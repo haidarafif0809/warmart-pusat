@@ -176,10 +176,10 @@ class UserTest extends TestCase
 
         $response = $this->get($response->headers->get('location'))->assertSee('Password '. $user_reset->name .' Berhasil Di Reset');
 
-        $this->assertDatabaseMissing('users',['id' => 2, 'password' => $user_reset->password]);
+        $this->assertDatabaseMissing('users',['id' => 2, 'password' => $user_reset->password ]);
 
     }
 
-
+    
 
 }

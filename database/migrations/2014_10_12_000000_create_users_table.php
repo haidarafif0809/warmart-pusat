@@ -19,7 +19,7 @@ class CreateUsersTable extends Migration
             $table->string('email',100)->unique();
             $table->string('alamat',100);
             $table->string('password',100);
-            $table->string('status',100)->nullable();
+            $table->string('status_konfirmasi',100)->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

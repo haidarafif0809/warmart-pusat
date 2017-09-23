@@ -81,8 +81,8 @@
                                        Master Data <span class="caret"></span>
                                     </a>
                               <ul class="dropdown-menu" aria-labelledby="dropdownMenu1"> 
-                                <li><a href="{{ route('bank.index') }}">Bank</a></li> 
-                                <li><a href="{{ route('master_user.index') }}">User</a></li> 
+                                <li><a href="{{ route('bank.index') }}">Bank</a></li>                                 
+                                <li><a href="{{ route('user.index') }}">User</a></li> 
                                 <li><a href="{{ route('warung.index') }}">Warung</a></li> 
                               </ul>
                             </li>

@@ -30,6 +30,7 @@ class UsersSeeder extends Seeder
 	    $admin->email = 'admin@gmail.com';
 	    $admin->alamat = "-";
 	    $admin->password = bcrypt('rahasia');
+	    $admin->status_konfirmasi = "1";
 	 
 	    $admin->wilayah = '101';
 	    $admin->link_afiliasi = 'andaglos.com/aff/1';
@@ -38,9 +39,8 @@ class UsersSeeder extends Seeder
 	    $admin->no_rekening = '044353534';
 	    $admin->an_rekening = 'fahrizal';
 	    $admin->tipe_user = '1';
-	    $admin->tgl_lahir = '0000-00-00';
+	    $admin->tgl_lahir = '2000-10-10';
 
-	    $admin->status = "1";
 	    $admin->save();
 	    $admin->attachRole($adminRole);
 
@@ -49,6 +49,7 @@ class UsersSeeder extends Seeder
 	    $member->name = "Sample Member";
 	    $member->email = 'member@gmail.com';
 	    $member->alamat = "-";
+		$member->status_konfirmasi = "1";
 
 	    $member->wilayah = '103';
 	    $member->link_afiliasi = 'andaglos.com/aff/1';
@@ -57,9 +58,8 @@ class UsersSeeder extends Seeder
 	    $member->no_rekening = '044353534';
 	    $member->an_rekening = 'fahrizal';
 	    $member->tipe_user = '2';
-	    $member->tgl_lahir = '0000-00-00';
+	    $member->tgl_lahir = '2000-10-10';
 	    
-		$member->status = "1";
 	    $member->password = bcrypt('rahasia');
 	    $member->save();
 	    $member->attachRole($memberRole);

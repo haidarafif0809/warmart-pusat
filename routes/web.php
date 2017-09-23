@@ -21,9 +21,28 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::group(['middleware' =>'auth'], function(){
 
-	Route::resource('master_user', 'UserController');
+	Route::resource('user', 'UserController');
 	Route::resource('bank', 'BankController');
 	Route::resource('warung', 'WarungController');
+
+
+	Route::get('user/konfirmasi/{id}',[
+	'middleware' => ['auth','role:admin'],
+	'as' => 'user.konfirmasi',
+	'uses' => 'UserController@konfirmasi'
+	]);
+
+	Route::get('user/reset/{id}',[
+	'middleware' => ['auth','role:admin'],
+	'as' => 'user.reset',
+	'uses' => 'UserController@reset_password'
+	]);
+
+	Route::get('user/no_konfirmasi/{id}',[
+	'middleware' => ['auth'],
+	'as' => 'user.no_konfirmasi',
+	'uses' => 'UserController@no_konfirmasi'
+	]);	
 
 
 });
