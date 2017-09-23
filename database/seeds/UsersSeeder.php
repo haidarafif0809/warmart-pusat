@@ -24,19 +24,41 @@ class UsersSeeder extends Seeder
 	    $memberRole->display_name = "Member";
 	    $memberRole->save();
 	    // Membuat sample admin
+
 	    $admin = new User();
 	    $admin->name = 'Admin Larapus';
 	    $admin->email = 'admin@gmail.com';
 	    $admin->alamat = "-";
 	    $admin->password = bcrypt('rahasia');
+	 
+	    $admin->wilayah = '101';
+	    $admin->link_afiliasi = 'andaglos.com/aff/1';
+	    $admin->no_telp = "087345365743";
+	    $admin->nama_bank = 'BNI';
+	    $admin->no_rekening = '044353534';
+	    $admin->an_rekening = 'fahrizal';
+	    $admin->tipe_user = '1';
+	    $admin->tgl_lahir = '0000-00-00';
+
 	    $admin->status = "1";
 	    $admin->save();
 	    $admin->attachRole($adminRole);
+
 	    // Membuat sample member
 	    $member = new User();
 	    $member->name = "Sample Member";
 	    $member->email = 'member@gmail.com';
 	    $member->alamat = "-";
+
+	    $member->wilayah = '103';
+	    $member->link_afiliasi = 'andaglos.com/aff/1';
+	    $member->no_telp = "087345365743";
+	    $member->nama_bank = 'BNI';
+	    $member->no_rekening = '044353534';
+	    $member->an_rekening = 'fahrizal';
+	    $member->tipe_user = '2';
+	    $member->tgl_lahir = '0000-00-00';
+	    
 		$member->status = "1";
 	    $member->password = bcrypt('rahasia');
 	    $member->save();
