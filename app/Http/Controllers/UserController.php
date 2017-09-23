@@ -3,6 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Yajra\Datatables\Html\Builder;
+use Yajra\Datatables\Datatables;
+use Illuminate\Support\Facades\DB;
+use App\User;
+use App\Role;
+use App\Otoritas;
+use Auth;
+use Session;
+use Laratrust;
 
 class UserController extends Controller
 {
@@ -11,9 +20,55 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request, Builder $htmlBuilder)
     {
-        //
+        //index user
+
+         if ($request->ajax()) {
+            # code...
+            $master_users = User::with('role');
+            return Datatables::of($master_users)
+            ->addColumn('action', function($master_user){
+                    return view('datatable._action', [
+                        'model'     => $master_user,
+                        'form_url'  => route('user.destroy', $master_user->id),
+                        'edit_url'  => route('user.edit', $master_user->id),
+                        'confirm_message'   => 'Yakin Mau Menghapus User ' . $master_user->name . '?',
+                   
+                        ]);
+                })
+            ->addColumn('konfirmasi', function($user_konfirmasi){
+                    return view('user._action', [
+                        'model'     => $user_konfirmasi,
+                        'confirm_message'   => 'Apakah Anda Yakin Ingin Meng Konfirmasi User ' . $user_konfirmasi->name . '?',
+                        'no_confirm_message'   => 'Apakah Anda Yakin Tidak Meng Konfirmasi User ' . $user_konfirmasi->name . '?',
+                        'konfirmasi_url' => route('user.konfirmasi', $user_konfirmasi->id),
+                        'no_konfirmasi_url' => route('user.no_konfirmasi', $user_konfirmasi->id),
+                        ]);
+                })//Konfirmasi User Apabila Bila Status User 1 Maka User sudah di konfirmasi oleh admin dan apabila status user 0 maka user belum di konfirmasi oleh admin
+
+            ->addColumn('reset', function($reset){
+                    return view('user._action_reset', [
+                        'model'     => $reset,
+                        'confirm_message'   => 'Apakah Anda Yakin Ingin Me Reset Password User ' . $reset->name . '?',
+                        'reset_url' => route('user.reset', $reset->id),
+                        ]);
+                })//Reset Password apabila di klik tombol reset password maka password menjadi 123456
+            ->addColumn('role', function($user){
+                $role = $user->where('id',$user->role->role_id)->first();
+                return $role->display_name;
+                })->make(true);
+        }
+        $html = $htmlBuilder
+        ->addColumn(['data' => 'name', 'name' => 'name', 'title' => 'Nama'])
+        ->addColumn(['data' => 'email', 'name' => 'email', 'title' => 'Username'])  
+        ->addColumn(['data' => 'alamat', 'name' => 'alamat', 'title' => 'Alamat', 'orderable' => false])
+        ->addColumn(['data' => 'role', 'name' => 'role', 'title' => 'Otoritas', 'orderable' => false, 'searchable'=>false])
+        ->addColumn(['data' => 'reset', 'name' => 'reset', 'title' => 'Reset Password', 'orderable' => false, 'searchable'=>false])
+        ->addColumn(['data' => 'konfirmasi', 'name' => 'konfirmasi', 'title' => 'Konfirmasi', 'searchable'=>false])
+        ->addColumn(['data' => 'action', 'name' => 'action', 'title' => '', 'orderable' => false, 'searchable'=>false]);
+
+        return view('user.index')->with(compact('html'));
     }
 
     /**
@@ -24,6 +79,7 @@ class UserController extends Controller
     public function create()
     {
         //
+        return view('user.create');
     }
 
     /**
@@ -34,7 +90,29 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // // proses tambah user
+         $this->validate($request, [
+            'name'   => 'required',
+            'email'     => 'required|unique:users,email', 
+            'alamat'    => 'required',
+            'role_id'    => 'required', 
+            ]);
+
+         $user_baru = User::create([ 
+            'name' =>$request->name,
+            'email'=>$request->email, 
+            'alamat'=>$request->alamat,  
+            'password' => bcrypt('123456')]);
+
+        $role_baru = Role::where('id',$request->role_id)->first();
+        $user_baru->attachRole($role_baru->id);
+
+        Session::flash("flash_notification", [
+            "level"=>"success",
+            "message"=>"Berhasil Menambah User $request->name"
+            ]);
+
+        return redirect()->route('user.index');
     }
 
     /**
@@ -56,7 +134,11 @@ class UserController extends Controller
      */
     public function edit($id)
     {
+        // edoit user
         //
+        $user = User::with('role')->find($id);
+
+        return view('user.edit')->with(compact('user'));
     }
 
     /**
@@ -68,7 +150,38 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+                //  proses update user
+
+         $this->validate($request, [
+            'name'      => 'required',
+            'email'     => 'required|unique:users,email,'.$id, 
+            'alamat'    => 'required',
+            'role_id'   => 'required', 
+            'role_lama' => 'required',
+            ]);
+
+         // update user
+         $user = User::where('id',$id)->update([
+                'name'  => $request->name,
+                'email' => $request->email,
+                'alamat'=> $request->alamat   
+            ]);
+
+         $role_lama = Role::where('id', $request->role_lama)->first();
+         $role_baru = Role::where('id', $request->role_id)->first();
+         $user_baru = User::find($id);
+
+         // buang role lama
+         $user_baru->detachRole($role_lama->id);
+         // masukan role baru
+         $user_baru->attachRole($role_baru->id);
+
+         Session::flash("flash_notification", [
+            "level"=>"success",
+            "message"=>"Berhasil Mengubah User $request->name"
+            ]);
+
+        return redirect()->route('user.index');
     }
 
     /**
@@ -79,6 +192,66 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // hapus 
+        $user = User::find($id);
+        $user->detachRole($user->role->role_id);
+
+        // jika gagal hapus
+        if (!User::destroy($id)) {
+            // redirect back
+            return redirect()->back();
+        }else{
+            Session::flash("flash_notification", [
+                "level"     => "danger",
+                "message"   => "User ". $user->name ." Berhasil Di Hapus"
+            ]);
+        return redirect()->route('user.index');
+        }
     }
+
+    public function reset(){
+
+    }
+
+    public function konfirmasi($id){
+        // konfirmasi user
+        $username = User::select('name')->where('id',$id)->first();
+        $user = User::where('id',$id)->update(['status_konfirmasi' => '1']);
+
+        Session::flash("flash_notification", [
+            "level"=>"success",
+            "message"=>"User ". $username->name ." Berhasil Di Konfirmasi"
+        ]);
+ 
+        return redirect()->route('user.index');
+
+    }
+
+    public function no_konfirmasi($id){
+        // no_konfirmasi user
+        $username = User::select('name')->where('id',$id)->first();
+        $user = User::where('id',$id)->update(['status_konfirmasi' => '0']);
+
+        Session::flash("flash_notification", [
+            "level"=>"success",
+            "message"=>"User ". $username->name ." Tidak Di Konfirmasi"
+        ]);
+ 
+        return redirect()->route('user.index');
+    }
+
+    public function reset_password($id){
+        // reset password
+        $username = User::select('name')->where('id',$id)->first();
+
+        $user = User::where('id',$id)->update(['password' => bcrypt('123456')]);
+
+        Session::flash("flash_notification", [
+            "level"=>"success",
+            "message"=>"Password ". $username->name ." Berhasil Di Reset"
+        ]);
+ 
+        return redirect()->route('user.index');
+    }
+
 }
