@@ -5,11 +5,13 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laratrust\Traits\LaratrustUserTrait;
+use Yajra\Auditable\AuditableTrait;
 
 class User extends Authenticatable
 {
     use Notifiable;
     use LaratrustUserTrait;
+    use AuditableTrait;
 
 
     /**

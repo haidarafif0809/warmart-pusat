@@ -20,6 +20,8 @@ class CreateUsersTable extends Migration
             $table->string('alamat',100);
             $table->string('password',100);
             $table->string('status_konfirmasi',100)->nullable();
+            $table->unsignedInteger('created_by')->nullable()->index();            
+            $table->unsignedInteger('updated_by')->nullable()->index();
             $table->rememberToken();
             $table->timestamps();
         });
