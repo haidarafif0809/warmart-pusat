@@ -16,13 +16,13 @@ class TambahKolomUser extends Migration
         //
          Schema::table('users', function (Blueprint $table) {
             //
-            $table->bigInteger('wilayah');
-            $table->string('link_afiliasi');
-            $table->string('no_telp');
-            $table->string('nama_bank');
-            $table->string('no_rekening');
-            $table->string('an_rekening');
-            $table->integer('tipe_user');
+            $table->bigInteger('wilayah')->nullable();
+            $table->string('link_afiliasi')->nullable();
+            $table->string('no_telp')->nullable();
+            $table->string('nama_bank')->nullable();
+            $table->string('no_rekening')->nullable();
+            $table->string('an_rekening')->nullable();
+            $table->integer('tipe_user')->nullable();
             $table->string('tgl_lahir')->nullable();
         });
     }
