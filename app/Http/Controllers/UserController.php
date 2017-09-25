@@ -102,6 +102,7 @@ class UserController extends Controller
             'name' =>$request->name,
             'email'=>$request->email, 
             'alamat'=>$request->alamat,  
+            'tipe_user' => '1',
             'password' => bcrypt('123456')]);
 
         $role_baru = Role::where('id',$request->role_id)->first();

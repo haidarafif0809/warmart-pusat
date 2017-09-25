@@ -35,22 +35,22 @@ class UserTest extends TestCase
     	// password
     	$password = bcrypt("rahasia");
     	// Test Insert User
-    	$test_user = User::create(['name' => 'UserTest', 'password' => $password, 'email' => 'usertest@gmail.com', 'alamat' => 'Test Alamat', 'status_konfirmasi' => 0]);
+    	$test_user = User::create(['name' => 'UserTest', 'password' => $password, 'email' => 'usertest@gmail.com', 'alamat' => 'Test Alamat', 'status_konfirmasi' => 0, 'tipe_user' => '1']);
 
     	// cek insert user
     	$this->assertDatabaseHas('users',[
-    			'name' => 'UserTest', 'password' => $password, 'email' => 'usertest@gmail.com', 'alamat' => 'Test Alamat', 'status_konfirmasi' => 0
+    			'name' => 'UserTest', 'password' => $password, 'email' => 'usertest@gmail.com', 'alamat' => 'Test Alamat', 'status_konfirmasi' => 0, 'tipe_user' => '1'
     		]);
 
     	// test update user
     	$password = bcrypt("123456");
     	User::find($test_user->id)->update([
-    			'name' => 'TestEditUser', 'password' => $password, 'email' => 'edituser@gmail.com', 'alamat' => 'Test Alamat Edit', 'status_konfirmasi' => 1
+    			'name' => 'TestEditUser', 'password' => $password, 'email' => 'edituser@gmail.com', 'alamat' => 'Test Alamat Edit', 'status_konfirmasi' => 1, 'tipe_user' => '1'
     		]);
 
     	// cek update user
     	$this->assertDatabaseHas('users',[
-    			'name' => 'TestEditUser', 'password' => $password, 'email' => 'edituser@gmail.com', 'alamat' => 'Test Alamat Edit', 'status_konfirmasi' => 1
+    			'name' => 'TestEditUser', 'password' => $password, 'email' => 'edituser@gmail.com', 'alamat' => 'Test Alamat Edit', 'status_konfirmasi' => 1, 'tipe_user' => '1'
     		]);
 
     	// test delete user
@@ -58,7 +58,7 @@ class UserTest extends TestCase
     	$user = User::find($test_user->id);
     	// cek delete user
     	$this->assertDatabaseMissing('users',[
-    			'name' => 'TestEditUser', 'password' => $password, 'email' => 'edituser@gmail.com', 'alamat' => 'Test Alamat Edit', 'status_konfirmasi' => 1	
+    			'name' => 'TestEditUser', 'password' => $password, 'email' => 'edituser@gmail.com', 'alamat' => 'Test Alamat Edit', 'status_konfirmasi' => 1, 'tipe_user' => '1'	
     		]);
 
 
@@ -73,6 +73,7 @@ class UserTest extends TestCase
             'name' => 'UserTestHttp',
             'email' => 'usertesthttp@gmail.com',
             'alamat' => 'Test Alamat Http',
+            'tipe_user' => '1',
             'role_id' => '1'
         ]);
 
@@ -85,7 +86,8 @@ class UserTest extends TestCase
            $this->assertDatabaseHas('users',[
                 'name' => 'UserTestHttp',
                 'email' => 'usertesthttp@gmail.com',
-                'alamat' => 'Test Alamat Http'
+                'alamat' => 'Test Alamat Http',
+                'tipe_user' => '1'
             ]);
 
     }
@@ -98,6 +100,7 @@ class UserTest extends TestCase
             'name'       => 'UserTestHttp',
             'email'      => 'usertesthttp@gmail.com',
             'alamat'     => 'Test Alamat Http',
+            'tipe_user'  => '1',
             'role_id'    => '1',
             'role_lama'  => '2',
             '_method' => 'PUT'
@@ -111,7 +114,8 @@ class UserTest extends TestCase
            $this->assertDatabaseHas('users',[
                 'name' => 'UserTestHttp',
                 'email' => 'usertesthttp@gmail.com',
-                'alamat' => 'Test Alamat Http'
+                'alamat' => 'Test Alamat Http',
+                'tipe_user'  => '1'
             ]);
     }
 
