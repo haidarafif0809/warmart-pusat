@@ -18,13 +18,26 @@ class UsersSeeder extends Seeder
 	    $adminRole->name = "admin";
 	    $adminRole->display_name = "Admin";
 	    $adminRole->save();
+	    
 	    // Membuat role member
 	    $memberRole = new Role();
 	    $memberRole->name = "member";
 	    $memberRole->display_name = "Member";
 	    $memberRole->save();
-	    // Membuat sample admin
+	    
+	    // Membuat role customer
+	    $customerRole = new Role();
+	    $customerRole->name = "customer";
+	    $customerRole->display_name = "Customer";
+	    $customerRole->save();
+	    
+	    // Membuat role warung
+	    $warungRole = new Role();
+	    $warungRole->name = "warung";
+	    $warungRole->display_name = "Warung";
+	    $warungRole->save();
 
+	    // Membuat sample admin
 	    $admin = new User();
 	    $admin->name = 'Admin Larapus';
 	    $admin->email = 'admin@gmail.com';
@@ -63,5 +76,26 @@ class UsersSeeder extends Seeder
 	    $member->password = bcrypt('rahasia');
 	    $member->save();
 	    $member->attachRole($memberRole);
+
+	    // Membuat Sample Customer
+	    $customer = new User();
+	    $customer->name = "Sample Customer";
+	    $customer->email = 'customer@gmail.com';
+	    $customer->alamat = "Jl. Kedaton";
+	    $customer->wilayah = '1';
+	    $customer->warung = '2';
+	    $customer->no_telp = "085345330858";
+	    $customer->tipe_user = '3';
+	    $customer->tgl_lahir = '1999-02-20';
+		$customer->status_konfirmasi = "1";
+
+	    $customer->link_afiliasi = '-';
+	    $customer->nama_bank = '-';
+	    $customer->no_rekening = '-';
+	    $customer->an_rekening = '-';
+	    
+	    $customer->password = bcrypt('rahasia');
+	    $customer->save();
+	    $customer->attachRole($customerRole);
     }
 }
