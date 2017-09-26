@@ -80,6 +80,12 @@
                                         <span class="sidebar-normal">Warung</span>
                                     </a>
                                 </li>
+                                <li>
+                                    <a href="{{ route('kategori-harga.index') }}">
+                                        <span class="sidebar-mini">KH</span>
+                                        <span class="sidebar-normal">Kategori Harga</span>
+                                    </a>
+                                </li>
                                 
                             </ul>
                         </div>

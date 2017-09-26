@@ -37,7 +37,7 @@
 <div class="form-group{{ $errors->has('role_id') ? ' has-error' : '' }}">
 	{!! Form::label('role_id', 'Otoritas', ['class'=>'col-md-2 control-label']) !!}
 	<div class="col-md-4">
-		{!! Form::select('role_id', []+App\Role::pluck('display_name','id')->all(), null, ['class'=>'form-control js-selectize-reguler', 'placeholder' => 'Pilih Otoritas']) !!}
+		{!! Form::select('role_id', []+App\Role::pluck('display_name','id')->all(), null, ['class'=>'form-control  js-selectize-reguler', 'placeholder' => 'Pilih Otoritas']) !!}
 		{!! $errors->first('role_id', '<p class="help-block">:message</p>') !!}
 	</div>
 </div>
