@@ -10,7 +10,7 @@ use App\User;
 
 class WarungTest extends DuskTestCase
 {
-
+    
     /**
      * A Dusk test example.
      *
@@ -23,7 +23,16 @@ class WarungTest extends DuskTestCase
                   ->visit('/home')
                   ->clickLink('Warung')
                   ->clickLink('Tambah Warung')
-                  ->type('email','fafa@gmail.com');
+                  ->type('email','fafa@gmail.com')
+                  ->type('name','Fahri')
+                  ->type('alamat','Jalan Way Halim')
+                  ->script("document.getElementById('pilih_kelurahan').selectize.setValue('1');")
+                  ->type('no_telp','085784343722')
+                  ->type('nama_bank','BNI')
+                  ->type('no_rekening','634735432')
+                  ->type('an_rekening','Jajang')
+                  ->press('Submit')
+                  ->assertSee('Success : Berhasil Menambah Warung Fahri');
         });
 
     } 

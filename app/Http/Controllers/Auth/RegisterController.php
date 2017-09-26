@@ -67,6 +67,7 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
+            'alamat' => $data['alamat']
         ]);
 
         $memberRole = Role::where('name', 'member')->first();
