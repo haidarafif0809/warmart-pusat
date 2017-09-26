@@ -14,7 +14,7 @@
 				</div>
 
 				<div class="panel-body">
-					<p> <a class="btn btn-primary" id="tambah_warung" href="{{ route('warung.create') }}">Tambah Warung (F1)</a> </p><div class="table-responsive">
+					<p> <a class="btn btn-primary" id="tambah_warung" href="{{ route('warung.create') }}"><i class="material-icons">add</i> Tambah Warung </a> </p><div class="table-responsive">
 					{!! $html->table(['class'=>'table-striped table']) !!}
 					</div>
 				</div>
@@ -28,13 +28,6 @@
 @section('scripts')
 
 {!! $html->scripts() !!}
- 	<script type="text/javascript">
- 	//TOMBOL TAMBAH STOK awal
- 	shortcut.add("f1", function() {
-        $("#tambah_warung").click();
-    })
-    </script>
-
 
 
 <script type="text/javascript">

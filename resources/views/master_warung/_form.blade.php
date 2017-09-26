@@ -23,24 +23,24 @@
 </div>
 
 
+
 <div class="form-group{{ $errors->has('kelurahan') ? ' has-error' : '' }}">
 	{!! Form::label('kelurahan', 'Kelurahan', ['class'=>'col-md-2 control-label']) !!}
 	<div class="col-md-4">
+		@if (isset($warung) && $warung->wilayah)
 		{!! Form::select('kelurahan', 
-		[''=>'']+App\Kelurahan::pluck('nama','id')->all(),
-		$warung->wilayah, ['class'=>'form-control js-selectize-reguler', 'placeholder' => 'Silahkan Pilih']) !!}
+		[''=>'']+App\Kelurahan::pluck('nama','id')->all(),$warung->wilayah
+		, ['class'=>'form-control js-selectize-reguler', 'placeholder' => 'Silahkan Pilih','id'=>'pilih_kelurahan']) !!}
 		{!! $errors->first('kelurahan', '<p class="help-block">:message</p>') !!}
+		@else
+		{!! Form::select('kelurahan', 
+		[''=>'']+App\Kelurahan::pluck('nama','id')->all(),null
+		, ['class'=>'form-control js-selectize-reguler', 'placeholder' => 'Silahkan Pilih','id'=>'pilih_kelurahan']) !!}
+		{!! $errors->first('kelurahan', '<p class="help-block">:message</p>') !!}
+		@endif
 	</div>
 </div>
 
-
-<div class="form-group{{ $errors->has('link_afiliasi') ? ' has-error' : '' }}">
-	{!! Form::label('link_afiliasi', 'Link Afiliasi', ['class'=>'col-md-2 control-label']) !!}
-	<div class="col-md-4">
-		{!! Form::text('link_afiliasi', null, ['class'=>'form-control','placeholder' => 'Link Afiliasi','required','autocomplete'=>'off']) !!}
-		{!! $errors->first('link_afiliasi', '<p class="help-block">:message</p>') !!}
-	</div>
-</div>
 
 <div class="form-group{{ $errors->has('no_telp') ? ' has-error' : '' }}">
 	{!! Form::label('no_telp', 'No Telp', ['class'=>'col-md-2 control-label']) !!}
@@ -78,8 +78,9 @@
 </div>
 
 
+
 <div class="form-group">
 	<div class="col-md-4 col-md-offset-2">
-		{!! Form::submit('Simpan', ['class'=>'btn btn-primary']) !!}
+			{!! Form::button('<i class="material-icons">send</i> Submit', ['class'=>'btn btn-primary', 'id'=>'btnSimpanWarung', 'type'=>'submit']) !!}
 	</div>
 </div>
