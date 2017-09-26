@@ -84,6 +84,8 @@
                                 <li><a href="{{ route('bank.index') }}">Bank</a></li>                                 
                                 <li><a href="{{ route('user.index') }}">User</a></li> 
                                 <li><a href="{{ route('warung.index') }}">Warung</a></li> 
+                                <li><a href="#">Stocking Center</a></li> 
+                                <li><a href="{{ route('kategori-harga.index') }}">Kategori Harga</a></li> 
                               </ul>
                             </li>
                         @endif
