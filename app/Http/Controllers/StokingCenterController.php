@@ -6,11 +6,11 @@ use Illuminate\Http\Request;
 use Yajra\Datatables\Html\Builder;
 use Yajra\Datatables\Datatables;
 use Illuminate\Support\Facades\DB;
-use App\Warung;
+use App\StokingCenter;
 use Session;
 use Laratrust;
 
-class WarungController extends Controller
+class StokingCenterController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,19 +19,20 @@ class WarungController extends Controller
      */
     public function index(Request $request, Builder $htmlBuilder)
     {
+        //
          //
         if ($request->ajax()) {
             # code...
-            $master_warung = Warung::with(['kelurahan','role'])->where('tipe_user',2)->get();
-            return Datatables::of($master_warung)
-                ->addColumn('action', function($warung){
+            $stokingcenter = StokingCenter::with(['kelurahan','kategori_harga'])->get();
+            return Datatables::of($stokingcenter)
+                ->addColumn('action', function($stokingcenter){
                     return view('datatable._action', [
-                        'model'     => $warung,
-                        'form_url'  => route('warung.destroy', $warung->id),
-                        'edit_url'  => route('warung.edit', $warung->id),
-                        'confirm_message'   => 'Yakin Mau Menghapus Warung ' . $warung->name . '?',
-                        'permission_ubah' => Laratrust::can('edit_warung'),
-                        'permission_hapus' => Laratrust::can('hapus_warung'),
+                        'model'     => $stokingcenter,
+                        'form_url'  => route('stoking-center.destroy', $stokingcenter->id),
+                        'edit_url'  => route('stoking-center.edit', $stokingcenter->id),
+                        'confirm_message'   => 'Yakin Mau Menghapus Stoking Center ' . $stokingcenter->name . '?',
+                        'permission_ubah' => Laratrust::can('edit_stokingcenter'),
+                        'permission_hapus' => Laratrust::can('hapus_stokingcenter'),
 
                         ]);
                 })
@@ -40,20 +41,14 @@ class WarungController extends Controller
                 })->make(true);
         }
         $html = $htmlBuilder
-        ->addColumn(['data' => 'email', 'name' => 'email', 'title' => 'Email']) 
-        ->addColumn(['data' => 'name', 'name' => 'name', 'title' => 'Nama Warung']) 
+        ->addColumn(['data' => 'name', 'name' => 'name', 'title' => 'Nama']) 
         ->addColumn(['data' => 'alamat', 'name' => 'alamat', 'title' => 'Alamat']) 
         ->addColumn(['data' => 'kelurahan.nama', 'name' => 'kelurahan.nama', 'title' => 'Wilayah']) 
-        ->addColumn(['data' => 'link', 'name' => 'link', 'title' => 'Link Afiliasi']) 
-        ->addColumn(['data' => 'no_telp', 'name' => 'no_telp', 'title' => 'No Telp']) 
-        ->addColumn(['data' => 'nama_bank', 'name' => 'nama_bank', 'title' => 'Nama Bank']) 
-        ->addColumn(['data' => 'no_rekening', 'name' => 'no_rekening', 'title' => 'No Rekening']) 
-        ->addColumn(['data' => 'an_rekening', 'name' => 'an_rekening', 'title' => 'A.N Rekening'])
+        ->addColumn(['data' => 'kategori_harga.nama_kategori_harga', 'name' => 'kategori_harga.nama_kategori_harga', 'title' => 'Nama Kategori Harga']) 
+        ->addColumn(['data' => 'url_api', 'name' => 'url_api', 'title' => 'URL API']) 
         ->addColumn(['data' => 'action', 'name' => 'action', 'title' => '', 'orderable' => false, 'searchable'=>false]);
         
-        return view('master_warung.index')->with(compact('html'));
-
-
+        return view('stoking_center.index')->with(compact('html'));
     }
 
     /**
@@ -64,7 +59,7 @@ class WarungController extends Controller
     public function create()
     {
         //
-        return view('master_warung.create');
+        return view('stoking_center.create');
     }
 
     /**
@@ -75,42 +70,31 @@ class WarungController extends Controller
      */
     public function store(Request $request)
     {
-        //
+         //
            $this->validate($request, [
-            'email'     => 'required|unique:users,email,',
-            'name'      => 'required|unique:users,name,',
+            'name'      => 'required|unique:stoking_centers,name,',
             'alamat'    => 'required',
-            'kelurahan' => 'required',
-            'no_telp'   => 'required|numeric',
-            'nama_bank' => 'required',
-            'no_rekening' => 'required|unique:users,no_rekening,',
-            'an_rekening' => 'required',
+            'kelurahan' => 'required|unique:stoking_centers,wilayah,',
+            'kategoriharga' => 'required',
+            'url_api'   => 'required||unique:stoking_centers,url_api,',
 
             ]);
 
-         $warung = Warung::create([
-            'email' =>$request->email,
-            'password' => bcrypt('rahasia'),
+         $warung = StokingCenter::create([
             'name' =>$request->name,
             'alamat' =>$request->alamat,
             'wilayah' =>$request->kelurahan,
-            'no_telp' =>$request->no_telp,
-            'nama_bank' =>$request->nama_bank,
-            'no_rekening' =>$request->no_rekening,
-            'an_rekening' =>$request->an_rekening,
-            'tipe_user'=> 2,
-            'status_konfirmasi'=>0
+            'kategori_harga' =>$request->kategoriharga,
+            'url_api' =>$request->url_api,
+
             ]);
-
-
-        $warung->attachRole(4);
 
           $pesan_alert = 
                '<div class="container-fluid">
                     <div class="alert-icon">
                     <i class="material-icons">check</i>
                     </div>
-                    <b>Success : Berhasil Menambah Warung '.$request->name.' </b>
+                    <b>Success : Berhasil Menambah Stoking Center '.$request->name.' </b>
                 </div>';
 
 
@@ -118,7 +102,7 @@ class WarungController extends Controller
             "level"=>"success",
             "message"=>$pesan_alert
             ]);
-        return redirect()->route('warung.index');
+        return redirect()->route('stoking-center.index');
     }
 
     /**
@@ -141,8 +125,8 @@ class WarungController extends Controller
     public function edit($id)
     {
         //
-          $warung = Warung::with(['kelurahan'])->find($id);
-            return view('master_warung.edit')->with(compact('warung'));
+          $stokingcenter = StokingCenter::with(['kelurahan','kategori_harga'])->find($id);
+            return view('stoking_center.edit')->with(compact('stokingcenter'));
     }
 
     /**
@@ -154,35 +138,31 @@ class WarungController extends Controller
      */
     public function update(Request $request, $id)
     {
-            //
-            $this->validate($request, [
-            'email'     => 'required|unique:users,email,'. $id,
-            'name'      => 'required|unique:users,name,'. $id,
+        //
+           $this->validate($request, [
+            'name'      => 'required|unique:stoking_centers,name,'.$id,
             'alamat'    => 'required',
-            'kelurahan' => 'required',
-            'no_telp'   => 'required|numeric',
-            'nama_bank' => 'required',
-            'no_rekening' => 'required|unique:users,no_rekening,'. $id,
-            'an_rekening' => 'required',
+            'kelurahan' => 'required|unique:stoking_centers,wilayah,'.$id,
+            'kategoriharga' => 'required',
+            'url_api'   => 'required||unique:stoking_centers,url_api,'.$id,
+
             ]);
 
+
          //insert
-        $barang = Warung::where('id',$id)->update([
-            'email' =>$request->email,
+        $stoking_center = StokingCenter::where('id',$id)->update([
             'name' =>$request->name,
             'alamat' =>$request->alamat,
             'wilayah' =>$request->kelurahan,
-            'no_telp' =>$request->no_telp,
-            'nama_bank' =>$request->nama_bank,
-            'no_rekening' =>$request->no_rekening,
-            'an_rekening' =>$request->an_rekening
+            'kategori_harga' =>$request->kategoriharga,
+            'url_api' =>$request->url_api,
         ]);
 
         $pesan_alert = '<div class="container-fluid">
                     <div class="alert-icon">
                     <i class="material-icons">check</i>
                     </div>
-                    <b>Success : Berhasil Mengubah Warung '.$request->name.' </b>
+                    <b>Success : Berhasil Mengubah Stoking Center '.$request->name.' </b>
                 </div>';
 
         Session::flash("flash_notification", [
@@ -190,7 +170,7 @@ class WarungController extends Controller
             "message"=> $pesan_alert
             ]);
 
-        return redirect()->route('warung.index');
+        return redirect()->route('stoking-center.index');
     }
 
     /**
@@ -201,8 +181,9 @@ class WarungController extends Controller
      */
     public function destroy($id)
     {
+        //
         // jika gagal hapus
-        if (!Warung::destroy($id)) {
+        if (!StokingCenter::destroy($id)) {
             // redirect back
             return redirect()->back();
         }else{
@@ -211,15 +192,14 @@ class WarungController extends Controller
                     <div class="alert-icon">
                     <i class="material-icons">check</i>
                     </div>
-                    <b>Success : Berhasil Menghapus Warung </b>
+                    <b>Success : Berhasil Menghapus Stoking Center </b>
                 </div>';
 
         Session:: flash("flash_notification", [
             "level"=>"danger",
             "message"=> $pesan_alert
             ]);
-        return redirect()->route('warung.index');
+        return redirect()->route('stoking-center.index');
         }
-
     }
 }

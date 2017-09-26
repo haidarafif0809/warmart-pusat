@@ -37,7 +37,7 @@ class Warung extends Model
 
     	public function getLinkAfiliasiAttribute() {
 
-      	 $link_afiliasi = "war-mart.id/aff/".$this->id."";
+      	 $link_afiliasi = url("aff/".$this->id);
        	 return $link_afiliasi;
         
    		}
