@@ -10,12 +10,13 @@
 					<li class="active">Edit Kategori Harga</li>
 				</ul>
 
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<h2 class="panel-title">Edit Kategori Harga</h2>
-					</div>
-
-					<div class="panel-body">
+		 <div class="card">
+			   	   <div class="card-header card-header-icon" data-background-color="purple">
+                       <i class="material-icons">monetization_on</i>
+                                </div>
+                      <div class="card-content">
+                         <h4 class="card-title"> Kategori Harga </h4>
+                      
 						{!! Form::model($kategori_harga, ['url' => route('kategori-harga.update', $kategori_harga->id), 'method' => 'put', 'files'=>'true','class'=>'form-horizontal']) !!}
 							@include('kategori_harga._form')
 						{!! Form::close() !!}

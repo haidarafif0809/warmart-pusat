@@ -3,11 +3,6 @@
 	<div class="col-md-4">
 		{!! Form::text('nama_kategori_harga', null, ['class'=>'form-control','placeholder'=>'Nama Kategori Harga','required','autocomplete'=>'off', 'id'=>'nama_kategori_harga']) !!}
 		{!! $errors->first('nama_kategori_harga', '<p class="help-block" id="nama_kategori_harga_error">:message</p>') !!}
-	</div>
-</div>
- 
-<div class="form-group">
-	<div class="col-md-4 col-md-offset-2">
-	{!! Form::button('<i class="material-icons">send</i> Submit', ['class'=>'btn btn-primary', 'id'=>'tombol_simpan', 'type'=>'submit']) !!} 
-	</div>
+	</div> 
+	{!! Form::button('<i class="material-icons">send</i> Submit', ['class'=>'btn btn-primary', 'id'=>'tombol_simpan', 'type'=>'submit']) !!}  
 </div>

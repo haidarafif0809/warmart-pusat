@@ -9,12 +9,13 @@
 				<li><a href="{{ url('/kategori-harga') }}">Kategori Harga</a></li>
 				<li class="active">Tambah Kategori Harga</li>
 			</ul>
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h2 class="panel-title">Tambah Kategori Harga</h2>
-				</div>
-
-				<div class="panel-body">
+			  <div class="card">
+			   	   <div class="card-header card-header-icon" data-background-color="purple">
+                       <i class="material-icons">monetization_on</i>
+                   </div>
+                      <div class="card-content">
+                         <h4 class="card-title"> Kategori Harga </h4>
+                      
 					{!! Form::open(['url' => route('kategori-harga.store'),'method' => 'post', 'class'=>'form-horizontal']) !!}
 						@include('kategori_harga._form')
 					{!! Form::close() !!}
