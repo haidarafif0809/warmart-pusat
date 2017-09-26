@@ -49,8 +49,8 @@ class KategoriHargaController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {
-        //
+    { 
+        return view('kategori_harga.create');
     }
 
     /**
@@ -61,7 +61,28 @@ class KategoriHargaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'nama_kategori_harga'     => 'required|unique:kategori_hargas,nama_kategori_harga,', 
+        ]);
+        
+        $pesan_alert = 
+             '<div class="container-fluid">
+                  <div class="alert-icon">
+                  <i class="material-icons">check</i>
+                  </div>
+                  <b>Sukses : Berhasil Menambah Kategori Harga "'.$request->nama_kategori_harga.'"</b>
+              </div>';
+
+            $kategori_harga = KategoriHarga::create([
+                'nama_kategori_harga' =>$request->nama_kategori_harga, 
+            ]);
+
+            Session::flash("flash_notification", [
+                "level"=>"success",
+                "message"=> $pesan_alert
+            ]);
+            
+            return redirect()->route('kategori-harga.index');
     }
 
     /**
@@ -84,6 +105,8 @@ class KategoriHargaController extends Controller
     public function edit($id)
     {
         //
+        $kategori_harga = KategoriHarga::find($id);
+        return view('kategori_harga.edit')->with(compact('kategori_harga'));
     }
 
     /**
@@ -94,8 +117,29 @@ class KategoriHargaController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
-        //
+    { 
+        $this->validate($request, [            
+            'nama_kategori_harga'     => 'required|unique:kategori_hargas,nama_kategori_harga,'. $id, 
+        ]);
+
+        KategoriHarga::where('id', $id)->update([
+                'nama_kategori_harga' =>$request->nama_kategori_harga, 
+            ]);
+
+        $pesan_alert = 
+             '<div class="container-fluid">
+                  <div class="alert-icon">
+                  <i class="material-icons">check</i>
+                  </div>
+                  <b>Sukses : Berhasil Mengubah Kategori Harga "'.$request->nama_kategori_harga.'"</b>
+              </div>';
+
+        Session::flash("flash_notification", [
+            "level"=>"success",
+            "message"=>$pesan_alert
+            ]);
+
+        return redirect()->route('kategori-harga.index');    
     }
 
     /**
@@ -106,6 +150,22 @@ class KategoriHargaController extends Controller
      */
     public function destroy($id)
     {
-        //
+      $pesan_alert = 
+               '<div class="container-fluid">
+                    <div class="alert-icon">
+                    <i class="material-icons">check</i>
+                    </div>
+                    <b>Sukses : Kategori Harga Berhasil Dihapus</b>
+                </div>';
+
+        KategoriHarga::destroy($id);  
+
+        Session:: flash("flash_notification", [
+            "level"=>"success",
+            "message"=> $pesan_alert
+            ]);
+
+
+        return redirect()->route('kategori-harga.index');
     }
 }
