@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Session;
 use Laratrust;
 use App\Bank;
-
+use Auth;
 class BankController extends Controller
 {
     /**
@@ -159,6 +159,9 @@ class BankController extends Controller
      */
     public function destroy($id)
     {
+
+      
+
       $pesan_alert = 
                '<div class="container-fluid">
                     <div class="alert-icon">
@@ -173,6 +176,8 @@ class BankController extends Controller
             "level"=>"success",
             "message"=> $pesan_alert
             ]);
+
+
         return redirect()->route('bank.index');
     }
 
