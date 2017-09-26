@@ -10,12 +10,13 @@
 					<li class="active">Edit Bank</li>
 				</ul>
 
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<h2 class="panel-title">Edit Bank</h2>
-					</div>
-
-					<div class="panel-body">
+		 <div class="card">
+			   	   <div class="card-header card-header-icon" data-background-color="purple">
+                       <i class="material-icons">payment</i>
+                                </div>
+                      <div class="card-content">
+                         <h4 class="card-title"> Bank </h4>
+                      
 						{!! Form::model($bank, ['url' => route('bank.update', $bank->id), 'method' => 'put', 'files'=>'true','class'=>'form-horizontal']) !!}
 							@include('bank._form')
 						{!! Form::close() !!}
