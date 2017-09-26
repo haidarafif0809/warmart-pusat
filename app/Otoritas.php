@@ -14,6 +14,11 @@ class Otoritas extends Model
 		  {
 		  	return $this->hasOne('App\User','id','user_id');
 		  }
+
+    	public function customer()
+		  {
+		  	return $this->hasOne('App\Customer','id','user_id');
+		  }
 		
 		public function role()
 		  {

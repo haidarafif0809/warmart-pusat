@@ -117,13 +117,25 @@
                         <ul class="nav navbar-nav navbar-right">
                         
                             <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <i class="material-icons">person</i>{{ Auth::user()->name }} <span class="caret"></span>
-                                    
-                                    <p class="hidden-lg hidden-md">
-                                        Profile
-                                        <b class="caret"></b>
-                                    </p>
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                       Master Data <span class="caret"></span>
+                                    </a>
+                              <ul class="dropdown-menu" aria-labelledby="dropdownMenu1"> 
+                                <li><a href="{{ route('bank.index') }}">Bank</a></li> 
+                                <li><a href="{{ route('customer.index') }}">Customer</a></li>                                 
+                                <li><a href="{{ route('user.index') }}">User</a></li> 
+                                <li><a href="{{ route('warung.index') }}">Warung</a></li> 
+                              </ul>
+                            </li>
+                        @endif
+                              <!-- Authentication Links -->
+                        @if (Auth::guest())
+                            <li><a href="{{ url('/login') }}">Login</a></li>
+                            <li><a href="{{ url('/register') }}">Register</a></li>
+                        @else
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                    <i class="material-icons">person</i> {{ Auth::user()->name }} <span class="caret"></span>
                                 </a>
                                 <ul class="dropdown-menu">
                                    

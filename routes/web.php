@@ -26,6 +26,7 @@ Route::group(['middleware' =>'auth'], function(){
 	Route::resource('warung', 'WarungController');
 	Route::resource('kategori-harga', 'KategoriHargaController');
 	Route::resource('stocking-center', 'KategoriHargaController');
+	Route::resource('customer', 'CustomerController');
 
 
 	Route::get('user/konfirmasi/{id}',[
