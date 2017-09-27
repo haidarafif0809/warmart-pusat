@@ -8,33 +8,27 @@
 			</ul>
  
 			
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h2 class="panel-title">Warung</h2>
-				</div>
-
-				<div class="panel-body">
-					<p> <a class="btn btn-primary" id="tambah_warung" href="{{ route('warung.create') }}">Tambah Warung (F1)</a> </p><div class="table-responsive">
-					{!! $html->table(['class'=>'table-striped table']) !!}
+			   <div class="card">
+			   	   <div class="card-header card-header-icon" data-background-color="purple">
+                       <i class="material-icons">store</i>
+                                </div>
+                      <div class="card-content">
+                         <h4 class="card-title"> Warung </h4>
+                       <div class="toolbar">
+                         	<p> <a class="btn btn-primary" href="{{ route('warung.create') }}"><i class="material-icons">add</i> Tambah Warung</a> </p>
+                         </div>
+					<div class="table-responsive material-datatables">
+					{!! $html->table(['class'=>'table table-striped table-no-bordered table-hover','cellspacing' => '0','width' => '100%','style' => 'width:100%']) !!}
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-
-
 @endsection
 
 @section('scripts')
 
 {!! $html->scripts() !!}
- 	<script type="text/javascript">
- 	//TOMBOL TAMBAH STOK awal
- 	shortcut.add("f1", function() {
-        $("#tambah_warung").click();
-    })
-    </script>
-
 
 
 <script type="text/javascript">

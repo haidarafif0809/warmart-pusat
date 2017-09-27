@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Session;
 use Laratrust;
 use App\Bank;
-
+use Auth;
 class BankController extends Controller
 {
     /**
@@ -29,8 +29,8 @@ class BankController extends Controller
                         'form_url'  => route('bank.destroy', $bank->id),
                         'edit_url'  => route('bank.edit', $bank->id),
                         'confirm_message'   => 'Anda Yakin Ingin Menghapus Bank ' .$bank->nama_bank . ' ?',
-                        'permission_ubah' => Laratrust::can('edit_satuan'),
-                        'permission_hapus' => Laratrust::can('hapus_satuan'),
+                        'permission_ubah' => Laratrust::can('edit_bank'),
+                        'permission_hapus' => Laratrust::can('hapus_bank'),
 
                         ]);
                 })->make(true);
@@ -159,6 +159,9 @@ class BankController extends Controller
      */
     public function destroy($id)
     {
+
+      
+
       $pesan_alert = 
                '<div class="container-fluid">
                     <div class="alert-icon">
@@ -173,6 +176,8 @@ class BankController extends Controller
             "level"=>"success",
             "message"=> $pesan_alert
             ]);
+
+
         return redirect()->route('bank.index');
     }
 

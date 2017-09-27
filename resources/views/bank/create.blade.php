@@ -9,12 +9,13 @@
 				<li><a href="{{ url('/bank') }}">Bank</a></li>
 				<li class="active">Tambah Bank</li>
 			</ul>
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h2 class="panel-title">Tambah Bank</h2>
-				</div>
-
-				<div class="panel-body">
+			  <div class="card">
+			   	   <div class="card-header card-header-icon" data-background-color="purple">
+                       <i class="material-icons">payment</i>
+                                </div>
+                      <div class="card-content">
+                         <h4 class="card-title"> Bank </h4>
+                      
 					{!! Form::open(['url' => route('bank.store'),'method' => 'post', 'class'=>'form-horizontal']) !!}
 						@include('bank._form')
 					{!! Form::close() !!}

@@ -69,7 +69,7 @@ class BankTest extends TestCase
     }
 
     //HAPUS BANK
-    public function testHTTPHapusSatuan(){
+    public function testHTTPHapusBank(){
 
     	$bank = Bank::create(["nama_bank" => "BCA TESTING", "atas_nama" => "Ramadhan", "no_rek" => "1237855463622"]);
         //login user -> admin
@@ -85,7 +85,7 @@ class BankTest extends TestCase
     }
 
     //HALAMAN MENU EDIT BANK
-    public function testHTTPUpdateBank (){
+    public function testHTTPUpdateBank(){
 
         $bank = Bank::create(["nama_bank" => "Bank Lampung", "atas_nama" => "Maulana Pasa", "no_rek" => "15475398433265"]);
         //login user -> admin
@@ -100,7 +100,7 @@ class BankTest extends TestCase
     }
 
     //PROSES EDIT BANK
-    public function testHTTPEditSatuan (){
+    public function testHTTPEditBank(){
         
         $bank = Bank::create(["nama_bank" => "Bank Lampung", "atas_nama" => "Maulana Pasa", "no_rek" => "15475398433265"]);
         //login user -> admin

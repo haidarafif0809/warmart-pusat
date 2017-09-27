@@ -17,7 +17,7 @@ class CreateUsersTable extends Migration
             $table->increments('id',100);
             $table->string('name',100);
             $table->string('email',100)->unique();
-            $table->string('alamat',100);
+            $table->string('alamat',100)->nullable();
             $table->string('password',100);
             $table->string('status_konfirmasi',100)->nullable();
             $table->unsignedInteger('created_by')->nullable()->index();            

@@ -22,8 +22,9 @@ class WarungController extends Controller
          //
         if ($request->ajax()) {
             # code...
-            $master_warung = Warung::with(['kelurahan'])->where('tipe_user',2)->get();
-            return Datatables::of($master_warung)->addColumn('action', function($warung){
+            $master_warung = Warung::with(['kelurahan','role'])->where('tipe_user',2)->get();
+            return Datatables::of($master_warung)
+                ->addColumn('action', function($warung){
                     return view('datatable._action', [
                         'model'     => $warung,
                         'form_url'  => route('warung.destroy', $warung->id),
@@ -33,6 +34,9 @@ class WarungController extends Controller
                         'permission_hapus' => Laratrust::can('hapus_warung'),
 
                         ]);
+                })
+                ->addColumn('link', function($link){ 
+                    return $link->link_afiliasi;
                 })->make(true);
         }
         $html = $htmlBuilder
@@ -40,11 +44,11 @@ class WarungController extends Controller
         ->addColumn(['data' => 'name', 'name' => 'name', 'title' => 'Nama Warung']) 
         ->addColumn(['data' => 'alamat', 'name' => 'alamat', 'title' => 'Alamat']) 
         ->addColumn(['data' => 'kelurahan.nama', 'name' => 'kelurahan.nama', 'title' => 'Wilayah']) 
-        ->addColumn(['data' => 'link_afiliasi', 'name' => 'link_afiliasi', 'title' => 'Link Afiliasi']) 
+        ->addColumn(['data' => 'link', 'name' => 'link', 'title' => 'Link Afiliasi']) 
         ->addColumn(['data' => 'no_telp', 'name' => 'no_telp', 'title' => 'No Telp']) 
         ->addColumn(['data' => 'nama_bank', 'name' => 'nama_bank', 'title' => 'Nama Bank']) 
         ->addColumn(['data' => 'no_rekening', 'name' => 'no_rekening', 'title' => 'No Rekening']) 
-        ->addColumn(['data' => 'an_rekening', 'name' => 'an_rekening', 'title' => 'A.N Rekening']) 
+        ->addColumn(['data' => 'an_rekening', 'name' => 'an_rekening', 'title' => 'A.N Rekening'])
         ->addColumn(['data' => 'action', 'name' => 'action', 'title' => '', 'orderable' => false, 'searchable'=>false]);
         
         return view('master_warung.index')->with(compact('html'));
@@ -73,30 +77,33 @@ class WarungController extends Controller
     {
         //
            $this->validate($request, [
-            'email'     => 'required',
-            'name'      => 'required',
+            'email'     => 'required|unique:users,email,',
+            'name'      => 'required|unique:users,name,',
             'alamat'    => 'required',
             'kelurahan' => 'required',
-            'link_afiliasi' => 'required',
             'no_telp'   => 'required|numeric',
             'nama_bank' => 'required',
-            'no_rekening' => 'required',
+            'no_rekening' => 'required|unique:users,no_rekening,',
             'an_rekening' => 'required',
 
             ]);
 
-         $satuan = Warung::create([
+         $warung = Warung::create([
             'email' =>$request->email,
             'password' => bcrypt('rahasia'),
             'name' =>$request->name,
             'alamat' =>$request->alamat,
             'wilayah' =>$request->kelurahan,
-            'link_afiliasi' =>$request->link_afiliasi,
             'no_telp' =>$request->no_telp,
             'nama_bank' =>$request->nama_bank,
             'no_rekening' =>$request->no_rekening,
-            'an_rekening' =>$request->an_rekening
+            'an_rekening' =>$request->an_rekening,
+            'tipe_user'=> 2,
+            'status_konfirmasi'=>0
             ]);
+
+
+        $warung->attachRole(4);
 
           $pesan_alert = 
                '<div class="container-fluid">
@@ -149,14 +156,13 @@ class WarungController extends Controller
     {
             //
             $this->validate($request, [
-            'email'     => 'required',
-            'name'      => 'required',
+            'email'     => 'required|unique:users,email,'. $id,
+            'name'      => 'required|unique:users,name,'. $id,
             'alamat'    => 'required',
             'kelurahan' => 'required',
-            'link_afiliasi' => 'required',
             'no_telp'   => 'required|numeric',
             'nama_bank' => 'required',
-            'no_rekening' => 'required',
+            'no_rekening' => 'required|unique:users,no_rekening,'. $id,
             'an_rekening' => 'required',
             ]);
 
@@ -166,7 +172,6 @@ class WarungController extends Controller
             'name' =>$request->name,
             'alamat' =>$request->alamat,
             'wilayah' =>$request->kelurahan,
-            'link_afiliasi' =>$request->link_afiliasi,
             'no_telp' =>$request->no_telp,
             'nama_bank' =>$request->nama_bank,
             'no_rekening' =>$request->no_rekening,
@@ -196,9 +201,12 @@ class WarungController extends Controller
      */
     public function destroy($id)
     {
-        // 
-        Warung::destroy($id);
-
+        // jika gagal hapus
+        if (!Warung::destroy($id)) {
+            // redirect back
+            return redirect()->back();
+        }else{
+            
         $pesan_alert = '<div class="container-fluid">
                     <div class="alert-icon">
                     <i class="material-icons">check</i>
@@ -211,5 +219,7 @@ class WarungController extends Controller
             "message"=> $pesan_alert
             ]);
         return redirect()->route('warung.index');
+        }
+
     }
 }

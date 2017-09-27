@@ -11,9 +11,9 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/','HomeController@index');
+
+
 
 Auth::routes();
 
@@ -24,6 +24,9 @@ Route::group(['middleware' =>'auth'], function(){
 	Route::resource('user', 'UserController');
 	Route::resource('bank', 'BankController');
 	Route::resource('warung', 'WarungController');
+	Route::resource('kategori-harga', 'KategoriHargaController');
+	Route::resource('stoking-center', 'StokingCenterController');
+	Route::resource('customer', 'CustomerController');
 
 
 	Route::get('user/konfirmasi/{id}',[
