@@ -1,7 +1,7 @@
 @extends('layouts.app_login')
+@include('layouts._flash')
 
 @section('content')
-
 
 
        @if ($errors->has('email'))

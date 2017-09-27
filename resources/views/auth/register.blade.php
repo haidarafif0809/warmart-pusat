@@ -5,7 +5,7 @@
                              {{ csrf_field() }}
                                 <div class="card card-login ">
                                     <div class="card-header text-center" data-background-color="blue">
-                                        <h4 class="card-title">Registrasi</h4>
+                                        <h4 class="card-title">Registrasi Warung</h4>
                                  
                                     </div>
                              
@@ -17,13 +17,9 @@
                                                 <i class="material-icons">person</i>
                                             </span>
                                             <div class="form-group label-floating {{ $errors->has('name') ? ' has-error' : '' }}">
-                                                <label class="control-label">Nama</label>
-                                                <input type="text" value="{{ old('name') }}" class="form-control" name="name">
-                                 @if ($errors->has('name'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('name') }}</strong>
-                                    </span>
-                                @endif
+                                                <label class="control-label">Nama Warung</label>
+                                                    {!! Form::text('name', null, ['class'=>'form-control','required','autocomplete'=>'off']) !!}
+                                                    {!! $errors->first('name', '<p class="help-block">:message</p>') !!}
                                                 
                                             </div>
                                         </div> 
@@ -33,32 +29,91 @@
                                             </span>
                                             <div class="form-group label-floating {{ $errors->has('email') ? ' has-error' : '' }}">
                                                 <label class="control-label">Email address</label>
-                                                <input type="email" value="{{ old('email') }}" class="form-control" name="email">
-                                                   @if ($errors->has('email'))
-                                                    <span class="help-block">
-                                                        <strong>{{ $errors->first('email') }}</strong>
-                                                    </span>
-                                                @endif
+                                                    {!! Form::text('email', null, ['class'=>'form-control','required','autocomplete'=>'off']) !!}
+                                                    {!! $errors->first('email', '<p class="help-block">:message</p>') !!}
 
                                                 
                                             </div>
                                         </div>
+
                                         <div class="input-group ">
                                             <span class="input-group-addon">
                                                 <i class="material-icons">address</i>
                                             </span>
                                             <div class="form-group label-floating {{ $errors->has('alamat') ? ' has-error' : '' }}">
                                                 <label class="control-label">Alamat</label>
-                                                <input type="text" value="{{ old('alamat') }}" class="form-control" name="alamat">
-                                                        @if ($errors->has('alamat'))
-                                                            <span class="help-block">
-                                                                <strong>{{ $errors->first('alamat') }}</strong>
-                                                            </span>
-                                                        @endif
+                                                    {!! Form::text('alamat', null, ['class'=>'form-control','required','autocomplete'=>'off']) !!}
+                                                    {!! $errors->first('alamat', '<p class="help-block">:message</p>') !!}
 
                                                 
                                             </div>
                                         </div>
+
+                                        <div class="input-group ">
+                                            <span class="input-group-addon">
+                                                <i class="material-icons">room</i>
+                                            </span> 
+                                            <div class="form-group label-floating {{ $errors->has('kelurahan') ? ' has-error' : '' }}">
+                                                <label class="control-label">Kelurahan</label>
+                                                {!! Form::select('kelurahan', 
+                                                [''=>'']+App\Kelurahan::pluck('nama','id')->all(),null
+                                                , ['class'=>'form-control js-selectize-reguler', 'placeholder' => 'Silahkan Pilih','id'=>'pilih_kelurahan','required']) !!}
+                                                {!! $errors->first('kelurahan', '<p class="help-block">:message</p>') !!} 
+                                            </div>
+                                        </div>
+
+                                        <div class="input-group ">
+                                            <span class="input-group-addon">
+                                                <i class="material-icons">phone</i>
+                                            </span>
+                                            <div class="form-group label-floating {{ $errors->has('no_telp') ? ' has-error' : '' }}">
+                                                <label class="control-label">No Telpon</label> 
+                                                    {!! Form::text('no_telp', null, ['class'=>'form-control','required','autocomplete'=>'off']) !!}
+                                                    {!! $errors->first('no_telp', '<p class="help-block">:message</p>') !!}
+
+                                                
+                                            </div>
+                                        </div>
+
+                                        <div class="input-group ">
+                                            <span class="input-group-addon">
+                                                <i class="material-icons">account_balance</i>
+                                            </span>
+                                            <div class="form-group label-floating {{ $errors->has('nama_bank') ? ' has-error' : '' }}">
+                                                <label class="control-label">Nama Bank</label>
+                                                    {!! Form::text('no_telp', null, ['class'=>'form-control','required','autocomplete'=>'off']) !!}
+                                                    {!! $errors->first('no_telp', '<p class="help-block">:message</p>') !!}
+
+                                                
+                                            </div>
+                                        </div>
+
+                                        <div class="input-group ">
+                                            <span class="input-group-addon">
+                                                <i class="material-icons">attach_money</i>
+                                            </span>
+                                            <div class="form-group label-floating {{ $errors->has('no_rekening') ? ' has-error' : '' }}">
+                                                <label class="control-label">No Rekening</label>
+                                                    {!! Form::text('no_rekening', null, ['class'=>'form-control','required','autocomplete'=>'off']) !!}
+                                                    {!! $errors->first('no_rekening', '<p class="help-block">:message</p>') !!}
+
+                                                
+                                            </div>
+                                        </div>
+
+                                        <div class="input-group ">
+                                            <span class="input-group-addon">
+                                                <i class="material-icons">account_box</i>
+                                            </span>
+                                            <div class="form-group label-floating {{ $errors->has('an_rekening') ? ' has-error' : '' }}">
+                                                <label class="control-label">A.N Rekening</label>
+                                                    {!! Form::text('an_rekening', null, ['class'=>'form-control','required','autocomplete'=>'off']) !!}
+                                                    {!! $errors->first('an_rekening', '<p class="help-block">:message</p>') !!}
+
+                                                
+                                            </div>
+                                        </div>
+
                                         <div class="input-group">
                                             <span class="input-group-addon">
                                                 <i class="material-icons">lock_outline</i>
@@ -87,7 +142,7 @@
                                         </div>
                                     </div>
                                     <div class="footer text-center">
-                                        <button type="submit" class="btn btn-rose btn-simple btn-wd btn-lg">Let's go</button>
+                                        <button type="submit" class="btn btn-rose btn-simple btn-wd btn-lg">Registrasi Warung</button>
                                     </div>
                                 </div>
                             </form>

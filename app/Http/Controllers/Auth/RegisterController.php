@@ -38,6 +38,7 @@ class RegisterController extends Controller
     public function __construct()
     {
         $this->middleware('guest');
+        $this->middleware('user-should-verified');
     }
 
     /**
@@ -49,9 +50,15 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
+            'name' => 'required|string|name|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
+            'alamat'    => 'required',
+            'kelurahan' => 'required',
+            'no_telp'   => 'required|numeric',
+            'nama_bank' => 'required',
+            'no_rekening' => 'required',
+            'an_rekening' => 'required',
         ]);
     }
 
@@ -62,16 +69,23 @@ class RegisterController extends Controller
      * @return \App\User
      */
     protected function create(array $data)
-    {
+    { 
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
-            'alamat' => $data['alamat']
+            'alamat' => $data['alamat'],  
+            'wilayah' => $data['kelurahan'],   
+            'no_telp' => $data['no_telp'],     
+            'nama_bank' => $data['nama_bank'],  
+            'no_rekening' => $data['no_rekening'], 
+            'an_rekening' => $data['an_rekening'],  
+            'tipe_user'=> 2,
+            'status_konfirmasi'=>0
         ]);
 
-        $memberRole = Role::where('name', 'member')->first();
-        $user->attachRole($memberRole);
+        $warungRole = Role::where('name', 'warung')->first();
+        $user->attachRole($warungRole);
         return $user;
     }
 }

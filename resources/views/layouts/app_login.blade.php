@@ -33,12 +33,30 @@
                 <a class="navbar-brand" href=" ../dashboard.html ">Warmart.id</a>
             </div>
             <div class="collapse navbar-collapse">
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="">
-                        <a href="{{ url('/register') }}">
-                            <i class="material-icons">person_add</i> Register
+                <ul class="nav navbar-nav navbar-right"> 
+                    <li>
+                        <a data-toggle="collapse" href="#pagesExamples">
+                            <p>
+                            <i class="material-icons">person_add</i> Registrasi
+                                <b class="caret"></b>
+                            </p>
                         </a>
+                        <div class="collapse" id="pagesExamples">
+                            <ul class="nav">
+                                <li class="">
+                                    <a href="{{ url('/register') }}">
+                                        <i class="material-icons">store</i> Warung
+                                    </a>
+                                </li>
+                                <li class="">
+                                    <a href="{{ url('/register') }}">
+                                        <i class="material-icons">group_add</i> Customer
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     </li>
+
                     <li class=" active ">
                         <a href="{{ url('/login') }}">
                             <i class="material-icons">fingerprint</i> Login
