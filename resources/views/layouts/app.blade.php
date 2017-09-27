@@ -81,6 +81,12 @@
                                     </a>
                                 </li>
                                 <li>
+                                    <a href="{{ route('stoking-center.index') }}">
+                                        <span class="sidebar-mini">SC</span>
+                                        <span class="sidebar-normal">Stoking Center</span>
+                                    </a>
+                                </li>
+                                <li>
                                     <a href="{{ route('kategori-harga.index') }}">
                                         <span class="sidebar-mini">KH</span>
                                         <span class="sidebar-normal">Kategori Harga</span>

@@ -84,7 +84,7 @@ class WarungTest extends TestCase
      
     }
 
-     //test http update stok awal
+     //test http update Warung
     public function testHTTPUpdateWarung (){
 
         $password = bcrypt('rahasia');
@@ -104,7 +104,7 @@ class WarungTest extends TestCase
     }
 
 
-     //test http hapus stok awal
+     //test http hapus Warung
     public function testHTTPHapusWarung(){
 
     	$password = bcrypt('rahasia');
