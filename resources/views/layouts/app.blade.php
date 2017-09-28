@@ -69,27 +69,33 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('user.index') }}">
-                                        <span class="sidebar-mini">U</span>
-                                        <span class="sidebar-normal">User</span>
+                                    <a href="{{ route('customer.index') }}">
+                                        <span class="sidebar-mini">C</span>
+                                        <span class="sidebar-normal">Customer</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('warung.index') }}">
-                                        <span class="sidebar-mini">W</span>
-                                        <span class="sidebar-normal">Warung</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('stoking-center.index') }}">
-                                        <span class="sidebar-mini">SC</span>
-                                        <span class="sidebar-normal">Stoking Center</span>
+                                    <a href="{{ route('komunitas.index') }}">
+                                        <span class="sidebar-mini">K</span>
+                                        <span class="sidebar-normal">Komunitas</span>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="{{ route('kategori-harga.index') }}">
                                         <span class="sidebar-mini">KH</span>
                                         <span class="sidebar-normal">Kategori Harga</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('user.index') }}">
+                                        <span class="sidebar-mini">U</span>
+                                        <span class="sidebar-normal">User</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('stoking-center.index') }}">
+                                        <span class="sidebar-mini">W</span>
+                                        <span class="sidebar-normal">Warung</span>
                                     </a>
                                 </li>
                                 

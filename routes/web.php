@@ -23,7 +23,7 @@ Route::group(['middleware' =>'auth'], function(){
 
 	Route::resource('user', 'UserController');
 	Route::resource('bank', 'BankController');
-	Route::resource('warung', 'WarungController');
+	Route::resource('komunitas', 'KomunitasController');
 	Route::resource('kategori-harga', 'KategoriHargaController');
 	Route::resource('stoking-center', 'StokingCenterController');
 	Route::resource('customer', 'CustomerController');

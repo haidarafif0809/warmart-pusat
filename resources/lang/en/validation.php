@@ -87,6 +87,7 @@ return [
     'unique'               => 'Maaaf :attribute Sudah Tersedia.',
     'uploaded'             => 'The :attribute failed to upload.',
     'url'                  => 'The :attribute format is invalid.',
+    'without_spaces'                  => 'Input :attribute tidak boleh ada spasi.',
 
     /*
     |--------------------------------------------------------------------------

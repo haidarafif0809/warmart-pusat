@@ -8,15 +8,14 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laratrust\Traits\LaratrustUserTrait;
 use Spatie\Activitylog\Traits\LogsActivity;
 
-class Warung extends Model
+class Komunitas extends Model
 {
 	use Notifiable;
     use LaratrustUserTrait;
     use LogsActivity;
     //
 
-    protected $table = 'users';
-
+    protected $table = 'users'; 
    	protected $fillable = ['email','password','name', 'alamat', 'wilayah','no_telp','nama_bank', 'no_rekening','an_rekening','tipe_user','status_konfirmasi'];
 
 

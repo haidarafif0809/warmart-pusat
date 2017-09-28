@@ -6,11 +6,11 @@ use Illuminate\Http\Request;
 use Yajra\Datatables\Html\Builder;
 use Yajra\Datatables\Datatables;
 use Illuminate\Support\Facades\DB;
-use App\Warung;
+use App\Komunitas;
 use Session;
 use Laratrust;
 
-class WarungController extends Controller
+class KomunitasController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -22,16 +22,16 @@ class WarungController extends Controller
          //
         if ($request->ajax()) {
             # code...
-            $master_warung = Warung::with(['kelurahan','role'])->where('tipe_user',2)->get();
-            return Datatables::of($master_warung)
-                ->addColumn('action', function($warung){
+            $master_komunitas = komunitas::with(['kelurahan','role'])->where('tipe_user',2)->get();
+            return Datatables::of($master_komunitas)
+                ->addColumn('action', function($komunitas){
                     return view('datatable._action', [
-                        'model'     => $warung,
-                        'form_url'  => route('warung.destroy', $warung->id),
-                        'edit_url'  => route('warung.edit', $warung->id),
-                        'confirm_message'   => 'Yakin Mau Menghapus Warung ' . $warung->name . '?',
-                        'permission_ubah' => Laratrust::can('edit_warung'),
-                        'permission_hapus' => Laratrust::can('hapus_warung'),
+                        'model'     => $komunitas,
+                        'form_url'  => route('komunitas.destroy', $komunitas->id),
+                        'edit_url'  => route('komunitas.edit', $komunitas->id),
+                        'confirm_message'   => 'Yakin Mau Menghapus komunitas ' . $komunitas->name . '?',
+                        'permission_ubah' => Laratrust::can('edit_komunitas'),
+                        'permission_hapus' => Laratrust::can('hapus_komunitas'),
 
                         ]);
                 })
@@ -40,18 +40,18 @@ class WarungController extends Controller
                 })->make(true);
         }
         $html = $htmlBuilder
-        ->addColumn(['data' => 'email', 'name' => 'email', 'title' => 'Email']) 
-        ->addColumn(['data' => 'name', 'name' => 'name', 'title' => 'Nama Warung']) 
+        ->addColumn(['data' => 'email', 'name' => 'email', 'title' => 'No Telp']) 
+        ->addColumn(['data' => 'name', 'name' => 'name', 'title' => 'Nama Komunitas']) 
+        ->addColumn(['data' => 'no_telp', 'name' => 'no_telp', 'title' => 'Email']) 
         ->addColumn(['data' => 'alamat', 'name' => 'alamat', 'title' => 'Alamat']) 
         ->addColumn(['data' => 'kelurahan.nama', 'name' => 'kelurahan.nama', 'title' => 'Wilayah']) 
         ->addColumn(['data' => 'link', 'name' => 'link', 'title' => 'Link Afiliasi']) 
-        ->addColumn(['data' => 'no_telp', 'name' => 'no_telp', 'title' => 'No Telp']) 
         ->addColumn(['data' => 'nama_bank', 'name' => 'nama_bank', 'title' => 'Nama Bank']) 
         ->addColumn(['data' => 'no_rekening', 'name' => 'no_rekening', 'title' => 'No Rekening']) 
         ->addColumn(['data' => 'an_rekening', 'name' => 'an_rekening', 'title' => 'A.N Rekening'])
         ->addColumn(['data' => 'action', 'name' => 'action', 'title' => '', 'orderable' => false, 'searchable'=>false]);
         
-        return view('master_warung.index')->with(compact('html'));
+        return view('master_komunitas.index')->with(compact('html'));
 
 
     }
@@ -64,7 +64,7 @@ class WarungController extends Controller
     public function create()
     {
         //
-        return view('master_warung.create');
+        return view('master_komunitas.create');
     }
 
     /**
@@ -75,20 +75,19 @@ class WarungController extends Controller
      */
     public function store(Request $request)
     {
-        //
            $this->validate($request, [
-            'email'     => 'required|unique:users,email,',
+            'email'     => 'required|without_spaces|numeric|unique:users,email,',
             'name'      => 'required|unique:users,name,',
             'alamat'    => 'required',
             'kelurahan' => 'required',
-            'no_telp'   => 'required|numeric',
+            'no_telp'   => 'required|without_spaces|unique:users,no_telp,',
             'nama_bank' => 'required',
             'no_rekening' => 'required|unique:users,no_rekening,',
             'an_rekening' => 'required',
 
             ]);
 
-         $warung = Warung::create([
+         $komunitas = Komunitas::create([
             'email' =>$request->email,
             'password' => bcrypt('rahasia'),
             'name' =>$request->name,
@@ -103,14 +102,14 @@ class WarungController extends Controller
             ]);
 
 
-        $warung->attachRole(4);
+        $komunitas->attachRole(4);
 
           $pesan_alert = 
                '<div class="container-fluid">
                     <div class="alert-icon">
                     <i class="material-icons">check</i>
                     </div>
-                    <b>Success : Berhasil Menambah Warung '.$request->name.' </b>
+                    <b>Success : Berhasil Menambah Komunitas '.$request->name.' </b>
                 </div>';
 
 
@@ -118,7 +117,7 @@ class WarungController extends Controller
             "level"=>"success",
             "message"=>$pesan_alert
             ]);
-        return redirect()->route('warung.index');
+        return redirect()->route('komunitas.index');
     }
 
     /**
@@ -140,9 +139,8 @@ class WarungController extends Controller
      */
     public function edit($id)
     {
-        //
-          $warung = Warung::with(['kelurahan'])->find($id);
-            return view('master_warung.edit')->with(compact('warung'));
+          $komunitas = Komunitas::with(['kelurahan'])->find($id);
+            return view('master_komunitas.edit')->with(compact('komunitas'));
     }
 
     /**
@@ -154,20 +152,19 @@ class WarungController extends Controller
      */
     public function update(Request $request, $id)
     {
-            //
             $this->validate($request, [
-            'email'     => 'required|unique:users,email,'. $id,
+            'email'     => 'required|without_spaces|numeric|unique:users,email,'. $id,
             'name'      => 'required|unique:users,name,'. $id,
             'alamat'    => 'required',
             'kelurahan' => 'required',
-            'no_telp'   => 'required|numeric',
+            'no_telp'   => 'required|without_spaces|unique:users,no_telp,'. $id,
             'nama_bank' => 'required',
             'no_rekening' => 'required|unique:users,no_rekening,'. $id,
             'an_rekening' => 'required',
             ]);
 
          //insert
-        $barang = Warung::where('id',$id)->update([
+        $komunitas = Komunitas::where('id',$id)->update([
             'email' =>$request->email,
             'name' =>$request->name,
             'alamat' =>$request->alamat,
@@ -182,7 +179,7 @@ class WarungController extends Controller
                     <div class="alert-icon">
                     <i class="material-icons">check</i>
                     </div>
-                    <b>Success : Berhasil Mengubah Warung '.$request->name.' </b>
+                    <b>Success : Berhasil Mengubah Komunitas '.$request->name.' </b>
                 </div>';
 
         Session::flash("flash_notification", [
@@ -190,7 +187,7 @@ class WarungController extends Controller
             "message"=> $pesan_alert
             ]);
 
-        return redirect()->route('warung.index');
+        return redirect()->route('komunitas.index');
     }
 
     /**
@@ -202,7 +199,7 @@ class WarungController extends Controller
     public function destroy($id)
     {
         // jika gagal hapus
-        if (!Warung::destroy($id)) {
+        if (!Komunitas::destroy($id)) {
             // redirect back
             return redirect()->back();
         }else{
@@ -211,14 +208,14 @@ class WarungController extends Controller
                     <div class="alert-icon">
                     <i class="material-icons">check</i>
                     </div>
-                    <b>Success : Berhasil Menghapus Warung </b>
+                    <b>Success : Berhasil Menghapus Komunitas </b>
                 </div>';
 
         Session:: flash("flash_notification", [
             "level"=>"danger",
             "message"=> $pesan_alert
             ]);
-        return redirect()->route('warung.index');
+        return redirect()->route('komunitas.index');
         }
 
     }

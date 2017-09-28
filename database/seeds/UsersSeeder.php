@@ -37,6 +37,12 @@ class UsersSeeder extends Seeder
 	    $warungRole->display_name = "Warung";
 	    $warungRole->save();
 
+	    // Membuat role komunitas
+	    $komunitasRole = new Role();
+	    $komunitasRole->name = "komunitas";
+	    $komunitasRole->display_name = "Komunitas";
+	    $komunitasRole->save();
+
 	    // Membuat sample admin
 	    $admin = new User();
 	    $admin->name = 'Admin Larapus';
@@ -83,7 +89,7 @@ class UsersSeeder extends Seeder
 	    $customer->email = 'customer@gmail.com';
 	    $customer->alamat = "Jl. Kedaton";
 	    $customer->wilayah = '1';
-	    $customer->warung = '2';
+	    $customer->komunitas = '2';
 	    $customer->no_telp = "085345330858";
 	    $customer->tipe_user = '3';
 	    $customer->tgl_lahir = '1999-02-20';
