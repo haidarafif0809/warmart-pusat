@@ -1,16 +1,42 @@
 <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-	{!! Form::label('email', 'Email', ['class'=>'col-md-2 control-label']) !!}
+	{!! Form::label('email', 'No Telp', ['class'=>'col-md-2 control-label']) !!}
 	<div class="col-md-4">
-		{!! Form::email('email', null, ['class'=>'form-control','placeholder'=>'Email','autocomplete'=>'off']) !!}
+		{!! Form::number('email', null, ['class'=>'form-control','placeholder'=>'No Telp','required','autocomplete'=>'off']) !!}
 		{!! $errors->first('email', '<p class="help-block">:message</p>') !!}
 	</div>
 </div>
 
 <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-	{!! Form::label('name', 'Nama Warung', ['class'=>'col-md-2 control-label']) !!}
+	{!! Form::label('name', 'Nama Komunitas', ['class'=>'col-md-2 control-label']) !!}
 	<div class="col-md-4">
-		{!! Form::text('name', null, ['class'=>'form-control','placeholder' => 'Nama Warung','required','autocomplete'=>'off']) !!}
+		{!! Form::text('name', null, ['class'=>'form-control','placeholder' => 'Nama Komunitas','required','autocomplete'=>'off']) !!}
 		{!! $errors->first('name', '<p class="help-block">:message</p>') !!}
+	</div>
+</div>
+
+
+<div class="form-group{{ $errors->has('no_telp') ? ' has-error' : '' }}">
+	{!! Form::label('no_telp', 'Email', ['class'=>'col-md-2 control-label']) !!}
+	<div class="col-md-4">
+		{!! Form::email('no_telp', null, ['class'=>'form-control','placeholder' => 'Email','required','autocomplete'=>'off']) !!}
+		{!! $errors->first('no_telp', '<p class="help-block">:message</p>') !!}
+	</div>
+</div>
+
+<div class="form-group{{ $errors->has('id_warung') ? ' has-error' : '' }}">
+	{!! Form::label('id_warung', 'Warung', ['class'=>'col-md-2 control-label']) !!}
+	<div class="col-md-4">
+		@if (isset($komunitas) && $komunitas->id_warung)
+		{!! Form::select('id_warung', 
+		[''=>'']+App\Warung::pluck('name','id')->all(),$komunitas->id_warung
+		, ['class'=>'form-control js-selectize-reguler', 'placeholder' => 'Silahkan Pilih','id'=>'pilih_id_warung']) !!}
+		{!! $errors->first('id_warung', '<p class="help-block">:message</p>') !!}
+		@else
+		{!! Form::select('id_warung', 
+		[''=>'']+App\Warung::pluck('name','id')->all(),null
+		, ['class'=>'form-control js-selectize-reguler', 'placeholder' => 'Silahkan Pilih','id'=>'pilih_id_warung']) !!}
+		{!! $errors->first('id_warung', '<p class="help-block">:message</p>') !!}
+		@endif
 	</div>
 </div>
 
@@ -27,9 +53,9 @@
 <div class="form-group{{ $errors->has('kelurahan') ? ' has-error' : '' }}">
 	{!! Form::label('kelurahan', 'Kelurahan', ['class'=>'col-md-2 control-label']) !!}
 	<div class="col-md-4">
-		@if (isset($warung) && $warung->wilayah)
+		@if (isset($komunitas) && $komunitas->wilayah)
 		{!! Form::select('kelurahan', 
-		[''=>'']+App\Kelurahan::pluck('nama','id')->all(),$warung->wilayah
+		[''=>'']+App\Kelurahan::pluck('nama','id')->all(),$komunitas->wilayah
 		, ['class'=>'form-control js-selectize-reguler', 'placeholder' => 'Silahkan Pilih','id'=>'pilih_kelurahan']) !!}
 		{!! $errors->first('kelurahan', '<p class="help-block">:message</p>') !!}
 		@else
@@ -41,14 +67,6 @@
 	</div>
 </div>
 
-
-<div class="form-group{{ $errors->has('no_telp') ? ' has-error' : '' }}">
-	{!! Form::label('no_telp', 'No Telp', ['class'=>'col-md-2 control-label']) !!}
-	<div class="col-md-4">
-		{!! Form::text('no_telp', null, ['class'=>'form-control','placeholder' => 'No Telp','required','autocomplete'=>'off']) !!}
-		{!! $errors->first('no_telp', '<p class="help-block">:message</p>') !!}
-	</div>
-</div>
 
 
 <div class="form-group{{ $errors->has('nama_bank') ? ' has-error' : '' }}">

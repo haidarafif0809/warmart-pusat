@@ -16,7 +16,7 @@
                          <h4 class="card-title"> Warung </h4>
                       
 					{!! Form::open(['url' => route('warung.store'),'method' => 'post', 'class'=>'form-horizontal']) !!}
-						@include('master_warung._form')
+						@include('warung._form')
 					{!! Form::close() !!}
 				</div>
 			</div>

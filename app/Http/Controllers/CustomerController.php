@@ -22,7 +22,7 @@ class CustomerController extends Controller
     public function index(Request $request, Builder $htmlBuilder)
     {
         if ($request->ajax()) {
-            $master_customer = Customer::with(['kelurahan', 'user_warung'])->where('tipe_user',3)->get();
+            $master_customer = Customer::with(['kelurahan', 'user_komunitas'])->where('tipe_user',3)->get();
             return Datatables::of($master_customer)->addColumn('action', function($customer){
                     return view('datatable._action', [
                         'model'     => $customer,
@@ -39,7 +39,7 @@ class CustomerController extends Controller
                         $nama_warung = "WARMART";
                     }
                     else{
-                        $nama_warung = $id_warung->user_warung->name;
+                        $nama_warung = $id_warung->user_komunitas->name;
                     }
                     
                     return $nama_warung;

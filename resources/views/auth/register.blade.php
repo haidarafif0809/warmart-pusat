@@ -5,7 +5,7 @@
                              {{ csrf_field() }}
                                 <div class="card card-login ">
                                     <div class="card-header text-center" data-background-color="blue">
-                                        <h4 class="card-title">Registrasi Warung</h4>
+                                        <h4 class="card-title">Registrasi Komunitas</h4>
                                  
                                     </div>
                              
@@ -17,7 +17,7 @@
                                                 <i class="material-icons">person</i>
                                             </span>
                                             <div class="form-group label-floating {{ $errors->has('name') ? ' has-error' : '' }}">
-                                                <label class="control-label">Nama Warung</label>
+                                                <label class="control-label">Nama Komunitas</label>
                                                     {!! Form::text('name', null, ['class'=>'form-control','required','autocomplete'=>'off']) !!}
                                                     {!! $errors->first('name', '<p class="help-block">:message</p>') !!}
                                                 
@@ -142,7 +142,7 @@
                                         </div>
                                     </div>
                                     <div class="footer text-center">
-                                        <button type="submit" class="btn btn-rose btn-simple btn-wd btn-lg">Registrasi Warung</button>
+                                        <button type="submit" class="btn btn-rose btn-simple btn-wd btn-lg">Registrasi Komunitas</button>
                                     </div>
                                 </div>
                             </form>

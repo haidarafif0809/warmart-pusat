@@ -18,12 +18,11 @@ class WarungController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request, Builder $htmlBuilder)
-    {
-         //
+    { 
         if ($request->ajax()) {
             # code...
-            $master_warung = Warung::with(['kelurahan','role'])->where('tipe_user',2)->get();
-            return Datatables::of($master_warung)
+            $warung = Warung::with(['kelurahan'])->get();
+            return Datatables::of($warung)
                 ->addColumn('action', function($warung){
                     return view('datatable._action', [
                         'model'     => $warung,
@@ -40,21 +39,15 @@ class WarungController extends Controller
                 })->make(true);
         }
         $html = $htmlBuilder
-        ->addColumn(['data' => 'email', 'name' => 'email', 'title' => 'Email']) 
-        ->addColumn(['data' => 'name', 'name' => 'name', 'title' => 'Nama Warung']) 
+        ->addColumn(['data' => 'name', 'name' => 'name', 'title' => 'Nama']) 
         ->addColumn(['data' => 'alamat', 'name' => 'alamat', 'title' => 'Alamat']) 
-        ->addColumn(['data' => 'kelurahan.nama', 'name' => 'kelurahan.nama', 'title' => 'Wilayah']) 
-        ->addColumn(['data' => 'link', 'name' => 'link', 'title' => 'Link Afiliasi']) 
-        ->addColumn(['data' => 'no_telp', 'name' => 'no_telp', 'title' => 'No Telp']) 
-        ->addColumn(['data' => 'nama_bank', 'name' => 'nama_bank', 'title' => 'Nama Bank']) 
-        ->addColumn(['data' => 'no_rekening', 'name' => 'no_rekening', 'title' => 'No Rekening']) 
-        ->addColumn(['data' => 'an_rekening', 'name' => 'an_rekening', 'title' => 'A.N Rekening'])
+        ->addColumn(['data' => 'kelurahan.nama', 'name' => 'kelurahan.nama', 'title' => 'Wilayah'])  
+        ->addColumn(['data' => 'url_api', 'name' => 'url_api', 'title' => 'URL API']) 
         ->addColumn(['data' => 'action', 'name' => 'action', 'title' => '', 'orderable' => false, 'searchable'=>false]);
         
-        return view('master_warung.index')->with(compact('html'));
-
-
+        return view('warung.index')->with(compact('html'));
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -62,9 +55,8 @@ class WarungController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {
-        //
-        return view('master_warung.create');
+    { 
+        return view('warung.create');
     }
 
     /**
@@ -75,42 +67,28 @@ class WarungController extends Controller
      */
     public function store(Request $request)
     {
-        //
            $this->validate($request, [
-            'email'     => 'required|unique:users,email,',
-            'name'      => 'required|unique:users,name,',
+            'name'      => 'required|unique:warungs,name,',
             'alamat'    => 'required',
-            'kelurahan' => 'required',
-            'no_telp'   => 'required|numeric',
-            'nama_bank' => 'required',
-            'no_rekening' => 'required|unique:users,no_rekening,',
-            'an_rekening' => 'required',
+            'kelurahan' => 'required', 
+            'url_api'   => 'required||unique:warungs,url_api,',
 
             ]);
 
          $warung = Warung::create([
-            'email' =>$request->email,
-            'password' => bcrypt('rahasia'),
             'name' =>$request->name,
             'alamat' =>$request->alamat,
-            'wilayah' =>$request->kelurahan,
-            'no_telp' =>$request->no_telp,
-            'nama_bank' =>$request->nama_bank,
-            'no_rekening' =>$request->no_rekening,
-            'an_rekening' =>$request->an_rekening,
-            'tipe_user'=> 2,
-            'status_konfirmasi'=>0
+            'wilayah' =>$request->kelurahan, 
+            'url_api' =>$request->url_api,
+
             ]);
-
-
-        $warung->attachRole(4);
 
           $pesan_alert = 
                '<div class="container-fluid">
                     <div class="alert-icon">
                     <i class="material-icons">check</i>
                     </div>
-                    <b>Success : Berhasil Menambah Warung '.$request->name.' </b>
+                    <b>Success : Berhasil Menambah Stoking Center '.$request->name.' </b>
                 </div>';
 
 
@@ -140,9 +118,8 @@ class WarungController extends Controller
      */
     public function edit($id)
     {
-        //
           $warung = Warung::with(['kelurahan'])->find($id);
-            return view('master_warung.edit')->with(compact('warung'));
+            return view('warung.edit')->with(compact('warung'));
     }
 
     /**
@@ -154,28 +131,21 @@ class WarungController extends Controller
      */
     public function update(Request $request, $id)
     {
-            //
-            $this->validate($request, [
-            'email'     => 'required|unique:users,email,'. $id,
-            'name'      => 'required|unique:users,name,'. $id,
+           $this->validate($request, [
+            'name'      => 'required|unique:warungs,name,'.$id,
             'alamat'    => 'required',
-            'kelurahan' => 'required',
-            'no_telp'   => 'required|numeric',
-            'nama_bank' => 'required',
-            'no_rekening' => 'required|unique:users,no_rekening,'. $id,
-            'an_rekening' => 'required',
+            'kelurahan' => 'required', 
+            'url_api'   => 'required||unique:warungs,url_api,'.$id,
+
             ]);
 
+
          //insert
-        $barang = Warung::where('id',$id)->update([
-            'email' =>$request->email,
+        $warung = Warung::where('id',$id)->update([
             'name' =>$request->name,
             'alamat' =>$request->alamat,
-            'wilayah' =>$request->kelurahan,
-            'no_telp' =>$request->no_telp,
-            'nama_bank' =>$request->nama_bank,
-            'no_rekening' =>$request->no_rekening,
-            'an_rekening' =>$request->an_rekening
+            'wilayah' =>$request->kelurahan, 
+            'url_api' =>$request->url_api,
         ]);
 
         $pesan_alert = '<div class="container-fluid">
@@ -220,6 +190,5 @@ class WarungController extends Controller
             ]);
         return redirect()->route('warung.index');
         }
-
     }
 }

@@ -36,4 +36,5 @@ class User extends Authenticatable
           {
             return $this->hasOne('App\Otoritas','user_id','id');
           }
+ 
 }

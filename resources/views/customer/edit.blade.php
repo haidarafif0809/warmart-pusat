@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-	
 		<div class="row">
 			<div class="col-md-12">
 				<ul class="breadcrumb">
@@ -10,20 +9,20 @@
 					<li class="active">Edit Customer</li>
 				</ul>
 
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<h2 class="panel-title">Edit Customer</h2>
-					</div>
-
-					<div class="panel-body">
+		 <div class="card">
+			   	   <div class="card-header card-header-icon" data-background-color="purple">
+                       <i class="material-icons">person_add</i>
+                                </div>
+                      <div class="card-content">
+                         <h4 class="card-title"> Customer </h4>
+                      
 						{!! Form::model($customer, ['url' => route('customer.update', $customer->id), 'method' => 'put', 'files'=>'true','class'=>'form-horizontal']) !!}
 							@include('customer._form')
 						{!! Form::close() !!}
 					</div>
 				</div>
 			</div>
-		</div>
-	
+		</div>  
 @endsection
 
 @section('scripts')
