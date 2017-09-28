@@ -25,6 +25,8 @@ class TambahKolomUser extends Migration
             $table->integer('tipe_user')->nullable();
             $table->string('tgl_lahir')->nullable();
             $table->integer('komunitas')->nullable()->default(0);
+            $table->integer('id_warung')->nullable();
+
         });
     }
 
@@ -47,6 +49,7 @@ class TambahKolomUser extends Migration
             $table->dropColumn('tipe_user');
             $table->dropColumn('tgl_lahir');
             $table->dropColumn('komunitas');
+            $table->dropColumn('id_warung');
         });
     }
 }

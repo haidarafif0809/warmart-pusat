@@ -22,8 +22,8 @@ class KomunitasController extends Controller
          //
         if ($request->ajax()) {
             # code...
-            $master_komunitas = komunitas::with(['kelurahan','role'])->where('tipe_user',2)->get();
-            return Datatables::of($master_komunitas)
+            $komunitas = komunitas::with(['kelurahan','role','warung'])->where('tipe_user',2)->get();
+            return Datatables::of($komunitas)
                 ->addColumn('action', function($komunitas){
                     return view('datatable._action', [
                         'model'     => $komunitas,
@@ -37,13 +37,20 @@ class KomunitasController extends Controller
                 })
                 ->addColumn('link', function($link){ 
                     return $link->link_afiliasi;
+                })
+                ->addColumn('warung', function($warung){ 
+                   if ($warung->id_warung == "") {
+                        return "-";
+                   }else{
+                        return $warung->warung->name;
+                   }
                 })->make(true);
         }
         $html = $htmlBuilder
         ->addColumn(['data' => 'email', 'name' => 'email', 'title' => 'No Telp']) 
-        ->addColumn(['data' => 'name', 'name' => 'name', 'title' => 'Nama Komunitas']) 
-        ->addColumn(['data' => 'no_telp', 'name' => 'no_telp', 'title' => 'Email']) 
-        ->addColumn(['data' => 'alamat', 'name' => 'alamat', 'title' => 'Alamat']) 
+        ->addColumn(['data' => 'name', 'name' => 'name', 'title' => 'Nama Komunitas'])
+        ->addColumn(['data' => 'warung', 'name' => 'warung', 'title' => 'Warung'])  
+        ->addColumn(['data' => 'no_telp', 'name' => 'no_telp', 'title' => 'Email'])  
         ->addColumn(['data' => 'kelurahan.nama', 'name' => 'kelurahan.nama', 'title' => 'Wilayah']) 
         ->addColumn(['data' => 'link', 'name' => 'link', 'title' => 'Link Afiliasi']) 
         ->addColumn(['data' => 'nama_bank', 'name' => 'nama_bank', 'title' => 'Nama Bank']) 
@@ -51,7 +58,7 @@ class KomunitasController extends Controller
         ->addColumn(['data' => 'an_rekening', 'name' => 'an_rekening', 'title' => 'A.N Rekening'])
         ->addColumn(['data' => 'action', 'name' => 'action', 'title' => '', 'orderable' => false, 'searchable'=>false]);
         
-        return view('master_komunitas.index')->with(compact('html'));
+        return view('komunitas.index')->with(compact('html'));
 
 
     }
@@ -64,7 +71,7 @@ class KomunitasController extends Controller
     public function create()
     {
         //
-        return view('master_komunitas.create');
+        return view('komunitas.create');
     }
 
     /**
@@ -84,6 +91,7 @@ class KomunitasController extends Controller
             'nama_bank' => 'required',
             'no_rekening' => 'required|unique:users,no_rekening,',
             'an_rekening' => 'required',
+            'id_warung' => 'required',
 
             ]);
 
@@ -97,6 +105,7 @@ class KomunitasController extends Controller
             'nama_bank' =>$request->nama_bank,
             'no_rekening' =>$request->no_rekening,
             'an_rekening' =>$request->an_rekening,
+            'id_warung' =>$request->id_warung,
             'tipe_user'=> 2,
             'status_konfirmasi'=>0
             ]);
@@ -139,8 +148,8 @@ class KomunitasController extends Controller
      */
     public function edit($id)
     {
-          $komunitas = Komunitas::with(['kelurahan'])->find($id);
-            return view('master_komunitas.edit')->with(compact('komunitas'));
+          $komunitas = Komunitas::with(['kelurahan','warung'])->find($id);
+            return view('komunitas.edit')->with(compact('komunitas'));
     }
 
     /**
@@ -161,6 +170,7 @@ class KomunitasController extends Controller
             'nama_bank' => 'required',
             'no_rekening' => 'required|unique:users,no_rekening,'. $id,
             'an_rekening' => 'required',
+            'id_warung' => 'required',
             ]);
 
          //insert
@@ -172,7 +182,8 @@ class KomunitasController extends Controller
             'no_telp' =>$request->no_telp,
             'nama_bank' =>$request->nama_bank,
             'no_rekening' =>$request->no_rekening,
-            'an_rekening' =>$request->an_rekening
+            'an_rekening' =>$request->an_rekening,
+            'id_warung' =>$request->id_warung,
         ]);
 
         $pesan_alert = '<div class="container-fluid">

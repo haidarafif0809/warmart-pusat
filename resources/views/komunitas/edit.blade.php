@@ -18,7 +18,7 @@
                          <h4 class="card-title"> Komunitas </h4>
                       
 						{!! Form::model($komunitas, ['url' => route('komunitas.update', $komunitas->id), 'method' => 'put', 'files'=>'true','class'=>'form-horizontal']) !!}
-							@include('master_komunitas._form')
+							@include('komunitas._form')
 						{!! Form::close() !!}
 					</div>
 				</div>

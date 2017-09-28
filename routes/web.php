@@ -17,15 +17,19 @@ Route::get('/','HomeController@index');
 
 Auth::routes();
 
+
+Route::get('/register-warung','Auth\RegisterController@register_warung');
+Route::get('/register-customer','Auth\RegisterController@register_customer');
+
+
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::group(['middleware' =>'auth'], function(){
 
 	Route::resource('user', 'UserController');
 	Route::resource('bank', 'BankController');
-	Route::resource('komunitas', 'KomunitasController');
-	Route::resource('kategori-harga', 'KategoriHargaController');
-	Route::resource('stoking-center', 'StokingCenterController');
+	Route::resource('komunitas', 'KomunitasController'); 
+	Route::resource('warung', 'WarungController');
 	Route::resource('customer', 'CustomerController');
 
 

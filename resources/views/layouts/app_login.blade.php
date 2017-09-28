@@ -30,7 +30,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href=" ../dashboard.html ">Warmart.id</a>
+                <a class="navbar-brand" href="">Warmart.id</a>
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav navbar-right"> 
@@ -44,13 +44,18 @@
                         <div class="collapse" id="pagesExamples">
                             <ul class="nav">
                                 <li class="">
-                                    <a href="{{ url('/register') }}">
-                                        <i class="material-icons">store</i> Warung
+                                    <a href="{{ url('/register-customer') }}">
+                                        <i class="material-icons">person_add</i> Customer
                                     </a>
                                 </li>
                                 <li class="">
                                     <a href="{{ url('/register') }}">
-                                        <i class="material-icons">group_add</i> Customer
+                                        <i class="material-icons">people</i> Komunitas
+                                    </a>
+                                </li>
+                                <li class="">
+                                    <a href="{{ url('/register-warung') }}">
+                                        <i class="material-icons">store</i> Warung
                                     </a>
                                 </li>
                             </ul>

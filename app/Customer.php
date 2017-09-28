@@ -17,7 +17,7 @@ class Customer extends Model
 
     protected $table = 'users';
 
-   	protected $fillable = ['email','password','name', 'alamat', 'wilayah', 'warung', 'no_telp','tgl_lahir','tipe_user', 'status_konfirmasi'];
+   	protected $fillable = ['email','password','name', 'alamat', 'wilayah', 'komunitas', 'no_telp','tgl_lahir','tipe_user', 'status_konfirmasi'];
 
    	protected $hidden = [
         'password', 'remember_token',
@@ -27,7 +27,7 @@ class Customer extends Model
 		return $this->hasOne('App\Kelurahan','id','wilayah');
 	}
 
-   	public function user_warung(){
-		return $this->hasOne('App\User','id','warung');
+   	public function user_komunitas(){
+		return $this->hasOne('App\User','id','komunitas');
 	}
 }

@@ -16,7 +16,7 @@
                          <h4 class="card-title"> Komunitas </h4>
                       
 					{!! Form::open(['url' => route('komunitas.store'),'method' => 'post', 'class'=>'form-horizontal']) !!}
-						@include('master_komunitas._form')
+						@include('komunitas._form')
 					{!! Form::close() !!}
 				</div>
 			</div>

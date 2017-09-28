@@ -16,7 +16,7 @@ class Komunitas extends Model
     //
 
     protected $table = 'users'; 
-   	protected $fillable = ['email','password','name', 'alamat', 'wilayah','no_telp','nama_bank', 'no_rekening','an_rekening','tipe_user','status_konfirmasi'];
+   	protected $fillable = ['email','password','name', 'alamat', 'wilayah','no_telp','nama_bank', 'no_rekening','an_rekening','tipe_user','status_konfirmasi','id_warung'];
 
 
     protected $hidden = [
@@ -41,4 +41,8 @@ class Komunitas extends Model
         
    		}
 
+        public function warung()
+          {
+            return $this->hasOne('App\Warung','id','id_warung');
+          }
 }

@@ -88,4 +88,14 @@ class RegisterController extends Controller
         $user->attachRole($warungRole);
         return $user;
     }
+
+    protected function register_warung()
+    { 
+        return view('auth.register_warung');    
+    }
+
+    protected function register_customer()
+    { 
+        return view('auth.register_customer');    
+    }
 }

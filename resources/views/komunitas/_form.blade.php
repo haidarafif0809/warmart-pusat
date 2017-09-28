@@ -23,6 +23,23 @@
 	</div>
 </div>
 
+<div class="form-group{{ $errors->has('id_warung') ? ' has-error' : '' }}">
+	{!! Form::label('id_warung', 'Warung', ['class'=>'col-md-2 control-label']) !!}
+	<div class="col-md-4">
+		@if (isset($komunitas) && $komunitas->id_warung)
+		{!! Form::select('id_warung', 
+		[''=>'']+App\Warung::pluck('name','id')->all(),$komunitas->id_warung
+		, ['class'=>'form-control js-selectize-reguler', 'placeholder' => 'Silahkan Pilih','id'=>'pilih_id_warung']) !!}
+		{!! $errors->first('id_warung', '<p class="help-block">:message</p>') !!}
+		@else
+		{!! Form::select('id_warung', 
+		[''=>'']+App\Warung::pluck('name','id')->all(),null
+		, ['class'=>'form-control js-selectize-reguler', 'placeholder' => 'Silahkan Pilih','id'=>'pilih_id_warung']) !!}
+		{!! $errors->first('id_warung', '<p class="help-block">:message</p>') !!}
+		@endif
+	</div>
+</div>
+
 <div class="form-group{{ $errors->has('alamat') ? ' has-error' : '' }}">
 	{!! Form::label('alamat', 'Alamat', ['class'=>'col-md-2 control-label']) !!}
 	<div class="col-md-4">
@@ -36,9 +53,9 @@
 <div class="form-group{{ $errors->has('kelurahan') ? ' has-error' : '' }}">
 	{!! Form::label('kelurahan', 'Kelurahan', ['class'=>'col-md-2 control-label']) !!}
 	<div class="col-md-4">
-		@if (isset($warung) && $warung->wilayah)
+		@if (isset($komunitas) && $komunitas->wilayah)
 		{!! Form::select('kelurahan', 
-		[''=>'']+App\Kelurahan::pluck('nama','id')->all(),$warung->wilayah
+		[''=>'']+App\Kelurahan::pluck('nama','id')->all(),$komunitas->wilayah
 		, ['class'=>'form-control js-selectize-reguler', 'placeholder' => 'Silahkan Pilih','id'=>'pilih_kelurahan']) !!}
 		{!! $errors->first('kelurahan', '<p class="help-block">:message</p>') !!}
 		@else

@@ -79,13 +79,7 @@
                                         <span class="sidebar-mini">K</span>
                                         <span class="sidebar-normal">Komunitas</span>
                                     </a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('kategori-harga.index') }}">
-                                        <span class="sidebar-mini">KH</span>
-                                        <span class="sidebar-normal">Kategori Harga</span>
-                                    </a>
-                                </li>
+                                </li> 
                                 <li>
                                     <a href="{{ route('user.index') }}">
                                         <span class="sidebar-mini">U</span>
@@ -93,7 +87,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('stoking-center.index') }}">
+                                    <a href="{{ route('warung.index') }}">
                                         <span class="sidebar-mini">W</span>
                                         <span class="sidebar-normal">Warung</span>
                                     </a>
