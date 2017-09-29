@@ -72,6 +72,7 @@ class RegisterController extends Controller
                 'nama_bank' => 'required',
                 'no_rekening' => 'required',
                 'an_rekening' => 'required',
+                'id_warung' => 'required',
             ]);
         }elseif ($data['id_register'] == 3) {
            
@@ -114,6 +115,7 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
             'alamat' => $data['alamat'],  
+            'id_warung' => $data['id_warung'],  
             'wilayah' => $data['kelurahan'],   
             'no_telp' => $data['no_telp'],     
             'nama_bank' => $data['nama_bank'],  

@@ -65,6 +65,19 @@
 
                                         <div class="input-group ">
                                             <span class="input-group-addon">
+                                                <i class="material-icons">store</i>
+                                            </span> 
+                                            <div class="form-group label-floating {{ $errors->has('id_warung') ? ' has-error' : '' }}">
+                                                <label class="control-label">Warung</label>
+                                                {!! Form::select('id_warung', 
+                                                [''=>'']+App\Warung::pluck('name','id')->all(),null
+                                                , ['class'=>'form-control js-selectize-reguler', 'placeholder' => 'Silahkan Pilih','id'=>'pilih_warung','required']) !!}
+                                                {!! $errors->first('id_warung', '<p class="help-block">:message</p>') !!} 
+                                            </div>
+                                        </div>
+
+                                        <div class="input-group ">
+                                            <span class="input-group-addon">
                                                 <i class="material-icons">room</i>
                                             </span> 
                                             <div class="form-group label-floating {{ $errors->has('kelurahan') ? ' has-error' : '' }}">
