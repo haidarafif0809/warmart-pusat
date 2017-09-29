@@ -17,8 +17,7 @@ Route::get('/','HomeController@index');
 
 Auth::routes();
 
-
-Route::get('/register-warung','Auth\RegisterController@register_warung');
+ 
 Route::get('/register-customer','Auth\RegisterController@register_customer'); 
 
 

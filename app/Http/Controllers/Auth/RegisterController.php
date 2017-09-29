@@ -154,11 +154,7 @@ class RegisterController extends Controller
     
 
     }
-
-    protected function register_warung()
-    { 
-        return view('auth.register_warung');    
-    }
+ 
 
     protected function register_customer()
     { 
