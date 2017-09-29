@@ -63,12 +63,12 @@ class RegisterController extends Controller
         }elseif ($data['id_register'] == 2) { 
             //Komunitas
             return Validator::make($data, [
-                'email' => 'required|string|email|max:255|unique:users',
-                'name' => 'required|string|name|max:255|unique:users',
+                'email'     => 'required|numeric|without_spaces|unique:users,email',
+                'name'      => 'required',
                 'password' => 'required|string|min:6|confirmed',
                 'alamat'    => 'required',
                 'kelurahan' => 'required',
-                'no_telp'   => 'required|without_spaces|numeric|without_spaces',
+                'no_telp'   => 'required|without_spaces|unique:users,no_telp',
                 'nama_bank' => 'required',
                 'no_rekening' => 'required',
                 'an_rekening' => 'required',
@@ -108,7 +108,7 @@ class RegisterController extends Controller
         return $user;
 
         }elseif ($data['id_register'] == 2) { 
-        //Komunitas
+        //Komunitas 
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
@@ -123,7 +123,7 @@ class RegisterController extends Controller
             'status_konfirmasi'=>0
         ]);
 
-        $warungRole = Role::where('name', 'warung')->first();
+        $warungRole = Role::where('name', 'komunitas')->first();
         $user->attachRole($warungRole);
         return $user;
 
