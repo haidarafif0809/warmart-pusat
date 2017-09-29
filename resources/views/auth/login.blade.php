@@ -1,9 +1,9 @@
 @extends('layouts.app_login')
-@include('layouts._flash')
+
 
 @section('content')
 
-
+@include('layouts._flash_login')
        @if ($errors->has('email'))
                             <div class="alert alert-danger alert-with-icon">
         <i class="material-icons" data-notify="icon" >error_outline</i>
@@ -11,6 +11,7 @@
         <span data-notify="message"> <b>Failed:</b> {{ $errors->first('email') }}</span>
     </div>
      @endif
+
                     <form method="POST" action="{{ url('/login') }}">
                              {{ csrf_field() }}
                                 <div class="card card-login ">
@@ -24,11 +25,11 @@
                                     <div class="card-content">
                                         <div class="input-group ">
                                             <span class="input-group-addon">
-                                                <i class="material-icons">email</i>
+                                                <i class="material-icons">phone</i>
                                             </span>
                                             <div class="form-group label-floating {{ $errors->has('email') ? ' has-error' : '' }}">
-                                                <label class="control-label">Email address</label>
-                                                <input type="email" value="{{ old('email') }}" class="form-control" name="email">
+                                                <label class="control-label">Nomor Telpon</label>
+                                                <input type="text" value="{{ old('email') }}" class="form-control" name="email">
 
                                                 
                                             </div>

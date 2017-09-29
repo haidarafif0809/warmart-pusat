@@ -14,6 +14,7 @@
     <!--  Material Dashboard CSS    -->
     <link href="css/material-dashboard.css?v=1.2.0" rel="stylesheet" />
    
+    <link href="css/bootstrap-datepicker.min.css" rel="stylesheet">
     <!--     Fonts and icons     -->
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons" />
@@ -142,7 +143,9 @@
 <script src="js/jquery.tagsinput.js"></script>
 <!-- Material Dashboard javascript methods -->
 <script src="js/material-dashboard.js?v=1.2.0"></script>
-<script src="js/demo.js"></script>
+
+<script src="js/bootstrap-datepicker.min.js"></script>
+<script src="js/demo.js"></script> 
 
 <script type="text/javascript">
     $().ready(function() {
@@ -150,6 +153,10 @@
 
     
     });
+$('.datepicker').datepicker({
+    format: 'dd/mm/yyyy', 
+    autoclose: true,
+});
 </script>
 
 

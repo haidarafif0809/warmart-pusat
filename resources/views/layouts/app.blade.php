@@ -21,6 +21,9 @@
     <link href="{{ asset('css/demo.css') }}" rel="stylesheet" />
 
      <link href="{{ asset('css/selectize.bootstrap3.css') }}" rel="stylesheet">
+
+     
+    <link href="{{ asset('css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
      
     <!--     Fonts and icons     -->
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
@@ -189,6 +192,8 @@
 <script src="{{ asset('js/jquery-3.2.1.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('js/material.min.js') }}" type="text/javascript"></script>
+
+<script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
 <script src="{{ asset('js/perfect-scrollbar.jquery.min.js') }}" type="text/javascript"></script>
 <!-- Library for adding dinamically elements -->
 <script src="{{ asset('js/arrive.min.js') }}" type="text/javascript"></script>

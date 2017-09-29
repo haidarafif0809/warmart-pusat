@@ -18,13 +18,12 @@ class UserShouldVerified
     public function handle($request, Closure $next)
     {
        $response = $next($request);
-        if (Auth::check() && !Auth::user()->status) {
+        if (Auth::check() && !Auth::user()->status_konfirmasi) {
 
         Auth::logout();
 
-        Session::flash("flash_notification", [
-        "level" => "warning",
-       "message" => "Anda Tidak Bisa Login Di Karenakan Belum DI Konfirmasi Oleh Admin."
+        Session::flash("flash_notification", [ 
+        "message" => "Anda Tidak Bisa Login Di Karenakan Belum DI Konfirmasi Oleh Admin."
         ]);
 
         return redirect('/login');
