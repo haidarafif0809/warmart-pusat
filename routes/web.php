@@ -23,6 +23,18 @@ Route::get('/register-customer','Auth\RegisterController@register_customer');
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::get('/ubah-password',[
+	'middleware' => ['auth'],
+	'as' => 'user.ubah_password',
+	'uses' => 'UbahPasswordController@ubah_password'
+	]);
+
+Route::put('/proses-ubah-password/{id}',[
+	'middleware' => ['auth'],
+	'as' => 'user.proses_ubah_password',
+	'uses' => 'UbahPasswordController@proses_ubah_password'
+	]);
+
 Route::group(['middleware' =>'auth'], function(){
 
 	Route::resource('user', 'UserController');

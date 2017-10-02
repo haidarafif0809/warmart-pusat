@@ -26,7 +26,7 @@ class UserController extends Controller
 
          if ($request->ajax()) {
             # code...
-            $master_users = User::with('role');
+            $master_users = User::with('role')->where('tipe_user',1);
             return Datatables::of($master_users)
             ->addColumn('action', function($master_user){
                     return view('datatable._action', [
@@ -78,8 +78,11 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
-        return view('user.create');
+            
+            // ambil otoritas yang bukan warung, customer, dan komunitas
+        $otoritas = Role::where('id','!=',3)->where('id','!=',4)->where('id','!=',5)->pluck('display_name','id');
+
+        return view('user.create',['otoritas' => $otoritas]);
     }
 
     /**
@@ -110,7 +113,7 @@ class UserController extends Controller
 
         Session::flash("flash_notification", [
             "level"=>"success",
-            "message"=>"Berhasil Menambah User $request->name"
+            "message"=>" <b>BERHASIL:</b> Menambah User <b>$request->name</b>"
             ]);
 
         return redirect()->route('user.index');
@@ -138,8 +141,10 @@ class UserController extends Controller
         // edoit user
         //
         $user = User::with('role')->find($id);
+            // ambil otoritas yang bukan warung, customer, dan komunitas
+        $otoritas = Role::where('id','!=',3)->where('id','!=',4)->where('id','!=',5)->pluck('display_name','id');
 
-        return view('user.edit')->with(compact('user'));
+        return view('user.edit',['otoritas'=>$otoritas])->with(compact('user'));
     }
 
     /**
@@ -179,7 +184,7 @@ class UserController extends Controller
 
          Session::flash("flash_notification", [
             "level"=>"success",
-            "message"=>"Berhasil Mengubah User $request->name"
+            "message"=>"BERHASIL:</b> Mengubah User $request->name"
             ]);
 
         return redirect()->route('user.index');
