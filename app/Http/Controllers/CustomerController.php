@@ -90,9 +90,9 @@ class CustomerController extends Controller
 
         $this->validate($request, [
             'name'      => 'required',
-            'email'     => 'required|unique:users,email',
+            'email'     => 'required|without_spaces|unique:users,email',
             'alamat'    => 'required',
-            'no_telp'   => 'required|numeric',
+            'no_telp'   => 'required|without_spaces|numeric',
             'tgl_lahir' => 'required',
             'kelurahan' => 'required',
         ]);
@@ -182,9 +182,9 @@ class CustomerController extends Controller
 
         $this->validate($request, [            
             'name'      => 'required',
-            'email'     => 'required|unique:users,email,' .$id,
+            'email'     => 'required|without_spaces|unique:users,email,' .$id,
             'alamat'    => 'required',
-            'no_telp'   => 'required|numeric',
+            'no_telp'   => 'required|without_spaces|numeric',
             'tgl_lahir' => 'required',
             'kelurahan' => 'required',
         ]);

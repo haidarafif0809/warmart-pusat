@@ -2,5 +2,5 @@
 
 <a href="{{ $edit_url }}" class="btn btn-sm btn-success">Ubah</a> |
 
-{!! Form::submit('Hapus',['class'=>'btn btn-sm btn-danger js-confirm']) !!}
+{!! Form::submit('Hapus',['class'=>'btn btn-sm btn-danger js-confirm', 'id'=> 'btn-hapus']) !!}
 {!! Form::close() !!}

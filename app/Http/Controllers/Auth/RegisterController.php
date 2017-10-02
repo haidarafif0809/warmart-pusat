@@ -6,7 +6,7 @@ use App\User;
 use App\Role;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Foundation\Auth\RegistersUsers; 
 
 class RegisterController extends Controller
 {
@@ -48,18 +48,37 @@ class RegisterController extends Controller
      * @return \Illuminate\Contracts\Validation\Validator
      */
     protected function validator(array $data)
-    {
-        return Validator::make($data, [
-            'email' => 'required|string|email|max:255|unique:users',
-            'name' => 'required|string|name|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
-            'alamat'    => 'required',
-            'kelurahan' => 'required',
-            'no_telp'   => 'required|numeric',
-            'nama_bank' => 'required',
-            'no_rekening' => 'required',
-            'an_rekening' => 'required',
-        ]);
+    { 
+        if ($data['id_register'] == 1) {
+            //Customer
+            return Validator::make($data, [
+                'name'      => 'required',
+                'email'     => 'required|numeric|without_spaces|unique:users,email',
+                'alamat'    => 'required',
+                'no_telp'   => 'required|without_spaces|unique:users,no_telp',
+                'tgl_lahir' => 'required',
+                'kelurahan' => 'required',
+                'password' => 'required|string|min:6|confirmed',
+            ]);
+        }elseif ($data['id_register'] == 2) { 
+            //Komunitas
+            return Validator::make($data, [
+                'email'     => 'required|numeric|without_spaces|unique:users,email',
+                'name'      => 'required',
+                'password' => 'required|string|min:6|confirmed',
+                'alamat'    => 'required',
+                'kelurahan' => 'required',
+                'no_telp'   => 'required|without_spaces|unique:users,no_telp',
+                'nama_bank' => 'required',
+                'no_rekening' => 'required',
+                'an_rekening' => 'required',
+                'id_warung' => 'required',
+            ]);
+        }elseif ($data['id_register'] == 3) {
+           
+              //Warung
+        }
+
     }
 
     /**
@@ -69,7 +88,50 @@ class RegisterController extends Controller
      * @return \App\User
      */
     protected function create(array $data)
-    { 
+    {  
+
+        if ($data['id_register'] == 1) {
+        //Customer
+        $user = User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'alamat' => $data['alamat'],    
+            'no_telp' => $data['no_telp'],  
+            'wilayah' => $data['kelurahan'],  
+            'tgl_lahir' => $data['tgl_lahir'],    
+            'password' => bcrypt($data['password']),
+            'tipe_user'=> 3,
+            'status_konfirmasi'=>0
+        ]);
+
+        $customerRole = Role::where('name', 'customer')->first();
+        $user->attachRole($customerRole);
+        return $user;
+
+        }elseif ($data['id_register'] == 2) { 
+        //Komunitas 
+        $user = User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => bcrypt($data['password']),
+            'alamat' => $data['alamat'],  
+            'id_warung' => $data['id_warung'],  
+            'wilayah' => $data['kelurahan'],   
+            'no_telp' => $data['no_telp'],     
+            'nama_bank' => $data['nama_bank'],  
+            'no_rekening' => $data['no_rekening'], 
+            'an_rekening' => $data['an_rekening'],  
+            'tipe_user'=> 2,
+            'status_konfirmasi'=>0
+        ]);
+
+        $warungRole = Role::where('name', 'komunitas')->first();
+        $user->attachRole($warungRole);
+        return $user;
+
+        }elseif ($data['id_register'] == 3) {
+           
+              //Warung
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
@@ -87,15 +149,16 @@ class RegisterController extends Controller
         $warungRole = Role::where('name', 'warung')->first();
         $user->attachRole($warungRole);
         return $user;
-    }
+        }
 
-    protected function register_warung()
-    { 
-        return view('auth.register_warung');    
+    
+
     }
+ 
 
     protected function register_customer()
     { 
         return view('auth.register_customer');    
     }
+ 
 }

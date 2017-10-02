@@ -55,7 +55,7 @@ class UserController extends Controller
                         ]);
                 })//Reset Password apabila di klik tombol reset password maka password menjadi 123456
             ->addColumn('role', function($user){
-                $role = $user->where('id',$user->role->role_id)->first();
+                 $role = Role::where('id',$user->role->role_id)->first();
                 return $role->display_name;
                 })->make(true);
         }
@@ -210,9 +210,7 @@ class UserController extends Controller
         }
     }
 
-    public function reset(){
-
-    }
+ 
 
     public function konfirmasi($id){
         // konfirmasi user

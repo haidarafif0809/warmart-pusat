@@ -17,20 +17,34 @@
                                                 <i class="material-icons">person</i>
                                             </span>
                                             <div class="form-group label-floating {{ $errors->has('name') ? ' has-error' : '' }}">
-                                                <label class="control-label">Nama Komunitas</label>
+                                                <label class="control-label">Nama</label>
                                                     {!! Form::text('name', null, ['class'=>'form-control','required','autocomplete'=>'off']) !!}
                                                     {!! $errors->first('name', '<p class="help-block">:message</p>') !!}
                                                 
                                             </div>
                                         </div> 
+                                        
+                                        <div class="input-group ">
+                                            <span class="input-group-addon">
+                                                <i class="material-icons">phone</i>
+                                            </span>
+                                            <div class="form-group label-floating {{ $errors->has('email') ? ' has-error' : '' }}">
+                                                <label class="control-label">No Telpon</label>
+                                                    {!! Form::number('email', null, ['class'=>'form-control','required','autocomplete'=>'off']) !!}
+                                                    {!! $errors->first('email', '<p class="help-block">:message</p>') !!}
+
+                                                
+                                            </div>
+                                        </div>
+
                                         <div class="input-group ">
                                             <span class="input-group-addon">
                                                 <i class="material-icons">email</i>
                                             </span>
-                                            <div class="form-group label-floating {{ $errors->has('email') ? ' has-error' : '' }}">
-                                                <label class="control-label">Email address</label>
-                                                    {!! Form::text('email', null, ['class'=>'form-control','required','autocomplete'=>'off']) !!}
-                                                    {!! $errors->first('email', '<p class="help-block">:message</p>') !!}
+                                            <div class="form-group label-floating {{ $errors->has('no_telp') ? ' has-error' : '' }}">
+                                                <label class="control-label">Email</label> 
+                                                    {!! Form::email('no_telp', null, ['class'=>'form-control','required','autocomplete'=>'off']) !!}
+                                                    {!! $errors->first('no_telp', '<p class="help-block">:message</p>') !!}
 
                                                 
                                             </div>
@@ -51,6 +65,19 @@
 
                                         <div class="input-group ">
                                             <span class="input-group-addon">
+                                                <i class="material-icons">store</i>
+                                            </span> 
+                                            <div class="form-group label-floating {{ $errors->has('id_warung') ? ' has-error' : '' }}">
+                                                <label class="control-label">Warung</label>
+                                                {!! Form::select('id_warung', 
+                                                [''=>'']+App\Warung::pluck('name','id')->all(),null
+                                                , ['class'=>'form-control js-selectize-reguler', 'placeholder' => 'Silahkan Pilih','id'=>'pilih_warung','required']) !!}
+                                                {!! $errors->first('id_warung', '<p class="help-block">:message</p>') !!} 
+                                            </div>
+                                        </div>
+
+                                        <div class="input-group ">
+                                            <span class="input-group-addon">
                                                 <i class="material-icons">room</i>
                                             </span> 
                                             <div class="form-group label-floating {{ $errors->has('kelurahan') ? ' has-error' : '' }}">
@@ -62,18 +89,6 @@
                                             </div>
                                         </div>
 
-                                        <div class="input-group ">
-                                            <span class="input-group-addon">
-                                                <i class="material-icons">phone</i>
-                                            </span>
-                                            <div class="form-group label-floating {{ $errors->has('no_telp') ? ' has-error' : '' }}">
-                                                <label class="control-label">No Telpon</label> 
-                                                    {!! Form::text('no_telp', null, ['class'=>'form-control','required','autocomplete'=>'off']) !!}
-                                                    {!! $errors->first('no_telp', '<p class="help-block">:message</p>') !!}
-
-                                                
-                                            </div>
-                                        </div>
 
                                         <div class="input-group ">
                                             <span class="input-group-addon">
@@ -81,8 +96,8 @@
                                             </span>
                                             <div class="form-group label-floating {{ $errors->has('nama_bank') ? ' has-error' : '' }}">
                                                 <label class="control-label">Nama Bank</label>
-                                                    {!! Form::text('no_telp', null, ['class'=>'form-control','required','autocomplete'=>'off']) !!}
-                                                    {!! $errors->first('no_telp', '<p class="help-block">:message</p>') !!}
+                                                    {!! Form::text('nama_bank', null, ['class'=>'form-control','required','autocomplete'=>'off']) !!}
+                                                    {!! $errors->first('nama_bank', '<p class="help-block">:message</p>') !!}
 
                                                 
                                             </div>
@@ -141,6 +156,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                          {!! Form::hidden('id_register', 2, ['class'=>'form-control','autocomplete'=>'off']) !!}
                                     <div class="footer text-center">
                                         <button type="submit" class="btn btn-rose btn-simple btn-wd btn-lg">Registrasi Komunitas</button>
                                     </div>
