@@ -12,6 +12,8 @@
 */
 
 Route::get('/','HomeController@index');
+Route::get('/sms','HomeController@sms');
+
 
 
 
