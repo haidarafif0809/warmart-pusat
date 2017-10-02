@@ -42,7 +42,7 @@
                                             </span>
                                             <div class="form-group label-floating {{ $errors->has('no_telp') ? ' has-error' : '' }}">
                                                 <label class="control-label">Email Customer</label>
-                                                    {!! Form::email('no_telp', null, ['class'=>'form-control','required','autocomplete'=>'off']) !!}
+                                                    {!! Form::email('no_telp', null, ['class'=>'form-control','autocomplete'=>'off']) !!}
                                                     {!! $errors->first('no_telp', '<p class="help-block">:message</p>') !!}
 
                                                 
