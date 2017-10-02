@@ -26,7 +26,7 @@ class UserController extends Controller
 
          if ($request->ajax()) {
             # code...
-            $master_users = User::with('role');
+            $master_users = User::with('role')->where('tipe_user',1);
             return Datatables::of($master_users)
             ->addColumn('action', function($master_user){
                     return view('datatable._action', [
