@@ -68,26 +68,13 @@
                                             </span>
                                             <div class="form-group label-floating {{ $errors->has('tgl_lahir') ? ' has-error' : '' }}">
                                                 <label class="control-label">Tanggal Lahir</label>
-                                                    {!! Form::text('tgl_lahir', null, ['class'=>'form-control datepicker','required','readonly','autocomplete'=>'off']) !!}
+                                                    {!! Form::text('tgl_lahir', null, ['class'=>'form-control datepicker','readonly','autocomplete'=>'off']) !!}
                                                     {!! $errors->first('tgl_lahir', '<p class="help-block">:message</p>') !!}
 
                                                 
                                             </div>
                                         </div>
-
-                                        <div class="input-group ">
-                                            <span class="input-group-addon">
-                                                <i class="material-icons">room</i>
-                                            </span> 
-                                            <div class="form-group label-floating {{ $errors->has('kelurahan') ? ' has-error' : '' }}">
-                                                <label class="control-label">Kelurahan</label>
-                                                {!! Form::select('kelurahan', 
-                                                [''=>'']+App\Kelurahan::pluck('nama','id')->all(),null
-                                                , ['class'=>'form-control js-selectize-reguler', 'placeholder' => 'Silahkan Pilih','id'=>'pilih_kelurahan','required']) !!}
-                                                {!! $errors->first('kelurahan', '<p class="help-block">:message</p>') !!} 
-                                            </div>
-                                        </div>
-
+ 
                                         <div class="input-group">
                                             <span class="input-group-addon">
                                                 <i class="material-icons">lock_outline</i>

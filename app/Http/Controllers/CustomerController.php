@@ -35,7 +35,7 @@ class CustomerController extends Controller
                         ]);
                 })
                 ->addColumn('nama_warung', function($id_warung){
-                    if ($id_warung->warung == 0) {
+                    if ($id_warung->komunitas == 0) {
                         $nama_warung = "WARMART";
                     }
                     else{
@@ -43,16 +43,35 @@ class CustomerController extends Controller
                     }
                     
                     return $nama_warung;
+                })
+                ->addColumn('tgl_lahir', function($tgl_lahir){
+                    if ($tgl_lahir->tgl_lahir == "") {
+                        $tgl_lahir = "-";
+                    }
+                    else{
+                        $tgl_lahir = $tgl_lahir->tgl_lahir;
+                    }
+                    
+                    return $tgl_lahir;
+                })
+                ->addColumn('no_telp', function($no_telp){
+                    if ($no_telp->no_telp == "") {
+                        $no_telp = "-";
+                    }
+                    else{
+                        $no_telp = $no_telp->no_telp;
+                    }
+                    
+                    return $no_telp;
                 })->make(true);
         }
         $html = $htmlBuilder
-        ->addColumn(['data' => 'email', 'name' => 'email', 'title' => 'Email']) 
+        ->addColumn(['data' => 'email', 'name' => 'email', 'title' => 'No. Telpon']) 
         ->addColumn(['data' => 'name', 'name' => 'name', 'title' => 'Nama']) 
-        ->addColumn(['data' => 'no_telp', 'name' => 'no_telp', 'title' => 'No. Telpon']) 
+        ->addColumn(['data' => 'no_telp', 'name' => 'no_telp', 'title' => 'Email']) 
         ->addColumn(['data' => 'tgl_lahir', 'name' => 'tgl_lahir', 'title' => 'Tanggal Lahir'])
-        ->addColumn(['data' => 'alamat', 'name' => 'alamat', 'title' => 'Alamat']) 
-        ->addColumn(['data' => 'kelurahan.nama', 'name' => 'kelurahan.nama', 'title' => 'Wilayah'])
-        ->addColumn(['data' => 'nama_warung', 'name' => 'nama_warung', 'title' => 'Warung'])
+        ->addColumn(['data' => 'alamat', 'name' => 'alamat', 'title' => 'Alamat'])  
+        ->addColumn(['data' => 'nama_warung', 'name' => 'nama_warung', 'title' => 'Komunitas'])
         ->addColumn(['data' => 'action', 'name' => 'action', 'title' => '', 'orderable' => false, 'searchable'=>false]);
 
         return view('customer.index')->with(compact('html'));
@@ -90,11 +109,11 @@ class CustomerController extends Controller
 
         $this->validate($request, [
             'name'      => 'required',
-            'email'     => 'required|without_spaces|unique:users,email',
+            'email'     => 'required|without_spaces|numeric',
             'alamat'    => 'required',
-            'no_telp'   => 'required|without_spaces|numeric',
-            'tgl_lahir' => 'required',
-            'kelurahan' => 'required',
+            'no_telp'   => 'without_spaces|unique:users,email',
+            'tgl_lahir' => '', 
+            'komunitas' => '', 
         ]);
 
 
@@ -108,6 +127,7 @@ class CustomerController extends Controller
             'wilayah'           => $request->kelurahan,
             'tipe_user'         => 3,
             'status_konfirmasi' => 0,
+            'komunitas' => $request->komunitas,
             'password'  => bcrypt('123456')
         ]);
 
