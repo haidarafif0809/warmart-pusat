@@ -84,6 +84,12 @@
                                     </a>
                                 </li> 
                                 <li>
+                                    <a href="{{ route('otoritas.index') }}">
+                                        <span class="sidebar-mini">O</span>
+                                        <span class="sidebar-normal">Otoritas</span>
+                                    </a>
+                                </li> 
+                                <li>
                                     <a href="{{ route('user.index') }}">
                                         <span class="sidebar-mini">U</span>
                                         <span class="sidebar-normal">User</span>
