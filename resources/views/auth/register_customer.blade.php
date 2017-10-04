@@ -51,7 +51,7 @@
 
                                         <div class="input-group ">
                                             <span class="input-group-addon">
-                                                <i class="material-icons">address</i>
+                                                <i class="material-icons">home</i>
                                             </span>
                                             <div class="form-group label-floating {{ $errors->has('alamat') ? ' has-error' : '' }}">
                                                 <label class="control-label">Alamat Customer</label>

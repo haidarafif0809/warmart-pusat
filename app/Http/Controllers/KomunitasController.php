@@ -44,6 +44,34 @@ class KomunitasController extends Controller
                    }else{
                         return $warung->warung->name;
                    }
+                })
+                ->addColumn('kelurahan', function($kelurahan){ 
+                   if ($kelurahan->wilayah == "") {
+                        return "-";
+                   }else{
+                        return $kelurahan->kelurahan->nama;
+                   }
+                })
+                ->addColumn('nama_bank', function($nama_bank){ 
+                   if ($nama_bank->nama_bank == "") {
+                        return "-";
+                   }else{
+                        return $nama_bank->nama_bank;
+                   }
+                })
+                ->addColumn('no_rekening', function($no_rekening){ 
+                   if ($no_rekening->no_rekening == "") {
+                        return "-";
+                   }else{
+                        return $no_rekening->no_rekening;
+                   }
+                })
+                ->addColumn('an_rekening', function($an_rekening){ 
+                   if ($an_rekening->an_rekening == "") {
+                        return "-";
+                   }else{
+                        return $an_rekening->an_rekening;
+                   }
                 })->make(true);
         }
         $html = $htmlBuilder
@@ -51,7 +79,7 @@ class KomunitasController extends Controller
         ->addColumn(['data' => 'name', 'name' => 'name', 'title' => 'Nama Komunitas'])
         ->addColumn(['data' => 'warung', 'name' => 'warung', 'title' => 'Warung'])  
         ->addColumn(['data' => 'no_telp', 'name' => 'no_telp', 'title' => 'Email'])  
-        ->addColumn(['data' => 'kelurahan.nama', 'name' => 'kelurahan.nama', 'title' => 'Wilayah']) 
+        ->addColumn(['data' => 'kelurahan', 'name' => 'kelurahan', 'title' => 'Wilayah']) 
         ->addColumn(['data' => 'link', 'name' => 'link', 'title' => 'Link Afiliasi']) 
         ->addColumn(['data' => 'nama_bank', 'name' => 'nama_bank', 'title' => 'Nama Bank']) 
         ->addColumn(['data' => 'no_rekening', 'name' => 'no_rekening', 'title' => 'No Rekening']) 

@@ -56,6 +56,8 @@
                             <p>Dashboard</p>
                         </a>
                     </li>
+
+                    @if(Laratrust::can('lihat_master_data'))
                     <li>
                         <a data-toggle="collapse" href="#pagesExamples">
                             <i class="material-icons">image</i>
@@ -65,46 +67,58 @@
                         </a>
                         <div class="collapse" id="pagesExamples">
                             <ul class="nav">
+                                @if(Laratrust::can('lihat_bank'))
                                 <li>
                                     <a href="{{ route('bank.index') }}">
                                         <span class="sidebar-mini">B</span>
                                         <span class="sidebar-normal">Bank</span>
                                     </a>
                                 </li>
+                                @endif
+                                @if(Laratrust::can('lihat_customer'))
                                 <li>
                                     <a href="{{ route('customer.index') }}">
                                         <span class="sidebar-mini">C</span>
                                         <span class="sidebar-normal">Customer</span>
                                     </a>
                                 </li>
+                                @endif
+                                @if(Laratrust::can('lihat_komunitas'))
                                 <li>
                                     <a href="{{ route('komunitas.index') }}">
                                         <span class="sidebar-mini">K</span>
                                         <span class="sidebar-normal">Komunitas</span>
                                     </a>
                                 </li> 
+                                @endif
+                                @if(Laratrust::can('lihat_otoritas'))
                                 <li>
                                     <a href="{{ route('otoritas.index') }}">
                                         <span class="sidebar-mini">O</span>
                                         <span class="sidebar-normal">Otoritas</span>
                                     </a>
                                 </li> 
+                                @endif
+                                @if(Laratrust::can('lihat_user'))
                                 <li>
                                     <a href="{{ route('user.index') }}">
                                         <span class="sidebar-mini">U</span>
                                         <span class="sidebar-normal">User</span>
                                     </a>
                                 </li>
+                                @endif        
+                                @if(Laratrust::can('lihat_warung'))
                                 <li>
                                     <a href="{{ route('warung.index') }}">
                                         <span class="sidebar-mini">W</span>
                                         <span class="sidebar-normal">Warung</span>
                                     </a>
                                 </li>
-                                
+                                @endif 
                             </ul>
                         </div>
                     </li>
+                    @endif
                    
                   
                 </ul>
