@@ -217,8 +217,7 @@ class RegisterController extends Controller
         $nomor_tujuan = $request->email;
         $user = User::where('email',$nomor_tujuan)->first();
         User::where('email',$nomor_tujuan)->update(['kode_verifikasi' => $kode_verifikasi]);
-        $isi_pesan ='Yth:  '.$user->name.'.
-                    Masukan Kode Verfikasi Berikut Untuk Login Ke Warmart '.$kode_verifikasi.'';
+        $isi_pesan ='Yth :  '.$user->name.', Masukan Kode Verfikasi Berikut Untuk Login Ke Warmart : '.$kode_verifikasi.'';
 
         if (env('STATUS_SMS') == 1) {
         $client = new Client(); //GuzzleHttp\Client
@@ -228,8 +227,8 @@ class RegisterController extends Controller
         Session::flash("flash_notification", [ 
         "alert" => 'danger',
         "icon" => 'error_outline',
-        "judul" => 'FAILED',
-        "message" => 'Silahkan Verifikasi Nomor Anda '.$nomor_tujuan.''
+        "judul" => 'INFO',
+        "message" => 'Silahkan Periksa Hp Anda Kami Mengirim Kode Verfikasi Ke : '.$nomor_tujuan.''
         ]);
 
         return redirect('/kirim-kode-verifikasi?nomor='.$nomor_tujuan);

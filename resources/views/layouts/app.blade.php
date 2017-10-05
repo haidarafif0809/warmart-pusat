@@ -50,13 +50,38 @@
             <div class="sidebar-wrapper">
               
                 <ul class="nav">
+                    <li>
+                        <a data-toggle="collapse" href="#logout">
+                            <i class="material-icons">person</i>
+                            <p>{{ Auth::user()->name }}
+                                <b class="caret"></b>
+                            </p>
+                        </a> 
+                        <div class="collapse" id="logout">
+                            <ul class="nav">
+                                    <li>
+                                         <a href="{{ url('/ubah-password') }}">Ubah Password</a>
+                                    </li>
+                                    <li>
+                                         <a href="{{ url('/logout') }}"
+                                            onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                            Logout
+                                        </a>
+                                        <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
+                                            {{ csrf_field() }}
+                                        </form>
+
+                                    </li>     
+                            </ul>
+                        </div>
+                    </li>
                     <li class="active">
                         <a href="{{ url('/')}}">
                             <i class="material-icons">dashboard</i>
                             <p>Dashboard</p>
                         </a>
                     </li>
-
                     @if(Laratrust::can('lihat_master_data'))
                     <li>
                         <a data-toggle="collapse" href="#pagesExamples">
@@ -143,36 +168,7 @@
                         <a class="navbar-brand" href="#"> Dashboard </a>
                     </div>
                     <div class="collapse navbar-collapse">
-                        <ul class="nav navbar-nav navbar-right">
-                        
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <i class="material-icons">person</i>{{ Auth::user()->name }} <span class="caret"></span>
-                                    
-                                    <p class="hidden-lg hidden-md">
-                                        Profile
-                                        <b class="caret"></b>
-                                    </p>
-                                </a>
-                                <ul class="dropdown-menu">
-                                   
-                                    <li>
-                                         <a href="{{ url('/ubah-password') }}">Ubah Password</a>
-                                    </li>
-                                    <li>
-                                         <a href="{{ url('/logout') }}"
-                                            onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                            Logout
-                                        </a>
-                                        <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
-                                            {{ csrf_field() }}
-                                        </form>
-
-                                    </li>
-                                
-                                </ul>
-                            </li>
+                        <ul class="nav navbar-nav navbar-right"> 
                        
                            
                         </ul>

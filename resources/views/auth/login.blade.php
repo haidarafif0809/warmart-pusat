@@ -49,11 +49,14 @@
                                                  @endif
                                             </div>
                                         </div>
-                                       <a style="padding-left: 20px" href="{{ url('/lupa-password/') }}">Lupa Password</a> 
                                     </div>
                                     <div class="footer text-center">
                                         <button type="submit" class="btn btn-rose btn-simple btn-wd btn-lg">Let's go</button>
                                     </div>
+                                    <center>    
+                                        <a href="{{ url('/lupa-password/') }}">Lupa Password</a> 
+                                    </center>
+                                    
                                 </div>
                             </form>
                
