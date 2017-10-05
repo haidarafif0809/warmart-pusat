@@ -17,22 +17,7 @@
                        <div class="toolbar">
 
 						{!! Form::model($user, ['url' => route('user.proses_ubah_password', $user->id), 'method' => 'put', 'files'=>'true','class'=>'form-horizontal']) !!}
-
-                       		<div class="col-md-1"></div>
-                       	    <div class="input-group col-md-4">
-                                <span class="input-group-addon">
-                                   <i class="material-icons">lock_outline</i>
-                                 </span>
-                                  <div class="form-group label-floating {{ $errors->has('password') ? ' has-error' : '' }}">
-                                      <label class="control-label">Password Awal</label>
-                                      <input type="password" class="form-control" name="password_awal" >
-
-                                             <span class="help-block">
-                                              <strong>{{ $errors->first('password_awal') }}</strong>
-                                             </span>
-                                  </div>
-                            </div>
-
+ 
                        		<div class="col-md-1"></div>
                        	    <div class="input-group col-md-4">
                                 <span class="input-group-addon">

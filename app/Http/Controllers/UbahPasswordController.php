@@ -19,14 +19,10 @@ class UbahPasswordController extends Controller
 
     public function proses_ubah_password(Request $request, $id)
     {
-        $this->validate($request, [
-            'password_awal' => 'required',
+        $this->validate($request, [ 
             'password' => 'required|min:6|confirmed'
         ]);
- 
-        $cek_password = User::find($id);
-
-		if (Auth::attempt(['email' => $cek_password->email, 'password' => $request->password_awal])) {
+  
 		         
             $update_user = User::find($id);   
             $update_user->password = bcrypt($request->password);
@@ -36,16 +32,7 @@ class UbahPasswordController extends Controller
 	            "level"     => "success",
 	            "message"   => "Password Berhasil Di Ubah"
 	        ]);
-
-		 }
- 
-        else{ 
-	        Session::flash("flash_notification", [
-	            "level"     => "danger",
-	            "message"   => "Mohon Maaf Password Awal Anda Belum Sama"
-	        ]);
-        }
- 
+  
        return back();
     } 	
 }
