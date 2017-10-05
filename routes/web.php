@@ -24,10 +24,16 @@ Route::get('/register-customer','Auth\RegisterController@register_customer');
 Route::get('kirim-kode-verifikasi','Auth\RegisterController@kirim_kode_verifikasi');
 Route::get('proses-kirim-kode-verifikasi','Auth\RegisterController@proses_kirim_kode_verifikasi');  
 Route::get('kirim-ulang-kode-verifikasi/{id}','Auth\RegisterController@kirim_ulang_kode_verifikasi');
+Route::get('lupa-password','Auth\RegisterController@lupa_password');
 
 Route::put('/proses-kirim-kode-verifikasi/{nomor_hp}',[ 
 	'as' => 'user.proses_kirim_kode_verifikasi',
 	'uses' => 'Auth\RegisterController@proses_kirim_kode_verifikasi'
+	]);
+
+Route::post('/proses-lupa-password',[ 
+	'as' => 'user.proses_lupa_password',
+	'uses' => 'Auth\RegisterController@proses_lupa_password'
 	]);
 
 Route::get('/home', 'HomeController@index')->name('home');

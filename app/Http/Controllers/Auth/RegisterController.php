@@ -204,4 +204,35 @@ class RegisterController extends Controller
         return view('auth.register_customer');    
     }
  
+    protected function lupa_password()
+    { 
+        return view('auth.lupa_password');    
+    }
+ 
+    protected function proses_lupa_password(Request $request)
+    {   
+        $kode_verifikasi = rand(1111,9999);
+        $userkey = env('USERKEY');
+        $passkey = env('PASSKEY');
+        $nomor_tujuan = $request->email;
+        $user = User::where('email',$nomor_tujuan)->first();
+        User::where('email',$nomor_tujuan)->update(['kode_verifikasi' => $kode_verifikasi]);
+        $isi_pesan ='Yth:  '.$user->name.'.
+                    Masukan Kode Verfikasi Berikut Untuk Login Ke Warmart '.$kode_verifikasi.'';
+
+        if (env('STATUS_SMS') == 1) {
+        $client = new Client(); //GuzzleHttp\Client
+        $result = $client->get("https://reguler.zenziva.net/apps/smsapi.php?userkey=$userkey&passkey=$passkey&nohp=$nomor_tujuan&pesan=$isi_pesan"); 
+
+
+        Session::flash("flash_notification", [ 
+        "alert" => 'danger',
+        "icon" => 'error_outline',
+        "judul" => 'FAILED',
+        "message" => 'Silahkan Verifikasi Nomor Anda '.$nomor_tujuan.''
+        ]);
+
+        return redirect('/kirim-kode-verifikasi?nomor='.$nomor_tujuan);
+        } 
+    }
 }
