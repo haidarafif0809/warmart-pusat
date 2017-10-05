@@ -29,8 +29,8 @@ class CustomerController extends Controller
                         'form_url'  => route('customer.destroy', $customer->id),
                         'edit_url'  => route('customer.edit', $customer->id),
                         'confirm_message'   => 'Anda Yakin Ingin Menghapus ' .$customer->name . ' ?',
-                        'permission_ubah' => Laratrust::can('edit_satuan'),
-                        'permission_hapus' => Laratrust::can('hapus_satuan'),
+                        'permission_ubah' => Laratrust::can('edit_customer'),
+                        'permission_hapus' => Laratrust::can('hapus_customer'),
 
                         ]);
                 })
