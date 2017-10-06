@@ -14,9 +14,11 @@
                                 </div>
                       <div class="card-content">
                          <h4 class="card-title"> Komunitas </h4>
+					@if(Laratrust::can('tambah_komunitas'))
                        <div class="toolbar">
                          	<p> <a class="btn btn-primary" href="{{ route('komunitas.create') }}"><i class="material-icons">add</i> Tambah Komunitas</a> </p>
                          </div>
+                    @endif
 					<div class="table-responsive material-datatables">
 					{!! $html->table(['class'=>'table table-striped table-no-bordered table-hover','cellspacing' => '0','width' => '100%','style' => 'width:100%']) !!}
 					</div>

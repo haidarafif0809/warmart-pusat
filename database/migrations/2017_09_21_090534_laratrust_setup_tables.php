@@ -39,6 +39,7 @@ class LaratrustSetupTables extends Migration
             $table->string('name',100)->unique();
             $table->string('display_name',100)->nullable();
             $table->string('description',100)->nullable();
+            $table->string('grup',100)->nullable();
             $table->timestamps();
         });
 

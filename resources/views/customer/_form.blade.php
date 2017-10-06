@@ -6,11 +6,20 @@
 	</div>
 </div>
 
+
 <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-	{!! Form::label('email', 'Email Customer', ['class'=>'col-md-2 control-label']) !!}
+	{!! Form::label('email', 'No. Telpon', ['class'=>'col-md-2 control-label']) !!}
 	<div class="col-md-4">
-		{!! Form::email('email', null, ['class'=>'form-control','required','autocomplete'=>'off', 'placeholder' => 'Email Customer', 'id' => 'email_customer']) !!}
-		{!! $errors->first('email', '<p class="help-block" id="email_error">:message</p>') !!}
+		{!! Form::number('email', null, ['class'=>'form-control','required','autocomplete'=>'off', 'placeholder' => 'No. Telpon', 'id' => 'telpon_customer']) !!}
+		{!! $errors->first('email', '<p class="help-block" id="no_telp_error">:message</p>') !!}
+	</div>
+</div>
+
+<div class="form-group{{ $errors->has('no_telp') ? ' has-error' : '' }}">
+	{!! Form::label('no_telp', 'Email Customer', ['class'=>'col-md-2 control-label']) !!}
+	<div class="col-md-4">
+		{!! Form::text('no_telp', null, ['class'=>'form-control','autocomplete'=>'off', 'placeholder' => 'Email Customer', 'id' => 'email_customer']) !!}
+		{!! $errors->first('no_telp', '<p class="help-block" id="email_error">:message</p>') !!}
 	</div>
 </div> 
 
@@ -19,14 +28,6 @@
 	<div class="col-md-4">
 		{!! Form::text('alamat', null, ['class'=>'form-control','required','autocomplete'=>'off', 'placeholder' => 'Alamat Customer', 'id' => 'alamat_customer']) !!}
 		{!! $errors->first('alamat', '<p class="help-block">:message</p>') !!}
-	</div>
-</div>
-
-<div class="form-group{{ $errors->has('no_telp') ? ' has-error' : '' }}">
-	{!! Form::label('no_telp', 'No. Telpon', ['class'=>'col-md-2 control-label']) !!}
-	<div class="col-md-4">
-		{!! Form::text('no_telp', null, ['class'=>'form-control','required','autocomplete'=>'off', 'placeholder' => 'No. Telpon', 'id' => 'telpon_customer']) !!}
-		{!! $errors->first('no_telp', '<p class="help-block" id="no_telp_error">:message</p>') !!}
 	</div>
 </div>
 
@@ -46,31 +47,23 @@
 		@endif		
 	</div>
 </div>
-
-@if (isset($customer) && $customer)
-
-	<div class="form-group{{ $errors->has('kelurahan') ? ' has-error' : '' }}">
-		{!! Form::label('kelurahan', 'Kelurahan Customer', ['class'=>'col-md-2 control-label']) !!}
-		<div class="col-md-4">
-			{!! Form::select('kelurahan', 
-			[''=>'']+App\Kelurahan::pluck('nama','id')->all(), $customer->wilayah, ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH KELURAHAN--', 'id' => 'kelurahan_customer']) !!}
-			{!! $errors->first('kelurahan', '<p class="help-block">:message</p>') !!}
-		</div>
+ 
+<div class="form-group{{ $errors->has('komunitas') ? ' has-error' : '' }}">
+	{!! Form::label('komunitas', 'Komunitas', ['class'=>'col-md-2 control-label']) !!}
+	<div class="col-md-4">
+		@if (isset($komunitas) && $komunitas->komunitas)
+		{!! Form::select('komunitas', 
+		[''=>'']+App\Komunitas::where('tipe_user','2')->pluck('name','id')->all(),$komunitas->komunitas
+		, ['class'=>'form-control js-selectize-reguler', 'placeholder' => 'Silahkan Pilih','id'=>'pilih_komunitas']) !!}
+		{!! $errors->first('komunitas', '<p class="help-block">:message</p>') !!}
+		@else
+		{!! Form::select('komunitas', 
+		[''=>'']+App\Komunitas::where('tipe_user','2')->pluck('name','id')->all(),null
+		, ['class'=>'form-control js-selectize-reguler', 'placeholder' => 'Silahkan Pilih','id'=>'pilih_komunitas']) !!}
+		{!! $errors->first('komunitas', '<p class="help-block">:message</p>') !!}
+		@endif
 	</div>
-
-@else
-
-	<div class="form-group{{ $errors->has('kelurahan') ? ' has-error' : '' }}">
-		{!! Form::label('kelurahan', 'Kelurahan Customer', ['class'=>'col-md-2 control-label']) !!}
-		<div class="col-md-4">
-			{!! Form::select('kelurahan', 
-			[''=>'']+App\Kelurahan::pluck('nama','id')->all(), null, ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH KELURAHAN--', 'id' => 'kelurahan_customer']) !!}
-			{!! $errors->first('kelurahan', '<p class="help-block">:message</p>') !!}
-		</div>
-	</div>
-
-@endif
-
+</div>
 
 <div class="form-group">
 	<div class="col-md-4 col-md-offset-2">

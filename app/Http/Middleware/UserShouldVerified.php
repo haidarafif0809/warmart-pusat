@@ -23,10 +23,13 @@ class UserShouldVerified
         Auth::logout();
 
         Session::flash("flash_notification", [ 
-        "message" => "Anda Tidak Bisa Login Di Karenakan Belum DI Konfirmasi Oleh Admin."
+        "alert" => 'danger',
+        "icon" => 'error_outline',
+        "judul" => 'FAILED',
+        "message" => 'Silahkan Verifikasi Nomor Anda '.$request['email'].''
         ]);
 
-        return redirect('/login');
+        return redirect('/kirim-kode-verifikasi?nomor='.$request['email']);
         }
 
         return $response;

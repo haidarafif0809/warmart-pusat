@@ -1,23 +1,22 @@
 @extends('layouts.app')
 @section('content')
-
 	<div class="row">
 		<div class="col-md-12">
 			<ul class="breadcrumb">
 				<li><a href="{{ url('/home') }}">Home</a></li>
-				<li class="active">Bank</li>
+				<li class="active">Otoritas</li>
 			</ul>
  
 			
 			   <div class="card">
 			   	   <div class="card-header card-header-icon" data-background-color="purple">
-                       <i class="material-icons">payment</i>
+                       <i class="material-icons">settings</i>
                                 </div>
                       <div class="card-content">
-                         <h4 class="card-title"> Bank </h4>
-					@if(Laratrust::can('tambah_bank'))
+                         <h4 class="card-title"> Otoritas </h4>
+					@if(Laratrust::can('tambah_otoritas'))
                        <div class="toolbar">
-                         	<p> <a class="btn btn-primary" href="{{ route('bank.create') }}"><i class="material-icons">add</i> Tambah Bank</a> </p>
+                         	<p> <a class="btn btn-primary" href="{{ route('otoritas.create') }}"><i class="material-icons">add</i> Tambah Otoritas</a> </p>
                          </div>
                     @endif
 					<div class="table-responsive material-datatables">
@@ -27,12 +26,13 @@
 			</div>
 		</div>
 	</div>
- 
-
 @endsection
 
 @section('scripts')
+
 {!! $html->scripts() !!}
+
+
 <script type="text/javascript">
 	// confirm delete
 		$(document.body).on('submit', '.js-confirm', function () {
@@ -43,4 +43,5 @@
 		return c;
 	}); 
 </script>
+
 @endsection

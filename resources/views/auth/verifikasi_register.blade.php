@@ -3,25 +3,16 @@
 
 @section('content')
 
-@include('layouts._flash_login')
-       @if ($errors->has('email'))
-                            <div class="alert alert-danger alert-with-icon">
-        <i class="material-icons" data-notify="icon" >error_outline</i>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">x</button>
-        <span data-notify="message"> <b>Failed:</b> {{ $errors->first('email') }}</span>
-    </div>
-     @endif
+@include('layouts._flash_login') 
 
-                    <form method="POST" action="{{ url('/login') }}">
+                        {!! Form::model($user->id,['url' => route('user.proses_kirim_kode_verifikasi', $nomor_hp), 'method' => 'put', 'files'=>'true','class'=>'form-horizontal']) !!}
                              {{ csrf_field() }}
                                 <div class="card card-login ">
                                     <div class="card-header text-center" data-background-color="blue">
-                                        <h4 class="card-title">Login</h4>
+                                        <h4 class="card-title">Masukan Kode Verifikasi</h4>
                                  
                                     </div>
-                             
-                                   
-                                   
+                              
                                     <div class="card-content">
                                         <div class="input-group ">
                                             <span class="input-group-addon">
@@ -29,7 +20,7 @@
                                             </span>
                                             <div class="form-group label-floating {{ $errors->has('email') ? ' has-error' : '' }}">
                                                 <label class="control-label">Nomor Telpon</label>
-                                                <input type="text" value="{{ old('email') }}" class="form-control" name="email">
+                                                <input type="text" value="{{ $nomor_hp }}" class="form-control" name="email" readonly="">
 
                                                 
                                             </div>
@@ -38,26 +29,24 @@
                                             <span class="input-group-addon">
                                                 <i class="material-icons">lock_outline</i>
                                             </span>
-                                            <div class="form-group label-floating {{ $errors->has('password') ? ' has-error' : '' }}">
-                                                <label class="control-label">Password</label>
-                                                <input type="password" class="form-control" name="password" >
+                                            <div class="form-group label-floating {{ $errors->has('kode_verifikasi') ? ' has-error' : '' }}">
+                                                <label class="control-label">Kode Verifikasi</label>
+                                                <input type="text" class="form-control" name="kode_verifikasi" maxlength="4" required="" autocomplete="off">
 
-                                                  @if ($errors->has('password'))
+                                                  @if ($errors->has('kode_verifikasi'))
                                                         <span class="help-block">
-                                                            <strong>{{ $errors->first('password') }}</strong>
+                                                            <strong>{{ $errors->first('kode_verifikasi') }}</strong>
                                                         </span>
                                                  @endif
                                             </div>
                                         </div>
                                     </div>
                                     <div class="footer text-center">
-                                        <button type="submit" id="login" class="btn btn-rose btn-simple btn-wd btn-lg">Let's go</button>
+                                        <button type="submit" class="btn btn-rose btn-simple btn-wd btn-lg">Verifikasi</button>
+                                        <h6><a href="{{ url('/kirim-ulang-kode-verifikasi/'.$user->id.'') }}">Kirim Ulang Kode Verifikasi</a></h6>
                                     </div>
-                                    <center>    
-                                        <a href="{{ url('/lupa-password/') }}">Lupa Password</a> 
-                                    </center>
-                                    
                                 </div>
-                            </form>
+                    {!! Form::close() !!}
+
                
 @endsection

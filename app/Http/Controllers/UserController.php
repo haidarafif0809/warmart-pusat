@@ -34,6 +34,8 @@ class UserController extends Controller
                         'form_url'  => route('user.destroy', $master_user->id),
                         'edit_url'  => route('user.edit', $master_user->id),
                         'confirm_message'   => 'Yakin Mau Menghapus User ' . $master_user->name . '?',
+                        'permission_ubah' => Laratrust::can('edit_user'),
+                        'permission_hapus' => Laratrust::can('hapus_user'),
                    
                         ]);
                 })
@@ -44,6 +46,7 @@ class UserController extends Controller
                         'no_confirm_message'   => 'Apakah Anda Yakin Tidak Meng Konfirmasi User ' . $user_konfirmasi->name . '?',
                         'konfirmasi_url' => route('user.konfirmasi', $user_konfirmasi->id),
                         'no_konfirmasi_url' => route('user.no_konfirmasi', $user_konfirmasi->id),
+                        'konfirmasi_user' => Laratrust::can('konfirmasi_user'), 
                         ]);
                 })//Konfirmasi User Apabila Bila Status User 1 Maka User sudah di konfirmasi oleh admin dan apabila status user 0 maka user belum di konfirmasi oleh admin
 
@@ -52,6 +55,7 @@ class UserController extends Controller
                         'model'     => $reset,
                         'confirm_message'   => 'Apakah Anda Yakin Ingin Me Reset Password User ' . $reset->name . '?',
                         'reset_url' => route('user.reset', $reset->id),
+                        'reset_password_user' => Laratrust::can('reset_password_user'), 
                         ]);
                 })//Reset Password apabila di klik tombol reset password maka password menjadi 123456
             ->addColumn('role', function($user){
@@ -78,8 +82,11 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
-        return view('user.create');
+            
+            // ambil otoritas yang bukan warung, customer, dan komunitas
+        $otoritas = Role::where('id','!=',3)->where('id','!=',4)->where('id','!=',5)->pluck('display_name','id');
+
+        return view('user.create',['otoritas' => $otoritas]);
     }
 
     /**
@@ -110,7 +117,7 @@ class UserController extends Controller
 
         Session::flash("flash_notification", [
             "level"=>"success",
-            "message"=>"Berhasil Menambah User $request->name"
+            "message"=>" <b>BERHASIL:</b> Menambah User <b>$request->name</b>"
             ]);
 
         return redirect()->route('user.index');
@@ -138,8 +145,10 @@ class UserController extends Controller
         // edoit user
         //
         $user = User::with('role')->find($id);
+            // ambil otoritas yang bukan warung, customer, dan komunitas
+        $otoritas = Role::where('id','!=',3)->where('id','!=',4)->where('id','!=',5)->pluck('display_name','id');
 
-        return view('user.edit')->with(compact('user'));
+        return view('user.edit',['otoritas'=>$otoritas])->with(compact('user'));
     }
 
     /**
@@ -179,7 +188,7 @@ class UserController extends Controller
 
          Session::flash("flash_notification", [
             "level"=>"success",
-            "message"=>"Berhasil Mengubah User $request->name"
+            "message"=>"BERHASIL:</b> Mengubah User $request->name"
             ]);
 
         return redirect()->route('user.index');

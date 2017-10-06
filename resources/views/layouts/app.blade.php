@@ -26,7 +26,7 @@
     <link href="{{ asset('css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
      
     <!--     Fonts and icons     -->
-    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
@@ -50,12 +50,39 @@
             <div class="sidebar-wrapper">
               
                 <ul class="nav">
+                    <li>
+                        <a data-toggle="collapse" href="#logout">
+                            <i class="material-icons">person</i>
+                            <p>{{ Auth::user()->name }}
+                                <b class="caret"></b>
+                            </p>
+                        </a> 
+                        <div class="collapse" id="logout">
+                            <ul class="nav">
+                                    <li>
+                                         <a href="{{ url('/ubah-password') }}">Ubah Password</a>
+                                    </li>
+                                    <li>
+                                         <a href="{{ url('/logout') }}"
+                                            onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                            Logout
+                                        </a>
+                                        <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
+                                            {{ csrf_field() }}
+                                        </form>
+
+                                    </li>     
+                            </ul>
+                        </div>
+                    </li>
                     <li class="active">
                         <a href="{{ url('/')}}">
                             <i class="material-icons">dashboard</i>
                             <p>Dashboard</p>
                         </a>
                     </li>
+                    @if(Laratrust::can('lihat_master_data'))
                     <li>
                         <a data-toggle="collapse" href="#pagesExamples">
                             <i class="material-icons">image</i>
@@ -65,40 +92,58 @@
                         </a>
                         <div class="collapse" id="pagesExamples">
                             <ul class="nav">
+                                @if(Laratrust::can('lihat_bank'))
                                 <li>
                                     <a href="{{ route('bank.index') }}">
                                         <span class="sidebar-mini">B</span>
                                         <span class="sidebar-normal">Bank</span>
                                     </a>
                                 </li>
+                                @endif
+                                @if(Laratrust::can('lihat_customer'))
                                 <li>
                                     <a href="{{ route('customer.index') }}">
                                         <span class="sidebar-mini">C</span>
                                         <span class="sidebar-normal">Customer</span>
                                     </a>
                                 </li>
+                                @endif
+                                @if(Laratrust::can('lihat_komunitas'))
                                 <li>
                                     <a href="{{ route('komunitas.index') }}">
                                         <span class="sidebar-mini">K</span>
                                         <span class="sidebar-normal">Komunitas</span>
                                     </a>
                                 </li> 
+                                @endif
+                                @if(Laratrust::can('lihat_otoritas'))
+                                <li>
+                                    <a href="{{ route('otoritas.index') }}">
+                                        <span class="sidebar-mini">O</span>
+                                        <span class="sidebar-normal">Otoritas</span>
+                                    </a>
+                                </li> 
+                                @endif
+                                @if(Laratrust::can('lihat_user'))
                                 <li>
                                     <a href="{{ route('user.index') }}">
                                         <span class="sidebar-mini">U</span>
                                         <span class="sidebar-normal">User</span>
                                     </a>
                                 </li>
+                                @endif        
+                                @if(Laratrust::can('lihat_warung'))
                                 <li>
                                     <a href="{{ route('warung.index') }}">
                                         <span class="sidebar-mini">W</span>
                                         <span class="sidebar-normal">Warung</span>
                                     </a>
                                 </li>
-                                
+                                @endif 
                             </ul>
                         </div>
                     </li>
+                    @endif
                    
                   
                 </ul>
@@ -123,36 +168,7 @@
                         <a class="navbar-brand" href="#"> Dashboard </a>
                     </div>
                     <div class="collapse navbar-collapse">
-                        <ul class="nav navbar-nav navbar-right">
-                        
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <i class="material-icons">person</i>{{ Auth::user()->name }} <span class="caret"></span>
-                                    
-                                    <p class="hidden-lg hidden-md">
-                                        Profile
-                                        <b class="caret"></b>
-                                    </p>
-                                </a>
-                                <ul class="dropdown-menu">
-                                   
-                                    <li>
-                                         <a href="{{ url('/ubah-password') }}">Ubah Password</a>
-                                    </li>
-                                    <li>
-                                         <a href="{{ url('/logout') }}"
-                                            onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                            Logout
-                                        </a>
-                                        <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
-                                            {{ csrf_field() }}
-                                        </form>
-
-                                    </li>
-                                
-                                </ul>
-                            </li>
+                        <ul class="nav navbar-nav navbar-right"> 
                        
                            
                         </ul>
@@ -220,7 +236,7 @@
 <!--  Plugin for Select, full documentation here: http://silviomoreto.github.io/bootstrap-select -->
 <script src="{{ asset('js/jquery.select-bootstrap.js') }}"></script>
 <!--  DataTables.net Plugin, full documentation here: https://datatables.net/    -->
-<script src="{{ asset('js/jquery.datatables.js') }}"></script>
+<script src="{{ asset('js/jquery.dataTables.js') }}"></script>
 <!-- Sweet Alert 2 plugin, full documentation here: https://limonte.github.io/sweetalert2/ -->
 <script src="{{ asset('js/sweetalert2.js') }}"></script>
 <!-- Plugin for Fileupload, full documentation here: http://www.jasny.net/bootstrap/javascript/#fileinput -->
