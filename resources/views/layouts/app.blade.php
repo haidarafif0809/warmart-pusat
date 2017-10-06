@@ -44,7 +44,7 @@
                     WM
                 </a>
                 <a href="http://www.creative-tim.com" class="simple-text logo-normal">
-                    WARMART.id
+                    WARMART.ID
                 </a>
             </div>
             <div class="sidebar-wrapper">
