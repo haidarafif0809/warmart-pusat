@@ -40,10 +40,10 @@
         Tip 3: you can change the color of the sidebar with data-background-color="white | black"
     -->
             <div class="logo">
-                <a href="http://www.creative-tim.com" class="simple-text logo-mini">
+                <a href="https://war-mart.id" class="simple-text logo-mini">
                     WM
                 </a>
-                <a href="http://www.creative-tim.com" class="simple-text logo-normal">
+                <a href="https://war-mart.id" class="simple-text logo-normal">
                     WARMART.ID
                 </a>
             </div>
