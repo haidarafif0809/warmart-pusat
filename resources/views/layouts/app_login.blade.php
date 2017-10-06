@@ -10,11 +10,11 @@
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
     <!-- Bootstrap core CSS     -->
-    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" />
     <!--  Material Dashboard CSS    -->
-    <link href="css/material-dashboard.css?v=1.2.0" rel="stylesheet" />
+    <link href="{{ asset('css/material-dashboard.css?v=1.2.0') }}" rel="stylesheet" />
    
-    <link href="css/bootstrap-datepicker.min.css" rel="stylesheet">
+    <link href="{{ asset('css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
     <!--     Fonts and icons     -->
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons" />
@@ -69,7 +69,7 @@
         </div>
     </nav>
     <div class="wrapper wrapper-full-page">
-        <div class="full-page login-page" filter-color="black" data-image="img/login_bg.jpg">
+        <div class="full-page login-page" filter-color="black" data-image="{{ asset('img/login_bg.jpg') }}">
             <!--   you can change the color of the filter page using: data-color="blue | purple | green | orange | red | rose " -->
             <div class="content">
                 <div class="container">
@@ -98,49 +98,49 @@
     </div>
 </body>
 <!--   Core JS Files   -->
-<script src="js/jquery-3.2.1.min.js" type="text/javascript"></script>
-<script src="js/bootstrap.min.js" type="text/javascript"></script>
-<script src="js/material.min.js" type="text/javascript"></script>
-<script src="js/perfect-scrollbar.jquery.min.js" type="text/javascript"></script>
+<script src="{{ asset('js/jquery-3.2.1.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('js/material.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('js/perfect-scrollbar.jquery.min.js') }}" type="text/javascript"></script>
 <!-- Library for adding dinamically elements -->
-<script src="js/arrive.min.js" type="text/javascript"></script>
+<script src="{{ asset('js/arrive.min.js') }}" type="text/javascript"></script>
 <!-- Forms Validations Plugin -->
-<script src="js/jquery.validate.min.js"></script>
+<script src="{{ asset('js/jquery.validate.min.js') }}"></script>
 <!-- Promise Library for SweetAlert2 working on IE -->
-<script src="js/es6-promise-auto.min.js"></script>
+<script src="{{ asset('js/es6-promise-auto.min.js') }}"></script>
 <!--  Plugin for Date Time Picker and Full Calendar Plugin-->
-<script src="js/moment.min.js"></script>
+<script src="{{ asset('js/moment.min.js') }}"></script>
 <!--  Charts Plugin, full documentation here: https://gionkunz.github.io/chartist-js/ -->
-<script src="js/chartist.min.js"></script>
+<script src="{{ asset('js/chartist.min.js') }}"></script>
 <!--  Plugin for the Wizard, full documentation here: https://github.com/VinceG/twitter-bootstrap-wizard -->
-<script src="js/jquery.bootstrap-wizard.js"></script>
+<script src="{{ asset('js/jquery.bootstrap-wizard.js') }}"></script>
 <!--  Notifications Plugin, full documentation here: http://bootstrap-notify.remabledesigns.com/    -->
-<script src="js/bootstrap-notify.js"></script>
+<script src="{{ asset('js/bootstrap-notify.js') }}"></script>
 <!--  Plugin for the DateTimePicker, full documentation here: https://eonasdan.github.io/bootstrap-datetimepicker/ -->
-<script src="js/bootstrap-datetimepicker.js"></script>
+<script src="{{ asset('js/bootstrap-datetimepicker.js') }}"></script>
 <!-- Vector Map plugin, full documentation here: http://jvectormap.com/documentation/ -->
-<script src="js/jquery-jvectormap.js"></script>
+<script src="{{ asset('js/jquery-jvectormap.js') }}"></script>
 <!-- Sliders Plugin, full documentation here: https://refreshless.com/nouislider/ -->
-<script src="js/nouislider.min.js"></script>
+<script src="{{ asset('js/nouislider.min.js') }}"></script>
 <!--  Google Maps Plugin    -->
 <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
 <!--  Plugin for Select, full documentation here: http://silviomoreto.github.io/bootstrap-select -->
-<script src="js/jquery.select-bootstrap.js"></script>
+<script src="{{ asset('js/jquery.select-bootstrap.js') }}"></script>
 <!--  DataTables.net Plugin, full documentation here: https://datatables.net/    -->
-<script src="js/jquery.dataTables.js"></script>
+<script src="{{ asset('js/jquery.dataTables.js') }}"></script>
 <!-- Sweet Alert 2 plugin, full documentation here: https://limonte.github.io/sweetalert2/ -->
-<script src="js/sweetalert2.js"></script>
+<script src="{{ asset('js/sweetalert2.js') }}"></script>
 <!-- Plugin for Fileupload, full documentation here: http://www.jasny.net/bootstrap/javascript/#fileinput -->
-<script src="js/jasny-bootstrap.min.js"></script>
+<script src="{{ asset('js/jasny-bootstrap.min.js') }}"></script>
 <!--  Full Calendar Plugin, full documentation here: https://github.com/fullcalendar/fullcalendar    -->
-<script src="js/fullcalendar.min.js"></script>
+<script src="{{ asset('js/fullcalendar.min.js') }}"></script>
 <!-- Plugin for Tags, full documentation here: https://github.com/bootstrap-tagsinput/bootstrap-tagsinputs  -->
-<script src="js/jquery.tagsinput.js"></script>
+<script src="{{ asset('js/jquery.tagsinput.js') }}"></script>
 <!-- Material Dashboard javascript methods -->
-<script src="js/material-dashboard.js?v=1.2.0"></script>
+<script src="{{ asset('js/material-dashboard.js?v=1.2.0') }}"></script>
 
-<script src="js/bootstrap-datepicker.min.js"></script>
-<script src="js/demo.js"></script> 
+<script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
+<script src="{{ asset('js/demo.js') }}"></script> 
 
 <script type="text/javascript">
     $().ready(function() {

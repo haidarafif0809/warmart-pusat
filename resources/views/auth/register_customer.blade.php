@@ -102,6 +102,10 @@
                                             </div>
                                         </div>
                                           {!! Form::hidden('id_register', 1, ['class'=>'form-control','autocomplete'=>'off']) !!}
+
+                                          @if(isset($komunitas_id))
+                                          {!! Form::hidden('komunitas_id', $komunitas_id, ['class'=>'form-control','autocomplete'=>'off']) !!}
+                                          @endif
                                     </div>
                                     <div class="footer text-center">
                                         <button type="submit" class="btn btn-rose btn-simple btn-wd btn-lg">Registrasi Costomer</button>

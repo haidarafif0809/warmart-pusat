@@ -12,6 +12,7 @@ use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Auth;
+use App\KomunitasCustomer;
 
 class RegisterController extends Controller
 {
@@ -87,7 +88,7 @@ class RegisterController extends Controller
         $kode_verifikasi = rand(1111,9999);
         if ($data['id_register'] == 1) {
         //Customer
-    $user = User::create([
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'alamat' => $data['alamat'],    
@@ -99,8 +100,18 @@ class RegisterController extends Controller
             'kode_verifikasi'=> $kode_verifikasi,
         ]);
 
+
+
         $customerRole = Role::where('name', 'customer')->first();
         $user->attachRole($customerRole);
+
+
+          // registrasi berasal dari link affiliasi
+        if (isset($data['komunitas_id'])) {
+            
+            //kaitkan customer dengan komunitas yang berasal dari link affiliasi
+            KomunitasCustomer::create(['komunitas_id' => $data['komunitas_id'],'user_id' => $user->id]);
+        }
 
         $userkey = env('USERKEY');
         $passkey = env('PASSKEY');

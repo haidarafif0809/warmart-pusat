@@ -14,8 +14,3 @@ $('.datepicker').datepicker({
     autoclose: true,
 });
 
-$('.clockpicker').clockpicker({
-    placement: 'bottom',
-    align: 'left',
-    autoclose: true, 
-});

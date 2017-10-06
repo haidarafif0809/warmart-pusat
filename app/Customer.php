@@ -27,7 +27,19 @@ class Customer extends Model
 		return $this->hasOne('App\Kelurahan','id','wilayah');
 	}
 
-   	public function user_komunitas(){
-		return $this->hasOne('App\User','id','komunitas');
-	}
+    public function getKomunitasAttribute() {
+    
+    $komunitas = KomunitasCustomer::where('user_id',$this->id); 
+
+        if ($komunitas->count() == 0) {
+          return "warmart";
+        } 
+        else {
+          return $komunitas->first()->komunitas->name;
+        }
+    }
+
+    public function komunitas(){
+      return $this->belongsTo('App\KomunitasCustomer','user_id','id');
+    }
 }

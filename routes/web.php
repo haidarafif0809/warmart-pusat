@@ -20,7 +20,16 @@ Route::get('/sms','HomeController@sms');
 Auth::routes();
 
  
-Route::get('/register-customer','Auth\RegisterController@register_customer'); 
+Route::get('/register-customer','Auth\RegisterController@register_customer');
+
+//registrasi lewat link affiliasi
+Route::get('/aff/{id}/',function($id){
+
+
+	return view('auth.register_customer',['komunitas_id' => $id]);
+}); 
+
+
 Route::get('kirim-kode-verifikasi','Auth\RegisterController@kirim_kode_verifikasi');
 Route::get('proses-kirim-kode-verifikasi','Auth\RegisterController@proses_kirim_kode_verifikasi');  
 Route::get('kirim-ulang-kode-verifikasi/{id}','Auth\RegisterController@kirim_ulang_kode_verifikasi');

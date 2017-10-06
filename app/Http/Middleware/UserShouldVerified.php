@@ -25,7 +25,7 @@ class UserShouldVerified
         Session::flash("flash_notification", [ 
         "alert" => 'danger',
         "icon" => 'error_outline',
-        "judul" => 'FAILED',
+        "judul" => 'INFO',
         "message" => 'Silahkan Verifikasi Nomor Anda '.$request['email'].''
         ]);
 
