@@ -12,6 +12,7 @@ use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Auth;
+use App\KomunitasCustomer;
 
 class RegisterController extends Controller
 {

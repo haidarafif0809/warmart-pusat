@@ -51,9 +51,9 @@
 <div class="form-group{{ $errors->has('komunitas') ? ' has-error' : '' }}">
 	{!! Form::label('komunitas', 'Komunitas', ['class'=>'col-md-2 control-label']) !!}
 	<div class="col-md-4">
-		@if (isset($komunitas) && $komunitas->komunitas)
+		@if (isset($komunitas))
 		{!! Form::select('komunitas', 
-		[''=>'']+App\Komunitas::where('tipe_user','2')->pluck('name','id')->all(),$komunitas->komunitas
+		[''=>'']+App\Komunitas::where('tipe_user','2')->pluck('name','id')->all(),$komunitas->komunitas_id
 		, ['class'=>'form-control js-selectize-reguler', 'placeholder' => 'Silahkan Pilih','id'=>'pilih_komunitas']) !!}
 		{!! $errors->first('komunitas', '<p class="help-block">:message</p>') !!}
 		@else

@@ -21,7 +21,7 @@ class LoginTest extends DuskTestCase
                     ->type('email','admin@gmail.com')
                     ->type('password','rahasia')
                     ->click('#login')
-                    ->assertSee('WARMART');
+                    ->assertSee('Dashboard');
         });
     }
 }

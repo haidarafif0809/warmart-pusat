@@ -11,6 +11,7 @@ use Laratrust;
 use App\Customer;
 use App\User;
 use App\Role;
+use App\KomunitasCustomer;
 
 class CustomerController extends Controller
 {
@@ -22,7 +23,7 @@ class CustomerController extends Controller
     public function index(Request $request, Builder $htmlBuilder)
     {
         if ($request->ajax()) {
-            $master_customer = Customer::with(['kelurahan', 'user_komunitas'])->where('tipe_user',3)->get();
+            $master_customer = Customer::with(['kelurahan'])->where('tipe_user',3)->get();
             return Datatables::of($master_customer)->addColumn('action', function($customer){
                     return view('datatable._action', [
                         'model'     => $customer,
@@ -34,15 +35,10 @@ class CustomerController extends Controller
 
                         ]);
                 })
-                ->addColumn('nama_warung', function($id_warung){
-                    if ($id_warung->komunitas == 0) {
-                        $nama_warung = "WARMART";
-                    }
-                    else{
-                        $nama_warung = $id_warung->user_komunitas->name;
-                    }
+                ->addColumn('komunitas', function($customer){
+                  
                     
-                    return $nama_warung;
+                    return $customer->komunitas;
                 })
                 ->addColumn('tgl_lahir', function($tgl_lahir){
                     if ($tgl_lahir->tgl_lahir == "") {
@@ -71,7 +67,7 @@ class CustomerController extends Controller
         ->addColumn(['data' => 'no_telp', 'name' => 'no_telp', 'title' => 'Email']) 
         ->addColumn(['data' => 'tgl_lahir', 'name' => 'tgl_lahir', 'title' => 'Tanggal Lahir'])
         ->addColumn(['data' => 'alamat', 'name' => 'alamat', 'title' => 'Alamat'])  
-        ->addColumn(['data' => 'nama_warung', 'name' => 'nama_warung', 'title' => 'Komunitas'])
+        ->addColumn(['data' => 'komunitas', 'name' => 'komunitas', 'title' => 'Komunitas'])
         ->addColumn(['data' => 'action', 'name' => 'action', 'title' => '', 'orderable' => false, 'searchable'=>false]);
 
         return view('customer.index')->with(compact('html'));
@@ -179,8 +175,10 @@ class CustomerController extends Controller
 
         $customer = Customer::find($id);
         $tanggal = tanggal_terbalik($customer->tgl_lahir);
+        $komunitas = KomunitasCustomer::where('user_id',$id)->first();
 
-        return view('customer.edit')->with(compact('customer', 'tanggal'));
+
+        return view('customer.edit')->with(compact('customer', 'tanggal','komunitas'));
         
     }
 
@@ -206,7 +204,7 @@ class CustomerController extends Controller
             'alamat'    => 'required',
             'no_telp'   => 'required|without_spaces|numeric',
             'tgl_lahir' => 'required',
-            'kelurahan' => 'required',
+            
         ]);
 
         Customer::where('id', $id)->update([
@@ -217,6 +215,10 @@ class CustomerController extends Controller
             'tgl_lahir'         => tanggal_mysql($request->tgl_lahir),
             'wilayah'           => $request->kelurahan,
         ]);
+
+        //hapus komunitas sebelumnya, masukkan komunitas baru
+        KomunitasCustomer::where('user_id',$id)->delete();
+        KomunitasCustomer::create(['user_id' =>$id ,'komunitas_id' => $request->komunitas]);
 
         $pesan_alert = 
              '<div class="container-fluid">
@@ -251,6 +253,7 @@ class CustomerController extends Controller
                 </div>';
 
         Customer::destroy($id);
+        KomunitasCustomer::where('user_id',$id)->delete();
 
         Session:: flash("flash_notification", [
             "level"=>"success",
