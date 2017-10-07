@@ -17,11 +17,27 @@ class Customer extends Model
 
     protected $table = 'users';
 
-   	protected $fillable = ['email','password','name', 'alamat', 'wilayah', 'komunitas', 'no_telp','tgl_lahir','tipe_user', 'status_konfirmasi'];
+   	protected $fillable = ['email','password','name', 'alamat', 'wilayah', 'no_telp','tgl_lahir','tipe_user', 'status_konfirmasi'];
 
    	protected $hidden = [
         'password', 'remember_token',
     ];
+
+
+
+  public function setTglLahirAttribute($tgl_lahir)
+  {
+      //TANGGAL SQL
+      $date= date_create($tgl_lahir);
+      $date_format =  date_format($date,"Y-m-d");    
+     
+    $this->attributes['tgl_lahir'] = $date_format;
+  }
+
+  public function getTglLahirAttribute($tgl_lahir) {
+
+    return \Carbon\Carbon::createFromFormat('Y-m-d', $tgl_lahir)->format('d-m-Y'); 
+  }
     
    	public function kelurahan(){
 		return $this->hasOne('App\Kelurahan','id','wilayah');
