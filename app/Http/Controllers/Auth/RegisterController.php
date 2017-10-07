@@ -111,12 +111,22 @@ class RegisterController extends Controller
                 'kode_verifikasi'=> $kode_verifikasi,
             ]);
 
+
+
             $customerRole = Role::where('name', 'customer')->first();
             $user->attachRole($customerRole);
 
+
+              // registrasi berasal dari link affiliasi
+            if (isset($data['komunitas_id'])) {
+                
+                //kaitkan customer dengan komunitas yang berasal dari link affiliasi
+                KomunitasCustomer::create(['komunitas_id' => $data['komunitas_id'],'user_id' => $user->id]);
+            }
+
             $userkey = env('USERKEY');
             $passkey = env('PASSKEY');
-            $nomor_tujuan = $data['no_telp'];
+            $nomor_tujuan = $data['email'];
             $isi_pesan ='Terima Kasih Telah Mendaftar Sebagai Customer Warmart. Silakan Masukan Kode Verfikasi Warmart '.$kode_verifikasi.'';
 
             if (env('STATUS_SMS') == 1) {

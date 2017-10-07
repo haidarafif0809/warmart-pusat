@@ -19,7 +19,9 @@ Route::get('/sms','HomeController@sms');
 
 Auth::routes();
 
- 
+//USER WARUNG 
+Route::get('/register-warung','Auth\RegisterController@register_warung'); 
+
 Route::get('/register-customer','Auth\RegisterController@register_customer');
 
 //registrasi lewat link affiliasi
