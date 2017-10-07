@@ -131,6 +131,13 @@
                                         <span class="sidebar-normal">User</span>
                                     </a>
                                 </li>
+
+                                <li>
+                                    <a href="{{ route('user_warung.index') }}">
+                                        <span class="sidebar-mini">UW</span>
+                                        <span class="sidebar-normal">User Warung</span>
+                                    </a>
+                                </li>
                                 @endif        
                                 @if(Laratrust::can('lihat_warung'))
                                 <li>

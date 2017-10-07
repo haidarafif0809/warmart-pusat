@@ -64,13 +64,24 @@ class RegisterController extends Controller
                 'tgl_lahir' => '', 
                 'password' => 'required|string|min:6|confirmed',
             ]);
-        }elseif ($data['id_register'] == 2) { 
+        }
+        elseif ($data['id_register'] == 2) { 
             //Komunitas
             return Validator::make($data, [
                 'email'     => 'required|numeric|without_spaces|unique:users,email',
                 'name'      => 'required',
                 'password' => 'required|string|min:6|confirmed',
                 'no_telp'   => 'without_spaces|unique:users,no_telp',
+                'alamat'    => 'required', 
+            ]);
+        }
+        elseif ($data['id_register'] == 3) { 
+            //USER WARUNG
+            return Validator::make($data, [
+                'email'     => 'required|without_spaces|unique:users,email',
+                'name'      => 'required',
+                'password'  => 'required|string|min:6|confirmed',
+                'no_telp'   => 'required|numeric|without_spaces|unique:users,no_telp',
                 'alamat'    => 'required', 
             ]);
         }
@@ -87,62 +98,93 @@ class RegisterController extends Controller
         $kode_verifikasi = rand(1111,9999);
         if ($data['id_register'] == 1) {
         //Customer
-    $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'alamat' => $data['alamat'],    
-            'no_telp' => $data['no_telp'],   
-            'tgl_lahir' => $data['tgl_lahir'],    
-            'password' => bcrypt($data['password']),
-            'tipe_user'=> 3,
-            'status_konfirmasi'=>0,
-            'kode_verifikasi'=> $kode_verifikasi,
-        ]);
+            $user = User::create([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'alamat' => $data['alamat'],    
+                'no_telp' => $data['no_telp'],   
+                'tgl_lahir' => $data['tgl_lahir'],    
+                'password' => bcrypt($data['password']),
+                'tipe_user'=> 3,
+                'status_konfirmasi'=>0,
+                'kode_verifikasi'=> $kode_verifikasi,
+            ]);
 
-        $customerRole = Role::where('name', 'customer')->first();
-        $user->attachRole($customerRole);
+            $customerRole = Role::where('name', 'customer')->first();
+            $user->attachRole($customerRole);
 
-        $userkey = env('USERKEY');
-        $passkey = env('PASSKEY');
-        $nomor_tujuan = $data['email'];
-        $isi_pesan ='Terima Kasih Telah Mendaftar Sebagai Customer Warmart. Silakan Masukan Kode Verfikasi Warmart '.$kode_verifikasi.'';
+            $userkey = env('USERKEY');
+            $passkey = env('PASSKEY');
+            $nomor_tujuan = $data['no_telp'];
+            $isi_pesan ='Terima Kasih Telah Mendaftar Sebagai Customer Warmart. Silakan Masukan Kode Verfikasi Warmart '.$kode_verifikasi.'';
 
-        if (env('STATUS_SMS') == 1) {
-            $client = new Client(); //GuzzleHttp\Client
-            $result = $client->get('https://reguler.zenziva.net/apps/smsapi.php?userkey='.$userkey.'&passkey='.$passkey.'&nohp='.$nomor_tujuan.'&pesan='.$isi_pesan.''); 
-           
+            if (env('STATUS_SMS') == 1) {
+                $client = new Client(); //GuzzleHttp\Client
+                $result = $client->get('https://reguler.zenziva.net/apps/smsapi.php?userkey='.$userkey.'&passkey='.$passkey.'&nohp='.$nomor_tujuan.'&pesan='.$isi_pesan.''); 
+               
+            }
+
+            return $user;
+
         }
-
-        return $user;
-
-        }elseif ($data['id_register'] == 2) { 
+        elseif ($data['id_register'] == 2) { 
         //Komunitas 
-        $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
-            'alamat' => $data['alamat'],   
-            'no_telp' => $data['no_telp'],   
-            'tipe_user'=> 2,
-            'status_konfirmasi'=>0,
-            'kode_verifikasi'=> $kode_verifikasi,
-        ]);
+            $user = User::create([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'password' => bcrypt($data['password']),
+                'alamat' => $data['alamat'],   
+                'no_telp' => $data['no_telp'],   
+                'tipe_user'=> 2,
+                'status_konfirmasi'=>0,
+                'kode_verifikasi'=> $kode_verifikasi,
+            ]);
 
-        $warungRole = Role::where('name', 'komunitas')->first();
-        $user->attachRole($warungRole);
+            $warungRole = Role::where('name', 'komunitas')->first();
+            $user->attachRole($warungRole);
 
-        $userkey = env('USERKEY');
-        $passkey = env('PASSKEY');
-        $nomor_tujuan = $data['email'];
-        $isi_pesan ='Terima Kasih Telah Mendaftar Sebagai Komunitas Warmart. Silakan Masukan Kode Verfikasi Warmart '.$kode_verifikasi.'';
+            $userkey = env('USERKEY');
+            $passkey = env('PASSKEY');
+            $nomor_tujuan = $data['no_telp'];
+            $isi_pesan ='Terima Kasih Telah Mendaftar Sebagai Komunitas Warmart. Silakan Masukan Kode Verfikasi Warmart '.$kode_verifikasi.'';
 
-        if (env('STATUS_SMS') == 1) {
-            $client = new Client(); //GuzzleHttp\Client
-            $result = $client->get('https://reguler.zenziva.net/apps/smsapi.php?userkey='.$userkey.'&passkey='.$passkey.'&nohp='.$nomor_tujuan.'&pesan='.$isi_pesan.''); 
-           
+            if (env('STATUS_SMS') == 1) {
+                $client = new Client(); //GuzzleHttp\Client
+                $result = $client->get('https://reguler.zenziva.net/apps/smsapi.php?userkey='.$userkey.'&passkey='.$passkey.'&nohp='.$nomor_tujuan.'&pesan='.$isi_pesan.''); 
+               
+            }
+
+            return $user;
+
         }
+        elseif ($data['id_register'] == 3) { 
+        //USER WARUNG 
+            $user = User::create([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'password' => bcrypt($data['password']),
+                'alamat' => $data['alamat'],   
+                'no_telp' => $data['no_telp'],   
+                'tipe_user'=> 4,
+                'status_konfirmasi'=>0,
+                'kode_verifikasi'=> $kode_verifikasi,
+            ]);
 
-        return $user;
+            $userWarungRole = Role::where('name', 'warung')->first();
+            $user->attachRole($userWarungRole);
+
+            $userkey = env('USERKEY');
+            $passkey = env('PASSKEY');
+            $nomor_tujuan = $data['no_telp'];
+            $isi_pesan ='Terima Kasih Telah Mendaftar Sebagai User Warung Warmart. Silakan Masukan Kode Verfikasi Warmart '.$kode_verifikasi.'';
+
+            if (env('STATUS_SMS') == 1) {
+                $client = new Client(); //GuzzleHttp\Client
+                $result = $client->get('https://reguler.zenziva.net/apps/smsapi.php?userkey='.$userkey.'&passkey='.$passkey.'&nohp='.$nomor_tujuan.'&pesan='.$isi_pesan.''); 
+               
+            }
+
+            return $user;
 
         }
 
@@ -151,13 +193,13 @@ class RegisterController extends Controller
     protected function kirim_kode_verifikasi(Request $request)
     {  
         $nomor_hp = $request->nomor;
-        $user = User::where('email',$request->nomor)->first();
+        $user = User::where('no_telp',$request->nomor)->first();
         return view('auth.verifikasi_register',['nomor_hp'=>$nomor_hp,'user'=>$user]);    
     }
 
     protected function proses_kirim_kode_verifikasi(Request $request,$nomor_hp)
     {  
-        $user = User::where('email',$nomor_hp)->first();
+        $user = User::where('no_telp',$nomor_hp)->first();
         if ($request->kode_verifikasi != $user->kode_verifikasi) {
              
             Session::flash("flash_notification", [
@@ -182,7 +224,7 @@ class RegisterController extends Controller
            
         $userkey = env('USERKEY');
         $passkey = env('PASSKEY');
-        $nomor_tujuan = $user->email;
+        $nomor_tujuan = $user->no_telp;
         $isi_pesan ='Terima Kasih Telah Mendaftar Sebagai Warmart. Silakan Masukan Kode Verfikasi Warmart '.$kode_verifikasi.'';
 
         if (env('STATUS_SMS') == 1) {
@@ -214,9 +256,9 @@ class RegisterController extends Controller
         $kode_verifikasi = rand(1111,9999);
         $userkey = env('USERKEY');
         $passkey = env('PASSKEY');
-        $nomor_tujuan = $request->email;
-        $user = User::where('email',$nomor_tujuan)->first();
-        User::where('email',$nomor_tujuan)->update(['kode_verifikasi' => $kode_verifikasi]);
+        $nomor_tujuan = $request->no_telp;
+        $user = User::where('no_telp',$nomor_tujuan)->first();
+        User::where('no_telp',$nomor_tujuan)->update(['kode_verifikasi' => $kode_verifikasi]);
         $isi_pesan ='Yth :  '.$user->name.', Masukan Kode Verfikasi Berikut Untuk Login Ke Warmart : '.$kode_verifikasi.'';
 
         if (env('STATUS_SMS') == 1) {
@@ -233,5 +275,13 @@ class RegisterController extends Controller
 
         return redirect('/kirim-kode-verifikasi?nomor='.$nomor_tujuan);
         } 
+    }
+
+    //USER WARUNG
+
+
+    protected function register_warung  ()
+    { 
+        return view('auth.register_warung   ');    
     }
 }

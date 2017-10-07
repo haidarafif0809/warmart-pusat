@@ -7,6 +7,8 @@ use Yajra\Datatables\Html\Builder;
 use Yajra\Datatables\Datatables;
 use Illuminate\Support\Facades\DB;
 use App\Warung;
+use App\UserWarung;
+use App\BankWarung;
 use Session;
 use Laratrust;
 
@@ -21,7 +23,7 @@ class WarungController extends Controller
     { 
         if ($request->ajax()) {
             # code...
-            $warung = Warung::with(['kelurahan'])->get();
+            $warung = Warung::with(['kelurahan', 'bank_warung'])->get();
             return Datatables::of($warung)
                 ->addColumn('action', function($warung){
                     return view('datatable._action', [
@@ -33,16 +35,17 @@ class WarungController extends Controller
                         'permission_hapus' => Laratrust::can('hapus_warung'),
 
                         ]);
-                })
-                ->addColumn('link', function($link){ 
-                    return $link->link_afiliasi;
                 })->make(true);
         }
         $html = $htmlBuilder
         ->addColumn(['data' => 'name', 'name' => 'name', 'title' => 'Nama']) 
+        ->addColumn(['data' => 'no_telpon', 'name' => 'no_telpon', 'title' => 'No. Telpon']) 
+        ->addColumn(['data' => 'email', 'name' => 'email', 'title' => 'Email']) 
+        ->addColumn(['data' => 'bank_warung.nama_bank', 'name' => 'bank_warung.nama_bank', 'title' => 'Nama Bank']) 
+        ->addColumn(['data' => 'bank_warung.atas_nama', 'name' => 'bank_warung.atas_nama', 'title' => 'Nama Rekening']) 
+        ->addColumn(['data' => 'bank_warung.no_rek', 'name' => 'bank_warung.no_rek', 'title' => 'No. Rekening']) 
         ->addColumn(['data' => 'alamat', 'name' => 'alamat', 'title' => 'Alamat']) 
         ->addColumn(['data' => 'kelurahan.nama', 'name' => 'kelurahan.nama', 'title' => 'Wilayah'])  
-        ->addColumn(['data' => 'url_api', 'name' => 'url_api', 'title' => 'URL API']) 
         ->addColumn(['data' => 'action', 'name' => 'action', 'title' => '', 'orderable' => false, 'searchable'=>false]);
         
         return view('warung.index')->with(compact('html'));
@@ -71,24 +74,53 @@ class WarungController extends Controller
             'name'      => 'required|unique:warungs,name,',
             'alamat'    => 'required',
             'kelurahan' => 'required', 
-            'url_api'   => 'required||unique:warungs,url_api,',
+            'nama_bank' => 'required',
+            'atas_nama' => 'required', 
+            'no_rek'    => 'required|numeric|unique:bank_warungs,no_rek,',
+            'no_telpon' => 'required|without_spaces|unique:users,no_telp,',
+            'email'     => 'required|without_spaces|unique:users,email,',
 
             ]);
 
+    //INSERT MASTER DATA WARUNG
          $warung = Warung::create([
             'name' =>$request->name,
             'alamat' =>$request->alamat,
-            'wilayah' =>$request->kelurahan, 
-            'url_api' =>$request->url_api,
-
+            'wilayah' =>$request->kelurahan,
+            'no_telpon' =>$request->no_telpon, 
+            'email' =>$request->email, 
             ]);
+
+    //INSERT BANK WARUNG
+         $bank_warung = BankWarung::create([
+            'nama_bank' =>$request->nama_bank,              
+            'atas_nama' => $request->atas_nama,
+            'no_rek' =>$request->no_rek,
+            'warung_id' =>$warung->id,
+            ]);
+
+    //INSERT USER WARUNG
+         $user_warung = UserWarung::create([ 
+            'name'              => $request->name,
+            'email'             => $request->email, 
+            'no_telp'           => $request->no_telpon, 
+            'alamat'            => $request->alamat,
+            'wilayah'           => $request->kelurahan,
+            'id_warung'         => $warung->id,
+            'tipe_user'         => 4,
+            'status_konfirmasi' => 1,
+            'password'          => bcrypt('123456')
+            ]);
+
+    //INSERT OTORITAS USER WARUNG
+        $user_warung->attachRole(4);
 
           $pesan_alert = 
                '<div class="container-fluid">
                     <div class="alert-icon">
                     <i class="material-icons">check</i>
                     </div>
-                    <b>Success : Berhasil Menambah Stoking Center '.$request->name.' </b>
+                    <b>Success : Berhasil Menambah Warung '.$request->name.' </b>
                 </div>';
 
 
@@ -118,7 +150,7 @@ class WarungController extends Controller
      */
     public function edit($id)
     {
-          $warung = Warung::with(['kelurahan'])->find($id);
+          $warung = Warung::with(['kelurahan', 'bank_warung'])->find($id);
             return view('warung.edit')->with(compact('warung'));
     }
 
@@ -131,28 +163,45 @@ class WarungController extends Controller
      */
     public function update(Request $request, $id)
     {
+
+        //VALIDASI WARUNG
            $this->validate($request, [
             'name'      => 'required|unique:warungs,name,'.$id,
             'alamat'    => 'required',
-            'kelurahan' => 'required', 
-            'url_api'   => 'required||unique:warungs,url_api,'.$id,
-
+            'kelurahan' => 'required',
+            'no_telpon' => 'required',
             ]);
 
-
-         //insert
+         //UPDATE MASTER DATA WARUNG
         $warung = Warung::where('id',$id)->update([
             'name' =>$request->name,
             'alamat' =>$request->alamat,
-            'wilayah' =>$request->kelurahan, 
-            'url_api' =>$request->url_api,
+            'wilayah' =>$request->kelurahan,
+            'no_telpon' =>$request->no_telpon, 
         ]);
 
-        $pesan_alert = '<div class="container-fluid">
+        $bank_warung_id = BankWarung::select('id')->where('warung_id', $id)->first();
+
+        //VALIDASI BANK WARUNG
+           $this->validate($request, [
+            'nama_bank' => 'required',
+            'atas_nama' => 'required', 
+            'no_rek'    => 'required|numeric|unique:bank_warungs,no_rek,'.$bank_warung_id->id, 
+            ]);
+
+         //UPDATE BANK WARUNG
+        $bank_warung = BankWarung::where('warung_id',$id)->update([
+            'nama_bank' =>$request->nama_bank,
+            'atas_nama' =>$request->atas_nama,
+            'no_rek' =>$request->no_rek,
+        ]);
+
+        $pesan_alert = '
+                <div class="container-fluid">
                     <div class="alert-icon">
-                    <i class="material-icons">check</i>
+                        <i class="material-icons">check</i>
                     </div>
-                    <b>Success : Berhasil Mengubah Warung '.$request->name.' </b>
+                        <b>Success : Berhasil Mengubah Warung '.$request->name.' </b>
                 </div>';
 
         Session::flash("flash_notification", [
@@ -173,19 +222,20 @@ class WarungController extends Controller
     {
         // jika gagal hapus
         if (!Warung::destroy($id)) {
-            // redirect back
             return redirect()->back();
-        }else{
+        }
+        else{
             
-        $pesan_alert = '<div class="container-fluid">
+        $pesan_alert = '
+                <div class="container-fluid">
                     <div class="alert-icon">
-                    <i class="material-icons">check</i>
+                        <i class="material-icons">check</i>
                     </div>
-                    <b>Success : Berhasil Menghapus Warung </b>
+                        <b>Success : Berhasil Menghapus Warung </b>
                 </div>';
 
         Session:: flash("flash_notification", [
-            "level"=>"danger",
+            "level"=>"success",
             "message"=> $pesan_alert
             ]);
         return redirect()->route('warung.index');

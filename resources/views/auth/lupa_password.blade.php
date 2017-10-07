@@ -16,10 +16,10 @@
                                             <span class="input-group-addon">
                                                 <i class="material-icons">phone</i>
                                             </span>
-                                            <div class="form-group label-floating {{ $errors->has('email') ? ' has-error' : '' }}">
+                                            <div class="form-group label-floating {{ $errors->has('no_telp') ? ' has-error' : '' }}">
                                                 <label class="control-label">No Telpon</label>
-                                                    {!! Form::number('email', null, ['class'=>'form-control','required','autocomplete'=>'off']) !!}
-                                                    {!! $errors->first('email', '<p class="help-block">:message</p>') !!} 
+                                                    {!! Form::number('no_telp', null, ['class'=>'form-control','required','autocomplete'=>'off']) !!}
+                                                    {!! $errors->first('no_telp', '<p class="help-block">:message</p>') !!} 
                                             </div>
                                         </div>
                                     </div>

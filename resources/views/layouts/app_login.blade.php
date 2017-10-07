@@ -54,6 +54,11 @@
                                         <i class="material-icons">people</i> Komunitas
                                     </a>
                                 </li> 
+                                <li class="">
+                                    <a href="{{ url('/register-warung') }}">
+                                        <i class="material-icons">store</i> User Warung
+                                    </a>
+                                </li> 
                             </ul>
                         </div>
                     </li>

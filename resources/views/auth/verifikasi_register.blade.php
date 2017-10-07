@@ -18,9 +18,9 @@
                                             <span class="input-group-addon">
                                                 <i class="material-icons">phone</i>
                                             </span>
-                                            <div class="form-group label-floating {{ $errors->has('email') ? ' has-error' : '' }}">
+                                            <div class="form-group label-floating {{ $errors->has('no_telp') ? ' has-error' : '' }}">
                                                 <label class="control-label">Nomor Telpon</label>
-                                                <input type="text" value="{{ $nomor_hp }}" class="form-control" name="email" readonly="">
+                                                <input type="text" value="{{ $nomor_hp }}" class="form-control" name="no_telp" readonly="">
 
                                                 
                                             </div>

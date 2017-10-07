@@ -23,3 +23,40 @@
 		</div>
 	</div>
 @endsection
+
+
+@section('scripts')
+<script type="text/javascript">
+	$(document).ready(function(){
+
+		var nama_warung = $("#nama_warung_error").text();
+		var no_telpon = $("#no_telp_error").text();
+		var alamat_warung = $("#alamat_warung_error").text();
+		var nama_bank = $("#nama_bank_error").text();
+		var atas_nama = $("#atas_nama_error").text();
+		var no_rek = $("#no_rek_error").text();
+
+		if (nama_warung != "") {
+			$("#nama_warung").focus();
+		}
+		else if (no_telpon != "") {
+			$("#no_telpon").focus();
+		}
+		else if(alamat_warung != ""){
+			$("#alamat_warung").focus();
+		}
+		else if (nama_bank != "") {
+			$("#nama_bank").focus();
+		}
+		else if (atas_nama != "") {
+			$("#atas_nama").focus();
+		}
+		else if(no_rek != ""){
+			$("#no_rek").focus();
+		}
+		else{
+			$("#nama_warung").focus();
+		}
+	}); 
+</script>
+@endsection

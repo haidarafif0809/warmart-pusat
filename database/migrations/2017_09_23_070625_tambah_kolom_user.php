@@ -22,7 +22,7 @@ class TambahKolomUser extends Migration
             $table->string('nama_bank')->nullable();
             $table->string('no_rekening')->nullable();
             $table->string('an_rekening')->nullable();
-            $table->integer('tipe_user')->nullable();
+            $table->integer('tipe_user')->nullable()->comment = "1 = User Warmart, 2 = User Komunitas, 3 = User Customer, 4 = User Warung";
             $table->string('tgl_lahir')->nullable();
             $table->integer('komunitas')->nullable()->default(0);
             $table->integer('id_warung')->nullable();

@@ -18,7 +18,7 @@ class CreateWarungsTable extends Migration
             $table->string('name');
             $table->string('alamat');
             $table->string('wilayah'); 
-            $table->string('url_api')->unique();
+            $table->string('url_api')->nullable();
             $table->timestamps();
         });
     }
