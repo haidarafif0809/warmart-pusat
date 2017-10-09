@@ -7,19 +7,19 @@
 </div>
 
 
-<div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-	{!! Form::label('email', 'No. Telpon', ['class'=>'col-md-2 control-label']) !!}
+<div class="form-group{{ $errors->has('no_telp') ? ' has-error' : '' }}">
+	{!! Form::label('no_telp', 'No. Telpon', ['class'=>'col-md-2 control-label']) !!}
 	<div class="col-md-4">
-		{!! Form::number('email', null, ['class'=>'form-control','required','autocomplete'=>'off', 'placeholder' => 'No. Telpon', 'id' => 'telpon_customer']) !!}
-		{!! $errors->first('email', '<p class="help-block" id="no_telp_error">:message</p>') !!}
+		{!! Form::number('no_telp', null, ['class'=>'form-control','required','autocomplete'=>'off', 'placeholder' => 'No. Telpon', 'id' => 'telpon_customer']) !!}
+		{!! $errors->first('no_telp', '<p class="help-block" id="no_telp_error">:message</p>') !!}
 	</div>
 </div>
 
-<div class="form-group{{ $errors->has('no_telp') ? ' has-error' : '' }}">
-	{!! Form::label('no_telp', 'Email Customer', ['class'=>'col-md-2 control-label']) !!}
+<div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
+	{!! Form::label('email', 'Email Customer', ['class'=>'col-md-2 control-label']) !!}
 	<div class="col-md-4">
-		{!! Form::text('no_telp', null, ['class'=>'form-control','autocomplete'=>'off', 'placeholder' => 'Email Customer', 'id' => 'email_customer']) !!}
-		{!! $errors->first('no_telp', '<p class="help-block" id="email_error">:message</p>') !!}
+		{!! Form::text('email', null, ['class'=>'form-control','autocomplete'=>'off', 'placeholder' => 'Email Customer', 'id' => 'email_customer']) !!}
+		{!! $errors->first('email', '<p class="help-block" id="email_error">:message</p>') !!}
 	</div>
 </div> 
 

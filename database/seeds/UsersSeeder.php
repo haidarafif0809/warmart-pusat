@@ -51,9 +51,7 @@ class UsersSeeder extends Seeder
 	    $admin->password = bcrypt('rahasia');
 	    $admin->status_konfirmasi = "1";
 	 
-	    $admin->wilayah = '101';
-	    $admin->link_afiliasi = 'andaglos.com/aff/1';
-	    $admin->no_telp = "087345365743";
+	    $admin->wilayah = '101';	    $admin->no_telp = "087345365743";
 	    $admin->nama_bank = 'BNI';
 	    $admin->no_rekening = '044353534';
 	    $admin->an_rekening = 'fahrizal';
@@ -70,9 +68,7 @@ class UsersSeeder extends Seeder
 	    $member->alamat = "-";
 		$member->status_konfirmasi = "1";
 
-	    $member->wilayah = '103';
-	    $member->link_afiliasi = 'andaglos.com/aff/1';
-	    $member->no_telp = "087345365743";
+	    $member->wilayah = '103';	    $member->no_telp = "087345365743";
 	    $member->nama_bank = 'BNI';
 	    $member->no_rekening = '044353534';
 	    $member->an_rekening = 'fahrizal';
@@ -89,13 +85,10 @@ class UsersSeeder extends Seeder
 	    $customer->email = 'customer@gmail.com';
 	    $customer->alamat = "Jl. Kedaton";
 	    $customer->wilayah = '1';
-	    $customer->komunitas = '2';
 	    $customer->no_telp = "085345330858";
 	    $customer->tipe_user = '3';
 	    $customer->tgl_lahir = '1999-02-20';
 		$customer->status_konfirmasi = "1";
-
-	    $customer->link_afiliasi = '-';
 	    $customer->nama_bank = '-';
 	    $customer->no_rekening = '-';
 	    $customer->an_rekening = '-';

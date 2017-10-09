@@ -97,18 +97,14 @@ class CustomerController extends Controller
     public function store(Request $request)
     {
 
-        //TANGGAL SQL
-        function tanggal_mysql($tanggalDB){
-            $date= date_create($tanggalDB);
-            return $date_format =  date_format($date,"Y-m-d");    
-         }
+      
 
         $this->validate($request, [
             'name'      => 'required',
-            'email'     => 'required|without_spaces|numeric',
+            'email'     => 'required|without_spaces|email',
             'alamat'    => 'required',
-            'no_telp'   => 'without_spaces|unique:users,email',
-            'tgl_lahir' => '', 
+            'no_telp'   => 'without_spaces|unique:users,no_telp|numeric',
+            'tgl_lahir' => 'date', 
             'komunitas' => '', 
         ]);
 
@@ -119,16 +115,20 @@ class CustomerController extends Controller
             'email'             => $request->email, 
             'alamat'            => $request->alamat,
             'no_telp'           => $request->no_telp,
-            'tgl_lahir'         => tanggal_mysql($request->tgl_lahir),
+            'tgl_lahir'         => $request->tgl_lahir,
             'wilayah'           => $request->kelurahan,
             'tipe_user'         => 3,
             'status_konfirmasi' => 0,
-            'komunitas' => $request->komunitas,
             'password'  => bcrypt('123456')
         ]);
 
     //INSERT OTORITAS CUSTOMER
         $customer_baru->attachRole(3);
+
+        if (isset($request->komunitas)) {
+        
+        KomunitasCustomer::create(['user_id' =>$customer_baru->id ,'komunitas_id' => $request->komunitas]);
+        }
         
         $pesan_alert = 
              '<div class="container-fluid">
@@ -167,14 +167,10 @@ class CustomerController extends Controller
     public function edit($id)
     {
 
-        function tanggal_terbalik($tanggal){
-             $date= date_create($tanggal);
-             $date_terbalik =  date_format($date,"d/m/Y");
-             return $date_terbalik;
-        }
+      
 
         $customer = Customer::find($id);
-        $tanggal = tanggal_terbalik($customer->tgl_lahir);
+        $tanggal = $customer->tgl_lahir;
         $komunitas = KomunitasCustomer::where('user_id',$id)->first();
 
 
@@ -192,33 +188,32 @@ class CustomerController extends Controller
     public function update(Request $request, $id)
     {
 
-        //TANGGAL SQL
-        function tanggal_mysql($tanggalDB){
-            $date= date_create($tanggalDB);
-            return $date_format =  date_format($date,"Y-m-d");    
-         }
-
+       
         $this->validate($request, [            
             'name'      => 'required',
             'email'     => 'required|without_spaces|unique:users,email,' .$id,
             'alamat'    => 'required',
             'no_telp'   => 'required|without_spaces|numeric',
-            'tgl_lahir' => 'required',
+            'tgl_lahir' => 'required|date',
             
         ]);
 
-        Customer::where('id', $id)->update([
+        Customer::find($id)->update([
             'name'              => $request->name,
             'email'             => $request->email, 
             'alamat'            => $request->alamat,
             'no_telp'           => $request->no_telp,
-            'tgl_lahir'         => tanggal_mysql($request->tgl_lahir),
+            'tgl_lahir'         => $request->tgl_lahir,
             'wilayah'           => $request->kelurahan,
         ]);
 
         //hapus komunitas sebelumnya, masukkan komunitas baru
-        KomunitasCustomer::where('user_id',$id)->delete();
+          KomunitasCustomer::where('user_id',$id)->delete();
+        if (isset($request->komunitas)) {
+        
         KomunitasCustomer::create(['user_id' =>$id ,'komunitas_id' => $request->komunitas]);
+        }
+
 
         $pesan_alert = 
              '<div class="container-fluid">
