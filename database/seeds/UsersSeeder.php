@@ -53,7 +53,7 @@ class UsersSeeder extends Seeder
 	 
 	    $admin->wilayah = '101';
 
-	    $admin->no_telp = "087345365743";
+	    $admin->no_telp = "081222498686";
 	    $admin->nama_bank = 'BNI';
 	    $admin->no_rekening = '044353534';
 	    $admin->an_rekening = 'fahrizal';
