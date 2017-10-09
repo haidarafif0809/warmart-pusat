@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateWarungsTable extends Migration
+class CreateKomunitasPenggiats extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class CreateWarungsTable extends Migration
      */
     public function up()
     {
-        Schema::create('warungs', function (Blueprint $table) {
+        Schema::create('komunitas_penggiats', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
-            $table->string('alamat');
-            $table->string('wilayah'); 
-            $table->string('url_api')->nullable();
+            $table->string('nama_penggiat');
+            $table->string('alamat_penggiat');
+            $table->integer('komunitas_id');
             $table->timestamps();
         });
     }
@@ -30,6 +29,6 @@ class CreateWarungsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('warungs');
+        Schema::dropIfExists('komunitas_penggiats');
     }
 }

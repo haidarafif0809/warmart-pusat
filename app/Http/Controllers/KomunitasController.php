@@ -7,6 +7,7 @@ use Yajra\Datatables\Html\Builder;
 use Yajra\Datatables\Datatables;
 use Illuminate\Support\Facades\DB;
 use App\Komunitas;
+use App\KomunitasPenggiat;
 use Session;
 use Laratrust;
 
@@ -22,7 +23,7 @@ class KomunitasController extends Controller
          //
         if ($request->ajax()) {
             # code...
-            $komunitas = komunitas::with(['kelurahan','role','warung'])->where('tipe_user',2)->get();
+            $komunitas = Komunitas::with(['kelurahan','role','warung','komunitas_penggiat'])->where('tipe_user',2)->get();
             return Datatables::of($komunitas)
                 ->addColumn('action', function($komunitas){
                     return view('datatable._action', [
@@ -34,56 +35,56 @@ class KomunitasController extends Controller
                         'permission_hapus' => Laratrust::can('hapus_komunitas'),
 
                         ]);
-                })
-                ->addColumn('link', function($link){ 
+                })->addColumn('link', function($link){ 
+
                     return $link->link_afiliasi;
-                })
-                ->addColumn('warung', function($warung){ 
+
+                })->addColumn('warung', function($warung){ 
+
                    if ($warung->id_warung == "") {
                         return "-";
                    }else{
                         return $warung->warung->name;
                    }
-                })
-                ->addColumn('kelurahan', function($kelurahan){ 
+
+                })->addColumn('kelurahan', function($kelurahan){ 
+
                    if ($kelurahan->wilayah == "") {
                         return "-";
                    }else{
                         return $kelurahan->kelurahan->nama;
                    }
-                })
-                ->addColumn('nama_bank', function($nama_bank){ 
-                   if ($nama_bank->nama_bank == "") {
-                        return "-";
-                   }else{
-                        return $nama_bank->nama_bank;
-                   }
-                })
-                ->addColumn('no_rekening', function($no_rekening){ 
-                   if ($no_rekening->no_rekening == "") {
-                        return "-";
-                   }else{
-                        return $no_rekening->no_rekening;
-                   }
-                })
-                ->addColumn('an_rekening', function($an_rekening){ 
-                   if ($an_rekening->an_rekening == "") {
-                        return "-";
-                   }else{
-                        return $an_rekening->an_rekening;
-                   }
+
+                })->addColumn('nama_penggiat', function($warmart){ 
+
+                    if($warmart->komunitas_penggiat != ""){
+                        return $jaja = $warmart->komunitas_penggiat->nama_penggiat;
+                    }
+                    else{
+                        return $jaja = "-";
+                    }
+
+                })->addColumn('alamat_penggiat', function($warmart){ 
+
+                    if($warmart->komunitas_penggiat != ""){
+                        return $jaja = $warmart->komunitas_penggiat->alamat_penggiat;
+                    }
+                    else{
+                        return $jaja = "-";
+                    }
+                         
                 })->make(true);
         }
         $html = $htmlBuilder
         ->addColumn(['data' => 'email', 'name' => 'email', 'title' => 'No Telp']) 
         ->addColumn(['data' => 'name', 'name' => 'name', 'title' => 'Nama Komunitas'])
+        ->addColumn(['data' => 'nama_penggiat', 'name' => 'nama_penggiat', 'title' => 'Nama Penggiat'])
+        ->addColumn(['data' => 'alamat', 'name' => 'alamat', 'title' => 'Alamat Komunitas'])
+        ->addColumn(['data' => 'alamat_penggiat', 'name' => 'alamat_penggiat', 'title' => 'Alamat Penggiat'])
         ->addColumn(['data' => 'warung', 'name' => 'warung', 'title' => 'Warung'])  
         ->addColumn(['data' => 'no_telp', 'name' => 'no_telp', 'title' => 'Email'])  
         ->addColumn(['data' => 'kelurahan', 'name' => 'kelurahan', 'title' => 'Wilayah']) 
         ->addColumn(['data' => 'link', 'name' => 'link', 'title' => 'Link Afiliasi']) 
-        ->addColumn(['data' => 'nama_bank', 'name' => 'nama_bank', 'title' => 'Nama Bank']) 
-        ->addColumn(['data' => 'no_rekening', 'name' => 'no_rekening', 'title' => 'No Rekening']) 
-        ->addColumn(['data' => 'an_rekening', 'name' => 'an_rekening', 'title' => 'A.N Rekening'])
         ->addColumn(['data' => 'action', 'name' => 'action', 'title' => '', 'orderable' => false, 'searchable'=>false]);
         
         return view('komunitas.index')->with(compact('html'));
@@ -111,7 +112,7 @@ class KomunitasController extends Controller
     public function store(Request $request)
     {
            $this->validate($request, [
-            'email'     => 'required|without_spaces|numeric|unique:users,email,',
+            'email'     => 'required|without_spaces|unique:users,email,',
             'name'      => 'required|unique:users,name,',
             'alamat'    => 'required',
             'kelurahan' => 'required',
@@ -137,6 +138,17 @@ class KomunitasController extends Controller
             'tipe_user'=> 2,
             'status_konfirmasi'=>0
             ]);
+
+         if ($request->name_penggiat != "" AND $request->alamat_penggiat != ""){
+            $komunitaspenggiat = KomunitasPenggiat::create([
+            'nama_penggiat' =>$request->name_penggiat,
+            'alamat_penggiat'  =>$request->alamat_penggiat,
+            'komunitas_id'=>$komunitas->id      
+            ]);
+         }
+         else{
+            
+         }
 
 
         $komunitas->attachRole(4);
@@ -176,7 +188,9 @@ class KomunitasController extends Controller
      */
     public function edit($id)
     {
-          $komunitas = Komunitas::with(['kelurahan','warung'])->find($id);
+
+
+          $komunitas = Komunitas::with(['kelurahan','warung','komunitas_penggiat'])->find($id);
             return view('komunitas.edit')->with(compact('komunitas'));
     }
 
@@ -190,7 +204,7 @@ class KomunitasController extends Controller
     public function update(Request $request, $id)
     {
             $this->validate($request, [
-            'email'     => 'required|without_spaces|numeric|unique:users,email,'. $id,
+            'email'     => 'required|without_spaces|unique:users,email,'. $id,
             'name'      => 'required|unique:users,name,'. $id,
             'alamat'    => 'required',
             'kelurahan' => 'required',
@@ -213,6 +227,16 @@ class KomunitasController extends Controller
             'an_rekening' =>$request->an_rekening,
             'id_warung' =>$request->id_warung,
         ]);
+
+        if ($request->name_penggiat != "" AND $request->alamat_penggiat != ""){
+            $komunitaspenggiat = KomunitasPenggiat::where('komunitas_id',$id)->update([
+            'nama_penggiat' =>$request->name_penggiat,
+            'alamat_penggiat'  =>$request->alamat_penggiat  
+            ]);
+         }
+         else{
+            
+         }
 
         $pesan_alert = '<div class="container-fluid">
                     <div class="alert-icon">

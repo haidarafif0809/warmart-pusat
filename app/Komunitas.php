@@ -41,8 +41,11 @@ class Komunitas extends Model
         
    		}
 
-        public function warung()
-          {
+     public function warung(){
             return $this->hasOne('App\Warung','id','id_warung');
-          }
+     }
+
+     public function komunitas_penggiat(){
+        return $this->hasOne('App\KomunitasPenggiat','komunitas_id','id');
+     }
 }

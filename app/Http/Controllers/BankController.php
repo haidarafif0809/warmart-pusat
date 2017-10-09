@@ -37,7 +37,7 @@ class BankController extends Controller
         }
         $html = $htmlBuilder
         ->addColumn(['data' => 'nama_bank', 'name' => 'nama_bank', 'title' => 'Nama Bank']) 
-        ->addColumn(['data' => 'atas_nama', 'name' => 'atas_nama', 'title' => 'A.N Rekening']) 
+        ->addColumn(['data' => 'atas_nama', 'name' => 'atas_nama', 'title' => 'Nama Rekening']) 
         ->addColumn(['data' => 'no_rek', 'name' => 'no_rek', 'title' => 'No. Rekening']) 
         ->addColumn(['data' => 'action', 'name' => 'action', 'title' => '', 'orderable' => false, 'searchable'=>false]);
 
@@ -64,9 +64,10 @@ class BankController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'nama_bank'     => 'required|unique:banks,nama_bank,',
+            'nama_bank'     => 'required',
             'atas_nama'     => 'required',
             'no_rek'        => 'required|numeric|unique:banks,no_rek,',
+            'tampil_customer'     => 'required',
         ]);
         
         $pesan_alert = 
@@ -81,6 +82,7 @@ class BankController extends Controller
                 'nama_bank' =>$request->nama_bank,              
                 'atas_nama' => $request->atas_nama,
                 'no_rek' =>$request->no_rek,
+                'tampil_customer' =>$request->tampil_customer,
             ]);
 
             Session::flash("flash_notification", [
@@ -124,15 +126,17 @@ class BankController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [            
-            'nama_bank'     => 'required|unique:banks,nama_bank,'. $id,
+            'nama_bank'     => 'required',
             'atas_nama'     => 'required',
             'no_rek'        => 'required|numeric|unique:banks,no_rek,'. $id,
+            'tampil_customer'     => 'required',
         ]);
 
         Bank::where('id', $id)->update([
                 'nama_bank' =>$request->nama_bank,
                 'atas_nama' =>$request->atas_nama,
                 'no_rek'    =>$request->no_rek,
+                'tampil_customer'    =>$request->tampil_customer,
             ]);
 
         $pesan_alert = 

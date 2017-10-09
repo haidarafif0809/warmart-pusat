@@ -1,5 +1,5 @@
 <div class="form-group{{ $errors->has('nama_bank') ? ' has-error' : '' }}">
-	{!! Form::label('nama_bank', 'Nama Bank', ['class'=>'col-md-2 control-label']) !!}
+	{!! Form::label('nama_bank', 'Nama Bank', ['class'=>'col-md-2 control-label ']) !!}
 	<div class="col-md-4">
 		{!! Form::text('nama_bank', null, ['class'=>'form-control','placeholder'=>'Nama Bank','required','autocomplete'=>'off', 'id'=>'nama_bank']) !!}
 		{!! $errors->first('nama_bank', '<p class="help-block" id="nama_bank_error">:message</p>') !!}
@@ -7,7 +7,7 @@
 </div>
 
 <div class="form-group{{ $errors->has('atas_nama') ? ' has-error' : '' }}">
-	{!! Form::label('atas_nama', 'Atas Nama', ['class'=>'col-md-2 control-label']) !!}
+	{!! Form::label('atas_nama', 'Atas Nama', ['class'=>'col-md-2 control-label ']) !!}
 	<div class="col-md-4">
 		{!! Form::text('atas_nama', null, ['class'=>'form-control','placeholder'=>'Atas Nama','required','autocomplete'=>'off', 'id'=>'atas_nama']) !!}
 		{!! $errors->first('atas_nama', '<p class="help-block" id="atas_nama_error">:message</p>') !!}
@@ -15,10 +15,21 @@
 </div>
 
 <div class="form-group{{ $errors->has('no_rek') ? ' has-error' : '' }}">
-	{!! Form::label('no_rek', 'No. Rekening', ['class'=>'col-md-2 control-label']) !!}
+	{!! Form::label('no_rek', 'No. Rekening', ['class'=>'col-md-2 control-label ']) !!}
 	<div class="col-md-4">
 		{!! Form::text('no_rek', null, ['class'=>'form-control','placeholder'=>'No. Rekening','required','autocomplete'=>'off', 'id'=>'no_rek']) !!}
 		{!! $errors->first('no_rek', '<p class="help-block" id="no_rek_error">:message</p>') !!}
+	</div>
+</div>
+
+
+<div class="form-group{{ $errors->has('tampil_customer') ? ' has-error' : '' }}">
+	{!! Form::label('tampil_customer', 'Tampilkan Dicustomer', ['class'=>'col-md-2 control-label']) !!}
+	<div class="col-md-4">
+		{!! Form::select('tampil_customer', [
+		'1'=>'Iya',
+		'0'=>'Tidak	'],null, ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--SILAKAN PILIH--','id'=>'pilih_tampil_customer', 'required' => '']) !!}
+		{!! $errors->first('tampil_customer', '<p class="help-block">:message</p>') !!}
 	</div>
 </div>
 

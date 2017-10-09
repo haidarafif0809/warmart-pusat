@@ -1,8 +1,8 @@
-<div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-	{!! Form::label('email', 'No Telp', ['class'=>'col-md-2 control-label']) !!}
+<div class="form-group{{ $errors->has('no_telp') ? ' has-error' : '' }}">
+	{!! Form::label('no_telp', 'No Telp', ['class'=>'col-md-2 control-label']) !!}
 	<div class="col-md-4">
-		{!! Form::number('email', null, ['class'=>'form-control','placeholder'=>'No Telp','required','autocomplete'=>'off']) !!}
-		{!! $errors->first('email', '<p class="help-block">:message</p>') !!}
+		{!! Form::number('no_telp', null, ['class'=>'form-control','placeholder'=>'No Telp','required','autocomplete'=>'off']) !!}
+		{!! $errors->first('no_telp', '<p class="help-block">:message</p>') !!}
 	</div>
 </div>
 
@@ -15,11 +15,24 @@
 </div>
 
 
-<div class="form-group{{ $errors->has('no_telp') ? ' has-error' : '' }}">
-	{!! Form::label('no_telp', 'Email', ['class'=>'col-md-2 control-label']) !!}
+<div class="form-group{{ $errors->has('name_penggiat') ? ' has-error' : '' }}">
+	{!! Form::label('name_penggiat', 'Nama Penggiat', ['class'=>'col-md-2 control-label']) !!}
 	<div class="col-md-4">
-		{!! Form::email('no_telp', null, ['class'=>'form-control','placeholder' => 'Email','required','autocomplete'=>'off']) !!}
-		{!! $errors->first('no_telp', '<p class="help-block">:message</p>') !!}
+		@if (isset($komunitas) && $komunitas->komunitas_penggiat)
+		{!! Form::text('name_penggiat', $komunitas->komunitas_penggiat->nama_penggiat, ['class'=>'form-control','placeholder' => 'Nama Penggiat','required','autocomplete'=>'off']) !!}
+		@else
+		{!! Form::text('name_penggiat', null, ['class'=>'form-control','placeholder' => 'Nama Penggiat','required','autocomplete'=>'off']) !!}
+		@endif
+		{!! $errors->first('name_penggiat', '<p class="help-block">:message</p>') !!}
+	</div>
+</div>
+
+
+<div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
+	{!! Form::label('email', 'Email', ['class'=>'col-md-2 control-label']) !!}
+	<div class="col-md-4">
+		{!! Form::email('email', null, ['class'=>'form-control','placeholder' => 'Email','required','autocomplete'=>'off']) !!}
+		{!! $errors->first('email', '<p class="help-block">:message</p>') !!}
 	</div>
 </div>
 
@@ -41,13 +54,28 @@
 </div>
 
 <div class="form-group{{ $errors->has('alamat') ? ' has-error' : '' }}">
-	{!! Form::label('alamat', 'Alamat', ['class'=>'col-md-2 control-label']) !!}
+	{!! Form::label('alamat', 'Alamat Komunitas', ['class'=>'col-md-2 control-label']) !!}
 	<div class="col-md-4">
 		{!! Form::text('alamat', null, ['class'=>'form-control','placeholder' => 'Alamat','required','autocomplete'=>'off']) !!}
 		{!! $errors->first('alamat', '<p class="help-block">:message</p>') !!}
 	</div>
 </div>
 
+
+<div class="form-group{{ $errors->has('alamat_penggiat') ? ' has-error' : '' }}">
+	{!! Form::label('alamat_penggiat', 'Alamat Penggiat', ['class'=>'col-md-2 control-label']) !!}
+	<div class="col-md-4">
+		@if (isset($komunitas) && $komunitas->komunitas_penggiat)
+		{!! Form::text('alamat_penggiat', $komunitas->komunitas_penggiat->alamat_penggiat, ['class'=>'form-control','placeholder' => 'Alamat Penggiat','required','autocomplete'=>'off']) !!}
+		{!! $errors->first('alamat_penggiat', '<p class="help-block">:message</p>') !!}
+		@else
+		{!! Form::text('alamat_penggiat', null, ['class'=>'form-control','placeholder' => 'Alamat Penggiat','required','autocomplete'=>'off']) !!}
+		{!! $errors->first('alamat_penggiat', '<p class="help-block">:message</p>') !!}
+		@endif
+
+
+	</div>
+</div>
 
 
 <div class="form-group{{ $errors->has('kelurahan') ? ' has-error' : '' }}">

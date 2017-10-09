@@ -57,7 +57,7 @@ class BankTest extends TestCase
     	//login user -> admin
         $user = User::find(1);
 
-        $response = $this->actingAs($user)->json('POST', route('bank.store'), ["nama_bank" => "BRI TESTING","atas_nama" => "Rindang Testing","no_rek"=>"7357146"]);
+        $response = $this->actingAs($user)->json('POST', route('bank.store'), ["nama_bank" => "BRI TESTING","atas_nama" => "Rindang Testing","no_rek"=>"7357146", "tampil_customer"=>"1"]);
 
         $response->assertStatus(302)
                  ->assertRedirect(route('bank.index'));
@@ -106,7 +106,7 @@ class BankTest extends TestCase
         //login user -> admin
         $user = User::find(1);
 
-        $response = $this->actingAs($user)->json('POST', route('bank.update',$bank->id), ['_method' => 'PUT','nama_bank' => 'Bank Lampung Testing Update', 'atas_nama' => 'Pasa Maulana', 'no_rek' => '15186366591366']);
+        $response = $this->actingAs($user)->json('POST', route('bank.update',$bank->id), ['_method' => 'PUT','nama_bank' => 'Bank Lampung Testing Update', 'atas_nama' => 'Pasa Maulana', 'no_rek' => '15186366591366', 'tampil_customer' => '1']);
 
         $response->assertStatus(302)
                  ->assertRedirect(route('bank.index'));

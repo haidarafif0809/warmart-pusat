@@ -6,6 +6,8 @@ use Illuminate\Support\ServiceProvider;
 use Laravel\Dusk\DuskServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use Validator;
+use App\Observers\WarungObserver;
+use App\Warung;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,6 +23,8 @@ class AppServiceProvider extends ServiceProvider
         Validator::extend('without_spaces', function($attr, $value){
             return preg_match('/^\S*$/u', $value);
         });
+
+        Warung::observe(WarungObserver::class);
     }
 
     /**

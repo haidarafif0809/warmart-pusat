@@ -19,7 +19,9 @@ Route::get('/sms','HomeController@sms');
 
 Auth::routes();
 
- 
+//USER WARUNG 
+Route::get('/register-warung','Auth\RegisterController@register_warung'); 
+
 Route::get('/register-customer','Auth\RegisterController@register_customer');
 
 //registrasi lewat link affiliasi
@@ -67,6 +69,7 @@ Route::group(['middleware' =>'auth'], function(){
 	Route::resource('warung', 'WarungController');
 	Route::resource('customer', 'CustomerController');
 	Route::resource('otoritas', 'OtoritasController'); 
+	Route::resource('user_warung', 'UserWarungController'); 
 
 
 	Route::get('user/konfirmasi/{id}',[

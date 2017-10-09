@@ -23,13 +23,13 @@ class UserShouldVerified
         Auth::logout();
 
         Session::flash("flash_notification", [ 
-        "alert" => 'danger',
+        "alert" => 'warning',
         "icon" => 'error_outline',
-        "judul" => 'INFO',
-        "message" => 'Silahkan Verifikasi Nomor Anda '.$request['email'].''
+        "judul" => 'ALERT',
+        "message" => 'Silahkan Verifikasi Nomor Anda '.$request['no_telp'].''
         ]);
 
-        return redirect('/kirim-kode-verifikasi?nomor='.$request['email']);
+        return redirect('/kirim-kode-verifikasi?nomor='.$request['no_telp']);
         }
 
         return $response;
