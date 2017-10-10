@@ -29,7 +29,7 @@
                                             </span>
                                             <div class="form-group label-floating {{ $errors->has('no_telp') ? ' has-error' : '' }}">
                                                 <label class="control-label">Nomor Telpon</label>
-                                                <input type="text" value="{{ old('no_telp') }}" class="form-control" name="no_telp">
+                                                <input type="number" value="{{ old('no_telp') }}" class="form-control" name="no_telp">
 
                                                 
                                             </div>

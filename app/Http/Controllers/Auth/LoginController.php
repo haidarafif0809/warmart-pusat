@@ -38,4 +38,8 @@ class LoginController extends Controller
         $this->middleware('user-should-verified');
         
     }
+
+    public function username(){
+        return 'no_telp';
+    }
 }
