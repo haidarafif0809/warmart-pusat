@@ -8,7 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laratrust\Traits\LaratrustUserTrait;
 use Spatie\Activitylog\Traits\LogsActivity;
 
-class UserWarung extends Model
+class UserWarung extends Authenticatable
 {
 
     use LogsActivity;
@@ -17,7 +17,7 @@ class UserWarung extends Model
 
     protected $table = 'users';
 
-   	protected $fillable = ['email','password','name', 'alamat', 'wilayah', 'tipe_user', 'id_warung', 'status_konfirmasi', 'no_telp'];
+   	protected $fillable = ['email','password','name', 'alamat', 'wilayah', 'tipe_user', 'id_warung', 'status_konfirmasi', 'no_telp', 'kode_verifikasi'];
 
    	protected $hidden = [
         'password', 'remember_token',

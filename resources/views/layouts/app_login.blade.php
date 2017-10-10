@@ -56,7 +56,7 @@
                                 </li> 
                                 <li class="">
                                     <a href="{{ url('/register-warung') }}">
-                                        <i class="material-icons">store</i> User Warung
+                                        <i class="material-icons">store</i> Warung
                                     </a>
                                 </li> 
                             </ul>

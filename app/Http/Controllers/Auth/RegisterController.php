@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use App\UserWarung;
+use App\BankWarung;
+use App\Warung;
 use App\Role;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -79,7 +82,6 @@ class RegisterController extends Controller
         elseif ($data['id_register'] == 3) { 
             //USER WARUNG
             return Validator::make($data, [
-                'email'     => 'required|without_spaces|unique:users,email',
                 'name'      => 'required',
                 'password'  => 'required|string|min:6|confirmed',
                 'no_telp'   => 'required|numeric|without_spaces|unique:users,no_telp',
@@ -126,7 +128,7 @@ class RegisterController extends Controller
 
             $userkey = env('USERKEY');
             $passkey = env('PASSKEY');
-            $nomor_tujuan = $data['email'];
+            $nomor_tujuan = $data['no_telp'];
             $isi_pesan ='Terima Kasih Telah Mendaftar Sebagai Customer Warmart. Silakan Masukan Kode Verfikasi Warmart '.$kode_verifikasi.'';
 
             if (env('STATUS_SMS') == 1) {
@@ -169,14 +171,33 @@ class RegisterController extends Controller
 
         }
         elseif ($data['id_register'] == 3) { 
+
+        //MASTER WARUNG
+            $warung = Warung::create([
+                'name'      =>$data['name'],
+                'alamat'    =>$data['alamat'],
+                'no_telpon' =>$data['no_telp'],
+                'wilayah'     => "-", 
+                'email'     => "-", 
+            ]);
+
+        //INSERT BANK WARUNG
+         $bank_warung = BankWarung::create([
+                'nama_bank' => "-",              
+                'atas_nama' => "-",
+                'no_rek'    => "-",
+                'warung_id' => $warung->id,
+            ]);
+
         //USER WARUNG 
-            $user = User::create([
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'password' => bcrypt($data['password']),
-                'alamat' => $data['alamat'],   
-                'no_telp' => $data['no_telp'],   
-                'tipe_user'=> 4,
+            $user = UserWarung::create([
+                'name'      => $data['name'],
+                'email'     => "-",
+                'password'  => bcrypt($data['password']),
+                'alamat'    => $data['alamat'],   
+                'no_telp'   => $data['no_telp'],  
+                'id_warung' => $warung->id,   
+                'tipe_user' => 4,
                 'status_konfirmasi'=>0,
                 'kode_verifikasi'=> $kode_verifikasi,
             ]);
@@ -187,7 +208,7 @@ class RegisterController extends Controller
             $userkey = env('USERKEY');
             $passkey = env('PASSKEY');
             $nomor_tujuan = $data['no_telp'];
-            $isi_pesan ='Terima Kasih Telah Mendaftar Sebagai User Warung Warmart. Silakan Masukan Kode Verfikasi Warmart '.$kode_verifikasi.'';
+            $isi_pesan ='Terima Kasih Telah Mendaftar Sebagai Warung Warmart. Silakan Masukan Kode Verfikasi Warmart '.$kode_verifikasi.'';
 
             if (env('STATUS_SMS') == 1) {
                 $client = new Client(); //GuzzleHttp\Client

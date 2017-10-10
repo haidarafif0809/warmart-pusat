@@ -14,6 +14,15 @@
 	</div>
 </div>
 
+@if (isset($warung) && $warung->email)
+<div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}" style="display: none">
+	{!! Form::label('email', 'Email', ['class'=>'col-md-2 control-label']) !!}
+	<div class="col-md-4">
+		{!! Form::text('email', null, ['class'=>'form-control','required','autocomplete'=>'off', 'placeholder' =>'Email']) !!}
+		{!! $errors->first('email', '<p class="help-block">:message</p>') !!}
+	</div>
+</div> 
+@else
 <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
 	{!! Form::label('email', 'Email', ['class'=>'col-md-2 control-label']) !!}
 	<div class="col-md-4">
@@ -21,6 +30,9 @@
 		{!! $errors->first('email', '<p class="help-block">:message</p>') !!}
 	</div>
 </div> 
+@endif
+
+
 
 <div class="form-group{{ $errors->has('nama_bank') ? ' has-error' : '' }}">
 	{!! Form::label('nama_bank', 'Nama Bank', ['class'=>'col-md-2 control-label ']) !!}
