@@ -60,6 +60,9 @@
                         <div class="collapse" id="logout">
                             <ul class="nav">
                                     <li>
+                                         <a href="{{ url('/ubah-profil') }}">Ubah Profil</a>
+                                    </li>
+                                    <li>
                                          <a href="{{ url('/ubah-password') }}">Ubah Password</a>
                                     </li>
                                     <li>

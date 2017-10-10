@@ -61,6 +61,18 @@ Route::put('/proses-ubah-password/{id}',[
 	'uses' => 'UbahPasswordController@proses_ubah_password'
 	]);
 
+Route::get('/ubah-profil',[
+	'middleware' => ['auth'],
+	'as' => 'user.ubah_profil',
+	'uses' => 'UbahProfilController@ubah_profil'
+	]);
+
+Route::put('/proses-ubah-profil/{id}',[
+	'middleware' => ['auth'],
+	'as' => 'user.proses_ubah_profil',
+	'uses' => 'UbahProfilController@proses_ubah_profil'
+	]);
+
 Route::group(['middleware' =>'auth'], function(){
 
 	Route::resource('user', 'UserController');
