@@ -41,6 +41,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    {!! Form::hidden('status', $status, ['class'=>'form-control','autocomplete'=>'off']) !!}
                                     <div class="footer text-center">
                                         <button type="submit" class="btn btn-rose btn-simple btn-wd btn-lg">Verifikasi</button>
                                         <h6><a href="{{ url('/kirim-ulang-kode-verifikasi/'.$user->id.'') }}">Kirim Ulang Kode Verifikasi</a></h6>

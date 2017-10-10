@@ -61,19 +61,7 @@
                                                 
                                             </div>
                                         </div>
-
-                                        <div class="input-group ">
-                                            <span class="input-group-addon">
-                                                <i class="material-icons">event</i>
-                                            </span>
-                                            <div class="form-group label-floating {{ $errors->has('tgl_lahir') ? ' has-error' : '' }}">
-                                                <label class="control-label">Tanggal Lahir</label>
-                                                    {!! Form::text('tgl_lahir', null, ['class'=>'form-control datepicker','readonly','autocomplete'=>'off']) !!}
-                                                    {!! $errors->first('tgl_lahir', '<p class="help-block">:message</p>') !!}
-
-                                                
-                                            </div>
-                                        </div>
+ 
  
                                         <div class="input-group">
                                             <span class="input-group-addon">

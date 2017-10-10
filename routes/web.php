@@ -32,8 +32,7 @@ Route::get('/aff/{id}/',function($id){
 }); 
 
 
-Route::get('kirim-kode-verifikasi','Auth\RegisterController@kirim_kode_verifikasi');
-Route::get('proses-kirim-kode-verifikasi','Auth\RegisterController@proses_kirim_kode_verifikasi');  
+Route::get('kirim-kode-verifikasi','Auth\RegisterController@kirim_kode_verifikasi'); 
 Route::get('kirim-ulang-kode-verifikasi/{id}','Auth\RegisterController@kirim_ulang_kode_verifikasi');
 Route::get('lupa-password','Auth\RegisterController@lupa_password');
 
