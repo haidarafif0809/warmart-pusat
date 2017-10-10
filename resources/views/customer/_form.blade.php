@@ -18,7 +18,7 @@
 <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
 	{!! Form::label('email', 'Email Customer', ['class'=>'col-md-2 control-label']) !!}
 	<div class="col-md-4">
-		{!! Form::text('email', null, ['class'=>'form-control','autocomplete'=>'off', 'placeholder' => 'Email Customer', 'id' => 'email_customer']) !!}
+		{!! Form::email('email', null, ['class'=>'form-control','autocomplete'=>'off', 'placeholder' => 'Email Customer', 'id' => 'email_customer']) !!}
 		{!! $errors->first('email', '<p class="help-block" id="email_error">:message</p>') !!}
 	</div>
 </div> 

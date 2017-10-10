@@ -76,13 +76,13 @@ class KomunitasController extends Controller
                 })->make(true);
         }
         $html = $htmlBuilder
-        ->addColumn(['data' => 'email', 'name' => 'email', 'title' => 'No Telp']) 
+        ->addColumn(['data' => 'no_telp', 'name' => 'no_telp', 'title' => 'No Telp']) 
         ->addColumn(['data' => 'name', 'name' => 'name', 'title' => 'Nama Komunitas'])
         ->addColumn(['data' => 'nama_penggiat', 'name' => 'nama_penggiat', 'title' => 'Nama Penggiat'])
         ->addColumn(['data' => 'alamat', 'name' => 'alamat', 'title' => 'Alamat Komunitas'])
         ->addColumn(['data' => 'alamat_penggiat', 'name' => 'alamat_penggiat', 'title' => 'Alamat Penggiat'])
         ->addColumn(['data' => 'warung', 'name' => 'warung', 'title' => 'Warung'])  
-        ->addColumn(['data' => 'no_telp', 'name' => 'no_telp', 'title' => 'Email'])  
+        ->addColumn(['data' => 'email', 'name' => 'email', 'title' => 'Email'])  
         ->addColumn(['data' => 'kelurahan', 'name' => 'kelurahan', 'title' => 'Wilayah']) 
         ->addColumn(['data' => 'link', 'name' => 'link', 'title' => 'Link Afiliasi']) 
         ->addColumn(['data' => 'action', 'name' => 'action', 'title' => '', 'orderable' => false, 'searchable'=>false]);

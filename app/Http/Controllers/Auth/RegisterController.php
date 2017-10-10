@@ -59,20 +59,20 @@ class RegisterController extends Controller
             //Customer
             return Validator::make($data, [
                 'name'      => 'required',
-                'email'     => 'required|numeric|without_spaces|unique:users,email',
+                'email'     => 'required|without_spaces|unique:users,email',
                 'alamat'    => 'required',
-                'no_telp'   => 'without_spaces|unique:users,no_telp',
+                'no_telp'   => 'required|numeric|without_spaces|unique:users,no_telp',
                 'tgl_lahir' => '', 
-                'password' => 'required|string|min:6|confirmed',
+                'password'  => 'required|string|min:6|confirmed',
             ]);
         }
         elseif ($data['id_register'] == 2) { 
             //Komunitas
             return Validator::make($data, [
-                'email'     => 'required|numeric|without_spaces|unique:users,email',
+                'email'     => 'required|without_spaces|unique:users,email',
                 'name'      => 'required',
-                'password' => 'required|string|min:6|confirmed',
-                'no_telp'   => 'without_spaces|unique:users,no_telp',
+                'password'  =>  'required|string|min:6|confirmed',
+                'no_telp'   => 'required|numeric|without_spaces|unique:users,no_telp',
                 'alamat'    => 'required', 
             ]);
         }
@@ -197,8 +197,7 @@ class RegisterController extends Controller
 
             return $user;
 
-        }
-
+        } 
     }
  
     protected function kirim_kode_verifikasi(Request $request)

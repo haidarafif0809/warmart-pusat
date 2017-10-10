@@ -49,10 +49,8 @@ class UsersSeeder extends Seeder
 	    $admin->email = 'admin@gmail.com';
 	    $admin->alamat = "-";
 	    $admin->password = bcrypt('rahasia');
-	    $admin->status_konfirmasi = "1";
-	 
-	    $admin->wilayah = '101';
-
+	    $admin->status_konfirmasi = "1"; 
+	    $admin->wilayah = '101'; 
 	    $admin->no_telp = "081222498686";
 	    $admin->nama_bank = 'BNI';
 	    $admin->no_rekening = '044353534';
