@@ -48,4 +48,8 @@ class Komunitas extends Model
      public function komunitas_penggiat(){
         return $this->hasOne('App\KomunitasPenggiat','komunitas_id','id');
      }
+
+     public function bank_komunitas(){
+        return $this->hasOne('App\BankKomunitas','komunitas_id','id');
+     }
 }
