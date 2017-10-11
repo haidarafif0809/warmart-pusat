@@ -84,7 +84,7 @@ return [
     ],
     'string'               => 'The :attribute must be a string.',
     'timezone'             => 'The :attribute must be a valid zone.',
-    'unique'               => 'Maaaf :attribute Sudah Tersedia.',
+    'unique'               => 'Maaf :attribute Sudah Terpakai.',
     'uploaded'             => 'The :attribute failed to upload.',
     'url'                  => 'The :attribute format is invalid.',
     'without_spaces'                  => 'Input :attribute tidak boleh ada spasi.',
