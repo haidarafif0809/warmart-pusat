@@ -80,7 +80,9 @@ Route::group(['middleware' =>'auth'], function(){
 	Route::resource('warung', 'WarungController');
 	Route::resource('customer', 'CustomerController');
 	Route::resource('otoritas', 'OtoritasController'); 
-	Route::resource('user_warung', 'UserWarungController'); 
+	Route::resource('user_warung', 'UserWarungController'); 	
+	Route::resource('kas', 'KasController'); 	
+	Route::resource('barang', 'BarangController'); 
 
 
 	Route::get('user/konfirmasi/{id}',[
