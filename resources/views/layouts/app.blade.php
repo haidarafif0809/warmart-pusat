@@ -82,6 +82,41 @@
                             <p>Dashboard</p>
                         </a>
                     </li>
+
+                    <!-- MASTER DATA WARUNG -->
+                    @if(Auth::user()->tipe_user == 4)
+                    <li>
+                        <a data-toggle="collapse" href="#pagesExamples">
+                            <i class="material-icons">image</i>
+                            <p> Master Data
+                                <b class="caret"></b>
+                            </p>
+                        </a>
+                        <div class="collapse" id="pagesExamples">
+                            <ul class="nav">
+
+                                <li>
+                                    <a href="{{ route('kas.index') }}">
+                                        <span class="sidebar-mini">K</span>
+                                        <span class="sidebar-normal">Kas</span>
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="{{ route('barang.index') }}">
+                                        <span class="sidebar-mini">P</span>
+                                        <span class="sidebar-normal">Produk</span>
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </li>
+                    @endif
+                    <!--END MASTER DATA WARUNG -->
+
+
+                    <!--MASTER DATA WARMART PUSAT-->
                     @if(Laratrust::can('lihat_master_data'))
                     <li>
                         <a data-toggle="collapse" href="#pagesExamples">
@@ -151,6 +186,7 @@
                         </div>
                     </li>
                     @endif
+                    <!--end master data warmart pusat-->
                    
                   
                 </ul>
