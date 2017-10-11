@@ -46,7 +46,7 @@
                             <ul class="nav">
                                 <li class="">
                                     <a href="{{ url('/register-customer') }}">
-                                        <i class="material-icons">person_add</i> Customer
+                                        <i class="material-icons">person_add</i> Pelanggan
                                     </a>
                                 </li>
                                 <li class="">
@@ -56,7 +56,7 @@
                                 </li> 
                                 <li class="">
                                     <a href="{{ url('/register-warung') }}">
-                                        <i class="material-icons">store</i> User Warung
+                                        <i class="material-icons">store</i> Warung
                                     </a>
                                 </li> 
                             </ul>

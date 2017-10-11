@@ -25,11 +25,11 @@ class UserShouldVerified
         Session::flash("flash_notification", [ 
         "alert" => 'warning',
         "icon" => 'error_outline',
-        "judul" => 'ALERT',
+        "judul" => 'PERHATIAN',
         "message" => 'Silahkan Verifikasi Nomor Anda '.$request['no_telp'].''
         ]);
 
-        return redirect('/kirim-kode-verifikasi?nomor='.$request['no_telp']);
+        return redirect('/kirim-kode-verifikasi?nomor='.$request['no_telp'].'&status=0');
         }
 
         return $response;

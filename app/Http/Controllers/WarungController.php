@@ -35,17 +35,25 @@ class WarungController extends Controller
                         'permission_hapus' => Laratrust::can('hapus_warung'),
 
                         ]);
+                })
+                ->addColumn('kelurahan', function($wilayah){
+                    if ($wilayah->wilayah == "" OR $wilayah->wilayah == "-") {
+                        $wilayah = "-";
+                    }
+                    else{
+                        $wilayah = $wilayah->kelurahan->nama;
+                    }
+                    return $wilayah;
                 })->make(true);
         }
         $html = $htmlBuilder
         ->addColumn(['data' => 'name', 'name' => 'name', 'title' => 'Nama']) 
         ->addColumn(['data' => 'no_telpon', 'name' => 'no_telpon', 'title' => 'No. Telpon']) 
-        ->addColumn(['data' => 'email', 'name' => 'email', 'title' => 'Email']) 
         ->addColumn(['data' => 'bank_warung.nama_bank', 'name' => 'bank_warung.nama_bank', 'title' => 'Nama Bank']) 
         ->addColumn(['data' => 'bank_warung.atas_nama', 'name' => 'bank_warung.atas_nama', 'title' => 'Nama Rekening']) 
         ->addColumn(['data' => 'bank_warung.no_rek', 'name' => 'bank_warung.no_rek', 'title' => 'No. Rekening']) 
         ->addColumn(['data' => 'alamat', 'name' => 'alamat', 'title' => 'Alamat']) 
-        ->addColumn(['data' => 'kelurahan.nama', 'name' => 'kelurahan.nama', 'title' => 'Wilayah'])  
+        ->addColumn(['data' => 'kelurahan', 'name' => 'kelurahan', 'title' => 'Wilayah'])  
         ->addColumn(['data' => 'action', 'name' => 'action', 'title' => '', 'orderable' => false, 'searchable'=>false]);
         
         return view('warung.index')->with(compact('html'));
@@ -84,11 +92,11 @@ class WarungController extends Controller
 
     //INSERT MASTER DATA WARUNG
          $warung = Warung::create([
-            'name' =>$request->name,
-            'alamat' =>$request->alamat,
-            'wilayah' =>$request->kelurahan,
+            'name'      =>$request->name,
+            'alamat'    =>$request->alamat,
+            'wilayah'   =>$request->kelurahan,
             'no_telpon' =>$request->no_telpon, 
-            'email' =>$request->email, 
+            'email'     =>"-", 
             ]);
 
     //INSERT BANK WARUNG
@@ -120,7 +128,7 @@ class WarungController extends Controller
                     <div class="alert-icon">
                     <i class="material-icons">check</i>
                     </div>
-                    <b>Success : Berhasil Menambah Warung '.$request->name.' </b>
+                    <b>Sukses : Berhasil Menambah Warung '.$request->name.' </b>
                 </div>';
 
 
@@ -150,8 +158,9 @@ class WarungController extends Controller
      */
     public function edit($id)
     {
-          $warung = Warung::with(['kelurahan', 'bank_warung'])->find($id);
-            return view('warung.edit')->with(compact('warung'));
+        $warung = Warung::with(['kelurahan', 'bank_warung'])->find($id);
+        return view('warung.edit')->with(compact('warung'));
+
     }
 
     /**
@@ -201,7 +210,7 @@ class WarungController extends Controller
                     <div class="alert-icon">
                         <i class="material-icons">check</i>
                     </div>
-                        <b>Success : Berhasil Mengubah Warung '.$request->name.' </b>
+                        <b>Sukses : Berhasil Mengubah Warung '.$request->name.' </b>
                 </div>';
 
         Session::flash("flash_notification", [
@@ -231,7 +240,7 @@ class WarungController extends Controller
                     <div class="alert-icon">
                         <i class="material-icons">check</i>
                     </div>
-                        <b>Success : Berhasil Menghapus Warung </b>
+                        <b>Sukses : Berhasil Menghapus Warung </b>
                 </div>';
 
         Session:: flash("flash_notification", [

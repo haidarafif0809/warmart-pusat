@@ -26,25 +26,25 @@
                                         
                                         <div class="input-group ">
                                             <span class="input-group-addon">
-                                                <i class="material-icons">phone</i>
+                                                <i class="material-icons">local_phone</i>
                                             </span>
-                                            <div class="form-group label-floating {{ $errors->has('email') ? ' has-error' : '' }}">
+                                            <div class="form-group label-floating {{ $errors->has('no_telp') ? ' has-error' : '' }}">
                                                 <label class="control-label">No Telpon</label>
-                                                    {!! Form::number('email', null, ['class'=>'form-control','required','autocomplete'=>'off']) !!}
-                                                    {!! $errors->first('email', '<p class="help-block">:message</p>') !!}
+                                                    {!! Form::text('no_telp', null, ['class'=>'form-control','required','autocomplete'=>'off']) !!}
+                                                    {!! $errors->first('no_telp', '<p class="help-block">:message</p>') !!}
 
                                                 
                                             </div>
                                         </div>
-
+                                        
                                         <div class="input-group ">
                                             <span class="input-group-addon">
                                                 <i class="material-icons">email</i>
                                             </span>
-                                            <div class="form-group label-floating {{ $errors->has('no_telp') ? ' has-error' : '' }}">
-                                                <label class="control-label">Email</label> 
-                                                    {!! Form::email('no_telp', null, ['class'=>'form-control','required','autocomplete'=>'off']) !!}
-                                                    {!! $errors->first('no_telp', '<p class="help-block">:message</p>') !!}
+                                            <div class="form-group label-floating {{ $errors->has('email') ? ' has-error' : '' }}">
+                                                <label class="control-label">Email</label>
+                                                    {!! Form::email('email', null, ['class'=>'form-control','autocomplete'=>'off']) !!}
+                                                    {!! $errors->first('email', '<p class="help-block">:message</p>') !!}
 
                                                 
                                             </div>

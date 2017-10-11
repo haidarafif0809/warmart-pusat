@@ -29,7 +29,7 @@
                                             </span>
                                             <div class="form-group label-floating {{ $errors->has('no_telp') ? ' has-error' : '' }}">
                                                 <label class="control-label">Nomor Telpon</label>
-                                                <input type="text" value="{{ old('no_telp') }}" class="form-control" name="no_telp">
+                                                <input type="number" value="{{ old('no_telp') }}" class="form-control" name="no_telp">
 
                                                 
                                             </div>
@@ -51,7 +51,7 @@
                                         </div>
                                     </div>
                                     <div class="footer text-center">
-                                        <button type="submit" id="login" class="btn btn-rose btn-simple btn-wd btn-lg">Let's go</button>
+                                        <button type="submit" id="login" class="btn btn-rose btn-simple btn-wd btn-lg">Login</button>
                                     </div>
                                     <center>    
                                         <a href="{{ url('/lupa-password/') }}">Lupa Password</a> 

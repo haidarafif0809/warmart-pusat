@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use App\UserWarung;
+use App\BankWarung;
+use App\Warung;
 use App\Role;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -59,27 +62,26 @@ class RegisterController extends Controller
             //Customer
             return Validator::make($data, [
                 'name'      => 'required',
-                'email'     => 'required|numeric|without_spaces|unique:users,email',
+                'email'     => 'nullable|without_spaces|unique:users,email',
                 'alamat'    => 'required',
-                'no_telp'   => 'without_spaces|unique:users,no_telp',
-                'tgl_lahir' => '', 
-                'password' => 'required|string|min:6|confirmed',
+                'no_telp'   => 'required|numeric|without_spaces|unique:users,no_telp', 
+                'password'  => 'required|string|min:6|confirmed',
             ]);
         }
         elseif ($data['id_register'] == 2) { 
             //Komunitas
             return Validator::make($data, [
-                'email'     => 'required|numeric|without_spaces|unique:users,email',
+                'email'     => 'nullable|without_spaces|unique:users,email',
                 'name'      => 'required',
-                'password' => 'required|string|min:6|confirmed',
-                'no_telp'   => 'without_spaces|unique:users,no_telp',
+                'password'  => 'required|string|min:6|confirmed',
+                'no_telp'   => 'required|numeric|without_spaces|unique:users,no_telp',
                 'alamat'    => 'required', 
             ]);
         }
         elseif ($data['id_register'] == 3) { 
             //USER WARUNG
             return Validator::make($data, [
-                'email'     => 'required|without_spaces|unique:users,email',
+                'email'     => 'nullable|without_spaces|unique:users,email',
                 'name'      => 'required',
                 'password'  => 'required|string|min:6|confirmed',
                 'no_telp'   => 'required|numeric|without_spaces|unique:users,no_telp',
@@ -103,8 +105,7 @@ class RegisterController extends Controller
                 'name' => $data['name'],
                 'email' => $data['email'],
                 'alamat' => $data['alamat'],    
-                'no_telp' => $data['no_telp'],   
-                'tgl_lahir' => $data['tgl_lahir'],    
+                'no_telp' => $data['no_telp'],    
                 'password' => bcrypt($data['password']),
                 'tipe_user'=> 3,
                 'status_konfirmasi'=>0,
@@ -126,7 +127,7 @@ class RegisterController extends Controller
 
             $userkey = env('USERKEY');
             $passkey = env('PASSKEY');
-            $nomor_tujuan = $data['email'];
+            $nomor_tujuan = $data['no_telp'];
             $isi_pesan ='Terima Kasih Telah Mendaftar Sebagai Customer Warmart. Silakan Masukan Kode Verfikasi Warmart '.$kode_verifikasi.'';
 
             if (env('STATUS_SMS') == 1) {
@@ -169,14 +170,33 @@ class RegisterController extends Controller
 
         }
         elseif ($data['id_register'] == 3) { 
+
+        //MASTER WARUNG
+            $warung = Warung::create([
+                'name'      =>$data['name'],
+                'alamat'    =>$data['alamat'],
+                'no_telpon' =>$data['no_telp'],
+                'wilayah'     => "-", 
+                'email'     => "-", 
+            ]);
+
+        //INSERT BANK WARUNG
+         $bank_warung = BankWarung::create([
+                'nama_bank' => "-",              
+                'atas_nama' => "-",
+                'no_rek'    => "-",
+                'warung_id' => $warung->id,
+            ]);
+
         //USER WARUNG 
-            $user = User::create([
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'password' => bcrypt($data['password']),
-                'alamat' => $data['alamat'],   
-                'no_telp' => $data['no_telp'],   
-                'tipe_user'=> 4,
+            $user = UserWarung::create([
+                'name'      => $data['name'],
+                'email'     => "-",
+                'password'  => bcrypt($data['password']),
+                'alamat'    => $data['alamat'],   
+                'no_telp'   => $data['no_telp'],  
+                'id_warung' => $warung->id,   
+                'tipe_user' => 4,
                 'status_konfirmasi'=>0,
                 'kode_verifikasi'=> $kode_verifikasi,
             ]);
@@ -187,7 +207,7 @@ class RegisterController extends Controller
             $userkey = env('USERKEY');
             $passkey = env('PASSKEY');
             $nomor_tujuan = $data['no_telp'];
-            $isi_pesan ='Terima Kasih Telah Mendaftar Sebagai User Warung Warmart. Silakan Masukan Kode Verfikasi Warmart '.$kode_verifikasi.'';
+            $isi_pesan ='Terima Kasih Telah Mendaftar Sebagai Warung Warmart. Silakan Masukan Kode Verfikasi Warmart '.$kode_verifikasi.'';
 
             if (env('STATUS_SMS') == 1) {
                 $client = new Client(); //GuzzleHttp\Client
@@ -197,16 +217,16 @@ class RegisterController extends Controller
 
             return $user;
 
-        }
-
+        } 
     }
  
     protected function kirim_kode_verifikasi(Request $request)
     {  
         $nomor_hp = $request->nomor;
+        $status = $request->status;
         $user = User::where('no_telp',$request->nomor)->first();
-        return view('auth.verifikasi_register',['nomor_hp'=>$nomor_hp,'user'=>$user]);    
-    }
+        return view('auth.verifikasi_register',['nomor_hp'=>$nomor_hp,'user'=>$user,'status'=>$status]);    
+    } 
 
     protected function proses_kirim_kode_verifikasi(Request $request,$nomor_hp)
     {  
@@ -222,8 +242,14 @@ class RegisterController extends Controller
           }else{
 
             User::where('id',$user->id)->update(['status_konfirmasi' => '1']); 
+            $user = User::find($user->id);
             Auth::login($user);
-            return redirect('/home');
+
+            if ($request->status == 0) {
+                return redirect('/home');
+            }elseif($request->status == 1){
+                return redirect('/ubah-password'); 
+            }
           }
     }
 
@@ -244,10 +270,10 @@ class RegisterController extends Controller
         }
 
             Session::flash("flash_notification", [
-                "alert" => 'success',
-                "icon" => 'done',
-                "judul" => 'SUCCES',
-                "message" => 'Silakan Masukan Kode Verfikasi']);
+                "alert" => 'warning',
+                "icon" => 'warning',
+                "judul" => 'PERHATIAN',
+                "message" => 'Silakan Perika Handphone Anda untuk Masukan Kode Verfikasi']);
             return back();
 
     }
@@ -278,13 +304,13 @@ class RegisterController extends Controller
 
 
         Session::flash("flash_notification", [ 
-        "alert" => 'danger',
-        "icon" => 'error_outline',
+        "alert" => 'warning',
+        "icon" => 'done',
         "judul" => 'INFO',
         "message" => 'Silahkan Periksa Hp Anda Kami Mengirim Kode Verfikasi Ke : '.$nomor_tujuan.''
         ]);
 
-        return redirect('/kirim-kode-verifikasi?nomor='.$nomor_tujuan);
+        return redirect('/kirim-kode-verifikasi?nomor='.$nomor_tujuan.'&status=1');
         } 
     }
 

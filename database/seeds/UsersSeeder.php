@@ -49,14 +49,9 @@ class UsersSeeder extends Seeder
 	    $admin->email = 'admin@gmail.com';
 	    $admin->alamat = "-";
 	    $admin->password = bcrypt('rahasia');
-	    $admin->status_konfirmasi = "1";
-	 
-	    $admin->wilayah = '101';
-
+	    $admin->status_konfirmasi = "1"; 
+	    $admin->wilayah = '101'; 
 	    $admin->no_telp = "081222498686";
-	    $admin->nama_bank = 'BNI';
-	    $admin->no_rekening = '044353534';
-	    $admin->an_rekening = 'fahrizal';
 	    $admin->tipe_user = '1';
 	    $admin->tgl_lahir = '2000-10-10';
 
@@ -72,9 +67,6 @@ class UsersSeeder extends Seeder
 
 	    $member->wilayah = '103';
 	    $member->no_telp = "087345365743";
-	    $member->nama_bank = 'BNI';
-	    $member->no_rekening = '044353534';
-	    $member->an_rekening = 'fahrizal';
 	    $member->tipe_user = '2';
 	    $member->tgl_lahir = '2000-10-10';
 	    
@@ -94,9 +86,6 @@ class UsersSeeder extends Seeder
 	    $customer->tgl_lahir = '1999-02-20';
 		$customer->status_konfirmasi = "1";
 
-	    $customer->nama_bank = '-';
-	    $customer->no_rekening = '-';
-	    $customer->an_rekening = '-';
 	    
 	    $customer->password = bcrypt('rahasia');
 	    $customer->save();

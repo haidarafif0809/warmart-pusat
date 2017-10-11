@@ -62,9 +62,9 @@ class CustomerController extends Controller
                 })->make(true);
         }
         $html = $htmlBuilder
-        ->addColumn(['data' => 'email', 'name' => 'email', 'title' => 'No. Telpon']) 
+        ->addColumn(['data' => 'no_telp', 'name' => 'no_telp', 'title' => 'No. Telpon']) 
         ->addColumn(['data' => 'name', 'name' => 'name', 'title' => 'Nama']) 
-        ->addColumn(['data' => 'no_telp', 'name' => 'no_telp', 'title' => 'Email']) 
+        ->addColumn(['data' => 'email', 'name' => 'email', 'title' => 'Email']) 
         ->addColumn(['data' => 'tgl_lahir', 'name' => 'tgl_lahir', 'title' => 'Tanggal Lahir'])
         ->addColumn(['data' => 'alamat', 'name' => 'alamat', 'title' => 'Alamat'])  
         ->addColumn(['data' => 'komunitas', 'name' => 'komunitas', 'title' => 'Komunitas'])
@@ -96,20 +96,17 @@ class CustomerController extends Controller
 
     public function store(Request $request)
     {
-
-      
-
+ 
         $this->validate($request, [
             'name'      => 'required',
-            'email'     => 'required|without_spaces|email',
+            'email'     => 'required|without_spaces|unique:users,no_telp',
             'alamat'    => 'required',
             'no_telp'   => 'without_spaces|unique:users,no_telp|numeric',
             'tgl_lahir' => 'date', 
             'komunitas' => '', 
         ]);
-
-
-    //INSERT CUSTOMER
+ 
+      //INSERT CUSTOMER
         $customer_baru = Customer::create([ 
             'name'              => $request->name,
             'email'             => $request->email, 
@@ -122,7 +119,7 @@ class CustomerController extends Controller
             'password'  => bcrypt('123456')
         ]);
 
-    //INSERT OTORITAS CUSTOMER
+      //INSERT OTORITAS CUSTOMER
         $customer_baru->attachRole(3);
 
         if (isset($request->komunitas)) {
@@ -193,7 +190,7 @@ class CustomerController extends Controller
             'name'      => 'required',
             'email'     => 'required|without_spaces|unique:users,email,' .$id,
             'alamat'    => 'required',
-            'no_telp'   => 'required|without_spaces|numeric',
+            'no_telp'   => 'required|without_spaces|numeric|unique:users,no_telp,' .$id,
             'tgl_lahir' => 'required|date',
             
         ]);
@@ -208,7 +205,7 @@ class CustomerController extends Controller
         ]);
 
         //hapus komunitas sebelumnya, masukkan komunitas baru
-          KomunitasCustomer::where('user_id',$id)->delete();
+        KomunitasCustomer::where('user_id',$id)->delete();
         if (isset($request->komunitas)) {
         
         KomunitasCustomer::create(['user_id' =>$id ,'komunitas_id' => $request->komunitas]);
