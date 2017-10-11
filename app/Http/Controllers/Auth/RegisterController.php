@@ -62,7 +62,7 @@ class RegisterController extends Controller
             //Customer
             return Validator::make($data, [
                 'name'      => 'required',
-                'email'     => 'required|without_spaces|unique:users,email',
+                'email'     => 'without_spaces|unique:users,email',
                 'alamat'    => 'required',
                 'no_telp'   => 'required|numeric|without_spaces|unique:users,no_telp', 
                 'password'  => 'required|string|min:6|confirmed',
@@ -71,7 +71,7 @@ class RegisterController extends Controller
         elseif ($data['id_register'] == 2) { 
             //Komunitas
             return Validator::make($data, [
-                'email'     => 'required|without_spaces|unique:users,email',
+                'email'     => 'without_spaces|unique:users,email',
                 'name'      => 'required',
                 'password'  =>  'required|string|min:6|confirmed',
                 'no_telp'   => 'required|numeric|without_spaces|unique:users,no_telp',

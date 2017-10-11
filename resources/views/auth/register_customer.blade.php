@@ -96,7 +96,7 @@
                                           @endif
                                     </div>
                                     <div class="footer text-center">
-                                        <button type="submit" class="btn btn-rose btn-simple btn-wd btn-lg">Registrasi Costomer</button>
+                                        <button type="submit" class="btn btn-rose btn-simple btn-wd btn-lg">Registrasi Customer</button>
                                     </div>
                                 </div>
     {!! Form::close() !!}
