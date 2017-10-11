@@ -273,7 +273,7 @@ class RegisterController extends Controller
                 "alert" => 'warning',
                 "icon" => 'warning',
                 "judul" => 'PERHATIAN',
-                "message" => 'Silakan Perika Handphone Anda untuk Masukan Kode Verfikasi']);
+                "message" => 'Silakan input nomor verifikasi yang terkirim melalui SMS ke no ' . $user->no_telp]);
             return back();
 
     }
