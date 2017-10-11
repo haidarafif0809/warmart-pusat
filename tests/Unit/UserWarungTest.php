@@ -50,4 +50,112 @@ class UserWarungTest extends TestCase
         //CEK USER WARUNG
 
     }
+
+    //HAPUS WARUNG JIKA DATA USER WARUNG TINGGAL 1
+    public function testHTTPHapusUserWarung(){
+
+    	//TAMBAH USER WARUNG
+        $password = bcrypt('123456');
+
+        //TAMBAH WARUNG
+        $warung = Warung::create(['email' => '-','name'=>'Rindang CLOTH','alamat'=>'Jl. Kemiling Raya','wilayah'=>'10','no_telpon'=>'085383550858']);       
+        $data_id = Warung::select('id')->where('name', $warung->name)->first();
+
+        $user_warung = UserWarung::create(['email' => 'rindang@gmail.com','password' => $password,'name' => 'Rindang CLOTH', 'alamat' => 'JJl. Kemiling Raya', 'wilayah' => '103', 'tipe_user' => '4', 'id_warung' => $data_id->id, 'status_konfirmasi' => '1', 'no_telp' => '085383550858', 'kode_verifikasi' => '1001']);
+
+        //login user -> admin
+        $user = User::find(1);
+
+        $jumalh_user_warung = UserWarung::where('id_warung', $data_id->id)->count();
+
+        $response = $this->actingAs($user)->json('POST', route('user_warung.destroy',$user_warung->id), ['_method' => 'DELETE']);
+
+        if ($jumalh_user_warung > 1) {
+
+        	$response->assertStatus(302)
+                 	 ->assertRedirect(route('user_warung.index'));
+            $response2 = $this->get($response->headers->get('location'))->assertSee('Sukses : Berhasil Menghapus Warung'); 
+        }
+        else{        	
+            $response2 = $this->get($response->headers->get('location'))->assertSee('Gagal : User Warung Tidak Bisa Dihapus.');
+        }            
+
+    }
+
+    //HAPUS WARUNG JIKA DATA USER WARUNG LEBIH DARI 1
+    public function testHTTPHapusUserWarungg(){
+
+    	//TAMBAH USER WARUNG
+        $password = bcrypt('123456');
+
+        //TAMBAH WARUNG
+        $warung = Warung::create(['email' => '-','name'=>'Rindang CLOTH','alamat'=>'Jl. Kemiling Raya','wilayah'=>'10','no_telpon'=>'085383550858']);       
+        $data_id = Warung::select('id')->where('name', $warung->name)->first();
+
+        $user_warung = UserWarung::create(['email' => 'rindang@gmail.com','password' => $password,'name' => 'Rindang CLOTH', 'alamat' => 'JJl. Kemiling Raya', 'wilayah' => '103', 'tipe_user' => '4', 'id_warung' => $data_id->id, 'status_konfirmasi' => '1', 'no_telp' => '085383550858', 'kode_verifikasi' => '1001']);
+
+        $user_warung2 = UserWarung::create(['email' => 'rindang2@gmail.com','password' => $password,'name' => 'Rindang2 CLOTH', 'alamat' => 'Jl. Kemiling Raya', 'wilayah' => '103', 'tipe_user' => '4', 'id_warung' => $data_id->id, 'status_konfirmasi' => '1', 'no_telp' => '0853835508580', 'kode_verifikasi' => '1011']);
+        //login user -> admin
+        $user = User::find(1);
+
+        $jumalh_user_warung = UserWarung::where('id_warung', $data_id->id)->count();
+
+        $response = $this->actingAs($user)->json('POST', route('user_warung.destroy',$user_warung->id), ['_method' => 'DELETE']);
+
+        if ($jumalh_user_warung > 1) {
+
+        	$response->assertStatus(302)
+                 	 ->assertRedirect(route('user_warung.index'));
+            $response2 = $this->get($response->headers->get('location'))->assertSee('Sukses : Berhasil Menghapus User Warung'); 
+        }
+        else{        	
+            $response2 = $this->get($response->headers->get('location'))->assertSee('Gagal : User Warung Tidak Bisa Dihapus.');
+        }            
+
+    }
+
+    //HALAMAN MENU EDIT USER WARUNG
+    public function testHTTPUpdateUserWarung(){
+
+        //TAMBAH WARUNG
+        $warung = Warung::create(['email' => '-','name'=>'Rindang CLOTH','alamat'=>'Jl. Kemiling Raya','wilayah'=>'10','no_telpon'=>'085383550858']);       
+        $data_id = Warung::select('id')->where('id', $warung->id)->first();
+        
+        //TAMBAH BANK WARUNG
+        $password = bcrypt('123456');
+        $user_warung = UserWarung::create(['email' => 'rindang@gmail.com','password' => $password,'name' => 'Rindang Ramadhan', 'alamat' => 'Jalan Way Seputih Pahoman', 'wilayah' => '103', 'tipe_user' => '4', 'id_warung' => $data_id->id, 'status_konfirmasi' => '1', 'no_telp' => '085383550858', 'kode_verifikasi' => '1001']);
+
+        //login user -> admin
+        $user = User::find(1);
+
+        $response = $this->actingAs($user)->get(route('user_warung.edit',$user_warung->id));
+
+        $response->assertStatus(200)
+                 ->assertSee('Edit User Warung');
+
+     
+    }
+
+    //PROSES EDIT BANK
+    public function testHTTPEditUserWarung(){
+        
+        //TAMBAH WARUNG
+        $warung = Warung::create(['email' => '-','name'=>'Rindang CLOTH','alamat'=>'Jl. Kemiling Raya','wilayah'=>'10','no_telpon'=>'085383550858']);       
+        $data_id = Warung::select('id')->where('id', $warung->id)->first();
+
+        //TAMBAH BANK WARUNG
+        $password = bcrypt('123456');
+        $user_warung = UserWarung::create(['email' => 'rindang@gmail.com','password' => $password,'name' => 'Rindang CLOTH', 'alamat' => 'Jl. Kemiling Raya', 'wilayah' => '103', 'tipe_user' => '4', 'id_warung' => $data_id->id, 'status_konfirmasi' => '1', 'no_telp' => '085383550858', 'kode_verifikasi' => '1001']);
+
+        //login user -> admin
+        $user = User::find(1);
+
+        $response = $this->actingAs($user)->json('POST', route('user_warung.update',$user_warung->id), ['_method' => 'PUT','name' => 'Rindang CLOTH Update', 'alamat' => 'Jl. Kemiling Raya Update', 'kelurahan' => '10', 'email' => 'rindangramadhan@gmail.com', 'no_telp'=>'085383550858']);
+
+        $response->assertStatus(302)
+                 ->assertRedirect(route('user_warung.index'));
+
+        $response2 = $this->get($response->headers->get('location'))->assertSee('Sukses : Berhasil Mengubah User Warung Rindang CLOTH Update');
+     
+    }
 }

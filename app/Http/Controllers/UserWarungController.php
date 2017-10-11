@@ -133,7 +133,7 @@ class UserWarungController extends Controller
                     <div class="alert-icon">
                         <i class="material-icons">check</i>
                     </div>
-                        <b>Success : Berhasil Mengubah User Warung '.$request->name.' </b>
+                        <b>Sukses : Berhasil Mengubah User Warung '.$request->name.' </b>
                 </div>';
 
         Session::flash("flash_notification", [
@@ -162,7 +162,7 @@ class UserWarungController extends Controller
                     <div class="alert-icon">
                         <i class="material-icons">check</i>
                     </div>
-                        <b>Success : Berhasil Menghapus User Warung </b>
+                        <b>Sukses : Berhasil Menghapus User Warung </b>
                 </div>';
 
                 Session:: flash("flash_notification", [
