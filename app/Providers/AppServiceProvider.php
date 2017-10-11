@@ -7,7 +7,9 @@ use Laravel\Dusk\DuskServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use Validator;
 use App\Observers\WarungObserver;
+use App\Observers\UserWarungObserver;
 use App\Warung;
+use App\UserWarung;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,6 +27,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Warung::observe(WarungObserver::class);
+        UserWarung::observe(UserWarungObserver::class);
     }
 
     /**

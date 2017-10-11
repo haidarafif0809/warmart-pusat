@@ -128,7 +128,7 @@ class WarungController extends Controller
                     <div class="alert-icon">
                     <i class="material-icons">check</i>
                     </div>
-                    <b>Success : Berhasil Menambah Warung '.$request->name.' </b>
+                    <b>Sukses : Berhasil Menambah Warung '.$request->name.' </b>
                 </div>';
 
 
@@ -158,8 +158,9 @@ class WarungController extends Controller
      */
     public function edit($id)
     {
-          $warung = Warung::with(['kelurahan', 'bank_warung'])->find($id);
-            return view('warung.edit')->with(compact('warung'));
+        $warung = Warung::with(['kelurahan', 'bank_warung'])->find($id);
+        return view('warung.edit')->with(compact('warung'));
+
     }
 
     /**
@@ -209,7 +210,7 @@ class WarungController extends Controller
                     <div class="alert-icon">
                         <i class="material-icons">check</i>
                     </div>
-                        <b>Success : Berhasil Mengubah Warung '.$request->name.' </b>
+                        <b>Sukses : Berhasil Mengubah Warung '.$request->name.' </b>
                 </div>';
 
         Session::flash("flash_notification", [
@@ -239,7 +240,7 @@ class WarungController extends Controller
                     <div class="alert-icon">
                         <i class="material-icons">check</i>
                     </div>
-                        <b>Success : Berhasil Menghapus Warung </b>
+                        <b>Sukses : Berhasil Menghapus Warung </b>
                 </div>';
 
         Session:: flash("flash_notification", [
