@@ -62,7 +62,7 @@ class RegisterController extends Controller
             //Customer
             return Validator::make($data, [
                 'name'      => 'required',
-                'email'     => 'without_spaces|unique:users,email',
+                'email'     => 'nullable|without_spaces|unique:users,email',
                 'alamat'    => 'required',
                 'no_telp'   => 'required|numeric|without_spaces|unique:users,no_telp', 
                 'password'  => 'required|string|min:6|confirmed',
@@ -71,9 +71,9 @@ class RegisterController extends Controller
         elseif ($data['id_register'] == 2) { 
             //Komunitas
             return Validator::make($data, [
-                'email'     => 'without_spaces|unique:users,email',
+                'email'     => 'nullable|without_spaces|unique:users,email',
                 'name'      => 'required',
-                'password'  =>  'required|string|min:6|confirmed',
+                'password'  => 'required|string|min:6|confirmed',
                 'no_telp'   => 'required|numeric|without_spaces|unique:users,no_telp',
                 'alamat'    => 'required', 
             ]);
@@ -81,6 +81,7 @@ class RegisterController extends Controller
         elseif ($data['id_register'] == 3) { 
             //USER WARUNG
             return Validator::make($data, [
+                'email'     => 'nullable|without_spaces|unique:users,email',
                 'name'      => 'required',
                 'password'  => 'required|string|min:6|confirmed',
                 'no_telp'   => 'required|numeric|without_spaces|unique:users,no_telp',
@@ -269,10 +270,10 @@ class RegisterController extends Controller
         }
 
             Session::flash("flash_notification", [
-                "alert" => 'success',
-                "icon" => 'done',
-                "judul" => 'SUCCES',
-                "message" => 'Silakan Masukan Kode Verfikasi']);
+                "alert" => 'warning',
+                "icon" => 'warning',
+                "judul" => 'PERHATIAN',
+                "message" => 'Silakan Perika Handphone Anda untuk Masukan Kode Verfikasi']);
             return back();
 
     }
