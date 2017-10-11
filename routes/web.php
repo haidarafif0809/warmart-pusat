@@ -32,8 +32,7 @@ Route::get('/aff/{id}/',function($id){
 }); 
 
 
-Route::get('kirim-kode-verifikasi','Auth\RegisterController@kirim_kode_verifikasi');
-Route::get('proses-kirim-kode-verifikasi','Auth\RegisterController@proses_kirim_kode_verifikasi');  
+Route::get('kirim-kode-verifikasi','Auth\RegisterController@kirim_kode_verifikasi'); 
 Route::get('kirim-ulang-kode-verifikasi/{id}','Auth\RegisterController@kirim_ulang_kode_verifikasi');
 Route::get('lupa-password','Auth\RegisterController@lupa_password');
 
@@ -59,6 +58,18 @@ Route::put('/proses-ubah-password/{id}',[
 	'middleware' => ['auth'],
 	'as' => 'user.proses_ubah_password',
 	'uses' => 'UbahPasswordController@proses_ubah_password'
+	]);
+
+Route::get('/ubah-profil',[
+	'middleware' => ['auth'],
+	'as' => 'user.ubah_profil',
+	'uses' => 'UbahProfilController@ubah_profil'
+	]);
+
+Route::put('/proses-ubah-profil/{id}',[
+	'middleware' => ['auth'],
+	'as' => 'user.proses_ubah_profil',
+	'uses' => 'UbahProfilController@proses_ubah_profil'
 	]);
 
 Route::group(['middleware' =>'auth'], function(){

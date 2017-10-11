@@ -205,7 +205,7 @@ class CustomerController extends Controller
         ]);
 
         //hapus komunitas sebelumnya, masukkan komunitas baru
-          KomunitasCustomer::where('user_id',$id)->delete();
+        KomunitasCustomer::where('user_id',$id)->delete();
         if (isset($request->komunitas)) {
         
         KomunitasCustomer::create(['user_id' =>$id ,'komunitas_id' => $request->komunitas]);

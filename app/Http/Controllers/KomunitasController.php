@@ -7,6 +7,7 @@ use Yajra\Datatables\Html\Builder;
 use Yajra\Datatables\Datatables;
 use Illuminate\Support\Facades\DB;
 use App\Komunitas;
+use App\BankKomunitas;
 use App\KomunitasPenggiat;
 use Session;
 use Laratrust;
@@ -23,7 +24,7 @@ class KomunitasController extends Controller
          //
         if ($request->ajax()) {
             # code...
-            $komunitas = Komunitas::with(['kelurahan','role','warung','komunitas_penggiat'])->where('tipe_user',2)->get();
+            $komunitas = Komunitas::with(['kelurahan','role','warung','komunitas_penggiat','bank_komunitas'])->where('tipe_user',2)->get();
             return Datatables::of($komunitas)
                 ->addColumn('action', function($komunitas){
                     return view('datatable._action', [
@@ -118,7 +119,7 @@ class KomunitasController extends Controller
             'kelurahan' => 'required',
             'no_telp'   => 'required|without_spaces|unique:users,no_telp,',
             'nama_bank' => 'required',
-            'no_rekening' => 'required|unique:users,no_rekening,',
+            'no_rekening' => 'required|unique:bank_komunitas,no_rek,',
             'an_rekening' => 'required',
             'id_warung' => 'required',
 
@@ -131,14 +132,12 @@ class KomunitasController extends Controller
             'alamat' =>$request->alamat,
             'wilayah' =>$request->kelurahan,
             'no_telp' =>$request->no_telp,
-            'nama_bank' =>$request->nama_bank,
-            'no_rekening' =>$request->no_rekening,
-            'an_rekening' =>$request->an_rekening,
             'id_warung' =>$request->id_warung,
             'tipe_user'=> 2,
             'status_konfirmasi'=>0
             ]);
 
+         //masukan data komunitas komunitas
          if ($request->name_penggiat != "" AND $request->alamat_penggiat != ""){
             $komunitaspenggiat = KomunitasPenggiat::create([
             'nama_penggiat' =>$request->name_penggiat,
@@ -149,6 +148,21 @@ class KomunitasController extends Controller
          else{
             
          }
+        //end masukan data komunitas komunitas
+
+        //masukan data bank komunitas
+         if ($request->nama_bank != "" AND $request->no_rekening != "" AND $request->an_rekening != "" ){
+            $bankkomunitas = BankKomunitas::create([
+            'nama_bank' =>$request->nama_bank,
+            'no_rek'  =>$request->no_rekening,
+            'atas_nama'=>$request->an_rekening,              
+            'komunitas_id'=>$komunitas->id      
+            ]);
+         }
+         else{
+            
+         }
+        //end masukan data bank komunitas
 
 
         $komunitas->attachRole(4);
@@ -210,7 +224,7 @@ class KomunitasController extends Controller
             'kelurahan' => 'required',
             'no_telp'   => 'required|without_spaces|unique:users,no_telp,'. $id,
             'nama_bank' => 'required',
-            'no_rekening' => 'required|unique:users,no_rekening,'. $id,
+            'no_rekening' => 'required|unique:bank_komunitas,no_rek,'. $id,
             'an_rekening' => 'required',
             'id_warung' => 'required',
             ]);
@@ -222,9 +236,6 @@ class KomunitasController extends Controller
             'alamat' =>$request->alamat,
             'wilayah' =>$request->kelurahan,
             'no_telp' =>$request->no_telp,
-            'nama_bank' =>$request->nama_bank,
-            'no_rekening' =>$request->no_rekening,
-            'an_rekening' =>$request->an_rekening,
             'id_warung' =>$request->id_warung,
         ]);
 
@@ -237,6 +248,19 @@ class KomunitasController extends Controller
          else{
             
          }
+
+         //masukan data bank komunitas
+         if ($request->nama_bank != "" AND $request->no_rekening != "" AND $request->an_rekening != "" ){
+            $bankkomunitas = BankKomunitas::where('komunitas_id',$id)->update([
+            'nama_bank' =>$request->nama_bank,
+            'no_rek'  =>$request->no_rekening,
+            'atas_nama'=>$request->an_rekening              
+            ]);
+         }
+         else{
+            
+         }
+        //end masukan data bank komunitas
 
         $pesan_alert = '<div class="container-fluid">
                     <div class="alert-icon">
@@ -264,7 +288,11 @@ class KomunitasController extends Controller
         // jika gagal hapus
         if (!Komunitas::destroy($id)) {
             // redirect back
-            return redirect()->back();
+           KomunitasPenggiat::where('komunitas_id',$id)->delete();
+           BankKomunitas::where('komunitas_id',$id)->delete();
+
+           return redirect()->back();
+
         }else{
             
         $pesan_alert = '<div class="container-fluid">

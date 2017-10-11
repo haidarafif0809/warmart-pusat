@@ -62,19 +62,18 @@ class RegisterController extends Controller
             //Customer
             return Validator::make($data, [
                 'name'      => 'required',
-                'email'     => 'required|without_spaces|unique:users,email',
+                'email'     => 'nullable|without_spaces|unique:users,email',
                 'alamat'    => 'required',
-                'no_telp'   => 'required|numeric|without_spaces|unique:users,no_telp',
-                'tgl_lahir' => '', 
+                'no_telp'   => 'required|numeric|without_spaces|unique:users,no_telp', 
                 'password'  => 'required|string|min:6|confirmed',
             ]);
         }
         elseif ($data['id_register'] == 2) { 
             //Komunitas
             return Validator::make($data, [
-                'email'     => 'required|without_spaces|unique:users,email',
+                'email'     => 'nullable|without_spaces|unique:users,email',
                 'name'      => 'required',
-                'password'  =>  'required|string|min:6|confirmed',
+                'password'  => 'required|string|min:6|confirmed',
                 'no_telp'   => 'required|numeric|without_spaces|unique:users,no_telp',
                 'alamat'    => 'required', 
             ]);
@@ -82,6 +81,7 @@ class RegisterController extends Controller
         elseif ($data['id_register'] == 3) { 
             //USER WARUNG
             return Validator::make($data, [
+                'email'     => 'nullable|without_spaces|unique:users,email',
                 'name'      => 'required',
                 'password'  => 'required|string|min:6|confirmed',
                 'no_telp'   => 'required|numeric|without_spaces|unique:users,no_telp',
@@ -105,8 +105,7 @@ class RegisterController extends Controller
                 'name' => $data['name'],
                 'email' => $data['email'],
                 'alamat' => $data['alamat'],    
-                'no_telp' => $data['no_telp'],   
-                'tgl_lahir' => $data['tgl_lahir'],    
+                'no_telp' => $data['no_telp'],    
                 'password' => bcrypt($data['password']),
                 'tipe_user'=> 3,
                 'status_konfirmasi'=>0,
@@ -224,9 +223,10 @@ class RegisterController extends Controller
     protected function kirim_kode_verifikasi(Request $request)
     {  
         $nomor_hp = $request->nomor;
+        $status = $request->status;
         $user = User::where('no_telp',$request->nomor)->first();
-        return view('auth.verifikasi_register',['nomor_hp'=>$nomor_hp,'user'=>$user]);    
-    }
+        return view('auth.verifikasi_register',['nomor_hp'=>$nomor_hp,'user'=>$user,'status'=>$status]);    
+    } 
 
     protected function proses_kirim_kode_verifikasi(Request $request,$nomor_hp)
     {  
@@ -242,8 +242,14 @@ class RegisterController extends Controller
           }else{
 
             User::where('id',$user->id)->update(['status_konfirmasi' => '1']); 
+            $user = User::find($user->id);
             Auth::login($user);
-            return redirect('/home');
+
+            if ($request->status == 0) {
+                return redirect('/home');
+            }elseif($request->status == 1){
+                return redirect('/ubah-password'); 
+            }
           }
     }
 
@@ -264,10 +270,10 @@ class RegisterController extends Controller
         }
 
             Session::flash("flash_notification", [
-                "alert" => 'success',
-                "icon" => 'done',
-                "judul" => 'SUCCES',
-                "message" => 'Silakan Masukan Kode Verfikasi']);
+                "alert" => 'warning',
+                "icon" => 'warning',
+                "judul" => 'PERHATIAN',
+                "message" => 'Silakan Perika Handphone Anda untuk Masukan Kode Verfikasi']);
             return back();
 
     }
@@ -298,13 +304,13 @@ class RegisterController extends Controller
 
 
         Session::flash("flash_notification", [ 
-        "alert" => 'danger',
-        "icon" => 'error_outline',
+        "alert" => 'warning',
+        "icon" => 'done',
         "judul" => 'INFO',
         "message" => 'Silahkan Periksa Hp Anda Kami Mengirim Kode Verfikasi Ke : '.$nomor_tujuan.''
         ]);
 
-        return redirect('/kirim-kode-verifikasi?nomor='.$nomor_tujuan);
+        return redirect('/kirim-kode-verifikasi?nomor='.$nomor_tujuan.'&status=1');
         } 
     }
 

@@ -51,7 +51,7 @@
                                         </div>
                                     </div>
                                     <div class="footer text-center">
-                                        <button type="submit" id="login" class="btn btn-rose btn-simple btn-wd btn-lg">Let's go</button>
+                                        <button type="submit" id="login" class="btn btn-rose btn-simple btn-wd btn-lg">Login</button>
                                     </div>
                                     <center>    
                                         <a href="{{ url('/lupa-password/') }}">Lupa Password</a> 
