@@ -36,11 +36,13 @@ class KomunitasController extends Controller
                         'permission_hapus' => Laratrust::can('hapus_komunitas'),
 
                         ]);
+
                 })->addColumn('link', function($link){ 
 
                     return $link->link_afiliasi;
 
-                })->addColumn('warung', function($warung){ 
+                })
+                ->addColumn('warung', function($warung){ 
 
                    if ($warung->id_warung == "") {
                         return "-";
@@ -56,37 +58,17 @@ class KomunitasController extends Controller
                         return $kelurahan->kelurahan->nama;
                    }
 
-                })->addColumn('nama_penggiat', function($warmart){ 
-
-                    if($warmart->komunitas_penggiat != ""){
-                        return $jaja = $warmart->komunitas_penggiat->nama_penggiat;
-                    }
-                    else{
-                        return $jaja = "-";
-                    }
-
-                })->addColumn('alamat_penggiat', function($warmart){ 
-
-                    if($warmart->komunitas_penggiat != ""){
-                        return $jaja = $warmart->komunitas_penggiat->alamat_penggiat;
-                    }
-                    else{
-                        return $jaja = "-";
-                    }
-                         
                 })->make(true);
         }
         $html = $htmlBuilder
         ->addColumn(['data' => 'no_telp', 'name' => 'no_telp', 'title' => 'No Telp']) 
         ->addColumn(['data' => 'name', 'name' => 'name', 'title' => 'Nama Komunitas'])
-        ->addColumn(['data' => 'nama_penggiat', 'name' => 'nama_penggiat', 'title' => 'Nama Penggiat'])
         ->addColumn(['data' => 'alamat', 'name' => 'alamat', 'title' => 'Alamat Komunitas'])
-        ->addColumn(['data' => 'alamat_penggiat', 'name' => 'alamat_penggiat', 'title' => 'Alamat Penggiat'])
         ->addColumn(['data' => 'warung', 'name' => 'warung', 'title' => 'Warung'])  
         ->addColumn(['data' => 'email', 'name' => 'email', 'title' => 'Email'])  
         ->addColumn(['data' => 'kelurahan', 'name' => 'kelurahan', 'title' => 'Wilayah']) 
         ->addColumn(['data' => 'link', 'name' => 'link', 'title' => 'Link Afiliasi']) 
-        ->addColumn(['data' => 'action', 'name' => 'action', 'title' => '', 'orderable' => false, 'searchable'=>false]);
+        ->addColumn(['data' => 'action', 'name' => 'action', 'title' => '','orderable' => false, 'searchable'=>false]);
         
         return view('komunitas.index')->with(compact('html'));
 
@@ -204,8 +186,15 @@ class KomunitasController extends Controller
     {
 
 
-          $komunitas = Komunitas::with(['kelurahan','warung','komunitas_penggiat'])->find($id);
+          $komunitas = Komunitas::with(['kelurahan','warung','komunitas_penggiat','bank_komunitas'])->find($id);
             return view('komunitas.edit')->with(compact('komunitas'));
+    }
+
+
+
+    public function detail_lihat_komunitas($id)
+    {
+          $komunitas = Komunitas::with(['kelurahan','warung','komunitas_penggiat','bank_komunitas'])->find($id);
     }
 
     /**
@@ -288,13 +277,15 @@ class KomunitasController extends Controller
         // jika gagal hapus
         if (!Komunitas::destroy($id)) {
             // redirect back
-           KomunitasPenggiat::where('komunitas_id',$id)->delete();
-           BankKomunitas::where('komunitas_id',$id)->delete();
-
+          
            return redirect()->back();
 
         }else{
             
+             KomunitasPenggiat::where('komunitas_id',$id)->delete();
+           BankKomunitas::where('komunitas_id',$id)->delete();
+
+
         $pesan_alert = '<div class="container-fluid">
                     <div class="alert-icon">
                     <i class="material-icons">check</i>
