@@ -121,8 +121,8 @@ class BarangController extends Controller
                 $extension = $uploaded_foto->getClientOriginalExtension();
                 // membuat nama file random berikut extension
                 $filename = str_random(40) . '.' . $extension;
-                // menyimpan foto_kamar ke folder public/img
-                $destinationPath = public_path() . DIRECTORY_SEPARATOR . 'img';
+                // menyimpan foto_kamar ke folder public/foto_produk
+                $destinationPath = public_path() . DIRECTORY_SEPARATOR . 'foto_produk';
                 $uploaded_foto->move($destinationPath, $filename);
                 // mengisi field foto_kamar di database kamar dengan filename yang baru dibuat
   
@@ -226,13 +226,13 @@ class BarangController extends Controller
                     $extension = $uploaded_foto->getClientOriginalExtension();
                     // membuat nama file random dengan extension
                     $filename = str_random(40) . '.' . $extension;
-                    $destinationPath = public_path() . DIRECTORY_SEPARATOR . 'img';
-                    // memindahkan file ke folder public/img
+                    $destinationPath = public_path() . DIRECTORY_SEPARATOR . 'foto_produk';
+                    // memindahkan file ke folder public/foto_produk
                     $uploaded_foto->move($destinationPath, $filename);
                     // hapus foto_home lama, jika ada
                     if ($update_barang->foto) {
                     $old_foto = $update_barang->foto;
-                    $filepath = public_path() . DIRECTORY_SEPARATOR . 'img'
+                    $filepath = public_path() . DIRECTORY_SEPARATOR . 'foto_produk'
                     . DIRECTORY_SEPARATOR . $update_barang->foto;
                     try {
                     File::delete($filepath);
