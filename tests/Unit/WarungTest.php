@@ -71,8 +71,8 @@ class WarungTest extends TestCase
         $bank_warung = BankWarung::find($bank_warung->id);
         $this->assertDatabaseMissing('bank_warungs', ['nama_bank'=>'BNI SYARIAH','atas_nama'=>'RindangRamadhan','no_rek'=>'05486751238','warung_id'=>'1']);
 
-        //CEK USER WARUNG
-        //$user_warung = UserWarung::find($user_warung->id);
+        //CEK BANK WARUNG
+        $user_warung = UserWarung::find($user_warung->id);
         $this->assertDatabaseMissing('users', ['email' => 'rindangramadhan@gmail.com','password' => $password,'name' => 'RindangRamadhan', 'alamat' => 'Jalan Way Seputih Pahoman', 'wilayah' => '103', 'tipe_user' => '4', 'id_warung' => '1', 'status_konfirmasi' => '1', 'no_telp' => '085383550858', 'kode_verifikasi' => '1001']);
 
     }
@@ -168,7 +168,7 @@ class WarungTest extends TestCase
      
     }
 
-    //PROSES EDIT BANK
+    //PROSES EDIT WARUNG
     public function testHTTPEditWarung(){
         
         //TAMBAH WARUNG
@@ -189,6 +189,7 @@ class WarungTest extends TestCase
         $response2 = $this->get($response->headers->get('location'))->assertSee('Sukses : Berhasil Mengubah Warung Rindang CLOTH Update');
      
     }
+
 
 
 }
