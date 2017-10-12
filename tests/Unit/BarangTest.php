@@ -6,6 +6,9 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 use App\Barang;
 use App\User;
 use URL;
@@ -87,6 +90,7 @@ class BarangTest extends TestCase
             'status_aktif'          => '1',
             'id_warung'             => '1'
         ]);
+        
 
         $response->assertStatus(302)
                  ->assertRedirect(route('barang.index'));

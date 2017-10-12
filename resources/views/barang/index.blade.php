@@ -5,7 +5,7 @@
 		<div class="col-md-12">
 			<ul class="breadcrumb">
 				<li><a href="{{ url('/home') }}">Home</a></li>
-				<li class="active">Barang</li>
+				<li class="active">Produk</li>
 			</ul>
  
 			
@@ -14,9 +14,9 @@
                        <i class="material-icons">dns</i>
                                 </div>
                       <div class="card-content">
-                         <h4 class="card-title"> Barang </h4>
+                         <h4 class="card-title"> Produk </h4>
                        <div class="toolbar">
-                         	<p> <a class="btn btn-primary" href="{{ route('barang.create') }}"><i class="material-icons">add</i> Tambah Barang</a> </p>
+                         	<p> <a class="btn btn-primary" href="{{ route('barang.create') }}"><i class="material-icons">add</i> Tambah Produk</a> </p>
                          </div>
 					<div class="table-responsive material-datatables">
 						{!! $html->table(['class'=>'table-striped table']) !!}
