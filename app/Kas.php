@@ -14,14 +14,12 @@ class Kas extends Model
 
        protected $fillable = ['kode_kas','nama_kas','status_kas', 'default_kas'];
 
-          public function user_buat()
-		  {
-		  	return $this->hasOne('App\User','id','created_by');
-		  }
+	   public function user_buat(){
+			return $this->hasOne('App\User','id','created_by');
+	   }
 
-          public function user_edit()
-		  {
-		  	return $this->hasOne('App\User','id','updated_by');
-		  }
+	   public function user_edit(){
+			return $this->hasOne('App\User','id','updated_by');
+	   }
 
 }
