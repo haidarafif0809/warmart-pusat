@@ -86,7 +86,7 @@ class WarungTest extends TestCase
         $user = User::find(1);
 
         $response = $this->actingAs($user)->json('POST', route('warung.store'), [
-         'name'      => 'Rindang CLOTH',
+         'name'      => 'Rindang CLOTHH',
          'alamat'    => 'Jl. Kemiling Raya',
          'kelurahan' => '10',
          'nama_bank' => 'BNI SYARIAH',
@@ -100,17 +100,16 @@ class WarungTest extends TestCase
                  ->assertRedirect(route('warung.index'));
         
         //TAMBAH WARUNG
-        $warung = Warung::create(['email' => '-','name'=>'Rindang CLOTH','alamat'=>'Jl. Kemiling Raya','wilayah'=>'10','no_telpon'=>'085383550858']);       
+        $warung = Warung::create(['email' => '-','name'=>'Rindang CLOTHH','alamat'=>'Jl. Kemiling Raya','wilayah'=>'10','no_telpon'=>'085383550858']);       
         $data_id = Warung::select('id')->where('name', $warung->name)->first();
-
-        $password = bcrypt('123456');
-        $response2 = $this->get($response->headers->get('location'))->assertSee('Sukses : Berhasil Menambah Warung Rindang CLOTH');
+        
+        $response2 = $this->get($response->headers->get('location'))->assertSee('Sukses : Berhasil Menambah Warung Rindang CLOTHH');
         //CEK DB TABLE warungs
-        $response_warung = $this->assertDatabaseHas("warungs",['name' => 'Rindang CLOTH','alamat' => 'Jl. Kemiling Raya','wilayah' => '10','no_telpon' => '085383550858','email' => '-']);
+        $response_warung = $this->assertDatabaseHas("warungs",['name' => 'Rindang CLOTHH','alamat' => 'Jl. Kemiling Raya','wilayah' => '10','no_telpon' => '085383550858','email' => '-']);
         //CEK DB TABLE bank_warungs
         $response_bank_warung = $this->assertDatabaseHas("bank_warungs",['nama_bank' => 'BNI SYARIAH','atas_nama' => 'RINDANG RAMADHAN','no_rek'=>'0433857710', 'warung_id' => $data_id->id]);
         //CEK DB TABLE users
-        $response_user_warung = $this->assertDatabaseHas("users",['name' => 'Rindang CLOTH', 'email' => 'rindangramadhan10@gmail.com', 'no_telp' => '085383550858', 'alamat' => 'Jl. Kemiling Raya', 'wilayah' => '10', 'id_warung' => $data_id->id, 'tipe_user' => '4', 'status_konfirmasi' => '1' ]);
+        $response_user_warung = $this->assertDatabaseHas("users",['name' => 'Rindang CLOTHH', 'email' => 'rindangramadhan10@gmail.com', 'no_telp' => '085383550858', 'alamat' => 'Jl. Kemiling Raya', 'wilayah' => '10', 'id_warung' => $data_id->id, 'tipe_user' => '4', 'status_konfirmasi' => '1' ]);
     }
 
     //HAPUS WARUNG

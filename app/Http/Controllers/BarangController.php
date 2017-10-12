@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use App\Barang;
 use Laratrust;
+use File;
 use Auth;
 
 class BarangController extends Controller
@@ -79,18 +80,21 @@ class BarangController extends Controller
      */
     public function store(Request $request)
     {
-         //validate
-        $this->validate($request, [
-          'kode_barcode'        => 'unique:barangs,kode_barcode,NULL,id,id_warung,'.Auth::user()->id_warung.'|max:191', 
-          'kode_barang'         => 'required|unique:barangs,kode_barang,NULL,id,id_warung,'.Auth::user()->id_warung.'|max:191',
-          'nama_barang'         => 'required|max:191',
-          'harga_beli'          => 'required|numeric|digits_between:1,11',
-          'harga_jual'          => 'numeric|digits_between:1,11',
-          'hitung_stok'         => 'required',
-          'kategori_barang_id'  => 'required|exists:kategori_barangs,id',
-          'satuan_id'           => 'required|exists:satuans,id',
-          'status_aktif'        => 'required'
-        ]);
+                       //validate
+            $this->validate($request, [
+              'kode_barcode'        => 'nullable|unique:barangs,kode_barcode,NULL,id,id_warung,'.Auth::user()->id_warung.'|max:191', 
+              'kode_barang'         => 'required|unique:barangs,kode_barang,NULL,id,id_warung,'.Auth::user()->id_warung.'|max:191',
+              'nama_barang'         => 'required|max:191',
+              'harga_beli'          => 'required|numeric|digits_between:1,11',
+              'harga_jual'          => 'required|numeric|digits_between:1,11',
+              'hitung_stok'         => 'required',
+              'kategori_barang_id'  => 'required|exists:kategori_barangs,id',
+              'satuan_id'           => 'required|exists:satuans,id',
+              'status_aktif'        => 'required',
+              'foto'                => 'image|max:2048'
+            ]);
+
+       
 
         $insert_barang = Barang::create([
             'kode_barang'       => $request->kode_barang ,
@@ -103,6 +107,32 @@ class BarangController extends Controller
             'status_aktif'      => $request->status_aktif, 
             'hitung_stok'       => $request->hitung_stok, 
             'id_warung'         => Auth::user()->id_warung]);
+
+        // isi field foto_kamar jika ada FOTO KAMAR 1 yang diupload
+        if ($request->hasFile('foto')) {
+           
+            $foto = $request->file('foto');
+
+             if (is_array($foto) || is_object($foto))
+            {
+                // Mengambil file yang diupload
+                $uploaded_foto = $foto;
+                // mengambil extension file
+                $extension = $uploaded_foto->getClientOriginalExtension();
+                // membuat nama file random berikut extension
+                $filename = str_random(40) . '.' . $extension;
+                // menyimpan foto_kamar ke folder public/foto_produk
+                $destinationPath = public_path() . DIRECTORY_SEPARATOR . 'foto_produk';
+                $uploaded_foto->move($destinationPath, $filename);
+                // mengisi field foto_kamar di database kamar dengan filename yang baru dibuat
+  
+                $insert_barang->foto = $filename; 
+                
+                     // menyimpan field foto_kamar di database kamar dengan filename yang baru dibuat
+                $insert_barang->save();
+            }
+
+        }
 
         $pesan_alert = 
                '<div class="container-fluid">
@@ -154,24 +184,25 @@ class BarangController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
-                //validate
-        $this->validate($request, [
-          'kode_barcode'        => 'max:191|unique:barangs,kode_barcode,'. $id.',id,id_warung,'.Auth::user()->id_warung,
-          'kode_barang'         => 'required|max:191|unique:barangs,kode_barang,'. $id.',id,id_warung,'.Auth::user()->id_warung,
-          'nama_barang'         => 'required|max:191',
-          'harga_beli'          => 'required|numeric|digits_between:1,11',
-          'harga_jual'          => 'numeric|digits_between:1,11',
-          'hitung_stok'         => 'required',
-          'kategori_barang_id'  => 'required|exists:kategori_barangs,id',
-          'satuan_id'           => 'required|exists:satuans,id',
-          'status_aktif'        => 'required'
+                    //validate
+            $this->validate($request, [
+              'kode_barcode'        => 'nullable|max:191|unique:barangs,kode_barcode,'. $id.',id,id_warung,'.Auth::user()->id_warung,
+              'kode_barang'         => 'required|max:191|unique:barangs,kode_barang,'. $id.',id,id_warung,'.Auth::user()->id_warung,
+              'nama_barang'         => 'required|max:191',
+              'harga_beli'          => 'required|numeric|digits_between:1,11',
+              'harga_jual'          => 'required|numeric|digits_between:1,11',
+              'hitung_stok'         => 'required',
+              'kategori_barang_id'  => 'required|exists:kategori_barangs,id',
+              'satuan_id'           => 'required|exists:satuans,id',
+              'status_aktif'        => 'required',
+              'foto'                => 'image|max:2048'
 
-        ]);
-
+            ]);
+       
 
         //update
-        $barang = Barang::where('id',$id)->update([
+        $update_barang = Barang::find($id);
+        $update_barang->update([
             'kode_barang'       => $request->kode_barang ,
             'kode_barcode'      => $request->kode_barcode, 
             'nama_barang'       => $request->nama_barang, 
@@ -183,6 +214,39 @@ class BarangController extends Controller
             'hitung_stok'       => $request->hitung_stok, 
             'id_warung'         => Auth::user()->id_warung
         ]);
+
+        if ($request->hasFile('foto')) {
+
+                $foto = $request->file('foto');
+
+                   // menambil foto_kategori yang diupload berikut ekstensinya
+
+                    $filename = null;
+                    $uploaded_foto = $foto;
+                    $extension = $uploaded_foto->getClientOriginalExtension();
+                    // membuat nama file random dengan extension
+                    $filename = str_random(40) . '.' . $extension;
+                    $destinationPath = public_path() . DIRECTORY_SEPARATOR . 'foto_produk';
+                    // memindahkan file ke folder public/foto_produk
+                    $uploaded_foto->move($destinationPath, $filename);
+                    // hapus foto_home lama, jika ada
+                    if ($update_barang->foto) {
+                    $old_foto = $update_barang->foto;
+                    $filepath = public_path() . DIRECTORY_SEPARATOR . 'foto_produk'
+                    . DIRECTORY_SEPARATOR . $update_barang->foto;
+                    try {
+                    File::delete($filepath);
+                    } catch (FileNotFoundException $e) {
+                    // File sudah dihapus/tidak ada
+                    }
+
+                 }
+          
+                $update_barang->foto = $filename; 
+                            
+                $update_barang->save();
+
+         }
         
 
 

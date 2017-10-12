@@ -1,7 +1,7 @@
 <div class="form-group{{ $errors->has('kode_barcode') ? ' has-error' : '' }}">
 	{!! Form::label('kode_barcode', 'Barcode', ['class'=>'col-md-2 control-label']) !!}
 	<div class="col-md-4">
-		{!! Form::text('kode_barcode', null, ['class'=>'form-control','placeholder' => 'Barcode','required','autocomplete'=>'off', 'id' => 'kode_barcode']) !!}
+		{!! Form::text('kode_barcode', null, ['class'=>'form-control','placeholder' => 'Barcode','autocomplete'=>'off', 'id' => 'kode_barcode']) !!}
 		{!! $errors->first('kode_barcode', '<p class="help-block" id="kode_barcode_error">:message</p>') !!}
 	</div>
 </div>
@@ -80,10 +80,40 @@
 	</div>
 </div> 
 
+<div class="form-group{{ $errors->has('foto') ? ' has-error' : '' }}">
+	{!! Form::label('foto', 'Foto', ['class'=>'col-md-2 control-label']) !!}
+	<div class="col-md-4">
+		<div class="fileinput fileinput-new text-center" data-provides="fileinput">
+		    <div class="fileinput-new thumbnail">
+
+				@if (isset($barang) && $barang->foto)
+					<p>
+						{!! Html::image(asset('img/'.$barang->foto), null, ['class' => 'img-rounded img-responsive']) !!}
+					</p>
+				@else
+				<img src="../../assets/img/image_placeholder.jpg" alt="Foto Akan Tampil Disini">
+				@endif
+		        
+		    </div>
+		    <div class="fileinput-preview fileinput-exists thumbnail"></div>
+		    <div>
+		        <span class="btn btn-rose btn-round btn-file">
+		            <span class="fileinput-new">Ambil Foto</span>
+		            <span class="fileinput-exists">Ubah</span>
+		            {!! Form::file('foto',null,['id'=>'foto']) !!}
+					{!! $errors->first('foto', '<p class="help-block">:message</p>') !!}
+		        </span>
+		        <a href="#pablo" class="btn btn-danger btn-round fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i> Hapus</a>
+		    </div>
+		</div>
+	</div>
+</div> 
 
 
 <div class="form-group">
 	<div class="col-md-4 col-md-offset-2">
-			{!! Form::button('<i class="material-icons">send</i> Submit', ['class'=>'btn btn-primary', 'id'=>'btnSimpan', 'type'=>'submit']) !!}
+			{!! Form::button('<i class="material-icons">send</i> Submit', ['class'=>'btn btn-primary', 'id'=>'btnSimpan', 'type'=>'submit', 'dusk'=>'btn-submit']) !!}
+			
+
 	</div>
 </div>
