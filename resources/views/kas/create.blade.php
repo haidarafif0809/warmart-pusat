@@ -41,6 +41,7 @@
 		else{
 			$("#kode_kas").focus();
 		}
+
 	}); 
 </script>
 @endsection
