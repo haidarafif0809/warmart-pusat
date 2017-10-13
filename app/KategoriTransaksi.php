@@ -9,7 +9,7 @@ use Yajra\Auditable\AuditableTrait;
 class KategoriTransaksi extends Model
 {
     use AuditableTrait;
-    use LogsActivity;
+    use LogsActivity; 
 
     protected $fillable = ['nama_kategori_transaksi'];
 }
