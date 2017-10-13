@@ -36,7 +36,14 @@ class Customer extends Model
 
   public function getTglLahirAttribute($tgl_lahir) {
 
-    return \Carbon\Carbon::createFromFormat('Y-m-d', $tgl_lahir)->format('d-m-Y'); 
+    if ($tgl_lahir == NULL) {
+      return "-";
+    }
+    else {
+      return \Carbon\Carbon::createFromFormat('Y-m-d', $tgl_lahir)->format('d-m-Y'); 
+    }
+
+    
   }
     
    	public function kelurahan(){
