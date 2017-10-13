@@ -59,4 +59,46 @@ class RegisterCustomerTest extends TestCase
 
     }
  
-}
+    public function testHTTPVerifikasiCustomerSalahKodeVerifikasi(){
+             
+
+        $response = $this->json('POST', url('/register'),[
+            'name' => 'UserCustomerTestHttp',
+            'email' => 'usercustomertesthttp@gmail.com',
+            'no_telp' => '082282107750',
+            'alamat' => 'Test Alamat Http', 
+            'password' => 'rahasia', 
+            'password_confirmation' => 'rahasia', 
+            'id_register' => '1', 
+
+        ]);
+
+        $response->assertStatus(302)
+                 ->assertRedirect(url('kirim-kode-verifikasi?nomor=082282107750&status=0'));
+
+
+        $response2 = $this->get($response->headers->get('location'))->assertSee('Silakan input nomor verifikasi yang terkirim melalui SMS ke no 082282107750');
+
+           $this->assertDatabaseHas('users',[
+                'name' => 'UserCustomerTestHttp',
+                'email' => 'usercustomertesthttp@gmail.com',
+                'no_telp' => '082282107750',
+                'alamat' => 'Test Alamat Http',   
+                'tipe_user' => '3'
+            ]);   
+
+        $response = $this->json('POST', route('user.proses_kirim_kode_verifikasi', '082282107750'),[
+            'no_telp' => '082282107750',
+            'kode_verifikasi' => '9820',
+
+        ]);
+
+
+        $response->assertStatus(302)
+                 ->assertRedirect(route('user.proses_kirim_kode_verifikasi', '082282107750'));
+
+
+        $response2 = $this->get($response->headers->get('location'))->assertSee('Mohon Maaf Kode Verfikasi Yang Anda Isi Tidak Sama');
+    }
+
+} 
