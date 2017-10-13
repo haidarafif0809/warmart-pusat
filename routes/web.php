@@ -83,6 +83,8 @@ Route::group(['middleware' =>'auth'], function(){
 	Route::resource('user_warung', 'UserWarungController'); 	
 	Route::resource('kas', 'KasController'); 	
 	Route::resource('barang', 'BarangController'); 
+	Route::resource('kategori_transaksi', 'KategoriTransaksiController'); 
+	Route::resource('kas_masuk', 'KasMasukController');
 
 	Route::get('detail_komunitas/{id}',[
 	'middleware' => ['auth','role:admin'],

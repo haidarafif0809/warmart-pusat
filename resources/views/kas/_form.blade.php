@@ -148,6 +148,6 @@
 <div class="form-group">
 	<div class="col-md-4 col-md-offset-2">
 	<p style="color: red; font-style: italic;">*Note : Hanya 1 Kas yang dijadikan default.</p>
-	{!! Form::button('<i class="material-icons">send</i> Submit', ['class'=>'btn btn-primary', 'id'=>'btnSimpanBank', 'type'=>'submit']) !!} 
+	{!! Form::button('<i class="material-icons">send</i> Submit', ['class'=>'btn btn-primary', 'id'=>'btnSimpanKas', 'type'=>'submit']) !!} 
 	</div>
 </div>

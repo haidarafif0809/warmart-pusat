@@ -86,34 +86,62 @@
                         </a>
                     </li>
 
-                    <!-- MASTER DATA WARUNG -->
-                    @if(Auth::user()->tipe_user == 4)
                     <li>
-                        <a data-toggle="collapse" href="#pagesExamples">
+                        <a data-toggle="collapse" href="#transaksiKas">
                             <i class="material-icons">image</i>
-                            <p> Master Data
+                            <p> Transaksi Kas
                                 <b class="caret"></b>
                             </p>
                         </a>
-                        <div class="collapse" id="pagesExamples">
+                        <div class="collapse" id="transaksiKas">
                             <ul class="nav">
-
-                                <li>
-                                    <a href="{{ route('kas.index') }}">
-                                        <span class="sidebar-mini">K</span>
-                                        <span class="sidebar-normal">Kas</span>
+                                  <li>
+                                    <a href="{{ route('kas_masuk.index') }}">
+                                        <span class="sidebar-mini">KM</span>
+                                        <span class="sidebar-normal">Kas Masuk</span>
                                     </a>
-                                </li>
-
+                                </li> 
                                 <li>
-                                    <a href="{{ route('barang.index') }}">
-                                        <span class="sidebar-mini">P</span>
-                                        <span class="sidebar-normal">Produk</span>
+                                    <a href="#">
+                                        <span class="sidebar-mini">KK</span>
+                                        <span class="sidebar-normal">Kas Keluar</span>
                                     </a>
-                                </li>
+                                </li> 
+                                <li>
+                                    <a href="#">
+                                        <span class="sidebar-mini">KMT</span>
+                                        <span class="sidebar-normal">Kas Mutasi</span>
+                                    </a>
+                                </li> 
+                                 
 
                             </ul>
                         </div>
+                    </li>
+
+                    <!-- MASTER DATA WARUNG -->
+                    @if(Auth::user()->tipe_user == 4)
+                    <li>
+                        <ul class="nav">
+                            <li>
+                                <a href="{{ route('kategori_transaksi.index') }}">
+                                    <i class="material-icons">label_outline</i>
+                                    <p>Kategori Transaksi</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('kas.index') }}">
+                                    <i class="material-icons">payment</i>
+                                    <p>Kas</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('barang.index') }}">
+                                    <i class="material-icons">dns</i>
+                                    <p>Produk</p>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                     @endif
                     <!--END MASTER DATA WARUNG -->

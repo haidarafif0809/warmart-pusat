@@ -16,29 +16,68 @@ class KasTest extends DuskTestCase
      *
      * @return void
      */
-    public function testExample()
-    {
-        $this->browse(function (Browser $browser) {
-            $browser->visit('/')
-                    ->assertSee('Login');
-        });
-    }
 
+//TAMBAH KAS
     public function testTambahKas(){
 
         $this->browse(function ($first, $second){
 
-              $first->loginAs(User::find(4))
+            $first->loginAs(User::find(4))
                     ->visit('/home')
-                    ->clickLink("Kas")
-                    ->clickLink("Kas")
+                    ->clickLink("Kas")->assertSee('Kode Kas')
+                    ->clickLink("Tambah Kas")->assertSee('Tambah Kas')
                     ->type('kode_kas', 'K-001')
-                    ->type('nama_kas', 'Kas Browser')
-                    ->type('status_kas', '1')
-                    ->type('default_kas', '0')
-                    ->press('#btnSimpanBank')
-                    ->assertSee('Sukses');
+                    ->type('nama_kas', 'Kas Browser');
+            $first->script("document.getElementById('status_kas_radioOn').checked = true;");
+            $first->script("document.getElementById('default_kas_radioOn').checked = true;");
+            $first->element('#btnSimpanKas')->submit();
+            $first->assertSee('Tambah Kas');
 
         });
     }
+
+//EDIT KAS
+    public function testEditKas(){
+
+        $this->browse( function ($first, $second){
+
+            $first->loginAs(User::find(4))
+                    ->visit('/home')
+                    ->clickLink("Kas")->assertSee('Kode Kas')
+                    ->whenAvailable('.js-confirm', function ($table){
+                        ;
+                    })
+                    ->with('.table', function ($table){
+                        $table->assertSee("Kas Browser")->clickLink("Ubah");
+                    })
+                    ->assertSee('Edit Kas')
+                    ->type('kode_kas', 'K-001')
+                    ->type('nama_kas', 'Kas Browser Edit');
+            $first->script("document.getElementById('status_kas_radioOn').checked = true;");
+            $first->script("document.getElementById('default_kas_radioOn').checked = true;");
+            $first->element('#btnSimpanKas')->submit();
+
+
+        });
+
+    }
+
+//JIKA KODE KAS SUDAH TERPAKAI
+    public function testKodeKasTidakBolehSama(){
+
+          $this->browse(function ($first, $second) {
+            $first->loginAs(User::find(4))
+                    ->visit('/home')
+                    ->clickLink("Kas")->assertSee('Kode Kas')
+                    ->clickLink("Tambah Kas")->assertSee('Tambah Kas')
+                    ->type('kode_kas', 'K001')
+                    ->type('nama_kas', 'Kas Browser');
+            $first->script("document.getElementById('status_kas_radioOn').checked = true;");
+            $first->script("document.getElementById('default_kas_radioOn').checked = true;");
+            $first->element('#btnSimpanKas')->submit();
+            $first->type('kode_kas','fokus')->assertSee('Maaf kode kas Sudah Terpakai.');
+        });
+
+    }
+
 }
