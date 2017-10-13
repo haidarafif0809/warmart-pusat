@@ -57,10 +57,25 @@
                                         <button type="submit" id="login" class="btn btn-rose btn-simple btn-wd btn-lg">Login</button>
                                     </div>
                                     <center>     
-                                       <p>Belum Daftar? <a href="{{ url('/lupa-password/') }}">Daftar Sekarang</a> </p>
+                                       <p>Belum Daftar? <a class="swal-pendaftaran" href="#">Daftar Sekarang</a> </p>
                                     </center>
                                     
                                 </div>
                             </form>
                
+@endsection 
+
+@section('scripts') 
+
+<script type="text/javascript">
+$('.swal-pendaftaran').click(function(){
+    swal({
+        title: 'Daftar Sebagai?',
+        html:
+            '<li class="" style="list-style-type:none"><a href="{{ url('/register-customer') }}"  class="btn btn-info"><i class="material-icons">person_add</i> Pelanggan</a></li><li class="" style="list-style-type:none"><a href="{{ url('/register') }}"  class="btn btn-success"><i class="material-icons">people</i> Komunitas</a></li><li class=""  style="list-style-type:none"><a href="{{ url('/register-warung') }}"  class="btn btn-warning"><i class="material-icons">store</i> Warung</a></li> ',
+        showConfirmButton :  false,
+    });
+});
+</script>
+
 @endsection

@@ -159,5 +159,6 @@ $('.datepicker').datepicker({
 });
 </script>
 
+@yield('scripts')
 
 </html>
