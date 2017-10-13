@@ -20,8 +20,14 @@ class UbahProfilController extends Controller
         $user = Auth::user();
         $komunitas = Komunitas::with(['kelurahan','warung','komunitas_penggiat'])->find($user->id);
         $otoritas = Role::where('id','!=',3)->where('id','!=',4)->where('id','!=',5)->pluck('display_name','id');
-        $customer = Customer::find($user->id);
-        $tanggal = $customer->tgl_lahir;
+        $customer = Customer::find($user->id)->first();
+
+        if ($customer->tgl_lahir == "" AND $customer->tgl_lahir == NULL) { 
+        	$tanggal = "";
+        }else{
+      		$tanggal = $komunitas->tgl_lahir; 
+        }
+
         $komunitas_customer = KomunitasCustomer::where('user_id',$user->id)->first();
         return view('ubah_profil',['user'=>$user,'otoritas'=>$otoritas,'komunitas'=>$komunitas, 'tanggal'=>$tanggal,'komunitas_customer'=>$komunitas_customer,'customer'=>$customer]);
     }
@@ -58,17 +64,26 @@ class UbahProfilController extends Controller
 			            'no_rekening' =>$request['no_rekening'],
 			            'an_rekening' =>$request['an_rekening'],
 			            'id_warung' =>$request['id_warung'],
-			        ]);
+			        ]); 
+
+			        $cek_komunitas_penggiat = KomunitasPenggiat::where('komunitas_id',$id)->count();
  
-			        if ($request['name_penggiat'] != "" AND $request['alamat_penggiat'] != ""){
-			            $komunitaspenggiat = KomunitasPenggiat::where('komunitas_id',$id)->update([
-			            'nama_penggiat' =>$request['name_penggiat'],
-			            'alamat_penggiat'  =>$request['alamat_penggiat']  
-			            ]);
-			         }
-			         else{
-			            
-			         }
+ 					if ($cek_komunitas_penggiat == 0) {
+				        if ($request['nama_penggiat'] != "" AND $request['alamat_penggiat'] != ""){
+						            $komunitaspenggiat = KomunitasPenggiat::create([
+						            'nama_penggiat' =>$request->nama_penggiat,
+						            'alamat_penggiat'  =>$request->alamat_penggiat,
+						            'komunitas_id'=>$id      
+						            ]);
+	            			KomunitasPenggiat::where('komunitas_id',$id)->update(['nama_penggiat' =>$request['nama_penggiat'],'alamat_penggiat'  =>$request['alamat_penggiat']]);  
+				        } 
+ 					}elseif ($cek_komunitas_penggiat == 1){
+				        if ($request['nama_penggiat'] != "" AND $request['alamat_penggiat'] != ""){ 
+	            			KomunitasPenggiat::where('komunitas_id',$id)->update(['nama_penggiat' =>$request['nama_penggiat'],'alamat_penggiat'  =>$request['alamat_penggiat']]);  
+				        }  
+ 					}
+
+
 
   			}elseif ($request['id_ubah_profil'] == 3) {
 
@@ -80,12 +95,13 @@ class UbahProfilController extends Controller
 			            'tgl_lahir'         => $request['tgl_lahir'],
 			            'wilayah'           => $request['kelurahan'],
 			        ]);
-
-			        //hapus komunitas sebelumnya, masukkan komunitas baru
-			        KomunitasCustomer::where('user_id',$id)->delete();
-			        if (isset($request['komunitas'])) {
-			        
-			        KomunitasCustomer::create(['user_id' =>$id ,'komunitas_id' => $request['komunitas']]);
+			        if ($request['komunitas'] != "") {
+				        //hapus komunitas sebelumnya, masukkan komunitas baru
+				        KomunitasCustomer::where('user_id',$id)->delete();
+				        if (isset($request['komunitas'])) {
+				        
+				        KomunitasCustomer::create(['user_id' =>$id ,'komunitas_id' => $request['komunitas']]);
+				        }
 			        }
   			}
 		          

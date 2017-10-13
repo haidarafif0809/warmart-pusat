@@ -71,15 +71,15 @@
                     </div>
 
 
-                    <div class="form-group{{ $errors->has('name_penggiat') ? ' has-error' : '' }}">
-                      {!! Form::label('name_penggiat', 'Nama Penggiat', ['class'=>'col-md-2 control-label']) !!}
+                    <div class="form-group{{ $errors->has('nama_penggiat') ? ' has-error' : '' }}">
+                      {!! Form::label('nama_penggiat', 'Nama Penggiat', ['class'=>'col-md-2 control-label']) !!}
                       <div class="col-md-4">
                         @if (isset($komunitas) && $komunitas->komunitas_penggiat)
-                        {!! Form::text('name_penggiat', $komunitas->komunitas_penggiat->nama_penggiat, ['class'=>'form-control','placeholder' => 'Nama Penggiat','autocomplete'=>'off']) !!}
+                        {!! Form::text('nama_penggiat', $komunitas->komunitas_penggiat->nama_penggiat, ['class'=>'form-control','placeholder' => 'Nama Penggiat','autocomplete'=>'off']) !!}
                         @else
-                        {!! Form::text('name_penggiat', null, ['class'=>'form-control','placeholder' => 'Nama Penggiat','autocomplete'=>'off']) !!}
+                        {!! Form::text('nama_penggiat', null, ['class'=>'form-control','placeholder' => 'Nama Penggiat','autocomplete'=>'off']) !!}
                         @endif
-                        {!! $errors->first('name_penggiat', '<p class="help-block">:message</p>') !!}
+                        {!! $errors->first('nama_penggiat', '<p class="help-block">:message</p>') !!}
                       </div>
                     </div>
 
@@ -218,7 +218,7 @@
 
                     <div class="form-group{{ $errors->has('tgl_lahir') ? ' has-error' : '' }}">
                       {!! Form::label('tgl_lahir', 'Tanggal Lahir', ['class'=>'col-md-2 control-label']) !!}
-                      <div class="col-md-4">
+                      <div class="col-md-4"> 
                         @if (isset($customer) && $customer)
 
                           {!! Form::text('tgl_lahir', $tanggal, ['class'=>'form-control datepicker', 'id'=>'datepicker','placeholder'=>'Tanggal Lahir','readonly']) !!}
