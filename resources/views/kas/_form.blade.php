@@ -14,29 +14,140 @@
 	</div>
 </div>
 
-<div class="form-group{{ $errors->has('status_kas') ? ' has-error' : '' }}">
-	{!! Form::label('status_kas', 'Status Kas', ['class'=>'col-md-2 control-label']) !!}
-	<div class="col-md-4">
-		{!! Form::select('status_kas', [
-		'1'=>'Aktif',
-		'0'=>'Tidak Aktif	'],null, ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--SILAKAN PILIH--','id'=>'pilih_status_kas', 'required' => '']) !!}
-		{!! $errors->first('status_kas', '<p class="help-block">:message</p>') !!}
+@if (isset($kas->status_kas))
+	
+	<div class="form-group{{ $errors->has('status_kas') ? ' has-error' : '' }}">
+		{!! Form::label('status_kas', 'Status Kas', ['class'=>'col-md-2 control-label']) !!}
+		@if($kas->status_kas == 1)
+			<div class="col-md-1">
+				<div class="radio form-group">
+					<label>
+						<input type="radio" name="status_kas" id="status_kas_radioOn" value="1" checked="true">
+						Aktif
+					</label>
+				</div>
+			</div>
+			<div class="col-md-1">
+				<div class="radio form-group">
+					<label>
+						<input type="radio" name="status_kas" id="status_kas_radio" value="0">
+						Tidak Aktif
+					</label>
+				</div>
+			</div>
+		@else
+			<div class="col-md-1">
+				<div class="radio form-group">
+					<label>
+						<input type="radio" name="status_kas" id="status_kas_radioOn" value="1">
+						Aktif
+					</label>
+				</div>
+			</div>
+			<div class="col-md-1">
+				<div class="radio form-group">
+					<label>
+						<input type="radio" name="status_kas" id="status_kas_radio" value="0" checked="true">
+						Tidak Aktif
+					</label>
+				</div>
+			</div>
+		@endif
 	</div>
-</div>
 
-<div class="form-group{{ $errors->has('default_kas') ? ' has-error' : '' }}">
-	{!! Form::label('default_kas', 'Default Kas', ['class'=>'col-md-2 control-label']) !!}
-	<div class="col-md-4">
-		{!! Form::select('default_kas', [
-		'1'=>'Iya',
-		'0'=>'Tidak	'],null, ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--SILAKAN PILIH--','id'=>'pilih_default_kas', 'required' => '']) !!}
-		{!! $errors->first('default_kas', '<p class="help-block">:message</p>') !!}
-		<p style="color: red; font-style: italic;">*Note : Hanya 1 Kas yang dijadikan default.</p>
+@else
+
+	<div class="form-group{{ $errors->has('status_kas') ? ' has-error' : '' }}">
+		{!! Form::label('status_kas', 'Status Kas', ['class'=>'col-md-2 control-label']) !!}
+		<div class="col-md-1">
+			<div class="radio form-group">
+				<label>
+					<input type="radio" name="status_kas" id="status_kas_radioOn" value="1">
+					Aktif
+				</label>
+			</div>
+		</div>
+		<div class="col-md-1">
+			<div class="radio form-group">
+				<label>
+					<input type="radio" name="status_kas" id="status_kas_radio" value="0">
+					Tidak Aktif
+				</label>
+			</div>
+		</div>
 	</div>
-</div>
+
+@endif
+
+@if (isset($kas->default_kas))
+	
+	<div class="form-group{{ $errors->has('default_kas') ? ' has-error' : '' }}">
+		{!! Form::label('default_kas', 'Default Kas', ['class'=>'col-md-2 control-label']) !!}
+		@if($kas->default_kas == 1)
+			<div class="col-md-1">
+				<div class="radio form-group">
+					<label>
+						<input type="radio" name="default_kas" id="default_kas_radioOn" value="1" checked="true">
+						Iya
+					</label>
+				</div>
+			</div>
+			<div class="col-md-1">
+				<div class="radio form-group">
+					<label>
+						<input type="radio" name="default_kas" id="default_kas_radio" value="0">
+						Tidak 
+					</label>
+				</div>
+			</div>
+		@else
+			<div class="col-md-1">
+				<div class="radio form-group">
+					<label>
+						<input type="radio" name="default_kas" id="default_kas_radioOn" value="1">
+						Iya
+					</label>
+				</div>
+			</div>
+			<div class="col-md-1">
+				<div class="radio form-group">
+					<label>
+						<input type="radio" name="default_kas" id="default_kas_radio" value="0" checked="true">
+						Tidak 
+					</label>
+				</div>
+			</div>
+		@endif
+	</div>
+
+@else
+
+	<div class="form-group{{ $errors->has('default_kas') ? ' has-error' : '' }}">
+		{!! Form::label('default_kas', 'Default Kas', ['class'=>'col-md-2 control-label']) !!}
+		<div class="col-md-1">
+			<div class="radio form-group">
+				<label>
+					<input type="radio" name="default_kas" id="default_kas_radioOn" value="1">
+					Iya
+				</label>
+			</div>
+		</div>
+		<div class="col-md-1">
+			<div class="radio form-group">
+				<label>
+					<input type="radio" name="default_kas" id="default_kas_radio" value="0">
+					Tidak 
+				</label>
+			</div>
+		</div>	
+	</div>
+	
+@endif
+
 
 <div class="form-group">
 	<div class="col-md-4 col-md-offset-2">
+	<p style="color: red; font-style: italic;">*Note : Hanya 1 Kas yang dijadikan default.</p>
 	{!! Form::button('<i class="material-icons">send</i> Submit', ['class'=>'btn btn-primary', 'id'=>'btnSimpanBank', 'type'=>'submit']) !!} 
 	</div>
 </div>

@@ -187,6 +187,21 @@ class KasController extends Controller
                 'status_kas'    =>$request->status_kas,
                 'default_kas'   =>$request->default_kas,
             ]);
+
+            $pesan_alert = 
+                     '<div class="container-fluid">
+                          <div class="alert-icon">
+                          <i class="material-icons">check</i>
+                          </div>
+                          <b>Sukses : Berhasil Mengubah Kas "'.$request->nama_kas.'"</b>
+                      </div>';
+
+                Session::flash("flash_notification", [
+                    "level"=>"success",
+                    "message"=>$pesan_alert
+                    ]);
+
+                return redirect()->route('kas.index');
         }
         else{
 
