@@ -38,16 +38,6 @@
 	</div>
 </div> 
 
-<div class="form-group{{ $errors->has('hitung_stok') ? ' has-error' : '' }}">
-	{!! Form::label('hitung_stok', 'Hitung Stok', ['class'=>'col-md-2 control-label']) !!}
-	<div class="col-md-4">
-		{!! Form::select('hitung_stok', 
-		['1'=>'Ya',
-		'0'=>'Tidak'],null,['class'=>'form-control js-selectize-reguler','id'=>'hitung_stok']) !!}
-		{!! $errors->first('hitung_stok', '<p class="help-block">:message</p>') !!}
-	</div>
-</div> 
-
 
 <div class="form-group{{ $errors->has('kategori_barang_id') ? ' has-error' : '' }}">
 	{!! Form::label('kategori_barang_id', 'Kategori Produk', ['class'=>'col-md-2 control-label']) !!}
@@ -70,15 +60,99 @@
 	</div>
 </div>
 
+
+
+<div class="form-group{{ $errors->has('hitung_stok') ? ' has-error' : '' }}">
+	{!! Form::label('hitung_stok', 'Hitung Stok', ['class'=>'col-md-2 control-label']) !!}
+	<div class="col-md-1">
+
+		<div class="checkbox">
+			<label>
+
+				@if (isset($barang) && $barang->hitung_stok == 1) 
+
+					<input type="checkbox" name="hitung_stok" value="1" id="HitungStokYa" checked>
+
+				@else
+
+					<input type="checkbox" name="hitung_stok" value="1" id="HitungStokYa">
+
+				@endif
+
+
+				{!! $errors->first('hitung_stok', '<p class="help-block">:message</p>') !!}
+				Ya
+			</label>
+		</div>
+
+	</div>
+
+	<div class="col-md-1">
+		
+		<div class="checkbox">
+			<label>
+				@if (isset($barang) && $barang->hitung_stok == 0)
+
+					<input type="checkbox" name="hitung_stok" value="0" id="HitungStokTidak" checked>
+
+				@else
+
+					<input type="checkbox" name="hitung_stok" value="0" id="HitungStokTidak">
+
+				@endif
+
+				Tidak
+			</label>
+		</div>
+
+	</div>
+
+</div>
+
+
 <div class="form-group{{ $errors->has('status_aktif') ? ' has-error' : '' }}">
 	{!! Form::label('status_aktif', 'Status', ['class'=>'col-md-2 control-label']) !!}
-	<div class="col-md-4">
-		{!! Form::select('status_aktif', 
-		['1'=>'Aktif',
-		'0'=>'Tidak'],null,['class'=>'form-control js-selectize-reguler','id'=>'status_aktif']) !!}
-		{!! $errors->first('status_aktif', '<p class="help-block">:message</p>') !!}
+	<div class="col-md-1">
+
+		<div class="checkbox">
+			<label>
+				@if (isset($barang) && $barang->status_aktif == 1)
+
+					<input type="checkbox" name="status_aktif" value="1" id="StatusYa" checked>
+				@else
+
+					<input type="checkbox" name="status_aktif" value="1" id="StatusYa">
+
+				@endif
+
+				{!! $errors->first('status_aktif', '<p class="help-block">:message</p>') !!}
+				Aktif
+			</label>
+		</div>
+
 	</div>
-</div> 
+
+	<div class="col-md-1">
+		
+		<div class="checkbox">
+			<label>				
+				@if (isset($barang) && $barang->status_aktif == 0)
+
+					<input type="checkbox" name="status_aktif" value="0" id="StatusTidak" checked>
+
+				@else
+
+					<input type="checkbox" name="status_aktif" value="0" id="StatusTidak">
+
+				@endif
+				Tidak
+			</label>
+		</div>
+
+	</div>
+
+</div>
+
 
 <div class="form-group{{ $errors->has('foto') ? ' has-error' : '' }}">
 	{!! Form::label('foto', 'Foto', ['class'=>'col-md-2 control-label']) !!}
@@ -103,7 +177,7 @@
 		            {!! Form::file('foto',null,['id'=>'foto']) !!}
 					{!! $errors->first('foto', '<p class="help-block">:message</p>') !!}
 		        </span>
-		        <a href="#pablo" class="btn btn-danger btn-round fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i> Hapus</a>
+		        <a href="#pablo" class="btn btn-danger btn-round fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i> Batal</a>
 		    </div>
 		</div>
 	</div>
@@ -113,7 +187,7 @@
 <div class="form-group">
 	<div class="col-md-4 col-md-offset-2">
 			{!! Form::button('<i class="material-icons">send</i> Submit', ['class'=>'btn btn-primary', 'id'=>'btnSimpan', 'type'=>'submit', 'dusk'=>'btn-submit']) !!}
-			
+
 
 	</div>
 </div>
