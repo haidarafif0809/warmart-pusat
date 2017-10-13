@@ -13,17 +13,11 @@ use App\TransaksiKas;
 
 class KasMasukController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    //PROSES MENAMPILKAN KAS MASUK
      public function index(Request $request, Builder $htmlBuilder)
-    {
-        // 
-
+    { 
          if ($request->ajax()) {
-            # code...
+
             $kas_masuk = KasMasuk::with(['kas','kategori']);
             return Datatables::of($kas_masuk)->addColumn('action', function($master_kas_masuk){
                     return view('kas_masuk._action', [
@@ -43,34 +37,17 @@ class KasMasukController extends Controller
         ->addColumn(['data' => 'keterangan', 'name' => 'jumlah', 'title' => 'Keterangan'])
         ->addColumn(['data' => 'action', 'name' => 'action', 'title' => 'Aksi', 'orderable' => false, 'searchable'=>false]);
 
-        return view('kas_masuk.index')->with(compact('html'));
-
-
+        return view('kas_masuk.index')->with(compact('html')); 
     }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+ 
     public function create()
-    {
-        //
-
+    { 
         return view('kas_masuk.create');
     }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+ 
+    //PROSES TAMBAH KAS MASUK
     public function store(Request $request)
-    {
-        //
-
-          // // proses tambah user
+    { 
          $this->validate($request, [
             'kas'   => 'required',
             'kategori'   => 'required',
@@ -79,11 +56,15 @@ class KasMasukController extends Controller
             
             ]);
 
+         if ($request->keterangan == "") {
+             $keterangan = "-";
+         }else{ 
+             $keterangan = $request->keterangan;
+         }
 
          $no_faktur = KasMasuk::no_faktur();
- 
-         $kas = KasMasuk::create(['no_faktur' => $no_faktur,'kas' => $request->kas,'kategori' => $request->kategori,'jumlah' => $request->jumlah,'keterangan' => $request->keterangan]);
-
+         $kas = KasMasuk::create(['no_faktur' => $no_faktur,'kas' => $request->kas,'kategori' => $request->kategori,'jumlah' => $request->jumlah,'keterangan' => $keterangan]);
+         //PROSES MEMBUAT TRANSAKSI KAS
          TransaksiKas::create(['no_faktur' => $no_faktur,'jenis_transaksi'=>'kas_masuk' ,'jumlah_masuk' => $request->jumlah,'kas' => $request->kas] );
 
         Session::flash("flash_notification", [
@@ -94,62 +75,41 @@ class KasMasukController extends Controller
         return redirect()->route('kas_masuk.index');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    //PROSES KE HALAMAN EDIT
     public function edit($id)
-    {
-        //
-
-                   $kas_masuk = KasMasuk::find($id);
-       
-
+    { 
+        $kas_masuk = KasMasuk::find($id);
+        
         return view('kas_masuk.edit')->with(compact('kas_masuk'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    //PROSES EDIT KAS Masuk
     public function update(Request $request, $id)
-    {
-        //
-
-
-           // // proses tambah user
+    {  
          $this->validate($request, [
             'kas'   => 'required',
             'kategori'   => 'required',
             'jumlah'   => 'required|numeric',
-            'keterangan'   => 'max:150', 
-            
+            'keterangan'   => 'max:150',  
             ]);
 
-         $kas = KasMasuk::find($id)->update(['kas' => $request->kas,'kategori' => $request->kategori,'jumlah' => $request->jumlah,'keterangan' => $request->keterangan]);
+         if ($request->keterangan == "") {
+             $keterangan = "-";
+         }else{ 
+             $keterangan = $request->keterangan;
+         }
 
+         $kas = KasMasuk::find($id)->update(['kas' => $request->kas,'kategori' => $request->kategori,'jumlah' => $request->jumlah,'keterangan' => $keterangan]);
          $kas_masuk = KasMasuk::find($id);
 
-
-        TransaksiKas::where('no_faktur' , $kas_masuk->no_faktur)->update(['jumlah_masuk' => $request->jumlah,'kas' => $request->kas] );
+         //PROSES UPDATE TRANSAKSI KAS
+        TransaksiKas::where('no_faktur' , $kas_masuk->no_faktur)->update(['jumlah_masuk' => $request->jumlah,'kas' => $request->kas]);
     
-
          Session::flash("flash_notification", [
             "level"=>"success",
             "message"=>"BERHASIL:</b> Mengubah Kas Masuk $kas_masuk->no_faktur"
@@ -158,27 +118,17 @@ class KasMasukController extends Controller
         return redirect()->route('kas_masuk.index');
 
     }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+ 
     public function destroy($id)
-    {
-        //
-
-          $kas = KasMasuk::find($id);
-          
-          TransaksiKas::where('no_faktur',$kas->no_faktur())->delete();
-  
-
+    { 
+        $kas = KasMasuk::find($id); 
         // jika gagal hapus
         if (!KasMasuk::destroy($id)) {
             // redirect back
             return redirect()->back();
         }else{
+            //MENGHAPUS TRANSAKSI KAS
+           TransaksiKas::where('no_faktur',$kas->no_faktur())->delete();
             Session::flash("flash_notification", [
                 "level"     => "success",
                 "message"   => "Kas Masuk ". $kas->no_faktur ." Berhasil Di Hapus"
