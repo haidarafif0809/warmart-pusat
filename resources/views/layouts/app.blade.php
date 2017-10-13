@@ -86,6 +86,39 @@
                         </a>
                     </li>
 
+                    <li>
+                        <a data-toggle="collapse" href="#transaksiKas">
+                            <i class="material-icons">image</i>
+                            <p> Transaksi Kas
+                                <b class="caret"></b>
+                            </p>
+                        </a>
+                        <div class="collapse" id="transaksiKas">
+                            <ul class="nav">
+                                  <li>
+                                    <a href="{{ route('kas_masuk.index') }}">
+                                        <span class="sidebar-mini">KM</span>
+                                        <span class="sidebar-normal">Kas Masuk</span>
+                                    </a>
+                                </li> 
+                                <li>
+                                    <a href="#">
+                                        <span class="sidebar-mini">KK</span>
+                                        <span class="sidebar-normal">Kas Keluar</span>
+                                    </a>
+                                </li> 
+                                <li>
+                                    <a href="#">
+                                        <span class="sidebar-mini">KMT</span>
+                                        <span class="sidebar-normal">Kas Mutasi</span>
+                                    </a>
+                                </li> 
+                                 
+
+                            </ul>
+                        </div>
+                    </li>
+
                     <!-- MASTER DATA WARUNG -->
                     @if(Auth::user()->tipe_user == 4)
                     <li>
