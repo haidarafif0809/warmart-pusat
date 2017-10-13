@@ -17,7 +17,7 @@ class TambahKolomNoTelponWarung extends Migration
          Schema::table('warungs', function (Blueprint $table) {
             //
             $table->string('no_telpon');
-            $table->string('email');
+            $table->string('email')->nullable();
             $table->unsignedInteger('created_by')->nullable()->index();            
             $table->unsignedInteger('updated_by')->nullable()->index();
 

@@ -62,7 +62,7 @@ class RegisterController extends Controller
             //Customer
             return Validator::make($data, [
                 'name'      => 'required',
-                'email'     => 'nullable|without_spaces|unique:users,email',
+                'email'     => 'nullable|without_spaces|unique:users,email|email',
                 'alamat'    => 'required',
                 'no_telp'   => 'required|numeric|without_spaces|unique:users,no_telp', 
                 'password'  => 'required|string|min:6|confirmed',
@@ -71,7 +71,7 @@ class RegisterController extends Controller
         elseif ($data['id_register'] == 2) { 
             //Komunitas
             return Validator::make($data, [
-                'email'     => 'nullable|without_spaces|unique:users,email',
+                'email'     => 'nullable|without_spaces|unique:users,email|email',
                 'name'      => 'required',
                 'password'  => 'required|string|min:6|confirmed',
                 'no_telp'   => 'required|numeric|without_spaces|unique:users,no_telp',
@@ -81,7 +81,7 @@ class RegisterController extends Controller
         elseif ($data['id_register'] == 3) { 
             //USER WARUNG
             return Validator::make($data, [
-                'email'     => 'nullable|without_spaces|unique:users,email',
+                'email'     => 'nullable|without_spaces|unique:users,email|email',
                 'name'      => 'required',
                 'password'  => 'required|string|min:6|confirmed',
                 'no_telp'   => 'required|numeric|without_spaces|unique:users,no_telp',
@@ -177,7 +177,6 @@ class RegisterController extends Controller
                 'alamat'    =>$data['alamat'],
                 'no_telpon' =>$data['no_telp'],
                 'wilayah'     => "-", 
-                'email'     => "-", 
             ]);
 
         //INSERT BANK WARUNG
@@ -191,7 +190,6 @@ class RegisterController extends Controller
         //USER WARUNG 
             $user = UserWarung::create([
                 'name'      => $data['name'],
-                'email'     => "-",
                 'password'  => bcrypt($data['password']),
                 'alamat'    => $data['alamat'],   
                 'no_telp'   => $data['no_telp'],  

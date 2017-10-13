@@ -17,7 +17,7 @@ class Customer extends Model
 
     protected $table = 'users';
 
-   	protected $fillable = ['email','password','name', 'alamat', 'wilayah', 'no_telp','tgl_lahir','tipe_user', 'status_konfirmasi'];
+   	protected $fillable = ['id','email','password','name', 'alamat', 'wilayah', 'no_telp','tgl_lahir','tipe_user', 'status_konfirmasi'];
 
    	protected $hidden = [
         'password', 'remember_token',
@@ -36,7 +36,14 @@ class Customer extends Model
 
   public function getTglLahirAttribute($tgl_lahir) {
 
-    return \Carbon\Carbon::createFromFormat('Y-m-d', $tgl_lahir)->format('d-m-Y'); 
+    if ($tgl_lahir == NULL) {
+      return "-";
+    }
+    else {
+      return \Carbon\Carbon::createFromFormat('Y-m-d', $tgl_lahir)->format('d-m-Y'); 
+    }
+
+    
   }
     
    	public function kelurahan(){
