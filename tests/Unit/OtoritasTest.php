@@ -80,7 +80,7 @@ class OtoritasTest extends TestCase
     }
 
 
-    //HALAMAN MENU EDIT BANK
+    //HALAMAN MENU EDIT OTORITAS
     public function testHTTPUpdateRole (){
 
         $role = Role::create(["name" => "member3","display_name"=>"Member 3"]);
@@ -94,7 +94,7 @@ class OtoritasTest extends TestCase
  
     }
 
-    //PROSES EDIT BANK
+    //PROSES EDIT OTORITAS
     public function testHTTPEditRole (){
         
         $role = Role::create(["name" => "member4","display_name"=>"Member 4"]);
