@@ -84,6 +84,11 @@ Route::group(['middleware' =>'auth'], function(){
 	Route::resource('kas', 'KasController'); 	
 	Route::resource('barang', 'BarangController'); 
 
+	Route::get('detail_komunitas/{id}',[
+	'middleware' => ['auth','role:admin'],
+	'as' => 'komunitas.detail',
+	'uses' => 'KomunitasController@detail_lihat_komunitas'
+	]);
 
 	Route::get('user/konfirmasi/{id}',[
 	'middleware' => ['auth','role:admin'],

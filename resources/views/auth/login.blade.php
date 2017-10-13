@@ -51,10 +51,13 @@
                                         </div>
                                     </div>
                                     <div class="footer text-center">
+                                    <center>    
+                                        <a style="padding-right: 40%;font-size: 90%"  href="{{ url('/lupa-password/') }}">Lupa Password</a> 
+                                    </center>
                                         <button type="submit" id="login" class="btn btn-rose btn-simple btn-wd btn-lg">Login</button>
                                     </div>
-                                    <center>    
-                                        <a href="{{ url('/lupa-password/') }}">Lupa Password</a> 
+                                    <center>     
+                                       <p>Belum Daftar? <a href="{{ url('/lupa-password/') }}">Daftar Sekarang</a> </p>
                                     </center>
                                     
                                 </div>
