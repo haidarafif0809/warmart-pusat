@@ -89,31 +89,26 @@
                     <!-- MASTER DATA WARUNG -->
                     @if(Auth::user()->tipe_user == 4)
                     <li>
-                        <a data-toggle="collapse" href="#pagesExamples">
-                            <i class="material-icons">image</i>
-                            <p> Master Data
-                                <b class="caret"></b>
-                            </p>
-                        </a>
-                        <div class="collapse" id="pagesExamples">
-                            <ul class="nav">
-
-                                <li>
-                                    <a href="{{ route('kas.index') }}">
-                                        <span class="sidebar-mini">K</span>
-                                        <span class="sidebar-normal">Kas</span>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a href="{{ route('barang.index') }}">
-                                        <span class="sidebar-mini">P</span>
-                                        <span class="sidebar-normal">Produk</span>
-                                    </a>
-                                </li>
-
-                            </ul>
-                        </div>
+                        <ul class="nav">
+                            <li>
+                                <a href="{{ route('kategori_transaksi.index') }}">
+                                    <i class="material-icons">label_outline</i>
+                                    <p>Kategori Transaksi</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('kas.index') }}">
+                                    <i class="material-icons">payment</i>
+                                    <p>Kas</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('barang.index') }}">
+                                    <i class="material-icons">dns</i>
+                                    <p>Produk</p>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                     @endif
                     <!--END MASTER DATA WARUNG -->
