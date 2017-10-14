@@ -102,7 +102,7 @@
                                     </a>
                                 </li> 
                                 <li>
-                                    <a href="#">
+                                    <a href="{{ route('kas_keluar.index') }}">
                                         <span class="sidebar-mini">KK</span>
                                         <span class="sidebar-normal">Kas Keluar</span>
                                     </a>
@@ -125,7 +125,7 @@
                         <ul class="nav">
                             <li>
                                 <a href="{{ route('kategori_transaksi.index') }}">
-                                    <i class="material-icons">label_outline</i>
+                                    <i class="material-icons">local_offer</i>
                                     <p>Kategori Transaksi</p>
                                 </a>
                             </li>

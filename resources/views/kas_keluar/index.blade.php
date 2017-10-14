@@ -5,19 +5,19 @@
 		<div class="col-md-12">
 			<ul class="breadcrumb">
 				<li><a href="{{ url('/home') }}">Home</a></li>
-				<li class="active">Kategori Transaksi</li>
+				<li class="active">Kas Keluar</li>
 			</ul>
  
 			
 			   <div class="card">
 			   	   <div class="card-header card-header-icon" data-background-color="purple">
-                       <i class="material-icons">local_offer</i>
+                       <i class="material-icons">account_circle</i>
                                 </div>
                       <div class="card-content">
-                         <h4 class="card-title"> Kategori Transaksi </h4>
+                         <h4 class="card-title"> Kas Keluar </h4>
 					
                        <div class="toolbar">
-                         	<p> <a class="btn btn-primary" href="{{ route('kategori_transaksi.create') }}"><i class="material-icons">add</i> Tambah kategori Transaksi</a> </p>
+                         	<p> <a class="btn btn-primary" href="{{ route('kas_keluar.create') }}"><i class="material-icons">add</i> Tambah Kas Keluar</a> </p>
                          </div>
                   
 					<div class="table-responsive material-datatables">
