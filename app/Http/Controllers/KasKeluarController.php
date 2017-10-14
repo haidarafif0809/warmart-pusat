@@ -35,13 +35,17 @@ class KasKeluarController extends Controller
                         'confirm_message'   => 'Yakin Mau Menghapus kas keluar ' . $master_kas_keluar->no_faktur . '?'
                    
                         ]); 
+                })
+         ->addColumn('jumlah_keluar', function($jumlah_keluar){
+                    $data_keluar = number_format($jumlah_keluar->jumlah,0,',','.');
+                    return $data_keluar;
                 })->make(true);
         }
         $html = $htmlBuilder
         ->addColumn(['data' => 'no_faktur', 'name' => 'no_faktur', 'title' => 'No Faktur'])
         ->addColumn(['data' => 'kas.nama_kas', 'name' => 'kas.nama_kas', 'title' => 'Kas'])
         ->addColumn(['data' => 'kategori.nama_kategori_transaksi', 'name' => 'kategori.nama_kategori_transaksi', 'title' => 'Kategori'])
-        ->addColumn(['data' => 'jumlah', 'name' => 'jumlah', 'title' => 'Jumlah'])
+        ->addColumn(['data' => 'jumlah_keluar', 'name' => 'jumlah_keluar', 'title' => 'Jumlah'])
         ->addColumn(['data' => 'keterangan', 'name' => 'jumlah', 'title' => 'Keterangan'])
         ->addColumn(['data' => 'action', 'name' => 'action', 'title' => 'Aksi', 'orderable' => false, 'searchable'=>false]);
 
@@ -89,7 +93,7 @@ class KasKeluarController extends Controller
             <div class="alert-icon">
                 <i class="material-icons">check</i>
             </div>
-            <b>Sukses : Berhasil Menambah Transaksi Kas Keluar "'.$no_faktur.'"</b>
+            <b>Sukses : Berhasil Menambah Transaksi Kas Keluar Sebesar "'.$request->jumlah.'"</b>
          </div>';
 
          Session::flash("flash_notification", [
@@ -137,10 +141,7 @@ class KasKeluarController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
-
-            // // proses tambah user
-         $this->validate($request, [
+        $this->validate($request, [
             'kas'   => 'required',
             'kategori'   => 'required',
             'jumlah'   => 'required|numeric',
@@ -148,9 +149,9 @@ class KasKeluarController extends Controller
             
             ]);
 
-         $kas = KasKeluar::find($id)->update(['kas' => $request->kas,'kategori' => $request->kategori,'jumlah' => $request->jumlah,'keterangan' => $request->keterangan]);
+        $kas = KasKeluar::find($id)->update(['kas' => $request->kas,'kategori' => $request->kategori,'jumlah' => $request->jumlah,'keterangan' => $request->keterangan]);
 
-         $kas_keluar = KasKeluar::find($id);
+        $kas_keluar = KasKeluar::find($id);
 
 
         TransaksiKas::where('no_faktur' , $kas_keluar->no_faktur)->update(['jumlah_keluar' => $request->jumlah,'kas' => $request->kas] );
@@ -205,4 +206,11 @@ class KasKeluarController extends Controller
             return redirect()->route('kas_keluar.index');
         }
     }
+
+    //HITUNG TOTAL KAS
+    public function hitung_total_kas(Request $request){
+        $total_kas = TransaksiKas::total_kas($request);
+        return $total_kas;
+    }
+    
 }

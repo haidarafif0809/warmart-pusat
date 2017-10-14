@@ -12,6 +12,13 @@
 		{!! $errors->first('kategori', '<p class="help-block">:message</p>') !!}
 	</div>
 </div>
+<div class="form-group{{ $errors->has('jumlah_kas') ? ' has-error' : '' }}">
+	{!! Form::label('jumlah_kas', 'Total Kas', ['class'=>'col-md-2 control-label']) !!}
+	<div class="col-md-4">
+		{!! Form::text('jumlah_kas', null, ['class'=>'form-control','required','autocomplete'=>'off', 'placeholder' => 'Total Kas ', 'id' => 'total_kas', 'readonly']) !!}
+		{!! $errors->first('jumlah_kas', '<p class="help-block">:message</p>') !!}
+	</div>
+</div>
 <div class="form-group{{ $errors->has('jumlah') ? ' has-error' : '' }}">
 	{!! Form::label('jumlah', 'Jumlah', ['class'=>'col-md-2 control-label']) !!}
 	<div class="col-md-4">
