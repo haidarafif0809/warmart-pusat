@@ -2,7 +2,8 @@
 	{!! Form::label('kode_barcode', 'Barcode', ['class'=>'col-md-2 control-label']) !!}
 	<div class="col-md-4">
 		{!! Form::text('kode_barcode', null, ['class'=>'form-control','placeholder' => 'Barcode','autocomplete'=>'off', 'id' => 'kode_barcode']) !!}
-		{!! $errors->first('kode_barcode', '<p class="help-block" id="kode_barcode_error">:message</p>') !!}
+
+		{!! $errors->first('kode_barcode', '<p class="help-block" id="kode_barcode_error" >:message</p>') !!}
 	</div>
 </div>
 
@@ -18,7 +19,7 @@
 	{!! Form::label('nama_barang', 'Nama Produk', ['class'=>'col-md-2 control-label']) !!}
 	<div class="col-md-4">
 		{!! Form::text('nama_barang', null, ['class'=>'form-control','required','autocomplete'=>'off', 'id' =>'nama_barang', 'placeholder' => 'Nama Produk']) !!}
-		{!! $errors->first('nama_barang', '<p class="help-block">:message</p>') !!}
+		{!! $errors->first('nama_barang', '<p class="help-block" id="nama_produk_error">:message</p>') !!}
 	</div>
 </div> 
 
@@ -26,7 +27,7 @@
 	{!! Form::label('harga_beli', 'Harga Beli', ['class'=>'col-md-2 control-label']) !!}
 	<div class="col-md-4">
 		{!! Form::text('harga_beli', null, ['class'=>'form-control','required','autocomplete'=>'off', 'id' =>'harga_beli', 'placeholder' => 'Harga Beli']) !!}
-		{!! $errors->first('harga_beli', '<p class="help-block">:message</p>') !!}
+		{!! $errors->first('harga_beli', '<p class="help-block" id="harga_beli_error">:message</p>') !!}
 	</div>
 </div> 
 
@@ -34,7 +35,7 @@
 	{!! Form::label('harga_jual', 'Harga Jual', ['class'=>'col-md-2 control-label']) !!}
 	<div class="col-md-4">
 		{!! Form::text('harga_jual', null, ['class'=>'form-control','required','autocomplete'=>'off', 'id' =>'harga_jual', 'placeholder' => 'Harga Jual']) !!}
-		{!! $errors->first('harga_jual', '<p class="help-block">:message</p>') !!}
+		{!! $errors->first('harga_jual', '<p class="help-block" id="harga_jual_error">:message</p>') !!}
 	</div>
 </div> 
 
@@ -44,8 +45,8 @@
 	<div class="col-md-4">
 		{!! Form::select('kategori_barang_id', 
 		[''=>'']+App\KategoriBarang::pluck('nama_kategori_barang','id')->all(),
-		null, ['class'=>'form-control js-selectize-reguler', 'placeholder' => 'Silahkan Pilih','id'=>'kategori_barang']) !!}
-		{!! $errors->first('kategori_barang_id', '<p class="help-block">:message</p>') !!}
+		null, ['class'=>'form-control js-selectize-reguler', 'required','placeholder' => 'Pilih Kategori Produk','id'=>'kategori_barang', 'style'=> 'width: 215px;']) !!}
+		{!! $errors->first('kategori_barang_id', '<p class="help-block" id="kategori_error">:message</p>') !!}
 	</div>
 </div>
 
@@ -55,8 +56,8 @@
 	<div class="col-md-4">
 		{!! Form::select('satuan_id', 
 		[''=>'']+App\Satuan::pluck('nama_satuan','id')->all(),
-		null, ['class'=>'form-control js-selectize-reguler', 'placeholder' => 'Silahkan Pilih','id'=>'satuan']) !!}
-		{!! $errors->first('satuan_id', '<p class="help-block">:message</p>') !!}
+		null, ['class'=>'form-control js-selectize-reguler','required', 'placeholder' => 'Pilih Satuan','id'=>'satuan', 'style'=> 'width: 215px;']) !!}
+		{!! $errors->first('satuan_id', '<p class="help-block" id="satuan_error">:message</p>') !!}
 	</div>
 </div>
 
@@ -66,7 +67,7 @@
 	{!! Form::label('hitung_stok', 'Hitung Stok', ['class'=>'col-md-2 control-label']) !!}
 	<div class="col-md-1">
 
-		<div class="checkbox">
+		<div class="checkbox" >
 			<label>
 
 				@if (isset($barang) && $barang->hitung_stok == 1) 
@@ -80,7 +81,7 @@
 				@endif
 
 
-				{!! $errors->first('hitung_stok', '<p class="help-block">:message</p>') !!}
+				{!! $errors->first('hitung_stok', '<p class="help-block" id="hitung_stok_error">:message</p>') !!}
 				Ya
 			</label>
 		</div>
@@ -97,7 +98,7 @@
 
 				@else
 
-					<input type="checkbox" name="hitung_stok" value="0" id="HitungStokTidak">
+					<input type="checkbox"  name="hitung_stok" value="0" id="HitungStokTidak">
 
 				@endif
 
@@ -125,7 +126,7 @@
 
 				@endif
 
-				{!! $errors->first('status_aktif', '<p class="help-block">:message</p>') !!}
+				{!! $errors->first('status_aktif', '<p class="help-block" id="status_error">:message</p>') !!}
 				Aktif
 			</label>
 		</div>
@@ -162,7 +163,7 @@
 
 				@if (isset($barang) && $barang->foto)
 					<p>
-						{!! Html::image(asset('img/'.$barang->foto), null, ['class' => 'img-rounded img-responsive']) !!}
+						{!! Html::image(asset('foto_produk/'.$barang->foto), null, ['class' => 'img-rounded img-responsive']) !!}
 					</p>
 				@else
 				<img src="../../assets/img/image_placeholder.jpg" alt="Foto Akan Tampil Disini">

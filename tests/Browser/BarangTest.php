@@ -34,6 +34,8 @@ class BarangTest extends DuskTestCase
                     $first->script("document.getElementById('StatusYa').checked = true;"); 
                     $first->attach('foto', __DIR__.'/screenshots/testFoto.png');
                     $first->element('#btnSimpan')->submit();
+                    $first->assertSeeLink('Tambah Produk'); 
+
         }); 
     } 
 
@@ -62,10 +64,64 @@ class BarangTest extends DuskTestCase
                     $first->script("document.getElementById('HitungStokYa').checked = true;"); 
                     $first->script("document.getElementById('StatusYa').checked = true;"); 
                     $first->attach('foto', __DIR__.'/screenshots/testFoto.png');                    
-                    $first->element('#btnSimpan')->submit();
+                    $first->element('#btnSimpan')->submit();                    
+                    $first->assertSeeLink('Tambah Produk'); 
 
         }); 
     }
+
+
+
+   public function testBarcodeTidakBolehSama(){// BARCODE PER WARUNG TIDAK BOLEH SAMA 
+
+        $this->browse(function ($first, $second) {
+            $first->loginAs(User::find(4))
+                  ->visit('/barang') 
+                  ->clickLink('Tambah Produk')
+                  ->type('kode_barcode','5700011001')// kode barcode ini sudah ada di SEEDER
+                  ->type('kode_barang','MTK1000')
+                  ->type('nama_barang','Mie test')
+                  ->type('harga_beli','2000')
+                  ->type('harga_jual','3000');
+                    $first->script("document.getElementById('kategori_barang').selectize.setValue('1');");  
+                    $first->assertSee('SEMBAKOK');
+                    $first->script("document.getElementById('satuan').selectize.setValue('8');");  
+                    $first->assertSee('BUNGKUS');
+                    $first->script("document.getElementById('HitungStokYa').checked = true;"); 
+                    $first->script("document.getElementById('StatusYa').checked = true;"); 
+                    $first->attach('foto', __DIR__.'/screenshots/testFoto.png');
+                    $first->element('#btnSimpan')->submit();
+                    $first->script('document.getElementById("kode_barcode").focus();');
+                    $first->assertSeeIn('#kode_barcode_error','Maaf kode barcode Sudah Terpakai.');
+        }); 
+
+    }
+
+   public function testKodeBarangTidakBolehSama(){// KODE BARANG PER WARUNG TIDAK BOLEH SAMA 
+
+        $this->browse(function ($first, $second) {
+            $first->loginAs(User::find(4))
+                  ->visit('/barang') 
+                  ->clickLink('Tambah Produk')
+                  ->type('kode_barcode','5700141117')
+                  ->type('kode_barang','B001')// kode barang ini sudah ada di SEEDER
+                  ->type('nama_barang','Mie test')
+                  ->type('harga_beli','2000')
+                  ->type('harga_jual','3000');
+                    $first->script("document.getElementById('kategori_barang').selectize.setValue('1');");  
+                    $first->assertSee('SEMBAKOK');
+                    $first->script("document.getElementById('satuan').selectize.setValue('8');");  
+                    $first->assertSee('BUNGKUS');
+                    $first->script("document.getElementById('HitungStokYa').checked = true;"); 
+                    $first->script("document.getElementById('StatusYa').checked = true;"); 
+                    $first->attach('foto', __DIR__.'/screenshots/testFoto.png');
+                    $first->element('#btnSimpan')->submit();
+                    $first->script('document.getElementById("kode_barang").focus();');
+                    $first->assertSeeIn('#kode_produk_error','Maaf kode barang Sudah Terpakai.');
+        }); 
+
+    }
+
 
 
 
