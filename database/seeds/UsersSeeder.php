@@ -90,5 +90,20 @@ class UsersSeeder extends Seeder
 	    $customer->password = bcrypt('rahasia');
 	    $customer->save();
 	    $customer->attachRole($customerRole);
+
+	    // Membuat Sample Warung
+	    $warung = new User();
+	    $warung->name = "Sample Warung";
+	    $warung->email = 'warung@gmail.com';
+	    $warung->alamat = "Jl. Kedaton";
+	    $warung->wilayah = '1';
+	    $warung->no_telp = "081273435435";
+	    $warung->tipe_user = '4';
+		$warung->status_konfirmasi = "1";
+
+	    
+	    $warung->password = bcrypt('rahasia');
+	    $warung->save();
+	    $warung->attachRole($customerRole);
     }
 }

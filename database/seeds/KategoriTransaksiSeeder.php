@@ -12,7 +12,7 @@ class KategoriTransaksiSeeder extends Seeder
      */
     public function run()
     {
-        KategoriTransaksi::create(['nama_kategori_transaksi' => 'BIAYA OPERASIONAL']);
-        KategoriTransaksi::create(['nama_kategori_transaksi' => 'GAJI KARYAWAN']);
+        KategoriTransaksi::create(['nama_kategori_transaksi' => 'BIAYA OPERASIONAL', 'id_warung' => 1]);
+        KategoriTransaksi::create(['nama_kategori_transaksi' => 'GAJI KARYAWAN', 'id_warung' => 1]);
     }
 }

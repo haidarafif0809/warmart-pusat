@@ -22,7 +22,7 @@ class KasController extends Controller
     {
         if ($request->ajax()) {
 
-            $kas = Kas::with(['user_buat', 'user_edit']);
+            $kas = Kas::select(['id','kode_kas', 'nama_kas', 'status_kas', 'default_kas'])->where('warung_id', Auth::user()->id_warung);
             return Datatables::of($kas)
                 ->addColumn('action', function($kas){
                     return view('datatable._action', [
@@ -60,8 +60,6 @@ class KasController extends Controller
         ->addColumn(['data' => 'nama_kas', 'name' => 'nama_kas', 'title' => 'Nama Kas']) 
         ->addColumn(['data' => 'status_kas', 'name' => 'status_kas', 'title' => 'Status Kas'])
         ->addColumn(['data' => 'default_kas', 'name' => 'default_kas', 'title' => 'Default Kas']) 
-        ->addColumn(['data' => 'user_buat.name', 'name' => 'user_buat.name', 'title' => 'User Buat'])
-        ->addColumn(['data' => 'user_buat.name', 'name' => 'user_buat.name', 'title' => 'User Edit'])
         ->addColumn(['data' => 'action', 'name' => 'action', 'title' => '', 'orderable' => false, 'searchable'=>false]);
         
         return view('kas.index')->with(compact('html'));
@@ -105,7 +103,9 @@ class KasController extends Controller
                 'kode_kas'    =>$request->kode_kas,
                 'nama_kas'    =>$request->nama_kas,
                 'status_kas'  =>$request->status_kas,
-                'default_kas' =>$request->default_kas, 
+                'default_kas' =>$request->default_kas,
+                'default_kas' =>$request->default_kas,
+                'warung_id'   =>Auth::user()->id_warung
             ]);
         }
         else{
@@ -114,7 +114,9 @@ class KasController extends Controller
                 'kode_kas'    =>$request->kode_kas,
                 'nama_kas'    =>$request->nama_kas,
                 'status_kas'  =>$request->status_kas,
-                'default_kas' =>$request->default_kas, 
+                'default_kas' =>$request->default_kas,
+                'default_kas' =>$request->default_kas,
+                'warung_id'   =>Auth::user()->id_warung 
             ]);
         }    
 
