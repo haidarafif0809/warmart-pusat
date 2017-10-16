@@ -93,8 +93,6 @@ class KasKeluarController extends Controller
 
         $kas = KasKeluar::create(['no_faktur' => $no_faktur,'kas' => $request->kas,'kategori' => $request->kategori,'jumlah' => $request->jumlah,'keterangan' => $request->keterangan, 'warung_id' => Auth::user()->id_warung]);
 
-        TransaksiKas::create(['no_faktur' => $no_faktur, 'jenis_transaksi'=>'kas_keluar', 'jumlah_keluar' => $request->jumlah, 'kas' => $request->kas, 'warung_id' => Auth::user()->id_warung] );
-
         $pesan_alert = 
         '<div class="container-fluid">
             <div class="alert-icon">
