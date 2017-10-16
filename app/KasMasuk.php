@@ -8,7 +8,7 @@ class KasMasuk extends Model
 {
     //
 
-    protected $fillable = ['no_faktur','kas','kategori','jumlah','keterangan' ];
+    protected $fillable = ['no_faktur','kas','kategori','jumlah','keterangan','id_warung'];
 
     public function kas(){
     	return $this->belongsTo('App\Kas','kas','id');

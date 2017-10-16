@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\KasMasuk;
 use Session;
 use App\TransaksiKas;
+use Auth;
 
 
 class KasMasukController extends Controller
@@ -18,7 +19,7 @@ class KasMasukController extends Controller
     { 
          if ($request->ajax()) {
 
-            $kas_masuk = KasMasuk::with(['kas','kategori']);
+            $kas_masuk = KasMasuk::with(['kas','kategori'])->where('id_warung',Auth::user()->id_warung)->get();
             return Datatables::of($kas_masuk)->addColumn('action', function($master_kas_masuk){
                     return view('datatable._action', [
                         'model'     => $master_kas_masuk,
@@ -52,9 +53,8 @@ class KasMasukController extends Controller
             'kas'   => 'required',
             'kategori'   => 'required',
             'jumlah'   => 'required|numeric',
-            'keterangan'   => 'max:150', 
-            
-            ]);
+            'keterangan'   => 'max:150'
+            ]); 
 
          if ($request->keterangan == "") {
              $keterangan = "-";
@@ -63,7 +63,7 @@ class KasMasukController extends Controller
          }
 
          $no_faktur = KasMasuk::no_faktur();
-         $kas = KasMasuk::create(['no_faktur' => $no_faktur,'kas' => $request->kas,'kategori' => $request->kategori,'jumlah' => $request->jumlah,'keterangan' => $keterangan]);
+         $kas = KasMasuk::create(['no_faktur' => $no_faktur,'kas' => $request->kas,'kategori' => $request->kategori,'jumlah' => $request->jumlah,'keterangan' => $keterangan,'id_warung'=> Auth::user()->id_warung]);
          
          //PROSES MEMBUAT TRANSAKSI KAS
          TransaksiKas::create(['no_faktur' => $no_faktur,'jenis_transaksi'=>'kas_masuk' ,'jumlah_masuk' => $request->jumlah,'kas' => $request->kas] );

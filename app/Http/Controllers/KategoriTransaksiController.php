@@ -22,7 +22,7 @@ class KategoriTransaksiController extends Controller
     {
         if ($request->ajax()) {
 
-            $data_kategori_transaksi = KategoriTransaksi::select(['id','nama_kategori_transaksi']);
+            $data_kategori_transaksi = KategoriTransaksi::select(['id','nama_kategori_transaksi','id_warung'])->where('id_warung',Auth::user()->id_warung)->get();
             return Datatables::of($data_kategori_transaksi)
                 
                 ->addColumn('action', function($kategori_transaksi){
@@ -67,9 +67,13 @@ class KategoriTransaksiController extends Controller
             'nama_kategori_transaksi' => 'required|unique:kategori_transaksis,nama_kategori_transaksi',
         ]);
 
-        $kategori_transaksi = KategoriTransaksi::create([
-            'nama_kategori_transaksi' =>$request->nama_kategori_transaksi
-        ]);
+            if (Auth::user()->id_warung != "") {
+            $kategori_transaksi = KategoriTransaksi::create([
+                'nama_kategori_transaksi' =>$request->nama_kategori_transaksi,
+                'id_warung' =>Auth::user()->id_warung]); 
+            }else{
+                return response()->view('error.403');
+            }
 
         $pesan_alert = 
         '<div class="container-fluid">
@@ -106,8 +110,14 @@ class KategoriTransaksiController extends Controller
      */
     public function edit($id)
     {
+        $id_warung = Auth::user()->id_warung;
         $kategori_transaksi = KategoriTransaksi::find($id);
-        return view('kategori_transaksi.edit')->with(compact('kategori_transaksi'));
+
+            if ($id_warung == $kategori_transaksi->id_warung) {
+                return view('kategori_transaksi.edit',['user_warung'=>$id_warung])->with(compact('kategori_transaksi')); 
+            }else{
+                return response()->view('error.403');
+            }
     }
 
     /**

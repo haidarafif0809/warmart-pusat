@@ -11,5 +11,5 @@ class KategoriTransaksi extends Model
     use AuditableTrait;
     use LogsActivity; 
 
-    protected $fillable = ['nama_kategori_transaksi'];
+    protected $fillable = ['nama_kategori_transaksi','id_warung'];
 }
