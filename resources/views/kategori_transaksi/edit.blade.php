@@ -12,7 +12,7 @@
 
 		 		<div class="card">
 			   	   	<div class="card-header card-header-icon" data-background-color="purple">
-                       <i class="material-icons">label_outline</i>
+                       <i class="material-icons">local_offer</i>
                    	</div>
                     <div class="card-content">
 

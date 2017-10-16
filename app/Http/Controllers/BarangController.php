@@ -37,6 +37,11 @@ class BarangController extends Controller
 
                     ]);
             })
+            ->addColumn('nama_barang', function($barang){
+
+                return title_case($barang->nama_barang);
+
+            })
             ->addColumn('status_aktif', function($status){
 
                 if ($status->status_aktif == 1) {
@@ -95,11 +100,10 @@ class BarangController extends Controller
             ]);
 
        
-
         $insert_barang = Barang::create([
             'kode_barang'       => $request->kode_barang ,
             'kode_barcode'      => $request->kode_barcode, 
-            'nama_barang'       => $request->nama_barang, 
+            'nama_barang'       => strtolower($request->nama_barang), 
             'harga_beli'        => $request->harga_beli, 
             'harga_jual'        => $request->harga_jual, 
             'satuan_id'         => $request->satuan_id, 
@@ -205,7 +209,7 @@ class BarangController extends Controller
         $update_barang->update([
             'kode_barang'       => $request->kode_barang ,
             'kode_barcode'      => $request->kode_barcode, 
-            'nama_barang'       => $request->nama_barang, 
+            'nama_barang'       => strtolower($request->nama_barang), 
             'harga_beli'        => $request->harga_beli, 
             'harga_jual'        => $request->harga_jual, 
             'satuan_id'         => $request->satuan_id, 

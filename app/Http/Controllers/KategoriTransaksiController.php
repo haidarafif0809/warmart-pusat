@@ -151,22 +151,12 @@ class KategoriTransaksiController extends Controller
      */
     public function destroy($id)
     {
-        $pesan_alert = 
-               '<div class="container-fluid">
-                    <div class="alert-icon">
-                    <i class="material-icons">check</i>
-                    </div>
-                    <b>Sukses : Kategori Transaksi Berhasil Dihapus</b>
-                </div>';
-
-        KategoriTransaksi::destroy($id);  
-
-        Session:: flash("flash_notification", [
-            "level"=>"success",
-            "message"=> $pesan_alert
-            ]);
-
-
-        return redirect()->route('kategori_transaksi.index');
+        // JIKA GAGAL MENGHAPUD
+        if (!KategoriTransaksi::destroy($id)) {
+            return redirect()->back();
+        }
+        else{
+            return redirect()->route('kategori_transaksi.index');
+        }
     }
 }

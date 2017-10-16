@@ -85,6 +85,14 @@ Route::group(['middleware' =>'auth'], function(){
 	Route::resource('barang', 'BarangController'); 
 	Route::resource('kategori_transaksi', 'KategoriTransaksiController'); 
 	Route::resource('kas_masuk', 'KasMasukController');
+	Route::resource('kas_keluar', 'KasKeluarController');	
+	Route::resource('kas_mutasi', 'KasMutasiController');
+
+	Route::post('/cek_total_kas',[ 		
+	'middleware' => ['auth'],
+	'as' => 'cek_total_kas',
+	'uses' => 'TransaksikasController@total_kas'
+	]);
 
 	Route::get('detail_komunitas/{id}',[
 	'middleware' => ['auth','role:admin'],
