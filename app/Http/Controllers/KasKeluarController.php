@@ -94,19 +94,18 @@ class KasKeluarController extends Controller
             $no_faktur = KasKeluar::no_faktur(); 
             $kas = KasKeluar::create(['no_faktur' => $no_faktur,'kas' => $request->kas,'kategori' => $request->kategori,'jumlah' => $request->jumlah,'keterangan' => $request->keterangan, 'warung_id' => Auth::user()->id_warung]);
 
-            TransaksiKas::create(['no_faktur' => $no_faktur, 'jenis_transaksi'=>'kas_keluar', 'jumlah_keluar' => $request->jumlah, 'kas' => $request->kas, 'warung_id' => Auth::user()->id_warung] );
-
-        $pesan_alert = 
-        '<div class="container-fluid">
-            <div class="alert-icon">
-                <i class="material-icons">check</i>
-            </div>
-            <b>Sukses : Berhasil Menambah Transaksi Kas Keluar Sebesar "'.$request->jumlah.'"</b>
-         </div>';
+            $pesan_alert = 
+            '<div class="container-fluid">
+                <div class="alert-icon">
+                    <i class="material-icons">check</i>
+                </div>
+                <b>Sukses : Berhasil Menambah Transaksi Kas Keluar Sebesar "'.$request->jumlah.'"</b>
+             </div>';
 
             return redirect()->route('kas_keluar.index');
-        }else{
-                return response()->view('error.403');            
+        }
+        else{
+            return response()->view('error.403');            
         }
     }
 
@@ -129,7 +128,7 @@ class KasKeluarController extends Controller
      */
     public function edit($id)
     {
-        //
+
         $id_warung = Auth::user()->id_warung;
         $kas_keluar = KasKeluar::find($id);
         //MENAMPILKAN KAS
@@ -144,7 +143,8 @@ class KasKeluarController extends Controller
        
         if ($id_warung == $kas_keluar->warung_id) {
             return view('kas_keluar.edit', ['data_kategori_transaksi'=> $data_kategori_transaksi, 'data_kas'=> $data_kas])->with(compact('kas_keluar'));
-        }else{
+        }
+        else{
             return response()->view('error.403');
         }
     }
@@ -166,32 +166,39 @@ class KasKeluarController extends Controller
             
             ]);
 
-        $id_warung = Auth::user()->id_warung;
-        $kas_keluar = KasKeluar::find($id);
+            $id_warung = Auth::user()->id_warung;
+            $kas_keluar = KasKeluar::find($id);
        
         if ($id_warung == $kas_keluar->warung_id) {
-            $kas = KasKeluar::find($id)->update(['kas' => $request->kas,'kategori' => $request->kategori,'jumlah' => $request->jumlah,'keterangan' => $request->keterangan]);
 
-            $kas_keluar = KasKeluar::find($id);
+            $kas_keluar->kas = $request->kas;
+            $kas_keluar->kategori = $request->kategori;
+            $kas_keluar->jumlah = $request->jumlah;
+            $kas_keluar->keterangan = $request->keterangan;
 
+            if (!$kas_keluar->save()) {
+                return redirect()->back();
+            }
+            else{
 
-            TransaksiKas::where('no_faktur' , $kas_keluar->no_faktur)->update(['jumlah_keluar' => $request->jumlah,'kas' => $request->kas] );
+                $pesan_alert = 
+                '<div class="container-fluid">
+                    <div class="alert-icon">
+                        <i class="material-icons">check</i>
+                    </div>
+                    <b>Sukses : Berhasil Mengubah Transaksi Kas Keluar "'.$kas_keluar->no_faktur.'"</b>
+                 </div>';
 
-            $pesan_alert = 
-            '<div class="container-fluid">
-                <div class="alert-icon">
-                    <i class="material-icons">check</i>
-                </div>
-                <b>Sukses : Berhasil Mengubah Transaksi Kas Keluar "'.$kas_keluar->no_faktur.'"</b>
-             </div>';
-
-             Session::flash("flash_notification", [
-                "level"=>"success",
-                "message"=> $pesan_alert
-             ]);
+                 Session::flash("flash_notification", [
+                    "level"=>"success",
+                    "message"=> $pesan_alert
+                 ]);
 
             return redirect()->route('kas_keluar.index');
-        }else{
+
+            }
+        }
+        else{
             return response()->view('error.403');
         }
     }
@@ -212,9 +219,7 @@ class KasKeluarController extends Controller
             if (!KasKeluar::destroy($id)) {
                 return redirect()->back();
             }
-            else{
-
-                TransaksiKas::where('no_faktur',$kas_keluar->no_faktur)->delete();
+            else{                
 
                 $pesan_alert = 
                 '<div class="container-fluid">
