@@ -28,10 +28,12 @@
     <nav class="navbar navbar-default navbar-transparent navbar-fixed-top navbar-color-on-scroll" color-on-scroll=" " id="sectionsNav">
         <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
-            <a href="{{ url('/login') }}" target="_blank"  style="color:#ffc34d;" class="btn  btn-round"><i class="material-icons"></i> Login WarMart</a>
+            @if (Auth::check())
+            <a href="{{ route('home.dashboard') }}" style="color:#ffc34d;" class="btn  btn-round"><i class="material-icons">dashboard</i> Dashboard</a>
+            @else
+            <a href="{{ url('/login') }}" style="color:#ffc34d;" class="btn  btn-round"><i class="material-icons">fingerprint</i> Login WarMart</a>
+            @endif
         </div>
-
-
     </nav>
 
             <center class="back"><div class="container">
@@ -160,66 +162,96 @@ height:100%;
 
  <!--     *********    MANFAAT ALASAN BERGABUNG     *********      -->
 
-    <div class="section-image" style="background-image: url('assets/img/mosque.jpg');">
+    <div class="main main-raised">
         <div class="profile-content">
             <div class="container">
-                    <div class="description text-center">
+                    <div class="description">
             
-             <div class="row">
+            <div class="row">
+
                     <div class="col-md-6">
-                            <h3 style="color:#ffc34d;font-weight:bold;" align="left">
-                        Manfaat sebagai Pelanggan<br></h3>
-                            <h4 style="color:white;" align="left">
-                            1. Berkontribusi menumbuhkan Usaha muslim (jihad ekonomi) <br>
-                            2. Belanja bernilai ibadah <br>
-                            3. Mudah berbelanja di warung muslim <br>
-                            4. Mudah mencari barang, harga dan lokasi warung muslim terdekat <br>
-                            5. Barang lengkap sesuai kebutuhan <br>
-                            6. Potensi Income dengan mendaftarkan saudara Muslim <br><br><br>
+                        <div class="card card-raised card-background">
+                            <div class="card-content">
+                                <a href="#pablo">
+                                    <h3 class="card-title">Manfaat Pelanggan</h3>
+                                </a>
+                                <p class="card-description">
+                                    <h4 style="color:white;">
+                                    <ul>
+                                        <li>Berkontribusi menumbuhkan Usaha muslim (jihad ekonomi) </li>
+                                        <li>Belanja bernilai ibadah </li>
+                                        <li>Mudah berbelanja di warung muslim </li>
+                                        <li>Mudah mencari barang, harga dan lokasi warung muslim terdekat </li>
+                                        <li>Barang lengkap sesuai kebutuhan </li>
+                                        <li>Potensi Income dengan mendaftarkan saudara Muslim </li>
+                                    </ul>
                             </h4>
+                                </p>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="col-md-6">
-                            <h3 style="color:#ffc34d;font-weight:bold;" align="right">
-                        Manfaat sebagai Warung<br></h3>
-                            <h4 style="color:white;" align="right">
-                             Terhubung dengan Pelanggan WarMart se Indonesia .1 <br>
-                             Mendapat support teknologi manajemen warung .2<br>
-                             Mudah ditemukan konsumen .3<br>
-                             Penjualan online / offline .4<br>
-                             Mudah terakses oleh supplier .5<br>
-                             Terhubung dengan investor muslim .6<br><br><br>
-                            </h4>
-                     </div>
-            </div>
-
-             <div class="row">
-                    <div class="col-md-6">
-                            <h3 style="color:#ffc34d;font-weight:bold;" align="left">
-                        Manfaat sebagai Penggiat Komunitas<br></h3>
-            
-                            <h4 style="color:white;" align="left">
-                            1. Terhubung Dengan Pergerakan Ekonomi Umat <br>
-                            2. Bersinergi dengan beragam komunitas <br>
-                            3. Berkontribusi dalam kebangkitan ekonomi Islam <br>
-                            4. Mendapatkan potensi income dari belanja komunitas <br>
-                            5. Menumbuhkan kesadaran  bela ekonomi Islam <br>
-                            </h4>
+                        <div class="card card-raised card-background">
+                            <div class="card-content">
+                                <h3 class="card-title">Manfaat Warung</h3>
+                                <p class="card-description">
+                                   <h4 style="color:white;">
+                                   <ul>
+                                        <li>Terhubung dengan Pelanggan WarMart se Indonesia </li> 
+                                        <li>Mendapat support teknologi manajemen warung </li>
+                                        <li>Mudah ditemukan konsumen </li>
+                                        <li>Penjualan online / offline </li>
+                                        <li>Mudah terakses oleh supplier </li>
+                                        <li>Terhubung dengan investor muslim </li>
+                                    </ul>
+                                </h4>
+                                </p>
+                            </div>
+                        </div>
                     </div>
+            </div><!-- div row-->
+
+              <div class="row">
+
                     <div class="col-md-6">
-                            <h3 style="color:#ffc34d;font-weight:bold;" align="right">
-                        Manfaat sebagai Ajak Teman</h3>
-
-                             <h4 style="color:white;" align="right">
-                            Bebas biaya pendaftaran alias GRATIS!!! .1<br>
-                            Punya penghasilan tambahan .2<br>
-                            GRATIS!!! Web replika dengan nama sendiri .3<br>
-                            Bergabung dengan komunitas positif .4<br>
-                            Share bagi hasil dari transaksi teman .5<br>
+                        <div class="card card-raised card-background" >
+                            <div class="card-content">
+                                <h3 class="card-title">Manfaat Penggiat Komunitas</h3>
+                                <p class="card-description">
+                              <h4 style="color:white;">
+                                <ul>       
+                                    <li>Terhubung Dengan Pergerakan Ekonomi Umat</li>
+                                    <li>Bersinergi dengan beragam komunitas</li>
+                                    <li>Berkontribusi dalam kebangkitan ekonomi Islam</li>
+                                    <li>Mendapatkan potensi income dari belanja komunitas</li>
+                                    <li>Menumbuhkan kesadaran  bela ekonomi Islam</li>
+                                </ul>
                             </h4>
+                                </p>
+                            </div>
+                        </div>
                     </div>
-              </div>
-
+                
+                    <div class="col-md-6">
+                        <div class="card card-raised card-background" >
+                            <div class="card-content">
+                                <h3 class="card-title">Manfaat Ajak Teman</h3>
+                                <p class="card-description">
+                               <h4 style="color:white;">
+                                <ul>
+                                    <li>Bebas biaya pendaftaran alias GRATIS!!! </li>
+                                    <li>Punya penghasilan tambahan </li>
+                                    <li>GRATIS!!! Web replika dengan nama sendiri </li>
+                                    <li>Bergabung dengan komunitas positif </li>
+                                    <li>Share bagi hasil dari transaksi teman </li>
+                                </ul>
+                            </h4>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+            </div><!-- div row-->
 
             </div>
         </div>
@@ -317,7 +349,7 @@ height:100%;
             <div class="section text-center">
               
                     <center><h3 style="color:white;font-style:italic;" class="card-description">Mari menjadi bagian dalam kebangkitan perekonomian Islam di Indonesia.</h3><h4 style="color:white;font-style:italic;" class="card-description"> Islam berjaya, akan menjadi Rahmat bagi seluruh Alam.</h4><h5 style="color:white;font-style:italic;" class="card-description"> Ambil Bagian Anda sekarang juga</h5></center><br>
-                    <center><a href="{{ url('/login') }}" class="btn btn-danger"> DAFTAR </a></center>
+                    <center><a href="#" class="btn btn-danger swal-pendaftaran"> DAFTAR </a></center>
                  
             </div>
 
@@ -338,6 +370,8 @@ height:100%;
             </div>
         </div>
     </footer>
+
+
 
 <!--   Core JS Files   -->
 <script src="{{ asset('js/jquery-3.2.1.min.js') }}" type="text/javascript"></script>
@@ -378,10 +412,20 @@ height:100%;
 <script src="{{ asset('js/fullcalendar.min.js') }}"></script>
 <!-- Plugin for Tags, full documentation here: https://github.com/bootstrap-tagsinput/bootstrap-tagsinputs  -->
 <script src="{{ asset('js/jquery.tagsinput.js') }}"></script>
-<!-- Material Dashboard javascript methods -->
-<script src="{{ asset('js/material-dashboard.js?v=1.2.0') }}"></script>
 
 <script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
 <script src="{{ asset('js/demo.js') }}"></script>
 <script src="{{ asset('js/material-kit.js?v=1.2.0')}}" type="text/javascript"></script>
+
+<script type="text/javascript">
+$('.swal-pendaftaran').click(function(){
+    swal({
+        title: 'Daftar Sebagai?',
+        html:
+            '<li class="" style="list-style-type:none"><a href="{{ url('/register-customer') }}"  class="btn btn-info"><i class="material-icons">person_add</i> Pelanggan</a></li><li class="" style="list-style-type:none"><a href="{{ url('/register') }}"  class="btn btn-success"><i class="material-icons">people</i> Komunitas</a></li><li class=""  style="list-style-type:none"><a href="{{ url('/register-warung') }}"  class="btn btn-warning"><i class="material-icons">store</i> Warung</a></li> ',
+        showConfirmButton :  false,
+    });
+});
+</script>
+
 </html>
