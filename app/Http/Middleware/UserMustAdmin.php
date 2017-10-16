@@ -20,12 +20,13 @@ class UserMustAdmin
         $response = $next($request);
 
 
-        if (Auth::check() && Auth::user()->tipe_user != 3) {
+        if (Auth::check() && Auth::user()->tipe_user != 1) {
              Auth::logout();
 
+         return response()->view('error.403');
         }
 
-         return response()->view('error.403');;
+        return $response;
 
     }
 }

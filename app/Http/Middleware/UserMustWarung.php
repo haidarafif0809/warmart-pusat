@@ -20,9 +20,11 @@ class UserMustWarung
 
         if (Auth::check() && Auth::user()->tipe_user != 4) {
              Auth::logout();
-
+            return response()->view('error.403');
         }
 
-         return response()->view('error.403');;
+        return $response;
+
+      
     }
 }
