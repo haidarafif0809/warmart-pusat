@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\KasKeluar;
 use Session;
 use App\TransaksiKas;
-
+use Auth;
 
 class KasKeluarController extends Controller
 {
@@ -20,26 +20,24 @@ class KasKeluarController extends Controller
      */
         public function index(Request $request, Builder $htmlBuilder)
     {
-        //
+        if ($request->ajax()) {
 
-
-         if ($request->ajax()) {
-            # code...
-            $kas_keluar = KasKeluar::with(['kas','kategori']);
+            $kas_keluar = KasKeluar::with(['kas','kategori'])->where('warung_id', Auth::user()->id_warung);
             return Datatables::of($kas_keluar)
-         ->addColumn('action', function($master_kas_keluar){
-                    return view('kas_keluar._action', [
-                        'model'     => $master_kas_keluar,
-                        'form_url'  => route('kas_keluar.destroy', $master_kas_keluar->id),
-                        'edit_url'  => route('kas_keluar.edit', $master_kas_keluar->id),
-                        'confirm_message'   => 'Yakin Mau Menghapus kas keluar ' . $master_kas_keluar->no_faktur . '?'
-                   
-                        ]); 
-                })
-         ->addColumn('jumlah_keluar', function($jumlah_keluar){
-                    $data_keluar = number_format($jumlah_keluar->jumlah,0,',','.');
-                    return $data_keluar;
-                })->make(true);
+
+            ->addColumn('action', function($master_kas_keluar){
+                return view('kas_keluar._action', [
+                    'model'     => $master_kas_keluar,
+                    'form_url'  => route('kas_keluar.destroy', $master_kas_keluar->id),
+                    'edit_url'  => route('kas_keluar.edit', $master_kas_keluar->id),
+                    'confirm_message'   => 'Yakin Mau Menghapus kas keluar ' . $master_kas_keluar->no_faktur . '?'
+                ]); 
+            })
+            ->addColumn('jumlah_keluar', function($jumlah_keluar){
+                $data_keluar = number_format($jumlah_keluar->jumlah,0,',','.');
+
+                return $data_keluar;
+            })->make(true);
         }
         $html = $htmlBuilder
         ->addColumn(['data' => 'no_faktur', 'name' => 'no_faktur', 'title' => 'No Faktur'])
@@ -62,8 +60,17 @@ class KasKeluarController extends Controller
      */
     public function create()
     {
-        //
-                return view('kas_keluar.create');
+        //MENAMPILKAN KAS
+        $data_kas = DB::table('kas')
+            ->where('warung_id', Auth::user()->id_warung)
+            ->pluck('nama_kas','id');
+
+        //MENAMPILKAN KATEGORI TRANSAKSI
+        $data_kategori_transaksi = DB::table('data_kategori_transaksis')
+            ->where('warung_id', Auth::user()->id_warung)
+            ->pluck('nama_kategori_transaksi','id');
+
+        return view('kas_keluar.create', ['data_kategori_transaksi'=> $data_kategori_transaksi]);
     }
 
     /**
@@ -84,9 +91,9 @@ class KasKeluarController extends Controller
 
         $no_faktur = KasKeluar::no_faktur();
 
-        $kas = KasKeluar::create(['no_faktur' => $no_faktur,'kas' => $request->kas,'kategori' => $request->kategori,'jumlah' => $request->jumlah,'keterangan' => $request->keterangan]);
+        $kas = KasKeluar::create(['no_faktur' => $no_faktur,'kas' => $request->kas,'kategori' => $request->kategori,'jumlah' => $request->jumlah,'keterangan' => $request->keterangan, 'warung_id' => Auth::user()->id]);
 
-        TransaksiKas::create(['no_faktur' => $no_faktur, 'jenis_transaksi'=>'kas_keluar', 'jumlah_keluar' => $request->jumlah, 'kas' => $request->kas] );
+        TransaksiKas::create(['no_faktur' => $no_faktur, 'jenis_transaksi'=>'kas_keluar', 'jumlah_keluar' => $request->jumlah, 'kas' => $request->kas, 'warung_id' => Auth::user()->id] );
 
         $pesan_alert = 
         '<div class="container-fluid">

@@ -19,7 +19,8 @@ class KasSeeder extends Seeder
     	$kas->kode_kas = "K001";    	
     	$kas->nama_kas = "KAS BESAR";
     	$kas->status_kas = "1";
-    	$kas->default_kas = "0";
+      $kas->default_kas = "0";
+      $kas->warung_id = "4";
 	    $kas->save();
 
       // Membuat Seeder Kas
@@ -27,7 +28,8 @@ class KasSeeder extends Seeder
     	$kas->kode_kas = "K002";    	
     	$kas->nama_kas = "KAS WARUNG";
     	$kas->status_kas = "1";
-    	$kas->default_kas = "1";
+      $kas->default_kas = "1";
+      $kas->warung_id = "4";
 	    $kas->save();
     
     }

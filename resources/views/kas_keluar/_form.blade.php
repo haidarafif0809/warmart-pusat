@@ -1,14 +1,14 @@
-<div class="form-group{{ $errors->has('kas') ? ' has-error' : '' }}">
-	{!! Form::label('kas', 'Kas', ['class'=>'col-md-2 control-label']) !!}
+<div class="form-group{{ $errors->has('kas[]') ? ' has-error' : '' }}">
+	{!! Form::label('kas[]', 'Kas', ['class'=>'col-md-2 control-label']) !!}
 	<div class="col-md-4">
-		{!! Form::select('kas', [''=>'']+App\Kas::pluck('nama_kas','id')->all(),null, ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH KAS--', 'id' => 'nama_kas']) !!}
-		{!! $errors->first('kas', '<p class="help-block">:message</p>') !!}
+		{!! Form::select('kas[]', $data_kas, null, ['class'=>'js-selectize-reguler', 'placeholder' => '--PILIH KAS--', 'id' => 'nama_kas']) !!}
+		{!! $errors->first('kas[]', '<p class="help-block">:message</p>') !!}
 	</div>
 </div>
 <div class="form-group{{ $errors->has('kategori') ? ' has-error' : '' }}">
 	{!! Form::label('kategori', 'Kategori Transaksi', ['class'=>'col-md-2 control-label']) !!}
 	<div class="col-md-4">
-		{!! Form::select('kategori', [''=>'']+App\KategoriTransaksi::pluck('nama_kategori_transaksi','id')->all(),null, ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH KATEGORI TRANSAKSI--', 'id' => 'kategori_transaksi']) !!}
+		{!! Form::select('kategori', [''=>'']+App\KategoriTransaksi::pluck('nama_kategori_transaksi','id')->all(),null, ['class'=>'js-selectize-reguler', 'placeholder' => '--PILIH KATEGORI TRANSAKSI--', 'id' => 'kategori_transaksi']) !!}
 		{!! $errors->first('kategori', '<p class="help-block">:message</p>') !!}
 	</div>
 </div>
