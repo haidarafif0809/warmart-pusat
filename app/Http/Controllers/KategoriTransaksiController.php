@@ -133,9 +133,15 @@ class KategoriTransaksiController extends Controller
             'nama_kategori_transaksi'     => 'required|unique:kategori_transaksis,nama_kategori_transaksi,'.$id,
         ]);
 
-        $kategori_transaksi = KategoriTransaksi::find($id)->update([
-            'nama_kategori_transaksi'  => $request->nama_kategori_transaksi
-        ]);
+        $kategori_transaksi = KategoriTransaksi::find($id);
+
+        if ($id_warung == $kategori_transaksi->id_warung) {
+            $kategori_transaksi = KategoriTransaksi::find($id)->update([
+                'nama_kategori_transaksi'  => $request->nama_kategori_transaksi
+            ]);
+        }else{
+                return response()->view('error.403'); 
+        }
 
         $pesan_alert = 
         '<div class="container-fluid">
@@ -161,12 +167,19 @@ class KategoriTransaksiController extends Controller
      */
     public function destroy($id)
     {
-        // JIKA GAGAL MENGHAPUD
-        if (!KategoriTransaksi::destroy($id)) {
-            return redirect()->back();
-        }
-        else{
-            return redirect()->route('kategori_transaksi.index');
+
+        $kategori_transaksi = KategoriTransaksi::find($id);
+
+        if ($id_warung == $kategori_transaksi->id_warung) {
+            // JIKA GAGAL MENGHAPUD
+            if (!KategoriTransaksi::destroy($id)) {
+                return redirect()->back();
+            }
+            else{
+                return redirect()->route('kategori_transaksi.index');
+            }
+        }else{
+                return response()->view('error.403'); 
         }
     }
 }
