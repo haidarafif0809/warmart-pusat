@@ -18,6 +18,12 @@ class BankController extends Controller
      * @return \Illuminate\Http\Response
      */
 
+    public function __construct()
+    {
+        $this->middleware('user-must-admin');
+    }
+
+
     //MENAMPILKAN DATA YG ADA DI ITEM KELUAR
     public function index(Request $request, Builder $htmlBuilder)
     {
