@@ -17,7 +17,7 @@ class KasObserver
                     <div class="alert-icon">
                         <i class="material-icons">warning</i>
                     </div>
-                    <b>Gagal : Kas Yang Menjadi Defaul Kas Tidak Bisa Dihapus</b>
+                    <b>Gagal : Kas Yang Menjadi Default Kas Tidak Bisa Dihapus</b>
                 </div>';
 
             Session:: flash("flash_notification", [
