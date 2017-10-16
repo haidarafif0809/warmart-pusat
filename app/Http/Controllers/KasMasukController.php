@@ -81,6 +81,7 @@ class KasMasukController extends Controller
 
             return redirect()->route('kas_masuk.index');
         }else{
+          Auth::logout();
                 return response()->view('error.403');            
         }
     }
@@ -97,8 +98,9 @@ class KasMasukController extends Controller
         $kas_masuk = KasMasuk::find($id);
 
         if ($id_warung == $kas_masuk->id_warung) {
-            return view('kas_masuk.edit',['user_warung'=>$id_warung])->with(compact('kas_masuk')); 
+            return view('kas_masuk.edit')->with(compact('kas_masuk')); 
         }else{
+            Auth::logout();
             return response()->view('error.403');
         }
     }
@@ -119,9 +121,11 @@ class KasMasukController extends Controller
              $keterangan = $request->keterangan;
          }
 
-        if ($id_warung == $kategori_transaksi->id_warung) {
+        $kas_masuk = KasMasuk::find($id);
+        $id_warung = Auth::user()->id_warung;
+
+        if ($id_warung == $kas_masuk->id_warung) {
              $kas = KasMasuk::find($id)->update(['kas' => $request->kas,'kategori' => $request->kategori,'jumlah' => $request->jumlah,'keterangan' => $keterangan]);
-             $kas_masuk = KasMasuk::find($id);
 
              //PROSES UPDATE TRANSAKSI KAS
             TransaksiKas::where('no_faktur' , $kas_masuk->no_faktur)->update(['jumlah_masuk' => $request->jumlah,'kas' => $request->kas]);
@@ -133,15 +137,16 @@ class KasMasukController extends Controller
 
             return redirect()->route('kas_masuk.index');
         }else{
+          Auth::logout();
                 return response()->view('error.403'); 
-        }
-
+        } 
     }
   
 
     public function destroy($id)
     { 
         $kas = KasMasuk::find($id); 
+        $id_warung = Auth::user()->id_warung;
         if ($id_warung == $kas->id_warung) {
             // jika gagal hapus
             if (!KasMasuk::destroy($id)) {
@@ -157,6 +162,7 @@ class KasMasukController extends Controller
             return redirect()->route('kas_masuk.index');
             }
         }else{
+          Auth::logout();
                 return response()->view('error.403'); 
         }
     }

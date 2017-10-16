@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
-@section('content')
-	@if($user_warung == $kas_masuk->id_warung)
+@section('content') 
 		<div class="row">
 			<div class="col-md-12">
 				<ul class="breadcrumb">
@@ -23,8 +22,5 @@
 					</div>
 				</div>
 			</div>
-		</div>
-	@else
-		@include('error.403')
-	@endif
+		</div> 
 @endsection 

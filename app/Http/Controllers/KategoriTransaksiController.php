@@ -72,6 +72,7 @@ class KategoriTransaksiController extends Controller
                 'nama_kategori_transaksi' =>$request->nama_kategori_transaksi,
                 'id_warung' =>Auth::user()->id_warung]); 
             }else{
+                  Auth::logout();
                 return response()->view('error.403');
             }
 
@@ -114,8 +115,9 @@ class KategoriTransaksiController extends Controller
         $kategori_transaksi = KategoriTransaksi::find($id);
 
             if ($id_warung == $kategori_transaksi->id_warung) {
-                return view('kategori_transaksi.edit',['user_warung'=>$id_warung])->with(compact('kategori_transaksi')); 
+                return view('kategori_transaksi.edit')->with(compact('kategori_transaksi')); 
             }else{
+                  Auth::logout();
                 return response()->view('error.403');
             }
     }
@@ -140,6 +142,7 @@ class KategoriTransaksiController extends Controller
                 'nama_kategori_transaksi'  => $request->nama_kategori_transaksi
             ]);
         }else{
+              Auth::logout();
                 return response()->view('error.403'); 
         }
 
@@ -166,8 +169,8 @@ class KategoriTransaksiController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-    {
-
+    { 
+        $id_warung = Auth::user()->id_warung;
         $kategori_transaksi = KategoriTransaksi::find($id);
 
         if ($id_warung == $kategori_transaksi->id_warung) {
@@ -179,6 +182,7 @@ class KategoriTransaksiController extends Controller
                 return redirect()->route('kategori_transaksi.index');
             }
         }else{
+              Auth::logout();
                 return response()->view('error.403'); 
         }
     }

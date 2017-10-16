@@ -13,11 +13,11 @@ use Laratrust;
 
 class KasController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+   public function __construct()
+    {
+        $this->middleware('user-must-warung');
+    }
+
     public function index(Request $request, Builder $htmlBuilder)
     {
         if ($request->ajax()) {
@@ -91,49 +91,54 @@ class KasController extends Controller
             'default_kas'=> 'required',
         ]);
 
-        //JIKA BUAT KAS BARU DENGAN DEFAULT KAS = "YA", TETAPI SUDAH ADA YG DEFAULT
-        if ($request->default_kas == 1) {
-            //UPDATE MASTER DATA KAS WARUNG, JADI TIDAK DEFAULT KAS
-            $kas_default = Kas::where('default_kas',$request->default_kas)->update([
-                'default_kas' => 0, 
-            ]);
+        if (Auth::user()->id_warung != "") {
+            //JIKA BUAT KAS BARU DENGAN DEFAULT KAS = "YA", TETAPI SUDAH ADA YG DEFAULT
+            if ($request->default_kas == 1) {
+                //UPDATE MASTER DATA KAS WARUNG, JADI TIDAK DEFAULT KAS
+                $kas_default = Kas::where('default_kas',$request->default_kas)->update([
+                    'default_kas' => 0, 
+                ]);
 
-            //INSERT MASTER DATA KAS WARUNG, JADI DEFAULT KAS
-            $warung = Kas::create([
-                'kode_kas'    =>$request->kode_kas,
-                'nama_kas'    =>$request->nama_kas,
-                'status_kas'  =>$request->status_kas,
-                'default_kas' =>$request->default_kas,
-                'default_kas' =>$request->default_kas,
-                'warung_id'   =>Auth::user()->id_warung
-            ]);
+                //INSERT MASTER DATA KAS WARUNG, JADI DEFAULT KAS
+                $warung = Kas::create([
+                    'kode_kas'    =>$request->kode_kas,
+                    'nama_kas'    =>$request->nama_kas,
+                    'status_kas'  =>$request->status_kas,
+                    'default_kas' =>$request->default_kas,
+                    'default_kas' =>$request->default_kas,
+                    'warung_id'   =>Auth::user()->id_warung
+                ]);
+            }
+            else{
+                    //INSERT MASTER DATA KAS WARUNG
+                    $warung = Kas::create([
+                        'kode_kas'    =>$request->kode_kas,
+                        'nama_kas'    =>$request->nama_kas,
+                        'status_kas'  =>$request->status_kas,
+                        'default_kas' =>$request->default_kas,
+                        'default_kas' =>$request->default_kas,
+                        'warung_id'   =>Auth::user()->id_warung 
+                    ]);  
+          }    
+              $pesan_alert = 
+                     '<div class="container-fluid">
+                          <div class="alert-icon">
+                          <i class="material-icons">check</i>
+                          </div>
+                          <b>Sukses : Berhasil Menambah Kas '.$request->nama_kas.' </b>
+                      </div>';
+
+
+              Session::flash("flash_notification", [
+                  "level"=>"success",
+                  "message"=>$pesan_alert
+                  ]);
+              return redirect()->route('kas.index');
+
+        }else{
+            Auth::logout();
+                return response()->view('error.403');
         }
-        else{
-            //INSERT MASTER DATA KAS WARUNG
-            $warung = Kas::create([
-                'kode_kas'    =>$request->kode_kas,
-                'nama_kas'    =>$request->nama_kas,
-                'status_kas'  =>$request->status_kas,
-                'default_kas' =>$request->default_kas,
-                'default_kas' =>$request->default_kas,
-                'warung_id'   =>Auth::user()->id_warung 
-            ]);
-        }    
-
-        $pesan_alert = 
-               '<div class="container-fluid">
-                    <div class="alert-icon">
-                    <i class="material-icons">check</i>
-                    </div>
-                    <b>Sukses : Berhasil Menambah Kas '.$request->nama_kas.' </b>
-                </div>';
-
-
-        Session::flash("flash_notification", [
-            "level"=>"success",
-            "message"=>$pesan_alert
-            ]);
-        return redirect()->route('kas.index');
     }
 
     /**
@@ -155,8 +160,15 @@ class KasController extends Controller
      */
     public function edit($id)
     {
+        $id_warung = Auth::user()->id_warung;
         $kas = Kas::find($id);
-        return view('kas.edit')->with(compact('kas'));
+
+        if ($id_warung == $kas->warung_id) {
+            return view('kas.edit',['user_warung'=>$id_warung])->with(compact('kas')); 
+        }else{
+            Auth::logout();
+            return response()->view('error.403');
+        }
     }
 
     /**
@@ -175,84 +187,92 @@ class KasController extends Controller
             'default_kas'=> 'required',
         ]);
 
-        //JIKA BUAT KAS BARU DENGAN DEFAULT KAS = "YA", TETAPI SUDAH ADA YG DEFAULT
-        if ($request->default_kas == 1) {
-            //UPDATE MASTER DATA KAS WARUNG, JADI TIDAK DEFAULT KAS
-            $kas_default = Kas::where('default_kas',$request->default_kas)->update([
-                'default_kas' => 0, 
-            ]);
+        $id_warung = Auth::user()->id_warung;
+        $kas = Kas::find($id);
 
-            //UPDATE MASTER DATA KAS WARUNG
-            Kas::where('id', $id)->update([
-                'kode_kas'      =>$request->kode_kas,
-                'nama_kas'      =>$request->nama_kas,
-                'status_kas'    =>$request->status_kas,
-                'default_kas'   =>$request->default_kas,
-            ]);
+        if ($id_warung == $kas->warung_id) {
+          //JIKA BUAT KAS BARU DENGAN DEFAULT KAS = "YA", TETAPI SUDAH ADA YG DEFAULT
+          if ($request->default_kas == 1) {
+              //UPDATE MASTER DATA KAS WARUNG, JADI TIDAK DEFAULT KAS
+              $kas_default = Kas::where('default_kas',$request->default_kas)->update([
+                  'default_kas' => 0, 
+              ]);
 
-            $pesan_alert = 
-                     '<div class="container-fluid">
-                          <div class="alert-icon">
-                          <i class="material-icons">check</i>
-                          </div>
-                          <b>Sukses : Berhasil Mengubah Kas "'.$request->nama_kas.'"</b>
-                      </div>';
+              //UPDATE MASTER DATA KAS WARUNG
+              Kas::where('id', $id)->update([
+                  'kode_kas'      =>$request->kode_kas,
+                  'nama_kas'      =>$request->nama_kas,
+                  'status_kas'    =>$request->status_kas,
+                  'default_kas'   =>$request->default_kas,
+              ]);
 
-                Session::flash("flash_notification", [
-                    "level"=>"success",
-                    "message"=>$pesan_alert
-                    ]);
+              $pesan_alert = 
+                       '<div class="container-fluid">
+                            <div class="alert-icon">
+                            <i class="material-icons">check</i>
+                            </div>
+                            <b>Sukses : Berhasil Mengubah Kas "'.$request->nama_kas.'"</b>
+                        </div>';
 
-                return redirect()->route('kas.index');
-        }
-        else{
+                  Session::flash("flash_notification", [
+                      "level"=>"success",
+                      "message"=>$pesan_alert
+                      ]);
 
-            //JIKA KAS DEFAULT, DIUBAH MENJADI TIDAK DEFAULT (MAKA MUNCUL PERINGATAN)
-            $data_kas = Kas::select('default_kas')->where('id', $id)->first();
+                  return redirect()->route('kas.index');
+          }
+          else{
 
-            if ($data_kas->default_kas != 1) {
-                //UPDATE MASTER DATA KAS WARUNG
-                Kas::where('id', $id)->update([
-                    'kode_kas'      =>$request->kode_kas,
-                    'nama_kas'      =>$request->nama_kas,
-                    'status_kas'    =>$request->status_kas,
-                    'default_kas'   =>$request->default_kas,
-                ]);
+              //JIKA KAS DEFAULT, DIUBAH MENJADI TIDAK DEFAULT (MAKA MUNCUL PERINGATAN)
+              $data_kas = Kas::select('default_kas')->where('id', $id)->first();
 
-                $pesan_alert = 
-                     '<div class="container-fluid">
-                          <div class="alert-icon">
-                          <i class="material-icons">check</i>
-                          </div>
-                          <b>Sukses : Berhasil Mengubah Kas "'.$request->nama_kas.'"</b>
-                      </div>';
+              if ($data_kas->default_kas != 1) {
+                  //UPDATE MASTER DATA KAS WARUNG
+                  Kas::where('id', $id)->update([
+                      'kode_kas'      =>$request->kode_kas,
+                      'nama_kas'      =>$request->nama_kas,
+                      'status_kas'    =>$request->status_kas,
+                      'default_kas'   =>$request->default_kas,
+                  ]);
 
-                Session::flash("flash_notification", [
-                    "level"=>"success",
-                    "message"=>$pesan_alert
-                    ]);
+                  $pesan_alert = 
+                       '<div class="container-fluid">
+                            <div class="alert-icon">
+                            <i class="material-icons">check</i>
+                            </div>
+                            <b>Sukses : Berhasil Mengubah Kas "'.$request->nama_kas.'"</b>
+                        </div>';
 
-                return redirect()->route('kas.index');
-        
-            }
-            else{
-                $pesan_alert = 
-                 '<div class="container-fluid">
-                      <div class="alert-icon">
-                      <i class="material-icons">warning</i>
-                      </div>
-                      <b>Peringatan : Harus Ada 1 Kas Yang Menjadi Default Kas.</b>
-                  </div>';
+                  Session::flash("flash_notification", [
+                      "level"=>"success",
+                      "message"=>$pesan_alert
+                      ]);
 
-                Session::flash("flash_notification", [
-                    "level"=>"warning",
-                    "message"=>$pesan_alert
-                ]);
+                  return redirect()->route('kas.index');
+          
+              }
+              else{
+                  $pesan_alert = 
+                   '<div class="container-fluid">
+                        <div class="alert-icon">
+                        <i class="material-icons">warning</i>
+                        </div>
+                        <b>Peringatan : Harus Ada 1 Kas Yang Menjadi Default Kas.</b>
+                    </div>';
 
-                return redirect()->back();
-            }         
-        }
+                  Session::flash("flash_notification", [
+                      "level"=>"warning",
+                      "message"=>$pesan_alert
+                  ]);
+
+                  return redirect()->back();
+              }         
+          }
            
+        }else{
+            Auth::logout();
+            return response()->view('error.403');
+        }
     }
 
     /**
@@ -263,12 +283,20 @@ class KasController extends Controller
      */
     public function destroy($id)
     {
-        // JIKA GAGAL MENGHAPUD
-        if (!Kas::destroy($id)) {
-            return redirect()->back();
-        }
-        else{
-            return redirect()->route('kas.index');
+        $id_warung = Auth::user()->id_warung;
+        $kas = Kas::find($id);
+
+        if ($id_warung == $kas->warung_id) {
+          // JIKA GAGAL MENGHAPUD
+          if (!Kas::destroy($id)) {
+              return redirect()->back();
+          }
+          else{
+              return redirect()->route('kas.index');
+          }
+        }else{
+            Auth::logout();
+            return response()->view('error.403');
         }
         
     }
