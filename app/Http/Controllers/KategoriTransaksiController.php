@@ -13,11 +13,11 @@ use Auth;
 
 class KategoriTransaksiController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+  public function __construct()
+    {
+        $this->middleware('user-must-warung');
+    }
+
   public function index(Request $request, Builder $htmlBuilder)
     {
         if ($request->ajax()) {

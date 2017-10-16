@@ -14,6 +14,11 @@ use Auth;
 
 class KasMasukController extends Controller
 {
+     
+    public function __construct()
+    {
+        $this->middleware('user-must-warung');
+    }
     //PROSES MENAMPILKAN KAS MASUK
      public function index(Request $request, Builder $htmlBuilder)
     { 
@@ -62,18 +67,22 @@ class KasMasukController extends Controller
              $keterangan = $request->keterangan;
          }
 
-         $no_faktur = KasMasuk::no_faktur();
-         $kas = KasMasuk::create(['no_faktur' => $no_faktur,'kas' => $request->kas,'kategori' => $request->kategori,'jumlah' => $request->jumlah,'keterangan' => $keterangan,'id_warung'=> Auth::user()->id_warung]);
-         
-         //PROSES MEMBUAT TRANSAKSI KAS
-         TransaksiKas::create(['no_faktur' => $no_faktur,'jenis_transaksi'=>'kas_masuk' ,'jumlah_masuk' => $request->jumlah,'kas' => $request->kas] );
+        if (Auth::user()->id_warung != "") {
+             $no_faktur = KasMasuk::no_faktur();
+             $kas = KasMasuk::create(['no_faktur' => $no_faktur,'kas' => $request->kas,'kategori' => $request->kategori,'jumlah' => $request->jumlah,'keterangan' => $keterangan,'id_warung'=> Auth::user()->id_warung]);
+             
+             //PROSES MEMBUAT TRANSAKSI KAS
+             TransaksiKas::create(['no_faktur' => $no_faktur,'jenis_transaksi'=>'kas_masuk' ,'jumlah_masuk' => $request->jumlah,'kas' => $request->kas,'warung_id'=>Auth::user()->id_warung]);
 
-        Session::flash("flash_notification", [
-            "level"=>"success",
-            "message"=>" <b>BERHASIL:</b> Memasukkan Kas Sejumlah $request->jumlah  </b>"
-            ]);
+            Session::flash("flash_notification", [
+                "level"=>"success",
+                "message"=>" <b>BERHASIL:</b> Memasukkan Kas Sejumlah $request->jumlah  </b>"
+                ]);
 
-        return redirect()->route('kas_masuk.index');
+            return redirect()->route('kas_masuk.index');
+        }else{
+                return response()->view('error.403');            
+        }
     }
 
     public function show($id)
@@ -84,8 +93,14 @@ class KasMasukController extends Controller
     //PROSES KE HALAMAN EDIT
     public function edit($id)
     { 
+        $id_warung = Auth::user()->id_warung;
         $kas_masuk = KasMasuk::find($id);
-        return view('kas_masuk.edit')->with(compact('kas_masuk'));
+
+        if ($id_warung == $kas_masuk->id_warung) {
+            return view('kas_masuk.edit',['user_warung'=>$id_warung])->with(compact('kas_masuk')); 
+        }else{
+            return response()->view('error.403');
+        }
     }
 
     //PROSES EDIT KAS Masuk
@@ -104,36 +119,45 @@ class KasMasukController extends Controller
              $keterangan = $request->keterangan;
          }
 
-         $kas = KasMasuk::find($id)->update(['kas' => $request->kas,'kategori' => $request->kategori,'jumlah' => $request->jumlah,'keterangan' => $keterangan]);
-         $kas_masuk = KasMasuk::find($id);
+        if ($id_warung == $kategori_transaksi->id_warung) {
+             $kas = KasMasuk::find($id)->update(['kas' => $request->kas,'kategori' => $request->kategori,'jumlah' => $request->jumlah,'keterangan' => $keterangan]);
+             $kas_masuk = KasMasuk::find($id);
 
-         //PROSES UPDATE TRANSAKSI KAS
-        TransaksiKas::where('no_faktur' , $kas_masuk->no_faktur)->update(['jumlah_masuk' => $request->jumlah,'kas' => $request->kas]);
-    
-         Session::flash("flash_notification", [
-            "level"=>"success",
-            "message"=>"BERHASIL:</b> Mengubah Kas Masuk $kas_masuk->no_faktur"
-            ]);
+             //PROSES UPDATE TRANSAKSI KAS
+            TransaksiKas::where('no_faktur' , $kas_masuk->no_faktur)->update(['jumlah_masuk' => $request->jumlah,'kas' => $request->kas]);
+        
+             Session::flash("flash_notification", [
+                "level"=>"success",
+                "message"=>"BERHASIL:</b> Mengubah Kas Masuk $kas_masuk->no_faktur"
+                ]);
 
-        return redirect()->route('kas_masuk.index');
+            return redirect()->route('kas_masuk.index');
+        }else{
+                return response()->view('error.403'); 
+        }
 
     }
- 
+  
+
     public function destroy($id)
     { 
         $kas = KasMasuk::find($id); 
-        // jika gagal hapus
-        if (!KasMasuk::destroy($id)) {
-            // redirect back
-            return redirect()->back();
+        if ($id_warung == $kas->id_warung) {
+            // jika gagal hapus
+            if (!KasMasuk::destroy($id)) {
+                // redirect back
+                return redirect()->back();
+            }else{
+                //MENGHAPUS TRANSAKSI KAS
+               TransaksiKas::where('no_faktur',$kas->no_faktur())->delete();
+                Session::flash("flash_notification", [
+                    "level"     => "success",
+                    "message"   => "Kas Masuk ". $kas->no_faktur ." Berhasil Di Hapus"
+                ]);
+            return redirect()->route('kas_masuk.index');
+            }
         }else{
-            //MENGHAPUS TRANSAKSI KAS
-           TransaksiKas::where('no_faktur',$kas->no_faktur())->delete();
-            Session::flash("flash_notification", [
-                "level"     => "success",
-                "message"   => "Kas Masuk ". $kas->no_faktur ." Berhasil Di Hapus"
-            ]);
-        return redirect()->route('kas_masuk.index');
+                return response()->view('error.403'); 
         }
     }
 }
