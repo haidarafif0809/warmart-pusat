@@ -62,6 +62,8 @@ class Kernel extends HttpKernel
         'ability' => \Laratrust\Middleware\LaratrustAbility::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'user-should-verified' => \App\Http\Middleware\UserShouldVerified::class,
+        'user-must-admin' => \App\Http\Middleware\UserMustAdmin::class,
+        'user-must-warung' => \App\Http\Middleware\UserMustWarung::class,
 
     ];
 }
