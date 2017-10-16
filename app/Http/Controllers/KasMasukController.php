@@ -81,6 +81,7 @@ class KasMasukController extends Controller
 
             return redirect()->route('kas_masuk.index');
         }else{
+          Auth::logout();
                 return response()->view('error.403');            
         }
     }
@@ -99,6 +100,7 @@ class KasMasukController extends Controller
         if ($id_warung == $kas_masuk->id_warung) {
             return view('kas_masuk.edit')->with(compact('kas_masuk')); 
         }else{
+            Auth::logout();
             return response()->view('error.403');
         }
     }
@@ -135,6 +137,7 @@ class KasMasukController extends Controller
 
             return redirect()->route('kas_masuk.index');
         }else{
+          Auth::logout();
                 return response()->view('error.403'); 
         } 
     }
@@ -159,6 +162,7 @@ class KasMasukController extends Controller
             return redirect()->route('kas_masuk.index');
             }
         }else{
+          Auth::logout();
                 return response()->view('error.403'); 
         }
     }
