@@ -4,6 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB; 
+use Auth;
+
 class KasMasuk extends Model
 {
     //
@@ -35,7 +37,7 @@ class KasMasuk extends Model
          }
       
       //ambil bulan dan no_faktur dari tanggal item_keluar terakhir
-         $item_keluar = KasMasuk::select([DB::raw('MONTH(created_at) bulan'), 'no_faktur'])->orderBy('id','DESC')->first();
+         $item_keluar = KasMasuk::select([DB::raw('MONTH(created_at) bulan'), 'no_faktur'])->where('id_warung',Auth::user()->id_warung)->orderBy('id','DESC')->first();
 
 
          if ($item_keluar != NULL) {

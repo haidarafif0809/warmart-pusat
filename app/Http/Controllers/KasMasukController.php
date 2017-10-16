@@ -97,7 +97,7 @@ class KasMasukController extends Controller
         $kas_masuk = KasMasuk::find($id);
 
         if ($id_warung == $kas_masuk->id_warung) {
-            return view('kas_masuk.edit',['user_warung'=>$id_warung])->with(compact('kas_masuk')); 
+            return view('kas_masuk.edit')->with(compact('kas_masuk')); 
         }else{
             return response()->view('error.403');
         }

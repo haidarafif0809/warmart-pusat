@@ -114,7 +114,7 @@ class KategoriTransaksiController extends Controller
         $kategori_transaksi = KategoriTransaksi::find($id);
 
             if ($id_warung == $kategori_transaksi->id_warung) {
-                return view('kategori_transaksi.edit',['user_warung'=>$id_warung])->with(compact('kategori_transaksi')); 
+                return view('kategori_transaksi.edit')->with(compact('kategori_transaksi')); 
             }else{
                 return response()->view('error.403');
             }
