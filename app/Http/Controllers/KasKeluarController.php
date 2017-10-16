@@ -66,11 +66,11 @@ class KasKeluarController extends Controller
             ->pluck('nama_kas','id');
 
         //MENAMPILKAN KATEGORI TRANSAKSI
-        $data_kategori_transaksi = DB::table('data_kategori_transaksis')
-            ->where('warung_id', Auth::user()->id_warung)
+        $data_kategori_transaksi = DB::table('kategori_transaksis')
+            ->where('id_warung', Auth::user()->id_warung)
             ->pluck('nama_kategori_transaksi','id');
 
-        return view('kas_keluar.create', ['data_kategori_transaksi'=> $data_kategori_transaksi]);
+        return view('kas_keluar.create', ['data_kategori_transaksi'=> $data_kategori_transaksi, 'data_kas'=> $data_kas]);
     }
 
     /**
@@ -91,9 +91,9 @@ class KasKeluarController extends Controller
 
         $no_faktur = KasKeluar::no_faktur();
 
-        $kas = KasKeluar::create(['no_faktur' => $no_faktur,'kas' => $request->kas,'kategori' => $request->kategori,'jumlah' => $request->jumlah,'keterangan' => $request->keterangan, 'warung_id' => Auth::user()->id]);
+        $kas = KasKeluar::create(['no_faktur' => $no_faktur,'kas' => $request->kas,'kategori' => $request->kategori,'jumlah' => $request->jumlah,'keterangan' => $request->keterangan, 'warung_id' => Auth::user()->id_warung]);
 
-        TransaksiKas::create(['no_faktur' => $no_faktur, 'jenis_transaksi'=>'kas_keluar', 'jumlah_keluar' => $request->jumlah, 'kas' => $request->kas, 'warung_id' => Auth::user()->id] );
+        TransaksiKas::create(['no_faktur' => $no_faktur, 'jenis_transaksi'=>'kas_keluar', 'jumlah_keluar' => $request->jumlah, 'kas' => $request->kas, 'warung_id' => Auth::user()->id_warung] );
 
         $pesan_alert = 
         '<div class="container-fluid">
