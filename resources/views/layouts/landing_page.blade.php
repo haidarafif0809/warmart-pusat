@@ -233,7 +233,7 @@ height:100%;
         <div class="container">
             <div class="row">
                 <div class="col-md-6 col-md-offset-3 text-center">
-                    <marquee><h2 class="text-center">Kata Mereka</h2></marquee>
+                    <h2 class="text-center">Kata Mereka</h2>
                 </div>
             </div>
 
