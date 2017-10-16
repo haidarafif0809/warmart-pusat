@@ -13,11 +13,11 @@ use Auth;
 
 class KategoriTransaksiController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+  public function __construct()
+    {
+        $this->middleware('user-must-warung');
+    }
+
   public function index(Request $request, Builder $htmlBuilder)
     {
         if ($request->ajax()) {
@@ -166,8 +166,8 @@ class KategoriTransaksiController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-    {
-
+    { 
+        $id_warung = Auth::user()->id_warung;
         $kategori_transaksi = KategoriTransaksi::find($id);
 
         if ($id_warung == $kategori_transaksi->id_warung) {

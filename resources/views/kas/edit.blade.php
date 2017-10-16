@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-	
+	@if($user_warung == $kas->warung_id)
 		<div class="row">
 			<div class="col-md-12">
 				<ul class="breadcrumb">
@@ -24,7 +24,9 @@
 				</div>
 			</div>
 		</div>
-	
+	@else
+		@include('error.403')
+	@endif
 @endsection
 
 @section('scripts')
