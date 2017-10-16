@@ -13,11 +13,11 @@ use Auth;
 
 class KasKeluarController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function __construct()
+    {
+        $this->middleware('user-must-warung');
+    }
+
         public function index(Request $request, Builder $htmlBuilder)
     {
         if ($request->ajax()) {
@@ -60,6 +60,7 @@ class KasKeluarController extends Controller
      */
     public function create()
     {
+
         //MENAMPILKAN KAS
         $data_kas = DB::table('kas')
             ->where('warung_id', Auth::user()->id_warung)
@@ -89,9 +90,11 @@ class KasKeluarController extends Controller
             'keterangan'   => 'max:150',
         ]);
 
-        $no_faktur = KasKeluar::no_faktur();
+        if (Auth::user()->id_warung != "") {
+            $no_faktur = KasKeluar::no_faktur(); 
+            $kas = KasKeluar::create(['no_faktur' => $no_faktur,'kas' => $request->kas,'kategori' => $request->kategori,'jumlah' => $request->jumlah,'keterangan' => $request->keterangan, 'warung_id' => Auth::user()->id_warung]);
 
-        $kas = KasKeluar::create(['no_faktur' => $no_faktur,'kas' => $request->kas,'kategori' => $request->kategori,'jumlah' => $request->jumlah,'keterangan' => $request->keterangan, 'warung_id' => Auth::user()->id_warung]);
+            TransaksiKas::create(['no_faktur' => $no_faktur, 'jenis_transaksi'=>'kas_keluar', 'jumlah_keluar' => $request->jumlah, 'kas' => $request->kas, 'warung_id' => Auth::user()->id_warung] );
 
         $pesan_alert = 
         '<div class="container-fluid">
@@ -101,12 +104,10 @@ class KasKeluarController extends Controller
             <b>Sukses : Berhasil Menambah Transaksi Kas Keluar Sebesar "'.$request->jumlah.'"</b>
          </div>';
 
-         Session::flash("flash_notification", [
-            "level"=>"success",
-            "message"=> $pesan_alert
-         ]);
-
-        return redirect()->route('kas_keluar.index');
+            return redirect()->route('kas_keluar.index');
+        }else{
+                return response()->view('error.403');            
+        }
     }
 
     /**
@@ -129,12 +130,23 @@ class KasKeluarController extends Controller
     public function edit($id)
     {
         //
+        $id_warung = Auth::user()->id_warung;
+        $kas_keluar = KasKeluar::find($id);
+        //MENAMPILKAN KAS
+        $data_kas = DB::table('kas')
+            ->where('warung_id', Auth::user()->id_warung)
+            ->pluck('nama_kas','id');
 
-
-                   $kas_keluar = KasKeluar::find($id);
+        //MENAMPILKAN KATEGORI TRANSAKSI
+        $data_kategori_transaksi = DB::table('kategori_transaksis')
+            ->where('id_warung', Auth::user()->id_warung)
+            ->pluck('nama_kategori_transaksi','id');
        
-
-        return view('kas_keluar.edit')->with(compact('kas_keluar'));
+        if ($id_warung == $kas_keluar->warung_id) {
+            return view('kas_keluar.edit', ['data_kategori_transaksi'=> $data_kategori_transaksi, 'data_kas'=> $data_kas])->with(compact('kas_keluar'));
+        }else{
+            return response()->view('error.403');
+        }
     }
 
     /**
@@ -154,27 +166,34 @@ class KasKeluarController extends Controller
             
             ]);
 
-        $kas = KasKeluar::find($id)->update(['kas' => $request->kas,'kategori' => $request->kategori,'jumlah' => $request->jumlah,'keterangan' => $request->keterangan]);
-
+        $id_warung = Auth::user()->id_warung;
         $kas_keluar = KasKeluar::find($id);
+       
+        if ($id_warung == $kas_keluar->warung_id) {
+            $kas = KasKeluar::find($id)->update(['kas' => $request->kas,'kategori' => $request->kategori,'jumlah' => $request->jumlah,'keterangan' => $request->keterangan]);
+
+            $kas_keluar = KasKeluar::find($id);
 
 
-        TransaksiKas::where('no_faktur' , $kas_keluar->no_faktur)->update(['jumlah_keluar' => $request->jumlah,'kas' => $request->kas] );
+            TransaksiKas::where('no_faktur' , $kas_keluar->no_faktur)->update(['jumlah_keluar' => $request->jumlah,'kas' => $request->kas] );
 
-        $pesan_alert = 
-        '<div class="container-fluid">
-            <div class="alert-icon">
-                <i class="material-icons">check</i>
-            </div>
-            <b>Sukses : Berhasil Mengubah Transaksi Kas Keluar "'.$kas_keluar->no_faktur.'"</b>
-         </div>';
+            $pesan_alert = 
+            '<div class="container-fluid">
+                <div class="alert-icon">
+                    <i class="material-icons">check</i>
+                </div>
+                <b>Sukses : Berhasil Mengubah Transaksi Kas Keluar "'.$kas_keluar->no_faktur.'"</b>
+             </div>';
 
-         Session::flash("flash_notification", [
-            "level"=>"success",
-            "message"=> $pesan_alert
-         ]);
+             Session::flash("flash_notification", [
+                "level"=>"success",
+                "message"=> $pesan_alert
+             ]);
 
-        return redirect()->route('kas_keluar.index');
+            return redirect()->route('kas_keluar.index');
+        }else{
+            return response()->view('error.403');
+        }
     }
 
     /**
@@ -186,29 +205,34 @@ class KasKeluarController extends Controller
     public function destroy($id)
     {
         $kas_keluar = KasKeluar::find($id);
+        $id_warung = Auth::user()->id_warung; 
+       
+        if ($id_warung == $kas_keluar->warung_id) {
+            // jika gagal hapus
+            if (!KasKeluar::destroy($id)) {
+                return redirect()->back();
+            }
+            else{
 
-        // jika gagal hapus
-        if (!KasKeluar::destroy($id)) {
-            return redirect()->back();
-        }
-        else{
+                TransaksiKas::where('no_faktur',$kas_keluar->no_faktur)->delete();
 
-            TransaksiKas::where('no_faktur',$kas_keluar->no_faktur)->delete();
+                $pesan_alert = 
+                '<div class="container-fluid">
+                    <div class="alert-icon">
+                        <i class="material-icons">check</i>
+                    </div>
+                    <b>Sukses : Berhasil Menghapus Transaksi Kas Keluar "'.$kas_keluar->no_faktur.'"</b>
+                 </div>';
 
-            $pesan_alert = 
-            '<div class="container-fluid">
-                <div class="alert-icon">
-                    <i class="material-icons">check</i>
-                </div>
-                <b>Sukses : Berhasil Menghapus Transaksi Kas Keluar "'.$kas_keluar->no_faktur.'"</b>
-             </div>';
-
-             Session::flash("flash_notification", [
-                "level"=>"success",
-                "message"=> $pesan_alert
-             ]);
-            
-            return redirect()->route('kas_keluar.index');
+                 Session::flash("flash_notification", [
+                    "level"=>"success",
+                    "message"=> $pesan_alert
+                 ]);
+                
+                return redirect()->route('kas_keluar.index');
+            }
+        }else{
+            return response()->view('error.403');
         }
     }
 
