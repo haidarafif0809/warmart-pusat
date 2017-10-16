@@ -20,7 +20,7 @@ class KasMasukController extends Controller
 
             $kas_masuk = KasMasuk::with(['kas','kategori']);
             return Datatables::of($kas_masuk)->addColumn('action', function($master_kas_masuk){
-                    return view('kas_masuk._action', [
+                    return view('datatable._action', [
                         'model'     => $master_kas_masuk,
                         'form_url'  => route('kas_masuk.destroy', $master_kas_masuk->id),
                         'edit_url'  => route('kas_masuk.edit', $master_kas_masuk->id),
@@ -64,6 +64,7 @@ class KasMasukController extends Controller
 
          $no_faktur = KasMasuk::no_faktur();
          $kas = KasMasuk::create(['no_faktur' => $no_faktur,'kas' => $request->kas,'kategori' => $request->kategori,'jumlah' => $request->jumlah,'keterangan' => $keterangan]);
+         
          //PROSES MEMBUAT TRANSAKSI KAS
          TransaksiKas::create(['no_faktur' => $no_faktur,'jenis_transaksi'=>'kas_masuk' ,'jumlah_masuk' => $request->jumlah,'kas' => $request->kas] );
 
@@ -84,7 +85,6 @@ class KasMasukController extends Controller
     public function edit($id)
     { 
         $kas_masuk = KasMasuk::find($id);
-        
         return view('kas_masuk.edit')->with(compact('kas_masuk'));
     }
 

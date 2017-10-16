@@ -86,9 +86,12 @@
                         </a>
                     </li>
 
+
+                    <!-- MASTER DATA WARUNG -->
+                    @if(Auth::user()->tipe_user == 4) 
                     <li>
                         <a data-toggle="collapse" href="#transaksiKas">
-                            <i class="material-icons">image</i>
+                            <i class="material-icons">credit_card</i>
                             <p> Transaksi Kas
                                 <b class="caret"></b>
                             </p>
@@ -112,15 +115,11 @@
                                         <span class="sidebar-mini">KMT</span>
                                         <span class="sidebar-normal">Kas Mutasi</span>
                                     </a>
-                                </li> 
-                                 
-
+                                </li>  
                             </ul>
                         </div>
                     </li>
 
-                    <!-- MASTER DATA WARUNG -->
-                    @if(Auth::user()->tipe_user == 4)
                     <li>
                         <ul class="nav">
                             <li>

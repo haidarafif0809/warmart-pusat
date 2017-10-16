@@ -11,7 +11,7 @@
 			</ul>
 			  <div class="card">
 			   	   <div class="card-header card-header-icon" data-background-color="purple">
-                       <i class="material-icons">account_circle</i>
+                       <i class="material-icons">credit_card</i>
                    </div>
                       <div class="card-content">
                          <h4 class="card-title"> kas masuk </h4>
