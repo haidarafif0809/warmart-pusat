@@ -1,7 +1,7 @@
 <div class="form-group{{ $errors->has('kode_barcode') ? ' has-error' : '' }}">
 	{!! Form::label('kode_barcode', 'Barcode', ['class'=>'col-md-2 control-label']) !!}
 	<div class="col-md-4">
-		{!! Form::text('kode_barcode', null, ['class'=>'form-control','placeholder' => 'Barcode','autocomplete'=>'off', 'id' => 'kode_barcode']) !!}
+		{!! Form::text('kode_barcode', null, ['class'=>'form-control','placeholder' => 'Barcode(Jika Ada)','autocomplete'=>'off', 'id' => 'kode_barcode']) !!}
 
 		{!! $errors->first('kode_barcode', '<p class="help-block" id="kode_barcode_error" >:message</p>') !!}
 	</div>
@@ -22,23 +22,6 @@
 		{!! $errors->first('nama_barang', '<p class="help-block" id="nama_produk_error">:message</p>') !!}
 	</div>
 </div> 
-
-<div class="form-group{{ $errors->has('harga_beli') ? ' has-error' : '' }}">
-	{!! Form::label('harga_beli', 'Harga Beli', ['class'=>'col-md-2 control-label']) !!}
-	<div class="col-md-4">
-		{!! Form::text('harga_beli', null, ['class'=>'form-control','required','autocomplete'=>'off', 'id' =>'harga_beli', 'placeholder' => 'Harga Beli']) !!}
-		{!! $errors->first('harga_beli', '<p class="help-block" id="harga_beli_error">:message</p>') !!}
-	</div>
-</div> 
-
-<div class="form-group{{ $errors->has('harga_jual') ? ' has-error' : '' }}">
-	{!! Form::label('harga_jual', 'Harga Jual', ['class'=>'col-md-2 control-label']) !!}
-	<div class="col-md-4">
-		{!! Form::text('harga_jual', null, ['class'=>'form-control','required','autocomplete'=>'off', 'id' =>'harga_jual', 'placeholder' => 'Harga Jual']) !!}
-		{!! $errors->first('harga_jual', '<p class="help-block" id="harga_jual_error">:message</p>') !!}
-	</div>
-</div> 
-
 
 <div class="form-group{{ $errors->has('kategori_barang_id') ? ' has-error' : '' }}">
 	{!! Form::label('kategori_barang_id', 'Kategori Produk', ['class'=>'col-md-2 control-label']) !!}
@@ -61,6 +44,21 @@
 	</div>
 </div>
 
+<div class="form-group{{ $errors->has('harga_beli') ? ' has-error' : '' }}">
+	{!! Form::label('harga_beli', 'Harga Beli', ['class'=>'col-md-2 control-label']) !!}
+	<div class="col-md-4">
+		{!! Form::text('harga_beli', null, ['class'=>'form-control','required','autocomplete'=>'off', 'id' =>'harga_beli', 'placeholder' => 'Harga Beli']) !!}
+		{!! $errors->first('harga_beli', '<p class="help-block" id="harga_beli_error">:message</p>') !!}
+	</div>
+</div> 
+
+<div class="form-group{{ $errors->has('harga_jual') ? ' has-error' : '' }}">
+	{!! Form::label('harga_jual', 'Harga Jual', ['class'=>'col-md-2 control-label']) !!}
+	<div class="col-md-4">
+		{!! Form::text('harga_jual', null, ['class'=>'form-control','required','autocomplete'=>'off', 'id' =>'harga_jual', 'placeholder' => 'Harga Jual']) !!}
+		{!! $errors->first('harga_jual', '<p class="help-block" id="harga_jual_error">:message</p>') !!}
+	</div>
+</div> 
 
 
 <div class="form-group{{ $errors->has('hitung_stok') ? ' has-error' : '' }}">
