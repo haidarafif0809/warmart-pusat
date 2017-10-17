@@ -9,9 +9,11 @@ use Validator;
 use App\Observers\WarungObserver;
 use App\Observers\UserWarungObserver;
 use App\Observers\KasObserver;
+use App\Observers\KasKeluarObserver;
 use App\Observers\KategoriTransaksiObserver;
 use App\Warung;
 use App\Kas;
+use App\KasKeluar;
 use App\UserWarung;
 use App\KategoriTransaksi;
 
@@ -33,6 +35,7 @@ class AppServiceProvider extends ServiceProvider
         Warung::observe(WarungObserver::class);
         UserWarung::observe(UserWarungObserver::class);
         Kas::observe(KasObserver::class);
+        KasKeluar::observe(KasKeluarObserver::class);
         KategoriTransaksi::observe(KategoriTransaksiObserver::class);
     }
 
