@@ -14,6 +14,13 @@
 Route::get('/','HomeController@index');
 Route::get('/sms','HomeController@sms');
 
+Route::get('/dashboard',[
+	'middleware' => ['auth'],
+	'as'=>'home.dashboard',
+	'uses' => 'HomeController@dashboard'
+]);
+
+
 
 
 

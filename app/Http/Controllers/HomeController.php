@@ -29,6 +29,11 @@ class HomeController extends Controller
         return view('layouts.landing_page');
     }
 
+    public function dashboard()
+    {
+        return view('home');
+    }
+
     public function sms(){
 
         $client = new Client(); //GuzzleHttp\Client

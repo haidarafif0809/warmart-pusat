@@ -17,6 +17,12 @@ class UserWarungController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function __construct()
+    {
+        $this->middleware('user-must-admin');
+    }
+
     public function index(Request $request, Builder $htmlBuilder)
     {
         if ($request->ajax()) {
