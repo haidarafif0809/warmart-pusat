@@ -99,6 +99,7 @@ class UsersSeeder extends Seeder
 	    $warung->wilayah = '1';
 	    $warung->no_telp = "081273435435";
 	    $warung->tipe_user = '4';
+	    $warung->id_warung = '1';
 		$warung->status_konfirmasi = "1";
 
 	    

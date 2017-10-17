@@ -74,9 +74,11 @@ class KasMasukController extends Controller
              //PROSES MEMBUAT TRANSAKSI KAS
              TransaksiKas::create(['no_faktur' => $no_faktur,'jenis_transaksi'=>'kas_masuk' ,'jumlah_masuk' => $request->jumlah,'kas' => $request->kas,'warung_id'=>Auth::user()->id_warung]);
 
+            $pesan_alert = '<b>Sukses:</b> Berhasil Menambah Transaksi Kas Masuk Sebesar "'.$request->jumlah.'" </b>';
+
             Session::flash("flash_notification", [
                 "level"=>"success",
-                "message"=>" <b>BERHASIL:</b> Memasukkan Kas Sejumlah $request->jumlah  </b>"
+                "message"=> $pesan_alert
                 ]);
 
             return redirect()->route('kas_masuk.index');
@@ -132,7 +134,7 @@ class KasMasukController extends Controller
         
              Session::flash("flash_notification", [
                 "level"=>"success",
-                "message"=>"BERHASIL:</b> Mengubah Kas Masuk $kas_masuk->no_faktur"
+                "message"=>'<b>Sukses :</b>Berhasil Mengubah Transaksi Kas Keluar "'.$kas_masuk->no_faktur.'"'
                 ]);
 
             return redirect()->route('kas_masuk.index');
@@ -157,7 +159,7 @@ class KasMasukController extends Controller
                TransaksiKas::where('no_faktur',$kas->no_faktur())->delete();
                 Session::flash("flash_notification", [
                     "level"     => "success",
-                    "message"   => "Kas Masuk ". $kas->no_faktur ." Berhasil Di Hapus"
+                    "message"   => '<b>Sukses :</b> Berhasil Menghapus Transaksi Kas Masuk "'. $kas->no_faktur.'"'
                 ]);
             return redirect()->route('kas_masuk.index');
             }
