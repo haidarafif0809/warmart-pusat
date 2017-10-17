@@ -104,6 +104,9 @@
                                     <div class="footer text-center">
                                         <button type="submit" class="btn btn-rose btn-simple btn-wd btn-lg">Registrasi Pelanggan</button>
                                     </div>
+                                    <center>     
+                                       <p>Sudah Daftar? <a href="{{ url('/login') }}">Masuk Sekarang</a> </p>
+                                    </center>
                                 </div>
     {!! Form::close() !!}
 @endsection
