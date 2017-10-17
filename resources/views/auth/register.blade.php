@@ -1,6 +1,13 @@
 @extends('layouts.app_login')
 
 @section('content')
+       @if ($errors->has('no_telp'))
+                            <div class="alert alert-danger alert-with-icon">
+        <i class="material-icons" data-notify="icon" >error_outline</i>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">x</button>
+        <span data-notify="message"> <b>Failed:</b> Mohon Maaf Nomor Telfon Yang Anda Input Sudah Terdaftar</span>
+        </div>
+     @endif
   <form method="POST" action="{{ url('/register') }}">
                              {{ csrf_field() }}
                                 <div class="card card-login ">
@@ -30,8 +37,7 @@
                                             </span>
                                             <div class="form-group label-floating {{ $errors->has('no_telp') ? ' has-error' : '' }}">
                                                 <label class="control-label">No Telpon</label>
-                                                    {!! Form::text('no_telp', null, ['class'=>'form-control','required','autocomplete'=>'off']) !!}
-                                                    {!! $errors->first('no_telp', '<p class="help-block">:message</p>') !!}
+                                                    {!! Form::text('no_telp', null, ['class'=>'form-control','required','autocomplete'=>'off']) !!} 
 
                                                 
                                             </div>
@@ -54,7 +60,7 @@
                                             <span class="input-group-addon">
                                                 <i class="material-icons">home</i>
                                             </span>
-                                            <div class="form-group label-floating {{ $errors->has('alamat') ? ' has-error' : '' }}">
+                                            <div class="form-group label-floating">
                                                 <label class="control-label">Alamat</label>
                                                     {!! Form::text('alamat', null, ['class'=>'form-control','required','autocomplete'=>'off']) !!}
                                                     {!! $errors->first('alamat', '<p class="help-block">:message</p>') !!}
