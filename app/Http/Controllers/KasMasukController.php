@@ -48,7 +48,17 @@ class KasMasukController extends Controller
  
     public function create()
     { 
-        return view('kas_masuk.create');
+        //MENAMPILKAN KAS
+        $data_kas = DB::table('kas')
+            ->where('warung_id', Auth::user()->id_warung)
+            ->pluck('nama_kas','id');
+
+        //MENAMPILKAN KATEGORI TRANSAKSI
+        $data_kategori_transaksi = DB::table('kategori_transaksis')
+            ->where('id_warung', Auth::user()->id_warung)
+            ->pluck('nama_kategori_transaksi','id');
+
+        return view('kas_masuk.create', ['data_kategori_transaksi'=> $data_kategori_transaksi, 'data_kas'=> $data_kas]);
     }
  
     //PROSES TAMBAH KAS MASUK
@@ -98,9 +108,18 @@ class KasMasukController extends Controller
     { 
         $id_warung = Auth::user()->id_warung;
         $kas_masuk = KasMasuk::find($id);
+        //MENAMPILKAN KAS
+        $data_kas = DB::table('kas')
+            ->where('warung_id', Auth::user()->id_warung)
+            ->pluck('nama_kas','id');
+
+        //MENAMPILKAN KATEGORI TRANSAKSI
+        $data_kategori_transaksi = DB::table('kategori_transaksis')
+            ->where('id_warung', Auth::user()->id_warung)
+            ->pluck('nama_kategori_transaksi','id'); 
 
         if ($id_warung == $kas_masuk->id_warung) {
-            return view('kas_masuk.edit')->with(compact('kas_masuk')); 
+            return view('kas_masuk.edit',['data_kategori_transaksi'=> $data_kategori_transaksi, 'data_kas'=> $data_kas])->with(compact('kas_masuk')); 
         }else{
             Auth::logout();
             return response()->view('error.403');
@@ -146,26 +165,44 @@ class KasMasukController extends Controller
   
 
     public function destroy($id)
-    { 
-        $kas = KasMasuk::find($id); 
-        $id_warung = Auth::user()->id_warung;
-        if ($id_warung == $kas->id_warung) {
-            // jika gagal hapus
-            if (!KasMasuk::destroy($id)) {
-                // redirect back
-                return redirect()->back();
-            }else{
-                //MENGHAPUS TRANSAKSI KAS
-               TransaksiKas::where('no_faktur',$kas->no_faktur())->delete();
-                Session::flash("flash_notification", [
-                    "level"     => "success",
-                    "message"   => '<b>Sukses :</b> Berhasil Menghapus Transaksi Kas Masuk "'. $kas->no_faktur.'"'
-                ]);
-            return redirect()->route('kas_masuk.index');
-            }
+    { $kas_masuk = KasMasuk::find($id); 
+
+       if ($kas_masuk->id_warung != Auth::user()->id_warung) {
+                Auth::logout();
+                return response()->view('error.403');
         }else{
-          Auth::logout();
-                return response()->view('error.403'); 
-        }
+
+                   // hitung kas
+                    $sisa_kas = TransaksiKas::select(DB::raw('SUM(jumlah_masuk - jumlah_keluar) as total_kas'))
+                                ->where('kas', $kas_masuk->kas)
+                                ->where('warung_id',Auth::user()->id_warung)
+                                ->where('no_faktur','!=',$kas_masuk->no_faktur)
+                                ->first();
+
+                   if ($sisa_kas->total_kas < 0) {
+
+                           Session::flash("flash_notification", [
+                                    "level"     => "danger",
+                                    "message"   => "<b>Info :</b> Kas Masuk ". $kas_masuk->no_faktur ." Tidak Di Hapus, Jika Dihapus Kas akan Minus "
+                                ]);
+                            return redirect()->route('kas_masuk.index');
+                    }else{
+
+                           TransaksiKas::where('no_faktur',$kas_masuk->no_faktur)->delete();
+            
+                            // jika gagal hapus
+                            if (!KasMasuk::destroy($id)) {
+                                // redirect back
+                                return redirect()->back();
+                            }else{
+                                Session::flash("flash_notification", [
+                                    "level"     => "success",
+                                    "message"   => "<b>Succes :</b> Kas Masuk ". $kas_masuk->no_faktur ." Berhasil Di Hapus"
+                                ]);
+                            return redirect()->route('kas_masuk.index');
+                            }
+                    } 
+
+       } 
     }
 }
