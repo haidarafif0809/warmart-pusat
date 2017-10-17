@@ -28,7 +28,7 @@
 	<div class="col-md-4">
 		{!! Form::select('kategori_barang_id', 
 		[''=>'']+App\KategoriBarang::pluck('nama_kategori_barang','id')->all(),
-		null, ['class'=>'form-control js-selectize-reguler', 'required','placeholder' => 'Pilih Kategori Produk','id'=>'kategori_barang', 'style'=> 'width: 215px;']) !!}
+		null, ['class'=>'js-selectize-reguler', 'required','placeholder' => 'Pilih Kategori Produk','id'=>'kategori_barang', 'style'=> 'width: 215px;']) !!}
 		{!! $errors->first('kategori_barang_id', '<p class="help-block" id="kategori_error">:message</p>') !!}
 	</div>
 </div>
@@ -38,11 +38,13 @@
 	{!! Form::label('satuan_id', 'Satuan', ['class'=>'col-md-2 control-label']) !!}
 	<div class="col-md-4">
 		{!! Form::select('satuan_id', 
-		[''=>'']+App\Satuan::pluck('nama_satuan','id')->all(),
-		null, ['class'=>'form-control js-selectize-reguler','required', 'placeholder' => 'Pilih Satuan','id'=>'satuan', 'style'=> 'width: 215px;']) !!}
+		['1'=>'PCS']+App\Satuan::pluck('nama_satuan','id')->all(),
+		null, ['class'=>'js-selectize-reguler','required', 'id'=>'satuan', 'style'=> 'width: 215px;']) !!}
 		{!! $errors->first('satuan_id', '<p class="help-block" id="satuan_error">:message</p>') !!}
 	</div>
 </div>
+
+
 
 <div class="form-group{{ $errors->has('harga_beli') ? ' has-error' : '' }}">
 	{!! Form::label('harga_beli', 'Harga Beli', ['class'=>'col-md-2 control-label']) !!}
@@ -63,93 +65,32 @@
 
 <div class="form-group{{ $errors->has('hitung_stok') ? ' has-error' : '' }}">
 	{!! Form::label('hitung_stok', 'Hitung Stok', ['class'=>'col-md-2 control-label']) !!}
-	<div class="col-md-1">
-
-		<div class="checkbox" >
-			<label>
-
-				@if (isset($barang) && $barang->hitung_stok == 1) 
-
-					<input type="checkbox" name="hitung_stok" value="1" id="HitungStokYa" checked>
-
-				@else
-
-					<input type="checkbox" name="hitung_stok" value="1" id="HitungStokYa">
-
-				@endif
-
-
-				{!! $errors->first('hitung_stok', '<p class="help-block" id="hitung_stok_error">:message</p>') !!}
-				Ya
-			</label>
+		<div class="col-md-1">
+			<div class="togglebutton">
+				<label>
+					@if (isset($barang) && $barang->hitung_stok == 1)
+			    	<input type="checkbox" name="hitung_stok" id="hitung_stok" value="1" checked="">						
+					@else
+			    	<input type="checkbox" name="hitung_stok" id="hitung_stok" value="1">
+			    	@endif
+				</label>
+			</div>
 		</div>
-
-	</div>
-
-	<div class="col-md-1">
-		
-		<div class="checkbox">
-			<label>
-				@if (isset($barang) && $barang->hitung_stok == 0)
-
-					<input type="checkbox" name="hitung_stok" value="0" id="HitungStokTidak" checked>
-
-				@else
-
-					<input type="checkbox"  name="hitung_stok" value="0" id="HitungStokTidak">
-
-				@endif
-
-				Tidak
-			</label>
-		</div>
-
-	</div>
-
 </div>
 
-
 <div class="form-group{{ $errors->has('status_aktif') ? ' has-error' : '' }}">
-	{!! Form::label('status_aktif', 'Status', ['class'=>'col-md-2 control-label']) !!}
-	<div class="col-md-1">
-
-		<div class="checkbox">
-			<label>
-				@if (isset($barang) && $barang->status_aktif == 1)
-
-					<input type="checkbox" name="status_aktif" value="1" id="StatusYa" checked>
-				@else
-
-					<input type="checkbox" name="status_aktif" value="1" id="StatusYa">
-
-				@endif
-
-				{!! $errors->first('status_aktif', '<p class="help-block" id="status_error">:message</p>') !!}
-				Aktif
-			</label>
+	{!! Form::label('status_aktif', 'Bisa Dijual', ['class'=>'col-md-2 control-label']) !!}
+		<div class="col-md-1">
+			<div class="togglebutton">
+				<label>
+					@if (isset($barang) && $barang->status_aktif == 1)
+			    	<input type="checkbox" name="status_aktif" id="status_aktif" value="1" checked="">
+			    	@else
+			    	<input type="checkbox" name="status_aktif" id="status_aktif" value="1">
+			    	@endif
+				</label>
+			</div>
 		</div>
-
-	</div>
-
-	<div class="col-md-1">
-		
-		<div class="checkbox">
-			<label>				
-				@if (isset($barang) && $barang->status_aktif == 0)
-
-					<input type="checkbox" name="status_aktif" value="0" id="StatusTidak" checked>
-
-				@else
-
-					<input type="checkbox" name="status_aktif" value="0" id="StatusTidak">
-
-				@endif
-				Tidak
-			</label>
-		</div>
-
-	</div>
-
 </div>
 
 

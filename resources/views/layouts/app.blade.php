@@ -91,7 +91,7 @@
                     @if(Auth::user()->tipe_user == 4) 
                     <li>
                         <a data-toggle="collapse" href="#transaksiKas">
-                            <i class="material-icons">credit_card</i>
+                            <i class="material-icons">autorenew</i>
                             <p> Transaksi Kas
                                 <b class="caret"></b>
                             </p>
@@ -111,7 +111,7 @@
                                     </a>
                                 </li> 
                                 <li>
-                                    <a href="#">
+                                    <a href="{{ route('kas_mutasi.index') }}"> 
                                         <span class="sidebar-mini">KMT</span>
                                         <span class="sidebar-normal">Kas Mutasi</span>
                                     </a>

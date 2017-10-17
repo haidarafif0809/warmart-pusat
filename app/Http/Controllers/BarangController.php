@@ -99,12 +99,26 @@ class BarangController extends Controller
               'nama_barang'         => 'required|max:191',
               'harga_beli'          => 'required|numeric|digits_between:1,11',
               'harga_jual'          => 'required|numeric|digits_between:1,11',
-              'hitung_stok'         => 'required',
               'kategori_barang_id'  => 'required|exists:kategori_barangs,id',
               'satuan_id'           => 'required|exists:satuans,id',
-              'status_aktif'        => 'required',
               'foto'                => 'image|max:2048'
             ]);
+
+        if ($request->status_aktif == '') {
+            
+            $status_aktif = 0;
+
+        }else{
+             $status_aktif = $request->status_aktif;
+        }
+
+        if ($request->hitung_stok == '') {
+          
+          $hitung_stok = 0;
+
+        }else{
+          $hitung_stok  = $request->hitung_stok;
+        }
 
        
         $insert_barang = Barang::create([
@@ -115,8 +129,8 @@ class BarangController extends Controller
             'harga_jual'        => $request->harga_jual, 
             'satuan_id'         => $request->satuan_id, 
             'kategori_barang_id'=> $request->kategori_barang_id, 
-            'status_aktif'      => $request->status_aktif, 
-            'hitung_stok'       => $request->hitung_stok, 
+            'status_aktif'      => $status_aktif, 
+            'hitung_stok'       => $hitung_stok, 
             'id_warung'         => Auth::user()->id_warung]);
 
         // isi field foto_kamar jika ada FOTO KAMAR 1 yang diupload
@@ -202,13 +216,27 @@ class BarangController extends Controller
               'nama_barang'         => 'required|max:191',
               'harga_beli'          => 'required|numeric|digits_between:1,11',
               'harga_jual'          => 'required|numeric|digits_between:1,11',
-              'hitung_stok'         => 'required',
               'kategori_barang_id'  => 'required|exists:kategori_barangs,id',
               'satuan_id'           => 'required|exists:satuans,id',
-              'status_aktif'        => 'required',
               'foto'                => 'image|max:2048'
 
             ]);
+
+        if ($request->status_aktif == '') {
+            
+            $status_aktif = 0;
+
+        }else{
+             $status_aktif = $request->status_aktif;
+        }
+
+        if ($request->hitung_stok == '') {
+          
+          $hitung_stok = 0;
+
+        }else{
+          $hitung_stok  = $request->hitung_stok;
+        }
        
 
         //update
@@ -221,8 +249,8 @@ class BarangController extends Controller
             'harga_jual'        => $request->harga_jual, 
             'satuan_id'         => $request->satuan_id, 
             'kategori_barang_id'=> $request->kategori_barang_id, 
-            'status_aktif'      => $request->status_aktif, 
-            'hitung_stok'       => $request->hitung_stok, 
+            'status_aktif'      => $status_aktif, 
+            'hitung_stok'       => $hitung_stok, 
             'id_warung'         => Auth::user()->id_warung
         ]);
 
