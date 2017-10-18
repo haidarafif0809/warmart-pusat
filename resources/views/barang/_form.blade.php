@@ -28,7 +28,7 @@
 	<div class="col-md-4">
 		{!! Form::select('kategori_barang_id', 
 		[''=>'']+App\KategoriBarang::pluck('nama_kategori_barang','id')->all(),
-		null, ['class'=>'js-selectize-reguler', 'required','placeholder' => 'Pilih Kategori Produk','id'=>'kategori_barang', 'style'=> 'width: 215px;']) !!}
+		null, [  'required'=> 'true','placeholder' => 'Pilih Kategori Produk','id'=>'kategori_barang', 'style'=> 'width: 215px;']) !!}
 		{!! $errors->first('kategori_barang_id', '<p class="help-block" id="kategori_error">:message</p>') !!}
 	</div>
 </div>
@@ -39,7 +39,7 @@
 	<div class="col-md-4">
 		{!! Form::select('satuan_id', 
 		['1'=>'PCS']+App\Satuan::pluck('nama_satuan','id')->all(),
-		null, ['class'=>'js-selectize-reguler','required', 'id'=>'satuan', 'style'=> 'width: 215px;']) !!}
+		null, ['required', 'id'=>'satuan', 'style'=> 'width: 215px;']) !!}
 		{!! $errors->first('satuan_id', '<p class="help-block" id="satuan_error">:message</p>') !!}
 	</div>
 </div>
