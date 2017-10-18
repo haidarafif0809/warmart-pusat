@@ -4,7 +4,6 @@ namespace App\Observers;
 
 use App\KasMutasi;
 use App\TransaksiKas;
-use Auth;
 
 class KasMutasiObserver
 {
@@ -16,14 +15,14 @@ class KasMutasiObserver
                 'jenis_transaksi'   =>'kas_mutasi' , 
                 'jumlah_keluar'     => $KasMutasi->jumlah, 
                 'kas'               => $KasMutasi->dari_kas, 
-                'warung_id'         => Auth::user()->id_warung] );  
+                'warung_id'         => $KasMutasi->id_warung] );  
              //kas masuk 
              TransaksiKas::create([ 
                 'no_faktur'         => $KasMutasi->no_faktur, 
                 'jenis_transaksi'   =>'kas_mutasi', 
                 'jumlah_masuk'      => $KasMutasi->jumlah, 
                 'kas'               => $KasMutasi->ke_kas, 
-                'warung_id'         => Auth::user()->id_warung] ); 
+                'warung_id'         => $KasMutasi->id_warung] ); 
     }
 
 	public function updating(KasMutasi $KasMutasi){
