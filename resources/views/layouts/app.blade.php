@@ -1,6 +1,5 @@
 <!doctype html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8" />
     <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('img/apple-icon.png') }}" />
@@ -17,7 +16,6 @@
     <!--  Material Dashboard CSS    -->
     <link href="{{ asset('css/material-dashboard.css?v=1.2.0') }}" rel="stylesheet" />
     <!--  CSS for Demo Purpose, don't include it in your project     -->
-    <link href="{{ asset('css/demo.css') }}" rel="stylesheet" />
 
      <link href="{{ asset('css/selectize.bootstrap3.css') }}" rel="stylesheet">
 
@@ -313,7 +311,7 @@
 <!-- Sliders Plugin, full documentation here: https://refreshless.com/nouislider/ -->
 <script src="{{ asset('js/nouislider.min.js') }}"></script>
 <!--  Google Maps Plugin    -->
-<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
+<!-- <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script> -->
 <!--  Plugin for Select, full documentation here: http://silviomoreto.github.io/bootstrap-select -->
 <script src="{{ asset('js/jquery.select-bootstrap.js') }}"></script>
 <!--  DataTables.net Plugin, full documentation here: https://datatables.net/    -->
