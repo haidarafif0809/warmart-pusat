@@ -21,9 +21,8 @@
                                             <span class="input-group-addon">
                                                 <i class="material-icons">person</i>
                                             </span>
-                                            <div class="form-group label-floating {{ $errors->has('name') ? ' has-error' : '' }}">
-                                                <label class="control-label">Nama Warung</label>
-                                                    {!! Form::text('name', null, ['class'=>'form-control','required','autocomplete'=>'off']) !!}
+                                            <div class="form-group label-floating {{ $errors->has('name') ? ' has-error' : '' }}"> 
+                                                    {!! Form::text('name', null, ['class'=>'form-control','required','autocomplete'=>'off','placeholder'=>'Nama']) !!}
                                                     {!! $errors->first('name', '<p class="help-block">:message</p>') !!}
                                                 
                                             </div>
@@ -34,9 +33,8 @@
                                             <span class="input-group-addon">
                                                 <i class="material-icons">local_phone</i>
                                             </span>
-                                            <div class="form-group label-floating">
-                                                <label class="control-label">No Telpon </label>
-                                                    {!! Form::number('no_telp', null, ['class'=>'form-control','required','autocomplete'=>'off']) !!} 
+                                            <div class="form-group label-floating"> 
+                                                    {!! Form::number('no_telp', null, ['class'=>'form-control','required','autocomplete'=>'off','placeholder'=>'Nomor Telpon']) !!} 
 
                                                 
                                             </div>
@@ -46,9 +44,8 @@
                                             <span class="input-group-addon">
                                                 <i class="material-icons">home</i>
                                             </span>
-                                            <div class="form-group label-floating {{ $errors->has('alamat') ? ' has-error' : '' }}">
-                                                <label class="control-label">Alamat Warung</label>
-                                                    {!! Form::text('alamat', null, ['class'=>'form-control','required','autocomplete'=>'off']) !!}
+                                            <div class="form-group label-floating {{ $errors->has('alamat') ? ' has-error' : '' }}"> 
+                                                    {!! Form::text('alamat', null, ['class'=>'form-control','required','autocomplete'=>'off','placeholder'=>'Alamat']) !!}
                                                     {!! $errors->first('alamat', '<p class="help-block">:message</p>') !!}
 
                                                 
@@ -59,9 +56,8 @@
                                             <span class="input-group-addon">
                                                 <i class="material-icons">lock_outline</i>
                                             </span>
-                                            <div class="form-group label-floating {{ $errors->has('password') ? ' has-error' : '' }}">
-                                                <label class="control-label">Password</label>
-                                                <input type="password" class="form-control" name="password" >
+                                            <div class="form-group label-floating {{ $errors->has('password') ? ' has-error' : '' }}"> 
+                                                <input type="password" class="form-control" name="password" placeholder="Password">
 
                                                   @if ($errors->has('password'))
                                                         <span class="help-block">
@@ -74,9 +70,8 @@
                                             <span class="input-group-addon">
                                                 <i class="material-icons">lock_outline</i>
                                             </span>
-                                            <div class="form-group label-floating">
-                                                <label class="control-label">Konfirmasi Password</label>
-                                                <input type="password" id="password-confirm" class="form-control" name="password_confirmation" >
+                                            <div class="form-group label-floating"> 
+                                                <input type="password" id="password-confirm" class="form-control" name="password_confirmation" placeholder="Konfirmasi Password">
 
                                              
                                             </div>

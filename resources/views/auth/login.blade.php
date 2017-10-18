@@ -27,9 +27,8 @@
                                             <span class="input-group-addon">
                                                 <i class="material-icons">phone</i>
                                             </span>
-                                            <div class="form-group label-floating {{ $errors->has('no_telp') ? ' has-error' : '' }}">
-                                                <label class="control-label">Nomor Telpon</label>
-                                                <input type="number" value="{{ old('no_telp') }}" class="form-control" name="no_telp">
+                                            <div class="form-group label-floating {{ $errors->has('no_telp') ? ' has-error' : '' }}"> 
+                                                <input type="number" value="{{ old('no_telp') }}" class="form-control" name="no_telp" placeholder="Nomor Telpon" autocomplete="off">
 
                                                 
                                             </div>
@@ -38,9 +37,8 @@
                                             <span class="input-group-addon">
                                                 <i class="material-icons">lock_outline</i>
                                             </span>
-                                            <div class="form-group label-floating {{ $errors->has('password') ? ' has-error' : '' }}">
-                                                <label class="control-label">Password</label>
-                                                <input type="password" class="form-control" name="password" >
+                                            <div class="form-group label-floating {{ $errors->has('password') ? ' has-error' : '' }}"> 
+                                                <input type="password" class="form-control" name="password" placeholder="Password">
 
                                                   @if ($errors->has('password'))
                                                         <span class="help-block">

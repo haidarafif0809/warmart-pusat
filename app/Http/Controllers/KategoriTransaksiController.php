@@ -64,7 +64,7 @@ class KategoriTransaksiController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'nama_kategori_transaksi' => 'required|unique:kategori_transaksis,nama_kategori_transaksi',
+            'nama_kategori_transaksi' => 'required|unique:kategori_transaksis,nama_kategori_transaksi,NULL,id,id_warung,'.Auth::user()->id_warung.'',
         ]);
 
             if (Auth::user()->id_warung != "") {
@@ -132,7 +132,7 @@ class KategoriTransaksiController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'nama_kategori_transaksi'     => 'required|unique:kategori_transaksis,nama_kategori_transaksi,'.$id,
+            'nama_kategori_transaksi'     => 'required|unique:kategori_transaksis,nama_kategori_transaksi,'. $id.',id,id_warung,'.Auth::user()->id_warung,
         ]);
 
         $kategori_transaksi = KategoriTransaksi::find($id);

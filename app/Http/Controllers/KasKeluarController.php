@@ -37,6 +37,11 @@ class KasKeluarController extends Controller
                 $data_keluar = number_format($jumlah_keluar->jumlah,0,',','.');
 
                 return $data_keluar;
+            })
+            ->addColumn('waktu', function($waktu){
+                $waktu = $waktu->created_at;
+
+                return $waktu;
             })->make(true);
         }
         $html = $htmlBuilder
@@ -44,7 +49,8 @@ class KasKeluarController extends Controller
         ->addColumn(['data' => 'kas.nama_kas', 'name' => 'kas.nama_kas', 'title' => 'Kas'])
         ->addColumn(['data' => 'kategori.nama_kategori_transaksi', 'name' => 'kategori.nama_kategori_transaksi', 'title' => 'Kategori'])
         ->addColumn(['data' => 'jumlah_keluar', 'name' => 'jumlah_keluar', 'title' => 'Jumlah'])
-        ->addColumn(['data' => 'keterangan', 'name' => 'jumlah', 'title' => 'Keterangan'])
+        ->addColumn(['data' => 'keterangan', 'name' => 'keterangan', 'title' => 'Keterangan'])
+        ->addColumn(['data' => 'waktu', 'name' => 'waktu', 'title' => 'Waktu'])
         ->addColumn(['data' => 'action', 'name' => 'action', 'title' => 'Aksi', 'orderable' => false, 'searchable'=>false]);
 
         return view('kas_keluar.index')->with(compact('html'));

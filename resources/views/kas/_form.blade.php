@@ -14,135 +14,35 @@
 	</div>
 </div>
 
-@if (isset($kas->status_kas))
-	
-	<div class="form-group{{ $errors->has('status_kas') ? ' has-error' : '' }}">
-		{!! Form::label('status_kas', 'Status Kas', ['class'=>'col-md-2 control-label']) !!}
-		@if($kas->status_kas == 1)
-			<div class="col-md-1">
-				<div class="radio form-group">
-					<label>
-						<input type="radio" name="status_kas" id="status_kas_radioOn" value="1" checked="true">
-						Aktif
-					</label>
-				</div>
-			</div>
-			<div class="col-md-1">
-				<div class="radio form-group">
-					<label>
-						<input type="radio" name="status_kas" id="status_kas_radio" value="0">
-						Tidak Aktif
-					</label>
-				</div>
-			</div>
-		@else
-			<div class="col-md-1">
-				<div class="radio form-group">
-					<label>
-						<input type="radio" name="status_kas" id="status_kas_radioOn" value="1">
-						Aktif
-					</label>
-				</div>
-			</div>
-			<div class="col-md-1">
-				<div class="radio form-group">
-					<label>
-						<input type="radio" name="status_kas" id="status_kas_radio" value="0" checked="true">
-						Tidak Aktif
-					</label>
-				</div>
-			</div>
-		@endif
-	</div>
+<div class="form-group{{ $errors->has('status_kas') ? ' has-error' : '' }}">
+    {!! Form::label('status_kas', 'Tampil Ditransaksi', ['class'=>'col-md-2 control-label']) !!}
+        <div class="col-md-1">
+            <div class="togglebutton">
+                <label>
+                    @if (isset($kas) && $kas->status_kas == 1)
+                    <input type="checkbox" name="status_kas" id="status_kas" value="1" checked="">                        
+                    @else
+                    <input type="checkbox" name="status_kas" id="status_kas" value="1">
+                    @endif
+                </label>
+            </div>
+        </div>
+</div>
 
-@else
-
-	<div class="form-group{{ $errors->has('status_kas') ? ' has-error' : '' }}">
-		{!! Form::label('status_kas', 'Status Kas', ['class'=>'col-md-2 control-label']) !!}
-		<div class="col-md-1">
-			<div class="radio form-group">
-				<label>
-					<input type="radio" name="status_kas" id="status_kas_radioOn" value="1">
-					Aktif
-				</label>
-			</div>
-		</div>
-		<div class="col-md-1">
-			<div class="radio form-group">
-				<label>
-					<input type="radio" name="status_kas" id="status_kas_radio" value="0">
-					Tidak Aktif
-				</label>
-			</div>
-		</div>
-	</div>
-
-@endif
-
-@if (isset($kas->default_kas))
-	
-	<div class="form-group{{ $errors->has('default_kas') ? ' has-error' : '' }}">
-		{!! Form::label('default_kas', 'Default Kas', ['class'=>'col-md-2 control-label']) !!}
-		@if($kas->default_kas == 1)
-			<div class="col-md-1">
-				<div class="radio form-group">
-					<label>
-						<input type="radio" name="default_kas" id="default_kas_radioOn" value="1" checked="true">
-						Iya
-					</label>
-				</div>
-			</div>
-			<div class="col-md-1">
-				<div class="radio form-group">
-					<label>
-						<input type="radio" name="default_kas" id="default_kas_radio" value="0">
-						Tidak 
-					</label>
-				</div>
-			</div>
-		@else
-			<div class="col-md-1">
-				<div class="radio form-group">
-					<label>
-						<input type="radio" name="default_kas" id="default_kas_radioOn" value="1">
-						Iya
-					</label>
-				</div>
-			</div>
-			<div class="col-md-1">
-				<div class="radio form-group">
-					<label>
-						<input type="radio" name="default_kas" id="default_kas_radio" value="0" checked="true">
-						Tidak 
-					</label>
-				</div>
-			</div>
-		@endif
-	</div>
-
-@else
-
-	<div class="form-group{{ $errors->has('default_kas') ? ' has-error' : '' }}">
-		{!! Form::label('default_kas', 'Default Kas', ['class'=>'col-md-2 control-label']) !!}
-		<div class="col-md-1">
-			<div class="radio form-group">
-				<label>
-					<input type="radio" name="default_kas" id="default_kas_radioOn" value="1">
-					Iya
-				</label>
-			</div>
-		</div>
-		<div class="col-md-1">
-			<div class="radio form-group">
-				<label>
-					<input type="radio" name="default_kas" id="default_kas_radio" value="0">
-					Tidak 
-				</label>
-			</div>
-		</div>	
-	</div>
-	
-@endif
+<div class="form-group{{ $errors->has('default_kas') ? ' has-error' : '' }}">
+    {!! Form::label('default_kas', 'Kas Utama', ['class'=>'col-md-2 control-label']) !!}
+        <div class="col-md-1">
+            <div class="togglebutton">
+                <label>
+                    @if (isset($kas) && $kas->default_kas == 1)
+                    <input type="checkbox" name="default_kas" id="default_kas" value="1" checked="" data_toogle = "0">
+                    @else
+                    <input type="checkbox" name="default_kas" id="default_kas" value="1" data_toogle = "1">
+                    @endif
+                </label>
+            </div>
+        </div>
+</div>
 
 
 <div class="form-group">
