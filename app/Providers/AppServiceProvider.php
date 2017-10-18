@@ -11,11 +11,13 @@ use App\Observers\UserWarungObserver;
 use App\Observers\KasObserver;
 use App\Observers\KasKeluarObserver;
 use App\Observers\KategoriTransaksiObserver;
+use App\Observers\KasMutasiObserver;
 use App\Warung;
 use App\Kas;
 use App\KasKeluar;
 use App\UserWarung;
 use App\KategoriTransaksi;
+use App\KasMutasi;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -37,6 +39,7 @@ class AppServiceProvider extends ServiceProvider
         Kas::observe(KasObserver::class);
         KasKeluar::observe(KasKeluarObserver::class);
         KategoriTransaksi::observe(KategoriTransaksiObserver::class);
+        KasMutasi::observe(KasMutasiObserver::class);
     }
 
     /**

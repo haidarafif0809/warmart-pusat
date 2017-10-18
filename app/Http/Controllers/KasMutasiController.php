@@ -111,21 +111,6 @@ class KasMutasiController extends Controller
                 'keterangan'    => $request->keterangan, 
                 'id_warung'     => Auth::user()->id_warung]); 
      
-             //kas keluar  
-             TransaksiKas::create([ 
-                'no_faktur'         => $no_faktur, 
-                'jenis_transaksi'   =>'kas_mutasi' , 
-                'jumlah_keluar'     => $request->jumlah, 
-                'kas'               => $request->dari_kas, 
-                'warung_id'         => Auth::user()->id_warung] );  
-             //kas masuk 
-             TransaksiKas::create([ 
-                'no_faktur'         => $no_faktur, 
-                'jenis_transaksi'   =>'kas_mutasi', 
-                'jumlah_masuk'      => $request->jumlah, 
-                'kas'               => $request->ke_kas, 
-                'warung_id'         => Auth::user()->id_warung] ); 
-     
             Session::flash("flash_notification", [ 
                 "level"=>"success", 
                 "message"=>" <b>BERHASIL:</b> Memutasikan Kas Sejumlah <b>$request->jumlah</b>" 
@@ -195,10 +180,7 @@ class KasMutasiController extends Controller
                 ]); 
      
              $kas = KasMutasi::find($id)->update(['dari_kas' => $request->dari_kas,'ke_kas' => $request->ke_kas,'jumlah' => $request->jumlah,'keterangan' => $request->keterangan,'id_warung'     => Auth::user()->id_warung]); 
-     
-            TransaksiKas::where('no_faktur' , $kas_mutasi->no_faktur)->where('jumlah_masuk','>',0)->update(['jumlah_masuk' => $request->jumlah,'kas' => $request->ke_kas] ); 
-            TransaksiKas::where('no_faktur' , $kas_mutasi->no_faktur)->where('jumlah_keluar','>',0)->update(['jumlah_keluar' => $request->jumlah,'kas' => $request->dari_kas] ); 
-         
+              
      
              Session::flash("flash_notification", [ 
                 "level"=>"success", 
@@ -241,9 +223,7 @@ class KasMutasiController extends Controller
                                 ]); 
                             return redirect()->route('kas_mutasi.index'); 
                     }else{
-
-                            TransaksiKas::where('no_faktur',$kas_mutasi->no_faktur)->delete(); 
-             
+            
                             // jika gagal hapus 
                             if (!KasMutasi::destroy($id)) { 
                                 // redirect back 
