@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use Session;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
+use SEOMeta;
+use OpenGraph;
+use Twitter;
+
 
 class HomeController extends Controller
 {
@@ -26,6 +30,16 @@ class HomeController extends Controller
      */
     public function index()
     {
+        SEOMeta::setTitle('War-Mart.id');
+        SEOMeta::setDescription('Warmart marketplace warung pertama di Indonesia');
+        SEOMeta::setCanonical('https://war-mart.id');
+        SEOMeta::addKeyword(['warmart', 'warung', 'marketplace','toko online']);
+
+        OpenGraph::setDescription('Warmart marketplace warung pertama di Indonesia');
+        OpenGraph::setTitle('War-Mart.id');
+        OpenGraph::setUrl('https://war-mart.id');
+        OpenGraph::addProperty('type', 'articles');
+
         return view('layouts.landing_page');
     }
 

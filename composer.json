@@ -6,6 +6,8 @@
     "type": "project",
     "require": {
         "php": ">=7.0.0",
+        "artesaos/seotools": "^0.10.0",
+        "doctrine/dbal": "2.5",
         "fideloper/proxy": "~3.3",
         "guzzlehttp/guzzle": "^6.3",
         "laravel/framework": "5.5.*",
@@ -13,12 +15,11 @@
         "laravelcollective/html": "^5.2.0",
         "santigarcor/laratrust": "3.0.*",
         "spatie/laravel-activitylog": "^2.1",
+        "stevebauman/location": "2.0.*",
         "symfony/psr-http-message-bridge": "^1.0",
         "yajra/laravel-auditable": "^1.1",
         "yajra/laravel-datatables-oracle": "~6.0",
-        "zendframework/zend-diactoros": "^1.6",
-        "stevebauman/location": "2.0.*",
-        "doctrine/dbal": "2.5"
+        "zendframework/zend-diactoros": "^1.6"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.1",
