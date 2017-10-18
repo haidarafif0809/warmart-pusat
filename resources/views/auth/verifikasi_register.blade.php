@@ -18,9 +18,8 @@
                                             <span class="input-group-addon">
                                                 <i class="material-icons">phone</i>
                                             </span>
-                                            <div class="form-group label-floating {{ $errors->has('no_telp') ? ' has-error' : '' }}">
-                                                <label class="control-label">Nomor Telpon</label>
-                                                <input type="text" value="{{ $nomor_hp }}" class="form-control" name="no_telp" readonly="">
+                                            <div class="form-group label-floating {{ $errors->has('no_telp') ? ' has-error' : '' }}"> 
+                                                <input type="text" value="{{ $nomor_hp }}" class="form-control" name="no_telp" readonly="" placeholder="Nomor Telpon">
 
                                                 
                                             </div>
@@ -29,9 +28,8 @@
                                             <span class="input-group-addon">
                                                 <i class="material-icons">lock_outline</i>
                                             </span>
-                                            <div class="form-group label-floating {{ $errors->has('kode_verifikasi') ? ' has-error' : '' }}">
-                                                <label class="control-label">Kode Verifikasi</label>
-                                                <input type="text" class="form-control" name="kode_verifikasi" maxlength="4" required="" autocomplete="off">
+                                            <div class="form-group label-floating {{ $errors->has('kode_verifikasi') ? ' has-error' : '' }}"> 
+                                                <input type="text" class="form-control" name="kode_verifikasi" maxlength="4" required="" autocomplete="off" placeholder="Kode Verifikasi">
 
                                                   @if ($errors->has('kode_verifikasi'))
                                                         <span class="help-block">
