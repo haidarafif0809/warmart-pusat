@@ -76,7 +76,7 @@ class BarangTest extends TestCase
     public function testHTTPtambahBarang()
     {
 
-        $user = User::find(4);
+        $user = User::find(5);
 
         $response = $this->actingAs($user)->json('POST', route('barang.store'),[
             'kode_barcode'          => '124958781489',
@@ -115,7 +115,7 @@ class BarangTest extends TestCase
      public function testHTTPeditBarang()
      {
 
-        $user = User::find(4);
+        $user = User::find(5);
 
         $response = $this->actingAs($user)->json('POST', route('barang.update',1),[
             'kode_barcode'          => '23',
@@ -152,7 +152,7 @@ class BarangTest extends TestCase
 
       public function testHTTPhapusBarang(){
 
-        $user = User::find(4);
+        $user = User::find(5);
         $barang_hapus = Barang::find(1);// user yang dihapus
 
         $response = $this->actingAs($user)->json('POST', route('barang.destroy',1) , ['_method' => 'DELETE']);

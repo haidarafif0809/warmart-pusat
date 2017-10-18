@@ -1,6 +1,13 @@
 @extends('layouts.app_login')
 
 @section('content')
+       @if ($errors->has('no_telp'))
+                            <div class="alert alert-danger alert-with-icon">
+        <i class="material-icons" data-notify="icon" >error_outline</i>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">x</button>
+        <span data-notify="message"> <b>Failed:</b> Mohon Maaf Nomor Telfon Yang Anda Input Sudah Terdaftar</span>
+        </div>
+     @endif
     {!! Form::open(['url' => url('/register'),'method' => 'post', 'class'=>'form-horizontal']) !!}
                              {{ csrf_field() }}
                                 <div class="card card-login ">
@@ -27,10 +34,9 @@
                                             <span class="input-group-addon">
                                                 <i class="material-icons">local_phone</i>
                                             </span>
-                                            <div class="form-group label-floating {{ $errors->has('no_telp') ? ' has-error' : '' }}">
+                                            <div class="form-group label-floating">
                                                 <label class="control-label">No Telpon </label>
-                                                    {!! Form::number('no_telp', null, ['class'=>'form-control','required','autocomplete'=>'off']) !!}
-                                                    {!! $errors->first('no_telp', '<p class="help-block">:message</p>') !!}
+                                                    {!! Form::number('no_telp', null, ['class'=>'form-control','required','autocomplete'=>'off']) !!} 
 
                                                 
                                             </div>
@@ -80,6 +86,9 @@
                                     <div class="footer text-center">
                                         <button type="submit" class="btn btn-rose btn-simple btn-wd btn-lg">Registrasi Warung</button>
                                     </div>
+                                    <center>     
+                                       <p>Sudah Daftar? <a href="{{ url('/login') }}">Masuk Sekarang</a> </p>
+                                    </center>
                                 </div>
     {!! Form::close() !!}
 @endsection

@@ -18,7 +18,7 @@ class BarangTest extends DuskTestCase
     public function testTambahProduk(){
 
         $this->browse(function ($first, $second) {
-            $first->loginAs(User::find(4))
+            $first->loginAs(User::find(5))
                   ->visit('/barang') 
                   ->clickLink('Tambah Produk')
                   ->type('kode_barcode','123789')
@@ -30,8 +30,8 @@ class BarangTest extends DuskTestCase
                     $first->assertSee('SEMBAKOK');
                     $first->script("document.getElementById('satuan').selectize.setValue('8');");  
                     $first->assertSee('BUNGKUS');
-                    $first->script("document.getElementById('HitungStokYa').checked = true;"); 
-                    $first->script("document.getElementById('StatusYa').checked = true;"); 
+                    $first->script("document.getElementById('hitung_stok').checked = true;"); 
+                    $first->script("document.getElementById('status_aktif').checked = true;"); 
                     $first->attach('foto', __DIR__.'/screenshots/testFoto.png');
                     $first->element('#btnSimpan')->submit();
                     $first->assertSeeLink('Tambah Produk'); 
@@ -42,7 +42,7 @@ class BarangTest extends DuskTestCase
     public function testEditProduk(){
 
           $this->browse(function ($first, $second) {
-            $first->loginAs(User::find(4))
+            $first->loginAs(User::find(5))
                   ->visit('/barang')  
                   ->whenAvailable('.js-confirm', function ($table) { 
                               ;
@@ -61,8 +61,8 @@ class BarangTest extends DuskTestCase
                     $first->assertSee('UMUM');
                     $first->script("document.getElementById('satuan').selectize.setValue('1');");  
                     $first->assertSee('PCS');
-                    $first->script("document.getElementById('HitungStokYa').checked = true;"); 
-                    $first->script("document.getElementById('StatusYa').checked = true;"); 
+                    $first->script("document.getElementById('hitung_stok').checked = true;"); 
+                    $first->script("document.getElementById('status_aktif').checked = true;"); 
                     $first->attach('foto', __DIR__.'/screenshots/testFoto.png');                    
                     $first->element('#btnSimpan')->submit();                    
                     $first->assertSeeLink('Tambah Produk'); 
@@ -75,7 +75,7 @@ class BarangTest extends DuskTestCase
    public function testBarcodeTidakBolehSama(){// BARCODE PER WARUNG TIDAK BOLEH SAMA 
 
         $this->browse(function ($first, $second) {
-            $first->loginAs(User::find(4))
+            $first->loginAs(User::find(5))
                   ->visit('/barang') 
                   ->clickLink('Tambah Produk')
                   ->type('kode_barcode','5700011001')// kode barcode ini sudah ada di SEEDER
@@ -87,8 +87,8 @@ class BarangTest extends DuskTestCase
                     $first->assertSee('SEMBAKOK');
                     $first->script("document.getElementById('satuan').selectize.setValue('8');");  
                     $first->assertSee('BUNGKUS');
-                    $first->script("document.getElementById('HitungStokYa').checked = true;"); 
-                    $first->script("document.getElementById('StatusYa').checked = true;"); 
+                    $first->script("document.getElementById('hitung_stok').checked = true;"); 
+                    $first->script("document.getElementById('status_aktif').checked = true;"); 
                     $first->attach('foto', __DIR__.'/screenshots/testFoto.png');
                     $first->element('#btnSimpan')->submit();
                     $first->script('document.getElementById("kode_barcode").focus();');
@@ -100,7 +100,7 @@ class BarangTest extends DuskTestCase
    public function testKodeBarangTidakBolehSama(){// KODE BARANG PER WARUNG TIDAK BOLEH SAMA 
 
         $this->browse(function ($first, $second) {
-            $first->loginAs(User::find(4))
+            $first->loginAs(User::find(5))
                   ->visit('/barang') 
                   ->clickLink('Tambah Produk')
                   ->type('kode_barcode','5700141117')
@@ -112,8 +112,8 @@ class BarangTest extends DuskTestCase
                     $first->assertSee('SEMBAKOK');
                     $first->script("document.getElementById('satuan').selectize.setValue('8');");  
                     $first->assertSee('BUNGKUS');
-                    $first->script("document.getElementById('HitungStokYa').checked = true;"); 
-                    $first->script("document.getElementById('StatusYa').checked = true;"); 
+                    $first->script("document.getElementById('hitung_stok').checked = true;"); 
+                    $first->script("document.getElementById('status_aktif').checked = true;"); 
                     $first->attach('foto', __DIR__.'/screenshots/testFoto.png');
                     $first->element('#btnSimpan')->submit();
                     $first->script('document.getElementById("kode_barang").focus();');

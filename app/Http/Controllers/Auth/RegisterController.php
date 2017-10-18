@@ -308,8 +308,8 @@ class RegisterController extends Controller
         "message" => 'Silahkan Periksa Hp Anda Kami Mengirim Kode Verfikasi Ke : '.$nomor_tujuan.''
         ]);
 
-        return redirect('/kirim-kode-verifikasi?nomor='.$nomor_tujuan.'&status=1');
         } 
+        return redirect('/kirim-kode-verifikasi?nomor='.$nomor_tujuan.'&status=1');
     }
 
     //USER WARUNG
