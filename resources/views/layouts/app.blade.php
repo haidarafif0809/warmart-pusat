@@ -121,27 +121,36 @@
                     </li>
 
                     <li>
-                        <ul class="nav">
-                            <li>
-                                <a href="{{ route('kategori_transaksi.index') }}">
-                                    <i class="material-icons">local_offer</i>
-                                    <p>Kategori Transaksi</p>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('kas.index') }}">
-                                    <i class="material-icons">payment</i>
-                                    <p>Kas</p>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('barang.index') }}">
-                                    <i class="material-icons">dns</i>
-                                    <p>Produk</p>
-                                </a>
-                            </li>
-                        </ul>
+                        <a data-toggle="collapse" href="#setting">
+                            <i class="material-icons">settings</i>
+                            <p> Setting
+                                <b class="caret"></b>
+                            </p>
+                        </a>
+                        <div class="collapse" id="setting">
+                            <ul class="nav">
+                                  <li>
+                                    <a href="{{ route('kategori_transaksi.index') }}">
+                                        <span class="sidebar-mini">KT</span>
+                                        <span class="sidebar-normal">Kategori Transaksi</span>
+                                    </a>
+                                </li> 
+                                <li>
+                                    <a href="{{ route('kas.index') }}">
+                                        <span class="sidebar-mini">K</span>
+                                        <span class="sidebar-normal">Kas</span>
+                                    </a>
+                                </li> 
+                                <li>
+                                    <a href="{{ route('barang.index') }}">
+                                        <span class="sidebar-mini">P</span>
+                                        <span class="sidebar-normal">Produk</span>
+                                    </a>
+                                </li>  
+                            </ul>
+                        </div>
                     </li>
+ 
                     @endif
                     <!--END MASTER DATA WARUNG -->
 
