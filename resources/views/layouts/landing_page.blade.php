@@ -191,7 +191,7 @@ height:100%;
 
                                         <div class="back back-background" style="background-image: url('assets/img/flat/pelanggan_2.jpg');">
                                             <div class="card-content">
-                                                <p >
+                                                <p class="card-description">
                                                      <h4 style="color:white;font-weight:bold;">
                                                 <ul align="left">
                                                         <li>Berkontribusi menumbuhkan Usaha muslim (jihad ekonomi) </li>
@@ -224,7 +224,7 @@ height:100%;
 
                                         <div class="back back-background" style="background-image: url('assets/img/flat/warung_2.jpg');">
                                             <div class="card-content">
-                                                <p >
+                                                <p class="card-description">
                                                      <h4 style="color:white;font-weight:bold;">
                                                     <ul align="left">
                                                             <li>Terhubung dengan Pelanggan WarMart se Indonesia </li> 
@@ -259,7 +259,7 @@ height:100%;
 
                                         <div class="back back-background" style="background-image: url('assets/img/flat/komunitas_2.jpg');">
                                             <div class="card-content">
-                                                <p >
+                                                <p class="card-description">
                                                    <h4 style="color:white;font-weight:bold;">
                                                     <ul align="left">       
                                                         <li>Terhubung Dengan Pergerakan Ekonomi Umat</li>
