@@ -97,18 +97,48 @@ class KasKeluarController extends Controller
         ]);
 
         if (Auth::user()->id_warung != "") {
-            $no_faktur = KasKeluar::no_faktur(); 
-            $kas = KasKeluar::create(['no_faktur' => $no_faktur,'kas' => $request->kas,'kategori' => $request->kategori,'jumlah' => $request->jumlah,'keterangan' => $request->keterangan, 'warung_id' => Auth::user()->id_warung]);
 
-            $pesan_alert = 
-            '<div class="container-fluid">
-                <div class="alert-icon">
-                    <i class="material-icons">check</i>
-                </div>
-                <b>Sukses : Berhasil Menambah Transaksi Kas Keluar Sebesar "'.$request->jumlah.'"</b>
-             </div>';
+            $total_kas = TransaksiKas::total_kas($request);
+            $sisa_kas = $total_kas - $request->jumlah;
 
-            return redirect()->route('kas_keluar.index');
+            if ($sisa_kas < 0) {
+
+                $pesan_alert = 
+                '<div class="container-fluid">
+                    <div class="alert-icon">
+                        <i class="material-icons">warning</i>
+                    </div>
+                    <b>Gagal : Kas Tidak Mencukupi. Total Kas = "'.$total_kas.'"</b>
+                 </div>';
+
+                 Session::flash("flash_notification", [
+                    "level"=>"warning",
+                    "message"=> $pesan_alert
+                 ]);
+
+                return redirect()->back();              
+            }
+            else{
+
+                $no_faktur = KasKeluar::no_faktur(); 
+                $kas = KasKeluar::create(['no_faktur' => $no_faktur,'kas' => $request->kas,'kategori' => $request->kategori,'jumlah' => $request->jumlah,'keterangan' => $request->keterangan, 'warung_id' => Auth::user()->id_warung]);
+
+                $pesan_alert = 
+                '<div class="container-fluid">
+                    <div class="alert-icon">
+                        <i class="material-icons">check</i>
+                    </div>
+                    <b>Sukses : Berhasil Menambah Transaksi Kas Keluar Sebesar "'.$request->jumlah.'"</b>
+                 </div>';
+
+                 Session::flash("flash_notification", [
+                    "level"=>"success",
+                    "message"=> $pesan_alert
+                 ]);
+
+                return redirect()->route('kas_keluar.index');
+            }
+            
         }
         else{
             return response()->view('error.403');            
@@ -245,12 +275,6 @@ class KasKeluarController extends Controller
         }else{
             return response()->view('error.403');
         }
-    }
-
-    //HITUNG TOTAL KAS
-    public function hitung_total_kas(Request $request){
-        $total_kas = TransaksiKas::total_kas($request);
-        return $total_kas;
     }
     
 }

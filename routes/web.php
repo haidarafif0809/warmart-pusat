@@ -98,6 +98,62 @@ Route::middleware('optimizeImages','auth')->group(function () {
 	Route::resource('kas_keluar', 'KasKeluarController');	
 	Route::resource('kas_mutasi', 'KasMutasiController');
 	Route::resource('item-masuk', 'ItemMasukController');
+	Route::resource('item-keluar', 'ItemKeluarController');
+
+//ITEM KELUAR
+	Route::post('/item-keluar/proses-tambah-tbs-item-keluar',[
+	'middleware' => ['auth'],
+	'as' => 'item-keluar.proses_tambah_tbs_item_keluar',
+	'uses' => 'ItemKeluarController@proses_tambah_tbs_item_keluar'
+	]);	
+
+	Route::post('/item-keluar/proses-hapus-semua-tbs-item-keluar/',[
+	'middleware' => ['auth'],
+	'as' => 'item-keluar.proses_hapus_semua_tbs_item_keluar',
+	'uses' => 'ItemKeluarController@proses_hapus_semua_tbs_item_keluar'
+	]);
+
+	Route::delete('/item-keluar/proses-hapus-tbs-item-keluar/{id}',[
+	'middleware' => ['auth'],
+	'as' => 'item-keluar.proses_hapus_tbs_item_keluar',
+	'uses' => 'ItemKeluarController@proses_hapus_tbs_item_keluar'
+	]);
+
+	Route::post('/item-masuk/proses-hapus-semua-edit-tbs-item-keluar/{id}',[
+	'middleware' => ['auth'],
+	'as' => 'item-keluar.proses_hapus_semua_edit_tbs_item_keluar',
+	'uses' => 'ItemKeluarController@proses_hapus_semua_edit_tbs_item_keluar'
+	]);
+
+	Route::post('/item-keluar/proses-edit-item-keluar/{id}',[
+	'middleware' => ['auth'],
+	'as' => 'item-keluar.proses_edit_item_keluar',
+	'uses' => 'ItemKeluarController@proses_edit_item_keluar'
+	]);
+
+	Route::get('/item-keluar/proses-form-edit/{id}',[
+	'middleware' => ['auth'],
+	'as' => 'item-keluar.proses_form_edit',
+	'uses' => 'ItemKeluarController@proses_form_edit'
+	]);
+	Route::post('/item-keluar/proses-tambah-edit-tbs-item-keluar/{id}',[
+	'middleware' => ['auth'],
+	'as' => 'item-keluar.proses_tambah_edit_tbs_item_keluar',
+	'uses' => 'ItemKeluarController@proses_tambah_edit_tbs_item_keluar'
+	]);
+	Route::delete('/item-keluar/proses-hapus-edit-tbs-item-keluar/{id}',[
+	'middleware' => ['auth'],
+	'as' => 'item-keluar.proses_hapus_edit_tbs_item_keluar',
+	'uses' => 'ItemKeluarController@proses_hapus_edit_tbs_item_keluar'
+	]);
+
+	Route::post('/item-keluar/edit-jumlah-tbs-item-keluar',[
+	'middleware' => ['auth'],
+	'as' => 'item-keluar.edit_jumlah_tbs_item_keluar',
+	'uses' => 'ItemKeluarController@proses_edit_jumlah_tbs_item_keluar'
+	]);
+
+//ITEM KELUAR
 
 	Route::post('/cek_total_kas',[ 		
 	'middleware' => ['auth'],
