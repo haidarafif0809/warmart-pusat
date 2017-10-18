@@ -26,6 +26,10 @@ Route::get('/dashboard',[
 
 Auth::routes();
 
+//sarat & ketentuan
+Route::get('/sarat-ketentuan','Auth\RegisterController@sarat_ketentuan'); 
+
+
 //USER WARUNG 
 Route::get('/register-warung','Auth\RegisterController@register_warung'); 
 
