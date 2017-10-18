@@ -37,7 +37,7 @@ class KasMutasiController extends Controller
                     # code... 
                  $kas_mutasi = KasMutasi::with(['dari_kas','ke_kas'])->where('id_warung',Auth::user()->id_warung)->get(); 
                  return Datatables::of($kas_mutasi) 
-                 ->addColumn('action', function($master_kas_mutasi){ 
+                    ->addColumn('action', function($master_kas_mutasi){ 
                             return view('datatable._action', [ 
                                 'model'     => $master_kas_mutasi, 
                                 'form_url'  => route('kas_mutasi.destroy', $master_kas_mutasi->id), 
@@ -45,7 +45,15 @@ class KasMutasiController extends Controller
                                 'confirm_message'   => 'Yakin Mau Menghapus Kas Mutasi ' . $master_kas_mutasi->no_faktur . '?' 
                             
                                 ]);  
-                        })->make(true); 
+                        })
+
+                    ->addColumn('jumlah', function($kas_mutasi){
+                    $jumlah_keluar = number_format($kas_mutasi->jumlah,0,',','.');
+
+                    return $jumlah_keluar;
+
+                    })->make(true); 
+
                 } 
                 $html = $htmlBuilder 
                 ->addColumn(['data' => 'no_faktur', 'name' => 'no_faktur', 'title' => 'No Faktur']) 
