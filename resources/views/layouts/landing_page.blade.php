@@ -191,8 +191,9 @@ height:100%;
 
                                         <div class="back back-background" style="background-image: url('assets/img/flat/pelanggan_2.jpg');">
                                             <div class="card-content">
+                                                <h3 class="category text-info"></h3>
                                                 <p class="card-description">
-                                                     <h4 style="color:white;font-weight:bold;">
+                                                     <h6 style="color:white;font-weight:bold;">
                                                 <ul align="left">
                                                         <li>Berkontribusi menumbuhkan Usaha muslim (jihad ekonomi) </li>
                                                         <li>Belanja bernilai ibadah </li>
@@ -201,7 +202,7 @@ height:100%;
                                                         <li>Barang lengkap sesuai kebutuhan </li>
                                                         <li>Potensi Income dengan mendaftarkan saudara Muslim </li>
                                                 </ul>
-                                                 </h4>
+                                                 </h6>
                                                 </p>
 
                                             </div>
@@ -224,8 +225,9 @@ height:100%;
 
                                         <div class="back back-background" style="background-image: url('assets/img/flat/warung_2.jpg');">
                                             <div class="card-content">
+                                                 <h3 class="category text-info"></h3>
                                                 <p class="card-description">
-                                                     <h4 style="color:white;font-weight:bold;">
+                                                     <h6 style="color:white;font-weight:bold;">
                                                     <ul align="left">
                                                             <li>Terhubung dengan Pelanggan WarMart se Indonesia </li> 
                                                             <li>Mendapat support teknologi manajemen warung </li>
@@ -234,7 +236,7 @@ height:100%;
                                                             <li>Mudah terakses oleh supplier </li>
                                                             <li>Terhubung dengan investor muslim </li>
                                                         </ul>
-                                                    </h4>
+                                                    </h6>
                                                 </p>
 
                                             </div>
@@ -259,8 +261,9 @@ height:100%;
 
                                         <div class="back back-background" style="background-image: url('assets/img/flat/komunitas_2.jpg');">
                                             <div class="card-content">
+                                                <h3 class="category text-info"></h3>
                                                 <p class="card-description">
-                                                   <h4 style="color:white;font-weight:bold;">
+                                                   <h6 style="color:white;font-weight:bold;">
                                                     <ul align="left">       
                                                         <li>Terhubung Dengan Pergerakan Ekonomi Umat</li>
                                                         <li>Bersinergi dengan beragam komunitas</li>
@@ -268,7 +271,7 @@ height:100%;
                                                         <li>Mendapatkan potensi income dari belanja komunitas</li>
                                                         <li>Menumbuhkan kesadaran  bela ekonomi Islam</li>
                                                     </ul>
-                                                </h4>
+                                                </h6>
                                                 </p>
 
                                             </div>
@@ -291,8 +294,9 @@ height:100%;
 
                                         <div class="back back-background" style="background-image: url('assets/img/flat/ajak_ajak_2.jpg');">
                                             <div class="card-content">
+                                                <h3 class="category text-info"></h3>
                                                 <p class="card-description">
-                                                     <h4 style="color:white;font-weight:bold;">
+                                                     <h6 style="color:white;font-weight:bold;">
                                                      <ul align="left">
                                                         <li>Bebas biaya pendaftaran alias GRATIS!!! </li> 
                                                         <li>Punya penghasilan tambahan </li> 
@@ -300,7 +304,7 @@ height:100%;
                                                         <li>Bergabung dengan komunitas positif </li> 
                                                         <li>Share bagi hasil dari transaksi teman </li>
                                                      </ul>
-                                                 </h4>
+                                                 </h6>
                                                 </p>
 
                                             </div>
