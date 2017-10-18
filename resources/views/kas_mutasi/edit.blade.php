@@ -17,7 +17,7 @@
                       <div class="card-content"> 
                          <h4 class="card-title"> Kas Mutasi </h4> 
                        
-            {!! Form::model($kas_mutasi, ['url' => route('kas_mutasi.update', $kas_mutasi->id), 'method' => 'put', 'files'=>'true','class'=>'form-horizontal']) !!} 
+            {!! Form::model($kas_mutasi, ['url' => route('kas_mutasi.update', $kas_mutasi->id), 'method' => 'put', 'files'=>'true','class'=>'form-horizontal', 'id'=> 'form_kas_mutasi']) !!} 
               @include('kas_mutasi._form') 
             {!! Form::close() !!} 
           </div> 
@@ -78,7 +78,7 @@
  
       $(document).on('click','#submit_kas', function(){ 
  
-        var jumlah = $(this).val(); 
+        var jumlah = $("#jumlah").val(); 
         var sisa_kas = $('#sisa_kas').val();         
         var jumlah_lama = "{{ $kas_mutasi->jumlah }}"; 
  
@@ -89,9 +89,19 @@
         var hitung_kas = (parseInt(sisa_kas,10) + parseInt(jumlah_lama,10)) - parseInt(jumlah,10); 
  
         if (hitung_kas < 0) { 
-          alert("Total Kas Tidak Mencukupi!"); 
-          $(this).val(''); 
-        } 
+
+            $("#form_kas_mutasi").submit(function(){
+            return false;
+            });
+            alert("Total Kas Tidak Mencukupi!"); 
+            $("#jumlah").val('');
+
+          }else{
+
+            document.getElementById("form_kas_mutasi").submit();
+
+          }
+
              
       }) 
  
