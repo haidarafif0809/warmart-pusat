@@ -16,6 +16,7 @@
         "renatomarinho/laravel-page-speed": "^1.8",
         "santigarcor/laratrust": "3.0.*",
         "spatie/laravel-activitylog": "^2.1",
+        "spatie/laravel-image-optimizer": "^1.1",
         "stevebauman/location": "2.0.*",
         "symfony/psr-http-message-bridge": "^1.0",
         "yajra/laravel-auditable": "^1.1",

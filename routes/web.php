@@ -11,7 +11,7 @@
 |
 */
 
-Route::get('/','HomeController@index');
+Route::get('/','HomeController@index')->middleware('optimizeImages');
 Route::get('/sms','HomeController@sms');
 
 Route::get('/dashboard',[
@@ -79,7 +79,7 @@ Route::put('/proses-ubah-profil/{id}',[
 	'uses' => 'UbahProfilController@proses_ubah_profil'
 	]);
 
-Route::group(['middleware' =>'auth'], function(){
+Route::middleware('optimizeImages','auth')->group(function () {
 
 	Route::resource('user', 'UserController');
 	Route::resource('bank', 'BankController');

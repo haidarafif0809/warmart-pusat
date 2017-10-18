@@ -71,6 +71,8 @@ class Kernel extends HttpKernel
         'user-should-verified' => \App\Http\Middleware\UserShouldVerified::class,
         'user-must-admin' => \App\Http\Middleware\UserMustAdmin::class,
         'user-must-warung' => \App\Http\Middleware\UserMustWarung::class,
+        'optimizeImages' => \Spatie\LaravelImageOptimizer\Middlewares\OptimizeImages::class,
+
 
     ];
 }
