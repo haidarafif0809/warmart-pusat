@@ -24,3 +24,14 @@
 	</div>
 @endsection
 
+@section('scripts')
+
+
+<script type="text/javascript">
+	
+$('select').selectize({
+ sortField: 'text'
+});
+</script>
+@endsection
+

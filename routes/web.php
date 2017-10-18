@@ -11,11 +11,11 @@
 |
 */
 
-Route::get('/','HomeController@index');
+Route::get('/','HomeController@index')->middleware('optimizeImages');
 Route::get('/sms','HomeController@sms');
 
 Route::get('/dashboard',[
-	'middleware' => ['auth'],
+	'middleware' => ['auth','optimizeImages'],
 	'as'=>'home.dashboard',
 	'uses' => 'HomeController@dashboard'
 ]);
@@ -23,23 +23,26 @@ Route::get('/dashboard',[
 
 
 
+Route::middleware('optimizeImages')->group(function () {
 
 Auth::routes();
 
-//USER WARUNG 
-Route::get('/register-warung','Auth\RegisterController@register_warung'); 
+});
 
-Route::get('/register-customer','Auth\RegisterController@register_customer');
+//USER WARUNG 
+Route::get('/register-warung','Auth\RegisterController@register_warung')->middleware('optimizeImages'); 
+
+Route::get('/register-customer','Auth\RegisterController@register_customer')->middleware('optimizeImages');
 
 //registrasi lewat link affiliasi
 Route::get('/aff/{id}/',function($id){
 
 
 	return view('auth.register_customer',['komunitas_id' => $id]);
-}); 
+})->middleware('optimizeImages'); 
 
 
-Route::get('kirim-kode-verifikasi','Auth\RegisterController@kirim_kode_verifikasi'); 
+Route::get('kirim-kode-verifikasi','Auth\RegisterController@kirim_kode_verifikasi')->middleware('optimizeImages'); 
 Route::get('kirim-ulang-kode-verifikasi/{id}','Auth\RegisterController@kirim_ulang_kode_verifikasi');
 Route::get('lupa-password','Auth\RegisterController@lupa_password');
 
@@ -79,7 +82,7 @@ Route::put('/proses-ubah-profil/{id}',[
 	'uses' => 'UbahProfilController@proses_ubah_profil'
 	]);
 
-Route::group(['middleware' =>'auth'], function(){
+Route::middleware('optimizeImages','auth')->group(function () {
 
 	Route::resource('user', 'UserController');
 	Route::resource('bank', 'BankController');
