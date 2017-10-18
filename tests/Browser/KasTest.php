@@ -28,8 +28,8 @@ class KasTest extends DuskTestCase
                     ->clickLink("Tambah Kas")->assertSee('Tambah Kas')
                     ->type('kode_kas', 'K-001')
                     ->type('nama_kas', 'Kas Browser');
-            $first->script("document.getElementById('status_kas_radioOn').checked = true;");
-            $first->script("document.getElementById('default_kas_radioOn').checked = true;");
+            $first->script("document.getElementById('status_kas').checked = true;");
+            $first->script("document.getElementById('default_kas').checked = true;");
             $first->element('#btnSimpanKas')->submit();
             $first->assertSee('Tambah Kas');
 

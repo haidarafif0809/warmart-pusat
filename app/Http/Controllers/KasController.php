@@ -85,47 +85,58 @@ class KasController extends Controller
     {
 
         $this->validate($request, [
-            'kode_kas'   => 'required|unique:kas,kode_kas,',
-            'nama_kas'   => 'required',
-            'status_kas' => 'required', 
-            'default_kas'=> 'required',
+            'kode_kas'   => 'required|unique:kas,kode_kas,NULL,id,warung_id,'.Auth::user()->id_warung.'',
+            'nama_kas'   => 'required'
         ]);
+
+        if ($request->status_kas == '') {
+          $status_kas = 0;
+        }
+        else{
+          $status_kas = $request->status_kas;
+        }
+
+        if ($request->default_kas == '') {
+          $default_kas = 0;
+        }
+        else{
+          $default_kas = $request->default_kas;
+        }
 
         if (Auth::user()->id_warung != "") {
             //JIKA BUAT KAS BARU DENGAN DEFAULT KAS = "YA", TETAPI SUDAH ADA YG DEFAULT
             if ($request->default_kas == 1) {
                 //UPDATE MASTER DATA KAS WARUNG, JADI TIDAK DEFAULT KAS
-                $kas_default = Kas::where('default_kas',$request->default_kas)->update([
+                $kas_default = Kas::where('default_kas',$request->default_kas)
+                ->where('warung_id', Auth::user()->id_warung)->update([
                     'default_kas' => 0, 
                 ]);
 
                 //INSERT MASTER DATA KAS WARUNG, JADI DEFAULT KAS
-                $warung = Kas::create([
+                $kas = Kas::create([
                     'kode_kas'    =>$request->kode_kas,
                     'nama_kas'    =>$request->nama_kas,
-                    'status_kas'  =>$request->status_kas,
-                    'default_kas' =>$request->default_kas,
-                    'default_kas' =>$request->default_kas,
+                    'status_kas'  =>$status_kas,
+                    'default_kas' =>$default_kas,
                     'warung_id'   =>Auth::user()->id_warung
                 ]);
             }
             else{
                     //INSERT MASTER DATA KAS WARUNG
-                    $warung = Kas::create([
+                    $kas = Kas::create([
                         'kode_kas'    =>$request->kode_kas,
                         'nama_kas'    =>$request->nama_kas,
-                        'status_kas'  =>$request->status_kas,
-                        'default_kas' =>$request->default_kas,
-                        'default_kas' =>$request->default_kas,
+                        'status_kas'  =>$status_kas,
+                        'default_kas' =>$default_kas,
                         'warung_id'   =>Auth::user()->id_warung 
                     ]);  
-          }    
+            }    
               $pesan_alert = 
                      '<div class="container-fluid">
                           <div class="alert-icon">
                           <i class="material-icons">check</i>
                           </div>
-                          <b>Sukses : Berhasil Menambah Kas '.$request->nama_kas.' </b>
+                          <b>Sukses : Berhasil Menambah Kas "'.$request->nama_kas.'" </b>
                       </div>';
 
 
@@ -135,9 +146,10 @@ class KasController extends Controller
                   ]);
               return redirect()->route('kas.index');
 
-        }else{
+        }
+        else{
             Auth::logout();
-                return response()->view('error.403');
+            return response()->view('error.403');
         }
     }
 
@@ -181,20 +193,33 @@ class KasController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'kode_kas'   => 'required|unique:kas,kode_kas,'.$id,
-            'nama_kas'   => 'required',
-            'status_kas' => 'required', 
-            'default_kas'=> 'required',
+            'kode_kas'   => 'required|unique:kas,kode_kas,'. $id.',id,warung_id,'.Auth::user()->id_warung,
+            'nama_kas'   => 'required'
         ]);
 
         $id_warung = Auth::user()->id_warung;
         $kas = Kas::find($id);
 
+        if ($request->status_kas == '') {
+          $status_kas = 0;
+        }
+        else{
+          $status_kas = $request->status_kas;
+        }
+
+        if ($request->default_kas == '') {
+          $default_kas = 0;
+        }
+        else{
+          $default_kas = $request->default_kas;
+        }
+
         if ($id_warung == $kas->warung_id) {
           //JIKA BUAT KAS BARU DENGAN DEFAULT KAS = "YA", TETAPI SUDAH ADA YG DEFAULT
           if ($request->default_kas == 1) {
               //UPDATE MASTER DATA KAS WARUNG, JADI TIDAK DEFAULT KAS
-              $kas_default = Kas::where('default_kas',$request->default_kas)->update([
+              $kas_default = Kas::where('default_kas',$request->default_kas)
+              ->where('warung_id', Auth::user()->id_warung)->update([
                   'default_kas' => 0, 
               ]);
 
@@ -202,8 +227,8 @@ class KasController extends Controller
               Kas::where('id', $id)->update([
                   'kode_kas'      =>$request->kode_kas,
                   'nama_kas'      =>$request->nama_kas,
-                  'status_kas'    =>$request->status_kas,
-                  'default_kas'   =>$request->default_kas,
+                  'status_kas'    =>$status_kas,
+                  'default_kas'   =>$default_kas,
               ]);
 
               $pesan_alert = 
@@ -228,11 +253,13 @@ class KasController extends Controller
 
               if ($data_kas->default_kas != 1) {
                   //UPDATE MASTER DATA KAS WARUNG
-                  Kas::where('id', $id)->update([
+                  Kas::where('id', $id)
+                  ->where('warung_id', Auth::user()->id_warung)
+                  ->update([
                       'kode_kas'      =>$request->kode_kas,
                       'nama_kas'      =>$request->nama_kas,
-                      'status_kas'    =>$request->status_kas,
-                      'default_kas'   =>$request->default_kas,
+                      'status_kas'    =>$status_kas,
+                      'default_kas'   =>$default_kas,
                   ]);
 
                   $pesan_alert = 

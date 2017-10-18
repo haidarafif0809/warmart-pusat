@@ -29,7 +29,7 @@
 <div class="form-group{{ $errors->has('keterangan') ? ' has-error' : '' }}">
 	{!! Form::label('keterangan', 'Keterangan', ['class'=>'col-md-2 control-label']) !!}
 	<div class="col-md-4">
-		{!! Form::textarea('keterangan', null, ['class'=>'form-control','required','autocomplete'=>'off', 'placeholder' => 'Keterangan ', 'style' => 'height:75px', 'id' => 'keterangan']) !!}
+		{!! Form::textarea('keterangan', null, ['class'=>'form-control','autocomplete'=>'off', 'placeholder' => 'Keterangan ', 'style' => 'height:75px', 'id' => 'keterangan']) !!}
 		{!! $errors->first('keterangan', '<p class="help-block">:message</p>') !!}
 	</div>
 </div>
