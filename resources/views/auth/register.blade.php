@@ -91,22 +91,25 @@
                                             </div>
                                         </div>
 
-
-
-                                      <div class="input-group">
-
-                                         <div class="form-group label-floating"> 
-                                            <div class="checkbox">
-                                                <label>
-                                                    <input type="checkbox" name="ceklis_sarat_komunitas" id="ceklis_sarat_komunitas" value="0" data_toogle = "0"> 
-                                                </label>
-                                                <a href="{{ url('/sarat-ketentuan') }}" target="_blank"><u>Syarat & Ketentuan</u></a>
-                                            </div>
+                                        <div class="input-group">
+                                                <div class="row">
+                                                    <div class="col-sm-2">
+                                                        <div class="checkbox">
+                                                        <label>
+                                                              <input type="checkbox" name="ceklis_syarat_komunitas" id="ceklis_syarat_komunitas" value="0" data_toogle = "0"> 
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-10" style="padding-top:20px">
+                                                *Dengan membuat akun, Anda telah membaca, memahami & menyetujui <a href="{{ url('/syarat-ketentuan') }}" target="_blank" ><u>Syarat & Ketentuan</u></a>
+                                                </div>
+                                            </div> 
                                         </div>
-                                        </div>
 
-                                    </div>
+                                    
                                           {!! Form::hidden('id_register', 2, ['class'=>'form-control','autocomplete'=>'off']) !!}
+
+                                          </div>
                                     <div class="footer text-center">
                                         <button type="submit" class="btn btn-rose btn-simple btn-wd btn-lg" disabled id="tombol_regist_komunitas">Registrasi Komunitas</button>
                                     </div>

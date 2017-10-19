@@ -166,17 +166,17 @@ $('.datepicker').datepicker({
 
 <script type="text/javascript">
     $(document).ready(function(){
-        $(document).on("click", "#ceklis_sarat", function(){
+        $(document).on("click", "#ceklis_syarat", function(){
             var data_toogle = $(this).attr("data_toogle");
             if (data_toogle == 0) {
                     $("#tombol_regist").attr("disabled",false);
-                    $("#ceklis_sarat").prop('checked', true);
+                    $("#ceklis_syarat").prop('checked', true);
                     $(this).attr("data_toogle", 1);
 
             }
             else{
                 $("#tombol_regist").attr("disabled",true);
-                $("#ceklis_sarat").prop('checked', false);
+                $("#ceklis_syarat").prop('checked', false);
                 $(this).attr("data_toogle", 0);
             }
         });
@@ -187,17 +187,17 @@ $('.datepicker').datepicker({
 
 <script type="text/javascript">
     $(document).ready(function(){
-        $(document).on("click", "#ceklis_sarat_warung", function(){
+        $(document).on("click", "#ceklis_syarat_warung", function(){
             var data_toogle = $(this).attr("data_toogle");
             if (data_toogle == 0) {
                     $("#tombol_regist_warung").attr("disabled",false);
-                    $("#ceklis_sarat_warung").prop('checked', true);
+                    $("#ceklis_syarat_warung").prop('checked', true);
                     $(this).attr("data_toogle", 1);
 
             }
             else{
                 $("#tombol_regist_warung").attr("disabled",true);
-                $("#ceklis_sarat_warung").prop('checked', false);
+                $("#ceklis_syarat_warung").prop('checked', false);
                 $(this).attr("data_toogle", 0);
             }
         });
@@ -207,17 +207,17 @@ $('.datepicker').datepicker({
 
 <script type="text/javascript">
     $(document).ready(function(){
-        $(document).on("click", "#ceklis_sarat_komunitas", function(){
+        $(document).on("click", "#ceklis_syarat_komunitas", function(){
             var data_toogle = $(this).attr("data_toogle");
             if (data_toogle == 0) {
                     $("#tombol_regist_komunitas").attr("disabled",false);
-                    $("#ceklis_sarat_komunitas").prop('checked', true);
+                    $("#ceklis_syarat_komunitas").prop('checked', true);
                     $(this).attr("data_toogle", 1);
 
             }
             else{
                 $("#tombol_regist_komunitas").attr("disabled",true);
-                $("#ceklis_sarat_komunitas").prop('checked', false);
+                $("#ceklis_syarat_komunitas").prop('checked', false);
                 $(this).attr("data_toogle", 0);
             }
         });

@@ -30,7 +30,7 @@ Auth::routes();
 });
 
 //sarat & ketentuan
-Route::get('/sarat-ketentuan','Auth\RegisterController@sarat_ketentuan'); 
+Route::get('/syarat-ketentuan','Auth\RegisterController@syarat_ketentuan'); 
 
 
 //USER WARUNG 
