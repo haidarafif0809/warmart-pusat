@@ -11,11 +11,11 @@
 |
 */
 
-Route::get('/','HomeController@index');
+Route::get('/','HomeController@index')->middleware('optimizeImages');
 Route::get('/sms','HomeController@sms');
 
 Route::get('/dashboard',[
-	'middleware' => ['auth'],
+	'middleware' => ['auth','optimizeImages'],
 	'as'=>'home.dashboard',
 	'uses' => 'HomeController@dashboard'
 ]);
@@ -23,27 +23,30 @@ Route::get('/dashboard',[
 
 
 
+Route::middleware('optimizeImages')->group(function () {
 
 Auth::routes();
+
+});
 
 //sarat & ketentuan
 Route::get('/sarat-ketentuan','Auth\RegisterController@sarat_ketentuan'); 
 
 
 //USER WARUNG 
-Route::get('/register-warung','Auth\RegisterController@register_warung'); 
+Route::get('/register-warung','Auth\RegisterController@register_warung')->middleware('optimizeImages'); 
 
-Route::get('/register-customer','Auth\RegisterController@register_customer');
+Route::get('/register-customer','Auth\RegisterController@register_customer')->middleware('optimizeImages');
 
 //registrasi lewat link affiliasi
 Route::get('/aff/{id}/',function($id){
 
 
 	return view('auth.register_customer',['komunitas_id' => $id]);
-}); 
+})->middleware('optimizeImages'); 
 
 
-Route::get('kirim-kode-verifikasi','Auth\RegisterController@kirim_kode_verifikasi'); 
+Route::get('kirim-kode-verifikasi','Auth\RegisterController@kirim_kode_verifikasi')->middleware('optimizeImages'); 
 Route::get('kirim-ulang-kode-verifikasi/{id}','Auth\RegisterController@kirim_ulang_kode_verifikasi');
 Route::get('lupa-password','Auth\RegisterController@lupa_password');
 
@@ -83,7 +86,7 @@ Route::put('/proses-ubah-profil/{id}',[
 	'uses' => 'UbahProfilController@proses_ubah_profil'
 	]);
 
-Route::group(['middleware' =>'auth'], function(){
+Route::middleware('optimizeImages','auth')->group(function () {
 
 	Route::resource('user', 'UserController');
 	Route::resource('bank', 'BankController');
@@ -98,6 +101,63 @@ Route::group(['middleware' =>'auth'], function(){
 	Route::resource('kas_masuk', 'KasMasukController');
 	Route::resource('kas_keluar', 'KasKeluarController');	
 	Route::resource('kas_mutasi', 'KasMutasiController');
+	Route::resource('item-masuk', 'ItemMasukController');
+	Route::resource('item-keluar', 'ItemKeluarController');
+
+//ITEM KELUAR
+	Route::post('/item-keluar/proses-tambah-tbs-item-keluar',[
+	'middleware' => ['auth'],
+	'as' => 'item-keluar.proses_tambah_tbs_item_keluar',
+	'uses' => 'ItemKeluarController@proses_tambah_tbs_item_keluar'
+	]);	
+
+	Route::post('/item-keluar/proses-hapus-semua-tbs-item-keluar/',[
+	'middleware' => ['auth'],
+	'as' => 'item-keluar.proses_hapus_semua_tbs_item_keluar',
+	'uses' => 'ItemKeluarController@proses_hapus_semua_tbs_item_keluar'
+	]);
+
+	Route::delete('/item-keluar/proses-hapus-tbs-item-keluar/{id}',[
+	'middleware' => ['auth'],
+	'as' => 'item-keluar.proses_hapus_tbs_item_keluar',
+	'uses' => 'ItemKeluarController@proses_hapus_tbs_item_keluar'
+	]);
+
+	Route::post('/item-masuk/proses-hapus-semua-edit-tbs-item-keluar/{id}',[
+	'middleware' => ['auth'],
+	'as' => 'item-keluar.proses_hapus_semua_edit_tbs_item_keluar',
+	'uses' => 'ItemKeluarController@proses_hapus_semua_edit_tbs_item_keluar'
+	]);
+
+	Route::post('/item-keluar/proses-edit-item-keluar/{id}',[
+	'middleware' => ['auth'],
+	'as' => 'item-keluar.proses_edit_item_keluar',
+	'uses' => 'ItemKeluarController@proses_edit_item_keluar'
+	]);
+
+	Route::get('/item-keluar/proses-form-edit/{id}',[
+	'middleware' => ['auth'],
+	'as' => 'item-keluar.proses_form_edit',
+	'uses' => 'ItemKeluarController@proses_form_edit'
+	]);
+	Route::post('/item-keluar/proses-tambah-edit-tbs-item-keluar/{id}',[
+	'middleware' => ['auth'],
+	'as' => 'item-keluar.proses_tambah_edit_tbs_item_keluar',
+	'uses' => 'ItemKeluarController@proses_tambah_edit_tbs_item_keluar'
+	]);
+	Route::delete('/item-keluar/proses-hapus-edit-tbs-item-keluar/{id}',[
+	'middleware' => ['auth'],
+	'as' => 'item-keluar.proses_hapus_edit_tbs_item_keluar',
+	'uses' => 'ItemKeluarController@proses_hapus_edit_tbs_item_keluar'
+	]);
+
+	Route::post('/item-keluar/edit-jumlah-tbs-item-keluar',[
+	'middleware' => ['auth'],
+	'as' => 'item-keluar.edit_jumlah_tbs_item_keluar',
+	'uses' => 'ItemKeluarController@proses_edit_jumlah_tbs_item_keluar'
+	]);
+
+//ITEM KELUAR
 
 	Route::post('/cek_total_kas',[ 		
 	'middleware' => ['auth'],
@@ -140,4 +200,65 @@ Route::group(['middleware' =>'auth'], function(){
 	'uses' => 'OtoritasController@proses_setting_permission'
 	]);
 
+
+//ITEM MASUK
+	Route::get('/item-masuk/proses-form-edit/{id}',[
+	'middleware' => ['auth'],
+	'as' => 'item-masuk.proses_form_edit',
+	'uses' => 'ItemMasukController@proses_form_edit'
+	]);
+
+	Route::post('/item-masuk/proses-tambah-tbs-item-masuk',[
+	'middleware' => ['auth'],
+	'as' => 'item-masuk.proses_tambah_tbs_item_masuk',
+	'uses' => 'ItemMasukController@proses_tambah_tbs_item_masuk'
+	]);
+
+	Route::post('/item-masuk/proses-tambah-edit-tbs-item-masuk/{id}',[
+	'middleware' => ['auth'],
+	'as' => 'item-masuk.proses_tambah_edit_tbs_item_masuk',
+	'uses' => 'ItemMasukController@proses_tambah_edit_tbs_item_masuk'
+	]);
+
+	Route::post('/item-masuk/proses-hapus-tbs-item-masuk/{id}',[
+	'middleware' => ['auth'],
+	'as' => 'item-masuk.proses_hapus_tbs_item_masuk',
+	'uses' => 'ItemMasukController@proses_hapus_tbs_item_masuk'
+	]);
+
+	Route::post('/item-masuk/proses-hapus-edit-tbs-item-masuk/{id}',[
+	'middleware' => ['auth'],
+	'as' => 'item-masuk.proses_hapus_edit_tbs_item_masuk',
+	'uses' => 'ItemMasukController@proses_hapus_edit_tbs_item_masuk'
+	]);
+
+	Route::post('/item-masuk/proses-hapus-semua-tbs-item-masuk/',[
+	'middleware' => ['auth'],
+	'as' => 'item-masuk.proses_hapus_semua_tbs_item_masuk',
+	'uses' => 'ItemMasukController@proses_hapus_semua_tbs_item_masuk'
+	]);
+
+	Route::post('/item-masuk/proses-hapus-semua-edit-tbs-item-masuk/{id}',[
+	'middleware' => ['auth'],
+	'as' => 'item-masuk.proses_hapus_semua_edit_tbs_item_masuk',
+	'uses' => 'ItemMasukController@proses_hapus_semua_edit_tbs_item_masuk'
+	]);
+
+	Route::post('/item-masuk/proses-edit-item-masuk/{id}',[
+	'middleware' => ['auth'],
+	'as' => 'item-masuk.proses_edit_item_masuk',
+	'uses' => 'ItemMasukController@proses_edit_item_masuk'
+	]);
+
+	Route::post('/item-masuk/edit-jumlah-item-masuk',[
+	'middleware' => ['auth'],
+	'as' => 'item-masuk.edit_jumlah',
+	'uses' => 'ItemMasukController@proses_edit_jumlah'
+	]);
+
+	Route::post('/item-masuk/edit-jumlah-edit-item-masuk',[
+	'middleware' => ['auth'],
+	'as' => 'item-masuk.edit_jumlah_edit',
+	'uses' => 'ItemMasukController@proses_edit_jumlah_edit'
+	]);
 });
