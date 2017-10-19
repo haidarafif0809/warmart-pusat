@@ -180,6 +180,8 @@
 
 
                     <!--MASTER DATA WARMART PUSAT-->
+                    @if(Auth::user()->tipe_user == 1) 
+
                     @if(Laratrust::can('lihat_master_data'))
                     <li>
                         <a data-toggle="collapse" href="#pagesExamples">
@@ -248,8 +250,15 @@
                             </ul>
                         </div>
                     </li>
+                    <li class="">
+                        <a href="{{ route('error.index')}}">
+                            <i class="material-icons">error</i>
+                            <p>Error Log</p>
+                        </a>
+                    </li>
                     @endif
                     <!--end master data warmart pusat-->
+                    @endif
                    
                   
                 </ul>
@@ -367,7 +376,7 @@
 <script type="text/javascript">
     $(document).ready(function() {
 
-        $.fn.dataTable.ext.errMode = 'throw';
+       // $.fn.dataTable.ext.errMode = 'throw';
     });
 </script>
 

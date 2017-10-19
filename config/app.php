@@ -173,6 +173,8 @@ return [
         Collective\Html\HtmlServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
         Stevebauman\Location\LocationServiceProvider::class,
+        PragmaRX\Tracker\Vendor\Laravel\ServiceProvider::class,
+
         /*
          * Application Service Providers...
          */
@@ -246,6 +248,8 @@ return [
         'Twitter'   => Artesaos\SEOTools\Facades\TwitterCard::class,
         // or
         'SEO' => Artesaos\SEOTools\Facades\SEOTools::class,
+        'Tracker' => 'PragmaRX\Tracker\Vendor\Laravel\Facade',
+
 
         
     ],

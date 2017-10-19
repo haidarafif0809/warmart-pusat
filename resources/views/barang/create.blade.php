@@ -33,5 +33,41 @@ $('select').selectize({
  sortField: 'text'
 });
 </script>
-@endsection
+ 
+<script type="text/javascript"> 
+ 
+    $(document).ready(function(){ 
+
+		$('#hitung_stok').change(function() {
+
+			if(this.checked){
+					            
+				$("#label_hitung_stok").text("Ya");
+
+			}else{
+
+				$("#label_hitung_stok").text("Tidak");
+
+			}
+		               
+    	}); 
+
+    	$('#status_aktif').change(function() {
+
+			if(this.checked){
+					            
+				$("#label_status_aktif").text("Ya");
+
+			}else{
+
+				$("#label_status_aktif").text("Tidak");
+				
+			}
+		               
+    	}); 
+    	      
+    }); 
+             
+</script> 
+@endsection 
 
