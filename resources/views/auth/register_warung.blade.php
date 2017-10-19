@@ -78,18 +78,13 @@
                                         </div>
 
                                         <div class="input-group">
-                                                <div class="row">
-                                                    <div class="col-sm-2">
-                                                        <div class="checkbox">
+                                                        <div class="checkbox" style="padding:10px">
                                                         <label>
                                                               <input type="checkbox" name="ceklis_syarat_warung" id="ceklis_syarat_warung" value="0" data_toogle = "0"> 
                                                         </label>
+                                                       *Dengan membuat akun, Anda telah membaca, memahami & menyetujui <a href="{{ url('/syarat-ketentuan') }}" target="_blank" ><u>Syarat & Ketentuan</u></a>
+
                                                     </div>
-                                                </div>
-                                                <div class="col-sm-10" style="padding-top:30px">
-                                                *Dengan membuat akun, Anda telah membaca, memahami & menyetujui <a href="{{ url('/syarat-ketentuan') }}" target="_blank" ><u>Syarat & Ketentuan</u></a>
-                                                </div>
-                                            </div> 
                                         </div>
 
 
