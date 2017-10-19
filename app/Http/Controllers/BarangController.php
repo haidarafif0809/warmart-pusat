@@ -165,7 +165,6 @@ class BarangController extends Controller
                     'hitung_stok'       => $hitung_stok, 
                     'id_warung'         => Auth::user()->id_warung]);
 
-                // isi field foto_kamar jika ada FOTO KAMAR 1 yang diupload
                 if ($request->hasFile('foto')) {
                    
                     $foto = $request->file('foto');
@@ -369,19 +368,30 @@ class BarangController extends Controller
                     return redirect()->back();
                 }else{
 
+                    if ($barang->foto != '') {
 
-                $pesan_alert = 
-                       '<div class="container-fluid">
-                            <div class="alert-icon">
-                            <b><i class="material-icons">check</i></b>
-                            </div>
-                            <b>BERHASIL:</b> Menghapus Produk <b>'.$barang->nama_barang.'</b>
-                        </div>';
+                              $old_foto = $barang->foto;
+                              $filepath = public_path() . DIRECTORY_SEPARATOR . 'foto_produk'
+                              . DIRECTORY_SEPARATOR . $barang->foto;
+                              try {
+                              File::delete($filepath);
+                              } catch (FileNotFoundException $e) {
+                              // File sudah dihapus/tidak ada
+                              }            
+                    }
 
-                    Session::flash("flash_notification", [
-                        "level"     => "danger",
-                        "message"   => $pesan_alert
-                    ]);
+                    $pesan_alert = 
+                           '<div class="container-fluid">
+                                <div class="alert-icon">
+                                <b><i class="material-icons">check</i></b>
+                                </div>
+                                <b>BERHASIL:</b> Menghapus Produk <b>'.$barang->nama_barang.'</b>
+                            </div>';
+
+                        Session::flash("flash_notification", [
+                            "level"     => "danger",
+                            "message"   => $pesan_alert
+                        ]);
                 return redirect()->route('barang.index');
                 }
         }
