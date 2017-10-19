@@ -72,6 +72,7 @@ class UserController extends Controller
         }
         $html = $htmlBuilder
         ->addColumn(['data' => 'name', 'name' => 'name', 'title' => 'Nama'])
+        ->addColumn(['data' => 'no_telp', 'name' => 'no_telp', 'title' => 'No. Telpon'])  
         ->addColumn(['data' => 'email', 'name' => 'email', 'title' => 'Username'])  
         ->addColumn(['data' => 'alamat', 'name' => 'alamat', 'title' => 'Alamat', 'orderable' => false])
         ->addColumn(['data' => 'role', 'name' => 'role', 'title' => 'Otoritas', 'orderable' => false, 'searchable'=>false])
@@ -107,24 +108,26 @@ class UserController extends Controller
         // // proses tambah user
          $this->validate($request, [
             'name'   => 'required',
-            'email'     => 'required|unique:users,email', 
+            'email'     => 'nullable|unique:users,email', 
             'alamat'    => 'required',
+            'no_telp'    => 'required|without_spaces|unique:users,no_telp,',
             'role_id'    => 'required', 
             ]);
 
          $user_baru = User::create([ 
-            'name' =>$request->name,
-            'email'=>$request->email, 
-            'alamat'=>$request->alamat,  
+            'name'      =>$request->name,
+            'email'     =>$request->email, 
+            'alamat'    =>$request->alamat,  
+            'no_telp'   =>$request->no_telp, 
             'tipe_user' => '1',
-            'password' => bcrypt('123456')]);
+            'password'  => bcrypt('123456')]);
 
         $role_baru = Role::where('id',$request->role_id)->first();
         $user_baru->attachRole($role_baru->id);
 
         Session::flash("flash_notification", [
             "level"=>"success",
-            "message"=>" <b>BERHASIL:</b> Menambah User <b>$request->name</b>"
+            "message"=>"<b>BERHASIL:</b> Menambah User <b>$request->name</b>"
             ]);
 
         return redirect()->route('user.index');
@@ -171,17 +174,19 @@ class UserController extends Controller
 
          $this->validate($request, [
             'name'      => 'required',
-            'email'     => 'required|unique:users,email,'.$id, 
+            'email'     => 'nullable|unique:users,email,'.$id, 
             'alamat'    => 'required',
             'role_id'   => 'required', 
             'role_lama' => 'required',
+            'no_telp'   => 'required|without_spaces|unique:users,no_telp,'.$id
             ]);
 
          // update user
          $user = User::where('id',$id)->update([
                 'name'  => $request->name,
                 'email' => $request->email,
-                'alamat'=> $request->alamat   
+                'alamat'=> $request->alamat,
+                'no_telp'  => $request->no_telp   
             ]);
 
          $role_lama = Role::where('id', $request->role_lama)->first();
@@ -195,7 +200,7 @@ class UserController extends Controller
 
          Session::flash("flash_notification", [
             "level"=>"success",
-            "message"=>"BERHASIL:</b> Mengubah User $request->name"
+            "message"=>"<b>BERHASIL:</b> Mengubah User <b>$request->name</b>"
             ]);
 
         return redirect()->route('user.index');
