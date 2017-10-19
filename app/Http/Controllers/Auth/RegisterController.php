@@ -281,9 +281,9 @@ class RegisterController extends Controller
         return view('auth.register_customer');    
     }
 
-     protected function sarat_ketentuan()
+     protected function syarat_ketentuan()
     { 
-        return view('auth.sarat_ketentuan');    
+        return view('auth.syarat_ketentuan');    
     }
  
     protected function lupa_password()
