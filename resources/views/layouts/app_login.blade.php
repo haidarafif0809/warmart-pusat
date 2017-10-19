@@ -158,6 +158,68 @@ $('.datepicker').datepicker({
 });
 </script>
 
+
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(document).on("click", "#ceklis_sarat", function(){
+            var data_toogle = $(this).attr("data_toogle");
+            if (data_toogle == 0) {
+                    $("#tombol_regist").attr("disabled",false);
+                    $("#ceklis_sarat").prop('checked', true);
+                    $(this).attr("data_toogle", 1);
+
+            }
+            else{
+                $("#tombol_regist").attr("disabled",true);
+                $("#ceklis_sarat").prop('checked', false);
+                $(this).attr("data_toogle", 0);
+            }
+        });
+    }); 
+</script>
+
+
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(document).on("click", "#ceklis_sarat_warung", function(){
+            var data_toogle = $(this).attr("data_toogle");
+            if (data_toogle == 0) {
+                    $("#tombol_regist_warung").attr("disabled",false);
+                    $("#ceklis_sarat_warung").prop('checked', true);
+                    $(this).attr("data_toogle", 1);
+
+            }
+            else{
+                $("#tombol_regist_warung").attr("disabled",true);
+                $("#ceklis_sarat_warung").prop('checked', false);
+                $(this).attr("data_toogle", 0);
+            }
+        });
+    }); 
+</script>
+
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(document).on("click", "#ceklis_sarat_komunitas", function(){
+            var data_toogle = $(this).attr("data_toogle");
+            if (data_toogle == 0) {
+                    $("#tombol_regist_komunitas").attr("disabled",false);
+                    $("#ceklis_sarat_komunitas").prop('checked', true);
+                    $(this).attr("data_toogle", 1);
+
+            }
+            else{
+                $("#tombol_regist_komunitas").attr("disabled",true);
+                $("#ceklis_sarat_komunitas").prop('checked', false);
+                $(this).attr("data_toogle", 0);
+            }
+        });
+    }); 
+</script>
+
 @yield('scripts')
 
 </html>
