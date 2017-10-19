@@ -43,7 +43,7 @@
                     WM
                 </a>
                 <a href="https://war-mart.id" class="simple-text logo-normal">
-                    WARMART.ID
+                    WAR-MART.ID
                 </a>
             </div>
             <div class="sidebar-wrapper">

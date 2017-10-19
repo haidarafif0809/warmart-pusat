@@ -7,6 +7,8 @@
     <link rel="icon" type="image/png" href="img/favicon.png" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+    <title>War-Mart.id</title>
+
     <meta name="viewport" content="width=device-width" />
     <!-- Bootstrap core CSS     -->
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" />
@@ -23,7 +25,7 @@
 
 </head>
 <body class="off-canvas-sidebar">
-    <nav class="navbar navbar-default  navbar-fixed-top " color-on-scroll=" " id="sectionsNav" style="background-color:purple;">
+    <nav class="navbar  navbar-fixed-top " color-on-scroll=" " id="sectionsNav" style="background-color:purple;">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation-example-2">
@@ -32,10 +34,10 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="" style="color:white;">Warmart.id</a>
+                <a class="navbar-brand" href="" ><p style="color:white;">War-mart.id</p></a>
             </div>
             <div class="collapse navbar-collapse">
-                <ul class="nav navbar-nav navbar-right"> 
+                <ul class="nav navbar-nav navbar-right" style="background-color:purple;"> 
                     <li>
                         <a data-toggle="collapse" href="#pagesExamples">
                             <p>
