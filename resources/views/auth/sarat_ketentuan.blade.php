@@ -242,6 +242,10 @@
 <li>Apabila dipandang perlu, WarMart berhak untuk setiap saat merubah sebagian ataupun keseluruhan perjanjian Member tanpa perlu mendapatkan persetujuan terlebih dahulu dari Member</li>
 </ol>
 
+
+<hr style="list-style:bold;">
+
+
 <h4 style="font-weight:bold;">Barang Terlarang</h4>
 
 <p>Barang yang dijual oleh Warung harus barang Halal dan Toyib. WarMart telah dan akan terus melakukan hal-hal sebagaimana dipersyaratkan oleh peraturan perundang-undangan dan hal-hal yang dilarang atau di haramkan oleh MUI (Majelis Ulama Indonesia) untuk mencegah terjadinya perdagangan barang-barang yang melanggar ketentuan hukum dan Agama yang berlaku dan/atau hak pribadi pihak ketiga. Berkenaan dengan hal tersebut, berikut adalah barang-barang yang dilarang untuk diperjualbelikan melalui WarMart:</p>
