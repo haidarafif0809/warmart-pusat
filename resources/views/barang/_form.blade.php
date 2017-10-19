@@ -68,11 +68,12 @@
 		<div class="col-md-1">
 			<div class="togglebutton">
 				<label>
-					@if (isset($barang) && $barang->hitung_stok == 1)
-			    	<input type="checkbox" name="hitung_stok" id="hitung_stok" value="1" checked="">						
+					@if (isset($barang) && $barang->hitung_stok == 0)
+			    	<input type="checkbox" name="hitung_stok" id="hitung_stok" value="1">						
 					@else
-			    	<input type="checkbox" name="hitung_stok" id="hitung_stok" value="1">
+			    	<input type="checkbox" name="hitung_stok" id="hitung_stok" value="1" checked="">
 			    	@endif
+			    	<font id="label_hitung_stok">Ya</font>
 				</label>
 			</div>
 		</div>
@@ -83,11 +84,12 @@
 		<div class="col-md-1">
 			<div class="togglebutton">
 				<label>
-					@if (isset($barang) && $barang->status_aktif == 1)
-			    	<input type="checkbox" name="status_aktif" id="status_aktif" value="1" checked="">
-			    	@else
+					@if (isset($barang) && $barang->status_aktif == 0)
 			    	<input type="checkbox" name="status_aktif" id="status_aktif" value="1">
+			    	@else
+			    	<input type="checkbox" name="status_aktif" id="status_aktif" value="1" checked="">
 			    	@endif
+			    	<font id="label_status_aktif">Ya</font>
 				</label>
 			</div>
 		</div>
