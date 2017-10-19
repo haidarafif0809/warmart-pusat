@@ -97,7 +97,7 @@
                                                 <label>
                                                     <input type="checkbox" name="ceklis_sarat" id="ceklis_sarat" value="0" data_toogle = "0"> 
                                                 </label>
-                                                <a href="{{ url('/sarat-ketentuan') }}"><u>Syarat & Ketentuan</u></a>
+                                                <a href="{{ url('/sarat-ketentuan') }}" target="_blank" ><u>Syarat & Ketentuan</u></a>
                                             </div>
                                         </div>
                                         </div>
