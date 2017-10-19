@@ -31,11 +31,11 @@ class HomeController extends Controller
     public function index()
     {
         SEOMeta::setTitle('War-Mart.id');
-        SEOMeta::setDescription('Warmart marketplace warung pertama di Indonesia');
+        SEOMeta::setDescription('Warmart marketplace warung muslim pertama di Indonesia');
         SEOMeta::setCanonical('https://war-mart.id');
-        SEOMeta::addKeyword(['warmart', 'warung', 'marketplace','toko online']);
+        SEOMeta::addKeyword(['warmart', 'warung', 'marketplace','toko online','belanja','lazada']);
 
-        OpenGraph::setDescription('Warmart marketplace warung pertama di Indonesia');
+        OpenGraph::setDescription('Warmart marketplace warung muslim pertama di Indonesia');
         OpenGraph::setTitle('War-Mart.id');
         OpenGraph::setUrl('https://war-mart.id');
         OpenGraph::addProperty('type', 'articles');

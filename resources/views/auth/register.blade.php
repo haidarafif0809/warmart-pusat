@@ -90,10 +90,25 @@
                                              
                                             </div>
                                         </div>
+
+
+
+                                      <div class="input-group">
+
+                                         <div class="form-group label-floating"> 
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" name="ceklis_sarat_komunitas" id="ceklis_sarat_komunitas" value="0" data_toogle = "0"> 
+                                                </label>
+                                                <a href="{{ url('/sarat-ketentuan') }}"><u>Syarat & Ketentuan</u></a>
+                                            </div>
+                                        </div>
+                                        </div>
+
                                     </div>
                                           {!! Form::hidden('id_register', 2, ['class'=>'form-control','autocomplete'=>'off']) !!}
                                     <div class="footer text-center">
-                                        <button type="submit" class="btn btn-rose btn-simple btn-wd btn-lg">Registrasi Komunitas</button>
+                                        <button type="submit" class="btn btn-rose btn-simple btn-wd btn-lg" disabled id="tombol_regist_komunitas">Registrasi Komunitas</button>
                                     </div>
                                     <center>     
                                        <p>Sudah Daftar? <a href="{{ url('/login') }}">Masuk Sekarang</a> </p>
