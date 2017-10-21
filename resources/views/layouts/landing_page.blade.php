@@ -429,7 +429,7 @@ height:100%;
     <footer class="footer">
         <div class="container">
 
-             <h4><a style="font-weight:bold;">INFO :</a><a style="color:red;font-weight:italic;"> Soft launcing Aplikasi WartMart insya Allah akan dilaksanakan pada tanggal 20 November 2017</a></h4> 
+             <h4><a style="font-weight:bold;">INFO :</a><a style="color:red;font-weight:italic;"> Soft Launching Aplikasi WartMart Insya Allah akan dilaksanakan pada tanggal 20 November 2017</a></h4> 
 
             <div class="copyright pull-right">
                 &copy; <script>document.write(new Date().getFullYear())</script> PT Andaglos Global Teknologi, made with love for a better web

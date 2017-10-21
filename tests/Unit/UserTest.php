@@ -35,22 +35,22 @@ class UserTest extends TestCase
     	// password
     	$password = bcrypt("rahasia");
     	// Test Insert User
-    	$test_user = User::create(['name' => 'UserTest', 'password' => $password, 'email' => 'usertest@gmail.com', 'alamat' => 'Test Alamat', 'status_konfirmasi' => 0, 'tipe_user' => '1']);
+    	$test_user = User::create(['name' => 'UserTest', 'password' => $password, 'email' => 'usertest@gmail.com', 'no_telp' => '123456789' , 'alamat' => 'Test Alamat', 'status_konfirmasi' => 0, 'tipe_user' => '1']);
 
     	// cek insert user
     	$this->assertDatabaseHas('users',[
-    			'name' => 'UserTest', 'password' => $password, 'email' => 'usertest@gmail.com', 'alamat' => 'Test Alamat', 'status_konfirmasi' => 0, 'tipe_user' => '1'
+    			'name' => 'UserTest', 'password' => $password, 'email' => 'usertest@gmail.com',  'no_telp' => '123456789' ,'alamat' => 'Test Alamat', 'status_konfirmasi' => 0, 'tipe_user' => '1'
     		]);
 
     	// test update user
     	$password = bcrypt("123456");
     	User::find($test_user->id)->update([
-    			'name' => 'TestEditUser', 'password' => $password, 'email' => 'edituser@gmail.com', 'alamat' => 'Test Alamat Edit', 'status_konfirmasi' => 1, 'tipe_user' => '1'
+    			'name' => 'TestEditUser', 'password' => $password, 'email' => 'edituser@gmail.com', 'no_telp' => '0123458912645' , 'alamat' => 'Test Alamat Edit', 'status_konfirmasi' => 1, 'tipe_user' => '1'
     		]);
 
     	// cek update user
     	$this->assertDatabaseHas('users',[
-    			'name' => 'TestEditUser', 'password' => $password, 'email' => 'edituser@gmail.com', 'alamat' => 'Test Alamat Edit', 'status_konfirmasi' => 1, 'tipe_user' => '1'
+    			'name' => 'TestEditUser', 'password' => $password, 'email' => 'edituser@gmail.com',  'no_telp' => '0123458912645' ,'alamat' => 'Test Alamat Edit', 'status_konfirmasi' => 1, 'tipe_user' => '1'
     		]);
 
     	// test delete user
@@ -58,7 +58,7 @@ class UserTest extends TestCase
     	$user = User::find($test_user->id);
     	// cek delete user
     	$this->assertDatabaseMissing('users',[
-    			'name' => 'TestEditUser', 'password' => $password, 'email' => 'edituser@gmail.com', 'alamat' => 'Test Alamat Edit', 'status_konfirmasi' => 1, 'tipe_user' => '1'	
+    			'name' => 'TestEditUser', 'password' => $password, 'email' => 'edituser@gmail.com', 'no_telp' => '0123458912645' ,'alamat' => 'Test Alamat Edit', 'status_konfirmasi' => 1, 'tipe_user' => '1'	
     		]);
 
 
@@ -72,6 +72,7 @@ class UserTest extends TestCase
         $response = $this->actingAs($user)->json('POST', route('user.store'),[
             'name' => 'UserTestHttp',
             'email' => 'usertesthttp@gmail.com',
+            'no_telp' => '085769105615',
             'alamat' => 'Test Alamat Http',
             'tipe_user' => '1',
             'role_id' => '1'
@@ -81,24 +82,40 @@ class UserTest extends TestCase
                  ->assertRedirect(route('user.index'));
 
 
-        $response2 = $this->get($response->headers->get('location'))->assertSee('Berhasil Menambah User UserTestHttp');
+        $response2 = $this->get($response->headers->get('location'))->assertSee('<b>BERHASIL:</b> Menambah User <b>UserTestHttp</b>');
 
            $this->assertDatabaseHas('users',[
                 'name' => 'UserTestHttp',
                 'email' => 'usertesthttp@gmail.com',
+                'no_telp' => '085769105615',
                 'alamat' => 'Test Alamat Http',
                 'tipe_user' => '1'
             ]);
 
     }
 
+
+    public function testHTTPUpdateUser(){
+
+        $user = User::find(1); 
+
+        $response = $this->actingAs($user)->get(route('user.edit',1)); 
+ 
+        $response->assertStatus(200)->assertSee('Edit User'); 
+
+     }
+
     public function testHTTPeditUser(){
 
-          $user = User::find(1);
+        $user = User::find(1);
 
-        $response = $this->actingAs($user)->json('POST', route('user.update',2),[
+        // Test Insert User
+        $test_user = User::create(['name' => 'UserTest', 'password' =>  bcrypt("rahasia"), 'email' => 'usertest@gmail.com', 'no_telp' => '123456789' , 'alamat' => 'Test Alamat', 'status_konfirmasi' => 0, 'tipe_user' => '1']);
+
+        $response = $this->actingAs($user)->json('POST', route('user.update',$test_user->id),[
             'name'       => 'UserTestHttp',
             'email'      => 'usertesthttp@gmail.com',
+            'no_telp'    => '085769105615',
             'alamat'     => 'Test Alamat Http',
             'tipe_user'  => '1',
             'role_id'    => '1',
@@ -109,11 +126,12 @@ class UserTest extends TestCase
         $response->assertStatus(302)
                 ->assertRedirect(route('user.index'));
 
-        $response2 = $this->get($response->headers->get('location'))->assertSee('Berhasil Mengubah User UserTestHttp');
+        $response2 = $this->get($response->headers->get('location'))->assertSee('<b>BERHASIL:</b> Mengubah User <b>UserTestHttp</b>');
 
            $this->assertDatabaseHas('users',[
                 'name' => 'UserTestHttp',
                 'email' => 'usertesthttp@gmail.com',
+                'no_telp' => '085769105615',
                 'alamat' => 'Test Alamat Http',
                 'tipe_user'  => '1'
             ]);

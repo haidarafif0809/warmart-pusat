@@ -26,6 +26,7 @@ class Kernel extends HttpKernel
         \RenatoMarinho\LaravelPageSpeed\Middleware\TrimUrls::class,
         \RenatoMarinho\LaravelPageSpeed\Middleware\RemoveQuotes::class,
         \RenatoMarinho\LaravelPageSpeed\Middleware\CollapseWhitespace::class,
+        \PragmaRX\Tracker\Vendor\Laravel\Middlewares\Tracker::class,
     ];
 
     /**

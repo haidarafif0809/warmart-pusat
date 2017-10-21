@@ -90,10 +90,23 @@
                                              
                                             </div>
                                         </div>
-                                    </div>
+
+                                        <div class="input-group">
+                                                        <div class="checkbox" style="padding:10px">
+                                                        <label>
+                                                              <input type="checkbox" name="ceklis_syarat_komunitas" id="ceklis_syarat_komunitas" value="0" data_toogle = "0"> 
+                                                        </label>
+                                                       *Dengan membuat akun, Anda telah membaca, memahami & menyetujui <a href="{{ url('/syarat-ketentuan') }}" target="_blank" ><u>Syarat & Ketentuan</u></a>
+
+                                                    </div>
+                                        </div>
+
+                                    
                                           {!! Form::hidden('id_register', 2, ['class'=>'form-control','autocomplete'=>'off']) !!}
+
+                                          </div>
                                     <div class="footer text-center">
-                                        <button type="submit" class="btn btn-rose btn-simple btn-wd btn-lg">Registrasi Komunitas</button>
+                                        <button type="submit" class="btn btn-rose btn-simple btn-wd btn-lg" disabled id="tombol_regist_komunitas">Registrasi Komunitas</button>
                                     </div>
                                     <center>     
                                        <p>Sudah Daftar? <a href="{{ url('/login') }}">Masuk Sekarang</a> </p>

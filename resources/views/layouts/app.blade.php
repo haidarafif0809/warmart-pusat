@@ -8,6 +8,8 @@
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
 
+        <title>War-Mart.id</title>
+
       <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -41,7 +43,7 @@
                     WM
                 </a>
                 <a href="https://war-mart.id" class="simple-text logo-normal">
-                    WARMART.ID
+                    WAR-MART.ID
                 </a>
             </div>
             <div class="sidebar-wrapper">
@@ -178,6 +180,8 @@
 
 
                     <!--MASTER DATA WARMART PUSAT-->
+                    @if(Auth::user()->tipe_user == 1) 
+
                     @if(Laratrust::can('lihat_master_data'))
                     <li>
                         <a data-toggle="collapse" href="#pagesExamples">
@@ -246,8 +250,15 @@
                             </ul>
                         </div>
                     </li>
+                    <li class="">
+                        <a href="{{ route('error.index')}}">
+                            <i class="material-icons">error</i>
+                            <p>Error Log</p>
+                        </a>
+                    </li>
                     @endif
                     <!--end master data warmart pusat-->
+                    @endif
                    
                   
                 </ul>
@@ -365,7 +376,7 @@
 <script type="text/javascript">
     $(document).ready(function() {
 
-        $.fn.dataTable.ext.errMode = 'throw';
+       // $.fn.dataTable.ext.errMode = 'throw';
     });
 </script>
 

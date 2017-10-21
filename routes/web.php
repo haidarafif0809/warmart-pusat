@@ -29,6 +29,10 @@ Auth::routes();
 
 });
 
+//sarat & ketentuan
+Route::get('/syarat-ketentuan','Auth\RegisterController@syarat_ketentuan'); 
+
+
 //USER WARUNG 
 Route::get('/register-warung','Auth\RegisterController@register_warung')->middleware('optimizeImages'); 
 
@@ -97,6 +101,7 @@ Route::middleware('optimizeImages','auth')->group(function () {
 	Route::resource('kas_masuk', 'KasMasukController');
 	Route::resource('kas_keluar', 'KasKeluarController');	
 	Route::resource('kas_mutasi', 'KasMutasiController');
+	Route::resource('error', 'ErrorController');
 	Route::resource('item-masuk', 'ItemMasukController');
 	Route::resource('item-keluar', 'ItemKeluarController');
 
