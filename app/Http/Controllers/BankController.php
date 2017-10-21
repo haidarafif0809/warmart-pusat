@@ -183,7 +183,7 @@ class BankController extends Controller
         Bank::destroy($id);  
 
         Session:: flash("flash_notification", [
-            "level"=>"success",
+            "level"=>"danger",
             "message"=> $pesan_alert
             ]);
 
