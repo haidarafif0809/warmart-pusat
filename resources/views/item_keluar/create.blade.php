@@ -48,7 +48,7 @@
 		<div class="card">
 
 			<div class="card-header card-header-icon" data-background-color="purple">
-				<i class="material-icons">call_missed_outgoing</i>
+				<i class="material-icons">vertical_align_top</i>
 			</div>
 
 			<div class="card-content">

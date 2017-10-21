@@ -48,7 +48,7 @@
 
 			<div class="card">
 			   	<div class="card-header card-header-icon" data-background-color="purple">
-                       <i class="material-icons">account_circle</i>
+                       <i class="material-icons">vertical_align_bottom</i>
                                 </div>
                   <div class="card-content">
                          <h4 class="card-title"> Item Masuk </h4>

@@ -4,12 +4,13 @@ namespace App\Observers;
 
 use App\Kas;
 use Session;
+use Auth;
 
 class KasObserver
 {
     public function deleting(Kas $Kas)
     {       
-    	$data_kas = Kas::select('default_kas')->where('id', $Kas->id)->first();
+    	$data_kas = Kas::select('default_kas')->where('id', $Kas->id)->where('warung_id', Auth::user()->id_warung)->first();
 
     	if ($data_kas->default_kas == 1) {
     		$pesan_alert = 
@@ -35,7 +36,7 @@ class KasObserver
                     <b>Sukses : Kas Berhasil Dihapus</b>
                 </div>';
 
-    		Kas::where('id', $Kas->id)->delete();
+    		Kas::where('id', $Kas->id)->where('warung_id', Auth::user()->id_warung)->delete();
 
             Session:: flash("flash_notification", [
                 "level"=>"success",
