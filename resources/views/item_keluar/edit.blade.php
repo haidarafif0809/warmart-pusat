@@ -3,8 +3,8 @@
 @section('content')
 
 <!--FORM EDIT JUMLAH TBS ITEM KELUAR-->
-	{!! Form::open(['url' => route('item-keluar.edit_jumlah_tbs_item_keluar'),'method' => 'post', 'id'=>'form-edit-jumlah']) !!}
-		<input type="hidden" name="id_tbs_item_keluar" id="id_produk_edit_jumlah"  >
+	{!! Form::open(['url' => route('item-keluar.edit_jumlah_edit_tbs_item_keluar'),'method' => 'post', 'id'=>'form-edit-jumlah']) !!}
+		<input type="hidden" name="id_edit_tbs_item_keluar" id="id_produk_edit_jumlah"  >
 		<input type="hidden" name="jumlah_keluar" id="jumlah_keluar"  >
 	{!! Form::close() !!}
 
@@ -48,7 +48,7 @@
 		<div class="card">
 
 			<div class="card-header card-header-icon" data-background-color="purple">
-				<i class="material-icons">call_missed_outgoing</i>
+				<i class="material-icons">vertical_align_top</i>
 			</div>
 
 			<div class="card-content">
@@ -183,7 +183,7 @@
 	</script>
 
 	<script type="text/javascript">
-		$(document).on('click', '.edit-jumlah', function () {
+		$(document).on('click', '.edit-jumlah-edit-tbs', function () {
 
 			var id_produk = $(this).attr('data-id');
 
@@ -230,10 +230,9 @@
 	</script>
 
 	<script type="text/javascript">
-	// Konfirmasi Penghapusan
 		$(document.body).on('submit', '.js-confirm', function () {
-			var $btnHapus = $(this)
-			var text = $btnHapus.data('confirm') ? $btnHapus.data('confirm') : 'Anda yakin melakukan tindakan ini ?'
+			var $btnHapus = $(this);
+			var text = $btnHapus.data('confirm') ? $btnHapus.data('confirm') : 'Anda yakin melakukan tindakan ini ?';
 			var pesan_konfirmasi = confirm(text);
 			return pesan_konfirmasi;
 		});  

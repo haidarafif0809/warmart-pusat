@@ -153,6 +153,12 @@ Route::middleware('optimizeImages','auth')->group(function () {
 	'uses' => 'ItemKeluarController@proses_edit_jumlah_tbs_item_keluar'
 	]);
 
+	Route::post('/item-keluar/edit-jumlah-edit-tbs-item-keluar',[
+	'middleware' => ['auth'],
+	'as' => 'item-keluar.edit_jumlah_edit_tbs_item_keluar',
+	'uses' => 'ItemKeluarController@proses_edit_jumlah_edit_tbs_item_keluar'
+	]);
+
 //ITEM KELUAR
 
 	Route::post('/cek_total_kas',[ 		
