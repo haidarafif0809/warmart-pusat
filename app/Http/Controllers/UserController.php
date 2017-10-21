@@ -49,6 +49,8 @@ class UserController extends Controller
             ->addColumn('konfirmasi', function($user_konfirmasi){
                     return view('user._action', [
                         'model'     => $user_konfirmasi,
+                        'confirm_ya'   => 'confirm-ya-'.$user_konfirmasi->id,
+                        'confirm_no'   => 'confirm-no-'.$user_konfirmasi->id,
                         'confirm_message'   => 'Apakah Anda Yakin Ingin Meng Konfirmasi User ' . $user_konfirmasi->name . '?',
                         'no_confirm_message'   => 'Apakah Anda Yakin Tidak Meng Konfirmasi User ' . $user_konfirmasi->name . '?',
                         'konfirmasi_url' => route('user.konfirmasi', $user_konfirmasi->id),
@@ -60,6 +62,7 @@ class UserController extends Controller
             ->addColumn('reset', function($reset){
                     return view('user._action_reset', [
                         'model'     => $reset,
+                        'id_reset'  => 'reset-'.$reset->id,
                         'confirm_message'   => 'Apakah Anda Yakin Ingin Me Reset Password User ' . $reset->name . '?',
                         'reset_url' => route('user.reset', $reset->id),
                         'reset_password_user' => Laratrust::can('reset_password_user'), 
