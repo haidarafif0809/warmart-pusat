@@ -1,11 +1,11 @@
 {!! Form::model($model, ['url' => $form_url, 'method' => 'delete', 'class' => 'form-inline js-confirm', 'data-confirm' => $confirm_message]) !!}
 
-<button type="button" class="btn btn-sm btn-default" data-toggle="modal" data-target="#myModal{{$id_item_keluar}}">Detail</button>  
+<button type="button" class="btn btn-sm btn-default" id="btnDetail-{{$id_item_keluar}}" data-toggle="modal" data-target="#myModal{{$id_item_keluar}}">Detail</button>  
 
-|<a href="{{ $edit_url }}" class="btn btn-sm btn-success">Ubah</a> |
+|<a href="{{ $edit_url }}" class="btn btn-sm btn-success" id="btnEdit-{{$id_item_keluar}}">Ubah</a> |
 
 
-{!! Form::submit('Hapus',['class'=>'btn btn-sm btn-danger js-confirm']) !!}
+{!! Form::submit('Hapus',['class'=>'btn btn-sm btn-danger js-confirm', 'id' => 'btnHapus-'.$id_item_keluar]) !!}
 {!! Form::close() !!}
 
 <!-- MODAL PILIH PRODUK -->
@@ -16,7 +16,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Detail Produk</h4>
+          <h4 class="modal-title">Detail Item Keluar</h4>
         </div>
         <div class="modal-body"> 
         <div class="responsive">

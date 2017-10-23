@@ -41,76 +41,21 @@ class DetailItemKeluarObserver
 					return false;
 				}
 				else{
+					//HPP PRODUK (MODEL)
+						$hpp_produk = $DetailItemKeluar->produk->hpp;
+						$total_hpp = $hpp_produk * $jumlah_produk_keluar;
 
-					while ($jumlah_produk_keluar > 0) {
-
-						$hpp = DB::table('hpps AS hpp_masuk')->select([DB::raw('jumlah_masuk - IFNULL((SELECT SUM(jumlah_keluar) as jumlah_keluar FROM hpps WHERE id_produk = "'.$DetailItemKeluar->id_produk.'" AND no_faktur_hpp_masuk = hpp_masuk.no_faktur),0) AS sisa_hpp'), 'no_faktur', 'harga_unit'])
-						->where('id_produk', $DetailItemKeluar->id_produk)->where('warung_id', $DetailItemKeluar->warung_id)->where('jenis_hpp', 1)
-						->having('sisa_hpp', '>', 0)
-						->orderBy('created_at', 'ASC')->first();
-
-							$jumlah_hpp_masuk = $hpp->sisa_hpp;
-
-							if ($jumlah_produk_keluar == $jumlah_hpp_masuk) {
-
-								$total_nilai = $jumlah_produk_keluar * $hpp->harga_unit;
-
-						        	Hpp::create([
+								Hpp::create([
 									'no_faktur' 		  => $DetailItemKeluar->no_faktur,
-									'no_faktur_hpp_masuk' => $hpp->no_faktur,
 									'id_produk' 		  => $DetailItemKeluar->id_produk, 
 									'jenis_transaksi'	  => 'item_keluar', 
 									'jumlah_keluar'		  => $jumlah_produk_keluar, 
-									'harga_unit'		  => $hpp->harga_unit, 
-									'total_nilai'		  => $total_nilai,
+									'harga_unit'		  => $hpp_produk, 
+									'total_nilai'		  => $total_hpp,
 									'warung_id'			  => $DetailItemKeluar->warung_id, 
 									'jenis_hpp'			  => 2
 								]);
 
-						        $jumlah_produk_keluar = 0;
-							}
-							else if ($jumlah_produk_keluar > $jumlah_hpp_masuk) {
-								
-
-								$total_nilai = $jumlah_produk_keluar * $hpp->harga_unit;
-
-						        Hpp::create([
-									'no_faktur' 		  => $DetailItemKeluar->no_faktur,
-									'no_faktur_hpp_masuk' => $hpp->no_faktur,
-									'id_produk' 		  => $DetailItemKeluar->id_produk, 
-									'jenis_transaksi'	  => 'item_keluar', 
-									'jumlah_keluar'		  => $jumlah_hpp_masuk, 
-									'harga_unit'		  => $hpp->harga_unit, 
-									'total_nilai'		  => $total_nilai,
-									'warung_id'			  => $DetailItemKeluar->warung_id, 
-									'jenis_hpp'			  => 2
-								]);
-
-								$jumlah_produk_keluar -= $jumlah_hpp_masuk;
-
-							}
-							else if ($jumlah_produk_keluar < $jumlah_hpp_masuk) {
-
-
-								$total_nilai = $jumlah_produk_keluar * $hpp->harga_unit;
-
-						        Hpp::create([
-									'no_faktur' 		  => $DetailItemKeluar->no_faktur,
-									'no_faktur_hpp_masuk' => $hpp->no_faktur,
-									'id_produk' 		  => $DetailItemKeluar->id_produk, 
-									'jenis_transaksi'	  => 'item_keluar', 
-									'jumlah_keluar'		  => $jumlah_produk_keluar, 
-									'harga_unit'		  => $hpp->harga_unit, 
-									'total_nilai'		  => $total_nilai,
-									'warung_id'			  => $DetailItemKeluar->warung_id, 
-									'jenis_hpp'			  => 2
-								]);
-						       	
-						       	$jumlah_produk_keluar = 0;
-
-							}
-
-					} // END WHILE
 
 					return true;
 
