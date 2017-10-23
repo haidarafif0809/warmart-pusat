@@ -5,13 +5,9 @@
 			<div class="checkbox">
 				<label>
 				@if(App\PermissionRole::where('role_id',$otoritas->id)->where('permission_id',$permissions->id)->count() == 1) 
-
-					{!! Form::checkbox($permissions->name, '1',['checked' => '']) !!} 
-
+					<input checked="" name="{{$permissions->name}}" type=checkbox value="1" id="{{$permissions->name}}">
 				@else  
-
-					{!! Form::checkbox($permissions->name, '1') !!} 
-
+					<input name="{{$permissions->name}}" type=checkbox value="1" id="{{$permissions->name}}">
 				@endif
 				{{ $permissions->display_name }}
 
@@ -32,13 +28,9 @@
 			<div class="checkbox">
 				<label>
 				@if(App\PermissionRole::where('role_id',$otoritas->id)->where('permission_id',$permissions->id)->count() == 1) 
-
-					{!! Form::checkbox($permissions->name, '1',['checked' => '']) !!} 
-
+					<input checked="" name="{{$permissions->name}}" type=checkbox value="1" id="{{$permissions->name}}">
 				@else  
-
-					{!! Form::checkbox($permissions->name, '1') !!} 
-
+					<input name="{{$permissions->name}}" type=checkbox value="1" id="{{$permissions->name}}">
 				@endif
 				{{ $permissions->display_name }}
 
@@ -52,14 +44,10 @@
 		@foreach($permission_customer as $permissions) 
 			<div class="checkbox">
 				<label>
-				@if(App\PermissionRole::where('role_id',$otoritas->id)->where('permission_id',$permissions->id)->count() == 1) 
-
-					{!! Form::checkbox($permissions->name, '1',['checked' => '']) !!} 
-
+				@if(App\PermissionRole::where('role_id',$otoritas->id)->where('permission_id',$permissions->id)->count() == 1) 			
+					<input checked="" name="{{$permissions->name}}" type=checkbox value="1" id="{{$permissions->name}}">
 				@else  
-
-					{!! Form::checkbox($permissions->name, '1') !!} 
-
+					<input name="{{$permissions->name}}" type=checkbox value="1" id="{{$permissions->name}}">
 				@endif
 				{{ $permissions->display_name }}
 
@@ -74,13 +62,9 @@
 			<div class="checkbox">
 				<label>
 				@if(App\PermissionRole::where('role_id',$otoritas->id)->where('permission_id',$permissions->id)->count() == 1) 
-
-					{!! Form::checkbox($permissions->name, '1',['checked' => '']) !!} 
-
+					<input checked="" name="{{$permissions->name}}" type=checkbox value="1" id="{{$permissions->name}}">
 				@else  
-
-					{!! Form::checkbox($permissions->name, '1') !!} 
-
+					<input name="{{$permissions->name}}" type=checkbox value="1" id="{{$permissions->name}}"> 
 				@endif
 				{{ $permissions->display_name }}
 
@@ -95,13 +79,9 @@
 			<div class="checkbox">
 				<label>
 				@if(App\PermissionRole::where('role_id',$otoritas->id)->where('permission_id',$permissions->id)->count() == 1) 
-
-					{!! Form::checkbox($permissions->name, '1',['checked' => '']) !!} 
-
+					<input checked="" name="{{$permissions->name}}" type=checkbox value="1" id="{{$permissions->name}}">
 				@else  
-
-					{!! Form::checkbox($permissions->name, '1') !!} 
-
+					<input name="{{$permissions->name}}" type=checkbox value="1" id="{{$permissions->name}}"> 
 				@endif
 				{{ $permissions->display_name }}
 
@@ -116,13 +96,9 @@
 			<div class="checkbox">
 				<label>
 				@if(App\PermissionRole::where('role_id',$otoritas->id)->where('permission_id',$permissions->id)->count() == 1) 
-
-					{!! Form::checkbox($permissions->name, '1',['checked' => '']) !!} 
-
+					<input checked="" name="{{$permissions->name}}" type=checkbox value="1" id="{{$permissions->name}}">
 				@else  
-
-					{!! Form::checkbox($permissions->name, '1') !!} 
-
+					<input name="{{$permissions->name}}" type=checkbox value="1" id="{{$permissions->name}}">
 				@endif
 				{{ $permissions->display_name }}
 
@@ -138,13 +114,9 @@
 			<div class="checkbox">
 				<label>
 				@if(App\PermissionRole::where('role_id',$otoritas->id)->where('permission_id',$permissions->id)->count() == 1) 
-
-					{!! Form::checkbox($permissions->name, '1',['checked' => '']) !!} 
-
+					<input checked="" name="{{$permissions->name}}" type=checkbox value="1" id="{{$permissions->name}}">
 				@else  
-
-					{!! Form::checkbox($permissions->name, '1') !!} 
-
+					<input name="{{$permissions->name}}" type=checkbox value="1" id="{{$permissions->name}}">
 				@endif
 				{{ $permissions->display_name }}
 
@@ -153,4 +125,4 @@
 		@endforeach
 	</div> 
 </div>
-{!! Form::button('<i class="material-icons">send</i> Submit', ['class'=>'btn btn-primary', 'type'=>'submit']) !!}
+{!! Form::button('<i class="material-icons">send</i> Submit', ['class'=>'btn btn-primary', 'type'=>'submit','id'=>'btnSubmitPermession']) !!}

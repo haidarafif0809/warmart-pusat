@@ -37,7 +37,7 @@ class OtoritasController extends Controller
                     'form_url'          => route('otoritas.destroy', $otoritas->id),
                     'edit_url'          => route('otoritas.edit', $otoritas->id),
                     'permission_url'          => route('otoritas.permission', $otoritas->id),
-                    'confirm_message'   => 'Apakah Anda Yakin Ingin Menghapus Block' .$otoritas->name. '?',
+                    'confirm_message'   => 'Apakah Anda Yakin Ingin Menghapus Otoritas ' .$otoritas->name. '?',
                     'permission_ubah' => Laratrust::can('edit_otoritas'),
                     'permission_hapus' => Laratrust::can('hapus_otoritas'),
                     'permission_otoritas' => Laratrust::can('permission_otoritas'),
@@ -174,7 +174,7 @@ class OtoritasController extends Controller
         Role::destroy($id);
 
         Session:: flash("flash_notification", [
-            "level"=>"success",
+            "level"=>"danger",
             "message"=>"Otoritas Berhasil Di Hapus"
             ]);
         return redirect()->route('otoritas.index');
@@ -231,7 +231,7 @@ class OtoritasController extends Controller
 
           Session:: flash("flash_notification", [
             "level"=>"success",
-            "message"=>"Setting Permission <b> $role->display_name </b> Berhasil Dirubah"
+            "message"=>"Setting Permission $role->display_name Berhasil Dirubah"
             ]);
         return redirect()->route('otoritas.index');
 
