@@ -99,7 +99,7 @@ class CustomerController extends Controller
  
         $this->validate($request, [
             'name'      => 'required',
-            'email'     => 'required|without_spaces|unique:users,no_telp',
+            'email'     => 'nullable|unique:users,email', 
             'alamat'    => 'required',
             'no_telp'   => 'without_spaces|unique:users,no_telp|numeric',
             'tgl_lahir' => 'date', 
@@ -127,17 +127,11 @@ class CustomerController extends Controller
         KomunitasCustomer::create(['user_id' =>$customer_baru->id ,'komunitas_id' => $request->komunitas]);
         }
         
-        $pesan_alert = 
-             '<div class="container-fluid">
-                  <div class="alert-icon">
-                  <i class="material-icons">check</i>
-                  </div>
-                  <b>Sukses : Berhasil Menambah Customer "'.$request->name.'"</b>
-              </div>';
+
 
             Session::flash("flash_notification", [
                 "level"=>"success",
-                "message"=> $pesan_alert
+                "message"=> "Sukses : Berhasil Menambah Customer ".$request->name.""
             ]);
 
             return redirect()->route('customer.index');
@@ -188,7 +182,7 @@ class CustomerController extends Controller
        
         $this->validate($request, [            
             'name'      => 'required',
-            'email'     => 'required|without_spaces|unique:users,email,' .$id,
+            'email'     => 'nullable|without_spaces|unique:users,email,' .$id,
             'alamat'    => 'required',
             'no_telp'   => 'required|without_spaces|numeric|unique:users,no_telp,' .$id,
             'tgl_lahir' => 'required|date',
@@ -212,17 +206,11 @@ class CustomerController extends Controller
         }
 
 
-        $pesan_alert = 
-             '<div class="container-fluid">
-                  <div class="alert-icon">
-                  <i class="material-icons">check</i>
-                  </div>
-                  <b>Sukses : Berhasil Mengubah Customer "'.$request->name.'"</b>
-              </div>';
+ 
 
         Session::flash("flash_notification", [
             "level"=>"success",
-            "message"=>$pesan_alert
+            "message"=> "Sukses : Berhasil Mengubah Customer ".$request->name.""
             ]);
 
         return redirect()->route('customer.index');  
@@ -248,7 +236,7 @@ class CustomerController extends Controller
         KomunitasCustomer::where('user_id',$id)->delete();
 
         Session:: flash("flash_notification", [
-            "level"=>"success",
+            "level"=>"danger",
             "message"=> $pesan_alert
             ]);
         return redirect()->route('customer.index');
