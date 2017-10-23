@@ -102,6 +102,6 @@
 
 <div class="form-group">
 	<div class="col-md-4 col-md-offset-2">
-			{!! Form::button('<i class="material-icons">send</i> Submit', ['class'=>'btn btn-primary', 'id'=>'btnSimpanStokingCenter', 'type'=>'submit']) !!}
+			{!! Form::button('<i class="material-icons">send</i> Submit', ['class'=>'btn btn-primary', 'id'=>'btnSimpanWarung', 'type'=>'submit']) !!}
 	</div>
 </div>
