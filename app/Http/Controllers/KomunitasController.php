@@ -160,7 +160,7 @@ class KomunitasController extends Controller
                     <div class="alert-icon">
                     <i class="material-icons">check</i>
                     </div>
-                    <b>Success : Berhasil Menambah Komunitas '.$request->name.' </b>
+                    <b>Berhasil : Menambah Komunitas '.$request->name.' </b>
                 </div>';
 
 
@@ -261,7 +261,7 @@ class KomunitasController extends Controller
                     <div class="alert-icon">
                     <i class="material-icons">check</i>
                     </div>
-                    <b>Success : Berhasil Mengubah Komunitas '.$request->name.' </b>
+                    <b>Berhasil : Mengubah Komunitas '.$request->name.' </b>
                 </div>';
 
         Session::flash("flash_notification", [
@@ -296,7 +296,7 @@ class KomunitasController extends Controller
                     <div class="alert-icon">
                     <i class="material-icons">check</i>
                     </div>
-                    <b>Success : Berhasil Menghapus Komunitas </b>
+                    <b>Berhasil : Menghapus Komunitas </b>
                 </div>';
 
         Session:: flash("flash_notification", [

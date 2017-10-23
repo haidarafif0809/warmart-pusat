@@ -1,8 +1,8 @@
 <div class="form-group{{ $errors->has('no_telp') ? ' has-error' : '' }}">
 	{!! Form::label('no_telp', 'No Telp', ['class'=>'col-md-2 control-label']) !!}
 	<div class="col-md-4">
-		{!! Form::number('no_telp', null, ['class'=>'form-control','placeholder'=>'No Telp','required','autocomplete'=>'off']) !!}
-		{!! $errors->first('no_telp', '<p class="help-block">:message</p>') !!}
+		{!! Form::number('no_telp', null, ['class'=>'form-control','placeholder'=>'No Telp','required','autocomplete'=>'off','id'=>'no_telp']) !!}
+		{!! $errors->first('no_telp', '<p class="help-block" id="no_telp_error">:message</p>') !!}
 	</div>
 </div>
 
@@ -31,8 +31,8 @@
 <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
 	{!! Form::label('email', 'Email', ['class'=>'col-md-2 control-label']) !!}
 	<div class="col-md-4">
-		{!! Form::email('email', null, ['class'=>'form-control','placeholder' => 'Email','required','autocomplete'=>'off']) !!}
-		{!! $errors->first('email', '<p class="help-block">:message</p>') !!}
+		{!! Form::email('email', null, ['class'=>'form-control','placeholder' => 'Email','required','autocomplete'=>'off','id'=>'email']) !!}
+		{!! $errors->first('email', '<p class="help-block" id="email_error">:message</p>') !!}
 	</div>
 </div>
 
@@ -42,12 +42,12 @@
 		@if (isset($komunitas) && $komunitas->id_warung)
 		{!! Form::select('id_warung', 
 		[''=>'']+App\Warung::pluck('name','id')->all(),$komunitas->id_warung
-		, ['class'=>'form-control js-selectize-reguler', 'placeholder' => 'Silahkan Pilih','id'=>'pilih_id_warung']) !!}
+		, ['class'=>'js-selectize-reguler', 'placeholder' => 'Silahkan Pilih','id'=>'pilih_id_warung']) !!}
 		{!! $errors->first('id_warung', '<p class="help-block">:message</p>') !!}
 		@else
 		{!! Form::select('id_warung', 
 		[''=>'']+App\Warung::pluck('name','id')->all(),null
-		, ['class'=>'form-control js-selectize-reguler', 'placeholder' => 'Silahkan Pilih','id'=>'pilih_id_warung']) !!}
+		, ['class'=>'js-selectize-reguler', 'placeholder' => 'Silahkan Pilih','id'=>'pilih_id_warung']) !!}
 		{!! $errors->first('id_warung', '<p class="help-block">:message</p>') !!}
 		@endif
 	</div>
@@ -84,12 +84,12 @@
 		@if (isset($komunitas) && $komunitas->wilayah)
 		{!! Form::select('kelurahan', 
 		[''=>'']+App\Kelurahan::pluck('nama','id')->all(),$komunitas->wilayah
-		, ['class'=>'form-control js-selectize-reguler', 'placeholder' => 'Silahkan Pilih','id'=>'pilih_kelurahan']) !!}
+		, ['class'=>'js-selectize-reguler', 'placeholder' => 'Silahkan Pilih','id'=>'pilih_kelurahan']) !!}
 		{!! $errors->first('kelurahan', '<p class="help-block">:message</p>') !!}
 		@else
 		{!! Form::select('kelurahan', 
 		[''=>'']+App\Kelurahan::pluck('nama','id')->all(),null
-		, ['class'=>'form-control js-selectize-reguler', 'placeholder' => 'Silahkan Pilih','id'=>'pilih_kelurahan']) !!}
+		, ['class'=>'js-selectize-reguler', 'placeholder' => 'Silahkan Pilih','id'=>'pilih_kelurahan']) !!}
 		{!! $errors->first('kelurahan', '<p class="help-block">:message</p>') !!}
 		@endif
 	</div>
