@@ -67,10 +67,7 @@
 										{!! Form::hidden('jumlah_produk', null, ['autocomplete'=>'off', 'id'=>'jumlah_produk']) !!}
 										{!! $errors->first('jumlah_produk', '<p class="help-block" id="eror_jumlah_produk">:message</p>') !!}
 					          	</div>
-
-					          	<div class="col-md-2">
-					          		<button type="submit" class="btn btn-success" id="btnSubmitEdit"><i class="material-icons">done</i> Submit Produk (F1)</button>
-					          	</div>								
+					          									
 						 	{!! Form::close() !!}
 						</div>
 					<!--/COL MD 8-->
@@ -114,7 +111,7 @@
 
 			$select[0].selectize.focus();
 
-			$("#form-produk").submit(function(){
+			$select.on('change', function(){
 
 				var produk = $("#pilih_produk").val();
 				var jumlah = $("#jumlah_produk").val();
