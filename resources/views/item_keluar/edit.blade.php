@@ -139,8 +139,10 @@
 						confirmButtonAriaLabel: 'Thumbs up, great!',
 						cancelButtonText:'<i class="fa fa-thumbs-o-down"> Batal',
 						closeOnConfirm: true,
-
 						cancelButtonAriaLabel: 'Thumbs down',
+						inputAttributes: {
+							'name': 'edit_qty_produk',
+						},
 					    inputValidator : function (value) {
 					    	return new Promise(function (resolve, reject) {
 
@@ -202,6 +204,9 @@
 				cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal',
 				closeOnConfirm: true,
 				cancelButtonAriaLabel: 'Thumbs down',
+				inputAttributes: {
+						'name': 'edit_qty_produk',
+				},
 				inputValidator : function (value) {
 					return new Promise(function (resolve, reject) {
 						if (value) {

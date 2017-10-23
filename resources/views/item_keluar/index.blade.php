@@ -17,7 +17,7 @@
                          <h4 class="card-title"> Item Keluar </h4>
 					
                        <div class="toolbar">
-                         		<p> <a class="btn btn-primary" href="{{ route('item-keluar.create') }}" id="btnTambahItemKeluar"><i class="material-icons">add</i> Item Keluar</a> </p>
+                         		<p> <a class="btn btn-primary" href="{{ route('item-keluar.create') }}" id="btnTambahItemKeluar"><i class="material-icons">add</i> Tambah Item Keluar</a> </p>
                          </div>
 			
 					<div class="table-responsive">
@@ -32,11 +32,9 @@
 @section('scripts')
 {!! $html->scripts() !!}
 <script type="text/javascript">
-	// confirm delete
 		$(document.body).on('submit', '.js-confirm', function () {
-		var $el = $(this)
-		var text = $el.data('confirm') ? $el.data('confirm') : 'Anda yakin melakukan tindakan ini\
-	?'
+		var $el = $(this);
+		var text = $el.data('confirm') ? $el.data('confirm') : 'Anda yakin melakukan tindakan ini ?';
 		var c = confirm(text);
 		return c;
 	}); 

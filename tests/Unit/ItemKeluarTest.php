@@ -50,11 +50,24 @@ class ItemKeluarTest extends TestCase
 	//CEK DATABASE TBS ITEM KELUAR
 	    $see_tbs_item_keluar = $this->assertDatabaseHas('tbs_item_keluars',['id_produk' => '1', 'session_id' => session()->getId(), 'jumlah_produk' => '1', 'warung_id' => '1']);
 
-	// TEST INSERT DETAIL ITEM KELUAR
-	    $create_detail_item_keluar = DetailItemKeluar::create(['id_produk' => $create_tbs_item_keluar->id_produk, 'no_faktur' => $no_faktur, 'jumlah_produk' => $create_tbs_item_keluar->jumlah_produk, 'warung_id' => $create_tbs_item_keluar->warung_id]);
-
-	//CEK DATABASE DETAIL ITEM KELUAR
-	    $see_detail_item_keluar = $this->assertDatabaseHas('tbs_item_keluars',['id_produk' => '1', 'session_id' => session()->getId(), 'jumlah_produk' => '1', 'warung_id' => '1']);
+    // TEST INSERT DETAIL ITEM KELUAR
+        $create_detail_item_keluar = DetailItemKeluar::create(['id_produk' => $create_tbs_item_keluar->id_produk, 'no_faktur' => $no_faktur, 'jumlah_produk' => $create_tbs_item_keluar->jumlah_produk, 'warung_id' => $create_tbs_item_keluar->warung_id]);
+        
+    //CEK DATABASE DETAIL ITEM KELUAR
+        $see_detail_item_keluar = $this->assertDatabaseHas('detail_item_keluars',['id_produk' => '1', 'no_faktur' => $no_faktur, 'jumlah_produk' => '1', 'warung_id' => '1']);
+    //CEK DATABASE HPP ITEM KELUAR
+        $hpp_produk = $create_detail_item_keluar->produk->hpp;
+        $total_hpp = $hpp_produk * $create_detail_item_keluar->jumlah_produk;
+        $see_detail_item_keluar = $this->assertDatabaseHas('hpps',[
+                                    'no_faktur'           => $no_faktur,
+                                    'id_produk'           => $create_detail_item_keluar->id_produk, 
+                                    'jenis_transaksi'     => 'item_keluar', 
+                                    'jumlah_keluar'       => $create_detail_item_keluar->jumlah_produk, 
+                                    'harga_unit'          => $hpp_produk, 
+                                    'total_nilai'         => $total_hpp,
+                                    'warung_id'           => $create_detail_item_keluar->warung_id, 
+                                    'jenis_hpp'           => 2
+                                ]);
 
 	// TEST INSERT ITEM KELUAR
 	    $create_item_keluar = ItemKeluar::create(['no_faktur' => $no_faktur, 'keterangan' => 'TestCase Item Keluar', 'warung_id' => '1']);
@@ -171,32 +184,32 @@ class ItemKeluarTest extends TestCase
                  	->assertSee('Edit Item Keluar : <b>'.$no_faktur.'</b>');
     }
 
-    // HTTPTEST UPDATE ITEM KELUAR
+        // HTTPTEST UPDATE ITEM KELUAR
     public function testHTTPEditItemKeluar() {
 
     //MEMBUAT NO FAKTUR
-    	$warung_id = 1;
-    	$no_faktur = ItemKeluar::no_faktur($warung_id);
+        $warung_id = 1;
+        $no_faktur = ItemKeluar::no_faktur($warung_id);
 
-	// TEST INSERT TBS ITEM KELUAR
-	    $create_tbs_item_keluar = TbsItemKeluar::create(['id_produk' => '1', 'session_id' => session()->getId(), 'jumlah_produk' => '1', 'warung_id' => '1']);
+    // TEST INSERT TBS ITEM KELUAR
+        $create_tbs_item_keluar = TbsItemKeluar::create(['id_produk' => '1', 'session_id' => session()->getId(), 'jumlah_produk' => '1', 'warung_id' => '1']);
 
-	// TEST INSERT DETAIL ITEM KELUAR
-	    $create_detail_item_keluar = DetailItemKeluar::create(['id_produk' => $create_tbs_item_keluar->id_produk, 'no_faktur' => $no_faktur, 'jumlah_produk' => $create_tbs_item_keluar->jumlah_produk, 'warung_id' => $create_tbs_item_keluar->warung_id]);
+    // TEST INSERT DETAIL ITEM KELUAR
+        $create_detail_item_keluar = DetailItemKeluar::create(['id_produk' => $create_tbs_item_keluar->id_produk, 'no_faktur' => $no_faktur, 'jumlah_produk' => $create_tbs_item_keluar->jumlah_produk, 'warung_id' => $create_tbs_item_keluar->warung_id]);
 
-	// TEST INSERT ITEM KELUAR
-	    $create_item_keluar = ItemKeluar::create(['no_faktur' => $no_faktur, 'keterangan' => 'TestCase Item Keluar', 'warung_id' => '1']);
+    // TEST INSERT ITEM KELUAR
+        $create_item_keluar = ItemKeluar::create(['no_faktur' => $no_faktur, 'keterangan' => 'TestCase Item Keluar', 'warung_id' => '1']);
 
-	    //LOGIN USER WARUNG
-	    $user = User::find(5);
+        //LOGIN USER WARUNG
+        $user = User::find(5);
 
-		$response = $this->actingAs($user)->json('POST', route('item-keluar.proses_edit_item_keluar',$create_item_keluar->id), ['keterangan' => 'HttpTest Tambah Item Keluar #2']);
+        $response = $this->actingAs($user)->json('POST', route('item-keluar.proses_edit_item_keluar',$create_item_keluar->id), ['keterangan' => 'HttpTest Tambah Item Keluar #2']);
 
-		$response->assertStatus(302)
-	                 ->assertRedirect(route('item-keluar.index'));
+        $response->assertStatus(302)
+                     ->assertRedirect(route('item-keluar.index'));
 
-	    $response2 = $this->get($response->headers->get('location'))
-	    					->assertSee('Sukses : Berhasil Melakukan Edit Transaksi Item Keluar Faktur "'.$create_item_keluar->no_faktur.'"');
+        $response2 = $this->get($response->headers->get('location'))
+                            ->assertSee('Sukses : Berhasil Melakukan Edit Transaksi Item Keluar Faktur "'.$create_item_keluar->no_faktur.'"');
 
     }
 

@@ -32,12 +32,18 @@ class ItemKeluarController extends Controller
                     'edit_url'                  => route('item-keluar.proses_form_edit', $itemkeluar->id),
                     'confirm_message'           => 'Anda Yakin Ingin Menghapus Item Keluar Faktur "'.$itemkeluar->no_faktur.'" ?',
                 ]);
+            })
+            ->addColumn('total_nilai_keluar', function($total_keluar){
+                $data_nilai_keluar = number_format($total_keluar->total,0,',','.');
+
+                return $data_nilai_keluar;
             })->make(true);
         }
 
         $html = $htmlBuilder
             ->addColumn(['data' => 'no_faktur', 'name' => 'no_faktur', 'title' => 'No. Faktur'])
-            ->addColumn(['data' => 'keterangan', 'name' => 'keterangan', 'title' => 'Keterangan'])         
+            ->addColumn(['data' => 'keterangan', 'name' => 'keterangan', 'title' => 'Keterangan'])
+            ->addColumn(['data' => 'total_nilai_keluar', 'name' => 'total_nilai_keluar', 'title' => 'Total'])
             ->addColumn(['data' => 'created_at', 'name' => 'created_at', 'title' => 'Waktu'])
             ->addColumn(['data' => 'updated_at', 'name' => 'updated_at', 'title' => 'Waktu Edit'])
             ->addColumn(['data' => 'action', 'name' => 'action', 'title' => '', 'orderable' => false, 'searchable' => false]);
@@ -70,7 +76,7 @@ class ItemKeluarController extends Controller
                 })
                 ->editColumn('jumlah_produk', function($produk){
                    
-                   return "<a href='#edit-jumlah' class='edit-jumlah' data-id='$produk->id_tbs_item_keluar'>$produk->jumlah_produk</a>"; 
+                   return "<a href='#edit-jumlah' id='edit_jumlah_produk' class='edit-jumlah' data-id='$produk->id_tbs_item_keluar'>$produk->jumlah_produk</a>"; 
                 })->make(true);
         }
         
@@ -409,7 +415,7 @@ class ItemKeluarController extends Controller
                 DB::rollBack();
                 return redirect()->back();
             }
-        }          
+        }
 
 //INSERT DETAIL ITEM KELUAR
     $data_produk_item_keluar = EditTbsItemKeluar::where('no_faktur', $data_item_keluar->no_faktur)->where('warung_id', Auth::user()->id_warung);
@@ -431,58 +437,59 @@ class ItemKeluarController extends Controller
 
                 return redirect()->back();
         }
-
-        foreach ($data_produk_item_keluar->get() as $data_tbs) {
+        else{
+            foreach ($data_produk_item_keluar->get() as $data_tbs) {
             
-            $detail_item_keluar = new DetailItemKeluar();
-            if (!$detail_item_keluar->stok_produk($data_tbs->id_produk, $data_tbs->jumlah_produk)) {
-                //DI BATALKAN PROSES NYA
-                DB::rollBack();
-                return redirect()->back();
+                $detail_item_keluar = new DetailItemKeluar();
+                if (!$detail_item_keluar->stok_produk($data_tbs->id_produk, $data_tbs->jumlah_produk)) {
+                    //DI BATALKAN PROSES NYA
+                    DB::rollBack();
+                    return redirect()->back();
+                }
+                else{
+                    $detail_item_keluar = DetailItemKeluar::create([
+                        'id_produk'     => $data_tbs->id_produk,              
+                        'no_faktur'     => $data_item_keluar->no_faktur,
+                        'jumlah_produk' => $data_tbs->jumlah_produk,
+                        'warung_id'     => Auth::user()->id_warung
+                    ]);  
+                }
+                
+            }
+
+    //INSERT ITEM KELUAR
+            if ($request->keterangan == "") {
+                $keterangan = "-";
             }
             else{
-                $detail_item_keluar = DetailItemKeluar::create([
-                    'id_produk'     => $data_tbs->id_produk,              
-                    'no_faktur'     => $data_item_keluar->no_faktur,
-                    'jumlah_produk' => $data_tbs->jumlah_produk,
-                    'warung_id'     => Auth::user()->id_warung
-                ]);  
+                $keterangan = $request->keterangan;
             }
-            
-        }
 
-//INSERT ITEM KELUAR
-        if ($request->keterangan == "") {
-            $keterangan = "-";
-        }
-        else{
-            $keterangan = $request->keterangan;
-        }
-
-        $itemkeluar = ItemKeluar::find($id)->update([ 
-            'keterangan' =>$keterangan
-        ]);
-
-        $hapus_edit_tbs_item_keluar = EditTbsItemKeluar::where('no_faktur', $data_item_keluar->no_faktur)->where('warung_id', Auth::user()->id_warung)->delete(); 
-
-        if (!$itemkeluar) {
-            return back();
-        }
-
-        $pesan_alert = 
-            '<div class="container-fluid">
-                <div class="alert-icon">
-                    <i class="material-icons">check</i>
-                </div>
-                    <b>Sukses : Berhasil Melakukan Edit Transaksi Item Keluar Faktur "'.$data_item_keluar->no_faktur.'"</b>
-            </div>';
-
-            Session::flash("flash_notification", [
-                "level"     => "success",
-                "message"   => $pesan_alert
+            $itemkeluar = ItemKeluar::find($id)->update([ 
+                'keterangan' =>$keterangan
             ]);
 
-        return redirect()->route('item-keluar.index');
+            $hapus_edit_tbs_item_keluar = EditTbsItemKeluar::where('no_faktur', $data_item_keluar->no_faktur)->where('warung_id', Auth::user()->id_warung)->delete(); 
+
+            if (!$itemkeluar) {
+                return back();
+            }
+
+            $pesan_alert = 
+                '<div class="container-fluid">
+                    <div class="alert-icon">
+                        <i class="material-icons">check</i>
+                    </div>
+                        <b>Sukses : Berhasil Melakukan Edit Transaksi Item Keluar Faktur "'.$data_item_keluar->no_faktur.'"</b>
+                </div>';
+
+                Session::flash("flash_notification", [
+                    "level"     => "success",
+                    "message"   => $pesan_alert
+                ]);
+
+            return redirect()->route('item-keluar.index');
+        }        
         
     }
  
@@ -546,7 +553,7 @@ class ItemKeluarController extends Controller
                 })
                 ->editColumn('jumlah_produk', function($produk){
                    
-                   return "<a href='#edit-jumlah' class='edit-jumlah-edit-tbs' data-id='$produk->id_edit_tbs_item_keluar'>$produk->jumlah_produk</a>"; 
+                   return "<a href='#edit-jumlah' id='edit_jumlah_produk' class='edit-jumlah-edit-tbs' data-id='$produk->id_edit_tbs_item_keluar'>$produk->jumlah_produk</a>"; 
                 })->make(true);
         }
 

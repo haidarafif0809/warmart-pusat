@@ -235,7 +235,7 @@
 		 	var produk = $("#pilih_produk").val();
 		 	var jumlah = $("#jumlah_produk").val();
 		 	if (produk == "") {
-		 		// swal('Oops...','Produk Harus Dipilih Dahulu !','error');
+		 		 swal('Oops...','Produk Harus Dipilih Dahulu !','error');
 
 		 		return false;
 
