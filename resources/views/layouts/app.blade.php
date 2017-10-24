@@ -170,7 +170,13 @@
                                         <span class="sidebar-mini">P</span>
                                         <span class="sidebar-normal">Produk</span>
                                     </a>
-                                </li>  
+                                </li> 
+                                 <li>
+                                    <a href="{{ route('suplier.index') }}">
+                                        <span class="sidebar-mini">S</span>
+                                        <span class="sidebar-normal">Suplier</span>
+                                    </a>
+                                </li>   
                             </ul>
                         </div>
                     </li>
