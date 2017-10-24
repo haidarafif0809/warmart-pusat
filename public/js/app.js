@@ -998,6 +998,8 @@ Vue.use(VueResource);
 
 window.Vue.use(__WEBPACK_IMPORTED_MODULE_1_vue_swal___default.a);
 
+Vue.component('pagination', __webpack_require__(80));
+
 window.Vue.use(__WEBPACK_IMPORTED_MODULE_0_vue_router__["a" /* default */]);
 
 
@@ -34782,83 +34784,108 @@ var render = function() {
       _c("div", { staticClass: "card" }, [
         _vm._m(1),
         _vm._v(" "),
-        _c("div", { staticClass: "card-content" }, [
-          _c("h4", { staticClass: "card-title" }, [_vm._v(" Bank ")]),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "toolbar" },
-            [
-              _c(
-                "router-link",
-                {
-                  staticClass: "btn btn-primary",
-                  attrs: { to: { name: "createBank" } }
-                },
-                [_vm._v("Tambah Bank")]
-              )
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "table-responsive material-datatables" }, [
-            _c("table", { staticClass: "table table-bordered table-striped" }, [
-              _vm._m(2),
-              _vm._v(" "),
-              _c(
-                "tbody",
-                _vm._l(_vm.banks, function(bank, index) {
-                  return _c("tr", [
-                    _c("td", [_vm._v(_vm._s(bank.nama_bank))]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(bank.atas_nama))]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(bank.no_rek))]),
+        _c(
+          "div",
+          { staticClass: "card-content" },
+          [
+            _c("h4", { staticClass: "card-title" }, [_vm._v(" Bank ")]),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "toolbar" },
+              [
+                _c(
+                  "router-link",
+                  {
+                    staticClass: "btn btn-primary",
+                    attrs: { to: { name: "createBank" } }
+                  },
+                  [_vm._v("Tambah Bank")]
+                )
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: " table-responsive material-datatables" },
+              [
+                _c(
+                  "table",
+                  { staticClass: "table table-striped table-hover " },
+                  [
+                    _vm._m(2),
                     _vm._v(" "),
                     _c(
-                      "td",
-                      [
-                        _c(
-                          "router-link",
-                          {
-                            staticClass: "btn btn-xs btn-default",
-                            attrs: {
-                              to: { name: "editBank", params: { id: bank.id } }
-                            }
-                          },
-                          [
-                            _vm._v(
-                              "\n                                Edit\n                           \t\t\t "
-                            )
-                          ]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "a",
-                          {
-                            staticClass: "btn btn-xs btn-danger",
-                            attrs: { href: "#" },
-                            on: {
-                              click: function($event) {
-                                _vm.deleteEntry(bank.id, index, bank.nama_bank)
-                              }
-                            }
-                          },
-                          [
-                            _vm._v(
-                              "\n                                Delete\n                            "
-                            )
-                          ]
-                        )
-                      ],
-                      1
+                      "tbody",
+                      _vm._l(_vm.banks, function(bank, index) {
+                        return _c("tr", [
+                          _c("td", [_vm._v(_vm._s(bank.nama_bank))]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s(bank.atas_nama))]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s(bank.no_rek))]),
+                          _vm._v(" "),
+                          _c(
+                            "td",
+                            [
+                              _c(
+                                "router-link",
+                                {
+                                  staticClass: "btn btn-xs btn-default",
+                                  attrs: {
+                                    to: {
+                                      name: "editBank",
+                                      params: { id: bank.id }
+                                    }
+                                  }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                                Edit\n                           \t\t\t "
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "a",
+                                {
+                                  staticClass: "btn btn-xs btn-danger",
+                                  attrs: { href: "#" },
+                                  on: {
+                                    click: function($event) {
+                                      _vm.deleteEntry(
+                                        bank.id,
+                                        index,
+                                        bank.nama_bank
+                                      )
+                                    }
+                                  }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                                Delete\n                            "
+                                  )
+                                ]
+                              )
+                            ],
+                            1
+                          )
+                        ])
+                      })
                     )
-                  ])
-                })
-              )
-            ])
-          ])
-        ])
+                  ]
+                )
+              ]
+            ),
+            _vm._v(" "),
+            _c("pagination", {
+              attrs: { data: _vm.banksData },
+              on: { "pagination-change-page": _vm.getResults }
+            })
+          ],
+          1
+        )
       ])
     ])
   ])
@@ -34891,7 +34918,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("thead", [
+    return _c("thead", { staticClass: "text-primary" }, [
       _c("tr", [
         _c("th", [_vm._v("Nama Bank")]),
         _vm._v(" "),
@@ -34980,25 +35007,45 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
-            banks: []
+            banks: [],
+            banksData: {},
+            url: window.location.origin + window.location.pathname
         };
     },
     mounted: function mounted() {
         var app = this;
-        var url = window.location.origin + window.location.pathname;
-        axios.get(url + '/view').then(function (resp) {
-            app.banks = resp.data;
-        }).catch(function (resp) {
-            console.log(resp);
-            alert("Could not load banks");
-        });
+        app.getResults();
+    },
+    created: function created() {
+        // Fetch initial results
+
     },
 
     methods: {
+
+        // Our method to GET results from a Laravel endpoint
+        getResults: function getResults(page) {
+            var app = this;
+            if (typeof page === 'undefined') {
+                page = 1;
+            }
+            // Using vue-resource as an example
+
+            axios.get(app.url + '/view?page=' + page).then(function (resp) {
+                app.banks = resp.data.data;
+                app.banksData = resp.data;
+            }).catch(function (resp) {
+                console.log(resp);
+                alert("Could not load banks");
+            });
+        },
         alert: function alert(pesan) {
             this.$swal({
                 title: "Berhasil Menghapus Bank!",
@@ -35605,6 +35652,75 @@ if (false) {
     require("vue-hot-reload-api")      .rerender("data-v-867c03ba", module.exports)
   }
 }
+
+/***/ }),
+/* 80 */
+/***/ (function(module, exports) {
+
+module.exports = {
+	props: {
+		data: {
+			type: Object,
+			default: function() {
+				return {
+					current_page: 1,
+					data: [],
+					from: 1,
+					last_page: 1,
+					next_page_url: null,
+					per_page: 10,
+					prev_page_url: null,
+					to: 1,
+					total: 0,
+				}
+			}
+		},
+		limit: {
+			type: Number,
+			default: 0
+		}
+	},
+
+	template: '<ul class="pagination" v-if="data.total > data.per_page">\
+		<li class="page-item" v-if="data.prev_page_url">\
+			<a class="page-link" href="#" aria-label="Previous" @click.prevent="selectPage(--data.current_page)"><span aria-hidden="true">&laquo;</span></a>\
+		</li>\
+		<li class="page-item" v-for="n in getPages()" :class="{ \'active\': n == data.current_page }"><a class="page-link" href="#" @click.prevent="selectPage(n)">{{ n }}</a></li>\
+		<li class="page-item" v-if="data.next_page_url">\
+			<a class="page-link" href="#" aria-label="Next" @click.prevent="selectPage(++data.current_page)"><span aria-hidden="true">&raquo;</span></a>\
+		</li>\
+	</ul>',
+
+	methods: {
+		selectPage: function(page) {
+			this.$emit('pagination-change-page', page);
+		},
+		getPages: function() {
+			if (this.limit === -1) {
+				return 0;
+			}
+
+			if (this.limit === 0) {
+				return this.data.last_page;
+			}
+
+        	var start = this.data.current_page - this.limit,
+        	    end   = this.data.current_page + this.limit + 1,
+        	    pages = [],
+        	    index;
+
+        	start = start < 1 ? 1 : start;
+        	end   = end >= this.data.last_page ? this.data.last_page + 1 : end;
+
+        	for (index = start; index < end; index++) {
+        		pages.push(index);
+        	}
+
+        	return pages;
+		}
+	}
+};
+
 
 /***/ })
 /******/ ]);

@@ -19,6 +19,7 @@
         "vue": "^2.1.10"
     },
     "dependencies": {
+        "laravel-vue-pagination": "^1.0.6",
         "vue-router": "^3.0.1",
         "vue-swal": "0.0.6",
         "vuetable": "^1.5.12"

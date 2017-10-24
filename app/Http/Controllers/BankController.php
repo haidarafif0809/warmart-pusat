@@ -32,7 +32,8 @@ class BankController extends Controller
 
 
     public function view(){
-        return Bank::all();
+        $bank = Bank::paginate(10);
+        return response()->json($bank);
     }
 
     /**

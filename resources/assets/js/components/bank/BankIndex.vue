@@ -21,9 +21,9 @@
                          	<router-link :to="{name: 'createBank'}" class="btn btn-primary">Tambah Bank</router-link>
                          </div>
              
-					<div class="table-responsive material-datatables">
-						<table class="table table-bordered table-striped">
-		                    <thead>
+					<div class=" table-responsive material-datatables">
+						<table class="table table-striped table-hover ">
+		                    <thead class="text-primary">
 		                    <tr>
 		                      
 		                        <th>Nama Bank</th>
@@ -52,7 +52,10 @@
 		                    </tr>
 		                    </tbody>
 		                </table>
+                 
+
 					</div>
+             <pagination :data="banksData" v-on:pagination-change-page="getResults"></pagination>
 				</div>
 			</div>
 		</div>
@@ -63,24 +66,41 @@
     export default {
         data: function () {
             return {
-                banks: []
+                banks: [],
+                banksData: {},
+                url : window.location.origin+window.location.pathname
             }
         },
         mounted() {
             var app = this;
-            let url = window.location.origin+window.location.pathname;
-            axios.get(url+'/view')
+            app.getResults();
+
+      },
+        created() {
+        // Fetch initial results
+      
+      },
+        methods: {
+
+            // Our method to GET results from a Laravel endpoint
+      getResults(page) {
+          var app = this;
+        if (typeof page === 'undefined') {
+          page = 1;
+        }
+         // Using vue-resource as an example
+      
+            axios.get(app.url+'/view?page='+page)
                 .then(function (resp) {
-                    app.banks = resp.data;
+                    app.banks = resp.data.data;
+                    app.banksData = resp.data;
                 })
                 .catch(function (resp) {
                     console.log(resp);
                     alert("Could not load banks");
                 });
 
-
-        },
-        methods: {
+      },
 		  alert(pesan) {
               this.$swal({
                   title: "Berhasil Menghapus Bank!",

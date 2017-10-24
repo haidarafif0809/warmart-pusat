@@ -15,6 +15,7 @@ import VueSwal from 'vue-swal'
 
 window.Vue.use(VueSwal)
 
+Vue.component('pagination', require('laravel-vue-pagination'));
 
 window.Vue.use(VueRouter);
 
