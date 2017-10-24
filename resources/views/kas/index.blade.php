@@ -28,15 +28,13 @@
 @endsection
 
 @section('scripts')
-{!! $html->scripts() !!}
+
 <script type="text/javascript">
-	// confirm delete
-		$(document.body).on('submit', '.js-confirm', function () {
-		var $el = $(this)
-		var text = $el.data('confirm') ? $el.data('confirm') : 'Anda yakin melakukan tindakan ini\
-	?'
-		var c = confirm(text);
-		return c;
-	}); 
+	$(document.body).on('submit', '.js-confirm', function () {
+		var $btnHapus = $(this);
+		var text = $btnHapus.data('confirm') ? $btnHapus.data('confirm') : 'Anda yakin melakukan tindakan ini ?';
+		var pesan_konfirmasi = confirm(text);
+		return pesan_konfirmasi;
+	});
 </script>
 @endsection

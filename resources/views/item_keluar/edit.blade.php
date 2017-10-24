@@ -3,8 +3,8 @@
 @section('content')
 
 <!--FORM EDIT JUMLAH TBS ITEM KELUAR-->
-	{!! Form::open(['url' => route('item-keluar.edit_jumlah_tbs_item_keluar'),'method' => 'post', 'id'=>'form-edit-jumlah']) !!}
-		<input type="hidden" name="id_tbs_item_keluar" id="id_produk_edit_jumlah"  >
+	{!! Form::open(['url' => route('item-keluar.edit_jumlah_edit_tbs_item_keluar'),'method' => 'post', 'id'=>'form-edit-jumlah']) !!}
+		<input type="hidden" name="id_edit_tbs_item_keluar" id="id_produk_edit_jumlah"  >
 		<input type="hidden" name="jumlah_keluar" id="jumlah_keluar"  >
 	{!! Form::close() !!}
 
@@ -48,7 +48,7 @@
 		<div class="card">
 
 			<div class="card-header card-header-icon" data-background-color="purple">
-				<i class="material-icons">call_missed_outgoing</i>
+				<i class="material-icons">vertical_align_top</i>
 			</div>
 
 			<div class="card-content">
@@ -67,10 +67,7 @@
 										{!! Form::hidden('jumlah_produk', null, ['autocomplete'=>'off', 'id'=>'jumlah_produk']) !!}
 										{!! $errors->first('jumlah_produk', '<p class="help-block" id="eror_jumlah_produk">:message</p>') !!}
 					          	</div>
-
-					          	<div class="col-md-2">
-					          		<button type="submit" class="btn btn-success" id="btnSubmitEdit"><i class="material-icons">done</i> Submit Produk (F1)</button>
-					          	</div>								
+					          									
 						 	{!! Form::close() !!}
 						</div>
 					<!--/COL MD 8-->
@@ -114,7 +111,7 @@
 
 			$select[0].selectize.focus();
 
-			$("#form-produk").submit(function(){
+			$select.on('change', function(){
 
 				var produk = $("#pilih_produk").val();
 				var jumlah = $("#jumlah_produk").val();
@@ -139,8 +136,10 @@
 						confirmButtonAriaLabel: 'Thumbs up, great!',
 						cancelButtonText:'<i class="fa fa-thumbs-o-down"> Batal',
 						closeOnConfirm: true,
-
 						cancelButtonAriaLabel: 'Thumbs down',
+						inputAttributes: {
+							'name': 'edit_qty_produk',
+						},
 					    inputValidator : function (value) {
 					    	return new Promise(function (resolve, reject) {
 
@@ -183,7 +182,7 @@
 	</script>
 
 	<script type="text/javascript">
-		$(document).on('click', '.edit-jumlah', function () {
+		$(document).on('click', '.edit-jumlah-edit-tbs', function () {
 
 			var id_produk = $(this).attr('data-id');
 
@@ -202,6 +201,9 @@
 				cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal',
 				closeOnConfirm: true,
 				cancelButtonAriaLabel: 'Thumbs down',
+				inputAttributes: {
+						'name': 'edit_qty_produk',
+				},
 				inputValidator : function (value) {
 					return new Promise(function (resolve, reject) {
 						if (value) {
@@ -230,10 +232,9 @@
 	</script>
 
 	<script type="text/javascript">
-	// Konfirmasi Penghapusan
 		$(document.body).on('submit', '.js-confirm', function () {
-			var $btnHapus = $(this)
-			var text = $btnHapus.data('confirm') ? $btnHapus.data('confirm') : 'Anda yakin melakukan tindakan ini ?'
+			var $btnHapus = $(this);
+			var text = $btnHapus.data('confirm') ? $btnHapus.data('confirm') : 'Anda yakin melakukan tindakan ini ?';
 			var pesan_konfirmasi = confirm(text);
 			return pesan_konfirmasi;
 		});  

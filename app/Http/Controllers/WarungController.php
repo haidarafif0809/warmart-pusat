@@ -134,7 +134,7 @@ class WarungController extends Controller
                     <div class="alert-icon">
                     <i class="material-icons">check</i>
                     </div>
-                    <b>Sukses : Berhasil Menambah Warung '.$request->name.' </b>
+                    <b>Berhasil : Menambah Warung '.$request->name.'</b>
                 </div>';
 
 
@@ -216,7 +216,7 @@ class WarungController extends Controller
                     <div class="alert-icon">
                         <i class="material-icons">check</i>
                     </div>
-                        <b>Sukses : Berhasil Mengubah Warung '.$request->name.' </b>
+                        <b>Berhasil : Mengubah Warung '.$request->name.' </b>
                 </div>';
 
         Session::flash("flash_notification", [
@@ -246,11 +246,11 @@ class WarungController extends Controller
                     <div class="alert-icon">
                         <i class="material-icons">check</i>
                     </div>
-                        <b>Sukses : Berhasil Menghapus Warung </b>
+                        <b>Berhasil : Menghapus Warung </b>
                 </div>';
 
         Session:: flash("flash_notification", [
-            "level"=>"success",
+            "level"=>"danger",
             "message"=> $pesan_alert
             ]);
         return redirect()->route('warung.index');

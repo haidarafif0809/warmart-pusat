@@ -9,65 +9,11 @@ use Auth;
 
 class ItemKeluar extends Model
 {
-    use AuditableTrait;
+  use AuditableTrait;
 
-    protected $fillable = ['id','no_faktur','keterangan','total','warung_id','created_at','updated_at'];
+  protected $fillable = ['id','no_faktur','keterangan','total','warung_id','created_at','updated_at'];
 
-
-    //MODEL EVENT 
-  	public static function boot() {
-    parent::boot();
-      
-    self::deleting(function($itemKeluar) {
-
-     
-
-      $hpp_terpakai =  Hpp::where('no_faktur_hpp_masuk', $itemKeluar->no_faktur)->count();
-      
-      if ($hpp_terpakai > 0) {
-
-         $pesan_alert = 
-               '<div class="container-fluid">
-                    <div class="alert-icon">
-                    <i class="material-icons">error</i>
-                    </div>
-                    <b>Gagal : Item Masuk Sudah Terpakai Tidak Boleh Di Hapus</b>
-                </div>';
-
-          Session:: flash("flash_notification", [
-            "level"=>"danger",
-            "message"=> $pesan_alert
-            ]);
-        return false;
-      }
-      else {
-        DetailItemKeluar::where('no_faktur', $itemKeluar->no_faktur)->delete();
-        Hpp::where('no_faktur', $itemKeluar->no_faktur)->delete();
-
-        return true;
-      }
- 
-    
-    });   
-
-    self::creating(function($itemKeluar) {
-
-
-      $total_nilai_item_keluar = Hpp::where('no_faktur', $itemKeluar->no_faktur)->sum('total_nilai');
-
-     $itemKeluar->total = $total_nilai_item_keluar;
-
-      return true;
-    
-    });  
-
-
-
-
-  } //end modal event
-
-
-   public static function no_faktur(){
+  public static function no_faktur($warung_id){
 
     $tahun_sekarang = date('Y');
     $bulan_sekarang = date('m');
@@ -85,7 +31,7 @@ class ItemKeluar extends Model
     }
 
     //ambil bulan dan no_faktur dari tanggal item_keluar terakhir
-    $item_keluar = ItemKeluar::select([DB::raw('MONTH(created_at) bulan'), 'no_faktur'])->where('warung_id',Auth::user()->id_warung)->orderBy('id','DESC')->first();
+    $item_keluar = ItemKeluar::select([DB::raw('MONTH(created_at) bulan'), 'no_faktur'])->where('warung_id', $warung_id)->orderBy('id','DESC')->first();
 
       if ($item_keluar != NULL) {
         $pisah_nomor = explode("/", $item_keluar->no_faktur);

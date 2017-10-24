@@ -18,7 +18,7 @@
 	{!! Form::label('email', 'Email', ['class'=>'col-md-2 control-label']) !!}
 	<div class="col-md-4">
 		{!! Form::email('email', null, ['class'=>'form-control','autocomplete'=>'off', 'placeholder' =>'Email']) !!}
-		{!! $errors->first('email', '<p class="help-block">:message</p>') !!}
+		{!! $errors->first('email', '<p class="help-block" id="email_error">:message</p>') !!}
 	</div>
 </div> 
 
@@ -53,7 +53,8 @@
 
 <div class="form-group">
 	<div class="col-md-4 col-md-offset-2">
-		{!! Form::button('<i class="material-icons">save</i>Simpan', ['class'=>'btn btn-primary','type'=>'submit']) !!}
+		{!! Form::button('<i class="material-icons">save</i>Simpan', ['class'=>'btn btn-primary','type'=>'submit', 'id'=>'btnSubmit' , 'dusk'=>"submit_user"]) !!}
+
 
 	</div>
 </div>

@@ -13,48 +13,45 @@ class UserTest extends DuskTestCase
      *
      * @return void
      */
-    public function testExample()
-    {
-        $this->browse(function (Browser $browser) {
-            $browser->visit('/')
-                    ->assertSee('Laravel');
-        });
-    }
+
 
     public function testTambahUser(){
 
         $this->browse(function ($first, $second){
 
             $first->loginAs(User::find(1))
-                    ->visit('/home')
-                    ->ClickLink('User')
-                    ->ClickLink("Tambah User")
+                    ->visit('/user')
+                    ->clickLink("Tambah User")
+                    ->pause(1000)
                     ->type('name','Browser Test')
-                    ->type('email','browserTest@gmail.com')
+                    ->type('no_telp','08594794637')
+                    ->type('email','Test@gmail.com')
                     ->type('alamat','Jl. browserTest');
                       $first->script("document.getElementById('otoritas').selectize.setValue('2');");
-                      $first->assertSee("Member")
-                    ->press('Simpan')
-                    ->assertSee('Berhasil Menambah User Browser Test');
-
+                      $first->assertSee("Member");
+                      $first->press('.btn-primary')
+                    ->pause(1000)->assertSee("Menambah User");
         });
     }
 
-     public function testResetPassword(){
+       public function testResetPassword(){
 
-         $this->browse(function ($first, $second) {
+        $user = User::select('id')->where('no_telp','08594794637')->first();
+
+         $this->browse(function ($first, $second) use($user) {
             $first->loginAs(User::find(1))
-                  ->visit('/home')
-                  ->ClickLink('User')
+                  ->visit('/user')
+                  ->assertSeeLink('Tambah User')
                   ->whenAvailable('.js-confirm', function ($table) {  
                               ;
                     })
-                  ->with('.table', function ($table) {
+                  ->with('.table', function ($table) use($user) {
                         $table->assertSee('Browser Test')
-                              ->press('Reset Password');
+                              ->press('#reset-'.$user->id)
+                              ->assertDialogOpened("Apakah Anda Yakin Ingin Me Reset Password User Browser Test?");
                     })->driver->switchTo()->alert()->accept();
 
-            $first->assertSee('Password Browser Test Berhasil Di Reset');
+            $first->assertSee('Berhasil Di Reset');
 
                  
         });
@@ -62,19 +59,22 @@ class UserTest extends DuskTestCase
 
     }
 
+    public function testKonfirmasiIya(){
 
-     public function testKonfirmasi(){
+        $user = User::select('id')->where('no_telp','08594794637')->first();
 
-         $this->browse(function ($first, $second) {
+         $this->browse(function ($first, $second)use($user) {
             $first->loginAs(User::find(1))
-                  ->visit('/home')
-                  ->ClickLink('User')
+                  ->visit('/user')
+                  ->assertSeeLink('Tambah User')
                   ->whenAvailable('.js-confirm', function ($table) {  
                               ;
                     })
-                  ->with('.table', function ($table) {
+                  ->with('.table', function ($table) use($user){
                         $table->assertSee('Browser Test')
-                              ->press('Iya');
+                              ->press('#confirm-ya-'.$user->id)
+                              ->assertDialogOpened('Apakah Anda Yakin Ingin Meng Konfirmasi User Browser Test?');
+                              
                     })->driver->switchTo()->alert()->accept();
 
             $first->assertSee('User Browser Test Berhasil Di Konfirmasi');
@@ -85,18 +85,22 @@ class UserTest extends DuskTestCase
 
     }
 
-    public function testTidakKonfirmasi(){
+    public function testKonfirmasiNo(){
 
-         $this->browse(function ($first, $second) {
+        $user = User::select('id')->where('no_telp','08594794637')->first();
+
+         $this->browse(function ($first, $second)use($user) {
             $first->loginAs(User::find(1))
-                  ->visit('/home')
-                  ->ClickLink('User')
+                  ->visit('/user')
+                  ->assertSeeLink('Tambah User')
                   ->whenAvailable('.js-confirm', function ($table) {  
                               ;
                     })
-                  ->with('.table', function ($table) {
+                  ->with('.table', function ($table) use($user){
                         $table->assertSee('Browser Test')
-                              ->press('Tidak');
+                              ->press('#confirm-no-'.$user->id)
+                              ->assertDialogOpened('Apakah Anda Yakin Tidak Meng Konfirmasi User Browser Test?');
+                              
                     })->driver->switchTo()->alert()->accept();
 
             $first->assertSee('User Browser Test Tidak Di Konfirmasi');
@@ -109,44 +113,50 @@ class UserTest extends DuskTestCase
 
     public function testEditUser(){
 
-        $this->browse( function ($first, $second){
+        $user = User::select('id')->where('no_telp','08594794637')->first();
+
+        $this->browse( function ($first, $second)use($user){
 
             $first->loginAs(User::find(1))
-                  ->visit('/home')
-                  ->ClickLink('User')
+                  ->visit('/user')
+                  ->assertSeeLink('Tambah User')
                   ->whenAvailable('.js-confirm', function ($table){
                     ;
                   })
-                  ->with('.table', function ($table){
+                  ->with('.table', function ($table)use($user){
                     $table->assertSee("Browser Test")
-                          ->ClickLink("Ubah");
+                          ->press('#edit-'.$user->id);
                   })
                   ->assertSee('Edit User')
                   ->type('name','Browser Test Edit')
+                  ->type('no_telp','0856457897947')
                   ->type('email','browserTestEdit@gmail.com')
                   ->type('alamat','Jl. browserTest Edit');
                   $first->script("document.getElementById('otoritas').selectize.setValue('2');");
-                  $first->assertSee("Member")
-                  ->press('Simpan')
-                  ->assertSee('Berhasil Mengubah User Browser Test Edit');
+                  $first->assertSee("Member");
+                  $first->press('.btn-primary')
+                  ->pause(1000)->assertSee('Mengubah User');
 
 
         });
 
     } 
 
-    public function testHapusUser(){
+     public function testHapusUser(){
 
-         $this->browse(function ($first, $second) {
+        $user = User::select('id')->where('no_telp','0856457897947')->first();
+
+         $this->browse(function ($first, $second) use ($user) {
             $first->loginAs(User::find(1))
-                  ->visit('/home')
-                  ->ClickLink('User')
+                  ->visit('/user')
+                  ->assertSeeLink('Tambah User')
                   ->whenAvailable('.js-confirm', function ($table) {  
                               ;
                     })
-                  ->with('.table', function ($table) {
-                        $table->assertSee('Sample Member')
-                              ->press('Hapus');
+                  ->with('.table', function ($table) use ($user) {
+                        $table->assertSee('Browser Test Edit')
+                              ->press('#delete-'.$user->id)
+                              ->assertDialogOpened('Yakin Mau Menghapus User Browser Test Edit?');
                     })->driver->switchTo()->alert()->accept();
 
             $first->assertSee('User Browser Test Edit Berhasil Di Hapus');
@@ -157,8 +167,47 @@ class UserTest extends DuskTestCase
 
     }
 
+    public function testUniqueNoTelp(){
 
+            $this->browse(function ($first, $second){
 
+            $first->loginAs(User::find(1))
+                    ->visit('/user')
+                    ->clickLink("Tambah User")
+                    ->pause(1000)
+                    ->type('name','Browser Test')
+                    ->type('no_telp','081222498686')// no telp sudah ada
+                    ->type('email','Test@gmail.com')
+                    ->type('alamat','Jl. browserTest');
+                      $first->script("document.getElementById('otoritas').selectize.setValue('2');");
+                      $first->assertSee("Member");
+                      $first->press('.btn-primary');
+                      $first->script('document.getElementById("no_telp").focus();');
+                      $first->assertSeeIn('#no_telp_error','Maaf no telp Sudah Terpakai.');
+
+        });
+    }
+
+   public function testUniqueEmail(){
+
+            $this->browse(function ($first, $second){
+
+            $first->loginAs(User::find(1))
+                    ->visit('/user')
+                    ->clickLink("Tambah User")
+                    ->pause(1000)
+                    ->type('name','Browser Test')
+                    ->type('no_telp','081222498686')
+                    ->type('email','admin@gmail.com ')// email sudah ada
+                    ->type('alamat','Jl. browserTest');
+                      $first->script("document.getElementById('otoritas').selectize.setValue('2');");
+                      $first->assertSee("Member");
+                      $first->press('.btn-primary');
+                      $first->script('document.getElementById("email").focus();');
+                      $first->assertSeeIn('#email_error','Maaf email Sudah Terpakai.');
+
+        });
+    }
 
 
 }

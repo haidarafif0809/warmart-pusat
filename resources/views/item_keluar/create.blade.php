@@ -48,7 +48,7 @@
 		<div class="card">
 
 			<div class="card-header card-header-icon" data-background-color="purple">
-				<i class="material-icons">call_missed_outgoing</i>
+				<i class="material-icons">vertical_align_top</i>
 			</div>
 
 			<div class="card-content">
@@ -67,10 +67,7 @@
 										{!! Form::hidden('jumlah_produk', null, ['class'=>'form-control','placeholder'=>'Jumlah Produk','required','autocomplete'=>'off', 'id'=>'jumlah_produk']) !!}
 										{!! $errors->first('jumlah_produk', '<p class="help-block" id="eror_jumlah_produk">:message</p>') !!}
 					          	</div>
-
-					          	<div class="col-md-2">
-					          		<button type="submit" class="btn btn-success" id="btn-submit-produk"><i class="material-icons">done</i> Submit Produk (F1)</button>
-					          	</div>								
+							
 						 	{!! Form::close() !!}
 						</div>
 					<!--/COL MD 8-->
@@ -120,7 +117,7 @@
 
 			$select[0].selectize.focus();
 
-			$("#form-produk").submit(function(){
+			$select.on('change', function(){
 
 				var produk = $("#pilih_produk").val();
 				var jumlah = $("#jumlah_produk").val();
@@ -133,20 +130,21 @@
 		 			swal({
 		 				title: 'Jumlah Produk',
 		 				input: 'number',
-				  		inputPlaceholder : 'Jumlah Produk',				
+				  		inputPlaceholder : 'Jumlah Produk',
 						type: 'question',
 						html:'Berapa Jumlah Yang akan di keluarkan?',
 						animation: false,
 						showCloseButton: true,
 						showCancelButton: true,
 						focusConfirm: true,
-						confirmButtonText:
-						'<i class="fa fa-thumbs-o-up"></i> Submit',
+						confirmButtonText:'<i class="fa fa-thumbs-o-up"></i> Submit',
 						confirmButtonAriaLabel: 'Thumbs up, great!',
 						cancelButtonText:'<i class="fa fa-thumbs-o-down"> Batal',
 						closeOnConfirm: true,
-
 						cancelButtonAriaLabel: 'Thumbs down',
+						inputAttributes: {
+						    'name': 'qty_produk',
+						  },
 					    inputValidator : function (value) {
 					    	return new Promise(function (resolve, reject) {
 
@@ -208,6 +206,9 @@
 				cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal',
 				closeOnConfirm: true,
 				cancelButtonAriaLabel: 'Thumbs down',
+				inputAttributes: {
+						'name': 'edit_qty_produk',
+					},
 				inputValidator : function (value) {
 					return new Promise(function (resolve, reject) {
 						if (value) {
@@ -262,11 +263,6 @@
 
 
  	<script type="text/javascript">    
-
-	 	shortcut.add("f1", function() {
-	        $("#btn-submit-produk").click();
-	    });
-
 
 	 	shortcut.add("f2", function() {
 	        $("#btnSelesai").click();

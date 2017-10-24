@@ -32,12 +32,18 @@ class ItemKeluarController extends Controller
                     'edit_url'                  => route('item-keluar.proses_form_edit', $itemkeluar->id),
                     'confirm_message'           => 'Anda Yakin Ingin Menghapus Item Keluar Faktur "'.$itemkeluar->no_faktur.'" ?',
                 ]);
+            })
+            ->addColumn('total_nilai_keluar', function($total_keluar){
+                $data_nilai_keluar = number_format($total_keluar->total,0,',','.');
+
+                return $data_nilai_keluar;
             })->make(true);
         }
 
         $html = $htmlBuilder
             ->addColumn(['data' => 'no_faktur', 'name' => 'no_faktur', 'title' => 'No. Faktur'])
-            ->addColumn(['data' => 'keterangan', 'name' => 'keterangan', 'title' => 'Keterangan'])         
+            ->addColumn(['data' => 'keterangan', 'name' => 'keterangan', 'title' => 'Keterangan'])
+            ->addColumn(['data' => 'total_nilai_keluar', 'name' => 'total_nilai_keluar', 'title' => 'Total'])
             ->addColumn(['data' => 'created_at', 'name' => 'created_at', 'title' => 'Waktu'])
             ->addColumn(['data' => 'updated_at', 'name' => 'updated_at', 'title' => 'Waktu Edit'])
             ->addColumn(['data' => 'action', 'name' => 'action', 'title' => '', 'orderable' => false, 'searchable' => false]);
@@ -53,7 +59,7 @@ class ItemKeluarController extends Controller
         if ($request->ajax()) {
 
             $session_id = session()->getId();            
-            $tbs_item_keluar = TbsItemKeluar::with(['produk'])->where('session_id', $session_id)->get();
+            $tbs_item_keluar = TbsItemKeluar::with(['produk'])->where('session_id', $session_id)->where('warung_id',Auth::user()->id_warung)->get();
 
             return Datatables::of($tbs_item_keluar)->addColumn('action', function($tbsitemkeluar){
 
@@ -70,7 +76,7 @@ class ItemKeluarController extends Controller
                 })
                 ->editColumn('jumlah_produk', function($produk){
                    
-                   return "<a href='#edit-jumlah' class='edit-jumlah' data-id='$produk->id_tbs_item_keluar'>$produk->jumlah_produk</a>"; 
+                   return "<a href='#edit-jumlah' id='edit_jumlah_produk' class='edit-jumlah' data-id='$produk->id_tbs_item_keluar'>$produk->jumlah_produk</a>"; 
                 })->make(true);
         }
         
@@ -96,7 +102,7 @@ class ItemKeluarController extends Controller
         ->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)
         ->count();
         
-        $data_produk = Barang::select('nama_barang')->where('id', $request->id_produk)->first();
+        $data_produk = Barang::select('nama_barang')->where('id', $request->id_produk)->where('id_warung',Auth::user()->id_warung)->first();
       
 //JIKA PRODUK YG DIPILIH SUDAH ADA DI TBS
         if ($data_tbs > 0) {
@@ -157,10 +163,10 @@ class ItemKeluarController extends Controller
         ->where('id_produk', $request->id_produk)
         ->where('no_faktur', $data_item_keluar->no_faktur)
         ->where('session_id', $session_id)
+        ->where('warung_id',Auth::user()->id_warung)
         ->count();
 
-        $data_produk = Barang::select('nama_barang')->where('id', $request->id_produk)->first();
-        $pesan_alert = "Produk '".$data_produk->nama_barang."' Sudah Ada, Silakan Pilih Produk Lain !";
+        $data_produk = Barang::select('nama_barang')->where('id', $request->id_produk)->where('id_warung',Auth::user()->id_warung)->first();
 
 
       //JIKA PRODUK YG DIPILIH SUDAH ADA DI TBS
@@ -192,10 +198,11 @@ class ItemKeluarController extends Controller
               </div>';
 
             $tbsitemkeluar = EditTbsItemkeluar::create([
-                'id_produk' =>$request->id_produk,    
-                'no_faktur' =>$data_item_keluar->no_faktur,                    
-                'session_id' => $session_id,
-                'jumlah_produk' =>$request->jumlah_produk,
+                'id_produk'     => $request->id_produk,    
+                'no_faktur'     => $data_item_keluar->no_faktur,                    
+                'session_id'    => $session_id,
+                'jumlah_produk' => $request->jumlah_produk,
+                'warung_id'     => Auth::user()->id_warung
             ]);
 
             Session::flash("flash_notification", [
@@ -231,38 +238,25 @@ class ItemKeluarController extends Controller
         }
     }
 
-//PROSES HAPUS EDIT TBS ITEM keluar
+//PROSES HAPUS EDIT TBS ITEM KELUAR
     public function proses_hapus_edit_tbs_item_keluar($id) { 
-        if (!EditTbsItemKeluar::destroy($id)) {
-          $pesan_alert = 
-               '<div class="container-fluid">
-                    <div class="alert-icon">
-                    <i class="material-icons">error</i>
-                    </div>
-                    <b>Gagal : Produk Sudah Terpakai Tidak Boleh Di Hapus</b>
-                </div>';
 
-            Session::flash("flash_notification", [
-                "level"     => "danger",
-                "message"   => $pesan_alert
-            ]);
-        return back();
-        }
-        else{
-          $pesan_alert = 
-               '<div class="container-fluid">
-                    <div class="alert-icon">
+        EditTbsItemKeluar::destroy($id);
+
+        $pesan_alert = 
+            '<div class="container-fluid">
+                <div class="alert-icon">
                     <i class="material-icons">check</i>
-                    </div>
-                    <b>Sukses : Berhasil Menghapus Produk</b>
-                </div>';
+                </div>
+                <b>Sukses : Berhasil Menghapus Produk</b>
+            </div>';
 
             Session::flash("flash_notification", [
                 "level"     => "success",
                 "message"   => $pesan_alert
             ]);
+
         return back();
-        }
     }
 
 
@@ -285,26 +279,30 @@ class ItemKeluarController extends Controller
         return redirect()->route('item-keluar.create');
     }
 
-//PROSES BATAL EDIT ITEM keluar
+//PROSES BATAL EDIT ITEM KELUAR
     public function proses_hapus_semua_edit_tbs_item_keluar($id)
     {   
-        //MENGAMBIL ID ITEM keluar
-        $data_item_keluar = ItemKeluar::find($id); 
+        //MENGAMBIL ID ITEM KELUAR
+        $data_item_keluar = ItemKeluar::find($id);
+
         //PROSES MENGHAPUS SEMUA EDTI TBS SESUAI NO FAKTUR YANG DI AMBIL 
-        $data_tbs_item_keluar = EditTbsItemKeluar::where('no_faktur', $data_item_keluar->no_faktur)->delete(); 
+        $data_tbs_item_keluar = EditTbsItemKeluar::where('no_faktur', $data_item_keluar->no_faktur)
+        ->where('warung_id', Auth::user()->id_warung)->delete();
+
         $pesan_alert = 
                '<div class="container-fluid">
                     <div class="alert-icon">
                     <i class="material-icons">check</i>
                     </div>
-                    <b>Sukses : Berhasil Membatalkan Edit Item keluar</b>
+                    <b>Sukses : Berhasil Membatalkan Edit Item Keluar Faktur "'.$data_item_keluar->no_faktur.'"</b>
                 </div>';
 
             Session::flash("flash_notification", [
                 "level"     => "success",
                 "message"   => $pesan_alert
             ]);
-       return redirect()->route('item-keluar.index');
+
+        return redirect()->route('item-keluar.index');
     }
 
 
@@ -319,10 +317,10 @@ class ItemKeluarController extends Controller
     
     //START TRANSAKSI
       DB::beginTransaction();
-
+        $warung_id = Auth::user()->id_warung;
         $session_id = session()->getId();
         $user = Auth::user()->id;
-        $no_faktur = ItemKeluar::no_faktur();
+        $no_faktur = ItemKeluar::no_faktur($warung_id);
 
     //INSERT DETAIL ITEM KELUAR
         $data_produk_item_keluar = TbsItemKeluar::where('session_id', $session_id)->where('warung_id',Auth::user()->id_warung);
@@ -400,78 +398,99 @@ class ItemKeluarController extends Controller
     }
 
 
-    //PROSES SELESAI TRANSAKSI EDIT ITEM keluar
+    //PROSES SELESAI TRANSAKSI EDIT ITEM KELUAR
     public function proses_edit_item_keluar(Request $request,$id) {
 
         $data_item_keluar = ItemKeluar::find($id);  
         $session_id = session()->getId();
         $user = Auth::user()->id; 
 
-        $hapus_detail_tbs_item_keluar = DetailItemKeluar::where('no_faktur', $data_item_keluar->no_faktur)->delete(); 
+        $data_detail_item_keluar = DetailItemKeluar::where('no_faktur', $data_item_keluar->no_faktur)->where('warung_id', Auth::user()->id_warung)->get();
 
-      //INSERT DETAIL ITEM keluar
-        $data_produk_item_keluar = EditTbsItemKeluar::where('no_faktur', $data_item_keluar->no_faktur);
+//HAPUS DETAIL ITEM KELUAR
+        foreach ($data_detail_item_keluar as $data_detail) {            
+
+            if (!$hapus_detail = DetailItemKeluar::destroy($data_detail->id_detail_item_keluar)) {
+                //DI BATALKAN PROSES NYA
+                DB::rollBack();
+                return redirect()->back();
+            }
+        }
+
+//INSERT DETAIL ITEM KELUAR
+    $data_produk_item_keluar = EditTbsItemKeluar::where('no_faktur', $data_item_keluar->no_faktur)->where('warung_id', Auth::user()->id_warung);
 
         if ($data_produk_item_keluar->count() == 0) {
 
-           $pesan_alert = 
-               '<div class="container-fluid">
+            $pesan_alert = 
+                '<div class="container-fluid">
                     <div class="alert-icon">
-                    <i class="material-icons">error</i>
+                        <i class="material-icons">error</i>
                     </div>
-                    <b>Gagal : Belum ada Produk Yang Di inputkan</b>
+                        <b>Gagal : Belum Ada Produk Yang Diinputkan</b>
                 </div>';
 
-        Session::flash("flash_notification", [
-            "level"     => "danger",
-            "message"   => $pesan_alert
-        ]);
+                Session::flash("flash_notification", [
+                    "level"     => "danger",
+                    "message"   => $pesan_alert
+                ]);
 
-          
-          return redirect()->back();
-        }
-
-        foreach ($data_produk_item_keluar->get() as $data_tbs) {
-            $detail_item_keluar = DetailItemKeluar::create([
-                'id_produk' =>$data_tbs->id_produk,              
-                'no_faktur' => $data_item_keluar->no_faktur,
-                'jumlah_produk' =>$data_tbs->jumlah_produk,
-            ]);
-        }
-
-      //INSERT ITEM keluar
-        if ($request->keterangan == "") {
-          $keterangan = "-";
+                return redirect()->back();
         }
         else{
-          $keterangan = $request->keterangan;
-        }
+            foreach ($data_produk_item_keluar->get() as $data_tbs) {
+            
+                $detail_item_keluar = new DetailItemKeluar();
+                if (!$detail_item_keluar->stok_produk($data_tbs->id_produk, $data_tbs->jumlah_produk)) {
+                    //DI BATALKAN PROSES NYA
+                    DB::rollBack();
+                    return redirect()->back();
+                }
+                else{
+                    $detail_item_keluar = DetailItemKeluar::create([
+                        'id_produk'     => $data_tbs->id_produk,              
+                        'no_faktur'     => $data_item_keluar->no_faktur,
+                        'jumlah_produk' => $data_tbs->jumlah_produk,
+                        'warung_id'     => Auth::user()->id_warung
+                    ]);  
+                }
+                
+            }
 
-        $itemkeluar = ItemKeluar::find($id)->update([ 
-            'keterangan' =>$keterangan
-        ]);
+    //INSERT ITEM KELUAR
+            if ($request->keterangan == "") {
+                $keterangan = "-";
+            }
+            else{
+                $keterangan = $request->keterangan;
+            }
 
-        $hapus_edit_tbs_item_keluar = EditTbsItemKeluar::where('no_faktur', $data_item_keluar->no_faktur)->delete(); 
+            $itemkeluar = ItemKeluar::find($id)->update([ 
+                'keterangan' =>$keterangan
+            ]);
 
+            $hapus_edit_tbs_item_keluar = EditTbsItemKeluar::where('no_faktur', $data_item_keluar->no_faktur)->where('warung_id', Auth::user()->id_warung)->delete(); 
 
-        if (!$itemkeluar) {
-          return back();
-        }
-         
-        $pesan_alert = 
-               '<div class="container-fluid">
+            if (!$itemkeluar) {
+                return back();
+            }
+
+            $pesan_alert = 
+                '<div class="container-fluid">
                     <div class="alert-icon">
-                    <i class="material-icons">check</i>
+                        <i class="material-icons">check</i>
                     </div>
-                    <b>Sukses : Berhasil Melakukan Edit Transaksi Item keluar Faktur "'.$data_item_keluar->no_faktur.'"</b>
+                        <b>Sukses : Berhasil Melakukan Edit Transaksi Item Keluar Faktur "'.$data_item_keluar->no_faktur.'"</b>
                 </div>';
 
-        Session::flash("flash_notification", [
-            "level"     => "success",
-            "message"   => $pesan_alert
-        ]);
+                Session::flash("flash_notification", [
+                    "level"     => "success",
+                    "message"   => $pesan_alert
+                ]);
 
-        return redirect()->route('item-keluar.index');
+            return redirect()->route('item-keluar.index');
+        }        
+        
     }
  
 
@@ -486,13 +505,15 @@ class ItemKeluarController extends Controller
     {
         //
     }
-public function proses_form_edit($id)
+    
+    public function proses_form_edit($id)
     {
         $session_id = session()->getId();
         $data_item_keluar = ItemKeluar::find($id);  
-        $data_produk_item_keluar = DetailItemKeluar::where('no_faktur', $data_item_keluar->no_faktur);
+        $data_produk_item_keluar = DetailItemKeluar::where('no_faktur', $data_item_keluar->no_faktur)->where('warung_id', Auth::user()->id_warung);
 
-        $hapus_semua_edit_tbs_item_keluar = EditTbsItemKeluar::where('no_faktur', $data_item_keluar->no_faktur)->delete();
+        $hapus_semua_edit_tbs_item_keluar = EditTbsItemKeluar::where('no_faktur', $data_item_keluar->no_faktur)->where('warung_id', Auth::user()->id_warung)
+        ->delete();
 
         foreach ($data_produk_item_keluar->get() as $data_tbs) {
             $detail_item_keluar = EditTbsItemKeluar::create([
@@ -517,12 +538,13 @@ public function proses_form_edit($id)
     {   
         if ($request->ajax()) {  
             $item_keluar = ItemKeluar::find($id); 
-            $tbs_item_keluar = EditTbsItemKeluar::with(['produk'])->where('no_faktur', $item_keluar->no_faktur)->get();
+            $tbs_item_keluar = EditTbsItemKeluar::with(['produk'])->where('no_faktur', $item_keluar->no_faktur)->where('warung_id', Auth::user()->id_warung)
+            ->get();
             return Datatables::of($tbs_item_keluar)->addColumn('action', function($tbsitemkeluar){
                     return view('item_keluar._hapus_produk', [
                         'model'     => $tbsitemkeluar,
                         'form_url'  => route('item-keluar.proses_hapus_edit_tbs_item_keluar', $tbsitemkeluar->id_edit_tbs_item_keluar),  
-                        'confirm_message'   => 'Yakin Mau Menghapus Produk ?'
+                        'confirm_message'   => 'Yakin Mau Menghapus Produk "'.$tbsitemkeluar->produk->nama_barang.'" ?'
                         ]);
                 })->addColumn('data_produk_tbs', function($data_produk_tbs){ 
                     $produk = Barang::find($data_produk_tbs->id_produk);
@@ -531,7 +553,7 @@ public function proses_form_edit($id)
                 })
                 ->editColumn('jumlah_produk', function($produk){
                    
-                   return "<a href='#edit-jumlah' class='edit-jumlah' data-id='$produk->id_tbs_item_keluar'>$produk->jumlah_produk</a>"; 
+                   return "<a href='#edit-jumlah' id='edit_jumlah_produk' class='edit-jumlah-edit-tbs' data-id='$produk->id_edit_tbs_item_keluar'>$produk->jumlah_produk</a>"; 
                 })->make(true);
         }
 
@@ -562,15 +584,14 @@ public function proses_form_edit($id)
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-      public function destroy($id)
-    { 
-      $pesan_alert = 
-               '<div class="container-fluid">
-                    <div class="alert-icon">
+    public function destroy($id) {
+        $pesan_alert =
+            '<div class="container-fluid">
+                <div class="alert-icon">
                     <i class="material-icons">check</i>
-                    </div>
-                    <b>Sukses : Item Keluar Berhasil Dihapus</b>
-                </div>';
+                </div>
+                <b>Sukses : Item Keluar Berhasil Dihapus</b>
+            </div>';
 
         if (!ItemKeluar::destroy($id)) {
           return redirect()->back();
@@ -589,6 +610,31 @@ public function proses_form_edit($id)
 
         $tbs_item_keluar->update(['jumlah_produk' => $request->jumlah_keluar]);
         $nama_barang = $tbs_item_keluar->produk->nama_barang;
+
+        $pesan_alert = 
+               '<div class="container-fluid">
+                    <div class="alert-icon">
+                    <i class="material-icons">check</i>
+                    </div>
+                    <b>Sukses : Berhasil Mengubah Jumlah Item Keluar "'.$nama_barang.'"</b>
+                </div>';
+
+            Session::flash("flash_notification", [
+                "level"     => "success",
+                "message"   => $pesan_alert
+            ]);
+
+        return redirect()->back();
+    }
+
+//PROSE EDIT JUMLAH EDIT TBS ITEM KELUAR
+    public function proses_edit_jumlah_edit_tbs_item_keluar(Request $request){
+        $tbs_item_keluar = EditTbsItemKeluar::find($request->id_edit_tbs_item_keluar);
+
+        $tbs_item_keluar->update(['jumlah_produk' => $request->jumlah_keluar]);
+        $nama_barang = $tbs_item_keluar->produk->nama_barang;
+
+
 
         $pesan_alert = 
                '<div class="container-fluid">

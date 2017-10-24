@@ -48,7 +48,7 @@
 
 			<div class="card">
 			   	<div class="card-header card-header-icon" data-background-color="purple">
-                       <i class="material-icons">account_circle</i>
+                       <i class="material-icons">vertical_align_bottom</i>
                                 </div>
                   <div class="card-content">
                          <h4 class="card-title"> Item Masuk </h4>
@@ -235,7 +235,7 @@
 		 	var produk = $("#pilih_produk").val();
 		 	var jumlah = $("#jumlah_produk").val();
 		 	if (produk == "") {
-		 		// swal('Oops...','Produk Harus Dipilih Dahulu !','error');
+		 		 swal('Oops...','Produk Harus Dipilih Dahulu !','error');
 
 		 		return false;
 

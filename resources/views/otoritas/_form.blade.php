@@ -1,16 +1,16 @@
 <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
 	{!! Form::label('name', 'Nama', ['class'=>'col-md-2 control-label']) !!}
 	<div class="col-md-4">
-		{!! Form::text('name', null, ['class'=>'form-control','placeholder'=>'Nama','required','autocomplete'=>'off']) !!}
-		{!! $errors->first('name', '<p class="help-block">:message</p>') !!}
+		{!! Form::text('name', null, ['class'=>'form-control','placeholder'=>'Nama','required','autocomplete'=>'off','id'=>'name']) !!}
+		{!! $errors->first('name', '<p class="help-block" id="name_error">:message</p>') !!}
 	</div>
 </div>
 
 <div class="form-group{{ $errors->has('display_name') ? ' has-error' : '' }}">
 	{!! Form::label('display_name', 'Display Nama', ['class'=>'col-md-2 control-label']) !!}
 	<div class="col-md-4">
-		{!! Form::text('display_name', null, ['class'=>'form-control','placeholder' => 'Display Nama','required','autocomplete'=>'off']) !!}
-		{!! $errors->first('display_name', '<p class="help-block">:message</p>') !!}
+		{!! Form::text('display_name', null, ['class'=>'form-control','placeholder' => 'Display Nama','required','autocomplete'=>'off','id'=>'display_name']) !!}
+		{!! $errors->first('display_name', '<p class="help-block" id="display_name_error">:message</p>') !!}
 	</div>
 </div>
 
@@ -24,6 +24,6 @@
 
 <div class="form-group">
 	<div class="col-md-4 col-md-offset-2">
-			{!! Form::button('<i class="material-icons">send</i> Submit', ['class'=>'btn btn-primary', 'id'=>'btnSimpanWarung', 'type'=>'submit']) !!}
+			{!! Form::button('<i class="material-icons">send</i> Submit', ['class'=>'btn btn-primary', 'id'=>'btnSimpanOtoritas', 'type'=>'submit']) !!}
 	</div>
 </div>
