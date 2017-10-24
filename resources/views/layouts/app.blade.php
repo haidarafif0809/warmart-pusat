@@ -385,13 +385,6 @@
 <script src="{{ asset('js/shortcut.js') }}"></script>
 
 
-<script type="text/javascript">
-    $(document).ready(function() {
-
-       // $.fn.dataTable.ext.errMode = 'throw';
-    });
-</script>
-
 @yield('scripts')
 
 </html>
