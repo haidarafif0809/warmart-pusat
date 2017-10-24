@@ -86,8 +86,12 @@ Route::put('/proses-ubah-profil/{id}',[
 	'uses' => 'UbahProfilController@proses_ubah_profil'
 	]);
 
-Route::middleware('optimizeImages','auth')->group(function () {
+//menampilkan data bank
+Route::get('/bank/view','BankController@view')->middleware('auth');
+Route::get('/bank/pencarian','BankController@pencarian')->middleware('auth');
 
+Route::middleware('optimizeImages','auth')->group(function () {
+	
 	Route::resource('user', 'UserController');
 	Route::resource('bank', 'BankController');
 	Route::resource('komunitas', 'KomunitasController'); 
@@ -104,8 +108,9 @@ Route::middleware('optimizeImages','auth')->group(function () {
 	Route::resource('error', 'ErrorController');
 	Route::resource('item-masuk', 'ItemMasukController');
 	Route::resource('item-keluar', 'ItemKeluarController');
+	Route::resource('suplier', 'SuplierController');
 
-//ITEM KELUAR
+	//ITEM KELUAR
 	Route::post('/item-keluar/proses-tambah-tbs-item-keluar',[
 	'middleware' => ['auth'],
 	'as' => 'item-keluar.proses_tambah_tbs_item_keluar',
