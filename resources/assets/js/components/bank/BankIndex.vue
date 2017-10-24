@@ -1,4 +1,6 @@
 <template>
+
+
 <div class="row" >
 		
 		<div class="col-md-12">
@@ -17,11 +19,17 @@
 	
                        <div class="toolbar">
                     
-
-                         	<router-link :to="{name: 'createBank'}" class="btn btn-primary">Tambah Bank</router-link>
+                        <p> <router-link :to="{name: 'createBank'}" class="btn btn-primary">Tambah Bank</router-link></p>
+                         	
                          </div>
-             
-					<div class=" table-responsive material-datatables">
+     
+
+					<div class=" table-responsive ">
+            <div  align="right">
+              pencarian
+              <input type="text" name="pencarian" v-model="pencarian" placeholder="Kolom Pencarian" >
+            </div>
+            
 						<table class="table table-striped table-hover ">
 		                    <thead class="text-primary">
 		                    <tr>
@@ -53,9 +61,9 @@
 		                    </tbody>
 		                </table>
                  
-
+            <div align="right"><pagination :data="banksData" v-on:pagination-change-page="getResults"></pagination></div>
 					</div>
-             <pagination :data="banksData" v-on:pagination-change-page="getResults"></pagination>
+             
 				</div>
 			</div>
 		</div>
@@ -68,7 +76,9 @@
             return {
                 banks: [],
                 banksData: {},
-                url : window.location.origin+window.location.pathname
+                url : window.location.origin+window.location.pathname,
+                pencarian: '',
+                contoh : ''
             }
         },
         mounted() {
@@ -76,21 +86,20 @@
             app.getResults();
 
       },
-        created() {
-        // Fetch initial results
-      
+      watch: {
+        // whenever question changes, this function will run
+            pencarian: function (newQuestion) {
+              this.getHasilPencarian()  
+             }
       },
-        methods: {
 
-            // Our method to GET results from a Laravel endpoint
+        methods: {
       getResults(page) {
           var app = this;
         if (typeof page === 'undefined') {
           page = 1;
         }
-         // Using vue-resource as an example
-      
-            axios.get(app.url+'/view?page='+page)
+        axios.get(app.url+'/view?page='+page)
                 .then(function (resp) {
                     app.banks = resp.data.data;
                     app.banksData = resp.data;
@@ -99,7 +108,21 @@
                     console.log(resp);
                     alert("Could not load banks");
                 });
-
+       },
+      getHasilPencarian(page){
+        var app = this;
+        if (typeof page === 'undefined') {
+          page = 1;
+        }
+        axios.get(app.url+'/pencarian?search='+app.pencarian+'&page='+page)
+                .then(function (resp) {
+                    app.banks = resp.data.data;
+                    app.banksData = resp.data;
+                })
+                .catch(function (resp) {
+                    console.log(resp);
+                    alert("Could not load banks");
+                });
       },
 		  alert(pesan) {
               this.$swal({
@@ -113,7 +136,7 @@
                     var app = this;
                     axios.delete('http://localhost/warmart/public/bank/' + id)
                         .then(function (resp) {
-                            app.banks.splice(index, 1);
+                          app.getResults();
 							app.alert("Berhasil Menghapus Bank "+nama_bank)
 						})
                         .catch(function (resp) {

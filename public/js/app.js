@@ -32761,17 +32761,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -32823,242 +32812,239 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "col-md-12" }, [
-    _c("ul", { staticClass: "breadcrumb" }, [
-      _vm._m(0),
-      _vm._v(" "),
-      _c(
-        "li",
-        [
-          _c("router-link", { attrs: { to: { name: "indexBank" } } }, [
-            _vm._v("Bank")
-          ])
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c("li", { staticClass: "active" }, [_vm._v("Tambah Bank")])
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "card" }, [
-      _vm._m(1),
-      _vm._v(" "),
-      _c("div", { staticClass: "card-content" }, [
-        _c("h4", { staticClass: "card-title" }, [_vm._v(" Bank ")]),
+  return _c("div", { staticClass: "row" }, [
+    _c("div", { staticClass: "col-md-12" }, [
+      _c("ul", { staticClass: "breadcrumb" }, [
+        _vm._m(0),
         _vm._v(" "),
-        _c("div", [
-          _vm.success == true
-            ? _c("div", { staticClass: "alert alert-success" }, [
-                _c("div", { staticClass: "container-fluid" }, [
-                  _vm._m(2),
-                  _vm._v(" "),
-                  _c("b", [_vm._v(_vm._s(_vm.message))])
-                ])
-              ])
-            : _vm._e(),
+        _c(
+          "li",
+          [
+            _c("router-link", { attrs: { to: { name: "indexBank" } } }, [
+              _vm._v("Bank")
+            ])
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c("li", { staticClass: "active" }, [_vm._v("Tambah Bank")])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "card" }, [
+        _vm._m(1),
+        _vm._v(" "),
+        _c("div", { staticClass: "card-content" }, [
+          _c("h4", { staticClass: "card-title" }, [_vm._v(" Bank ")]),
           _vm._v(" "),
-          _c(
-            "form",
-            {
-              staticClass: "form-horizontal",
-              on: {
-                submit: function($event) {
-                  $event.preventDefault()
-                  _vm.saveForm()
+          _c("div", [
+            _c(
+              "form",
+              {
+                staticClass: "form-horizontal",
+                on: {
+                  submit: function($event) {
+                    $event.preventDefault()
+                    _vm.saveForm()
+                  }
                 }
-              }
-            },
-            [
-              _c("div", { staticClass: "form-group" }, [
-                _c(
-                  "label",
-                  {
-                    staticClass: "col-md-2 control-label",
-                    attrs: { for: "name" }
-                  },
-                  [_vm._v("Nama Bank")]
-                ),
-                _vm._v(" "),
-                _c("div", { staticClass: "col-md-4" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.bank.nama_bank,
-                        expression: "bank.nama_bank"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    attrs: {
-                      required: "",
-                      autocomplete: "off",
-                      placeholder: "Nama Bank",
-                      type: "text",
-                      autofocus: ""
+              },
+              [
+                _c("div", { staticClass: "form-group" }, [
+                  _c(
+                    "label",
+                    {
+                      staticClass: "col-md-2 control-label",
+                      attrs: { for: "name" }
                     },
-                    domProps: { value: _vm.bank.nama_bank },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(_vm.bank, "nama_bank", $event.target.value)
-                      }
-                    }
-                  }),
+                    [_vm._v("Nama Bank")]
+                  ),
                   _vm._v(" "),
-                  _vm.errors.nama_bank
-                    ? _c("span", { staticClass: "label label-danger" }, [
-                        _vm._v(_vm._s(_vm.errors.nama_bank[0]))
-                      ])
-                    : _vm._e()
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "form-group" }, [
-                _c(
-                  "label",
-                  {
-                    staticClass: "col-md-2 control-label",
-                    attrs: { for: "no_telp" }
-                  },
-                  [_vm._v("A.N Bank")]
-                ),
-                _vm._v(" "),
-                _c("div", { staticClass: "col-md-4" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.bank.atas_nama,
-                        expression: "bank.atas_nama"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    attrs: {
-                      required: "",
-                      autocomplete: "off",
-                      placeholder: "A.N Bank",
-                      type: "text"
-                    },
-                    domProps: { value: _vm.bank.atas_nama },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(_vm.bank, "atas_nama", $event.target.value)
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _vm.errors.atas_nama
-                    ? _c("span", { staticClass: "label label-danger" }, [
-                        _vm._v(_vm._s(_vm.errors.atas_nama[0]))
-                      ])
-                    : _vm._e()
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "form-group" }, [
-                _c(
-                  "label",
-                  {
-                    staticClass: "col-md-2 control-label",
-                    attrs: { for: "no_rek" }
-                  },
-                  [_vm._v("No Rek")]
-                ),
-                _vm._v(" "),
-                _c("div", { staticClass: "col-md-4" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.bank.no_rek,
-                        expression: "bank.no_rek"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    attrs: {
-                      required: "",
-                      autocomplete: "off",
-                      placeholder: "No Rekening",
-                      type: "text"
-                    },
-                    domProps: { value: _vm.bank.no_rek },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(_vm.bank, "no_rek", $event.target.value)
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _vm.errors.no_rek
-                    ? _c("span", { staticClass: "label label-danger" }, [
-                        _vm._v(_vm._s(_vm.errors.no_rek[0]))
-                      ])
-                    : _vm._e()
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "form-group" }, [
-                _c("div", { staticClass: "col-md-2 " }),
-                _vm._v(" "),
-                _c("div", { staticClass: "togglebutton col-md-4" }, [
-                  _c("label", [
+                  _c("div", { staticClass: "col-md-4" }, [
                     _c("input", {
                       directives: [
                         {
                           name: "model",
                           rawName: "v-model",
-                          value: _vm.bank.tampil_customer,
-                          expression: "bank.tampil_customer"
+                          value: _vm.bank.nama_bank,
+                          expression: "bank.nama_bank"
                         }
                       ],
-                      attrs: { type: "checkbox", value: "1" },
-                      domProps: {
-                        checked: Array.isArray(_vm.bank.tampil_customer)
-                          ? _vm._i(_vm.bank.tampil_customer, "1") > -1
-                          : _vm.bank.tampil_customer
+                      staticClass: "form-control",
+                      attrs: {
+                        required: "",
+                        autocomplete: "off",
+                        placeholder: "Nama Bank",
+                        type: "text",
+                        name: "nama_bank",
+                        autofocus: ""
                       },
+                      domProps: { value: _vm.bank.nama_bank },
                       on: {
-                        change: function($event) {
-                          var $$a = _vm.bank.tampil_customer,
-                            $$el = $event.target,
-                            $$c = $$el.checked ? true : false
-                          if (Array.isArray($$a)) {
-                            var $$v = "1",
-                              $$i = _vm._i($$a, $$v)
-                            if ($$el.checked) {
-                              $$i < 0 &&
-                                (_vm.bank.tampil_customer = $$a.concat([$$v]))
-                            } else {
-                              $$i > -1 &&
-                                (_vm.bank.tampil_customer = $$a
-                                  .slice(0, $$i)
-                                  .concat($$a.slice($$i + 1)))
-                            }
-                          } else {
-                            _vm.$set(_vm.bank, "tampil_customer", $$c)
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
                           }
+                          _vm.$set(_vm.bank, "nama_bank", $event.target.value)
                         }
                       }
                     }),
-                    _vm._v(" Tampil Di Customer\n                            ")
+                    _vm._v(" "),
+                    _vm.errors.nama_bank
+                      ? _c("span", { staticClass: "label label-danger" }, [
+                          _vm._v(_vm._s(_vm.errors.nama_bank[0]))
+                        ])
+                      : _vm._e()
                   ])
-                ])
-              ]),
-              _vm._v(" "),
-              _vm._m(3)
-            ]
-          )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c(
+                    "label",
+                    {
+                      staticClass: "col-md-2 control-label",
+                      attrs: { for: "no_telp" }
+                    },
+                    [_vm._v("A.N Bank")]
+                  ),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-md-4" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.bank.atas_nama,
+                          expression: "bank.atas_nama"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: {
+                        required: "",
+                        autocomplete: "off",
+                        placeholder: "A.N Bank",
+                        type: "text",
+                        name: "atas_nama"
+                      },
+                      domProps: { value: _vm.bank.atas_nama },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.bank, "atas_nama", $event.target.value)
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _vm.errors.atas_nama
+                      ? _c("span", { staticClass: "label label-danger" }, [
+                          _vm._v(_vm._s(_vm.errors.atas_nama[0]))
+                        ])
+                      : _vm._e()
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c(
+                    "label",
+                    {
+                      staticClass: "col-md-2 control-label",
+                      attrs: { for: "no_rek" }
+                    },
+                    [_vm._v("No Rek")]
+                  ),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-md-4" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.bank.no_rek,
+                          expression: "bank.no_rek"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: {
+                        required: "",
+                        autocomplete: "off",
+                        placeholder: "No Rekening",
+                        type: "text",
+                        name: "no_rek"
+                      },
+                      domProps: { value: _vm.bank.no_rek },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.bank, "no_rek", $event.target.value)
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _vm.errors.no_rek
+                      ? _c("span", { staticClass: "label label-danger" }, [
+                          _vm._v(_vm._s(_vm.errors.no_rek[0]))
+                        ])
+                      : _vm._e()
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("div", { staticClass: "col-md-2 " }),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "togglebutton col-md-4" }, [
+                    _c("label", [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.bank.tampil_customer,
+                            expression: "bank.tampil_customer"
+                          }
+                        ],
+                        attrs: { type: "checkbox", value: "1" },
+                        domProps: {
+                          checked: Array.isArray(_vm.bank.tampil_customer)
+                            ? _vm._i(_vm.bank.tampil_customer, "1") > -1
+                            : _vm.bank.tampil_customer
+                        },
+                        on: {
+                          change: function($event) {
+                            var $$a = _vm.bank.tampil_customer,
+                              $$el = $event.target,
+                              $$c = $$el.checked ? true : false
+                            if (Array.isArray($$a)) {
+                              var $$v = "1",
+                                $$i = _vm._i($$a, $$v)
+                              if ($$el.checked) {
+                                $$i < 0 &&
+                                  (_vm.bank.tampil_customer = $$a.concat([$$v]))
+                              } else {
+                                $$i > -1 &&
+                                  (_vm.bank.tampil_customer = $$a
+                                    .slice(0, $$i)
+                                    .concat($$a.slice($$i + 1)))
+                              }
+                            } else {
+                              _vm.$set(_vm.bank, "tampil_customer", $$c)
+                            }
+                          }
+                        }
+                      }),
+                      _vm._v(
+                        " Tampil Di Customer\n                            "
+                      )
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _vm._m(2)
+              ]
+            )
+          ])
         ])
       ])
     ])
@@ -33083,14 +33069,6 @@ var staticRenderFns = [
       },
       [_c("i", { staticClass: "material-icons" }, [_vm._v("payment")])]
     )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "alert-icon" }, [
-      _c("i", { staticClass: "material-icons" }, [_vm._v("check")])
-    ])
   },
   function() {
     var _vm = this
@@ -34784,15 +34762,12 @@ var render = function() {
       _c("div", { staticClass: "card" }, [
         _vm._m(1),
         _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "card-content" },
-          [
-            _c("h4", { staticClass: "card-title" }, [_vm._v(" Bank ")]),
-            _vm._v(" "),
+        _c("div", { staticClass: "card-content" }, [
+          _c("h4", { staticClass: "card-title" }, [_vm._v(" Bank ")]),
+          _vm._v(" "),
+          _c("div", { staticClass: "toolbar" }, [
             _c(
-              "div",
-              { staticClass: "toolbar" },
+              "p",
               [
                 _c(
                   "router-link",
@@ -34804,88 +34779,107 @@ var render = function() {
                 )
               ],
               1
-            ),
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: " table-responsive " }, [
+            _c("div", { attrs: { align: "right" } }, [
+              _vm._v("\n              pencarian\n              "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.pencarian,
+                    expression: "pencarian"
+                  }
+                ],
+                attrs: {
+                  type: "text",
+                  name: "pencarian",
+                  placeholder: "Kolom Pencarian"
+                },
+                domProps: { value: _vm.pencarian },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.pencarian = $event.target.value
+                  }
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c("table", { staticClass: "table table-striped table-hover " }, [
+              _vm._m(2),
+              _vm._v(" "),
+              _c(
+                "tbody",
+                _vm._l(_vm.banks, function(bank, index) {
+                  return _c("tr", [
+                    _c("td", [_vm._v(_vm._s(bank.nama_bank))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(bank.atas_nama))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(bank.no_rek))]),
+                    _vm._v(" "),
+                    _c(
+                      "td",
+                      [
+                        _c(
+                          "router-link",
+                          {
+                            staticClass: "btn btn-xs btn-default",
+                            attrs: {
+                              to: { name: "editBank", params: { id: bank.id } }
+                            }
+                          },
+                          [
+                            _vm._v(
+                              "\n                                Edit\n                           \t\t\t "
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "a",
+                          {
+                            staticClass: "btn btn-xs btn-danger",
+                            attrs: { href: "#" },
+                            on: {
+                              click: function($event) {
+                                _vm.deleteEntry(bank.id, index, bank.nama_bank)
+                              }
+                            }
+                          },
+                          [
+                            _vm._v(
+                              "\n                                Delete\n                            "
+                            )
+                          ]
+                        )
+                      ],
+                      1
+                    )
+                  ])
+                })
+              )
+            ]),
             _vm._v(" "),
             _c(
               "div",
-              { staticClass: " table-responsive material-datatables" },
+              { attrs: { align: "right" } },
               [
-                _c(
-                  "table",
-                  { staticClass: "table table-striped table-hover " },
-                  [
-                    _vm._m(2),
-                    _vm._v(" "),
-                    _c(
-                      "tbody",
-                      _vm._l(_vm.banks, function(bank, index) {
-                        return _c("tr", [
-                          _c("td", [_vm._v(_vm._s(bank.nama_bank))]),
-                          _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(bank.atas_nama))]),
-                          _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(bank.no_rek))]),
-                          _vm._v(" "),
-                          _c(
-                            "td",
-                            [
-                              _c(
-                                "router-link",
-                                {
-                                  staticClass: "btn btn-xs btn-default",
-                                  attrs: {
-                                    to: {
-                                      name: "editBank",
-                                      params: { id: bank.id }
-                                    }
-                                  }
-                                },
-                                [
-                                  _vm._v(
-                                    "\n                                Edit\n                           \t\t\t "
-                                  )
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "a",
-                                {
-                                  staticClass: "btn btn-xs btn-danger",
-                                  attrs: { href: "#" },
-                                  on: {
-                                    click: function($event) {
-                                      _vm.deleteEntry(
-                                        bank.id,
-                                        index,
-                                        bank.nama_bank
-                                      )
-                                    }
-                                  }
-                                },
-                                [
-                                  _vm._v(
-                                    "\n                                Delete\n                            "
-                                  )
-                                ]
-                              )
-                            ],
-                            1
-                          )
-                        ])
-                      })
-                    )
-                  ]
-                )
-              ]
-            ),
-            _vm._v(" "),
-            _c("pagination", {
-              attrs: { data: _vm.banksData },
-              on: { "pagination-change-page": _vm.getResults }
-            })
-          ],
-          1
-        )
+                _c("pagination", {
+                  attrs: { data: _vm.banksData },
+                  on: { "pagination-change-page": _vm.getResults }
+                })
+              ],
+              1
+            )
+          ])
+        ])
       ])
     ])
   ])
@@ -35010,35 +35004,57 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
             banks: [],
             banksData: {},
-            url: window.location.origin + window.location.pathname
+            url: window.location.origin + window.location.pathname,
+            pencarian: '',
+            contoh: ''
         };
     },
     mounted: function mounted() {
         var app = this;
         app.getResults();
     },
-    created: function created() {
-        // Fetch initial results
 
+    watch: {
+        // whenever question changes, this function will run
+        pencarian: function pencarian(newQuestion) {
+            this.getHasilPencarian();
+        }
     },
 
     methods: {
-
-        // Our method to GET results from a Laravel endpoint
         getResults: function getResults(page) {
             var app = this;
             if (typeof page === 'undefined') {
                 page = 1;
             }
-            // Using vue-resource as an example
-
             axios.get(app.url + '/view?page=' + page).then(function (resp) {
+                app.banks = resp.data.data;
+                app.banksData = resp.data;
+            }).catch(function (resp) {
+                console.log(resp);
+                alert("Could not load banks");
+            });
+        },
+        getHasilPencarian: function getHasilPencarian(page) {
+            var app = this;
+            if (typeof page === 'undefined') {
+                page = 1;
+            }
+            axios.get(app.url + '/pencarian?search=' + app.pencarian + '&page=' + page).then(function (resp) {
                 app.banks = resp.data.data;
                 app.banksData = resp.data;
             }).catch(function (resp) {
@@ -35057,7 +35073,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             if (confirm("Yakin Ingin Menghapus Bank " + nama_bank + " ?")) {
                 var app = this;
                 axios.delete('http://localhost/warmart/public/bank/' + id).then(function (resp) {
-                    app.banks.splice(index, 1);
+                    app.getResults();
                     app.alert("Berhasil Menghapus Bank " + nama_bank);
                 }).catch(function (resp) {
                     alert("Could not delete company");
@@ -35315,6 +35331,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     mounted: function mounted() {
@@ -35372,232 +35389,236 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "col-md-12" }, [
-    _c("ul", { staticClass: "breadcrumb" }, [
-      _vm._m(0),
-      _vm._v(" "),
-      _c(
-        "li",
-        [
-          _c("router-link", { attrs: { to: { name: "indexBank" } } }, [
-            _vm._v("Bank")
-          ])
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c("li", { staticClass: "active" }, [_vm._v("Edit Bank")])
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "card" }, [
-      _vm._m(1),
-      _vm._v(" "),
-      _c("div", { staticClass: "card-content" }, [
-        _c("h4", { staticClass: "card-title" }, [_vm._v(" Bank ")]),
+  return _c("div", { staticClass: "row" }, [
+    _c("div", { staticClass: "col-md-12" }, [
+      _c("ul", { staticClass: "breadcrumb" }, [
+        _vm._m(0),
         _vm._v(" "),
-        _c("div", [
-          _c(
-            "form",
-            {
-              staticClass: "form-horizontal",
-              on: {
-                submit: function($event) {
-                  $event.preventDefault()
-                  _vm.saveForm()
+        _c(
+          "li",
+          [
+            _c("router-link", { attrs: { to: { name: "indexBank" } } }, [
+              _vm._v("Bank")
+            ])
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c("li", { staticClass: "active" }, [_vm._v("Edit Bank")])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "card" }, [
+        _vm._m(1),
+        _vm._v(" "),
+        _c("div", { staticClass: "card-content" }, [
+          _c("h4", { staticClass: "card-title" }, [_vm._v(" Bank ")]),
+          _vm._v(" "),
+          _c("div", [
+            _c(
+              "form",
+              {
+                staticClass: "form-horizontal",
+                on: {
+                  submit: function($event) {
+                    $event.preventDefault()
+                    _vm.saveForm()
+                  }
                 }
-              }
-            },
-            [
-              _c("div", { staticClass: "form-group" }, [
-                _c(
-                  "label",
-                  {
-                    staticClass: "col-md-2 control-label",
-                    attrs: { for: "name" }
-                  },
-                  [_vm._v("Nama Bank")]
-                ),
-                _vm._v(" "),
-                _c("div", { staticClass: "col-md-4" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.bank.nama_bank,
-                        expression: "bank.nama_bank"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    attrs: {
-                      required: "",
-                      autocomplete: "off",
-                      placeholder: "Nama Bank",
-                      type: "text",
-                      autofocus: ""
+              },
+              [
+                _c("div", { staticClass: "form-group" }, [
+                  _c(
+                    "label",
+                    {
+                      staticClass: "col-md-2 control-label",
+                      attrs: { for: "name" }
                     },
-                    domProps: { value: _vm.bank.nama_bank },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(_vm.bank, "nama_bank", $event.target.value)
-                      }
-                    }
-                  }),
+                    [_vm._v("Nama Bank")]
+                  ),
                   _vm._v(" "),
-                  _vm.errors.nama_bank
-                    ? _c("span", { staticClass: "label label-danger" }, [
-                        _vm._v(_vm._s(_vm.errors.nama_bank[0]))
-                      ])
-                    : _vm._e()
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "form-group" }, [
-                _c(
-                  "label",
-                  {
-                    staticClass: "col-md-2 control-label",
-                    attrs: { for: "no_telp" }
-                  },
-                  [_vm._v("A.N Bank")]
-                ),
-                _vm._v(" "),
-                _c("div", { staticClass: "col-md-4" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.bank.atas_nama,
-                        expression: "bank.atas_nama"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    attrs: {
-                      required: "",
-                      autocomplete: "off",
-                      placeholder: "A.N Bank",
-                      type: "text"
-                    },
-                    domProps: { value: _vm.bank.atas_nama },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(_vm.bank, "atas_nama", $event.target.value)
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _vm.errors.atas_nama
-                    ? _c("span", { staticClass: "label label-danger" }, [
-                        _vm._v(_vm._s(_vm.errors.atas_nama[0]))
-                      ])
-                    : _vm._e()
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "form-group" }, [
-                _c(
-                  "label",
-                  {
-                    staticClass: "col-md-2 control-label",
-                    attrs: { for: "no_rek" }
-                  },
-                  [_vm._v("No Rek")]
-                ),
-                _vm._v(" "),
-                _c("div", { staticClass: "col-md-4" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.bank.no_rek,
-                        expression: "bank.no_rek"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    attrs: {
-                      required: "",
-                      autocomplete: "off",
-                      placeholder: "No Rekening",
-                      type: "text"
-                    },
-                    domProps: { value: _vm.bank.no_rek },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(_vm.bank, "no_rek", $event.target.value)
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _vm.errors.no_rek
-                    ? _c("span", { staticClass: "label label-danger" }, [
-                        _vm._v(_vm._s(_vm.errors.no_rek[0]))
-                      ])
-                    : _vm._e()
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "form-group" }, [
-                _c("div", { staticClass: "col-md-2 " }),
-                _vm._v(" "),
-                _c("div", { staticClass: "togglebutton col-md-4" }, [
-                  _c("label", [
+                  _c("div", { staticClass: "col-md-4" }, [
                     _c("input", {
                       directives: [
                         {
                           name: "model",
                           rawName: "v-model",
-                          value: _vm.bank.tampil_customer,
-                          expression: "bank.tampil_customer"
+                          value: _vm.bank.nama_bank,
+                          expression: "bank.nama_bank"
                         }
                       ],
-                      attrs: { type: "checkbox", value: "1" },
-                      domProps: {
-                        checked: Array.isArray(_vm.bank.tampil_customer)
-                          ? _vm._i(_vm.bank.tampil_customer, "1") > -1
-                          : _vm.bank.tampil_customer
+                      staticClass: "form-control",
+                      attrs: {
+                        required: "",
+                        autocomplete: "off",
+                        placeholder: "Nama Bank",
+                        type: "text",
+                        autofocus: ""
                       },
+                      domProps: { value: _vm.bank.nama_bank },
                       on: {
-                        change: function($event) {
-                          var $$a = _vm.bank.tampil_customer,
-                            $$el = $event.target,
-                            $$c = $$el.checked ? true : false
-                          if (Array.isArray($$a)) {
-                            var $$v = "1",
-                              $$i = _vm._i($$a, $$v)
-                            if ($$el.checked) {
-                              $$i < 0 &&
-                                (_vm.bank.tampil_customer = $$a.concat([$$v]))
-                            } else {
-                              $$i > -1 &&
-                                (_vm.bank.tampil_customer = $$a
-                                  .slice(0, $$i)
-                                  .concat($$a.slice($$i + 1)))
-                            }
-                          } else {
-                            _vm.$set(_vm.bank, "tampil_customer", $$c)
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
                           }
+                          _vm.$set(_vm.bank, "nama_bank", $event.target.value)
                         }
                       }
                     }),
-                    _vm._v(" Tampil Di Customer\n                            ")
+                    _vm._v(" "),
+                    _vm.errors.nama_bank
+                      ? _c("span", { staticClass: "label label-danger" }, [
+                          _vm._v(_vm._s(_vm.errors.nama_bank[0]))
+                        ])
+                      : _vm._e()
                   ])
-                ])
-              ]),
-              _vm._v(" "),
-              _vm._m(2)
-            ]
-          )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c(
+                    "label",
+                    {
+                      staticClass: "col-md-2 control-label",
+                      attrs: { for: "no_telp" }
+                    },
+                    [_vm._v("A.N Bank")]
+                  ),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-md-4" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.bank.atas_nama,
+                          expression: "bank.atas_nama"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: {
+                        required: "",
+                        autocomplete: "off",
+                        placeholder: "A.N Bank",
+                        type: "text"
+                      },
+                      domProps: { value: _vm.bank.atas_nama },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.bank, "atas_nama", $event.target.value)
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _vm.errors.atas_nama
+                      ? _c("span", { staticClass: "label label-danger" }, [
+                          _vm._v(_vm._s(_vm.errors.atas_nama[0]))
+                        ])
+                      : _vm._e()
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c(
+                    "label",
+                    {
+                      staticClass: "col-md-2 control-label",
+                      attrs: { for: "no_rek" }
+                    },
+                    [_vm._v("No Rek")]
+                  ),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-md-4" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.bank.no_rek,
+                          expression: "bank.no_rek"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: {
+                        required: "",
+                        autocomplete: "off",
+                        placeholder: "No Rekening",
+                        type: "text"
+                      },
+                      domProps: { value: _vm.bank.no_rek },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.bank, "no_rek", $event.target.value)
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _vm.errors.no_rek
+                      ? _c("span", { staticClass: "label label-danger" }, [
+                          _vm._v(_vm._s(_vm.errors.no_rek[0]))
+                        ])
+                      : _vm._e()
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("div", { staticClass: "col-md-2 " }),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "togglebutton col-md-4" }, [
+                    _c("label", [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.bank.tampil_customer,
+                            expression: "bank.tampil_customer"
+                          }
+                        ],
+                        attrs: { type: "checkbox", value: "1" },
+                        domProps: {
+                          checked: Array.isArray(_vm.bank.tampil_customer)
+                            ? _vm._i(_vm.bank.tampil_customer, "1") > -1
+                            : _vm.bank.tampil_customer
+                        },
+                        on: {
+                          change: function($event) {
+                            var $$a = _vm.bank.tampil_customer,
+                              $$el = $event.target,
+                              $$c = $$el.checked ? true : false
+                            if (Array.isArray($$a)) {
+                              var $$v = "1",
+                                $$i = _vm._i($$a, $$v)
+                              if ($$el.checked) {
+                                $$i < 0 &&
+                                  (_vm.bank.tampil_customer = $$a.concat([$$v]))
+                              } else {
+                                $$i > -1 &&
+                                  (_vm.bank.tampil_customer = $$a
+                                    .slice(0, $$i)
+                                    .concat($$a.slice($$i + 1)))
+                              }
+                            } else {
+                              _vm.$set(_vm.bank, "tampil_customer", $$c)
+                            }
+                          }
+                        }
+                      }),
+                      _vm._v(
+                        " Tampil Di Customer\n                            "
+                      )
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _vm._m(2)
+              ]
+            )
+          ])
         ])
       ])
     ])

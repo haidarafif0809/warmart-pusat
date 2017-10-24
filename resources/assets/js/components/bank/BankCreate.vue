@@ -1,6 +1,6 @@
 
 <template>
-
+<div class="row" >
 <div class="col-md-12">
 <ul class="breadcrumb">
     <li><a href=" ">Home</a></li>
@@ -14,23 +14,11 @@
           <div class="card-content">
              <h4 class="card-title"> Bank </h4>
     <div>
-
-
-        <div class="alert alert-success" v-if="success == true " >
-
-            <div class="container-fluid">
-                  <div class="alert-icon">
-                  <i class="material-icons">check</i>
-                  </div>
-                  <b>{{ message}}</b>
-              </div>
-         
-        </div>
                 <form v-on:submit.prevent="saveForm()" class="form-horizontal"> 
                     <div class="form-group">
                         <label for="name" class="col-md-2 control-label">Nama Bank</label>
                         <div class="col-md-4">
-                            <input class="form-control" required autocomplete="off" placeholder="Nama Bank" type="text" v-model="bank.nama_bank"  autofocus="">
+                            <input class="form-control" required autocomplete="off" placeholder="Nama Bank" type="text" v-model="bank.nama_bank" name="nama_bank"  autofocus="">
                                <span v-if="errors.nama_bank" class="label label-danger">{{ errors.nama_bank[0] }}</span>
                             
                         </div>
@@ -40,14 +28,14 @@
                     <div class="form-group">
                         <label for="no_telp" class="col-md-2 control-label">A.N Bank</label>
                         <div class="col-md-4">
-                            <input class="form-control" required autocomplete="off" placeholder="A.N Bank" type="text" v-model="bank.atas_nama">
+                            <input class="form-control" required autocomplete="off" placeholder="A.N Bank" type="text" v-model="bank.atas_nama" name="atas_nama" >
                               <span v-if="errors.atas_nama" class="label label-danger">{{ errors.atas_nama[0] }}</span>
                         </div>
                     </div>   
                   <div class="form-group">
                         <label for="no_rek" class="col-md-2 control-label">No Rek</label>
                         <div class="col-md-4">
-                            <input class="form-control" required autocomplete="off" placeholder="No Rekening" type="text" v-model="bank.no_rek">
+                            <input class="form-control" required autocomplete="off" placeholder="No Rekening" type="text" v-model="bank.no_rek" name="no_rek" >
                               <span v-if="errors.no_rek" class="label label-danger">{{ errors.no_rek[0] }}</span>
                         </div>
                     </div>
@@ -70,6 +58,7 @@
             </div>
         </div>
     </div>
+  </div>
 </template>
 
 <script>

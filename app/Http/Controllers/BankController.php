@@ -10,6 +10,7 @@ use Session;
 use Laratrust;
 use App\Bank;
 use Auth;
+
 class BankController extends Controller
 {
     /**
@@ -33,6 +34,12 @@ class BankController extends Controller
 
     public function view(){
         $bank = Bank::paginate(10);
+        return response()->json($bank);
+    }
+
+    public function pencarian(Request $request){
+
+        $bank = Bank::where('nama_bank','LIKE',"%$request->search%")->orWhere('atas_nama','LIKE',"%$request->search%")->orWhere('no_rek','LIKE',"%$request->search%")->paginate(10);
         return response()->json($bank);
     }
 

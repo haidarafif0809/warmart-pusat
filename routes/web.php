@@ -88,6 +88,7 @@ Route::put('/proses-ubah-profil/{id}',[
 
 //menampilkan data bank
 Route::get('/bank/view','BankController@view')->middleware('auth');
+Route::get('/bank/pencarian','BankController@pencarian')->middleware('auth');
 
 Route::middleware('optimizeImages','auth')->group(function () {
 	
