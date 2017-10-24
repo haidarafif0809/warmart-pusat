@@ -27,28 +27,12 @@ class BankController extends Controller
     //MENAMPILKAN DATA YG ADA DI ITEM KELUAR
     public function index(Request $request, Builder $htmlBuilder)
     {
-        if ($request->ajax()) {
-            $master_bank = Bank::select(['id','nama_bank', 'atas_nama', 'no_rek']);
-            return Datatables::of($master_bank)->addColumn('action', function($bank){
-                    return view('datatable._action', [
-                        'model'     => $bank,
-                        'form_url'  => route('bank.destroy', $bank->id),
-                        'edit_url'  => route('bank.edit', $bank->id),
-                        'confirm_message'   => 'Anda Yakin Ingin Menghapus Bank ' .$bank->nama_bank . ' ?',
-                        'permission_ubah' => Laratrust::can('edit_bank'),
-                        'permission_hapus' => Laratrust::can('hapus_bank'),
-
-                        ]);
-                })->make(true);
-        }
-        $html = $htmlBuilder
-        ->addColumn(['data' => 'nama_bank', 'name' => 'nama_bank', 'title' => 'Nama Bank']) 
-        ->addColumn(['data' => 'atas_nama', 'name' => 'atas_nama', 'title' => 'Nama Rekening']) 
-        ->addColumn(['data' => 'no_rek', 'name' => 'no_rek', 'title' => 'No. Rekening']) 
-        ->addColumn(['data' => 'action', 'name' => 'action', 'title' => '', 'orderable' => false, 'searchable'=>false]);
-
         return view('bank.index')->with(compact('html'));
+    }
 
+
+    public function view(){
+        return Bank::all();
     }
 
     /**
@@ -75,28 +59,13 @@ class BankController extends Controller
             'no_rek'        => 'required|numeric|unique:banks,no_rek,',
             'tampil_customer'     => 'required',
         ]);
-        
-        $pesan_alert = 
-             '<div class="container-fluid">
-                  <div class="alert-icon">
-                  <i class="material-icons">check</i>
-                  </div>
-                  <b>Sukses : Berhasil Menambah Bank "'.$request->nama_bank.'"</b>
-              </div>';
-
-            $master_bank = Bank::create([
+            
+             $master_bank = Bank::create([
                 'nama_bank' =>$request->nama_bank,              
                 'atas_nama' => $request->atas_nama,
                 'no_rek' =>$request->no_rek,
                 'tampil_customer' =>$request->tampil_customer,
             ]);
-
-            Session::flash("flash_notification", [
-                "level"=>"success",
-                "message"=> $pesan_alert
-            ]);
-            
-            return redirect()->route('bank.index');
     }
 
     /**
@@ -108,6 +77,8 @@ class BankController extends Controller
     public function show($id)
     {
         //
+
+        return Bank::find($id);
     }
 
     /**
@@ -135,7 +106,6 @@ class BankController extends Controller
             'nama_bank'     => 'required',
             'atas_nama'     => 'required',
             'no_rek'        => 'required|numeric|unique:banks,no_rek,'. $id,
-            'tampil_customer'     => 'required',
         ]);
 
         Bank::where('id', $id)->update([
@@ -144,21 +114,6 @@ class BankController extends Controller
                 'no_rek'    =>$request->no_rek,
                 'tampil_customer'    =>$request->tampil_customer,
             ]);
-
-        $pesan_alert = 
-             '<div class="container-fluid">
-                  <div class="alert-icon">
-                  <i class="material-icons">check</i>
-                  </div>
-                  <b>Sukses : Berhasil Mengubah Bank "'.$request->nama_bank.'"</b>
-              </div>';
-
-        Session::flash("flash_notification", [
-            "level"=>"success",
-            "message"=>$pesan_alert
-            ]);
-
-        return redirect()->route('bank.index');    
     }
 
     /**
@@ -169,26 +124,8 @@ class BankController extends Controller
      */
     public function destroy($id)
     {
-
-      
-
-      $pesan_alert = 
-               '<div class="container-fluid">
-                    <div class="alert-icon">
-                    <i class="material-icons">check</i>
-                    </div>
-                    <b>Sukses : Bank Berhasil Dihapus</b>
-                </div>';
-
-        Bank::destroy($id);  
-
-        Session:: flash("flash_notification", [
-            "level"=>"success",
-            "message"=> $pesan_alert
-            ]);
-
-
-        return redirect()->route('bank.index');
+       $bank =  Bank::destroy($id);  
+        return response(200);
     }
 
 }// END CLASS BankController
