@@ -10,6 +10,7 @@ use App\Komunitas;
 use App\KomunitasPenggiat;
 use App\KomunitasCustomer;
 use App\Customer;
+use App\UserWarung; 
 use Session;
 
 class UbahProfilController extends Controller
@@ -28,8 +29,10 @@ class UbahProfilController extends Controller
       		$tanggal = $komunitas->tgl_lahir; 
         }
 
+        $user_warung = UserWarung::with(['kelurahan', 'warung'])->find($user->id);
+
         $komunitas_customer = KomunitasCustomer::where('user_id',$user->id)->first();
-        return view('ubah_profil',['user'=>$user,'otoritas'=>$otoritas,'komunitas'=>$komunitas, 'tanggal'=>$tanggal,'komunitas_customer'=>$komunitas_customer,'customer'=>$customer]);
+        return view('ubah_profil',['user'=>$user,'otoritas'=>$otoritas,'komunitas'=>$komunitas, 'tanggal'=>$tanggal,'komunitas_customer'=>$komunitas_customer,'customer'=>$customer,'user_warung'=>$user_warung]);
     }
 
 
@@ -103,6 +106,20 @@ class UbahProfilController extends Controller
 				        KomunitasCustomer::create(['user_id' =>$id ,'komunitas_id' => $request['komunitas']]);
 				        }
 			        }
+
+
+  			}elseif ($request['id_ubah_profil'] == 4) {
+
+				     
+		         //UPDATE USER WARUNG
+		        $user_warung = UserWarung::where('id',$id)->update([
+		            'name'      => $request->name,
+		            'email'     => $request->email, 
+		            'no_telp'     => $request->no_telp, 
+		            'alamat'    => $request->alamat,
+		            'wilayah'   => $request->kelurahan,
+		            'id_warung' => $request->id_warung,
+		        ]);
   			}
 		          
 
