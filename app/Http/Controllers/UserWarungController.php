@@ -159,24 +159,46 @@ class UserWarungController extends Controller
     public function destroy($id)
     {
     // JIKA USER WARUNG GAGAL DIHAPUS
-        if (!UserWarung::destroy($id)) {
-            return redirect()->back();
-        }
-        else{
-            $pesan_alert = '
-                <div class="container-fluid">
-                    <div class="alert-icon">
-                        <i class="material-icons">check</i>
-                    </div>
-                        <b>Sukses : Berhasil Menghapus User Warung </b>
-                </div>';
+        $user_warung = UserWarung::select('id_warung')->where('id',$id)->first();
+        $warung_user = UserWarung::where('id_warung', $user_warung->id)->count();
 
-                Session:: flash("flash_notification", [
-                    "level"=>"success",
-                    "message"=> $pesan_alert
-                ]);
+        if ($warung_user > 1) {
 
-                return redirect()->route('user_warung.index');
+                if (!UserWarung::destroy($id)) {
+                    return redirect()->back();
+                }
+                else{
+                    $pesan_alert = '
+                        <div class="container-fluid">
+                            <div class="alert-icon">
+                                <i class="material-icons">check</i>
+                            </div>
+                                <b>Sukses : Berhasil Menghapus User Warung </b>
+                        </div>';
+
+                        Session:: flash("flash_notification", [
+                            "level"=>"success",
+                            "message"=> $pesan_alert
+                        ]);
+
+                        return redirect()->route('user_warung.index');
+                }
+        }else{
+                    $pesan_alert = '
+                        <div class="container-fluid">
+                            <div class="alert-icon">
+                                <i class="material-icons">check</i>
+                            </div>
+                                <b>Gagal : User Warung Tidak Bisa Dihapus </b>
+                        </div>';
+
+                        Session:: flash("flash_notification", [
+                            "level"=>"success",
+                            "message"=> $pesan_alert
+                        ]);
+
+                        return redirect()->route('user_warung.index');
         }
+    
     }
 }

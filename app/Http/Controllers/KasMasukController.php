@@ -30,7 +30,7 @@ class KasMasukController extends Controller
                         'model'     => $master_kas_masuk,
                         'form_url'  => route('kas_masuk.destroy', $master_kas_masuk->id),
                         'edit_url'  => route('kas_masuk.edit', $master_kas_masuk->id),
-                        'confirm_message'   => 'Yakin Mau Menghapus kas masuk ' . $master_kas_masuk->no_faktur . '?'
+                        'confirm_message'   => 'Yakin Mau Menghapus Kas Masuk ' . $master_kas_masuk->no_faktur . '?'
                    
                         ]); 
                 })->make(true);
@@ -152,8 +152,8 @@ class KasMasukController extends Controller
             TransaksiKas::where('no_faktur' , $kas_masuk->no_faktur)->update(['jumlah_masuk' => $request->jumlah,'kas' => $request->kas]);
         
              Session::flash("flash_notification", [
-                "level"=>"success",
-                "message"=>'<b>Sukses :</b>Berhasil Mengubah Transaksi Kas Keluar "'.$kas_masuk->no_faktur.'"'
+                "level"=>"danger",
+                "message"=>'<b>Sukses :</b>Berhasil Mengubah Transaksi Kas Masuk "'.$kas_masuk->no_faktur.'"'
                 ]);
 
             return redirect()->route('kas_masuk.index');

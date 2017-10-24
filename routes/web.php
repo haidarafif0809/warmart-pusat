@@ -108,6 +108,7 @@ Route::middleware('optimizeImages','auth')->group(function () {
 	Route::resource('error', 'ErrorController');
 	Route::resource('item-masuk', 'ItemMasukController');
 	Route::resource('item-keluar', 'ItemKeluarController');
+	Route::resource('suplier', 'SuplierController');
 
 	//ITEM KELUAR
 	Route::post('/item-keluar/proses-tambah-tbs-item-keluar',[
