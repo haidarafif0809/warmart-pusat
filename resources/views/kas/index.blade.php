@@ -29,6 +29,7 @@
 
 @section('scripts')
 
+{!! $html->scripts() !!}
 <script type="text/javascript">
 	$(document.body).on('submit', '.js-confirm', function () {
 		var $btnHapus = $(this);
