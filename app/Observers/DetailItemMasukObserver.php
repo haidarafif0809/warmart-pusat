@@ -17,14 +17,14 @@ class DetailItemMasukObserver
 		$total_nilai = $DetailItemMasuk->jumlah_produk *  $DetailItemMasuk->produk->harga_beli;
  
 				Hpp::create([
-					'no_faktur' => $DetailItemMasuk->no_faktur, 
-					'id_produk' => $DetailItemMasuk->id_produk, 
-					'jenis_transaksi' => 'item_masuk',
-					'jumlah_masuk' => $DetailItemMasuk->jumlah_produk, 
-					'harga_unit' => $DetailItemMasuk->produk->harga_beli,
-					'total_nilai' => $total_nilai, 
-					'jenis_hpp' => '1',
-					'warung_id'=>Auth::user()->id_warung
+					'no_faktur'  	 => $DetailItemMasuk->no_faktur, 
+					'id_produk'  	 => $DetailItemMasuk->id_produk, 
+					'jenis_transaksi'=> 'item_masuk',
+					'jumlah_masuk' 	 => $DetailItemMasuk->jumlah_produk, 
+					'harga_unit' 	 => $DetailItemMasuk->produk->harga_beli,
+					'total_nilai' 	 => $total_nilai, 
+					'jenis_hpp' 	 => '1',
+					'warung_id'		 => $DetailItemMasuk->warung_id, 
 				]);
  
  				return true;   

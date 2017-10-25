@@ -16,7 +16,7 @@ class ItemMasuk extends Model
 
     protected $fillable = ['id','no_faktur','keterangan','total','created_at','updated_at','warung_id'];
  
-   public static function no_faktur(){
+   public static function no_faktur($warung_id){
 
         $tahun_sekarang = date('Y');
         $bulan_sekarang = date('m');
@@ -34,7 +34,7 @@ class ItemMasuk extends Model
          }
       
       //ambil bulan dan no_faktur dari tanggal item_keluar terakhir
-         $item_keluar = ItemMasuk::select([DB::raw('MONTH(created_at) bulan'), 'no_faktur'])->where('warung_id',Auth::user()->id_warung)->orderBy('id','DESC')->first();
+         $item_keluar = ItemMasuk::select([DB::raw('MONTH(created_at) bulan'), 'no_faktur'])->where('warung_id',$warung_id)->orderBy('id','DESC')->first();
 
 
          if ($item_keluar != NULL) {

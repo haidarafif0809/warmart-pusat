@@ -6,6 +6,7 @@ use App\ItemMasuk;
 use App\DetailItemMasuk;
 use App\Hpp;
 use Auth;
+use Session;
 use DB;
 
 class ItemMasukObserver
@@ -13,7 +14,7 @@ class ItemMasukObserver
  
     public function creating(ItemMasuk $itemMasuk){
 
-        $total_nilai_item_masuk = Hpp::where('no_faktur', $itemMasuk->no_faktur)->where('warung_id',Auth::user()->id_warung)->sum('total_nilai');
+        $total_nilai_item_masuk = Hpp::where('no_faktur', $itemMasuk->no_faktur)->where('warung_id',$itemMasuk->warung_id)->sum('total_nilai');
         $itemMasuk->total = $total_nilai_item_masuk;
         return true;
     }

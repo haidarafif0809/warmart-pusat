@@ -349,10 +349,10 @@ class ItemMasukController extends Controller
         $warung_id = Auth::user()->id_warung;
         $session_id = session()->getId();
         $user = Auth::user()->id;
-        $no_faktur = ItemMasuk::no_faktur();
+        $no_faktur = ItemMasuk::no_faktur($warung_id);
 
       //INSERT DETAIL ITEM MASUK
-        $data_produk_item_masuk = TbsItemMasuk::where('session_id', $session_id)->where('warung_id',Auth::user()->id_warung);
+        $data_produk_item_masuk = TbsItemMasuk::where('session_id', $session_id)->where('warung_id',$warung_id);
 
         //jika belum ada produk yang di inputkan 
         if ($data_produk_item_masuk->count() == 0) {
@@ -387,14 +387,14 @@ class ItemMasukController extends Controller
                 'id_produk' =>$data_tbs->id_produk,              
                 'no_faktur' => $no_faktur,
                 'jumlah_produk' =>$data_tbs->jumlah_produk,
-                'warung_id' => Auth::user()->id_warung,
+                'warung_id' => $warung_id,
             ]);
         }
 
         $itemmasuk = ItemMasuk::create([
             'no_faktur' => $no_faktur,
             'keterangan' =>$keterangan,
-            'warung_id' => Auth::user()->id_warung,
+            'warung_id' => $warung_id,
         ]);
 
         if (!$itemmasuk) {
