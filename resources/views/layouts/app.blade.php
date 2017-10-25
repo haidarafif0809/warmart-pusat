@@ -368,7 +368,7 @@
 <script src="{{ asset('js/selectize.min.js') }}"></script> 
 
 <script src="{{ asset('js/custom.js') }}"></script>
-
+<script src="{{ asset('js/ckeditor/ckeditor.js') }}"></script>
 <!-- SHORTCUT JS -->
 <script src="{{ asset('js/shortcut.js') }}"></script>
 

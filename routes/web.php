@@ -105,6 +105,28 @@ Route::middleware('optimizeImages','auth')->group(function () {
 	Route::resource('item-masuk', 'ItemMasukController');
 	Route::resource('item-keluar', 'ItemKeluarController');
 
+//BARANG
+	//HALAMAN DESKRIPSI
+	Route::get('/barang/detail-produk/{id}',[
+	'middleware' => ['auth'],
+	'as' 	=> 'barang.detail_produk',
+	'uses'	=> 'BarangController@detail_produk'
+	]);
+
+	//PROSES UPDATE DESKRIPSI
+	Route::post('/barang/update-deskripsi-produk',[
+	'middleware' => ['auth'],
+	'as' 	=> 'barang.update_deskripsi_produk',
+	'uses'	=> 'BarangController@update_deskripsi_produk'
+	]);	
+
+	//LIHAT DESKRIPSI
+	Route::get('/barang/lihat-deskripsi-produk/{id}',[
+	'middleware' => ['auth'],
+	'as' 	=> 'barang.lihat_deskripsi_produk',
+	'uses'	=> 'BarangController@lihat_deskripsi_produk'
+	]);	
+
 //ITEM KELUAR
 	Route::post('/item-keluar/proses-tambah-tbs-item-keluar',[
 	'middleware' => ['auth'],
