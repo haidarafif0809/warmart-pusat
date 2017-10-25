@@ -134,7 +134,7 @@
 	      deleteEntry(id, index,nama_bank) {
                 if (confirm("Yakin Ingin Menghapus Bank "+nama_bank+" ?")) {
                     var app = this;
-                    axios.delete('http://localhost/warmart/public/bank/' + id)
+                    axios.delete(app.url'/' + id)
                         .then(function (resp) {
                           app.getResults();
 							app.alert("Berhasil Menghapus Bank "+nama_bank)
