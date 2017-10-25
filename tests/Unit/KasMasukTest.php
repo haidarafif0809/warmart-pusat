@@ -165,7 +165,7 @@ class KasMasukTest extends TestCase
 	        $kas = KasMasuk::create(['no_faktur' => $no_faktur, 'kas' => '2', 'kategori' => '1', 'jumlah' => '50000', 'keterangan' => 'Makan Karyawan','id_warung'=>'1']);
 	        $transaksi_kas = TransaksiKas::create(['no_faktur' => $no_faktur, 'jenis_transaksi'=>'kas_masuk', 'jumlah_keluar' => '50000', 'kas' => '2','warung_id'=>'1']);
 
-	        $response2 = $this->get($response->headers->get('location'))->assertSee('Berhasil Menambah Transaksi Kas Masuk Sebesar "50000"');
+	        $response2 = $this->get($response->headers->get('location'))->assertSee('<b>Sukses:</b> Berhasil Menambah Transaksi Kas Masuk Sebesar "50000" </b>');
 
 	        //CEK DB TABLE KAS
 	        $response_kas = $this->assertDatabaseHas("kas_masuks",['no_faktur' => $no_faktur, 'kas' => '2', 'kategori' => '1', 'jumlah' => '50000', 'keterangan' => 'Makan Karyawan','id_warung'=>'1']);
@@ -225,7 +225,7 @@ class KasMasukTest extends TestCase
 	        $response = $this->actingAs($user)->json('POST', route('kas_masuk.destroy',$kas->id), ['_method' => 'DELETE']);
 	        TransaksiKas::where('no_faktur', $kas->no_faktur)->delete();
 
-	        $this->get($response->headers->get('location'))->assertSee(' Berhasil Menghapus Transaksi Kas Masuk "'.$no_faktur.'"'); 
+	        $this->get($response->headers->get('location'))->assertSee('<b>Succes :</b> Kas Masuk '.$no_faktur.' Berhasil Di Hapus'); 
     }
 
     //HALAMAN MENU EDIT KAS

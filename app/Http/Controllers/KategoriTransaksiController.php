@@ -131,6 +131,8 @@ class KategoriTransaksiController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $id_warung = Auth::user()->id_warung;
+
         $this->validate($request, [
             'nama_kategori_transaksi'     => 'required|unique:kategori_transaksis,nama_kategori_transaksi,'. $id.',id,id_warung,'.Auth::user()->id_warung,
         ]);

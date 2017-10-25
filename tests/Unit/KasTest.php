@@ -77,7 +77,7 @@ class KasTest extends TestCase
         
         // CEK DATA BASE
         $data_kas = Kas::select('default_kas')->where('id', $kas_test2->id)->first();
-        $user = User::find(1);
+        $user = User::find(4);
         $response = $this->actingAs($user)->json('POST', route('kas.destroy',$kas_test2->id), ['_method' => 'DELETE']);
 
         if ($data_kas->default_kas == 1) {
@@ -97,7 +97,7 @@ class KasTest extends TestCase
     public function testHTTPTambahKas() {
 
         //login user -> admin
-        $user = User::find(1);
+        $user = User::find(4);
 
         $response = $this->actingAs($user)->json('POST', route('kas.store'), [
          'kode_kas'   => 'K-001',
@@ -123,7 +123,7 @@ class KasTest extends TestCase
         //TAMBAH KAS
         $kas = Kas::create(['kode_kas' => 'K-001', 'nama_kas' => 'KAS KECIL', 'status_kas' => '1', 'default_kas' => '1' ]);
         //login user -> admin
-        $user = User::find(1);
+        $user = User::find(4);
 
         $response = $this->actingAs($user)->json('POST', route('kas.destroy',$kas->id), ['_method' => 'DELETE']);
 
@@ -138,7 +138,7 @@ class KasTest extends TestCase
         $kas = Kas::create(['kode_kas' => 'K-001', 'nama_kas' => 'KAS KECIL', 'status_kas' => '1', 'default_kas' => '0' ]);
 
         //login user -> admin
-        $user = User::find(1);
+        $user = User::find(4);
 
         $response = $this->actingAs($user)->json('POST', route('kas.destroy',$kas->id), ['_method' => 'DELETE']);
 
@@ -155,7 +155,7 @@ class KasTest extends TestCase
         $kas = Kas::create(['kode_kas' => 'K-001', 'nama_kas' => 'KAS KECIL', 'status_kas' => '1', 'default_kas' => '0' ]);
 
         //login user -> admin
-        $user = User::find(1);
+        $user = User::find(4);
 
         $response = $this->actingAs($user)->get(route('kas.edit',$kas->id));
 
@@ -170,7 +170,7 @@ class KasTest extends TestCase
         $kas = Kas::create(['kode_kas' => 'K-001', 'nama_kas' => 'KAS KECIL', 'status_kas' => '1', 'default_kas' => '0' ]);
 
         //login user -> admin
-        $user = User::find(1);
+        $user = User::find(4);
 
         $response = $this->actingAs($user)->json('POST', route('kas.update',$kas->id), ['_method' => 'PUT', 'kode_kas' => 'K-001', 'nama_kas' => 'KAS KECIL UPDATE', 'status_kas' => '1', 'default_kas' => '0']);
 

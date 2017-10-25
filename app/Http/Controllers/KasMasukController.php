@@ -30,10 +30,14 @@ class KasMasukController extends Controller
                         'model'     => $master_kas_masuk,
                         'form_url'  => route('kas_masuk.destroy', $master_kas_masuk->id),
                         'edit_url'  => route('kas_masuk.edit', $master_kas_masuk->id),
-                        'confirm_message'   => 'Yakin Mau Menghapus kas masuk ' . $master_kas_masuk->no_faktur . '?'
+                        'confirm_message'   => 'Yakin Mau Menghapus Kas Masuk ' . $master_kas_masuk->no_faktur . '?'
                    
                         ]); 
-                })->make(true);
+                })
+                ->addColumn('jumlah', function($kas_masuk){
+                    return $kas_masuk->tandaPemisahTitik;
+                })
+                ->make(true);
         }
         $html = $htmlBuilder
         ->addColumn(['data' => 'no_faktur', 'name' => 'no_faktur', 'title' => 'No Faktur'])
@@ -130,7 +134,6 @@ class KasMasukController extends Controller
     public function update(Request $request, $id)
     {  
          $this->validate($request, [
-            'kas'   => 'required',
             'kategori'   => 'required',
             'jumlah'   => 'required|numeric',
             'keterangan'   => 'max:150',  
@@ -146,17 +149,34 @@ class KasMasukController extends Controller
         $id_warung = Auth::user()->id_warung;
 
         if ($id_warung == $kas_masuk->id_warung) {
-             $kas = KasMasuk::find($id)->update(['kas' => $request->kas,'kategori' => $request->kategori,'jumlah' => $request->jumlah,'keterangan' => $keterangan]);
+                    // hitung kas
+                $sisa_kas = TransaksiKas::select(DB::raw('SUM(jumlah_masuk - jumlah_keluar) as total_kas'))
+                                    ->where('kas', $kas_masuk->kas)
+                                    ->where('warung_id',Auth::user()->id_warung)
+                                    ->where('no_faktur','!=',$kas_masuk->no_faktur)
+                                    ->first();
 
-             //PROSES UPDATE TRANSAKSI KAS
-            TransaksiKas::where('no_faktur' , $kas_masuk->no_faktur)->update(['jumlah_masuk' => $request->jumlah,'kas' => $request->kas]);
-        
-             Session::flash("flash_notification", [
-                "level"=>"success",
-                "message"=>'<b>Sukses :</b>Berhasil Mengubah Transaksi Kas Keluar "'.$kas_masuk->no_faktur.'"'
-                ]);
+                $jumlah_kas = $request->jumlah + $sisa_kas->total_kas;
+                if ($jumlah_kas < 0) {
 
-            return redirect()->route('kas_masuk.index');
+                       Session::flash("flash_notification", [
+                                    "level"     => "danger",
+                                    "message"   => "<b>Info :</b> Jumlah Kas Yang Anda Masukan Lebih Kecil Dari Total Kas Saat Ini"
+                                ]);
+                      return redirect()->back();
+                    }else{
+                        $kas = KasMasuk::find($id)->update(['kategori' => $request->kategori,'jumlah' => $request->jumlah,'keterangan' => $keterangan]);
+                         //PROSES UPDATE TRANSAKSI KAS
+                        TransaksiKas::where('no_faktur' , $kas_masuk->no_faktur)->update(['jumlah_masuk' => $request->jumlah]);
+                    
+                         Session::flash("flash_notification", [
+                            "level"=>"success",
+                            "message"=>'<b>Sukses :</b>Berhasil Mengubah Transaksi Kas Masuk "'.$kas_masuk->no_faktur.'"'
+                            ]);
+
+                        return redirect()->route('kas_masuk.index');
+                }
+
         }else{
           Auth::logout();
                 return response()->view('error.403'); 
@@ -196,7 +216,7 @@ class KasMasukController extends Controller
                                 return redirect()->back();
                             }else{
                                 Session::flash("flash_notification", [
-                                    "level"     => "success",
+                                    "level"     => "danger",
                                     "message"   => "<b>Succes :</b> Kas Masuk ". $kas_masuk->no_faktur ." Berhasil Di Hapus"
                                 ]);
                             return redirect()->route('kas_masuk.index');
