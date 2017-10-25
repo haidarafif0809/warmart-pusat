@@ -37,7 +37,7 @@
     <body class="product-page">
 
 	<div class="page-header header-filter" data-parallax="true" >
-		{!! Html::image(asset('image/deskripsis.jpeg')) !!}
+		{!! Html::image(asset('image/background.jpg')) !!}
 	</div>
 
 	<div class="section section-gray">
@@ -54,7 +54,7 @@
                     <div class="col-md-6 col-sm-6">
 						<h2 class="title"> {{ $nama_produk }} </h2>
 						<h3 class="main-price">Rp. {{ number_format($lihat_deskripsi_produk->harga_jual,0,',','.') }}</h3>	
-	                        {!! substr($lihat_deskripsi_produk->deskripsi_produk, 0, 300) !!}.
+	                        {!! substr($lihat_deskripsi_produk->deskripsi_produk, 0, 300) !!}...
 	                        		<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
 	                                    <h4 class="panel-title">
 	                                    <b> Baca Selengkapnya... </b><i class="material-icons">keyboard_arrow_down</i>
