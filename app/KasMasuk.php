@@ -18,6 +18,10 @@ class KasMasuk extends Model
     public function kategori(){
     	return $this->belongsTo('App\KategoriTransaksi','kategori','id');
     }
+     public function getTandaPemisahTitikAttribute()
+    {
+      return number_format($this->jumlah,0,',','.');
+    }
 
     public static function no_faktur(){
 
