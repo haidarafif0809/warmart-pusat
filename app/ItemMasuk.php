@@ -15,61 +15,7 @@ class ItemMasuk extends Model
     use AuditableTrait;
 
     protected $fillable = ['id','no_faktur','keterangan','total','created_at','updated_at','warung_id'];
-
-
-    //MODEL EVENT 
-  	public static function boot() {
-    parent::boot();
-      
-    self::deleting(function($itemMasuk) {
-
-     
-
-      $hpp_terpakai =  Hpp::where('no_faktur_hpp_masuk', $itemMasuk->no_faktur)->where('warung_id',Auth::user()->id_warung)->count();
-      
-      if ($hpp_terpakai > 0) {
-
-         $pesan_alert = 
-               '<div class="container-fluid">
-                    <div class="alert-icon">
-                    <i class="material-icons">error</i>
-                    </div>
-                    <b>Gagal : Item Masuk Sudah Terpakai Tidak Boleh Di Hapus</b>
-                </div>';
-
-          Session:: flash("flash_notification", [
-            "level"=>"danger",
-            "message"=> $pesan_alert
-            ]);
-        return false;
-      }
-      else {
-        DetailItemMasuk::where('no_faktur', $itemMasuk->no_faktur)->where('warung_id',Auth::user()->id_warung)->delete();
-        Hpp::where('no_faktur', $itemMasuk->no_faktur)->where('warung_id',Auth::user()->id_warung)->delete();
-
-        return true;
-      }
  
-    
-    });   
-
-    self::creating(function($itemMasuk) {
-
-
-      $total_nilai_item_keluar = Hpp::where('no_faktur', $itemMasuk->no_faktur)->where('warung_id',Auth::user()->id_warung)->sum('total_nilai');
-
-     $itemMasuk->total = $total_nilai_item_keluar;
-
-      return true;
-    
-    });  
-
-
-
-
-  } //end modal event
-
-
    public static function no_faktur(){
 
         $tahun_sekarang = date('Y');

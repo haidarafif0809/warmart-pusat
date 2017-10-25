@@ -185,36 +185,22 @@ class ItemMasukController extends Controller
      //PROSES HAPUS EDIT TBS ITEM MASUK
     public function proses_hapus_edit_tbs_item_masuk($id)
     { 
-        if (!EditTbsItemMasuk::destroy($id)) {
-          $pesan_alert = 
-               '<div class="container-fluid">
-                    <div class="alert-icon">
-                    <i class="material-icons">error</i>
-                    </div>
-                    <b>Gagal : Produk Sudah Terpakai Tidak Boleh Di Hapus</b>
-                </div>';
+        EditTbsItemMasuk::where('id_edit_tbs_item_masuk',$id)->delete();
 
-            Session::flash("flash_notification", [
-                "level"     => "danger",
-                "message"   => $pesan_alert
-            ]);
-        return back();
-        }
-        else{
-          $pesan_alert = 
-               '<div class="container-fluid">
-                    <div class="alert-icon">
+        $pesan_alert = 
+            '<div class="container-fluid">
+                <div class="alert-icon">
                     <i class="material-icons">check</i>
-                    </div>
-                    <b>Sukses : Berhasil Menghapus Produk</b>
-                </div>';
+                </div>
+                <b>Sukses : Berhasil Menghapus Produk</b>
+            </div>';
 
             Session::flash("flash_notification", [
                 "level"     => "success",
                 "message"   => $pesan_alert
             ]);
+
         return back();
-        }
     }
 
 
@@ -267,73 +253,84 @@ class ItemMasukController extends Controller
         $session_id = session()->getId();
         $user = Auth::user()->id; 
 
-        $hapus_detail_tbs_item_masuk = DetailItemMasuk::where('no_faktur', $data_item_masuk->no_faktur)->delete(); 
-
-      //INSERT DETAIL ITEM MASUK
-        $data_produk_item_masuk = EditTbsItemMasuk::where('no_faktur', $data_item_masuk->no_faktur);
+//INSERT DETAIL ITEM MASUK
+    $data_produk_item_masuk = EditTbsItemMasuk::where('no_faktur', $data_item_masuk->no_faktur)->where('warung_id', Auth::user()->id_warung);
 
         if ($data_produk_item_masuk->count() == 0) {
 
-           $pesan_alert = 
-               '<div class="container-fluid">
+            $pesan_alert = 
+                '<div class="container-fluid">
                     <div class="alert-icon">
-                    <i class="material-icons">error</i>
+                        <i class="material-icons">error</i>
                     </div>
-                    <b>Gagal : Belum ada Produk Yang Di inputkan</b>
+                        <b>Gagal : Belum Ada Produk Yang Diinputkan</b>
                 </div>';
 
-        Session::flash("flash_notification", [
-            "level"     => "danger",
-            "message"   => $pesan_alert
-        ]);
+                Session::flash("flash_notification", [
+                    "level"     => "danger",
+                    "message"   => $pesan_alert
+                ]);
 
-          
-          return redirect()->back();
-        }
-
-        foreach ($data_produk_item_masuk->get() as $data_tbs) {
-            $detail_item_masuk = DetailItemMasuk::create([
-                'id_produk' =>$data_tbs->id_produk,              
-                'no_faktur' => $data_item_masuk->no_faktur,
-                'jumlah_produk' =>$data_tbs->jumlah_produk,
-                'warung_id' => Auth::user()->id_warung
-            ]);
-        }
-
-      //INSERT ITEM MASUK
-        if ($request->keterangan == "") {
-          $keterangan = "-";
+                return redirect()->back();
         }
         else{
-          $keterangan = $request->keterangan;
-        }
+            $data_detail_item_masuk = DetailItemMasuk::where('no_faktur', $data_item_masuk->no_faktur)->where('warung_id', Auth::user()->id_warung)->get();
 
-        $itemmasuk = ItemMasuk::find($id)->update([ 
-            'keterangan' =>$keterangan, 
-            'user_edit' => $user,
-        ]);
+    //HAPUS DETAIL ITEM MASUK
+            foreach ($data_detail_item_masuk as $data_detail) {            
 
-        $hapus_edit_tbs_item_masuk = EditTbsItemMasuk::where('no_faktur', $data_item_masuk->no_faktur)->delete(); 
+                if (!$hapus_detail = DetailItemMasuk::destroy($data_detail->id_detail_item_masuk)) {
+                    //DI BATALKAN PROSES NYA
+                    DB::rollBack();
+                    return redirect()->back();
+                }
+            }
 
 
-        if (!$itemmasuk) {
-          return back();
-        }
-         
-        $pesan_alert = 
-               '<div class="container-fluid">
+            foreach ($data_produk_item_masuk->get() as $data_tbs) {
+             
+                    $detail_item_masuk = DetailItemMasuk::create([
+                        'id_produk'     => $data_tbs->id_produk,              
+                        'no_faktur'     => $data_item_masuk->no_faktur,
+                        'jumlah_produk' => $data_tbs->jumlah_produk,
+                        'warung_id'     => Auth::user()->id_warung
+                    ]);   
+                
+            }
+
+    //INSERT ITEM MASUK
+            if ($request->keterangan == "") {
+                $keterangan = "-";
+            }
+            else{
+                $keterangan = $request->keterangan;
+            }
+
+            $itemmasuk = ItemMasuk::find($id)->update([ 
+                'keterangan' =>$keterangan
+            ]);
+
+            $hapus_edit_tbs_item_masuk = EditTbsItemMasuk::where('no_faktur', $data_item_masuk->no_faktur)->where('warung_id', Auth::user()->id_warung)->delete(); 
+
+            if (!$itemmasuk) {
+                return back();
+            }
+
+            $pesan_alert = 
+                '<div class="container-fluid">
                     <div class="alert-icon">
-                    <i class="material-icons">check</i>
+                        <i class="material-icons">check</i>
                     </div>
-                    <b>Sukses : Berhasil Melakukan Edit Transaksi Item Masuk Faktur "'.$data_item_masuk->no_faktur.'"</b>
+                        <b>Sukses : Berhasil Melakukan Edit Transaksi Item Masuk Faktur "'.$data_item_masuk->no_faktur.'"</b>
                 </div>';
 
-        Session::flash("flash_notification", [
-            "level"     => "success",
-            "message"   => $pesan_alert
-        ]);
+                Session::flash("flash_notification", [
+                    "level"     => "success",
+                    "message"   => $pesan_alert
+                ]);
 
-        return redirect()->route('item-masuk.index');
+            return redirect()->route('item-masuk.index');
+        }        
     }
  
 
@@ -347,7 +344,11 @@ class ItemMasukController extends Controller
     //PROSES SELESAI TRANSAKSI ITEM MASUK
     public function store(Request $request) {
 
+    //START TRANSAKSI
+      DB::beginTransaction();
+        $warung_id = Auth::user()->id_warung;
         $session_id = session()->getId();
+        $user = Auth::user()->id;
         $no_faktur = ItemMasuk::no_faktur();
 
       //INSERT DETAIL ITEM MASUK
@@ -373,6 +374,14 @@ class ItemMasukController extends Controller
           return redirect()->back();
         } 
 
+        //INSERT ITEM MASUK
+        if ($request->keterangan == "") {
+          $keterangan = "-";
+        }
+        else{
+          $keterangan = $request->keterangan;
+        }
+
         foreach ($data_produk_item_masuk->get() as $data_tbs) {
             $detail_item_masuk = DetailItemMasuk::create([
                 'id_produk' =>$data_tbs->id_produk,              
@@ -380,14 +389,6 @@ class ItemMasukController extends Controller
                 'jumlah_produk' =>$data_tbs->jumlah_produk,
                 'warung_id' => Auth::user()->id_warung,
             ]);
-        }
-
-      //INSERT ITEM MASUK
-        if ($request->keterangan == "") {
-          $keterangan = "-";
-        }
-        else{
-          $keterangan = $request->keterangan;
         }
 
         $itemmasuk = ItemMasuk::create([
@@ -416,6 +417,7 @@ class ItemMasukController extends Controller
             "message"   => $pesan_alert
         ]);
 
+        DB::commit(); 
         return redirect()->route('item-masuk.index');
     }
  
@@ -552,6 +554,7 @@ class ItemMasukController extends Controller
                 'no_faktur' =>$data_item_masuk->no_faktur,                    
                 'session_id' => $session_id,
                 'jumlah_produk' =>$request->jumlah_produk,
+                'warung_id' => Auth::user()->id_warung,
             ]);
 
             Session::flash("flash_notification", [

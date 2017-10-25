@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Auth;
 
 class EditTbsItemMasuk extends Model
 {
@@ -26,7 +27,7 @@ class EditTbsItemMasuk extends Model
 
      
 
-      $hpp_terpakai =  Hpp::where('no_faktur_hpp_masuk', $itemMasuk->no_faktur)->where('id_barang',$itemMasuk->id_produk)->count();
+      $hpp_terpakai =  Hpp::where('no_faktur', $itemMasuk->no_faktur)->where('id_produk',$itemMasuk->id_produk)->where('warung_id', Auth::user()->id_warung)->count();
       
       if ($hpp_terpakai > 0) { 
         return false;
