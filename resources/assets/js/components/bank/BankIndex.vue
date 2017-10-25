@@ -41,8 +41,8 @@
 		             
 		                    </tr>
 		                    </thead>
-		                    <tbody>
-		                    <tr v-for="bank, index in banks">
+		                    <tbody v-if="banks.length">
+		                    <tr v-for="bank, index in banks" >
 		                    
 		                        <td>{{ bank.nama_bank }}</td>
 		                        <td>{{ bank.atas_nama }}</td>
@@ -58,8 +58,13 @@
 		          
 		                
 		                    </tr>
-		                    </tbody>
+                      </tbody>
+                      <tbody v-else>
+                                  <tr ><td colspan="4"  class="text-center">Tidak Ada Data</td></tr>
+                      </tbody>
 		                </table>
+
+             <vue-simple-spinner v-if="loading"></vue-simple-spinner>
                  
             <div align="right"><pagination :data="banksData" v-on:pagination-change-page="getResults"></pagination></div>
 					</div>
@@ -78,7 +83,8 @@
                 banksData: {},
                 url : window.location.origin+window.location.pathname,
                 pencarian: '',
-                contoh : ''
+                contoh : '',
+                loading: true
             }
         },
         mounted() {
@@ -103,9 +109,11 @@
                 .then(function (resp) {
                     app.banks = resp.data.data;
                     app.banksData = resp.data;
+                    app.loading = false;
                 })
                 .catch(function (resp) {
                     console.log(resp);
+                    app.loading = false;
                     alert("Could not load banks");
                 });
        },
@@ -134,7 +142,7 @@
 	      deleteEntry(id, index,nama_bank) {
                 if (confirm("Yakin Ingin Menghapus Bank "+nama_bank+" ?")) {
                     var app = this;
-                    axios.delete('http://localhost/warmart/public/bank/' + id)
+                    axios.delete(app.url+'/' + id)
                         .then(function (resp) {
                           app.getResults();
 							app.alert("Berhasil Menghapus Bank "+nama_bank)

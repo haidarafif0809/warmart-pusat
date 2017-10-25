@@ -12,10 +12,14 @@ var VueResource = require('vue-resource');
 Vue.use(VueResource);
 import VueRouter from 'vue-router';
 import VueSwal from 'vue-swal'
+import Spinner from 'vue-simple-spinner'
+
 
 window.Vue.use(VueSwal)
+window.Vue.use(Spinner)
 
 Vue.component('pagination', require('laravel-vue-pagination'));
+Vue.component('vue-simple-spinner',require('vue-simple-spinner'))
 
 window.Vue.use(VueRouter);
 
