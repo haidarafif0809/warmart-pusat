@@ -19,7 +19,7 @@
                     <div class="form-group">
                         <label for="name" class="col-md-2 control-label">Nama Bank</label>
                         <div class="col-md-4">
-                            <input class="form-control" required autocomplete="off" placeholder="Nama Bank" type="text" v-model="bank.nama_bank"  autofocus="">
+                            <input class="form-control" required autocomplete="off" placeholder="Nama Bank" type="text" v-model="bank.nama_bank"  autofocus="" name="nama_bank">
                                <span v-if="errors.nama_bank" class="label label-danger">{{ errors.nama_bank[0] }}</span>
                             
                         </div>
@@ -29,14 +29,14 @@
                     <div class="form-group">
                         <label for="no_telp" class="col-md-2 control-label">A.N Bank</label>
                         <div class="col-md-4">
-                            <input class="form-control" required autocomplete="off" placeholder="A.N Bank" type="text" v-model="bank.atas_nama">
+                            <input class="form-control" required autocomplete="off" placeholder="A.N Bank" type="text" name="atas_nama" v-model="bank.atas_nama">
                               <span v-if="errors.atas_nama" class="label label-danger">{{ errors.atas_nama[0] }}</span>
                         </div>
                     </div>   
                   <div class="form-group">
                         <label for="no_rek" class="col-md-2 control-label">No Rek</label>
                         <div class="col-md-4">
-                            <input class="form-control" required autocomplete="off" placeholder="No Rekening" type="text" v-model="bank.no_rek">
+                            <input class="form-control" required autocomplete="off" placeholder="No Rekening" type="text" name="no_rek" v-model="bank.no_rek">
                               <span v-if="errors.no_rek" class="label label-danger">{{ errors.no_rek[0] }}</span>
                         </div>
                     </div>
@@ -44,7 +44,7 @@
                          <div  class="col-md-2 "></div>
                          <div class="togglebutton col-md-4">
                             <label>
-                                <input type="checkbox" v-model="bank.tampil_customer" value="1"> Tampil Di Customer
+                                <input type="checkbox" v-model="bank.tampil_customer" value="1" name="tampil_customer" id="tampil_customer"> Tampil Di Customer
                             </label>
                         </div>
                     </div>

@@ -13,7 +13,7 @@ Vue.use(VueResource);
 import VueRouter from 'vue-router';
 import VueSwal from 'vue-swal'
 import Spinner from 'vue-simple-spinner'
-
+ 
 
 window.Vue.use(VueSwal)
 window.Vue.use(Spinner)
