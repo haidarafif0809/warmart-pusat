@@ -30,7 +30,7 @@ class KategoriTransaksiController extends Controller
                         'model'             => $kategori_transaksi,
                         'form_url'          => route('kategori_transaksi.destroy', $kategori_transaksi->id),
                         'edit_url'          => route('kategori_transaksi.edit', $kategori_transaksi->id),
-                        'confirm_message'   => 'Yakin Mau Menghapus Kategori Transaksi ' . $kategori_transaksi->name . '?'
+                        'confirm_message'   => 'Yakin Mau Menghapus Kategori Transaksi ' . $kategori_transaksi->nama_kategori_transaksi . '?'
                    
                         ]); 
                 })->make(true);
