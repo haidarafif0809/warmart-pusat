@@ -199,11 +199,37 @@ Route::middleware('optimizeImages','auth')->group(function () {
 	'uses' => 'TransaksikasController@total_kas'
 	]);
 
+//KOMUNITAS
 	Route::get('detail_komunitas/{id}',[
 	'middleware' => ['auth','role:admin'],
 	'as' => 'komunitas.detail',
 	'uses' => 'KomunitasController@detail_lihat_komunitas'
 	]);
+
+	Route::get('komunitas/konfirmasi/{id}',[
+	'middleware' => ['auth','role:admin'],
+	'as' => 'komunitas.konfirmasi',
+	'uses' => 'KomunitasController@konfirmasi'
+	]);
+
+	Route::get('komunitas/no_konfirmasi/{id}',[
+	'middleware' => ['auth'],
+	'as' => 'komunitas.no_konfirmasi',
+	'uses' => 'KomunitasController@no_konfirmasi'
+	]);	
+
+//USER WARUNG
+	Route::get('user_warung/konfirmasi/{id}',[
+	'middleware' => ['auth','role:admin'],
+	'as' => 'user_warung.konfirmasi',
+	'uses' => 'UserWarungController@konfirmasi'
+	]);
+
+	Route::get('user_warung/no_konfirmasi/{id}',[
+	'middleware' => ['auth'],
+	'as' => 'user_warung.no_konfirmasi',
+	'uses' => 'UserWarungController@no_konfirmasi'
+	]);	
 
 	Route::get('user/konfirmasi/{id}',[
 	'middleware' => ['auth','role:admin'],
