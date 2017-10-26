@@ -64,7 +64,20 @@ class KomunitasController extends Controller
                         return $kelurahan->kelurahan->nama;
                    }
 
-                })->make(true);
+                })
+                ->addColumn('konfirmasi', function($user_konfirmasi){
+                    return view('komunitas._action', [
+                        'model'     => $user_konfirmasi,
+                        'confirm_ya'   => 'confirm-ya-'.$user_konfirmasi->id,
+                        'confirm_no'   => 'confirm-no-'.$user_konfirmasi->id,
+                        'confirm_message'   => 'Apakah Anda Yakin Ingin Meng Konfirmasi Komunitas ' . $user_konfirmasi->name . '?',
+                        'no_confirm_message'   => 'Apakah Anda Yakin Tidak Meng Konfirmasi Komunitas ' . $user_konfirmasi->name . '?',
+                        'konfirmasi_url' => route('komunitas.konfirmasi', $user_konfirmasi->id),
+                        'no_konfirmasi_url' => route('komunitas.no_konfirmasi', $user_konfirmasi->id),
+                        'konfirmasi_user' => Laratrust::can('konfirmasi_user'), 
+                        ]);
+                })//Konfirmasi Komunitas Apabila Bila Status Komunitas 1 Maka Komunitas sudah di konfirmasi oleh admin dan apabila status user 0 maka user belum di konfirmasi oleh admin
+                ->make(true);
         }
         $html = $htmlBuilder
         ->addColumn(['data' => 'no_telp', 'name' => 'no_telp', 'title' => 'No Telp']) 
@@ -74,6 +87,7 @@ class KomunitasController extends Controller
         ->addColumn(['data' => 'email', 'name' => 'email', 'title' => 'Email'])  
         ->addColumn(['data' => 'kelurahan', 'name' => 'kelurahan', 'title' => 'Wilayah']) 
         ->addColumn(['data' => 'link', 'name' => 'link', 'title' => 'Link Afiliasi']) 
+        ->addColumn(['data' => 'konfirmasi', 'name' => 'konfirmasi', 'title' => 'Konfirmasi', 'searchable'=>false])
         ->addColumn(['data' => 'action', 'name' => 'action', 'title' => '','orderable' => false, 'searchable'=>false]);
         
         return view('komunitas.index')->with(compact('html'));
@@ -307,4 +321,48 @@ class KomunitasController extends Controller
         }
 
     }
+
+    public function konfirmasi($id){
+        // konfirmasi komunitas
+        $username = Komunitas::select('name')->where('id',$id)->first();
+        $user_komunitas = Komunitas::where('id',$id)->update(['konfirmasi_admin' => '1']);
+
+        $pesan_alert = '
+            <div class="container-fluid">
+                <div class="alert-icon">
+                    <i class="material-icons">check</i>
+                </div>
+                    <b>Sukses : Komunitas '. $username->name .' Berhasil Di Konfirmasi </b>
+            </div>';
+
+        Session::flash("flash_notification", [
+            "level"=>"success",
+            "message"=> $pesan_alert
+            ]);
+ 
+        return redirect()->route('komunitas.index');
+
+    }
+
+    public function no_konfirmasi($id){
+        // no_konfirmasi komunitas
+        $username = Komunitas::select('name')->where('id',$id)->first();
+        $user_komunitas = Komunitas::where('id',$id)->update(['konfirmasi_admin' => '0']);
+
+        $pesan_alert = '
+            <div class="container-fluid">
+                <div class="alert-icon">
+                    <i class="material-icons">check</i>
+                </div>
+                    <b>Sukses : Komunitas '. $username->name .' Tidak Di Konfirmasi </b>
+            </div>';
+
+        Session::flash("flash_notification", [
+            "level"=>"success",
+            "message"=> $pesan_alert
+            ]);
+ 
+        return redirect()->route('komunitas.index');
+    }
+
 }

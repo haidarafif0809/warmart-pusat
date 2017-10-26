@@ -77,13 +77,9 @@
 						<div class="col-md-3">
 					 		{!! Form::open(['url' => route('item-keluar.proses_hapus_semua_tbs_item_keluar'),'method' => 'post', 'class' => 'form-group js-confirm', 'data-confirm' => 'Apakah Anda Ingin Membatalkan Item Keluar ?']) !!}
 						 	<!--- TOMBOL SELESAI -->
-							 	<div class="col-md-4">
 							 		<button type="button" class="btn btn-primary" id="btnSelesai" data-toggle="modal" data-target="#modal_selesai"><i class="material-icons">send</i> Selesai (F2)</button>
-							 	</div>
 
-							 	<div class="col-md-2">
 							 		<button type="submit" class="btn btn-danger" id="btnBatal"><i class="material-icons">cancel</i> Batal (F3)</button>
-							 	</div>
 					 		{!! Form::close() !!}
 						</div>
 

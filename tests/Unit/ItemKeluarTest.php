@@ -91,7 +91,7 @@ class ItemKeluarTest extends TestCase
 //HTTPTEST
 
     // HTTPTEST TAMBAH ITEM KELUAR
-    public function httpTestTambahItemKeluar() {
+    public function testHTTPTambahItemKeluar() {
     	
    	//MEMBUAT NO FAKTUR
     	$warung_id = 1;
@@ -134,7 +134,7 @@ class ItemKeluarTest extends TestCase
     }
 
     // HTTPTEST HAPUS ITEM KELUAR
-    public function httpTestHapusItemKeluar() {
+    public function testHTTPHapusItemKeluar() {
     	
    	//MEMBUAT NO FAKTUR
     	$warung_id = 1;

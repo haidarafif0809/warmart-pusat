@@ -110,7 +110,29 @@ Route::middleware('optimizeImages','auth')->group(function () {
 	Route::resource('item-keluar', 'ItemKeluarController');
 	Route::resource('suplier', 'SuplierController');
 
-	//ITEM KELUAR
+//BARANG
+	//HALAMAN DESKRIPSI
+	Route::get('/barang/detail-produk/{id}',[
+	'middleware' => ['auth'],
+	'as' 	=> 'barang.detail_produk',
+	'uses'	=> 'BarangController@detail_produk'
+	]);
+
+	//PROSES UPDATE DESKRIPSI
+	Route::post('/barang/update-deskripsi-produk',[
+	'middleware' => ['auth'],
+	'as' 	=> 'barang.update_deskripsi_produk',
+	'uses'	=> 'BarangController@update_deskripsi_produk'
+	]);	
+
+	//LIHAT DESKRIPSI
+	Route::get('/barang/lihat-deskripsi-produk/{id}',[
+	'middleware' => ['auth'],
+	'as' 	=> 'barang.lihat_deskripsi_produk',
+	'uses'	=> 'BarangController@lihat_deskripsi_produk'
+	]);	
+
+//ITEM KELUAR
 	Route::post('/item-keluar/proses-tambah-tbs-item-keluar',[
 	'middleware' => ['auth'],
 	'as' => 'item-keluar.proses_tambah_tbs_item_keluar',
@@ -177,11 +199,37 @@ Route::middleware('optimizeImages','auth')->group(function () {
 	'uses' => 'TransaksikasController@total_kas'
 	]);
 
+//KOMUNITAS
 	Route::get('detail_komunitas/{id}',[
 	'middleware' => ['auth','role:admin'],
 	'as' => 'komunitas.detail',
 	'uses' => 'KomunitasController@detail_lihat_komunitas'
 	]);
+
+	Route::get('komunitas/konfirmasi/{id}',[
+	'middleware' => ['auth','role:admin'],
+	'as' => 'komunitas.konfirmasi',
+	'uses' => 'KomunitasController@konfirmasi'
+	]);
+
+	Route::get('komunitas/no_konfirmasi/{id}',[
+	'middleware' => ['auth'],
+	'as' => 'komunitas.no_konfirmasi',
+	'uses' => 'KomunitasController@no_konfirmasi'
+	]);	
+
+//USER WARUNG
+	Route::get('user_warung/konfirmasi/{id}',[
+	'middleware' => ['auth','role:admin'],
+	'as' => 'user_warung.konfirmasi',
+	'uses' => 'UserWarungController@konfirmasi'
+	]);
+
+	Route::get('user_warung/no_konfirmasi/{id}',[
+	'middleware' => ['auth'],
+	'as' => 'user_warung.no_konfirmasi',
+	'uses' => 'UserWarungController@no_konfirmasi'
+	]);	
 
 	Route::get('user/konfirmasi/{id}',[
 	'middleware' => ['auth','role:admin'],

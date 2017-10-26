@@ -94,7 +94,7 @@
 
 
                     <!-- MASTER DATA WARUNG -->
-                    @if(Auth::user()->tipe_user == 4) 
+                    @if(Auth::user()->tipe_user == 4 AND Auth::user()->konfirmasi_admin == 1)
                     <li>
                         <a data-toggle="collapse" href="#persediaan">
                             <i class="material-icons">assessment</i>
@@ -187,7 +187,6 @@
                             </ul>
                         </div>
                     </li>
-
                     @endif
                     <!--END MASTER DATA WARUNG -->
 
@@ -380,7 +379,8 @@
 
 <script src="{{ asset('js/selectize.min.js') }}"></script> 
 
-
+<script src="{{ asset('js/custom.js') }}"></script>
+<script src="{{ asset('js/ckeditor/ckeditor.js') }}"></script>
 <!-- SHORTCUT JS -->
 <script src="{{ asset('js/shortcut.js') }}"></script>
 

@@ -45,6 +45,7 @@ class BarangController extends Controller
                               'model'             => $barang,
                               'form_url'          => route('barang.destroy',$barang->id),
                               'edit_url'          => route('barang.edit',$barang->id),
+                              'detail_url'        => route('barang.detail_produk',$barang->id),
                               'confirm_message'   => 'Anda Yakin Mau Menghapus ' .$barang->nama_barang .' ?' 
 
                           ]);
@@ -87,7 +88,7 @@ class BarangController extends Controller
               ->addColumn(['data' => 'harga_jual', 'name' => 'harga_jual', 'title' => 'Harga Jual']) 
               ->addColumn(['data' => 'status_aktif', 'name' => 'status_aktif', 'title' => 'Status']) 
               ->addColumn(['data' => 'kategori_barang.nama_kategori_barang', 'name' => 'kategori_barang.nama_kategori_barang', 'title' => 'Kategori'])
-              ->addColumn(['data' => 'action', 'name' => 'action', 'title' => 'Ubah | Hapus', 'orderable' => false, 'searchable'=>false]);
+              ->addColumn(['data' => 'action', 'name' => 'action', 'title' => 'Detail | Ubah | Hapus', 'orderable' => false, 'searchable'=>false]);
 
               return view('barang.index')->with(compact('html'));
 
@@ -394,6 +395,61 @@ class BarangController extends Controller
                         ]);
                 return redirect()->route('barang.index');
                 }
+        }
+    }
+
+    //HALAMAN DETAIL PRODUK
+    public function detail_produk($id) {
+      $barang = Barang::find($id);
+      if ($barang->id_warung != Auth::user()->id_warung) {
+        Auth::logout();
+        return response()->view('error.403');
+      }
+      else{
+        return view('barang.detail_produk', ['id' => $id, 'deskripsi_produk' => $barang->deskripsi_produk])->with(compact('barang'));
+      }
+    }
+
+    //UPDATE DESKRIPSI PRODUK
+    public function update_deskripsi_produk(Request $request) {
+      $update_deskripsi_produk = Barang::find($request->id);
+        if ($update_deskripsi_produk->id_warung != Auth::user()->id_warung) {
+          Auth::logout();
+          return response()->view('error.403');
+        }
+        else{
+          $update_deskripsi_produk->update([
+            'deskripsi_produk' => $request->deskripsi_produk
+          ]);
+
+          $pesan_alert = 
+            '<div class="container-fluid">
+              <div class="alert-icon">
+                <b><i class="material-icons">check</i></b>
+              </div>
+                <b>BERHASIL:</b> Menambahkan Deskripsi Produk <b>'.$update_deskripsi_produk->nama_barang.'</b>
+            </div>';
+
+            Session::flash("flash_notification", [
+              "level"=>"success",
+              "message"=>$pesan_alert
+            ]);
+
+            return redirect()->route('barang.index');
+        }
+    }
+
+    //LIHAT DESKRIPSI PRODUK
+    public function lihat_deskripsi_produk($id) {
+      $lihat_deskripsi_produk = Barang::find($id);
+      $nama_produk = $lihat_deskripsi_produk->nama;
+      
+        if ($lihat_deskripsi_produk->id_warung != Auth::user()->id_warung) {
+          Auth::logout();
+          return response()->view('error.403');
+        }
+        else{
+          return view('barang.lihat_deskripsi_produk', ['id' => $id, 'lihat_deskripsi_produk' => $lihat_deskripsi_produk, 'nama_produk' => $nama_produk]);
         }
     }
 }
