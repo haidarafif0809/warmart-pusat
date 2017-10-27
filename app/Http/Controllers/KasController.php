@@ -22,7 +22,7 @@ class KasController extends Controller
     {
         if ($request->ajax()) {
 
-            $kas = Kas::select(['id','kode_kas', 'nama_kas', 'status_kas', 'default_kas'])->where('warung_id', Auth::user()->id_warung);
+            $kas = Kas::select(['id','kode_kas', 'nama_kas', 'status_kas', 'default_kas'])->where('warung_id', Auth::user()->id_warung)->get();
             return Datatables::of($kas)
                 ->addColumn('action', function($kas){
                     return view('datatable._action', [

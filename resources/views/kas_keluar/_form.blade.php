@@ -1,14 +1,14 @@
 <div class="form-group{{ $errors->has('kas') ? ' has-error' : '' }}">
 	{!! Form::label('kas', 'Kas', ['class'=>'col-md-2 control-label']) !!}
 	<div class="col-md-4">
-		{!! Form::select('kas', $data_kas, null, ['class'=>'js-selectize-reguler', 'placeholder' => '--PILIH KAS--', 'id' => 'nama_kas']) !!}
+		{!! Form::select('kas', $data_kas, null, ['placeholder' => '--PILIH KAS--', 'id' => 'nama_kas']) !!}
 		{!! $errors->first('kas', '<p class="help-block">:message</p>') !!}
 	</div>
 </div>
 <div class="form-group{{ $errors->has('kategori') ? ' has-error' : '' }}">
 	{!! Form::label('kategori', 'Kategori Transaksi', ['class'=>'col-md-2 control-label']) !!}
 	<div class="col-md-4">
-		{!! Form::select('kategori', $data_kategori_transaksi, null, ['class'=>'js-selectize-reguler', 'placeholder' => '--PILIH KATEGORI TRANSAKSI--', 'id' => 'kategori_transaksi']) !!}
+		{!! Form::select('kategori', $data_kategori_transaksi, null, [ 'placeholder' => '--PILIH KATEGORI TRANSAKSI--', 'id' => 'kategori_transaksi']) !!}
 		{!! $errors->first('kategori', '<p class="help-block">:message</p>') !!}
 	</div>
 </div>

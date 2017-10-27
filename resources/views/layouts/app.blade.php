@@ -30,6 +30,13 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 
+  <style type="text/css">
+    
+    .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+    padding: 1px;
+    }
+  </style>
+
 <body>
     <div class="wrapper">
         <div class="sidebar" data-active-color="rose" data-background-color="black" data-image="{{ asset('img/sidebar-1.jpg') }}">
@@ -87,7 +94,7 @@
 
 
                     <!-- MASTER DATA WARUNG -->
-                    @if(Auth::user()->tipe_user == 4) 
+                    @if(Auth::user()->tipe_user == 4 AND Auth::user()->konfirmasi_admin == 1)
                     <li>
                         <a data-toggle="collapse" href="#persediaan">
                             <i class="material-icons">assessment</i>
@@ -170,11 +177,16 @@
                                         <span class="sidebar-mini">P</span>
                                         <span class="sidebar-normal">Produk</span>
                                     </a>
-                                </li>  
+                                </li> 
+                                 <li>
+                                    <a href="{{ route('suplier.index') }}">
+                                        <span class="sidebar-mini">S</span>
+                                        <span class="sidebar-normal">Suplier</span>
+                                    </a>
+                                </li>   
                             </ul>
                         </div>
                     </li>
-
                     @endif
                     <!--END MASTER DATA WARUNG -->
 
@@ -368,17 +380,10 @@
 <script src="{{ asset('js/selectize.min.js') }}"></script> 
 
 <script src="{{ asset('js/custom.js') }}"></script>
-
+<script src="{{ asset('js/ckeditor/ckeditor.js') }}"></script>
 <!-- SHORTCUT JS -->
 <script src="{{ asset('js/shortcut.js') }}"></script>
 
-
-<script type="text/javascript">
-    $(document).ready(function() {
-
-       // $.fn.dataTable.ext.errMode = 'throw';
-    });
-</script>
 
 @yield('scripts')
 

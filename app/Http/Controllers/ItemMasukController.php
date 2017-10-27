@@ -23,6 +23,12 @@ class ItemMasukController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+        public function __construct()
+    {
+        $this->middleware('user-must-warung');
+    }
+
    public function index(Request $request, Builder $htmlBuilder)
     { 
         if ($request->ajax()) { 

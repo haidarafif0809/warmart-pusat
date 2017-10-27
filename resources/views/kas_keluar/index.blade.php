@@ -17,7 +17,7 @@
                          <h4 class="card-title"> Kas Keluar </h4>
 					
                        <div class="toolbar">
-                         	<p> <a class="btn btn-primary" href="{{ route('kas_keluar.create') }}"><i class="material-icons">add</i> Tambah Kas Keluar</a> </p>
+                         	<p> <a class="btn btn-primary" href="{{ route('kas_keluar.create') }}"><i class="material-icons">add</i>Tambah Kas Keluar</a> </p>
                          </div>
                   
 					<div class="table-responsive material-datatables">
