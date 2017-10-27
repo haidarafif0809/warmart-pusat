@@ -43,7 +43,7 @@
                          <div  class="col-md-2 "></div>
                          <div class="togglebutton col-md-4">
                             <label>
-                                <input type="checkbox" v-model="bank.tampil_customer" value="1"> Tampil Di Customer
+                                <input type="checkbox" v-model="bank.tampil_customer" value="1" name="tampil_customer" id="tampil_customer"> Tampil Di Customer
                             </label>
                         </div>
                     </div>

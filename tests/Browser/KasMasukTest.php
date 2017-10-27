@@ -133,6 +133,29 @@ class KasMasukTest extends DuskTestCase
         }); 
     }
 
+      public function testEditJumlahKurangDariKasSaatIni(){
+          $user = User::select('id_warung')->where('id',4)->first();
+          $kas_masuk = KasMasuk::select('id','no_faktur')->where('id_warung',$user->id_warung)->limit(1)->first();
+          $this->browse(function ($first) use($kas_masuk) {
+            $first->loginAs(User::find(4))
+                  ->visit('/kas_masuk')  
+                  ->whenAvailable('.js-confirm', function ($table) { 
+                              ;
+                    })
+                  ->with('.table', function ($table) use($kas_masuk) {
+                        $table->press('#edit-'.$kas_masuk->id);
+                    })
+                  ->assertSee('Edit Kas Masuk');
+                  $first->script("document.getElementById('kategori_transaksi').selectize.setValue('2');");  
+                  $first->assertSee('GAJI KARYAWAN');
+                  $first->type('jumlah','10000')
+                  ->type('keterangan','-');                   
+                    $first->element('#btnSimpan')->submit();
+                    $first->assertSee('INFO : Jumlah Kas Yang Anda Masukan Lebih Kecil Dari Total Kas Saat Ini'); 
+
+        }); 
+    }
+
 }
 
 

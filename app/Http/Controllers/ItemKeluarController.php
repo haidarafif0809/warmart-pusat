@@ -342,59 +342,62 @@ class ItemKeluarController extends Controller
 
             return redirect()->back();
         }
+        else{
 
-        foreach ($data_produk_item_keluar->get() as $data_tbs) {
+            foreach ($data_produk_item_keluar->get() as $data_tbs) {
 
-          $detail_item_keluar = new DetailItemKeluar();
-          if (!$detail_item_keluar->stok_produk($data_tbs->id_produk, $data_tbs->jumlah_produk)) {
-            //DI BATALKAN PROSES NYA
-            DB::rollBack();
-            return redirect()->route('item-keluar.create');            
-          }
-          else{
+              $detail_item_keluar = new DetailItemKeluar();
+              if (!$detail_item_keluar->stok_produk($data_tbs->id_produk, $data_tbs->jumlah_produk)) {
+                //DI BATALKAN PROSES NYA
+                DB::rollBack();
+                return redirect()->route('item-keluar.create');            
+              }
+              else{
 
-            $detail_item_keluar = DetailItemKeluar::create([
-                'id_produk'     =>  $data_tbs->id_produk,              
-                'no_faktur'     => $no_faktur,
-                'jumlah_produk' => $data_tbs->jumlah_produk,
-                'warung_id'     => Auth::user()->id_warung
+                $detail_item_keluar = DetailItemKeluar::create([
+                    'id_produk'     =>  $data_tbs->id_produk,              
+                    'no_faktur'     => $no_faktur,
+                    'jumlah_produk' => $data_tbs->jumlah_produk,
+                    'warung_id'     => Auth::user()->id_warung
+                ]);
+
+              }
+            }
+
+          //INSERT ITEM KELUAR
+            if ($request->keterangan == "") {
+              $keterangan = "-";
+            }
+            else{
+              $keterangan = $request->keterangan;
+            }
+
+            $itemkeluar = ItemKeluar::create([
+                'no_faktur'  => $no_faktur,
+                'keterangan' => $keterangan,
+                'warung_id'  => Auth::user()->id_warung
+            ]);
+            
+          //HAPUS TBS ITEM KELUAR
+            $data_produk_item_keluar->delete();
+
+            $pesan_alert = 
+                   '<div class="container-fluid">
+                        <div class="alert-icon">
+                        <i class="material-icons">check</i>
+                        </div>
+                        <b>Sukses : Berhasil Melakukan Transaksi Item Keluar Faktur "'.$no_faktur.'"</b>
+                    </div>';
+
+            Session::flash("flash_notification", [
+                "level"     => "success",
+                "message"   => $pesan_alert
             ]);
 
-          }
+            DB::commit();
+            return redirect()->route('item-keluar.index');
+
         }
-
-      //INSERT ITEM KELUAR
-        if ($request->keterangan == "") {
-          $keterangan = "-";
-        }
-        else{
-          $keterangan = $request->keterangan;
-        }
-
-        $itemkeluar = ItemKeluar::create([
-            'no_faktur'  => $no_faktur,
-            'keterangan' => $keterangan,
-            'warung_id'  => Auth::user()->id_warung
-        ]);
-        
-      //HAPUS TBS ITEM KELUAR
-        $data_produk_item_keluar->delete();
-
-        $pesan_alert = 
-               '<div class="container-fluid">
-                    <div class="alert-icon">
-                    <i class="material-icons">check</i>
-                    </div>
-                    <b>Sukses : Berhasil Melakukan Transaksi Item Keluar Faktur "'.$no_faktur.'"</b>
-                </div>';
-
-        Session::flash("flash_notification", [
-            "level"     => "success",
-            "message"   => $pesan_alert
-        ]);
-
-        DB::commit();
-        return redirect()->route('item-keluar.index');
     }
 
 

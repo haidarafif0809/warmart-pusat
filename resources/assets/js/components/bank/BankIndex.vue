@@ -41,25 +41,30 @@
 		             
 		                    </tr>
 		                    </thead>
-		                    <tbody>
-		                    <tr v-for="bank, index in banks">
+		                    <tbody v-if="banks.length" class="data-ada">
+		                    <tr v-for="bank, index in banks" >
 		                    
 		                        <td>{{ bank.nama_bank }}</td>
 		                        <td>{{ bank.atas_nama }}</td>
 		                        <td>{{ bank.no_rek }}</td>
 		                        <td> 
-		                           <router-link :to="{name: 'editBank', params: {id: bank.id}}" class="btn btn-xs btn-default">
-                                Edit
+		                           <router-link :to="{name: 'editBank', params: {id: bank.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + bank.id" >
+                                Edit 
                            			 </router-link> <a href="#"
-                               class="btn btn-xs btn-danger"
+                               class="btn btn-xs btn-danger" v-bind:id="'delete-' + bank.id"
                                v-on:click="deleteEntry(bank.id, index,bank.nama_bank)">
                                 Delete
                             </a></td>
 		          
 		                
 		                    </tr>
-		                    </tbody>
+                      </tbody>
+                      <tbody class="data-tidak-ada" v-else>
+                                  <tr ><td colspan="4"  class="text-center">Tidak Ada Data</td></tr>
+                      </tbody>
 		                </table>
+
+             <vue-simple-spinner v-if="loading"></vue-simple-spinner>
                  
             <div align="right"><pagination :data="banksData" v-on:pagination-change-page="getResults"></pagination></div>
 					</div>
@@ -78,7 +83,8 @@
                 banksData: {},
                 url : window.location.origin+window.location.pathname,
                 pencarian: '',
-                contoh : ''
+                contoh : '',
+                loading: true
             }
         },
         mounted() {
@@ -103,9 +109,11 @@
                 .then(function (resp) {
                     app.banks = resp.data.data;
                     app.banksData = resp.data;
+                    app.loading = false;
                 })
                 .catch(function (resp) {
                     console.log(resp);
+                    app.loading = false;
                     alert("Could not load banks");
                 });
        },
