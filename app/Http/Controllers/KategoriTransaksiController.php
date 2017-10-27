@@ -26,7 +26,7 @@ class KategoriTransaksiController extends Controller
             return Datatables::of($data_kategori_transaksi)
                 
                 ->addColumn('action', function($kategori_transaksi){
-                    return view('datatable._action', [
+                    return view('datatable._action', [  
                         'model'             => $kategori_transaksi,
                         'form_url'          => route('kategori_transaksi.destroy', $kategori_transaksi->id),
                         'edit_url'          => route('kategori_transaksi.edit', $kategori_transaksi->id),

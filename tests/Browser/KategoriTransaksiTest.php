@@ -7,7 +7,9 @@ use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use App\User;
 use App\KategoriTransaksi;
-
+use App\TransaksiKas;
+use App\KasMasuk;
+use App\Kas;
 class KategoriTransaksiTest extends DuskTestCase
 {
     /**
@@ -63,7 +65,7 @@ class KategoriTransaksiTest extends DuskTestCase
 
     }
 
-           public function testHapusKategoriTransaksi(){
+       public function testHapusKategoriTransaksi(){
           $kategori = KategoriTransaksi::select('id')->where('nama_kategori_transaksi','MODAL SIMPANAN BERBEDA')->first();
           $this->browse(function ($first) use ($kategori) {
             $first->loginAs(User::find(5))
@@ -79,6 +81,38 @@ class KategoriTransaksiTest extends DuskTestCase
 
         }); 
     }
+
+       public function testNamaKategoriSudahTerpakaiTransaksi(){// BARCODE PER WARUNG TIDAK BOLEH SAMA 
+                 $id_warung = 1;
+                 $no_faktur = KasMasuk::no_faktur($id_warung);
+                $tambah_kategori_transaksi = KategoriTransaksi::create([
+                'nama_kategori_transaksi' =>'COBA TRANSAKSI',
+                'id_warung' =>1]); 
+
+                $kategori = KategoriTransaksi::select('id')->where('nama_kategori_transaksi',$tambah_kategori_transaksi->nama_kategori_transaksi)->first();
+                $kas = Kas::select('id')->where('warung_id',1)->first();
+
+                $kas_tambah = KasMasuk::create(['no_faktur' => $no_faktur,'kas' => $kas->id,'kategori' => $kategori->id,'jumlah' => 1000,'keterangan' => '-','id_warung'=> 1]);
+             
+             //PROSES MEMBUAT TRANSAKSI KAS
+             TransaksiKas::create(['no_faktur' => $no_faktur,'jenis_transaksi'=>'kas_masuk' ,'jumlah_masuk' => 1000,'kas' => $kas->id,'warung_id'=>1]);
+
+        $this->browse(function ($first) use ($kategori){
+            $first->loginAs(User::find(5))
+                  ->visit('/kategori_transaksi')
+                  ->whenAvailable('.js-confirm', function ($table){ 
+                              ;
+                    })
+                  ->with('.table', function ($table) use ($kategori) {
+                        $table->press('#delete-'.$kategori->id)
+                              ->assertDialogOpened('Yakin Mau Menghapus Kategori Transaksi COBA TRANSAKSI?');
+                    })->driver->switchTo()->alert()->accept();
+                    $first->assertSee('GAGAL : KATEGORI TRANSAKSI TIDAK BISA DIHAPUS. KARENA SUDAH TERPAKAI.'); 
+        }); 
+
+    }
+
+
 
 
 }
