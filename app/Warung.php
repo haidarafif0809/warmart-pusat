@@ -12,7 +12,7 @@ class Warung extends Model
     use AuditableTrait;
 	use LogsActivity;
 	
-   	protected $fillable = ['name','alamat','wilayah', 'no_telpon', 'email'];
+   	protected $fillable = ['name','alamat','wilayah', 'no_telpon', 'email','provinsi','kabupaten','kecamatan'];
 
    	//relasi dengan model kelurahan
    	   	public function kelurahan(){
