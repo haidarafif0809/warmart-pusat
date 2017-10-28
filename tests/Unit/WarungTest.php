@@ -77,9 +77,7 @@ class WarungTest extends TestCase
 
     }
 
-
-//HTTP TESTING
-    //TAMBAH WARUNG
+  //TAMBAH WARUNG
     public function testHTTPTambahWarung() {
 
         //login user -> admin
@@ -103,7 +101,7 @@ class WarungTest extends TestCase
         $warung = Warung::create(['email' => '-','name'=>'Rindang CLOTHH','alamat'=>'Jl. Kemiling Raya','wilayah'=>'10','no_telpon'=>'085383550858']);       
         $data_id = Warung::select('id')->where('name', $warung->name)->first();
         
-        $response2 = $this->get($response->headers->get('location'))->assertSee('Sukses : Berhasil Menambah Warung Rindang CLOTHH');
+        $response2 = $this->get($response->headers->get('location'))->assertSee('Berhasil : Menambah Warung Rindang CLOTHH');
         //CEK DB TABLE warungs
         $response_warung = $this->assertDatabaseHas("warungs",['name' => 'Rindang CLOTHH','alamat' => 'Jl. Kemiling Raya','wilayah' => '10','no_telpon' => '085383550858','email' => '-']);
         //CEK DB TABLE bank_warungs
@@ -139,35 +137,11 @@ class WarungTest extends TestCase
         $response->assertStatus(302)
                  ->assertRedirect(route('warung.index'));
         
-        $response2 = $this->get($response->headers->get('location'))->assertSee('Sukses : Berhasil Menghapus Warung');       
+        $response2 = $this->get($response->headers->get('location'))->assertSee('Berhasil : Menghapus Warung ');       
 
     }
 
-    //HALAMAN MENU EDIT WARUNG
-    public function testHTTPUpdateWarung(){
-
-        //TAMBAH WARUNG
-        $warung = Warung::create(['email' => '-','name'=>'Rindang CLOTH','alamat'=>'Jl. Kemiling Raya','wilayah'=>'10','no_telpon'=>'085383550858']);       
-        $data_id = Warung::select('id')->where('id', $warung->id)->first();
-        //TAMBAH BANK WARUNG
-        $bank_warung = BankWarung::create(['nama_bank'=>'BNI','atas_nama'=>'Rindang Ramadhan','no_rek'=>'0433156248','warung_id'=>$data_id->id]);
-        
-        //TAMBAH BANK WARUNG
-        $password = bcrypt('123456');
-        $user_warung = UserWarung::create(['email' => 'rindang@gmail.com','password' => $password,'name' => 'Rindang Ramadhan', 'alamat' => 'Jalan Way Seputih Pahoman', 'wilayah' => '103', 'tipe_user' => '4', 'id_warung' => $data_id->id, 'status_konfirmasi' => '1', 'no_telp' => '085383550858', 'kode_verifikasi' => '1001']);
-
-        //login user -> admin
-        $user = User::find(1);
-
-        $response = $this->actingAs($user)->get(route('warung.edit',$warung->id));
-
-        $response->assertStatus(200)
-                 ->assertSee('Edit Warung');
-
-     
-    }
-
-    //PROSES EDIT WARUNG
+  //PROSES EDIT WARUNG
     public function testHTTPEditWarung(){
         
         //TAMBAH WARUNG
@@ -185,10 +159,33 @@ class WarungTest extends TestCase
         $response->assertStatus(302)
                  ->assertRedirect(route('warung.index'));
 
-        $response2 = $this->get($response->headers->get('location'))->assertSee('Sukses : Berhasil Mengubah Warung Rindang CLOTH Update');
+        $response2 = $this->get($response->headers->get('location'))->assertSee('Berhasil : Mengubah Warung Rindang CLOTH Update');
      
     }
+    
+        //HALAMAN MENU EDIT WARUNG
+    public function testHTTPUpdateWarung(){
 
+        //TAMBAH WARUNG
+        $warung = Warung::create(['email' => '-','name'=>'Rindang CLOTH','alamat'=>'Jl. Kemiling Raya','wilayah'=>'10','no_telpon'=>'085383550858']);       
+        $data_id = Warung::select('id')->where('id', $warung->id)->first();
+        //TAMBAH BANK WARUNG
+        $bank_warung = BankWarung::create(['nama_bank'=>'BNI','atas_nama'=>'Rindang Ramadhan','no_rek'=>'0433156248','warung_id'=>$data_id->id]);
+        
+        //TAMBAH BANK WARUNG
+        $password = bcrypt('123456');
+
+        $user_warung = UserWarung::create(['email' => 'rindang@gmail.com','password' => $password,'name' => 'Rindang Ramadhan', 'alamat' => 'Jalan Way Seputih Pahoman', 'wilayah' => '103', 'tipe_user' => '4', 'id_warung' => '1', 'status_konfirmasi' => '1', 'no_telp' => '085383550858', 'kode_verifikasi' => '1001']);
+        //login user -> admin
+        $user = User::find(1);
+
+        $response = $this->actingAs($user)->get(route('warung.edit',$warung->id));
+
+        $response->assertStatus(200)
+                 ->assertSee('Edit Warung');
+
+     
+    }
 
 
 }
