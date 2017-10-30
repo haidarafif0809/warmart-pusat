@@ -32,6 +32,11 @@ Route::get('/daftar-produk/{id}',[
 	'uses' => 'DaftarProdukController@filter_kategori'
 ]);
 
+Route::get('/keranjang-belanja',[ 
+	'as' => 'keranjang_belanja.daftar_belanja',
+	'uses' => 'KeranjangBelanjaController@daftar_belanja'
+]);
+
 Route::middleware('optimizeImages')->group(function () {
 
 	Auth::routes();
