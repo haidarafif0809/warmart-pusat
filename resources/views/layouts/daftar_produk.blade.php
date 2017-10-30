@@ -81,7 +81,7 @@
                     </li>
 
                     <li class="button-container">
-                        <a href="#" target="_blank" class="btn btn-rose btn-round">
+                        <a href="{{ url('/keranjang-belanja') }}" target="_blank" class="btn btn-rose btn-round">
                             <i class="material-icons">shopping_cart</i> Beli Sekarang
                         </a>
                     </li>
@@ -108,27 +108,21 @@
 
         <div class="section">
             <div class="container">
-                <h2 class="section-title">Temukan Apa Yang Anda Butuhkan</h2>
+                <h3 class="title text-center">Temukan Apa Yang Anda Butuhkan</h3>
                 <div class="row">
-                    <div class="col-md-3">
-                        <div class="card card-refine card-plain">
-                            <div class="card-content">
-                                <h4 class="card-title">
-                                    Filter Kategori
-                                    <button class="btn btn-default btn-fab btn-fab-mini btn-simple pull-right" rel="tooltip" title="Reset Filter">
-                                        <a href="{{route('daftar_produk.index')}}"><i class="material-icons">cached</i></a>
-                                    </button><br>
-                                    <div class="btn-group-vertical">
-                                        @foreach($kategori_produk as $kategoris)                                        
-                                        <li><a style="text-align: left; font-size: 15px;" href="{{route('daftar_produk.filter_kategori',$kategoris->id)}}">{{ $kategoris->nama_kategori_barang }}</a></li>
-                                        @endforeach
-                                    </div>
-                                </h4>
-                            </div>
-                        </div><!-- end card -->
+                    <div class="col-md-2"> 
+                        <ul class="nav nav-tabs" data-tabs="tabs" style="background-color: #f44336">                                        
+                            <li><a href="{{route('daftar_produk.index')}}"> Semua Kategori</a></li>
+                        </ul>
                     </div>
-
-                    <div class="col-md-9">
+                    <div class="col-md-10">                        
+                        <ul class="nav nav-tabs" data-tabs="tabs" style="background-color: #f44336">                                        
+                            @foreach($kategori_produk as $kategoris)
+                            <li><a href="{{route('daftar_produk.filter_kategori',$kategoris->id)}}">{{ $kategoris->nama_kategori_barang }}</a></li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    <div class="col-md-12">
                         <div class="row">
                             <!-- Menampilkan Produk -->
                             <span id="span-produk">{!! $daftar_produk !!}</span>
@@ -189,20 +183,20 @@
             <ul class="pull-left">
                 <li>
                     <a href="#pablo">
-                       Blog
-                   </a>
-               </li>
-               <li>
+                     Blog
+                 </a>
+             </li>
+             <li>
                 <a href="#pablo">
                     Presentation
                 </a>
             </li>
             <li>
                 <a href="#pablo">
-                   Discover
-               </a>
-           </li>
-           <li>
+                 Discover
+             </a>
+         </li>
+         <li>
             <a href="#pablo">
                 Payment
             </a>

@@ -21,57 +21,53 @@ class DaftarProdukController extends Controller
       $produk_pagination = $data_produk->links();
       $daftar_produk = $this->listProduk($data_produk);
       return view('layouts.daftar_produk', ['kategori_produk' => $kategori_produk, 'daftar_produk' => $daftar_produk, 'produk_pagination' => $produk_pagination ]);
-    }
+  }
 
-    public function listProduk($data_produk){
-     $daftar_produk = '';
-     foreach ($data_produk as $produks) {
+  public function listProduk($data_produk){
+   $daftar_produk = '';
+   foreach ($data_produk as $produks) {
 
       $warung = Warung::select(['name'])->where('id', $produks->id_warung)->first();
 
-      $daftar_produk .= '<div class="col-md-3">
-      <div class="card card-product card-plain no-shadow" data-colored-shadow="false">
-      <div class="card-image">';
+      $daftar_produk .= '      
+      <div class="col-md-3">
+          <div class="card cards card-pricing">
+              <div class="card card-product card-plain no-shadow" data-colored-shadow="false">
+                  <div class="card-image">';
 
-      if ($produks->foto != NULL) {
-       $daftar_produk .= '<img src="./foto_produk/'.$produks->foto.'">';
-     }
-     else{
-      $daftar_produk .= '<img src="./image/foto_default.png">';
-    }
+                      if ($produks->foto != NULL) {
+                         $daftar_produk .= '<img src="./foto_produk/'.$produks->foto.'">';
+                     }
+                     else{
+                      $daftar_produk .= '<img src="./image/foto_default.png">';
+                  }
 
-    $daftar_produk .= '</div>
-    <div class="card-content">
-    <a href="#">
-    <h5 class="card-title">'.$produks->nama_barang.'</h5>
-    </a>';
+                  $daftar_produk .= '</div>
+                  <div class="card-content">
+                    <a href="#">
+                        <h5 class="card-title">'.$produks->nama.'</h5>
+                    </a>';
 
-    if ($produks->deskripsi_produk != "") {
-     $daftar_produk .= '<p class="description">'.strip_tags(substr($produks->deskripsi_produk, 0, 60)).'..</p>';
-   }
-   else{
-    $daftar_produk .= '<p class="description">Tidak Ada Deskripsi Untuk Produk Ini.</p>';
-  }
-  $daftar_produk .= '<div class="footer">
-  <div class="price-container">
-  <span class="price">'.$produks->rupiah.'</span>
-  </div>
+                    if ($produks->deskripsi_produk != "") {
+                        $daftar_produk .= '<p class="description">'.strip_tags(substr($produks->deskripsi_produk, 0, 75)).'..</p>';
+                    }
+                    else{
+                        $daftar_produk .= '<p class="description">Tidak Ada Deskripsi'.' <br> '.'Untuk Produk Ini.</p>';
+                    }
+                    $daftar_produk .= '<div class="footer">
 
-  <button class="btn btn-rose btn-simple btn-fab btn-fab-mini btn-round pull-right btn-wishlist" data-id="'.$produks->id.'" rel="tooltip" title="Tambah Ke Wishlist" data-placement="left" data-toogle="0">
-  <i class="material-icons" id="icon-'.$produks->id.'" data-toogle="0"><span id="icon_wishlist-'.$produks->id.'">favorite_border</span></i>
-  </button>
+                    <h5 style="color:red"> '.$produks->rupiah.' </h5>
+                    <a class="description"><i class="material-icons">store</i>  '.$warung->name.' </a><hr>
+                    <a href="#" class="btn btn-danger btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja">Beli Sekarang <i class="material-icons">keyboard_arrow_right</i></a>
+                </div>
 
-  <button class="btn btn-rose btn-simple btn-fab btn-fab-mini btn-round pull-right" rel="tooltip" title="Tambah Ke Keranjang Belanja" data-placement="left">
-  <i class="material-icons">add_shopping_cart</i>
-  </button>
+            </div>
 
-  </div>
+            
+        </div>
+    </div>
 
-  </div>
-
-  <a class="description"><i class="material-icons">store</i>  '.$warung->name.' </a>
-  </div>
-  </div>';
+</div>';
 
 
 }
@@ -90,62 +86,57 @@ public function filter_kategori($id)
     $daftar_produk = "";
     foreach ($data_produk as $produks) {
       $warung = Warung::select(['name'])->where('id', $produks->id_warung)->first();
-      $daftar_produk .= '<div class="col-md-3">
-      <div class="card card-product card-plain no-shadow" data-colored-shadow="false">
-      <div class="card-image">';
+      $daftar_produk .= '
+      <div class="col-md-3">
+          <div class="card cards card-pricing">
+              <div class="card card-product card-plain no-shadow" data-colored-shadow="false">
+                  <div class="card-image">';
 
-      if ($produks->foto != NULL) {
-       $daftar_produk .= '<img src="../foto_produk/'.$produks->foto.'">';
-     }
-     else{
-      $daftar_produk .= '<img src="../image/foto_default.png">';
-    }
+                      if ($produks->foto != NULL) {
+                         $daftar_produk .= '<img src="../foto_produk/'.$produks->foto.'">';
+                     }
+                     else{
+                      $daftar_produk .= '<img src="../image/foto_default.png">';
+                  }
 
-    $daftar_produk .= '</div>
-    <div class="card-content">
-    <a href="#">
-    <h5 class="card-title">'.$produks->nama_barang.'</h5>
-    </a>
-    <p class="description">
-    Impeccably tailored in Italy from lightweight navy wool.
-    </p>
-    <div class="footer">
-    <div class="price-container">
-    <span class="price"> Rp. '.number_format($produks->harga_jual,0,',','.').'</span>
-    </div>
+                  $daftar_produk .= '</div>
+                  <div class="card-content">
+                    <a href="#">
+                        <h5 class="card-title">'.$produks->nama.'</h5>
+                    </a>
+                    <p class="description">
+                        Impeccably tailored in Italy from lightweight navy wool.
+                    </p>
+                    <div class="footer">
+                        <h5 style="color:red"> '.$produks->rupiah.' </h5>
+                        <a class="description"><i class="material-icons">store</i>  '.$warung->name.' </a><hr>
+                        <a href="#" class="btn btn-danger btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja">Beli Sekarang <i class="material-icons">keyboard_arrow_right</i></a>
 
-    <button class="btn btn-rose btn-simple btn-fab btn-fab-mini btn-round pull-right btn-wishlist" data-id="'.$produks->id.'" rel="tooltip" title="Tambah Ke Wishlist" data-placement="left" data-toogle="0">
-    <i class="material-icons" id="icon-'.$produks->id.'" data-toogle="0"><span id="icon_wishlist-'.$produks->id.'">favorite_border</span></i>
-    </button>
-
-    <button class="btn btn-rose btn-simple btn-fab btn-fab-mini btn-round pull-right" rel="tooltip" title="Tambah Ke Keranjang Belanja" data-placement="left">
-    <i class="material-icons">add_shopping_cart</i>
-    </button>
-
-    </div>
-    </div>
-    <a class="description"><i class="material-icons">store</i>  '.$warung->name.' </a>
-    </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
     </div>';
-  }
+}
 }
 else{
   $daftar_produk = 
   '<div class="col-md-3">
   <div class="card card-product card-plain no-shadow" data-colored-shadow="false">
-  <div class="card-image">
-  <img src="../image/foto_default.png">
+      <div class="card-image">
+          <img src="../image/foto_default.png">
+      </div>
+      <div class="card-content">
+          <a href="#">
+              <h4 class="card-title">Tidak Ada Produk</h4>
+          </a>
+      </div>
   </div>
-  <div class="card-content">
-  <a href="#">
-  <h4 class="card-title">Tidak Ada Produk</h4>
-  </a>
-  </div>
-  </div>
-  </div>';
+</div>';
 }        
 
-return view('layouts.daftar_produk', ['kategori_produk' => $kategori_produk, 'daftar_produk' => $daftar_produk, 'produk_pagination' => $produk_pagination]);
+return view('layouts.daftar_produk', ['kategori_produk' => $kategori_produk, 'daftar_produk' => $daftar_produk, 'produk_pagination' => $produk_pagination, 'id' => $id]);
 }
 
 }
