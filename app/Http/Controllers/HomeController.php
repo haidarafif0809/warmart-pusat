@@ -54,33 +54,33 @@ class HomeController extends Controller
     }
 
     public function listProduk($data_produk){
-       $daftar_produk = "";
-       $produk_pagination = $data_produk->links();
-       foreach ($data_produk as $produks) {
+     $daftar_produk = "";
+     $produk_pagination = $data_produk->links();
+     foreach ($data_produk as $produks) {
 
         $warung = Warung::select(['name'])->where('id', $produks->id_warung)->first();
 
         $daftar_produk .= '<div class="col-md-3">
         <div class="card card-product card-plain no-shadow" data-colored-shadow="false">
-         <div class="card-image">';
+           <div class="card-image">';
 
             if ($produks->foto != NULL) {
-             $daftar_produk .= '<img src="./foto_produk/'.$produks->foto.'">';
-         }
-         else{
+               $daftar_produk .= '<img src="./foto_produk/'.$produks->foto.'">';
+           }
+           else{
             $daftar_produk .= '<img src="./image/foto_default.png">';
         }
 
         $daftar_produk .= '</div>
         <div class="card-content">
-         <a href="#">
-             <h5 class="card-title">'.$produks->nama.'</h5>
-         </a>';
+           <a href="#">
+               <h5 class="card-title">'.$produks->nama.'</h5>
+           </a>';
 
-         if ($produks->deskripsi_produk != "") {
-             $daftar_produk .= '<p class="description">'.strip_tags(substr($produks->deskripsi_produk, 0, 60)).'..</p>';
-         }
-         else{
+           if ($produks->deskripsi_produk != "") {
+               $daftar_produk .= '<p class="description">'.strip_tags(substr($produks->deskripsi_produk, 0, 60)).'..</p>';
+           }
+           else{
             $daftar_produk .= '<p class="description">Tidak Ada Deskripsi</p>
             <p class="description">Untuk Produk Ini</p>';
         }
