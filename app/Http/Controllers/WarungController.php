@@ -193,6 +193,7 @@ class WarungController extends Controller
             'alamat' =>$request->alamat,
             'wilayah' =>$request->kelurahan,
             'no_telpon' =>$request->no_telpon, 
+            'email' =>$request->email,
         ]);
 
         $bank_warung_id = BankWarung::select('id')->where('warung_id', $id)->first();

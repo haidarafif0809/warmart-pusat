@@ -64,12 +64,10 @@
 									{!! $errors->first('id_produk', '<p class="help-block">:message</p>') !!}
 							
 							</div>
-							{!! Form::hidden('jumlah_produk', null, ['autocomplete'=>'off', 'id'=>'jumlah_produk']) !!}
-								
-							
-      
 
-		  			 <button type="submit" class="btn btn-success"><i class="material-icons">done</i> Submit Produk</button>
+									{!! Form::hidden('jumlah_produk', null, ['class'=>'form-control','placeholder'=>'Jumlah Produk','required','autocomplete'=>'off', 'id'=>'jumlah_produk']) !!}
+									{!! $errors->first('jumlah_produk', '<p class="help-block" id="eror_jumlah_produk">:message</p>') !!}
+								
 		 			{!! Form::close() !!} 
 
 						<!-- / form input produk -->
@@ -227,13 +225,18 @@
 						 sortField: 'text'
 						}); 
 		 $select[0].selectize.focus();
+
+
 		
-		$("#form-produk").submit(function(){
+    	
+	
+		
+		 $select.on('change', function(){
 
 		 	var produk = $("#pilih_produk").val();
 		 	var jumlah = $("#jumlah_produk").val();
 		 	if (produk == "") {
-		 		swal('Oops...','Produk Harus Dipilih Dahulu !','error');
+		 		 swal('Oops...','Produk Harus Dipilih Dahulu !','error');
 
 		 		return false;
 
@@ -285,6 +288,12 @@
 						); 
 						return false;
 					} 
+				}
+				, function (dismiss) {
+				
+				  if (dismiss === 'cancel') {
+				 $select[0].selectize.clear()
+				  }
 				});  
 				return false;
 		 	} 
