@@ -66,18 +66,18 @@
                 <div class="collapse" id="logout">
                     <ul class="nav">
                         <li>
-                           <a href="{{ url('/ubah-profil') }}">Ubah Profil</a>
-                       </li>
-                       <li>
-                           <a href="{{ url('/ubah-password') }}">Ubah Password</a>
-                       </li>
-                       <li>
-                           <a href="{{ url('/logout') }}"
-                           onclick="event.preventDefault();
-                           document.getElementById('logout-form').submit();">
-                           Logout
-                       </a>
-                       <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
+                         <a href="{{ url('/ubah-profil') }}">Ubah Profil</a>
+                     </li>
+                     <li>
+                         <a href="{{ url('/ubah-password') }}">Ubah Password</a>
+                     </li>
+                     <li>
+                         <a href="{{ url('/logout') }}"
+                         onclick="event.preventDefault();
+                         document.getElementById('logout-form').submit();">
+                         Logout
+                     </a>
+                     <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
                         {{ csrf_field() }}
                     </form>
 
@@ -278,6 +278,10 @@
 <!--end master data warmart pusat-->
 @endif
 
+<!--HALAMAN KOMUNITAS-->
+@if(Auth::user()->tipe_user == 2 AND Auth::user()->konfirmasi_admin == 1)
+
+@endif
 
 </ul>
 </div>
@@ -312,15 +316,15 @@
     <div class="content">
         <div class="container-fluid">
 
-         <div class="row">
-           @include('layouts._flash')
-           @yield('content')
-       </div>
+           <div class="row">
+             @include('layouts._flash')
+             @yield('content')
+         </div>
 
-   </div>
-   <!-- end container fluid -->
-</div>
-<footer class="footer">
+     </div>
+     <!-- end container fluid -->
+ </div>
+ <footer class="footer">
     <div class="container-fluid">
         <nav class="pull-left">
 

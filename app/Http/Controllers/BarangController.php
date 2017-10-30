@@ -310,6 +310,7 @@ class BarangController extends Controller
                               $destinationPath = public_path() . DIRECTORY_SEPARATOR . 'foto_produk';
                               // memindahkan file ke folder public/foto_produk
                               $uploaded_foto->move($destinationPath, $filename);
+
                               // hapus foto_home lama, jika ada
                               if ($update_barang->foto) {
                               $old_foto = $update_barang->foto;

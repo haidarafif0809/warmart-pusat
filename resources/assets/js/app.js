@@ -39,6 +39,6 @@ const routes = [
     {path: '/edit/:id', component: BankEdit, name: 'editBank'}
 ]
 
-const router = new VueRouter({ routes })
+	const router = new VueRouter({ routes })
 
-const app = new Vue({ router }).$mount('#vue-app')
+	const app = new Vue({ router }).$mount('#vue-app')

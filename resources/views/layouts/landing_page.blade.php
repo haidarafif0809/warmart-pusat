@@ -12,29 +12,31 @@
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" />
     <!--  Material Dashboard CSS    -->
     <link href="{{ asset('css/material-dashboard.css?v=1.2.0') }}" rel="stylesheet" />
-   
+
     <link href="{{ asset('css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
     <!--     Fonts and icons     -->
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-     <link href="{{ asset('css/material-kit.css?v=1.2.0')}}" rel="stylesheet"/>
-     <link href="{{ asset('assets/assets-for-demo/vertical-nav.css')}}" rel="stylesheet" />
+    <link href="{{ asset('css/material-kit.css?v=1.2.0')}}" rel="stylesheet"/>
+    <link href="{{ asset('assets/assets-for-demo/vertical-nav.css')}}" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
 
     {!! SEOMeta::generate() !!}
     {!! OpenGraph::generate() !!}
     {!! Twitter::generate() !!}
 
-      <!-- MINIFIED -->
+    <!-- MINIFIED -->
     {!! SEO::generate(true) !!}
     
 
-        <!-- LUMEN -->
+    <!-- LUMEN -->
     {!! app('seotools')->generate() !!}
 
 </head>
 
-    <body class="landing-page">
+<body class="landing-page">
     <nav class="navbar navbar-default navbar-transparent navbar-fixed-top navbar-color-on-scroll" color-on-scroll=" " id="sectionsNav">
         <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
@@ -46,396 +48,401 @@
         </div>
     </nav>
 
-            <center class="back"><div class="container">
-                                <h2 style="color:white;font-weight:bold;">ANDA MUSLIM ?</h2>
-                            <h2 style="color:white;font-weight:bold;">SUDAHKAH ANDA BERBELANJA KE SAUDARA MUSLIM ?</h2>
-                            <h2 style="color:#ffc34d;">Jadilah pejuang untuk kemajuan perekonomian Islam</h2>
-                        <h5 style="color:white;">WarMart adalah marketplace muslim pertama di Indonesia yang menerapkan sistem transaksi online dan offline bagi warung muslim se-Indonesia</h5>
-            </div></center>
+    <center class="back"><div class="container">
+        <h2 style="color:white;font-weight:bold;">ANDA MUSLIM ?</h2>
+        <h2 style="color:white;font-weight:bold;">SUDAHKAH ANDA BERBELANJA KE SAUDARA MUSLIM ?</h2>
+        <h2 style="color:#ffc34d;">Jadilah pejuang untuk kemajuan perekonomian Islam</h2>
+        <h5 style="color:white;">WarMart adalah marketplace muslim pertama di Indonesia yang menerapkan sistem transaksi online dan offline bagi warung muslim se-Indonesia</h5>
+    </div></center>
 
 
-        <div class="team-4 section-image" style="background-image: url('assets/img/examples/office2.jpg');">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="iframe-container">  
-                            <iframe src="https://www.youtube.com/embed/wQ1MyRDCD-I?modestbranding=1&autohide=1&showinfo=0" frameborder="0" allowfullscreen height="250"></iframe>
-                        </div>
-                    </div>
-                    <div class="col-md-5 col-md-offset-1">
-                       <h2 style="color:#ffc34d;font-weight:bold;">Tentang</h2>
-                        <h3 style="color:#ffffff;">WarMart adalah marketplace untuk warung muslim pertama di Indonesia yang memfasilitasi warung-warung milik saudara muslim untuk menjual produknya secara online maupun offline. Penjualan secara online melalui aplikasi android dan penjualan secara offline menggunakan aplikasi web base yang kami sediakan</h3>
+    <div class="team-4 section-image" style="background-image: url('assets/img/examples/office2.jpg');">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="iframe-container">  
+                        <iframe src="https://www.youtube.com/embed/wQ1MyRDCD-I?modestbranding=1&autohide=1&showinfo=0" frameborder="0" allowfullscreen height="250"></iframe>
                     </div>
                 </div>
-            </div>
-        </div>
-<style type="text/css">
-.peran{
-width:100%;
-height:100%;
-}
+                <div class="col-md-5 col-md-offset-1">
+                 <h2 style="color:#ffc34d;font-weight:bold;">Tentang</h2>
+                 <h3 style="color:#ffffff;">WarMart adalah marketplace untuk warung muslim pertama di Indonesia yang memfasilitasi warung-warung milik saudara muslim untuk menjual produknya secara online maupun offline. Penjualan secara online melalui aplikasi android dan penjualan secara offline menggunakan aplikasi web base yang kami sediakan</h3>
+             </div>
+         </div>
+     </div>
+ </div>
+ <style type="text/css">
+    .peran{
+        width:100%;
+        height:100%;
+    }
 </style>
-        <div class="container">
-            <div class="section text-center ">
-                  <img  class="img img-raised" src="assets/img/examples/warmart_logo.png" />
-                  <h2 style="color:red;font-weight:bold;">PASAR MUSLIM <a style="color:black;">INDONESIA</a></h2>
+<div class="container">
+    <div class="section text-center ">
+      <img  class="img img-raised" src="assets/img/examples/warmart_logo.png" />
+      <h2 style="color:red;font-weight:bold;">PASAR MUSLIM <a style="color:black;">INDONESIA</a></h2>
 
-            </div>
-        </div>
- <!--     *********    PERAN ANDA     *********      -->
+      {!! $daftar_produk !!}
+      <div class="col-md-12">
+          <a href="{{route('daftar_produk.index')}} " rel="tooltip" style="position: center" class="btn btn-rose btn-round">Lihat Selengkapnya...</a>
+      </div>
+      
+  </div>
+</div>
+<!--     *********    PERAN ANDA     *********      -->
 
-    <div class="section" style="background-color:#ffc34d;">
-        <div class="container" >
-            <div class="row">
+<div class="section" style="background-color:#ffc34d;">
+    <div class="container" >
+        <div class="row">
 
 
-                <div class="col-md-12">
-                    <h2 class="text-center">Peran Anda</h2>
-                    <br />
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="card card-blog">
-                                <div class="card-image">
-                                    <a href="#pablo">
-                                        <img class="img img-raised" src="assets/img/flat/pelanggan3.jpg" />
-                                    </a>
-                                </div>
+            <div class="col-md-12">
+                <h2 class="text-center">Peran Anda</h2>
+                <br />
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="card card-blog">
+                            <div class="card-image">
+                                <a href="#pablo">
+                                    <img class="img img-raised" src="assets/img/flat/pelanggan3.jpg" />
+                                </a>
+                            </div>
 
-                                <div class="card-content">
-                                    <h4 class="category text-danger">PELANGGAN</h4>
-                                    <p class="card-description" style="color:black;">
-                                        Berbelanja di WarMart, berarti Anda telah membantu memajukan perekonomian saudara muslim. Memajukan perekonomian Islam adalah salah satu wujud dari jihad ekonomi yang insya Allah akan mengalirkan pahala kepada Anda. Mari berbelanja sambil beramal.<center><a href="{{ url('/register-customer') }}" class="btn btn-danger"> DAFTAR </a></center>
-                                    </p>
-                                </div>
+                            <div class="card-content">
+                                <h4 class="category text-danger">PELANGGAN</h4>
+                                <p class="card-description" style="color:black;">
+                                    Berbelanja di WarMart, berarti Anda telah membantu memajukan perekonomian saudara muslim. Memajukan perekonomian Islam adalah salah satu wujud dari jihad ekonomi yang insya Allah akan mengalirkan pahala kepada Anda. Mari berbelanja sambil beramal.<center><a href="{{ url('/register-customer') }}" class="btn btn-danger"> DAFTAR </a></center>
+                                </p>
                             </div>
                         </div>
-
-                        <div class="col-md-3">
-                            <div class="card card-blog">
-                                <div class="card-image">
-                                    <a href="#pablo">
-                                        <img class="img img-raised" src="assets/img/flat/warung3.jpg"/>
-                                    </a>
-                                </div>
-                                <div class="card-content">
-                                    <h4 class="category text-danger">WARUNG</h4>
-                                    <p class="card-description" style="color:black;">
-                                        Warung Anda akan mendapatkan support teknologi yang terupdate secara terus menerus tanpa mengeluarkan banyak biaya. Aplikasi WarMart mudah digunakan sehingga tidak ada halangan bagi Anda yang belum terbiasa menggunakan teknologi untuk pengelolaan warung.<center><a href="{{ url('/register-warung') }}" class="btn btn-danger"> DAFTAR </a></center>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-3">
-                            <div class="card card-blog">
-                                <div class="card-image">
-                                    <a href="#pablo">
-                                        <img class="img img-raised" src="assets/img/flat/komunitas3.jpg"/>
-                                    </a>
-                                </div>
-                                <div class="card-content">
-                                    <h4 class="category text-danger">KOMUNITAS</h4>
-                                    <p class="card-description" style="color:black;">
-                                       Komunitas menjadi roda penggerak kesadaran umat untuk membela dan memperjuangkan kejayaan perekonomian Islam. Komunitas yang mendaftarkan anggotanya menjadi palanggan Warmart, akan mendapatkan share bagi hasil setiap anggota komunitas berbelanja di Warmart.<br><center><a href="{{ url('/register') }}" class="btn btn-danger"> DAFTAR </a></center>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div class="col-md-3">
-                            <div class="card card-blog">
-                                <div class="card-image">
-                                    <a href="#pablo">
-                                        <img class="img img-raised" src="assets/img/flat/ajak_ajak3.jpg"/>
-                                    </a>
-                                </div>
-                                <div class="card-content">
-                                    <h4 class="category text-danger">AJAK TEMAN</h4>
-                                    <p class="card-description" style="color:black;">
-                                        Anda yang sudah menjadi pelanggan WarMart dapat mengajak teman untuk menjadi pelanggan WarMart seperti Anda. Setiap teman Anda tersebut berbelanja ke Warmart di warung manapun, Anda akan mendapatkan share bagi hasil dari keuntungan warung secara otomatis. <center><a href="{{ url('/register-customer') }}" class="btn btn-danger" > DAFTAR </a></center>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-
                     </div>
 
+                    <div class="col-md-3">
+                        <div class="card card-blog">
+                            <div class="card-image">
+                                <a href="#pablo">
+                                    <img class="img img-raised" src="assets/img/flat/warung3.jpg"/>
+                                </a>
+                            </div>
+                            <div class="card-content">
+                                <h4 class="category text-danger">WARUNG</h4>
+                                <p class="card-description" style="color:black;">
+                                    Warung Anda akan mendapatkan support teknologi yang terupdate secara terus menerus tanpa mengeluarkan banyak biaya. Aplikasi WarMart mudah digunakan sehingga tidak ada halangan bagi Anda yang belum terbiasa menggunakan teknologi untuk pengelolaan warung.<center><a href="https://info.war-mart.id/warung/" class="btn btn-danger"> DAFTAR </a></center>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="card card-blog">
+                            <div class="card-image">
+                                <a href="#pablo">
+                                    <img class="img img-raised" src="assets/img/flat/komunitas3.jpg"/>
+                                </a>
+                            </div>
+                            <div class="card-content">
+                                <h4 class="category text-danger">KOMUNITAS</h4>
+                                <p class="card-description" style="color:black;">
+                                 Komunitas menjadi roda penggerak kesadaran umat untuk membela dan memperjuangkan kejayaan perekonomian Islam. Komunitas yang mendaftarkan anggotanya menjadi palanggan Warmart, akan mendapatkan share bagi hasil setiap anggota komunitas berbelanja di Warmart.<br><center><a href="{{ url('/register') }}" class="btn btn-danger"> DAFTAR </a></center>
+                             </p>
+                         </div>
+                     </div>
+                 </div>
+
+
+                 <div class="col-md-3">
+                    <div class="card card-blog">
+                        <div class="card-image">
+                            <a href="#pablo">
+                                <img class="img img-raised" src="assets/img/flat/ajak_ajak3.jpg"/>
+                            </a>
+                        </div>
+                        <div class="card-content">
+                            <h4 class="category text-danger">AJAK TEMAN</h4>
+                            <p class="card-description" style="color:black;">
+                                Anda yang sudah menjadi pelanggan WarMart dapat mengajak teman untuk menjadi pelanggan WarMart seperti Anda. Setiap teman Anda tersebut berbelanja ke Warmart di warung manapun, Anda akan mendapatkan share bagi hasil dari keuntungan warung secara otomatis. <center><a href="{{ url('/register-customer') }}" class="btn btn-danger" > DAFTAR </a></center>
+                            </p>
+                        </div>
+                    </div>
                 </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+</div>
+
+<!--     *********    MANFAAT ALASAN BERGABUNG     *********      -->
+
+<!--     *********    MORPHING CARDS     *********      -->
+
+<div class="cards main main-raised" id="morphing"  >
+
+    <div class="container">
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="rotating-card-container">
+                    <div class="card card-rotate card-background">
+                        <div class="front front-background" style="background-image: url('assets/img/flat/pelanggan_2.jpg');">
+                            <div class="card-content">
+                                <h3 class="category text-info" style="color:orange;font-weight:bold;" >Manfaat Pelanggan <i class="material-icons">refresh</i></h3>
+                                <p class="card-description">
+
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="back back-background" style="background-image: url('assets/img/flat/pelanggan_2.jpg');">
+                            <div class="card-content">
+                                <h3 class="category text-info"></h3>
+                                <p class="card-description">
+                                   <h6 style="color:white;font-weight:bold;">
+                                    <ul align="left">
+                                        <li>Berkontribusi menumbuhkan Usaha muslim (jihad ekonomi) </li>
+                                        <li>Belanja bernilai ibadah </li>
+                                        <li>Mudah berbelanja di warung muslim </li>
+                                        <li>Mudah mencari barang, harga dan lokasi warung muslim terdekat </li>
+                                        <li>Barang lengkap sesuai kebutuhan </li>
+                                        <li>Potensi Income dengan mendaftarkan saudara Muslim </li>
+                                    </ul>
+                                </h6>
+                            </p>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="rotating-card-container">
+                <div class="card card-rotate card-background">
+                    <div class="front front-background" style="background-image: url('assets/img/flat/warung_2.jpg');">
+                        <div class="card-content">
+                            <h3 class="category text-info" style="color:orange;font-weight:bold;">Manfaat Warung <i class="material-icons">refresh</i></h3>
+                            <p class="card-description">
+
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="back back-background" style="background-image: url('assets/img/flat/warung_2.jpg');">
+                        <div class="card-content">
+                           <h3 class="category text-info"></h3>
+                           <p class="card-description">
+                               <h6 style="color:white;font-weight:bold;">
+                                <ul align="left">
+                                    <li>Terhubung dengan Pelanggan WarMart se Indonesia </li> 
+                                    <li>Mendapat support teknologi manajemen warung </li>
+                                    <li>Mudah ditemukan konsumen </li>
+                                    <li>Penjualan online / offline </li>
+                                    <li>Mudah terakses oleh supplier </li>
+                                    <li>Terhubung dengan investor muslim </li>
+                                </ul>
+                            </h6>
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- PEMISAH ROW 1 - 2-->
+<div class="row">
+    <div class="col-md-6">
+        <div class="rotating-card-container">
+            <div class="card card-rotate card-background">
+                <div class="front front-background" style="background-image: url('assets/img/flat/komunitas_2.jpg');">
+                    <div class="card-content">
+                        <h3 class="category text-info" style="color:orange;font-weight:bold;">Manfaat Komunitas <i class="material-icons">refresh</i></h3>
+                        <p class="card-description">
+
+                        </p>
+                    </div>
+                </div>
+
+                <div class="back back-background" style="background-image: url('assets/img/flat/komunitas_2.jpg');">
+                    <div class="card-content">
+                        <h3 class="category text-info"></h3>
+                        <p class="card-description">
+                         <h6 style="color:white;font-weight:bold;">
+                            <ul align="left">       
+                                <li>Terhubung Dengan Pergerakan Ekonomi Umat</li>
+                                <li>Bersinergi dengan beragam komunitas</li>
+                                <li>Berkontribusi dalam kebangkitan ekonomi Islam</li>
+                                <li>Mendapatkan potensi income dari belanja komunitas</li>
+                                <li>Menumbuhkan kesadaran  bela ekonomi Islam</li>
+                            </ul>
+                        </h6>
+                    </p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-6">
+    <div class="rotating-card-container">
+        <div class="card card-rotate card-background">
+            <div class="front front-background" style="background-image: url('assets/img/flat/ajak_ajak_2.jpg');">
+                <div class="card-content">
+                    <h3 class="category text-info" style="color:orange;font-weight:bold;">Manfaat Ajak Teman <i class="material-icons">refresh</i></h3>
+                    <p class="card-description">
+
+                    </p>
+                </div>
+            </div>
+
+            <div class="back back-background" style="background-image: url('assets/img/flat/ajak_ajak_2.jpg');">
+                <div class="card-content">
+                    <h3 class="category text-info"></h3>
+                    <p class="card-description">
+                       <h6 style="color:white;font-weight:bold;">
+                           <ul align="left">
+                            <li>Bebas biaya pendaftaran alias GRATIS!!! </li> 
+                            <li>Punya penghasilan tambahan </li> 
+                            <li>GRATIS!!! Web replika dengan nama sendiri </li> 
+                            <li>Bergabung dengan komunitas positif </li> 
+                            <li>Share bagi hasil dari transaksi teman </li>
+                        </ul>
+                    </h6>
+                </p>
 
             </div>
         </div>
     </div>
+</div>
+</div>
 
- <!--     *********    MANFAAT ALASAN BERGABUNG     *********      -->
-
-                <!--     *********    MORPHING CARDS     *********      -->
-
-                <div class="cards main main-raised" id="morphing"  >
-
-                    <div class="container">
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="rotating-card-container">
-                                    <div class="card card-rotate card-background">
-                                        <div class="front front-background" style="background-image: url('assets/img/flat/pelanggan_2.jpg');">
-                                            <div class="card-content">
-                                                <h3 class="category text-info" style="color:orange;font-weight:bold;" >Manfaat Pelanggan <i class="material-icons">refresh</i></h3>
-                                                <p class="card-description">
-                                               
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        <div class="back back-background" style="background-image: url('assets/img/flat/pelanggan_2.jpg');">
-                                            <div class="card-content">
-                                                <h3 class="category text-info"></h3>
-                                                <p class="card-description">
-                                                     <h6 style="color:white;font-weight:bold;">
-                                                <ul align="left">
-                                                        <li>Berkontribusi menumbuhkan Usaha muslim (jihad ekonomi) </li>
-                                                        <li>Belanja bernilai ibadah </li>
-                                                        <li>Mudah berbelanja di warung muslim </li>
-                                                        <li>Mudah mencari barang, harga dan lokasi warung muslim terdekat </li>
-                                                        <li>Barang lengkap sesuai kebutuhan </li>
-                                                        <li>Potensi Income dengan mendaftarkan saudara Muslim </li>
-                                                </ul>
-                                                 </h6>
-                                                </p>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="rotating-card-container">
-                                    <div class="card card-rotate card-background">
-                                        <div class="front front-background" style="background-image: url('assets/img/flat/warung_2.jpg');">
-                                            <div class="card-content">
-                                                <h3 class="category text-info" style="color:orange;font-weight:bold;">Manfaat Warung <i class="material-icons">refresh</i></h3>
-                                                <p class="card-description">
-                                               
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        <div class="back back-background" style="background-image: url('assets/img/flat/warung_2.jpg');">
-                                            <div class="card-content">
-                                                 <h3 class="category text-info"></h3>
-                                                <p class="card-description">
-                                                     <h6 style="color:white;font-weight:bold;">
-                                                    <ul align="left">
-                                                            <li>Terhubung dengan Pelanggan WarMart se Indonesia </li> 
-                                                            <li>Mendapat support teknologi manajemen warung </li>
-                                                            <li>Mudah ditemukan konsumen </li>
-                                                            <li>Penjualan online / offline </li>
-                                                            <li>Mudah terakses oleh supplier </li>
-                                                            <li>Terhubung dengan investor muslim </li>
-                                                        </ul>
-                                                    </h6>
-                                                </p>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- PEMISAH ROW 1 - 2-->
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="rotating-card-container">
-                                    <div class="card card-rotate card-background">
-                                        <div class="front front-background" style="background-image: url('assets/img/flat/komunitas_2.jpg');">
-                                            <div class="card-content">
-                                                <h3 class="category text-info" style="color:orange;font-weight:bold;">Manfaat Komunitas <i class="material-icons">refresh</i></h3>
-                                                <p class="card-description">
-                                               
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        <div class="back back-background" style="background-image: url('assets/img/flat/komunitas_2.jpg');">
-                                            <div class="card-content">
-                                                <h3 class="category text-info"></h3>
-                                                <p class="card-description">
-                                                   <h6 style="color:white;font-weight:bold;">
-                                                    <ul align="left">       
-                                                        <li>Terhubung Dengan Pergerakan Ekonomi Umat</li>
-                                                        <li>Bersinergi dengan beragam komunitas</li>
-                                                        <li>Berkontribusi dalam kebangkitan ekonomi Islam</li>
-                                                        <li>Mendapatkan potensi income dari belanja komunitas</li>
-                                                        <li>Menumbuhkan kesadaran  bela ekonomi Islam</li>
-                                                    </ul>
-                                                </h6>
-                                                </p>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="rotating-card-container">
-                                    <div class="card card-rotate card-background">
-                                        <div class="front front-background" style="background-image: url('assets/img/flat/ajak_ajak_2.jpg');">
-                                            <div class="card-content">
-                                                <h3 class="category text-info" style="color:orange;font-weight:bold;">Manfaat Ajak Teman <i class="material-icons">refresh</i></h3>
-                                                <p class="card-description">
-                                               
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        <div class="back back-background" style="background-image: url('assets/img/flat/ajak_ajak_2.jpg');">
-                                            <div class="card-content">
-                                                <h3 class="category text-info"></h3>
-                                                <p class="card-description">
-                                                     <h6 style="color:white;font-weight:bold;">
-                                                     <ul align="left">
-                                                        <li>Bebas biaya pendaftaran alias GRATIS!!! </li> 
-                                                        <li>Punya penghasilan tambahan </li> 
-                                                        <li>GRATIS!!! Web replika dengan nama sendiri </li> 
-                                                        <li>Bergabung dengan komunitas positif </li> 
-                                                        <li>Share bagi hasil dari transaksi teman </li>
-                                                     </ul>
-                                                 </h6>
-                                                </p>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
+</div>
+</div>
 <br><br>
-                </div>
+</div>
 
 
-   
-    <!--     *********    TESTIMONIALS 2     *********      -->
 
-    <div class="testimonials-2 section-dark">
+<!--     *********    TESTIMONIALS 2     *********      -->
 
-        <div class="container">
-            <h2 class="text-center" style="color:white;font-weight:bold;">Kata Mereka</h2>
-            <div class="row">
+<div class="testimonials-2 section-dark">
 
-                <div id="carousel-testimonial" class="carousel slide" data-ride="carousel">
+    <div class="container">
+        <h2 class="text-center" style="color:white;font-weight:bold;">Kata Mereka</h2>
+        <div class="row">
 
-                    <div class="carousel-inner" role="listbox">
-                        
-                        <div class="item active">
-                            <div class="card card-testimonial card-plain">
-                                <div class="card-avatar">
-                                    <a href="#pablo">
-                                        <img class="img" src="assets/img/faces/buya_yahya.jpg" />
-                                    </a>
-                                </div>
+            <div id="carousel-testimonial" class="carousel slide" data-ride="carousel">
 
-                                <div class="card-content">
-                                    <h5 class="card-description">
-                                        “Seandainya Umat Islam sepakat semuanya, tidak akan membeli produk kecuali milik saudaranya, beres semuanya. Dan kalau Islam jaya, orang di luar Islam itu akan tertolong juga, nggak akan terhinakan.” 
-                                    </h5>
-                                    <br> 
-                                     <h4 style="color:orange;font-weight:bold;" >Buya Yahya</h4>
-                                    <h6 class="category text-muted">Pendiri Pondok Pesantren Al-Bahjah</h6>
-                                </div>
+                <div class="carousel-inner" role="listbox">
+
+                    <div class="item active">
+                        <div class="card card-testimonial card-plain">
+                            <div class="card-avatar">
+                                <a href="#pablo">
+                                    <img class="img" src="assets/img/faces/buya_yahya.jpg" />
+                                </a>
+                            </div>
+
+                            <div class="card-content">
+                                <h5 class="card-description">
+                                    “Seandainya Umat Islam sepakat semuanya, tidak akan membeli produk kecuali milik saudaranya, beres semuanya. Dan kalau Islam jaya, orang di luar Islam itu akan tertolong juga, nggak akan terhinakan.” 
+                                </h5>
+                                <br> 
+                                <h4 style="color:orange;font-weight:bold;" >Buya Yahya</h4>
+                                <h6 class="category text-muted">Pendiri Pondok Pesantren Al-Bahjah</h6>
                             </div>
                         </div>
-
-                        <div class="item">
-                            <div class="card card-testimonial card-plain">
-                                <div class="card-avatar">
-                                    <a href="#pablo">
-                                        <img class="img" src="assets/img/faces/ust_zulkifli_ali.jpg" />
-                                    </a>
-                                </div>
-
-                                <div class="card-content">
-                                    <h5 class="card-description">
-                                        “Apapun yang berkaitan dengan masalah produk, apapun yang berkaitan dengan masalah fasilitas dan segala macamnya, selagi ada muslim yang punya, agak mahal nggak apa-apa, kualitasnya agak dibawah nggak apa-apa..Allah akan tolong kamu.”
-                                    </h5>
-                                   <h4 style="color:orange;font-weight:bold;" >Ust. Zulkifli M Ali, Lc, MA</h4>
-                                     <h6 class="category text-muted">Da'i / Pendakwah</h6>
-                                </div>
-                            </div>
-                        </div>
-
-                         <div class="item">
-                            <div class="card card-testimonial card-plain">
-                                <div class="card-avatar">
-                                    <a href="#pablo">
-                                        <img class="img" src="assets/img/faces/rendy_saputra.jpg" />
-                                    </a>
-                                </div>
-
-                                <div class="card-content">
-                                    <h5 class="card-description">
-                                        "Manusia adalah pasar, suka nggak suka, saya jualan nggak jualan, setiap orang belanja, setiap orang ngeluarin duit. Pertanyaanya, setiap orang pasti belanja, tapi tidak setiap orang muslim jualan, ini masalah. Trilyunan rupiah kita keluar, karena kita nggak jualan, itu masalahnya."
-                                    </h5>
-                                   <h4 style="color:orange;font-weight:bold;" >Rendy Saputra</h4>
-                                     <h6 class="category text-muted">Pengusaha Muda</h6>
-                                </div>
-                            </div>
-                        </div>
-
                     </div>
 
-                    <a class="left carousel-control" href="#carousel-testimonial" role="button" data-slide="prev">
-                        <i class="material-icons" aria-hidden="true">chevron_left</i>
-                    </a>
-                    <a class="right carousel-control" href="#carousel-testimonial" role="button" data-slide="next">
-                        <i class="material-icons" aria-hidden="true">chevron_right</i>
-                    </a>
+                    <div class="item">
+                        <div class="card card-testimonial card-plain">
+                            <div class="card-avatar">
+                                <a href="#pablo">
+                                    <img class="img" src="assets/img/faces/ust_zulkifli_ali.jpg" />
+                                </a>
+                            </div>
+
+                            <div class="card-content">
+                                <h5 class="card-description">
+                                    “Apapun yang berkaitan dengan masalah produk, apapun yang berkaitan dengan masalah fasilitas dan segala macamnya, selagi ada muslim yang punya, agak mahal nggak apa-apa, kualitasnya agak dibawah nggak apa-apa..Allah akan tolong kamu.”
+                                </h5>
+                                <h4 style="color:orange;font-weight:bold;" >Ust. Zulkifli M Ali, Lc, MA</h4>
+                                <h6 class="category text-muted">Da'i / Pendakwah</h6>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="item">
+                        <div class="card card-testimonial card-plain">
+                            <div class="card-avatar">
+                                <a href="#pablo">
+                                    <img class="img" src="assets/img/faces/rendy_saputra.jpg" />
+                                </a>
+                            </div>
+
+                            <div class="card-content">
+                                <h5 class="card-description">
+                                    "Manusia adalah pasar, suka nggak suka, saya jualan nggak jualan, setiap orang belanja, setiap orang ngeluarin duit. Pertanyaanya, setiap orang pasti belanja, tapi tidak setiap orang muslim jualan, ini masalah. Trilyunan rupiah kita keluar, karena kita nggak jualan, itu masalahnya."
+                                </h5>
+                                <h4 style="color:orange;font-weight:bold;" >Rendy Saputra</h4>
+                                <h6 class="category text-muted">Pengusaha Muda</h6>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
+                <a class="left carousel-control" href="#carousel-testimonial" role="button" data-slide="prev">
+                    <i class="material-icons" aria-hidden="true">chevron_left</i>
+                </a>
+                <a class="right carousel-control" href="#carousel-testimonial" role="button" data-slide="next">
+                    <i class="material-icons" aria-hidden="true">chevron_right</i>
+                </a>
             </div>
+
+        </div>
+
+    </div>
+</div>
+
+<!--     *********    END TESTIMONIALS 2      *********      -->
+
+
+
+<!--     *********    CALL TO ACTION       *********      -->
+
+<div class="section-image" style="background-image: url('assets/img/open_shop.jpg');">
+    <div class="container">
+        <div class="section text-center">
+
+            <center><h3 class="card-description"><a style="color:orange;font-weight:bold;">MARI MENJADI BAGIAN DALAM </a> <a style="color:white;font-weight:bold;">KEBANGKITAN PEREKONOMIAN ISLAM DI INDONESIA.</h3><h4 style="color:white;font-style:italic;" class="card-description"> Islam berjaya, akan menjadi Rahmat bagi seluruh Alam.</h4><h5 style="color:white;font-style:italic;" class="card-description"> Ambil Bagian Anda sekarang juga</h5></a></center><br>
+            <center><a href="#" class="btn btn-danger swal-pendaftaran"> DAFTAR </a></center>
+
+        </div>
+
+        <div class="section text-center">
 
         </div>
     </div>
-
-    <!--     *********    END TESTIMONIALS 2      *********      -->
-
-
-
-    <!--     *********    CALL TO ACTION       *********      -->
-
- <div class="section-image" style="background-image: url('assets/img/open_shop.jpg');">
-        <div class="container">
-            <div class="section text-center">
-              
-                    <center><h3 class="card-description"><a style="color:orange;font-weight:bold;">MARI MENJADI BAGIAN DALAM </a> <a style="color:white;font-weight:bold;">KEBANGKITAN PEREKONOMIAN ISLAM DI INDONESIA.</h3><h4 style="color:white;font-style:italic;" class="card-description"> Islam berjaya, akan menjadi Rahmat bagi seluruh Alam.</h4><h5 style="color:white;font-style:italic;" class="card-description"> Ambil Bagian Anda sekarang juga</h5></a></center><br>
-                    <center><a href="#" class="btn btn-danger swal-pendaftaran"> DAFTAR </a></center>
-                 
-            </div>
-
-            <div class="section text-center">
-             
-            </div>
-        </div>
 </div>
 
 
 
 
-    <footer class="footer">
-        <div class="container">
+<footer class="footer">
+    <div class="container">
 
-             <h4><a style="font-weight:bold;">INFO :</a><a style="color:red;font-weight:italic;"> Soft Launching Aplikasi WartMart Insya Allah akan dilaksanakan pada tanggal 20 November 2017</a></h4> 
+       <h4><a style="font-weight:bold;">INFO :</a><a style="color:red;font-weight:italic;"> Soft Launching Aplikasi WartMart Insya Allah akan dilaksanakan pada tanggal 20 November 2017</a></h4> 
 
-            <div class="copyright pull-right">
-                &copy; <script>document.write(new Date().getFullYear())</script> PT Andaglos Global Teknologi, made with love for a better web
-            </div>
-        </div>
-    </footer>
+       <div class="copyright pull-right">
+        &copy; <script>document.write(new Date().getFullYear())</script> PT Andaglos Global Teknologi, made with love for a better web
+    </div>
+</div>
+</footer>
 
 
 
@@ -484,14 +491,14 @@ height:100%;
 <script src="{{ asset('js/material-kit.js?v=1.2.0')}}" type="text/javascript"></script>
 
 <script type="text/javascript">
-$('.swal-pendaftaran').click(function(){
-    swal({
-        title: 'Daftar Sebagai ?',
-        html:
+    $('.swal-pendaftaran').click(function(){
+        swal({
+            title: 'Daftar Sebagai ?',
+            html:
             '<li class="" style="list-style-type:none"><a href="{{ url('/register-customer') }}"  class="btn btn-info"><i class="material-icons">person_add</i> Pelanggan</a></li><li class="" style="list-style-type:none"><a href="{{ url('/register') }}"  class="btn btn-success"><i class="material-icons">people</i> Komunitas</a></li><li class=""  style="list-style-type:none"><a href="{{ url('/register-warung') }}"  class="btn btn-warning"><i class="material-icons">store</i> Warung </a></li> ',
-        showConfirmButton :  false,
+            showConfirmButton :  false,
+        });
     });
-});
 </script>
 
 </html>
