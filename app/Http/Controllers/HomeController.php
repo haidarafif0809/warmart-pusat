@@ -9,6 +9,9 @@ use GuzzleHttp\Client;
 use SEOMeta;
 use OpenGraph;
 use Twitter;
+use App\User;
+use App\Barang;
+use App\Error;
 
 
 class HomeController extends Controller
@@ -45,7 +48,14 @@ class HomeController extends Controller
 
     public function dashboard()
     {
-        return view('home');
+        $jumlah_komunitas = User::where('tipe_user','2')->count();
+        $jumlah_customer = User::where('tipe_user','3')->count();
+        $jumlah_warung = User::where('tipe_user','4')->count();
+        $jumlah_warung_tervalidasi = User::where('tipe_user','4')->where('konfirmasi_admin','1')->count();
+        $jumlah_komunitas_tervalidasi = User::where('tipe_user','2')->where('konfirmasi_admin','1')->count();
+        $produk = Barang::count();
+        $error_log = Error::count();
+        return view('home',['jumlah_komunitas'=>$jumlah_komunitas,'jumlah_customer'=>$jumlah_customer,'jumlah_warung'=>$jumlah_warung,'jumlah_warung_tervalidasi'=>$jumlah_warung_tervalidasi,'jumlah_komunitas_tervalidasi'=>$jumlah_komunitas_tervalidasi,'produk'=>$produk,'error_log'=>$error_log]);
     }
 
     public function sms(){
