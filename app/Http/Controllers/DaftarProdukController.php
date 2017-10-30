@@ -16,7 +16,7 @@ class DaftarProdukController extends Controller
      */
     public function index()
     {
-        $data_produk = Barang::select(['id','kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung'])->paginate(4);
+        $data_produk = Barang::select(['id','kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung'])->paginate(12);
         $kategori_produk = KategoriBarang::select(['id','nama_kategori_barang'])->get();
 
         $daftar_produk = "";
@@ -40,12 +40,16 @@ class DaftarProdukController extends Controller
             <div class="card-content">
                <a href="#">
                    <h5 class="card-title">'.$produks->nama_barang.'</h5>
-               </a>
-               <p class="description">
-                Impeccably tailored in Italy from lightweight navy wool.
-            </p>
-            <div class="footer">
-               <div class="price-container">
+               </a>';
+
+               if ($produks->deskripsi_produk != "") {
+                   $daftar_produk .= '<p class="description">'.strip_tags(substr($produks->deskripsi_produk, 0, 60)).'..</p>';
+               }
+               else{
+                $daftar_produk .= '<p class="description">Tidak Ada Deskripsi Untuk Produk Ini.</p>';
+            }
+            $daftar_produk .= '<div class="footer">
+            <div class="price-container">
                 <span class="price">'.$produks->rupiah.'</span>
             </div>
 
@@ -72,7 +76,7 @@ return view('layouts.daftar_produk', ['kategori_produk' => $kategori_produk, 'da
 public function filter_kategori($id)
 {
     $data_produk = Barang::select(['id','kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung'])
-    ->where('kategori_barang_id', $id)->paginate(4);
+    ->where('kategori_barang_id', $id)->paginate(12);
     $kategori_produk = KategoriBarang::select(['id','nama_kategori_barang'])->get();
 
     $produk_pagination = $data_produk->links();
