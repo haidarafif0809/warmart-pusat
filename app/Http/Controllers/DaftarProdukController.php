@@ -71,7 +71,7 @@ return view('layouts.daftar_produk', ['kategori_produk' => $kategori_produk, 'da
 
 public function filter_kategori($id)
 {
-    $data_produk = Barang::select(['id','kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id'])
+    $data_produk = Barang::select(['id','kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung'])
     ->where('kategori_barang_id', $id)->paginate(4);
     $kategori_produk = KategoriBarang::select(['id','nama_kategori_barang'])->get();
 
@@ -81,6 +81,7 @@ public function filter_kategori($id)
 
         $daftar_produk = "";
         foreach ($data_produk as $produks) {
+            $warung = Warung::select(['name'])->where('id', $produks->id_warung)->first();
             $daftar_produk .= '<div class="col-md-3">
             <div class="card card-product card-plain no-shadow" data-colored-shadow="false">
                <div class="card-image">';
@@ -115,6 +116,7 @@ public function filter_kategori($id)
 
        </div>
    </div>
+   <a class="description"><i class="material-icons">store</i>  '.$warung->name.' </a>
 </div>
 </div>';
 }
