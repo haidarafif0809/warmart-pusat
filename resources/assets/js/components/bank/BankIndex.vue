@@ -41,17 +41,17 @@
 		             
 		                    </tr>
 		                    </thead>
-		                    <tbody v-if="banks.length">
+		                    <tbody v-if="banks.length" class="data-ada">
 		                    <tr v-for="bank, index in banks" >
 		                    
 		                        <td>{{ bank.nama_bank }}</td>
 		                        <td>{{ bank.atas_nama }}</td>
 		                        <td>{{ bank.no_rek }}</td>
 		                        <td> 
-		                           <router-link :to="{name: 'editBank', params: {id: bank.id}}" class="btn btn-xs btn-default">
-                                Edit
+		                           <router-link :to="{name: 'editBank', params: {id: bank.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + bank.id" >
+                                Edit 
                            			 </router-link> <a href="#"
-                               class="btn btn-xs btn-danger"
+                               class="btn btn-xs btn-danger" v-bind:id="'delete-' + bank.id"
                                v-on:click="deleteEntry(bank.id, index,bank.nama_bank)">
                                 Delete
                             </a></td>
@@ -59,7 +59,7 @@
 		                
 		                    </tr>
                       </tbody>
-                      <tbody v-else>
+                      <tbody class="data-tidak-ada" v-else>
                                   <tr ><td colspan="4"  class="text-center">Tidak Ada Data</td></tr>
                       </tbody>
 		                </table>

@@ -22,6 +22,9 @@ class UserMustWarung
              Auth::logout();
             return response()->view('error.403');
         }
+        else if(Auth::user()->konfirmasi_admin == 0){
+            return redirect()->route('home.dashboard');
+        }
 
         return $response;
 

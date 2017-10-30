@@ -82,7 +82,8 @@ class KasMasukController extends Controller
          }
 
         if (Auth::user()->id_warung != "") {
-             $no_faktur = KasMasuk::no_faktur();
+            $id_warung = Auth::user()->id_warung;
+             $no_faktur = KasMasuk::no_faktur($id_warung);
              $kas = KasMasuk::create(['no_faktur' => $no_faktur,'kas' => $request->kas,'kategori' => $request->kategori,'jumlah' => $request->jumlah,'keterangan' => $keterangan,'id_warung'=> Auth::user()->id_warung]);
              
              //PROSES MEMBUAT TRANSAKSI KAS

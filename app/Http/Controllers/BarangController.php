@@ -40,7 +40,7 @@ class BarangController extends Controller
                   $data_barang = Barang::with(['satuan','kategori_barang'])->where('id_warung',Auth::user()->id_warung)->get();
                   return Datatables::of($data_barang)
                   ->addColumn('action', function($barang){ 
-                      return view('datatable._action',[
+                      return view('datatable._action_barang',[
 
                               'model'             => $barang,
                               'form_url'          => route('barang.destroy',$barang->id),

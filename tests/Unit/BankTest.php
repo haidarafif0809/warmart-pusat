@@ -59,11 +59,7 @@ class BankTest extends TestCase
 
         $response = $this->actingAs($user)->json('POST', route('bank.store'), ["nama_bank" => "BRI TESTING","atas_nama" => "Rindang Testing","no_rek"=>"7357146", "tampil_customer"=>"1"]);
 
-        $response->assertStatus(302)
-                 ->assertRedirect(route('bank.index'));
-        
-
-        $response2 = $this->get($response->headers->get('location'))->assertSee('Sukses : Berhasil Menambah Bank "BRI TESTING"');
+        $response->assertStatus(200);
 
         $this->assertDatabaseHas("banks",["nama_bank" => "BRI TESTING","atas_nama" => "Rindang Testing","no_rek"=>"7357146"]);
     }
@@ -77,10 +73,7 @@ class BankTest extends TestCase
 
         $response = $this->actingAs($user)->json('POST', route('bank.destroy',$bank->id), ['_method' => 'DELETE']);
 
-        $response->assertStatus(302)
-                 ->assertRedirect(route('bank.index'));
-        
-        $response2 = $this->get($response->headers->get('location'))->assertSee('Sukses : Bank Berhasil Dihapus');       
+        $response->assertStatus(200);   
 
     }
 
@@ -108,10 +101,9 @@ class BankTest extends TestCase
 
         $response = $this->actingAs($user)->json('POST', route('bank.update',$bank->id), ['_method' => 'PUT','nama_bank' => 'Bank Lampung Testing Update', 'atas_nama' => 'Pasa Maulana', 'no_rek' => '15186366591366', 'tampil_customer' => '1']);
 
-        $response->assertStatus(302)
-                 ->assertRedirect(route('bank.index'));
+        $response->assertStatus(200);
 
-        $response2 = $this->get($response->headers->get('location'))->assertSee('Sukses : Berhasil Mengubah Bank "Bank Lampung Testing Update"');
+
      
     }
 }
