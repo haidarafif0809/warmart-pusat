@@ -6,7 +6,7 @@ use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use App\User;
-
+use App\Suplier;
 
 class SuplierTest extends DuskTestCase
 {
@@ -30,7 +30,7 @@ class SuplierTest extends DuskTestCase
     }
 
 
-     public function testEditProduk(){
+     public function testEditSuplier(){
 
           $this->browse(function ($first, $second) {
             $first->loginAs(User::find(5))
@@ -53,7 +53,7 @@ class SuplierTest extends DuskTestCase
         }); 
     }
 
-       public function testBarcodeTidakBolehSama(){// BARCODE PER WARUNG TIDAK BOLEH SAMA 
+       public function testNamaSuplierBolehSama(){// BARCODE PER WARUNG TIDAK BOLEH SAMA 
 
         $this->browse(function ($first, $second) {
             $first->loginAs(User::find(5))
@@ -67,6 +67,23 @@ class SuplierTest extends DuskTestCase
                     $first->assertSeeIn('#nama_suplier_error','Maaf nama suplier Sudah Terpakai.');
         }); 
 
+    }
+
+        public function testHapusSuplier(){
+          $suplier = Suplier::select('id')->where('nama_suplier','PT ANDAGLOS GLOBAL TEKNOLOGI')->first();
+          $this->browse(function ($first) use ($suplier) {
+            $first->loginAs(User::find(5))
+                  ->visit('/suplier')
+                  ->whenAvailable('.js-confirm', function ($table) { 
+                              ;
+                    })
+                  ->with('.table', function ($table) use($suplier) {
+                        $table->press('#delete-'.$suplier->id)
+                              ->assertDialogOpened('Anda Yakin Ingin Menghapus PT ANDAGLOS GLOBAL TEKNOLOGI ?');
+                    })->driver->switchTo()->alert()->accept();
+                    $first->assertSee('SUKSES : BERHASIL MENGHAPUS SUPLIER'); 
+
+        }   ); 
     }
 
 }

@@ -23,7 +23,7 @@ class KasMasuk extends Model
       return number_format($this->jumlah,0,',','.');
     }
 
-    public static function no_faktur(){
+    public static function no_faktur($id_warung){
 
         $tahun_sekarang = date('Y');
         $bulan_sekarang = date('m');
@@ -41,7 +41,7 @@ class KasMasuk extends Model
          }
       
       //ambil bulan dan no_faktur dari tanggal item_keluar terakhir
-         $item_keluar = KasMasuk::select([DB::raw('MONTH(created_at) bulan'), 'no_faktur'])->where('id_warung',Auth::user()->id_warung)->orderBy('id','DESC')->first();
+         $item_keluar = KasMasuk::select([DB::raw('MONTH(created_at) bulan'), 'no_faktur'])->where('id_warung',$id_warung)->orderBy('id','DESC')->first();
 
 
          if ($item_keluar != NULL) {

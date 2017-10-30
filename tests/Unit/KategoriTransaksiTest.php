@@ -32,28 +32,35 @@ class KategoriTransaksiTest extends TestCase
 //CRUD TESTING
     public function testKategoriTransaksiCrud() {
     	
-    	//TAMBAH KATEGORI TRANSAKSI
-        $kategori_transaksi = KategoriTransaksi::create(["nama_kategori_transaksi" => "GAJI MANAGEMEN"]);
-		$this->assertDatabaseHas('kategori_transaksis', ["nama_kategori_transaksi" => "GAJI MANAGEMEN"]);
+    	// TEST INSERT KATEGORI TRANSAKSI
+        $kategori_transaksi_test = KategoriTransaksi::create([
+        'nama_kategori_transaksi' => 'MODAL SIM','id_warung'=>'1'
+        ]);
+        //CEK DATABASE TAMBAH
+        $this->assertDatabaseHas('kategori_transaksis',['nama_kategori_transaksi' => 'MODAL SIM','id_warung'=>'1']);
+        // TEST UPDATE KATEGORI TRANSAKSI
+        KategoriTransaksi::find($kategori_transaksi_test->id)->update(['nama_kategori_transaksi' => 'MODAL SIM DI']);
+        //CEK DATABASE UPDATE
+        $this->assertDatabaseHas('kategori_transaksis',['nama_kategori_transaksi' => 'MODAL SIM DI']);
 
-		//UPDATE KATEGORI TRANSAKSI
-		KategoriTransaksi::find($kategori_transaksi->id)->update(["nama_kategori_transaksi" => "GAJI MANAGEMEN II"]);
-		$this->assertDatabaseHas('kategori_transaksis', ["nama_kategori_transaksi" => "GAJI MANAGEMEN II"]);
+        // TEST DELETE KATEGORI TRANSAKSI
+        KategoriTransaksi::destroy($kategori_transaksi_test->id);
+        $suplier = KategoriTransaksi::find($kategori_transaksi_test->id);
 
-		//DELETE KATEGORI TRANSAKSI
-		$hapus_kategori_transaksi = KategoriTransaksi::destroy($kategori_transaksi->id);
-
-        $kategori_transaksi = KategoriTransaksi::find($kategori_transaksi->id);
-        $this->assertDatabaseMissing('kategori_transaksis', ["nama_kategori_transaksi" => "GAJI MANAGEMEN II"]);
+        // cek DATA BASE
+        $this->assertDatabaseMissing('kategori_transaksis',[
+        'nama_kategori_transaksi' => 'MODAL SIM DI'
+        ]);
+   
 
     }
-//HTTP TESTING
+
     //TAMBAH KATEGORI TRANSAKSI
     public function testHTTPTambahKategoriTransaksi() {
 
-        $user = User::find(1);
+        $user = User::find(5);
 
-        $response = $this->actingAs($user)->json('POST', route('kategori_transaksi.store'), ["nama_kategori_transaksi" => "GAJI MANAGEMEN"]);
+        $response = $this->actingAs($user)->json('POST', route('kategori_transaksi.store'), ["nama_kategori_transaksi" => "GAJI MANAGEMEN","id_warung"=>"1"]);
 
         $response->assertStatus(302)
                  ->assertRedirect(route('kategori_transaksi.index'));
@@ -61,15 +68,15 @@ class KategoriTransaksiTest extends TestCase
 
         $response2 = $this->get($response->headers->get('location'))->assertSee('Sukses : Berhasil Menambah Kategori Transaksi "GAJI MANAGEMEN"');
 
-        $this->assertDatabaseHas("kategori_transaksis",["nama_kategori_transaksi" => "GAJI MANAGEMEN"]);
+        $this->assertDatabaseHas("kategori_transaksis",["nama_kategori_transaksi" => "GAJI MANAGEMEN","id_warung"=>"1"]);
     }
 
     //HAPUS KATEGORI TRANSAKSI
     public function testHTTPHapusKategoriTransaksi(){
 
-    	$kategori_transaksi = KategoriTransaksi::create(["nama_kategori_transaksi" => "GAJI MANAGEMEN"]);
+        $kategori_transaksi = KategoriTransaksi::create(["nama_kategori_transaksi" => "GAJI MANAGEMEN","id_warung"=>"1"]);
 
-        $user = User::find(1);
+        $user = User::find(5);
 
         $response = $this->actingAs($user)->json('POST', route('kategori_transaksi.destroy',$kategori_transaksi->id), ['_method' => 'DELETE']);
 
@@ -80,12 +87,12 @@ class KategoriTransaksiTest extends TestCase
 
     }
 
-    //HALAMAN MENU EDIT KATEGORI TRANSAKSI
+        //HALAMAN MENU EDIT KATEGORI TRANSAKSI
     public function testHTTPUpdatekategori_transaksi(){
 
-        $kategori_transaksi = KategoriTransaksi::create(["nama_kategori_transaksi" => "GAJI MANAGEMEN"]);
+        $kategori_transaksi = KategoriTransaksi::create(["nama_kategori_transaksi" => "GAJI MANAGEMEN","id_warung"=>"1"]);
 
-        $user = User::find(1);
+        $user = User::find(5);
 
         $response = $this->actingAs($user)->get(route('kategori_transaksi.edit',$kategori_transaksi->id));
         $response->assertStatus(200)
@@ -93,15 +100,14 @@ class KategoriTransaksiTest extends TestCase
 
      
     }
-
-    //PROSES EDIT KATEGORI TRANSAKSI
+     //PROSES EDIT KATEGORI TRANSAKSI
     public function testHTTPEditKategoriTransaksi(){
         
-        $kategori_transaksi = KategoriTransaksi::create(["nama_kategori_transaksi" => "GAJI MANAGEMEN"]);
+        $kategori_transaksi = KategoriTransaksi::create(["nama_kategori_transaksi" => "GAJI MANAGEMEN","id_warung"=>"1"]);
         //login user -> admin
-        $user = User::find(1);
+        $user = User::find(5);
 
-        $response = $this->actingAs($user)->json('POST', route('kategori_transaksi.update',$kategori_transaksi->id), ['_method' => 'PUT','nama_kategori_transaksi' => 'GAJI MANAGEMEN UPDATE']);
+        $response = $this->actingAs($user)->json('POST', route('kategori_transaksi.update',$kategori_transaksi->id), ['_method' => 'PUT','nama_kategori_transaksi' => 'GAJI MANAGEMEN UPDATE','id_warung'=>'1']);
 
         $response->assertStatus(302)
                  ->assertRedirect(route('kategori_transaksi.index'));
@@ -109,4 +115,6 @@ class KategoriTransaksiTest extends TestCase
         $response2 = $this->get($response->headers->get('location'))->assertSee('Sukses : Berhasil Mengubah Kategori Transaksi "GAJI MANAGEMEN UPDATE"');
      
     }
+
+
 }

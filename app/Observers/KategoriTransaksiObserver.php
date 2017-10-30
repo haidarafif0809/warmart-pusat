@@ -12,8 +12,8 @@ class KategoriTransaksiObserver
 {
     public function deleting(KategoriTransaksi $KategoriTransaksi)
     {       
-        $data_kategori_masuk = KasMasuk::where('kategori', $KategoriTransaksi->id)->where('id_warung', Auth::user()->id_warung)->count();
-        $data_kategori_keluar = KasKeluar::where('kategori', $KategoriTransaksi->id)->where('id_warung', Auth::user()->id_warung)->count();
+        $data_kategori_masuk = KasMasuk::where('kategori', $KategoriTransaksi->id)->where('id_warung', $KategoriTransaksi->id_warung)->count();
+        $data_kategori_keluar = KasKeluar::where('kategori', $KategoriTransaksi->id)->where('warung_id', $KategoriTransaksi->id_warung)->count();
 
     	if ($data_kategori_masuk > 0 OR $data_kategori_keluar > 0) {
     		$pesan_alert = 
@@ -40,7 +40,7 @@ class KategoriTransaksiObserver
                     <b>Sukses : Kategori Transaksi Berhasil Dihapus</b>
             </div>';
 
-            KategoriTransaksi::where('id', $KategoriTransaksi->id)->where('id_warung', Auth::user()->id_warung)->delete();
+            KategoriTransaksi::where('id', $KategoriTransaksi->id)->where('id_warung', $KategoriTransaksi->id_warung)->delete();
 
             Session:: flash("flash_notification", [
                     "level"=>"success",
