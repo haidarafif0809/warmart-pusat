@@ -12,7 +12,7 @@
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" />
     <!--  Material Dashboard CSS    -->
     <link href="{{ asset('css/material-dashboard.css?v=1.2.0') }}" rel="stylesheet" />
-    
+
     <link href="{{ asset('css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
     <!--     Fonts and icons     -->
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
@@ -20,6 +20,8 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="{{ asset('css/material-kit.css?v=1.2.0')}}" rel="stylesheet"/>
     <link href="{{ asset('assets/assets-for-demo/vertical-nav.css')}}" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
 
     {!! SEOMeta::generate() !!}
     {!! OpenGraph::generate() !!}
@@ -80,6 +82,11 @@
       <img  class="img img-raised" src="assets/img/examples/warmart_logo.png" />
       <h2 style="color:red;font-weight:bold;">PASAR MUSLIM <a style="color:black;">INDONESIA</a></h2>
 
+      {!! $daftar_produk !!}
+      <div class="col-md-12">
+          <a href="{{route('daftar_produk.index')}} " rel="tooltip" style="position: center" class="btn btn-rose btn-round">Lihat Selengkapnya...</a>
+      </div>
+      
   </div>
 </div>
 <!--     *********    PERAN ANDA     *********      -->
@@ -120,7 +127,7 @@
                             <div class="card-content">
                                 <h4 class="category text-danger">WARUNG</h4>
                                 <p class="card-description" style="color:black;">
-                                    Warung Anda akan mendapatkan support teknologi yang terupdate secara terus menerus tanpa mengeluarkan banyak biaya. Aplikasi WarMart mudah digunakan sehingga tidak ada halangan bagi Anda yang belum terbiasa menggunakan teknologi untuk pengelolaan warung.<center><a href="{{ url('/register-warung') }}" class="btn btn-danger"> DAFTAR </a></center>
+                                    Warung Anda akan mendapatkan support teknologi yang terupdate secara terus menerus tanpa mengeluarkan banyak biaya. Aplikasi WarMart mudah digunakan sehingga tidak ada halangan bagi Anda yang belum terbiasa menggunakan teknologi untuk pengelolaan warung.<center><a href="https://info.war-mart.id/warung/" class="btn btn-danger"> DAFTAR </a></center>
                                 </p>
                             </div>
                         </div>
@@ -184,7 +191,7 @@
                             <div class="card-content">
                                 <h3 class="category text-info" style="color:orange;font-weight:bold;" >Manfaat Pelanggan <i class="material-icons">refresh</i></h3>
                                 <p class="card-description">
-                                 
+
                                 </p>
                             </div>
                         </div>
@@ -218,7 +225,7 @@
                         <div class="card-content">
                             <h3 class="category text-info" style="color:orange;font-weight:bold;">Manfaat Warung <i class="material-icons">refresh</i></h3>
                             <p class="card-description">
-                             
+
                             </p>
                         </div>
                     </div>
@@ -254,7 +261,7 @@
                     <div class="card-content">
                         <h3 class="category text-info" style="color:orange;font-weight:bold;">Manfaat Komunitas <i class="material-icons">refresh</i></h3>
                         <p class="card-description">
-                         
+
                         </p>
                     </div>
                 </div>
@@ -287,7 +294,7 @@
                 <div class="card-content">
                     <h3 class="category text-info" style="color:orange;font-weight:bold;">Manfaat Ajak Teman <i class="material-icons">refresh</i></h3>
                     <p class="card-description">
-                     
+
                     </p>
                 </div>
             </div>
@@ -331,7 +338,7 @@
             <div id="carousel-testimonial" class="carousel slide" data-ride="carousel">
 
                 <div class="carousel-inner" role="listbox">
-                    
+
                     <div class="item active">
                         <div class="card card-testimonial card-plain">
                             <div class="card-avatar">
@@ -411,14 +418,14 @@
 <div class="section-image" style="background-image: url('assets/img/open_shop.jpg');">
     <div class="container">
         <div class="section text-center">
-          
+
             <center><h3 class="card-description"><a style="color:orange;font-weight:bold;">MARI MENJADI BAGIAN DALAM </a> <a style="color:white;font-weight:bold;">KEBANGKITAN PEREKONOMIAN ISLAM DI INDONESIA.</h3><h4 style="color:white;font-style:italic;" class="card-description"> Islam berjaya, akan menjadi Rahmat bagi seluruh Alam.</h4><h5 style="color:white;font-style:italic;" class="card-description"> Ambil Bagian Anda sekarang juga</h5></a></center><br>
             <center><a href="#" class="btn btn-danger swal-pendaftaran"> DAFTAR </a></center>
-            
+
         </div>
 
         <div class="section text-center">
-           
+
         </div>
     </div>
 </div>
