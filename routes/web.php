@@ -20,8 +20,17 @@ Route::get('/dashboard',[
 	'uses' => 'HomeController@dashboard'
 ]);
 
+Route::get('/daftar-produk',[
+	'middleware' => ['auth'],
+	'as' => 'daftar_produk.index',
+	'uses' => 'DaftarProdukController@index'
+]);
 
-
+Route::get('/daftar-produk/{id}',[
+	'middleware' => ['auth'],
+	'as' => 'daftar_produk.filter_kategori',
+	'uses' => 'DaftarProdukController@filter_kategori'
+]);
 
 Route::middleware('optimizeImages')->group(function () {
 
@@ -60,7 +69,7 @@ Route::post('/proses-lupa-password',[
 	'uses' => 'Auth\RegisterController@proses_lupa_password'
 	]);
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', 'HomeController@index_home')->name('home');
 
 Route::get('/ubah-password',[
 	'middleware' => ['auth'],

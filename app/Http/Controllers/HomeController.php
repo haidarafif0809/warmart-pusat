@@ -9,6 +9,7 @@ use GuzzleHttp\Client;
 use SEOMeta;
 use OpenGraph;
 use Twitter;
+use Auth;
 
 
 class HomeController extends Controller
@@ -41,6 +42,28 @@ class HomeController extends Controller
         OpenGraph::addProperty('type', 'articles');
 
         return view('layouts.landing_page');
+               
+    }
+
+    public function index_home()
+    {
+        SEOMeta::setTitle('War-Mart.id');
+        SEOMeta::setDescription('Warmart marketplace warung muslim pertama di Indonesia');
+        SEOMeta::setCanonical('https://war-mart.id');
+        SEOMeta::addKeyword(['warmart', 'warung', 'marketplace','toko online','belanja','lazada']);
+
+        OpenGraph::setDescription('Warmart marketplace warung muslim pertama di Indonesia');
+        OpenGraph::setTitle('War-Mart.id');
+        OpenGraph::setUrl('https://war-mart.id');
+        OpenGraph::addProperty('type', 'articles');
+
+        if (Auth::user()->tipe_user == 3) {
+            return redirect()->route('daftar_produk.index');
+        }
+        else{
+            return view('layouts.landing_page');
+        }
+               
     }
 
     public function dashboard()

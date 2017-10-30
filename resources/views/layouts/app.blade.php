@@ -270,8 +270,12 @@
                     </li>
                     @endif
                     <!--end master data warmart pusat-->
+                    @endif                   
+
+                   <!--HALAMAN KOMUNITAS-->
+                    @if(Auth::user()->tipe_user == 2 AND Auth::user()->konfirmasi_admin == 1)
+
                     @endif
-                   
                   
                 </ul>
             </div>
