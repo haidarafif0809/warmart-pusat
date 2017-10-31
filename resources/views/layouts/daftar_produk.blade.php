@@ -1,8 +1,6 @@
 <!doctype html>
 <html lang="en">
-
 <head>
-
     <title>War-Mart.id</title>
     <meta charset="utf-8" />
     <link rel="apple-touch-icon" sizes="76x76" href="img/apple-icon.png" />
@@ -35,7 +33,6 @@
     {!! app('seotools')->generate() !!}
 
 </head>
-
 
 <body class="ecommerce-page">
     <nav class="navbar navbar-default navbar-transparent navbar-fixed-top navbar-color-on-scroll" color-on-scroll="100" id="sectionsNav">
@@ -82,7 +79,7 @@
 
                     <li class="button-container">
                         <a href="{{ url('/keranjang-belanja') }}" target="_blank" class="btn btn-rose btn-round">
-                            <i class="material-icons">shopping_cart</i> Beli Sekarang
+                            <i class="material-icons">shopping_cart</i> Keranjang Belanja
                         </a>
                     </li>
                 </ul>
@@ -90,7 +87,7 @@
         </div>
     </nav>
 
-    <div class="page-header header-filter header-small" data-parallax="true"" style="background-image: url('image/background2.jpg');">
+    <div class="page-header header-filter header-small" data-parallax="true"" style="{!! $foto_latar_belakang !!}">
 
         <div class="container">
             <div class="row">
@@ -106,20 +103,18 @@
 
     <div class="main main-raised">
 
-        <div class="section">
+        <div class="section" style="background-color: #E5E5E5">
             <div class="container">
-                <h3 class="title text-center">Temukan Apa Yang Anda Butuhkan</h3>
+                <h3 class="title text-center">{!! $nama_kategori !!}</h3>
                 <div class="row">
-                    <div class="col-md-2"> 
+                    <div class="col-md-3"> 
                         <ul class="nav nav-tabs" data-tabs="tabs" style="background-color: #f44336">                                        
-                            <li><a href="{{route('daftar_produk.index')}}"> Semua Kategori</a></li>
+                            <li><a href="{{route('daftar_produk.index')}}"><i class="material-icons">format_align_justify</i> Semua Kategori</a></li>
                         </ul>
                     </div>
-                    <div class="col-md-10">                        
-                        <ul class="nav nav-tabs" data-tabs="tabs" style="background-color: #f44336">                                        
-                            @foreach($kategori_produk as $kategoris)
-                            <li><a href="{{route('daftar_produk.filter_kategori',$kategoris->id)}}">{{ $kategoris->nama_kategori_barang }}</a></li>
-                            @endforeach
+                    <div class="col-md-9">                        
+                        <ul class="nav nav-tabs" data-tabs="tabs" style="background-color: #f44336">
+                            {!! $kategori_produk !!}
                         </ul>
                     </div>
                     <div class="col-md-12">
@@ -183,20 +178,20 @@
             <ul class="pull-left">
                 <li>
                     <a href="#pablo">
-                     Blog
-                 </a>
-             </li>
-             <li>
+                       Blog
+                   </a>
+               </li>
+               <li>
                 <a href="#pablo">
                     Presentation
                 </a>
             </li>
             <li>
                 <a href="#pablo">
-                 Discover
-             </a>
-         </li>
-         <li>
+                   Discover
+               </a>
+           </li>
+           <li>
             <a href="#pablo">
                 Payment
             </a>

@@ -26,6 +26,11 @@ class Barang extends Model
 		return $this->hasOne('App\KategoriBarang','id','kategori_barang_id');
 	}
 
+	public function warung()
+	{
+		return $this->hasOne('App\Warung','id','id_warung');
+	}
+
 	public function getHppAttribute(){
 
 		$hpp_masuk = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk), 0) as total_produk_masuk'), DB::raw('IFNULL(SUM(total_nilai), 0) as total_nilai_masuk')])
