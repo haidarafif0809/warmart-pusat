@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\KategoriBarang;
 use App\Warung;
 use App\Barang;
+use App\User;
 
 class DaftarProdukController extends Controller
 {
@@ -16,7 +17,14 @@ class DaftarProdukController extends Controller
      */
     public function index()
     {
-      $data_produk = Barang::select(['id','kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung'])->paginate(12);
+      //Pilih warung yang sudah dikonfirmasi admin
+      $data_warung = User::select(['id_warung'])->where('id_warung', '!=' ,'NULL')->where('konfirmasi_admin', 1)->get();
+      $array_warung = array();
+      foreach ($data_warung as $data_warungs) {
+        array_push($array_warung, $data_warungs->id_warung);
+      }
+
+      $data_produk = Barang::select(['id','kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung'])->whereIn('id_warung', $array_warung)->paginate(12);
       $kategori = KategoriBarang::select(['id','nama_kategori_barang','kategori_icon']);
       $produk_pagination = $data_produk->links();
       $foto_latar_belakang = "background-image: url('image/background2.jpg');";
@@ -28,9 +36,16 @@ class DaftarProdukController extends Controller
     }
 
     public function produkKategori($kategori){
+      //Pilih warung yang sudah dikonfirmasi admin
+      $data_warung = User::select(['id_warung'])->where('id_warung', '!=' ,'NULL')->where('konfirmasi_admin', 1)->get();
+      $array_warung = array();
+      foreach ($data_warung as $data_warungs) {
+        array_push($array_warung, $data_warungs->id_warung);
+      }
+      //MEANMPILKAN KATEGORI PRODUK
       $kategori_produk = '';
       foreach ($kategori->get() as $kategori) {
-        $jumlah_produk = Barang::where('kategori_barang_id', $kategori->id)->count();
+        $jumlah_produk = Barang::where('kategori_barang_id', $kategori->id)->whereIn('id_warung', $array_warung)->count();
         $kategori_produk .= '
         <li>
           <a href="'.route('daftar_produk.filter_kategori',$kategori->id).'"><i class="material-icons">'.$kategori->kategori_icon.'</i>'.$kategori->nama_kategori_barang.' - '.$jumlah_produk.'</a>
@@ -87,8 +102,15 @@ class DaftarProdukController extends Controller
 
 public function filter_kategori($id)
 {
+  //Pilih warung yang sudah dikonfirmasi admin
+  $data_warung = User::select(['id_warung'])->where('id_warung', '!=' ,'NULL')->where('konfirmasi_admin', 1)->get();
+  $array_warung = array();
+  foreach ($data_warung as $data_warungs) {
+    array_push($array_warung, $data_warungs->id_warung);
+  }
+
   $data_produk = Barang::select(['id','kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung'])
-  ->where('kategori_barang_id', $id)->paginate(12);
+  ->where('kategori_barang_id', $id)->whereIn('id_warung', $array_warung)->paginate(12);
   $kategori = KategoriBarang::select(['id','nama_kategori_barang','kategori_icon']);
   $foto_latar_belakang = "background-image: url('../image/background2.jpg');";
   $produk_pagination = $data_produk->links();
