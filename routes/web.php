@@ -33,6 +33,7 @@ Route::get('/daftar-produk/{id}',[
 ]);
 
 Route::get('/keranjang-belanja',[ 
+	'middleware' => ['auth'],
 	'as' => 'keranjang_belanja.daftar_belanja',
 	'uses' => 'KeranjangBelanjaController@daftar_belanja'
 ]);
