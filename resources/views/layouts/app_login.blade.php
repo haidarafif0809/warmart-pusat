@@ -7,8 +7,8 @@
     <link rel="icon" type="image/png" href="img/favicon.png" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
-       
-        <title>War-Mart.id</title>
+    
+    <title>War-Mart.id</title>
 
 
     <meta name="viewport" content="width=device-width" />
@@ -16,7 +16,7 @@
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" />
     <!--  Material Dashboard CSS    -->
     <link href="{{ asset('css/material-dashboard.css?v=1.2.0') }}" rel="stylesheet" />
-   
+    
     <link href="{{ asset('css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
     <!--     Fonts and icons     -->
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
@@ -41,7 +41,7 @@
                     <li>
                         <a data-toggle="collapse" href="#pagesExamples">
                             <p>
-                            <i class="material-icons">person_add</i> Registrasi
+                                <i class="material-icons">person_add</i> Registrasi
                                 <b class="caret"></b>
                             </p>
                         </a>
@@ -71,7 +71,7 @@
                             <i class="material-icons">fingerprint</i> Login
                         </a>
                     </li>
-                   
+                    
                 </ul>
             </div>
         </div>
@@ -83,27 +83,27 @@
                 <div class="container">
                     <div class="row">
 
-        
+                        
                         <div class="col-md-4 col-sm-6 col-md-offset-4 col-sm-offset-3">
 
-                             @yield('content')
-                        </div>
-                    </div>
-                </div>
+                           @yield('content')
+                       </div>
+                   </div>
+               </div>
+           </div>
+           <footer class="footer">
+            <div class="container">
+                <p class="copyright pull-right">
+                    &copy;
+                    <script>
+                        document.write(new Date().getFullYear())
+                    </script>
+                    <a href="https://andaglos.id">PT Andaglos Global Teknologi</a>, made with love for a better web
+                </p>
             </div>
-            <footer class="footer">
-                <div class="container">
-                    <p class="copyright pull-right">
-                        &copy;
-                        <script>
-                            document.write(new Date().getFullYear())
-                        </script>
-                        <a href="https://andaglos.id">PT Andaglos Global Teknologi</a>, made with love for a better web
-                    </p>
-                </div>
-            </footer>
-        </div>
+        </footer>
     </div>
+</div>
 </body>
 <!--   Core JS Files   -->
 <script src="{{ asset('js/jquery-3.2.1.min.js') }}" type="text/javascript"></script>
@@ -154,12 +154,12 @@
     $().ready(function() {
         demo.checkFullPageBackgroundImage();
 
-    
+        
     });
-$('.datepicker').datepicker({
-    format: 'yyyy-mm-dd', 
-    autoclose: true,
-});
+    $('.datepicker').datepicker({
+        format: 'yyyy-mm-dd', 
+        autoclose: true,
+    });
 </script>
 
 
@@ -169,9 +169,9 @@ $('.datepicker').datepicker({
         $(document).on("click", "#ceklis_syarat", function(){
             var data_toogle = $(this).attr("data_toogle");
             if (data_toogle == 0) {
-                    $("#tombol_regist").attr("disabled",false);
-                    $("#ceklis_syarat").prop('checked', true);
-                    $(this).attr("data_toogle", 1);
+                $("#tombol_regist").attr("disabled",false);
+                $("#ceklis_syarat").prop('checked', true);
+                $(this).attr("data_toogle", 1);
 
             }
             else{
@@ -190,9 +190,9 @@ $('.datepicker').datepicker({
         $(document).on("click", "#ceklis_syarat_warung", function(){
             var data_toogle = $(this).attr("data_toogle");
             if (data_toogle == 0) {
-                    $("#tombol_regist_warung").attr("disabled",false);
-                    $("#ceklis_syarat_warung").prop('checked', true);
-                    $(this).attr("data_toogle", 1);
+                $("#tombol_regist_warung").attr("disabled",false);
+                $("#ceklis_syarat_warung").prop('checked', true);
+                $(this).attr("data_toogle", 1);
 
             }
             else{
@@ -210,9 +210,9 @@ $('.datepicker').datepicker({
         $(document).on("click", "#ceklis_syarat_komunitas", function(){
             var data_toogle = $(this).attr("data_toogle");
             if (data_toogle == 0) {
-                    $("#tombol_regist_komunitas").attr("disabled",false);
-                    $("#ceklis_syarat_komunitas").prop('checked', true);
-                    $(this).attr("data_toogle", 1);
+                $("#tombol_regist_komunitas").attr("disabled",false);
+                $("#ceklis_syarat_komunitas").prop('checked', true);
+                $(this).attr("data_toogle", 1);
 
             }
             else{

@@ -6,12 +6,15 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Yajra\Auditable\AuditableTrait;
+use Laravel\Scout\Searchable;
+
 
 class Barang extends Model
 {
     //       
 	use AuditableTrait;
 	use LogsActivity;
+	use Searchable;
 
 
 	protected $fillable = ['kode_barang','kode_barcode','nama_barang', 'harga_beli','harga_jual','satuan_id','kategori_barang_id','status_aktif','hitung_stok','id_warung', 'deskripsi_produk'];
