@@ -97,7 +97,7 @@
 
 
             <div class="col-md-12">
-                <h2 class="text-center">Peran Anda</h2>
+                <h2 class="text-center card-title">Peran Anda</h2>
                 <br />
                 <div class="row">
                     <div class="col-md-3">
@@ -332,10 +332,10 @@
 <div class="testimonials-2 section-dark">
 
     <div class="container">
-        <h2 class="text-center" style="color:white;font-weight:bold;">Kata Mereka</h2>
+        <h2 class="text-center card-title" style="color:white;font-weight:bold;">Tokoh Berbicara</h2>
         <div class="row">
 
-            <div id="carousel-testimonial" class="carousel slide" data-ride="carousel">
+            <div id="carousel-testimonial" class="carousel slide" data-ride="carousel" data-interval="100">
 
                 <div class="carousel-inner" role="listbox">
 
@@ -499,6 +499,10 @@
             showConfirmButton :  false,
         });
     });
+    
+    $(".carousel").carousel({interval: 1000 * 10 });
 </script>
+
+scrip
 
 </html>
