@@ -23,6 +23,15 @@
 	</div>
 </div>
 
+
+<div class="form-group{{ $errors->has('contact_person') ? ' has-error' : '' }}">
+	{!! Form::label('contact_person', 'Contact Person', ['class'=>'col-md-2 control-label']) !!}
+	<div class="col-md-4">
+		{!! Form::text('contact_person', null, ['class'=>'form-control','required','autocomplete'=>'off', 'placeholder' => 'Contact Person', 'id' => 'contact_person']) !!}
+		{!! $errors->first('contact_person', '<p class="help-block">:message</p>') !!}
+	</div>
+</div>
+
 <div class="form-group">
 	<div class="col-md-4 col-md-offset-2">
 		{!! Form::button('<i class="material-icons">send</i>Submit', ['class'=>'btn btn-primary','type'=>'submit', 'id'=>'btnSubmit']) !!}
