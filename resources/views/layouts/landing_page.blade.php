@@ -78,13 +78,13 @@
     }
 </style>
 <div class="container">
-    <div class="section text-center ">
+    <div class="section text-center">
       <img  class="img img-raised" src="assets/img/examples/warmart_logo.png" />
       <h2 style="color:red;font-weight:bold;">PASAR MUSLIM <a style="color:black;">INDONESIA</a></h2>
 
       {!! $daftar_produk !!}
       <div class="col-md-12">
-          <a href="{{route('daftar_produk.index')}} " rel="tooltip" style="position: center" class="btn btn-rose btn-round">Lihat Selengkapnya...</a>
+          <a href="{{route('daftar_produk.index')}} " rel="tooltip" class="btn btn-round" style="position: center; background-color: #f44336" >Lihat Selengkapnya...</a>
       </div>
       
   </div>

@@ -1,13 +1,13 @@
 @extends('layouts.app')
 @section('content')
-	<div id="vue-app">
-		<router-view name="itemIndex"></router-view>
+<div id="vue-app">
+	<router-view name="bankIndex"></router-view>
 
-		<router-view>
-			
-		</router-view>
-	</div>
- 
+	<router-view>
+		
+	</router-view>
+</div>
+
 
 @endsection
 

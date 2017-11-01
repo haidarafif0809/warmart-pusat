@@ -1,6 +1,8 @@
 <!doctype html>
 <html lang="en">
+
 <head>
+
     <title>War-Mart.id</title>
     <meta charset="utf-8" />
     <link rel="apple-touch-icon" sizes="76x76" href="img/apple-icon.png" />
@@ -33,6 +35,7 @@
     {!! app('seotools')->generate() !!}
 
 </head>
+
 
 <body class="ecommerce-page">
     <nav class="navbar navbar-default navbar-transparent navbar-fixed-top navbar-color-on-scroll" color-on-scroll="100" id="sectionsNav">
@@ -79,7 +82,7 @@
 
                     <li class="button-container">
                         <a href="{{ url('/keranjang-belanja') }}" target="_blank" class="btn btn-rose btn-round">
-                            <i class="material-icons">shopping_cart</i> Keranjang Belanja
+                            <i class="material-icons">shopping_cart</i> Beli Sekarang
                         </a>
                     </li>
                 </ul>
@@ -87,7 +90,7 @@
         </div>
     </nav>
 
-    <div class="page-header header-filter header-small" data-parallax="true"" style="{!! $foto_latar_belakang !!}">
+    <div class="page-header header-filter header-small" data-parallax="true"" style="background-image: url('image/background2.jpg');">
 
         <div class="container">
             <div class="row">
@@ -103,109 +106,88 @@
 
     <div class="main main-raised">
 
-        <div class="section" style="background-color: #E5E5E5">
-            <div class="container">
-                <h3 class="title text-center">{!! $nama_kategori !!}</h3>
-                <div class="row">
-                    <div class="col-md-3"> 
-                        <ul class="nav nav-tabs" data-tabs="tabs" style="background-color: #f44336">                                        
-                            <li><a href="{{route('daftar_produk.index')}}"><i class="material-icons">format_align_justify</i> Semua Kategori</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-md-9">                        
-                        <ul class="nav nav-tabs" data-tabs="tabs" style="background-color: #f44336">
-                            {!! $kategori_produk !!}
-                        </ul>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="row">
-                            <!-- Menampilkan Produk -->
-                            <span id="span-produk">{!! $daftar_produk !!}</span>
-                            <div class="col-md-12">
-                                {{$produk_pagination}}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div><!-- section -->
-
-    </div> <!-- end-main-raised -->
-
-    <div class="section section-blog">
-    </div><!-- section -->
-
-    <footer class="footer footer-black footer-big">
+     <div class="section">
         <div class="container">
+         @yield('content')
+     </div>
+ </div><!-- section -->
 
-            <div class="content">
-                <div class="row">
-                    <div class="col-md-4">
-                        <h5>Tentang Kami</h5>
-                        <p>Creative Tim is a startup that creates design tools that make the web development process faster and easier. </p> <p>We love the web and care deeply for how users interact with a digital product. We power businesses and individuals to create better looking web projects around the world. </p>
-                    </div>
+</div> <!-- end-main-raised -->
 
-                    <div class="col-md-4">
-                        <h5>Media Sosial</h5>
-                        <div class="social-feed">
-                            <div class="feed-line">
-                                <i class="fa fa-twitter"></i>
-                                <p>How to handle ethical disagreements with your clients.</p>
-                            </div>
-                            <div class="feed-line">
-                                <i class="fa fa-twitter"></i>
-                                <p>The tangible benefits of designing at 1x pixel density.</p>
-                            </div>
-                            <div class="feed-line">
-                                <i class="fa fa-facebook-square"></i>
-                                <p>A collection of 25 stunning sites that you can use for inspiration.</p>
-                            </div>
+<div class="section section-blog">
+</div><!-- section -->
+
+<footer class="footer footer-black footer-big">
+    <div class="container">
+
+        <div class="content">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>Tentang Kami</h5>
+                    <p>Creative Tim is a startup that creates design tools that make the web development process faster and easier. </p> <p>We love the web and care deeply for how users interact with a digital product. We power businesses and individuals to create better looking web projects around the world. </p>
+                </div>
+
+                <div class="col-md-4">
+                    <h5>Media Sosial</h5>
+                    <div class="social-feed">
+                        <div class="feed-line">
+                            <i class="fa fa-twitter"></i>
+                            <p>How to handle ethical disagreements with your clients.</p>
                         </div>
-                    </div>
-
-                    <div class="col-md-4">
-                        <h5>Instagram</h5>
-                        <div class="gallery-feed">
+                        <div class="feed-line">
+                            <i class="fa fa-twitter"></i>
+                            <p>The tangible benefits of designing at 1x pixel density.</p>
                         </div>
-
+                        <div class="feed-line">
+                            <i class="fa fa-facebook-square"></i>
+                            <p>A collection of 25 stunning sites that you can use for inspiration.</p>
+                        </div>
                     </div>
                 </div>
+
+                <div class="col-md-4">
+                    <h5>Instagram</h5>
+                    <div class="gallery-feed">
+                    </div>
+
+                </div>
             </div>
+        </div>
 
 
-            <hr />
+        <hr />
 
-            <ul class="pull-left">
-                <li>
-                    <a href="#pablo">
-                       Blog
-                   </a>
-               </li>
-               <li>
-                <a href="#pablo">
-                    Presentation
-                </a>
-            </li>
+        <ul class="pull-left">
             <li>
                 <a href="#pablo">
-                   Discover
+                   Blog
                </a>
            </li>
            <li>
             <a href="#pablo">
-                Payment
+                Presentation
             </a>
         </li>
         <li>
             <a href="#pablo">
-                Contact Us
-            </a>
-        </li>
-    </ul>
+               Discover
+           </a>
+       </li>
+       <li>
+        <a href="#pablo">
+            Payment
+        </a>
+    </li>
+    <li>
+        <a href="#pablo">
+            Contact Us
+        </a>
+    </li>
+</ul>
 
-    <div class="copyright pull-right">
-        Copyright &copy; <script>document.write(new Date().getFullYear())</script> <a href="https://andaglos.id/"> PT. Andaglos Global Teknologi.</a>
-    </div>
+<div class="copyright pull-right">
+    Copyright &copy; <script>document.write(new Date().getFullYear())</script> <a href="https://andaglos.id/"> PT. Andaglos Global Teknologi.</a>
+</div>
 </div>
 </footer>
 </body>
@@ -256,26 +238,7 @@
 <script src="{{ asset('js/demo.js') }}"></script>
 <script src="{{ asset('js/material-kit.js?v=1.2.0')}}" type="text/javascript"></script>
 
-<script>
-    $(document).on('click','.btn-wishlist',function(){
-        var data_toggle = $(this).attr('data-toogle');
-        var id = $(this).attr('data-id');
-
-        if (data_toggle == 0) {
-            $(this).attr("data-toogle", 1);
-            $(this).attr("data-original-title", "Hapus Dari Wishlist");
-            $("#icon_wishlist-"+id+"").text("favorite");
-        }
-        else{
-            $(this).attr("data-toogle", 0);
-            $(this).attr("data-original-title", "Tambah Ke Wishlist");                
-            $("#icon_wishlist-"+id+"").text("favorite_border");
-        }            
-    }); 
-    $("#form_filter_kategori").submit(function(){
-        return false;
-    });
-</script>
+@yield('scripts')
 
 
 </html>

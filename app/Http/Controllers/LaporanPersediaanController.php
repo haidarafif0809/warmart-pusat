@@ -41,11 +41,16 @@ class LaporanPersediaanController extends Controller
 			})
 			->addColumn('hpp', function($hpp){
 
-				$total_nilai = Hpp::select([DB::raw('IFNULL(SUM(total_nilai),0) as total_masuk'),DB::raw('IFNULL(SUM(jumlah_masuk),0) as jumlah_masuk')])->where('id_produk',$hpp->id)->where('jenis_hpp',1)->where('warung_id',Auth::user()->id_warung)->first();  
-				$proses_hpp = $total_nilai->total_masuk / $total_nilai->jumlah_masuk;
-				$hpp = round($proses_hpp,2);
-
+				$total_nilai = Hpp::select([DB::raw('IFNULL(SUM(total_nilai),0) as total_masuk'),DB::raw('IFNULL(SUM(jumlah_masuk),0) as jumlah_masuk')])->where('id_produk',$hpp->id)->where('jenis_hpp',1)->where('warung_id',Auth::user()->id_warung)->first(); 
+				if ($total_nilai->total_masuk == 0 || $total_nilai->jumlah_masuk == 0) {
+					$hpp = 0;
+				} 
+				else {
+					$proses_hpp = $total_nilai->total_masuk / $total_nilai->jumlah_masuk;
+					$hpp = round($proses_hpp,2);
+				}
 				return $hpp;
+				
 			})->make(true);
 		}
 		$html = $htmlBuilder 
