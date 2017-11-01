@@ -93,8 +93,8 @@
             <div class="row">
                 <div class="col-md-8 col-md-offset-2">
                     <div class="brand">
-                        <h1 class="title">WAR-MART.ID</h1>
-                        <h4 class="title"> PASAR MUSLIM INDONESIA </h4>
+                        <h1 class="title">PASAR MUSLIM INDONESIA</h1>
+                        <h4 class="title"> Segala Kemudahan Untuk Umat Muslim Berbelanja.</h4>
                     </div>
                 </div>
             </div>
@@ -200,20 +200,20 @@
             <ul class="pull-left">
                 <li>
                     <a href="#pablo">
-                       Blog
-                   </a>
-               </li>
-               <li>
+                     Blog
+                 </a>
+             </li>
+             <li>
                 <a href="#pablo">
                     Presentation
                 </a>
             </li>
             <li>
                 <a href="#pablo">
-                   Discover
-               </a>
-           </li>
-           <li>
+                 Discover
+             </a>
+         </li>
+         <li>
             <a href="#pablo">
                 Payment
             </a>
@@ -300,7 +300,7 @@
 </script>
 
 <script type="text/javascript">
- $(document).ready(function(){
+   $(document).ready(function(){
     $("#cari_produk").focus();
 });
 </script>
