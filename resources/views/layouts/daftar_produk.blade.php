@@ -93,8 +93,8 @@
             <div class="row">
                 <div class="col-md-8 col-md-offset-2">
                     <div class="brand">
-                        <h1 class="title">Ecommerce Page!</h1>
-                        <h4 style="color: white">Free global delivery for all products. Use coupon <b>25summer</b> for an extra 25% Off</h4>
+                        <h1 class="title">PASAR MUSLIM INDONESIA</h1>
+                        <h4 class="title"> Segala Kemudahan Untuk Umat Muslim Berbelanja.</h4>
                     </div>
                 </div>
             </div>
@@ -105,7 +105,29 @@
 
         <div class="section" style="background-color: #E5E5E5">
             <div class="container">
+
                 <h3 class="title text-center">{!! $nama_kategori !!}</h3>
+
+                <div class="card card-raised card-form-horizontal">
+                    <div class="card-content">
+                        <form method="" action="">
+                            <div class="row">
+                                <div class="col-sm-10">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="material-icons">search</i>
+                                        </span>
+                                        <input type="email" id="cari_produk" value="" placeholder="Cari Produk.." class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <button type="button" class="btn btn-block" style="background-color: #f44336">Cari Produk</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
                 <div class="row">
                     <div class="col-md-3"> 
                         <ul class="nav nav-tabs" data-tabs="tabs" style="background-color: #f44336">                                        
@@ -178,20 +200,20 @@
             <ul class="pull-left">
                 <li>
                     <a href="#pablo">
-                       Blog
-                   </a>
-               </li>
-               <li>
+                     Blog
+                 </a>
+             </li>
+             <li>
                 <a href="#pablo">
                     Presentation
                 </a>
             </li>
             <li>
                 <a href="#pablo">
-                   Discover
-               </a>
-           </li>
-           <li>
+                 Discover
+             </a>
+         </li>
+         <li>
             <a href="#pablo">
                 Payment
             </a>
@@ -275,6 +297,12 @@
     $("#form_filter_kategori").submit(function(){
         return false;
     });
+</script>
+
+<script type="text/javascript">
+   $(document).ready(function(){
+    $("#cari_produk").focus();
+});
 </script>
 
 
