@@ -9,12 +9,12 @@
 			</ul>
  
 			
-			   <div class="card">
+			   	<div class="card">
 			   	   <div class="card-header card-header-icon" data-background-color="purple">
                        <i class="material-icons">payment</i>
                                 </div>
-                      <div class="card-content">
-                        <h4 class="card-title"> Kas </h4>
+                     		<div class="card-content">
+                        	<h4 class="card-title"> Kas </h4>
 	                       	<div class="toolbar">
 	                         	<p> <a class="btn btn-primary" href="{{ route('kas.create') }}"><i class="material-icons">add</i> Tambah Kas</a> </p>
 	                        </div>

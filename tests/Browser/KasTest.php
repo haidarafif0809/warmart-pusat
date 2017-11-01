@@ -8,6 +8,7 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use App\User;
+use App\Kas;
 
 class KasTest extends DuskTestCase
 {
@@ -21,17 +22,15 @@ class KasTest extends DuskTestCase
     public function testTambahKas(){
 
         $this->browse(function ($first, $second){
-
-            $first->loginAs(User::find(4))
-                    ->visit('/home')
-                    ->clickLink("Kas")->assertSee('Kode Kas')
-                    ->clickLink("Tambah Kas")->assertSee('Tambah Kas')
+            $first->loginAs(User::find(5))
+                    ->visit('/kas')
+                    ->clickLink("Tambah Kas")
                     ->type('kode_kas', 'K-001')
                     ->type('nama_kas', 'Kas Browser');
             $first->script("document.getElementById('status_kas').checked = true;");
-            $first->script("document.getElementById('default_kas').checked = true;");
+            $first->script("document.getElementById('default_kas').checked = false;");
             $first->element('#btnSimpanKas')->submit();
-            $first->assertSee('Tambah Kas');
+            $first->assertSee('SUKSES : BERHASIL MENAMBAH KAS "KAS BROWSER"');
 
         });
     }
@@ -41,22 +40,18 @@ class KasTest extends DuskTestCase
 
         $this->browse( function ($first, $second){
 
-            $first->loginAs(User::find(4))
-                    ->visit('/home')
-                    ->clickLink("Kas")->assertSee('Kode Kas')
+            $first->loginAs(User::find(5))
+                    ->visit('/kas')
                     ->whenAvailable('.js-confirm', function ($table){
                         ;
                     })
                     ->with('.table', function ($table){
-                        $table->assertSee("Kas Browser")->clickLink("Ubah");
+                        $table->assertSee("K-001")->clickLink("Ubah");
                     })
                     ->assertSee('Edit Kas')
-                    ->type('kode_kas', 'K-001')
                     ->type('nama_kas', 'Kas Browser Edit');
-            $first->script("document.getElementById('status_kas_radioOn').checked = true;");
-            $first->script("document.getElementById('default_kas_radioOn').checked = true;");
             $first->element('#btnSimpanKas')->submit();
-
+            $first->assertSee('SUKSES : BERHASIL MENGUBAH KAS "KAS BROWSER EDIT"');
 
         });
 
@@ -66,18 +61,38 @@ class KasTest extends DuskTestCase
     public function testKodeKasTidakBolehSama(){
 
           $this->browse(function ($first, $second) {
-            $first->loginAs(User::find(4))
-                    ->visit('/home')
-                    ->clickLink("Kas")->assertSee('Kode Kas')
-                    ->clickLink("Tambah Kas")->assertSee('Tambah Kas')
-                    ->type('kode_kas', 'K001')
+            $first->loginAs(User::find(5))
+                    ->visit('/kas')
+                    ->clickLink("Tambah Kas")
+                    ->type('kode_kas', 'K-001')
                     ->type('nama_kas', 'Kas Browser');
-            $first->script("document.getElementById('status_kas_radioOn').checked = true;");
-            $first->script("document.getElementById('default_kas_radioOn').checked = true;");
+            $first->script("document.getElementById('status_kas').checked = true;");
+            $first->script("document.getElementById('default_kas').checked = true;");
             $first->element('#btnSimpanKas')->submit();
-            $first->type('kode_kas','fokus')->assertSee('Maaf kode kas Sudah Terpakai.');
+            $first->script('document.getElementById("kode_kas").focus();');
+            $first->assertSeeIn('#kode_kas_error','Maaf kode kas Sudah Terpakai.');
         });
 
     }
+   
+    public function testHapusKas(){
+          $kas = Kas::select('id')->where('nama_kas','Kas Browser Edit')->first();
+          $this->browse(function ($first) use ($kas) {
+            $first->loginAs(User::find(5))
+                  ->visit('/kas')
+                  ->whenAvailable('.js-confirm', function ($table) { 
+                              ;
+                    })
+                  ->with('.table', function ($table) use ($kas) {
+                        $table->press('#delete-'.$kas->id)
+                              ->assertDialogOpened('Yakin Mau Menghapus Kas Kas Browser Edit ?');
+                    })->driver->switchTo()->alert()->accept();
+                    $first->assertSee('SUKSES : KAS BERHASIL DIHAPUS'); 
+
+        }); 
+    }
+
+
+
 
 }
