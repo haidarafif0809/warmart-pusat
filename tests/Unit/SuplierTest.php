@@ -59,7 +59,7 @@ class SuplierTest extends TestCase
 
         $user = User::find(5);
 
-        $response = $this->actingAs($user)->json('POST', route('suplier.store'), ['nama_suplier' => 'PT SELAMAT DATANG d','alamat'=>'jln ds','no_telp'=>'082394234233']);
+        $response = $this->actingAs($user)->json('POST', route('suplier.store'), ['nama_suplier' => 'PT SELAMAT DATANG d','alamat'=>'jln ds','no_telp'=>'082394234233','warung_id'=>'1']);
 
         $response->assertStatus(302)
                  ->assertRedirect(route('suplier.index'));
@@ -67,18 +67,30 @@ class SuplierTest extends TestCase
 
         $response2 = $this->get($response->headers->get('location'))->assertSee('Sukses : Berhasil Menambah Suplier "PT SELAMAT DATANG d"');
 
-        $this->assertDatabaseHas("supliers",['nama_suplier' => 'PT SELAMAT DATANG d','alamat'=>'jln ds','no_telp'=>'082394234233']);
+        $this->assertDatabaseHas("supliers",['nama_suplier' => 'PT SELAMAT DATANG d','alamat'=>'jln ds','no_telp'=>'082394234233','warung_id'=>'1']);
     }
 
-    //EDIT SUPLIER
-    public function testHTTPeditBarang(){
-        
-        $suplier = Suplier::create(['nama_suplier' => 'PT SELAMAT DATANG di','alamat'=>'jln ds','no_telp'=>'082394234233','warung_id'=>'1']);
 
-        //login user -> admin
+
+   //HAPUS SUPLIER
+    public function testHTTPHapusSuplier(){
         $user = User::find(5);
+    	$suplier = Suplier::create(['nama_suplier' => 'PT SELAMAT DATANG di','alamat'=>'jln ds','no_telp'=>'082394234233','warung_id'=>'1']);
+        $response = $this->actingAs($user)->json('POST', route('suplier.destroy',$suplier->id), ['_method' => 'DELETE']);
 
-        $response = $this->actingAs($user)->json('POST', route('suplier.update',$suplier->id), ['_method' => 'PUT','nama_suplier' => 'PT SELAMAT DATANG dong','alamat'=>'jln ds','no_telp'=>'082394234233','warung_id'=>'1']);
+        $response->assertStatus(302)
+                 ->assertRedirect(route('suplier.index'));
+        
+        $response2 = $this->get($response->headers->get('location'))->assertSee('Sukses : Berhasil Menghapus Suplier');       
+
+    }
+
+
+	//EDIT SUPLIER
+    public function testHTTPeditBarang(){
+        $user = User::find(5);
+    	$suplier = Suplier::create(['nama_suplier' => 'PT SELAMAT DATANG di','alamat'=>'jln ds','no_telp'=>'082394234233','warung_id'=>'1']);
+        $response = $this->actingAs($user)->json('POST', route('suplier.update',$suplier->id), ['_method' => 'PUT','nama_suplier' => 'PT SELAMAT DATANG dong','alamat'=>'jln ds','no_telp'=>'082394234233']);
 
         $response->assertStatus(302)
                  ->assertRedirect(route('suplier.index'));
