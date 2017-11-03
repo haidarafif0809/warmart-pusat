@@ -30,7 +30,7 @@ class SuplierController extends Controller
     {
         //
             if ($request->ajax()) {
-            $master_suplier = Suplier::select(['id','nama_suplier','no_telp','alamat','warung_id'])->where('warung_id',Auth::user()->id_warung)->get();
+            $master_suplier = Suplier::select(['id','nama_suplier','no_telp','alamat','warung_id','contact_person'])->where('warung_id',Auth::user()->id_warung)->get();
             return Datatables::of($master_suplier)->addColumn('action', function($suplier){
                     return view('datatable._action', [
                         'model'     => $suplier,
@@ -43,7 +43,8 @@ class SuplierController extends Controller
         $html = $htmlBuilder
         ->addColumn(['data' => 'nama_suplier', 'name' => 'nama_suplier', 'title' => 'Nama']) 
         ->addColumn(['data' => 'no_telp', 'name' => 'no_telp', 'title' => 'No. Telpon']) 
-        ->addColumn(['data' => 'alamat', 'name' => 'alamat', 'title' => 'Alamat'])  
+        ->addColumn(['data' => 'alamat', 'name' => 'alamat', 'title' => 'Alamat']) 
+        ->addColumn(['data' => 'contact_person', 'name' => 'contact_person', 'title' => 'Contact Person'])   
         ->addColumn(['data' => 'action', 'name' => 'action', 'title' => '', 'orderable' => false, 'searchable'=>false]);
 
         return view('suplier.index')->with(compact('html'));
@@ -80,6 +81,7 @@ class SuplierController extends Controller
                 'nama_suplier' =>$request->nama_suplier,
                 'alamat'       =>$request->alamat,
                 'no_telp'      =>$request->no_telp,
+                'contact_person'      =>$request->contact_person,
                 'warung_id'    =>Auth::user()->id_warung]); 
             }else{
                   Auth::logout();
@@ -156,6 +158,7 @@ class SuplierController extends Controller
                 'nama_suplier' =>$request->nama_suplier,
                 'alamat'       =>$request->alamat,
                 'no_telp'      =>$request->no_telp,
+                'contact_person'      =>$request->contact_person,
             ]);
         }else{
               Auth::logout();

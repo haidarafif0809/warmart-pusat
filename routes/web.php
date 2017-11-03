@@ -89,11 +89,11 @@ Route::put('/proses-ubah-password/{id}',[
 	'uses' => 'UbahPasswordController@proses_ubah_password'
 ]);
 
-Route::get('/ubah-profil',[
-	'middleware' => ['auth'],
-	'as' => 'user.ubah_profil',
-	'uses' => 'UbahProfilController@ubah_profil'
-]);
+// Route::get('/ubah-profil',[
+// 	'middleware' => ['auth'],
+// 	'as' => 'user.ubah_profil',
+// 	'uses' => 'UbahProfilController@ubah_profil'
+// ]);
 
 Route::put('/proses-ubah-profil/{id}',[
 	'middleware' => ['auth'],

@@ -10,6 +10,6 @@ class Suplier extends Model
 	use AuditableTrait;
 	use LogsActivity;
     //
-       	protected $fillable = ['nama_suplier','alamat','no_telp','warung_id'];
+       	protected $fillable = ['nama_suplier','alamat','no_telp','warung_id','contact_person'];
 
 }

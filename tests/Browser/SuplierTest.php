@@ -23,7 +23,8 @@ class SuplierTest extends DuskTestCase
                   ->clickLink('Tambah Suplier')
                   ->type('nama_suplier','PT ANDAGLOS')
                   ->type('alamat','jln permadani')
-                  ->type('no_telp','085524596647');
+                  ->type('no_telp','085524596647')
+                  ->type('contact_person','08942342343');
                     $first->element('#btnSubmit')->submit();
                     $first->assertSeeLink('Tambah Suplier'); 
         }); 
@@ -45,7 +46,8 @@ class SuplierTest extends DuskTestCase
                   ->assertSee('Edit Suplier')
                   ->type('nama_suplier','PT ANDAGLOS GLOBAL TEKNOLOGI')
                   ->type('alamat','jln permadani 90DA')
-                  ->type('no_telp','08552459664755');
+                  ->type('no_telp','08552459664755')
+                  ->type('contact_person','08942342343');
                    
                     $first->element('#btnSubmit')->submit();                    
                     $first->assertSeeLink('Tambah Suplier'); 
@@ -61,7 +63,8 @@ class SuplierTest extends DuskTestCase
                   ->clickLink('Tambah Suplier')
                   ->type('nama_suplier','PT ANDAGLOS GLOBAL TEKNOLOGI')
                   ->type('alamat','jln permadani 90DA')
-                  ->type('no_telp','08552459664755');
+                  ->type('no_telp','08552459664755')
+                  ->type('contact_person','08942342343');
                   $first->element('#btnSubmit')->submit();
                     $first->script('document.getElementById("nama_suplier").focus();');
                     $first->assertSeeIn('#nama_suplier_error','Maaf nama suplier Sudah Terpakai.');
