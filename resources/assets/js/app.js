@@ -27,17 +27,29 @@ import BankCreate from './components/bank/BankCreate.vue';
 import BankIndex from './components/bank/BankIndex.vue';
 import BankEdit from './components/bank/BankEdit.vue';
 
+
+/**Satuan*/
+import SatuanIndex from './components/satuan/SatuanIndex.vue';
+import SatuanCreate from './components/satuan/SatuanCreate.vue';
+import SatuanEdit from './components/satuan/SatuanEdit.vue';
+ 
+
 const routes = [ 
     {
         path: '/',
         components: {
-            bankIndex: BankIndex
+            bankIndex: BankIndex,
+            satuanIndex: SatuanIndex
         },
-         name : 'indexBank'
+         name : 'indexBank',
+         name : 'indexSatuan'
     },  
     {path: '/create', component: BankCreate, name: 'createBank'},
-    {path: '/edit/:id', component: BankEdit, name: 'editBank'}
+    {path: '/edit/:id', component: BankEdit, name: 'editBank'},
+    {path: '/create_satuan', component: SatuanCreate, name: 'createSatuan'},
+    {path: '/edit_satuan/:id', component: SatuanEdit, name: 'editSatuan'},
 ]
+
 
 	const router = new VueRouter({ routes })
 

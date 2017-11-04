@@ -263,6 +263,12 @@
     					</a>
     				</li>
     				@endif 
+                    <li>
+                        <a href="{{ route('satuan.index') }}">
+                            <span class="sidebar-mini">S</span>
+                            <span class="sidebar-normal">Satuan</span>
+                        </a>
+                    </li>
     			</ul>
     		</div>
     	</li>
