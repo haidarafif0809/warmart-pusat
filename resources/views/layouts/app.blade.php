@@ -90,6 +90,39 @@
     		</a>
     	</li>
 
+                    <!--PEMBELIAN-->
+                    @if(Auth::user()->tipe_user == 4 AND Auth::user()->konfirmasi_admin == 1)
+                    <li>
+                        <a href="{{ route('pembelian.index') }}">
+                            <i class="material-icons">add_shopping_cart</i>
+                            <p>Pembelian</p>
+                        </a>
+                    </li>
+                    <!--PEMBELIAN-->
+                    <li>
+                        <a data-toggle="collapse" href="#persediaan">
+                            <i class="material-icons">assessment</i>
+                            <p> Persediaan
+                                <b class="caret"></b>
+                            </p>
+                        </a>
+                        <div class="collapse" id="persediaan">
+                            <ul class="nav">
+                                  <li>
+                                    <a href="{{ route('item-masuk.index') }}"> 
+                                        <span class="sidebar-mini">IM</span>
+                                        <span class="sidebar-normal">Item Masuk</span>
+                                    </a>
+                                </li>  
+                                <li>
+                                    <a href="{{ route('item-keluar.index') }}">
+                                        <span class="sidebar-mini">IK</span>
+                                        <span class="sidebar-normal">Item Keluar</span>
+                                    </a>
+                                </li> 
+                            </ul>
+                        </div>
+                    </li>
 
     	<!-- MASTER DATA WARUNG -->
     	@if(Auth::user()->tipe_user == 4 AND Auth::user()->konfirmasi_admin == 1)
