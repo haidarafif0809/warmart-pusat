@@ -49,6 +49,18 @@ Route::get('/keranjang-belanja',[
 	'uses' => 'KeranjangBelanjaController@daftar_belanja'
 ]);
 
+Route::get('/keranjang-belanja/tambah-jumlah-produk-keranjang-belanja/{id}',[
+	'middleware' => ['auth'],
+	'as' => 'keranjang-belanja.tambah_jumlah_produk_keranjang_belanjaan',
+	'uses' => 'KeranjangBelanjaController@tambah_jumlah_produk_keranjang_belanjaan'
+]);
+
+Route::get('/keranjang-belanja/kurang-jumlah-produk-keranjang-belanja/{id}',[
+	'middleware' => ['auth'],
+	'as' => 'keranjang-belanja.kurang_jumlah_produk_keranjang_belanjaan',
+	'uses' => 'KeranjangBelanjaController@kurang_jumlah_produk_keranjang_belanjaan'
+]);
+
 Route::middleware('optimizeImages')->group(function () {
 
 	Auth::routes();
