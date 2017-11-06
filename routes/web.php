@@ -76,6 +76,7 @@ Route::post('/proses-lupa-password',[
 ]);
 
 Route::get('/home', 'HomeController@index_home')->name('home');
+Route::get('/dashboard-admin', 'HomeController@dashboard_admin')->middleware(['auth','user-must-admin']);
 
 Route::get('/ubah-password',[
 	'middleware' => ['auth'],
