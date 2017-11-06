@@ -72,30 +72,32 @@ class HomeController extends Controller
       $warung = Warung::select(['name'])->where('id', $produks->id_warung)->first();
 
       $daftar_produk .= '      
-      <div class="col-md-3">
-      <div class="card cards card-pricing">
-      <div class="card-image">';
-      if ($produks->foto != NULL) {
-       $daftar_produk .= '<img src="./foto_produk/'.$produks->foto.'">';
-     }
-     else{
-      $daftar_produk .= '<img src="./image/foto_default.png">';
-    }
-    $daftar_produk .= '
-    </div>
-    <div class="card-content">
-    <div class="footer">     
-    <a href="#" class="card-title">
-    '.strip_tags(substr($produks->nama, 0, 25)).'...
-    </a><br>
-    <b style="color:red; font-size:18px"> '.$produks->rupiah.' </b><br>
-    <a class="description"><i class="material-icons">store</i>  '.strip_tags(substr($warung->name, 0, 25)).'... </a>
-    <a href="'.url("/keranjang-belanja") .'" class="btn btn-danger btn-round btn-sm" rel="tooltip" title="Tambah Ke Keranjang Belanja"><b> Beli Sekarang </b><i class="material-icons">keyboard_arrow_right</i></a>
-    </div>
+      <div class="col-md-3 col-sm-6 col-xs-6">
+        <div class="card cards card-pricing">
+          <a href="'.url("/keranjang-belanja") .'">
+            <div class="card-image">';
+              if ($produks->foto != NULL) {
+               $daftar_produk .= '<img src="./foto_produk/'.$produks->foto.'">';
+             }
+             else{
+              $daftar_produk .= '<img src="./image/foto_default.png">';
+            }
+            $daftar_produk .= '
+          </div>
+        </a>
+        <div class="card-content">
+          <div class="footer">     
+            <a href="'.url("/keranjang-belanja") .'" class="card-title">
+              '.strip_tags(substr($produks->nama, 0, 15)).'...
+            </a><br>
+            <b style="color:red; font-size:18px"> '.$produks->rupiah.' </b><br>
+            <a class="description"><i class="material-icons">store</i>  '.strip_tags(substr($warung->name, 0, 25)).'... </a><br>
+            <a href="'.url("/keranjang-belanja") .'" class="btn btn-danger btn-round btn-sm" rel="tooltip" title="Tambah Ke Keranjang Belanja"><b> Beli Sekarang </b><i class="material-icons">keyboard_arrow_right</i></a>
+          </div>
 
-    </div>
+        </div>
 
-    </div>
+      </div>
     </div>';
   }
   return $daftar_produk;
