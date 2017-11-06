@@ -184,7 +184,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Artesaos\SEOTools\Providers\SEOToolsServiceProvider::class,
-        
+   
 
 
 
@@ -249,7 +249,6 @@ return [
         // or
         'SEO' => Artesaos\SEOTools\Facades\SEOTools::class,
         'Tracker' => 'PragmaRX\Tracker\Vendor\Laravel\Facade',
-        'Agent' => Jenssegers\Agent\Agent::class
 
 
         

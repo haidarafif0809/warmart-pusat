@@ -35,24 +35,24 @@
 </head>
 
 <style type="text/css">
-.navbar-nav .open .dropdown-menu{
-    color: grey;
-}
+    .navbar-nav .open .dropdown-menu{
+        color: grey;
+    }
 
-#card-ubah-profil{
-    background: #FFFFFF;
-    position: relative;
-    z-index: 3;
+    #card-ubah-profil{
+        background: #FFFFFF;
+        position: relative;
+        z-index: 3;
 
-    margin: -60px 30px 60px;
-    border-radius: 6px;
-    box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
-}
+        margin: -60px 30px 60px;
+        border-radius: 6px;
+        box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
+    }
 </style>
 
 <body class="ecommerce-page">
 
-    @if (Agent::isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
+    @if ($agent->isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
     <nav class="navbar navbar-default navbar-fixed-top navbar-color-on-scroll" color-on-scroll="100" id="sectionsNav">
         <div class="container">
 
@@ -135,7 +135,7 @@
 </nav>
 @endif
 
-@if (Agent::isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
+@if ($agent->isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
 
 <br><br><br><br><br><br><br><br>
 <div class="main main-raised" style="background-color: #E5E5E5">
@@ -259,10 +259,14 @@
 
                 <div class="form-group{{ $errors->has('tgl_lahir') ? ' has-error' : '' }}">
                     {!! Form::label('tgl_lahir', 'Tanggal Lahir', ['class'=>'col-md-2 control-label']) !!}
-                    <div class="col-md-10">
-                        {!! Form::text('tgl_lahir',null, ['class'=>'form-control datepicker', 'id'=>'datepicker','placeholder'=>'Tanggal Lahir','readonly']) !!}
+                    <div class="col-md-10"> 
+                        @if (isset($pelanggan) && $pelanggan)
+                        {!! Form::text('tgl_lahir', $tanggal, ['class'=>'form-control datepicker', 'id'=>'datepicker','placeholder'=>'Tanggal Lahir','readonly']) !!}
                         {!! $errors->first('tgl_lahir', '<p class="help-block">:message</p>') !!}
-                        
+                        @else
+                        {!! Form::text('tgl_lahir', null, ['class'=>'form-control datepicker', 'id'=>'datepicker','placeholder'=>'Tanggal Lahir','readonly']) !!}
+                        {!! $errors->first('tgl_lahir', '<p class="help-block">:message</p>') !!}
+                        @endif    
                     </div>
                 </div>
 
@@ -274,97 +278,97 @@
                         {!! $errors->first('komunitas', '<p class="help-block">:message</p>') !!}
                         @else
                         {!! Form::select('komunitas', 
-                            [''=>'']+App\Komunitas::where('tipe_user','2')->pluck('name','id')->all(),null
-                            , ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH KOMUNITAS--','id'=>'pilih_komunitas']) !!}
-                            {!! $errors->first('komunitas', '<p class="help-block">:message</p>') !!}
-                            @endif
-                        </div>
+                        [''=>'']+App\Komunitas::where('tipe_user','2')->pluck('name','id')->all(),null
+                        , ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH KOMUNITAS--','id'=>'pilih_komunitas']) !!}
+                        {!! $errors->first('komunitas', '<p class="help-block">:message</p>') !!}
+                        @endif
                     </div>
-                    {!! Form::hidden('id', $user->id, ['class'=>'form-control','autocomplete'=>'off']) !!}
-                    <div class="col-md-2"></div>
-                    <div class="col-md-4">
-                        {!! Form::button('<i class="material-icons">save</i>Simpan Profil', ['class'=>'btn btn-rose ', 'type'=>'submit', 'id' => 'btnSimpanProfil']) !!}
-                    </div>
-
-                    {!! Form::close() !!}
                 </div>
+                {!! Form::hidden('id', $user->id, ['class'=>'form-control','autocomplete'=>'off']) !!}
+                <div class="col-md-2"></div>
+                <div class="col-md-4">
+                    {!! Form::button('<i class="material-icons">save</i>Simpan Profil', ['class'=>'btn btn-rose ', 'type'=>'submit', 'id' => 'btnSimpanProfil']) !!}
+                </div>
+
+                {!! Form::close() !!}
             </div>
         </div>
     </div>
-    @endif
+</div>
+@endif
 
 
-    <footer class="footer footer-black footer-big">
-        <div class="container">
+<footer class="footer footer-black footer-big">
+    <div class="container">
 
-            <div class="content">
-                <div class="row">
-                    <div class="col-md-4">
-                        <h5>Tentang Kami</h5>
-                        <p>Creative Tim is a startup that creates design tools that make the web development process faster and easier. </p> <p>We love the web and care deeply for how users interact with a digital product. We power businesses and individuals to create better looking web projects around the world. </p>
-                    </div>
+        <div class="content">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>Tentang Kami</h5>
+                    <p>Creative Tim is a startup that creates design tools that make the web development process faster and easier. </p> <p>We love the web and care deeply for how users interact with a digital product. We power businesses and individuals to create better looking web projects around the world. </p>
+                </div>
 
-                    <div class="col-md-4">
-                        <h5>Media Sosial</h5>
-                        <div class="social-feed">
-                            <div class="feed-line">
-                                <i class="fa fa-twitter"></i>
-                                <p>How to handle ethical disagreements with your clients.</p>
-                            </div>
-                            <div class="feed-line">
-                                <i class="fa fa-twitter"></i>
-                                <p>The tangible benefits of designing at 1x pixel density.</p>
-                            </div>
-                            <div class="feed-line">
-                                <i class="fa fa-facebook-square"></i>
-                                <p>A collection of 25 stunning sites that you can use for inspiration.</p>
-                            </div>
+                <div class="col-md-4">
+                    <h5>Media Sosial</h5>
+                    <div class="social-feed">
+                        <div class="feed-line">
+                            <i class="fa fa-twitter"></i>
+                            <p>How to handle ethical disagreements with your clients.</p>
                         </div>
-                    </div>
-
-                    <div class="col-md-4">
-                        <h5>Instagram</h5>
-                        <div class="gallery-feed">
+                        <div class="feed-line">
+                            <i class="fa fa-twitter"></i>
+                            <p>The tangible benefits of designing at 1x pixel density.</p>
                         </div>
-
+                        <div class="feed-line">
+                            <i class="fa fa-facebook-square"></i>
+                            <p>A collection of 25 stunning sites that you can use for inspiration.</p>
+                        </div>
                     </div>
                 </div>
+
+                <div class="col-md-4">
+                    <h5>Instagram</h5>
+                    <div class="gallery-feed">
+                    </div>
+
+                </div>
             </div>
+        </div>
 
 
-            <hr />
+        <hr />
 
-            <ul class="pull-left">
-                <li>
-                    <a href="#pablo">
-                       Blog
-                   </a>
-               </li>
-               <li>
-                <a href="#pablo">
-                    Presentation
-                </a>
-            </li>
+        <ul class="pull-left">
             <li>
                 <a href="#pablo">
-                   Discover
+                   Blog
                </a>
            </li>
            <li>
             <a href="#pablo">
-                Payment
+                Presentation
             </a>
         </li>
         <li>
             <a href="#pablo">
-                Contact Us
-            </a>
-        </li>
-    </ul>
+               Discover
+           </a>
+       </li>
+       <li>
+        <a href="#pablo">
+            Payment
+        </a>
+    </li>
+    <li>
+        <a href="#pablo">
+            Contact Us
+        </a>
+    </li>
+</ul>
 
-    <div class="copyright pull-right">
-        Copyright &copy; <script>document.write(new Date().getFullYear())</script> <a href="https://andaglos.id/"> PT. Andaglos Global Teknologi.</a>
-    </div>
+<div class="copyright pull-right">
+    Copyright &copy; <script>document.write(new Date().getFullYear())</script> <a href="https://andaglos.id/"> PT. Andaglos Global Teknologi.</a>
+</div>
 </div>
 </footer>
 </body>

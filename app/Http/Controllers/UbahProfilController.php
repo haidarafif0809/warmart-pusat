@@ -44,7 +44,7 @@ class UbahProfilController extends Controller
 			'no_telp' => 'required|unique:users,no_telp,'.$id,
 			'email' => 'required|unique:users,email,'.$id, 
 			'alamat' => 'required',
-		]);
+			]);
 
 		if ($request['id_ubah_profil'] == 1) {
 
@@ -53,7 +53,7 @@ class UbahProfilController extends Controller
 				'no_telp' => $request->no_telp,
 				'email' => $request->email,
 				'alamat'=> $request->alamat   
-			]);
+				]);
 
 		}elseif ($request['id_ubah_profil'] == 2) {
 
@@ -68,7 +68,7 @@ class UbahProfilController extends Controller
 				'no_rekening' =>$request['no_rekening'],
 				'an_rekening' =>$request['an_rekening'],
 				'id_warung' =>$request['id_warung'],
-			]); 
+				]); 
 
 			$cek_komunitas_penggiat = KomunitasPenggiat::where('komunitas_id',$id)->count();
 
@@ -78,7 +78,7 @@ class UbahProfilController extends Controller
 						'nama_penggiat' =>$request->nama_penggiat,
 						'alamat_penggiat'  =>$request->alamat_penggiat,
 						'komunitas_id'=>$id      
-					]);
+						]);
 					KomunitasPenggiat::where('komunitas_id',$id)->update(['nama_penggiat' =>$request['nama_penggiat'],'alamat_penggiat'  =>$request['alamat_penggiat']]);  
 				} 
 			}elseif ($cek_komunitas_penggiat == 1){
@@ -98,7 +98,7 @@ class UbahProfilController extends Controller
 				'no_telp'           => $request->no_telp,
 				'tgl_lahir'         => $request['tgl_lahir'],
 				'wilayah'           => $request['kelurahan'],
-			]);
+				]);
 			if ($request['komunitas'] != "") {
 				        //hapus komunitas sebelumnya, masukkan komunitas baru
 				KomunitasCustomer::where('user_id',$id)->delete();
@@ -120,14 +120,14 @@ class UbahProfilController extends Controller
 				'alamat'    => $request->alamat,
 				'wilayah'   => $request->kelurahan,
 				'id_warung' => $request->id_warung,
-			]);
+				]);
 		}
 
 
 		Session::flash("flash_notification", [
 			"level"     => "success",
 			"message"   => "Profil Berhasil Di Ubah"
-		]);
+			]);
 
 		return back();
 	} 
@@ -143,9 +143,20 @@ class UbahProfilController extends Controller
 		$user = Auth::user();
         //PELANGGAN, WARUNG, KOMUNITAS
 		$pelanggan = Customer::select(['id','email','password','name', 'alamat', 'wilayah', 'no_telp','tgl_lahir','tipe_user', 'status_konfirmasi'])->where('id', $user->id)->first();
+		$warung_pelanggan = UserWarung::with(['kelurahan', 'warung'])->find($user->id);
 		$komunitas_pelanggan = KomunitasCustomer::where('user_id',$user->id)->first();
 
-		return view('ubah_profil_pelanggan',['user' => $pelanggan, 'pelanggan' => $pelanggan, 'komunitas_pelanggan' => $komunitas_pelanggan]);
+		//TAMPILAN MOBILE
+		$agent = new Agent();
+
+		if ($pelanggan->tgl_lahir == "" AND $pelanggan->tgl_lahir == NULL) { 
+			$tanggal = "";
+		}
+		else{
+			$tanggal = $this->tanggal_mysql($pelanggan->tgl_lahir);
+		}
+
+		return view('ubah_profil_pelanggan',['user' => $user, 'pelanggan' => $pelanggan, 'warung_pelanggan' => $warung_pelanggan, 'komunitas_pelanggan' => $komunitas_pelanggan, 'tanggal' => $tanggal, 'agent' => $agent]);
 	}
 
 //UBAH PROFIL USER PELANGGAN
@@ -156,7 +167,7 @@ class UbahProfilController extends Controller
 			'no_telp' 	=> 'required|unique:users,no_telp,'.$request->id,
 			'email' 	=> 'required|unique:users,email,'.$request->id, 
 			'alamat' 	=> 'required',
-		]);
+			]);
 		//UPDATE USER PELANGGAN
 		Customer::find($request->id)->update([
 			'name'              => $request->name,
@@ -164,7 +175,7 @@ class UbahProfilController extends Controller
 			'alamat'            => $request->alamat,
 			'no_telp'           => $request->no_telp,
 			'tgl_lahir'         => $request->tgl_lahir,
-		]);
+			]);
 
 		//JIKA SEBELUMNYA SUDAH ADA DI KOMUNITAS
 		if ($request['komunitas'] != "") {
