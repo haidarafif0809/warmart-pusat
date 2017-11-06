@@ -91,14 +91,15 @@
                                         </div>
 
                                         <div class="input-group">
-                                                        <div class="checkbox" style="padding:10px">
+                                                        <div class="checkbox" style="padding:10;font-size:12px;" >
                                                         <label>
-                                                              <input type="checkbox" name="ceklis_syarat" id="ceklis_syarat" value="0" data_toogle = "0"> 
+                                                              <input type="checkbox" name="ceklis_syarat_warung" id="ceklis_syarat_warung" value="0" data_toogle = "0"> 
                                                         </label>
-                                                       *Dengan membuat akun, Anda telah membaca, memahami & menyetujui <a href="{{ url('/syarat-ketentuan') }}" target="_blank" ><u>Syarat & Ketentuan</u></a>
-
+                                                       <b>* Anda memahami & menyetujui <a href="{{ url('/syarat-ketentuan') }}" target="_blank" ><u>Syarat & Ketentuan</u></a></b>
                                                     </div>
                                         </div>
+                         
+
 
                                           {!! Form::hidden('id_register', 1, ['class'=>'form-control','autocomplete'=>'off']) !!}
 
