@@ -113,6 +113,12 @@ Route::put('/proses-ubah-profil/{id}',[
 Route::get('/bank/view','BankController@view')->middleware('auth');
 Route::get('/bank/pencarian','BankController@pencarian')->middleware('auth');
 
+
+//menampilkan data satuan
+Route::get('/satuan/view','SatuanController@view')->middleware('auth');
+Route::get('/satuan/pencarian','SatuanController@pencarian')->middleware('auth');
+
+
 Route::middleware('optimizeImages','auth')->group(function () {
 	
 	Route::resource('user', 'UserController');
@@ -132,6 +138,7 @@ Route::middleware('optimizeImages','auth')->group(function () {
 	Route::resource('item-masuk', 'ItemMasukController');
 	Route::resource('item-keluar', 'ItemKeluarController');
 	Route::resource('suplier', 'SuplierController');
+	Route::resource('satuan', 'SatuanController');
 	Route::resource('laporan-persediaan', 'LaporanPersediaanController');
 	Route::resource('pembelian', 'PembelianController');
 

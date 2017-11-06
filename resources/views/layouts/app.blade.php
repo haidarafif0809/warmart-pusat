@@ -280,33 +280,39 @@
 </a>
 </li>
 
-<li>
- <a href="{{ route('user_warung.index') }}">
-  <span class="sidebar-mini">UW</span>
-  <span class="sidebar-normal">User Warung</span>
-</a>
-</li>
-@endif        
-@if(Laratrust::can('lihat_warung'))
-<li>
- <a href="{{ route('warung.index') }}">
-  <span class="sidebar-mini">W</span>
-  <span class="sidebar-normal">Warung</span>
-</a>
-</li>
-@endif 
-</ul>
-</div>
-</li>
-<li class="">
-  <a href="{{ route('error.index')}}">
-   <i class="material-icons">error</i>
-   <p>Error Log</p>
-</a>
-</li>
-@endif
-<!--end master data warmart pusat-->
-@endif
+    				<li>
+    					<a href="{{ route('user_warung.index') }}">
+    						<span class="sidebar-mini">UW</span>
+    						<span class="sidebar-normal">User Warung</span>
+    					</a>
+    				</li>
+    				@endif        
+    				@if(Laratrust::can('lihat_warung'))
+    				<li>
+    					<a href="{{ route('warung.index') }}">
+    						<span class="sidebar-mini">W</span>
+    						<span class="sidebar-normal">Warung</span>
+    					</a>
+    				</li>
+    				@endif 
+                    <li>
+                        <a href="{{ route('satuan.index') }}">
+                            <span class="sidebar-mini">S</span>
+                            <span class="sidebar-normal">Satuan</span>
+                        </a>
+                    </li>
+    			</ul>
+    		</div>
+    	</li>
+    	<li class="">
+    		<a href="{{ route('error.index')}}">
+    			<i class="material-icons">error</i>
+    			<p>Error Log</p>
+    		</a>
+    	</li>
+    	@endif
+    	<!--end master data warmart pusat-->
+    	@endif
 
 <!--HALAMAN KOMUNITAS-->
 @if(Auth::user()->tipe_user == 2 AND Auth::user()->konfirmasi_admin == 1)

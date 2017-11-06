@@ -54,14 +54,12 @@
         <h2 style="color:#ffc34d;">Jadilah pejuang untuk kemajuan perekonomian Islam</h2>
         <h5 style="color:white;">WarMart adalah marketplace muslim pertama di Indonesia yang menerapkan sistem transaksi online dan offline bagi warung muslim se-Indonesia</h5>
     </div></center>
-
-
     <div class="team-4 section-image" style="background-image: url('assets/img/examples/office2.jpg');">
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
                     <div class="iframe-container">  
-                        <iframe src="https://www.youtube.com/embed/wQ1MyRDCD-I?modestbranding=1&autohide=1&showinfo=0" frameborder="0" allowfullscreen height="250"></iframe>
+                        <iframe src="https://www.youtube.com/embed/GqRicXWcW7k?modestbranding=1&autohide=1&showinfo=0" frameborder="0" allowfullscreen height="250"></iframe>
                     </div>
                 </div>
                 <div class="col-md-5 col-md-offset-1">
@@ -97,7 +95,7 @@
 
 
             <div class="col-md-12">
-                <h2 class="text-center">Peran Anda</h2>
+                <h2 class="text-center card-title">Peran Anda</h2>
                 <br />
                 <div class="row">
                     <div class="col-md-3">
@@ -332,10 +330,10 @@
 <div class="testimonials-2 section-dark">
 
     <div class="container">
-        <h2 class="text-center" style="color:white;font-weight:bold;">Kata Mereka</h2>
+        <h2 class="text-center card-title" style="color:white;font-weight:bold;">Tokoh Berbicara</h2>
         <div class="row">
 
-            <div id="carousel-testimonial" class="carousel slide" data-ride="carousel">
+            <div id="carousel-testimonial" class="carousel slide" data-ride="carousel" data-interval="100">
 
                 <div class="carousel-inner" role="listbox">
 
@@ -354,6 +352,7 @@
                                 <br> 
                                 <h4 style="color:orange;font-weight:bold;" >Buya Yahya</h4>
                                 <h6 class="category text-muted">Pendiri Pondok Pesantren Al-Bahjah</h6>
+                                <a href="https://www.youtube.com/watch?v=Q5UDzwhq6A8" target="_blank" rel="tooltip" class="btn btn-round" style="position: center; background-color: #f44336" >LIHAT VIDEO</a>
                             </div>
                         </div>
                     </div>
@@ -372,6 +371,7 @@
                                 </h5>
                                 <h4 style="color:orange;font-weight:bold;" >Ust. Zulkifli M Ali, Lc, MA</h4>
                                 <h6 class="category text-muted">Da'i / Pendakwah</h6>
+                                 <a href="https://www.youtube.com/watch?v=n-oliABULjw" target="_blank" rel="tooltip" class="btn btn-round" style="position: center; background-color: #f44336" >LIHAT VIDEO</a>
                             </div>
                         </div>
                     </div>
@@ -383,13 +383,13 @@
                                     <img class="img" src="assets/img/faces/rendy_saputra.jpg" />
                                 </a>
                             </div>
-
                             <div class="card-content">
                                 <h5 class="card-description">
                                     "Manusia adalah pasar, suka nggak suka, saya jualan nggak jualan, setiap orang belanja, setiap orang ngeluarin duit. Pertanyaanya, setiap orang pasti belanja, tapi tidak setiap orang muslim jualan, ini masalah. Trilyunan rupiah kita keluar, karena kita nggak jualan, itu masalahnya."
                                 </h5>
                                 <h4 style="color:orange;font-weight:bold;" >Rendy Saputra</h4>
                                 <h6 class="category text-muted">Pengusaha Muda</h6>
+                                 <a href="https://www.youtube.com/watch?v=cVKEK5poL9Y " target="_blank" rel="tooltip" class="btn btn-round" style="position: center; background-color: #f44336" >LIHAT VIDEO</a>
                             </div>
                         </div>
                     </div>
@@ -499,6 +499,10 @@
             showConfirmButton :  false,
         });
     });
+    
+    $(".carousel").carousel({interval: 1000 * 10 });
 </script>
+
+scrip
 
 </html>
