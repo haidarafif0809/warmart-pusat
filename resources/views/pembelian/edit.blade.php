@@ -132,7 +132,7 @@
 		<ul class="breadcrumb"> 
 			<li><a href="{{ url('/home') }} ">Home</a></li> 
 			<li><a href="{{ url('/pembelian') }}">Pembelian</a></li> 
-			<li class="active">Tambah Pembelian</li> 
+			<li class="active">Edit Pembelian </li> 
 		</ul> 
 
 		<div class="row"><!-- ROW --> 
@@ -145,7 +145,7 @@
 					</div> 
 
 					<div class="card-content"> 
-						<h4 class="card-title"> Pembelian </h4> 
+						<h4 class="card-title">Edit Pembelian {{$no_faktur}}</h4> 
 						<div class="row"> 
 
 							<!--COL MD 8--> 
@@ -191,7 +191,7 @@
 							<div class="col-md-6"> 
 								<div class="{{ $errors->has('suplier') ? ' has-error' : '' }}"> 
 									<h4>Suplier</h4> 
-									{!! Form::select('suplier', []+App\Suplier::where('warung_id',Auth::user()->id_warung)->pluck('nama_suplier','id')->all(), null, ['class'=>'', 'placeholder' => '-- PILIH SUPLIER --', 'id'=>'pilih_suplier','autofocus' => 'true']) !!} 
+									{!! Form::select('suplier', []+App\Suplier::where('warung_id',Auth::user()->id_warung)->pluck('nama_suplier','id')->all(), $pembelian->suplier_id, ['class'=>'', 'placeholder' => '-- PILIH SUPLIER --', 'id'=>'pilih_suplier','autofocus' => 'true']) !!} 
 									{!! $errors->first('suplier', '<p class="help-block">:message</p>') !!} 
 								</div> 
 							</div> 
@@ -201,12 +201,12 @@
 									<h4>Cara Bayar</h4> 
 									@if($kas_default->count() == 0) 
 
-									{!! Form::select('cara_bayar', []+App\Kas::where('warung_id',Auth::user()->id_warung)->where('status_kas',1)->pluck('nama_kas','id')->all(), null, ['class'=>'', 'id'=>'cara_bayar','autofocus' => 'true','placeholder' => 'Anda Belum Punya Kas',]) !!} 
+									{!! Form::select('cara_bayar', []+App\Kas::where('warung_id',Auth::user()->id_warung)->where('status_kas',1)->pluck('nama_kas','id')->all(), $pembelian->cara_bayar, ['class'=>'', 'id'=>'cara_bayar','autofocus' => 'true','placeholder' => 'Anda Belum Punya Kas',]) !!} 
 									<span class="label label-danger"><a href="{{ route('kas.create') }}" target="blank" >Tambah Kas Disini</a></span> 
 
 									@else 
 
-									{!! Form::select('cara_bayar', []+App\Kas::where('warung_id',Auth::user()->id_warung)->where('status_kas',1)->pluck('nama_kas','id')->all(), $kas_default->first()->id, ['class'=>'', 'id'=>'cara_bayar','autofocus' => 'true']) !!} 
+									{!! Form::select('cara_bayar', []+App\Kas::where('warung_id',Auth::user()->id_warung)->where('status_kas',1)->pluck('nama_kas','id')->all(), $pembelian->cara_bayar, ['class'=>'', 'id'=>'cara_bayar','autofocus' => 'true']) !!} 
 									{!! $errors->first('cara_bayar', '<p class="help-block">:message</p>') !!} 
 
 									@endif 

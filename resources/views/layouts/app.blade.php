@@ -38,7 +38,7 @@
 </style>
 
 <body>
-	<div class="wrapper">
+	<div class="wrapper" id="vue-app">
 		<div class="sidebar" data-active-color="rose" data-background-color="black" data-image="{{ asset('img/sidebar-1.jpg') }}">
             <!--
         Tip 1: You can change the color of active element of the sidebar using: data-active-color="purple | blue | green | orange | red | rose"
@@ -84,75 +84,81 @@
     		</div>
     	</li>
     	<li class="active">
-    		<a href="{{ url('/dashboard')}}">
-    			<i class="material-icons">dashboard</i>
-    			<p>Dashboard</p>
-    		</a>
-    	</li>
+        @if(Auth::user()->tipe_user == 1 )
+        <router-link :to="{name: 'indexDashboard'}">   <i class="material-icons">dashboard</i>
+          <p>Dashboard</p></router-link>
+          @else 
+          <a href="{{ url('/dashboard')}}">
+            <i class="material-icons">dashboard</i>
+            <p>Dashboard</p>
+          </a>
 
-      <!--PEMBELIAN-->
-      @if(Auth::user()->tipe_user == 4 AND Auth::user()->konfirmasi_admin == 1)
-      <li>
-        <a href="{{ route('pembelian.index') }}">
-          <i class="material-icons">add_shopping_cart</i>
-          <p>Pembelian</p>
-        </a>
-      </li>
-      <!--PEMBELIAN-->
-      <li>
-        <a data-toggle="collapse" href="#persediaan">
-          <i class="material-icons">assessment</i>
-          <p> Persediaan
+          @endif
+        </li>
+
+        <!--PEMBELIAN-->
+        @if(Auth::user()->tipe_user == 4 AND Auth::user()->konfirmasi_admin == 1)
+        <li>
+          <a href="{{ route('pembelian.index') }}">
+            <i class="material-icons">add_shopping_cart</i>
+            <p>Pembelian</p>
+          </a>
+        </li>
+        <!--PEMBELIAN-->
+        <li>
+          <a data-toggle="collapse" href="#persediaan">
+            <i class="material-icons">assessment</i>
+            <p> Persediaan
+              <b class="caret"></b>
+            </p>
+          </a>
+          <div class="collapse" id="persediaan">
+            <ul class="nav">
+              <li>
+                <a href="{{ route('item-masuk.index') }}"> 
+                  <span class="sidebar-mini">IM</span>
+                  <span class="sidebar-normal">Item Masuk</span>
+                </a>
+              </li>  
+              <li>
+                <a href="{{ route('item-keluar.index') }}">
+                  <span class="sidebar-mini">IK</span>
+                  <span class="sidebar-normal">Item Keluar</span>
+                </a>
+              </li> 
+            </ul>
+          </div>
+        </li>
+
+        <!-- MASTER DATA WARUNG -->
+        <li>
+          <a data-toggle="collapse" href="#persediaan">
+           <i class="material-icons">assessment</i>
+           <p> Persediaan
             <b class="caret"></b>
           </p>
         </a>
         <div class="collapse" id="persediaan">
-          <ul class="nav">
-            <li>
-              <a href="{{ route('item-masuk.index') }}"> 
-                <span class="sidebar-mini">IM</span>
-                <span class="sidebar-normal">Item Masuk</span>
-              </a>
-            </li>  
-            <li>
-              <a href="{{ route('item-keluar.index') }}">
-                <span class="sidebar-mini">IK</span>
-                <span class="sidebar-normal">Item Keluar</span>
-              </a>
-            </li> 
-          </ul>
-        </div>
-      </li>
-
-      <!-- MASTER DATA WARUNG -->
-      <li>
-        <a data-toggle="collapse" href="#persediaan">
-         <i class="material-icons">assessment</i>
-         <p> Persediaan
-          <b class="caret"></b>
-        </p>
-      </a>
-      <div class="collapse" id="persediaan">
-       <ul class="nav">
+         <ul class="nav">
+          <li>
+           <a href="{{ route('item-masuk.index') }}"> 
+            <span class="sidebar-mini">IM</span>
+            <span class="sidebar-normal">Item Masuk</span>
+          </a>
+        </li>  
         <li>
-         <a href="{{ route('item-masuk.index') }}"> 
-          <span class="sidebar-mini">IM</span>
-          <span class="sidebar-normal">Item Masuk</span>
+         <a href="{{ route('item-keluar.index') }}">
+          <span class="sidebar-mini">IK</span>
+          <span class="sidebar-normal">Item Keluar</span>
         </a>
-      </li>  
+      </li> 
       <li>
-       <a href="{{ route('item-keluar.index') }}">
-        <span class="sidebar-mini">IK</span>
-        <span class="sidebar-normal">Item Keluar</span>
+       <a href="{{ route('laporan-persediaan.index') }}">
+        <span class="sidebar-mini">LP</span>
+        <span class="sidebar-normal">Laporan Persediaan</span>
       </a>
     </li> 
-    <li>
-     <a href="{{ route('laporan-persediaan.index') }}">
-      <span class="sidebar-mini">LP</span>
-      <span class="sidebar-normal">Laporan Persediaan</span>
-    </a>
-  </li> 
-</ul>
+  </ul>
 </div>
 </li>
 
@@ -242,18 +248,17 @@
  <ul class="nav">
   @if(Laratrust::can('lihat_bank'))
   <li>
-   <a href="{{ route('bank.index') }}">
-    <span class="sidebar-mini">B</span>
-    <span class="sidebar-normal">Bank</span>
+
+   <router-link :to="{name: 'indexBank'}"> <span class="sidebar-mini">B</span>
+    <span class="sidebar-normal">Bank</span></router-link>
+  </li>
+  @endif
+  @if(Laratrust::can('lihat_customer'))
+  <li>
+   <a href="{{ route('customer.index') }}">
+    <span class="sidebar-mini">C</span>
+    <span class="sidebar-normal">Customer</span>
   </a>
-</li>
-@endif
-@if(Laratrust::can('lihat_customer'))
-<li>
- <a href="{{ route('customer.index') }}">
-  <span class="sidebar-mini">C</span>
-  <span class="sidebar-normal">Customer</span>
-</a>
 </li>
 @endif
 @if(Laratrust::can('lihat_komunitas'))
@@ -296,11 +301,10 @@
 </li>
 @endif 
 <li>
-  <a href="{{ route('satuan.index') }}">
-    <span class="sidebar-mini">S</span>
-    <span class="sidebar-normal">Satuan</span>
-  </a>
-</li>
+
+  <router-link :to="{name: 'indexSatuan'}">    <span class="sidebar-mini">S</span>
+    <span class="sidebar-normal">Satuan</span></router-link>
+  </li>
 </ul>
 </div>
 </li>
@@ -367,7 +371,7 @@
 			</nav>
 			<p class="copyright pull-right">
 				&copy;
-				<script>
+				<script type="text/javascript">
 					document.write(new Date().getFullYear())
 				</script>
 				<a href="https://andaglos.id">PT Andaglos Global Teknologi</a>, made with love for a better web

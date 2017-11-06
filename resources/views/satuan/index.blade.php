@@ -1,12 +1,5 @@
 @extends('layouts.app')
 @section('content')
-<div id="vue-app">
-	<router-view name="satuanIndex"></router-view>
-
-	<router-view>
-		
-	</router-view>
-</div>
 
 
 @endsection

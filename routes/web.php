@@ -11,8 +11,19 @@
 |
 */
 
+
+
 Route::get('/','HomeController@index')->middleware('optimizeImages');
 Route::get('/sms','HomeController@sms');
+Route::get('/resize-all-file',function(){
+	$barang =  App\Barang::where('foto','<>',null)->get();
+	foreach ($barang as $barangs) {
+		$image_resize = Image::make(public_path('foto_produk/' .$barangs->foto));              
+		$image_resize->resize(300, 300);
+		$image_resize->save(public_path('foto_produk/' .$barangs->foto));
+	}
+	return $barang;
+});
 
 Route::get('/dashboard',[
 	'middleware' => ['auth','optimizeImages'],
@@ -76,6 +87,7 @@ Route::post('/proses-lupa-password',[
 ]);
 
 Route::get('/home', 'HomeController@index_home')->name('home');
+Route::get('/dashboard-admin', 'HomeController@dashboard_admin')->middleware(['auth','user-must-admin']);
 
 Route::get('/ubah-password',[
 	'middleware' => ['auth'],

@@ -3,12 +3,15 @@
 namespace App; 
 
 use Illuminate\Database\Eloquent\Model; 
-use Illuminate\Support\Facades\DB;  
+use Illuminate\Support\Facades\DB; 
+use Yajra\Auditable\AuditableTrait; 
+
 use Session; 
 use Auth; 
 
 class DetailPembelian extends Model 
 { 
+	use AuditableTrait; 
 	protected $fillable = ['no_faktur','satuan_id','id_produk','jumlah_produk','harga_produk','subtotal','tax','potongan','warung_id','ppn']; 
 	protected $primaryKey = 'id_detail_pembelian'; 
 	
