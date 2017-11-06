@@ -90,231 +90,230 @@
     		</a>
     	</li>
 
-                    <!--PEMBELIAN-->
-                    @if(Auth::user()->tipe_user == 4 AND Auth::user()->konfirmasi_admin == 1)
-                    <li>
-                        <a href="{{ route('pembelian.index') }}">
-                            <i class="material-icons">add_shopping_cart</i>
-                            <p>Pembelian</p>
-                        </a>
-                    </li>
-                    <!--PEMBELIAN-->
-                    <li>
-                        <a data-toggle="collapse" href="#persediaan">
-                            <i class="material-icons">assessment</i>
-                            <p> Persediaan
-                                <b class="caret"></b>
-                            </p>
-                        </a>
-                        <div class="collapse" id="persediaan">
-                            <ul class="nav">
-                                  <li>
-                                    <a href="{{ route('item-masuk.index') }}"> 
-                                        <span class="sidebar-mini">IM</span>
-                                        <span class="sidebar-normal">Item Masuk</span>
-                                    </a>
-                                </li>  
-                                <li>
-                                    <a href="{{ route('item-keluar.index') }}">
-                                        <span class="sidebar-mini">IK</span>
-                                        <span class="sidebar-normal">Item Keluar</span>
-                                    </a>
-                                </li> 
-                            </ul>
-                        </div>
-                    </li>
+        <!--PEMBELIAN-->
+        @if(Auth::user()->tipe_user == 4 AND Auth::user()->konfirmasi_admin == 1)
+        <li>
+            <a href="{{ route('pembelian.index') }}">
+                <i class="material-icons">add_shopping_cart</i>
+                <p>Pembelian</p>
+            </a>
+        </li>
+        <!--PEMBELIAN-->
+        <li>
+            <a data-toggle="collapse" href="#persediaan">
+                <i class="material-icons">assessment</i>
+                <p> Persediaan
+                    <b class="caret"></b>
+                </p>
+            </a>
+            <div class="collapse" id="persediaan">
+                <ul class="nav">
+                  <li>
+                    <a href="{{ route('item-masuk.index') }}"> 
+                        <span class="sidebar-mini">IM</span>
+                        <span class="sidebar-normal">Item Masuk</span>
+                    </a>
+                </li>  
+                <li>
+                    <a href="{{ route('item-keluar.index') }}">
+                        <span class="sidebar-mini">IK</span>
+                        <span class="sidebar-normal">Item Keluar</span>
+                    </a>
+                </li> 
+            </ul>
+        </div>
+    </li>
 
-    	<!-- MASTER DATA WARUNG -->
-    	@if(Auth::user()->tipe_user == 4 AND Auth::user()->konfirmasi_admin == 1)
-    	<li>
-    		<a data-toggle="collapse" href="#persediaan">
-    			<i class="material-icons">assessment</i>
-    			<p> Persediaan
-    				<b class="caret"></b>
-    			</p>
-    		</a>
-    		<div class="collapse" id="persediaan">
-    			<ul class="nav">
-    				<li>
-    					<a href="{{ route('item-masuk.index') }}"> 
-    						<span class="sidebar-mini">IM</span>
-    						<span class="sidebar-normal">Item Masuk</span>
-    					</a>
-    				</li>  
-    				<li>
-    					<a href="{{ route('item-keluar.index') }}">
-    						<span class="sidebar-mini">IK</span>
-    						<span class="sidebar-normal">Item Keluar</span>
-    					</a>
-    				</li> 
-    				<li>
-    					<a href="{{ route('laporan-persediaan.index') }}">
-    						<span class="sidebar-mini">LP</span>
-    						<span class="sidebar-normal">Laporan Persediaan</span>
-    					</a>
-    				</li> 
-    			</ul>
-    		</div>
-    	</li>
+    <!-- MASTER DATA WARUNG -->
+    <li>
+      <a data-toggle="collapse" href="#persediaan">
+       <i class="material-icons">assessment</i>
+       <p> Persediaan
+        <b class="caret"></b>
+    </p>
+</a>
+<div class="collapse" id="persediaan">
+   <ul class="nav">
+    <li>
+     <a href="{{ route('item-masuk.index') }}"> 
+      <span class="sidebar-mini">IM</span>
+      <span class="sidebar-normal">Item Masuk</span>
+  </a>
+</li>  
+<li>
+ <a href="{{ route('item-keluar.index') }}">
+  <span class="sidebar-mini">IK</span>
+  <span class="sidebar-normal">Item Keluar</span>
+</a>
+</li> 
+<li>
+ <a href="{{ route('laporan-persediaan.index') }}">
+  <span class="sidebar-mini">LP</span>
+  <span class="sidebar-normal">Laporan Persediaan</span>
+</a>
+</li> 
+</ul>
+</div>
+</li>
 
-    	<li>
-    		<a data-toggle="collapse" href="#transaksiKas">
-    			<i class="material-icons">autorenew</i>
-    			<p> Transaksi Kas
-    				<b class="caret"></b>
-    			</p>
-    		</a>
-    		<div class="collapse" id="transaksiKas">
-    			<ul class="nav">
-    				<li>
-    					<a href="{{ route('kas_masuk.index') }}">
-    						<span class="sidebar-mini">KM</span>
-    						<span class="sidebar-normal">Kas Masuk</span>
-    					</a>
-    				</li> 
-    				<li>
-    					<a href="{{ route('kas_keluar.index') }}">
-    						<span class="sidebar-mini">KK</span>
-    						<span class="sidebar-normal">Kas Keluar</span>
-    					</a>
-    				</li> 
-    				<li>
-    					<a href="{{ route('kas_mutasi.index') }}"> 
-    						<span class="sidebar-mini">KMT</span>
-    						<span class="sidebar-normal">Kas Mutasi</span>
-    					</a>
-    				</li>  
-    			</ul>
-    		</div>
-    	</li>
+<li>
+  <a data-toggle="collapse" href="#transaksiKas">
+   <i class="material-icons">autorenew</i>
+   <p> Transaksi Kas
+    <b class="caret"></b>
+</p>
+</a>
+<div class="collapse" id="transaksiKas">
+   <ul class="nav">
+    <li>
+     <a href="{{ route('kas_masuk.index') }}">
+      <span class="sidebar-mini">KM</span>
+      <span class="sidebar-normal">Kas Masuk</span>
+  </a>
+</li> 
+<li>
+ <a href="{{ route('kas_keluar.index') }}">
+  <span class="sidebar-mini">KK</span>
+  <span class="sidebar-normal">Kas Keluar</span>
+</a>
+</li> 
+<li>
+ <a href="{{ route('kas_mutasi.index') }}"> 
+  <span class="sidebar-mini">KMT</span>
+  <span class="sidebar-normal">Kas Mutasi</span>
+</a>
+</li>  
+</ul>
+</div>
+</li>
 
-    	<li>
-    		<a data-toggle="collapse" href="#setting">
-    			<i class="material-icons">settings</i>
-    			<p> Setting
-    				<b class="caret"></b>
-    			</p>
-    		</a>
-    		<div class="collapse" id="setting">
-    			<ul class="nav">
-    				<li>
-    					<a href="{{ route('kategori_transaksi.index') }}">
-    						<span class="sidebar-mini">KT</span>
-    						<span class="sidebar-normal">Kategori Transaksi</span>
-    					</a>
-    				</li> 
-    				<li>
-    					<a href="{{ route('kas.index') }}">
-    						<span class="sidebar-mini">K</span>
-    						<span class="sidebar-normal">Kas</span>
-    					</a>
-    				</li> 
-    				<li>
-    					<a href="{{ route('barang.index') }}">
-    						<span class="sidebar-mini">P</span>
-    						<span class="sidebar-normal">Produk</span>
-    					</a>
-    				</li> 
-    				<li>
-    					<a href="{{ route('suplier.index') }}">
-    						<span class="sidebar-mini">S</span>
-    						<span class="sidebar-normal">Suplier</span>
-    					</a>
-    				</li>   
-    			</ul>
-    		</div>
-    	</li>
-    	@endif
-    	<!--END MASTER DATA WARUNG -->
+<li>
+  <a data-toggle="collapse" href="#setting">
+   <i class="material-icons">settings</i>
+   <p> Setting
+    <b class="caret"></b>
+</p>
+</a>
+<div class="collapse" id="setting">
+   <ul class="nav">
+    <li>
+     <a href="{{ route('kategori_transaksi.index') }}">
+      <span class="sidebar-mini">KT</span>
+      <span class="sidebar-normal">Kategori Transaksi</span>
+  </a>
+</li> 
+<li>
+ <a href="{{ route('kas.index') }}">
+  <span class="sidebar-mini">K</span>
+  <span class="sidebar-normal">Kas</span>
+</a>
+</li> 
+<li>
+ <a href="{{ route('barang.index') }}">
+  <span class="sidebar-mini">P</span>
+  <span class="sidebar-normal">Produk</span>
+</a>
+</li> 
+<li>
+ <a href="{{ route('suplier.index') }}">
+  <span class="sidebar-mini">S</span>
+  <span class="sidebar-normal">Suplier</span>
+</a>
+</li>   
+</ul>
+</div>
+</li>
+@endif
+<!--END MASTER DATA WARUNG -->
 
 
-    	<!--MASTER DATA WARMART PUSAT-->
-    	@if(Auth::user()->tipe_user == 1) 
+<!--MASTER DATA WARMART PUSAT-->
+@if(Auth::user()->tipe_user == 1) 
 
-    	@if(Laratrust::can('lihat_master_data'))
-    	<li>
-    		<a data-toggle="collapse" href="#pagesExamples">
-    			<i class="material-icons">image</i>
-    			<p> Master Data
-    				<b class="caret"></b>
-    			</p>
-    		</a>
-    		<div class="collapse" id="pagesExamples">
-    			<ul class="nav">
-    				@if(Laratrust::can('lihat_bank'))
-    				<li>
-    					<a href="{{ route('bank.index') }}">
-    						<span class="sidebar-mini">B</span>
-    						<span class="sidebar-normal">Bank</span>
-    					</a>
-    				</li>
-    				@endif
-    				@if(Laratrust::can('lihat_customer'))
-    				<li>
-    					<a href="{{ route('customer.index') }}">
-    						<span class="sidebar-mini">C</span>
-    						<span class="sidebar-normal">Customer</span>
-    					</a>
-    				</li>
-    				@endif
-    				@if(Laratrust::can('lihat_komunitas'))
-    				<li>
-    					<a href="{{ route('komunitas.index') }}">
-    						<span class="sidebar-mini">K</span>
-    						<span class="sidebar-normal">Komunitas</span>
-    					</a>
-    				</li> 
-    				@endif
-    				@if(Laratrust::can('lihat_otoritas'))
-    				<li>
-    					<a href="{{ route('otoritas.index') }}">
-    						<span class="sidebar-mini">O</span>
-    						<span class="sidebar-normal">Otoritas</span>
-    					</a>
-    				</li> 
-    				@endif
-    				@if(Laratrust::can('lihat_user'))
-    				<li>
-    					<a href="{{ route('user.index') }}">
-    						<span class="sidebar-mini">U</span>
-    						<span class="sidebar-normal">User</span>
-    					</a>
-    				</li>
+@if(Laratrust::can('lihat_master_data'))
+<li>
+  <a data-toggle="collapse" href="#pagesExamples">
+   <i class="material-icons">image</i>
+   <p> Master Data
+    <b class="caret"></b>
+</p>
+</a>
+<div class="collapse" id="pagesExamples">
+   <ul class="nav">
+    @if(Laratrust::can('lihat_bank'))
+    <li>
+     <a href="{{ route('bank.index') }}">
+      <span class="sidebar-mini">B</span>
+      <span class="sidebar-normal">Bank</span>
+  </a>
+</li>
+@endif
+@if(Laratrust::can('lihat_customer'))
+<li>
+ <a href="{{ route('customer.index') }}">
+  <span class="sidebar-mini">C</span>
+  <span class="sidebar-normal">Customer</span>
+</a>
+</li>
+@endif
+@if(Laratrust::can('lihat_komunitas'))
+<li>
+ <a href="{{ route('komunitas.index') }}">
+  <span class="sidebar-mini">K</span>
+  <span class="sidebar-normal">Komunitas</span>
+</a>
+</li> 
+@endif
+@if(Laratrust::can('lihat_otoritas'))
+<li>
+ <a href="{{ route('otoritas.index') }}">
+  <span class="sidebar-mini">O</span>
+  <span class="sidebar-normal">Otoritas</span>
+</a>
+</li> 
+@endif
+@if(Laratrust::can('lihat_user'))
+<li>
+ <a href="{{ route('user.index') }}">
+  <span class="sidebar-mini">U</span>
+  <span class="sidebar-normal">User</span>
+</a>
+</li>
 
-    				<li>
-    					<a href="{{ route('user_warung.index') }}">
-    						<span class="sidebar-mini">UW</span>
-    						<span class="sidebar-normal">User Warung</span>
-    					</a>
-    				</li>
-    				@endif        
-    				@if(Laratrust::can('lihat_warung'))
-    				<li>
-    					<a href="{{ route('warung.index') }}">
-    						<span class="sidebar-mini">W</span>
-    						<span class="sidebar-normal">Warung</span>
-    					</a>
-    				</li>
-    				@endif 
-    			</ul>
-    		</div>
-    	</li>
-    	<li class="">
-    		<a href="{{ route('error.index')}}">
-    			<i class="material-icons">error</i>
-    			<p>Error Log</p>
-    		</a>
-    	</li>
-    	@endif
-    	<!--end master data warmart pusat-->
-    	@endif
+<li>
+ <a href="{{ route('user_warung.index') }}">
+  <span class="sidebar-mini">UW</span>
+  <span class="sidebar-normal">User Warung</span>
+</a>
+</li>
+@endif        
+@if(Laratrust::can('lihat_warung'))
+<li>
+ <a href="{{ route('warung.index') }}">
+  <span class="sidebar-mini">W</span>
+  <span class="sidebar-normal">Warung</span>
+</a>
+</li>
+@endif 
+</ul>
+</div>
+</li>
+<li class="">
+  <a href="{{ route('error.index')}}">
+   <i class="material-icons">error</i>
+   <p>Error Log</p>
+</a>
+</li>
+@endif
+<!--end master data warmart pusat-->
+@endif
 
-    	<!--HALAMAN KOMUNITAS-->
-    	@if(Auth::user()->tipe_user == 2 AND Auth::user()->konfirmasi_admin == 1)
+<!--HALAMAN KOMUNITAS-->
+@if(Auth::user()->tipe_user == 2 AND Auth::user()->konfirmasi_admin == 1)
 
-    	@endif
+@endif
 
-    </ul>
+</ul>
 </div>
 </div>
 <div class="main-panel">
