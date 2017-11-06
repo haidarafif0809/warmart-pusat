@@ -131,11 +131,6 @@ class UbahProfilController extends Controller
 
 		return back();
 	} 
-//TANGGAL MYSQL
-	function tanggal_mysql($tanggal){
-		$date= date_create($tanggal);
-		return $date_format =  date_format($date,"Y-m-d");    
-	}
 
 //UBAH PROFIL USER PELANGGAN
 	public function ubah_profil_pelanggan() {
