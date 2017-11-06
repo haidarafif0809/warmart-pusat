@@ -1,4 +1,3 @@
-
 @extends('layouts.app_pelanggan')
 
 @section('content')
@@ -6,7 +5,7 @@
     <li><a href="{{ url('/daftar-produk') }}">Home</a></li>
     <li class="active">Ubah Profil</li>
 </ul>
-<div class="card" id="card-ubah-profil">
+<div class="card" id="card-ubah-profil" style="background-color: #fafafa">
     <div class="card-header card-header-icon" data-background-color="rose">
         <i class="material-icons">settings</i>
     </div>
@@ -63,38 +62,38 @@
                     {!! $errors->first('komunitas', '<p class="help-block">:message</p>') !!}
                     @else
                     {!! Form::select('komunitas', 
-                        [''=>'']+App\Komunitas::where('tipe_user','2')->pluck('name','id')->all(),null
-                        , ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH KOMUNITAS--','id'=>'pilih_komunitas']) !!}
-                        {!! $errors->first('komunitas', '<p class="help-block">:message</p>') !!}
-                        @endif
-                    </div>
+                    [''=>'']+App\Komunitas::where('tipe_user','2')->pluck('name','id')->all(),null
+                    , ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH KOMUNITAS--','id'=>'pilih_komunitas']) !!}
+                    {!! $errors->first('komunitas', '<p class="help-block">:message</p>') !!}
+                    @endif
                 </div>
-                {!! Form::hidden('id', $user->id, ['class'=>'form-control','autocomplete'=>'off']) !!}
-                <div class="col-md-2"></div>
-                <div class="col-md-4">
-                    {!! Form::button('<i class="material-icons">save</i>Simpan Profil', ['class'=>'btn btn-rose ', 'type'=>'submit', 'id' => 'btnSimpanProfil']) !!}
-                </div>
-
-                {!! Form::close() !!}
             </div>
+            {!! Form::hidden('id', $user->id, ['class'=>'form-control','autocomplete'=>'off']) !!}
+            <div class="col-md-2"></div>
+            <div class="col-md-4">
+                {!! Form::button('<i class="material-icons">save</i>Simpan Profil', ['class'=>'btn btn-rose ', 'type'=>'submit', 'id' => 'btnSimpanProfil']) !!}
+            </div>
+
+            {!! Form::close() !!}
         </div>
     </div>
-    @endsection
-    {{-- div card ubah profil --}}
+</div>
+@endsection
+{{-- div card ubah profil --}}
 
-    @section('scripts')
-    <script type="text/javascript">
-       $(document).ready(function(){
-        $("#nama_pelanggan").focus();
-    });
+@section('scripts')
+<script type="text/javascript">
+   $(document).ready(function(){
+    $("#nama_pelanggan").focus();
+});
 
-       $('.datepicker').datepicker({
-        format: 'yyyy-mm-dd', 
-        autoclose: true,
-    });
-       $(document).on('click', '#btnSimpanProfil', function(){
-        swal("Berhasil!", "Profil Berhasil Diubah", "success");
-    });
+   $('.datepicker').datepicker({
+    format: 'dd-mm.yyyy', 
+    autoclose: true,
+});
+   $(document).on('click', '#btnSimpanProfil', function(){
+    swal("Berhasil!", "Profil Berhasil Diubah", "success");
+});
 </script>
 @endsection
 
