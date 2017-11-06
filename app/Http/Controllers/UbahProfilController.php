@@ -149,7 +149,7 @@ class UbahProfilController extends Controller
 		$this->validate($request, [ 
 			'name' 		=> 'required', 
 			'no_telp' 	=> 'required|unique:users,no_telp,'.$request->id,
-			'email' 	=> 'required|unique:users,email,'.$request->id, 
+			'email' 	=> 'unique:users,email,'.$request->id, 
 			'alamat' 	=> 'required',
 		]);
 		//UPDATE USER PELANGGAN
