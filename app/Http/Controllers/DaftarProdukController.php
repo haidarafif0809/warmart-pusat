@@ -87,7 +87,7 @@ class DaftarProdukController extends Controller
       $warung = Warung::select(['name'])->where('id', $produks->id_warung)->first();
 
       $daftar_produk .= '      
-      <div class="col-md-3 col-sm-6">
+      <div class="col-md-3 col-sm-6 col-xs-6">
       <div class="card cards card-pricing">
       <a href="'.url("/keranjang-belanja") .'">
       <div class="card-image">';

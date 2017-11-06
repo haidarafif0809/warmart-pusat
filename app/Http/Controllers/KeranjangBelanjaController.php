@@ -8,6 +8,7 @@ use SEOMeta;
 use OpenGraph;
 use Twitter;
 use App\KeranjangBelanja;
+use Jenssegers\Agent\Agent;
 
 class KeranjangBelanjaController extends Controller
 {
@@ -26,8 +27,9 @@ class KeranjangBelanjaController extends Controller
 
 		$keranjang_belanjaan = KeranjangBelanja::with(['produk','pelanggan']);
 
+		$agent = new Agent();
 		$cek_belanjaan = $keranjang_belanjaan->count();
-		return view('layouts.keranjang_belanja',['keranjang_belanjaan'=>$keranjang_belanjaan,'cek_belanjaan'=>$cek_belanjaan]);
+		return view('layouts.keranjang_belanja',['keranjang_belanjaan'=>$keranjang_belanjaan,'cek_belanjaan'=>$cek_belanjaan,'agent'=>$agent]);
 
 	}
 }

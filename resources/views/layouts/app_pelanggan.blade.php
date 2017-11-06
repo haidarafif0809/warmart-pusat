@@ -35,13 +35,55 @@
 </head>
 
 <style type="text/css">
-    .navbar-nav .open .dropdown-menu{
-        color: grey;
-    }
+.navbar-nav .open .dropdown-menu{
+    color: grey;
+}
 </style>
 
 
 <body class="ecommerce-page">
+
+    @if ($agent->isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
+    <nav class="navbar navbar-default navbar-fixed-top navbar-color-on-scroll" color-on-scroll="100" id="sectionsNav">
+        <div class="container">
+
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="material-icons">person</i> {{ Auth::user()->name }} 
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu dropdown-with-icons">
+                        <li style="color:black">
+                            <a href="{{ url('/keranjang-belanja') }}" target="_blank" class="warna-list">
+                                <i class="material-icons">shopping_cart</i> Keranjang Belanja
+                            </a>
+                        </li>
+
+                        <li style="color:black">
+                            <a href="{{ url('/ubah-profil-pelanggan') }}">
+                                <i class="material-icons">settings</i> Ubah Profil
+                            </a>
+                        </li>
+                        <li style="color:black">
+                            <a href="{{ url('/ubah-password') }}">
+                                <i class="material-icons">lock_outline</i> Ubah Password
+                            </a>
+                        </li>
+                        <li style="color:black">
+                            <a href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> 
+                                <i class="material-icons">reply_all</i> Logout
+                            </a>
+                            <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
+                                {{ csrf_field() }}
+                            </form>
+                        </li>                            
+                    </ul>
+                </li>                    
+            </ul>
+        </div>
+    </nav>
+    @else
     <nav class="navbar navbar-default navbar-transparent navbar-fixed-top navbar-color-on-scroll" color-on-scroll="100" id="sectionsNav">
        <div class="container">
         <ul class="nav navbar-nav navbar-right">
@@ -52,7 +94,7 @@
                 </a>
                 <ul class="dropdown-menu dropdown-with-icons">
                     <li>
-                        <a href="{{ url('/ubah-profil') }}">
+                        <a href="{{ url('/ubah-profil-pelanggan') }}">
                             <i class="material-icons">settings</i> Ubah Profil
                         </a>
                     </li>
@@ -81,30 +123,10 @@
         </ul>
     </div>
 </nav>
+@endif 
 
-<div class="page-header header-filter header-small" data-parallax="true"" style="background-image: url('image/background2.jpg');">
 
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2">
-                <div class="brand">
-                    <h1 class="title">PASAR MUSLIM INDONESIA</h1>
-                    <h4 class="title"> Segala Kemudahan Untuk Umat Muslim Berbelanja.</h4>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="main main-raised">
-
- <div class="section">
-    <div class="container">
-     @yield('content')
- </div>
-</div><!-- section -->
-
-</div> <!-- end-main-raised -->
+@yield('content')
 
 <div class="section section-blog">
 </div><!-- section -->
@@ -152,20 +174,20 @@
         <ul class="pull-left">
             <li>
                 <a href="#pablo">
-                   Blog
-               </a>
-           </li>
-           <li>
+                 Blog
+             </a>
+         </li>
+         <li>
             <a href="#pablo">
                 Presentation
             </a>
         </li>
         <li>
             <a href="#pablo">
-               Discover
-           </a>
-       </li>
-       <li>
+             Discover
+         </a>
+     </li>
+     <li>
         <a href="#pablo">
             Payment
         </a>

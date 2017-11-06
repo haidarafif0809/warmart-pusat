@@ -174,6 +174,7 @@ return [
         Barryvdh\Debugbar\ServiceProvider::class,
         Stevebauman\Location\LocationServiceProvider::class,
         PragmaRX\Tracker\Vendor\Laravel\ServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -249,7 +250,9 @@ return [
         // or
         'SEO' => Artesaos\SEOTools\Facades\SEOTools::class,
         'Tracker' => 'PragmaRX\Tracker\Vendor\Laravel\Facade',
-        'Agent' => Jenssegers\Agent\Agent::class
+        'Agent' => Jenssegers\Agent\Agent::class,
+        'Image' => Intervention\Image\Facades\Image::class
+
 
 
         
