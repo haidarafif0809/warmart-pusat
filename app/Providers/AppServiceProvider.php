@@ -16,6 +16,8 @@ use App\Observers\DetailItemKeluarObserver;
 use App\Observers\ItemKeluarObserver;
 use App\Observers\DetailItemMasukObserver;
 use App\Observers\ItemMasukObserver;
+use App\Observers\DetailPembelianObserver;
+use App\Observers\PembelianObserver;
 use App\Warung;
 use App\Kas;
 use App\KasKeluar;
@@ -26,6 +28,8 @@ use App\DetailItemKeluar;
 use App\ItemKeluar;
 use App\DetailItemMasuk;
 use App\ItemMasuk;
+use App\DetailPembelian;
+use App\Pembelian;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -52,6 +56,8 @@ class AppServiceProvider extends ServiceProvider
         ItemKeluar::observe(ItemKeluarObserver::class);
         DetailItemMasuk::observe(DetailItemMasukObserver::class);
         ItemMasuk::observe(ItemMasukObserver::class);
+        DetailPembelian::observe(DetailPembelianObserver::class);
+        Pembelian::observe(PembelianObserver::class);
     }
 
     /**

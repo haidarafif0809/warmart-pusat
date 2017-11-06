@@ -34,200 +34,304 @@
 
 </head>
 
+<style type="text/css">
+    .navbar-nav .open .dropdown-menu{
+        color: grey;
+    }
+</style>
+
 <body class="ecommerce-page">
-    <nav class="navbar navbar-default navbar-transparent navbar-fixed-top navbar-color-on-scroll" color-on-scroll="100" id="sectionsNav">
+
+    @if ($agent->isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
+    <nav class="navbar navbar-default navbar-fixed-top navbar-color-on-scroll" color-on-scroll="100" id="sectionsNav">
         <div class="container">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="https://war-mart.id"> WAR-MART.ID </a>
-            </div>
 
-            <div class="collapse navbar-collapse">
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="material-icons">person</i> {{ Auth::user()->name }}
-                            <b class="caret"></b>
-                        </a>
-                        <ul class="dropdown-menu dropdown-with-icons">
-                            <li>
-                                <a href="{{ url('/ubah-profil') }}">
-                                    <i class="fa fa-edit"></i> Ubah Profil
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ url('/ubah-password') }}">
-                                    <i class="fa fa-expeditedssl"></i> Ubah Password
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> 
-                                    <i class="fa  fa-sign-out"></i> Logout
-                                </a>
-                                <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
-                                    {{ csrf_field() }}
-                                </form>
-                            </li>                            
-                        </ul>
-                    </li>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="material-icons">person</i> {{ Auth::user()->name }} 
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu dropdown-with-icons">
+                        <li style="color:black">
+                            <a href="{{ url('/keranjang-belanja') }}" target="_blank" class="warna-list">
+                                <i class="material-icons">shopping_cart</i> Keranjang Belanja
+                            </a>
+                        </li>
 
-                    <li class="button-container">
-                        <a href="{{ url('/keranjang-belanja') }}" target="_blank" class="btn btn-rose btn-round">
-                            <i class="material-icons">shopping_cart</i> Keranjang Belanja
-                        </a>
-                    </li>
-                </ul>
-            </div>
+                        <li style="color:black">
+                            <a href="{{ url('/ubah-profil-pelanggan') }}">
+                                <i class="material-icons">settings</i> Ubah Profil
+                            </a>
+                        </li>
+                        <li style="color:black">
+                            <a href="{{ url('/ubah-password') }}">
+                                <i class="material-icons">lock_outline</i> Ubah Password
+                            </a>
+                        </li>
+                        <li style="color:black">
+                            <a href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> 
+                                <i class="material-icons">reply_all</i> Logout
+                            </a>
+                            <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
+                                {{ csrf_field() }}
+                            </form>
+                        </li>                            
+                    </ul>
+                </li>                    
+            </ul>
         </div>
     </nav>
 
-    <div class="page-header header-filter header-small" data-parallax="true"" style="{!! $foto_latar_belakang !!}">
+    @else
+    <nav class="navbar navbar-default navbar-transparent navbar-fixed-top navbar-color-on-scroll" color-on-scroll="100" id="sectionsNav">
+     <div class="container">
+        <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <i class="material-icons">person</i> {{ Auth::user()->name }}
+                    <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu dropdown-with-icons">
+                    <li>
+                        <a href="{{ url('/ubah-profil-pelanggan') }}">
+                            <i class="material-icons">settings</i> Ubah Profil
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url('/ubah-password') }}">
+                            <i class="material-icons">lock_outline</i> Ubah Password
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> 
+                            <i class="material-icons">reply_all</i> Logout
+                        </a>
+                        <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
+                            {{ csrf_field() }}
+                        </form>
+                    </li>                             
+                </ul>
+            </li>
 
-        <div class="container">
-            <div class="row">
-                <div class="col-md-8 col-md-offset-2">
-                    <div class="brand">
-                        <h1 class="title">PASAR MUSLIM INDONESIA</h1>
-                        <h4 class="title"> Segala Kemudahan Untuk Umat Muslim Berbelanja.</h4>
+            <li class="button-container">
+                <a href="{{ url('/keranjang-belanja') }}" target="_blank" class="btn btn-rose btn-round">
+                    <i class="material-icons">shopping_cart</i> Keranjang Belanja
+                </a>
+            </li>
+
+        </ul>
+    </div>
+</nav>
+@endif
+
+@if ($agent->isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
+
+<br><br><br><br><br><br><br><br>
+<div class="main main-raised" style="background-color: #E5E5E5">
+
+    <div class="container">
+        <h3 class="title text-center">{!! $nama_kategori !!}</h3>
+
+        <div class="card card-raised card-form-horizontal">
+            <div class="card-content">
+                <form method="" action="">
+                    <div class="row">
+                        <div class="col-sm-10">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">search</i>
+                                </span>
+                                <input type="email" id="cari_produk" value="" placeholder="Cari Produk.." class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="button" class="btn btn-block" style="background-color: #f44336">Cari</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12"> 
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="headingTwo">
+                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            <h4 class="title">
+                                KATEGORI
+                                <i class="material-icons">keyboard_arrow_down</i>
+                            </h4>
+                        </a>
+                    </div>
+                    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                        <div class="panel-body">
+
+                            <ul class="nav" style="background-color: #f44336">                                        
+                                <li><a style="color:white" href="{{route('daftar_produk.index')}}"><i class="material-icons">format_align_justify</i> SEMUA KATEGORI</a></li>
+                            </ul>
+
+                            <ul class="nav" style="background-color: #f44336">
+                                {!! $kategori_produk !!}                        
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12"><br>
+                <div class="row">
+                    <!-- Menampilkan Produk -->
+                    {!! $daftar_produk !!}
+                    <div class="col-md-12">
+                        {{$produk_pagination}}
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="main main-raised">
-
-        <div class="section" style="background-color: #E5E5E5">
-            <div class="container">
-
-                <h3 class="title text-center">{!! $nama_kategori !!}</h3>
-
-                <div class="card card-raised card-form-horizontal">
-                    <div class="card-content">
-                        <form method="" action="">
-                            <div class="row">
-                                <div class="col-sm-10">
-                                    <div class="input-group">
-                                        <span class="input-group-addon">
-                                            <i class="material-icons">search</i>
-                                        </span>
-                                        <input type="email" id="cari_produk" value="" placeholder="Cari Produk.." class="form-control" />
-                                    </div>
-                                </div>
-                                <div class="col-sm-2">
-                                    <button type="button" class="btn btn-block" style="background-color: #f44336">Cari Produk</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
+</div> <!-- end-main-raised -->
+@else <!--JIKA DIAKSES VIA KOMPUTER-->
+<div class="page-header header-filter header-small" data-parallax="true"" style="{!! $foto_latar_belakang !!}">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="brand">
+                    <h1 class="title">PASAR MUSLIM INDONESIA</h1>
+                    <h4 class="title"> Segala Kemudahan Untuk Umat Muslim Berbelanja.</h4>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
 
+<div class="main main-raised" style="background-color: #E5E5E5">
+
+    <div class="container">
+        <h3 class="title text-center">{!! $nama_kategori !!}</h3>
+
+        <div class="card card-raised card-form-horizontal">
+            <div class="card-content">
+                <form method="" action="">
+                    <div class="row">
+                        <div class="col-sm-10">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">search</i>
+                                </span>
+                                <input type="email" id="cari_produk" value="" placeholder="Cari Produk.." class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="button" class="btn btn-block" style="background-color: #f44336">Cari</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3"> 
+                <ul class="nav nav-tabs" data-tabs="tabs" style="background-color: #f44336">                                        
+                    <li><a href="{{route('daftar_produk.index')}}"><i class="material-icons">format_align_justify</i> Semua Kategori</a></li>
+                </ul>
+            </div>
+            <div class="col-md-9">                        
+                <ul class="nav nav-tabs" data-tabs="tabs" style="background-color: #f44336">
+                    {!! $kategori_produk !!}                        
+                </ul>
+            </div>
+
+            <div class="col-md-12"><br>
                 <div class="row">
-                    <div class="col-md-3"> 
-                        <ul class="nav nav-tabs" data-tabs="tabs" style="background-color: #f44336">                                        
-                            <li><a href="{{route('daftar_produk.index')}}"><i class="material-icons">format_align_justify</i> Semua Kategori</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-md-9">                        
-                        <ul class="nav nav-tabs" data-tabs="tabs" style="background-color: #f44336">
-                            {!! $kategori_produk !!}
-                        </ul>
-                    </div>
+                    <!-- Menampilkan Produk -->
+                    <span id="span-produk">{!! $daftar_produk !!}</span>
                     <div class="col-md-12">
-                        <div class="row">
-                            <!-- Menampilkan Produk -->
-                            <span id="span-produk">{!! $daftar_produk !!}</span>
-                            <div class="col-md-12">
-                                {{$produk_pagination}}
-                            </div>
-                        </div>
+                        {{$produk_pagination}}
                     </div>
                 </div>
             </div>
-        </div><!-- section -->
+        </div>
+    </div>
 
-    </div> <!-- end-main-raised -->
+</div> <!-- end-main-raised -->
+@endif
 
-    <div class="section section-blog">
-    </div><!-- section -->
+<div class="section section-blog">
+</div><!-- section -->
 
-    <footer class="footer footer-black footer-big">
-        <div class="container">
+<footer class="footer footer-black footer-big">
+    <div class="container">
 
-            <div class="content">
-                <div class="row">
-                    <div class="col-md-4">
-                        <h5>Tentang Kami</h5>
-                        <p>Creative Tim is a startup that creates design tools that make the web development process faster and easier. </p> <p>We love the web and care deeply for how users interact with a digital product. We power businesses and individuals to create better looking web projects around the world. </p>
-                    </div>
+        <div class="content">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>Tentang Kami</h5>
+                    <p>Creative Tim is a startup that creates design tools that make the web development process faster and easier. </p> <p>We love the web and care deeply for how users interact with a digital product. We power businesses and individuals to create better looking web projects around the world. </p>
+                </div>
 
-                    <div class="col-md-4">
-                        <h5>Media Sosial</h5>
-                        <div class="social-feed">
-                            <div class="feed-line">
-                                <i class="fa fa-twitter"></i>
-                                <p>How to handle ethical disagreements with your clients.</p>
-                            </div>
-                            <div class="feed-line">
-                                <i class="fa fa-twitter"></i>
-                                <p>The tangible benefits of designing at 1x pixel density.</p>
-                            </div>
-                            <div class="feed-line">
-                                <i class="fa fa-facebook-square"></i>
-                                <p>A collection of 25 stunning sites that you can use for inspiration.</p>
-                            </div>
+                <div class="col-md-4">
+                    <h5>Media Sosial</h5>
+                    <div class="social-feed">
+                        <div class="feed-line">
+                            <i class="fa fa-twitter"></i>
+                            <p>How to handle ethical disagreements with your clients.</p>
                         </div>
-                    </div>
-
-                    <div class="col-md-4">
-                        <h5>Instagram</h5>
-                        <div class="gallery-feed">
+                        <div class="feed-line">
+                            <i class="fa fa-twitter"></i>
+                            <p>The tangible benefits of designing at 1x pixel density.</p>
                         </div>
-
+                        <div class="feed-line">
+                            <i class="fa fa-facebook-square"></i>
+                            <p>A collection of 25 stunning sites that you can use for inspiration.</p>
+                        </div>
                     </div>
                 </div>
+
+                <div class="col-md-4">
+                    <h5>Instagram</h5>
+                    <div class="gallery-feed">
+                    </div>
+
+                </div>
             </div>
+        </div>
 
 
-            <hr />
+        <hr />
 
-            <ul class="pull-left">
-                <li>
-                    <a href="#pablo">
-                     Blog
-                 </a>
-             </li>
-             <li>
-                <a href="#pablo">
-                    Presentation
-                </a>
-            </li>
+        <ul class="pull-left">
             <li>
                 <a href="#pablo">
-                 Discover
+                 Blog
              </a>
          </li>
          <li>
             <a href="#pablo">
-                Payment
+                Presentation
             </a>
         </li>
         <li>
             <a href="#pablo">
-                Contact Us
-            </a>
-        </li>
-    </ul>
+             Discover
+         </a>
+     </li>
+     <li>
+        <a href="#pablo">
+            Payment
+        </a>
+    </li>
+    <li>
+        <a href="#pablo">
+            Contact Us
+        </a>
+    </li>
+</ul>
 
-    <div class="copyright pull-right">
-        Copyright &copy; <script>document.write(new Date().getFullYear())</script> <a href="https://andaglos.id/"> PT. Andaglos Global Teknologi.</a>
-    </div>
+<div class="copyright pull-right">
+    Copyright &copy; <script>document.write(new Date().getFullYear())</script> <a href="https://andaglos.id/"> PT. Andaglos Global Teknologi.</a>
+</div>
 </div>
 </footer>
 </body>
