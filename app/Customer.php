@@ -20,7 +20,7 @@ class Customer extends Model
   protected $fillable = ['id','email','password','name', 'alamat', 'wilayah', 'no_telp','tgl_lahir','tipe_user', 'status_konfirmasi'];
 
   protected $hidden = [
-    'password', 'remember_token',
+  'password', 'remember_token',
   ];
 
 
