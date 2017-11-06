@@ -149,6 +149,54 @@ export default {
             });
           }
         }
-      }
-    }
-    </script>
+        axios.get(app.url+'/view?page='+page)
+                .then(function (resp) {
+                    app.satuans = resp.data.data;
+                    app.satuansData = resp.data;
+                    app.loading = false;
+                })
+                .catch(function (resp) {
+                    console.log(resp);
+                    app.loading = false;
+                    alert("Could not load satuans");
+                });
+       },
+      getHasilPencarian(page){
+        var app = this;
+        if (typeof page === 'undefined') {
+          page = 1;
+        }
+        axios.get(app.url+'/pencarian?search='+app.pencarian+'&page='+page)
+                .then(function (resp) {
+                    app.satuans = resp.data.data;
+                    app.satuansData = resp.data;
+                })
+                .catch(function (resp) {
+                    console.log(resp);
+                    alert("Could not load satuans");
+                });
+      },
+		  alert(pesan) {
+              this.$swal({
+                  title: "Berhasil Menghapus satuan!",
+                  text: pesan,
+                  icon: "success",
+                });
+            },
+            deleteEntry(id, index,nama_satuan){
+		     if (confirm("Yakin Ingin Menghapus Satuan "+nama_satuan+" ?")) {
+                    var app = this;
+                    axios.delete(app.url+'/' + id)
+                        .then(function (resp) {
+                          app.getResults();
+							app.alert("Berhasil Menghapus Satuan "+nama_satuan)
+						})
+                        .catch(function (resp) {
+                            alert("Could not delete company");
+                        });
+                }
+            }
+         }
+	  }
+</script>
+

@@ -120,6 +120,10 @@ Route::get('/satuan/view','SatuanController@view')->middleware('auth');
 Route::get('/satuan/pencarian','SatuanController@pencarian')->middleware('auth');
 
 
+//menampilkan data user
+Route::get('/user/view','UserController@view')->middleware('auth');
+Route::get('/user/pencarian','UserController@pencarian')->middleware('auth');
+
 Route::middleware('optimizeImages','auth')->group(function () {
 	
 	Route::resource('user', 'UserController');

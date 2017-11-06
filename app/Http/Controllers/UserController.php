@@ -30,60 +30,19 @@ class UserController extends Controller
     public function index(Request $request, Builder $htmlBuilder)
     {
         //index user
-
-         if ($request->ajax()) {
-            # code...
-            $master_users = User::with('role')->where('tipe_user',1);
-            return Datatables::of($master_users)
-            ->addColumn('action', function($master_user){
-                    return view('datatable._action', [
-                        'model'     => $master_user,
-                        'form_url'  => route('user.destroy', $master_user->id),
-                        'edit_url'  => route('user.edit', $master_user->id),
-                        'confirm_message'   => 'Yakin Mau Menghapus User ' . $master_user->name . '?',
-                        'permission_ubah' => Laratrust::can('edit_user'),
-                        'permission_hapus' => Laratrust::can('hapus_user'),
-                   
-                        ]);
-                })
-            ->addColumn('konfirmasi', function($user_konfirmasi){
-                    return view('user._action', [
-                        'model'     => $user_konfirmasi,
-                        'confirm_ya'   => 'confirm-ya-'.$user_konfirmasi->id,
-                        'confirm_no'   => 'confirm-no-'.$user_konfirmasi->id,
-                        'confirm_message'   => 'Apakah Anda Yakin Ingin Meng Konfirmasi User ' . $user_konfirmasi->name . '?',
-                        'no_confirm_message'   => 'Apakah Anda Yakin Tidak Meng Konfirmasi User ' . $user_konfirmasi->name . '?',
-                        'konfirmasi_url' => route('user.konfirmasi', $user_konfirmasi->id),
-                        'no_konfirmasi_url' => route('user.no_konfirmasi', $user_konfirmasi->id),
-                        'konfirmasi_user' => Laratrust::can('konfirmasi_user'), 
-                        ]);
-                })//Konfirmasi User Apabila Bila Status User 1 Maka User sudah di konfirmasi oleh admin dan apabila status user 0 maka user belum di konfirmasi oleh admin
-
-            ->addColumn('reset', function($reset){
-                    return view('user._action_reset', [
-                        'model'     => $reset,
-                        'id_reset'  => 'reset-'.$reset->id,
-                        'confirm_message'   => 'Apakah Anda Yakin Ingin Me Reset Password User ' . $reset->name . '?',
-                        'reset_url' => route('user.reset', $reset->id),
-                        'reset_password_user' => Laratrust::can('reset_password_user'), 
-                        ]);
-                })//Reset Password apabila di klik tombol reset password maka password menjadi 123456
-            ->addColumn('role', function($user){
-                 $role = Role::where('id',$user->role->role_id)->first();
-                return $role->display_name;
-                })->make(true);
-        }
-        $html = $htmlBuilder
-        ->addColumn(['data' => 'name', 'name' => 'name', 'title' => 'Nama'])
-        ->addColumn(['data' => 'no_telp', 'name' => 'no_telp', 'title' => 'No. Telpon'])  
-        ->addColumn(['data' => 'email', 'name' => 'email', 'title' => 'Username'])  
-        ->addColumn(['data' => 'alamat', 'name' => 'alamat', 'title' => 'Alamat', 'orderable' => false])
-        ->addColumn(['data' => 'role', 'name' => 'role', 'title' => 'Otoritas', 'orderable' => false, 'searchable'=>false])
-        ->addColumn(['data' => 'reset', 'name' => 'reset', 'title' => 'Reset Password', 'orderable' => false, 'searchable'=>false])
-        ->addColumn(['data' => 'konfirmasi', 'name' => 'konfirmasi', 'title' => 'Konfirmasi', 'searchable'=>false])
-        ->addColumn(['data' => 'action', 'name' => 'action', 'title' => '', 'orderable' => false, 'searchable'=>false]);
-
         return view('user.index')->with(compact('html'));
+         
+    }
+
+         public function view(){
+        $user = User::with('role')->where('tipe_user',1)->paginate(10);
+        return response()->json($user);
+    }
+
+    public function pencarian(Request $request){
+
+        $user = User::with('role')->where('tipe_user',1)->orWhere('name','LIKE',"%$request->search%")->orWhere('no_telp','LIKE',"%$request->search%")->orWhere('email','LIKE',"%$request->search%")->orWhere('alamat','LIKE',"%$request->search%")->paginate(10);
+        return response()->json($user);
     }
 
     /**
