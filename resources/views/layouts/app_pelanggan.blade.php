@@ -115,8 +115,8 @@
             </li>
 
             <li class="button-container">
-                <a href="{{ url('/keranjang-belanja') }}" class="btn btn-rose btn-round"><b>1</b>
-                    <i class="material-icons">shopping_cart</i> Keranjang Belanja
+                <a href="{{ url('/keranjang-belanja') }}" class="btn btn-rose btn-round">
+                    <i class="material-icons">shopping_cart</i> Keranjang Belanja <b>- {{ $cek_belanjaan }}</b>
                 </a>
             </li>
 

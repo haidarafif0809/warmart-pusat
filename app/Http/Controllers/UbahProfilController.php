@@ -13,6 +13,7 @@ use Jenssegers\Agent\Agent;
 use App\Customer;
 use App\UserWarung; 
 use Session;
+use App\KeranjangBelanja;  
 
 class UbahProfilController extends Controller
 {
@@ -140,7 +141,9 @@ class UbahProfilController extends Controller
 		$pelanggan = Customer::select(['id','email','password','name', 'alamat', 'wilayah', 'no_telp','tgl_lahir','tipe_user', 'status_konfirmasi'])->where('id', $user->id)->first();
 		$komunitas_pelanggan = KomunitasCustomer::where('user_id',$user->id)->first();
 
-		return view('ubah_profil_pelanggan',['user' => $pelanggan, 'pelanggan' => $pelanggan, 'komunitas_pelanggan' => $komunitas_pelanggan]);
+		$keranjang_belanjaan = KeranjangBelanja::with(['produk','pelanggan'])->where('id_pelanggan',Auth::user()->id)->get();
+		$cek_belanjaan = $keranjang_belanjaan->count();  
+		return view('ubah_profil_pelanggan',['user' => $pelanggan, 'pelanggan' => $pelanggan, 'komunitas_pelanggan' => $komunitas_pelanggan, 'cek_belanjaan' => $cek_belanjaan]);
 	}
 
 //UBAH PROFIL USER PELANGGAN
