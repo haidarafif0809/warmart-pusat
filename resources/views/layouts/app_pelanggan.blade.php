@@ -85,7 +85,7 @@
     </nav>
     @else
     <nav class="navbar navbar-default navbar-transparent navbar-fixed-top navbar-color-on-scroll" color-on-scroll="100" id="sectionsNav">
-       <div class="container">
+     <div class="container">
         <ul class="nav navbar-nav navbar-right">
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -137,70 +137,67 @@
             <div class="row">
                 <div class="col-md-4">
                     <h5>Tentang Kami</h5>
-                    <p>Creative Tim is a startup that creates design tools that make the web development process faster and easier. </p> <p>We love the web and care deeply for how users interact with a digital product. We power businesses and individuals to create better looking web projects around the world. </p>
+                    <p>Warmart adalah marketplace warung muslim pertama di Indonesia. Kami menghubungkan usaha-usaha muslim dengan pelanggan seluruh Umat Islam di Indonesia. Jenis usaha yang dapat bergabung dengan Warmart diantaranya: Warung, Toko, Minimarket, Pedagang Kaki Lima, Bengkel, Rumah Makan, Klinik, Home Industri, Peternakan, Pertanian, Perikanan, Kerajinan, Fashion dan usaha lainya.</p>
                 </div>
 
                 <div class="col-md-4">
-                    <h5>Media Sosial</h5>
+                    <h5>Contact Us</h5>
                     <div class="social-feed">
                         <div class="feed-line">
-                            <i class="fa fa-twitter"></i>
-                            <p>How to handle ethical disagreements with your clients.</p>
-                        </div>
-                        <div class="feed-line">
-                            <i class="fa fa-twitter"></i>
-                            <p>The tangible benefits of designing at 1x pixel density.</p>
-                        </div>
-                        <div class="feed-line">
-                            <i class="fa fa-facebook-square"></i>
-                            <p>A collection of 25 stunning sites that you can use for inspiration.</p>
+                            <i class="fa fa-phone-square"></i>
+                            <p>+62-721-8050-299 <br>
+                                Bandar Lampung, Indonesia
+                                solusibisnis@andaglos.id</p>
+                            </div>
+                            <div class="feed-line">                            
+                                <a href="https://id-id.facebook.com/andaglos/" target="blank"><i class="fa fa-facebook-square"></i> Andaglos</a>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="col-md-4">
-                    <h5>Instagram</h5>
-                    <div class="gallery-feed">
+                    <div class="col-md-4">
+                        <h5>Instagram</h5>
+                        <div class="gallery-feed">
+                        </div>
+
                     </div>
-
                 </div>
             </div>
-        </div>
 
 
-        <hr />
+            <hr />
 
-        <ul class="pull-left">
+            <ul class="pull-left">
+                <li>
+                    <a href="#pablo">
+                       Blog
+                   </a>
+               </li>
+               <li>
+                <a href="#pablo">
+                    Presentation
+                </a>
+            </li>
             <li>
                 <a href="#pablo">
-                 Blog
-             </a>
-         </li>
-         <li>
+                   Discover
+               </a>
+           </li>
+           <li>
             <a href="#pablo">
-                Presentation
+                Payment
             </a>
         </li>
         <li>
             <a href="#pablo">
-             Discover
-         </a>
-     </li>
-     <li>
-        <a href="#pablo">
-            Payment
-        </a>
-    </li>
-    <li>
-        <a href="#pablo">
-            Contact Us
-        </a>
-    </li>
-</ul>
+                Contact Us
+            </a>
+        </li>
+    </ul>
 
-<div class="copyright pull-right">
-    Copyright &copy; <script>document.write(new Date().getFullYear())</script> <a href="https://andaglos.id/"> PT. Andaglos Global Teknologi.</a>
-</div>
+    <div class="copyright pull-right">
+        Copyright &copy; <script>document.write(new Date().getFullYear())</script> <a href="https://andaglos.id/"> PT. Andaglos Global Teknologi.</a>
+    </div>
 </div>
 </footer>
 </body>
