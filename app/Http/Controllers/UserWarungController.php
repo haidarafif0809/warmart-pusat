@@ -58,6 +58,15 @@ class UserWarungController extends Controller
                 }
                 return $email;
             })
+            ->addColumn('email', function($warung){
+                if ($warung->warung == NULL AND $warung->warung == "") {
+                    $warung = "-";
+                }
+                else{
+                    $warung = $warung->warung->name;
+                }
+                return $warung;
+            })
             ->addColumn('konfirmasi', function($user_konfirmasi){
                 return view('user_warung._action', [
                     'model'     => $user_konfirmasi,
@@ -78,7 +87,7 @@ class UserWarungController extends Controller
         ->addColumn(['data' => 'name', 'name' => 'name', 'title' => 'Nama']) 
         ->addColumn(['data' => 'alamat', 'name' => 'alamat', 'title' => 'Alamat']) 
         ->addColumn(['data' => 'kelurahan', 'name' => 'kelurahan', 'title' => 'Wilayah'])  
-        ->addColumn(['data' => 'warung.name', 'name' => 'warung.name', 'title' => 'Warung'])  
+        ->addColumn(['data' => 'warung', 'name' => 'warung', 'title' => 'Warung', 'orderable' => false, 'searchable'=>false])  
         ->addColumn(['data' => 'konfirmasi', 'name' => 'konfirmasi', 'title' => 'Konfirmasi', 'searchable'=>false])
         ->addColumn(['data' => 'action', 'name' => 'action', 'title' => '', 'orderable' => false, 'searchable'=>false]);
         
