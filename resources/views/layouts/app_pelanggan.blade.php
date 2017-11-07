@@ -3,8 +3,8 @@
 <head>
     <title>War-Mart.id</title>
     <meta charset="utf-8" />
-    <link rel="apple-touch-icon" sizes="76x76" href="img/favicon.png" />
-    <link rel="icon" type="image/png" href="img/favicon.png" />
+    <link rel="apple-touch-icon" sizes="76x76" href="img/favicon.jpg" />
+    <link rel="icon" type="image/png" href="img/favicon.jpg" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
@@ -35,9 +35,9 @@
 </head>
 
 <style type="text/css">
-.navbar-nav .open .dropdown-menu{
-    color: grey;
-}
+    .navbar-nav .open .dropdown-menu{
+        color: grey;
+    }
 </style>
 
 
@@ -56,7 +56,7 @@
                     <ul class="dropdown-menu dropdown-with-icons">
                         <li style="color:black">
                             <a href="{{ url('/keranjang-belanja') }}" target="_blank" class="warna-list">
-                                <i class="material-icons">shopping_cart</i> Keranjang Belanja
+                                <i class="material-icons">shopping_cart</i> Keranjang Belanja <b style="font-size: 15px">| {{ $cek_belanjaan }}</b>
                             </a>
                         </li>
 
@@ -85,7 +85,7 @@
     </nav>
     @else
     <nav class="navbar navbar-default navbar-transparent navbar-fixed-top navbar-color-on-scroll" color-on-scroll="100" id="sectionsNav">
-     <div class="container">
+       <div class="container">
         <ul class="nav navbar-nav navbar-right">
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -116,7 +116,7 @@
 
             <li class="button-container">
                 <a href="{{ url('/keranjang-belanja') }}" class="btn btn-rose btn-round">
-                    <i class="material-icons">shopping_cart</i> Keranjang Belanja <b>- {{ $cek_belanjaan }}</b>
+                    <i class="material-icons">shopping_cart</i> Keranjang Belanja <b style="font-size: 15px">| {{ $cek_belanjaan }}</b>
                 </a>
             </li>
 
@@ -147,57 +147,57 @@
                             <i class="fa fa-phone-square"></i>
                             <p>+62-721-8050-299 <br>
                                 Bandar Lampung, Indonesia
-                            solusibisnis@andaglos.id</p>
-                        </div>
-                        <div class="feed-line">                            
-                            <a href="https://id-id.facebook.com/andaglos/" target="blank"><i class="fa fa-facebook-square"></i> Andaglos</a>
+                                solusibisnis@andaglos.id</p>
+                            </div>
+                            <div class="feed-line">                            
+                                <a href="https://id-id.facebook.com/andaglos/" target="blank"><i class="fa fa-facebook-square"></i> Andaglos</a>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="col-md-4">
-                    <h5>Instagram</h5>
-                    <div class="gallery-feed">
+                    <div class="col-md-4">
+                        <h5>Instagram</h5>
+                        <div class="gallery-feed">
+                        </div>
+
                     </div>
-
                 </div>
             </div>
-        </div>
 
 
-        <hr />
+            <hr />
 
-        <ul class="pull-left">
+            <ul class="pull-left">
+                <li>
+                    <a href="#pablo">
+                     Blog
+                 </a>
+             </li>
+             <li>
+                <a href="#pablo">
+                    Presentation
+                </a>
+            </li>
             <li>
                 <a href="#pablo">
-                   Blog
-               </a>
-           </li>
-           <li>
+                 Discover
+             </a>
+         </li>
+         <li>
             <a href="#pablo">
-                Presentation
+                Payment
             </a>
         </li>
         <li>
             <a href="#pablo">
-               Discover
-           </a>
-       </li>
-       <li>
-        <a href="#pablo">
-            Payment
-        </a>
-    </li>
-    <li>
-        <a href="#pablo">
-            Contact Us
-        </a>
-    </li>
-</ul>
+                Contact Us
+            </a>
+        </li>
+    </ul>
 
-<div class="copyright pull-right">
-    Copyright &copy; <script>document.write(new Date().getFullYear())</script> <a href="https://andaglos.id/"> PT. Andaglos Global Teknologi.</a>
-</div>
+    <div class="copyright pull-right">
+        Copyright &copy; <script>document.write(new Date().getFullYear())</script> <a href="https://andaglos.id/"> PT. Andaglos Global Teknologi.</a>
+    </div>
 </div>
 </footer>
 </body>
