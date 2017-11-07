@@ -2,10 +2,10 @@
 
 @section('content')
 <style type="text/css">
-#card-ubah-profil{ 
-    background: #fafafa;; 
-    position: relative; 
-    z-index: 3; 
+    #card-ubah-profil{ 
+        background: #fafafa;; 
+        position: relative; 
+        z-index: 3; 
 
         margin: -60px 30px 60px; 
         border-radius: 6px; 
@@ -38,7 +38,7 @@
 <div class="container">
     <div class="card" id="card-ubah-profil-mobile"><br>
         <ul class="breadcrumb">
-            <li><a href="{{ url('/daftar-produk') }}">Home</a></li>
+            <li><a href="{{ url('/daftar-produk') }}" style="color: purple">Home</a></li>
             <li class="active">Ubah Profil Pelanggan</li>
         </ul>
     </div>
@@ -136,7 +136,7 @@
     <div class="container">
         <div class="card" id="card-ubah-profil"><br>
             <ul class="breadcrumb">
-                <li><a href="{{ url('/daftar-produk') }}">Home</a></li>
+                <li><a href="{{ url('/daftar-produk') }}" style="color: purple">Home</a></li>
                 <li class="active">Ubah Profil Pelanggan</li>
             </ul>
         </div>

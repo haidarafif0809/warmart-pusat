@@ -66,7 +66,7 @@
                             </a>
                         </li>
                         <li style="color:black">
-                            <a href="{{ url('/ubah-password') }}">
+                            <a href="{{ url('/ubah-password-pelanggan') }}">
                                 <i class="material-icons">lock_outline</i> Ubah Password
                             </a>
                         </li>
@@ -99,7 +99,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ url('/ubah-password') }}">
+                        <a href="{{ url('/ubah-password-pelanggan') }}">
                             <i class="material-icons">lock_outline</i> Ubah Password
                         </a>
                     </li>

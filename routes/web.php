@@ -126,6 +126,20 @@ Route::put('/proses-ubah-password/{id}',[
 	'uses' => 'UbahPasswordController@proses_ubah_password'
 ]);
 
+//UBAH PASSWORD PELANGGAN
+Route::get('/ubah-password-pelanggan',[
+	'middleware' => ['auth'],
+	'as' => 'user.ubah_password_pelanggan',
+	'uses' => 'UbahPasswordController@ubah_password_pelanggan'
+]);
+
+//PROSES //UBAH PASSWORD PELANGGAN
+Route::put('/proses-ubah-password-pelanggan/{id}',[
+	'middleware' => ['auth'],
+	'as' => 'user.proses_ubah_password_pelanggan',
+	'uses' => 'UbahPasswordController@proses_ubah_password_pelanggan'
+]);
+
 //UBAH PROFIL PELANGGAN
 Route::get('/ubah-profil-pelanggan',[
 	'middleware' => ['auth'],
