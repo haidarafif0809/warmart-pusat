@@ -118,18 +118,21 @@ class KeranjangBelanjaController extends Controller
 	public function tambah_produk_keranjang_belanjaan($id)
 	{
 		$pelanggan =  Auth::user()->id ; 
-		$keranjang_belanjaan = KeranjangBelanja::where('id_pelanggan',$pelanggan)->orWhere('id_produk',$id)->first(); 
-		if ($keranjang_belanjaan->id_pelanggan != $pelanggan AND $keranjang_belanjaan->id_produk != $id) { 
+		$datakeranjang_belanjaan = KeranjangBelanja::where('id_pelanggan',$pelanggan)->orWhere('id_produk',$id);
+		$keranjang_belanjaan = $datakeranjang_belanjaan->first();
+		if ($datakeranjang_belanjaan->count() == 1) {
+			if ($keranjang_belanjaan->id_pelanggan == $pelanggan AND $keranjang_belanjaan->id_produk == $id) { 
+
+				$keranjang_belanjaan->jumlah_produk += 1;
+				$keranjang_belanjaan->save();
+			}  
+		}else{
 
 			$produk = KeranjangBelanja::create(); 
 			$produk->id_produk = $id;
 			$produk->id_pelanggan =  $pelanggan;
 			$produk->jumlah_produk += 1;
-			$produk->save(); 	
-		}else{
-
-			$keranjang_belanjaan->jumlah_produk += 1;
-			$keranjang_belanjaan->save();
+			$produk->save(); 		
 		}
 		return redirect()->back();
 		
