@@ -414,8 +414,7 @@ public function prosesEditPembelian(Request $request) {
 			'status_beli_awal'  => $request->status_pembelian, 
 			'tanggal_jt_tempo'  => $request->jatuh_tempo, 
 			'keterangan'        => $request->keterangan, 
-			'ppn'               => $request->ppn, 
-			'warung_id'         => Auth::user()->id_warung 
+			'ppn'               => $request->ppn
 		]);
 
           //HAPUS TBS PEMBELIAN 
