@@ -10,6 +10,7 @@ use App\TbsPembelian;
 use App\DetailPembelian;   
 use App\Barang;   
 use App\EditTbsPembelian;
+use App\TransaksiKas;
 use App\Kas;   
 use Session; 
 use Auth; 
@@ -618,6 +619,8 @@ public function proses_batal_transaksi_pembelian(){
       $subtotal = number_format($sum_subtotal->subtotal,2,',','.'); 
       $tbs_pembelian = EditTbsPembelian::with(['produk'])->where('no_faktur', $data_pembelian->no_faktur)->where('warung_id',Auth::user()->id_warung); 
       $jumlah_item =  $tbs_pembelian->count();
+      $kas = TransaksiKas::select('jumlah_keluar')->where('no_faktur', $no_faktur)->where('warung_id',Auth::user()->id_warung)->first(); 
+      $jumlah_kas_lama = $kas->jumlah_keluar;
       if ($request->ajax()) { 
         return Datatables::of($tbs_pembelian->get())->addColumn('action', function($TbsPembelian){ 
 
@@ -674,7 +677,8 @@ public function proses_batal_transaksi_pembelian(){
         'kas_default'   =>$kas_default,
         'no_faktur'     =>$no_faktur,
         'pembelian'      => $data_pembelian,
-        'jumlah_item'   => $jumlah_item] )->with(compact('html')); 
+        'jumlah_item'   => $jumlah_item,
+        'jumlah_kas_lama'=> $jumlah_kas_lama] )->with(compact('html')); 
 
     } 
 

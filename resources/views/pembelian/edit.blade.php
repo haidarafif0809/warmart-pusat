@@ -312,12 +312,13 @@
 
 			var kas = $("#id_cara_bayar").val(); 
 			var pembayaran = $("#pembayaran").val(); 
+			var jumlah_lama = "{{$jumlah_kas_lama}}"; 
 
 			$.post('{{ route('cek_total_kas') }}',{'_token': $('meta[name=csrf-token]').attr('content'),kas:kas}, function(data){  
 				if (data == '')  { 
 					data = 0; 
 				} 
-				var hitung_sisa_kas = parseFloat(data) - parseFloat(pembayaran); 
+				var hitung_sisa_kas = (parseFloat(data) + parseFloat(jumlah_lama)) - parseFloat(pembayaran); 
 				if (hitung_sisa_kas >= 0) { 
 					document.getElementById("form_pembelian").submit(); 
 				}else{ 
