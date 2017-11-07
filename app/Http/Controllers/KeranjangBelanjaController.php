@@ -120,12 +120,11 @@ class KeranjangBelanjaController extends Controller
 		$pelanggan =  Auth::user()->id ; 
 		$datakeranjang_belanjaan = KeranjangBelanja::where('id_pelanggan',$pelanggan)->orWhere('id_produk',$id);
 		$keranjang_belanjaan = $datakeranjang_belanjaan->first();
-		if ($datakeranjang_belanjaan->count() == 1) {
-			if ($keranjang_belanjaan->id_pelanggan == $pelanggan AND $keranjang_belanjaan->id_produk == $id) { 
+		if ($datakeranjang_belanjaan->count() >= 1 AND $keranjang_belanjaan->id_pelanggan == $pelanggan AND $keranjang_belanjaan->id_produk == $id) {
 
-				$keranjang_belanjaan->jumlah_produk += 1;
-				$keranjang_belanjaan->save();
-			}  
+
+			$keranjang_belanjaan->jumlah_produk += 1;
+			$keranjang_belanjaan->save(); 
 		}else{
 
 			$produk = KeranjangBelanja::create(); 
