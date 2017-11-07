@@ -129,7 +129,7 @@ class UbahProfilController extends Controller
 			"message"   => "Profil Berhasil Di Ubah"
 		]);
 
-		return back();
+		return redirect()->route('dashboard');
 	} 
 
 //UBAH PROFIL USER PELANGGAN

@@ -70,7 +70,7 @@ class KeranjangBelanjaController extends Controller
 			</div>
 			</td>   
 			<td class="td-actions">
-			<a href=" '. url('/keranjang-belanja/hapus-produk-keranjang-belanja/'.$keranjang_belanjaans->id_keranjang_belanja.''). '" type="button" rel="tooltip" data-placement="left" title="Remove item" class="btn btn-simple">
+			<a id="btnHapusgProduk" href=" '. url('/keranjang-belanja/hapus-produk-keranjang-belanja/'.$keranjang_belanjaans->id_keranjang_belanja.''). '" type="button" rel="tooltip" data-placement="left" title="Remove item" class="btn btn-simple">
 			<i class="material-icons">close</i>
 			</a>
 			</td>
@@ -116,4 +116,15 @@ class KeranjangBelanjaController extends Controller
 		
 	}
 
+	public function tambah_produk_keranjang_belanjaan($id)
+	{
+		$produk = KeranjangBelanja::create(); 
+		$produk->id_produk = $id;
+		$produk->id_pelanggan = Auth::user()->id;
+		$produk->jumlah_produk += 1;
+		$produk->save();
+		
+		return redirect()->route('keranjang_belanja.daftar_belanja');
+		
+	}
 }

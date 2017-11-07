@@ -43,6 +43,7 @@ Route::get('/daftar-produk/{id}',[
 	'uses' => 'DaftarProdukController@filter_kategori'
 ]);
 
+//PUNYA KERANJANG BELANJAAN
 Route::get('/keranjang-belanja',[ 
 	'middleware' => ['auth'],
 	'as' => 'keranjang_belanja.daftar_belanja',
@@ -59,6 +60,18 @@ Route::get('/keranjang-belanja/kurang-jumlah-produk-keranjang-belanja/{id}',[
 	'middleware' => ['auth'],
 	'as' => 'keranjang-belanja.kurang_jumlah_produk_keranjang_belanjaan',
 	'uses' => 'KeranjangBelanjaController@kurang_jumlah_produk_keranjang_belanjaan'
+]);
+
+Route::get('/keranjang-belanja/hapus-produk-keranjang-belanja/{id}',[
+	'middleware' => ['auth'],
+	'as' => 'keranjang-belanja.hapus_produk_keranjang_belanjaan',
+	'uses' => 'KeranjangBelanjaController@hapus_produk_keranjang_belanjaan'
+]);
+
+Route::get('/keranjang-belanja/tambah-produk-keranjang-belanja/{id}',[
+	'middleware' => ['auth'],
+	'as' => 'keranjang-belanja.tambah_produk_keranjang_belanjaan',
+	'uses' => 'KeranjangBelanjaController@tambah_produk_keranjang_belanjaan'
 ]);
 
 Route::middleware('optimizeImages')->group(function () {

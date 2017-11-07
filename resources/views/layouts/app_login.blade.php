@@ -3,8 +3,8 @@
 
 <head>
     <meta charset="utf-8" />
-    <link rel="apple-touch-icon" sizes="76x76" href="img/apple-icon.png" />
-    <link rel="icon" type="image/png" href="img/favicon.png" />
+    <link rel="apple-touch-icon" sizes="76x76" href="img/favicon.jpg" />
+    <link rel="icon" type="image/png" href="img/favicon.jpg" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     
@@ -83,22 +83,22 @@
                 <div class="container">
                     <div class="row">
 
-                        
+
                         <div class="col-md-4 col-sm-6 col-md-offset-4 col-sm-offset-3">
 
-                           @yield('content')
-                       </div>
-                   </div>
-               </div>
-           </div>
-           <footer class="footer">
+                         @yield('content')
+                     </div>
+                 </div>
+             </div>
+         </div>
+         <footer class="footer">
             <div class="container">
                 <p class="copyright pull-right">
                     &copy;
                     <script>
                         document.write(new Date().getFullYear())
                     </script>
-                    <a href="https://andaglos.id">PT Andaglos Global Teknologi</a>, made with love for a better web
+                    <a href="https://andaglos.id"> PT Andaglos Global Teknologi</a>
                 </p>
             </div>
         </footer>
