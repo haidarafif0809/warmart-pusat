@@ -1,7 +1,7 @@
 @extends('layouts.app_pelanggan')
 @section('content') 
 
-@if ($agent->isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
+@if (Agent::isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
 
 <div class="page-header header-filter header-small" data-parallax="true"" style="background-image: url('image/background2.jpg');">
 

@@ -35,15 +35,15 @@
 </head>
 
 <style type="text/css">
-.navbar-nav .open .dropdown-menu{
-    color: grey;
-}
+    .navbar-nav .open .dropdown-menu{
+        color: grey;
+    }
 </style>
 
 
 <body class="ecommerce-page">
 
-    @if ($agent->isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
+    @if (Agent::isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
     <nav class="navbar navbar-default navbar-fixed-top navbar-color-on-scroll" color-on-scroll="100" id="sectionsNav">
         <div class="container">
 
@@ -253,6 +253,4 @@
 <script src="{{ asset('js/material-kit.js?v=1.2.0')}}" type="text/javascript"></script>
 
 @yield('scripts')
-
-
 </html>
