@@ -128,8 +128,7 @@
 
 @yield('content')
 
-<div class="section section-blog">
-</div><!-- section -->
+
 
 <footer class="footer footer-black footer-big">
     <div class="container">

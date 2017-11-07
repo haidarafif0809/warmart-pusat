@@ -93,7 +93,7 @@
                                         <div class="input-group">
                                                         <div class="checkbox" style="padding:10;font-size:12px;" >
                                                         <label>
-                                                              <input type="checkbox" name="ceklis_syarat_warung" id="ceklis_syarat_warung" value="0" data_toogle = "0"> 
+                                                          <input type="checkbox" name="ceklis_syarat" id="ceklis_syarat" value="0" data_toogle = "0"> 
                                                         </label>
                                                        <b>* Anda memahami & menyetujui <a href="{{ url('/syarat-ketentuan') }}" target="_blank" ><u>Syarat & Ketentuan</u></a></b>
                                                     </div>
