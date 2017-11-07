@@ -63,22 +63,22 @@ class DaftarProdukController extends Controller
         $jumlah_produk = Barang::where('kategori_barang_id', $kategori->id)->whereIn('id_warung', $array_warung)->count();
         $kategori_produk .= '
         <li>
-        <a href="'.route('daftar_produk.filter_kategori',$kategori->id).'" style="color:white"><i class="material-icons">'.$kategori->kategori_icon.'</i>'.$kategori->nama_kategori_barang.' - '.$jumlah_produk.'</a>
+          <a href="'.route('daftar_produk.filter_kategori',$kategori->id).'" style="color:white"><i class="material-icons">'.$kategori->kategori_icon.'</i>'.$kategori->nama_kategori_barang.' - '.$jumlah_produk.'</a>
         </li>';
       }
       $kategori_produk .= '
       <li class="dropdown">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color:white"><i class="material-icons">list</i> Lain - Lain <b class="caret"></b></a>
-      <ul class="dropdown-menu dropdown-with-icons">';
-      foreach ($kategori->get() as $kategori) {
-        $jumlah_produk = Barang::where('kategori_barang_id', $kategori->id)->whereIn('id_warung', $array_warung)->count();
-        $kategori_produk .= '
-        <li>
-        <a href="'.route('daftar_produk.filter_kategori',$kategori->id).'"><i class="material-icons">'.$kategori->kategori_icon.'</i>'.$kategori->nama_kategori_barang.' - '.$jumlah_produk.'</a>
-        </li>';
-      }
-      $kategori_produk .= '
-      </ul>
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color:white"><i class="material-icons">list</i> Lain - Lain <b class="caret"></b></a>
+        <ul class="dropdown-menu dropdown-with-icons">';
+          foreach ($kategori->get() as $kategori) {
+            $jumlah_produk = Barang::where('kategori_barang_id', $kategori->id)->whereIn('id_warung', $array_warung)->count();
+            $kategori_produk .= '
+            <li>
+              <a href="'.route('daftar_produk.filter_kategori',$kategori->id).'"><i class="material-icons">'.$kategori->kategori_icon.'</i>'.$kategori->nama_kategori_barang.' - '.$jumlah_produk.'</a>
+            </li>';
+          }
+          $kategori_produk .= '
+        </ul>
       </li>';
 
       return $kategori_produk;
@@ -94,36 +94,36 @@ class DaftarProdukController extends Controller
 
         $daftar_produk .= '      
         <div class="col-md-3 col-sm-6 col-xs-6">
-        <div class="card cards card-pricing">
-        <a href="'.url("/keranjang-belanja") .'">
-        <div class="card-image">';
-        if ($produks->foto != NULL) {
-         $daftar_produk .= '<img src="./foto_produk/'.$produks->foto.'">';
-       }
-       else{
-        $daftar_produk .= '<img src="./image/foto_default.png">';
-      }
-      $daftar_produk .= '
-      </div>
-      </a>
-      <div class="card-content">
-      <div class="footer">     
-      <a href="'.url("/keranjang-belanja") .'" class="card-title">
-      '.strip_tags(substr($produks->nama, 0, 10)).'...
-      </a><br>
-      <b style="color:red; font-size:18px"> '.$produks->rupiah.' </b><br>
-      <a class="description"><i class="material-icons">store</i>  '.strip_tags(substr($warung->name, 0, 10)).'... </a><br>';
+          <div class="card cards card-pricing">
+            <a href="'.url("/keranjang-belanja") .'">
+              <div class="card-image">';
+                if ($produks->foto != NULL) {
+                 $daftar_produk .= '<img src="./foto_produk/'.$produks->foto.'">';
+               }
+               else{
+                $daftar_produk .= '<img src="./image/foto_default.png">';
+              }
+              $daftar_produk .= '
+            </div>
+          </a>
+          <div class="card-content">
+            <div class="footer">     
+              <a href="'.url("/keranjang-belanja") .'" class="card-title">
+                '.strip_tags(substr($produks->nama, 0, 10)).'...
+              </a><br>
+              <b style="color:red; font-size:18px"> '.$produks->rupiah.' </b><br>
+              <a class="description"><i class="material-icons">store</i>  '.strip_tags(substr($warung->name, 0, 10)).'... </a><br>';
 
-      if ($agent->isMobile()) {
-        $daftar_produk .= '<a href="'.url("/keranjang-belanja") .'" class="btn btn-danger btn-round btn-sm" rel="tooltip" title="Tambah Ke Keranjang Belanja"><b> Beli </b><i class="material-icons">keyboard_arrow_right</i></a>';
-      }
-      else{
-        $daftar_produk .= '<a href="'. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" id="btnBeliSekarang" class="btn btn-danger btn-round btn-sm" rel="tooltip" title="Tambah Ke Keranjang Belanja"><b> Beli Sekarang </b><i class="material-icons">keyboard_arrow_right</i></a>';
-      }
-      $daftar_produk .= '
-      </div>
-      </div>
-      </div>
+              if ($agent->isMobile()) {
+                $daftar_produk .= '<a href="'.url("/keranjang-belanja") .'" class="btn btn-danger btn-round btn-sm" rel="tooltip" title="Tambah Ke Keranjang Belanja" id="btnBeliSekarang"><b> Beli </b><i class="material-icons">keyboard_arrow_right</i></a>';
+              }
+              else{
+                $daftar_produk .= '<a href="'. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" id="btnBeliSekarang" class="btn btn-danger btn-round btn-sm" rel="tooltip" title="Tambah Ke Keranjang Belanja"><b> Beli Sekarang </b><i class="material-icons">keyboard_arrow_right</i></a>';
+              }
+              $daftar_produk .= '
+            </div>
+          </div>
+        </div>
       </div>';
     }
     return $daftar_produk;
@@ -166,36 +166,36 @@ class DaftarProdukController extends Controller
 
         $daftar_produk .= '      
         <div class="col-md-3 col-sm-6 col-xs-6">
-        <div class="card cards card-pricing">
-        <a href="'.url("/keranjang-belanja") .'">
-        <div class="card-image">';
-        if ($produks->foto != NULL) {
-         $daftar_produk .= '<img src="../foto_produk/'.$produks->foto.'">';
-       }
-       else{
-        $daftar_produk .= '<img src="../image/foto_default.png">';
-      }
-      $daftar_produk .= '
-      </div>
-      </a>
-      <div class="card-content">
-      <div class="footer">     
-      <a href="'.url("/keranjang-belanja") .'" class="card-title">
-      '.strip_tags(substr($produks->nama, 0, 10)).'...
-      </a><br>
-      <b style="color:red; font-size:18px"> '.$produks->rupiah.' </b><br>
-      <a class="description"><i class="material-icons">store</i>  '.strip_tags(substr($warung->name, 0, 10)).'... </a><br>';
+          <div class="card cards card-pricing">
+            <a href="'.url("/keranjang-belanja") .'">
+              <div class="card-image">';
+                if ($produks->foto != NULL) {
+                 $daftar_produk .= '<img src="../foto_produk/'.$produks->foto.'">';
+               }
+               else{
+                $daftar_produk .= '<img src="../image/foto_default.png">';
+              }
+              $daftar_produk .= '
+            </div>
+          </a>
+          <div class="card-content">
+            <div class="footer">     
+              <a href="'.url("/keranjang-belanja") .'" class="card-title">
+                '.strip_tags(substr($produks->nama, 0, 10)).'...
+              </a><br>
+              <b style="color:red; font-size:18px"> '.$produks->rupiah.' </b><br>
+              <a class="description"><i class="material-icons">store</i>  '.strip_tags(substr($warung->name, 0, 10)).'... </a><br>';
 
-      if ($agent->isMobile()) {
-        $daftar_produk .= '<a href="'. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" id="btnBeliSekarang" class="btn btn-danger btn-round btn-sm" rel="tooltip" title="Tambah Ke Keranjang Belanja"><b> Beli </b><i class="material-icons">keyboard_arrow_right</i></a>';
-      }
-      else{
-        $daftar_produk .= '<a href="'. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" id="btnBeliSekarang" class="btn btn-danger btn-round btn-sm" rel="tooltip" title="Tambah Ke Keranjang Belanja"><b> Beli Sekarang </b><i class="material-icons">keyboard_arrow_right</i></a>';
-      }
-      $daftar_produk .= '
-      </div>
-      </div>
-      </div>
+              if ($agent->isMobile()) {
+                $daftar_produk .= '<a href="'. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" id="btnBeliSekarang" class="btn btn-danger btn-round btn-sm" rel="tooltip" title="Tambah Ke Keranjang Belanja"><b> Beli </b><i class="material-icons">keyboard_arrow_right</i></a>';
+              }
+              else{
+                $daftar_produk .= '<a href="'. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" id="btnBeliSekarang" class="btn btn-danger btn-round btn-sm" rel="tooltip" title="Tambah Ke Keranjang Belanja"><b> Beli Sekarang </b><i class="material-icons">keyboard_arrow_right</i></a>';
+              }
+              $daftar_produk .= '
+            </div>
+          </div>
+        </div>
       </div>';
     }
   }
@@ -203,19 +203,19 @@ class DaftarProdukController extends Controller
     $daftar_produk = 
     '<div class="col-md-3">
     <div class="card card-product card-plain no-shadow" data-colored-shadow="false">
-    <div class="card-image">
-    <img src="../image/foto_default.png">
+      <div class="card-image">
+        <img src="../image/foto_default.png">
+      </div>
+      <div class="card-content">
+        <a href="#">
+          <h4 class="card-title">Tidak Ada Produk</h4>
+        </a>
+      </div>
     </div>
-    <div class="card-content">
-    <a href="#">
-    <h4 class="card-title">Tidak Ada Produk</h4>
-    </a>
-    </div>
-    </div>
-    </div>';
-  }        
+  </div>';
+}        
 
-  return view('layouts.daftar_produk', ['kategori_produk' => $kategori_produk, 'daftar_produk' => $daftar_produk, 'produk_pagination' => $produk_pagination, 'id' => $id, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'agent' => $agent,'cek_belanjaan'=>$cek_belanjaan,'cek_belanjaan']);
+return view('layouts.daftar_produk', ['kategori_produk' => $kategori_produk, 'daftar_produk' => $daftar_produk, 'produk_pagination' => $produk_pagination, 'id' => $id, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'agent' => $agent,'cek_belanjaan'=>$cek_belanjaan,'cek_belanjaan']);
 }
 
 }
