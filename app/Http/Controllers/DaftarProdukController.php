@@ -107,7 +107,7 @@ class DaftarProdukController extends Controller
     </a><br>
     <b style="color:red; font-size:18px"> '.$produks->rupiah.' </b><br>
     <a class="description"><i class="material-icons">store</i>  '.strip_tags(substr($warung->name, 0, 25)).'... </a><br>
-    <a href=" '. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" class="btn btn-danger btn-round btn-sm" rel="tooltip" title="Tambah Ke Keranjang Belanja"><b> Beli Sekarang </b><i class="material-icons">keyboard_arrow_right</i></a>
+    <a href=" '. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" class="btn btn-danger btn-round btn-sm" rel="tooltip" title="Tambah Ke Keranjang Belanja" id="btnBeliSekarang"><b> Beli Sekarang </b><i class="material-icons">keyboard_arrow_right</i></a>
     </div>
 
     </div>
@@ -172,7 +172,7 @@ public function filter_kategori($id)
     </a><br>
     <b style="color:red; font-size:18px"> '.$produks->rupiah.' </b><br>
     <a class="description"><i class="material-icons">store</i>  '.strip_tags(substr($warung->name, 0, 25)).'... </a><br>
-    <a href="'. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" class="btn btn-danger btn-round btn-sm" rel="tooltip" title="Tambah Ke Keranjang Belanja"><b> Beli Sekarang </b><i class="material-icons">keyboard_arrow_right</i></a>
+    <a href="'. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" class="btn btn-danger btn-round btn-sm" rel="tooltip" title="Tambah Ke Keranjang Belanja" id="btnBeliSekarang"><b> Beli Sekarang </b><i class="material-icons">keyboard_arrow_right</i></a>
     </div>
 
     </div>

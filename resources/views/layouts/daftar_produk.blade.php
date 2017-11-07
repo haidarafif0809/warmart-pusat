@@ -150,4 +150,9 @@
 @endsection
 
 @section('scripts') 
+<script type="text/javascript"> 
+ $(document).on('click', '#btnBeliSekarang', function(){
+  swal("Berhasil!", "Produk Berhasil Di Tambah Ke Keranjang Belanjaan", "success");
+});
+</script>
 @endsection 

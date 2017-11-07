@@ -115,7 +115,7 @@
             </li>
 
             <li class="button-container">
-                <a href="{{ url('/keranjang-belanja') }}" class="btn btn-rose btn-round">
+                <a href="{{ url('/keranjang-belanja') }}" class="btn btn-rose btn-round"><b>1</b>
                     <i class="material-icons">shopping_cart</i> Keranjang Belanja
                 </a>
             </li>
@@ -147,57 +147,57 @@
                             <i class="fa fa-phone-square"></i>
                             <p>+62-721-8050-299 <br>
                                 Bandar Lampung, Indonesia
-                                solusibisnis@andaglos.id</p>
-                            </div>
-                            <div class="feed-line">                            
-                                <a href="https://id-id.facebook.com/andaglos/" target="blank"><i class="fa fa-facebook-square"></i> Andaglos</a>
-                            </div>
+                            solusibisnis@andaglos.id</p>
                         </div>
-                    </div>
-
-                    <div class="col-md-4">
-                        <h5>Instagram</h5>
-                        <div class="gallery-feed">
+                        <div class="feed-line">                            
+                            <a href="https://id-id.facebook.com/andaglos/" target="blank"><i class="fa fa-facebook-square"></i> Andaglos</a>
                         </div>
-
                     </div>
                 </div>
+
+                <div class="col-md-4">
+                    <h5>Instagram</h5>
+                    <div class="gallery-feed">
+                    </div>
+
+                </div>
             </div>
+        </div>
 
 
-            <hr />
+        <hr />
 
-            <ul class="pull-left">
-                <li>
-                    <a href="#pablo">
-                       Blog
-                   </a>
-               </li>
-               <li>
-                <a href="#pablo">
-                    Presentation
-                </a>
-            </li>
+        <ul class="pull-left">
             <li>
                 <a href="#pablo">
-                   Discover
+                   Blog
                </a>
            </li>
            <li>
             <a href="#pablo">
-                Payment
+                Presentation
             </a>
         </li>
         <li>
             <a href="#pablo">
-                Contact Us
-            </a>
-        </li>
-    </ul>
+               Discover
+           </a>
+       </li>
+       <li>
+        <a href="#pablo">
+            Payment
+        </a>
+    </li>
+    <li>
+        <a href="#pablo">
+            Contact Us
+        </a>
+    </li>
+</ul>
 
-    <div class="copyright pull-right">
-        Copyright &copy; <script>document.write(new Date().getFullYear())</script> <a href="https://andaglos.id/"> PT. Andaglos Global Teknologi.</a>
-    </div>
+<div class="copyright pull-right">
+    Copyright &copy; <script>document.write(new Date().getFullYear())</script> <a href="https://andaglos.id/"> PT. Andaglos Global Teknologi.</a>
+</div>
 </div>
 </footer>
 </body>
