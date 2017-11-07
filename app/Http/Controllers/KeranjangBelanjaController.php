@@ -29,11 +29,10 @@ class KeranjangBelanjaController extends Controller
 
 		$agent = new Agent();
 		
-		$keranjang_belanjaan = KeranjangBelanja::with(['produk','pelanggan'])->get();
+		$keranjang_belanjaan = KeranjangBelanja::with(['produk','pelanggan'])->where('id_pelanggan',Auth::user()->id)->get();
 		$cek_belanjaan = $keranjang_belanjaan->count();  
 
-		$jumlah_produk = KeranjangBelanja::select([DB::raw('IFNULL(SUM(jumlah_produk),0) as total_produk')])->first(); 
-		$jumlah_produk = KeranjangBelanja::select([DB::raw('IFNULL(SUM(jumlah_produk),0) as total_produk')])->first(); 
+		$jumlah_produk = KeranjangBelanja::select([DB::raw('IFNULL(SUM(jumlah_produk),0) as total_produk')])->first();  
 
       	//MEANMPILKAN PRODUK BELANJAAN
 		$produk_belanjaan = '';
@@ -70,7 +69,7 @@ class KeranjangBelanjaController extends Controller
 			</div>
 			</td>   
 			<td class="td-actions">
-			<a href=" '. url('/keranjang-belanja/hapus-produk-keranjang-belanja/'.$keranjang_belanjaans->id_keranjang_belanja.''). '" type="button" rel="tooltip" data-placement="left" title="Remove item" class="btn btn-simple">
+			<a id="btnHapusProduk" href=" '. url('/keranjang-belanja/hapus-produk-keranjang-belanja/'.$keranjang_belanjaans->id_keranjang_belanja.''). '" type="button" rel="tooltip" data-placement="left" title="Remove item" class="btn btn-simple">
 			<i class="material-icons">close</i>
 			</a>
 			</td>
@@ -116,4 +115,23 @@ class KeranjangBelanjaController extends Controller
 		
 	}
 
+	public function tambah_produk_keranjang_belanjaan($id)
+	{
+		$pelanggan =  Auth::user()->id ; 
+		$keranjang_belanjaan = KeranjangBelanja::where('id_pelanggan',$pelanggan)->orWhere('id_produk',$id)->first(); 
+		if ($keranjang_belanjaan->id_pelanggan != $pelanggan AND $keranjang_belanjaan->id_produk != $id) { 
+
+			$produk = KeranjangBelanja::create(); 
+			$produk->id_produk = $id;
+			$produk->id_pelanggan =  $pelanggan;
+			$produk->jumlah_produk += 1;
+			$produk->save(); 	
+		}else{
+
+			$keranjang_belanjaan->jumlah_produk += 1;
+			$keranjang_belanjaan->save();
+		}
+		return redirect()->back();
+		
+	}
 }

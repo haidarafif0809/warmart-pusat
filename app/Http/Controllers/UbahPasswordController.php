@@ -22,17 +22,17 @@ class UbahPasswordController extends Controller
         $this->validate($request, [ 
             'password' => 'required|min:6|confirmed'
         ]);
-  
-		         
-            $update_user = User::find($id);   
-            $update_user->password = bcrypt($request->password);
-            $update_user->save();  
+        
+        
+        $update_user = User::find($id);   
+        $update_user->password = bcrypt($request->password);
+        $update_user->save();  
 
-	        Session::flash("flash_notification", [
-	            "level"     => "success",
-	            "message"   => "Password Berhasil Di Ubah"
-	        ]);
-  
-       return back();
+        Session::flash("flash_notification", [
+         "level"     => "success",
+         "message"   => "Password Berhasil Di Ubah"
+     ]);
+        
+        return back();
     } 	
 }

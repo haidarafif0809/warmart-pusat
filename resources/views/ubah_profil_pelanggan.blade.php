@@ -2,10 +2,10 @@
 
 @section('content')
 <style type="text/css">
-    #card-ubah-profil{ 
-        background: #fafafa;; 
-        position: relative; 
-        z-index: 3; 
+#card-ubah-profil{ 
+    background: #fafafa;; 
+    position: relative; 
+    z-index: 3; 
 
         margin: -60px 30px 60px; 
         border-radius: 6px; 

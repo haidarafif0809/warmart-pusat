@@ -59,22 +59,22 @@ class DaftarProdukController extends Controller
         $jumlah_produk = Barang::where('kategori_barang_id', $kategori->id)->whereIn('id_warung', $array_warung)->count();
         $kategori_produk .= '
         <li>
-          <a href="'.route('daftar_produk.filter_kategori',$kategori->id).'" style="color:white"><i class="material-icons">'.$kategori->kategori_icon.'</i>'.$kategori->nama_kategori_barang.' - '.$jumlah_produk.'</a>
+        <a href="'.route('daftar_produk.filter_kategori',$kategori->id).'" style="color:white"><i class="material-icons">'.$kategori->kategori_icon.'</i>'.$kategori->nama_kategori_barang.' - '.$jumlah_produk.'</a>
         </li>';
       }
       $kategori_produk .= '
       <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color:white"><i class="material-icons">list</i> Lain - Lain <b class="caret"></b></a>
-        <ul class="dropdown-menu dropdown-with-icons">';
-          foreach ($kategori->get() as $kategori) {
-            $jumlah_produk = Barang::where('kategori_barang_id', $kategori->id)->whereIn('id_warung', $array_warung)->count();
-            $kategori_produk .= '
-            <li>
-              <a href="'.route('daftar_produk.filter_kategori',$kategori->id).'"><i class="material-icons">'.$kategori->kategori_icon.'</i>'.$kategori->nama_kategori_barang.' - '.$jumlah_produk.'</a>
-            </li>';
-          }
-          $kategori_produk .= '
-        </ul>
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color:white"><i class="material-icons">list</i> Lain - Lain <b class="caret"></b></a>
+      <ul class="dropdown-menu dropdown-with-icons">';
+      foreach ($kategori->get() as $kategori) {
+        $jumlah_produk = Barang::where('kategori_barang_id', $kategori->id)->whereIn('id_warung', $array_warung)->count();
+        $kategori_produk .= '
+        <li>
+        <a href="'.route('daftar_produk.filter_kategori',$kategori->id).'"><i class="material-icons">'.$kategori->kategori_icon.'</i>'.$kategori->nama_kategori_barang.' - '.$jumlah_produk.'</a>
+        </li>';
+      }
+      $kategori_produk .= '
+      </ul>
       </li>';
 
       return $kategori_produk;
@@ -158,6 +158,7 @@ class DaftarProdukController extends Controller
       foreach ($data_produk as $produks) {
         $warung = Warung::select(['name'])->where('id', $produks->id_warung)->first();
 
+    <a href="'. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" class="btn btn-danger btn-round btn-sm" rel="tooltip" title="Tambah Ke Keranjang Belanja" id="btnBeliSekarang"><b> Beli Sekarang </b><i class="material-icons">keyboard_arrow_right</i></a>
         $daftar_produk .= '      
         <div class="col-md-3 col-sm-6 col-xs-6">
           <div class="card cards card-pricing">
