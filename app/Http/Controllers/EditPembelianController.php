@@ -330,7 +330,7 @@ public function prosesEditPembelian(Request $request) {
 	$session_id = session()->getId();
 	$user = Auth::user()->id; 
 
-//INSERT DETAIL PEMBELIAN
+
 	$data_produk_pembelian = EditTbsPembelian::where('no_faktur', $no_faktur)->where('warung_id', Auth::user()->id_warung);
 
 	if ($data_produk_pembelian->count() == 0) {
@@ -368,6 +368,7 @@ public function prosesEditPembelian(Request $request) {
 			if ($barang->first()->harga_beli != $data_tbs->harga_produk) {
 				$barang->update(['harga_beli'=>$data_tbs->harga_produk]); 
 			}
+			//INSERT DETAIL PEMBELIAN
 			$detail_pembelian = DetailPembelian::create([ 
 				'no_faktur'         => $no_faktur, 
 				'satuan_id'         => $data_tbs->satuan_id, 
@@ -401,7 +402,7 @@ public function prosesEditPembelian(Request $request) {
 			$kembalian = $request->kembalian; 
 		} 
 
-		$update_pembelian = Pembelian::where('no_faktur',$no_faktur)->where('warung_id',Auth::user()->id_warung)->update([			
+		$update_pembelian = Pembelian::find($request->id_pembelian)->update([			
 			'total'             => str_replace('.','',$request->total_akhir), 
 			'suplier_id'        => $request->suplier_id, 
 			'status_pembelian'  => $request->status_pembelian, 

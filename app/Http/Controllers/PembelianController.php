@@ -60,6 +60,7 @@ class PembelianController extends Controller
 
       $html = $htmlBuilder 
       ->addColumn(['data' => 'no_faktur', 'name' => 'no_faktur', 'title' => 'No. Faktur']) 
+      ->addColumn(['data' => 'created_at', 'name' => 'created_at', 'title' => 'Waktu']) 
       ->addColumn(['data' => 'suplier.nama_suplier', 'name' => 'suplier.nama_suplier', 'title' => 'Suplier', 'orderable' => false, 'searchable'=>false]) 
       ->addColumn(['data' => 'status_pembelian', 'name' => 'status_pembelian', 'title' => 'Status']) 
       ->addColumn(['data' => 'total', 'name' => 'total', 'title' => 'Total']) 

@@ -115,6 +115,7 @@
 					{!! Form::hidden('status_pembelian', $pembelian->status_pembelian, ['class'=>'form-control','autocomplete'=>'off', 'id'=>'status_pembelian']) !!}   
 					{!! Form::hidden('ppn', $pembelian->ppn, ['class'=>'form-control','autocomplete'=>'off', 'id'=>'ppn']) !!} 
 					{!! Form::hidden('potongan', $pembelian->potongan, ['class'=>'form-control','autocomplete'=>'off', 'id'=>'potongan']) !!} 
+					{!! Form::hidden('id_pembelian', $pembelian->id, ['class'=>'form-control','autocomplete'=>'off', 'id'=>'id_pembelian']) !!} 
 				</span> 
 			</div> 
 			<div class="modal-footer">  
