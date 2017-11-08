@@ -31,21 +31,21 @@
 
         <div class="card card-raised card-form-horizontal">
             <div class="card-content">
-                <form method="" action="">
+                {!! Form::open(['url' => route('daftar_produk.pencarian'),'method' => 'get', 'class'=>'form-horizontal']) !!}
                     <div class="row">
                         <div class="col-sm-10">
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">search</i>
                                 </span>
-                                <input type="email" id="cari_produk" value="" placeholder="Cari Produk.." class="form-control" />
+                                <input type="text" name="search" id="cari_produk" value="" placeholder="Cari Produk.." class="form-control" />
                             </div>
                         </div>
                         <div class="col-sm-2">
-                            <button type="button" class="btn btn-block" style="background-color: #f44336">Cari</button>
+                            <button type="submit" class="btn btn-block" style="background-color: #f44336">Cari</button>
                         </div>
                     </div>
-                </form>
+                    {!! Form::close() !!}
             </div>
         </div>
 
@@ -109,21 +109,21 @@
 
         <div class="card card-raised card-form-horizontal">
             <div class="card-content">
-                <form method="" action="">
+                {!! Form::open(['url' => route('daftar_produk.pencarian'),'method' => 'get', 'class'=>'form-horizontal']) !!}
                     <div class="row">
                         <div class="col-sm-10">
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">search</i>
                                 </span>
-                                <input type="email" id="cari_produk" value="" placeholder="Cari Produk.." class="form-control" />
+                                <input type="text" name="search" id="cari_produk" value="" placeholder="Cari Produk.." class="form-control" />
                             </div>
                         </div>
                         <div class="col-sm-2">
-                            <button type="button" class="btn btn-block" style="background-color: #f44336">Cari</button>
+                            <button type="submit" class="btn btn-block" style="background-color: #f44336">Cari</button>
                         </div>
                     </div>
-                </form>
+                    {!! Form::close() !!}
             </div>
         </div>
 
