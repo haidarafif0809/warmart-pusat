@@ -209,7 +209,7 @@
 <li>
  <a href="{{ route('suplier.index') }}">
   <span class="sidebar-mini">S</span>
-  <span class="sidebar-normal">Suplier</span>
+  <span class="sidebar-normal">Supplier</span>
 </a>
 </li>   
 </ul>
