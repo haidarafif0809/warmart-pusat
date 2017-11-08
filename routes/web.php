@@ -174,11 +174,34 @@ Route::put('/proses-ubah-profil-warung',[
 	'uses' => 'UbahProfilController@proses_ubah_profil_warung'
 ]);
 
-Route::put('/proses-ubah-profil/{id}',[
+//UBAH PROFIL KOMUNITAS
+Route::get('/ubah-profil-komunitas',[
 	'middleware' => ['auth'],
 	'as' => 'user.proses_ubah_profil',
 	'uses' => 'UbahProfilController@proses_ubah_profil'
 	]);
+
+//PROSES UBAH PROFIL KOMUNITAS
+Route::put('/proses-ubah-profil-komunitas',[
+	'middleware' => ['auth'],
+	'as' => 'user.proses_ubah_profil_komunitas',
+	'uses' => 'UbahProfilController@proses_ubah_profil_komunitas'
+]);
+
+//UBAH PROFIL ADMIN
+Route::get('/ubah-profil-admin',[
+	'middleware' => ['auth'],
+	'as' => 'user.ubah_profil_admin',
+	'uses' => 'UbahProfilController@ubah_profil_admin'
+]);
+
+//PROSES UBAH PROFIL ADMIN
+Route::put('/proses-ubah-profil-admin',[
+	'middleware' => ['auth'],
+	'as' => 'user.proses_ubah_profil_admin',
+	'uses' => 'UbahProfilController@proses_ubah_profil_admin'
+]);
+
 
 //menampilkan data bank
 Route::get('/bank/view','BankController@view')->middleware('auth');

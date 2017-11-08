@@ -66,7 +66,14 @@
     			<div class="collapse" id="logout">
     				<ul class="nav">
               <li>
+                @if(Auth::user()->tipe_user == 4 )
                 <a href="{{ url('/ubah-profil-warung') }}">Ubah Profil</a>
+                @elseif(Auth::user()->tipe_user == 2 )
+                <a href="{{ url('/ubah-profil-komunitas') }}">Ubah Profil</a>
+                @elseif(Auth::user()->tipe_user == 1 )
+                <a href="{{ url('/ubah-profil-admin') }}">Ubah Profil</a>
+                @endif
+
               </li>
 
               <li>
@@ -202,7 +209,7 @@
 <li>
  <a href="{{ route('suplier.index') }}">
   <span class="sidebar-mini">S</span>
-  <span class="sidebar-normal">Suplier</span>
+  <span class="sidebar-normal">Supplier</span>
 </a>
 </li>   
 </ul>
