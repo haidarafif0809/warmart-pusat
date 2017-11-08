@@ -85,8 +85,8 @@ class PembelianObserver
       } else {
          DetailPembelian::where('no_faktur', $Pembelian->no_faktur)->where('warung_id', $Pembelian->warung_id)->delete();
          Hpp::where('no_faktur', $Pembelian->no_faktur)->where('warung_id', $Pembelian->warung_id)->where('jenis_transaksi','pembelian')->delete();
-         TransaksiKas::where('no_faktur',$Pembelian->no_faktur)->where('warung_id',Auth::user()->id_warung)->where('jenis_transaksi','pembelian')->delete();
-         TransaksiHutang::where('no_faktur',$Pembelian->no_faktur)->where('warung_id',Auth::user()->id_warung)->where('jenis_transaksi','pembelian')->delete();
+         TransaksiKas::where('no_faktur',$Pembelian->no_faktur)->where('warung_id',$Pembelian->warung_id)->where('jenis_transaksi','pembelian')->delete();
+         TransaksiHutang::where('no_faktur',$Pembelian->no_faktur)->where('warung_id',$Pembelian->warung_id)->where('jenis_transaksi','pembelian')->delete();
          return true;
       }
 

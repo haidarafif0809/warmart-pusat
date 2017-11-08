@@ -41,6 +41,44 @@
 
 <script> 
 	$(function() { 
+		$(document).on('click','#closeModalFaktur',function(){   
+			var id = $(this).attr('data-id');   
+			$("#modal-faktur-"+id).hide(); 
+		}); 
+		$(document).on('click','#detail_faktur_beli',function(){   
+			var id = $(this).attr('data-id');  
+			var no_faktur = $(this).attr('data-no_faktur'); 
+			$("#modal-faktur-"+id).show(); 
+
+			$('#table-faktur-'+id).DataTable().destroy(); 
+			$('#table-faktur-'+id).DataTable({ 
+				scrollX: true,
+				processing: true, 
+				serverSide: true, 
+				"ajax": { 
+					url: '{{ route("datatable_detail_faktur_beli") }}', 
+					"data": function ( d ) { 
+						d.no_faktur = no_faktur; 
+					}, 
+					type:'POST', 
+					'headers': { 
+						'X-CSRF-TOKEN': '{{ csrf_token() }}' 
+					}, 
+				}, 
+				columns: [ 
+				{ data: 'status_pembelian', name: 'status_pembelian' }, 
+				{ data: 'kas.nama_kas', name: 'kas.nama_kas' , orderable : false, searchable : false}, 
+				{ data: 'tanggal_jt_tempo', name: 'tanggal_jt_tempo' }, 
+				{ data: 'potongan', name: 'potongan' }, 
+				{ data: 'total', name: 'total' }, 
+				{ data: 'tunai', name: 'tunai' }, 
+				{ data: 'kembalian', name: 'kembalian' }, 
+				{ data: 'kredit', name: 'kredit' } 
+				] 
+			});              
+			
+		}); 
+
 		$(document).on('click','#closeModalX',function(){   
 			var id = $(this).attr('data-id');   
 			$("#myModal-"+id).hide(); 
