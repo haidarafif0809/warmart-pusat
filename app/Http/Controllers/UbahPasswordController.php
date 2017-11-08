@@ -18,21 +18,22 @@ class UbahPasswordController extends Controller
         return view('ubah_password',['user'=>$user]);
     }
 
-    public function proses_ubah_password(Request $request, $id)
+    public function proses_ubah_password(Request $request)
     {
         $this->validate($request, [ 
             'password' => 'required|min:6|confirmed'
-            ]);
+        ]);
         
         
-        $update_user = User::find($id);   
+        $user = Auth::user();
+        $update_user = User::find($user->id);   
         $update_user->password = bcrypt($request->password);
         $update_user->save();  
 
         Session::flash("flash_notification", [
-           "level"     => "success",
-           "message"   => "Password Berhasil Di Ubah"
-           ]);
+         "level"     => "success",
+         "message"   => "Password Berhasil Di Ubah"
+     ]);
         
         return back();
     } 	
@@ -52,16 +53,17 @@ class UbahPasswordController extends Controller
     {
         $this->validate($request, [ 
             'password' => 'required|min:6|confirmed'
-            ]);
+        ]);
 
-        $update_user = User::find($id);   
+        $user = Auth::user();
+        $update_user = User::find($user->id);   
         $update_user->password = bcrypt($request->password);
         $update_user->save();  
 
         Session::flash("flash_notification", [
-         "level"     => "success",
-         "message"   => "Password Berhasil Di Ubah"
-         ]);
+           "level"     => "success",
+           "message"   => "Password Berhasil Di Ubah"
+       ]);
         
         return redirect()->route('daftar_produk.index');
     } 

@@ -65,25 +65,35 @@
     			</a> 
     			<div class="collapse" id="logout">
     				<ul class="nav">
-    					
-    					<li>
-    						<a href="{{ url('/ubah-password') }}">Ubah Password</a>
-    					</li>
-    					<li>
-    						<a href="{{ url('/logout') }}"
-    						onclick="event.preventDefault();
-    						document.getElementById('logout-form').submit();">
-    						Logout
-    					</a>
-    					<form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
-    						{{ csrf_field() }}
-    					</form>
+              <li>
+                @if(Auth::user()->tipe_user == 4 )
+                <a href="{{ url('/ubah-profil-warung') }}">Ubah Profil</a>
+                @elseif(Auth::user()->tipe_user == 2 )
+                <a href="{{ url('/ubah-profil-komunitas') }}">Ubah Profil</a>
+                @elseif(Auth::user()->tipe_user == 1 )
+                <a href="{{ url('/ubah-profil-admin') }}">Ubah Profil</a>
+                @endif
 
-    				</li>     
-    			</ul>
-    		</div>
-    	</li>
-    	<li class="active">
+              </li>
+
+              <li>
+                <a href="{{ url('/ubah-password') }}">Ubah Password</a>
+              </li>
+              <li>
+                <a href="{{ url('/logout') }}"
+                onclick="event.preventDefault();
+                document.getElementById('logout-form').submit();">
+                Logout
+              </a>
+              <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
+                {{ csrf_field() }}
+              </form>
+
+            </li>     
+          </ul>
+        </div>
+      </li>
+      <li class="active">
         @if(Auth::user()->tipe_user == 1 )
         <router-link :to="{name: 'indexDashboard'}">   <i class="material-icons">dashboard</i>
           <p>Dashboard</p></router-link>
@@ -199,7 +209,7 @@
 <li>
  <a href="{{ route('suplier.index') }}">
   <span class="sidebar-mini">S</span>
-  <span class="sidebar-normal">Suplier</span>
+  <span class="sidebar-normal">Supplier</span>
 </a>
 </li>   
 </ul>
