@@ -154,6 +154,20 @@ Route::put('/proses-ubah-profil-pelanggan',[
 	'uses' => 'UbahProfilController@proses_ubah_profil_pelanggan'
 ]);
 
+//UBAH PROFIL WARUNG
+Route::get('/ubah-profil-warung',[
+	'middleware' => ['auth'],
+	'as' => 'user.ubah_profil_warung',
+	'uses' => 'UbahProfilController@ubah_profil_warung'
+]);
+
+//PROSES UBAH PROFIL WARUNG
+Route::put('/proses-ubah-profil-warung',[
+	'middleware' => ['auth'],
+	'as' => 'user.proses_ubah_profil_warung',
+	'uses' => 'UbahProfilController@proses_ubah_profil_warung'
+]);
+
 Route::put('/proses-ubah-profil/{id}',[
 	'middleware' => ['auth'],
 	'as' => 'user.proses_ubah_profil',

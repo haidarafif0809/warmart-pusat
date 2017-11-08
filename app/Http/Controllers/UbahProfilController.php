@@ -12,6 +12,7 @@ use App\KomunitasCustomer;
 use Jenssegers\Agent\Agent;
 use App\Customer;
 use App\UserWarung; 
+use App\BankWarung;
 use Session;
 use App\KeranjangBelanja;  
 
@@ -176,4 +177,41 @@ class UbahProfilController extends Controller
 
 		return redirect()->route('daftar_produk.index');
 	}	
+
+//UBAH PROFIL USER WARUNG
+	public function ubah_profil_warung() {
+    	//PILIH USER -> LOGIN
+		$user = Auth::user(); 
+		$user_warung = UserWarung::with(['kelurahan'])->find($user->id);
+		return view('ubah_profil_warung')->with(compact('user_warung','user')); 
+	}
+
+//UBAH PROFIL USER PELANGGAN
+	public function proses_ubah_profil_warung(Request $request) {
+		//VALIDASI
+		$this->validate($request, [
+			'name'      => 'required',
+			'alamat'    => 'required',
+			'kelurahan' => 'required', 
+			'email'     => 'required|without_spaces|unique:users,email,'.$request->id,
+			'no_telp'   => 'required|without_spaces|unique:users,no_telp,'.$request->id,
+		]);
+
+         //UPDATE USER WARUNG
+		$user_warung = UserWarung::where('id',$request->id)->update([
+			'name'      => $request->name,
+			'email'     => $request->email, 
+			'no_telp'     => $request->no_telp, 
+			'alamat'    => $request->alamat,
+			'wilayah'   => $request->kelurahan, 
+		]);
+
+
+		Session::flash("flash_notification", [
+			"level"     => "success",
+			"message"   => "Profil Berhasil Di Ubah"
+		]);
+
+		return redirect()->back();
+	}	 
 }

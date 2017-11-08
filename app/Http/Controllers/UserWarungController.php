@@ -58,7 +58,7 @@ class UserWarungController extends Controller
                 }
                 return $email;
             })
-            ->addColumn('email', function($warung){
+            ->addColumn('warung', function($warung){
                 if ($warung->warung == NULL AND $warung->warung == "") {
                     $warung = "-";
                 }
