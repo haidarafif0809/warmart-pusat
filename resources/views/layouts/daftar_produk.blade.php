@@ -1,6 +1,13 @@
 @extends('layouts.app_pelanggan')
 @section('content') 
 
+<style type="text/css">
+.list-produk {
+    padding-left: 4px;
+    padding-right: 4px;
+}
+</style>
+
 @if (Agent::isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
 
 <div class="page-header header-filter header-small" data-parallax="true"" style="background-image: url('image/background2.jpg');">
