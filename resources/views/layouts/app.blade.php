@@ -70,6 +70,8 @@
                 <a href="{{ url('/ubah-profil-warung') }}">Ubah Profil</a>
                 @elseif(Auth::user()->tipe_user == 2 )
                 <a href="{{ url('/ubah-profil-komunitas') }}">Ubah Profil</a>
+                @elseif(Auth::user()->tipe_user == 1 )
+                <a href="{{ url('/ubah-profil-admin') }}">Ubah Profil</a>
                 @endif
 
               </li>
