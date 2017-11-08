@@ -136,7 +136,7 @@ class BarangController extends Controller
           'harga_jual'          => 'required|numeric|digits_between:1,11',
           'kategori_barang_id'  => 'required|exists:kategori_barangs,id',
           'satuan_id'           => 'required|exists:satuans,id',
-          'foto'                => 'image|max:2048'
+          'foto'                => 'image|max:3072'
         ]);
 
         if ($request->status_aktif == '') {
