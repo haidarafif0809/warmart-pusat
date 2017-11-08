@@ -12,7 +12,7 @@ class EditTbsPembelian extends Model
 {
 	use AuditableTrait;
 	protected $fillable = ['session_id','no_faktur','satuan_id','id_produk','jumlah_produk','harga_produk','subtotal','potongan','tax','warung_id','ppn'];
-	protected $primaryKey = 'id_edit_tbs_pembelian';
+	protected $primaryKey = 'id_edit_tbs_pembelians';
 
 	public function produk()
 	{

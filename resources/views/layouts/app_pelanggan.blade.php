@@ -3,8 +3,8 @@
 <head>
     <title>War-Mart.id</title>
     <meta charset="utf-8" />
-    <link rel="apple-touch-icon" sizes="76x76" href="img/apple-icon.png" />
-    <link rel="icon" type="image/png" href="img/favicon.png" />
+    <link rel="apple-touch-icon" sizes="76x76" href="img/favicon.jpg" />
+    <link rel="icon" type="image/png" href="img/favicon.jpg" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
@@ -42,6 +42,48 @@
 
 
 <body class="ecommerce-page">
+
+    @if (Agent::isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
+    <nav class="navbar navbar-default navbar-fixed-top navbar-color-on-scroll" color-on-scroll="100" id="sectionsNav">
+        <div class="container">
+
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="material-icons">person</i> {{ Auth::user()->name }} 
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu dropdown-with-icons">
+                        <li style="color:black">
+                            <a href="{{ url('/keranjang-belanja') }}" target="_blank" class="warna-list">
+                                <i class="material-icons">shopping_cart</i> Keranjang Belanja <b style="font-size: 15px">| {{ $cek_belanjaan }}</b>
+                            </a>
+                        </li>
+
+                        <li style="color:black">
+                            <a href="{{ url('/ubah-profil-pelanggan') }}">
+                                <i class="material-icons">settings</i> Ubah Profil
+                            </a>
+                        </li>
+                        <li style="color:black">
+                            <a href="{{ url('/ubah-password-pelanggan') }}">
+                                <i class="material-icons">lock_outline</i> Ubah Password
+                            </a>
+                        </li>
+                        <li style="color:black">
+                            <a href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> 
+                                <i class="material-icons">reply_all</i> Logout
+                            </a>
+                            <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
+                                {{ csrf_field() }}
+                            </form>
+                        </li>                            
+                    </ul>
+                </li>                    
+            </ul>
+        </div>
+    </nav>
+    @else
     <nav class="navbar navbar-default navbar-transparent navbar-fixed-top navbar-color-on-scroll" color-on-scroll="100" id="sectionsNav">
        <div class="container">
         <ul class="nav navbar-nav navbar-right">
@@ -52,12 +94,12 @@
                 </a>
                 <ul class="dropdown-menu dropdown-with-icons">
                     <li>
-                        <a href="{{ url('/ubah-profil') }}">
+                        <a href="{{ url('/ubah-profil-pelanggan') }}">
                             <i class="material-icons">settings</i> Ubah Profil
                         </a>
                     </li>
                     <li>
-                        <a href="{{ url('/ubah-password') }}">
+                        <a href="{{ url('/ubah-password-pelanggan') }}">
                             <i class="material-icons">lock_outline</i> Ubah Password
                         </a>
                     </li>
@@ -73,41 +115,20 @@
             </li>
 
             <li class="button-container">
-                <a href="{{ url('/keranjang-belanja') }}" target="_blank" class="btn btn-rose btn-round">
-                    <i class="material-icons">shopping_cart</i> Keranjang Belanja
+                <a href="{{ url('/keranjang-belanja') }}" class="btn btn-rose btn-round">
+                    <i class="material-icons">shopping_cart</i> Keranjang Belanja <b style="font-size: 15px">| {{ $cek_belanjaan }}</b>
                 </a>
             </li>
 
         </ul>
     </div>
 </nav>
+@endif 
 
-<div class="page-header header-filter header-small" data-parallax="true"" style="background-image: url('image/background2.jpg');">
 
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2">
-                <div class="brand">
-                    <h1 class="title">PASAR MUSLIM INDONESIA</h1>
-                    <h4 class="title"> Segala Kemudahan Untuk Umat Muslim Berbelanja.</h4>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+@yield('content')
 
-<div class="main main-raised">
 
- <div class="section">
-    <div class="container">
-     @yield('content')
- </div>
-</div><!-- section -->
-
-</div> <!-- end-main-raised -->
-
-<div class="section section-blog">
-</div><!-- section -->
 
 <footer class="footer footer-black footer-big">
     <div class="container">
@@ -116,70 +137,67 @@
             <div class="row">
                 <div class="col-md-4">
                     <h5>Tentang Kami</h5>
-                    <p>Creative Tim is a startup that creates design tools that make the web development process faster and easier. </p> <p>We love the web and care deeply for how users interact with a digital product. We power businesses and individuals to create better looking web projects around the world. </p>
+                    <p>Warmart adalah marketplace warung muslim pertama di Indonesia. Kami menghubungkan usaha-usaha muslim dengan pelanggan seluruh Umat Islam di Indonesia. Jenis usaha yang dapat bergabung dengan Warmart diantaranya: Warung, Toko, Minimarket, Pedagang Kaki Lima, Bengkel, Rumah Makan, Klinik, Home Industri, Peternakan, Pertanian, Perikanan, Kerajinan, Fashion dan usaha lainya.</p>
                 </div>
 
                 <div class="col-md-4">
-                    <h5>Media Sosial</h5>
+                    <h5>Contact Us</h5>
                     <div class="social-feed">
                         <div class="feed-line">
-                            <i class="fa fa-twitter"></i>
-                            <p>How to handle ethical disagreements with your clients.</p>
-                        </div>
-                        <div class="feed-line">
-                            <i class="fa fa-twitter"></i>
-                            <p>The tangible benefits of designing at 1x pixel density.</p>
-                        </div>
-                        <div class="feed-line">
-                            <i class="fa fa-facebook-square"></i>
-                            <p>A collection of 25 stunning sites that you can use for inspiration.</p>
+                            <i class="fa fa-phone-square"></i>
+                            <p>+62-721-8050-299 <br>
+                                Bandar Lampung, Indonesia
+                                solusibisnis@andaglos.id</p>
+                            </div>
+                            <div class="feed-line">                            
+                                <a href="https://id-id.facebook.com/andaglos/" target="blank"><i class="fa fa-facebook-square"></i> Andaglos</a>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="col-md-4">
-                    <h5>Instagram</h5>
-                    <div class="gallery-feed">
+                    <div class="col-md-4">
+                        <h5>Instagram</h5>
+                        <div class="gallery-feed">
+                        </div>
+
                     </div>
-
                 </div>
             </div>
-        </div>
 
 
-        <hr />
+            <hr />
 
-        <ul class="pull-left">
+            <ul class="pull-left">
+                <li>
+                    <a href="#pablo">
+                     Blog
+                 </a>
+             </li>
+             <li>
+                <a href="#pablo">
+                    Presentation
+                </a>
+            </li>
             <li>
                 <a href="#pablo">
-                   Blog
-               </a>
-           </li>
-           <li>
+                 Discover
+             </a>
+         </li>
+         <li>
             <a href="#pablo">
-                Presentation
+                Payment
             </a>
         </li>
         <li>
             <a href="#pablo">
-               Discover
-           </a>
-       </li>
-       <li>
-        <a href="#pablo">
-            Payment
-        </a>
-    </li>
-    <li>
-        <a href="#pablo">
-            Contact Us
-        </a>
-    </li>
-</ul>
+                Contact Us
+            </a>
+        </li>
+    </ul>
 
-<div class="copyright pull-right">
-    Copyright &copy; <script>document.write(new Date().getFullYear())</script> <a href="https://andaglos.id/"> PT. Andaglos Global Teknologi.</a>
-</div>
+    <div class="copyright pull-right">
+        Copyright &copy; <script>document.write(new Date().getFullYear())</script> <a href="https://andaglos.id/"> PT. Andaglos Global Teknologi.</a>
+    </div>
 </div>
 </footer>
 </body>
@@ -231,6 +249,4 @@
 <script src="{{ asset('js/material-kit.js?v=1.2.0')}}" type="text/javascript"></script>
 
 @yield('scripts')
-
-
 </html>

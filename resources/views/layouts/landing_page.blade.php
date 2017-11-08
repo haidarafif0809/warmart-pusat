@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <link rel="apple-touch-icon" sizes="76x76" href="img/apple-icon.png" />
+    <link rel="apple-touch-icon" sizes="76x76" href="img/favicon.png" />
     <link rel="icon" type="image/png" href="img/favicon.png" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
@@ -63,17 +63,17 @@
                     </div>
                 </div>
                 <div class="col-md-5 col-md-offset-1">
-                 <h2 style="color:#ffc34d;font-weight:bold;">Tentang</h2>
-                 <h3 style="color:#ffffff;">WarMart adalah marketplace untuk warung muslim pertama di Indonesia yang memfasilitasi warung-warung milik saudara muslim untuk menjual produknya secara online maupun offline. Penjualan secara online melalui aplikasi android dan penjualan secara offline menggunakan aplikasi web base yang kami sediakan</h3>
-             </div>
-         </div>
-     </div>
- </div>
- <style type="text/css">
-    .peran{
-        width:100%;
-        height:100%;
-    }
+                   <h2 style="color:#ffc34d;font-weight:bold;">Tentang</h2>
+                   <h3 style="color:#ffffff;">WarMart adalah marketplace untuk warung muslim pertama di Indonesia yang memfasilitasi warung-warung milik saudara muslim untuk menjual produknya secara online maupun offline. Penjualan secara online melalui aplikasi android dan penjualan secara offline menggunakan aplikasi web base yang kami sediakan</h3>
+               </div>
+           </div>
+       </div>
+   </div>
+   <style type="text/css">
+   .peran{
+    width:100%;
+    height:100%;
+}
 </style>
 <div class="container">
     <div class="section text-center">
@@ -141,14 +141,14 @@
                             <div class="card-content">
                                 <h4 class="category text-danger">KOMUNITAS</h4>
                                 <p class="card-description" style="color:black;">
-                                 Komunitas menjadi roda penggerak kesadaran umat untuk membela dan memperjuangkan kejayaan perekonomian Islam. Komunitas yang mendaftarkan anggotanya menjadi palanggan Warmart, akan mendapatkan share bagi hasil setiap anggota komunitas berbelanja di Warmart.<br><center><a href="{{ url('/register') }}" class="btn btn-danger"> DAFTAR </a></center>
-                             </p>
-                         </div>
-                     </div>
-                 </div>
+                                   Komunitas menjadi roda penggerak kesadaran umat untuk membela dan memperjuangkan kejayaan perekonomian Islam. Komunitas yang mendaftarkan anggotanya menjadi palanggan Warmart, akan mendapatkan share bagi hasil setiap anggota komunitas berbelanja di Warmart.<br><center><a href="{{ url('/register') }}" class="btn btn-danger"> DAFTAR </a></center>
+                               </p>
+                           </div>
+                       </div>
+                   </div>
 
 
-                 <div class="col-md-3">
+                   <div class="col-md-3">
                     <div class="card card-blog">
                         <div class="card-image">
                             <a href="#pablo">
@@ -198,7 +198,7 @@
                             <div class="card-content">
                                 <h3 class="category text-info"></h3>
                                 <p class="card-description">
-                                   <h6 style="color:white;font-weight:bold;">
+                                 <h6 style="color:white;font-weight:bold;">
                                     <ul align="left">
                                         <li>Berkontribusi menumbuhkan Usaha muslim (jihad ekonomi) </li>
                                         <li>Belanja bernilai ibadah </li>
@@ -230,9 +230,9 @@
 
                     <div class="back back-background" style="background-image: url('assets/img/flat/warung_2.jpg');">
                         <div class="card-content">
-                           <h3 class="category text-info"></h3>
-                           <p class="card-description">
-                               <h6 style="color:white;font-weight:bold;">
+                         <h3 class="category text-info"></h3>
+                         <p class="card-description">
+                             <h6 style="color:white;font-weight:bold;">
                                 <ul align="left">
                                     <li>Terhubung dengan Pelanggan WarMart se Indonesia </li> 
                                     <li>Mendapat support teknologi manajemen warung </li>
@@ -268,7 +268,7 @@
                     <div class="card-content">
                         <h3 class="category text-info"></h3>
                         <p class="card-description">
-                         <h6 style="color:white;font-weight:bold;">
+                           <h6 style="color:white;font-weight:bold;">
                             <ul align="left">       
                                 <li>Terhubung Dengan Pergerakan Ekonomi Umat</li>
                                 <li>Bersinergi dengan beragam komunitas</li>
@@ -301,8 +301,8 @@
                 <div class="card-content">
                     <h3 class="category text-info"></h3>
                     <p class="card-description">
-                       <h6 style="color:white;font-weight:bold;">
-                           <ul align="left">
+                     <h6 style="color:white;font-weight:bold;">
+                         <ul align="left">
                             <li>Bebas biaya pendaftaran alias GRATIS!!! </li> 
                             <li>Punya penghasilan tambahan </li> 
                             <li>GRATIS!!! Web replika dengan nama sendiri </li> 
@@ -371,7 +371,7 @@
                                 </h5>
                                 <h4 style="color:orange;font-weight:bold;" >Ust. Zulkifli M Ali, Lc, MA</h4>
                                 <h6 class="category text-muted">Da'i / Pendakwah</h6>
-                                 <a href="https://www.youtube.com/watch?v=n-oliABULjw" target="_blank" rel="tooltip" class="btn btn-round" style="position: center; background-color: #f44336" >LIHAT VIDEO</a>
+                                <a href="https://www.youtube.com/watch?v=n-oliABULjw" target="_blank" rel="tooltip" class="btn btn-round" style="position: center; background-color: #f44336" >LIHAT VIDEO</a>
                             </div>
                         </div>
                     </div>
@@ -389,7 +389,7 @@
                                 </h5>
                                 <h4 style="color:orange;font-weight:bold;" >Rendy Saputra</h4>
                                 <h6 class="category text-muted">Pengusaha Muda</h6>
-                                 <a href="https://www.youtube.com/watch?v=cVKEK5poL9Y " target="_blank" rel="tooltip" class="btn btn-round" style="position: center; background-color: #f44336" >LIHAT VIDEO</a>
+                                <a href="https://www.youtube.com/watch?v=cVKEK5poL9Y " target="_blank" rel="tooltip" class="btn btn-round" style="position: center; background-color: #f44336" >LIHAT VIDEO</a>
                             </div>
                         </div>
                     </div>
@@ -436,10 +436,10 @@
 <footer class="footer">
     <div class="container">
 
-       <h4><a style="font-weight:bold;">INFO :</a><a style="color:red;font-weight:italic;"> Soft Launching Aplikasi WartMart Insya Allah akan dilaksanakan pada tanggal 20 November 2017</a></h4> 
+     <h4><a style="font-weight:bold;">INFO :</a><a style="color:red;font-weight:italic;"> Soft Launching Aplikasi WartMart Insya Allah akan dilaksanakan pada tanggal 20 November 2017</a></h4> 
 
-       <div class="copyright pull-right">
-        &copy; <script>document.write(new Date().getFullYear())</script> PT Andaglos Global Teknologi, made with love for a better web
+     <div class="copyright pull-right">
+        &copy; <script>document.write(new Date().getFullYear())</script> PT Andaglos Global Teknologi
     </div>
 </div>
 </footer>

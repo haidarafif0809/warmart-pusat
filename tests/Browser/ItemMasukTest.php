@@ -24,15 +24,14 @@ class ItemMasukTest extends DuskTestCase
         $this->browse(function ($first, $second){
 
             $first->loginAs(User::find(4))
-                    ->visit('/item-masuk')
-                    ->clickLink('Tambah Item Masuk');
+            ->visit('/item-masuk')
+            ->clickLink('Tambah Item Masuk');
             
-            $first->script("document.getElementById('pilih_produk').selectize.setValue('1');");
+            $first->script("document.getElementById('pilih_produk').selectize.setValue('1-KECAP ASIN ABC');");
             $first->assertSee('B001 - KECAP ASIN ABC')
-                    ->pause(1000);
-
-            $first->press('Submit')
-                    ->assertSee('Jumlah Harus Di isi!');
+            ->pause(1000)
+            ->press('Submit')
+            ->assertSee('Jumlah Harus Di isi!');
         });
     }
 
@@ -41,28 +40,28 @@ class ItemMasukTest extends DuskTestCase
         $this->browse(function ($first, $second){
 
             $first->loginAs(User::find(4))
-                    ->visit('/item-masuk')
-                    ->clickLink('Tambah Item Masuk');
-            
-            $first->script("document.getElementById('pilih_produk').selectize.setValue('1');");
+            ->visit('/item-masuk')
+            ->clickLink('Tambah Item Masuk');
+
+            $first->script("document.getElementById('pilih_produk').selectize.setValue('1-KECAP ASIN ABC');");
             $first->assertSee('B001 - KECAP ASIN ABC')
-                    ->type('qty_produk', '1')
-                    ->pause(1000);
+            ->type('qty_produk', '1')
+            ->pause(1000);
 
             $first->press('Submit')
-                    ->assertSee('SUKSES : BERHASIL MENAMBAH PRODUK "KECAP ASIN ABC"');
+            ->assertSee('SUKSES : BERHASIL MENAMBAH PRODUK "KECAP ASIN ABC"');
 
             //PRODUK LANGSUNG DIHAPUS
             $first->waitFor('.js-confirm')
-                    ->with('.table', function ($table) {
-                        $table->assertSee('KECAP ASIN ABC')
+            ->with('.table', function ($table) {
+                $table->assertSee('KECAP ASIN ABC')
                         //cari tombol hapus tbs item masuk dan scroll ke sana
-                        ->element('.btn-hapus-tbs')->getLocationOnScreenOnceScrolledIntoView();
+                ->element('.btn-hapus-tbs')->getLocationOnScreenOnceScrolledIntoView();
                         //form hapus tbs item masuknya di submit
-                        $table->element('.form-hapus-tbs')->submit();                      
-                    })
+                $table->element('.form-hapus-tbs')->submit();                      
+            })
                 //untuk menclick tombol oke di alert dialog javascript untuk menghapus tbs item masuk
-                ->driver->switchTo()->alert()->accept();
+            ->driver->switchTo()->alert()->accept();
         });
     }
 
@@ -71,37 +70,37 @@ class ItemMasukTest extends DuskTestCase
         $this->browse(function ($first, $second){
 
             $first->loginAs(User::find(4))
-                    ->visit('/item-masuk')
-                    ->clickLink('Tambah Item Masuk');
-            
-            $first->script("document.getElementById('pilih_produk').selectize.setValue('1');");
+            ->visit('/item-masuk')
+            ->clickLink('Tambah Item Masuk');
+
+            $first->script("document.getElementById('pilih_produk').selectize.setValue('1-KECAP ASIN ABC');");
             $first->assertSee('B001 - KECAP ASIN ABC')
-                    ->type('qty_produk', '1')
-                    ->pause(1000);
+            ->type('qty_produk', '1')
+            ->pause(1000);
 
             $first->press('Submit')
-                    ->assertSee('SUKSES : BERHASIL MENAMBAH PRODUK "KECAP ASIN ABC"')
-                    ->pause(1000);
+            ->assertSee('SUKSES : BERHASIL MENAMBAH PRODUK "KECAP ASIN ABC"')
+            ->pause(1000);
 
-            $first->script("document.getElementById('pilih_produk').selectize.setValue('1');");
+            $first->script("document.getElementById('pilih_produk').selectize.setValue('1-KECAP ASIN ABC');");
             $first->assertSee('B001 - KECAP ASIN ABC')
-                    ->type('qty_produk', '1')
-                    ->pause(1000);
+            ->type('qty_produk', '1')
+            ->pause(1000);
 
             $first->press('Submit')
-                    ->assertSee('WARNING : PRODUK "KECAP ASIN ABC" SUDAH ADA, SILAKAN PILIH PRODUK LAIN !');
+            ->assertSee('WARNING : PRODUK "KECAP ASIN ABC" SUDAH ADA, SILAKAN PILIH PRODUK LAIN !');
 
             //PRODUK LANGSUNG DIHAPUS
             $first->waitFor('.js-confirm')
-                    ->with('.table', function ($table) {
-                        $table->assertSee('KECAP ASIN ABC')
+            ->with('.table', function ($table) {
+                $table->assertSee('KECAP ASIN ABC')
                         //cari tombol hapus tbs item masuk dan scroll ke sana
-                        ->element('.btn-hapus-tbs')->getLocationOnScreenOnceScrolledIntoView();
+                ->element('.btn-hapus-tbs')->getLocationOnScreenOnceScrolledIntoView();
                         //form hapus tbs item masuknya di submit
-                        $table->element('.form-hapus-tbs')->submit();                      
-                    })
+                $table->element('.form-hapus-tbs')->submit();                      
+            })
                 //untuk menclick tombol oke di alert dialog javascript untuk menghapus tbs item masuk
-                ->driver->switchTo()->alert()->accept();
+            ->driver->switchTo()->alert()->accept();
         });
     }
 
@@ -110,35 +109,35 @@ class ItemMasukTest extends DuskTestCase
         $this->browse(function ($first, $second){
 
             $first->loginAs(User::find(4))
-                    ->visit('/item-masuk')
-                    ->clickLink('Tambah Item Masuk');
-            
-            $first->script("document.getElementById('pilih_produk').selectize.setValue('1');");
+            ->visit('/item-masuk')
+            ->clickLink('Tambah Item Masuk');
+
+            $first->script("document.getElementById('pilih_produk').selectize.setValue('1-KECAP ASIN ABC');");
             $first->assertSee('B001 - KECAP ASIN ABC')
-                    ->type('qty_produk', '1')
-                    ->pause(1000);
+            ->type('qty_produk', '1')
+            ->pause(1000);
 
             $first->press('Submit')
-                    ->assertSee('SUKSES : BERHASIL MENAMBAH PRODUK "KECAP ASIN ABC"')
-                    ->pause(1000)
-                    ->press('#edit_jumlah_produk')
-                    ->assertSee('Jumlah Item Masuk')
-                    ->type('edit_qty_produk', '2');
+            ->assertSee('SUKSES : BERHASIL MENAMBAH PRODUK "KECAP ASIN ABC"')
+            ->pause(1000)
+            ->press('#edit_jumlah_produk')
+            ->assertSee('Kecap Asin Abc')
+            ->type('edit_qty_produk', '2');
 
             $first->press('Submit')
-                    ->assertSee('SUKSES : BERHASIL MENGUBAH JUMLAH ITEM MASUK "KECAP ASIN ABC"');
+            ->assertSee('SUKSES : BERHASIL MENGUBAH JUMLAH ITEM MASUK "KECAP ASIN ABC"');
 
             //PRODUK LANGSUNG DIHAPUS
             $first->waitFor('.js-confirm')
-                    ->with('.table', function ($table) {
-                        $table->assertSee('KECAP ASIN ABC')
+            ->with('.table', function ($table) {
+                $table->assertSee('KECAP ASIN ABC')
                         //cari tombol hapus tbs item masuk dan scroll ke sana
-                        ->element('.btn-hapus-tbs')->getLocationOnScreenOnceScrolledIntoView();
+                ->element('.btn-hapus-tbs')->getLocationOnScreenOnceScrolledIntoView();
                         //form hapus tbs item masuknya di submit
-                        $table->element('.form-hapus-tbs')->submit();                      
-                    })
+                $table->element('.form-hapus-tbs')->submit();                      
+            })
                 //untuk menclick tombol oke di alert dialog javascript untuk menghapus tbs item masuk
-                ->driver->switchTo()->alert()->accept();
+            ->driver->switchTo()->alert()->accept();
 
         });
     }
@@ -148,26 +147,26 @@ class ItemMasukTest extends DuskTestCase
         $this->browse(function ($first, $second){
 
             $first->loginAs(User::find(4))
-                    ->visit('/item-masuk')
-                    ->clickLink('Tambah Item Masuk');
-            
-            $first->script("document.getElementById('pilih_produk').selectize.setValue('1');");
+            ->visit('/item-masuk')
+            ->clickLink('Tambah Item Masuk');
+
+            $first->script("document.getElementById('pilih_produk').selectize.setValue('1-KECAP ASIN ABC');");
             $first->assertSee('B001 - KECAP ASIN ABC')
-                    ->type('qty_produk', '1')
-                    ->pause(1000);
+            ->type('qty_produk', '1')
+            ->pause(1000);
 
             $first->press('Submit')
-                    ->assertSee('SUKSES : BERHASIL MENAMBAH PRODUK "KECAP ASIN ABC"')
-                    ->waitFor('.js-confirm')
-                    ->with('.table', function ($table) {
-                        $table->assertSee('KECAP ASIN ABC')
+            ->assertSee('SUKSES : BERHASIL MENAMBAH PRODUK "KECAP ASIN ABC"')
+            ->waitFor('.js-confirm')
+            ->with('.table', function ($table) {
+                $table->assertSee('KECAP ASIN ABC')
                         //cari tombol hapus tbs item masuk dan scroll ke sana
-                        ->element('.btn-hapus-tbs')->getLocationOnScreenOnceScrolledIntoView();
+                ->element('.btn-hapus-tbs')->getLocationOnScreenOnceScrolledIntoView();
                         //form hapus tbs item masuknya di submit
-                        $table->element('.form-hapus-tbs')->submit();                      
-                    })
+                $table->element('.form-hapus-tbs')->submit();                      
+            })
                 //untuk menclick tombol oke di alert dialog javascript untuk menghapus tbs item masuk
-                ->driver->switchTo()->alert()->accept();
+            ->driver->switchTo()->alert()->accept();
 
             $first->assertSee('SUKSES : BERHASIL MENGHAPUS PRODUK');
         });
@@ -178,18 +177,18 @@ class ItemMasukTest extends DuskTestCase
         $this->browse(function ($first, $second){
 
             $first->loginAs(User::find(4))
-                    ->visit('/item-masuk')
-                    ->clickLink('Tambah Item Masuk');
-            
-            $first->script("document.getElementById('pilih_produk').selectize.setValue('1');");
+            ->visit('/item-masuk')
+            ->clickLink('Tambah Item Masuk');
+
+            $first->script("document.getElementById('pilih_produk').selectize.setValue('1-KECAP ASIN ABC');");
             $first->assertSee('B001 - KECAP ASIN ABC')
-                    ->type('qty_produk', '1')
-                    ->pause(1000);
+            ->type('qty_produk', '1')
+            ->pause(1000);
 
             $first->press('Submit')
-                    ->assertSee('SUKSES : BERHASIL MENAMBAH PRODUK "KECAP ASIN ABC"')
-                    ->press('#btnBatal')
-                    ->driver->switchTo()->alert()->accept();
+            ->assertSee('SUKSES : BERHASIL MENAMBAH PRODUK "KECAP ASIN ABC"')
+            ->press('#btnBatal')
+            ->driver->switchTo()->alert()->accept();
 
             $first->assertSee('SUKSES : BERHASIL MEMBATALKAN ITEM MASUK');
         });
@@ -204,21 +203,21 @@ class ItemMasukTest extends DuskTestCase
             $no_faktur = ItemMasuk::no_faktur($warung_id);
 
             $first->loginAs(User::find(4))
-                    ->visit('/item-masuk')
-                    ->clickLink('Tambah Item Masuk');
-            
-            $first->script("document.getElementById('pilih_produk').selectize.setValue('1');");
-            $first->assertSee('B001 - KECAP ASIN ABC')
-                    ->type('qty_produk', '1')
-                    ->pause(1000);
+            ->visit('/item-masuk')
+            ->clickLink('Tambah Item Masuk');
 
-            $first->press('Submit')
-                    ->assertSee('SUKSES : BERHASIL MENAMBAH PRODUK "KECAP ASIN ABC"')
-                    ->press('#btnSelesai')
-                    ->assertSee('Anda Yakin Ingin Menyelesaikan Transaksi Ini')
-                    ->type('#keterangan','Keterangan BrowserTest')
-                    ->press('#btn-simpan-item-masuk')
-                    ->assertSee('SUKSES : BERHASIL MELAKUKAN TRANSAKSI ITEM MASUK FAKTUR "'.$no_faktur.'"');
+            $first->script("document.getElementById('pilih_produk').selectize.setValue('1-KECAP ASIN ABC');");
+            $first->assertSee('B001 - KECAP ASIN ABC')
+            ->type('qty_produk', '1')
+            ->pause(1000)
+            ->press('Submit')
+            ->assertSee('SUKSES : BERHASIL MENAMBAH PRODUK "KECAP ASIN ABC"');
+
+            $first->press('#btnSelesai')
+            ->assertSee('Anda Yakin Ingin Menyelesaikan Transaksi Ini')
+            ->type('#keterangan','Keterangan BrowserTest')
+            ->press('#btn-simpan-item-masuk')
+            ->assertSee('SUKSES : BERHASIL MELAKUKAN TRANSAKSI ITEM MASUK FAKTUR "'.$no_faktur.'"');
         });
     }
 
@@ -228,14 +227,14 @@ class ItemMasukTest extends DuskTestCase
         $this->browse(function ($first, $second){
 
             $first->loginAs(User::find(4))
-                    ->visit('/item-masuk')
-                    ->clickLink('Tambah Item Masuk');
-            
+            ->visit('/item-masuk')
+            ->clickLink('Tambah Item Masuk');
+
             $first->press('#btnSelesai')
-                    ->assertSee('Anda Yakin Ingin Menyelesaikan Transaksi Ini')
-                    ->type('#keterangan','Keterangan BrowserTest')
-                    ->press('#btn-simpan-item-masuk')
-                    ->assertSee('GAGAL : BELUM ADA PRODUK YANG DIINPUTKAN');
+            ->assertSee('Anda Yakin Ingin Menyelesaikan Transaksi Ini')
+            ->type('#keterangan','Keterangan BrowserTest')
+            ->press('#btn-simpan-item-masuk')
+            ->assertSee('GAGAL : BELUM ADA PRODUK YANG DI INPUTKAN');
         }); 
     }
 
@@ -246,14 +245,14 @@ class ItemMasukTest extends DuskTestCase
         $this->browse(function ($first, $second)use($item_masuk){
 
             $first->loginAs(User::find(4))
-                    ->visit('/item-masuk')
-                    ->assertSeeLink('Tambah Item Masuk')
-                    ->whenAvailable('.js-confirm', function ($table) { 
-                        ;
-                    })
-                    ->with('.table', function ($table)use($item_masuk){
-                        $table->press('#btnDetail-'.$item_masuk->id);
-                    });
+            ->visit('/item-masuk')
+            ->assertSeeLink('Tambah Item Masuk')
+            ->whenAvailable('.js-confirm', function ($table) { 
+                ;
+            })
+            ->with('.table', function ($table)use($item_masuk){
+                $table->press('#btnDetail-'.$item_masuk->id);
+            });
             $first->assertSee('Detail Item Masuk');
         });
     }
@@ -264,27 +263,48 @@ class ItemMasukTest extends DuskTestCase
         $this->browse(function ($first, $second)use($item_masuk){
 
             $first->loginAs(User::find(5))
-                    ->visit('/item-masuk')
-                    ->assertSeeLink('Tambah Item Masuk')
-                    ->whenAvailable('.js-confirm', function ($table) { 
-                        ;
-                    })
-                    ->with('.table', function ($table) use($item_masuk){
-                        $table->assertSee(''.$item_masuk->no_faktur.'')
-                              ->press('#btnEdit-'.$item_masuk->id);
-                    })
-                    ->assertSee('Edit Item Masuk : '.$item_masuk->no_faktur.'')
-                    ->press('#edit_jumlah_produk')
-                    ->assertSee('Jumlah Item Masuk')
-                    ->type('edit_qty_produk', '2')
-                    ->press('Submit')
-                    ->assertSee('SUKSES : BERHASIL MENGUBAH JUMLAH ITEM MASUK "KECAP ASIN ABC"');
-                    
-                $first->press('#btnSelesai')
-                    ->assertSee('Anda Yakin Ingin Menyelesaikan Transaksi Ini')
-                    ->type('#keterangan','Keterangan Update BrowserTest')
-                    ->press('#btn-simpan-item-masuk')
-                    ->assertSee('SUKSES : BERHASIL MELAKUKAN EDIT TRANSAKSI ITEM MASUK FAKTUR "'.$item_masuk->no_faktur.'"');
+            ->visit('/item-masuk')
+            ->assertSeeLink('Tambah Item Masuk')
+            ->whenAvailable('.js-confirm', function ($table) { 
+                ;
+            })
+            ->with('.table', function ($table) use($item_masuk){
+                $table->assertSee(''.$item_masuk->no_faktur.'')
+                ->press('#btnEdit-'.$item_masuk->id);
+            })
+            ->assertSee('Edit Item Masuk : '.$item_masuk->no_faktur.'')
+            ->press('#edit_jumlah_produk')
+            ->assertSee('KECAP ASIN ABC')
+            ->type('edit_qty_produk', '2')
+            ->press('Submit')
+            ->assertSee('SUKSES : BERHASIL MENGUBAH JUMLAH ITEM MASUK "KECAP ASIN ABC"');
+
+            $first->press('#btnSelesai')
+            ->assertSee('Anda Yakin Ingin Menyelesaikan Transaksi Ini')
+            ->type('#keterangan','Keterangan Update BrowserTest')
+            ->press('#btn-simpan-item-masuk')
+            ->assertSee('SUKSES : BERHASIL MELAKUKAN EDIT TRANSAKSI ITEM MASUK FAKTUR "'.$item_masuk->no_faktur.'"');
+        });
+    }
+
+    public function testHapusItemMasuk(){
+
+        $item_masuk = ItemMasuk::select(['id', 'no_faktur'])->orderBy('id', 'DESC')->first();
+        $this->browse(function ($first, $second)use($item_masuk){
+
+            $first->loginAs(User::find(5))
+            ->visit('/item-masuk')
+            ->assertSeeLink('Tambah Item Masuk')
+            ->whenAvailable('.js-confirm', function ($table) { 
+                ;
+            })
+            ->with('.table', function ($table) use($item_masuk){
+                $table->assertSee(''.$item_masuk->no_faktur.'')
+                ->press('#btnHapus-'.$item_masuk->id)
+                ->assertDialogOpened('Anda Yakin Ingin Menghapus Item Keluar Faktur "'.$item_masuk->no_faktur.'" ?');
+            })->driver->switchTo()->alert()->accept();
+
+            $first->assertSee('SUKSES : ITEM MASUK BERHASIL DIHAPUS');
         });
     }
 }

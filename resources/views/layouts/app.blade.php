@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8" />
-	<link rel="apple-touch-icon" sizes="76x76" href="{{ asset('img/apple-icon.png') }}" />
+	<link rel="apple-touch-icon" sizes="76x76" href="{{ asset('img/favicon.png') }}" />
 	<link rel="icon" type="image/png" href="{{ asset('img/favicon.png') }}" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
@@ -104,32 +104,8 @@
             <p>Pembelian</p>
           </a>
         </li>
-        <!--PEMBELIAN-->
-        <li>
-          <a data-toggle="collapse" href="#persediaan">
-            <i class="material-icons">assessment</i>
-            <p> Persediaan
-              <b class="caret"></b>
-            </p>
-          </a>
-          <div class="collapse" id="persediaan">
-            <ul class="nav">
-              <li>
-                <a href="{{ route('item-masuk.index') }}"> 
-                  <span class="sidebar-mini">IM</span>
-                  <span class="sidebar-normal">Item Masuk</span>
-                </a>
-              </li>  
-              <li>
-                <a href="{{ route('item-keluar.index') }}">
-                  <span class="sidebar-mini">IK</span>
-                  <span class="sidebar-normal">Item Keluar</span>
-                </a>
-              </li> 
-            </ul>
-          </div>
-        </li>
-
+        <!--PEMBELIAN--> 
+        
         <!-- MASTER DATA WARUNG -->
         <li>
           <a data-toggle="collapse" href="#persediaan">
@@ -374,7 +350,7 @@
 				<script type="text/javascript">
 					document.write(new Date().getFullYear())
 				</script>
-				<a href="https://andaglos.id">PT Andaglos Global Teknologi</a>, made with love for a better web
+				<a href="https://andaglos.id">PT Andaglos Global Teknologi</a>
 			</p>
 		</div>
 	</footer>
