@@ -31,7 +31,13 @@
 <!--FORM EDIT PAJAK TBS PEMBELIAN--> 
 
 <!-- MODAL TOMBOL SELESAI --> 
+<!-- SUPAYA MODAL BISA DISCROLL-->
 
+<style type="text/css">
+.modal {
+	overflow-y:auto;
+}
+</style>
 <div class="modal" id="modal_selesai" role="dialog" data-backdrop=""> 
 	<div class="modal-dialog"> 
 		<!-- Modal content--> 
