@@ -38,8 +38,8 @@
 	{!! Form::label('satuan_id', 'Satuan', ['class'=>'col-md-2 control-label']) !!}
 	<div class="col-md-4">
 		{!! Form::select('satuan_id', 
-		['1'=>'PCS']+App\Satuan::pluck('nama_satuan','id')->all(),
-		null, ['required', 'id'=>'satuan', 'style'=> 'width: 215px;']) !!}
+		[''=>'']+App\Satuan::pluck('nama_satuan','id')->all(),
+		App\Satuan::select('id')->where('nama_satuan','PCS')->first()->id, ['required', 'id'=>'satuan', 'style'=> 'width: 215px;']) !!}
 		{!! $errors->first('satuan_id', '<p class="help-block" id="satuan_error">:message</p>') !!}
 	</div>
 </div>
@@ -121,7 +121,7 @@
 				<a href="#pablo" class="btn btn-danger btn-round fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i> Batal</a>
 			</div>
 			{!! $errors->first('foto', '<p class="help-block">:message</p>') !!}
-			<a style="color: red;">Size Foto Terlalu Besar (Ukuran Max : 2MB)</a>
+			<a style="color: red;">Size Foto (Ukuran Max : 3MB)</a>
 		</div>
 	</div>
 </div> 

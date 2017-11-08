@@ -31,7 +31,13 @@
 <!--FORM EDIT PAJAK TBS PEMBELIAN--> 
 
 <!-- MODAL TOMBOL SELESAI --> 
+<!-- SUPAYA MODAL BISA DISCROLL-->
 
+<style type="text/css">
+.modal {
+	overflow-y:auto;
+}
+</style>
 <div class="modal" id="modal_selesai" role="dialog" data-backdrop=""> 
 	<div class="modal-dialog"> 
 		<!-- Modal content--> 
@@ -115,6 +121,7 @@
 					{!! Form::hidden('status_pembelian', $pembelian->status_pembelian, ['class'=>'form-control','autocomplete'=>'off', 'id'=>'status_pembelian']) !!}   
 					{!! Form::hidden('ppn', $pembelian->ppn, ['class'=>'form-control','autocomplete'=>'off', 'id'=>'ppn']) !!} 
 					{!! Form::hidden('potongan', $pembelian->potongan, ['class'=>'form-control','autocomplete'=>'off', 'id'=>'potongan']) !!} 
+					{!! Form::hidden('id_pembelian', $pembelian->id, ['class'=>'form-control','autocomplete'=>'off', 'id'=>'id_pembelian']) !!} 
 				</span> 
 			</div> 
 			<div class="modal-footer">  

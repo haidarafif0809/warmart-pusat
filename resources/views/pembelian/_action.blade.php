@@ -7,11 +7,16 @@
 
 {!! Form::submit('Hapus',['class'=>'btn btn-sm btn-danger js-confirm', 'id' => 'btnHapus-'.$model->id]) !!} 
 {!! Form::close() !!} 
-
+<!-- SUPAYA MODAL BISA DISCROLL-->
+<style type="text/css">
+.modal {
+  overflow-y:auto;
+}
+</style>
 <!-- MODAL PILIH PRODUK --> 
-<div class="modal " id="myModal-{{$model->id}}" role="dialog" data-backdrop=""> 
+<div class="modal" id="myModal-{{$model->id}}" role="dialog" data-backdrop=""> 
   <div class="modal-dialog"> 
-   
+
     <!-- Modal content --> 
     <div class="modal-content"> 
       <div class="modal-header"> 

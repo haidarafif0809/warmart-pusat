@@ -53,6 +53,7 @@
 			
 			$('#table-detail-'+id).DataTable().destroy(); 
 			$('#table-detail-'+id).DataTable({ 
+				scrollX: true,
 				processing: true, 
 				serverSide: true, 
 				"ajax": { 
