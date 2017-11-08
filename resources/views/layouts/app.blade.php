@@ -65,25 +65,28 @@
     			</a> 
     			<div class="collapse" id="logout">
     				<ul class="nav">
-    					
-    					<li>
-    						<a href="{{ url('/ubah-password') }}">Ubah Password</a>
-    					</li>
-    					<li>
-    						<a href="{{ url('/logout') }}"
-    						onclick="event.preventDefault();
-    						document.getElementById('logout-form').submit();">
-    						Logout
-    					</a>
-    					<form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
-    						{{ csrf_field() }}
-    					</form>
+              <li>
+                <a href="{{ url('/ubah-profil-warung') }}">Ubah Profil</a>
+              </li>
 
-    				</li>     
-    			</ul>
-    		</div>
-    	</li>
-    	<li class="active">
+              <li>
+                <a href="{{ url('/ubah-password') }}">Ubah Password</a>
+              </li>
+              <li>
+                <a href="{{ url('/logout') }}"
+                onclick="event.preventDefault();
+                document.getElementById('logout-form').submit();">
+                Logout
+              </a>
+              <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
+                {{ csrf_field() }}
+              </form>
+
+            </li>     
+          </ul>
+        </div>
+      </li>
+      <li class="active">
         @if(Auth::user()->tipe_user == 1 )
         <router-link :to="{name: 'indexDashboard'}">   <i class="material-icons">dashboard</i>
           <p>Dashboard</p></router-link>

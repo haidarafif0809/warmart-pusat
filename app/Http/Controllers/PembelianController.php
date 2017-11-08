@@ -62,13 +62,13 @@ class PembelianController extends Controller
       ->addColumn(['data' => 'no_faktur', 'name' => 'no_faktur', 'title' => 'No. Faktur']) 
       ->addColumn(['data' => 'created_at', 'name' => 'created_at', 'title' => 'Waktu']) 
       ->addColumn(['data' => 'suplier.nama_suplier', 'name' => 'suplier.nama_suplier', 'title' => 'Suplier', 'orderable' => false, 'searchable'=>false]) 
+      ->addColumn(['data' => 'kas.nama_kas', 'name' => 'kas.nama_kas', 'title' => 'Cara Bayar', 'orderable' => false, 'searchable'=>false]) 
       ->addColumn(['data' => 'status_pembelian', 'name' => 'status_pembelian', 'title' => 'Status']) 
+      ->addColumn(['data' => 'potongan', 'name' => 'potongan', 'title' => 'Potongan'])  
       ->addColumn(['data' => 'total', 'name' => 'total', 'title' => 'Total']) 
-      ->addColumn(['data' => 'potongan', 'name' => 'potongan', 'title' => 'Potongan']) 
       ->addColumn(['data' => 'tunai', 'name' => 'tunai', 'title' => 'Tunai']) 
       ->addColumn(['data' => 'kembalian', 'name' => 'kembalian', 'title' => 'Kembalian']) 
       ->addColumn(['data' => 'kredit', 'name' => 'kredit', 'title' => 'Kredit']) 
-      ->addColumn(['data' => 'kas.nama_kas', 'name' => 'kas.nama_kas', 'title' => 'Cara Bayar', 'orderable' => false, 'searchable'=>false]) 
       ->addColumn(['data' => 'tanggal_jt_tempo', 'name' => 'tanggal_jt_tempo', 'title' => 'Jatuh Tempo']) 
       ->addColumn(['data' => 'action', 'name' => 'action', 'title' => 'Aksi', 'orderable' => false, 'searchable' => false]); 
 
