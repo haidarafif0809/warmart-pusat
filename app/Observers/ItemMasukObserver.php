@@ -40,7 +40,7 @@ class ItemMasukObserver
       <div class="alert-icon">
       <i class="material-icons">error</i>
       </div>
-      <b>Gagal : Stok Tidak Mencukupi "</b>
+      <b>Gagal : Stok Tidak Mencukupi </b>
       </div>';
 
       Session::flash("flash_notification", [

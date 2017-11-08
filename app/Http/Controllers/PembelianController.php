@@ -619,8 +619,12 @@ public function proses_batal_transaksi_pembelian(){
       $subtotal = number_format($sum_subtotal->subtotal,2,',','.'); 
       $tbs_pembelian = EditTbsPembelian::with(['produk'])->where('no_faktur', $data_pembelian->no_faktur)->where('warung_id',Auth::user()->id_warung); 
       $jumlah_item =  $tbs_pembelian->count();
-      $kas = TransaksiKas::select('jumlah_keluar')->where('no_faktur', $no_faktur)->where('warung_id',Auth::user()->id_warung)->first(); 
-      $jumlah_kas_lama = $kas->jumlah_keluar;
+      $kas = TransaksiKas::select('jumlah_keluar')->where('no_faktur', $no_faktur)->where('warung_id',Auth::user()->id_warung); 
+      if ($kas->count() == 0) {        
+        $jumlah_kas_lama = 0;
+      }else{
+        $jumlah_kas_lama = $kas->first()->jumlah_keluar;
+      }
       if ($request->ajax()) { 
         return Datatables::of($tbs_pembelian->get())->addColumn('action', function($TbsPembelian){ 
 
