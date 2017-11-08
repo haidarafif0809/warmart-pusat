@@ -183,7 +183,7 @@ class BarangController extends Controller
           $filename = str_random(40) . '.' . $extension;
 
           $image_resize = Image::make($foto->getRealPath());              
-          $image_resize->resize(300, 300);
+          $image_resize->fit(300);
           $image_resize->save(public_path('foto_produk/' .$filename));
           $insert_barang->foto = $filename; 
           // menyimpan field foto_kamar di database kamar dengan filename yang baru dibuat
@@ -299,18 +299,16 @@ class BarangController extends Controller
 
       if ($request->hasFile('foto')) {
 
-        $foto = $request->file('foto');
-
-                             // menambil foto_kategori yang diupload berikut ekstensinya
-
-        $filename = null;
+                  // Mengambil file yang diupload
         $uploaded_foto = $foto;
+          // mengambil extension file
         $extension = $uploaded_foto->getClientOriginalExtension();
-                              // membuat nama file random dengan extension
+          // membuat nama file random berikut extension
         $filename = str_random(40) . '.' . $extension;
-        $destinationPath = public_path() . DIRECTORY_SEPARATOR . 'foto_produk';
-                              // memindahkan file ke folder public/foto_produk
-        $uploaded_foto->move($destinationPath, $filename);
+
+        $image_resize = Image::make($foto->getRealPath());              
+        $image_resize->fit(300);
+        $image_resize->save(public_path('foto_produk/' .$filename));
 
                               // hapus foto_home lama, jika ada
         if ($update_barang->foto) {
