@@ -38,23 +38,23 @@
 
  const routes = [ 
  {
-    path: '/',
-    components: {
-        dashboardIndex: DashboardAdminIndex
-    },
-    name : 'indexDashboard'
-},  
-{path: '/create', component: BankCreate, name: 'createBank'},
-{path: '/satuan', component: SatuanIndex, name: 'indexSatuan'},
-{path: '/bank', component: BankIndex, name: 'indexBank'},
-{path: '/edit/:id', component: BankEdit, name: 'editBank'},
-{path: '/lazy_load', component: LazyIndex, name: 'indexLazy'},
-{path: '/create-satuan', component: SatuanCreate, name: 'createSatuan'},
-{path: '/edit-satuan/:id', component: SatuanEdit, name: 'editSatuan'},
+ 	path: '/',
+ 	components: {
+ 		dashboardIndex: DashboardAdminIndex
+ 	},
+ 	name : 'indexDashboard'
+ },  
+ {path: '/create-bank', component: BankCreate, name: 'createBank'},
+ {path: '/satuan', component: SatuanIndex, name: 'indexSatuan'},
+ {path: '/bank', component: BankIndex, name: 'indexBank'},
+ {path: '/edit-bank/:id', component: BankEdit, name: 'editBank'},
+ {path: '/lazy_load', component: LazyIndex, name: 'indexLazy'},
+ {path: '/create-satuan', component: SatuanCreate, name: 'createSatuan'},
+ {path: '/edit-satuan/:id', component: SatuanEdit, name: 'editSatuan'},
 
-]
+ ]
 
 
-const router = new VueRouter({ routes })
+ const router = new VueRouter({ routes })
 
-const app = new Vue({ router }).$mount('#vue-app')
+ const app = new Vue({ router }).$mount('#vue-app')
