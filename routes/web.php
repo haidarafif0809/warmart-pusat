@@ -168,6 +168,20 @@ Route::put('/proses-ubah-profil-warung',[
 	'uses' => 'UbahProfilController@proses_ubah_profil_warung'
 ]);
 
+//UBAH PROFIL KOMUNITAS
+Route::get('/ubah-profil-komunitas',[
+	'middleware' => ['auth'],
+	'as' => 'user.ubah_profil_komunitas',
+	'uses' => 'UbahProfilController@ubah_profil_komunitas'
+]);
+
+//PROSES UBAH PROFIL KOMUNITAS
+Route::put('/proses-ubah-profil-komunitas',[
+	'middleware' => ['auth'],
+	'as' => 'user.proses_ubah_profil_komunitas',
+	'uses' => 'UbahProfilController@proses_ubah_profil_komunitas'
+]);
+
 Route::put('/proses-ubah-profil/{id}',[
 	'middleware' => ['auth'],
 	'as' => 'user.proses_ubah_profil',
