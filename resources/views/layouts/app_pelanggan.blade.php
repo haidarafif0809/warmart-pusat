@@ -59,7 +59,8 @@
                                 <i class="material-icons">shopping_cart</i> Keranjang Belanja <b style="font-size: 15px">| {{ $cek_belanjaan }}</b>
                             </a>
                         </li>
-
+                        <!--HANYA USER LOGIN PELANGGAN-->
+                        @if(Auth::user()->tipe_user == 3)
                         <li style="color:black">
                             <a href="{{ url('/ubah-profil-pelanggan') }}">
                                 <i class="material-icons">settings</i> Ubah Profil
@@ -69,7 +70,8 @@
                             <a href="{{ url('/ubah-password-pelanggan') }}">
                                 <i class="material-icons">lock_outline</i> Ubah Password
                             </a>
-                        </li>
+                        </li>                        
+                        @endif
                         <li style="color:black">
                             <a href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> 
                                 <i class="material-icons">reply_all</i> Logout
@@ -93,16 +95,19 @@
                     <b class="caret"></b>
                 </a>
                 <ul class="dropdown-menu dropdown-with-icons">
-                    <li>
+                    <!--HANYA USER LOGIN PELANGGAN-->
+                    @if(Auth::user()->tipe_user == 3)
+                    <li style="color:black">
                         <a href="{{ url('/ubah-profil-pelanggan') }}">
                             <i class="material-icons">settings</i> Ubah Profil
                         </a>
                     </li>
-                    <li>
+                    <li style="color:black">
                         <a href="{{ url('/ubah-password-pelanggan') }}">
                             <i class="material-icons">lock_outline</i> Ubah Password
                         </a>
-                    </li>
+                    </li>                        
+                    @endif
                     <li>
                         <a href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> 
                             <i class="material-icons">reply_all</i> Logout
