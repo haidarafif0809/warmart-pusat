@@ -216,68 +216,90 @@ public function edit_potongan_tbs_pembelian(Request $request){
     $potongan = substr_count($request->potongan_edit_produk, '%'); // UNTUK CEK APAKAH ADA STRING "%" 
     // JIKA TIDAK ADA
     if ($potongan == 0) { 
-    	$potongan_produk = filter_var($request->potongan_edit_produk, FILTER_SANITIZE_NUMBER_INT); // POTONGAN TIDAK DALAM BENTUK NOMINAL
+    	// FILTER NUMBER FLOAT
+    	$potongan_produk = filter_var($request->potongan_edit_produk, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION); // POTONGAN TIDAK DALAM BENTUK NOMINAL
+    	$potongan_persen = 0;
     }else{ // JIKA ADA
-    	$potongan_persen = filter_var($request->potongan_edit_produk, FILTER_SANITIZE_NUMBER_INT); //  PISAH STRING BERDASRAKAN TANDA "%" NYA
+    	// FILTER NUMBER FLOAT
+    	$potongan_persen = filter_var($request->potongan_edit_produk, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION); //  PISAH STRING BERDASRAKAN TANDA "%" NYA
     	// POTONGA PRODUK =  (HARGA * JUMLAH ) * POTONGAN PERSEN / 100;
     	$potongan_produk = ($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) * $potongan_persen / 100; 
     } 
     if ($potongan_produk == '') {
     	$potongan_produk = 0;
     }
-    // JIKA TIDAK ADA PAJAK 
-    if ($tbs_pembelian->tax == 0) { 
-    	$tax_produk = 0; 
-    }else{ 
-// TAX PERSEN =  (TAX * 100) / (JUMLAH * HARGA - POTONGAN )
-    	$tax = ($tbs_pembelian->tax * 100) / ($tbs_pembelian->jumlah_produk * $tbs_pembelian->harga_produk - $potongan_produk); 
-// TAX PRODUK = ((HARGA * JUMLAH) - POTONGAN) * TAX PERSEN / 100
-    	$tax_produk = (($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $potongan_produk) * $tax / 100; 
-    } 
+    if ($potongan_persen > 100) {
+    	$pesan_alert =  
+    	'<div class="container-fluid"> 
+    	<div class="alert-icon"> 
+    	<i class="material-icons">check</i> 
+    	</div> 
+    	<b>Potongan Tidak Boleh Lebih Dari 100%!</b> 
+    	</div>'; 
 
-    if ($tbs_pembelian->ppn == 'Include') {  // JIKA PPN INCLUDE MAKA PAJAK TIDAK MEMPENGARUHI SUBTOTAL
-    	$subtotal = ($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $potongan_produk; 
-    }elseif ($tbs_pembelian->ppn == 'Exclude') {  // JIKA PPN EXCLUDE MAKA PAJAK MEMPENGARUHI SUBTOTAL
-    	$subtotal = (($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $potongan_produk) + $tax_produk; 
-    }else{ 
-    	$subtotal = ($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $potongan_produk; 
-    } 
-// UPDATE  SUBTOTAL, POTONGAN, TAX
-    $tbs_pembelian->update(['potongan' => $potongan_produk,'subtotal'=>$subtotal,'tax'=>$tax_produk]); 
-    $nama_barang = $tbs_pembelian->TitleCaseBarang; // TITLE CASH
+    	Session::flash("flash_notification", [ 
+    		"level"     => "success", 
+    		"message"   => $pesan_alert 
+    	]); 
 
-    $pesan_alert =  
-    '<div class="container-fluid"> 
-    <div class="alert-icon"> 
-    <i class="material-icons">check</i> 
-    </div> 
-    <b>Berhasil Mengubah Potongan Produk "'.$nama_barang.'"</b> 
-    </div>'; 
+    	return redirect()->back(); 
+    }else{
+			    // JIKA TIDAK ADA PAJAK 
+    	if ($tbs_pembelian->tax == 0) { 
+    		$tax_produk = 0; 
+    	}else{ 
+			// TAX PERSEN =  (TAX * 100) / (JUMLAH * HARGA - POTONGAN )
+    		$tax = ($tbs_pembelian->tax * 100) / ($tbs_pembelian->jumlah_produk * $tbs_pembelian->harga_produk - $potongan_produk); 
+			// TAX PRODUK = ((HARGA * JUMLAH) - POTONGAN) * TAX PERSEN / 100
+    		$tax_produk = (($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $potongan_produk) * $tax / 100; 
+    	} 
 
-    Session::flash("flash_notification", [ 
-    	"level"     => "success", 
-    	"message"   => $pesan_alert 
-    ]); 
+			    if ($tbs_pembelian->ppn == 'Include') {  // JIKA PPN INCLUDE MAKA PAJAK TIDAK MEMPENGARUHI SUBTOTAL
+			    	$subtotal = ($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $potongan_produk; 
+			    }elseif ($tbs_pembelian->ppn == 'Exclude') {  // JIKA PPN EXCLUDE MAKA PAJAK MEMPENGARUHI SUBTOTAL
+			    	$subtotal = (($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $potongan_produk) + $tax_produk; 
+			    }else{ 
+			    	$subtotal = ($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $potongan_produk; 
+			    } 
+			// UPDATE  SUBTOTAL, POTONGAN, TAX
+			    $tbs_pembelian->update(['potongan' => $potongan_produk,'subtotal'=>$subtotal,'tax'=>$tax_produk]); 
+			    $nama_barang = $tbs_pembelian->TitleCaseBarang; // TITLE CASH
 
-    return redirect()->back(); 
-}
-} 
+			    $pesan_alert =  
+			    '<div class="container-fluid"> 
+			    <div class="alert-icon"> 
+			    <i class="material-icons">check</i> 
+			    </div> 
+			    <b>Berhasil Mengubah Potongan Produk "'.$nama_barang.'"</b> 
+			    </div>'; 
+
+			    Session::flash("flash_notification", [ 
+			    	"level"     => "success", 
+			    	"message"   => $pesan_alert 
+			    ]); 
+
+			    return redirect()->back(); 
+			}
+		}
+	} 
 
 
-public function editTaxTbsPembelian(Request $request){ 
+	public function editTaxTbsPembelian(Request $request){ 
 
-	if (Auth::user()->id_warung == '') {
-		Auth::logout();
-		return response()->view('error.403');
-	}else{
+		if (Auth::user()->id_warung == '') {
+			Auth::logout();
+			return response()->view('error.403');
+		}else{
 	// SELECT EDIT  TBS PEMBELIAN  
-		$tbs_pembelian = EditTbsPembelian::find($request->id_tax); 
+			$tbs_pembelian = EditTbsPembelian::find($request->id_tax); 
     $tax = substr_count($request->tax_edit_produk, '%'); // UNTUK CEK APAKAH ADA STRING "%" 
     // JIKA TIDAK ADA
     if ($tax == 0) { 
-    	$tax_produk = filter_var($request->tax_edit_produk, FILTER_SANITIZE_NUMBER_INT);// TAX DAALAM BENTUK NOMINAL
+    	$tax_produk = filter_var($request->tax_edit_produk, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);// TAX DAALAM BENTUK NOMINAL
+
+    	$tax_persen = 0;  //  PISAH STRING BERDASRAKAN TANDA "%"
     }else{ // JIKA ADA
-    	$tax_persen = filter_var($request->tax_edit_produk, FILTER_SANITIZE_NUMBER_INT);  //  PISAH STRING BERDASRAKAN TANDA "%"
+    	$tax_persen = filter_var($request->tax_edit_produk, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);  //  PISAH STRING BERDASRAKAN TANDA "%"
     	// TAX PRODUK = ((HARGA * JUMLAH) - POTONGAN) * TAX PERSEN / 100
     	$tax_produk = (($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $tbs_pembelian->potongan) * $tax_persen / 100; 
     } 
@@ -285,30 +307,48 @@ public function editTaxTbsPembelian(Request $request){
     	$tax_produk = 0;
     }
 
-    if ($request->ppn_produk == 'Include') {   // JIKA PPN INCLUDE MAKA PAJAK TIDAK MEMPENGARUHI SUBTOTAL
-    	$subtotal = ($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $tbs_pembelian->potongan; 
-    }elseif ($request->ppn_produk == 'Exclude') { // JIKA PPN EXCLUDE MAKA PAJAK MEMPENGARUHI SUBTOTAL 
-    	$subtotal = (($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $tbs_pembelian->potongan) + $tax_produk; 
-    } 
+    if ($tax_persen > 100) {
+    	$pesan_alert =  
+    	'<div class="container-fluid"> 
+    	<div class="alert-icon"> 
+    	<i class="material-icons">check</i> 
+    	</div> 
+    	<b>Pajak Tidak Boleh Lebih Dari 100%!</b> 
+    	</div>'; 
 
-    // UPDATE SUBTOTAL, TAX, PPN
-    $tbs_pembelian->update(['subtotal'=>$subtotal,'tax'=>$tax_produk,'ppn'=>$request->ppn_produk]); 
-    $nama_barang = $tbs_pembelian->TitleCaseBarang; // TITLE CASH
+    	Session::flash("flash_notification", [ 
+    		"level"     => "success", 
+    		"message"   => $pesan_alert 
+    	]); 
 
-    $pesan_alert =  
-    '<div class="container-fluid"> 
-    <div class="alert-icon"> 
-    <i class="material-icons">check</i> 
-    </div> 
-    <b>Berhasil Mengubah Pajak Produk "'.$nama_barang.'"</b> 
-    </div>'; 
+    	return redirect()->back(); 
+    }else{
 
-    Session::flash("flash_notification", [ 
-    	"level"     => "success", 
-    	"message"   => $pesan_alert 
-    ]); 
+	    if ($request->ppn_produk == 'Include') {   // JIKA PPN INCLUDE MAKA PAJAK TIDAK MEMPENGARUHI SUBTOTAL
+	    	$subtotal = ($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $tbs_pembelian->potongan; 
+	    }elseif ($request->ppn_produk == 'Exclude') { // JIKA PPN EXCLUDE MAKA PAJAK MEMPENGARUHI SUBTOTAL 
+	    	$subtotal = (($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $tbs_pembelian->potongan) + $tax_produk; 
+	    } 
 
-    return redirect()->back(); 
+	    // UPDATE SUBTOTAL, TAX, PPN
+	    $tbs_pembelian->update(['subtotal'=>$subtotal,'tax'=>$tax_produk,'ppn'=>$request->ppn_produk]); 
+	    $nama_barang = $tbs_pembelian->TitleCaseBarang; // TITLE CASH
+
+	    $pesan_alert =  
+	    '<div class="container-fluid"> 
+	    <div class="alert-icon"> 
+	    <i class="material-icons">check</i> 
+	    </div> 
+	    <b>Berhasil Mengubah Pajak Produk "'.$nama_barang.'"</b> 
+	    </div>'; 
+
+	    Session::flash("flash_notification", [ 
+	    	"level"     => "success", 
+	    	"message"   => $pesan_alert 
+	    ]); 
+
+	    return redirect()->back(); 
+	}
 }
 } 
 //PROSES HAPUS TBS PEMBELIAN 

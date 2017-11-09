@@ -45,8 +45,10 @@ class UbahPasswordController extends Controller
         $user = Auth::user();
         $keranjang_belanjaan = KeranjangBelanja::with(['produk','pelanggan'])->where('id_pelanggan',Auth::user()->id)->get();
         $cek_belanjaan = $keranjang_belanjaan->count();
+        //FOTO WARMART
+        $logo_warmart = "".asset('/assets/img/examples/warmart_logo.png')."";
 
-        return view('ubah_password_pelanggan',['user'=>$user, 'cek_belanjaan'=>$cek_belanjaan]);
+        return view('ubah_password_pelanggan',['user'=>$user, 'cek_belanjaan'=>$cek_belanjaan, 'logo_warmart'=>$logo_warmart]);
     }
 
     public function proses_ubah_password_pelanggan(Request $request, $id)

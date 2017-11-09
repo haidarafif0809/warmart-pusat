@@ -38,7 +38,7 @@ class UserWarungController extends Controller
                     'permission_ubah' => Laratrust::can('edit_warung'),
                     'permission_hapus' => Laratrust::can('hapus_warung'),
 
-                ]);
+                    ]);
             })
             ->addColumn('kelurahan', function($wilayah){
                 if ($wilayah->wilayah == NULL) {
@@ -77,7 +77,7 @@ class UserWarungController extends Controller
                     'konfirmasi_url' => route('user_warung.konfirmasi', $user_konfirmasi->id),
                     'no_konfirmasi_url' => route('user_warung.no_konfirmasi', $user_konfirmasi->id),
                     'konfirmasi_user' => Laratrust::can('konfirmasi_user'), 
-                ]);
+                    ]);
                 })//Konfirmasi User Warung Apabila Bila Status User Warung 1 Maka User Warung sudah di konfirmasi oleh admin dan apabila status user 0 maka user belum di konfirmasi oleh admin
             ->make(true);
         }
@@ -148,39 +148,39 @@ class UserWarungController extends Controller
     public function update(Request $request, $id)
     {
         //VALIDASI USER WARUNG
-       $this->validate($request, [
+     $this->validate($request, [
         'name'      => 'required',
         'alamat'    => 'required',
         'kelurahan' => 'required', 
         'email'     => 'required|without_spaces|unique:users,email,'.$id,
         'no_telp'   => 'required|without_spaces|unique:users,no_telp,'.$id,
-    ]);
+        ]);
 
          //UPDATE USER WARUNG
-       $user_warung = UserWarung::where('id',$id)->update([
+     $user_warung = UserWarung::where('id',$id)->update([
         'name'      => $request->name,
         'email'     => $request->email, 
         'no_telp'     => $request->no_telp, 
         'alamat'    => $request->alamat,
         'wilayah'   => $request->kelurahan,
         'id_warung' => $request->id_warung,
-    ]);
+        ]);
 
-       $pesan_alert = '
-       <div class="container-fluid">
-       <div class="alert-icon">
-       <i class="material-icons">check</i>
-       </div>
-       <b>Sukses : Berhasil Mengubah User Warung '.$request->name.' </b>
-       </div>';
+     $pesan_alert = '
+     <div class="container-fluid">
+         <div class="alert-icon">
+             <i class="material-icons">check</i>
+         </div>
+         <b>Sukses : Berhasil Mengubah User Warung '.$request->name.' </b>
+     </div>';
 
-       Session::flash("flash_notification", [
+     Session::flash("flash_notification", [
         "level"=>"success",
         "message"=> $pesan_alert
-    ]);
+        ]);
 
-       return redirect()->route('user_warung.index');
-   }
+     return redirect()->route('user_warung.index');
+ }
 
     /**
      * Remove the specified resource from storage.
@@ -202,32 +202,32 @@ class UserWarungController extends Controller
             else{
                 $pesan_alert = '
                 <div class="container-fluid">
-                <div class="alert-icon">
-                <i class="material-icons">check</i>
-                </div>
-                <b>Sukses : Berhasil Menghapus User Warung </b>
+                    <div class="alert-icon">
+                        <i class="material-icons">check</i>
+                    </div>
+                    <b>Sukses : Berhasil Menghapus User Warung </b>
                 </div>';
 
                 Session:: flash("flash_notification", [
                     "level"=>"success",
                     "message"=> $pesan_alert
-                ]);
+                    ]);
 
                 return redirect()->route('user_warung.index');
             }
         }else{
             $pesan_alert = '
             <div class="container-fluid">
-            <div class="alert-icon">
-            <i class="material-icons">check</i>
-            </div>
-            <b>Gagal : User Warung Tidak Bisa Dihapus </b>
+                <div class="alert-icon">
+                    <i class="material-icons">check</i>
+                </div>
+                <b>Gagal : User Warung Tidak Bisa Dihapus </b>
             </div>';
 
             Session:: flash("flash_notification", [
                 "level"=>"success",
                 "message"=> $pesan_alert
-            ]);
+                ]);
 
             return redirect()->route('user_warung.index');
         }
@@ -235,22 +235,24 @@ class UserWarungController extends Controller
     }
 
     public function konfirmasi($id){
-        // konfirmasi komunitas
+        // konfirmasi user_warung
         $username = UserWarung::select('name')->where('id',$id)->first();
-        $user_warung = UserWarung::where('id',$id)->update(['konfirmasi_admin' => '1']);
+        $user_warung = UserWarung::find($id)->update([
+            'konfirmasi_admin' => '1'
+            ]);
 
         $pesan_alert = '
         <div class="container-fluid">
-        <div class="alert-icon">
-        <i class="material-icons">check</i>
-        </div>
-        <b>Sukses : User Warung '. $username->name .' Berhasil Di Konfirmasi </b>
+            <div class="alert-icon">
+                <i class="material-icons">check</i>
+            </div>
+            <b>Sukses : User Warung '. $username->name .' Berhasil Di Konfirmasi </b>
         </div>';
 
         Session::flash("flash_notification", [
             "level"=>"success",
             "message"=> $pesan_alert
-        ]);
+            ]);
 
         return redirect()->route('user_warung.index');
 
@@ -259,20 +261,22 @@ class UserWarungController extends Controller
     public function no_konfirmasi($id){
         // no_konfirmasi user_warung
         $username = UserWarung::select('name')->where('id',$id)->first();
-        $user_warung = UserWarung::where('id',$id)->update(['konfirmasi_admin' => '0']);
+        $user_warung = UserWarung::find($id)->update([
+            'konfirmasi_admin' => '0'
+            ]);
 
         $pesan_alert = '
         <div class="container-fluid">
-        <div class="alert-icon">
-        <i class="material-icons">check</i>
-        </div>
-        <b>Sukses : User Warung '. $username->name .' Tidak Di Konfirmasi </b>
+            <div class="alert-icon">
+                <i class="material-icons">check</i>
+            </div>
+            <b>Sukses : User Warung '. $username->name .' Tidak Di Konfirmasi </b>
         </div>';
 
         Session::flash("flash_notification", [
             "level"=>"success",
             "message"=> $pesan_alert
-        ]);
+            ]);
 
         return redirect()->route('user_warung.index');
     }
