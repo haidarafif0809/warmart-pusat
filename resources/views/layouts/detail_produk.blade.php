@@ -4,8 +4,8 @@
   <meta charset="utf-8" />
   <title>War-Mart.id</title>
   <meta charset="utf-8" />
-  <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('img/favicon.jpg') }}" />
-  <link rel="icon" type="image/png" href="{{ asset('img/favicon.jpg') }}" />
+  <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('img/favicon.png') }}" />
+  <link rel="icon" type="image/png" href="{{ asset('img/favicon.png') }}" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
   <meta name="viewport" content="width=device-width" />
@@ -121,7 +121,7 @@
           </a>
         </div>
         <div class="row text-right">
-          <a href="{{ url('/keranjang-belanja/tambah-produk-keranjang-belanja/$barang->id) }}" class="btn btn-rose btn-round">Beli Sekarabg &nbsp;<i class="material-icons">shopping_cart</i></a>
+          <a href="{{ url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$barang->id.'') }}" id="btnBeliSekarang" class="btn btn-rose btn-round">Beli Sekarabg &nbsp;<i class="material-icons">shopping_cart</i></a>
         </div>
 
         <div class="col-sm-12 col-md-12">                     

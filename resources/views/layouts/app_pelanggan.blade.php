@@ -3,8 +3,8 @@
 <head>
     <title>War-Mart.id</title>
     <meta charset="utf-8" />
-    <link rel="apple-touch-icon" sizes="76x76" href="img/favicon.jpg" />
-    <link rel="icon" type="image/png" href="img/favicon.jpg" />
+    <link rel="apple-touch-icon" sizes="76x76" href="img/favicon.png" />
+    <link rel="icon" type="image/png" href="img/favicon.png" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
@@ -35,9 +35,9 @@
 </head>
 
 <style type="text/css">
-    .navbar-nav .open .dropdown-menu{
-        color: grey;
-    }
+.navbar-nav .open .dropdown-menu{
+    color: grey;
+}
 </style>
 
 
@@ -53,7 +53,7 @@
                         <a href="{{ url('/home') }}"><img  class="img img-raised" src="{!! $logo_warmart !!}" style="width: 50%"/></a>
                     </div>
                     <div class="col-md-7 col-sm-7 col-xs-7">
-                     <li class="dropdown">
+                       <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <i class="material-icons">person</i> {{ Auth::user()->name }} 
                             <b class="caret"></b>
@@ -95,9 +95,9 @@
 </nav>
 @else
 <nav class="navbar navbar-default navbar-transparent navbar-fixed-top navbar-color-on-scroll" color-on-scroll="100" id="sectionsNav">
-   <div class="container">
-       <a href="{{ url('/home') }}"><img  class="img img-raised" src="{!! $logo_warmart !!}" style="width: 10%"/></a>
-       <ul class="nav navbar-nav navbar-right">
+ <div class="container">
+     <a href="{{ url('/home') }}"><img  class="img img-raised" src="{!! $logo_warmart !!}" style="width: 10%"/></a>
+     <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 <i class="material-icons">person</i> {{ Auth::user()->name }}
@@ -161,57 +161,57 @@
                             <i class="fa fa-phone-square"></i>
                             <p>+62-721-8050-299 <br>
                                 Bandar Lampung, Indonesia
-                                solusibisnis@andaglos.id</p>
-                            </div>
-                            <div class="feed-line">                            
-                                <a href="https://id-id.facebook.com/andaglos/" target="blank"><i class="fa fa-facebook-square"></i> Andaglos</a>
-                            </div>
+                            solusibisnis@andaglos.id</p>
                         </div>
-                    </div>
-
-                    <div class="col-md-4">
-                        <h5>Instagram</h5>
-                        <div class="gallery-feed">
+                        <div class="feed-line">                            
+                            <a href="https://id-id.facebook.com/andaglos/" target="blank"><i class="fa fa-facebook-square"></i> Andaglos</a>
                         </div>
-
                     </div>
                 </div>
+
+                <div class="col-md-4">
+                    <h5>Instagram</h5>
+                    <div class="gallery-feed">
+                    </div>
+
+                </div>
             </div>
+        </div>
 
 
-            <hr />
+        <hr />
 
-            <ul class="pull-left">
-                <li>
-                    <a href="#pablo">
-                     Blog
-                 </a>
-             </li>
-             <li>
-                <a href="#pablo">
-                    Presentation
-                </a>
-            </li>
+        <ul class="pull-left">
             <li>
                 <a href="#pablo">
-                 Discover
-             </a>
-         </li>
-         <li>
+                   Blog
+               </a>
+           </li>
+           <li>
             <a href="#pablo">
-                Payment
+                Presentation
             </a>
         </li>
         <li>
             <a href="#pablo">
-                Contact Us
-            </a>
-        </li>
-    </ul>
+               Discover
+           </a>
+       </li>
+       <li>
+        <a href="#pablo">
+            Payment
+        </a>
+    </li>
+    <li>
+        <a href="#pablo">
+            Contact Us
+        </a>
+    </li>
+</ul>
 
-    <div class="copyright pull-right">
-        Copyright &copy; <script>document.write(new Date().getFullYear())</script> <a href="https://andaglos.id/"> PT. Andaglos Global Teknologi.</a>
-    </div>
+<div class="copyright pull-right">
+    Copyright &copy; <script>document.write(new Date().getFullYear())</script> <a href="https://andaglos.id/"> PT. Andaglos Global Teknologi.</a>
+</div>
 </div>
 </footer>
 </body>

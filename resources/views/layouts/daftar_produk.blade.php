@@ -2,10 +2,10 @@
 @section('content') 
 
 <style type="text/css">
-    .list-produk {
-        padding-left: 4px;
-        padding-right: 4px;
-    }
+.list-produk {
+    padding-left: 4px;
+    padding-right: 4px;
+}
 </style>
 
 @if (Agent::isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
@@ -160,8 +160,12 @@
 
 @section('scripts') 
 <script type="text/javascript"> 
-   $(document).on('click', '#btnBeliSekarang', function(){
-      swal("Berhasil!", "Produk Berhasil Di Tambah Ke Keranjang Belanjaan", "success");
+   $(document).on('click', '#btnBeliSekarang', function(){ 
+      swal({
+        title: "Produk Berhasil Di Tambah Ke Keranjang Belanjaan", 
+        showConfirmButton :  false,
+        type: "success",
+    });
   });
    $(document).on('click', '#btnBeli', function(){
     swal("Info!", "Silakan Login Sebagai Pelanggan Untuk Melakukan Pesanan.", "info");

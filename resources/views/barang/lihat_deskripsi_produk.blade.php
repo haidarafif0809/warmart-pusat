@@ -12,79 +12,79 @@
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" />
     <!--  Material Dashboard CSS    -->
     <link href="{{ asset('css/material-dashboard.css?v=1.2.0') }}" rel="stylesheet" />
-   
+    
     <link href="{{ asset('css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
     <!--     Fonts and icons     -->
-     <link href="{{ asset('css/material-kit.css?v=1.2.0')}}" rel="stylesheet"/>
-     <link href="{{ asset('assets/assets-for-demo/vertical-nav.css')}}" rel="stylesheet" />
+    <link href="{{ asset('css/material-kit.css?v=1.2.0')}}" rel="stylesheet"/>
+    <link href="{{ asset('assets/assets-for-demo/vertical-nav.css')}}" rel="stylesheet" />
 
-     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
 
     {!! SEOMeta::generate() !!}
     {!! OpenGraph::generate() !!}
     {!! Twitter::generate() !!}
 
-      <!-- MINIFIED -->
+    <!-- MINIFIED -->
     {!! SEO::generate(true) !!}
     
 
-        <!-- LUMEN -->
+    <!-- LUMEN -->
     {!! app('seotools')->generate() !!}
 
 </head>
 
-    <body class="product-page">
+<body class="product-page">
 
 	<div class="page-header header-filter" data-parallax="true" >
 		{!! Html::image(asset('image/background.jpg')) !!}
 	</div>
 
 	<div class="section section-gray">
-	    <div class="container">
-            <div class="main main-raised main-product">
-                <div class="row">
-                    <div class="col-md-6 col-sm-6">
-                       		@if(isset($lihat_deskripsi_produk->foto))
-                       			{!! Html::image(asset('foto_produk/'.$lihat_deskripsi_produk->foto)) !!}
-                            @else
-								{!! Html::image(asset('image/foto_default.png')) !!}
-                            @endif
-                    </div>
-                    <div class="col-md-6 col-sm-6">
-						<h2 class="title"> {{ $nama_produk }} </h2>
-						<h3 class="main-price">Rp. {{ number_format($lihat_deskripsi_produk->harga_jual,0,',','.') }}</h3>	
-	                        {!! substr($lihat_deskripsi_produk->deskripsi_produk, 0, 300) !!}...
-	                        		<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-	                                    <h4 class="panel-title">
-	                                    <b> Baca Selengkapnya... </b><i class="material-icons">keyboard_arrow_down</i>
-	                                    </h4>
-	                                </a>
-                    </div>
-                    <div class="col-sm-12 col-md-12">                    	
-						<div id="acordeon">
-                            <div class="panel-group" id="accordion">
-	                          <div class="panel panel-border panel-default">
-	                            <div id="collapseOne" class="panel-collapse collapse">
-	                              <div class="panel-body"><hr style="border-width: 1px; border-color: black">
-	                              	<h3>Detail Produk Dari {{$nama_produk}}</h3>
-	                                {!!$lihat_deskripsi_produk->deskripsi_produk!!}
-	                              </div>
-	                            </div>
-	                          </div>
-
-	                        </div>
-                        </div><!--  end acordeon -->
-
-                        <div class="row text-right">
-                        	<a href="{{ route('barang.detail_produk', $id) }}" class="btn btn-rose btn-round">Kembali &nbsp;<i class="material-icons">reply</i></a>
-                        </div>
-
-                    </div>
+     <div class="container">
+        <div class="main main-raised main-product">
+            <div class="row">
+                <div class="col-md-6 col-sm-6">
+                 @if(isset($lihat_deskripsi_produk->foto))
+                 {!! Html::image(asset('foto_produk/'.$lihat_deskripsi_produk->foto)) !!}
+                 @else
+                 {!! Html::image(asset('image/foto_default.png')) !!}
+                 @endif
+             </div>
+             <div class="col-md-6 col-sm-6">
+              <h2 class="title"> {{ $nama_produk }} </h2>
+              <h3 class="main-price">Rp. {{ number_format($lihat_deskripsi_produk->harga_jual,0,',','.') }}</h3>	
+              {!! substr($lihat_deskripsi_produk->deskripsi_produk, 0, 300) !!}...
+              <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                 <h4 class="panel-title">
+                     <b> Baca Selengkapnya... </b><i class="material-icons">keyboard_arrow_down</i>
+                 </h4>
+             </a>
+         </div>
+         <div class="col-sm-12 col-md-12">                    	
+          <div id="acordeon">
+            <div class="panel-group" id="accordion">
+               <div class="panel panel-border panel-default">
+                 <div id="collapseOne" class="panel-collapse collapse">
+                   <div class="panel-body"><hr style="border-width: 1px; border-color: black">
+                    <h3>Detail Produk Dari {{$nama_produk}}</h3>
+                    {!!$lihat_deskripsi_produk->deskripsi_produk!!}
                 </div>
             </div>
         </div>
+
     </div>
+</div><!--  end acordeon -->
+
+<div class="row text-right">
+ <a href="{{ route('barang.detail_produk', $id) }}" class="btn btn-rose btn-round">Kembali &nbsp;<i class="material-icons">reply</i></a>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+</div>
 </body>
 
 <!--   Core JS Files   -->
