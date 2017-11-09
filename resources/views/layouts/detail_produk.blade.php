@@ -41,48 +41,101 @@
 </style>
 
 <body class="product-page"> 
-  <nav class="navbar navbar-default navbar-transparent navbar-fixed-top navbar-color-on-scroll" color-on-scroll="100" id="sectionsNav">
-   <div class="container">
-    <ul class="nav navbar-nav navbar-right">
-      <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-          <i class="material-icons">person</i> {{ Auth::user()->name }}
-          <b class="caret"></b>
-        </a>
-        <ul class="dropdown-menu dropdown-with-icons">
-          <!--HANYA USER LOGIN PELANGGAN-->
-          @if(Auth::user()->tipe_user == 3)
-          <li style="color:black">
-            <a href="{{ url('/ubah-profil-pelanggan') }}">
-              <i class="material-icons">settings</i> Ubah Profil
+  @if (Agent::isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
+  <nav class="navbar navbar-default navbar-fixed-top navbar-color-on-scroll" color-on-scroll="100" id="sectionsNav">
+    <div class="container">
+      <ul class="nav navbar-nav navbar-right">             
+
+        <div class="row">
+          <div class="col-md-5 col-sm-5 col-xs-5">                            
+            <a href="{{ url('/home') }}"><img  class="img img-raised" src="{!! $logo_warmart !!}" style="width: 50%"/></a>
+          </div>
+          <div class="col-md-7 col-sm-7 col-xs-7">
+           <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <i class="material-icons">person</i> {{ Auth::user()->name }} 
+              <b class="caret"></b>
             </a>
+
+            <ul class="dropdown-menu dropdown-with-icons">
+              <li style="color:black">
+                <a href="{{ url('/keranjang-belanja') }}" class="warna-list">
+                  <i class="material-icons">shopping_cart</i> Keranjang Belanja <b style="font-size: 15px">| {{ $cek_belanjaan }}</b>
+                </a>
+              </li>
+              <!--HANYA USER LOGIN PELANGGAN-->
+              @if(Auth::user()->tipe_user == 3)
+              <li style="color:black">
+                <a href="{{ url('/ubah-profil-pelanggan') }}">
+                  <i class="material-icons">settings</i> Ubah Profil
+                </a>
+              </li>
+              <li style="color:black">
+                <a href="{{ url('/ubah-password-pelanggan') }}">
+                  <i class="material-icons">lock_outline</i> Ubah Password
+                </a>
+              </li>                        
+              @endif
+              <li style="color:black">
+                <a href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> 
+                  <i class="material-icons">reply_all</i> Logout
+                </a>
+                <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
+                  {{ csrf_field() }}
+                </form>
+              </li>                            
+            </ul>
           </li>
-          <li style="color:black">
-            <a href="{{ url('/ubah-password-pelanggan') }}">
-              <i class="material-icons">lock_outline</i> Ubah Password
-            </a>
-          </li>                        
-          @endif
-          <li>
-            <a href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> 
-              <i class="material-icons">reply_all</i> Logout
-            </a>
-            <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
-              {{ csrf_field() }}
-            </form>
-          </li>                             
-        </ul>
-      </li>
-
-      <li class="button-container">
-        <a href="{{ url('/keranjang-belanja') }}" class="btn btn-rose btn-round">
-          <i class="material-icons">shopping_cart</i> Keranjang Belanja <b style="font-size: 15px">| {{ $cek_belanjaan }}</b>
-        </a>
-      </li>
-
+        </div>
+      </div>
     </ul>
   </div>
 </nav>
+@else
+<nav class="navbar navbar-default navbar-transparent navbar-fixed-top navbar-color-on-scroll" color-on-scroll="100" id="sectionsNav">
+ <div class="container">
+   <a href="{{ url('/home') }}"><img  class="img img-raised" src="{!! $logo_warmart !!}" style="width: 10%"/></a>
+   <ul class="nav navbar-nav navbar-right">
+    <li class="dropdown">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+        <i class="material-icons">person</i> {{ Auth::user()->name }}
+        <b class="caret"></b>
+      </a>
+      <ul class="dropdown-menu dropdown-with-icons">
+        <!--HANYA USER LOGIN PELANGGAN-->
+        @if(Auth::user()->tipe_user == 3)
+        <li style="color:black">
+          <a href="{{ url('/ubah-profil-pelanggan') }}">
+            <i class="material-icons">settings</i> Ubah Profil
+          </a>
+        </li>
+        <li style="color:black">
+          <a href="{{ url('/ubah-password-pelanggan') }}">
+            <i class="material-icons">lock_outline</i> Ubah Password
+          </a>
+        </li>                        
+        @endif
+        <li>
+          <a href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> 
+            <i class="material-icons">reply_all</i> Logout
+          </a>
+          <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
+            {{ csrf_field() }}
+          </form>
+        </li>                             
+      </ul>
+    </li>
+
+    <li class="button-container">
+      <a href="{{ url('/keranjang-belanja') }}" class="btn btn-rose btn-round">
+        <i class="material-icons">shopping_cart</i> Keranjang Belanja <b style="font-size: 15px">| {{ $cek_belanjaan }}</b>
+      </a>
+    </li>
+
+  </ul>
+</div>
+</nav>
+@endif 
 
 <div class="page-header header-filter header-small" data-parallax="false"" style="background-image: url('../image/background2.jpg');"> 
   <div class="container">
@@ -110,7 +163,7 @@
           <img src="../image/foto_default.png"/>
           @endif
         </div>
-        <div class="col-md-6 col-sm-6">
+        <div class="col-md-6 col-sm-6"> 
           <h2 class="title"> {{ $barang->nama_barang }} </h2>
           <h3 class="main-price">Rp. {{ number_format($barang->harga_jual,0,',','.') }}</h3>  
           {!! substr($barang->deskripsi_produk, 0, 300) !!}...
@@ -120,9 +173,15 @@
             </h4>
           </a>
         </div>
-        <div class="row text-right">
+        @if (Agent::isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
+        <div class="row text-center">
           <a href="{{ url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$barang->id.'') }}" id="btnBeliSekarang" class="btn btn-rose btn-round">Beli Sekarabg &nbsp;<i class="material-icons">shopping_cart</i></a>
         </div>
+        @else 
+        <div class="row text-right">
+          <a href="{{ url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$barang->id.'') }}" id="btnBeliSekarang" class="btn btn-rose btn-round">Beli Sekarabg &nbsp;<i class="material-icons">shopping_cart</i></a> 
+        </div>         
+        @endif
 
         <div class="col-sm-12 col-md-12">                     
           <div id="acordeon">
@@ -130,6 +189,7 @@
               <div class="panel panel-border panel-default">
                 <div id="collapseOne" class="panel-collapse collapse">
                   <div class="panel-body">
+                   <div class="panel-body"><hr style="border-width: 1px; border-color: black">
                     <h3>Detail Produk Dari {{$barang->nama_barang}}</h3>
                     {!!$barang->deskripsi_produk!!}
                   </div>
@@ -163,47 +223,34 @@
   </div>
 </div>
 
-
 <footer class="footer footer-black footer-big">
   <div class="container">
 
     <div class="content">
       <div class="row">
         <div class="col-md-4">
-          <h5>About Us</h5>
-          <p>Creative Tim is a startup that creates design tools that make the web development process faster and easier. </p> <p>We love the web and care deeply for how users interact with a digital product. We power businesses and individuals to create better looking web projects around the world. </p>
+          <h5>Tentang Kami</h5>
+          <p>Warmart adalah marketplace warung muslim pertama di Indonesia. Kami menghubungkan usaha-usaha muslim dengan pelanggan seluruh Umat Islam di Indonesia. Jenis usaha yang dapat bergabung dengan Warmart diantaranya: Warung, Toko, Minimarket, Pedagang Kaki Lima, Bengkel, Rumah Makan, Klinik, Home Industri, Peternakan, Pertanian, Perikanan, Kerajinan, Fashion dan usaha lainya.</p>
         </div>
 
         <div class="col-md-4">
-          <h5>Social Feed</h5>
+          <h5>Contact Us</h5>
           <div class="social-feed">
             <div class="feed-line">
-              <i class="fa fa-twitter"></i>
-              <p>How to handle ethical disagreements with your clients.</p>
+              <i class="fa fa-phone-square"></i>
+              <p>+62-721-8050-299 <br>
+                Bandar Lampung, Indonesia
+              solusibisnis@andaglos.id</p>
             </div>
-            <div class="feed-line">
-              <i class="fa fa-twitter"></i>
-              <p>The tangible benefits of designing at 1x pixel density.</p>
-            </div>
-            <div class="feed-line">
-              <i class="fa fa-facebook-square"></i>
-              <p>A collection of 25 stunning sites that you can use for inspiration.</p>
+            <div class="feed-line">                            
+              <a href="https://id-id.facebook.com/andaglos/" target="blank"><i class="fa fa-facebook-square"></i> Andaglos</a>
             </div>
           </div>
         </div>
 
         <div class="col-md-4">
-          <h5>Instagram Feed</h5>
+          <h5>Instagram</h5>
           <div class="gallery-feed">
-            <img src="../assets/img/faces/card-profile6-square.jpg" class="img img-raised img-rounded" alt="" />
-            <img src="../assets/img/faces/christian.jpg" class="img img-raised img-rounded" alt="" />
-            <img src="../assets/img/faces/card-profile4-square.jpg" class="img img-raised img-rounded" alt="" />
-            <img src="../assets/img/faces/card-profile1-square.jpg" class="img img-raised img-rounded" alt="" />
-
-            <img src="../assets/img/faces/marc.jpg" class="img img-raised img-rounded" alt="" />
-            <img src="../assets/img/faces/kendall.jpg" class="img img-raised img-rounded" alt="" />
-            <img src="../assets/img/faces/card-profile5-square.jpg" class="img img-raised img-rounded" alt="" />
-            <img src="../assets/img/faces/card-profile2-square.jpg" class="img img-raised img-rounded" alt="" />
           </div>
 
         </div>
@@ -242,11 +289,10 @@
 </ul>
 
 <div class="copyright pull-right">
-  Copyright &copy; <script>document.write(new Date().getFullYear())</script> Creative Tim All Rights Reserved.
+  Copyright &copy; <script>document.write(new Date().getFullYear())</script> <a href="https://andaglos.id/"> PT. Andaglos Global Teknologi.</a>
 </div>
 </div>
 </footer>
-
 
 </body>
 

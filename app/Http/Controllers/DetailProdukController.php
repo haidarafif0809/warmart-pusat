@@ -50,10 +50,23 @@ class DetailProdukController extends Controller
 			<a class="description"><i class="material-icons">store</i>  '.strip_tags(substr($warung->name, 0, 10)).'... </a><br>';
 
 			if ($agent->isMobile()) {
-				$daftar_produk .= '<a href="'. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" class="btn btn-danger btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja" id="btnBeliSekarang"><b style="font-size:15px"> Beli </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';
+                //JIKA USER LOGIN BUKAN PELANGGAN MAKA TIDAK BISA PESAN PRODUK
+				if(Auth::user()->tipe_user == 3){
+					$daftar_produk .= '<a href="'. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" class="btn btn-danger btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja" id="btnBeliSekarang"><b style="font-size:18px"> Beli </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';
+				}
+				else{
+					$daftar_produk .= '<button type="button" class="btn btn-danger btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja" id="btnBeli"><b style="font-size:18px"> Beli </b><i class="fa fa-chevron-right" aria-hidden="true"></i></button>';
+				}
+
 			}
 			else{
-				$daftar_produk .= '<a href="'. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" id="btnBeliSekarang" class="btn btn-danger btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja"><b style="font-size:18px"> Beli Sekarang </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';
+                //JIKA USER LOGIN BUKAN PELANGGAN MAKA TIDAK BISA PESAN PRODUK
+				if(Auth::user()->tipe_user == 3){
+					$daftar_produk .= '<a href="'. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" id="btnBeliSekarang" class="btn btn-danger btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja"><b style="font-size:18px"> Beli Sekarang </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';
+				}
+				else{
+					$daftar_produk .= '<button type="button" class="btn btn-danger btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja" id="btnBeli"><b style="font-size:18px"> Beli Sekarang</b><i class="fa fa-chevron-right" aria-hidden="true"></i></button>';
+				}                
 			}
 			$daftar_produk .= '
 			</div>
@@ -61,7 +74,7 @@ class DetailProdukController extends Controller
 			</div>
 			</div>';
 		}
-		return $daftar_produk;
+		return $daftar_produk; 
 	}
 
 	public function detail_produk($id){
@@ -92,7 +105,10 @@ class DetailProdukController extends Controller
 		$keranjang_belanjaan = KeranjangBelanja::with(['produk','pelanggan'])->where('id_pelanggan',Auth::user()->id)->get();
 		$cek_belanjaan = $keranjang_belanjaan->count();   
 
-		return view('layouts.detail_produk', ['id' => $id, 'barang' => $barang,'cek_belanjaan'=>$cek_belanjaan,'daftar_produk_sama'=>$daftar_produk_sama,'daftar_produk_warung'=>$daftar_produk_warung]); 
+		$agent = new Agent();
+		$logo_warmart = "".asset('/assets/img/examples/warmart_logo.png')."";
+
+		return view('layouts.detail_produk', ['id' => $id, 'barang' => $barang,'cek_belanjaan'=>$cek_belanjaan,'daftar_produk_sama'=>$daftar_produk_sama,'daftar_produk_warung'=>$daftar_produk_warung,'agent'=>$agent,'logo_warmart'=>$logo_warmart]); 
 
 	}
 }

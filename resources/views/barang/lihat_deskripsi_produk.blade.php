@@ -41,44 +41,44 @@
 	</div>
 
 	<div class="section section-gray">
-     <div class="container">
+       <div class="container">
         <div class="main main-raised main-product">
             <div class="row">
                 <div class="col-md-6 col-sm-6">
-                 @if(isset($lihat_deskripsi_produk->foto))
-                 {!! Html::image(asset('foto_produk/'.$lihat_deskripsi_produk->foto)) !!}
-                 @else
-                 {!! Html::image(asset('image/foto_default.png')) !!}
-                 @endif
-             </div>
-             <div class="col-md-6 col-sm-6">
-              <h2 class="title"> {{ $nama_produk }} </h2>
-              <h3 class="main-price">Rp. {{ number_format($lihat_deskripsi_produk->harga_jual,0,',','.') }}</h3>	
-              {!! substr($lihat_deskripsi_produk->deskripsi_produk, 0, 300) !!}...
-              <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                 <h4 class="panel-title">
-                     <b> Baca Selengkapnya... </b><i class="material-icons">keyboard_arrow_down</i>
-                 </h4>
-             </a>
-         </div>
-         <div class="col-sm-12 col-md-12">                    	
-          <div id="acordeon">
-            <div class="panel-group" id="accordion">
-               <div class="panel panel-border panel-default">
-                 <div id="collapseOne" class="panel-collapse collapse">
-                   <div class="panel-body"><hr style="border-width: 1px; border-color: black">
-                    <h3>Detail Produk Dari {{$nama_produk}}</h3>
-                    {!!$lihat_deskripsi_produk->deskripsi_produk!!}
+                   @if(isset($lihat_deskripsi_produk->foto))
+                   {!! Html::image(asset('foto_produk/'.$lihat_deskripsi_produk->foto)) !!}
+                   @else
+                   {!! Html::image(asset('image/foto_default.png')) !!}
+                   @endif
+               </div>
+               <div class="col-md-6 col-sm-6">
+                  <h2 class="title"> {{ $nama_produk }} </h2>
+                  <h3 class="main-price">Rp. {{ number_format($lihat_deskripsi_produk->harga_jual,0,',','.') }}</h3>	
+                  {!! substr($lihat_deskripsi_produk->deskripsi_produk, 0, 300) !!}...
+                  <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                   <h4 class="panel-title">
+                       <b> Baca Selengkapnya... </b><i class="material-icons">keyboard_arrow_down</i>
+                   </h4>
+               </a>
+           </div>
+           <div class="col-sm-12 col-md-12">                    	
+              <div id="acordeon">
+                <div class="panel-group" id="accordion">
+                 <div class="panel panel-border panel-default">
+                   <div id="collapseOne" class="panel-collapse collapse">
+                     <div class="panel-body"><hr style="border-width: 1px; border-color: black">
+                        <h3>Detail Produk Dari {{$nama_produk}}</h3>
+                        {!!$lihat_deskripsi_produk->deskripsi_produk!!}
+                    </div>
                 </div>
             </div>
+
         </div>
+    </div><!--  end acordeon -->
 
-    </div>
-</div><!--  end acordeon -->
-
-<div class="row text-right">
- <a href="{{ route('barang.detail_produk', $id) }}" class="btn btn-rose btn-round">Kembali &nbsp;<i class="material-icons">reply</i></a>
-</div>
+    <div class="row text-right">
+       <a href="{{ route('barang.detail_produk', $id) }}" class="btn btn-rose btn-round">Kembali &nbsp;<i class="material-icons">reply</i></a>
+   </div>
 
 </div>
 </div>
