@@ -125,7 +125,11 @@ class PembelianController extends Controller
             $tax_persen = 0; 
           } 
           return "<a href='#edit-tax' id='edit_tax_produk' class='edit-tax' data-id='$produk->id_tbs_pembelian'  data-jumlah='$produk->jumlah_produk' data-potongan='$produk->potongan' data-harga='$produk->harga_produk' data-ppn='$ppn_produk' data-nama='$produk->TitleCaseBarang'>".round($produk->tax,2)." | ".round($tax_persen,2)."%</a>";  
-        })->make(true); 
+        })
+          ->editColumn('subtotal', function($produk){
+            return "<span id='table-subtotal'>$produk->subtotal</span>";  
+          })->make(true); 
+
         } 
 
         $html = $htmlBuilder 
