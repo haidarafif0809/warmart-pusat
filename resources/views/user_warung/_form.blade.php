@@ -17,10 +17,10 @@
 <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
 	{!! Form::label('email', 'Email', ['class'=>'col-md-2 control-label']) !!}
 	<div class="col-md-4">
-		{!! Form::email('email', null, ['class'=>'form-control','required','autocomplete'=>'off', 'placeholder' =>'Email']) !!}
+		{!! Form::text('email', null, ['class'=>'form-control','placeholder' => 'Email','required','autocomplete'=>'off']) !!}
 		{!! $errors->first('email', '<p class="help-block">:message</p>') !!}
 	</div>
-</div> 
+</div>
 
 <div class="form-group{{ $errors->has('alamat') ? ' has-error' : '' }}">
 	{!! Form::label('alamat', 'Alamat', ['class'=>'col-md-2 control-label']) !!}
@@ -35,15 +35,15 @@
 	{!! Form::label('kelurahan', 'Kelurahan', ['class'=>'col-md-2 control-label']) !!}
 	<div class="col-md-4">
 		@if (isset($user_warung) && $user_warung->wilayah)
-			{!! Form::select('kelurahan', 
-			[''=>'']+App\Kelurahan::pluck('nama','id')->all(),$user_warung->wilayah
-			, ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--SILAKAN PILIH--','id'=>'pilih_kelurahan']) !!}
-			{!! $errors->first('kelurahan', '<p class="help-block">:message</p>') !!}
+		{!! Form::select('kelurahan', 
+		[''=>'']+App\Kelurahan::pluck('nama','id')->all(),$user_warung->wilayah
+		, ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--SILAKAN PILIH--','id'=>'pilih_kelurahan']) !!}
+		{!! $errors->first('kelurahan', '<p class="help-block">:message</p>') !!}
 		@else
-			{!! Form::select('kelurahan', 
-			[''=>'']+App\Kelurahan::pluck('nama','id')->all(),null
-			, ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--SILAKAN PILIH--','id'=>'pilih_kelurahan']) !!}
-			{!! $errors->first('kelurahan', '<p class="help-block">:message</p>') !!}
+		{!! Form::select('kelurahan', 
+		[''=>'']+App\Kelurahan::pluck('nama','id')->all(),null
+		, ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--SILAKAN PILIH--','id'=>'pilih_kelurahan']) !!}
+		{!! $errors->first('kelurahan', '<p class="help-block">:message</p>') !!}
 		@endif
 	</div>
 </div>
@@ -67,6 +67,6 @@
 
 <div class="form-group">
 	<div class="col-md-4 col-md-offset-2">
-			{!! Form::button('<i class="material-icons">send</i> Submit', ['class'=>'btn btn-primary', 'id'=>'btnSimpanStokingCenter', 'type'=>'submit']) !!}
+		{!! Form::button('<i class="material-icons">send</i> Submit', ['class'=>'btn btn-primary', 'id'=>'btnSimpanStokingCenter', 'type'=>'submit']) !!}
 	</div>
 </div>

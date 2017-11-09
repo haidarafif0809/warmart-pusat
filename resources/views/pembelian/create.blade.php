@@ -31,7 +31,13 @@
 <!--FORM EDIT PAJAK TBS PEMBELIAN--> 
 
 <!-- MODAL TOMBOL SELESAI --> 
+<!-- SUPAYA MODAL BISA DISCROLL-->
 
+<style type="text/css">
+.modal {
+	overflow-y:auto;
+}
+</style>
 <div class="modal" id="modal_selesai" role="dialog" data-backdrop=""> 
 	<div class="modal-dialog"> 
 		<!-- Modal content--> 
@@ -48,41 +54,41 @@
 			{!! Form::open(['url' => route('pembelian.store'),'method' => 'post', 'class'=>'form-horizontal','id'=>'form_pembelian']) !!} 
 			<div class="modal-body"> 
 				<div class="row"> 
-					<div class="col-md-3"> 
-						<h5>Potongan(%)</h5> 
+					<div class="col-md-3  col-xs-3"> 
+						<h5>Disc(%)</h5> 
 						{!! Form::text('potongan_persen', '', ['class'=>'form-control','autocomplete'=>'off', 'id' =>'potongan_persen','style'=>'height: 40px; width:90%; font-size:20px;']) !!} 
 						{!! $errors->first('potongan_persen', '<p class="help-block" id="potongan_error">:message</p>') !!} 
 					</div> 
-					<div class="col-md-3"> 
-						<h5>Potongan</h5> 
+					<div class="col-md-3 col-xs-3"> 
+						<h5>Disc(Rp)</h5> 
 						{!! Form::text('potongan_faktur', '', ['class'=>'form-control','autocomplete'=>'off', 'id' =>'potongan_faktur','style'=>'height: 40px; width:90%; font-size:20px;']) !!} 
 						{!! $errors->first('potongan_faktur', '<p class="help-block" id="potongan_error">:message</p>') !!} 
 					</div> 
-					<div class="col-sm-6"> 
+					<div class="col-md-6 col-xs-6"> 
 						<h5>Subtotal</h5> 
-						{!! Form::text('subtotal', $subtotal_tbs, ['class'=>'form-control','autocomplete'=>'off', 'id' =>'subtotal','style'=>'height: 40px; width:90%; font-size:23px;']) !!} 
+						{!! Form::text('subtotal', $subtotal_tbs, ['class'=>'form-control','autocomplete'=>'off', 'id' =>'subtotal','style'=>'height: 40px; width:90%; font-size:23px;','readonly'=>'']) !!} 
 						{!! $errors->first('subtotal', '<p class="help-block" id="subtotal_error">:message</p>') !!} 
 					</div> 
 				</div>  
 				<div class="row"> 
-					<div class="col-md-6"> 
+					<div class="col-md-6  col-xs-6"> 
 						<h5><i class="material-icons">info_outline</i> Pembayaran </h5> 
-						{!! Form::number('pembayaran', '', ['class'=>'form-control','autocomplete'=>'off', 'id'=>'pembayaran','style'=>'height: 40px; width:90%; font-size:25px;','placeholder'=>'Silakan Isi Pembayaran']) !!} 
+						{!! Form::number('pembayaran', '', ['class'=>'form-control','autocomplete'=>'off', 'id'=>'pembayaran','style'=>'height: 40px; width:90%; font-size:25px;','placeholder'=>'Isi Pembayaran']) !!} 
 						{!! $errors->first('pembayaran', '<p class="help-block" id="pembayaran_error">:message</p>') !!} 
 					</div> 
-					<div class="col-md-6"> 
+					<div class="col-md-6  col-xs-6"> 
 						<h5>Total Akhir</h5> 
 						{!! Form::text('total_akhir', $subtotal_tbs, ['class'=>'form-control','required','autocomplete'=>'off', 'id'=>'total_akhir','style'=>'height: 40px; width:90%; font-size:25px;', 'readonly'=>'' ]) !!} 
 					</div> 
 				</div> 
 
 				<div class="row"> 
-					<div class="col-md-6"> 
+					<div class="col-md-6  col-xs-6"> 
 						<h5>Kembalian</h5> 
 						{!! Form::text('kembalian', '', ['class'=>'form-control','autocomplete'=>'off', 'id' =>'kembalian','style'=>'height: 40px; width:90%; font-size:25px;', 'readonly'=>'' ]) !!} 
 						{!! $errors->first('kembalian', '<p class="help-block" id="kembalian_error">:message</p>') !!} 
 					</div> 
-					<div class="col-md-6"> 
+					<div class="col-md-6  col-xs-6"> 
 						<h5>Kredit</h5> 
 						{!! Form::text('kredit', $subtotal_tbs, ['class'=>'form-control','autocomplete'=>'off', 'id' =>'kredit','style'=>'height: 40px; width:90%; font-size:25px;', 'readonly'=>'' ]) !!} 
 						{!! $errors->first('kredit', '<p class="help-block" id="kredit_error">:message</p>') !!} 
@@ -91,12 +97,12 @@
 				</div> 
 
 				<div class="row"> 
-					<div class="col-md-6"> 
+					<div class="col-md-6  col-xs-6"> 
 						<h5>Jatuh Tempo</h5> 
 						{!! Form::text('jatuh_tempo', null, ['class'=>'form-control datepicker','autocomplete'=>'off', 'id' =>'jatuh_tempo','placeholder' => 'Jatuh Tempo']) !!} 
 						{!! $errors->first('jatuh_tempo', '<p class="help-block" id="jatuh_tempo_error">:message</p>') !!} 
 					</div> 
-					<div class="col-md-6"> 
+					<div class="col-md-6  col-xs-6"> 
 						<h5>Keterangan</h5> 
 						<textarea class="form-control" name="keterangan" id="keterangan" placeholder="...." rows="1"></textarea> 
 
@@ -970,7 +976,7 @@
 
 	shortcut.add("f2", function() { 
 		$("#btnSelesai").click(); 
-		$("#keterangan").focus(); 
+		$("#pembayaran").focus(); 
 	}); 
 
 

@@ -29,11 +29,10 @@ class KeranjangBelanjaController extends Controller
 
 		$agent = new Agent();
 		
-		$keranjang_belanjaan = KeranjangBelanja::with(['produk','pelanggan'])->get();
+		$keranjang_belanjaan = KeranjangBelanja::with(['produk','pelanggan'])->where('id_pelanggan',Auth::user()->id)->get();
 		$cek_belanjaan = $keranjang_belanjaan->count();  
 
-		$jumlah_produk = KeranjangBelanja::select([DB::raw('IFNULL(SUM(jumlah_produk),0) as total_produk')])->first(); 
-		$jumlah_produk = KeranjangBelanja::select([DB::raw('IFNULL(SUM(jumlah_produk),0) as total_produk')])->first(); 
+		$jumlah_produk = KeranjangBelanja::select([DB::raw('IFNULL(SUM(jumlah_produk),0) as total_produk')])->first();  
 
       	//MEANMPILKAN PRODUK BELANJAAN
 		$produk_belanjaan = '';
@@ -43,37 +42,37 @@ class KeranjangBelanjaController extends Controller
 
 			$produk_belanjaan .= '
 			<tr class="card" style="margin-bottom: 3px;margin-top: 3px;width: 725px;">
-			<td>
-			<div class="img-container"> ';
-			if ($keranjang_belanjaans->produk->foto != NULL) {
-				$produk_belanjaan .= '<img src="foto_produk/'.$keranjang_belanjaans->produk->foto.'">';
-			}
-			else{
-				$produk_belanjaan .= '<img src="image/foto_default.png">';
-			}
-			$produk_belanjaan .= '
-			</div>
-			</td>
-			<td class="td-name">
-			<a href="#jacket">'. $keranjang_belanjaans->produk->nama_barang .'</a>
-			<br />
-			<small><i class="material-icons">store</i>  '. $keranjang_belanjaans->produk->warung->name .' </small>
-			</td>  
-			<td class="td-number">
-			<b>Rp. '. number_format($harga_produk,0,',','.') .'</b>
-			</td> 
-			<td class="td-number">
-			<div class="btn-group">
-			<a href=" '. url('/keranjang-belanja/kurang-jumlah-produk-keranjang-belanja/'.$keranjang_belanjaans->id_keranjang_belanja.''). '" class="btn btn-round btn-info btn-xs"  style="background-color: #f44336"> <i class="material-icons">remove</i> </a>
-			<a class="btn btn-round btn-info btn-xs"  style="background-color: #f44336">'. $keranjang_belanjaans->jumlah_produk .' </a>
-			<a href=" '. url('/keranjang-belanja/tambah-jumlah-produk-keranjang-belanja/'.$keranjang_belanjaans->id_keranjang_belanja.''). '" class="btn btn-round btn-info btn-xs"  style="background-color: #f44336"> <i class="material-icons">add</i> </a>
-			</div>
-			</td>   
-			<td class="td-actions">
-			<a href=" '. url('/keranjang-belanja/hapus-produk-keranjang-belanja/'.$keranjang_belanjaans->id_keranjang_belanja.''). '" type="button" rel="tooltip" data-placement="left" title="Remove item" class="btn btn-simple">
-			<i class="material-icons">close</i>
-			</a>
-			</td>
+				<td>
+					<div class="img-container"> ';
+						if ($keranjang_belanjaans->produk->foto != NULL) {
+							$produk_belanjaan .= '<img src="foto_produk/'.$keranjang_belanjaans->produk->foto.'">';
+						}
+						else{
+							$produk_belanjaan .= '<img src="image/foto_default.png">';
+						}
+						$produk_belanjaan .= '
+					</div>
+				</td>
+				<td class="td-name">
+					<a href="#jacket">'. $keranjang_belanjaans->produk->nama_barang .'</a>
+					<br />
+					<small><i class="material-icons">store</i>  '. $keranjang_belanjaans->produk->warung->name .' </small>
+				</td>  
+				<td class="td-number">
+					<b>Rp. '. number_format($harga_produk,0,',','.') .'</b>
+				</td> 
+				<td class="td-number">
+					<div class="btn-group">
+						<a href=" '. url('/keranjang-belanja/kurang-jumlah-produk-keranjang-belanja/'.$keranjang_belanjaans->id_keranjang_belanja.''). '" class="btn btn-round btn-info btn-xs"  style="background-color: #f44336"> <i class="material-icons">remove</i> </a>
+						<a class="btn btn-round btn-info btn-xs"  style="background-color: #f44336">'. $keranjang_belanjaans->jumlah_produk .' </a>
+						<a href=" '. url('/keranjang-belanja/tambah-jumlah-produk-keranjang-belanja/'.$keranjang_belanjaans->id_keranjang_belanja.''). '" class="btn btn-round btn-info btn-xs"  style="background-color: #f44336"> <i class="material-icons">add</i> </a>
+					</div>
+				</td>   
+				<td class="td-actions">
+					<a id="btnHapusProduk" href=" '. url('/keranjang-belanja/hapus-produk-keranjang-belanja/'.$keranjang_belanjaans->id_keranjang_belanja.''). '" type="button" rel="tooltip" data-placement="left" title="Remove item" class="btn btn-simple">
+						<i class="material-icons">close</i>
+					</a>
+				</td>
 			</tr>  
 			';
 			$subtotal = $subtotal += $harga_produk;
@@ -116,4 +115,25 @@ class KeranjangBelanjaController extends Controller
 		
 	}
 
+	public function tambah_produk_keranjang_belanjaan($id)
+	{
+		$pelanggan =  Auth::user()->id ; 
+		$datakeranjang_belanjaan = KeranjangBelanja::where('id_pelanggan',$pelanggan)->orWhere('id_produk',$id);
+		$keranjang_belanjaan = $datakeranjang_belanjaan->first();
+		if ($datakeranjang_belanjaan->count() >= 1 AND $keranjang_belanjaan->id_pelanggan == $pelanggan AND $keranjang_belanjaan->id_produk == $id) {
+
+
+			$keranjang_belanjaan->jumlah_produk += 1;
+			$keranjang_belanjaan->save(); 
+		}else{
+
+			$produk = KeranjangBelanja::create(); 
+			$produk->id_produk = $id;
+			$produk->id_pelanggan =  $pelanggan;
+			$produk->jumlah_produk += 1;
+			$produk->save(); 		
+		}
+		return redirect()->back();
+		
+	}
 }

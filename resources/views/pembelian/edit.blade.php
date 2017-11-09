@@ -2,28 +2,28 @@
 
 @section('content') 
 <!--FORM EDIT JUMLAH TBS PEMBELIAN--> 
-{!! Form::open(['url' => route('pembelian.edit_jumlah_tbs_pembelian'),'method' => 'post', 'id'=>'form-edit-jumlah']) !!} 
+{!! Form::open(['url' => route('editPembelian.edit_jumlah_tbs_pembelian'),'method' => 'post', 'id'=>'form-edit-jumlah']) !!} 
 <input type="hidden" name="id_tbs_pembelian" id="id_produk_edit_jumlah" > 
 <input type="hidden" name="jumlah_edit_produk" id="jumlah_edit_produk" > 
 {!! Form::close() !!} 
 <!--FORM EDIT JUMLAH TBS PEMBELIAN--> 
 
 <!--FORM EDIT HARGA TBS PEMBELIAN--> 
-{!! Form::open(['url' => route('pembelian.edit_harga_tbs_pembelian'),'method' => 'post', 'id'=>'form-edit-harga']) !!} 
+{!! Form::open(['url' => route('editPembelian.edit_harga_tbs_pembelian'),'method' => 'post', 'id'=>'form-edit-harga']) !!} 
 <input type="hidden" name="id_harga" id="id_produk_edit_harga" > 
 <input type="hidden" name="harga_edit_produk" id="harga_edit_produk" > 
 {!! Form::close() !!} 
 <!--FORM EDIT HARGA TBS PEMBELIAN--> 
 
 <!--FORM EDIT POTONGAN TBS PEMBELIAN--> 
-{!! Form::open(['url' => route('pembelian.edit_potongan_tbs_pembelian'),'method' => 'post', 'id'=>'form-edit-potongan']) !!} 
+{!! Form::open(['url' => route('editPembelian.edit_potongan_tbs_pembelian'),'method' => 'post', 'id'=>'form-edit-potongan']) !!} 
 <input type="hidden" name="id_potongan" id="id_produk_edit_potongan" > 
 <input type="hidden" name="potongan_edit_produk" id="potongan_edit_produk" > 
 {!! Form::close() !!} 
 <!--FORM EDIT POTONGAN TBS PEMBELIAN--> 
 
 <!--FORM EDIT PAJAK TBS PEMBELIAN--> 
-{!! Form::open(['url' => route('pembelian.edit_tax_tbs_pembelian'),'method' => 'post', 'id'=>'form-edit-tax']) !!} 
+{!! Form::open(['url' => route('editPembelian.edit_tax_tbs_pembelian'),'method' => 'post', 'id'=>'form-edit-tax']) !!} 
 <input type="hidden" name="id_tax" id="id_produk_edit_tax" placeholder="id"> 
 <input type="hidden" name="tax_edit_produk" id="tax_edit_produk" placeholder="tax"> 
 <input type="hidden" name="ppn_produk" id="ppn_produk" placeholder="ppn"> 
@@ -31,7 +31,13 @@
 <!--FORM EDIT PAJAK TBS PEMBELIAN--> 
 
 <!-- MODAL TOMBOL SELESAI --> 
+<!-- SUPAYA MODAL BISA DISCROLL-->
 
+<style type="text/css">
+.modal {
+	overflow-y:auto;
+}
+</style>
 <div class="modal" id="modal_selesai" role="dialog" data-backdrop=""> 
 	<div class="modal-dialog"> 
 		<!-- Modal content--> 
@@ -45,80 +51,90 @@
 				</h4> 
 			</div> 
 
-			{!! Form::open(['url' => route('pembelian.store'),'method' => 'post', 'class'=>'form-horizontal','id'=>'form_pembelian']) !!} 
+			{!! Form::open(['url' => route('editPembelian.prosesEditPembelian'),'method' => 'post', 'class'=>'form-horizontal','id'=>'form_pembelian']) !!} 
 			<div class="modal-body"> 
 				<div class="row"> 
-					<div class="col-md-3"> 
-						<h5>Potongan(%)</h5> 
+					<div class="col-md-3 col-xs-3"> 
+						<h5>Disc(%)</h5> 
 						{!! Form::text('potongan_persen', '', ['class'=>'form-control','autocomplete'=>'off', 'id' =>'potongan_persen','style'=>'height: 40px; width:90%; font-size:20px;']) !!} 
 						{!! $errors->first('potongan_persen', '<p class="help-block" id="potongan_error">:message</p>') !!} 
 					</div> 
-					<div class="col-md-3"> 
-						<h5>Potongan</h5> 
-						{!! Form::text('potongan_faktur', '', ['class'=>'form-control','autocomplete'=>'off', 'id' =>'potongan_faktur','style'=>'height: 40px; width:90%; font-size:20px;']) !!} 
+					<div class="col-md-3 col-xs-3"> 
+						<h5>Disc(Rp)</h5> 
+						{!! Form::text('potongan_faktur',  number_format($pembelian->potongan,2,',','.'), ['class'=>'form-control','autocomplete'=>'off', 'id' =>'potongan_faktur','style'=>'height: 40px; width:90%; font-size:20px;']) !!} 
 						{!! $errors->first('potongan_faktur', '<p class="help-block" id="potongan_error">:message</p>') !!} 
 					</div> 
-					<div class="col-sm-6"> 
+					<div class="col-sm-6 col-xs-6"> 
 						<h5>Subtotal</h5> 
-						{!! Form::text('subtotal', $subtotal_tbs, ['class'=>'form-control','autocomplete'=>'off', 'id' =>'subtotal','style'=>'height: 40px; width:90%; font-size:23px;']) !!} 
+						{!! Form::text('subtotal', $subtotal_tbs, ['class'=>'form-control','autocomplete'=>'off', 'id' =>'subtotal','style'=>'height: 40px; width:90%; font-size:23px;','readonly'=>'']) !!} 
 						{!! $errors->first('subtotal', '<p class="help-block" id="subtotal_error">:message</p>') !!} 
 					</div> 
 				</div>  
 				<div class="row"> 
-					<div class="col-md-6"> 
+					<div class="col-md-6 col-xs-6"> 
 						<h5><i class="material-icons">info_outline</i> Pembayaran </h5> 
-						{!! Form::number('pembayaran', '', ['class'=>'form-control','autocomplete'=>'off', 'id'=>'pembayaran','style'=>'height: 40px; width:90%; font-size:25px;','placeholder'=>'Silakan Isi Pembayaran']) !!} 
+						{!! Form::number('pembayaran', $pembelian->tunai, ['class'=>'form-control','autocomplete'=>'off', 'id'=>'pembayaran','style'=>'height: 40px; width:90%; font-size:25px;','placeholder'=>'Silakan Isi Pembayaran']) !!} 
 						{!! $errors->first('pembayaran', '<p class="help-block" id="pembayaran_error">:message</p>') !!} 
 					</div> 
-					<div class="col-md-6"> 
+					<div class="col-md-6 col-xs-6"> 
 						<h5>Total Akhir</h5> 
-						{!! Form::text('total_akhir', $subtotal_tbs, ['class'=>'form-control','required','autocomplete'=>'off', 'id'=>'total_akhir','style'=>'height: 40px; width:90%; font-size:25px;', 'readonly'=>'' ]) !!} 
+						{!! Form::text('total_akhir', '', ['class'=>'form-control','required','autocomplete'=>'off', 'id'=>'total_akhir','style'=>'height: 40px; width:90%; font-size:25px;', 'readonly'=>'' ]) !!} 
 					</div> 
 				</div> 
 
 				<div class="row"> 
-					<div class="col-md-6"> 
+					<div class="col-md-6 col-xs-6"> 
 						<h5>Kembalian</h5> 
 						{!! Form::text('kembalian', '', ['class'=>'form-control','autocomplete'=>'off', 'id' =>'kembalian','style'=>'height: 40px; width:90%; font-size:25px;', 'readonly'=>'' ]) !!} 
 						{!! $errors->first('kembalian', '<p class="help-block" id="kembalian_error">:message</p>') !!} 
 					</div> 
-					<div class="col-md-6"> 
+					<div class="col-md-6 col-xs-6"> 
 						<h5>Kredit</h5> 
-						{!! Form::text('kredit', $subtotal_tbs, ['class'=>'form-control','autocomplete'=>'off', 'id' =>'kredit','style'=>'height: 40px; width:90%; font-size:25px;', 'readonly'=>'' ]) !!} 
+						{!! Form::text('kredit', '', ['class'=>'form-control','autocomplete'=>'off', 'id' =>'kredit','style'=>'height: 40px; width:90%; font-size:25px;', 'readonly'=>'' ]) !!} 
 						{!! $errors->first('kredit', '<p class="help-block" id="kredit_error">:message</p>') !!} 
 					</div> 
 
 				</div> 
 
 				<div class="row"> 
-					<div class="col-md-6"> 
+					<div class="col-md-6 col-xs-6"> 
 						<h5>Jatuh Tempo</h5> 
-						{!! Form::text('jatuh_tempo', null, ['class'=>'form-control datepicker','autocomplete'=>'off', 'id' =>'jatuh_tempo','placeholder' => 'Jatuh Tempo']) !!} 
+						{!! Form::text('jatuh_tempo', $pembelian->tanggal_jt_tempo, ['class'=>'form-control datepicker','autocomplete'=>'off', 'id' =>'jatuh_tempo','placeholder' => 'Jatuh Tempo']) !!} 
 						{!! $errors->first('jatuh_tempo', '<p class="help-block" id="jatuh_tempo_error">:message</p>') !!} 
 					</div> 
-					<div class="col-md-6"> 
+					<div class="col-md-6 col-xs-6"> 
 						<h5>Keterangan</h5> 
-						<textarea class="form-control" name="keterangan" id="keterangan" placeholder="...." rows="1"></textarea> 
+						<textarea class="form-control" name="keterangan" id="keterangan" placeholder="...." rows="1">{{$pembelian->keterangan}}</textarea> 
 
 					</div> 
 				</div> 
 
 				<span style="display: none;"> 
-					{!! Form::hidden('suplier_id', null, ['class'=>'form-control','autocomplete'=>'off', 'id'=>'suplier_id']) !!} 
+					{!! Form::hidden('suplier_id', $pembelian->suplier_id, ['class'=>'form-control','autocomplete'=>'off', 'id'=>'suplier_id']) !!}					
+					{!! Form::hidden('no_faktur_edit', $pembelian->no_faktur, ['class'=>'form-control','required','autocomplete'=>'off', 'id'=>'no_faktur_edit']) !!}  
 
 					@if($kas_default->count() == 0) 
-					{!! Form::hidden('id_cara_bayar', null, ['class'=>'form-control','autocomplete'=>'off', 'id'=>'id_cara_bayar']) !!} 
+					{!! Form::hidden('id_cara_bayar', $pembelian->cara_bayar, ['class'=>'form-control','autocomplete'=>'off', 'id'=>'id_cara_bayar']) !!} 
 					@else 
-					{!! Form::hidden('id_cara_bayar', $kas_default->first()->id, ['class'=>'form-control','autocomplete'=>'off', 'id'=>'id_cara_bayar']) !!} 
+					{!! Form::hidden('id_cara_bayar', $pembelian->cara_bayar, ['class'=>'form-control','autocomplete'=>'off', 'id'=>'id_cara_bayar']) !!} 
 					@endif 
-					{!! Form::hidden('status_pembelian', 'Hutang', ['class'=>'form-control','autocomplete'=>'off', 'id'=>'status_pembelian']) !!}   
-					{!! Form::hidden('ppn', null, ['class'=>'form-control','autocomplete'=>'off', 'id'=>'ppn']) !!} 
-					{!! Form::hidden('potongan', null, ['class'=>'form-control','autocomplete'=>'off', 'id'=>'potongan']) !!} 
+					{!! Form::hidden('status_pembelian', $pembelian->status_pembelian, ['class'=>'form-control','autocomplete'=>'off', 'id'=>'status_pembelian']) !!}   
+					{!! Form::hidden('ppn', $pembelian->ppn, ['class'=>'form-control','autocomplete'=>'off', 'id'=>'ppn']) !!} 
+					{!! Form::hidden('potongan', $pembelian->potongan, ['class'=>'form-control','autocomplete'=>'off', 'id'=>'potongan']) !!} 
+					{!! Form::hidden('id_pembelian', $pembelian->id, ['class'=>'form-control','autocomplete'=>'off', 'id'=>'id_pembelian']) !!} 
 				</span> 
 			</div> 
 			<div class="modal-footer">  
-				<button type="submit"  id="btn-tunai-pembelian" class="btn btn-success" style="display: none;"><i class="material-icons">credit_card</i> Tunai</button> 
-				<button type="submit"  id="btn-hutang-pembelian" class="btn btn-success"  ><i class="material-icons">credit_card</i> Hutang</button> 
+				@if($pembelian->status_pembelian == 'Tunai')
+				
+				<button type="submit"  id="btn-tunai-pembelian" class="btn btn-success"><i class="material-icons" >credit_card</i> Tunai</button> 
+				<button type="submit"  id="btn-hutang-pembelian" class="btn btn-success" style="display: none"><i class="material-icons" >credit_card</i> Hutang</button> 
+
+				@elseif($pembelian->status_pembelian == 'Hutang')
+				<button type="submit"  id="btn-tunai-pembelian" class="btn btn-success" style="display: none"><i class="material-icons" >credit_card</i> Tunai</button> 
+				<button type="submit"  id="btn-hutang-pembelian" class="btn btn-success"><i class="material-icons" >credit_card</i> Hutang</button> 
+				@endif
+
 				<button type="button" class="btn btn-default" data-dismiss="modal" id="btnCloseModal"><i class="material-icons">close</i> Close</button> 
 			</div> 
 			{!! Form::close() !!} 
@@ -145,12 +161,12 @@
 					</div> 
 
 					<div class="card-content"> 
-						<h4 class="card-title">Edit Pembelian {{$no_faktur}}</h4> 
+						<h4 class="card-title">Edit Pembelian <b>{{$no_faktur}}</b></h4> 
 						<div class="row"> 
 
 							<!--COL MD 8--> 
 							<div class="col-md-8"> 
-								{!! Form::open(['url' => route('pembelian.proses_tambah_tbs_pembelian'),'method' => 'post', 'class'=>'form-inline','id' => 'form-produk']) !!} 
+								{!! Form::open(['url' => route('editPembelian.proses_tambah_tbs_pembelian'),'method' => 'post', 'class'=>'form-inline','id' => 'form-produk']) !!} 
 								<div class="col-md-4"><br> 
 									<div class="{{ $errors->has('id_produk') ? ' has-error' : '' }}"> 
 										{!! Form::select('id_produk', []+App\Barang::where('status_aktif',1)->where('id_warung',Auth::user()->id_warung)->select([DB::raw('CONCAT(kode_barang, " - ", nama_barang) AS data_produk'),DB::raw('CONCAT(id, "-", nama_barang,"-",harga_beli) AS id')])->pluck('data_produk','id')->all(), null, ['class'=>'', 'placeholder' => '-- PILIH PRODUK --', 'id'=>'pilih_produk','autofocus' => 'true']) !!} 
@@ -158,13 +174,9 @@
 									</div> 
 
 									{!! Form::hidden('id_produk_tbs', null, ['class'=>'form-control','placeholder'=>'Jumlah Produk','required','autocomplete'=>'off', 'id'=>'id_produk_tbs']) !!} 
-									{!! $errors->first('id_produk_tbs', '<p class="help-block" id="eror_id_produk_tbs">:message</p>') !!} 
-
 									{!! Form::hidden('jumlah_produk', null, ['class'=>'form-control','placeholder'=>'Jumlah Produk','required','autocomplete'=>'off', 'id'=>'jumlah_produk']) !!} 
-									{!! $errors->first('jumlah_produk', '<p class="help-block" id="eror_jumlah_produk">:message</p>') !!} 
-
 									{!! Form::hidden('harga_produk', null, ['class'=>'form-control','placeholder'=>'Harga Produk','required','autocomplete'=>'off', 'id'=>'harga_produk']) !!} 
-									{!! $errors->first('harga_produk', '<p class="help-block" id="eror_harga_produk">:message</p>') !!} 
+									{!! Form::hidden('no_faktur', $pembelian->no_faktur, ['class'=>'form-control','required','autocomplete'=>'off', 'id'=>'no_faktur']) !!} 
 								</div> 
 
 								{!! Form::close() !!} 
@@ -214,10 +226,10 @@
 							</div> 
 						</div> 
 
-						{!! Form::open(['url' => route('pembelian.batal_transaksi_pembelian'),'method' => 'post', 'class' => 'form-group js-confirm', 'data-confirm' => 'Apakah Anda Ingin Membatalkan Pembelian ?']) !!} 
+						{!! Form::open(['url' => route('editPembelian.batal_transaksi_pembelian'),'method' => 'post', 'class' => 'form-group js-confirm', 'data-confirm' => 'Apakah Anda Ingin Membatalkan Pembelian ?']) !!} 
 						<!--- TOMBOL SELESAI --> 
 						<button type="button" class="btn btn-primary" id="btnSelesai" data-toggle="modal"><i class="material-icons">send</i> Selesai (F2)</button> 
-
+						{!! Form::hidden('no_faktur_batal', $pembelian->no_faktur, ['class'=>'form-control','required','autocomplete'=>'off', 'id'=>'no_faktur_batal']) !!} 
 						<button type="submit" class="btn btn-danger" id="btnBatal"><i class="material-icons">cancel</i> Batal (F3)</button> 
 						{!! Form::close() !!} 
 					</div> 
@@ -252,7 +264,6 @@
 		newstr = newstr.join(" "); 
 		return newstr; 
 	}  
-</script> 
 </script> 
 <script type="text/javascript"> 
 	$(document).ready(function(){ 
@@ -308,12 +319,13 @@
 
 			var kas = $("#id_cara_bayar").val(); 
 			var pembayaran = $("#pembayaran").val(); 
+			var jumlah_lama = "{{$jumlah_kas_lama}}"; 
 
 			$.post('{{ route('cek_total_kas') }}',{'_token': $('meta[name=csrf-token]').attr('content'),kas:kas}, function(data){  
 				if (data == '')  { 
 					data = 0; 
 				} 
-				var hitung_sisa_kas = parseFloat(data) - parseFloat(pembayaran); 
+				var hitung_sisa_kas = (parseFloat(data) + parseFloat(jumlah_lama)) - parseFloat(pembayaran); 
 				if (hitung_sisa_kas >= 0) { 
 					document.getElementById("form_pembelian").submit(); 
 				}else{ 
@@ -334,10 +346,14 @@
 <script type="text/javascript"> 
 	$(document).ready(function(){ 
 		$(document).on("click", "#btnSelesai", function(){ 
+			var jumlah_item = "{{$jumlah_item}}";
 			var cara_bayar = $("#cara_bayar").val(); 
 			var suplier = $("#pilih_suplier").val(); 
 
-			if (suplier == '') { 
+			if (jumlah_item == 0) {
+				alert("Belum Ada Produk Yang Di Input!"); 
+			}
+			else if (suplier == '') { 
 				alert("Suplier Belum Dipilih!"); 
 				var $select = $('#pilih_suplier').selectize({ 
 					sortField: 'text' 
@@ -953,8 +969,38 @@
 <script type="text/javascript"> 
 	$(document).ready(function(){ 
 
-		var pesan_error = $("#eror_jumlah_produk").text(); 
+		var potongan = bersihPemisah(bersihPemisah(bersihPemisah(bersihPemisah($("#potongan_faktur").val())))); 
+		if(potongan == '') { 
+			potongan = 0; 
+		}  
+		var pembayaran = bersihPemisah(bersihPemisah(bersihPemisah(bersihPemisah($("#pembayaran").val())))); 
+		var subtotal = bersihPemisah(bersihPemisah(bersihPemisah(bersihPemisah($("#subtotal").val())))); 
 
+		var potongan_persen = parseFloat(potongan) / parseFloat(subtotal) * 100; 
+		$("#potongan_persen").val(potongan_persen.format(2, 3, '.', ',')); 
+
+		var total_akhir = parseFloat(subtotal) - parseFloat(potongan); 
+		$("#total_akhir").val(total_akhir.format(2, 3, '.', ',')); 
+
+		if (pembayaran == '') { 
+			pembayaran = 0; 
+		} 
+		var kembalian = parseFloat(pembayaran,10) - parseFloat(total_akhir,10);         
+		var kredit = parseFloat(total_akhir,10) - parseFloat(pembayaran,10);   
+		if (kembalian >= 0) { 
+			$("#kembalian").val(kembalian.format(2, 3, '.', ',')); 
+			$("#kredit").val(''); 
+			$("#btn-tunai-pembelian").show(); 
+			$("#btn-hutang-pembelian").hide(); 
+			$("#status_pembelian").val("Tunai"); 
+		}else if(kredit >= 0){ 
+			$("#kembalian").val(''); 
+			$("#kredit").val(kredit.format(2, 3, '.', ',')); 
+			$("#btn-hutang-pembelian").show(); 
+			$("#btn-tunai-pembelian").hide(); 
+			$("#status_pembelian").val("Hutang"); 
+		} 
+		var pesan_error = $("#eror_jumlah_produk").text(); 
 		if (pesan_error != "") {         
 			$("#modal_produk").modal('show'); 
 			$("#jumlah_produk").focus(); 
@@ -970,7 +1016,7 @@
 
 	shortcut.add("f2", function() { 
 		$("#btnSelesai").click(); 
-		$("#keterangan").focus(); 
+		$("#pembayaran").focus(); 
 	}); 
 
 

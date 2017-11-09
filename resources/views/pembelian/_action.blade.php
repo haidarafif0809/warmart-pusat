@@ -7,11 +7,52 @@
 
 {!! Form::submit('Hapus',['class'=>'btn btn-sm btn-danger js-confirm', 'id' => 'btnHapus-'.$model->id]) !!} 
 {!! Form::close() !!} 
+<!-- SUPAYA MODAL BISA DISCROLL-->
+<style type="text/css">
+.modal {
+  overflow-y:auto;
+}
+</style>
+
+
+<!-- MODAL DETAIL FAKTUR PEMBELIAN --> 
+<div class="modal" id="modal-faktur-{{$model->id}}" role="dialog" data-backdrop=""> 
+  <div class="modal-dialog"> 
+
+    <!-- Modal content --> 
+    <div class="modal-content"> 
+      <div class="modal-header"> 
+        <button type="button" class="close" data-dismiss="modal" id="closeModalFaktur" data-id="{{$model->id}}">&times;</button> 
+        
+        <h4 class="modal-title">{{$model->no_faktur}}</h4> 
+      </div> 
+      <div class="modal-body">  
+        <div class="responsive"> 
+         <table class="table table-bordered" id="table-faktur-{{$model->id}}">  
+          <thead> 
+            <tr> 
+              <th>Status</th> 
+              <th>Cara Bayar</th> 
+              <th>Jatuh Tempo</th> 
+              <th>Potongan</th> 
+              <th>Total</th> 
+              <th>Tunai</th> 
+              <th>Kembalian</th> 
+              <th>Kredit</th> 
+            </tr> 
+          </thead> 
+        </table> 
+      </div>   
+    </div>   
+  </div> 
+</div> 
+
+</div> 
 
 <!-- MODAL PILIH PRODUK --> 
-<div class="modal " id="myModal-{{$model->id}}" role="dialog" data-backdrop=""> 
+<div class="modal" id="myModal-{{$model->id}}" role="dialog" data-backdrop=""> 
   <div class="modal-dialog"> 
-   
+
     <!-- Modal content --> 
     <div class="modal-content"> 
       <div class="modal-header"> 

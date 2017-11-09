@@ -50,7 +50,7 @@ class Barang extends Model
 	}
 
 	public function getRupiahAttribute(){
-		return 'Rp. '. number_format($this->harga_jual,0,',','.');
+		return 'Rp '. number_format($this->harga_jual,0,',','.');
 	}
 
 

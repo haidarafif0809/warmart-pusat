@@ -1,7 +1,14 @@
 @extends('layouts.app_pelanggan')
 @section('content') 
 
-@if ($agent->isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
+<style type="text/css">
+    .list-produk {
+        padding-left: 4px;
+        padding-right: 4px;
+    }
+</style>
+
+@if (Agent::isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
 
 <div class="page-header header-filter header-small" data-parallax="true"" style="background-image: url('image/background2.jpg');">
 
@@ -24,21 +31,21 @@
 
         <div class="card card-raised card-form-horizontal">
             <div class="card-content">
-                <form method="" action="">
-                    <div class="row">
-                        <div class="col-sm-10">
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="material-icons">search</i>
-                                </span>
-                                <input type="email" id="cari_produk" value="" placeholder="Cari Produk.." class="form-control" />
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <button type="button" class="btn btn-block" style="background-color: #f44336">Cari</button>
+                {!! Form::open(['url' => route('daftar_produk.pencarian'),'method' => 'get', 'class'=>'form-horizontal']) !!}
+                <div class="row">
+                    <div class="col-sm-10">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">search</i>
+                            </span>
+                            <input type="text" name="search" id="cari_produk" value="" placeholder="Cari Produk.." class="form-control" />
                         </div>
                     </div>
-                </form>
+                    <div class="col-sm-2">
+                        <button type="submit" class="btn btn-block" style="background-color: #f44336">Cari</button>
+                    </div>
+                </div>
+                {!! Form::close() !!}
             </div>
         </div>
 
@@ -72,7 +79,7 @@
                 <div class="row">
                     <!-- Menampilkan Produk -->
                     {!! $daftar_produk !!}
-                    <div class="col-md-12">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
                         {{$produk_pagination}}
                     </div>
                 </div>
@@ -102,21 +109,21 @@
 
         <div class="card card-raised card-form-horizontal">
             <div class="card-content">
-                <form method="" action="">
-                    <div class="row">
-                        <div class="col-sm-10">
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="material-icons">search</i>
-                                </span>
-                                <input type="email" id="cari_produk" value="" placeholder="Cari Produk.." class="form-control" />
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <button type="button" class="btn btn-block" style="background-color: #f44336">Cari</button>
+                {!! Form::open(['url' => route('daftar_produk.pencarian'),'method' => 'get', 'class'=>'form-horizontal']) !!}
+                <div class="row">
+                    <div class="col-sm-10">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">search</i>
+                            </span>
+                            <input type="text" name="search" id="cari_produk" value="" placeholder="Cari Produk.." class="form-control" />
                         </div>
                     </div>
-                </form>
+                    <div class="col-sm-2">
+                        <button type="submit" class="btn btn-block" style="background-color: #f44336">Cari</button>
+                    </div>
+                </div>
+                {!! Form::close() !!}
             </div>
         </div>
 
@@ -150,4 +157,12 @@
 @endsection
 
 @section('scripts') 
+<script type="text/javascript"> 
+ $(document).on('click', '#btnBeliSekarang', function(){
+  swal("Berhasil!", "Produk Berhasil Di Tambah Ke Keranjang Belanjaan", "success");
+});
+ $(document).on('click', '#btnBeli', function(){
+    swal("Info!", "Silakan Login Sebagai Pelanggan Untuk Melakukan Pesanan.", "info");
+});
+</script>
 @endsection 
