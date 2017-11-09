@@ -108,7 +108,7 @@ class PembelianController extends Controller
           ->editColumn('potongan', function($produk){ 
 
             $potongan_persen = ($produk->potongan / ($produk->jumlah_produk * $produk->harga_produk)) * 100; 
-            return "<a href='#edit-potongan' id='edit_potongan' class='edit-potongan' data-id='$produk->id_tbs_pembelian' data-nama='$produk->TitleCaseBarang' data-jumlah='$produk->jumlah_produk' data-harga='$produk->harga_produk'>$produk->potongan"." | ".round($potongan_persen,2)."%</a>";  
+            return "<a href='#edit-potongan' id='edit_potongan' class='edit-potongan' data-id='$produk->id_tbs_pembelian' data-nama='$produk->TitleCaseBarang' data-jumlah='$produk->jumlah_produk' data-harga='$produk->harga_produk'>".round($produk->potongan,2)." | ".round($potongan_persen,2)."%</a>";  
           }) 
           ->editColumn('tax', function($produk)  use ($session_id) { 
             $ppn = TbsPembelian::select('ppn')->where('session_id', $session_id)->where('warung_id',Auth::user()->id_warung)->where('ppn','!=','')->limit(1); 
@@ -124,7 +124,7 @@ class PembelianController extends Controller
             $ppn_produk = ""; 
             $tax_persen = 0; 
           } 
-          return "<a href='#edit-tax' id='edit_tax_produk' class='edit-tax' data-id='$produk->id_tbs_pembelian'  data-jumlah='$produk->jumlah_produk' data-potongan='$produk->potongan' data-harga='$produk->harga_produk' data-ppn='$ppn_produk' data-nama='$produk->TitleCaseBarang'>$produk->tax"." | ".round($tax_persen,2)."%</a>";  
+          return "<a href='#edit-tax' id='edit_tax_produk' class='edit-tax' data-id='$produk->id_tbs_pembelian'  data-jumlah='$produk->jumlah_produk' data-potongan='$produk->potongan' data-harga='$produk->harga_produk' data-ppn='$ppn_produk' data-nama='$produk->TitleCaseBarang'>".round($produk->tax,2)." | ".round($tax_persen,2)."%</a>";  
         })->make(true); 
         } 
 
@@ -333,10 +333,12 @@ public function edit_potongan_tbs_pembelian(Request $request){
     $potongan = substr_count($request->potongan_edit_produk, '%'); // UNTUK CEK APAKAH ADA STRING "%" 
         // JIKA TIDAK ADA
     if ($potongan == 0) { 
-      $potongan_produk = filter_var($request->potongan_edit_produk, FILTER_SANITIZE_NUMBER_INT); // POTONGAN TIDAK DALAM BENTUK NOMINAL
+      // FILTER ANGKA DESIMAL
+      $potongan_produk = filter_var($request->potongan_edit_produk, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION); // POTONGAN TIDAK DALAM BENTUK NOMINAL
+      $potongan_persen = 0;
     }else{ // JIKA ADA
-
-      $potongan_persen = filter_var($request->potongan_edit_produk, FILTER_SANITIZE_NUMBER_INT);  //  PISAH STRING BERDASRAKAN TANDA "%"
+        // FILTER ANGKA DESIMAL
+      $potongan_persen = filter_var($request->potongan_edit_produk, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);  //  PISAH STRING BERDASRAKAN TANDA "%"
 // POTONGA PRODUK =  (HARGA * JUMLAH ) * POTONGAN PERSEN / 100;
       $potongan_produk = ($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) * $potongan_persen / 100; 
     } 
@@ -344,60 +346,81 @@ public function edit_potongan_tbs_pembelian(Request $request){
     if ($potongan_produk == '') {
      $potongan_produk = 0;
    }
-    // JIKA TIDAK ADA PAJAK 
-   if ($tbs_pembelian->tax == 0) { 
-    $tax_produk = 0; 
-  }else{ 
-// TAX PERSEN =  (TAX * 100) / (JUMLAH * HARGA - POTONGAN )
-    $tax = ($tbs_pembelian->tax * 100) / ($tbs_pembelian->jumlah_produk * $tbs_pembelian->harga_produk - $potongan_produk); 
-// TAX PRODUK = ((HARGA * JUMLAH) - POTONGAN) * TAX PERSEN / 100
-    $tax_produk = (($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $potongan_produk) * $tax / 100; 
-  } 
+
+   if ($potongan_persen > 100) {
+     $pesan_alert =  
+     '<div class="container-fluid"> 
+     <div class="alert-icon"> 
+     <i class="material-icons">check</i> 
+     </div> 
+     <b>Potongan Tidak Boleh Lebih Dari 100%!</b> 
+     </div>'; 
+
+     Session::flash("flash_notification", [ 
+      "level"     => "success", 
+      "message"   => $pesan_alert 
+    ]); 
+
+     return redirect()->back();          
+   }else{
+
+          // JIKA TIDAK ADA PAJAK 
+    if ($tbs_pembelian->tax == 0) { 
+      $tax_produk = 0; 
+    }else{ 
+            // TAX PERSEN =  (TAX * 100) / (JUMLAH * HARGA - POTONGAN )
+      $tax = ($tbs_pembelian->tax * 100) / ($tbs_pembelian->jumlah_produk * $tbs_pembelian->harga_produk - $potongan_produk); 
+            // TAX PRODUK = ((HARGA * JUMLAH) - POTONGAN) * TAX PERSEN / 100
+      $tax_produk = (($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $potongan_produk) * $tax / 100; 
+    } 
 
     if ($tbs_pembelian->ppn == 'Include') {  // JIKA PPN INCLUDE MAKA PAJAK TIDAK MEMPENGARUHI SUBTOTAL
       $subtotal = ($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $potongan_produk; 
-    }elseif ($tbs_pembelian->ppn == 'Exclude') { // JIKA PPN EXCLUDE MAKA PAJAK MEMPENGARUHI SUBTOTAL
-     $subtotal = (($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $potongan_produk) + $tax_produk; 
-   }else{ 
-    $subtotal = ($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $potongan_produk; 
-  } 
+          }elseif ($tbs_pembelian->ppn == 'Exclude') { // JIKA PPN EXCLUDE MAKA PAJAK MEMPENGARUHI SUBTOTAL
+           $subtotal = (($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $potongan_produk) + $tax_produk; 
+         }else{ 
+          $subtotal = ($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $potongan_produk; 
+        } 
 
 // UPDATE POTONGAN, SUBTOTAL, TAX
-  $tbs_pembelian->update(['potongan' => $potongan_produk,'subtotal'=>$subtotal,'tax'=>$tax_produk]); 
-  $nama_barang = $tbs_pembelian->TitleCaseBarang; // TITLE CASH
+        $tbs_pembelian->update(['potongan' => $potongan_produk,'subtotal'=>$subtotal,'tax'=>$tax_produk]); 
+          $nama_barang = $tbs_pembelian->TitleCaseBarang; // TITLE CASH
 
-  $pesan_alert =  
-  '<div class="container-fluid"> 
-  <div class="alert-icon"> 
-  <i class="material-icons">check</i> 
-  </div> 
-  <b>Berhasil Mengubah Potongan Produk "'.$nama_barang.'"</b> 
-  </div>'; 
+          $pesan_alert =  
+          '<div class="container-fluid"> 
+          <div class="alert-icon"> 
+          <i class="material-icons">check</i> 
+          </div> 
+          <b>Berhasil Mengubah Potongan Produk "'.$nama_barang.'"</b> 
+          </div>'; 
 
-  Session::flash("flash_notification", [ 
-    "level"     => "success", 
-    "message"   => $pesan_alert 
-  ]); 
+          Session::flash("flash_notification", [ 
+            "level"     => "success", 
+            "message"   => $pesan_alert 
+          ]); 
 
-  return redirect()->back(); 
-}
-} 
+          return redirect()->back(); 
+        }
 
-public function editTaxTbsPembelian(Request $request){ 
+      }
+    } 
 
-  if (Auth::user()->id_warung == '') {
-    Auth::logout();
-    return response()->view('error.403');
-  }else{
+    public function editTaxTbsPembelian(Request $request){ 
+
+      if (Auth::user()->id_warung == '') {
+        Auth::logout();
+        return response()->view('error.403');
+      }else{
   // SELECT EDIT  TBS PEMBELIAN 
-    $tbs_pembelian = TbsPembelian::find($request->id_tax); 
+        $tbs_pembelian = TbsPembelian::find($request->id_tax); 
     $tax = substr_count($request->tax_edit_produk, '%'); // UNTUK CEK APAKAH ADA STRING "%" 
       // JIKA TIDAK ADA
     if ($tax == 0) { 
-      $tax_produk = filter_var($request->tax_edit_produk, FILTER_SANITIZE_NUMBER_INT); // TAX DAALAM BENTUK NOMINAL
+      $tax_produk = filter_var($request->tax_edit_produk, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION); // TAX DAALAM BENTUK NOMINAL
+      $tax_persen = 0;
     }else{  // JIKA ADA
 
-      $tax_persen = filter_var($request->tax_edit_produk, FILTER_SANITIZE_NUMBER_INT); //  PISAH STRING BERDASRAKAN TANDA "%"
+      $tax_persen = filter_var($request->tax_edit_produk, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION); //  PISAH STRING BERDASRAKAN TANDA "%"
 // TAX PRODUK = ((HARGA * JUMLAH) - POTONGAN) * TAX PERSEN / 100
       $tax_produk = (($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $tbs_pembelian->potongan) * $tax_persen / 100; 
     } 
@@ -406,85 +429,104 @@ public function editTaxTbsPembelian(Request $request){
       $tax_produk = 0;
     }
 
-    if ($request->ppn_produk == 'Include') { // JIKA PPN INCLUDE MAKA PAJAK TIDAK MEMPENGARUHI SUBTOTAL
-      $subtotal = ($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $tbs_pembelian->potongan; 
-    }elseif ($request->ppn_produk == 'Exclude') { // JIKA PPN EXCLUDE MAKA PAJAK MEMPENGARUHI SUBTOTAL 
-     $subtotal = (($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $tbs_pembelian->potongan) + $tax_produk; 
-   } 
-   // UPDATE SUBTOTAL, TAX, PPN
-   $tbs_pembelian->update(['subtotal'=>$subtotal,'tax'=>$tax_produk,'ppn'=>$request->ppn_produk]); 
-   $nama_barang = $tbs_pembelian->TitleCaseBarang; // TITLE CASH
+    if ($tax_persen > 100) {
 
-   $pesan_alert =  
-   '<div class="container-fluid"> 
-   <div class="alert-icon"> 
-   <i class="material-icons">check</i> 
-   </div> 
-   <b>Berhasil Mengubah Pajak Produk "'.$nama_barang.'"</b> 
-   </div>'; 
+     $pesan_alert =  
+     '<div class="container-fluid"> 
+     <div class="alert-icon"> 
+     <i class="material-icons">check</i> 
+     </div> 
+     <b>Pajak Tidak Boleh Lebih Dari 100%!</b> 
+     </div>'; 
 
-   Session::flash("flash_notification", [ 
-    "level"     => "success", 
-    "message"   => $pesan_alert 
-  ]); 
-
-   return redirect()->back(); 
- }
-} 
-
-//PROSES HAPUS TBS PEMBELIAN 
-public function hapus_tbs_pembelian($id){ 
-
-  if (Auth::user()->id_warung == '') {
-    Auth::logout();
-    return response()->view('error.403');
-  }else{
-
-    if (!TbsPembelian::destroy($id)) { 
-      return redirect()->route('pembelian.create'); 
-    } 
-    else{ 
-      $pesan_alert =  
-      '<div class="container-fluid"> 
-      <div class="alert-icon"> 
-      <i class="material-icons">check</i> 
-      </div> 
-      <b>Berhasil Menghapus Produk</b> 
-      </div>'; 
-
-      Session::flash("flash_notification", [ 
-        "level"     => "danger", 
-        "message"   => $pesan_alert 
-      ]); 
-      return redirect()->route('pembelian.create'); 
-    } 
-  }
-} 
-
-//PROSES BATAL TBS PEMBELIAN 
-public function proses_batal_transaksi_pembelian(){ 
-
-  if (Auth::user()->id_warung == '') {
-    Auth::logout();
-    return response()->view('error.403');
-  }else{
-    $session_id = session()->getId(); 
-    $data_tbs_pembelian = TbsPembelian::where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->delete(); 
-    $pesan_alert =  
-    '<div class="container-fluid"> 
-    <div class="alert-icon"> 
-    <i class="material-icons">check</i> 
-    </div> 
-    <b>Berhasil Membatalkan Pembelian</b> 
-    </div>'; 
-
-    Session::flash("flash_notification", [ 
+     Session::flash("flash_notification", [ 
       "level"     => "success", 
       "message"   => $pesan_alert 
     ]); 
-    return redirect()->route('pembelian.create'); 
-  }
-} 
+
+     return redirect()->back(); 
+   }else{
+
+              if ($request->ppn_produk == 'Include') { // JIKA PPN INCLUDE MAKA PAJAK TIDAK MEMPENGARUHI SUBTOTAL
+                $subtotal = ($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $tbs_pembelian->potongan; 
+              }elseif ($request->ppn_produk == 'Exclude') { // JIKA PPN EXCLUDE MAKA PAJAK MEMPENGARUHI SUBTOTAL 
+               $subtotal = (($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $tbs_pembelian->potongan) + $tax_produk; 
+             } 
+             // UPDATE SUBTOTAL, TAX, PPN
+             $tbs_pembelian->update(['subtotal'=>$subtotal,'tax'=>$tax_produk,'ppn'=>$request->ppn_produk]); 
+             $nama_barang = $tbs_pembelian->TitleCaseBarang; // TITLE CASH
+
+             $pesan_alert =  
+             '<div class="container-fluid"> 
+             <div class="alert-icon"> 
+             <i class="material-icons">check</i> 
+             </div> 
+             <b>Berhasil Mengubah Pajak Produk "'.$nama_barang.'"</b> 
+             </div>'; 
+
+             Session::flash("flash_notification", [ 
+              "level"     => "success", 
+              "message"   => $pesan_alert 
+            ]); 
+
+             return redirect()->back(); 
+           }
+         }
+       } 
+
+//PROSES HAPUS TBS PEMBELIAN 
+       public function hapus_tbs_pembelian($id){ 
+
+        if (Auth::user()->id_warung == '') {
+          Auth::logout();
+          return response()->view('error.403');
+        }else{
+
+          if (!TbsPembelian::destroy($id)) { 
+            return redirect()->route('pembelian.create'); 
+          } 
+          else{ 
+            $pesan_alert =  
+            '<div class="container-fluid"> 
+            <div class="alert-icon"> 
+            <i class="material-icons">check</i> 
+            </div> 
+            <b>Berhasil Menghapus Produk</b> 
+            </div>'; 
+
+            Session::flash("flash_notification", [ 
+              "level"     => "danger", 
+              "message"   => $pesan_alert 
+            ]); 
+            return redirect()->route('pembelian.create'); 
+          } 
+        }
+      } 
+
+//PROSES BATAL TBS PEMBELIAN 
+      public function proses_batal_transaksi_pembelian(){ 
+
+        if (Auth::user()->id_warung == '') {
+          Auth::logout();
+          return response()->view('error.403');
+        }else{
+          $session_id = session()->getId(); 
+          $data_tbs_pembelian = TbsPembelian::where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->delete(); 
+          $pesan_alert =  
+          '<div class="container-fluid"> 
+          <div class="alert-icon"> 
+          <i class="material-icons">check</i> 
+          </div> 
+          <b>Berhasil Membatalkan Pembelian</b> 
+          </div>'; 
+
+          Session::flash("flash_notification", [ 
+            "level"     => "success", 
+            "message"   => $pesan_alert 
+          ]); 
+          return redirect()->route('pembelian.create'); 
+        }
+      } 
     /** 
      * Store a newly created resource in storage. 
      * 
@@ -738,7 +780,7 @@ public function proses_batal_transaksi_pembelian(){
           ->editColumn('potongan', function($produk){ 
 
             $potongan_persen = ($produk->potongan / ($produk->jumlah_produk * $produk->harga_produk)) * 100; 
-            return "<a href='#edit-potongan' id='edit_potongan' class='edit-potongan' data-id='$produk->id_edit_tbs_pembelians' data-nama='$produk->TitleCaseBarang' data-jumlah='$produk->jumlah_produk' data-harga='$produk->harga_produk'>$produk->potongan"." | ".round($potongan_persen,2)."%</a>";  
+            return "<a href='#edit-potongan' id='edit_potongan' class='edit-potongan' data-id='$produk->id_edit_tbs_pembelians' data-nama='$produk->TitleCaseBarang' data-jumlah='$produk->jumlah_produk' data-harga='$produk->harga_produk'>".round($produk->potongan,2)." | ".round($potongan_persen,2)."%</a>";  
           }) 
           ->editColumn('tax', function($produk)  use ($no_faktur) { 
             $ppn = EditTbsPembelian::select('ppn')->where('no_faktur', $no_faktur)->where('warung_id',Auth::user()->id_warung)->where('ppn','!=','')->limit(1); 
@@ -756,7 +798,7 @@ public function proses_batal_transaksi_pembelian(){
              $ppn_produk = ""; 
              $tax_persen = 0;  
            } 
-           return "<a href='#edit-tax' id='edit_tax_produk' class='edit-tax' data-id='$produk->id_edit_tbs_pembelians'  data-jumlah='$produk->jumlah_produk' data-potongan='$produk->potongan' data-harga='$produk->harga_produk' data-ppn='$ppn_produk' data-nama='$produk->TitleCaseBarang'>$produk->tax"." | ".round($tax_persen,2)."%</a>";  
+           return "<a href='#edit-tax' id='edit_tax_produk' class='edit-tax' data-id='$produk->id_edit_tbs_pembelians'  data-jumlah='$produk->jumlah_produk' data-potongan='$produk->potongan' data-harga='$produk->harga_produk' data-ppn='$ppn_produk' data-nama='$produk->TitleCaseBarang'>".round($produk->tax,2)." | ".round($tax_persen,2)."%</a>";  
          })->make(true); 
         } 
 
