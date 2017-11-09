@@ -23,13 +23,15 @@ class UbahProfilController extends Controller
 	public function ubah_profil_pelanggan() {
     	//PILIH USER -> LOGIN
 		$user = Auth::user();
+		//FOTO WARMART
+		$logo_warmart = "".asset('/assets/img/examples/warmart_logo.png')."";
         //PELANGGAN, WARUNG, KOMUNITAS
 		$pelanggan = Customer::select(['id','email','password','name', 'alamat', 'wilayah', 'no_telp','tgl_lahir','tipe_user', 'status_konfirmasi'])->where('id', $user->id)->first();
 		$komunitas_pelanggan = KomunitasCustomer::where('user_id',$user->id)->first();
 
 		$keranjang_belanjaan = KeranjangBelanja::with(['produk','pelanggan'])->where('id_pelanggan',Auth::user()->id)->get();
 		$cek_belanjaan = $keranjang_belanjaan->count();  
-		return view('ubah_profil.ubah_profil_pelanggan',['user' => $pelanggan, 'pelanggan' => $pelanggan, 'komunitas_pelanggan' => $komunitas_pelanggan, 'cek_belanjaan' => $cek_belanjaan]);
+		return view('ubah_profil.ubah_profil_pelanggan',['user' => $pelanggan, 'pelanggan' => $pelanggan, 'komunitas_pelanggan' => $komunitas_pelanggan, 'cek_belanjaan' => $cek_belanjaan, 'logo_warmart' => $logo_warmart]);
 	}
 
 //UBAH PROFIL USER PELANGGAN
@@ -40,7 +42,7 @@ class UbahProfilController extends Controller
 			'no_telp' 	=> 'required|unique:users,no_telp,'.$request->id,
 			'email' 	=> 'unique:users,email,'.$request->id, 
 			'alamat' 	=> 'required',
-		]);
+			]);
 		//UPDATE USER PELANGGAN
 		Customer::find($request->id)->update([
 			'name'              => $request->name,
@@ -48,7 +50,7 @@ class UbahProfilController extends Controller
 			'alamat'            => $request->alamat,
 			'no_telp'           => $request->no_telp,
 			'tgl_lahir'         => $request->tgl_lahir,
-		]);
+			]);
 
 		//JIKA SEBELUMNYA SUDAH ADA DI KOMUNITAS
 		if ($request['komunitas'] != "") {
@@ -80,7 +82,7 @@ class UbahProfilController extends Controller
 			'kelurahan' => 'required', 
 			'email'     => 'required|without_spaces|unique:users,email,'.$request->id,
 			'no_telp'   => 'required|without_spaces|unique:users,no_telp,'.$request->id,
-		]);
+			]);
 
          //UPDATE USER WARUNG
 		$user_warung = UserWarung::where('id',$request->id)->update([
@@ -89,13 +91,13 @@ class UbahProfilController extends Controller
 			'no_telp'     => $request->no_telp, 
 			'alamat'    => $request->alamat,
 			'wilayah'   => $request->kelurahan, 
-		]);
+			]);
 
 
 		Session::flash("flash_notification", [
 			"level"     => "success",
 			"message"   => "Profil Berhasil Di Ubah"
-		]);
+			]);
 
 		return redirect()->back();
 	}	 
@@ -124,7 +126,7 @@ class UbahProfilController extends Controller
 			'no_rekening' => 'required',
 			'an_rekening' => 'required',
 			'id_warung' => 'required',
-		]);
+			]);
 
          //insert
 		$komunitas = Komunitas::where('id',$request->id)->update([
@@ -134,7 +136,7 @@ class UbahProfilController extends Controller
 			'wilayah' =>$request->kelurahan,
 			'no_telp' =>$request->no_telp,
 			'id_warung' =>$request->id_warung,
-		]);
+			]);
 
 		$cek_komunitas_penggiat = KomunitasPenggiat::where('komunitas_id',$request->id)->count(); 
 
@@ -144,13 +146,13 @@ class UbahProfilController extends Controller
 				'nama_penggiat' =>$request->name_penggiat,
 				'alamat_penggiat'  =>$request->alamat_penggiat,
 				'komunitas_id'=>$request->id 
-			]);
+				]);
 		}else{
 			if ($request->name_penggiat != "" AND $request->alamat_penggiat != ""){
 				$komunitaspenggiat = KomunitasPenggiat::where('komunitas_id',$request->id)->update([
 					'nama_penggiat' =>$request->name_penggiat,
 					'alamat_penggiat'  =>$request->alamat_penggiat
-				]);
+					]);
 			} 
 		} 
 
@@ -162,14 +164,14 @@ class UbahProfilController extends Controller
 				'no_rek'    =>$request->no_rekening,
 				'atas_nama' =>$request->an_rekening ,
 				'komunitas_id'=>$request->id              
-			]);  
+				]);  
 		}else{
 			if ($request->nama_bank != "" AND $request->no_rekening != "" AND $request->an_rekening != "" ){
 				$bankkomunitas = BankKomunitas::where('komunitas_id',$request->id)->update([
 					'nama_bank' =>$request->nama_bank,
 					'no_rek'    =>$request->no_rekening,
 					'atas_nama' =>$request->an_rekening              
-				]);
+					]);
 			} 
 
 		}
@@ -177,7 +179,7 @@ class UbahProfilController extends Controller
 		Session::flash("flash_notification", [
 			"level"     => "success",
 			"message"   => "Profil Berhasil Di Ubah"
-		]);
+			]);
 
 		return redirect()->back();
 	}	 
@@ -198,7 +200,7 @@ class UbahProfilController extends Controller
 			'email'     => 'required|without_spaces|unique:users,email,'.$request->id,
 			'no_telp'   => 'required|without_spaces|unique:users,no_telp,'.$request->id,
 			'alamat'    => 'required', 
-		]);
+			]);
 
          //UPDATE USER ADMIN
 		$user_warung = User::where('id',$request->id)->update([
@@ -206,13 +208,13 @@ class UbahProfilController extends Controller
 			'email'     => $request->email, 
 			'no_telp'     => $request->no_telp, 
 			'alamat'    => $request->alamat, 
-		]);
+			]);
 
 
 		Session::flash("flash_notification", [
 			"level"     => "success",
 			"message"   => "Profil Berhasil Di Ubah"
-		]);
+			]);
 
 		return redirect()->back();
 	}	

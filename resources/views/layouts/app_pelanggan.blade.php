@@ -46,87 +46,96 @@
     @if (Agent::isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
     <nav class="navbar navbar-default navbar-fixed-top navbar-color-on-scroll" color-on-scroll="100" id="sectionsNav">
         <div class="container">
+            <ul class="nav navbar-nav navbar-right">             
 
-            <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <i class="material-icons">person</i> {{ Auth::user()->name }} 
-                        <b class="caret"></b>
-                    </a>
-                    <ul class="dropdown-menu dropdown-with-icons">
-                        <li style="color:black">
-                            <a href="{{ url('/keranjang-belanja') }}" target="_blank" class="warna-list">
-                                <i class="material-icons">shopping_cart</i> Keranjang Belanja <b style="font-size: 15px">| {{ $cek_belanjaan }}</b>
-                            </a>
-                        </li>
-                        <!--HANYA USER LOGIN PELANGGAN-->
-                        @if(Auth::user()->tipe_user == 3)
-                        <li style="color:black">
-                            <a href="{{ url('/ubah-profil-pelanggan') }}">
-                                <i class="material-icons">settings</i> Ubah Profil
-                            </a>
-                        </li>
-                        <li style="color:black">
-                            <a href="{{ url('/ubah-password-pelanggan') }}">
-                                <i class="material-icons">lock_outline</i> Ubah Password
-                            </a>
-                        </li>                        
-                        @endif
-                        <li style="color:black">
-                            <a href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> 
-                                <i class="material-icons">reply_all</i> Logout
-                            </a>
-                            <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
-                                {{ csrf_field() }}
-                            </form>
-                        </li>                            
-                    </ul>
-                </li>                    
-            </ul>
-        </div>
-    </nav>
-    @else
-    <nav class="navbar navbar-default navbar-transparent navbar-fixed-top navbar-color-on-scroll" color-on-scroll="100" id="sectionsNav">
-       <div class="container">
-        <ul class="nav navbar-nav navbar-right">
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    <i class="material-icons">person</i> {{ Auth::user()->name }}
-                    <b class="caret"></b>
-                </a>
-                <ul class="dropdown-menu dropdown-with-icons">
-                    <!--HANYA USER LOGIN PELANGGAN-->
-                    @if(Auth::user()->tipe_user == 3)
-                    <li style="color:black">
-                        <a href="{{ url('/ubah-profil-pelanggan') }}">
-                            <i class="material-icons">settings</i> Ubah Profil
+                <div class="row">
+                    <div class="col-md-5 col-sm-5 col-xs-5">                            
+                        <a href="{{ url('/home') }}"><img  class="img img-raised" src="{!! $logo_warmart !!}" style="width: 50%"/></a>
+                    </div>
+                    <div class="col-md-7 col-sm-7 col-xs-7">
+                     <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="material-icons">person</i> {{ Auth::user()->name }} 
+                            <b class="caret"></b>
                         </a>
+
+                        <ul class="dropdown-menu dropdown-with-icons">
+                            <li style="color:black">
+                                <a href="{{ url('/keranjang-belanja') }}" target="_blank" class="warna-list">
+                                    <i class="material-icons">shopping_cart</i> Keranjang Belanja <b style="font-size: 15px">| {{ $cek_belanjaan }}</b>
+                                </a>
+                            </li>
+                            <!--HANYA USER LOGIN PELANGGAN-->
+                            @if(Auth::user()->tipe_user == 3)
+                            <li style="color:black">
+                                <a href="{{ url('/ubah-profil-pelanggan') }}">
+                                    <i class="material-icons">settings</i> Ubah Profil
+                                </a>
+                            </li>
+                            <li style="color:black">
+                                <a href="{{ url('/ubah-password-pelanggan') }}">
+                                    <i class="material-icons">lock_outline</i> Ubah Password
+                                </a>
+                            </li>                        
+                            @endif
+                            <li style="color:black">
+                                <a href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> 
+                                    <i class="material-icons">reply_all</i> Logout
+                                </a>
+                                <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
+                                    {{ csrf_field() }}
+                                </form>
+                            </li>                            
+                        </ul>
                     </li>
-                    <li style="color:black">
-                        <a href="{{ url('/ubah-password-pelanggan') }}">
-                            <i class="material-icons">lock_outline</i> Ubah Password
-                        </a>
-                    </li>                        
-                    @endif
-                    <li>
-                        <a href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> 
-                            <i class="material-icons">reply_all</i> Logout
-                        </a>
-                        <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
-                            {{ csrf_field() }}
-                        </form>
-                    </li>                             
-                </ul>
-            </li>
-
-            <li class="button-container">
-                <a href="{{ url('/keranjang-belanja') }}" class="btn btn-rose btn-round">
-                    <i class="material-icons">shopping_cart</i> Keranjang Belanja <b style="font-size: 15px">| {{ $cek_belanjaan }}</b>
-                </a>
-            </li>
-
+                </div>
+            </div>
         </ul>
     </div>
+</nav>
+@else
+<nav class="navbar navbar-default navbar-transparent navbar-fixed-top navbar-color-on-scroll" color-on-scroll="100" id="sectionsNav">
+   <div class="container">
+       <a href="{{ url('/home') }}"><img  class="img img-raised" src="{!! $logo_warmart !!}" style="width: 10%"/></a>
+       <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <i class="material-icons">person</i> {{ Auth::user()->name }}
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu dropdown-with-icons">
+                <!--HANYA USER LOGIN PELANGGAN-->
+                @if(Auth::user()->tipe_user == 3)
+                <li style="color:black">
+                    <a href="{{ url('/ubah-profil-pelanggan') }}">
+                        <i class="material-icons">settings</i> Ubah Profil
+                    </a>
+                </li>
+                <li style="color:black">
+                    <a href="{{ url('/ubah-password-pelanggan') }}">
+                        <i class="material-icons">lock_outline</i> Ubah Password
+                    </a>
+                </li>                        
+                @endif
+                <li>
+                    <a href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> 
+                        <i class="material-icons">reply_all</i> Logout
+                    </a>
+                    <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
+                        {{ csrf_field() }}
+                    </form>
+                </li>                             
+            </ul>
+        </li>
+
+        <li class="button-container">
+            <a href="{{ url('/keranjang-belanja') }}" class="btn btn-rose btn-round">
+                <i class="material-icons">shopping_cart</i> Keranjang Belanja <b style="font-size: 15px">| {{ $cek_belanjaan }}</b>
+            </a>
+        </li>
+
+    </ul>
+</div>
 </nav>
 @endif 
 

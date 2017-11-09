@@ -33,7 +33,8 @@ class KeranjangBelanjaController extends Controller
 		$cek_belanjaan = $keranjang_belanjaan->count();  
 
 		$jumlah_produk = KeranjangBelanja::select([DB::raw('IFNULL(SUM(jumlah_produk),0) as total_produk')])->first();  
-
+		//FOTO WARMART
+		$logo_warmart = "".asset('/assets/img/examples/warmart_logo.png')."";
       	//MEANMPILKAN PRODUK BELANJAAN
 		$produk_belanjaan = '';
 		$subtotal = 0;
@@ -80,7 +81,7 @@ class KeranjangBelanjaController extends Controller
 
 		}
 
-		return view('layouts.keranjang_belanja',['keranjang_belanjaan'=>$keranjang_belanjaan,'cek_belanjaan'=>$cek_belanjaan,'agent'=>$agent,'produk_belanjaan'=>$produk_belanjaan,'jumlah_produk'=>$jumlah_produk,'subtotal'=>number_format($subtotal,0,',','.')]);
+		return view('layouts.keranjang_belanja',['keranjang_belanjaan'=>$keranjang_belanjaan,'cek_belanjaan'=>$cek_belanjaan,'agent'=>$agent,'produk_belanjaan'=>$produk_belanjaan,'jumlah_produk'=>$jumlah_produk,'logo_warmart'=>$logo_warmart,'subtotal'=>number_format($subtotal,0,',','.')]);
 
 	}
 

@@ -17,7 +17,7 @@ class Barang extends Model
 	use Searchable;
 
 
-	protected $fillable = ['kode_barang','kode_barcode','nama_barang', 'harga_beli','harga_jual','satuan_id','kategori_barang_id','status_aktif','hitung_stok','id_warung', 'deskripsi_produk'];
+	protected $fillable = ['kode_barang','kode_barcode','nama_barang', 'harga_beli','harga_jual','satuan_id','kategori_barang_id','status_aktif','hitung_stok','id_warung', 'deskripsi_produk', 'konfirmasi_admin'];
 
 	public function satuan()
 	{

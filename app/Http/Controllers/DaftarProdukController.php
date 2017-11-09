@@ -39,6 +39,8 @@ class DaftarProdukController extends Controller
       $produk_pagination = $data_produk->links();
       //FOTO HEADER
       $foto_latar_belakang = "background-image: url('image/background2.jpg');";
+      //FOTO WARMART
+      $logo_warmart = "assets/img/examples/warmart_logo.png";
       //TAMPIL DAFTAR PRODUK
       $daftar_produk = $this->listProduk($data_produk);
       //TAMPIL KATEGORI
@@ -47,7 +49,7 @@ class DaftarProdukController extends Controller
       //TAMPILAN MOBILE
       $agent = new Agent();
 
-      return view('layouts.daftar_produk', ['kategori_produk' => $kategori_produk, 'daftar_produk' => $daftar_produk, 'produk_pagination' => $produk_pagination, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'agent' => $agent,'cek_belanjaan'=>$cek_belanjaan]);
+      return view('layouts.daftar_produk', ['kategori_produk' => $kategori_produk, 'daftar_produk' => $daftar_produk, 'produk_pagination' => $produk_pagination, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'agent' => $agent,'cek_belanjaan'=>$cek_belanjaan,'logo_warmart'=>$logo_warmart]);
     }
 
     public function produkKategori($kategori){
@@ -161,6 +163,8 @@ class DaftarProdukController extends Controller
     $kategori = KategoriBarang::select(['id','nama_kategori_barang','kategori_icon']);
 //FOTO HEADER
     $foto_latar_belakang = "background-image: url('../image/background2.jpg');";
+//FOTO WARMART
+    $logo_warmart = "../assets/img/examples/warmart_logo.png";
 //PAGINATION DAFTAR PRODUK
     $produk_pagination = $data_produk->links();
 //MENAMPILKAN KATEGORI
@@ -228,26 +232,22 @@ class DaftarProdukController extends Controller
   </div>';
 }        
 
-return view('layouts.daftar_produk', ['kategori_produk' => $kategori_produk, 'daftar_produk' => $daftar_produk, 'produk_pagination' => $produk_pagination, 'id' => $id, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'agent' => $agent,'cek_belanjaan'=>$cek_belanjaan,'cek_belanjaan']);
+return view('layouts.daftar_produk', ['kategori_produk' => $kategori_produk, 'daftar_produk' => $daftar_produk, 'produk_pagination' => $produk_pagination, 'id' => $id, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'agent' => $agent,'cek_belanjaan'=>$cek_belanjaan,'logo_warmart'=>$logo_warmart]);
 }
 
 public function pencarian(Request $request){
+
   $keranjang_belanjaan = KeranjangBelanja::with(['produk','pelanggan'])->where('id_pelanggan',Auth::user()->id)->get();
   $cek_belanjaan = $keranjang_belanjaan->count(); 
-  //Pilih warung yang sudah dikonfirmasi admin
-  $data_warung = User::select(['id_warung'])->where('id_warung', '!=' ,'NULL')->where('konfirmasi_admin', 1)->groupBy('id_warung')->get();
-  $array_warung = array();
-  foreach ($data_warung as $data_warungs) {
-    array_push($array_warung, $data_warungs->id_warung);
-  }
 
 //PILIH PRODUK
-  $data_produk = Barang::search($request->search)->paginate(12);
-
+  $data_produk = Barang::search($request->search)->where('konfirmasi_admin', 1)->paginate(12);
 //PILIH KATEGORI
   $kategori = KategoriBarang::select(['id','nama_kategori_barang','kategori_icon']);
 //FOTO HEADER
-  $foto_latar_belakang = "background-image: url('../image/background2.jpg');";
+  $foto_latar_belakang = "background-image: url('".asset('/image/background2.jpg')."');";
+//FOTO WARMART
+  $logo_warmart = "".asset('/assets/img/examples/warmart_logo.png')."";
 //PAGINATION DAFTAR PRODUK
   $produk_pagination = $data_produk->links();
 //MENAMPILKAN KATEGORI
@@ -315,7 +315,7 @@ public function pencarian(Request $request){
   </div>';
 }        
 
-return view('layouts.daftar_produk', ['kategori_produk' => $kategori_produk, 'daftar_produk' => $daftar_produk, 'produk_pagination' => $produk_pagination, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'agent' => $agent,'cek_belanjaan'=>$cek_belanjaan,'cek_belanjaan']);
+return view('layouts.daftar_produk', ['kategori_produk' => $kategori_produk, 'daftar_produk' => $daftar_produk, 'produk_pagination' => $produk_pagination, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'agent' => $agent,'cek_belanjaan'=>$cek_belanjaan,'logo_warmart'=>$logo_warmart]);
 }
 
 }

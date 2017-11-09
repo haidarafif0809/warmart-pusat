@@ -10,14 +10,15 @@
 
 @if (Agent::isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
 
-<div class="page-header header-filter header-small" data-parallax="true"" style="background-image: url('image/background2.jpg');">
+<div class="page-header header-filter header-small" data-parallax="true"" style="{!! $foto_latar_belakang !!}">
+    <a href="{{ url('/home') }}"><img  class="img img-raised" src="{!! $logo_warmart !!}" style="width: 10%"/></a>
 
     <div class="container"> 
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
                 <div class="brand">
-                    <h1 class="title">PASAR MUSLIM INDONESIA</h1>
-                    <h4 class="title"> Segala Kemudahan Untuk Umat Muslim Berbelanja.</h4>
+                    <h3 class="title">PASAR MUSLIM INDONESIA</h3>
+                    <h6 class="title"> Segala Kemudahan Untuk Umat Muslim Berbelanja.</h6>
                 </div>
             </div>
         </div>
@@ -82,6 +83,7 @@
                     <div class="col-md-12 col-sm-12 col-xs-12">
                         {{$produk_pagination}}
                     </div>
+                    
                 </div>
             </div>
         </div>
@@ -95,7 +97,7 @@
             <div class="col-md-8 col-md-offset-2">
                 <div class="brand">
                     <h1 class="title">PASAR MUSLIM INDONESIA</h1>
-                    <h4 class="title"> Segala Kemudahan Untuk Umat Muslim Berbelanja.</h4>
+                    <h3 class="title"> Segala Kemudahan Untuk Umat Muslim Berbelanja.</h3>
                 </div>
             </div>
         </div>
@@ -158,10 +160,10 @@
 
 @section('scripts') 
 <script type="text/javascript"> 
- $(document).on('click', '#btnBeliSekarang', function(){
-  swal("Berhasil!", "Produk Berhasil Di Tambah Ke Keranjang Belanjaan", "success");
-});
- $(document).on('click', '#btnBeli', function(){
+   $(document).on('click', '#btnBeliSekarang', function(){
+      swal("Berhasil!", "Produk Berhasil Di Tambah Ke Keranjang Belanjaan", "success");
+  });
+   $(document).on('click', '#btnBeli', function(){
     swal("Info!", "Silakan Login Sebagai Pelanggan Untuk Melakukan Pesanan.", "info");
 });
 </script>
