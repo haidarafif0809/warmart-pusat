@@ -213,6 +213,15 @@ Route::get('/satuan/view','SatuanController@view')->middleware('auth');
 Route::get('/satuan/pencarian','SatuanController@pencarian')->middleware('auth');
 
 
+//menampilkan data user
+Route::get('/user/view','UserController@view')->middleware('auth');
+Route::get('/user/pencarian','UserController@pencarian')->middleware('auth');
+Route::get('/user/selectize','UserController@selectize')->middleware('auth');
+Route::get('/user/reset','UserController@reset_password')->middleware('auth');
+Route::get('/user/konfirmasi','UserController@konfirmasi')->middleware('auth');
+Route::get('/user/no-konfirmasi','UserController@no_konfirmasi')->middleware('auth');
+
+
 Route::middleware('optimizeImages','auth')->group(function () {
 	
 	Route::resource('user', 'UserController');
@@ -480,23 +489,7 @@ Route::middleware('optimizeImages','auth')->group(function () {
 		'uses' => 'UserWarungController@no_konfirmasi'
 		]);	
 
-	Route::get('user/konfirmasi/{id}',[
-		'middleware' => ['auth','role:admin'],
-		'as' => 'user.konfirmasi',
-		'uses' => 'UserController@konfirmasi'
-		]);
 
-	Route::get('user/reset/{id}',[
-		'middleware' => ['auth','role:admin'],
-		'as' => 'user.reset',
-		'uses' => 'UserController@reset_password'
-		]);
-
-	Route::get('user/no_konfirmasi/{id}',[
-		'middleware' => ['auth'],
-		'as' => 'user.no_konfirmasi',
-		'uses' => 'UserController@no_konfirmasi'
-		]);	
 
 	Route::get('otoritas/permission/{id}',[
 		'middleware' => ['auth'],

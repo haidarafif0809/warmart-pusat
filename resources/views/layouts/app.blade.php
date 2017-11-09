@@ -265,10 +265,8 @@
 @endif
 @if(Laratrust::can('lihat_user'))
 <li>
- <a href="{{ route('user.index') }}">
-  <span class="sidebar-mini">U</span>
-  <span class="sidebar-normal">User</span>
-</a>
+   <router-link :to="{name: 'indexUser'}"> <span class="sidebar-mini">U</span>
+    <span class="sidebar-normal">User</span></router-link>
 </li>
 
 <li>

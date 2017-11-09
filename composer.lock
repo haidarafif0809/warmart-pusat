@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "algolia/algoliasearch-client-php",
-            "version": "1.23.0",
+            "version": "1.23.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/algolia/algoliasearch-client-php.git",
-                "reference": "4abaf869af55107b2bd61e75ad3ac06ffcd456a6"
+                "reference": "3f0a012c88d69f3b092edaf9e6a8d69699d55dfc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/algolia/algoliasearch-client-php/zipball/4abaf869af55107b2bd61e75ad3ac06ffcd456a6",
-                "reference": "4abaf869af55107b2bd61e75ad3ac06ffcd456a6",
+                "url": "https://api.github.com/repos/algolia/algoliasearch-client-php/zipball/3f0a012c88d69f3b092edaf9e6a8d69699d55dfc",
+                "reference": "3f0a012c88d69f3b092edaf9e6a8d69699d55dfc",
                 "shasum": ""
             },
             "require": {
@@ -54,7 +54,7 @@
             ],
             "description": "Algolia Search API Client for PHP",
             "homepage": "https://github.com/algolia/algoliasearch-client-php",
-            "time": "2017-10-26T14:10:58+00:00"
+            "time": "2017-11-07T09:38:14+00:00"
         },
         {
             "name": "anahkiasen/underscore-php",
@@ -1492,16 +1492,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v5.5.19",
+            "version": "v5.5.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "c678100e84934ec85c9f8bc26bd0a60222682719"
+                "reference": "ce0019d22a83b1b240330ea4115ae27a4d75d79c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/c678100e84934ec85c9f8bc26bd0a60222682719",
-                "reference": "c678100e84934ec85c9f8bc26bd0a60222682719",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/ce0019d22a83b1b240330ea4115ae27a4d75d79c",
+                "reference": "ce0019d22a83b1b240330ea4115ae27a4d75d79c",
                 "shasum": ""
             },
             "require": {
@@ -1583,7 +1583,7 @@
                 "nexmo/client": "Required to use the Nexmo transport (~1.0).",
                 "pda/pheanstalk": "Required to use the beanstalk queue driver (~3.0).",
                 "predis/predis": "Required to use the redis cache and queue drivers (~1.0).",
-                "pusher/pusher-php-server": "Required to use the Pusher broadcast driver (~2.0).",
+                "pusher/pusher-php-server": "Required to use the Pusher broadcast driver (~3.0).",
                 "symfony/css-selector": "Required to use some of the crawler integration testing tools (~3.3).",
                 "symfony/dom-crawler": "Required to use most of the crawler integration testing tools (~3.3).",
                 "symfony/psr-http-message-bridge": "Required to psr7 bridging features (~1.0)."
@@ -1619,7 +1619,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2017-10-25T19:10:45+00:00"
+            "time": "2017-11-07T14:24:50+00:00"
         },
         {
             "name": "laravel/scout",
@@ -2704,16 +2704,16 @@
         },
         {
             "name": "pragmarx/support",
-            "version": "v0.8.5",
+            "version": "v0.8.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/antonioribeiro/support.git",
-                "reference": "7471be77190a7c2a5c9da93f85e296c386dfe618"
+                "reference": "ff1e1eeaa32da840a2c374a3f3ce077314129c32"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/antonioribeiro/support/zipball/7471be77190a7c2a5c9da93f85e296c386dfe618",
-                "reference": "7471be77190a7c2a5c9da93f85e296c386dfe618",
+                "url": "https://api.github.com/repos/antonioribeiro/support/zipball/ff1e1eeaa32da840a2c374a3f3ce077314129c32",
+                "reference": "ff1e1eeaa32da840a2c374a3f3ce077314129c32",
                 "shasum": ""
             },
             "require": {
@@ -2755,7 +2755,7 @@
                 "laravel",
                 "pragmarx"
             ],
-            "time": "2017-11-03T23:12:24+00:00"
+            "time": "2017-11-07T20:42:53+00:00"
         },
         {
             "name": "pragmarx/tracker",
@@ -3407,16 +3407,16 @@
         },
         {
             "name": "spatie/laravel-activitylog",
-            "version": "2.2.0",
+            "version": "2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-activitylog.git",
-                "reference": "930707fbd2b13dbc8cda7c72e818d43378c11398"
+                "reference": "0bd2b36241febb8868aa5898b9a2c836e0b4e9b5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-activitylog/zipball/930707fbd2b13dbc8cda7c72e818d43378c11398",
-                "reference": "930707fbd2b13dbc8cda7c72e818d43378c11398",
+                "url": "https://api.github.com/repos/spatie/laravel-activitylog/zipball/0bd2b36241febb8868aa5898b9a2c836e0b4e9b5",
+                "reference": "0bd2b36241febb8868aa5898b9a2c836e0b4e9b5",
                 "shasum": ""
             },
             "require": {
@@ -3474,7 +3474,7 @@
                 "spatie",
                 "user"
             ],
-            "time": "2017-10-16T19:55:43+00:00"
+            "time": "2017-11-07T14:03:51+00:00"
         },
         {
             "name": "spatie/laravel-image-optimizer",
@@ -3537,16 +3537,16 @@
         },
         {
             "name": "spatie/string",
-            "version": "2.2.1",
+            "version": "2.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/string.git",
-                "reference": "5435f8095a6c2f4ac67cbc9a1fbc116197863144"
+                "reference": "28607b9925b4f0499d48570553ca419c6298e26b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/string/zipball/5435f8095a6c2f4ac67cbc9a1fbc116197863144",
-                "reference": "5435f8095a6c2f4ac67cbc9a1fbc116197863144",
+                "url": "https://api.github.com/repos/spatie/string/zipball/28607b9925b4f0499d48570553ca419c6298e26b",
+                "reference": "28607b9925b4f0499d48570553ca419c6298e26b",
                 "shasum": ""
             },
             "require": {
@@ -3586,7 +3586,7 @@
                 "spatie",
                 "string"
             ],
-            "time": "2016-12-01T13:46:28+00:00"
+            "time": "2017-11-08T14:28:57+00:00"
         },
         {
             "name": "stevebauman/location",
@@ -6155,16 +6155,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "6.4.3",
+            "version": "6.4.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "06b28548fd2b4a20c3cd6e247dc86331a7d4db13"
+                "reference": "562f7dc75d46510a4ed5d16189ae57fbe45a9932"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/06b28548fd2b4a20c3cd6e247dc86331a7d4db13",
-                "reference": "06b28548fd2b4a20c3cd6e247dc86331a7d4db13",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/562f7dc75d46510a4ed5d16189ae57fbe45a9932",
+                "reference": "562f7dc75d46510a4ed5d16189ae57fbe45a9932",
                 "shasum": ""
             },
             "require": {
@@ -6235,7 +6235,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2017-10-16T13:18:59+00:00"
+            "time": "2017-11-08T11:26:09+00:00"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
