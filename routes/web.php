@@ -311,7 +311,13 @@ Route::middleware('optimizeImages','auth')->group(function () {
 		'middleware' => ['auth'], 
 		'as'   => 'datatable_detail.pembelian', 
 		'uses' => 'PembelianController@datatableDetailPembelian' 
-		]); 
+	]); 
+	 // DATATABEL DETAIL FAKTUR PEMBELIAN 
+	Route::post('pembelian/detail-faktur-pembelian', [ 
+		'middleware' => ['auth'], 
+		'as'   => 'datatable_detail_faktur_beli', 
+		'uses' => 'PembelianController@datatableFakturPembelian' 
+	]); 
 
 	// PROSES FROM EDIT BELI
 	Route::get('/pembelian/proses-form-edit/{id}',[

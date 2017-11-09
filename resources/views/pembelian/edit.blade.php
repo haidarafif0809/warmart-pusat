@@ -54,41 +54,41 @@
 			{!! Form::open(['url' => route('editPembelian.prosesEditPembelian'),'method' => 'post', 'class'=>'form-horizontal','id'=>'form_pembelian']) !!} 
 			<div class="modal-body"> 
 				<div class="row"> 
-					<div class="col-md-3"> 
-						<h5>Potongan(%)</h5> 
-						{!! Form::text('potongan_persen', '', ['class'=>'form-control','autocomplete'=>'off', 'id' =>'potongan_persen','style'=>'height: 40px; width:90%; font-size:20px;']) !!} 
+					<div class="col-md-3 col-xs-3"> 
+						<h5>Disc(%)</h5> 
+						{!! Form::number('potongan_persen', '', ['class'=>'form-control','autocomplete'=>'off', 'id' =>'potongan_persen','style'=>'height: 40px; width:90%; font-size:20px;']) !!} 
 						{!! $errors->first('potongan_persen', '<p class="help-block" id="potongan_error">:message</p>') !!} 
 					</div> 
-					<div class="col-md-3"> 
-						<h5>Potongan</h5> 
-						{!! Form::text('potongan_faktur',  number_format($pembelian->potongan,2,',','.'), ['class'=>'form-control','autocomplete'=>'off', 'id' =>'potongan_faktur','style'=>'height: 40px; width:90%; font-size:20px;']) !!} 
+					<div class="col-md-3 col-xs-3"> 
+						<h5>Disc(Rp)</h5> 
+						{!! Form::number('potongan_faktur',  number_format($pembelian->potongan,2,',','.'), ['class'=>'form-control','autocomplete'=>'off', 'id' =>'potongan_faktur','style'=>'height: 40px; width:90%; font-size:20px;']) !!} 
 						{!! $errors->first('potongan_faktur', '<p class="help-block" id="potongan_error">:message</p>') !!} 
 					</div> 
-					<div class="col-sm-6"> 
+					<div class="col-sm-6 col-xs-6"> 
 						<h5>Subtotal</h5> 
-						{!! Form::text('subtotal', $subtotal_tbs, ['class'=>'form-control','autocomplete'=>'off', 'id' =>'subtotal','style'=>'height: 40px; width:90%; font-size:23px;']) !!} 
+						{!! Form::text('subtotal', $subtotal_tbs, ['class'=>'form-control','autocomplete'=>'off', 'id' =>'subtotal','style'=>'height: 40px; width:90%; font-size:23px;','readonly'=>'']) !!} 
 						{!! $errors->first('subtotal', '<p class="help-block" id="subtotal_error">:message</p>') !!} 
 					</div> 
 				</div>  
 				<div class="row"> 
-					<div class="col-md-6"> 
+					<div class="col-md-6 col-xs-6"> 
 						<h5><i class="material-icons">info_outline</i> Pembayaran </h5> 
 						{!! Form::number('pembayaran', $pembelian->tunai, ['class'=>'form-control','autocomplete'=>'off', 'id'=>'pembayaran','style'=>'height: 40px; width:90%; font-size:25px;','placeholder'=>'Silakan Isi Pembayaran']) !!} 
 						{!! $errors->first('pembayaran', '<p class="help-block" id="pembayaran_error">:message</p>') !!} 
 					</div> 
-					<div class="col-md-6"> 
+					<div class="col-md-6 col-xs-6"> 
 						<h5>Total Akhir</h5> 
 						{!! Form::text('total_akhir', '', ['class'=>'form-control','required','autocomplete'=>'off', 'id'=>'total_akhir','style'=>'height: 40px; width:90%; font-size:25px;', 'readonly'=>'' ]) !!} 
 					</div> 
 				</div> 
 
 				<div class="row"> 
-					<div class="col-md-6"> 
+					<div class="col-md-6 col-xs-6"> 
 						<h5>Kembalian</h5> 
 						{!! Form::text('kembalian', '', ['class'=>'form-control','autocomplete'=>'off', 'id' =>'kembalian','style'=>'height: 40px; width:90%; font-size:25px;', 'readonly'=>'' ]) !!} 
 						{!! $errors->first('kembalian', '<p class="help-block" id="kembalian_error">:message</p>') !!} 
 					</div> 
-					<div class="col-md-6"> 
+					<div class="col-md-6 col-xs-6"> 
 						<h5>Kredit</h5> 
 						{!! Form::text('kredit', '', ['class'=>'form-control','autocomplete'=>'off', 'id' =>'kredit','style'=>'height: 40px; width:90%; font-size:25px;', 'readonly'=>'' ]) !!} 
 						{!! $errors->first('kredit', '<p class="help-block" id="kredit_error">:message</p>') !!} 
@@ -97,12 +97,12 @@
 				</div> 
 
 				<div class="row"> 
-					<div class="col-md-6"> 
+					<div class="col-md-6 col-xs-6"> 
 						<h5>Jatuh Tempo</h5> 
 						{!! Form::text('jatuh_tempo', $pembelian->tanggal_jt_tempo, ['class'=>'form-control datepicker','autocomplete'=>'off', 'id' =>'jatuh_tempo','placeholder' => 'Jatuh Tempo']) !!} 
 						{!! $errors->first('jatuh_tempo', '<p class="help-block" id="jatuh_tempo_error">:message</p>') !!} 
 					</div> 
-					<div class="col-md-6"> 
+					<div class="col-md-6 col-xs-6"> 
 						<h5>Keterangan</h5> 
 						<textarea class="form-control" name="keterangan" id="keterangan" placeholder="...." rows="1">{{$pembelian->keterangan}}</textarea> 
 
@@ -413,8 +413,7 @@
 				alert("Potongan Yang Anda Masukan Lebih Dari 100%!");     
 				$(this).focus();   
 				$(this).val('');     
-				$("#total_akhir").val(subtotal.format(2, 3, '.', ','));   
-				$("#total_akhir_display").text(subtotal.format(2, 3, '.', ','));   
+				$("#total_akhir").val(subtotal);   
 				$("#potongan_faktur").val(''); 
 				$("#potongan_persen").val(''); 
 				$("#potongan").val(''); 
@@ -437,8 +436,7 @@
 				var potongan_nominal = parseFloat(subtotal) * (parseFloat(potongan_persen) / 100); 
 				var total_akhir = parseFloat(subtotal,10) - parseFloat(potongan_nominal,10); 
 				$("#total_akhir").val(total_akhir.format(2, 3, '.', ','));   
-				$("#total_akhir_display").text(total_akhir.format(2, 3, '.', ','));         
-				$("#potongan_faktur").val(potongan_nominal.format(2, 3, '.', ',')); 
+				$("#potongan_faktur").val(potongan_nominal.toFixed(2)); 
 				$("#potongan").val(potongan_nominal);   
 
 				var kembalian = parseFloat(pembayaran,10) - parseFloat(total_akhir,10);         
@@ -481,8 +479,7 @@
 				alert("Potongan Yang Anda Masukan Melebihi Subtotal!");     
 
 				$(this).val('');     
-				$("#total_akhir").val(subtotal.format(2, 3, '.', ','));   
-				$("#total_akhir_display").text(subtotal.format(2, 3, '.', ',')); 
+				$("#total_akhir").val(subtotal);   
 				$("#potongan_persen").val('');   
 				$("#potongan").val('');   
 				$(this).focus();   
@@ -504,8 +501,7 @@
 				}   
 			}else{       
 				$("#total_akhir").val(total_akhir.format(2, 3, '.', ','));   
-				$("#total_akhir_display").text(total_akhir.format(2, 3, '.', ',')); 
-				$("#potongan_persen").val(potongan_persen.format(2, 3, '.', ','));   
+				$("#potongan_persen").val(potongan_persen.toFixed(2));   
 				$("#potongan").val(potongan); 
 				var kembalian = parseFloat(pembayaran) - parseFloat(total_akhir);         
 				var kredit = parseFloat(total_akhir) - parseFloat(pembayaran);   
@@ -1016,7 +1012,7 @@
 
 	shortcut.add("f2", function() { 
 		$("#btnSelesai").click(); 
-		$("#keterangan").focus(); 
+		$("#pembayaran").focus(); 
 	}); 
 
 
