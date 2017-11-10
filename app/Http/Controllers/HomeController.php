@@ -76,36 +76,36 @@ class HomeController extends Controller
 
         $daftar_produk .= '      
         <div class="col-md-3 col-sm-6 col-xs-6 list-produk">
-          <div class="card cards card-pricing">
-            <a href="'.url("/keranjang-belanja") .'">
-              <div class="card-image">';
-                if ($produks->foto != NULL) {
-                 $daftar_produk .= '<img src="./foto_produk/'.$produks->foto.'">';
-               }
-               else{
-                $daftar_produk .= '<img src="./image/foto_default.png">';
-              }
-              $daftar_produk .= '
-            </div>
-          </a>
-          <div class="card-content">
-            <div class="footer">     
-              <a href="'.url("/keranjang-belanja") .'" class="card-title">
-                '.strip_tags(substr($produks->nama, 0, 10)).'...
-              </a><br>
-              <b style="color:red; font-size:18px"> '.$produks->rupiah.' </b><br>
-              <a class="description"><i class="material-icons">store</i>  '.strip_tags(substr($warung->name, 0, 10)).'... </a><br>';
+        <div class="card cards card-pricing">
+        <a href="'.url("/keranjang-belanja") .'">
+        <div class="card-image">';
+        if ($produks->foto != NULL) {
+         $daftar_produk .= '<img src="./foto_produk/'.$produks->foto.'">';
+       }
+       else{
+        $daftar_produk .= '<img src="./image/foto_default.png">';
+      }
+      $daftar_produk .= '
+      </div>
+      </a>
+      <div class="card-content">
+      <div class="footer">     
+      <a href="'.url("/keranjang-belanja") .'" class="card-title">
+      '.strip_tags(substr($produks->nama, 0, 10)).'...
+      </a><br>
+      <b style="color:red; font-size:18px"> '.$produks->rupiah.' </b><br>
+      <a class="description"><i class="material-icons">store</i>  '.strip_tags(substr($warung->name, 0, 10)).'... </a><br>';
 
-              if ($agent->isMobile()) {
-                $daftar_produk .= '<a href="'.url("/keranjang-belanja") .'" class="btn btn-danger btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja" id="btnBeliSekarang"><b style="font-size:15px"> Beli </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';
-              }
-              else{
-                $daftar_produk .= '<a href="'. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" id="btnBeliSekarang" class="btn btn-danger btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja"><b style="font-size:18px"> Beli Sekarang </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';
-              }
-              $daftar_produk .= '
-            </div>
-          </div>
-        </div>
+      if ($agent->isMobile()) {
+        $daftar_produk .= '<a href="'.url("/keranjang-belanja") .'" class="btn btn-danger btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja" id="btnBeliSekarang"><b style="font-size:15px"> Beli </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';
+      }
+      else{
+        $daftar_produk .= '<a href="'. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" id="btnBeliSekarang" class="btn btn-danger btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja"><b style="font-size:18px"> Beli Sekarang </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';
+      }
+      $daftar_produk .= '
+      </div>
+      </div>
+      </div>
       </div>';
     }
     return $daftar_produk;
@@ -174,6 +174,7 @@ class HomeController extends Controller
     $jumlah_komunitas_tervalidasi = User::where('tipe_user','2')->where('konfirmasi_admin','1')->count();
     $produk = Barang::count();
     $error_log = Error::count();
+    $rata_rata_produk_perwarung = $produk / $jumlah_warung;
 
     $response['komunitas'] = $jumlah_komunitas;
     $response['customer'] = $jumlah_customer;
@@ -181,6 +182,7 @@ class HomeController extends Controller
     $response['warung_tervalidasi'] = $jumlah_warung_tervalidasi;
     $response['komunitas_tervalidasi'] = $jumlah_komunitas_tervalidasi;
     $response['produk'] = $produk;
+    $response['rata_rata_produk'] = $rata_rata_produk_perwarung;
     $response['error_log'] = $error_log;
 
     return response()->json($response);

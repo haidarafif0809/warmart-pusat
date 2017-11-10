@@ -60,6 +60,14 @@
                     <h3 class="card-title"> {{ dashboardData.produk }}</h3>
                 </div> 
             </div>
+        </div>   
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-stats"> 
+                <div class="card-content">
+                    <p class="category">Rata-rata Produk Perwarung</p>
+                    <h3 class="card-title"> {{ dashboardData.rata_rata_produk }}</h3>
+                </div> 
+            </div>
         </div>
         <div class="col-lg-3 col-md-6 col-sm-6">
             <div class="card card-stats"> 
@@ -70,6 +78,7 @@
             </div>
         </div>
     </div>
+    
 </template>
 
 <script>
