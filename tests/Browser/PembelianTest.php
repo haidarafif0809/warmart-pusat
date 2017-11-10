@@ -328,4 +328,86 @@ class PembelianTest extends DuskTestCase
         }); 
     }
 
+
+
+    public function testSelesaiTransaksiPembelianHutang(){
+
+        $no_faktur = Pembelian::no_faktur(1); 
+
+        $this->browse(function ($first, $second) use ($no_faktur) {
+            $first->loginAs(User::find(5))
+            ->visit('/pembelian')                  
+            ->clickLink('Tambah Pembelian')
+            ->assertSee('Pembelian');
+
+            $first->script("document.getElementById('pilih_produk').selectize.setValue('1-KECAP ASIN ABC-55000');");
+            $first->assertSee('B001 - KECAP ASIN ABC')
+            ->pause(1000);
+
+            $first->type('#jadwal_produk_swal','1')
+            ->press('Submit')
+            ->assertSee('BERHASIL MENAMBAH PRODUK "KECAP ASIN ABC"');
+
+            $first->pause(1000)
+            ->press('SELESAI (F2)')
+            ->assertDialogOpened('Suplier Belum Dipilih!');
+            $first->driver->switchTo()->alert()->accept();
+
+            $first->script("document.getElementById('pilih_suplier').selectize.setValue('1');");
+            $first->assertSee("JAYA BAROKAH")
+            ->press('SELESAI (F2)')
+            ->pause(1000);
+
+            $first->whenAvailable('.modal', function ($modal) use($no_faktur){
+                $modal->assertSee('Silahkan Lengkapi Pembayaran!');
+                $modal->assertInputValue('#subtotal','55.000,00')
+                ->assertInputValue('#total_akhir','55.000,00')
+                ->assertInputValue('#kredit','55.000,00')
+
+                ->type('pembayaran','100000')
+                ->assertInputValue('#kembalian','45.000,00')
+                ->assertInputValue('#kredit','')
+
+                ->type('potongan_persen','10')
+                ->assertInputValue('#potongan_faktur','5500')
+                ->assertInputValue('#total_akhir','49.500,00')
+                ->assertInputValue('#kembalian','50.500,00')
+                ->assertInputValue('#kredit','')
+
+                ->type('potongan_faktur','10000')
+                ->assertInputValue('#total_akhir','45.000,00')
+                ->assertInputValue('#kembalian','55.000,00')
+                ->assertInputValue('#kredit','')
+                ->type('keterangan','Browser Test Pembelian')
+                ->press('TUNAI');
+
+            })
+            ->pause(1000)
+            ->assertSee('Kas Anda Tidak Cukup Untuk Melakukan Pembayaran')
+            ->press('OK')
+            ->pause(1000);
+            $first->whenAvailable('.modal', function ($modal) use($no_faktur){
+                $modal->type('pembayaran',0)
+                ->assertInputValue('#kredit','45.000,00')
+                ->press('HUTANG');
+            });       
+
+            $first->pause(1000)
+            ->assertDialogOpened('Jatuh Tempo Belum Diisi!');
+            $first->driver->switchTo()->alert()->accept();
+            $first->pause(1000)
+            ->type('jatuh_tempo','2017-11-20');
+
+            $first->whenAvailable('.modal', function ($modal) use($no_faktur){
+                $modal->press('HUTANG');
+            }); 
+            
+            $first->pause(1000)->assertSee('SUKSES : BERHASIL MELAKUKAN TRANSAKSI PEMBELIAN FAKTUR "'.$no_faktur.'"');
+
+
+
+        }); 
+
+    }
+
 }
