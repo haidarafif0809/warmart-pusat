@@ -8,22 +8,16 @@
  require('./bootstrap');
 
  window.Vue = require('vue');
- var VueResource = require('vue-resource');
- Vue.use(VueResource);
+
  import VueRouter from 'vue-router';
  import VueSwal from 'vue-swal'
  import Spinner from 'vue-simple-spinner'
- 
+
  window.Vue.use(VueSwal)
  window.Vue.use(Spinner)
  Vue.component('pagination', require('laravel-vue-pagination'));
  Vue.component('vue-simple-spinner',require('vue-simple-spinner'))
-
-
-var selectize = require('vue-selectize');
- 
- window.Vue.use(selectize);
-
+ Vue.component('selectize-component', require('vue2-selectize'));
 
  window.Vue.use(VueRouter);
 
@@ -46,27 +40,27 @@ var selectize = require('vue-selectize');
 
  const routes = [ 
  {
-    path: '/',
-    components: {
-        dashboardIndex: DashboardAdminIndex
-    },
-    name : 'indexDashboard'
-},  
-{path: '/create-bank', component: BankCreate, name: 'createBank'},
-{path: '/satuan', component: SatuanIndex, name: 'indexSatuan'},
-{path: '/bank', component: BankIndex, name: 'indexBank'},
-{path: '/user', component: UserIndex, name: 'indexUser'},
+ 	path: '/',
+ 	components: {
+ 		dashboardIndex: DashboardAdminIndex
+ 	},
+ 	name : 'indexDashboard'
+ },  
+ {path: '/create-bank', component: BankCreate, name: 'createBank'},
+ {path: '/satuan', component: SatuanIndex, name: 'indexSatuan'},
+ {path: '/bank', component: BankIndex, name: 'indexBank'},
+ {path: '/user', component: UserIndex, name: 'indexUser'},
 
 
-{path: '/edit-bank/:id', component: BankEdit, name: 'editBank'},
-{path: '/lazy_load', component: LazyIndex, name: 'indexLazy'},
-{path: '/create-satuan', component: SatuanCreate, name: 'createSatuan'},
-{path: '/edit-satuan/:id', component: SatuanEdit, name: 'editSatuan'},
+ {path: '/edit-bank/:id', component: BankEdit, name: 'editBank'},
+ {path: '/lazy_load', component: LazyIndex, name: 'indexLazy'},
+ {path: '/create-satuan', component: SatuanCreate, name: 'createSatuan'},
+ {path: '/edit-satuan/:id', component: SatuanEdit, name: 'editSatuan'},
 
-{path: '/create-user', component: UserCreate, name: 'createUser'},
-{path: '/edit-user/:id', component: UserEdit, name: 'editUser'},
+ {path: '/create-user', component: UserCreate, name: 'createUser'},
+ {path: '/edit-user/:id', component: UserEdit, name: 'editUser'},
 
-]
+ ]
 
 
  const router = new VueRouter({ routes })

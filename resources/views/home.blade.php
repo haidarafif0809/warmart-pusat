@@ -93,7 +93,7 @@
 @endsection
 @section('scripts')
 @if(Auth::user()->tipe_user == 1)
-<script type="text/javascript" src="{{ asset('js/app.js?v=1.5')}}"></script>
+<script type="text/javascript" src="{{ asset('js/app.js?v=1.6')}}"></script>
 @endif
 @endsection
 
