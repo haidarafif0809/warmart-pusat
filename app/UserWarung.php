@@ -17,7 +17,7 @@ class UserWarung extends Authenticatable
 
   protected $table = 'users';
 
-  protected $fillable = ['email','password','name', 'alamat', 'wilayah', 'tipe_user', 'id_warung', 'status_konfirmasi', 'no_telp', 'kode_verifikasi', 'konfirmasi_admin'];
+  protected $fillable = ['email','password','name', 'alamat', 'wilayah', 'tipe_user', 'id_warung', 'status_konfirmasi', 'no_telp', 'kode_verifikasi', 'konfirmasi_admin', 'foto_ktp'];
 
   protected $hidden = [
   'password', 'remember_token',
