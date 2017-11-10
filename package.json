@@ -12,16 +12,18 @@
     "devDependencies": {
         "axios": "^0.16.2",
         "bootstrap-sass": "^3.3.7",
-        "cross-env": "^5.0.1",
+        "cross-env": "^5.1.1",
         "jquery": "^3.1.1",
-        "laravel-mix": "^1.0",
+        "laravel-mix": "^1.6.1",
         "lodash": "^4.17.4",
-        "vue": "^2.5.2"
+        "vue": "^2.5.3"
     },
     "dependencies": {
         "laravel-vue-pagination": "^1.0.6",
         "vue-clazy-load": "^0.2.0",
         "vue-router": "^3.0.1",
+        "vue-select": "github:sagalbot/vue-select",
+        "vue-selectize": "0.0.3",
         "vue-simple-spinner": "^1.2.8",
         "vue-swal": "0.0.6",
         "vuetable": "^1.5.12"

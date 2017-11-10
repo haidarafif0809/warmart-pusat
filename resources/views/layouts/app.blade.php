@@ -265,10 +265,8 @@
 @endif
 @if(Laratrust::can('lihat_user'))
 <li>
- <a href="{{ route('user.index') }}">
-  <span class="sidebar-mini">U</span>
-  <span class="sidebar-normal">User</span>
-</a>
+   <router-link :to="{name: 'indexUser'}"> <span class="sidebar-mini">U</span>
+    <span class="sidebar-normal">User</span></router-link>
 </li>
 
 <li>
@@ -366,6 +364,19 @@
 	</footer>
 </div>
 </div>
+<!--Start of Tawk.to Script-->
+<script type="text/javascript">
+  var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+  (function(){
+    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+    s1.async=true;
+    s1.src='https://embed.tawk.to/5a051374bb0c3f433d4c84cd/default';
+    s1.charset='UTF-8';
+    s1.setAttribute('crossorigin','*');
+    s0.parentNode.insertBefore(s1,s0);
+  })();
+</script>
+<!--End of Tawk.to Script-->
 </body>
 <!--   Core JS Files   -->
 <script src="{{ asset('js/jquery-3.2.1.min.js') }}" type="text/javascript"></script>

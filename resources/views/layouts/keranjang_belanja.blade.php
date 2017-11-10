@@ -1,7 +1,7 @@
 @extends('layouts.app_pelanggan')
 @section('content') 
 
-<div class="page-header header-filter header-small" data-parallax="true"" style="background-image: url('image/background2.jpg');">
+<div class="page-header header-filter header-small" data-parallax="true" style="background-image: url('image/background2.jpg');">
 
   <div class="container">
     <div class="row">
@@ -105,7 +105,10 @@
 @section('scripts') 
 <script type="text/javascript"> 
  $(document).on('click', '#btnHapusProduk', function(){
-  swal("Berhasil!", "Produk Berhasil Di Hapus", "success");
-});
+  swal({
+    title: "Produk Berhasil Di Hapus!", 
+    showConfirmButton :  false,
+    type: "success",
+  });
 </script>
 @endsection 

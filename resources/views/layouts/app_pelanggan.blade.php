@@ -3,8 +3,8 @@
 <head>
     <title>War-Mart.id</title>
     <meta charset="utf-8" />
-    <link rel="apple-touch-icon" sizes="76x76" href="img/favicon.jpg" />
-    <link rel="icon" type="image/png" href="img/favicon.jpg" />
+    <link rel="apple-touch-icon" sizes="76x76" href="img/favicon.png" />
+    <link rel="icon" type="image/png" href="img/favicon.png" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
@@ -35,9 +35,9 @@
 </head>
 
 <style type="text/css">
-    .navbar-nav .open .dropdown-menu{
-        color: grey;
-    }
+.navbar-nav .open .dropdown-menu{
+    color: grey;
+}
 </style>
 
 
@@ -61,7 +61,7 @@
 
                         <ul class="dropdown-menu dropdown-with-icons">
                             <li style="color:black">
-                                <a href="{{ url('/keranjang-belanja') }}" target="_blank" class="warna-list">
+                                <a href="{{ url('/keranjang-belanja') }}" class="warna-list">
                                     <i class="material-icons">shopping_cart</i> Keranjang Belanja <b style="font-size: 15px">| {{ $cek_belanjaan }}</b>
                                 </a>
                             </li>
@@ -161,59 +161,72 @@
                             <i class="fa fa-phone-square"></i>
                             <p>+62-721-8050-299 <br>
                                 Bandar Lampung, Indonesia
-                                solusibisnis@andaglos.id</p>
-                            </div>
-                            <div class="feed-line">                            
-                                <a href="https://id-id.facebook.com/andaglos/" target="blank"><i class="fa fa-facebook-square"></i> Andaglos</a>
-                            </div>
+                            solusibisnis@andaglos.id</p>
                         </div>
-                    </div>
-
-                    <div class="col-md-4">
-                        <h5>Instagram</h5>
-                        <div class="gallery-feed">
+                        <div class="feed-line">                            
+                            <a href="https://id-id.facebook.com/andaglos/" target="blank"><i class="fa fa-facebook-square"></i> Andaglos</a>
                         </div>
-
                     </div>
                 </div>
+
+                <div class="col-md-4">
+                    <h5>Instagram</h5>
+                    <div class="gallery-feed">
+                    </div>
+
+                </div>
             </div>
+        </div>
 
 
-            <hr />
+        <hr />
 
-            <ul class="pull-left">
-                <li>
-                    <a href="#pablo">
-                     Blog
-                 </a>
-             </li>
-             <li>
-                <a href="#pablo">
-                    Presentation
-                </a>
-            </li>
+        <ul class="pull-left">
             <li>
                 <a href="#pablo">
-                 Discover
+                 Blog
              </a>
          </li>
          <li>
             <a href="#pablo">
-                Payment
+                Presentation
             </a>
         </li>
         <li>
             <a href="#pablo">
-                Contact Us
-            </a>
-        </li>
-    </ul>
+             Discover
+         </a>
+     </li>
+     <li>
+        <a href="#pablo">
+            Payment
+        </a>
+    </li>
+    <li>
+        <a href="#pablo">
+            Contact Us
+        </a>
+    </li>
+</ul>
 
-    <div class="copyright pull-right">
-        Copyright &copy; <script>document.write(new Date().getFullYear())</script> <a href="https://andaglos.id/"> PT. Andaglos Global Teknologi.</a>
-    </div>
+<div class="copyright pull-right">
+    Copyright &copy; <script>document.write(new Date().getFullYear())</script> <a href="https://andaglos.id/"> PT. Andaglos Global Teknologi.</a>
+</div>
 </div>
 </footer>
+<!--Start of Tawk.to Script-->
+<script type="text/javascript">
+  var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+  (function(){
+    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+    s1.async=true;
+    s1.src='https://embed.tawk.to/5a051374bb0c3f433d4c84cd/default';
+    s1.charset='UTF-8';
+    s1.setAttribute('crossorigin','*');
+    s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
+<!--End of Tawk.to Script-->
 </body>
 
 <!--   Core JS Files   -->

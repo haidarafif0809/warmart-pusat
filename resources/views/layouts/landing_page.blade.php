@@ -63,17 +63,17 @@
                     </div>
                 </div>
                 <div class="col-md-5 col-md-offset-1">
-                 <h2 style="color:#ffc34d;font-weight:bold;">Tentang</h2>
-                 <h3 style="color:#ffffff;">WarMart adalah marketplace untuk warung muslim pertama di Indonesia yang memfasilitasi warung-warung milik saudara muslim untuk menjual produknya secara online maupun offline. Penjualan secara online melalui aplikasi android dan penjualan secara offline menggunakan aplikasi web base yang kami sediakan</h3>
-             </div>
-         </div>
-     </div>
- </div>
- <style type="text/css">
-     .peran{
-        width:100%;
-        height:100%;
-    }
+                   <h2 style="color:#ffc34d;font-weight:bold;">Tentang</h2>
+                   <h3 style="color:#ffffff;">WarMart adalah marketplace untuk warung muslim pertama di Indonesia yang memfasilitasi warung-warung milik saudara muslim untuk menjual produknya secara online maupun offline. Penjualan secara online melalui aplikasi android dan penjualan secara offline menggunakan aplikasi web base yang kami sediakan</h3>
+               </div>
+           </div>
+       </div>
+   </div>
+   <style type="text/css">
+   .peran{
+    width:100%;
+    height:100%;
+}
 </style>
 <div class="container">
     <div class="section text-center">
@@ -141,14 +141,14 @@
                             <div class="card-content">
                                 <h4 class="category text-danger">KOMUNITAS</h4>
                                 <p class="card-description" style="color:black;">
-                                 Komunitas menjadi roda penggerak kesadaran umat untuk membela dan memperjuangkan kejayaan perekonomian Islam. Komunitas yang mendaftarkan anggotanya menjadi palanggan Warmart, akan mendapatkan share bagi hasil setiap anggota komunitas berbelanja di Warmart.<br><center><a href="{{ url('/register') }}" class="btn btn-danger"> DAFTAR </a></center>
-                             </p>
-                         </div>
-                     </div>
-                 </div>
+                                   Komunitas menjadi roda penggerak kesadaran umat untuk membela dan memperjuangkan kejayaan perekonomian Islam. Komunitas yang mendaftarkan anggotanya menjadi palanggan Warmart, akan mendapatkan share bagi hasil setiap anggota komunitas berbelanja di Warmart.<br><center><a href="{{ url('/register') }}" class="btn btn-danger"> DAFTAR </a></center>
+                               </p>
+                           </div>
+                       </div>
+                   </div>
 
 
-                 <div class="col-md-3">
+                   <div class="col-md-3">
                     <div class="card card-blog">
                         <div class="card-image">
                             <a href="#pablo">
@@ -198,7 +198,7 @@
                             <div class="card-content">
                                 <h3 class="category text-info"></h3>
                                 <p class="card-description">
-                                   <h6 style="color:white;font-weight:bold;">
+                                 <h6 style="color:white;font-weight:bold;">
                                     <ul align="left">
                                         <li>Berkontribusi menumbuhkan Usaha muslim (jihad ekonomi) </li>
                                         <li>Belanja bernilai ibadah </li>
@@ -230,9 +230,9 @@
 
                     <div class="back back-background" style="background-image: url('assets/img/flat/warung_2.jpg');">
                         <div class="card-content">
-                           <h3 class="category text-info"></h3>
-                           <p class="card-description">
-                               <h6 style="color:white;font-weight:bold;">
+                         <h3 class="category text-info"></h3>
+                         <p class="card-description">
+                             <h6 style="color:white;font-weight:bold;">
                                 <ul align="left">
                                     <li>Terhubung dengan Pelanggan WarMart se Indonesia </li> 
                                     <li>Mendapat support teknologi manajemen warung </li>
@@ -268,7 +268,7 @@
                     <div class="card-content">
                         <h3 class="category text-info"></h3>
                         <p class="card-description">
-                         <h6 style="color:white;font-weight:bold;">
+                           <h6 style="color:white;font-weight:bold;">
                             <ul align="left">       
                                 <li>Terhubung Dengan Pergerakan Ekonomi Umat</li>
                                 <li>Bersinergi dengan beragam komunitas</li>
@@ -301,8 +301,8 @@
                 <div class="card-content">
                     <h3 class="category text-info"></h3>
                     <p class="card-description">
-                       <h6 style="color:white;font-weight:bold;">
-                           <ul align="left">
+                     <h6 style="color:white;font-weight:bold;">
+                         <ul align="left">
                             <li>Bebas biaya pendaftaran alias GRATIS!!! </li> 
                             <li>Punya penghasilan tambahan </li> 
                             <li>GRATIS!!! Web replika dengan nama sendiri </li> 
@@ -436,16 +436,28 @@
 <footer class="footer">
     <div class="container">
 
-       <h4><a style="font-weight:bold;">INFO :</a><a style="color:red;font-weight:italic;"> Soft Launching Aplikasi WartMart Insya Allah akan dilaksanakan pada tanggal 20 November 2017</a></h4> 
+     <h4><a style="font-weight:bold;">INFO :</a><a style="color:red;font-weight:italic;"> Soft Launching Aplikasi WartMart Insya Allah akan dilaksanakan pada tanggal 20 November 2017</a></h4> 
 
-       <div class="copyright pull-right">
+     <div class="copyright pull-right">
         &copy; <script>document.write(new Date().getFullYear())</script> PT Andaglos Global Teknologi
     </div>
 </div>
 </footer>
 
-
-
+<!--Start of Tawk.to Script-->
+<script type="text/javascript">
+  var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+  (function(){
+    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+    s1.async=true;
+    s1.src='https://embed.tawk.to/5a051374bb0c3f433d4c84cd/default';
+    s1.charset='UTF-8';
+    s1.setAttribute('crossorigin','*');
+    s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
+<!--End of Tawk.to Script-->
+</body>
 <!--   Core JS Files   -->
 <script src="{{ asset('js/jquery-3.2.1.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript"></script>
@@ -502,7 +514,5 @@
     
     $(".carousel").carousel({interval: 1000 * 10 });
 </script>
-
-scrip
 
 </html>
