@@ -84,7 +84,7 @@ class UbahProfilController extends Controller
 
 //UBAH PROFIL USER WARUNG
 	public function proses_ubah_profil_warung(Request $request) {
-		$user_warung = UserWarung::find($request->id);
+		$user_warung = UserWarung::find(Auth::user()->id);
 		if ($user_warung->id_warung != Auth::user()->id_warung) {
 			Auth::logout();
 			return response()->view('error.403');

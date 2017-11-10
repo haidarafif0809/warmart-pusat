@@ -163,21 +163,26 @@ class HomeController extends Controller
     $prose_total_persedian = $nila_masuk->total_masuk - $nila_keluar->total_keluar;
     $total_persedian = number_format($prose_total_persedian,0,',','.');
 
-    $user = Auth::user(); 
+    $user = Auth::user();
     $user_warung = UserWarung::with(['kelurahan'])->find($user->id);
-
+    
+    if ($user->tipe_user == 4) {
     //JIKA FOTO KTP SUDAH DI ISI MAKA AKAN REDIRECT KE HOME
-    if ($user_warung->foto_ktp == NULL OR $user_warung->foto_ktp == "") {
-      return view('ubah_profil.ubah_profil_warung')->with(compact('user_warung','user'));
-    }
+      if ($user_warung->foto_ktp == NULL OR $user_warung->foto_ktp == "") {
+        return view('ubah_profil.ubah_profil_warung')->with(compact('user_warung','user'));
+      }
     //JIKA FOTO KTP BELUM DI ISI MAKA AKAN REDIRECT KE UBAH PROFIL
-    else{
-     return view('home',['jumlah_komunitas'=>$jumlah_komunitas,'jumlah_customer'=>$jumlah_customer,'jumlah_warung'=>$jumlah_warung,'jumlah_warung_tervalidasi'=>$jumlah_warung_tervalidasi,'jumlah_komunitas_tervalidasi'=>$jumlah_komunitas_tervalidasi,'produk'=>$produk,'error_log'=>$error_log,'produk_warung'=>$produk_warung,'transaksi_kas'=>$transaksi_kas,'jumlah_kas_masuk'=>$jumlah_kas_masuk,'jumlah_kas_keluar'=>$jumlah_kas_keluar,'stok_masuk'=>$stok_masuk,'stok_keluar'=>$stok_keluar,'total_persedian'=>$total_persedian]);
+      else{
+       return view('home',['jumlah_komunitas'=>$jumlah_komunitas,'jumlah_customer'=>$jumlah_customer,'jumlah_warung'=>$jumlah_warung,'jumlah_warung_tervalidasi'=>$jumlah_warung_tervalidasi,'jumlah_komunitas_tervalidasi'=>$jumlah_komunitas_tervalidasi,'produk'=>$produk,'error_log'=>$error_log,'produk_warung'=>$produk_warung,'transaksi_kas'=>$transaksi_kas,'jumlah_kas_masuk'=>$jumlah_kas_masuk,'jumlah_kas_keluar'=>$jumlah_kas_keluar,'stok_masuk'=>$stok_masuk,'stok_keluar'=>$stok_keluar,'total_persedian'=>$total_persedian]);
+     }
    }
+   else{
+    return view('home',['jumlah_komunitas'=>$jumlah_komunitas,'jumlah_customer'=>$jumlah_customer,'jumlah_warung'=>$jumlah_warung,'jumlah_warung_tervalidasi'=>$jumlah_warung_tervalidasi,'jumlah_komunitas_tervalidasi'=>$jumlah_komunitas_tervalidasi,'produk'=>$produk,'error_log'=>$error_log,'produk_warung'=>$produk_warung,'transaksi_kas'=>$transaksi_kas,'jumlah_kas_masuk'=>$jumlah_kas_masuk,'jumlah_kas_keluar'=>$jumlah_kas_keluar,'stok_masuk'=>$stok_masuk,'stok_keluar'=>$stok_keluar,'total_persedian'=>$total_persedian]);
+  }
 
- }
+}
 
- public function dashboard_admin (Request $request){
+public function dashboard_admin (Request $request){
 
   $jumlah_komunitas = User::where('tipe_user','2')->count();
   $jumlah_customer = User::where('tipe_user','3')->count();

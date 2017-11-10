@@ -32,9 +32,9 @@
 
 <style type="text/css">
 
-.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
-	padding: 1px;
-}
+  .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+   padding: 1px;
+ }
 </style>
 
 <body>
@@ -107,7 +107,7 @@
         </li>
 
         <!--PEMBELIAN-->
-        @if(Auth::user()->tipe_user == 4 AND Auth::user()->konfirmasi_admin == 1)
+        @if(Auth::user()->tipe_user == 4 AND Auth::user()->konfirmasi_admin == 1 AND Auth::user()->foto_ktp != "")
         <li>
           <a href="{{ route('pembelian.index') }}">
             <i class="material-icons">add_shopping_cart</i>
@@ -265,8 +265,8 @@
 @endif
 @if(Laratrust::can('lihat_user'))
 <li>
-   <router-link :to="{name: 'indexUser'}"> <span class="sidebar-mini">U</span>
-    <span class="sidebar-normal">User</span></router-link>
+ <router-link :to="{name: 'indexUser'}"> <span class="sidebar-mini">U</span>
+  <span class="sidebar-normal">User</span></router-link>
 </li>
 
 <li>

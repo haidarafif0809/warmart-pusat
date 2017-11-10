@@ -2,7 +2,7 @@
 @section('content')
 
 <!-- LOGI USER WARUNG -->
-@if(Auth::user()->tipe_user == 4 AND Auth::user()->foto_ktp == "" AND Auth::user()->konfirmasi_admin == 0)
+@if(Auth::user()->tipe_user == 4 AND Auth::user()->foto_ktp == "")
 <div class="alert alert-info">
  <div class="alert-icon">
   <i class="material-icons">info_outline</i>
@@ -78,7 +78,7 @@
         </div>
       </div> 
 
-      {!! Form::text('id', $user->id, ['class'=>'form-control','autocomplete'=>'off']) !!}
+      {!! Form::hidden('id', $user->id, ['class'=>'form-control','autocomplete'=>'off']) !!}
       
       <div class="form-group{{ $errors->has('foto_ktp') ? ' has-error' : '' }}">
         {!! Form::label('foto_ktp', 'Foto KTP', ['class'=>'col-md-2 control-label']) !!}
