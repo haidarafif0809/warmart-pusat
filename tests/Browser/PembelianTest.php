@@ -12,10 +12,10 @@ use App\Pembelian;
 class PembelianTest extends DuskTestCase
 {
     /**
-     * A Dusk test example.
-     *
-     * @return void
-     */
+    * A Dusk test example.
+    *
+    * @return void
+    */
     public function testTambahTbsPembelianJumlahProdukKosong()
     {
         $this->browse(function ($first, $second)  {
@@ -44,7 +44,17 @@ class PembelianTest extends DuskTestCase
             ->pause(1000);
             $first->type('#jadwal_produk_swal','1')
             ->press('Submit')
-            ->assertSee('BERHASIL MENAMBAH PRODUK "KECAP ASIN ABC"');
+            ->assertSee('BERHASIL MENAMBAH PRODUK "KECAP ASIN ABC"')
+            ->pause(1000)
+
+            ->whenAvailable('.js-confirm', function ($table) { 
+              ;
+          })
+            ->with('.table', function ($table) {
+                $table->press('.btn-hapus-tbs')
+                ->assertDialogOpened('Anda Yakin Ingin Menghapus Produk "Kecap Asin Abc" ?');
+            })->driver->switchTo()->alert()->accept();
+            $first->pause(1000)->assertSee('BERHASIL MENGHAPUS PRODUK');
         }); 
     }
 
@@ -401,10 +411,8 @@ class PembelianTest extends DuskTestCase
             $first->whenAvailable('.modal', function ($modal) use($no_faktur){
                 $modal->press('HUTANG');
             }); 
-            
+
             $first->pause(1000)->assertSee('SUKSES : BERHASIL MELAKUKAN TRANSAKSI PEMBELIAN FAKTUR "'.$no_faktur.'"');
-
-
 
         }); 
 
