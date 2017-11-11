@@ -21,16 +21,16 @@ class UserWarungObserver
         else{
         	$pesan_alert = '
             <div class="container-fluid">
-                <div class="alert-icon">
-                    <i class="material-icons">error_outline</i>
-                </div>
-                <b>Gagal : User Warung Tidak Bisa Dihapus.</b>
+            <div class="alert-icon">
+            <i class="material-icons">error_outline</i>
+            </div>
+            <b>Gagal : User Warung Tidak Bisa Dihapus.</b>
             </div>';
 
             Session:: flash("flash_notification", [
                 "level"=>"danger",
                 "message"=> $pesan_alert
-                ]);
+            ]);
             return false;
         }
         
@@ -42,13 +42,13 @@ class UserWarungObserver
         $data_produk = Barang::where('id_warung', $UserWarung->id_warung)->get();
 
         if ($UserWarung->konfirmasi_admin == 1) {
-           foreach ($data_produk as $produk) {
-            $produk->update(['konfirmasi_admin' => '1']);
+         foreach ($data_produk as $produk) {
+            $produk->update(['konfirmasi_admin' => 1]);
         }
     }
     else{
         foreach ($data_produk as $produk) {
-            $produk->update(['konfirmasi_admin' => '0']);
+            $produk->update(['konfirmasi_admin' => 0]);
         }
     }
 
