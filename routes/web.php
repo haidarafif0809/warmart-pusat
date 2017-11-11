@@ -15,6 +15,12 @@
 
 Route::get('/','HomeController@index')->middleware('optimizeImages');
 Route::get('/sms','HomeController@sms');
+
+
+Route::get('/pencarian_contoh/{search}',function($search){
+	return App\Barang::search($search)->where('konfirmasi_admin', 1)->get();
+});
+
 Route::get('/resize-all-file',function(){
 	$barang =  App\Barang::where('foto','<>',null)->get();
 	foreach ($barang as $barangs) {
