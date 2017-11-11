@@ -43,7 +43,7 @@ Route::get('/resize-file',function(){
 
 	$image_resize = Image::make(public_path('foto_produk/YVV306YQr5ZRCru9IzrUbxmZ0FeRe2TVDqPMmzw5.png'));              
 	$image_resize->fit(300);
-	$image_resize->save(public_path('foto_produk/' .$barangs->foto));
+	$image_resize->save(public_path('foto_produk/YVV306YQr5ZRCru9IzrUbxmZ0FeRe2TVDqPMmzw5.png' ));
 });
 
 
