@@ -18,7 +18,7 @@ Route::get('/sms','HomeController@sms');
 
 
 Route::get('/pencarian_contoh/{search}',function($search){
-	return App\Barang::search($search)->where('konfirmasi_admin', 1)->get();
+	return App\Barang::search($search)->get();
 });
 
 Route::get('/resize-all-file',function(){
