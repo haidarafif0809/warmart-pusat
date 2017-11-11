@@ -6,9 +6,10 @@
     padding-left: 4px;
     padding-right: 4px;
 }
-.card-image{
+.card .card-image{
 
     height: auto; /*this makes sure to maintain the aspect ratio*/
+    margin-top: 5px;
 }
 </style>
 
@@ -164,14 +165,14 @@
 
 @section('scripts') 
 <script type="text/javascript"> 
-   $(document).on('click', '#btnBeliSekarang', function(){ 
-      swal({
-        title: "Produk Berhasil Di Tambah Ke Keranjang Belanjaan", 
-        showConfirmButton :  false,
-        type: "success",
-    });
-  });
-   $(document).on('click', '#btnBeli', function(){
+ $(document).on('click', '#btnBeliSekarang', function(){ 
+  swal({
+    title: "Produk Berhasil Di Tambah Ke Keranjang Belanjaan", 
+    showConfirmButton :  false,
+    type: "success",
+});
+});
+ $(document).on('click', '#btnBeli', function(){
     swal("Info!", "Silakan Login Sebagai Pelanggan Untuk Melakukan Pesanan.", "info");
 });
 </script>
