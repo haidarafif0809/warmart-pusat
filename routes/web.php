@@ -31,13 +31,13 @@ Route::get('/update_produk',function(){
 });
 
 Route::get('/resize-all-file',function(){
-	$barang =  App\Barang::where('foto','<>',null)->get();
-	foreach ($barang as $barangs) {
+	$barang =  App\Barang::where('foto','!=',null);
+	foreach ($barang->get() as $barangs) {
 		$image_resize = Image::make(public_path('foto_produk/' .$barangs->foto));              
 		$image_resize->fit(300);
 		$image_resize->save(public_path('foto_produk/' .$barangs->foto));
 	}
-	return $barang;
+	return $barang->count();
 });
 Route::get('/resize-file',function(){
 
