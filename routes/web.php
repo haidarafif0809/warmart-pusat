@@ -224,7 +224,7 @@ Route::get('/satuan/pencarian','SatuanController@pencarian')->middleware('auth')
 //menampilkan data user
 Route::get('/user/view','UserController@view')->middleware('auth');
 Route::get('/user/pencarian','UserController@pencarian')->middleware('auth');
-Route::get('/user/selectize','UserController@selectize')->middleware('auth');
+Route::get('/user/otoritas-user','UserController@otoritas_user')->middleware('auth');
 Route::get('/user/reset','UserController@reset_password')->middleware('auth');
 Route::get('/user/konfirmasi','UserController@konfirmasi')->middleware('auth');
 Route::get('/user/no-konfirmasi','UserController@no_konfirmasi')->middleware('auth');

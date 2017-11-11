@@ -49,11 +49,16 @@
                     <div class="form-group">
                         <label for="role_id" class="col-md-2 control-label ">Otoritas</label>
                         <div class="col-md-4">
-                       <select v-selectize="selected" name="role_id" id="role_id">
-                            <option v-for="otor, index in otoritas" v-bind:value="otor.id" >{{ otor.display_name }}</option>
-                       </select>
+                             <selectize-component v-model="user.role_id" :settings="settings" name="role_id" id="role_id"> 
+                            <option v-bind:value="user.role.role_id">{{ user.role_user }}</option>
+                            <option v-for="otor, index in otoritas" v-bind:value="otor.id"  >{{ otor.display_name }}</option>
+                       </selectize-component>
+                        <span v-if="errors.role_id" id="role_id_error" class="label label-danger">{{ errors.role_id[0] }}</span>
                         </div>
                     </div>
+
+                     <input class="form-control" required autocomplete="off" placeholder="Role Lama" type="hidden" v-model="user.role_lama" name="role_lama" id="role_lama"  autofocus="">
+
                     <div class="form-group">
                         <div class="col-md-4 col-md-offset-2">
                             <button class="btn btn-primary" id="btnSimpanUser" type="submit"><i class="material-icons">send</i> Submit</button>
@@ -74,6 +79,7 @@ export default {
         let app = this;
         let id = app.$route.params.id;
         app.userId = id;
+        app.selected();
 
         axios.get(app.url+'/' + id)
         .then(function (resp) {
@@ -91,8 +97,13 @@ export default {
                 no_telp : '',
                 email : '',
                 alamat : '',
-                role_id : ''
+                role_id : '',
+                role_lama : '',
             },
+            message : '',
+            settings: {
+                placeholder: 'Pilih Otoritas'
+            }, 
             url : window.location.origin+(window.location.pathname).replace("dashboard", "user"),
             errors: []
         }
@@ -103,19 +114,30 @@ export default {
             var newUser = app.user;
             axios.patch(app.url+'/' + app.userId, newUser)
             .then(function (resp) {
-                app.alert();
-                app.$router.replace('/');
+                app.message = 'Sukses : Berhasil Mengubah User';
+                app.alert(app.message);
+                app.$router.replace('/user/');
             })
             .catch(function (resp) {
                 console.log(resp);
                 app.errors = resp.response.data.errors;
-                alert("Could not create your User");
+                alert("Periksa kembali data yang anda masukan");
             });
-        }
-        ,
-        alert() {
+        },
+        selected() {
+          var app = this;
+          axios.get(app.url+'/otoritas-user')
+          .then(function (resp) {
+            app.otoritas = resp.data;
+          })
+          .catch(function (resp) {
+            alert("Could not load users");
+          });
+        },
+        alert(pesan) {
           this.$swal({
-              title: "Berhasil Mengubah User!",
+              title: "Berhasil !",
+              text: pesan,
               icon: "success",
           });
       }

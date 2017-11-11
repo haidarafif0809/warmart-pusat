@@ -89,7 +89,7 @@ export default {
                 app.bank.no_rek = ''
                 app.bank.tampil_customer = 0
                 app.errors = '';
-                app.$router.replace('/');
+                app.$router.replace('/bank/');
 
             })
             .catch(function (resp) {

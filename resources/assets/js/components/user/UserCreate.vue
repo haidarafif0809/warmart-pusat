@@ -111,7 +111,7 @@ export default {
                 app.user.alamat = ''
                 app.user.role_id = ''
                 app.errors = '';
-                app.$router.replace('/');
+                app.$router.replace('/user/');
 
             })
             .catch(function (resp) {
@@ -121,7 +121,7 @@ export default {
         },
         selected() {
           var app = this;
-          axios.get(app.url+'/selectize')
+          axios.get(app.url+'/otoritas-user')
           .then(function (resp) {
             app.otoritas = resp.data;
         })

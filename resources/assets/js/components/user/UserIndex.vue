@@ -25,7 +25,7 @@
       <div class=" table-responsive ">
        <div  align="right">
          pencarian
-         <input type="text" name="pencarian" v-model="pencarian" placeholder="Kolom Pencarian" >
+         <input type="text" name="pencarian" v-model="pencarian" autocomplete="" placeholder="Kolom Pencarian" >
        </div>
 
        <table class="table table-striped table-hover ">
@@ -88,6 +88,8 @@
 
     <div align="right"><pagination :data="usersData" v-on:pagination-change-page="getResults"></pagination></div>
 
+
+
   </div>
 
 
@@ -102,7 +104,8 @@ export default {
   data: function () {
     return {
       users: [],
-      usersData: {},
+      usersData: {
+      },
       url : window.location.origin+(window.location.pathname).replace("dashboard", "user"),
       pencarian: '',
       contoh : '',
@@ -128,7 +131,7 @@ export default {
           }
           axios.get(app.url+'/view?page='+page)
           .then(function (resp) {
-            app.users = resp.data;
+            app.users = resp.data.data;
             app.usersData = resp.data;
             app.loading = false;
           })
@@ -138,6 +141,7 @@ export default {
             alert("Could not load users");
           });
         },
+
         getHasilPencarian(page){
           var app = this;
           if (typeof page === 'undefined') {
@@ -145,7 +149,7 @@ export default {
           }
           axios.get(app.url+'/pencarian?search='+app.pencarian+'&page='+page)
           .then(function (resp) {
-            app.users = resp.data;
+            app.users = resp.data.data;
             app.usersData = resp.data;
           })
           .catch(function (resp) {

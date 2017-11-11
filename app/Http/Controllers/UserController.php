@@ -33,46 +33,74 @@ class UserController extends Controller
         return view('user.index')->with(compact('html'));
     }
 
+
+
      public function view(){
 
-        $user = User::with('role')->where('tipe_user',1)->paginate(5);
+        $user = User::with('role')->where('tipe_user',1)->paginate(10);
         $user_array = array();
         foreach ($user as $users) {
             # code...
-            $paginate = $users->paginate(5);
             $role_users = Role::where('id',$users->role->role_id)->first();
-            array_push($user_array, ['role_user'=>$role_users->display_name,'user'=>$users,'paginate'=>$paginate]);
-
+            array_push($user_array, ['role_user'=>$role_users->display_name,'user'=>$users]);
           }
+          //DATA PAGINATION 
+          $respons['current_page'] = $user->currentPage();
+          $respons['data'] = $user_array; 
+          $respons['first_page_url'] = url('/user/view?page='.$user->firstItem());
+          $respons['from'] = 1;
+          $respons['last_page'] = $user->lastPage();
+          $respons['last_page_url'] = url('/user/view?page='.$user->lastPage());
+          $respons['next_page_url'] = $user->nextPageUrl();
+          $respons['path'] = url('/user/view');
+          $respons['per_page'] = $user->perPage();
+          $respons['prev_page_url'] = $user->previousPageUrl();
+          $respons['to'] = $user->perPage();
+          $respons['total'] = $user->total();
+          //DATA PAGINATION 
 
-
-        return response()->json($user_array);
-
-      
+        return response()->json($respons);  
     }
 
-     public function selectize(){
+     public function otoritas_user(){
         $otoritas = Role::where('id','!=',3)->where('id','!=',4)->where('id','!=',5)->get();
         return response()->json($otoritas);
     }
     public function pencarian(Request $request){
-
-        $user = User::with('role')->where('tipe_user',1)
-        ->orwhere('name','LIKE',"%$request->search%")
-        ->orWhere('no_telp','LIKE',"%$request->search%")
-        ->orWhere('email','LIKE',"%$request->search%")
-        ->orWhere('alamat','LIKE',"%$request->search%")->paginate(5);
+        $search = $request->search;// REQUEST SEARCH
+        //query pencarian 
+        $user = User::with('role')
+                ->where('tipe_user',1)
+                ->where(function($query) use ($search){// search
+                $query->orwhere('name','LIKE',$search.'%')
+                        ->orWhere('no_telp','LIKE',$search.'%')
+                        ->orWhere('email','LIKE',$search.'%')
+                        ->orWhere('alamat','LIKE',$search.'%');
+               })->paginate(10);
 
          $user_array = array();
 
         foreach ($user as $users) {
             # code...
-            $paginate = $users->paginate(5);
             $role_users = Role::where('id',$users->role->role_id)->first();
-            array_push($user_array, ['role_user'=>$role_users->display_name,'user'=>$users,'paginate'=>$paginate]);
+            array_push($user_array, ['role_user'=>$role_users->display_name,'user'=>$users]);
           }
+          //DATA PAGINATION 
+          $respons['current_page'] = $user->currentPage();
+          $respons['data'] = $user_array; 
+          $respons['first_page_url'] = url('/user/view?page='.$user->firstItem());
+          $respons['from'] = 1;
+          $respons['last_page'] = $user->lastPage();
+          $respons['last_page_url'] = url('/user/view?page='.$user->lastPage());
+          $respons['next_page_url'] = $user->nextPageUrl();
+          $respons['path'] = url('/user/view');
+          $respons['per_page'] = $user->perPage();
+          $respons['prev_page_url'] = $user->previousPageUrl();
+          $respons['to'] = $user->perPage();
+          $respons['total'] = $user->total();
+          //DATA PAGINATION 
 
-        return response()->json($user_array);
+        return response()->json($respons);
     }
     /**
      * Show the form for creating a new resource.
@@ -128,6 +156,12 @@ class UserController extends Controller
     public function show($id)
     {
         //
+        $user = User::with('role')->find($id);
+        $role_users = Role::where('id',$user->role->role_id)->first();
+        $user['role_user'] = $role_users->display_name;
+        $user['role_lama'] = $user->role->role_id;
+
+        return $user;
     }
 
     /**
@@ -141,8 +175,11 @@ class UserController extends Controller
         // edoit user
         //
         $user = User::with('role')->find($id);
+        $role_users = Role::where('id',$user->role->role_id)->first();
+        $user['role_user'] = $role_users;
+        $user['role_user_lama'] = $user->role->role_id;
             // ambil otoritas yang bukan warung, customer, dan komunitas
-        return url('user#/edit_user/'.$id);
+        return url('satuan#/edit_satuan/'.$id);
     }
 
     /**
@@ -181,13 +218,6 @@ class UserController extends Controller
          $user_baru->detachRole($role_lama->id);
          // masukan role baru
          $user_baru->attachRole($role_baru->id);
-
-         Session::flash("flash_notification", [
-            "level"=>"success",
-            "message"=>"<b>BERHASIL:</b> Mengubah User <b>$request->name</b>"
-            ]);
-
-        return redirect()->route('user.index');
     }
 
     /**

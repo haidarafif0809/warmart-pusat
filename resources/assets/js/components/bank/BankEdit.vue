@@ -97,7 +97,7 @@ export default {
             axios.patch(app.url+'/' + app.bankId, newBank)
             .then(function (resp) {
                 app.alert();
-                app.$router.replace('/');
+                app.$router.replace('/bank/');
             })
             .catch(function (resp) {
                 console.log(resp);

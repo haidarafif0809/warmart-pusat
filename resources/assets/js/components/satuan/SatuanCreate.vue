@@ -61,7 +61,7 @@ export default {
                 app.alert(app.message);
                 app.satuan.nama_satuan = ''
                 app.errors = '';
-                app.$router.replace('/');
+                app.$router.replace('/satuan/');
 
             })
             .catch(function (resp) {

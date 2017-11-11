@@ -71,7 +71,7 @@ export default {
             axios.patch(app.url+'/' + app.satuanId, newSatuan)
             .then(function (resp) {
                 app.alert();
-                app.$router.replace('/');
+                app.$router.replace('/satuan/');
             })
             .catch(function (resp) {
                 console.log(resp);
