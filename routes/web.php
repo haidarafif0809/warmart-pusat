@@ -26,7 +26,6 @@ Route::get('/update_produk',function(){
 	$barang = App\Barang::all();
 	foreach ($barang as $key ) {
 		
-		App\Barang::find($key->id)->update(['konfirmasi_admin' => 1]);
 		echo App\Barang::find($key->id)->update(['konfirmasi_admin' => 1]);
 	}
 });
@@ -40,6 +39,13 @@ Route::get('/resize-all-file',function(){
 	}
 	return $barang;
 });
+Route::get('/resize-file',function($file){
+
+	$image_resize = Image::make(public_path('foto_produk/YVV306YQr5ZRCru9IzrUbxmZ0FeRe2TVDqPMmzw5.png'));              
+	$image_resize->fit(300);
+	$image_resize->save(public_path('foto_produk/' .$barangs->foto));
+});
+
 
 Route::get('/dashboard',[
 	'middleware' => ['auth','optimizeImages'],
