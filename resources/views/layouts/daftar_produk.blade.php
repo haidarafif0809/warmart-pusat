@@ -7,7 +7,7 @@
     padding-right: 4px;
 }
 .card-image{
-    width: 100%; /*set the width or max-width*/
+
     height: auto; /*this makes sure to maintain the aspect ratio*/
 }
 </style>
