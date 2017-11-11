@@ -21,6 +21,15 @@ Route::get('/pencarian_contoh/{search}',function($search){
 	return App\Barang::search($search)->where('konfirmasi_admin', 1)->get();
 });
 
+Route::get('/update_produk',function(){
+
+	$barang = App\Barang::all();
+	foreach ($barang as $key ) {
+		
+		App\Barang::find($key->id)->update(['konfirmasi_admin' => 1]);
+	}
+});
+
 Route::get('/resize-all-file',function(){
 	$barang =  App\Barang::where('foto','<>',null)->get();
 	foreach ($barang as $barangs) {
