@@ -40,6 +40,17 @@
 }
 </style>
 
+<style type="text/css">
+.list-produk {
+  padding-left: 4px;
+  padding-right: 4px;
+}
+.card .card-image{
+
+  height: auto; /*this makes sure to maintain the aspect ratio*/
+  margin-top: 5px;
+}
+</style>
 <body class="product-page"> 
   @if (Agent::isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
   <nav class="navbar navbar-default navbar-fixed-top navbar-color-on-scroll" color-on-scroll="100" id="sectionsNav">
@@ -165,8 +176,9 @@
         </div>
         <div class="col-md-6 col-sm-6"> 
           <h2 class="title"> {{ $barang->nama_barang }} </h2>
-          <h3 class="main-price">Rp. {{ number_format($barang->harga_jual,0,',','.') }}</h3>  
-          {!! substr($barang->deskripsi_produk, 0, 300) !!}...
+          <h3 class="main-price">Rp. {{ number_format($barang->harga_jual,0,',','.') }}</h3> 
+          <a style="font-size: 20px;" class="description"><i style="font-size: 30px;" class="material-icons">store</i>  {{ $barang->warung->name }}</a>
+          {!! substr($barang->deskripsi_produk, 0, 300) !!}
           <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
             <h4 class="panel-title">
               <b> Baca Selengkapnya... </b><i class="material-icons">keyboard_arrow_down</i>
@@ -214,7 +226,7 @@
     </div>
 
     <div class="related-products">
-      <h3 class="title text-center">Produk Yang Ada DI Warung:</h3>
+      <h3 class="title text-center">Produk Yang Ada DI Warung {{ $barang->warung->name }}:</h3>
 
       <div class="row"> 
         {!! $daftar_produk_warung !!}   

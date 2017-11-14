@@ -30,7 +30,7 @@ class DetailProdukController extends Controller
 			$daftar_produk .= '      
 			<div class="col-md-3 col-sm-6 col-xs-6 list-produk">
 			<div class="card cards card-pricing">
-			<a href="'.url("/keranjang-belanja") .'">
+			<a href="'. url('detail-produk/'.$produks->id.''). '">
 			<div class="card-image">';
 			if ($produks->foto != NULL) {
 				$daftar_produk .= '<img src="../foto_produk/'.$produks->foto.'">';
@@ -42,17 +42,22 @@ class DetailProdukController extends Controller
 			</div>
 			</a>
 			<div class="card-content">
-			<div class="footer">     
-			<a href="'. url('detail-produk/'.$produks->id.''). '" class="card-title">
-			'.strip_tags(substr($produks->nama, 0, 10)).'...
-			</a><br>
+			<div class="footer">  
+			<a href="'. url('detail-produk/'.$produks->id.''). '" class="card-title">';
+			if (strlen(strip_tags($produks->nama)) <= 33) {
+				$daftar_produk .= ''.strip_tags(substr($produks->nama, 0, 60)).'...<br>';
+			}
+			else{
+				$daftar_produk .= ''.strip_tags(substr($produks->nama, 0, 60)).'...';                
+			}
+			$daftar_produk .= '</a><br>             
 			<b style="color:red; font-size:18px"> '.$produks->rupiah.' </b><br>
 			<a class="description"><i class="material-icons">store</i>  '.strip_tags(substr($warung->name, 0, 10)).'... </a><br>';
 
 			if ($agent->isMobile()) {
                 //JIKA USER LOGIN BUKAN PELANGGAN MAKA TIDAK BISA PESAN PRODUK
 				if(Auth::user()->tipe_user == 3){
-					$daftar_produk .= '<a href="'. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" class="btn btn-danger btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja" id="btnBeliSekarang"><b style="font-size:18px"> Beli </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';
+					$daftar_produk .= '<a href="'.url("/keranjang-belanja") .'" class="btn btn-danger btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja" id="btnBeliSekarang"><b style="font-size:18px"> Beli </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';
 				}
 				else{
 					$daftar_produk .= '<button type="button" class="btn btn-danger btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja" id="btnBeli"><b style="font-size:18px"> Beli </b><i class="fa fa-chevron-right" aria-hidden="true"></i></button>';
@@ -74,7 +79,7 @@ class DetailProdukController extends Controller
 			</div>
 			</div>';
 		}
-		return $daftar_produk; 
+		return $daftar_produk;
 	}
 
 	public function detail_produk($id){
