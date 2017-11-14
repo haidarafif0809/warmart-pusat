@@ -86,7 +86,7 @@ class KeranjangBelanjaController extends Controller
 			$produk_belanjaan .= ' <a class="btn btn-round btn-info btn-xs"  style="background-color: #f44336">'. $keranjang_belanjaans->jumlah_produk .' </a>';
 
 
-			if ($sisa_stok_keluar == 0) {
+			if ($sisa_stok_keluar <= 0) {
 				$produk_belanjaan .= '
 				<a class="btn btn-round btn-info btn-xs"  style="background-color: #f44336" disabled="true"> <i class="material-icons">add</i> </a>'; 
 			}
@@ -146,14 +146,17 @@ class KeranjangBelanjaController extends Controller
 
 	public function tambah_produk_keranjang_belanjaan($id)
 	{
+
 		$pelanggan =  Auth::user()->id ; 
 		$datakeranjang_belanjaan = KeranjangBelanja::where('id_pelanggan',$pelanggan)->orWhere('id_produk',$id);
 		$keranjang_belanjaan = $datakeranjang_belanjaan->first();
 
 		if ($datakeranjang_belanjaan->count() > 0 AND $keranjang_belanjaan->id_pelanggan == $pelanggan AND $keranjang_belanjaan->id_produk == $id) {
+			$barang = Barang::find($id);   
 
 			$keranjang_belanjaan->jumlah_produk += 1;
 			$keranjang_belanjaan->save(); 
+			
 		}else{
 
 			$produk = KeranjangBelanja::create(); 

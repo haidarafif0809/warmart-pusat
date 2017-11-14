@@ -8,8 +8,10 @@ use App\KategoriBarang;
 use App\Warung;
 use App\Barang;
 use App\User;
+use App\Hpp;
 use App\KeranjangBelanja; 
 use Auth;
+use DB;
 
 class DaftarProdukController extends Controller
 {
@@ -95,6 +97,19 @@ class DaftarProdukController extends Controller
 
         $warung = Warung::select(['name'])->where('id', $produks->id_warung)->first();
 
+        $keranjang_belanjaan = KeranjangBelanja::with(['produk','pelanggan'])->where('id_pelanggan',Auth::user()->id)->where('id_produk',$produks->id)->count(); 
+
+        if ($keranjang_belanjaan == 0) {
+          $stok = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk),0) - IFNULL(SUM(jumlah_keluar),0) as stok_produk')])->where('id_produk', $produks->id)->where('warung_id', $produks->id_warung)->first();
+          $cek_produk = $stok->stok_produk; 
+        } else{
+
+          $cek_produk = KeranjangBelanja::where('id_pelanggan',Auth::user()->id)->where('id_produk',$produks->id)->first(); 
+          $stok = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk),0) - IFNULL(SUM(jumlah_keluar),0) as stok_produk')])->where('id_produk', $cek_produk->id_produk)->where('warung_id', $produks->id_warung)->first();
+          $cek_produk = $stok->stok_produk - $cek_produk->jumlah_produk; 
+
+        }   
+
         $daftar_produk .= '      
         <div class="col-md-3 col-sm-6 col-xs-6 list-produk">
         <div class="card cards card-pricing">
@@ -125,7 +140,11 @@ class DaftarProdukController extends Controller
       if ($agent->isMobile()) {
                 //JIKA USER LOGIN BUKAN PELANGGAN MAKA TIDAK BISA PESAN PRODUK
         if(Auth::user()->tipe_user == 3){
-          $daftar_produk .= '<a href="'.url("/keranjang-belanja") .'" class="btn btn-danger btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja" id="btnBeliSekarang"><b style="font-size:18px"> Beli </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';
+          if ($cek_produk == 0) {
+            $daftar_produk .= '<a class="btn btn-danger btn-round" rel="tooltip" title="Stok Tidak Ada"><b style="font-size:18px"> Beli </b><i class="fa fa-chevron-right" aria-hidden="true" disabled="" ></i></a>';  
+          }else{
+            $daftar_produk .= '<a href="'.url("/keranjang-belanja") .'" class="btn btn-danger btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja" id="btnBeliSekarang"><b style="font-size:18px"> Beli </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';            
+          }
         }
         else{
           $daftar_produk .= '<button type="button" class="btn btn-danger btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja" id="btnBeli"><b style="font-size:18px"> Beli </b><i class="fa fa-chevron-right" aria-hidden="true"></i></button>';
@@ -135,7 +154,11 @@ class DaftarProdukController extends Controller
       else{
                 //JIKA USER LOGIN BUKAN PELANGGAN MAKA TIDAK BISA PESAN PRODUK
         if(Auth::user()->tipe_user == 3){
-          $daftar_produk .= '<a href="'. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" id="btnBeliSekarang" class="btn btn-danger btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja"><b style="font-size:18px"> Beli Sekarang </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';
+          if ($cek_produk == 0) {
+            $daftar_produk .= '<a class="btn btn-danger btn-round" rel="tooltip" title="Stok Tidak Ada" disabled="" ><b style="font-size:18px"> Beli Sekarang </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';
+          }else{
+            $daftar_produk .= '<a href="'. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" id="btnBeliSekarang" class="btn btn-danger btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja"><b style="font-size:18px"> Beli Sekarang </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';
+          }
         }
         else{
           $daftar_produk .= '<button type="button" class="btn btn-danger btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja" id="btnBeli"><b style="font-size:18px"> Beli Sekarang</b><i class="fa fa-chevron-right" aria-hidden="true"></i></button>';
@@ -187,151 +210,186 @@ class DaftarProdukController extends Controller
       foreach ($data_produk as $produks) {
         $warung = Warung::select(['name'])->where('id', $produks->id_warung)->first();
 
+        
+        $keranjang_belanjaan = KeranjangBelanja::with(['produk','pelanggan'])->where('id_pelanggan',Auth::user()->id)->where('id_produk',$produks->id)->count(); 
+
+        if ($keranjang_belanjaan == 0) {
+          $stok = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk),0) - IFNULL(SUM(jumlah_keluar),0) as stok_produk')])->where('id_produk', $produks->id)->where('warung_id', $produks->id_warung)->first();
+          $cek_produk = $stok->stok_produk; 
+        } else{
+
+          $cek_produk = KeranjangBelanja::where('id_pelanggan',Auth::user()->id)->where('id_produk',$produks->id)->first(); 
+          $stok = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk),0) - IFNULL(SUM(jumlah_keluar),0) as stok_produk')])->where('id_produk', $cek_produk->id_produk)->where('warung_id', $produks->id_warung)->first();
+          $cek_produk = $stok->stok_produk - $cek_produk->jumlah_produk; 
+
+        }   
+
         $daftar_produk .= '      
-        <div class="col-md-3 col-sm-6 col-xs-6">
+        <div class="col-md-3 col-sm-6 col-xs-6 list-produk">
         <div class="card cards card-pricing">
         <a href="'. url('detail-produk/'.$produks->id.''). '">
         <div class="card-image">';
         if ($produks->foto != NULL) {
-         $daftar_produk .= '<img src="../foto_produk/'.$produks->foto.'">';
-       }
-       else{
-        $daftar_produk .= '<img src="../image/foto_default.png">';
-      }
-      $daftar_produk .= '
-      </div>
-      </a>
-      <div class="card-content">
-      <div class="footer">     
-      <a href="'. url('detail-produk/'.$produks->id.''). '" class="card-title">';
-      if (strlen(strip_tags($produks->nama)) <= 33) {
-        $daftar_produk .= ''.strip_tags(substr($produks->nama, 0, 60)).'...<br>';
-      }
-      else{
-        $daftar_produk .= ''.strip_tags(substr($produks->nama, 0, 60)).'...';                
-      }
-      $daftar_produk .= '</a><br>
-      <b style="color:red; font-size:18px"> '.$produks->rupiah.' </b><br>
-      <a class="description"><i class="material-icons">store</i>  '.strip_tags(substr($warung->name, 0, 10)).'... </a><br>';
+          $daftar_produk .= '<img src="../foto_produk/'.$produks->foto.'">';
+        }
+        else{
+          $daftar_produk .= '<img src="../image/foto_default.png">';
+        }
+        $daftar_produk .= '
+        </div>
+        </a>
+        <div class="card-content">
+        <div class="footer">  
+        <a href="'. url('detail-produk/'.$produks->id.''). '" class="card-title">';
+        if (strlen(strip_tags($produks->nama)) <= 33) {
+          $daftar_produk .= ''.strip_tags(substr($produks->nama, 0, 60)).'...<br>';
+        }
+        else{
+          $daftar_produk .= ''.strip_tags(substr($produks->nama, 0, 60)).'...';                
+        }
+        $daftar_produk .= '</a><br>             
+        <b style="color:red; font-size:18px"> '.$produks->rupiah.' </b><br>
+        <a class="description"><i class="material-icons">store</i>  '.strip_tags(substr($warung->name, 0, 10)).'... </a><br>';
 
-      if ($agent->isMobile()) {
-        $daftar_produk .= '<a href="'. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" id="btnBeliSekarang" class="btn btn-danger btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja"><b style="font-size:18px"> Beli </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';
-      }
-      else{
-        $daftar_produk .= '<a href="'. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" id="btnBeliSekarang" class="btn btn-danger btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja"><b style="font-size:18px"> Beli Sekarang </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';
-      }
-      $daftar_produk .= '
+        if ($agent->isMobile()) {
+                //JIKA USER LOGIN BUKAN PELANGGAN MAKA TIDAK BISA PESAN PRODUK
+          if(Auth::user()->tipe_user == 3){
+            if ($cek_produk == 0) {
+              $daftar_produk .= '<a class="btn btn-danger btn-round" rel="tooltip" title="Stok Tidak Ada"><b style="font-size:18px"> Beli </b><i class="fa fa-chevron-right" aria-hidden="true" disabled="" ></i></a>';  
+            }else{
+              $daftar_produk .= '<a href="'.url("/keranjang-belanja") .'" class="btn btn-danger btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja" id="btnBeliSekarang"><b style="font-size:18px"> Beli </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';            
+            }
+          }
+          else{
+            $daftar_produk .= '<button type="button" class="btn btn-danger btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja" id="btnBeli"><b style="font-size:18px"> Beli </b><i class="fa fa-chevron-right" aria-hidden="true"></i></button>';
+          }
+
+        }
+        else{
+                //JIKA USER LOGIN BUKAN PELANGGAN MAKA TIDAK BISA PESAN PRODUK
+          if(Auth::user()->tipe_user == 3){
+            if ($cek_produk == 0) {
+              $daftar_produk .= '<a class="btn btn-danger btn-round" rel="tooltip" title="Stok Tidak Ada" disabled="" ><b style="font-size:18px"> Beli Sekarang </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';
+            }else{
+              $daftar_produk .= '<a href="'. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" id="btnBeliSekarang" class="btn btn-danger btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja"><b style="font-size:18px"> Beli Sekarang </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';
+            }
+          }
+          else{
+            $daftar_produk .= '<button type="button" class="btn btn-danger btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja" id="btnBeli"><b style="font-size:18px"> Beli Sekarang</b><i class="fa fa-chevron-right" aria-hidden="true"></i></button>';
+          }                
+        }
+        $daftar_produk .= '
+        </div>
+        </div>
+        </div>
+        </div>';
+      } 
+    }
+    else{
+      $daftar_produk = 
+      '<div class="col-md-3">
+      <div class="card card-product card-plain no-shadow" data-colored-shadow="false">
+      <div class="card-image">
+      <img src="../image/foto_default.png">
       </div>
+      <div class="card-content">
+      <a href="#">
+      <h4 class="card-title">Tidak Ada Produk</h4>
+      </a>
       </div>
       </div>
       </div>';
-    }
+    }        
+
+    return view('layouts.daftar_produk', ['kategori_produk' => $kategori_produk, 'daftar_produk' => $daftar_produk, 'produk_pagination' => $produk_pagination, 'id' => $id, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'agent' => $agent,'cek_belanjaan'=>$cek_belanjaan,'logo_warmart'=>$logo_warmart]);
   }
-  else{
-    $daftar_produk = 
-    '<div class="col-md-3">
-    <div class="card card-product card-plain no-shadow" data-colored-shadow="false">
-    <div class="card-image">
-    <img src="../image/foto_default.png">
-    </div>
-    <div class="card-content">
-    <a href="#">
-    <h4 class="card-title">Tidak Ada Produk</h4>
-    </a>
-    </div>
-    </div>
-    </div>';
-  }        
 
-  return view('layouts.daftar_produk', ['kategori_produk' => $kategori_produk, 'daftar_produk' => $daftar_produk, 'produk_pagination' => $produk_pagination, 'id' => $id, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'agent' => $agent,'cek_belanjaan'=>$cek_belanjaan,'logo_warmart'=>$logo_warmart]);
-}
+  public function pencarian(Request $request){
 
-public function pencarian(Request $request){
-
-  $keranjang_belanjaan = KeranjangBelanja::with(['produk','pelanggan'])->where('id_pelanggan',Auth::user()->id)->get();
-  $cek_belanjaan = $keranjang_belanjaan->count(); 
+    $keranjang_belanjaan = KeranjangBelanja::with(['produk','pelanggan'])->where('id_pelanggan',Auth::user()->id)->get();
+    $cek_belanjaan = $keranjang_belanjaan->count(); 
 
 //PILIH PRODUK
-  $data_produk = Barang::search($request->search)->where('konfirmasi_admin', 1)->paginate(12);
+    $data_produk = Barang::search($request->search)->where('konfirmasi_admin', 1)->paginate(12);
 //PILIH KATEGORI
-  $kategori = KategoriBarang::select(['id','nama_kategori_barang','kategori_icon']);
+    $kategori = KategoriBarang::select(['id','nama_kategori_barang','kategori_icon']);
 //FOTO HEADER
-  $foto_latar_belakang = "background-image: url('".asset('/image/background2.jpg')."');";
+    $foto_latar_belakang = "background-image: url('".asset('/image/background2.jpg')."');";
 //FOTO WARMART
-  $logo_warmart = "".asset('/assets/img/examples/warmart_logo.png')."";
+    $logo_warmart = "".asset('/assets/img/examples/warmart_logo.png')."";
 //PAGINATION DAFTAR PRODUK
-  $produk_pagination = $data_produk->links();
+    $produk_pagination = $data_produk->links();
 //MENAMPILKAN KATEGORI
-  $kategori_produk = $this->produkKategori($kategori);
-  $data_kategori = $kategori->first();
-  $nama_kategori = 'Hasil Pencarian : "'.$request->search.'"';
+    $kategori_produk = $this->produkKategori($kategori);
+    $data_kategori = $kategori->first();
+    $nama_kategori = 'Hasil Pencarian : "'.$request->search.'"';
 
 //TAMPILAN VIA HP
-  $agent = new Agent();
+    $agent = new Agent();
 
-  if ($data_produk->count() > 0) {
+    if ($data_produk->count() > 0) {
 
-    $daftar_produk = "";
-    foreach ($data_produk as $produks) {
-      $warung = Warung::select(['name'])->where('id', $produks->id_warung)->first();
+      $daftar_produk = "";
+      foreach ($data_produk as $produks) {
+        $warung = Warung::select(['name'])->where('id', $produks->id_warung)->first();
 
-      $daftar_produk .= '      
-      <div class="col-md-3 col-sm-6 col-xs-6">
-      <div class="card cards card-pricing">
-      <a href="'.url("/keranjang-belanja") .'">
-      <div class="card-image">';
-      if ($produks->foto != NULL) {
-        $daftar_produk .= '<img src="'.asset('foto_produk/'.$produks->foto.'').'">';
+        $daftar_produk .= '      
+        <div class="col-md-3 col-sm-6 col-xs-6">
+        <div class="card cards card-pricing">
+        <a href="'.url("/keranjang-belanja") .'">
+        <div class="card-image">';
+        if ($produks->foto != NULL) {
+          $daftar_produk .= '<img src="'.asset('foto_produk/'.$produks->foto.'').'">';
+        }
+        else{
+          $daftar_produk .= '<img src="'.asset('image/foto_default.png').'">';
+        }
+        $daftar_produk .= '
+        </div>
+        </a>
+        <div class="card-content">
+        <div class="footer">     
+        <a href="'.url("/keranjang-belanja") .'" class="card-title">';
+        if (strlen(strip_tags($produks->nama)) <= 33) {
+          $daftar_produk .= ''.strip_tags(substr($produks->nama, 0, 60)).'...<br>';
+        }
+        else{
+          $daftar_produk .= ''.strip_tags(substr($produks->nama, 0, 60)).'...';                
+        }
+        $daftar_produk .= '</a><br>
+        <b style="color:red; font-size:18px"> '.$produks->rupiah.' </b><br>
+        <a class="description"><i class="material-icons">store</i>  '.strip_tags(substr($warung->name, 0, 10)).'... </a><br>';
+
+        if ($agent->isMobile()) {
+          $daftar_produk .= '<a href="'. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" id="btnBeliSekarang" class="btn btn-danger btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja"><b style="font-size:18px"> Beli </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';
+        }
+        else{
+          $daftar_produk .= '<a href="'. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" id="btnBeliSekarang" class="btn btn-danger btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja"><b style="font-size:18px"> Beli Sekarang </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';
+        }
+        $daftar_produk .= '
+        </div>
+        </div>
+        </div>
+        </div>';
       }
-      else{
-        $daftar_produk .= '<img src="'.asset('image/foto_default.png').'">';
-      }
-      $daftar_produk .= '
+    }
+    else{
+      $daftar_produk = 
+      '<div class="col-md-3">
+      <div class="card card-product card-plain no-shadow" data-colored-shadow="false">
+      <div class="card-image">
+      <img src="'.asset('image/foto_default.png').'">
       </div>
-      </a>
       <div class="card-content">
-      <div class="footer">     
-      <a href="'.url("/keranjang-belanja") .'" class="card-title">';
-      if (strlen(strip_tags($produks->nama)) <= 33) {
-        $daftar_produk .= ''.strip_tags(substr($produks->nama, 0, 60)).'...<br>';
-      }
-      else{
-        $daftar_produk .= ''.strip_tags(substr($produks->nama, 0, 60)).'...';                
-      }
-      $daftar_produk .= '</a><br>
-      <b style="color:red; font-size:18px"> '.$produks->rupiah.' </b><br>
-      <a class="description"><i class="material-icons">store</i>  '.strip_tags(substr($warung->name, 0, 10)).'... </a><br>';
-
-      if ($agent->isMobile()) {
-        $daftar_produk .= '<a href="'. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" id="btnBeliSekarang" class="btn btn-danger btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja"><b style="font-size:18px"> Beli </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';
-      }
-      else{
-        $daftar_produk .= '<a href="'. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" id="btnBeliSekarang" class="btn btn-danger btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja"><b style="font-size:18px"> Beli Sekarang </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';
-      }
-      $daftar_produk .= '
-      </div>
+      <a href="#">
+      <h4 >Tidak Ada Produk</h4>
+      </a>
       </div>
       </div>
       </div>';
-    }
-  }
-  else{
-    $daftar_produk = 
-    '<div class="col-md-3">
-    <div class="card card-product card-plain no-shadow" data-colored-shadow="false">
-    <div class="card-image">
-    <img src="'.asset('image/foto_default.png').'">
-    </div>
-    <div class="card-content">
-    <a href="#">
-    <h4 >Tidak Ada Produk</h4>
-    </a>
-    </div>
-    </div>
-    </div>';
-  }        
+    }        
 
-  return view('layouts.daftar_produk', ['kategori_produk' => $kategori_produk, 'daftar_produk' => $daftar_produk, 'produk_pagination' => $produk_pagination, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'agent' => $agent,'cek_belanjaan'=>$cek_belanjaan,'logo_warmart'=>$logo_warmart]);
-}
+    return view('layouts.daftar_produk', ['kategori_produk' => $kategori_produk, 'daftar_produk' => $daftar_produk, 'produk_pagination' => $produk_pagination, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'agent' => $agent,'cek_belanjaan'=>$cek_belanjaan,'logo_warmart'=>$logo_warmart]);
+  }
 
 }
