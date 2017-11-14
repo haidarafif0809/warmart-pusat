@@ -25,20 +25,28 @@ Route::get('/update_produk',function(){
 
 	$barang = App\Barang::all();
 	foreach ($barang as $key ) {
-		
-		App\Barang::find($key->id)->update(['konfirmasi_admin' => 1]);
+		$barang = App\Barang::find($key->id);
+		$barang->konfirmasi_admin = 1;
+		$barang->save();
 	}
 });
 
 Route::get('/resize-all-file',function(){
-	$barang =  App\Barang::where('foto','<>',null)->get();
-	foreach ($barang as $barangs) {
+	$barang =  App\Barang::where('foto','!=',null);
+	foreach ($barang->get() as $barangs) {
 		$image_resize = Image::make(public_path('foto_produk/' .$barangs->foto));              
 		$image_resize->fit(300);
 		$image_resize->save(public_path('foto_produk/' .$barangs->foto));
 	}
-	return $barang;
+	return $barang->count();
 });
+Route::get('/resize-file',function(){
+
+	$image_resize = Image::make(public_path('foto_produk/YVV306YQr5ZRCru9IzrUbxmZ0FeRe2TVDqPMmzw5.png'));              
+	$image_resize->fit(300);
+	$image_resize->save(public_path('foto_produk/YVV306YQr5ZRCru9IzrUbxmZ0FeRe2TVDqPMmzw5.png' ));
+});
+
 
 Route::get('/dashboard',[
 	'middleware' => ['auth','optimizeImages'],

@@ -10,8 +10,6 @@
     <meta name="viewport" content="width=device-width" />
     <!-- Bootstrap core CSS     -->
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" />
-    <!--  Material Dashboard CSS    -->
-    <link href="{{ asset('css/material-dashboard.css?v=1.2.0') }}" rel="stylesheet" />
 
     <link href="{{ asset('css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
     <!--     Fonts and icons     -->
@@ -53,7 +51,7 @@
                         <a href="{{ url('/home') }}"><img  class="img img-raised" src="{!! $logo_warmart !!}" style="width: 50%"/></a>
                     </div>
                     <div class="col-md-7 col-sm-7 col-xs-7">
-                     <li class="dropdown">
+                       <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <i class="material-icons">person</i> {{ Auth::user()->name }} 
                             <b class="caret"></b>
@@ -95,9 +93,9 @@
 </nav>
 @else
 <nav class="navbar navbar-default navbar-transparent navbar-fixed-top navbar-color-on-scroll" color-on-scroll="100" id="sectionsNav">
-   <div class="container">
-       <a href="{{ url('/home') }}"><img  class="img img-raised" src="{!! $logo_warmart !!}" style="width: 10%"/></a>
-       <ul class="nav navbar-nav navbar-right">
+ <div class="container">
+     <a href="{{ url('/home') }}"><img  class="img img-raised" src="{!! $logo_warmart !!}" style="width: 10%"/></a>
+     <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 <i class="material-icons">person</i> {{ Auth::user()->name }}
@@ -184,20 +182,20 @@
         <ul class="pull-left">
             <li>
                 <a href="#pablo">
-                 Blog
-             </a>
-         </li>
-         <li>
+                   Blog
+               </a>
+           </li>
+           <li>
             <a href="#pablo">
                 Presentation
             </a>
         </li>
         <li>
             <a href="#pablo">
-             Discover
-         </a>
-     </li>
-     <li>
+               Discover
+           </a>
+       </li>
+       <li>
         <a href="#pablo">
             Payment
         </a>
