@@ -47,6 +47,9 @@
  import CustomerCreate from './components/customer/CustomerCreate.vue';
  import CustomerEdit from './components/customer/CustomerEdit.vue';
  import CustomerDetail from './components/customer/CustomerDetail.vue';
+ 
+ /**Error Log*/
+ import ErrorIndex from './components/error/ErrorIndex.vue';
 
  const routes = [ 
  {
@@ -62,6 +65,8 @@
  {path: '/user', component: UserIndex, name: 'indexUser'},
   /*CUSTOMER*/
  {path: '/customer', component: CustomerIndex, name: 'indexCustomer'},
+  /*ERROR LOG*/
+ {path: '/error', component: ErrorIndex, name: 'indexError'},
 
 
  {path: '/edit-bank/:id', component: BankEdit, name: 'editBank'},

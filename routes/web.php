@@ -257,6 +257,9 @@ Route::get('/user/reset','UserController@reset_password')->middleware('auth');
 Route::get('/user/konfirmasi','UserController@konfirmasi')->middleware('auth');
 Route::get('/user/no-konfirmasi','UserController@no_konfirmasi')->middleware('auth');
 
+//MENAMPILKAN DARA ERROR LOG
+Route::get('/error/view','ErrorController@view')->middleware('auth');
+Route::get('/error/pencarian','ErrorController@pencarian')->middleware('auth');
 
 Route::middleware('optimizeImages','auth')->group(function () {
 	

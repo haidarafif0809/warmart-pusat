@@ -293,10 +293,10 @@
 </div>
 </li>
 <li class="">
-  <a href="{{ route('error.index')}}">
-   <i class="material-icons">error</i>
-   <p>Error Log</p>
- </a>
+  <router-link :to="{name: 'indexError'}">
+    <i class="material-icons">error</i>
+    <p>Error Log</p>
+  </router-link>
 </li>
 @endif
 <!--end master data warmart pusat-->

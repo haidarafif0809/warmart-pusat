@@ -129,41 +129,6 @@ export default {
             console.log(resp);
             alert("Tidak Bisa Memuat Customer");
           });
-        },
-        alert(pesan) {
-          this.$swal({
-            title: "Berhasil Menghapus Customer!",
-            text: pesan,
-            icon: "success",
-          });
-        },
-        deleteEntry(id, index,name) {
-          swal({
-            title: "Konfirmasi Hapus",
-            text : "Anda Yakin Ingin Menghapus Customer "+name+" ?",
-            icon : "warning",
-            buttons: true,
-            dangerMode: true,
-          })
-          .then((willDelete) => {
-            if (willDelete) {
-              var app = this;
-              axios.delete(app.url+'/' + id)
-              .then(function (resp) {
-                app.$router.replace('/customer');
-                app.getResults();
-                swal("Customer Berhasil Dihapus!  ", {
-                  icon: "success",
-                });
-              })
-              .catch(function (resp) {
-                swal("Gagal Menghapus Customer!  ", {
-                  icon: "warning",
-                });
-              });
-
-            } 
-          });
         }
       }
     }
