@@ -3,8 +3,8 @@
 <head>
     <title>War-Mart.id</title>
     <meta charset="utf-8" />
-    <link rel="apple-touch-icon" sizes="76x76" href="img/favicon.png" />
-    <link rel="icon" type="image/png" href="img/favicon.png" />
+    <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('img/favicon.png') }}" />
+    <link rel="icon" type="image/png" href="{{ asset('img/favicon.png') }}" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
@@ -51,7 +51,7 @@
                         <a href="{{ url('/home') }}"><img  class="img img-raised" src="{!! $logo_warmart !!}" style="width: 50%"/></a>
                     </div>
                     <div class="col-md-7 col-sm-7 col-xs-7">
-                       <li class="dropdown">
+                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <i class="material-icons">person</i> {{ Auth::user()->name }} 
                             <b class="caret"></b>
@@ -93,9 +93,9 @@
 </nav>
 @else
 <nav class="navbar navbar-default navbar-transparent navbar-fixed-top navbar-color-on-scroll" color-on-scroll="100" id="sectionsNav">
- <div class="container">
-     <a href="{{ url('/home') }}"><img  class="img img-raised" src="{!! $logo_warmart !!}" style="width: 10%"/></a>
-     <ul class="nav navbar-nav navbar-right">
+   <div class="container">
+       <a href="{{ url('/home') }}"><img  class="img img-raised" src="{!! $logo_warmart !!}" style="width: 10%"/></a>
+       <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 <i class="material-icons">person</i> {{ Auth::user()->name }}
@@ -141,77 +141,69 @@
 @yield('content')
 
 
-
 <footer class="footer footer-black footer-big">
-    <div class="container">
-
-        <div class="content">
-            <div class="row">
-                <div class="col-md-4">
-                    <h5>Tentang Kami</h5>
-                    <p>Warmart adalah marketplace warung muslim pertama di Indonesia. Kami menghubungkan usaha-usaha muslim dengan pelanggan seluruh Umat Islam di Indonesia. Jenis usaha yang dapat bergabung dengan Warmart diantaranya: Warung, Toko, Minimarket, Pedagang Kaki Lima, Bengkel, Rumah Makan, Klinik, Home Industri, Peternakan, Pertanian, Perikanan, Kerajinan, Fashion dan usaha lainya.</p>
-                </div>
-
-                <div class="col-md-4">
-                    <h5>Contact Us</h5>
-                    <div class="social-feed">
-                        <div class="feed-line">
-                            <i class="fa fa-phone-square"></i>
-                            <p>+62-721-8050-299 <br>
-                                Bandar Lampung, Indonesia
-                            solusibisnis@andaglos.id</p>
-                        </div>
-                        <div class="feed-line">                            
-                            <a href="https://id-id.facebook.com/andaglos/" target="blank"><i class="fa fa-facebook-square"></i> Andaglos</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <h5>Instagram</h5>
-                    <div class="gallery-feed">
-                    </div>
-
-                </div>
-            </div>
+  <div class="container">
+    <div class="content">
+      <div class="row">
+        <div class="col-md-4">
+          <h5>Tentang Kami</h5>
+          <p>Warmart adalah marketplace warung muslim pertama di Indonesia. Kami menghubungkan usaha-usaha muslim dengan pelanggan seluruh Umat Islam di Indonesia. Jenis usaha yang dapat bergabung dengan Warmart diantaranya: Warung, Toko, Minimarket, Pedagang Kaki Lima, Bengkel, Rumah Makan, Klinik, Home Industri, Peternakan, Pertanian, Perikanan, Kerajinan, Fashion dan usaha lainya.</p>
+      </div>
+      <div class="col-md-4">
+          <h5>Contact Us</h5>
+          <div class="social-feed">
+            <div class="feed-line">
+              <i class="fa fa-phone-square"></i>
+              <p>+62-721-8050-299 <br>
+                Bandar Lampung, Indonesia
+            solusibisnis@andaglos.id</p>
         </div>
-
-
-        <hr />
-
-        <ul class="pull-left">
-            <li>
-                <a href="#pablo">
-                   Blog
-               </a>
-           </li>
-           <li>
-            <a href="#pablo">
-                Presentation
-            </a>
-        </li>
-        <li>
-            <a href="#pablo">
-               Discover
-           </a>
-       </li>
-       <li>
-        <a href="#pablo">
-            Payment
-        </a>
-    </li>
-    <li>
-        <a href="#pablo">
-            Contact Us
-        </a>
-    </li>
+        <div class="feed-line">                            
+          <a href="https://id-id.facebook.com/andaglos/" target="blank"><i class="fa fa-facebook-square"></i> Andaglos</a>
+      </div>
+  </div>
+</div>
+<div class="col-md-4">
+  <h5>Instagram</h5>
+  <div class="gallery-feed">
+  </div>
+</div>
+</div>
+</div>
+<hr />
+<ul class="pull-left">
+  <li>
+    <a href="#pablo">
+       Blog
+   </a>
+</li>
+<li>
+  <a href="#pablo">
+    Presentation
+</a>
+</li>
+<li>
+  <a href="#pablo">
+     Discover
+ </a>
+</li>
+<li>
+    <a href="#pablo">
+      Payment
+  </a>
+</li>
+<li>
+    <a href="#pablo">
+      Contact Us
+  </a>
+</li>
 </ul>
-
 <div class="copyright pull-right">
-    Copyright &copy; <script>document.write(new Date().getFullYear())</script> <a href="https://andaglos.id/"> PT. Andaglos Global Teknologi.</a>
+  Copyright &copy; <script>document.write(new Date().getFullYear())</script> <a href="https://andaglos.id/"> PT. Andaglos Global Teknologi.</a>
 </div>
 </div>
 </footer>
+
 <!--Start of Tawk.to Script-->
 <script type="text/javascript">
   var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
@@ -226,7 +218,6 @@
 </script>
 <!--End of Tawk.to Script-->
 </body>
-
 <!--   Core JS Files   -->
 <script src="{{ asset('js/jquery-3.2.1.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript"></script>
@@ -268,10 +259,21 @@
 <script src="{{ asset('js/fullcalendar.min.js') }}"></script>
 <!-- Plugin for Tags, full documentation here: https://github.com/bootstrap-tagsinput/bootstrap-tagsinputs  -->
 <script src="{{ asset('js/jquery.tagsinput.js') }}"></script>
-
 <script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
 <script src="{{ asset('js/demo.js') }}"></script>
 <script src="{{ asset('js/material-kit.js?v=1.2.0')}}" type="text/javascript"></script>
 
-@yield('scripts')
+<script type="text/javascript"> 
+ 
+   $(document).on('click', '#btnBeliSekarang', function(){      
+      swal({
+        title: "Produk Berhasil Di Tambah Ke Keranjang Belanjaan", 
+        showConfirmButton :  false,
+        type: "success",
+    });
+  });
+   $(document).on('click', '#btnBeli', function(){
+    swal("Info!", "Silakan Login Sebagai Pelanggan Untuk Melakukan Pesanan.", "info");
+});
+</script>
 </html>

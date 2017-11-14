@@ -46,7 +46,6 @@
   padding-right: 4px;
 }
 .card .card-image{
-
   height: auto; /*this makes sure to maintain the aspect ratio*/
   margin-top: 5px;
 }
@@ -160,11 +159,8 @@
     </div>
   </div>
 </div>
-
-
 <div class="section section-gray">
   <div class="container"> 
-
     <div class="main main-raised main-product">
       <div class="row">
         <div class="col-md-6 col-sm-6">
@@ -187,14 +183,22 @@
         </div>
         @if (Agent::isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
         <div class="row text-center">
-          <a href="{{ url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$barang->id.'') }}" id="btnBeliSekarang" class="btn btn-rose btn-round">Beli Sekarabg &nbsp;<i class="material-icons">shopping_cart</i></a>
+          @if ($cek_produk == 0)
+          <a  rel="tooltip" title="Stok Tidak Ada" disabled="" class="btn btn-rose btn-round">Beli Sekarang &nbsp;<i class="material-icons">shopping_cart</i></a> 
+          @else
+          <a  rel="tooltip" title="Tambah Ke Keranjang Belanja" href="{{ url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$barang->id.'') }}" id="btnBeliSekarang" class="btn btn-rose btn-round">Beli Sekarang &nbsp;<i class="material-icons">shopping_cart</i></a> 
+          @endif
         </div>
         @else 
+
         <div class="row text-right">
-          <a href="{{ url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$barang->id.'') }}" id="btnBeliSekarang" class="btn btn-rose btn-round">Beli Sekarabg &nbsp;<i class="material-icons">shopping_cart</i></a> 
+          @if ($cek_produk == 0)
+          <a  rel="tooltip" title="Stok Tidak Ada" disabled="" class="btn btn-rose btn-round">Beli Sekarang &nbsp;<i class="material-icons">shopping_cart</i></a> 
+          @else
+          <a  rel="tooltip" title="Tambah Ke Keranjang Belanja" href="{{ url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$barang->id.'') }}" id="btnBeliSekarang" class="btn btn-rose btn-round">Beli Sekarang &nbsp;<i class="material-icons">shopping_cart</i></a> 
+          @endif
         </div>         
         @endif
-
         <div class="col-sm-12 col-md-12">                     
           <div id="acordeon">
             <div class="panel-group" id="accordion">
@@ -208,43 +212,33 @@
                 </div>
               </div>
             </div>
-
           </div>
         </div><!--  end acordeon -->
-
       </div>
     </div>  
-
-
-
     <div class="related-products">
       <h3 class="title text-center">Produk Yang Sama:</h3>
-
       <div class="row">
         {!! $daftar_produk_sama !!}  
       </div>
     </div>
-
     <div class="related-products">
       <h3 class="title text-center">Produk Yang Ada DI Warung {{ $barang->warung->name }}:</h3>
-
       <div class="row"> 
         {!! $daftar_produk_warung !!}   
       </div>
     </div>
   </div>
 </div>
-
+</div>
 <footer class="footer footer-black footer-big">
   <div class="container">
-
     <div class="content">
       <div class="row">
         <div class="col-md-4">
           <h5>Tentang Kami</h5>
           <p>Warmart adalah marketplace warung muslim pertama di Indonesia. Kami menghubungkan usaha-usaha muslim dengan pelanggan seluruh Umat Islam di Indonesia. Jenis usaha yang dapat bergabung dengan Warmart diantaranya: Warung, Toko, Minimarket, Pedagang Kaki Lima, Bengkel, Rumah Makan, Klinik, Home Industri, Peternakan, Pertanian, Perikanan, Kerajinan, Fashion dan usaha lainya.</p>
         </div>
-
         <div class="col-md-4">
           <h5>Contact Us</h5>
           <div class="social-feed">
@@ -259,19 +253,14 @@
             </div>
           </div>
         </div>
-
         <div class="col-md-4">
           <h5>Instagram</h5>
           <div class="gallery-feed">
           </div>
-
         </div>
       </div>
     </div>
-
-
     <hr />
-
     <ul class="pull-left">
       <li>
         <a href="#pablo">
@@ -299,15 +288,26 @@
     </a>
   </li>
 </ul>
-
 <div class="copyright pull-right">
   Copyright &copy; <script>document.write(new Date().getFullYear())</script> <a href="https://andaglos.id/"> PT. Andaglos Global Teknologi.</a>
 </div>
 </div>
 </footer>
 
+<!--Start of Tawk.to Script-->
+<script type="text/javascript">
+  var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+  (function(){
+    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+    s1.async=true;
+    s1.src='https://embed.tawk.to/5a051374bb0c3f433d4c84cd/default';
+    s1.charset='UTF-8';
+    s1.setAttribute('crossorigin','*');
+    s0.parentNode.insertBefore(s1,s0);
+  })();
+</script>
+<!--End of Tawk.to Script-->
 </body>
-
 <!--   Core JS Files   -->
 <script src="{{ asset('js/jquery-3.2.1.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript"></script>
@@ -349,11 +349,9 @@
 <script src="{{ asset('js/fullcalendar.min.js') }}"></script>
 <!-- Plugin for Tags, full documentation here: https://github.com/bootstrap-tagsinput/bootstrap-tagsinputs  -->
 <script src="{{ asset('js/jquery.tagsinput.js') }}"></script>
-
 <script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
 <script src="{{ asset('js/demo.js') }}"></script>
 <script src="{{ asset('js/material-kit.js?v=1.2.0')}}" type="text/javascript"></script>
-
 <script type="text/javascript"> 
  $(document).on('click', '#btnBeliSekarang', function(){      
   swal({
@@ -363,5 +361,4 @@
   });
 });
 </script>
-
 </html>

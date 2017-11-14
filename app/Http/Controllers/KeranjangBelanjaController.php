@@ -86,7 +86,7 @@ class KeranjangBelanjaController extends Controller
 			$produk_belanjaan .= ' <a class="btn btn-round btn-info btn-xs"  style="background-color: #f44336">'. $keranjang_belanjaans->jumlah_produk .' </a>';
 
 
-			if ($sisa_stok_keluar == 0) {
+			if ($sisa_stok_keluar <= 0) {
 				$produk_belanjaan .= '
 				<a class="btn btn-round btn-info btn-xs"  style="background-color: #f44336" disabled="true"> <i class="material-icons">add</i> </a>'; 
 			}
@@ -146,14 +146,29 @@ class KeranjangBelanjaController extends Controller
 
 	public function tambah_produk_keranjang_belanjaan($id)
 	{
+
 		$pelanggan =  Auth::user()->id ; 
 		$datakeranjang_belanjaan = KeranjangBelanja::where('id_pelanggan',$pelanggan)->orWhere('id_produk',$id);
 		$keranjang_belanjaan = $datakeranjang_belanjaan->first();
 
-		if ($datakeranjang_belanjaan->count() > 0 AND $keranjang_belanjaan->id_pelanggan == $pelanggan AND $keranjang_belanjaan->id_produk == $id) {
+		$barang = Barang::find($id);   
+		if ($datakeranjang_belanjaan->count() == 0) {
+			$stok = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk),0) - IFNULL(SUM(jumlah_keluar),0) as stok_produk')])->where('id_produk', $id)->where('warung_id', $barang->id_warung)->first();
+			$sisa_stok_keluar = $stok->stok_produk; 
+		} else{
+			
+			$cek_produk = KeranjangBelanja::where('id_pelanggan',Auth::user()->id)->where('id_produk',$id)->first(); 
+			$stok = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk),0) - IFNULL(SUM(jumlah_keluar),0) as stok_produk')])->where('id_produk', $cek_produk->id_produk)->where('warung_id', $barang->id_warung)->first();
+			$sisa_stok_keluar = $stok->stok_produk - $cek_produk->jumlah_produk; 
 
-			$keranjang_belanjaan->jumlah_produk += 1;
-			$keranjang_belanjaan->save(); 
+		}   
+		if ($datakeranjang_belanjaan->count() > 0 AND $keranjang_belanjaan->id_pelanggan == $pelanggan AND $keranjang_belanjaan->id_produk == $id) {
+			if ($sisa_stok_keluar <= 0) {
+				# code...
+			}else{
+				$keranjang_belanjaan->jumlah_produk += 1;
+				$keranjang_belanjaan->save(); 
+			}
 		}else{
 
 			$produk = KeranjangBelanja::create(); 
