@@ -151,24 +151,12 @@ class KeranjangBelanjaController extends Controller
 		$datakeranjang_belanjaan = KeranjangBelanja::where('id_pelanggan',$pelanggan)->orWhere('id_produk',$id);
 		$keranjang_belanjaan = $datakeranjang_belanjaan->first();
 
-		$barang = Barang::find($id);   
-		if ($datakeranjang_belanjaan->count() == 0) {
-			$stok = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk),0) - IFNULL(SUM(jumlah_keluar),0) as stok_produk')])->where('id_produk', $id)->where('warung_id', $barang->id_warung)->first();
-			$sisa_stok_keluar = $stok->stok_produk; 
-		} else{
-			
-			$cek_produk = KeranjangBelanja::where('id_pelanggan',Auth::user()->id)->where('id_produk',$id)->first(); 
-			$stok = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk),0) - IFNULL(SUM(jumlah_keluar),0) as stok_produk')])->where('id_produk', $cek_produk->id_produk)->where('warung_id', $barang->id_warung)->first();
-			$sisa_stok_keluar = $stok->stok_produk - $cek_produk->jumlah_produk; 
-
-		}   
 		if ($datakeranjang_belanjaan->count() > 0 AND $keranjang_belanjaan->id_pelanggan == $pelanggan AND $keranjang_belanjaan->id_produk == $id) {
-			if ($sisa_stok_keluar <= 0) {
-				# code...
-			}else{
-				$keranjang_belanjaan->jumlah_produk += 1;
-				$keranjang_belanjaan->save(); 
-			}
+			$barang = Barang::find($id);   
+
+			$keranjang_belanjaan->jumlah_produk += 1;
+			$keranjang_belanjaan->save(); 
+			
 		}else{
 
 			$produk = KeranjangBelanja::create(); 
