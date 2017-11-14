@@ -51,7 +51,7 @@ class Customer extends Model
   }
 
   public function getKomunitasAttribute() {
-    
+
     $komunitas = KomunitasCustomer::where('user_id',$this->id); 
 
     if ($komunitas->count() == 0) {
@@ -62,7 +62,7 @@ class Customer extends Model
     }
   }
 
-  public function komunitas(){
-    return $this->belongsTo('App\KomunitasCustomer','user_id','id');
+  public function komunitas_customer(){
+    return $this->hasOne('App\KomunitasCustomer','user_id','id');
   }
 }
