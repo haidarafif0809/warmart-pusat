@@ -11,6 +11,7 @@ use Laratrust;
 use App\Customer;
 use App\User;
 use App\Role;
+use App\Komunitas;
 use App\KomunitasCustomer;
 
 class CustomerController extends Controller
@@ -22,56 +23,24 @@ class CustomerController extends Controller
      */
     public function index(Request $request, Builder $htmlBuilder)
     {
-        if ($request->ajax()) {
-            $master_customer = Customer::with(['kelurahan'])->where('tipe_user',3)->get();
-            return Datatables::of($master_customer)->addColumn('action', function($customer){
-                    return view('datatable._action', [
-                        'model'     => $customer,
-                        'form_url'  => route('customer.destroy', $customer->id),
-                        'edit_url'  => route('customer.edit', $customer->id),
-                        'confirm_message'   => 'Anda Yakin Ingin Menghapus ' .$customer->name . ' ?',
-                        'permission_ubah' => Laratrust::can('edit_customer'),
-                        'permission_hapus' => Laratrust::can('hapus_customer'),
+      return view('customer.index')->with(compact('html'));
+    }
 
-                        ]);
-                })
-                ->addColumn('komunitas', function($customer){
-                  
-                    
-                    return $customer->komunitas;
-                })
-                ->addColumn('tgl_lahir', function($tgl_lahir){
-                    if ($tgl_lahir->tgl_lahir == "") {
-                        $tgl_lahir = "-";
-                    }
-                    else{
-                        $tgl_lahir = $tgl_lahir->tgl_lahir;
-                    }
-                    
-                    return $tgl_lahir;
-                })
-                ->addColumn('no_telp', function($no_telp){
-                    if ($no_telp->no_telp == "") {
-                        $no_telp = "-";
-                    }
-                    else{
-                        $no_telp = $no_telp->no_telp;
-                    }
-                    
-                    return $no_telp;
-                })->make(true);
-        }
-        $html = $htmlBuilder
-        ->addColumn(['data' => 'no_telp', 'name' => 'no_telp', 'title' => 'No. Telpon']) 
-        ->addColumn(['data' => 'name', 'name' => 'name', 'title' => 'Nama']) 
-        ->addColumn(['data' => 'email', 'name' => 'email', 'title' => 'Email']) 
-        ->addColumn(['data' => 'tgl_lahir', 'name' => 'tgl_lahir', 'title' => 'Tanggal Lahir'])
-        ->addColumn(['data' => 'alamat', 'name' => 'alamat', 'title' => 'Alamat'])  
-        ->addColumn(['data' => 'komunitas', 'name' => 'komunitas', 'title' => 'Komunitas'])
-        ->addColumn(['data' => 'action', 'name' => 'action', 'title' => '', 'orderable' => false, 'searchable'=>false]);
+    public function view(){
+      $customer = Customer::where('tipe_user', 3)->paginate(10);
+      return response()->json($customer);
+    }
 
-        return view('customer.index')->with(compact('html'));
-
+    public function pencarian(Request $request){
+      $customer = Customer::where('tipe_user', 3)->where(function($query) use ($request){
+        $query->orwhere('name','LIKE',"%$request->search%")
+        ->orWhere('alamat','LIKE',"%$request->search%")
+        ->orWhere('wilayah','LIKE',"%$request->search%")
+        ->orWhere('no_telp','LIKE',"%$request->search%")
+        ->orWhere('tgl_lahir','LIKE',"%$request->search%");
+      })
+      ->paginate(10);
+      return response()->json($customer);
     }
 
     /**
@@ -81,7 +50,15 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        return view('customer.create');
+      // PILIH KOMUNITAS (FORM INPUT)
+      $komunitas = Komunitas::where('tipe_user', 2)->where('konfirmasi_admin', 1)->pluck('name','id');
+      return view('customer.create',['komunitas' => $komunitas]);
+    }
+
+    //PROSES PILIH KOMUNITAS
+    public function pilih_komunitas(){
+      $komunitas = Komunitas::where('tipe_user', 2)->get();
+      return response()->json($komunitas);
     }
 
     /**
@@ -96,46 +73,35 @@ class CustomerController extends Controller
 
     public function store(Request $request)
     {
- 
-        $this->validate($request, [
-            'name'      => 'required',
-            'email'     => 'nullable|unique:users,email', 
-            'alamat'    => 'required',
-            'no_telp'   => 'without_spaces|unique:users,no_telp|numeric',
-            'tgl_lahir' => 'date', 
-            'komunitas' => '', 
+
+      $this->validate($request, [
+        'name'      => 'required',
+        'email'     => 'nullable|unique:users,email', 
+        'alamat'    => 'required',
+        'no_telp'   => 'without_spaces|unique:users,no_telp|numeric',
+        'tgl_lahir' => 'date', 
+        'komunitas' => '', 
         ]);
- 
+
       //INSERT CUSTOMER
-        $customer_baru = Customer::create([ 
-            'name'              => $request->name,
-            'email'             => $request->email, 
-            'alamat'            => $request->alamat,
-            'no_telp'           => $request->no_telp,
-            'tgl_lahir'         => $request->tgl_lahir,
-            'wilayah'           => $request->kelurahan,
-            'tipe_user'         => 3,
-            'status_konfirmasi' => 0,
-            'password'  => bcrypt('123456')
+      $customer_baru = Customer::create([ 
+        'name'              => $request->name,
+        'email'             => $request->email, 
+        'alamat'            => $request->alamat,
+        'no_telp'           => $request->no_telp,
+        'tgl_lahir'         => $request->tgl_lahir,
+        'tipe_user'         => 3,
+        'status_konfirmasi' => 0,
+        'password'  => bcrypt('123456')
         ]);
 
       //INSERT OTORITAS CUSTOMER
-        $customer_baru->attachRole(3);
-
-        if (isset($request->komunitas)) {
-        
+      $customer_baru->attachRole(3);
+      
+      if (isset($request->komunitas)) {
         KomunitasCustomer::create(['user_id' =>$customer_baru->id ,'komunitas_id' => $request->komunitas]);
-        }
-        
+      }
 
-
-            Session::flash("flash_notification", [
-                "level"=>"success",
-                "message"=> "Sukses : Berhasil Menambah Customer ".$request->name.""
-            ]);
-
-            return redirect()->route('customer.index');
-           
     }
 
     /**
@@ -146,7 +112,18 @@ class CustomerController extends Controller
      */
     public function show($id)
     {
-        //
+      //EDIT CUSTOMER
+      $customer = Customer::find($id);
+      $cek_komunitas = KomunitasCustomer::where('user_id',$id)->count();
+      if ($cek_komunitas > 0) {
+        $komunitas = KomunitasCustomer::where('user_id',$id)->first();
+        $customer['komunitas_id'] = $komunitas->komunitas_id;
+      }
+      else{
+        $customer['komunitas_id'] = '';
+      }
+
+      return $customer;
     }
 
     /**
@@ -157,16 +134,13 @@ class CustomerController extends Controller
      */
     public function edit($id)
     {
-
-      
-
-        $customer = Customer::find($id);
-        $tanggal = $customer->tgl_lahir;
-        $komunitas = KomunitasCustomer::where('user_id',$id)->first();
+      $customer = Customer::find($id);
+      $tanggal = $customer->tgl_lahir;
+      $komunitas = KomunitasCustomer::where('user_id',$id)->first();
 
 
-        return view('customer.edit')->with(compact('customer', 'tanggal','komunitas'));
-        
+      return view('customer.edit')->with(compact('customer', 'tanggal','komunitas'));
+
     }
 
     /**
@@ -178,42 +152,29 @@ class CustomerController extends Controller
      */
     public function update(Request $request, $id)
     {
+      $this->validate($request, [            
+        'name'      => 'required',
+        'email'     => 'nullable|without_spaces|unique:users,email,' .$id,
+        'alamat'    => 'required',
+        'no_telp'   => 'required|without_spaces|numeric|unique:users,no_telp,' .$id,
+        'tgl_lahir' => 'required|date',
 
-       
-        $this->validate($request, [            
-            'name'      => 'required',
-            'email'     => 'nullable|without_spaces|unique:users,email,' .$id,
-            'alamat'    => 'required',
-            'no_telp'   => 'required|without_spaces|numeric|unique:users,no_telp,' .$id,
-            'tgl_lahir' => 'required|date',
-            
         ]);
 
-        Customer::find($id)->update([
-            'name'              => $request->name,
-            'email'             => $request->email, 
-            'alamat'            => $request->alamat,
-            'no_telp'           => $request->no_telp,
-            'tgl_lahir'         => $request->tgl_lahir,
-            'wilayah'           => $request->kelurahan,
+      Customer::find($id)->update([
+        'name'              => $request->name,
+        'email'             => $request->email, 
+        'alamat'            => $request->alamat,
+        'no_telp'           => $request->no_telp,
+        'tgl_lahir'         => $request->tgl_lahir,
+        'wilayah'           => $request->kelurahan,
         ]);
 
         //hapus komunitas sebelumnya, masukkan komunitas baru
-        KomunitasCustomer::where('user_id',$id)->delete();
-        if (isset($request->komunitas)) {
-        
+      KomunitasCustomer::where('user_id',$id)->delete();
+      if (isset($request->komunitas)) {
         KomunitasCustomer::create(['user_id' =>$id ,'komunitas_id' => $request->komunitas]);
-        }
-
-
- 
-
-        Session::flash("flash_notification", [
-            "level"=>"success",
-            "message"=> "Sukses : Berhasil Mengubah Customer ".$request->name.""
-            ]);
-
-        return redirect()->route('customer.index');  
+      } 
     }
 
     /**
@@ -224,21 +185,32 @@ class CustomerController extends Controller
      */
     public function destroy($id)
     {
-      $pesan_alert = 
-               '<div class="container-fluid">
-                    <div class="alert-icon">
-                    <i class="material-icons">check</i>
-                    </div>
-                    <b>Sukses : Customer Berhasil Dihapus</b>
-                </div>';
+    // HAPUS CUSTOMER 
+      $customer = Customer::find($id);
+      KomunitasCustomer::where('user_id',$id)->delete();
 
-        Customer::destroy($id);
-        KomunitasCustomer::where('user_id',$id)->delete();
-
-        Session:: flash("flash_notification", [
-            "level"=>"danger",
-            "message"=> $pesan_alert
-            ]);
-        return redirect()->route('customer.index');
+      $hapus_customer = Customer::destroy($id);
+      return response(200);
     }
-}
+
+    //DETAIL CUSTOMER
+    public function view_detail($id){
+      $data_customer = Customer::with('komunitas_customer')->where('tipe_user', 3)->where('id', $id)->first();
+      if (KomunitasCustomer::where('user_id', $id)->count() > 0) {
+        $data_komunitas = Komunitas::select('name')->where('id', $data_customer->komunitas_customer->komunitas_id)->first();
+        $komunitas = $data_komunitas->name;
+      }
+      else{
+        $komunitas = "Tidak Ada Komunitas";
+      }
+
+      $customer['name'] = $data_customer->name;
+      $customer['email'] = $data_customer->email;
+      $customer['alamat'] = $data_customer->alamat;
+      $customer['no_telp'] = $data_customer->no_telp;
+      $customer['tgl_lahir'] = $data_customer->tgl_lahir;
+      $customer['komunitas'] = $komunitas;      
+      
+      return response()->json($customer);
+    }
+  }
