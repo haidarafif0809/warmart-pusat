@@ -25,8 +25,9 @@ Route::get('/update_produk',function(){
 
 	$barang = App\Barang::all();
 	foreach ($barang as $key ) {
-		
-		echo App\Barang::find($key->id)->update(['konfirmasi_admin' => 1]);
+		$barang = App\Barang::find($key->id);
+		$barang->konfirmasi_admin = 1;
+		$barang->save();
 	}
 });
 
