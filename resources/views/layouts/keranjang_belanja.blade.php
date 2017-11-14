@@ -55,19 +55,21 @@
           </div>
           @else
           <div class="col-md-8"> 
-            <table class="table table-shopping">
-              <thead >
-                <tr class="card" style="width: 725px;">
-                  <th class="text-center"></th>
-                  <th style="padding-left: 20%"><b>Produk</b></th>   
-                  <th style="padding-left: 125%"><b>Harga Produk</b></th> 
-                  <th style="padding-left: 135%"><b>Kuantitas</b></th> 
-                </tr>
-              </thead>
-              <tbody>        
-                {!! $produk_belanjaan !!}
-              </tbody>
-            </table> 
+            <div class="table-responsive">
+              <table class="table table-shopping">
+                <thead >
+                  <tr class="card" style="width: 725px;">
+                    <th class="text-center"></th>
+                    <th style="padding-left: 20%"><b>Produk</b></th>   
+                    <th style="padding-left: 125%"><b>Harga Produk</b></th> 
+                    <th style="padding-left: 135%"><b>Kuantitas</b></th> 
+                  </tr>
+                </thead>
+                <tbody>        
+                  {!! $produk_belanjaan !!}
+                </tbody>
+              </table> 
+            </div>
           </div>
           @endif 
 

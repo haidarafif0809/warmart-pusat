@@ -8,6 +8,8 @@ use SEOMeta;
 use OpenGraph;
 use Twitter;
 use App\KeranjangBelanja; 
+use App\Barang;
+use App\Hpp;  
 use Jenssegers\Agent\Agent;
 use Auth;
 use DB;
@@ -39,6 +41,13 @@ class KeranjangBelanjaController extends Controller
 		$produk_belanjaan = '';
 		$subtotal = 0;
 		foreach ($keranjang_belanjaan as $keranjang_belanjaans) {  
+			$barang = Barang::where('id',$keranjang_belanjaans->id_produk)->first();
+			
+			$stok = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk),0) - IFNULL(SUM(jumlah_keluar),0) as stok_produk')])->where('id_produk', $keranjang_belanjaans->id_produk)
+			->where('warung_id', $barang->id_warung)->first();
+
+			$sisa_stok_keluar = $stok->stok_produk - $keranjang_belanjaans->jumlah_produk;
+
 			$harga_produk = $keranjang_belanjaans->produk->harga_jual * $keranjang_belanjaans->jumlah_produk;
 
 			$produk_belanjaan .= '
@@ -55,18 +64,37 @@ class KeranjangBelanjaController extends Controller
 			</div>
 			</td>
 			<td class="td-name">
-			<a href="#jacket">'. $keranjang_belanjaans->produk->nama_barang .'</a>
+			<a href="'. url('detail-produk/'.$keranjang_belanjaans->id_produk.''). '">'. $keranjang_belanjaans->produk->nama_barang .'</a>
 			<br />
 			<small><i class="material-icons">store</i>  '. $keranjang_belanjaans->produk->warung->name .' </small>
 			</td>  
 			<td class="td-number">
-			<b>Rp. '. number_format($harga_produk,0,',','.') .'</b>
+			<b>Rp. '. number_format($harga_produk,0,',','.') .'</b> 
 			</td> 
 			<td class="td-number">
-			<div class="btn-group">
-			<a href=" '. url('/keranjang-belanja/kurang-jumlah-produk-keranjang-belanja/'.$keranjang_belanjaans->id_keranjang_belanja.''). '" class="btn btn-round btn-info btn-xs"  style="background-color: #f44336"> <i class="material-icons">remove</i> </a>
-			<a class="btn btn-round btn-info btn-xs"  style="background-color: #f44336">'. $keranjang_belanjaans->jumlah_produk .' </a>
-			<a href=" '. url('/keranjang-belanja/tambah-jumlah-produk-keranjang-belanja/'.$keranjang_belanjaans->id_keranjang_belanja.''). '" class="btn btn-round btn-info btn-xs"  style="background-color: #f44336"> <i class="material-icons">add</i> </a>
+			<div class="btn-group">';
+
+			if ($keranjang_belanjaans->jumlah_produk == 1) {
+				$produk_belanjaan .= '
+				<a class="btn btn-round btn-info btn-xs"  style="background-color: #f44336" disabled="true"> <i class="material-icons">remove</i> </a>'; 
+			}
+			else {
+				$produk_belanjaan .= ' 
+				<a href=" '. url('/keranjang-belanja/kurang-jumlah-produk-keranjang-belanja/'.$keranjang_belanjaans->id_keranjang_belanja.''). '" class="btn btn-round btn-info btn-xs"  style="background-color: #f44336"> <i class="material-icons">remove</i></a>';
+			}
+
+			$produk_belanjaan .= ' <a class="btn btn-round btn-info btn-xs"  style="background-color: #f44336">'. $keranjang_belanjaans->jumlah_produk .' </a>';
+
+
+			if ($sisa_stok_keluar == 0) {
+				$produk_belanjaan .= '
+				<a class="btn btn-round btn-info btn-xs"  style="background-color: #f44336" disabled="true"> <i class="material-icons">add</i> </a>'; 
+			}
+			else {
+				$produk_belanjaan .= '
+				<a href=" '. url('/keranjang-belanja/tambah-jumlah-produk-keranjang-belanja/'.$keranjang_belanjaans->id_keranjang_belanja.''). '" class="btn btn-round btn-info btn-xs"  style="background-color: #f44336"> <i class="material-icons">add</i> </a>';
+			}
+			$produk_belanjaan .= '
 			</div>
 			</td>   
 			<td class="td-actions">
@@ -111,9 +139,9 @@ class KeranjangBelanjaController extends Controller
 		$produk = KeranjangBelanja::find($id); 
 		$produk->jumlah_produk -= 1;
 		$produk->save();
-		
+
 		return redirect()->back();
-		
+
 	}
 
 	public function tambah_produk_keranjang_belanjaan($id)
@@ -135,6 +163,6 @@ class KeranjangBelanjaController extends Controller
 			$produk->save(); 		
 		}
 		return redirect()->back();
-		
+
 	}
 }
