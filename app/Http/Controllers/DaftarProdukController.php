@@ -12,6 +12,7 @@ use App\KeranjangBelanja;
 use Auth;
 use App\Hpp;
 use DB;
+use Intervention\Image\ImageManagerStatic as Image;
 
 class DaftarProdukController extends Controller
 {
@@ -206,7 +207,7 @@ class DaftarProdukController extends Controller
    else{
     $tombol_beli = '<button type="button" class="btn btn-danger btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja" id="btnBeli"><b style="font-size:18px"> Beli Sekarang</b><i class="fa fa-chevron-right" aria-hidden="true"></i></button>';
   }  
-  
+
 }
 return $tombol_beli; 
 }
@@ -245,6 +246,7 @@ public function namaWarung($warung){
 
 public function fotoProduk($produks){
  if ($produks->foto != NULL) {
+  $this->resizeProduk($produks);
   $foto_produk = '<img src="'.asset('foto_produk/'.$produks->foto.'').'">';
 }
 else{
@@ -299,6 +301,16 @@ else {
   $daftar_produk = $this->tidakAdaProduk()."asdasda";
 }
 return $daftar_produk;
+}
+
+public function resizeProduk($produks){
+  $foto_produk =  Image::make(asset('foto_produk/'.$produks->foto));
+  $height_foto = $foto_produk->height();
+  $width_foto = $foto_produk->width();
+  if ($height_foto != 300 || $width_foto != 300 ) {
+    $foto_produk->fit(300);
+    $foto_produk->save(public_path('foto_produk/' .$filename));
+  }
 }
 
 
