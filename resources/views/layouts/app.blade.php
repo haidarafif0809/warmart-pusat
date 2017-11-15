@@ -241,18 +241,18 @@
   @endif
   @if(Laratrust::can('lihat_customer'))
   <li>
-   <a href="{{ route('customer.index') }}">
-    <span class="sidebar-mini">C</span>
-    <span class="sidebar-normal">Customer</span>
+    <router-link :to="{name: 'indexCustomer'}">
+      <span class="sidebar-mini">C</span>
+      <span class="sidebar-normal">Customer</span>
+    </router-link>
+  </li>
+  @endif
+  @if(Laratrust::can('lihat_komunitas'))
+  <li>
+   <a href="{{ route('komunitas.index') }}">
+    <span class="sidebar-mini">K</span>
+    <span class="sidebar-normal">Komunitas</span>
   </a>
-</li>
-@endif
-@if(Laratrust::can('lihat_komunitas'))
-<li>
- <a href="{{ route('komunitas.index') }}">
-  <span class="sidebar-mini">K</span>
-  <span class="sidebar-normal">Komunitas</span>
-</a>
 </li> 
 @endif
 @if(Laratrust::can('lihat_otoritas'))
@@ -290,10 +290,10 @@
 </div>
 </li>
 <li class="">
-  <a href="{{ route('error.index')}}">
-   <i class="material-icons">error</i>
-   <p>Error Log</p>
- </a>
+  <router-link :to="{name: 'indexError'}">
+    <i class="material-icons">error</i>
+    <p>Error Log</p>
+  </router-link>
 </li>
 @endif
 <!--end master data warmart pusat-->

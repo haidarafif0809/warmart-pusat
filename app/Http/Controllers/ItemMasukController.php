@@ -95,7 +95,7 @@ class ItemMasukController extends Controller
     { 
 
       $this->validate($request, [
-        'id_produk_tbs'     => 'required|max:11|numeric',
+        'id_produk_tbs'     => 'required|numeric',
         'jumlah_produk' => 'required|digits_between:1,15|numeric',
         ]);
 
@@ -512,7 +512,7 @@ return redirect()->route('item-masuk.index');
     public function proses_tambah_edit_tbs_item_masuk(Request $request,$id)
     { 
       $this->validate($request, [
-        'id_produk_tbs'     => 'required|max:11|numeric',
+        'id_produk_tbs'     => 'required|numeric',
         'jumlah_produk' => 'required|max:8|numeric',
         ]);
 
