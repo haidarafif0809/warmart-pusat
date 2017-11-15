@@ -230,6 +230,14 @@ Route::get('/user/konfirmasi','UserController@konfirmasi')->middleware('auth');
 Route::get('/user/no-konfirmasi','UserController@no_konfirmasi')->middleware('auth');
 
 
+
+
+
+//menampilkan data user
+Route::get('/warung/view','WarungController@view')->middleware('auth');
+Route::get('/warung/pencarian','WarungController@pencarian')->middleware('auth');
+Route::get('/warung/pilih-kelurahan','WarungController@pilih_kelurahan')->middleware('auth');
+
 Route::middleware('optimizeImages','auth')->group(function () {
 	
 	Route::resource('user', 'UserController');

@@ -38,6 +38,12 @@
  import UserCreate from './components/user/UserCreate.vue';
  import UserEdit from './components/user/UserEdit.vue';
 
+  /**Warung*/
+  import WarungIndex from './components/warung/WarungIndex.vue';
+  import WarungCreate from './components/warung/WarungCreate.vue';
+  import WarungEdit from './components/warung/WarungEdit.vue';
+
+
  const routes = [ 
  {
  	path: '/',
@@ -52,6 +58,7 @@
  {path: '/user', component: UserIndex, name: 'indexUser'},
 
 
+
  {path: '/edit-bank/:id', component: BankEdit, name: 'editBank'},
  {path: '/lazy_load', component: LazyIndex, name: 'indexLazy'},
  {path: '/create-satuan', component: SatuanCreate, name: 'createSatuan'},
@@ -59,6 +66,14 @@
 
  {path: '/create-user', component: UserCreate, name: 'createUser'},
  {path: '/edit-user/:id', component: UserEdit, name: 'editUser'},
+
+
+
+
+  /**Warung*/
+ {path: '/warung', component: WarungIndex, name: 'indexWarung'},
+ {path: '/create-warung', component: WarungCreate, name: 'createWarung'},
+ {path: '/edit-warung/:id', component: WarungEdit, name: 'editWarung'},
 
  ]
 

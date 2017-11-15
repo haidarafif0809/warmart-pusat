@@ -278,14 +278,11 @@
 @endif        
 @if(Laratrust::can('lihat_warung'))
 <li>
- <a href="{{ route('warung.index') }}">
-  <span class="sidebar-mini">W</span>
-  <span class="sidebar-normal">Warung</span>
-</a>
+   <router-link :to="{name: 'indexWarung'}">    <span class="sidebar-mini">W</span>
+    <span class="sidebar-normal">Warung</span></router-link>
 </li>
 @endif 
 <li>
-
   <router-link :to="{name: 'indexSatuan'}">    <span class="sidebar-mini">S</span>
     <span class="sidebar-normal">Satuan</span></router-link>
   </li>

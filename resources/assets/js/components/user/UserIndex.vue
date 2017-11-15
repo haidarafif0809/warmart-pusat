@@ -41,7 +41,7 @@
             <th>Aksi</th>
           </tr>
         </thead>
-        <tbody v-if="users.length" class="data-ada">
+        <tbody v-if="users.length > 0 && loading == false" class="data-ada">
           <tr v-for="user, index in users" >
             <td>{{ user.user.name }}</td>
             <td>{{ user.user.no_telp }}</td>
@@ -78,7 +78,7 @@
         </td>
       </tr>
       </tbody>
-      <tbody class="data-tidak-ada" v-else>
+      <tbody class="data-tidak-ada" v-else-if="users.length == 0 && loading == false">
         <tr ><td colspan="4"  class="text-center">Tidak Ada Data</td></tr>
       </tbody>
     </table>
@@ -165,57 +165,117 @@ export default {
           });
         },
         deleteEntry(id, index,name) {
-          if (confirm("Yakin Ingin Menghapus user "+name+" ?")) {
-            var app = this;
-            axios.delete(app.url+'/' + id)
-            .then(function (resp) {
-              app.getResults();
-              app.alert("Berhasil Menghapus user "+name)
-            })
-            .catch(function (resp) {
-              alert("Could not delete company");
-            });
-          }
+           swal({
+            title: "Konfirmasi Hapus",
+            text : "Anda Yakin Ingin Menghapus User "+name+" ?",
+            icon : "warning",
+            buttons: true,
+            dangerMode: true,
+          })
+          .then((willDelete) => {
+            if (willDelete) {
+              var app = this;
+              axios.delete(app.url+'/' + id)
+              .then(function (resp) {
+                app.$router.replace('/user/');
+                app.getResults();
+                swal("User Berhasil Dihapus!  ", {
+                  icon: "success",
+                });
+              })
+              .catch(function (resp) {
+                swal("Gagal Menghapus User!  ", {
+                  icon: "warning",
+                });
+              });
+
+           }
+          });
         },
         resetEntry(id, index,name) {
-          if (confirm("Apakah Anda Yakin Ingin Me Reset Password User "+name+" ?")) {
-            var app = this;
-            axios.get(app.url+'/reset?idreset='+id)
-            .then(function (resp) {
-              app.getResults();
-              app.alert("Berhasil Reset user "+name)
-            })
-            .catch(function (resp) {
-              alert("Could not reset company");
-            });
-          }
+          swal({
+            title: "Konfirmasi Reset",
+            text : "Anda Yakin Ingin Me Reset Password User "+name+" ?",
+            icon : "warning",
+            buttons: true,
+            dangerMode: true,
+          })
+          .then((willDelete) => {
+            if (willDelete) {
+              var app = this;
+              axios.get(app.url+'/reset?idreset=' + id)
+              .then(function (resp) {
+                app.$router.replace('/user/');
+                app.getResults();
+                swal("User Berhasil Direset!  ", {
+                  icon: "success",
+                });
+              })
+              .catch(function (resp) {
+                swal("Gagal Mereset User!  ", {
+                  icon: "warning",
+                });
+              });
+
+           }
+          });
         },
        konfirmasiEntry(id, index,name) {
-          if (confirm("Apakah Anda Yakin Ingin Meng Konfirmasi User "+name+" ?")) {
-            var app = this;
-            axios.get(app.url+'/konfirmasi?confirm='+id)
-            .then(function (resp) {
-              app.getResults();
-              app.alert("Berhasil Konfirmasi user "+name)
-            })
-            .catch(function (resp) {
-              alert("Could not confirm company");
-            });
-          }
+           swal({
+            title: "Konfirmasi User",
+            text : "Apakah Anda Yakin Ingin Meng Konfirmasi User "+name+" ?",
+            icon : "warning",
+            buttons: true,
+            dangerMode: true,
+          })
+          .then((willDelete) => {
+            if (willDelete) {
+              var app = this;
+              axios.get(app.url+'/konfirmasi?confirm=' + id)
+              .then(function (resp) {
+                app.$router.replace('/user/');
+                app.getResults();
+                swal("User Berhasil Dikonfirmasi!  ", {
+                  icon: "success",
+                });
+              })
+              .catch(function (resp) {
+                swal("Gagal konfirmasi User!  ", {
+                  icon: "warning",
+                });
+              });
+
+           }
+          });
         },
        nokonfirmasiEntry(id, index,name) {
-          if (confirm("Apakah Anda Yakin Batal Meng Konfirmasi User "+name+" ?")) {
-            var app = this;
-            axios.get(app.url+'/no-konfirmasi?confirm='+id)
-            .then(function (resp) {
-              app.getResults();
-              app.alert("Berhasil Batal Konfirmasi user "+name)
-            })
-            .catch(function (resp) {
-              alert("Could not confirm company");
-            });
-          }
-        },
+        swal({
+            title: "Konfirmasi User",
+            text : "Apakah Anda Yakin Batal Meng Konfirmasi User "+name+" ?",
+            icon : "warning",
+            buttons: true,
+            dangerMode: true,
+          })
+          .then((willDelete) => {
+            if (willDelete) {
+              var app = this;
+              axios.get(app.url+'/no-konfirmasi?confirm=' + id)
+              .then(function (resp) {
+                app.$router.replace('/user/');
+                app.getResults();
+                swal("User Berhasil Batal Konfirmasi!  ", {
+                  icon: "success",
+                });
+              })
+              .catch(function (resp) {
+                swal("Gagal batal konfirmasi User!  ", {
+                  icon: "warning",
+                });
+              });
+
+           }
+          });
+        }
       }
     }
     </script>
