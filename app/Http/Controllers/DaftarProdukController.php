@@ -108,15 +108,15 @@ class DaftarProdukController extends Controller
       $data_produk = Barang::select(['id','kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung','konfirmasi_admin'])
       ->where('kategori_barang_id', $id)->whereIn('id_warung', $array_warung)->inRandomOrder()->paginate(12);
 
-      
+  //PILIH KATEGORI
+      $kategori = KategoriBarang::select(['id','nama_kategori_barang','kategori_icon']);
   //FOTO HEADER
       $foto_latar_belakang = "background-image: url('../image/background2.jpg');";
   //FOTO WARMART
       $logo_warmart = "../assets/img/examples/warmart_logo.png";
   //PAGINATION DAFTAR PRODUK
       $produk_pagination = $data_produk->links();
-       //PILIH KATEGORI
-      $kategori = KategoriBarang::select(['id','nama_kategori_barang','kategori_icon'])->where('id',$id);
+  //MENAMPILKAN KATEGORI
       $kategori_produk = $this->produkKategori($kategori);
       $data_kategori = $kategori->first();
       $nama_kategori = "KATEGORI : ".$data_kategori->nama_kategori_barang."";
