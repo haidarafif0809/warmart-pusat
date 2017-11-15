@@ -183,8 +183,7 @@ class DaftarProdukController extends Controller
     if ($agent->isMobile()) {
                   //JIKA USER LOGIN BUKAN PELANGGAN MAKA TIDAK BISA PESAN PRODUK
       if(Auth::user()->tipe_user == 3){
-
-        if ($cek_produk == 0) {
+       if ($cek_produk == 0) {
          $tombol_beli = '<a class="btn btn-danger btn-round" rel="tooltip" title="Stok Tidak Ada"><b style="font-size:18px"> Beli </b><i class="fa fa-chevron-right" aria-hidden="true" disabled="" ></i></a>';  
        }else{
          $tombol_beli = '<a href="'.url("/keranjang-belanja") .'" class="btn btn-danger btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja" id="btnBeliSekarang"><b style="font-size:18px"> Beli </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';            
@@ -207,9 +206,8 @@ class DaftarProdukController extends Controller
    else{
     $tombol_beli = '<button type="button" class="btn btn-danger btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja" id="btnBeli"><b style="font-size:18px"> Beli Sekarang</b><i class="fa fa-chevron-right" aria-hidden="true"></i></button>';
   }  
-  
+  return $tombol_beli;              
 }
-return $tombol_beli;   
 }
 
 public function tidakAdaProduk(){
