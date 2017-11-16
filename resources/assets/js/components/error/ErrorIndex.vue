@@ -45,7 +45,7 @@
 			              <!--JIKA DATA CUSTOMER KOSONG-->
 			              <tbody class="data-tidak-ada" v-else-if="errors.length == 0 && loading== false">
 			                <tr>
-			                  <td colspan="4"  class="text-center">Tidak Ada Data</td>
+			                  <td colspan="6"  class="text-center">Tidak Ada Data</td>
 			                </tr>
 			              </tbody>
 			            </table>

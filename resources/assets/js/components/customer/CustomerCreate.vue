@@ -52,15 +52,15 @@
 		                    <div class="form-group">
 		                        <label for="name" class="col-md-2 control-label">Tanggal Lahir</label>
 		                        <div class="col-md-4">
-		                            <datepicker :input-class="'form-control'" placeholder="Tanggal Lahir" v-model="customer.tgl_lahir" name="uniquename"></datepicker>
+		                            <datepicker :input-class="'form-control'" placeholder="Tanggal Lahir" v-model="customer.tgl_lahir" name="uniquename" v-bind:id="'tanggal_lahir'"></datepicker>
 		                        </div>
 		                    </div>
 
 		                    <div class="form-group">
 	                            <label for="komunitas" class="col-md-2 control-label ">Komunitas</label>
 	                            <div class="col-md-4">
-	                                <selectize-component v-model="customer.komunitas" :settings="setKomunitas"> 
-	                                    <option v-for="data_komunitas, index in komunitas" v-bind:value="data_komunitas.id" >{{ data_komunitas.name }}</option>
+	                                <selectize-component v-model="customer.komunitas" :settings="setKomunitas" id="komunitas"> 
+	                                    <option v-for="data_komunitas, index in komunitas" v-bind:value="data_komunitas.id">{{ data_komunitas.name }}</option>
 	                                </selectize-component>
 	                            </div>
 	                        </div>
@@ -126,7 +126,7 @@ export default {
         },
         alert(pesan) {
           this.$swal({
-              title: "Berhasil!",
+              title: "Sukses!",
               text: pesan,
               icon: "success",
           });
