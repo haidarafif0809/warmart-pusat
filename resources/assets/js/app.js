@@ -56,6 +56,11 @@
   import WarungCreate from './components/warung/WarungCreate.vue';
   import WarungEdit from './components/warung/WarungEdit.vue';
 
+  /**KOMUNITAS*/
+  import KomunitasIndex from './components/komunitas/KomunitasIndex.vue';
+  import KomunitasCreate from './components/komunitas/KomunitasCreate.vue';
+  import KomunitasEdit from './components/komunitas/KomunitasEdit.vue';
+
 
  const routes = [ 
  {
@@ -89,17 +94,19 @@
  {path: '/create-user', component: UserCreate, name: 'createUser'},
  {path: '/edit-user/:id', component: UserEdit, name: 'editUser'},
 
-
-
-
   /**Warung*/
  {path: '/warung', component: WarungIndex, name: 'indexWarung'},
  {path: '/create-warung', component: WarungCreate, name: 'createWarung'},
  {path: '/edit-warung/:id', component: WarungEdit, name: 'editWarung'},
 
- ]
+// Komunitas
+{path: '/komunitas', component: KomunitasIndex, name: 'indexKomunitas'},
+{path: '/create-komunitas', component: KomunitasCreate, name: 'createKomunitas'},
+{path: '/edit-komunitas/:id', component: KomunitasEdit, name: 'editKomunitas'},
+
+]
 
 
- const router = new VueRouter({ routes })
+const router = new VueRouter({ routes })
 
- const app = new Vue({ router }).$mount('#vue-app')
+const app = new Vue({ router }).$mount('#vue-app')
