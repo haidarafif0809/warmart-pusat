@@ -50,7 +50,7 @@ class BarangController extends Controller
               'detail_url'        => route('barang.detail_produk',$barang->id),
               'confirm_message'   => 'Anda Yakin Mau Menghapus ' .$barang->nama_barang .' ?' 
 
-              ]);
+            ]);
           })
           ->addColumn('nama_barang', function($barang){
 
@@ -137,7 +137,7 @@ class BarangController extends Controller
           'kategori_barang_id'  => 'required|exists:kategori_barangs,id',
           'satuan_id'           => 'required|exists:satuans,id',
           'foto'                => 'image|max:3072'
-          ]);
+        ]);
 
         if ($request->status_aktif == '') {
 
@@ -196,21 +196,21 @@ class BarangController extends Controller
       $pesan_alert = 
       '<div class="container-fluid">
       <div class="alert-icon">
-        <b><i class="material-icons">check</i></b>
+      <b><i class="material-icons">check</i></b>
       </div>
       <b>BERHASIL:</b> Menambahkan Produk <b>'.$request->nama_barang.'</b>
-    </div>';
+      </div>';
 
-    Session::flash("flash_notification", [
-      "level"=>"success",
-      "message"=>$pesan_alert
+      Session::flash("flash_notification", [
+        "level"=>"success",
+        "message"=>$pesan_alert
       ]);
 
-    return redirect()->route('barang.index');
+      return redirect()->route('barang.index');
+
+    }
 
   }
-
-}
 
     /**
      * Display the specified resource.
@@ -266,7 +266,7 @@ class BarangController extends Controller
           'satuan_id'           => 'required|exists:satuans,id',
           'foto'                => 'image|max:2048'
 
-          ]);
+        ]);
 
         if ($request->status_aktif == '') {
 
@@ -297,11 +297,12 @@ class BarangController extends Controller
         'hitung_stok'       => $hitung_stok, 
         'konfirmasi_admin'  => 1,
         'id_warung'         => Auth::user()->id_warung
-        ]);
+      ]);
 
       if ($request->hasFile('foto')) {
 
                   // Mengambil file yang diupload
+        $foto = $request->file('foto');
         $uploaded_foto = $foto;
           // mengambil extension file
         $extension = $uploaded_foto->getClientOriginalExtension();
@@ -334,21 +335,21 @@ class BarangController extends Controller
       $pesan_alert = 
       '<div class="container-fluid">
       <div class="alert-icon">
-        <b><i class="material-icons">check</i></b>
+      <b><i class="material-icons">check</i></b>
       </div>
       <b>BERHASIL:</b> Mengubah Produk <b>'.$request->nama_barang.'</b>
-    </div>';
+      </div>';
 
-    Session::flash("flash_notification", [
-      "level"=>"success",
-      "message"=>$pesan_alert
+      Session::flash("flash_notification", [
+        "level"=>"success",
+        "message"=>$pesan_alert
       ]);
 
-    return redirect()->route('barang.index');
+      return redirect()->route('barang.index');
+
+    }
 
   }
-
-}
 
     /**
      * Remove the specified resource from storage.
@@ -386,72 +387,72 @@ class BarangController extends Controller
           $pesan_alert = 
           '<div class="container-fluid">
           <div class="alert-icon">
-            <b><i class="material-icons">check</i></b>
+          <b><i class="material-icons">check</i></b>
           </div>
           <b>BERHASIL:</b> Menghapus Produk <b>'.$barang->nama_barang.'</b>
+          </div>';
+
+          Session::flash("flash_notification", [
+            "level"     => "danger",
+            "message"   => $pesan_alert
+          ]);
+          return redirect()->route('barang.index');
+        }
+      }
+    }
+
+    //HALAMAN DETAIL PRODUK
+    public function detail_produk($id) {
+      $barang = Barang::find($id);
+      if ($barang->id_warung != Auth::user()->id_warung) {
+        Auth::logout();
+        return response()->view('error.403');
+      }
+      else{
+        return view('barang.detail_produk', ['id' => $id, 'deskripsi_produk' => $barang->deskripsi_produk])->with(compact('barang'));
+      }
+    }
+
+    //UPDATE DESKRIPSI PRODUK
+    public function update_deskripsi_produk(Request $request) {
+      $update_deskripsi_produk = Barang::find($request->id);
+      if ($update_deskripsi_produk->id_warung != Auth::user()->id_warung) {
+        Auth::logout();
+        return response()->view('error.403');
+      }
+      else{
+        $update_deskripsi_produk->update([
+          'deskripsi_produk' => $request->deskripsi_produk
+        ]);
+
+        $pesan_alert = 
+        '<div class="container-fluid">
+        <div class="alert-icon">
+        <b><i class="material-icons">check</i></b>
+        </div>
+        <b>BERHASIL:</b> Menambahkan Deskripsi Produk <b>'.$update_deskripsi_produk->nama_barang.'</b>
         </div>';
 
         Session::flash("flash_notification", [
-          "level"     => "danger",
-          "message"   => $pesan_alert
-          ]);
+          "level"=>"success",
+          "message"=>$pesan_alert
+        ]);
+
         return redirect()->route('barang.index');
       }
     }
-  }
-
-    //HALAMAN DETAIL PRODUK
-  public function detail_produk($id) {
-    $barang = Barang::find($id);
-    if ($barang->id_warung != Auth::user()->id_warung) {
-      Auth::logout();
-      return response()->view('error.403');
-    }
-    else{
-      return view('barang.detail_produk', ['id' => $id, 'deskripsi_produk' => $barang->deskripsi_produk])->with(compact('barang'));
-    }
-  }
-
-    //UPDATE DESKRIPSI PRODUK
-  public function update_deskripsi_produk(Request $request) {
-    $update_deskripsi_produk = Barang::find($request->id);
-    if ($update_deskripsi_produk->id_warung != Auth::user()->id_warung) {
-      Auth::logout();
-      return response()->view('error.403');
-    }
-    else{
-      $update_deskripsi_produk->update([
-        'deskripsi_produk' => $request->deskripsi_produk
-        ]);
-
-      $pesan_alert = 
-      '<div class="container-fluid">
-      <div class="alert-icon">
-        <b><i class="material-icons">check</i></b>
-      </div>
-      <b>BERHASIL:</b> Menambahkan Deskripsi Produk <b>'.$update_deskripsi_produk->nama_barang.'</b>
-    </div>';
-
-    Session::flash("flash_notification", [
-      "level"=>"success",
-      "message"=>$pesan_alert
-      ]);
-
-    return redirect()->route('barang.index');
-  }
-}
 
     //LIHAT DESKRIPSI PRODUK
-public function lihat_deskripsi_produk($id) {
-  $lihat_deskripsi_produk = Barang::find($id);
-  $nama_produk = $lihat_deskripsi_produk->nama;
-  
-  if ($lihat_deskripsi_produk->id_warung != Auth::user()->id_warung) {
-    Auth::logout();
-    return response()->view('error.403');
+    public function lihat_deskripsi_produk($id) {
+      $lihat_deskripsi_produk = Barang::find($id);
+      $nama_produk = $lihat_deskripsi_produk->nama;
+
+      if ($lihat_deskripsi_produk->id_warung != Auth::user()->id_warung) {
+        Auth::logout();
+        return response()->view('error.403');
+      }
+      else{
+        return view('barang.lihat_deskripsi_produk', ['id' => $id, 'lihat_deskripsi_produk' => $lihat_deskripsi_produk, 'nama_produk' => $nama_produk]);
+      }
+    }
   }
-  else{
-    return view('barang.lihat_deskripsi_produk', ['id' => $id, 'lihat_deskripsi_produk' => $lihat_deskripsi_produk, 'nama_produk' => $nama_produk]);
-  }
-}
-}

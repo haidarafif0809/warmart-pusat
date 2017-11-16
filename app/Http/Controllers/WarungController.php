@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Warung;
 use App\UserWarung;
 use App\BankWarung;
+use App\Kelurahan;
 use Session;
 use Laratrust;
 
@@ -27,44 +28,37 @@ class WarungController extends Controller
 
     public function index(Request $request, Builder $htmlBuilder)
     { 
-        if ($request->ajax()) {
-            # code...
-            $warung = Warung::with(['kelurahan', 'bank_warung'])->get();
-            return Datatables::of($warung)
-                ->addColumn('action', function($warung){
-                    return view('datatable._action', [
-                        'model'     => $warung,
-                        'form_url'  => route('warung.destroy', $warung->id),
-                        'edit_url'  => route('warung.edit', $warung->id),
-                        'confirm_message'   => 'Yakin Mau Menghapus Warung ' . $warung->name . '?',
-                        'permission_ubah' => Laratrust::can('edit_warung'),
-                        'permission_hapus' => Laratrust::can('hapus_warung'),
-
-                        ]);
-                })
-                ->addColumn('kelurahan', function($wilayah){
-                    if ($wilayah->wilayah == "" OR $wilayah->wilayah == "-") {
-                        $wilayah = "-";
-                    }
-                    else{
-                        $wilayah = $wilayah->kelurahan->nama;
-                    }
-                    return $wilayah;
-                })->make(true);
-        }
-        $html = $htmlBuilder
-        ->addColumn(['data' => 'name', 'name' => 'name', 'title' => 'Nama']) 
-        ->addColumn(['data' => 'no_telpon', 'name' => 'no_telpon', 'title' => 'No. Telpon']) 
-        ->addColumn(['data' => 'bank_warung.nama_bank', 'name' => 'bank_warung.nama_bank', 'title' => 'Nama Bank']) 
-        ->addColumn(['data' => 'bank_warung.atas_nama', 'name' => 'bank_warung.atas_nama', 'title' => 'Nama Rekening']) 
-        ->addColumn(['data' => 'bank_warung.no_rek', 'name' => 'bank_warung.no_rek', 'title' => 'No. Rekening']) 
-        ->addColumn(['data' => 'alamat', 'name' => 'alamat', 'title' => 'Alamat']) 
-        ->addColumn(['data' => 'kelurahan', 'name' => 'kelurahan', 'title' => 'Wilayah'])  
-        ->addColumn(['data' => 'action', 'name' => 'action', 'title' => '', 'orderable' => false, 'searchable'=>false]);
-        
         return view('warung.index')->with(compact('html'));
     }
 
+
+     public function view(){
+            $warung = Warung::leftJoin('kelurahans','warungs.wilayah','=','kelurahans.id')
+            ->leftJoin('bank_warungs','warungs.id','=','bank_warungs.warung_id')
+            ->paginate(10);
+            return response()->json($warung);  
+    }
+
+    public function pencarian(Request $request){
+
+        $warung = Warung::leftJoin('kelurahans','warungs.wilayah','=','kelurahans.id')
+        ->leftJoin('bank_warungs','warungs.id','=','bank_warungs.warung_id')
+        ->where('name','LIKE',"%$request->search%")
+        ->orWhere('alamat','LIKE',"%$request->search%")
+        ->orWhere('no_telpon','LIKE',"%$request->search%")
+        ->orWhere('bank_warungs.nama_bank','LIKE',"%$request->search%")
+        ->orWhere('bank_warungs.atas_nama','LIKE',"%$request->search%")
+        ->orWhere('bank_warungs.no_rek','LIKE',"%$request->search%")
+        ->orWhere('kelurahans.nama','LIKE',"%$request->search%")
+        ->paginate(10);
+
+        return response()->json($warung);
+    }
+
+    public function pilih_kelurahan(){
+        $kelurahan = Kelurahan::select('id','nama')->get();
+        return response()->json($kelurahan);
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -91,7 +85,7 @@ class WarungController extends Controller
             'nama_bank' => 'required',
             'atas_nama' => 'required', 
             'no_rek'    => 'required|numeric|unique:bank_warungs,no_rek,',
-            'no_telpon' => 'required|without_spaces|unique:users,no_telp,',
+            'no_telpon' => 'required|without_spaces|max:15|unique:users,no_telp,',
             'email'     => 'required|without_spaces|unique:users,email,',
 
             ]);
@@ -128,21 +122,6 @@ class WarungController extends Controller
 
     //INSERT OTORITAS USER WARUNG
         $user_warung->attachRole(4);
-
-          $pesan_alert = 
-               '<div class="container-fluid">
-                    <div class="alert-icon">
-                    <i class="material-icons">check</i>
-                    </div>
-                    <b>Berhasil : Menambah Warung '.$request->name.'</b>
-                </div>';
-
-
-        Session::flash("flash_notification", [
-            "level"=>"success",
-            "message"=>$pesan_alert
-            ]);
-        return redirect()->route('warung.index');
     }
 
     /**
@@ -154,6 +133,18 @@ class WarungController extends Controller
     public function show($id)
     {
         //
+         $warung = Warung::with(['kelurahan', 'bank_warung'])->find($id);
+         if ($warung->wilayah != "-" ) {
+           $warung['kelurahan'] =  $warung->kelurahan->nama;
+         }
+         else{
+           $warung['kelurahan'] = "-";
+         }
+         $warung['nama_bank'] = $warung->bank_warung->nama_bank;
+         $warung['atas_nama'] = $warung->bank_warung->atas_nama;
+         $warung['no_rek'] = $warung->bank_warung->no_rek;
+
+        return $warung;
     }
 
     /**
@@ -165,8 +156,7 @@ class WarungController extends Controller
     public function edit($id)
     {
         $warung = Warung::with(['kelurahan', 'bank_warung'])->find($id);
-        return view('warung.edit')->with(compact('warung'));
-
+        return url('warung#/edit_warung/'.$id);
     }
 
     /**
@@ -184,7 +174,7 @@ class WarungController extends Controller
             'name'      => 'required|unique:warungs,name,'.$id,
             'alamat'    => 'required',
             'kelurahan' => 'required',
-            'no_telpon' => 'required',
+            'no_telpon' => 'required|max:15',
             ]);
 
          //UPDATE MASTER DATA WARUNG
@@ -211,21 +201,6 @@ class WarungController extends Controller
             'atas_nama' =>$request->atas_nama,
             'no_rek' =>$request->no_rek,
         ]);
-
-        $pesan_alert = '
-                <div class="container-fluid">
-                    <div class="alert-icon">
-                        <i class="material-icons">check</i>
-                    </div>
-                        <b>Berhasil : Mengubah Warung '.$request->name.' </b>
-                </div>';
-
-        Session::flash("flash_notification", [
-            "level"=>"success",
-            "message"=> $pesan_alert
-            ]);
-
-        return redirect()->route('warung.index');
     }
 
     /**
@@ -237,24 +212,7 @@ class WarungController extends Controller
     public function destroy($id)
     {
         // jika gagal hapus
-        if (!Warung::destroy($id)) {
-            return redirect()->back();
-        }
-        else{
-            
-        $pesan_alert = '
-                <div class="container-fluid">
-                    <div class="alert-icon">
-                        <i class="material-icons">check</i>
-                    </div>
-                        <b>Berhasil : Menghapus Warung </b>
-                </div>';
-
-        Session:: flash("flash_notification", [
-            "level"=>"danger",
-            "message"=> $pesan_alert
-            ]);
-        return redirect()->route('warung.index');
-        }
+            $warung = Warung::destroy($id);
+            return response(200);
     }
 }

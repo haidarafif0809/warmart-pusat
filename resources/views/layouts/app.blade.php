@@ -241,18 +241,18 @@
   @endif
   @if(Laratrust::can('lihat_customer'))
   <li>
-   <a href="{{ route('customer.index') }}">
-    <span class="sidebar-mini">C</span>
-    <span class="sidebar-normal">Customer</span>
+    <router-link :to="{name: 'indexCustomer'}">
+      <span class="sidebar-mini">C</span>
+      <span class="sidebar-normal">Customer</span>
+    </router-link>
+  </li>
+  @endif
+  @if(Laratrust::can('lihat_komunitas'))
+  <li>
+   <a href="{{ route('komunitas.index') }}">
+    <span class="sidebar-mini">K</span>
+    <span class="sidebar-normal">Komunitas</span>
   </a>
-</li>
-@endif
-@if(Laratrust::can('lihat_komunitas'))
-<li>
- <a href="{{ route('komunitas.index') }}">
-  <span class="sidebar-mini">K</span>
-  <span class="sidebar-normal">Komunitas</span>
-</a>
 </li> 
 @endif
 @if(Laratrust::can('lihat_otoritas'))
@@ -278,14 +278,11 @@
 @endif        
 @if(Laratrust::can('lihat_warung'))
 <li>
- <a href="{{ route('warung.index') }}">
-  <span class="sidebar-mini">W</span>
-  <span class="sidebar-normal">Warung</span>
-</a>
+   <router-link :to="{name: 'indexWarung'}">    <span class="sidebar-mini">W</span>
+    <span class="sidebar-normal">Warung</span></router-link>
 </li>
 @endif 
 <li>
-
   <router-link :to="{name: 'indexSatuan'}">    <span class="sidebar-mini">S</span>
     <span class="sidebar-normal">Satuan</span></router-link>
   </li>
@@ -293,10 +290,10 @@
 </div>
 </li>
 <li class="">
-  <a href="{{ route('error.index')}}">
-   <i class="material-icons">error</i>
-   <p>Error Log</p>
- </a>
+  <router-link :to="{name: 'indexError'}">
+    <i class="material-icons">error</i>
+    <p>Error Log</p>
+  </router-link>
 </li>
 @endif
 <!--end master data warmart pusat-->

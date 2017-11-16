@@ -19,55 +19,118 @@ class ErrorController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-        public function __construct()
+    public function __construct()
     {
         $this->middleware('user-must-admin');
     }
 
 
   //PROSES MENAMPILKAN ERROR LOG
-     public function index(Request $request, Builder $htmlBuilder)
+    public function index(Request $request, Builder $htmlBuilder)
     { 
-         if ($request->ajax()) {
-
-            $error_log = Error::all()->where('message','<>',NULL);
-            return Datatables::of($error_log)->
-            addColumn('route',function($error){
-
-                $log = TrackerLog::where('error_id',$error->id)->where('route_path_id','<>',NULL);
-
-                if ($log->count() > 0) {
-                    # code...
-                    return $log->first()->route_path->path;
-                }
-                else {
-                    return "-";
-                }
-
-            })->
-            addColumn('method',function($error){
-
-                $log = TrackerLog::where('error_id',$error->id)->where('method','<>',NULL);
-
-                if ($log->count() > 0) {
-                    # code...
-                    return $log->first()->method;
-                }
-                else {
-                    return "-";
-                }
-
-            })->make(true);
-        }
-        $html = $htmlBuilder
-        ->addColumn(['data' => 'id', 'name' => 'id', 'title' => 'ID'])
-        ->addColumn(['data' => 'code', 'name' => 'code', 'title' => 'KODE'])  
-        ->addColumn(['data' => 'method', 'name' => 'method', 'title' => 'Method', 'orderable' => false, 'searchable'=>false])  
-        ->addColumn(['data' => 'route', 'name' => 'route', 'title' => 'Route', 'orderable' => false, 'searchable'=>false])  
-        ->addColumn(['data' => 'message', 'name' => 'message', 'title' => 'Pesan Error'])
-        ->addColumn(['data' => 'created_at', 'name' => 'created_at', 'title' => 'Waktu']);
 
         return view('error_log.index')->with(compact('html')); 
+    }
+
+    //VIEW ERROR LOG
+    public function view(){
+        $error = Error::with('log')->where('message','<>',NULL)->paginate(10);
+        $error_array = array();
+
+        foreach ($error as $errors) {
+
+            $log_route = TrackerLog::where('error_id', $errors->id)->where('route_path_id','<>',NULL);
+            $log_method = TrackerLog::where('error_id', $errors->id)->where('method','<>',NULL);
+
+            if ($log_route->count() > 0) {
+                $route_log = $log_route->first()->route_path->path;
+            }
+            else{
+                $route_log = "-";
+            }
+
+            if ($log_method->count() > 0) {
+                $metod_log = $log_method->first()->method;
+            }
+            else{
+                $metod_log = "-";
+            }
+
+            array_push($error_array, ['error'=>$errors, 'method'=>$metod_log, 'route'=>$route_log]);
+
+        }
+
+        //DATA PAGINATION 
+        $respons['current_page'] = $error->currentPage();
+        $respons['data'] = $error_array;
+        $respons['first_page_url'] = url('/error/view?page='.$error->firstItem());
+        $respons['from'] = 1;
+        $respons['last_page'] = $error->lastPage();
+        $respons['last_page_url'] = url('/error/view?page='.$error->lastPage());
+        $respons['next_page_url'] = $error->nextPageUrl();
+        $respons['path'] = url('/error/view');
+        $respons['per_page'] = $error->perPage();
+        $respons['prev_page_url'] = $error->previousPageUrl();
+        $respons['to'] = $error->perPage();
+        $respons['total'] = $error->total();
+        //DATA PAGINATION
+
+        return response()->json($respons);  
+    }
+
+    //PEBCARIAN ERROR LOG
+    public function pencarian(Request $request){
+        $search = $request->search;// REQUEST SEARCH
+
+        $error = Error::with('log')->where('message','<>',NULL)
+        ->where(function($query) use ($search){// search
+            $query->orwhere('id','LIKE','%'.$search.'%')
+            ->orWhere('code','LIKE','%'.$search.'%')
+            ->orWhere('message','LIKE','%'.$search.'%')
+            ->orWhere('created_at','LIKE','%'.$search.'%');
+        })->paginate(10);
+
+        $error_array = array();
+
+        foreach ($error as $errors) {
+
+            $log_route = TrackerLog::where('error_id', $errors->id)->where('route_path_id','<>',NULL);
+            $log_method = TrackerLog::where('error_id', $errors->id)->where('method','<>',NULL);
+
+            if ($log_route->count() > 0) {
+                $route_log = $log_route->first()->route_path->path;
+            }
+            else{
+                $route_log = "-";
+            }
+
+            if ($log_method->count() > 0) {
+                $metod_log = $log_method->first()->method;
+            }
+            else{
+                $metod_log = "-";
+            }
+
+            array_push($error_array, ['error'=>$errors, 'method'=>$metod_log, 'route'=>$route_log]);
+
+        }
+
+        //DATA PAGINATION 
+        $respons['current_page'] = $error->currentPage();
+        $respons['data'] = $error_array;
+        $respons['first_page_url'] = url('/error/view?page='.$error->firstItem());
+        $respons['from'] = 1;
+        $respons['last_page'] = $error->lastPage();
+        $respons['last_page_url'] = url('/error/view?page='.$error->lastPage());
+        $respons['next_page_url'] = $error->nextPageUrl();
+        $respons['path'] = url('/error/view');
+        $respons['per_page'] = $error->perPage();
+        $respons['prev_page_url'] = $error->previousPageUrl();
+        $respons['to'] = $error->perPage();
+        $respons['total'] = $error->total();
+        //DATA PAGINATION
+
+        return response()->json($respons); 
     }
 
     /**
