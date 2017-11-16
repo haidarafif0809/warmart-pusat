@@ -2,24 +2,24 @@
 
 @section('content')
 <style type="text/css">
-    #card-ubah-profil{ 
-        background: #fafafa;; 
-        position: relative; 
-        z-index: 3; 
+#card-ubah-profil{ 
+    background: #fafafa;; 
+    position: relative; 
+    z-index: 3; 
 
-        margin: -60px 30px 60px; 
-        border-radius: 6px; 
-        box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2); 
-    } 
-    #card-ubah-profil-mobile{ 
-        background: #fafafa;; 
-        position: relative; 
-        z-index: 3; 
+    margin: -60px 30px 60px; 
+    border-radius: 6px; 
+    box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2); 
+} 
+#card-ubah-profil-mobile{ 
+    background: #fafafa;; 
+    position: relative; 
+    z-index: 3; 
 
-        margin: -30px 0px 60px;
-        border-radius: 6px; 
-        box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2); 
-    } 
+    margin: -30px 0px 60px;
+    border-radius: 6px; 
+    box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2); 
+} 
 </style>
 @if (Agent::isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
 <div class="page-header header-filter header-small" data-parallax="true"" style="background-image: url('image/background2.jpg');">
@@ -223,15 +223,15 @@
 
 @section('scripts')
 <script type="text/javascript">
-   $(document).ready(function(){
+ $(document).ready(function(){
     $("#nama_pelanggan").focus();
 });
 
-   $('.datepicker').datepicker({
+ $('.datepicker').datepicker({
     format: 'dd-mm.yyyy', 
     autoclose: true,
 });
-   $(document).on('click', '#btnSimpanProfil', function(){
+ $(document).on('click', '#btnSimpanProfil', function(){
     swal("Berhasil!", "Profil Berhasil Diubah", "success");
 });
 </script>

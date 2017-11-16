@@ -93,7 +93,7 @@
                 </table>
               </div>
             </div>
-            <button type="button" class="btn btn-round pull-right" style="background-color: #f44336">Lanjut Ke Pembayaran <i class="material-icons">keyboard_arrow_right</i></button>
+            <a href="{{ url('/selesaikan-pemesanan') }}" type="button" class="btn btn-round pull-right" style="background-color: #f44336">Lanjut Ke Pembayaran <i class="material-icons">keyboard_arrow_right</i></a>
           </div>
         </div>
       </div>
