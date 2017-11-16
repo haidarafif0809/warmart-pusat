@@ -35,7 +35,7 @@
                   <h6 class="card-title" style="color: black; padding-left: 10px"> Alamat Pengiriman</h6> <hr>
                 </div>
 
-                {!! Form::model($user, ['url' => route('user.proses_ubah_profil', $user->id), 'method' => 'put', 'files'=>'true','class'=>'form-horizontal']) !!}
+                {!! Form::model($user, ['url' => route('selesaikan-pemesanan.proses'), 'method' => 'put', 'files'=>'true','class'=>'form-horizontal']) !!}
                 <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                   {!! Form::label('name', 'Nama', ['class'=>'col-md-2 control-label']) !!}
                   <div class="col-md-6">
@@ -60,7 +60,8 @@
                   </div>
                 </div>
 
-                {!! Form::close() !!}
+                {!! Form::hidden('jumlah_produk',$jumlah_produk->total_produk , ['class'=>'form-control']) !!}
+                {!! Form::hidden('subtotal', $subtotal, ['class'=>'form-control','required','autocomplete'=>'off', 'placeholder' => 'No. Telpon', 'id' => 'nama_pelanggan']) !!} 
               </div>
             </div> 
 
@@ -102,17 +103,18 @@
                   <table>
                     <tbody>      
                       <tr><td width="50%">Jumlah Produk </td> <td>: &nbsp;&nbsp;&nbsp;</td> <td>{{ $jumlah_produk->total_produk }}</td></tr>
-                      <tr><td width="50%">Subtotal </td> <td>: &nbsp;&nbsp;&nbsp;</td> <td>Rp. {{ $subtotal }}</td></tr>
+                      <tr><td width="50%">Subtotal </td> <td>: &nbsp;&nbsp;&nbsp;</td> <td>Rp. {{ number_format($subtotal,0,',','.') }}</td></tr>
                     </tbody>
                   </table><hr>
                   <table>
                     <tbody>     
-                      <tr><td width="40%"><h5><b>Total :</b></h5></td> <td> &nbsp;&nbsp;&nbsp;</td> <td><h5><b>RP {{ $subtotal }}</b></h5></td></tr>
+                      <tr><td width="40%"><h5><b>Total :</b></h5></td> <td> &nbsp;&nbsp;&nbsp;</td> <td><h5><b>RP {{ number_format($subtotal,0,',','.') }}</b></h5></td></tr>
                     </tbody>
                   </table>
                 </div>
-              </div>
-              <a href="{{ url('/pembayaran') }}" type="button" class="btn btn-round pull-right" style="background-color: #f44336">Selesai Pesanan <i class="material-icons">keyboard_arrow_right</i></a>
+              </div> 
+              {!! Form::button('Selesai Pesanan <i class="material-icons">keyboard_arrow_right</i> ', ['class'=>'btn btn-round pull-right', 'type'=>'submit','style'=>'background-color: #f44336']) !!}
+              {!! Form::close() !!}
             </div>
           </div>
         </div> 

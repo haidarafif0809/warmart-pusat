@@ -83,7 +83,14 @@ Route::get('/keranjang-belanja',[
 Route::get('/selesaikan-pemesanan',[ 
 	'middleware' => ['auth'],
 	'as' => 'selesaikan-pemesanan.index',
-	'uses' => 'KeranjangBelanjaController@selesaikanPemesanan'
+	'uses' => 'PemesananController@selesaikanPemesanan'
+]);
+
+//PUNYA PROSES SELESAI PEMESANAN
+Route::put('proses/selesaikan-pemesanan',[ 
+	'middleware' => ['auth'],
+	'as' => 'selesaikan-pemesanan.proses',
+	'uses' => 'PemesananController@prosesSelesaikanPemesanan'
 ]);
 
 Route::get('/keranjang-belanja/tambah-jumlah-produk-keranjang-belanja/{id}',[

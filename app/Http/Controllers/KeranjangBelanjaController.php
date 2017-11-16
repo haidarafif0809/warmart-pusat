@@ -16,10 +16,32 @@ use DB;
 
 class KeranjangBelanjaController extends Controller
 {
-    //
-	public function produkKeranjang($keranjang_belanjaan)
+    // 
+
+
+	public function daftar_belanja()
 	{
+		SEOMeta::setTitle('War-Mart.id');
+		SEOMeta::setDescription('Warmart marketplace warung muslim pertama di Indonesia');
+		SEOMeta::setCanonical('https://war-mart.id');
+		SEOMeta::addKeyword(['warmart', 'warung', 'marketplace','toko online','belanja','lazada']);
+
+		OpenGraph::setDescription('Warmart marketplace warung muslim pertama di Indonesia');
+		OpenGraph::setTitle('War-Mart.id');
+		OpenGraph::setUrl('https://war-mart.id');
+		OpenGraph::addProperty('type', 'articles'); 
+
+		$agent = new Agent();
+
+		$keranjang_belanjaan = KeranjangBelanja::with(['produk','pelanggan'])->where('id_pelanggan',Auth::user()->id)->get();
+		$cek_belanjaan = $keranjang_belanjaan->count();  
+
+		$jumlah_produk = KeranjangBelanja::select([DB::raw('IFNULL(SUM(jumlah_produk),0) as total_produk')])->first();  
+		//FOTO WARMART
+		$logo_warmart = "".asset('/assets/img/examples/warmart_logo.png')."";
+      	//MEANMPILKAN PRODUK BELANJAAN 
 		$produk_belanjaan = '';
+		$subtotal = 0;
 		foreach ($keranjang_belanjaan as $keranjang_belanjaans) {  
 			$barang = Barang::where('id',$keranjang_belanjaans->id_produk)->first();
 			
@@ -84,77 +106,8 @@ class KeranjangBelanjaController extends Controller
 			</td>
 			</tr>  
 			';  
-		}
-		return $produk_belanjaan;
-	}
-
-
-
-	public function subtotalProduk($keranjang_belanjaan)
-	{
-		$subtotal = 0;
-		foreach ($keranjang_belanjaan as $keranjang_belanjaans) {  
-			$harga_produk = $keranjang_belanjaans->produk->harga_jual * $keranjang_belanjaans->jumlah_produk; 
 			$subtotal = $subtotal += $harga_produk;
-
-
 		}
-		return $subtotal;
-	}
-
-
-
-	public function selesaikanPemesanan()
-	{ 
-		SEOMeta::setTitle('War-Mart.id');
-		SEOMeta::setDescription('Warmart marketplace warung muslim pertama di Indonesia');
-		SEOMeta::setCanonical('https://war-mart.id');
-		SEOMeta::addKeyword(['warmart', 'warung', 'marketplace','toko online','belanja','lazada']);
-
-		OpenGraph::setDescription('Warmart marketplace warung muslim pertama di Indonesia');
-		OpenGraph::setTitle('War-Mart.id');
-		OpenGraph::setUrl('https://war-mart.id');
-		OpenGraph::addProperty('type', 'articles'); 
-
-		$agent = new Agent();
-
-		$keranjang_belanjaan = KeranjangBelanja::with(['produk','pelanggan'])->where('id_pelanggan',Auth::user()->id)->get();
-		$cek_belanjaan = $keranjang_belanjaan->count();  
-
-		$jumlah_produk = KeranjangBelanja::select([DB::raw('IFNULL(SUM(jumlah_produk),0) as total_produk')])->first();  
-		//FOTO WARMART
-		$logo_warmart = "".asset('/assets/img/examples/warmart_logo.png')."";
-      	//MEANMPILKAN PRODUK BELANJAAN  
-		$subtotal = $this->subtotalProduk($keranjang_belanjaan);
-
-		$user = Auth::user();
-
-		return view('layouts.selesaikan_pemesanan',['keranjang_belanjaan'=>$keranjang_belanjaan,'cek_belanjaan'=>$cek_belanjaan,'agent'=>$agent,'jumlah_produk'=>$jumlah_produk,'logo_warmart'=>$logo_warmart,'subtotal'=>number_format($subtotal,0,',','.'),'user'=>$user]);
-	}
-
-	public function daftar_belanja()
-	{
-		SEOMeta::setTitle('War-Mart.id');
-		SEOMeta::setDescription('Warmart marketplace warung muslim pertama di Indonesia');
-		SEOMeta::setCanonical('https://war-mart.id');
-		SEOMeta::addKeyword(['warmart', 'warung', 'marketplace','toko online','belanja','lazada']);
-
-		OpenGraph::setDescription('Warmart marketplace warung muslim pertama di Indonesia');
-		OpenGraph::setTitle('War-Mart.id');
-		OpenGraph::setUrl('https://war-mart.id');
-		OpenGraph::addProperty('type', 'articles'); 
-
-		$agent = new Agent();
-
-		$keranjang_belanjaan = KeranjangBelanja::with(['produk','pelanggan'])->where('id_pelanggan',Auth::user()->id)->get();
-		$cek_belanjaan = $keranjang_belanjaan->count();  
-
-		$jumlah_produk = KeranjangBelanja::select([DB::raw('IFNULL(SUM(jumlah_produk),0) as total_produk')])->first();  
-		//FOTO WARMART
-		$logo_warmart = "".asset('/assets/img/examples/warmart_logo.png')."";
-      	//MEANMPILKAN PRODUK BELANJAAN 
-		$produk_belanjaan = $this->produkKeranjang($keranjang_belanjaan);
-		$subtotal = $this->subtotalProduk($keranjang_belanjaan);
 
 
 		return view('layouts.keranjang_belanja',['keranjang_belanjaan'=>$keranjang_belanjaan,'cek_belanjaan'=>$cek_belanjaan,'agent'=>$agent,'produk_belanjaan'=>$produk_belanjaan,'jumlah_produk'=>$jumlah_produk,'logo_warmart'=>$logo_warmart,'subtotal'=>number_format($subtotal,0,',','.')]);
