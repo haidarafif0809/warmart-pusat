@@ -185,13 +185,13 @@ class DaftarProdukController extends Controller
                   //JIKA USER LOGIN BUKAN PELANGGAN MAKA TIDAK BISA PESAN PRODUK
       if(Auth::user()->tipe_user == 3){
        if ($cek_produk == 0) {
-         $tombol_beli = '<a class="btn btn-danger btn-round" rel="tooltip" title="Stok Tidak Ada"><b style="font-size:18px"> Beli </b><i class="fa fa-chevron-right" aria-hidden="true" disabled="" ></i></a>';  
+         $tombol_beli = '<a style="background-color:#01573e" class="btn btn-round" rel="tooltip" title="Stok Tidak Ada"><b style="font-size:18px"> Beli </b><i class="fa fa-chevron-right" aria-hidden="true" disabled="" ></i></a>';  
        }else{
-         $tombol_beli = '<a href="'.url("/keranjang-belanja") .'" class="btn btn-danger btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja" id="btnBeliSekarang"><b style="font-size:18px"> Beli </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';            
+         $tombol_beli = '<a href="'.url("/keranjang-belanja") .'" style="background-color:#01573e" class="btn btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja" id="btnBeliSekarang"><b style="font-size:18px"> Beli </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';            
        }
      }
      else{
-      $tombol_beli = '<button type="button" class="btn btn-danger btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja" id="btnBeli"><b style="font-size:18px"> Beli </b><i class="fa fa-chevron-right" aria-hidden="true"></i></button>';
+      $tombol_beli = '<button type="button" style="background-color:#01573e" class="btn btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja" id="btnBeli"><b style="font-size:18px"> Beli </b><i class="fa fa-chevron-right" aria-hidden="true"></i></button>';
     }
 
   }
@@ -199,13 +199,13 @@ class DaftarProdukController extends Controller
                   //JIKA USER LOGIN BUKAN PELANGGAN MAKA TIDAK BISA PESAN PRODUK
     if(Auth::user()->tipe_user == 3){
       if ($cek_produk == 0) {
-        $tombol_beli = '<a class="btn btn-danger btn-round" rel="tooltip" title="Stok Tidak Ada" disabled="" ><b style="font-size:18px"> Beli Sekarang </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';
+        $tombol_beli = '<a style="background-color:#01573e" class="btn btn-round" rel="tooltip" title="Stok Tidak Ada" disabled="" ><b style="font-size:18px"> Beli Sekarang </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';
       }else{
-       $tombol_beli = '<a href="'. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" id="btnBeliSekarang" class="btn btn-danger btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja"><b style="font-size:18px"> Beli Sekarang </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';
+       $tombol_beli = '<a href="'. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" id="btnBeliSekarang" style="background-color:#01573e" class="btn btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja"><b style="font-size:18px"> Beli Sekarang </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';
      }
    }
    else{
-    $tombol_beli = '<button type="button" class="btn btn-danger btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja" id="btnBeli"><b style="font-size:18px"> Beli Sekarang</b><i class="fa fa-chevron-right" aria-hidden="true"></i></button>';
+    $tombol_beli = '<button type="button" style="background-color:#01573e" class="btn btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja" id="btnBeli"><b style="font-size:18px"> Beli Sekarang</b><i class="fa fa-chevron-right" aria-hidden="true"></i></button>';
   }  
 
 }
