@@ -278,6 +278,8 @@ Route::get('/komunitas/konfirmasi','KomunitasController@konfirmasi')->middleware
 Route::get('/komunitas/no-konfirmasi','KomunitasController@no_konfirmasi')->middleware('auth');
 Route::get('/komunitas/warung-komunitas','KomunitasController@warungKomunitas')->middleware('auth');
 Route::get('/komunitas/kelurahan-komunitas','KomunitasController@keluarahanKomunitas')->middleware('auth');
+Route::get('/komunitas/detail-komunitas/{id}','KomunitasController@detail_lihat_komunitas')->middleware('auth');
+
 // KOMUNITAS
 
 Route::middleware('optimizeImages','auth')->group(function () {
@@ -513,13 +515,6 @@ Route::middleware('optimizeImages','auth')->group(function () {
 		'middleware' => ['auth'],
 		'as' => 'cek_total_kas',
 		'uses' => 'TransaksikasController@total_kas'
-	]);
-
-//KOMUNITAS
-	Route::get('detail_komunitas/{id}',[
-		'middleware' => ['auth','role:admin'],
-		'as' => 'komunitas.detail',
-		'uses' => 'KomunitasController@detail_lihat_komunitas'
 	]);
 
 	Route::get('komunitas/konfirmasi/{id}',[

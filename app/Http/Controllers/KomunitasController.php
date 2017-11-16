@@ -52,7 +52,7 @@ class KomunitasController extends Controller
             })
             ->addColumn('warung', function($warung){ 
 
-               if ($warung->id_warung == "") {
+             if ($warung->id_warung == "") {
                 return "-";
             }else{
                 return $warung->warung->name;
@@ -60,7 +60,7 @@ class KomunitasController extends Controller
 
         })->addColumn('kelurahan', function($kelurahan){ 
 
-           if ($kelurahan->wilayah == "") {
+         if ($kelurahan->wilayah == "") {
             return "-";
         }else{
             return $kelurahan->kelurahan->nama;
@@ -103,9 +103,9 @@ public function view (){
     $komunitas_array = array();
     foreach ($komunitas as $comunitas) {
 
-       if ($comunitas->id_warung == "") {
-           $warung = "-";
-       }else{
+     if ($comunitas->id_warung == "") {
+         $warung = "-";
+     }else{
         $warung = $comunitas->warung->name;
     }
 
@@ -155,9 +155,9 @@ public function pencarian(Request $request){
     $komunitas_array = array();
     foreach ($komunitas as $comunitas) {
 
-       if ($comunitas->id_warung == "") {
-           $warung = "-";
-       }else{
+     if ($comunitas->id_warung == "") {
+         $warung = "-";
+     }else{
         $warung = $comunitas->warung->name;
     }
 
@@ -216,7 +216,7 @@ return response()->json($respons);
      */
     public function store(Request $request)
     {
-       $this->validate($request, [
+     $this->validate($request, [
         'email'     => 'required|without_spaces|unique:users,email,',
         'name'      => 'required|unique:users,name,',
         'alamat'    => 'required',
@@ -229,7 +229,7 @@ return response()->json($respons);
 
     ]);
 
-       $komunitas = Komunitas::create([
+     $komunitas = Komunitas::create([
         'email' =>$request->email,
         'password' => bcrypt('rahasia'),
         'name' =>$request->name,
@@ -242,7 +242,7 @@ return response()->json($respons);
     ]);
 
          //masukan data komunitas komunitas
-       if ($request->name_penggiat != "" AND $request->alamat_penggiat != ""){
+     if ($request->name_penggiat != "" AND $request->alamat_penggiat != ""){
         $komunitaspenggiat = KomunitasPenggiat::create([
             'nama_penggiat' =>$request->name_penggiat,
             'alamat_penggiat'  =>$request->alamat_penggiat,
@@ -307,8 +307,8 @@ return response()->json($respons);
 
   public function detail_lihat_komunitas($id)
   {
-      $komunitas = Komunitas::with(['kelurahan','warung','komunitas_penggiat','bank_komunitas'])->find($id);
-  }
+   return $komunitas = Komunitas::with(['komunitas_penggiat','bank_komunitas'])->find($id);
+}
 
     /**
      * Update the specified resource in storage.

@@ -50,7 +50,8 @@
 									<td>{{ komunitas.email }}</td>
 									<td>{{ komunitas.wilayah }}</td>
 									<td>{{ komunitas.link_afiliasi }}</td>
-
+									<td><router-link :to="{name: 'detailKomunitas', params: {id: komunitas.id}}" class="btn btn-xs btn-warning" v-bind:id="'detail-' + komunitas.id" >
+									Detail </router-link> </td>
 									<td v-if="komunitas.konfirmasi_admin == 0"> <a href="#" class="btn btn-xs btn-primary" v-bind:id="'konfirmasi-' + komunitas.id" v-on:click="ConfirmEntry(komunitas.id, index,komunitas.nama_komunitas)">Iya</a> </td>
 
 									<td v-else><a href="#" class="btn btn-xs btn-danger" v-bind:id="'konfirmasi-' + komunitas.id" v-on:click="NoConfirmEntry(komunitas.id, index,komunitas.nama_komunitas)">Tidak</a></td>
