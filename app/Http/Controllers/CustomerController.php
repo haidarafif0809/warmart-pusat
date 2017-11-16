@@ -135,11 +135,13 @@ class CustomerController extends Controller
     public function edit($id)
     {
       $customer = Customer::find($id);
-      $tanggal = $customer->tgl_lahir;
-      $komunitas = KomunitasCustomer::where('user_id',$id)->first();
+
+      return url('customer#/edit_customer/'.$id);
+      // $tanggal = $customer->tgl_lahir;
+      // $komunitas = KomunitasCustomer::where('user_id',$id)->first();
 
 
-      return view('customer.edit')->with(compact('customer', 'tanggal','komunitas'));
+      // return view('customer.edit')->with(compact('customer', 'tanggal','komunitas'));
 
     }
 
