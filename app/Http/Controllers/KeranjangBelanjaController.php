@@ -78,23 +78,23 @@ class KeranjangBelanjaController extends Controller
 
 			if ($keranjang_belanjaans->jumlah_produk == 1) {
 				$produk_belanjaan .= '
-				<a class="btn btn-round btn-info btn-xs"  style="background-color: #f44336" disabled="true"> <i class="material-icons">remove</i> </a>'; 
+				<a class="btn btn-round btn-info btn-xs"   style="background-color: #01573e" disabled="true"> <i class="material-icons">remove</i> </a>'; 
 			}
 			else {
 				$produk_belanjaan .= ' 
-				<a href=" '. url('/keranjang-belanja/kurang-jumlah-produk-keranjang-belanja/'.$keranjang_belanjaans->id_keranjang_belanja.''). '" class="btn btn-round btn-info btn-xs"  style="background-color: #f44336"> <i class="material-icons">remove</i></a>';
+				<a href=" '. url('/keranjang-belanja/kurang-jumlah-produk-keranjang-belanja/'.$keranjang_belanjaans->id_keranjang_belanja.''). '" class="btn btn-round btn-info btn-xs"   style="background-color: #01573e"> <i class="material-icons">remove</i></a>';
 			}
 
-			$produk_belanjaan .= ' <a class="btn btn-round btn-info btn-xs"  style="background-color: #f44336">'. $keranjang_belanjaans->jumlah_produk .' </a>';
+			$produk_belanjaan .= ' <a class="btn btn-round btn-info btn-xs"   style="background-color: #01573e">'. $keranjang_belanjaans->jumlah_produk .' </a>';
 
 
 			if ($sisa_stok_keluar <= 0) {
 				$produk_belanjaan .= '
-				<a class="btn btn-round btn-info btn-xs"  style="background-color: #f44336" disabled="true"> <i class="material-icons">add</i> </a>'; 
+				<a class="btn btn-round btn-info btn-xs"   style="background-color: #01573e" disabled="true"> <i class="material-icons">add</i> </a>'; 
 			}
 			else {
 				$produk_belanjaan .= '
-				<a href=" '. url('/keranjang-belanja/tambah-jumlah-produk-keranjang-belanja/'.$keranjang_belanjaans->id_keranjang_belanja.''). '" class="btn btn-round btn-info btn-xs"  style="background-color: #f44336"> <i class="material-icons">add</i> </a>';
+				<a href=" '. url('/keranjang-belanja/tambah-jumlah-produk-keranjang-belanja/'.$keranjang_belanjaans->id_keranjang_belanja.''). '" class="btn btn-round btn-info btn-xs"   style="background-color: #01573e"> <i class="material-icons">add</i> </a>';
 			}
 			$produk_belanjaan .= '
 			</div>

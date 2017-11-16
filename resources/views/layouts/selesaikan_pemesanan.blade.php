@@ -27,6 +27,16 @@
             <li class="active">Selesaikan Pemesanan</li>
           </ul>
         </div> 
+        @if($cek_belanjaan == 0)
+        <div class="card">
+          <div class="col-md-12">
+            <center>
+              <h3>Keranjang Belanjaan Anda Kosong,Silahkan Berbelanja.</h3>
+              <a  href="{{ url('/daftar-produk') }}" type="button" class="btn btn-block" style="background-color: #01573e">Lanjut Belanja<i class="material-icons">keyboard_arrow_right</i></a>
+            </center> 
+          </div>
+        </div>
+        @else
         <div class="row"> 
           <div class="card"><br>
             <div class="col-md-7"> 
@@ -61,7 +71,7 @@
                 </div>
 
                 {!! Form::hidden('jumlah_produk',$jumlah_produk->total_produk , ['class'=>'form-control']) !!}
-                {!! Form::hidden('subtotal', $subtotal, ['class'=>'form-control','required','autocomplete'=>'off', 'placeholder' => 'No. Telpon', 'id' => 'nama_pelanggan']) !!} 
+                {!! Form::hidden('subtotal', $subtotal, ['class'=>'form-control']) !!} 
               </div>
             </div> 
 
@@ -75,7 +85,7 @@
                   <table class="table">
                     <thead> 
                       <td><b>PRODUK</b></td>
-                      <td><b>KUANTITAS</b></td>
+                      <td><b>JUMLAH</b></td>
                       <td><b>HARGA</b></td> 
                       <td><b>HAPUS</b></td>
                     </thead> 
@@ -113,11 +123,12 @@
                   </table>
                 </div>
               </div> 
-              {!! Form::button('Selesai Pesanan <i class="material-icons">keyboard_arrow_right</i> ', ['class'=>'btn btn-round pull-right', 'type'=>'submit','style'=>'background-color: #f44336']) !!}
+              {!! Form::button('Selesai Pesanan <i class="material-icons">keyboard_arrow_right</i> ', ['class'=>'btn btn-round pull-right', 'type'=>'submit','style'=>'background-color: #01573e']) !!}
               {!! Form::close() !!}
             </div>
           </div>
         </div> 
+        @endif
       </div> 
     </div>
   </div>
