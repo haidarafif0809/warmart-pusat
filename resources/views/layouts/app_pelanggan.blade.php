@@ -1,138 +1,138 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <title>War-Mart.id</title>
-    <meta charset="utf-8" />
-    <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('img/favicon.png') }}" />
-    <link rel="icon" type="image/png" href="{{ asset('img/favicon.png') }}" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
-    <meta name="viewport" content="width=device-width" />
-    <!-- Bootstrap core CSS     -->
-    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" />
+  <title>War-Mart.id</title>
+  <meta charset="utf-8" />
+  <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('img/favicon.png') }}" />
+  <link rel="icon" type="image/png" href="{{ asset('img/favicon.png') }}" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+  <meta name="viewport" content="width=device-width" />
+  <!-- Bootstrap core CSS     -->
+  <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" />
 
-    <link href="{{ asset('css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
-    <!--     Fonts and icons     -->
-    <link href="{{ asset('css/material-kit.css?v=1.2.0')}}" rel="stylesheet"/>
-    <link href="{{ asset('assets/assets-for-demo/vertical-nav.css')}}" rel="stylesheet" />
+  <link href="{{ asset('css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
+  <!--     Fonts and icons     -->
+  <link href="{{ asset('css/material-kit.css?v=1.2.0')}}" rel="stylesheet"/>
+  <link href="{{ asset('assets/assets-for-demo/vertical-nav.css')}}" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
 
-    {!! SEOMeta::generate() !!}
-    {!! OpenGraph::generate() !!}
-    {!! Twitter::generate() !!}
+  {!! SEOMeta::generate() !!}
+  {!! OpenGraph::generate() !!}
+  {!! Twitter::generate() !!}
 
-    <!-- MINIFIED -->
-    {!! SEO::generate(true) !!}
-    
+  <!-- MINIFIED -->
+  {!! SEO::generate(true) !!}
 
-    <!-- LUMEN -->
-    {!! app('seotools')->generate() !!}
+
+  <!-- LUMEN -->
+  {!! app('seotools')->generate() !!}
 
 </head>
 
 <style type="text/css">
-.navbar-nav .open .dropdown-menu{
+  .navbar-nav .open .dropdown-menu{
     color: grey;
-}
+  }
 </style>
 
 
 <body class="ecommerce-page">
 
-    @if (Agent::isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
-    <nav class="navbar navbar-default navbar-fixed-top navbar-color-on-scroll" color-on-scroll="100" id="sectionsNav">
-        <div class="container">
-            <ul class="nav navbar-nav navbar-right">             
+  @if (Agent::isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
+  <nav class="navbar navbar-default navbar-fixed-top navbar-color-on-scroll" color-on-scroll="100" id="sectionsNav">
+    <div class="container">
+      <ul class="nav navbar-nav navbar-right">             
 
-                <div class="row">
-                    <div class="col-md-5 col-sm-5 col-xs-5">                            
-                        <a href="{{ url('/home') }}"><img  class="img img-raised" src="{!! $logo_warmart !!}" style="width: 50%"/></a>
-                    </div>
-                    <div class="col-md-7 col-sm-7 col-xs-7">
-                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="material-icons">person</i> {{ Auth::user()->name }} 
-                            <b class="caret"></b>
-                        </a>
+        <div class="row">
+          <div class="col-md-5 col-sm-5 col-xs-5">                            
+            <a href="{{ url('/home') }}"><img  class="img img-raised" src="{!! $logo_warmart !!}" style="width: 50%"/></a>
+          </div>
+          <div class="col-md-7 col-sm-7 col-xs-7">
+           <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <i class="material-icons">person</i> {{ Auth::user()->name }} 
+              <b class="caret"></b>
+            </a>
 
-                        <ul class="dropdown-menu dropdown-with-icons">
-                            <li style="color:black">
-                                <a href="{{ url('/keranjang-belanja') }}" class="warna-list">
-                                    <i class="material-icons">shopping_cart</i> Keranjang Belanja <b style="font-size: 15px">| {{ $cek_belanjaan }}</b>
-                                </a>
-                            </li>
-                            <!--HANYA USER LOGIN PELANGGAN-->
-                            @if(Auth::user()->tipe_user == 3)
-                            <li style="color:black">
-                                <a href="{{ url('/ubah-profil-pelanggan') }}">
-                                    <i class="material-icons">settings</i> Ubah Profil
-                                </a>
-                            </li>
-                            <li style="color:black">
-                                <a href="{{ url('/ubah-password-pelanggan') }}">
-                                    <i class="material-icons">lock_outline</i> Ubah Password
-                                </a>
-                            </li>                        
-                            @endif
-                            <li style="color:black">
-                                <a href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> 
-                                    <i class="material-icons">reply_all</i> Logout
-                                </a>
-                                <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
-                                    {{ csrf_field() }}
-                                </form>
-                            </li>                            
-                        </ul>
-                    </li>
-                </div>
-            </div>
-        </ul>
-    </div>
+            <ul class="dropdown-menu dropdown-with-icons">
+              <li style="color:black">
+                <a href="{{ url('/keranjang-belanja') }}" class="warna-list">
+                  <i class="material-icons">shopping_cart</i> Keranjang Belanja <b style="font-size: 15px">| {{ $cek_belanjaan }}</b>
+                </a>
+              </li>
+              <!--HANYA USER LOGIN PELANGGAN-->
+              @if(Auth::user()->tipe_user == 3)
+              <li style="color:black">
+                <a href="{{ url('/ubah-profil-pelanggan') }}">
+                  <i class="material-icons">settings</i> Ubah Profil
+                </a>
+              </li>
+              <li style="color:black">
+                <a href="{{ url('/ubah-password-pelanggan') }}">
+                  <i class="material-icons">lock_outline</i> Ubah Password
+                </a>
+              </li>                        
+              @endif
+              <li style="color:black">
+                <a href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> 
+                  <i class="material-icons">reply_all</i> Logout
+                </a>
+                <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
+                  {{ csrf_field() }}
+                </form>
+              </li>                            
+            </ul>
+          </li>
+        </div>
+      </div>
+    </ul>
+  </div>
 </nav>
 @else
 <nav class="navbar navbar-default navbar-transparent navbar-fixed-top navbar-color-on-scroll" color-on-scroll="100" id="sectionsNav">
-   <div class="container">
-       <a href="{{ url('/home') }}"><img  class="img img-raised" src="{!! $logo_warmart !!}" style="width: 10%"/></a>
-       <ul class="nav navbar-nav navbar-right">
-        <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                <i class="material-icons">person</i> {{ Auth::user()->name }}
-                <b class="caret"></b>
-            </a>
-            <ul class="dropdown-menu dropdown-with-icons">
-                <!--HANYA USER LOGIN PELANGGAN-->
-                @if(Auth::user()->tipe_user == 3)
-                <li style="color:black">
-                    <a href="{{ url('/ubah-profil-pelanggan') }}">
-                        <i class="material-icons">settings</i> Ubah Profil
-                    </a>
-                </li>
-                <li style="color:black">
-                    <a href="{{ url('/ubah-password-pelanggan') }}">
-                        <i class="material-icons">lock_outline</i> Ubah Password
-                    </a>
-                </li>                        
-                @endif
-                <li>
-                    <a href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> 
-                        <i class="material-icons">reply_all</i> Logout
-                    </a>
-                    <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
-                        {{ csrf_field() }}
-                    </form>
-                </li>                             
-            </ul>
+ <div class="container">
+   <a href="{{ url('/home') }}"><img  class="img img-raised" src="{!! $logo_warmart !!}" style="width: 10%"/></a>
+   <ul class="nav navbar-nav navbar-right">
+    <li class="dropdown">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+        <i class="material-icons">person</i> {{ Auth::user()->name }}
+        <b class="caret"></b>
+      </a>
+      <ul class="dropdown-menu dropdown-with-icons">
+        <!--HANYA USER LOGIN PELANGGAN-->
+        @if(Auth::user()->tipe_user == 3)
+        <li style="color:black">
+          <a href="{{ url('/ubah-profil-pelanggan') }}">
+            <i class="material-icons">settings</i> Ubah Profil
+          </a>
         </li>
+        <li style="color:black">
+          <a href="{{ url('/ubah-password-pelanggan') }}">
+            <i class="material-icons">lock_outline</i> Ubah Password
+          </a>
+        </li>                        
+        @endif
+        <li>
+          <a href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> 
+            <i class="material-icons">reply_all</i> Logout
+          </a>
+          <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
+            {{ csrf_field() }}
+          </form>
+        </li>                             
+      </ul>
+    </li>
 
-        <li class="button-container">
-            <a href="{{ url('/keranjang-belanja') }}" class="btn btn-rose btn-round">
-                <i class="material-icons">shopping_cart</i> Keranjang Belanja <b style="font-size: 15px">| {{ $cek_belanjaan }}</b>
-            </a>
-        </li>
+    <li class="button-container">
+      <a href="{{ url('/keranjang-belanja') }}" class="btn btn-rose btn-round">
+        <i class="material-icons">shopping_cart</i> Keranjang Belanja <b style="font-size: 15px">| {{ $cek_belanjaan }}</b>
+      </a>
+    </li>
 
-    </ul>
+  </ul>
 </div>
 </nav>
 @endif 
@@ -148,60 +148,65 @@
         <div class="col-md-4">
           <h5>Tentang Kami</h5>
           <p>Warmart adalah marketplace warung muslim pertama di Indonesia. Kami menghubungkan usaha-usaha muslim dengan pelanggan seluruh Umat Islam di Indonesia. Jenis usaha yang dapat bergabung dengan Warmart diantaranya: Warung, Toko, Minimarket, Pedagang Kaki Lima, Bengkel, Rumah Makan, Klinik, Home Industri, Peternakan, Pertanian, Perikanan, Kerajinan, Fashion dan usaha lainya.</p>
-      </div>
-      <div class="col-md-4">
+        </div>
+        <div class="col-md-4">
           <h5>Contact Us</h5>
           <div class="social-feed">
             <div class="feed-line">
               <i class="fa fa-phone-square"></i>
               <p>+62-721-8050-299 <br>
                 Bandar Lampung, Indonesia
-            solusibisnis@andaglos.id</p>
+                solusibisnis@andaglos.id</p>
+              </div>
+              <div class="feed-line">
+                <i class="fa fa-phone-square"></i>
+                <p>Whatsapp<br>
+                  +62-811-728-549</p>
+                </div>
+                <div class="feed-line">                            
+                  <a href="https://id-id.facebook.com/andaglos/" target="blank"><i class="fa fa-facebook-square"></i> Andaglos</a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <h5>Instagram</h5>
+              <div class="gallery-feed">
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="feed-line">                            
-          <a href="https://id-id.facebook.com/andaglos/" target="blank"><i class="fa fa-facebook-square"></i> Andaglos</a>
-      </div>
+        <hr />
+        <ul class="pull-left">
+          <li>
+            <a href="#pablo">
+             Blog
+           </a>
+         </li>
+         <li>
+          <a href="#pablo">
+            Presentation
+          </a>
+        </li>
+        <li>
+          <a href="#pablo">
+           Discover
+         </a>
+       </li>
+       <li>
+        <a href="#pablo">
+          Payment
+        </a>
+      </li>
+      <li>
+        <a href="#pablo">
+          Contact Us
+        </a>
+      </li>
+    </ul>
+    <div class="copyright pull-right">
+      Copyright &copy; <script>document.write(new Date().getFullYear())</script> <a href="https://andaglos.id/"> PT. Andaglos Global Teknologi.</a>
+    </div>
   </div>
-</div>
-<div class="col-md-4">
-  <h5>Instagram</h5>
-  <div class="gallery-feed">
-  </div>
-</div>
-</div>
-</div>
-<hr />
-<ul class="pull-left">
-  <li>
-    <a href="#pablo">
-       Blog
-   </a>
-</li>
-<li>
-  <a href="#pablo">
-    Presentation
-</a>
-</li>
-<li>
-  <a href="#pablo">
-     Discover
- </a>
-</li>
-<li>
-    <a href="#pablo">
-      Payment
-  </a>
-</li>
-<li>
-    <a href="#pablo">
-      Contact Us
-  </a>
-</li>
-</ul>
-<div class="copyright pull-right">
-  Copyright &copy; <script>document.write(new Date().getFullYear())</script> <a href="https://andaglos.id/"> PT. Andaglos Global Teknologi.</a>
-</div>
-</div>
 </footer>
 
 <!--Start of Tawk.to Script-->
@@ -214,7 +219,7 @@
     s1.charset='UTF-8';
     s1.setAttribute('crossorigin','*');
     s0.parentNode.insertBefore(s1,s0);
-})();
+  })();
 </script>
 <!--End of Tawk.to Script-->
 </body>
@@ -264,16 +269,16 @@
 <script src="{{ asset('js/material-kit.js?v=1.2.0')}}" type="text/javascript"></script>
 
 <script type="text/javascript"> 
- 
-   $(document).on('click', '#btnBeliSekarang', function(){      
-      swal({
-        title: "Produk Berhasil Di Tambah Ke Keranjang Belanjaan", 
-        showConfirmButton :  false,
-        type: "success",
-    });
+
+ $(document).on('click', '#btnBeliSekarang', function(){      
+  swal({
+    title: "Produk Berhasil Di Tambah Ke Keranjang Belanjaan", 
+    showConfirmButton :  false,
+    type: "success",
   });
-   $(document).on('click', '#btnBeli', function(){
-    swal("Info!", "Silakan Login Sebagai Pelanggan Untuk Melakukan Pesanan.", "info");
+});
+ $(document).on('click', '#btnBeli', function(){
+  swal("Info!", "Silakan Login Sebagai Pelanggan Untuk Melakukan Pesanan.", "info");
 });
 </script>
 </html>

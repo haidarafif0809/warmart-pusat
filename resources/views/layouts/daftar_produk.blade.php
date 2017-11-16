@@ -48,7 +48,7 @@
                         </div>
                     </div>
                     <div class="col-sm-2">
-                        <button type="submit" class="btn btn-block" style="background-color: #f44336">Cari</button>
+                        <button type="submit" class="btn btn-block" style="background-color: #01573e">Cari</button>
                     </div>
                 </div>
                 {!! Form::close() !!}
@@ -69,11 +69,11 @@
                     <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
                         <div class="panel-body">
 
-                            <ul class="nav" style="background-color: #f44336">                                        
+                            <ul class="nav" style="background-color: #01573e">                                        
                                 <li><a style="color:white" href="{{route('daftar_produk.index')}}"><i class="material-icons">format_align_justify</i> SEMUA KATEGORI</a></li>
                             </ul>
 
-                            <ul class="nav" style="background-color: #f44336">
+                            <ul class="nav" style="background-color: #01573e">
                                 {!! $kategori_produk !!}                        
                             </ul>
                         </div>
@@ -127,7 +127,7 @@
                         </div>
                     </div>
                     <div class="col-sm-2">
-                        <button type="submit" class="btn btn-block" style="background-color: #f44336">Cari</button>
+                        <button type="submit" class="btn btn-block" style="background-color: #01573e">Cari</button>
                     </div>
                 </div>
                 {!! Form::close() !!}
@@ -136,12 +136,12 @@
 
         <div class="row">
             <div class="col-md-3"> 
-                <ul class="nav nav-tabs" data-tabs="tabs" style="background-color: #f44336">                                        
+                <ul class="nav nav-tabs" data-tabs="tabs" style="background-color: #01573e">                                        
                     <li><a href="{{route('daftar_produk.index')}}"><i class="material-icons">format_align_justify</i> Semua Kategori</a></li>
                 </ul>
             </div>
             <div class="col-md-9">                        
-                <ul class="nav nav-tabs" data-tabs="tabs" style="background-color: #f44336">
+                <ul class="nav nav-tabs" data-tabs="tabs" style="background-color: #01573e">
                     {!! $kategori_produk !!}                        
                 </ul>
             </div>

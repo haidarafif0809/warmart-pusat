@@ -32,9 +32,9 @@
 
 <style type="text/css">
 
-  .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
-   padding: 1px;
- }
+.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+ padding: 1px;
+}
 </style>
 
 <body>
@@ -249,10 +249,10 @@
   @endif
   @if(Laratrust::can('lihat_komunitas'))
   <li>
-   <a href="{{ route('komunitas.index') }}">
+   <router-link :to="{name: 'indexKomunitas'}">
     <span class="sidebar-mini">K</span>
     <span class="sidebar-normal">Komunitas</span>
-  </a>
+  </router-link>
 </li> 
 @endif
 @if(Laratrust::can('lihat_otoritas'))
@@ -278,8 +278,8 @@
 @endif        
 @if(Laratrust::can('lihat_warung'))
 <li>
-   <router-link :to="{name: 'indexWarung'}">    <span class="sidebar-mini">W</span>
-    <span class="sidebar-normal">Warung</span></router-link>
+ <router-link :to="{name: 'indexWarung'}">    <span class="sidebar-mini">W</span>
+  <span class="sidebar-normal">Warung</span></router-link>
 </li>
 @endif 
 <li>

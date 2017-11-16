@@ -143,7 +143,7 @@ export default {
             text : "Anda Yakin Ingin Menghapus Customer "+name+" ?", 
             icon : "warning", 
             buttons: true, 
-            dangerMode: true, 
+            dangerMode: true,
           })
           .then((willDelete) => {
             if (willDelete) { 

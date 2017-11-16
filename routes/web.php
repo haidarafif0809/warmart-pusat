@@ -276,6 +276,17 @@ Route::get('/warung/view','WarungController@view')->middleware('auth');
 Route::get('/warung/pencarian','WarungController@pencarian')->middleware('auth');
 Route::get('/warung/pilih-kelurahan','WarungController@pilih_kelurahan')->middleware('auth');
 
+
+
+// KOMUNITAS VUE.JS
+Route::get('/komunitas/view','KomunitasController@view')->middleware('auth');
+Route::get('/komunitas/pencarian','KomunitasController@pencarian')->middleware('auth');
+Route::get('/komunitas/konfirmasi','KomunitasController@konfirmasi')->middleware('auth');
+Route::get('/komunitas/no-konfirmasi','KomunitasController@no_konfirmasi')->middleware('auth');
+Route::get('/komunitas/warung-komunitas','KomunitasController@warungKomunitas')->middleware('auth');
+Route::get('/komunitas/kelurahan-komunitas','KomunitasController@keluarahanKomunitas')->middleware('auth');
+// KOMUNITAS
+
 Route::middleware('optimizeImages','auth')->group(function () {
 	
 	Route::resource('user', 'UserController');
