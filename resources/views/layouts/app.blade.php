@@ -252,7 +252,7 @@
    <router-link :to="{name: 'indexKomunitas'}">
     <span class="sidebar-mini">K</span>
     <span class="sidebar-normal">Komunitas</span>
-  </a>
+  </router-link>
 </li> 
 @endif
 @if(Laratrust::can('lihat_otoritas'))
