@@ -7,14 +7,14 @@
 <!-- LOGI USER WARUNG -->
 @if(Auth::user()->tipe_user == 4 AND Auth::user()->konfirmasi_admin == 0)
 <div class="alert alert-info">
- <div class="alert-icon">
+   <div class="alert-icon">
     <i class="material-icons">info_outline</i>
 </div>
 <b>Info : Pendaftaran anda sebagai warung sedang menunggu verifikasi dari admin.</b>
 </div>
 @elseif(Auth::user()->tipe_user == 2 AND Auth::user()->konfirmasi_admin == 0)
 <div class="alert alert-info">
- <div class="alert-icon">
+   <div class="alert-icon">
     <i class="material-icons">info_outline</i>
 </div>
 <b>Info : Pendaftaran anda sebagai komunitas sedang menunggu verifikasi dari admin.</b>
@@ -93,7 +93,7 @@
 @endsection
 @section('scripts')
 @if(Auth::user()->tipe_user == 1)
-<script type="text/javascript" src="{{ asset('js/app.js?v=1.12')}}"></script>
+<script type="text/javascript" src="{{ asset('js/app.js?v=1.13')}}"></script>
 @endif
 @endsection
 
