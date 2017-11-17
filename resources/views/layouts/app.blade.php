@@ -32,9 +32,9 @@
 
 <style type="text/css">
 
-.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
- padding: 1px;
-}
+  .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+   padding: 1px;
+ }
 </style>
 
 <body>
@@ -270,10 +270,9 @@
 </li>
 
 <li>
- <a href="{{ route('user_warung.index') }}">
+ <router-link :to="{name: 'indexUserWarung'}">
   <span class="sidebar-mini">UW</span>
-  <span class="sidebar-normal">User Warung</span>
-</a>
+  <span class="sidebar-normal">User Warung</span></router-link>
 </li>
 @endif        
 @if(Laratrust::can('lihat_warung'))

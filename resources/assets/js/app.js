@@ -61,6 +61,10 @@
   import KomunitasCreate from './components/komunitas/KomunitasCreate.vue';
   import KomunitasEdit from './components/komunitas/KomunitasEdit.vue';
 
+  /**USER WARUNG*/
+  import UserWarungIndex from './components/user_warung/UserWarungIndex.vue';
+  import UserWarungEdit from './components/user_warung/UserWarungEdit.vue';
+
 
  const routes = [ 
  {
@@ -103,6 +107,10 @@
 {path: '/komunitas', component: KomunitasIndex, name: 'indexKomunitas'},
 {path: '/create-komunitas', component: KomunitasCreate, name: 'createKomunitas'},
 {path: '/edit-komunitas/:id', component: KomunitasEdit, name: 'editKomunitas'},
+
+// USER WARUNG
+{path: '/user-warung', component: UserWarungIndex, name: 'indexUserWarung'},
+{path: '/edit-user-warung/:id', component: UserWarungEdit, name: 'editUserWarung'},
 
 ]
 
