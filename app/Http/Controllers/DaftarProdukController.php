@@ -263,7 +263,7 @@ public function cardProduk($produks){
     $card_produk .= '      
     <div class="col-md-3 col-sm-6 col-xs-6 list-produk">
     <div class="card cards card-pricing">
-    <a href="'.url("/keranjang-belanja") .'">
+      <a href="'.url("/detail-produk/".$produks->id."") .'">
     <div class="card-image">';
     $card_produk .= $this->fotoProduk($produks);
     $card_produk .= '
@@ -271,7 +271,7 @@ public function cardProduk($produks){
     </a>
     <div class="card-content">
     <div class="footer">  
-    <a href="'.url("/keranjang-belanja") .'" class="card-title">';
+      <a href="'.url("/detail-produk/".$produks->id."") .'" class="card-title">';
     $card_produk .= $this->namaProduk($produks);
     $card_produk .= '</a><br>             
     <b style="color:red; font-size:18px"> '.$produks->rupiah.' </b><br>';
