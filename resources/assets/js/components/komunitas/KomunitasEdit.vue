@@ -47,7 +47,7 @@
 							<label for="id_warung" class="col-md-2 control-label ">Warung</label>
 							<div class="col-md-4">
 
-								<selectize-component v-model="komunitas.id_warung" :settings="settings"> 
+								<selectize-component v-model="komunitas.id_warung" :settings="settings" id="pilih_id_warung"> 
 									<option v-for="warungs, index in warung" v-bind:value="warungs.id" >{{ warungs.name }}</option>
 								</selectize-component>
 								<span v-if="errors.id_warung" id="id_warung_error" class="label label-danger">{{ errors.id_warung[0] }}</span>
@@ -71,7 +71,7 @@
 							<label for="kelurahan" class="col-md-2 control-label ">Kelurahan</label>
 							<div class="col-md-4">
 
-								<selectize-component  v-model="komunitas.kelurahan" :settings="settings"> 
+								<selectize-component  v-model="komunitas.kelurahan" :settings="settings" id="pilih_kelurahan"> 
 									<option v-for="kelurahans, index in kelurahan" v-bind:value="kelurahans.id" >{{ kelurahans.nama }}</option>
 								</selectize-component>
 								<span v-if="errors.kelurahan" id="kelurahan_error" class="label label-danger">{{ errors.kelurahan[0] }}</span>
