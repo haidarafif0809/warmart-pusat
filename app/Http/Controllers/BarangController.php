@@ -40,7 +40,7 @@ class BarangController extends Controller
            // datatable
         if ($request->ajax()) {
                   # code...
-          $data_barang = Barang::with(['satuan','kategori_barang'])->where('id_warung',Auth::user()->id_warung)->get();
+          $data_barang = Barang::with(['satuan','kategori_barang'])->where('id_warung',Auth::user()->id_warung)->orderBy('id','desc');
           return Datatables::of($data_barang)
           ->addColumn('action', function($barang){ 
             return view('datatable._action_barang',[
