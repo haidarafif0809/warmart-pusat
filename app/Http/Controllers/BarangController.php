@@ -8,6 +8,7 @@ use Yajra\Datatables\Datatables;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use App\Barang;
+use App\Hpp;
 use Laratrust;
 use File;
 use Auth;
@@ -366,30 +367,16 @@ class BarangController extends Controller
         Auth::logout();
         return response()->view('error.403');
       }else{
-                // jika gagal hapus
-        if (!Barang::destroy($id)) {
-                    // redirect back
-          return redirect()->back();
-        }else{
 
-          if ($barang->foto != '') {
-
-            $old_foto = $barang->foto;
-            $filepath = public_path() . DIRECTORY_SEPARATOR . 'foto_produk'
-            . DIRECTORY_SEPARATOR . $barang->foto;
-            try {
-              File::delete($filepath);
-            } catch (FileNotFoundException $e) {
-                              // File sudah dihapus/tidak ada
-            }            
-          }
+        $cek_barang = Hpp::where('id_produk',$id)->count();
+        if ($cek_barang > 0) {
 
           $pesan_alert = 
           '<div class="container-fluid">
           <div class="alert-icon">
           <b><i class="material-icons">check</i></b>
           </div>
-          <b>BERHASIL:</b> Menghapus Produk <b>'.$barang->nama_barang.'</b>
+          <b>GAGAL: Produk '.$barang->nama_barang.' Tidak Bisa Dihapus Karena Sudah Terpakai.</b>
           </div>';
 
           Session::flash("flash_notification", [
@@ -397,7 +384,41 @@ class BarangController extends Controller
             "message"   => $pesan_alert
           ]);
           return redirect()->route('barang.index');
+
+        }else{
+                      // jika gagal hapus
+          if (!Barang::destroy($id)) {
+                          // redirect back
+            return redirect()->back();
+          }else{
+            if ($barang->foto != '') {
+
+              $old_foto = $barang->foto;
+              $filepath = public_path() . DIRECTORY_SEPARATOR . 'foto_produk'
+              . DIRECTORY_SEPARATOR . $barang->foto;
+              try {
+                File::delete($filepath);
+              } catch (FileNotFoundException $e) {
+                                                          // File sudah dihapus/tidak ada
+              }            
+            }
+
+            $pesan_alert = 
+            '<div class="container-fluid">
+            <div class="alert-icon">
+            <b><i class="material-icons">check</i></b>
+            </div>
+            <b>BERHASIL:</b> Menghapus Produk <b>'.$barang->nama_barang.'</b>
+            </div>';
+
+            Session::flash("flash_notification", [
+              "level"     => "danger",
+              "message"   => $pesan_alert
+            ]);
+            return redirect()->route('barang.index');
+          }
         }
+
       }
     }
 
