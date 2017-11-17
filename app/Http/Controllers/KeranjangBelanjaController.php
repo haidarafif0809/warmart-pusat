@@ -16,7 +16,9 @@ use DB;
 
 class KeranjangBelanjaController extends Controller
 {
-    //
+    // 
+
+
 	public function daftar_belanja()
 	{
 		SEOMeta::setTitle('War-Mart.id');
@@ -30,14 +32,14 @@ class KeranjangBelanjaController extends Controller
 		OpenGraph::addProperty('type', 'articles'); 
 
 		$agent = new Agent();
-		
+
 		$keranjang_belanjaan = KeranjangBelanja::with(['produk','pelanggan'])->where('id_pelanggan',Auth::user()->id)->get();
 		$cek_belanjaan = $keranjang_belanjaan->count();  
 
 		$jumlah_produk = KeranjangBelanja::select([DB::raw('IFNULL(SUM(jumlah_produk),0) as total_produk')])->first();  
 		//FOTO WARMART
 		$logo_warmart = "".asset('/assets/img/examples/warmart_logo.png')."";
-      	//MEANMPILKAN PRODUK BELANJAAN
+      	//MEANMPILKAN PRODUK BELANJAAN 
 		$produk_belanjaan = '';
 		$subtotal = 0;
 		foreach ($keranjang_belanjaan as $keranjang_belanjaans) {  
@@ -76,23 +78,23 @@ class KeranjangBelanjaController extends Controller
 
 			if ($keranjang_belanjaans->jumlah_produk == 1) {
 				$produk_belanjaan .= '
-				<a class="btn btn-round btn-info btn-xs"  style="background-color: #f44336" disabled="true"> <i class="material-icons">remove</i> </a>'; 
+				<a class="btn btn-round btn-info btn-xs"   style="background-color: #01573e" disabled="true"> <i class="material-icons">remove</i> </a>'; 
 			}
 			else {
 				$produk_belanjaan .= ' 
-				<a href=" '. url('/keranjang-belanja/kurang-jumlah-produk-keranjang-belanja/'.$keranjang_belanjaans->id_keranjang_belanja.''). '" class="btn btn-round btn-info btn-xs"  style="background-color: #f44336"> <i class="material-icons">remove</i></a>';
+				<a href=" '. url('/keranjang-belanja/kurang-jumlah-produk-keranjang-belanja/'.$keranjang_belanjaans->id_keranjang_belanja.''). '" class="btn btn-round btn-info btn-xs"   style="background-color: #01573e"> <i class="material-icons">remove</i></a>';
 			}
 
-			$produk_belanjaan .= ' <a class="btn btn-round btn-info btn-xs"  style="background-color: #f44336">'. $keranjang_belanjaans->jumlah_produk .' </a>';
+			$produk_belanjaan .= ' <a class="btn btn-round btn-info btn-xs"   style="background-color: #01573e">'. $keranjang_belanjaans->jumlah_produk .' </a>';
 
 
 			if ($sisa_stok_keluar <= 0) {
 				$produk_belanjaan .= '
-				<a class="btn btn-round btn-info btn-xs"  style="background-color: #f44336" disabled="true"> <i class="material-icons">add</i> </a>'; 
+				<a class="btn btn-round btn-info btn-xs"   style="background-color: #01573e" disabled="true"> <i class="material-icons">add</i> </a>'; 
 			}
 			else {
 				$produk_belanjaan .= '
-				<a href=" '. url('/keranjang-belanja/tambah-jumlah-produk-keranjang-belanja/'.$keranjang_belanjaans->id_keranjang_belanja.''). '" class="btn btn-round btn-info btn-xs"  style="background-color: #f44336"> <i class="material-icons">add</i> </a>';
+				<a href=" '. url('/keranjang-belanja/tambah-jumlah-produk-keranjang-belanja/'.$keranjang_belanjaans->id_keranjang_belanja.''). '" class="btn btn-round btn-info btn-xs"   style="background-color: #01573e"> <i class="material-icons">add</i> </a>';
 			}
 			$produk_belanjaan .= '
 			</div>
@@ -103,11 +105,10 @@ class KeranjangBelanjaController extends Controller
 			</a>
 			</td>
 			</tr>  
-			';
+			';  
 			$subtotal = $subtotal += $harga_produk;
-
-
 		}
+
 
 		return view('layouts.keranjang_belanja',['keranjang_belanjaan'=>$keranjang_belanjaan,'cek_belanjaan'=>$cek_belanjaan,'agent'=>$agent,'produk_belanjaan'=>$produk_belanjaan,'jumlah_produk'=>$jumlah_produk,'logo_warmart'=>$logo_warmart,'subtotal'=>number_format($subtotal,0,',','.')]);
 
@@ -156,7 +157,7 @@ class KeranjangBelanjaController extends Controller
 
 			$keranjang_belanjaan->jumlah_produk += 1;
 			$keranjang_belanjaan->save(); 
-			
+
 		}else{
 
 			$produk = KeranjangBelanja::create(); 

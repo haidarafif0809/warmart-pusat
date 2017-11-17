@@ -79,6 +79,20 @@ Route::get('/keranjang-belanja',[
 	'uses' => 'KeranjangBelanjaController@daftar_belanja'
 	]);
 
+//PUNYA SELESAI PEMESANAN
+Route::get('/selesaikan-pemesanan',[ 
+	'middleware' => ['auth'],
+	'as' => 'selesaikan-pemesanan.index',
+	'uses' => 'PemesananController@selesaikanPemesanan'
+]);
+
+//PUNYA PROSES SELESAI PEMESANAN
+Route::put('proses/selesaikan-pemesanan',[ 
+	'middleware' => ['auth'],
+	'as' => 'selesaikan-pemesanan.proses',
+	'uses' => 'PemesananController@prosesSelesaikanPemesanan'
+]);
+
 Route::get('/keranjang-belanja/tambah-jumlah-produk-keranjang-belanja/{id}',[
 	'middleware' => ['auth'],
 	'as' => 'keranjang-belanja.tambah_jumlah_produk_keranjang_belanjaan',

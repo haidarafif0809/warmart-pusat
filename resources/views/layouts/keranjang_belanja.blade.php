@@ -31,7 +31,7 @@
           <div class="col-md-12">
             <center>
               <h3>Keranjang Belanjaan Anda Kosong,Silahkan Berbelanja.</h3>
-              <a  href="{{ url('/daftar-produk') }}" type="button" class="btn btn-block" style="background-color: #f44336">Lanjut Belanja<i class="material-icons">keyboard_arrow_right</i></a>
+              <a  href="{{ url('/daftar-produk') }}" type="button" class="btn btn-block" style="background-color: #01573e">Lanjut Belanja<i class="material-icons">keyboard_arrow_right</i></a>
             </center> 
           </div>
         </div>
@@ -41,7 +41,7 @@
           <div class="col-md-4"> 
             <table class="table table-shopping">
               <thead >
-                <tr class="card" style="width: 725px;">
+                <tr class="card" style="width: 725px;" >
                   <th class="text-center"></th>
                   <th style="padding-left: 20%"><b>Produk</b></th>   
                   <th style="padding-left: 125%"><b>Harga Produk</b></th> 
@@ -56,15 +56,12 @@
           @else
           <div class="col-md-8"> 
             <div class="table-responsive">
-              <table class="table table-shopping">
-                <thead >
-                  <tr class="card" style="width: 725px;">
-                    <th class="text-center"></th>
-                    <th style="padding-left: 20%"><b>Produk</b></th>   
-                    <th style="padding-left: 125%"><b>Harga Produk</b></th> 
-                    <th style="padding-left: 135%"><b>Kuantitas</b></th> 
-                  </tr>
-                </thead>
+              <div class="card"  style="width: 725px;" >
+                <div class="card-header card-header-text"> 
+                  <h6>&nbsp;&nbsp;&nbsp;<b>Produk</b> <b style="padding-left: 315px">Harga Produk</b> <b style="padding-left: 50px">Jumlah</b></h6> 
+                </div>
+              </div>
+              <table class="table table-shopping"> 
                 <tbody>        
                   {!! $produk_belanjaan !!}
                 </tbody>
@@ -76,8 +73,8 @@
           <div class="col-md-4">
 
             <div class="card">
-              <div class="card-header card-header-text" data-background-color=''  style="background-color: #f44336">
-                <h6 class="card-title">Rincian Pesanan</h6> 
+              <div class="card-header card-header-text">
+                <h6 class="card-title" style="color: black; padding-left: 10px"> Rincian Pesanan</h6> <hr>
               </div>
               <div class="card-content table-responsive"> 
                 <table>
@@ -93,7 +90,7 @@
                 </table>
               </div>
             </div>
-            <button type="button" class="btn btn-round pull-right" style="background-color: #f44336">Lanjut Ke Pembayaran <i class="material-icons">keyboard_arrow_right</i></button>
+            <a href="{{ url('/selesaikan-pemesanan') }}" type="button" class="btn btn-round pull-right"  style="background-color: #01573e">Lanjut Ke Pembayaran <i class="material-icons">keyboard_arrow_right</i></a>
           </div>
         </div>
       </div>

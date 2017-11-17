@@ -137,7 +137,7 @@
     </li>
 
     <li class="button-container">
-      <a href="{{ url('/keranjang-belanja') }}" class="btn btn-rose btn-round">
+      <a href="{{ url('/keranjang-belanja') }}" class="btn btn-round"  style="background-color: #01573e">
         <i class="material-icons">shopping_cart</i> Keranjang Belanja <b style="font-size: 15px">| {{ $cek_belanjaan }}</b>
       </a>
     </li>
@@ -184,18 +184,18 @@
         @if (Agent::isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
         <div class="row text-center">
           @if ($cek_produk == 0)
-          <a  rel="tooltip" title="Stok Tidak Ada" disabled="" class="btn btn-rose btn-round">Beli Sekarang &nbsp;<i class="material-icons">shopping_cart</i></a> 
+          <a  rel="tooltip" title="Stok Tidak Ada" disabled="" class="btn btn-round"  style="background-color: #01573e">Beli Sekarang &nbsp;<i class="material-icons">shopping_cart</i></a> 
           @else
-          <a  rel="tooltip" title="Tambah Ke Keranjang Belanja" href="{{ url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$barang->id.'') }}" id="btnBeliSekarang" class="btn btn-rose btn-round">Beli Sekarang &nbsp;<i class="material-icons">shopping_cart</i></a> 
+          <a  rel="tooltip" title="Tambah Ke Keranjang Belanja" href="{{ url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$barang->id.'') }}" id="btnBeliSekarang" class="btn btn-round"  style="background-color: #01573e">Beli Sekarang &nbsp;<i class="material-icons">shopping_cart</i></a> 
           @endif
         </div>
         @else 
 
         <div class="row text-right">
           @if ($cek_produk == 0)
-          <a  rel="tooltip" title="Stok Tidak Ada" disabled="" class="btn btn-rose btn-round">Beli Sekarang &nbsp;<i class="material-icons">shopping_cart</i></a> 
+          <a  rel="tooltip" title="Stok Tidak Ada" disabled="" class="btn btn-round"  style="background-color: #01573e">Beli Sekarang &nbsp;<i class="material-icons">shopping_cart</i></a> 
           @else
-          <a  rel="tooltip" title="Tambah Ke Keranjang Belanja" href="{{ url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$barang->id.'') }}" id="btnBeliSekarang" class="btn btn-rose btn-round">Beli Sekarang &nbsp;<i class="material-icons">shopping_cart</i></a> 
+          <a  rel="tooltip" title="Tambah Ke Keranjang Belanja" href="{{ url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$barang->id.'') }}" id="btnBeliSekarang" class="btn btn-round"  style="background-color: #01573e">Beli Sekarang &nbsp;<i class="material-icons">shopping_cart</i></a> 
           @endif
         </div>         
         @endif

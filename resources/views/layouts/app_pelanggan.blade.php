@@ -33,9 +33,9 @@
 </head>
 
 <style type="text/css">
-  .navbar-nav .open .dropdown-menu{
-    color: grey;
-  }
+.navbar-nav .open .dropdown-menu{
+  color: grey;
+}
 </style>
 
 
@@ -59,7 +59,7 @@
 
             <ul class="dropdown-menu dropdown-with-icons">
               <li style="color:black">
-                <a href="{{ url('/keranjang-belanja') }}" class="warna-list">
+                <a href="{{ url('/keranjang-belanja') }}" class="warna-list" style="background-color: #01573e">
                   <i class="material-icons">shopping_cart</i> Keranjang Belanja <b style="font-size: 15px">| {{ $cek_belanjaan }}</b>
                 </a>
               </li>
@@ -127,7 +127,7 @@
     </li>
 
     <li class="button-container">
-      <a href="{{ url('/keranjang-belanja') }}" class="btn btn-rose btn-round">
+      <a href="{{ url('/keranjang-belanja') }}" class="btn btn-round" style="background-color: #01573e">
         <i class="material-icons">shopping_cart</i> Keranjang Belanja <b style="font-size: 15px">| {{ $cek_belanjaan }}</b>
       </a>
     </li>
@@ -156,57 +156,57 @@
               <i class="fa fa-phone-square"></i>
               <p>+62-721-8050-299 <br>
                 Bandar Lampung, Indonesia
-                solusibisnis@andaglos.id</p>
-              </div>
-              <div class="feed-line">
-                <i class="fa fa-phone-square"></i>
-                <p>Whatsapp<br>
-                  +62-811-728-549</p>
-                </div>
-                <div class="feed-line">                            
-                  <a href="https://id-id.facebook.com/andaglos/" target="blank"><i class="fa fa-facebook-square"></i> Andaglos</a>
-                </div>
-              </div>
+              solusibisnis@andaglos.id</p>
             </div>
-            <div class="col-md-4">
-              <h5>Instagram</h5>
-              <div class="gallery-feed">
-              </div>
+            <div class="feed-line">
+              <i class="fa fa-phone-square"></i>
+              <p>Whatsapp<br>
+              +62-811-728-549</p>
+            </div>
+            <div class="feed-line">                            
+              <a href="https://id-id.facebook.com/andaglos/" target="blank"><i class="fa fa-facebook-square"></i> Andaglos</a>
             </div>
           </div>
         </div>
-        <hr />
-        <ul class="pull-left">
-          <li>
-            <a href="#pablo">
-             Blog
-           </a>
-         </li>
-         <li>
-          <a href="#pablo">
-            Presentation
-          </a>
-        </li>
-        <li>
-          <a href="#pablo">
-           Discover
-         </a>
-       </li>
-       <li>
-        <a href="#pablo">
-          Payment
-        </a>
-      </li>
+        <div class="col-md-4">
+          <h5>Instagram</h5>
+          <div class="gallery-feed">
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr />
+    <ul class="pull-left">
       <li>
         <a href="#pablo">
-          Contact Us
-        </a>
-      </li>
-    </ul>
-    <div class="copyright pull-right">
-      Copyright &copy; <script>document.write(new Date().getFullYear())</script> <a href="https://andaglos.id/"> PT. Andaglos Global Teknologi.</a>
-    </div>
-  </div>
+         Blog
+       </a>
+     </li>
+     <li>
+      <a href="#pablo">
+        Presentation
+      </a>
+    </li>
+    <li>
+      <a href="#pablo">
+       Discover
+     </a>
+   </li>
+   <li>
+    <a href="#pablo">
+      Payment
+    </a>
+  </li>
+  <li>
+    <a href="#pablo">
+      Contact Us
+    </a>
+  </li>
+</ul>
+<div class="copyright pull-right">
+  Copyright &copy; <script>document.write(new Date().getFullYear())</script> <a href="https://andaglos.id/"> PT. Andaglos Global Teknologi.</a>
+</div>
+</div>
 </footer>
 
 <!--Start of Tawk.to Script-->

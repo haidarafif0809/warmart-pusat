@@ -51,15 +51,16 @@
  /**Error Log*/
  import ErrorIndex from './components/error/ErrorIndex.vue';
 
-  /**Warung*/
-  import WarungIndex from './components/warung/WarungIndex.vue';
-  import WarungCreate from './components/warung/WarungCreate.vue';
-  import WarungEdit from './components/warung/WarungEdit.vue';
+ /**Warung*/
+ import WarungIndex from './components/warung/WarungIndex.vue';
+ import WarungCreate from './components/warung/WarungCreate.vue';
+ import WarungEdit from './components/warung/WarungEdit.vue';
 
-  /**KOMUNITAS*/
-  import KomunitasIndex from './components/komunitas/KomunitasIndex.vue';
-  import KomunitasCreate from './components/komunitas/KomunitasCreate.vue';
-  import KomunitasEdit from './components/komunitas/KomunitasEdit.vue';
+ /**KOMUNITAS*/
+ import KomunitasIndex from './components/komunitas/KomunitasIndex.vue';
+ import KomunitasCreate from './components/komunitas/KomunitasCreate.vue';
+ import KomunitasEdit from './components/komunitas/KomunitasEdit.vue';
+ import KomunitasDetail from './components/komunitas/KomunitasDetail.vue';
 
   /**USER WARUNG*/
   import UserWarungIndex from './components/user_warung/UserWarungIndex.vue';
@@ -78,9 +79,9 @@
  {path: '/satuan', component: SatuanIndex, name: 'indexSatuan'},
  {path: '/bank', component: BankIndex, name: 'indexBank'},
  {path: '/user', component: UserIndex, name: 'indexUser'},
-  /*CUSTOMER*/
+ /*CUSTOMER*/
  {path: '/customer', component: CustomerIndex, name: 'indexCustomer'},
-  /*ERROR LOG*/
+ /*ERROR LOG*/
  {path: '/error', component: ErrorIndex, name: 'indexError'},
 
 
@@ -98,7 +99,7 @@
  {path: '/create-user', component: UserCreate, name: 'createUser'},
  {path: '/edit-user/:id', component: UserEdit, name: 'editUser'},
 
-  /**Warung*/
+ /**Warung*/
  {path: '/warung', component: WarungIndex, name: 'indexWarung'},
  {path: '/create-warung', component: WarungCreate, name: 'createWarung'},
  {path: '/edit-warung/:id', component: WarungEdit, name: 'editWarung'},
@@ -107,6 +108,7 @@
 {path: '/komunitas', component: KomunitasIndex, name: 'indexKomunitas'},
 {path: '/create-komunitas', component: KomunitasCreate, name: 'createKomunitas'},
 {path: '/edit-komunitas/:id', component: KomunitasEdit, name: 'editKomunitas'},
+{path: '/detail-komunitas/:id', component: KomunitasDetail, name: 'detailKomunitas'},
 
 // USER WARUNG
 {path: '/user-warung', component: UserWarungIndex, name: 'indexUserWarung'},
