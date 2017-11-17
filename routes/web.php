@@ -84,14 +84,14 @@ Route::get('/selesaikan-pemesanan',[
 	'middleware' => ['auth'],
 	'as' => 'selesaikan-pemesanan.index',
 	'uses' => 'PemesananController@selesaikanPemesanan'
-]);
+	]);
 
 //PUNYA PROSES SELESAI PEMESANAN
 Route::put('proses/selesaikan-pemesanan',[ 
 	'middleware' => ['auth'],
 	'as' => 'selesaikan-pemesanan.proses',
 	'uses' => 'PemesananController@prosesSelesaikanPemesanan'
-]);
+	]);
 
 Route::get('/keranjang-belanja/tambah-jumlah-produk-keranjang-belanja/{id}',[
 	'middleware' => ['auth'],
@@ -295,6 +295,7 @@ Route::get('/komunitas/konfirmasi','KomunitasController@konfirmasi')->middleware
 Route::get('/komunitas/no-konfirmasi','KomunitasController@no_konfirmasi')->middleware('auth');
 Route::get('/komunitas/warung-komunitas','KomunitasController@warungKomunitas')->middleware('auth');
 Route::get('/komunitas/kelurahan-komunitas','KomunitasController@keluarahanKomunitas')->middleware('auth');
+Route::get('/komunitas/detail-komunitas/{id}','KomunitasController@detail_lihat_komunitas')->middleware('auth');
 
 
 Route::middleware('optimizeImages','auth')->group(function () {
@@ -533,11 +534,6 @@ Route::middleware('optimizeImages','auth')->group(function () {
 		]);
 
 //KOMUNITAS
-	Route::get('detail_komunitas/{id}',[
-		'middleware' => ['auth','role:admin'],
-		'as' => 'komunitas.detail',
-		'uses' => 'KomunitasController@detail_lihat_komunitas'
-		]);
 
 	Route::get('komunitas/konfirmasi/{id}',[
 		'middleware' => ['auth','role:admin'],
