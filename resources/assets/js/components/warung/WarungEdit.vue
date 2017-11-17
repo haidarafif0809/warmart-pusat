@@ -11,7 +11,7 @@
                    <i class="material-icons">dns</i>
                </div>
                <div class="card-content">
-                 <h4 class="card-title"> Warung </h4>
+                 <h4 class="card-title"> Edit Warung </h4>
                  <div>
                     <form v-on:submit.prevent="saveForm()" class="form-horizontal"> 
                         <div class="form-group">
@@ -74,7 +74,7 @@
                         <div class="form-group">
                             <label for="kelurahan" class="col-md-2 control-label ">Kelurahan</label>
                             <div class="col-md-4">
-                                <selectize-component v-model="warung.kelurahan" :settings="settings"> 
+                                <selectize-component v-model="warung.kelurahan" :settings="settings" id="pilih_kelurahan"> 
                                     <option v-for="kelurahans, index in kelurahan" v-bind:value="kelurahans.id" >{{ kelurahans.nama }}</option>
                                 </selectize-component>
                             </div>
@@ -98,6 +98,7 @@ export default {
     mounted() {
         let app = this;
         let id = app.$route.params.id;
+
         app.warungId = id;
         app.selected();
 
@@ -124,7 +125,7 @@ export default {
             },
             message : '',
             settings: {
-                value: app.warung
+                placeholder: 'Pilih Kelurahan'
             }, 
             url : window.location.origin+(window.location.pathname).replace("dashboard", "warung"),
             errors: []

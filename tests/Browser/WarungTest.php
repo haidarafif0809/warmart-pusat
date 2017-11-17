@@ -21,7 +21,7 @@ class WarungTest extends DuskTestCase
 
         $this->browse(function ($WarungTest) {
             $WarungTest->loginAs(User::find(1))
-                  ->visit('/warung')
+                  ->visit('/dashboard#/warung')
                   ->clickLink('Tambah Warung')
                   ->type('name','Fahri')
                   ->type('no_telpon','085675753645')
@@ -33,15 +33,18 @@ class WarungTest extends DuskTestCase
                   $WarungTest->script("document.getElementById('pilih_kelurahan').selectize.setValue('1');");  
                   $WarungTest->assertSee('Kedaton');
                   $WarungTest->press('#btnSimpanWarung')
-                  ->assertSee('BERHASIL : MENAMBAH WARUNG FAHRI');
-        });
+                   ->whenAvailable('.swal-modal', function ($modal) {
+                    $modal->assertSee('Sukses : Berhasil Menambah warung Fahri');
+                    });
+              });
 
-    } 
-  public function testUniqueWarung(){
+    }
+
+      public function testUniqueWarung(){
 
         $this->browse(function ($WarungTest) {
             $WarungTest->loginAs(User::find(1))
-                  ->visit('/warung')
+                  ->visit('/dashboard#/warung')
                   ->clickLink('Tambah Warung')
                   ->type('name','Fahri')
                   ->type('no_telpon','085675753645')
@@ -53,32 +56,32 @@ class WarungTest extends DuskTestCase
                   $WarungTest->script("document.getElementById('pilih_kelurahan').selectize.setValue('1');");  
                   $WarungTest->assertSee('Kedaton');
                   $WarungTest->press('#btnSimpanWarung');
-                  $WarungTest->script("document.getElementById('nama_warung').focus();");
-                  $WarungTest->assertSeeIn("#nama_warung_error","Maaf name Sudah Terpakai");
-                  $WarungTest->script("document.getElementById('no_telpon').focus();");
-                  $WarungTest->assertSeeIn("#no_telp_error","Maaf no telpon Sudah Terpakai");
-                  $WarungTest->script("document.getElementById('no_rek').focus();");
-                  $WarungTest->assertSeeIn("#no_rek_error","Maaf no rek Sudah Terpakai");
+                  $WarungTest->whenAvailable('#name_error', function ($label) {
+                      $label->assertSee('MAAF NAME SUDAH TERPAKAI.');
+                  });
+                  $WarungTest->whenAvailable('#no_telpon_error', function ($label) {
+                      $label->assertSee('MAAF NO TELPON SUDAH TERPAKAI.');
+                  });
+                  $WarungTest->whenAvailable('#no_rek_error', function ($label) {
+                      $label->assertSee('MAAF NO REK SUDAH TERPAKAI.');
+                  });
         });
 
-    } 
+    }
 
       public function testUbahWarung() {
-      $warung = Warung::select('id')->where('no_telpon','085675753645')->first();
-      $this->browse(function ($WarungTest)use($warung) {
-        $WarungTest->loginAs(User::find(1))
-                  ->visit('/warung')
+                $warung = Warung::select('id')->where('no_telpon','085675753645')->first();
+                $this->browse(function ($WarungTest)use($warung) {
+                  $WarungTest->loginAs(User::find(1))
+                  ->visit('/dashboard#/warung')
                   ->assertSeeLink('Tambah Warung')
-                  ->whenAvailable('.js-confirm', function ($table) { 
-                              ;
-                    })
-                  ->with('.table', function ($table) use($warung){
-                        $table->assertSee('Fahri')
-                              ->press('#edit-'.$warung->id);
+                   ->whenAvailable('.data-ada', function ($modal) use ($warung) {
+                      $modal->click('#edit-'.$warung->id);
                     })
                   ->assertSee('Edit Warung')
                   ->type('name','Fahrizal Ramadhan')
                   ->type('no_telpon','08567767975')
+                  ->type('email','Testswarungedit@gmail.com')
                   ->type('nama_bank','BNI SYARIAH')
                   ->type('atas_nama','Jajang NUrjaman')
                   ->type('no_rek','634735436432')
@@ -86,27 +89,28 @@ class WarungTest extends DuskTestCase
                   $WarungTest->script("document.getElementById('pilih_kelurahan').selectize.setValue('2');");  
                   $WarungTest->assertSee('Surabaya');
                   $WarungTest->press('#btnSimpanWarung')
-                  ->assertSee('BERHASIL : MENGUBAH WARUNG FAHRIZAL RAMADHAN');
+                    ->whenAvailable('.swal-modal', function ($modal) {
+                    $modal->assertSee('Sukses : Berhasil Mengubah Warung');
+                    });
+                  
         });
 
-    } 
+    }
 
-       public function testHapusWarung() {
+    public function testHapusWarung() {
       $warung = Warung::select('id')->where('no_telpon','08567767975')->first();
       $this->browse(function ($WarungTest)use($warung) {
         $WarungTest->loginAs(User::find(1))
-                  ->visit('/warung')
+                  ->visit('/dashboard#/warung')
                   ->assertSeeLink('Tambah Warung')
-                  ->whenAvailable('.js-confirm', function ($table) { 
-                              ;
-                    })
-                  ->with('.table', function ($table) use($warung){
+                  ->whenAvailable('.data-ada', function ($table) use($warung){
                         $table->assertSee('Fahrizal Ramadhan')
                               ->press('#delete-'.$warung->id)
-                              ->assertDialogOpened('Yakin Mau Menghapus Warung Fahrizal Ramadhan?');
+                              ->assertDialogOpened('Anda Yakin Ingin Menghapus Warung Fahrizal Ramadhan ?');
                     })->driver->switchTo()->alert()->accept();
-                  $WarungTest->assertSee('BERHASIL : MENGHAPUS WARUNG');
+                  $WarungTest->assertSee('Warung Berhasil Dihapus!');
         });
 
-    } 
+   }   
+
 }
