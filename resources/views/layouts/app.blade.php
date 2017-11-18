@@ -286,7 +286,14 @@
   <router-link :to="{name: 'indexSatuan'}">    <span class="sidebar-mini">S</span>
     <span class="sidebar-normal">Satuan</span></router-link>
   </li>
-</ul>
+
+  <!--KELOMPOK PRODUK-->
+  <li>
+    <router-link :to="{name: 'indexKelompokProduk'}">    <span class="sidebar-mini">KP</span>
+      <span class="sidebar-normal">Kelompok Produk</span></router-link>
+    </li>
+    <!--KELOMPOK PRODUK-->
+  </ul>
 </div>
 </li>
 <li class="">

@@ -63,6 +63,12 @@
  import KomunitasDetail from './components/komunitas/KomunitasDetail.vue';
 
 
+ /**kelompok produk*/
+ import KelompokProdukIndex from './components/kelompok_produk/KelompokProdukIndex.vue';
+ import KelompokProdukCreate from './components/kelompok_produk/KelompokProdukCreate.vue';
+ import KelompokProdukEdit from './components/kelompok_produk/KelompokProdukEdit.vue';
+
+
  const routes = [ 
  {
  	path: '/',
@@ -106,6 +112,11 @@
 {path: '/edit-komunitas/:id', component: KomunitasEdit, name: 'editKomunitas'},
 {path: '/detail-komunitas/:id', component: KomunitasDetail, name: 'detailKomunitas'},
 
+// kelompok produk
+
+{path: '/kelompok-produk', component: KelompokProdukIndex, name: 'indexKelompokProduk'},
+{path: '/create-kelompok-produk', component: KelompokProdukCreate, name: 'createKelompokProduk'},
+{path: '/edit-kelompok-produk/:id', component: KelompokProdukEdit, name: 'editKelompokProduk'},
 ]
 
 

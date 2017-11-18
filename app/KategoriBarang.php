@@ -10,8 +10,8 @@ use Yajra\Auditable\AuditableTrait;
 class KategoriBarang extends Model
 {
     //
-       use AuditableTrait;
-       use LogsActivity;
+	use AuditableTrait;
+	use LogsActivity;
 
-       protected $fillable = ['nama_kategori_barang'];
+	protected $fillable = ['nama_kategori_barang','kategori_icon'];
 }

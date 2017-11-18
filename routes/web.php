@@ -283,8 +283,6 @@ Route::get('/warung/view','WarungController@view')->middleware('auth');
 Route::get('/warung/pencarian','WarungController@pencarian')->middleware('auth');
 Route::get('/warung/pilih-kelurahan','WarungController@pilih_kelurahan')->middleware('auth');
 
-
-
 // KOMUNITAS VUE.JS
 Route::get('/komunitas/view','KomunitasController@view')->middleware('auth');
 Route::get('/komunitas/pencarian','KomunitasController@pencarian')->middleware('auth');
@@ -294,7 +292,10 @@ Route::get('/komunitas/warung-komunitas','KomunitasController@warungKomunitas')-
 Route::get('/komunitas/kelurahan-komunitas','KomunitasController@keluarahanKomunitas')->middleware('auth');
 Route::get('/komunitas/detail-komunitas/{id}','KomunitasController@detail_lihat_komunitas')->middleware('auth');
 
-// KOMUNITAS
+// KELOMPOK PRODUK VUE.JS
+Route::get('/kelompok-produk/view','KelompokProdukController@view')->middleware('auth');
+Route::get('/kelompok-produk/pencarian','KelompokProdukController@pencarian')->middleware('auth');
+
 
 Route::middleware('optimizeImages','auth')->group(function () {
 	
@@ -318,6 +319,7 @@ Route::middleware('optimizeImages','auth')->group(function () {
 	Route::resource('satuan', 'SatuanController');
 	Route::resource('laporan-persediaan', 'LaporanPersediaanController');
 	Route::resource('pembelian', 'PembelianController');
+	Route::resource('kelompok-produk', 'KelompokProdukController');
 
 //BARANG
 	//HALAMAN DESKRIPSI
