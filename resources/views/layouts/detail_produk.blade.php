@@ -35,20 +35,41 @@
 </head>
 
 <style type="text/css">
-.navbar-nav .open .dropdown-menu{
-  color: grey;
-}
-</style>
-
-<style type="text/css">
-.list-produk {
-  padding-left: 4px;
-  padding-right: 4px;
-}
-.card .card-image{
-  height: auto; /*this makes sure to maintain the aspect ratio*/
-  margin-top: 5px;
-}
+  .navbar-nav .open .dropdown-menu{
+    color: grey;
+  }
+  .list-produk {
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+  .product-page .page-header .container {
+    padding-top: 10vh;
+  }
+  .product-page .main-raised {
+    padding-top: 0%;
+  }
+  .product-page .related-products .title {
+    margin-bottom: 1px;
+  }
+  .product-page h2.title {
+    margin-bottom: 0px;
+    margin-top: 0px;
+  }
+  .h3 {
+    margin: 0%;
+    line-height: 0em;
+  }
+  .card .card-image{
+    height: auto; /*this makes sure to maintain the aspect ratio*/
+    margin-top: 5px;
+  }
+  .img-produk{
+    border-radius: 15px;
+    margin-top: 10px;
+  }
+  p {
+    margin: 0 0 0px;
+  }
 </style>
 <body class="product-page"> 
   @if (Agent::isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
@@ -103,7 +124,7 @@
 </nav>
 @else
 <nav class="navbar navbar-default navbar-transparent navbar-fixed-top navbar-color-on-scroll" color-on-scroll="100" id="sectionsNav">
- <div class="container">
+  <div class="container">
    <a href="{{ url('/home') }}"><img  class="img img-raised" src="{!! $logo_warmart !!}" style="width: 10%"/></a>
    <ul class="nav navbar-nav navbar-right">
     <li class="dropdown">
@@ -152,8 +173,8 @@
     <div class="row">
       <div class="col-md-8 col-md-offset-2">
         <div class="brand">
-          <h1 class="title">PASAR MUSLIM INDONESIA</h1>
-          <h4 class="title"> Segala Kemudahan Untuk Umat Muslim Berbelanja.</h4>
+          <h2 class="title text-center">PASAR MUSLIM INDONESIA</h2>
+          <h4 class="title text-center"> Segala Kemudahan Untuk Umat Muslim Berbelanja.</h4>
         </div>
       </div>
     </div>
@@ -162,17 +183,17 @@
 <div class="section section-gray">
   <div class="container"> 
     <div class="main main-raised main-product">
-      <div class="row">
+      <div class="row page-1">
         <div class="col-md-6 col-sm-6">
           @if($barang->foto != NULL)
-          <img src="../foto_produk/{{$barang->foto}}"/>
+          <img class="img-produk" src="../foto_produk/{{$barang->foto}}"/>
           @else 
-          <img src="../image/foto_default.png"/>
+          <img class="img-produk" src="../image/foto_default.png"/>
           @endif
         </div>
         <div class="col-md-6 col-sm-6"> 
-          <h2 class="title"> {{ $barang->nama_barang }} </h2>
-          <h3 class="main-price">Rp. {{ number_format($barang->harga_jual,0,',','.') }}</h3> 
+          <h2 class="title"> {{ $barang->nama }} </h2>
+          <h3 class="main-price h3">Rp. {{ number_format($barang->harga_jual,0,',','.') }}</h3> 
           <a style="font-size: 20px;" class="description"><i style="font-size: 30px;" class="material-icons">store</i>  {{ $barang->warung->name }}</a>
           {!! substr($barang->deskripsi_produk, 0, 300) !!}
           <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
@@ -206,24 +227,24 @@
                 <div id="collapseOne" class="panel-collapse collapse">
                   <div class="panel-body">
                    <div class="panel-body"><hr style="border-width: 1px; border-color: black">
-                    <h3>Detail Produk Dari {{$barang->nama_barang}}</h3>
-                    {!!$barang->deskripsi_produk!!}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div><!--  end acordeon -->
-      </div>
-    </div>  
-    <div class="related-products">
-      <h3 class="title text-center">Produk Yang Sama:</h3>
+                     <h3 class="h3">Detail Produk Dari {{$barang->nama}}</h3><br>
+                     {!!$barang->deskripsi_produk!!}
+                   </div>
+                 </div>
+               </div>
+             </div>
+           </div>
+         </div><!--  end acordeon -->
+       </div>
+     </div>  
+     <div class="related-products">
+      <h3 class="title text-center h3">Produk Yang Sama:</h3>
       <div class="row">
         {!! $daftar_produk_sama !!}  
       </div>
     </div>
     <div class="related-products">
-      <h3 class="title text-center">Produk Yang Ada DI Warung {{ $barang->warung->name }}:</h3>
+      <h3 class="title text-center h3">Produk Yang Ada DI Warung {{ $barang->warung->name }}:</h3>
       <div class="row"> 
         {!! $daftar_produk_warung !!}   
       </div>
@@ -246,51 +267,51 @@
               <i class="fa fa-phone-square"></i>
               <p>+62-721-8050-299 <br>
                 Bandar Lampung, Indonesia
-              solusibisnis@andaglos.id</p>
-            </div>
-            <div class="feed-line">                            
-              <a href="https://id-id.facebook.com/andaglos/" target="blank"><i class="fa fa-facebook-square"></i> Andaglos</a>
+                solusibisnis@andaglos.id</p>
+              </div>
+              <div class="feed-line">                            
+                <a href="https://id-id.facebook.com/andaglos/" target="blank"><i class="fa fa-facebook-square"></i> Andaglos</a>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="col-md-4">
-          <h5>Instagram</h5>
-          <div class="gallery-feed">
+          <div class="col-md-4">
+            <h5>Instagram</h5>
+            <div class="gallery-feed">
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <hr />
-    <ul class="pull-left">
+      <hr />
+      <ul class="pull-left">
+        <li>
+          <a href="#pablo">
+           Blog
+         </a>
+       </li>
+       <li>
+        <a href="#pablo">
+          Presentation
+        </a>
+      </li>
       <li>
         <a href="#pablo">
-         Blog
+         Discover
        </a>
      </li>
      <li>
       <a href="#pablo">
-        Presentation
+        Payment
       </a>
     </li>
     <li>
       <a href="#pablo">
-       Discover
-     </a>
-   </li>
-   <li>
-    <a href="#pablo">
-      Payment
-    </a>
-  </li>
-  <li>
-    <a href="#pablo">
-      Contact Us
-    </a>
-  </li>
-</ul>
-<div class="copyright pull-right">
-  Copyright &copy; <script>document.write(new Date().getFullYear())</script> <a href="https://andaglos.id/"> PT. Andaglos Global Teknologi.</a>
-</div>
+        Contact Us
+      </a>
+    </li>
+  </ul>
+  <div class="copyright pull-right">
+    Copyright &copy; <script>document.write(new Date().getFullYear())</script> <a href="https://andaglos.id/"> PT. Andaglos Global Teknologi.</a>
+  </div>
 </div>
 </footer>
 

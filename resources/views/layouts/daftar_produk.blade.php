@@ -2,20 +2,27 @@
 @section('content') 
 
 <style type="text/css">
-.list-produk {
-    padding-left: 4px;
-    padding-right: 4px;
-}
-.card .card-image{
+    .list-produk {
+        padding-left: 4px;
+        padding-right: 4px;
+    }
+    .card .card-image{
 
-    height: auto; /*this makes sure to maintain the aspect ratio*/
-    margin-top: 5px;
-}
+        height: auto; /*this makes sure to maintain the aspect ratio*/
+        margin-top: 5px;
+    }
+    .tombolBeli {
+        padding: 5px 0px;
+        margin: 0px 0px;
+    }
+    .card .footer {
+        margin-top: 0px;
+    }      
 </style>
 
 @if (Agent::isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
 
-<div class="page-header header-filter header-small" data-parallax="true"" style="{!! $foto_latar_belakang !!}">
+<div class="page-header header-small" data-parallax="true"" style="{!! $foto_latar_belakang !!}">
     <a href="{{ url('/home') }}"><img  class="img img-raised" src="{!! $logo_warmart !!}" style="width: 10%"/></a>
 
     <div class="container"> 
