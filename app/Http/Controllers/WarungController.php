@@ -133,13 +133,8 @@ class WarungController extends Controller
     public function show($id)
     {
         //
-         $warung = Warung::with(['kelurahan', 'bank_warung'])->find($id);
-         if ($warung->wilayah != "-" ) {
-           $warung['kelurahan'] =  $warung->kelurahan->nama;
-         }
-         else{
-           $warung['kelurahan'] = "-";
-         }
+         $warung = Warung::with(['bank_warung'])->find($id);
+         $warung['kelurahan'] =  $warung->wilayah;
          $warung['nama_bank'] = $warung->bank_warung->nama_bank;
          $warung['atas_nama'] = $warung->bank_warung->atas_nama;
          $warung['no_rek'] = $warung->bank_warung->no_rek;
