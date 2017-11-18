@@ -62,6 +62,9 @@
  import KomunitasEdit from './components/komunitas/KomunitasEdit.vue';
  import KomunitasDetail from './components/komunitas/KomunitasDetail.vue';
 
+  /**USER WARUNG*/
+  import UserWarungIndex from './components/user_warung/UserWarungIndex.vue';
+  import UserWarungEdit from './components/user_warung/UserWarungEdit.vue';
 
  /**kelompok produk*/
  import KelompokProdukIndex from './components/kelompok_produk/KelompokProdukIndex.vue';

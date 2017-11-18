@@ -30,6 +30,7 @@
           <tr>
             <th>Nama</th>
             <th>No Telp</th>
+            <th>Email</th>
             <th>Nama Bank</th>
             <th>Nama Rekening</th>
             <th>No Rekening</th>
@@ -42,6 +43,7 @@
           <tr v-for="warung, index in warungs" >
             <td>{{ warung.name }}</td>
             <td>{{ warung.no_telpon }}</td>
+            <td>{{ warung.email }}</td>
             <td>{{ warung.nama_bank }}</td>
             <td>{{ warung.atas_nama }}</td>
             <td>{{ warung.no_rek }}</td>
@@ -60,7 +62,7 @@
       </tr>
       </tbody>
       <tbody class="data-tidak-ada" v-else-if="warungs.length == 0 && loading == false">
-        <tr ><td colspan="4"  class="text-center">Tidak Ada Data</td></tr>
+        <tr ><td colspan="9"  class="text-center">Tidak Ada Data</td></tr>
       </tbody>
     </table>
 

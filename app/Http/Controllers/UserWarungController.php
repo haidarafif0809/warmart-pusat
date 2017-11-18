@@ -7,6 +7,8 @@ use Yajra\Datatables\Html\Builder;
 use Yajra\Datatables\Datatables;
 use Illuminate\Support\Facades\DB;
 use App\UserWarung;
+use App\Kelurahan;
+use App\Warung;
 use Session;
 use Laratrust;
 
@@ -24,74 +26,74 @@ class UserWarungController extends Controller
     }
 
     public function index(Request $request, Builder $htmlBuilder)
-    {
-        if ($request->ajax()) {
-            # code...
-            $user_warung = UserWarung::with(['kelurahan', 'warung'])->where('tipe_user', 4)->get();
-            return Datatables::of($user_warung)
-            ->addColumn('action', function($user_warung){
-                return view('datatable._action', [
-                    'model'     => $user_warung,
-                    'form_url'  => route('user_warung.destroy', $user_warung->id),
-                    'edit_url'  => route('user_warung.edit', $user_warung->id),
-                    'confirm_message'   => 'Yakin Mau Menghapus Warung ' . $user_warung->name . '?',
-                    'permission_ubah' => Laratrust::can('edit_warung'),
-                    'permission_hapus' => Laratrust::can('hapus_warung'),
-
-                    ]);
-            })
-            ->addColumn('kelurahan', function($wilayah){
-                if ($wilayah->wilayah == NULL) {
-                    $wilayah = "-";
-                }
-                else{
-                    $wilayah = $wilayah->kelurahan->nama;
-                }
-                return $wilayah;
-            })
-            ->addColumn('email', function($email){
-                if ($email->email == NULL AND $email->email == "") {
-                    $email = "-";
-                }
-                else{
-                    $email = $email->email;
-                }
-                return $email;
-            })
-            ->addColumn('warung', function($warung){
-                if ($warung->warung == NULL AND $warung->warung == "") {
-                    $warung = "-";
-                }
-                else{
-                    $warung = $warung->warung->name;
-                }
-                return $warung;
-            })
-            ->addColumn('konfirmasi', function($user_konfirmasi){
-                return view('user_warung._action', [
-                    'model'     => $user_konfirmasi,
-                    'confirm_ya'   => 'confirm-ya-'.$user_konfirmasi->id,
-                    'confirm_no'   => 'confirm-no-'.$user_konfirmasi->id,
-                    'confirm_message'   => 'Apakah Anda Yakin Ingin Meng Konfirmasi User Warung ' . $user_konfirmasi->name . '?',
-                    'no_confirm_message'   => 'Apakah Anda Yakin Tidak Meng Konfirmasi User Warung ' . $user_konfirmasi->name . '?',
-                    'konfirmasi_url' => route('user_warung.konfirmasi', $user_konfirmasi->id),
-                    'no_konfirmasi_url' => route('user_warung.no_konfirmasi', $user_konfirmasi->id),
-                    'konfirmasi_user' => Laratrust::can('konfirmasi_user'), 
-                    ]);
-                })//Konfirmasi User Warung Apabila Bila Status User Warung 1 Maka User Warung sudah di konfirmasi oleh admin dan apabila status user 0 maka user belum di konfirmasi oleh admin
-            ->make(true);
-        }
-        $html = $htmlBuilder
-        ->addColumn(['data' => 'email', 'name' => 'email', 'title' => 'Email']) 
-        ->addColumn(['data' => 'no_telp', 'name' => 'no_telp', 'title' => 'No. Telpon']) 
-        ->addColumn(['data' => 'name', 'name' => 'name', 'title' => 'Nama']) 
-        ->addColumn(['data' => 'alamat', 'name' => 'alamat', 'title' => 'Alamat']) 
-        ->addColumn(['data' => 'kelurahan', 'name' => 'kelurahan', 'title' => 'Wilayah'])  
-        ->addColumn(['data' => 'warung', 'name' => 'warung', 'title' => 'Warung', 'orderable' => false, 'searchable'=>false])  
-        ->addColumn(['data' => 'konfirmasi', 'name' => 'konfirmasi', 'title' => 'Konfirmasi', 'searchable'=>false])
-        ->addColumn(['data' => 'action', 'name' => 'action', 'title' => '', 'orderable' => false, 'searchable'=>false]);
-        
+    {        
         return view('user_warung.index')->with(compact('html'));
+    }
+
+    //VIEW USER WARUNG
+    public function view(){
+        $user_warung = UserWarung::with(['kelurahan', 'warung'])->where('tipe_user', 4)->paginate(10);
+
+        $user_warung_array = array();
+        foreach ($user_warung as $user_warungs) {
+            $wilayah = $user_warungs->kelurahan->nama;
+            $warung = $user_warungs->warung->name;
+            array_push($user_warung_array, ['user_warung'=>$user_warungs, 'wilayah'=>$wilayah, 'warung'=>$warung]);
+        }
+
+        //DATA PAGINATION 
+        $respons['current_page'] = $user_warung->currentPage();
+        $respons['data'] = $user_warung_array;
+        $respons['first_page_url'] = url('/user-warung/view?page='.$user_warung->firstItem());
+        $respons['from'] = 1;
+        $respons['last_page'] = $user_warung->lastPage();
+        $respons['last_page_url'] = url('/user-warung/view?page='.$user_warung->lastPage());
+        $respons['next_page_url'] = $user_warung->nextPageUrl();
+        $respons['path'] = url('/user-warung/view');
+        $respons['per_page'] = $user_warung->perPage();
+        $respons['prev_page_url'] = $user_warung->previousPageUrl();
+        $respons['to'] = $user_warung->perPage();
+        $respons['total'] = $user_warung->total();
+        //DATA PAGINATION
+
+        return response()->json($respons);
+    }
+
+    //PENCARIAN USER WARUNG
+    public function pencarian(Request $request){
+        $search = $request->search;// REQUEST SEARCH
+
+        $user_warung = UserWarung::with(['kelurahan', 'warung'])->where('tipe_user', 4)
+        ->where(function($query) use ($search){// search
+            $query->orwhere('email','LIKE','%'.$search.'%')
+            ->orWhere('no_telp','LIKE','%'.$search.'%')
+            ->orWhere('name','LIKE','%'.$search.'%')
+            ->orWhere('alamat','LIKE','%'.$search.'%');
+        })->paginate(10);
+
+        $user_warung_array = array();
+        foreach ($user_warung as $user_warungs) {
+            $wilayah = $user_warungs->kelurahan->nama;
+            $warung = $user_warungs->warung->name;
+            array_push($user_warung_array, ['user_warung'=>$user_warungs, 'wilayah'=>$wilayah, 'warung'=>$warung]);
+        }
+
+        //DATA PAGINATION 
+        $respons['current_page'] = $user_warung->currentPage();
+        $respons['data'] = $user_warung_array;
+        $respons['first_page_url'] = url('/user-warung/view?page='.$user_warung->firstItem());
+        $respons['from'] = 1;
+        $respons['last_page'] = $user_warung->lastPage();
+        $respons['last_page_url'] = url('/user-warung/view?page='.$user_warung->lastPage());
+        $respons['next_page_url'] = $user_warung->nextPageUrl();
+        $respons['path'] = url('/user-warung/view');
+        $respons['per_page'] = $user_warung->perPage();
+        $respons['prev_page_url'] = $user_warung->previousPageUrl();
+        $respons['to'] = $user_warung->perPage();
+        $respons['total'] = $user_warung->total();
+        //DATA PAGINATION
+
+        return response()->json($respons);
     }
 
     /**
@@ -123,7 +125,15 @@ class UserWarungController extends Controller
      */
     public function show($id)
     {
-        //
+        $user_warung = UserWarung::with(['kelurahan', 'warung'])->find($id);
+
+        $kelurahan = Kelurahan::where('id',$user_warung->wilayah)->first();
+        $warung = Warung::where('id',$user_warung->id_warung)->first();
+
+        $user_warung['kelurahan'] = $kelurahan->nama;
+        $user_warung['warung'] = $warung->name;
+
+        return $user_warung;
     }
 
     /**
@@ -135,7 +145,14 @@ class UserWarungController extends Controller
     public function edit($id)
     {
         $user_warung = UserWarung::with(['kelurahan', 'warung'])->find($id);
-        return view('user_warung.edit')->with(compact('user_warung'));
+
+        $kelurahan = Kelurahan::where('id',$wilayah)->first();
+        $warung = Warung::where('id',$id_warung)->first();
+
+        $user_warung['kelurahan'] = $kelurahan;
+        $user_warung['warung'] = $warung;
+
+        return url('user-warung#/edit_user_warung/'.$id);
     }
 
     /**
@@ -147,40 +164,28 @@ class UserWarungController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //VALIDASI USER WARUNG
-     $this->validate($request, [
-        'name'      => 'required',
-        'alamat'    => 'required',
-        'kelurahan' => 'required', 
-        'email'     => 'required|without_spaces|unique:users,email,'.$id,
-        'no_telp'   => 'required|without_spaces|unique:users,no_telp,'.$id,
-        ]);
+    //VALIDASI USER WARUNG
+        $this->validate($request, [
+            'email'     => 'required|without_spaces|unique:users,email,'. $id,
+            'name'      => 'required',
+            'alamat'    => 'required',
+            'kelurahan' => 'required',
+            'no_telp'   => 'required|without_spaces|unique:users,no_telp,'. $id,
+            'id_warung' => 'required',
+            ]);
 
-         //UPDATE USER WARUNG
-     $user_warung = UserWarung::where('id',$id)->update([
-        'name'      => $request->name,
-        'email'     => $request->email, 
-        'no_telp'     => $request->no_telp, 
-        'alamat'    => $request->alamat,
-        'wilayah'   => $request->kelurahan,
-        'id_warung' => $request->id_warung,
-        ]);
+    //UPDATE USER WARUNG
+        $user_warung = UserWarung::where('id',$id)->update([
+            'email' =>$request->email,
+            'name' =>$request->name,
+            'alamat' =>$request->alamat,
+            'wilayah' =>$request->wilayah,
+            'no_telp' =>$request->no_telp,
+            'id_warung' =>$request->id_warung,
+            ]);
 
-     $pesan_alert = '
-     <div class="container-fluid">
-         <div class="alert-icon">
-             <i class="material-icons">check</i>
-         </div>
-         <b>Sukses : Berhasil Mengubah User Warung '.$request->name.' </b>
-     </div>';
 
-     Session::flash("flash_notification", [
-        "level"=>"success",
-        "message"=> $pesan_alert
-        ]);
-
-     return redirect()->route('user_warung.index');
- }
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -190,94 +195,39 @@ class UserWarungController extends Controller
      */
     public function destroy($id)
     {
+
     // JIKA USER WARUNG GAGAL DIHAPUS
         $user_warung = UserWarung::select('id_warung')->where('id',$id)->first();
-        $warung_user = UserWarung::where('id_warung', $user_warung->id)->count();
+        $warung_user = UserWarung::where('id_warung', $user_warung->id_warung)->count();
 
         if ($warung_user > 1) {
-
-            if (!UserWarung::destroy($id)) {
-                return redirect()->back();
-            }
-            else{
-                $pesan_alert = '
-                <div class="container-fluid">
-                    <div class="alert-icon">
-                        <i class="material-icons">check</i>
-                    </div>
-                    <b>Sukses : Berhasil Menghapus User Warung </b>
-                </div>';
-
-                Session:: flash("flash_notification", [
-                    "level"=>"success",
-                    "message"=> $pesan_alert
-                    ]);
-
-                return redirect()->route('user_warung.index');
-            }
-        }else{
-            $pesan_alert = '
-            <div class="container-fluid">
-                <div class="alert-icon">
-                    <i class="material-icons">check</i>
-                </div>
-                <b>Gagal : User Warung Tidak Bisa Dihapus </b>
-            </div>';
-
-            Session:: flash("flash_notification", [
-                "level"=>"success",
-                "message"=> $pesan_alert
-                ]);
-
-            return redirect()->route('user_warung.index');
+            $user_warung = UserWarung::destroy($id);
+            return response(200);
         }
 
     }
 
-    public function konfirmasi($id){
+    public function konfirmasi(Request $request){
         // konfirmasi user_warung
-        $username = UserWarung::select('name')->where('id',$id)->first();
-        $user_warung = UserWarung::find($id)->update([
-            'konfirmasi_admin' => '1'
-            ]);
-
-        $pesan_alert = '
-        <div class="container-fluid">
-            <div class="alert-icon">
-                <i class="material-icons">check</i>
-            </div>
-            <b>Sukses : User Warung '. $username->name .' Berhasil Di Konfirmasi </b>
-        </div>';
-
-        Session::flash("flash_notification", [
-            "level"=>"success",
-            "message"=> $pesan_alert
-            ]);
-
-        return redirect()->route('user_warung.index');
-
+        $username = UserWarung::select('name')->where('id',$request->confirm)->first();
+        $user_warung = UserWarung::find($request->confirm)->update([ 'konfirmasi_admin' => 1 ]);
     }
 
-    public function no_konfirmasi($id){
+    public function no_konfirmasi(Request $request){
         // no_konfirmasi user_warung
-        $username = UserWarung::select('name')->where('id',$id)->first();
-        $user_warung = UserWarung::find($id)->update([
-            'konfirmasi_admin' => '0'
-            ]);
+        $username = UserWarung::select('name')->where('id',$request->confirm)->first();
+        $user_warung = UserWarung::find($request->confirm)->update([ 'konfirmasi_admin' => 0 ]);
+    }
 
-        $pesan_alert = '
-        <div class="container-fluid">
-            <div class="alert-icon">
-                <i class="material-icons">check</i>
-            </div>
-            <b>Sukses : User Warung '. $username->name .' Tidak Di Konfirmasi </b>
-        </div>';
+    //PROSES PILIH KELURAHAN
+    public function pilih_kelurahan(){
+        $kelurahan = Kelurahan::all();
+        return response()->json($kelurahan);
+    }
 
-        Session::flash("flash_notification", [
-            "level"=>"success",
-            "message"=> $pesan_alert
-            ]);
-
-        return redirect()->route('user_warung.index');
+    //PROSES PILIH WARUNG
+    public function pilih_warung(){
+        $warung = Warung::all();
+        return response()->json($warung);
     }
 }

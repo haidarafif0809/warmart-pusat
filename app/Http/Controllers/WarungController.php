@@ -96,7 +96,7 @@ class WarungController extends Controller
             'alamat'    =>$request->alamat,
             'wilayah'   =>$request->kelurahan,
             'no_telpon' =>$request->no_telpon, 
-            'email'     =>"-", 
+            'email'     =>$request->email, 
             ]);
 
     //INSERT BANK WARUNG

@@ -72,13 +72,13 @@ class DetailProdukController extends Controller
                 //JIKA USER LOGIN BUKAN PELANGGAN MAKA TIDAK BISA PESAN PRODUK
 				if(Auth::user()->tipe_user == 3){
 					if ($cek_produk <= 0) {
-						$daftar_produk .= '<a class="btn btn-round"  style="background-color: #01573e" rel="tooltip" title="Stok Tidak Ada" disabled="" ><b style="font-size:18px"> Beli </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>'; 
+						$daftar_produk .= '<a class="btn btn-block"  style="background-color: #01573e" rel="tooltip" title="Stok Tidak Ada" disabled="" ><b style="font-size:18px"> Beli </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>'; 
 					}else{
-						$daftar_produk .= '<a href="'. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" class="btn btn-round"  style="background-color: #01573e" rel="tooltip" title="Tambah Ke Keranjang Belanja" id="btnBeliSekarang"><b style="font-size:18px"> Beli </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';						
+						$daftar_produk .= '<a href="'. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" class="btn btn-block"  style="background-color: #01573e" rel="tooltip" title="Tambah Ke Keranjang Belanja" id="btnBeliSekarang"><b style="font-size:18px"> Beli </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';						
 					}
 				}
 				else{
-					$daftar_produk .= '<button type="button" class="btn btn-round"  style="background-color: #01573e" rel="tooltip" title="Tambah Ke Keranjang Belanja" id="btnBeli"><b style="font-size:18px"> Beli </b><i class="fa fa-chevron-right" aria-hidden="true"></i></button>';
+					$daftar_produk .= '<button type="button" class="btn btn-block"  style="background-color: #01573e" rel="tooltip" title="Tambah Ke Keranjang Belanja" id="btnBeli"><b style="font-size:18px"> Beli </b><i class="fa fa-chevron-right" aria-hidden="true"></i></button>';
 				}
 
 			}
@@ -86,13 +86,13 @@ class DetailProdukController extends Controller
                 //JIKA USER LOGIN BUKAN PELANGGAN MAKA TIDAK BISA PESAN PRODUK
 				if(Auth::user()->tipe_user == 3){
 					if ($cek_produk <= 0) {
-						$daftar_produk .= '<a class="btn btn-round"  style="background-color: #01573e" rel="tooltip" title="Stok Tidak Ada" disabled="" ><b style="font-size:18px"> Beli Sekarang </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';
+						$daftar_produk .= '<a class="btn btn-block"  style="background-color: #01573e" rel="tooltip" title="Stok Tidak Ada" disabled="" ><b style="font-size:18px"> Beli Sekarang </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';
 					}else{
-						$daftar_produk .= '<a href="'. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" id="btnBeliSekarang" class="btn btn-round"  style="background-color: #01573e" rel="tooltip" title="Tambah Ke Keranjang Belanja"><b style="font-size:18px"> Beli Sekarang </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';
+						$daftar_produk .= '<a href="'. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" id="btnBeliSekarang" class="btn btn-block"  style="background-color: #01573e" rel="tooltip" title="Tambah Ke Keranjang Belanja"><b style="font-size:18px"> Beli Sekarang </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';
 					}
 				}
 				else{
-					$daftar_produk .= '<button type="button" class="btn btn-round"  style="background-color: #01573e" rel="tooltip" title="Tambah Ke Keranjang Belanja" id="btnBeli"><b style="font-size:18px" > Beli Sekarang</b><i class="fa fa-chevron-right" aria-hidden="true"></i></button>';
+					$daftar_produk .= '<button type="button" class="btn btn-block"  style="background-color: #01573e" rel="tooltip" title="Tambah Ke Keranjang Belanja" id="btnBeli"><b style="font-size:18px" > Beli Sekarang</b><i class="fa fa-chevron-right" aria-hidden="true"></i></button>';
 				}                
 			}
 			$daftar_produk .= '
