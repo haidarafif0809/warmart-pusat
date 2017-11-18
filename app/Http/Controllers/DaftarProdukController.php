@@ -70,22 +70,22 @@ class DaftarProdukController extends Controller
         $jumlah_produk = Barang::where('kategori_barang_id', $kategori->id)->whereIn('id_warung', $array_warung)->count();
         $kategori_produk .= '
         <li>
-        <a href="'.route('daftar_produk.filter_kategori',$kategori->id).'" style="color:white"><i class="material-icons">'.$kategori->kategori_icon.'</i>'.$kategori->nama_kategori_barang.' - '.$jumlah_produk.'</a>
+          <a href="'.route('daftar_produk.filter_kategori',$kategori->id).'" style="color:white"><i class="material-icons">'.$kategori->kategori_icon.'</i>'.$kategori->nama_kategori_barang.' - '.$jumlah_produk.'</a>
         </li>';
       }
       $kategori_produk .= '
       <li class="dropdown">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color:white"><i class="material-icons">list</i> Lain - Lain <b class="caret"></b></a>
-      <ul class="dropdown-menu dropdown-with-icons">';
-      foreach ($kategori->get() as $kategori) {
-        $jumlah_produk = Barang::where('kategori_barang_id', $kategori->id)->whereIn('id_warung', $array_warung)->count();
-        $kategori_produk .= '
-        <li>
-        <a href="'.route('daftar_produk.filter_kategori',$kategori->id).'"><i class="material-icons">'.$kategori->kategori_icon.'</i>'.$kategori->nama_kategori_barang.' - '.$jumlah_produk.'</a>
-        </li>';
-      }
-      $kategori_produk .= '
-      </ul>
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color:white"><i class="material-icons">list</i> Lain - Lain <b class="caret"></b></a>
+        <ul class="dropdown-menu dropdown-with-icons">';
+          foreach ($kategori->get() as $kategori) {
+            $jumlah_produk = Barang::where('kategori_barang_id', $kategori->id)->whereIn('id_warung', $array_warung)->count();
+            $kategori_produk .= '
+            <li>
+              <a href="'.route('daftar_produk.filter_kategori',$kategori->id).'"><i class="material-icons">'.$kategori->kategori_icon.'</i>'.$kategori->nama_kategori_barang.' - '.$jumlah_produk.'</a>
+            </li>';
+          }
+          $kategori_produk .= '
+        </ul>
       </li>';
 
       return $kategori_produk;
@@ -185,13 +185,13 @@ class DaftarProdukController extends Controller
                   //JIKA USER LOGIN BUKAN PELANGGAN MAKA TIDAK BISA PESAN PRODUK
       if(Auth::user()->tipe_user == 3){
        if ($cek_produk == 0) {
-         $tombol_beli = '<a style="background-color:#01573e" class="btn btn-round" rel="tooltip" title="Stok Tidak Ada"><b style="font-size:18px"> Beli </b><i class="fa fa-chevron-right" aria-hidden="true" disabled="" ></i></a>';  
-       }else{
-         $tombol_beli = '<a href="'.url("/keranjang-belanja") .'" style="background-color:#01573e" class="btn btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja" id="btnBeliSekarang"><b style="font-size:18px"> Beli </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';            
-       }
-     }
-     else{
-      $tombol_beli = '<button type="button" style="background-color:#01573e" class="btn btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja" id="btnBeli"><b style="font-size:18px"> Beli </b><i class="fa fa-chevron-right" aria-hidden="true"></i></button>';
+        $tombol_beli = '<a style="background-color:#01573e" class="btn btn-block tombolBeli" rel="tooltip" title="Stok Tidak Ada"><b style="font-size:15px;"> Beli Sekarang </b><i class="fa fa-chevron-right" aria-hidden="true" disabled="" ></i></a>';  
+      }else{
+        $tombol_beli = '<a href="'.url("/keranjang-belanja") .'" style="background-color:#01573e" class="btn btn-block tombolBeli" rel="tooltip" title="Tambah Ke Keranjang Belanja" id="btnBeliSekarang"><b style="font-size:15px;"> Beli Sekarang </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';            
+      }
+    }
+    else{
+      $tombol_beli = '<button type="button" style="background-color:#01573e" class="btn btn-block tombolBeli" rel="tooltip" title="Tambah Ke Keranjang Belanja" id="btnBeli"><b style="font-size:15px;"> Beli Sekarang </b><i class="fa fa-chevron-right" aria-hidden="true"></i></button>';
     }
 
   }
@@ -199,32 +199,32 @@ class DaftarProdukController extends Controller
                   //JIKA USER LOGIN BUKAN PELANGGAN MAKA TIDAK BISA PESAN PRODUK
     if(Auth::user()->tipe_user == 3){
       if ($cek_produk == 0) {
-        $tombol_beli = '<a style="background-color:#01573e" class="btn btn-round" rel="tooltip" title="Stok Tidak Ada" disabled="" ><b style="font-size:18px"> Beli Sekarang </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';
+        $tombol_beli = '<a style="background-color:#01573e" class="btn btn-block tombolBeli" rel="tooltip" title="Stok Tidak Ada" disabled="" ><b style="font-size:18px"> Beli Sekarang </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';
       }else{
-       $tombol_beli = '<a href="'. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" id="btnBeliSekarang" style="background-color:#01573e" class="btn btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja"><b style="font-size:18px"> Beli Sekarang </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';
-     }
-   }
-   else{
-    $tombol_beli = '<button type="button" style="background-color:#01573e" class="btn btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja" id="btnBeli"><b style="font-size:18px"> Beli Sekarang</b><i class="fa fa-chevron-right" aria-hidden="true"></i></button>';
-  }  
+        $tombol_beli = '<a href="'. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" id="btnBeliSekarang" style="background-color:#01573e" class="btn btn-block tombolBeli" rel="tooltip" title="Tambah Ke Keranjang Belanja"><b style="font-size:18px"> Beli Sekarang </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';
+      }
+    }
+    else{
+      $tombol_beli = '<button type="button" style="background-color:#01573e" class="btn btn-block tombolBeli" rel="tooltip" title="Tambah Ke Keranjang Belanja" id="btnBeli"><b style="font-size:18px"> Beli Sekarang</b><i class="fa fa-chevron-right" aria-hidden="true"></i></button>';
+    }  
 
-}
-return $tombol_beli; 
+  }
+  return $tombol_beli; 
 }
 
 public function tidakAdaProduk(){
   return   '<div class="col-md-3">
   <div class="card card-product card-plain no-shadow" data-colored-shadow="false">
-  <div class="card-image">
-  <img src="'.asset('image/foto_default.png').'">
+    <div class="card-image">
+      <img src="'.asset('image/foto_default.png').'">
+    </div>
+    <div class="card-content">
+      <a href="#">
+        <h4 >Tidak Ada Produk</h4>
+      </a>
+    </div>
   </div>
-  <div class="card-content">
-  <a href="#">
-  <h4 >Tidak Ada Produk</h4>
-  </a>
-  </div>
-  </div>
-  </div>'; 
+</div>'; 
 }
 
 public function namaProduk($produks){
@@ -240,7 +240,7 @@ public function namaProduk($produks){
 
 public function namaWarung($warung){
 
-  return '<a class="description"><i class="material-icons">store</i>  '.strip_tags(substr($warung->name, 0, 10)).'... </a>';
+  return '<a class="description"><i class="material-icons">store</i>  '.strip_tags(substr($warung->name, 0, 25)).'... </a>';
 
 }
 
@@ -262,42 +262,42 @@ public function cardProduk($produks){
     $cek_produk = $this->cekStokProduk($produks);
     $card_produk .= '      
     <div class="col-md-3 col-sm-6 col-xs-6 list-produk">
-    <div class="card cards card-pricing">
-      <a href="'.url("/detail-produk/".$produks->id."") .'">
-    <div class="card-image">';
-    $card_produk .= $this->fotoProduk($produks);
-    $card_produk .= '
-    </div>
-    </a>
-    <div class="card-content">
-    <div class="footer">  
-      <a href="'.url("/detail-produk/".$produks->id."") .'" class="card-title">';
-    $card_produk .= $this->namaProduk($produks);
-    $card_produk .= '</a><br>             
-    <b style="color:red; font-size:18px"> '.$produks->rupiah.' </b><br>';
-    $card_produk .= $this->namaWarung($warung).'<br>';
+      <div class="card cards card-pricing">
+        <a href="'.url("/detail-produk/".$produks->id."") .'">
+          <div class="card-image">';
+            $card_produk .= $this->fotoProduk($produks);
+            $card_produk .= '
+          </div>
+        </a>
+        <div class="card-content">
+          <div class="footer">  
+            <a href="'.url("/detail-produk/".$produks->id."") .'" class="card-title">';
+              $card_produk .= $this->namaProduk($produks);
+              $card_produk .= '</a><br>             
+              <b style="color:red; font-size:18px"> '.$produks->rupiah.' </b><br>';
+              $card_produk .= $this->namaWarung($warung).'<br>';
       //tombol beli
-    $card_produk .= $this->tombolBeli($cek_produk,$produks);
-    $card_produk .= '
-    </div>
-    </div>
-    </div>
-    </div>';
+              $card_produk .= $this->tombolBeli($cek_produk,$produks);
+              $card_produk .= '
+            </div>
+          </div>
+        </div>
+      </div>';
+    }
+    return $card_produk;
   }
-  return $card_produk;
-}
 
-public function daftarProduk($data_produk){
- if ($data_produk->count() > 0) {
-  $daftar_produk = "";
-  foreach ($data_produk as $produks) {
-    $daftar_produk .= $this->cardProduk($produks);
-  }
-  if ($daftar_produk == "") {
-   $daftar_produk = $this->tidakAdaProduk();
+  public function daftarProduk($data_produk){
+   if ($data_produk->count() > 0) {
+    $daftar_produk = "";
+    foreach ($data_produk as $produks) {
+      $daftar_produk .= $this->cardProduk($produks);
+    }
+    if ($daftar_produk == "") {
+     $daftar_produk = $this->tidakAdaProduk();
+   }
  }
-}
-else {
+ else {
   $daftar_produk = $this->tidakAdaProduk()."asdasda";
 }
 return $daftar_produk;
