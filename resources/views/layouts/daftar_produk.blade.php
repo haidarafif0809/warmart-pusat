@@ -24,6 +24,25 @@
 .card .footer {
     margin-top: 0px;
 }      
+
+@font-face {
+  font-family: "San Francisco";
+  font-weight: 200;
+  src: url("//applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-thin-webfont.woff2");
+}
+
+
+.flexFont {
+    height:4em;
+    padding:1%;
+    margin: 10px;
+}
+
+.smaller {
+    font-size: 0.7em;
+    background-color:red;
+    width: 10em;
+}
 </style>
 
 @if (Agent::isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
@@ -95,7 +114,7 @@
             </div>
 
             <div class="col-md-12"><br>
-                <div class="row">
+                <div class="row ">
                     <!-- Menampilkan Produk -->
                     {!! $daftar_produk !!}
                     <div class="col-md-12 col-sm-12 col-xs-12">
@@ -174,4 +193,22 @@
 </div> <!-- end-main-raised -->
 @endif
 
+@endsection
+@section('scripts')
+<script type="text/javascript">
+    flexFont = function () {
+        var divs = document.getElementsByClassName("flexFont");
+        for(var i = 0; i < divs.length; i++) {
+            var relFontsize = divs[i].offsetWidth*0.05;
+            divs[i].style.fontSize = relFontsize+'px';
+        }
+    };
+
+    window.onload = function(event) {
+        flexFont();
+    };
+    window.onresize = function(event) {
+        flexFont();
+    };
+</script>
 @endsection

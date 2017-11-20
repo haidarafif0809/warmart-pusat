@@ -268,7 +268,7 @@ public function cardProduk($produks){
     $warung = Warung::select(['name'])->where('id', $produks->id_warung)->first();
     $cek_produk = $this->cekStokProduk($produks);
     $card_produk .= '      
-    <div class="col-md-3 col-sm-6 col-xs-6 list-produk" style=" margin-bottom:10px;">
+    <div class="col-md-3 col-sm-6 col-xs-6 list-produk " style=" margin-bottom:10px;">
     <div class="card cards card-pricing">
     <a href="'.url("/detail-produk/".$produks->id."") .'">
     <div class="card-image">';
@@ -278,9 +278,10 @@ public function cardProduk($produks){
     </a>
     <div class="card-content">
     <div class="footer">  
+    <p class="nama-produk flexFont">
     <a href="'.url("/detail-produk/".$produks->id."") .'" >';
     $card_produk .= $this->namaProduk($produks);
-    $card_produk .= '</a><br>             
+    $card_produk .= '</a></p>
     <p style="color:red; font-size:18px"> '.$produks->rupiah.' </p>';
     $card_produk .= $this->namaWarung($warung).'<br>';
       //tombol beli
