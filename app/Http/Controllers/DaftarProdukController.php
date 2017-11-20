@@ -229,7 +229,7 @@ public function tidakAdaProduk(){
 
 public function namaProduk($produks){
   if (strlen(strip_tags($produks->nama)) <= 33) {
-    $nama_produk = ''.strip_tags(substr($produks->nama, 0, 60)).'...<br>';
+    $nama_produk = ''.strip_tags(substr($produks->nama, 0, 60));
   }
   else{
     $nama_produk = ''.strip_tags(substr($produks->nama, 0, 60)).'...';                
