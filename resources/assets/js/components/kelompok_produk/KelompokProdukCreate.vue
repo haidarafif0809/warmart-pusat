@@ -65,7 +65,7 @@ export default {
 			var newkelompok_produk = app.kelompok_produk;
 			axios.post(app.url, newkelompok_produk)
 			.then(function (resp) {
-				app.message = 'Berhasil Menambah Kelompok Produk '+ app.kelompok_produk.kelompok;
+				app.message = 'Menambah Kelompok Produk '+ app.kelompok_produk.kelompok;
 				app.alert(app.message);
 				app.kelompok_produk.kelompok = ''
 				app.kelompok_produk.icon_kelompok = ''
