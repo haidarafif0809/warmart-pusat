@@ -2,22 +2,28 @@
 @section('content') 
 
 <style type="text/css">
-    .list-produk {
-        padding-left: 4px;
-        padding-right: 4px;
-    }
-    .card .card-image{
+.list-produk {
+    padding-left: 4px;
+    padding-right: 4px;
+}
+.card .card-image{
 
-        height: auto; /*this makes sure to maintain the aspect ratio*/
-        margin-top: 5px;
-    }
-    .tombolBeli {
-        padding: 5px 0px;
-        margin: 0px 0px;
-    }
-    .card .footer {
-        margin-top: 0px;
-    }      
+    height: auto; /*this makes sure to maintain the aspect ratio*/
+    margin-top: 0px;
+}
+.card-pricing {
+    margin-bottom: 0px;
+}
+.tombolBeli {
+    padding: 10px 0px;
+    margin:0px;
+}
+.card-pricing .card-content {
+    padding: 5px !important;
+}
+.card .footer {
+    margin-top: 0px;
+}      
 </style>
 
 @if (Agent::isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
@@ -37,7 +43,7 @@
     </div>
 </div>
 
-<div class="main main-raised" style="background-color: #E5E5E5">
+<div class="main main-raised" >
 
     <div class="container">
         <h3 class="title text-center">{!! $nama_kategori !!}</h3>
@@ -116,7 +122,7 @@
     </div>
 </div>
 
-<div class="main main-raised" style="background-color: #E5E5E5">
+<div class="main main-raised" >
 
     <div class="container">
         <h3 class="title text-center">{!! $nama_kategori !!}</h3>
