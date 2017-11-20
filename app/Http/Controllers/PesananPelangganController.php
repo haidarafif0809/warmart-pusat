@@ -39,6 +39,7 @@ class PesananPelangganController extends Controller
 		$user = Auth::user();
 
 		$pesanan_pelanggan = PesananPelanggan::where('id_pelanggan',Auth::user()->id)->get();
+		$cek_pesanan = $pesanan_pelanggan->count();  
 
       	//MEANMPILKAN PRODUK PESANAN VERSI MOBILE 
 		$produk_pesanan_mobile = ''; 
@@ -90,7 +91,7 @@ class PesananPelangganController extends Controller
 			$produk_pesanan_komputer .= '</tr>';   
 		}
 
-		return view('layouts.pesanan_pelanggan',['produk_pesanan_mobile'=>$produk_pesanan_mobile,'produk_pesanan_komputer'=>$produk_pesanan_komputer,'cek_belanjaan'=>$cek_belanjaan,'agent'=>$agent,'logo_warmart'=>$logo_warmart,'user'=>$user]);
+		return view('layouts.pesanan_pelanggan',['produk_pesanan_mobile'=>$produk_pesanan_mobile,'produk_pesanan_komputer'=>$produk_pesanan_komputer,'cek_belanjaan'=>$cek_belanjaan,'agent'=>$agent,'logo_warmart'=>$logo_warmart,'user'=>$user,'cek_pesanan'=>$cek_pesanan]);
 	}
 
 	public function detailPesananPelanggan($id)
