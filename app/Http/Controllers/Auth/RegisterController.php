@@ -128,7 +128,7 @@ class RegisterController extends Controller
             $userkey = env('USERKEY');
             $passkey = env('PASSKEY');
             $nomor_tujuan = $data['no_telp'];
-            $isi_pesan =''.$kode_verifikasi.' adalah Kode Verfikasi Warmart, Terima Kasih Telah Mendaftar Sebagai Customer Warmart. ';
+            $isi_pesan =''.$kode_verifikasi.' adalah Nomor Verfikasi Warmart, Terima Kasih Telah Mendaftar Sebagai Customer Warmart. ';
 
             if (env('STATUS_SMS') == 1) {
                 $client = new Client(); //GuzzleHttp\Client
@@ -158,7 +158,7 @@ class RegisterController extends Controller
             $userkey = env('USERKEY');
             $passkey = env('PASSKEY');
             $nomor_tujuan = $data['no_telp'];
-            $isi_pesan =''.$kode_verifikasi.' adalah Kode Verfikasi Warmart, Terima Kasih Telah Mendaftar Sebagai Komunitas Warmart.';
+            $isi_pesan =''.$kode_verifikasi.' adalah Nomor Verfikasi Warmart, Terima Kasih Telah Mendaftar Sebagai Komunitas Warmart.';
 
             if (env('STATUS_SMS') == 1) {
                 $client = new Client(); //GuzzleHttp\Client
@@ -205,7 +205,7 @@ class RegisterController extends Controller
             $userkey = env('USERKEY');
             $passkey = env('PASSKEY');
             $nomor_tujuan = $data['no_telp'];
-            $isi_pesan =''.$kode_verifikasi.' adalah Kode Verfikasi Warmart, Terima Kasih Telah Mendaftar Sebagai Warung Warmart.';
+            $isi_pesan =''.$kode_verifikasi.' adalah Nomor Verfikasi Warmart, Terima Kasih Telah Mendaftar Sebagai Warung Warmart.';
 
             if (env('STATUS_SMS') == 1) {
                 $client = new Client(); //GuzzleHttp\Client
@@ -235,7 +235,7 @@ class RegisterController extends Controller
                 "alert" => 'danger',
                 "icon" => 'error_outline',
                 "judul" => 'FAILED',
-                "message" => 'Mohon Maaf Kode Verfikasi Yang Anda Isi Tidak Sama']);
+                "message" => 'Mohon Maaf Nomor Verfikasi Yang Anda Isi Tidak Sama']);
             return back();
         }else{
 
@@ -260,7 +260,7 @@ class RegisterController extends Controller
         $userkey = env('USERKEY');
         $passkey = env('PASSKEY');
         $nomor_tujuan = $user->no_telp;
-        $isi_pesan =''.$kode_verifikasi.' adalah Kode Verfikasi Warmart, Terima Kasih Telah Mendaftar Sebagai Warmart.';
+        $isi_pesan = ''.$kode_verifikasi.' adalah Nomor Verfikasi Warmart, Terima Kasih Telah Mendaftar Sebagai Warmart.';
 
         if (env('STATUS_SMS') == 1) {
         $client = new Client(); //GuzzleHttp\Client
@@ -271,7 +271,7 @@ class RegisterController extends Controller
         "alert" => 'warning',
         "icon" => 'warning',
         "judul" => 'PERHATIAN',
-        "message" => 'Silakan input nomor verifikasi yang terkirim melalui SMS ke no ' . $user->no_telp]);
+        "message" => 'Silakan input Nomor verifikasi yang terkirim melalui SMS ke no ' . $user->no_telp]);
     return back();
 
 }
@@ -299,18 +299,17 @@ protected function proses_lupa_password(Request $request)
     $nomor_tujuan = $request->no_telp;
     $user = User::where('no_telp',$nomor_tujuan)->first();
     User::where('no_telp',$nomor_tujuan)->update(['kode_verifikasi' => $kode_verifikasi]);
-    $isi_pesan =''.$kode_verifikasi.' adalah kode verifikasi untuk merubah password Anda di Warmart';
+    $isi_pesan =''.$kode_verifikasi.' adalah Nomor Verifikasi untuk merubah password Anda di Warmart';
 
     if (env('STATUS_SMS') == 1) {
         $client = new Client(); //GuzzleHttp\Client
-        $result = $client->get("https://reguler.zenziva.net/apps/smsapi.php?userkey=$userkey&passkey=$passkey&nohp=$nomor_tujuan&pesan=$isi_pesan"); 
-
+        $result = $client->get("https://reguler.zenziva.net/apps/smsapi.php?userkey=$userkey&passkey=$passkey&nohp=$nomor_tujuan&pesan=".urlencode($isi_pesan)); 
 
         Session::flash("flash_notification", [ 
             "alert" => 'warning',
             "icon" => 'done',
             "judul" => 'INFO',
-            "message" => 'Silahkan periksa ponsel anda, kami mengirim sms kode verifikasi ke : '.$nomor_tujuan.''
+            "message" => 'Silahkan periksa ponsel anda, kami mengirim sms nomor verifikasi ke : '.$nomor_tujuan.''
         ]);
 
     } 

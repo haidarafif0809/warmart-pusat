@@ -66,6 +66,11 @@
   import UserWarungIndex from './components/user_warung/UserWarungIndex.vue';
   import UserWarungEdit from './components/user_warung/UserWarungEdit.vue';
 
+ /**kelompok produk*/
+ import KelompokProdukIndex from './components/kelompok_produk/KelompokProdukIndex.vue';
+ import KelompokProdukCreate from './components/kelompok_produk/KelompokProdukCreate.vue';
+ import KelompokProdukEdit from './components/kelompok_produk/KelompokProdukEdit.vue';
+
 
  const routes = [ 
  {
@@ -110,10 +115,11 @@
 {path: '/edit-komunitas/:id', component: KomunitasEdit, name: 'editKomunitas'},
 {path: '/detail-komunitas/:id', component: KomunitasDetail, name: 'detailKomunitas'},
 
-// USER WARUNG
-{path: '/user-warung', component: UserWarungIndex, name: 'indexUserWarung'},
-{path: '/edit-user-warung/:id', component: UserWarungEdit, name: 'editUserWarung'},
+// kelompok produk
 
+{path: '/kelompok-produk', component: KelompokProdukIndex, name: 'indexKelompokProduk'},
+{path: '/create-kelompok-produk', component: KelompokProdukCreate, name: 'createKelompokProduk'},
+{path: '/edit-kelompok-produk/:id', component: KelompokProdukEdit, name: 'editKelompokProduk'},
 ]
 
 
