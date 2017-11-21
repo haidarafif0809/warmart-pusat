@@ -109,6 +109,10 @@
  {path: '/create-warung', component: WarungCreate, name: 'createWarung'},
  {path: '/edit-warung/:id', component: WarungEdit, name: 'editWarung'},
 
+ /**USER WARUNG*/
+ {path: '/user-warung', component: UserWarungIndex, name: 'indexUserWarung'},
+ {path: '/edit-user-warung/:id', component: UserWarungEdit, name: 'editUserWarung'},
+
 // Komunitas
 {path: '/komunitas', component: KomunitasIndex, name: 'indexKomunitas'},
 {path: '/create-komunitas', component: KomunitasCreate, name: 'createKomunitas'},

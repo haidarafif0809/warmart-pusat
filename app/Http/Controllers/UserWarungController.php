@@ -32,11 +32,17 @@ class UserWarungController extends Controller
 
     //VIEW USER WARUNG
     public function view(){
-        $user_warung = UserWarung::with(['kelurahan', 'warung'])->where('tipe_user', 4)->paginate(10);
+        $user_warung = UserWarung::with(['warung'])->where('tipe_user', 4)->paginate(10);
 
         $user_warung_array = array();
         foreach ($user_warung as $user_warungs) {
-            $wilayah = $user_warungs->kelurahan->nama;
+            $data_kelurahan = Kelurahan::select(['nama'])->where('id', $user_warungs->wilayah)->first();
+            if ($user_warungs->wilayah == NULL) {
+                $wilayah = "-";
+            }
+            else{
+                $wilayah = $data_kelurahan->nama;
+            }
             $warung = $user_warungs->warung->name;
             array_push($user_warung_array, ['user_warung'=>$user_warungs, 'wilayah'=>$wilayah, 'warung'=>$warung]);
         }
@@ -125,12 +131,18 @@ class UserWarungController extends Controller
      */
     public function show($id)
     {
-        $user_warung = UserWarung::with(['kelurahan', 'warung'])->find($id);
+        $user_warung = UserWarung::with(['warung'])->find($id);
+        $data_kelurahan = Kelurahan::select(['nama'])->where('id', $user_warung->wilayah)->first();
+        if ($user_warung->wilayah == NULL) {
+            $wilayah = "-";
+        }
+        else{
+            $wilayah = $data_kelurahan->nama;
+        }
 
-        $kelurahan = Kelurahan::where('id',$user_warung->wilayah)->first();
         $warung = Warung::where('id',$user_warung->id_warung)->first();
 
-        $user_warung['kelurahan'] = $kelurahan->nama;
+        $user_warung['kelurahan'] = $wilayah;
         $user_warung['warung'] = $warung->name;
 
         return $user_warung;
@@ -146,11 +158,11 @@ class UserWarungController extends Controller
     {
         $user_warung = UserWarung::with(['kelurahan', 'warung'])->find($id);
 
-        $kelurahan = Kelurahan::where('id',$wilayah)->first();
-        $warung = Warung::where('id',$id_warung)->first();
+        $kelurahan = Kelurahan::where('id',$user_warung->wilayah)->first();
+        $warung = Warung::where('id',$user_warung->id_warung)->first();
 
-        $user_warung['kelurahan'] = $kelurahan;
-        $user_warung['warung'] = $warung;
+        $user_warung['kelurahan'] = $kelurahan->name;
+        $user_warung['warung'] = $warung->nama;
 
         return url('user-warung#/edit_user_warung/'.$id);
     }
