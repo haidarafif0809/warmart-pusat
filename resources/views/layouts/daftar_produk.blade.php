@@ -33,7 +33,7 @@
 
 
 .flexFont {
-    height:4em;
+    height:2em;
     padding:1%;
     margin: 10px;
 }
