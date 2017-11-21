@@ -105,6 +105,11 @@
         <!--HANYA USER LOGIN PELANGGAN-->
         @if(Auth::user()->tipe_user == 3)
         <li style="color:black">
+          <a href="{{ url('/pesanan') }}">
+            <i class="material-icons">archive</i> Pesanan
+          </a>
+        </li>
+        <li style="color:black">
           <a href="{{ url('/ubah-profil-pelanggan') }}">
             <i class="material-icons">settings</i> Ubah Profil
           </a>
@@ -267,6 +272,8 @@
 <script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
 <script src="{{ asset('js/demo.js') }}"></script>
 <script src="{{ asset('js/material-kit.js?v=1.2.0')}}" type="text/javascript"></script>
+<!--  DataTables.net Plugin, full documentation here: https://datatables.net/    -->
+<script src="{{ asset('assets/js/jquery.datatables.js')}}"></script>
 
 <script type="text/javascript"> 
 

@@ -32,7 +32,7 @@
 						</div>
 						<div class="form-group">
 							<div class="col-md-4 col-md-offset-2">
-								<button class="btn btn-primary" id="btnSimpanKomunitas" type="submit"><i class="material-icons">send</i> Submit</button>
+								<button class="btn btn-primary" id="btnSimpanKelompokProduk" type="submit"><i class="material-icons">send</i> Submit</button>
 							</div>
 						</div>
 					</form>

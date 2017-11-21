@@ -32,9 +32,9 @@
 
 <style type="text/css">
 
-  .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
-   padding: 1px;
- }
+.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+ padding: 1px;
+}
 </style>
 
 <body>
@@ -255,6 +255,8 @@
   </router-link>
 </li> 
 @endif
+
+<!-- OTORITAS ADMIN
 @if(Laratrust::can('lihat_otoritas'))
 <li>
  <a href="{{ route('otoritas.index') }}">
@@ -263,6 +265,7 @@
 </a>
 </li> 
 @endif
+-->
 @if(Laratrust::can('lihat_user'))
 <li>
  <router-link :to="{name: 'indexUser'}"> <span class="sidebar-mini">U</span>

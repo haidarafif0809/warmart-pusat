@@ -33,7 +33,7 @@
 						
 						<div class="form-group">
 							<div class="col-md-4 col-md-offset-2">
-								<button class="btn btn-primary" id="btnSimpanKomunitas" type="submit"><i class="material-icons">send</i> Submit</button>
+								<button class="btn btn-primary" id="btnSimpanKelompokProduk" type="submit"><i class="material-icons">send</i> Submit</button>
 							</div>
 						</div>
 					</form>
@@ -52,7 +52,7 @@ export default {
 			errors: [],
 			url : window.location.origin+(window.location.pathname).replace("dashboard", "kelompok-produk"),
 			kelompok_produk: {
-				kelompok : '',
+				nama_kelompok : '',
 				icon_kelompok : ''
 			},
 			message : ''
@@ -65,9 +65,9 @@ export default {
 			var newkelompok_produk = app.kelompok_produk;
 			axios.post(app.url, newkelompok_produk)
 			.then(function (resp) {
-				app.message = 'Menambah Kelompok Produk '+ app.kelompok_produk.kelompok;
+				app.message = 'Menambah Kelompok Produk '+ app.kelompok_produk.nama_kelompok;
 				app.alert(app.message);
-				app.kelompok_produk.kelompok = ''
+				app.kelompok_produk.nama_kelompok = ''
 				app.kelompok_produk.icon_kelompok = ''
 				app.errors = '';
 				app.$router.replace('/kelompok-produk/');
