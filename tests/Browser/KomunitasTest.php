@@ -185,7 +185,7 @@ class KomunitasTest extends DuskTestCase
       });
     }
     
-    public function testUbahBank() {
+    public function testUbahKomunitas() {
 
       $komunitas = Komunitas::select('id')->where('no_telp','08571212477')->first();
 
