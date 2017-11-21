@@ -77,36 +77,37 @@ class HomeController extends Controller
 
         $daftar_produk .= '      
         <div class="col-md-3 col-sm-6 col-xs-6 list-produk">
-          <div class="card cards card-pricing">
-            <a href="'.url("/keranjang-belanja") .'">
-              <div class="card-image">';
-                if ($produks->foto != NULL) {
-                 $daftar_produk .= '<img src="./foto_produk/'.$produks->foto.'">';
-               }
-               else{
-                $daftar_produk .= '<img src="./image/foto_default.png">';
-              }
-              $daftar_produk .= '
-            </div>
-          </a>
-          <div class="card-content">
-            <div class="footer">     
-              <a href="'.url("/keranjang-belanja") .'" class="card-title">
-                '.strip_tags(substr($produks->nama, 0, 10)).'...
-              </a><br>
-              <b style="color:red; font-size:18px"> '.$produks->rupiah.' </b><br>
-              <a class="description"><i class="material-icons">store</i>  '.strip_tags(substr($warung->name, 0, 10)).'... </a><br>';
+        <div class="card cards card-pricing">
+        <a href="'.url("/keranjang-belanja") .'">
+        <div class="card-image">';
+        if ($produks->foto != NULL) {
+         $daftar_produk .= '<img src="./foto_produk/'.$produks->foto.'">';
+       }
+       else{
+        $daftar_produk .= '<img src="./image/foto_default.png">';
+      }
+      $daftar_produk .= '
+      </div>
+      </a>
+      <div class="card-content">
+      <div class="footer">    
+      <p class="flexFont"> 
+      <a href="'.url("/keranjang-belanja") .'" >
+      '.strip_tags(substr($produks->nama, 0, 10)).'...
+      </a></p>
+      <p style="color:red; font-size:18px"> '.$produks->rupiah.' </p>
+      <a class="description"><i class="material-icons">store</i>  '.strip_tags(substr($warung->name, 0, 10)).'... </a><br>';
 
-              if ($agent->isMobile()) {
-                $daftar_produk .= '<a href="'.url("/keranjang-belanja") .'" class="btn btn-danger btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja" id="btnBeliSekarang"><b style="font-size:15px"> Beli </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';
-              }
-              else{
-                $daftar_produk .= '<a href="'. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" id="btnBeliSekarang" class="btn btn-danger btn-round" rel="tooltip" title="Tambah Ke Keranjang Belanja"><b style="font-size:18px"> Beli Sekarang </b><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';
-              }
-              $daftar_produk .= '
-            </div>
-          </div>
-        </div>
+      if ($agent->isMobile()) {
+        $daftar_produk .= '<a href="'.url("/keranjang-belanja") .'" class="btn btn-danger btn-block" id="btnBeliSekarang" style="background-color:#01573e"> Beli Sekarang </a>';
+      }
+      else{
+        $daftar_produk .= '<a href="'. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" id="btnBeliSekarang" class="btn btn-danger btn-block"  style="background-color:#01573e;"> Beli Sekarang </a>';
+      }
+      $daftar_produk .= '
+      </div>
+      </div>
+      </div>
       </div>';
     }
     return $daftar_produk;
