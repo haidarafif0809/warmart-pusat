@@ -34,7 +34,7 @@ class DaftarProdukController extends Controller
 
         //PILIH DATA PRODUK
 
-      $data_produk = Barang::select(['id','kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung','konfirmasi_admin'])
+      $data_produk = Barang::select(['id','kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung','konfirmasi_admin','satuan_id'])
       ->inRandomOrder()
       ->whereIn('id_warung', $array_warung)->paginate(12);
 
@@ -290,7 +290,7 @@ public function cardProduk($produks){
     <a href="'.url("/detail-produk/".$produks->id."") .'" >';
     $card_produk .= $this->namaProduk($produks);
     $card_produk .= '</a></p>
-    <p style="color:#d21f30; font-size:18px;line-height:1.4"> '.$produks->rupiah.' </p>';
+    <p style="color:#d21f30; font-size:18px;line-height:1.4"> '.$produks->rupiah.' / '.$produks->satuan->nama_satuan.' </p>';
     $card_produk .= $this->namaWarung($warung).'<br>';
       //tombol beli
     $card_produk .= $this->tombolBeli($cek_produk,$produks);
