@@ -230,13 +230,20 @@ public function tidakAdaProduk(){
 
 public function namaProduk($produks){
   if (strlen(strip_tags($produks->nama)) <= 33) {
-    $nama_produk = ''.strip_tags(substr($produks->nama, 0, 60));
+
+    $nama_produk = ''.strip_tags($produks->nama);
   }
   else{
-    $nama_produk = ''.strip_tags(substr($produks->nama, 0, 60)).'...';                
-  }
+    $agent = new Agent();
+    if ($agent->isMobile()) {
+      $nama_produk = ''.strip_tags(substr($produks->nama, 0, 35)).'...'; 
+    }
+    else {
+     $nama_produk = ''.strip_tags(substr($produks->nama, 0, 60)).'...'; 
+   }
 
-  return $nama_produk;
+ }
+ return $nama_produk;
 }
 
 public function namaWarung($warung){
@@ -283,7 +290,7 @@ public function cardProduk($produks){
     <a href="'.url("/detail-produk/".$produks->id."") .'" >';
     $card_produk .= $this->namaProduk($produks);
     $card_produk .= '</a></p>
-    <p style="color:red; font-size:18px"> '.$produks->rupiah.' </p>';
+    <p style="color:#d21f30; font-size:18px;line-height:1.4"> '.$produks->rupiah.' </p>';
     $card_produk .= $this->namaWarung($warung).'<br>';
       //tombol beli
     $card_produk .= $this->tombolBeli($cek_produk,$produks);
