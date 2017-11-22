@@ -16,6 +16,13 @@
 Route::get('/','HomeController@index')->middleware('optimizeImages');
 Route::get('/sms','HomeController@sms');
 
+Route::get('/cek-deposit','PortaPulsaController@cekDeposit');
+
+Route::get('/cek-harga-pulsa/{pilihan}','PortaPulsaController@cekHargaPulsa');
+Route::get('/cek-status-pulsa/{notrx_id}','PortaPulsaController@statusTransaksi');
+
+Route::get('/perbarui-harga-pulsa','PortaPulsaController@perbaruiDataHargaPulsa');
+Route::get('/callback-portal-pulsa','PortaPulsaController@callback');
 
 Route::get('/pencarian_contoh/{search}',function($search){
 	return App\Barang::search($search)->where('konfirmasi_admin', 1)->get();
