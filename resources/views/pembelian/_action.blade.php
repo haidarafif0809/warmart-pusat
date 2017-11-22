@@ -65,7 +65,7 @@
          <table class="table table-bordered" id="table-detail-{{$model->id}}">  
           <thead> 
             <tr> 
-              <th>No. Faktur</th> 
+              <th>No. Transaksi</th> 
               <th>Produk</th> 
               <th>Jumlah</th> 
               <th>Harga</th> 

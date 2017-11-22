@@ -253,17 +253,7 @@
 
 		return (c ? num.replace('.', c) : num).replace(new RegExp(re, 'g'), '$&' + (s || ',')); 
 	}; 
-
-	function titleCase(str) { 
-		var newstr = str.split(" "); 
-		for(i=0;i<newstr.length;i++){ 
-			if(newstr[i] == "") continue; 
-			var copy = newstr[i].substring(1).toLowerCase(); 
-			newstr[i] = newstr[i][0].toUpperCase() + copy; 
-		} 
-		newstr = newstr.join(" "); 
-		return newstr; 
-	}  
+	
 </script> 
 <script type="text/javascript"> 
 	$(document).ready(function(){ 
@@ -633,10 +623,12 @@
 							text: "Anda Yakin Ingin Merubah Harga Beli Produk?", 
 							type: 'warning', 
 							showCancelButton: true, 
-							confirmButtonColor: '#3085d6', 
-							cancelButtonColor: '#d33', 
-							cancelButtonText: 'Batal', 
-							confirmButtonText: 'Ya' 
+							confirmButtonText:
+							'<i class="fa fa-thumbs-up"></i> Ya',
+							confirmButtonAriaLabel: 'Thumbs up, great!',
+							cancelButtonText:
+							'<i class="fa fa-thumbs-down"></i>',
+							cancelButtonAriaLabel: 'Thumbs down' 
 						}).then(function () { 
 							$("#id_produk_tbs").val(id_produk); 
 							$("#jumlah_produk").val(result[0]); 
@@ -754,10 +746,12 @@
 					text: "Anda Yakin Ingin Merubah Harga Beli Produk?", 
 					type: 'warning', 
 					showCancelButton: true, 
-					confirmButtonColor: '#3085d6', 
-					cancelButtonColor: '#d33', 
-					cancelButtonText: 'Batal', 
-					confirmButtonText: 'Ya' 
+					confirmButtonText:
+					'<i class="fa fa-thumbs-up"></i> Ya',
+					confirmButtonAriaLabel: 'Thumbs up, great!',
+					cancelButtonText:
+					'<i class="fa fa-thumbs-down"></i>',
+					cancelButtonAriaLabel: 'Thumbs down'
 				}).then(function () { 
 					$("#id_produk_edit_harga").val(id_tbs); 
 					$("#harga_edit_produk").val(harga_produk); 
