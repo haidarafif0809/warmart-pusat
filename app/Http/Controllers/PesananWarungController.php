@@ -9,8 +9,11 @@ use Illuminate\Support\Facades\DB;
 use App\KeranjangBelanja; 
 use App\Barang;
 use App\Hpp;  
+use App\Kas;  
 use App\PesananPelanggan;  
 use App\DetailPesananPelanggan;   
+use App\Penjualan;  
+use App\DetailPenjualan;  
 use Auth; 
 
 class PesananWarungController extends Controller
@@ -98,7 +101,20 @@ class PesananWarungController extends Controller
 				$status_pesanan .= '<td><b  style="color:red">Pesanan Di Batalkan</b></td>'; 
 			}
 
-			return view('pesanan_warung.detail_pesanan',['pesanan'=>$pesanan,'detail_pesanan' => $detail_pesanan_pelanggan,'status_pesanan' => $status_pesanan,'subtotal'=>$subtotal]); 
+        //MENAMPILKAN KAS
+			$data_kas = DB::table('kas')
+			->where('warung_id', Auth::user()->id_warung)
+			->pluck('nama_kas','id');
+
+        //MENAMPILKAN KAS
+			$kas = DB::table('kas')
+			->where('warung_id', Auth::user()->id_warung)->get();
+
+			$kas_option = "";
+			foreach ($kas as $data_kass) {
+				$kas_option .= '<option value"'.$data_kass->id.'">'.$data_kass->nama_kas.'</option>';
+			}
+			return view('pesanan_warung.detail_pesanan',['pesanan'=>$pesanan,'detail_pesanan' => $detail_pesanan_pelanggan,'status_pesanan' => $status_pesanan,'subtotal'=>$subtotal,'data_kas'=>$kas_option,'kas'=>$data_kas]); 
 		}
 	}
 
@@ -109,8 +125,10 @@ class PesananWarungController extends Controller
 		return redirect()->back();
 	}
 
-	public function selesaiKonfirmasiPesananWarung($id)
+	public function selesaiKonfirmasiPesananWarung(Request $request)
 	{ 
+		print_r($request->id_kas);
+		exit();
 		PesananPelanggan::where('id',$id)->update(['konfirmasi_pesanan' => '2']);
 		return redirect()->back();
 	}

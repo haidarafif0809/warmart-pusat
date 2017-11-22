@@ -168,7 +168,7 @@ Route::get('konfirmasi-pesanan-warung/{id}',[
 ]);
 
 //PUNYA SELESAI KONFIRMASI PESANAN WARUNG
-Route::get('selesai-konfirmasi-pesanan-warung/{id}',[ 
+Route::post('/selesai-konfirmasi-pesanan-warung}',[ 
 	'middleware' => ['auth'],
 	'as' => 'pesanan-warung.selesai_konfirmasi',
 	'uses' => 'PesananWarungController@selesaiKonfirmasiPesananWarung'
