@@ -255,7 +255,7 @@ Route::get('/ubah-password',[
 	'uses' => 'UbahPasswordController@ubah_password'
 ]);
 
-Route::put('/proses-ubah-password/{id}',[
+Route::put('/proses-ubah-password',[
 	'middleware' => ['auth'],
 	'as' => 'user.proses_ubah_password',
 	'uses' => 'UbahPasswordController@proses_ubah_password'

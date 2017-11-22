@@ -44,7 +44,7 @@ class UbahProfilController extends Controller
 			'no_telp' 	=> 'required|unique:users,no_telp,'.$request->id,
 			'email' 	=> 'unique:users,email,'.$request->id, 
 			'alamat' 	=> 'required',
-			]);
+		]);
 		//UPDATE USER PELANGGAN
 		Customer::find($request->id)->update([
 			'name'              => $request->name,
@@ -52,7 +52,7 @@ class UbahProfilController extends Controller
 			'alamat'            => $request->alamat,
 			'no_telp'           => $request->no_telp,
 			'tgl_lahir'         => $request->tgl_lahir,
-			]);
+		]);
 
 		//JIKA SEBELUMNYA SUDAH ADA DI KOMUNITAS
 		if ($request['komunitas'] != "") {
@@ -98,7 +98,7 @@ class UbahProfilController extends Controller
 				'email'     => 'required|without_spaces|unique:users,email,'.$request->id,
 				'no_telp'   => 'required|without_spaces|unique:users,no_telp,'.$request->id,
 				'foto_ktp'  => 'image|max:3072'
-				]);
+			]);
 
          //UPDATE USER WARUNG
 			$user_warung->update([
@@ -107,7 +107,7 @@ class UbahProfilController extends Controller
 				'no_telp'   => $request->no_telp, 
 				'alamat'    => $request->alamat,
 				'wilayah'   => $request->kelurahan, 
-				]);
+			]);
 
 		//UPDATE FOTO KTP
 			if ($request->hasFile('foto_ktp')) {
@@ -144,134 +144,129 @@ class UbahProfilController extends Controller
 			$pesan_alert = 
 			'<div class="container-fluid">
 			<div class="alert-icon">
-				<i class="material-icons">check</i>
+			<i class="material-icons">check</i>
 			</div>
 			<b>Sukses : Berhasil Merubah Profil "'.$user_warung->name.'"</b>
-		</div>';
+			</div>';
 
-		Session::flash("flash_notification", [
-			"level"     => "success",
-			"message"   => $pesan_alert
+			Session::flash("flash_notification", [
+				"level"     => "success",
+				"message"   => $pesan_alert
 			]);
 
-		return redirect()->back();
-	}
-}	 
+			return redirect()->back();
+		}
+	}	 
 
 //UBAH PROFIL USER KOMUNITAS
-public function ubah_profil_komunitas() {
+	public function ubah_profil_komunitas() {
     	//PILIH USER -> LOGIN
-	$user = Auth::user(); 
-	$komunitas = Komunitas::with(['kelurahan','warung','komunitas_penggiat','bank_komunitas'])->find($user->id); 
+		$user = Auth::user(); 
+		$komunitas = Komunitas::with(['kelurahan','warung','komunitas_penggiat','bank_komunitas'])->find($user->id); 
 
-	return view('ubah_profil.ubah_profil_komunitas')->with(compact('user','komunitas')); 
-}
+		return view('ubah_profil.ubah_profil_komunitas')->with(compact('user','komunitas')); 
+	}
 
 //UBAH PROFIL USER PELANGGAN
-public function proses_ubah_profil_komunitas(Request $request) {
+	public function proses_ubah_profil_komunitas(Request $request) {
 
         //end masukan data bank komunitas
 		//VALIDASI 
-	$this->validate($request, [
-		'email'     => 'required|without_spaces|unique:users,email,'. $request->id,
-		'name'      => 'required|unique:users,name,'. $request->id,
-		'alamat'    => 'required',
-		'kelurahan' => 'required',
-		'no_telp'   => 'required|without_spaces|unique:users,no_telp,'. $request->id,
-		'nama_bank' => 'required',
-		'no_rekening' => 'required',
-		'an_rekening' => 'required',
-		'id_warung' => 'required',
+		$this->validate($request, [
+			'email'     => 'required|without_spaces|unique:users,email,'. $request->id,
+			'name'      => 'required|unique:users,name,'. $request->id,
+			'alamat'    => 'required',
+			'kelurahan' => 'required',
+			'no_telp'   => 'required|without_spaces|unique:users,no_telp,'. $request->id,
+			'nama_bank' => 'required',
+			'no_rekening' => 'required',
+			'an_rekening' => 'required',
+			'id_warung' => 'required',
 		]);
 
          //insert
-	$komunitas = Komunitas::where('id',$request->id)->update([
-		'email' =>$request->email,
-		'name' =>$request->name,
-		'alamat' =>$request->alamat,
-		'wilayah' =>$request->kelurahan,
-		'no_telp' =>$request->no_telp,
-		'id_warung' =>$request->id_warung,
+		$komunitas = Komunitas::where('id',$request->id)->update([
+			'email' =>$request->email,
+			'name' =>$request->name,
+			'alamat' =>$request->alamat,
+			'wilayah' =>$request->kelurahan,
+			'no_telp' =>$request->no_telp,
+			'id_warung' =>$request->id_warung,
 		]);
 
-	$cek_komunitas_penggiat = KomunitasPenggiat::where('komunitas_id',$request->id)->count(); 
+		$cek_komunitas_penggiat = KomunitasPenggiat::where('komunitas_id',$request->id)->count(); 
 
          //masukan data penggiat komunitas
-	if ($cek_komunitas_penggiat == 0) {
-		$komunitaspenggiat = KomunitasPenggiat::create([
-			'nama_penggiat' =>$request->name_penggiat,
-			'alamat_penggiat'  =>$request->alamat_penggiat,
-			'komunitas_id'=>$request->id 
-			]);
-	}else{
-		if ($request->name_penggiat != "" AND $request->alamat_penggiat != ""){
-			$komunitaspenggiat = KomunitasPenggiat::where('komunitas_id',$request->id)->update([
+		if ($cek_komunitas_penggiat == 0) {
+			$komunitaspenggiat = KomunitasPenggiat::create([
 				'nama_penggiat' =>$request->name_penggiat,
-				'alamat_penggiat'  =>$request->alamat_penggiat
+				'alamat_penggiat'  =>$request->alamat_penggiat,
+				'komunitas_id'=>$request->id 
+			]);
+		}else{
+			if ($request->name_penggiat != "" AND $request->alamat_penggiat != ""){
+				$komunitaspenggiat = KomunitasPenggiat::where('komunitas_id',$request->id)->update([
+					'nama_penggiat' =>$request->name_penggiat,
+					'alamat_penggiat'  =>$request->alamat_penggiat
 				]);
+			} 
 		} 
-	} 
 
-	$cek_bank_komunitas = BankKomunitas::where('komunitas_id',$request->id)->count(); 
+		$cek_bank_komunitas = BankKomunitas::where('komunitas_id',$request->id)->count(); 
          //masukan data bank komunitas 
-	if ($cek_bank_komunitas == 0) {
-		$bankkomunitas = BankKomunitas::create([
-			'nama_bank' =>$request->nama_bank,
-			'no_rek'    =>$request->no_rekening,
-			'atas_nama' =>$request->an_rekening ,
-			'komunitas_id'=>$request->id              
-			]);  
-	}else{
-		if ($request->nama_bank != "" AND $request->no_rekening != "" AND $request->an_rekening != "" ){
-			$bankkomunitas = BankKomunitas::where('komunitas_id',$request->id)->update([
+		if ($cek_bank_komunitas == 0) {
+			$bankkomunitas = BankKomunitas::create([
 				'nama_bank' =>$request->nama_bank,
 				'no_rek'    =>$request->no_rekening,
-				'atas_nama' =>$request->an_rekening              
+				'atas_nama' =>$request->an_rekening ,
+				'komunitas_id'=>$request->id              
+			]);  
+		}else{
+			if ($request->nama_bank != "" AND $request->no_rekening != "" AND $request->an_rekening != "" ){
+				$bankkomunitas = BankKomunitas::where('komunitas_id',$request->id)->update([
+					'nama_bank' =>$request->nama_bank,
+					'no_rek'    =>$request->no_rekening,
+					'atas_nama' =>$request->an_rekening              
 				]);
-		} 
+			} 
 
-	}
+		}
 
-	Session::flash("flash_notification", [
-		"level"     => "success",
-		"message"   => "Profil Berhasil Di Ubah"
+		Session::flash("flash_notification", [
+			"level"     => "success",
+			"message"   => "Profil Berhasil Di Ubah"
 		]);
 
-	return redirect()->back();
-}	 
+		return redirect()->back();
+	}	 
 
 //UBAH PROFIL USER ADMIN
-public function ubah_profil_admin() {
+	public function ubah_profil_admin() {
     	//PILIH USER -> LOGIN
-	$user = Auth::user(); 
-	$user_admin = UserWarung::find($user->id);
-	return view('ubah_profil.ubah_profil_admin')->with(compact('user_admin','user')); 
-}
+		$user = Auth::user(); 
+		$user_admin = UserWarung::find($user->id);
+		$user_admin['nama'] = $user_admin->name;
+		return $user_admin;
+	}
 
 //UBAH PROFIL USER ADMIN
-public function proses_ubah_profil_admin(Request $request) {
+	public function proses_ubah_profil_admin(Request $request) {
 		//VALIDASI
-	$this->validate($request, [
-		'name'      => 'required',
-		'email'     => 'required|without_spaces|unique:users,email,'.$request->id,
-		'no_telp'   => 'required|without_spaces|unique:users,no_telp,'.$request->id,
-		'alamat'    => 'required', 
+		$this->validate($request, [
+			'nama'      => 'required',
+			'email'     => 'required|without_spaces|unique:users,email,'.$request->id,
+			'no_telp'   => 'required|without_spaces|unique:users,no_telp,'.$request->id,
+			'alamat'    => 'required', 
 		]);
 
          //UPDATE USER ADMIN
-	$user_warung = User::where('id',$request->id)->update([
-		'name'      => $request->name,
-		'email'     => $request->email, 
-		'no_telp'     => $request->no_telp, 
-		'alamat'    => $request->alamat, 
+		$user_warung = User::where('id',$request->id)->update([
+			'name'      => $request->nama,
+			'email'     => $request->email, 
+			'no_telp'     => $request->no_telp, 
+			'alamat'    => $request->alamat
 		]);
 
 
-	Session::flash("flash_notification", [
-		"level"     => "success",
-		"message"   => "Profil Berhasil Di Ubah"
-		]);
-
-	return redirect()->back();
-}	
+	}	
 }
