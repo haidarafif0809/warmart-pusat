@@ -98,9 +98,9 @@
         {!! Form::open(['url' => route('pesanan-warung.selesai_konfirmasi'),'method' => 'post','id' => 'form-selesaikan-pesanan', 'class'=>'form-horizontal']) !!}
         {!! Form::hidden('id_pesanan', $pesanan->id, ['Produk','required', 'id'=>'id_pesanan']) !!}
         <div class="form-group{{ $errors->has('id_kas') ? ' has-error' : '' }}">
-          {!! Form::label('kas', 'Kas', ['class'=>'col-md-2 control-label']) !!}
+          {!! Form::label('id_kas', 'Kas', ['class'=>'col-md-2 control-label']) !!}
           <div class="col-md-6">
-            {!! Form::select('id_kas', $kas, null, ['class'=>'form-control','placeholder' => ' Kas','id'=>'kas']) !!}
+            {!! Form::select('id_kas', $kas, null, ['class'=>'form-control','id'=>'kas']) !!}
             {!! $errors->first('id_kas', '<p class="help-block">:message</p>') !!}
           </div>
           {!! Form::button('Simpan', ['class'=>'btn btn-info','type'=>'submit','id'=>'btnSimpan']) !!}

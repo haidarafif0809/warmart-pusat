@@ -10,6 +10,7 @@ use App\KeranjangBelanja;
 use App\Barang;
 use App\Hpp;  
 use App\Kas;  
+use App\TransaksiKas;  
 use App\PesananPelanggan;  
 use App\DetailPesananPelanggan;   
 use App\Penjualan;  
@@ -126,10 +127,41 @@ class PesananWarungController extends Controller
 	}
 
 	public function selesaiKonfirmasiPesananWarung(Request $request)
-	{ 
-		print_r($request->id_kas);
-		exit();
-		PesananPelanggan::where('id',$id)->update(['konfirmasi_pesanan' => '2']);
+	{  
+		$id_warung = Auth::user()->id_warung;
+		$pesanna_pelanggan = PesananPelanggan::where('id',$request->id_pesanan)->first();
+
+		$penjualan = Penjualan::create([
+			'id_kas'     => $request->id_kas,      
+			'id_pesanan'     => $request->id_pesanan,              
+			'id_pelanggan'     => $pesanna_pelanggan->id_pelanggan,
+			'id_warung'     => $id_warung,
+			'total' => $pesanna_pelanggan->subtotal
+		]);   
+
+		$detail_pesanan_pelanggan = DetailPesananPelanggan::where('id_pesanan_pelanggan',$request->id_pesanan)->get();
+
+		$jumlah_masuk = "";
+		foreach ($detail_pesanan_pelanggan as $detail_pesanan_pelanggans) {
+			$subtotal = $detail_pesanan_pelanggans->harga_produk * $detail_pesanan_pelanggans->jumlah_produk;
+
+			DetailPenjualan::create([
+				'id_penjualan'     => $penjualan->id,      
+				'id_produk'     => $detail_pesanan_pelanggans->id_produk,              
+				'harga'     => $detail_pesanan_pelanggans->harga_produk,
+				'jumlah' => $detail_pesanan_pelanggans->jumlah_produk,
+				'subtotal' => $subtotal
+			]);
+			$jumlah_masuk .= $jumlah_masuk += $subtotal;
+		}
+
+
+		$no_faktur = Penjualan::no_faktur($id_warung);
+
+        //PROSES MEMBUAT TRANSAKSI KAS
+		TransaksiKas::create(['no_faktur' => $no_faktur,'jenis_transaksi'=>'penjualan' ,'jumlah_masuk' => $jumlah_masuk,'kas' => $request->id_kas,'warung_id'=> $id_warung]);
+
+		PesananPelanggan::where('id',$request->id_pesanan)->update(['konfirmasi_pesanan' => '2']);
 		return redirect()->back();
 	}
 
