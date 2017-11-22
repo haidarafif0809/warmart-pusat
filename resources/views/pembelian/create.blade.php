@@ -248,18 +248,7 @@
 		return (c ? num.replace('.', c) : num).replace(new RegExp(re, 'g'), '$&' + (s || ',')); 
 	}; 
 
-	function titleCase(str) { 
-		var newstr = str.split(" "); 
-		for(i=0;i<newstr.length;i++){ 
-			if(newstr[i] == "") continue; 
-			var copy = newstr[i].substring(1).toLowerCase(); 
-			newstr[i] = newstr[i][0].toUpperCase() + copy; 
-		} 
-		newstr = newstr.join(" "); 
-		return newstr; 
-	}  
-</script> 
-</script> 
+</script>
 <script type="text/javascript"> 
 	$(document).ready(function(){ 
 		$('#btn-hutang-pembelian').click(function() { 
@@ -545,10 +534,7 @@
 	}); 
 </script> 
 <!-- PEMBAYARAN FAKTUR --> 
-<div class="row"> 
-	<div class="col-md-6"></div> 
-	<div class="col-md-6"></div> 
-</div> 
+
 <!-- TAMBAH PRODUK --> 
 <script type="text/javascript"> 
 	$(document).ready(function(){ 
@@ -581,31 +567,28 @@
 					title : titleCase(nama_produk), 
 					html: 
 					'<div class="row">'+ 
-					'<div class="col-sm-6"><lable> Jumlah Produk </lable>'+ 
-					'<input id="jadwal_produk_swal" class="swal2-input" placeholder="JUMLAH PRODUK"></div>'+ 
-					'<div class="col-sm-6"><lable>Harga Produk </lable>'+ 
-					'<input id="harga_produk_swal" class="swal2-input" placeholder="HARGA PRODUK" value="'+harga_produk+'"></div>'+ 
-					'</div>', 
-					animation: false, 
+					'<div class="col-sm-6  col-xs-6"><lable>Jumlah</lable><br>'+ 
+					'<input type="number" id="jumlah_produk_swal" class="swal2-input" placeholder="JUMLAH" autofocus></div>'+ 
+					'<div class="col-sm-6 col-xs-6"><lable>Harga</lable><br>'+ 
+					'<input type="number"  id="harga_produk_swal" class="swal2-input" placeholder="HARGA" value="'+harga_produk+'"></div>'+ 
+					'</div>', 	
+					allowEnterKey : false,
 					showCloseButton: true, 
-					showCancelButton: true, 
-					focusConfirm: true, 
+					showCancelButton: true,                        
+					focusConfirm: false, 
 					confirmButtonText:'<i class="fa fa-thumbs-o-up"></i> Submit', 
 					confirmButtonAriaLabel: 'Thumbs up, great!', 
 					cancelButtonText:'<i class="fa fa-thumbs-o-down"> Batal', 
-					closeOnConfirm: true, 
+					closeOnConfirm: false, 
 					cancelButtonAriaLabel: 'Thumbs down', 
-					inputAttributes: { 
-						'name': 'qty_produk', 
-					}, 
 					preConfirm: function () { 
 						return new Promise(function (resolve) { 
 							resolve([ 
-								$('#jadwal_produk_swal').val(), 
+								$('#jumlah_produk_swal').val(), 
 								$('#harga_produk_swal').val() 
 								]) 
 						}) 
-					},       
+					}   
 				}).then(function (result) { 
 
 					if (result[0] == '' || result[0] == 0) { 
@@ -616,17 +599,19 @@
 
 						swal('Oops...', 'Harga Produk Tidak Boleh 0 atau Kosong !', 'error'); 
 						return false; 
-					}else if (result[1] != harga_produk) { 
+					} else if (result[1] != harga_produk) { 
 
 						swal({ 
-							title: 'Anda Yakin?', 
-							text: "Anda Yakin Ingin Merubah Harga Beli Produk?", 
+							text: "Anda Yakin Ingin Merubah Harga Beli Produk <b>"+titleCase(nama_produk)+ "</b>?", 
 							type: 'warning', 
 							showCancelButton: true, 
-							confirmButtonColor: '#3085d6', 
-							cancelButtonColor: '#d33', 
-							cancelButtonText: 'Batal', 
-							confirmButtonText: 'Ya' 
+							cancelButtonText: 'Batal',
+							confirmButtonText:
+							'<i class="fa fa-thumbs-up"></i> Ya',
+							confirmButtonAriaLabel: 'Thumbs up, great!',
+							cancelButtonText:
+							'<i class="fa fa-thumbs-down"></i>',
+							cancelButtonAriaLabel: 'Thumbs down'
 						}).then(function () { 
 							$("#id_produk_tbs").val(id_produk); 
 							$("#jumlah_produk").val(result[0]); 
@@ -740,14 +725,15 @@
 			if (harga_produk != "0") { 
 
 				swal({ 
-					title: 'Anda Yakin?', 
-					text: "Anda Yakin Ingin Merubah Harga Beli Produk?", 
+					text: "Anda Yakin Ingin Merubah Harga Beli Produk <b>"+titleCase(nama_produk)+ "</b>?", 
 					type: 'warning', 
-					showCancelButton: true, 
-					confirmButtonColor: '#3085d6', 
-					cancelButtonColor: '#d33', 
-					cancelButtonText: 'Batal', 
-					confirmButtonText: 'Ya' 
+					showCancelButton: true,  
+					confirmButtonText:
+					'<i class="fa fa-thumbs-up"></i> Ya',
+					confirmButtonAriaLabel: 'Thumbs up, great!',
+					cancelButtonText:
+					'<i class="fa fa-thumbs-down"></i>',
+					cancelButtonAriaLabel: 'Thumbs down'
 				}).then(function () { 
 					$("#id_produk_edit_harga").val(id_tbs); 
 					$("#harga_edit_produk").val(harga_produk); 
@@ -872,9 +858,9 @@
 			title: titleCase(nama_produk), 
 			html:'Sertakan <b>%</b> Jika Ingin Pajak Dalam Bentuk Persentase<br><br>'+ 
 			'<div class="row">'+ 
-			'<div class="col-sm-6">'+ppn_produk+''+ 
-			'<div class="col-sm-6">'+ 
-			'<input id="tax_swal" class="swal2-input" placeholder="PAJAK PRODUK"></div>'+ 
+			'<div class="col-sm-6 col-xs-6">'+ppn_produk+''+ 
+			'<div class="col-sm-6 col-xs-6">'+ 
+			'<input id="tax_swal" class="swal2-input" placeholder="PAJAK"></div>'+ 
 			'</div>', 
 			animation: false, 
 			showCloseButton: true, 

@@ -50,12 +50,12 @@ class PembelianController extends Controller
             return "<a href='#detail-faktur' id='detail_faktur_beli' class='detail_faktur_beli' data-id='$data_pembelian->id' data-no_faktur='$data_pembelian->no_faktur'>$data_pembelian->no_faktur</a>"; 
           }) 
           ->addColumn('total', function($data_pembelian){ 
-            return $data_pembelian->PemisahTotal; 
+            return "<p align='right'>$data_pembelian->PemisahTotal</p>"; 
           })->make(true); 
         } 
 
         $html = $htmlBuilder 
-        ->addColumn(['data' => 'no_faktur', 'name' => 'no_faktur', 'title' => 'No. Faktur']) 
+        ->addColumn(['data' => 'no_faktur', 'name' => 'no_faktur', 'title' => 'No. Transaksi']) 
         ->addColumn(['data' => 'created_at', 'name' => 'created_at', 'title' => 'Waktu','orderable' => false]) 
         ->addColumn(['data' => 'suplier.nama_suplier', 'name' => 'suplier.nama_suplier', 'title' => 'Suplier', 'orderable' => false, 'searchable'=>false]) 
         ->addColumn(['data' => 'status_pembelian', 'name' => 'status_pembelian', 'title' => 'Status']) 
@@ -99,16 +99,16 @@ class PembelianController extends Controller
             return $data_produk_tbs->produk->kode_barang .' - '.$data_produk_tbs->TitleCaseBarang;  
           }) 
           ->editColumn('jumlah_produk', function($produk_tbs){ 
-            return "<a href='#edit-jumlah' id='edit_jumlah_produk' class='edit-jumlah' data-id='$produk_tbs->id_tbs_pembelian' data-nama='$produk_tbs->TitleCaseBarang'>$produk_tbs->jumlah_produk</a>";  
+            return "<a href='#edit-jumlah' align='right' id='edit_jumlah_produk' class='edit-jumlah' data-id='$produk_tbs->id_tbs_pembelian' data-nama='$produk_tbs->TitleCaseBarang'><p align='right'>".$produk_tbs->PemisahJumlah."</p></a>";  
           }) 
           ->editColumn('harga_produk', function($produk){ 
 
-           return "<a href='#edit-harga' id='edit_harga_produk' class='edit-harga' data-id='$produk->id_tbs_pembelian'  data-nama='$produk->TitleCaseBarang'>$produk->harga_produk</a>";  
+           return "<a href='#edit-harga' align='right' id='edit_harga_produk' class='edit-harga' data-id='$produk->id_tbs_pembelian'  data-nama='$produk->TitleCaseBarang'><p align='right'>".$produk->PemisahHarga."</p></a>";  
          }) 
           ->editColumn('potongan', function($produk){ 
 
             $potongan_persen = ($produk->potongan / ($produk->jumlah_produk * $produk->harga_produk)) * 100; 
-            return "<a href='#edit-potongan' id='edit_potongan' class='edit-potongan' data-id='$produk->id_tbs_pembelian' data-nama='$produk->TitleCaseBarang' data-jumlah='$produk->jumlah_produk' data-harga='$produk->harga_produk'>".round($produk->potongan,2)." | ".round($potongan_persen,2)."%</a>";  
+            return "<a href='#edit-potongan' id='edit_potongan' class='edit-potongan' data-id='$produk->id_tbs_pembelian' data-nama='$produk->TitleCaseBarang' data-jumlah='$produk->jumlah_produk' data-harga='$produk->harga_produk'><p align='right'>".round($produk->potongan,2)." | ".round($potongan_persen,2)."%</p></a>";  
           }) 
           ->editColumn('tax', function($produk)  use ($session_id) { 
             $ppn = TbsPembelian::select('ppn')->where('session_id', $session_id)->where('warung_id',Auth::user()->id_warung)->where('ppn','!=','')->limit(1); 
@@ -124,10 +124,10 @@ class PembelianController extends Controller
             $ppn_produk = ""; 
             $tax_persen = 0; 
           } 
-          return "<a href='#edit-tax' id='edit_tax_produk' class='edit-tax' data-id='$produk->id_tbs_pembelian'  data-jumlah='$produk->jumlah_produk' data-potongan='$produk->potongan' data-harga='$produk->harga_produk' data-ppn='$ppn_produk' data-nama='$produk->TitleCaseBarang'>".round($produk->tax,2)." | ".round($tax_persen,2)."%</a>";  
+          return "<a href='#edit-tax'id='edit_tax_produk' class='edit-tax' data-id='$produk->id_tbs_pembelian'  data-jumlah='$produk->jumlah_produk' data-potongan='$produk->potongan' data-harga='$produk->harga_produk' data-ppn='$ppn_produk' data-nama='$produk->TitleCaseBarang'><p align='right'>".round($produk->tax,2)." | ".round($tax_persen,2)."%</p></a>";  
         })
           ->editColumn('subtotal', function($produk){
-            return "<span id='table-subtotal'>$produk->subtotal</span>";  
+            return "<p id='table-subtotal' align='right'>".$produk->PemisahSubtotal."</p>";  
           })->make(true); 
 
         } 
@@ -658,15 +658,15 @@ public function edit_potongan_tbs_pembelian(Request $request){
     return Datatables::of($detail_pembelian)->addColumn('produk',function($data_pembelian){ 
       return $data_pembelian->TitleCaseBarang; 
     })->addColumn('jumlah_produk',function($data_pembelian){ 
-      return $data_pembelian->PemisahJumlah; 
+      return "<p align='right'>$data_pembelian->PemisahJumlah</p>"; 
     })->addColumn('harga_produk',function($data_pembelian){ 
-      return $data_pembelian->PemisahHarga; 
+      return "<p align='right'>$data_pembelian->PemisahHarga</p>";  
     })->addColumn('potongan',function($data_pembelian){ 
-      return $data_pembelian->PemisahPotongan; 
+      return "<p align='right'>$data_pembelian->PemisahPotongan</p>";  
     })->addColumn('tax',function($data_pembelian){ 
-      return $data_pembelian->PemisahTax; 
+      return "<p align='right'>$data_pembelian->PemisahTax</p>";  
     })->addColumn('subtotal',function($data_pembelian){ 
-      return $data_pembelian->PemisahSubtotal; 
+      return "<p align='right'>$data_pembelian->PemisahSubtotal</p>";  
     })->make(true); 
   } 
 
@@ -675,19 +675,19 @@ public function edit_potongan_tbs_pembelian(Request $request){
     $pembelian = Pembelian::with(['kas'])->where('warung_id',Auth::user()->id_warung)->where('no_faktur',$request->no_faktur)->orderBy('id')->get(); 
     return Datatables::of($pembelian)
     ->addColumn('total', function($data_pembelian){ 
-      return $data_pembelian->PemisahTotal; 
+      return "<p align='right'>$data_pembelian->PemisahTotal</p>";  
     })
     ->addColumn('potongan', function($data_pembelian){ 
-      return $data_pembelian->PemisahPotongan; 
+      return "<p align='right'>$data_pembelian->PemisahPotongan</p>";  
     }) 
     ->addColumn('tunai', function($data_pembelian){ 
-      return $data_pembelian->PemisahTunai; 
+      return "<p align='right'>$data_pembelian->PemisahTunai</p>";  
     }) 
     ->addColumn('kembalian', function($data_pembelian){ 
-      return $data_pembelian->PemisahKembalian; 
+      return "<p align='right'>$data_pembelian->PemisahKembalian</p>";  
     }) 
     ->addColumn('kredit', function($data_pembelian){ 
-      return $data_pembelian->PemisahKredit; 
+      return "<p align='right'>$data_pembelian->PemisahKredit</p>";  
     })->make(true); 
   }
 
@@ -775,16 +775,16 @@ public function edit_potongan_tbs_pembelian(Request $request){
             return $data_produk_tbs->produk->kode_barang .' - '.$data_produk_tbs->TitleCaseBarang;  
           }) 
           ->editColumn('jumlah_produk', function($produk_tbs){ 
-            return "<a href='#edit-jumlah' id='edit_jumlah_produk' class='edit-jumlah' data-id='$produk_tbs->id_edit_tbs_pembelians' data-nama='$produk_tbs->TitleCaseBarang'>$produk_tbs->jumlah_produk</a>";  
+            return "<a href='#edit-jumlah' id='edit_jumlah_produk' class='edit-jumlah' data-id='$produk_tbs->id_edit_tbs_pembelians' data-nama='$produk_tbs->TitleCaseBarang'><p align='right'>".$produk_tbs->PemisahJumlah."</p></a>";  
           }) 
           ->editColumn('harga_produk', function($produk){ 
 
-           return "<a href='#edit-harga' id='edit_harga_produk' class='edit-harga' data-id='$produk->id_edit_tbs_pembelians'  data-nama='$produk->TitleCaseBarang'>$produk->harga_produk</a>";  
+           return "<a href='#edit-harga' id='edit_harga_produk' class='edit-harga' data-id='$produk->id_edit_tbs_pembelians'  data-nama='$produk->TitleCaseBarang'><p align='right'>".$produk->PemisahHarga."</p></a>";  
          }) 
           ->editColumn('potongan', function($produk){ 
 
             $potongan_persen = ($produk->potongan / ($produk->jumlah_produk * $produk->harga_produk)) * 100; 
-            return "<a href='#edit-potongan' id='edit_potongan' class='edit-potongan' data-id='$produk->id_edit_tbs_pembelians' data-nama='$produk->TitleCaseBarang' data-jumlah='$produk->jumlah_produk' data-harga='$produk->harga_produk'>".round($produk->potongan,2)." | ".round($potongan_persen,2)."%</a>";  
+            return "<a href='#edit-potongan' id='edit_potongan' class='edit-potongan' data-id='$produk->id_edit_tbs_pembelians' data-nama='$produk->TitleCaseBarang' data-jumlah='$produk->jumlah_produk' data-harga='$produk->harga_produk'><p align='right'>".round($produk->potongan,2)." | ".round($potongan_persen,2)."%</p></a>";  
           }) 
           ->editColumn('tax', function($produk)  use ($no_faktur) { 
             $ppn = EditTbsPembelian::select('ppn')->where('no_faktur', $no_faktur)->where('warung_id',Auth::user()->id_warung)->where('ppn','!=','')->limit(1); 
@@ -802,8 +802,11 @@ public function edit_potongan_tbs_pembelian(Request $request){
              $ppn_produk = ""; 
              $tax_persen = 0;  
            } 
-           return "<a href='#edit-tax' id='edit_tax_produk' class='edit-tax' data-id='$produk->id_edit_tbs_pembelians'  data-jumlah='$produk->jumlah_produk' data-potongan='$produk->potongan' data-harga='$produk->harga_produk' data-ppn='$ppn_produk' data-nama='$produk->TitleCaseBarang'>".round($produk->tax,2)." | ".round($tax_persen,2)."%</a>";  
-         })->make(true); 
+           return "<a href='#edit-tax' id='edit_tax_produk' class='edit-tax' data-id='$produk->id_edit_tbs_pembelians'  data-jumlah='$produk->jumlah_produk' data-potongan='$produk->potongan' data-harga='$produk->harga_produk' data-ppn='$ppn_produk' data-nama='$produk->TitleCaseBarang'><p align='right'>".round($produk->tax,2)." | ".round($tax_persen,2)."%</p></a>";  
+         }) 
+          ->editColumn('subtotal', function($produk){
+            return "<p id='table-subtotal' align='right'>".$produk->PemisahSubtotal."</p>";  
+          })->make(true); 
         } 
 
         $html = $htmlBuilder 
