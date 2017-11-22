@@ -10,10 +10,8 @@ use Twitter;
 use App\KeranjangBelanja; 
 use App\Barang;
 use App\Hpp;  
-use App\PesananPelanggan; 
-use App\PesananWarung; 
-use App\DetailPesananPelanggan; 
-use App\DetailPesananWarung; 
+use App\PesananPelanggan;  
+use App\DetailPesananPelanggan;  
 use Jenssegers\Agent\Agent;
 use Auth;
 use DB;
@@ -68,15 +66,7 @@ class PemesananController extends Controller
 			'jumlah_produk'     => $request->jumlah_produk,
 			'subtotal'     => $request->subtotal
 		]);   
-
-		$pesanan_warung = PesananWarung::create([
-			'id_pelanggan'     => $id_user,      
-			'nama_pemesan'     => $request->name,              
-			'no_telp_pemesan'     => $request->no_telp,
-			'alamat_pemesan' => $request->alamat,
-			'jumlah_produk'     => $request->jumlah_produk,
-			'subtotal'     => $request->subtotal
-		]);   
+		
 
 		foreach ($keranjang_belanjaan as $keranjang_belanjaans) {  
 
@@ -87,15 +77,7 @@ class PemesananController extends Controller
 				'harga_produk' => $keranjang_belanjaans->produk->harga_jual,
 				'jumlah_produk'     => $keranjang_belanjaans->jumlah_produk, 
 			]);   
-
-			DetailPesananWarung::create([
-				'id_pesanan_warung'     => $pesanan_warung->id,              
-				'id_produk'     => $keranjang_belanjaans->id_produk,
-				'id_pelanggan' => $keranjang_belanjaans->id_pelanggan,
-				'harga_produk' => $keranjang_belanjaans->produk->harga_jual,
-				'jumlah_produk'     => $keranjang_belanjaans->jumlah_produk, 
-			]);   
-
+			
 			KeranjangBelanja::destroy($keranjang_belanjaans->id_keranjang_belanja);
 
 		}

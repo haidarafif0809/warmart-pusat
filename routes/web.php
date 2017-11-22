@@ -132,18 +132,81 @@ Route::put('proses/selesaikan-pemesanan',[
 	'uses' => 'PemesananController@prosesSelesaikanPemesanan'
 ]);
 
-//PUNYA PESANAN
+//PUNYA PESANAN PELANGGAN
 Route::get('/pesanan',[ 
 	'middleware' => ['auth'],
 	'as' => 'pesanan.index',
 	'uses' => 'PesananPelangganController@pesananPelanggan'
 ]);
 
-//PUNYA DETAIL PESANAN
+//PUNYA DETAIL PESANAN PELANGGAN
 Route::get('pesanan-detail/{id}',[ 
 	'middleware' => ['auth'],
 	'as' => 'pesanan.detail',
 	'uses' => 'PesananPelangganController@detailPesananPelanggan'
+]);
+
+//PUNYA PESANAN WARUNG
+Route::get('/pesanan-warung',[ 
+	'middleware' => ['auth'],
+	'as' => 'pesanan-warung.index',
+	'uses' => 'PesananWarungController@pesananWarung'
+]);
+
+//PUNYA PESANAN WARUNG
+Route::get('detail-pesanan-warung/{id}',[ 
+	'middleware' => ['auth'],
+	'as' => 'pesanan-warung.detail',
+	'uses' => 'PesananWarungController@detailPesananWarung'
+]);
+
+//PUNYA KONFIRMASI PESANAN WARUNG
+Route::get('konfirmasi-pesanan-warung/{id}',[ 
+	'middleware' => ['auth'],
+	'as' => 'pesanan-warung.konfirmasi',
+	'uses' => 'PesananWarungController@konfirmasiPesananWarung'
+]);
+
+//PUNYA SELESAI KONFIRMASI PESANAN WARUNG
+Route::get('selesai-konfirmasi-pesanan-warung/{id}',[ 
+	'middleware' => ['auth'],
+	'as' => 'pesanan-warung.selesai_konfirmasi',
+	'uses' => 'PesananWarungController@selesaiKonfirmasiPesananWarung'
+]);
+
+//PUNYA BATALKAN KONFIRMASI PESANAN WARUNG
+Route::get('batalkan-konfirmasi-pesanan-warung/{id}',[ 
+	'middleware' => ['auth'],
+	'as' => 'pesanan-warung.batalkan_konfirmasi',
+	'uses' => 'PesananWarungController@batalkanKonfirmasiPesananWarung'
+]);
+
+//PUNYA BATALKAN PESANAN WARUNG
+Route::get('batalkan-pesanan-warung/{id}',[ 
+	'middleware' => ['auth'],
+	'as' => 'pesanan-warung.batalkan',
+	'uses' => 'PesananWarungController@batalkanPesananWarung'
+]);
+
+//PUNYA BATALKAN PESANAN WARUNG
+Route::get('batalkan-pesanan-warung/{id}',[ 
+	'middleware' => ['auth'],
+	'as' => 'pesanan-warung.batalkan',
+	'uses' => 'PesananWarungController@batalkanPesananWarung'
+]);
+
+//PUNYA TAMBAH JUMLAH PRODUK PESANAN WARUNG
+Route::get('tambah-produk-pesanan-warung/{id}',[ 
+	'middleware' => ['auth'],
+	'as' => 'pesanan-warung.tambah',
+	'uses' => 'PesananWarungController@tambahProdukPesananWarung'
+]);
+
+//PUNYA KURANG JUMLAH PRODUK PESANAN WARUNG
+Route::get('kurang-produk-pesanan-warung/{id}',[ 
+	'middleware' => ['auth'],
+	'as' => 'pesanan-warung.kurang',
+	'uses' => 'PesananWarungController@kurangProdukPesananWarung'
 ]);
 
 Route::middleware('optimizeImages')->group(function () {

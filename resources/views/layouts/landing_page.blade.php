@@ -130,15 +130,15 @@ button {
 </style>
 <div class="container">
     <div class="section text-center">
-      <img  class="img img-raised" src="assets/img/examples/warmart_logo.png" style="max-width: 50%;" />
-      <h2 style="color:red;font-weight:bold;">PASAR MUSLIM <a style="color:black;">INDONESIA</a></h2>
+        <img  class="img img-raised" src="assets/img/examples/warmart_logo.png?v=1.0" style="max-width: 50%;" />
+        <h2 style="color:red;font-weight:bold;">PASAR MUSLIM <a style="color:black;">INDONESIA</a></h2>
 
-      {!! $daftar_produk !!}
-      <div class="col-md-12">
-        <a href="{{route('daftar_produk.index')}} " rel="tooltip" class="btn btn-round" style="position: center; " >Lihat Selengkapnya...</a>
+        {!! $daftar_produk !!}
+        <div class="col-md-12">
+            <a href="{{route('daftar_produk.index')}} " rel="tooltip" class="btn btn-round" style="position: center; " >Lihat Selengkapnya...</a>
+        </div>
+
     </div>
-
-</div>
 </div>
 <!--     *********    PERAN ANDA     *********      -->
 

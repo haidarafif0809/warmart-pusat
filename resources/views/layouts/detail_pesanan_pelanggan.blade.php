@@ -116,7 +116,7 @@
 
                     @foreach($detail_pesanan_pelanggan as $detail_pesanan_pelanggans)
                     <tr style="margin-top:0px;margin-bottom: 0px;">
-                      <td style="padding-left: 10px;"><a href="{{ url('detail-produk/'.$detail_pesanan_pelanggans->id_produk.'') }}">asdasdsa dsadh aks hdkasd{{ $detail_pesanan_pelanggans->produk->nama_barang }}</a></td>
+                      <td style="padding-left: 10px;"><a href="{{ url('detail-produk/'.$detail_pesanan_pelanggans->id_produk.'') }}">{{ $detail_pesanan_pelanggans->produk->nama_barang }}</a></td>
                       <td style="padding-left: 100px;">{{ $detail_pesanan_pelanggans->jumlah_produk }}</td>
                       <td style="padding-left: 150px;">{{ number_format($detail_pesanan_pelanggans->produk->harga_jual,0,',','.') }}</td> 
                     </tr>  
