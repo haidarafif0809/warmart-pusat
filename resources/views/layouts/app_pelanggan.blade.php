@@ -57,6 +57,12 @@
               <b class="caret"></b>
             </a>
 
+            <li style="color:black">
+              <a href="{{ url('/pesanan') }}">
+                <i class="material-icons">archive</i> Pesanan
+              </a>
+            </li>
+            
             <ul class="dropdown-menu dropdown-with-icons">
               <li style="color:black">
                 <a href="{{ url('/keranjang-belanja') }}" class="warna-list" style="background-color: #01573e">

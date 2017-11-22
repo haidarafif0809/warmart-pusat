@@ -116,6 +116,14 @@
         </li>
         <!--PEMBELIAN--> 
         
+        <li>
+          <a href="{{ route('pesanan-warung.index') }}">
+            <i class="material-icons">archive</i>
+            <p>Pesanan</p>
+          </a>
+        </li>
+        <!--PEMBELIAN--> 
+
         <!-- MASTER DATA WARUNG -->
         <li>
           <a data-toggle="collapse" href="#persediaan">

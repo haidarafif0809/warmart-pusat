@@ -35,6 +35,59 @@
     {!! app('seotools')->generate() !!}
 
 </head>
+<style type="text/css">
+    .list-produk {
+        padding-left: 4px;
+        padding-right: 4px;
+    }
+    .card .card-image{
+
+        height: auto; /*this makes sure to maintain the aspect ratio*/
+        margin-top: 0px;
+    }
+    .card-pricing {
+        margin-bottom: 0px;
+    }
+    .tombolBeli {
+        padding: 10px 0px;
+        margin:0px;
+    }
+    .card-pricing .card-content {
+        padding: 5px !important;
+    }
+    .card .footer {
+        margin-top: 0px;
+    }      
+
+    @font-face {
+      font-family: "San Francisco";
+      font-weight: 200;
+      src: url("//applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-thin-webfont.woff2");
+  }
+
+
+  .flexFont {
+    height:2em;
+    padding:1%;
+    margin: 10px;
+}
+
+.smaller {
+    font-size: 0.7em;
+    background-color:red;
+    width: 10em;
+}
+
+.btn {
+    background-color:#01573e;
+}
+
+
+button {
+   background-color:#01573e;
+}
+</style>
+
 
 <body class="landing-page">
     <nav class="navbar navbar-default navbar-transparent navbar-fixed-top navbar-color-on-scroll" color-on-scroll=" " id="sectionsNav">
@@ -70,22 +123,22 @@
      </div>
  </div>
  <style type="text/css">
- .peran{
-    width:100%;
-    height:100%;
-}
+     .peran{
+        width:100%;
+        height:100%;
+    }
 </style>
 <div class="container">
     <div class="section text-center">
-      <img  class="img img-raised" src="assets/img/examples/warmart_logo.png" />
-      <h2 style="color:red;font-weight:bold;">PASAR MUSLIM <a style="color:black;">INDONESIA</a></h2>
+        <img  class="img img-raised" src="assets/img/examples/warmart_logo.png?v=1.0" style="max-width: 50%;" />
+        <h2 style="color:red;font-weight:bold;">PASAR MUSLIM <a style="color:black;">INDONESIA</a></h2>
 
-      {!! $daftar_produk !!}
-      <div class="col-md-12">
-          <a href="{{route('daftar_produk.index')}} " rel="tooltip" class="btn btn-round" style="position: center; background-color: #f44336" >Lihat Selengkapnya...</a>
-      </div>
-      
-  </div>
+        {!! $daftar_produk !!}
+        <div class="col-md-12">
+            <a href="{{route('daftar_produk.index')}} " rel="tooltip" class="btn btn-round" style="position: center; " >Lihat Selengkapnya...</a>
+        </div>
+
+    </div>
 </div>
 <!--     *********    PERAN ANDA     *********      -->
 
@@ -109,7 +162,7 @@
                             <div class="card-content">
                                 <h4 class="category text-danger">PELANGGAN</h4>
                                 <p class="card-description" style="color:black;">
-                                    Berbelanja di WarMart, berarti Anda telah membantu memajukan perekonomian saudara muslim. Memajukan perekonomian Islam adalah salah satu wujud dari jihad ekonomi yang insya Allah akan mengalirkan pahala kepada Anda. Mari berbelanja sambil beramal.<center><a href="{{ url('/register-customer') }}" class="btn btn-danger"> DAFTAR </a></center>
+                                    Berbelanja di WarMart, berarti Anda telah membantu memajukan perekonomian saudara muslim. Memajukan perekonomian Islam adalah salah satu wujud dari jihad ekonomi yang insya Allah akan mengalirkan pahala kepada Anda. Mari berbelanja sambil beramal.<center><a href="https://info.war-mart.id/pelanggan/" class="btn "> DAFTAR </a></center>
                                 </p>
                             </div>
                         </div>
@@ -125,7 +178,7 @@
                             <div class="card-content">
                                 <h4 class="category text-danger">WARUNG</h4>
                                 <p class="card-description" style="color:black;">
-                                    Warung Anda akan mendapatkan support teknologi yang terupdate secara terus menerus tanpa mengeluarkan banyak biaya. Aplikasi WarMart mudah digunakan sehingga tidak ada halangan bagi Anda yang belum terbiasa menggunakan teknologi untuk pengelolaan warung.<center><a href="https://info.war-mart.id/warung/" class="btn btn-danger"> DAFTAR </a></center>
+                                    Warung Anda akan mendapatkan support teknologi yang terupdate secara terus menerus tanpa mengeluarkan banyak biaya. Aplikasi WarMart mudah digunakan sehingga tidak ada halangan bagi Anda yang belum terbiasa menggunakan teknologi untuk pengelolaan warung.<center><a href="https://info.war-mart.id/warung/" class="btn "> DAFTAR </a></center>
                                 </p>
                             </div>
                         </div>
@@ -141,36 +194,36 @@
                             <div class="card-content">
                                 <h4 class="category text-danger">KOMUNITAS</h4>
                                 <p class="card-description" style="color:black;">
-                                 Komunitas menjadi roda penggerak kesadaran umat untuk membela dan memperjuangkan kejayaan perekonomian Islam. Komunitas yang mendaftarkan anggotanya menjadi palanggan Warmart, akan mendapatkan share bagi hasil setiap anggota komunitas berbelanja di Warmart.<br><center><a href="{{ url('/register') }}" class="btn btn-danger"> DAFTAR </a></center>
-                             </p>
-                         </div>
-                     </div>
-                 </div>
-
-
-                 <div class="col-md-3">
-                    <div class="card card-blog">
-                        <div class="card-image">
-                            <a href="#pablo">
-                                <img class="img img-raised" src="assets/img/flat/ajak_ajak3.jpg"/>
-                            </a>
-                        </div>
-                        <div class="card-content">
-                            <h4 class="category text-danger">AJAK TEMAN</h4>
-                            <p class="card-description" style="color:black;">
-                                Anda yang sudah menjadi pelanggan WarMart dapat mengajak teman untuk menjadi pelanggan WarMart seperti Anda. Setiap teman Anda tersebut berbelanja ke Warmart di warung manapun, Anda akan mendapatkan share bagi hasil dari keuntungan warung secara otomatis. <center><a href="{{ url('/register-customer') }}" class="btn btn-danger" > DAFTAR </a></center>
-                            </p>
+                                    Komunitas menjadi roda penggerak kesadaran umat untuk membela dan memperjuangkan kejayaan perekonomian Islam. Komunitas yang mendaftarkan anggotanya menjadi palanggan Warmart, akan mendapatkan share bagi hasil setiap anggota komunitas berbelanja di Warmart.<br><center><a href="https://info.war-mart.id/komunitas/" class="btn "> DAFTAR </a></center>
+                                </p>
+                            </div>
                         </div>
                     </div>
-                </div>
 
+
+                    <div class="col-md-3">
+                        <div class="card card-blog">
+                            <div class="card-image">
+                                <a href="#pablo">
+                                    <img class="img img-raised" src="assets/img/flat/ajak_ajak3.jpg"/>
+                                </a>
+                            </div>
+                            <div class="card-content">
+                                <h4 class="category text-danger">AJAK TEMAN</h4>
+                                <p class="card-description" style="color:black;">
+                                    Anda yang sudah menjadi pelanggan WarMart dapat mengajak teman untuk menjadi pelanggan WarMart seperti Anda. Setiap teman Anda tersebut berbelanja ke Warmart di warung manapun, Anda akan mendapatkan share bagi hasil dari keuntungan warung secara otomatis. <center><a href="https://info.war-mart.id/ajak-teman/" class="btn " > DAFTAR </a></center>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
 
             </div>
 
         </div>
-
     </div>
-</div>
 </div>
 
 <!--     *********    MANFAAT ALASAN BERGABUNG     *********      -->
@@ -420,7 +473,7 @@
         <div class="section text-center">
 
             <center><h3 class="card-description"><a style="color:orange;font-weight:bold;">MARI MENJADI BAGIAN DALAM </a> <a style="color:white;font-weight:bold;">KEBANGKITAN PEREKONOMIAN ISLAM DI INDONESIA.</h3><h4 style="color:white;font-style:italic;" class="card-description"> Islam berjaya, akan menjadi Rahmat bagi seluruh Alam.</h4><h5 style="color:white;font-style:italic;" class="card-description"> Ambil Bagian Anda sekarang juga</h5></a></center><br>
-            <center><a href="#" class="btn btn-danger swal-pendaftaran"> DAFTAR </a></center>
+            <center><a href="#" class="btn  swal-pendaftaran"> DAFTAR </a></center>
 
         </div>
 
@@ -435,7 +488,7 @@
 
 <footer class="footer">
     <div class="container">
-       
+
        <div class="copyright pull-right">
         &copy; <script>document.write(new Date().getFullYear())</script> PT Andaglos Global Teknologi
     </div>

@@ -23,6 +23,11 @@
 }
 .card .footer {
     margin-top: 0px;
+    font-family: Helvetica,Arial,sans-serif;
+    font-weight: 400;
+    line-height:1.2em;
+    text-decoration: none;
+    font-size:15px;
 }      
 
 @font-face {
@@ -33,9 +38,14 @@
 
 
 .flexFont {
-    height:4em;
+    @if(Agent::isMobile())
+    height:3em;
+    @else  
+    height:2em;
+    @endif
     padding:1%;
     margin: 10px;
+
 }
 
 .smaller {
