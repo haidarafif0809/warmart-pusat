@@ -40,36 +40,30 @@
 
 
 <body class="ecommerce-page">
-
-  @if (Agent::isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
-  <nav class="navbar navbar-default navbar-fixed-top navbar-color-on-scroll" color-on-scroll="100" id="sectionsNav">
+  <nav class="navbar navbar-default navbar-transparent navbar-fixed-top navbar-color-on-scroll" color-on-scroll=" " id="sectionsNav">
     <div class="container">
-      <ul class="nav navbar-nav navbar-right">             
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a href="{{ url('/') }}"><img class="navbar-brand"   src="{{asset('/assets/img/examples/warmart_logo.png')}}" /></a>
 
-        <div class="row">
-          <div class="col-md-5 col-sm-5 col-xs-5">                            
-            <a href="{{ url('/home') }}"><img  class="img img-raised" src="{!! $logo_warmart !!}" style="width: 50%"/></a>
-          </div>
-          <div class="col-md-7 col-sm-7 col-xs-7">
-           <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <i class="material-icons">person</i> {{ Auth::user()->name }} 
+      </div>
+
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav navbar-right">
+          @if(Auth::check())
+          <li class="dropdown button-container ">
+            <a href="#" class="dropdown-toggle btn btn-rose btn-round" data-toggle="dropdown">
+              <i class="material-icons">account_circle</i> {{ Auth::user()->name}}
               <b class="caret"></b>
             </a>
-
-            <li style="color:black">
-              <a href="{{ url('/pesanan') }}">
-                <i class="material-icons">archive</i> Pesanan
-              </a>
-            </li>
-            
             <ul class="dropdown-menu dropdown-with-icons">
-              <li style="color:black">
-                <a href="{{ url('/keranjang-belanja') }}" class="warna-list" style="background-color: #01573e">
-                  <i class="material-icons">shopping_cart</i> Keranjang Belanja <b style="font-size: 15px">| {{ $cek_belanjaan }}</b>
-                </a>
-              </li>
-              <!--HANYA USER LOGIN PELANGGAN-->
+
               @if(Auth::user()->tipe_user == 3)
               <li style="color:black">
                 <a href="{{ url('/ubah-profil-pelanggan') }}">
@@ -80,143 +74,130 @@
                 <a href="{{ url('/ubah-password-pelanggan') }}">
                   <i class="material-icons">lock_outline</i> Ubah Password
                 </a>
-              </li>                        
+              </li>
               @endif
-              <li style="color:black">
+              <li>
                 <a href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> 
                   <i class="material-icons">reply_all</i> Logout
                 </a>
                 <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
                   {{ csrf_field() }}
                 </form>
-              </li>                            
+              </li> 
             </ul>
           </li>
-        </div>
-      </div>
-    </ul>
-  </div>
-</nav>
-@else
-<nav class="navbar navbar-default navbar-transparent navbar-fixed-top navbar-color-on-scroll" color-on-scroll="100" id="sectionsNav">
- <div class="container">
-   <a href="{{ url('/home') }}"><img  class="img img-raised" src="{!! $logo_warmart !!}" style="width: 10%"/></a>
-   <ul class="nav navbar-nav navbar-right">
-    <li class="dropdown">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-        <i class="material-icons">person</i> {{ Auth::user()->name }}
-        <b class="caret"></b>
-      </a>
-      <ul class="dropdown-menu dropdown-with-icons">
-        <!--HANYA USER LOGIN PELANGGAN-->
-        @if(Auth::user()->tipe_user == 3)
-        <li style="color:black">
-          <a href="{{ url('/pesanan') }}">
-            <i class="material-icons">archive</i> Pesanan
-          </a>
-        </li>
-        <li style="color:black">
-          <a href="{{ url('/ubah-profil-pelanggan') }}">
-            <i class="material-icons">settings</i> Ubah Profil
-          </a>
-        </li>
-        <li style="color:black">
-          <a href="{{ url('/ubah-password-pelanggan') }}">
-            <i class="material-icons">lock_outline</i> Ubah Password
-          </a>
-        </li>                        
-        @endif
-        <li>
-          <a href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> 
-            <i class="material-icons">reply_all</i> Logout
-          </a>
-          <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
-            {{ csrf_field() }}
-          </form>
-        </li>                             
-      </ul>
-    </li>
-
-    <li class="button-container">
-      <a href="{{ url('/keranjang-belanja') }}" class="btn btn-round" style="background-color: #01573e">
-        <i class="material-icons">shopping_cart</i> Keranjang Belanja <b style="font-size: 15px">| {{ $cek_belanjaan }}</b>
-      </a>
-    </li>
-
-  </ul>
-</div>
-</nav>
-@endif 
+          @if(Auth::user()->tipe_user == 3)
+          <li class="button-container">
+            <a href="{{ url('/pesanan') }}">
+              <i class="material-icons">archive</i> Pesanan
+            </a>
 
 
-@yield('content')
+          </li>
+          @endif
+          @endif
+          <li>
+            <a href="https://info.war-mart.id">
+              <i class="material-icons">info</i>INFO Warmart
+            </a>
+          </li>   
+          <li>
+            <a href="{{ url('/tentang-warmart')}}">
+              <i class="material-icons">info</i>Tentang Warmart
+            </a>
+          </li>
+          @if(Auth::check() && Auth::user()->tipe_user == 3)
+          <li class="button-container">
+            <a href="{{ url('/keranjang-belanja') }}" class="btn btn-round btn-rose" >
+              <i class="material-icons">shopping_cart</i> Keranjang Belanja <b style="font-size: 15px">| {{ $cek_belanjaan }}</b>
+            </a>
+          </li>
+          @endif
 
 
-<footer class="footer footer-black footer-big">
-  <div class="container">
-    <div class="content">
-      <div class="row">
-        <div class="col-md-4">
-          <h5>Tentang Kami</h5>
-          <p>Warmart adalah marketplace warung muslim pertama di Indonesia. Kami menghubungkan usaha-usaha muslim dengan pelanggan seluruh Umat Islam di Indonesia. Jenis usaha yang dapat bergabung dengan Warmart diantaranya: Warung, Toko, Minimarket, Pedagang Kaki Lima, Bengkel, Rumah Makan, Klinik, Home Industri, Peternakan, Pertanian, Perikanan, Kerajinan, Fashion dan usaha lainya.</p>
-        </div>
-        <div class="col-md-4">
-          <h5>Contact Us</h5>
-          <div class="social-feed">
-            <div class="feed-line">
-              <i class="fa fa-phone-square"></i>
-              <p>+62-721-8050-299 <br>
-                Bandar Lampung, Indonesia
-              solusibisnis@andaglos.id</p>
-            </div>
-            <div class="feed-line">
-              <i class="fa fa-phone-square"></i>
-              <p>Whatsapp<br>
-              +62-811-728-549</p>
-            </div>
-            <div class="feed-line">                            
-              <a href="https://id-id.facebook.com/andaglos/" target="blank"><i class="fa fa-facebook-square"></i> Andaglos</a>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <h5>Instagram</h5>
-          <div class="gallery-feed">
-          </div>
-        </div>
+
+
+          @if(!Auth::check())
+          <li class="button-container">
+            <a href="{{ url('/login')}}" class="btn btn-rose btn-round">
+              <i class="material-icons">lock_outline
+              </i> Masuk
+            </a>
+          </li>
+          @endif
+        </ul>
       </div>
     </div>
-    <hr />
-    <ul class="pull-left">
+  </nav>
+
+  @yield('content')
+
+
+  <footer class="footer footer-black footer-big">
+    <div class="container">
+      <div class="content">
+        <div class="row">
+          <div class="col-md-4">
+            <h5>Tentang Kami</h5>
+            <p>Warmart adalah marketplace warung muslim pertama di Indonesia. Kami menghubungkan usaha-usaha muslim dengan pelanggan seluruh Umat Islam di Indonesia. Jenis usaha yang dapat bergabung dengan Warmart diantaranya: Warung, Toko, Minimarket, Pedagang Kaki Lima, Bengkel, Rumah Makan, Klinik, Home Industri, Peternakan, Pertanian, Perikanan, Kerajinan, Fashion dan usaha lainya.</p>
+          </div>
+          <div class="col-md-4">
+            <h5>Contact Us</h5>
+            <div class="social-feed">
+              <div class="feed-line">
+                <i class="fa fa-phone-square"></i>
+                <p>+62-721-8050-299 <br>
+                  Bandar Lampung, Indonesia
+                solusibisnis@andaglos.id</p>
+              </div>
+              <div class="feed-line">
+                <i class="fa fa-phone-square"></i>
+                <p>Whatsapp<br>
+                +62-811-728-549</p>
+              </div>
+              <div class="feed-line">                            
+                <a href="https://id-id.facebook.com/andaglos/" target="blank"><i class="fa fa-facebook-square"></i> Andaglos</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <h5>Instagram</h5>
+            <div class="gallery-feed">
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr />
+      <ul class="pull-left">
+        <li>
+          <a href="#pablo">
+           Blog
+         </a>
+       </li>
+       <li>
+        <a href="#pablo">
+          Presentation
+        </a>
+      </li>
       <li>
         <a href="#pablo">
-         Blog
+         Discover
        </a>
      </li>
      <li>
       <a href="#pablo">
-        Presentation
+        Payment
       </a>
     </li>
     <li>
       <a href="#pablo">
-       Discover
-     </a>
-   </li>
-   <li>
-    <a href="#pablo">
-      Payment
-    </a>
-  </li>
-  <li>
-    <a href="#pablo">
-      Contact Us
-    </a>
-  </li>
-</ul>
-<div class="copyright pull-right">
-  Copyright &copy; <script>document.write(new Date().getFullYear())</script> <a href="https://andaglos.id/"> PT. Andaglos Global Teknologi.</a>
-</div>
+        Contact Us
+      </a>
+    </li>
+  </ul>
+  <div class="copyright pull-right">
+    Copyright &copy; <script>document.write(new Date().getFullYear())</script> <a href="https://andaglos.id/"> PT. Andaglos Global Teknologi.</a>
+  </div>
 </div>
 </footer>
 
@@ -261,8 +242,7 @@
 <script src="{{ asset('js/jquery-jvectormap.js') }}"></script>
 <!-- Sliders Plugin, full documentation here: https://refreshless.com/nouislider/ -->
 <script src="{{ asset('js/nouislider.min.js') }}"></script>
-<!--  Google Maps Plugin    -->
-<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
+
 <!--  Plugin for Select, full documentation here: http://silviomoreto.github.io/bootstrap-select -->
 <script src="{{ asset('js/jquery.select-bootstrap.js') }}"></script>
 <!--  DataTables.net Plugin, full documentation here: https://datatables.net/    -->

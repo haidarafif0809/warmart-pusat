@@ -1,6 +1,25 @@
 @extends('layouts.app_pelanggan')
 @section('content') 
 
+<style type="text/css">
+.flexFont {
+  @if(Agent::isMobile())
+  height:3em;
+  @else  
+  height:2em;
+  @endif
+  padding:1%;
+  margin: 10px;
+
+}
+
+.smaller {
+  font-size: 0.7em;
+  background-color:red;
+  width: 10em;
+}
+</style>
+
 <div class="page-header header-filter header-small" data-parallax="true" style="background-image: url('image/background2.jpg');">
 
   <div class="container">

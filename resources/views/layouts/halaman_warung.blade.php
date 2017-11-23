@@ -3,10 +3,8 @@
 
 <style type="text/css">
 .list-produk {
-
     padding-left: 4px;
     padding-right: 4px;
-
 }
 .card .card-image{
 
@@ -43,20 +41,10 @@
     @if(Agent::isMobile())
     height:3em;
     @else  
-    height:3em;
+    height:2em;
     @endif
     padding:1%;
-    margin: 5px;
-
-}
-.btnWarung {
-    @if(Agent::isMobile())
-    height:3em;
-    @else  
-    height:3em;
-    @endif
-    padding:1%;
-    margin: 0px;
+    margin: 10px;
 
 }
 
@@ -98,7 +86,7 @@
                             <span class="input-group-addon">
                                 <i class="material-icons">search</i>
                             </span>
-                            <input type="text" name="search" id="cari_produk" value="" placeholder="Cari Produk Atau Warung.." class="form-control" />
+                            <input type="text" name="search" id="cari_produk" value="" placeholder="Cari Produk.." class="form-control" />
                         </div>
                     </div>
                     <div class="col-sm-2">
@@ -109,21 +97,13 @@
             </div>
         </div>
 
-        <div class="row">   
-            <div class="col-md-12">
-                <!--Menampilkan Warung Secara Acak--> 
-                <h4 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px"> Warung</h4> 
-            </div>   
-            <span class="span-warung">{!! $daftar_warung !!}</span> 
-        </div>
-
         <div class="row">
-            <div class="col-md-12">                 
+            <div class="col-md-12"> 
                 <div class="panel panel-default">
                     <div class="panel-heading" role="tab" id="headingTwo">
                         <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                             <h4 class="title">
-                                KATEGORI PRODUK
+                                KATEGORI
                                 <i class="material-icons">keyboard_arrow_down</i>
                             </h4>
                         </a>
@@ -175,17 +155,19 @@
 
     <div class="container">
         <h3 class="title text-center">{!! $nama_kategori !!}</h3>
-
+        {!! $list_warung !!}
         <div class="card card-raised card-form-horizontal">
             <div class="card-content">
-                {!! Form::open(['url' => route('daftar_produk.pencarian'),'method' => 'get', 'class'=>'form-horizontal']) !!}
+                {!! Form::open(['url' => route('halaman_warung.pencarian'),'method' => 'get', 'class'=>'form-horizontal']) !!}
                 <div class="row">
                     <div class="col-sm-10">
                         <div class="input-group">
                             <span class="input-group-addon">
                                 <i class="material-icons">search</i>
                             </span>
-                            <input type="text" name="search" id="cari_produk" value="" placeholder="Cari Produk Atau Warung.." class="form-control" />
+                            <input type="text" name="search" id="cari_produk" value="" placeholder="Cari Produk.." class="form-control" />
+                           <input type="hidden" name="id_warung" id="cari_produk" value="{{$id}}" class="form-control" />
+
                         </div>
                     </div>
                     <div class="col-sm-2">
@@ -197,32 +179,29 @@
         </div>
 
         <div class="row">
-
-            <!--Menampilkan Warung Secara Acak--> 
-            <div class="col-md-12"> 
-                <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px"> Warung</h5>           
-                <span id="span-warung">{!! $daftar_warung !!}</span>     
-            </div>
-
             <div class="col-md-3"> 
-                <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:25px"> Produk</h5>  
                 <ul class="nav nav-tabs" data-tabs="tabs" style="background-color: #01573e">                                        
-                    <li><a href="{{route('daftar_produk.index')}}"><i class="material-icons">format_align_justify</i> Semua Kategori</a></li>
+                    <li><a href="{{route('halaman-warung.halaman_warung',$id)}}"><i class="material-icons">format_align_justify</i> Semua Kategori</a></li>
                 </ul>
             </div>
-            <div class="col-md-9">      
-                <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:25px"><br></h5>                  
+            <div class="col-md-9">                        
                 <ul class="nav nav-tabs" data-tabs="tabs" style="background-color: #01573e">
                     {!! $kategori_produk !!}                        
                 </ul>
             </div>
+           
+              <div class="col-md-12">
+                <div class="row">
+                    <!-- Menampilkan Produk -->
+                    <h4 class="title">{!! $nama_warung !!}</h4>
+                </div>
+            </div>
+
 
             <div class="col-md-12"><br>
                 <div class="row">
-                    <div class="col-md-12">
-                        <!-- Menampilkan Produk -->
-                        <span id="span-produk">{!! $daftar_produk !!}</span>
-                    </div>
+                    <!-- Menampilkan Produk -->
+                    <span id="span-produk">{!! $daftar_produk !!}</span>
                     <div class="col-md-12">
                         {{$produk_pagination}}
                     </div>

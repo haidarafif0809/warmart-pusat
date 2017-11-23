@@ -13,8 +13,10 @@
 
 
 
-Route::get('/','HomeController@index')->middleware('optimizeImages');
+Route::get('/','DaftarProdukController@index')->middleware('optimizeImages');
 Route::get('/sms','HomeController@sms');
+
+Route::get('/tentang-warmart','HomeController@index');
 
 Route::get('/cek-deposit','PortaPulsaController@cekDeposit');
 
@@ -75,7 +77,6 @@ Route::get('/daftar-produk/{id}',[
 ]);
 
 Route::get('/daftar-produk/pencarian/search',[
-	'middleware' => ['auth'],
 	'as' => 'daftar_produk.pencarian',
 	'uses' => 'DaftarProdukController@pencarian'
 ]);
@@ -86,6 +87,26 @@ Route::get('/detail-produk/{id}',[
 	'as' => 'detail-produk.detail_produk',
 	'uses' => 'DetailProdukController@detail_produk'
 ]);
+
+//PUNYA HALAMAN WARUNG
+Route::get('/halaman-warung/{id}',[
+	'middleware' => ['auth'],
+	'as' => 'halaman-warung.halaman_warung',
+	'uses' => 'HalamanWarungController@index'
+]);
+
+Route::get('/halaman-warung/filter/{id}/{id_warung}/',[
+	'middleware' => ['auth'],
+	'as' => 'halaman_warung.filter_kategori',
+	'uses' => 'HalamanWarungController@filter_kategori'
+]);
+
+Route::get('/halaman-warung/pencarian/search',[
+	'middleware' => ['auth'],
+	'as' => 'halaman_warung.pencarian',
+	'uses' => 'HalamanWarungController@pencarian'
+]);
+
 
 //PUNYA KERANJANG BELANJAAN
 Route::get('/keranjang-belanja',[ 

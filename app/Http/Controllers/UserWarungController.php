@@ -184,7 +184,7 @@ class UserWarungController extends Controller
             'kelurahan' => 'required',
             'no_telp'   => 'required|without_spaces|unique:users,no_telp,'. $id,
             'id_warung' => 'required',
-            ]);
+        ]);
 
     //UPDATE USER WARUNG
         $user_warung = UserWarung::where('id',$id)->update([
@@ -194,7 +194,7 @@ class UserWarungController extends Controller
             'wilayah' =>$request->wilayah,
             'no_telp' =>$request->no_telp,
             'id_warung' =>$request->id_warung,
-            ]);
+        ]);
 
 
     }
@@ -215,6 +215,9 @@ class UserWarungController extends Controller
         if ($warung_user > 1) {
             $user_warung = UserWarung::destroy($id);
             return response(200);
+        }
+        else {
+            return response(422);
         }
 
     }
