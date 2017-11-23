@@ -110,14 +110,15 @@
             </div>
         </div>
 
-        <div class="row">
-
-            <div class="col-sm-12">
+        <div class="row">   
+            <div class="col-md-12">
                 <!--Menampilkan Warung Secara Acak--> 
-                <h4 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px">Daftar Warung</h4>
-            </div>
-            <span id="span-warung">{!! $daftar_warung !!}</span>                
+                <h4 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px">Daftar Warung</h4> 
+            </div>   
+            <span class="span-warung">{!! $daftar_warung !!}</span> 
+        </div>
 
+        <div class="row">
             <div class="col-md-12">                 
                 <div class="panel panel-default">
                     <div class="panel-heading" role="tab" id="headingTwo">
