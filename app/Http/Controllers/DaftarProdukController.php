@@ -302,7 +302,7 @@ public static function cardProduk($produks){
       <div class="card cards card-pricing">
         <a href="'.url("/detail-produk/".$produks->id."") .'">
           <div class="card-image">';
-            $card_produk .= $this->fotoProduk($produks);
+            $card_produk .= DaftarProdukController::fotoProduk($produks);
             $card_produk .= '
           </div>
         </a>
@@ -310,12 +310,12 @@ public static function cardProduk($produks){
           <div class="footer">  
             <p class="nama-produk flexFont">
               <a href="'.url("/detail-produk/".$produks->id."") .'" >';
-                $card_produk .= $this->namaProduk($produks);
+                $card_produk .= DaftarProdukController::namaProduk($produks);
                 $card_produk .= '</a></p>
                 <p style="color:#d21f30; font-size:18px;line-height:1.4"> '.$produks->rupiah.' / '.$produks->satuan->nama_satuan.' </p>';
-                $card_produk .= $this->namaWarung($warung).'<br>';
+                $card_produk .= DaftarProdukController::namaWarung($warung).'<br>';
       //tombol beli
-                $card_produk .= $this->tombolBeli($cek_produk,$produks);
+                $card_produk .= DaftarProdukController::tombolBeli($cek_produk,$produks);
                 $card_produk .= '
               </div>
             </div>
@@ -325,18 +325,18 @@ public static function cardProduk($produks){
       return $card_produk;
     }
 
-    public function daftarProduk($data_produk){
+    public static function daftarProduk($data_produk){
      if ($data_produk->count() > 0) {
       $daftar_produk = "";
       foreach ($data_produk as $produks) {
-        $daftar_produk .= $this->cardProduk($produks);
+        $daftar_produk .= DaftarProdukController::cardProduk($produks);
       }
       if ($daftar_produk == "") {
-       $daftar_produk = $this->tidakAdaProduk();
+       $daftar_produk = DaftarProdukController::tidakAdaProduk();
      }
    }
    else {
-    $daftar_produk = $this->tidakAdaProduk();
+    $daftar_produk = DaftarProdukController::tidakAdaProduk();
   }
   return $daftar_produk;
 }
@@ -385,13 +385,13 @@ public static function cardWarung($warungs){
             <div class="col-md-9 col-sm-9 col-xs-9">              
               <p class="nama-produk flexFont">
                 <a href="halaman-warung/'.$warungs->id.'" >';
-                  $card_warung .= $this->warungNama($warungs);
+                  $card_warung .= DaftarProdukController::warungNama($warungs);
                   $card_warung .= '
                 </a>
               </p>
               <p class="nama-produk flexFont">            
                 <a href="halaman-warung/'.$warungs->id.'">';
-                  $card_warung .= $this->alamatWarung($warungs);
+                  $card_warung .= DaftarProdukController::alamatWarung($warungs);
                   $card_warung .= '
                 </a>
               </p>
@@ -399,7 +399,7 @@ public static function cardWarung($warungs){
           </div>        
           <p class="btnWarung">';
           //tombol kunjungi
-            $card_warung .= $this->tombolKunjungi($warungs);
+            $card_warung .= DaftarProdukController::tombolKunjungi($warungs);
             $card_warung .= '
           </p>
         </div>
