@@ -53,6 +53,15 @@ class Barang extends Model
 		return 'Rp '. number_format($this->harga_jual,0,',','.');
 	}
 
+	public function getStokAttribute()
+	{
+		
+		$stok = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk),0) - IFNULL(SUM(jumlah_keluar),0) as stok_produk')])->where('id_produk', $this->id)->first();
+
+		return $stok->stok_produk;
+		
+	}
+
 
 
 }
