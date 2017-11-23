@@ -43,7 +43,7 @@ class DaftarProdukController extends Controller
       //PILIH DATA WARUNG
       if ($agent->isMobile()) {
         $warung_data = Warung::select(['id','name', 'alamat', 'wilayah', 'no_telpon'])
-        ->inRandomOrder()->paginate(2);        # code...
+        ->inRandomOrder()->paginate(4);        # code...
       }
       else{
         $warung_data = Warung::select(['id','name', 'alamat', 'wilayah', 'no_telpon'])
@@ -360,7 +360,7 @@ public function cardWarung($warungs){
       <div class="card-content">
         <div class="footer">
           <div class="row">
-            <div class="col-md-1">                      
+            <div class="col-md-1 col-sm-1 col-xs-1">                      
               <p class="nama-produk flexFont">                
                 <i class="material-icons">store</i>
               </p>                    
@@ -368,7 +368,7 @@ public function cardWarung($warungs){
                 <i class="material-icons">place</i>
               </p>
             </div>
-            <div class="col-md-9">              
+            <div class="col-md-9 col-sm-9 col-xs-9">              
               <p class="nama-produk flexFont">
                 <a href="halaman-warung/'.$warungs->id.'" >';
                   $card_warung .= $this->warungNama($warungs);

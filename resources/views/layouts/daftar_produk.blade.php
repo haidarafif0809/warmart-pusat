@@ -111,18 +111,19 @@
         </div>
 
         <div class="row">
-            <!--Menampilkan Warung Secara Acak--> 
-            <div class="col-md-12"> 
-                <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px">Daftar Warung</h5>                
-            </div>
-            <span id="span-warung">{!! $daftar_warung !!}</span>
 
-            <div class="col-md-12"> 
+            <div class="col-sm-12">
+                <!--Menampilkan Warung Secara Acak--> 
+                <h4 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px">Daftar Warung</h4>
+            </div>
+            <span id="span-warung">{!! $daftar_warung !!}</span>                
+
+            <div class="col-md-12">                 
                 <div class="panel panel-default">
                     <div class="panel-heading" role="tab" id="headingTwo">
                         <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                             <h4 class="title">
-                                KATEGORI
+                                KATEGORI PRODUK
                                 <i class="material-icons">keyboard_arrow_down</i>
                             </h4>
                         </a>
@@ -199,10 +200,9 @@
 
             <!--Menampilkan Warung Secara Acak--> 
             <div class="col-md-12"> 
-                <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px">Daftar Warung</h5>                
+                <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px">Daftar Warung</h5>           
+                <span id="span-warung">{!! $daftar_warung !!}</span>     
             </div>
-            <span id="span-warung">{!! $daftar_warung !!}</span>
-
 
             <div class="col-md-3"> 
                 <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:25px">Daftar Produk</h5>  
@@ -219,8 +219,10 @@
 
             <div class="col-md-12"><br>
                 <div class="row">
-                    <!-- Menampilkan Produk -->
-                    <span id="span-produk">{!! $daftar_produk !!}</span>
+                    <div class="col-md-12">
+                        <!-- Menampilkan Produk -->
+                        <span id="span-produk">{!! $daftar_produk !!}</span>
+                    </div>
                     <div class="col-md-12">
                         {{$produk_pagination}}
                     </div>
