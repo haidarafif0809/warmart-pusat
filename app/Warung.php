@@ -5,12 +5,13 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Yajra\Auditable\AuditableTrait;
-
+use Laravel\Scout\Searchable;
 
 class Warung extends Model
 {
 	use AuditableTrait;
 	use LogsActivity;
+	use Searchable;
 	
 	protected $fillable = ['name','alamat','wilayah', 'no_telpon', 'email','provinsi','kabupaten','kecamatan'];
 
