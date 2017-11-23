@@ -42,7 +42,7 @@ class DaftarProdukController extends Controller
 
       //PILIH DATA WARUNG
       $warung_data = Warung::select(['id','name', 'alamat', 'wilayah', 'no_telpon'])
-      ->inRandomOrder()->paginate(4);
+      ->inRandomOrder()->limit(4)->get();
 
         //PILIH DATA KATEGORI PRODUK
       $kategori = KategoriBarang::select(['id','nama_kategori_barang','kategori_icon']);
@@ -143,7 +143,7 @@ class DaftarProdukController extends Controller
   //PILIH PRODUK
      $data_produk = Barang::search($request->search)->paginate(12);
   //PILIH DATA WARUNG
-     $warung_data = Warung::search($request->search)->paginate(4);
+     $warung_data = Warung::search($request->search)->get();
   //PILIH KATEGORI
      $kategori = KategoriBarang::select(['id','nama_kategori_barang','kategori_icon']);
   //FOTO HEADER
@@ -391,21 +391,6 @@ public function cardWarung($warungs){
   return $card_warung;
 }
 
-public function tidakAdaWarung(){
-  return '
-  <div class="col-md-3">
-    <div class="card card-product card-plain no-shadow" data-colored-shadow="false">
-      <div class="card-image">
-        <img src="'.asset('image/foto_default.png').'">
-      </div>
-      <div class="card-content" style="padding:0px">
-        <a href="#">
-          <h4 >Tidak Ada Produk</h4>
-        </a>
-      </div>
-    </div>
-  </div>'; 
-}
 public function alamatWarung($warungs){
   if (strlen(strip_tags($warungs->alamat)) <= 33) {
     $nama_produk = ''.strip_tags($warungs->alamat);
