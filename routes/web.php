@@ -89,6 +89,26 @@ Route::get('/detail-produk/{id}',[
 	'uses' => 'DetailProdukController@detail_produk'
 ]);
 
+//PUNYA HALAMAN WARUNG
+Route::get('/halaman-warung/{id}',[
+	'middleware' => ['auth'],
+	'as' => 'halaman-warung.halaman_warung',
+	'uses' => 'HalamanWarungController@index'
+]);
+
+Route::get('/halaman-warung/filter/{id}/{id_warung}/',[
+	'middleware' => ['auth'],
+	'as' => 'halaman_warung.filter_kategori',
+	'uses' => 'HalamanWarungController@filter_kategori'
+]);
+
+Route::get('/halaman-warung/pencarian/search',[
+	'middleware' => ['auth'],
+	'as' => 'halaman_warung.pencarian',
+	'uses' => 'HalamanWarungController@pencarian'
+]);
+
+
 //PUNYA KERANJANG BELANJAAN
 Route::get('/keranjang-belanja',[ 
 	'middleware' => ['auth'],
