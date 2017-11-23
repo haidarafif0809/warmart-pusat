@@ -6,7 +6,7 @@
 
     padding-left: 4px;
     padding-right: 4px;
-    
+
 }
 .card .card-image{
 
@@ -112,7 +112,7 @@
         <div class="row">   
             <div class="col-md-12">
                 <!--Menampilkan Warung Secara Acak--> 
-                <h4 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px">Daftar Warung</h4> 
+                <h4 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px"> Warung</h4> 
             </div>   
             <span class="span-warung">{!! $daftar_warung !!}</span> 
         </div>
@@ -200,12 +200,12 @@
 
             <!--Menampilkan Warung Secara Acak--> 
             <div class="col-md-12"> 
-                <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px">Daftar Warung</h5>           
+                <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px"> Warung</h5>           
                 <span id="span-warung">{!! $daftar_warung !!}</span>     
             </div>
 
             <div class="col-md-3"> 
-                <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:25px">Daftar Produk</h5>  
+                <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:25px"> Produk</h5>  
                 <ul class="nav nav-tabs" data-tabs="tabs" style="background-color: #01573e">                                        
                     <li><a href="{{route('daftar_produk.index')}}"><i class="material-icons">format_align_justify</i> Semua Kategori</a></li>
                 </ul>
