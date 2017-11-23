@@ -83,22 +83,22 @@ class DaftarProdukController extends Controller
         $jumlah_produk = Barang::where('kategori_barang_id', $kategori->id)->whereIn('id_warung', $array_warung)->count();
         $kategori_produk .= '
         <li>
-          <a href="'.route('daftar_produk.filter_kategori',$kategori->id).'" style="color:white"><i class="material-icons">'.$kategori->kategori_icon.'</i>'.$kategori->nama_kategori_barang.' - '.$jumlah_produk.'</a>
+        <a href="'.route('daftar_produk.filter_kategori',$kategori->id).'" style="color:white"><i class="material-icons">'.$kategori->kategori_icon.'</i>'.$kategori->nama_kategori_barang.' - '.$jumlah_produk.'</a>
         </li>';
       }
       $kategori_produk .= '
       <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color:white"><i class="material-icons">list</i> Lain - Lain <b class="caret"></b></a>
-        <ul class="dropdown-menu dropdown-with-icons">';
-          foreach ($kategori->get() as $kategori) {
-            $jumlah_produk = Barang::where('kategori_barang_id', $kategori->id)->whereIn('id_warung', $array_warung)->count();
-            $kategori_produk .= '
-            <li>
-              <a href="'.route('daftar_produk.filter_kategori',$kategori->id).'"><i class="material-icons">'.$kategori->kategori_icon.'</i>'.$kategori->nama_kategori_barang.' - '.$jumlah_produk.'</a>
-            </li>';
-          }
-          $kategori_produk .= '
-        </ul>
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color:white"><i class="material-icons">list</i> Lain - Lain <b class="caret"></b></a>
+      <ul class="dropdown-menu dropdown-with-icons">';
+      foreach ($kategori->get() as $kategori) {
+        $jumlah_produk = Barang::where('kategori_barang_id', $kategori->id)->whereIn('id_warung', $array_warung)->count();
+        $kategori_produk .= '
+        <li>
+        <a href="'.route('daftar_produk.filter_kategori',$kategori->id).'"><i class="material-icons">'.$kategori->kategori_icon.'</i>'.$kategori->nama_kategori_barang.' - '.$jumlah_produk.'</a>
+        </li>';
+      }
+      $kategori_produk .= '
+      </ul>
       </li>';
 
       return $kategori_produk;
@@ -207,7 +207,7 @@ public function tombolBeli($cek_produk,$produks){
                   //JIKA USER LOGIN BUKAN PELANGGAN MAKA TIDAK BISA PESAN PRODUK
     if(Auth::check() && Auth::user()->tipe_user == 3 ){
      if ($cek_produk == 0) {
-      $tombol_beli = '<a style="background-color:#01573e" class="btn btn-block tombolBeli btn-lg" rel="tooltip" title="Stok Tidak Ada"> Beli Sekarang </a>';  
+      $tombol_beli = '<a style="background-color:#01573e" class="btn btn-block tombolBeli" rel="tooltip" title="Stok Tidak Ada"> Beli Sekarang </a>';  
     }else{
       $tombol_beli = '<a href="'.url("/keranjang-belanja") .'" style="background-color:#01573e" class="btn btn-block tombolBeli" id="btnBeliSekarang"> Beli Sekarang </a>';            
     }
@@ -237,16 +237,16 @@ return $tombol_beli;
 public function tidakAdaProduk(){
   return   '<div class="col-md-3">
   <div class="card card-product card-plain no-shadow" data-colored-shadow="false">
-    <div class="card-image">
-      <img src="'.asset('image/foto_default.png').'">
-    </div>
-    <div class="card-content" style="padding:0px">
-      <a href="#">
-        <h4 >Tidak Ada Produk</h4>
-      </a>
-    </div>
+  <div class="card-image">
+  <img src="'.asset('image/foto_default.png').'">
   </div>
-</div>'; 
+  <div class="card-content" style="padding:0px">
+  <a href="#">
+  <h4 >Tidak Ada Produk</h4>
+  </a>
+  </div>
+  </div>
+  </div>'; 
 }
 
 public function namaProduk($produks){
@@ -298,46 +298,46 @@ public function cardProduk($produks){
     $cek_produk = $this->cekStokProduk($produks);
     $card_produk .= '      
     <div class="col-md-3 col-sm-6 col-xs-6 list-produk " style=" margin-bottom:10px;">
-      <div class="card cards card-pricing">
-        <a href="'.url("/detail-produk/".$produks->id."") .'">
-          <div class="card-image">';
-            $card_produk .= $this->fotoProduk($produks);
-            $card_produk .= '
-          </div>
-        </a>
-        <div class="card-content">
-          <div class="footer">  
-            <p class="nama-produk flexFont">
-              <a href="'.url("/detail-produk/".$produks->id."") .'" >';
-                $card_produk .= $this->namaProduk($produks);
-                $card_produk .= '</a></p>
-                <p style="color:#d21f30; font-size:18px;line-height:1.4"> '.$produks->rupiah.' / '.$produks->satuan->nama_satuan.' </p>';
-                $card_produk .= $this->namaWarung($warung).'<br>';
+    <div class="card cards card-pricing">
+    <a href="'.url("/detail-produk/".$produks->id."") .'">
+    <div class="card-image">';
+    $card_produk .= $this->fotoProduk($produks);
+    $card_produk .= '
+    </div>
+    </a>
+    <div class="card-content">
+    <div class="footer">  
+    <p class="nama-produk flexFont">
+    <a href="'.url("/detail-produk/".$produks->id."") .'" >';
+    $card_produk .= $this->namaProduk($produks);
+    $card_produk .= '</a></p>
+    <p style="color:#d21f30; " class="flexFont"> '.$produks->rupiah.' / '.$produks->satuan->nama_satuan.' </p>';
+    $card_produk .= '<p class="flexFont">'.$this->namaWarung($warung).'</p>';
       //tombol beli
-                $card_produk .= $this->tombolBeli($cek_produk,$produks);
-                $card_produk .= '
-              </div>
-            </div>
-          </div>
-        </div>';
-      }
-      return $card_produk;
-    }
-
-    public function daftarProduk($data_produk){
-     if ($data_produk->count() > 0) {
-      $daftar_produk = "";
-      foreach ($data_produk as $produks) {
-        $daftar_produk .= $this->cardProduk($produks);
-      }
-      if ($daftar_produk == "") {
-       $daftar_produk = $this->tidakAdaProduk();
-     }
-   }
-   else {
-    $daftar_produk = $this->tidakAdaProduk();
+    $card_produk .= $this->tombolBeli($cek_produk,$produks);
+    $card_produk .= '
+    </div>
+    </div>
+    </div>
+    </div>';
   }
-  return $daftar_produk;
+  return $card_produk;
+}
+
+public function daftarProduk($data_produk){
+ if ($data_produk->count() > 0) {
+  $daftar_produk = "";
+  foreach ($data_produk as $produks) {
+    $daftar_produk .= $this->cardProduk($produks);
+  }
+  if ($daftar_produk == "") {
+   $daftar_produk = $this->tidakAdaProduk();
+ }
+}
+else {
+  $daftar_produk = $this->tidakAdaProduk();
+}
+return $daftar_produk;
 }
 
 public function resizeProduk($produks){
@@ -369,41 +369,41 @@ public function cardWarung($warungs){
   $card_warung = "";
   $card_warung .= '      
   <div class="col-md-3 col-sm-6 col-xs-6 list-produk " style=" margin-bottom:10px;">
-    <div class="card cards card-pricing" style="text-align: left;">
-      <div class="card-content">
-        <div class="footer">
-          <div class="row">
-            <div class="col-md-1 col-sm-1 col-xs-1">                      
-              <p class="nama-produk flexFont">                
-                <i class="material-icons">store</i>
-              </p>                    
-              <p class="nama-produk flexFont">
-                <i class="material-icons">place</i>
-              </p>
-            </div>
-            <div class="col-md-9 col-sm-9 col-xs-9">              
-              <p class="nama-produk flexFont">
-                <a href="halaman-warung/'.$warungs->id.'" >';
-                  $card_warung .= $this->warungNama($warungs);
-                  $card_warung .= '
-                </a>
-              </p>
-              <p class="nama-produk flexFont">            
-                <a href="halaman-warung/'.$warungs->id.'">';
-                  $card_warung .= $this->alamatWarung($warungs);
-                  $card_warung .= '
-                </a>
-              </p>
-            </div>    
-          </div>        
-          <p class="btnWarung">';
+  <div class="card cards card-pricing" style="text-align: left;">
+  <div class="card-content">
+  <div class="footer">
+  <div class="row">
+  <div class="col-md-1 col-sm-1 col-xs-1">                      
+  <p class="nama-produk flexFont">                
+  <i class="material-icons">store</i>
+  </p>                    
+  <p class="nama-produk flexFont">
+  <i class="material-icons">place</i>
+  </p>
+  </div>
+  <div class="col-md-9 col-sm-9 col-xs-9">              
+  <p class="nama-produk flexFont">
+  <a href="halaman-warung/'.$warungs->id.'" >';
+  $card_warung .= $this->warungNama($warungs);
+  $card_warung .= '
+  </a>
+  </p>
+  <p class="nama-produk flexFont">            
+  <a href="halaman-warung/'.$warungs->id.'">';
+  $card_warung .= $this->alamatWarung($warungs);
+  $card_warung .= '
+  </a>
+  </p>
+  </div>    
+  </div>        
+  <p class="btnWarung">';
           //tombol kunjungi
-            $card_warung .= $this->tombolKunjungi($warungs);
-            $card_warung .= '
-          </p>
-        </div>
-      </div>
-    </div>
+  $card_warung .= $this->tombolKunjungi($warungs);
+  $card_warung .= '
+  </p>
+  </div>
+  </div>
+  </div>
   </div>';
   return $card_warung;
 }

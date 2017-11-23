@@ -2,45 +2,45 @@
 @section('content') 
 
 <style type="text/css">
-    .list-produk {
-        @if(Agent::isMobile())
-        @else  
-        padding-left: 4px;
-        padding-right: 4px;
-        @endif
-    }
-    .card .card-image{
+.list-produk {
+    @if(Agent::isMobile())
+    @else  
+    padding-left: 4px;
+    padding-right: 4px;
+    @endif
+}
+.card .card-image{
 
-        height: auto; /*this makes sure to maintain the aspect ratio*/
-        margin-top: 0px;
-    }
-    .card-pricing {
-        margin-bottom: 0px;
-    }
-    .tombolBeli {
-        padding: 10px 0px;
-        margin:0px;
-    }
-    .card-pricing .card-content {
-        padding: 5px !important;
-    }
-    .card .footer {
-        margin-top: 0px;
-        font-family: Helvetica,Arial,sans-serif;
-        font-weight: 400;
-        line-height:1.2em;
-        text-decoration: none;
-        font-size:15px;
-    }      
+    height: auto; /*this makes sure to maintain the aspect ratio*/
+    margin-top: 0px;
+}
+.card-pricing {
+    margin-bottom: 0px;
+}
+.tombolBeli {
+    padding: 10px 0px;
+    margin:0px;
+}
+.card-pricing .card-content {
+    padding: 5px !important;
+}
+.card .footer {
+    margin-top: 0px;
+    font-family: Helvetica,Arial,sans-serif;
+    font-weight: 400;
+    line-height:1.2em;
+    text-decoration: none;
+    font-size:15px;
+}      
 
-    @font-face {
-      font-family: "San Francisco";
-      font-weight: 200;
-      src: url("//applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-thin-webfont.woff2");
-  }
+@font-face {
+  font-family: "San Francisco";
+  font-weight: 200;
+  src: url("//applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-thin-webfont.woff2");
+}
 
 
-  .flexFont {
+.flexFont {
     @if(Agent::isMobile())
     height:3em;
     @else  

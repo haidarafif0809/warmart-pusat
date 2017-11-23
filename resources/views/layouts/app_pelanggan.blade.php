@@ -91,9 +91,10 @@
             <a href="{{ url('/pesanan') }}">
               <i class="material-icons">archive</i> Pesanan
             </a>
-            @endif
+
 
           </li>
+          @endif
           @endif
           <li>
             <a href="https://info.war-mart.id">
