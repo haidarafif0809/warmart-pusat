@@ -77,7 +77,6 @@ Route::get('/daftar-produk/{id}',[
 ]);
 
 Route::get('/daftar-produk/pencarian/search',[
-	'middleware' => ['auth'],
 	'as' => 'daftar_produk.pencarian',
 	'uses' => 'DaftarProdukController@pencarian'
 ]);
