@@ -173,7 +173,13 @@ class DaftarProdukController extends Controller
    }
 
    public function cekStokProduk($produks){
-    $keranjang_belanjaan = KeranjangBelanja::with(['produk','pelanggan'])->where('id_pelanggan',Auth::user()->id)->where('id_produk',$produks->id)->count(); 
+    if (Auth::check()) {
+      $keranjang_belanjaan = KeranjangBelanja::with(['produk','pelanggan'])->where('id_pelanggan',Auth::user()->id)->where('id_produk',$produks->id)->count(); 
+    }
+    else {
+      $keranjang_belanjaan = 0;
+    }
+
       //jika belum ada belanjaan
     if ($keranjang_belanjaan == 0) {
      $stok = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk),0) - IFNULL(SUM(jumlah_keluar),0) as stok_produk')])->where('id_produk', $produks->id)->where('warung_id', $produks->id_warung)->first();
@@ -199,7 +205,7 @@ public function tombolBeli($cek_produk,$produks){
   $agent = new Agent();
   if ($agent->isMobile()) {
                   //JIKA USER LOGIN BUKAN PELANGGAN MAKA TIDAK BISA PESAN PRODUK
-    if(Auth::user()->tipe_user == 3){
+    if(Auth::check() && Auth::user()->tipe_user == 3 ){
      if ($cek_produk == 0) {
       $tombol_beli = '<a style="background-color:#01573e" class="btn btn-block tombolBeli btn-lg" rel="tooltip" title="Stok Tidak Ada"> Beli Sekarang </a>';  
     }else{
@@ -213,7 +219,7 @@ public function tombolBeli($cek_produk,$produks){
 }
 else{
                   //JIKA USER LOGIN BUKAN PELANGGAN MAKA TIDAK BISA PESAN PRODUK
-  if(Auth::user()->tipe_user == 3){
+  if(Auth::check() && Auth::user()->tipe_user == 3){
     if ($cek_produk == 0) {
       $tombol_beli = '<a style="background-color:#01573e" class="btn btn-block tombolBeli" rel="tooltip" title="Stok Tidak Ada" disabled="" >Beli Sekarang </a>';
     }else{
