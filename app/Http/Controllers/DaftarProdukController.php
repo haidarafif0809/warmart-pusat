@@ -37,11 +37,17 @@ class DaftarProdukController extends Controller
         array_push($array_warung, $data_warungs->id_warung);
       }
 
-        //PILIH DATA PRODUK
+      //TAMPILAN MOBILE
+      $agent = new Agent();
 
+        //PILIH DATA PRODUK
       $data_produk = Barang::select(['id','kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung','konfirmasi_admin','satuan_id'])
       ->inRandomOrder()
       ->whereIn('id_warung', $array_warung)->paginate(12);
+
+      //PILIH DATA WARUNG
+      $warung_data = Warung::select(['id','name', 'alamat', 'wilayah', 'no_telpon'])
+      ->inRandomOrder()->paginate(4);
 
         //PILIH DATA KATEGORI PRODUK
       $kategori = KategoriBarang::select(['id','nama_kategori_barang','kategori_icon']);
@@ -53,13 +59,13 @@ class DaftarProdukController extends Controller
       $logo_warmart = "assets/img/examples/warmart_logo.png";
         //TAMPIL DAFTAR PRODUK
       $daftar_produk = $this->daftarProduk($data_produk);
+      $daftar_warung = $this->daftarWarung($warung_data);
         //TAMPIL KATEGORI
       $kategori_produk = $this->produkKategori($kategori);
       $nama_kategori = "Temukan Apa Yang Anda Butuhkan";
-        //TAMPILAN MOBILE
-      $agent = new Agent();
 
-      return view('layouts.daftar_produk', ['kategori_produk' => $kategori_produk, 'daftar_produk' => $daftar_produk, 'produk_pagination' => $produk_pagination, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'agent' => $agent,'cek_belanjaan'=>$cek_belanjaan,'logo_warmart'=>$logo_warmart]);
+
+      return view('layouts.daftar_produk', ['kategori_produk' => $kategori_produk, 'daftar_produk' => $daftar_produk, 'daftar_warung' => $daftar_warung, 'produk_pagination' => $produk_pagination, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'agent' => $agent,'cek_belanjaan'=>$cek_belanjaan,'logo_warmart'=>$logo_warmart]);
     }
 
     public function produkKategori($kategori){
@@ -75,22 +81,22 @@ class DaftarProdukController extends Controller
         $jumlah_produk = Barang::where('kategori_barang_id', $kategori->id)->whereIn('id_warung', $array_warung)->count();
         $kategori_produk .= '
         <li>
-        <a href="'.route('daftar_produk.filter_kategori',$kategori->id).'" style="color:white"><i class="material-icons">'.$kategori->kategori_icon.'</i>'.$kategori->nama_kategori_barang.' - '.$jumlah_produk.'</a>
+          <a href="'.route('daftar_produk.filter_kategori',$kategori->id).'" style="color:white"><i class="material-icons">'.$kategori->kategori_icon.'</i>'.$kategori->nama_kategori_barang.' - '.$jumlah_produk.'</a>
         </li>';
       }
       $kategori_produk .= '
       <li class="dropdown">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color:white"><i class="material-icons">list</i> Lain - Lain <b class="caret"></b></a>
-      <ul class="dropdown-menu dropdown-with-icons">';
-      foreach ($kategori->get() as $kategori) {
-        $jumlah_produk = Barang::where('kategori_barang_id', $kategori->id)->whereIn('id_warung', $array_warung)->count();
-        $kategori_produk .= '
-        <li>
-        <a href="'.route('daftar_produk.filter_kategori',$kategori->id).'"><i class="material-icons">'.$kategori->kategori_icon.'</i>'.$kategori->nama_kategori_barang.' - '.$jumlah_produk.'</a>
-        </li>';
-      }
-      $kategori_produk .= '
-      </ul>
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color:white"><i class="material-icons">list</i> Lain - Lain <b class="caret"></b></a>
+        <ul class="dropdown-menu dropdown-with-icons">';
+          foreach ($kategori->get() as $kategori) {
+            $jumlah_produk = Barang::where('kategori_barang_id', $kategori->id)->whereIn('id_warung', $array_warung)->count();
+            $kategori_produk .= '
+            <li>
+              <a href="'.route('daftar_produk.filter_kategori',$kategori->id).'"><i class="material-icons">'.$kategori->kategori_icon.'</i>'.$kategori->nama_kategori_barang.' - '.$jumlah_produk.'</a>
+            </li>';
+          }
+          $kategori_produk .= '
+        </ul>
       </li>';
 
       return $kategori_produk;
@@ -113,7 +119,7 @@ class DaftarProdukController extends Controller
       $data_produk = Barang::select(['id','kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung','konfirmasi_admin','satuan_id'])
       ->where('kategori_barang_id', $id)->whereIn('id_warung', $array_warung)->inRandomOrder()->paginate(12);
 
-      
+
   //FOTO HEADER
       $foto_latar_belakang = "background-image: url('../image/background2.jpg');";
   //FOTO WARMART
@@ -141,8 +147,9 @@ class DaftarProdukController extends Controller
 
   //PILIH PRODUK
      $data_produk = Barang::search($request->search)->paginate(12);
+  //PILIH DATA WARUNG
+     $warung_data = Warung::search($request->search)->paginate(4);
   //PILIH KATEGORI
-
      $kategori = KategoriBarang::select(['id','nama_kategori_barang','kategori_icon']);
   //FOTO HEADER
      $foto_latar_belakang = "background-image: url('".asset('/image/background2.jpg')."');";
@@ -158,8 +165,9 @@ class DaftarProdukController extends Controller
      $agent = new Agent();
 
      $daftar_produk = $this->daftarProduk($data_produk);
+     $daftar_warung = $this->daftarWarung($warung_data);
 
-     return view('layouts.daftar_produk', ['kategori_produk' => $kategori_produk, 'daftar_produk' => $daftar_produk, 'produk_pagination' => $produk_pagination, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'agent' => $agent,'cek_belanjaan'=>$cek_belanjaan,'logo_warmart'=>$logo_warmart]);
+     return view('layouts.daftar_produk', ['kategori_produk' => $kategori_produk, 'daftar_warung' => $daftar_warung, 'daftar_produk' => $daftar_produk, 'produk_pagination' => $produk_pagination, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'agent' => $agent,'cek_belanjaan'=>$cek_belanjaan,'logo_warmart'=>$logo_warmart]);
    }
 
    public function cekStokProduk($produks){
@@ -226,16 +234,16 @@ return $tombol_beli;
 public function tidakAdaProduk(){
   return   '<div class="col-md-3">
   <div class="card card-product card-plain no-shadow" data-colored-shadow="false">
-  <div class="card-image">
-  <img src="'.asset('image/foto_default.png').'">
+    <div class="card-image">
+      <img src="'.asset('image/foto_default.png').'">
+    </div>
+    <div class="card-content" style="padding:0px">
+      <a href="#">
+        <h4 >Tidak Ada Produk</h4>
+      </a>
+    </div>
   </div>
-  <div class="card-content" style="padding:0px">
-  <a href="#">
-  <h4 >Tidak Ada Produk</h4>
-  </a>
-  </div>
-  </div>
-  </div>'; 
+</div>'; 
 }
 
 public function namaProduk($produks){
@@ -260,12 +268,12 @@ public function namaWarung($warung){
 
   if (strlen($warung->name) > 25) {
     # code...
-    $namaWarung = '<a class="description"><i class="material-icons">store</i>  '.strip_tags(substr($warung->name, 0, 25)).'... </a>';
+    $namaWarung = '<a class="description"> <i class="material-icons">store</i> '.strip_tags(substr($warung->name, 0, 25)).'... </a>';
   }
   else {
-   $namaWarung = '<a class="description"><i class="material-icons">store</i>  '.strip_tags($warung->name).' </a>';
- }
- return $namaWarung;
+    $namaWarung = '<a class="description"> <i class="material-icons">store</i> '.strip_tags($warung->name).' </a>';
+  }
+  return $namaWarung;
 
 }
 
@@ -287,46 +295,46 @@ public function cardProduk($produks){
     $cek_produk = $this->cekStokProduk($produks);
     $card_produk .= '      
     <div class="col-md-3 col-sm-6 col-xs-6 list-produk " style=" margin-bottom:10px;">
-    <div class="card cards card-pricing">
-    <a href="'.url("/detail-produk/".$produks->id."") .'">
-    <div class="card-image">';
-    $card_produk .= $this->fotoProduk($produks);
-    $card_produk .= '
-    </div>
-    </a>
-    <div class="card-content">
-    <div class="footer">  
-    <p class="nama-produk flexFont">
-    <a href="'.url("/detail-produk/".$produks->id."") .'" >';
-    $card_produk .= $this->namaProduk($produks);
-    $card_produk .= '</a></p>
-    <p style="color:#d21f30; font-size:18px;line-height:1.4"> '.$produks->rupiah.' / '.$produks->satuan->nama_satuan.' </p>';
-    $card_produk .= $this->namaWarung($warung).'<br>';
+      <div class="card cards card-pricing">
+        <a href="'.url("/detail-produk/".$produks->id."") .'">
+          <div class="card-image">';
+            $card_produk .= $this->fotoProduk($produks);
+            $card_produk .= '
+          </div>
+        </a>
+        <div class="card-content">
+          <div class="footer">  
+            <p class="nama-produk flexFont">
+              <a href="'.url("/detail-produk/".$produks->id."") .'" >';
+                $card_produk .= $this->namaProduk($produks);
+                $card_produk .= '</a></p>
+                <p style="color:#d21f30; font-size:18px;line-height:1.4"> '.$produks->rupiah.' / '.$produks->satuan->nama_satuan.' </p>';
+                $card_produk .= $this->namaWarung($warung).'<br>';
       //tombol beli
-    $card_produk .= $this->tombolBeli($cek_produk,$produks);
-    $card_produk .= '
-    </div>
-    </div>
-    </div>
-    </div>';
-  }
-  return $card_produk;
-}
+                $card_produk .= $this->tombolBeli($cek_produk,$produks);
+                $card_produk .= '
+              </div>
+            </div>
+          </div>
+        </div>';
+      }
+      return $card_produk;
+    }
 
-public function daftarProduk($data_produk){
- if ($data_produk->count() > 0) {
-  $daftar_produk = "";
-  foreach ($data_produk as $produks) {
-    $daftar_produk .= $this->cardProduk($produks);
+    public function daftarProduk($data_produk){
+     if ($data_produk->count() > 0) {
+      $daftar_produk = "";
+      foreach ($data_produk as $produks) {
+        $daftar_produk .= $this->cardProduk($produks);
+      }
+      if ($daftar_produk == "") {
+       $daftar_produk = $this->tidakAdaProduk();
+     }
+   }
+   else {
+    $daftar_produk = $this->tidakAdaProduk();
   }
-  if ($daftar_produk == "") {
-   $daftar_produk = $this->tidakAdaProduk();
- }
-}
-else {
-  $daftar_produk = $this->tidakAdaProduk();
-}
-return $daftar_produk;
+  return $daftar_produk;
 }
 
 public function resizeProduk($produks){
@@ -339,5 +347,115 @@ public function resizeProduk($produks){
   }
 }
 
+
+//WARUNG//WARUNG//WARUNG//WARUNG
+
+public function daftarWarung($warung_data){
+  $daftar_warung = "";
+  foreach ($warung_data as $warungs) {
+    $daftar_warung .= $this->cardWarung($warungs);
+  }
+  return $daftar_warung;
+}
+
+public function cardWarung($warungs){
+  $card_warung = "";
+  $card_warung .= '      
+  <div class="col-md-3 col-sm-6 col-xs-6 list-produk " style=" margin-bottom:10px;">
+    <div class="card cards card-pricing" style="text-align: left;">
+      <div class="card-content">
+        <div class="footer">
+          <div class="row">
+            <div class="col-md-1 col-sm-1 col-xs-1">                      
+              <p class="nama-produk flexFont">                
+                <i class="material-icons">store</i>
+              </p>                    
+              <p class="nama-produk flexFont">
+                <i class="material-icons">place</i>
+              </p>
+            </div>
+            <div class="col-md-9 col-sm-9 col-xs-9">              
+              <p class="nama-produk flexFont">
+                <a href="halaman-warung/'.$warungs->id.'" >';
+                  $card_warung .= $this->warungNama($warungs);
+                  $card_warung .= '
+                </a>
+              </p>
+              <p class="nama-produk flexFont">            
+                <a href="halaman-warung/'.$warungs->id.'">';
+                  $card_warung .= $this->alamatWarung($warungs);
+                  $card_warung .= '
+                </a>
+              </p>
+            </div>    
+          </div>        
+          <p class="btnWarung">';
+          //tombol kunjungi
+            $card_warung .= $this->tombolKunjungi($warungs);
+            $card_warung .= '
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>';
+  return $card_warung;
+}
+
+public function tidakAdaWarung(){
+  return '
+  <div class="col-md-3">
+    <div class="card card-product card-plain no-shadow" data-colored-shadow="false">
+      <div class="card-image">
+        <img src="'.asset('image/foto_default.png').'">
+      </div>
+      <div class="card-content" style="padding:0px">
+        <a href="#">
+          <h4 >Tidak Ada Produk</h4>
+        </a>
+      </div>
+    </div>
+  </div>'; 
+}
+public function alamatWarung($warungs){
+  if (strlen(strip_tags($warungs->alamat)) <= 33) {
+    $nama_produk = ''.strip_tags($warungs->alamat);
+  }
+  else{
+    $agent = new Agent();
+    if ($agent->isMobile()) {
+      $nama_produk = ''.strip_tags(substr($warungs->alamat, 0, 35)).'...'; 
+    }
+    else {
+      $nama_produk = ''.strip_tags(substr($warungs->alamat, 0, 60)).'...'; 
+    }
+
+  }
+  return $nama_produk;
+}
+
+
+public function tombolKunjungi($warungs){
+  $agent = new Agent();
+  if ($agent->isMobile()) {
+    $tombol_kunjungi = '<a href="halaman-warung/'.$warungs->id.'" style="background-color:#01573e; position: relative" class="btn btn-block tombolBeli" id="btnKunjungi"> Kunjungi Warung </a>';
+  }
+  else{
+    $tombol_kunjungi = '<a href="halaman-warung/'.$warungs->id.'" id="btnKunjungi" style="background-color:#01573e; position: relative" class="btn btn-block tombolBeli"> Kunjungi Warung </a>';
+  }
+  return $tombol_kunjungi; 
+}
+
+//NAMA WARUNG UNTUK DAFTAR WARUNG
+public function warungNama($warung){
+
+  if (strlen($warung->name) > 25) {
+    $namaWarung = ''.strip_tags(substr($warung->name, 0, 25)).'...';
+  }
+  else {
+    $namaWarung = ''.strip_tags($warung->name).'';
+  }
+  return $namaWarung;
+
+}
 
 }

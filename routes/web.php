@@ -170,7 +170,7 @@ Route::get('konfirmasi-pesanan-warung/{id}',[
 ]);
 
 //PUNYA SELESAI KONFIRMASI PESANAN WARUNG
-Route::get('selesai-konfirmasi-pesanan-warung/{id}',[ 
+Route::post('/selesai-konfirmasi-pesanan-warung}',[ 
 	'middleware' => ['auth'],
 	'as' => 'pesanan-warung.selesai_konfirmasi',
 	'uses' => 'PesananWarungController@selesaiKonfirmasiPesananWarung'
@@ -257,7 +257,7 @@ Route::get('/ubah-password',[
 	'uses' => 'UbahPasswordController@ubah_password'
 ]);
 
-Route::put('/proses-ubah-password/{id}',[
+Route::put('/proses-ubah-password',[
 	'middleware' => ['auth'],
 	'as' => 'user.proses_ubah_password',
 	'uses' => 'UbahPasswordController@proses_ubah_password'

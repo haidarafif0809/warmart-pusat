@@ -9,8 +9,12 @@ use Illuminate\Support\Facades\DB;
 use App\KeranjangBelanja; 
 use App\Barang;
 use App\Hpp;  
+use App\Kas;  
+use App\TransaksiKas;  
 use App\PesananPelanggan;  
 use App\DetailPesananPelanggan;   
+use App\Penjualan;  
+use App\DetailPenjualan;  
 use Auth; 
 
 class PesananWarungController extends Controller
@@ -98,7 +102,20 @@ class PesananWarungController extends Controller
 				$status_pesanan .= '<td><b  style="color:red">Pesanan Di Batalkan</b></td>'; 
 			}
 
-			return view('pesanan_warung.detail_pesanan',['pesanan'=>$pesanan,'detail_pesanan' => $detail_pesanan_pelanggan,'status_pesanan' => $status_pesanan,'subtotal'=>$subtotal]); 
+        //MENAMPILKAN KAS
+			$data_kas = DB::table('kas')
+			->where('warung_id', Auth::user()->id_warung)
+			->pluck('nama_kas','id');
+
+        //MENAMPILKAN KAS
+			$kas = DB::table('kas')
+			->where('warung_id', Auth::user()->id_warung)->get();
+
+			$kas_option = "";
+			foreach ($kas as $data_kass) {
+				$kas_option .= '<option value"'.$data_kass->id.'">'.$data_kass->nama_kas.'</option>';
+			}
+			return view('pesanan_warung.detail_pesanan',['pesanan'=>$pesanan,'detail_pesanan' => $detail_pesanan_pelanggan,'status_pesanan' => $status_pesanan,'subtotal'=>$subtotal,'data_kas'=>$kas_option,'kas'=>$data_kas]); 
 		}
 	}
 
@@ -109,9 +126,42 @@ class PesananWarungController extends Controller
 		return redirect()->back();
 	}
 
-	public function selesaiKonfirmasiPesananWarung($id)
-	{ 
-		PesananPelanggan::where('id',$id)->update(['konfirmasi_pesanan' => '2']);
+	public function selesaiKonfirmasiPesananWarung(Request $request)
+	{  
+		$id_warung = Auth::user()->id_warung;
+		$pesanna_pelanggan = PesananPelanggan::where('id',$request->id_pesanan)->first();
+
+		$penjualan = Penjualan::create([
+			'id_kas'     => $request->id_kas,      
+			'id_pesanan'     => $request->id_pesanan,              
+			'id_pelanggan'     => $pesanna_pelanggan->id_pelanggan,
+			'id_warung'     => $id_warung,
+			'total' => $pesanna_pelanggan->subtotal
+		]);   
+
+		$detail_pesanan_pelanggan = DetailPesananPelanggan::where('id_pesanan_pelanggan',$request->id_pesanan)->get();
+
+		$jumlah_masuk = "";
+		foreach ($detail_pesanan_pelanggan as $detail_pesanan_pelanggans) {
+			$subtotal = $detail_pesanan_pelanggans->harga_produk * $detail_pesanan_pelanggans->jumlah_produk;
+
+			DetailPenjualan::create([
+				'id_penjualan'     => $penjualan->id,      
+				'id_produk'     => $detail_pesanan_pelanggans->id_produk,              
+				'harga'     => $detail_pesanan_pelanggans->harga_produk,
+				'jumlah' => $detail_pesanan_pelanggans->jumlah_produk,
+				'subtotal' => $subtotal
+			]);
+			$jumlah_masuk .= $jumlah_masuk += $subtotal;
+		}
+
+
+		$no_faktur = Penjualan::no_faktur($id_warung);
+
+        //PROSES MEMBUAT TRANSAKSI KAS
+		TransaksiKas::create(['no_faktur' => $no_faktur,'jenis_transaksi'=>'penjualan' ,'jumlah_masuk' => $jumlah_masuk,'kas' => $request->id_kas,'warung_id'=> $id_warung]);
+
+		PesananPelanggan::where('id',$request->id_pesanan)->update(['konfirmasi_pesanan' => '2']);
 		return redirect()->back();
 	}
 

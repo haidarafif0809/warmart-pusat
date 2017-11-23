@@ -2,49 +2,62 @@
 @section('content') 
 
 <style type="text/css">
-.list-produk {
-    padding-left: 4px;
-    padding-right: 4px;
-}
-.card .card-image{
+    .list-produk {
+        @if(Agent::isMobile())
+        @else  
+        padding-left: 4px;
+        padding-right: 4px;
+        @endif
+    }
+    .card .card-image{
 
-    height: auto; /*this makes sure to maintain the aspect ratio*/
-    margin-top: 0px;
-}
-.card-pricing {
-    margin-bottom: 0px;
-}
-.tombolBeli {
-    padding: 10px 0px;
-    margin:0px;
-}
-.card-pricing .card-content {
-    padding: 5px !important;
-}
-.card .footer {
-    margin-top: 0px;
-    font-family: Helvetica,Arial,sans-serif;
-    font-weight: 400;
-    line-height:1.2em;
-    text-decoration: none;
-    font-size:15px;
-}      
+        height: auto; /*this makes sure to maintain the aspect ratio*/
+        margin-top: 0px;
+    }
+    .card-pricing {
+        margin-bottom: 0px;
+    }
+    .tombolBeli {
+        padding: 10px 0px;
+        margin:0px;
+    }
+    .card-pricing .card-content {
+        padding: 5px !important;
+    }
+    .card .footer {
+        margin-top: 0px;
+        font-family: Helvetica,Arial,sans-serif;
+        font-weight: 400;
+        line-height:1.2em;
+        text-decoration: none;
+        font-size:15px;
+    }      
 
-@font-face {
-  font-family: "San Francisco";
-  font-weight: 200;
-  src: url("//applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-thin-webfont.woff2");
-}
+    @font-face {
+      font-family: "San Francisco";
+      font-weight: 200;
+      src: url("//applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-thin-webfont.woff2");
+  }
 
 
-.flexFont {
+  .flexFont {
     @if(Agent::isMobile())
     height:3em;
     @else  
-    height:2em;
+    height:3em;
     @endif
     padding:1%;
-    margin: 10px;
+    margin: 5px;
+
+}
+.btnWarung {
+    @if(Agent::isMobile())
+    height:3em;
+    @else  
+    height:3em;
+    @endif
+    padding:1%;
+    margin: 0px;
 
 }
 
@@ -86,7 +99,7 @@
                             <span class="input-group-addon">
                                 <i class="material-icons">search</i>
                             </span>
-                            <input type="text" name="search" id="cari_produk" value="" placeholder="Cari Produk.." class="form-control" />
+                            <input type="text" name="search" id="cari_produk" value="" placeholder="Cari Produk Atau Warung.." class="form-control" />
                         </div>
                     </div>
                     <div class="col-sm-2">
@@ -98,12 +111,19 @@
         </div>
 
         <div class="row">
-            <div class="col-md-12"> 
+
+            <div class="col-sm-12">
+                <!--Menampilkan Warung Secara Acak--> 
+                <h4 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px">Daftar Warung</h4>
+            </div>
+            <span id="span-warung">{!! $daftar_warung !!}</span>                
+
+            <div class="col-md-12">                 
                 <div class="panel panel-default">
                     <div class="panel-heading" role="tab" id="headingTwo">
                         <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                             <h4 class="title">
-                                KATEGORI
+                                KATEGORI PRODUK
                                 <i class="material-icons">keyboard_arrow_down</i>
                             </h4>
                         </a>
@@ -165,7 +185,7 @@
                             <span class="input-group-addon">
                                 <i class="material-icons">search</i>
                             </span>
-                            <input type="text" name="search" id="cari_produk" value="" placeholder="Cari Produk.." class="form-control" />
+                            <input type="text" name="search" id="cari_produk" value="" placeholder="Cari Produk Atau Warung.." class="form-control" />
                         </div>
                     </div>
                     <div class="col-sm-2">
@@ -177,12 +197,21 @@
         </div>
 
         <div class="row">
+
+            <!--Menampilkan Warung Secara Acak--> 
+            <div class="col-md-12"> 
+                <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px">Daftar Warung</h5>           
+                <span id="span-warung">{!! $daftar_warung !!}</span>     
+            </div>
+
             <div class="col-md-3"> 
+                <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:25px">Daftar Produk</h5>  
                 <ul class="nav nav-tabs" data-tabs="tabs" style="background-color: #01573e">                                        
                     <li><a href="{{route('daftar_produk.index')}}"><i class="material-icons">format_align_justify</i> Semua Kategori</a></li>
                 </ul>
             </div>
-            <div class="col-md-9">                        
+            <div class="col-md-9">      
+                <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:25px"><br></h5>                  
                 <ul class="nav nav-tabs" data-tabs="tabs" style="background-color: #01573e">
                     {!! $kategori_produk !!}                        
                 </ul>
@@ -190,8 +219,10 @@
 
             <div class="col-md-12"><br>
                 <div class="row">
-                    <!-- Menampilkan Produk -->
-                    <span id="span-produk">{!! $daftar_produk !!}</span>
+                    <div class="col-md-12">
+                        <!-- Menampilkan Produk -->
+                        <span id="span-produk">{!! $daftar_produk !!}</span>
+                    </div>
                     <div class="col-md-12">
                         {{$produk_pagination}}
                     </div>

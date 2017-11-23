@@ -71,13 +71,17 @@
                 @elseif(Auth::user()->tipe_user == 2 )
                 <a href="{{ url('/ubah-profil-komunitas') }}">Ubah Profil</a>
                 @elseif(Auth::user()->tipe_user == 1 )
-                <a href="{{ url('/ubah-profil-admin') }}">Ubah Profil</a>
+                <router-link :to="{name: 'ubahProfilAdmin'}">Ubah Profil</router-link>
                 @endif
 
               </li>
 
               <li>
+                @if(Auth::user()->tipe_user == 1 )                
+                <router-link :to="{name: 'ubahPasswordAdmin'}">Ubah Password </router-link>
+                @else
                 <a href="{{ url('/ubah-password') }}">Ubah Password</a>
+                @endif
               </li>
               <li>
                 <a href="{{ url('/logout') }}"
