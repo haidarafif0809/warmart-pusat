@@ -3,11 +3,10 @@
 
 <style type="text/css">
 .list-produk {
-    @if(Agent::isMobile())
-    @else  
+
     padding-left: 4px;
     padding-right: 4px;
-    @endif
+    
 }
 .card .card-image{
 

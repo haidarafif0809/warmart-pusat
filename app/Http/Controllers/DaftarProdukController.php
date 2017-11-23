@@ -317,8 +317,8 @@ public static function cardProduk($produks){
     <a href="'.url("/detail-produk/".$produks->id."") .'" >';
     $card_produk .= DaftarProdukController::namaProduk($produks);
     $card_produk .= '</a></p>
-    <p style="color:#d21f30; font-size:18px;line-height:1.4"> '.$produks->rupiah.' / '.$produks->satuan->nama_satuan.' </p>';
-    $card_produk .= DaftarProdukController::namaWarung($warung).'<br>';
+    <p style="color:#d21f30;" class="flexFont"> '.$produks->rupiah.' / '.$produks->satuan->nama_satuan.' </p>';
+    $card_produk .= '<p class="flexFont">'.DaftarProdukController::namaWarung($warung).'</p>';
       //tombol beli
     $card_produk .= DaftarProdukController::tombolBeli($cek_produk,$produks);
     $card_produk .= '
