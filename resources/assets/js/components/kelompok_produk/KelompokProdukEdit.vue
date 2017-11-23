@@ -63,7 +63,7 @@ export default {
 	data: function () {
 		return {
 
-			komunitasId: null,
+			kelompok_produkId: null,
 			kelompok_produk: {
 				nama_kelompok : '',
 				icon_kelompok : ''

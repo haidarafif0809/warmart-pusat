@@ -22,5 +22,17 @@ class TbsPembelian extends Model
 	{
 		return title_case($this->produk->nama_barang);
 	}
+	public function getPemisahSubtotalAttribute() 
+	{   
+		return number_format($this->subtotal,2,',','.'); 
+	} 
+	public function getPemisahHargaAttribute() 
+	{   
+		return number_format($this->harga_produk,2,',','.'); 
+	} 
+	public function getPemisahJumlahAttribute() 
+	{   
+		return number_format($this->jumlah_produk,2,',','.'); 
+	} 
 	
 }

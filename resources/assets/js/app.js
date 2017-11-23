@@ -62,14 +62,20 @@
  import KomunitasEdit from './components/komunitas/KomunitasEdit.vue';
  import KomunitasDetail from './components/komunitas/KomunitasDetail.vue';
 
-  /**USER WARUNG*/
-  import UserWarungIndex from './components/user_warung/UserWarungIndex.vue';
-  import UserWarungEdit from './components/user_warung/UserWarungEdit.vue';
+ /**USER WARUNG*/
+ import UserWarungIndex from './components/user_warung/UserWarungIndex.vue';
+ import UserWarungEdit from './components/user_warung/UserWarungEdit.vue';
 
  /**kelompok produk*/
  import KelompokProdukIndex from './components/kelompok_produk/KelompokProdukIndex.vue';
  import KelompokProdukCreate from './components/kelompok_produk/KelompokProdukCreate.vue';
  import KelompokProdukEdit from './components/kelompok_produk/KelompokProdukEdit.vue';
+
+ // UBAH PROFIL ADMIN
+ import UbahProfilAdmin from './components/ubah_profil/UbahProfilAdmin.vue';
+
+ // UBAH PASSSWORD
+ import UbahPasswordAdmin from './components/ubah_password/UbahPasswordAdmin.vue';
 
 
  const routes = [ 
@@ -124,6 +130,13 @@
 {path: '/kelompok-produk', component: KelompokProdukIndex, name: 'indexKelompokProduk'},
 {path: '/create-kelompok-produk', component: KelompokProdukCreate, name: 'createKelompokProduk'},
 {path: '/edit-kelompok-produk/:id', component: KelompokProdukEdit, name: 'editKelompokProduk'},
+
+// ubah profil admin
+{path: '/ubah-profil-admin', component: UbahProfilAdmin, name: 'ubahProfilAdmin'},
+
+// ubah password admin
+{path: '/ubah-password-admin', component: UbahPasswordAdmin, name: 'ubahPasswordAdmin'},
+
 ]
 
 

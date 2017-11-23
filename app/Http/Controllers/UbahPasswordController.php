@@ -30,12 +30,6 @@ class UbahPasswordController extends Controller
         $update_user->password = bcrypt($request->password);
         $update_user->save();  
 
-        Session::flash("flash_notification", [
-         "level"     => "success",
-         "message"   => "Password Berhasil Di Ubah"
-     ]);
-        
-        return back();
     } 	
 
     //USER PELANGGAN
