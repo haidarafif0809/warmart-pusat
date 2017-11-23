@@ -86,10 +86,12 @@
               </li> 
             </ul>
           </li>
+          @if(Auth::user()->tipe_user == 3)
           <li class="button-container">
             <a href="{{ url('/pesanan') }}">
               <i class="material-icons">archive</i> Pesanan
             </a>
+            @endif
 
           </li>
           @endif
