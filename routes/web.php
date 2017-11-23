@@ -13,8 +13,10 @@
 
 
 
-Route::get('/','HomeController@index')->middleware('optimizeImages');
+Route::get('/','DaftarProdukController@index')->middleware('optimizeImages');
 Route::get('/sms','HomeController@sms');
+
+Route::get('/tentang-warmart','HomeController@index');
 
 Route::get('/cek-deposit','PortaPulsaController@cekDeposit');
 
