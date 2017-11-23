@@ -122,6 +122,9 @@ class DaftarProdukController extends Controller
       $data_produk = Barang::select(['id','kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung','konfirmasi_admin','satuan_id'])
       ->where('kategori_barang_id', $id)->whereIn('id_warung', $array_warung)->inRandomOrder()->paginate(12);
 
+      //PILIH DATA WARUNG
+      $warung_data = Warung::select(['id','name', 'alamat', 'wilayah', 'no_telpon'])
+      ->inRandomOrder()->get();
 
   //FOTO HEADER
       $foto_latar_belakang = "background-image: url('../image/background2.jpg');";
@@ -132,15 +135,17 @@ class DaftarProdukController extends Controller
       //PILIH KATEGORI
       $kategori = KategoriBarang::select(['id','nama_kategori_barang','kategori_icon'])->where('id',$id);
       $kategori_produk = DaftarProdukController::produkKategori($kategori);
+      $daftar_warung = DaftarProdukController::daftarWarung($warung_data);
       $data_kategori = $kategori->first();
       $nama_kategori = "KATEGORI : ".$data_kategori->nama_kategori_barang."";
 
   //TAMPILAN VIA HP
       $agent = new Agent();
 
-      $daftar_produk = DaftarProdukController::daftarProduk($data_produk);      
+      $daftar_produk = DaftarProdukController::daftarProduk($data_produk);  
+      $daftar_warung = DaftarProdukController::daftarWarung($warung_data);    
 
-      return view('layouts.daftar_produk', ['kategori_produk' => $kategori_produk, 'daftar_produk' => $daftar_produk, 'produk_pagination' => $produk_pagination, 'id' => $id, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'agent' => $agent,'cek_belanjaan'=>$cek_belanjaan,'logo_warmart'=>$logo_warmart]);
+      return view('layouts.daftar_produk', ['kategori_produk' => $kategori_produk, 'daftar_warung' => $daftar_warung, 'daftar_produk' => $daftar_produk, 'produk_pagination' => $produk_pagination, 'id' => $id, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'agent' => $agent,'cek_belanjaan'=>$cek_belanjaan,'logo_warmart'=>$logo_warmart]);
     }
 
     public static function pencarian(Request $request){
@@ -430,10 +435,10 @@ public static function alamatWarung($warungs){
 public static function tombolKunjungi($warungs){
   $agent = new Agent();
   if ($agent->isMobile()) {
-    $tombol_kunjungi = '<a href="halaman-warung/'.$warungs->id.'" style="background-color:#01573e; position: relative" class="btn btn-block tombolBeli" id="btnKunjungi"> Kunjungi Warung </a>';
+    $tombol_kunjungi = '<a href="'.asset("halaman-warung/".$warungs->id."").'" style="background-color:#01573e; position: relative" class="btn btn-block tombolBeli" id="btnKunjungi"> Kunjungi Warung </a>';
   }
   else{
-    $tombol_kunjungi = '<a href="halaman-warung/'.$warungs->id.'" id="btnKunjungi" style="background-color:#01573e; position: relative" class="btn btn-block tombolBeli"> Kunjungi Warung </a>';
+    $tombol_kunjungi = '<a href="'.asset("halaman-warung/".$warungs->id."").'" id="btnKunjungi" style="background-color:#01573e; position: relative" class="btn btn-block tombolBeli"> Kunjungi Warung </a>';
   }
   return $tombol_kunjungi; 
 }
