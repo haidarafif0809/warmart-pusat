@@ -41,14 +41,8 @@ class DaftarProdukController extends Controller
       ->whereIn('id_warung', $array_warung)->paginate(12);
 
       //PILIH DATA WARUNG
-      if ($agent->isMobile()) {
-        $warung_data = Warung::select(['id','name', 'alamat', 'wilayah', 'no_telpon'])
-        ->inRandomOrder()->paginate(4);        # code...
-      }
-      else{
-        $warung_data = Warung::select(['id','name', 'alamat', 'wilayah', 'no_telpon'])
-        ->inRandomOrder()->paginate(4);
-      }
+      $warung_data = Warung::select(['id','name', 'alamat', 'wilayah', 'no_telpon'])
+      ->inRandomOrder()->paginate(4);
 
         //PILIH DATA KATEGORI PRODUK
       $kategori = KategoriBarang::select(['id','nama_kategori_barang','kategori_icon']);
@@ -148,8 +142,9 @@ class DaftarProdukController extends Controller
 
   //PILIH PRODUK
      $data_produk = Barang::search($request->search)->paginate(12);
+  //PILIH DATA WARUNG
+     $warung_data = Warung::search($request->search)->paginate(4);
   //PILIH KATEGORI
-
      $kategori = KategoriBarang::select(['id','nama_kategori_barang','kategori_icon']);
   //FOTO HEADER
      $foto_latar_belakang = "background-image: url('".asset('/image/background2.jpg')."');";
@@ -165,8 +160,9 @@ class DaftarProdukController extends Controller
      $agent = new Agent();
 
      $daftar_produk = $this->daftarProduk($data_produk);
+     $daftar_warung = $this->daftarWarung($warung_data);
 
-     return view('layouts.daftar_produk', ['kategori_produk' => $kategori_produk, 'daftar_produk' => $daftar_produk, 'produk_pagination' => $produk_pagination, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'agent' => $agent,'cek_belanjaan'=>$cek_belanjaan,'logo_warmart'=>$logo_warmart]);
+     return view('layouts.daftar_produk', ['kategori_produk' => $kategori_produk, 'daftar_warung' => $daftar_warung, 'daftar_produk' => $daftar_produk, 'produk_pagination' => $produk_pagination, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'agent' => $agent,'cek_belanjaan'=>$cek_belanjaan,'logo_warmart'=>$logo_warmart]);
    }
 
    public function cekStokProduk($produks){
@@ -383,12 +379,10 @@ public function cardWarung($warungs){
               </p>
             </div>    
           </div>        
-          <p class="btnWarung">            
-            <a href="#">';
+          <p class="btnWarung">';
           //tombol kunjungi
-              $card_warung .= $this->tombolKunjungi($warungs);
-              $card_warung .= '
-            </a>
+            $card_warung .= $this->tombolKunjungi($warungs);
+            $card_warung .= '
           </p>
         </div>
       </div>
