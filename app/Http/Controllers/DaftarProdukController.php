@@ -23,9 +23,14 @@ class DaftarProdukController extends Controller
      */
     public function index()
     {
-      $keranjang_belanjaan = KeranjangBelanja::with(['produk','pelanggan'])->where('id_pelanggan',Auth::user()->id)->get();
-      $cek_belanjaan = $keranjang_belanjaan->count();  
+      if (Auth::check()) {
+        $keranjang_belanjaan = KeranjangBelanja::with(['produk','pelanggan'])->where('id_pelanggan',Auth::user()->id)->get();
+        $cek_belanjaan = $keranjang_belanjaan->count();  
+      }
+      else {
+        $cek_belanjaan = 0;
         //Pilih warung yang sudah dikonfirmasi admin
+      }
       $data_warung = User::select(['id_warung'])->where('id_warung', '!=' ,'NULL')->where('konfirmasi_admin', 1)->groupBy('id_warung')->get();
       $array_warung = array();
       foreach ($data_warung as $data_warungs) {
@@ -166,25 +171,30 @@ class DaftarProdukController extends Controller
    }
 
    public function cekStokProduk($produks){
-    $keranjang_belanjaan = KeranjangBelanja::with(['produk','pelanggan'])->where('id_pelanggan',Auth::user()->id)->where('id_produk',$produks->id)->count(); 
-      //jika belum ada belanjaan
-    if ($keranjang_belanjaan == 0) {
-     $stok = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk),0) - IFNULL(SUM(jumlah_keluar),0) as stok_produk')])->where('id_produk', $produks->id)->where('warung_id', $produks->id_warung)->first();
-     $cek_produk = $stok->stok_produk; 
+    if (Auth::check()) {
+     $keranjang_belanjaan = KeranjangBelanja::with(['produk','pelanggan'])->where('id_pelanggan',Auth::user()->id)->where('id_produk',$produks->id)->count(); 
    }
-   elseif($produks->hitung_stok == 1){
+   else {
+    $keranjang_belanjaan = 0;
+  }   
+      //jika belum ada belanjaan
+  if ($keranjang_belanjaan == 0) {
+   $stok = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk),0) - IFNULL(SUM(jumlah_keluar),0) as stok_produk')])->where('id_produk', $produks->id)->where('warung_id', $produks->id_warung)->first();
+   $cek_produk = $stok->stok_produk; 
+ }
+ elseif($produks->hitung_stok == 1){
       //jika produk tersebut jasa
-    $cek_produk = 1;
-  } 
-  elseif($keranjang_belanjaan > 0){
+  $cek_produk = 1;
+} 
+elseif($keranjang_belanjaan > 0){
       //jika sudah ada belanjaan
-    $cek_produk = KeranjangBelanja::where('id_pelanggan',Auth::user()->id)->where('id_produk',$produks->id)->first(); 
-    $stok = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk),0) - IFNULL(SUM(jumlah_keluar),0) as stok_produk')])->where('id_produk', $cek_produk->id_produk)->where('warung_id', $produks->id_warung)->first();
-    $cek_produk = $stok->stok_produk - $cek_produk->jumlah_produk; 
+  $cek_produk = KeranjangBelanja::where('id_pelanggan',Auth::user()->id)->where('id_produk',$produks->id)->first(); 
+  $stok = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk),0) - IFNULL(SUM(jumlah_keluar),0) as stok_produk')])->where('id_produk', $cek_produk->id_produk)->where('warung_id', $produks->id_warung)->first();
+  $cek_produk = $stok->stok_produk - $cek_produk->jumlah_produk; 
 
-  }
+}
 
-  return $cek_produk;
+return $cek_produk;
 }
 
 
@@ -192,7 +202,7 @@ public function tombolBeli($cek_produk,$produks){
   $agent = new Agent();
   if ($agent->isMobile()) {
                   //JIKA USER LOGIN BUKAN PELANGGAN MAKA TIDAK BISA PESAN PRODUK
-    if(Auth::user()->tipe_user == 3){
+    if(Auth::check() && Auth::user()->tipe_user == 3){
      if ($cek_produk == 0) {
       $tombol_beli = '<a style="background-color:#01573e" class="btn btn-block tombolBeli btn-lg" rel="tooltip" title="Stok Tidak Ada"> Beli Sekarang </a>';  
     }else{
@@ -206,7 +216,7 @@ public function tombolBeli($cek_produk,$produks){
 }
 else{
                   //JIKA USER LOGIN BUKAN PELANGGAN MAKA TIDAK BISA PESAN PRODUK
-  if(Auth::user()->tipe_user == 3){
+  if(Auth::check() && Auth::user()->tipe_user == 3 ){
     if ($cek_produk == 0) {
       $tombol_beli = '<a style="background-color:#01573e" class="btn btn-block tombolBeli" rel="tooltip" title="Stok Tidak Ada" disabled="" >Beli Sekarang </a>';
     }else{

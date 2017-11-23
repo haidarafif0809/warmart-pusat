@@ -21,96 +21,21 @@ class KeranjangBelanjaController extends Controller
 
 	public function daftar_belanja()
 	{
-		SEOMeta::setTitle('War-Mart.id');
-		SEOMeta::setDescription('Warmart marketplace warung muslim pertama di Indonesia');
-		SEOMeta::setCanonical('https://war-mart.id');
-		SEOMeta::addKeyword(['warmart', 'warung', 'marketplace','toko online','belanja','lazada']);
-
-		OpenGraph::setDescription('Warmart marketplace warung muslim pertama di Indonesia');
-		OpenGraph::setTitle('War-Mart.id');
-		OpenGraph::setUrl('https://war-mart.id');
-		OpenGraph::addProperty('type', 'articles'); 
-
+		
+		$this->seo();
 		$agent = new Agent();
 
 		$keranjang_belanjaan = KeranjangBelanja::with(['produk','pelanggan'])->where('id_pelanggan',Auth::user()->id)->get();
 		$cek_belanjaan = $keranjang_belanjaan->count();  
 
 		$jumlah_produk = KeranjangBelanja::select([DB::raw('IFNULL(SUM(jumlah_produk),0) as total_produk')])->first();  
-		//FOTO WARMART
-		$logo_warmart = "".asset('/assets/img/examples/warmart_logo.png')."";
-      	//MEANMPILKAN PRODUK BELANJAAN 
-		$produk_belanjaan = '';
-		$subtotal = 0;
-		foreach ($keranjang_belanjaan as $keranjang_belanjaans) {  
-			$barang = Barang::where('id',$keranjang_belanjaans->id_produk)->first();
-			
-			$stok = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk),0) - IFNULL(SUM(jumlah_keluar),0) as stok_produk')])->where('id_produk', $keranjang_belanjaans->id_produk)
-			->where('warung_id', $barang->id_warung)->first();
 
-			$sisa_stok_keluar = $stok->stok_produk - $keranjang_belanjaans->jumlah_produk;
+      	//MEANMPILKAN PRODUK BELANJAAN DAN SUBTUTALNYA
+		$produk_belanjaan_dan_subtotal = $this->tampilanProdukKeranjangBelanja($keranjang_belanjaan);
+		$subtotal = number_format($produk_belanjaan_dan_subtotal['subtotal'],0,',','.');
+		$produk_belanjaan = $produk_belanjaan_dan_subtotal['produk_belanjaan'];
 
-			$harga_produk = $keranjang_belanjaans->produk->harga_jual * $keranjang_belanjaans->jumlah_produk;
-
-			$produk_belanjaan .= '
-			<tr class="card" style="margin-bottom: 3px;margin-top: 3px;width: 725px;">
-			<td>
-			<div class="img-container"> ';
-			if ($keranjang_belanjaans->produk->foto != NULL) {
-				$produk_belanjaan .= '<img src="foto_produk/'.$keranjang_belanjaans->produk->foto.'">';
-			}
-			else{
-				$produk_belanjaan .= '<img src="image/foto_default.png">';
-			}
-			$produk_belanjaan .= '
-			</div>
-			</td>
-			<td class="td-name">
-			<a href="'. url('detail-produk/'.$keranjang_belanjaans->id_produk.''). '">'. $keranjang_belanjaans->produk->nama_barang .'</a>
-			<br />
-			<small><i class="material-icons">store</i>  '. $keranjang_belanjaans->produk->warung->name .' </small>
-			</td>  
-			<td class="td-number">
-			<b>Rp. '. number_format($harga_produk,0,',','.') .'</b> 
-			</td> 
-			<td class="td-number">
-			<div class="btn-group">';
-
-			if ($keranjang_belanjaans->jumlah_produk == 1) {
-				$produk_belanjaan .= '
-				<a class="btn btn-round btn-info btn-xs"   style="background-color: #01573e" disabled="true"> <i class="material-icons">remove</i> </a>'; 
-			}
-			else {
-				$produk_belanjaan .= ' 
-				<a href=" '. url('/keranjang-belanja/kurang-jumlah-produk-keranjang-belanja/'.$keranjang_belanjaans->id_keranjang_belanja.''). '" class="btn btn-round btn-info btn-xs"   style="background-color: #01573e"> <i class="material-icons">remove</i></a>';
-			}
-
-			$produk_belanjaan .= ' <a class="btn btn-round btn-info btn-xs"   style="background-color: #01573e">'. $keranjang_belanjaans->jumlah_produk .' </a>';
-
-
-			if ($sisa_stok_keluar <= 0) {
-				$produk_belanjaan .= '
-				<a class="btn btn-round btn-info btn-xs"   style="background-color: #01573e" disabled="true"> <i class="material-icons">add</i> </a>'; 
-			}
-			else {
-				$produk_belanjaan .= '
-				<a href=" '. url('/keranjang-belanja/tambah-jumlah-produk-keranjang-belanja/'.$keranjang_belanjaans->id_keranjang_belanja.''). '" class="btn btn-round btn-info btn-xs"   style="background-color: #01573e"> <i class="material-icons">add</i> </a>';
-			}
-			$produk_belanjaan .= '
-			</div>
-			</td>   
-			<td class="td-actions">
-			<a id="btnHapusProduk" href=" '. url('/keranjang-belanja/hapus-produk-keranjang-belanja/'.$keranjang_belanjaans->id_keranjang_belanja.''). '" type="button" rel="tooltip" data-placement="left" title="Remove item" class="btn btn-simple">
-			<i class="material-icons">close</i>
-			</a>
-			</td>
-			</tr>  
-			';  
-			$subtotal = $subtotal += $harga_produk;
-		}
-
-
-		return view('layouts.keranjang_belanja',['keranjang_belanjaan'=>$keranjang_belanjaan,'cek_belanjaan'=>$cek_belanjaan,'agent'=>$agent,'produk_belanjaan'=>$produk_belanjaan,'jumlah_produk'=>$jumlah_produk,'logo_warmart'=>$logo_warmart,'subtotal'=>number_format($subtotal,0,',','.')]);
+		return view('layouts.keranjang_belanja',['keranjang_belanjaan'=>$keranjang_belanjaan,'cek_belanjaan'=>$cek_belanjaan,'agent'=>$agent,'produk_belanjaan'=>$produk_belanjaan,'jumlah_produk'=>$jumlah_produk,'subtotal'=>$subtotal]);
 
 	}
 
@@ -168,5 +93,135 @@ class KeranjangBelanjaController extends Controller
 		}
 		return redirect()->back();
 
+	}
+
+
+	public function fotoProduk($keranjang_belanjaans){
+		if ($keranjang_belanjaans->produk->foto != NULL) {
+			$foto_produk = '<img src="foto_produk/'.$keranjang_belanjaans->produk->foto.'">';
+		}
+		else{
+			$foto_produk = '<img src="image/foto_default.png">';
+		}
+		return $foto_produk;
+	}
+
+	public function tombolKurangiProduk($keranjang_belanjaans){
+		if ($keranjang_belanjaans->jumlah_produk == 1) {
+			$tombolKurangiProduk = '
+			<a class="btn btn-round btn-info btn-xs"   style="background-color: #01573e" disabled="true"> <i class="material-icons">remove</i> </a>'; 
+		}
+		else {
+			$tombolKurangiProduk = ' 
+			<a href=" '. url('/keranjang-belanja/kurang-jumlah-produk-keranjang-belanja/'.$keranjang_belanjaans->id_keranjang_belanja.''). '" class="btn btn-round btn-info btn-xs"   style="background-color: #01573e"> <i class="material-icons">remove</i></a>';
+		}
+		return $tombolKurangiProduk;
+	}
+
+	public function tombolTambahiProduk ($sisa_stok,$keranjang_belanjaans){
+		if ($sisa_stok <= 0) {
+			$tombolTambahiProduk = '
+			<a class="btn btn-round btn-info btn-xs"   style="background-color: #01573e" disabled="true"> <i class="material-icons">add</i> </a>'; 
+		}
+		else {
+			$tombolTambahiProduk = '
+			<a href=" '. url('/keranjang-belanja/tambah-jumlah-produk-keranjang-belanja/'.$keranjang_belanjaans->id_keranjang_belanja.''). '" class="btn btn-round btn-info btn-xs"   style="background-color: #01573e"> <i class="material-icons">add</i> </a>';
+		}
+
+		return $tombolTambahiProduk;
+	}
+
+	public function cardProdukBelanjaan($harga_produk,$sisa_stok,$keranjang_belanjaans){
+		$produk_belanjaan = '
+		<tr class="card" style="margin-bottom: 3px;margin-top: 3px;width: 725px;">
+		<td>
+		<div class="img-container"> ';
+		$produk_belanjaan .= $this->fotoProduk($keranjang_belanjaans);
+		$produk_belanjaan .= '
+		</div>
+		</td>
+		<td class="td-name flexFont">
+		<a href="'. url('detail-produk/'.$keranjang_belanjaans->id_produk.''). '">'. $this->namaProduk($keranjang_belanjaans->produk->nama_barang) .'</a>
+		<br />
+		<small><i class="material-icons">store</i>  '. $keranjang_belanjaans->produk->warung->name .' </small>
+		</td>  
+		<td class="td-number">
+		<b>Rp. '. number_format($harga_produk,0,',','.') .'</b> 
+		</td> 
+		<td class="td-number">
+		<div class="btn-group">';
+
+			//tombol kurangi produk
+		$produk_belanjaan .= $this->tombolKurangiProduk($keranjang_belanjaans);
+
+		$produk_belanjaan .= ' <a class="btn btn-round btn-info btn-xs"   style="background-color: #01573e">'. $keranjang_belanjaans->jumlah_produk .' </a>';
+			//tombol tambahi
+		$produk_belanjaan .= $this->tombolTambahiProduk($sisa_stok,$keranjang_belanjaans);
+
+		$produk_belanjaan .= '
+		</div>
+		</td>   
+		<td class="td-actions">
+		<a id="btnHapusProduk" href=" '. url('/keranjang-belanja/hapus-produk-keranjang-belanja/'.$keranjang_belanjaans->id_keranjang_belanja.''). '" type="button" rel="tooltip" data-placement="left" title="Remove item" class="btn btn-simple">
+		<i class="material-icons">close</i>
+		</a>
+		</td>
+		</tr>  
+		';  
+		return $produk_belanjaan;
+	}
+
+	public function tampilanProdukKeranjangBelanja($keranjang_belanjaan){
+		$subtotal = 0;
+		$produk_belanjaan = "";
+		foreach ($keranjang_belanjaan as $keranjang_belanjaans) {  
+
+			$barang = Barang::where('id',$keranjang_belanjaans->id_produk);
+			//jika barang yang di keranjang ternyata sudah dihapus warung
+			if ($barang->count() == 0) {
+				KeranjangBelanja::where('id_produk',$keranjang_belanjaans->id_produk)->delete();
+			}
+			else {
+				$sisa_stok = $barang->first()->stok - $keranjang_belanjaans->jumlah_produk;
+				$harga_produk = $keranjang_belanjaans->produk->harga_jual ;
+				$subtotal_produk = $keranjang_belanjaans->produk->harga_jual * $keranjang_belanjaans->jumlah_produk;
+			//card produk belanjaan 
+				$produk_belanjaan .= $this->cardProdukBelanjaan($harga_produk,$sisa_stok,$keranjang_belanjaans);	
+				$subtotal += $subtotal_produk;
+			}
+		}
+
+		return array('produk_belanjaan' => $produk_belanjaan , 'subtotal' => $subtotal);
+	}
+
+	public function seo(){
+		SEOMeta::setTitle('War-Mart.id');
+		SEOMeta::setDescription('Warmart marketplace warung muslim pertama di Indonesia');
+		SEOMeta::setCanonical('https://war-mart.id');
+		SEOMeta::addKeyword(['warmart', 'warung', 'marketplace','toko online','belanja','lazada']);
+
+		OpenGraph::setDescription('Warmart marketplace warung muslim pertama di Indonesia');
+		OpenGraph::setTitle('War-Mart.id');
+		OpenGraph::setUrl('https://war-mart.id');
+		OpenGraph::addProperty('type', 'articles'); 
+	}
+
+
+	public function namaProduk($nama){
+		if (strlen(strip_tags($nama)) <= 33) {
+
+			$nama_produk = strip_tags($nama);
+		}
+		else{
+			$agent = new Agent();
+			if ($agent->isMobile()) {
+				$nama_produk = ''.strip_tags(substr($nama, 0, 35)).'...'; 
+			}
+			else {
+				$nama_produk = ''.strip_tags(substr($nama, 0, 30)).'...'; 
+			}
+
+		}
+		return $nama_produk;
 	}
 }
