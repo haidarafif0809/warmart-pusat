@@ -96,7 +96,7 @@
           </li>
           @endif
           @endif
-          @if(Auth::check() && (Auth::user()->tipe == 4 OR Auth::user()->tipe == 1 ))
+          @if(Auth::check() && (Auth::user()->tipe_user == 4 OR Auth::user()->tipe_user == 1 ))
           <li>
             <a href="{{ url('/dashboard')}}">
               <i class="material-icons">dashboard</i>dashboard
