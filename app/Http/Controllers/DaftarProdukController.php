@@ -95,22 +95,22 @@ class DaftarProdukController extends Controller
       $jumlah_produk = Barang::where('kategori_barang_id', $kategori->id)->whereIn('id_warung', $array_warung)->count();
       $kategori_produk .= '
       <li>
-        <a href="'.route('daftar_produk.filter_kategori',$kategori->id).'" style="color:white"><i class="material-icons">'.$kategori->kategori_icon.'</i>'.$kategori->nama_kategori_barang.' - '.$jumlah_produk.'</a>
+      <a href="'.route('daftar_produk.filter_kategori',$kategori->id).'" style="color:white"><i class="material-icons">'.$kategori->kategori_icon.'</i>'.$kategori->nama_kategori_barang.' - '.$jumlah_produk.'</a>
       </li>';
     }
     $kategori_produk .= '
     <li class="dropdown">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color:white"><i class="material-icons">list</i> Lain - Lain <b class="caret"></b></a>
-      <ul class="dropdown-menu dropdown-with-icons">';
-        foreach ($kategori->get() as $kategori) {
-          $jumlah_produk = Barang::where('kategori_barang_id', $kategori->id)->whereIn('id_warung', $array_warung)->count();
-          $kategori_produk .= '
-          <li>
-            <a href="'.route('daftar_produk.filter_kategori',$kategori->id).'"><i class="material-icons">'.$kategori->kategori_icon.'</i>'.$kategori->nama_kategori_barang.' - '.$jumlah_produk.'</a>
-          </li>';
-        }
-        $kategori_produk .= '
-      </ul>
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color:white"><i class="material-icons">list</i> Lain - Lain <b class="caret"></b></a>
+    <ul class="dropdown-menu dropdown-with-icons">';
+    foreach ($kategori->get() as $kategori) {
+      $jumlah_produk = Barang::where('kategori_barang_id', $kategori->id)->whereIn('id_warung', $array_warung)->count();
+      $kategori_produk .= '
+      <li>
+      <a href="'.route('daftar_produk.filter_kategori',$kategori->id).'"><i class="material-icons">'.$kategori->kategori_icon.'</i>'.$kategori->nama_kategori_barang.' - '.$jumlah_produk.'</a>
+      </li>';
+    }
+    $kategori_produk .= '
+    </ul>
     </li>';
 
     return $kategori_produk;
@@ -243,7 +243,7 @@ class DaftarProdukController extends Controller
        if ($cek_produk == 0) {
         $tombol_beli = '<a style="background-color:#01573e" class="btn btn-block tombolBeli" rel="tooltip" title="Stok Tidak Ada"> Beli Sekarang </a>';  
       }else{
-        $tombol_beli = '<a href="'.url("/keranjang-belanja") .'" style="background-color:#01573e" class="btn btn-block tombolBeli" id="btnBeliSekarang"> Beli Sekarang </a>';            
+        $tombol_beli = '<a href="'. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" id="btnBeliSekarang" style="background-color:#01573e" class="btn btn-block tombolBeli" rel="tooltip" title="Tambah Ke Keranjang Belanja"> Beli Sekarang </a>';           
       }
     }
     else{
@@ -272,43 +272,43 @@ public static function tidakAdaProduk(){
   $produk_kosong ="";
   $produk_kosong .='
   <div class="col-md-12 col-s,-12 col-xs-12">
-    <div class="card" data-colored-shadow="false" style="background-color:#f7f7f7">
-      <div class="card-content">';
-        $agent = new Agent();
-        if ($agent->isMobile()) {
-          $produk_kosong .='<h6 class="text-center" style="margin:0px">Oops... Produk Tidak Dapat Ditemukan.</h6>
-          <p class="text-center">Silakan menggunakan kata kunci lain.</p>';
-        }
-        else{
-          $produk_kosong .='<h3 class="title text-center" style="margin:0px">Oops... Hasil Pencarian Produk Tidak Dapat Ditemukan.</h3>
-          <h5 class="text-center" style="margin:0px">Silakan melakukan pencarian kembali dengan menggunakan kata kunci lain.</h5>';
-        }        
-        $produk_kosong .='</div>
-      </div>
-    </div>'; 
-
-    return $produk_kosong;
+  <div class="card" data-colored-shadow="false" style="background-color:#f7f7f7">
+  <div class="card-content">';
+  $agent = new Agent();
+  if ($agent->isMobile()) {
+    $produk_kosong .='<h6 class="text-center" style="margin:0px">Oops... Produk Tidak Dapat Ditemukan.</h6>
+    <p class="text-center">Silakan menggunakan kata kunci lain.</p>';
   }
+  else{
+    $produk_kosong .='<h3 class="title text-center" style="margin:0px">Oops... Hasil Pencarian Produk Tidak Dapat Ditemukan.</h3>
+    <h5 class="text-center" style="margin:0px">Silakan melakukan pencarian kembali dengan menggunakan kata kunci lain.</h5>';
+  }        
+  $produk_kosong .='</div>
+  </div>
+  </div>'; 
 
-  public static function namaProduk($produks){
-    if (strlen(strip_tags($produks->nama)) <= 33) {
+  return $produk_kosong;
+}
 
-      $nama_produk = ''.strip_tags($produks->nama);
+public static function namaProduk($produks){
+  if (strlen(strip_tags($produks->nama)) <= 33) {
+
+    $nama_produk = ''.strip_tags($produks->nama);
+  }
+  else{
+    $agent = new Agent();
+    if ($agent->isMobile()) {
+      $nama_produk = ''.strip_tags(substr($produks->nama, 0, 35)).'...'; 
     }
-    else{
-      $agent = new Agent();
-      if ($agent->isMobile()) {
-        $nama_produk = ''.strip_tags(substr($produks->nama, 0, 35)).'...'; 
-      }
-      else {
-       $nama_produk = ''.strip_tags(substr($produks->nama, 0, 60)).'...'; 
-     }
-
+    else {
+     $nama_produk = ''.strip_tags(substr($produks->nama, 0, 60)).'...'; 
    }
-   return $nama_produk;
- }
 
- public static function namaWarung($warung){
+ }
+ return $nama_produk;
+}
+
+public static function namaWarung($warung){
 
   if (strlen($warung->name) > 25) {
     # code...
@@ -339,44 +339,44 @@ public static function cardProduk($produks){
     $cek_produk = DaftarProdukController::cekStokProduk($produks);
     $card_produk .= '      
     <div class="col-md-3 col-sm-6 col-xs-6 list-produk " style=" margin-bottom:10px;">
-      <div class="card cards card-pricing">
-        <a href="'.url("/detail-produk/".$produks->id."") .'">
-          <div class="card-image">';
-            $card_produk .= DaftarProdukController::fotoProduk($produks);
-            $card_produk .= '
-          </div>
-        </a>
-        <div class="card-content">
-          <div class="footer">  
-            <p class="nama-produk flexFont">'.$cek_produk.'';
+    <div class="card cards card-pricing">
+    <a href="'.url("/detail-produk/".$produks->id."") .'">
+    <div class="card-image">';
+    $card_produk .= DaftarProdukController::fotoProduk($produks);
+    $card_produk .= '
+    </div>
+    </a>
+    <div class="card-content">
+    <div class="footer">  
+    <p class="nama-produk flexFont">'.$cek_produk.'';
 
-              $card_produk .= '<a href="'.url("/detail-produk/".$produks->id."") .'" >';
-              $card_produk .= DaftarProdukController::namaProduk($produks);
-              $card_produk .= '</a></p>
-              <p style="color:#d21f30;" class="flexFont"> '.$produks->rupiah.' / '.$produks->satuan->nama_satuan.' </p>';
-              $card_produk .= '<p class="flexFont">'.DaftarProdukController::namaWarung($warung).'</p>';
+    $card_produk .= '<a href="'.url("/detail-produk/".$produks->id."") .'" >';
+    $card_produk .= DaftarProdukController::namaProduk($produks);
+    $card_produk .= '</a></p>
+    <p style="color:#d21f30;" class="flexFont"> '.$produks->rupiah.' / '.$produks->satuan->nama_satuan.' </p>';
+    $card_produk .= '<p class="flexFont">'.DaftarProdukController::namaWarung($warung).'</p>';
       //tombol beli
-              $card_produk .= DaftarProdukController::tombolBeli($cek_produk,$produks);
-              $card_produk .= '
-            </div>
-          </div>
-        </div>
-      </div>';
-    }
-    return $card_produk;
+    $card_produk .= DaftarProdukController::tombolBeli($cek_produk,$produks);
+    $card_produk .= '
+    </div>
+    </div>
+    </div>
+    </div>';
   }
+  return $card_produk;
+}
 
-  public static function daftarProduk($data_produk){
-   if ($data_produk->count() > 0) {
-    $daftar_produk = "";
-    foreach ($data_produk as $produks) {
-      $daftar_produk .= DaftarProdukController::cardProduk($produks);
-    }
-    if ($daftar_produk == "") {
-     $daftar_produk = DaftarProdukController::tidakAdaProduk();
-   }
+public static function daftarProduk($data_produk){
+ if ($data_produk->count() > 0) {
+  $daftar_produk = "";
+  foreach ($data_produk as $produks) {
+    $daftar_produk .= DaftarProdukController::cardProduk($produks);
+  }
+  if ($daftar_produk == "") {
+   $daftar_produk = DaftarProdukController::tidakAdaProduk();
  }
- else {
+}
+else {
   $daftar_produk = DaftarProdukController::tidakAdaProduk();
 }
 
@@ -417,41 +417,41 @@ public static function cardWarung($warungs){
   $card_warung = "";
   $card_warung .= '      
   <div class="col-md-3 col-sm-6 col-xs-6 list-produk " style=" margin-bottom:10px;">
-    <div class="card cards card-pricing" style="text-align: left;">
-      <div class="card-content">
-        <div class="footer">
-          <div class="row">
-            <div class="col-md-1 col-sm-1 col-xs-1">                      
-              <p class="nama-produk flexFont">                
-                <i class="material-icons">store</i>
-              </p>                    
-              <p class="nama-produk flexFont">
-                <i class="material-icons">place</i>
-              </p>
-            </div>
-            <div class="col-md-9 col-sm-9 col-xs-9">              
-              <p class="nama-produk flexFont">
-                <a href="halaman-warung/'.$warungs->id.'" >';
-                  $card_warung .= DaftarProdukController::warungNama($warungs);
-                  $card_warung .= '
-                </a>
-              </p>
-              <p class="nama-produk flexFont">            
-                <a href="halaman-warung/'.$warungs->id.'">';
-                  $card_warung .= DaftarProdukController::alamatWarung($warungs);
-                  $card_warung .= '
-                </a>
-              </p>
-            </div>    
-          </div>        
-          <p class="btnWarung">';
+  <div class="card cards card-pricing" style="text-align: left;">
+  <div class="card-content">
+  <div class="footer">
+  <div class="row">
+  <div class="col-md-1 col-sm-1 col-xs-1">                      
+  <p class="nama-produk flexFont">                
+  <i class="material-icons">store</i>
+  </p>                    
+  <p class="nama-produk flexFont">
+  <i class="material-icons">place</i>
+  </p>
+  </div>
+  <div class="col-md-9 col-sm-9 col-xs-9">              
+  <p class="nama-produk flexFont">
+  <a href="halaman-warung/'.$warungs->id.'" >';
+  $card_warung .= DaftarProdukController::warungNama($warungs);
+  $card_warung .= '
+  </a>
+  </p>
+  <p class="nama-produk flexFont">            
+  <a href="halaman-warung/'.$warungs->id.'">';
+  $card_warung .= DaftarProdukController::alamatWarung($warungs);
+  $card_warung .= '
+  </a>
+  </p>
+  </div>    
+  </div>        
+  <p class="btnWarung">';
           //tombol kunjungi
-            $card_warung .= DaftarProdukController::tombolKunjungi($warungs);
-            $card_warung .= '
-          </p>
-        </div>
-      </div>
-    </div>
+  $card_warung .= DaftarProdukController::tombolKunjungi($warungs);
+  $card_warung .= '
+  </p>
+  </div>
+  </div>
+  </div>
   </div>';
   return $card_warung;
 }
@@ -502,22 +502,22 @@ public static function tidakAdaWarung(){
   $warung_kosong ="";
   $warung_kosong .='
   <div class="col-md-12 col-s,-12 col-xs-12">
-    <div class="card" data-colored-shadow="false" style="background-color:#f7f7f7">
-      <div class="card-content">';
-        $agent = new Agent();
-        if ($agent->isMobile()) {
-          $warung_kosong .='<h6 class="text-center" style="margin:0px">Oops... Warung Tidak Dapat Ditemukan.</h6>
-          <p class="text-center">Silakan menggunakan kata kunci lain.</p>';
-        }
-        else{
-          $warung_kosong .='<h3 class="title text-center" style="margin:0px">Oops... Hasil Pencarian Warung Tidak Dapat Ditemukan.</h3>
-          <h5 class="text-center" style="margin:0px">Silakan melakukan pencarian kembali dengan menggunakan kata kunci lain.</h5>';
-        }        
-        $warung_kosong .='</div>
-      </div>
-    </div>'; 
-
-    return $warung_kosong;
+  <div class="card" data-colored-shadow="false" style="background-color:#f7f7f7">
+  <div class="card-content">';
+  $agent = new Agent();
+  if ($agent->isMobile()) {
+    $warung_kosong .='<h6 class="text-center" style="margin:0px">Oops... Warung Tidak Dapat Ditemukan.</h6>
+    <p class="text-center">Silakan menggunakan kata kunci lain.</p>';
   }
+  else{
+    $warung_kosong .='<h3 class="title text-center" style="margin:0px">Oops... Hasil Pencarian Warung Tidak Dapat Ditemukan.</h3>
+    <h5 class="text-center" style="margin:0px">Silakan melakukan pencarian kembali dengan menggunakan kata kunci lain.</h5>';
+  }        
+  $warung_kosong .='</div>
+  </div>
+  </div>'; 
+
+  return $warung_kosong;
+}
 
 }
