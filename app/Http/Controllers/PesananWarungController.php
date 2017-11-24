@@ -176,6 +176,8 @@ class PesananWarungController extends Controller
 
 		DetailPenjualan::where('id_penjualan',$penjualan->first()->id)->delete();
 		TransaksiKas::where('no_faktur',$penjualan->first()->id)->delete();
+		Hpp::where('no_faktur', $penjualan->first()->id)->where('jenis_hpp', 2)->delete();
+
 		$penjualan->delete();
 		DB::commit(); 
 

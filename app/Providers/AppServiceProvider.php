@@ -18,6 +18,8 @@ use App\Observers\DetailItemMasukObserver;
 use App\Observers\ItemMasukObserver;
 use App\Observers\DetailPembelianObserver;
 use App\Observers\PembelianObserver;
+use App\Observers\DetailPenjualanObserver;
+use App\DetailPenjualan;
 use App\Warung;
 use App\Kas;
 use App\KasKeluar;
@@ -58,6 +60,7 @@ class AppServiceProvider extends ServiceProvider
         ItemMasuk::observe(ItemMasukObserver::class);
         DetailPembelian::observe(DetailPembelianObserver::class);
         Pembelian::observe(PembelianObserver::class);
+        DetailPenjualan::observe(DetailPenjualanObserver::class);
     }
 
     /**
