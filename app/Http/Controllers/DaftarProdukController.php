@@ -348,7 +348,7 @@ public static function cardProduk($produks){
         </a>
         <div class="card-content">
           <div class="footer">  
-            <p class="nama-produk flexFont">'.$cek_produk.'';
+            <p class="nama-produk flexFont">';
 
               $card_produk .= '<a href="'.url("/detail-produk/".$produks->id."") .'" >';
               $card_produk .= DaftarProdukController::namaProduk($produks);
