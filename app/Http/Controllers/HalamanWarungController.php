@@ -211,8 +211,6 @@ class HalamanWarungController extends Controller
 			else{
 				$card_warung = '';
     				$card_warung .= '
-    				<div class="row">
-					<div class="col-md-6 col-md-offset-3">
 						<div class="profile-tabs">
 		                    <div class="nav-align-center">
 								<ul class="nav nav-pills nav-pills-icons" role="tablist">
@@ -241,8 +239,6 @@ class HalamanWarungController extends Controller
 			                            </a>
 			                        </li>          
 			                    </ul>
-			                  </div>
-							</div>
 						</div>
 					</div>';
 			}
