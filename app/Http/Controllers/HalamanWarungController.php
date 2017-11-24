@@ -26,15 +26,14 @@ class HalamanWarungController extends Controller
       $keranjang_belanjaan = KeranjangBelanja::with(['produk','pelanggan'])->where('id_pelanggan',Auth::user()->id)->get();
       $cek_belanjaan = $keranjang_belanjaan->count();  
         //Pilih warung yang sudah dikonfirmasi admin
-      $data_warung = User::select(['id_warung'])->where('id_warung',$id)->where('konfirmasi_admin', 1)->get();
-      $array_warung = array();
-      foreach ($data_warung as $data_warungs) {
-        array_push($array_warung, $data_warungs->id_warung);
-      }
+      	$data_warung = User::select(['id_warung'])->where('id_warung',$id)->where('konfirmasi_admin', 1)->get();
+     	$array_warung = array();
+    	foreach ($data_warung as $data_warungs) {
+      	array_push($array_warung, $data_warungs->id_warung);
+    	}
         //PILIH DATA PRODUK
 
-      $data_produk = Barang::select(['id','kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung','konfirmasi_admin','satuan_id'])
-      ->inRandomOrder()
+      $data_produk = Barang::inRandomOrder()
       ->whereIn('id_warung', $array_warung)->paginate(12);
 
         //PILIH DATA KATEGORI PRODUK
@@ -50,14 +49,14 @@ class HalamanWarungController extends Controller
       $list_warung = HalamanWarungController::cardWarung($id);
 
           //TAMPIL NAMA WARUNG
-    	 $data_warung = Warung::select(['name','id'])->where('id', $id)->first();
+    	 $warungs_data = Warung::select(['name','id'])->where('id', $id)->first();
      	$nama_warung = 'Produk';
 
         //TAMPIL DAFTAR PRODUK
       $daftar_produk = DaftarProdukController::daftarProduk($data_produk);
         //TAMPIL KATEGORI
       $kategori_produk = HalamanWarungController::produkKategori($kategori,$id);
-      $nama_kategori = "Warung : ".$data_warung->name;
+      $nama_kategori = "Warung : ".$warungs_data->name;
 
         //TAMPILAN MOBILE
       $agent = new Agent();
@@ -72,21 +71,17 @@ class HalamanWarungController extends Controller
       $cek_belanjaan = $keranjang_belanjaan->count(); 
     //Pilih warung yang sudah dikonfirmasi admin
       $data_warung = User::select(['id_warung'])->where('id_warung',$id_warung)->where('konfirmasi_admin', 1)->groupBy('id_warung')->get();
-      $array_warung = array();
-      foreach ($data_warung as $data_warungs) {
-        array_push($array_warung, $data_warungs->id_warung);
-      }
-
+     	$array_warung = array();
+    	foreach ($data_warung as $data_warungs) {
+      	array_push($array_warung, $data_warungs->id_warung);
+    	}
   		//PILIH PRODUK
-      $data_produk = Barang::select(['id','kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung','konfirmasi_admin','satuan_id'])
-      ->where('kategori_barang_id', $id)->whereIn('id_warung', $array_warung)->inRandomOrder()->paginate(12);
+      $data_produk = Barang::where('kategori_barang_id', $id)->whereIn('id_warung',  $array_warung)->inRandomOrder()->paginate(12);
 
-      
       //TAMPIL LIST WARUNG
       $list_warung = HalamanWarungController::cardWarung($id_warung);
 
          //TAMPIL NAMA WARUNG
-     	$data_warung = Warung::select(['name','id'])->where('id', $id_warung)->first();
      	$nama_warung = 'Produk';
 
   		//FOTO HEADER
@@ -189,23 +184,23 @@ class HalamanWarungController extends Controller
     $card_warung .= '<div class="card card-raised card-form-horizontal">
             <div class="card-content">
                 <div class="row">
-                    <div class="col-md-2 col-sm-6 col-xs-6">
-                    <i class="material-icons">store</i> <b>Warung</b>
+                    <div class="col-md-3 col-sm-6 col-xs-6">
+                    <i  class="material-icons">store</i> 
                     <p>';$card_warung .= DaftarProdukController::warungNama($warung);
                     $card_warung .= '</p>
                     </div>
                     <div class="col-md-2 col-sm-6 col-xs-6">
-                    <i class="material-icons">place</i>  <b>Lokasi</b>
+                    <i  class="material-icons">place</i>  
                     <p>';$card_warung .= DaftarProdukController::alamatWarung($warung);
                     $card_warung .= '</p>
                     </div>
-                    <div class="col-md-2 col-sm-6 col-xs-6">
-                    <i class="material-icons">call</i> <b>Telpon</b>
+                    <div class="col-md-3 col-sm-6 col-xs-6">
+                    <i  class="material-icons">call</i> 
                     <p>';$card_warung .= HalamanWarungController::telponWarung($warung);
                     $card_warung .= '</p>
                     </div>
-                    <div class="col-md-4 col-sm-6 col-xs-6">
-                    <i class="material-icons">offline_pin</i> <b>Produk</b>
+                    <div class="col-md-2 col-sm-6 col-xs-6">
+                    <i  class="material-icons">offline_pin</i>
                     <p>';$card_warung .= HalamanWarungController::produkWarung($jumlah_produk_warung);
                     $card_warung .= '</p>
                     </div>
@@ -239,15 +234,15 @@ class HalamanWarungController extends Controller
 
 	public static function produkWarung($jumlah_produk_warung){
   	if (strlen(strip_tags($jumlah_produk_warung)) <= 15) {
-    $produk_warung = ''.strip_tags($jumlah_produk_warung).' Item';
+    $produk_warung = ''.strip_tags($jumlah_produk_warung).' Produk';
   	}
   	else{
     $agent = new Agent();
     if ($agent->isMobile()) {
-      $produk_warung = ''.strip_tags(substr($jumlah_produk_warung, 0, 35)).'... Item'; 
+      $produk_warung = ''.strip_tags(substr($jumlah_produk_warung, 0, 35)).'... Produk'; 
     }
     else {
-      $produk_warung = ''.strip_tags(substr($jumlah_produk_warung, 0, 60)).'... Item'; 
+      $produk_warung = ''.strip_tags(substr($jumlah_produk_warung, 0, 60)).'... Produk'; 
     }
   }
   return $produk_warung;
