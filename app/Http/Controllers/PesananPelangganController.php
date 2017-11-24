@@ -38,8 +38,9 @@ class PesananPelangganController extends Controller
 		$logo_warmart = "".asset('/assets/img/examples/warmart_logo.png').""; 
 		$user = Auth::user();
 
-		$pesanan_pelanggan = PesananPelanggan::where('id_pelanggan',Auth::user()->id)->get();
+		$pesanan_pelanggan = PesananPelanggan::where('id_pelanggan',Auth::user()->id)->paginate(10);
 		$cek_pesanan = $pesanan_pelanggan->count();  
+		$pagination_pesanan = $pesanan_pelanggan->links();
 
       	//MEANMPILKAN PRODUK PESANAN VERSI MOBILE 
 		$produk_pesanan_mobile = ''; 
@@ -61,9 +62,11 @@ class PesananPelangganController extends Controller
 			if ($pesanan_pelanggans->konfirmasi_pesanan == 0) {
 				$produk_pesanan_mobile .= '<b  style="color:red">Belum Di Konfirmasi</b>'; 
 			}elseif ($pesanan_pelanggans->konfirmasi_pesanan == 1) {
-				$produk_pesanan_mobile .= '<b  style="color:orange">Sedang Konfirmasi</b>'; 
+				$produk_pesanan_mobile .= '<b  style="color:orange">Sudah Diterima Warung</b>'; 
 			}elseif ($pesanan_pelanggans->konfirmasi_pesanan == 2) {
-				$produk_pesanan_mobile .= '<b  style="color:#01573e">Sudah Di Konfirmasi</b>'; 
+				$produk_pesanan_mobile .= '<b  style="color:#01573e">Selesai</b>'; 
+			}elseif ($pesanan_pelanggans->konfirmasi_pesanan == 3) {
+				$produk_pesanan_mobile .= '<b  style="color:red">Batal</b>'; 
 			}
 
 			$produk_pesanan_mobile .= ' 
@@ -84,14 +87,17 @@ class PesananPelangganController extends Controller
 			if ($pesanan_pelanggans->konfirmasi_pesanan == 0) {
 				$produk_pesanan_komputer .= '<td><b  style="color:red">Belum Di Konfirmasi</b></td>'; 
 			}elseif ($pesanan_pelanggans->konfirmasi_pesanan == 1) {
-				$produk_pesanan_komputer .= '<td><b  style="color:orange">Sedang Konfirmasi</b></td>'; 
+				$produk_pesanan_komputer .= '<td><b  style="color:orange">Sudah Diterima Warung</b></td>'; 
 			}elseif ($pesanan_pelanggans->konfirmasi_pesanan == 2) {
-				$produk_pesanan_komputer .= '<td><b  style="color:#01573e">Sudah Di Konfirmasi</b></td>'; 
+				$produk_pesanan_komputer .= '<td><b  style="color:#01573e">Selesai</b></td>'; 
+			}
+			elseif ($pesanan_pelanggans->konfirmasi_pesanan == 3) {
+				$produk_pesanan_komputer .= '<td><b  style="color:red">Batal</b></td>'; 
 			}
 			$produk_pesanan_komputer .= '</tr>';   
 		}
 
-		return view('layouts.pesanan_pelanggan',['produk_pesanan_mobile'=>$produk_pesanan_mobile,'produk_pesanan_komputer'=>$produk_pesanan_komputer,'cek_belanjaan'=>$cek_belanjaan,'agent'=>$agent,'logo_warmart'=>$logo_warmart,'user'=>$user,'cek_pesanan'=>$cek_pesanan]);
+		return view('layouts.pesanan_pelanggan',['produk_pesanan_mobile'=>$produk_pesanan_mobile,'produk_pesanan_komputer'=>$produk_pesanan_komputer,'cek_belanjaan'=>$cek_belanjaan,'agent'=>$agent,'logo_warmart'=>$logo_warmart,'user'=>$user,'cek_pesanan'=>$cek_pesanan,'pagination_pesanan'=> $pagination_pesanan]);
 	}
 
 	public function detailPesananPelanggan($id)
@@ -120,9 +126,12 @@ class PesananPelangganController extends Controller
 		if ($pesanan_pelanggan->konfirmasi_pesanan == 0) {
 			$status_pesanan .= '<td><b  style="color:red">Belum Di Konfirmasi</b></td>'; 
 		}elseif ($pesanan_pelanggan->konfirmasi_pesanan == 1) {
-			$status_pesanan .= '<td><b  style="color:orange">Sedang Konfirmasi</b></td>'; 
+			$status_pesanan .= '<td><b  style="color:orange">Sudah Diterima Warung</b></td>'; 
 		}elseif ($pesanan_pelanggan->konfirmasi_pesanan == 2) {
-			$status_pesanan .= '<td><b  style="color:#01573e">Sudah Di Konfirmasi</b></td>'; 
+			$status_pesanan .= '<td><b  style="color:#01573e">Selesai</b></td>'; 
+		}
+		elseif ($pesanan_pelanggans->konfirmasi_pesanan == 3) {
+			$produk_pesanan_mobile .= '<td><b  style="color:red">Batal</b></td>'; 
 		}
 
 		return view('layouts.detail_pesanan_pelanggan',['detail_pesanan_pelanggan'=>$detail_pesanan_pelanggan,'pesanan_pelanggan'=>$pesanan_pelanggan,'cek_belanjaan'=>$cek_belanjaan,'agent'=>$agent,'logo_warmart'=>$logo_warmart,'user'=>$user,'status_pesanan'=>$status_pesanan]);
