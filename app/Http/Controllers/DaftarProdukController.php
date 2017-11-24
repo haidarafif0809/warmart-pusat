@@ -339,16 +339,16 @@ public static function cardProduk($produks){
     $cek_produk = DaftarProdukController::cekStokProduk($produks);
     $card_produk .= '      
     <div class="col-md-3 col-sm-6 col-xs-6 list-produk " style=" margin-bottom:10px;">
-    <div class="card cards card-pricing">
-    <a href="'.url("/detail-produk/".$produks->id."") .'">
-    <div class="card-image">';
-    $card_produk .= DaftarProdukController::fotoProduk($produks);
-    $card_produk .= '
-    </div>
-    </a>
-    <div class="card-content">
-    <div class="footer">  
-    <p class="nama-produk flexFont">'.$cek_produk.'';
+      <div class="card cards card-pricing">
+        <a href="'.url("/detail-produk/".$produks->id."") .'">
+          <div class="card-image">';
+            $card_produk .= DaftarProdukController::fotoProduk($produks);
+            $card_produk .= '
+          </div>
+        </a>
+        <div class="card-content">
+          <div class="footer">  
+            <p class="nama-produk flexFont">';
 
     $card_produk .= '<a href="'.url("/detail-produk/".$produks->id."") .'" >';
     $card_produk .= DaftarProdukController::namaProduk($produks);
