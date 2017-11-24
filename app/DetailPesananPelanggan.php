@@ -19,5 +19,9 @@ class DetailPesananPelanggan extends Model
       // relasi ke pesanan pelanggan
 	public function pesanan_pelanggan(){
 		return $this->hasOne('App\PesananPelanggan','id','id_pesanan_pelanggan');
+	}
+	public function getNamaBarangAttribute() 
+	{ 
+		return title_case($this->produk->nama_barang); 
 	} 
 }
