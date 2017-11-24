@@ -76,10 +76,10 @@
 
     <div class="container">
         <h3 class="title text-center">{!! $nama_kategori !!}</h3>
-
+            {!! $list_warung !!}
         <div class="card card-raised card-form-horizontal">
             <div class="card-content">
-                {!! Form::open(['url' => route('daftar_produk.pencarian'),'method' => 'get', 'class'=>'form-horizontal']) !!}
+                {!! Form::open(['url' => route('halaman_warung.pencarian'),'method' => 'get', 'class'=>'form-horizontal']) !!}
                 <div class="row">
                     <div class="col-sm-10">
                         <div class="input-group">
@@ -87,6 +87,7 @@
                                 <i class="material-icons">search</i>
                             </span>
                             <input type="text" name="search" id="cari_produk" value="" placeholder="Cari Produk.." class="form-control" />
+                            <input type="hidden" name="id_warung" id="cari_produk" value="{{$id}}" class="form-control" />
                         </div>
                     </div>
                     <div class="col-sm-2">
@@ -95,6 +96,13 @@
                 </div>
                 {!! Form::close() !!}
             </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+                <!--Menampilkan Warung Secara Acak--> 
+                <h4 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px"> {!! $nama_warung !!}</h4> 
+            </div>   
         </div>
 
         <div class="row">
@@ -112,7 +120,7 @@
                         <div class="panel-body">
 
                             <ul class="nav" style="background-color: #01573e">                                        
-                                <li><a style="color:white" href="{{route('daftar_produk.index')}}"><i class="material-icons">format_align_justify</i> SEMUA KATEGORI</a></li>
+                                <li><a style="color:white" href="{{route('halaman-warung.halaman_warung',$id)}}"><i class="material-icons">format_align_justify</i> SEMUA KATEGORI</a></li>
                             </ul>
 
                             <ul class="nav" style="background-color: #01573e">
@@ -179,24 +187,24 @@
         </div>
 
         <div class="row">
+
+            <!--Menampilkan NAMA Warung --> 
+            <div class="col-md-12"> 
+                <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px"> {!! $nama_warung !!} </h5>             
+            </div>
+
             <div class="col-md-3"> 
                 <ul class="nav nav-tabs" data-tabs="tabs" style="background-color: #01573e">                                        
                     <li><a href="{{route('halaman-warung.halaman_warung',$id)}}"><i class="material-icons">format_align_justify</i> Semua Kategori</a></li>
                 </ul>
             </div>
+
+
             <div class="col-md-9">                        
                 <ul class="nav nav-tabs" data-tabs="tabs" style="background-color: #01573e">
                     {!! $kategori_produk !!}                        
                 </ul>
-            </div>
-           
-              <div class="col-md-12">
-                <div class="row">
-                    <!-- Menampilkan Produk -->
-                    <h4 class="title">{!! $nama_warung !!}</h4>
-                </div>
-            </div>
-
+            </div>      
 
             <div class="col-md-12"><br>
                 <div class="row">
