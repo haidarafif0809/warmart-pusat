@@ -33,7 +33,7 @@ class PesananWarungController extends Controller
 		}else{ 
 			
 			if ($request->ajax()) { 
-				$pesanan_warung = PesananPelanggan::with('pelanggan');
+				$pesanan_warung = PesananPelanggan::with('pelanggan')->where('id_warung',Auth::user()->id_warung)->orderBy('id','desc');
 				return Datatables::of($pesanan_warung)
 				->addColumn('konfirmasi_pesanan', function($konfirmasi_pesanan){
 					$status = "";
@@ -128,6 +128,8 @@ class PesananWarungController extends Controller
 
 	public function selesaiKonfirmasiPesananWarung(Request $request)
 	{  
+		           //START TRANSAKSI 
+		DB::beginTransaction(); 
 		$id_warung = Auth::user()->id_warung;
 		$pesanna_pelanggan = PesananPelanggan::where('id',$request->id_pesanan)->first();
 
@@ -141,7 +143,7 @@ class PesananWarungController extends Controller
 
 		$detail_pesanan_pelanggan = DetailPesananPelanggan::where('id_pesanan_pelanggan',$request->id_pesanan)->get();
 
-		$jumlah_masuk = "";
+		$jumlah_masuk = 0;
 		foreach ($detail_pesanan_pelanggan as $detail_pesanan_pelanggans) {
 			$subtotal = $detail_pesanan_pelanggans->harga_produk * $detail_pesanan_pelanggans->jumlah_produk;
 
@@ -152,22 +154,34 @@ class PesananWarungController extends Controller
 				'jumlah' => $detail_pesanan_pelanggans->jumlah_produk,
 				'subtotal' => $subtotal
 			]);
-			$jumlah_masuk .= $jumlah_masuk += $subtotal;
+			$jumlah_masuk = $jumlah_masuk + $subtotal;
 		}
 
 
-		$no_faktur = Penjualan::no_faktur($id_warung);
-
         //PROSES MEMBUAT TRANSAKSI KAS
-		TransaksiKas::create(['no_faktur' => $no_faktur,'jenis_transaksi'=>'penjualan' ,'jumlah_masuk' => $jumlah_masuk,'kas' => $request->id_kas,'warung_id'=> $id_warung]);
+		TransaksiKas::create(['no_faktur' => $penjualan->id,'jenis_transaksi'=>'penjualan' ,'jumlah_masuk' => $jumlah_masuk,'kas' => $request->id_kas,'warung_id'=> $id_warung]);
 
 		PesananPelanggan::where('id',$request->id_pesanan)->update(['konfirmasi_pesanan' => '2']);
+
+		DB::commit(); 
 		return redirect()->back();
 	}
 
 	public function batalkanPesananWarung($id)
 	{ 
+				           //START TRANSAKSI 
+		DB::beginTransaction(); 
 		PesananPelanggan::where('id',$id)->update(['konfirmasi_pesanan' => '3']);
+		$penjualan = Penjualan::where('id_pesanan',$id);
+		if ($penjualan->count() != 0) {
+			# code...
+			DetailPenjualan::where('id_penjualan',$penjualan->first()->id)->delete();
+			TransaksiKas::where('no_faktur',$penjualan->first()->id)->delete();
+			$penjualan->delete();
+		}
+		
+		DB::commit(); 
+
 		return redirect()->back();
 	}
 
