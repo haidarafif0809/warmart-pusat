@@ -63,9 +63,9 @@ class PemesananController extends Controller
 		->leftJoin('barangs','keranjang_belanjas.id_produk','=','barangs.id')
 		->where('id_pelanggan',Auth::user()->id);
 
-		$keranjang = $keranjang_belanjaan->limit(1)->first(); 
+		$keranjang = $keranjang_belanjaan->get(); 
 
-		$id_warung = $keranjang['id_warung'];
+		$id_warung = $keranjang_belanjaan->limit(1)->first()->id_warung; 
 		$id_user = Auth::user()->id;
 
 		$pesanan_pelanggan = PesananPelanggan::create([
@@ -75,7 +75,7 @@ class PemesananController extends Controller
 			'alamat_pemesan' => $request->alamat,
 			'jumlah_produk'     => $request->jumlah_produk,
 			'subtotal'     => $request->subtotal,
-			'id_warung' 	=> $keranjang['id_warung']
+			'id_warung' 	=> $id_warung
 		]);   
 
 		$id_pesanan_pelanggan =  $pesanan_pelanggan->id;
@@ -88,7 +88,7 @@ class PemesananController extends Controller
 
 		$this->kirimSmsKeWarung($nomor_tujuan,$id_pesanan_pelanggan);
 
-		foreach ($keranjang_belanjaan->get() as $keranjang_belanjaans) {  
+		foreach ($keranjang as $keranjang_belanjaans) {  
 
 			DetailPesananPelanggan::create([
 				'id_pesanan_pelanggan'     => $pesanan_pelanggan->id,              

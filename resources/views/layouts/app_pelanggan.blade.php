@@ -267,7 +267,12 @@
 <script src="{{ asset('js/material-kit.js?v=1.2.0')}}" type="text/javascript"></script>
 <!--  DataTables.net Plugin, full documentation here: https://datatables.net/    -->
 <script src="{{ asset('assets/js/jquery.datatables.js')}}"></script>
+{{-- lazy load image --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-lazyload/10.3.5/lazyload.min.js"></script>
 
+<script type="text/javascript">
+  var myLazyLoad = new LazyLoad();
+</script>
 <script type="text/javascript"> 
 
  $(document).on('click', '#btnBeliSekarang', function(){      

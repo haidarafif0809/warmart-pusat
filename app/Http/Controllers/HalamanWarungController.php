@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Jenssegers\Agent\Agent;
 use App\KategoriBarang;
 use App\Warung;
+use App\Kelurahan;
 use App\Barang;
 use App\User;
 use App\KeranjangBelanja; 
@@ -50,13 +51,13 @@ class HalamanWarungController extends Controller
 
           //TAMPIL NAMA WARUNG
     	 $data_warung = Warung::select(['name','id'])->where('id', $id)->first();
-     	$nama_warung = 'Produk Warung : '.$data_warung->name;
+     	$nama_warung = 'Produk';
 
         //TAMPIL DAFTAR PRODUK
       $daftar_produk = DaftarProdukController::daftarProduk($data_produk);
         //TAMPIL KATEGORI
       $kategori_produk = HalamanWarungController::produkKategori($kategori,$id);
-      $nama_kategori = "Halaman Warung";
+      $nama_kategori = "Warung : ".$data_warung->name;
 
         //TAMPILAN MOBILE
       $agent = new Agent();
@@ -86,7 +87,7 @@ class HalamanWarungController extends Controller
 
          //TAMPIL NAMA WARUNG
      	$data_warung = Warung::select(['name','id'])->where('id', $id_warung)->first();
-     	$nama_warung = 'Produk Warung : '.$data_warung->name;
+     	$nama_warung = 'Produk';
 
   		//FOTO HEADER
       $foto_latar_belakang = "background-image: url('".asset('image/background2.jpg')."');";
@@ -166,37 +167,90 @@ class HalamanWarungController extends Controller
   //MENAMPILKAN KATEGORI
      $kategori_produk = HalamanWarungController::produkKategori($kategori,$request->id_warung);
      $data_kategori = $kategori->first();
-     $nama_kategori = 'Hasil Pencarian : "'.$request->search.'"';
+     $nama_kategori = 'Hasil Pencarian : "'.$request->search.'" <a href="'.url("/halaman-warung/".$request->id_warung) .'"> <i class="material-icons" style="color:red" >highlight_off</i> </a>';
 
     //TAMPIL NAMA WARUNG
      $data_warung = Warung::select(['name','id'])->where('id', $request->id_warung)->first();
-     $nama_warung = 'Produk Warung : '.$data_warung->name;
+     $nama_warung = 'Produk';
 
   //TAMPILAN VIA HP
      $agent = new Agent();
 
      $daftar_produk = DaftarProdukController::daftarProduk($data_produk);
 
-     return view('layouts.daftar_produk', ['kategori_produk' => $kategori_produk, 'daftar_produk' => $daftar_produk, 'produk_pagination' => $produk_pagination, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'agent' => $agent,'cek_belanjaan'=>$cek_belanjaan,'logo_warmart'=>$logo_warmart,'list_warung'=>$list_warung,'id'=>$request->id_warung,'nama_warung'=>$nama_warung]);
+     return view('layouts.halaman_warung', ['kategori_produk' => $kategori_produk, 'daftar_produk' => $daftar_produk, 'produk_pagination' => $produk_pagination, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'agent' => $agent,'cek_belanjaan'=>$cek_belanjaan,'logo_warmart'=>$logo_warmart,'list_warung'=>$list_warung,'id'=>$request->id_warung,'nama_warung'=>$nama_warung]);
    }
 
     public static function cardWarung($id_warungs){
-    $warung = Warung::select(['name','id','wilayah'])->where('id', $id_warungs)->first();
-    $card_warung = '
-    <div class="card card-raised card-form-horizontal">
+    $warung = Warung::select(['name','id','wilayah','alamat','no_telpon'])->where('id', $id_warungs)->first();
+    $jumlah_produk_warung = Barang::where('id_warung',$id_warungs)->count();
+
+    $card_warung = '';
+    $card_warung .= '<div class="card card-raised card-form-horizontal">
             <div class="card-content">
                 <div class="row">
-                    <div class="col-sm-10">
-                    <h4> <i class="material-icons">store</i> '.$warung->name.'</h4>
+                    <div class="col-md-2 col-sm-6 col-xs-6">
+                    <i class="material-icons">store</i> <b>Warung</b>
+                    <p>';$card_warung .= DaftarProdukController::warungNama($warung);
+                    $card_warung .= '</p>
                     </div>
-                    <div class="col-sm-2">
-                       
+                    <div class="col-md-2 col-sm-6 col-xs-6">
+                    <i class="material-icons">place</i>  <b>Lokasi</b>
+                    <p>';$card_warung .= DaftarProdukController::alamatWarung($warung);
+                    $card_warung .= '</p>
+                    </div>
+                    <div class="col-md-2 col-sm-6 col-xs-6">
+                    <i class="material-icons">call</i> <b>Telpon</b>
+                    <p>';$card_warung .= HalamanWarungController::telponWarung($warung);
+                    $card_warung .= '</p>
+                    </div>
+                    <div class="col-md-4 col-sm-6 col-xs-6">
+                    <i class="material-icons">offline_pin</i> <b>Produk</b>
+                    <p>';$card_warung .= HalamanWarungController::produkWarung($jumlah_produk_warung);
+                    $card_warung .= '</p>
+                    </div>
+                    <div class="col-md-2 col-sm-6 col-xs-12">
+                    <h6>
+                    <a href="'.url('daftar-produk').'" style="background-color:#01573e; position: relative" class="btn btn-block tombolBeli" id="btnKunjungi"> Kembali </a>
+                    </h6>
                     </div>
                 </div>
             </div>
         </div>';
 
 	return $card_warung;
-    } 
+    }
+
+    public static function telponWarung($warungs){
+  	if (strlen(strip_tags($warungs->no_telpon)) <= 15) {
+    $telpon_warung = ''.strip_tags($warungs->no_telpon);
+  	}
+  	else{
+    $agent = new Agent();
+    if ($agent->isMobile()) {
+      $telpon_warung = ''.strip_tags(substr($warungs->no_telpon, 0, 35)).'...'; 
+    }
+    else {
+      $telpon_warung = ''.strip_tags(substr($warungs->no_telpon, 0, 60)).'...'; 
+    }
+  }
+  return $telpon_warung;
+}
+
+	public static function produkWarung($jumlah_produk_warung){
+  	if (strlen(strip_tags($jumlah_produk_warung)) <= 15) {
+    $produk_warung = ''.strip_tags($jumlah_produk_warung).' Item';
+  	}
+  	else{
+    $agent = new Agent();
+    if ($agent->isMobile()) {
+      $produk_warung = ''.strip_tags(substr($jumlah_produk_warung, 0, 35)).'... Item'; 
+    }
+    else {
+      $produk_warung = ''.strip_tags(substr($jumlah_produk_warung, 0, 60)).'... Item'; 
+    }
+  }
+  return $produk_warung;
+}
 
 }
