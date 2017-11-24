@@ -179,39 +179,73 @@ class HalamanWarungController extends Controller
     public static function cardWarung($id_warungs){
     $warung = Warung::select(['name','id','wilayah','alamat','no_telpon'])->where('id', $id_warungs)->first();
     $jumlah_produk_warung = Barang::where('id_warung',$id_warungs)->count();
-
-    $card_warung = '';
-    $card_warung .= '<div class="card card-raised card-form-horizontal">
-            <div class="card-content">
-                <div class="row">
-                    <div class="col-md-3 col-sm-6 col-xs-6">
-                    <i  class="material-icons">store</i> 
-                    <p>';$card_warung .= DaftarProdukController::warungNama($warung);
-                    $card_warung .= '</p>
-                    </div>
-                    <div class="col-md-2 col-sm-6 col-xs-6">
-                    <i  class="material-icons">place</i>  
-                    <p>';$card_warung .= DaftarProdukController::alamatWarung($warung);
-                    $card_warung .= '</p>
-                    </div>
-                    <div class="col-md-3 col-sm-6 col-xs-6">
-                    <i  class="material-icons">call</i> 
-                    <p>';$card_warung .= HalamanWarungController::telponWarung($warung);
-                    $card_warung .= '</p>
-                    </div>
-                    <div class="col-md-2 col-sm-6 col-xs-6">
-                    <i  class="material-icons">offline_pin</i>
-                    <p>';$card_warung .= HalamanWarungController::produkWarung($jumlah_produk_warung);
-                    $card_warung .= '</p>
-                    </div>
-                    <div class="col-md-2 col-sm-6 col-xs-12">
-                    <h6>
-                    <a href="'.url('daftar-produk').'" style="background-color:#01573e; position: relative" class="btn btn-block tombolBeli" id="btnKunjungi"> Kembali </a>
-                    </h6>
-                    </div>
-                </div>
-            </div>
-        </div>';
+  		$agent = new Agent();
+ 		 if ($agent->isMobile()) {
+ 		 	$card_warung = '';
+    		$card_warung .= '
+    			<div class="card card-raised card-form-horizontal"> 
+            		<div class="card-content"> 
+              		<div class="col-md-2 col-sm-6 col-xs-6 nav-pills-icons"> 
+                    <p class="text-center"><i  class="material-icons">store</i>  </p>
+                    <p class="text-center">';$card_warung .= DaftarProdukController::warungNama($warung); 
+                    $card_warung .= '</p> 
+                    </div> 
+                    <div class="col-md-2 col-sm-6 col-xs-6"> 
+                    <p class="text-center"><i  class="material-icons">place</i> </p>  
+                    <p class="text-center">';$card_warung .= DaftarProdukController::alamatWarung($warung); 
+                    $card_warung .= '</p> 
+                     </div> 
+                    <div class="col-md-2 col-sm-6 col-xs-6"> 
+                   <p class="text-center"> <i  class="material-icons">call</i>  </p>
+                    <p class="text-center">';$card_warung .= HalamanWarungController::telponWarung($warung); 
+                    $card_warung .= '</p> 
+             		 </div>  
+                    <div class="col-md-2 col-sm-6 col-xs-6"> 
+                    <p class="text-center"><i  class="material-icons">offline_pin</i> </p>
+                    <p class="text-center">';$card_warung .= HalamanWarungController::produkWarung($jumlah_produk_warung); 
+                    $card_warung .= '</p> 
+            		</div>  
+              </div> 
+            </div>'; 
+			}
+			else{
+				$card_warung = '';
+    				$card_warung .= '
+    				<div class="row">
+					<div class="col-md-6 col-md-offset-3">
+						<div class="profile-tabs">
+		                    <div class="nav-align-center">
+								<ul class="nav nav-pills nav-pills-icons" role="tablist">
+									<li >
+			                            <a role="tab" >
+											<i class="material-icons">store</i>';$card_warung .= DaftarProdukController::warungNama($warung);
+                    $card_warung .= '
+			                            </a>
+			                        </li>
+                                    <li>
+										<a role="tab" >
+											<i class="material-icons">place</i>';$card_warung .= DaftarProdukController::alamatWarung($warung);
+                    $card_warung .= '
+										</a>
+									</li> 
+									 <li>
+			                            <a role="tab" >
+											<i class="material-icons">call</i>';$card_warung .= HalamanWarungController::telponWarung($warung);
+                    $card_warung .= '
+			                            </a>
+			                        </li>
+			                          <li>
+			                            <a role="tab" >
+											<i class="material-icons">offline_pin</i>';$card_warung .= HalamanWarungController::produkWarung($jumlah_produk_warung);
+                    $card_warung .= '
+			                            </a>
+			                        </li>          
+			                    </ul>
+			                  </div>
+							</div>
+						</div>
+					</div>';
+			}
 
 	return $card_warung;
     }
