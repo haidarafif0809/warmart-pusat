@@ -44,7 +44,7 @@ class DaftarProdukController extends Controller
       $agent = new Agent();
 
         //PILIH DATA PRODUK
-      $data_produk = Barang::select(['id','kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung','konfirmasi_admin','satuan_id'])
+      $data_produk = Barang::select(['id','kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung','konfirmasi_admin','satuan_id','hitung_stok'])
       ->inRandomOrder()
       ->whereIn('id_warung', $array_warung)->paginate(12);
 
@@ -119,7 +119,7 @@ class DaftarProdukController extends Controller
       }
 
   //PILIH PRODUK
-      $data_produk = Barang::select(['id','kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung','konfirmasi_admin','satuan_id'])
+      $data_produk = Barang::select(['id','kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung','konfirmasi_admin','satuan_id','hitung_stok'])
       ->where('kategori_barang_id', $id)->whereIn('id_warung', $array_warung)->inRandomOrder()->paginate(12);
 
       //PILIH DATA WARUNG
@@ -194,92 +194,103 @@ class DaftarProdukController extends Controller
 
       //jika belum ada belanjaan
       if ($keranjang_belanjaan == 0) {
-       $stok = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk),0) - IFNULL(SUM(jumlah_keluar),0) as stok_produk')])->where('id_produk', $produks->id)->where('warung_id', $produks->id_warung)->first();
-       $cek_produk = $stok->stok_produk; 
-     }
-     elseif($produks->hitung_stok == 1){
-      //jika produk tersebut jasa
-      $cek_produk = 1;
-    } 
-    elseif($keranjang_belanjaan > 0){
+        //jika barang di hitung stok
+        if ($produks->hitung_stok == 1) {
+          $stok = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk),0) - IFNULL(SUM(jumlah_keluar),0) as stok_produk')])->where('id_produk', $produks->id)->where('warung_id', $produks->id_warung)->first();
+          $cek_produk = $stok->stok_produk; 
+        }
+        //jika tidak hitung stok
+        else {
+          $cek_produk = 1;
+        }
+
+      }
+      elseif($keranjang_belanjaan > 0){
       //jika sudah ada belanjaan
-      $cek_produk = KeranjangBelanja::where('id_pelanggan',Auth::user()->id)->where('id_produk',$produks->id)->first(); 
-      $stok = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk),0) - IFNULL(SUM(jumlah_keluar),0) as stok_produk')])->where('id_produk', $cek_produk->id_produk)->where('warung_id', $produks->id_warung)->first();
-      $cek_produk = $stok->stok_produk - $cek_produk->jumlah_produk; 
+        if ($produks->hitung_stok == 1) {
+          $cek_produk = KeranjangBelanja::where('id_pelanggan',Auth::user()->id)->where('id_produk',$produks->id)->first(); 
+          $stok = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk),0) - IFNULL(SUM(jumlah_keluar),0) as stok_produk')])->where('id_produk', $cek_produk->id_produk)->where('warung_id', $produks->id_warung)->first();
+          $cek_produk = $stok->stok_produk - $cek_produk->jumlah_produk; 
+        }
+        else {
 
+          $cek_produk = 1;
+        }
+
+
+      }
+
+      return $cek_produk;
     }
 
-    return $cek_produk;
-  }
 
-
-  public static function tombolBeli($cek_produk,$produks){
-    $agent = new Agent();
-    if ($agent->isMobile()) {
+    public static function tombolBeli($cek_produk,$produks){
+      $agent = new Agent();
+      if ($agent->isMobile()) {
                   //JIKA USER LOGIN BUKAN PELANGGAN MAKA TIDAK BISA PESAN PRODUK
-      if(Auth::check() && Auth::user()->tipe_user == 3 ){
-       if ($cek_produk == 0) {
-        $tombol_beli = '<a style="background-color:#01573e" class="btn btn-block tombolBeli" rel="tooltip" title="Stok Tidak Ada"> Beli Sekarang </a>';  
-      }else{
-        $tombol_beli = '<a href="'.url("/keranjang-belanja") .'" style="background-color:#01573e" class="btn btn-block tombolBeli" id="btnBeliSekarang"> Beli Sekarang </a>';            
+        if(Auth::check() && Auth::user()->tipe_user == 3 ){
+         if ($cek_produk == 0) {
+          $tombol_beli = '<a style="background-color:#01573e" class="btn btn-block tombolBeli" rel="tooltip" title="Stok Tidak Ada"> Beli Sekarang </a>';  
+        }else{
+          $tombol_beli = '<a href="'.url("/keranjang-belanja") .'" style="background-color:#01573e" class="btn btn-block tombolBeli" id="btnBeliSekarang"> Beli Sekarang </a>';            
+        }
       }
+      else{
+        $tombol_beli = '<button type="button" style="background-color:#01573e" class="btn btn-block tombolBeli" id="btnBeli"> Beli Sekarang  </button>';
+      }
+
     }
     else{
-      $tombol_beli = '<button type="button" style="background-color:#01573e" class="btn btn-block tombolBeli" id="btnBeli"> Beli Sekarang  </button>';
-    }
-
-  }
-  else{
                   //JIKA USER LOGIN BUKAN PELANGGAN MAKA TIDAK BISA PESAN PRODUK
-    if(Auth::check() && Auth::user()->tipe_user == 3){
-      if ($cek_produk == 0) {
-        $tombol_beli = '<a style="background-color:#01573e" class="btn btn-block tombolBeli" rel="tooltip" title="Stok Tidak Ada" disabled="" >Beli Sekarang </a>';
-      }else{
-        $tombol_beli = '<a href="'. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" id="btnBeliSekarang" style="background-color:#01573e" class="btn btn-block tombolBeli" rel="tooltip" title="Tambah Ke Keranjang Belanja"> Beli Sekarang </a>';
+      if(Auth::check() && Auth::user()->tipe_user == 3){
+        if ($cek_produk == 0) {
+          $tombol_beli = '<a style="background-color:#01573e" class="btn btn-block tombolBeli" rel="tooltip" title="Stok Tidak Ada" disabled="" >Beli Sekarang </a>';
+        }else{
+          $tombol_beli = '<a href="'. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" id="btnBeliSekarang" style="background-color:#01573e" class="btn btn-block tombolBeli" rel="tooltip" title="Tambah Ke Keranjang Belanja"> Beli Sekarang </a>';
+        }
       }
+      else{
+        $tombol_beli = '<button type="button" style="background-color:#01573e" class="btn btn-block tombolBeli" id="btnBeli"> Beli Sekarang</button>';
+      }  
+
+    }
+    return $tombol_beli; 
+  }
+
+  public static function tidakAdaProduk(){
+    return   '<div class="col-md-3">
+    <div class="card card-product card-plain no-shadow" data-colored-shadow="false">
+    <div class="card-image">
+    <img src="'.asset('image/foto_default.png').'">
+    </div>
+    <div class="card-content" style="padding:0px">
+    <a href="#">
+    <h4 >Tidak Ada Produk</h4>
+    </a>
+    </div>
+    </div>
+    </div>'; 
+  }
+
+  public static function namaProduk($produks){
+    if (strlen(strip_tags($produks->nama)) <= 33) {
+
+      $nama_produk = ''.strip_tags($produks->nama);
     }
     else{
-      $tombol_beli = '<button type="button" style="background-color:#01573e" class="btn btn-block tombolBeli" id="btnBeli"> Beli Sekarang</button>';
-    }  
+      $agent = new Agent();
+      if ($agent->isMobile()) {
+        $nama_produk = ''.strip_tags(substr($produks->nama, 0, 35)).'...'; 
+      }
+      else {
+       $nama_produk = ''.strip_tags(substr($produks->nama, 0, 60)).'...'; 
+     }
 
-  }
-  return $tombol_beli; 
-}
-
-public static function tidakAdaProduk(){
-  return   '<div class="col-md-3">
-  <div class="card card-product card-plain no-shadow" data-colored-shadow="false">
-  <div class="card-image">
-  <img src="'.asset('image/foto_default.png').'">
-  </div>
-  <div class="card-content" style="padding:0px">
-  <a href="#">
-  <h4 >Tidak Ada Produk</h4>
-  </a>
-  </div>
-  </div>
-  </div>'; 
-}
-
-public static function namaProduk($produks){
-  if (strlen(strip_tags($produks->nama)) <= 33) {
-
-    $nama_produk = ''.strip_tags($produks->nama);
-  }
-  else{
-    $agent = new Agent();
-    if ($agent->isMobile()) {
-      $nama_produk = ''.strip_tags(substr($produks->nama, 0, 35)).'...'; 
-    }
-    else {
-     $nama_produk = ''.strip_tags(substr($produks->nama, 0, 60)).'...'; 
    }
-
+   return $nama_produk;
  }
- return $nama_produk;
-}
 
-public static function namaWarung($warung){
+ public static function namaWarung($warung){
 
   if (strlen($warung->name) > 25) {
     # code...
@@ -319,8 +330,9 @@ public static function cardProduk($produks){
     </a>
     <div class="card-content">
     <div class="footer">  
-    <p class="nama-produk flexFont">
-    <a href="'.url("/detail-produk/".$produks->id."") .'" >';
+    <p class="nama-produk flexFont">'.$cek_produk.'';
+
+    $card_produk .= '<a href="'.url("/detail-produk/".$produks->id."") .'" >';
     $card_produk .= DaftarProdukController::namaProduk($produks);
     $card_produk .= '</a></p>
     <p style="color:#d21f30;" class="flexFont"> '.$produks->rupiah.' / '.$produks->satuan->nama_satuan.' </p>';
