@@ -96,9 +96,16 @@
           </li>
           @endif
           @endif
+          @if(Auth::check() && (Auth::user()->tipe_user == 4 OR Auth::user()->tipe_user == 1 ))
+          <li>
+            <a href="{{ url('/dashboard')}}">
+              <i class="material-icons">dashboard</i>dashboard
+            </a>
+          </li> 
+          @endif
           <li>
             <a href="https://info.war-mart.id">
-              <i class="material-icons">info</i>INFO Warmart
+              <i class="material-icons">info</i>SUPPORT Warmart
             </a>
           </li>   
           <li>

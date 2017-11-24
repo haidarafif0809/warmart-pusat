@@ -28,7 +28,7 @@ class KeranjangBelanjaController extends Controller
 		$keranjang_belanjaan = KeranjangBelanja::with(['produk','pelanggan'])->where('id_pelanggan',Auth::user()->id)->get();
 		$cek_belanjaan = $keranjang_belanjaan->count();  
 
-		$jumlah_produk = KeranjangBelanja::select([DB::raw('IFNULL(SUM(jumlah_produk),0) as total_produk')])->first();  
+		$jumlah_produk = KeranjangBelanja::select([DB::raw('IFNULL(SUM(jumlah_produk),0) as total_produk')])->where('id_pelanggan',Auth::user()->id)->first();  
 
       	//MEANMPILKAN PRODUK BELANJAAN DAN SUBTUTALNYA
 		$produk_belanjaan_dan_subtotal = $this->tampilanProdukKeranjangBelanja($keranjang_belanjaan);
@@ -119,7 +119,7 @@ class KeranjangBelanjaController extends Controller
 	}
 
 	public function tombolTambahiProduk ($sisa_stok,$keranjang_belanjaans){
-		if ($sisa_stok <= 0) {
+		if ($sisa_stok <= 0 && $keranjang_belanjaans->produk->hitung_stok == 1) {
 			$tombolTambahiProduk = '
 			<a class="btn btn-round btn-info btn-xs"   style="background-color: #01573e" disabled="true"> <i class="material-icons">add</i> </a>'; 
 		}

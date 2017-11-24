@@ -57,7 +57,7 @@
       @else
       @if (Agent::isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
       {!! $produk_pesanan_mobile !!}
-
+      {{$pagination_pesanan }}
       @else <!--JIKA DIAKSES VIA KOMPUTER-->
       <div class="card">
         <div class="col-md-12">
@@ -81,6 +81,7 @@
                           {!! $produk_pesanan_komputer !!}
                         </tbody>
                       </table>
+                      {{$pagination_pesanan }}
                     </div>
                   </div>
                 </div>  
