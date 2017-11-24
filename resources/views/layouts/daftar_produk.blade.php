@@ -2,45 +2,44 @@
 @section('content') 
 
 <style type="text/css">
-    .list-produk {
-        @if(Agent::isMobile())
-        @else  
-        padding-left: 4px;
-        padding-right: 4px;
-        @endif
-    }
-    .card .card-image{
+.list-produk {
 
-        height: auto; /*this makes sure to maintain the aspect ratio*/
-        margin-top: 0px;
-    }
-    .card-pricing {
-        margin-bottom: 0px;
-    }
-    .tombolBeli {
-        padding: 10px 0px;
-        margin:0px;
-    }
-    .card-pricing .card-content {
-        padding: 5px !important;
-    }
-    .card .footer {
-        margin-top: 0px;
-        font-family: Helvetica,Arial,sans-serif;
-        font-weight: 400;
-        line-height:1.2em;
-        text-decoration: none;
-        font-size:15px;
-    }      
+    padding-left: 4px;
+    padding-right: 4px;
 
-    @font-face {
-      font-family: "San Francisco";
-      font-weight: 200;
-      src: url("//applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-thin-webfont.woff2");
-  }
+}
+.card .card-image{
+
+    height: auto; /*this makes sure to maintain the aspect ratio*/
+    margin-top: 0px;
+}
+.card-pricing {
+    margin-bottom: 0px;
+}
+.tombolBeli {
+    padding: 10px 0px;
+    margin:0px;
+}
+.card-pricing .card-content {
+    padding: 5px !important;
+}
+.card .footer {
+    margin-top: 0px;
+    font-family: Helvetica,Arial,sans-serif;
+    font-weight: 400;
+    line-height:1.2em;
+    text-decoration: none;
+    font-size:15px;
+}      
+
+@font-face {
+  font-family: "San Francisco";
+  font-weight: 200;
+  src: url("//applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-thin-webfont.woff2");
+}
 
 
-  .flexFont {
+.flexFont {
     @if(Agent::isMobile())
     height:3em;
     @else  
@@ -113,7 +112,7 @@
         <div class="row">   
             <div class="col-md-12">
                 <!--Menampilkan Warung Secara Acak--> 
-                <h4 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px">Daftar Warung</h4> 
+                <h4 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px"> Warung</h4> 
             </div>   
             <span class="span-warung">{!! $daftar_warung !!}</span> 
         </div>
@@ -201,12 +200,12 @@
 
             <!--Menampilkan Warung Secara Acak--> 
             <div class="col-md-12"> 
-                <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px">Daftar Warung</h5>           
+                <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px"> Warung</h5>           
                 <span id="span-warung">{!! $daftar_warung !!}</span>     
             </div>
 
             <div class="col-md-3"> 
-                <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:25px">Daftar Produk</h5>  
+                <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:25px"> Produk</h5>  
                 <ul class="nav nav-tabs" data-tabs="tabs" style="background-color: #01573e">                                        
                     <li><a href="{{route('daftar_produk.index')}}"><i class="material-icons">format_align_justify</i> Semua Kategori</a></li>
                 </ul>

@@ -37,7 +37,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -128,7 +128,7 @@ class RegisterController extends Controller
             $userkey = env('USERKEY');
             $passkey = env('PASSKEY');
             $nomor_tujuan = $data['no_telp'];
-            $isi_pesan =''.$kode_verifikasi.' adalah Nomor Verfikasi Warmart, Terima Kasih Telah Mendaftar Sebagai Customer Warmart. ';
+            $isi_pesan = urlencode($kode_verifikasi.', masukkan angka tersebut untuk Verfikasi User Warmart, Terima Kasih Telah Mendaftar Sebagai Customer Warmart. ');
 
             if (env('STATUS_SMS') == 1) {
                 $client = new Client(); //GuzzleHttp\Client
@@ -158,7 +158,7 @@ class RegisterController extends Controller
             $userkey = env('USERKEY');
             $passkey = env('PASSKEY');
             $nomor_tujuan = $data['no_telp'];
-            $isi_pesan =''.$kode_verifikasi.' adalah Nomor Verfikasi Warmart, Terima Kasih Telah Mendaftar Sebagai Komunitas Warmart.';
+            $isi_pesan =urlencode($kode_verifikasi.', masukkan angka tersebut untuk Verfikasi User Warmart, Terima Kasih Telah Mendaftar Sebagai Komunitas Warmart.');
 
             if (env('STATUS_SMS') == 1) {
                 $client = new Client(); //GuzzleHttp\Client
@@ -205,7 +205,7 @@ class RegisterController extends Controller
             $userkey = env('USERKEY');
             $passkey = env('PASSKEY');
             $nomor_tujuan = $data['no_telp'];
-            $isi_pesan =''.$kode_verifikasi.' adalah Nomor Verfikasi Warmart, Terima Kasih Telah Mendaftar Sebagai Warung Warmart.';
+            $isi_pesan = urlencode($kode_verifikasi.', masukkan angka tersebut untuk Verfikasi User Warmart, Terima Kasih Telah Mendaftar Sebagai Warung Warmart.');
 
             if (env('STATUS_SMS') == 1) {
                 $client = new Client(); //GuzzleHttp\Client
@@ -260,7 +260,7 @@ class RegisterController extends Controller
         $userkey = env('USERKEY');
         $passkey = env('PASSKEY');
         $nomor_tujuan = $user->no_telp;
-        $isi_pesan = ''.$kode_verifikasi.' adalah Nomor Verfikasi Warmart, Terima Kasih Telah Mendaftar Sebagai Warmart.';
+        $isi_pesan = urlencode($kode_verifikasi.', masukkan angka tersebut untuk memverfikasi User Warmart');
 
         if (env('STATUS_SMS') == 1) {
         $client = new Client(); //GuzzleHttp\Client
@@ -299,7 +299,7 @@ protected function proses_lupa_password(Request $request)
     $nomor_tujuan = $request->no_telp;
     $user = User::where('no_telp',$nomor_tujuan)->first();
     User::where('no_telp',$nomor_tujuan)->update(['kode_verifikasi' => $kode_verifikasi]);
-    $isi_pesan =''.$kode_verifikasi.' adalah Nomor Verifikasi untuk merubah password Anda di Warmart';
+    $isi_pesan = $kode_verifikasi.', masukan angka tersebut untuk memverifikasi perubahan password Anda di Warmart';
 
     if (env('STATUS_SMS') == 1) {
         $client = new Client(); //GuzzleHttp\Client

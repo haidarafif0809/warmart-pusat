@@ -36,37 +36,37 @@
 
 </head>
 <style type="text/css">
-    .list-produk {
-        padding-left: 4px;
-        padding-right: 4px;
-    }
-    .card .card-image{
+.list-produk {
+    padding-left: 4px;
+    padding-right: 4px;
+}
+.card .card-image{
 
-        height: auto; /*this makes sure to maintain the aspect ratio*/
-        margin-top: 0px;
-    }
-    .card-pricing {
-        margin-bottom: 0px;
-    }
-    .tombolBeli {
-        padding: 10px 0px;
-        margin:0px;
-    }
-    .card-pricing .card-content {
-        padding: 5px !important;
-    }
-    .card .footer {
-        margin-top: 0px;
-    }      
+    height: auto; /*this makes sure to maintain the aspect ratio*/
+    margin-top: 0px;
+}
+.card-pricing {
+    margin-bottom: 0px;
+}
+.tombolBeli {
+    padding: 10px 0px;
+    margin:0px;
+}
+.card-pricing .card-content {
+    padding: 5px !important;
+}
+.card .footer {
+    margin-top: 0px;
+}      
 
-    @font-face {
-      font-family: "San Francisco";
-      font-weight: 200;
-      src: url("//applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-thin-webfont.woff2");
-  }
+@font-face {
+  font-family: "San Francisco";
+  font-weight: 200;
+  src: url("//applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-thin-webfont.woff2");
+}
 
 
-  .flexFont {
+.flexFont {
     height:2em;
     padding:1%;
     margin: 10px;
@@ -93,8 +93,10 @@ button {
     <nav class="navbar navbar-default navbar-transparent navbar-fixed-top navbar-color-on-scroll" color-on-scroll=" " id="sectionsNav">
         <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
-            @if (Auth::check())
-            <a href="{{ route('home.dashboard') }}" style="color:#ffc34d;" class="btn  btn-round"><i class="material-icons">dashboard</i> Dashboard</a>
+            @if (Auth::check() && Auth::user()->tipe_user == 3)
+            <a href="{{ url('/') }}" style="color:#ffc34d;" class="btn  btn-round"><i class="material-icons">home</i> home</a>
+            @elseif(Auth::check() && Auth::user()->tipe_user != 3)
+            <a href="{{ route('home.dashboard') }} " style="color:#ffc34d;" class="btn  btn-round"><i class="material-icons">dashboard</i>dashboard </a>
             @else
             <a href="{{ url('/login') }}" style="color:#ffc34d;" class="btn  btn-round"><i class="material-icons">fingerprint</i> Login</a>
             @endif
@@ -123,10 +125,10 @@ button {
      </div>
  </div>
  <style type="text/css">
-     .peran{
-        width:100%;
-        height:100%;
-    }
+ .peran{
+    width:100%;
+    height:100%;
+}
 </style>
 <div class="container">
     <div class="section text-center">
