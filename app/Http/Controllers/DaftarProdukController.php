@@ -241,39 +241,46 @@ return $tombol_beli;
 }
 
 public static function tidakAdaProduk(){
-  return   '<div class="col-md-3">
-  <div class="card card-product card-plain no-shadow" data-colored-shadow="false">
-    <div class="card-image">
-      <img src="'.asset('image/foto_default.png').'">
-    </div>
-    <div class="card-content" style="padding:0px">
-      <a href="#">
-        <h4 >Tidak Ada Produk</h4>
-      </a>
-    </div>
-  </div>
-</div>'; 
-}
+  $produk_kosong ="";
+  $produk_kosong .='
+  <div class="col-md-12 col-s,-12 col-xs-12">
+    <div class="card" data-colored-shadow="false" style="background-color:#f7f7f7">
+      <div class="card-content">';
+        $agent = new Agent();
+        if ($agent->isMobile()) {
+          $produk_kosong .='<h6 class="text-center" style="margin:0px">Oops... Produk Tidak Dapat Ditemukan.</h6>
+          <p class="text-center">Silakan menggunakan kata kunci lain.</p>';
+        }
+        else{
+          $produk_kosong .='<h3 class="title text-center" style="margin:0px">Oops... Hasil Pencarian Produk Tidak Dapat Ditemukan.</h3>
+          <h5 class="text-center" style="margin:0px">Silakan melakukan pencarian kembali dengan menggunakan kata kunci lain.</h5>';
+        }        
+        $produk_kosong .='</div>
+      </div>
+    </div>'; 
 
-public static function namaProduk($produks){
-  if (strlen(strip_tags($produks->nama)) <= 33) {
-
-    $nama_produk = ''.strip_tags($produks->nama);
+    return $produk_kosong;
   }
-  else{
-    $agent = new Agent();
-    if ($agent->isMobile()) {
-      $nama_produk = ''.strip_tags(substr($produks->nama, 0, 35)).'...'; 
+
+  public static function namaProduk($produks){
+    if (strlen(strip_tags($produks->nama)) <= 33) {
+
+      $nama_produk = ''.strip_tags($produks->nama);
     }
-    else {
-     $nama_produk = ''.strip_tags(substr($produks->nama, 0, 60)).'...'; 
+    else{
+      $agent = new Agent();
+      if ($agent->isMobile()) {
+        $nama_produk = ''.strip_tags(substr($produks->nama, 0, 35)).'...'; 
+      }
+      else {
+       $nama_produk = ''.strip_tags(substr($produks->nama, 0, 60)).'...'; 
+     }
+
    }
-
+   return $nama_produk;
  }
- return $nama_produk;
-}
 
-public static function namaWarung($warung){
+ public static function namaWarung($warung){
 
   if (strlen($warung->name) > 25) {
     # code...
@@ -360,13 +367,18 @@ public static function resizeProduk($produks){
 //WARUNG//WARUNG//WARUNG//WARUNG
 
 public static function daftarWarung($warung_data){
-  $daftar_warung = "";
-  $perulangan = 0;
-  foreach ($warung_data as $warungs) {
-    $daftar_warung .= DaftarProdukController::cardWarung($warungs);
+  if ($warung_data->count() > 0) {
+    $daftar_warung = "";
+    $perulangan = 0;
+    foreach ($warung_data as $warungs) {
+      $daftar_warung .= DaftarProdukController::cardWarung($warungs);
 
-    $perulangan++;
-    if($perulangan == 4) break;
+      $perulangan++;
+      if($perulangan == 4) break;
+    }
+  }
+  else {
+    $daftar_warung = DaftarProdukController::tidakAdaWarung();
   }
   return $daftar_warung;
 }
@@ -455,5 +467,27 @@ public static function warungNama($warung){
   return $namaWarung;
 
 }
+
+public static function tidakAdaWarung(){
+  $warung_kosong ="";
+  $warung_kosong .='
+  <div class="col-md-12 col-s,-12 col-xs-12">
+    <div class="card" data-colored-shadow="false" style="background-color:#f7f7f7">
+      <div class="card-content">';
+        $agent = new Agent();
+        if ($agent->isMobile()) {
+          $warung_kosong .='<h6 class="text-center" style="margin:0px">Oops... Warung Tidak Dapat Ditemukan.</h6>
+          <p class="text-center">Silakan menggunakan kata kunci lain.</p>';
+        }
+        else{
+          $warung_kosong .='<h3 class="title text-center" style="margin:0px">Oops... Hasil Pencarian Warung Tidak Dapat Ditemukan.</h3>
+          <h5 class="text-center" style="margin:0px">Silakan melakukan pencarian kembali dengan menggunakan kata kunci lain.</h5>';
+        }        
+        $warung_kosong .='</div>
+      </div>
+    </div>'; 
+
+    return $warung_kosong;
+  }
 
 }
