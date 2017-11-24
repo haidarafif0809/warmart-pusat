@@ -16,6 +16,14 @@
 Route::get('/','DaftarProdukController@index')->middleware('optimizeImages');
 Route::get('/sms','HomeController@sms');
 
+Route::get('copy-produk-alfatih', function() {
+    //
+	$produk = App\Barang::where('id_warung',73)->get();
+	foreach ($produk as $key ) {
+		App\Barang::create(['kode_barang' => $key->kode_barang,'kode_barcode' => $key->kode_barcode,'nama_barang' => $key->nama_barang, 'harga_beli' => $key->harga_beli,'harga_jual' => $key->harga_jual,'satuan_id' => $key->satuan_id,'kategori_barang_id' => $key->kategori_barang_id,'status_aktif' => $key->status_aktif,'hitung_stok' => $key->hitung_stok,'id_warung' =>121, 'deskripsi_produk' => $key->deskripsi_produk, 'konfirmasi_admin' => $key->konfirmasi_admin]);
+	}
+});
+
 Route::get('/tentang-warmart','HomeController@index');
 
 Route::get('/cek-deposit','PortaPulsaController@cekDeposit');
