@@ -173,10 +173,13 @@ class PesananWarungController extends Controller
 		DB::beginTransaction(); 
 		PesananPelanggan::where('id',$id)->update(['konfirmasi_pesanan' => '3']);
 		$penjualan = Penjualan::where('id_pesanan',$id);
-
-		DetailPenjualan::where('id_penjualan',$penjualan->first()->id)->delete();
-		TransaksiKas::where('no_faktur',$penjualan->first()->id)->delete();
-		$penjualan->delete();
+		if ($penjualan->count() != 0) {
+			# code...
+			DetailPenjualan::where('id_penjualan',$penjualan->first()->id)->delete();
+			TransaksiKas::where('no_faktur',$penjualan->first()->id)->delete();
+			$penjualan->delete();
+		}
+		
 		DB::commit(); 
 
 		return redirect()->back();
