@@ -16,6 +16,7 @@
         "laravel/scout": "^3.0",
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "^5.2.0",
+        "laravolt/indonesia": "^0.7.0",
         "pragmarx/tracker": "^3.2",
         "renatomarinho/laravel-page-speed": "^1.8",
         "santigarcor/laratrust": "3.0.*",
