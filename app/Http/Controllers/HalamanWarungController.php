@@ -53,7 +53,13 @@ class HalamanWarungController extends Controller
      	$nama_warung = 'Produk';
 
         //TAMPIL DAFTAR PRODUK
+      if ($data_produk->count() > 0) {
       $daftar_produk = DaftarProdukController::daftarProduk($data_produk);
+      }
+      else{
+      $daftar_produk = HalamanWarungController::tidakAdaProdukWarung();
+      }
+      
         //TAMPIL KATEGORI
       $kategori_produk = HalamanWarungController::produkKategori($kategori,$id);
       $nama_kategori = "Warung : ".$warungs_data->name;
@@ -100,6 +106,15 @@ class HalamanWarungController extends Controller
       $agent = new Agent();
 
       $daftar_produk = DaftarProdukController::daftarProduk($data_produk);      
+
+        //TAMPIL DAFTAR PRODUK
+      if ($data_produk->count() > 0) {
+      $daftar_produk = DaftarProdukController::daftarProduk($data_produk);
+      }
+      else{
+      $daftar_produk = HalamanWarungController::tidakAdaProdukKategori();
+      }
+
 
       return view('layouts.halaman_warung', ['kategori_produk' => $kategori_produk, 'daftar_produk' => $daftar_produk, 'produk_pagination' => $produk_pagination, 'id' => $id, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'agent' => $agent,'cek_belanjaan'=>$cek_belanjaan,'logo_warmart'=>$logo_warmart,'list_warung'=>$list_warung,'id'=>$id_warung,'nama_warung'=>$nama_warung]);
     }
@@ -276,6 +291,50 @@ class HalamanWarungController extends Controller
     }
   }
   return $produk_warung;
+}
+
+public static function tidakAdaProdukWarung(){
+  $produk_kosong ="";
+  $produk_kosong .='
+  <div class="col-md-12 col-s,-12 col-xs-12">
+  <div class="card" data-colored-shadow="false" style="background-color:#f7f7f7">
+  <div class="card-content">';
+  $agent = new Agent();
+  if ($agent->isMobile()) {
+    $produk_kosong .='<h6 class="text-center" style="margin:0px">Maaf Warung yang anda pilih tidak ada produk yang tersedia.</h6>
+    <p class="text-center">Silakan pilih warung lain</p>';
+  }
+  else{
+    $produk_kosong .='<h3 class="title text-center" style="margin:0px">Maaf Warung yang anda pilih tidak ada produk yang tersedia.</h3>
+    <h5 class="text-center" style="margin:0px">Silakan pilih warung lain</h5>';
+  }        
+  $produk_kosong .='</div>
+  </div>
+  </div>'; 
+
+  return $produk_kosong;
+}
+
+public static function tidakAdaProdukKategori(){
+  $produk_kosong ="";
+  $produk_kosong .='
+  <div class="col-md-12 col-s,-12 col-xs-12">
+  <div class="card" data-colored-shadow="false" style="background-color:#f7f7f7">
+  <div class="card-content">';
+  $agent = new Agent();
+  if ($agent->isMobile()) {
+    $produk_kosong .='<h6 class="text-center" style="margin:0px">Maaf Kategori yang anda pilih tidak ada produk yang tersedia.</h6>
+    <p class="text-center">Silakan pilih kategori lain</p>';
+  }
+  else{
+    $produk_kosong .='<h3 class="title text-center" style="margin:0px">Maaf Kategori yang anda pilih tidak ada produk yang tersedia.</h3>
+    <h5 class="text-center" style="margin:0px">Silakan pilih kategori lain</h5>';
+  }        
+  $produk_kosong .='</div>
+  </div>
+  </div>'; 
+
+  return $produk_kosong;
 }
 
 }
