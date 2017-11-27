@@ -268,7 +268,7 @@ public static function tombolBeli($cek_produk,$produks){
   }
 }
 elseif (Auth::check() && Auth::user()->tipe_user != $pelanggan) {
-  $tombol_beli = '<a style="background-color:#01573e" class="btn btn-block tombolBeli" rel="tooltip" title="Masuk Sebagai Pelanggan Untuk Beli" disabled=""> Beli Sekarang </a>';  
+  $tombol_beli = '<a  disabled="true" style="background-color:#01573e" class="btn btn-block tombolBeli" rel="tooltip" title="Masuk Sebagai Pelanggan Untuk Beli" > Beli Sekarang </a>';  
 }
 else{
  if ($cek_produk == 0) {
