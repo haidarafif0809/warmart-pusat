@@ -20,6 +20,7 @@ use App\Barang;
 use App\Warung;
 use App\UserWarung;
 use App\KategoriBarang;
+use App\PesananPelanggan;
 
 
 class HomeController extends Controller
@@ -193,6 +194,8 @@ public function dashboard_admin (Request $request){
   $produk = Barang::count();
   $error_log = Error::count();
   $rata_rata_produk_perwarung = $produk / $jumlah_warung;
+  $pesanan = PesananPelanggan::all()->count();
+  $pesanan_selesai = PesananPelanggan::where('konfirmasi_pesanan',2)->count();
 
   $response['komunitas'] = $jumlah_komunitas;
   $response['customer'] = $jumlah_customer;
@@ -202,6 +205,8 @@ public function dashboard_admin (Request $request){
   $response['rata_rata_produk'] = $rata_rata_produk_perwarung;
   $response['produk'] = $produk;
   $response['error_log'] = $error_log;
+  $response['pesanan'] = $pesanan;
+  $response['pesanan_selesai'] = $pesanan_selesai;
 
   return response()->json($response);
 
