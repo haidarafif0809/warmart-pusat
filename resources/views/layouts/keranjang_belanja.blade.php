@@ -18,6 +18,7 @@
   background-color:red;
   width: 10em;
 }
+
 </style>
 
 <div class="page-header header-filter header-small" data-parallax="true" style="background-image: url('image/background2.jpg');">
@@ -85,28 +86,30 @@
               <div class="col-sm-6 col-xs-6"><p align="right" class="text-danger"><b>Rp. {{ $subtotal }}</b></p></div>
             </div>
           </div>
-          <a href="{{ url('/selesaikan-pemesanan') }}" type="button" class="btn btn-round pull-right"  style="background-color: #01573e">Lanjut Ke Pembayaran <i class="material-icons">keyboard_arrow_right</i></a>
+
+          <center><a href="{{ url('/selesaikan-pemesanan') }}" class="btn btn-round" style="background-color: #01573e">Lanjut Ke Pembayaran <i class="material-icons">keyboard_arrow_right</i></a></center>
 
         </div>
         @else
         <div class="col-md-8"> 
-          <div class="table-responsive">
-            <div class="card"  style="width: 725px;" >
-              <div class="card-header card-header-text"> 
-                <h6>&nbsp;&nbsp;&nbsp;<b>Produk</b> <b style="padding-left: 315px">Harga Produk</b> <b style="padding-left: 50px">Jumlah</b></h6> 
-              </div>
+
+          <div class="card">
+            <div class="card-header card-header-text">
+
+              <div class="row">
+                <div class="col-md-6">  <h4 class="card-title" style="color: black;"> Produk</h4> </div>
+                <div class="col-md-3">  <h4 class="card-title" style="color: black;"> Harga</h4> </div>
+                <div class="col-md-3">  <h4 class="card-title" style="color: black;"> Jumlah</h4> </div>
+              </div><hr>
             </div>
-            <table class="table table-shopping"> 
-              <tbody>        
-                {!! $produk_belanjaan !!}
-              </tbody>
-            </table> 
+            {!! $produk_belanjaan !!}
           </div>
+
         </div> 
 
         <div class="col-md-4">
 
-          <div class="card">
+          <div class="card" style="margin-bottom: 1px;">
             <div class="card-header card-header-text">
               <h6 class="card-title" style="color: black; padding-left: 10px"> Rincian Pesanan</h6> <hr>
             </div>
@@ -124,7 +127,7 @@
               </table>
             </div>
           </div>
-          <a href="{{ url('/selesaikan-pemesanan') }}" type="button" class="btn btn-round pull-right"  style="background-color: #01573e">Lanjut Ke Pembayaran <i class="material-icons">keyboard_arrow_right</i></a>
+          <a href="{{ url('/selesaikan-pemesanan') }}" type="button" class="btn btn-round pull-left"  style="background-color: #01573e">Lanjut Ke Pembayaran <i class="material-icons">keyboard_arrow_right</i></a>
         </div>
 
 
@@ -136,18 +139,37 @@
   </div>
 </div>
 </div>  
-</div> <!-- end-main-raised -->
+</div>
 @endsection
 
 @section('scripts') 
 <script type="text/javascript"> 
- $(document).on('click', '#btnHapusProduk', function(){
-  swal({
-    title: "Produk Berhasil Di Hapus!", 
-    showConfirmButton :  false,
-    type: "success",
+  $(document).on('click', '#btnHapusProduk', function () { 
+    var id = $(this).attr("data-id");
+    var nama = $(this).attr("data-nama");
+    swal({
+      text: "Anda Yakin Ingin Menghapus Produk <b>"+nama+"</b> Dari Keranjang Belanja ?",
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya!',
+      cancelButtonText: 'Tidak',
+      confirmButtonClass: 'btn btn-success',
+      cancelButtonClass: 'btn btn-danger',
+      buttonsStyling: false
+    }).then(function () {
+
+      var url_hapus_produk_keranjang_belanja = window.location.origin + (window.location.pathname).replace("keranjang-belanja", "keranjang-belanja/hapus-produk-keranjang-belanja/"+id);
+      window.location.href=url_hapus_produk_keranjang_belanja;
+
+      swal({
+        text :  "Produk <b>"+nama+"</b> Berhasil Dihapus Dari Keranjang Belanjaan", 
+        showConfirmButton :  false,
+        type: "success",
+      });
+
+    })
   });
 
-  
 </script>
 @endsection 

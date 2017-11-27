@@ -10,6 +10,8 @@
   <meta name="viewport" content="width=device-width" />
   <!-- Bootstrap core CSS     -->
   <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" />
+  <link href="{{ asset('css/material-dashboard.css?v=1.2.0') }}" rel="stylesheet" />
+  <!--  CSS for Demo Purpose, don't include it in your project     -->
 
   <link href="{{ asset('css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
   <!--     Fonts and icons     -->
@@ -265,8 +267,6 @@
 <script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
 <script src="{{ asset('js/demo.js') }}"></script>
 <script src="{{ asset('js/material-kit.js?v=1.2.0')}}" type="text/javascript"></script>
-<!--  DataTables.net Plugin, full documentation here: https://datatables.net/    -->
-<script src="{{ asset('assets/js/jquery.datatables.js')}}"></script>
 {{-- lazy load image --}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-lazyload/10.3.5/lazyload.min.js"></script>
 
@@ -277,11 +277,13 @@
 
  $(document).on('click', '#btnBeliSekarang', function(){      
   swal({
-    title: "Produk Berhasil Di Tambah Ke Keranjang Belanjaan", 
+    text :  "Produk Berhasil Di Tambahkan Ke Keranjang Belanjaan", 
     showConfirmButton :  false,
     type: "success",
   });
 });
 
 </script>
+@yield('scripts')
+
 </html>

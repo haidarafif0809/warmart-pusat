@@ -166,7 +166,7 @@ class KeranjangBelanjaController extends Controller
 		if ($agent->isMobile()) {
 
 			$produk_belanjaan = '
-			<div class="card" style="margin-bottom: 1px; ">
+			<div class="card" style="margin-bottom: 1px; margin-top: 1px">
 			<div class="row">
 			<div class="col-md-12">
 
@@ -198,8 +198,7 @@ class KeranjangBelanjaController extends Controller
 
 			<center><div class="btn-group">
 
-			<a id="btnHapusProduk" href=" '. url('/keranjang-belanja/hapus-produk-keranjang-belanja/'.$keranjang_belanjaans->id_keranjang_belanja.''). '" type="button" class="btn btn-danger btn-xs"> <i class="material-icons">delete</i></a>
-
+			<button id="btnHapusProduk" data-nama="'. title_case($keranjang_belanjaans->produk->nama_barang) .'" data-id="'.$keranjang_belanjaans->id_keranjang_belanja.'" class="btn btn-danger btn-xs"><i class="material-icons">delete</i></button>
 			</div></center>
 
 
@@ -213,23 +212,35 @@ class KeranjangBelanjaController extends Controller
 
 		}else{
 
+
 			$produk_belanjaan = '
-			<tr class="card" style="margin-bottom: 3px;margin-top: 3px;width: 725px;">
-			<td>
-			<div class="img-container"> ';
+
+			<div class="card-content" style="padding-left: 5px; padding-top: 1px; padding-bottom: 1px; padding-right: 1px;"> 
+			<div class="row"> 
+			<div class="col-md-12">
+			<div class="row">
+
+			<div class="col-md-6">
+			<div class="row">
+			<div class="col-sm-4"> 
+			<div class="img-container"  style="padding-left: 5px; padding-top: 1px; padding-bottom: 1px; padding-right: 1px; width:100px;">';
 			$produk_belanjaan .= $this->fotoProduk($keranjang_belanjaans);
 			$produk_belanjaan .= '
 			</div>
-			</td>
-			<td class="td-name flexFont">
-			<a href="'. url('detail-produk/'.$keranjang_belanjaans->id_produk.''). '">'. $this->namaProduk($keranjang_belanjaans->produk->nama_barang) .'</a>
-			<br />
-			<small><i class="material-icons">store</i>  '. $keranjang_belanjaans->produk->warung->name .' </small>
-			</td>  
-			<td class="td-number">
-			<b>Rp. '. number_format($harga_produk,0,',','.') .'</b> 
-			</td> 
-			<td class="td-number">
+			</div>
+			<div class="col-sm-8">
+			<h5><a href="'. url('detail-produk/'.$keranjang_belanjaans->id_produk.''). '">'. $this->namaProduk($keranjang_belanjaans->produk->nama_barang) .'</a> </h5>
+			<p><small> '. $keranjang_belanjaans->produk->warung->name .'</small></p>
+			</div>
+			</div>
+			</div>
+
+			<div class="col-md-3">
+
+			<h5><b>Rp. '. number_format($harga_produk,0,',','.') .'</b></h5>
+			</div>
+
+			<div class="col-md-3">
 			<div class="btn-group">';
 
 			//tombol kurangi produk
@@ -240,15 +251,16 @@ class KeranjangBelanjaController extends Controller
 			$produk_belanjaan .= $this->tombolTambahiProduk($sisa_stok,$keranjang_belanjaans);
 
 			$produk_belanjaan .= '
+			</div><br>
+			<button id="btnHapusProduk" data-id="'.$keranjang_belanjaans->id_keranjang_belanja.'" data-nama="'.title_case($keranjang_belanjaans->produk->nama_barang) .'" class="btn btn-danger btn-xs">Hapus</button>
+
 			</div>
-			</td>   
-			<td class="td-actions">
-			<a id="btnHapusProduk" href=" '. url('/keranjang-belanja/hapus-produk-keranjang-belanja/'.$keranjang_belanjaans->id_keranjang_belanja.''). '" type="button" rel="tooltip" data-placement="left" title="Remove item" class="btn btn-simple">
-			<i class="material-icons">close</i>
-			</a>
-			</td>
-			</tr>  
-			';  
+			</div>
+			</div>
+			</div>
+			</div><hr>
+
+			'; 
 
 		}
 
