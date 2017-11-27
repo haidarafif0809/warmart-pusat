@@ -341,15 +341,16 @@ public static function namaWarung($warung){
 }
 
 public static function fotoProduk($produks){
- if ($produks->foto != NULL) {
-  DaftarProdukController::resizeProduk($produks);
-  
-  $foto_produk = '<img alt="'.$produks->nama.'" data-src="'.asset('foto_produk/'.$produks->foto.'').'">';
-}
-else{
-  $foto_produk = '<img src="'.asset('image/foto_default.png').'">';
-}
-return $foto_produk;
+  if ($produks->foto != NULL && file_exists( public_path() . '/foto_produk/'.$produks->foto)) {
+
+    DaftarProdukController::resizeProduk($produks);
+
+    $foto_produk = '<img alt="'.$produks->nama.'" data-src="'.asset('foto_produk/'.$produks->foto.'').'">';
+  }
+  else{
+    $foto_produk = '<img src="'.asset('image/foto_default.png').'">';
+  }
+  return $foto_produk;
 }
 
 public static function cardProduk($produks){
