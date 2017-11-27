@@ -40,9 +40,11 @@ class PesananWarungController extends Controller
 					if ($konfirmasi_pesanan->konfirmasi_pesanan == 0) {
 						$status .= '<b  style="color:red">Belum Di Konfirmasi</b>'; 
 					}elseif ($konfirmasi_pesanan->konfirmasi_pesanan == 1) {
-						$status .= '<b  style="color:orange">Sedang Konfirmasi</b>'; 
+						$status .= '<b  style="color:orange">Sudah Konfirmasi</b>'; 
 					}elseif ($konfirmasi_pesanan->konfirmasi_pesanan == 2) {
-						$status .= '<b  style="color:#01573e">Sudah Di Konfirmasi</b>'; 
+						$status .= '<b  style="color:#01573e">Selesai</b>'; 
+					}elseif ($konfirmasi_pesanan->konfirmasi_pesanan == 3) {
+						$status .= '<b  style="color:#01573e">Batal</b>'; 
 					}
 					return $status;
 				})->addColumn('subtotal', function($subtotal){
@@ -60,11 +62,12 @@ class PesananWarungController extends Controller
 			}
 			$html = $htmlBuilder
 			->addColumn(['data' => 'id', 'name' => 'id', 'title' => 'Pesanan'])  
-			->addColumn(['data' => 'pemesan', 'name' => 'pemesan', 'title' => 'Pemesan']) 
-			->addColumn(['data' => 'jumlah_produk', 'name' => 'jumlah_produk', 'title' => 'Jumlah']) 
-			->addColumn(['data' => 'subtotal', 'name' => 'subtotal', 'title' => 'Total'])  
+			->addColumn(['data' => 'pemesan', 'name' => 'pemesan', 'title' => 'Pemesan','orderable' => false, 'searchable'=>false]) 
+			->addColumn(['data' => 'jumlah_produk', 'name' => 'jumlah_produk', 'title' => 'Jumlah', 'orderable' => false, 'searchable'=>false]) 
+			->addColumn(['data' => 'subtotal', 'name' => 'subtotal', 'title' => 'Total', 'orderable' => false, 'searchable'=>false])  
 			->addColumn(['data' => 'konfirmasi_pesanan', 'name' => 'konfirmasi_pesanan', 'title' => 'Status', 'orderable' => false, 'searchable'=>false])
-			->addColumn(['data' => 'data_pengirim', 'name' => 'data_pengirim', 'title' => 'Pengiriman', 'orderable' => false, 'searchable'=>false]) ; 
+			->addColumn(['data' => 'data_pengirim', 'name' => 'data_pengirim', 'title' => 'Pengiriman', 'orderable' => false, 'searchable'=>false])
+			->addColumn(['data' => 'created_at', 'name' => 'created_at', 'title' => 'Waktu', 'orderable' => false, 'searchable'=>false]) ; 
 			return view('pesanan_warung.index')->with(compact('html'));
 		}
 	}
@@ -77,7 +80,7 @@ class PesananWarungController extends Controller
 			return response()->view('error.403');
 		}else{ 
 
-			$pesanan = PesananPelanggan::with('pelanggan')->find($id)->first();
+			$pesanan = PesananPelanggan::with('pelanggan')->find($id);
 			$detail_pesanan_pelanggan = DetailPesananPelanggan::with(['produk','pelanggan','pesanan_pelanggan'])->where('id_pesanan_pelanggan',$id)->get(); 
 
 			$subtotal = 0;
@@ -99,7 +102,7 @@ class PesananWarungController extends Controller
 			}elseif ($pesanan->konfirmasi_pesanan == 2) {
 				$status_pesanan .= '<td><b  style="color:#01573e">Selesai</b></td>'; 
 			}elseif ($pesanan->konfirmasi_pesanan == 3) {
-				$status_pesanan .= '<td><b  style="color:red">Pesanan Di Batalkan</b></td>'; 
+				$status_pesanan .= '<td><b  style="color:red"> Batal</b></td>'; 
 			}
 
         //MENAMPILKAN KAS
