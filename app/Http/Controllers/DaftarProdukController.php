@@ -163,7 +163,11 @@ class DaftarProdukController extends Controller
 
     if (Auth::check()) {
       $keranjang_belanjaan = KeranjangBelanja::with(['produk','pelanggan'])->where('id_pelanggan',Auth::user()->id)->get();
+      if ($keranjang_belanjaan->count() > 0) {
+        $warung_yang_dipesan = $keranjang_belanjaan->first()->produk->id_warung;
+      }
       $cek_belanjaan = $keranjang_belanjaan->count(); 
+
     }
     else {
       $cek_belanjaan = 0;
