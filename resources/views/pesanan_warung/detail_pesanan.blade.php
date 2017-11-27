@@ -114,7 +114,7 @@
             <td>
               <center>
 
-                
+
 
                 {{ $detail_pesanans->jumlah_produk }}
                 <div class="btn-group">
@@ -125,10 +125,8 @@
                   @else
                   <a  href="{{ url('kurang-produk-pesanan-warung/'.$detail_pesanans->id.'') }}" class="btn btn-round btn-xs"> <i class="material-icons">remove</i></a>
                   @endif
-
                   <a href="{{ url('tambah-produk-pesanan-warung/'.$detail_pesanans->id.'') }}" class="btn btn-round btn-xs"> <i class="material-icons">add</i></a>
-                  @else
-                  <a class="btn btn-xs" >{{  $detail_pesanans->jumlah_produk }} </a>
+
                   @endif
 
                 </div>

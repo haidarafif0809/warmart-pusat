@@ -65,7 +65,7 @@ class PemesananController extends Controller
 
 		$keranjang = $keranjang_belanjaan->get(); 
 
-		$id_warung = $keranjang_belanjaan->limit(1)->first()->id_warung; 
+		$id_warung = $keranjang_belanjaan->first()->id_warung; 
 		$id_user = Auth::user()->id;
 
 		$pesanan_pelanggan = PesananPelanggan::create([

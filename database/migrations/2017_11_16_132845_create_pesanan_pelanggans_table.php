@@ -21,7 +21,7 @@ class CreatePesananPelanggansTable extends Migration
             $table->string('alamat_pemesan');
             $table->string('jumlah_produk');
             $table->string('subtotal');
-            $table->integer('konfirmasi_pesanan')->nullable()->default(0)->comment = "1.belum di konfirmasi, 2.sudah di konfirmasi, 3.selesai, 4.batal";;
+            $table->integer('konfirmasi_pesanan')->nullable()->default(0)->comment = "0.belum di konfirmasi, 1.sudah di konfirmasi, 2.selesai, 3.batal";;
             $table->timestamps();
         });
     }
