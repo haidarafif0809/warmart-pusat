@@ -863,8 +863,8 @@
 		var subtotal = (parseFloat(jumlah) * parseFloat(harga)) - parseFloat(potongan); 
 		if (ppn == '') { 
 			var ppn_produk = '<select id="ppn_swal" name="ppn_swal" class="swal2-input js-selectize-reguler">'+ 
-			'<option value"Include>Include</option>'+ 
-			'<option value"Exclude>Exclude</option>'+ 
+			'<option value="Include">Include</option>'+ 
+			'<option value="Exclude">Exclude</option>'+ 
 			'</select></div>'; 
 		}else { 
 			var ppn_produk = '<select id="ppn_swal" name="ppn_swal" class="swal2-input js-selectize-reguler">'+ 

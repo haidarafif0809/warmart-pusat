@@ -39,7 +39,7 @@ class PemesananController extends Controller
 		$keranjang_belanjaan = KeranjangBelanja::with(['produk','pelanggan'])->where('id_pelanggan',Auth::user()->id)->get();
 		$cek_belanjaan = $keranjang_belanjaan->count();  
 
-		$jumlah_produk = KeranjangBelanja::select([DB::raw('IFNULL(SUM(jumlah_produk),0) as total_produk')])->first();  
+		$jumlah_produk = KeranjangBelanja::select([DB::raw('IFNULL(SUM(jumlah_produk),0) as total_produk')])->where('id_pelanggan',Auth::user()->id)->first();  
 		//FOTO WARMART
 		$logo_warmart = "".asset('/assets/img/examples/warmart_logo.png')."";
 
@@ -59,7 +59,7 @@ class PemesananController extends Controller
 	public function prosesSelesaikanPemesanan(Request $request)
 	{  
 
-		$keranjang_belanjaan = KeranjangBelanja::select('keranjang_belanjas.id_keranjang_belanja AS id_keranjang_belanja','keranjang_belanjas.id_produk AS id_produk','keranjang_belanjas.id_pelanggan AS id_pelanggan','keranjang_belanjas.jumlah_produk AS jumlah_produk','barangs.harga_jual AS harga_jual','barangs.id_warung AS id_warung')
+		$keranjang_belanjaan = KeranjangBelanja::select('keranjang_belanjas.id_keranjang_belanja AS id_keranjang_belanja','keranjang_belanjas.id_produk AS id_produk','keranjang_belanjas.jumlah_produk AS jumlah_produk','barangs.harga_jual AS harga_jual','barangs.id_warung AS id_warung')
 		->leftJoin('barangs','keranjang_belanjas.id_produk','=','barangs.id')
 		->where('id_pelanggan',Auth::user()->id);
 
@@ -93,7 +93,7 @@ class PemesananController extends Controller
 			DetailPesananPelanggan::create([
 				'id_pesanan_pelanggan'     => $pesanan_pelanggan->id,              
 				'id_produk'     => $keranjang_belanjaans['id_produk'],
-				'id_pelanggan' => $keranjang_belanjaans['id_pelanggan'],
+				'id_pelanggan' => $id_user,
 				'harga_produk' => $keranjang_belanjaans['harga_jual'],
 				'jumlah_produk'     => $keranjang_belanjaans['jumlah_produk'], 
 			]);   
