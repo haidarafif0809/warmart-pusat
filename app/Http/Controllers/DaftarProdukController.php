@@ -120,18 +120,32 @@ class DaftarProdukController extends Controller
 
   public static function filter_kategori($id)
   {
-    $keranjang_belanjaan = KeranjangBelanja::with(['produk','pelanggan'])->where('id_pelanggan',Auth::user()->id)->get();
+    $keranjang_belanjaan = KeranjangBelanja::with(['produk','pelanggan'])->where('id_pelanggan',Auth::user()->id);
     $cek_belanjaan = $keranjang_belanjaan->count(); 
-    //Pilih warung yang sudah dikonfirmasi admin
-    $data_warung = User::select(['id_warung'])->where('id_warung', '!=' ,'NULL')->where('konfirmasi_admin', 1)->groupBy('id_warung')->get();
-    $array_warung = array();
-    foreach ($data_warung as $data_warungs) {
-      array_push($array_warung, $data_warungs->id_warung);
+    if ($cek_belanjaan > 0) {
+      $warung_yang_dipesan = $keranjang_belanjaan->first()->produk->id_warung;
     }
 
+    if (isset($warung_yang_dipesan)) {
+      $data_produk = Barang::select(['id','kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung','konfirmasi_admin','satuan_id','hitung_stok'])
+      ->where('kategori_barang_id', $id)->where('id_warung', $warung_yang_dipesan)->inRandomOrder()->paginate(12);
+    }
+    else {
+       //Pilih warung yang sudah dikonfirmasi admin
+      $data_warung = User::select(['id_warung'])->where('id_warung', '!=' ,'NULL')->where('konfirmasi_admin', 1)->groupBy('id_warung')->get();
+      $array_warung = array();
+      foreach ($data_warung as $data_warungs) {
+        array_push($array_warung, $data_warungs->id_warung);
+      }
+
   //PILIH PRODUK
-    $data_produk = Barang::select(['id','kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung','konfirmasi_admin','satuan_id','hitung_stok'])
-    ->where('kategori_barang_id', $id)->whereIn('id_warung', $array_warung)->inRandomOrder()->paginate(12);
+      $data_produk = Barang::select(['id','kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung','konfirmasi_admin','satuan_id','hitung_stok'])
+      ->where('kategori_barang_id', $id)->whereIn('id_warung', $array_warung)->inRandomOrder()->paginate(12);
+
+    }
+    
+
+
 
       //PILIH DATA WARUNG
     $warung_data = Warung::select(['id','name', 'alamat', 'wilayah', 'no_telpon'])
@@ -527,5 +541,7 @@ public static function tidakAdaWarung(){
 
   return $warung_kosong;
 }
+
+
 
 }
