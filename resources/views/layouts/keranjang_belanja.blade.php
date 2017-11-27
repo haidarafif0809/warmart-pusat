@@ -59,19 +59,34 @@
       <div class="row">
         @if ($agent->isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
         <div class="col-md-4"> 
-          <table class="table table-shopping">
-            <thead >
-              <tr class="card" style="width: 725px;" >
-                <th class="text-center"></th>
-                <th style="padding-left: 20%"><b>Produk</b></th>   
-                <th style="padding-left: 125%"><b>Harga Produk</b></th> 
-                <th style="padding-left: 135%"><b>Kuantitas</b></th> 
-              </tr>
-            </thead>
-            <tbody>        
-              {!! $produk_belanjaan !!}
-            </tbody>
-          </table> 
+          <div class="card" style="margin-bottom: 3px;">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="col-sm-6 col-xs-6">Pesanan Saya</div>
+
+                <div class="col-sm-6 col-xs-6"><p align="right">Jumlah</p></div>
+              </div>
+            </div>
+          </div>
+
+          {!! $produk_belanjaan !!}
+
+          <div class="card" style="margin-bottom: 3px;">
+
+            <div class="col-md-12">
+              <div class="col-sm-6 col-xs-6">Total Produk </div>
+
+              <div class="col-sm-6 col-xs-6"><p align="right" class="text-danger"><b>{{ $jumlah_produk->total_produk }}</b></p></div>
+            </div>
+
+            <div class="col-md-12">
+              <div class="col-sm-6 col-xs-6">Subtotal</div>
+
+              <div class="col-sm-6 col-xs-6"><p align="right" class="text-danger"><b>Rp. {{ $subtotal }}</b></p></div>
+            </div>
+          </div>
+          <a href="{{ url('/selesaikan-pemesanan') }}" type="button" class="btn btn-round pull-right"  style="background-color: #01573e">Lanjut Ke Pembayaran <i class="material-icons">keyboard_arrow_right</i></a>
+
         </div>
         @else
         <div class="col-md-8"> 
@@ -87,8 +102,7 @@
               </tbody>
             </table> 
           </div>
-        </div>
-        @endif 
+        </div> 
 
         <div class="col-md-4">
 
@@ -112,6 +126,10 @@
           </div>
           <a href="{{ url('/selesaikan-pemesanan') }}" type="button" class="btn btn-round pull-right"  style="background-color: #01573e">Lanjut Ke Pembayaran <i class="material-icons">keyboard_arrow_right</i></a>
         </div>
+
+
+        @endif
+
       </div>
     </div>
     @endif
@@ -129,5 +147,7 @@
     showConfirmButton :  false,
     type: "success",
   });
+
+  
 </script>
 @endsection 
