@@ -286,6 +286,10 @@
     text :  "Produk Berhasil Di Tambahkan Ke Keranjang Belanjaan", 
     showConfirmButton :  false,
     type: "success",
+    timer: 10000,
+    onOpen: () => {
+      swal.showLoading()
+    }
   });
 });
 

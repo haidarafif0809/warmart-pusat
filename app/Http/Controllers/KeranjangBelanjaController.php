@@ -74,22 +74,17 @@ class KeranjangBelanjaController extends Controller
 	{
 
 		$pelanggan =  Auth::user()->id ; 
-		$datakeranjang_belanjaan = KeranjangBelanja::where('id_pelanggan',$pelanggan)->orWhere('id_produk',$id);
-		$keranjang_belanjaan = $datakeranjang_belanjaan->first();
 
-		if ($datakeranjang_belanjaan->count() > 0 AND $keranjang_belanjaan->id_pelanggan == $pelanggan AND $keranjang_belanjaan->id_produk == $id) {
-			$barang = Barang::find($id);   
+		$datakeranjang_belanjaan = KeranjangBelanja::where('id_pelanggan',$pelanggan)->Where('id_produk',$id);
+		$jumlah_produk = $datakeranjang_belanjaan->first();
 
-			$keranjang_belanjaan->jumlah_produk += 1;
-			$keranjang_belanjaan->save(); 
+		if ($datakeranjang_belanjaan->count() > 0) { 
+
+			$datakeranjang_belanjaan->update(['jumlah_produk'=> $jumlah_produk->jumlah_produk + 1]);						
 
 		}else{
 
-			$produk = KeranjangBelanja::create(); 
-			$produk->id_produk = $id;
-			$produk->id_pelanggan =  $pelanggan;
-			$produk->jumlah_produk += 1;
-			$produk->save(); 		
+			$produk = KeranjangBelanja::create(['id_produk'=>$id,'id_pelanggan'=>$pelanggan,'jumlah_produk' => '1']); 
 		}
 		return redirect()->back();
 

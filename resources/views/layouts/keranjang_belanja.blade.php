@@ -60,7 +60,7 @@
       <div class="row">
         @if ($agent->isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
         <div class="col-md-4"> 
-          <div class="card" style="margin-bottom: 3px;">
+          <div class="card" style="margin-bottom: 1px; margin-top: 1px;">
             <div class="row">
               <div class="col-md-12">
                 <div class="col-sm-6 col-xs-6">Pesanan Saya</div>
@@ -72,7 +72,7 @@
 
           {!! $produk_belanjaan !!}
 
-          <div class="card" style="margin-bottom: 3px;">
+          <div class="card" style="margin-bottom: 1px; margin-top: 1px;">
 
             <div class="col-md-12">
               <div class="col-sm-6 col-xs-6">Total Produk </div>
@@ -94,7 +94,7 @@
         <div class="col-md-8"> 
 
           <div class="card">
-            <div class="card-header card-header-text">
+            <div class="card-header">
 
               <div class="row">
                 <div class="col-md-6">  <h4 class="card-title" style="color: black;"> Produk</h4> </div>
@@ -110,14 +110,14 @@
         <div class="col-md-4">
 
           <div class="card" style="margin-bottom: 1px;">
-            <div class="card-header card-header-text">
+            <div class="card-header">
               <h6 class="card-title" style="color: black; padding-left: 10px"> Rincian Pesanan</h6> <hr>
             </div>
             <div class="card-content table-responsive"> 
               <table>
                 <tbody>      
-                  <tr><td width="50%">Jumlah Produk </td> <td>: &nbsp;&nbsp;&nbsp;</td> <td>{{ $jumlah_produk->total_produk }}</td></tr>
-                  <tr><td width="50%">Subtotal </td> <td>: &nbsp;&nbsp;&nbsp;</td> <td>Rp. {{ $subtotal }}</td></tr>
+                  <tr><td width="50%"><b>Total Produk</b> </td> <td>: &nbsp;&nbsp;&nbsp;</td> <td> <b>{{ $jumlah_produk->total_produk }}</b></td></tr>
+                  <tr><td width="50%"><b>Subtotal</b> </td> <td>: &nbsp;&nbsp;&nbsp;</td> <td><b>Rp. {{ $subtotal }}</b></td></tr>
                 </tbody>
               </table><hr>
               <table>
@@ -165,7 +165,11 @@
       swal({
         text :  "Produk <b>"+nama+"</b> Berhasil Dihapus Dari Keranjang Belanjaan", 
         showConfirmButton :  false,
-        type: "success",
+        type: "success",    
+        timer: 10000,
+        onOpen: () => {
+          swal.showLoading()
+        }
       });
 
     })

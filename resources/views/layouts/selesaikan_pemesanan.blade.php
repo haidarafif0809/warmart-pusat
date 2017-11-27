@@ -36,8 +36,8 @@
         @else 
         <div class="card"><br>
           <div class="col-md-7"> 
-            <div class="card"   data-background-color="rose">
-              <div class="card-header card-header-text">
+            <div class="card" >
+              <div class="card-header">
                 <h6 class="card-title" style="color: black; padding-left: 10px"> Alamat Pengiriman</h6> <hr>
               </div>
 
@@ -73,8 +73,8 @@
 
           <div class="col-md-5">
 
-            <div class="card"  data-background-color="rose">
-              <div class="card-header card-header-text">
+            <div class="card">
+              <div class="card-header">
                 <h6 class="card-title" style="color: black; padding-left: 10px">Rincian Pesanan</h6> <hr>
               </div>
               <div class="card-content table-responsive"> 
