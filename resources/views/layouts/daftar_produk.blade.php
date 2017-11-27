@@ -108,7 +108,8 @@
                 {!! Form::close() !!}
             </div>
         </div>
-        @if(App\KeranjangBelanja::where('id_pelanggan',Auth::user()->id)->count() == 0)
+        @if(Auth::check())
+        @if( App\KeranjangBelanja::where('id_pelanggan',Auth::user()->id)->count() == 0)
         <div class="row">   
             <div class="col-md-12">
                 <!--Menampilkan Warung Secara Acak--> 
@@ -116,6 +117,16 @@
             </div>   
             <span class="span-warung">{!! $daftar_warung !!}</span> 
         </div>
+        @endif
+        @else 
+        <div class="row">   
+            <div class="col-md-12">
+                <!--Menampilkan Warung Secara Acak--> 
+                <h4 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px"> Warung</h4> 
+            </div>   
+            <span class="span-warung">{!! $daftar_warung !!}</span> 
+        </div>
+
         @endif  
 
         <div class="row">
@@ -151,7 +162,7 @@
                     <div class="col-md-12 col-sm-12 col-xs-12">
                         {{$produk_pagination}}
                     </div>
-                    
+
                 </div>
             </div>
         </div>
@@ -198,12 +209,20 @@
         </div>
 
         <div class="row">
+          @if(Auth::check())
           @if(App\KeranjangBelanja::where('id_pelanggan',Auth::user()->id)->count() == 0)
           <!--Menampilkan Warung Secara Acak--> 
           <div class="col-md-12"> 
             <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px"> Warung</h5>           
             <span id="span-warung">{!! $daftar_warung !!}</span>     
         </div>
+        @endif
+        @else 
+        <div class="col-md-12"> 
+            <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px"> Warung</h5>           
+            <span id="span-warung">{!! $daftar_warung !!}</span>     
+        </div>
+
         @endif
 
         <div class="col-md-3"> 
