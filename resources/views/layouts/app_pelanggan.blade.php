@@ -13,6 +13,8 @@
   <link href="{{ asset('css/material-dashboard.css?v=1.2.0') }}" rel="stylesheet" />
   <!--  CSS for Demo Purpose, don't include it in your project     -->
 
+  <link href="{{ asset('css/selectize.bootstrap3.css') }}" rel="stylesheet">
+
   <link href="{{ asset('css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
   <!--     Fonts and icons     -->
   <link href="{{ asset('css/material-kit.css?v=1.2.0')}}" rel="stylesheet"/>
@@ -228,6 +230,8 @@
 <script src="{{ asset('js/jquery-3.2.1.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('js/material.min.js') }}" type="text/javascript"></script>
+
+<script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
 <script src="{{ asset('js/perfect-scrollbar.jquery.min.js') }}" type="text/javascript"></script>
 <!-- Library for adding dinamically elements -->
 <script src="{{ asset('js/arrive.min.js') }}" type="text/javascript"></script>
@@ -246,7 +250,7 @@
 <!--  Plugin for the DateTimePicker, full documentation here: https://eonasdan.github.io/bootstrap-datetimepicker/ -->
 <script src="{{ asset('js/bootstrap-datetimepicker.js') }}"></script>
 <!--    Plugin for Select, full documentation here: http://silviomoreto.github.io/bootstrap-select   -->
-<script src="{{ asset('js/bootstrap-selectpicker.js') }}"></script>
+
 <!-- Vector Map plugin, full documentation here: http://jvectormap.com/documentation/ -->
 <script src="{{ asset('js/jquery-jvectormap.js') }}"></script>
 <!-- Sliders Plugin, full documentation here: https://refreshless.com/nouislider/ -->
@@ -264,8 +268,10 @@
 <script src="{{ asset('js/fullcalendar.min.js') }}"></script>
 <!-- Plugin for Tags, full documentation here: https://github.com/bootstrap-tagsinput/bootstrap-tagsinputs  -->
 <script src="{{ asset('js/jquery.tagsinput.js') }}"></script>
-<script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
+<script src="{{ asset('js/material-dashboard.js?v=1.2.0') }}"></script>
 <script src="{{ asset('js/demo.js') }}"></script>
+<script src="{{ asset('js/selectize.min.js') }}"></script> 
+
 <script src="{{ asset('js/material-kit.js?v=1.2.0')}}" type="text/javascript"></script>
 {{-- lazy load image --}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-lazyload/10.3.5/lazyload.min.js"></script>
