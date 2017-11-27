@@ -163,7 +163,11 @@ class DaftarProdukController extends Controller
 
     if (Auth::check()) {
       $keranjang_belanjaan = KeranjangBelanja::with(['produk','pelanggan'])->where('id_pelanggan',Auth::user()->id)->get();
+      if ($keranjang_belanjaan->count() > 0) {
+        $warung_yang_dipesan = $keranjang_belanjaan->first()->produk->id_warung;
+      }
       $cek_belanjaan = $keranjang_belanjaan->count(); 
+
     }
     else {
       $cek_belanjaan = 0;
@@ -188,84 +192,85 @@ class DaftarProdukController extends Controller
     $nama_kategori = 'Hasil Pencarian : "'.$request->search.'" <a href="'.url("/daftar-produk") .'"> <i class="material-icons" style="color:red" >highlight_off</i> </a>';
   //TAMPILAN VIA HP
     $agent = new Agent();
-
+    if (isset($warung_yang_dipesan)) {
+     $daftar_produk = DaftarProdukController::daftarProduk($data_produk,$warung_yang_dipesan);
+   }
+   else {
     $daftar_produk = DaftarProdukController::daftarProduk($data_produk);
-    $daftar_warung = DaftarProdukController::daftarWarung($warung_data);
-
-    return view('layouts.daftar_produk', ['kategori_produk' => $kategori_produk, 'daftar_warung' => $daftar_warung, 'daftar_produk' => $daftar_produk, 'produk_pagination' => $produk_pagination, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'agent' => $agent,'cek_belanjaan'=>$cek_belanjaan,'logo_warmart'=>$logo_warmart]);
   }
 
-  public static function cekStokProduk($produks){
-    if (Auth::check()) {
-      $keranjang_belanjaan = KeranjangBelanja::with(['produk','pelanggan'])->where('id_pelanggan',Auth::user()->id)->where('id_produk',$produks->id)->count(); 
-    }
-    else {
-      $keranjang_belanjaan = 0;
-    }
+  $daftar_warung = DaftarProdukController::daftarWarung($warung_data);
+
+  return view('layouts.daftar_produk', ['kategori_produk' => $kategori_produk, 'daftar_warung' => $daftar_warung, 'daftar_produk' => $daftar_produk, 'produk_pagination' => $produk_pagination, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'agent' => $agent,'cek_belanjaan'=>$cek_belanjaan,'logo_warmart'=>$logo_warmart]);
+}
+
+public static function cekStokProduk($produks){
+  if (Auth::check()) {
+    $keranjang_belanjaan = KeranjangBelanja::with(['produk','pelanggan'])->where('id_pelanggan',Auth::user()->id)->where('id_produk',$produks->id)->count(); 
+  }
+  else {
+    $keranjang_belanjaan = 0;
+  }
 
       //jika belum ada belanjaan
-    if ($keranjang_belanjaan == 0) {
+  if ($keranjang_belanjaan == 0) {
         //jika barang di hitung stok
-      if ($produks->hitung_stok == 1) {
-        $stok = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk),0) - IFNULL(SUM(jumlah_keluar),0) as stok_produk')])->where('id_produk', $produks->id)->where('warung_id', $produks->id_warung)->first();
-        $cek_produk = $stok->stok_produk; 
-      }
+    if ($produks->hitung_stok == 1) {
+      $stok = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk),0) - IFNULL(SUM(jumlah_keluar),0) as stok_produk')])->where('id_produk', $produks->id)->where('warung_id', $produks->id_warung)->first();
+      $cek_produk = $stok->stok_produk; 
+    }
         //jika tidak hitung stok
-      else {
-        $cek_produk = 1;
-      }
-
+    else {
+      $cek_produk = 1;
     }
-    elseif($keranjang_belanjaan > 0){
+
+  }
+  elseif($keranjang_belanjaan > 0){
       //jika sudah ada belanjaan
-      if ($produks->hitung_stok == 1) {
-        $cek_produk = KeranjangBelanja::where('id_pelanggan',Auth::user()->id)->where('id_produk',$produks->id)->first(); 
-        $stok = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk),0) - IFNULL(SUM(jumlah_keluar),0) as stok_produk')])->where('id_produk', $cek_produk->id_produk)->where('warung_id', $produks->id_warung)->first();
-        $cek_produk = $stok->stok_produk - $cek_produk->jumlah_produk; 
-      }
-      else {
+    if ($produks->hitung_stok == 1) {
+      $cek_produk = KeranjangBelanja::where('id_pelanggan',Auth::user()->id)->where('id_produk',$produks->id)->first(); 
+      $stok = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk),0) - IFNULL(SUM(jumlah_keluar),0) as stok_produk')])->where('id_produk', $cek_produk->id_produk)->where('warung_id', $produks->id_warung)->first();
+      $cek_produk = $stok->stok_produk - $cek_produk->jumlah_produk; 
+    }
+    else {
 
-        $cek_produk = 1;
-      }
-
-
+      $cek_produk = 1;
     }
 
-    return $cek_produk;
+
   }
 
+  return $cek_produk;
+}
 
-  public static function tombolBeli($cek_produk,$produks){
-    $agent = new Agent();
-    if ($agent->isMobile()) {
-                  //JIKA USER LOGIN BUKAN PELANGGAN MAKA TIDAK BISA PESAN PRODUK
-      if(Auth::check() && Auth::user()->tipe_user == 3 ){
-       if ($cek_produk == 0) {
-        $tombol_beli = '<a style="background-color:#01573e" class="btn btn-block tombolBeli" rel="tooltip" title="Stok Tidak Ada"> Beli Sekarang </a>';  
-      }else{
-        $tombol_beli = '<a href="'. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" id="btnBeliSekarang" style="background-color:#01573e" class="btn btn-block tombolBeli" rel="tooltip" title="Tambah Ke Keranjang Belanja"> Beli Sekarang </a>';           
-      }
-    }
-    else{
-      $tombol_beli = '<button type="button" style="background-color:#01573e" class="btn btn-block tombolBeli" id="btnBeli"> Beli Sekarang  </button>';
-    }
 
+public static function tombolBeli($cek_produk,$produks){
+  $pelanggan = 3;
+  if(Auth::check() && Auth::user()->tipe_user == $pelanggan ){
+   if ($cek_produk == 0) {
+    $tombol_beli = '<a disabled="true" style="background-color:#01573e" class="btn btn-block tombolBeli" rel="tooltip" title="Stok Tidak Ada"> Beli Sekarang </a>';  
+  }else{
+    $tombol_beli = '<a href="'. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" id="btnBeliSekarang" style="background-color:#01573e" class="btn btn-block tombolBeli" rel="tooltip" title="Tambah Ke Keranjang Belanja"> Beli Sekarang </a>';           
   }
-  else{
-                  //JIKA USER LOGIN BUKAN PELANGGAN MAKA TIDAK BISA PESAN PRODUK
-    if(Auth::check() && Auth::user()->tipe_user == 3){
-      if ($cek_produk == 0) {
-        $tombol_beli = '<a style="background-color:#01573e" class="btn btn-block tombolBeli" rel="tooltip" title="Stok Tidak Ada" disabled="" >Beli Sekarang </a>';
-      }else{
-        $tombol_beli = '<a href="'. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" id="btnBeliSekarang" style="background-color:#01573e" class="btn btn-block tombolBeli" rel="tooltip" title="Tambah Ke Keranjang Belanja"> Beli Sekarang </a>';
-      }
-    }
-    else{
-      $tombol_beli = '<button type="button" style="background-color:#01573e" class="btn btn-block tombolBeli" id="btnBeli"> Beli Sekarang</button>';
-    }  
+}
+elseif (Auth::check() && Auth::user()->tipe_user != $pelanggan) {
+  $tombol_beli = '<a style="background-color:#01573e" class="btn btn-block tombolBeli" rel="tooltip" title="Masuk Sebagai Pelanggan Untuk Beli" disabled=""> Beli Sekarang </a>';  
+}
+else{
+ if ($cek_produk == 0) {
+  $tombol_beli = '<a disabled="true" style="background-color:#01573e" class="btn btn-block tombolBeli" rel="tooltip" title="Stok Tidak Ada" > Beli Sekarang </a>';  
+}else{
+  $tombol_beli = '<a href="'. url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$produks->id.''). '" id="btnBeliSekarang" style="background-color:#01573e" class="btn btn-block tombolBeli" rel="tooltip" title="Tambah Ke Keranjang Belanja"> Beli Sekarang </a>';           
+}
+}
 
-  }
-  return $tombol_beli; 
+
+
+return $tombol_beli; 
+}
+
+public function tomboBeliDisable($tool_tip){
+  $tombol_beli = '<button type="button" style="background-color:#01573e" class="btn btn-block tombolBeli" id="btnBeli" disabled="" rel="tooltip" title="'.$tool_tip.'" > Beli Sekarang  </button>';
 }
 
 public static function tidakAdaProduk(){
@@ -367,11 +372,13 @@ public static function cardProduk($produks){
   return $card_produk;
 }
 
-public static function daftarProduk($data_produk){
+public static function daftarProduk($data_produk,$warung_yang_dipesan = ""){
  if ($data_produk->count() > 0) {
   $daftar_produk = "";
   foreach ($data_produk as $produks) {
-    $daftar_produk .= DaftarProdukController::cardProduk($produks);
+    if ($warung_yang_dipesan == "" OR $warung_yang_dipesan == $produks->id_warung ) {
+      $daftar_produk .= DaftarProdukController::cardProduk($produks);
+    }  
   }
   if ($daftar_produk == "") {
    $daftar_produk = DaftarProdukController::tidakAdaProduk();

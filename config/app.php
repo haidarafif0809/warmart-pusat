@@ -175,6 +175,7 @@ return [
         Stevebauman\Location\LocationServiceProvider::class,
         PragmaRX\Tracker\Vendor\Laravel\ServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
+        Laravolt\Indonesia\ServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -242,6 +243,7 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
         'Location' => Stevebauman\Location\Facades\Location::class,
+        'Indonesia' => Laravolt\Indonesia\Facade::class,
 
         // other Facades ommited
         'SEOMeta'   => Artesaos\SEOTools\Facades\SEOMeta::class,

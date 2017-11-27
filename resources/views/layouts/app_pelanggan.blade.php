@@ -282,8 +282,6 @@
     type: "success",
   });
 });
- $(document).on('click', '#btnBeli', function(){
-  swal("Info!", "Silakan Login Sebagai Pelanggan Untuk Melakukan Pesanan.", "info");
-});
+
 </script>
 </html>
