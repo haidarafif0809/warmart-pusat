@@ -33,7 +33,7 @@
                         <div class="form-group">
                             <label for="email" class="col-md-2 control-label">Email</label>
                             <div class="col-md-4">
-                                <input class="form-control" required autocomplete="off" placeholder="Email" type="email" v-model="profilWarung.email" name="email"  autofocus="">
+                                <input class="form-control" autocomplete="off" placeholder="Email" type="email" v-model="profilWarung.email" name="email"  autofocus="">
                                 <span v-if="errors.email" id="email_error" class="label label-danger">{{ errors.email[0] }}</span>
 
                             </div>
