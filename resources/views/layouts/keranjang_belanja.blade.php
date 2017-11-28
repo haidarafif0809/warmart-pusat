@@ -36,7 +36,12 @@
 </div>
 
 <div class="main main-raised"> 
-  <div class="container" style="margin-left: 5px; margin-right: 5px;">
+ @if ($agent->isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
+ <div class="container" style="margin-left: 5px; margin-right: 5px;">
+  @else
+
+  <div class="container">
+    @endif
     <div class="card-content"> 
       <h3 class="title text-center">Keranjang Belanjaan</h3>
       <div class="row">
