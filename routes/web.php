@@ -315,10 +315,10 @@ Route::get('/ubah-profil-pelanggan',[
 
 // PROSES CARI PROVINSI
 Route::get('/cek-kabupaten',[ 		
-		'middleware' => ['auth'],
-		'as' => 'cek_kabupaten',
-		'uses' => 'UbahProfilController@cek_kabupaten'
-]);
+	'middleware' => ['auth'],
+	'as' => 'cek_kabupaten',
+	'uses' => 'UbahProfilController@cek_kabupaten'
+	]);
 
 //PROSES UBAH PROFIL PELANGGAN
 Route::put('/proses-ubah-profil-pelanggan',[
@@ -427,9 +427,7 @@ Route::get('/kelompok-produk/pencarian','KelompokProdukController@pencarian')->m
 Route::get('/profil-warung/view', 'WarungProfilController@view')->middleware('auth');
 Route::get('/profil-warung/pencarian', 'WarungProfilController@pencarian')->middleware('auth');
 Route::get('/profil-warung/pilih-provinsi','WarungProfilController@pilih_provinsi')->middleware('auth');
-Route::get('/profil-warung/pilih-kabupaten/{id}','WarungProfilController@pilih_kabupaten')->middleware('auth');
-Route::get('/profil-warung/pilih-kecamatan/{id}','WarungProfilController@pilih_kecamatan')->middleware('auth');
-Route::get('/profil-warung/pilih-kelurahan/{id}','WarungProfilController@pilih_kelurahan')->middleware('auth');
+Route::get('/profil-warung/pilih-wilayah/{id}/{type}','WarungProfilController@pilih_wilayah')->middleware('auth');
 Route::get('/profil-warung/view-detail/{id}','WarungProfilController@view_detail')->middleware('auth');
 
 

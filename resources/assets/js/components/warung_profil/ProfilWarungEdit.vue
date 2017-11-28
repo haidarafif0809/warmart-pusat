@@ -199,6 +199,7 @@ export default {
           axios.get(app.url+'/pilih-provinsi')
           .then(function (resp) {
             app.provinsi = resp.data;
+
         })
           .catch(function (resp) {
             alert("Tidak bisa memuat provinsi ");
@@ -206,7 +207,8 @@ export default {
       },
         selected_kabupaten(provinsi_id) {
           var app = this;
-          axios.get(app.url+'/pilih-kabupaten/'+provinsi_id)
+          var type = "kabupaten";
+          axios.get(app.url+'/pilih-wilayah/'+provinsi_id+'/'+type)
           .then(function (resp) {
             app.kabupaten = resp.data;
         })
@@ -216,7 +218,8 @@ export default {
       },
         selected_kecamatan(kabupaten_id) {
           var app = this;
-          axios.get(app.url+'/pilih-kecamatan/'+kabupaten_id)
+          var type = "kecamatan";
+          axios.get(app.url+'/pilih-wilayah/'+kabupaten_id+'/'+type)
           .then(function (resp) {
             app.kecamatan = resp.data;
         })
@@ -226,9 +229,11 @@ export default {
       },
         selected_kelurahan(kecamatan_id) {
           var app = this;
-          axios.get(app.url+'/pilih-kelurahan/'+kecamatan_id)
+          var type = "kelurahan";
+          axios.get(app.url+'/pilih-wilayah/'+kecamatan_id+'/'+type)
           .then(function (resp) {
             app.kelurahan = resp.data;
+            console.log(resp.data)
         })
           .catch(function (resp) {
             alert("Tidak bisa memuat kelurahan ");
@@ -244,18 +249,17 @@ export default {
   },
   watch:{
      'profilWarung.provinsi': function (newVal, oldVal){
-
-         if (oldVal != "" && newVal != "") {
+         if (newVal != "") {
             this.selected_kabupaten(newVal);
          }
      },
      'profilWarung.kabupaten': function (newVal, oldVal){
-         if (oldVal != "" && newVal != "") {
+         if (newVal != "") {
             this.selected_kecamatan(newVal);
          }
      },
      'profilWarung.kecamatan': function (newVal, oldVal){
-         if (oldVal != "" && newVal != "") {
+         if (newVal != "") {
             this.selected_kelurahan(newVal);
          }
      }
