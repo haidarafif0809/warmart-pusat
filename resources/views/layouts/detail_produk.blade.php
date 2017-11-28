@@ -220,7 +220,9 @@ p {
         <div class="col-md-8 col-md-offset-2">
           <div class="brand">
             <h2 class="title text-center">PASAR MUSLIM INDONESIA</h2>
+            @if(!Agent::isMobile())
             <h4 class="title text-center"> Segala Kemudahan Untuk Umat Muslim Berbelanja.</h4>
+            @endif
           </div>
         </div>
       </div>
