@@ -104,7 +104,7 @@ p {
 
 .flexFont {
   @if(Agent::isMobile())
-  height:3em;
+  height:4em;
   @else  
   height:3em;
   @endif
