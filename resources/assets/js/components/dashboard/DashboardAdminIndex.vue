@@ -201,6 +201,7 @@ export default {
         else if(app.tipeUser.content == 4){
             app.getDashboardWarung();
         }
+        console.log(app.tipeUser.content)
     },
     methods: {
         getDashboardData(){
