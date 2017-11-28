@@ -215,16 +215,16 @@
     </router-link>
   </li>
   <li>
-    <router-link :to="{name: 'indexKas'}">
-      <span class="sidebar-mini">K</span>
-      <span class="sidebar-normal">Kas</span>
-    </router-link>
-  </li> 
-  <li>
-   <a href="{{ route('barang.index') }}">
-    <span class="sidebar-mini">P</span>
-    <span class="sidebar-normal">Produk</span>
+   <a href="{{ route('kas.index') }}">
+    <span class="sidebar-mini">K</span>
+    <span class="sidebar-normal">Kas</span>
   </a>
+</li> 
+<li>
+ <a href="{{ route('barang.index') }}">
+  <span class="sidebar-mini">P</span>
+  <span class="sidebar-normal">Produk</span>
+</a>
 </li> 
 <li>
  <a href="{{ route('suplier.index') }}">
