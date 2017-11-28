@@ -70,7 +70,7 @@
     				<ul class="nav">
               <li>
                 @if(Auth::user()->tipe_user == 4 )
-                <a href="{{ url('/ubah-profil-warung') }}">Ubah Profil</a>
+                <a href="{{ url('/ubah-profil-warung') }}">Ubah Profil User</a>
                 @elseif(Auth::user()->tipe_user == 2 )
                 <a href="{{ url('/ubah-profil-komunitas') }}">Ubah Profil</a>
                 @elseif(Auth::user()->tipe_user == 1 )
@@ -80,83 +80,90 @@
               </li>
 
               <li>
-                @if(Auth::user()->tipe_user == 1 )                
-                <router-link :to="{name: 'ubahPasswordAdmin'}">Ubah Password </router-link>
-                @else
-                <a href="{{ url('/ubah-password') }}">Ubah Password</a>
-                @endif
-              </li>
-              <li>
-                <a href="{{ url('/logout') }}"
-                onclick="event.preventDefault();
-                document.getElementById('logout-form').submit();">
-                Logout
+                <router-link :to="{name: 'indexProfilWarung'}">
+                  <span class="sidebar-normal">Ubah Profil Warung</span>
+                </router-link>
               </a>
-              <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
-                {{ csrf_field() }}
-              </form>
+            </li> 
 
-            </li>     
-          </ul>
-        </div>
-      </li>
-      <li class="active">
-        @if(Auth::user()->tipe_user == 1 OR Auth::user()->tipe_user == 4)
-        <router-link :to="{name: 'indexDashboard'}">   <i class="material-icons">dashboard</i><p>Dashboard</p></router-link>
-        @else 
-        <a href="{{ url('/dashboard')}}">
-          <i class="material-icons">dashboard</i>
-          <p>Dashboard</p>
-        </a>
-        @endif
-      </li>
+            <li>
+              @if(Auth::user()->tipe_user == 1 )                
+              <router-link :to="{name: 'ubahPasswordAdmin'}">Ubah Password </router-link>
+              @else
+              <a href="{{ url('/ubah-password') }}">Ubah Password</a>
+              @endif
+            </li>
+            <li>
+              <a href="{{ url('/logout') }}"
+              onclick="event.preventDefault();
+              document.getElementById('logout-form').submit();">
+              Logout
+            </a>
+            <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
+              {{ csrf_field() }}
+            </form>
 
-      <!--PEMBELIAN-->
-      @if(Auth::user()->tipe_user == 4 AND Auth::user()->konfirmasi_admin == 1 AND Auth::user()->foto_ktp != "")
-      <li>
-        <a href="{{ route('pembelian.index') }}">
-          <i class="material-icons">add_shopping_cart</i>
-          <p>Pembelian</p>
-        </a>
-      </li>
-      <!--PEMBELIAN--> 
-
-      <li>
-        <a href="{{ route('pesanan-warung.index') }}">
-          <i class="material-icons">archive</i>
-          <p>Pesanan</p>
-        </a>
-      </li>
-      <!--PEMBELIAN--> 
-
-      <!-- MASTER DATA WARUNG -->
-      <li>
-        <a data-toggle="collapse" href="#persediaan">
-         <i class="material-icons">assessment</i>
-         <p> Persediaan
-          <b class="caret"></b>
-        </p>
+          </li>     
+        </ul>
+      </div>
+    </li>
+    <li class="active">
+      @if(Auth::user()->tipe_user == 1 OR Auth::user()->tipe_user == 4)
+      <router-link :to="{name: 'indexDashboard'}">   <i class="material-icons">dashboard</i><p>Dashboard</p></router-link>
+      @else 
+      <a href="{{ url('/dashboard')}}">
+        <i class="material-icons">dashboard</i>
+        <p>Dashboard</p>
       </a>
-      <div class="collapse" id="persediaan">
-       <ul class="nav">
-        <li>
-         <a href="{{ route('item-masuk.index') }}"> 
-          <span class="sidebar-mini">IM</span>
-          <span class="sidebar-normal">Item Masuk</span>
-        </a>
-      </li>  
-      <li>
-       <a href="{{ route('item-keluar.index') }}">
-        <span class="sidebar-mini">IK</span>
-        <span class="sidebar-normal">Item Keluar</span>
-      </a>
-    </li> 
+      @endif
+    </li>
+
+    <!--PEMBELIAN-->
+    @if(Auth::user()->tipe_user == 4 AND Auth::user()->konfirmasi_admin == 1 AND Auth::user()->foto_ktp != "")
     <li>
-     <a href="{{ route('laporan-persediaan.index') }}">
-      <span class="sidebar-mini">LP</span>
-      <span class="sidebar-normal">Laporan Persediaan</span>
+      <a href="{{ route('pembelian.index') }}">
+        <i class="material-icons">add_shopping_cart</i>
+        <p>Pembelian</p>
+      </a>
+    </li>
+    <!--PEMBELIAN--> 
+
+    <li>
+      <a href="{{ route('pesanan-warung.index') }}">
+        <i class="material-icons">archive</i>
+        <p>Pesanan</p>
+      </a>
+    </li>
+    <!--PEMBELIAN--> 
+
+    <!-- MASTER DATA WARUNG -->
+    <li>
+      <a data-toggle="collapse" href="#persediaan">
+       <i class="material-icons">assessment</i>
+       <p> Persediaan
+        <b class="caret"></b>
+      </p>
+    </a>
+    <div class="collapse" id="persediaan">
+     <ul class="nav">
+      <li>
+       <a href="{{ route('item-masuk.index') }}"> 
+        <span class="sidebar-mini">IM</span>
+        <span class="sidebar-normal">Item Masuk</span>
+      </a>
+    </li>  
+    <li>
+     <a href="{{ route('item-keluar.index') }}">
+      <span class="sidebar-mini">IK</span>
+      <span class="sidebar-normal">Item Keluar</span>
     </a>
   </li> 
+  <li>
+   <a href="{{ route('laporan-persediaan.index') }}">
+    <span class="sidebar-mini">LP</span>
+    <span class="sidebar-normal">Laporan Persediaan</span>
+  </a>
+</li> 
 </ul>
 </div>
 </li>
@@ -202,22 +209,22 @@
 <div class="collapse" id="setting">
  <ul class="nav">
   <li>
-   <a href="{{ route('kategori_transaksi.index') }}">
-    <span class="sidebar-mini">KT</span>
-    <span class="sidebar-normal">Kategori Transaksi</span>
+    <router-link :to="{name: 'indexKategoriTransaksi'}">
+      <span class="sidebar-mini">KT</span>
+      <span class="sidebar-normal">Kategori Transaksi</span>
+    </router-link>
+  </li>
+  <li>
+    <router-link :to="{name: 'indexKas'}">
+      <span class="sidebar-mini">K</span>
+      <span class="sidebar-normal">Kas</span>
+    </router-link>
+  </li> 
+  <li>
+   <a href="{{ route('barang.index') }}">
+    <span class="sidebar-mini">P</span>
+    <span class="sidebar-normal">Produk</span>
   </a>
-</li> 
-<li>
- <a href="{{ route('kas.index') }}">
-  <span class="sidebar-mini">K</span>
-  <span class="sidebar-normal">Kas</span>
-</a>
-</li> 
-<li>
- <a href="{{ route('barang.index') }}">
-  <span class="sidebar-mini">P</span>
-  <span class="sidebar-normal">Produk</span>
-</a>
 </li> 
 <li>
  <a href="{{ route('suplier.index') }}">
@@ -225,13 +232,6 @@
   <span class="sidebar-normal">Supplier</span>
 </a>
 </li>
-<li>
-  <router-link :to="{name: 'indexProfilWarung'}">
-    <span class="sidebar-mini">W</span>
-    <span class="sidebar-normal">Warung</span>
-  </router-link>
-</a>
-</li> 
 </ul>
 </div>
 </li>

@@ -81,6 +81,11 @@
  import ProfilWarungIndex from './components/warung_profil/ProfilWarungIndex.vue';
  import ProfilWarungEdit from './components/warung_profil/ProfilWarungEdit.vue';
 
+ // KATEGORI TRANSAKSI
+ import KategoriTransaksiIndex from './components/kategori_transaksi/KategoriTransaksiIndex.vue';
+ import KategoriTransaksiCreate from './components/kategori_transaksi/KategoriTransaksiCreate.vue';
+ import KategoriTransaksiEdit from './components/kategori_transaksi/KategoriTransaksiEdit.vue';
+
  const routes = [ 
  {
  	path: '/',
@@ -143,6 +148,11 @@
 // Ubah Data Profil Warung
 {path: '/profil-warung', component: ProfilWarungIndex, name: 'indexProfilWarung'},
 {path: '/edit-profil-warung/:id', component: ProfilWarungEdit, name: 'editProfilWarung'},
+
+// Kategori Transaksi
+{path: '/kategori-transaksi', component: KategoriTransaksiIndex, name: 'indexKategoriTransaksi'},
+{path: '/create-kategori-transaksi', component: KategoriTransaksiCreate, name: 'createKategoriTransaksi'},
+{path: '/edit-kategori-transaksi/:id', component: KategoriTransaksiEdit, name: 'editKategoriTransaksi'},
 
 ]
 
