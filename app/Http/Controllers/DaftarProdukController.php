@@ -369,7 +369,7 @@ public static function cardProduk($produks){
     </a>
     <div class="card-content">
     <div class="footer">  
-    <p class="nama-produk flexFont">';
+    <p class=" flexFont">';
 
     $card_produk .= '<a href="'.url("/detail-produk/".$produks->id."") .'" >';
     $card_produk .= DaftarProdukController::namaProduk($produks);
@@ -453,13 +453,13 @@ public static function cardWarung($warungs){
   </p>
   </div>
   <div class="col-md-9 col-sm-9 col-xs-9">              
-  <p class="">
+  <p class="flexFontWarung">
   <a href="halaman-warung/'.$warungs->id.'" >';
   $card_warung .= DaftarProdukController::warungNama($warungs);
   $card_warung .= '
   </a>
   </p>
-  <p class="">            
+  <p class="flexFontWarung">            
   <a href="halaman-warung/'.$warungs->id.'">';
   $card_warung .= DaftarProdukController::alamatWarung($warungs);
   $card_warung .= '
