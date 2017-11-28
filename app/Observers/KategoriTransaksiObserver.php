@@ -15,39 +15,14 @@ class KategoriTransaksiObserver
         $data_kategori_masuk = KasMasuk::where('kategori', $KategoriTransaksi->id)->where('id_warung', $KategoriTransaksi->id_warung)->count();
         $data_kategori_keluar = KasKeluar::where('kategori', $KategoriTransaksi->id)->where('warung_id', $KategoriTransaksi->id_warung)->count();
 
-    	if ($data_kategori_masuk > 0 OR $data_kategori_keluar > 0) {
-    		$pesan_alert = 
-                '<div class="container-fluid">
-                    <div class="alert-icon">
-                        <i class="material-icons">warning</i>
-                    </div>
-                    <b>Gagal : Kategori Transaksi Tidak Bisa Dihapus. Karena Sudah Terpakai.</b>
-                </div>';
-
-            Session:: flash("flash_notification", [
-                "level"=>"danger",
-                "message"=> $pesan_alert
-                ]);
+        if ($data_kategori_masuk > 0 OR $data_kategori_keluar > 0) {
             return false;
-    	}
-    	else{
-
-            $pesan_alert = 
-            '<div class="container-fluid">
-                <div class="alert-icon">
-                    <i class="material-icons">check</i>
-                </div>
-                    <b>Sukses : Kategori Transaksi Berhasil Dihapus</b>
-            </div>';
-
+        }
+        else{
             KategoriTransaksi::where('id', $KategoriTransaksi->id)->where('id_warung', $KategoriTransaksi->id_warung)->delete();
+        }
 
-            Session:: flash("flash_notification", [
-                    "level"=>"success",
-                    "message"=> $pesan_alert
-                ]);
-            return true;
-    	}
+        exit();
 
     }
 
