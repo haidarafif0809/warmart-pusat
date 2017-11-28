@@ -16,6 +16,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Auth;
 use App\KomunitasCustomer;
+use Notification;
+use App\Notifications\PendaftarWarung;
 
 class RegisterController extends Controller
 {
@@ -201,6 +203,8 @@ class RegisterController extends Controller
 
             $userWarungRole = Role::where('name', 'warung')->first();
             $user->attachRole($userWarungRole);
+
+            Notification::send(User::first(), new PendaftarWarung($user));
 
             $userkey = env('USERKEY');
             $passkey = env('PASSKEY');

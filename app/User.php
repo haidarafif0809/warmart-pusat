@@ -32,10 +32,14 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-        public function role()
-          {
-            return $this->hasOne('App\Otoritas','user_id','id');
-          }
+    public function role()
+    {
+        return $this->hasOne('App\Otoritas','user_id','id');
+    }
+           // Specify Slack Webhook URL to route notifications to 
+    public function routeNotificationForSlack() {
+        return 'https://hooks.slack.com/services/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';
+    }
 
- 
+
 }
