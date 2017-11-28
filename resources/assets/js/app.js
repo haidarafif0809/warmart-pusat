@@ -77,6 +77,9 @@
  // UBAH PASSSWORD
  import UbahPasswordAdmin from './components/ubah_password/UbahPasswordAdmin.vue';
 
+ // UBAH DATA PROFIL WARUNG
+ import ProfilWarungIndex from './components/warung_profil/ProfilWarungIndex.vue';
+ import ProfilWarungEdit from './components/warung_profil/ProfilWarungEdit.vue';
 
  const routes = [ 
  {
@@ -136,6 +139,10 @@
 
 // ubah password admin
 {path: '/ubah-password-admin', component: UbahPasswordAdmin, name: 'ubahPasswordAdmin'},
+
+// Ubah Data Profil Warung
+{path: '/profil-warung', component: ProfilWarungIndex, name: 'indexProfilWarung'},
+{path: '/edit-profil-warung/:id', component: ProfilWarungEdit, name: 'editProfilWarung'},
 
 ]
 
