@@ -369,7 +369,7 @@ public static function cardProduk($produks){
     </a>
     <div class="card-content">
     <div class="footer">  
-    <p class="nama-produk flexFont">';
+    <p class=" flexFont">';
 
     $card_produk .= '<a href="'.url("/detail-produk/".$produks->id."") .'" >';
     $card_produk .= DaftarProdukController::namaProduk($produks);
@@ -404,6 +404,17 @@ else {
 }
 
 return $daftar_produk;
+}
+
+public static function dataWarungTervalidasi(){
+  $data_warung = User::select(['id_warung'])->where('id_warung', '!=' ,'NULL')->where('konfirmasi_admin', 1)->groupBy('id_warung')->get();
+  $array_warung = array();
+  foreach ($data_warung as $data_warungs) {
+    array_push($array_warung, $data_warungs->id_warung);
+  }
+
+  return $array_warung;
+
 }
 
 public static function resizeProduk($produks){

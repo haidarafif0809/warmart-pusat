@@ -10,31 +10,34 @@
 
 	<title>War-Mart.id</title>
 
-	<!-- CSRF Token -->
-	<meta name="csrf-token" content="{{ csrf_token() }}">
+  <!-- CSRF Token -->
+  <meta name="csrf-token" content="{{ csrf_token() }}">
 
-	<!-- Bootstrap core CSS     -->
-	<link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" />
-	<!--  Material Dashboard CSS    -->
-	<link href="{{ asset('css/material-dashboard.css?v=1.2.0') }}" rel="stylesheet" />
-	<!--  CSS for Demo Purpose, don't include it in your project     -->
+  <!--TIPE USER-->
+  <meta name="tipe-user" content="{{ Auth::user()->tipe_user }}">
 
-	<link href="{{ asset('css/selectize.bootstrap3.css') }}" rel="stylesheet">
+  <!-- Bootstrap core CSS     -->
+  <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" />
+  <!--  Material Dashboard CSS    -->
+  <link href="{{ asset('css/material-dashboard.css?v=1.2.0') }}" rel="stylesheet" />
+  <!--  CSS for Demo Purpose, don't include it in your project     -->
+
+  <link href="{{ asset('css/selectize.bootstrap3.css') }}" rel="stylesheet">
 
 
-	<link href="{{ asset('css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
+  <link href="{{ asset('css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
 
-	<!--     Fonts and icons     -->
-	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
-	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons" />
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!--     Fonts and icons     -->
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 
 <style type="text/css">
 
-.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
- padding: 1px;
-}
+  .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+   padding: 1px;
+ }
 </style>
 
 <body>
@@ -98,65 +101,63 @@
         </div>
       </li>
       <li class="active">
-        @if(Auth::user()->tipe_user == 1 )
-        <router-link :to="{name: 'indexDashboard'}">   <i class="material-icons">dashboard</i>
-          <p>Dashboard</p></router-link>
-          @else 
-          <a href="{{ url('/dashboard')}}">
-            <i class="material-icons">dashboard</i>
-            <p>Dashboard</p>
-          </a>
-
-          @endif
-        </li>
-
-        <!--PEMBELIAN-->
-        @if(Auth::user()->tipe_user == 4 AND Auth::user()->konfirmasi_admin == 1 AND Auth::user()->foto_ktp != "")
-        <li>
-          <a href="{{ route('pembelian.index') }}">
-            <i class="material-icons">add_shopping_cart</i>
-            <p>Pembelian</p>
-          </a>
-        </li>
-        <!--PEMBELIAN--> 
-        
-        <li>
-          <a href="{{ route('pesanan-warung.index') }}">
-            <i class="material-icons">archive</i>
-            <p>Pesanan</p>
-          </a>
-        </li>
-        <!--PEMBELIAN--> 
-
-        <!-- MASTER DATA WARUNG -->
-        <li>
-          <a data-toggle="collapse" href="#persediaan">
-           <i class="material-icons">assessment</i>
-           <p> Persediaan
-            <b class="caret"></b>
-          </p>
+        @if(Auth::user()->tipe_user == 1 OR Auth::user()->tipe_user == 4)
+        <router-link :to="{name: 'indexDashboard'}">   <i class="material-icons">dashboard</i><p>Dashboard</p></router-link>
+        @else 
+        <a href="{{ url('/dashboard')}}">
+          <i class="material-icons">dashboard</i>
+          <p>Dashboard</p>
         </a>
-        <div class="collapse" id="persediaan">
-         <ul class="nav">
-          <li>
-           <a href="{{ route('item-masuk.index') }}"> 
-            <span class="sidebar-mini">IM</span>
-            <span class="sidebar-normal">Item Masuk</span>
-          </a>
-        </li>  
-        <li>
-         <a href="{{ route('item-keluar.index') }}">
-          <span class="sidebar-mini">IK</span>
-          <span class="sidebar-normal">Item Keluar</span>
-        </a>
-      </li> 
+        @endif
+      </li>
+
+      <!--PEMBELIAN-->
+      @if(Auth::user()->tipe_user == 4 AND Auth::user()->konfirmasi_admin == 1 AND Auth::user()->foto_ktp != "")
       <li>
-       <a href="{{ route('laporan-persediaan.index') }}">
-        <span class="sidebar-mini">LP</span>
-        <span class="sidebar-normal">Laporan Persediaan</span>
+        <a href="{{ route('pembelian.index') }}">
+          <i class="material-icons">add_shopping_cart</i>
+          <p>Pembelian</p>
+        </a>
+      </li>
+      <!--PEMBELIAN--> 
+
+      <li>
+        <a href="{{ route('pesanan-warung.index') }}">
+          <i class="material-icons">archive</i>
+          <p>Pesanan</p>
+        </a>
+      </li>
+      <!--PEMBELIAN--> 
+
+      <!-- MASTER DATA WARUNG -->
+      <li>
+        <a data-toggle="collapse" href="#persediaan">
+         <i class="material-icons">assessment</i>
+         <p> Persediaan
+          <b class="caret"></b>
+        </p>
+      </a>
+      <div class="collapse" id="persediaan">
+       <ul class="nav">
+        <li>
+         <a href="{{ route('item-masuk.index') }}"> 
+          <span class="sidebar-mini">IM</span>
+          <span class="sidebar-normal">Item Masuk</span>
+        </a>
+      </li>  
+      <li>
+       <a href="{{ route('item-keluar.index') }}">
+        <span class="sidebar-mini">IK</span>
+        <span class="sidebar-normal">Item Keluar</span>
       </a>
     </li> 
-  </ul>
+    <li>
+     <a href="{{ route('laporan-persediaan.index') }}">
+      <span class="sidebar-mini">LP</span>
+      <span class="sidebar-normal">Laporan Persediaan</span>
+    </a>
+  </li> 
+</ul>
 </div>
 </li>
 
@@ -223,7 +224,14 @@
   <span class="sidebar-mini">S</span>
   <span class="sidebar-normal">Supplier</span>
 </a>
-</li>   
+</li>
+<li>
+  <router-link :to="{name: 'indexProfilWarung'}">
+    <span class="sidebar-mini">W</span>
+    <span class="sidebar-normal">Warung</span>
+  </router-link>
+</a>
+</li> 
 </ul>
 </div>
 </li>

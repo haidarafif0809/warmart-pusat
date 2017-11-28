@@ -50,14 +50,8 @@
 
 }
 .btnWarung {
-    @if(Agent::isMobile())
-    height:3em;
-    @else  
-    height:3em;
-    @endif
     padding:1%;
     margin: 0px;
-
 }
 
 .smaller {
@@ -259,11 +253,34 @@
 @section('scripts')
 <script type="text/javascript">
     flexFont = function () {
+        @if(Agent::isMobile())
         var divs = document.getElementsByClassName("flexFont");
         for(var i = 0; i < divs.length; i++) {
-            var relFontsize = divs[i].offsetWidth*0.05;
+            var relFontsize = divs[i].offsetWidth*0.1;
             divs[i].style.fontSize = relFontsize+'px';
         }
+        @else 
+        var divs = document.getElementsByClassName("flexFont");
+        for(var i = 0; i < divs.length; i++) {
+            var relFontsize = divs[i].offsetWidth*0.06;
+            divs[i].style.fontSize = relFontsize+'px';
+        }
+
+        @endif
+        @if(Agent::isMobile())
+        var divs = document.getElementsByClassName("flexFontWarung");
+        for(var i = 0; i < divs.length; i++) {
+            var relFontsize = divs[i].offsetWidth*0.14;
+            divs[i].style.fontSize = relFontsize+'px';
+        }
+        @else 
+        var divs = document.getElementsByClassName("flexFontWarung");
+        for(var i = 0; i < divs.length; i++) {
+            var relFontsize = divs[i].offsetWidth*0.16;
+            divs[i].style.fontSize = relFontsize+'px';
+        }
+
+        @endif
     };
 
     window.onload = function(event) {
