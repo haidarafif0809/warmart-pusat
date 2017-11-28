@@ -1,6 +1,7 @@
 @extends('layouts.app_pelanggan')
 
 @section('content')
+  <link href="{{ asset('css/selectize.bootstrap3.css') }}" rel="stylesheet">
 
 <style type="text/css">
 #card-ubah-profil{ 
@@ -236,7 +237,7 @@
                     <div class="col-md-10">
                         
                          @if (isset($lokasi_pelanggan))
-                        {!! Form::select('kabupaten', array(),$lokasi_pelanggan->kabupaten, ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH KABUPATEN--','id'=>'pilih_kabupaten']) !!}
+                        {!! Form::select('kabupaten', $kabupaten,$lokasi_pelanggan->kabupaten, ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH KABUPATEN--','id'=>'pilih_kabupaten']) !!}
                         {!! $errors->first('kabupaten', '<p class="help-block">:message</p>') !!}
                         @else
                         {!! Form::select('kabupaten',array(),null
@@ -252,7 +253,7 @@
                     <div class="col-md-10">
                        
                          @if (isset($lokasi_pelanggan))
-                        {!! Form::select('kecamatan',array(), $lokasi_pelanggan->kecamatan, ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH KECAMATAN--','id'=>'pilih_kecamatan']) !!}
+                        {!! Form::select('kecamatan',$kecamatan, $lokasi_pelanggan->kecamatan, ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH KECAMATAN--','id'=>'pilih_kecamatan']) !!}
                         {!! $errors->first('kecamatan', '<p class="help-block">:message</p>') !!}
                         @else
                         {!! Form::select('kecamatan',array(),null
@@ -268,7 +269,7 @@
                     <div class="col-md-10">
                         
                          @if (isset($lokasi_pelanggan))
-                        {!! Form::select('kelurahan',array(), $lokasi_pelanggan->kelurahan, ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH KELURAHAN--','id'=>'pilih_kelurahan']) !!}
+                        {!! Form::select('kelurahan',$kelurahan, $lokasi_pelanggan->kelurahan, ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH KELURAHAN--','id'=>'pilih_kelurahan']) !!}
                         {!! $errors->first('kelurahan', '<p class="help-block">:message</p>') !!}
                         @else
                         {!! Form::select('kelurahan',array(),null
@@ -294,11 +295,33 @@
 @endsection
 
 @section('scripts')
+
 <script type="text/javascript">
  $(document).ready(function(){
     $("#nama_pelanggan").focus();
 
+            var id_provinsi = $("#pilih_provinsi").val();
+            var id_kabupaten = $("#pilih_kabupaten").val();
+            var id_kecamatan = $("#pilih_kecamatan").val();
+
+            var type_kabupaten = "kabupaten";
+            var type_kecamatan = "kecamatan";
+            var type_kelurahan = "kelurahan";
+
+            $.get('{{ route('cek_wilayah') }}',{'_token': $('meta[name=csrf-token]').attr('content'),type:type_kabupaten,id:id_provinsi}, function(data){  
+                    $("#pilih_kabupaten").html(data);
+            }); 
+
+            $.get('{{ route('cek_wilayah') }}',{'_token': $('meta[name=csrf-token]').attr('content'),type:type_kecamatan,id:id_kabupaten}, function(data){  
+                    $("#pilih_kecamatan").html(data);
+            }); 
+
+            $.get('{{ route('cek_wilayah') }}',{'_token': $('meta[name=csrf-token]').attr('content'),type:type_kelurahan,id:id_kecamatan}, function(data){  
+                    $("#pilih_kelurahan").html(data);
+            }); 
+
 });
+    
 
  $('.datepicker').datepicker({
     format: 'dd-mm-yyyy', 
@@ -313,16 +336,17 @@
         $(document).on('change', '#pilih_provinsi', function(){
             var id = $("#pilih_provinsi").val();
             var type = "kabupaten";
-            $.get('{{ route('cek_kabupaten') }}',{'_token': $('meta[name=csrf-token]').attr('content'),type:type,id:id}, function(data){  
+            $.get('{{ route('cek_wilayah') }}',{'_token': $('meta[name=csrf-token]').attr('content'),type:type,id:id}, function(data){  
                     $("#pilih_kabupaten").html(data);
             }); 
             $("#pilih_kecamatan").html('');
             $('#pilih_kelurahan').html('');
         });
+
         $(document).on('change', '#pilih_kabupaten', function(){
             var id = $("#pilih_kabupaten").val();
             var type = "kecamatan";
-            $.get('{{ route('cek_kabupaten') }}',{'_token': $('meta[name=csrf-token]').attr('content'),type:type,id:id}, function(data){  
+            $.get('{{ route('cek_wilayah') }}',{'_token': $('meta[name=csrf-token]').attr('content'),type:type,id:id}, function(data){  
                     $("#pilih_kecamatan").html(data);
             });                
             $('#pilih_kelurahan').html('');
@@ -330,10 +354,10 @@
         $(document).on('change', '#pilih_kecamatan', function(){
             var id = $("#pilih_kecamatan").val();
             var type = "kelurahan";
-            $.get('{{ route('cek_kabupaten') }}',{'_token': $('meta[name=csrf-token]').attr('content'),type:type,id:id}, function(data){  
+            $.get('{{ route('cek_wilayah') }}',{'_token': $('meta[name=csrf-token]').attr('content'),type:type,id:id}, function(data){  
                     $("#pilih_kelurahan").html(data);
-            });                
-        });
+             });
+        });                
 </script>
 @endsection
 

@@ -313,10 +313,10 @@ Route::get('/ubah-profil-pelanggan',[
 ]);
 
 // PROSES CARI PROVINSI
-Route::get('/cek-kabupaten',[ 		
+Route::get('/cek-wilayah',[ 		
 		'middleware' => ['auth'],
-		'as' => 'cek_kabupaten',
-		'uses' => 'UbahProfilController@cek_kabupaten'
+		'as' => 'cek_wilayah',
+		'uses' => 'UbahProfilController@cek_wilayah'
 ]);
 
 //PROSES UBAH PROFIL PELANGGAN
