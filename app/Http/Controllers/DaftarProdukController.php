@@ -445,21 +445,21 @@ public static function cardWarung($warungs){
   <div class="footer">
   <div class="row">
   <div class="col-md-1 col-sm-1 col-xs-1">                      
-  <p class="nama-produk flexFont">                
+  <p class="">                
   <i class="material-icons">store</i>
   </p>                    
-  <p class="nama-produk flexFont">
+  <p class="">
   <i class="material-icons">place</i>
   </p>
   </div>
   <div class="col-md-9 col-sm-9 col-xs-9">              
-  <p class="nama-produk flexFont">
+  <p class="">
   <a href="halaman-warung/'.$warungs->id.'" >';
   $card_warung .= DaftarProdukController::warungNama($warungs);
   $card_warung .= '
   </a>
   </p>
-  <p class="nama-produk flexFont">            
+  <p class="">            
   <a href="halaman-warung/'.$warungs->id.'">';
   $card_warung .= DaftarProdukController::alamatWarung($warungs);
   $card_warung .= '

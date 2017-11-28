@@ -266,7 +266,7 @@
 <script src="{{ asset('js/fullcalendar.min.js') }}"></script>
 <!-- Plugin for Tags, full documentation here: https://github.com/bootstrap-tagsinput/bootstrap-tagsinputs  -->
 <script src="{{ asset('js/jquery.tagsinput.js') }}"></script>
-<script src="{{ asset('js/material-dashboard.js?v=1.2.0') }}"></script>
+
 <script src="{{ asset('js/demo.js') }}"></script>
 <script src="{{ asset('js/selectize.min.js') }}"></script> 
 
