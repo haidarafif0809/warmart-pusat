@@ -76,7 +76,7 @@
 
     <div class="container">
         <h3 class="title text-center">{!! $nama_kategori !!}</h3>
-            {!! $list_warung !!}
+        {!! $list_warung !!}
         <div class="card card-raised card-form-horizontal">
             <div class="card-content">
                 {!! Form::open(['url' => route('halaman_warung.pencarian'),'method' => 'get', 'class'=>'form-horizontal']) !!}
@@ -100,49 +100,49 @@
 
         <div class="row">
           <div class="col-md-12">
-                <!--Menampilkan Warung Secara Acak--> 
-                <h4 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px"> {!! $nama_warung !!}</h4> 
-            </div>   
-        </div>
+            <!--Menampilkan Warung Secara Acak--> 
+            <h4 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px"> Produk</h4> 
+        </div>   
+    </div>
 
-        <div class="row">
-            <div class="col-md-12"> 
-                <div class="panel panel-default">
-                    <div class="panel-heading" role="tab" id="headingTwo">
-                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                            <h4 class="title">
-                                KATEGORI
-                                <i class="material-icons">keyboard_arrow_down</i>
-                            </h4>
-                        </a>
-                    </div>
-                    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-                        <div class="panel-body">
+    <div class="row">
+        <div class="col-md-12"> 
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingTwo">
+                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        <h4 class="title">
+                            KATEGORI
+                            <i class="material-icons">keyboard_arrow_down</i>
+                        </h4>
+                    </a>
+                </div>
+                <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                    <div class="panel-body">
 
-                            <ul class="nav" style="background-color: #01573e">                                        
-                                <li><a style="color:white" href="{{route('halaman-warung.halaman_warung',$id)}}"><i class="material-icons">format_align_justify</i> SEMUA KATEGORI</a></li>
-                            </ul>
+                        <ul class="nav" style="background-color: #01573e">                                        
+                            <li><a style="color:white" href="{{route('halaman-warung.halaman_warung',$id)}}"><i class="material-icons">format_align_justify</i> SEMUA KATEGORI</a></li>
+                        </ul>
 
-                            <ul class="nav" style="background-color: #01573e">
-                                {!! $kategori_produk !!}                        
-                            </ul>
-                        </div>
+                        <ul class="nav" style="background-color: #01573e">
+                            {!! $kategori_produk !!}                        
+                        </ul>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="col-md-12"><br>
-                <div class="row ">
-                    <!-- Menampilkan Produk -->
-                    {!! $daftar_produk !!}
-                    <div class="col-md-12 col-sm-12 col-xs-12">
-                        {{$produk_pagination}}
-                    </div>
-                    
+        <div class="col-md-12"><br>
+            <div class="row ">
+                <!-- Menampilkan Produk -->
+                {!! $daftar_produk !!}
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    {{$produk_pagination}}
                 </div>
+
             </div>
         </div>
     </div>
+</div>
 
 </div> <!-- end-main-raised -->
 @else <!--JIKA DIAKSES VIA KOMPUTER-->
@@ -174,7 +174,7 @@
                                 <i class="material-icons">search</i>
                             </span>
                             <input type="text" name="search" id="cari_produk" value="" placeholder="Cari Produk.." class="form-control" />
-                           <input type="hidden" name="id_warung" id="cari_produk" value="{{$id}}" class="form-control" />
+                            <input type="hidden" name="id_warung" id="cari_produk" value="{{$id}}" class="form-control" />
 
                         </div>
                     </div>
@@ -190,7 +190,7 @@
 
             <!--Menampilkan NAMA Warung --> 
             <div class="col-md-12"> 
-                <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px"> {!! $nama_warung !!} </h5>             
+                <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px"> Produk </h5>             
             </div>
 
             <div class="col-md-3"> 

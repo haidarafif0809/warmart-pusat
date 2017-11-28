@@ -22,4 +22,26 @@ class KeranjangBelanja extends Model
 	public function scopeJumlahBelanja($query){
 		return $query->where('id_pelanggan',Auth::user()->id)->count();
 	}
+
+	public function getNamaProdukAttribute() 
+	{   
+		return title_case($this->produk->nama_barang); 
+
+	}
+
+
+	public function getNamaProdukMobileAttribute() 
+	{   
+		if (strlen(strip_tags($this->produk->nama_barang)) <= 33) {
+
+			$nama_produk =title_case( strip_tags($this->produk->nama_barang));
+		}else{
+
+			$nama_produk = title_case(''.strip_tags(substr($this->produk->nama_barang, 0, 30)).'...'); 
+		}
+
+		return $nama_produk;
+	}
+	
+
 }

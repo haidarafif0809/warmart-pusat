@@ -161,7 +161,7 @@ class KeranjangBelanjaController extends Controller
 		if ($agent->isMobile()) {
 
 			$produk_belanjaan = '
-			<div class="card" style="margin-bottom: 1px; margin-top: 1px">
+			<div class="card" style="margin-bottom: 1px; margin-top: 1px;">
 			<div class="row">
 			<div class="col-md-12">
 

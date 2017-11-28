@@ -406,6 +406,17 @@ else {
 return $daftar_produk;
 }
 
+public static function dataWarungTervalidasi(){
+  $data_warung = User::select(['id_warung'])->where('id_warung', '!=' ,'NULL')->where('konfirmasi_admin', 1)->groupBy('id_warung')->get();
+  $array_warung = array();
+  foreach ($data_warung as $data_warungs) {
+    array_push($array_warung, $data_warungs->id_warung);
+  }
+
+  return $array_warung;
+
+}
+
 public static function resizeProduk($produks){
   $foto_produk =  Image::make(asset('foto_produk/'.$produks->foto));
   $height_foto = $foto_produk->height();
