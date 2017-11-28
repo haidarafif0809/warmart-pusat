@@ -259,14 +259,17 @@
 <!--  DataTables.net Plugin, full documentation here: https://datatables.net/    -->
 <script src="{{ asset('js/jquery.dataTables.js') }}"></script>
 <!-- Sweet Alert 2 plugin, full documentation here: https://limonte.github.io/sweetalert2/ -->
-<script src="{{ asset('js/sweetalert2.js') }}"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.0.5/sweetalert2.all.min.js"></script>
+
+<!-- Sertakan polibill untuk Prompt ES6 (opsional) untuk browser IE11 dan Android --> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.js"> </script>
 <!-- Plugin for Fileupload, full documentation here: http://www.jasny.net/bootstrap/javascript/#fileinput -->
 <script src="{{ asset('js/jasny-bootstrap.min.js') }}"></script>
 <!--  Full Calendar Plugin, full documentation here: https://github.com/fullcalendar/fullcalendar    -->
 <script src="{{ asset('js/fullcalendar.min.js') }}"></script>
 <!-- Plugin for Tags, full documentation here: https://github.com/bootstrap-tagsinput/bootstrap-tagsinputs  -->
 <script src="{{ asset('js/jquery.tagsinput.js') }}"></script>
-
+<script src="{{ asset('js/material-dashboard.js?v=1.2.0') }}"></script>
 <script src="{{ asset('js/demo.js') }}"></script>
 <script src="{{ asset('js/selectize.min.js') }}"></script> 
 

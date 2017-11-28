@@ -147,32 +147,31 @@
   $(document).on('click', '#btnHapusProduk', function () { 
     var id = $(this).attr("data-id");
     var nama = $(this).attr("data-nama");
+
     swal({
-      text: "Anda Yakin Ingin Menghapus Produk <b>"+nama+"</b> Dari Keranjang Belanja ?",
+      html: "Anda Yakin Ingin Menghapus Produk <b>"+nama+"</b> Dari Keranjang Belanja ?",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Ya!',
-      cancelButtonText: 'Tidak',
-      confirmButtonClass: 'btn btn-success',
-      cancelButtonClass: 'btn btn-danger',
-      buttonsStyling: false
-    }).then(function () {
+      confirmButtonText: 'Ya',
+      cancelButtonText: 'Batal'
+    }).then((result) => {
+      if (result.value) {
+        var url_hapus_produk_keranjang_belanja = window.location.origin + (window.location.pathname).replace("keranjang-belanja", "keranjang-belanja/hapus-produk-keranjang-belanja/"+id);
+        window.location.href=url_hapus_produk_keranjang_belanja;
+        swal({
+          html :  "Produk <b>"+nama+"</b> Berhasil Dihapus Dari Keranjang Belanjaan", 
+          showConfirmButton :  false,
+          type: "success",    
+          timer: 10000,
+          onOpen: () => {
+            swal.showLoading()
+          }
+        });
 
-      var url_hapus_produk_keranjang_belanja = window.location.origin + (window.location.pathname).replace("keranjang-belanja", "keranjang-belanja/hapus-produk-keranjang-belanja/"+id);
-      window.location.href=url_hapus_produk_keranjang_belanja;
-
-      swal({
-        text :  "Produk <b>"+nama+"</b> Berhasil Dihapus Dari Keranjang Belanjaan", 
-        showConfirmButton :  false,
-        type: "success",    
-        timer: 10000,
-        onOpen: () => {
-          swal.showLoading()
-        }
-      });
-
+      }
     })
+
   });
 
 </script>
