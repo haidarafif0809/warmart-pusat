@@ -65,7 +65,7 @@
             <div class="card card-stats"> 
                 <div class="card-content">
                     <p class="category">Rata-rata Produk Perwarung</p>
-                    <h3 class="card-title"> {{ dashboardData.rata_rata_produk }}</h3>
+                    <h3 class="card-title"> {{ dashboardData.rata_rata_produk.toFixed(2) }}</h3>
                 </div> 
             </div>
         </div>
@@ -74,6 +74,22 @@
                 <div class="card-content">
                     <p class="category">Jumlah Error Log</p>
                     <h3 class="card-title">{{ dashboardData.error_log }}</h3>
+                </div> 
+            </div>
+        </div>     
+           <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-stats"> 
+                <div class="card-content">
+                    <p class="category">Jumlah Seluruh Pesanan</p>
+                    <h3 class="card-title">{{ dashboardData.pesanan }}</h3>
+                </div> 
+            </div>
+        </div>  
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-stats"> 
+                <div class="card-content">
+                    <p class="category">Jumlah Pesanan Selesai</p>
+                    <h3 class="card-title">{{ dashboardData.pesanan_selesai }}</h3>
                 </div> 
             </div>
         </div>

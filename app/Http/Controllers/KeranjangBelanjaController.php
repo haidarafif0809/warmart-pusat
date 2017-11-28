@@ -74,22 +74,17 @@ class KeranjangBelanjaController extends Controller
 	{
 
 		$pelanggan =  Auth::user()->id ; 
-		$datakeranjang_belanjaan = KeranjangBelanja::where('id_pelanggan',$pelanggan)->orWhere('id_produk',$id);
-		$keranjang_belanjaan = $datakeranjang_belanjaan->first();
 
-		if ($datakeranjang_belanjaan->count() > 0 AND $keranjang_belanjaan->id_pelanggan == $pelanggan AND $keranjang_belanjaan->id_produk == $id) {
-			$barang = Barang::find($id);   
+		$datakeranjang_belanjaan = KeranjangBelanja::where('id_pelanggan',$pelanggan)->Where('id_produk',$id);
+		$jumlah_produk = $datakeranjang_belanjaan->first();
 
-			$keranjang_belanjaan->jumlah_produk += 1;
-			$keranjang_belanjaan->save(); 
+		if ($datakeranjang_belanjaan->count() > 0) { 
+
+			$datakeranjang_belanjaan->update(['jumlah_produk'=> $jumlah_produk->jumlah_produk + 1]);						
 
 		}else{
 
-			$produk = KeranjangBelanja::create(); 
-			$produk->id_produk = $id;
-			$produk->id_pelanggan =  $pelanggan;
-			$produk->jumlah_produk += 1;
-			$produk->save(); 		
+			$produk = KeranjangBelanja::create(['id_produk'=>$id,'id_pelanggan'=>$pelanggan,'jumlah_produk' => '1']); 
 		}
 		return redirect()->back();
 
@@ -107,69 +102,166 @@ class KeranjangBelanjaController extends Controller
 	}
 
 	public function tombolKurangiProduk($keranjang_belanjaans){
-		if ($keranjang_belanjaans->jumlah_produk == 1) {
-			$tombolKurangiProduk = '
-			<a class="btn btn-round btn-info btn-xs"   style="background-color: #01573e" disabled="true"> <i class="material-icons">remove</i> </a>'; 
+
+		$agent = new Agent();
+		if ($agent->isMobile()) {
+
+			if ($keranjang_belanjaans->jumlah_produk == 1) {
+				$tombolKurangiProduk = '<a class="btn btn-xs" disabled="true">-</a>';
+			}else{
+				$tombolKurangiProduk = '<a href=" '. url('/keranjang-belanja/kurang-jumlah-produk-keranjang-belanja/'.$keranjang_belanjaans->id_keranjang_belanja.''). '" class="btn btn-xs">-</a>';
+			}
+
+		}else{
+
+			if ($keranjang_belanjaans->jumlah_produk == 1) {
+				$tombolKurangiProduk = '
+				<a class="btn btn-round btn-info btn-xs"   style="background-color: #01573e" disabled="true"> <i class="material-icons">remove</i> </a>'; 
+			}
+			else {
+				$tombolKurangiProduk = ' 
+				<a href=" '. url('/keranjang-belanja/kurang-jumlah-produk-keranjang-belanja/'.$keranjang_belanjaans->id_keranjang_belanja.''). '" class="btn btn-round btn-info btn-xs"   style="background-color: #01573e"> <i class="material-icons">remove</i></a>';
+			}
 		}
-		else {
-			$tombolKurangiProduk = ' 
-			<a href=" '. url('/keranjang-belanja/kurang-jumlah-produk-keranjang-belanja/'.$keranjang_belanjaans->id_keranjang_belanja.''). '" class="btn btn-round btn-info btn-xs"   style="background-color: #01573e"> <i class="material-icons">remove</i></a>';
-		}
+
+
 		return $tombolKurangiProduk;
 	}
 
 	public function tombolTambahiProduk ($sisa_stok,$keranjang_belanjaans){
-		if ($sisa_stok <= 0 && $keranjang_belanjaans->produk->hitung_stok == 1) {
-			$tombolTambahiProduk = '
-			<a class="btn btn-round btn-info btn-xs"   style="background-color: #01573e" disabled="true"> <i class="material-icons">add</i> </a>'; 
+
+		$agent = new Agent();
+		if ($agent->isMobile()) {
+			if ($sisa_stok <= 0 && $keranjang_belanjaans->produk->hitung_stok == 1) {
+				$tombolTambahiProduk = '<a class="btn btn-xs" disabled="true">+</a>';
+			}
+			else {
+				$tombolTambahiProduk = '
+				<a href=" '. url('/keranjang-belanja/tambah-jumlah-produk-keranjang-belanja/'.$keranjang_belanjaans->id_keranjang_belanja.''). '" class="btn btn-xs">+</a>';
+			}
 		}
-		else {
-			$tombolTambahiProduk = '
-			<a href=" '. url('/keranjang-belanja/tambah-jumlah-produk-keranjang-belanja/'.$keranjang_belanjaans->id_keranjang_belanja.''). '" class="btn btn-round btn-info btn-xs"   style="background-color: #01573e"> <i class="material-icons">add</i> </a>';
-		}
+		else{
+			if ($sisa_stok <= 0 && $keranjang_belanjaans->produk->hitung_stok == 1) {
+				$tombolTambahiProduk = '
+				<a class="btn btn-round btn-info btn-xs"   style="background-color: #01573e" disabled="true"> <i class="material-icons">add</i> </a>'; 
+			}
+			else {
+				$tombolTambahiProduk = '
+				<a href=" '. url('/keranjang-belanja/tambah-jumlah-produk-keranjang-belanja/'.$keranjang_belanjaans->id_keranjang_belanja.''). '" class="btn btn-round btn-info btn-xs"   style="background-color: #01573e"> <i class="material-icons">add</i> </a>';
+			}
+		}	
+
 
 		return $tombolTambahiProduk;
 	}
 
 	public function cardProdukBelanjaan($harga_produk,$sisa_stok,$keranjang_belanjaans){
-		$produk_belanjaan = '
-		<tr class="card" style="margin-bottom: 3px;margin-top: 3px;width: 725px;">
-		<td>
-		<div class="img-container"> ';
-		$produk_belanjaan .= $this->fotoProduk($keranjang_belanjaans);
-		$produk_belanjaan .= '
-		</div>
-		</td>
-		<td class="td-name flexFont">
-		<a href="'. url('detail-produk/'.$keranjang_belanjaans->id_produk.''). '">'. $this->namaProduk($keranjang_belanjaans->produk->nama_barang) .'</a>
-		<br />
-		<small><i class="material-icons">store</i>  '. $keranjang_belanjaans->produk->warung->name .' </small>
-		</td>  
-		<td class="td-number">
-		<b>Rp. '. number_format($harga_produk,0,',','.') .'</b> 
-		</td> 
-		<td class="td-number">
-		<div class="btn-group">';
+
+		$agent = new Agent();
+		if ($agent->isMobile()) {
+
+			$produk_belanjaan = '
+			<div class="card" style="margin-bottom: 1px; margin-top: 1px">
+			<div class="row">
+			<div class="col-md-12">
+
+			<div class="row">
+			<div class="col-xs-4">
+			<div class="img-container" style="margin-bottom:10px;margin-top: 10px; margin-left: 10px; margin-right: 10px;">';
+			$produk_belanjaan .= $this->fotoProduk($keranjang_belanjaans);
+			$produk_belanjaan .= '</div>
+			</div>
+
+			<div class="col-xs-4">
+			<b  style="margin-bottom:10px;margin-top: 10px;"><a href="'. url('detail-produk/'.$keranjang_belanjaans->id_produk.''). '">'. $this->namaProduk($keranjang_belanjaans->produk->nama_barang) .'</a></b>
+			<p class="text-danger">Rp. '. number_format($harga_produk,0,',','.') .'</p>
+			<p><small> '. $keranjang_belanjaans->produk->warung->name .'</small></p>
+			</div>
+
+			<div class="col-xs-4">
+
+			<center><b>'. $keranjang_belanjaans->jumlah_produk .' </b><br>
+
+			<div class="btn-group">';
+			//tombol kurangi produk
+			$produk_belanjaan .= $this->tombolKurangiProduk($keranjang_belanjaans);
+			$produk_belanjaan .= $this->tombolTambahiProduk($sisa_stok,$keranjang_belanjaans);
+
+			$produk_belanjaan .= '  
+			</div>
+			</center>
+
+			<center><div class="btn-group">
+
+			<button id="btnHapusProduk" data-nama="'. title_case($keranjang_belanjaans->produk->nama_barang) .'" data-id="'.$keranjang_belanjaans->id_keranjang_belanja.'" class="btn btn-danger btn-xs"><i class="material-icons">delete</i></button>
+			</div></center>
+
+
+
+			</div>
+			</div>
+
+			</div>
+			</div>
+			</div>';
+
+		}else{
+
+
+			$produk_belanjaan = '
+
+			<div class="card-content" style="padding-left: 5px; padding-top: 1px; padding-bottom: 1px; padding-right: 1px;"> 
+			<div class="row"> 
+			<div class="col-md-12">
+			<div class="row">
+
+			<div class="col-md-6">
+			<div class="row">
+			<div class="col-sm-4"> 
+			<div class="img-container"  style="padding-left: 5px; padding-top: 1px; padding-bottom: 1px; padding-right: 1px; width:100px;">';
+			$produk_belanjaan .= $this->fotoProduk($keranjang_belanjaans);
+			$produk_belanjaan .= '
+			</div>
+			</div>
+			<div class="col-sm-8">
+			<h5><a href="'. url('detail-produk/'.$keranjang_belanjaans->id_produk.''). '">'. $this->namaProduk($keranjang_belanjaans->produk->nama_barang) .'</a> </h5>
+			<p><small> '. $keranjang_belanjaans->produk->warung->name .'</small></p>
+			</div>
+			</div>
+			</div>
+
+			<div class="col-md-3">
+
+			<h5><b>Rp. '. number_format($harga_produk,0,',','.') .'</b></h5>
+			</div>
+
+			<div class="col-md-3">
+			<div class="btn-group">';
 
 			//tombol kurangi produk
-		$produk_belanjaan .= $this->tombolKurangiProduk($keranjang_belanjaans);
+			$produk_belanjaan .= $this->tombolKurangiProduk($keranjang_belanjaans);
 
-		$produk_belanjaan .= ' <a class="btn btn-round btn-info btn-xs"   style="background-color: #01573e">'. $keranjang_belanjaans->jumlah_produk .' </a>';
+			$produk_belanjaan .= ' <a class="btn btn-round btn-info btn-xs"   style="background-color: #01573e">'. $keranjang_belanjaans->jumlah_produk .' </a>';
 			//tombol tambahi
-		$produk_belanjaan .= $this->tombolTambahiProduk($sisa_stok,$keranjang_belanjaans);
+			$produk_belanjaan .= $this->tombolTambahiProduk($sisa_stok,$keranjang_belanjaans);
 
-		$produk_belanjaan .= '
-		</div>
-		</td>   
-		<td class="td-actions">
-		<a id="btnHapusProduk" href=" '. url('/keranjang-belanja/hapus-produk-keranjang-belanja/'.$keranjang_belanjaans->id_keranjang_belanja.''). '" type="button" rel="tooltip" data-placement="left" title="Remove item" class="btn btn-simple">
-		<i class="material-icons">close</i>
-		</a>
-		</td>
-		</tr>  
-		';  
+			$produk_belanjaan .= '
+			</div><br>
+			<button id="btnHapusProduk" data-id="'.$keranjang_belanjaans->id_keranjang_belanja.'" data-nama="'.title_case($keranjang_belanjaans->produk->nama_barang) .'" class="btn btn-danger btn-xs">Hapus</button>
+
+			</div>
+			</div>
+			</div>
+			</div>
+			</div><hr>
+
+			'; 
+
+		}
+
 		return $produk_belanjaan;
 	}
+
 
 	public function tampilanProdukKeranjangBelanja($keranjang_belanjaan){
 		$subtotal = 0;
@@ -208,20 +300,30 @@ class KeranjangBelanjaController extends Controller
 
 
 	public function namaProduk($nama){
-		if (strlen(strip_tags($nama)) <= 33) {
 
-			$nama_produk = strip_tags($nama);
-		}
-		else{
-			$agent = new Agent();
-			if ($agent->isMobile()) {
-				$nama_produk = ''.strip_tags(substr($nama, 0, 35)).'...'; 
-			}
-			else {
-				$nama_produk = ''.strip_tags(substr($nama, 0, 30)).'...'; 
+		$agent = new Agent();
+		if ($agent->isMobile()) {
+
+			if (strlen(strip_tags($nama)) <= 20) {
+
+				$nama_produk =title_case( strip_tags($nama));
+			}else{
+
+				$nama_produk = title_case(''.strip_tags(substr($nama, 0, 21)).'...'); 
 			}
 
 		}
+		else {
+
+			if (strlen(strip_tags($nama)) <= 33) {
+
+				$nama_produk =title_case( strip_tags($nama));
+			}else{
+
+				$nama_produk = title_case(''.strip_tags(substr($nama, 0, 30)).'...'); 
+			}
+		}
+
 		return $nama_produk;
 	}
 }

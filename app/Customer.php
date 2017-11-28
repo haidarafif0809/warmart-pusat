@@ -46,6 +46,11 @@ class Customer extends Model
     
   }
   
+    public function lokasiPelanggan(){
+    return $this->hasOne('App\LokasiPelanggan','id_pelanggan','id');
+  }
+
+
   public function kelurahan(){
     return $this->hasOne('App\Kelurahan','id','wilayah');
   }

@@ -20,7 +20,7 @@
         <div class="col-md-2">Order #{{ $pesanan->id }}
 
           <!-- MODAL PILIH PRODUK -->
-          <div class="modal " id="data_pemesa" role="dialog" data-backdrop="">
+          <div class="modal " id="data_pemesan" role="dialog" data-backdrop="">
             <div class="modal-dialog">
 
               <!-- Modal content-->
@@ -74,7 +74,9 @@
           <button id="konfirmasi-pesanan-warung" id-pesanan="{{$pesanan->id}}" class="btn btn-round btn-info btn-xs"  rel="tooltip" data-placement="top" title="Lanjutkan Pesanan"><i class="material-icons">done</i></button>
           @endif
 
-          <button type="button" class="btn btn-sm btn-primary" id="btnDetail" data-toggle="modal" data-target="#data_pemesa">Pemesan</button> 
+
+          <button type="button" class="btn btn-sm btn-primary" id="btnDetail" data-toggle="modal" data-target="#data_pemesan">Pemesan</button> 
+
 
         </div>
 
@@ -112,6 +114,9 @@
             <td>
               <center>
 
+
+
+                {{ $detail_pesanans->jumlah_produk }}
                 <div class="btn-group">
 
                   @if($pesanan->konfirmasi_pesanan == 0) 
@@ -120,10 +125,8 @@
                   @else
                   <a  href="{{ url('kurang-produk-pesanan-warung/'.$detail_pesanans->id.'') }}" class="btn btn-round btn-xs"> <i class="material-icons">remove</i></a>
                   @endif
-                  <a class="btn btn-round btn-xs" >{{  $detail_pesanans->jumlah_produk }} </a>
                   <a href="{{ url('tambah-produk-pesanan-warung/'.$detail_pesanans->id.'') }}" class="btn btn-round btn-xs"> <i class="material-icons">add</i></a>
-                  @else
-                  <a class="btn btn-xs" >{{  $detail_pesanans->jumlah_produk }} </a>
+
                   @endif
 
                 </div>
@@ -190,53 +193,7 @@
 @endsection
 
 @section('scripts')  
-<script type="text/javascript">
-  $(document).on('click', '#selesai_pesanan', function () { 
-
-    var kas = '<select id="ppn_swal" name="ppn_swal" class="swal2-input js-selectize-reguler">'
-
-    + '<?php echo $data_kas ?>'+
-
-
-    '</select></div>'; 
-
-    swal({ 
-      title:'Pilih Kas',  
-      html:
-      '<div class="row">'+  
-      '<div class="col-sm-12">'+kas+''+  
-      '</div>', 
-      animation: false,
-      showCloseButton: true,
-      showCancelButton: true,
-      focusConfirm: true,
-      confirmButtonText:'<i class="fa fa-thumbs-o-up"></i> Submit',
-      confirmButtonAriaLabel: 'Thumbs up, great!',
-      cancelButtonText:'<i class="fa fa-thumbs-o-down"> Batal',
-      closeOnConfirm: true,
-      cancelButtonAriaLabel: 'Thumbs down',
-      inputAttributes: {
-        'name': 'qty_produk',
-      },
-      inputValidator : function (value) {
-        return new Promise(function (resolve, reject) {
-          if (value) {
-            resolve();
-          } else {
-
-            reject('Kas Harus Di isi!');
-
-          }
-        });
-      }
-    }).then(function (selesaikan_pesanan) {
-
-      $("#id_pesanan").val(id_tbs); 
-      $("#kas").val(result[0]);  
-      $("#form-selesaikan-pesanan").submit();   
-    })   
-  });
-
+<script type="text/javascript"> 
   $(document).on('click', '#batalkan-konfirmasi-pesanan-warung', function () { 
 
     swal({
