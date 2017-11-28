@@ -125,247 +125,251 @@ p {
 
 </style>
 <body class="product-page"> 
-  <nav class="navbar navbar-default navbar-transparent navbar-fixed-top navbar-color-on-scroll" color-on-scroll=" " id="sectionsNav">
-    <div class="container">
-      <!-- Brand and toggle get grouped for better mobile display -->
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a href="{{ url('/') }}"><img class="navbar-brand"   src="{{asset('/assets/img/examples/warmart_logo.png')}}" /></a>
-        @if(Agent::isMobile() && Auth::check() && Auth::user()->tipe_user == 3)
-        <a href="{{ url('/keranjang-belanja') }}" class="navbar-brand pull-right" >
-          <i class="material-icons">shopping_cart</i> <b style="font-size: 15px">| {{ $cek_belanjaan }}</b>
-        </a>
-        @endif
+  @if(Agent::isMobile())
+  <nav class="navbar navbar-default  navbar-fixed-top "  id="sectionsNav">
+    @else 
+    <nav class="navbar navbar-default navbar-transparent navbar-fixed-top navbar-color-on-scroll" color-on-scroll=" " id="sectionsNav">
+      @endif
+      <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a href="{{ url('/') }}"><img class="navbar-brand"   src="{{asset('/assets/img/examples/warmart_logo.png')}}" /></a>
+          @if(Agent::isMobile() && Auth::check() && Auth::user()->tipe_user == 3)
+          <a href="{{ url('/keranjang-belanja') }}" class="navbar-brand pull-right" >
+            <i class="material-icons">shopping_cart</i> <b style="font-size: 15px">| {{ $cek_belanjaan }}</b>
+          </a>
+          @endif
 
-      </div>
+        </div>
 
-      <div class="collapse navbar-collapse">
-        <ul class="nav navbar-nav navbar-right">
-          @if(Auth::check())
-          <li class="dropdown button-container ">
-            <a href="#" class="dropdown-toggle btn btn-rose btn-round" data-toggle="dropdown">
-              <i class="material-icons">account_circle</i> {{ Auth::user()->name}}
-              <b class="caret"></b>
-            </a>
-            <ul class="dropdown-menu dropdown-with-icons">
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav navbar-right">
+            @if(Auth::check())
+            <li class="dropdown button-container ">
+              <a href="#" class="dropdown-toggle btn btn-rose btn-round" data-toggle="dropdown">
+                <i class="material-icons">account_circle</i> {{ Auth::user()->name}}
+                <b class="caret"></b>
+              </a>
+              <ul class="dropdown-menu dropdown-with-icons">
 
-              @if(Auth::user()->tipe_user == 3)
-              <li style="color:black">
-                <a href="{{ url('/ubah-profil-pelanggan') }}">
-                  <i class="material-icons">settings</i> Ubah Profil
-                </a>
-              </li>
-              <li style="color:black">
-                <a href="{{ url('/ubah-password-pelanggan') }}">
-                  <i class="material-icons">lock_outline</i> Ubah Password
-                </a>
-              </li>
+                @if(Auth::user()->tipe_user == 3)
+                <li style="color:black">
+                  <a href="{{ url('/ubah-profil-pelanggan') }}">
+                    <i class="material-icons">settings</i> Ubah Profil
+                  </a>
+                </li>
+                <li style="color:black">
+                  <a href="{{ url('/ubah-password-pelanggan') }}">
+                    <i class="material-icons">lock_outline</i> Ubah Password
+                  </a>
+                </li>
+                @endif
+                <li>
+                  <a href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> 
+                    <i class="material-icons">reply_all</i> Logout
+                  </a>
+                  <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
+                    {{ csrf_field() }}
+                  </form>
+                </li> 
+              </ul>
+            </li>
+            @if(Auth::user()->tipe_user == 3)
+            <li class="button-container">
+              <a href="{{ url('/pesanan') }}">
+                <i class="material-icons">archive</i> Pesanan
+              </a>
               @endif
-              <li>
-                <a href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> 
-                  <i class="material-icons">reply_all</i> Logout
-                </a>
-                <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
-                  {{ csrf_field() }}
-                </form>
-              </li> 
-            </ul>
-          </li>
-          @if(Auth::user()->tipe_user == 3)
-          <li class="button-container">
-            <a href="{{ url('/pesanan') }}">
-              <i class="material-icons">archive</i> Pesanan
-            </a>
+
+            </li>
+            @endif
+            <li>
+              <a href="https://info.war-mart.id">
+                <i class="material-icons">info</i>INFO Warmart
+              </a>
+            </li>   
+            <li>
+              <a href="{{ url('/tentang-warmart')}}">
+                <i class="material-icons">info</i>Tentang Warmart
+              </a>
+            </li>
+            @if(Auth::check() && Auth::user()->tipe_user == 3)
+            <li class="button-container">
+              <a href="{{ url('/keranjang-belanja') }}" class="btn btn-round btn-rose" >
+                <i class="material-icons">shopping_cart</i> Keranjang Belanja <b style="font-size: 15px">| {{ $cek_belanjaan }}</b>
+              </a>
+            </li>
             @endif
 
-          </li>
-          @endif
-          <li>
-            <a href="https://info.war-mart.id">
-              <i class="material-icons">info</i>INFO Warmart
-            </a>
-          </li>   
-          <li>
-            <a href="{{ url('/tentang-warmart')}}">
-              <i class="material-icons">info</i>Tentang Warmart
-            </a>
-          </li>
-          @if(Auth::check() && Auth::user()->tipe_user == 3)
-          <li class="button-container">
-            <a href="{{ url('/keranjang-belanja') }}" class="btn btn-round btn-rose" >
-              <i class="material-icons">shopping_cart</i> Keranjang Belanja <b style="font-size: 15px">| {{ $cek_belanjaan }}</b>
-            </a>
-          </li>
-          @endif
 
 
 
-
-          @if(!Auth::check())
-          <li class="button-container">
-            <a href="{{ url('/login')}}" class="btn btn-rose btn-round">
-              <i class="material-icons">lock_outline
-              </i> Masuk
-            </a>
-          </li>
-          @endif
-        </ul>
+            @if(!Auth::check())
+            <li class="button-container">
+              <a href="{{ url('/login')}}" class="btn btn-rose btn-round">
+                <i class="material-icons">lock_outline
+                </i> Masuk
+              </a>
+            </li>
+            @endif
+          </ul>
+        </div>
       </div>
-    </div>
-  </nav>
+    </nav>
 
-  <div class="page-header header-filter header-small" data-parallax="false"" style="background-image: url('../image/background2.jpg');"> 
-    <div class="container">
-      <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-          <div class="brand">
-            <h2 class="title text-center">PASAR MUSLIM INDONESIA</h2>
-            @if(!Agent::isMobile())
-            <h4 class="title text-center"> Segala Kemudahan Untuk Umat Muslim Berbelanja.</h4>
-            @endif
+    <div class="page-header header-filter header-small" data-parallax="false"" style="background-image: url('../image/background2.jpg');"> 
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8 col-md-offset-2">
+            <div class="brand">
+              <h2 class="title text-center">PASAR MUSLIM INDONESIA</h2>
+              @if(!Agent::isMobile())
+              <h4 class="title text-center"> Segala Kemudahan Untuk Umat Muslim Berbelanja.</h4>
+              @endif
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="section section-gray">
-    <div class="container"> 
-      <div class="main main-raised main-product">
-        <div class="row page-1">
-          <div class="col-md-6 col-sm-6">
-            @if($barang->foto != NULL)
-            <img class="img-produk" src="../foto_produk/{{$barang->foto}}"/>
+    <div class="section section-gray">
+      <div class="container"> 
+        <div class="main main-raised main-product">
+          <div class="row page-1">
+            <div class="col-md-6 col-sm-6">
+              @if($barang->foto != NULL)
+              <img class="img-produk" src="../foto_produk/{{$barang->foto}}"/>
+              @else 
+              <img class="img-produk" src="../image/foto_default.png"/>
+              @endif
+            </div>
+            <div class="col-md-6 col-sm-6"> 
+              <h2 class="title"> {{ $barang->nama }} </h2>
+              <h3 class="main-price h3">Rp. {{ number_format($barang->harga_jual,0,',','.') }}</h3> 
+              <a style="font-size: 20px;" class="description"><i style="font-size: 30px;" class="material-icons">store</i>  {{ $barang->warung->name }}</a>
+              {!! substr($barang->deskripsi_produk, 0, 300) !!}
+              <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                <h4 class="panel-title">
+                  <b> Baca Selengkapnya... </b><i class="material-icons">keyboard_arrow_down</i>
+                </h4>
+              </a>
+            </div>
+            @if (Agent::isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
+            <div class="row text-center">
+              @if ($cek_produk == 0)
+              <a  rel="tooltip" title="Stok Tidak Ada" disabled="" class="btn btn-round"  style="background-color: #01573e">Beli Sekarang &nbsp;<i class="material-icons">shopping_cart</i></a> 
+              @else
+              <a  rel="tooltip" title="Tambah Ke Keranjang Belanja" href="{{ url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$barang->id.'') }}" id="btnBeliSekarang" class="btn btn-round"  style="background-color: #01573e">Beli Sekarang &nbsp;<i class="material-icons">shopping_cart</i></a> 
+              @endif
+            </div>
             @else 
-            <img class="img-produk" src="../image/foto_default.png"/>
-            @endif
-          </div>
-          <div class="col-md-6 col-sm-6"> 
-            <h2 class="title"> {{ $barang->nama }} </h2>
-            <h3 class="main-price h3">Rp. {{ number_format($barang->harga_jual,0,',','.') }}</h3> 
-            <a style="font-size: 20px;" class="description"><i style="font-size: 30px;" class="material-icons">store</i>  {{ $barang->warung->name }}</a>
-            {!! substr($barang->deskripsi_produk, 0, 300) !!}
-            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-              <h4 class="panel-title">
-                <b> Baca Selengkapnya... </b><i class="material-icons">keyboard_arrow_down</i>
-              </h4>
-            </a>
-          </div>
-          @if (Agent::isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
-          <div class="row text-center">
-            @if ($cek_produk == 0)
-            <a  rel="tooltip" title="Stok Tidak Ada" disabled="" class="btn btn-round"  style="background-color: #01573e">Beli Sekarang &nbsp;<i class="material-icons">shopping_cart</i></a> 
-            @else
-            <a  rel="tooltip" title="Tambah Ke Keranjang Belanja" href="{{ url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$barang->id.'') }}" id="btnBeliSekarang" class="btn btn-round"  style="background-color: #01573e">Beli Sekarang &nbsp;<i class="material-icons">shopping_cart</i></a> 
-            @endif
-          </div>
-          @else 
 
-          <div class="row text-right">
-            @if ($cek_produk == 0)
-            <a  rel="tooltip" title="Stok Tidak Ada" disabled="" class="btn btn-round"  style="background-color: #01573e">Beli Sekarang &nbsp;<i class="material-icons">shopping_cart</i></a> 
-            @else
-            <a  rel="tooltip" title="Tambah Ke Keranjang Belanja" href="{{ url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$barang->id.'') }}" id="btnBeliSekarang" class="btn btn-round"  style="background-color: #01573e">Beli Sekarang &nbsp;<i class="material-icons">shopping_cart</i></a> 
+            <div class="row text-right">
+              @if ($cek_produk == 0)
+              <a  rel="tooltip" title="Stok Tidak Ada" disabled="" class="btn btn-round"  style="background-color: #01573e">Beli Sekarang &nbsp;<i class="material-icons">shopping_cart</i></a> 
+              @else
+              <a  rel="tooltip" title="Tambah Ke Keranjang Belanja" href="{{ url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$barang->id.'') }}" id="btnBeliSekarang" class="btn btn-round"  style="background-color: #01573e">Beli Sekarang &nbsp;<i class="material-icons">shopping_cart</i></a> 
+              @endif
+            </div>         
             @endif
-          </div>         
-          @endif
-          <div class="col-sm-12 col-md-12">                     
-            <div id="acordeon">
-              <div class="panel-group" id="accordion">
-                <div class="panel panel-border panel-default">
-                  <div id="collapseOne" class="panel-collapse collapse">
-                    <div class="panel-body">
-                     <div class="panel-body"><hr style="border-width: 1px; border-color: black">
-                       <h3 class="h3">Detail Produk Dari {{$barang->nama}}</h3><br>
-                       {!!$barang->deskripsi_produk!!}
+            <div class="col-sm-12 col-md-12">                     
+              <div id="acordeon">
+                <div class="panel-group" id="accordion">
+                  <div class="panel panel-border panel-default">
+                    <div id="collapseOne" class="panel-collapse collapse">
+                      <div class="panel-body">
+                       <div class="panel-body"><hr style="border-width: 1px; border-color: black">
+                         <h3 class="h3">Detail Produk Dari {{$barang->nama}}</h3><br>
+                         {!!$barang->deskripsi_produk!!}
+                       </div>
                      </div>
                    </div>
                  </div>
                </div>
-             </div>
-           </div><!--  end acordeon -->
-         </div>
-       </div>  
-       <div class="related-products">
-        <h3 class="text-center ">Produk Sekategori</h3>
-        <div class="row">
-          {!! $daftar_produk_sama !!}  
+             </div><!--  end acordeon -->
+           </div>
+         </div>  
+         <div class="related-products">
+          <h3 class="text-center ">Produk Sekategori</h3>
+          <div class="row">
+            {!! $daftar_produk_sama !!}  
+          </div>
         </div>
-      </div>
-      <hr>
-      <div class="related-products">
-        <h3 class="text-center ">Produk {{ title_case($barang->warung->name) }}</h3>
-        <div class="row"> 
-          {!! $daftar_produk_warung !!}   
+        <hr>
+        <div class="related-products">
+          <h3 class="text-center ">Produk {{ title_case($barang->warung->name) }}</h3>
+          <div class="row"> 
+            {!! $daftar_produk_warung !!}   
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-<footer class="footer footer-black footer-big">
-  <div class="container">
-    <div class="content">
-      <div class="row">
-        <div class="col-md-4">
-          <h5>Tentang Kami</h5>
-          <p>Warmart adalah marketplace warung muslim pertama di Indonesia. Kami menghubungkan usaha-usaha muslim dengan pelanggan seluruh Umat Islam di Indonesia. Jenis usaha yang dapat bergabung dengan Warmart diantaranya: Warung, Toko, Minimarket, Pedagang Kaki Lima, Bengkel, Rumah Makan, Klinik, Home Industri, Peternakan, Pertanian, Perikanan, Kerajinan, Fashion dan usaha lainya.</p>
-        </div>
-        <div class="col-md-4">
-          <h5>Contact Us</h5>
-          <div class="social-feed">
-            <div class="feed-line">
-              <i class="fa fa-phone-square"></i>
-              <p>+62-721-8050-299 <br>
-                Bandar Lampung, Indonesia
-              solusibisnis@andaglos.id</p>
-            </div>
-            <div class="feed-line">                            
-              <a href="https://id-id.facebook.com/andaglos/" target="blank"><i class="fa fa-facebook-square"></i> Andaglos</a>
+  <footer class="footer footer-black footer-big">
+    <div class="container">
+      <div class="content">
+        <div class="row">
+          <div class="col-md-4">
+            <h5>Tentang Kami</h5>
+            <p>Warmart adalah marketplace warung muslim pertama di Indonesia. Kami menghubungkan usaha-usaha muslim dengan pelanggan seluruh Umat Islam di Indonesia. Jenis usaha yang dapat bergabung dengan Warmart diantaranya: Warung, Toko, Minimarket, Pedagang Kaki Lima, Bengkel, Rumah Makan, Klinik, Home Industri, Peternakan, Pertanian, Perikanan, Kerajinan, Fashion dan usaha lainya.</p>
+          </div>
+          <div class="col-md-4">
+            <h5>Contact Us</h5>
+            <div class="social-feed">
+              <div class="feed-line">
+                <i class="fa fa-phone-square"></i>
+                <p>+62-721-8050-299 <br>
+                  Bandar Lampung, Indonesia
+                solusibisnis@andaglos.id</p>
+              </div>
+              <div class="feed-line">                            
+                <a href="https://id-id.facebook.com/andaglos/" target="blank"><i class="fa fa-facebook-square"></i> Andaglos</a>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="col-md-4">
-          <h5>Instagram</h5>
-          <div class="gallery-feed">
+          <div class="col-md-4">
+            <h5>Instagram</h5>
+            <div class="gallery-feed">
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <hr />
-    <ul class="pull-left">
+      <hr />
+      <ul class="pull-left">
+        <li>
+          <a href="#pablo">
+           Blog
+         </a>
+       </li>
+       <li>
+        <a href="#pablo">
+          Presentation
+        </a>
+      </li>
       <li>
         <a href="#pablo">
-         Blog
+         Discover
        </a>
      </li>
      <li>
       <a href="#pablo">
-        Presentation
+        Payment
       </a>
     </li>
     <li>
       <a href="#pablo">
-       Discover
-     </a>
-   </li>
-   <li>
-    <a href="#pablo">
-      Payment
-    </a>
-  </li>
-  <li>
-    <a href="#pablo">
-      Contact Us
-    </a>
-  </li>
-</ul>
-<div class="copyright pull-right">
-  Copyright &copy; <script>document.write(new Date().getFullYear())</script> <a href="https://andaglos.id/"> PT. Andaglos Global Teknologi.</a>
-</div>
+        Contact Us
+      </a>
+    </li>
+  </ul>
+  <div class="copyright pull-right">
+    Copyright &copy; <script>document.write(new Date().getFullYear())</script> <a href="https://andaglos.id/"> PT. Andaglos Global Teknologi.</a>
+  </div>
 </div>
 </footer>
 
