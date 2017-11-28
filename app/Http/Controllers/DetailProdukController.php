@@ -26,7 +26,7 @@ class DetailProdukController extends Controller
 
 		$this->seoDetailProduk();
 		$barang = Barang::find($id);   
-		$array_warung = $this->dataWarungTervalidasi();
+		$array_warung = DaftarProdukController::dataWarungTervalidasi();
 		$daftar_produk_sama =$this->produkSekategori($barang,$array_warung); 
 		$daftar_produk_warung = $this->produkSewarung($barang,$array_warung);  
 		$cek_belanjaan = KeranjangBelanja::jumlahBelanja();
