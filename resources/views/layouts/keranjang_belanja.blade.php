@@ -35,8 +35,8 @@
   </div>
 </div>
 
-<div class="main main-raised" > 
-  <div class="container">
+<div class="main main-raised"> 
+  <div class="container" style="margin-left: 5px; margin-right: 5px;">
     <div class="card-content"> 
       <h3 class="title text-center">Keranjang Belanjaan</h3>
       <div class="row">
@@ -57,40 +57,39 @@
         </div>
       </div>
       @else
-      <div class="row">
-        @if ($agent->isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
-        <div class="col-md-4"> 
-          <div class="card" style="margin-bottom: 1px; margin-top: 1px;">
-            <div class="row">
-              <div class="col-md-12">
-                <div class="col-sm-6 col-xs-6">Pesanan Saya</div>
+      @if ($agent->isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
+      <div class="card" style="margin-bottom: 1px; margin-top: 1px;">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="col-sm-6 col-xs-6">Pesanan Saya</div>
 
-                <div class="col-sm-6 col-xs-6"><p align="right">Jumlah</p></div>
-              </div>
-            </div>
+            <div class="col-sm-6 col-xs-6"><p align="right">Jumlah</p></div>
           </div>
-
-          {!! $produk_belanjaan !!}
-
-          <div class="card" style="margin-bottom: 1px; margin-top: 1px;">
-
-            <div class="col-md-12">
-              <div class="col-sm-6 col-xs-6">Total Produk </div>
-
-              <div class="col-sm-6 col-xs-6"><p align="right" class="text-danger"><b>{{ $jumlah_produk->total_produk }}</b></p></div>
-            </div>
-
-            <div class="col-md-12">
-              <div class="col-sm-6 col-xs-6">Subtotal</div>
-
-              <div class="col-sm-6 col-xs-6"><p align="right" class="text-danger"><b>Rp. {{ $subtotal }}</b></p></div>
-            </div>
-          </div>
-
-          <center><a href="{{ url('/selesaikan-pemesanan') }}" class="btn btn-round" style="background-color: #01573e">Lanjut Ke Pembayaran <i class="material-icons">keyboard_arrow_right</i></a></center>
-
         </div>
-        @else
+      </div>
+
+      {!! $produk_belanjaan !!}
+
+      <div class="card" style="margin-bottom: 1px; margin-top: 1px;">
+
+        <div class="col-md-12">
+          <div class="col-sm-6 col-xs-6">Total Produk </div>
+
+          <div class="col-sm-6 col-xs-6"><p align="right" class="text-danger"><b>{{ $jumlah_produk->total_produk }}</b></p></div>
+        </div>
+
+        <div class="col-md-12">
+          <div class="col-sm-6 col-xs-6">Subtotal</div>
+
+          <div class="col-sm-6 col-xs-6"><p align="right" class="text-danger"><b>Rp. {{ $subtotal }}</b></p></div>
+        </div>
+      </div>
+
+      <center><a href="{{ url('/selesaikan-pemesanan') }}" class="btn btn-round" style="background-color: #01573e">Lanjut Ke Pembayaran <i class="material-icons">keyboard_arrow_right</i></a></center>
+
+      @else
+
+      <div class="row">
         <div class="col-md-8"> 
 
           <div class="card">
