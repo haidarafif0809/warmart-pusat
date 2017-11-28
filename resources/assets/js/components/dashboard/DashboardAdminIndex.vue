@@ -1,6 +1,6 @@
 <template>
 
-    <div class="row">   
+    <div class="row" v-if="tipeUser.content == 1">   
         <center>
             <img v-bind:src="url+ 'image/warmart_logo.png'"class="img-responsive" width="500" height="160"> 
         </center>
@@ -94,6 +94,93 @@
             </div>
         </div>
     </div>
+
+    <div class="row" v-else-if="tipeUser.content == 4">   
+        <center>
+            <img v-bind:src="url+ 'image/warmart_logo.png'"class="img-responsive" width="500" height="160"> 
+        </center>
+
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-stats"> 
+                <div class="card-header" data-background-color="rose">
+                    <i class="material-icons">local_atm</i>
+                </div>
+                <div class="card-content">
+                    <p class="category">Posisi Kas</p>
+                    <h3 class="card-title">{{ dashboardData.transaksi_kas }}</h3>
+                </div> 
+            </div>
+        </div>  
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-stats"> 
+                <div class="card-header" data-background-color="rose">
+                    <i class="material-icons">trending_down</i>
+                </div>
+                <div class="card-content">
+                    <p class="category">Kas Masuk</p>
+                    <h3 class="card-title">{{ dashboardData.kas_masuk }}</h3>
+                </div> 
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-stats"> 
+                <div class="card-header" data-background-color="rose">
+                    <i class="material-icons">trending_up</i>
+                </div>
+                <div class="card-content">
+                    <p class="category">Kas Keluar</p>
+                    <h3 class="card-title">{{ dashboardData.kas_keluar }}</h3>
+                </div> 
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-stats"> 
+                <div class="card-header" data-background-color="rose">
+                    <i class="material-icons">payment</i>
+                </div>
+                <div class="card-content">
+                    <p class="category">Nilai Persedian</p>
+                    <h3 class="card-title">{{ dashboardData.total_persedian }}</h3>
+                </div> 
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-sm-6">
+        </div>
+        <div class="col-lg-2 col-md-6 col-sm-6">
+            <div class="card card-stats"> 
+                <div class="card-header" data-background-color="rose">
+                    <i class="material-icons">local_offer</i>
+                </div>
+                <div class="card-content">
+                    <p class="category">Jumlah Produk</p>
+                    <h3 class="card-title">{{ dashboardData.produk_warung }}</h3>
+                </div> 
+            </div>
+        </div> 
+        <div class="col-lg-2 col-md-6 col-sm-6">
+            <div class="card card-stats"> 
+                <div class="card-header" data-background-color="rose">
+                    <i class="material-icons">system_update_alt</i>
+                </div>
+                <div class="card-content">
+                    <p class="category">Item Masuk</p>
+                    <h3 class="card-title">{{ dashboardData.stok_masuk }}</h3>
+                </div> 
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-6 col-sm-6">
+            <div class="card card-stats"> 
+                <div class="card-header" data-background-color="rose">
+                    <i class="material-icons">open_in_new</i>
+                </div>
+                <div class="card-content">
+                    <p class="category">Item Keluar</p>
+                    <h3 class="card-title">{{ dashboardData.stok_keluar }}</h3>
+                </div> 
+            </div>
+        </div>
+    </div>
     
 </template>
 
@@ -102,13 +189,18 @@ export default {
     data: function () {
         return {
             url: window.location.origin + (window.location.pathname).replace("dashboard", ""),
-            dashboardData: []
+            dashboardData: [],
+            tipeUser : document.head.querySelector('meta[name="tipe-user"]')
         }
     },
     mounted() {
         var app = this;
-        app.getDashboardData();
-
+        if (app.tipeUser.content == 1) {
+            app.getDashboardData();
+        }
+        else if(app.tipeUser.content == 4){
+            app.getDashboardWarung();
+        }
     },
     methods: {
         getDashboardData(){
@@ -119,7 +211,18 @@ export default {
             })
             .catch(function (resp) {
                 console.log(resp);
-                alert("Could not load Data");
+                alert("Tidak Bisa Memuat Data");
+            });
+        },
+        getDashboardWarung(){
+            var app = this
+            axios.get(app.url+'/dashboard-warung')
+            .then(function (resp) {
+                app.dashboardData = resp.data;
+            })
+            .catch(function (resp) {
+                console.log(resp);
+                alert("Tidak Bisa Memuat Data");
             });
         }
     }

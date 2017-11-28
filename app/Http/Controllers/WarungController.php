@@ -14,8 +14,7 @@ use Session;
 use Laratrust;
 
 class WarungController extends Controller
-{
-    /**
+{    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -32,11 +31,11 @@ class WarungController extends Controller
     }
 
 
-     public function view(){
-            $warung = Warung::leftJoin('kelurahans','warungs.wilayah','=','kelurahans.id')
-            ->leftJoin('bank_warungs','warungs.id','=','bank_warungs.warung_id')
-            ->paginate(10);
-            return response()->json($warung);  
+    public function view(){
+        $warung = Warung::leftJoin('kelurahans','warungs.wilayah','=','kelurahans.id')
+        ->leftJoin('bank_warungs','warungs.id','=','bank_warungs.warung_id')
+        ->paginate(10);
+        return response()->json($warung);  
     }
 
     public function pencarian(Request $request){
@@ -78,51 +77,51 @@ class WarungController extends Controller
      */
     public function store(Request $request)
     {
-           $this->validate($request, [
-            'name'      => 'required|unique:warungs,name,',
-            'alamat'    => 'required',
-            'kelurahan' => 'required', 
-            'nama_bank' => 'required',
-            'atas_nama' => 'required', 
-            'no_rek'    => 'required|numeric|unique:bank_warungs,no_rek,',
-            'no_telpon' => 'required|without_spaces|max:15|unique:users,no_telp,',
-            'email'     => 'required|without_spaces|unique:users,email,',
+     $this->validate($request, [
+        'name'      => 'required|unique:warungs,name,',
+        'alamat'    => 'required',
+        'kelurahan' => 'required', 
+        'nama_bank' => 'required',
+        'atas_nama' => 'required', 
+        'no_rek'    => 'required|numeric|unique:bank_warungs,no_rek,',
+        'no_telpon' => 'required|without_spaces|max:15|unique:users,no_telp,',
+        'email'     => 'required|without_spaces|unique:users,email,',
 
-            ]);
+        ]);
 
     //INSERT MASTER DATA WARUNG
-         $warung = Warung::create([
-            'name'      =>$request->name,
-            'alamat'    =>$request->alamat,
-            'wilayah'   =>$request->kelurahan,
-            'no_telpon' =>$request->no_telpon, 
-            'email'     =>$request->email, 
-            ]);
+     $warung = Warung::create([
+        'name'      =>$request->name,
+        'alamat'    =>$request->alamat,
+        'wilayah'   =>$request->kelurahan,
+        'no_telpon' =>$request->no_telpon, 
+        'email'     =>$request->email, 
+        ]);
 
     //INSERT BANK WARUNG
-         $bank_warung = BankWarung::create([
-            'nama_bank' =>$request->nama_bank,              
-            'atas_nama' => $request->atas_nama,
-            'no_rek' =>$request->no_rek,
-            'warung_id' =>$warung->id,
-            ]);
+     $bank_warung = BankWarung::create([
+        'nama_bank' =>$request->nama_bank,              
+        'atas_nama' => $request->atas_nama,
+        'no_rek' =>$request->no_rek,
+        'warung_id' =>$warung->id,
+        ]);
 
     //INSERT USER WARUNG
-         $user_warung = UserWarung::create([ 
-            'name'              => $request->name,
-            'email'             => $request->email, 
-            'no_telp'           => $request->no_telpon, 
-            'alamat'            => $request->alamat,
-            'wilayah'           => $request->kelurahan,
-            'id_warung'         => $warung->id,
-            'tipe_user'         => 4,
-            'status_konfirmasi' => 1,
-            'password'          => bcrypt('123456')
-            ]);
+     $user_warung = UserWarung::create([ 
+        'name'              => $request->name,
+        'email'             => $request->email, 
+        'no_telp'           => $request->no_telpon, 
+        'alamat'            => $request->alamat,
+        'wilayah'           => $request->kelurahan,
+        'id_warung'         => $warung->id,
+        'tipe_user'         => 4,
+        'status_konfirmasi' => 1,
+        'password'          => bcrypt('123456')
+        ]);
 
     //INSERT OTORITAS USER WARUNG
-        $user_warung->attachRole(4);
-    }
+     $user_warung->attachRole(4);
+ }
 
     /**
      * Display the specified resource.
@@ -133,14 +132,14 @@ class WarungController extends Controller
     public function show($id)
     {
         //
-         $warung = Warung::with(['bank_warung'])->find($id);
-         $warung['kelurahan'] =  $warung->wilayah;
-         $warung['nama_bank'] = $warung->bank_warung->nama_bank;
-         $warung['atas_nama'] = $warung->bank_warung->atas_nama;
-         $warung['no_rek'] = $warung->bank_warung->no_rek;
+       $warung = Warung::with(['bank_warung'])->find($id);
+       $warung['kelurahan'] =  $warung->wilayah;
+       $warung['nama_bank'] = $warung->bank_warung->nama_bank;
+       $warung['atas_nama'] = $warung->bank_warung->atas_nama;
+       $warung['no_rek'] = $warung->bank_warung->no_rek;
 
-        return $warung;
-    }
+       return $warung;
+   }
 
     /**
      * Show the form for editing the specified resource.
@@ -165,38 +164,38 @@ class WarungController extends Controller
     {
 
         //VALIDASI WARUNG
-           $this->validate($request, [
-            'name'      => 'required|unique:warungs,name,'.$id,
-            'alamat'    => 'required',
-            'kelurahan' => 'required',
-            'no_telpon' => 'required|max:15',
-            ]);
+     $this->validate($request, [
+        'name'      => 'required|unique:warungs,name,'.$id,
+        'alamat'    => 'required',
+        'kelurahan' => 'required',
+        'no_telpon' => 'required|max:15',
+        ]);
 
          //UPDATE MASTER DATA WARUNG
-        $warung = Warung::where('id',$id)->update([
-            'name' =>$request->name,
-            'alamat' =>$request->alamat,
-            'wilayah' =>$request->kelurahan,
-            'no_telpon' =>$request->no_telpon, 
-            'email' =>$request->email,
+     $warung = Warung::where('id',$id)->update([
+        'name' =>$request->name,
+        'alamat' =>$request->alamat,
+        'wilayah' =>$request->kelurahan,
+        'no_telpon' =>$request->no_telpon, 
+        'email' =>$request->email,
         ]);
 
-        $bank_warung_id = BankWarung::select('id')->where('warung_id', $id)->first();
+     $bank_warung_id = BankWarung::select('id')->where('warung_id', $id)->first();
 
         //VALIDASI BANK WARUNG
-           $this->validate($request, [
-            'nama_bank' => 'required',
-            'atas_nama' => 'required', 
-            'no_rek'    => 'required|numeric|unique:bank_warungs,no_rek,'.$bank_warung_id->id, 
-            ]);
+     $this->validate($request, [
+        'nama_bank' => 'required',
+        'atas_nama' => 'required', 
+        'no_rek'    => 'required|numeric|unique:bank_warungs,no_rek,'.$bank_warung_id->id, 
+        ]);
 
          //UPDATE BANK WARUNG
-        $bank_warung = BankWarung::where('warung_id',$id)->update([
-            'nama_bank' =>$request->nama_bank,
-            'atas_nama' =>$request->atas_nama,
-            'no_rek' =>$request->no_rek,
+     $bank_warung = BankWarung::where('warung_id',$id)->update([
+        'nama_bank' =>$request->nama_bank,
+        'atas_nama' =>$request->atas_nama,
+        'no_rek' =>$request->no_rek,
         ]);
-    }
+ }
 
     /**
      * Remove the specified resource from storage.
@@ -207,7 +206,7 @@ class WarungController extends Controller
     public function destroy($id)
     {
         // jika gagal hapus
-            $warung = Warung::destroy($id);
-            return response(200);
+        $warung = Warung::destroy($id);
+        return response(200);
     }
 }
