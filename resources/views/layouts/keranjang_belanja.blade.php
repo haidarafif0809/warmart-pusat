@@ -101,7 +101,7 @@
             <div class="card-header">
 
               <div class="row">
-                <div class="col-md-6">  <h4 class="card-title" style="color: black;"> Produk</h4> </div>
+                <div class="col-md-6">  <h4 class="card-title" align="center" style="color: black;"> Produk</h4> </div>
                 <div class="col-md-3">  <h4 class="card-title" style="color: black;"> Harga</h4> </div>
                 <div class="col-md-3">  <h4 class="card-title" style="color: black;"> Jumlah</h4> </div>
               </div><hr>
