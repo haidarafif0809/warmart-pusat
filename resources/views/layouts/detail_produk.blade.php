@@ -136,6 +136,11 @@ p {
           <span class="icon-bar"></span>
         </button>
         <a href="{{ url('/') }}"><img class="navbar-brand"   src="{{asset('/assets/img/examples/warmart_logo.png')}}" /></a>
+        @if(Agent::isMobile() && Auth::check() && Auth::user()->tipe_user == 3)
+        <a href="{{ url('/keranjang-belanja') }}" class="navbar-brand pull-right" >
+          <i class="material-icons">shopping_cart</i> <b style="font-size: 15px">| {{ $cek_belanjaan }}</b>
+        </a>
+        @endif
 
       </div>
 
