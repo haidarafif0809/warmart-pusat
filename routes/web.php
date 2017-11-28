@@ -314,11 +314,11 @@ Route::get('/ubah-profil-pelanggan',[
 	]);
 
 // PROSES CARI PROVINSI
-Route::get('/cek-kabupaten',[ 		
-	'middleware' => ['auth'],
-	'as' => 'cek_kabupaten',
-	'uses' => 'UbahProfilController@cek_kabupaten'
-	]);
+Route::get('/cek-wilayah',[ 		
+		'middleware' => ['auth'],
+		'as' => 'cek_wilayah',
+		'uses' => 'UbahProfilController@cek_wilayah'
+]);
 
 //PROSES UBAH PROFIL PELANGGAN
 Route::put('/proses-ubah-profil-pelanggan',[
@@ -430,6 +430,9 @@ Route::get('/profil-warung/pilih-provinsi','WarungProfilController@pilih_provins
 Route::get('/profil-warung/pilih-wilayah/{id}/{type}','WarungProfilController@pilih_wilayah')->middleware('auth');
 Route::get('/profil-warung/view-detail/{id}','WarungProfilController@view_detail')->middleware('auth');
 
+//KATEGORI TRANSAKSI VUE.JS
+Route::get('/kategori-transaksi/view','KategoriTransaksiController@view')->middleware('auth');
+Route::get('/kategori-transaksi/pencarian', 'KategoriTransaksiController@pencarian')->middleware('auth');
 
 Route::middleware('optimizeImages','auth')->group(function () {
 	
@@ -442,7 +445,7 @@ Route::middleware('optimizeImages','auth')->group(function () {
 	Route::resource('user-warung', 'UserWarungController'); 	
 	Route::resource('kas', 'KasController'); 	
 	Route::resource('barang', 'BarangController'); 
-	Route::resource('kategori_transaksi', 'KategoriTransaksiController'); 
+	Route::resource('kategori-transaksi', 'KategoriTransaksiController'); 
 	Route::resource('kas_masuk', 'KasMasukController');
 	Route::resource('kas_keluar', 'KasKeluarController');	
 	Route::resource('kas_mutasi', 'KasMutasiController');
