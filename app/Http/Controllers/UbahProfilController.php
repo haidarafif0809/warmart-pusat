@@ -12,12 +12,14 @@ use App\KomunitasCustomer;
 use Jenssegers\Agent\Agent;
 use App\Customer;
 use App\UserWarung; 
+use App\LokasiPelanggan; 
 use App\BankWarung;
 use App\BankKomunitas;
 use Session;
 use App\KeranjangBelanja;
 use Intervention\Image\ImageManagerStatic as Image;
 use File;
+use Indonesia;
 
 class UbahProfilController extends Controller
 {   
@@ -31,9 +33,24 @@ class UbahProfilController extends Controller
 		$pelanggan = Customer::select(['id','email','password','name', 'alamat', 'wilayah', 'no_telp','tgl_lahir','tipe_user', 'status_konfirmasi'])->where('id', $user->id)->first();
 		$komunitas_pelanggan = KomunitasCustomer::where('user_id',$user->id)->first();
 
+		//DATA LOKASI PELANGGAN
+		$lokasi_pelanggan = LokasiPelanggan::where('id_pelanggan',$user->id)->first();
+		//select provinsi
+		$provinsi = Indonesia::allProvinces()->pluck('name','id');
+		//select provinsi
+		//select kabupaten
+		$kabupaten = Indonesia::allCities()->pluck('name','id');
+		//select kabupaten
+		//select kecamatan
+		$kecamatan = Indonesia::allDistricts()->pluck('name','id');
+		//select kecamatan
+		//select kelurahan
+		$kelurahan = Indonesia::allVillages()->pluck('name','id');
+		//select kelurahan
+
 		$keranjang_belanjaan = KeranjangBelanja::with(['produk','pelanggan'])->where('id_pelanggan',Auth::user()->id)->get();
 		$cek_belanjaan = $keranjang_belanjaan->count();  
-		return view('ubah_profil.ubah_profil_pelanggan',['user' => $pelanggan, 'pelanggan' => $pelanggan, 'komunitas_pelanggan' => $komunitas_pelanggan, 'cek_belanjaan' => $cek_belanjaan, 'logo_warmart' => $logo_warmart]);
+		return view('ubah_profil.ubah_profil_pelanggan',['user' => $pelanggan, 'pelanggan' => $pelanggan, 'komunitas_pelanggan' => $komunitas_pelanggan, 'cek_belanjaan' => $cek_belanjaan, 'logo_warmart' => $logo_warmart,'lokasi_pelanggan'=>$lokasi_pelanggan,'provinsi'=>$provinsi,'kabupaten'=>$kabupaten,'kecamatan'=>$kecamatan,'kelurahan'=>$kelurahan]);
 	}
 
 //UBAH PROFIL USER PELANGGAN
@@ -58,9 +75,15 @@ class UbahProfilController extends Controller
 		if ($request['komunitas'] != "") {
 			//HAPUS KOMUNITAS LAMA
 			KomunitasCustomer::where('user_id',$request->id)->delete();
+			LokasiPelanggan::where('id_pelanggan',$request->id)->delete();
+
 			//INSERT KOMUNITAS BARU
 			if (isset($request['komunitas'])) {
 				KomunitasCustomer::create(['user_id' =>$request->id ,'komunitas_id' => $request['komunitas']]);
+
+						//UPDATE USER PELANGGAN
+				LokasiPelanggan::create(['id_pelanggan' =>$request->id ,'provinsi' => $request['provinsi'],'kabupaten' => $request['kabupaten'],'kecamatan' => $request['kecamatan'],'kelurahan' => $request['kelurahan']]);
+
 			}
 		}
 
@@ -256,7 +279,8 @@ class UbahProfilController extends Controller
 			'nama'      => 'required',
 			'email'     => 'required|without_spaces|unique:users,email,'.$request->id,
 			'no_telp'   => 'required|without_spaces|unique:users,no_telp,'.$request->id,
-			'alamat'    => 'required', 
+			'alamat'    => 'required',
+
 		]);
 
          //UPDATE USER ADMIN
@@ -268,5 +292,56 @@ class UbahProfilController extends Controller
 		]);
 
 
-	}	
+	}
+
+
+	//CARI WILAYAH 
+	public function cek_kabupaten(Request $request) 
+  	{	
+  		# Tarik ID_wilayah & tipe_wilayah
+  		$id_wilayah = $request->id;
+  		$type_wilayah = $request->type;
+
+  		# Inisialisasi variabel berdasarkan masing-masing tabel dari model
+  		# dimana ID target sama dengan ID inputan
+  		$kabupaten = Indonesia::allCities()->where('province_id', $id_wilayah);
+  		$kecamatan = Indonesia::allDistricts()->where('city_id', $id_wilayah);
+  		$kelurahan = Indonesia::allVillages()->where('district_id', $id_wilayah);
+
+  		# Buat pilihan "Switch Case" berdasarkan variabel "type" dari form
+  		switch($type_wilayah):
+  			# untuk kasus "kabupaten"
+  			case 'kabupaten':
+  				  		$return = '<option value="">--PILIH KABUPATEN--</option>';
+  						# lakukan perulangan untuk tabel kabupaten lalu kirim
+  						foreach($kabupaten as $kabupatens){
+  						# isi nilai return
+  						$return .= "<option value='$kabupatens->id'>$kabupatens->name</option>";
+  						# kirim
+  						} 
+  					return $return;
+  			break;
+  			# untuk kasus "kecamatan"
+  			case 'kecamatan':
+  				$return = '<option value="">--PILIH KECAMATAN--</option>';
+  				foreach($kecamatan as $kecamatans){
+  						# isi nilai return
+  						$return .= "<option value='$kecamatans->id'>$kecamatans->name</option>";
+  						# kirim
+  						} 
+  				return $return;
+  			break;
+  			# untuk kasus "kelurahan"
+  			case 'kelurahan':
+  				$return = '<option value="">--PILIH KELURAHAN--</option>';
+  				foreach($kelurahan as $kelurahans) {
+  					$return .= "<option value='$kelurahans->id'>$kelurahans->name</option>";
+  					}
+  				return $return;
+  			break;
+  		# pilihan berakhir
+  		endswitch;
+
+  	}
+
 }

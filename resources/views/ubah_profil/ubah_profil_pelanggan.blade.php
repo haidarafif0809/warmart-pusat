@@ -1,6 +1,7 @@
 @extends('layouts.app_pelanggan')
 
 @section('content')
+
 <style type="text/css">
 #card-ubah-profil{ 
     background: #fafafa;; 
@@ -107,6 +108,22 @@
                         @endif
                     </div>
                 </div>
+
+                <div class="form-group{{ $errors->has('provinsi') ? ' has-error' : '' }}">
+                    {!! Form::label('provinsi', 'Provinsi', ['class'=>'col-md-2 control-label']) !!}
+                    <div class="col-md-10">
+                        @if (isset($lokasi_pelanggan))
+                        {!! Form::select('provinsi', $provinsi ,$lokasi_pelanggan->provinsi, ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH PROVINSI--','id'=>'pilih_provinsi']) !!}
+                        {!! $errors->first('provinsi', '<p class="help-block">:message</p>') !!}
+                        @else
+                        {!! Form::select('provinsi',$provinsi,null
+                        , ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH PROVINSI--','id'=>'pilih_provinsi']) !!}
+                        {!! $errors->first('provinsi', '<p class="help-block">:message</p>') !!}
+                        @endif
+                    </div>
+                </div>
+
+
                 {!! Form::hidden('id', $user->id, ['class'=>'form-control','autocomplete'=>'off']) !!}
                 <div class="col-md-2"></div>
                 <div class="col-md-4">
@@ -125,7 +142,7 @@
             <div class="col-md-8 col-md-offset-2">
                 <div class="brand">
                     <h1 class="title">PASAR MUSLIM INDONESIA</h1>
-                    <h3 class="title"> Segala Kemudahan Untuk Umat Muslim Berbelanja.</h3>
+                    <h4 class="title"> Segala Kemudahan Untuk Umat Muslim Berbelanja.</h4>
                 </div>
             </div>
         </div>
@@ -133,21 +150,15 @@
 </div>
 
 <div class="main main-raised" >
-    <div class="container">
-        <div class="card" id="card-ubah-profil"><br>
+    <div class="container">   
+                <h4 class="card-title"><i class="material-icons">settings</i> Ubah Profil </h4>
             <ul class="breadcrumb">
                 <li><a href="{{ url('/daftar-produk') }}" style="color: purple">Home</a></li>
                 <li class="active">Ubah Profil Pelanggan</li>
             </ul>
-        </div>
-
-        <div class="card" id="card-ubah-profil" >
-            <div class="card-header card-header-icon" data-background-color="rose">
-                <i class="material-icons">settings</i>
-            </div>
 
             <div class="card-content">
-                <h4 class="card-title"> Ubah Profil </h4>
+                
                 <div class="toolbar">
                     {!! Form::model($user, ['url' => route('user.proses_ubah_profil_pelanggan'), 'method' => 'put', 'files'=>'true','class'=>'form-horizontal']) !!}
                     <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
@@ -205,6 +216,69 @@
                             @endif
                         </div>
                     </div>
+
+                   <div class="form-group{{ $errors->has('provinsi') ? ' has-error' : '' }}">
+                    {!! Form::label('provinsi', 'Provinsi', ['class'=>'col-md-2 control-label']) !!}
+                    <div class="col-md-10">
+                        @if (isset($lokasi_pelanggan))
+                        {!! Form::select('provinsi', $provinsi ,$lokasi_pelanggan->provinsi, ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH PROVINSI--','id'=>'pilih_provinsi']) !!}
+                        {!! $errors->first('provinsi', '<p class="help-block">:message</p>') !!}
+                        @else
+                        {!! Form::select('provinsi',$provinsi,null
+                        , ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH PROVINSI--','id'=>'pilih_provinsi']) !!}
+                        {!! $errors->first('provinsi', '<p class="help-block">:message</p>') !!}
+                        @endif
+                    </div>
+                </div>
+
+                  <div class="form-group{{ $errors->has('kabupaten') ? ' has-error' : '' }}">
+                    {!! Form::label('kabupaten', 'Kabupaten', ['class'=>'col-md-2 control-label']) !!}
+                    <div class="col-md-10">
+                        
+                         @if (isset($lokasi_pelanggan))
+                        {!! Form::select('kabupaten', array(),$lokasi_pelanggan->kabupaten, ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH KABUPATEN--','id'=>'pilih_kabupaten']) !!}
+                        {!! $errors->first('kabupaten', '<p class="help-block">:message</p>') !!}
+                        @else
+                        {!! Form::select('kabupaten',array(),null
+                        , ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH KABUPATEN--','id'=>'pilih_kabupaten']) !!}
+                        {!! $errors->first('kabupaten', '<p class="help-block">:message</p>') !!}
+                        @endif
+                        
+                    </div>
+                </div>
+
+                <div class="form-group{{ $errors->has('kecamatan') ? ' has-error' : '' }}">
+                    {!! Form::label('kecamatan', 'Kecamatan', ['class'=>'col-md-2 control-label']) !!}
+                    <div class="col-md-10">
+                       
+                         @if (isset($lokasi_pelanggan))
+                        {!! Form::select('kecamatan',array(), $lokasi_pelanggan->kecamatan, ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH KECAMATAN--','id'=>'pilih_kecamatan']) !!}
+                        {!! $errors->first('kecamatan', '<p class="help-block">:message</p>') !!}
+                        @else
+                        {!! Form::select('kecamatan',array(),null
+                        , ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH KECAMATAN--','id'=>'pilih_kecamatan']) !!}
+                        {!! $errors->first('kecamatan', '<p class="help-block">:message</p>') !!}
+                        @endif
+                        
+                    </div>
+                </div>
+
+               <div class="form-group{{ $errors->has('kelurahan') ? ' has-error' : '' }}">
+                    {!! Form::label('kelurahan', 'Kelurahan', ['class'=>'col-md-2 control-label']) !!}
+                    <div class="col-md-10">
+                        
+                         @if (isset($lokasi_pelanggan))
+                        {!! Form::select('kelurahan',array(), $lokasi_pelanggan->kelurahan, ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH KELURAHAN--','id'=>'pilih_kelurahan']) !!}
+                        {!! $errors->first('kelurahan', '<p class="help-block">:message</p>') !!}
+                        @else
+                        {!! Form::select('kelurahan',array(),null
+                        , ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH KELURAHAN--','id'=>'pilih_kelurahan']) !!}
+                        {!! $errors->first('kelurahan', '<p class="help-block">:message</p>') !!}
+                        @endif
+                        
+                    </div>
+                </div>
+
                     {!! Form::hidden('id', $user->id, ['class'=>'form-control','autocomplete'=>'off']) !!}
                     <div class="col-md-2"></div>
                     <div class="col-md-4">
@@ -216,24 +290,50 @@
             </div>
         </div>
     </div>
-</div> <!-- end-main-raised -->
 @endif
 @endsection
-{{-- div card ubah profil --}}
 
 @section('scripts')
 <script type="text/javascript">
  $(document).ready(function(){
     $("#nama_pelanggan").focus();
+
 });
 
  $('.datepicker').datepicker({
-    format: 'dd-mm.yyyy', 
-    autoclose: true,
+    format: 'dd-mm-yyyy', 
+    autoclose: true
 });
  $(document).on('click', '#btnSimpanProfil', function(){
     swal("Berhasil!", "Profil Berhasil Diubah", "success");
 });
+</script>
+
+<script type="text/javascript">
+        $(document).on('change', '#pilih_provinsi', function(){
+            var id = $("#pilih_provinsi").val();
+            var type = "kabupaten";
+            $.get('{{ route('cek_kabupaten') }}',{'_token': $('meta[name=csrf-token]').attr('content'),type:type,id:id}, function(data){  
+                    $("#pilih_kabupaten").html(data);
+            }); 
+            $("#pilih_kecamatan").html('');
+            $('#pilih_kelurahan').html('');
+        });
+        $(document).on('change', '#pilih_kabupaten', function(){
+            var id = $("#pilih_kabupaten").val();
+            var type = "kecamatan";
+            $.get('{{ route('cek_kabupaten') }}',{'_token': $('meta[name=csrf-token]').attr('content'),type:type,id:id}, function(data){  
+                    $("#pilih_kecamatan").html(data);
+            });                
+            $('#pilih_kelurahan').html('');
+        }); 
+        $(document).on('change', '#pilih_kecamatan', function(){
+            var id = $("#pilih_kecamatan").val();
+            var type = "kelurahan";
+            $.get('{{ route('cek_kabupaten') }}',{'_token': $('meta[name=csrf-token]').attr('content'),type:type,id:id}, function(data){  
+                    $("#pilih_kelurahan").html(data);
+            });                
+        });
 </script>
 @endsection
 
