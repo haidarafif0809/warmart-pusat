@@ -34,9 +34,7 @@
 </head>
 
 <style type="text/css">
-.navbar-nav .open .dropdown-menu{
-  color: grey;
-}
+
 .list-produk {
   padding-left: 4px;
   padding-right: 4px;
@@ -54,10 +52,7 @@
   margin-bottom: 0px;
   margin-top: 0px;
 }
-.h3 {
-  margin: 0%;
-  line-height: 0em;
-}
+
 .card .card-image{
   height: auto; /*this makes sure to maintain the aspect ratio*/
   margin-top: 5px;
@@ -69,6 +64,65 @@
 p {
   margin: 0 0 0px;
 }
+
+.list-produk {
+
+  padding-left: 4px;
+  padding-right: 4px;
+
+}
+.card .card-image{
+
+  height: auto; /*this makes sure to maintain the aspect ratio*/
+  margin-top: 0px;
+}
+.card-pricing {
+  margin-bottom: 0px;
+}
+.tombolBeli {
+  padding: 10px 0px;
+  margin:0px;
+}
+.card-pricing .card-content {
+  padding: 5px !important;
+}
+.card .footer {
+  margin-top: 0px;
+  font-family: Helvetica,Arial,sans-serif;
+  font-weight: 400;
+  line-height:1.2em;
+  text-decoration: none;
+  font-size:15px;
+}      
+
+@font-face {
+  font-family: "San Francisco";
+  font-weight: 200;
+  src: url("//applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-thin-webfont.woff2");
+}
+
+
+.flexFont {
+  @if(Agent::isMobile())
+  height:3em;
+  @else  
+  height:3em;
+  @endif
+  padding:1%;
+  margin: 5px;
+
+}
+.btnWarung {
+  padding:1%;
+  margin: 0px;
+}
+
+.smaller {
+  font-size: 0.7em;
+  background-color:red;
+  width: 10em;
+}
+
 </style>
 <body class="product-page"> 
   <nav class="navbar navbar-default navbar-transparent navbar-fixed-top navbar-color-on-scroll" color-on-scroll=" " id="sectionsNav">
@@ -230,13 +284,14 @@ p {
          </div>
        </div>  
        <div class="related-products">
-        <h3 class="title text-center h3">Produk Yang Sama:</h3>
+        <h3 class="text-center ">Produk Sekategori</h3>
         <div class="row">
           {!! $daftar_produk_sama !!}  
         </div>
       </div>
+      <hr>
       <div class="related-products">
-        <h3 class="title text-center h3">Produk Yang Ada DI Warung {{ $barang->warung->name }}:</h3>
+        <h3 class="text-center ">Produk {{ title_case($barang->warung->name) }}</h3>
         <div class="row"> 
           {!! $daftar_produk_warung !!}   
         </div>
@@ -348,8 +403,7 @@ p {
 <script src="{{ asset('js/jquery-jvectormap.js') }}"></script>
 <!-- Sliders Plugin, full documentation here: https://refreshless.com/nouislider/ -->
 <script src="{{ asset('js/nouislider.min.js') }}"></script>
-<!--  Google Maps Plugin    -->
-<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
+
 <!--  Plugin for Select, full documentation here: http://silviomoreto.github.io/bootstrap-select -->
 <script src="{{ asset('js/jquery.select-bootstrap.js') }}"></script>
 <!--  DataTables.net Plugin, full documentation here: https://datatables.net/    -->
@@ -365,6 +419,12 @@ p {
 <script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
 <script src="{{ asset('js/demo.js') }}"></script>
 <script src="{{ asset('js/material-kit.js?v=1.2.0')}}" type="text/javascript"></script>
+{{-- lazy load image --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-lazyload/10.3.5/lazyload.min.js"></script>
+
+<script type="text/javascript">
+  var myLazyLoad = new LazyLoad();
+</script>
 <script type="text/javascript"> 
  $(document).on('click', '#btnBeliSekarang', function(){      
   swal({
@@ -373,5 +433,31 @@ p {
     type: "success",
   });
 });
+</script>
+<script type="text/javascript">
+  flexFont = function () {
+    @if(Agent::isMobile())
+    var divs = document.getElementsByClassName("flexFont");
+    for(var i = 0; i < divs.length; i++) {
+      var relFontsize = divs[i].offsetWidth*0.13;
+      divs[i].style.fontSize = relFontsize+'px';
+    }
+    @else 
+    var divs = document.getElementsByClassName("flexFont");
+    for(var i = 0; i < divs.length; i++) {
+      var relFontsize = divs[i].offsetWidth*0.06;
+      divs[i].style.fontSize = relFontsize+'px';
+    }
+
+    @endif
+
+  };
+
+  window.onload = function(event) {
+    flexFont();
+  };
+  window.onresize = function(event) {
+    flexFont();
+  };
 </script>
 </html>
