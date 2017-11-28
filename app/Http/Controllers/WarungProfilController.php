@@ -35,10 +35,18 @@ class WarungProfilController extends Controller
             $no_rek = $warungs->bank_warung->no_rek;
             $nama_bank = $warungs->bank_warung->nama_bank;
             $atas_nama = $warungs->bank_warung->atas_nama;
-            $provinsi = Indonesia::findProvince($warungs->provinsi);
-            $kabupaten = Indonesia::findCity($warungs->kabupaten);
-            $kecamatan = Indonesia::findDistrict($warungs->kecamatan);
-            $kelurahan = Indonesia::findVillage($warungs->wilayah);
+            if ($warungs->provinsi == NULL) {
+                $provinsi = "";
+                $kabupaten = "";
+                $kecamatan = "";
+                $kelurahan = "";
+            }
+            else{                
+                $provinsi = Indonesia::findProvince($warungs->provinsi);
+                $kabupaten = Indonesia::findCity($warungs->kabupaten);
+                $kecamatan = Indonesia::findDistrict($warungs->kecamatan);
+                $kelurahan = Indonesia::findVillage($warungs->wilayah);
+            }
 
             array_push($warung_array, ['warung'=>$warungs, 'no_rek'=>$no_rek, 'nama_bank'=>$nama_bank, 'atas_nama'=>$atas_nama, 'provinsi'=>$provinsi, 'kabupaten'=>$kabupaten, 'kecamatan'=>$kecamatan, 'kelurahan'=>$kelurahan]);
         }
@@ -62,23 +70,37 @@ class WarungProfilController extends Controller
     }
 
     public function pilih_provinsi(){
-        $provinsi = Indonesia::allProvinces();
-        return response()->json($provinsi);
+        $wilayah = Indonesia::allProvinces();
+        return response()->json($wilayah);
     }
 
-    public function pilih_kabupaten($id){
+    //PILIH WILAYAH 
+    public function pilih_wilayah($id, $type) 
+    { 
+    # Tarik ID_wilayah & tipe_wilayah
+        $id_wilayah = $id;
+        $type_wilayah = $type;
+
+    # Buat pilihan "Switch Case" berdasarkan variabel "type" dari dari data yg dikirim
+        switch($type_wilayah):
+     # untuk kasus "kabupaten"
+        case 'kabupaten':
         $kabupaten = Indonesia::allCities()->where('province_id', $id);
         return response()->json($kabupaten);
-    }
-
-    public function pilih_kecamatan($id){
+        break;
+     # untuk kasus "kecamatan"
+        case 'kecamatan':
         $kecamatan = Indonesia::allDistricts()->where('city_id', $id);
         return response()->json($kecamatan);
-    }
-
-    public function pilih_kelurahan($id){
+        break;
+     # untuk kasus "kelurahan"
+        case 'kelurahan':
         $kelurahan = Indonesia::allVillages()->where('district_id', $id);
         return response()->json($kelurahan);
+        break;
+    # pilihan berakhir
+        endswitch;
+
     }
 
     /**
@@ -110,14 +132,14 @@ class WarungProfilController extends Controller
      */
     public function show($id)
     {
-     $warung = Warung::with(['bank_warung'])->find($id);
-     $warung['provinsi'] =  $warung->provinsi;
-     $warung['nama_bank'] = $warung->bank_warung->nama_bank;
-     $warung['atas_nama'] = $warung->bank_warung->atas_nama;
-     $warung['no_rek'] = $warung->bank_warung->no_rek;
+       $warung = Warung::with(['bank_warung'])->find($id);
+       $warung['provinsi'] =  $warung->provinsi;
+       $warung['nama_bank'] = $warung->bank_warung->nama_bank;
+       $warung['atas_nama'] = $warung->bank_warung->atas_nama;
+       $warung['no_rek'] = $warung->bank_warung->no_rek;
 
-     return $warung;
- }
+       return $warung;
+   }
 
     /**
      * Show the form for editing the specified resource.
@@ -143,18 +165,18 @@ class WarungProfilController extends Controller
     public function update(Request $request, $id)
     {
     //VALIDASI WARUNG
-       $this->validate($request, [
+     $this->validate($request, [
         'name'      => 'required|unique:warungs,name,'.$id,
         'alamat'    => 'required',
         'provinsi'  => 'required',
         'kabupaten' => 'required',
         'kecamatan' => 'required',
         'kelurahan' => 'required',
-        'no_telpon' => 'required|max:15',
+        'no_telpon' => 'required|max:15|unique:warungs,no_telpon,'.$id,
         ]);
 
          //UPDATE MASTER DATA WARUNG
-       $warung = Warung::where('id',$id)->update([
+     $warung = Warung::where('id',$id)->update([
         'name'      =>$request->name,
         'alamat'    =>$request->alamat,
         'provinsi'  =>$request->provinsi,
@@ -165,22 +187,22 @@ class WarungProfilController extends Controller
         'email'     =>$request->email,
         ]);
 
-       $bank_warung_id = BankWarung::select('id')->where('warung_id', $id)->first();
+     $bank_warung_id = BankWarung::select('id')->where('warung_id', $id)->first();
 
         //VALIDASI BANK WARUNG
-       $this->validate($request, [
+     $this->validate($request, [
         'nama_bank' => 'required',
         'atas_nama' => 'required', 
         'no_rek'    => 'required|numeric|unique:bank_warungs,no_rek,'.$bank_warung_id->id, 
         ]);
 
          //UPDATE BANK WARUNG
-       $bank_warung = BankWarung::where('warung_id',$id)->update([
+     $bank_warung = BankWarung::where('warung_id',$id)->update([
         'nama_bank' =>$request->nama_bank,
         'atas_nama' =>$request->atas_nama,
         'no_rek' =>$request->no_rek,
         ]);
-   }
+ }
 
     /**
      * Remove the specified resource from storage.

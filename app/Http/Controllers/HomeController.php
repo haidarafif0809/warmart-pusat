@@ -194,6 +194,8 @@ class HomeController extends Controller
     $produk = Barang::count();
     $error_log = Error::count();
     $rata_rata_produk_perwarung = $produk / $jumlah_warung;
+    $pesanan = PesananPelanggan::all()->count();
+    $pesanan_selesai = PesananPelanggan::where('konfirmasi_pesanan',2)->count();
 
     $response['komunitas'] = $jumlah_komunitas;
     $response['customer'] = $jumlah_customer;
@@ -202,6 +204,9 @@ class HomeController extends Controller
     $response['komunitas_tervalidasi'] = $jumlah_komunitas_tervalidasi;
     $response['rata_rata_produk'] = $rata_rata_produk_perwarung;
     $response['produk'] = $produk;
+    $response['error_log'] = $error_log;
+    $response['pesanan'] = $pesanan;
+    $response['pesanan_selesai'] = $pesanan_selesai;
 
     return response()->json($response);
 
@@ -240,35 +245,7 @@ class HomeController extends Controller
 
   }
 
-  $jumlah_komunitas = User::where('tipe_user','2')->count();
-  $jumlah_customer = User::where('tipe_user','3')->count();
-  $jumlah_warung = User::where('tipe_user','4')->count();
-  $jumlah_warung_tervalidasi = User::where('tipe_user','4')->where('konfirmasi_admin','1')->count();
-  $jumlah_komunitas_tervalidasi = User::where('tipe_user','2')->where('konfirmasi_admin','1')->count();
-  $produk = Barang::count();
-  $error_log = Error::count();
-  $rata_rata_produk_perwarung = $produk / $jumlah_warung;
-  $pesanan = PesananPelanggan::all()->count();
-  $pesanan_selesai = PesananPelanggan::where('konfirmasi_pesanan',2)->count();
-
-  $response['komunitas'] = $jumlah_komunitas;
-  $response['customer'] = $jumlah_customer;
-  $response['warung'] = $jumlah_warung;
-  $response['warung_tervalidasi'] = $jumlah_warung_tervalidasi;
-  $response['komunitas_tervalidasi'] = $jumlah_komunitas_tervalidasi;
-  $response['rata_rata_produk'] = $rata_rata_produk_perwarung;
-  $response['produk'] = $produk;
-  $response['error_log'] = $error_log;
-  $response['pesanan'] = $pesanan;
-  $response['pesanan_selesai'] = $pesanan_selesai;
-
-  return response()->json($response);
-
-
-
-}
-
-public function sms(){
+  public function sms(){
 
         $client = new Client(); //GuzzleHttp\Client
         $result = $client->get('https://reguler.zenziva.net/apps/smsapi.php?userkey=k9d4p8&passkey=afifmaulana&nohp=081222498686&pesan=isi%20pesan');

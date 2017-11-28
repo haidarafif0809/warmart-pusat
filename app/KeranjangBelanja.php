@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Auth;
 
 class KeranjangBelanja extends Model
 {
@@ -17,6 +18,10 @@ class KeranjangBelanja extends Model
 	public function pelanggan(){
 		return $this->hasOne('App\User','id','id_pelanggan');
 	} 
+
+	public function scopeJumlahBelanja($query){
+		return $query->where('id_pelanggan',Auth::user()->id)->count();
+	}
 
 	public function getNamaProdukAttribute() 
 	{   
