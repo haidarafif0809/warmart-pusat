@@ -11,8 +11,7 @@
   <meta name="viewport" content="width=device-width" />
   <!-- Bootstrap core CSS     -->
   <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" />
-  <!--  Material Dashboard CSS    -->
-  <link href="{{ asset('css/material-dashboard.css?v=1.2.0') }}" rel="stylesheet" />
+
 
   <link href="{{ asset('css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
   <!--     Fonts and icons     -->
