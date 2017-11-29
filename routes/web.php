@@ -434,6 +434,10 @@ Route::get('/profil-warung/view-detail/{id}','WarungProfilController@view_detail
 Route::get('/kategori-transaksi/view','KategoriTransaksiController@view')->middleware('auth');
 Route::get('/kategori-transaksi/pencarian', 'KategoriTransaksiController@pencarian')->middleware('auth');
 
+//SUPLIER VUE.JS
+Route::get('/suplier/view','SuplierController@view')->middleware('auth');
+Route::get('/suplier/pencarian', 'SuplierController@pencarian')->middleware('auth');
+
 Route::middleware('optimizeImages','auth')->group(function () {
 	
 	Route::resource('user', 'UserController');

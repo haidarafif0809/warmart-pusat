@@ -86,6 +86,11 @@
  import KategoriTransaksiCreate from './components/kategori_transaksi/KategoriTransaksiCreate.vue';
  import KategoriTransaksiEdit from './components/kategori_transaksi/KategoriTransaksiEdit.vue';
 
+ // SUPLIER
+ import SuplierIndex from './components/suplier/SuplierIndex.vue';
+ import SuplierCreate from './components/suplier/SuplierCreate.vue';
+ import SuplierEdit from './components/suplier/SuplierEdit.vue';
+
  const routes = [ 
  {
  	path: '/',
@@ -153,6 +158,11 @@
 {path: '/kategori-transaksi', component: KategoriTransaksiIndex, name: 'indexKategoriTransaksi'},
 {path: '/create-kategori-transaksi', component: KategoriTransaksiCreate, name: 'createKategoriTransaksi'},
 {path: '/edit-kategori-transaksi/:id', component: KategoriTransaksiEdit, name: 'editKategoriTransaksi'},
+
+// Suplier
+{path: '/suplier', component: SuplierIndex, name: 'indexSuplier'},
+{path: '/create-suplier', component: SuplierCreate, name: 'createSuplier'},
+{path: '/edit-suplier/:id', component: SuplierEdit, name: 'editSuplier'},
 
 ]
 

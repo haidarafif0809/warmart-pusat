@@ -8,6 +8,7 @@ use Yajra\Datatables\Datatables;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use App\Suplier;
+use App\Pembelian;
 use Laratrust;
 use File;
 use Auth;
@@ -20,7 +21,7 @@ class SuplierController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-      public function __construct()
+    public function __construct()
     {
         $this->middleware('user-must-warung');
     }
@@ -28,28 +29,82 @@ class SuplierController extends Controller
 
     public function index(Request $request, Builder $htmlBuilder)
     {
-        //
-            if ($request->ajax()) {
-            $master_suplier = Suplier::select(['id','nama_suplier','no_telp','alamat','warung_id','contact_person'])->where('warung_id',Auth::user()->id_warung)->get();
-            return Datatables::of($master_suplier)->addColumn('action', function($suplier){
-                    return view('datatable._action', [
-                        'model'     => $suplier,
-                        'form_url'  => route('suplier.destroy', $suplier->id),
-                        'edit_url'  => route('suplier.edit', $suplier->id),
-                        'confirm_message'   => 'Anda Yakin Ingin Menghapus ' .$suplier->nama_suplier . ' ?',
-                        ]);
-              })->make(true);
-        }
-        $html = $htmlBuilder
-        ->addColumn(['data' => 'nama_suplier', 'name' => 'nama_suplier', 'title' => 'Nama']) 
-        ->addColumn(['data' => 'no_telp', 'name' => 'no_telp', 'title' => 'No. Telpon']) 
-        ->addColumn(['data' => 'alamat', 'name' => 'alamat', 'title' => 'Alamat']) 
-        ->addColumn(['data' => 'contact_person', 'name' => 'contact_person', 'title' => 'Contact Person'])   
-        ->addColumn(['data' => 'action', 'name' => 'action', 'title' => '', 'orderable' => false, 'searchable'=>false]);
-
         return view('suplier.index')->with(compact('html'));
-        
-}
+    }
+
+    public function view(){
+        $data_suplier = Suplier::where('warung_id',Auth::user()->id_warung)->orderBy('id','desc')->paginate(10);
+        $array_suplier = array();
+        foreach ($data_suplier as $suplier) {
+            $data_pembelian = Pembelian::where('suplier_id', $suplier->id)->where('warung_id', $suplier->warung_id)->count();
+
+            if ($data_pembelian > 0) {
+                $status_suplier = 1;
+            }else{
+                $status_suplier = 0;
+            }
+
+            array_push($array_suplier,[
+                'suplier' => $suplier,
+                'status_suplier' => $status_suplier
+                ]);
+        }
+
+     //DATA PAGINATION 
+        $respons['current_page'] = $data_suplier->currentPage();
+        $respons['data'] = $array_suplier; 
+        $respons['first_page_url'] = url('/suplier/view?page='.$data_suplier->firstItem());
+        $respons['from'] = 1;
+        $respons['last_page'] = $data_suplier->lastPage();
+        $respons['last_page_url'] = url('/suplier/view?page='.$data_suplier->lastPage());
+        $respons['next_page_url'] = $data_suplier->nextPageUrl();
+        $respons['path'] = url('/suplier/view');
+        $respons['per_page'] = $data_suplier->perPage();
+        $respons['prev_page_url'] = $data_suplier->previousPageUrl();
+        $respons['to'] = $data_suplier->perPage();
+        $respons['total'] = $data_suplier->total();
+        return response()->json($respons);
+    }
+
+    public function pencarian(Request $request){
+        $data_suplier = Suplier::where('warung_id',Auth::user()->id_warung)
+        ->where('nama_suplier','LIKE',"%$request->search%")
+        ->orwhere('no_telp','LIKE',"%$request->search%")
+        ->orwhere('alamat','LIKE',"%$request->search%")
+        ->orwhere('contact_person','LIKE',"%$request->search%")
+        ->orderBy('id','desc')->paginate(10);
+
+        $array_suplier = array();
+        foreach ($data_suplier as $suplier) {
+            $data_pembelian = Pembelian::where('suplier_id', $suplier->id)->where('warung_id', $suplier->warung_id)->count();
+
+            if ($data_pembelian > 0) {
+                $status_suplier = 1;
+            }else{
+                $status_suplier = 0;
+            }
+
+            array_push($array_suplier,[
+                'suplier' => $suplier,
+                'status_suplier' => $status_suplier
+                ]);
+        }
+
+     //DATA PAGINATION 
+        $respons['current_page'] = $data_suplier->currentPage();
+        $respons['data'] = $array_suplier; 
+        $respons['first_page_url'] = url('/suplier/view?page='.$data_suplier->firstItem());
+        $respons['from'] = 1;
+        $respons['last_page'] = $data_suplier->lastPage();
+        $respons['last_page_url'] = url('/suplier/view?page='.$data_suplier->lastPage());
+        $respons['next_page_url'] = $data_suplier->nextPageUrl();
+        $respons['path'] = url('/suplier/view');
+        $respons['per_page'] = $data_suplier->perPage();
+        $respons['prev_page_url'] = $data_suplier->previousPageUrl();
+        $respons['to'] = $data_suplier->perPage();
+        $respons['total'] = $data_suplier->total();
+        return response()->json($respons);
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -69,39 +124,25 @@ class SuplierController extends Controller
      */
     public function store(Request $request)
     {
-        //
         $this->validate($request, [
-            'nama_suplier' => 'required|unique:supliers,nama_suplier,NULL,id,warung_id,'.Auth::user()->id_warung.'',
-            'alamat'=>'required',
-            'no_telp'=>'required',
-        ]);
+            'nama_suplier'  => 'required|unique:supliers,nama_suplier,NULL,id,warung_id,'.Auth::user()->id_warung.'',
+            'alamat'        =>'required',
+            'no_telp'       =>'required|without_spaces',
+            ]);
 
-            if (Auth::user()->id_warung != "") {
+        if (Auth::user()->id_warung != "") {
             $suplier = Suplier::create([
-                'nama_suplier' =>$request->nama_suplier,
-                'alamat'       =>$request->alamat,
-                'no_telp'      =>$request->no_telp,
-                'contact_person'      =>$request->contact_person,
-                'warung_id'    =>Auth::user()->id_warung]); 
-            }else{
-                  Auth::logout();
-                return response()->view('error.403');
-            }
+                'nama_suplier'   =>$request->nama_suplier,
+                'alamat'         =>$request->alamat,
+                'no_telp'        =>$request->no_telp,
+                'contact_person' =>$request->contact_person,
+                'warung_id'      =>Auth::user()->id_warung]); 
+        }else{
+          Auth::logout();
+          return response()->view('error.403');
+      }
 
-        $pesan_alert = '<div class="container-fluid">
-            <div class="alert-icon">
-                <i class="material-icons">check</i>
-            </div>
-            <b>Sukses : Berhasil Menambah Suplier "'.$request->nama_suplier.'"</b>
-         </div>';
-
-         Session::flash("flash_notification", [
-            "level"=>"success",
-            "message"=> $pesan_alert
-         ]);
-
-        return redirect()->route('suplier.index');
-    }
+  }
 
     /**
      * Display the specified resource.
@@ -111,8 +152,9 @@ class SuplierController extends Controller
      */
     public function show($id)
     {
-        //
-    }
+      $suplier = Suplier::find($id);      
+      return $suplier;
+  }
 
     /**
      * Show the form for editing the specified resource.
@@ -122,17 +164,16 @@ class SuplierController extends Controller
      */
     public function edit($id)
     {
-        //
         $warung_id = Auth::user()->id_warung;
         $suplier = Suplier::find($id);
 
-            if ($warung_id == $suplier->warung_id) {
-                return view('suplier.edit')->with(compact('suplier')); 
-            }else{
-                  Auth::logout();
-                return response()->view('error.403');
-            }
-    }
+        if ($warung_id == $suplier->warung_id) {
+            return view('suplier.edit')->with(compact('suplier')); 
+        }else{
+          Auth::logout();
+          return response()->view('error.403');
+      }
+  }
 
     /**
      * Update the specified resource in storage.
@@ -146,11 +187,11 @@ class SuplierController extends Controller
         //
         $id_warung = Auth::user()->id_warung;
 
-         $this->validate($request, [
-            'nama_suplier' => 'required|unique:supliers,nama_suplier,'. $id.',id,warung_id,'.Auth::user()->id_warung.'',
-            'alamat'=>'required',
-            'no_telp'=>'required',
-        ]);
+        $this->validate($request, [
+            'nama_suplier'  => 'required|unique:supliers,nama_suplier,'. $id.',id,warung_id,'.Auth::user()->id_warung.'',
+            'alamat'        =>'required',
+            'no_telp'       =>'required|without_spaces',
+            ]);
 
         $suplier = Suplier::find($id);
         if ($id_warung == $suplier->warung_id) {
@@ -159,27 +200,12 @@ class SuplierController extends Controller
                 'alamat'       =>$request->alamat,
                 'no_telp'      =>$request->no_telp,
                 'contact_person'      =>$request->contact_person,
-            ]);
+                ]);
         }else{
-              Auth::logout();
-                return response()->view('error.403'); 
-        }
-
-        $pesan_alert = 
-        '<div class="container-fluid">
-            <div class="alert-icon">
-                <i class="material-icons">check</i>
-            </div>
-            <b>Sukses : Berhasil Mengubah Suplier "'.$request->nama_suplier.'"</b>
-         </div>';
-
-         Session::flash("flash_notification", [
-            "level"=>"success",
-            "message"=> $pesan_alert
-         ]);
-
-        return redirect()->route('suplier.index');
-    }
+          Auth::logout();
+          return response()->view('error.403'); 
+      }
+  }
 
     /**
      * Remove the specified resource from storage.
@@ -189,32 +215,14 @@ class SuplierController extends Controller
      */
     public function destroy($id)
     {
-        //
         $id_warung = Auth::user()->id_warung;
         $suplier = Suplier::find($id);
 
         if ($id_warung == $suplier->warung_id) {
-            // JIKA GAGAL MENGHAPUD
-            if (!Suplier::destroy($id)) {
-                return redirect()->back();
-            }
-            else{
-         $pesan_alert = '<div class="container-fluid">
-            <div class="alert-icon">
-                <i class="material-icons">check</i>
-            </div>
-            <b>Sukses : Berhasil Menghapus Suplier </b>
-         </div>';
-
-         Session::flash("flash_notification", [
-            "level"=>"danger",
-            "message"=> $pesan_alert
-         ]);
-                return redirect()->route('suplier.index');
-            }
+            Suplier::destroy($id);
         }else{
-              Auth::logout();
-                return response()->view('error.403'); 
+            Auth::logout();
+            return response()->view('error.403'); 
         }
     }
 }
