@@ -78,13 +78,13 @@
                 @endif
 
               </li>
-
+              <!--SEMENTARA TIDAK DITAMPILKAN DULU, KARENA BELUM SELESAI MIGRASI KE VUE JS
               <li>
                 <router-link :to="{name: 'indexProfilWarung'}">
                   <span class="sidebar-normal">Ubah Profil Warung</span>
                 </router-link>
-              </a>
-            </li> 
+              </li> 
+            -->
 
             <li>
               @if(Auth::user()->tipe_user == 1 )                
@@ -93,6 +93,7 @@
               <a href="{{ url('/ubah-password') }}">Ubah Password</a>
               @endif
             </li>
+
             <li>
               <a href="{{ url('/logout') }}"
               onclick="event.preventDefault();
@@ -102,14 +103,14 @@
             <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
               {{ csrf_field() }}
             </form>
-
           </li>     
         </ul>
       </div>
     </li>
-    <li class="active">
+    <li class="active vueJs">
       @if(Auth::user()->tipe_user == 1 OR Auth::user()->tipe_user == 4)
-      <router-link :to="{name: 'indexDashboard'}">   <i class="material-icons">dashboard</i><p>Dashboard</p></router-link>
+      <!-- <router-link :to="{name: 'indexDashboard'}">   <i class="material-icons">dashboard</i><p>Dashboard</p></router-link> -->
+      <a href="#"><i class="material-icons">dashboard</i><p>Dashboard</p></a>
       @else 
       <a href="{{ url('/dashboard')}}">
         <i class="material-icons">dashboard</i>
@@ -208,17 +209,19 @@
 </a>
 <div class="collapse" id="setting">
  <ul class="nav">
-  <li>
-    <router-link :to="{name: 'indexKategoriTransaksi'}">
+   <li class="vueJs">
+    <!-- <router-link :to="{name: 'indexKategoriTransaksi'}"> -->
+    <a href="#">
       <span class="sidebar-mini">KT</span>
       <span class="sidebar-normal">Kategori Transaksi</span>
-    </router-link>
+    </a>
+    <!-- </router-link> -->
   </li>
-  <li>
-    <router-link :to="{name: 'indexKas'}">
+  <li class="vueJs">
+    <a href="#">
       <span class="sidebar-mini">K</span>
       <span class="sidebar-normal">Kas</span>
-    </router-link>
+    </a>
   </li> 
   <li>
    <a href="{{ route('barang.index') }}">
@@ -226,8 +229,8 @@
     <span class="sidebar-normal">Produk</span>
   </a>
 </li> 
-<li>
- <a href="{{ route('suplier.index') }}">
+<li class="vueJs">
+ <a href="#">
   <span class="sidebar-mini">S</span>
   <span class="sidebar-normal">Supplier</span>
 </a>
@@ -455,7 +458,12 @@
 <script src="{{ asset('js/ckeditor/ckeditor.js') }}"></script>
 <!-- SHORTCUT JS -->
 <script src="{{ asset('js/shortcut.js') }}"></script>
-
+<!--MENU YG SEDANG DI MIGRASI KE VUEJS TIDAK BISA DIAKSES SEMENTARA-->
+<script type="text/javascript">
+  $(document).on('click', '.vueJs', function(){
+    swal("Pemberitahuan!", "Menu Tidak Dapat Diakses. Karena Dalam Proses Perbaikan!", "info");
+  });
+</script>
 
 @yield('scripts')
 
