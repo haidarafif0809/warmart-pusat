@@ -32,6 +32,7 @@
                   <th>Alamat</th>
                   <th>Wilayah</th>
                   <th>Warung</th>
+                  <th>Foto Ktp</th>
                   <th>Konfirmasi</th>
                   <th></th>
                 </tr>
@@ -45,6 +46,9 @@
                   <td>{{ userWarung.user_warung.alamat }}</td>
                   <td>{{ userWarung.wilayah }}</td>
                   <td>{{ userWarung.warung }}</td>
+                  <td><a v-if="userWarung.user_warung.foto_ktp != undefined" v-bind:href="url_foto_ktp+ '/'+userWarung.user_warung.foto_ktp" target="blank">Lihat Ktp</a>
+                      <p v-else >Belum Ada Ktp</p>
+                  </td>
                   <td v-if="userWarung.user_warung.konfirmasi_admin == 1">
                     <a href="#"
                     class="btn btn-xs btn-warning" v-bind:id="'confirm-no-' + userWarung.user_warung.id"
@@ -80,7 +84,7 @@
             <!--LOADING-->
             <vue-simple-spinner v-if="loading"></vue-simple-spinner>
             <!--PAGINATION TABLE-->
-            <div align="right"><pagination :data="userWarungsData" v-on:pagination-change-page="getResults"></pagination></div>
+            <div align="right"><pagination :data="userWarungsData" :limit="4" v-on:pagination-change-page="getResults"></pagination></div>
 
           </div><!-- /END RESPONSIVE-->
 
@@ -99,6 +103,7 @@ export default {
       userWarungs: [],
       userWarungsData: {},
       url : window.location.origin+(window.location.pathname).replace("dashboard", "user-warung"),
+      url_foto_ktp : window.location.origin+(window.location.pathname).replace("dashboard", "foto_ktp_user"),
       pencarian: '',
       contoh : '',
       loading: true
