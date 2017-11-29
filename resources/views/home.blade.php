@@ -39,7 +39,7 @@
 @endsection
 @section('scripts')
 @if(Auth::user()->tipe_user == 1 OR Auth::user()->tipe_user == 4)
-<script type="text/javascript" src="{{ asset('js/app.js?v=1.19')}}"></script>
+<script type="text/javascript" src="{{ asset('js/app.js?v=1.20')}}"></script>
 @endif
 @endsection
 

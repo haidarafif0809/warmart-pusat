@@ -83,32 +83,35 @@
 
                         <div class="form-group">
                             <label for="kabupaten" class="col-md-2 control-label">Kabupaten</label>
-                            <div class="col-md-4">
+                            <div class="col-md-4" v-if="loading == false">
                                 <selectize-component v-model="profilWarung.kabupaten" :settings="placeholder_kabupaten" id="pilih_kabupaten"> 
                                     <option v-for="kabupatens, index in kabupaten" v-bind:value="kabupatens.id" >{{ kabupatens.name }}</option>
                                 </selectize-component>
                                 <span v-if="errors.kabupaten" id="kabupaten_error" class="label label-danger">{{ errors.kabupaten[0] }}</span>
                             </div>
+                            <vue-simple-spinner v-if="loading"></vue-simple-spinner>
                         </div>
 
                         <div class="form-group">
                             <label for="kecamatan" class="col-md-2 control-label">Kecamatan</label>
-                            <div class="col-md-4">
+                            <div class="col-md-4" v-if="loadingKecamatan == false">
                                 <selectize-component v-model="profilWarung.kecamatan" :settings="placeholder_kecamatan" id="pilih_kecamatan"> 
                                     <option v-for="kecamatans, index in kecamatan" v-bind:value="kecamatans.id" >{{ kecamatans.name }}</option>
                                 </selectize-component>
                                 <span v-if="errors.kecamatan" id="kecamatan_error" class="label label-danger">{{ errors.kecamatan[0] }}</span>
                             </div>
+                            <vue-simple-spinner v-if="loadingKecamatan"></vue-simple-spinner>
                         </div>
 
                         <div class="form-group">
                             <label for="kelurahan" class="col-md-2 control-label">Kelurahan</label>
-                            <div class="col-md-4">
+                            <div class="col-md-4" v-if="loadingKelurahan == false">
                                 <selectize-component v-model="profilWarung.kelurahan" :settings="placeholder_kelurahan" id="pilih_kelurahan"> 
                                     <option v-for="kelurahans, index in kelurahan" v-bind:value="kelurahans.id" >{{ kelurahans.name }}</option>
                                 </selectize-component>
                                 <span v-if="errors.kelurahan" id="kelurahan_error" class="label label-danger">{{ errors.kelurahan[0] }}</span>
-                            </div>
+                            </div> 
+                            <vue-simple-spinner v-if="loadingKelurahan"></vue-simple-spinner>
                         </div>
                         <div class="form-group">
                             <div class="col-md-4 col-md-offset-2">
@@ -116,7 +119,6 @@
                             </div>
                         </div>
                     </form>
-
                 </div>
             </div>
         </div>
@@ -129,13 +131,16 @@ export default {
     mounted() {
         let app = this;
         let id = app.$route.params.id;
-
+        
         app.profilWarungId = id;
         app.selected_provinsi();
 
         axios.get(app.url+'/' + id)
         .then(function (resp) {
             app.profilWarung = resp.data;
+            app.loading = false;
+            app.loadingKecamatan = false;
+            app.loadingKelurahan = false;
         })
         .catch(function () {
             alert("Tidak bisa memuat warung")
@@ -175,7 +180,10 @@ export default {
                 placeholder: '--PILIH KELURAHAN--'
             }, 
             url : window.location.origin+(window.location.pathname).replace("dashboard", "profil-warung"),
-            errors: []
+            errors: [],
+            loading: true,
+            loadingKecamatan: true,
+            loadingKelurahan: true
         }
     },
     methods: {
@@ -208,9 +216,13 @@ export default {
         selected_kabupaten(provinsi_id) {
           var app = this;
           var type = "kabupaten";
+          app.loading = true;
+
           axios.get(app.url+'/pilih-wilayah/'+provinsi_id+'/'+type)
           .then(function (resp) {
-            app.kabupaten = resp.data;
+            app.kabupaten = resp.data;            
+            app.loading = false;
+            
         })
           .catch(function (resp) {
             alert("Tidak bisa memuat kabupaten ");
@@ -219,9 +231,12 @@ export default {
         selected_kecamatan(kabupaten_id) {
           var app = this;
           var type = "kecamatan";
+          app.loadingKecamatan = true;
+
           axios.get(app.url+'/pilih-wilayah/'+kabupaten_id+'/'+type)
           .then(function (resp) {
             app.kecamatan = resp.data;
+            app.loadingKecamatan = false;            
         })
           .catch(function (resp) {
             alert("Tidak bisa memuat kecamatan ");
@@ -230,10 +245,13 @@ export default {
         selected_kelurahan(kecamatan_id) {
           var app = this;
           var type = "kelurahan";
+          app.loadingKelurahan = true;
+
           axios.get(app.url+'/pilih-wilayah/'+kecamatan_id+'/'+type)
           .then(function (resp) {
             app.kelurahan = resp.data;
-            console.log(resp.data)
+            app.loadingKelurahan = false;
+            
         })
           .catch(function (resp) {
             alert("Tidak bisa memuat kelurahan ");
