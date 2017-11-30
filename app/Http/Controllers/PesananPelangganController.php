@@ -121,7 +121,7 @@ class PesananPelangganController extends Controller
             $status_pesanan .= '<td><b  style="color:orange">Sudah Diterima Warung</b></td>';
         } elseif ($pesanan_pelanggan->konfirmasi_pesanan == 2) {
             $status_pesanan .= '<td><b  style="color:#01573e">Selesai</b></td>';
-        } elseif ($pesanan_pelanggans->konfirmasi_pesanan == 3) {
+        } elseif ($pesanan_pelanggan->konfirmasi_pesanan == 3) {
             $produk_pesanan_mobile .= '<td><b  style="color:red">Batal</b></td>';
         }
 
