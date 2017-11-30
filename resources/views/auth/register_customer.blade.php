@@ -45,7 +45,7 @@
                                                 <i class="material-icons">email</i>
                                             </span>
                                             <div class="form-group label-floating "> 
-                                                    {!! Form::email('email', null, ['class'=>'form-control','autocomplete'=>'off','placeholder'=>'Email']) !!}
+                                                    {!! Form::email('email', null, ['class'=>'form-control','autocomplete'=>'off','placeholder'=>'Email (tidak wajib)']) !!}
                                                     {!! $errors->first('email', '<p class="label label-danger">:message</p>') !!}
 
                                                 
@@ -68,12 +68,11 @@
                                                 <i class="material-icons">people</i>
                                             </span>
                                             <div class="form-group label-floating "> 
-                                                {!! Form::select('komunitas', [''=>'']+App\Komunitas::where('tipe_user',2)->pluck('name','id')->all(),null, ['class'=>'js-selectize-reguler', 'placeholder' => '-Pilih Komunitas-','id' => 'komunitas']) !!}
-                                                    {!! $errors->first('alamat', '<p class="label label-danger">:message</p>') !!}
-
-                                                
+                                                {!! Form::select('komunitas', [''=>'']+App\Komunitas::where('tipe_user',2)->pluck('name','id')->all(),null, ['class'=>'js-selectize-reguler', 'placeholder' => 'Pilih Komunitas (tidak wajib)','id' => 'komunitas']) !!}
+                                                    {!! $errors->first('alamat', '<p class="label label-danger">:message</p>') !!}     
                                             </div>
                                         </div>
+
  
  
                                         <div class="input-group">
