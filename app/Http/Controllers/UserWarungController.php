@@ -32,75 +32,87 @@ class UserWarungController extends Controller
 
     //VIEW USER WARUNG
     public function view(){
-        $user_warung = UserWarung::with(['warung'])->where('tipe_user', 4)->paginate(10);
+        $user_warung = UserWarung::with(['warung'])->where('tipe_user', 4)->orderBy('id','desc')->paginate(10);
 
         $user_warung_array = array();
         foreach ($user_warung as $user_warungs) {
             $data_kelurahan = Kelurahan::select(['nama'])->where('id', $user_warungs->wilayah)->first();
-            if ($user_warungs->wilayah == NULL) {
-                $wilayah = "-";
-            }
-            else{
-                $wilayah = $data_kelurahan->nama;
-            }
-            $warung = $user_warungs->warung->name;
-            array_push($user_warung_array, ['user_warung'=>$user_warungs, 'wilayah'=>$wilayah, 'warung'=>$warung]);
-        }
+            if ($user_warungs->wilayah == "") {
+               $wilayah = "-";
+           }
+           else {
+              $wilayah = $user_warungs->kelurahan->nama; 
+          }
+          $warung = $user_warungs->warung->name;
+          array_push($user_warung_array, ['user_warung'=>$user_warungs, 'wilayah'=>$wilayah, 'warung'=>$warung]);
+      }
 
         //DATA PAGINATION 
-        $respons['current_page'] = $user_warung->currentPage();
-        $respons['data'] = $user_warung_array;
-        $respons['first_page_url'] = url('/user-warung/view?page='.$user_warung->firstItem());
-        $respons['from'] = 1;
-        $respons['last_page'] = $user_warung->lastPage();
-        $respons['last_page_url'] = url('/user-warung/view?page='.$user_warung->lastPage());
-        $respons['next_page_url'] = $user_warung->nextPageUrl();
-        $respons['path'] = url('/user-warung/view');
-        $respons['per_page'] = $user_warung->perPage();
-        $respons['prev_page_url'] = $user_warung->previousPageUrl();
-        $respons['to'] = $user_warung->perPage();
-        $respons['total'] = $user_warung->total();
+      $respons['current_page'] = $user_warung->currentPage();
+      $respons['data'] = $user_warung_array;
+      $respons['first_page_url'] = url('/user-warung/view?page='.$user_warung->firstItem());
+      $respons['from'] = 1;
+      $respons['last_page'] = $user_warung->lastPage();
+      $respons['last_page_url'] = url('/user-warung/view?page='.$user_warung->lastPage());
+      $respons['next_page_url'] = $user_warung->nextPageUrl();
+      $respons['path'] = url('/user-warung/view');
+      $respons['per_page'] = $user_warung->perPage();
+      $respons['prev_page_url'] = $user_warung->previousPageUrl();
+      $respons['to'] = $user_warung->perPage();
+      $respons['total'] = $user_warung->total();
         //DATA PAGINATION
 
-        return response()->json($respons);
-    }
+      return response()->json($respons);
+  }
 
     //PENCARIAN USER WARUNG
-    public function pencarian(Request $request){
+  public function pencarian(Request $request){
         $search = $request->search;// REQUEST SEARCH
 
-        $user_warung = UserWarung::with(['kelurahan', 'warung'])->where('tipe_user', 4)
-        ->where(function($query) use ($search){// search
-            $query->orwhere('email','LIKE','%'.$search.'%')
-            ->orWhere('no_telp','LIKE','%'.$search.'%')
-            ->orWhere('name','LIKE','%'.$search.'%')
-            ->orWhere('alamat','LIKE','%'.$search.'%');
-        })->paginate(10);
+        if ($search != "") {
+            $user_warung = UserWarung::with(['warung','kelurahan'])->where('tipe_user', 4)
+                ->where(function($query) use ($search){// search
+                    $query->orwhere('email','LIKE','%'.$search.'%')
+                    ->orWhere('no_telp','LIKE','%'.$search.'%')
+                    ->orWhere('name','LIKE','%'.$search.'%')
+                    ->orWhere('alamat','LIKE','%'.$search.'%');
+                })->paginate(10);
+            }
+            else {
+                $user_warung = UserWarung::with(['warung','kelurahan'])->where('tipe_user', 4)->orderBy('id','desc')->paginate(10);
+            }
 
-        $user_warung_array = array();
-        foreach ($user_warung as $user_warungs) {
-            $wilayah = $user_warungs->kelurahan->nama;
-            $warung = $user_warungs->warung->name;
-            array_push($user_warung_array, ['user_warung'=>$user_warungs, 'wilayah'=>$wilayah, 'warung'=>$warung]);
-        }
+
+            $user_warung_array = array();
+            foreach ($user_warung as $user_warungs) {
+                if ($user_warungs->wilayah == "") {
+                   $wilayah = "-";
+               }
+               else {
+                  $wilayah = $user_warungs->kelurahan->nama; 
+              }
+
+              $warung = $user_warungs->warung->name;
+              array_push($user_warung_array, ['user_warung'=>$user_warungs, 'wilayah'=>$wilayah, 'warung'=>$warung]);
+          }
 
         //DATA PAGINATION 
-        $respons['current_page'] = $user_warung->currentPage();
-        $respons['data'] = $user_warung_array;
-        $respons['first_page_url'] = url('/user-warung/view?page='.$user_warung->firstItem());
-        $respons['from'] = 1;
-        $respons['last_page'] = $user_warung->lastPage();
-        $respons['last_page_url'] = url('/user-warung/view?page='.$user_warung->lastPage());
-        $respons['next_page_url'] = $user_warung->nextPageUrl();
-        $respons['path'] = url('/user-warung/view');
-        $respons['per_page'] = $user_warung->perPage();
-        $respons['prev_page_url'] = $user_warung->previousPageUrl();
-        $respons['to'] = $user_warung->perPage();
-        $respons['total'] = $user_warung->total();
+          $respons['current_page'] = $user_warung->currentPage();
+          $respons['data'] = $user_warung_array;
+          $respons['first_page_url'] = url('/user-warung/view?page='.$user_warung->firstItem());
+          $respons['from'] = 1;
+          $respons['last_page'] = $user_warung->lastPage();
+          $respons['last_page_url'] = url('/user-warung/view?page='.$user_warung->lastPage());
+          $respons['next_page_url'] = $user_warung->nextPageUrl();
+          $respons['path'] = url('/user-warung/view');
+          $respons['per_page'] = $user_warung->perPage();
+          $respons['prev_page_url'] = $user_warung->previousPageUrl();
+          $respons['to'] = $user_warung->perPage();
+          $respons['total'] = $user_warung->total();
         //DATA PAGINATION
 
-        return response()->json($respons);
-    }
+          return response()->json($respons);
+      }
 
     /**
      * Show the form for creating a new resource.

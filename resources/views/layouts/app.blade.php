@@ -107,10 +107,11 @@
         </ul>
       </div>
     </li>
-    <li class="active vueJs">
-      @if(Auth::user()->tipe_user == 1 OR Auth::user()->tipe_user == 4)
-      <!-- <router-link :to="{name: 'indexDashboard'}">   <i class="material-icons">dashboard</i><p>Dashboard</p></router-link> -->
-      <a href="#"><i class="material-icons">dashboard</i><p>Dashboard</p></a>
+    <li class="active">
+      @if(Auth::user()->tipe_user == 1)
+      <router-link :to="{name: 'indexDashboard'}">   <i class="material-icons">dashboard</i><p>Dashboard</p></router-link>
+      @elseif(Auth::user()->tipe_user == 4)
+      <a href="#" class="vueJs"><i class="material-icons">dashboard</i><p>Dashboard</p></a> 
       @else 
       <a href="{{ url('/dashboard')}}">
         <i class="material-icons">dashboard</i>

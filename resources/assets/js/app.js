@@ -94,6 +94,11 @@
  import KasEdit from './components/kas/KasEdit.vue';
 
 
+ // SUPLIER
+ import SuplierIndex from './components/suplier/SuplierIndex.vue';
+ import SuplierCreate from './components/suplier/SuplierCreate.vue';
+ import SuplierEdit from './components/suplier/SuplierEdit.vue';
+
  const routes = [ 
  {
  	path: '/',
@@ -167,6 +172,11 @@
 {path: '/create-kas', component: KasCreate, name: 'createKas'},
 {path: '/edit-kas/:id', component: KasEdit, name: 'editKas'},
 
+
+// Suplier
+{path: '/suplier', component: SuplierIndex, name: 'indexSuplier'},
+{path: '/create-suplier', component: SuplierCreate, name: 'createSuplier'},
+{path: '/edit-suplier/:id', component: SuplierEdit, name: 'editSuplier'},
 
 ]
 
