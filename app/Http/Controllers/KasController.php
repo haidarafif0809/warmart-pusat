@@ -18,56 +18,67 @@ class KasController extends Controller
   $this->middleware('user-must-warung');
 }
 
-public function index(Request $request, Builder $htmlBuilder)
-{
-  if ($request->ajax()) {
-
-    $kas = Kas::select(['id','kode_kas', 'nama_kas', 'status_kas', 'default_kas'])->where('warung_id', Auth::user()->id_warung)->get();
-    return Datatables::of($kas)
-    ->addColumn('action', function($kas){
-      return view('datatable._action', [
-        'model'             => $kas,
-        'form_url'          => route('kas.destroy', $kas->id),
-        'edit_url'          => route('kas.edit', $kas->id),
-        'confirm_message'   => 'Yakin Mau Menghapus Kas ' . $kas->nama_kas . ' ?',
-        'permission_ubah'   => Laratrust::can('edit_kas'),
-        'permission_hapus'  => Laratrust::can('hapus_kas'),
-
-        ]);
-    })
-    ->editColumn('default_kas', function($default){
-      if ($default->default_kas == 1) {
-        $default = '<i style="color:green" class="material-icons">check_circle</i>';
-      }
-      else{
-        $default = '<i style="color:red" class="material-icons">cancel</i>';
-      }
-      return $default;
-    })
-    ->editColumn('status_kas', function($status){
-      if ($status->status_kas == 1) {
-        $status = "Aktif";
-      }
-      else{
-        $status = "Tidak Aktif";
-      }                    
-      return $status;
-    })
-    ->addColumn('totalKas', function($nilai_kas){ 
-      return $nilai_kas->totalKas;
-    })
-    ->make(true);
-  }
-  $html = $htmlBuilder
-  ->addColumn(['data' => 'kode_kas', 'name' => 'kode_kas', 'title' => 'Kode Kas']) 
-  ->addColumn(['data' => 'nama_kas', 'name' => 'nama_kas', 'title' => 'Nama Kas']) 
-  ->addColumn(['data' => 'status_kas', 'name' => 'status_kas', 'title' => 'Status Kas'])
-  ->addColumn(['data' => 'default_kas', 'name' => 'default_kas', 'title' => 'Default Kas']) 
-  ->addColumn(['data' => 'totalKas', 'name' => 'totalKas', 'title' => 'Total Kas']) 
-  ->addColumn(['data' => 'action', 'name' => 'action', 'title' => '', 'orderable' => false, 'searchable'=>false]);
-
+  public function index(Request $request, Builder $htmlBuilder){
   return view('kas.index')->with(compact('html'));
-}
+  }
+
+     public function view(){
+        $kas = Kas::where('warung_id', Auth::user()->id_warung)->paginate(10);
+        $kas_array = array();
+        foreach ($kas as $kass) {
+            $total_kas = $kass->totalKas;
+            array_push($kas_array, ['total_kas'=>$total_kas,'kas'=>$kass]);
+          }
+          //DATA PAGINATION 
+          $respons['current_page'] = $kas->currentPage();
+          $respons['data'] = $kas_array; 
+          $respons['first_page_url'] = url('/kas/view?page='.$kas->firstItem());
+          $respons['from'] = 1;
+          $respons['last_page'] = $kas->lastPage();
+          $respons['last_page_url'] = url('/kas/view?page='.$kas->lastPage());
+          $respons['next_page_url'] = $kas->nextPageUrl();
+          $respons['path'] = url('/kas/view');
+          $respons['per_page'] = $kas->perPage();
+          $respons['prev_page_url'] = $kas->previousPageUrl();
+          $respons['to'] = $kas->perPage();
+          $respons['total'] = $kas->total();
+          //DATA PAGINATION 
+
+        return response()->json($respons);
+    }
+
+     public function pencarian(Request $request){
+        $search = $request->search;// REQUEST SEARCH
+        //query pencarian 
+        $kas = Kas::where('warung_id', Auth::user()->id_warung)
+                ->where(function($query) use ($search){// search
+                $query->orwhere('nama_kas','LIKE',$search.'%')
+                        ->orWhere('kode_kas','LIKE',$search.'%');
+               })->paginate(10);
+
+         $kas_array = array();
+
+          foreach ($kas as $kass) {
+            $total_kas = $kass->totalKas;
+            array_push($kas_array, ['total_kas'=>$total_kas,'kas'=>$kass]);
+          }
+          //DATA PAGINATION 
+          $respons['current_page'] = $kas->currentPage();
+          $respons['data'] = $kas_array; 
+          $respons['first_page_url'] = url('/kas/view?page='.$kas->firstItem());
+          $respons['from'] = 1;
+          $respons['last_page'] = $kas->lastPage();
+          $respons['last_page_url'] = url('/kas/view?page='.$kas->lastPage());
+          $respons['next_page_url'] = $kas->nextPageUrl();
+          $respons['path'] = url('/kas/view');
+          $respons['per_page'] = $kas->perPage();
+          $respons['prev_page_url'] = $kas->previousPageUrl();
+          $respons['to'] = $kas->perPage();
+          $respons['total'] = $kas->total();
+          //DATA PAGINATION 
+
+        return response()->json($respons);
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -135,21 +146,6 @@ public function index(Request $request, Builder $htmlBuilder)
             'warung_id'   =>Auth::user()->id_warung 
             ]);  
         }    
-        $pesan_alert = 
-        '<div class="container-fluid">
-        <div class="alert-icon">
-          <i class="material-icons">check</i>
-        </div>
-        <b>Sukses : Berhasil Menambah Kas "'.$request->nama_kas.'" </b>
-      </div>';
-
-
-      Session::flash("flash_notification", [
-        "level"=>"success",
-        "message"=>$pesan_alert
-        ]);
-      return redirect()->route('kas.index');
-
     }
     else{
       Auth::logout();
@@ -165,7 +161,7 @@ public function index(Request $request, Builder $htmlBuilder)
      */
     public function show($id)
     {
-        //
+        return Kas::find($id);
     }
 
     /**
@@ -234,21 +230,6 @@ public function index(Request $request, Builder $htmlBuilder)
             'status_kas'    =>$status_kas,
             'default_kas'   =>$default_kas,
             ]);
-
-          $pesan_alert = 
-          '<div class="container-fluid">
-          <div class="alert-icon">
-            <i class="material-icons">check</i>
-          </div>
-          <b>Sukses : Berhasil Mengubah Kas "'.$request->nama_kas.'"</b>
-        </div>';
-
-        Session::flash("flash_notification", [
-          "level"=>"success",
-          "message"=>$pesan_alert
-          ]);
-
-        return redirect()->route('kas.index');
       }
       else{
 
@@ -318,13 +299,7 @@ public function index(Request $request, Builder $htmlBuilder)
       $kas = Kas::find($id);
 
       if ($id_warung == $kas->warung_id) {
-          // JIKA GAGAL MENGHAPUD
-        if (!Kas::destroy($id)) {
-          return redirect()->back();
-        }
-        else{
-          return redirect()->route('kas.index');
-        }
+        Kas::destroy($id);
       }else{
         Auth::logout();
         return response()->view('error.403');
