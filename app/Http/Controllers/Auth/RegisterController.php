@@ -114,11 +114,12 @@ class RegisterController extends Controller
             $customerRole = Role::where('name', 'customer')->first();
             $user->attachRole($customerRole);
 
-            // registrasi berasal dari link affiliasi
+            // registrasi berasal dari link affiliasi atau memilih komunitas saat registrasi
             if (isset($data['komunitas_id'])) {
-
                 //kaitkan customer dengan komunitas yang berasal dari link affiliasi
                 KomunitasCustomer::create(['komunitas_id' => $data['komunitas_id'], 'user_id' => $user->id]);
+            } elseif ($data['komunitas'] != "") {
+                KomunitasCustomer::create(['komunitas_id' => $data['komunitas'], 'user_id' => $user->id]);
             }
 
             $userkey      = env('USERKEY');
@@ -214,7 +215,7 @@ class RegisterController extends Controller
         }
     }
 
-    protected function kirimKodeVerifikasi(Request $request)
+    protected function kirim_kode_verifikasi(Request $request)
     {
         $nomor_hp = $request->nomor;
         $status   = $request->status;
@@ -222,7 +223,7 @@ class RegisterController extends Controller
         return view('auth.verifikasi_register', ['nomor_hp' => $nomor_hp, 'user' => $user, 'status' => $status]);
     }
 
-    protected function prosesKirimKodeVerifikasi(Request $request, $nomor_hp)
+    protected function proses_kirim_kode_verifikasi(Request $request, $nomor_hp)
     {
         $user = User::where('no_telp', $nomor_hp)->first();
         if ($request->kode_verifikasi != $user->kode_verifikasi) {
@@ -247,7 +248,7 @@ class RegisterController extends Controller
         }
     }
 
-    protected function kirimUlangKodeVerifikasi($id)
+    protected function kirim_ulang_kode_verifikasi($id)
     {
         $kode_verifikasi = rand(1111, 9999);
         User::where('id', $id)->update(['kode_verifikasi' => $kode_verifikasi]);
@@ -272,22 +273,22 @@ class RegisterController extends Controller
 
     }
 
-    protected function registerCustomer()
+    protected function register_customer()
     {
         return view('auth.register_customer');
     }
 
-    protected function syaratKetentuan()
+    protected function syarat_ketentuan()
     {
         return view('auth.syarat_ketentuan');
     }
 
-    protected function lupaPassword()
+    protected function lupa_password()
     {
         return view('auth.lupa_password');
     }
 
-    protected function prosesLupaPassword(Request $request)
+    protected function proses_lupa_password(Request $request)
     {
         $kode_verifikasi = rand(1111, 9999);
         $userkey         = env('USERKEY');
@@ -314,7 +315,7 @@ class RegisterController extends Controller
 
     //USER WARUNG
 
-    protected function registerWarung()
+    protected function register_warung()
     {
         return view('auth.register_warung   ');
     }
