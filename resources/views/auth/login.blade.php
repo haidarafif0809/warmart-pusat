@@ -1,73 +1,88 @@
 @extends('layouts.app_login')
 
-
 @section('content')
 
 @include('layouts._flash_login')
        @if ($errors->has('no_telp'))
-                            <div class="alert alert-danger alert-with-icon">
-        <i class="material-icons" data-notify="icon" >error_outline</i>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">x</button>
-        <span data-notify="message"> <b>Failed:</b> {{ $errors->first('no_telp') }}</span>
+<div class="alert alert-danger alert-with-icon">
+    <i class="material-icons" data-notify="icon">
+        error_outline
+    </i>
+    <button aria-label="Close" class="close" data-dismiss="alert" type="button">
+        x
+    </button>
+    <span data-notify="message">
+        <b>
+            Failed:
+        </b>
+        {{ $errors->first('no_telp') }}
+    </span>
+</div>
+@endif
+<form action="{{ url('/login') }}" method="POST">
+    {{ csrf_field() }}
+    <div class="card card-login ">
+        <div class="card-header text-center" data-background-color="blue">
+            <h4 class="card-title">
+                Login
+            </h4>
+        </div>
+        <div class="card-content">
+            <div class="input-group ">
+                <span class="input-group-addon">
+                    <i class="material-icons">
+                        phone
+                    </i>
+                </span>
+                <div class="form-group label-floating ">
+                    <input autocomplete="off" class="form-control" name="no_telp" placeholder="Nomor Telpon" type="number" value="{{ old('no_telp') }}">
+                    </input>
+                </div>
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <i class="material-icons">
+                        lock_outline
+                    </i>
+                </span>
+                <div class="form-group label-floating ">
+                    <input class="form-control" name="password" placeholder="Password" type="password">
+                        @if ($errors->has('password'))
+                        <span class="label label-danger">
+                            <strong>
+                                {{ $errors->first('password') }}
+                            </strong>
+                        </span>
+                        @endif
+                    </input>
+                </div>
+            </div>
+        </div>
+        <div class="footer text-center">
+            <center>
+                <a href="{{ url('/lupa-password/') }}" style="padding-right: 40%;font-size: 90%">
+                    Lupa Password
+                </a>
+            </center>
+            <button class="btn btn-rose btn-simple btn-wd btn-lg" id="login" type="submit">
+                Login
+            </button>
+        </div>
+        <center>
+            <p>
+                Belum Daftar?
+                <a class="swal-pendaftaran" href="#">
+                    Daftar Sekarang
+                </a>
+            </p>
+        </center>
     </div>
-     @endif
-
-
-                    <form method="POST" action="{{ url('/login') }}">
-                             {{ csrf_field() }}
-                                <div class="card card-login ">
-                                    <div class="card-header text-center" data-background-color="blue">
-                                        <h4 class="card-title">Login</h4>
-                                 
-                                    </div>
-                             
-                                   
-                                   
-                                    <div class="card-content">
-                                        <div class="input-group ">
-                                            <span class="input-group-addon">
-                                                <i class="material-icons">phone</i>
-                                            </span>
-                                            <div class="form-group label-floating "> 
-                                                <input type="number" value="{{ old('no_telp') }}" class="form-control" name="no_telp" placeholder="Nomor Telpon" autocomplete="off">
-
-                                                
-                                            </div>
-                                        </div>
-                                        <div class="input-group">
-                                            <span class="input-group-addon">
-                                                <i class="material-icons">lock_outline</i>
-                                            </span>
-                                            <div class="form-group label-floating "> 
-                                                <input type="password" class="form-control" name="password" placeholder="Password">
-
-                                                  @if ($errors->has('password'))
-                                                        <span class="label label-danger">
-                                                            <strong>{{ $errors->first('password') }}</strong>
-                                                        </span>
-                                                 @endif
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="footer text-center">
-                                    <center>    
-                                        <a style="padding-right: 40%;font-size: 90%"  href="{{ url('/lupa-password/') }}">Lupa Password</a> 
-                                    </center>
-                                        <button type="submit" id="login" class="btn btn-rose btn-simple btn-wd btn-lg">Login</button>
-                                    </div>
-                                    <center>     
-                                       <p>Belum Daftar? <a class="swal-pendaftaran" href="#">Daftar Sekarang</a> </p>
-                                    </center>
-                                    
-                                </div>
-                            </form>
-               
+</form>
 @endsection 
 
-@section('scripts') 
-
+@section('scripts')
 <script type="text/javascript">
-$('.swal-pendaftaran').click(function(){
+    $('.swal-pendaftaran').click(function(){
     swal({
         title: 'Daftar Sebagai?',
         html:
@@ -76,5 +91,4 @@ $('.swal-pendaftaran').click(function(){
     });
 });
 </script>
-
 @endsection
