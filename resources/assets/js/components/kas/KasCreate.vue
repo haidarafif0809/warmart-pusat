@@ -29,18 +29,22 @@
 								<span v-if="errors.nama_kas" id="nama_kas_error" class="label label-danger">{{ errors.nama_kas[0] }}</span>
 							</div>
 						</div>
-						<div class="form-group">
-							<label for="nama_kas" class="col-md-2 control-label">Tampil Ditransaksi</label>
-							<div class="col-md-4">
-									<toggle-button  :value="1" id="status_kas" name="status_kas" v-model="kas.status_kas" :sync="false"/>
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="default_kas" class="col-md-2 control-label">Default Kas</label>
-							<div class="col-md-4">
-								<toggle-button v-on:change="defaultKas()" :value="1" id="default_kas" name="default_kas" v-model="kas.default_kas" :sync="false"/>
-							</div>
-						</div>
+ 						<div class="form-group">
+                            <label for="nama_kas" class="col-md-2 control-label">Tampil Transaksi</label>
+                                <div class="togglebutton col-md-4">
+                                <label>
+                                    <input type="checkbox" v-model="kas.status_kas" value="1" name="status_kas" id="status_kas"> 
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="nama_kas" class="col-md-2 control-label">Default Kas</label>
+                                <div class="togglebutton col-md-4">
+                                <label>
+                                    <input type="checkbox" v-on:change="defaultKas()" v-model="kas.default_kas" value="1" name="default_kas" id="default_kas"> 
+                                </label>
+                            </div>
+                    </div>
 
 						
 						<div class="form-group">
@@ -117,9 +121,9 @@ export default {
 			})
 			.then((confirm) => {
 				if (confirm) {
-				toogle : "true";
+				toogle.prop('checked', true);
 				} else {
-			 	toogle : "false";
+				toogle.prop('checked', false);
 			}
 			});
          } 	

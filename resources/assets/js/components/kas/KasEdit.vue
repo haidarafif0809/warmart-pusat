@@ -30,17 +30,21 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="nama_kas" class="col-md-2 control-label">Tampil Ditransaksi</label>
-                            <div class="col-md-4">
-                                    <toggle-button  :value="1" id="status_kas" name="status_kas" v-model="kas.status_kas" />
+                            <label for="nama_kas" class="col-md-2 control-label">Tampil Transaksi</label>
+                                <div class="togglebutton col-md-4">
+                                <label>
+                                    <input type="checkbox" v-model="kas.status_kas" value="1" name="status_kas" id="status_kas"> 
+                                </label>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="default_kas" class="col-md-2 control-label">Default Kas</label>
-                            <div class="col-md-4">
-                                <toggle-button v-on:change="defaultKas()" :value="1" id="default_kas" name="default_kas" v-model="kas.default_kas" />
+                            <label for="nama_kas" class="col-md-2 control-label">Default Kas</label>
+                                <div class="togglebutton col-md-4">
+                                <label>
+                                    <input type="checkbox" v-on:change="defaultKas()" v-model="kas.default_kas" value="1" name="default_kas" id="default_kas"> 
+                                </label>
                             </div>
-                        </div>
+                    </div>
 
                     <div class="form-group">
                         <div class="col-md-4 col-md-offset-2">
@@ -89,18 +93,42 @@ export default {
         saveForm() {
             var app = this;
             var newKas = app.kas;
-            axios.patch(app.url+'/' + app.kasId, newKas)
-            .then(function (resp) {
+             if (app.kas.default_kas == false || app.kas.default_kas == 0 ){
+                axios.get(app.url+'/cek-default-kas?id='+app.kasId)
+                .then(function (resp) {
+                    if (resp.data == 1) {
+                        swal({
+                            title: "Peringatan",
+                            text:"Harus Ada 1 Kas Yang Menjadi Default Kas",
+                            });
+                    }
+                    else{
+                        axios.patch(app.url+'/' + app.kasId, newKas)
+                        .then(function (resp) {
+                        app.alert();
+                        app.$router.replace('/kas/');
+                        })
+                        .catch(function (resp) {
+                        console.log(resp);
+                        app.errors = resp.response.data.errors;
+                        alert("Could not create your kas");
+                        });
+                    }
+              });
+            }
+            else{
+                 axios.patch(app.url+'/' + app.kasId, newKas)
+                .then(function (resp) {
                 app.alert();
                 app.$router.replace('/kas/');
-            })
-            .catch(function (resp) {
+                })
+                .catch(function (resp) {
                 console.log(resp);
                 app.errors = resp.response.data.errors;
                 alert("Could not create your kas");
-            });
-        }
-        ,
+                });
+            }
+        },
         alert() {
           this.$swal({
               title: "Berhasil Mengubah Kas!",
@@ -121,10 +149,10 @@ export default {
             })
             .then((confirm) => {
                 if (confirm) {
-                toogle : "true";
+                toogle.prop('checked', true);
                 } else {
-                toogle : "false";
-            }
+                toogle.prop('checked', false);
+                }
             });
          }  
       }

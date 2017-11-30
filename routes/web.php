@@ -441,7 +441,7 @@ Route::get('/suplier/pencarian', 'SuplierController@pencarian')->middleware('aut
 //KAS VUE.JS
 Route::get('/kas/view','KasController@view')->middleware('auth');
 Route::get('/kas/pencarian', 'KasController@pencarian')->middleware('auth');
-
+Route::get('/kas/cek-default-kas', 'KasController@cekDefaultKas')->middleware('auth');
 
 
 Route::middleware('optimizeImages','auth')->group(function () {
