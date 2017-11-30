@@ -122,7 +122,7 @@ class PesananPelangganController extends Controller
         } elseif ($pesanan_pelanggan->konfirmasi_pesanan == 2) {
             $status_pesanan .= '<td><b  style="color:#01573e">Selesai</b></td>';
         } elseif ($pesanan_pelanggan->konfirmasi_pesanan == 3) {
-            $produk_pesanan_mobile .= '<td><b  style="color:red">Batal</b></td>';
+            $status_pesanan .= '<td><b  style="color:red">Batal</b></td>';
         }
 
         return view('layouts.detail_pesanan_pelanggan', ['detail_pesanan_pelanggan' => $detail_pesanan_pelanggan, 'pesanan_pelanggan' => $pesanan_pelanggan, 'cek_belanjaan' => $cek_belanjaan, 'agent' => $agent, 'logo_warmart' => $logo_warmart, 'user' => $user, 'status_pesanan' => $status_pesanan]);
