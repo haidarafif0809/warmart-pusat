@@ -23,9 +23,9 @@
             <span class="input-group-addon">
                 <i class="material-icons">person</i>
             </span>
-            <div class="form-group label-floating {{ $errors->has('name') ? ' has-error' : '' }}"> 
+            <div class="form-group label-floating "> 
                 {!! Form::text('name', null, ['class'=>'form-control','required','autocomplete'=>'off','placeholder'=>'Nama']) !!}
-                {!! $errors->first('name', '<p class="help-block">:message</p>') !!}
+                {!! $errors->first('name', '<p class="label label-danger">:message</p>') !!}
                 
             </div>
         </div> 
@@ -34,7 +34,7 @@
             <span class="input-group-addon">
                 <i class="material-icons">local_phone</i>
             </span>
-            <div class="form-group label-floating {{ $errors->has('no_telp') ? ' has-error' : '' }}"> 
+            <div class="form-group label-floating "> 
                 {!! Form::text('no_telp', null, ['class'=>'form-control','required','autocomplete'=>'off','placeholder'=>'Nomor Telpon']) !!} 
 
                 
@@ -45,9 +45,9 @@
             <span class="input-group-addon">
                 <i class="material-icons">email</i>
             </span>
-            <div class="form-group label-floating {{ $errors->has('email') ? ' has-error' : '' }}"> 
+            <div class="form-group label-floating "> 
                 {!! Form::email('email', null, ['class'=>'form-control','autocomplete'=>'off','placeholder'=>'Email']) !!}
-                {!! $errors->first('email', '<p class="help-block">:message</p>') !!}
+                {!! $errors->first('email', '<p class="label label-danger">:message</p>') !!}
 
                 
             </div>
@@ -59,7 +59,7 @@
             </span>
             <div class="form-group label-floating"> 
                 {!! Form::text('alamat', null, ['class'=>'form-control','required','autocomplete'=>'off','placeholder'=>'Alamat']) !!}
-                {!! $errors->first('alamat', '<p class="help-block">:message</p>') !!}
+                {!! $errors->first('alamat', '<p class="label label-danger">:message</p>') !!}
 
                 
             </div>
@@ -70,11 +70,11 @@
             <span class="input-group-addon">
                 <i class="material-icons">lock_outline</i>
             </span>
-            <div class="form-group label-floating {{ $errors->has('password') ? ' has-error' : '' }}"> 
+            <div class="form-group label-floating "> 
                 <input type="password" class="form-control" name="password" placeholder="Password">
 
                 @if ($errors->has('password'))
-                <span class="help-block">
+                <span class="label label-danger">
                     <strong>{{ $errors->first('password') }}</strong>
                 </span>
                 @endif

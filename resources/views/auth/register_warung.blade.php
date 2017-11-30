@@ -23,7 +23,7 @@
                                             </span>
                                             <div class="form-group label-floating {{ $errors->has('name') ? ' has-error' : '' }}"> 
                                                     {!! Form::text('name', null, ['class'=>'form-control','required','autocomplete'=>'off','placeholder'=>'Nama']) !!}
-                                                    {!! $errors->first('name', '<p class="help-block">:message</p>') !!}
+                                                    {!! $errors->first('name', '<p class="label label-danger">:message</p>') !!}
                                                 
                                             </div>
                                         </div> 
@@ -46,7 +46,7 @@
                                             </span>
                                             <div class="form-group label-floating {{ $errors->has('alamat') ? ' has-error' : '' }}"> 
                                                     {!! Form::text('alamat', null, ['class'=>'form-control','required','autocomplete'=>'off','placeholder'=>'Alamat']) !!}
-                                                    {!! $errors->first('alamat', '<p class="help-block">:message</p>') !!}
+                                                    {!! $errors->first('alamat', '<p class="label label-danger">:message</p>') !!}
 
                                                 
                                             </div>
@@ -60,7 +60,7 @@
                                                 <input type="password" class="form-control" name="password" placeholder="Password">
 
                                                   @if ($errors->has('password'))
-                                                        <span class="help-block">
+                                                        <span class="label label-danger">
                                                             <strong>{{ $errors->first('password') }}</strong>
                                                         </span>
                                                  @endif
