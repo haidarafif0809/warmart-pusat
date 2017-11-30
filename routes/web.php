@@ -438,6 +438,12 @@ Route::get('/kategori-transaksi/pencarian', 'KategoriTransaksiController@pencari
 Route::get('/suplier/view','SuplierController@view')->middleware('auth');
 Route::get('/suplier/pencarian', 'SuplierController@pencarian')->middleware('auth');
 
+//KAS VUE.JS
+Route::get('/kas/view','KasController@view')->middleware('auth');
+Route::get('/kas/pencarian', 'KasController@pencarian')->middleware('auth');
+Route::get('/kas/cek-default-kas', 'KasController@cekDefaultKas')->middleware('auth');
+
+
 Route::middleware('optimizeImages','auth')->group(function () {
 	
 	Route::resource('user', 'UserController');
