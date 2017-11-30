@@ -1,11 +1,11 @@
 @extends('layouts.app_pelanggan')
-@section('content') 
+@section('content')
 
 <style type="text/css">
 .flexFont {
   @if(Agent::isMobile())
   height:3em;
-  @else  
+  @else
   height:2em;
   @endif
   padding:1%;
@@ -35,14 +35,14 @@
   </div>
 </div>
 
-<div class="main main-raised"> 
+<div class="main main-raised">
  @if ($agent->isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
  <div class="container" style="margin-left: 5px; margin-right: 5px;">
   @else
 
   <div class="container">
     @endif
-    <div class="card-content"> 
+    <div class="card-content">
       <h3 class="title text-center">Keranjang Belanjaan</h3>
       <div class="row">
        <ul class="breadcrumb" style="margin-top:10px ">
@@ -58,7 +58,7 @@
           <center>
             <h3>Keranjang Belanjaan Anda Kosong, Silahkan Berbelanja.</h3>
             <a  href="{{ url('/daftar-produk') }}" type="button" class="btn btn-block" style="background-color: #01573e">Lanjut Belanja<i class="material-icons">keyboard_arrow_right</i></a>
-          </center> 
+          </center>
         </div>
       </div>
       @else
@@ -74,6 +74,8 @@
       </div>
 
       {!! $produk_belanjaan !!}
+
+      {{$pagination}}
 
       <div class="card" style="margin-bottom: 1px; margin-top: 1px;">
 
@@ -95,9 +97,9 @@
       @else
 
       <div class="row">
-        <div class="col-md-8"> 
+        <div class="col-md-8">
 
-          <div class="card">
+          <div class="card" style="margin-bottom: 1px;">
             <div class="card-header">
 
               <div class="row">
@@ -109,7 +111,9 @@
             {!! $produk_belanjaan !!}
           </div>
 
-        </div> 
+          {{$pagination}}
+
+        </div>
 
         <div class="col-md-4">
 
@@ -117,15 +121,15 @@
             <div class="card-header">
               <h6 class="card-title" style="color: black; padding-left: 10px"> Rincian Pesanan</h6> <hr>
             </div>
-            <div class="card-content table-responsive"> 
+            <div class="card-content table-responsive">
               <table>
-                <tbody>      
+                <tbody>
                   <tr><td width="50%"><b>Total Produk</b> </td> <td>: &nbsp;&nbsp;&nbsp;</td> <td> <b>{{ $jumlah_produk->total_produk }}</b></td></tr>
                   <tr><td width="50%"><b>Subtotal</b> </td> <td>: &nbsp;&nbsp;&nbsp;</td> <td><b>Rp. {{ $subtotal }}</b></td></tr>
                 </tbody>
               </table><hr>
               <table>
-                <tbody>     
+                <tbody>
                   <tr><td width="40%"><h5><b>Total :</b></h5></td> <td> &nbsp;&nbsp;&nbsp;</td> <td><h5><b>RP {{ $subtotal }}</b></h5></td></tr>
                 </tbody>
               </table>
@@ -142,13 +146,13 @@
     @endif
   </div>
 </div>
-</div>  
+</div>
 </div>
 @endsection
 
-@section('scripts') 
-<script type="text/javascript"> 
-  $(document).on('click', '#btnHapusProduk', function () { 
+@section('scripts')
+<script type="text/javascript">
+  $(document).on('click', '#btnHapusProduk', function () {
     var id = $(this).attr("data-id");
     var nama = $(this).attr("data-nama");
 
@@ -164,9 +168,9 @@
         var url_hapus_produk_keranjang_belanja = window.location.origin + (window.location.pathname).replace("keranjang-belanja", "keranjang-belanja/hapus-produk-keranjang-belanja/"+id);
         window.location.href=url_hapus_produk_keranjang_belanja;
         swal({
-          html :  "Produk <b>"+nama+"</b> Berhasil Dihapus Dari Keranjang Belanjaan", 
+          html :  "Produk <b>"+nama+"</b> Berhasil Dihapus Dari Keranjang Belanjaan",
           showConfirmButton :  false,
-          type: "success",    
+          type: "success",
           timer: 10000,
           onOpen: () => {
             swal.showLoading()
@@ -179,4 +183,4 @@
   });
 
 </script>
-@endsection 
+@endsection
