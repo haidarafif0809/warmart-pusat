@@ -13,7 +13,9 @@
  import VueSwal from 'vue-swal'
  import Spinner from 'vue-simple-spinner'
  import Datepicker from 'vuejs-datepicker';
+ import ToggleButton from 'vue-js-toggle-button'
 
+	Vue.use(ToggleButton)
 
  window.Vue.use(VueSwal)
  window.Vue.use(Spinner)
@@ -85,6 +87,12 @@
  import KategoriTransaksiIndex from './components/kategori_transaksi/KategoriTransaksiIndex.vue';
  import KategoriTransaksiCreate from './components/kategori_transaksi/KategoriTransaksiCreate.vue';
  import KategoriTransaksiEdit from './components/kategori_transaksi/KategoriTransaksiEdit.vue';
+
+ // KAS WARUNG
+ import KasIndex from './components/kas/KasIndex.vue';
+ import KasCreate from './components/kas/KasCreate.vue';
+ import KasEdit from './components/kas/KasEdit.vue';
+
 
  // SUPLIER
  import SuplierIndex from './components/suplier/SuplierIndex.vue';
@@ -158,6 +166,12 @@
 {path: '/kategori-transaksi', component: KategoriTransaksiIndex, name: 'indexKategoriTransaksi'},
 {path: '/create-kategori-transaksi', component: KategoriTransaksiCreate, name: 'createKategoriTransaksi'},
 {path: '/edit-kategori-transaksi/:id', component: KategoriTransaksiEdit, name: 'editKategoriTransaksi'},
+
+// Kategori Transaksi
+{path: '/kas', component: KasIndex, name: 'indexKas'},
+{path: '/create-kas', component: KasCreate, name: 'createKas'},
+{path: '/edit-kas/:id', component: KasEdit, name: 'editKas'},
+
 
 // Suplier
 {path: '/suplier', component: SuplierIndex, name: 'indexSuplier'},
