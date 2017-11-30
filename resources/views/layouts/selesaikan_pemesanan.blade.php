@@ -41,7 +41,7 @@
               <h6 class="card-title" style="color: black; padding-left: 10px"> Alamat Pengiriman</h6> <hr>
             </div>
 
-            {!! Form::model($user, ['url' => route('selesaikan-pemesanan.proses'), 'method' => 'put', 'files'=>'true','class'=>'form-horizontal']) !!}
+            {!! Form::model($user, ['url' => route('selesaikan-pemesanan.proses'), 'method' => 'put', 'files'=>'true','class'=>'form-horizontal','id'=>'formSelesaikanPesanan']) !!}
             <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
               {!! Form::label('name', 'Nama', ['class'=>'col-md-2 control-label']) !!}
               <div class="col-md-6">
@@ -132,7 +132,7 @@
     </div>
   </div>
 
-  <center>{!! Form::button('Selesai Pesanan <i class="material-icons">keyboard_arrow_right</i> ', ['class'=>'btn btn-round', 'type'=>'submit','style'=>'background-color: #01573e']) !!}</center>
+  <center>{!! Form::button('Selesai Pesanan <i class="material-icons">keyboard_arrow_right</i> ', ['id'=>'SelesaikanPesanan','class'=>'btn btn-round', 'type'=>'submit','style'=>'background-color: #01573e']) !!}</center>
 
   @else
 
@@ -195,7 +195,7 @@
 
   </div>
 
-  {!! Form::button('Selesai Pesanan <i class="material-icons">keyboard_arrow_right</i> ', ['class'=>'btn btn-round pull-right', 'type'=>'submit','style'=>'background-color: #01573e']) !!}
+  {!! Form::button('Selesai Pesanan <i class="material-icons">keyboard_arrow_right</i> ', ['id'=>'SelesaikanPesanan','class'=>'btn btn-round pull-right', 'type'=>'submit','style'=>'background-color: #01573e']) !!}
   @endif
 
   {!! Form::close() !!}
@@ -211,6 +211,41 @@
 
 @section('scripts')
 <script type="text/javascript">
+
+  $(document).on('click', '#SelesaikanPesanan', function () {
+
+    $("#formSelesaikanPesanan").submit(function(){
+      return false;
+    });
+
+    swal({
+      html: "Anda Yakin Ingin Menyelesaikan Pesanan Ini ?",
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya',
+      cancelButtonText: 'Batal'
+    }).then((result) => {
+      if (result.value) {
+
+        document.getElementById("formSelesaikanPesanan").submit();
+
+        swal({
+          html :  "Berhasil Menyelesaikan Pesanan",
+          showConfirmButton :  false,
+          type: "success",
+          timer: 10000,
+          onOpen: () => {
+            swal.showLoading()
+          }
+        });
+
+      }
+    })
+
+
+  });
+
   $(document).on('click', '#btnHapusProduk', function () {
     var id = $(this).attr("data-id");
     var nama = $(this).attr("data-nama");
