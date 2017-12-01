@@ -14,7 +14,7 @@
                    	</div>
                    	<div class="card-content">
                    		<h4 class="card-title"> Deskripsi Produk </h4>
-                   		{!! Form::open(['url' => route('barang.update_deskripsi_produk'),'method' => 'post', 'class'=>'form-horizontal']) !!}	
+                   		{!! Form::open(['url' => route('barang.update_deskripsi_produk'),'method' => 'post', 'class'=>'form-horizontal']) !!}
 	                   		<div class="form-group{{ $errors->has('deskripsi_produk') ? ' has-error' : '' }}">
 									{!! Form::textarea('deskripsi_produk', $deskripsi_produk, ['class' => 'form-control deskripsi-produk']) !!}
 									{!! $errors->first('deskripsi_produk', '<p class="help-block">:message</p>') !!}
