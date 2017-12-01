@@ -90,20 +90,20 @@ export default {
 	},
 	methods: {        
 		saveForm() {
-			var app = this;
-			var newsuplier = app.suplier;
-			axios.patch(app.url+'/' + app.suplierId, newsuplier)
-			.then(function (resp) {
-				app.message = 'Berhasil Mengubah Suplier '+app.suplier.nama_suplier;
-				app.alert(app.message);
-				app.$router.replace('/suplier/');
-			})
-			.catch(function (resp) {				
-				console.log(resp)
-				app.errors = resp.response.data.errors;
-				alert("Periksa kembali data yang anda masukan");
-			});
-		},
+            var app = this;
+            var produk = app.produk;
+            axios.patch(app.url+'/' + app.produk, Produk)
+            .then(function (resp) {
+                app.message = 'Berhasil Mengubah Produk '+app.produk.nama_barang;
+                app.alert(app.message);
+                app.$router.replace('/produk/');
+            })
+            .catch(function (resp) {                
+                console.log(resp)
+                app.errors = resp.response.data.errors;
+                alert("Periksa kembali data yang anda masukan");
+            });
+        },
 		alert(pesan) {
 			this.$swal({
 				title: "Berhasil !",

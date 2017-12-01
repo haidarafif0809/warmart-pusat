@@ -133,7 +133,7 @@ export default {
         let id = app.$route.params.id;
         
         app.profilWarungId = id;
-        app.selected_provinsi();
+        app.dataProvinsi();
 
         axios.get(app.url+'/' + id)
         .then(function (resp) {
@@ -202,7 +202,7 @@ export default {
                 alert("Periksa kembali data yang anda masukan");
             });
         },
-        selected_provinsi() {
+        dataProvinsi() {
           var app = this;
           axios.get(app.url+'/pilih-provinsi')
           .then(function (resp) {
@@ -213,7 +213,7 @@ export default {
             alert("Tidak bisa memuat provinsi ");
         });
       },
-        selected_kabupaten(provinsi_id) {
+        dataKabupaten(provinsi_id) {
           var app = this;
           var type = "kabupaten";
           app.loading = true;
@@ -228,7 +228,7 @@ export default {
             alert("Tidak bisa memuat kabupaten ");
         });
       },
-        selected_kecamatan(kabupaten_id) {
+        dataKecamatan(kabupaten_id) {
           var app = this;
           var type = "kecamatan";
           app.loadingKecamatan = true;
@@ -242,7 +242,7 @@ export default {
             alert("Tidak bisa memuat kecamatan ");
         });
       },
-        selected_kelurahan(kecamatan_id) {
+        dataKelurahan(kecamatan_id) {
           var app = this;
           var type = "kelurahan";
           app.loadingKelurahan = true;
@@ -268,17 +268,17 @@ export default {
   watch:{
      'profilWarung.provinsi': function (newVal, oldVal){
          if (newVal != "") {
-            this.selected_kabupaten(newVal);
+            this.dataKabupaten(newVal);
          }
      },
      'profilWarung.kabupaten': function (newVal, oldVal){
          if (newVal != "") {
-            this.selected_kecamatan(newVal);
+            this.dataKecamatan(newVal);
          }
      },
      'profilWarung.kecamatan': function (newVal, oldVal){
          if (newVal != "") {
-            this.selected_kelurahan(newVal);
+            this.dataKelurahan(newVal);
          }
      }
  }

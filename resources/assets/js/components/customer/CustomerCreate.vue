@@ -104,7 +104,7 @@ export default {
     },
     mounted() {
         var app = this;
-        app.pilih_komunitas();
+        app.dataKomunitas();
     },
     methods: {
         saveForm() {
@@ -131,7 +131,7 @@ export default {
               icon: "success",
           });
       	},
-      	pilih_komunitas() {
+      	dataKomunitas() {
 	      	var app = this;
 	      	axios.get(app.url+'/pilih-komunitas').then(function (resp) {
 	            app.komunitas = resp.data;

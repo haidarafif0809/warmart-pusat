@@ -224,8 +224,8 @@
       <span class="sidebar-normal">Kas</span>
     </a>
   </li> 
-  <li>
-   <a href="{{ route('barang.index') }}">
+  <li class="vueJs">
+   <a href="#">
     <span class="sidebar-mini">P</span>
     <span class="sidebar-normal">Produk</span>
   </a>

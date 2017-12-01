@@ -1,0 +1,191 @@
+<style scoped>
+.pencarian {
+  color: red; 
+  float: right;
+}
+</style>
+
+<template>  
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="breadcrumb">
+                <li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li>
+                <li class="active">Produk</li>
+            </ul>
+            
+            <div class="card">
+                <div class="card-header card-header-icon" data-background-color="purple">
+                    <i class="material-icons">dns</i>
+                </div>
+                <div class="card-content">
+                    <h4 class="card-title"> Produk</h4>
+
+                    <div class="toolbar">
+                        <router-link :to="{name: 'createProduk'}" class="btn btn-primary"><i class="material-icons">add</i>  Produk</router-link>
+
+                        <div class="pencarian">
+                            <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control" autocomplete="">
+                        </div>
+                    </div>
+
+                    <br>
+                    <div class=" table-responsive ">
+                        <table class="table table-striped table-hover ">
+                            <thead class="text-primary">
+                                <tr>
+                                    <th>Barcode</th>
+                                    <th>Kode</th>
+                                    <th>Nama</th>
+                                    <th>Satuan</th>
+                                    <th>Harga Beli</th>
+                                    <th>Harga Jual</th>
+                                    <th>Status</th>
+                                    <th>Kategori</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody v-if="produk.length"  class="data-ada">
+                                <tr v-for="produk, index in produk" >
+                                     <td>{{ produk.produk.kode_barcode }}</td>
+                                     <td>{{ produk.produk.kode_barang }}</td>
+                                     <td>{{ produk.produk.nama_barang }}</td>
+                                     <td>{{ produk.produk.satuan.nama_satuan}}</td>
+                                     <td>{{ produk.harga_beli }}</td>
+                                     <td>{{ produk.harga_jual }}</td>
+                                     <td v-if="produk.produk.status_aktif == 1">Aktif</td>
+                                     <td v-else>Tidak Aktif</td>
+                                     <td>{{ produk.produk.kategori_barang.nama_kategori_barang }}</td>
+                                     <td>
+                                        <router-link :to="{name: 'detailProduk', params: {id: produk.produk.id}}" class="btn btn-xs btn-info" v-bind:id="'detail-' + produk.produk.id" > Detail
+                                        </router-link>
+                                        <router-link :to="{name: 'editProduk', params: {id: produk.produk.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + produk.produk.id" > Edit
+                                        </router-link>
+
+                                        <a v-if="produk.status_produk == 0" href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + produk.produk.id" v-on:click="deleteEntry(produk.produk.id, index, produk.produk.nama_barang)">Delete
+                                        </a>
+
+                                        <a v-else href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + produk.produk.id" v-on:click="gagalHapus(produk.produk.id, index, produk.produk.nama_barang)">Delete
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>                    
+                            <tbody class="data-tidak-ada" v-else>
+                                <tr ><td colspan="9"  class="text-center">Tidak Ada Data</td></tr>
+                            </tbody>
+                    </table>    
+
+                 <vue-simple-spinner v-if="loading"></vue-simple-spinner>
+
+                 <div align="right"><pagination :data="produkData" v-on:pagination-change-page="getResults"></pagination></div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+export default {
+    data: function () {
+        return {
+            produk: [],
+            produkData: {},
+            url : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
+            pencarian: '',
+            loading: true
+        }
+    },
+    mounted() {
+        var app = this;
+        app.getResults();
+    },
+    watch: {
+        // whenever question changes, this function will run
+        pencarian: function (newQuestion) {
+            this.getHasilPencarian()  
+        }
+    },
+
+    methods: {
+        getResults(page) {
+            var app = this; 
+            if (typeof page === 'undefined') {
+                page = 1;
+            }
+            axios.get(app.url+'/view?page='+page)
+            .then(function (resp) {
+                app.produk = resp.data.data;
+                app.produkData = resp.data;
+                app.loading = false;
+            })
+            .catch(function (resp) {
+                console.log(resp);
+                app.loading = false;
+                alert("Tidak Dapat Memuat Produk");
+            });
+        },
+        getHasilPencarian(page){
+            var app = this;
+            if (typeof page === 'undefined') {
+                page = 1;
+            }
+            axios.get(app.url+'/pencarian?search='+app.pencarian+'&page='+page)
+            .then(function (resp) {
+                app.produk = resp.data.data;
+                app.produkData = resp.data;
+                app.loading = false;
+            })
+            .catch(function (resp) {
+                console.log(resp);
+                alert("Tidak Dapat Memuat Produk");
+            });
+        },
+        alert(pesan) {
+            this.$swal({
+                title: "Berhasil ",
+                text: pesan,
+                icon: "success",
+            });
+        },
+        deleteEntry(id, index,nama_barang) {
+            swal({
+                title: "Konfirmasi Hapus",
+                text : "Anda Yakin Ingin Menghapus "+nama_barang+" ?",
+                icon : "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                  var app = this;
+                  axios.delete(app.url+'/' + id)
+                  .then(function (resp) {
+                    app.getResults();
+                    swal("Produk Berhasil Dihapus!  ", {
+                      icon: "success",
+                    });
+                  })
+                  .catch(function (resp) {
+                    app.$router.replace('/produk/');
+                    swal("Gagal Menghapus produk!", {
+                      icon: "warning",
+                    });
+                  });
+               }
+               this.$router.replace('/produk/');
+            });
+        },
+         gagalHapus(id, index,nama_barang) {
+            this.$swal({
+                title: "Gagal ",
+                text: ""+nama_barang+" Tidak Bisa Dihapus Karena Sudah Terpakai",
+                icon: "warning",
+            });
+
+            this.$router.replace('/produk/');
+        }
+    }
+}
+</script>

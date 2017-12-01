@@ -86,7 +86,7 @@ export default {
         let app = this;
         let id = app.$route.params.id;
         app.customerId = id;
-        app.pilih_komunitas();
+        app.dataKomunitas();
         axios.get(app.url+'/' + id)
         .then(function (resp) {
             app.customer = resp.data;
@@ -130,7 +130,7 @@ export default {
                 alert("Periksa Kembali Data Yang Anda Masukan");
             });
         },
-        pilih_komunitas() {
+        dataKomunitas() {
           var app = this;
           axios.get(app.url+'/pilih-komunitas')
           .then(function (resp) {
