@@ -435,6 +435,10 @@ Route::get('/produk/pencarian', 'BarangController@pencarian')->middleware('auth'
 Route::get('/produk/pilih-kategori', 'BarangController@pilih_kategori')->middleware('auth');
 Route::get('/produk/pilih-satuan', 'BarangController@pilih_satuan')->middleware('auth');
 
+Route::get('/kas/view', 'KasController@view')->middleware('auth');
+Route::get('/kas/pencarian', 'KasController@pencarian')->middleware('auth');
+Route::get('/kas/cek-default-kas', 'KasController@cekDefaultKas')->middleware('auth');
+
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
     Route::resource('user', 'UserController');
