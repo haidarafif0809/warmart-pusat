@@ -110,6 +110,7 @@
 
       </div>
 
+      {{$pagination}}
       <div class="card" style="margin-bottom: 1px; margin-top: 1px;">
         <div class="row">
           <div class="col-xs-6">
@@ -141,7 +142,7 @@
       <h6 class="card-title" style="color: black; padding-left: 10px; margin-bottom: 1px;">Rincian Pesanan</h6> <hr>
     </div>
 
-    <div class="card-content" style="margin-top: 1px; margin-bottom: 1px;">
+    <div class="card-content" style="padding-top: 1px; padding-bottom: 1px;">
       <div class="row">
         <div class="col-md-6"><h5><b>Produk</b></h5> </div>
         <div class="col-md-2"><h5><b>Jumlah</b></h5> </div>
@@ -175,9 +176,10 @@
 
     </div>
     @endforeach
+    {{$pagination}}
 
   </div>
-  <hr>
+  <hr style="margin-top: 1px;">
   <div class="card-content" style="margin-top: 1px;">
 
     <div class="row">
