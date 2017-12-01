@@ -1,5 +1,5 @@
 @extends('layouts.app_pelanggan')
-@section('content') 
+@section('content')
 
 <div class="page-header header-filter header-small" data-parallax="true" style="background-image: url('image/background2.jpg');">
 
@@ -15,33 +15,33 @@
   </div>
 </div>
 
-<div class="main main-raised"> 
-  <div class="container"> 
+<div class="main main-raised">
+  <div class="container">
     <ul class="breadcrumb" style="margin-top: 10px; margin-bottom: 10px;">
       <li><a href="{{ url('/daftar-produk') }}">Home</a></li>
       <li><a href="{{ url('/keranjang-belanja') }}">Keranjang Belanja</a></li>
       <li class="active">Pesanan</li>
-    </ul>   
-    <div class="card-content"> 
+    </ul>
+    <div class="card-content">
       <h3 class="title text-center">Selesaikan Pemesanan</h3>
-      <div class="row"> 
+      <div class="row">
         @if($cek_belanjaan == 0)
         <div class="card">
           <div class="col-md-12">
             <center>
               <h3>Keranjang Belanjaan Anda Kosong,Silahkan Berbelanja.</h3>
               <a  href="{{ url('/daftar-produk') }}" type="button" class="btn btn-block" style="background-color: #01573e">Lanjut Belanja<i class="material-icons">keyboard_arrow_right</i></a>
-            </center> 
+            </center>
           </div>
         </div>
-        @else 
-        <div class="col-md-7"> 
+        @else
+        <div class="col-md-7">
           <div class="card" style="margin-bottom: 5px; margin-top: 5px;">
             <div class="card-header">
               <h6 class="card-title" style="color: black; padding-left: 10px"> Alamat Pengiriman</h6> <hr>
             </div>
 
-            {!! Form::model($user, ['url' => route('selesaikan-pemesanan.proses'), 'method' => 'put', 'files'=>'true','class'=>'form-horizontal']) !!}
+            {!! Form::model($user, ['url' => route('selesaikan-pemesanan.proses'), 'method' => 'put', 'files'=>'true','class'=>'form-horizontal','id'=>'formSelesaikanPesanan']) !!}
             <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
               {!! Form::label('name', 'Nama', ['class'=>'col-md-2 control-label']) !!}
               <div class="col-md-6">
@@ -67,11 +67,11 @@
             </div>
 
             {!! Form::hidden('jumlah_produk',$jumlah_produk->total_produk , ['class'=>'form-control']) !!}
-            {!! Form::hidden('subtotal', $subtotal, ['class'=>'form-control']) !!} 
+            {!! Form::hidden('subtotal', $subtotal, ['class'=>'form-control']) !!}
 
 
           </div>
-        </div> 
+        </div>
 
         <div class="col-md-5">
          @if ($agent->isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
@@ -90,12 +90,12 @@
                    @else
                    <img src="image/foto_default.png">
                    @endif
-                 </div>                    
+                 </div>
 
                </div>
 
                <div class="col-xs-8">
-                <p style="margin-bottom:1px;margin-top: 1px;"><a href="#"><b>{{$keranjang_belanjaans->NamaProdukMobile}}</b></a></p>                      
+                <p style="margin-bottom:1px;margin-top: 1px;"><a href="#"><b>{{$keranjang_belanjaans->NamaProdukMobile}}</b></a></p>
                 <p style="margin-bottom:1px;margin-top: 1px;"><b>Rp. {{number_format($keranjang_belanjaans->produk->harga_jual,0,',','.') }} x {{$keranjang_belanjaans->jumlah_produk }} {{$keranjang_belanjaans->produk->satuan->nama_satuan}}</b></p>
                 <p style="margin-bottom:1px;margin-top: 1px;"><small>{{$keranjang_belanjaans->produk->warung->name}}</small></p>
 
@@ -132,7 +132,7 @@
     </div>
   </div>
 
-  <center>{!! Form::button('Selesai Pesanan <i class="material-icons">keyboard_arrow_right</i> ', ['class'=>'btn btn-round', 'type'=>'submit','style'=>'background-color: #01573e']) !!}</center>
+  <center>{!! Form::button('Selesai Pesanan <i class="material-icons">keyboard_arrow_right</i> ', ['id'=>'SelesaikanPesanan','class'=>'btn btn-round', 'type'=>'submit','style'=>'background-color: #01573e']) !!}</center>
 
   @else
 
@@ -141,7 +141,7 @@
       <h6 class="card-title" style="color: black; padding-left: 10px; margin-bottom: 1px;">Rincian Pesanan</h6> <hr>
     </div>
 
-    <div class="card-content" style="margin-top: 1px; margin-bottom: 1px;"> 
+    <div class="card-content" style="margin-top: 1px; margin-bottom: 1px;">
       <div class="row">
         <div class="col-md-6"><h5><b>Produk</b></h5> </div>
         <div class="col-md-2"><h5><b>Jumlah</b></h5> </div>
@@ -162,14 +162,14 @@
          <div class="row">
 
           <div class="col-md-8">
-            <b>{{ number_format($keranjang_belanjaans->produk->harga_jual,0,',','.') }}</b> 
+            <b>{{ number_format($keranjang_belanjaans->produk->harga_jual,0,',','.') }}</b>
           </div>
 
           <div class="col-md-4">
             <a href="#" id="btnHapusProduk" data-nama="{{title_case($keranjang_belanjaans->produk->nama_barang)}}" data-id="{{$keranjang_belanjaans->id_keranjang_belanja}}" type="button"><i class="material-icons">close</i></a>
           </div>
 
-        </div> 
+        </div>
 
       </div>
 
@@ -177,8 +177,8 @@
     @endforeach
 
   </div>
-  <hr>  
-  <div class="card-content" style="margin-top: 1px;"> 
+  <hr>
+  <div class="card-content" style="margin-top: 1px;">
 
     <div class="row">
       <div class="col-md-4"><b>Total Produk</b></div>
@@ -193,25 +193,60 @@
       </div>
     </div>
 
-  </div> 
+  </div>
 
-  {!! Form::button('Selesai Pesanan <i class="material-icons">keyboard_arrow_right</i> ', ['class'=>'btn btn-round pull-right', 'type'=>'submit','style'=>'background-color: #01573e']) !!}
+  {!! Form::button('Selesai Pesanan <i class="material-icons">keyboard_arrow_right</i> ', ['id'=>'SelesaikanPesanan','class'=>'btn btn-round pull-right', 'type'=>'submit','style'=>'background-color: #01573e']) !!}
   @endif
 
   {!! Form::close() !!}
 </div>
 @endif
-</div> 
 </div>
 </div>
-</div>  
+</div>
+</div>
 </div> <!-- end-main-raised -->
 @endsection
 
 
-@section('scripts') 
-<script type="text/javascript"> 
-  $(document).on('click', '#btnHapusProduk', function () { 
+@section('scripts')
+<script type="text/javascript">
+
+  $(document).on('click', '#SelesaikanPesanan', function () {
+
+    $("#formSelesaikanPesanan").submit(function(){
+      return false;
+    });
+
+    swal({
+      html: "Anda Yakin Ingin Menyelesaikan Pesanan Ini ?",
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya',
+      cancelButtonText: 'Batal'
+    }).then((result) => {
+      if (result.value) {
+
+        document.getElementById("formSelesaikanPesanan").submit();
+
+        swal({
+          html :  "Berhasil Menyelesaikan Pesanan",
+          showConfirmButton :  false,
+          type: "success",
+          timer: 10000,
+          onOpen: () => {
+            swal.showLoading()
+          }
+        });
+
+      }
+    })
+
+
+  });
+
+  $(document).on('click', '#btnHapusProduk', function () {
     var id = $(this).attr("data-id");
     var nama = $(this).attr("data-nama");
 
@@ -227,9 +262,9 @@
         var url_hapus_produk_keranjang_belanja = window.location.origin + (window.location.pathname).replace("keranjang-belanja", "keranjang-belanja/hapus-produk-keranjang-belanja/"+id);
         window.location.href=url_hapus_produk_keranjang_belanja;
         swal({
-          html :  "Produk <b>"+nama+"</b> Berhasil Dihapus Dari Keranjang Belanjaan", 
+          html :  "Produk <b>"+nama+"</b> Berhasil Dihapus Dari Keranjang Belanjaan",
           showConfirmButton :  false,
-          type: "success",    
+          type: "success",
           timer: 10000,
           onOpen: () => {
             swal.showLoading()
@@ -242,4 +277,4 @@
   });
 
 </script>
-@endsection 
+@endsection

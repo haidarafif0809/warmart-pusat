@@ -22,6 +22,7 @@
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="{{ asset('css/selectize.bootstrap3.css') }}" rel="stylesheet">
 </head>
 
 <body class="off-canvas-sidebar">
@@ -148,6 +149,7 @@
 <script src="{{ asset('js/material-dashboard.js?v=1.2.0') }}"></script>
 
 <script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
+<script src="{{ asset('js/selectize.min.js') }}"></script> 
 <script src="{{ asset('js/demo.js') }}"></script> 
 
 <script type="text/javascript">
