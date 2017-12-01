@@ -31,22 +31,32 @@ class PemesananController extends Controller
 
         $agent = new Agent();
 
-        $keranjang_belanjaan = KeranjangBelanja::with(['produk', 'pelanggan'])->where('id_pelanggan', Auth::user()->id)->get();
-        $cek_belanjaan       = $keranjang_belanjaan->count();
+        $keranjang_belanja = KeranjangBelanja::with(['produk', 'pelanggan'])->where('id_pelanggan', Auth::user()->id);
+
+        $cek_belanjaan = $keranjang_belanja->count();
+        //PERINTAH PAGINATION
+        if ($agent->isMobile()) {
+
+            $keranjang_belanjaan = $keranjang_belanja->paginate(4);
+        } else {
+
+            $keranjang_belanjaan = $keranjang_belanja->paginate(8);
+        }
+        $pagination = $keranjang_belanjaan->links();
 
         $jumlah_produk = KeranjangBelanja::select([DB::raw('IFNULL(SUM(jumlah_produk),0) as total_produk')])->where('id_pelanggan', Auth::user()->id)->first();
         //FOTO WARMART
         $logo_warmart = "" . asset('/assets/img/examples/warmart_logo.png') . "";
 
         $subtotal = 0;
-        foreach ($keranjang_belanjaan as $keranjang_belanjaans) {
+        foreach ($keranjang_belanja->get() as $keranjang_belanjaans) {
             $harga_produk = $keranjang_belanjaans->produk->harga_jual * $keranjang_belanjaans->jumlah_produk;
             $subtotal     = $subtotal += $harga_produk;
         }
 
         $user = Auth::user();
 
-        return view('layouts.selesaikan_pemesanan', ['keranjang_belanjaan' => $keranjang_belanjaan, 'cek_belanjaan' => $cek_belanjaan, 'agent' => $agent, 'jumlah_produk' => $jumlah_produk, 'logo_warmart' => $logo_warmart, 'subtotal' => $subtotal, 'user' => $user]);
+        return view('layouts.selesaikan_pemesanan', ['pagination' => $pagination, 'keranjang_belanjaan' => $keranjang_belanjaan, 'cek_belanjaan' => $cek_belanjaan, 'agent' => $agent, 'jumlah_produk' => $jumlah_produk, 'logo_warmart' => $logo_warmart, 'subtotal' => $subtotal, 'user' => $user]);
     }
 
     public function prosesSelesaikanPemesanan(Request $request)

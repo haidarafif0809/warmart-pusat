@@ -473,7 +473,7 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
     ]);
 
     //PROSES UPDATE DESKRIPSI
-    Route::post('/produk/update-deskripsi-produk', [
+    Route::put('/update-deskripsi', [
         'middleware' => ['auth'],
         'as'         => 'produk.update_deskripsi_produk',
         'uses'       => 'BarangController@update_deskripsi_produk',

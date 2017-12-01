@@ -360,18 +360,11 @@ class BarangController extends Controller
         }
     }
 
-    //UPDATE DESKRIPSI PRODUK
-    public function update_deskripsi_produk(Request $request, $id)
+    public function update_deskripsi_produk(Request $request)
     {
-        $update_deskripsi_produk = Barang::find($id);
-        if ($update_deskripsi_produk->id_warung != Auth::user()->id_warung) {
-            Auth::logout();
-            return response()->view('error.403');
-        } else {
-            $update_deskripsi_produk->update([
-                'deskripsi_produk' => $request->deskripsi_produk,
-            ]);
-        }
+        $update_deskripsi_produk = Barang::where('id', $request->id)->update([
+            'deskripsi_produk' => $request->deskripsi_produk,
+        ]);
     }
 
     //LIHAT DESKRIPSI PRODUK

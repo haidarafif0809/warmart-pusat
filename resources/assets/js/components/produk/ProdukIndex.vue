@@ -76,7 +76,7 @@
 
                  <vue-simple-spinner v-if="loading"></vue-simple-spinner>
 
-                 <div align="right"><pagination :data="produkData" v-on:pagination-change-page="getResults"></pagination></div>
+                 <div align="right"><pagination :data="produkData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
 
                     </div>
 
