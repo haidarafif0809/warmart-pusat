@@ -356,7 +356,7 @@ class BarangController extends Controller
             Auth::logout();
             return response()->view('error.403');
         } else {
-            return url('dashboard#/' . $id);
+            return view('barang.detail_produk', ['id' => $id, 'deskripsi_produk' => $barang->deskripsi_produk])->with(compact('barang'));
         }
     }
 

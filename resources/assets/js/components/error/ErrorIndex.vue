@@ -53,7 +53,7 @@
 			            <!--LOADING-->
 			            <vue-simple-spinner v-if="loading"></vue-simple-spinner>
 			            <!--PAGINATION TABLE-->
-			            <div align="right"><pagination :data="errorsData" v-on:pagination-change-page="getResults"></pagination></div>
+			            <div align="right"><pagination :data="errorsData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
 
 			        </div><!-- /END RESPONSIVE-->
 				</div>

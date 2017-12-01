@@ -2,28 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\KasKeluar;
+use App\KasMasuk;
+use App\KategoriTransaksi;
+use Auth;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Html\Builder;
-use Yajra\Datatables\Datatables;
-use Illuminate\Support\Facades\DB; 
-use Session;
-use Laratrust;
-use App\KategoriTransaksi;
-use App\KasMasuk;
-use App\KasKeluar;
-use Auth;
 
 class KategoriTransaksiController extends Controller
 {
-  public function __construct()
-  {
-    $this->middleware('user-must-warung');
-  }
+    public function __construct()
+    {
+        $this->middleware('user-must-warung');
+    }
 
-  public function index(Request $request, Builder $htmlBuilder)
-  {
-    return view('kategori_transaksi.index')->with(compact('html'));
-  }
+    public function index(Request $request, Builder $htmlBuilder)
+    {
+        return view('kategori_transaksi.index')->with(compact('html'));
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -32,79 +28,80 @@ class KategoriTransaksiController extends Controller
      */
     public function create()
     {
-      return view('kategori_transaksi.create');
+        return view('kategori_transaksi.create');
     }
 
-    public function view(){
-      $data_kategori_transaksi = KategoriTransaksi::where('id_warung',Auth::user()->id_warung)->orderBy('id','desc')->paginate(10);
-      $array_kategori_transaksi = array();
-      foreach ($data_kategori_transaksi as $kategori_transaksi) {
-        $data_kategori_masuk = KasMasuk::where('kategori', $kategori_transaksi->id)->where('id_warung', $kategori_transaksi->id_warung)->count();
+    public function statusTransaksi($kategori_transaksi)
+    {
+        $data_kategori_masuk  = KasMasuk::where('kategori', $kategori_transaksi->id)->where('id_warung', $kategori_transaksi->id_warung)->count();
         $data_kategori_keluar = KasKeluar::where('kategori', $kategori_transaksi->id)->where('warung_id', $kategori_transaksi->id_warung)->count();
 
-        if ($data_kategori_masuk > 0 OR $data_kategori_keluar > 0) {
-          $status_transaksi = 1;
-        }else{
-          $status_transaksi = 0;
+        if ($data_kategori_masuk > 0 or $data_kategori_keluar > 0) {
+            $status_transaksi = 1;
+        } else {
+            $status_transaksi = 0;
         }
-
-        array_push($array_kategori_transaksi,[
-          'id' => $kategori_transaksi->id,
-          'nama_kategori_transaksi' => $kategori_transaksi->nama_kategori_transaksi,
-          'status_transaksi' => $status_transaksi]);
-      }
-
-     //DATA PAGINATION 
-      $respons['current_page'] = $data_kategori_transaksi->currentPage();
-      $respons['data'] = $array_kategori_transaksi; 
-      $respons['first_page_url'] = url('/kategori-transaksi/view?page='.$data_kategori_transaksi->firstItem());
-      $respons['from'] = 1;
-      $respons['last_page'] = $data_kategori_transaksi->lastPage();
-      $respons['last_page_url'] = url('/kategori-transaksi/view?page='.$data_kategori_transaksi->lastPage());
-      $respons['next_page_url'] = $data_kategori_transaksi->nextPageUrl();
-      $respons['path'] = url('/kategori-transaksi/view');
-      $respons['per_page'] = $data_kategori_transaksi->perPage();
-      $respons['prev_page_url'] = $data_kategori_transaksi->previousPageUrl();
-      $respons['to'] = $data_kategori_transaksi->perPage();
-      $respons['total'] = $data_kategori_transaksi->total();
-      return response()->json($respons);
+        return $status_transaksi;
     }
 
-    public function pencarian(Request $request){
-      $data_kategori_transaksi = KategoriTransaksi::where('id_warung',Auth::user()->id_warung)
-      ->where('nama_kategori_transaksi','LIKE',"%$request->search%")
-      ->orderBy('id','desc')->paginate(10);
-      $array_kategori_transaksi = array();
-      foreach ($data_kategori_transaksi as $kategori_transaksi) {
-        $data_kategori_masuk = KasMasuk::where('kategori', $kategori_transaksi->id)->where('id_warung', $kategori_transaksi->id_warung)->count();
-        $data_kategori_keluar = KasKeluar::where('kategori', $kategori_transaksi->id)->where('warung_id', $kategori_transaksi->id_warung)->count();
+    public function view()
+    {
+        $data_kategori_transaksi  = KategoriTransaksi::where('id_warung', Auth::user()->id_warung)->orderBy('id', 'desc')->paginate(10);
+        $array_kategori_transaksi = array();
+        foreach ($data_kategori_transaksi as $kategori_transaksi) {
+            $status_transaksi = $this->statusTransaksi($kategori_transaksi);
 
-        if ($data_kategori_masuk > 0 OR $data_kategori_keluar > 0) {
-          $status_transaksi = 1;
-        }else{
-          $status_transaksi = 0;
+            array_push($array_kategori_transaksi, [
+                'id'                      => $kategori_transaksi->id,
+                'nama_kategori_transaksi' => $kategori_transaksi->nama_kategori_transaksi,
+                'status_transaksi'        => $status_transaksi]);
         }
 
-        array_push($array_kategori_transaksi,[
-          'id' => $kategori_transaksi->id,
-          'nama_kategori_transaksi' => $kategori_transaksi->nama_kategori_transaksi,
-          'status_transaksi' => $status_transaksi]);
-      }
+        //DATA PAGINATION
+        $respons['current_page']   = $data_kategori_transaksi->currentPage();
+        $respons['data']           = $array_kategori_transaksi;
+        $respons['first_page_url'] = url('/kategori-transaksi/view?page=' . $data_kategori_transaksi->firstItem());
+        $respons['from']           = 1;
+        $respons['last_page']      = $data_kategori_transaksi->lastPage();
+        $respons['last_page_url']  = url('/kategori-transaksi/view?page=' . $data_kategori_transaksi->lastPage());
+        $respons['next_page_url']  = $data_kategori_transaksi->nextPageUrl();
+        $respons['path']           = url('/kategori-transaksi/view');
+        $respons['per_page']       = $data_kategori_transaksi->perPage();
+        $respons['prev_page_url']  = $data_kategori_transaksi->previousPageUrl();
+        $respons['to']             = $data_kategori_transaksi->perPage();
+        $respons['total']          = $data_kategori_transaksi->total();
+        return response()->json($respons);
+    }
 
-     //DATA PAGINATION 
-      $respons['current_page'] = $data_kategori_transaksi->currentPage();
-      $respons['data'] = $array_kategori_transaksi; 
-      $respons['first_page_url'] = url('/kategori-transaksi/view?page='.$data_kategori_transaksi->firstItem());
-      $respons['from'] = 1;
-      $respons['last_page'] = $data_kategori_transaksi->lastPage();
-      $respons['last_page_url'] = url('/kategori-transaksi/view?page='.$data_kategori_transaksi->lastPage());
-      $respons['next_page_url'] = $data_kategori_transaksi->nextPageUrl();
-      $respons['path'] = url('/kategori-transaksi/view');
-      $respons['per_page'] = $data_kategori_transaksi->perPage();
-      $respons['prev_page_url'] = $data_kategori_transaksi->previousPageUrl();
-      $respons['to'] = $data_kategori_transaksi->perPage();
-      $respons['total'] = $data_kategori_transaksi->total();
-      return response()->json($respons);
+    public function pencarian(Request $request)
+    {
+        $data_kategori_transaksi = KategoriTransaksi::where('id_warung', Auth::user()->id_warung)
+            ->where('nama_kategori_transaksi', 'LIKE', "%$request->search%")
+            ->orderBy('id', 'desc')->paginate(10);
+        $array_kategori_transaksi = array();
+        foreach ($data_kategori_transaksi as $kategori_transaksi) {
+            $status_transaksi = $this->statusTransaksi($kategori_transaksi);
+
+            array_push($array_kategori_transaksi, [
+                'id'                      => $kategori_transaksi->id,
+                'nama_kategori_transaksi' => $kategori_transaksi->nama_kategori_transaksi,
+                'status_transaksi'        => $status_transaksi]);
+        }
+
+        //DATA PAGINATION
+        $respons['current_page']   = $data_kategori_transaksi->currentPage();
+        $respons['data']           = $array_kategori_transaksi;
+        $respons['first_page_url'] = url('/kategori-transaksi/view?page=' . $data_kategori_transaksi->firstItem());
+        $respons['from']           = 1;
+        $respons['last_page']      = $data_kategori_transaksi->lastPage();
+        $respons['last_page_url']  = url('/kategori-transaksi/view?page=' . $data_kategori_transaksi->lastPage());
+        $respons['next_page_url']  = $data_kategori_transaksi->nextPageUrl();
+        $respons['path']           = url('/kategori-transaksi/view');
+        $respons['per_page']       = $data_kategori_transaksi->perPage();
+        $respons['prev_page_url']  = $data_kategori_transaksi->previousPageUrl();
+        $respons['to']             = $data_kategori_transaksi->perPage();
+        $respons['total']          = $data_kategori_transaksi->total();
+        return response()->json($respons);
     }
 
     /**
@@ -115,18 +112,18 @@ class KategoriTransaksiController extends Controller
      */
     public function store(Request $request)
     {
-      $this->validate($request, [
-        'nama_kategori_transaksi' => 'required|unique:kategori_transaksis,nama_kategori_transaksi,NULL,id,id_warung,'.Auth::user()->id_warung.'',
+        $this->validate($request, [
+            'nama_kategori_transaksi' => 'required|unique:kategori_transaksis,nama_kategori_transaksi,NULL,id,id_warung,' . Auth::user()->id_warung . '',
         ]);
 
-      if (Auth::user()->id_warung != "") {
-        $kategori_transaksi = KategoriTransaksi::create([
-          'nama_kategori_transaksi' =>$request->nama_kategori_transaksi,
-          'id_warung' =>Auth::user()->id_warung]);
-      }else{
-        Auth::logout();
-        return response()->view('error.403');
-      }
+        if (Auth::user()->id_warung != "") {
+            $kategori_transaksi = KategoriTransaksi::create([
+                'nama_kategori_transaksi' => $request->nama_kategori_transaksi,
+                'id_warung'               => Auth::user()->id_warung]);
+        } else {
+            Auth::logout();
+            return response()->view('error.403');
+        }
     }
 
     /**
@@ -137,8 +134,8 @@ class KategoriTransaksiController extends Controller
      */
     public function show($id)
     {
-      $kategori_transaksi = KategoriTransaksi::find($id);      
-      return $kategori_transaksi;
+        $kategori_transaksi = KategoriTransaksi::find($id);
+        return $kategori_transaksi;
     }
 
     /**
@@ -149,15 +146,15 @@ class KategoriTransaksiController extends Controller
      */
     public function edit($id)
     {
-      $id_warung = Auth::user()->id_warung;
-      $kategori_transaksi = KategoriTransaksi::find($id);
+        $id_warung          = Auth::user()->id_warung;
+        $kategori_transaksi = KategoriTransaksi::find($id);
 
-      if ($id_warung == $kategori_transaksi->id_warung) {
-        return view('kategori_transaksi.edit')->with(compact('kategori_transaksi')); 
-      }else{
-        Auth::logout();
-        return response()->view('error.403');
-      }
+        if ($id_warung == $kategori_transaksi->id_warung) {
+            return view('kategori_transaksi.edit')->with(compact('kategori_transaksi'));
+        } else {
+            Auth::logout();
+            return response()->view('error.403');
+        }
     }
 
     /**
@@ -169,21 +166,21 @@ class KategoriTransaksiController extends Controller
      */
     public function update(Request $request, $id)
     {
-      $id_warung = Auth::user()->id_warung;
-      $this->validate($request, [
-        'nama_kategori_transaksi' => 'required|unique:kategori_transaksis,nama_kategori_transaksi,'. $id.',id,id_warung,'.Auth::user()->id_warung,
+        $id_warung = Auth::user()->id_warung;
+        $this->validate($request, [
+            'nama_kategori_transaksi' => 'required|unique:kategori_transaksis,nama_kategori_transaksi,' . $id . ',id,id_warung,' . Auth::user()->id_warung,
         ]);
 
-      $kategori_transaksi = KategoriTransaksi::find($id);
+        $kategori_transaksi = KategoriTransaksi::find($id);
 
-      if ($id_warung == $kategori_transaksi->id_warung) {
-        $kategori_transaksi = KategoriTransaksi::find($id)->update([
-          'nama_kategori_transaksi'  => $request->nama_kategori_transaksi
-          ]);
-      }else{
-        Auth::logout();
-        return response()->view('error.403');
-      }
+        if ($id_warung == $kategori_transaksi->id_warung) {
+            $kategori_transaksi = KategoriTransaksi::find($id)->update([
+                'nama_kategori_transaksi' => $request->nama_kategori_transaksi,
+            ]);
+        } else {
+            Auth::logout();
+            return response()->view('error.403');
+        }
     }
 
     /**
@@ -194,14 +191,14 @@ class KategoriTransaksiController extends Controller
      */
     public function destroy($id)
     {
-      $id_warung = Auth::user()->id_warung;
-      $kategori_transaksi = KategoriTransaksi::find($id);
+        $id_warung          = Auth::user()->id_warung;
+        $kategori_transaksi = KategoriTransaksi::find($id);
 
-      if ($id_warung == $kategori_transaksi->id_warung) {
-        KategoriTransaksi::destroy($id);
-      }else{
-        Auth::logout();
-        return response()->view('error.403');
-      }
+        if ($id_warung == $kategori_transaksi->id_warung) {
+            KategoriTransaksi::destroy($id);
+        } else {
+            Auth::logout();
+            return response()->view('error.403');
+        }
     }
-  }
+}
