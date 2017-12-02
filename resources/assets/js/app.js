@@ -11,7 +11,6 @@ import Spinner from 'vue-simple-spinner'
 import Datepicker from 'vuejs-datepicker'
 import ToggleButton from 'vue-js-toggle-button'
 import VueFroala from 'vue-froala-wysiwyg'
-window.$ = window.jQuery = require('jquery');
 // Require Froala Editor js file.
 require('froala-editor/js/froala_editor.pkgd.min')
 // Require Froala Editor css files.
