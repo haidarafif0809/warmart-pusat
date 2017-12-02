@@ -275,4 +275,15 @@ class KasController extends Controller
         }
 
     }
+
+    public function cekKasWarung()
+    {
+        $kas = Kas::where('warung_id', Auth::user()->id_warung);
+
+        return response()->json([
+            "cek_kas" => $kas->count(),
+            "kas"     => $kas->get()->toArray(),
+        ]);
+
+    }
 }
