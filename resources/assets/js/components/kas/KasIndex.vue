@@ -32,7 +32,7 @@
             <th>Aksi</th>
           </tr>
         </thead>
-        <tbody v-if="kass.length" class="data-ada">
+        <tbody v-if="kass.length > 0 && loading == false" class="data-ada">
           <tr v-for="kas, index in kass" >
 
             <td>{{ kas.kas.kode_kas }}</td>
@@ -53,9 +53,15 @@
             <td> 
              <router-link :to="{name: 'editKas', params: {id: kas.kas.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + kas.kas.id" >
               Edit 
-            </router-link> <a href="#"
+            </router-link> 
+            <a v-if="kas.status_transaksi == 0" href="#"
             class="btn btn-xs btn-danger" v-bind:id="'delete-' + kas.kas.id"
-            v-on:click="deleteEntry(kas.kas.id, index,kas.kas.nama_kas)">
+            v-on:click="deleteEntry(kas.kas.id, index,kas.kas.nama_kas)" >
+            Delete
+          </a>
+          <a v-if="kas.status_transaksi == 1" href="#"
+            class="btn btn-xs btn-danger" v-bind:id="'delete-' + kas.kas.id"
+            v-on:click="gagalHapus(kas.kas.id, index,kas.kas.nama_kas)">
             Delete
           </a>
         </td>
@@ -63,7 +69,7 @@
 
         </tr>
       </tbody>
-      <tbody class="data-tidak-ada" v-else>
+      <tbody class="data-tidak-ada" v-else-if="kass.length == 0 && loading == false">
         <tr ><td colspan="6"  class="text-center">Tidak Ada Data</td></tr>
       </tbody>
     </table>
@@ -172,7 +178,15 @@ export default {
             });
           }
          });
+        },
+         gagalHapus(id, index,nama_kas) {
+            this.$swal({
+                title: "Gagal ",
+                text: "Kas '"+nama_kas+"' Sudah Terpakai",
+                icon: "warning",
+            });
         }
+
       }
     }
     </script>
