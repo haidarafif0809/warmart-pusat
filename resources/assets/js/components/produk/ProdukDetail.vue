@@ -16,7 +16,7 @@
                     <h4 class="card-title">Deskripsi Produk </h4>
                     <form v-on:submit.prevent="saveForm()" class="form-horizontal">
                     
-                        <textarea v-model="produk.deskripsi_produk" class="form-control"></textarea>
+                    <textarea v-model="produk.deskripsi_produk" class="form-control"></textarea>
                         <input class="form-control" autocomplete="off" v-model="produk.id" type="hidden" name="id" id="id"  autofocus="">
                         <div class="form-group">
                             <button class="btn btn-primary" id="btnSimpanProduk" type="submit"><i class="material-icons">send</i> Submit</button>
@@ -75,7 +75,8 @@ export default {
         },
         alert() {
           this.$swal({
-              title: "Berhasil Mengubah Deskripsi Produk!",
+              title: "Sukses",
+              text: "Deskripsi Produk Berhasil Diubah!",
               icon: "success",
           });
         }

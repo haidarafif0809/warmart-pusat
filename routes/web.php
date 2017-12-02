@@ -438,6 +438,7 @@ Route::get('/produk/pilih-satuan', 'BarangController@pilih_satuan')->middleware(
 Route::get('/kas/view', 'KasController@view')->middleware('auth');
 Route::get('/kas/pencarian', 'KasController@pencarian')->middleware('auth');
 Route::get('/kas/cek-default-kas', 'KasController@cekDefaultKas')->middleware('auth');
+Route::get('/kas/cek-kas-warung', 'KasController@cekKasWarung')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
@@ -761,4 +762,5 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
         'as'         => 'item-masuk.edit_jumlah_edit',
         'uses'       => 'ItemMasukController@proses_edit_jumlah_edit',
     ]);
+
 });
