@@ -30,7 +30,7 @@ class PesananWarungController extends Controller
         } else {
 
             if ($request->ajax()) {
-                $pesanan_warung = PesananPelanggan::with('pelanggan')->where('id_warung', Auth::user()->id_warung)->orderBy('id', 'desc');
+                $pesanan_warung = PesananPelanggan::where('id_warung', Auth::user()->id_warung)->orderBy('id', 'desc');
                 return Datatables::of($pesanan_warung)
                     ->addColumn('konfirmasi_pesanan', function ($konfirmasi_pesanan) {
                         $status = "";
@@ -53,7 +53,7 @@ class PesananWarungController extends Controller
                             'detail_pengirim' => $data,
                         ]);
                     })->addColumn('pemesan', function ($pemesan) {
-                    $data_pemesan = "" . $pemesan->pelanggan->name . "(" . $pemesan->pelanggan->no_telp . ")";
+                    $data_pemesan = "" . $pemesan->nama_pemesan . "(" . $pemesan->no_telp_pemesan . ")";
                     return $data_pemesan;
                 })->make(true);
             }
