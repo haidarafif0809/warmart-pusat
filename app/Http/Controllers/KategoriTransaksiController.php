@@ -44,6 +44,25 @@ class KategoriTransaksiController extends Controller
         return $status_transaksi;
     }
 
+    public function dataPagination($data_kategori_transaksi, $array_kategori_transaksi)
+    {
+
+        $respons['current_page']   = $data_kategori_transaksi->currentPage();
+        $respons['data']           = $array_kategori_transaksi;
+        $respons['first_page_url'] = url('/kategori-transaksi/view?page=' . $data_kategori_transaksi->firstItem());
+        $respons['from']           = 1;
+        $respons['last_page']      = $data_kategori_transaksi->lastPage();
+        $respons['last_page_url']  = url('/kategori-transaksi/view?page=' . $data_kategori_transaksi->lastPage());
+        $respons['next_page_url']  = $data_kategori_transaksi->nextPageUrl();
+        $respons['path']           = url('/kategori-transaksi/view');
+        $respons['per_page']       = $data_kategori_transaksi->perPage();
+        $respons['prev_page_url']  = $data_kategori_transaksi->previousPageUrl();
+        $respons['to']             = $data_kategori_transaksi->perPage();
+        $respons['total']          = $data_kategori_transaksi->total();
+
+        return $respons;
+    }
+
     public function view()
     {
         $data_kategori_transaksi  = KategoriTransaksi::where('id_warung', Auth::user()->id_warung)->orderBy('id', 'desc')->paginate(10);
@@ -58,18 +77,7 @@ class KategoriTransaksiController extends Controller
         }
 
         //DATA PAGINATION
-        $respons['current_page']   = $data_kategori_transaksi->currentPage();
-        $respons['data']           = $array_kategori_transaksi;
-        $respons['first_page_url'] = url('/kategori-transaksi/view?page=' . $data_kategori_transaksi->firstItem());
-        $respons['from']           = 1;
-        $respons['last_page']      = $data_kategori_transaksi->lastPage();
-        $respons['last_page_url']  = url('/kategori-transaksi/view?page=' . $data_kategori_transaksi->lastPage());
-        $respons['next_page_url']  = $data_kategori_transaksi->nextPageUrl();
-        $respons['path']           = url('/kategori-transaksi/view');
-        $respons['per_page']       = $data_kategori_transaksi->perPage();
-        $respons['prev_page_url']  = $data_kategori_transaksi->previousPageUrl();
-        $respons['to']             = $data_kategori_transaksi->perPage();
-        $respons['total']          = $data_kategori_transaksi->total();
+        $respons = $this->dataPagination($data_kategori_transaksi, $array_kategori_transaksi);
         return response()->json($respons);
     }
 
@@ -89,18 +97,7 @@ class KategoriTransaksiController extends Controller
         }
 
         //DATA PAGINATION
-        $respons['current_page']   = $data_kategori_transaksi->currentPage();
-        $respons['data']           = $array_kategori_transaksi;
-        $respons['first_page_url'] = url('/kategori-transaksi/view?page=' . $data_kategori_transaksi->firstItem());
-        $respons['from']           = 1;
-        $respons['last_page']      = $data_kategori_transaksi->lastPage();
-        $respons['last_page_url']  = url('/kategori-transaksi/view?page=' . $data_kategori_transaksi->lastPage());
-        $respons['next_page_url']  = $data_kategori_transaksi->nextPageUrl();
-        $respons['path']           = url('/kategori-transaksi/view');
-        $respons['per_page']       = $data_kategori_transaksi->perPage();
-        $respons['prev_page_url']  = $data_kategori_transaksi->previousPageUrl();
-        $respons['to']             = $data_kategori_transaksi->perPage();
-        $respons['total']          = $data_kategori_transaksi->total();
+        $respons = $this->dataPagination($data_kategori_transaksi, $array_kategori_transaksi);
         return response()->json($respons);
     }
 

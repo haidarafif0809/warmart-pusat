@@ -229,7 +229,7 @@ export default {
 		    let newProduk = new FormData();
 		    if (document.getElementById('foto').files[0] != undefined) {
 		    	newProduk.append('foto', document.getElementById('foto').files[0]);
-		    }		    
+		    }
 		    newProduk.append('kode_barcode', app.produk.kode_barcode);
 		    newProduk.append('kode_barang', app.produk.kode_barang);
 		    newProduk.append('nama_barang', app.produk.nama_barang);
