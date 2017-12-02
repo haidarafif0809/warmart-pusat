@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Kas;
+use App\TransaksiKas;
 use Auth;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Html\Builder;
