@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Kas;
+use App\KasKeluar;
+use App\KasMasuk;
+use App\KasMutasi;
+use App\Pembelian;
 use Auth;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Html\Builder;
@@ -21,11 +25,12 @@ class KasController extends Controller
 
     public function view()
     {
-        $kas       = Kas::where('warung_id', Auth::user()->id_warung)->paginate(10);
+        $kas       = Kas::where('warung_id', Auth::user()->id_warung)->orderBy('id', 'desc')->paginate(10);
         $kas_array = array();
         foreach ($kas as $kass) {
-            $total_kas = $kass->totalKas;
-            array_push($kas_array, ['total_kas' => $total_kas, 'kas' => $kass]);
+            $status_transaksi = $this->cekKasTerpakai($kass->id, Auth::user()->id_warung);
+            $total_kas        = $kass->totalKas;
+            array_push($kas_array, ['total_kas' => $total_kas, 'kas' => $kass, 'status_transaksi' => $status_transaksi]);
         }
         //DATA PAGINATION
         $respons['current_page']   = $kas->currentPage();
@@ -57,7 +62,6 @@ class KasController extends Controller
             })->paginate(10);
 
         $kas_array = array();
-
         foreach ($kas as $kass) {
             $total_kas = $kass->totalKas;
             array_push($kas_array, ['total_kas' => $total_kas, 'kas' => $kass]);
@@ -275,6 +279,21 @@ class KasController extends Controller
         }
 
     }
+    public function cekKasTerpakai($id, $id_warung)
+    {
+        $data_kas_masuk     = KasMasuk::where('kas', $id)->where('id_warung', $id_warung)->count();
+        $data_kas_keluar    = KasKeluar::where('kas', $id)->where('warung_id', $id_warung)->count();
+        $data_kas_mutasi    = KasMutasi::where('dari_kas', $id)->orWhere('ke_kas', $id)->where('id_warung', $id_warung)->count();
+        $data_kas_pembelian = Pembelian::where('cara_bayar', $id)->where('warung_id', $id_warung)->count();
+
+        if ($data_kas_masuk > 0 or $data_kas_keluar > 0 or $data_kas_mutasi > 0 or $data_kas_pembelian > 0) {
+            $status_transaksi = 1;
+        } else {
+            $status_transaksi = 0;
+        }
+        return $status_transaksi;
+    }
+
 
     public function cekKasWarung()
     {

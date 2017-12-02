@@ -35,28 +35,21 @@ class BarangController extends Controller
         return number_format($angka, 0, ',', '.');
     }
 
-    public function view()
+    public function statusProduk($id)
     {
-        $data_produk  = Barang::with(['satuan', 'kategori_barang'])->where('id_warung', Auth::user()->id_warung)->orderBy('id', 'desc')->paginate(10);
-        $array_produk = array();
-        foreach ($data_produk as $produk) {
-            $cek_produk = Hpp::where('id_produk', $produk->id)->count();
-
-            if ($cek_produk > 0) {
-                $status_produk = 1;
-            } else {
-                $status_produk = 0;
-            }
-
-            array_push($array_produk, [
-                'produk'        => $produk,
-                'harga_jual'    => $this->tandaPemisahTitik($produk->harga_jual),
-                'harga_beli'    => $this->tandaPemisahTitik($produk->harga_beli),
-                'status_produk' => $status_produk,
-            ]);
+        $cek_produk = Hpp::where('id_produk', $id)->count();
+        if ($cek_produk > 0) {
+            $status_produk = 1;
+        } else {
+            $status_produk = 0;
         }
 
-        //DATA PAGINATION
+        return $status_produk;
+    }
+
+    public function dataPagination($data_produk, $array_produk)
+    {
+
         $respons['current_page']   = $data_produk->currentPage();
         $respons['data']           = $array_produk;
         $respons['first_page_url'] = url('/produk/view?page=' . $data_produk->firstItem());
@@ -69,6 +62,27 @@ class BarangController extends Controller
         $respons['prev_page_url']  = $data_produk->previousPageUrl();
         $respons['to']             = $data_produk->perPage();
         $respons['total']          = $data_produk->total();
+
+        return $respons;
+    }
+
+    public function view()
+    {
+        $data_produk  = Barang::with(['satuan', 'kategori_barang'])->where('id_warung', Auth::user()->id_warung)->orderBy('id', 'desc')->paginate(10);
+        $array_produk = array();
+        foreach ($data_produk as $produk) {
+
+            $status_produk = $this->statusProduk($produk->id);
+            array_push($array_produk, [
+                'produk'        => $produk,
+                'harga_jual'    => $this->tandaPemisahTitik($produk->harga_jual),
+                'harga_beli'    => $this->tandaPemisahTitik($produk->harga_beli),
+                'status_produk' => $status_produk,
+            ]);
+        }
+
+        //DATA PAGINATION
+        $respons = $this->dataPagination($data_produk, $array_produk);
         return response()->json($respons);
     }
 
@@ -83,14 +97,8 @@ class BarangController extends Controller
             ->orderBy('id', 'desc')->paginate(10);
         $array_produk = array();
         foreach ($data_produk as $produk) {
-            $cek_produk = Hpp::where('id_produk', $produk->id)->count();
 
-            if ($cek_produk > 0) {
-                $status_produk = 1;
-            } else {
-                $status_produk = 0;
-            }
-
+            $status_produk = $this->statusProduk($produk);
             array_push($array_produk, [
                 'produk'        => $produk,
                 'harga_jual'    => $this->tandaPemisahTitik($produk->harga_jual),
@@ -100,18 +108,7 @@ class BarangController extends Controller
         }
 
         //DATA PAGINATION
-        $respons['current_page']   = $data_produk->currentPage();
-        $respons['data']           = $array_produk;
-        $respons['first_page_url'] = url('/produk/view?page=' . $data_produk->firstItem());
-        $respons['from']           = 1;
-        $respons['last_page']      = $data_produk->lastPage();
-        $respons['last_page_url']  = url('/produk/view?page=' . $data_produk->lastPage());
-        $respons['next_page_url']  = $data_produk->nextPageUrl();
-        $respons['path']           = url('/produk/view');
-        $respons['per_page']       = $data_produk->perPage();
-        $respons['prev_page_url']  = $data_produk->previousPageUrl();
-        $respons['to']             = $data_produk->perPage();
-        $respons['total']          = $data_produk->total();
+        $respons = $this->dataPagination($data_produk, $array_produk);
         return response()->json($respons);
     }
 
@@ -360,18 +357,11 @@ class BarangController extends Controller
         }
     }
 
-    //UPDATE DESKRIPSI PRODUK
-    public function update_deskripsi_produk(Request $request, $id)
+    public function update_deskripsi_produk(Request $request)
     {
-        $update_deskripsi_produk = Barang::find($id);
-        if ($update_deskripsi_produk->id_warung != Auth::user()->id_warung) {
-            Auth::logout();
-            return response()->view('error.403');
-        } else {
-            $update_deskripsi_produk->update([
-                'deskripsi_produk' => $request->deskripsi_produk,
-            ]);
-        }
+        $update_deskripsi_produk = Barang::where('id', $request->id)->update([
+            'deskripsi_produk' => $request->deskripsi_produk,
+        ]);
     }
 
     //LIHAT DESKRIPSI PRODUK

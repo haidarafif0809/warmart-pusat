@@ -15,10 +15,12 @@
                 <div class="card-content">
                     <h4 class="card-title">Deskripsi Produk </h4>
                     <form v-on:submit.prevent="saveForm()" class="form-horizontal">
-                    <ckeditor v-model="produk.deskripsi_produk" :height="'300px'" :toolbar="[['Format']]"></ckeditor>
-                                                
+                    
+                    <froala :tag="'textarea'" v-model="produk.deskripsi_produk"></froala>
+                        <input class="form-control" autocomplete="off" v-model="produk.id" type="hidden" name="id" id="id"  autofocus="">
                         <div class="form-group">
-                                <button class="btn btn-primary" id="btnSimpanProduk" type="submit"><i class="material-icons">send</i> Submit</button>
+                            <button class="btn btn-primary" id="btnSimpanProduk" type="submit"><i class="material-icons">send</i> Submit</button>
+                            <a :href="urlLihat+produk.id" class="btn btn-info" id="lihatDeskripsi" type="submit"><i class="material-icons">remove_red_eye</i> Lihat</a>
                         </div>
                     </form>
                 </div>
@@ -47,9 +49,11 @@ export default {
         return {
             produkId: null,
             produk: {
+                id:'',
                 deskripsi_produk: '',
             },
             url : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
+            urlLihat : window.location.origin+(window.location.pathname).replace("dashboard", "produk/lihat-deskripsi-produk/"),
             errors: []
         }
     },
@@ -57,7 +61,8 @@ export default {
         saveForm() {
             var app = this;
             var newproduk = app.produk;
-            axios.patch(app.url+'/update-deskripsi-produk/' + app.produkId, newproduk)
+
+            axios.put('update-deskripsi', newproduk)
             .then(function (resp) {
                 app.alert();
                 app.$router.replace('/produk/');
@@ -67,14 +72,14 @@ export default {
                 app.errors = resp.response.data.errors;
                 alert("Could not create your produk");
             });
-        }
-        ,
+        },
         alert() {
           this.$swal({
-              title: "Berhasil Mengubah produk!",
+              title: "Sukses",
+              text: "Deskripsi Produk Berhasil Diubah!",
               icon: "success",
           });
-      }
+        }
   }
 }
 </script>
