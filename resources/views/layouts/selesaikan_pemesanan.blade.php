@@ -233,7 +233,7 @@
         document.getElementById("formSelesaikanPesanan").submit();
 
         swal({
-          html :  "Berhasil Menyelesaikan Pesanan",
+          html :  "Berhasil Menyelesaikan Pesanan."+"<p>Terima Kasih Telah Berbelanja Di Warmart , Silahkan Tunggu Konfirmasi Dari Warung<p>",
           showConfirmButton :  false,
           type: "success",
           timer: 10000,
