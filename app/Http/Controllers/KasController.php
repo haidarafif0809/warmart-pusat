@@ -3,10 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Kas;
-use App\KasKeluar;
-use App\KasMasuk;
-use App\KasMutasi;
-use App\Pembelian;
+use App\TransaksiKas;
 use Auth;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Html\Builder;
@@ -281,12 +278,9 @@ class KasController extends Controller
     }
     public function cekKasTerpakai($id, $id_warung)
     {
-        $data_kas_masuk     = KasMasuk::where('kas', $id)->where('id_warung', $id_warung)->count();
-        $data_kas_keluar    = KasKeluar::where('kas', $id)->where('warung_id', $id_warung)->count();
-        $data_kas_mutasi    = KasMutasi::where('dari_kas', $id)->orWhere('ke_kas', $id)->where('id_warung', $id_warung)->count();
-        $data_kas_pembelian = Pembelian::where('cara_bayar', $id)->where('warung_id', $id_warung)->count();
+        $data_transaksi_kas = TransaksiKas::where('kas', $id)->where('warung_id', $id_warung)->count();
 
-        if ($data_kas_masuk > 0 or $data_kas_keluar > 0 or $data_kas_mutasi > 0 or $data_kas_pembelian > 0) {
+        if ($data_transaksi_kas > 0) {
             $status_transaksi = 1;
         } else {
             $status_transaksi = 0;

@@ -30,7 +30,7 @@ class PesananWarungController extends Controller
         } else {
 
             if ($request->ajax()) {
-                $pesanan_warung = PesananPelanggan::with('pelanggan')->where('id_warung', Auth::user()->id_warung)->orderBy('id', 'desc');
+                $pesanan_warung = PesananPelanggan::where('id_warung', Auth::user()->id_warung)->orderBy('id', 'desc');
                 return Datatables::of($pesanan_warung)
                     ->addColumn('konfirmasi_pesanan', function ($konfirmasi_pesanan) {
                         $status = "";
@@ -53,7 +53,7 @@ class PesananWarungController extends Controller
                             'detail_pengirim' => $data,
                         ]);
                     })->addColumn('pemesan', function ($pemesan) {
-                    $data_pemesan = "" . $pemesan->pelanggan->name . "(" . $pemesan->pelanggan->no_telp . ")";
+                    $data_pemesan = "" . $pemesan->nama_pemesan . "(" . $pemesan->no_telp_pemesan . ")";
                     return $data_pemesan;
                 })->make(true);
             }
@@ -78,10 +78,12 @@ class PesananWarungController extends Controller
         } else {
 
             $pesanan                  = PesananPelanggan::with('pelanggan')->find($id);
-            $detail_pesanan_pelanggan = DetailPesananPelanggan::with(['produk', 'pelanggan', 'pesanan_pelanggan'])->where('id_pesanan_pelanggan', $id)->get();
+            $detail_pesanan_pelanggan = DetailPesananPelanggan::with(['produk', 'pelanggan', 'pesanan_pelanggan'])->where('id_pesanan_pelanggan', $id);
+            $detail_pesanan           = $detail_pesanan_pelanggan->paginate(10);
+            $pagination               = $detail_pesanan->links();
 
             $subtotal = 0;
-            foreach ($detail_pesanan_pelanggan as $detail_pesanan_pelanggans) {
+            foreach ($detail_pesanan_pelanggan->get() as $detail_pesanan_pelanggans) {
 
                 $harga_produk = $detail_pesanan_pelanggans->produk->harga_jual * $detail_pesanan_pelanggans->jumlah_produk;
                 $subtotal     = $subtotal += $harga_produk;
@@ -102,7 +104,7 @@ class PesananWarungController extends Controller
                 $status_pesanan .= '<td><b  style="color:red"> Batal</b></td>';
             }
 
-            return view('pesanan_warung.detail_pesanan', ['pesanan' => $pesanan, 'detail_pesanan' => $detail_pesanan_pelanggan, 'status_pesanan' => $status_pesanan, 'subtotal' => $subtotal]);
+            return view('pesanan_warung.detail_pesanan', ['pesanan' => $pesanan, 'detail_pesanan' => $detail_pesanan, 'status_pesanan' => $status_pesanan, 'subtotal' => $subtotal, 'pagination' => $pagination]);
         }
     }
 
