@@ -1,14 +1,14 @@
 <!doctype html>
 <html lang="en">
 <head>
-	<meta charset="utf-8" />
-	<link rel="apple-touch-icon" sizes="76x76" href="{{ asset('img/favicon.png') }}" />
-	<link rel="icon" type="image/png" href="{{ asset('img/favicon.png') }}" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
-	<meta name="viewport" content="width=device-width" />
+  <meta charset="utf-8" />
+  <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('img/favicon.png') }}" />
+  <link rel="icon" type="image/png" href="{{ asset('img/favicon.png') }}" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+  <meta name="viewport" content="width=device-width" />
 
-	<title>War-Mart.id</title>
+  <title>War-Mart.id</title>
 
   <!-- CSRF Token -->
   <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -41,8 +41,8 @@
 </style>
 
 <body>
-	<div class="wrapper" id="vue-app">
-		<div class="sidebar" data-active-color="rose" data-background-color="black" data-image="{{ asset('img/sidebar-1.jpg') }}">
+  <div class="wrapper" id="vue-app">
+    <div class="sidebar" data-active-color="rose" data-background-color="black" data-image="{{ asset('img/sidebar-1.jpg') }}">
             <!--
         Tip 1: You can change the color of active element of the sidebar using: data-active-color="purple | blue | green | orange | red | rose"
         Tip 2: you can also add an image using data-image tag
@@ -58,16 +58,16 @@
     </div>
     <div class="sidebar-wrapper">
 
-    	<ul class="nav">
-    		<li>
-    			<a data-toggle="collapse" href="#logout">
-    				<i class="material-icons">person</i>
-    				<p>{{ Auth::user()->name }}
-    					<b class="caret"></b>
-    				</p>
-    			</a> 
-    			<div class="collapse" id="logout">
-    				<ul class="nav">
+      <ul class="nav">
+        <li>
+          <a data-toggle="collapse" href="#logout">
+            <i class="material-icons">person</i>
+            <p>{{ Auth::user()->name }}
+              <b class="caret"></b>
+            </p>
+          </a>
+          <div class="collapse" id="logout">
+            <ul class="nav">
               <li>
                 @if(Auth::user()->tipe_user == 4 )
                 <a href="{{ url('/ubah-profil-warung') }}">Ubah Profil User</a>
@@ -83,11 +83,11 @@
                 <router-link :to="{name: 'indexProfilWarung'}">
                   <span class="sidebar-normal">Ubah Profil Warung</span>
                 </router-link>
-              </li> 
+              </li>
             -->
 
             <li>
-              @if(Auth::user()->tipe_user == 1 )                
+              @if(Auth::user()->tipe_user == 1 )
               <router-link :to="{name: 'ubahPasswordAdmin'}">Ubah Password </router-link>
               @else
               <a href="{{ url('/ubah-password') }}">Ubah Password</a>
@@ -103,7 +103,7 @@
             <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
               {{ csrf_field() }}
             </form>
-          </li>     
+          </li>
         </ul>
       </div>
     </li>
@@ -111,8 +111,8 @@
       @if(Auth::user()->tipe_user == 1)
       <router-link :to="{name: 'indexDashboard'}">   <i class="material-icons">dashboard</i><p>Dashboard</p></router-link>
       @elseif(Auth::user()->tipe_user == 4)
-      <a href="#" class="vueJs"><i class="material-icons">dashboard</i><p>Dashboard</p></a> 
-      @else 
+      <a href="#" class="vueJs"><i class="material-icons">dashboard</i><p>Dashboard</p></a>
+      @else
       <a href="{{ url('/dashboard')}}">
         <i class="material-icons">dashboard</i>
         <p>Dashboard</p>
@@ -128,7 +128,7 @@
         <p>Pembelian</p>
       </a>
     </li>
-    <!--PEMBELIAN--> 
+    <!--PEMBELIAN-->
 
     <li>
       <a href="{{ route('pesanan-warung.index') }}">
@@ -136,7 +136,7 @@
         <p>Pesanan</p>
       </a>
     </li>
-    <!--PEMBELIAN--> 
+    <!--PEMBELIAN-->
 
     <!-- MASTER DATA WARUNG -->
     <li>
@@ -149,23 +149,23 @@
     <div class="collapse" id="persediaan">
      <ul class="nav">
       <li>
-       <a href="{{ route('item-masuk.index') }}"> 
+       <a href="{{ route('item-masuk.index') }}">
         <span class="sidebar-mini">IM</span>
         <span class="sidebar-normal">Item Masuk</span>
       </a>
-    </li>  
+    </li>
     <li>
      <a href="{{ route('item-keluar.index') }}">
       <span class="sidebar-mini">IK</span>
       <span class="sidebar-normal">Item Keluar</span>
     </a>
-  </li> 
+  </li>
   <li>
    <a href="{{ route('laporan-persediaan.index') }}">
     <span class="sidebar-mini">LP</span>
     <span class="sidebar-normal">Laporan Persediaan</span>
   </a>
-</li> 
+</li>
 </ul>
 </div>
 </li>
@@ -184,19 +184,19 @@
     <span class="sidebar-mini">KM</span>
     <span class="sidebar-normal">Kas Masuk</span>
   </a>
-</li> 
+</li>
 <li>
  <a href="{{ route('kas_keluar.index') }}">
   <span class="sidebar-mini">KK</span>
   <span class="sidebar-normal">Kas Keluar</span>
 </a>
-</li> 
+</li>
 <li>
- <a href="{{ route('kas_mutasi.index') }}"> 
+ <a href="{{ route('kas_mutasi.index') }}">
   <span class="sidebar-mini">KMT</span>
   <span class="sidebar-normal">Kas Mutasi</span>
 </a>
-</li>  
+</li>
 </ul>
 </div>
 </li>
@@ -223,13 +223,13 @@
       <span class="sidebar-mini">K</span>
       <span class="sidebar-normal">Kas</span>
     </a>
-  </li> 
+  </li>
   <li class="vueJs">
    <a href="#">
     <span class="sidebar-mini">P</span>
     <span class="sidebar-normal">Produk</span>
   </a>
-</li> 
+</li>
 <li class="vueJs">
  <a href="#">
   <span class="sidebar-mini">S</span>
@@ -244,7 +244,7 @@
 
 
 <!--MASTER DATA WARMART PUSAT-->
-@if(Auth::user()->tipe_user == 1) 
+@if(Auth::user()->tipe_user == 1)
 
 @if(Laratrust::can('lihat_master_data'))
 <li>
@@ -277,7 +277,7 @@
     <span class="sidebar-mini">K</span>
     <span class="sidebar-normal">Komunitas</span>
   </router-link>
-</li> 
+</li>
 @endif
 
 <!-- OTORITAS ADMIN
@@ -287,7 +287,7 @@
   <span class="sidebar-mini">O</span>
   <span class="sidebar-normal">Otoritas</span>
 </a>
-</li> 
+</li>
 @endif
 -->
 @if(Laratrust::can('lihat_user'))
@@ -301,13 +301,13 @@
   <span class="sidebar-mini">UW</span>
   <span class="sidebar-normal">User Warung</span></router-link>
 </li>
-@endif        
+@endif
 @if(Laratrust::can('lihat_warung'))
 <li>
  <router-link :to="{name: 'indexWarung'}">    <span class="sidebar-mini">W</span>
   <span class="sidebar-normal">Warung</span></router-link>
 </li>
-@endif 
+@endif
 <li>
   <router-link :to="{name: 'indexSatuan'}">    <span class="sidebar-mini">S</span>
     <span class="sidebar-normal">Satuan</span></router-link>
@@ -341,57 +341,57 @@
 </div>
 </div>
 <div class="main-panel">
-	<nav class="navbar navbar-transparent navbar-absolute">
-		<div class="container-fluid">
-			<div class="navbar-minimize">
-				<button id="minimizeSidebar" class="btn btn-round btn-white btn-fill btn-just-icon">
-					<i class="material-icons visible-on-sidebar-regular">more_vert</i>
-					<i class="material-icons visible-on-sidebar-mini">view_list</i>
-				</button>
-			</div>
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle" data-toggle="collapse">
-					<span class="sr-only">Toggle navigation</span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
-				<a class="navbar-brand" href="#"> Dashboard </a>
-			</div>
-			<div class="collapse navbar-collapse">
-				<ul class="nav navbar-nav navbar-right"> 
+  <nav class="navbar navbar-transparent navbar-absolute">
+    <div class="container-fluid">
+      <div class="navbar-minimize">
+        <button id="minimizeSidebar" class="btn btn-round btn-white btn-fill btn-just-icon">
+          <i class="material-icons visible-on-sidebar-regular">more_vert</i>
+          <i class="material-icons visible-on-sidebar-mini">view_list</i>
+        </button>
+      </div>
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#"> Dashboard </a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav navbar-right">
 
 
-				</ul>
+        </ul>
 
-			</div>
-		</div>
-	</nav>
-	<div class="content">
-		<div class="container-fluid">
+      </div>
+    </div>
+  </nav>
+  <div class="content">
+    <div class="container-fluid">
 
-			<div class="row">
-				@include('layouts._flash')
-				@yield('content')
-			</div>
+      <div class="row">
+        @include('layouts._flash')
+        @yield('content')
+      </div>
 
-		</div>
-		<!-- end container fluid -->
-	</div>
-	<footer class="footer">
-		<div class="container-fluid">
-			<nav class="pull-left">
+    </div>
+    <!-- end container fluid -->
+  </div>
+  <footer class="footer">
+    <div class="container-fluid">
+      <nav class="pull-left">
 
-			</nav>
-			<p class="copyright pull-right">
-				&copy;
-				<script type="text/javascript">
-					document.write(new Date().getFullYear())
-				</script>
-				<a href="https://andaglos.id">PT Andaglos Global Teknologi</a>
-			</p>
-		</div>
-	</footer>
+      </nav>
+      <p class="copyright pull-right">
+        &copy;
+        <script type="text/javascript">
+          document.write(new Date().getFullYear())
+        </script>
+        <a href="https://andaglos.id">PT Andaglos Global Teknologi</a>
+      </p>
+    </div>
+  </footer>
 </div>
 </div>
 <!--Start of Tawk.to Script-->
@@ -409,7 +409,7 @@
 <!--End of Tawk.to Script-->
 </body>
 <!--   Core JS Files   -->
-<script src="{{ asset('js/jquery-3.2.1.min.js') }}" type="text/javascript"></script>
+<script type="text/javascript" src="{{ asset('js/app.js?v=1.20')}}"></script>
 <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('js/material.min.js') }}" type="text/javascript"></script>
 
@@ -453,7 +453,7 @@
 <!-- Material Dashboard DEMO methods, don't include it in your project! -->
 <script src="{{ asset('js/demo.js') }}"></script>
 
-<script src="{{ asset('js/selectize.min.js') }}"></script> 
+<script src="{{ asset('js/selectize.min.js') }}"></script>
 
 <script src="{{ asset('js/custom.js') }}"></script>
 <script src="{{ asset('js/ckeditor/ckeditor.js') }}"></script>

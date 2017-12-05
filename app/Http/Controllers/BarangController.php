@@ -249,9 +249,10 @@ class BarangController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        $update_barang = Barang::find($id);
+
+        $update_barang = Barang::find($request->id);
         if ($update_barang->id_warung != Auth::user()->id_warung) {
             Auth::logout();
             return response()->view('error.403');
@@ -259,24 +260,24 @@ class BarangController extends Controller
 
             //validate
             $this->validate($request, [
-                'kode_barcode'       => 'nullable|max:191|unique:barangs,kode_barcode,' . $id . ',id,id_warung,' . Auth::user()->id_warung,
-                'kode_barang'        => 'required|max:191|unique:barangs,kode_barang,' . $id . ',id,id_warung,' . Auth::user()->id_warung,
+                'kode_barcode'       => 'nullable|max:191|unique:barangs,kode_barcode,' . $request->id . ',id,id_warung,' . Auth::user()->id_warung,
+                'kode_barang'        => 'required|max:191|unique:barangs,kode_barang,' . $request->id . ',id,id_warung,' . Auth::user()->id_warung,
                 'nama_barang'        => 'required|max:191',
                 'harga_beli'         => 'required|numeric|digits_between:1,11',
                 'harga_jual'         => 'required|numeric|digits_between:1,11',
                 'kategori_barang_id' => 'required|exists:kategori_barangs,id',
                 'satuan_id'          => 'required|exists:satuans,id',
-                'foto'               => 'image|max:2048',
+                'foto'               => 'image|max:3072',
 
             ]);
 
-            if ($request->status_aktif == 'true') {
+            if ($request->status_aktif == 1 || $request->status_aktif == 'true') {
                 $status_aktif = 1;
             } else {
                 $status_aktif = 0;
             }
 
-            if ($request->hitung_stok == 'true') {
+            if ($request->hitung_stok == 1 || $request->hitung_stok == 'true') {
                 $hitung_stok = 1;
             } else {
                 $hitung_stok = 0;
@@ -329,7 +330,7 @@ class BarangController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int  $request->id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
