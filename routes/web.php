@@ -235,6 +235,15 @@ Route::get('kurang-produk-pesanan-warung/{id}', [
     'uses'       => 'PesananWarungController@kurangProdukPesananWarung',
 ]);
 
+//PUNYA EDIT JUMLAH  PESANAN WARUNG
+Route::post('/edit-jumlah-pesanan-warung}', [
+    'middleware' => ['auth'],
+    'as'         => 'pesanan-warung.edit_jumlah_pesanan',
+    'uses'       => 'PesananWarungController@editJumlahPesanan',
+]);
+
+//PUNYA
+
 Route::middleware('optimizeImages')->group(function () {
 
     Auth::routes();
