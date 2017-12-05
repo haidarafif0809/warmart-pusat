@@ -78,95 +78,92 @@
                 @endif
 
               </li>
-              <!--SEMENTARA TIDAK DITAMPILKAN DULU, KARENA BELUM SELESAI MIGRASI KE VUE JS
               <li>
                 <router-link :to="{name: 'indexProfilWarung'}">
                   <span class="sidebar-normal">Ubah Profil Warung</span>
                 </router-link>
               </li>
-            -->
 
-            <li>
-              @if(Auth::user()->tipe_user == 1 )
-              <router-link :to="{name: 'ubahPasswordAdmin'}">Ubah Password </router-link>
-              @else
-              <a href="{{ url('/ubah-password') }}">Ubah Password</a>
-              @endif
+
+              <li>
+                @if(Auth::user()->tipe_user == 1 )
+                <router-link :to="{name: 'ubahPasswordAdmin'}">Ubah Password </router-link>
+                @else
+                <a href="{{ url('/ubah-password') }}">Ubah Password</a>
+                @endif
+              </li>
+
+              <li>
+                <a href="{{ url('/logout') }}"
+                onclick="event.preventDefault();
+                document.getElementById('logout-form').submit();">
+                Logout
+              </a>
+              <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
+                {{ csrf_field() }}
+              </form>
             </li>
+          </ul>
+        </div>
+      </li>
+      <li class="active">
+        @if(Auth::user()->tipe_user == 1 OR Auth::user()->tipe_user == 4)
+        <router-link :to="{name: 'indexDashboard'}">   <i class="material-icons">dashboard</i><p>Dashboard</p></router-link>
+        @else
+        <a href="{{ url('/dashboard')}}">
+          <i class="material-icons">dashboard</i>
+          <p>Dashboard</p>
+        </a>
+        @endif
+      </li>
 
-            <li>
-              <a href="{{ url('/logout') }}"
-              onclick="event.preventDefault();
-              document.getElementById('logout-form').submit();">
-              Logout
-            </a>
-            <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
-              {{ csrf_field() }}
-            </form>
-          </li>
-        </ul>
-      </div>
-    </li>
-    <li class="active">
-      @if(Auth::user()->tipe_user == 1)
-      <router-link :to="{name: 'indexDashboard'}">   <i class="material-icons">dashboard</i><p>Dashboard</p></router-link>
-      @elseif(Auth::user()->tipe_user == 4)
-      <a href="#" class="vueJs"><i class="material-icons">dashboard</i><p>Dashboard</p></a>
-      @else
-      <a href="{{ url('/dashboard')}}">
-        <i class="material-icons">dashboard</i>
-        <p>Dashboard</p>
-      </a>
-      @endif
-    </li>
+      <!--PEMBELIAN-->
+      @if(Auth::user()->tipe_user == 4 AND Auth::user()->konfirmasi_admin == 1 AND Auth::user()->foto_ktp != "")
+      <li class="vueJs">
+        <a href="#">
+          <i class="material-icons">add_shopping_cart</i>
+          <p>Pembelian</p>
+        </a>
+      </li>
+      <!--PEMBELIAN-->
 
-    <!--PEMBELIAN-->
-    @if(Auth::user()->tipe_user == 4 AND Auth::user()->konfirmasi_admin == 1 AND Auth::user()->foto_ktp != "")
-    <li>
-      <a href="{{ route('pembelian.index') }}">
-        <i class="material-icons">add_shopping_cart</i>
-        <p>Pembelian</p>
-      </a>
-    </li>
-    <!--PEMBELIAN-->
-
-    <li>
-      <a href="{{ route('pesanan-warung.index') }}">
-        <i class="material-icons">archive</i>
-        <p>Pesanan</p>
-      </a>
-    </li>
-    <!--PEMBELIAN-->
-
-    <!-- MASTER DATA WARUNG -->
-    <li>
-      <a data-toggle="collapse" href="#persediaan">
-       <i class="material-icons">assessment</i>
-       <p> Persediaan
-        <b class="caret"></b>
-      </p>
-    </a>
-    <div class="collapse" id="persediaan">
-     <ul class="nav">
       <li>
-       <a href="{{ route('item-masuk.index') }}">
-        <span class="sidebar-mini">IM</span>
-        <span class="sidebar-normal">Item Masuk</span>
+        <a href="{{ route('pesanan-warung.index') }}">
+          <i class="material-icons">archive</i>
+          <p>Pesanan</p>
+        </a>
+      </li>
+      <!--PEMBELIAN-->
+
+      <!-- MASTER DATA WARUNG -->
+      <li>
+        <a data-toggle="collapse" href="#persediaan">
+         <i class="material-icons">assessment</i>
+         <p> Persediaan
+          <b class="caret"></b>
+        </p>
+      </a>
+      <div class="collapse" id="persediaan">
+       <ul class="nav">
+         <li class="vueJs">
+           <a href="#">
+            <span class="sidebar-mini">IM</span>
+            <span class="sidebar-normal">Item Masuk</span>
+          </a>
+        </li>
+        <li class="vueJs">
+         <a href="#">
+          <span class="sidebar-mini">IK</span>
+          <span class="sidebar-normal">Item Keluar</span>
+        </a>
+      </li>
+      <li class="vueJs">
+       <a href="#">
+        <span class="sidebar-mini">LP</span>
+        <span class="sidebar-normal">Laporan Persediaan</span>
       </a>
     </li>
-    <li>
-     <a href="{{ route('item-keluar.index') }}">
-      <span class="sidebar-mini">IK</span>
-      <span class="sidebar-normal">Item Keluar</span>
-    </a>
-  </li>
-  <li>
-   <a href="{{ route('laporan-persediaan.index') }}">
-    <span class="sidebar-mini">LP</span>
-    <span class="sidebar-normal">Laporan Persediaan</span>
-  </a>
-</li>
-</ul>
+  </ul>
 </div>
 </li>
 
@@ -179,20 +176,20 @@
 </a>
 <div class="collapse" id="transaksiKas">
  <ul class="nav">
-  <li>
-   <a href="{{ route('kas_masuk.index') }}">
+  <li class="vueJs">
+   <a href="#">
     <span class="sidebar-mini">KM</span>
     <span class="sidebar-normal">Kas Masuk</span>
   </a>
 </li>
-<li>
- <a href="{{ route('kas_keluar.index') }}">
+<li class="vueJs">
+ <a href="#">
   <span class="sidebar-mini">KK</span>
   <span class="sidebar-normal">Kas Keluar</span>
 </a>
 </li>
-<li>
- <a href="{{ route('kas_mutasi.index') }}">
+<li class="vueJs">
+ <a href="#">
   <span class="sidebar-mini">KMT</span>
   <span class="sidebar-normal">Kas Mutasi</span>
 </a>
@@ -210,31 +207,29 @@
 </a>
 <div class="collapse" id="setting">
  <ul class="nav">
-   <li class="vueJs">
-    <!-- <router-link :to="{name: 'indexKategoriTransaksi'}"> -->
-    <a href="#">
+   <li>
+    <router-link :to="{name: 'indexKategoriTransaksi'}">
       <span class="sidebar-mini">KT</span>
       <span class="sidebar-normal">Kategori Transaksi</span>
-    </a>
-    <!-- </router-link> -->
+    </router-link>
   </li>
-  <li class="vueJs">
-    <a href="#">
+  <li>
+    <router-link :to="{name: 'indexKas'}">
       <span class="sidebar-mini">K</span>
       <span class="sidebar-normal">Kas</span>
-    </a>
+    </router-link>
   </li>
-  <li class="vueJs">
-   <a href="#">
+  <li>
+   <router-link :to="{name: 'indexProduk'}">
     <span class="sidebar-mini">P</span>
     <span class="sidebar-normal">Produk</span>
-  </a>
+  </router-link>
 </li>
-<li class="vueJs">
- <a href="#">
+<li>
+ <router-link :to="{name: 'indexSuplier'}">
   <span class="sidebar-mini">S</span>
   <span class="sidebar-normal">Supplier</span>
-</a>
+</router-link>
 </li>
 </ul>
 </div>
