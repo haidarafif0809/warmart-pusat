@@ -11,6 +11,7 @@ use App\TransaksiKas;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Jenssegers\Agent\Agent;
 use Yajra\Datatables\Datatables;
 use Yajra\Datatables\Html\Builder;
 
@@ -63,8 +64,9 @@ class PesananWarungController extends Controller
                 ->addColumn(['data' => 'jumlah_produk', 'name' => 'jumlah_produk', 'title' => 'Jumlah', 'orderable' => false, 'searchable' => false])
                 ->addColumn(['data' => 'subtotal', 'name' => 'subtotal', 'title' => 'Total', 'orderable' => false, 'searchable' => false])
                 ->addColumn(['data' => 'konfirmasi_pesanan', 'name' => 'konfirmasi_pesanan', 'title' => 'Status', 'orderable' => false, 'searchable' => false])
-                ->addColumn(['data' => 'data_pengirim', 'name' => 'data_pengirim', 'title' => 'Pengiriman', 'orderable' => false, 'searchable' => false])
-                ->addColumn(['data' => 'created_at', 'name' => 'created_at', 'title' => 'Waktu', 'orderable' => false, 'searchable' => false]);
+                ->addColumn(['data' => 'created_at', 'name' => 'created_at', 'title' => 'Waktu', 'orderable' => false, 'searchable' => false])
+
+                ->addColumn(['data' => 'data_pengirim', 'name' => 'data_pengirim', 'title' => 'Detail', 'orderable' => false, 'searchable' => false]);
             return view('pesanan_warung.index')->with(compact('html'));
         }
     }
@@ -104,7 +106,9 @@ class PesananWarungController extends Controller
                 $status_pesanan .= '<td><b  style="color:red"> Batal</b></td>';
             }
 
-            return view('pesanan_warung.detail_pesanan', ['pesanan' => $pesanan, 'detail_pesanan' => $detail_pesanan, 'status_pesanan' => $status_pesanan, 'subtotal' => $subtotal, 'pagination' => $pagination]);
+            $agent = new Agent();
+
+            return view('pesanan_warung.detail_pesanan', ['pesanan' => $pesanan, 'detail_pesanan' => $detail_pesanan, 'status_pesanan' => $status_pesanan, 'subtotal' => $subtotal, 'pagination' => $pagination, 'agent' => $agent]);
         }
     }
 
@@ -203,6 +207,15 @@ class PesananWarungController extends Controller
         $detail_pesanan->save();
 
         return redirect()->back();
+    }
+
+    public function editJumlahPesanan(Request $request)
+    {
+
+        DetailPesananPelanggan::find($request->id)->update(['jumlah_produk' => $request->jumlah_produk]);
+
+        return redirect()->back();
+
     }
 
 }
