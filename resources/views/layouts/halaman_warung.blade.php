@@ -1,10 +1,12 @@
 @extends('layouts.app_pelanggan')
-@section('content') 
+@section('content')
 
 <style type="text/css">
 .list-produk {
+
     padding-left: 4px;
     padding-right: 4px;
+
 }
 .card .card-image{
 
@@ -28,7 +30,7 @@
     line-height:1.2em;
     text-decoration: none;
     font-size:15px;
-}      
+}
 
 @font-face {
   font-family: "San Francisco";
@@ -40,12 +42,16 @@
 .flexFont {
     @if(Agent::isMobile())
     height:3em;
-    @else  
-    height:2em;
+    @else
+    height:3em;
     @endif
     padding:1%;
-    margin: 10px;
+    margin: 5px;
 
+}
+.btnWarung {
+    padding:1%;
+    margin: 0px;
 }
 
 .smaller {
@@ -60,7 +66,7 @@
 <div class="page-header header-small" data-parallax="true"" style="{!! $foto_latar_belakang !!}">
     <a href="{{ url('/home') }}"><img  class="img img-raised" src="{!! $logo_warmart !!}" style="width: 10%"/></a>
 
-    <div class="container"> 
+    <div class="container">
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
                 <div class="brand">
@@ -100,13 +106,13 @@
 
         <div class="row">
           <div class="col-md-12">
-            <!--Menampilkan Warung Secara Acak--> 
-            <h4 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px"> Produk</h4> 
-        </div>   
+            <!--Menampilkan Warung Secara Acak-->
+            <h4 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px"> Produk</h4>
+        </div>
     </div>
 
     <div class="row">
-        <div class="col-md-12"> 
+        <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-heading" role="tab" id="headingTwo">
                     <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
@@ -119,12 +125,12 @@
                 <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
                     <div class="panel-body">
 
-                        <ul class="nav" style="background-color: #01573e">                                        
+                        <ul class="nav" style="background-color: #01573e">
                             <li><a style="color:white" href="{{route('halaman-warung.halaman_warung',$id)}}"><i class="material-icons">format_align_justify</i> SEMUA KATEGORI</a></li>
                         </ul>
 
                         <ul class="nav" style="background-color: #01573e">
-                            {!! $kategori_produk !!}                        
+                            {!! $kategori_produk !!}
                         </ul>
                     </div>
                 </div>
@@ -188,23 +194,23 @@
 
         <div class="row">
 
-            <!--Menampilkan NAMA Warung --> 
-            <div class="col-md-12"> 
-                <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px"> Produk </h5>             
+            <!--Menampilkan NAMA Warung -->
+            <div class="col-md-12">
+                <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px"> Produk </h5>
             </div>
 
-            <div class="col-md-3"> 
-                <ul class="nav nav-tabs" data-tabs="tabs" style="background-color: #01573e">                                        
+            <div class="col-md-3">
+                <ul class="nav nav-tabs" data-tabs="tabs" style="background-color: #01573e">
                     <li><a href="{{route('halaman-warung.halaman_warung',$id)}}"><i class="material-icons">format_align_justify</i> Semua Kategori</a></li>
                 </ul>
             </div>
 
 
-            <div class="col-md-9">                        
+            <div class="col-md-9">
                 <ul class="nav nav-tabs" data-tabs="tabs" style="background-color: #01573e">
-                    {!! $kategori_produk !!}                        
+                    {!! $kategori_produk !!}
                 </ul>
-            </div>      
+            </div>
 
             <div class="col-md-12"><br>
                 <div class="row">
@@ -225,11 +231,34 @@
 @section('scripts')
 <script type="text/javascript">
     flexFont = function () {
+        @if(Agent::isMobile())
         var divs = document.getElementsByClassName("flexFont");
         for(var i = 0; i < divs.length; i++) {
-            var relFontsize = divs[i].offsetWidth*0.05;
+            var relFontsize = divs[i].offsetWidth*0.1;
             divs[i].style.fontSize = relFontsize+'px';
         }
+        @else
+        var divs = document.getElementsByClassName("flexFont");
+        for(var i = 0; i < divs.length; i++) {
+            var relFontsize = divs[i].offsetWidth*0.06;
+            divs[i].style.fontSize = relFontsize+'px';
+        }
+
+        @endif
+        @if(Agent::isMobile())
+        var divs = document.getElementsByClassName("flexFontWarung");
+        for(var i = 0; i < divs.length; i++) {
+            var relFontsize = divs[i].offsetWidth*0.14;
+            divs[i].style.fontSize = relFontsize+'px';
+        }
+        @else
+        var divs = document.getElementsByClassName("flexFontWarung");
+        for(var i = 0; i < divs.length; i++) {
+            var relFontsize = divs[i].offsetWidth*0.16;
+            divs[i].style.fontSize = relFontsize+'px';
+        }
+
+        @endif
     };
 
     window.onload = function(event) {
