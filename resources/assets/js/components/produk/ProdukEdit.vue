@@ -79,7 +79,7 @@
                             <label for="hitung_stok" class="col-md-2 control-label">Hitung Stok</label>
                                <div class="togglebutton col-md-4">
                                 <label>
-                                    <input type="checkbox" v-model="produk.hitung_stok" name="hitung_stok" id="hitung_stok" value="1">
+                                    <input type="checkbox" v-model="produk.hitung_stok" name="hitung_stok" id="hitung_stok">
                                 </label>
                             </div>
                         </div>
@@ -88,7 +88,7 @@
                             <label for="status_aktif" class="col-md-2 control-label">Bisa Dijual</label>
                                <div class="togglebutton col-md-4">
                                 <label>
-                                    <input type="checkbox" v-model="produk.status_aktif" name="status_aktif" id="status_aktif" value="1">
+                                    <input type="checkbox" v-model="produk.status_aktif" name="status_aktif" id="status_aktif">
                                 </label>
                             </div>
                         </div>
@@ -116,6 +116,8 @@
                             </div>
                         </div> 
                         
+                        <input class="form-control" autocomplete="off" v-model="produk.id" type="hidden" name="id" id="id"  autofocus="">
+
                         <div class="form-group">
                             <div class="col-md-4 col-md-offset-2">
                                 <button class="btn btn-primary" id="btnSimpanProduk" type="submit"><i class="material-icons">send</i> Submit</button>
@@ -158,6 +160,7 @@ export default {
             url_picture : window.location.origin+(window.location.pathname).replace("dashboard", "foto_produk"),
             url_origin : window.location.origin+(window.location.pathname).replace("dashboard", ""),
             produk: {
+                id: '',
                 foto : '',
                 kode_barcode : '',
                 kode_barang : '',
@@ -166,8 +169,8 @@ export default {
                 satuan_id : '',
                 harga_beli : '',
                 harga_jual : '',
-                hitung_stok : 'true',
-                status_aktif : 'true'
+                hitung_stok : 1,
+                status_aktif : 1
             },
             message : '',
             placeholder_kategori: {
@@ -181,14 +184,10 @@ export default {
     methods: {        
         saveForm() {
             var app = this;
-            if (document.getElementById('foto').files[0] != undefined) {
-                var newProduk = app.inputData();
-            }else{
-                var newProduk = app.produk;
-            }
+            var newProduk = app.inputData();
             app.loading();
 
-            axios.patch(app.url+'/' + app.produkId, newProduk)
+            axios.post(app.url+'/' + app.produkId, newProduk)
             .then(function (resp) {
                 app.message = 'Berhasil Mengubah Produk '+app.produk.nama_barang;
                 app.alert(app.message);
@@ -245,7 +244,7 @@ export default {
                 newProduk.append('foto', document.getElementById('foto').files[0]);
             }           
             newProduk.append('kode_barcode', app.produk.kode_barcode);
-            newProduk.append('kode_barcode', app.produk.kode_barcode);
+            newProduk.append('kode_barang', app.produk.kode_barang);
             newProduk.append('nama_barang', app.produk.nama_barang);
             newProduk.append('kategori_barang_id', app.produk.kategori_barang_id);
             newProduk.append('satuan_id', app.produk.satuan_id);

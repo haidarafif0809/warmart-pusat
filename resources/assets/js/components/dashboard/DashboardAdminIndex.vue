@@ -106,7 +106,7 @@
                     <i class="material-icons">local_atm</i>
                 </div>
                 <div class="card-content">
-                    <p class="category">Posisi Kas</p>
+                    <h6 class="category">Posisi Kas</h6>
                     <h3 class="card-title">{{ dashboardData.transaksi_kas }}</h3>
                 </div> 
             </div>
@@ -117,7 +117,7 @@
                     <i class="material-icons">trending_down</i>
                 </div>
                 <div class="card-content">
-                    <p class="category">Kas Masuk</p>
+                    <h6 class="category">Kas Masuk</h6>
                     <h3 class="card-title">{{ dashboardData.kas_masuk }}</h3>
                 </div> 
             </div>
@@ -128,7 +128,7 @@
                     <i class="material-icons">trending_up</i>
                 </div>
                 <div class="card-content">
-                    <p class="category">Kas Keluar</p>
+                    <h6 class="category">Kas Keluar</h6>
                     <h3 class="card-title">{{ dashboardData.kas_keluar }}</h3>
                 </div> 
             </div>
@@ -139,7 +139,7 @@
                     <i class="material-icons">payment</i>
                 </div>
                 <div class="card-content">
-                    <p class="category">Nilai Persedian</p>
+                    <h6 class="category">Nilai Persedian</h6>
                     <h3 class="card-title">{{ dashboardData.total_persedian }}</h3>
                 </div> 
             </div>
@@ -153,7 +153,7 @@
                     <i class="material-icons">local_offer</i>
                 </div>
                 <div class="card-content">
-                    <p class="category">Jumlah Produk</p>
+                    <h6 class="category">Jumlah Produk</h6>
                     <h3 class="card-title">{{ dashboardData.produk_warung }}</h3>
                 </div> 
             </div>
@@ -164,7 +164,7 @@
                     <i class="material-icons">system_update_alt</i>
                 </div>
                 <div class="card-content">
-                    <p class="category">Item Masuk</p>
+                    <h6 class="category">Item Masuk</h6>
                     <h3 class="card-title">{{ dashboardData.stok_masuk }}</h3>
                 </div> 
             </div>
@@ -175,7 +175,7 @@
                     <i class="material-icons">open_in_new</i>
                 </div>
                 <div class="card-content">
-                    <p class="category">Item Keluar</p>
+                    <h6 class="category">Item Keluar</h6>
                     <h3 class="card-title">{{ dashboardData.stok_keluar }}</h3>
                 </div> 
             </div>
