@@ -1,6 +1,26 @@
 @extends('layouts.app_pelanggan')
 @section('content')
-
+<style type="text/css">
+  .page-header.header-small {
+    height: 35vh;
+    min-height: 35vh;
+  }
+  .ecommerce-page .page-header .container {
+    padding-top: 10vh;
+  }
+  h4 {
+    @if(Agent::isMobile())
+    font-size: 1.2em;
+    line-height: 1.4em;
+    margin: 20px 0 10px;
+    @endif
+  }
+  .panel .panel-heading {
+    background-color: transparent;
+    border-bottom: 2px solid #ddd;
+    padding: 5px 0px 5px 0px;
+  }
+</style>
 @if (Agent::isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
 
 <div class="page-header header-small" data-parallax="true"" style="background-image: url('./image/background2.jpg');">
@@ -9,7 +29,6 @@
       <div class="col-md-8 col-md-offset-2">
         <div class="brand">
           <h3 class="title">PASAR MUSLIM INDONESIA</h3>
-          <h6 class="title"> Segala Kemudahan Untuk Umat Muslim Berbelanja.</h6>
         </div>
       </div>
     </div>
@@ -22,7 +41,7 @@
       <div class="col-md-8 col-md-offset-2">
         <div class="brand">
           <h1 class="title">PASAR MUSLIM INDONESIA</h1>
-          <h4 class="title"> Segala Kemudahan Untuk Umat Muslim Berbelanja.</h4>
+          <h3 class="title"> Segala Kemudahan Untuk Umat Muslim Berbelanja.</h3>
         </div>
       </div>
     </div>
