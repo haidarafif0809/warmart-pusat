@@ -56,8 +56,9 @@
                                      <td v-else>Tidak Aktif</td>
                                      <td>{{ produk.produk.kategori_barang.nama_kategori_barang }}</td>
                                      <td>
-                                        <router-link :to="{name: 'detailProduk', params: {id: produk.produk.id}}" class="btn btn-xs btn-info" v-bind:id="'detail-' + produk.produk.id" > Detail
-                                        </router-link>
+
+                                        <a :href="urlLihat+produk.produk.id" class="btn btn-xs btn-info" id="lihatDeskripsi" type="button"> Deskripsi</a>
+
                                         <router-link :to="{name: 'editProduk', params: {id: produk.produk.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + produk.produk.id" > Edit
                                         </router-link>
 
@@ -93,6 +94,7 @@ export default {
             produk: [],
             produkData: {},
             url : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
+            urlLihat : window.location.origin+(window.location.pathname).replace("dashboard", "produk/lihat-deskripsi-produk/"),
             pencarian: '',
             loading: true
         }
