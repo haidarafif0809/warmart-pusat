@@ -70,7 +70,7 @@
             <ul class="nav">
               <li>
                 @if(Auth::user()->tipe_user == 4 )
-                <a href="{{ url('/ubah-profil-warung') }}">Ubah Profil User</a>
+                <router-link :to="{name: 'ubahProfilUserWarung'}">Ubah Profil User</router-link>
                 @elseif(Auth::user()->tipe_user == 2 )
                 <a href="{{ url('/ubah-profil-komunitas') }}">Ubah Profil</a>
                 @elseif(Auth::user()->tipe_user == 1 )
@@ -89,7 +89,7 @@
                 @if(Auth::user()->tipe_user == 1 )
                 <router-link :to="{name: 'ubahPasswordAdmin'}">Ubah Password </router-link>
                 @else
-                <a href="{{ url('/ubah-password') }}">Ubah Password</a>
+                <router-link :to="{name: 'ubahPasswordUserWarung'}">Ubah Password </router-link>
                 @endif
               </li>
 
