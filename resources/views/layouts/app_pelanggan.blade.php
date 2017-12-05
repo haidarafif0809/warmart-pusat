@@ -44,7 +44,7 @@
 <body class="ecommerce-page">
   @if(Agent::isMobile())
   <nav class="navbar navbar-default  navbar-fixed-top "  id="sectionsNav">
-    @else 
+    @else
     <nav class="navbar navbar-default navbar-transparent navbar-fixed-top navbar-color-on-scroll" color-on-scroll=" " id="sectionsNav">
       @endif
       <div class="container">
@@ -90,13 +90,13 @@
                 </li>
                 @endif
                 <li>
-                  <a href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> 
+                  <a href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                     <i class="material-icons">reply_all</i> Logout
                   </a>
                   <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
                     {{ csrf_field() }}
                   </form>
-                </li> 
+                </li>
               </ul>
             </li>
             @if(Auth::user()->tipe_user == 3)
@@ -114,13 +114,13 @@
               <a href="{{ url('/dashboard')}}">
                 <i class="material-icons">dashboard</i>dashboard
               </a>
-            </li> 
+            </li>
             @endif
             <li>
               <a href="https://info.war-mart.id">
                 <i class="material-icons">info</i>SUPPORT Warmart
               </a>
-            </li>   
+            </li>
             <li>
               <a href="{{ url('/tentang-warmart')}}">
                 <i class="material-icons">info</i>Tentang Warmart
@@ -175,7 +175,7 @@
                   <p>Whatsapp<br>
                   +62-811-728-549</p>
                 </div>
-                <div class="feed-line">                            
+                <div class="feed-line">
                   <a href="https://id-id.facebook.com/andaglos/" target="blank"><i class="fa fa-facebook-square"></i> Andaglos</a>
                 </div>
               </div>
@@ -272,7 +272,7 @@
 <!-- Sweet Alert 2 plugin, full documentation here: https://limonte.github.io/sweetalert2/ -->
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.0.5/sweetalert2.all.min.js"></script>
 
-<!-- Sertakan polibill untuk Prompt ES6 (opsional) untuk browser IE11 dan Android --> 
+<!-- Sertakan polibill untuk Prompt ES6 (opsional) untuk browser IE11 dan Android -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.js"> </script>
 <!-- Plugin for Fileupload, full documentation here: http://www.jasny.net/bootstrap/javascript/#fileinput -->
 <script src="{{ asset('js/jasny-bootstrap.min.js') }}"></script>
@@ -282,7 +282,7 @@
 <script src="{{ asset('js/jquery.tagsinput.js') }}"></script>
 <script src="{{ asset('js/material-dashboard.js?v=1.2.0') }}"></script>
 <script src="{{ asset('js/demo.js') }}"></script>
-<script src="{{ asset('js/selectize.min.js') }}"></script> 
+<script src="{{ asset('js/selectize.min.js') }}"></script>
 
 <script src="{{ asset('js/material-kit.js?v=1.2.0')}}" type="text/javascript"></script>
 {{-- lazy load image --}}
@@ -291,11 +291,11 @@
 <script type="text/javascript">
   var myLazyLoad = new LazyLoad();
 </script>
-<script type="text/javascript"> 
+<script type="text/javascript">
 
- $(document).on('click', '#btnBeliSekarang', function(){      
+ $(document).on('click', '#btnBeliSekarang', function(){
   swal({
-    text :  "Produk Berhasil Di Tambahkan Ke Keranjang Belanjaan", 
+    text :  "Produk Berhasil Di Tambahkan Ke Keranjang Belanja",
     showConfirmButton :  false,
     type: "success",
     timer: 10000,
