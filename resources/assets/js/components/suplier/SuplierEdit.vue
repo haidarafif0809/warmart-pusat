@@ -3,8 +3,8 @@
 		<div class="col-md-12">
 			<ul class="breadcrumb">
 				<li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li>
-				<li><router-link :to="{name: 'indexSuplier'}">Suplier</router-link></li>
-				<li class="active">Edit Suplier</li>
+				<li><router-link :to="{name: 'indexSuplier'}">Supplier</router-link></li>
+				<li class="active">Edit Supplier</li>
 			</ul>
 			<div class="card">
 
@@ -13,10 +13,10 @@
 				</div>
 
 				<div class="card-content">
-					<h4 class="card-title"> Suplier </h4>
+					<h4 class="card-title"> Supplier </h4>
 					<form v-on:submit.prevent="saveForm()" class="form-horizontal"> 
 						<div class="form-group">
-							<label for="nama_suplier" class="col-md-2 control-label">Nama Suplier</label>
+							<label for="nama_suplier" class="col-md-2 control-label">Nama Supplier</label>
 							<div class="col-md-4">
 								<input class="form-control" autocomplete="off" placeholder="Nama Suplier" v-model="suplier.nama_suplier" type="text" name="nama_suplier" id="nama_suplier"  autofocus="">
 								<span v-if="errors.nama_suplier" id="nama_suplier_error" class="label label-danger">{{ errors.nama_suplier[0] }}</span>
@@ -25,21 +25,21 @@
 						<div class="form-group">
 							<label for="alamat" class="col-md-2 control-label">Alamat</label>
 							<div class="col-md-4">
-								<input class="form-control" autocomplete="off" placeholder="Alamat Suplier" v-model="suplier.alamat" type="text" name="alamat" id="alamat"  autofocus="">
+								<input class="form-control" autocomplete="off" placeholder="Alamat Supplier" v-model="suplier.alamat" type="text" name="alamat" id="alamat"  autofocus="">
 								<span v-if="errors.alamat" id="alamat_error" class="label label-danger">{{ errors.alamat[0] }}</span>
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="no_telp" class="col-md-2 control-label">No. Telpon</label>
 							<div class="col-md-4">
-								<input class="form-control" autocomplete="off" placeholder="No. Telpon Suplier" v-model="suplier.no_telp" type="text" name="no_telp" id="no_telp"  autofocus="">
+								<input class="form-control" autocomplete="off" placeholder="No. Telpon Supplier" v-model="suplier.no_telp" type="text" name="no_telp" id="no_telp"  autofocus="">
 								<span v-if="errors.no_telp" id="no_telp_error" class="label label-danger">{{ errors.no_telp[0] }}</span>
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="contact_person" class="col-md-2 control-label">Contact Person</label>
 							<div class="col-md-4">
-								<input class="form-control" autocomplete="off" placeholder="Contact Person Suplier" v-model="suplier.contact_person" type="text" name="contact_person" id="contact_person"  autofocus="">
+								<input class="form-control" autocomplete="off" placeholder="Contact Person Supplier" v-model="suplier.contact_person" type="text" name="contact_person" id="contact_person"  autofocus="">
 								<span v-if="errors.contact_person" id="contact_person_error" class="label label-danger">{{ errors.contact_person[0] }}</span>
 							</div>
 						</div>
@@ -91,12 +91,12 @@ export default {
 	methods: {        
 		saveForm() {
             var app = this;
-            var produk = app.produk;
-            axios.patch(app.url+'/' + app.produk, Produk)
+            var suplier = app.suplier;
+            axios.patch(app.url+'/' + app.suplierId, suplier)
             .then(function (resp) {
-                app.message = 'Berhasil Mengubah Produk '+app.produk.nama_barang;
+                app.message = 'Berhasil Mengubah suplier '+app.suplier.nama_barang;
                 app.alert(app.message);
-                app.$router.replace('/produk/');
+                app.$router.replace('/suplier/');
             })
             .catch(function (resp) {                
                 console.log(resp)

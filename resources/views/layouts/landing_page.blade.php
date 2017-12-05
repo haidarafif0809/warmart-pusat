@@ -29,44 +29,44 @@
 
     <!-- MINIFIED -->
     {!! SEO::generate(true) !!}
-    
+
 
     <!-- LUMEN -->
     {!! app('seotools')->generate() !!}
 
 </head>
 <style type="text/css">
-.list-produk {
-    padding-left: 4px;
-    padding-right: 4px;
-}
-.card .card-image{
+    .list-produk {
+        padding-left: 4px;
+        padding-right: 4px;
+    }
+    .card .card-image{
 
-    height: auto; /*this makes sure to maintain the aspect ratio*/
-    margin-top: 0px;
-}
-.card-pricing {
-    margin-bottom: 0px;
-}
-.tombolBeli {
-    padding: 10px 0px;
-    margin:0px;
-}
-.card-pricing .card-content {
-    padding: 5px !important;
-}
-.card .footer {
-    margin-top: 0px;
-}      
+        height: auto; /*this makes sure to maintain the aspect ratio*/
+        margin-top: 0px;
+    }
+    .card-pricing {
+        margin-bottom: 0px;
+    }
+    .tombolBeli {
+        padding: 10px 0px;
+        margin:0px;
+    }
+    .card-pricing .card-content {
+        padding: 5px !important;
+    }
+    .card .footer {
+        margin-top: 0px;
+    }
 
-@font-face {
-  font-family: "San Francisco";
-  font-weight: 200;
-  src: url("//applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-thin-webfont.woff2");
-}
+    @font-face {
+      font-family: "San Francisco";
+      font-weight: 200;
+      src: url("//applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-thin-webfont.woff2");
+  }
 
 
-.flexFont {
+  .flexFont {
     height:2em;
     padding:1%;
     margin: 10px;
@@ -84,7 +84,7 @@
 
 
 button {
-   background-color:#01573e;
+ background-color:#01573e;
 }
 </style>
 
@@ -95,7 +95,13 @@ button {
             <!-- Brand and toggle get grouped for better mobile display -->
             @if (Auth::check() && Auth::user()->tipe_user == 3)
             <a href="{{ url('/') }}" style="color:#ffc34d;" class="btn  btn-round"><i class="material-icons">home</i> home</a>
-            @elseif(Auth::check() && Auth::user()->tipe_user != 3)
+            @elseif(Auth::check() && Auth::user()->tipe_user == 4)
+            @if(Auth::user()->foto_ktp != NULL)
+            <a href="{{ route('home.dashboard') }} " style="color:#ffc34d;" class="btn  btn-round"><i class="material-icons">dashboard</i>dashboard </a>
+            @else
+            <a href="{{ url('dashboard#/ubah-profil-user-warung') }} " style="color:#ffc34d;" class="btn  btn-round"><i class="material-icons">dashboard</i>dashboard </a>
+            @endif
+            @elseif(Auth::check() && Auth::user()->tipe_user != 4 OR Auth::check() && Auth::user()->tipe_user != 3)
             <a href="{{ route('home.dashboard') }} " style="color:#ffc34d;" class="btn  btn-round"><i class="material-icons">dashboard</i>dashboard </a>
             @else
             <a href="{{ url('/login') }}" style="color:#ffc34d;" class="btn  btn-round"><i class="material-icons">fingerprint</i> Login</a>
@@ -113,22 +119,22 @@ button {
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
-                    <div class="iframe-container">  
+                    <div class="iframe-container">
                         <iframe src="https://www.youtube.com/embed/mZRBfHiAxk0?modestbranding=1&autohide=1&showinfo=0" frameborder="0" allowfullscreen height="250"></iframe>
                     </div>
                 </div>
                 <div class="col-md-5 col-md-offset-1">
-                 <h2 style="color:#ffc34d;font-weight:bold;">Tentang</h2>
-                 <h3 style="color:#ffffff;">WarMart adalah marketplace untuk warung muslim pertama di Indonesia yang memfasilitasi warung-warung milik saudara muslim untuk menjual produknya secara online maupun offline. Penjualan secara online melalui aplikasi android dan penjualan secara offline menggunakan aplikasi web base yang kami sediakan</h3>
-             </div>
-         </div>
-     </div>
- </div>
- <style type="text/css">
- .peran{
-    width:100%;
-    height:100%;
-}
+                   <h2 style="color:#ffc34d;font-weight:bold;">Tentang</h2>
+                   <h3 style="color:#ffffff;">WarMart adalah marketplace untuk warung muslim pertama di Indonesia yang memfasilitasi warung-warung milik saudara muslim untuk menjual produknya secara online maupun offline. Penjualan secara online melalui aplikasi android dan penjualan secara offline menggunakan aplikasi web base yang kami sediakan</h3>
+               </div>
+           </div>
+       </div>
+   </div>
+   <style type="text/css">
+       .peran{
+        width:100%;
+        height:100%;
+    }
 </style>
 <div class="container">
     <div class="section text-center">
@@ -253,7 +259,7 @@ button {
                             <div class="card-content">
                                 <h3 class="category text-info"></h3>
                                 <p class="card-description">
-                                   <h6 style="color:white;font-weight:bold;">
+                                 <h6 style="color:white;font-weight:bold;">
                                     <ul align="left">
                                         <li>Berkontribusi menumbuhkan Usaha muslim (jihad ekonomi) </li>
                                         <li>Belanja bernilai ibadah </li>
@@ -285,11 +291,11 @@ button {
 
                     <div class="back back-background" style="background-image: url('assets/img/flat/warung_2.jpg');">
                         <div class="card-content">
-                           <h3 class="category text-info"></h3>
-                           <p class="card-description">
-                               <h6 style="color:white;font-weight:bold;">
+                         <h3 class="category text-info"></h3>
+                         <p class="card-description">
+                             <h6 style="color:white;font-weight:bold;">
                                 <ul align="left">
-                                    <li>Terhubung dengan Pelanggan WarMart se Indonesia </li> 
+                                    <li>Terhubung dengan Pelanggan WarMart se Indonesia </li>
                                     <li>Mendapat support teknologi manajemen warung </li>
                                     <li>Mudah ditemukan konsumen </li>
                                     <li>Penjualan online / offline </li>
@@ -323,8 +329,8 @@ button {
                     <div class="card-content">
                         <h3 class="category text-info"></h3>
                         <p class="card-description">
-                         <h6 style="color:white;font-weight:bold;">
-                            <ul align="left">       
+                           <h6 style="color:white;font-weight:bold;">
+                            <ul align="left">
                                 <li>Terhubung Dengan Pergerakan Ekonomi Umat</li>
                                 <li>Bersinergi dengan beragam komunitas</li>
                                 <li>Berkontribusi dalam kebangkitan ekonomi Islam</li>
@@ -356,12 +362,12 @@ button {
                 <div class="card-content">
                     <h3 class="category text-info"></h3>
                     <p class="card-description">
-                       <h6 style="color:white;font-weight:bold;">
-                           <ul align="left">
-                            <li>Bebas biaya pendaftaran alias GRATIS!!! </li> 
-                            <li>Punya penghasilan tambahan </li> 
-                            <li>GRATIS!!! Web replika dengan nama sendiri </li> 
-                            <li>Bergabung dengan komunitas positif </li> 
+                     <h6 style="color:white;font-weight:bold;">
+                         <ul align="left">
+                            <li>Bebas biaya pendaftaran alias GRATIS!!! </li>
+                            <li>Punya penghasilan tambahan </li>
+                            <li>GRATIS!!! Web replika dengan nama sendiri </li>
+                            <li>Bergabung dengan komunitas positif </li>
                             <li>Share bagi hasil dari transaksi teman </li>
                         </ul>
                     </h6>
@@ -402,9 +408,9 @@ button {
 
                             <div class="card-content">
                                 <h5 class="card-description">
-                                    “Seandainya Umat Islam sepakat semuanya, tidak akan membeli produk kecuali milik saudaranya, beres semuanya. Dan kalau Islam jaya, orang di luar Islam itu akan tertolong juga, nggak akan terhinakan.” 
+                                    “Seandainya Umat Islam sepakat semuanya, tidak akan membeli produk kecuali milik saudaranya, beres semuanya. Dan kalau Islam jaya, orang di luar Islam itu akan tertolong juga, nggak akan terhinakan.”
                                 </h5>
-                                <br> 
+                                <br>
                                 <h4 style="color:orange;font-weight:bold;" >Buya Yahya</h4>
                                 <h6 class="category text-muted">Pendiri Pondok Pesantren Al-Bahjah</h6>
                                 <a href="https://www.youtube.com/watch?v=qg4DtkMkHvE&feature=youtu.be" target="_blank" rel="tooltip" class="btn btn-round" style="position: center; background-color: #f44336" >LIHAT VIDEO</a>
@@ -491,7 +497,7 @@ button {
 <footer class="footer">
     <div class="container">
 
-       <div class="copyright pull-right">
+     <div class="copyright pull-right">
         &copy; <script>document.write(new Date().getFullYear())</script> PT Andaglos Global Teknologi
     </div>
 </div>
@@ -564,7 +570,7 @@ button {
             showConfirmButton :  false,
         });
     });
-    
+
     $(".carousel").carousel({interval: 1000 * 10 });
 </script>
 

@@ -10,7 +10,7 @@
         <div class="col-md-12">
             <ul class="breadcrumb">
                 <li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li>
-                <li class="active">Suplier</li>
+                <li class="active">Supplier</li>
             </ul>
             
             <div class="card">
@@ -18,10 +18,10 @@
                     <i class="material-icons">assignment_return</i>
                 </div>
                 <div class="card-content">
-                    <h4 class="card-title"> Suplier</h4>
+                    <h4 class="card-title"> Supplier</h4>
 
                     <div class="toolbar">
-                        <router-link :to="{name: 'createSuplier'}" class="btn btn-primary"><i class="material-icons">add</i>  Suplier</router-link>
+                        <router-link :to="{name: 'createSuplier'}" class="btn btn-primary"><i class="material-icons">add</i>  Supplier</router-link>
 
                         <div class="pencarian">
                             <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control" autocomplete="">

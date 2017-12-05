@@ -27,7 +27,7 @@
      <h4 class="card-title"> Ubah Profil </h4>
      <div class="toolbar">
 
-      {!! Form::model($user, ['url' => route('user.proses_ubah_profil_warung'), 'method' => 'put', 'files'=>'true','class'=>'form-horizontal']) !!}
+      {!! Form::model($user, ['url' => route('user.proses_ubah_profil_warung', $id), 'method' => 'put', 'files'=>'true','class'=>'form-horizontal']) !!}
       <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
         {!! Form::label('name', 'Nama', ['class'=>'col-md-2 control-label']) !!}
         <div class="col-md-4">
@@ -65,21 +65,21 @@
         {!! Form::label('kelurahan', 'Kelurahan', ['class'=>'col-md-2 control-label']) !!}
         <div class="col-md-4">
           @if (isset($user_warung) && $user_warung->wilayah)
-          {!! Form::select('kelurahan', 
+          {!! Form::select('kelurahan',
           [''=>'']+App\Kelurahan::pluck('nama','id')->all(),$user_warung->wilayah
           , ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--SILAKAN PILIH--','id'=>'pilih_kelurahan']) !!}
           {!! $errors->first('kelurahan', '<p class="help-block">:message</p>') !!}
           @else
-          {!! Form::select('kelurahan', 
+          {!! Form::select('kelurahan',
           [''=>'']+App\Kelurahan::pluck('nama','id')->all(),null
           , ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--SILAKAN PILIH--','id'=>'pilih_kelurahan']) !!}
           {!! $errors->first('kelurahan', '<p class="help-block">:message</p>') !!}
           @endif
         </div>
-      </div> 
+      </div>
 
       {!! Form::hidden('id', $user->id, ['class'=>'form-control','autocomplete'=>'off']) !!}
-      
+
       <div class="form-group{{ $errors->has('foto_ktp') ? ' has-error' : '' }}">
         {!! Form::label('foto_ktp', 'Foto KTP', ['class'=>'col-md-2 control-label']) !!}
         <div class="col-md-4">
@@ -108,7 +108,7 @@
             <a style="color: red;">Size Foto (Ukuran Max : 3MB)</a>
           </div>
         </div>
-      </div> 
+      </div>
 
       <div class="form-group">
         <div class="col-md-4 col-md-offset-2">

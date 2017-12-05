@@ -10,6 +10,8 @@
 	</div>
 	<b>Info : Pendaftaran anda sebagai warung sedang menunggu verifikasi dari admin.</b>
 </div>
+<router-view name="ubahProfilUserWarung"></router-view>
+<router-view></router-view>
 @elseif(Auth::user()->tipe_user == 2 AND Auth::user()->konfirmasi_admin == 0)
 <div class="alert alert-info">
 	<div class="alert-icon">
