@@ -1,48 +1,47 @@
 @extends('layouts.app_pelanggan')
-@section('content') 
+@section('content')
 
 <style type="text/css">
-.list-produk {
+    .list-produk {
 
-    padding-left: 4px;
-    padding-right: 4px;
+        padding-left: 4px;
+        padding-right: 4px;
 
-}
-.card .card-image{
+    }
+    .card .card-image{
 
-    height: auto; /*this makes sure to maintain the aspect ratio*/
-    margin-top: 0px;
-}
-.card-pricing {
-    margin-bottom: 0px;
-}
-.tombolBeli {
-    padding: 10px 0px;
-    margin:0px;
-}
-.card-pricing .card-content {
-    padding: 5px !important;
-}
-.card .footer {
-    margin-top: 0px;
-    font-family: Helvetica,Arial,sans-serif;
-    font-weight: 400;
-    line-height:1.2em;
-    text-decoration: none;
-    font-size:15px;
-}      
+        height: auto; /*this makes sure to maintain the aspect ratio*/
+        margin-top: 0px;
+    }
+    .card-pricing {
+        margin-bottom: 0px;
+    }
+    .tombolBeli {
+        padding: 10px 0px;
+        margin:0px;
+    }
+    .card-pricing .card-content {
+        padding: 5px !important;
+    }
+    .card .footer {
+        margin-top: 0px;
+        font-family: Helvetica,Arial,sans-serif;
+        font-weight: 400;
+        line-height:1.2em;
+        text-decoration: none;
+        font-size:15px;
+    }
 
-@font-face {
-  font-family: "San Francisco";
-  font-weight: 200;
-  src: url("//applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-thin-webfont.woff2");
-}
+    @font-face {
+      font-family: "San Francisco";
+      font-weight: 200;
+      src: url("//applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-thin-webfont.woff2");
+  }
 
-
-.flexFont {
+  .flexFont {
     @if(Agent::isMobile())
     height:3em;
-    @else  
+    @else
     height:3em;
     @endif
     padding:1%;
@@ -59,6 +58,29 @@
     background-color:red;
     width: 10em;
 }
+.page-header.header-small {
+    height: 35vh;
+    min-height: 35vh;
+}
+.ecommerce-page .page-header .container {
+    @if(Agent::isMobile())
+    padding-top: 7vh;
+    @else
+    padding-top: 10vh;
+    @endif
+}
+h4 {
+    @if(Agent::isMobile())
+    font-size: 1.2em;
+    line-height: 1.4em;
+    margin: 20px 0 10px;
+    @endif
+}
+.panel .panel-heading {
+    background-color: transparent;
+    border-bottom: 2px solid #ddd;
+    padding: 5px 0px 5px 0px;
+}
 </style>
 
 @if (Agent::isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
@@ -66,12 +88,11 @@
 <div class="page-header header-small" data-parallax="true"" style="{!! $foto_latar_belakang !!}">
     <a href="{{ url('/home') }}"><img  class="img img-raised" src="{!! $logo_warmart !!}" style="width: 10%"/></a>
 
-    <div class="container"> 
+    <div class="container">
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
                 <div class="brand">
                     <h3 class="title">PASAR MUSLIM INDONESIA</h3>
-                    <h6 class="title"> Segala Kemudahan Untuk Umat Muslim Berbelanja.</h6>
                 </div>
             </div>
         </div>
@@ -81,7 +102,7 @@
 <div class="main main-raised" >
 
     <div class="container">
-        <h3 class="title text-center">{!! $nama_kategori !!}</h3>
+        <h4 class="title text-center">{!! $nama_kategori !!}</h4>
 
         <div class="card card-raised card-form-horizontal">
             <div class="card-content">
@@ -102,33 +123,13 @@
                 {!! Form::close() !!}
             </div>
         </div>
-        @if(Auth::check())
-        @if( App\KeranjangBelanja::where('id_pelanggan',Auth::user()->id)->count() == 0)
-        <div class="row">   
-            <div class="col-md-12">
-                <!--Menampilkan Warung Secara Acak--> 
-                <h4 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px"> Warung</h4> 
-            </div>   
-            <span class="span-warung">{!! $daftar_warung !!}</span> 
-        </div>
-        @endif
-        @else 
-        <div class="row">   
-            <div class="col-md-12">
-                <!--Menampilkan Warung Secara Acak--> 
-                <h4 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px"> Warung</h4> 
-            </div>   
-            <span class="span-warung">{!! $daftar_warung !!}</span> 
-        </div>
-
-        @endif  
 
         <div class="row">
-            <div class="col-md-12">                 
+            <div class="col-md-12">
                 <div class="panel panel-default">
                     <div class="panel-heading" role="tab" id="headingTwo">
                         <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                            <h4 class="title">
+                            <h4 class="title" style="margin: 0px">
                                 KATEGORI PRODUK
                                 <i class="material-icons">keyboard_arrow_down</i>
                             </h4>
@@ -137,12 +138,12 @@
                     <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
                         <div class="panel-body">
 
-                            <ul class="nav" style="background-color: #01573e">                                        
+                            <ul class="nav" style="background-color: #01573e">
                                 <li><a style="color:white" href="{{route('daftar_produk.index')}}"><i class="material-icons">format_align_justify</i> SEMUA KATEGORI</a></li>
                             </ul>
 
                             <ul class="nav" style="background-color: #01573e">
-                                {!! $kategori_produk !!}                        
+                                {!! $kategori_produk !!}
                             </ul>
                         </div>
                     </div>
@@ -156,8 +157,27 @@
                     <div class="col-md-12 col-sm-12 col-xs-12">
                         {{$produk_pagination}}
                     </div>
-
                 </div>
+
+                @if(Auth::check())
+                @if( App\KeranjangBelanja::where('id_pelanggan',Auth::user()->id)->count() == 0)
+                <div class="row">
+                    <div class="col-md-12">
+                        <!--Menampilkan Warung Secara Acak-->
+                        <h4 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px"> Warung</h4>
+                    </div>
+                    <span class="span-warung">{!! $daftar_warung !!}</span>
+                </div>
+                @endif
+                @else
+                <div class="row">
+                    <div class="col-md-12">
+                        <!--Menampilkan Warung Secara Acak-->
+                        <h4 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px"> Warung</h4>
+                    </div>
+                    <span class="span-warung">{!! $daftar_warung !!}</span>
+                </div>
+                @endif
             </div>
         </div>
     </div>
@@ -203,48 +223,48 @@
         </div>
 
         <div class="row">
-          @if(Auth::check())
-          @if(App\KeranjangBelanja::where('id_pelanggan',Auth::user()->id)->count() == 0)
-          <!--Menampilkan Warung Secara Acak--> 
-          <div class="col-md-12"> 
-            <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px"> Warung</h5>           
-            <span id="span-warung">{!! $daftar_warung !!}</span>     
-        </div>
-        @endif
-        @else 
-        <div class="col-md-12"> 
-            <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px"> Warung</h5>           
-            <span id="span-warung">{!! $daftar_warung !!}</span>     
-        </div>
+            <div class="col-md-3">
+                <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px"> Produk</h5>
+                <ul class="nav nav-tabs" data-tabs="tabs" style="background-color: #01573e">
+                    <li><a href="{{route('daftar_produk.index')}}"><i class="material-icons">format_align_justify</i> Semua Kategori</a></li>
+                </ul>
+            </div>
+            <div class="col-md-9">
+                <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px"><br></h5>
+                <ul class="nav nav-tabs" data-tabs="tabs" style="background-color: #01573e">
+                    {!! $kategori_produk !!}
+                </ul>
+            </div>
 
-        @endif
-
-        <div class="col-md-3"> 
-            <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:25px"> Produk</h5>  
-            <ul class="nav nav-tabs" data-tabs="tabs" style="background-color: #01573e">                                        
-                <li><a href="{{route('daftar_produk.index')}}"><i class="material-icons">format_align_justify</i> Semua Kategori</a></li>
-            </ul>
-        </div>
-        <div class="col-md-9">      
-            <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:25px"><br></h5>                  
-            <ul class="nav nav-tabs" data-tabs="tabs" style="background-color: #01573e">
-                {!! $kategori_produk !!}                        
-            </ul>
-        </div>
-
-        <div class="col-md-12"><br>
-            <div class="row">
-                <div class="col-md-12">
-                    <!-- Menampilkan Produk -->
-                    <span id="span-produk">{!! $daftar_produk !!}</span>
-                </div>
-                <div class="col-md-12">
-                    {{$produk_pagination}}
+            <div class="col-md-12"><br>
+                <div class="row">
+                    <div class="col-md-12">
+                        <!-- Menampilkan Produk -->
+                        <span id="span-produk">{!! $daftar_produk !!}</span>
+                    </div>
+                    <div class="col-md-12">
+                        {{$produk_pagination}}
+                    </div>
                 </div>
             </div>
+
+
+            @if(Auth::check())
+            @if(App\KeranjangBelanja::where('id_pelanggan',Auth::user()->id)->count() == 0)
+            <!--Menampilkan Warung Secara Acak-->
+            <div class="col-md-12">
+                <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:15px"> Warung</h5>
+                <span id="span-warung">{!! $daftar_warung !!}</span>
+            </div>
+            @endif
+            @else
+            <div class="col-md-12">
+                <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px"> Warung</h5>
+                <span id="span-warung">{!! $daftar_warung !!}</span>
+            </div>
+            @endif
         </div>
     </div>
-</div>
 
 </div> <!-- end-main-raised -->
 @endif
@@ -259,7 +279,7 @@
             var relFontsize = divs[i].offsetWidth*0.1;
             divs[i].style.fontSize = relFontsize+'px';
         }
-        @else 
+        @else
         var divs = document.getElementsByClassName("flexFont");
         for(var i = 0; i < divs.length; i++) {
             var relFontsize = divs[i].offsetWidth*0.06;
@@ -270,13 +290,13 @@
         @if(Agent::isMobile())
         var divs = document.getElementsByClassName("flexFontWarung");
         for(var i = 0; i < divs.length; i++) {
-            var relFontsize = divs[i].offsetWidth*0.14;
+            var relFontsize = divs[i].offsetWidth*0.15;
             divs[i].style.fontSize = relFontsize+'px';
         }
-        @else 
+        @else
         var divs = document.getElementsByClassName("flexFontWarung");
         for(var i = 0; i < divs.length; i++) {
-            var relFontsize = divs[i].offsetWidth*0.16;
+            var relFontsize = divs[i].offsetWidth*0.1;
             divs[i].style.fontSize = relFontsize+'px';
         }
 

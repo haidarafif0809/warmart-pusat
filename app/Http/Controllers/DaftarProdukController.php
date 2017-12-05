@@ -41,13 +41,13 @@ class DaftarProdukController extends Controller
         if (isset($warung_yang_dipesan)) {
             $data_produk = Barang::select(['id', 'kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung', 'konfirmasi_admin', 'satuan_id', 'hitung_stok'])
                 ->inRandomOrder()
-                ->where('id_warung', $warung_yang_dipesan)->paginate(12);
+                ->where('id_warung', $warung_yang_dipesan)->paginate(20);
         } else {
             //Pilih warung yang sudah dikonfirmasi admin
             $array_warung = DaftarProdukController::dataWarungTervalidasi();
             $data_produk  = Barang::select(['id', 'kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung', 'konfirmasi_admin', 'satuan_id', 'hitung_stok'])
                 ->inRandomOrder()
-                ->whereIn('id_warung', $array_warung)->paginate(12);
+                ->whereIn('id_warung', $array_warung)->paginate(20);
         }
 
         //PILIH DATA WARUNG
@@ -114,14 +114,14 @@ class DaftarProdukController extends Controller
 
         if (isset($warung_yang_dipesan)) {
             $data_produk = Barang::select(['id', 'kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung', 'konfirmasi_admin', 'satuan_id', 'hitung_stok'])
-                ->where('kategori_barang_id', $id)->where('id_warung', $warung_yang_dipesan)->inRandomOrder()->paginate(12);
+                ->where('kategori_barang_id', $id)->where('id_warung', $warung_yang_dipesan)->inRandomOrder()->paginate(20);
         } else {
             //Pilih warung yang sudah dikonfirmasi admin
             $array_warung = DaftarProdukController::dataWarungTervalidasi();
 
             //PILIH PRODUK
             $data_produk = Barang::select(['id', 'kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung', 'konfirmasi_admin', 'satuan_id', 'hitung_stok'])
-                ->where('kategori_barang_id', $id)->whereIn('id_warung', $array_warung)->inRandomOrder()->paginate(12);
+                ->where('kategori_barang_id', $id)->whereIn('id_warung', $array_warung)->inRandomOrder()->paginate(20);
 
         }
 
@@ -166,7 +166,7 @@ class DaftarProdukController extends Controller
         }
 
         //PILIH PRODUK
-        $data_produk = Barang::search($request->search)->paginate(12);
+        $data_produk = Barang::search($request->search)->paginate(20);
         //PILIH DATA WARUNG
         $warung_data = Warung::search($request->search)->get();
         //PILIH KATEGORI
