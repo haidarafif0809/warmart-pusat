@@ -404,7 +404,7 @@
 <!--End of Tawk.to Script-->
 </body>
 <!--   Core JS Files   -->
-<script type="text/javascript" src="{{ asset('js/app.js?v=1.21')}}"></script>
+<script type="text/javascript" src="{{ asset('js/app.js?v=1.22')}}"></script>
 <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('js/material.min.js') }}" type="text/javascript"></script>
 

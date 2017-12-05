@@ -321,14 +321,14 @@ Route::put('/proses-ubah-profil-pelanggan', [
 ]);
 
 //UBAH PROFIL WARUNG
-Route::get('/ubah-profil-warung', [
+Route::get('/ubah-profil-user-warung', [
     'middleware' => ['auth'],
     'as'         => 'user.ubah_profil_warung',
-    'uses'       => 'UbahProfilController@ubah_profil_warung',
+    'uses'       => 'UbahProfilController@ubah_profil_user_warung',
 ]);
 
 //PROSES UBAH PROFIL WARUNG
-Route::put('/proses-ubah-profil-warung', [
+Route::post('/ubah-profil-user-warung/{id}', [
     'middleware' => ['auth'],
     'as'         => 'user.proses_ubah_profil_warung',
     'uses'       => 'UbahProfilController@proses_ubah_profil_warung',
@@ -434,7 +434,6 @@ Route::get('/produk/view', 'BarangController@view')->middleware('auth');
 Route::get('/produk/pencarian', 'BarangController@pencarian')->middleware('auth');
 Route::get('/produk/pilih-kategori', 'BarangController@pilih_kategori')->middleware('auth');
 Route::get('/produk/pilih-satuan', 'BarangController@pilih_satuan')->middleware('auth');
-Route::post('/produk/{id}', 'BarangController@update')->middleware('auth');
 
 Route::get('/kas/view', 'KasController@view')->middleware('auth');
 Route::get('/kas/pencarian', 'KasController@pencarian')->middleware('auth');

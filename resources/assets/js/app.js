@@ -87,6 +87,10 @@ import ProdukIndex from './components/produk/ProdukIndex.vue';
 import ProdukCreate from './components/produk/ProdukCreate.vue';
 import ProdukEdit from './components/produk/ProdukEdit.vue';
 import ProdukDetail from './components/produk/ProdukDetail.vue';
+// UBAH PASSSWORD USER WARUNG
+import UbahPasswordUserWarung from './components/ubah_password/UbahPasswordUserWarung.vue';
+// UBAH PROFIL USER WARUNG
+import UbahProfilUserWarung from './components/ubah_profil/UbahProfilUserWarung.vue';
 const routes = [{
         path: '/',
         components: {
@@ -298,6 +302,18 @@ const routes = [{
         component: ProdukDetail,
         name: 'detailProduk'
     },
+    // ubah password user warung 
+    {
+        path: '/ubah-password-user-warung',
+        component: UbahPasswordUserWarung,
+        name: 'ubahPasswordUserWarung'
+    },
+    // ubah profil user warung
+    {
+        path: '/ubah-profil-user-warung',
+        component: UbahProfilUserWarung,
+        name: 'ubahProfilUserWarung'
+    }
 ]
 const router = new VueRouter({
     routes
