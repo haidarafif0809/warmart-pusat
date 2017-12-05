@@ -62,7 +62,7 @@ class PesananPelangganController extends Controller
                 $produk_pesanan_mobile .= '<b  style="color:red">Batal</b>';
             }
 
-            $produk_pesanan_mobile .= '<br>Warung : ' . $pesanan_pelanggans->warung->name;
+            $produk_pesanan_mobile .= '<br>Warung : <a href="' . url('halaman-warung/' . $pesanan_pelanggans->id_warung . '') . '"><b>' . $pesanan_pelanggans->warung->name . '</b></a>';
             $produk_pesanan_mobile .= '
             <a href="' . url('pesanan-detail/' . $pesanan_pelanggans->id . '') . '" style="background-color: #01573e" class="btn btn-block">Detail Pesanan</a>
             </div>
@@ -75,9 +75,9 @@ class PesananPelangganController extends Controller
 
             $produk_pesanan_komputer .= '
             <tr  style="margin-top:0px;margin-bottom: 0px;">
-            <td><a href="' . url('pesanan-detail/' . $pesanan_pelanggans->id . '') . '">#' . $pesanan_pelanggans->id . '</a></td>
-            <td>' . $pesanan_pelanggans->created_at . '</td>
-            <td>Rp. ' . number_format($pesanan_pelanggans->subtotal, 0, ',', '.') . '</td>';
+            <td><a href="' . url('pesanan-detail/' . $pesanan_pelanggans->id . '') . '"><b>#' . $pesanan_pelanggans->id . '</b></a></td>
+            <td><b>' . $pesanan_pelanggans->WaktuPesan . '</b></td>
+            <td><b>Rp. ' . number_format($pesanan_pelanggans->subtotal, 0, ',', '.') . '</b></td>';
             if ($pesanan_pelanggans->konfirmasi_pesanan == 0) {
                 $produk_pesanan_komputer .= '<td><b  style="color:red">Belum Di Konfirmasi</b></td>';
             } elseif ($pesanan_pelanggans->konfirmasi_pesanan == 1) {
@@ -87,6 +87,7 @@ class PesananPelangganController extends Controller
             } elseif ($pesanan_pelanggans->konfirmasi_pesanan == 3) {
                 $produk_pesanan_komputer .= '<td><b  style="color:red">Batal</b></td>';
             }
+            $produk_pesanan_komputer .= '<td><a href="' . url('halaman-warung/' . $pesanan_pelanggans->id_warung . '') . '"><b>' . $pesanan_pelanggans->warung->name . '</b></a></td>';
             $produk_pesanan_komputer .= '</tr>';
         }
 
@@ -129,12 +130,4 @@ class PesananPelangganController extends Controller
         return view('layouts.detail_pesanan_pelanggan', ['detail_pesanan_pelanggan' => $detail_pesanan_pelanggan, 'pesanan_pelanggan' => $pesanan_pelanggan, 'cek_belanjaan' => $cek_belanjaan, 'agent' => $agent, 'logo_warmart' => $logo_warmart, 'user' => $user, 'status_pesanan' => $status_pesanan]);
     }
 
-// function tanggal terbalik
-    public function tanggal_terbalik($tanggal)
-    {
-
-        $date          = date_create($tanggal);
-        $date_terbalik = date_format($date, "d/m/Y");
-        return $date_terbalik;
-    }
 }
