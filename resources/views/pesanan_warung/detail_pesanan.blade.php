@@ -37,7 +37,7 @@
      <p style="margin-top: 1px; margin-bottom: 1px;">{{ $pesanan->created_at }}</p>
      <hr style="margin-top: 1x; margin-bottom: 1px;">
 
-     <b class="card-title" style="margin-top: 1px; margin-bottom: 1px;">Alamat Pengiriman</b>
+     <b class="card-title" style="margin-top: 1px; margin-bottom: 1px;">Alamat Pelanggan</b>
      <p style="margin-top: 1px; margin-bottom: 1px;"> {{ $pesanan->nama_pemesan }}</p>
      <p style="margin-top: 1px; margin-bottom: 1px;">{{ $pesanan->no_telp_pemesan }}</p>
      <p style="margin-top: 1px; margin-bottom: 1px;">{{ $pesanan->alamat_pemesan }}</p>
@@ -157,12 +157,12 @@
 
 @else
 
-<div class="card" style="margin-top: 1px; margin-bottom: 1px;">
-  <div class="card-content" style="padding-bottom: 10px;padding-top: 1px">
+<div class="card" style="margin-top: 5px; margin-bottom: 1px;">
+  <div class="card-content">
 
     <div class="row">
 
-      <div class="col-md-2">Order #{{ $pesanan->id }}
+      <div class="col-md-1">Order #{{ $pesanan->id }}
 
         <!-- MODAL PILIH PRODUK -->
         <div class="modal " id="data_pemesan" role="dialog" data-backdrop="">
@@ -190,36 +190,42 @@
       </div>
 
 
-      <div class="col-md-3">Di pesan pada {{ $pesanan->created_at }}</div>
+      <div class="col-md-3">Waktu Pesan : {{ $pesanan->created_at }}</div>
 
-      <div class="col-md-3">Total : Rp. {{ number_format($subtotal,0,',','.') }}</div>
+      <div class="col-md-2">Total : Rp. {{ number_format($subtotal,0,',','.') }}</div>
 
       <div class="col-md-2">Status : {!! $status_pesanan !!}</div>
 
-      <div class="col-md-2">Terima :
+      <div class="col-md-4">
+
+        @if($pesanan->konfirmasi_pesanan == 1)
+        Selesai ?:
+        @else
+        Lanjut ?:
+        @endif
 
         @if($pesanan->konfirmasi_pesanan == 0)
 
-        <button id="konfirmasi-pesanan-warung" id-pesanan="{{$pesanan->id}}" class="btn btn-round btn-info btn-xs"  rel="tooltip" data-placement="top" title="Lanjutkan Pesanan"><i class="material-icons">done</i></button>
+        <button id="konfirmasi-pesanan-warung" id-pesanan="{{$pesanan->id}}" class="btn btn-sm btn-info"><font style="font-size: 12px;">Lanjut</font></button>
 
-        <button id="batalkan-pesanan-warung" id-pesanan="{{$pesanan->id}}" class="btn btn-round btn-danger btn-xs"  rel="tooltip" data-placement="top" title="Batalkan Pesanan" ><i class="material-icons">cancel</i></button>
+        <button id="batalkan-pesanan-warung" id-pesanan="{{$pesanan->id}}" class="btn btn-sm btn-danger"><font style="font-size: 12px;">Batal</font></button>
 
         @elseif($pesanan->konfirmasi_pesanan == 1)
 
-        <button class="btn btn-round btn-info btn-xs" data-id="{{ $pesanan->id }}" id="selesaikan_pesanan" rel="tooltip" data-placement="top" title="Selesaikan Pesanan" > <i class="material-icons">done</i></button>
+        <button class="btn btn-info btn-sm" data-id="{{ $pesanan->id }}" id="selesaikan_pesanan">  <font style="font-size: 12px;">Selesai</font></button>
 
-        <button id="batalkan-konfirmasi-pesanan-warung" id-pesanan="{{$pesanan->id}}" class="btn btn-round btn-danger btn-xs"  rel="tooltip" data-placement="top" title="Batalkan Konfirmasi" ><i class="material-icons">cancel</i></button>
+        <button id="batalkan-konfirmasi-pesanan-warung" id-pesanan="{{$pesanan->id}}" class="btn btn-sm btn-danger"><font style="font-size: 12px;">Batal</font></button>
 
         @elseif($pesanan->konfirmasi_pesanan == 2)
 
-        <button id="batalkan-pesanan-warung" id-pesanan="{{$pesanan->id}}" class="btn btn-round btn-danger btn-xs"  rel="tooltip" data-placement="top" title="Batalkan Pesanan" ><i class="material-icons">cancel</i></button>
+        <button id="batalkan-pesanan-warung" id-pesanan="{{$pesanan->id}}" class="btn btn-sm btn-danger"><font style="font-size: 12px;">Batal</font></button>
 
         @elseif($pesanan->konfirmasi_pesanan == 3)
 
-        <button id="konfirmasi-pesanan-warung" id-pesanan="{{$pesanan->id}}" class="btn btn-round btn-info btn-xs"  rel="tooltip" data-placement="top" title="Lanjutkan Pesanan"><i class="material-icons">done</i></button>
+        <button id="konfirmasi-pesanan-warung" id-pesanan="{{$pesanan->id}}" class="btn btn-sm btn-info"><font style="font-size: 12px;">Lanjut</font></button>
         @endif
 
-        <button type="button" class="btn btn-sm btn-primary" id="btnDetail" data-toggle="modal" data-target="#data_pemesan">Pemesan</button>
+        <button type="button" class="btn btn-sm btn-primary" id="btnDetail" data-toggle="modal" data-target="#data_pemesan"><font style="font-size: 12px;">Pemesan</font></button>
 
 
       </div>
@@ -230,7 +236,7 @@
 
 </div>
 
-<div class="card" style="margin-top: 1px; margin-bottom: 1px;">
+<div class="card" style="margin-top: 5px; margin-bottom: 1px;">
 
   <div class="card-content">
 
@@ -258,19 +264,20 @@
           <td>
             <center>
 
-
-
-              {{ $detail_pesanans->jumlah_produk }}
               <div class="btn-group">
 
                 @if($pesanan->konfirmasi_pesanan == 0)
+
                 @if($detail_pesanans->jumlah_produk == 0)
                 <a disabled="true" class="btn btn-round btn-xs"> <i class="material-icons">remove</i></a>
                 @else
                 <a  href="{{ url('kurang-produk-pesanan-warung/'.$detail_pesanans->id.'') }}" class="btn btn-round btn-xs"> <i class="material-icons">remove</i></a>
                 @endif
+                <a id="edit-jumlah-pesanan" data-nama="{{$detail_pesanans->NamaBarang}}" data-id="{{$detail_pesanans->id}}"  class="btn btn-round btn-xs" rel="tooltip" data-placement="top" title="Edit Jumlah"> <font style="font-size: 11.5px;">{{ $detail_pesanans->jumlah_produk }}</font> </a>
                 <a href="{{ url('tambah-produk-pesanan-warung/'.$detail_pesanans->id.'') }}" class="btn btn-round btn-xs"> <i class="material-icons">add</i></a>
 
+                @else
+                {{ $detail_pesanans->jumlah_produk }}
                 @endif
 
               </div>
@@ -344,7 +351,7 @@
 
      swal({
       title: "Pilih Kas",
-      html: kas_warung,
+      html: kas_warung+'<p style="color: red; font-style: italic;">*Jika Anda Menyelesaikan Pesanan Ini, Maka Kas Anda Akan Bertambah & Stok Produk Akan Berkurang',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
