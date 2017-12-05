@@ -266,10 +266,10 @@ class DaftarProdukController extends Controller
   <div class="card-content">';
         $agent = new Agent();
         if ($agent->isMobile()) {
-            $produk_kosong .= '<h6 class="text-center" style="margin:0px">Oops... Produk Tidak Dapat Ditemukan.</h6>
+            $produk_kosong .= '<h6 class="text-center" style="margin:0px">Oops... "Produk" Tidak Dapat Ditemukan.</h6>
     <p class="text-center">Silakan menggunakan kata kunci lain.</p>';
         } else {
-            $produk_kosong .= '<h3 class="title text-center" style="margin:0px">Oops... Hasil Pencarian Produk Tidak Dapat Ditemukan.</h3>
+            $produk_kosong .= '<h3 class="title text-center" style="margin:0px">Oops... Hasil Pencarian "Produk" Tidak Dapat Ditemukan.</h3>
     <h5 class="text-center" style="margin:0px">Silakan melakukan pencarian kembali dengan menggunakan kata kunci lain.</h5>';
         }
         $produk_kosong .= '</div>
@@ -514,10 +514,10 @@ class DaftarProdukController extends Controller
   <div class="card-content">';
         $agent = new Agent();
         if ($agent->isMobile()) {
-            $warung_kosong .= '<h6 class="text-center" style="margin:0px">Oops... Warung Tidak Dapat Ditemukan.</h6>
+            $warung_kosong .= '<h6 class="text-center" style="margin:0px">Oops... "Warung" Tidak Dapat Ditemukan.</h6>
     <p class="text-center">Silakan menggunakan kata kunci lain.</p>';
         } else {
-            $warung_kosong .= '<h3 class="title text-center" style="margin:0px">Oops... Hasil Pencarian Warung Tidak Dapat Ditemukan.</h3>
+            $warung_kosong .= '<h3 class="title text-center" style="margin:0px">Oops... Hasil Pencarian "Warung" Tidak Dapat Ditemukan.</h3>
     <h5 class="text-center" style="margin:0px">Silakan melakukan pencarian kembali dengan menggunakan kata kunci lain.</h5>';
         }
         $warung_kosong .= '</div>

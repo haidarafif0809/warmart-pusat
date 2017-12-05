@@ -50,7 +50,7 @@
                             <div class="col-md-4">
                                 <div class="fileinput fileinput-new text-center" data-provides="fileinput">
                                     <div class="fileinput-new thumbnail">
-                                        <img v-if="profil_user_warung.foto_ktp != ''" :src="url_picture+'/'+profil_user_warung.foto_ktp" /> 
+                                        <img v-if="profil_user_warung.foto_ktp != NULL" :src="url_picture+'/'+profil_user_warung.foto_ktp" /> 
                                         <img :src="url_origin+'/assets/img/image_placeholder.jpg'" alt="Foto Ktp Akan Tampil Disini" v-else>
                                     </div>
                                     <div class="fileinput-preview fileinput-exists thumbnail"></div>
