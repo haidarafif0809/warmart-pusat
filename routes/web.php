@@ -434,6 +434,7 @@ Route::get('/produk/view', 'BarangController@view')->middleware('auth');
 Route::get('/produk/pencarian', 'BarangController@pencarian')->middleware('auth');
 Route::get('/produk/pilih-kategori', 'BarangController@pilih_kategori')->middleware('auth');
 Route::get('/produk/pilih-satuan', 'BarangController@pilih_satuan')->middleware('auth');
+Route::post('/produk/{id}', 'BarangController@update')->middleware('auth');
 
 Route::get('/kas/view', 'KasController@view')->middleware('auth');
 Route::get('/kas/pencarian', 'KasController@pencarian')->middleware('auth');
