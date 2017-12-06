@@ -77,7 +77,7 @@
     </div><!--  end acordeon -->
 
     <div class="row text-right">
-      <a href="{{url('/dashboard#/detail-produk/'.$id)}}" class="btn btn-rose btn-round">Kembali &nbsp;<i class="material-icons">reply</i></a>
+      <a href="{{url('/dashboard#/produk')}}" class="btn btn-rose btn-round">Kembali &nbsp;<i class="material-icons">reply</i></a>
     </div>
 
   </div>
