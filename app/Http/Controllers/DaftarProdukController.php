@@ -67,7 +67,7 @@ class DaftarProdukController extends Controller
         $daftar_warung = DaftarProdukController::daftarWarung($warung_data);
         //TAMPIL KATEGORI
         $kategori_produk = DaftarProdukController::produkKategori($kategori);
-        $nama_kategori   = "Temukan Apa Yang Anda Butuhkan";
+        $nama_kategori   = "";
 
         return view('layouts.daftar_produk', ['kategori_produk' => $kategori_produk, 'daftar_produk' => $daftar_produk, 'daftar_warung' => $daftar_warung, 'produk_pagination' => $produk_pagination, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'agent' => $agent, 'cek_belanjaan' => $cek_belanjaan, 'logo_warmart' => $logo_warmart]);
     }
