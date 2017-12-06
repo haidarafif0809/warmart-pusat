@@ -41,10 +41,10 @@
       <li class="active"><b>Detail Pesanan </b></li>
     </ul>
     @else <!--JIKA DIAKSES VIA KOMPUTER-->
-    <ul class="breadcrumb" style="margin-top: 10px">
-      <li><a href="{{ url('/daftar-produk') }}">Home</a></li>
-      <li><a href="{{ url('/pesanan') }}">Pesanan</a></li>
-      <li class="active">Detail Pesanan </li>
+    <ul class="breadcrumb" style="margin-top: 10px; margin-bottom: 1px;">
+      <li><a href="{{ url('/daftar-produk') }}"><b>Home</b></a></li>
+      <li><a href="{{ url('/pesanan') }}"><b>Pesanan</b></a></li>
+      <li class="active"><b>Detail Pesanan</b> </li>
     </ul>
     @endif
 
@@ -144,13 +144,13 @@
 
    <div class="row">
     <div class="col-md-12">
-      <div class="card">
+      <div class="card" style="margin-bottom:1px;">
         <div class="card-content">
           <div class="row">
-            <div class="col-md-3">Order #{{ $pesanan_pelanggan->id }}</div>
-            <div class="col-md-3">Di pesan pada {{ $pesanan_pelanggan->created_at }}</div>
-            <div class="col-md-3">Total : RP {{ number_format($pesanan_pelanggan->subtotal,0,',','.') }}</div>
-            <div class="col-md-3">Status : {!! $status_pesanan !!}</div>
+            <div class="col-md-2"><b>Order #{{ $pesanan_pelanggan->id }}</b></div>
+            <div class="col-md-3"><b>Waktu Pesan : {{ $pesanan_pelanggan->WaktuPesan }}</b></div>
+            <div class="col-md-3"><b>Total : Rp. {{ number_format($pesanan_pelanggan->subtotal,0,',','.') }}</b></div>
+            <div class="col-md-3"><b>Status : {!! $status_pesanan !!}</b></div>
           </div>
         </div>
       </div>
@@ -159,64 +159,93 @@
 
   <div class="row">
 
-    <div class="col-md-5">
-      <div class="card"  data-background-color="rose">
-        <div class="card-header card-header-text">
-          <h6 class="card-title" style="color: black; padding-left: 10px">Alamat Pengirim</h6> <hr>
-        </div>
-        <h4 style="padding-left: 10px;"> {{ $pesanan_pelanggan->nama_pemesan }}</h4>
-        <p style="padding-left: 10px;"> {{ $pesanan_pelanggan->alamat_pemesan }}</p>
-        <p style="padding-left: 10px;"> {{ $pesanan_pelanggan->no_telp_pemesan }}</p>
-      </div>
-    </div>
 
     <div class="col-md-7">
-      <div class="card"  data-background-color="rose">
-        <div class="card-header card-header-text">
-          <h6 class="card-title" style="color: black; padding-left: 10px">Rincian Pesanan</h6> <hr>
+      <div class="card" style="margin-bottom: 1px;">
+        <div class="card-header" style="margin-bottom: 1px;">
+
+          <div class="row" style="margin-bottom: 1px;">
+            <div class="col-md-6">  <h4 class="card-title" align="center" style="color: black;"> Produk</h4> </div>
+            <div class="col-md-3">  <h4 class="card-title" style="color: black;"> Harga</h4> </div>
+            <div class="col-md-3">  <h4 class="card-title" style="color: black;"> Jumlah</h4> </div>
+          </div><hr  style="margin-bottom: 1px;">
         </div>
 
-        <div class="card-content table-responsive">
-          <table class="table">
-            <thead>
-              <td><b>PRODUK</b></td>
-              <td style="padding-left: 180px;"><b>JUMLAH</b></td>
-              <td style="padding-left: 150px;"><b>HARGA</b></td>
-            </thead>
-          </table>
-          <div style="height: 123px; overflow-y: scroll;">
-            <table class="table table-hover table-responsive table-bordered">
-              <tbody>
+        @foreach($detail_pesanan_pelanggan as $detail_pesanan_pelanggans)
+        <div class="card-content" style="padding-left: 5px; padding-top: 1px; padding-bottom: 1px; padding-right: 1px;">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="row">
 
-                @foreach($detail_pesanan_pelanggan as $detail_pesanan_pelanggans)
-                <tr style="margin-top:0px;margin-bottom: 0px;">
-                  <td style="padding-left: 10px;"><a href="{{ url('detail-produk/'.$detail_pesanan_pelanggans->id_produk.'') }}">{{ $detail_pesanan_pelanggans->produk->nama_barang }}</a></td>
-                  <td style="padding-left: 100px;">{{ $detail_pesanan_pelanggans->jumlah_produk }}</td>
-                  <td style="padding-left: 150px;">{{ number_format($detail_pesanan_pelanggans->produk->harga_jual,0,',','.') }}</td>
-                </tr>
-                @endforeach
+                <div class="col-md-6">
+                  <div class="row">
+                    <div class="col-sm-4">
+                      <div class="img-container"  style="padding-left: 5px; padding-top: 1px; padding-bottom: 1px; padding-right: 1px; width:100px;">
 
-              </tbody>
-            </table>
+                        @if($detail_pesanan_pelanggans->produk->foto != NULL)
+                        <img src="../foto_produk/{{$detail_pesanan_pelanggans->produk->foto}}">
+                        @else
+                        <img src="../image/foto_default.png">
+                        @endif
+                      </div>
+                    </div>
+                    <div class="col-sm-8">
+                      <h5><a href="#"><b>{{$detail_pesanan_pelanggans->NamaBarang}} </b> </a> </h5>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-3">
+
+                  <h5><b>Rp. {{number_format($detail_pesanan_pelanggans->produk->harga_jual,0,',','.') }}</b></h5>
+                </div>
+
+                <div class="col-md-3">
+
+                  <h5><b>{{$detail_pesanan_pelanggans->jumlah_produk }} {{$detail_pesanan_pelanggans->produk->satuan->nama_satuan }}</b></h5>
+
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
+        </div><hr>
+        @endforeach
 
-        <div class="card-content table-responsive">  <hr>
-          <table>
-            <tbody>
-              <tr><td width="40%"><h5><b>Total :</b></h5></td> <td> &nbsp;&nbsp;&nbsp;</td> <td><h5><b>RP {{ number_format($pesanan_pelanggan->subtotal,0,',','.') }}</b></h5></td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+     </div>
+
+     {{$pagination}}
 
     </div>
 
-  </div>
+    <div class="col-md-5">
+      <div class="card">
+        <div class="card-content">
 
-  @endif
+         <b class="card-title" style="margin-top: 1px; margin-bottom: 1px;">Warung</b>
+         <p style="margin-top: 1px; margin-bottom: 1px;">{{ $pesanan_pelanggan->warung->name }}</p>
+         <p style="margin-top: 1px; margin-bottom: 1px;">{{ $pesanan_pelanggan->warung->no_telpon }}</p>
+         <p style="margin-top: 1px; margin-bottom: 1px;">{{ $pesanan_pelanggan->warung->kelurahan->nama }}</p>
+         <hr style="margin-top: 1x; margin-bottom: 1px;">
 
-</div>
+         <b class="card-title" style="margin-top: 1px; margin-bottom: 1px;">Alamat Pengiriman</b>
+         <p style="margin-top: 1px; margin-bottom: 1px;">{{ $pesanan_pelanggan->nama_pemesan }}</p>
+         <p style="margin-top: 1px; margin-bottom: 1px;">{{ $pesanan_pelanggan->no_telp_pemesan }}</p>
+         <p style="margin-top: 1px; margin-bottom: 1px;">{{ $pesanan_pelanggan->alamat_pemesan }}</p>
+
+         <hr style="margin-top: 1x; margin-bottom: 1px;">
+
+         <b class="card-title" style="margin-top: 1px; margin-bottom: 1px;">Total</b>
+         <p class="text-danger" style="margin-top: 1px; margin-bottom: 1px;"><b>Rp. {{ number_format($pesanan_pelanggan->subtotal,0,',','.') }}</b></p>
+
+         <hr style="margin-top: 1x; margin-bottom: 1px;">
+       </div>
+     </div>
+
+   </div>
+
+   @endif
+
+ </div>
 </div>
 </div>
 @endsection
