@@ -18,9 +18,9 @@
 <div class="main main-raised">
   <div class="container">
     <ul class="breadcrumb" style="margin-top: 10px; margin-bottom: 10px;">
-      <li><a href="{{ url('/daftar-produk') }}">Home</a></li>
-      <li><a href="{{ url('/keranjang-belanja') }}">Keranjang Belanja</a></li>
-      <li class="active">Pesanan</li>
+      <li><a href="{{ url('/daftar-produk') }}"><b>Home</b></a></li>
+      <li><a href="{{ url('/keranjang-belanja') }}"><b>Keranjang Belanja</b></a></li>
+      <li class="active"><b>Pesanan</b></li>
     </ul>
     <div class="card-content">
       <h3 class="title text-center">Selesaikan Pemesanan</h3>
@@ -37,38 +37,38 @@
         @else
         <div class="col-md-7">
           <div class="card" style="margin-bottom: 5px; margin-top: 5px;">
-            <div class="card-header">
-              <h6 class="card-title" style="color: black; padding-left: 10px"> Alamat Pengiriman</h6> <hr>
+            <div class="card-header" style="margin-bottom: 1px; margin-top: 1px;">
+              <h6 class="card-title" style="color: black; padding-left: 10px ;" > Alamat Pengiriman</h6> <hr>
             </div>
 
             {!! Form::model($user, ['url' => route('selesaikan-pemesanan.proses'), 'method' => 'put', 'files'=>'true','class'=>'form-horizontal','id'=>'formSelesaikanPesanan']) !!}
-            <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-              {!! Form::label('name', 'Nama', ['class'=>'col-md-2 control-label']) !!}
+            <div style="margin-bottom: 1px; margin-top: 1px;" class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
+              {!! Form::label('name', 'Nama', ['class'=>'col-md-2 control-label', 'style'=> 'margin-bottom:1px; margin-top:1px;']) !!}
               <div class="col-md-6">
                 {!! Form::text('name', null, ['class'=>'form-control','required','autocomplete'=>'off', 'placeholder' => 'Nama', 'id' => 'nama_pelanggan']) !!}
                 {!! $errors->first('name', '<p class="help-block">:message</p>') !!}
               </div>
             </div>
 
-            <div class="form-group{{ $errors->has('no_telp') ? ' has-error' : '' }}">
-              {!! Form::label('no_telp', 'No. Telpon', ['class'=>'col-md-2 control-label']) !!}
+            <div style="margin-bottom: 1px; margin-top: 1px;" class="form-group{{ $errors->has('no_telp') ? ' has-error' : '' }}">
+              {!! Form::label('no_telp', 'No. Telpon', ['class'=>'col-md-2 control-label', 'style'=> 'margin-bottom:1px; margin-top:1px;']) !!}
               <div class="col-md-6">
                 {!! Form::text('no_telp', null, ['class'=>'form-control','required','autocomplete'=>'off', 'placeholder' => 'No. Telpon', 'id' => 'nama_pelanggan']) !!}
                 {!! $errors->first('no_telp', '<p class="help-block">:message</p>') !!}
               </div>
             </div>
 
-            <div class="form-group{{ $errors->has('alamat') ? ' has-error' : '' }}">
-              {!! Form::label('alamat', 'Alamat', ['class'=>'col-md-2 control-label']) !!}
+            <div style="margin-bottom: 1px; margin-top: 1px;" class="form-group{{ $errors->has('alamat') ? ' has-error' : '' }}">
+              {!! Form::label('alamat', 'Alamat', ['class'=>'col-md-2 control-label', 'style'=> 'margin-bottom:1px; margin-top:1px;']) !!}
               <div class="col-md-6">
                 {!! Form::textarea('alamat', null, ['class'=>'form-control','required','autocomplete'=>'off', 'placeholder' => 'Alamat', 'id' => 'nama_pelanggan']) !!}
                 {!! $errors->first('alamat', '<p class="help-block">:message</p>') !!}
               </div>
             </div>
-
-            {!! Form::hidden('jumlah_produk',$jumlah_produk->total_produk , ['class'=>'form-control']) !!}
-            {!! Form::hidden('subtotal', $subtotal, ['class'=>'form-control']) !!}
-
+            <span style="display: none">
+              {!! Form::text('jumlah_produk',$jumlah_produk->total_produk , ['class'=>'form-control']) !!}
+              {!! Form::text('subtotal', $subtotal, ['class'=>'form-control']) !!}
+            </span>
 
           </div>
         </div>
