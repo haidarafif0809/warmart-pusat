@@ -113,8 +113,10 @@ class PesananPelangganController extends Controller
         $logo_warmart        = "" . asset('/assets/img/examples/warmart_logo.png') . "";
         $user                = Auth::user();
 
-        $pesanan_pelanggan        = PesananPelanggan::where('id_pelanggan', Auth::user()->id)->where('id', $id)->first();
-        $detail_pesanan_pelanggan = DetailPesananPelanggan::with(['produk', 'pelanggan', 'pesanan_pelanggan'])->where('id_pelanggan', Auth::user()->id)->where('id_pesanan_pelanggan', $pesanan_pelanggan->id)->get();
+        $pesanan_pelanggan        = PesananPelanggan::with('warung')->where('id_pelanggan', Auth::user()->id)->where('id', $id)->first();
+        $detail_pesanan_pelanggan = DetailPesananPelanggan::with(['produk', 'pelanggan', 'pesanan_pelanggan'])->where('id_pelanggan', Auth::user()->id)->where('id_pesanan_pelanggan', $pesanan_pelanggan->id)->paginate(10);
+        //PERINTAH PAGINATION
+        $pagination = $detail_pesanan_pelanggan->links();
 
         $status_pesanan = '';
         if ($pesanan_pelanggan->konfirmasi_pesanan == 0) {
@@ -127,7 +129,7 @@ class PesananPelangganController extends Controller
             $status_pesanan .= '<td><b  style="color:red">Batal</b></td>';
         }
 
-        return view('layouts.detail_pesanan_pelanggan', ['detail_pesanan_pelanggan' => $detail_pesanan_pelanggan, 'pesanan_pelanggan' => $pesanan_pelanggan, 'cek_belanjaan' => $cek_belanjaan, 'agent' => $agent, 'logo_warmart' => $logo_warmart, 'user' => $user, 'status_pesanan' => $status_pesanan]);
+        return view('layouts.detail_pesanan_pelanggan', ['detail_pesanan_pelanggan' => $detail_pesanan_pelanggan, 'pesanan_pelanggan' => $pesanan_pelanggan, 'cek_belanjaan' => $cek_belanjaan, 'agent' => $agent, 'logo_warmart' => $logo_warmart, 'user' => $user, 'status_pesanan' => $status_pesanan, 'pagination' => $pagination]);
     }
 
 }
