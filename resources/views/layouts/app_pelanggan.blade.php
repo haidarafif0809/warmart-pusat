@@ -62,7 +62,7 @@
                             <i class="material-icons">
                                 account_circle
                             </i>
-                            Masuk / Daftar
+                            Masuk
                         </a>
                         @endif
                         @if(Agent::isMobile() && Auth::check() && Auth::user()->tipe_user == 3)
