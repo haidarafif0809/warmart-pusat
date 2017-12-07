@@ -41,13 +41,13 @@ class DaftarProdukController extends Controller
         if (isset($warung_yang_dipesan)) {
             $data_produk = Barang::select(['id', 'kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung', 'konfirmasi_admin', 'satuan_id', 'hitung_stok'])
                 ->inRandomOrder()
-                ->where('id_warung', $warung_yang_dipesan)->paginate(20);
+                ->where('id_warung', $warung_yang_dipesan)->where('status_aktif', 1)->paginate(20);
         } else {
             //Pilih warung yang sudah dikonfirmasi admin
             $array_warung = DaftarProdukController::dataWarungTervalidasi();
-            $data_produk  = Barang::select(['id', 'kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung', 'konfirmasi_admin', 'satuan_id', 'hitung_stok'])
+            $data_produk  = Barang::select(['id', 'kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung', 'konfirmasi_admin', 'satuan_id', 'hitung_stok', 'status_aktif'])
                 ->inRandomOrder()
-                ->whereIn('id_warung', $array_warung)->paginate(20);
+                ->whereIn('id_warung', $array_warung)->where('status_aktif', 1)->paginate(20);
         }
 
         //PILIH DATA WARUNG
@@ -67,7 +67,7 @@ class DaftarProdukController extends Controller
         $daftar_warung = DaftarProdukController::daftarWarung($warung_data);
         //TAMPIL KATEGORI
         $kategori_produk = DaftarProdukController::produkKategori($kategori);
-        $nama_kategori   = "Temukan Apa Yang Anda Butuhkan";
+        $nama_kategori   = "";
 
         return view('layouts.daftar_produk', ['kategori_produk' => $kategori_produk, 'daftar_produk' => $daftar_produk, 'daftar_warung' => $daftar_warung, 'produk_pagination' => $produk_pagination, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'agent' => $agent, 'cek_belanjaan' => $cek_belanjaan, 'logo_warmart' => $logo_warmart]);
     }
@@ -113,15 +113,15 @@ class DaftarProdukController extends Controller
         }
 
         if (isset($warung_yang_dipesan)) {
-            $data_produk = Barang::select(['id', 'kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung', 'konfirmasi_admin', 'satuan_id', 'hitung_stok'])
-                ->where('kategori_barang_id', $id)->where('id_warung', $warung_yang_dipesan)->inRandomOrder()->paginate(20);
+            $data_produk = Barang::select(['id', 'kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung', 'konfirmasi_admin', 'satuan_id', 'hitung_stok', 'status_aktif'])
+                ->where('kategori_barang_id', $id)->where('id_warung', $warung_yang_dipesan)->where('status_aktif', 1)->inRandomOrder()->paginate(20);
         } else {
             //Pilih warung yang sudah dikonfirmasi admin
             $array_warung = DaftarProdukController::dataWarungTervalidasi();
 
             //PILIH PRODUK
-            $data_produk = Barang::select(['id', 'kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung', 'konfirmasi_admin', 'satuan_id', 'hitung_stok'])
-                ->where('kategori_barang_id', $id)->whereIn('id_warung', $array_warung)->inRandomOrder()->paginate(20);
+            $data_produk = Barang::select(['id', 'kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung', 'konfirmasi_admin', 'satuan_id', 'hitung_stok', 'status_aktif'])
+                ->where('kategori_barang_id', $id)->whereIn('id_warung', $array_warung)->where('status_aktif', 1)->inRandomOrder()->paginate(20);
 
         }
 
@@ -326,33 +326,36 @@ class DaftarProdukController extends Controller
     {
         $card_produk = "";
         if ($produks->konfirmasi_admin != 0) {
-            $warung     = Warung::select(['name', 'id'])->where('id', $produks->id_warung)->first();
-            $cek_produk = DaftarProdukController::cekStokProduk($produks);
-            $card_produk .= '
+            if ($produks->status_aktif != 0) {
+
+                $warung     = Warung::select(['name', 'id'])->where('id', $produks->id_warung)->first();
+                $cek_produk = DaftarProdukController::cekStokProduk($produks);
+                $card_produk .= '
     <div class="col-md-3 col-sm-6 col-xs-6 list-produk " style=" margin-bottom:10px;">
     <div class="card cards card-pricing">
     <a href="' . url("/detail-produk/" . $produks->id . "") . '">
     <div class="card-image">';
-            $card_produk .= DaftarProdukController::fotoProduk($produks);
-            $card_produk .= '
+                $card_produk .= DaftarProdukController::fotoProduk($produks);
+                $card_produk .= '
     </div>
     </a>
     <div class="card-content">
     <div class="footer">
     <p class=" flexFont">';
 
-            $card_produk .= '<a href="' . url("/detail-produk/" . $produks->id . "") . '" >';
-            $card_produk .= DaftarProdukController::namaProduk($produks);
-            $card_produk .= '</a></p>
+                $card_produk .= '<a href="' . url("/detail-produk/" . $produks->id . "") . '" >';
+                $card_produk .= DaftarProdukController::namaProduk($produks);
+                $card_produk .= '</a></p>
     <p style="color:#d21f30;" class="flexFont"> ' . $produks->rupiah . ' / ' . $produks->satuan->nama_satuan . ' </p>';
-            $card_produk .= '<p class="flexFont">' . DaftarProdukController::namaWarung($warung) . '</p>';
-            //tombol beli
-            $card_produk .= DaftarProdukController::tombolBeli($cek_produk, $produks);
-            $card_produk .= '
+                $card_produk .= '<p class="flexFont">' . DaftarProdukController::namaWarung($warung) . '</p>';
+                //tombol beli
+                $card_produk .= DaftarProdukController::tombolBeli($cek_produk, $produks);
+                $card_produk .= '
     </div>
     </div>
     </div>
     </div>';
+            }
         }
         return $card_produk;
     }

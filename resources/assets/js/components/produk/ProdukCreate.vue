@@ -20,7 +20,7 @@
 								<div class="form-group">
 									<label for="kode_barcode" class="col-md-2 control-label">Kode Barcode</label>
 									<div class="col-md-10">
-										<input class="form-control" autocomplete="off" placeholder="Kode Barcode" v-model="produk.kode_barcode" type="text" name="kode_barcode" id="kode_barcode"  autofocus="">
+										<input class="form-control" autocomplete="off" placeholder="Kode Barcode (boleh tidak di isi)" v-model="produk.kode_barcode" type="text" name="kode_barcode" id="kode_barcode"  autofocus="">
 										<span v-if="errors.kode_barcode" id="kode_barcode_error" class="label label-danger">{{ errors.kode_barcode[0] }}</span>
 									</div>
 								</div>
