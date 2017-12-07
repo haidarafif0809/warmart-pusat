@@ -2,11 +2,23 @@
 	
 	<div class="row">
 		<div class="col-md-12">
+            <div class="alert alert-warning" v-if="profil_user_warung.foto_ktp == null ">
+                 <div class="alert-icon">
+                  <i class="material-icons">info_outline</i>
+                </div>
+                <b>Info : Silakan lengkapi profil untuk mengakses fitur warung.</b>
+            </div>
+            <div class="alert alert-info" v-else>
+                 <div class="alert-icon">
+                  <i class="material-icons">info_outline</i>
+                </div>
+                <b>Info : Pendaftaran anda sebagai warung sedang menunggu verifikasi dari admin.</b>
+            </div>
+            
 			<ul class="breadcrumb">
 				<li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li>
 				<li class="active">Ubah Profil</li>
 			</ul>
-
 
 			<div class="card">
 				<div class="card-header card-header-icon" data-background-color="purple">
@@ -50,7 +62,7 @@
                             <div class="col-md-4">
                                 <div class="fileinput fileinput-new text-center" data-provides="fileinput">
                                     <div class="fileinput-new thumbnail">
-                                        <img v-if="profil_user_warung.foto_ktp != NULL" :src="url_picture+'/'+profil_user_warung.foto_ktp" /> 
+                                        <img v-if="profil_user_warung.foto_ktp != null" :src="url_picture+'/'+profil_user_warung.foto_ktp" /> 
                                         <img :src="url_origin+'/assets/img/image_placeholder.jpg'" alt="Foto Ktp Akan Tampil Disini" v-else>
                                     </div>
                                     <div class="fileinput-preview fileinput-exists thumbnail"></div>
