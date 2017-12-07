@@ -62,6 +62,10 @@ import ProdukDetail from './components/produk/ProdukDetail.vue';
 import UbahPasswordUserWarung from './components/ubah_password/UbahPasswordUserWarung.vue';
 // UBAH PROFIL USER WARUNG
 import UbahProfilUserWarung from './components/ubah_profil/UbahProfilUserWarung.vue';
+// ITEM MASUK 
+import ItemMasukIndex from './components/item_masuk/ItemMasukIndex.vue';
+import ItemMasukCreate from './components/item_masuk/ItemMasukCreate.vue';
+import ItemMasukEdit from './components/item_masuk/ItemMasukEdit.vue';
 const routes = [{
         path: '/',
         components: {
@@ -284,7 +288,20 @@ const routes = [{
         path: '/ubah-profil-user-warung',
         component: UbahProfilUserWarung,
         name: 'ubahProfilUserWarung'
-    }
+    },
+    // ITEM MASUK
+    {
+        path: '/item-masuk',
+        component: ItemMasukIndex,
+        name: 'indexItemMasuk'
+    }, {
+        path: '/create-item-masuk',
+        component: ItemMasukCreate,
+        name: 'createItemMasuk'
+    }, {
+        path: '/edit-item-masuk/:id',
+        component: ItemMasukEdit,
+        name: 'editItemMasuk'
+    },
 ]
-
 export default routes;
