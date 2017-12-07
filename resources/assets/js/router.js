@@ -62,6 +62,10 @@ import ProdukDetail from './components/produk/ProdukDetail.vue';
 import UbahPasswordUserWarung from './components/ubah_password/UbahPasswordUserWarung.vue';
 // UBAH PROFIL USER WARUNG
 import UbahProfilUserWarung from './components/ubah_profil/UbahProfilUserWarung.vue';
+// KAS KELUAR
+import KasKeluarIndex from './components/kas_keluar/KasKeluarIndex.vue';
+import KasKeluarCreate from './components/kas_keluar/KasKeluarCreate.vue';
+import KasKeluarEdit from './components/kas_keluar/KasKeluarEdit.vue';
 const routes = [{
         path: '/',
         components: {
@@ -227,7 +231,7 @@ const routes = [{
         component: KategoriTransaksiEdit,
         name: 'editKategoriTransaksi'
     },
-    // Kategori Transaksi
+    // Kas
     {
         path: '/kas',
         component: KasIndex,
@@ -284,7 +288,20 @@ const routes = [{
         path: '/ubah-profil-user-warung',
         component: UbahProfilUserWarung,
         name: 'ubahProfilUserWarung'
+    },
+    // Kas Keluar
+    {
+        path: '/kas-keluar',
+        component: KasKeluarIndex,
+        name: 'indexKasKeluar'
+    }, {
+        path: '/create-kas-keluar',
+        component: KasKeluarCreate,
+        name: 'createKasKeluar'
+    }, {
+        path: '/edit-kas-keluar/:id',
+        component: KasKeluarEdit,
+        name: 'editKasKeluar'
     }
 ]
-
 export default routes;

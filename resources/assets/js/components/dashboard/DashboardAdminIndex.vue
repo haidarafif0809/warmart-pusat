@@ -96,6 +96,15 @@
     </div>
 
     <div class="row" v-else-if="tipeUser.content == 4">   
+        <div class="col-md-12">
+            <div class="alert alert-info"  v-if="dashboardData.konfirmasi_admin == 0">
+                <div class="alert-icon">
+                    <i class="material-icons">info_outline</i>
+                </div>
+                <b>Info : Pendaftaran anda sebagai warung sedang menunggu verifikasi dari admin.</b>
+            </div>        
+        </div>
+        
         <center>
             <img v-bind:src="url+ 'image/warmart_logo.png'"class="img-responsive" width="500" height="160"> 
         </center>

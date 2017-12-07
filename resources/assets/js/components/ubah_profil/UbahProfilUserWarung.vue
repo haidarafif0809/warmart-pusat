@@ -2,13 +2,13 @@
 	
 	<div class="row">
 		<div class="col-md-12">
-            <div class="alert alert-warning" v-if="profil_user_warung.foto_ktp == null ">
+            <div class="alert alert-warning" v-if="profil_user_warung.foto_ktp == null && profil_user_warung.konfirmasi_admin == 0 ">
                  <div class="alert-icon">
                   <i class="material-icons">info_outline</i>
                 </div>
                 <b>Info : Silakan lengkapi profil untuk mengakses fitur warung.</b>
             </div>
-            <div class="alert alert-info" v-else>
+            <div class="alert alert-info" v-else-if="profil_user_warung.foto_ktp != null && profil_user_warung.konfirmasi_admin == 0">
                  <div class="alert-icon">
                   <i class="material-icons">info_outline</i>
                 </div>
@@ -120,7 +120,8 @@ export default {
 				no_telp : '',
 				email : '',
 				alamat : '',
-				foto_ktp :''
+                foto_ktp :'',
+                konfirmasi_admin :''
             },
             message : '',
             url : window.location.origin+(window.location.pathname).replace("dashboard", "ubah-profil-user-warung"),

@@ -74,26 +74,26 @@ class HomeController extends Controller
             $warung = Warung::select(['name'])->where('id', $produks->id_warung)->first();
 
             $daftar_produk .= '
-        <div class="col-md-3 col-sm-6 col-xs-6 list-produk">
-          <div class="card cards card-pricing">
-            <a href="' . url("/keranjang-belanja") . '">
-              <div class="card-image">';
+            <div class="col-md-3 col-sm-6 col-xs-6 list-produk">
+              <div class="card cards card-pricing">
+                <a href="' . url("/keranjang-belanja") . '">
+                  <div class="card-image">';
             if ($produks->foto != null) {
                 $daftar_produk .= '<img src="./foto_produk/' . $produks->foto . '">';
             } else {
                 $daftar_produk .= '<img src="./image/foto_default.png">';
             }
             $daftar_produk .= '
-              </div>
+                </div>
             </a>
             <div class="card-content">
               <div class="footer">
                 <p class="flexFont">
                   <a href="' . url("/keranjang-belanja") . '" >
                     ' . strip_tags(substr($produks->nama, 0, 10)) . '...
-                  </a></p>
-                  <p style="color:red; font-size:18px"> ' . $produks->rupiah . ' </p>
-                  <a class="description"><i class="material-icons">store</i>  ' . strip_tags(substr($warung->name, 0, 10)) . '... </a><br>';
+                </a></p>
+                <p style="color:red; font-size:18px"> ' . $produks->rupiah . ' </p>
+                <a class="description"><i class="material-icons">store</i>  ' . strip_tags(substr($warung->name, 0, 10)) . '... </a><br>';
 
             if ($agent->isMobile()) {
                 $daftar_produk .= '<a href="' . url("/keranjang-belanja") . '" class="btn btn-danger btn-block" id="btnBeliSekarang" style="background-color:#01573e"> Beli Sekarang </a>';
@@ -101,10 +101,10 @@ class HomeController extends Controller
                 $daftar_produk .= '<a href="' . url('/keranjang-belanja/tambah-produk-keranjang-belanja/' . $produks->id . '') . '" id="btnBeliSekarang" class="btn btn-danger btn-block"  style="background-color:#01573e;"> Beli Sekarang </a>';
             }
             $daftar_produk .= '
-                </div>
-              </div>
             </div>
-          </div>';
+        </div>
+    </div>
+</div>';
         }
         return $daftar_produk;
     }
@@ -227,14 +227,14 @@ class HomeController extends Controller
         $prose_total_persedian = $nila_masuk->total_masuk - $nila_keluar->total_keluar;
         $total_persedian       = $prose_total_persedian;
 
-        $response['produk_warung']   = $this->tandaPemisahTitik($produk_warung);
-        $response['transaksi_kas']   = 'Rp ' . $this->tandaPemisahTitik($transaksi_kas->jumlah_kas);
-        $response['kas_masuk']       = 'Rp ' . $this->tandaPemisahTitik($jumlah_kas_masuk->total_kas_masuk);
-        $response['kas_keluar']      = 'Rp ' . $this->tandaPemisahTitik($jumlah_kas_keluar->total_kas_keluar);
-        $response['stok_masuk']      = $this->tandaPemisahTitik($stok_masuk->jumlah_item_masuk);
-        $response['stok_keluar']     = $this->tandaPemisahTitik($stok_keluar->jumlah_item_keluar);
-        $response['total_persedian'] = 'Rp ' . $this->tandaPemisahTitik($total_persedian);
-
+        $response['produk_warung']    = $this->tandaPemisahTitik($produk_warung);
+        $response['transaksi_kas']    = 'Rp ' . $this->tandaPemisahTitik($transaksi_kas->jumlah_kas);
+        $response['kas_masuk']        = 'Rp ' . $this->tandaPemisahTitik($jumlah_kas_masuk->total_kas_masuk);
+        $response['kas_keluar']       = 'Rp ' . $this->tandaPemisahTitik($jumlah_kas_keluar->total_kas_keluar);
+        $response['stok_masuk']       = $this->tandaPemisahTitik($stok_masuk->jumlah_item_masuk);
+        $response['stok_keluar']      = $this->tandaPemisahTitik($stok_keluar->jumlah_item_keluar);
+        $response['total_persedian']  = 'Rp ' . $this->tandaPemisahTitik($total_persedian);
+        $response['konfirmasi_admin'] = Auth::user()->konfirmasi_admin;
         return response()->json($response);
 
     }

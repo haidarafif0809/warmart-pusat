@@ -450,6 +450,10 @@ Route::get('/kas/pencarian', 'KasController@pencarian')->middleware('auth');
 Route::get('/kas/cek-default-kas', 'KasController@cekDefaultKas')->middleware('auth');
 Route::get('/kas/cek-kas-warung', 'KasController@cekKasWarung')->middleware('auth');
 
+//KAS KELUAR VUE.JS
+Route::get('/kas-keluar/view', 'KasKeluarController@view')->middleware('auth');
+Route::get('/kas-keluar/pencarian', 'KasKeluarController@pencarian')->middleware('auth');
+
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
     Route::resource('user', 'UserController');
