@@ -245,9 +245,14 @@ class RegisterController extends Controller
             User::where('id', $user->id)->update(['status_konfirmasi' => '1']);
             $user = User::find($user->id);
             Auth::login($user);
-
+            //warung
             if ($request->status == 0) {
-                return redirect('/home');
+                if (Auth::user()->tipe_user == 4) {
+                    return redirect('/dashboard#/ubah-profil-user-warung');
+                } else {
+                    return redirect('/');
+                }
+
             } elseif ($request->status == 1) {
                 return redirect('/ubah-password');
             }
