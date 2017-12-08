@@ -510,7 +510,7 @@
         <!--End of Tawk.to Script-->
     </body>
     <!--   Core JS Files   -->
-    <script src="{{ asset('js/app.js?v=1.24')}}" type="text/javascript">
+    <script src="{{ asset('js/app.js?v=1.25')}}" type="text/javascript">
     </script>
     <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript">
     </script>

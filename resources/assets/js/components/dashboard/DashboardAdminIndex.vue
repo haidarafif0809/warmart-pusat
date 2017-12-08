@@ -108,6 +108,27 @@
         <center>
             <img v-bind:src="url+ 'image/warmart_logo.png'"class="img-responsive" width="500" height="160"> 
         </center>
+        <center>
+             <div id="tab" class="btn-group" data-toggle="buttons-radio">
+        
+                    <router-link :to="{name: 'indexProduk'}"  class="btn btn-large btn-info activemenu-nav">
+                                <i class="material-icons">
+                                    store
+                                </i>
+                                Produk
+                            </router-link>
+            
+                <a :href="url + 'pesanan-warung'"  class="btn btn-large btn-info" >
+                                <i class="material-icons">
+                                    archive
+                                </i>
+                            
+                                    Pesanan
+                                
+                            </a>
+          
+            </div>
+            </center>
 
         <div class="col-lg-3 col-md-6 col-sm-6">
             <div class="card card-stats"> 
@@ -235,6 +256,7 @@ export default {
                 alert("Tidak Bisa Memuat Data");
             });
         }
+      
     }
 }
 </script>
