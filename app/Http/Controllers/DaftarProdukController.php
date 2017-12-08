@@ -237,7 +237,7 @@ class DaftarProdukController extends Controller
             if ($cek_produk == 0) {
                 $tombol_beli = '<a disabled="true" style="background-color:#01573e" class="btn btn-block tombolBeli" rel="tooltip" title="Stok Tidak Ada"> Beli Sekarang </a>';
             } else {
-                $tombol_beli = '<a href="' . url('/keranjang-belanja/tambah-produk-keranjang-belanja/' . $produks->id . '') . '" id="btnBeliSekarang" style="background-color:#01573e" class="btn btn-block tombolBeli" rel="tooltip" title="Tambah Ke Keranjang Belanja"> Beli Sekarang </a>';
+                $tombol_beli = '<a href="' . url('/keranjang-belanja/tambah-produk-keranjang-belanja/' . $produks->id . '') . '" id="btnBeliSekarang" style="background-color:#01573e" class="btn btn-block tombolBeli" > Beli Sekarang </a>';
             }
         } elseif (Auth::check() && Auth::user()->tipe_user != $pelanggan) {
             $tombol_beli = '<a  disabled="true" style="background-color:#01573e" class="btn btn-block tombolBeli" rel="tooltip" title="Masuk Sebagai Pelanggan Untuk Beli" > Beli Sekarang </a>';
@@ -245,7 +245,7 @@ class DaftarProdukController extends Controller
             if ($cek_produk == 0) {
                 $tombol_beli = '<a disabled="true" style="background-color:#01573e" class="btn btn-block tombolBeli" rel="tooltip" title="Stok Tidak Ada" > Beli Sekarang </a>';
             } else {
-                $tombol_beli = '<a href="' . url('/keranjang-belanja/tambah-produk-keranjang-belanja/' . $produks->id . '') . '" id="btnBeliSekarang" style="background-color:#01573e" class="btn btn-block tombolBeli" rel="tooltip" title="Tambah Ke Keranjang Belanja"> Beli Sekarang </a>';
+                $tombol_beli = '<a href="' . url('/keranjang-belanja/tambah-produk-keranjang-belanja/' . $produks->id . '') . '" id="btnBeliSekarang" style="background-color:#01573e" class="btn btn-block tombolBeli" > Beli Sekarang </a>';
             }
         }
 
