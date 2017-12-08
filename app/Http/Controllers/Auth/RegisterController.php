@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\BankWarung;
 use App\Http\Controllers\Controller;
+use App\Kas;
 use App\KomunitasCustomer;
 use App\Notifications\PendaftarWarung;
 use App\Role;
@@ -80,11 +81,12 @@ class RegisterController extends Controller
         } elseif ($data['id_register'] == 3) {
             //USER WARUNG
             return Validator::make($data, [
-                'email'    => 'nullable|without_spaces|unique:users,email|email',
-                'name'     => 'required',
-                'password' => 'required|string|min:6|confirmed',
-                'no_telp'  => 'required|numeric|without_spaces|unique:users,no_telp',
-                'alamat'   => 'required',
+                'email'       => 'nullable|without_spaces|unique:users,email|email',
+                'name'        => 'required',
+                'nama_warung' => 'required',
+                'password'    => 'required|string|min:6|confirmed',
+                'no_telp'     => 'required|numeric|without_spaces|unique:users,no_telp',
+                'alamat'      => 'required',
             ]);
         }
     }
@@ -168,7 +170,7 @@ class RegisterController extends Controller
 
             //MASTER WARUNG
             $warung = Warung::create([
-                'name'      => $data['name'],
+                'name'      => $data['nama_warung'],
                 'alamat'    => $data['alamat'],
                 'no_telpon' => $data['no_telp'],
                 'wilayah'   => "-",
@@ -193,6 +195,10 @@ class RegisterController extends Controller
                 'status_konfirmasi' => 0,
                 'kode_verifikasi'   => $kode_verifikasi,
             ]);
+
+            // KAS WARUNG
+
+            Kas::create(['kode_kas' => 'K01', 'nama_kas' => 'Kas Warung', 'status_kas' => 1, 'default_kas' => 1, 'warung_id' => $warung->id]);
 
             $userWarungRole = Role::where('name', 'warung')->first();
             $user->attachRole($userWarungRole);
