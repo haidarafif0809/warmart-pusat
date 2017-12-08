@@ -39,7 +39,8 @@ class DaftarProdukController extends Controller
         $agent = new Agent();
 
         if (isset($warung_yang_dipesan)) {
-            $data_produk = Barang::select(['id', 'kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung', 'konfirmasi_admin', 'satuan_id', 'hitung_stok'])
+
+            $data_produk = Barang::select(['id', 'kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung', 'konfirmasi_admin', 'satuan_id', 'hitung_stok', 'status_aktif'])
                 ->inRandomOrder()
                 ->where('id_warung', $warung_yang_dipesan)->where('status_aktif', 1)->paginate(20);
         } else {
