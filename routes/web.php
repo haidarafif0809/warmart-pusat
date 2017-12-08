@@ -89,9 +89,8 @@ Route::get('/daftar-produk/pencarian/search', [
 
 //PUNYA DETAIL PRODUK
 Route::get('/detail-produk/{id}', [
-    'middleware' => ['auth'],
-    'as'         => 'detail-produk.detail_produk',
-    'uses'       => 'DetailProdukController@detail_produk',
+    'as'   => 'detail-produk.detail_produk',
+    'uses' => 'DetailProdukController@detail_produk',
 ]);
 
 //PUNYA HALAMAN WARUNG
