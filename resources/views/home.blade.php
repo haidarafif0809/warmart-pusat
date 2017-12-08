@@ -3,13 +3,7 @@
 @section('content')
 
 <!-- LOGI USER WARUNG -->
-@if(Auth::user()->tipe_user == 4 AND Auth::user()->konfirmasi_admin == 0)
-<div class="alert alert-info">
-	<div class="alert-icon">
-		<i class="material-icons">info_outline</i>
-	</div>
-	<b>Info : Pendaftaran anda sebagai warung sedang menunggu verifikasi dari admin.</b>
-</div>
+@if(Auth::user()->tipe_user == 4 AND Auth::user()->foto_ktp == null )
 <router-view name="ubahProfilUserWarung"></router-view>
 <router-view></router-view>
 @elseif(Auth::user()->tipe_user == 2 AND Auth::user()->konfirmasi_admin == 0)
@@ -29,7 +23,7 @@
 </router-view>
 
 
-@elseif(Auth::user()->tipe_user == 4 AND Auth::user()->konfirmasi_admin == 1)
+@elseif(Auth::user()->tipe_user == 4 AND Auth::user()->foto_ktp != null )
 {{-- dashboard untuk warung --}}
 
 <router-view name="dashboardIndex"></router-view>
