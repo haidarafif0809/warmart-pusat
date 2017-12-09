@@ -70,6 +70,10 @@ import ItemMasukEdit from './components/item_masuk/ItemMasukEdit.vue';
 import KasKeluarIndex from './components/kas_keluar/KasKeluarIndex.vue';
 import KasKeluarCreate from './components/kas_keluar/KasKeluarCreate.vue';
 import KasKeluarEdit from './components/kas_keluar/KasKeluarEdit.vue';
+//KAS MASUK 
+import KasMasukIndex from './components/kas_masuk/KasMasukIndex.vue';
+import KasMasukCreate from './components/kas_masuk/KasMasukCreate.vue';
+import KasMasukEdit from './components/kas_masuk/KasMasukEdit.vue';
 const routes = [{
         path: '/',
         components: {
@@ -320,6 +324,20 @@ const routes = [{
         path: '/edit-item-masuk/:id',
         component: ItemMasukEdit,
         name: 'editItemMasuk'
+    },
+    // kas masuk
+    {
+        path: '/kas-masuk',
+        component: KasMasukIndex,
+        name: 'indexKasMasuk'
+    }, {
+        path: '/create-kas-masuk',
+        component: KasMasukCreate,
+        name: 'createKasMasuk'
+    }, {
+        path: '/edit-kas-masuk/:id',
+        component: KasMasukEdit,
+        name: 'editKasMasuk'
     }
 ]
 export default routes;

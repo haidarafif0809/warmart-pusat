@@ -459,6 +459,13 @@ Route::get('/item-masuk/pencarian-tbs-item-masuk', 'ItemMasukController@pencaria
 Route::get('/kas-keluar/view', 'KasKeluarController@view')->middleware('auth');
 Route::get('/kas-keluar/pencarian', 'KasKeluarController@pencarian')->middleware('auth');
 
+//KAS MASUK VUE JS
+Route::get('/kas-masuk/view', 'KasMasukController@view')->middleware('auth');
+Route::get('/kas-masuk/pencarian', 'KasMasukController@pencarian')->middleware('auth');
+Route::get('/kas-masuk/pilih-kas', 'KasMasukController@pilih_kas')->middleware('auth');
+Route::get('/kas-masuk/pilih-kategori', 'KasMasukController@pilih_kategori')->middleware('auth');
+Route::get('/kas-masuk/cek-kas-terpakai/{id}', 'KasMasukController@cekKasTerpakai')->middleware('auth');
+
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
     Route::resource('user', 'UserController');
