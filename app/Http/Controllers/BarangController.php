@@ -389,8 +389,7 @@ class BarangController extends Controller
             array_push($array, [
                 'id'          => $produks->id,
                 'nama_produk' => title_case($produks->nama_barang),
-                'kode_barang' => $produks->kode_barang,
-                'produk'      => $produks->id . "|" . title_case($produks->nama_barang)]);
+                'kode_barang' => $produks->kode_barang]);
         }
 
         return response()->json($array);
