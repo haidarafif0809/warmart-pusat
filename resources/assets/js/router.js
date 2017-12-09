@@ -66,6 +66,10 @@ import UbahProfilUserWarung from './components/ubah_profil/UbahProfilUserWarung.
 import ItemMasukIndex from './components/item_masuk/ItemMasukIndex.vue';
 import ItemMasukCreate from './components/item_masuk/ItemMasukCreate.vue';
 import ItemMasukEdit from './components/item_masuk/ItemMasukEdit.vue';
+// KAS KELUAR
+import KasKeluarIndex from './components/kas_keluar/KasKeluarIndex.vue';
+import KasKeluarCreate from './components/kas_keluar/KasKeluarCreate.vue';
+import KasKeluarEdit from './components/kas_keluar/KasKeluarEdit.vue';
 const routes = [{
         path: '/',
         components: {
@@ -231,7 +235,7 @@ const routes = [{
         component: KategoriTransaksiEdit,
         name: 'editKategoriTransaksi'
     },
-    // Kategori Transaksi
+    // Kas
     {
         path: '/kas',
         component: KasIndex,
@@ -289,19 +293,19 @@ const routes = [{
         component: UbahProfilUserWarung,
         name: 'ubahProfilUserWarung'
     },
-    // ITEM MASUK
+    // Kas Keluar
     {
-        path: '/item-masuk',
-        component: ItemMasukIndex,
-        name: 'indexItemMasuk'
+        path: '/kas-keluar',
+        component: KasKeluarIndex,
+        name: 'indexKasKeluar'
     }, {
-        path: '/create-item-masuk',
-        component: ItemMasukCreate,
-        name: 'createItemMasuk'
+        path: '/create-kas-keluar',
+        component: KasKeluarCreate,
+        name: 'createKasKeluar'
     }, {
-        path: '/edit-item-masuk/:id',
-        component: ItemMasukEdit,
-        name: 'editItemMasuk'
-    },
+        path: '/edit-kas-keluar/:id',
+        component: KasKeluarEdit,
+        name: 'editKasKeluar'
+    }
 ]
 export default routes;

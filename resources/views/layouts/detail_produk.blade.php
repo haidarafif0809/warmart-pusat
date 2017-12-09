@@ -140,6 +140,14 @@ p {
                         <a href="{{ url('/') }}">
                             <img class="navbar-brand" src="{{asset('/assets/img/examples/warmart_logo.png')}}"/>
                         </a>
+                        @if(Agent::isMobile() && !Auth::check())
+                        <a class="navbar-brand pull-right" href="{{ url('/login') }}">
+                            <i class="material-icons">
+                                account_circle
+                            </i>
+                            Masuk
+                        </a>
+                        @endif
                         @if(Agent::isMobile() && Auth::check() && Auth::user()->tipe_user == 3)
                         <a class="navbar-brand pull-right" href="{{ url('/keranjang-belanja') }}">
                             <i class="material-icons">
@@ -203,7 +211,17 @@ p {
                                     </i>
                                     Pesanan
                                 </a>
-                                @endif
+                            </li>
+                            @endif
+            @endif
+            @if(Auth::check() && (Auth::user()->tipe_user == 4 OR Auth::user()->tipe_user == 1 ))
+                            <li>
+                                <a href="{{ url('/dashboard')}}">
+                                    <i class="material-icons">
+                                        dashboard
+                                    </i>
+                                    dashboard
+                                </a>
                             </li>
                             @endif
                             <li>
@@ -211,7 +229,7 @@ p {
                                     <i class="material-icons">
                                         info
                                     </i>
-                                    INFO Warmart
+                                    SUPPORT Warmart
                                 </a>
                             </li>
                             <li>
@@ -243,7 +261,7 @@ p {
                             <li class="button-container">
                                 <a class="btn btn-rose btn-round" href="{{ url('/login')}}">
                                     <i class="material-icons">
-                                        lock_outline
+                                        account_circle
                                     </i>
                                     Masuk
                                 </a>
@@ -253,7 +271,7 @@ p {
                     </div>
                 </div>
             </nav>
-            <div "="" class="page-header header-filter header-small" data-parallax="false" style="background-image: url('../image/background2.jpg');">
+            <div class="page-header header-filter header-small" data-parallax="false" style="background-image: url('../image/background2.jpg');">
                 <div class="container">
                     <div class="row">
                         <div class="col-md-8 col-md-offset-2">

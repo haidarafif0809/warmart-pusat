@@ -89,9 +89,8 @@ Route::get('/daftar-produk/pencarian/search', [
 
 //PUNYA DETAIL PRODUK
 Route::get('/detail-produk/{id}', [
-    'middleware' => ['auth'],
-    'as'         => 'detail-produk.detail_produk',
-    'uses'       => 'DetailProdukController@detail_produk',
+    'as'   => 'detail-produk.detail_produk',
+    'uses' => 'DetailProdukController@detail_produk',
 ]);
 
 //PUNYA HALAMAN WARUNG
@@ -456,6 +455,10 @@ Route::get('/item-masuk/view', 'ItemMasukController@view')->middleware('auth');
 Route::get('/item-masuk/pencarian', 'ItemMasukController@pencarian')->middleware('auth');
 Route::get('/item-masuk/view-tbs-item-masuk', 'ItemMasukController@viewTbsItemMasuk')->middleware('auth');
 Route::get('/item-masuk/pencarian-tbs-item-masuk', 'ItemMasukController@pencarianTbsItemMasuk')->middleware('auth');
+
+//KAS KELUAR VUE.JS
+Route::get('/kas-keluar/view', 'KasKeluarController@view')->middleware('auth');
+Route::get('/kas-keluar/pencarian', 'KasKeluarController@pencarian')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 

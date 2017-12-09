@@ -136,6 +136,24 @@
                             </a>
                             @endif
                         </li>
+                        <li>
+                            <router-link :to="{name: 'indexProduk'}" class="menu-nav">
+                                <i class="material-icons">
+                                    store
+                                </i>
+                                Produk
+                            </router-link>
+                        </li>
+                        <li>
+                            <a href="{{ route('pesanan-warung.index') }}">
+                                <i class="material-icons">
+                                    archive
+                                </i>
+                                <p>
+                                    Pesanan
+                                </p>
+                            </a>
+                        </li>
                         <!--PEMBELIAN-->
                         @if(Auth::user()->tipe_user == 4 AND Auth::user()->konfirmasi_admin == 1 AND Auth::user()->foto_ktp != "")
                         <li class="vueJs">
@@ -145,17 +163,6 @@
                                 </i>
                                 <p>
                                     Pembelian
-                                </p>
-                            </a>
-                        </li>
-                        <!--PEMBELIAN-->
-                        <li>
-                            <a href="{{ route('pesanan-warung.index') }}">
-                                <i class="material-icons">
-                                    archive
-                                </i>
-                                <p>
-                                    Pesanan
                                 </p>
                             </a>
                         </li>
@@ -204,6 +211,16 @@
                                             </span>
                                         </a>
                                     </li>
+                                    <li>
+                                        <router-link :to="{name: 'indexSuplier'}" class="menu-nav">
+                                            <span class="sidebar-mini">
+                                                S
+                                            </span>
+                                            <span class="sidebar-normal">
+                                                Supplier
+                                            </span>
+                                        </router-link>
+                                    </li>
                                 </ul>
                             </div>
                         </li>
@@ -213,13 +230,33 @@
                                     autorenew
                                 </i>
                                 <p>
-                                    Transaksi Kas
+                                    Kas
                                     <b class="caret">
                                     </b>
                                 </p>
                             </a>
                             <div class="collapse" id="transaksiKas">
                                 <ul class="nav">
+                                    <li>
+                                        <router-link :to="{name: 'indexKas'}" class="menu-nav">
+                                            <span class="sidebar-mini">
+                                                K
+                                            </span>
+                                            <span class="sidebar-normal">
+                                                Kas
+                                            </span>
+                                        </router-link>
+                                    </li>
+                                    <li>
+                                        <router-link :to="{name: 'indexKategoriTransaksi'}" class="menu-nav">
+                                            <span class="sidebar-mini">
+                                                KT
+                                            </span>
+                                            <span class="sidebar-normal">
+                                                Kategori Transaksi
+                                            </span>
+                                        </router-link>
+                                    </li>
                                     <li class="vueJs">
                                         <a href="#">
                                             <span class="sidebar-mini">
@@ -249,62 +286,6 @@
                                                 Kas Mutasi
                                             </span>
                                         </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li>
-                            <a data-toggle="collapse" href="#setting">
-                                <i class="material-icons">
-                                    settings
-                                </i>
-                                <p>
-                                    Setting
-                                    <b class="caret">
-                                    </b>
-                                </p>
-                            </a>
-                            <div class="collapse" id="setting">
-                                <ul class="nav">
-                                    <li>
-                                        <router-link :to="{name: 'indexKategoriTransaksi'}" class="menu-nav">
-                                            <span class="sidebar-mini">
-                                                KT
-                                            </span>
-                                            <span class="sidebar-normal">
-                                                Kategori Transaksi
-                                            </span>
-                                        </router-link>
-                                    </li>
-                                    <li>
-                                        <router-link :to="{name: 'indexKas'}" class="menu-nav">
-                                            <span class="sidebar-mini">
-                                                K
-                                            </span>
-                                            <span class="sidebar-normal">
-                                                Kas
-                                            </span>
-                                        </router-link>
-                                    </li>
-                                    <li>
-                                        <router-link :to="{name: 'indexProduk'}" class="menu-nav">
-                                            <span class="sidebar-mini">
-                                                P
-                                            </span>
-                                            <span class="sidebar-normal">
-                                                Produk
-                                            </span>
-                                        </router-link>
-                                    </li>
-                                    <li>
-                                        <router-link :to="{name: 'indexSuplier'}" class="menu-nav">
-                                            <span class="sidebar-mini">
-                                                S
-                                            </span>
-                                            <span class="sidebar-normal">
-                                                Supplier
-                                            </span>
-                                        </router-link>
                                     </li>
                                 </ul>
                             </div>
@@ -529,7 +510,7 @@
         <!--End of Tawk.to Script-->
     </body>
     <!--   Core JS Files   -->
-    <script src="{{ asset('js/app.js?v=1.24')}}" type="text/javascript">
+    <script src="{{ asset('js/app.js?v=1.25')}}" type="text/javascript">
     </script>
     <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript">
     </script>

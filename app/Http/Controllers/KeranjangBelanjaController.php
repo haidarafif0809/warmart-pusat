@@ -20,10 +20,8 @@ class KeranjangBelanjaController extends Controller
         $this->seo();
         $agent = new Agent();
 
-        $keranjang_belanjaan = KeranjangBelanja::with(['produk', 'pelanggan'])->where('id_pelanggan', Auth::user()->id)->paginate(3);
+        $keranjang_belanjaan = KeranjangBelanja::with(['produk', 'pelanggan'])->where('id_pelanggan', Auth::user()->id)->get();
         $cek_belanjaan       = $keranjang_belanjaan->count();
-        //PERINTAH PAGINATION
-        $pagination = $keranjang_belanjaan->links();
 
         $jumlah_produk = KeranjangBelanja::select([DB::raw('IFNULL(SUM(jumlah_produk),0) as total_produk')])->where('id_pelanggan', Auth::user()->id)->first();
 
@@ -32,7 +30,7 @@ class KeranjangBelanjaController extends Controller
         $subtotal                      = number_format($produk_belanjaan_dan_subtotal['subtotal'], 0, ',', '.');
         $produk_belanjaan              = $produk_belanjaan_dan_subtotal['produk_belanjaan'];
 
-        return view('layouts.keranjang_belanja', ['pagination' => $pagination, 'keranjang_belanjaan' => $keranjang_belanjaan, 'cek_belanjaan' => $cek_belanjaan, 'agent' => $agent, 'produk_belanjaan' => $produk_belanjaan, 'jumlah_produk' => $jumlah_produk, 'subtotal' => $subtotal]);
+        return view('layouts.keranjang_belanja', ['keranjang_belanjaan' => $keranjang_belanjaan, 'cek_belanjaan' => $cek_belanjaan, 'agent' => $agent, 'produk_belanjaan' => $produk_belanjaan, 'jumlah_produk' => $jumlah_produk, 'subtotal' => $subtotal]);
 
     }
 

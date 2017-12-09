@@ -29,11 +29,26 @@
         <div class="input-group ">
             <span class="input-group-addon">
                 <i class="material-icons">
+                    store
+                </i>
+            </span>
+            <div class="form-group label-floating {{ $errors->has('nama_warung') ? ' has-error' : '' }}">
+                {!! Form::text('nama_warung', null, ['class'=>'form-control','required','autocomplete'=>'off','placeholder'=>'Nama Warung']) !!}
+                                                    {!! $errors->first('nama_warung', '
+                <p class="label label-danger">
+                    :message
+                </p>
+                ') !!}
+            </div>
+        </div>
+        <div class="input-group ">
+            <span class="input-group-addon">
+                <i class="material-icons">
                     person
                 </i>
             </span>
             <div class="form-group label-floating {{ $errors->has('name') ? ' has-error' : '' }}">
-                {!! Form::text('name', null, ['class'=>'form-control','required','autocomplete'=>'off','placeholder'=>'Nama']) !!}
+                {!! Form::text('name', null, ['class'=>'form-control','required','autocomplete'=>'off','placeholder'=>'Nama Pemilik']) !!}
                                                     {!! $errors->first('name', '
                 <p class="label label-danger">
                     :message
@@ -48,7 +63,7 @@
                 </i>
             </span>
             <div class="form-group label-floating">
-                {!! Form::number('no_telp', null, ['class'=>'form-control','required','autocomplete'=>'off','placeholder'=>'Nomor Telpon']) !!}
+                {!! Form::tel('no_telp', null, ['class'=>'form-control','required','autocomplete'=>'off','placeholder'=>'Nomor Telpon']) !!}
             </div>
         </div>
         <div class="input-group ">
@@ -58,7 +73,7 @@
                 </i>
             </span>
             <div class="form-group label-floating {{ $errors->has('alamat') ? ' has-error' : '' }}">
-                {!! Form::text('alamat', null, ['class'=>'form-control','required','autocomplete'=>'off','placeholder'=>'Alamat']) !!}
+                {!! Form::text('alamat', null, ['class'=>'form-control','required','autocomplete'=>'off','placeholder'=>'Alamat Warung']) !!}
                                                     {!! $errors->first('alamat', '
                 <p class="label label-danger">
                     :message
