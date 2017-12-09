@@ -414,7 +414,7 @@ export default {
     			app.inputTbsItemMasuk.keterangan = value;
     			var newinputTbsItemMasuk = app.inputTbsItemMasuk;
     			app.loading = true;
-    			axios.post(app.url+'/selesai-item-masuk',newinputTbsItemMasuk)
+    			axios.post(app.url,newinputTbsItemMasuk)
     			.then(function (resp) {
     				app.getResults();
     				app.alert("Menyelesaikan Transaksi Item Masuk");

@@ -579,23 +579,9 @@ class ItemMasukController extends Controller
     //PROSES HAPUS ITEM MASUK
     public function destroy($id)
     {
-        $pesan_alert =
-            '<div class="container-fluid">
-      <div class="alert-icon">
-      <i class="material-icons">check</i>
-      </div>
-      <b>Sukses : Item Masuk Berhasil Dihapus</b>
-      </div>';
 
-        if (!ItemMasuk::destroy($id)) {
-            return redirect()->back();
-        }
-
-        Session::flash("flash_notification", [
-            "level"   => "danger",
-            "message" => $pesan_alert,
-        ]);
-        return redirect()->route('item-masuk.index');
+        ItemMasuk::destroy($id);
+        return response(200);
     }
 
     public function proses_edit_jumlah(Request $request)
