@@ -306,6 +306,20 @@ const routes = [{
         path: '/edit-kas-keluar/:id',
         component: KasKeluarEdit,
         name: 'editKasKeluar'
+    },
+    // ITEM MASUK 
+    {
+        path: '/item-masuk',
+        component: ItemMasukIndex,
+        name: 'indexItemMasuk'
+    }, {
+        path: '/create-item-masuk',
+        component: ItemMasukCreate,
+        name: 'createItemMasuk'
+    }, {
+        path: '/edit-item-masuk/:id',
+        component: ItemMasukEdit,
+        name: 'editItemMasuk'
     }
 ]
 export default routes;

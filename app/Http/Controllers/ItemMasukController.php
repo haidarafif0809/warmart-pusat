@@ -105,14 +105,15 @@ class ItemMasukController extends Controller
     {
         $session_id     = session()->getId();
         $user_warung    = Auth::user()->id_warung;
-        $tbs_item_masuk = TbsItemMasuk::with(['produk'])->where('warung_id', $user_warung)->where('session_id', $session_id)->paginate(10);
+        $tbs_item_masuk = TbsItemMasuk::with(['produk'])->where('warung_id', $user_warung)->where('session_id', $session_id)->orderBy('id_tbs_item_masuk', 'desc')->paginate(10);
         $array          = array();
 
         foreach ($tbs_item_masuk as $tbs_item_masuks) {
             array_push($array, [
-                'id'          => $tbs_item_masuks->id,
-                'nama_produk' => $tbs_item_masuks->nama_barang,
-                'kode_produk' => $tbs_item_masuks->kode_barang]);
+                'id_tbs_item_masuk' => $tbs_item_masuks->id_tbs_item_masuk,
+                'nama_produk'       => $tbs_item_masuks->TitleCaseProduk,
+                'kode_produk'       => $tbs_item_masuks->produk->kode_barang,
+                'jumlah_produk'     => $tbs_item_masuks->jumlah_produk]);
         }
 
         //DATA PAGINATION
@@ -142,14 +143,15 @@ class ItemMasukController extends Controller
                 $query->orWhere('id_produk', 'LIKE', $request->search . '%')
                     ->orWhere('jumlah_produk', 'LIKE', $request->search . '%');
 
-            })->orderBy('id', 'desc')->paginate(10);
+            })->orderBy('id_tbs_item_masuk', 'desc')->paginate(10);
 
         $array = array();
         foreach ($tbs_item_masuk as $tbs_item_masuks) {
             array_push($array, [
-                'id'          => $tbs_item_masuks->id,
-                'nama_produk' => $tbs_item_masuks->produk->nama_barang,
-                'kode_produk' => $tbs_item_masuks->produk->kode_barang]);
+                'id_tbs_item_masuk' => $tbs_item_masuks->id_tbs_item_masuk,
+                'nama_produk'       => $tbs_item_masuks->TitleCaseProduk,
+                'kode_produk'       => $tbs_item_masuks->produk->kode_barang,
+                'jumlah_produk'     => $tbs_item_masuks->jumlah_produk]);
         }
 
         //DATA PAGINATION
@@ -208,97 +210,37 @@ class ItemMasukController extends Controller
     //PROSES TAMBAH TBS ITEM MASUK
     public function proses_tambah_tbs_item_masuk(Request $request)
     {
-
-        $this->validate($request, [
-            'id_produk_tbs' => 'required|numeric',
-            'jumlah_produk' => 'required|digits_between:1,15|numeric',
-        ]);
-
+        $produk     = explode("|", $request->produk);
+        $id_produk  = $produk[0];
         $session_id = session()->getId();
 
-        $data_tbs = TbsItemMasuk::select('id_produk')
-            ->where('id_produk', $request->id_produk_tbs)
-            ->where('session_id', $session_id)
-            ->count();
+        $data_tbs = TbsItemMasuk::where('id_produk', $id_produk)->where('session_id', $session_id);
 
-        $data_produk = Barang::select('nama_barang')->where('id', $request->id_produk)->first();
-        $pesan_alert = "Produk '" . $data_produk->nama_barang . "' Sudah Ada, Silakan Pilih Produk Lain !";
+        if ($data_tbs->count() > 0) {
+            $tbsitemmasuk  = $data_tbs->first();
+            $jumlah_produk = $tbsitemmasuk->jumlah_produk + $request->jumlah_produk;
 
-        //JIKA PRODUK YG DIPILIH SUDAH ADA DI TBS
-        if ($data_tbs > 0) {
+            $data_tbs->update(['jumlah_produk' => $jumlah_produk]);
 
-            $pesan_alert =
-            '<div class="container-fluid">
-        <div class="alert-icon">
-        <i class="material-icons">warning</i>
-        </div>
-        <b>Warning : Produk "' . $data_produk->nama_barang . '" Sudah Ada, Silakan Pilih Produk Lain !</b>
-        </div>';
-
-            Session::flash("flash_notification", [
-                "level"   => "warning",
-                "message" => $pesan_alert,
-            ]);
-
-            return back();
         } else {
 
-            $pesan_alert =
-            '<div class="container-fluid">
-        <div class="alert-icon">
-        <i class="material-icons">check</i>
-        </div>
-        <b>Sukses : Berhasil Menambah Produk "' . $data_produk->nama_barang . '"</b>
-        </div>';
-
-            $tbsitemmasuk = TbsItemMasuk::create([
-                'id_produk'     => $request->id_produk_tbs,
+            TbsItemMasuk::create([
+                'id_produk'     => $id_produk,
                 'session_id'    => $session_id,
                 'jumlah_produk' => $request->jumlah_produk,
                 'warung_id'     => Auth::user()->id_warung,
             ]);
-
-            Session::flash("flash_notification", [
-                "level"   => "success",
-                "message" => $pesan_alert,
-            ]);
-            return back();
-
         }
+        return response(200);
+
     }
 
     //PROSES HAPUS TBS ITEM MASUK
     public function proses_hapus_tbs_item_masuk($id)
     {
-        if (!TbsItemMasuk::destroy($id)) {
-            $pesan_alert =
-                '<div class="container-fluid">
-        <div class="alert-icon">
-        <i class="material-icons">check</i>
-        </div>
-        <b>Gagal : Menghapus Produk</b>
-        </div>';
+        TbsItemMasuk::destroy($id);
 
-            Session::flash("flash_notification", [
-                "level"   => "danger",
-                "message" => $pesan_alert,
-            ]);
-            return back();
-        } else {
-            $pesan_alert =
-                '<div class="container-fluid">
-        <div class="alert-icon">
-        <i class="material-icons">check</i>
-        </div>
-        <b>Sukses : Berhasil Menghapus Produk</b>
-        </div>';
-
-            Session::flash("flash_notification", [
-                "level"   => "success",
-                "message" => $pesan_alert,
-            ]);
-            return back();
-        }
+        return response(200);
     }
 
     //PROSES HAPUS EDIT TBS ITEM MASUK
@@ -327,19 +269,8 @@ class ItemMasukController extends Controller
     {
         $session_id          = session()->getId();
         $data_tbs_item_masuk = TbsItemMasuk::where('session_id', $session_id)->delete();
-        $pesan_alert         =
-            '<div class="container-fluid">
-      <div class="alert-icon">
-      <i class="material-icons">check</i>
-      </div>
-      <b>Sukses : Berhasil Membatalkan Item Masuk</b>
-      </div>';
 
-        Session::flash("flash_notification", [
-            "level"   => "success",
-            "message" => $pesan_alert,
-        ]);
-        return redirect()->route('item-masuk.create');
+        return response(200);
     }
 
     //PROSES BATAL EDIT ITEM MASUK
@@ -470,25 +401,6 @@ class ItemMasukController extends Controller
         //INSERT DETAIL ITEM MASUK
         $data_produk_item_masuk = TbsItemMasuk::where('session_id', $session_id)->where('warung_id', $warung_id);
 
-        //jika belum ada produk yang di inputkan
-        if ($data_produk_item_masuk->count() == 0) {
-
-            $pesan_alert =
-                '<div class="container-fluid">
-        <div class="alert-icon">
-        <i class="material-icons">error</i>
-        </div>
-        <b>Gagal : Belum ada Produk Yang Di inputkan</b>
-        </div>';
-
-            Session::flash("flash_notification", [
-                "level"   => "danger",
-                "message" => $pesan_alert,
-            ]);
-
-            return redirect()->back();
-        }
-
         //INSERT ITEM MASUK
         if ($request->keterangan == "") {
             $keterangan = "-";
@@ -511,28 +423,11 @@ class ItemMasukController extends Controller
             'warung_id'  => $warung_id,
         ]);
 
-        if (!$itemmasuk) {
-            return back();
-        }
-
         //HAPUS TBS ITEM MASUK
         $data_produk_item_masuk->delete();
 
-        $pesan_alert =
-            '<div class="container-fluid">
-      <div class="alert-icon">
-      <i class="material-icons">check</i>
-      </div>
-      <b>Sukses : Berhasil Melakukan Transaksi Item Masuk Faktur "' . $no_faktur . '"</b>
-      </div>';
-
-        Session::flash("flash_notification", [
-            "level"   => "success",
-            "message" => $pesan_alert,
-        ]);
-
         DB::commit();
-        return redirect()->route('item-masuk.index');
+        return response(200);
     }
 
     /**
@@ -705,26 +600,9 @@ class ItemMasukController extends Controller
 
     public function proses_edit_jumlah(Request $request)
     {
+        $tbs_item_masuk = TbsItemMasuk::find($request->id_tbs)->update(['jumlah_produk' => $request->jumlah_produk]);
 
-        $tbs_item_masuk = TbsItemMasuk::find($request->id_tbs_item_masuk);
-
-        $tbs_item_masuk->update(['jumlah_produk' => $request->jumlah_beli_baru]);
-        $nama_barang = $tbs_item_masuk->produk->nama_barang;
-
-        $pesan_alert =
-            '<div class="container-fluid">
-      <div class="alert-icon">
-      <i class="material-icons">check</i>
-      </div>
-      <b>Sukses : Berhasil Mengubah Jumlah Item Masuk "' . $nama_barang . '"  </b>
-      </div>';
-
-        Session::flash("flash_notification", [
-            "level"   => "success",
-            "message" => $pesan_alert,
-        ]);
-
-        return redirect()->back();
+        return response(200);
 
     }
 

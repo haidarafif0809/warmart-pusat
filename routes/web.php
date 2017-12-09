@@ -455,6 +455,7 @@ Route::get('/item-masuk/view', 'ItemMasukController@view')->middleware('auth');
 Route::get('/item-masuk/pencarian', 'ItemMasukController@pencarian')->middleware('auth');
 Route::get('/item-masuk/view-tbs-item-masuk', 'ItemMasukController@viewTbsItemMasuk')->middleware('auth');
 Route::get('/item-masuk/pencarian-tbs-item-masuk', 'ItemMasukController@pencarianTbsItemMasuk')->middleware('auth');
+Route::post('/item-masuk/selesai-item-masuk', 'ItemMasukController@store')->middleware('auth');
 
 //KAS KELUAR VUE.JS
 Route::get('/kas-keluar/view', 'KasKeluarController@view')->middleware('auth');
