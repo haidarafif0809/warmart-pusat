@@ -296,7 +296,7 @@ class PesananWarungController extends Controller
 
         DB::commit();
 
-        return redirect()->back();
+        // return redirect()->back();
     }
 
     public function batalkanKonfirmasiPesananWarung($id)

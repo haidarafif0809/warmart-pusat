@@ -87,13 +87,13 @@
 				  	</p>
 				  	
 				  	<p v-else-if="pesananData.pesanan.konfirmasi_pesanan == 2">
-				  		<button id="batalkan-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-sm btn-danger"><font style="font-size: 12px;">Batal</font></button>	
+				  		<button id="batalkan-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-sm btn-danger" @click="batalPesanan(pesananData.pesanan.id)"><font style="font-size: 12px;">Batal</font></button>	
 					  	<!--PEMESAN-->
 					  	<button type="button" class="btn btn-sm btn-primary" id="btnDetail" data-toggle="modal" data-target="#data_pemesan"><font style="font-size: 12px;">Pemesan</font></button>		  
 				  	</p>
 				  	
 				  	<p v-else-if="pesananData.pesanan.konfirmasi_pesanan == 3">
-				  		<button id="konfirmasi-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-sm btn-info"><font style="font-size: 12px;">Lanjut</font></button>	
+				  		<button id="konfirmasi-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-sm btn-info" @click="konfirmasiPesanan(pesananData.pesanan.id)"><font style="font-size: 12px;">Lanjut</font></button>	
 					  	<!--PEMESAN-->
 					  	<button type="button" class="btn btn-sm btn-primary" id="btnDetail" data-toggle="modal" data-target="#data_pemesan"><font style="font-size: 12px;">Pemesan</font></button>
 				  	</p>
@@ -183,6 +183,7 @@ export default {
             urlKurangProduk: window.location.origin + (window.location.pathname).replace("dashboard", "kurang-produk-pesanan-warung"),
             urlKonfirmasiPesanan: window.location.origin + (window.location.pathname).replace("dashboard", "konfirmasi-pesanan-warung"),
             urlBatalKonfirmasiPesanan: window.location.origin + (window.location.pathname).replace("dashboard", "batalkan-konfirmasi-pesanan-warung"),
+            urlBatalPesanan: window.location.origin + (window.location.pathname).replace("dashboard", "batalkan-pesanan-warung"),
             urlOrigin: window.location.origin + (window.location.pathname).replace("dashboard", ""),
 			loading: true
 		}
@@ -339,6 +340,32 @@ export default {
       	submitBatalKonfirmasiPesanan(id){      		
       		var app = this;
     		axios.get(app.urlBatalKonfirmasiPesanan+'/'+ id)
+            .then(function (resp) {
+              app.getResults();
+              app.$router.replace('/detail-pesanan-warung/'+id);
+            });
+      	},
+      	batalPesanan(id){
+      		var app = this;
+      		swal({
+		      text: "Anda Yakin Ingin Membatalkan Pesanan Ini??",
+		      type: 'warning',
+		      showCancelButton: true,
+		      confirmButtonColor: '#3085d6',
+		      cancelButtonColor: '#d33',
+		      confirmButtonText: 'Ya!',
+		      cancelButtonText: 'Tidak',
+		      confirmButtonClass: 'btn btn-success',
+		      cancelButtonClass: 'btn btn-danger',
+		      buttonsStyling: false
+		    }).then(function () {
+		    	app.submitBatalPesanan(id)
+		    	console.log(id)
+		    })
+      	},
+      	submitBatalPesanan(id){      		
+      		var app = this;
+    		axios.get(app.urlBatalPesanan+'/'+ id)
             .then(function (resp) {
               app.getResults();
               app.$router.replace('/detail-pesanan-warung/'+id);

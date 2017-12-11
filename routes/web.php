@@ -206,20 +206,6 @@ Route::get('batalkan-konfirmasi-pesanan-warung/{id}', [
     'uses'       => 'PesananWarungController@batalkanKonfirmasiPesananWarung',
 ]);
 
-//PUNYA BATALKAN PESANAN WARUNG
-Route::get('batalkan-pesanan-warung/{id}', [
-    'middleware' => ['auth'],
-    'as'         => 'pesanan-warung.batalkan',
-    'uses'       => 'PesananWarungController@batalkanPesananWarung',
-]);
-
-//PUNYA BATALKAN PESANAN WARUNG
-Route::get('batalkan-pesanan-warung/{id}', [
-    'middleware' => ['auth'],
-    'as'         => 'pesanan-warung.batalkan',
-    'uses'       => 'PesananWarungController@batalkanPesananWarung',
-]);
-
 //PUNYA TAMBAH JUMLAH PRODUK PESANAN WARUNG
 Route::get('tambah-produk-pesanan-warung/{id}', [
     'middleware' => ['auth'],
@@ -474,6 +460,7 @@ Route::get('/pesanan-warung/detail/{id}', 'PesananWarungController@detailPesanan
 Route::post('/edit-jumlah-produk-warung', 'PesananWarungController@editJumlahPesanan')->middleware('auth');
 Route::get('/konfirmasi-pesanan-warung/{id}', 'PesananWarungController@konfirmasiPesananWarung')->middleware('auth');
 Route::get('/batalkan-konfirmasi-pesanan-warung/{id}', 'PesananWarungController@batalkanKonfirmasiPesananWarung')->middleware('auth');
+Route::get('/batalkan-pesanan-warung/{id}', 'PesananWarungController@batalkanPesananWarung')->middleware('auth');
 
 //PEMBELIAN  VUE JS
 Route::get('/pembelian/view', 'PembelianController@view')->middleware('auth');
