@@ -74,6 +74,9 @@ import KasKeluarEdit from './components/kas_keluar/KasKeluarEdit.vue';
 import KasMasukIndex from './components/kas_masuk/KasMasukIndex.vue';
 import KasMasukCreate from './components/kas_masuk/KasMasukCreate.vue';
 import KasMasukEdit from './components/kas_masuk/KasMasukEdit.vue';
+// PESANAN WARUNG
+import PesananWarungIndex from './components/pesanan_warung/PesananWarungIndex.vue';
+import PesananWarungDetail from './components/pesanan_warung/PesananWarungDetail.vue';
 const routes = [{
         path: '/',
         components: {
@@ -338,6 +341,16 @@ const routes = [{
         path: '/edit-kas-masuk/:id',
         component: KasMasukEdit,
         name: 'editKasMasuk'
+    },
+    // Pesanan Warung
+    {
+        path: '/pesanan-warung',
+        component: PesananWarungIndex,
+        name: 'indexPesananWarung'
+    }, {
+        path: '/detail-pesanan-warung/:id',
+        component: PesananWarungDetail,
+        name: 'detailPesananWarung'
     }
 ]
 export default routes;
