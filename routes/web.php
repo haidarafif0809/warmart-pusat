@@ -468,6 +468,10 @@ Route::get('/kas-masuk/pilih-kas', 'KasMasukController@pilih_kas')->middleware('
 Route::get('/kas-masuk/pilih-kategori', 'KasMasukController@pilih_kategori')->middleware('auth');
 Route::get('/kas-masuk/cek-kas-terpakai/{id}', 'KasMasukController@cekKasTerpakai')->middleware('auth');
 
+//PEMBELIAN  VUE JS
+Route::get('/pembelian/view', 'PembelianController@view')->middleware('auth');
+Route::get('/pembelian/pencarian', 'PembelianController@pencarian')->middleware('auth');
+
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
     Route::resource('user', 'UserController');

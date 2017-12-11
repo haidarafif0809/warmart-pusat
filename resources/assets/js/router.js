@@ -74,6 +74,10 @@ import KasKeluarEdit from './components/kas_keluar/KasKeluarEdit.vue';
 import KasMasukIndex from './components/kas_masuk/KasMasukIndex.vue';
 import KasMasukCreate from './components/kas_masuk/KasMasukCreate.vue';
 import KasMasukEdit from './components/kas_masuk/KasMasukEdit.vue';
+//PEMBELIAN
+import PembelianIndex from './components/pembelian/PembelianIndex.vue';
+import PembelianCreate from './components/pembelian/PembelianCreate.vue';
+import PembelianEdit from './components/pembelian/PembelianEdit.vue';
 const routes = [{
         path: '/',
         components: {
@@ -338,6 +342,20 @@ const routes = [{
         path: '/edit-kas-masuk/:id',
         component: KasMasukEdit,
         name: 'editKasMasuk'
+    },
+    // pembelian
+    {
+        path: '/pembelian',
+        component: PembelianIndex,
+        name: 'indexPembelian'
+    }, {
+        path: '/create-pembelian',
+        component: PembelianCreate,
+        name: 'createPembelian'
+    }, {
+        path: '/edit-pembelian/:id',
+        component: PembelianEdit,
+        name: 'editPembelian'
     }
 ]
 export default routes;
