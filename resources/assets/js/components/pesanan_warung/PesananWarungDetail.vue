@@ -31,7 +31,7 @@
 
 			    <div class="row">
 
-			      <div class="col-md-1">Order #{{pesananData.id}}
+			      <div class="col-md-1">Order #{{pesananData.pesanan.id}}
 			        <!-- MODAL PEMESAN -->
 			        <div class="modal " id="data_pemesan" role="dialog" data-backdrop="">
 			          <div class="modal-dialog">
@@ -46,9 +46,9 @@
 			                <div class="responsive">
 			                   <table>
 								  <tbody>
-								      <tr><td width="25%"> Nama</td> <td> : </td> <td>  {{pesananData.nama_pemesan}} </td></tr>
-								      <tr><td width="25%"> Alamat</td> <td> : </td> <td>  {{pesananData.alamat_pemesan}} </td></tr>
-								      <tr><td width="25%"> No Telp</td> <td> : </td> <td>  {{pesananData.no_telp_pemesan}} </td></tr>
+								      <tr><td width="25%"> Nama</td> <td> : </td> <td>  {{pesananData.pesanan.nama_pemesan}} </td></tr>
+								      <tr><td width="25%"> Alamat</td> <td> : </td> <td>  {{pesananData.pesanan.alamat_pemesan}} </td></tr>
+								      <tr><td width="25%"> No Telp</td> <td> : </td> <td>  {{pesananData.pesanan.no_telp_pemesan}} </td></tr>
 								  </tbody>
 								</table>
 			                </div>
@@ -59,41 +59,41 @@
 
 			      </div> <!--END ORDER PESANAN ID-->
 
-			      <div class="col-md-3">Waktu Pesan : {{pesananData.created_at}}</div>					
+			      <div class="col-md-3">Waktu Pesan : {{pesananData.pesanan.created_at}}</div>					
 				  <div class="col-md-2">Total :Rp. {{ new Intl.NumberFormat().format(pesananData.subtotal) }}</div>					
 				  <div class="col-md-2">Status : 
-				  		<b style="color:red" v-if="pesananData.konfirmasi_pesanan == 0" >Belum Di Konfirmasi</b>
-				  		<b style="color:orange" v-else-if="pesananData.konfirmasi_pesanan == 1" >Sudah Di Konfirmasi</b>
-				  		<b style="color:#01573e" v-else-if="pesananData.konfirmasi_pesanan == 2" >Selesai</b>
+				  		<b style="color:red" v-if="pesananData.pesanan.konfirmasi_pesanan == 0" >Belum Di Konfirmasi</b>
+				  		<b style="color:orange" v-else-if="pesananData.pesanan.konfirmasi_pesanan == 1" >Sudah Di Konfirmasi</b>
+				  		<b style="color:#01573e" v-else-if="pesananData.pesanan.konfirmasi_pesanan == 2" >Selesai</b>
 				  		<b style="color:red" v-else > Batal</b>
 				  </div>
 
 				  <div class="col-md-4">
-				  	<p v-if="pesananData.konfirmasi_pesanan == 1">Selesai ? :</p>
+				  	<p v-if="pesananData.pesanan.konfirmasi_pesanan == 1">Selesai ? :</p>
 				  	<p v-else>Lanjut ? :</p>
 				  	
-				  	<p v-if="pesananData.konfirmasi_pesanan == 0">
-				  		<button id="konfirmasi-pesanan-warung" :id-pesanan="pesananData.id" class="btn btn-sm btn-info" @click="konfirmasiPesanan(pesananData.id)"><font style="font-size: 12px;">Lanjut</font></button>
-				  		<button id="batalkan-pesanan-warung" :id-pesanan="pesananData.id" class="btn btn-sm btn-danger" @click="batalPesanan(pesananData.id)"><font style="font-size: 12px;">Batal</font></button>
+				  	<p v-if="pesananData.pesanan.konfirmasi_pesanan == 0">
+				  		<button id="konfirmasi-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-sm btn-info" @click="konfirmasiPesanan(pesananData.pesanan.id)"><font style="font-size: 12px;">Lanjut</font></button>
+				  		<button id="batalkan-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-sm btn-danger" @click="batalPesanan(pesananData.pesanan.id)"><font style="font-size: 12px;">Batal</font></button>
 					  	<!--PEMESAN-->
 					  	<button type="button" class="btn btn-sm btn-primary" id="btnDetail" data-toggle="modal" data-target="#data_pemesan"><font style="font-size: 12px;">Pemesan</font></button>
 				  	</p>
 				  	
-				  	<p v-else-if="pesananData.konfirmasi_pesanan == 1">
-				  		<button class="btn btn-info btn-sm" :data-id="pesananData.id" id="selesaikan_pesanan">  <font style="font-size: 12px;">Selesai</font></button>
-				  		<button id="batalkan-konfirmasi-pesanan-warung" :id-pesanan="pesananData.id" class="btn btn-sm btn-danger"><font style="font-size: 12px;">Batal</font></button>
+				  	<p v-else-if="pesananData.pesanan.konfirmasi_pesanan == 1">
+				  		<button class="btn btn-info btn-sm" :data-id="pesananData.pesanan.id" id="selesaikan_pesanan">  <font style="font-size: 12px;">Selesai</font></button>
+				  		<button id="batalkan-konfirmasi-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-sm btn-danger"><font style="font-size: 12px;">Batal</font></button>
 					  	<!--PEMESAN-->
 					  	<button type="button" class="btn btn-sm btn-primary" id="btnDetail" data-toggle="modal" data-target="#data_pemesan"><font style="font-size: 12px;">Pemesan</font></button>
 				  	</p>
 				  	
-				  	<p v-else-if="pesananData.konfirmasi_pesanan == 2">
-				  		<button id="batalkan-pesanan-warung" :id-pesanan="pesananData.id" class="btn btn-sm btn-danger"><font style="font-size: 12px;">Batal</font></button>	
+				  	<p v-else-if="pesananData.pesanan.konfirmasi_pesanan == 2">
+				  		<button id="batalkan-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-sm btn-danger"><font style="font-size: 12px;">Batal</font></button>	
 					  	<!--PEMESAN-->
 					  	<button type="button" class="btn btn-sm btn-primary" id="btnDetail" data-toggle="modal" data-target="#data_pemesan"><font style="font-size: 12px;">Pemesan</font></button>		  
 				  	</p>
 				  	
-				  	<p v-else-if="pesananData.konfirmasi_pesanan == 3">
-				  		<button id="konfirmasi-pesanan-warung" :id-pesanan="pesananData.id" class="btn btn-sm btn-info"><font style="font-size: 12px;">Lanjut</font></button>	
+				  	<p v-else-if="pesananData.pesanan.konfirmasi_pesanan == 3">
+				  		<button id="konfirmasi-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-sm btn-info"><font style="font-size: 12px;">Lanjut</font></button>	
 					  	<!--PEMESAN-->
 					  	<button type="button" class="btn btn-sm btn-primary" id="btnDetail" data-toggle="modal" data-target="#data_pemesan"><font style="font-size: 12px;">Pemesan</font></button>
 				  	</p>
@@ -103,6 +103,9 @@
 			    </div> <!--END ROW-->
 			  </div> <!--END CARD CONTENT-->
 			</div> <!--END CARD-->
+
+			<input class="form-control" type="hidden"  v-model="editJumlahProduk.jumlah_produk"  name="jumlah_produk" id="jumlah_produk">
+			<input class="form-control" type="hidden"  v-model="editJumlahProduk.id"  name="id" id="id">
 
 			<!--DATA DETAIL PESANAN -->			
 			<div class="card card-detail">
@@ -170,6 +173,10 @@ export default {
 			detailPesanan: [],
 			detailPesananData: {},
 			pesananData: {},
+			editJumlahProduk: {
+				id : '',
+				jumlah_produk : '',
+			}, 
 			detailPesananId: null,
             url: window.location.origin + (window.location.pathname).replace("dashboard", "pesanan-warung"),
             urlTambahProduk: window.location.origin + (window.location.pathname).replace("dashboard", "tambah-produk-pesanan-warung"),
@@ -195,8 +202,9 @@ export default {
     		.then(function (resp) {
     			app.detailPesanan = resp.data.data.detail_pesanan.data;
     			app.detailPesananData = resp.data.data.detail_pesanan;
-    			app.pesananData = resp.data.data.pesanan;
+    			app.pesananData = resp.data.data;
     			app.loading = false;
+    			console.log(resp.data.data)
     		})
     		.catch(function (resp) {
     			app.loading = false;
@@ -220,10 +228,8 @@ export default {
             });
     	},
     	editProduk(id, index, nama_produk){
-    		var nama_produk = nama_produk;
-			var id = id;
-			console.log(id);
-			console.log(nama_produk);
+    		var app = this;
+
 			    swal({
 			      title: nama_produk,
 			      input: 'number',
@@ -243,12 +249,19 @@ export default {
 			        'data-id': id,
 			        'data-nama': nama_produk,
 			      }
-			    }).then((jumlah_produk, id) => {
+			    }).then((jumlah_produk) => {
 		          if (!jumlah_produk) throw null;
-		          this.submitProduk(jumlah_produk);
+		          app.submitProduk(jumlah_produk, id, nama_produk);
 		        });
     	},
-    	submitProduk(jumlah_produk){
+    	alert(pesan) {
+    		this.$swal({
+    			title: "Berhasil ",
+    			text: pesan,
+    			icon: "success",
+    		});
+    	},
+    	submitProduk(jumlah_produk, id, nama_produk){
 
     		if (jumlah_produk == 0 || jumlah_produk == "") {
     			this.$swal({
@@ -256,15 +269,23 @@ export default {
 		        });
     		}else{
     			var app = this;
+	        	app.editJumlahProduk.id = id;
+	        	app.editJumlahProduk.jumlah_produk = jumlah_produk;
+	        	var newJumlahProduk = app.editJumlahProduk;	        	
 	        	app.loading = true;
 
-	        	axios.post(app.urlOrigin+'edit-jumlah-produk-warung, ')
+	        	axios.post(app.urlOrigin+'edit-jumlah-produk-warung', newJumlahProduk)
 	        	.then(function (resp) {
 		            app.getResults();
-		            app.loading = false;
+		            app.alert("Mengubah Jumlah Produk "+nama_produk);
+    				app.loading = false;
+    				app.editJumlahProduk.jumlah_produk = ''
+    				app.editJumlahProduk.id = ''
+              		app.$router.replace('/detail-pesanan-warung/'+app.detailPesananId);
 	        	})
 	        	.catch(function (resp) {
 	            	alert("Tidak Dapat Mengubah Jumlah Produk");
+	            	console.log(resp)
 	        	});
 	        }
       	},

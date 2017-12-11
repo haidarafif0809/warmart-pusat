@@ -336,7 +336,7 @@ class PesananWarungController extends Controller
 
         DetailPesananPelanggan::find($request->id)->update(['jumlah_produk' => $request->jumlah_produk]);
 
-        return redirect()->back();
+        // return redirect()->back();
 
     }
 
