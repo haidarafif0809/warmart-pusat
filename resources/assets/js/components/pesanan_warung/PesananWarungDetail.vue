@@ -80,7 +80,7 @@
 				  	</p>
 				  	
 				  	<p v-else-if="pesananData.pesanan.konfirmasi_pesanan == 1">
-				  		<button class="btn btn-info btn-sm" :data-id="pesananData.pesanan.id" id="selesaikan_pesanan">  <font style="font-size: 12px;">Selesai</font></button>
+				  		<button class="btn btn-info btn-sm" :data-id="pesananData.pesanan.id" id="selesaikan_pesanan">  <font style="font-size: 12px;" @click="selesaikanPesanan(pesananData.pesanan.id)">Selesai</font></button>
 				  		<button id="batalkan-konfirmasi-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-sm btn-danger" @click="batalKonfirmasiPesanan(pesananData.pesanan.id)"><font style="font-size: 12px;">Batal</font></button>
 					  	<!--PEMESAN-->
 					  	<button type="button" class="btn btn-sm btn-primary" id="btnDetail" data-toggle="modal" data-target="#data_pemesan"><font style="font-size: 12px;">Pemesan</font></button>
@@ -104,8 +104,13 @@
 			  </div> <!--END CARD CONTENT-->
 			</div> <!--END CARD-->
 
+			<!--EDIT JUMLAH PRODUK-->
 			<input class="form-control" type="hidden"  v-model="editJumlahProduk.jumlah_produk"  name="jumlah_produk" id="jumlah_produk">
 			<input class="form-control" type="hidden"  v-model="editJumlahProduk.id"  name="id" id="id">
+
+			<!--SELESAI PESANAN-->
+			<input class="form-control" type="hidden"  v-model="selesaiPesanan.id_kas"  name="id_kas" id="id_kas">
+			<input class="form-control" type="hidden"  v-model="selesaiPesanan.id_pesanan"  name="id" id="id">
 
 			<!--DATA DETAIL PESANAN -->			
 			<div class="card card-detail">
@@ -177,7 +182,12 @@ export default {
 				id : '',
 				jumlah_produk : '',
 			}, 
+			selesaiPesanan: {
+				id_pesanan : '',
+				id_kas : '',
+			}, 
 			detailPesananId: null,
+			loading: true,
             url: window.location.origin + (window.location.pathname).replace("dashboard", "pesanan-warung"),
             urlTambahProduk: window.location.origin + (window.location.pathname).replace("dashboard", "tambah-produk-pesanan-warung"),
             urlKurangProduk: window.location.origin + (window.location.pathname).replace("dashboard", "kurang-produk-pesanan-warung"),
@@ -185,7 +195,7 @@ export default {
             urlBatalKonfirmasiPesanan: window.location.origin + (window.location.pathname).replace("dashboard", "batalkan-konfirmasi-pesanan-warung"),
             urlBatalPesanan: window.location.origin + (window.location.pathname).replace("dashboard", "batalkan-pesanan-warung"),
             urlOrigin: window.location.origin + (window.location.pathname).replace("dashboard", ""),
-			loading: true
+           	urlTambahKas: window.location.origin + (window.location.pathname).replace("dashboard", "dashboard#/kas")
 		}
 	},
 	mounted() {
@@ -363,13 +373,93 @@ export default {
 		    	console.log(id)
 		    })
       	},
-      	submitBatalPesanan(id){      		
+      	submitBatalPesanan(id){
       		var app = this;
     		axios.get(app.urlBatalPesanan+'/'+ id)
             .then(function (resp) {
               app.getResults();
               app.$router.replace('/detail-pesanan-warung/'+id);
             });
+      	},
+      	selesaikanPesanan(id){
+    		var app = this;
+    		axios.get(app.urlOrigin+'kas/cek-kas-warung')
+            .then(function (resp) {            	
+            	var data = resp.data;
+            	var urlKas = app.urlTambahKas;
+
+	      		if (data.cek_kas == 0) {
+	      			var kas_warung = '<input type="hidden" id="kas" value="0">Anda Belum Punya Kas, Silahkan Buat Kas <a target="blank" href="'+urlKas+'">Disini</a>';
+	      		}else{
+	      			var kas_warung = '<select id="kas" name="kas" class="swal2-input js-selectize-reguler">';
+	      			$.each(data.kas, function (i, item) {
+	      				if (data.kas[i].status_kas == 1) {
+	      					if (data.kas[i].default_kas == 1) {
+	      						kas_warung += '<option value="'+data.kas[i].id+'" selected>'+data.kas[i].nama_kas+'</option>';
+	      					}else{
+	      						kas_warung += '<option value="'+data.kas[i].id+'">'+data.kas[i].nama_kas+'</option>';
+	      					}
+	      				}
+	      			});
+
+	      			kas_warung += '</select>';
+	      		}
+
+	      		swal({
+			      title: "Pilih Kas",
+			      html: kas_warung+'<p style="color: red; font-style: italic; font-size:15px; text-align:left">*Jika Anda Menyelesaikan Pesanan Ini, Maka "Kas" Anda Akan Bertambah & "Stok Produk" Akan Berkurang',
+			      showCancelButton: true,
+			      confirmButtonColor: '#3085d6',
+			      cancelButtonColor: '#d33',
+			      confirmButtonText: 'Simpan',
+			      cancelButtonText: 'Batal',
+			      confirmButtonClass: 'btn btn-success',
+			      cancelButtonClass: 'btn btn-danger',
+			      buttonsStyling: false,
+			      preConfirm: function () {
+			        return new Promise(function (resolve) {
+			          resolve([
+			            $('#kas').val()
+			            ])
+			        })
+			      }
+			    }).then(function (result) {
+			    	if (result[0] == '' || result[0] == 0) {
+				        swal('Oops...', result[0], 'error');
+				        return false;
+				    }else{
+				    	var id_kas = result[0];
+				    	app.submitSelesaiPesanan(id, id_kas);
+			      	}
+			    });
+            });
+      	},
+      	submitSelesaiPesanan(id, id_kas){
+      		var app = this;
+      		app.selesaiPesanan.id_pesanan = id;
+      		app.selesaiPesanan.id_kas = id_kas;
+	        var newSelesaiPesanan = app.selesaiPesanan;	  
+
+    		axios.post(app.urlOrigin+'selesai-konfirmasi-pesanan-warung', newSelesaiPesanan)
+            .then(function (resp) {
+            	app.getResults();            
+	      		swal({
+					html :  "Pesanan order #<b>"+id+" Berhasil Di Selesaikan</b>",
+					showConfirmButton :  false,
+					type: "success",
+					timer: 10000,
+					onOpen: () => {
+							swal.showLoading()
+					}
+				});
+    			app.loading = false;
+    			app.selesaiPesanan.id_kas = ''
+    			app.selesaiPesanan.id_pesanan = ''
+              	app.$router.replace('/pesanan-warung');
+            })
+            .catch(function (resp) {
+            	alert("Tidak Dapat Menyelesaikan Pesanan");
+	        });
       	}
     }
 }
