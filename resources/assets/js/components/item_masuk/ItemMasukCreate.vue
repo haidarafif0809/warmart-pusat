@@ -305,10 +305,21 @@ export default {
     			app.loading = true;
     			axios.post(app.url+'/proses-tambah-tbs-item-masuk', newinputTbsItemMasuk)
     			.then(function (resp) {
-    				app.getResults();
-    				app.alert("Menambahkan Produk "+nama_produk);
-    				app.loading = false;
-    				app.inputTbsItemMasuk.jumlah_produk = ''
+
+    				if (resp.data == 0) {
+
+    					app.alertTbs("Produk Yang Anda Masukan Sudah Ada");
+    					app.loading = false;
+
+    				}else{
+
+    					app.getResults();
+    					app.alert("Menambahkan Produk "+nama_produk);
+    					app.loading = false;
+    					app.inputTbsItemMasuk.jumlah_produk = ''
+
+    				}
+    				
     			})
     			.catch(function (resp) {    				
     				app.loading = false;
@@ -435,7 +446,7 @@ export default {
 
     			if (resp.data == 0) {
 
-    				app.alertTbsKosong("Anda Belum Memasukan Produk");
+    				app.alertTbs("Anda Belum Memasukan Produk");
     				app.loading = false;
 
     			}else{
@@ -453,7 +464,7 @@ export default {
     		});
 
     	},
-    	alertTbsKosong(pesan) {
+    	alertTbs(pesan) {
     		this.$swal({
     			text: pesan,
     			icon: "warning",

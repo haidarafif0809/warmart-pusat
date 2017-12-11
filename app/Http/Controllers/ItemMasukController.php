@@ -214,13 +214,11 @@ class ItemMasukController extends Controller
         $id_produk  = $produk[0];
         $session_id = session()->getId();
 
-        $data_tbs = TbsItemMasuk::where('id_produk', $id_produk)->where('session_id', $session_id);
+        $data_tbs = TbsItemMasuk::where('id_produk', $id_produk)->where('warung_id', Auth::user()->id_warung)->where('session_id', $session_id);
 
         if ($data_tbs->count() > 0) {
-            $tbsitemmasuk  = $data_tbs->first();
-            $jumlah_produk = $tbsitemmasuk->jumlah_produk + $request->jumlah_produk;
 
-            $data_tbs->update(['jumlah_produk' => $jumlah_produk]);
+            return 0;
 
         } else {
 
@@ -230,8 +228,8 @@ class ItemMasukController extends Controller
                 'jumlah_produk' => $request->jumlah_produk,
                 'warung_id'     => Auth::user()->id_warung,
             ]);
+            return response(200);
         }
-        return response(200);
 
     }
 
