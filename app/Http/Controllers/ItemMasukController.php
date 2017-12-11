@@ -401,33 +401,40 @@ class ItemMasukController extends Controller
         //INSERT DETAIL ITEM MASUK
         $data_produk_item_masuk = TbsItemMasuk::where('session_id', $session_id)->where('warung_id', $warung_id);
 
-        //INSERT ITEM MASUK
-        if ($request->keterangan == "") {
-            $keterangan = "-";
-        } else {
-            $keterangan = $request->keterangan;
-        }
+        if ($data_produk_item_masuk->count() > 0) {
 
-        foreach ($data_produk_item_masuk->get() as $data_tbs) {
-            $detail_item_masuk = DetailItemMasuk::create([
-                'id_produk'     => $data_tbs->id_produk,
-                'no_faktur'     => $no_faktur,
-                'jumlah_produk' => $data_tbs->jumlah_produk,
-                'warung_id'     => $warung_id,
+            //INSERT ITEM MASUK
+            if ($request->keterangan == "") {
+                $keterangan = "-";
+            } else {
+                $keterangan = $request->keterangan;
+            }
+
+            foreach ($data_produk_item_masuk->get() as $data_tbs) {
+                $detail_item_masuk = DetailItemMasuk::create([
+                    'id_produk'     => $data_tbs->id_produk,
+                    'no_faktur'     => $no_faktur,
+                    'jumlah_produk' => $data_tbs->jumlah_produk,
+                    'warung_id'     => $warung_id,
+                ]);
+            }
+
+            $itemmasuk = ItemMasuk::create([
+                'no_faktur'  => $no_faktur,
+                'keterangan' => $keterangan,
+                'warung_id'  => $warung_id,
             ]);
+
+            //HAPUS TBS ITEM MASUK
+            $data_produk_item_masuk->delete();
+
+            DB::commit();
+            return response(200);
+
+        } else {
+            return $data_produk_item_masuk->count();
         }
 
-        $itemmasuk = ItemMasuk::create([
-            'no_faktur'  => $no_faktur,
-            'keterangan' => $keterangan,
-            'warung_id'  => $warung_id,
-        ]);
-
-        //HAPUS TBS ITEM MASUK
-        $data_produk_item_masuk->delete();
-
-        DB::commit();
-        return response(200);
     }
 
     /**
