@@ -192,32 +192,11 @@ Route::get('konfirmasi-pesanan-warung/{id}', [
     'uses'       => 'PesananWarungController@konfirmasiPesananWarung',
 ]);
 
-//PUNYA SELESAI KONFIRMASI PESANAN WARUNG
-Route::post('/selesai-konfirmasi-pesanan-warung}', [
-    'middleware' => ['auth'],
-    'as'         => 'pesanan-warung.selesai_konfirmasi',
-    'uses'       => 'PesananWarungController@selesaiKonfirmasiPesananWarung',
-]);
-
 //PUNYA BATALKAN KONFIRMASI PESANAN WARUNG
 Route::get('batalkan-konfirmasi-pesanan-warung/{id}', [
     'middleware' => ['auth'],
     'as'         => 'pesanan-warung.batalkan_konfirmasi',
     'uses'       => 'PesananWarungController@batalkanKonfirmasiPesananWarung',
-]);
-
-//PUNYA BATALKAN PESANAN WARUNG
-Route::get('batalkan-pesanan-warung/{id}', [
-    'middleware' => ['auth'],
-    'as'         => 'pesanan-warung.batalkan',
-    'uses'       => 'PesananWarungController@batalkanPesananWarung',
-]);
-
-//PUNYA BATALKAN PESANAN WARUNG
-Route::get('batalkan-pesanan-warung/{id}', [
-    'middleware' => ['auth'],
-    'as'         => 'pesanan-warung.batalkan',
-    'uses'       => 'PesananWarungController@batalkanPesananWarung',
 ]);
 
 //PUNYA TAMBAH JUMLAH PRODUK PESANAN WARUNG
@@ -475,6 +454,14 @@ Route::get('/pesanan-warung/detail-view/{id}', 'PesananWarungController@detailVi
 Route::get('/pesanan-warung/pencarian', 'PesananWarungController@pencarian')->middleware('auth');
 Route::get('/pesanan-warung/detail/{id}', 'PesananWarungController@detailPesanan')->middleware('auth');
 Route::post('/edit-jumlah-produk-warung', 'PesananWarungController@editJumlahPesanan')->middleware('auth');
+Route::get('/konfirmasi-pesanan-warung/{id}', 'PesananWarungController@konfirmasiPesananWarung')->middleware('auth');
+Route::get('/batalkan-konfirmasi-pesanan-warung/{id}', 'PesananWarungController@batalkanKonfirmasiPesananWarung')->middleware('auth');
+Route::get('/batalkan-pesanan-warung/{id}', 'PesananWarungController@batalkanPesananWarung')->middleware('auth');
+Route::post('/selesai-konfirmasi-pesanan-warung', 'PesananWarungController@selesaiKonfirmasiPesananWarung')->middleware('auth');
+
+//PEMBELIAN  VUE JS
+Route::get('/pembelian/view', 'PembelianController@view')->middleware('auth');
+Route::get('/pembelian/pencarian', 'PembelianController@pencarian')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 

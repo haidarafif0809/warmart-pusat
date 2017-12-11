@@ -74,6 +74,13 @@ import KasKeluarEdit from './components/kas_keluar/KasKeluarEdit.vue';
 import KasMasukIndex from './components/kas_masuk/KasMasukIndex.vue';
 import KasMasukCreate from './components/kas_masuk/KasMasukCreate.vue';
 import KasMasukEdit from './components/kas_masuk/KasMasukEdit.vue';
+// PESANAN WARUNG
+import PesananWarungIndex from './components/pesanan_warung/PesananWarungIndex.vue';
+import PesananWarungDetail from './components/pesanan_warung/PesananWarungDetail.vue';
+//PEMBELIAN
+import PembelianIndex from './components/pembelian/PembelianIndex.vue';
+import PembelianCreate from './components/pembelian/PembelianCreate.vue';
+import PembelianEdit from './components/pembelian/PembelianEdit.vue';
 const routes = [{
         path: '/',
         components: {
@@ -338,6 +345,30 @@ const routes = [{
         path: '/edit-kas-masuk/:id',
         component: KasMasukEdit,
         name: 'editKasMasuk'
+    },
+    // Pesanan Warung
+    {
+        path: '/pesanan-warung',
+        component: PesananWarungIndex,
+        name: 'indexPesananWarung'
+    }, {
+        path: '/detail-pesanan-warung/:id',
+        component: PesananWarungDetail,
+        name: 'detailPesananWarung'
+    },
+    // pembelian
+    {
+        path: '/pembelian',
+        component: PembelianIndex,
+        name: 'indexPembelian'
+    }, {
+        path: '/create-pembelian',
+        component: PembelianCreate,
+        name: 'createPembelian'
+    }, {
+        path: '/edit-pembelian/:id',
+        component: PembelianEdit,
+        name: 'editPembelian'
     }
 ]
 export default routes;
