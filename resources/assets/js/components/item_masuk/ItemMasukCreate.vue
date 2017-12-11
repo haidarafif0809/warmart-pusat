@@ -35,7 +35,6 @@
 
 								<input class="form-control" type="hidden"  v-model="inputTbsItemMasuk.jumlah_produk"  name="jumlah_produk" id="jumlah_produk">
 								<input class="form-control" type="hidden"  v-model="inputTbsItemMasuk.id_tbs"  name="id_tbs" id="id_tbs">
-								<input class="form-control" type="text"  v-model="inputTbsItemMasuk.cek_data_tbs"  name="cek_data_tbs" id="cek_data_tbs">
 
 
 							</form>
@@ -134,8 +133,7 @@ export default {
 				produk : '',
 				jumlah_produk : '',
 				id_tbs : '',
-				keterangan : '',
-				cek_data_tbs : ''
+				keterangan : ''
 			}, 
 			placeholder_produk: {
 				placeholder: '--PILIH PRODUK--'
