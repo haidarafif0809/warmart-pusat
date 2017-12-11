@@ -380,4 +380,19 @@ class BarangController extends Controller
             return view('barang.lihat_deskripsi_produk', ['id' => $id, 'lihat_deskripsi_produk' => $lihat_deskripsi_produk, 'nama_produk' => $nama_produk]);
         }
     }
+
+    public function pilihProduk()
+    {
+        $produk = Barang::where('id_warung', Auth::user()->id_warung)->get();
+        $array  = array();
+        foreach ($produk as $produks) {
+            array_push($array, [
+                'id'          => $produks->id,
+                'nama_produk' => title_case($produks->nama_barang),
+                'kode_barang' => $produks->kode_barang,
+                'produk'      => $produks->id . "|" . title_case($produks->nama_barang)]);
+        }
+
+        return response()->json($array);
+    }
 }

@@ -26,7 +26,7 @@
 
             <th>Kode Kas</th>
             <th>Nama Kas</th>
-            <th>Status Kas</th>
+            <th>Tampil Transaksi</th>
             <th>Default Kas</th>
             <th>Total Kas</th>
             <th>Aksi</th>
@@ -147,7 +147,7 @@ export default {
         },
         alert(pesan) {
           this.$swal({
-            title: "Berhasil Menghapus kas!",
+            title: "Berhasil Menghapus Kas Masuk!",
             text: pesan,
             icon: "success",
           });
@@ -165,14 +165,14 @@ export default {
             var app = this;
             axios.delete(app.url+'/' + id)
             .then(function (resp) {
-              app.$router.replace('/kas/');
+              app.$router.replace('/kas-masuk/');
               app.getResults();
                swal("Kas Berhasil Dihapus!  ", {
                   icon: "success",
                 });
             })
             .catch(function (resp) {
-              swal("Gagal Mereset User!  ", {
+              swal("Gagal Menghapus Kas Masuk!  ", {
                   icon: "warning",
                 });
             });

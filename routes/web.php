@@ -443,22 +443,28 @@ Route::get('/produk/pencarian', 'BarangController@pencarian')->middleware('auth'
 Route::get('/produk/pilih-kategori', 'BarangController@pilih_kategori')->middleware('auth');
 Route::get('/produk/pilih-satuan', 'BarangController@pilih_satuan')->middleware('auth');
 Route::post('/produk/{id}', 'BarangController@update')->middleware('auth');
+Route::get('/produk/pilih-produk', 'BarangController@pilihProduk')->middleware('auth');
 
 Route::get('/kas/view', 'KasController@view')->middleware('auth');
 Route::get('/kas/pencarian', 'KasController@pencarian')->middleware('auth');
 Route::get('/kas/cek-default-kas', 'KasController@cekDefaultKas')->middleware('auth');
 Route::get('/kas/cek-kas-warung', 'KasController@cekKasWarung')->middleware('auth');
 
+// ITEM MASUK
+Route::get('/item-masuk/view', 'ItemMasukController@view')->middleware('auth');
+Route::get('/item-masuk/pencarian', 'ItemMasukController@pencarian')->middleware('auth');
+Route::get('/item-masuk/view-tbs-item-masuk', 'ItemMasukController@viewTbsItemMasuk')->middleware('auth');
+Route::get('/item-masuk/pencarian-tbs-item-masuk', 'ItemMasukController@pencarianTbsItemMasuk')->middleware('auth');
 //KAS KELUAR VUE.JS
 Route::get('/kas-keluar/view', 'KasKeluarController@view')->middleware('auth');
 Route::get('/kas-keluar/pencarian', 'KasKeluarController@pencarian')->middleware('auth');
 
-//PESANAN WARUNG VUE.JS
-Route::get('/pesanan-warung/view', 'PesananWarungController@view')->middleware('auth');
-Route::get('/pesanan-warung/detail-view/{id}', 'PesananWarungController@detailView')->middleware('auth');
-Route::get('/pesanan-warung/pencarian', 'PesananWarungController@pencarian')->middleware('auth');
-Route::get('/pesanan-warung/detail/{id}', 'PesananWarungController@detailPesanan')->middleware('auth');
-Route::post('/edit-jumlah-produk-warung', 'PesananWarungController@editJumlahPesanan')->middleware('auth');
+//KAS MASUK VUE JS
+Route::get('/kas-masuk/view', 'KasMasukController@view')->middleware('auth');
+Route::get('/kas-masuk/pencarian', 'KasMasukController@pencarian')->middleware('auth');
+Route::get('/kas-masuk/pilih-kas', 'KasMasukController@pilih_kas')->middleware('auth');
+Route::get('/kas-masuk/pilih-kategori', 'KasMasukController@pilih_kategori')->middleware('auth');
+Route::get('/kas-masuk/cek-kas-terpakai/{id}', 'KasMasukController@cekKasTerpakai')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 

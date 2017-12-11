@@ -26,7 +26,7 @@
 			<div class="modal-body">
 				<textarea class="form-control" name="keterangan" id="keterangan" placeholder="Keterangan" rows="5"></textarea>
 			</div>
-			<div class="modal-footer"> 
+			<div class="modal-footer">
 				<button type="submit"  id="btn-simpan-item-masuk" class="btn btn-success"><i class="material-icons">save</i> Simpan</button>
 				<button type="button" class="btn btn-default" data-dismiss="modal"><i class="material-icons">close</i> Close</button>
 			</div>
@@ -65,17 +65,17 @@
 							{!! Form::hidden('jumlah_produk', null, ['class'=>'form-control','placeholder'=>'Jumlah Produk','required','autocomplete'=>'off', 'id'=>'jumlah_produk']) !!}
 							{!! $errors->first('jumlah_produk', '<p class="help-block" id="eror_jumlah_produk">:message</p>') !!}
 
-							{!! Form::hidden('id_produk_tbs', null, ['class'=>'form-control','placeholder'=>'Jumlah Produk','required','autocomplete'=>'off', 'id'=>'id_produk_tbs']) !!} 
-							{!! $errors->first('id_produk_tbs', '<p class="help-block" id="eror_id_produk_tbs">:message</p>') !!} 
+							{!! Form::hidden('id_produk_tbs', null, ['class'=>'form-control','placeholder'=>'Jumlah Produk','required','autocomplete'=>'off', 'id'=>'id_produk_tbs']) !!}
+							{!! $errors->first('id_produk_tbs', '<p class="help-block" id="eror_id_produk_tbs">:message</p>') !!}
 						</div>
-						
+
 						{!! Form::close() !!}
 					</div>
 					<!-- / col md 7 -->
 					<div class="col-md-1"></div>
 					<div class="col-md-3">
 						<!-- TOMBOL BATAL -->
-						{!! Form::open(['url' => route('item-masuk.proses_hapus_semua_tbs_item_masuk'),'method' => 'post', 'class' => 'form-group js-confirm', 'data-confirm' => 'Apakah Anda Ingin Membatalkan Item masuk ?']) !!} 						       		
+						{!! Form::open(['url' => route('item-masuk.proses_hapus_semua_tbs_item_masuk'),'method' => 'post', 'class' => 'form-group js-confirm', 'data-confirm' => 'Apakah Anda Ingin Membatalkan Item masuk ?']) !!}
 						<!--- TOMBOL SELESAI -->
 						<button type="button" class="btn btn-primary" id="btnSelesai" data-toggle="modal" data-target="#modal_selesai"><i class="material-icons">send</i> Selesai (F8)</button>
 
@@ -90,15 +90,15 @@
 
 
 						</div>
-						<div class="form-group col-md-2">												       			   
+						<div class="form-group col-md-2">
 
-						</div>										
+						</div>
 					</div>
 
 				</div>
 				<!--TABEL TBS ITEM 	MASUK -->
 				<div class="table-responsive">
-					{!! $html->table(['class'=>'table-striped table']) !!} 
+					{!! $html->table(['class'=>'table-striped table']) !!}
 				</div>
 			</div><!-- / PANEL BODY -->
 
@@ -110,7 +110,7 @@
 @section('scripts')
 {!! $html->scripts() !!}
 
-<script type="text/javascript"> 
+<script type="text/javascript">
 	$(document).on('click', '.edit-jumlah', function () {
 		var id_produk = $(this).attr('data-id');
 		var nama_produk = $(this).attr('data-nama');
@@ -161,10 +161,10 @@
 					'Oops...',
 					'Jumlah Tidak Boleh 0 !',
 					'error'
-					); 
+					);
 				return false;
-			} 
-		});  
+			}
+		});
 	});
 </script>
 <script type="text/javascript">
@@ -172,14 +172,14 @@
 
 		var $select = $('#pilih_produk').selectize({
 			sortField: 'text'
-		}); 
-		$select[0].selectize.focus();		
+		});
+		$select[0].selectize.focus();
 		$select.on('change', function(){
 
-			var pilih_produk = $("#pilih_produk").val(); 
-			var produk = pilih_produk.split("-"); 
-			var id_produk = produk[0]; 
-			var nama_produk = produk[1]; 
+			var pilih_produk = $("#pilih_produk").val();
+			var produk = pilih_produk.split("-");
+			var id_produk = produk[0];
+			var nama_produk = produk[1];
 			var jumlah = $("#jumlah_produk").val();
 
 			if (produk == "") {
@@ -223,7 +223,7 @@
 
 					if (jumlah != "0")  {
 						$("#jumlah_produk").val(jumlah);
-						$("#id_produk_tbs").val(id_produk); 					
+						$("#id_produk_tbs").val(id_produk);
 						$("#form-produk").submit();
 					}
 					else {
@@ -231,32 +231,32 @@
 							'Oops...',
 							'Jumlah Tidak Boleh 0 !',
 							'error'
-							); 
+							);
 						return false;
-					} 
+					}
 				}
 				, function (dismiss) {
 
 					if (dismiss === 'cancel') {
 						$select[0].selectize.clear()
 					}
-				});  
+				});
 				return false;
-			} 
+			}
 			else if (jumlah != "" && produk != ""){
 				return true;
-			} 
-		});   
+			}
+		});
 	});
 </script>
 
-<script type="text/javascript"> 
+<script type="text/javascript">
 	$(document.body).on('submit', '.js-confirm', function () {
 		var $btnHapus = $(this);
 		var text = $btnHapus.data('confirm') ? $btnHapus.data('confirm') : 'Anda yakin melakukan tindakan ini ?'
 		var pesan_konfirmasi = confirm(text);
 		return pesan_konfirmasi;
-	});  
+	});
 </script>
 
 <script type="text/javascript">
@@ -264,18 +264,18 @@
 
 		var pesan_error = $("#eror_jumlah_produk").text();
 
-		if (pesan_error != "") {				
+		if (pesan_error != "") {
 			$("#modal_produk").modal('show');
 			$("#jumlah_produk").focus();
 		}
 		else{
 			$("#modal_produk").modal('hide');
 		}
-	});	
+	});
 </script>
 
 
-<script type="text/javascript"> 
+<script type="text/javascript">
 	shortcut.add("f1", function() {
 		$("#cari_produk").click();
 	});
@@ -291,14 +291,14 @@
 	shortcut.add("f10", function() {
 		$("#btnBatal").click();
 	});
-</script> 
+</script>
 
-<script type="text/javascript"> 
+<script type="text/javascript">
 	$(document.body).on('submit', '.js-confirm', function () {
 		var $el = $(this);
 		var text = $el.data('confirm') ? $el.data('confirm') : 'Anda yakin melakukan tindakan ini\ ?';
 		var c = confirm(text);
 		return c;
-	}); 
+	});
 </script>
 @endsection
