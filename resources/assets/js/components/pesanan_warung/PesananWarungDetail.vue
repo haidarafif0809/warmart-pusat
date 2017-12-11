@@ -182,6 +182,7 @@ export default {
             urlTambahProduk: window.location.origin + (window.location.pathname).replace("dashboard", "tambah-produk-pesanan-warung"),
             urlKurangProduk: window.location.origin + (window.location.pathname).replace("dashboard", "kurang-produk-pesanan-warung"),
             urlKonfirmasiPesanan: window.location.origin + (window.location.pathname).replace("dashboard", "konfirmasi-pesanan-warung"),
+            urlBatalKonfirmasiPesanan: window.location.origin + (window.location.pathname).replace("dashboard", "batalkan-konfirmasi-pesanan-warung"),
             urlOrigin: window.location.origin + (window.location.pathname).replace("dashboard", ""),
 			loading: true
 		}
@@ -311,6 +312,33 @@ export default {
       	submitKonfirmasiPesanan(id){      		
       		var app = this;
     		axios.get(app.urlKonfirmasiPesanan+'/'+ id)
+            .then(function (resp) {
+              app.getResults();
+              app.$router.replace('/detail-pesanan-warung/'+id);
+            });
+      	},
+      	batalKonfirmasiPesanan(id){
+      		var app = this;
+
+	      	swal({
+		      text: "Anda Yakin Ingin Membatalkan Konfirmasi Pesanan Ini ?",
+		      type: 'warning',
+		      showCancelButton: true,
+		      confirmButtonColor: '#3085d6',
+		      cancelButtonColor: '#d33',
+		      confirmButtonText: 'Ya!',
+		      cancelButtonText: 'Tidak',
+		      confirmButtonClass: 'btn btn-success',
+		      cancelButtonClass: 'btn btn-danger',
+		      buttonsStyling: false
+		    }).then(function () {
+		    	app.submitBatalKonfirmasiPesanan(id)
+		    	console.log(id)
+		    })
+      	},
+      	submitBatalKonfirmasiPesanan(id){      		
+      		var app = this;
+    		axios.get(app.urlBatalKonfirmasiPesanan+'/'+ id)
             .then(function (resp) {
               app.getResults();
               app.$router.replace('/detail-pesanan-warung/'+id);

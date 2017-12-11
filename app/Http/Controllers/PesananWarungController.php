@@ -302,7 +302,7 @@ class PesananWarungController extends Controller
     public function batalkanKonfirmasiPesananWarung($id)
     {
         PesananPelanggan::where('id', $id)->update(['konfirmasi_pesanan' => '0']);
-        return redirect()->back();
+        // return redirect()->back();
     }
 
     public function tambahProdukPesananWarung($id)
