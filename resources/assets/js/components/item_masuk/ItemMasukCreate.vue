@@ -308,7 +308,7 @@ export default {
 
     				if (resp.data == 0) {
 
-    					app.alertTbs("Produk Yang Anda Masukan Sudah Ada");
+    					app.alertTbs("Produk "+nama_produk+" Sudah Ada, Silakan Pilih Produk Lain!");
     					app.loading = false;
 
     				}else{

@@ -455,6 +455,9 @@ Route::get('/item-masuk/view', 'ItemMasukController@view')->middleware('auth');
 Route::get('/item-masuk/pencarian', 'ItemMasukController@pencarian')->middleware('auth');
 Route::get('/item-masuk/view-tbs-item-masuk', 'ItemMasukController@viewTbsItemMasuk')->middleware('auth');
 Route::get('/item-masuk/pencarian-tbs-item-masuk', 'ItemMasukController@pencarianTbsItemMasuk')->middleware('auth');
+Route::get('/item-masuk/view-edit-tbs-item-masuk/{id}', 'ItemMasukController@viewEditTbsItemMasuk')->middleware('auth');
+Route::get('/item-masuk/pencarian-edit-tbs-item-masuk/{id}', 'ItemMasukController@pencarianEditTbsItemMasuk')->middleware('auth');
+Route::get('/item-masuk/ambil-faktur-item-masuk/{id}', 'ItemMasukController@ambilFakturItemMasuk')->middleware('auth');
 //KAS KELUAR VUE.JS
 Route::get('/kas-keluar/view', 'KasKeluarController@view')->middleware('auth');
 Route::get('/kas-keluar/pencarian', 'KasKeluarController@pencarian')->middleware('auth');
@@ -748,7 +751,7 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
         'uses'       => 'ItemMasukController@proses_tambah_tbs_item_masuk',
     ]);
 
-    Route::post('/item-masuk/proses-tambah-edit-tbs-item-masuk/{id}', [
+    Route::post('/item-masuk/proses-tambah-edit-tbs-item-masuk', [
         'middleware' => ['auth'],
         'as'         => 'item-masuk.proses_tambah_edit_tbs_item_masuk',
         'uses'       => 'ItemMasukController@proses_tambah_edit_tbs_item_masuk',
@@ -772,7 +775,7 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
         'uses'       => 'ItemMasukController@proses_hapus_semua_tbs_item_masuk',
     ]);
 
-    Route::post('/item-masuk/proses-hapus-semua-edit-tbs-item-masuk/{id}', [
+    Route::post('/item-masuk/proses-hapus-semua-edit-tbs-item-masuk', [
         'middleware' => ['auth'],
         'as'         => 'item-masuk.proses_hapus_semua_edit_tbs_item_masuk',
         'uses'       => 'ItemMasukController@proses_hapus_semua_edit_tbs_item_masuk',
