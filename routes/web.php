@@ -453,6 +453,13 @@ Route::get('/kas/cek-kas-warung', 'KasController@cekKasWarung')->middleware('aut
 Route::get('/kas-keluar/view', 'KasKeluarController@view')->middleware('auth');
 Route::get('/kas-keluar/pencarian', 'KasKeluarController@pencarian')->middleware('auth');
 
+//PESANAN WARUNG VUE.JS
+Route::get('/pesanan-warung/view', 'PesananWarungController@view')->middleware('auth');
+Route::get('/pesanan-warung/detail-view/{id}', 'PesananWarungController@detailView')->middleware('auth');
+Route::get('/pesanan-warung/pencarian', 'PesananWarungController@pencarian')->middleware('auth');
+Route::get('/pesanan-warung/detail/{id}', 'PesananWarungController@detailPesanan')->middleware('auth');
+Route::post('/edit-jumlah-produk-warung', 'PesananWarungController@editJumlahPesanan')->middleware('auth');
+
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
     Route::resource('user', 'UserController');

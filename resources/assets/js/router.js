@@ -66,6 +66,9 @@ import UbahProfilUserWarung from './components/ubah_profil/UbahProfilUserWarung.
 import KasKeluarIndex from './components/kas_keluar/KasKeluarIndex.vue';
 import KasKeluarCreate from './components/kas_keluar/KasKeluarCreate.vue';
 import KasKeluarEdit from './components/kas_keluar/KasKeluarEdit.vue';
+// PESANAN WARUNG
+import PesananWarungIndex from './components/pesanan_warung/PesananWarungIndex.vue';
+import PesananWarungDetail from './components/pesanan_warung/PesananWarungDetail.vue';
 const routes = [{
         path: '/',
         components: {
@@ -302,6 +305,16 @@ const routes = [{
         path: '/edit-kas-keluar/:id',
         component: KasKeluarEdit,
         name: 'editKasKeluar'
+    },
+    // Pesanan Warung
+    {
+        path: '/pesanan-warung',
+        component: PesananWarungIndex,
+        name: 'indexPesananWarung'
+    }, {
+        path: '/detail-pesanan-warung/:id',
+        component: PesananWarungDetail,
+        name: 'detailPesananWarung'
     }
 ]
 export default routes;
