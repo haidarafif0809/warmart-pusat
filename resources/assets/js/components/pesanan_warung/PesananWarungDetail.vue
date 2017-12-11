@@ -81,7 +81,7 @@
 				  	
 				  	<p v-else-if="pesananData.pesanan.konfirmasi_pesanan == 1">
 				  		<button class="btn btn-info btn-sm" :data-id="pesananData.pesanan.id" id="selesaikan_pesanan">  <font style="font-size: 12px;">Selesai</font></button>
-				  		<button id="batalkan-konfirmasi-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-sm btn-danger"><font style="font-size: 12px;">Batal</font></button>
+				  		<button id="batalkan-konfirmasi-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-sm btn-danger" @click="batalKonfirmasiPesanan(pesananData.pesanan.id)"><font style="font-size: 12px;">Batal</font></button>
 					  	<!--PEMESAN-->
 					  	<button type="button" class="btn btn-sm btn-primary" id="btnDetail" data-toggle="modal" data-target="#data_pemesan"><font style="font-size: 12px;">Pemesan</font></button>
 				  	</p>
@@ -291,8 +291,7 @@ export default {
       	},
       	konfirmasiPesanan(id){
       		var app = this;
-      		var id_pesanan = id;
-      		console.log(id_pesanan)
+
       		swal({
 		      text: "Anda Yakin Ingin Melanjutkan Pesanan Ini??",
 		      type: 'question',
@@ -304,16 +303,17 @@ export default {
 		      confirmButtonClass: 'btn btn-success',
 		      cancelButtonClass: 'btn btn-danger',
 		      buttonsStyling: false
-		    }).then(function (id_pesanan) {
-		    	app.submitKonfirmasiPesanan(id_pesanan)
+		    }).then(function () {
+		    	app.submitKonfirmasiPesanan(id)
+		    	console.log(id)
 		    })
       	},
-      	submitKonfirmasiPesanan(id_pesanan){      		
+      	submitKonfirmasiPesanan(id){      		
       		var app = this;
-    		axios.get(app.urlKonfirmasiPesanan+'/'+ id_pesanan)
+    		axios.get(app.urlKonfirmasiPesanan+'/'+ id)
             .then(function (resp) {
               app.getResults();
-              app.$router.replace('/detail-pesanan-warung/'+id_pesanan);
+              app.$router.replace('/detail-pesanan-warung/'+id);
             });
       	}
     }

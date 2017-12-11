@@ -472,6 +472,7 @@ Route::get('/pesanan-warung/detail-view/{id}', 'PesananWarungController@detailVi
 Route::get('/pesanan-warung/pencarian', 'PesananWarungController@pencarian')->middleware('auth');
 Route::get('/pesanan-warung/detail/{id}', 'PesananWarungController@detailPesanan')->middleware('auth');
 Route::post('/edit-jumlah-produk-warung', 'PesananWarungController@editJumlahPesanan')->middleware('auth');
+Route::get('/konfirmasi-pesanan-warung/{id}', 'PesananWarungController@konfirmasiPesananWarung')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
