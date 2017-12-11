@@ -455,8 +455,6 @@ Route::get('/item-masuk/view', 'ItemMasukController@view')->middleware('auth');
 Route::get('/item-masuk/pencarian', 'ItemMasukController@pencarian')->middleware('auth');
 Route::get('/item-masuk/view-tbs-item-masuk', 'ItemMasukController@viewTbsItemMasuk')->middleware('auth');
 Route::get('/item-masuk/pencarian-tbs-item-masuk', 'ItemMasukController@pencarianTbsItemMasuk')->middleware('auth');
-Route::post('/item-masuk/selesai-item-masuk', 'ItemMasukController@store')->middleware('auth');
-
 //KAS KELUAR VUE.JS
 Route::get('/kas-keluar/view', 'KasKeluarController@view')->middleware('auth');
 Route::get('/kas-keluar/pencarian', 'KasKeluarController@pencarian')->middleware('auth');
@@ -467,6 +465,14 @@ Route::get('/kas-masuk/pencarian', 'KasMasukController@pencarian')->middleware('
 Route::get('/kas-masuk/pilih-kas', 'KasMasukController@pilih_kas')->middleware('auth');
 Route::get('/kas-masuk/pilih-kategori', 'KasMasukController@pilih_kategori')->middleware('auth');
 Route::get('/kas-masuk/cek-kas-terpakai/{id}', 'KasMasukController@cekKasTerpakai')->middleware('auth');
+
+//PESANAN WARUNG VUE.JS
+Route::get('/pesanan-warung/view', 'PesananWarungController@view')->middleware('auth');
+Route::get('/pesanan-warung/detail-view/{id}', 'PesananWarungController@detailView')->middleware('auth');
+Route::get('/pesanan-warung/pencarian', 'PesananWarungController@pencarian')->middleware('auth');
+Route::get('/pesanan-warung/detail/{id}', 'PesananWarungController@detailPesanan')->middleware('auth');
+Route::post('/edit-jumlah-produk-warung', 'PesananWarungController@editJumlahPesanan')->middleware('auth');
+Route::get('/konfirmasi-pesanan-warung/{id}', 'PesananWarungController@konfirmasiPesananWarung')->middleware('auth');
 
 //PEMBELIAN  VUE JS
 Route::get('/pembelian/view', 'PembelianController@view')->middleware('auth');

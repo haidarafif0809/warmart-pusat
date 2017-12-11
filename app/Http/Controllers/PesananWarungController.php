@@ -71,6 +71,128 @@ class PesananWarungController extends Controller
         }
     }
 
+    public function tandaPemisahTitik($angka)
+    {
+        return number_format($angka, 0, ',', '.');
+    }
+
+    public function dataPagination($data_pesanan_warung, $array_pesanan_warung)
+    {
+
+        $respons['current_page']   = $data_pesanan_warung->currentPage();
+        $respons['data']           = $array_pesanan_warung;
+        $respons['first_page_url'] = url('/pesanan-warung/view?page=' . $data_pesanan_warung->firstItem());
+        $respons['from']           = 1;
+        $respons['last_page']      = $data_pesanan_warung->lastPage();
+        $respons['last_page_url']  = url('/pesanan-warung/view?page=' . $data_pesanan_warung->lastPage());
+        $respons['next_page_url']  = $data_pesanan_warung->nextPageUrl();
+        $respons['path']           = url('/pesanan-warung/view');
+        $respons['per_page']       = $data_pesanan_warung->perPage();
+        $respons['prev_page_url']  = $data_pesanan_warung->previousPageUrl();
+        $respons['to']             = $data_pesanan_warung->perPage();
+        $respons['total']          = $data_pesanan_warung->total();
+
+        return $respons;
+    }
+
+    public function view()
+    {
+        $data_pesanan_warung  = PesananPelanggan::where('id_warung', Auth::user()->id_warung)->orderBy('id', 'desc')->paginate(10);
+        $array_pesanan_warung = array();
+        foreach ($data_pesanan_warung as $pesanan_warung) {
+            array_push($array_pesanan_warung, [
+                'id'             => $pesanan_warung->id,
+                'pemesan'        => $pesanan_warung->nama_pemesan . "(" . $pesanan_warung->no_telp_pemesan . ")",
+                'subtotal'       => $this->tandaPemisahTitik($pesanan_warung->subtotal),
+                'pesanan_warung' => $pesanan_warung,
+            ]);
+        }
+
+        //DATA PAGINATION
+        $respons = $this->dataPagination($data_pesanan_warung, $array_pesanan_warung);
+        return response()->json($respons);
+    }
+
+    public function detailView($id)
+    {
+        $data_pesanan = PesananPelanggan::where('id_warung', Auth::user()->id_warung)->where('id', $id)->first();
+        return response()->json($data_pesanan);
+    }
+
+    public function pencarian(Request $request)
+    {
+        $search              = $request->search;
+        $data_pesanan_warung = PesananPelanggan::where('id_warung', Auth::user()->id_warung)
+            ->where(function ($query) use ($search) {
+                $query->orwhere('id', 'LIKE', '%' . $search . '%')
+                    ->orWhere('nama_pemesan', 'LIKE', '%' . $search . '%')
+                    ->orWhere('no_telp_pemesan', 'LIKE', '%' . $search . '%')
+                    ->orWhere('alamat_pemesan', 'LIKE', '%' . $search . '%')
+                    ->orWhere('created_at', 'LIKE', '%' . $search . '%');
+            })->orderBy('id', 'desc')->paginate(10);
+        $array_pesanan_warung = array();
+        foreach ($data_pesanan_warung as $pesanan_warung) {
+            array_push($array_pesanan_warung, [
+                'id'             => $pesanan_warung->id,
+                'pemesan'        => $pesanan_warung->nama_pemesan . "(" . $pesanan_warung->no_telp_pemesan . ")",
+                'subtotal'       => $this->tandaPemisahTitik($pesanan_warung->subtotal),
+                'pesanan_warung' => $pesanan_warung,
+            ]);
+        }
+
+        //DATA PAGINATION
+        $respons = $this->dataPagination($data_pesanan_warung, $array_pesanan_warung);
+        return response()->json($respons);
+    }
+
+    //VUE.JS
+    public function detailPesanan(Request $request, $id)
+    {
+
+        if (Auth::user()->id_warung == '') {
+            Auth::logout();
+            return response()->view('error.403');
+        } else {
+
+            $pesanan                  = PesananPelanggan::with('pelanggan')->find($id);
+            $detail_pesanan_pelanggan = DetailPesananPelanggan::with(['produk', 'pelanggan', 'pesanan_pelanggan'])->where('id_pesanan_pelanggan', $id);
+            $detail_pesanan           = $detail_pesanan_pelanggan->paginate(10);
+
+            $subtotal      = 0;
+            $array_pesanan = array();
+            $agent         = new Agent();
+            foreach ($detail_pesanan as $detail_pesanans) {
+
+                $harga_produk = $detail_pesanans->produk->harga_jual * $detail_pesanans->jumlah_produk;
+                $subtotal     = $subtotal += $harga_produk;
+
+            }
+
+            $data_pesanan = [
+                'pesanan'            => $pesanan,
+                'konfirmasi_pesanan' => $pesanan->konfirmasi_pesanan,
+                'agent'              => $agent,
+                'detail_pesanan'     => $detail_pesanan,
+                'subtotal'           => $subtotal,
+            ];
+
+            $respons['current_page']   = $detail_pesanan->currentPage();
+            $respons['data']           = $data_pesanan;
+            $respons['first_page_url'] = url('/detail/view?page=' . $detail_pesanan->firstItem());
+            $respons['from']           = 1;
+            $respons['last_page']      = $detail_pesanan->lastPage();
+            $respons['last_page_url']  = url('/detail/view?page=' . $detail_pesanan->lastPage());
+            $respons['next_page_url']  = $detail_pesanan->nextPageUrl();
+            $respons['path']           = url('/detail/view');
+            $respons['per_page']       = $detail_pesanan->perPage();
+            $respons['prev_page_url']  = $detail_pesanan->previousPageUrl();
+            $respons['to']             = $detail_pesanan->perPage();
+            $respons['total']          = $detail_pesanan->total();
+
+            return $respons;
+        }
+    }
+
     public function detailPesananWarung(Request $request, Builder $htmlBuilder, $id)
     {
 
@@ -115,7 +237,7 @@ class PesananWarungController extends Controller
     public function konfirmasiPesananWarung($id)
     {
         PesananPelanggan::where('id', $id)->update(['konfirmasi_pesanan' => '1']);
-        return redirect()->back();
+        // return redirect()->back();
     }
 
     public function selesaiKonfirmasiPesananWarung(Request $request)
@@ -193,7 +315,7 @@ class PesananWarungController extends Controller
         $detail_pesanan->jumlah_produk += 1;
         $detail_pesanan->save();
 
-        return redirect()->back();
+        // return redirect()->back();
     }
 
     public function kurangProdukPesananWarung($id)
@@ -206,7 +328,7 @@ class PesananWarungController extends Controller
         $detail_pesanan->jumlah_produk -= 1;
         $detail_pesanan->save();
 
-        return redirect()->back();
+        // return redirect()->back();
     }
 
     public function editJumlahPesanan(Request $request)
@@ -214,7 +336,7 @@ class PesananWarungController extends Controller
 
         DetailPesananPelanggan::find($request->id)->update(['jumlah_produk' => $request->jumlah_produk]);
 
-        return redirect()->back();
+        // return redirect()->back();
 
     }
 

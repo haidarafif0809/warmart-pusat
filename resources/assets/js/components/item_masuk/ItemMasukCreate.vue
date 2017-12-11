@@ -22,7 +22,7 @@
 					<div class="row">
 
 						<div class="col-md-8">
-							<form v-on:submit.prevent="formSubmitProduk()" class="form-horizontal"> 
+							<form class="form-horizontal"> 
 
 								<div class="form-group">
 									<div class="col-md-4"><br>
@@ -196,7 +196,16 @@ export default {
     			console.log(resp);
     			alert("Tidak Dapat Memuat Item Masuk");
     		});
-    	},
+    	},    
+    	dataProduk() {
+    		var app = this;
+    		axios.get(app.url_produk+'/pilih-produk').then(function (resp) {
+    			app.produk = resp.data;
+    		})
+    		.catch(function (resp) {
+    			alert("Tidak Bisa Memuat Produk");
+    		});
+    	},	
     	alert(pesan) {
     		this.$swal({
     			title: "Berhasil ",
@@ -237,16 +246,9 @@ export default {
     			app.inputTbsItemMasuk.id_tbs = ''
     		})
     		.catch(function (resp) {
+
+    			app.loading = false;
     			alert("Tidak dapat Menghapus Produk "+nama_produk);
-    		});
-    	},
-    	dataProduk() {
-    		var app = this;
-    		axios.get(app.url_produk+'/pilih-produk').then(function (resp) {
-    			app.produk = resp.data;
-    		})
-    		.catch(function (resp) {
-    			alert("Tidak Bisa Memuat Produk");
     		});
     	},
     	pilihProduk() {
@@ -303,12 +305,24 @@ export default {
     			app.loading = true;
     			axios.post(app.url+'/proses-tambah-tbs-item-masuk', newinputTbsItemMasuk)
     			.then(function (resp) {
-    				app.getResults();
-    				app.alert("Menambahkan Produk "+nama_produk);
-    				app.loading = false;
-    				app.inputTbsItemMasuk.jumlah_produk = ''
+
+    				if (resp.data == 0) {
+
+    					app.alertTbs("Produk Yang Anda Masukan Sudah Ada");
+    					app.loading = false;
+
+    				}else{
+
+    					app.getResults();
+    					app.alert("Menambahkan Produk "+nama_produk);
+    					app.loading = false;
+    					app.inputTbsItemMasuk.jumlah_produk = ''
+
+    				}
+    				
     			})
-    			.catch(function (resp) {
+    			.catch(function (resp) {    				
+    				app.loading = false;
     				alert("Tidak dapat Menambahkan Produk");
     			});
     		}
@@ -358,7 +372,8 @@ export default {
     				app.inputTbsItemMasuk.jumlah_produk = ''
     				app.inputTbsItemMasuk.id_tbs = ''
     			})
-    			.catch(function (resp) {
+    			.catch(function (resp) {    				
+    				app.loading = false;
     				alert("Tidak dapat Mengubah Jumlah Produk");
     			});
     		}
@@ -373,14 +388,19 @@ export default {
     		})
     		.then((willDelete) => {
     			if (willDelete) {
+
     				app.loading = true;
     				axios.post(app.url+'/proses-hapus-semua-tbs-item-masuk')
     				.then(function (resp) {
+
     					app.getResults();
     					app.alert("Membatalkan Transaksi Item Masuk");
     					app.$router.replace('/item-masuk');
+
     				})
     				.catch(function (resp) {
+
+    					app.loading = false;
     					alert("Tidak dapat Membatalkan Transaksi Item Masuk");
     				});
 
@@ -397,7 +417,7 @@ export default {
     			content: {
     				element: "input",
     				attributes: {
-    					placeholder: "Silakan Isi Keterangan",
+    					placeholder: "*Silakan Isi Keterangan",
     					type: "text",
     				},
     			},
@@ -409,22 +429,45 @@ export default {
     		}).then((value) => {
 
     			if (!value) throw null;
-    			var app = this;
 
-    			app.inputTbsItemMasuk.keterangan = value;
-    			var newinputTbsItemMasuk = app.inputTbsItemMasuk;
-    			app.loading = true;
-    			axios.post(app.url+'/selesai-item-masuk',newinputTbsItemMasuk)
-    			.then(function (resp) {
+    			this.prosesSelesaiItemMasuk(value);
+
+    		});
+    	},
+    	prosesSelesaiItemMasuk(value){
+
+    		var app = this;
+    		app.inputTbsItemMasuk.keterangan = value;
+    		var newinputTbsItemMasuk = app.inputTbsItemMasuk;
+    		app.loading = true;
+
+    		axios.post(app.url,newinputTbsItemMasuk)
+    		.then(function (resp) {
+
+    			if (resp.data == 0) {
+
+    				app.alertTbs("Anda Belum Memasukan Produk");
+    				app.loading = false;
+
+    			}else{
+
     				app.getResults();
     				app.alert("Menyelesaikan Transaksi Item Masuk");
     				app.$router.replace('/item-masuk');
-    			})
-    			.catch(function (resp) {
-    				alert("Tidak dapat Menyelesaikan Transaksi Item Masuk");
-    			});
 
+    			}
 
+    		})
+    		.catch(function (resp) {    			
+    			app.loading = false;
+    			alert("Tidak dapat Menyelesaikan Transaksi Item Masuk");
+    		});
+
+    	},
+    	alertTbs(pesan) {
+    		this.$swal({
+    			text: pesan,
+    			icon: "warning",
     		});
     	}
     }

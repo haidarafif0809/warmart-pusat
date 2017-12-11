@@ -50,7 +50,7 @@
 									Edit </router-link> </td>
 
 									<td> 
-										<a href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + item_masuk.id" v-on:click="deleteEntry(item_masuk.id, index,item_masuk.no_faktur)">Delete</a>
+										<a href="#item-masuk" class="btn btn-xs btn-danger" v-bind:id="'delete-' + item_masuk.id" v-on:click="deleteEntry(item_masuk.id, index,item_masuk.no_faktur)">Delete</a>
 									</td>
 								</tr>
 							</tbody>					
@@ -143,17 +143,39 @@ export default {
     		});
     	},
     	deleteEntry(id, index,no_faktur) {
-    		if (confirm("Yakin Ingin Menghapus Item Masuk "+no_faktur+" ?")) {
-    			var app = this;
-    			axios.delete(app.url+'/' + id)
-    			.then(function (resp) {
-    				app.getResults();
-    				app.alert("Menghapus Item Masuk "+no_faktur)
-    			})
-    			.catch(function (resp) {
-    				alert("Tidak dapat Menghapus Item Masuk");
-    			});
-    		}
+
+    		var app = this;
+    		app.$swal({
+    			text: "Anda Yakin Ingin Menghapus Transaksi "+no_faktur+ " ?",
+    			buttons: true,
+    			dangerMode: true,
+    		})
+    		.then((willDelete) => {
+    			if (willDelete) {
+
+    				this.prosesDelete(id,no_faktur);
+
+    			} else {
+
+    				app.$swal.close();
+
+    			}
+    		});
+
+    		
+    	},
+    	prosesDelete(id,no_faktur){
+    		var app = this;
+    		app.loading = true;
+    		axios.delete(app.url+'/' + id)
+    		.then(function (resp) {
+    			app.getResults();
+    			app.alert("Menghapus Item Masuk "+no_faktur);
+    			app.loading = false;
+    		})
+    		.catch(function (resp) {
+    			alert("Tidak dapat Menghapus Item Masuk");
+    		});
     	}
     }
 }
