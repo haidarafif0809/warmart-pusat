@@ -134,21 +134,21 @@ export default {
 				jumlah_produk : '',
 				id_tbs : '',
 				keterangan : '',
-                no_faktur : ''
-            }, 
-            placeholder_produk: {
-                placeholder: '--PILIH PRODUK--'
-            },
-            pencarian: '',
-            loading: true,
-            seen : false
-        }
-    },
-    mounted() {
-      var app = this;
-      app.dataProduk();
-      app.getFakturItemMasuk();
-      app.inputTbsItemMasuk.id = app.$route.params.id;
+        no_faktur : ''
+      }, 
+      placeholder_produk: {
+        placeholder: '--PILIH PRODUK--'
+      },
+      pencarian: '',
+      loading: true,
+      seen : false
+    }
+  },
+  mounted() {
+    var app = this;
+    app.dataProduk();
+    app.getFakturItemMasuk();
+    app.getResults();
 
   },
   watch: {
@@ -161,315 +161,319 @@ export default {
         	this.pilihProduk();  
         },
 
-    },
-    methods: {
-    	getResults(page) {
-    		var app = this;	
-            var id = app.$route.params.id;
-            if (typeof page === 'undefined') {
-               page = 1;
-           }
-           axios.get(app.url+'/view-edit-tbs-item-masuk/'+id+'?page='+page)
-           .then(function (resp) {
-
-               app.tbs_item_masuk = resp.data.data;
-               app.tbsItemMasukData = resp.data;
-               app.loading = false;
-               app.seen = true;
-
-           })
-           .catch(function (resp) {
-
-               console.log(resp);
-               app.loading = false;
-               app.seen = true;
-               alert("Tidak Dapat Memuat Item Masuk");
-
-           });
-       },
-       getHasilPencarian(page){
-          var app = this;
-          var id = app.$route.params.id;
-          if (typeof page === 'undefined') {
-           page = 1;
+      },
+      methods: {
+       getResults(page) {
+        var app = this;	
+        var id = app.$route.params.id;
+        if (typeof page === 'undefined') {
+         page = 1;
        }
-       axios.get(app.url+'/pencarian-edit-tbs-item-masuk/'+id+'?search='+app.pencarian+'&page='+page)
+       axios.get(app.url+'/view-edit-tbs-item-masuk/'+id+'?page='+page)
        .then(function (resp) {
 
-           app.tbs_item_masuk = resp.data.data;
-           app.tbsItemMasukData = resp.data;
-           app.loading = false;
-           app.seen = true;
+         app.tbs_item_masuk = resp.data.data;
+         app.tbsItemMasukData = resp.data;
+         app.loading = false;
+         app.seen = true;
+
        })
        .catch(function (resp) {
 
-           console.log(resp);
-           alert("Tidak Dapat Memuat Item Masuk");
+         console.log(resp);
+         app.loading = false;
+         app.seen = true;
+         alert("Tidak Dapat Memuat Item Masuk");
 
        });
+     },
+     getHasilPencarian(page){
+      var app = this;
+      var id = app.$route.params.id;
+      if (typeof page === 'undefined') {
+       page = 1;
+     }
+     axios.get(app.url+'/pencarian-edit-tbs-item-masuk/'+id+'?search='+app.pencarian+'&page='+page)
+     .then(function (resp) {
+
+       app.tbs_item_masuk = resp.data.data;
+       app.tbsItemMasukData = resp.data;
+       app.loading = false;
+       app.seen = true;
+     })
+     .catch(function (resp) {
+
+       console.log(resp);
+       alert("Tidak Dapat Memuat Item Masuk");
+
+     });
 
    }, 
    getFakturItemMasuk(){
-      var app = this;
-      var id = app.$route.params.id;
-      axios.get(app.url+'/ambil-faktur-item-masuk/'+id).then(function (resp) {
+    var app = this;
+    var id = app.$route.params.id;
+    axios.get(app.url+'/ambil-faktur-item-masuk/'+id).then(function (resp) {
 
-        app.inputTbsItemMasuk.no_faktur = resp.data.no_faktur;        
-        app.getResults();
+      app.inputTbsItemMasuk.no_faktur = resp.data.no_faktur; 
+      app.inputTbsItemMasuk.keterangan = resp.data.keterangan;        
 
     })
-      .catch(function (resp) {
+    .catch(function (resp) {
 
-       app.loading = false;
-       app.seen = true;
-       alert("Tidak Bisa Memuat Item Masuk");
+     app.loading = false;
+     app.seen = true;
+     alert("Tidak Bisa Memuat Item Masuk");
 
    });
 
   },   
   dataProduk() {
-      var app = this;
-      axios.get(app.url_produk+'/pilih-produk').then(function (resp) {
+    var app = this;
+    axios.get(app.url_produk+'/pilih-produk').then(function (resp) {
 
-       app.produk = resp.data;
+     app.produk = resp.data;
 
    })
-      .catch(function (resp) {
+    .catch(function (resp) {
 
-       app.loading = false;
-       app.seen = true;
-       alert("Tidak Bisa Memuat Produk");
+     app.loading = false;
+     app.seen = true;
+     alert("Tidak Bisa Memuat Produk");
 
    });
   },	
   pilihProduk() {
     if (this.inputTbsItemMasuk.produk == '') {
-        this.$swal({
-            text: "Silakan Pilih Produk Telebih dahulu!",
-        });
+      this.$swal({
+        text: "Silakan Pilih Produk Telebih dahulu!",
+      });
     }else{
 
-        var app = this;
-        var produk = app.inputTbsItemMasuk.produk.split("|");
-        var nama_produk = produk[1];
-        this.isiJumlahProduk(nama_produk);
+      var app = this;
+      var produk = app.inputTbsItemMasuk.produk.split("|");
+      var nama_produk = produk[1];
+      this.isiJumlahProduk(nama_produk);
     }
-},
-isiJumlahProduk(nama_produk){
+  },
+  isiJumlahProduk(nama_produk){
     var app = this;
     app.$swal({
-        title: nama_produk,
-        content: {
-            element: "input",
-            attributes: {
-                placeholder: "Jumlah Produk",
-                type: "number",
-            },
+      title: nama_produk,
+      content: {
+        element: "input",
+        attributes: {
+          placeholder: "Jumlah Produk",
+          type: "number",
         },
-        buttons: {
-            cancel: true,
-            confirm: "Submit"                   
+      },
+      buttons: {
+        cancel: true,
+        confirm: "Submit"                   
+      }
+
+
+    }).then((value) => {
+      if (!value) throw null;
+      this.submitProdukItemMasuk(value);
+    });
+  },
+  submitProdukItemMasuk(value){
+
+    if (value == 0) {
+
+      this.$swal({
+        text: "Jumlah Produk Tidak Boleh Nol!",
+      });
+
+    }else{
+
+      var app = this;
+      var produk = app.inputTbsItemMasuk.produk.split("|");
+      var nama_produk = produk[1];
+
+      app.inputTbsItemMasuk.jumlah_produk = value;
+      var newinputTbsItemMasuk = app.inputTbsItemMasuk;
+      app.loading = true;
+      axios.post(app.url+'/proses-tambah-edit-tbs-item-masuk', newinputTbsItemMasuk)
+      .then(function (resp) {
+
+        if (resp.data == 0) {
+
+          app.alertTbs("Produk "+nama_produk+" Sudah Ada, Silakan Pilih Produk Lain!");
+          app.loading = false;
+
+        }else{
+
+          app.getResults();
+          app.alert("Menambahkan Produk "+nama_produk);
+          app.loading = false;
+          app.inputTbsItemMasuk.jumlah_produk = ''
+
         }
 
-
-    }).then((value) => {
-        if (!value) throw null;
-        this.submitProdukItemMasuk(value);
-    });
-},
-submitProdukItemMasuk(value){
-
-    if (value == 0) {
-
-        this.$swal({
-            text: "Jumlah Produk Tidak Boleh Nol!",
-        });
-
-    }else{
-
-        var app = this;
-        var produk = app.inputTbsItemMasuk.produk.split("|");
-        var nama_produk = produk[1];
-
-        app.inputTbsItemMasuk.jumlah_produk = value;
-        var newinputTbsItemMasuk = app.inputTbsItemMasuk;
-        app.loading = true;
-        axios.post(app.url+'/proses-tambah-edit-tbs-item-masuk', newinputTbsItemMasuk)
-        .then(function (resp) {
-
-            if (resp.data == 0) {
-
-                app.alertTbs("Produk "+nama_produk+" Sudah Ada, Silakan Pilih Produk Lain!");
-                app.loading = false;
-
-            }else{
-
-                app.getResults();
-                app.alert("Menambahkan Produk "+nama_produk);
-                app.loading = false;
-                app.inputTbsItemMasuk.jumlah_produk = ''
-
-            }
-
-        })
-        .catch(function (resp) {                    
-            app.loading = false;
-            alert("Tidak dapat Menambahkan Produk");
-        });
+      })
+      .catch(function (resp) {                    
+        app.loading = false;
+        alert("Tidak dapat Menambahkan Produk");
+      });
     }
-},
-editEntry(id, index,nama_produk) {    
+  },
+  editEntry(id, index,nama_produk) {    
     var app = this;
 
     app.$swal({
-        title: nama_produk,
-        content: {
-            element: "input",
-            attributes: {
-                placeholder: "Edit Jumlah Produk",
-                type: "number",
-            },
+      title: nama_produk,
+      content: {
+        element: "input",
+        attributes: {
+          placeholder: "Edit Jumlah Produk",
+          type: "number",
         },
-        buttons: {
-            cancel: true,
-            confirm: "Submit"                   
-        },
+      },
+      buttons: {
+        cancel: true,
+        confirm: "Submit"                   
+      },
 
     }).then((value) => {
-        if (!value) throw null;
-        this.editJumlahProdukItemMasuk(value,id,nama_produk);
+      if (!value) throw null;
+      this.editJumlahProdukItemMasuk(value,id,nama_produk);
     });
 
-},
-editJumlahProdukItemMasuk(value,id,nama_produk){
+  },
+  editJumlahProdukItemMasuk(value,id,nama_produk){
     if (value == 0) {
 
-        this.$swal({
-            text: "Jumlah Produk Tidak Boleh Nol!",
-        });
+      this.$swal({
+        text: "Jumlah Produk Tidak Boleh Nol!",
+      });
 
     }else{
 
-        var app = this;
+      var app = this;
 
-        app.inputTbsItemMasuk.id_tbs = id;
-        app.inputTbsItemMasuk.jumlah_produk = value;
-        var newinputTbsItemMasuk = app.inputTbsItemMasuk;
-        app.loading = true;
-        axios.post(app.url+'/edit-jumlah-edit-item-masuk', newinputTbsItemMasuk)
-        .then(function (resp) {
+      app.inputTbsItemMasuk.id_tbs = id;
+      app.inputTbsItemMasuk.jumlah_produk = value;
+      var newinputTbsItemMasuk = app.inputTbsItemMasuk;
+      app.loading = true;
+      axios.post(app.url+'/edit-jumlah-edit-item-masuk', newinputTbsItemMasuk)
+      .then(function (resp) {
 
-            app.getResults();
-            app.alert("Mengubah Jumlah Produk "+nama_produk);
-            app.loading = false;
-            app.inputTbsItemMasuk.jumlah_produk = ''
-            app.inputTbsItemMasuk.id_tbs = ''
+        app.getResults();
+        app.alert("Mengubah Jumlah Produk "+nama_produk);
+        app.loading = false;
+        app.inputTbsItemMasuk.jumlah_produk = ''
+        app.inputTbsItemMasuk.id_tbs = ''
 
-        })
-        .catch(function (resp) { 
+      })
+      .catch(function (resp) { 
 
-            app.loading = false;
-            alert("Tidak dapat Mengubah Jumlah Produk");
+        app.loading = false;
+        alert("Tidak dapat Mengubah Jumlah Produk");
 
-        });
+      });
     }
-},
-deleteEntry(id, index,nama_produk) {
+  },
+  deleteEntry(id, index,nama_produk) {
 
     var app = this;
     app.$swal({
-        text: "Anda Yakin Ingin Menghapus Produk "+nama_produk+ " ?",
-        buttons: true,
-        dangerMode: true,
+      text: "Anda Yakin Ingin Menghapus Produk "+nama_produk+ " ?",
+      buttons: true,
+      dangerMode: true,
     })
     .then((willDelete) => {
-        if (willDelete) {
+      if (willDelete) {
 
-            this.prosesDelete(id,nama_produk);
+        this.prosesDelete(id,nama_produk);
 
-        } else {
+      } else {
 
-            app.$swal.close();
+        app.$swal.close();
 
-        }
+      }
     });
 
-},
-prosesDelete(id,nama_produk){
+  },
+  prosesDelete(id,nama_produk){
 
     var app = this;
     app.loading = true;
     axios.post(app.url+'/proses-hapus-edit-tbs-item-masuk/'+id)
     .then(function (resp) {
-        app.getResults();
-        app.alert("Menghapus Produk "+nama_produk);
-        app.loading = false;
-        app.inputTbsItemMasuk.id_tbs = ''
+      app.getResults();
+      app.alert("Menghapus Produk "+nama_produk);
+      app.loading = false;
+      app.inputTbsItemMasuk.id_tbs = ''
     })
     .catch(function (resp) {
 
-        app.loading = false;
-        alert("Tidak dapat Menghapus Produk "+nama_produk);
+      app.loading = false;
+      alert("Tidak dapat Menghapus Produk "+nama_produk);
     });
-},
-batalItemMasuk(){
+  },
+  batalItemMasuk(){
 
     var app = this;
     app.$swal({
-        text: "Anda Yakin Ingin Membatalkan Transaksi Item Masuk Ini ?",
-        buttons: true,
-        dangerMode: true,
+      text: "Anda Yakin Ingin Membatalkan Transaksi Item Masuk Ini ?",
+      buttons: true,
+      dangerMode: true,
     })
     .then((willDelete) => {
-        if (willDelete) {
+      if (willDelete) {
 
-            app.loading = true;
-            var newinputTbsItemMasuk = app.inputTbsItemMasuk;
-            axios.post(app.url+'/proses-hapus-semua-edit-tbs-item-masuk',newinputTbsItemMasuk)
-            .then(function (resp) {
+        app.loading = true;
+        var newinputTbsItemMasuk = app.inputTbsItemMasuk;
+        axios.post(app.url+'/proses-hapus-semua-edit-tbs-item-masuk',newinputTbsItemMasuk)
+        .then(function (resp) {
 
-                app.getResults();
-                app.alert("Membatalkan Transaksi Item Masuk");
-                app.$router.replace('/item-masuk');
+          app.getResults();
+          app.alert("Membatalkan Transaksi Item Masuk");
+          app.$router.replace('/item-masuk');
 
-            })
-            .catch(function (resp) {
+        })
+        .catch(function (resp) {
 
-                app.loading = false;
-                alert("Tidak dapat Membatalkan Transaksi Item Masuk");
-            });
+          app.loading = false;
+          alert("Tidak dapat Membatalkan Transaksi Item Masuk");
+        });
 
-        } else {
+      } else {
 
-            app.$swal.close();
+        app.$swal.close();
 
-        }
+      }
     });
-},
-selesaiItemMasuk(){
-    this.$swal({
-        text: "Anda Yakin Ingin Menyelesaikan Transaksi Ini ?",
-        content: {
-            element: "input",
-            attributes: {
-                placeholder: "*Silakan Isi Keterangan",
-                type: "text",
-            },
+  },
+  selesaiItemMasuk(){
+    var app = this;
+    var newinputTbsItemMasuk = app.inputTbsItemMasuk;
+    app.$swal({
+      text: "Anda Yakin Ingin Menyelesaikan Transaksi Ini ?",
+      content: {
+        element: "input",
+        attributes: {
+          placeholder: "*Silakan Isi Keterangan"
         },
-        buttons: {
-            cancel: true,
-            confirm: "Submit"                   
-        },
+      },
+      buttons: {
+        closeModal: false,
+        cancel: true,
+        confirm: "Submit"                 
+      },
 
     }).then((value) => {
 
-        if (!value) throw null;
+      if (!value) throw null;
 
-        this.prosesSelesaiItemMasuk(value);
+      this.prosesSelesaiItemMasuk(value);
 
     });
-},
-prosesSelesaiItemMasuk(value){
+
+
+  },
+  prosesSelesaiItemMasuk(value){
 
     var app = this;    
     var id = app.$route.params.id;
@@ -480,41 +484,41 @@ prosesSelesaiItemMasuk(value){
     axios.post(app.url+'/proses-edit-item-masuk/'+id,newinputTbsItemMasuk)
     .then(function (resp) {
 
-        if (resp.data == 0) {
+      if (resp.data == 0) {
 
-            app.alertTbs("Anda Belum Memasukan Produk");
-            app.loading = false;
+        app.alertTbs("Anda Belum Memasukan Produk");
+        app.loading = false;
 
-        }else{
+      }else{
 
-            app.getResults();
-            app.alert("Menyelesaikan Transaksi Item Masuk");
-            app.$router.replace('/item-masuk');
+        app.getResults();
+        app.alert("Menyelesaikan Transaksi Item Masuk");
+        app.$router.replace('/item-masuk');
 
-        }
+      }
 
     })
     .catch(function (resp) {                
-        app.loading = false;
-        alert("Tidak dapat Menyelesaikan Transaksi Item Masuk");
+      app.loading = false;
+      alert("Tidak dapat Menyelesaikan Transaksi Item Masuk");
     });
 
-},
-alert(pesan) {
-  this.$swal({
-
-   title: "Berhasil ",
-   text: pesan,
-   icon: "success",
-
-});
-},
-alertTbs(pesan) {
+  },
+  alert(pesan) {
     this.$swal({
-        text: pesan,
-        icon: "warning",
+
+     title: "Berhasil ",
+     text: pesan,
+     icon: "success",
+
+   });
+  },
+  alertTbs(pesan) {
+    this.$swal({
+      text: pesan,
+      icon: "warning",
     });
-}
+  }
 
 }
 

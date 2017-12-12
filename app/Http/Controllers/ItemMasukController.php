@@ -491,6 +491,8 @@ class ItemMasukController extends Controller
             ]);
         }
 
+        return response(200);
+
     }
 
     //MENAMPILKAN DATA DI TBS ITEM MASUK
@@ -591,20 +593,6 @@ class ItemMasukController extends Controller
     public function ambilFakturItemMasuk($id)
     {
         //
-        $session_id             = session()->getId();
-        $data_item_masuk        = ItemMasuk::find($id);
-        $data_produk_item_masuk = DetailItemMasuk::where('no_faktur', $data_item_masuk->no_faktur);
-
-        $hapus_semua_edit_tbs_item_masuk = EditTbsItemMasuk::where('no_faktur', $data_item_masuk->no_faktur)->delete();
-        foreach ($data_produk_item_masuk->get() as $data_tbs) {
-            $detail_item_masuk = EditTbsItemMasuk::create([
-                'id_produk'     => $data_tbs->id_produk,
-                'no_faktur'     => $data_tbs->no_faktur,
-                'jumlah_produk' => $data_tbs->jumlah_produk,
-                'session_id'    => $session_id,
-                'warung_id'     => Auth::user()->id_warung,
-            ]);
-        }
-        return $data_item_masuk;
+        return ItemMasuk::find($id);
     }
 }

@@ -66,6 +66,7 @@ import UbahProfilUserWarung from './components/ubah_profil/UbahProfilUserWarung.
 import ItemMasukIndex from './components/item_masuk/ItemMasukIndex.vue';
 import ItemMasukCreate from './components/item_masuk/ItemMasukCreate.vue';
 import ItemMasukEdit from './components/item_masuk/ItemMasukEdit.vue';
+import ItemMasukProsesEdit from './components/item_masuk/ItemMasukProsesEdit.vue';
 // KAS KELUAR
 import KasKeluarIndex from './components/kas_keluar/KasKeluarIndex.vue';
 import KasKeluarCreate from './components/kas_keluar/KasKeluarCreate.vue';
@@ -331,6 +332,10 @@ const routes = [{
         path: '/edit-item-masuk/:id',
         component: ItemMasukEdit,
         name: 'editItemMasuk'
+    }, {
+        path: '/item-masuk-edit/:id',
+        component: ItemMasukProsesEdit,
+        name: 'editItemMasukProses'
     },
     // kas masuk
     {
