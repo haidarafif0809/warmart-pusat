@@ -79,6 +79,7 @@ class ItemMasukController extends Controller
             array_push($array, [
                 'id'         => $item_masuks->id,
                 'no_faktur'  => $item_masuks->no_faktur,
+                'total'      => $item_masuks->TotalMasuk,
                 'keterangan' => $item_masuks->keterangan,
                 'waktu'      => $item_masuks->Waktu,
                 'waktu_edit' => $item_masuks->WaktuEdit]);
@@ -105,6 +106,7 @@ class ItemMasukController extends Controller
             array_push($array, [
                 'id'         => $item_masuks->id,
                 'no_faktur'  => $item_masuks->no_faktur,
+                'total'      => $item_masuks->TotalMasuk,
                 'keterangan' => $item_masuks->keterangan,
                 'waktu'      => $item_masuks->Waktu,
                 'waktu_edit' => $item_masuks->WaktuEdit]);

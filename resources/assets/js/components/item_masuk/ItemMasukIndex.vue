@@ -32,6 +32,7 @@
 								<tr>
 
 									<th>No. Transaksi</th>
+                                    <th>Total</th>
 									<th>Keterangan</th>
 									<th>Waktu</th>
 									<th>Waktu Edit</th>
@@ -43,6 +44,7 @@
 								<tr v-for="item_masuk, index in item_masuk" >
 
 									<td>{{ item_masuk.no_faktur }}</td>
+                                    <td>{{ item_masuk.total }}</td>
 									<td>{{ item_masuk.keterangan }}</td>
 									<td>{{ item_masuk.waktu }}</td>
 									<td>{{ item_masuk.waktu_edit }}</td>

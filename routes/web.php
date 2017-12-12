@@ -466,6 +466,10 @@ Route::post('/selesai-konfirmasi-pesanan-warung', 'PesananWarungController@seles
 Route::get('/pembelian/view', 'PembelianController@view')->middleware('auth');
 Route::get('/pembelian/pencarian', 'PembelianController@pencarian')->middleware('auth');
 
+// ITEM MASUK
+Route::get('/item-keluar/view', 'ItemKeluarController@view')->middleware('auth');
+Route::get('/item-keluar/pencarian', 'ItemKeluarController@pencarian')->middleware('auth');
+
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
     Route::resource('user', 'UserController');
