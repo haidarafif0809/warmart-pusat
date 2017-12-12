@@ -494,9 +494,12 @@ class ItemMasukController extends Controller
     //PROSES HAPUS ITEM MASUK
     public function destroy($id)
     {
+        if (!ItemMasuk::destroy($id)) {
 
-        ItemMasuk::destroy($id);
-        return response(200);
+            return 0;
+        } else {
+            return response(200);
+        }
     }
 
     public function proses_edit_jumlah(Request $request)

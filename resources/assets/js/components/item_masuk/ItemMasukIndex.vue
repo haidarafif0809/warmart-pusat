@@ -173,14 +173,30 @@ export default {
     		app.loading = true;
     		axios.delete(app.url+'/' + id)
     		.then(function (resp) {
-    			app.getResults();
-    			app.alert("Menghapus Item Masuk "+no_faktur);
-    			app.loading = false;
-    		})
+
+                if (resp.data == 0) {
+
+                    app.alertGagal("Item Masuk Tidak Dapat Dihapus, Karena Sudah Terpakai");
+                    app.loading = false;
+
+                }else{
+
+                    app.getResults();
+                    app.alert("Menghapus Item Masuk "+no_faktur);
+                    app.loading = false;  
+                }
+
+            })
     		.catch(function (resp) {
     			alert("Tidak dapat Menghapus Item Masuk");
     		});
-    	}
+    	},
+        alertGagal(pesan) {
+            this.$swal({
+              text: pesan,
+              icon: "warning",
+          });
+        }
     }
 }
 </script>
