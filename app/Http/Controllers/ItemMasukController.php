@@ -30,6 +30,46 @@ class ItemMasukController extends Controller
 
     }
 
+    public function paginationData($item_masuk, $array, $url)
+    {
+
+        //DATA PAGINATION
+        $respons['current_page']   = $item_masuk->currentPage();
+        $respons['data']           = $array;
+        $respons['first_page_url'] = url($url . '?page=' . $item_masuk->firstItem());
+        $respons['from']           = 1;
+        $respons['last_page']      = $item_masuk->lastPage();
+        $respons['last_page_url']  = url($url . '?page=' . $item_masuk->lastPage());
+        $respons['next_page_url']  = $item_masuk->nextPageUrl();
+        $respons['path']           = url($url);
+        $respons['per_page']       = $item_masuk->perPage();
+        $respons['prev_page_url']  = $item_masuk->previousPageUrl();
+        $respons['to']             = $item_masuk->perPage();
+        $respons['total']          = $item_masuk->total();
+        //DATA PAGINATION
+
+        return $respons;
+    }
+    public function paginationPencarianData($item_masuk, $array, $url, $search)
+    {
+        //DATA PAGINATION
+        $respons['current_page']   = $item_masuk->currentPage();
+        $respons['data']           = $array;
+        $respons['first_page_url'] = url($url . '?page=' . $item_masuk->firstItem() . '&search=' . $search);
+        $respons['from']           = 1;
+        $respons['last_page']      = $item_masuk->lastPage();
+        $respons['last_page_url']  = url($url . '?page=' . $item_masuk->lastPage() . '&search=' . $search);
+        $respons['next_page_url']  = $item_masuk->nextPageUrl();
+        $respons['path']           = url($url);
+        $respons['per_page']       = $item_masuk->perPage();
+        $respons['prev_page_url']  = $item_masuk->previousPageUrl();
+        $respons['to']             = $item_masuk->perPage();
+        $respons['total']          = $item_masuk->total();
+        //DATA PAGINATION
+
+        return $respons;
+    }
+
     public function view()
     {
         $item_masuk = ItemMasuk::where('warung_id', Auth::user()->id_warung)->orderBy('id', 'desc')->paginate(10);
@@ -43,21 +83,9 @@ class ItemMasukController extends Controller
                 'waktu'      => $item_masuks->Waktu,
                 'waktu_edit' => $item_masuks->WaktuEdit]);
         }
+        $url     = '/item-masuk/view';
+        $respons = $this->paginationData($item_masuk, $array, $url);
 
-        //DATA PAGINATION
-        $respons['current_page']   = $item_masuk->currentPage();
-        $respons['data']           = $array;
-        $respons['first_page_url'] = url('/item-masuk/view?page=' . $item_masuk->firstItem());
-        $respons['from']           = 1;
-        $respons['last_page']      = $item_masuk->lastPage();
-        $respons['last_page_url']  = url('/item-masuk/view?page=' . $item_masuk->lastPage());
-        $respons['next_page_url']  = $item_masuk->nextPageUrl();
-        $respons['path']           = url('/item-masuk/view');
-        $respons['per_page']       = $item_masuk->perPage();
-        $respons['prev_page_url']  = $item_masuk->previousPageUrl();
-        $respons['to']             = $item_masuk->perPage();
-        $respons['total']          = $item_masuk->total();
-        //DATA PAGINATION
         return response()->json($respons);
     }
 
@@ -82,20 +110,11 @@ class ItemMasukController extends Controller
                 'waktu_edit' => $item_masuks->WaktuEdit]);
         }
 
-        //DATA PAGINATION
-        $respons['current_page']   = $item_masuk->currentPage();
-        $respons['data']           = $array;
-        $respons['first_page_url'] = url('/item-masuk/pencarian?page=' . $item_masuk->firstItem() . '&search=' . $request->search);
-        $respons['from']           = 1;
-        $respons['last_page']      = $item_masuk->lastPage();
-        $respons['last_page_url']  = url('/item-masuk/pencarian?page=' . $item_masuk->lastPage() . '&search=' . $request->search);
-        $respons['next_page_url']  = $item_masuk->nextPageUrl();
-        $respons['path']           = url('/item-masuk/pencarian');
-        $respons['per_page']       = $item_masuk->perPage();
-        $respons['prev_page_url']  = $item_masuk->previousPageUrl();
-        $respons['to']             = $item_masuk->perPage();
-        $respons['total']          = $item_masuk->total();
-        //DATA PAGINATION
+        $url    = '/item-masuk/pencarian';
+        $search = $request->search;
+
+        $respons = $this->paginationPencarianData($item_masuk, $array, $url, $search);
+
         return response()->json($respons);
     }
 
@@ -114,20 +133,9 @@ class ItemMasukController extends Controller
                 'jumlah_produk'     => $tbs_item_masuks->jumlah_produk]);
         }
 
-        //DATA PAGINATION
-        $respons['current_page']   = $tbs_item_masuk->currentPage();
-        $respons['data']           = $array;
-        $respons['first_page_url'] = url('/item-masuk/view-tbs-item-masuk?page=' . $tbs_item_masuk->firstItem());
-        $respons['from']           = 1;
-        $respons['last_page']      = $tbs_item_masuk->lastPage();
-        $respons['last_page_url']  = url('/item-masuk/view-tbs-item-masuk?page=' . $tbs_item_masuk->lastPage());
-        $respons['next_page_url']  = $tbs_item_masuk->nextPageUrl();
-        $respons['path']           = url('/item-masuk/view-tbs-item-masuk');
-        $respons['per_page']       = $tbs_item_masuk->perPage();
-        $respons['prev_page_url']  = $tbs_item_masuk->previousPageUrl();
-        $respons['to']             = $tbs_item_masuk->perPage();
-        $respons['total']          = $tbs_item_masuk->total();
-        //DATA PAGINATION
+        $url     = '/item-masuk/view-tbs-item-masuk';
+        $respons = $this->paginationData($tbs_item_masuk, $array, $url);
+
         return response()->json($respons);
     }
 
@@ -152,20 +160,11 @@ class ItemMasukController extends Controller
                 'jumlah_produk'     => $tbs_item_masuks['jumlah_produk']]);
         }
 
-        //DATA PAGINATION
-        $respons['current_page']   = $tbs_item_masuk->currentPage();
-        $respons['data']           = $array;
-        $respons['first_page_url'] = url('/item-masuk/pencarian-tbs-item-masuk?page=' . $tbs_item_masuk->firstItem() . '&search=' . $request->search);
-        $respons['from']           = 1;
-        $respons['last_page']      = $tbs_item_masuk->lastPage();
-        $respons['last_page_url']  = url('/item-masuk/pencarian-tbs-item-masuk?page=' . $tbs_item_masuk->lastPage() . '&search=' . $request->search);
-        $respons['next_page_url']  = $tbs_item_masuk->nextPageUrl();
-        $respons['path']           = url('/item-masuk/pencarian-tbs-item-masuk');
-        $respons['per_page']       = $tbs_item_masuk->perPage();
-        $respons['prev_page_url']  = $tbs_item_masuk->previousPageUrl();
-        $respons['to']             = $tbs_item_masuk->perPage();
-        $respons['total']          = $tbs_item_masuk->total();
-        //DATA PAGINATION
+        $url    = '/item-masuk/pencarian-tbs-item-masuk';
+        $search = $request->search;
+
+        $respons = $this->paginationPencarianData($tbs_item_masuk, $array, $url, $search);
+
         return response()->json($respons);
     }
 
@@ -184,21 +183,9 @@ class ItemMasukController extends Controller
                 'kode_produk'            => $tbs_item_masuks->produk->kode_barang,
                 'jumlah_produk'          => $tbs_item_masuks->jumlah_produk]);
         }
+        $url     = '/item-masuk/view-edit-tbs-item-masuk/' . $id;
+        $respons = $this->paginationData($tbs_item_masuk, $array, $url);
 
-        //DATA PAGINATION
-        $respons['current_page']   = $tbs_item_masuk->currentPage();
-        $respons['data']           = $array;
-        $respons['first_page_url'] = url('/item-masuk/view-edit-tbs-item-masuk/' . $id . '?page=' . $tbs_item_masuk->firstItem());
-        $respons['from']           = 1;
-        $respons['last_page']      = $tbs_item_masuk->lastPage();
-        $respons['last_page_url']  = url('/item-masuk/view-edit-tbs-item-masuk/' . $id . '?page=' . $tbs_item_masuk->lastPage());
-        $respons['next_page_url']  = $tbs_item_masuk->nextPageUrl();
-        $respons['path']           = url('/item-masuk/view-edit-tbs-item-masuk/' . $id);
-        $respons['per_page']       = $tbs_item_masuk->perPage();
-        $respons['prev_page_url']  = $tbs_item_masuk->previousPageUrl();
-        $respons['to']             = $tbs_item_masuk->perPage();
-        $respons['total']          = $tbs_item_masuk->total();
-        //DATA PAGINATION
         return response()->json($respons);
     }
 
@@ -225,20 +212,11 @@ class ItemMasukController extends Controller
                 'jumlah_produk'          => $tbs_item_masuks['jumlah_produk']]);
         }
 
-        //DATA PAGINATION
-        $respons['current_page']   = $tbs_item_masuk->currentPage();
-        $respons['data']           = $array;
-        $respons['first_page_url'] = url('/item-masuk/pencarian-edit-tbs-item-masuk/' . $id . '?page=' . $tbs_item_masuk->firstItem() . '&search=' . $request->search);
-        $respons['from']           = 1;
-        $respons['last_page']      = $tbs_item_masuk->lastPage();
-        $respons['last_page_url']  = url('/item-masuk/pencarian-edit-tbs-item-masuk/' . $id . '?page=' . $tbs_item_masuk->lastPage() . '&search=' . $request->search);
-        $respons['next_page_url']  = $tbs_item_masuk->nextPageUrl();
-        $respons['path']           = url('/item-masuk/pencarian-edit-tbs-item-masuk/' . $id);
-        $respons['per_page']       = $tbs_item_masuk->perPage();
-        $respons['prev_page_url']  = $tbs_item_masuk->previousPageUrl();
-        $respons['to']             = $tbs_item_masuk->perPage();
-        $respons['total']          = $tbs_item_masuk->total();
-        //DATA PAGINATION
+        $url    = '/item-masuk/pencarian-edit-tbs-item-masuk/' . $id;
+        $search = $request->search;
+
+        $respons = $this->paginationPencarianData($tbs_item_masuk, $array, $url, $search);
+
         return response()->json($respons);
     }
 
@@ -560,20 +538,9 @@ class ItemMasukController extends Controller
                 'jumlah_produk'        => $detail_item_masuks->jumlah_produk]);
         }
 
-        //DATA PAGINATION
-        $respons['current_page']   = $detail_item_masuk->currentPage();
-        $respons['data']           = $array;
-        $respons['first_page_url'] = url('/item-masuk/detail-item-masuk/' . $id . '?page=' . $detail_item_masuk->firstItem());
-        $respons['from']           = 1;
-        $respons['last_page']      = $detail_item_masuk->lastPage();
-        $respons['last_page_url']  = url('/item-masuk/detail-item-masuk/' . $id . '?page=' . $detail_item_masuk->lastPage());
-        $respons['next_page_url']  = $detail_item_masuk->nextPageUrl();
-        $respons['path']           = url('/item-masuk/detail-item-masuk/' . $id);
-        $respons['per_page']       = $detail_item_masuk->perPage();
-        $respons['prev_page_url']  = $detail_item_masuk->previousPageUrl();
-        $respons['to']             = $detail_item_masuk->perPage();
-        $respons['total']          = $detail_item_masuk->total();
-        //DATA PAGINATION
+        $url     = '/item-masuk/detail-item-masuk/' . $id;
+        $respons = $this->paginationData($detail_item_masuk, $array, $url);
+
         return response()->json($respons);
     }
 
@@ -601,20 +568,11 @@ class ItemMasukController extends Controller
                 'jumlah_produk'        => $detail_item_masuks['jumlah_produk']]);
         }
 
-        //DATA PAGINATION
-        $respons['current_page']   = $detail_item_masuk->currentPage();
-        $respons['data']           = $array;
-        $respons['first_page_url'] = url('/item-masuk/pencarian-detail-item-masuk/' . $id . '?page=' . $detail_item_masuk->firstItem() . '&search=' . $request->search);
-        $respons['from']           = 1;
-        $respons['last_page']      = $detail_item_masuk->lastPage();
-        $respons['last_page_url']  = url('/item-masuk/pencarian-detail-item-masuk/' . $id . '?page=' . $detail_item_masuk->lastPage() . '&search=' . $request->search);
-        $respons['next_page_url']  = $detail_item_masuk->nextPageUrl();
-        $respons['path']           = url('/item-masuk/pencarian-detail-item-masuk/' . $id);
-        $respons['per_page']       = $detail_item_masuk->perPage();
-        $respons['prev_page_url']  = $detail_item_masuk->previousPageUrl();
-        $respons['to']             = $detail_item_masuk->perPage();
-        $respons['total']          = $detail_item_masuk->total();
-        //DATA PAGINATION
+        $url    = '/item-masuk/pencarian-detail-item-masuk/' . $id;
+        $search = $request->search;
+
+        $respons = $this->paginationPencarianData($detail_item_masuk, $array, $url, $search);
+
         return response()->json($respons);
     }
 }
