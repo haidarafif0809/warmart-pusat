@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Barang;
 use App\DetailItemMasuk;
 use App\EditTbsItemMasuk;
 use App\ItemMasuk;
@@ -11,7 +10,6 @@ use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Session;
-use Yajra\Datatables\Datatables;
 use Yajra\Datatables\Html\Builder;
 
 class ItemMasukController extends Controller
@@ -251,33 +249,7 @@ class ItemMasukController extends Controller
      */
     public function create(Request $request, Builder $htmlBuilder)
     {
-        if ($request->ajax()) {
-            $session_id     = session()->getId();
-            $user_warung    = Auth::user()->id_warung;
-            $tbs_item_masuk = TbsItemMasuk::with(['produk'])->where('warung_id', $user_warung)->where('session_id', $session_id)->get();
-            return Datatables::of($tbs_item_masuk)->addColumn('action', function ($tbsitemmasuk) {
-                return view('item_masuk._hapus_produk', [
-                    'model'           => $tbsitemmasuk,
-                    'form_url'        => route('item-masuk.proses_hapus_tbs_item_masuk', $tbsitemmasuk->id_tbs_item_masuk),
-                    'confirm_message' => 'Yakin Mau Menghapus Produk ?',
-                ]);
-            })
-                ->editColumn('jumlah_produk', function ($produk) {
-                    return "<a href='#edit-jumlah' id='edit_jumlah_produk' class='edit-jumlah' data-id='$produk->id_tbs_item_masuk' data-nama='$produk->TitleCaseProduk' >$produk->jumlah_produk</a>";
-                })
-                ->addColumn('data_produk_tbs', function ($data_produk_tbs) {
-                    $produk      = Barang::find($data_produk_tbs->id_produk);
-                    $data_produk = $produk->kode_barang . " - " . $produk->nama_barang;
-                    return $data_produk;
-                })->make(true);
-        }
 
-        $html = $htmlBuilder
-            ->addColumn(['data' => 'data_produk_tbs', 'name' => 'data_produk_tbs', 'title' => 'Produk', 'orderable' => false, 'searchable' => false])
-            ->addColumn(['data' => 'jumlah_produk', 'name' => 'jumlah_produk', 'title' => 'Jumlah'])
-            ->addColumn(['data' => 'action', 'name' => 'action', 'title' => 'Hapus', 'orderable' => false, 'searchable' => false]);
-
-        return view('item_masuk.create')->with(compact('html'));
     }
 
     //PROSES TAMBAH TBS ITEM MASUK
@@ -498,32 +470,7 @@ class ItemMasukController extends Controller
     //MENAMPILKAN DATA DI TBS ITEM MASUK
     public function edit(Request $request, Builder $htmlBuilder, $id)
     {
-        if ($request->ajax()) {
-            $item_masuk     = ItemMasuk::find($id);
-            $tbs_item_masuk = EditTbsItemMasuk::with(['produk'])->where('warung_id', Auth::user()->id_warung)->where('no_faktur', $item_masuk->no_faktur)->get();
-            return Datatables::of($tbs_item_masuk)->addColumn('action', function ($tbsitemmasuk) {
-                return view('item_masuk._hapus_produk', [
-                    'model'           => $tbsitemmasuk,
-                    'form_url'        => route('item-masuk.proses_hapus_edit_tbs_item_masuk', $tbsitemmasuk->id_edit_tbs_item_masuk),
-                    'confirm_message' => 'Yakin Mau Menghapus Produk ?',
-                ]);
-            })
-                ->editColumn('jumlah_produk', function ($produk) {
-                    return "<a href='#edit-jumlah' id='edit_jumlah_produk' class='edit-jumlah' data-id='$produk->id_edit_tbs_item_masuk' data-nama='$produk->TitleCaseProduk' >$produk->jumlah_produk</a>";
-                })->addColumn('data_produk_tbs', function ($data_produk_tbs) {
-                $produk      = Barang::find($data_produk_tbs->id_produk);
-                $data_produk = $produk->kode_barang . " - " . $produk->nama_barang;
-                return $data_produk;
-            })->make(true);
-        }
 
-        $html = $htmlBuilder
-            ->addColumn(['data' => 'data_produk_tbs', 'name' => 'data_produk_tbs', 'title' => 'Produk', 'searchable' => false])
-            ->addColumn(['data' => 'jumlah_produk', 'name' => 'jumlah_produk', 'title' => 'Jumlah'])
-            ->addColumn(['data' => 'action', 'name' => 'action', 'title' => 'Hapus', 'orderable' => false, 'searchable' => false]);
-
-        $item_masuk = ItemMasuk::find($id);
-        return view('item_masuk.edit')->with(compact('html', 'item_masuk'));
     }
 
     //PROSES TAMBAH EDIT TBS ITEM MASUK
@@ -594,5 +541,80 @@ class ItemMasukController extends Controller
     {
         //
         return ItemMasuk::find($id);
+    }
+    public function detailItemMasuk($id)
+    {
+        //
+        $item_masuk        = ItemMasuk::find($id);
+        $user_warung       = Auth::user()->id_warung;
+        $detail_item_masuk = DetailItemMasuk::with(['produk'])->where('warung_id', $user_warung)->where('no_faktur', $item_masuk->no_faktur)->orderBy('id_detail_item_masuk', 'desc')->paginate(10);
+        $array             = array();
+
+        foreach ($detail_item_masuk as $detail_item_masuks) {
+            array_push($array, [
+                'id_item_masuk'        => $id,
+                'no_faktur'            => $detail_item_masuks->no_faktur,
+                'id_detail_item_masuk' => $detail_item_masuks->id_detail_item_masuk,
+                'nama_produk'          => title_case($detail_item_masuks->produk->nama_barang),
+                'kode_produk'          => $detail_item_masuks->produk->kode_barang,
+                'jumlah_produk'        => $detail_item_masuks->jumlah_produk]);
+        }
+
+        //DATA PAGINATION
+        $respons['current_page']   = $detail_item_masuk->currentPage();
+        $respons['data']           = $array;
+        $respons['first_page_url'] = url('/item-masuk/detail-item-masuk/' . $id . '?page=' . $detail_item_masuk->firstItem());
+        $respons['from']           = 1;
+        $respons['last_page']      = $detail_item_masuk->lastPage();
+        $respons['last_page_url']  = url('/item-masuk/detail-item-masuk/' . $id . '?page=' . $detail_item_masuk->lastPage());
+        $respons['next_page_url']  = $detail_item_masuk->nextPageUrl();
+        $respons['path']           = url('/item-masuk/detail-item-masuk/' . $id);
+        $respons['per_page']       = $detail_item_masuk->perPage();
+        $respons['prev_page_url']  = $detail_item_masuk->previousPageUrl();
+        $respons['to']             = $detail_item_masuk->perPage();
+        $respons['total']          = $detail_item_masuk->total();
+        //DATA PAGINATION
+        return response()->json($respons);
+    }
+
+    public function pencarianDetailItemMasuk($id, Request $request)
+    {
+        $item_masuk        = ItemMasuk::find($id);
+        $user_warung       = Auth::user()->id_warung;
+        $detail_item_masuk = DetailItemMasuk::select('detail_item_masuks.id_detail_item_masuk AS id_detail_item_masuk', 'detail_item_masuks.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'detail_item_masuks.id_produk AS id_produk', 'detail_item_masuks.no_faktur AS no_faktur')->leftJoin('barangs', 'barangs.id', '=', 'detail_item_masuks.id_produk')
+            ->where('detail_item_masuks.warung_id', $user_warung)->where('detail_item_masuks.no_faktur', $item_masuk->no_faktur)
+            ->where(function ($query) use ($request) {
+
+                $query->orWhere('barangs.nama_barang', 'LIKE', $request->search . '%')
+                    ->orWhere('barangs.kode_barang', 'LIKE', $request->search . '%');
+
+            })->orderBy('detail_item_masuks.id_detail_item_masuk', 'desc')->paginate(10);
+
+        $array = array();
+        foreach ($detail_item_masuk as $detail_item_masuks) {
+            array_push($array, [
+                'id_item_masuk'        => $id,
+                'no_faktur'            => $detail_item_masuks['no_faktur'],
+                'id_detail_item_masuk' => $detail_item_masuks['id_detail_item_masuk'],
+                'nama_produk'          => title_case($detail_item_masuks['nama_barang']),
+                'kode_produk'          => $detail_item_masuks['kode_barang'],
+                'jumlah_produk'        => $detail_item_masuks['jumlah_produk']]);
+        }
+
+        //DATA PAGINATION
+        $respons['current_page']   = $detail_item_masuk->currentPage();
+        $respons['data']           = $array;
+        $respons['first_page_url'] = url('/item-masuk/pencarian-detail-item-masuk/' . $id . '?page=' . $detail_item_masuk->firstItem() . '&search=' . $request->search);
+        $respons['from']           = 1;
+        $respons['last_page']      = $detail_item_masuk->lastPage();
+        $respons['last_page_url']  = url('/item-masuk/pencarian-detail-item-masuk/' . $id . '?page=' . $detail_item_masuk->lastPage() . '&search=' . $request->search);
+        $respons['next_page_url']  = $detail_item_masuk->nextPageUrl();
+        $respons['path']           = url('/item-masuk/pencarian-detail-item-masuk/' . $id);
+        $respons['per_page']       = $detail_item_masuk->perPage();
+        $respons['prev_page_url']  = $detail_item_masuk->previousPageUrl();
+        $respons['to']             = $detail_item_masuk->perPage();
+        $respons['total']          = $detail_item_masuk->total();
+        //DATA PAGINATION
+        return response()->json($respons);
     }
 }

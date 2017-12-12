@@ -46,6 +46,10 @@
 									<td>{{ item_masuk.keterangan }}</td>
 									<td>{{ item_masuk.waktu }}</td>
 									<td>{{ item_masuk.waktu_edit }}</td>
+									<td>
+										<router-link :to="{name: 'detailItemMasuk', params: {id: item_masuk.id}}" class="btn btn-xs btn-info" v-bind:id="'detail-' + item_masuk.id" >
+										Detail </router-link> </td>
+									</td>
 									<td><router-link :to="{name: 'editItemMasukProses', params: {id: item_masuk.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + item_masuk.id" >
 									Edit </router-link> </td>
 

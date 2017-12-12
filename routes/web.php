@@ -437,6 +437,9 @@ Route::get('/item-masuk/pencarian-tbs-item-masuk', 'ItemMasukController@pencaria
 Route::get('/item-masuk/view-edit-tbs-item-masuk/{id}', 'ItemMasukController@viewEditTbsItemMasuk')->middleware('auth');
 Route::get('/item-masuk/pencarian-edit-tbs-item-masuk/{id}', 'ItemMasukController@pencarianEditTbsItemMasuk')->middleware('auth');
 Route::get('/item-masuk/ambil-faktur-item-masuk/{id}', 'ItemMasukController@ambilFakturItemMasuk')->middleware('auth');
+Route::get('/item-masuk/detail-item-masuk/{id}', 'ItemMasukController@detailItemMasuk')->middleware('auth');
+Route::get('/item-masuk/pencarian-detail-item-masuk/{id}', 'ItemMasukController@pencarianDetailItemMasuk')->middleware('auth');
+//KAS KELUAR VUE.JS
 //KAS KELUAR VUE.JS
 Route::get('/kas-keluar/view', 'KasKeluarController@view')->middleware('auth');
 Route::get('/kas-keluar/pencarian', 'KasKeluarController@pencarian')->middleware('auth');
