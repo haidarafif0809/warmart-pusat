@@ -143,6 +143,64 @@ export default {
     			alert("Tidak Dapat Memuat Item Keluar");
     		});
     	},
+    	alert(pesan) {
+    		this.$swal({
+    			title: "Berhasil ",
+    			text: pesan,
+    			icon: "success",
+    		});
+    	},
+    	deleteEntry(id, index,no_faktur) {
+
+    		var app = this;
+    		app.$swal({
+    			text: "Anda Yakin Ingin Menghapus Transaksi "+no_faktur+ " ?",
+    			buttons: true,
+    			dangerMode: true,
+    		})
+    		.then((willDelete) => {
+    			if (willDelete) {
+
+    				this.prosesDelete(id,no_faktur);
+
+    			} else {
+
+    				app.$swal.close();
+
+    			}
+    		});
+
+    		
+    	},
+    	prosesDelete(id,no_faktur){
+    		var app = this;
+    		app.loading = true;
+    		axios.delete(app.url+'/' + id)
+    		.then(function (resp) {
+
+    			if (resp.data == 0) {
+
+    				app.alertGagal(no_faktur+" Gagal di Hapus, Silakan di Coba Lagi");
+    				app.loading = false;
+
+    			}else{
+
+    				app.getResults();
+    				app.alert("Menghapus Item Keluar "+no_faktur);
+    				app.loading = false;  
+    			}
+
+    		})
+    		.catch(function (resp) {
+    			alert("Tidak dapat Menghapus Item Keluar");
+    		});
+    	},
+    	alertGagal(pesan) {
+    		this.$swal({
+    			text: pesan,
+    			icon: "warning",
+    		});
+    	}
     }
 }
 </script>

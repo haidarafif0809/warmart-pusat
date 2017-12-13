@@ -647,23 +647,13 @@ class ItemKeluarController extends Controller
      */
     public function destroy($id)
     {
-        $pesan_alert =
-            '<div class="container-fluid">
-        <div class="alert-icon">
-        <i class="material-icons">check</i>
-        </div>
-        <b>Sukses : Item Keluar Berhasil Dihapus</b>
-        </div>';
 
         if (!ItemKeluar::destroy($id)) {
-            return redirect()->back();
+            return 0;
+        } else {
+            return response(200);
         }
 
-        Session::flash("flash_notification", [
-            "level"   => "danger",
-            "message" => $pesan_alert,
-        ]);
-        return redirect()->route('item-keluar.index');
     }
 
 //PROSE EDIT JUMLAH TBS ITEM KELUAR
