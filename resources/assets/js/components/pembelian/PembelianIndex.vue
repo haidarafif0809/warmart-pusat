@@ -106,7 +106,6 @@ export default {
     		axios.get(app.url+'/view?page='+page)
     		.then(function (resp) {
     			app.pembelian = resp.data.data;
-    			alert(app.pembelian);
     			app.pembelianData = resp.data;
     			app.loading = false;
     		})

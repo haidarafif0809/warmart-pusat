@@ -465,6 +465,9 @@ Route::post('/selesai-konfirmasi-pesanan-warung', 'PesananWarungController@seles
 //PEMBELIAN  VUE JS
 Route::get('/pembelian/view', 'PembelianController@view')->middleware('auth');
 Route::get('/pembelian/pencarian', 'PembelianController@pencarian')->middleware('auth');
+Route::get('/pembelian/view-tbs-pembelian', 'PembelianController@viewTbsPembelian')->middleware('auth');
+Route::get('/pembelian/pencarian-tbs-pembelian', 'PembelianController@pencarianTbsPembelian')->middleware('auth');
+Route::get('/pembelian/pilih-suplier', 'PembelianController@pilih_suplier')->middleware('auth');
 
 // ITEM MASUK
 Route::get('/item-keluar/view', 'ItemKeluarController@view')->middleware('auth');
