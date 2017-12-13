@@ -42,7 +42,7 @@
                   <th>Aksi</th>
                 </tr>
               </thead>
-              <tbody v-if="kasKeluar.length"  class="data-ada">
+              <tbody v-if="kasKeluar.length > 0 && loading == false"  class="data-ada">
                 <tr v-for="dataKas, index in kasKeluar" >
                   <td>{{ dataKas.kas_keluar.no_faktur }}</td>
                   <td>{{ dataKas.kas_keluar.nama_kas }}</td>
@@ -54,13 +54,13 @@
                     <router-link :to="{name: 'editKasKeluar', params: {id: dataKas.kas_keluar.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + dataKas.kas_keluar.id" >
                       Edit
                     </router-link>
-                      <a href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + dataKas.kas_keluar.id" v-on:click="deleteEntry(dataKas.kas_keluar.id, index,dataKas.nama_kas)">
+                      <a href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + dataKas.kas_keluar.id" v-on:click="deleteEntry(dataKas.kas_keluar.id, index,dataKas.kas_keluar.nama_kas)">
                         Delete
                       </a>
                     </td>
                   </tr>
               </tbody>
-              <tbody class="data-tidak-ada" v-else>
+              <tbody class="data-tidak-ada" v-else-if="kasKeluar.length == 0 && loading == false">
                 <tr><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
               </tbody>
             </table>
@@ -109,7 +109,7 @@ export default {
           app.kasKeluar = resp.data.data;
           app.kasKeluarData = resp.data;
           app.loading = false;
-
+          console.log(resp.data)
         })
         .catch(function (resp) {
           console.log(resp);

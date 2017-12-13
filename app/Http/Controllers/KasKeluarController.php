@@ -80,7 +80,7 @@ class KasKeluarController extends Controller
 
     public function view()
     {
-        $data_kas_keluar = KasKeluar::leftJoin('kas', 'kas_keluars.kas', '=', 'kas.id')
+        $data_kas_keluar = KasKeluar::select(['kas_keluars.id', 'kas_keluars.no_faktur', 'kas_keluars.jumlah', 'kas_keluars.keterangan', 'kas_keluars.created_at', 'kas_keluars.warung_id', 'kas.nama_kas', 'kategori_transaksis.nama_kategori_transaksi'])->leftJoin('kas', 'kas_keluars.kas', '=', 'kas.id')
             ->leftJoin('kategori_transaksis', 'kas_keluars.kategori', '=', 'kategori_transaksis.id')
             ->where('kas_keluars.warung_id', Auth::user()->id_warung)->orderBy('kas_keluars.id', 'desc')->paginate(10);
 
@@ -97,7 +97,7 @@ class KasKeluarController extends Controller
     public function pencarian(Request $request)
     {
         $search          = $request->search;
-        $data_kas_keluar = KasKeluar::leftJoin('kas', 'kas_keluars.kas', '=', 'kas.id')
+        $data_kas_keluar = KasKeluar::select(['kas_keluars.id', 'kas_keluars.no_faktur', 'kas_keluars.jumlah', 'kas_keluars.keterangan', 'kas_keluars.created_at', 'kas_keluars.warung_id', 'kas.nama_kas', 'kategori_transaksis.nama_kategori_transaksi'])->leftJoin('kas', 'kas_keluars.kas', '=', 'kas.id')
             ->leftJoin('kategori_transaksis', 'kas_keluars.kategori', '=', 'kategori_transaksis.id')
             ->where('kas_keluars.warung_id', Auth::user()->id_warung)
             ->where(function ($query) use ($search) {
@@ -303,26 +303,7 @@ class KasKeluarController extends Controller
         $id_warung  = Auth::user()->id_warung;
 
         if ($id_warung == $kas_keluar->warung_id) {
-            // jika gagal hapus
-            if (!KasKeluar::destroy($id)) {
-                return redirect()->back();
-            } else {
-
-                $pesan_alert =
-                '<div class="container-fluid">
-                <div class="alert-icon">
-                    <i class="material-icons">check</i>
-                </div>
-                <b>Sukses : Berhasil Menghapus Transaksi Kas Keluar "' . $kas_keluar->no_faktur . '"</b>
-            </div>';
-
-                Session::flash("flash_notification", [
-                    "level"   => "success",
-                    "message" => $pesan_alert,
-                ]);
-
-                return redirect()->route('kas-keluar.index');
-            }
+            KasKeluar::destroy($id);
         } else {
             return response()->view('error.403');
         }

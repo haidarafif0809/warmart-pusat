@@ -462,13 +462,6 @@ Route::get('/batalkan-konfirmasi-pesanan-warung/{id}', 'PesananWarungController@
 Route::get('/batalkan-pesanan-warung/{id}', 'PesananWarungController@batalkanPesananWarung')->middleware('auth');
 Route::post('/selesai-konfirmasi-pesanan-warung', 'PesananWarungController@selesaiKonfirmasiPesananWarung')->middleware('auth');
 
-//PUNYA SELESAI KONFIRMASI PESANAN WARUNG
-Route::post('/selesai-konfirmasi-pesanan-warung}', [
-    'middleware' => ['auth'],
-    'as'         => 'pesanan-warung.selesai_konfirmasi',
-    'uses'       => 'PesananWarungController@selesaiKonfirmasiPesananWarung',
-]);
-
 //PEMBELIAN  VUE JS
 Route::get('/pembelian/view', 'PembelianController@view')->middleware('auth');
 Route::get('/pembelian/pencarian', 'PembelianController@pencarian')->middleware('auth');
@@ -505,7 +498,7 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
     Route::resource('produk', 'BarangController');
     Route::resource('kategori-transaksi', 'KategoriTransaksiController');
     Route::resource('kas_masuk', 'KasMasukController');
-    Route::resource('kas_keluar', 'KasKeluarController');
+    Route::resource('kas-keluar', 'KasKeluarController');
     Route::resource('kas_mutasi', 'KasMutasiController');
     Route::resource('error', 'ErrorController');
     Route::resource('item-masuk', 'ItemMasukController');
