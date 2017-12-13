@@ -462,6 +462,13 @@ Route::get('/batalkan-konfirmasi-pesanan-warung/{id}', 'PesananWarungController@
 Route::get('/batalkan-pesanan-warung/{id}', 'PesananWarungController@batalkanPesananWarung')->middleware('auth');
 Route::post('/selesai-konfirmasi-pesanan-warung', 'PesananWarungController@selesaiKonfirmasiPesananWarung')->middleware('auth');
 
+//PUNYA SELESAI KONFIRMASI PESANAN WARUNG
+Route::post('/selesai-konfirmasi-pesanan-warung}', [
+    'middleware' => ['auth'],
+    'as'         => 'pesanan-warung.selesai_konfirmasi',
+    'uses'       => 'PesananWarungController@selesaiKonfirmasiPesananWarung',
+]);
+
 //PEMBELIAN  VUE JS
 Route::get('/pembelian/view', 'PembelianController@view')->middleware('auth');
 Route::get('/pembelian/pencarian', 'PembelianController@pencarian')->middleware('auth');
