@@ -121,7 +121,7 @@
 				      	<tbody  v-if="detailPesanan.length > 0 && loading == false"  class="data-ada">
 
 				      	 	<tr v-for="detailPesanans, index in detailPesanan">
-				      			<td>{{ detailPesanans.produk.nama_barang }}</td>			          			
+				      			<td style="text-transform: capitalize">{{ detailPesanans.produk.nama_barang }}</td>			          			
 				      			<td>Rp. {{ new Intl.NumberFormat().format(detailPesanans.harga_produk) }}</td>			          			
 				      			<td>
 				      				<center>
@@ -254,14 +254,14 @@
 
 	                <div class="col-xs-8">
 	                    <p style="margin-bottom:1px;margin-top: 1px;">
-	                      <b>{{detailPesanans.produk.nama_barang}}</b>
+	                      <b style="text-transform: capitalize">{{detailPesanans.produk.nama_barang}}</b>
 	                    </p>
 	                    <p style="margin-bottom:1px;margin-top: 1px;">
 	                      <b>Rp. {{ new Intl.NumberFormat().format(detailPesanans.harga_produk) }}</b>
 	                    </p>
 
 	                    <a id="edit-jumlah-pesanan" :data-nama="detailPesanans.produk.nama_barang" :data-id="detailPesanans.id"  class="btn btn-info btn-xs" @click="editProduk(detailPesanans.id, index, detailPesanans.produk.nama_barang)">
-	                    	<font style="font-size: 11.5px;">{{ detailPesanans.jumlah_produk }} Satuan</font> 
+	                    	<font style="font-size: 11.5px;">{{ detailPesanans.jumlah_produk }}</font> 
 	                    </a>
 
 	                    <div class="btn-group" align="right" v-if="detailPesanans.pesanan_pelanggan.konfirmasi_pesanan == 0">
