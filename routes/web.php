@@ -477,6 +477,8 @@ Route::get('/item-keluar/pencarian-tbs-item-keluar', 'ItemKeluarController@penca
 Route::get('/item-keluar/ambil-faktur-item-keluar/{id}', 'ItemKeluarController@ambilFakturItemKeluar')->middleware('auth');
 Route::get('/item-keluar/detail-item-keluar/{id}', 'ItemKeluarController@detailItemKeluar')->middleware('auth');
 Route::get('/item-keluar/pencarian-detail-item-keluar/{id}', 'ItemKeluarController@pencarianDetailItemKeluar')->middleware('auth');
+Route::get('/item-keluar/view-edit-tbs-item-keluar/{id}', 'ItemKeluarController@viewEditTbsItemKeluar')->middleware('auth');
+Route::get('/item-keluar/pencarian-edit-tbs-item-keluar/{id}', 'ItemKeluarController@pencarianEditTbsItemKeluar')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
@@ -667,7 +669,7 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
         'uses'       => 'ItemKeluarController@proses_hapus_tbs_item_keluar',
     ]);
 
-    Route::post('/item-masuk/proses-hapus-semua-edit-tbs-item-keluar/{id}', [
+    Route::post('/item-keluar/proses-hapus-semua-edit-tbs-item-keluar', [
         'middleware' => ['auth'],
         'as'         => 'item-keluar.proses_hapus_semua_edit_tbs_item_keluar',
         'uses'       => 'ItemKeluarController@proses_hapus_semua_edit_tbs_item_keluar',
@@ -684,7 +686,7 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
         'as'         => 'item-keluar.proses_form_edit',
         'uses'       => 'ItemKeluarController@proses_form_edit',
     ]);
-    Route::post('/item-keluar/proses-tambah-edit-tbs-item-keluar/{id}', [
+    Route::post('/item-keluar/proses-tambah-edit-tbs-item-keluar', [
         'middleware' => ['auth'],
         'as'         => 'item-keluar.proses_tambah_edit_tbs_item_keluar',
         'uses'       => 'ItemKeluarController@proses_tambah_edit_tbs_item_keluar',

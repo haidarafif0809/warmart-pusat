@@ -15,4 +15,8 @@ class EditTbsItemKeluar extends Model
     {
         return $this->hasOne('App\Barang', 'id', 'id_produk');
     }
+    public function getTitleCaseProdukAttribute()
+    {
+        return title_case($this->produk->nama_barang);
+    }
 }
