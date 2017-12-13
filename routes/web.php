@@ -469,6 +469,8 @@ Route::get('/pembelian/pencarian', 'PembelianController@pencarian')->middleware(
 // ITEM MASUK
 Route::get('/item-keluar/view', 'ItemKeluarController@view')->middleware('auth');
 Route::get('/item-keluar/pencarian', 'ItemKeluarController@pencarian')->middleware('auth');
+Route::get('/item-keluar/view-tbs-item-keluar', 'ItemKeluarController@viewTbsItemKeluar')->middleware('auth');
+Route::get('/item-keluar/pencarian-tbs-item-keluar', 'ItemKeluarController@pencarianTbsItemKeluar')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 

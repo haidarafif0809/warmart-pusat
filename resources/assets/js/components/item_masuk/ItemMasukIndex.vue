@@ -33,49 +33,51 @@
 
 									<th>No. Transaksi</th>
                                     <th>Total</th>
-									<th>Keterangan</th>
-									<th>Waktu</th>
-									<th>Waktu Edit</th>
-									<th>Aksi</th>
+                                    <th>Keterangan</th>
+                                    <th>Waktu</th>
+                                    <th>Waktu Edit</th>
+                                    <th>Detail</th>
+                                    <th>Edit</th>
+                                    <th>Aksi</th>
 
-								</tr>
-							</thead>
-							<tbody v-if="item_masuk.length"  class="data-ada">
-								<tr v-for="item_masuk, index in item_masuk" >
+                                </tr>
+                            </thead>
+                            <tbody v-if="item_masuk.length"  class="data-ada">
+                                <tr v-for="item_masuk, index in item_masuk" >
 
-									<td>{{ item_masuk.no_faktur }}</td>
-                                    <td>{{ item_masuk.total }}</td>
-									<td>{{ item_masuk.keterangan }}</td>
-									<td>{{ item_masuk.waktu }}</td>
-									<td>{{ item_masuk.waktu_edit }}</td>
-									<td>
-										<router-link :to="{name: 'detailItemMasuk', params: {id: item_masuk.id}}" class="btn btn-xs btn-info" v-bind:id="'detail-' + item_masuk.id" >
-										Detail </router-link> </td>
-									</td>
-									<td><router-link :to="{name: 'editItemMasukProses', params: {id: item_masuk.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + item_masuk.id" >
-									Edit </router-link> </td>
+                                   <td>{{ item_masuk.no_faktur }}</td>
+                                   <td>{{ item_masuk.total }}</td>
+                                   <td>{{ item_masuk.keterangan }}</td>
+                                   <td>{{ item_masuk.waktu }}</td>
+                                   <td>{{ item_masuk.waktu_edit }}</td>
+                                   <td>
+                                      <router-link :to="{name: 'detailItemMasuk', params: {id: item_masuk.id}}" class="btn btn-xs btn-info" v-bind:id="'detail-' + item_masuk.id" >
+                                      Detail </router-link> </td>
+                                  </td>
+                                  <td><router-link :to="{name: 'editItemMasukProses', params: {id: item_masuk.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + item_masuk.id" >
+                                  Edit </router-link> </td>
 
-									<td> 
-										<a href="#item-masuk" class="btn btn-xs btn-danger" v-bind:id="'delete-' + item_masuk.id" v-on:click="deleteEntry(item_masuk.id, index,item_masuk.no_faktur)">Delete</a>
-									</td>
-								</tr>
-							</tbody>					
-							<tbody class="data-tidak-ada" v-else>
-								<tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
-							</tbody>
-						</table>	
+                                  <td> 
+                                      <a href="#item-masuk" class="btn btn-xs btn-danger" v-bind:id="'delete-' + item_masuk.id" v-on:click="deleteEntry(item_masuk.id, index,item_masuk.no_faktur)">Delete</a>
+                                  </td>
+                              </tr>
+                          </tbody>					
+                          <tbody class="data-tidak-ada" v-else>
+                            <tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
+                        </tbody>
+                    </table>	
 
-						<vue-simple-spinner v-if="loading"></vue-simple-spinner>
+                    <vue-simple-spinner v-if="loading"></vue-simple-spinner>
 
-						<div align="right"><pagination :data="itemMasukData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
+                    <div align="right"><pagination :data="itemMasukData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
 
-					</div>
+                </div>
 
-				</div>
-			</div>
+            </div>
+        </div>
 
-		</div>
-	</div>
+    </div>
+</div>
 
 </template>
 
