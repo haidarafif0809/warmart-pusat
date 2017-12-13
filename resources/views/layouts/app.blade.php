@@ -191,15 +191,15 @@
                         </span>
                     </router-link>
                 </li>
-                <li class="vueJs">
-                    <a href="#">
+                <li>
+                    <router-link :to="{name: 'indexItemKeluar'}" class="menu-nav">
                         <span class="sidebar-mini">
                             IK
                         </span>
                         <span class="sidebar-normal">
                             Item Keluar
                         </span>
-                    </a>
+                    </router-link>
                 </li>
                 <li class="vueJs">
                     <a href="#">
