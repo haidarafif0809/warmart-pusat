@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Barang;
 use App\DetailItemKeluar;
 use App\EditTbsItemKeluar;
 use App\ItemKeluar;
@@ -11,7 +10,6 @@ use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Session;
-use Yajra\Datatables\Datatables;
 use Yajra\Datatables\Html\Builder;
 
 class ItemKeluarController extends Controller
@@ -19,35 +17,6 @@ class ItemKeluarController extends Controller
     //MENAMPILKAN DATA YG ADA DI ITEM KELUAR
     public function index(Request $request, Builder $htmlBuilder)
     {
-        if ($request->ajax()) {
-            $item_keluar = ItemKeluar::all();
-            return Datatables::of($item_keluar)->addColumn('action', function ($itemkeluar) {
-                $detail_item_keluar = DetailItemKeluar::with(['produk'])->where('warung_id', Auth::user()->id_warung)->where('no_faktur', $itemkeluar->no_faktur)->get();
-                return view('item_keluar._action', [
-                    'model'                   => $itemkeluar,
-                    'id_item_keluar'          => $itemkeluar->id,
-                    'data_detail_item_keluar' => $detail_item_keluar,
-                    'form_url'                => route('item-keluar.destroy', $itemkeluar->id),
-                    'edit_url'                => route('item-keluar.proses_form_edit', $itemkeluar->id),
-                    'confirm_message'         => 'Anda Yakin Ingin Menghapus Item Keluar Faktur "' . $itemkeluar->no_faktur . '" ?',
-                ]);
-            })
-                ->addColumn('total_nilai_keluar', function ($total_keluar) {
-                    $data_nilai_keluar = number_format($total_keluar->total, 0, ',', '.');
-
-                    return $data_nilai_keluar;
-                })->make(true);
-        }
-
-        $html = $htmlBuilder
-            ->addColumn(['data' => 'no_faktur', 'name' => 'no_faktur', 'title' => 'No. Faktur'])
-            ->addColumn(['data' => 'keterangan', 'name' => 'keterangan', 'title' => 'Keterangan'])
-            ->addColumn(['data' => 'total_nilai_keluar', 'name' => 'total_nilai_keluar', 'title' => 'Total'])
-            ->addColumn(['data' => 'created_at', 'name' => 'created_at', 'title' => 'Waktu'])
-            ->addColumn(['data' => 'updated_at', 'name' => 'updated_at', 'title' => 'Waktu Edit'])
-            ->addColumn(['data' => 'action', 'name' => 'action', 'title' => '', 'orderable' => false, 'searchable' => false]);
-
-        return view('item_keluar.index')->with(compact('html'));
 
     }
 
@@ -247,36 +216,6 @@ class ItemKeluarController extends Controller
     public function create(Request $request, Builder $htmlBuilder)
     {
 
-        if ($request->ajax()) {
-
-            $session_id      = session()->getId();
-            $tbs_item_keluar = TbsItemKeluar::with(['produk'])->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->get();
-
-            return Datatables::of($tbs_item_keluar)->addColumn('action', function ($tbsitemkeluar) {
-
-                $pesan_alert = 'Anda Yakin Ingin Menghapus Produk "' . $tbsitemkeluar->produk->nama_barang . '" ?';
-                return view('item_keluar._hapus_produk', [
-                    'model'           => $tbsitemkeluar,
-                    'form_url'        => route('item-keluar.proses_hapus_tbs_item_keluar', $tbsitemkeluar->id_tbs_item_keluar),
-                    'confirm_message' => $pesan_alert,
-                ]);
-            })
-                ->editColumn('data_produk_tbs', function ($data_produk_tbs) {
-
-                    return $data_produk_tbs->produk->kode_barang . ' - ' . $data_produk_tbs->produk->nama_barang;
-                })
-                ->editColumn('jumlah_produk', function ($produk) {
-
-                    return "<a href='#edit-jumlah' id='edit_jumlah_produk' class='edit-jumlah' data-id='$produk->id_tbs_item_keluar'>$produk->jumlah_produk</a>";
-                })->make(true);
-        }
-
-        $html = $htmlBuilder
-            ->addColumn(['data' => 'data_produk_tbs', 'name' => 'data_produk_tbs', 'title' => 'Produk'])
-            ->addColumn(['data' => 'jumlah_produk', 'name' => 'jumlah_produk', 'title' => 'Jumlah'])
-            ->addColumn(['data' => 'action', 'name' => 'action', 'title' => 'Hapus', 'orderable' => false, 'searchable' => false]);
-
-        return view('item_keluar.create')->with(compact('html'));
     }
 
     //PROSES TAMBAH TBS ITEM KELUAR
@@ -577,34 +516,7 @@ class ItemKeluarController extends Controller
     //MENAMPILKAN DATA DI TBS ITEM KELUAR
     public function edit(Request $request, Builder $htmlBuilder, $id)
     {
-        if ($request->ajax()) {
-            $item_keluar     = ItemKeluar::find($id);
-            $tbs_item_keluar = EditTbsItemKeluar::with(['produk'])->where('no_faktur', $item_keluar->no_faktur)->where('warung_id', Auth::user()->id_warung)
-                ->get();
-            return Datatables::of($tbs_item_keluar)->addColumn('action', function ($tbsitemkeluar) {
-                return view('item_keluar._hapus_produk', [
-                    'model'           => $tbsitemkeluar,
-                    'form_url'        => route('item-keluar.proses_hapus_edit_tbs_item_keluar', $tbsitemkeluar->id_edit_tbs_item_keluar),
-                    'confirm_message' => 'Yakin Mau Menghapus Produk "' . $tbsitemkeluar->produk->nama_barang . '" ?',
-                ]);
-            })->addColumn('data_produk_tbs', function ($data_produk_tbs) {
-                $produk      = Barang::find($data_produk_tbs->id_produk);
-                $data_produk = $produk->kode_barang . " - " . $produk->nama_barang;
-                return $data_produk;
-            })
-                ->editColumn('jumlah_produk', function ($produk) {
 
-                    return "<a href='#edit-jumlah' id='edit_jumlah_produk' class='edit-jumlah-edit-tbs' data-id='$produk->id_edit_tbs_item_keluar'>$produk->jumlah_produk</a>";
-                })->make(true);
-        }
-
-        $html = $htmlBuilder
-            ->addColumn(['data' => 'data_produk_tbs', 'name' => 'data_produk_tbs', 'title' => 'Produk', 'searchable' => false])
-            ->addColumn(['data' => 'jumlah_produk', 'name' => 'jumlah_produk', 'title' => 'Jumlah'])
-            ->addColumn(['data' => 'action', 'name' => 'action', 'title' => 'Hapus', 'orderable' => false, 'searchable' => false]);
-
-        $item_keluar = Itemkeluar::find($id);
-        return view('item_keluar.edit')->with(compact('html', 'item_keluar'));
     }
 
     /**

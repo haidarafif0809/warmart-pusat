@@ -487,6 +487,11 @@ Route::get('/item-keluar/pencarian-detail-item-keluar/{id}', 'ItemKeluarControll
 Route::get('/item-keluar/view-edit-tbs-item-keluar/{id}', 'ItemKeluarController@viewEditTbsItemKeluar')->middleware('auth');
 Route::get('/item-keluar/pencarian-edit-tbs-item-keluar/{id}', 'ItemKeluarController@pencarianEditTbsItemKeluar')->middleware('auth');
 
+// LAPORAN PERSEDIAAN
+
+Route::get('/laporan-persediaan/view', 'LaporanPersediaanController@view')->middleware('auth');
+Route::get('/laporan-persediaan/pencarian', 'LaporanPersediaanController@pencarian')->middleware('auth');
+
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
     Route::resource('user', 'UserController');
