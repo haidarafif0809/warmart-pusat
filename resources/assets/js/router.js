@@ -66,6 +66,8 @@ import UbahProfilUserWarung from './components/ubah_profil/UbahProfilUserWarung.
 import ItemMasukIndex from './components/item_masuk/ItemMasukIndex.vue';
 import ItemMasukCreate from './components/item_masuk/ItemMasukCreate.vue';
 import ItemMasukEdit from './components/item_masuk/ItemMasukEdit.vue';
+import ItemMasukProsesEdit from './components/item_masuk/ItemMasukProsesEdit.vue';
+import ItemMasukDetail from './components/item_masuk/ItemMasukDetail.vue';
 // KAS KELUAR
 import KasKeluarIndex from './components/kas_keluar/KasKeluarIndex.vue';
 import KasKeluarCreate from './components/kas_keluar/KasKeluarCreate.vue';
@@ -81,6 +83,10 @@ import PesananWarungDetail from './components/pesanan_warung/PesananWarungDetail
 import PembelianIndex from './components/pembelian/PembelianIndex.vue';
 import PembelianCreate from './components/pembelian/PembelianCreate.vue';
 import PembelianEdit from './components/pembelian/PembelianEdit.vue';
+// ITEM KELUAR 
+import ItemKeluarIndex from './components/item_keluar/ItemKeluarIndex.vue';
+import ItemKeluarCreate from './components/item_keluar/ItemKeluarCreate.vue';
+import ItemKeluarEdit from './components/item_keluar/ItemKeluarEdit.vue';
 const routes = [{
         path: '/',
         components: {
@@ -331,6 +337,14 @@ const routes = [{
         path: '/edit-item-masuk/:id',
         component: ItemMasukEdit,
         name: 'editItemMasuk'
+    }, {
+        path: '/item-masuk-edit/:id',
+        component: ItemMasukProsesEdit,
+        name: 'editItemMasukProses'
+    }, {
+        path: '/detail-item-masuk/:id',
+        component: ItemMasukDetail,
+        name: 'detailItemMasuk'
     },
     // kas masuk
     {
@@ -369,6 +383,19 @@ const routes = [{
         path: '/edit-pembelian/:id',
         component: PembelianEdit,
         name: 'editPembelian'
+    }, // ITEM KELUAR 
+    {
+        path: '/item-keluar',
+        component: ItemKeluarIndex,
+        name: 'indexItemKeluar'
+    }, {
+        path: '/create-item-keluar',
+        component: ItemKeluarCreate,
+        name: 'createItemKeluar'
+    }, {
+        path: '/edit-item-keluar/:id',
+        component: ItemKeluarEdit,
+        name: 'editItemKeluar'
     }
 ]
 export default routes;

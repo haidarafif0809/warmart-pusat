@@ -434,6 +434,12 @@ Route::get('/item-masuk/view', 'ItemMasukController@view')->middleware('auth');
 Route::get('/item-masuk/pencarian', 'ItemMasukController@pencarian')->middleware('auth');
 Route::get('/item-masuk/view-tbs-item-masuk', 'ItemMasukController@viewTbsItemMasuk')->middleware('auth');
 Route::get('/item-masuk/pencarian-tbs-item-masuk', 'ItemMasukController@pencarianTbsItemMasuk')->middleware('auth');
+Route::get('/item-masuk/view-edit-tbs-item-masuk/{id}', 'ItemMasukController@viewEditTbsItemMasuk')->middleware('auth');
+Route::get('/item-masuk/pencarian-edit-tbs-item-masuk/{id}', 'ItemMasukController@pencarianEditTbsItemMasuk')->middleware('auth');
+Route::get('/item-masuk/ambil-faktur-item-masuk/{id}', 'ItemMasukController@ambilFakturItemMasuk')->middleware('auth');
+Route::get('/item-masuk/detail-item-masuk/{id}', 'ItemMasukController@detailItemMasuk')->middleware('auth');
+Route::get('/item-masuk/pencarian-detail-item-masuk/{id}', 'ItemMasukController@pencarianDetailItemMasuk')->middleware('auth');
+//KAS KELUAR VUE.JS
 //KAS KELUAR VUE.JS
 Route::get('/kas-keluar/view', 'KasKeluarController@view')->middleware('auth');
 Route::get('/kas-keluar/pencarian', 'KasKeluarController@pencarian')->middleware('auth');
@@ -459,6 +465,12 @@ Route::post('/selesai-konfirmasi-pesanan-warung', 'PesananWarungController@seles
 //PEMBELIAN  VUE JS
 Route::get('/pembelian/view', 'PembelianController@view')->middleware('auth');
 Route::get('/pembelian/pencarian', 'PembelianController@pencarian')->middleware('auth');
+
+// ITEM MASUK
+Route::get('/item-keluar/view', 'ItemKeluarController@view')->middleware('auth');
+Route::get('/item-keluar/pencarian', 'ItemKeluarController@pencarian')->middleware('auth');
+Route::get('/item-keluar/view-tbs-item-keluar', 'ItemKeluarController@viewTbsItemKeluar')->middleware('auth');
+Route::get('/item-keluar/pencarian-tbs-item-keluar', 'ItemKeluarController@pencarianTbsItemKeluar')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
@@ -735,7 +747,7 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
         'uses'       => 'ItemMasukController@proses_tambah_tbs_item_masuk',
     ]);
 
-    Route::post('/item-masuk/proses-tambah-edit-tbs-item-masuk/{id}', [
+    Route::post('/item-masuk/proses-tambah-edit-tbs-item-masuk', [
         'middleware' => ['auth'],
         'as'         => 'item-masuk.proses_tambah_edit_tbs_item_masuk',
         'uses'       => 'ItemMasukController@proses_tambah_edit_tbs_item_masuk',
@@ -759,7 +771,7 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
         'uses'       => 'ItemMasukController@proses_hapus_semua_tbs_item_masuk',
     ]);
 
-    Route::post('/item-masuk/proses-hapus-semua-edit-tbs-item-masuk/{id}', [
+    Route::post('/item-masuk/proses-hapus-semua-edit-tbs-item-masuk', [
         'middleware' => ['auth'],
         'as'         => 'item-masuk.proses_hapus_semua_edit_tbs_item_masuk',
         'uses'       => 'ItemMasukController@proses_hapus_semua_edit_tbs_item_masuk',
