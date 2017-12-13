@@ -6,17 +6,17 @@
 
         <li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li>
         <li style="color: purple">Persediaan</li>
-        <li><router-link :to="{name: 'indexItemMasuk'}">Item Masuk</router-link></li>
-        <li class="active">Edit Item Masuk</li>
+        <li><router-link :to="{name: 'indexItemKeluar'}">Item Keluar</router-link></li>
+        <li class="active">Edit Item Keluar</li>
 
       </ul>
 
       <div class="card">
         <div class="card-header card-header-icon" data-background-color="purple">
-          <i class="material-icons">vertical_align_bottom</i>
+          <i class="material-icons">vertical_align_top</i>
         </div>
         <div class="card-content">
-          <h4 class="card-title">Edit Item Masuk</h4>
+          <h4 class="card-title">Edit Item Keluar</h4>
           <div class="row">
 
             <div class="col-md-8">
@@ -78,7 +78,7 @@
 export default {
   data: function () {
     return {
-      url : window.location.origin+(window.location.pathname).replace("dashboard", "item-masuk"), 
+      url : window.location.origin+(window.location.pathname).replace("dashboard", "item-keluar"), 
       placeholder_produk: {
         placeholder: '--PILIH PRODUK--'
       },
@@ -87,26 +87,26 @@ export default {
   },
   mounted() {
     var app = this;
-    app.getFakturItemMasuk();
+    app.getFakturItemKeluar();
 
   },
   methods: { 
-   getFakturItemMasuk(){
-    var app = this;
-    var id = app.$route.params.id;
-    axios.get(app.url+'/proses-form-edit/'+id).then(function (resp) {
+    getFakturItemKeluar(){
+      var app = this;
+      var id = app.$route.params.id;
+      axios.get(app.url+'/proses-form-edit/'+id).then(function (resp) {
 
-      app.$router.replace('/edit-item-masuk/'+id);
+        app.$router.replace('/edit-item-keluar/'+id);
 
-    })
-    .catch(function (resp) {
-     alert("Tidak Bisa Memuat Item Masuk");
+      })
+      .catch(function (resp) {
+        alert("Tidak Bisa Memuat Item Keluar");
 
-   });
+      });
+
+    }
 
   }
-
-}
 
 }
 </script>
