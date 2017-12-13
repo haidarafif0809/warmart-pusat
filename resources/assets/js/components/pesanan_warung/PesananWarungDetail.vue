@@ -18,7 +18,7 @@
 
 	<div class="row">
 
-		<div class="col-md-12">
+		<div class="col-md-12" v-if="dataAgent == 1">
 			<ul class="breadcrumb">
 			    <li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li>
 			    <li><router-link :to="{name: 'indexPesananWarung'}">Pesanan</router-link></li>
@@ -153,13 +153,134 @@
                        </tbody>
 				    </table>
 			    	
-			    <!-- 	<vue-simple-spinner v-if="loading"></vue-simple-spinner>
-			    	<div align="right"><pagination :data="detailPesananData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div> -->
+			    	<vue-simple-spinner v-if="loading"></vue-simple-spinner>
+			    	<div align="right"><pagination :data="detailPesananData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
 			  </div>
 			 </div>
 			</div>
 
-        </div>
+        </div> <!-- JIKA DIAKSES VIA KOMPUTER-->
+
+        <div class="col-md-12" style="padding-left:25px; padding-right:25px" v-else> <!-- JIKA DIAKSES VIA MOBILE-->        	
+			<ul class="breadcrumb">
+			    <li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li>
+			    <li><router-link :to="{name: 'indexPesananWarung'}">Pesanan</router-link></li>
+			    <li class="active">Detail Pesanan</li>
+		 	</ul>
+
+		 	<div class="card" style="margin-bottom: 5px; margin-top: 1px;">
+		 		<div class="card-content">
+
+		 			<b class="card-title" style="margin-top: 1px; margin-bottom: 1px;">Order #{{pesananData.pesanan.id}}</b>
+		 			<hr style="margin-top: 1x; margin-bottom: 1px;">
+
+				    <b class="card-title" style="margin-top: 1px; margin-bottom: 1px;">Waktu Pesan</b>
+				    <p style="margin-top: 1px; margin-bottom: 1px;">{{pesananData.pesanan.created_at}}</p>
+				    <hr style="margin-top: 1x; margin-bottom: 1px;">
+
+				    <b class="card-title" style="margin-top: 1px; margin-bottom: 1px;">Alamat Pelanggan</b>
+				    <p style="margin-top: 1px; margin-bottom: 1px;"> {{ pesananData.pesanan.nama_pemesan }}</p>
+				    <p style="margin-top: 1px; margin-bottom: 1px;">{{ pesananData.pesanan.no_telp_pemesan }}</p>
+				    <p style="margin-top: 1px; margin-bottom: 1px;">{{ pesananData.pesanan.alamat_pemesan }}</p>
+				    <hr style="margin-top: 1x; margin-bottom: 1px;">
+
+				    <div class="row">
+					    <div class="col-md-12">
+					        <div class="row">
+						        <div class="col-xs-6" style="padding-left:10px; padding-right:10px">
+						           <p> <b class="card-title" style="margin-top: 1px; margin-bottom: 1px;">Status Pesanan</b></p>
+
+									<b style="color:red" v-if="pesananData.pesanan.konfirmasi_pesanan == 0" >Belum Di Konfirmasi</b>
+									<b style="color:orange" v-else-if="pesananData.pesanan.konfirmasi_pesanan == 1" >Sudah Di Konfirmasi
+									</b>
+									<b style="color:#01573e" v-else-if="pesananData.pesanan.konfirmasi_pesanan == 2" >Selesai
+									</b>
+								  	<b style="color:red" v-else > Batal</b>
+								</div>
+
+						        <div class="col-xs-6" style="padding-left:10px; padding-right:10px">
+						        	<b class="card-title" style="margin-top: 1px; margin-bottom: 1px;">Konfirmasi/Batal</b>
+
+	        						<div class="btn-group" v-if="pesananData.pesanan.konfirmasi_pesanan == 0">
+									  		<button id="konfirmasi-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-xs btn-info" @click="konfirmasiPesanan(pesananData.pesanan.id)"><font style="font-size: 12px;">Lanjut</font>
+									  		</button>
+									  		<button id="batalkan-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-xs btn-danger" @click="batalPesanan(pesananData.pesanan.id)"><font style="font-size: 12px;">Batal</font>
+									  		</button>
+									</div>
+					  	
+					  				<div class="btn-group" v-else-if="pesananData.pesanan.konfirmasi_pesanan == 1">
+									  		<button class="btn btn-info btn-xs" :data-id="pesananData.pesanan.id" id="selesaikan_pesanan">  <font style="font-size: 12px;" @click="selesaikanPesanan(pesananData.pesanan.id)">Selesai</font>
+									  		</button>
+									  		<button id="batalkan-konfirmasi-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-xs btn-danger" @click="batalKonfirmasiPesanan(pesananData.pesanan.id)"><font style="font-size: 12px;">Batal</font>
+									  		</button>
+									</div>
+									
+									<div class="btn-group" v-else-if="pesananData.pesanan.konfirmasi_pesanan == 2">  	
+									  		<button id="batalkan-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-xs btn-danger" @click="batalPesanan(pesananData.pesanan.id)"><font style="font-size: 12px;">Batal</font>
+									  		</button>		  
+									</div>
+
+									<div class="btn-group" v-else-if="pesananData.pesanan.konfirmasi_pesanan == 3">  	
+									  		<button id="konfirmasi-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-xs btn-info" @click="konfirmasiPesanan(pesananData.pesanan.id)"><font style="font-size: 12px;">Lanjut</font>
+									  		</button>	
+									</div>
+
+        						</div>
+        					</div>
+        				</div>
+        			</div>
+        			<hr style="margin-top: 1x; margin-bottom: 1px;">
+
+        			<b class="card-title" style="margin-top: 1px; margin-bottom: 1px;">Info Pembayaran</b>
+					<div class="row">
+					    <div class="col-sm-6 col-xs-6">Total </div>
+					    <div class="col-sm-6 col-xs-6"><p align="right" class="text-danger"><b>Rp. {{ new Intl.NumberFormat().format(pesananData.subtotal) }}</b></p></div>
+					</div>
+					<hr style="margin-top: 1x; margin-bottom: 1px;">
+				
+				</div>
+			</div>
+
+	        <div class="card" style="margin-bottom: 1px; margin-top: 1px;" v-for="detailPesanans, index in detailPesanan">
+	          <div class="row">
+	            <div class="col-md-12">
+	              <div class="row">
+	                <div class="col-xs-4">
+	                  <div class="img-container" style="margin-bottom:10px;margin-top: 10px; margin-left: 10px; margin-right: 10px;">
+	                        <img v-if="detailPesanans.produk.foto != null" :src="urlPicture+'/'+detailPesanans.produk.foto" /> 
+	                        <img v-else :src="urlOrigin+'/image/foto_default.png'">
+	                  </div>
+	                </div>
+
+	                <div class="col-xs-8">
+	                    <p style="margin-bottom:1px;margin-top: 1px;">
+	                      <b>{{detailPesanans.produk.nama_barang}}</b>
+	                    </p>
+	                    <p style="margin-bottom:1px;margin-top: 1px;">
+	                      <b>Rp. {{ new Intl.NumberFormat().format(detailPesanans.harga_produk) }}</b>
+	                    </p>
+
+	                    <a id="edit-jumlah-pesanan" :data-nama="detailPesanans.produk.nama_barang" :data-id="detailPesanans.id"  class="btn btn-info btn-xs" @click="editProduk(detailPesanans.id, index, detailPesanans.produk.nama_barang)">
+	                    	<font style="font-size: 11.5px;">{{ detailPesanans.jumlah_produk }} Satuan</font> 
+	                    </a>
+
+	                    <div class="btn-group" align="right" v-if="detailPesanans.pesanan_pelanggan.konfirmasi_pesanan == 0">
+	                    	<a v-if="detailPesanans.jumlah_produk == 0" disabled="true" class="btn btn-xs"> <i class="material-icons">remove</i></a>
+	                    	<a v-else href="#" class="btn btn-xs" @click="kurangProduk(detailPesanans.id)"> <i class="material-icons">remove</i></a>
+	                    	<a href="#" class="btn btn-xs" @click="tambahProduk(detailPesanans.id)"> <i class="material-icons">add</i></a>
+	                    </div>
+	                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	                    <b style="margin-bottom:1px;margin-top: 1px;" class="text-danger" v-if="detailPesanans.jumlah_produk == 0">Dibatalkan</b>
+	                </div>
+	              </div>
+
+		            <vue-simple-spinner v-if="loading"></vue-simple-spinner>
+				    <div align="right"><pagination :data="detailPesananData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
+	            </div>
+	          </div>
+	        </div>
+			
+        </div><!-- JIKA DIAKSES VIA MOBILE-->
     </div>
 </template>
 
@@ -177,7 +298,8 @@ export default {
 			selesaiPesanan: {
 				id_pesanan : '',
 				id_kas : '',
-			}, 
+			}, 			
+			dataAgent: '',
 			detailPesananId: null,
 			loading: true,
             url: window.location.origin + (window.location.pathname).replace("dashboard", "pesanan-warung"),
@@ -187,7 +309,8 @@ export default {
             urlBatalKonfirmasiPesanan: window.location.origin + (window.location.pathname).replace("dashboard", "batalkan-konfirmasi-pesanan-warung"),
             urlBatalPesanan: window.location.origin + (window.location.pathname).replace("dashboard", "batalkan-pesanan-warung"),
             urlOrigin: window.location.origin + (window.location.pathname).replace("dashboard", ""),
-           	urlTambahKas: window.location.origin + (window.location.pathname).replace("dashboard", "dashboard#/kas")
+           	urlTambahKas: window.location.origin + (window.location.pathname).replace("dashboard", "dashboard#/kas"),
+           	urlPicture : window.location.origin+(window.location.pathname).replace("dashboard", "foto_produk"),
 		}
 	},
 	mounted() {
@@ -207,8 +330,8 @@ export default {
     			app.detailPesanan = resp.data.data.detail_pesanan.data;
     			app.detailPesananData = resp.data.data.detail_pesanan;
     			app.pesananData = resp.data.data;
+    			app.dataAgent = resp.data.data.agent;
     			app.loading = false;
-    			console.log(resp.data.data)
     		})
     		.catch(function (resp) {
     			app.loading = false;
