@@ -88,6 +88,7 @@ import ItemKeluarIndex from './components/item_keluar/ItemKeluarIndex.vue';
 import ItemKeluarCreate from './components/item_keluar/ItemKeluarCreate.vue';
 import ItemKeluarEdit from './components/item_keluar/ItemKeluarEdit.vue';
 import ItemKeluarDetail from './components/item_keluar/ItemKeluarDetail.vue';
+import ItemKeluarProsesEdit from './components/item_keluar/ItemKeluarProsesEdit.vue';
 const routes = [{
         path: '/',
         components: {
@@ -401,6 +402,10 @@ const routes = [{
         path: '/detail-item-keluar/:id',
         component: ItemKeluarDetail,
         name: 'detailItemKeluar'
+    }, {
+        path: '/item-keluar-edit/:id',
+        component: ItemKeluarProsesEdit,
+        name: 'editItemKeluarProses'
     }
 ]
 export default routes;
