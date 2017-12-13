@@ -27,14 +27,4 @@ class DetailItemKeluar extends Model
 
     }
 
-    public function cek_stok_produk_edit($id_produk, $no_faktur)
-    {
-
-        $stok_produk = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk),0) - IFNULL(SUM(jumlah_keluar),0) as jumlah_produk')])->where('id_produk', $id_produk)
-            ->where('warung_id', Auth::user()->id_warung)->where('no_faktur', '!=', $no_faktur)->first();
-
-        return $sisa_stok_keluar = $stok_produk->jumlah_produk;
-
-    }
-
 }
