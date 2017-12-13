@@ -8,23 +8,23 @@
 
 				<li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li>
 				<li style="color: purple">Persediaan</li>
-				<li><router-link :to="{name: 'indexItemMasuk'}">Item Masuk</router-link></li>
-				<li class="active">Detail Item Masuk</li>
+				<li><router-link :to="{name: 'indexItemKeluar'}">Item Keluar</router-link></li>
+				<li class="active">Detail Item Keluar</li>
 
 			</ul>
 
 			<div class="card">
 				<div class="card-header card-header-icon" data-background-color="purple">
-					<i class="material-icons">vertical_align_bottom</i>
+					<i class="material-icons">vertical_align_top</i>
 				</div>
 				<div class="card-content">
-					<h4 class="card-title">Detail Item Masuk {{ no_faktur }}</h4>
+					<h4 class="card-title">Detail Item Keluar {{ no_faktur }}</h4>
 
 					<!--TABEL TBS ITEM 	MASUK -->
 
 
           <div class="toolbar">
-            <p> <router-link :to="{name: 'indexItemMasuk'}" class="btn btn-primary">Kembali</router-link></p>
+            <p> <router-link :to="{name: 'indexItemKeluar'}" class="btn btn-primary">Kembali</router-link></p>
           </div>
 
           <div class=" table-responsive ">
@@ -43,30 +43,30 @@
 
              </tr>
            </thead>
-           <tbody v-if="detail_item_masuk.length"  class="data-ada">
-            <tr v-for="detail_item_masuk, index in detail_item_masuk" >
+           <tbody v-if="detail_item_keluar.length"  class="data-ada">
+            <tr v-for="detail_item_keluar, index in detail_item_keluar" >
 
-             <td>{{ detail_item_masuk.no_faktur }} </td>
-             <td>{{ detail_item_masuk.kode_produk }} - {{ detail_item_masuk.nama_produk }}</td>
-             <td>{{ detail_item_masuk.jumlah_produk }} </td>
-           </tr>
-         </tbody>					
-         <tbody class="data-tidak-ada" v-else>
-          <tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
-        </tbody>
-      </table>	
+              <td>{{ detail_item_keluar.no_faktur }} </td>
+              <td>{{ detail_item_keluar.kode_produk }} - {{ detail_item_keluar.nama_produk }}</td>
+              <td>{{ detail_item_keluar.jumlah_produk }} </td>
+            </tr>
+          </tbody>					
+          <tbody class="data-tidak-ada" v-else>
+            <tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
+          </tbody>
+        </table>	
 
-      <vue-simple-spinner v-if="loading"></vue-simple-spinner>
+        <vue-simple-spinner v-if="loading"></vue-simple-spinner>
 
-      <div align="right"><pagination :data="detailItemMasukData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
+        <div align="right"><pagination :data="detailItemKeluarData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
 
-    </div>
+      </div>
 
 
 
-  </div><!-- / PANEL BODY -->
+    </div><!-- / PANEL BODY -->
 
-</div>
+  </div>
 </div>
 </div>
 
@@ -79,9 +79,9 @@ export default {
 		return {
 			errors: [],
 			produk: [],
-			detail_item_masuk: [],
-			detailItemMasukData : {},
-			url : window.location.origin+(window.location.pathname).replace("dashboard", "item-masuk"),
+			detail_item_keluar: [],
+			detailItemKeluarData : {},
+			url : window.location.origin+(window.location.pathname).replace("dashboard", "item-keluar"),
 			no_faktur : '',
       placeholder_produk: {
         placeholder: '--PILIH PRODUK--'
@@ -93,7 +93,7 @@ export default {
   },
   mounted() {
     var app = this;
-    app.getFakturItemMasuk();
+    app.getFakturItemKeluar();
     app.getResults();
 
   },
@@ -112,11 +112,11 @@ export default {
         if (typeof page === 'undefined') {
          page = 1;
        }
-       axios.get(app.url+'/detail-item-masuk/'+id+'?page='+page)
+       axios.get(app.url+'/detail-item-keluar/'+id+'?page='+page)
        .then(function (resp) {
 
-         app.detail_item_masuk = resp.data.data;
-         app.detailItemMasukData = resp.data;
+         app.detail_item_keluar = resp.data.data;
+         app.detailItemKeluarData = resp.data;
          app.loading = false;
          app.seen = true;
 
@@ -126,7 +126,7 @@ export default {
          console.log(resp);
          app.loading = false;
          app.seen = true;
-         alert("Tidak Dapat Memuat Detail Item Masuk");
+         alert("Tidak Dapat Memuat Detail Item Keluar");
 
        });
      },
@@ -136,26 +136,26 @@ export default {
       if (typeof page === 'undefined') {
        page = 1;
      }
-     axios.get(app.url+'/pencarian-detail-item-masuk/'+id+'?search='+app.pencarian+'&page='+page)
+     axios.get(app.url+'/pencarian-detail-item-keluar/'+id+'?search='+app.pencarian+'&page='+page)
      .then(function (resp) {
 
-      app.detail_item_masuk = resp.data.data;
-      app.detailItemMasukData = resp.data;
+      app.detail_item_keluar = resp.data.data;
+      app.detailItemKeluarData = resp.data;
       app.loading = false;
       app.seen = true;
     })
      .catch(function (resp) {
 
        console.log(resp);
-       alert("Tidak Dapat Memuat Detail Item Masuk");
+       alert("Tidak Dapat Memuat Detail Item Keluar");
 
      });
 
    }, 
-   getFakturItemMasuk(){
+   getFakturItemKeluar(){
     var app = this;
     var id = app.$route.params.id;
-    axios.get(app.url+'/ambil-faktur-item-masuk/'+id).then(function (resp) {
+    axios.get(app.url+'/ambil-faktur-item-keluar/'+id).then(function (resp) {
 
       app.no_faktur = resp.data.no_faktur; 
 
@@ -164,7 +164,7 @@ export default {
 
      app.loading = false;
      app.seen = true;
-     alert("Tidak Bisa Memuat Detail Item Masuk");
+     alert("Tidak Bisa Memuat Detail Item Keluar");
 
    });
 

@@ -687,4 +687,65 @@ class ItemKeluarController extends Controller
 
         return redirect()->back();
     }
+
+    public function ambilFakturItemKeluar($id)
+    {
+        //
+        return ItemKeluar::find($id);
+    }
+    public function detailItemKeluar($id)
+    {
+        //
+        $item_keluar        = ItemKeluar::find($id);
+        $user_warung        = Auth::user()->id_warung;
+        $detail_item_keluar = DetailItemKeluar::with(['produk'])->where('warung_id', $user_warung)->where('no_faktur', $item_keluar->no_faktur)->orderBy('id_detail_item_keluar', 'desc')->paginate(10);
+        $array              = array();
+
+        foreach ($detail_item_keluar as $detail_item_keluars) {
+            array_push($array, [
+                'id_item_keluar'        => $id,
+                'no_faktur'             => $detail_item_keluars->no_faktur,
+                'id_detail_item_keluar' => $detail_item_keluars->id_detail_item_keluar,
+                'nama_produk'           => title_case($detail_item_keluars->produk->nama_barang),
+                'kode_produk'           => $detail_item_keluars->produk->kode_barang,
+                'jumlah_produk'         => $detail_item_keluars->jumlah_produk]);
+        }
+
+        $url     = '/item-keluar/detail-item-keluar/' . $id;
+        $respons = $this->paginationData($detail_item_keluar, $array, $url);
+
+        return response()->json($respons);
+    }
+
+    public function pencarianDetailItemKeluar($id, Request $request)
+    {
+        $item_keluar        = ItemKeluar::find($id);
+        $user_warung        = Auth::user()->id_warung;
+        $detail_item_keluar = DetailItemKeluar::select('detail_item_keluars.id_detail_item_keluar AS id_detail_item_keluar', 'detail_item_keluars.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'detail_item_keluars.id_produk AS id_produk', 'detail_item_keluars.no_faktur AS no_faktur')->leftJoin('barangs', 'barangs.id', '=', 'detail_item_keluars.id_produk')
+            ->where('detail_item_keluars.warung_id', $user_warung)->where('detail_item_keluars.no_faktur', $item_keluar->no_faktur)
+            ->where(function ($query) use ($request) {
+
+                $query->orWhere('barangs.nama_barang', 'LIKE', $request->search . '%')
+                    ->orWhere('barangs.kode_barang', 'LIKE', $request->search . '%');
+
+            })->orderBy('detail_item_keluars.id_detail_item_keluar', 'desc')->paginate(10);
+
+        $array = array();
+        foreach ($detail_item_keluar as $detail_item_keluars) {
+            array_push($array, [
+                'id_item_keluar'        => $id,
+                'no_faktur'             => $detail_item_keluars['no_faktur'],
+                'id_detail_item_keluar' => $detail_item_keluars['id_detail_item_keluar'],
+                'nama_produk'           => title_case($detail_item_keluars['nama_barang']),
+                'kode_produk'           => $detail_item_keluars['kode_barang'],
+                'jumlah_produk'         => $detail_item_keluars['jumlah_produk']]);
+        }
+
+        $url    = '/item-keluar/pencarian-detail-item-keluar/' . $id;
+        $search = $request->search;
+
+        $respons = $this->paginationPencarianData($detail_item_keluar, $array, $url, $search);
+
+        return response()->json($respons);
+    }
 }
