@@ -122,7 +122,7 @@ class PembelianController extends Controller
 
         $kas_default = Kas::where('warung_id', Auth::user()->id_warung)->where('default_kas', 1)->count();
 
-        $tbs_pembelian = TbsPembelian::with(['produk'])->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->orderBy('id_tbs_pembelian', 'desc')->paginate(10);
+        $tbs_pembelian = TbsPembelian::select('tbs_pembelians.id_tbs_pembelian AS id_tbs_pembelian', 'tbs_pembelians.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'tbs_pembelians.id_produk AS id_produk', 'tbs_pembelians.harga_produk AS harga_produk', 'tbs_pembelians.potongan AS potongan', 'tbs_pembelians.tax AS tax')->leftJoin('barangs', 'barangs.id', '=', 'tbs_pembelians.id_produk')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->orderBy('id_tbs_pembelian', 'desc')->paginate(10);
         $array         = array();
 
         foreach ($tbs_pembelian as $tbs_pembelians) {
@@ -166,28 +166,119 @@ class PembelianController extends Controller
             ]);
         }
 
-        //DATA PAGINATION
-        $respons['current_page']   = $tbs_pembelian->currentPage();
-        $respons['data']           = $array;
-        $respons['first_page_url'] = url('/item-masuk/view-tbs-item-masuk?page=' . $tbs_pembelian->firstItem());
-        $respons['from']           = 1;
-        $respons['last_page']      = $tbs_pembelian->lastPage();
-        $respons['last_page_url']  = url('/item-masuk/view-tbs-item-masuk?page=' . $tbs_pembelian->lastPage());
-        $respons['next_page_url']  = $tbs_pembelian->nextPageUrl();
-        $respons['path']           = url('/item-masuk/view-tbs-item-masuk');
-        $respons['per_page']       = $tbs_pembelian->perPage();
-        $respons['prev_page_url']  = $tbs_pembelian->previousPageUrl();
-        $respons['to']             = $tbs_pembelian->perPage();
-        $respons['total']          = $tbs_pembelian->total();
-        //DATA PAGINATION
+        $url     = '/pembelian/view-edit-tbs-pembelian';
+        $respons = $this->paginationData($tbs_pembelian, $array, $url);
+
         return response()->json($respons);
     }
 
     public function pencarianTbsPembelian(Request $request)
     {
+        $session_id  = session()->getId();
+        $user_warung = Auth::user()->id_warung;
 
+        $sum_subtotal = TbsPembelian::select(DB::raw('SUM(subtotal) as subtotal'))->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->first();
+        $subtotal     = number_format($sum_subtotal->subtotal, 2, ',', '.');
+
+        $kas_default = Kas::where('warung_id', Auth::user()->id_warung)->where('default_kas', 1)->count();
+
+        $tbs_pembelian = TbsPembelian::select('tbs_pembelians.id_tbs_pembelian AS id_tbs_pembelian', 'tbs_pembelians.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'tbs_pembelians.id_produk AS id_produk', 'tbs_pembelians.harga_produk AS harga_produk', 'tbs_pembelians.potongan AS potongan', 'tbs_pembelians.tax AS tax')->leftJoin('barangs', 'barangs.id', '=', 'tbs_pembelians.id_produk')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)
+            ->where(function ($query) use ($request) {
+
+                $query->orWhere('barangs.nama_barang', 'LIKE', $request->search . '%')
+                    ->orWhere('barangs.kode_barang', 'LIKE', $request->search . '%');
+
+            })->orderBy('id_tbs_pembelian', 'desc')->paginate(10);
+
+        $array = array();
+
+        foreach ($tbs_pembelian as $tbs_pembelians) {
+
+            $potongan_persen        = ($tbs_pembelians->potongan / ($tbs_pembelians->jumlah_produk * $tbs_pembelians->harga_produk)) * 100;
+            $subtotal_tbs           = $tbs_pembelians->PemisahSubtotal;
+            $harga_pemisah          = $tbs_pembelians->PemisahHarga;
+            $nama_produk_title_case = $tbs_pembelians->TitleCaseBarang;
+            $jumlah_produk          = $tbs_pembelians->PemisahJumlah;
+
+            $ppn = TbsPembelian::select('ppn')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->where('ppn', '!=', '')->limit(1);
+            if ($ppn->count() > 0) {
+                $ppn_produk = $ppn->first()->ppn;
+                if ($tbs_pembelians->tax == 0) {
+                    $tax_persen = 0;
+                } else {
+
+                    $tax_persen = ($tbs_pembelians->tax * 100) / ($tbs_pembelians->jumlah_produk * $tbs_pembelians->harga_produk - $tbs_pembelians->potongan);
+                }
+            } else {
+                $ppn_produk = "";
+                $tax_persen = 0;
+            }
+
+            array_push($array, [
+                'id_tbs_pembelian'       => $tbs_pembelians->id_tbs_pembelian,
+                'nama_produk'            => $nama_produk_title_case,
+                'kode_produk'            => $tbs_pembelians->produk->kode_barang,
+                'harga_produk'           => $tbs_pembelians->harga_produk,
+                'harga_pemisah'          => $tbs_pembelians->PemisahHarga,
+                'jumlah_produk'          => $tbs_pembelians->jumlah_produk,
+                'jumlah_produk_pemisah'  => $jumlah_produk,
+                'potongan'               => $tbs_pembelians->potongan,
+                'potongan_persen'        => $potongan_persen,
+                'tax'                    => $tbs_pembelians->tax,
+                'ppn_produk'             => $ppn_produk,
+                'tax_persen'             => $tax_persen,
+                'kas_default'            => $kas_default,
+                'subtotal_tbs'           => $subtotal_tbs,
+                'subtotal_number_format' => $subtotal,
+            ]);
+        }
+
+        $url     = '/pembelian/pencarian-edit-tbs-pembelian';
+        $search  = $request->search;
+        $respons = $this->paginationPencarianData($tbs_pembelian, $array, $url, $search);
+
+        return response()->json($respons);
     }
 
+    public function paginationData($pembelian, $array, $url)
+    {
+
+        //DATA PAGINATION
+        $respons['current_page']   = $pembelian->currentPage();
+        $respons['data']           = $array;
+        $respons['first_page_url'] = url($url . '?page=' . $pembelian->firstItem());
+        $respons['from']           = 1;
+        $respons['last_page']      = $pembelian->lastPage();
+        $respons['last_page_url']  = url($url . '?page=' . $pembelian->lastPage());
+        $respons['next_page_url']  = $pembelian->nextPageUrl();
+        $respons['path']           = url($url);
+        $respons['per_page']       = $pembelian->perPage();
+        $respons['prev_page_url']  = $pembelian->previousPageUrl();
+        $respons['to']             = $pembelian->perPage();
+        $respons['total']          = $pembelian->total();
+        //DATA PAGINATION
+
+        return $respons;
+    }
+    public function paginationPencarianData($pembelian, $array, $url, $search)
+    {
+        //DATA PAGINATION
+        $respons['current_page']   = $pembelian->currentPage();
+        $respons['data']           = $array;
+        $respons['first_page_url'] = url($url . '?page=' . $pembelian->firstItem() . '&search=' . $search);
+        $respons['from']           = 1;
+        $respons['last_page']      = $pembelian->lastPage();
+        $respons['last_page_url']  = url($url . '?page=' . $pembelian->lastPage() . '&search=' . $search);
+        $respons['next_page_url']  = $pembelian->nextPageUrl();
+        $respons['path']           = url($url);
+        $respons['per_page']       = $pembelian->perPage();
+        $respons['prev_page_url']  = $pembelian->previousPageUrl();
+        $respons['to']             = $pembelian->perPage();
+        $respons['total']          = $pembelian->total();
+        //DATA PAGINATION
+
+        return $respons;
+    }
     public function pilih_suplier()
     {
         $suplier = Suplier::select('id', 'nama_suplier')->get();
