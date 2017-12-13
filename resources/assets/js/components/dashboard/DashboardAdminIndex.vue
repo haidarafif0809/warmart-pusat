@@ -183,7 +183,7 @@
                     <i class="material-icons">local_offer</i>
                 </div>
                 <div class="card-content">
-                    <h6 class="category">Jumlah Produk</h6>
+                    <h6 class="category">Produk</h6>
                     <h3 class="card-title">{{ dashboardData.produk_warung }}</h3>
                 </div> 
             </div>

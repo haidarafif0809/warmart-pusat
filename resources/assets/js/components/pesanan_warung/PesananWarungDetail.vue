@@ -104,14 +104,6 @@
 			  </div> <!--END CARD CONTENT-->
 			</div> <!--END CARD-->
 
-			<!--EDIT JUMLAH PRODUK-->
-			<input class="form-control" type="hidden"  v-model="editJumlahProduk.jumlah_produk"  name="jumlah_produk" id="jumlah_produk">
-			<input class="form-control" type="hidden"  v-model="editJumlahProduk.id"  name="id" id="id">
-
-			<!--SELESAI PESANAN-->
-			<input class="form-control" type="hidden"  v-model="selesaiPesanan.id_kas"  name="id_kas" id="id_kas">
-			<input class="form-control" type="hidden"  v-model="selesaiPesanan.id_pesanan"  name="id" id="id">
-
 			<!--DATA DETAIL PESANAN -->			
 			<div class="card card-detail">
 			  <div class="card-content">
@@ -442,7 +434,11 @@ export default {
 
     		axios.post(app.urlOrigin+'selesai-konfirmasi-pesanan-warung', newSelesaiPesanan)
             .then(function (resp) {
-            	app.getResults();            
+            	app.getResults();
+    			app.loading = false;
+    			app.selesaiPesanan.id_kas = ''
+    			app.selesaiPesanan.id_pesanan = ''
+              	app.$router.replace('/pesanan-warung');            
 	      		swal({
 					html :  "Pesanan order #<b>"+id+" Berhasil Di Selesaikan</b>",
 					showConfirmButton :  false,
@@ -450,12 +446,10 @@ export default {
 					timer: 10000,
 					onOpen: () => {
 							swal.showLoading()
-					}
+					},
+	                closeOnClickOutside: false,
+	                closeOnEsc: false
 				});
-    			app.loading = false;
-    			app.selesaiPesanan.id_kas = ''
-    			app.selesaiPesanan.id_pesanan = ''
-              	app.$router.replace('/pesanan-warung');
             })
             .catch(function (resp) {
             	alert("Tidak Dapat Menyelesaikan Pesanan");
