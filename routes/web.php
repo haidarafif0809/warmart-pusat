@@ -477,6 +477,9 @@ Route::get('/konfirmasi-pesanan-warung/{id}', 'PesananWarungController@konfirmas
 //PEMBELIAN  VUE JS
 Route::get('/pembelian/view', 'PembelianController@view')->middleware('auth');
 Route::get('/pembelian/pencarian', 'PembelianController@pencarian')->middleware('auth');
+Route::get('/pembelian/view-tbs-pembelian', 'PembelianController@viewTbsPembelian')->middleware('auth');
+Route::get('/pembelian/pencarian-tbs-pembelian', 'PembelianController@pencarianTbsPembelian')->middleware('auth');
+Route::get('/pembelian/pilih-suplier', 'PembelianController@pilih_suplier')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
