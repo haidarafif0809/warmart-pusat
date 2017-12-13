@@ -50,7 +50,7 @@
 									<td>{{ item_keluar.waktu }}</td>
 									<td>{{ item_keluar.waktu_edit }}</td>
 									<td>
-										<router-link :to="{name: 'detailItemMasuk', params: {id: item_keluar.id}}" class="btn btn-xs btn-info" v-bind:id="'detail-' + item_keluar.id" >
+										<router-link :to="{name: 'detailItemKeluar', params: {id: item_keluar.id}}" class="btn btn-xs btn-info" v-bind:id="'detail-' + item_keluar.id" >
 										Detail </router-link> </td>
 									</td>
 									<td><router-link :to="{name: 'editItemKeluar', params: {id: item_keluar.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + item_keluar.id" >

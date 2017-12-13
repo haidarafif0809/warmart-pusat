@@ -471,6 +471,9 @@ Route::get('/item-keluar/view', 'ItemKeluarController@view')->middleware('auth')
 Route::get('/item-keluar/pencarian', 'ItemKeluarController@pencarian')->middleware('auth');
 Route::get('/item-keluar/view-tbs-item-keluar', 'ItemKeluarController@viewTbsItemKeluar')->middleware('auth');
 Route::get('/item-keluar/pencarian-tbs-item-keluar', 'ItemKeluarController@pencarianTbsItemKeluar')->middleware('auth');
+Route::get('/item-keluar/ambil-faktur-item-keluar/{id}', 'ItemKeluarController@ambilFakturItemKeluar')->middleware('auth');
+Route::get('/item-keluar/detail-item-keluar/{id}', 'ItemKeluarController@detailItemKeluar')->middleware('auth');
+Route::get('/item-keluar/pencarian-detail-item-keluar/{id}', 'ItemKeluarController@pencarianDetailItemKeluar')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 

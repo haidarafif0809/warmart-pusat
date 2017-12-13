@@ -87,6 +87,7 @@ import PembelianEdit from './components/pembelian/PembelianEdit.vue';
 import ItemKeluarIndex from './components/item_keluar/ItemKeluarIndex.vue';
 import ItemKeluarCreate from './components/item_keluar/ItemKeluarCreate.vue';
 import ItemKeluarEdit from './components/item_keluar/ItemKeluarEdit.vue';
+import ItemKeluarDetail from './components/item_keluar/ItemKeluarDetail.vue';
 const routes = [{
         path: '/',
         components: {
@@ -396,6 +397,10 @@ const routes = [{
         path: '/edit-item-keluar/:id',
         component: ItemKeluarEdit,
         name: 'editItemKeluar'
+    }, {
+        path: '/detail-item-keluar/:id',
+        component: ItemKeluarDetail,
+        name: 'detailItemKeluar'
     }
 ]
 export default routes;
