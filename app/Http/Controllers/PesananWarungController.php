@@ -277,7 +277,7 @@ class PesananWarungController extends Controller
         PesananPelanggan::where('id', $request->id_pesanan)->update(['konfirmasi_pesanan' => '2']);
 
         DB::commit();
-        return redirect()->back();
+        // return redirect()->back();
     }
 
     public function batalkanPesananWarung($id)
@@ -296,13 +296,13 @@ class PesananWarungController extends Controller
 
         DB::commit();
 
-        return redirect()->back();
+        // return redirect()->back();
     }
 
     public function batalkanKonfirmasiPesananWarung($id)
     {
         PesananPelanggan::where('id', $id)->update(['konfirmasi_pesanan' => '0']);
-        return redirect()->back();
+        // return redirect()->back();
     }
 
     public function tambahProdukPesananWarung($id)

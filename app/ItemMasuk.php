@@ -72,5 +72,8 @@ class ItemMasuk extends Model
         $date_terbalik = date_format($date, "d/m/Y H:i:s");
         return $date_terbalik;
     }
-
+    public function getTotalMasukAttribute()
+    {
+        return number_format($this->total, 0, ',', '.');
+    }
 }

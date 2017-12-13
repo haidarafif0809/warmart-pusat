@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Barang;
 use App\DetailItemMasuk;
 use App\EditTbsItemMasuk;
 use App\ItemMasuk;
@@ -11,7 +10,6 @@ use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Session;
-use Yajra\Datatables\Datatables;
 use Yajra\Datatables\Html\Builder;
 
 class ItemMasukController extends Controller
@@ -32,6 +30,46 @@ class ItemMasukController extends Controller
 
     }
 
+    public function paginationData($item_masuk, $array, $url)
+    {
+
+        //DATA PAGINATION
+        $respons['current_page']   = $item_masuk->currentPage();
+        $respons['data']           = $array;
+        $respons['first_page_url'] = url($url . '?page=' . $item_masuk->firstItem());
+        $respons['from']           = 1;
+        $respons['last_page']      = $item_masuk->lastPage();
+        $respons['last_page_url']  = url($url . '?page=' . $item_masuk->lastPage());
+        $respons['next_page_url']  = $item_masuk->nextPageUrl();
+        $respons['path']           = url($url);
+        $respons['per_page']       = $item_masuk->perPage();
+        $respons['prev_page_url']  = $item_masuk->previousPageUrl();
+        $respons['to']             = $item_masuk->perPage();
+        $respons['total']          = $item_masuk->total();
+        //DATA PAGINATION
+
+        return $respons;
+    }
+    public function paginationPencarianData($item_masuk, $array, $url, $search)
+    {
+        //DATA PAGINATION
+        $respons['current_page']   = $item_masuk->currentPage();
+        $respons['data']           = $array;
+        $respons['first_page_url'] = url($url . '?page=' . $item_masuk->firstItem() . '&search=' . $search);
+        $respons['from']           = 1;
+        $respons['last_page']      = $item_masuk->lastPage();
+        $respons['last_page_url']  = url($url . '?page=' . $item_masuk->lastPage() . '&search=' . $search);
+        $respons['next_page_url']  = $item_masuk->nextPageUrl();
+        $respons['path']           = url($url);
+        $respons['per_page']       = $item_masuk->perPage();
+        $respons['prev_page_url']  = $item_masuk->previousPageUrl();
+        $respons['to']             = $item_masuk->perPage();
+        $respons['total']          = $item_masuk->total();
+        //DATA PAGINATION
+
+        return $respons;
+    }
+
     public function view()
     {
         $item_masuk = ItemMasuk::where('warung_id', Auth::user()->id_warung)->orderBy('id', 'desc')->paginate(10);
@@ -41,25 +79,14 @@ class ItemMasukController extends Controller
             array_push($array, [
                 'id'         => $item_masuks->id,
                 'no_faktur'  => $item_masuks->no_faktur,
+                'total'      => $item_masuks->TotalMasuk,
                 'keterangan' => $item_masuks->keterangan,
                 'waktu'      => $item_masuks->Waktu,
                 'waktu_edit' => $item_masuks->WaktuEdit]);
         }
+        $url     = '/item-masuk/view';
+        $respons = $this->paginationData($item_masuk, $array, $url);
 
-        //DATA PAGINATION
-        $respons['current_page']   = $item_masuk->currentPage();
-        $respons['data']           = $array;
-        $respons['first_page_url'] = url('/item-masuk/view?page=' . $item_masuk->firstItem());
-        $respons['from']           = 1;
-        $respons['last_page']      = $item_masuk->lastPage();
-        $respons['last_page_url']  = url('/item-masuk/view?page=' . $item_masuk->lastPage());
-        $respons['next_page_url']  = $item_masuk->nextPageUrl();
-        $respons['path']           = url('/item-masuk/view');
-        $respons['per_page']       = $item_masuk->perPage();
-        $respons['prev_page_url']  = $item_masuk->previousPageUrl();
-        $respons['to']             = $item_masuk->perPage();
-        $respons['total']          = $item_masuk->total();
-        //DATA PAGINATION
         return response()->json($respons);
     }
 
@@ -79,25 +106,17 @@ class ItemMasukController extends Controller
             array_push($array, [
                 'id'         => $item_masuks->id,
                 'no_faktur'  => $item_masuks->no_faktur,
+                'total'      => $item_masuks->TotalMasuk,
                 'keterangan' => $item_masuks->keterangan,
                 'waktu'      => $item_masuks->Waktu,
                 'waktu_edit' => $item_masuks->WaktuEdit]);
         }
 
-        //DATA PAGINATION
-        $respons['current_page']   = $item_masuk->currentPage();
-        $respons['data']           = $array;
-        $respons['first_page_url'] = url('/item-masuk/pencarian?page=' . $item_masuk->firstItem() . '&search=' . $request->search);
-        $respons['from']           = 1;
-        $respons['last_page']      = $item_masuk->lastPage();
-        $respons['last_page_url']  = url('/item-masuk/pencarian?page=' . $item_masuk->lastPage() . '&search=' . $request->search);
-        $respons['next_page_url']  = $item_masuk->nextPageUrl();
-        $respons['path']           = url('/item-masuk/pencarian');
-        $respons['per_page']       = $item_masuk->perPage();
-        $respons['prev_page_url']  = $item_masuk->previousPageUrl();
-        $respons['to']             = $item_masuk->perPage();
-        $respons['total']          = $item_masuk->total();
-        //DATA PAGINATION
+        $url    = '/item-masuk/pencarian';
+        $search = $request->search;
+
+        $respons = $this->paginationPencarianData($item_masuk, $array, $url, $search);
+
         return response()->json($respons);
     }
 
@@ -116,20 +135,9 @@ class ItemMasukController extends Controller
                 'jumlah_produk'     => $tbs_item_masuks->jumlah_produk]);
         }
 
-        //DATA PAGINATION
-        $respons['current_page']   = $tbs_item_masuk->currentPage();
-        $respons['data']           = $array;
-        $respons['first_page_url'] = url('/item-masuk/view-tbs-item-masuk?page=' . $tbs_item_masuk->firstItem());
-        $respons['from']           = 1;
-        $respons['last_page']      = $tbs_item_masuk->lastPage();
-        $respons['last_page_url']  = url('/item-masuk/view-tbs-item-masuk?page=' . $tbs_item_masuk->lastPage());
-        $respons['next_page_url']  = $tbs_item_masuk->nextPageUrl();
-        $respons['path']           = url('/item-masuk/view-tbs-item-masuk');
-        $respons['per_page']       = $tbs_item_masuk->perPage();
-        $respons['prev_page_url']  = $tbs_item_masuk->previousPageUrl();
-        $respons['to']             = $tbs_item_masuk->perPage();
-        $respons['total']          = $tbs_item_masuk->total();
-        //DATA PAGINATION
+        $url     = '/item-masuk/view-tbs-item-masuk';
+        $respons = $this->paginationData($tbs_item_masuk, $array, $url);
+
         return response()->json($respons);
     }
 
@@ -137,37 +145,80 @@ class ItemMasukController extends Controller
     {
         $session_id     = session()->getId();
         $user_warung    = Auth::user()->id_warung;
-        $tbs_item_masuk = TbsItemMasuk::with(['produk'])->where('warung_id', $user_warung)->where('session_id', $session_id)
+        $tbs_item_masuk = TbsItemMasuk::select('tbs_item_masuks.id_tbs_item_masuk AS id_tbs_item_masuk', 'tbs_item_masuks.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'tbs_item_masuks.id_produk AS id_produk')->leftJoin('barangs', 'barangs.id', '=', 'tbs_item_masuks.id_produk')->where('warung_id', $user_warung)->where('session_id', $session_id)
             ->where(function ($query) use ($request) {
 
-                $query->orWhere('id_produk', 'LIKE', $request->search . '%')
-                    ->orWhere('jumlah_produk', 'LIKE', $request->search . '%');
+                $query->orWhere('barangs.kode_barang', 'LIKE', $request->search . '%')
+                    ->orWhere('barangs.nama_barang', 'LIKE', $request->search . '%');
 
-            })->orderBy('id_tbs_item_masuk', 'desc')->paginate(10);
+            })->orderBy('tbs_item_masuks.id_tbs_item_masuk', 'desc')->paginate(10);
 
         $array = array();
         foreach ($tbs_item_masuk as $tbs_item_masuks) {
             array_push($array, [
-                'id_tbs_item_masuk' => $tbs_item_masuks->id_tbs_item_masuk,
-                'nama_produk'       => $tbs_item_masuks->TitleCaseProduk,
-                'kode_produk'       => $tbs_item_masuks->produk->kode_barang,
-                'jumlah_produk'     => $tbs_item_masuks->jumlah_produk]);
+                'id_tbs_item_masuk' => $tbs_item_masuks['id_tbs_item_masuk'],
+                'nama_produk'       => title_case($tbs_item_masuks['nama_barang']),
+                'kode_produk'       => $tbs_item_masuks['kode_barang'],
+                'jumlah_produk'     => $tbs_item_masuks['jumlah_produk']]);
         }
 
-        //DATA PAGINATION
-        $respons['current_page']   = $tbs_item_masuk->currentPage();
-        $respons['data']           = $array;
-        $respons['first_page_url'] = url('/item-masuk/pencarian-tbs-item-masuk?page=' . $tbs_item_masuk->firstItem() . '&search=' . $request->search);
-        $respons['from']           = 1;
-        $respons['last_page']      = $tbs_item_masuk->lastPage();
-        $respons['last_page_url']  = url('/item-masuk/pencarian-tbs-item-masuk?page=' . $tbs_item_masuk->lastPage() . '&search=' . $request->search);
-        $respons['next_page_url']  = $tbs_item_masuk->nextPageUrl();
-        $respons['path']           = url('/item-masuk/pencarian-tbs-item-masuk');
-        $respons['per_page']       = $tbs_item_masuk->perPage();
-        $respons['prev_page_url']  = $tbs_item_masuk->previousPageUrl();
-        $respons['to']             = $tbs_item_masuk->perPage();
-        $respons['total']          = $tbs_item_masuk->total();
-        //DATA PAGINATION
+        $url    = '/item-masuk/pencarian-tbs-item-masuk';
+        $search = $request->search;
+
+        $respons = $this->paginationPencarianData($tbs_item_masuk, $array, $url, $search);
+
+        return response()->json($respons);
+    }
+
+    public function viewEditTbsItemMasuk($id)
+    {
+        $item_masuk     = ItemMasuk::find($id);
+        $user_warung    = Auth::user()->id_warung;
+        $tbs_item_masuk = EditTbsItemMasuk::with(['produk'])->where('warung_id', $user_warung)->where('no_faktur', $item_masuk->no_faktur)->orderBy('id_edit_tbs_item_masuk', 'desc')->paginate(10);
+        $array          = array();
+
+        foreach ($tbs_item_masuk as $tbs_item_masuks) {
+            array_push($array, [
+                'id_item_masuk'          => $id,
+                'id_edit_tbs_item_masuk' => $tbs_item_masuks->id_edit_tbs_item_masuk,
+                'nama_produk'            => $tbs_item_masuks->TitleCaseProduk,
+                'kode_produk'            => $tbs_item_masuks->produk->kode_barang,
+                'jumlah_produk'          => $tbs_item_masuks->jumlah_produk]);
+        }
+        $url     = '/item-masuk/view-edit-tbs-item-masuk/' . $id;
+        $respons = $this->paginationData($tbs_item_masuk, $array, $url);
+
+        return response()->json($respons);
+    }
+
+    public function pencarianEditTbsItemMasuk(Request $request, $id)
+    {
+        $item_masuk     = ItemMasuk::find($id);
+        $user_warung    = Auth::user()->id_warung;
+        $tbs_item_masuk = EditTbsItemMasuk::select('edit_tbs_item_masuks.id_edit_tbs_item_masuk AS id_edit_tbs_item_masuk', 'edit_tbs_item_masuks.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'edit_tbs_item_masuks.id_produk AS id_produk')->leftJoin('barangs', 'barangs.id', '=', 'edit_tbs_item_masuks.id_produk')
+            ->where('warung_id', $user_warung)->where('no_faktur', $item_masuk->no_faktur)
+            ->where(function ($query) use ($request) {
+
+                $query->orWhere('barangs.nama_barang', 'LIKE', $request->search . '%')
+                    ->orWhere('barangs.kode_barang', 'LIKE', $request->search . '%');
+
+            })->orderBy('edit_tbs_item_masuks.id_edit_tbs_item_masuk', 'desc')->paginate(10);
+
+        $array = array();
+        foreach ($tbs_item_masuk as $tbs_item_masuks) {
+            array_push($array, [
+                'id_item_masuk'          => $id,
+                'id_edit_tbs_item_masuk' => $tbs_item_masuks['id_edit_tbs_item_masuk'],
+                'nama_produk'            => title_case($tbs_item_masuks['nama_barang']),
+                'kode_produk'            => $tbs_item_masuks['kode_barang'],
+                'jumlah_produk'          => $tbs_item_masuks['jumlah_produk']]);
+        }
+
+        $url    = '/item-masuk/pencarian-edit-tbs-item-masuk/' . $id;
+        $search = $request->search;
+
+        $respons = $this->paginationPencarianData($tbs_item_masuk, $array, $url, $search);
+
         return response()->json($respons);
     }
 
@@ -178,33 +229,7 @@ class ItemMasukController extends Controller
      */
     public function create(Request $request, Builder $htmlBuilder)
     {
-        if ($request->ajax()) {
-            $session_id     = session()->getId();
-            $user_warung    = Auth::user()->id_warung;
-            $tbs_item_masuk = TbsItemMasuk::with(['produk'])->where('warung_id', $user_warung)->where('session_id', $session_id)->get();
-            return Datatables::of($tbs_item_masuk)->addColumn('action', function ($tbsitemmasuk) {
-                return view('item_masuk._hapus_produk', [
-                    'model'           => $tbsitemmasuk,
-                    'form_url'        => route('item-masuk.proses_hapus_tbs_item_masuk', $tbsitemmasuk->id_tbs_item_masuk),
-                    'confirm_message' => 'Yakin Mau Menghapus Produk ?',
-                ]);
-            })
-                ->editColumn('jumlah_produk', function ($produk) {
-                    return "<a href='#edit-jumlah' id='edit_jumlah_produk' class='edit-jumlah' data-id='$produk->id_tbs_item_masuk' data-nama='$produk->TitleCaseProduk' >$produk->jumlah_produk</a>";
-                })
-                ->addColumn('data_produk_tbs', function ($data_produk_tbs) {
-                    $produk      = Barang::find($data_produk_tbs->id_produk);
-                    $data_produk = $produk->kode_barang . " - " . $produk->nama_barang;
-                    return $data_produk;
-                })->make(true);
-        }
 
-        $html = $htmlBuilder
-            ->addColumn(['data' => 'data_produk_tbs', 'name' => 'data_produk_tbs', 'title' => 'Produk', 'orderable' => false, 'searchable' => false])
-            ->addColumn(['data' => 'jumlah_produk', 'name' => 'jumlah_produk', 'title' => 'Jumlah'])
-            ->addColumn(['data' => 'action', 'name' => 'action', 'title' => 'Hapus', 'orderable' => false, 'searchable' => false]);
-
-        return view('item_masuk.create')->with(compact('html'));
     }
 
     //PROSES TAMBAH TBS ITEM MASUK
@@ -246,20 +271,7 @@ class ItemMasukController extends Controller
     {
         EditTbsItemMasuk::where('id_edit_tbs_item_masuk', $id)->delete();
 
-        $pesan_alert =
-            '<div class="container-fluid">
-      <div class="alert-icon">
-      <i class="material-icons">check</i>
-      </div>
-      <b>Sukses : Berhasil Menghapus Produk</b>
-      </div>';
-
-        Session::flash("flash_notification", [
-            "level"   => "success",
-            "message" => $pesan_alert,
-        ]);
-
-        return back();
+        return response(200);
     }
 
     //PROSES BATAL ITEM MASUK
@@ -272,72 +284,44 @@ class ItemMasukController extends Controller
     }
 
     //PROSES BATAL EDIT ITEM MASUK
-    public function proses_hapus_semua_edit_tbs_item_masuk($id)
+    public function proses_hapus_semua_edit_tbs_item_masuk(Request $request)
     {
-        //MENGAMBIL ID ITEM MASUK
-        $data_item_masuk = ItemMasuk::find($id);
-        //PROSES MENGHAPUS SEMUA EDTI TBS SESUAI NO FAKTUR YANG DI AMBIL
-        $data_tbs_item_masuk = EditTbsItemMasuk::where('no_faktur', $data_item_masuk->no_faktur)->delete();
-        $pesan_alert         =
-            '<div class="container-fluid">
-      <div class="alert-icon">
-      <i class="material-icons">check</i>
-      </div>
-      <b>Sukses : Berhasil Membatalkan Edit Item Masuk</b>
-      </div>';
 
-        Session::flash("flash_notification", [
-            "level"   => "success",
-            "message" => $pesan_alert,
-        ]);
-        return redirect()->route('item-masuk.index');
+        //PROSES MENGHAPUS SEMUA EDTI TBS SESUAI NO FAKTUR YANG DI AMBIL
+        $data_tbs_item_masuk = EditTbsItemMasuk::where('no_faktur', $request->no_faktur)->delete();
+
+        return response(200);
     }
 
     //PROSES SELESAI TRANSAKSI EDIT ITEM MASUK
     public function proses_edit_item_masuk(Request $request, $id)
     {
 
-        $data_item_masuk = ItemMasuk::find($id);
-        $session_id      = session()->getId();
-        $user            = Auth::user()->id;
+        $session_id = session()->getId();
+        $user       = Auth::user()->id;
 
 //INSERT DETAIL ITEM MASUK
-        $data_produk_item_masuk = EditTbsItemMasuk::where('no_faktur', $data_item_masuk->no_faktur)->where('warung_id', Auth::user()->id_warung);
+        $data_produk_item_masuk = EditTbsItemMasuk::where('no_faktur', $request->no_faktur)->where('warung_id', Auth::user()->id_warung);
 
         if ($data_produk_item_masuk->count() == 0) {
 
-            $pesan_alert =
-                '<div class="container-fluid">
-        <div class="alert-icon">
-        <i class="material-icons">error</i>
-        </div>
-        <b>Gagal : Belum Ada Produk Yang Diinputkan</b>
-        </div>';
+            return $data_produk_item_masuk->count();
 
-            Session::flash("flash_notification", [
-                "level"   => "danger",
-                "message" => $pesan_alert,
-            ]);
-
-            return redirect()->back();
         } else {
-            $data_detail_item_masuk = DetailItemMasuk::where('no_faktur', $data_item_masuk->no_faktur)->where('warung_id', Auth::user()->id_warung)->get();
+
+            $data_detail_item_masuk = DetailItemMasuk::where('no_faktur', $request->no_faktur)->where('warung_id', Auth::user()->id_warung)->get();
 
             //HAPUS DETAIL ITEM MASUK
             foreach ($data_detail_item_masuk as $data_detail) {
 
-                if (!$hapus_detail = DetailItemMasuk::destroy($data_detail->id_detail_item_masuk)) {
-                    //DI BATALKAN PROSES NYA
-                    DB::rollBack();
-                    return redirect()->back();
-                }
+                DetailItemMasuk::destroy($data_detail->id_detail_item_masuk);
             }
 
             foreach ($data_produk_item_masuk->get() as $data_tbs) {
 
                 $detail_item_masuk = DetailItemMasuk::create([
                     'id_produk'     => $data_tbs->id_produk,
-                    'no_faktur'     => $data_item_masuk->no_faktur,
+                    'no_faktur'     => $data_tbs->no_faktur,
                     'jumlah_produk' => $data_tbs->jumlah_produk,
                     'warung_id'     => Auth::user()->id_warung,
                 ]);
@@ -355,26 +339,9 @@ class ItemMasukController extends Controller
                 'keterangan' => $keterangan,
             ]);
 
-            $hapus_edit_tbs_item_masuk = EditTbsItemMasuk::where('no_faktur', $data_item_masuk->no_faktur)->where('warung_id', Auth::user()->id_warung)->delete();
+            $hapus_edit_tbs_item_masuk = EditTbsItemMasuk::where('no_faktur', $request->no_faktur)->where('warung_id', Auth::user()->id_warung)->delete();
 
-            if (!$itemmasuk) {
-                return back();
-            }
-
-            $pesan_alert =
-            '<div class="container-fluid">
-        <div class="alert-icon">
-        <i class="material-icons">check</i>
-        </div>
-        <b>Sukses : Berhasil Melakukan Edit Transaksi Item Masuk Faktur "' . $data_item_masuk->no_faktur . '"</b>
-        </div>';
-
-            Session::flash("flash_notification", [
-                "level"   => "success",
-                "message" => $pesan_alert,
-            ]);
-
-            return redirect()->route('item-masuk.index');
+            return response(200);
         }
     }
 
@@ -476,101 +443,46 @@ class ItemMasukController extends Controller
             ]);
         }
 
-        return redirect()->route('item-masuk.edit', $id);
+        return response(200);
+
     }
 
     //MENAMPILKAN DATA DI TBS ITEM MASUK
     public function edit(Request $request, Builder $htmlBuilder, $id)
     {
-        if ($request->ajax()) {
-            $item_masuk     = ItemMasuk::find($id);
-            $tbs_item_masuk = EditTbsItemMasuk::with(['produk'])->where('warung_id', Auth::user()->id_warung)->where('no_faktur', $item_masuk->no_faktur)->get();
-            return Datatables::of($tbs_item_masuk)->addColumn('action', function ($tbsitemmasuk) {
-                return view('item_masuk._hapus_produk', [
-                    'model'           => $tbsitemmasuk,
-                    'form_url'        => route('item-masuk.proses_hapus_edit_tbs_item_masuk', $tbsitemmasuk->id_edit_tbs_item_masuk),
-                    'confirm_message' => 'Yakin Mau Menghapus Produk ?',
-                ]);
-            })
-                ->editColumn('jumlah_produk', function ($produk) {
-                    return "<a href='#edit-jumlah' id='edit_jumlah_produk' class='edit-jumlah' data-id='$produk->id_edit_tbs_item_masuk' data-nama='$produk->TitleCaseProduk' >$produk->jumlah_produk</a>";
-                })->addColumn('data_produk_tbs', function ($data_produk_tbs) {
-                $produk      = Barang::find($data_produk_tbs->id_produk);
-                $data_produk = $produk->kode_barang . " - " . $produk->nama_barang;
-                return $data_produk;
-            })->make(true);
-        }
 
-        $html = $htmlBuilder
-            ->addColumn(['data' => 'data_produk_tbs', 'name' => 'data_produk_tbs', 'title' => 'Produk', 'searchable' => false])
-            ->addColumn(['data' => 'jumlah_produk', 'name' => 'jumlah_produk', 'title' => 'Jumlah'])
-            ->addColumn(['data' => 'action', 'name' => 'action', 'title' => 'Hapus', 'orderable' => false, 'searchable' => false]);
-
-        $item_masuk = ItemMasuk::find($id);
-        return view('item_masuk.edit')->with(compact('html', 'item_masuk'));
     }
 
     //PROSES TAMBAH EDIT TBS ITEM MASUK
-    public function proses_tambah_edit_tbs_item_masuk(Request $request, $id)
+    public function proses_tambah_edit_tbs_item_masuk(Request $request)
     {
-        $this->validate($request, [
-            'id_produk_tbs' => 'required|numeric',
-            'jumlah_produk' => 'required|max:8|numeric',
-        ]);
-
-        $data_item_masuk = ItemMasuk::find($id);
-        $session_id      = session()->getId();
+        $produk     = explode("|", $request->produk);
+        $id_produk  = $produk[0];
+        $session_id = session()->getId();
 
         $data_tbs = EditTbsItemMasuk::select('id_produk')
-            ->where('id_produk', $request->id_produk_tbs)
-            ->where('no_faktur', $data_item_masuk->no_faktur)
+            ->where('id_produk', $id_produk)
+            ->where('no_faktur', $request->no_faktur)
             ->where('session_id', $session_id)
             ->where('warung_id', Auth::user()->id_warung)
             ->count();
 
-        $data_produk = Barang::select('nama_barang')->where('id', $request->id_produk)->first();
-        $pesan_alert = "Produk '" . $data_produk->nama_barang . "' Sudah Ada, Silakan Pilih Produk Lain !";
-
         //JIKA PRODUK YG DIPILIH SUDAH ADA DI TBS
         if ($data_tbs > 0) {
 
-            $pesan_alert =
-            '<div class="container-fluid">
-        <div class="alert-icon">
-        <i class="material-icons">warning</i>
-        </div>
-        <b>Warning : Produk "' . $data_produk->nama_barang . '" Sudah Ada, Silakan Pilih Produk Lain !</b>
-        </div>';
+            return 0;
 
-            Session::flash("flash_notification", [
-                "level"   => "warning",
-                "message" => $pesan_alert,
-            ]);
-
-            return back();
         } else {
 
-            $pesan_alert =
-            '<div class="container-fluid">
-        <div class="alert-icon">
-        <i class="material-icons">check</i>
-        </div>
-        <b>Sukses : Berhasil Menambah Produk "' . $data_produk->nama_barang . '"</b>
-        </div>';
-
             $tbsitemmasuk = EditTbsItemMasuk::create([
-                'id_produk'     => $request->id_produk_tbs,
-                'no_faktur'     => $data_item_masuk->no_faktur,
+                'id_produk'     => $id_produk,
+                'no_faktur'     => $request->no_faktur,
                 'session_id'    => $session_id,
                 'jumlah_produk' => $request->jumlah_produk,
                 'warung_id'     => Auth::user()->id_warung,
             ]);
 
-            Session::flash("flash_notification", [
-                "level"   => "success",
-                "message" => $pesan_alert,
-            ]);
-            return back();
+            return response(200);
 
         }
     }
@@ -584,9 +496,12 @@ class ItemMasukController extends Controller
     //PROSES HAPUS ITEM MASUK
     public function destroy($id)
     {
+        if (!ItemMasuk::destroy($id)) {
 
-        ItemMasuk::destroy($id);
-        return response(200);
+            return 0;
+        } else {
+            return response(200);
+        }
     }
 
     public function proses_edit_jumlah(Request $request)
@@ -599,25 +514,70 @@ class ItemMasukController extends Controller
 
     public function proses_edit_jumlah_edit(Request $request)
     {
-        $tbs_item_masuk = EditTbsItemMasuk::find($request->id_edit_tbs_item_masuk);
+        $tbs_item_masuk = EditTbsItemMasuk::find($request->id_tbs)->update(['jumlah_produk' => $request->jumlah_produk]);
 
-        $tbs_item_masuk->update(['jumlah_produk' => $request->jumlah_beli_baru]);
-        $nama_barang = $tbs_item_masuk->produk->nama_barang;
+        return response(200);
 
-        $pesan_alert =
-            '<div class="container-fluid">
-      <div class="alert-icon">
-      <i class="material-icons">check</i>
-      </div>
-      <b>Sukses : Berhasil Mengubah Jumlah Item Masuk "' . $nama_barang . '"  </b>
-      </div>';
+    }
 
-        Session::flash("flash_notification", [
-            "level"   => "success",
-            "message" => $pesan_alert,
-        ]);
+    public function ambilFakturItemMasuk($id)
+    {
+        //
+        return ItemMasuk::find($id);
+    }
+    public function detailItemMasuk($id)
+    {
+        //
+        $item_masuk        = ItemMasuk::find($id);
+        $user_warung       = Auth::user()->id_warung;
+        $detail_item_masuk = DetailItemMasuk::with(['produk'])->where('warung_id', $user_warung)->where('no_faktur', $item_masuk->no_faktur)->orderBy('id_detail_item_masuk', 'desc')->paginate(10);
+        $array             = array();
 
-        return redirect()->back();
+        foreach ($detail_item_masuk as $detail_item_masuks) {
+            array_push($array, [
+                'id_item_masuk'        => $id,
+                'no_faktur'            => $detail_item_masuks->no_faktur,
+                'id_detail_item_masuk' => $detail_item_masuks->id_detail_item_masuk,
+                'nama_produk'          => title_case($detail_item_masuks->produk->nama_barang),
+                'kode_produk'          => $detail_item_masuks->produk->kode_barang,
+                'jumlah_produk'        => $detail_item_masuks->jumlah_produk]);
+        }
 
+        $url     = '/item-masuk/detail-item-masuk/' . $id;
+        $respons = $this->paginationData($detail_item_masuk, $array, $url);
+
+        return response()->json($respons);
+    }
+
+    public function pencarianDetailItemMasuk($id, Request $request)
+    {
+        $item_masuk        = ItemMasuk::find($id);
+        $user_warung       = Auth::user()->id_warung;
+        $detail_item_masuk = DetailItemMasuk::select('detail_item_masuks.id_detail_item_masuk AS id_detail_item_masuk', 'detail_item_masuks.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'detail_item_masuks.id_produk AS id_produk', 'detail_item_masuks.no_faktur AS no_faktur')->leftJoin('barangs', 'barangs.id', '=', 'detail_item_masuks.id_produk')
+            ->where('detail_item_masuks.warung_id', $user_warung)->where('detail_item_masuks.no_faktur', $item_masuk->no_faktur)
+            ->where(function ($query) use ($request) {
+
+                $query->orWhere('barangs.nama_barang', 'LIKE', $request->search . '%')
+                    ->orWhere('barangs.kode_barang', 'LIKE', $request->search . '%');
+
+            })->orderBy('detail_item_masuks.id_detail_item_masuk', 'desc')->paginate(10);
+
+        $array = array();
+        foreach ($detail_item_masuk as $detail_item_masuks) {
+            array_push($array, [
+                'id_item_masuk'        => $id,
+                'no_faktur'            => $detail_item_masuks['no_faktur'],
+                'id_detail_item_masuk' => $detail_item_masuks['id_detail_item_masuk'],
+                'nama_produk'          => title_case($detail_item_masuks['nama_barang']),
+                'kode_produk'          => $detail_item_masuks['kode_barang'],
+                'jumlah_produk'        => $detail_item_masuks['jumlah_produk']]);
+        }
+
+        $url    = '/item-masuk/pencarian-detail-item-masuk/' . $id;
+        $search = $request->search;
+
+        $respons = $this->paginationPencarianData($detail_item_masuk, $array, $url, $search);
+
+        return response()->json($respons);
     }
 }
