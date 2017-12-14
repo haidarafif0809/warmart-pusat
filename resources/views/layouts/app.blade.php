@@ -34,7 +34,7 @@
 </head>
 <style type="text/css">
 .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
-   padding: 1px;
+ padding: 1px;
 }
 </style>
 <body>
@@ -182,7 +182,7 @@
             <div class="collapse" id="persediaan">
                 <ul class="nav">
                     <li>
-                       <router-link :to="{name: 'indexItemMasuk'}" class="menu-nav">
+                     <router-link :to="{name: 'indexItemMasuk'}" class="menu-nav">
                         <span class="sidebar-mini">
                             IM
                         </span>
@@ -191,160 +191,160 @@
                         </span>
                     </router-link>
                 </li>
-                <li class="vueJs">
-                    <a href="#">
+                <li>
+                    <router-link :to="{name: 'indexItemKeluar'}" class="menu-nav">
                         <span class="sidebar-mini">
                             IK
                         </span>
                         <span class="sidebar-normal">
                             Item Keluar
                         </span>
-                    </a>
-                </li>
-                <li class="vueJs">
-                    <a href="#">
-                        <span class="sidebar-mini">
-                            LP
-                        </span>
-                        <span class="sidebar-normal">
-                            Laporan Persediaan
-                        </span>
-                    </a>
-                </li>
-                <li>
-                    <router-link :to="{name: 'indexSuplier'}" class="menu-nav">
-                        <span class="sidebar-mini">
-                            S
-                        </span>
-                        <span class="sidebar-normal">
-                            Supplier
-                        </span>
-                    </router-link>
-                </li>
-            </ul>
-        </div>
-    </li>
-    <li>
-        <a data-toggle="collapse" href="#transaksiKas">
-            <i class="material-icons">
-                autorenew
-            </i>
-            <p>
-                Kas
-                <b class="caret">
-                </b>
-            </p>
-        </a>
-        <div class="collapse" id="transaksiKas">
-            <ul class="nav">
-                <li>
-                    <router-link :to="{name: 'indexKas'}" class="menu-nav">
-                        <span class="sidebar-mini">
-                            K
-                        </span>
-                        <span class="sidebar-normal">
-                            Kas
-                        </span>
                     </router-link>
                 </li>
                 <li>
-                    <router-link :to="{name: 'indexKategoriTransaksi'}" class="menu-nav">
-                        <span class="sidebar-mini">
-                            KT
-                        </span>
-                        <span class="sidebar-normal">
-                            Kategori Transaksi
-                        </span>
-                    </router-link>
-                </li>
-                <li class="vueJs">
-                    <a href="#">
-                        <span class="sidebar-mini">
-                            KM
-                        </span>
-                        <span class="sidebar-normal">
-                            Kas Masuk
-                        </span>
-                    </a>
-                </li>
-                <li class="vueJs">
-                    <a href="#">
-                        <span class="sidebar-mini">
-                            KK
-                        </span>
-                        <span class="sidebar-normal">
-                            Kas Keluar
-                        </span>
-                    </a>
-                </li>
-                <li class="vueJs">
-                    <a href="#">
-                        <span class="sidebar-mini">
-                            KMT
-                        </span>
-                        <span class="sidebar-normal">
-                            Kas Mutasi
-                        </span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </li>
-    @endif
-    <!--END MASTER DATA WARUNG -->
-    <!--MASTER DATA WARMART PUSAT-->
-    @if(Auth::user()->tipe_user == 1)
+                  <router-link :to="{name: 'indexLaporanPersediaan'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        LP
+                    </span>
+                    <span class="sidebar-normal">
+                        Laporan Persediaan
+                    </span>
+                </router-link>
+            </li>
+            <li>
+                <router-link :to="{name: 'indexSuplier'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        S
+                    </span>
+                    <span class="sidebar-normal">
+                        Supplier
+                    </span>
+                </router-link>
+            </li>
+        </ul>
+    </div>
+</li>
+<li>
+    <a data-toggle="collapse" href="#transaksiKas">
+        <i class="material-icons">
+            autorenew
+        </i>
+        <p>
+            Kas
+            <b class="caret">
+            </b>
+        </p>
+    </a>
+    <div class="collapse" id="transaksiKas">
+        <ul class="nav">
+            <li>
+                <router-link :to="{name: 'indexKas'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        K
+                    </span>
+                    <span class="sidebar-normal">
+                        Kas
+                    </span>
+                </router-link>
+            </li>
+            <li>
+                <router-link :to="{name: 'indexKategoriTransaksi'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        KT
+                    </span>
+                    <span class="sidebar-normal">
+                        Kategori Transaksi
+                    </span>
+                </router-link>
+            </li>
+            <li class="vueJs">
+                <a href="#">
+                    <span class="sidebar-mini">
+                        KM
+                    </span>
+                    <span class="sidebar-normal">
+                        Kas Masuk
+                    </span>
+                </a>
+            </li>
+            <li class="vueJs">
+                <a href="#">
+                    <span class="sidebar-mini">
+                        KK
+                    </span>
+                    <span class="sidebar-normal">
+                        Kas Keluar
+                    </span>
+                </a>
+            </li>
+            <li class="vueJs">
+                <a href="#">
+                    <span class="sidebar-mini">
+                        KMT
+                    </span>
+                    <span class="sidebar-normal">
+                        Kas Mutasi
+                    </span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</li>
+@endif
+<!--END MASTER DATA WARUNG -->
+<!--MASTER DATA WARMART PUSAT-->
+@if(Auth::user()->tipe_user == 1)
 
-    @if(Laratrust::can('lihat_master_data'))
-    <li>
-        <a data-toggle="collapse" href="#pagesExamples">
-            <i class="material-icons">
-                image
-            </i>
-            <p>
-                Master Data
-                <b class="caret">
-                </b>
-            </p>
-        </a>
-        <div class="collapse" id="pagesExamples">
-            <ul class="nav">
-                @if(Laratrust::can('lihat_bank'))
-                <li>
-                    <router-link :to="{name: 'indexBank'}" class="menu-nav">
-                        <span class="sidebar-mini">
-                            B
-                        </span>
-                        <span class="sidebar-normal">
-                            Bank
-                        </span>
-                    </router-link>
-                </li>
-                @endif
-                @if(Laratrust::can('lihat_customer'))
-                <li>
-                    <router-link :to="{name: 'indexCustomer'}" class="menu-nav">
-                        <span class="sidebar-mini">
-                            C
-                        </span>
-                        <span class="sidebar-normal">
-                            Customer
-                        </span>
-                    </router-link>
-                </li>
-                @endif
-                @if(Laratrust::can('lihat_komunitas'))
-                <li>
-                    <router-link :to="{name: 'indexKomunitas'}" class="menu-nav">
-                        <span class="sidebar-mini">
-                            K
-                        </span>
-                        <span class="sidebar-normal">
-                            Komunitas
-                        </span>
-                    </router-link>
-                </li>
-                @endif
+@if(Laratrust::can('lihat_master_data'))
+<li>
+    <a data-toggle="collapse" href="#pagesExamples">
+        <i class="material-icons">
+            image
+        </i>
+        <p>
+            Master Data
+            <b class="caret">
+            </b>
+        </p>
+    </a>
+    <div class="collapse" id="pagesExamples">
+        <ul class="nav">
+            @if(Laratrust::can('lihat_bank'))
+            <li>
+                <router-link :to="{name: 'indexBank'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        B
+                    </span>
+                    <span class="sidebar-normal">
+                        Bank
+                    </span>
+                </router-link>
+            </li>
+            @endif
+            @if(Laratrust::can('lihat_customer'))
+            <li>
+                <router-link :to="{name: 'indexCustomer'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        C
+                    </span>
+                    <span class="sidebar-normal">
+                        Customer
+                    </span>
+                </router-link>
+            </li>
+            @endif
+            @if(Laratrust::can('lihat_komunitas'))
+            <li>
+                <router-link :to="{name: 'indexKomunitas'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        K
+                    </span>
+                    <span class="sidebar-normal">
+                        Komunitas
+                    </span>
+                </router-link>
+            </li>
+            @endif
                                     <!-- OTORITAS ADMIN
 @if(Laratrust::can('lihat_otoritas'))
 <li>
@@ -591,8 +591,8 @@
 </script>
 <script type="text/javascript">
     $(document).on('click', '.menu-nav', function(){
-       $('.navbar-toggle ').click();
-   });
+     $('.navbar-toggle ').click();
+ });
 </script>
 @yield('scripts')
 </html>

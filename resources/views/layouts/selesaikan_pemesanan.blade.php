@@ -144,21 +144,29 @@
 
     <div class="card-content" style="padding-top: 1px; padding-bottom: 1px;">
       <div class="row">
-        <div class="col-md-6"><h5><b>Produk</b></h5> </div>
+        <div class="col-md-4"><h5><b>Produk</b></h5> </div>
         <div class="col-md-2"><h5><b>Jumlah</b></h5> </div>
-        <div class="col-md-4"><h5><b>Harga</b></h5> </div>
+        <div class="col-md-3"><h5><b>Harga</b></h5> </div>
+        <div class="col-md-3"><h5><b>Subtotal</b></h5> </div>
       </div>
 
       @foreach($keranjang_belanjaan as $keranjang_belanjaans)
       <div class="row">
 
-        <div class="col-md-6">
+        <div class="col-md-4">
          <li><b> <a href="{{ url('detail-produk/'.$keranjang_belanjaans->id_produk.'') }}">{{ $keranjang_belanjaans->NamaProduk }}</a></b></li>
        </div>
 
-       <div class="col-md-2"><b align="right">{{ $keranjang_belanjaans->jumlah_produk }}</b> </div>
+       <div class="col-md-2">
+        <b align="right">{{ $keranjang_belanjaans->jumlah_produk }}</b>
+      </div>
 
-       <div class="col-md-4">
+      <div class="col-md-3">
+        <b align="right">
+         {{ number_format($keranjang_belanjaans->produk->harga_jual,0,',','.') }}</b>
+       </div>
+
+       <div class="col-md-3">
 
          <div class="row">
 

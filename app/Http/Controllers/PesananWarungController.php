@@ -160,7 +160,12 @@ class PesananWarungController extends Controller
 
             $subtotal      = 0;
             $array_pesanan = array();
-            $agent         = new Agent();
+            $data_agent    = new Agent();
+            if ($data_agent->isMobile()) {
+                $agent = 0;
+            } else {
+                $agent = 1;
+            }
             foreach ($detail_pesanan as $detail_pesanans) {
 
                 $harga_produk = $detail_pesanans->produk->harga_jual * $detail_pesanans->jumlah_produk;

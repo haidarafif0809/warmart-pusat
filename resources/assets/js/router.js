@@ -89,6 +89,8 @@ import ItemKeluarCreate from './components/item_keluar/ItemKeluarCreate.vue';
 import ItemKeluarEdit from './components/item_keluar/ItemKeluarEdit.vue';
 import ItemKeluarDetail from './components/item_keluar/ItemKeluarDetail.vue';
 import ItemKeluarProsesEdit from './components/item_keluar/ItemKeluarProsesEdit.vue';
+// PERSEDIAAN
+import LaporanPersediaanIndex from './components/laporan_persediaan/LaporanPersediaanIndex.vue';
 const routes = [{
         path: '/',
         components: {
@@ -406,6 +408,11 @@ const routes = [{
         path: '/item-keluar-edit/:id',
         component: ItemKeluarProsesEdit,
         name: 'editItemKeluarProses'
+    }, // LAP PERSEDIAAN
+    {
+        path: '/laporan-persediaan',
+        component: LaporanPersediaanIndex,
+        name: 'indexLaporanPersediaan'
     }
 ]
 export default routes;

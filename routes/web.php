@@ -462,6 +462,13 @@ Route::get('/batalkan-konfirmasi-pesanan-warung/{id}', 'PesananWarungController@
 Route::get('/batalkan-pesanan-warung/{id}', 'PesananWarungController@batalkanPesananWarung')->middleware('auth');
 Route::post('/selesai-konfirmasi-pesanan-warung', 'PesananWarungController@selesaiKonfirmasiPesananWarung')->middleware('auth');
 
+//PUNYA SELESAI KONFIRMASI PESANAN WARUNG
+Route::post('/selesai-konfirmasi-pesanan-warung}', [
+    'middleware' => ['auth'],
+    'as'         => 'pesanan-warung.selesai_konfirmasi',
+    'uses'       => 'PesananWarungController@selesaiKonfirmasiPesananWarung',
+]);
+
 //PEMBELIAN  VUE JS
 Route::get('/pembelian/view', 'PembelianController@view')->middleware('auth');
 Route::get('/pembelian/pencarian', 'PembelianController@pencarian')->middleware('auth');
@@ -481,6 +488,11 @@ Route::get('/item-keluar/detail-item-keluar/{id}', 'ItemKeluarController@detailI
 Route::get('/item-keluar/pencarian-detail-item-keluar/{id}', 'ItemKeluarController@pencarianDetailItemKeluar')->middleware('auth');
 Route::get('/item-keluar/view-edit-tbs-item-keluar/{id}', 'ItemKeluarController@viewEditTbsItemKeluar')->middleware('auth');
 Route::get('/item-keluar/pencarian-edit-tbs-item-keluar/{id}', 'ItemKeluarController@pencarianEditTbsItemKeluar')->middleware('auth');
+
+// LAPORAN PERSEDIAAN
+
+Route::get('/laporan-persediaan/view', 'LaporanPersediaanController@view')->middleware('auth');
+Route::get('/laporan-persediaan/pencarian', 'LaporanPersediaanController@pencarian')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
