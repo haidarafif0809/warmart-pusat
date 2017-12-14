@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Kas;
 use App\KasKeluar;
+use App\KategoriTransaksi;
 use App\TransaksiKas;
 use Auth;
 use Illuminate\Http\Request;
@@ -116,6 +118,18 @@ class KasKeluarController extends Controller
         return response()->json($respons);
     }
 
+    public function pilih_kas()
+    {
+        $kas = Kas::select('id', 'nama_kas')->where('kas.warung_id', Auth::user()->id_warung)->get();
+        return response()->json($kas);
+    }
+
+    public function pilih_kategori()
+    {
+        $kategori_transaksi = KategoriTransaksi::select('id', 'nama_kategori_transaksi')->where('kategori_transaksis.id_warung', Auth::user()->id_warung)->get();
+        return response()->json($kategori_transaksi);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -159,40 +173,20 @@ class KasKeluarController extends Controller
             $sisa_kas  = $total_kas - $request->jumlah;
 
             if ($sisa_kas < 0) {
-
-                $pesan_alert =
-                    '<div class="container-fluid">
-                <div class="alert-icon">
-                    <i class="material-icons">warning</i>
-                </div>
-                <b>Gagal : Kas Tidak Mencukupi. Total Kas = "' . $total_kas . '"</b>
-            </div>';
-
-                Session::flash("flash_notification", [
-                    "level"   => "warning",
-                    "message" => $pesan_alert,
-                ]);
-
-                return redirect()->back();
+                return $sisa_kas;
             } else {
 
                 $no_faktur = KasKeluar::no_faktur();
-                $kas       = KasKeluar::create(['no_faktur' => $no_faktur, 'kas' => $request->kas, 'kategori' => $request->kategori, 'jumlah' => $request->jumlah, 'keterangan' => $request->keterangan, 'warung_id' => Auth::user()->id_warung]);
-
-                $pesan_alert =
-                '<div class="container-fluid">
-            <div class="alert-icon">
-                <i class="material-icons">check</i>
-            </div>
-            <b>Sukses : Berhasil Menambah Transaksi Kas Keluar Sebesar "' . $request->jumlah . '"</b>
-        </div>';
-
-                Session::flash("flash_notification", [
-                    "level"   => "success",
-                    "message" => $pesan_alert,
+                $kas       = KasKeluar::create([
+                    'no_faktur'  => $no_faktur,
+                    'kas'        => $request->kas,
+                    'kategori'   => $request->kategori,
+                    'jumlah'     => $request->jumlah,
+                    'keterangan' => $request->keterangan,
+                    'warung_id'  => Auth::user()->id_warung,
                 ]);
 
-                return redirect()->route('kas-keluar.index');
+                return $sisa_kas;
             }
 
         } else {
