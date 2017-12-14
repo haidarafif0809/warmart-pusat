@@ -122,7 +122,7 @@ class PembelianController extends Controller
 
         $kas_default = Kas::where('warung_id', Auth::user()->id_warung)->where('default_kas', 1)->count();
 
-        $tbs_pembelian = TbsPembelian::select('tbs_pembelians.id_tbs_pembelian AS id_tbs_pembelian', 'tbs_pembelians.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'tbs_pembelians.id_produk AS id_produk', 'tbs_pembelians.harga_produk AS harga_produk', 'tbs_pembelians.potongan AS potongan', 'tbs_pembelians.tax AS tax')->leftJoin('barangs', 'barangs.id', '=', 'tbs_pembelians.id_produk')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->orderBy('id_tbs_pembelian', 'desc')->paginate(10);
+        $tbs_pembelian = TbsPembelian::select('tbs_pembelians.id_tbs_pembelian AS id_tbs_pembelian', 'tbs_pembelians.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'tbs_pembelians.id_produk AS id_produk', 'tbs_pembelians.harga_produk AS harga_produk', 'tbs_pembelians.potongan AS potongan', 'tbs_pembelians.tax AS tax', 'tbs_pembelians.subtotal AS subtotal')->leftJoin('barangs', 'barangs.id', '=', 'tbs_pembelians.id_produk')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->orderBy('id_tbs_pembelian', 'desc')->paginate(10);
         $array         = array();
 
         foreach ($tbs_pembelian as $tbs_pembelians) {
@@ -182,7 +182,7 @@ class PembelianController extends Controller
 
         $kas_default = Kas::where('warung_id', Auth::user()->id_warung)->where('default_kas', 1)->count();
 
-        $tbs_pembelian = TbsPembelian::select('tbs_pembelians.id_tbs_pembelian AS id_tbs_pembelian', 'tbs_pembelians.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'tbs_pembelians.id_produk AS id_produk', 'tbs_pembelians.harga_produk AS harga_produk', 'tbs_pembelians.potongan AS potongan', 'tbs_pembelians.tax AS tax')->leftJoin('barangs', 'barangs.id', '=', 'tbs_pembelians.id_produk')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)
+        $tbs_pembelian = TbsPembelian::select('tbs_pembelians.id_tbs_pembelian AS id_tbs_pembelian', 'tbs_pembelians.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'tbs_pembelians.id_produk AS id_produk', 'tbs_pembelians.harga_produk AS harga_produk', 'tbs_pembelians.potongan AS potongan', 'tbs_pembelians.tax AS tax', 'tbs_pembelians.subtotal AS subtotal')->leftJoin('barangs', 'barangs.id', '=', 'tbs_pembelians.id_produk')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)
             ->where(function ($query) use ($request) {
 
                 $query->orWhere('barangs.nama_barang', 'LIKE', $request->search . '%')
@@ -366,6 +366,15 @@ class PembelianController extends Controller
         }
     }
 
+    public function cekTbsPembelian(Request $request)
+    {
+        $session_id = session()->getId(); // SESSION ID
+        // CEK TBS PEMBELIAN
+        $data_tbs = TbsPembelian::where('id_produk', $request->id)
+            ->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
+        return $data_tbs->count();
+    }
+
     //PROSES TAMBAH TBS PEMBELIAN
     public function proses_tambah_tbs_pembelian(Request $request)
     {
@@ -374,66 +383,21 @@ class PembelianController extends Controller
             Auth::logout();
             return response()->view('error.403');
         } else {
-            //VALIDATE
-            $this->validate($request, [
-                'id_produk_tbs' => 'required|numeric',
-                'jumlah_produk' => 'required|numeric|digits_between:1,15',
+
+            $session_id = session()->getId();
+            $barang     = Barang::select('nama_barang', 'satuan_id')->where('id', $request->id_produk_tbs)->where('id_warung', Auth::user()->id_warung)->first();
+            // SUBTOTAL = JUMLAH * HARGA
+            $subtotal = $request->jumlah_produk * $request->harga_produk;
+            // INSERT TBS PEMBELIAN
+            $Insert_tbspembelian = TbsPembelian::create([
+                'id_produk'     => $request->id_produk_tbs,
+                'session_id'    => $session_id,
+                'jumlah_produk' => $request->jumlah_produk,
+                'harga_produk'  => $request->harga_produk,
+                'subtotal'      => $subtotal,
+                'satuan_id'     => $barang->satuan_id,
+                'warung_id'     => Auth::user()->id_warung,
             ]);
-
-            $session_id = session()->getId(); // SESSION ID
-            // CEK TBS PEMBELIAN
-            $data_tbs = TbsPembelian::where('id_produk', $request->id_produk_tbs)
-                ->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
-
-            // SELECT PRODUK
-            $barang = Barang::select('nama_barang', 'satuan_id')->where('id', $request->id_produk_tbs)->where('id_warung', Auth::user()->id_warung)->first();
-//JIKA PRODUK YG DIPILIH SUDAH ADA DI TBS
-            if ($data_tbs->count() > 0) {
-
-                $pesan_alert =
-                '<div class="container-fluid">
-        <div class="alert-icon">
-        <i class="material-icons">warning</i>
-        </div>
-        <b>Warning : Produk "' . $barang->nama_barang . '" Sudah Ada, Silakan Pilih Produk Lain !</b>
-        </div>';
-
-                Session::flash("flash_notification", [
-                    "level"   => "warning",
-                    "message" => $pesan_alert,
-                ]);
-
-                return redirect()->route('pembelian.create');
-            } else {
-
-                $pesan_alert =
-                '<div class="container-fluid">
-       <div class="alert-icon">
-       <i class="material-icons">check</i>
-       </div>
-       <b>Berhasil Menambah Produk "' . $barang->nama_barang . '"</b>
-       </div>';
-
-                // SUBTOTAL = JUMLAH * HARGA
-                $subtotal = $request->jumlah_produk * $request->harga_produk;
-
-                // INSERT TBS PEMBELIAN
-                $Insert_tbspembelian = TbsPembelian::create([
-                    'id_produk'     => $request->id_produk_tbs,
-                    'session_id'    => $session_id,
-                    'jumlah_produk' => $request->jumlah_produk,
-                    'harga_produk'  => $request->harga_produk,
-                    'subtotal'      => $subtotal,
-                    'satuan_id'     => $barang->satuan_id,
-                    'warung_id'     => Auth::user()->id_warung,
-                ]);
-
-                Session::flash("flash_notification", [
-                    "level"   => "success",
-                    "message" => $pesan_alert,
-                ]);
-                return redirect()->route('pembelian.create');
-            }
         }
     }
 
