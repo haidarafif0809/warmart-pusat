@@ -22,10 +22,10 @@
 
 							<!--COL MD 8--> 
 							<div class="col-md-8"> 
-								<form class="form-horizontal"> 
+								<form class="form-horizontal" id="form-produk"> 
 									<div class="form-group">
 										<div class="col-md-4"><br> 
-											<selectize-component v-model="inputTbsPembelian.produk" :settings="placeholder_produk" id="produk" ref='produk'> 
+											<selectize-component v-model="inputTbsPembelian.produk" :settings="placeholder_produk" id="produk" ref='produk' name="jumlah_produk"> 
 											<option v-for="produks, index in produk" v-bind:value="produks.produk">{{ produks.nama_produk }}</option>
 											</selectize-component>
 											
@@ -33,7 +33,7 @@
 
 								<input class="form-control" type="hidden"  v-model="inputTbsPembelian.jumlah_produk"  name="jumlah_produk" id="jumlah_produk">
 								<input class="form-control" type="hidden"  v-model="inputTbsPembelian.harga_produk"  name="harga_produk" id="harga_produk">
-								<input class="form-control" type="hidden"  v-model="inputTbsPembelian.id_tbs"  name="id_tbs" id="id_tbs">
+								<input class="form-control" type="hidden"  v-model="inputTbsPembelian.id_produk_tbs"  name="id_produk_tbs" id="id_produk_tbs">
 
 									</div>
 								</div><!--/COL MD 8--> 
@@ -296,36 +296,108 @@ export default {
     			this.$swal({
     				text: "Silakan Pilih Produk Telebih dahulu!",
     			});
-    		}else{
+    		}
+    		else if(this.inputTbsPembelian.jumlah_produk == ''){
 
     			var app = this;
     			var produk = app.inputTbsPembelian.produk.split("|");
+    			var id_produk = produk[0]; 
     			var nama_produk = produk[1];
-    			this.isiJumlahProduk(nama_produk);
+				var harga_produk = produk[2]; 
+				var jumlah = $("#jumlah_produk").val(); 
+
+    			this.isiJumlahProduk(id_produk,nama_produk,harga_produk);
+    		}
+    		else if (this.inputTbsPembelian.jumlah_produk == '' && this.inputTbsPembelian.produk == ''){
+
     		}
     	},
-    	isiJumlahProduk(nama_produk){
-    		var app = this;
-    		app.$swal({
-    			title: nama_produk,
-    			content: {
-    				element: "input",
-    				attributes: {
-    					placeholder: "Jumlah Produk",
-    					type: "number",
-    				},
-    			},
-    			buttons: {
-    				cancel: true,
-    				confirm: "Submit"    				
-    			}
+    	isiJumlahProduk(id_produk,nama_produk,harga_produk){
+    		var app = this;		
+				swal({
+				  title: titleCase(nama_produk),
+				  html:
+				    '<div class="col-sm-6  col-xs-6"><lable>Jumlah</lable><br><input type="number" id="swal-input1" class="swal2-input" autofocus></div>' +
+				    '<div class="col-sm-6  col-xs-6"><lable>Harga</lable><br><input type="number" id="swal-input2" class="swal2-input" value="'+harga_produk+'"></div>',
+				  	allowEnterKey : false,
+					showCloseButton: true, 
+					showCancelButton: true,                        
+					focusConfirm: false, 
+					confirmButtonText:'<i class="fa fa-thumbs-o-up"></i> Submit', 
+					confirmButtonAriaLabel: 'Thumbs up, great!', 
+					cancelButtonText:'<i class="fa fa-thumbs-o-down"> Batal', 
+					closeOnConfirm: false, 
+					cancelButtonAriaLabel: 'Thumbs down', 
+					preConfirm: function () { 
+						return new Promise(function (resolve) { 
+							resolve([ 
+								$('#swal-input1').val(), 
+								$('#swal-input2').val() 
+								]) 
+						}) 
+					}
+				}).then(function (result) { 
 
+					if (result[0] == '' || result[0] == 0) { 
 
-    		}).then((value) => {
-    			if (!value) throw null;
-    			this.submitProdukPembelian(value);
-    		});
-    	},
+						swal('Oops...', 'Jumlah Produk Tidak Boleh 0 atau Kosong !', 'error'); 
+						return false; 
+					}else if (result[1] == '' || result[1] == 0) { 
+
+						swal('Oops...', 'Harga Produk Tidak Boleh 0 atau Kosong !', 'error'); 
+						return false; 
+					}
+					else if (result[1] != harga_produk) { 
+								swal({ 
+									text: "Anda Yakin Ingin Merubah Harga Beli Produk <b>"+titleCase(nama_produk)+ "</b>?", 
+									type: 'warning', 
+									showCancelButton: true, 
+									cancelButtonText: 'Batal',
+									confirmButtonText:
+									'<i class="fa fa-thumbs-up"></i> Ya',
+									confirmButtonAriaLabel: 'Thumbs up, great!',
+									cancelButtonText:
+									'<i class="fa fa-thumbs-down"></i>',
+									cancelButtonAriaLabel: 'Thumbs down'
+								}).then(function () { 
+									$("#id_produk_tbs").val(id_produk); 
+									$("#jumlah_produk").val(result[0]); 
+									$("#harga_produk").val(result[1]);
+									
+
+								}) 
+							}else{ 
+								$("#id_produk_tbs").val(id_produk); 
+								$("#jumlah_produk").val(result[0]); 
+								$("#harga_produk").val(harga_produk); 
+
+							axios.get(app.url+'/cek-tbs-pembelian?id='+id_produk)
+							.then(function (resp) {
+								    	if (resp.data > 0) {
+								        		swal({
+								                title: "Peringatan",
+								                text:"Produk "+titleCase(nama_produk)+" Sudah Ada, Silakan Pilih Produk Lain !",
+								               });
+								        }
+								        else{
+
+    											app.loading = true;
+						                        axios.get(app.url+'/proses-tambah-tbs-pembelian?id_produk_tbs='+id_produk+'&jumlah_produk='+result[0]+'&harga_produk='+harga_produk)
+						                        .then(function (resp) {
+						                        app.alert("Menambahkan Produk "+titleCase(nama_produk));
+						                        app.loading = false;
+						                        app.getResults();
+						                        app.$router.replace('/create-pembelian/');
+						                        })
+						                        .catch(function (resp) {
+						                        app.loading = false;
+						                        alert("Tbs Pembelian tidak bisa ditambahkan");
+						                        });
+								        }
+							    });
+							} 
+						});
+		},
     	submitProdukPembelian(value){
 
     	},
