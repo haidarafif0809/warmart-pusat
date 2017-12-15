@@ -439,10 +439,12 @@ Route::get('/item-masuk/pencarian-edit-tbs-item-masuk/{id}', 'ItemMasukControlle
 Route::get('/item-masuk/ambil-faktur-item-masuk/{id}', 'ItemMasukController@ambilFakturItemMasuk')->middleware('auth');
 Route::get('/item-masuk/detail-item-masuk/{id}', 'ItemMasukController@detailItemMasuk')->middleware('auth');
 Route::get('/item-masuk/pencarian-detail-item-masuk/{id}', 'ItemMasukController@pencarianDetailItemMasuk')->middleware('auth');
-//KAS KELUAR VUE.JS
+
 //KAS KELUAR VUE.JS
 Route::get('/kas-keluar/view', 'KasKeluarController@view')->middleware('auth');
 Route::get('/kas-keluar/pencarian', 'KasKeluarController@pencarian')->middleware('auth');
+Route::get('/kas-keluar/pilih-kas', 'KasKeluarController@pilih_kas')->middleware('auth');
+Route::get('/kas-keluar/pilih-kategori', 'KasKeluarController@pilih_kategori')->middleware('auth');
 
 //KAS MASUK VUE JS
 Route::get('/kas-masuk/view', 'KasMasukController@view')->middleware('auth');
@@ -461,13 +463,6 @@ Route::get('/konfirmasi-pesanan-warung/{id}', 'PesananWarungController@konfirmas
 Route::get('/batalkan-konfirmasi-pesanan-warung/{id}', 'PesananWarungController@batalkanKonfirmasiPesananWarung')->middleware('auth');
 Route::get('/batalkan-pesanan-warung/{id}', 'PesananWarungController@batalkanPesananWarung')->middleware('auth');
 Route::post('/selesai-konfirmasi-pesanan-warung', 'PesananWarungController@selesaiKonfirmasiPesananWarung')->middleware('auth');
-
-//PUNYA SELESAI KONFIRMASI PESANAN WARUNG
-Route::post('/selesai-konfirmasi-pesanan-warung}', [
-    'middleware' => ['auth'],
-    'as'         => 'pesanan-warung.selesai_konfirmasi',
-    'uses'       => 'PesananWarungController@selesaiKonfirmasiPesananWarung',
-]);
 
 //PEMBELIAN  VUE JS
 Route::get('/pembelian/view', 'PembelianController@view')->middleware('auth');
@@ -491,7 +486,6 @@ Route::get('/item-keluar/view-edit-tbs-item-keluar/{id}', 'ItemKeluarController@
 Route::get('/item-keluar/pencarian-edit-tbs-item-keluar/{id}', 'ItemKeluarController@pencarianEditTbsItemKeluar')->middleware('auth');
 
 // LAPORAN PERSEDIAAN
-
 Route::get('/laporan-persediaan/view', 'LaporanPersediaanController@view')->middleware('auth');
 Route::get('/laporan-persediaan/pencarian', 'LaporanPersediaanController@pencarian')->middleware('auth');
 
@@ -508,7 +502,7 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
     Route::resource('produk', 'BarangController');
     Route::resource('kategori-transaksi', 'KategoriTransaksiController');
     Route::resource('kas_masuk', 'KasMasukController');
-    Route::resource('kas_keluar', 'KasKeluarController');
+    Route::resource('kas-keluar', 'KasKeluarController');
     Route::resource('kas_mutasi', 'KasMutasiController');
     Route::resource('error', 'ErrorController');
     Route::resource('item-masuk', 'ItemMasukController');
