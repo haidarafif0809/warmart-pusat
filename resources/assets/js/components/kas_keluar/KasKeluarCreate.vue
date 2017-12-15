@@ -38,7 +38,7 @@
 		                    <div class="form-group">
 		                        <label for="jumlah" class="col-md-2 control-label">Jumlah </label>
 		                        <div class="col-md-4">
-		                            <input class="form-control" required autocomplete="off" placeholder="Jumlah" type="text" v-model="kasKeluar.jumlah" id="jumlah" name="jumlah"  autofocus="">
+		                            <input class="form-control" ref="jumlah" required autocomplete="off" placeholder="Jumlah" type="text" v-model="kasKeluar.jumlah" id="jumlah" name="jumlah"  autofocus="">
 		                            <span v-if="errors.jumlah" id="jumlah_error" class="label label-danger">{{ errors.jumlah[0] }}</span>
 		                        </div>
 		                    </div>
@@ -102,13 +102,14 @@ export default {
             axios.post(app.url, newKasKeluar)
             .then(function (resp) {
             	if (resp.data < 0) {
-            		app.message = 'Kas Tidak Mencukupi. Total Kas = '+new Intl.NumberFormat().format(resp.data);
+            		app.message = 'Kas Tidak Mencukupi. Sisa Kas = '+new Intl.NumberFormat().format(resp.data);
 	                app.alertGagal(app.message);
 					app.$router.replace('/create-kas-keluar');
+					app.$refs.jumlah.$el.focus()
             	}
             	else{
 
-	                app.message = 'Berhasil Menambah Kas Keluar '+ app.kasKeluar.kas;
+	                app.message = 'Berhasil Menambah Kas Keluar';
 	                app.alert(app.message);
 	                app.kasKeluar.kas = ''
 	                app.kasKeluar.kategori = ''

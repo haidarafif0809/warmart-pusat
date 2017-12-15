@@ -9,7 +9,6 @@ use App\TransaksiKas;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Session;
 use Yajra\Datatables\Html\Builder;
 
 class KasKeluarController extends Controller
@@ -202,7 +201,10 @@ class KasKeluarController extends Controller
      */
     public function show($id)
     {
-        //
+        $id_warung  = Auth::user()->id_warung;
+        $kas_keluar = KasKeluar::find($id);
+
+        return $kas_keluar;
     }
 
     /**
@@ -247,38 +249,32 @@ class KasKeluarController extends Controller
             'kategori'   => 'required',
             'jumlah'     => 'required|numeric',
             'keterangan' => 'max:150',
-
         ]);
 
         $id_warung  = Auth::user()->id_warung;
         $kas_keluar = KasKeluar::find($id);
 
         if ($id_warung == $kas_keluar->warung_id) {
+            $total_kas = TransaksiKas::total_kas($request);
 
-            $kas_keluar->kas        = $request->kas;
-            $kas_keluar->kategori   = $request->kategori;
-            $kas_keluar->jumlah     = $request->jumlah;
-            $kas_keluar->keterangan = $request->keterangan;
-
-            if (!$kas_keluar->save()) {
-                return redirect()->back();
+            //JIKA KAS YG DIPILIH == KAS LAMA, MAKA (TOTAL KAS + JUMLAH KAS LAMA) - JUMLAH KAS BARU
+            if ($kas_keluar->kas == $request->kas) {
+                $data_kas = $total_kas + $kas_keluar->jumlah;
+                $sisa_kas = $data_kas - $request->jumlah;
             } else {
+                $sisa_kas = $total_kas - $request->jumlah;
+            }
 
-                $pesan_alert =
-                '<div class="container-fluid">
-                <div class="alert-icon">
-                    <i class="material-icons">check</i>
-                </div>
-                <b>Sukses : Berhasil Mengubah Transaksi Kas Keluar "' . $kas_keluar->no_faktur . '"</b>
-            </div>';
-
-                Session::flash("flash_notification", [
-                    "level"   => "success",
-                    "message" => $pesan_alert,
-                ]);
-
-                return redirect()->route('kas-keluar.index');
-
+            //JIKA KAS TIDAK CUKUP UNTUK DIKELUARKAN
+            if ($sisa_kas < 0) {
+                return $sisa_kas;
+            } else {
+                $kas_keluar->kas        = $request->kas;
+                $kas_keluar->kategori   = $request->kategori;
+                $kas_keluar->jumlah     = $request->jumlah;
+                $kas_keluar->keterangan = $request->keterangan;
+                $kas_keluar->save();
+                return $sisa_kas;
             }
         } else {
             return response()->view('error.403');
