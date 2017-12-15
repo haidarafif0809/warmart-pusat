@@ -473,6 +473,7 @@ Route::get('/pembelian/pilih-suplier', 'PembelianController@pilih_suplier')->mid
 Route::get('/pembelian/cek-tbs-pembelian', 'PembelianController@cekTbsPembelian')->middleware('auth');
 Route::get('/pembelian/proses-tambah-tbs-pembelian', 'PembelianController@proses_tambah_tbs_pembelian')->middleware('auth');
 Route::get('/pembelian/proses-edit-jumlah-tbs-pembelian', 'PembelianController@edit_jumlah_tbs_pembelian')->middleware('auth');
+Route::get('/pembelian/proses-edit-harga-tbs-pembelian', 'PembelianController@edit_harga_tbs_pembelian')->middleware('auth');
 
 // ITEM MASUK
 Route::get('/item-keluar/view', 'ItemKeluarController@view')->middleware('auth');

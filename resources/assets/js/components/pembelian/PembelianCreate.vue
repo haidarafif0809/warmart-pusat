@@ -65,11 +65,11 @@
 
 									<td>{{ tbs_pembelian.kode_produk }} - {{ tbs_pembelian.nama_produk }}</td>
 									<td>
-										<a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-on:click="editEntryJumlah(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk)"><p align='right'>{{ tbs_pembelian.jumlah_produk }}</p>
+										<a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-on:click="editEntryJumlah(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk)"><p align='right'>{{ tbs_pembelian.jumlah_produk_pemisah }}</p>
 										</a>
 									</td>
 									<td>
-										<a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" ><p align='right'>{{ tbs_pembelian.harga_pemisah }}</p>
+										<a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-on:click="editEntryHarga(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk)" ><p align='right'>{{ tbs_pembelian.harga_pemisah }}</p>
 										</a>
 									</td>
 									<td>
@@ -486,7 +486,58 @@ export default {
 			} 
 		}); 
     		
+    },//END editEntryJumlah
+    editEntryHarga(id, index,nama_produk) {    
+    		var app = this;		
+    		swal({ 
+			title: titleCase(nama_produk), 
+			input: 'number', 
+			inputPlaceholder : 'Harga Produk',         
+			html:'Berapa Harga Produk Yang Akan Dimasukkan ?', 
+			animation: false, 
+			showCloseButton: true, 
+			showCancelButton: true, 
+			focusConfirm: true, 
+			confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> Submit', 
+			confirmButtonAriaLabel: 'Thumbs up, great!', 
+			cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal', 
+			closeOnConfirm: true, 
+			cancelButtonAriaLabel: 'Thumbs down', 
+			inputAttributes: { 
+				'name': 'edit_harga_produk', 
+			}, 
+			inputValidator : function (value) { 
+				return new Promise(function (resolve, reject) { 
+					if (value) { 
+						resolve(); 
+					}  
+					else { 
+						reject('Harga Harus Di Isi!'); 
+					} 
+				}) 
+			} 
+		}).then(function (jumlah_produk) { 
+			if (jumlah_produk != "0") { 
+						app.loading = true;
+						axios.get(app.url+'/proses-edit-harga-tbs-pembelian?harga_edit_produk='+jumlah_produk+'&id_harga='+id)
+						.then(function (resp) {
+						app.alert("Mengubah Harga Produk "+titleCase(nama_produk));
+						app.loading = false;
+						app.getResults();
+						app.$router.replace('/create-pembelian/');
+						})
+						.catch(function (resp) {
+						app.loading = false;
+						alert("Harga Produk tidak bisa diedit");
+						});
+			} 
+			else { 
+				swal('Oops...', 'Harga Tidak Boleh 0 !', 'error'); 
+				return false; 
+			} 
+		}); 
+    		
     }//END editEntryJumlah
-    }
+ }
 }
 </script>

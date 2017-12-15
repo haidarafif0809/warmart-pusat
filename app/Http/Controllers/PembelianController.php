@@ -478,24 +478,9 @@ class PembelianController extends Controller
                 $subtotal = ($request->harga_edit_produk * $tbs_pembelian->jumlah_produk) - $potongan_produk;
             }
 
-// UPDATE HARGA, SUBTOTAL, POTONGAN, TAX
+            // UPDATE HARGA, SUBTOTAL, POTONGAN, TAX
             $tbs_pembelian->update(['harga_produk' => $request->harga_edit_produk, 'subtotal' => $subtotal, 'potongan' => $potongan_produk, 'tax' => $tax_produk]);
             $nama_barang = $tbs_pembelian->TitleCaseBarang; // TITLE CASH
-
-            $pesan_alert =
-                '<div class="container-fluid">
-<div class="alert-icon">
-<i class="material-icons">check</i>
-</div>
-<b>Berhasil Mengubah Harga Produk "' . $nama_barang . '"</b>
-</div>';
-
-            Session::flash("flash_notification", [
-                "level"   => "success",
-                "message" => $pesan_alert,
-            ]);
-
-            return redirect()->back();
         }
     }
 
