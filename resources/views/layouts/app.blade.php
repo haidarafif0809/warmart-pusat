@@ -33,9 +33,9 @@
 </meta>
 </head>
 <style type="text/css">
-.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
- padding: 1px;
-}
+    .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+       padding: 1px;
+   }
 </style>
 <body>
     <div class="wrapper" id="vue-app">
@@ -136,6 +136,9 @@
             </a>
             @endif
         </li>
+
+        @if(Auth::user()->tipe_user == 4 AND Auth::user()->konfirmasi_admin == 1 AND Auth::user()->foto_ktp != "")
+        <!--PRODUK -->
         <li>
             <router-link :to="{name: 'indexProduk'}" class="menu-nav">
                 <i class="material-icons">
@@ -144,6 +147,8 @@
                 Produk
             </router-link>
         </li>
+
+        <!--PESANAN -->
         <li>
             <a href="{{ route('pesanan-warung.index') }}">
                 <i class="material-icons">
@@ -154,8 +159,8 @@
                 </p>
             </a>
         </li>
+
         <!--PEMBELIAN-->
-        @if(Auth::user()->tipe_user == 4 AND Auth::user()->konfirmasi_admin == 1 AND Auth::user()->foto_ktp != "")
         <li class="vueJs">
             <a href="#">
                 <i class="material-icons">
@@ -182,7 +187,7 @@
             <div class="collapse" id="persediaan">
                 <ul class="nav">
                     <li>
-                     <router-link :to="{name: 'indexItemMasuk'}" class="menu-nav">
+                       <router-link :to="{name: 'indexItemMasuk'}" class="menu-nav">
                         <span class="sidebar-mini">
                             IM
                         </span>
@@ -591,8 +596,8 @@
 </script>
 <script type="text/javascript">
     $(document).on('click', '.menu-nav', function(){
-     $('.navbar-toggle ').click();
- });
+       $('.navbar-toggle ').click();
+   });
 </script>
 @yield('scripts')
 </html>
