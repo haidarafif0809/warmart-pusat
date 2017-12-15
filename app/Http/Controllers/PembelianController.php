@@ -484,6 +484,27 @@ class PembelianController extends Controller
         }
     }
 
+    //PROSES CEK PERSEN MELEBIHI BATAS
+    public function cek_persen_potongan_pembelian(Request $request)
+    {
+        // SELECT EDIT TBS PEMBELIAN
+        $tbs_pembelian = TbsPembelian::find($request->id_potongan);
+        $potongan      = substr_count($request->potongan_edit_produk, '%'); // UNTUK CEK APAKAH ADA STRING "%"
+        // JIKA TIDAK ADA
+        if ($potongan == 0) {
+            $potongan_persen = 0;
+        } else {
+            $potongan_persen = filter_var($request->potongan_edit_produk, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION); //  PISAH STRING BERDASRAKAN TANDA "%"
+        }
+
+        if ($potongan_persen > 100) {
+            return $persen_alert = 1;
+        } else {
+            return $persen_alert = 0;
+        }
+
+    }
+
 //PROSES EDIT HARGA TBS PEMBELIAN
     public function edit_potongan_tbs_pembelian(Request $request)
     {
