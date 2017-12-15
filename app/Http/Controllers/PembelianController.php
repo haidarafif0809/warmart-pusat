@@ -434,20 +434,6 @@ class PembelianController extends Controller
             $tbs_pembelian->update(['jumlah_produk' => $request->jumlah_edit_produk, 'subtotal' => $subtotal, 'tax' => $tax_produk]);
             $nama_barang = $tbs_pembelian->TitleCaseBarang; // TITLE CASH
 
-            $pesan_alert =
-                '<div class="container-fluid">
-  <div class="alert-icon">
-  <i class="material-icons">check</i>
-  </div>
-  <b>Berhasil Mengubah Jumlah Produk "' . $nama_barang . '"</b>
-  </div>';
-
-            Session::flash("flash_notification", [
-                "level"   => "success",
-                "message" => $pesan_alert,
-            ]);
-
-            return redirect()->back();
         }
     }
 
@@ -492,24 +478,9 @@ class PembelianController extends Controller
                 $subtotal = ($request->harga_edit_produk * $tbs_pembelian->jumlah_produk) - $potongan_produk;
             }
 
-// UPDATE HARGA, SUBTOTAL, POTONGAN, TAX
+            // UPDATE HARGA, SUBTOTAL, POTONGAN, TAX
             $tbs_pembelian->update(['harga_produk' => $request->harga_edit_produk, 'subtotal' => $subtotal, 'potongan' => $potongan_produk, 'tax' => $tax_produk]);
             $nama_barang = $tbs_pembelian->TitleCaseBarang; // TITLE CASH
-
-            $pesan_alert =
-                '<div class="container-fluid">
-<div class="alert-icon">
-<i class="material-icons">check</i>
-</div>
-<b>Berhasil Mengubah Harga Produk "' . $nama_barang . '"</b>
-</div>';
-
-            Session::flash("flash_notification", [
-                "level"   => "success",
-                "message" => $pesan_alert,
-            ]);
-
-            return redirect()->back();
         }
     }
 
@@ -674,32 +645,14 @@ class PembelianController extends Controller
         }
     }
 
-//PROSES HAPUS TBS PEMBELIAN
+    //PROSES HAPUS TBS PEMBELIAN
     public function hapus_tbs_pembelian($id)
     {
-
         if (Auth::user()->id_warung == '') {
             Auth::logout();
             return response()->view('error.403');
         } else {
-
-            if (!TbsPembelian::destroy($id)) {
-                return redirect()->route('pembelian.create');
-            } else {
-                $pesan_alert =
-                    '<div class="container-fluid">
-            <div class="alert-icon">
-            <i class="material-icons">check</i>
-            </div>
-            <b>Berhasil Menghapus Produk</b>
-            </div>';
-
-                Session::flash("flash_notification", [
-                    "level"   => "danger",
-                    "message" => $pesan_alert,
-                ]);
-                return redirect()->route('pembelian.create');
-            }
+            TbsPembelian::destroy($id);
         }
     }
 

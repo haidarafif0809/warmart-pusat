@@ -472,6 +472,8 @@ Route::get('/pembelian/pencarian-tbs-pembelian', 'PembelianController@pencarianT
 Route::get('/pembelian/pilih-suplier', 'PembelianController@pilih_suplier')->middleware('auth');
 Route::get('/pembelian/cek-tbs-pembelian', 'PembelianController@cekTbsPembelian')->middleware('auth');
 Route::get('/pembelian/proses-tambah-tbs-pembelian', 'PembelianController@proses_tambah_tbs_pembelian')->middleware('auth');
+Route::get('/pembelian/proses-edit-jumlah-tbs-pembelian', 'PembelianController@edit_jumlah_tbs_pembelian')->middleware('auth');
+Route::get('/pembelian/proses-edit-harga-tbs-pembelian', 'PembelianController@edit_harga_tbs_pembelian')->middleware('auth');
 
 // ITEM MASUK
 Route::get('/item-keluar/view', 'ItemKeluarController@view')->middleware('auth');
@@ -537,6 +539,13 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
 
     // PEMBELIAN
 
+    // TAMBAH TBS PEMBELIAN
+    Route::post('/pembelian/proses-tambah-tbs-pembelian', [
+        'middleware' => ['auth'],
+        'as'         => 'pembelian.proses_tambah_tbs_pembelian',
+        'uses'       => 'PembelianController@proses_tambah_tbs_pembelian',
+    ]);
+
     // EDIT JUMLAH TBS PEMBELIAN
     Route::post('/pembelian/proses-edit-jumlah-tbs-pembelian', [
         'middleware' => ['auth'],
@@ -571,6 +580,7 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
         'as'         => 'pembelian.hapus_tbs_pembelian',
         'uses'       => 'PembelianController@hapus_tbs_pembelian',
     ]);
+
     Route::post('/pembelian/batal-transaksi-pembelian/', [
         'middleware' => ['auth'],
         'as'         => 'pembelian.batal_transaksi_pembelian',
