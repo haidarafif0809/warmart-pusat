@@ -16,7 +16,7 @@
       
       <div class="card">
         <div class="card-header card-header-icon" data-background-color="purple">
-          <i class="material-icons">money_off</i>
+          <i class="material-icons">compare_arrows</i>
         </div>
         <div class="card-content">
           <h4 class="card-title"> Kas Mutasi</h4>
@@ -52,7 +52,7 @@
                     <router-link :to="{name: 'editKasMutasi', params: {id: dataKas.kas_mutasi.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + dataKas.kas_mutasi.id" >
                       Edit
                     </router-link>
-                      <a href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + dataKas.kas_mutasi.id" v-on:click="deleteEntry(dataKas.kas_mutasi.id, index,dataKas.kas_mutasi.nama_dari_kas, dataKas.kas_mutasi.nama_ke_kas)">
+                      <a href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + dataKas.kas_mutasi.id" v-on:click="deleteEntry(dataKas.kas_mutasi.id, index,dataKas.kas_mutasi.no_faktur)">
                         Delete
                       </a>
                     </td>
@@ -138,10 +138,10 @@ export default {
           icon: "success",
         });
       },
-        deleteEntry(id, index,name) {
+        deleteEntry(id, index,faktur) {
             swal({
                 title: "Konfirmasi Hapus",
-                text : "Anda Yakin Ingin Menghapus "+name+" ?",
+                text : "Anda Yakin Ingin Menghapus Transaksi "+faktur+" ?",
                 icon : "warning",
                 buttons: true,
                 dangerMode: true,

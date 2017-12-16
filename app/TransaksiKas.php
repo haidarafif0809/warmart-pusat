@@ -18,4 +18,12 @@ class TransaksiKas extends Model
             ->where('warung_id', Auth::user()->id_warung)->first();
         return $sum_kas->total_kas;
     }
+
+//HITUNGA TOTAL KAS
+    public static function total_kas_mutasi($dari_kas)
+    {
+        $sum_kas = TransaksiKas::select(DB::raw('SUM(jumlah_masuk - jumlah_keluar) as total_kas'))->where('kas', $dari_kas)
+            ->where('warung_id', Auth::user()->id_warung)->first();
+        return $sum_kas->total_kas;
+    }
 }
