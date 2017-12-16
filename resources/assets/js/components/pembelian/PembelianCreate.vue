@@ -57,7 +57,6 @@
 									<th>Pajak</th>
 									<th>Subtotal</th>
 									<th>Hapus</th>
-
 								</tr>
 							</thead>
 							<tbody v-if="tbs_pembelians.length"  class="data-ada">
@@ -121,7 +120,7 @@
 									<h4>Cara Bayar</h4> 
 									<div v-if="tbs_pembelians.kas_default == 0">
 									<selectize-component v-model="inputTbsPembelian.cara_bayar" :settings="placeholder_cara_bayar" id="cara_bayar" name="cara_bayar" ref='cara_bayar'> 
-									<option v-for="cara_bayars, index in cara_bayar" v-bind:value="cara_bayars.id">{{ cara_bayars.nama_kas }}</option>
+									<option v-for="cara_bayars, index in cara_bayar" v-bind:value="cara_bayars.id" >{{ cara_bayars.nama_kas }}</option>
 									</selectize-component>
 									<span class="label label-danger"><a href="" target="blank" >Tambah Kas Disini</a></span> 
 									</div>
@@ -138,7 +137,7 @@
 						<!--- TOMBOL SELESAI --> 
 						<button type="button" class="btn btn-primary" id="btnSelesai" data-toggle="modal"><i class="material-icons">send</i> Selesai (F2)</button> 
 
-						<button type="submit" class="btn btn-danger" id="btnBatal"  ><i class="material-icons">cancel</i> Batal (F3)</button> 
+						<button type="submit" class="btn btn-danger" id="btnBatal" v-on:click="batalPembelian()" ><i class="material-icons">cancel</i> Batal (F3)</button> 
 					</div> 
 				</div>             
 			</div><!-- COL SM 4 --> 
@@ -166,7 +165,8 @@ export default {
 				jumlah_produk : '',
 				harga_produk : '',
 				id_tbs : '',
-				keterangan : ''
+				keterangan : '',
+				cara_bayar: 4,
 			}, 
 			placeholder_produk: {
 				placeholder: '--PILIH PRODUK--'
@@ -174,9 +174,7 @@ export default {
 			placeholder_suplier: {
 				placeholder: '--PILIH SUPLIER--'
 			},
-			placeholder_cara_bayar: {
-				placeholder: '--PILIH CARA BAYAR--'
-			},
+			placeholder_cara_bayar: {},
 			pencarian: '',
 			loading: true,
 			seen : false
@@ -726,7 +724,39 @@ export default {
 					app.loading = false;
 					alert("Pajak Produk tidak bisa diedit");
 				});
-    }
+    },
+    batalPembelian(){
+    		var app = this;
+    		app.$swal({
+    			text: "Anda Yakin Ingin Membatalkan Transaksi Pembelian Ini ?",
+    			buttons: true,
+    			dangerMode: true,
+    		})
+    		.then((willDelete) => {
+    			if (willDelete) {
+
+    				app.loading = true;
+    				axios.post(app.url+'/batal-transaksi-pembelian')
+    				.then(function (resp) {
+
+    					app.getResults();
+    					app.alert("Membatalkan Transaksi Pembelian");
+    					app.$router.replace('/create-pembelian');
+
+    				})
+    				.catch(function (resp) {
+
+    					app.loading = false;
+    					alert("Tidak dapat Membatalkan Transaksi Pembelian");
+    				});
+
+    			} else {
+
+    				app.$swal.close();
+
+    			}
+    		});
+    	}
  }
 }
 </script>

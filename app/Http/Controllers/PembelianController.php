@@ -121,6 +121,7 @@ class PembelianController extends Controller
         $subtotal     = number_format($sum_subtotal->subtotal, 2, ',', '.');
 
         $kas_default = Kas::where('warung_id', Auth::user()->id_warung)->where('default_kas', 1)->count();
+        $kas_pilih   = Kas::where('warung_id', Auth::user()->id_warung)->where('default_kas', 1)->first();
 
         $tbs_pembelian = TbsPembelian::select('tbs_pembelians.id_tbs_pembelian AS id_tbs_pembelian', 'tbs_pembelians.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'tbs_pembelians.id_produk AS id_produk', 'tbs_pembelians.harga_produk AS harga_produk', 'tbs_pembelians.potongan AS potongan', 'tbs_pembelians.tax AS tax', 'tbs_pembelians.subtotal AS subtotal')->leftJoin('barangs', 'barangs.id', '=', 'tbs_pembelians.id_produk')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->orderBy('id_tbs_pembelian', 'desc')->paginate(10);
         $array         = array();
@@ -161,6 +162,7 @@ class PembelianController extends Controller
                 'ppn_produk'             => $ppn_produk,
                 'tax_persen'             => $tax_persen,
                 'kas_default'            => $kas_default,
+                'kas_pilih'              => $kas_pilih,
                 'subtotal_tbs'           => $subtotal_tbs,
                 'subtotal_number_format' => $subtotal,
             ]);
@@ -181,6 +183,7 @@ class PembelianController extends Controller
         $subtotal     = number_format($sum_subtotal->subtotal, 2, ',', '.');
 
         $kas_default = Kas::where('warung_id', Auth::user()->id_warung)->where('default_kas', 1)->count();
+        $kas_pilih   = Kas::where('warung_id', Auth::user()->id_warung)->where('default_kas', 1)->first();
 
         $tbs_pembelian = TbsPembelian::select('tbs_pembelians.id_tbs_pembelian AS id_tbs_pembelian', 'tbs_pembelians.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'tbs_pembelians.id_produk AS id_produk', 'tbs_pembelians.harga_produk AS harga_produk', 'tbs_pembelians.potongan AS potongan', 'tbs_pembelians.tax AS tax', 'tbs_pembelians.subtotal AS subtotal')->leftJoin('barangs', 'barangs.id', '=', 'tbs_pembelians.id_produk')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)
             ->where(function ($query) use ($request) {
@@ -228,6 +231,7 @@ class PembelianController extends Controller
                 'ppn_produk'             => $ppn_produk,
                 'tax_persen'             => $tax_persen,
                 'kas_default'            => $kas_default,
+                'kas_pilih'              => $kas_pilih,
                 'subtotal_tbs'           => $subtotal_tbs,
                 'subtotal_number_format' => $subtotal,
             ]);
@@ -281,7 +285,7 @@ class PembelianController extends Controller
     }
     public function pilih_suplier()
     {
-        $suplier = Suplier::select('id', 'nama_suplier')->get();
+        $suplier = Suplier::select('id', 'nama_suplier')->where('warung_id', Auth::user()->id_warung)->get();
         return response()->json($suplier);
     }
 
