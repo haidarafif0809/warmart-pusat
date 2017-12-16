@@ -269,7 +269,7 @@ class ItemMasukController extends Controller
     //PROSES HAPUS EDIT TBS ITEM MASUK
     public function proses_hapus_edit_tbs_item_masuk($id)
     {
-        EditTbsItemMasuk::where('id_edit_tbs_item_masuk', $id)->delete();
+        EditTbsItemMasuk::where('id_edit_tbs_item_masuk', $id)->where('warung_id', Auth::user()->id_warung)->delete();
 
         return response(200);
     }
@@ -278,7 +278,7 @@ class ItemMasukController extends Controller
     public function proses_hapus_semua_tbs_item_masuk()
     {
         $session_id          = session()->getId();
-        $data_tbs_item_masuk = TbsItemMasuk::where('session_id', $session_id)->delete();
+        $data_tbs_item_masuk = TbsItemMasuk::where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->delete();
 
         return response(200);
     }
@@ -288,7 +288,7 @@ class ItemMasukController extends Controller
     {
 
         //PROSES MENGHAPUS SEMUA EDTI TBS SESUAI NO FAKTUR YANG DI AMBIL
-        $data_tbs_item_masuk = EditTbsItemMasuk::where('no_faktur', $request->no_faktur)->delete();
+        $data_tbs_item_masuk = EditTbsItemMasuk::where('no_faktur', $request->no_faktur)->where('warung_id', Auth::user()->id_warung)->delete();
 
         return response(200);
     }
@@ -430,9 +430,9 @@ class ItemMasukController extends Controller
         //
         $session_id             = session()->getId();
         $data_item_masuk        = ItemMasuk::find($id);
-        $data_produk_item_masuk = DetailItemMasuk::where('no_faktur', $data_item_masuk->no_faktur);
+        $data_produk_item_masuk = DetailItemMasuk::where('no_faktur', $data_item_masuk->no_faktur)->where('warung_id', Auth::user()->id_warung);
 
-        $hapus_semua_edit_tbs_item_masuk = EditTbsItemMasuk::where('no_faktur', $data_item_masuk->no_faktur)->delete();
+        $hapus_semua_edit_tbs_item_masuk = EditTbsItemMasuk::where('no_faktur', $data_item_masuk->no_faktur)->where('warung_id', Auth::user()->id_warung)->delete();
         foreach ($data_produk_item_masuk->get() as $data_tbs) {
             $detail_item_masuk = EditTbsItemMasuk::create([
                 'id_produk'     => $data_tbs->id_produk,
