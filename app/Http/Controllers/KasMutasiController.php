@@ -7,7 +7,6 @@ use App\KasMutasi;
 use App\TransaksiKas;
 use Auth;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Session;
 use Yajra\Datatables\Html\Builder;
 
@@ -239,7 +238,6 @@ class KasMutasiController extends Controller
      */
     public function destroy($id)
     {
-
         $kas_mutasi = KasMutasi::find($id);
 
         if ($kas_mutasi->id_warung != Auth::user()->id_warung) {
@@ -247,21 +245,14 @@ class KasMutasiController extends Controller
             return response()->view('error.403');
         } else {
             // hitung kas
-            $sisa_kas = TransaksiKas::select(DB::raw('SUM(jumlah_masuk - jumlah_keluar) as total_kas'))
-                ->where('kas', $kas_mutasi->ke_kas)
-                ->where('warung_id', Auth::user()->id_warung)
-                ->where('no_faktur', '!=', $kas_mutasi->no_faktur)
-                ->first();
+            $total_kas = TransaksiKas::total_kas_mutasi($kas_mutasi->ke_kas);
+            $sisa_kas  = $total_kas - $kas_mutasi->jumlah;
 
-            if ($sisa_kas->total_kas < 0) {
-
-                Session::flash("flash_notification", [
-                    "level"   => "danger",
-                    "message" => "Mohon Maaf, Kas Mutasi " . $kas_mutasi->no_faktur . " Tidak bisa Di Hapus, Jika Dihapus Kas akan Minus ",
-                ]);
-                return redirect()->route('kas_mutasi.index');
+            if ($sisa_kas < 0) {
+                return 0;
             } else {
                 KasMutasi::destroy($id);
+                return response(200);
             }
 
         }

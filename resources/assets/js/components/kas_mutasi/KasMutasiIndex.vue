@@ -138,41 +138,47 @@ export default {
           icon: "success",
         });
       },
-        deleteEntry(id, index,faktur) {
-            swal({
-                title: "Konfirmasi Hapus",
-                text : "Anda Yakin Ingin Menghapus Transaksi "+faktur+" ?",
-                icon : "warning",
-                buttons: true,
-                dangerMode: true,
-            })
-            .then((willDelete) => {
-                if (willDelete) {
-                  var app = this;
-                  axios.delete(app.url+'/' + id)
-                  .then(function (resp) {
-                    app.getResults();
-                    swal("Kas Mutasi Berhasil Dihapus!  ", {
-                      icon: "success",
-                    });
-                  })
-                  .catch(function (resp) {
-                    app.$router.replace('/kas-mutasi/');
-                    swal("Gagal Menghapus Kas Mutasi!", {
-                      icon: "warning",
-                    });
-                  });
-               }
-               this.$router.replace('/kas-mutasi/');
-            });
-        },
-         gagalHapus(id, index,nama_kategori_transaksi) {
-            this.$swal({
-                title: "Gagal ",
-                text: "Kas Mutasi '"+nama_kategori_transaksi+"' Sudah Terpakai",
-                icon: "warning",
-            });
-        }
+      deleteEntry(id, index,faktur) {
+        var app = this;
+        app.$swal({
+          text: "Anda Yakin Ingin Menghapus Transaksi "+faktur+ " ?",
+          buttons: true,
+          dangerMode: true,
+        })
+        .then((willDelete) => {
+          if (willDelete) {
+            this.hapusTransaksi(id,faktur);
+          } else {
+            app.$swal.close();
+            app.$router.replace('/kas-mutasi/');
+          }
+        });
+      },
+      hapusTransaksi(id,faktur){
+        var app = this;
+        app.loading = true;
+        axios.delete(app.url+'/' + id)
+        .then(function (resp) {
+          if (resp.data == 0) {
+            app.alertGagal("Mohon Maaf, Kas Mutasi " +faktur+ " Tidak bisa Di Hapus, Jika Dihapus Kas Akan Minus");
+            app.loading = false;
+          }else{
+            app.getResults();
+            app.alert("Menghapus Kas Mutasi "+faktur);
+            app.loading = false;  
+          }
+          app.$router.replace('/kas-mutasi/');
+        })
+        .catch(function (resp) {
+          alert("Tidak dapat Menghapus Item Masuk");
+        });
+      },
+      alertGagal(pesan) {
+        this.$swal({
+            text: pesan,
+            icon: "warning",
+        });
+      }
     }
 }
 </script>
