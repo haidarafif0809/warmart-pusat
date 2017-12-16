@@ -150,14 +150,14 @@
 
         <!--PESANAN -->
         <li>
-            <a href="{{ route('pesanan-warung.index') }}">
+            <router-link :to="{name: 'indexPesananWarung'}" class="menu-nav">
                 <i class="material-icons">
                     archive
                 </i>
                 <p>
                     Pesanan
                 </p>
-            </a>
+            </router-link>
         </li>
 
         <!--PEMBELIAN-->
@@ -262,25 +262,25 @@
                     </span>
                 </router-link>
             </li>
-            <li class="vueJs">
-                <a href="#">
+            <li>
+                <router-link :to="{name: 'indexKasMasuk'}" class="menu-nav">
                     <span class="sidebar-mini">
                         KM
                     </span>
                     <span class="sidebar-normal">
                         Kas Masuk
                     </span>
-                </a>
+                </router-link>
             </li>
-            <li class="vueJs">
-                <a href="#">
+            <li>
+                <router-link :to="{name: 'indexKasKeluar'}" class="menu-nav">
                     <span class="sidebar-mini">
                         KK
                     </span>
                     <span class="sidebar-normal">
                         Kas Keluar
                     </span>
-                </a>
+                </router-link>
             </li>
             <li class="vueJs">
                 <a href="#">
