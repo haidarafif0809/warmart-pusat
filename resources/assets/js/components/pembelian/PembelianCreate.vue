@@ -78,7 +78,7 @@
 										</a>
 									</td>
 									<td>
-										<a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian"><p align='right'>{{ Math.round(tbs_pembelian.tax,2) }} | {{ Math.round(tbs_pembelian.tax_persen, 2) }} %</p>
+										<a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-on:click="editEntryTax(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk,tbs_pembelian.jumlah_produk,tbs_pembelian.harga_produk,tbs_pembelian.potongan,tbs_pembelian.ppn_produk)" ><p align='right'>{{ Math.round(tbs_pembelian.tax,2) }} | {{ Math.round(tbs_pembelian.tax_persen, 2) }} %</p>
 										</a>
 									</td>
 									<td><p id="table-subtotal" align="right">{{ tbs_pembelian.subtotal_tbs }}</p></td>
@@ -611,16 +611,122 @@ export default {
     				app.loading = true;
 					axios.get(app.url+'/proses-edit-potongan-tbs-pembelian?potongan_edit_produk='+potongan+'&id_potongan='+id)
 					.then(function (resp) {
-					app.alert("Mengubah Harga Produk "+titleCase(nama_produk));
+					app.alert("Mengubah Potongan Produk "+titleCase(nama_produk));
 					app.loading = false;
 					app.getResults();
 					app.$router.replace('/create-pembelian/');
 					})
 					.catch(function (resp) {
 					app.loading = false;
-					alert("Harga Produk tidak bisa diedit");
+					alert("Potongan Produk tidak bisa diedit");
 				});
-    }//END PROSES UPDATE POTONGAN TBS 
+    },//END PROSES UPDATE POTONGAN TBS 
+    editEntryTax(id, index,nama_produk,jumlah,harga,potongan,ppn){
+    		var app = this;		
+    		var subtotal = (parseFloat(jumlah) * parseFloat(harga)) - parseFloat(potongan); 
+    	
+    		if (ppn == '') { 
+			var ppn_produk = '<select id="ppn_swal" name="ppn_swal" class="swal2-input js-selectize-reguler">'+ 
+			'<option value"Include>Include</option>'+ 
+			'<option value"Exclude>Exclude</option>'+ 
+			'</select></div>'; 
+			}else { 
+			var ppn_produk = '<select id="ppn_swal" name="ppn_swal" class="swal2-input js-selectize-reguler">'+ 
+			'<option selected="selected" value="'+ppn+'">'+ppn+'</option>'+ 
+			'</select></div>'; 
+			} 
+
+		swal({ 
+			title: titleCase(nama_produk), 
+			html:'Sertakan <b>%</b> Jika Ingin Pajak Dalam Bentuk Persentase<br><br>'+ 
+			'<div class="row">'+ 
+			'<div class="col-sm-6 col-xs-6">'+ppn_produk+''+ 
+			'<div class="col-sm-6 col-xs-6">'+ 
+			'<input id="tax_swal" class="swal2-input" placeholder="PAJAK"></div>'+ 
+			'</div>', 
+			animation: false, 
+			showCloseButton: true, 
+			showCancelButton: true, 
+			confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> Submit', 
+			confirmButtonAriaLabel: 'Thumbs up, great!', 
+			cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal', 
+			cancelButtonAriaLabel: 'Thumbs down', 
+			preConfirm: function () { 
+				return new Promise(function (resolve) { 
+					resolve([ 
+						$('#tax_swal').val(), 
+						$('#ppn_swal').val() 
+						]) 
+				}) 
+			} 
+		}).then(function (result) {   
+			if (result[0] == '' || result[0] == 0) { 
+
+				swal('Oops...', 'Pajak Tidak Boleh 0 !', 'error'); 
+				return false; 
+			}   
+			else if (result[1] == '') { 
+
+				swal('Oops...', 'PPN Belum Di Isi', 'error'); 
+				return false; 
+			}else{ 
+
+				var pajak = result[0]; 
+				var pos = pajak.search("%"); 
+
+				if (pos > 0) { 
+					pajak = pajak.replace("%",""); 
+					if (pajak > 100) { 
+
+						swal('Oops...', 'Pajak Tidak Boleh Lebih Dari 100%!', 'error'); 
+						return false; 
+					}else{ 
+						axios.get(app.url+'/cek-persen-tax-pembelian?tax_edit_produk='+result[0]+'&id_tax='+id+'&ppn_produk='+result[1])
+						.then(function (resp) {
+									if (resp.data == 1) {
+									swal({
+										title: "Peringatan",
+										text:"Pajak Tidak Boleh Lebih Dari 100%!",
+										});
+									}
+								else{
+								var pajak = result[0];
+								var ppn_edit = result[1];
+								app.submitEditTax(pajak,id,nama_produk,ppn_edit);
+								}
+						});
+					} 
+				}else{ 
+
+					if (subtotal < result[0]) { 
+
+						swal('Oops...', 'Pajak Tidak Boleh Melebihi Subtotal!', 'error'); 
+						return false; 
+					}else{ 
+						var pajak = result[0];
+						var ppn_edit = result[1];
+						app.submitEditTax(pajak,id,nama_produk,ppn_edit);
+					} 
+
+				} 
+			} 
+		}); 
+    },//END SWAL EDIT TAX TBS
+    submitEditTax(pajak,id,nama_produk,ppn_edit){
+    				var app = this;
+    				app.loading = true;
+					axios.get(app.url+'/proses-edit-tax-tbs-pembelian?tax_edit_produk='+pajak+'&id_tax='+id+'&ppn_produk='+ppn_edit)
+					.then(function (resp) {
+					app.alert("Mengubah Pajak Produk "+titleCase(nama_produk));
+					app.loading = false;
+					app.getResults();
+					app.$router.replace('/create-pembelian/');
+					})
+					.catch(function (resp) {
+					app.loading = false;
+					alert("Pajak Produk tidak bisa diedit");
+				});
+    }
  }
 }
 </script>
