@@ -153,7 +153,8 @@ export default {
           });
         },
         deleteEntry(id, index,nama_kas) {
-            swal({
+          var app = this;
+            app.$swal({
             title: "Konfirmasi Hapus",
             text : "Anda Yakin Ingin Menghapus Kas "+nama_kas+" ?",
             icon : "warning",
@@ -165,14 +166,14 @@ export default {
             var app = this;
             axios.delete(app.url+'/' + id)
             .then(function (resp) {
-              app.$router.replace('/kas-masuk/');
+              app.$router.replace('/kas/');
               app.getResults();
-               swal("Kas Berhasil Dihapus!  ", {
+               app.$swal("Kas Berhasil Dihapus!  ", {
                   icon: "success",
                 });
             })
             .catch(function (resp) {
-              swal("Gagal Menghapus Kas Masuk!  ", {
+              app.$swal("Gagal Menghapus Kas Masuk!  ", {
                   icon: "warning",
                 });
             });

@@ -112,7 +112,8 @@ export default {
           var toogle = app.kas.default_kas;
 
          if (toogle == true) {
-			swal({
+         	app = this;
+			app.$swal({
 			title: "Konfirmasi",
 			text: "Apakah Anda Yakin Ingin Mengubah Kas Utama ?",
 			icon: "warning",
