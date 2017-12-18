@@ -7,7 +7,6 @@ use App\KasMutasi;
 use App\TransaksiKas;
 use Auth;
 use Illuminate\Http\Request;
-use Session;
 use Yajra\Datatables\Html\Builder;
 
 class KasMutasiController extends Controller
@@ -169,7 +168,9 @@ class KasMutasiController extends Controller
      */
     public function show($id)
     {
-        //
+        $kas_mutasi = kasMutasi::find($id);
+
+        return $kas_mutasi;
     }
 
     /**
@@ -188,7 +189,6 @@ class KasMutasiController extends Controller
             Auth::logout();
             return response()->view('error.403');
         } else {
-
             return view('kas_mutasi.edit', ['kas' => $kas])->with(compact('kas_mutasi'));
         }
 
@@ -209,24 +209,33 @@ class KasMutasiController extends Controller
             Auth::logout();
             return response()->view('error.403');
         } else {
+            $dari_kas  = $request->dari_kas;
+            $total_kas = TransaksiKas::total_kas_mutasi($dari_kas);
 
-            $this->validate($request, [
-                'dari_kas'   => 'required',
-                'ke_kas'     => 'required',
-                'jumlah'     => 'required|numeric',
-                'keterangan' => 'max:150',
+            //JIKA KAS YG DIPILIH == KAS LAMA, MAKA (TOTAL KAS + JUMLAH KAS LAMA) - JUMLAH KAS BARU
+            if ($kas_mutasi->dari_kas == $request->dari_kas) {
+                $data_kas = $total_kas + $kas_mutasi->jumlah;
+                $sisa_kas = $data_kas - $request->jumlah;
+            } elseif ($kas_mutasi->ke_kas == $request->dari_kas) {
+                $data_kas = $total_kas - $kas_mutasi->jumlah;
+                $sisa_kas = $data_kas - $request->jumlah;
+            } else {
+                $sisa_kas = $total_kas - $request->jumlah;
+            }
 
-            ]);
+            if ($sisa_kas < 0) {
+                return $sisa_kas;
+            } else {
+                $this->validate($request, [
+                    'dari_kas'   => 'required',
+                    'ke_kas'     => 'required',
+                    'jumlah'     => 'required|numeric',
+                    'keterangan' => 'max:150',
 
-            $kas = KasMutasi::find($id)->update(['dari_kas' => $request->dari_kas, 'ke_kas' => $request->ke_kas, 'jumlah' => $request->jumlah, 'keterangan' => $request->keterangan, 'id_warung' => Auth::user()->id_warung]);
+                ]);
 
-            Session::flash("flash_notification", [
-                "level"   => "success",
-                "message" => "<b>BERHASIL:</b> Mengubah Kas Mutasi $kas_mutasi->no_faktur",
-            ]);
-
-            return redirect()->route('kas_mutasi.index');
-
+                $kas = KasMutasi::find($id)->update(['dari_kas' => $request->dari_kas, 'ke_kas' => $request->ke_kas, 'jumlah' => $request->jumlah, 'keterangan' => $request->keterangan, 'id_warung' => Auth::user()->id_warung]);
+            }
         }
     }
 

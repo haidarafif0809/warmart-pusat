@@ -74,7 +74,6 @@ export default {
         return {
             errors: [],
             kas : [],
-            kategori :[],
             url : window.location.origin+(window.location.pathname).replace("dashboard", "kas-mutasi"),
             kasMutasi: {
                 dari_kas: '',
@@ -100,16 +99,14 @@ export default {
             
             if (app.kasMutasi.dari_kas != app.kasMutasi.ke_kas) {
 	            axios.post(app.url, newKasMutasi)
-	            .then(function (resp) {
-	            	
+	            .then(function (resp) {	            	
 	            		var respons = resp.data;
 		            	if (resp.data < 0) {
 		            		app.kasTidakCukup(respons);
 		            	}
 		            	else{
 		            		app.inputKasMutasi();
-		            	}
-	            	
+		            	}	            	
 	            })
 	            .catch(function (resp) {
 	            	console.log(resp)
