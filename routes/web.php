@@ -370,6 +370,7 @@ Route::get('/user/otoritas-user', 'UserController@otoritas_user')->middleware('a
 Route::get('/user/reset', 'UserController@reset_password')->middleware('auth');
 Route::get('/user/konfirmasi', 'UserController@konfirmasi')->middleware('auth');
 Route::get('/user/no-konfirmasi', 'UserController@no_konfirmasi')->middleware('auth');
+Route::get('/user/pilih-pelanggan', 'UserController@pilihPelanggan')->middleware('auth');
 
 //MENAMPILKAN DARA ERROR LOG
 Route::get('/error/view', 'ErrorController@view')->middleware('auth');
@@ -500,6 +501,13 @@ Route::get('/kas-mutasi/view', 'KasMutasiController@view')->middleware('auth');
 Route::get('/kas-mutasi/pencarian', 'KasMutasiController@pencarian')->middleware('auth');
 Route::get('/kas-mutasi/pilih-kas', 'KasMutasiController@pilih_kas')->middleware('auth');
 
+// PENJUALAN VUE.JS
+
+Route::get('/penjualan/view-tbs-penjualan', 'PenjualanController@viewTbsPenjualan')->middleware('auth');
+Route::get('/penjualan/pencarian-tbs-penjualan', 'PenjualanController@pencarianTbsPenjualan')->middleware('auth');
+Route::get('/penjualan/cek-data-tbs-penjualan', 'PenjualanController@cekDataTbsPenjualan')->middleware('auth');
+Route::get('/penjualan/pilih-pelanggan', 'PenjualanController@pilihPelanggan')->middleware('auth');
+
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
     Route::resource('user', 'UserController');
@@ -524,6 +532,7 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
     Route::resource('pembelian', 'PembelianController');
     Route::resource('kelompok-produk', 'KelompokProdukController');
     Route::resource('profil-warung', 'WarungProfilController');
+    Route::resource('penjualan', 'PenjualanController');
 
 //BARANG
     //HALAMAN DESKRIPSI
@@ -822,6 +831,31 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
         'middleware' => ['auth'],
         'as'         => 'item-masuk.edit_jumlah_edit',
         'uses'       => 'ItemMasukController@proses_edit_jumlah_edit',
+    ]);
+
+    // penjualan
+    Route::post('/penjualan/proses-tambah-tbs-penjualan', [
+        'middleware' => ['auth'],
+        'as'         => 'penjualan.proses_tambah_tbs_penjualan',
+        'uses'       => 'PenjualanController@prosesTambahTbsPenjualan',
+    ]);
+
+    Route::post('/penjualan/edit-jumlah-tbs-penjualan', [
+        'middleware' => ['auth'],
+        'as'         => 'penjualan.edit_jumlah_tbs_penjualan',
+        'uses'       => 'PenjualanController@prosesEditJumlahTbsPenjualan',
+    ]);
+
+    Route::post('/penjualan/edit-potongan-tbs-penjualan', [
+        'middleware' => ['auth'],
+        'as'         => 'penjualan.edit_potongan_tbs_penjualan',
+        'uses'       => 'PenjualanController@prosesEditPotonganTbsPenjualan',
+    ]);
+
+    Route::delete('/penjualan/proses-hapus-tbs-penjualan/{id}', [
+        'middleware' => ['auth'],
+        'as'         => 'penjualan.proses_hapus_tbs_penjualan',
+        'uses'       => 'PenjualanController@prosesHapusTbsPenjualan',
     ]);
 
 });

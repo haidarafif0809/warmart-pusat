@@ -95,6 +95,10 @@ import LaporanPersediaanIndex from './components/laporan_persediaan/LaporanPerse
 import KasMutasiIndex from './components/kas_mutasi/KasMutasiIndex.vue';
 import KasMutasiCreate from './components/kas_mutasi/KasMutasiCreate.vue';
 import KasMutasiEdit from './components/kas_mutasi/KasMutasiEdit.vue';
+// PENJUALAN
+import PenjualanIndex from './components/penjualan/PenjualanIndex.vue';
+import PenjualanCreate from './components/penjualan/PenjualanCreate.vue';
+import PenjualanEdit from './components/penjualan/PenjualanEdit.vue';
 const routes = [{
         path: '/',
         components: {
@@ -431,6 +435,19 @@ const routes = [{
         path: '/edit-kas-mutasi/:id',
         component: KasMutasiEdit,
         name: 'editKasMutasi'
+    }, // PENJUALAN
+    {
+        path: '/penjualan',
+        component: PenjualanIndex,
+        name: 'indexPenjualan'
+    }, {
+        path: '/create-penjualan',
+        component: PenjualanCreate,
+        name: 'createPenjualan'
+    }, {
+        path: '/edit-penjualan/:id',
+        component: PenjualanEdit,
+        name: 'editPenjualan'
     }
 ]
 export default routes;
