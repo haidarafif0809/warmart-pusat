@@ -108,27 +108,23 @@
         <center>
             <img v-bind:src="url+ 'image/warmart_logo.png'"class="img-responsive" width="500" height="160"> 
         </center>
-        <center>
+        <center v-if="dashboardData.konfirmasi_admin == 1">
              <div id="tab" class="btn-group" data-toggle="buttons-radio">
-        
-                    <router-link :to="{name: 'indexProduk'}"  class="btn btn-large btn-info activemenu-nav">
-                                <i class="material-icons">
-                                    store
-                                </i>
-                                Produk
-                            </router-link>
-            
-                <a :href="url + 'pesanan-warung'"  class="btn btn-large btn-info" >
-                                <i class="material-icons">
-                                    archive
-                                </i>
-                            
-                                    Pesanan
-                                
-                            </a>
-          
+                <router-link :to="{name: 'indexProduk'}"  class="btn btn-large btn-info activemenu-nav">
+                    <i class="material-icons">
+                        store
+                    </i>
+                        Produk
+                </router-link>
+
+                <router-link :to="{name: 'indexPesananWarung'}"  class="btn btn-large btn-info activemenu-nav">
+                    <i class="material-icons">
+                        archive
+                    </i>
+                        Pesanan
+                </router-link>          
             </div>
-            </center>
+        </center>
 
         <div class="col-lg-3 col-md-6 col-sm-6">
             <div class="card card-stats"> 
@@ -231,7 +227,6 @@ export default {
         else if(app.tipeUser.content == 4){
             app.getDashboardWarung();
         }
-        console.log(app.tipeUser.content)
     },
     methods: {
         getDashboardData(){
@@ -252,7 +247,6 @@ export default {
                 app.dashboardData = resp.data;
             })
             .catch(function (resp) {
-                console.log(resp);
                 alert("Tidak Bisa Memuat Data");
             });
         }

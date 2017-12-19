@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Kas;
 use App\KasKeluar;
+use App\KategoriTransaksi;
 use App\TransaksiKas;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Session;
 use Yajra\Datatables\Html\Builder;
 
 class KasKeluarController extends Controller
@@ -80,7 +81,7 @@ class KasKeluarController extends Controller
 
     public function view()
     {
-        $data_kas_keluar = KasKeluar::leftJoin('kas', 'kas_keluars.kas', '=', 'kas.id')
+        $data_kas_keluar = KasKeluar::select(['kas_keluars.id', 'kas_keluars.no_faktur', 'kas_keluars.jumlah', 'kas_keluars.keterangan', 'kas_keluars.created_at', 'kas_keluars.warung_id', 'kas.nama_kas', 'kategori_transaksis.nama_kategori_transaksi'])->leftJoin('kas', 'kas_keluars.kas', '=', 'kas.id')
             ->leftJoin('kategori_transaksis', 'kas_keluars.kategori', '=', 'kategori_transaksis.id')
             ->where('kas_keluars.warung_id', Auth::user()->id_warung)->orderBy('kas_keluars.id', 'desc')->paginate(10);
 
@@ -97,7 +98,7 @@ class KasKeluarController extends Controller
     public function pencarian(Request $request)
     {
         $search          = $request->search;
-        $data_kas_keluar = KasKeluar::leftJoin('kas', 'kas_keluars.kas', '=', 'kas.id')
+        $data_kas_keluar = KasKeluar::select(['kas_keluars.id', 'kas_keluars.no_faktur', 'kas_keluars.jumlah', 'kas_keluars.keterangan', 'kas_keluars.created_at', 'kas_keluars.warung_id', 'kas.nama_kas', 'kategori_transaksis.nama_kategori_transaksi'])->leftJoin('kas', 'kas_keluars.kas', '=', 'kas.id')
             ->leftJoin('kategori_transaksis', 'kas_keluars.kategori', '=', 'kategori_transaksis.id')
             ->where('kas_keluars.warung_id', Auth::user()->id_warung)
             ->where(function ($query) use ($search) {
@@ -114,6 +115,18 @@ class KasKeluarController extends Controller
         //DATA PAGINATION
         $respons = $this->dataPagination($data_kas_keluar, $array_kas_keluar);
         return response()->json($respons);
+    }
+
+    public function pilih_kas()
+    {
+        $kas = Kas::select('id', 'nama_kas')->where('kas.warung_id', Auth::user()->id_warung)->get();
+        return response()->json($kas);
+    }
+
+    public function pilih_kategori()
+    {
+        $kategori_transaksi = KategoriTransaksi::select('id', 'nama_kategori_transaksi')->where('kategori_transaksis.id_warung', Auth::user()->id_warung)->get();
+        return response()->json($kategori_transaksi);
     }
 
     /**
@@ -159,40 +172,20 @@ class KasKeluarController extends Controller
             $sisa_kas  = $total_kas - $request->jumlah;
 
             if ($sisa_kas < 0) {
-
-                $pesan_alert =
-                    '<div class="container-fluid">
-                <div class="alert-icon">
-                    <i class="material-icons">warning</i>
-                </div>
-                <b>Gagal : Kas Tidak Mencukupi. Total Kas = "' . $total_kas . '"</b>
-            </div>';
-
-                Session::flash("flash_notification", [
-                    "level"   => "warning",
-                    "message" => $pesan_alert,
-                ]);
-
-                return redirect()->back();
+                return $sisa_kas;
             } else {
 
                 $no_faktur = KasKeluar::no_faktur();
-                $kas       = KasKeluar::create(['no_faktur' => $no_faktur, 'kas' => $request->kas, 'kategori' => $request->kategori, 'jumlah' => $request->jumlah, 'keterangan' => $request->keterangan, 'warung_id' => Auth::user()->id_warung]);
-
-                $pesan_alert =
-                '<div class="container-fluid">
-            <div class="alert-icon">
-                <i class="material-icons">check</i>
-            </div>
-            <b>Sukses : Berhasil Menambah Transaksi Kas Keluar Sebesar "' . $request->jumlah . '"</b>
-        </div>';
-
-                Session::flash("flash_notification", [
-                    "level"   => "success",
-                    "message" => $pesan_alert,
+                $kas       = KasKeluar::create([
+                    'no_faktur'  => $no_faktur,
+                    'kas'        => $request->kas,
+                    'kategori'   => $request->kategori,
+                    'jumlah'     => $request->jumlah,
+                    'keterangan' => $request->keterangan,
+                    'warung_id'  => Auth::user()->id_warung,
                 ]);
 
-                return redirect()->route('kas-keluar.index');
+                return $sisa_kas;
             }
 
         } else {
@@ -208,7 +201,10 @@ class KasKeluarController extends Controller
      */
     public function show($id)
     {
-        //
+        $id_warung  = Auth::user()->id_warung;
+        $kas_keluar = KasKeluar::find($id);
+
+        return $kas_keluar;
     }
 
     /**
@@ -253,38 +249,32 @@ class KasKeluarController extends Controller
             'kategori'   => 'required',
             'jumlah'     => 'required|numeric',
             'keterangan' => 'max:150',
-
         ]);
 
         $id_warung  = Auth::user()->id_warung;
         $kas_keluar = KasKeluar::find($id);
 
         if ($id_warung == $kas_keluar->warung_id) {
+            $total_kas = TransaksiKas::total_kas($request);
 
-            $kas_keluar->kas        = $request->kas;
-            $kas_keluar->kategori   = $request->kategori;
-            $kas_keluar->jumlah     = $request->jumlah;
-            $kas_keluar->keterangan = $request->keterangan;
-
-            if (!$kas_keluar->save()) {
-                return redirect()->back();
+            //JIKA KAS YG DIPILIH == KAS LAMA, MAKA (TOTAL KAS + JUMLAH KAS LAMA) - JUMLAH KAS BARU
+            if ($kas_keluar->kas == $request->kas) {
+                $data_kas = $total_kas + $kas_keluar->jumlah;
+                $sisa_kas = $data_kas - $request->jumlah;
             } else {
+                $sisa_kas = $total_kas - $request->jumlah;
+            }
 
-                $pesan_alert =
-                '<div class="container-fluid">
-                <div class="alert-icon">
-                    <i class="material-icons">check</i>
-                </div>
-                <b>Sukses : Berhasil Mengubah Transaksi Kas Keluar "' . $kas_keluar->no_faktur . '"</b>
-            </div>';
-
-                Session::flash("flash_notification", [
-                    "level"   => "success",
-                    "message" => $pesan_alert,
-                ]);
-
-                return redirect()->route('kas-keluar.index');
-
+            //JIKA KAS TIDAK CUKUP UNTUK DIKELUARKAN
+            if ($sisa_kas < 0) {
+                return $sisa_kas;
+            } else {
+                $kas_keluar->kas        = $request->kas;
+                $kas_keluar->kategori   = $request->kategori;
+                $kas_keluar->jumlah     = $request->jumlah;
+                $kas_keluar->keterangan = $request->keterangan;
+                $kas_keluar->save();
+                return $sisa_kas;
             }
         } else {
             return response()->view('error.403');
@@ -303,26 +293,7 @@ class KasKeluarController extends Controller
         $id_warung  = Auth::user()->id_warung;
 
         if ($id_warung == $kas_keluar->warung_id) {
-            // jika gagal hapus
-            if (!KasKeluar::destroy($id)) {
-                return redirect()->back();
-            } else {
-
-                $pesan_alert =
-                '<div class="container-fluid">
-                <div class="alert-icon">
-                    <i class="material-icons">check</i>
-                </div>
-                <b>Sukses : Berhasil Menghapus Transaksi Kas Keluar "' . $kas_keluar->no_faktur . '"</b>
-            </div>';
-
-                Session::flash("flash_notification", [
-                    "level"   => "success",
-                    "message" => $pesan_alert,
-                ]);
-
-                return redirect()->route('kas-keluar.index');
-            }
+            KasKeluar::destroy($id);
         } else {
             return response()->view('error.403');
         }

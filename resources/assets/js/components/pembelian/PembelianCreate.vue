@@ -22,10 +22,10 @@
 
 							<!--COL MD 8--> 
 							<div class="col-md-8"> 
-								<form class="form-horizontal"> 
+								<form class="form-horizontal" id="form-produk"> 
 									<div class="form-group">
 										<div class="col-md-4"><br> 
-											<selectize-component v-model="inputTbsPembelian.produk" :settings="placeholder_produk" id="produk" ref='produk'> 
+											<selectize-component v-model="inputTbsPembelian.produk" :settings="placeholder_produk" id="produk" ref='produk' name="jumlah_produk"> 
 											<option v-for="produks, index in produk" v-bind:value="produks.produk">{{ produks.nama_produk }}</option>
 											</selectize-component>
 											
@@ -33,7 +33,7 @@
 
 								<input class="form-control" type="hidden"  v-model="inputTbsPembelian.jumlah_produk"  name="jumlah_produk" id="jumlah_produk">
 								<input class="form-control" type="hidden"  v-model="inputTbsPembelian.harga_produk"  name="harga_produk" id="harga_produk">
-								<input class="form-control" type="hidden"  v-model="inputTbsPembelian.id_tbs"  name="id_tbs" id="id_tbs">
+								<input class="form-control" type="hidden"  v-model="inputTbsPembelian.id_produk_tbs"  name="id_produk_tbs" id="id_produk_tbs">
 
 									</div>
 								</div><!--/COL MD 8--> 
@@ -65,19 +65,20 @@
 
 									<td>{{ tbs_pembelian.kode_produk }} - {{ tbs_pembelian.nama_produk }}</td>
 									<td>
-										<a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" ><p align='right'>{{ tbs_pembelian.jumlah_produk }}</p>
+										<a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-on:click="editEntryJumlah(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk)"><p align='right'>{{ tbs_pembelian.jumlah_produk_pemisah }}</p>
 										</a>
 									</td>
 									<td>
-										<a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" ><p align='right'>{{ tbs_pembelian.harga_pemisah }}</p>
+										<a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-on:click="editEntryHarga(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk)" ><p align='right'>{{ tbs_pembelian.harga_pemisah }}</p>
 										</a>
 									</td>
 									<td>
-										<a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" ><p align='right'>{{ Math.round(tbs_pembelian.potongan,2) }} | {{ Math.round(tbs_pembelian.potongan_persen,2) }} %</p>
+										<a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-on:click="editEntryPotongan(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk,tbs_pembelian.jumlah_produk,tbs_pembelian.harga_produk)"
+										><p align='right'>{{ Math.round(tbs_pembelian.potongan,2) }} | {{ Math.round(tbs_pembelian.potongan_persen,2) }} %</p>
 										</a>
 									</td>
 									<td>
-										<a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian"><p align='right'>{{ Math.round(tbs_pembelian.tax,2) }} | {{ Math.round(tbs_pembelian.tax_persen, 2) }} %</p>
+										<a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-on:click="editEntryTax(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk,tbs_pembelian.jumlah_produk,tbs_pembelian.harga_produk,tbs_pembelian.potongan,tbs_pembelian.ppn_produk)" ><p align='right'>{{ Math.round(tbs_pembelian.tax,2) }} | {{ Math.round(tbs_pembelian.tax_persen, 2) }} %</p>
 										</a>
 									</td>
 									<td><p id="table-subtotal" align="right">{{ tbs_pembelian.subtotal_tbs }}</p></td>
@@ -219,7 +220,7 @@ export default {
     			app.seen = true;
     			alert("Tidak Dapat Memuat Pembelian");
     		});
-    	},
+    	},//END FUNGSI UNTUK PAGINATION TAMPILAN AWAL / DOCUMENT READY 
     	getHasilPencarian(page){
     		var app = this;
     		if (typeof page === 'undefined') {
@@ -236,7 +237,7 @@ export default {
     			console.log(resp);
     			alert("Tidak Dapat Memuat Pembelian");
     		});
-    	},    
+    	}, //END FUNGSI UNTUK PAGINATION SEARCH     
     	dataProduk() {
     		var app = this;
     		axios.get(app.url_produk+'/pilih-produk').then(function (resp) {
@@ -245,7 +246,7 @@ export default {
     		.catch(function (resp) {
     			alert("Tidak Bisa Memuat Produk");
     		});
-    	},
+    	},//END FUNGSI UNTUK SELECTIZE PRODUK 
     	dataSuplier() {
     		var app = this;
     		axios.get(app.url+'/pilih-suplier').then(function (resp) {
@@ -254,7 +255,7 @@ export default {
     		.catch(function (resp) {
     			alert("Tidak Bisa Memuat Suplier");
     		});
-    	},
+    	},//END FUNGSI UNTUK SELECTIZE SUPLIER 
     	dataCaraBayar() {
     		var app = this;
     		axios.get(app.url_kas+'/pilih-kas').then(function (resp) {
@@ -263,14 +264,14 @@ export default {
     		.catch(function (resp) {
     			alert("Tidak Bisa Memuat Kas");
     		});
-    	},	
+    	},//END FUNGSI UNTUK SELECTIZE CARABAYAR 	
     	alert(pesan) {
     		this.$swal({
     			title: "Berhasil ",
     			text: pesan,
     			icon: "success",
     		});
-    	},
+    	},//alert untuk berhasil proses crud
     	deleteEntry(id, index,nama_produk) {
 
     		var app = this;
@@ -282,6 +283,7 @@ export default {
     		.then((willDelete) => {
     			if (willDelete) {
 
+    				this.prosesDelete(id,nama_produk);
 
     			} else {
 
@@ -290,51 +292,441 @@ export default {
     			}
     		});
 
-    	},
+    	},//END fungsi deleteEntry (alert konfirmasi hapus)
+    	prosesDelete(id,nama_produk){
+
+    		var app = this;
+    		app.loading = true;
+    		axios.delete(app.url+'/hapus-tbs-pembelian/'+id)
+    		.then(function (resp) {
+    			app.getResults();
+    			app.alert("Menghapus Produk "+nama_produk);
+    			app.loading = false;
+    			app.inputTbsPembelian.id_tbs = ''
+    		})
+    		.catch(function (resp) {
+
+    			app.loading = false;
+    			alert("Tidak dapat Menghapus Produk "+nama_produk);
+    		});
+    	},//END fungsi prosesDelete
     	pilihProduk() {
     		if (this.inputTbsPembelian.produk == '') {
     			this.$swal({
     				text: "Silakan Pilih Produk Telebih dahulu!",
     			});
-    		}else{
+    		}
+    		else if(this.inputTbsPembelian.jumlah_produk == ''){
 
     			var app = this;
     			var produk = app.inputTbsPembelian.produk.split("|");
+    			var id_produk = produk[0]; 
     			var nama_produk = produk[1];
-    			this.isiJumlahProduk(nama_produk);
+				var harga_produk = produk[2]; 
+				var jumlah = $("#jumlah_produk").val(); 
+
+    			this.isiJumlahProduk(id_produk,nama_produk,harga_produk);
     		}
-    	},
-    	isiJumlahProduk(nama_produk){
-    		var app = this;
-    		app.$swal({
-    			title: nama_produk,
-    			content: {
-    				element: "input",
-    				attributes: {
-    					placeholder: "Jumlah Produk",
-    					type: "number",
-    				},
-    			},
-    			buttons: {
-    				cancel: true,
-    				confirm: "Submit"    				
-    			}
+    		else if (this.inputTbsPembelian.jumlah_produk == '' && this.inputTbsPembelian.produk == ''){
 
+    		}
+    	},//END FUNGSI pilihProduk
+    	isiJumlahProduk(id_produk,nama_produk,harga_produk){
+    		var app = this;		
+				swal({
+				  title: titleCase(nama_produk),
+				  html:
+				    '<div class="col-sm-6  col-xs-6"><lable>Jumlah</lable><br><input type="number" id="swal-input1" class="swal2-input" autofocus></div>' +
+				    '<div class="col-sm-6  col-xs-6"><lable>Harga</lable><br><input type="number" id="swal-input2" class="swal2-input" value="'+harga_produk+'"></div>',
+				  	allowEnterKey : false,
+					showCloseButton: true, 
+					showCancelButton: true,                        
+					focusConfirm: false, 
+					confirmButtonText:'<i class="fa fa-thumbs-o-up"></i> Submit', 
+					confirmButtonAriaLabel: 'Thumbs up, great!', 
+					cancelButtonText:'<i class="fa fa-thumbs-o-down"> Batal', 
+					closeOnConfirm: false, 
+					cancelButtonAriaLabel: 'Thumbs down', 
+					preConfirm: function () { 
+						return new Promise(function (resolve) { 
+							resolve([ 
+								$('#swal-input1').val(), 
+								$('#swal-input2').val() 
+								]) 
+						}) 
+					}
+				}).then(function (result) { 
 
-    		}).then((value) => {
-    			if (!value) throw null;
-    			this.submitProdukPembelian(value);
-    		});
-    	},
-    	submitProdukPembelian(value){
+					if (result[0] == '' || result[0] == 0) { 
 
-    	},
-    	alertTbs(pesan) {
-    		this.$swal({
-    			text: pesan,
-    			icon: "warning",
-    		});
-    	}
+						swal('Oops...', 'Jumlah Produk Tidak Boleh 0 atau Kosong !', 'error'); 
+						return false; 
+					}else if (result[1] == '' || result[1] == 0) { 
+
+						swal('Oops...', 'Harga Produk Tidak Boleh 0 atau Kosong !', 'error'); 
+						return false; 
+					}
+					else if (result[1] != harga_produk) { 
+										app.$swal({
+										  title: "Konfirmasi",
+										  text: "Anda Yakin Ingin Merubah Harga Beli Produk "+titleCase(nama_produk)+ "?",
+										  icon: "warning",
+										  buttons: true,
+										  dangerMode: true,
+										})
+										.then((willDelete) => {
+										  if (willDelete) {
+										    $("#id_produk_tbs").val(id_produk); 
+											$("#jumlah_produk").val(result[0]); 
+											$("#harga_produk").val(result[1]);
+											
+											axios.get(app.url+'/cek-tbs-pembelian?id='+id_produk)
+											.then(function (resp) {
+											    	if (resp.data > 0) {
+											        		swal({
+											                title: "Peringatan",
+											                text:"Produk "+titleCase(nama_produk)+" Sudah Ada, Silakan Pilih Produk Lain !",
+											               });
+											        }
+											        else{
+			    											var jumlah_produk = result[0];
+			    											var harga_produk = result[1];
+									                       app.submitJumlahProduk(id_produk,jumlah_produk,harga_produk,nama_produk);
+											        }
+										    });
+										  } else {
+										    app.$swal.close();
+										  }
+										});
+							}else{ 
+								$("#id_produk_tbs").val(id_produk); 
+								$("#jumlah_produk").val(result[0]); 
+								$("#harga_produk").val(harga_produk); 
+										axios.get(app.url+'/cek-tbs-pembelian?id='+id_produk)
+										.then(function (resp) {
+											    	if (resp.data > 0) {
+											        		swal({
+											                title: "Peringatan",
+											                text:"Produk "+titleCase(nama_produk)+" Sudah Ada, Silakan Pilih Produk Lain !",
+											               });
+											        }
+											        else{
+											        		var jumlah_produk = result[0];
+			    											app.submitJumlahProduk(id_produk,jumlah_produk,harga_produk,nama_produk);
+											        }
+										    });
+							} 
+						});
+		},//END fungsi isiJumlahProduk
+		submitJumlahProduk(id_produk,jumlah_produk,harga_produk,nama_produk){
+				var app = this;
+				app.loading = true;
+					 axios.get(app.url+'/proses-tambah-tbs-pembelian?id_produk_tbs='+id_produk+'&jumlah_produk='+jumlah_produk+'&harga_produk='+harga_produk)
+						.then(function (resp) {
+							app.alert("Menambahkan Produk "+titleCase(nama_produk));
+							app.loading = false;
+							app.getResults();
+							app.$router.replace('/create-pembelian/');
+							})
+							.catch(function (resp) {
+							app.loading = false;
+							alert("Tbs Pembelian tidak bisa ditambahkan");
+					});
+		},//END PROSES TAMBAH PRODUK TBS
+		editEntryJumlah(id, index,nama_produk) {    
+    		var app = this;		
+    		swal({ 
+			title: titleCase(nama_produk), 
+			input: 'number', 
+			inputPlaceholder : 'Jumlah Produk',         
+			html:'Berapa Jumlah Produk Yang Akan Dimasukkan ?', 
+			animation: false, 
+			showCloseButton: true, 
+			showCancelButton: true, 
+			focusConfirm: true, 
+			confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> Submit', 
+			confirmButtonAriaLabel: 'Thumbs up, great!', 
+			cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal', 
+			closeOnConfirm: true, 
+			cancelButtonAriaLabel: 'Thumbs down', 
+			inputAttributes: { 
+				'name': 'edit_qty_produk', 
+			}, 
+			inputValidator : function (value) { 
+				return new Promise(function (resolve, reject) { 
+					if (value) { 
+						resolve(); 
+					}  
+					else { 
+						reject('Jumlah Harus Di Isi!'); 
+					} 
+				}) 
+			} 
+		}).then(function (jumlah_produk) { 
+			if (jumlah_produk != "0") { 
+						app.loading = true;
+						axios.get(app.url+'/proses-edit-jumlah-tbs-pembelian?jumlah_edit_produk='+jumlah_produk+'&id_tbs_pembelian='+id)
+						.then(function (resp) {
+						app.alert("Mengubah Jumlah Produk "+titleCase(nama_produk));
+						app.loading = false;
+						app.getResults();
+						app.$router.replace('/create-pembelian/');
+						})
+						.catch(function (resp) {
+						app.loading = false;
+						alert("Jumlah Produk tidak bisa diedit");
+						});
+			} 
+			else { 
+				swal('Oops...', 'Jumlah Tidak Boleh 0 !', 'error'); 
+				return false; 
+			} 
+		}); 
+    		
+    },//END editEntryJumlah
+    editEntryHarga(id, index,nama_produk) {    
+    		var app = this;		
+    		swal({ 
+			title: titleCase(nama_produk), 
+			input: 'number', 
+			inputPlaceholder : 'Harga Produk',         
+			html:'Berapa Harga Produk Yang Akan Dimasukkan ?', 
+			animation: false, 
+			showCloseButton: true, 
+			showCancelButton: true, 
+			focusConfirm: true, 
+			confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> Submit', 
+			confirmButtonAriaLabel: 'Thumbs up, great!', 
+			cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal', 
+			closeOnConfirm: true, 
+			cancelButtonAriaLabel: 'Thumbs down', 
+			inputAttributes: { 
+				'name': 'edit_harga_produk', 
+			}, 
+			inputValidator : function (value) { 
+				return new Promise(function (resolve, reject) { 
+					if (value) { 
+						resolve(); 
+					}  
+					else { 
+						reject('Harga Harus Di Isi!'); 
+					} 
+				}) 
+			} 
+		}).then(function (harga_produk) { 
+			if (harga_produk != "0") { 
+						app.loading = true;
+						axios.get(app.url+'/proses-edit-harga-tbs-pembelian?harga_edit_produk='+harga_produk+'&id_harga='+id)
+						.then(function (resp) {
+						app.alert("Mengubah Harga Produk "+titleCase(nama_produk));
+						app.loading = false;
+						app.getResults();
+						app.$router.replace('/create-pembelian/');
+						})
+						.catch(function (resp) {
+						app.loading = false;
+						alert("Harga Produk tidak bisa diedit");
+						});
+			} 
+			else { 
+				swal('Oops...', 'Harga Tidak Boleh 0 !', 'error'); 
+				return false; 
+			} 
+		}); 
+    		
+    },//END editEntryHarga
+    editEntryPotongan(id, index,nama_produk,jumlah,harga) {    
+    		var app = this;		
+    		var subtotal = parseFloat(jumlah) * parseFloat(harga);
+    		swal({ 
+			title: titleCase(nama_produk), 
+			input: 'text', 
+			inputPlaceholder : 'Potongan Produk',         
+			html:'Sertakan <b>%</b> Jika Ingin Potongan Dalam Bentuk Persentase', 
+			animation: false, 
+			showCloseButton: true, 
+			showCancelButton: true, 
+			focusConfirm: true, 
+			confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> Submit', 
+			confirmButtonAriaLabel: 'Thumbs up, great!', 
+			cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal', 
+			closeOnConfirm: true, 
+			cancelButtonAriaLabel: 'Thumbs down', 
+			inputAttributes: { 
+				'name': 'edit_potongan_produk', 
+			}, 
+			inputValidator : function (value) { 
+				return new Promise(function (resolve, reject) { 
+					if (value) { 
+						resolve(); 
+					}  
+					else { 
+						reject('Potongan Harus Di Isi!'); 
+					} 
+				}) 
+			} 
+		}).then(function (potongan) { 
+			var pos = potongan.search("%"); 
+			if (pos > 0)  
+			{   
+				var potongan_produk = potongan; 
+				potongan_produk = potongan_produk.replace("%","");       
+				if (potongan_produk > 100) { 
+					swal('Oops...', 'Potongan Tidak Boleh Lebih Dari 100%!', 'error'); 
+				} 
+				else if (potongan != "0") { 
+						axios.get(app.url+'/cek-persen-potongan-pembelian?potongan_edit_produk='+potongan+'&id_potongan='+id)
+						.then(function (resp) {
+							if (resp.data == 1) {
+							swal({
+								title: "Peringatan",
+								text:"Potongan Tidak Boleh Lebih Dari 100%!",
+								});
+							}
+						else{
+							app.submitEditPotongan(potongan,id,nama_produk);
+						}
+					});
+				} 
+				else { 
+					swal('Oops...', 'Potongan Tidak Boleh 0 !', 'error'); 
+				} 
+
+			}else{ 
+				if (subtotal < potongan) { 
+					swal('Oops...', 'Potongan Tidak Boleh Melebihi Subtotal!', 'error'); 
+				} 
+				else if (potongan != "0") { 
+					app.submitEditPotongan(potongan,id,nama_produk);
+				} 
+				else { 
+					swal('Oops...', 'Potongan Tidak Boleh 0 !', 'error'); 
+				} 
+			} 
+		}); 
+    		
+    },//END SWAL EDIT POTONGAN TBS
+    submitEditPotongan(potongan,id,nama_produk){
+    				var app = this;
+    				app.loading = true;
+					axios.get(app.url+'/proses-edit-potongan-tbs-pembelian?potongan_edit_produk='+potongan+'&id_potongan='+id)
+					.then(function (resp) {
+					app.alert("Mengubah Potongan Produk "+titleCase(nama_produk));
+					app.loading = false;
+					app.getResults();
+					app.$router.replace('/create-pembelian/');
+					})
+					.catch(function (resp) {
+					app.loading = false;
+					alert("Potongan Produk tidak bisa diedit");
+				});
+    },//END PROSES UPDATE POTONGAN TBS 
+    editEntryTax(id, index,nama_produk,jumlah,harga,potongan,ppn){
+    		var app = this;		
+    		var subtotal = (parseFloat(jumlah) * parseFloat(harga)) - parseFloat(potongan); 
+    	
+    		if (ppn == '') { 
+			var ppn_produk = '<select id="ppn_swal" name="ppn_swal" class="swal2-input js-selectize-reguler">'+ 
+			'<option value"Include>Include</option>'+ 
+			'<option value"Exclude>Exclude</option>'+ 
+			'</select></div>'; 
+			}else { 
+			var ppn_produk = '<select id="ppn_swal" name="ppn_swal" class="swal2-input js-selectize-reguler">'+ 
+			'<option selected="selected" value="'+ppn+'">'+ppn+'</option>'+ 
+			'</select></div>'; 
+			} 
+
+		swal({ 
+			title: titleCase(nama_produk), 
+			html:'Sertakan <b>%</b> Jika Ingin Pajak Dalam Bentuk Persentase<br><br>'+ 
+			'<div class="row">'+ 
+			'<div class="col-sm-6 col-xs-6">'+ppn_produk+''+ 
+			'<div class="col-sm-6 col-xs-6">'+ 
+			'<input id="tax_swal" class="swal2-input" placeholder="PAJAK"></div>'+ 
+			'</div>', 
+			animation: false, 
+			showCloseButton: true, 
+			showCancelButton: true, 
+			confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> Submit', 
+			confirmButtonAriaLabel: 'Thumbs up, great!', 
+			cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal', 
+			cancelButtonAriaLabel: 'Thumbs down', 
+			preConfirm: function () { 
+				return new Promise(function (resolve) { 
+					resolve([ 
+						$('#tax_swal').val(), 
+						$('#ppn_swal').val() 
+						]) 
+				}) 
+			} 
+		}).then(function (result) {   
+			if (result[0] == '' || result[0] == 0) { 
+
+				swal('Oops...', 'Pajak Tidak Boleh 0 !', 'error'); 
+				return false; 
+			}   
+			else if (result[1] == '') { 
+
+				swal('Oops...', 'PPN Belum Di Isi', 'error'); 
+				return false; 
+			}else{ 
+
+				var pajak = result[0]; 
+				var pos = pajak.search("%"); 
+
+				if (pos > 0) { 
+					pajak = pajak.replace("%",""); 
+					if (pajak > 100) { 
+
+						swal('Oops...', 'Pajak Tidak Boleh Lebih Dari 100%!', 'error'); 
+						return false; 
+					}else{ 
+						axios.get(app.url+'/cek-persen-tax-pembelian?tax_edit_produk='+result[0]+'&id_tax='+id+'&ppn_produk='+result[1])
+						.then(function (resp) {
+									if (resp.data == 1) {
+									swal({
+										title: "Peringatan",
+										text:"Pajak Tidak Boleh Lebih Dari 100%!",
+										});
+									}
+								else{
+								var pajak = result[0];
+								var ppn_edit = result[1];
+								app.submitEditTax(pajak,id,nama_produk,ppn_edit);
+								}
+						});
+					} 
+				}else{ 
+
+					if (subtotal < result[0]) { 
+
+						swal('Oops...', 'Pajak Tidak Boleh Melebihi Subtotal!', 'error'); 
+						return false; 
+					}else{ 
+						var pajak = result[0];
+						var ppn_edit = result[1];
+						app.submitEditTax(pajak,id,nama_produk,ppn_edit);
+					} 
+
+				} 
+			} 
+		}); 
+    },//END SWAL EDIT TAX TBS
+    submitEditTax(pajak,id,nama_produk,ppn_edit){
+    				var app = this;
+    				app.loading = true;
+					axios.get(app.url+'/proses-edit-tax-tbs-pembelian?tax_edit_produk='+pajak+'&id_tax='+id+'&ppn_produk='+ppn_edit)
+					.then(function (resp) {
+					app.alert("Mengubah Pajak Produk "+titleCase(nama_produk));
+					app.loading = false;
+					app.getResults();
+					app.$router.replace('/create-pembelian/');
+					})
+					.catch(function (resp) {
+					app.loading = false;
+					alert("Pajak Produk tidak bisa diedit");
+				});
     }
+ }
 }
 </script>

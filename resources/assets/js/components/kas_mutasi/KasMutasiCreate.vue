@@ -4,41 +4,43 @@
         <div class="col-md-12">
             <ul class="breadcrumb">
                 <li><a href=" ">Home</a></li>
-                <li><router-link :to="{name: 'indexKasKeluar'}">Kas Keluar</router-link></li>
-                <li class="active">Tambah Kas Keluar</li>
+                <li><router-link :to="{name: 'indexKasMutasi'}">Kas Mutasi</router-link></li>
+                <li class="active">Tambah Kas Mutasi</li>
             </ul>
 
             <div class="card">
 	            <div class="card-header card-header-icon" data-background-color="purple">
-	                 <i class="material-icons">money_off</i>
+	                 <i class="material-icons">compare_arrows</i>
 	            </div>
 	            
 	            <div class="card-content">
-	               	<h4 class="card-title"> Kas Keluar </h4>
+	               	<h4 class="card-title"> Kas Mutasi </h4>
 	               	<div>
 		               	<form v-on:submit.prevent="saveForm()" class="form-horizontal"> 
 		                    <div class="form-group">
-		                        <label for="kas" class="col-md-2 control-label">Kas</label>
+		                        <label for="dari_kas" class="col-md-2 control-label">Dari Kas</label>
 		                        <div class="col-md-4">
-		                            <selectize-component v-model="kasKeluar.kas" :settings="placeholderKas" id="kas"  name="kas"> 
+		                            <selectize-component v-model="kasMutasi.dari_kas" :settings="placeholderKas" id="dari_kas"  name="dari_kas"> 
 	                                    <option v-for="data_kas, index in kas" v-bind:value="data_kas.id">{{ data_kas.nama_kas }}</option>
 	                                </selectize-component>
+	                                <span v-if="errors.dari_kas" id="dari_kas_error" class="label label-danger">{{ errors.dari_kas[0] }}</span>
 		                        </div>
 		                    </div>
 
 		                    <div class="form-group">
-		                        <label for="kategori" class="col-md-2 control-label">Kategori</label>
+		                        <label for="ke_kas" class="col-md-2 control-label">Ke Kas</label>
 		                        <div class="col-md-4">
-		                             <selectize-component v-model="kasKeluar.kategori" :settings="placeholderKategori" id="kategori_transaksi" name="kategori_transaksi">
-	                                    <option v-for="data_kategori, index in kategori" v-bind:value="data_kategori.id">{{ data_kategori.nama_kategori_transaksi }}</option>
+		                            <selectize-component v-model="kasMutasi.ke_kas" :settings="placeholderKas" id="ke_kas"  name="ke_kas"> 
+	                                    <option v-for="data_kas, index in kas" v-bind:value="data_kas.id">{{ data_kas.nama_kas }}</option>
 	                                </selectize-component>
+	                                <span v-if="errors.ke_kas" id="ke_kas_error" class="label label-danger">{{ errors.ke_kas[0] }}</span>
 		                        </div>
 		                    </div>
 
 		                    <div class="form-group">
 		                        <label for="jumlah" class="col-md-2 control-label">Jumlah </label>
 		                        <div class="col-md-4">
-		                            <input class="form-control" ref="jumlah" required autocomplete="off" placeholder="Jumlah" type="text" v-model="kasKeluar.jumlah" id="jumlah" name="jumlah"  autofocus="">
+		                            <input class="form-control" ref="jumlah" required autocomplete="off" placeholder="Jumlah Mutasi" type="text" v-model="kasMutasi.jumlah" id="jumlah" name="jumlah"  autofocus="">
 		                            <span v-if="errors.jumlah" id="jumlah_error" class="label label-danger">{{ errors.jumlah[0] }}</span>
 		                        </div>
 		                    </div>
@@ -46,7 +48,7 @@
 		                    <div class="form-group">
 		                        <label for="keterangan" class="col-md-2 control-label">Keterangan</label>
 		                        <div class="col-md-4">
-		                            <input class="form-control" autocomplete="off" placeholder="Keterangan" type="text" v-model="kasKeluar.keterangan" id="jumlah" name="keterangan"  autofocus="">
+		                            <input class="form-control" autocomplete="off" placeholder="Keterangan" type="text" v-model="kasMutasi.keterangan" id="jumlah" name="keterangan"  autofocus="">
 		                            <span v-if="errors.keterangan" id="keterangan_error" class="label label-danger">{{ errors.keterangan[0] }}</span>
 		                        </div>
 		                    </div>
@@ -72,20 +74,16 @@ export default {
         return {
             errors: [],
             kas : [],
-            kategori :[],
-            url : window.location.origin+(window.location.pathname).replace("dashboard", "kas-keluar"),
-            kasKeluar: {
-                kas: '',
-                kategori: '',
+            url : window.location.origin+(window.location.pathname).replace("dashboard", "kas-mutasi"),
+            kasMutasi: {
+                dari_kas: '',
+                ke_kas: '',
                 jumlah: '',
                 keterangan: ''
             },
             message : '',
             placeholderKas: {
                 placeholder: '--PILIH KAS--'
-            },
-           	placeholderKategori: {
-                placeholder: '--PILIH KATEGORI--'
             }
         }
         
@@ -93,37 +91,32 @@ export default {
     mounted() {
         var app = this;
         app.dataKas();
-        app.dataKategori();
     },
     methods: {
         saveForm() {
             var app = this;
-            var newKasKeluar = app.kasKeluar;
-            axios.post(app.url, newKasKeluar)
-            .then(function (resp) {
-            	if (resp.data < 0) {
-            		app.message = 'Kas Tidak Mencukupi. Sisa Kas = '+new Intl.NumberFormat().format(resp.data);
-	                app.alertGagal(app.message);
-					app.$router.replace('/create-kas-keluar');
-					app.$refs.jumlah.$el.focus()
-            	}
-            	else{
+            var newKasMutasi = app.kasMutasi;
+            
+            if (app.kasMutasi.dari_kas != app.kasMutasi.ke_kas) {
+	            axios.post(app.url, newKasMutasi)
+	            .then(function (resp) {	            	
+	            		var respons = resp.data;
+		            	if (resp.data < 0) {
+		            		app.kasTidakCukup(respons);
+		            	}
+		            	else{
+		            		app.inputKasMutasi();
+		            	}	            	
+	            })
+	            .catch(function (resp) {
+	            	console.log(resp)
+	                app.success = false;
+	                app.errors = resp.response.data.errors;
+	            });
 
-	                app.message = 'Berhasil Menambah Kas Keluar';
-	                app.alert(app.message);
-	                app.kasKeluar.kas = ''
-	                app.kasKeluar.kategori = ''
-	                app.kasKeluar.jumlah = ''
-	                app.kasKeluar.keterangan = ''
-	                app.errors = '';
-	                app.$router.replace('/kas-keluar');
-
-            	}
-            })
-            .catch(function (resp) {
-                app.success = false;
-                app.errors = resp.response.data.errors;
-            });
+            }else{
+            	app.alertKasSama();
+            }
         },
         alert(pesan) {
           this.$swal({
@@ -139,6 +132,13 @@ export default {
               icon: "warning",
           });
       	},
+        alertKasSama() {
+          this.$swal({
+              title: "Peringatan!",
+              text: "Kas Tidak Boleh Sama!",
+              icon: "warning",
+          });
+      	},
       	dataKas() {
 	      	var app = this;
 	      	axios.get(app.url+'/pilih-kas').then(function (resp) {
@@ -148,15 +148,23 @@ export default {
 	        	alert("Tidak Bisa Memuat Kas");
 	        });
 	    },
-	    dataKategori() {
-	      	var app = this;
-	      	axios.get(app.url+'/pilih-kategori').then(function (resp) {
-	            app.kategori = resp.data;
-	        })
-	        .catch(function (resp) {
-	        	alert("Tidak Bisa Memuat Kategori");
-	        });
+	    kasTidakCukup(respons){
+	    	var app = this;
+	    	app.message = 'Kas Tidak Mencukupi. Sisa Kas = '+new Intl.NumberFormat().format(respons);
+	    	app.alertGagal(app.message);
+			app.$router.replace('/create-kas-mutasi');
 	    },
+	    inputKasMutasi(){
+	    	var app = this;
+	    	app.message = 'Berhasil Menambah Kas Mutasi';
+	    	app.alert(app.message);
+	    	app.kasMutasi.kas = ''
+	    	app.kasMutasi.kategori = ''
+	    	app.kasMutasi.jumlah = ''
+	    	app.kasMutasi.keterangan = ''
+	    	app.errors = '';
+	    	app.$router.replace('/kas-mutasi');
+	    }
   	}
 }
 </script>

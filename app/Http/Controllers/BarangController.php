@@ -88,13 +88,13 @@ class BarangController extends Controller
 
     public function pencarian(Request $request)
     {
-        $data_produk = Barang::with(['satuan', 'kategori_barang'])->where('id_warung', Auth::user()->id_warung)
-            ->where('kode_barang', 'LIKE', "%$request->search%")
-            ->orwhere('kode_barcode', 'LIKE', "%$request->search%")
-            ->orwhere('nama_barang', 'LIKE', "%$request->search%")
-            ->orwhere('harga_beli', 'LIKE', "%$request->search%")
-            ->orwhere('harga_jual', 'LIKE', "%$request->search%")
-            ->orderBy('id', 'desc')->paginate(10);
+        $data_produk = Barang::with(['satuan', 'kategori_barang'])->where('id_warung', Auth::user()->id_warung)->where(function ($query) use ($request) {
+            $query->orwhere('kode_barang', 'LIKE', '%' . $request->search . '%')
+                ->orwhere('kode_barcode', 'LIKE', '%' . $request->search . '%')
+                ->orwhere('nama_barang', 'LIKE', '%' . $request->search . '%')
+                ->orwhere('harga_beli', 'LIKE', '%' . $request->search . '%')
+                ->orwhere('harga_jual', 'LIKE', '%' . $request->search . '%');
+        })->orderBy('id', 'desc')->paginate(10);
         $array_produk = array();
         foreach ($data_produk as $produk) {
 
@@ -390,7 +390,7 @@ class BarangController extends Controller
                 'id'          => $produks->id,
                 'nama_produk' => title_case($produks->nama_barang),
                 'kode_barang' => $produks->kode_barang,
-                'produk'      => $produks->id . "|" . title_case($produks->nama_barang)]);
+                'produk'      => $produks->id . "|" . title_case($produks->nama_barang) . "|" . $produks->harga_beli]);
         }
 
         return response()->json($array);

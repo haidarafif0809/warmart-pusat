@@ -6,6 +6,7 @@ use App\DetailPesananPelanggan;
 use App\KeranjangBelanja;
 use App\PesananPelanggan;
 use Auth;
+use Indonesia;
 use Jenssegers\Agent\Agent;
 use OpenGraph;
 use SEOMeta;
@@ -41,16 +42,16 @@ class PesananPelangganController extends Controller
 
             $produk_pesanan_mobile .= '
             <div class="card">
-            <div class="col-sm-6">
-            <b>Pesanan : <a href="' . url('pesanan-detail/' . $pesanan_pelanggans->id . '') . '">#' . $pesanan_pelanggans->id . '</a></b>
-            </div><hr style="margin-bottom: 0px;margin-top: 1px">
-            <div class="col-sm-6">
-            Waktu Pesan : ' . $pesanan_pelanggans->WaktuPesan . '
-            </div>
-            <div class="container">
-            <a> Jumlah  : ' . $pesanan_pelanggans->jumlah_produk . '<a><br>
-            Total &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: Rp. ' . number_format($pesanan_pelanggans->subtotal, 0, ',', '.') . '<br>
-            Status &nbsp;&nbsp;: ';
+                <div class="col-sm-6">
+                    <b>Pesanan : <a href="' . url('pesanan-detail/' . $pesanan_pelanggans->id . '') . '">#' . $pesanan_pelanggans->id . '</a></b>
+                </div><hr style="margin-bottom: 0px;margin-top: 1px">
+                <div class="col-sm-6">
+                    Waktu Pesan : ' . $pesanan_pelanggans->WaktuPesan . '
+                </div>
+                <div class="container">
+                    <a> Jumlah  : ' . $pesanan_pelanggans->jumlah_produk . '<a><br>
+                        Total &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: Rp. ' . number_format($pesanan_pelanggans->subtotal, 0, ',', '.') . '<br>
+                        Status &nbsp;&nbsp;: ';
 
             if ($pesanan_pelanggans->konfirmasi_pesanan == 0) {
                 $produk_pesanan_mobile .= '<b  style="color:red">Belum Di Konfirmasi</b>';
@@ -64,9 +65,9 @@ class PesananPelangganController extends Controller
 
             $produk_pesanan_mobile .= '<br>Warung : <a href="' . url('halaman-warung/' . $pesanan_pelanggans->id_warung . '') . '"><b>' . $pesanan_pelanggans->warung->name . '</b></a>';
             $produk_pesanan_mobile .= '
-            <a href="' . url('pesanan-detail/' . $pesanan_pelanggans->id . '') . '" style="background-color: #01573e" class="btn btn-block">Detail Pesanan</a>
-            </div>
-            </div>';
+                        <a href="' . url('pesanan-detail/' . $pesanan_pelanggans->id . '') . '" style="background-color: #01573e" class="btn btn-block">Detail Pesanan</a>
+                    </div>
+                </div>';
         }
 
         //MEANMPILKAN PRODUK PESANAN VERSI KOMPUTER
@@ -74,10 +75,10 @@ class PesananPelangganController extends Controller
         foreach ($pesanan_pelanggan as $pesanan_pelanggans) {
 
             $produk_pesanan_komputer .= '
-            <tr  style="margin-top:0px;margin-bottom: 0px;">
-            <td><a href="' . url('pesanan-detail/' . $pesanan_pelanggans->id . '') . '"><b>#' . $pesanan_pelanggans->id . '</b></a></td>
-            <td><b>' . $pesanan_pelanggans->WaktuPesan . '</b></td>
-            <td><b>Rp. ' . number_format($pesanan_pelanggans->subtotal, 0, ',', '.') . '</b></td>';
+                <tr  style="margin-top:0px;margin-bottom: 0px;">
+                    <td><a href="' . url('pesanan-detail/' . $pesanan_pelanggans->id . '') . '"><b>#' . $pesanan_pelanggans->id . '</b></a></td>
+                    <td><b>' . $pesanan_pelanggans->WaktuPesan . '</b></td>
+                    <td><b>Rp. ' . number_format($pesanan_pelanggans->subtotal, 0, ',', '.') . '</b></td>';
             if ($pesanan_pelanggans->konfirmasi_pesanan == 0) {
                 $produk_pesanan_komputer .= '<td><b  style="color:red">Belum Di Konfirmasi</b></td>';
             } elseif ($pesanan_pelanggans->konfirmasi_pesanan == 1) {
@@ -129,7 +130,9 @@ class PesananPelangganController extends Controller
             $status_pesanan .= '<td><b  style="color:red">Batal</b></td>';
         }
 
-        return view('layouts.detail_pesanan_pelanggan', ['detail_pesanan_pelanggan' => $detail_pesanan_pelanggan, 'pesanan_pelanggan' => $pesanan_pelanggan, 'cek_belanjaan' => $cek_belanjaan, 'agent' => $agent, 'logo_warmart' => $logo_warmart, 'user' => $user, 'status_pesanan' => $status_pesanan, 'pagination' => $pagination]);
+        $lokasi_warung = Indonesia::allVillages()->where('id', $pesanan_pelanggan->warung->wilayah)->first();
+
+        return view('layouts.detail_pesanan_pelanggan', ['detail_pesanan_pelanggan' => $detail_pesanan_pelanggan, 'pesanan_pelanggan' => $pesanan_pelanggan, 'cek_belanjaan' => $cek_belanjaan, 'agent' => $agent, 'logo_warmart' => $logo_warmart, 'user' => $user, 'status_pesanan' => $status_pesanan, 'lokasi_warung' => $lokasi_warung->name, 'pagination' => $pagination]);
     }
 
 }

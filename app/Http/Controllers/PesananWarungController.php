@@ -76,9 +76,10 @@ class PesananWarungController extends Controller
         return number_format($angka, 0, ',', '.');
     }
 
-    public function dataPagination($data_pesanan_warung, $array_pesanan_warung)
+    public function dataPagination($data_pesanan_warung, $array_pesanan_warung, $agent)
     {
 
+        $respons['agent']          = $agent;
         $respons['current_page']   = $data_pesanan_warung->currentPage();
         $respons['data']           = $array_pesanan_warung;
         $respons['first_page_url'] = url('/pesanan-warung/view?page=' . $data_pesanan_warung->firstItem());
@@ -97,7 +98,13 @@ class PesananWarungController extends Controller
 
     public function view()
     {
-        $data_pesanan_warung  = PesananPelanggan::where('id_warung', Auth::user()->id_warung)->orderBy('id', 'desc')->paginate(10);
+        $data_pesanan_warung = PesananPelanggan::where('id_warung', Auth::user()->id_warung)->orderBy('id', 'desc')->paginate(10);
+        $data_agent          = new Agent();
+        if ($data_agent->isMobile()) {
+            $agent = 0;
+        } else {
+            $agent = 1;
+        }
         $array_pesanan_warung = array();
         foreach ($data_pesanan_warung as $pesanan_warung) {
             array_push($array_pesanan_warung, [
@@ -109,7 +116,7 @@ class PesananWarungController extends Controller
         }
 
         //DATA PAGINATION
-        $respons = $this->dataPagination($data_pesanan_warung, $array_pesanan_warung);
+        $respons = $this->dataPagination($data_pesanan_warung, $array_pesanan_warung, $agent);
         return response()->json($respons);
     }
 
@@ -121,7 +128,14 @@ class PesananWarungController extends Controller
 
     public function pencarian(Request $request)
     {
-        $search              = $request->search;
+        $search     = $request->search;
+        $data_agent = new Agent();
+        if ($data_agent->isMobile()) {
+            $agent = 0;
+        } else {
+            $agent = 1;
+        }
+
         $data_pesanan_warung = PesananPelanggan::where('id_warung', Auth::user()->id_warung)
             ->where(function ($query) use ($search) {
                 $query->orwhere('id', 'LIKE', '%' . $search . '%')
@@ -141,7 +155,7 @@ class PesananWarungController extends Controller
         }
 
         //DATA PAGINATION
-        $respons = $this->dataPagination($data_pesanan_warung, $array_pesanan_warung);
+        $respons = $this->dataPagination($data_pesanan_warung, $array_pesanan_warung, $agent);
         return response()->json($respons);
     }
 

@@ -122,7 +122,7 @@ class PembelianController extends Controller
 
         $kas_default = Kas::where('warung_id', Auth::user()->id_warung)->where('default_kas', 1)->count();
 
-        $tbs_pembelian = TbsPembelian::select('tbs_pembelians.id_tbs_pembelian AS id_tbs_pembelian', 'tbs_pembelians.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'tbs_pembelians.id_produk AS id_produk', 'tbs_pembelians.harga_produk AS harga_produk', 'tbs_pembelians.potongan AS potongan', 'tbs_pembelians.tax AS tax')->leftJoin('barangs', 'barangs.id', '=', 'tbs_pembelians.id_produk')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->orderBy('id_tbs_pembelian', 'desc')->paginate(10);
+        $tbs_pembelian = TbsPembelian::select('tbs_pembelians.id_tbs_pembelian AS id_tbs_pembelian', 'tbs_pembelians.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'tbs_pembelians.id_produk AS id_produk', 'tbs_pembelians.harga_produk AS harga_produk', 'tbs_pembelians.potongan AS potongan', 'tbs_pembelians.tax AS tax', 'tbs_pembelians.subtotal AS subtotal')->leftJoin('barangs', 'barangs.id', '=', 'tbs_pembelians.id_produk')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->orderBy('id_tbs_pembelian', 'desc')->paginate(10);
         $array         = array();
 
         foreach ($tbs_pembelian as $tbs_pembelians) {
@@ -182,7 +182,7 @@ class PembelianController extends Controller
 
         $kas_default = Kas::where('warung_id', Auth::user()->id_warung)->where('default_kas', 1)->count();
 
-        $tbs_pembelian = TbsPembelian::select('tbs_pembelians.id_tbs_pembelian AS id_tbs_pembelian', 'tbs_pembelians.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'tbs_pembelians.id_produk AS id_produk', 'tbs_pembelians.harga_produk AS harga_produk', 'tbs_pembelians.potongan AS potongan', 'tbs_pembelians.tax AS tax')->leftJoin('barangs', 'barangs.id', '=', 'tbs_pembelians.id_produk')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)
+        $tbs_pembelian = TbsPembelian::select('tbs_pembelians.id_tbs_pembelian AS id_tbs_pembelian', 'tbs_pembelians.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'tbs_pembelians.id_produk AS id_produk', 'tbs_pembelians.harga_produk AS harga_produk', 'tbs_pembelians.potongan AS potongan', 'tbs_pembelians.tax AS tax', 'tbs_pembelians.subtotal AS subtotal')->leftJoin('barangs', 'barangs.id', '=', 'tbs_pembelians.id_produk')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)
             ->where(function ($query) use ($request) {
 
                 $query->orWhere('barangs.nama_barang', 'LIKE', $request->search . '%')
@@ -366,6 +366,15 @@ class PembelianController extends Controller
         }
     }
 
+    public function cekTbsPembelian(Request $request)
+    {
+        $session_id = session()->getId(); // SESSION ID
+        // CEK TBS PEMBELIAN
+        $data_tbs = TbsPembelian::where('id_produk', $request->id)
+            ->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
+        return $data_tbs->count();
+    }
+
     //PROSES TAMBAH TBS PEMBELIAN
     public function proses_tambah_tbs_pembelian(Request $request)
     {
@@ -374,66 +383,21 @@ class PembelianController extends Controller
             Auth::logout();
             return response()->view('error.403');
         } else {
-            //VALIDATE
-            $this->validate($request, [
-                'id_produk_tbs' => 'required|numeric',
-                'jumlah_produk' => 'required|numeric|digits_between:1,15',
+
+            $session_id = session()->getId();
+            $barang     = Barang::select('nama_barang', 'satuan_id')->where('id', $request->id_produk_tbs)->where('id_warung', Auth::user()->id_warung)->first();
+            // SUBTOTAL = JUMLAH * HARGA
+            $subtotal = $request->jumlah_produk * $request->harga_produk;
+            // INSERT TBS PEMBELIAN
+            $Insert_tbspembelian = TbsPembelian::create([
+                'id_produk'     => $request->id_produk_tbs,
+                'session_id'    => $session_id,
+                'jumlah_produk' => $request->jumlah_produk,
+                'harga_produk'  => $request->harga_produk,
+                'subtotal'      => $subtotal,
+                'satuan_id'     => $barang->satuan_id,
+                'warung_id'     => Auth::user()->id_warung,
             ]);
-
-            $session_id = session()->getId(); // SESSION ID
-            // CEK TBS PEMBELIAN
-            $data_tbs = TbsPembelian::where('id_produk', $request->id_produk_tbs)
-                ->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
-
-            // SELECT PRODUK
-            $barang = Barang::select('nama_barang', 'satuan_id')->where('id', $request->id_produk_tbs)->where('id_warung', Auth::user()->id_warung)->first();
-//JIKA PRODUK YG DIPILIH SUDAH ADA DI TBS
-            if ($data_tbs->count() > 0) {
-
-                $pesan_alert =
-                '<div class="container-fluid">
-        <div class="alert-icon">
-        <i class="material-icons">warning</i>
-        </div>
-        <b>Warning : Produk "' . $barang->nama_barang . '" Sudah Ada, Silakan Pilih Produk Lain !</b>
-        </div>';
-
-                Session::flash("flash_notification", [
-                    "level"   => "warning",
-                    "message" => $pesan_alert,
-                ]);
-
-                return redirect()->route('pembelian.create');
-            } else {
-
-                $pesan_alert =
-                '<div class="container-fluid">
-       <div class="alert-icon">
-       <i class="material-icons">check</i>
-       </div>
-       <b>Berhasil Menambah Produk "' . $barang->nama_barang . '"</b>
-       </div>';
-
-                // SUBTOTAL = JUMLAH * HARGA
-                $subtotal = $request->jumlah_produk * $request->harga_produk;
-
-                // INSERT TBS PEMBELIAN
-                $Insert_tbspembelian = TbsPembelian::create([
-                    'id_produk'     => $request->id_produk_tbs,
-                    'session_id'    => $session_id,
-                    'jumlah_produk' => $request->jumlah_produk,
-                    'harga_produk'  => $request->harga_produk,
-                    'subtotal'      => $subtotal,
-                    'satuan_id'     => $barang->satuan_id,
-                    'warung_id'     => Auth::user()->id_warung,
-                ]);
-
-                Session::flash("flash_notification", [
-                    "level"   => "success",
-                    "message" => $pesan_alert,
-                ]);
-                return redirect()->route('pembelian.create');
-            }
         }
     }
 
@@ -470,20 +434,6 @@ class PembelianController extends Controller
             $tbs_pembelian->update(['jumlah_produk' => $request->jumlah_edit_produk, 'subtotal' => $subtotal, 'tax' => $tax_produk]);
             $nama_barang = $tbs_pembelian->TitleCaseBarang; // TITLE CASH
 
-            $pesan_alert =
-                '<div class="container-fluid">
-  <div class="alert-icon">
-  <i class="material-icons">check</i>
-  </div>
-  <b>Berhasil Mengubah Jumlah Produk "' . $nama_barang . '"</b>
-  </div>';
-
-            Session::flash("flash_notification", [
-                "level"   => "success",
-                "message" => $pesan_alert,
-            ]);
-
-            return redirect()->back();
         }
     }
 
@@ -528,25 +478,31 @@ class PembelianController extends Controller
                 $subtotal = ($request->harga_edit_produk * $tbs_pembelian->jumlah_produk) - $potongan_produk;
             }
 
-// UPDATE HARGA, SUBTOTAL, POTONGAN, TAX
+            // UPDATE HARGA, SUBTOTAL, POTONGAN, TAX
             $tbs_pembelian->update(['harga_produk' => $request->harga_edit_produk, 'subtotal' => $subtotal, 'potongan' => $potongan_produk, 'tax' => $tax_produk]);
             $nama_barang = $tbs_pembelian->TitleCaseBarang; // TITLE CASH
-
-            $pesan_alert =
-                '<div class="container-fluid">
-<div class="alert-icon">
-<i class="material-icons">check</i>
-</div>
-<b>Berhasil Mengubah Harga Produk "' . $nama_barang . '"</b>
-</div>';
-
-            Session::flash("flash_notification", [
-                "level"   => "success",
-                "message" => $pesan_alert,
-            ]);
-
-            return redirect()->back();
         }
+    }
+
+    //PROSES CEK PERSEN MELEBIHI BATAS
+    public function cek_persen_potongan_pembelian(Request $request)
+    {
+        // SELECT EDIT TBS PEMBELIAN
+        $tbs_pembelian = TbsPembelian::find($request->id_potongan);
+        $potongan      = substr_count($request->potongan_edit_produk, '%'); // UNTUK CEK APAKAH ADA STRING "%"
+        // JIKA TIDAK ADA
+        if ($potongan == 0) {
+            $potongan_persen = 0;
+        } else {
+            $potongan_persen = filter_var($request->potongan_edit_produk, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION); //  PISAH STRING BERDASRAKAN TANDA "%"
+        }
+
+        if ($potongan_persen > 100) {
+            return $persen_alert = 1;
+        } else {
+            return $persen_alert = 0;
+        }
+
     }
 
 //PROSES EDIT HARGA TBS PEMBELIAN
@@ -637,6 +593,28 @@ class PembelianController extends Controller
         }
     }
 
+//PROSES CEK PERSEN TAX  MELEBIHI BATAS
+    public function cek_persen_tax_pembelian(Request $request)
+    {
+        // SELECT EDIT TBS PEMBELIAN
+        $tbs_pembelian = TbsPembelian::find($request->id_tax);
+        $tax           = substr_count($request->tax_edit_produk, '%'); // UNTUK CEK APAKAH ADA STRING "%"
+        // JIKA TIDAK ADA
+        if ($tax == 0) {
+            $tax_persen = 0;
+        } else {
+            // JIKA ADA
+            $tax_persen = filter_var($request->tax_edit_produk, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION); //  PISAH STRING BERDASRAKAN TANDA "%"
+        }
+
+        if ($tax_persen > 100) {
+            return $persen_alert = 1;
+        } else {
+            return $persen_alert = 0;
+        }
+
+    }
+
     public function editTaxTbsPembelian(Request $request)
     {
 
@@ -663,79 +641,28 @@ class PembelianController extends Controller
                 $tax_produk = 0;
             }
 
-            if ($tax_persen > 100) {
-
-                $pesan_alert =
-                    '<div class="container-fluid">
-     <div class="alert-icon">
-     <i class="material-icons">check</i>
-     </div>
-     <b>Pajak Tidak Boleh Lebih Dari 100%!</b>
-     </div>';
-
-                Session::flash("flash_notification", [
-                    "level"   => "success",
-                    "message" => $pesan_alert,
-                ]);
-
-                return redirect()->back();
-            } else {
-
-                if ($request->ppn_produk == 'Include') {
-                    // JIKA PPN INCLUDE MAKA PAJAK TIDAK MEMPENGARUHI SUBTOTAL
-                    $subtotal = ($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $tbs_pembelian->potongan;
-                } elseif ($request->ppn_produk == 'Exclude') {
-                    // JIKA PPN EXCLUDE MAKA PAJAK MEMPENGARUHI SUBTOTAL
-                    $subtotal = (($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $tbs_pembelian->potongan) + $tax_produk;
-                }
-                // UPDATE SUBTOTAL, TAX, PPN
-                $tbs_pembelian->update(['subtotal' => $subtotal, 'tax' => $tax_produk, 'ppn' => $request->ppn_produk]);
-                $nama_barang = $tbs_pembelian->TitleCaseBarang; // TITLE CASH
-
-                $pesan_alert =
-                    '<div class="container-fluid">
-             <div class="alert-icon">
-             <i class="material-icons">check</i>
-             </div>
-             <b>Berhasil Mengubah Pajak Produk "' . $nama_barang . '"</b>
-             </div>';
-
-                Session::flash("flash_notification", [
-                    "level"   => "success",
-                    "message" => $pesan_alert,
-                ]);
-
-                return redirect()->back();
+            if ($request->ppn_produk == 'Include') {
+                // JIKA PPN INCLUDE MAKA PAJAK TIDAK MEMPENGARUHI SUBTOTAL
+                $subtotal = ($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $tbs_pembelian->potongan;
+            } elseif ($request->ppn_produk == 'Exclude') {
+                // JIKA PPN EXCLUDE MAKA PAJAK MEMPENGARUHI SUBTOTAL
+                $subtotal = (($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $tbs_pembelian->potongan) + $tax_produk;
             }
+            // UPDATE SUBTOTAL, TAX, PPN
+            $tbs_pembelian->update(['subtotal' => $subtotal, 'tax' => $tax_produk, 'ppn' => $request->ppn_produk]);
+            $nama_barang = $tbs_pembelian->TitleCaseBarang; // TITLE CASH
+
         }
     }
 
-//PROSES HAPUS TBS PEMBELIAN
+    //PROSES HAPUS TBS PEMBELIAN
     public function hapus_tbs_pembelian($id)
     {
-
         if (Auth::user()->id_warung == '') {
             Auth::logout();
             return response()->view('error.403');
         } else {
-
-            if (!TbsPembelian::destroy($id)) {
-                return redirect()->route('pembelian.create');
-            } else {
-                $pesan_alert =
-                    '<div class="container-fluid">
-            <div class="alert-icon">
-            <i class="material-icons">check</i>
-            </div>
-            <b>Berhasil Menghapus Produk</b>
-            </div>';
-
-                Session::flash("flash_notification", [
-                    "level"   => "danger",
-                    "message" => $pesan_alert,
-                ]);
-                return redirect()->route('pembelian.create');
-            }
+            TbsPembelian::destroy($id);
         }
     }
 
