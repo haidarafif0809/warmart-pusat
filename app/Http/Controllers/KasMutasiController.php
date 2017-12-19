@@ -7,8 +7,6 @@ use App\KasMutasi;
 use App\TransaksiKas;
 use Auth;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Session;
 use Yajra\Datatables\Html\Builder;
 
 class KasMutasiController extends Controller
@@ -94,6 +92,12 @@ class KasMutasiController extends Controller
         return response()->json($respons);
     }
 
+    public function pilih_kas()
+    {
+        $kas = Kas::select('id', 'nama_kas')->where('kas.warung_id', Auth::user()->id_warung)->get();
+        return response()->json($kas);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -125,32 +129,33 @@ class KasMutasiController extends Controller
             Auth::logout();
             return response()->view('error.403');
         } else {
+            $dari_kas  = $request->dari_kas;
+            $total_kas = TransaksiKas::total_kas_mutasi($dari_kas);
+            $sisa_kas  = $total_kas - $request->jumlah;
 
-            // // proses tambah kas mutasi
-            $this->validate($request, [
-                'dari_kas'   => 'required',
-                'ke_kas'     => 'required',
-                'jumlah'     => 'required|numeric|digits_between:1,9',
-                'keterangan' => 'nullable|max:150',
+            if ($sisa_kas < 0) {
+                return $sisa_kas;
+            } else {
+                // proses tambah kas mutasi
+                $this->validate($request, [
+                    'dari_kas'   => 'required',
+                    'ke_kas'     => 'required',
+                    'jumlah'     => 'required|numeric|digits_between:1,9',
+                    'keterangan' => 'nullable|max:150',
 
-            ]);
+                ]);
 
-            $no_faktur = KasMutasi::no_faktur();
+                $no_faktur  = KasMutasi::no_faktur();
+                $kas_mutasi = KasMutasi::create([
+                    'no_faktur'  => $no_faktur,
+                    'dari_kas'   => $request->dari_kas,
+                    'ke_kas'     => $request->ke_kas,
+                    'jumlah'     => $request->jumlah,
+                    'keterangan' => $request->keterangan,
+                    'id_warung'  => Auth::user()->id_warung]);
 
-            $kas_mutasi = KasMutasi::create([
-                'no_faktur'  => $no_faktur,
-                'dari_kas'   => $request->dari_kas,
-                'ke_kas'     => $request->ke_kas,
-                'jumlah'     => $request->jumlah,
-                'keterangan' => $request->keterangan,
-                'id_warung'  => Auth::user()->id_warung]);
-
-            Session::flash("flash_notification", [
-                "level"   => "success",
-                "message" => " <b>BERHASIL:</b> Memutasikan Kas Sejumlah <b>$request->jumlah</b>",
-            ]);
-
-            return redirect()->route('kas_mutasi.index');
+                return 1; //BERHASIL MELAKUKAN MUTASI KAS
+            }
         }
 
     }
@@ -163,7 +168,9 @@ class KasMutasiController extends Controller
      */
     public function show($id)
     {
-        //
+        $kas_mutasi = kasMutasi::find($id);
+
+        return $kas_mutasi;
     }
 
     /**
@@ -182,7 +189,6 @@ class KasMutasiController extends Controller
             Auth::logout();
             return response()->view('error.403');
         } else {
-
             return view('kas_mutasi.edit', ['kas' => $kas])->with(compact('kas_mutasi'));
         }
 
@@ -203,24 +209,33 @@ class KasMutasiController extends Controller
             Auth::logout();
             return response()->view('error.403');
         } else {
+            $dari_kas  = $request->dari_kas;
+            $total_kas = TransaksiKas::total_kas_mutasi($dari_kas);
 
-            $this->validate($request, [
-                'dari_kas'   => 'required',
-                'ke_kas'     => 'required',
-                'jumlah'     => 'required|numeric',
-                'keterangan' => 'max:150',
+            //JIKA KAS YG DIPILIH == KAS LAMA, MAKA (TOTAL KAS + JUMLAH KAS LAMA) - JUMLAH KAS BARU
+            if ($kas_mutasi->dari_kas == $request->dari_kas) {
+                $data_kas = $total_kas + $kas_mutasi->jumlah;
+                $sisa_kas = $data_kas - $request->jumlah;
+            } elseif ($kas_mutasi->ke_kas == $request->dari_kas) {
+                $data_kas = $total_kas - $kas_mutasi->jumlah;
+                $sisa_kas = $data_kas - $request->jumlah;
+            } else {
+                $sisa_kas = $total_kas - $request->jumlah;
+            }
 
-            ]);
+            if ($sisa_kas < 0) {
+                return $sisa_kas;
+            } else {
+                $this->validate($request, [
+                    'dari_kas'   => 'required',
+                    'ke_kas'     => 'required',
+                    'jumlah'     => 'required|numeric',
+                    'keterangan' => 'max:150',
 
-            $kas = KasMutasi::find($id)->update(['dari_kas' => $request->dari_kas, 'ke_kas' => $request->ke_kas, 'jumlah' => $request->jumlah, 'keterangan' => $request->keterangan, 'id_warung' => Auth::user()->id_warung]);
+                ]);
 
-            Session::flash("flash_notification", [
-                "level"   => "success",
-                "message" => "<b>BERHASIL:</b> Mengubah Kas Mutasi $kas_mutasi->no_faktur",
-            ]);
-
-            return redirect()->route('kas_mutasi.index');
-
+                $kas = KasMutasi::find($id)->update(['dari_kas' => $request->dari_kas, 'ke_kas' => $request->ke_kas, 'jumlah' => $request->jumlah, 'keterangan' => $request->keterangan, 'id_warung' => Auth::user()->id_warung]);
+            }
         }
     }
 
@@ -232,41 +247,21 @@ class KasMutasiController extends Controller
      */
     public function destroy($id)
     {
-        //
         $kas_mutasi = KasMutasi::find($id);
 
         if ($kas_mutasi->id_warung != Auth::user()->id_warung) {
             Auth::logout();
             return response()->view('error.403');
         } else {
-
             // hitung kas
-            $sisa_kas = TransaksiKas::select(DB::raw('SUM(jumlah_masuk - jumlah_keluar) as total_kas'))
-                ->where('kas', $kas_mutasi->ke_kas)
-                ->where('warung_id', Auth::user()->id_warung)
-                ->where('no_faktur', '!=', $kas_mutasi->no_faktur)
-                ->first();
+            $total_kas = TransaksiKas::total_kas_mutasi($kas_mutasi->ke_kas);
+            $sisa_kas  = $total_kas - $kas_mutasi->jumlah;
 
-            if ($sisa_kas->total_kas < 0) {
-
-                Session::flash("flash_notification", [
-                    "level"   => "danger",
-                    "message" => "Mohon Maaf, Kas Mutasi " . $kas_mutasi->no_faktur . " Tidak bisa Di Hapus, Jika Dihapus Kas akan Minus ",
-                ]);
-                return redirect()->route('kas_mutasi.index');
+            if ($sisa_kas < 0) {
+                return 0;
             } else {
-
-                // jika gagal hapus
-                if (!KasMutasi::destroy($id)) {
-                    // redirect back
-                    return redirect()->back();
-                } else {
-                    Session::flash("flash_notification", [
-                        "level"   => "danger",
-                        "message" => "Kas Mutasi " . $kas_mutasi->no_faktur . " Berhasil Di Hapus",
-                    ]);
-                    return redirect()->route('kas_mutasi.index');
-                }
+                KasMutasi::destroy($id);
+                return response(200);
             }
 
         }

@@ -8,7 +8,7 @@
 
 <template>	
 	<div class="row">
-		<div class="col-md-12">
+		<div class="col-md-12" v-if="dataAgent == 1"><!--AKSES VIA PC-->
         <!-- MODAL PEMESAN -->
         <div class="modal " id="data_pemesan" role="dialog" data-backdrop="">
             <div class="modal-dialog">
@@ -49,7 +49,7 @@
 					<h4 class="card-title"> Pesanan</h4>
 
 					<div class="toolbar">
-                    <router-link class="btn btn-primary" style="padding-bottom:10px"><i class="material-icons">add</i></router-link>
+                        <router-link :to="{name: 'indexDashboard'}" class="btn btn-primary" style="padding-bottom:10px"><i class="material-icons">add</i></router-link>
 
                         <div class="pencarian">
                             <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
@@ -61,10 +61,8 @@
 							<thead class="text-primary">
 								<tr>
 
-                                    <th>Pesanan</th>
+                                    <th>No</th>
                                     <th>Pemesan</th>
-                                    <th>Jumlah</th>
-                                    <th>Total</th>
                                     <th>Status</th>
                                     <th>Waktu</th>
                                     <th>Detail</th>
@@ -75,8 +73,6 @@
                                 <tr v-for="pesananWarung, index in pesananWarung" >
                                      <td>{{ pesananWarung.pesanan_warung.id }}</td>
                                      <td>{{ pesananWarung.pemesan }}</td>
-                                     <td>{{ pesananWarung.pesanan_warung.jumlah_produk }}</td>
-                                     <td>{{ pesananWarung.subtotal }}</td>
                                      <td>
                                         <b style="color:red" v-if="pesananWarung.pesanan_warung.konfirmasi_pesanan == 0">Belum Di Konfirmasi</b>
                                         <b style="color:orange" v-else-if="pesananWarung.pesanan_warung.konfirmasi_pesanan == 1">Sudah Konfirmasi</b>
@@ -105,7 +101,59 @@
 
                 </div>
             </div>
-        </div>
+        </div><!--AKSES VIA PC-->
+
+        <div class="col-md-12" style="padding-left:25px; padding-right:25px" v-else><!--AKSES VIA MOBILE-->
+            <ul class="breadcrumb" style="margin-bottom: 0px;">
+                <li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li>
+                <li class="active">Pesanan</li>
+            </ul>
+
+            <div class="card" style="margin-bottom: 5px; margin-top: 1px;">
+                <div class="card-content" style="padding: 5px 0px">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">search</i>
+                        </span>
+                        <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control" autocomplete="" style="color: red">
+                    </div>
+                </div>
+            </div>
+            
+
+            <div class="card" style="margin-bottom: 5px; margin-top: 1px;" v-for="pesananWarung, index in pesananWarung">
+                <div class="card-content" style="padding: 5px 0px">
+                        <div class="col-md-12">
+                            <b class="card-title" style="font-size:medium">Pesanan : #{{pesananWarung.pesanan_warung.id}}</b>
+                        </div><hr style="margin-bottom: 0px;margin-top: 1px">
+                        <div class="col-md-12 table-responsive" style="margin-bottom: 0px;">
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <tr><td width="25%"> Pemesan</td> <td> : </td> <td>  {{pesananWarung.pesanan_warung.nama_pemesan}} </td></tr>
+                                        <tr><td width="25%"> No. Telp</td> <td> : </td> <td>  {{pesananWarung.pesanan_warung.no_telp_pemesan}} </td></tr>
+                                        <tr><td width="25%"> Status</td> <td> : </td>
+                                            <td>
+                                                <b style="color:red" v-if="pesananWarung.pesanan_warung.konfirmasi_pesanan == 0">Belum Di Konfirmasi</b>
+                                                <b style="color:orange" v-else-if="pesananWarung.pesanan_warung.konfirmasi_pesanan == 1">Sudah Konfirmasi</b>
+                                                <b style="color:#01573e" v-else-if="pesananWarung.pesanan_warung.konfirmasi_pesanan == 2">Selesai</b>
+                                                <b style="color:#01573e" v-else>Batal</b>
+                                            </td>
+                                        </tr>
+                                        <tr><td width="25%"> Waktu</td> <td> : </td> <td> {{pesananWarung.pesanan_warung.created_at}} </td></tr>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <router-link :to="{name: 'detailPesananWarung', params: {id: pesananWarung.pesanan_warung.id}}" class="btn btn-block" v-bind:id="'detail-' + pesananWarung.pesanan_warung.id" style="background-color: #01573e; margin: 1px 1px" > Detail Pesanan
+                            </router-link>
+                        </div>
+                    </div>
+            </div><!-- end-main-raised -->
+
+            <vue-simple-spinner v-if="loading"></vue-simple-spinner>
+            <div align="right"><pagination :data="pesananWarungData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
+        </div><!--AKSES VIA MOBILE-->
     </div>
 </template>
 
@@ -118,6 +166,7 @@ export default {
             pesananWarungData: {},
 			url : window.location.origin+(window.location.pathname).replace("dashboard", "pesanan-warung"),
 			pencarian: '',
+            dataAgent: '',
 			loading: true
 		}
 	},
@@ -141,9 +190,10 @@ export default {
     		axios.get(app.url+'/view?page='+page)
     		.then(function (resp) {
     			app.pesananWarung = resp.data.data;
-    			app.pesananWarungData = resp.data;
+                app.pesananWarungData = resp.data;
+                app.dataAgent = resp.data.agent;
     			app.loading = false;
-                console.log(resp.data)
+                console.log(resp.data.agent)
     		})
     		.catch(function (resp) {
     			console.log(resp);

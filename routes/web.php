@@ -499,7 +499,6 @@ Route::get('/laporan-persediaan/pencarian', 'LaporanPersediaanController@pencari
 Route::get('/kas-mutasi/view', 'KasMutasiController@view')->middleware('auth');
 Route::get('/kas-mutasi/pencarian', 'KasMutasiController@pencarian')->middleware('auth');
 Route::get('/kas-mutasi/pilih-kas', 'KasMutasiController@pilih_kas')->middleware('auth');
-Route::get('/kas-mutasi/pilih-kategori', 'KasMutasiController@pilih_kategori')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
@@ -515,7 +514,7 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
     Route::resource('kategori-transaksi', 'KategoriTransaksiController');
     Route::resource('kas_masuk', 'KasMasukController');
     Route::resource('kas-keluar', 'KasKeluarController');
-    Route::resource('kas_mutasi', 'KasMutasiController');
+    Route::resource('kas-mutasi', 'KasMutasiController');
     Route::resource('error', 'ErrorController');
     Route::resource('item-masuk', 'ItemMasukController');
     Route::resource('item-keluar', 'ItemKeluarController');
