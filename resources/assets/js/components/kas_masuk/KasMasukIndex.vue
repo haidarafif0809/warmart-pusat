@@ -141,7 +141,8 @@ export default {
             });
         },
         deleteEntry(id, index,nama_kas) {
-            swal({
+
+            this.$swal({
                 title: "Konfirmasi Hapus",
                 text : "Anda Yakin Ingin Menghapus "+nama_kas+" ?",
                 icon : "warning",

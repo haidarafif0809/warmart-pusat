@@ -793,8 +793,14 @@ class PembelianController extends Controller
 
     public function total_kas(Request $request)
     {
-        $total_kas = TransaksiKas::total_kas($request);
-        return $total_kas;
+        $session_id            = session()->getId();
+        $total_kas             = TransaksiKas::total_kas($request);
+        $data_produk_pembelian = TbsPembelian::where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->count();
+
+        $respons['total_kas']             = $total_kas;
+        $respons['data_produk_pembelian'] = $data_produk_pembelian;
+
+        return $respons;
     }
 
     public function datatableDetailPembelian(Request $request)

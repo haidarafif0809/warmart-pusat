@@ -893,7 +893,7 @@ export default {
 
 			    if (potonganPersen > 100) {
 
-			        this.alert("Potongan Tidak Bisa Lebih Dari 100%")
+					swal('Oops...','Potongan Tidak Bisa Lebih Dari 100%','error'); 
 			        this.inputPembayaranPembelian.total_akhir = this.inputPembayaranPembelian.subtotal;
 			        this.inputPembayaranPembelian.potongan_faktur = 0
 			        this.inputPembayaranPembelian.potongan_persen = 0
@@ -927,8 +927,7 @@ export default {
 		    var total_akhir = parseFloat(this.inputPembayaranPembelian.subtotal) - parseFloat(potonganFaktur);
 
 		    if (potongan_persen > 100) {
-
-		        this.alert("Potongan Tidak Bisa Lebih Dari 100%")
+		    	swal('Oops...','Potongan Tidak Bisa Lebih Dari 100%','error'); 
 		        this.inputPembayaranPembelian.total_akhir = this.inputPembayaranPembelian.subtotal;
 		        this.inputPembayaranPembelian.potongan_faktur = 0
 		        this.inputPembayaranPembelian.potongan_persen = 0
@@ -981,24 +980,30 @@ export default {
 			}
 			axios.get(app.url+'/cek-total-kas-pembelian?kas='+kas)
 			.then(function (resp) {
-			if (resp.data == '') {
+			if (resp.data.total_kas == '' || resp.data.total_kas == null) {
 			 	var total_kas = 0;
 			}else{
-				var total_kas = resp.data;
+				var total_kas = resp.data.total_kas;
 			}
+			var data_produk_pembelian = resp.data.data_produk_pembelian;
 			var hitung_sisa_kas = parseFloat(total_kas) - parseFloat(pembayaran);
 			if (hitung_sisa_kas >= 0) {
-					var newPembelian = app.inputPembayaranPembelian;
-					axios.post(app.url, newPembelian)
-					.then(function (resp) {
-					app.message = 'Berhasil Menambah Pembelian';
-					app.alert(app.message);
-					app.$router.replace('/pembelian');
-					app.getResults();
-					})
-					.catch(function (resp) {
-					app.success = false;
-					});
+					if (data_produk_pembelian == 0){
+						swal('Oops...','Belum Ada Produk Yang Diinputkan','error'); 
+					}
+					else{
+						var newPembelian = app.inputPembayaranPembelian;
+						axios.post(app.url, newPembelian)
+						.then(function (resp) {
+						app.message = 'Berhasil Menambah Pembelian';
+						app.alert(app.message);
+						app.$router.replace('/pembelian');
+						app.getResults();
+						})
+						.catch(function (resp) {
+						app.success = false;
+						});
+					}
 			}else{
 				swal('Oops...','Kas Anda Tidak Cukup Untuk Melakukan Pembayaran','error');
 			}
