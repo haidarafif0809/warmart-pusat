@@ -19,8 +19,8 @@
 
                     <div class="row">
 
-                        <div class="col-md-3">
-                            <div class="card" style="margin-right: 10px; margin-left: 10px;">
+                        <div class="col-md-2">
+                            <div class="card card-produk">
 
                                 <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
                                     <selectize-component v-model="penjualan.pelanggan" :settings="placeholder_pelanggan" id="pelanggan" ref='pelanggan'> 
@@ -30,7 +30,7 @@
                               </div>
 
                               <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
-                                <selectize-component v-model="inputTbsPenjualan.produk" :settings="placeholder_produk" id="produk" ref='produk' class="form-produk"> 
+                                <selectize-component v-model="inputTbsPenjualan.produk" :settings="placeholder_produk" id="produk" ref='produk'> 
                                     <option v-for="produks, index in produk" v-bind:value="produks.produk">{{ produks.nama_produk }}</option>
                                 </selectize-component>
                                 <span v-if="errors.produk" id="produk_error" class="label label-danger">{{ errors.produk[0] }}</span>
@@ -48,63 +48,75 @@
                         </div>
                     </div>
 
-                    <div class="col-md-9">
-                        <div class="card">
 
-                            <div class="row">
-                                <div class="col-md-2">
+                    <div class="col-md-2">
+                        <div class="card" style="margin-right: 10px; margin-left: 10px;">
 
-                                    <div class="form-group">
-                                        <label class="label-control">Subtotal</label><br>
-                                        <input type="number" readonly="" value="0" v-model="penjualan.subtotal"  />
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label class="label-control">Potongan Faktur</label>
-                                        <input type="number" value="0" v-model="penjualan.potongan_faktur" v-on:keyup="potonganFaktur" />
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label class="label-control">Disc. Faktur(%)</label>
-                                        <input type="number" value="0" v-model="penjualan.potongan_persen" v-on:keyup="potonganPersen"/>
-                                    </div>
-
-
-                                </div>
-
-                                <div class="col-md-2">
-                                 <label class="label-control">Total Akhir</label><br>
-                                 <input class="form-penjualan" readonly="" type="number" id="total_akhir" name="total_akhir" placeholder="Total Akhir"  v-model="penjualan.total_akhir">
-                                 <label class="label-control">Pembayaran</label><br>
-                                 <input class="form-penjualan" type="number" id="pembayaran" name="pembayaran" placeholder="Pembayaran"  v-model="penjualan.pembayaran">
-                             </div>
-
-                             <div class="col-md-2">
-                                 <label class="label-control">Kembalian</label><br>
-                                 <input class="form-penjualan" readonly="" type="number" id="kembalian" name="kembalian" placeholder="Kembalian"  v-model="penjualan.kembalian">
-                                 <label class="label-control">Kredit</label><br>
-                                 <input class="form-penjualan" readonly="" type="number" id="kredit" name="kredit" placeholder="Kredit"  v-model="penjualan.kredit">
-
-                             </div>
-                             <div class="col-md-2">
-
-                                 <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
-                                    <label class="label-control">Kas</label><br>
-                                    <selectize-component v-model="penjualan.kas" :settings="placeholder_kas" id="kas" ref='kas'> 
-                                        <option v-for="kass, index in kas" v-bind:value="kass.id">{{ kass.nama_kas }}</option>
-                                    </selectize-component>
-                                    <span v-if="errors.kas" id="kas_error" class="label label-danger">{{ errors.kas[0] }}</span>
-                                </div>
-
-                                <button type="button" class="btn btn-primary" id="btnSelesai" v-on:click="selesaiPenjualan()"><i class="material-icons">save</i> Simpan</button>
-
-                                <button type="submit" class="btn btn-danger" id="btnBatal" v-on:click="batalPenjualan()"><i class="material-icons">cancel</i> Batal </button>
+                            <div class="form-group " style="margin-right: 10px; margin-left: 10px;">
+                                <label class="label-control">Subtotal</label><br>   
+                                <input type="number" readonly="" value="0" v-model="penjualan.subtotal"  />
                             </div>
 
-
+                            <div class="form-group " style="margin-right: 10px; margin-left: 10px;">
+                                <label class="label-control">Disc</label><br>   
+                                <input type="number" value="0" v-model="penjualan.potongan_faktur" v-on:keyup="potonganFaktur" />
+                            </div>
+                            <div class="form-group " style="margin-right: 10px; margin-left: 10px;">
+                                <label class="label-control">Disc(%)</label><br>    
+                                <input type="number" value="0" v-model="penjualan.potongan_persen" v-on:keyup="potonganPersen" />
+                            </div>
 
                         </div>
+                    </div>
 
+                    <div class="col-md-4">
+                        <div class="card card-pembayaran">
+
+                            <div class="row">
+
+                                <div class="col-md-6">
+                                    <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                                        <label class="label-control" style="color: black">Total Akhir</label>
+                                        <input class="form-penjualan" readonly="" type="number" id="total_akhir" name="total_akhir" placeholder="Total Akhir"  v-model="penjualan.total_akhir">
+                                    </div>
+
+                                    <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                                        <label class="label-control" style="color: black">Pembayaran</label>
+                                        <input class="form-penjualan" type="number" id="pembayaran" name="pembayaran" placeholder="Pembayaran"  v-model="penjualan.pembayaran">
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                                     <label class="label-control" style="color: black">Kembalian</label>
+                                     <input class="form-penjualan" readonly="" type="number" id="kembalian" name="kembalian" placeholder="Kembalian"  v-model="penjualan.kembalian">
+                                 </div>
+                                 <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                                     <label class="label-control" style="color: black">Kredit</label>
+                                     <input class="form-penjualan" readonly="" type="number" id="kredit" name="kredit" placeholder="Kredit"  v-model="penjualan.kredit">
+                                 </div>
+                             </div>
+
+                         </div>
+
+                     </div>
+                 </div>
+
+                 <div class="col-md-2">
+
+                     <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
+                        <label class="label-control">Kas</label><br>
+                        <selectize-component v-model="penjualan.kas" :settings="placeholder_kas" id="kas" ref='kas'> 
+                            <option v-for="kass, index in kas" v-bind:value="kass.id">{{ kass.nama_kas }}</option>
+                        </selectize-component>
+                        <span v-if="errors.kas" id="kas_error" class="label label-danger">{{ errors.kas[0] }}</span>
+                    </div>
+
+                    <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
+                        <button type="button" class="btn btn-success" id="btnSelesai" v-on:click="selesaiPenjualan()"><i class="material-icons">credit_card</i> Tunai</button>
+
+                        <button type="submit" class="btn btn-danger" id="btnBatal" v-on:click="batalPenjualan()"><i class="material-icons">cancel</i> Batal </button>
                     </div>
                 </div>
 
@@ -182,14 +194,15 @@
     box-sizing: border-box;
     font-size: 30px;
 }
-.form-produk{
- width: 100%;
- font-size: 30px; 
+.card-produk{
+    background-color:#82B1FF;
+}
+
+.card-pembayaran{
+    background-color:#82B1FF;
 }
 
 </style>
-
-
 
 
 <script>
