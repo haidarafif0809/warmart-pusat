@@ -89,23 +89,24 @@
 
                                 <div class="col-md-6">
                                     <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                     <label class="label-control" style="color: black">Kembalian</label>
-                                     <input class="form-penjualan" readonly="" type="number" id="kembalian" name="kembalian" placeholder="Kembalian"  v-model="penjualan.kembalian">
-                                 </div>
-                                 <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                     <label class="label-control" style="color: black">Kredit</label>
-                                     <input class="form-penjualan" readonly="" type="number" id="kredit" name="kredit" placeholder="Kredit"  v-model="penjualan.kredit">
-                                 </div>
-                             </div>
+                                       <label class="label-control" style="color: black">Kembalian</label>
+                                       <input class="form-penjualan" readonly="" type="number" id="kembalian" name="kembalian" placeholder="Kembalian"  v-model="penjualan.kembalian">
+                                   </div>
+                                   <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                                       <label class="label-control" style="color: black">Kredit</label>
+                                       <input class="form-penjualan" readonly="" type="number" id="kredit" name="kredit" placeholder="Kredit"  v-model="penjualan.kredit">
+                                   </div>
+                               </div>
 
-                         </div>
+                           </div>
 
-                     </div>
-                 </div>
+                       </div>
+                   </div>
 
-                 <div class="col-md-2">
+                   <div class="col-md-2">
 
-                     <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
+                    <div class="card">
+                       <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
                         <label class="label-control">Kas</label><br>
                         <selectize-component v-model="penjualan.kas" :settings="placeholder_kas" id="kas" ref='kas'> 
                             <option v-for="kass, index in kas" v-bind:value="kass.id">{{ kass.nama_kas }}</option>
@@ -119,65 +120,66 @@
                         <button type="submit" class="btn btn-danger" id="btnBatal" v-on:click="batalPenjualan()"><i class="material-icons">cancel</i> Batal </button>
                     </div>
                 </div>
-
             </div>
 
+        </div>
 
-            <!--TABEL TBS ITEM  MASUK -->
 
-            <div class=" table-responsive ">
-                <div  align="right">
-                    pencarian
-                    <input type="text" name="pencarian" v-model="pencarian" placeholder="Kolom Pencarian">
-                </div>
+        <!--TABEL TBS ITEM  MASUK -->
 
-                <table class="table table-striped table-hover" v-if="seen">
-                    <thead class="text-primary">
-                        <tr>
-
-                            <th>Produk</th>
-                            <th>Jumlah</th>
-                            <th>Harga</th>
-                            <th>Potongan</th>
-                            <th>Subtotal</th>
-                            <th>Hapus</th>
-
-                        </tr>
-                    </thead>
-                    <tbody v-if="tbs_penjualan.length"  class="data-ada">
-                        <tr v-for="tbs_penjualan, index in tbs_penjualan" >
-
-                            <td>{{ tbs_penjualan.kode_produk }} - {{ tbs_penjualan.nama_produk }}</td>
-
-                            <td>
-                                <a href="#create-penjualan" v-bind:id="'edit-' + tbs_penjualan.id_tbs_penjualan" v-on:click="editEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">{{ new Intl.NumberFormat().format(tbs_penjualan.jumlah_produk) }}</a>
-                            </td>
-
-                            <td>{{ new Intl.NumberFormat().format(tbs_penjualan.harga_produk) }}</td>
-
-                            <td><a href="#create-penjualan" v-bind:id="'edit-' + tbs_penjualan.id_tbs_penjualan" v-on:click="potonganEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">{{ tbs_penjualan.potongan }}</a></td>
-
-                            <td> {{ new Intl.NumberFormat().format(tbs_penjualan.subtotal) }}</td>
-
-                            <td><a href="#create-penjualan" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_penjualan.id_tbs_penjualan" v-on:click="deleteEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">Delete</a></td>
-                        </tr>
-                    </tbody>                    
-                    <tbody class="data-tidak-ada" v-else>
-                        <tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
-                    </tbody>
-                </table>    
-
-                <vue-simple-spinner v-if="loading"></vue-simple-spinner>
-
-                <div align="right"><pagination :data="tbsPenjualanData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
-
+        <div class=" table-responsive ">
+            <div  align="right">
+                pencarian
+                <input type="text" name="pencarian" v-model="pencarian" placeholder="Kolom Pencarian">
             </div>
-            <p style="color: red; font-style: italic;">*Note : Klik Kolom Jumlah Untuk Mengubah Jumlah Produk.</p>      
+
+            <table class="table table-striped table-hover" v-if="seen">
+                <thead class="text-primary">
+                    <tr>
+
+                        <th>Produk</th>
+                        <th>Jumlah</th>
+                        <th>Harga</th>
+                        <th>Potongan</th>
+                        <th>Subtotal</th>
+                        <th>Hapus</th>
+
+                    </tr>
+                </thead>
+                <tbody v-if="tbs_penjualan.length"  class="data-ada">
+                    <tr v-for="tbs_penjualan, index in tbs_penjualan" >
+
+                        <td>{{ tbs_penjualan.kode_produk }} - {{ tbs_penjualan.nama_produk }}</td>
+
+                        <td>
+                            <a href="#create-penjualan" v-bind:id="'edit-' + tbs_penjualan.id_tbs_penjualan" v-on:click="editEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">{{ new Intl.NumberFormat().format(tbs_penjualan.jumlah_produk) }}</a>
+                        </td>
+
+                        <td>{{ new Intl.NumberFormat().format(tbs_penjualan.harga_produk) }}</td>
+
+                        <td><a href="#create-penjualan" v-bind:id="'edit-' + tbs_penjualan.id_tbs_penjualan" v-on:click="potonganEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">{{ tbs_penjualan.potongan }}</a></td>
+
+                        <td> {{ new Intl.NumberFormat().format(tbs_penjualan.subtotal) }}</td>
+
+                        <td><a href="#create-penjualan" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_penjualan.id_tbs_penjualan" v-on:click="deleteEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">Delete</a></td>
+                    </tr>
+                </tbody>                    
+                <tbody class="data-tidak-ada" v-else>
+                    <tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
+                </tbody>
+            </table>    
+
+            <vue-simple-spinner v-if="loading"></vue-simple-spinner>
+
+            <div align="right"><pagination :data="tbsPenjualanData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
+
+        </div>
+        <p style="color: red; font-style: italic;">*Note : Klik Kolom Jumlah Untuk Mengubah Jumlah Produk.</p>      
 
 
-        </div><!-- / PANEL BODY -->
+    </div><!-- / PANEL BODY -->
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -217,7 +219,6 @@ export default {
             tbsPenjualanData : {},
             url : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
             url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
-            url_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas-masuk"),
             inputTbsPenjualan: {
                 produk : '',
                 jumlah_produk : '',
@@ -421,8 +422,16 @@ dataPelanggan() {
 },   
 dataKas() {
     var app = this;
-    axios.get(app.url_kas+'/pilih-kas').then(function (resp) {
-        app.kas = resp.data;
+    axios.get(app.url+'/pilih-kas').then(function (resp) {
+        app.kas = resp.data;   
+
+        $.each(resp.data, function (i, item) {
+            if (resp.data[i].default_kas == 1) {
+                app.penjualan.kas = resp.data[i].id 
+            }
+
+        });
+        
     })
     .catch(function (resp) {
 
