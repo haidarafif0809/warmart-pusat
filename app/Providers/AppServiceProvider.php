@@ -2,36 +2,38 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use Laravel\Dusk\DuskServiceProvider;
-use Illuminate\Support\Facades\Schema;
-use Validator;
-use App\Observers\WarungObserver;
-use App\Observers\UserWarungObserver;
-use App\Observers\KasObserver;
-use App\Observers\KasKeluarObserver;
-use App\Observers\KategoriTransaksiObserver;
-use App\Observers\KasMutasiObserver;
-use App\Observers\DetailItemKeluarObserver;
-use App\Observers\ItemKeluarObserver;
-use App\Observers\DetailItemMasukObserver;
-use App\Observers\ItemMasukObserver;
-use App\Observers\DetailPembelianObserver;
-use App\Observers\PembelianObserver;
-use App\Observers\DetailPenjualanObserver;
+use App\DetailItemKeluar;
+use App\DetailItemMasuk;
+use App\DetailPembelian;
 use App\DetailPenjualan;
-use App\Warung;
+use App\DetailPenjualanPos;
+use App\ItemKeluar;
+use App\ItemMasuk;
 use App\Kas;
 use App\KasKeluar;
-use App\UserWarung;
-use App\KategoriTransaksi;
 use App\KasMutasi;
-use App\DetailItemKeluar;
-use App\ItemKeluar;
-use App\DetailItemMasuk;
-use App\ItemMasuk;
-use App\DetailPembelian;
+use App\KategoriTransaksi;
+use App\Observers\DetailItemKeluarObserver;
+use App\Observers\DetailItemMasukObserver;
+use App\Observers\DetailPembelianObserver;
+use App\Observers\DetailPenjualanObserver;
+use App\Observers\DetailPenjualanPosObserver;
+use App\Observers\ItemKeluarObserver;
+use App\Observers\ItemMasukObserver;
+use App\Observers\KasKeluarObserver;
+use App\Observers\KasMutasiObserver;
+use App\Observers\KasObserver;
+use App\Observers\KategoriTransaksiObserver;
+use App\Observers\PembelianObserver;
+use App\Observers\UserWarungObserver;
+use App\Observers\WarungObserver;
 use App\Pembelian;
+use App\UserWarung;
+use App\Warung;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\ServiceProvider;
+use Laravel\Dusk\DuskServiceProvider;
+use Validator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -42,9 +44,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //    
+        //
         Schema::defaultStringLength(191);
-        Validator::extend('without_spaces', function($attr, $value){
+        Validator::extend('without_spaces', function ($attr, $value) {
             return preg_match('/^\S*$/u', $value);
         });
 
@@ -61,6 +63,7 @@ class AppServiceProvider extends ServiceProvider
         DetailPembelian::observe(DetailPembelianObserver::class);
         Pembelian::observe(PembelianObserver::class);
         DetailPenjualan::observe(DetailPenjualanObserver::class);
+        DetailPenjualanPos::observe(DetailPenjualanPosObserver::class);
     }
 
     /**
