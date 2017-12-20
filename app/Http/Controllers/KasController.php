@@ -288,7 +288,6 @@ class KasController extends Controller
         return $status_transaksi;
     }
 
-
     public function cekKasWarung()
     {
         $kas = Kas::where('warung_id', Auth::user()->id_warung);

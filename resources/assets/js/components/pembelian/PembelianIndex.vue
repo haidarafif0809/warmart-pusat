@@ -39,10 +39,10 @@
 								</tr>
 							</thead>
 							<tbody v-if="pembelian.length > 0 && loading == false"  class="data-ada">
-								<tr v-for="pembelian, index in pembelians" >
+								<tr v-for="pembelians, index in pembelian" >
 
 									<td>{{ pembelians.no_faktur }}</td>
-									<td>{{ pembelians.waktu }}</td>
+									<td>{{ pembelians.waktu.date }}</td>
 									<td>{{ pembelians.suplier }}</td>
 									<td>{{ pembelians.status_pembelian }}</td>
 									<td>{{ pembelians.total }}</td>

@@ -1,0 +1,750 @@
+
+
+<template>
+	<div class="row">
+		<div class="col-md-12">
+			<ul class="breadcrumb">
+
+				<li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li>
+				<li class="active">Penjualan</li>
+
+			</ul>
+
+			<div class="card">
+				<div class="card-header card-header-icon" data-background-color="purple">
+					<i class="material-icons">shop</i>
+				</div>
+				<div class="card-content">
+					<h4 class="card-title"> Penjualan </h4>
+
+                    <div class="row">
+
+                        <div class="col-md-3">
+                            <div class="card" style="margin-right: 10px; margin-left: 10px;">
+
+                                <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
+                                    <selectize-component v-model="penjualan.pelanggan" :settings="placeholder_pelanggan" id="pelanggan" ref='pelanggan'> 
+                                      <option v-for="pelanggans, index in pelanggan" v-bind:value="pelanggans.id">{{ pelanggans.nama_pelanggan }}</option>
+                                  </selectize-component>
+                                  <span v-if="errors.pelanggan" id="pelanggan_error" class="label label-danger">{{ errors.pelanggan[0] }}</span>
+                              </div>
+
+                              <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
+                                <selectize-component v-model="inputTbsPenjualan.produk" :settings="placeholder_produk" id="produk" ref='produk' class="form-produk"> 
+                                    <option v-for="produks, index in produk" v-bind:value="produks.produk">{{ produks.nama_produk }}</option>
+                                </selectize-component>
+                                <span v-if="errors.produk" id="produk_error" class="label label-danger">{{ errors.produk[0] }}</span>
+                            </div> 
+
+
+                            <span style="display: none;">
+                                <input class="form-control" type="hidden"  v-model="inputTbsPenjualan.jumlah_produk"  name="jumlah_produk" id="jumlah_produk">
+                                <input class="form-control" type="hidden"  v-model="inputTbsPenjualan.potongan_produk"  name="potongan_produk" id="potongan_produk">
+                                <input class="form-control" type="hidden"  v-model="inputTbsPenjualan.id_tbs"  name="id_tbs" id="id_tbs">
+                                <input class="form-control" type="hidden"  v-model="penjualan.potongan"  name="potongan" id="potongan">
+                            </span>
+
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-9">
+                        <div class="card">
+
+                            <div class="row">
+                                <div class="col-md-2">
+
+                                    <div class="form-group">
+                                        <label class="label-control">Subtotal</label><br>
+                                        <input type="number" readonly="" value="0" v-model="penjualan.subtotal"  />
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="label-control">Potongan Faktur</label>
+                                        <input type="number" value="0" v-model="penjualan.potongan_faktur" v-on:keyup="potonganFaktur" />
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="label-control">Disc. Faktur(%)</label>
+                                        <input type="number" value="0" v-model="penjualan.potongan_persen" v-on:keyup="potonganPersen"/>
+                                    </div>
+
+
+                                </div>
+
+                                <div class="col-md-2">
+                                 <label class="label-control">Total Akhir</label><br>
+                                 <input class="form-penjualan" readonly="" type="number" id="total_akhir" name="total_akhir" placeholder="Total Akhir"  v-model="penjualan.total_akhir">
+                                 <label class="label-control">Pembayaran</label><br>
+                                 <input class="form-penjualan" type="number" id="pembayaran" name="pembayaran" placeholder="Pembayaran"  v-model="penjualan.pembayaran">
+                             </div>
+
+                             <div class="col-md-2">
+                                 <label class="label-control">Kembalian</label><br>
+                                 <input class="form-penjualan" readonly="" type="number" id="kembalian" name="kembalian" placeholder="Kembalian"  v-model="penjualan.kembalian">
+                                 <label class="label-control">Kredit</label><br>
+                                 <input class="form-penjualan" readonly="" type="number" id="kredit" name="kredit" placeholder="Kredit"  v-model="penjualan.kredit">
+
+                             </div>
+                             <div class="col-md-2">
+
+                                 <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
+                                    <label class="label-control">Kas</label><br>
+                                    <selectize-component v-model="penjualan.kas" :settings="placeholder_kas" id="kas" ref='kas'> 
+                                        <option v-for="kass, index in kas" v-bind:value="kass.id">{{ kass.nama_kas }}</option>
+                                    </selectize-component>
+                                    <span v-if="errors.kas" id="kas_error" class="label label-danger">{{ errors.kas[0] }}</span>
+                                </div>
+
+                                <button type="button" class="btn btn-primary" id="btnSelesai" v-on:click="selesaiPenjualan()"><i class="material-icons">save</i> Simpan</button>
+
+                                <button type="submit" class="btn btn-danger" id="btnBatal" v-on:click="batalPenjualan()"><i class="material-icons">cancel</i> Batal </button>
+                            </div>
+
+
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!--TABEL TBS ITEM  MASUK -->
+
+            <div class=" table-responsive ">
+                <div  align="right">
+                    pencarian
+                    <input type="text" name="pencarian" v-model="pencarian" placeholder="Kolom Pencarian">
+                </div>
+
+                <table class="table table-striped table-hover" v-if="seen">
+                    <thead class="text-primary">
+                        <tr>
+
+                            <th>Produk</th>
+                            <th>Jumlah</th>
+                            <th>Harga</th>
+                            <th>Potongan</th>
+                            <th>Subtotal</th>
+                            <th>Hapus</th>
+
+                        </tr>
+                    </thead>
+                    <tbody v-if="tbs_penjualan.length"  class="data-ada">
+                        <tr v-for="tbs_penjualan, index in tbs_penjualan" >
+
+                            <td>{{ tbs_penjualan.kode_produk }} - {{ tbs_penjualan.nama_produk }}</td>
+
+                            <td>
+                                <a href="#create-penjualan" v-bind:id="'edit-' + tbs_penjualan.id_tbs_penjualan" v-on:click="editEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">{{ new Intl.NumberFormat().format(tbs_penjualan.jumlah_produk) }}</a>
+                            </td>
+
+                            <td>{{ new Intl.NumberFormat().format(tbs_penjualan.harga_produk) }}</td>
+
+                            <td><a href="#create-penjualan" v-bind:id="'edit-' + tbs_penjualan.id_tbs_penjualan" v-on:click="potonganEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">{{ tbs_penjualan.potongan }}</a></td>
+
+                            <td> {{ new Intl.NumberFormat().format(tbs_penjualan.subtotal) }}</td>
+
+                            <td><a href="#create-penjualan" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_penjualan.id_tbs_penjualan" v-on:click="deleteEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">Delete</a></td>
+                        </tr>
+                    </tbody>                    
+                    <tbody class="data-tidak-ada" v-else>
+                        <tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
+                    </tbody>
+                </table>    
+
+                <vue-simple-spinner v-if="loading"></vue-simple-spinner>
+
+                <div align="right"><pagination :data="tbsPenjualanData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
+
+            </div>
+            <p style="color: red; font-style: italic;">*Note : Klik Kolom Jumlah Untuk Mengubah Jumlah Produk.</p>      
+
+
+        </div><!-- / PANEL BODY -->
+
+    </div>
+</div>
+</div>
+
+</template>
+
+<style>
+.form-penjualan{
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 30px;
+}
+.form-produk{
+ width: 100%;
+ font-size: 30px; 
+}
+
+</style>
+
+
+
+
+<script>
+export default {
+    data: function () {
+        return {
+            errors: [],
+            produk: [],
+            pelanggan: [],
+            kas: [],
+            tbs_penjualan: [],
+            tbsPenjualanData : {},
+            url : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
+            url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
+            url_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas-masuk"),
+            inputTbsPenjualan: {
+                produk : '',
+                jumlah_produk : '',
+                potongan_produk : '',
+                id_tbs : '',
+            },
+            penjualan : {
+                pelanggan : '',
+                kas : '',
+                subtotal : 0,
+                potongan : 0,
+                potongan_faktur : 0,
+                potongan_persen : 0,
+                total_akhir : 0,
+                pembayaran : 0,
+                kembalian: 0,
+                kredit: 0,
+            }, 
+            placeholder_produk: {
+                placeholder: 'Cari Produk ...'
+            },
+            placeholder_pelanggan: {
+                placeholder: '--PILIH PELANGGAN--'
+            },
+            placeholder_kas: {
+                placeholder: '--PILIH KAS--'
+            },
+            pencarian: '',
+            loading: true,
+            seen : false
+
+        }
+    },
+    mounted() {   
+        var app = this;
+        app.dataProduk();
+        app.dataPelanggan();
+        app.dataKas();
+        app.getResults();
+        app.getDataPenjualan();
+    },
+    watch: {
+    // whenever question changes, this function will run
+    pencarian: function (newQuestion) {
+        this.getHasilPencarian()
+        this.loading = true
+    },
+    'inputTbsPenjualan.produk': function () {
+        this.pilihProduk()
+    },
+    'penjualan.pembayaran':function (val){
+        if (val == '') {
+            val = 0
+        }
+
+        this.hitungKembalian(val)
+
+    }
+
+},
+methods: {
+    hitungKembalian(val){
+        var kembalian = parseFloat(val) - parseFloat(this.penjualan.total_akhir);   
+        if (kembalian > 0) {
+
+            this.penjualan.kembalian = kembalian 
+            this.penjualan.kredit = 0
+        }else{
+          this.penjualan.kembalian = 0  
+          this.penjualan.kredit = parseFloat(this.penjualan.total_akhir) -parseFloat(val)
+      }        
+  },
+  potonganPersen(){
+
+    var potonganPersen = this.penjualan.potongan_persen
+
+    if (potonganPersen > 100) {
+
+        this.alertTbs("Potongan Tidak Bisa Lebih Dari 100%")
+        this.penjualan.total_akhir = this.penjualan.subtotal
+        this.penjualan.potongan_faktur = 0
+        this.penjualan.potongan_persen = 0
+        this.penjualan.potongan = 0
+
+    }else{
+
+        if (potonganPersen == '') {
+            potonganPersen = 0
+        }
+
+        var potongan_nominal = parseFloat(this.penjualan.subtotal) * (parseFloat(potonganPersen) / 100) 
+        var total_akhir = parseFloat(this.penjualan.subtotal,10) - parseFloat(potongan_nominal,10)
+
+        this.penjualan.potongan_faktur = potongan_nominal.toFixed(2)
+        this.penjualan.total_akhir = total_akhir.toFixed(2) 
+        this.penjualan.potongan = potongan_nominal
+        this.hitungKembalian(this.penjualan.pembayaran)
+
+    }
+},
+potonganFaktur(){
+
+    var potonganFaktur = this.penjualan.potongan_faktur
+
+    if (potonganFaktur == '') {
+        potonganFaktur = 0
+    }
+    var potongan_persen = (parseFloat(potonganFaktur) / parseFloat(this.penjualan.subtotal)) * 100
+    var total_akhir = parseFloat(this.penjualan.subtotal) - parseFloat(potonganFaktur)
+
+    if (potongan_persen > 100) {
+
+        this.alertTbs("Potongan Tidak Bisa Lebih Dari 100%")
+        this.penjualan.total_akhir = this.penjualan.subtotal
+        this.penjualan.potongan_faktur = 0
+        this.penjualan.potongan_persen = 0
+        this.penjualan.potongan = 0
+
+    }else{
+      this.penjualan.potongan_persen = potongan_persen.toFixed(2)
+      this.penjualan.total_akhir = total_akhir.toFixed(2)
+      this.penjualan.potongan = potonganFaktur
+      this.hitungKembalian(this.penjualan.pembayaran)
+  }
+
+}
+,getDataPenjualan(){
+
+    var app = this;
+    axios.get(app.url+'/cek-data-tbs-penjualan').then(function (resp) {
+
+        app.penjualan.subtotal = resp.data.subtotal
+        app.penjualan.total_akhir = resp.data.subtotal
+
+
+    })
+    .catch(function (resp) {
+
+        console.log(resp);
+        alert("Tidak Bisa Memuat Penjualan");
+    })
+
+},
+getResults(page) {
+    var app = this; 
+    if (typeof page === 'undefined') {
+        page = 1;
+    }
+    axios.get(app.url+'/view-tbs-penjualan?page='+page)
+    .then(function (resp) {
+        app.tbs_penjualan = resp.data.data;
+        app.tbsPenjualanData = resp.data;
+        app.loading = false;
+        app.seen = true;
+    })
+    .catch(function (resp) {
+        console.log(resp);
+        app.loading = false;
+        app.seen = true;
+        alert("Tidak Dapat Memuat Penjualan");
+    });
+}, 
+getHasilPencarian(page){
+    var app = this;
+    if (typeof page === 'undefined') {
+        page = 1;
+    }
+    axios.get(app.url+'/pencarian-tbs-penjualan?search='+app.pencarian+'&page='+page)
+    .then(function (resp) {
+        app.tbs_penjualan = resp.data.data;
+        app.tbsPenjualanData = resp.data;
+        app.loading = false;
+        app.seen = true;
+    })
+    .catch(function (resp) {
+        console.log(resp);
+        alert("Tidak Dapat Memuat Penjualan");
+    });
+},    
+dataProduk() {
+    var app = this;
+    axios.get(app.url_produk+'/pilih-produk').then(function (resp) {
+        app.produk = resp.data;
+    })
+    .catch(function (resp) {
+
+        console.log(resp);
+        alert("Tidak Bisa Memuat Produk");
+    });
+},   
+dataPelanggan() {
+    var app = this;
+    axios.get(app.url+'/pilih-pelanggan').then(function (resp) {
+        app.pelanggan = resp.data;
+    })
+    .catch(function (resp) {
+
+        console.log(resp);
+        alert("Tidak Bisa Memuat Pelanggan");
+    });
+},   
+dataKas() {
+    var app = this;
+    axios.get(app.url_kas+'/pilih-kas').then(function (resp) {
+        app.kas = resp.data;
+    })
+    .catch(function (resp) {
+
+        console.log(resp);
+        alert("Tidak Bisa Memuat Kas");
+    });
+},pilihProduk() {
+    if (this.inputTbsPenjualan.produk == '') {
+        this.$swal({
+            text: "Silakan Pilih Produk Telebih dahulu!",
+        });
+    }else{
+
+        var app = this;
+        var produk = app.inputTbsPenjualan.produk.split("|");
+        var nama_produk = produk[1];
+        this.isiJumlahProduk(nama_produk);
+    }
+},
+isiJumlahProduk(nama_produk){
+    var app = this;
+    app.$swal({
+        title: nama_produk,
+        content: {
+            element: "input",
+            attributes: {
+                placeholder: "Jumlah Produk",
+                type: "number",
+            },
+        },
+        buttons: {
+            cancel: true,
+            confirm: "Submit"                   
+        }
+
+
+    }).then((value) => {
+        if (!value) throw null;
+        this.submitProdukPenjualan(value);
+    });
+},
+submitProdukPenjualan(value){
+
+    if (value == 0) {
+
+        this.$swal({
+            text: "Jumlah Produk Tidak Boleh Nol!",
+        });
+
+    }else{
+
+        var app = this;
+        var produk = app.inputTbsPenjualan.produk.split("|");
+        var nama_produk = produk[1];
+
+        app.inputTbsPenjualan.jumlah_produk = value;
+        var newinputTbsPenjualan = app.inputTbsPenjualan;
+        app.loading = true;
+        axios.post(app.url+'/proses-tambah-tbs-penjualan', newinputTbsPenjualan)
+        .then(function (resp) {
+
+            if (resp.data == 0) {
+
+                app.alertTbs("Produk "+nama_produk+" Sudah Ada, Silakan Pilih Produk Lain!");
+                app.loading = false;
+
+            }else{
+
+                var subtotal = parseInt(app.penjualan.subtotal) + parseInt(resp.data.subtotal)
+
+                app.getResults();
+                app.penjualan.subtotal = subtotal                        
+                app.penjualan.total_akhir  = subtotal  
+                app.alert("Menambahkan Produk "+nama_produk)
+                app.loading = false
+                app.inputTbsPenjualan.jumlah_produk = ''
+
+            }
+
+        })
+        .catch(function (resp) {
+
+            console.log(resp);                  
+            app.loading = false;
+            alert("Tidak dapat Menambahkan Produk");
+        });
+    }
+},
+editEntry(id, index,nama_produk,subtotal_lama) {    
+    var app = this;     
+    app.$swal({
+        title: nama_produk,
+        content: {
+            element: "input",
+            attributes: {
+                placeholder: "Edit Jumlah Produk",
+                type: "number",
+            },
+        },
+        buttons: {
+            cancel: true,
+            confirm: "Submit"                   
+        },
+
+    }).then((value) => {
+        if (!value) throw null;
+        this.editJumlahProdukPenjualan(value,id,nama_produk,subtotal_lama);
+    });
+
+},
+editJumlahProdukPenjualan(value,id,nama_produk,subtotal_lama){
+    if (value == 0) {
+
+        this.$swal({
+            text: "Jumlah Produk Tidak Boleh Nol!",
+        });
+
+    }else{
+
+        var app = this;
+
+        app.inputTbsPenjualan.id_tbs = id;
+        app.inputTbsPenjualan.jumlah_produk = value;
+        var newinputTbsPenjualan = app.inputTbsPenjualan;
+        app.loading = true;
+        axios.post(app.url+'/edit-jumlah-tbs-penjualan', newinputTbsPenjualan)
+        .then(function (resp) {
+
+            var subtotal = (parseInt(app.penjualan.subtotal) - parseInt(subtotal_lama)) + parseInt(resp.data.subtotal)
+
+            app.getResults()
+            app.penjualan.subtotal = subtotal
+            app.penjualan.total_akhir = subtotal
+            app.alert("Mengubah Jumlah Produk "+nama_produk)
+            app.loading = false;
+            app.inputTbsPenjualan.jumlah_produk = ''
+            app.inputTbsPenjualan.id_tbs = ''
+
+        })
+        .catch(function (resp) { 
+
+            console.log(resp);                  
+            app.loading = false;
+            alert("Tidak dapat Mengubah Jumlah Produk");
+        });
+    }
+},
+potonganEntry(id, index,nama_produk,subtotal_lama) {    
+    var app = this;     
+    app.$swal({
+        title: nama_produk,
+        text : 'Sertakan % Jika Ingin Potongan Dalam Bentuk Persentase',
+        content: {
+            element: "input",
+            attributes: {
+                placeholder: "Edit Potongan Produk",
+                type: "text",
+            },
+        },
+        buttons: {
+            cancel: true,
+            confirm: "Submit"                   
+        },
+
+    }).then((value) => {
+        if (!value) throw null;
+        this.editPotonganProdukPenjualan(value,id,nama_produk,subtotal_lama);
+    });
+
+},
+editPotonganProdukPenjualan(value,id,nama_produk,subtotal_lama){
+
+    var app = this;
+
+    app.inputTbsPenjualan.id_tbs = id;
+    app.inputTbsPenjualan.potongan_produk = value;
+    var newinputTbsPenjualan = app.inputTbsPenjualan;
+
+    app.loading = true;
+    axios.post(app.url+'/edit-potongan-tbs-penjualan', newinputTbsPenjualan)
+    .then(function (resp) {
+
+        if (resp.data.status == 0) {
+
+            app.$swal({
+                text: "Tidak dapat Mengubah Potongan Produk, Periksa Kembali Inputan Anda!",
+            });            
+            app.loading = false;
+
+        }else if (resp.data.status == 1) {
+
+            app.$swal({
+                text: "Potongan Yang Anda Masukan Melebihi Subtotal!",
+            });
+            app.loading = false;
+
+        }else{
+
+            var subtotal = (parseInt(app.penjualan.subtotal) - parseInt(subtotal_lama)) + parseInt(resp.data.subtotal)
+
+            app.getResults()
+            app.penjualan.subtotal = subtotal
+            app.penjualan.total_akhir = subtotal
+            app.alert("Mengubah Potongan Produk "+nama_produk)
+            app.loading = false
+            app.inputTbsPenjualan.potongan_produk = ''
+            app.inputTbsPenjualan.id_tbs = ''
+
+        }
+
+
+    })
+    .catch(function (resp) { 
+
+        console.log(resp);                  
+        app.loading = false;
+    });
+
+},
+deleteEntry(id, index,nama_produk,subtotal_lama) {
+
+    var app = this;
+    app.$swal({
+        text: "Anda Yakin Ingin Menghapus Produk "+nama_produk+ " ?",
+        buttons: true,
+        dangerMode: true,
+    })
+    .then((willDelete) => {
+        if (willDelete) {
+
+            this.prosesDelete(id,nama_produk,subtotal_lama);
+
+        } else {
+
+            app.$swal.close();
+
+        }
+    });
+
+},
+prosesDelete(id,nama_produk,subtotal_lama){
+
+    var app = this;
+    app.loading = true;
+    axios.delete(app.url+'/proses-hapus-tbs-penjualan/'+id)
+    .then(function (resp) {
+
+        if (resp.data == 0) {
+
+            app.alertTbs("Produk "+nama_produk+" Gagal Dihapus!")
+            app.loading = false
+
+        }else{
+            var subtotal = parseInt(app.penjualan.subtotal) - parseInt(subtotal_lama)
+            app.getResults()
+            app.penjualan.subtotal = subtotal
+            app.penjualan.total_akhir = subtotal
+            app.alert("Menghapus Produk "+nama_produk)
+            app.loading = false
+            app.inputTbsPenjualan.id_tbs = ''  
+        }
+
+
+    })
+    .catch(function (resp) {
+
+        console.log(resp);
+        app.loading = false;
+        alert("Tidak dapat Menghapus Produk "+nama_produk);
+    });
+},
+selesaiPenjualan(){
+    this.$swal({
+        text: "Anda Yakin Ingin Menyelesaikan Transaksi Ini ?",
+        buttons: {
+            cancel: true,
+            confirm: "Submit"                   
+        },
+
+    }).then((value) => {
+
+        if (!value) throw null;
+
+        this.prosesSelesaiPenjualan(value);
+
+    });
+},
+prosesSelesaiPenjualan(value){
+
+    var app = this;
+    var newPenjualan = app.penjualan;
+    app.loading = true;
+
+    axios.post(app.url,newPenjualan)
+    .then(function (resp) {
+
+        if (resp.data == 0) {
+
+            app.alertTbs("Anda Belum Memasukan Produk");
+            app.loading = false;
+
+        }else if(resp.data.respons == 1){
+
+            app.alertTbs("Gagal : Stok " + resp.data.nama_produk + " Tidak Mencukupi Untuk di Jual, Sisa Produk = "+resp.data.stok_produk);
+            app.loading = false;
+
+        }else{
+
+            app.getResults();
+            app.alert("Menyelesaikan Transaksi Penjualan");
+
+        }
+
+    })
+    .catch(function (resp) {  
+
+        console.log(resp);              
+        app.loading = false;
+        alert("Tidak dapat Menyelesaikan Transaksi Penjualan");
+    });
+
+},
+alertTbs(pesan) {
+    this.$swal({
+        text: pesan,
+        icon: "warning",
+    });
+},
+alert(pesan) {
+    this.$swal({
+        title: "Berhasil ",
+        text: pesan,
+        icon: "success",
+    });
+}
+}
+}
+</script>

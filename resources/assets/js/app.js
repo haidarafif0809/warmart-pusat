@@ -11,6 +11,9 @@ import Spinner from 'vue-simple-spinner'
 import Datepicker from 'vuejs-datepicker'
 import ToggleButton from 'vue-js-toggle-button'
 import VueFroala from 'vue-froala-wysiwyg'
+import Autocomplete from 'v-autocomplete'
+// You need a specific loader for CSS files like https://github.com/webpack/css-loader
+import 'v-autocomplete/dist/v-autocomplete.css'
 import routes from './router.js'
 window.$ = window.jQuery = require('jquery');
 // Require Froala Editor js file.
@@ -21,6 +24,7 @@ require('font-awesome/css/font-awesome.css')
 require('froala-editor/css/froala_style.min.css')
 Vue.use(ToggleButton)
 Vue.use(VueFroala)
+Vue.use(Autocomplete)
 Vue.component('pagination', require('laravel-vue-pagination'));
 Vue.component('vue-simple-spinner', require('vue-simple-spinner'))
 Vue.component('selectize-component', require('vue2-selectize'));
@@ -28,7 +32,6 @@ Vue.component('datepicker', require('vuejs-datepicker'));
 window.Vue.use(VueSwal)
 window.Vue.use(Spinner)
 window.Vue.use(VueRouter);
-
 const router = new VueRouter({
     routes
 })

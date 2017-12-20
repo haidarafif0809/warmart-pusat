@@ -6,6 +6,7 @@ use App\Barang;
 use App\Hpp;
 use App\KategoriBarang;
 use App\Satuan;
+use App\User;
 use Auth;
 use File;
 use Illuminate\Http\Request;
@@ -390,7 +391,8 @@ class BarangController extends Controller
                 'id'          => $produks->id,
                 'nama_produk' => title_case($produks->nama_barang),
                 'kode_barang' => $produks->kode_barang,
-                'produk'      => $produks->id . "|" . title_case($produks->nama_barang) . "|" . $produks->harga_beli]);
+                'produk'      => $produks->id . "|" . title_case($produks->nama_barang) . "|" . $produks->harga_beli . "|" . $produks->harga_jual . "|" . $produks->satuan_id]);
+
         }
 
         return response()->json($array);

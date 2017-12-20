@@ -97,7 +97,7 @@ export default {
                 axios.get(app.url+'/cek-default-kas?id='+app.kasId)
                 .then(function (resp) {
                     if (resp.data == 1) {
-                        swal({
+                            swal({
                             title: "Peringatan",
                             text:"Harus Ada 1 Kas Yang Menjadi Default Kas",
                             });
@@ -140,7 +140,7 @@ export default {
           var toogle = app.kas.default_kas;
 
          if (toogle == true) {
-            swal({
+            this.$swal({
             title: "Konfirmasi",
             text: "Apakah Anda Yakin Ingin Mengubah Kas Utama ?",
             icon: "warning",

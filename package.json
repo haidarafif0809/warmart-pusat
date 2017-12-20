@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "laravel-vue-pagination": "^1.0.6",
+    "numeral": "^2.0.6",
     "vue-clazy-load": "^0.2.0",
     "vue-froala-wysiwyg": "^2.7.2",
     "vue-js-toggle-button": "^1.2.0",

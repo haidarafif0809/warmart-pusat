@@ -33,9 +33,9 @@
 </meta>
 </head>
 <style type="text/css">
-    .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
-     padding: 1px;
- }
+.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+ padding: 1px;
+}
 </style>
 <body>
     <div class="wrapper" id="vue-app">
@@ -171,8 +171,17 @@
                 </p>
             </a>
         </li>
-        <!--PEMBELIAN-->
-        <!-- MASTER DATA WARUNG -->
+        <!--PENJUALAN-
+        <li>
+            <router-link :to="{name: 'createPenjualan'}" class="menu-nav">
+                <i class="material-icons">
+                    shop
+                </i>
+                <p>
+                    Penjualan
+                </p>
+            </router-link>
+        </li>-MASTER DATA WARUNG -->
         <li>
             <a data-toggle="collapse" href="#persediaan">
                 <i class="material-icons">
@@ -187,7 +196,7 @@
             <div class="collapse" id="persediaan">
                 <ul class="nav">
                     <li>
-                     <router-link :to="{name: 'indexItemMasuk'}" class="menu-nav">
+                       <router-link :to="{name: 'indexItemMasuk'}" class="menu-nav">
                         <span class="sidebar-mini">
                             IM
                         </span>
@@ -588,6 +597,8 @@
 <!-- SHORTCUT JS -->
 <script src="{{ asset('js/shortcut.js') }}">
 </script>
+<script src="https://cdn.rawgit.com/chrisvfritz/5f0a639590d6e648933416f90ba7ae4e/raw/974aa47f8f9c5361c5233bd56be37db8ed765a09/currency-validator.js"></script>
+
 <!--MENU YG SEDANG DI MIGRASI KE VUEJS TIDAK BISA DIAKSES SEMENTARA-->
 <script type="text/javascript">
     $(document).on('click', '.vueJs', function(){
@@ -596,8 +607,8 @@
 </script>
 <script type="text/javascript">
     $(document).on('click', '.menu-nav', function(){
-     $('.navbar-toggle ').click();
- });
+       $('.navbar-toggle ').click();
+   });
 </script>
 @yield('scripts')
 </html>

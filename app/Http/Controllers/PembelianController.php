@@ -118,9 +118,10 @@ class PembelianController extends Controller
         $user_warung = Auth::user()->id_warung;
 
         $sum_subtotal = TbsPembelian::select(DB::raw('SUM(subtotal) as subtotal'))->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->first();
-        $subtotal     = number_format($sum_subtotal->subtotal, 2, ',', '.');
+        $subtotal     = $sum_subtotal->subtotal;
 
         $kas_default = Kas::where('warung_id', Auth::user()->id_warung)->where('default_kas', 1)->count();
+        $kas_pilih   = Kas::where('warung_id', Auth::user()->id_warung)->where('default_kas', 1)->first();
 
         $tbs_pembelian = TbsPembelian::select('tbs_pembelians.id_tbs_pembelian AS id_tbs_pembelian', 'tbs_pembelians.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'tbs_pembelians.id_produk AS id_produk', 'tbs_pembelians.harga_produk AS harga_produk', 'tbs_pembelians.potongan AS potongan', 'tbs_pembelians.tax AS tax', 'tbs_pembelians.subtotal AS subtotal')->leftJoin('barangs', 'barangs.id', '=', 'tbs_pembelians.id_produk')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->orderBy('id_tbs_pembelian', 'desc')->paginate(10);
         $array         = array();
@@ -161,13 +162,14 @@ class PembelianController extends Controller
                 'ppn_produk'             => $ppn_produk,
                 'tax_persen'             => $tax_persen,
                 'kas_default'            => $kas_default,
+                'kas_pilih'              => $kas_pilih,
                 'subtotal_tbs'           => $subtotal_tbs,
                 'subtotal_number_format' => $subtotal,
             ]);
         }
 
         $url     = '/pembelian/view-edit-tbs-pembelian';
-        $respons = $this->paginationData($tbs_pembelian, $array, $url);
+        $respons = $this->paginationData($tbs_pembelian, $array, $kas_default, $subtotal, $url);
 
         return response()->json($respons);
     }
@@ -181,6 +183,7 @@ class PembelianController extends Controller
         $subtotal     = number_format($sum_subtotal->subtotal, 2, ',', '.');
 
         $kas_default = Kas::where('warung_id', Auth::user()->id_warung)->where('default_kas', 1)->count();
+        $kas_pilih   = Kas::where('warung_id', Auth::user()->id_warung)->where('default_kas', 1)->first();
 
         $tbs_pembelian = TbsPembelian::select('tbs_pembelians.id_tbs_pembelian AS id_tbs_pembelian', 'tbs_pembelians.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'tbs_pembelians.id_produk AS id_produk', 'tbs_pembelians.harga_produk AS harga_produk', 'tbs_pembelians.potongan AS potongan', 'tbs_pembelians.tax AS tax', 'tbs_pembelians.subtotal AS subtotal')->leftJoin('barangs', 'barangs.id', '=', 'tbs_pembelians.id_produk')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)
             ->where(function ($query) use ($request) {
@@ -227,7 +230,7 @@ class PembelianController extends Controller
                 'tax'                    => $tbs_pembelians->tax,
                 'ppn_produk'             => $ppn_produk,
                 'tax_persen'             => $tax_persen,
-                'kas_default'            => $kas_default,
+                'kas_pilih'              => $kas_pilih,
                 'subtotal_tbs'           => $subtotal_tbs,
                 'subtotal_number_format' => $subtotal,
             ]);
@@ -235,17 +238,19 @@ class PembelianController extends Controller
 
         $url     = '/pembelian/pencarian-edit-tbs-pembelian';
         $search  = $request->search;
-        $respons = $this->paginationPencarianData($tbs_pembelian, $array, $url, $search);
+        $respons = $this->paginationPencarianData($tbs_pembelian, $array, $kas_default, $subtotal, $url, $search);
 
         return response()->json($respons);
     }
 
-    public function paginationData($pembelian, $array, $url)
+    public function paginationData($pembelian, $array, $kas_default, $subtotal, $url)
     {
 
         //DATA PAGINATION
         $respons['current_page']   = $pembelian->currentPage();
         $respons['data']           = $array;
+        $respons['kas_default']    = $kas_default;
+        $respons['subtotal']       = $subtotal;
         $respons['first_page_url'] = url($url . '?page=' . $pembelian->firstItem());
         $respons['from']           = 1;
         $respons['last_page']      = $pembelian->lastPage();
@@ -260,11 +265,13 @@ class PembelianController extends Controller
 
         return $respons;
     }
-    public function paginationPencarianData($pembelian, $array, $url, $search)
+    public function paginationPencarianData($pembelian, $array, $kas_default, $subtotal, $url, $search)
     {
         //DATA PAGINATION
         $respons['current_page']   = $pembelian->currentPage();
         $respons['data']           = $array;
+        $respons['kas_default']    = $kas_default;
+        $respons['subtotal']       = $subtotal;
         $respons['first_page_url'] = url($url . '?page=' . $pembelian->firstItem() . '&search=' . $search);
         $respons['from']           = 1;
         $respons['last_page']      = $pembelian->lastPage();
@@ -281,7 +288,7 @@ class PembelianController extends Controller
     }
     public function pilih_suplier()
     {
-        $suplier = Suplier::select('id', 'nama_suplier')->get();
+        $suplier = Suplier::select('id', 'nama_suplier')->where('warung_id', Auth::user()->id_warung)->get();
         return response()->json($suplier);
     }
 
@@ -714,101 +721,80 @@ class PembelianController extends Controller
             //INSERT DETAIL PEMBELIAN
             $data_produk_pembelian = TbsPembelian::where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
 
-            if ($data_produk_pembelian->count() == 0) {
-
-                $pesan_alert =
-                    '<div class="container-fluid">
-         <div class="alert-icon">
-         <i class="material-icons">error</i>
-         </div>
-         <b>Gagal : Belum Ada Produk Yang Diinputkan</b>
-         </div>';
-
-                Session::flash("flash_notification", [
-                    "level"   => "danger",
-                    "message" => $pesan_alert,
+            // INSERT DETAIL PEMBELIAN
+            foreach ($data_produk_pembelian->get() as $data_tbs_pembelian) {
+                $barang = Barang::select('harga_beli')->where('id', $data_tbs_pembelian->id_produk)->where('id_warung', Auth::user()->id_warung);
+                if ($barang->first()->harga_beli != $data_tbs_pembelian->harga_produk) {
+                    $barang->update(['harga_beli' => $data_tbs_pembelian->harga_produk]);
+                }
+                $detail_pembelian = DetailPembelian::create([
+                    'no_faktur'     => $no_faktur,
+                    'satuan_id'     => $data_tbs_pembelian->satuan_id,
+                    'id_produk'     => $data_tbs_pembelian->id_produk,
+                    'jumlah_produk' => $data_tbs_pembelian->jumlah_produk,
+                    'harga_produk'  => $data_tbs_pembelian->harga_produk,
+                    'subtotal'      => $data_tbs_pembelian->subtotal,
+                    'tax'           => $data_tbs_pembelian->tax,
+                    'potongan'      => $data_tbs_pembelian->potongan,
+                    'ppn'           => $data_tbs_pembelian->ppn,
+                    'warung_id'     => Auth::user()->id_warung,
                 ]);
-
-                return redirect()->back();
-            } else {
-
-                // INSERT DETAIL PEMBELIAN
-                foreach ($data_produk_pembelian->get() as $data_tbs_pembelian) {
-                    $barang = Barang::select('harga_beli')->where('id', $data_tbs_pembelian->id_produk)->where('id_warung', Auth::user()->id_warung);
-                    if ($barang->first()->harga_beli != $data_tbs_pembelian->harga_produk) {
-                        $barang->update(['harga_beli' => $data_tbs_pembelian->harga_produk]);
-                    }
-                    $detail_pembelian = DetailPembelian::create([
-                        'no_faktur'     => $no_faktur,
-                        'satuan_id'     => $data_tbs_pembelian->satuan_id,
-                        'id_produk'     => $data_tbs_pembelian->id_produk,
-                        'jumlah_produk' => $data_tbs_pembelian->jumlah_produk,
-                        'harga_produk'  => $data_tbs_pembelian->harga_produk,
-                        'subtotal'      => $data_tbs_pembelian->subtotal,
-                        'tax'           => $data_tbs_pembelian->tax,
-                        'potongan'      => $data_tbs_pembelian->potongan,
-                        'ppn'           => $data_tbs_pembelian->ppn,
-                        'warung_id'     => Auth::user()->id_warung,
-                    ]);
-
-                }
-
-                //INSERT PEMBELIAN
-                if ($request->keterangan == "") {
-                    $keterangan = "-";
-                } else {
-                    $keterangan = $request->keterangan;
-                }
-
-                if ($request->pembayaran == '') {
-                    $pembayaran = 0;
-                } else {
-                    $pembayaran = $request->pembayaran;
-                }
-                if ($request->kembalian == '') {
-                    $kembalian = 0;
-                } else {
-                    $kembalian = $request->kembalian;
-                }
-                $pembelian = Pembelian::create([
-                    'no_faktur'        => $no_faktur,
-                    'total'            => str_replace('.', '', $request->total_akhir),
-                    'suplier_id'       => $request->suplier_id,
-                    'status_pembelian' => $request->status_pembelian,
-                    'potongan'         => $request->potongan,
-                    'tunai'            => $pembayaran,
-                    'kembalian'        => str_replace('.', '', $kembalian),
-                    'kredit'           => str_replace('.', '', $request->kredit),
-                    'nilai_kredit'     => str_replace('.', '', $request->kredit),
-                    'cara_bayar'       => $request->id_cara_bayar,
-                    'status_beli_awal' => $request->status_pembelian,
-                    'tanggal_jt_tempo' => $request->jatuh_tempo,
-                    'keterangan'       => $request->keterangan,
-                    'ppn'              => $request->ppn,
-                    'warung_id'        => Auth::user()->id_warung,
-                ]);
-
-                //HAPUS TBS PEMBELIAN
-                $data_produk_pembelian->delete();
-
-                $pesan_alert =
-                    '<div class="container-fluid">
-        <div class="alert-icon">
-        <i class="material-icons">check</i>
-        </div>
-        <b>Sukses : Berhasil Melakukan Transaksi PEMBELIAN Faktur "' . $no_faktur . '"</b>
-        </div>';
-
-                Session::flash("flash_notification", [
-                    "level"   => "success",
-                    "message" => $pesan_alert,
-                ]);
-
-                DB::commit();
-                return redirect()->route('pembelian.index');
 
             }
+
+            //INSERT PEMBELIAN
+            if ($request->keterangan == "") {
+                $keterangan = "-";
+            } else {
+                $keterangan = $request->keterangan;
+            }
+
+            if ($request->pembayaran == '') {
+                $pembayaran = 0;
+            } else {
+                $pembayaran = $request->pembayaran;
+            }
+            if ($request->kembalian == '') {
+                $kembalian = 0;
+            } else {
+                $kembalian = $request->kembalian;
+            }
+            if ($pembayaran < $request->total_akhir) {
+                # code...
+                $status_pembelian = 'Hutang';
+            } else {
+                $status_pembelian = 'Tunai';
+            }
+
+            $pembelian = Pembelian::create([
+                'no_faktur'        => $no_faktur,
+                'total'            => $request->total_akhir,
+                'suplier_id'       => $request->suplier,
+                'status_pembelian' => $status_pembelian,
+                'potongan'         => $request->potongan,
+                'tunai'            => $pembayaran,
+                'kembalian'        => str_replace('.', '', $kembalian),
+                'kredit'           => str_replace('.', '', $request->kredit),
+                'nilai_kredit'     => str_replace('.', '', $request->kredit),
+                'cara_bayar'       => $request->cara_bayar,
+                'status_beli_awal' => $status_pembelian,
+                'tanggal_jt_tempo' => $request->jatuh_tempo,
+                'keterangan'       => $request->keterangan,
+                'ppn'              => $request->ppn,
+                'warung_id'        => Auth::user()->id_warung,
+            ]);
+
+            //HAPUS TBS PEMBELIAN
+            $data_produk_pembelian->delete();
+            DB::commit();
+
         }
+    }
+
+    public function total_kas(Request $request)
+    {
+        $total_kas = TransaksiKas::total_kas($request);
+        return $total_kas;
     }
 
     public function datatableDetailPembelian(Request $request)
