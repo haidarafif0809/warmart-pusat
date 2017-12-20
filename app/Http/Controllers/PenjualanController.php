@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Barang;
 use App\DetailPenjualanPos;
+use App\Kas;
 use App\PenjualanPos;
 use App\TbsPenjualan;
 use App\TransaksiKas;
@@ -32,6 +33,12 @@ class PenjualanController extends Controller
         }
 
         return response()->json($array);
+    }
+
+    public function pilih_kas()
+    {
+        $kas = Kas::select('id', 'nama_kas', 'default_kas')->where('warung_id', Auth::user()->id_warung)->where('status_kas', 1)->get();
+        return response()->json($kas);
     }
 
     public function paginationData($penjualan, $array, $url)
@@ -353,7 +360,7 @@ class PenjualanController extends Controller
                 TransaksiKas::create([
                     'no_faktur'       => $penjualan->id,
                     'jenis_transaksi' => 'PenjualanPos',
-                    'jumlah_keluar'   => $kas,
+                    'jumlah_masuk'    => $kas,
                     'kas'             => $penjualan->id_kas,
                     'warung_id'       => $penjualan->warung_id]);
             }

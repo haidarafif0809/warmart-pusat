@@ -514,6 +514,7 @@ Route::get('/penjualan/view-tbs-penjualan', 'PenjualanController@viewTbsPenjuala
 Route::get('/penjualan/pencarian-tbs-penjualan', 'PenjualanController@pencarianTbsPenjualan')->middleware('auth');
 Route::get('/penjualan/cek-data-tbs-penjualan', 'PenjualanController@cekDataTbsPenjualan')->middleware('auth');
 Route::get('/penjualan/pilih-pelanggan', 'PenjualanController@pilihPelanggan')->middleware('auth');
+Route::get('/penjualan/pilih-kas', 'PenjualanController@pilih_kas')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 

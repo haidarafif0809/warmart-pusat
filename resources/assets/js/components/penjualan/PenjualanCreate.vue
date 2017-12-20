@@ -19,8 +19,8 @@
 
                     <div class="row">
 
-                        <div class="col-md-3">
-                            <div class="card" style="margin-right: 10px; margin-left: 10px;">
+                        <div class="col-md-2">
+                            <div class="card card-produk">
 
                                 <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
                                     <selectize-component v-model="penjualan.pelanggan" :settings="placeholder_pelanggan" id="pelanggan" ref='pelanggan'> 
@@ -30,7 +30,7 @@
                               </div>
 
                               <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
-                                <selectize-component v-model="inputTbsPenjualan.produk" :settings="placeholder_produk" id="produk" ref='produk' class="form-produk"> 
+                                <selectize-component v-model="inputTbsPenjualan.produk" :settings="placeholder_produk" id="produk" ref='produk'> 
                                     <option v-for="produks, index in produk" v-bind:value="produks.produk">{{ produks.nama_produk }}</option>
                                 </selectize-component>
                                 <span v-if="errors.produk" id="produk_error" class="label label-danger">{{ errors.produk[0] }}</span>
@@ -48,124 +48,138 @@
                         </div>
                     </div>
 
-                    <div class="col-md-9">
-                        <div class="card">
 
-                            <div class="row">
-                                <div class="col-md-2">
+                    <div class="col-md-2">
+                        <div class="card" style="margin-right: 10px; margin-left: 10px;">
 
-                                    <div class="form-group">
-                                        <label class="label-control">Subtotal</label><br>
-                                        <input type="number" readonly="" value="0" v-model="penjualan.subtotal"  />
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label class="label-control">Potongan Faktur</label>
-                                        <input type="number" value="0" v-model="penjualan.potongan_faktur" v-on:keyup="potonganFaktur" />
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label class="label-control">Disc. Faktur(%)</label>
-                                        <input type="number" value="0" v-model="penjualan.potongan_persen" v-on:keyup="potonganPersen"/>
-                                    </div>
-
-
-                                </div>
-
-                                <div class="col-md-2">
-                                 <label class="label-control">Total Akhir</label><br>
-                                 <input class="form-penjualan" readonly="" type="number" id="total_akhir" name="total_akhir" placeholder="Total Akhir"  v-model="penjualan.total_akhir">
-                                 <label class="label-control">Pembayaran</label><br>
-                                 <input class="form-penjualan" type="number" id="pembayaran" name="pembayaran" placeholder="Pembayaran"  v-model="penjualan.pembayaran">
-                             </div>
-
-                             <div class="col-md-2">
-                                 <label class="label-control">Kembalian</label><br>
-                                 <input class="form-penjualan" readonly="" type="number" id="kembalian" name="kembalian" placeholder="Kembalian"  v-model="penjualan.kembalian">
-                                 <label class="label-control">Kredit</label><br>
-                                 <input class="form-penjualan" readonly="" type="number" id="kredit" name="kredit" placeholder="Kredit"  v-model="penjualan.kredit">
-
-                             </div>
-                             <div class="col-md-2">
-
-                                 <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
-                                    <label class="label-control">Kas</label><br>
-                                    <selectize-component v-model="penjualan.kas" :settings="placeholder_kas" id="kas" ref='kas'> 
-                                        <option v-for="kass, index in kas" v-bind:value="kass.id">{{ kass.nama_kas }}</option>
-                                    </selectize-component>
-                                    <span v-if="errors.kas" id="kas_error" class="label label-danger">{{ errors.kas[0] }}</span>
-                                </div>
-
-                                <button type="button" class="btn btn-primary" id="btnSelesai" v-on:click="selesaiPenjualan()"><i class="material-icons">save</i> Simpan</button>
-
-                                <button type="submit" class="btn btn-danger" id="btnBatal" v-on:click="batalPenjualan()"><i class="material-icons">cancel</i> Batal </button>
+                            <div class="form-group " style="margin-right: 10px; margin-left: 10px;">
+                                <label class="label-control">Subtotal</label><br>   
+                                <input type="number" readonly="" value="0" v-model="penjualan.subtotal"  />
                             </div>
 
-
+                            <div class="form-group " style="margin-right: 10px; margin-left: 10px;">
+                                <label class="label-control">Disc</label><br>   
+                                <input type="number" value="0" v-model="penjualan.potongan_faktur" v-on:keyup="potonganFaktur" />
+                            </div>
+                            <div class="form-group " style="margin-right: 10px; margin-left: 10px;">
+                                <label class="label-control">Disc(%)</label><br>    
+                                <input type="number" value="0" v-model="penjualan.potongan_persen" v-on:keyup="potonganPersen" />
+                            </div>
 
                         </div>
+                    </div>
 
+                    <div class="col-md-4">
+                        <div class="card card-pembayaran">
+
+                            <div class="row">
+
+                                <div class="col-md-6">
+                                    <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                                        <label class="label-control" style="color: black">Total Akhir</label>
+                                        <input class="form-penjualan" readonly="" type="number" id="total_akhir" name="total_akhir" placeholder="Total Akhir"  v-model="penjualan.total_akhir">
+                                    </div>
+
+                                    <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                                        <label class="label-control" style="color: black">Pembayaran</label>
+                                        <input class="form-penjualan" type="number" id="pembayaran" name="pembayaran" placeholder="Pembayaran"  v-model="penjualan.pembayaran">
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                                       <label class="label-control" style="color: black">Kembalian</label>
+                                       <input class="form-penjualan" readonly="" type="number" id="kembalian" name="kembalian" placeholder="Kembalian"  v-model="penjualan.kembalian">
+                                   </div>
+                                   <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                                       <label class="label-control" style="color: black">Kredit</label>
+                                       <input class="form-penjualan" readonly="" type="number" id="kredit" name="kredit" placeholder="Kredit"  v-model="penjualan.kredit">
+                                   </div>
+                               </div>
+
+                           </div>
+
+                       </div>
+                   </div>
+
+                   <div class="col-md-2">
+
+                    <div class="card">
+                       <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
+                        <label class="label-control">Kas</label><br>
+                        <selectize-component v-model="penjualan.kas" :settings="placeholder_kas" id="kas" ref='kas'> 
+                            <option v-for="kass, index in kas" v-bind:value="kass.id">{{ kass.nama_kas }}</option>
+                        </selectize-component>
+                        <span v-if="errors.kas" id="kas_error" class="label label-danger">{{ errors.kas[0] }}</span>
+                    </div>
+
+                    <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
+                        <button type="button" class="btn btn-success" id="btnSelesai" v-on:click="selesaiPenjualan()"><i class="material-icons">credit_card</i> Tunai</button>
+
+                        <button type="submit" class="btn btn-danger" id="btnBatal" v-on:click="batalPenjualan()"><i class="material-icons">cancel</i> Batal </button>
                     </div>
                 </div>
-
             </div>
 
+        </div>
 
-            <!--TABEL TBS ITEM  MASUK -->
 
-            <div class=" table-responsive ">
-                <div  align="right">
-                    pencarian
-                    <input type="text" name="pencarian" v-model="pencarian" placeholder="Kolom Pencarian">
-                </div>
+        <!--TABEL TBS ITEM  MASUK -->
 
-                <table class="table table-striped table-hover" v-if="seen">
-                    <thead class="text-primary">
-                        <tr>
-
-                            <th>Produk</th>
-                            <th>Jumlah</th>
-                            <th>Harga</th>
-                            <th>Potongan</th>
-                            <th>Subtotal</th>
-                            <th>Hapus</th>
-
-                        </tr>
-                    </thead>
-                    <tbody v-if="tbs_penjualan.length"  class="data-ada">
-                        <tr v-for="tbs_penjualan, index in tbs_penjualan" >
-
-                            <td>{{ tbs_penjualan.kode_produk }} - {{ tbs_penjualan.nama_produk }}</td>
-
-                            <td>
-                                <a href="#create-penjualan" v-bind:id="'edit-' + tbs_penjualan.id_tbs_penjualan" v-on:click="editEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">{{ new Intl.NumberFormat().format(tbs_penjualan.jumlah_produk) }}</a>
-                            </td>
-
-                            <td>{{ new Intl.NumberFormat().format(tbs_penjualan.harga_produk) }}</td>
-
-                            <td><a href="#create-penjualan" v-bind:id="'edit-' + tbs_penjualan.id_tbs_penjualan" v-on:click="potonganEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">{{ tbs_penjualan.potongan }}</a></td>
-
-                            <td> {{ new Intl.NumberFormat().format(tbs_penjualan.subtotal) }}</td>
-
-                            <td><a href="#create-penjualan" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_penjualan.id_tbs_penjualan" v-on:click="deleteEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">Delete</a></td>
-                        </tr>
-                    </tbody>                    
-                    <tbody class="data-tidak-ada" v-else>
-                        <tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
-                    </tbody>
-                </table>    
-
-                <vue-simple-spinner v-if="loading"></vue-simple-spinner>
-
-                <div align="right"><pagination :data="tbsPenjualanData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
-
+        <div class=" table-responsive ">
+            <div  align="right">
+                pencarian
+                <input type="text" name="pencarian" v-model="pencarian" placeholder="Kolom Pencarian">
             </div>
-            <p style="color: red; font-style: italic;">*Note : Klik Kolom Jumlah Untuk Mengubah Jumlah Produk.</p>      
+
+            <table class="table table-striped table-hover" v-if="seen">
+                <thead class="text-primary">
+                    <tr>
+
+                        <th>Produk</th>
+                        <th>Jumlah</th>
+                        <th>Harga</th>
+                        <th>Potongan</th>
+                        <th>Subtotal</th>
+                        <th>Hapus</th>
+
+                    </tr>
+                </thead>
+                <tbody v-if="tbs_penjualan.length"  class="data-ada">
+                    <tr v-for="tbs_penjualan, index in tbs_penjualan" >
+
+                        <td>{{ tbs_penjualan.kode_produk }} - {{ tbs_penjualan.nama_produk }}</td>
+
+                        <td>
+                            <a href="#create-penjualan" v-bind:id="'edit-' + tbs_penjualan.id_tbs_penjualan" v-on:click="editEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">{{ new Intl.NumberFormat().format(tbs_penjualan.jumlah_produk) }}</a>
+                        </td>
+
+                        <td>{{ new Intl.NumberFormat().format(tbs_penjualan.harga_produk) }}</td>
+
+                        <td><a href="#create-penjualan" v-bind:id="'edit-' + tbs_penjualan.id_tbs_penjualan" v-on:click="potonganEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">{{ tbs_penjualan.potongan }}</a></td>
+
+                        <td> {{ new Intl.NumberFormat().format(tbs_penjualan.subtotal) }}</td>
+
+                        <td><a href="#create-penjualan" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_penjualan.id_tbs_penjualan" v-on:click="deleteEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">Delete</a></td>
+                    </tr>
+                </tbody>                    
+                <tbody class="data-tidak-ada" v-else>
+                    <tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
+                </tbody>
+            </table>    
+
+            <vue-simple-spinner v-if="loading"></vue-simple-spinner>
+
+            <div align="right"><pagination :data="tbsPenjualanData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
+
+        </div>
+        <p style="color: red; font-style: italic;">*Note : Klik Kolom Jumlah Untuk Mengubah Jumlah Produk.</p>      
 
 
-        </div><!-- / PANEL BODY -->
+    </div><!-- / PANEL BODY -->
 
-    </div>
+</div>
 </div>
 </div>
 
@@ -182,14 +196,15 @@
     box-sizing: border-box;
     font-size: 30px;
 }
-.form-produk{
- width: 100%;
- font-size: 30px; 
+.card-produk{
+    background-color:#82B1FF;
+}
+
+.card-pembayaran{
+    background-color:#82B1FF;
 }
 
 </style>
-
-
 
 
 <script>
@@ -204,7 +219,6 @@ export default {
             tbsPenjualanData : {},
             url : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
             url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
-            url_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas-masuk"),
             inputTbsPenjualan: {
                 produk : '',
                 jumlah_produk : '',
@@ -408,8 +422,16 @@ dataPelanggan() {
 },   
 dataKas() {
     var app = this;
-    axios.get(app.url_kas+'/pilih-kas').then(function (resp) {
-        app.kas = resp.data;
+    axios.get(app.url+'/pilih-kas').then(function (resp) {
+        app.kas = resp.data;   
+
+        $.each(resp.data, function (i, item) {
+            if (resp.data[i].default_kas == 1) {
+                app.penjualan.kas = resp.data[i].id 
+            }
+
+        });
+        
     })
     .catch(function (resp) {
 
