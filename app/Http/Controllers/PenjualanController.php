@@ -6,6 +6,7 @@ use App\Barang;
 use App\DetailPenjualanPos;
 use App\PenjualanPos;
 use App\TbsPenjualan;
+use App\TransaksiKas;
 use App\User;
 use Auth;
 use Illuminate\Http\Request;
@@ -346,6 +347,16 @@ class PenjualanController extends Controller
                 'status_jual_awal' => 'Tunai',
                 'warung_id'        => Auth::user()->id_warung,
             ]);
+
+            $kas = intval($penjualan->tunai) - intval($penjualan->kembalian);
+            if ($kas > 0) {
+                TransaksiKas::create([
+                    'no_faktur'       => $penjualan->id,
+                    'jenis_transaksi' => 'PenjualanPos',
+                    'jumlah_keluar'   => $kas,
+                    'kas'             => $penjualan->id_kas,
+                    'warung_id'       => $penjualan->warung_id]);
+            }
 
             foreach ($data_produk_penjualan->get() as $data_tbs) {
 
