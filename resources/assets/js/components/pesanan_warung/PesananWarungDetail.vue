@@ -65,7 +65,8 @@
 				  		<b style="color:red" v-if="pesananData.pesanan.konfirmasi_pesanan == 0" >Belum Di Konfirmasi</b>
 				  		<b style="color:orange" v-else-if="pesananData.pesanan.konfirmasi_pesanan == 1" >Sudah Di Konfirmasi</b>
 				  		<b style="color:#01573e" v-else-if="pesananData.pesanan.konfirmasi_pesanan == 2" >Selesai</b>
-				  		<b style="color:red" v-else > Batal</b>
+				  		<b style="color:red" v-else-if="pesananData.pesanan.konfirmasi_pesanan == 3" >Batal</b>
+				  		<b style="color:orange" v-else > Batal Pelanggan</b>
 				  </div>
 
 				  <div class="col-md-4">
@@ -142,7 +143,8 @@
 				      				<b style="color:red" v-if="detailPesanans.pesanan_pelanggan.konfirmasi_pesanan == 0" >Belum Di Konfirmasi</b>
 									<b style="color:orange" v-else-if="detailPesanans.pesanan_pelanggan.konfirmasi_pesanan == 1" >Sudah Di Konfirmasi</b>
 									<b style="color:#01573e" v-else-if="detailPesanans.pesanan_pelanggan.konfirmasi_pesanan == 2" >Selesai</b>
-									<b style="color:red" v-else > Batal</b>
+									<b style="color:red" v-else-if="detailPesanans.pesanan_pelanggan.konfirmasi_pesanan == 3" >Batal</b>
+									<b style="color:orange" v-else > Batal Pelanggan</b>
 				      			</td>			          			
 			          		</tr>
 
@@ -191,11 +193,10 @@
 						           <p> <b class="card-title" style="margin-top: 1px; margin-bottom: 1px;">Status Pesanan</b></p>
 
 									<b style="color:red" v-if="pesananData.pesanan.konfirmasi_pesanan == 0" >Belum Di Konfirmasi</b>
-									<b style="color:orange" v-else-if="pesananData.pesanan.konfirmasi_pesanan == 1" >Sudah Di Konfirmasi
-									</b>
-									<b style="color:#01573e" v-else-if="pesananData.pesanan.konfirmasi_pesanan == 2" >Selesai
-									</b>
-								  	<b style="color:red" v-else > Batal</b>
+									<b style="color:orange" v-else-if="pesananData.pesanan.konfirmasi_pesanan == 1" >Sudah Di Konfirmasi</b>
+									<b style="color:#01573e" v-else-if="pesananData.pesanan.konfirmasi_pesanan == 2" >Selesai</b>
+							  		<b style="color:red" v-else-if="pesananData.pesanan.konfirmasi_pesanan == 3" >Batal</b>
+							  		<b style="color:orange" v-else > Batal Pelanggan</b>
 								</div>
 
 						        <div class="col-xs-6" style="padding-left:10px; padding-right:10px">
@@ -260,14 +261,17 @@
 	                      <b>Rp. {{ new Intl.NumberFormat().format(detailPesanans.harga_produk) }}</b>
 	                    </p>
 
-	                    <a id="edit-jumlah-pesanan" :data-nama="detailPesanans.produk.nama_barang" :data-id="detailPesanans.id"  class="btn btn-info btn-xs" @click="editProduk(detailPesanans.id, index, detailPesanans.produk.nama_barang)">
-	                    	<font style="font-size: 11.5px;">{{ detailPesanans.jumlah_produk }}</font> 
-	                    </a>
-
 	                    <div class="btn-group" align="right" v-if="detailPesanans.pesanan_pelanggan.konfirmasi_pesanan == 0">
+		                    <a id="edit-jumlah-pesanan" :data-nama="detailPesanans.produk.nama_barang" :data-id="detailPesanans.id"  class="btn btn-info btn-xs" @click="editProduk(detailPesanans.id, index, detailPesanans.produk.nama_barang)">
+		                    	<font style="font-size: 11.5px;">{{ detailPesanans.jumlah_produk }}</font> 
+		                    </a>
 	                    	<a v-if="detailPesanans.jumlah_produk == 0" disabled="true" class="btn btn-xs"> <i class="material-icons">remove</i></a>
 	                    	<a v-else href="#" class="btn btn-xs" @click="kurangProduk(detailPesanans.id)"> <i class="material-icons">remove</i></a>
 	                    	<a href="#" class="btn btn-xs" @click="tambahProduk(detailPesanans.id)"> <i class="material-icons">add</i></a>
+	                    </div>
+
+	                    <div v-else>
+	                    	{{ detailPesanans.jumlah_produk }}
 	                    </div>
 	                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	                    <b style="margin-bottom:1px;margin-top: 1px;" class="text-danger" v-if="detailPesanans.jumlah_produk == 0">Dibatalkan</b>
