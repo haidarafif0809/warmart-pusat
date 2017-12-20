@@ -77,7 +77,8 @@
                                         <b style="color:red" v-if="pesananWarung.pesanan_warung.konfirmasi_pesanan == 0">Belum Di Konfirmasi</b>
                                         <b style="color:orange" v-else-if="pesananWarung.pesanan_warung.konfirmasi_pesanan == 1">Sudah Konfirmasi</b>
                                         <b style="color:#01573e" v-else-if="pesananWarung.pesanan_warung.konfirmasi_pesanan == 2">Selesai</b>
-                                        <b style="color:#01573e" v-else>Batal</b>
+                                        <b style="color:#01573e" v-else-if="pesananWarung.pesanan_warung.konfirmasi_pesanan == 3">Batal</b>
+                                        <b style="color:orange" v-else>Batal Pelanggan</b>
                                      </td>
                                      <td>{{ pesananWarung.pesanan_warung.created_at }}</td>
                                      <td>
@@ -137,7 +138,8 @@
                                                 <b style="color:red" v-if="pesananWarung.pesanan_warung.konfirmasi_pesanan == 0">Belum Di Konfirmasi</b>
                                                 <b style="color:orange" v-else-if="pesananWarung.pesanan_warung.konfirmasi_pesanan == 1">Sudah Konfirmasi</b>
                                                 <b style="color:#01573e" v-else-if="pesananWarung.pesanan_warung.konfirmasi_pesanan == 2">Selesai</b>
-                                                <b style="color:#01573e" v-else>Batal</b>
+                                                <b style="color:#01573e" v-else-if="pesananWarung.pesanan_warung.konfirmasi_pesanan == 3">Batal</b>
+                                                <b style="color:orange" v-else>Batal Pelanggan</b>
                                             </td>
                                         </tr>
                                         <tr><td width="25%"> Waktu</td> <td> : </td> <td> {{pesananWarung.pesanan_warung.created_at}} </td></tr>

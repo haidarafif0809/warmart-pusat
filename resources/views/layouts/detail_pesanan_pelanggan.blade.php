@@ -87,6 +87,11 @@
           <hr style="margin-top: 1x; margin-bottom: 1px;">
 
           <p> <b class="card-title" style="margin-top: 1px; margin-bottom: 1px;">Status Pesanan: </b> {!! $status_pesanan !!}</p>
+          @if($pesanan_pelanggan->konfirmasi_pesanan == 0)
+          <span style="color:purple; font-size: 16;" id="btnBatal"><i class="fa fa-info-circle" aria-hidden="true"> <a href="#" style="font-size: 12px" data-id="{{$pesanan_pelanggan->id}}"></i> PEMBATALAN PESANAN </a> </span>
+          @elseif($pesanan_pelanggan->konfirmasi_pesanan == 4)
+          <span style="color:purple; font-size: 16;" id="btnLanjut"><i class="fa fa-info-circle" aria-hidden="true"> <a href="#" style="font-size: 12px" data-id="{{$pesanan_pelanggan->id}}"></i> LANJUTKAN PESANAN </a> </span>
+          @endif
           <hr style="margin-top: 1x; margin-bottom: 1px;">
         </div>
       </div>
@@ -239,8 +244,12 @@
 
              <b class="card-title" style="margin-top: 1px; margin-bottom: 1px;">Total</b>
              <p class="text-danger" style="margin-top: 1px; margin-bottom: 1px;"><b>Rp. {{ number_format($pesanan_pelanggan->subtotal,0,',','.') }}</b></p>
-
              <hr style="margin-top: 1x; margin-bottom: 1px;">
+             @if($pesanan_pelanggan->konfirmasi_pesanan == 0)
+             <span style="color:purple; font-size: 16;" id="btnBatal"><i class="fa fa-info-circle" aria-hidden="true"> <a href="#" style="font-size: 12px" data-id="{{$pesanan_pelanggan->id}}"></i> PEMBATALAN PESANAN </a> </span>
+             @elseif($pesanan_pelanggan->konfirmasi_pesanan == 4)
+             <span style="color:purple; font-size: 16;" id="btnLanjut"><i class="fa fa-info-circle" aria-hidden="true"> <a href="#" style="font-size: 12px" data-id="{{$pesanan_pelanggan->id}}"></i> LANJUTKAN PESANAN </a> </span>
+             @endif
            </div>
          </div>
 
@@ -254,4 +263,66 @@
  @endsection
 
  @section('scripts')
- @endsection
+ <script type="text/javascript">
+  $(document).on('click', '#btnBatal', function () {
+    batalPesanan();
+  });
+
+  function batalPesanan(){
+    swal({
+      title: "Konfirmasi Batal!",
+      text: "Yakin Ingin Membatalkan Pesanan Ini?",
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      cancelButtonText: 'Batal',
+      confirmButtonText: 'Ya',
+    }).then((result) => {
+      if (result.value) {
+        var urlBatalPesanan = window.location.origin + (window.location.pathname).replace("pesanan-detail/", "batal-pesanan-pelanggan/");
+        window.location.href=urlBatalPesanan;
+        swal({
+          text :  "Pesanan Berhasil Dibatalkan!",
+          showConfirmButton :  false,
+          type: "success",
+          timer: 10000,
+          onOpen: () => {
+            swal.showLoading()
+          }
+        });
+      }
+    });
+  }
+</script>
+<script type="text/javascript">
+  $(document).on('click', '#btnLanjut', function () {
+    lanjutPesanan();
+  });
+
+  function lanjutPesanan(){
+    swal({
+      title: "Konfirmasi Lanjut!",
+      text: "Yakin Ingin Melanjutkan Pesanan Ini?",
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      cancelButtonText: 'Batal',
+      confirmButtonText: 'Ya',
+    }).then((result) => {
+      if (result.value) {
+        var urlLanjutPesanan = window.location.origin + (window.location.pathname).replace("pesanan-detail/", "lanjut-pesanan-pelanggan/");
+        window.location.href=urlLanjutPesanan;
+        swal({
+          text :  "Pesanan Berhasil Dilanjutkan!",
+          showConfirmButton :  false,
+          type: "success",
+          timer: 10000,
+          onOpen: () => {
+            swal.showLoading()
+          }
+        });
+      }
+    })
+  }
+</script>
+@endsection

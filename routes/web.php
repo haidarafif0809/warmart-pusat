@@ -171,6 +171,12 @@ Route::get('pesanan-detail/{id}', [
     'uses'       => 'PesananPelangganController@detailPesananPelanggan',
 ]);
 
+//BATAL PESANAN PELANGGAN
+Route::get('batal-pesanan-pelanggan/{id}', 'PesananPelangganController@batalPesananPelanggan')->middleware('auth');
+
+//LANJUTKAN PESANAN PELANGGAN
+Route::get('lanjut-pesanan-pelanggan/{id}', 'PesananPelangganController@lanjutPesananPelanggan')->middleware('auth');
+
 //PUNYA PESANAN WARUNG
 Route::get('/pesanan-warung', [
     'middleware' => ['auth'],
