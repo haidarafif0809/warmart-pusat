@@ -48,6 +48,11 @@ class Pembelian extends Model
         $date_terbalik = date_format($date, "d-m-Y H:i:s");
         return $date_terbalik;
     }
+    public function getTotalSeparator()
+    {
+        $total = number_format($this->total, 2, ',', '.');
+        return $total;
+    }
 
     public static function no_faktur($warung_id)
     {

@@ -486,6 +486,7 @@ Route::get('/pembelian/cek-persen-potongan-pembelian', 'PembelianController@cek_
 Route::get('/pembelian/cek-persen-tax-pembelian', 'PembelianController@cek_persen_potongan_pembelian')->middleware('auth');
 Route::get('/pembelian/proses-edit-tax-tbs-pembelian', 'PembelianController@editTaxTbsPembelian')->middleware('auth');
 Route::get('/pembelian/cek-total-kas-pembelian', 'PembelianController@total_kas')->middleware('auth');
+Route::get('/pembelian/detail-view', 'PembelianController@detailView')->middleware('auth');
 
 // ITEM MASUK
 Route::get('/item-keluar/view', 'ItemKeluarController@view')->middleware('auth');

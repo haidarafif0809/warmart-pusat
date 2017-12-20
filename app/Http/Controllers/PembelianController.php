@@ -51,7 +51,7 @@ class PembelianController extends Controller
                 'waktu'            => $pembelians->getWaktuAttribute(),
                 'suplier'          => $pembelians->nama_suplier,
                 'status_pembelian' => $pembelians->status_pembelian,
-                'total'            => $pembelians->total]);
+                'total'            => $pembelians->getTotalSeparator()]);
         }
 
         //DATA PAGINATION
@@ -286,12 +286,33 @@ class PembelianController extends Controller
 
         return $respons;
     }
+
     public function pilih_suplier()
     {
         $suplier = Suplier::select('id', 'nama_suplier')->where('warung_id', Auth::user()->id_warung)->get();
         return response()->json($suplier);
     }
 
+    public function detailView(Request $request)
+    {
+        $detail_pembelian = DetailPembelian::with(['produk'])->where('warung_id', Auth::user()->id_warung)->where('no_faktur', $request->no_faktur)->get();
+        $array            = array();
+        foreach ($detail_pembelian as $detail_pembelians) {
+            array_push($array, [
+                'no_faktur'       => $detail_pembelians->no_faktur,
+                'nama_produk'     => $detail_pembelians->TitleCaseBarang,
+                'jumlah_produk'   => $detail_pembelians->PemisahJumlah,
+                'harga_produk'    => $detail_pembelians->PemisahHarga,
+                'potongan_produk' => $detail_pembelians->PemisahPotongan,
+                'pajak_produk'    => $detail_pembelians->PemisahTax,
+                'subtotal'        => $detail_pembelians->PemisahSubtotal,
+            ]);
+        }
+
+        $respons['data'] = $array;
+
+        return $respons;
+    }
     /**
      * Show the form for creating a new resource.
      *
