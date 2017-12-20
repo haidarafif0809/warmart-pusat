@@ -161,7 +161,6 @@
         </li>
 
         <!--PEMBELIAN-->
-        @if(Auth::user()->tipe_user == 4 AND Auth::user()->konfirmasi_admin == 1 AND Auth::user()->foto_ktp != "")
         <li class="vueJs">
             <a href="#">
                 <i class="material-icons">
