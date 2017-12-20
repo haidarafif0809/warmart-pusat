@@ -69,7 +69,7 @@
 				  		<b style="color:orange" v-else > Batal Pelanggan</b>
 				  </div>
 
-				  <div class="col-md-4">
+				  <div class="col-md-4" v-if="pesananData.pesanan.konfirmasi_pesanan != 4">
 				  	<p v-if="pesananData.pesanan.konfirmasi_pesanan == 1">Selesai ? :</p>
 				  	<p v-else>Lanjut ? :</p>
 				  	
@@ -189,7 +189,7 @@
 				    <div class="row">
 					    <div class="col-md-12">
 					        <div class="row">
-						        <div class="col-xs-6" style="padding-left:10px; padding-right:10px">
+						        <div class="col-xs-12" style="padding-left:10px; padding-right:10px">
 						           <p> <b class="card-title" style="margin-top: 1px; margin-bottom: 1px;">Status Pesanan</b></p>
 
 									<b style="color:red" v-if="pesananData.pesanan.konfirmasi_pesanan == 0" >Belum Di Konfirmasi</b>
@@ -198,35 +198,6 @@
 							  		<b style="color:red" v-else-if="pesananData.pesanan.konfirmasi_pesanan == 3" >Batal</b>
 							  		<b style="color:orange" v-else > Batal Pelanggan</b>
 								</div>
-
-						        <div class="col-xs-6" style="padding-left:10px; padding-right:10px">
-						        	<b class="card-title" style="margin-top: 1px; margin-bottom: 1px;">Konfirmasi/Batal</b>
-
-	        						<div class="btn-group" v-if="pesananData.pesanan.konfirmasi_pesanan == 0">
-									  		<button id="konfirmasi-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-xs btn-info" @click="konfirmasiPesanan(pesananData.pesanan.id)"><font style="font-size: 12px;">Lanjut</font>
-									  		</button>
-									  		<button id="batalkan-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-xs btn-danger" @click="batalPesanan(pesananData.pesanan.id)"><font style="font-size: 12px;">Batal</font>
-									  		</button>
-									</div>
-					  	
-					  				<div class="btn-group" v-else-if="pesananData.pesanan.konfirmasi_pesanan == 1">
-									  		<button class="btn btn-info btn-xs" :data-id="pesananData.pesanan.id" id="selesaikan_pesanan">  <font style="font-size: 12px;" @click="selesaikanPesanan(pesananData.pesanan.id)">Selesai</font>
-									  		</button>
-									  		<button id="batalkan-konfirmasi-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-xs btn-danger" @click="batalKonfirmasiPesanan(pesananData.pesanan.id)"><font style="font-size: 12px;">Batal</font>
-									  		</button>
-									</div>
-									
-									<div class="btn-group" v-else-if="pesananData.pesanan.konfirmasi_pesanan == 2">  	
-									  		<button id="batalkan-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-xs btn-danger" @click="batalPesanan(pesananData.pesanan.id)"><font style="font-size: 12px;">Batal</font>
-									  		</button>		  
-									</div>
-
-									<div class="btn-group" v-else-if="pesananData.pesanan.konfirmasi_pesanan == 3">  	
-									  		<button id="konfirmasi-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-xs btn-info" @click="konfirmasiPesanan(pesananData.pesanan.id)"><font style="font-size: 12px;">Lanjut</font>
-									  		</button>	
-									</div>
-
-        						</div>
         					</div>
         				</div>
         			</div>
@@ -238,7 +209,34 @@
 					    <div class="col-sm-6 col-xs-6"><p align="right" class="text-danger"><b>Rp. {{ new Intl.NumberFormat().format(pesananData.subtotal) }}</b></p></div>
 					</div>
 					<hr style="margin-top: 1x; margin-bottom: 1px;">
-				
+
+					<!--KONFIRMASI / BATAL -->
+					<b class="card-title" style="margin-top: 1px; margin-bottom: 1px;" v-if="pesananData.pesanan.konfirmasi_pesanan != 4">Konfirmasi/Batal</b><br>
+
+						<div class="btn-group" v-if="pesananData.pesanan.konfirmasi_pesanan == 0">
+							<button id="konfirmasi-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-xs btn-info" @click="konfirmasiPesanan(pesananData.pesanan.id)" style="padding: 5px 50px;"><font style="font-size: 12px;">Lanjut</font>
+							</button>
+							<button id="batalkan-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-xs btn-danger" @click="batalPesanan(pesananData.pesanan.id)" style="padding: 5px 50px;"><font style="font-size: 12px;">Batal</font>
+							</button>
+						</div>
+
+						<div class="btn-group" v-else-if="pesananData.pesanan.konfirmasi_pesanan == 1">
+							<button class="btn btn-info btn-xs" :data-id="pesananData.pesanan.id" id="selesaikan_pesanan" style="padding: 5px 50px;">  <font style="font-size: 12px;" @click="selesaikanPesanan(pesananData.pesanan.id)">Selesai</font>
+							</button>
+							<button id="batalkan-konfirmasi-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-xs btn-danger" @click="batalKonfirmasiPesanan(pesananData.pesanan.id)" style="padding: 5px 50px;"><font style="font-size: 12px;">Batal</font>
+							</button>
+						</div>
+									
+						<div class="btn-group" v-else-if="pesananData.pesanan.konfirmasi_pesanan == 2">  	
+							<button id="batalkan-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-xs btn-danger" @click="batalPesanan(pesananData.pesanan.id)" style="padding: 5px 50px;"><font style="font-size: 12px;">Batal</font>
+							</button>		  
+						</div>
+
+						<div class="btn-group" v-else-if="pesananData.pesanan.konfirmasi_pesanan == 3">  	
+							<button id="konfirmasi-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-xs btn-info" @click="konfirmasiPesanan(pesananData.pesanan.id)" style="padding: 5px 50px;"><font style="font-size: 12px;">Lanjut</font>
+							</button>	
+						</div>
+			
 				</div>
 			</div>
 
