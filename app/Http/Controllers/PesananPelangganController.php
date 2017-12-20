@@ -61,6 +61,8 @@ class PesananPelangganController extends Controller
                 $produk_pesanan_mobile .= '<b  style="color:#01573e">Selesai</b>';
             } elseif ($pesanan_pelanggans->konfirmasi_pesanan == 3) {
                 $produk_pesanan_mobile .= '<b  style="color:red">Batal</b>';
+            } elseif ($pesanan_pelanggans->konfirmasi_pesanan == 4) {
+                $produk_pesanan_mobile .= '<td><b  style="color:orange">Batal Pelanggan</b></td>';
             }
 
             $produk_pesanan_mobile .= '<br>Warung : <a href="' . url('halaman-warung/' . $pesanan_pelanggans->id_warung . '') . '"><b>' . $pesanan_pelanggans->warung->name . '</b></a>';
@@ -87,6 +89,8 @@ class PesananPelangganController extends Controller
                 $produk_pesanan_komputer .= '<td><b  style="color:#01573e">Selesai</b></td>';
             } elseif ($pesanan_pelanggans->konfirmasi_pesanan == 3) {
                 $produk_pesanan_komputer .= '<td><b  style="color:red">Batal</b></td>';
+            } elseif ($pesanan_pelanggans->konfirmasi_pesanan == 4) {
+                $produk_pesanan_komputer .= '<td><b  style="color:orange">Batal Pelanggan</b></td>';
             }
             $produk_pesanan_komputer .= '<td><a href="' . url('halaman-warung/' . $pesanan_pelanggans->id_warung . '') . '"><b>' . $pesanan_pelanggans->warung->name . '</b></a></td>';
             $produk_pesanan_komputer .= '</tr>';
@@ -128,11 +132,25 @@ class PesananPelangganController extends Controller
             $status_pesanan .= '<td><b  style="color:#01573e">Selesai</b></td>';
         } elseif ($pesanan_pelanggan->konfirmasi_pesanan == 3) {
             $status_pesanan .= '<td><b  style="color:red">Batal</b></td>';
+        } elseif ($pesanan_pelanggan->konfirmasi_pesanan == 4) {
+            $status_pesanan .= '<td><b  style="color:orange">Batal Pelanggan</b></td>';
         }
 
         $lokasi_warung = Indonesia::allVillages()->where('id', $pesanan_pelanggan->warung->wilayah)->first();
 
         return view('layouts.detail_pesanan_pelanggan', ['detail_pesanan_pelanggan' => $detail_pesanan_pelanggan, 'pesanan_pelanggan' => $pesanan_pelanggan, 'cek_belanjaan' => $cek_belanjaan, 'agent' => $agent, 'logo_warmart' => $logo_warmart, 'user' => $user, 'status_pesanan' => $status_pesanan, 'lokasi_warung' => $lokasi_warung->name, 'pagination' => $pagination]);
+    }
+
+    public function batalPesananPelanggan($id)
+    {
+        PesananPelanggan::where('id', $id)->update(['konfirmasi_pesanan' => '4']);
+        return redirect()->back();
+    }
+
+    public function lanjutPesananPelanggan($id)
+    {
+        PesananPelanggan::where('id', $id)->update(['konfirmasi_pesanan' => '0']);
+        return redirect()->back();
     }
 
 }
