@@ -30,7 +30,7 @@
 					</div> 
 					<div class="col-md-3 col-xs-3"> 
 						<h5>Disc(Rp)</h5> 
-						<input type="number" name="potongan_faktur" id="potongan_faktur" autocomplete="off"  v-model="inputPembayaranPembelian.potongan_faktur" class="form-control" style="height: 40px;width:90%;font-size:20px;" v-on:keyup="hitungPotonganFaktur()">
+						<input type="text" name="potongan_faktur" id="potongan_faktur" autocomplete="off"  v-model="inputPembayaranPembelian.potongan_faktur" class="form-control" style="height: 40px;width:90%;font-size:20px;" v-on:keyup="hitungPotonganFaktur()">
 					</div> 
 					<div class="col-md-6 col-xs-6"> 
 						<h5>Subtotal</h5> 
@@ -64,7 +64,7 @@
 				<div class="row"> 
 					<div class="col-md-6  col-xs-6"> 
 						<h5>Jatuh Tempo</h5> 
-						<input type="text" name="jatuh_tempo" id="jatuh_tempo" autocomplete="off"  v-model="inputPembayaranPembelian.jatuh_tempo"  class="form-control datepicker">
+						<datepicker :input-class="'form-control'" placeholder="Tanggal Lahir" v-model="inputPembayaranPembelian.jatuh_tempo" name="uniquename" v-bind:id="'jatuh_tempo'"  ></datepicker>
 					</div> 
 					<div class="col-md-6  col-xs-6"> 
 						<h5>Keterangan</h5> 
