@@ -8,6 +8,7 @@ use App\Kas;
 use App\PenjualanPos;
 use App\TbsPenjualan;
 use App\TransaksiKas;
+use App\TransaksiPiutang;
 use App\User;
 use Auth;
 use Illuminate\Http\Request;
@@ -330,6 +331,26 @@ class PenjualanController extends Controller
         $user       = Auth::user()->id;
         $no_faktur  = PenjualanPos::no_faktur($warung_id);
         //INSERT DETAIL PENJUALAN
+
+        $cek_status = intval($request->pembayaran) - intval($request->total_akhir);
+
+        if ($cek_status >= 0) {
+
+            $status_penjualan = "Tunai";
+            $this->validate($request, [
+                'pelanggan' => 'required',
+                'kas'       => 'required']);
+
+        } else {
+
+            $status_penjualan = "Piutang";
+            $this->validate($request, [
+                'pelanggan'   => 'required',
+                'kas'         => 'required',
+                'jatuh_tempo' => 'required']);
+
+        }
+
         $data_produk_penjualan = TbsPenjualan::with('produk')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
 
         if ($data_produk_penjualan->count() == 0) {
@@ -344,14 +365,15 @@ class PenjualanController extends Controller
                 'no_faktur'        => $no_faktur,
                 'total'            => $request->total_akhir,
                 'pelanggan_id'     => $request->pelanggan,
-                'status_penjualan' => 'Tunai',
+                'status_penjualan' => $status_penjualan,
                 'potongan'         => $request->potongan,
                 'tunai'            => $request->pembayaran,
                 'kembalian'        => $request->kembalian,
                 'kredit'           => $request->kredit,
                 'nilai_kredit'     => $request->kredit,
                 'id_kas'           => $request->kas,
-                'status_jual_awal' => 'Tunai',
+                'status_jual_awal' => $status_penjualan,
+                'tanggal_jt_tempo' => $request->jatuh_tempo,
                 'warung_id'        => Auth::user()->id_warung,
             ]);
 
@@ -362,6 +384,15 @@ class PenjualanController extends Controller
                     'jenis_transaksi' => 'PenjualanPos',
                     'jumlah_masuk'    => $kas,
                     'kas'             => $penjualan->id_kas,
+                    'warung_id'       => $penjualan->warung_id]);
+            }
+
+            if ($penjualan->kredit > 0) {
+                TransaksiPiutang::create([
+                    'no_faktur'       => $penjualan->id,
+                    'jenis_transaksi' => 'PenjualanPos',
+                    'jumlah_masuk'    => $penjualan->kredit,
+                    'pelanggan_id'    => $penjualan->pelanggan_id,
                     'warung_id'       => $penjualan->warung_id]);
             }
 
