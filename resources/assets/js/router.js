@@ -99,6 +99,8 @@ import KasMutasiEdit from './components/kas_mutasi/KasMutasiEdit.vue';
 import PenjualanIndex from './components/penjualan/PenjualanIndex.vue';
 import PenjualanCreate from './components/penjualan/PenjualanCreate.vue';
 import PenjualanEdit from './components/penjualan/PenjualanEdit.vue';
+// LAPORAN LABA KOTOR
+import LaporanLabaKotorIndex from './components/laporan/LaporanLabaKotorIndex.vue';
 const routes = [{
         path: '/',
         components: {
@@ -448,6 +450,12 @@ const routes = [{
         path: '/edit-penjualan/:id',
         component: PenjualanEdit,
         name: 'editPenjualan'
+    },
+    // LAPORAN LABA KOTOR
+    {
+        path: '/laporan-laba-kotor',
+        component: LaporanLabaKotorIndex,
+        name: 'indexLaporanLabaKotor'
     }
 ]
 export default routes;
