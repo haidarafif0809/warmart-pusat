@@ -866,4 +866,10 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
         'uses'       => 'PenjualanController@prosesHapusTbsPenjualan',
     ]);
 
+    Route::post('/penjualan/proses-batal-penjualan/', [
+        'middleware' => ['auth'],
+        'as'         => 'penjualan.proses_batal_penjualan',
+        'uses'       => 'PenjualanController@proses_batal_penjualan',
+    ]);
+
 });
