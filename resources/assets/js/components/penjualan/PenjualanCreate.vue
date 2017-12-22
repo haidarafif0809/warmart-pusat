@@ -19,7 +19,7 @@
 
                     <div class="row">
 
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="card card-produk">
 
                                 <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
@@ -92,12 +92,12 @@
 
                             <div class="col-md-6">
                                 <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                    <label class="label-control" style="color: black">Total Akhir</label>
+                                    <font style="color: black">Total Akhir</font>
                                     <input class="form-penjualan" readonly="" type="number" id="total_akhir" name="total_akhir" placeholder="Total Akhir"  v-model="penjualan.total_akhir">
                                 </div>
 
                                 <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                    <label class="label-control" style="color: black">Pembayaran</label>
+                                    <font style="color: black">Pembayaran</font>
                                     <input class="form-penjualan" type="number" id="pembayaran" name="pembayaran" placeholder="Pembayaran"  v-model="penjualan.pembayaran">
                                 </div>
 
@@ -105,11 +105,11 @@
 
                             <div class="col-md-6">
                                 <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                   <label class="label-control" style="color: black">Kembalian</label>
+                                   <font style="color: black">Kembalian</font>
                                    <input class="form-penjualan" readonly="" type="number" id="kembalian" name="kembalian" placeholder="Kembalian"  v-model="penjualan.kembalian">
                                </div>
                                <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                   <label class="label-control" style="color: black">Kredit</label>
+                                   <font style="color: black">Kredit</font>
                                    <input class="form-penjualan" readonly="" type="number" id="kredit" name="kredit" placeholder="Kredit"  v-model="penjualan.kredit">
                                </div>
                            </div>
@@ -119,7 +119,7 @@
                    </div>
                </div>
 
-               <div class="col-md-2">
+               <div class="col-md-3">
 
                 <div class="card">
                    <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
@@ -742,6 +742,47 @@ prosesDelete(id,nama_produk,subtotal_lama){
         console.log(resp);
         app.loading = false;
         alert("Tidak dapat Menghapus Produk "+nama_produk);
+    });
+},
+batalPenjualan(){
+
+    var app = this;
+    app.$swal({
+        text: "Anda Yakin Ingin Membatalkan Transaksi Penjualan Ini ?",
+        buttons: true,
+        dangerMode: true,
+    })
+    .then((willDelete) => {
+        if (willDelete) {
+
+            app.loading = true;
+            axios.post(app.url+'/proses-batal-penjualan')
+            .then(function (resp) {
+
+                app.getResults();
+                app.alert("Membatalkan Transaksi Penjualan");
+                app.penjualan.pelanggan = ''
+                app.penjualan.subtotal = 0
+                app.penjualan.jatuh_tempo = ''
+                app.penjualan.potongan_persen = 0
+                app.penjualan.potongan_faktur = 0
+                app.penjualan.total_akhir = 0
+                app.penjualan.pembayaran = 0
+                app.hitungKembalian(app.penjualan.pembayaran)
+
+            })
+            .catch(function (resp) {
+
+                console.log(resp);
+                app.loading = false;
+                alert("Tidak dapat Membatalkan Transaksi Penjualan");
+            });
+
+        } else {
+
+            app.$swal.close();
+
+        }
     });
 },
 selesaiPenjualan(){
