@@ -516,6 +516,13 @@ Route::get('/penjualan/cek-data-tbs-penjualan', 'PenjualanController@cekDataTbsP
 Route::get('/penjualan/pilih-pelanggan', 'PenjualanController@pilihPelanggan')->middleware('auth');
 Route::get('/penjualan/pilih-kas', 'PenjualanController@pilih_kas')->middleware('auth');
 
+// LABA KOTOR VUE.JS
+Route::post('/laporan-laba-kotor/view', 'LaporanLabaKotorController@prosesLaporanLabaKotor')->middleware('auth');
+Route::post('/laporan-laba-kotor/pencarian', 'LaporanLabaKotorController@pencarian')->middleware('auth');
+Route::post('/laporan-laba-kotor/view-pesanan', 'LaporanLabaKotorController@prosesLaporanLabaKotorPesanan')->middleware('auth');
+Route::post('/laporan-laba-kotor/pencarian-pesanan', 'LaporanLabaKotorController@pencarianPesanan')->middleware('auth');
+Route::get('/laporan-laba-kotor/pilih-pelanggan', 'LaporanLabaKotorController@pilihPelanggan')->middleware('auth');
+
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
     Route::resource('user', 'UserController');
@@ -537,6 +544,7 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
     Route::resource('suplier', 'SuplierController');
     Route::resource('satuan', 'SatuanController');
     Route::resource('laporan-persediaan', 'LaporanPersediaanController');
+    Route::resource('laporan-laba-kotor', 'LaporanLabaKotorController');
     Route::resource('pembelian', 'PembelianController');
     Route::resource('kelompok-produk', 'KelompokProdukController');
     Route::resource('profil-warung', 'WarungProfilController');

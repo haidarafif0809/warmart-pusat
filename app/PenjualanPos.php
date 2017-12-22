@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Yajra\Auditable\AuditableTrait;
@@ -85,4 +86,66 @@ class PenjualanPos extends Model
         return $no_faktur;
         //PROSES MEMBUAT NO. FAKTUR ITEM KELUAR
     }
+
+    public function tanggalSql($tangal)
+    {
+        $date        = date_create($tangal);
+        $date_format = date_format($date, "Y-m-d");
+        return $date_format;
+    }
+
+    // LAP. LABA KOTOR PENJUALAN POS
+    public function scopeLaporanLabaKotorPos($query_laporan_laba_kotor, $request)
+    {
+        if ($request->pelanggan == "") {
+            $query_laporan_laba_kotor = PenjualanPos::select(['penjualan_pos.id', 'penjualan_pos.pelanggan_id', 'penjualan_pos.no_faktur', 'penjualan_pos.total', 'penjualan_pos.potongan', 'penjualan_pos.created_at', 'users.name'])
+                ->leftJoin('users', 'users.id', '=', 'penjualan_pos.pelanggan_id')
+                ->where(DB::raw('DATE(penjualan_pos.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+                ->where(DB::raw('DATE(penjualan_pos.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+                ->where('penjualan_pos.warung_id', Auth::user()->id_warung)
+                ->orderBy('penjualan_pos.id', 'desc');
+        } else {
+            $query_laporan_laba_kotor = PenjualanPos::select(['penjualan_pos.id', 'penjualan_pos.pelanggan_id', 'penjualan_pos.no_faktur', 'penjualan_pos.total', 'penjualan_pos.potongan', 'penjualan_pos.created_at', 'users.name'])
+                ->leftJoin('users', 'users.id', '=', 'penjualan_pos.pelanggan_id')
+                ->where(DB::raw('DATE(penjualan_pos.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+                ->where(DB::raw('DATE(penjualan_pos.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+                ->where('users.id', $request->pelanggan)
+                ->where('penjualan_pos.warung_id', Auth::user()->id_warung)
+                ->orderBy('penjualan_pos.id', 'desc');
+        }
+
+        return $query_laporan_laba_kotor;
+    }
+
+    // CARI LAP. LABA KOTOR PENJUALAN POS
+    public function scopeCariLaporanLabaKotorPos($query_laporan_laba_kotor, $request)
+    {
+        if ($request->pelanggan == "") {
+            $search                   = $request->search;
+            $query_laporan_laba_kotor = PenjualanPos::select(['penjualan_pos.id', 'penjualan_pos.pelanggan_id', 'penjualan_pos.no_faktur', 'penjualan_pos.total', 'penjualan_pos.potongan', 'penjualan_pos.created_at', 'users.name'])
+                ->leftJoin('users', 'users.id', '=', 'penjualan_pos.pelanggan_id')
+                ->where(DB::raw('DATE(penjualan_pos.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+                ->where(DB::raw('DATE(penjualan_pos.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+                ->where('penjualan_pos.warung_id', Auth::user()->id_warung)
+                ->where(function ($query) use ($search) {
+                    $query->orwhere('penjualan_pos.no_faktur', 'LIKE', '%' . $search . '%')
+                        ->orwhere('users.name', 'LIKE', '%' . $search . '%');
+                })->orderBy('penjualan_pos.id', 'desc');
+        } else {
+            $search                   = $request->search;
+            $query_laporan_laba_kotor = PenjualanPos::select(['penjualan_pos.id', 'penjualan_pos.pelanggan_id', 'penjualan_pos.no_faktur', 'penjualan_pos.total', 'penjualan_pos.potongan', 'penjualan_pos.created_at', 'users.name'])
+                ->leftJoin('users', 'users.id', '=', 'penjualan_pos.pelanggan_id')
+                ->where(DB::raw('DATE(penjualan_pos.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+                ->where(DB::raw('DATE(penjualan_pos.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+                ->where('users.id', $request->pelanggan)
+                ->where('penjualan_pos.warung_id', Auth::user()->id_warung)
+                ->where(function ($query) use ($search) {
+                    $query->orwhere('penjualan_pos.no_faktur', 'LIKE', '%' . $search . '%')
+                        ->orwhere('users.name', 'LIKE', '%' . $search . '%');
+                })->orderBy('penjualan_pos.id', 'desc');
+        }
+
+        return $query_laporan_laba_kotor;
+    }
+
 }
