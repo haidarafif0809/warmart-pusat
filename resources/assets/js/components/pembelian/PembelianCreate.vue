@@ -241,7 +241,7 @@ export default {
 			tbsPembelianData : {},
 			url : window.location.origin+(window.location.pathname).replace("dashboard", "pembelian"),
 			url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
-			url_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas-masuk"),
+			url_kas : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
 			url_cek_total_kas : window.location.origin+(window.location.pathname).replace("dashboard", ""),
 			inputTbsPembelian: {
 				produk : '',
@@ -369,7 +369,12 @@ export default {
     	dataCaraBayar() {
     		var app = this;
     		axios.get(app.url_kas+'/pilih-kas').then(function (resp) {
-    			app.cara_bayar = resp.data;
+    				app.cara_bayar = resp.data;
+    				$.each(resp.data, function (i, item) {
+			            if (resp.data[i].default_kas == 1) {
+			                app.inputPembayaranPembelian.cara_bayar  = resp.data[i].id 
+			            }
+    				});
     		})
     		.catch(function (resp) {
     			alert("Tidak Bisa Memuat Kas");

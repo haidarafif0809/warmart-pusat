@@ -25,7 +25,7 @@
 						<div class="form-group">
 							<label for="nama_kas" class="col-md-2 control-label">Nama Kas</label>
 							<div class="col-md-4">
-								<input class="form-control" autocomplete="off" placeholder="Nama Kas" v-model="kas.nama_kas" type="text" name="nama_kas" id="nama_kas"  autofocus="">
+								<input class="form-control" autocomplete="off" placeholder="Nama Kas" v-model="kas.nama_kas" type="text" name="nama_kas" id="nama_kas"  >
 								<span v-if="errors.nama_kas" id="nama_kas_error" class="label label-danger">{{ errors.nama_kas[0] }}</span>
 							</div>
 						</div>
@@ -33,7 +33,7 @@
                             <label for="nama_kas" class="col-md-2 control-label">Tampil Transaksi</label>
                                 <div class="togglebutton col-md-4">
                                 <label>
-                                    <input type="checkbox" v-model="kas.status_kas" value="1" name="status_kas" id="status_kas"> 
+                                    <input type="checkbox" v-model="kas.status_kas" value="1" name="status_kas" id="status_kas"> <b> *Note : kiri = (tidak) || kanan : (ya)</b>
                                 </label>
                             </div>
                         </div>
@@ -41,7 +41,7 @@
                             <label for="nama_kas" class="col-md-2 control-label">Default Kas</label>
                                 <div class="togglebutton col-md-4">
                                 <label>
-                                    <input type="checkbox" v-on:change="defaultKas()" v-model="kas.default_kas" value="1" name="default_kas" id="default_kas"> 
+                                    <input type="checkbox" v-on:change="defaultKas()" v-model="kas.default_kas" value="1" name="default_kas" id="default_kas"> <b> *Note : kiri = (tidak) || kanan : (ya)</b>
                                 </label>
                             </div>
                     </div>
