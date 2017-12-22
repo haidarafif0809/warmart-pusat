@@ -30,7 +30,7 @@
 					</div> 
 					<div class="col-md-3 col-xs-3"> 
 						<h5>Disc(Rp)</h5> 
-						<input type="number" name="potongan_faktur" id="potongan_faktur" autocomplete="off"  v-model="inputPembayaranPembelian.potongan_faktur" class="form-control" style="height: 40px;width:90%;font-size:20px;" v-on:keyup="hitungPotonganFaktur()">
+						<input type="text" name="potongan_faktur" id="potongan_faktur" autocomplete="off"  v-model="inputPembayaranPembelian.potongan_faktur" class="form-control" style="height: 40px;width:90%;font-size:20px;" v-on:keyup="hitungPotonganFaktur()">
 					</div> 
 					<div class="col-md-6 col-xs-6"> 
 						<h5>Subtotal</h5> 
@@ -64,7 +64,7 @@
 				<div class="row"> 
 					<div class="col-md-6  col-xs-6"> 
 						<h5>Jatuh Tempo</h5> 
-						<input type="text" name="jatuh_tempo" id="jatuh_tempo" autocomplete="off"  v-model="inputPembayaranPembelian.jatuh_tempo"  class="form-control datepicker">
+						<datepicker :input-class="'form-control'" placeholder="Tanggal Lahir" v-model="inputPembayaranPembelian.jatuh_tempo" name="uniquename" v-bind:id="'jatuh_tempo'"  ></datepicker>
 					</div> 
 					<div class="col-md-6  col-xs-6"> 
 						<h5>Keterangan</h5> 
@@ -241,7 +241,7 @@ export default {
 			tbsPembelianData : {},
 			url : window.location.origin+(window.location.pathname).replace("dashboard", "pembelian"),
 			url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
-			url_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas-masuk"),
+			url_kas : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
 			url_cek_total_kas : window.location.origin+(window.location.pathname).replace("dashboard", ""),
 			inputTbsPembelian: {
 				produk : '',
@@ -369,7 +369,12 @@ export default {
     	dataCaraBayar() {
     		var app = this;
     		axios.get(app.url_kas+'/pilih-kas').then(function (resp) {
-    			app.cara_bayar = resp.data;
+    				app.cara_bayar = resp.data;
+    				$.each(resp.data, function (i, item) {
+			            if (resp.data[i].default_kas == 1) {
+			                app.inputPembayaranPembelian.cara_bayar  = resp.data[i].id 
+			            }
+    				});
     		})
     		.catch(function (resp) {
     			alert("Tidak Bisa Memuat Kas");
@@ -893,7 +898,7 @@ export default {
 
 			    if (potonganPersen > 100) {
 
-			        this.alert("Potongan Tidak Bisa Lebih Dari 100%")
+					swal('Oops...','Potongan Tidak Bisa Lebih Dari 100%','error'); 
 			        this.inputPembayaranPembelian.total_akhir = this.inputPembayaranPembelian.subtotal;
 			        this.inputPembayaranPembelian.potongan_faktur = 0
 			        this.inputPembayaranPembelian.potongan_persen = 0
@@ -927,8 +932,7 @@ export default {
 		    var total_akhir = parseFloat(this.inputPembayaranPembelian.subtotal) - parseFloat(potonganFaktur);
 
 		    if (potongan_persen > 100) {
-
-		        this.alert("Potongan Tidak Bisa Lebih Dari 100%")
+		    	swal('Oops...','Potongan Tidak Bisa Lebih Dari 100%','error'); 
 		        this.inputPembayaranPembelian.total_akhir = this.inputPembayaranPembelian.subtotal;
 		        this.inputPembayaranPembelian.potongan_faktur = 0
 		        this.inputPembayaranPembelian.potongan_persen = 0
@@ -981,24 +985,30 @@ export default {
 			}
 			axios.get(app.url+'/cek-total-kas-pembelian?kas='+kas)
 			.then(function (resp) {
-			if (resp.data == '') {
+			if (resp.data.total_kas == '' || resp.data.total_kas == null) {
 			 	var total_kas = 0;
 			}else{
-				var total_kas = resp.data;
+				var total_kas = resp.data.total_kas;
 			}
+			var data_produk_pembelian = resp.data.data_produk_pembelian;
 			var hitung_sisa_kas = parseFloat(total_kas) - parseFloat(pembayaran);
 			if (hitung_sisa_kas >= 0) {
-					var newPembelian = app.inputPembayaranPembelian;
-					axios.post(app.url, newPembelian)
-					.then(function (resp) {
-					app.message = 'Berhasil Menambah Pembelian';
-					app.alert(app.message);
-					app.$router.replace('/pembelian');
-					app.getResults();
-					})
-					.catch(function (resp) {
-					app.success = false;
-					});
+					if (data_produk_pembelian == 0){
+						swal('Oops...','Belum Ada Produk Yang Diinputkan','error'); 
+					}
+					else{
+						var newPembelian = app.inputPembayaranPembelian;
+						axios.post(app.url, newPembelian)
+						.then(function (resp) {
+						app.message = 'Berhasil Menambah Pembelian';
+						app.alert(app.message);
+						app.$router.replace('/pembelian');
+						app.getResults();
+						})
+						.catch(function (resp) {
+						app.success = false;
+						});
+					}
 			}else{
 				swal('Oops...','Kas Anda Tidak Cukup Untuk Melakukan Pembayaran','error');
 			}

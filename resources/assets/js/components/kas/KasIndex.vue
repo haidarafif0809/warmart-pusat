@@ -1,3 +1,9 @@
+<style scoped>
+.pencarian {
+  color: red; 
+  float: right;
+}
+</style>
 <template>
 		<div class="row">
 		<div class="col-md-12">
@@ -13,66 +19,68 @@
                         	<h4 class="card-title"> Kas </h4>
 	                       	<div class="toolbar">
 	                       	        <p> <router-link :to="{name: 'createKas'}" class="btn btn-primary">Tambah Kas</router-link></p>
-     						</div>
-     						 <div class=" table-responsive ">
-       <div  align="right">
-         pencarian
-         <input type="text" name="pencarian" v-model="pencarian" placeholder="Kolom Pencarian" >
-       </div>
 
-       <table class="table table-striped table-hover ">
-        <thead class="text-primary">
-          <tr>
+                            <div  class="pencarian">
+                             <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control" autocomplete="">
+                           </div>
+     						     </div>
+                     <br>
+     						 <div class="table-responsive">
+      
+                   <table class="table table-striped table-hover ">
+                    <thead class="text-primary">
+                      <tr>
 
-            <th>Kode Kas</th>
-            <th>Nama Kas</th>
-            <th>Tampil Transaksi</th>
-            <th>Default Kas</th>
-            <th>Total Kas</th>
-            <th>Aksi</th>
-          </tr>
-        </thead>
-        <tbody v-if="kass.length > 0 && loading == false" class="data-ada">
-          <tr v-for="kas, index in kass" >
+                        <th>Kode Kas</th>
+                        <th>Nama Kas</th>
+                        <th>Tampil Transaksi</th>
+                        <th>Default Kas</th>
+                        <th>Total Kas</th>
+                        <th>Aksi</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody v-if="kass.length > 0 && loading == false" class="data-ada">
+                      <tr v-for="kas, index in kass" >
 
-            <td>{{ kas.kas.kode_kas }}</td>
-             <td>{{ kas.kas.nama_kas }}</td>
-              <td v-if="kas.kas.status_kas == 1">
-              Aktif
-              </td>
-              <td v-else>
-                Tidak Aktif
-              </td>
-               <td v-if="kas.kas.default_kas == 1">
-                <i style="color:green" class="material-icons">check_circle</i>
-              </td>
-              <td v-else>
-                <i style="color:red" class="material-icons">cancel</i>
-              </td>
-                <td>{{ kas.total_kas }}</td>
-            <td> 
-             <router-link :to="{name: 'editKas', params: {id: kas.kas.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + kas.kas.id" >
-              Edit 
-            </router-link> 
-            <a v-if="kas.status_transaksi == 0" href="#"
-            class="btn btn-xs btn-danger" v-bind:id="'delete-' + kas.kas.id"
-            v-on:click="deleteEntry(kas.kas.id, index,kas.kas.nama_kas)" >
-            Delete
-          </a>
-          <a v-if="kas.status_transaksi == 1" href="#"
-            class="btn btn-xs btn-danger" v-bind:id="'delete-' + kas.kas.id"
-            v-on:click="gagalHapus(kas.kas.id, index,kas.kas.nama_kas)">
-            Delete
-          </a>
-        </td>
+                        <td>{{ kas.kas.kode_kas }}</td>
+                         <td>{{ kas.kas.nama_kas }}</td>
+                          <td v-if="kas.kas.status_kas == 1">
+                          Aktif
+                          </td>
+                          <td v-else>
+                            Tidak Aktif
+                          </td>
+                           <td v-if="kas.kas.default_kas == 1">
+                            <i style="color:green" class="material-icons">check_circle</i>
+                          </td>
+                          <td v-else>
+                            <i style="color:red" class="material-icons">cancel</i>
+                          </td>
+                            <td>{{ kas.total_kas }}</td>
+                        <td> 
+                         <router-link :to="{name: 'editKas', params: {id: kas.kas.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + kas.kas.id" >
+                          Edit 
+                        </router-link> 
+                        <a v-if="kas.status_transaksi == 0" href="#"
+                        class="btn btn-xs btn-danger" v-bind:id="'delete-' + kas.kas.id"
+                        v-on:click="deleteEntry(kas.kas.id, index,kas.kas.nama_kas)" >
+                        Delete
+                      </a>
+                      <a v-if="kas.status_transaksi == 1" href="#"
+                        class="btn btn-xs btn-danger" v-bind:id="'delete-' + kas.kas.id"
+                        v-on:click="gagalHapus(kas.kas.id, index,kas.kas.nama_kas)">
+                        Delete
+                      </a>
+                    </td>
+                    <td></td>
 
-
-        </tr>
-      </tbody>
-      <tbody class="data-tidak-ada" v-else-if="kass.length == 0 && loading == false">
-        <tr ><td colspan="6"  class="text-center">Tidak Ada Data</td></tr>
-      </tbody>
-    </table>
+                    </tr>
+                  </tbody>
+                  <tbody class="data-tidak-ada" v-else-if="kass.length == 0 && loading == false">
+                    <tr ><td colspan="8"  class="text-center">Tidak Ada Data</td></tr>
+                  </tbody>
+                </table>
 
     <vue-simple-spinner v-if="loading"></vue-simple-spinner>
 

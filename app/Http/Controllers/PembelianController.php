@@ -41,16 +41,17 @@ class PembelianController extends Controller
 
     public function view()
     {
-        $pembelian = Pembelian::with(['suplier'])->where('warung_id', Auth::user()->id_warung)->orderBy('id')->paginate(10);
-        $array     = array();
+        $pembelian = Pembelian::select('pembelians.id as id', 'pembelians.no_faktur as no_faktur', 'supliers.nama_suplier as nama_suplier', 'pembelians.created_at as created_at', 'pembelians.status_pembelian as status_pembelian', 'pembelians.total as total')->leftJoin('supliers', 'pembelians.suplier_id', '=', 'supliers.id')
+            ->where('pembelians.warung_id', Auth::user()->id_warung)->orderBy('pembelians.id')->paginate(10);
+        $array = array();
         foreach ($pembelian as $pembelians) {
             array_push($array, [
                 'id'               => $pembelians->id,
                 'no_faktur'        => $pembelians->no_faktur,
-                'waktu'            => $pembelians->created_at,
-                'suplier'          => $pembelians->suplier_id,
+                'waktu'            => $pembelians->getWaktuAttribute(),
+                'suplier'          => $pembelians->nama_suplier,
                 'status_pembelian' => $pembelians->status_pembelian,
-                'total'            => $pembelians->total]);
+                'total'            => $pembelians->getTotalSeparator()]);
         }
 
         //DATA PAGINATION
@@ -75,13 +76,12 @@ class PembelianController extends Controller
 
         $search = $request->search;
 
-        $pembelian = Pembelian::with(['suplier'])->where('warung_id', Auth::user()->id_warung)->orderBy('id')
+        $pembelian = Pembelian::select('pembelians.id as id', 'pembelians.no_faktur as no_faktur', 'supliers.nama_suplier as nama_suplier', 'pembelians.created_at as created_at', 'pembelians.status_pembelian as status_pembelian', 'pembelians.total as total')->leftJoin('supliers', 'pembelians.suplier_id', '=', 'supliers.id')->where('pembelians.warung_id', Auth::user()->id_warung)->orderBy('pembelians.id')
             ->where(function ($query) use ($search) {
-// search
-                $query->where('status_pembelian', 'LIKE', $search . '%')
-                    ->orWhere('no_faktur', 'LIKE', $search . '%')
-                    ->orWhere('total', 'LIKE', $search . '%')
-                    ->orWhere('create_at', 'LIKE', $search . '%');
+                // search
+                $query->where('pembelians.status_pembelian', 'LIKE', $search . '%')
+                    ->orWhere('pembelians.no_faktur', 'LIKE', $search . '%')
+                    ->orWhere('pembelians.total', 'LIKE', $search . '%');
             })->paginate(10);
 
         $array = array();
@@ -89,8 +89,8 @@ class PembelianController extends Controller
             array_push($array, [
                 'id'               => $pembelians->id,
                 'no_faktur'        => $pembelians->no_faktur,
-                'waktu'            => $pembelians->created_at,
-                'suplier'          => $pembelians->suplier->nama_suplier,
+                'waktu'            => $pembelians->getWaktuAttribute(),
+                'suplier'          => $pembelians->nama_suplier,
                 'status_pembelian' => $pembelians->status_pembelian,
                 'total'            => $pembelians->total]);
         }
@@ -286,12 +286,33 @@ class PembelianController extends Controller
 
         return $respons;
     }
+
     public function pilih_suplier()
     {
         $suplier = Suplier::select('id', 'nama_suplier')->where('warung_id', Auth::user()->id_warung)->get();
         return response()->json($suplier);
     }
 
+    public function detailView(Request $request)
+    {
+        $detail_pembelian = DetailPembelian::with(['produk'])->where('warung_id', Auth::user()->id_warung)->where('no_faktur', $request->no_faktur)->get();
+        $array            = array();
+        foreach ($detail_pembelian as $detail_pembelians) {
+            array_push($array, [
+                'no_faktur'       => $detail_pembelians->no_faktur,
+                'nama_produk'     => $detail_pembelians->TitleCaseBarang,
+                'jumlah_produk'   => $detail_pembelians->PemisahJumlah,
+                'harga_produk'    => $detail_pembelians->PemisahHarga,
+                'potongan_produk' => $detail_pembelians->PemisahPotongan,
+                'pajak_produk'    => $detail_pembelians->PemisahTax,
+                'subtotal'        => $detail_pembelians->PemisahSubtotal,
+            ]);
+        }
+
+        $respons['data'] = $array;
+
+        return $respons;
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -773,9 +794,9 @@ class PembelianController extends Controller
                 'status_pembelian' => $status_pembelian,
                 'potongan'         => $request->potongan,
                 'tunai'            => $pembayaran,
-                'kembalian'        => str_replace('.', '', $kembalian),
-                'kredit'           => str_replace('.', '', $request->kredit),
-                'nilai_kredit'     => str_replace('.', '', $request->kredit),
+                'kembalian'        => $kembalian,
+                'kredit'           => $request->kredit,
+                'nilai_kredit'     => $request->kredit,
                 'cara_bayar'       => $request->cara_bayar,
                 'status_beli_awal' => $status_pembelian,
                 'tanggal_jt_tempo' => $request->jatuh_tempo,
@@ -793,8 +814,14 @@ class PembelianController extends Controller
 
     public function total_kas(Request $request)
     {
-        $total_kas = TransaksiKas::total_kas($request);
-        return $total_kas;
+        $session_id            = session()->getId();
+        $total_kas             = TransaksiKas::total_kas($request);
+        $data_produk_pembelian = TbsPembelian::where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->count();
+
+        $respons['total_kas']             = $total_kas;
+        $respons['data_produk_pembelian'] = $data_produk_pembelian;
+
+        return $respons;
     }
 
     public function datatableDetailPembelian(Request $request)
@@ -1002,23 +1029,11 @@ class PembelianController extends Controller
             Auth::logout();
             return response()->view('error.403');
         } else {
-            $pesan_alert =
-                '<div class="container-fluid">
-       <div class="alert-icon">
-       <i class="material-icons">check</i>
-       </div>
-       <b>Pembelian Berhasil Dihapus</b>
-       </div>';
-
             if (!Pembelian::destroy($id)) {
-                return redirect()->back();
+                return 0;
+            } else {
+                return response(200);
             }
-
-            Session::flash("flash_notification", [
-                "level"   => "danger",
-                "message" => $pesan_alert,
-            ]);
-            return redirect()->route('pembelian.index');
         }
     }
 }

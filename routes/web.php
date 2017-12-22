@@ -486,6 +486,7 @@ Route::get('/pembelian/cek-persen-potongan-pembelian', 'PembelianController@cek_
 Route::get('/pembelian/cek-persen-tax-pembelian', 'PembelianController@cek_persen_potongan_pembelian')->middleware('auth');
 Route::get('/pembelian/proses-edit-tax-tbs-pembelian', 'PembelianController@editTaxTbsPembelian')->middleware('auth');
 Route::get('/pembelian/cek-total-kas-pembelian', 'PembelianController@total_kas')->middleware('auth');
+Route::get('/pembelian/detail-view', 'PembelianController@detailView')->middleware('auth');
 
 // ITEM MASUK
 Route::get('/item-keluar/view', 'ItemKeluarController@view')->middleware('auth');
@@ -513,6 +514,7 @@ Route::get('/penjualan/view-tbs-penjualan', 'PenjualanController@viewTbsPenjuala
 Route::get('/penjualan/pencarian-tbs-penjualan', 'PenjualanController@pencarianTbsPenjualan')->middleware('auth');
 Route::get('/penjualan/cek-data-tbs-penjualan', 'PenjualanController@cekDataTbsPenjualan')->middleware('auth');
 Route::get('/penjualan/pilih-pelanggan', 'PenjualanController@pilihPelanggan')->middleware('auth');
+Route::get('/penjualan/pilih-kas', 'PenjualanController@pilih_kas')->middleware('auth');
 
 // LABA KOTOR VUE.JS
 Route::post('/laporan-laba-kotor/view', 'LaporanLabaKotorController@prosesLaporanLabaKotor')->middleware('auth');
@@ -870,6 +872,12 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
         'middleware' => ['auth'],
         'as'         => 'penjualan.proses_hapus_tbs_penjualan',
         'uses'       => 'PenjualanController@prosesHapusTbsPenjualan',
+    ]);
+
+    Route::post('/penjualan/proses-batal-penjualan/', [
+        'middleware' => ['auth'],
+        'as'         => 'penjualan.proses_batal_penjualan',
+        'uses'       => 'PenjualanController@proses_batal_penjualan',
     ]);
 
 });

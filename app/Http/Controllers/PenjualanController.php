@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Barang;
 use App\DetailPenjualanPos;
+use App\Kas;
 use App\PenjualanPos;
 use App\TbsPenjualan;
 use App\TransaksiKas;
+use App\TransaksiPiutang;
 use App\User;
 use Auth;
 use Illuminate\Http\Request;
@@ -32,6 +34,12 @@ class PenjualanController extends Controller
         }
 
         return response()->json($array);
+    }
+
+    public function pilih_kas()
+    {
+        $kas = Kas::select('id', 'nama_kas', 'default_kas')->where('warung_id', Auth::user()->id_warung)->where('status_kas', 1)->get();
+        return response()->json($kas);
     }
 
     public function paginationData($penjualan, $array, $url)
@@ -112,14 +120,14 @@ class PenjualanController extends Controller
         $session_id    = session()->getId();
         $user_warung   = Auth::user()->id_warung;
         $tbs_penjualan = TbsPenjualan::select('tbs_penjualans.id_tbs_penjualan AS id_tbs_penjualan', 'tbs_penjualans.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'tbs_penjualans.id_produk AS id_produk', 'tbs_penjualans.potongan AS potongan', 'tbs_penjualans.subtotal AS subtotal', 'tbs_penjualans.harga_produk AS harga_produk')
-            ->leftJoin('barangs', 'barangs.id', '=', 'tbs_penjualans.id_produk')
-            ->where('warung_id', $user_warung)->where('session_id', $session_id)
-            ->where(function ($query) use ($request) {
+        ->leftJoin('barangs', 'barangs.id', '=', 'tbs_penjualans.id_produk')
+        ->where('warung_id', $user_warung)->where('session_id', $session_id)
+        ->where(function ($query) use ($request) {
 
-                $query->orWhere('barangs.kode_barang', 'LIKE', $request->search . '%')
-                    ->orWhere('barangs.nama_barang', 'LIKE', $request->search . '%');
+            $query->orWhere('barangs.kode_barang', 'LIKE', $request->search . '%')
+            ->orWhere('barangs.nama_barang', 'LIKE', $request->search . '%');
 
-            })->orderBy('tbs_penjualans.id_tbs_penjualan', 'desc')->paginate(10);
+        })->orderBy('tbs_penjualans.id_tbs_penjualan', 'desc')->paginate(10);
 
         $array = array();
         foreach ($tbs_penjualan as $tbs_penjualans) {
@@ -159,8 +167,8 @@ class PenjualanController extends Controller
         $session_id = session()->getId();
 
         $data_tbs = TbsPenjualan::where('id_produk', $id_produk)
-            ->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)
-            ->count();
+        ->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)
+        ->count();
 
 //JIKA PRODUK YG DIPILIH SUDAH ADA DI TBS
         if ($data_tbs > 0) {
@@ -245,6 +253,14 @@ class PenjualanController extends Controller
 
     }
 
+    public function proses_batal_penjualan(){
+        
+        $session_id           = session()->getId();
+        $data_tbs_penjualan = TbsPenjualan::where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->delete();
+
+        return response(200);
+    }
+
     public function cekPotongan($potongan, $harga_produk, $jumlah_produk)
     {
         $cek_potongan = substr_count($potongan, '%'); // UNTUK CEK APAKAH ADA STRING "%" atau maksudnya untuk cek apakah pot. dalam bentuk persen atau tidak
@@ -303,10 +319,10 @@ class PenjualanController extends Controller
  *
  * @return \Illuminate\Http\Response
  */
-    public function create()
-    {
+public function create()
+{
         //
-    }
+}
 
 /**
  * Store a newly created resource in storage.
@@ -314,89 +330,119 @@ class PenjualanController extends Controller
  * @param  \Illuminate\Http\Request  $request
  * @return \Illuminate\Http\Response
  */
-    public function store(Request $request)
-    {
+public function store(Request $request)
+{
         //START TRANSAKSI
-        DB::beginTransaction();
-        $warung_id  = Auth::user()->id_warung;
-        $session_id = session()->getId();
-        $user       = Auth::user()->id;
-        $no_faktur  = PenjualanPos::no_faktur($warung_id);
+    DB::beginTransaction();
+    $warung_id  = Auth::user()->id_warung;
+    $session_id = session()->getId();
+    $user       = Auth::user()->id;
+    $no_faktur  = PenjualanPos::no_faktur($warung_id);
         //INSERT DETAIL PENJUALAN
-        $data_produk_penjualan = TbsPenjualan::with('produk')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
 
-        if ($data_produk_penjualan->count() == 0) {
+    $cek_status = intval($request->pembayaran) - intval($request->total_akhir);
 
-            return $data_produk_penjualan->count();
+    if ($cek_status >= 0) {
 
-        } else {
+        $status_penjualan = "Tunai";
+        $this->validate($request, [
+            'pelanggan' => 'required',
+            'kas'       => 'required']);
+
+    } else {
+
+        $status_penjualan = "Piutang";
+        $this->validate($request, [
+            'pelanggan'   => 'required',
+            'kas'         => 'required',
+            'jatuh_tempo' => 'required']);
+
+    }
+
+    $data_produk_penjualan = TbsPenjualan::with('produk')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
+
+    if ($data_produk_penjualan->count() == 0) {
+
+        return $data_produk_penjualan->count();
+
+    } else {
 
             //INSERT PENJUALAN
 
-            $penjualan = PenjualanPos::create([
-                'no_faktur'        => $no_faktur,
-                'total'            => $request->total_akhir,
-                'pelanggan_id'     => $request->pelanggan,
-                'status_penjualan' => 'Tunai',
-                'potongan'         => $request->potongan,
-                'tunai'            => $request->pembayaran,
-                'kembalian'        => $request->kembalian,
-                'kredit'           => $request->kredit,
-                'nilai_kredit'     => $request->kredit,
-                'id_kas'           => $request->kas,
-                'status_jual_awal' => 'Tunai',
-                'warung_id'        => Auth::user()->id_warung,
-            ]);
+        $penjualan = PenjualanPos::create([
+            'no_faktur'        => $no_faktur,
+            'total'            => $request->total_akhir,
+            'pelanggan_id'     => $request->pelanggan,
+            'status_penjualan' => $status_penjualan,
+            'potongan'         => $request->potongan,
+            'tunai'            => $request->pembayaran,
+            'kembalian'        => $request->kembalian,
+            'kredit'           => $request->kredit,
+            'nilai_kredit'     => $request->kredit,
+            'id_kas'           => $request->kas,
+            'status_jual_awal' => $status_penjualan,
+            'tanggal_jt_tempo' => $request->jatuh_tempo,
+            'warung_id'        => Auth::user()->id_warung,
+        ]);
 
-            $kas = intval($penjualan->tunai) - intval($penjualan->kembalian);
-            if ($kas > 0) {
-                TransaksiKas::create([
-                    'no_faktur'       => $penjualan->id,
-                    'jenis_transaksi' => 'PenjualanPos',
-                    'jumlah_keluar'   => $kas,
-                    'kas'             => $penjualan->id_kas,
-                    'warung_id'       => $penjualan->warung_id]);
-            }
+        $kas = intval($penjualan->tunai) - intval($penjualan->kembalian);
+        if ($kas > 0) {
+            TransaksiKas::create([
+                'no_faktur'       => $penjualan->id,
+                'jenis_transaksi' => 'PenjualanPos',
+                'jumlah_masuk'    => $kas,
+                'kas'             => $penjualan->id_kas,
+                'warung_id'       => $penjualan->warung_id]);
+        }
 
-            foreach ($data_produk_penjualan->get() as $data_tbs) {
+        if ($penjualan->kredit > 0) {
+            TransaksiPiutang::create([
+                'no_faktur'       => $penjualan->id,
+                'jenis_transaksi' => 'PenjualanPos',
+                'jumlah_masuk'    => $penjualan->kredit,
+                'pelanggan_id'    => $penjualan->pelanggan_id,
+                'warung_id'       => $penjualan->warung_id]);
+        }
 
-                $detail_penjualan = new DetailPenjualanPos();
-                $stok_produk      = $detail_penjualan->stok_produk($data_tbs->id_produk);
-                $sisa             = $stok_produk - $data_tbs->jumlah_produk;
+        foreach ($data_produk_penjualan->get() as $data_tbs) {
 
-                if ($sisa < 0) {
+            $detail_penjualan = new DetailPenjualanPos();
+            $stok_produk      = $detail_penjualan->stok_produk($data_tbs->id_produk);
+            $sisa             = $stok_produk - $data_tbs->jumlah_produk;
+
+            if ($sisa < 0) {
                     //DI BATALKAN PROSES NYA
 
-                    $respons['respons']     = 1;
-                    $respons['nama_produk'] = title_case($data_tbs->produk->nama_barang);
-                    $respons['stok_produk'] = $stok_produk;
-                    DB::rollBack();
-                    return response()->json($respons);
+                $respons['respons']     = 1;
+                $respons['nama_produk'] = title_case($data_tbs->produk->nama_barang);
+                $respons['stok_produk'] = $stok_produk;
+                DB::rollBack();
+                return response()->json($respons);
 
-                } else {
+            } else {
 
-                    $detail_penjualan = DetailPenjualanPos::create([
-                        'id_penjualan_pos' => $penjualan->id,
-                        'no_faktur'        => $no_faktur,
-                        'satuan_id'        => $data_tbs->satuan_id,
-                        'id_produk'        => $data_tbs->id_produk,
-                        'jumlah_produk'    => $data_tbs->jumlah_produk,
-                        'harga_produk'     => $data_tbs->harga_produk,
-                        'subtotal'         => $data_tbs->subtotal,
-                        'potongan'         => $data_tbs->potongan,
-                        'warung_id'        => Auth::user()->id_warung,
-                    ]);
+                $detail_penjualan = DetailPenjualanPos::create([
+                    'id_penjualan_pos' => $penjualan->id,
+                    'no_faktur'        => $no_faktur,
+                    'satuan_id'        => $data_tbs->satuan_id,
+                    'id_produk'        => $data_tbs->id_produk,
+                    'jumlah_produk'    => $data_tbs->jumlah_produk,
+                    'harga_produk'     => $data_tbs->harga_produk,
+                    'subtotal'         => $data_tbs->subtotal,
+                    'potongan'         => $data_tbs->potongan,
+                    'warung_id'        => Auth::user()->id_warung,
+                ]);
 
-                }
             }
+        }
 
             //HAPUS TBS PENJUALAN
-            $data_produk_penjualan->delete();
-            DB::commit();
-            return response(200);
+        $data_produk_penjualan->delete();
+        DB::commit();
+        return response(200);
 
-        }
     }
+}
 
 /**
  * Display the specified resource.
@@ -404,10 +450,10 @@ class PenjualanController extends Controller
  * @param  int  $id
  * @return \Illuminate\Http\Response
  */
-    public function show($id)
-    {
+public function show($id)
+{
         //
-    }
+}
 
 /**
  * Show the form for editing the specified resource.
@@ -415,10 +461,10 @@ class PenjualanController extends Controller
  * @param  int  $id
  * @return \Illuminate\Http\Response
  */
-    public function edit($id)
-    {
+public function edit($id)
+{
         //
-    }
+}
 
 /**
  * Update the specified resource in storage.
@@ -427,10 +473,10 @@ class PenjualanController extends Controller
  * @param  int  $id
  * @return \Illuminate\Http\Response
  */
-    public function update(Request $request, $id)
-    {
+public function update(Request $request, $id)
+{
         //
-    }
+}
 
 /**
  * Remove the specified resource from storage.
@@ -438,8 +484,8 @@ class PenjualanController extends Controller
  * @param  int  $id
  * @return \Illuminate\Http\Response
  */
-    public function destroy($id)
-    {
+public function destroy($id)
+{
         //
-    }
+}
 }
