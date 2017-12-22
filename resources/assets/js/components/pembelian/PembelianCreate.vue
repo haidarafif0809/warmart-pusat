@@ -1,4 +1,9 @@
-
+<style scoped>
+.pencarian {
+  color: red; 
+  float: right;
+}
+</style>
 <template>
 <div class="row"> 
 	<div class="col-md-12"> 
@@ -120,14 +125,11 @@
 								</div><!--/COL MD 8--> 
 							</form>
 						</div> 
-					</div>
-
-					<div class=" table-responsive ">
-						<div  align="right">
-							pencarian
-							<input type="text" name="pencarian" v-model="pencarian" placeholder="Kolom Pencarian" >
+						<div class="pencarian">
+							<input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
 						</div>
-
+					</div>
+					<div class=" table-responsive ">
 						<table class="table table-striped table-hover" v-if="seen">
 							<thead class="text-primary">
 								<tr>
@@ -140,7 +142,7 @@
 									<th>Hapus</th>
 								</tr>
 							</thead>
-							<tbody v-if="tbs_pembelians.length"  class="data-ada">
+							<tbody v-if="tbs_pembelians.length > 0 && loading == false"  class="data-ada">
 								<tr v-for="tbs_pembelian, index in tbs_pembelians" >
 
 									<td>{{ tbs_pembelian.kode_produk }} - {{ tbs_pembelian.nama_produk }}</td>
@@ -167,7 +169,7 @@
 									</td>
 								</tr>
 							</tbody>					
-							<tbody class="data-tidak-ada" v-else>
+							<tbody class="data-tidak-ada"  v-else-if="tbs_pembelians.length == 0 && loading == false" >
 								<tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
 							</tbody>
 						</table>	
@@ -191,7 +193,7 @@
 					<div class="card-content"> 
 						<div class="row"> 
 							<div class="col-md-6"> 
-									<h4>Suplier</h4> 
+									<h4>Supplier</h4> 
 									<selectize-component v-model="inputPembayaranPembelian.suplier" :settings="placeholder_suplier" id="suplier" name="suplier" ref='suplier'> 
 											<option v-for="supliers, index in suplier" v-bind:value="supliers.id">{{ supliers.nama_suplier }}</option>
 									</selectize-component>
@@ -270,7 +272,7 @@ export default {
 				placeholder: '--PILIH PRODUK--'
 			},
 			placeholder_suplier: {
-				placeholder: '--PILIH SUPLIER--'
+				placeholder: '--PILIH SUPPLIER--'
 			},
 			placeholder_cara_bayar: {
 				placeholder: '--PILIH CARA BAYAR--'
@@ -657,7 +659,7 @@ export default {
 			title: titleCase(nama_produk), 
 			input: 'text', 
 			inputPlaceholder : 'Potongan Produk',         
-			html:'Sertakan <b>%</b> Jika Ingin Potongan Dalam Bentuk Persentase', 
+			html:'<i>Format : 10 (nominal) || 10% (persen)</i>', 
 			animation: false, 
 			showCloseButton: true, 
 			showCancelButton: true, 
@@ -742,8 +744,9 @@ export default {
     	
     		if (ppn == '') { 
 			var ppn_produk = '<select id="ppn_swal" name="ppn_swal" class="swal2-input js-selectize-reguler">'+ 
-			'<option value"Include>Include</option>'+ 
-			'<option value"Exclude>Exclude</option>'+ 
+			'<option value"Non">Non</option>'+ 
+			'<option value"Include">Include</option>'+ 
+			'<option value"Exclude">Exclude</option>'+ 
 			'</select></div>'; 
 			}else { 
 			var ppn_produk = '<select id="ppn_swal" name="ppn_swal" class="swal2-input js-selectize-reguler">'+ 
@@ -753,7 +756,7 @@ export default {
 
 		swal({ 
 			title: titleCase(nama_produk), 
-			html:'Sertakan <b>%</b> Jika Ingin Pajak Dalam Bentuk Persentase<br><br>'+ 
+			html:'<i>Format : 10 (nominal) || 10% (persen)</i>'+ 
 			'<div class="row">'+ 
 			'<div class="col-sm-6 col-xs-6">'+ppn_produk+''+ 
 			'<div class="col-sm-6 col-xs-6">'+ 

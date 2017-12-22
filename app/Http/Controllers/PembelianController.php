@@ -123,7 +123,7 @@ class PembelianController extends Controller
         $kas_default = Kas::where('warung_id', Auth::user()->id_warung)->where('default_kas', 1)->count();
         $kas_pilih   = Kas::where('warung_id', Auth::user()->id_warung)->where('default_kas', 1)->first();
 
-        $tbs_pembelian = TbsPembelian::select('tbs_pembelians.id_tbs_pembelian AS id_tbs_pembelian', 'tbs_pembelians.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'tbs_pembelians.id_produk AS id_produk', 'tbs_pembelians.harga_produk AS harga_produk', 'tbs_pembelians.potongan AS potongan', 'tbs_pembelians.tax AS tax', 'tbs_pembelians.subtotal AS subtotal')->leftJoin('barangs', 'barangs.id', '=', 'tbs_pembelians.id_produk')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->orderBy('id_tbs_pembelian', 'desc')->paginate(10);
+        $tbs_pembelian = TbsPembelian::select('tbs_pembelians.id_tbs_pembelian AS id_tbs_pembelian', 'tbs_pembelians.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'tbs_pembelians.id_produk AS id_produk', 'tbs_pembelians.harga_produk AS harga_produk', 'tbs_pembelians.potongan AS potongan', 'tbs_pembelians.tax AS tax', 'tbs_pembelians.subtotal AS subtotal', 'tbs_pembelians.ppn AS ppn')->leftJoin('barangs', 'barangs.id', '=', 'tbs_pembelians.id_produk')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->orderBy('id_tbs_pembelian', 'desc')->paginate(10);
         $array         = array();
 
         foreach ($tbs_pembelian as $tbs_pembelians) {
@@ -140,8 +140,15 @@ class PembelianController extends Controller
                 if ($tbs_pembelians->tax == 0) {
                     $tax_persen = 0;
                 } else {
+                    if ($tbs_pembelians->ppn == "Include") {
+                        $tax_kembali = $tbs_pembelians->subtotal - $tbs_pembelians->tax;
+                        //tax untuk mendapatkan 1,1
+                        $tax_format = $tbs_pembelians->subtotal / $tax_kembali - 1;
+                        $tax_persen = $tax_format * 100;
 
-                    $tax_persen = ($tbs_pembelians->tax * 100) / ($tbs_pembelians->jumlah_produk * $tbs_pembelians->harga_produk - $tbs_pembelians->potongan);
+                    } else if ($tbs_pembelians->ppn == "Exclude") {
+                        $tax_persen = ($tbs_pembelians->tax * 100) / ($tbs_pembelians->jumlah_produk * $tbs_pembelians->harga_produk - $tbs_pembelians->potongan);
+                    }
                 }
             } else {
                 $ppn_produk = "";
@@ -185,7 +192,7 @@ class PembelianController extends Controller
         $kas_default = Kas::where('warung_id', Auth::user()->id_warung)->where('default_kas', 1)->count();
         $kas_pilih   = Kas::where('warung_id', Auth::user()->id_warung)->where('default_kas', 1)->first();
 
-        $tbs_pembelian = TbsPembelian::select('tbs_pembelians.id_tbs_pembelian AS id_tbs_pembelian', 'tbs_pembelians.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'tbs_pembelians.id_produk AS id_produk', 'tbs_pembelians.harga_produk AS harga_produk', 'tbs_pembelians.potongan AS potongan', 'tbs_pembelians.tax AS tax', 'tbs_pembelians.subtotal AS subtotal')->leftJoin('barangs', 'barangs.id', '=', 'tbs_pembelians.id_produk')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)
+        $tbs_pembelian = TbsPembelian::select('tbs_pembelians.id_tbs_pembelian AS id_tbs_pembelian', 'tbs_pembelians.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'tbs_pembelians.id_produk AS id_produk', 'tbs_pembelians.harga_produk AS harga_produk', 'tbs_pembelians.potongan AS potongan', 'tbs_pembelians.tax AS tax', 'tbs_pembelians.subtotal AS subtotal', 'tbs_pembelians.ppn AS ppn')->leftJoin('barangs', 'barangs.id', '=', 'tbs_pembelians.id_produk')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)
             ->where(function ($query) use ($request) {
 
                 $query->orWhere('barangs.nama_barang', 'LIKE', $request->search . '%')
@@ -209,8 +216,16 @@ class PembelianController extends Controller
                 if ($tbs_pembelians->tax == 0) {
                     $tax_persen = 0;
                 } else {
+                    if ($tbs_pembelians->ppn == "Include") {
+                        $tax_kembali = $tbs_pembelians->subtotal - $tbs_pembelians->tax;
+                        //tax untuk mendapatkan 1,1
+                        $tax_format = $tbs_pembelians->subtotal / $tax_kembali - 1;
+                        $tax_persen = $tax_format * 100;
 
-                    $tax_persen = ($tbs_pembelians->tax * 100) / ($tbs_pembelians->jumlah_produk * $tbs_pembelians->harga_produk - $tbs_pembelians->potongan);
+                    } else if ($tbs_pembelians->ppn == "Exclude") {
+                        $tax_persen = ($tbs_pembelians->tax * 100) / ($tbs_pembelians->jumlah_produk * $tbs_pembelians->harga_produk - $tbs_pembelians->potongan);
+                    }
+
                 }
             } else {
                 $ppn_produk = "";
@@ -659,10 +674,17 @@ class PembelianController extends Controller
                 $tax_persen = 0;
             } else {
                 // JIKA ADA
-
                 $tax_persen = filter_var($request->tax_edit_produk, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION); //  PISAH STRING BERDASRAKAN TANDA "%"
                 // TAX PRODUK = ((HARGA * JUMLAH) - POTONGAN) * TAX PERSEN / 100
-                $tax_produk = (($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $tbs_pembelian->potongan) * $tax_persen / 100;
+                if ($request->ppn_produk == 'Include') {
+                    $default_tax              = 1;
+                    $subtotal_kurang_potongan = (($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $tbs_pembelian->potongan);
+                    $hasil_tax                = $default_tax + ($tax_persen / 100);
+                    $hasil_tax2               = $subtotal_kurang_potongan / $hasil_tax;
+                    $tax_produk               = $subtotal_kurang_potongan - $hasil_tax2;
+                } elseif ($request->ppn_produk == 'Exclude') {
+                    $tax_produk = (($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $tbs_pembelian->potongan) * $tax_persen / 100;
+                }
             }
 
             if ($tax_produk == '') {
