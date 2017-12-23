@@ -93,7 +93,7 @@ class PenjualanController extends Controller
             $potongan_persen = ($tbs_penjualans->potongan / ($tbs_penjualans->jumlah_produk * $tbs_penjualans->harga_produk)) * 100;
 
             if ($tbs_penjualans->potongan > 0) {
-                $potongan = number_format($tbs_penjualans->potongan, 0, ',', '.') . " (" . round($potongan_persen, 2) . "%)";
+                $potongan = number_format($tbs_penjualans->potongan, 0, ',', '.') . ",00 (" . round($potongan_persen, 2) . "%)";
             } else {
                 $potongan = $tbs_penjualans->potongan;
             }
@@ -134,7 +134,7 @@ class PenjualanController extends Controller
             $potongan_persen = ($tbs_penjualans['potongan'] / ($tbs_penjualans['jumlah_produk'] * $tbs_penjualans['harga_produk'])) * 100;
 
             if ($tbs_penjualans['potongan'] > 0) {
-                $potongan = number_format($tbs_penjualans['potongan']) . " (" . round($potongan_persen, 2) . "%)";
+                $potongan = number_format($tbs_penjualans['potongan'], 0, ',', '.') . ",00 (" . round($potongan_persen, 2) . "%)";
             } else {
                 $potongan = $tbs_penjualans['potongan'];
             }
@@ -254,7 +254,7 @@ class PenjualanController extends Controller
     }
 
     public function proses_batal_penjualan(){
-        
+
         $session_id           = session()->getId();
         $data_tbs_penjualan = TbsPenjualan::where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->delete();
 
