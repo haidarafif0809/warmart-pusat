@@ -96,119 +96,130 @@
 
                <div class="col-xs-8">
                 <p style="margin-bottom:1px;margin-top: 1px;"><a href="#"><b>{{$keranjang_belanjaans->NamaProdukMobile}}</b></a></p>
-                <p style="margin-bottom:1px;margin-top: 1px;"><b>Rp. {{number_format($keranjang_belanjaans->produk->harga_jual,0,',','.') }} x {{$keranjang_belanjaans->jumlah_produk }} {{$keranjang_belanjaans->produk->satuan->nama_satuan}}</b></p>
-                <p style="margin-bottom:1px;margin-top: 1px;"><small>{{$keranjang_belanjaans->produk->warung->name}}</small></p>
-
+                <div class="responsive">
+                 <table>
+                  <tbody>
+                    <tr style="font-weight: bold">
+                      <td width="25%"> {{number_format($keranjang_belanjaans->produk->harga_jual,0,',','.') }} </td>
+                      <td>&nbsp; x </td>
+                      <td> {{$keranjang_belanjaans->jumlah_produk }} </td>
+                      <td> {{number_format($keranjang_belanjaans->produk->harga_jual * $keranjang_belanjaans->jumlah_produk,0,',','.') }} </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
+              <p style="margin-bottom:1px;margin-top: 1px;"><small>{{$keranjang_belanjaans->produk->warung->name}}</small></p>
 
             </div>
 
           </div>
-        </div><hr style="margin-bottom: 1px; margin-top: 1px;">
 
-        @endforeach
-
-      </div>
-
-      {{$pagination}}
-      <div class="card" style="margin-bottom: 1px; margin-top: 1px;">
-        <div class="row">
-          <div class="col-xs-6">
-           <p style="margin-left: 5px; margin-top: 5px; margin-bottom: 5px;"><b> Total Produk</b></p>
-         </div>
-         <div class="col-xs-6">
-          <p style="margin-left: 5px; margin-top: 5px; margin-bottom: 5px;"><b> {{ $jumlah_produk->total_produk }}</b></p>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-xs-4">
-         <p style="margin-left: 5px; margin-top: 5px; margin-bottom: 5px;"><b>Total</b></p>
-       </div>
-       <div class="col-xs-2">
+      </div><hr style="margin-bottom: 1px; margin-top: 1px;">
 
+      @endforeach
+
+    </div>
+
+    {{$pagination}}
+    <div class="card" style="margin-bottom: 1px; margin-top: 1px;">
+      <div class="row">
+        <div class="col-xs-6">
+         <p style="margin-left: 5px; margin-top: 5px; margin-bottom: 5px;"><b> Total Produk</b></p>
        </div>
        <div class="col-xs-6">
-        <p style="margin-left: 5px; margin-top: 5px; margin-bottom: 5px;"><b>Rp. {{ number_format($subtotal,0,',','.') }}</b></p>
+        <p style="margin-left: 5px; margin-top: 5px; margin-bottom: 5px;"><b> {{ $jumlah_produk->total_produk }}</b></p>
       </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-4">
+       <p style="margin-left: 5px; margin-top: 5px; margin-bottom: 5px;"><b>Total</b></p>
+     </div>
+     <div class="col-xs-2">
+
+     </div>
+     <div class="col-xs-6">
+      <p style="margin-left: 5px; margin-top: 5px; margin-bottom: 5px;"><b>Rp. {{ number_format($subtotal,0,',','.') }}</b></p>
     </div>
   </div>
+</div>
 
-  <center>{!! Form::button('Selesai Pesanan <i class="material-icons">keyboard_arrow_right</i> ', ['id'=>'SelesaikanPesanan','class'=>'btn btn-round', 'type'=>'submit','style'=>'background-color: #01573e']) !!}</center>
+<center>{!! Form::button('Selesai Pesanan <i class="material-icons">keyboard_arrow_right</i> ', ['id'=>'SelesaikanPesanan','class'=>'btn btn-round', 'type'=>'submit','style'=>'background-color: #01573e']) !!}</center>
 
-  @else
+@else
 
-  <div class="card" style="margin-bottom: 5px; margin-top: 5px;">
-    <div class="card-header" style="padding-bottom: 1px;">
-      <h6 class="card-title" style="color: black; padding-left: 10px; margin-bottom: 1px;">Rincian Pesanan</h6> <hr>
+<div class="card" style="margin-bottom: 5px; margin-top: 5px;">
+  <div class="card-header" style="padding-bottom: 1px;">
+    <h6 class="card-title" style="color: black; padding-left: 10px; margin-bottom: 1px;">Rincian Pesanan</h6> <hr>
+  </div>
+
+  <div class="card-content" style="padding-top: 1px; padding-bottom: 1px;">
+    <div class="row">
+      <div class="col-md-4"><h5><b>Produk</b></h5> </div>
+      <div class="col-md-2"><h5><b>Jumlah</b></h5> </div>
+      <div class="col-md-3"><h5><b>Harga</b></h5> </div>
+      <div class="col-md-3"><h5><b>Subtotal</b></h5> </div>
     </div>
 
-    <div class="card-content" style="padding-top: 1px; padding-bottom: 1px;">
-      <div class="row">
-        <div class="col-md-4"><h5><b>Produk</b></h5> </div>
-        <div class="col-md-2"><h5><b>Jumlah</b></h5> </div>
-        <div class="col-md-3"><h5><b>Harga</b></h5> </div>
-        <div class="col-md-3"><h5><b>Subtotal</b></h5> </div>
-      </div>
+    @foreach($keranjang_belanjaan as $keranjang_belanjaans)
+    <div class="row">
 
-      @foreach($keranjang_belanjaan as $keranjang_belanjaans)
-      <div class="row">
+      <div class="col-md-4">
+       <li><b> <a href="{{ url('detail-produk/'.$keranjang_belanjaans->id_produk.'') }}">{{ $keranjang_belanjaans->NamaProduk }}</a></b></li>
+     </div>
+
+     <div class="col-md-2">
+      <b align="right">{{ $keranjang_belanjaans->jumlah_produk }}</b>
+    </div>
+
+    <div class="col-md-3">
+      <b align="right">
+       {{ number_format($keranjang_belanjaans->produk->harga_jual,0,',','.') }}</b>
+     </div>
+
+     <div class="col-md-3">
+
+       <div class="row">
+
+        <div class="col-md-8">
+          <b>{{ number_format($keranjang_belanjaans->produk->harga_jual * $keranjang_belanjaans->jumlah_produk,0,',','.') }}</b>
+        </div>
 
         <div class="col-md-4">
-         <li><b> <a href="{{ url('detail-produk/'.$keranjang_belanjaans->id_produk.'') }}">{{ $keranjang_belanjaans->NamaProduk }}</a></b></li>
-       </div>
-
-       <div class="col-md-2">
-        <b align="right">{{ $keranjang_belanjaans->jumlah_produk }}</b>
-      </div>
-
-      <div class="col-md-3">
-        <b align="right">
-         {{ number_format($keranjang_belanjaans->produk->harga_jual,0,',','.') }}</b>
-       </div>
-
-       <div class="col-md-3">
-
-         <div class="row">
-
-          <div class="col-md-8">
-            <b>{{ number_format($keranjang_belanjaans->produk->harga_jual,0,',','.') }}</b>
-          </div>
-
-          <div class="col-md-4">
-            <a href="#" id="btnHapusProduk" data-nama="{{title_case($keranjang_belanjaans->produk->nama_barang)}}" data-id="{{$keranjang_belanjaans->id_keranjang_belanja}}" type="button"><i class="material-icons">close</i></a>
-          </div>
-
+          <a href="#" id="btnHapusProduk" data-nama="{{title_case($keranjang_belanjaans->produk->nama_barang)}}" data-id="{{$keranjang_belanjaans->id_keranjang_belanja}}" type="button"><i class="material-icons">close</i></a>
         </div>
 
       </div>
 
     </div>
-    @endforeach
-    {{$pagination}}
 
   </div>
-  <hr style="margin-top: 1px;">
-  <div class="card-content" style="margin-top: 1px;">
+  @endforeach
+  {{$pagination}}
 
-    <div class="row">
-      <div class="col-md-4"><b>Total Produk</b></div>
-      <div class="col-md-4"><b>:</b></div>
-      <div class="col-md-4"><b>{{ $jumlah_produk->total_produk }}</b></div>
-    </div>
+</div>
+<hr style="margin-top: 1px;">
+<div class="card-content" style="margin-top: 1px;">
 
-    <div class="row">
-      <div class="col-md-4"><h5><b>Total </b></h5></div>
-      <div class="col-md-4"><h5><b>:</h5></div>
-        <div class="col-md-4"><h5 class="text-danger"><b>RP {{ number_format($subtotal,0,',','.') }}</b></h5></div>
-      </div>
-    </div>
-
+  <div class="row">
+    <div class="col-md-4"><b>Total Produk</b></div>
+    <div class="col-md-4"><b>:</b></div>
+    <div class="col-md-4"><b>{{ $jumlah_produk->total_produk }}</b></div>
   </div>
 
-  {!! Form::button('Selesai Pesanan <i class="material-icons">keyboard_arrow_right</i> ', ['id'=>'SelesaikanPesanan','class'=>'btn btn-round pull-right', 'type'=>'submit','style'=>'background-color: #01573e']) !!}
-  @endif
+  <div class="row">
+    <div class="col-md-4"><h5><b>Total </b></h5></div>
+    <div class="col-md-4"><h5><b>:</h5></div>
+    <div class="col-md-4"><h5 class="text-danger"><b>RP {{ number_format($subtotal,0,',','.') }}</b></h5></div>
+  </div>
+</div>
 
-  {!! Form::close() !!}
+</div>
+
+{!! Form::button('Selesai Pesanan <i class="material-icons">keyboard_arrow_right</i> ', ['id'=>'SelesaikanPesanan','class'=>'btn btn-round pull-right', 'type'=>'submit','style'=>'background-color: #01573e']) !!}
+@endif
+
+{!! Form::close() !!}
 </div>
 @endif
 </div>
