@@ -23,14 +23,14 @@
                             <div class="card card-produk">
 
                                 <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
-                                    <selectize-component v-model="penjualan.pelanggan" :settings="placeholder_pelanggan" id="pelanggan" ref='pelanggan'> 
+                                    <selectize-component v-model="penjualan.pelanggan" :settings="placeholder_pelanggan" id="pelanggan" ref='pelanggan' v-shortkey.focus="['f1']" > 
                                       <option v-for="pelanggans, index in pelanggan" v-bind:value="pelanggans.id">{{ pelanggans.nama_pelanggan }}</option>
                                   </selectize-component>
                                   <br v-if="errors.pelanggan">  <span v-if="errors.pelanggan" id="pelanggan_error" class="label label-danger">{{ errors.pelanggan[0] }}</span>
                               </div>
 
                               <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
-                                <selectize-component v-model="inputTbsPenjualan.produk" :settings="placeholder_produk" id="produk" ref='produk'> 
+                                <selectize-component v-model="inputTbsPenjualan.produk" :settings="placeholder_produk" id="produk" ref='produk' v-shortkey.focus="['f2']"> 
                                     <option v-for="produks, index in produk" v-bind:value="produks.produk">{{ produks.nama_produk }}</option>
                                 </selectize-component>
                             </div> 
@@ -42,8 +42,6 @@
                                 <input class="form-control" type="hidden"  v-model="inputTbsPenjualan.id_tbs"  name="id_tbs" id="id_tbs">
                                 <input class="form-control" type="hidden"  v-model="penjualan.potongan"  name="potongan" id="potongan">
                             </span>
-
-
                         </div>
                     </div>
 
@@ -55,13 +53,13 @@
                                 <div class="col-sm-6">
                                     <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
                                         <label class="label-control">Subtotal</label> 
-                                        <input type="number" class="form-subtotal" readonly="" value="0" v-model="penjualan.subtotal"/>
+                                        <money class="form-subtotal" readonly="" v-model="penjualan.subtotal" v-bind="separator" ></money> 
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                        <label class="label-control">Jatuh Tempo</label> 
-                                        <datepicker :input-class="'form-subtotal'" placeholder="Jatuh Tempo" v-model="penjualan.jatuh_tempo"></datepicker>
+                                        <label class="label-control">Jatuh Tempo(F6)</label> 
+                                        <datepicker :input-class="'form-subtotal'" placeholder="Jatuh Tempo" v-model="penjualan.jatuh_tempo" v-shortkey.focus="['f6']" ></datepicker>
                                         <br v-if="errors.jatuh_tempo">  <span v-if="errors.jatuh_tempo" id="jatuh_tempo_error" class="label label-danger">{{ errors.jatuh_tempo[0] }}</span>
                                     </div>
                                 </div>
@@ -70,14 +68,14 @@
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                     <label class="label-control">Disc</label>  
-                                     <input type="number" class="form-subtotal" value="0" v-model="penjualan.potongan_faktur" v-on:keyup="potonganFaktur" />
+                                     <label class="label-control">Disc(F3)</label>  
+                                     <money class="form-subtotal" v-model="penjualan.potongan_faktur" v-shortkey.focus="['f3']" v-bind="separator" ></money>
                                  </div>
                              </div>
                              <div class="col-sm-6">
                                 <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                    <label class="label-control">Disc(%)</label>    
-                                    <input type="number" class="form-subtotal" value="0" v-model="penjualan.potongan_persen" v-on:keyup="potonganPersen" />
+                                    <label class="label-control">Disc(%)(F4)</label>    
+                                    <input type="number" class="form-subtotal" value="0" v-model="penjualan.potongan_persen" v-on:blur="potonganPersen" v-shortkey.focus="['f4']" />
                                 </div>
                             </div>
                         </div>
@@ -93,12 +91,12 @@
                             <div class="col-md-6">
                                 <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
                                     <font style="color: black">Total Akhir</font>
-                                    <input class="form-penjualan" readonly="" type="number" id="total_akhir" name="total_akhir" placeholder="Total Akhir"  v-model="penjualan.total_akhir">
+                                    <money class="form-penjualan" readonly="" id="total_akhir" name="total_akhir" placeholder="Total Akhir"  v-model="penjualan.total_akhir" v-bind="separator" ></money> 
                                 </div>
 
                                 <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                    <font style="color: black">Pembayaran</font>
-                                    <input class="form-penjualan" type="number" id="pembayaran" name="pembayaran" placeholder="Pembayaran"  v-model="penjualan.pembayaran">
+                                    <font style="color: black">Pembayaran(F7)</font>
+                                    <money class="form-penjualan" v-shortkey.focus="['f7']" id="pembayaran" name="pembayaran" placeholder="Pembayaran"  v-model="penjualan.pembayaran" v-bind="separator" ></money> 
                                 </div>
 
                             </div>
@@ -106,11 +104,11 @@
                             <div class="col-md-6">
                                 <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
                                    <font style="color: black">Kembalian</font>
-                                   <input class="form-penjualan" readonly="" type="number" id="kembalian" name="kembalian" placeholder="Kembalian"  v-model="penjualan.kembalian">
+                                   <money class="form-penjualan" readonly="" id="kembalian" name="kembalian" placeholder="Kembalian"  v-model="penjualan.kembalian" v-bind="separator" ></money> 
                                </div>
                                <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
                                    <font style="color: black">Kredit</font>
-                                   <input class="form-penjualan" readonly="" type="number" id="kredit" name="kredit" placeholder="Kredit"  v-model="penjualan.kredit">
+                                   <money class="form-penjualan" readonly="" id="kredit" name="kredit" placeholder="Kredit"  v-model="penjualan.kredit" v-bind="separator" ></money> 
                                </div>
                            </div>
 
@@ -123,19 +121,19 @@
 
                 <div class="card">
                    <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
-                    <label class="label-control">Kas</label><br>
-                    <selectize-component v-model="penjualan.kas" :settings="placeholder_kas" id="kas" ref='kas'> 
+                    <label class="label-control">Kas(F8)</label><br>
+                    <selectize-component v-model="penjualan.kas" :settings="placeholder_kas" id="kas" ref='kas' v-shortkey.focus="['f8']" > 
                         <option v-for="kass, index in kas" v-bind:value="kass.id">{{ kass.nama_kas }}</option>
                     </selectize-component>
                     <br v-if="errors.kas">   <span v-if="errors.kas" id="kas_error" class="label label-danger">{{ errors.kas[0] }}</span>
                 </div>
 
                 <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
-                    <button v-if="tunai" type="button" class="btn btn-success" id="btnSelesai" v-on:click="selesaiPenjualan()"><i class="material-icons">credit_card</i>Tunai</button>
+                    <button v-if="tunai" type="button" class="btn btn-success" id="btnSelesai" v-on:click="selesaiPenjualan()" v-shortkey.push="['f9']" @shortkey="selesaiPenjualan()"><i class="material-icons">credit_card</i>Tunai(F9)</button>
 
-                    <button v-if="piutang" type="button" class="btn btn-success" id="btnSelesai" v-on:click="selesaiPenjualan()"><i class="material-icons">credit_card</i> Piutang</button>
+                    <button v-if="piutang" type="button" class="btn btn-success" id="btnSelesai" v-on:click="selesaiPenjualan()" v-shortkey.push="['f9']" @shortkey="selesaiPenjualan()"><i class="material-icons">credit_card</i> Piutang(F9)</button>
 
-                    <button type="submit" class="btn btn-danger" id="btnBatal" v-on:click="batalPenjualan()"><i class="material-icons">cancel</i> Batal </button>
+                    <button type="submit" class="btn btn-danger" id="btnBatal" v-on:click="batalPenjualan()" v-shortkey.push="['f10']" @shortkey="batalPenjualan()"><i class="material-icons">cancel</i> Batal(F10) </button>
                 </div>
             </div>
         </div>
@@ -148,7 +146,7 @@
     <div class=" table-responsive ">
         <div  align="right">
             pencarian
-            <input type="text" name="pencarian" v-model="pencarian" placeholder="Kolom Pencarian">
+            <input type="text" name="pencarian" v-model="pencarian" placeholder="Kolom Pencarian(F8)">
         </div>
 
         <table class="table table-striped table-hover" v-if="seen">
@@ -265,10 +263,10 @@ export default {
                 kredit: 0,
             }, 
             placeholder_produk: {
-                placeholder: 'Cari Produk ...'
+                placeholder: 'Cari Produk (F2) ...'
             },
             placeholder_pelanggan: {
-                placeholder: '--PILIH PELANGGAN--'
+                placeholder: '--PILIH PELANGGAN (F1)--'
             },
             placeholder_kas: {
                 placeholder: '--PILIH KAS--'
@@ -277,19 +275,27 @@ export default {
             loading: true,
             seen : false,
             tunai : false,
-            piutang : true
+            piutang : true,
+            separator: {
+              decimal: ',',
+              thousands: '.',
+              prefix: '',
+              suffix: '',
+              precision: 2,
+              masked: false /* doesn't work with directive */
+          }
 
-        }
-    },
-    mounted() {   
-        var app = this;
-        app.dataProduk();
-        app.dataPelanggan();
-        app.dataKas();
-        app.getResults();
-        app.getDataPenjualan();
-    },
-    watch: {
+      }
+  },
+  mounted() {   
+    var app = this;
+    app.dataProduk();
+    app.dataPelanggan();
+    app.dataKas();
+    app.getResults();
+    app.getDataPenjualan();
+},
+watch: {
     // whenever question changes, this function will run
     pencarian: function (newQuestion) {
         this.getHasilPencarian()
@@ -302,9 +308,10 @@ export default {
         if (val == '') {
             val = 0
         }
-
         this.hitungKembalian(val)
-
+    },
+    'penjualan.potongan_faktur':function(){
+        this.potonganFaktur()
     }
 
 },
@@ -355,30 +362,28 @@ methods: {
     }
 },
 potonganFaktur(){
+ var potonganFaktur = this.penjualan.potongan_faktur
+ if (potonganFaktur == '') {
+    potonganFaktur = 0
+}
+var potongan_persen = (parseFloat(potonganFaktur) / parseFloat(this.penjualan.subtotal)) * 100
+var total_akhir = parseFloat(this.penjualan.subtotal) - parseFloat(potonganFaktur)
 
-    var potonganFaktur = this.penjualan.potongan_faktur
+if (potongan_persen > 100) {
 
-    if (potonganFaktur == '') {
-        potonganFaktur = 0
-    }
-    var potongan_persen = (parseFloat(potonganFaktur) / parseFloat(this.penjualan.subtotal)) * 100
-    var total_akhir = parseFloat(this.penjualan.subtotal) - parseFloat(potonganFaktur)
+    this.alertTbs("Potongan Tidak Bisa Lebih Dari 100%")
+    this.penjualan.total_akhir = this.penjualan.subtotal
+    this.penjualan.potongan_faktur = 0
+    this.penjualan.potongan_persen = 0
+    this.penjualan.potongan = 0        
+    this.hitungKembalian(this.penjualan.pembayaran)
 
-    if (potongan_persen > 100) {
-
-        this.alertTbs("Potongan Tidak Bisa Lebih Dari 100%")
-        this.penjualan.total_akhir = this.penjualan.subtotal
-        this.penjualan.potongan_faktur = 0
-        this.penjualan.potongan_persen = 0
-        this.penjualan.potongan = 0        
-        this.hitungKembalian(this.penjualan.pembayaran)
-
-    }else{
-      this.penjualan.potongan_persen = potongan_persen.toFixed(2)
-      this.penjualan.total_akhir = total_akhir.toFixed(2)
-      this.penjualan.potongan = potonganFaktur
-      this.hitungKembalian(this.penjualan.pembayaran)
-  }
+}else{
+  this.penjualan.potongan_persen = potongan_persen.toFixed(2)
+  this.penjualan.total_akhir = total_akhir.toFixed(2)
+  this.penjualan.potongan = potonganFaktur
+  this.hitungKembalian(this.penjualan.pembayaran)
+}
 
 }
 ,getDataPenjualan(){
