@@ -148,4 +148,23 @@ class PenjualanPos extends Model
         return $query_laporan_laba_kotor;
     }
 
+    // DISKON LABA KOTOR PENJUALAN POS
+    public function scopePotonganLaporanLabaKotor($query_sub_potongan, $request)
+    {
+        if ($request->pelanggan == "") {
+            $query_sub_potongan = PenjualanPos::select(DB::raw('SUM(potongan) as potongan'))
+                ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+                ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+                ->where('warung_id', Auth::user()->id_warung);
+        } else {
+            $query_sub_potongan = PenjualanPos::select(DB::raw('SUM(potongan) as potongan'))
+                ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+                ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+                ->where('pelanggan_id', $request->pelanggan)
+                ->where('warung_id', Auth::user()->id_warung);
+        }
+
+        return $query_sub_potongan;
+    }
+
 }

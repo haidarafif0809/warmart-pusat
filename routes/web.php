@@ -522,6 +522,8 @@ Route::post('/laporan-laba-kotor/pencarian', 'LaporanLabaKotorController@pencari
 Route::post('/laporan-laba-kotor/view-pesanan', 'LaporanLabaKotorController@prosesLaporanLabaKotorPesanan')->middleware('auth');
 Route::post('/laporan-laba-kotor/pencarian-pesanan', 'LaporanLabaKotorController@pencarianPesanan')->middleware('auth');
 Route::get('/laporan-laba-kotor/pilih-pelanggan', 'LaporanLabaKotorController@pilihPelanggan')->middleware('auth');
+Route::post('/laporan-laba-kotor/subtotal-laba-kotor', 'LaporanLabaKotorController@subtotalLabaKotor')->middleware('auth');
+Route::post('/laporan-laba-kotor/subtotal-laba-kotor-pesanan', 'LaporanLabaKotorController@subtotalLabaKotorPesanan')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
