@@ -68,11 +68,11 @@
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                     <label class="label-control">Disc(F3)</label>  
-                                     <money class="form-subtotal" v-model="penjualan.potongan_faktur" v-shortkey.focus="['f3']" v-bind="separator" ></money>
-                                 </div>
-                             </div>
-                             <div class="col-sm-6">
+                                       <label class="label-control">Disc(F3)</label>  
+                                       <money class="form-subtotal" v-model="penjualan.potongan_faktur" v-shortkey.focus="['f3']" v-bind="separator" ></money>
+                                   </div>
+                               </div>
+                               <div class="col-sm-6">
                                 <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
                                     <label class="label-control">Disc(%)(F4)</label>    
                                     <input type="number" class="form-subtotal" value="0" v-model="penjualan.potongan_persen" v-on:blur="potonganPersen" v-shortkey.focus="['f4']" />
@@ -103,24 +103,24 @@
 
                             <div class="col-md-6">
                                 <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                   <font style="color: black">Kembalian</font>
-                                   <money class="form-penjualan" readonly="" id="kembalian" name="kembalian" placeholder="Kembalian"  v-model="penjualan.kembalian" v-bind="separator" ></money> 
-                               </div>
-                               <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                   <font style="color: black">Kredit</font>
-                                   <money class="form-penjualan" readonly="" id="kredit" name="kredit" placeholder="Kredit"  v-model="penjualan.kredit" v-bind="separator" ></money> 
-                               </div>
-                           </div>
+                                 <font style="color: black">Kembalian</font>
+                                 <money class="form-penjualan" readonly="" id="kembalian" name="kembalian" placeholder="Kembalian"  v-model="penjualan.kembalian" v-bind="separator" ></money> 
+                             </div>
+                             <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                                 <font style="color: black">Kredit</font>
+                                 <money class="form-penjualan" readonly="" id="kredit" name="kredit" placeholder="Kredit"  v-model="penjualan.kredit" v-bind="separator" ></money> 
+                             </div>
+                         </div>
 
-                       </div>
+                     </div>
 
-                   </div>
-               </div>
+                 </div>
+             </div>
 
-               <div class="col-md-3">
+             <div class="col-md-3">
 
                 <div class="card">
-                   <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
+                 <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
                     <label class="label-control">Kas(F8)</label><br>
                     <selectize-component v-model="penjualan.kas" :settings="placeholder_kas" id="kas" ref='kas' v-shortkey.focus="['f8']" > 
                         <option v-for="kass, index in kas" v-bind:value="kass.id">{{ kass.nama_kas }}</option>
@@ -168,14 +168,14 @@
                     <td>{{ tbs_penjualan.kode_produk }} - {{ tbs_penjualan.nama_produk }}</td>
 
                     <td>
-                        <a href="#create-penjualan" v-bind:id="'edit-' + tbs_penjualan.id_tbs_penjualan" v-on:click="editEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">{{ new Intl.NumberFormat().format(tbs_penjualan.jumlah_produk) }}</a>
+                        <a href="#create-penjualan" v-bind:id="'edit-' + tbs_penjualan.id_tbs_penjualan" v-on:click="editEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">{{ new Intl.NumberFormat().format(tbs_penjualan.jumlah_produk) }},00</a>
                     </td>
 
-                    <td>{{ new Intl.NumberFormat().format(tbs_penjualan.harga_produk) }}</td>
+                    <td>{{ new Intl.NumberFormat().format(tbs_penjualan.harga_produk) }},00</td>
 
                     <td><a href="#create-penjualan" v-bind:id="'edit-' + tbs_penjualan.id_tbs_penjualan" v-on:click="potonganEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">{{ tbs_penjualan.potongan }}</a></td>
 
-                    <td> {{ new Intl.NumberFormat().format(tbs_penjualan.subtotal) }}</td>
+                    <td> {{ new Intl.NumberFormat().format(tbs_penjualan.subtotal) }},00</td>
 
                     <td><a href="#create-penjualan" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_penjualan.id_tbs_penjualan" v-on:click="deleteEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">Delete</a></td>
                 </tr>
@@ -190,7 +190,7 @@
         <div align="right"><pagination :data="tbsPenjualanData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
 
     </div>
-    <p style="color: red; font-style: italic;">*Note : Klik Kolom Jumlah Untuk Mengubah Jumlah Produk.</p>      
+    <p style="color: red; font-style: italic;">*Note : Klik Kolom Jumlah, Harga, & Potongan Untuk Mengubah Nilai.</p>      
 
 
 </div><!-- / PANEL BODY -->
@@ -362,8 +362,8 @@ methods: {
     }
 },
 potonganFaktur(){
- var potonganFaktur = this.penjualan.potongan_faktur
- if (potonganFaktur == '') {
+   var potonganFaktur = this.penjualan.potongan_faktur
+   if (potonganFaktur == '') {
     potonganFaktur = 0
 }
 var potongan_persen = (parseFloat(potonganFaktur) / parseFloat(this.penjualan.subtotal)) * 100
