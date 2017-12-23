@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Customer;
+use App\DetailPenjualan;
+use App\DetailPenjualanPos;
 use App\Hpp;
 use App\Penjualan;
 use App\PenjualanPos;
@@ -49,10 +51,11 @@ class LaporanLabaKotorController extends Controller
         $array_laba_kotor = array();
         foreach ($laporan_laba_kotor as $laba_kotor) {
             $hpp              = Hpp::select(DB::raw('SUM(total_nilai) as total_hpp'))->where('no_faktur', $laba_kotor->id)->where('jenis_transaksi', 'PenjualanPos')->where('warung_id', Auth::user()->id_warung)->first();
-            $total_laba_kotor = $laba_kotor->total - $hpp->total_hpp;
+            $detail_penjualan = DetailPenjualanPos::select(DB::raw('SUM(subtotal) as subtotal'))->where('id_penjualan_pos', $laba_kotor->id)->where('warung_id', Auth::user()->id_warung)->first();
+            $total_laba_kotor = $detail_penjualan->subtotal - $hpp->total_hpp;
             $laba_jual        = $total_laba_kotor - $laba_kotor->potongan;
 
-            array_push($array_laba_kotor, ['laba_kotor' => $laba_kotor, 'hpp' => $hpp->total_hpp, 'total_laba_kotor' => $total_laba_kotor, 'laba_jual' => $laba_jual]);
+            array_push($array_laba_kotor, ['laba_kotor' => $laba_kotor, 'hpp' => $hpp->total_hpp, 'total_laba_kotor' => $total_laba_kotor, 'laba_jual' => $laba_jual, 'total' => $detail_penjualan->subtotal]);
         }
 
         //DATA PAGINATION
@@ -67,10 +70,11 @@ class LaporanLabaKotorController extends Controller
         $array_laba_kotor = array();
         foreach ($laporan_laba_kotor as $laba_kotor) {
             $hpp              = Hpp::select(DB::raw('SUM(total_nilai) as total_hpp'))->where('no_faktur', $laba_kotor->id)->where('jenis_transaksi', 'penjualan')->where('warung_id', Auth::user()->id_warung)->first();
-            $total_laba_kotor = $laba_kotor->total - $hpp->total_hpp;
+            $detail_penjualan = DetailPenjualan::select(DB::raw('SUM(subtotal) as subtotal'))->where('id_penjualan', $laba_kotor->id)->first();
+            $total_laba_kotor = $detail_penjualan->subtotal - $hpp->total_hpp;
             $laba_jual        = $total_laba_kotor - 0;
 
-            array_push($array_laba_kotor, ['laba_kotor' => $laba_kotor, 'hpp' => $hpp->total_hpp, 'total_laba_kotor' => $total_laba_kotor, 'laba_jual' => $laba_jual]);
+            array_push($array_laba_kotor, ['laba_kotor' => $laba_kotor, 'hpp' => $hpp->total_hpp, 'total_laba_kotor' => $total_laba_kotor, 'laba_jual' => $laba_jual, 'total' => $detail_penjualan->subtotal]);
         }
 
         //DATA PAGINATION
@@ -85,10 +89,11 @@ class LaporanLabaKotorController extends Controller
         $array_laba_kotor = array();
         foreach ($laporan_laba_kotor as $laba_kotor) {
             $hpp              = Hpp::select(DB::raw('SUM(total_nilai) as total_hpp'))->where('no_faktur', $laba_kotor->id)->where('jenis_transaksi', 'PenjualanPos')->where('warung_id', Auth::user()->id_warung)->first();
-            $total_laba_kotor = $laba_kotor->total - $hpp->total_hpp;
+            $detail_penjualan = DetailPenjualanPos::select(DB::raw('SUM(subtotal) as subtotal'))->where('id_penjualan_pos', $laba_kotor->id)->where('warung_id', Auth::user()->id_warung)->first();
+            $total_laba_kotor = $detail_penjualan->subtotal - $hpp->total_hpp;
             $laba_jual        = $total_laba_kotor - $laba_kotor->potongan;
 
-            array_push($array_laba_kotor, ['laba_kotor' => $laba_kotor, 'hpp' => $hpp->total_hpp, 'total_laba_kotor' => $total_laba_kotor, 'laba_jual' => $laba_jual]);
+            array_push($array_laba_kotor, ['laba_kotor' => $laba_kotor, 'hpp' => $hpp->total_hpp, 'total_laba_kotor' => $total_laba_kotor, 'laba_jual' => $laba_jual, 'total' => $detail_penjualan->subtotal]);
         }
 
         //DATA PAGINATION
@@ -103,14 +108,73 @@ class LaporanLabaKotorController extends Controller
         $array_laba_kotor = array();
         foreach ($laporan_laba_kotor as $laba_kotor) {
             $hpp              = Hpp::select(DB::raw('SUM(total_nilai) as total_hpp'))->where('no_faktur', $laba_kotor->id)->where('jenis_transaksi', 'penjualan')->where('warung_id', Auth::user()->id_warung)->first();
-            $total_laba_kotor = $laba_kotor->total - $hpp->total_hpp;
+            $detail_penjualan = DetailPenjualan::select(DB::raw('SUM(subtotal) as subtotal'))->where('id_penjualan', $laba_kotor->id)->first();
+            $total_laba_kotor = $detail_penjualan->subtotal - $hpp->total_hpp;
             $laba_jual        = $total_laba_kotor - 0;
 
-            array_push($array_laba_kotor, ['laba_kotor' => $laba_kotor, 'hpp' => $hpp->total_hpp, 'total_laba_kotor' => $total_laba_kotor, 'laba_jual' => $laba_jual]);
+            array_push($array_laba_kotor, ['laba_kotor' => $laba_kotor, 'hpp' => $hpp->total_hpp, 'total_laba_kotor' => $total_laba_kotor, 'laba_jual' => $laba_jual, 'total' => $detail_penjualan->subtotal]);
         }
 
         //DATA PAGINATION
         $respons = $this->dataPagination($laporan_laba_kotor, $array_laba_kotor);
         return response()->json($respons);
+    }
+
+    public function tanggalSql($tangal)
+    {
+        $date        = date_create($tangal);
+        $date_format = date_format($date, "Y-m-d");
+        return $date_format;
+    }
+
+    public function subtotalLabaKotor(Request $request)
+    {
+        //SUBTOTAL KESELURUHAN
+        $sub_total_penjualan = DetailPenjualanPos::subtotalLaporanLabaKotor($request)->first();
+
+        //DISKON KESELURUHAN
+        $sub_potongan = PenjualanPos::potonganLaporanLabaKotor($request)->first();
+
+        //TOTAL HPP KESELURUHAN
+        $jenis_transaksi = "PenjualanPos";
+        $sub_hpp         = Hpp::hppLaporanLabaKotor($request, $jenis_transaksi)->first();
+
+        $subtotal_penjualan  = $sub_total_penjualan->subtotal;
+        $subtotal_hpp        = $sub_hpp->total_hpp;
+        $subtotal_laba_kotor = $subtotal_penjualan - $subtotal_hpp;
+        $subtotal_potongan   = $sub_potongan->potongan;
+        $subtotal_laba_jual  = $subtotal_laba_kotor - $subtotal_potongan;
+
+        $response['subtotal_penjualan']  = $subtotal_penjualan;
+        $response['subtotal_hpp']        = $subtotal_hpp;
+        $response['subtotal_laba_kotor'] = $subtotal_laba_kotor;
+        $response['subtotal_potongan']   = $subtotal_potongan;
+        $response['subtotal_laba_jual']  = $subtotal_laba_jual;
+
+        return response()->json($response);
+    }
+
+    public function subtotalLabaKotorPesanan(Request $request)
+    {
+        //SUBTOTAL KESELURUHAN
+        $sub_total_penjualan = DetailPenjualan::subtotalLaporanLabaKotorPesanan($request)->first();
+
+        //TOTAL HPP KESELURUHAN
+        $jenis_transaksi = "penjualan";
+        $sub_hpp         = Hpp::hppLaporanLabaKotor($request, $jenis_transaksi)->first();
+
+        $subtotal_penjualan  = $sub_total_penjualan->subtotal;
+        $subtotal_hpp        = $sub_hpp->total_hpp;
+        $subtotal_laba_kotor = $subtotal_penjualan - $subtotal_hpp;
+        $subtotal_potongan   = 0;
+        $subtotal_laba_jual  = $subtotal_laba_kotor - $subtotal_potongan;
+
+        $response['subtotal_penjualan']  = $subtotal_penjualan;
+        $response['subtotal_hpp']        = $subtotal_hpp;
+        $response['subtotal_laba_kotor'] = $subtotal_laba_kotor;
+        $response['subtotal_potongan']   = $subtotal_potongan;
+        $response['subtotal_laba_jual']  = $subtotal_laba_jual;
+
+        return response()->json($response);
     }
 }

@@ -47,7 +47,7 @@
 						<table class="table table-striped table-hover">
 							<thead class="text-primary">
 								<tr>
-									<th>Nomor Transaksi</th>
+									<th>No. Transaksi</th>
 									<th>Waktu</th>
 									<th>Pelanggan</th>
 									<th style="text-align:right">Penjualan</th>
@@ -60,14 +60,27 @@
 							<tbody v-if="labaKotor.length > 0 && loading == false"  class="data-ada">
 								<tr v-for="labaKotors, index in labaKotor" >
 
-									<td>{{ labaKotors.laba_kotor.no_faktur }}</td>
-									<td>{{ labaKotors.laba_kotor.created_at }}</td>
+									<td>{{ labaKotors.laba_kotor.id }}</td>
+									<td>{{ labaKotors.laba_kotor.created_at | tanggal }}</td>
 									<td>{{ labaKotors.laba_kotor.name }}</td>
-									<td align="right">{{ labaKotors.laba_kotor.total | pemisahTitik }}</td>
+									<td align="right">{{ labaKotors.total | pemisahTitik }}</td>
 									<td align="right">{{ labaKotors.hpp | pemisahTitik }}</td>
 									<td align="right">{{ labaKotors.total_laba_kotor | pemisahTitik }}</td>
 									<td align="right">{{ labaKotors.laba_kotor.potongan | pemisahTitik }}</td>
 									<td align="right">{{ labaKotors.laba_jual | pemisahTitik }}</td>
+
+								</tr>
+
+								<tr style="color:red">
+
+									<td>TOTAL</td>
+									<td></td>
+									<td></td>
+									<td align="right">{{ subtotalLabaKotor.subtotal_penjualan | pemisahTitik }}</td>
+									<td align="right">{{ subtotalLabaKotor.subtotal_hpp | pemisahTitik }}</td>
+									<td align="right">{{ subtotalLabaKotor.subtotal_laba_kotor | pemisahTitik }}</td>
+									<td align="right">{{ subtotalLabaKotor.subtotal_potongan | pemisahTitik }}</td>
+									<td align="right">{{ subtotalLabaKotor.subtotal_laba_jual | pemisahTitik }}</td>
 
 								</tr>
 							</tbody>					
@@ -78,7 +91,7 @@
 						</div><!--RESPONSIVE-->
 						<vue-simple-spinner v-if="loading"></vue-simple-spinner>
 						<div align="right"><pagination :data="labaKotorData" v-on:pagination-change-page="prosesLaporan" :limit="4"></pagination></div>
-						<hr style="margin-top: 30px; margin-bottom: 30px; border-top: 5px solid #eeeeee;">
+						<hr style="margin-top: 30px; margin-bottom: 15px; border-top: 5px solid #eeeeee;">
 
 					<div class=" table-responsive">
 						<div class="pencarian">
@@ -89,7 +102,7 @@
 						<table class="table table-striped table-hover">
 							<thead class="text-primary">
 								<tr>
-									<th>Nomor Transaksi</th>
+									<th>No. Transaksi</th>
 									<th>Waktu</th>
 									<th>Pelanggan</th>
 									<th style="text-align:right">Penjualan</th>
@@ -103,13 +116,26 @@
 								<tr v-for="labaKotorPesanans, index in labaKotorPesanan" >
 
 									<td>{{ labaKotorPesanans.laba_kotor.id }}</td>
-									<td>{{ labaKotorPesanans.laba_kotor.created_at }}</td>
+									<td>{{ labaKotorPesanans.laba_kotor.created_at | tanggal }}</td>
 									<td>{{ labaKotorPesanans.laba_kotor.name }}</td>
-									<td align="right">{{ labaKotorPesanans.laba_kotor.total | pemisahTitik }}</td>
+									<td align="right">{{ labaKotorPesanans.total | pemisahTitik }}</td>
 									<td align="right">{{ labaKotorPesanans.hpp | pemisahTitik }}</td>
 									<td align="right">{{ labaKotorPesanans.total_laba_kotor | pemisahTitik }}</td>
 									<td align="right">0</td>
 									<td align="right">{{ labaKotorPesanans.laba_jual | pemisahTitik }}</td>
+
+								</tr>
+
+								<tr style="color:red">
+
+									<td>TOTAL</td>
+									<td></td>
+									<td></td>
+									<td align="right">{{ subtotalLabaKotorPesanan.subtotal_penjualan | pemisahTitik }}</td>
+									<td align="right">{{ subtotalLabaKotorPesanan.subtotal_hpp | pemisahTitik }}</td>
+									<td align="right">{{ subtotalLabaKotorPesanan.subtotal_laba_kotor | pemisahTitik }}</td>
+									<td align="right">{{ subtotalLabaKotorPesanan.subtotal_potongan | pemisahTitik }}</td>
+									<td align="right">{{ subtotalLabaKotorPesanan.subtotal_laba_jual | pemisahTitik }}</td>
 
 								</tr>
 							</tbody>					
@@ -136,8 +162,10 @@ export default {
 			pelanggan: [],
 			labaKotor: [],
 			labaKotorData: {},
+			subtotalLabaKotor: {},
 			labaKotorPesanan: [],
 			labaKotorPesananData: {},
+			subtotalLabaKotorPesanan: {},
 			filter: {
 				dari_tanggal: '',
 				sampai_tanggal: '',
@@ -169,6 +197,9 @@ export default {
     filters: {
 	  pemisahTitik: function (value) {
 	    return new Intl.NumberFormat().format(value)
+	  },
+	  tanggal: function (value) {
+	    return moment(String(value)).format('DD/MM/YYYY hh:mm')
 	  }
 	},
     methods: {
@@ -176,6 +207,8 @@ export default {
     		var app = this;
     		app.prosesLaporan();
     		app.prosesLaporanPesanan();
+    		app.totalLabaKotor();
+    		app.totalLabaKotorPesanan();
     	},
     	prosesLaporan(page) {
     		var app = this;	
@@ -189,7 +222,6 @@ export default {
     			app.labaKotor = resp.data.data;
     			app.labaKotorData = resp.data;
     			app.loading = false
-    			console.log(resp.data.data);
     		})
     		.catch(function (resp) {
     			console.log(resp);
@@ -208,7 +240,6 @@ export default {
     			app.labaKotorPesanan = resp.data.data;
     			app.labaKotorPesananData = resp.data;
     			app.loadingPesanan = false
-    			console.log(resp.data.data);
     		})
     		.catch(function (resp) {
     			console.log(resp);
@@ -257,7 +288,38 @@ export default {
           .catch(function (resp) {
             alert("Tidak bisa memuat pelanggan ");
         });
-      }
+      },
+      totalLabaKotor() {
+    		var app = this;	
+    		var newFilter = app.filter;
+
+    		app.loading = true,
+    		axios.post(app.url+'/subtotal-laba-kotor', newFilter)
+    		.then(function (resp) {
+    			app.subtotalLabaKotor = resp.data;
+    			app.loading = false
+    			console.log(resp.data)
+    		})
+    		.catch(function (resp) {
+    			console.log(resp);
+    			alert("Tidak Dapat Memuat Subtotal Laba Kotor");
+    		});
+    	},
+      totalLabaKotorPesanan() {
+    		var app = this;	
+    		var newFilter = app.filter;
+
+    		app.loading = true,
+    		axios.post(app.url+'/subtotal-laba-kotor-pesanan', newFilter)
+    		.then(function (resp) {
+    			app.subtotalLabaKotorPesanan = resp.data;
+    			app.loadingPesanan = false
+    		})
+    		.catch(function (resp) {
+    			console.log(resp);
+    			alert("Tidak Dapat Memuat Subtotal Laba Kotor");
+    		});
+    	}
     }
 }
 </script>

@@ -44,6 +44,13 @@ class Hpp extends Model
 
     }
 
+    public function tanggalSql($tangal)
+    {
+        $date        = date_create($tangal);
+        $date_format = date_format($date, "Y-m-d");
+        return $date_format;
+    }
+
     public function hpp($id_produk)
     {
 
@@ -57,6 +64,38 @@ class Hpp extends Model
         }
         return $hpp;
 
+    }
+
+    // HPP LABA KOTOR PENJUALAN POS
+    public function scopeHppLaporanLabaKotor($query_sub_hpp, $request, $jenis_transaksi)
+    {
+        if ($request->pelanggan == "") {
+            $query_sub_hpp = Hpp::select(DB::raw('SUM(total_nilai) as total_hpp'))
+                ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+                ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+                ->where('jenis_transaksi', $jenis_transaksi)
+                ->where('warung_id', Auth::user()->id_warung);
+        } else {
+            if ($jenis_transaksi == "PenjualanPos") {
+                $query_sub_hpp = Hpp::select(DB::raw('SUM(hpps.total_nilai) as total_hpp'))
+                    ->leftJoin('penjualan_pos', 'penjualan_pos.id', '=', 'hpps.no_faktur')
+                    ->where(DB::raw('DATE(hpps.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+                    ->where(DB::raw('DATE(hpps.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+                    ->where('hpps.jenis_transaksi', 'PenjualanPos')
+                    ->where('penjualan_pos.pelanggan_id', $request->pelanggan)
+                    ->where('hpps.warung_id', Auth::user()->id_warung);
+            } else {
+                $query_sub_hpp = Hpp::select(DB::raw('SUM(hpps.total_nilai) as total_hpp'))
+                    ->leftJoin('penjualans', 'penjualans.id', '=', 'hpps.no_faktur')
+                    ->where(DB::raw('DATE(hpps.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+                    ->where(DB::raw('DATE(hpps.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+                    ->where('hpps.jenis_transaksi', 'penjualan')
+                    ->where('penjualans.id_pelanggan', $request->pelanggan)
+                    ->where('hpps.warung_id', Auth::user()->id_warung);
+            }
+        }
+
+        return $query_sub_hpp;
     }
 
 }
