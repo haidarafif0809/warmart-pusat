@@ -2,20 +2,28 @@
 @section('content')
 <style type="text/css">
     .flexFont {
-  @if(Agent::isMobile())
-  height:3em;
-  @else
-  height:2em;
-  @endif
-  padding:1%;
-  margin: 10px;
+      @if(Agent::isMobile())
+      height:3em;
+      @else
+      height:2em;
+      @endif
+      padding:1%;
+      margin: 10px;
 
+  }
+
+  .smaller {
+      font-size: 0.7em;
+      background-color:red;
+      width: 10em;
+  }
+  .card .card-content {
+    padding: 0px 10px;
 }
-
-.smaller {
-  font-size: 0.7em;
-  background-color:red;
-  width: 10em;
+h6 {
+    font-size: 1.15em;
+    text-transform: uppercase;
+    font-weight: 500;
 }
 </style>
 <div class="page-header header-filter header-small" data-parallax="true" style="background-image: url('image/background2.jpg');">
@@ -73,7 +81,7 @@
                         </div>
                     </div>
                     @else
-      @if ($agent->isMobile())
+                    @if ($agent->isMobile())
                     <!--JIKA DAKSES VIA HP/TAB-->
                     <div class="card" style="margin-bottom: 1px; margin-top: 1px;">
                         <div class="row">
@@ -127,16 +135,16 @@
                     @else
                     <div class="row">
                         <div class="col-md-8">
-                            <div class="card" style="margin-bottom: 1px;">
+                            <div class="card" style="margin-bottom: 5px; padding-bottom: 15px;">
                                 <div class="card-header">
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-3">
                                             <h4 align="center" class="card-title" style="color: black;">
                                                 Produk
                                             </h4>
                                         </div>
                                         <div class="col-md-3">
-                                            <h4 class="card-title" style="color: black;">
+                                            <h4 class="card-title" style="color: black; text-align: right">
                                                 Harga
                                             </h4>
                                         </div>
@@ -145,128 +153,108 @@
                                                 Jumlah
                                             </h4>
                                         </div>
-                                    </div>
-                                    <hr>
-                                    </hr>
+                                        <div class="col-md-3">
+                                            <h4 class="card-title" style="color: black; padding-left: 25px;">
+                                                Subtotal
+                                            </h4>
+                                        </div>
+                                    </div><hr style="margin-top: 0px; margin-bottom: 0px;">
                                 </div>
                                 {!! $produk_belanjaan !!}
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <div class="card" style="margin-bottom: 1px;">
+                            <div class="card" style="margin-bottom: 5px; padding-bottom: 15px;">
                                 <div class="card-header">
                                     <h6 class="card-title" style="color: black; padding-left: 10px">
                                         Rincian Pesanan
                                     </h6>
                                     <hr>
-                                    </hr>
-                                </div>
-                                <div class="card-content table-responsive">
-                                    <table>
-                                        <tbody>
-                                            <tr>
-                                                <td width="50%">
-                                                    <b>
-                                                        Total Produk
-                                                    </b>
-                                                </td>
-                                                <td>
-                                                    :
-                                                </td>
-                                                <td>
-                                                    <b>
-                                                        {{ $jumlah_produk->total_produk }}
-                                                    </b>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td width="50%">
-                                                    <b>
-                                                        Subtotal
-                                                    </b>
-                                                </td>
-                                                <td>
-                                                    :
-                                                </td>
-                                                <td>
-                                                    <b>
-                                                        Rp. {{ $subtotal }}
-                                                    </b>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                    <hr>
-                                        <table>
-                                            <tbody>
-                                                <tr>
-                                                    <td width="40%">
-                                                        <h5>
-                                                            <b>
-                                                                Total :
-                                                            </b>
-                                                        </h5>
-                                                    </td>
-                                                    <td>
-                                                    </td>
-                                                    <td>
-                                                        <h5>
-                                                            <b>
-                                                                RP {{ $subtotal }}
-                                                            </b>
-                                                        </h5>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </hr>
-                                </div>
+                                </hr>
                             </div>
-                            <a class="btn btn-round pull-left" href="{{ url('/selesaikan-pemesanan') }}" style="background-color: #01573e" type="button">
-                                Lanjut Ke Pembayaran
-                                <i class="material-icons">
-                                    keyboard_arrow_right
-                                </i>
-                            </a>
+                            <div class="card-content table-responsive">
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <td width="60%">
+                                                <b>
+                                                    Total Produk
+                                                </b>
+                                            </td>
+                                            <td>
+                                                :
+                                            </td>
+                                            <td>
+                                                <b>
+                                                    {{ $cek_belanjaan }}
+                                                </b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="60%">
+                                                <b>
+                                                    Subtotal
+                                                </b>
+                                            </td>
+                                            <td>
+                                                :
+                                            </td>
+                                            <td>
+                                                <b>
+                                                    RP {{ $subtotal }}
+                                                </b>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </hr>
                         </div>
-                        @endif
                     </div>
+                    <a class="btn btn-round pull-left" href="{{ url('/selesaikan-pemesanan') }}" style="background-color: #01573e" type="button">
+                        Lanjut Ke Pembayaran
+                        <i class="material-icons">
+                            keyboard_arrow_right
+                        </i>
+                    </a>
                 </div>
                 @endif
             </div>
         </div>
+        @endif
     </div>
+</div>
+</div>
 </div>
 @endsection
 
 @section('scripts')
 <script type="text/javascript">
     $(document).on('click', '#btnHapusProduk', function () {
-    var id = $(this).attr("data-id");
-    var nama = $(this).attr("data-nama");
+        var id = $(this).attr("data-id");
+        var nama = $(this).attr("data-nama");
 
-    swal({
-      html: "Anda Yakin Ingin Menghapus Produk <b>"+nama+"</b> Dari Keranjang Belanja ?",
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Ya',
-      cancelButtonText: 'Batal'
-    }).then((result) => {
-      if (result.value) {
-        var url_hapus_produk_keranjang_belanja = window.location.origin + (window.location.pathname).replace("keranjang-belanja", "keranjang-belanja/hapus-produk-keranjang-belanja/"+id);
-        window.location.href=url_hapus_produk_keranjang_belanja;
         swal({
-          html :  "Produk <b>"+nama+"</b> Berhasil Dihapus Dari Keranjang Belanjaan",
-          showConfirmButton :  false,
-          type: "success",
-          timer: 10000,
-          onOpen: () => {
-            swal.showLoading()
-          }
+          html: "Anda Yakin Ingin Menghapus Produk <b>"+nama+"</b> Dari Keranjang Belanja ?",
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Ya',
+          cancelButtonText: 'Batal'
+      }).then((result) => {
+          if (result.value) {
+            var url_hapus_produk_keranjang_belanja = window.location.origin + (window.location.pathname).replace("keranjang-belanja", "keranjang-belanja/hapus-produk-keranjang-belanja/"+id);
+            window.location.href=url_hapus_produk_keranjang_belanja;
+            swal({
+              html :  "Produk <b>"+nama+"</b> Berhasil Dihapus Dari Keranjang Belanjaan",
+              showConfirmButton :  false,
+              type: "success",
+              timer: 10000,
+              onOpen: () => {
+                swal.showLoading()
+            }
         });
 
-      }
+        }
     })
 
   });
