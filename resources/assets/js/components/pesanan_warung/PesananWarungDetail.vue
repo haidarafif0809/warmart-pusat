@@ -60,7 +60,7 @@
 			      </div> <!--END ORDER PESANAN ID-->
 
 			      <div class="col-md-3">Waktu Pesan : {{pesananData.pesanan.created_at}}</div>					
-				  <div class="col-md-2">Total :Rp. {{ new Intl.NumberFormat().format(pesananData.subtotal) }}</div>					
+				  <div class="col-md-2">Total :Rp. {{ pesananData.subtotal | pemisahTitik }}</div>					
 				  <div class="col-md-2">Status : 
 				  		<b style="color:red" v-if="pesananData.pesanan.konfirmasi_pesanan == 0" >Belum Di Konfirmasi</b>
 				  		<b style="color:orange" v-else-if="pesananData.pesanan.konfirmasi_pesanan == 1" >Sudah Di Konfirmasi</b>
@@ -116,14 +116,15 @@
 						        <th><b>Produk</b></th>
 						        <th><b>Harga</b> </th>
 						        <th><center><b>Jumlah</b></center></th>
+						        <th><b>Subtotal</b></th>
 						        <th><b>Status</b> </th>
 					        </tr>
 				      	</thead>
 				      	<tbody  v-if="detailPesanan.length > 0 && loading == false"  class="data-ada">
 
 				      	 	<tr v-for="detailPesanans, index in detailPesanan">
-				      			<td style="text-transform: capitalize">{{ detailPesanans.produk.nama_barang }}</td>			          			
-				      			<td>Rp. {{ new Intl.NumberFormat().format(detailPesanans.harga_produk) }}</td>			          			
+				      			<td style="text-transform: capitalize">{{ detailPesanans.produk.nama_barang }}</td>
+				      			<td>Rp. {{ detailPesanans.harga_produk | pemisahTitik }}</td>
 				      			<td>
 				      				<center>
 					      				<div class="btn-group" v-if="detailPesanans.pesanan_pelanggan.konfirmasi_pesanan == 0">
@@ -138,7 +139,8 @@
 					      					{{detailPesanans.jumlah_produk}}
 					      				</div>
 				      				</center>
-				      			</td>			          			
+				      			</td>
+				      			<td>Rp. {{ detailPesanans.harga_produk * detailPesanans.jumlah_produk | pemisahTitik }}</td>		          			
 				      			<td>
 				      				<b style="color:red" v-if="detailPesanans.pesanan_pelanggan.konfirmasi_pesanan == 0" >Belum Di Konfirmasi</b>
 									<b style="color:orange" v-else-if="detailPesanans.pesanan_pelanggan.konfirmasi_pesanan == 1" >Sudah Di Konfirmasi</b>
@@ -206,7 +208,7 @@
         			<b class="card-title" style="margin-top: 1px; margin-bottom: 1px;">Info Pembayaran</b>
 					<div class="row">
 					    <div class="col-sm-6 col-xs-6">Total </div>
-					    <div class="col-sm-6 col-xs-6"><p align="right" class="text-danger"><b>Rp. {{ new Intl.NumberFormat().format(pesananData.subtotal) }}</b></p></div>
+					    <div class="col-sm-6 col-xs-6"><p align="right" class="text-danger"><b>Rp. {{ pesananData.subtotal | pemisahTitik }}</b></p></div>
 					</div>
 					<hr style="margin-top: 1x; margin-bottom: 1px;">
 
@@ -244,33 +246,43 @@
 	          <div class="row">
 	            <div class="col-md-12">
 	              <div class="row">
-	                <div class="col-xs-4">
+	                <div class="col-xs-4" style="padding-right:0px">
 	                  <div class="img-container" style="margin-bottom:10px;margin-top: 10px; margin-left: 10px; margin-right: 10px;">
 	                        <img v-if="detailPesanans.produk.foto != null" :src="urlPicture+'/'+detailPesanans.produk.foto" /> 
 	                        <img v-else :src="urlOrigin+'/image/foto_default.png'">
 	                  </div>
 	                </div>
 
-	                <div class="col-xs-8">
-	                    <p style="margin-bottom:1px;margin-top: 1px;">
+	                <div class="col-xs-8" style="padding-right:0px; padding-left:0px">
+	                    <p style="margin-bottom:1px;margin-top: 1px; padding-top:5px">
 	                      <b style="text-transform: capitalize">{{detailPesanans.produk.nama_barang}}</b>
 	                    </p>
-	                    <p style="margin-bottom:1px;margin-top: 1px;">
-	                      <b>Rp. {{ new Intl.NumberFormat().format(detailPesanans.harga_produk) }}</b>
-	                    </p>
 
-	                    <div class="btn-group" align="right" v-if="detailPesanans.pesanan_pelanggan.konfirmasi_pesanan == 0">
-		                    <a id="edit-jumlah-pesanan" :data-nama="detailPesanans.produk.nama_barang" :data-id="detailPesanans.id"  class="btn btn-info btn-xs" @click="editProduk(detailPesanans.id, index, detailPesanans.produk.nama_barang)">
-		                    	<font style="font-size: 11.5px;">{{ detailPesanans.jumlah_produk }}</font> 
-		                    </a>
-	                    	<a v-if="detailPesanans.jumlah_produk == 0" disabled="true" class="btn btn-xs"> <i class="material-icons">remove</i></a>
-	                    	<a v-else href="#" class="btn btn-xs" @click="kurangProduk(detailPesanans.id)"> <i class="material-icons">remove</i></a>
-	                    	<a href="#" class="btn btn-xs" @click="tambahProduk(detailPesanans.id)"> <i class="material-icons">add</i></a>
+	                    <div class="row">
+	                    	<div class="col-xs-4" style="padding-right:0px; padding-top:13px">
+			                    <p style="margin-bottom:1px;margin-top: 1px;">
+			                      Rp {{ detailPesanans.harga_produk | pemisahTitik }}
+			                    </p>
+			                    <p style="color:red; font-weight:bold; padding-top:13px">
+			                    	Rp {{ detailPesanans.harga_produk * detailPesanans.jumlah_produk | pemisahTitik }}
+			                    </p>
+	                    	</div>
+	                    	<div class="col-xs-8" style="padding-left:0px;">
+			                    <div class="btn-group" align="right" v-if="detailPesanans.pesanan_pelanggan.konfirmasi_pesanan == 0">
+				                    <a id="edit-jumlah-pesanan" :data-nama="detailPesanans.produk.nama_barang" :data-id="detailPesanans.id"  class="btn btn-info btn-xs" @click="editProduk(detailPesanans.id, index, detailPesanans.produk.nama_barang)">
+				                    	<font style="font-size: 11.5px;">{{ detailPesanans.jumlah_produk }}</font> 
+				                    </a>
+			                    	<a v-if="detailPesanans.jumlah_produk == 0" disabled="true" class="btn btn-xs"> <i class="material-icons">remove</i></a>
+			                    	<a v-else href="#" class="btn btn-xs" @click="kurangProduk(detailPesanans.id)"> <i class="material-icons">remove</i></a>
+			                    	<a href="#" class="btn btn-xs" @click="tambahProduk(detailPesanans.id)"> <i class="material-icons">add</i></a>
+			                    </div>
+
+			                    <div v-else style="padding-top:13px;">
+			                    	x {{ detailPesanans.jumlah_produk }}
+			                    </div>
+	                    	</div>
 	                    </div>
 
-	                    <div v-else>
-	                    	{{ detailPesanans.jumlah_produk }}
-	                    </div>
 	                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	                    <b style="margin-bottom:1px;margin-top: 1px;" class="text-danger" v-if="detailPesanans.jumlah_produk == 0">Dibatalkan</b>
 	                </div>
@@ -320,6 +332,11 @@ export default {
         let id = app.$route.params.id;
         app.detailPesananId = id;
 		app.getResults();
+	},
+    filters: {
+	  pemisahTitik: function (value) {
+	    return new Intl.NumberFormat().format(value)
+	  }
 	},
     methods: {
     	getResults(page) {
