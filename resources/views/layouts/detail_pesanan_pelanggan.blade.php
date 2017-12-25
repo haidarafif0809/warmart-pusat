@@ -107,8 +107,8 @@
           <div class="col-md-12">
 
             <div class="row">
-              <div class="col-xs-4">
-                <div class="img-container" style="margin-bottom:10px;margin-top: 10px; margin-left: 10px; margin-right: 10px;">
+              <div class="col-xs-4" style="padding-right:0px">
+                <div class="img-container" style="margin:10px;">
 
                   @if($detail_pesanan_pelanggans->produk->foto != NULL)
                   <img src="../foto_produk/{{$detail_pesanan_pelanggans->produk->foto}}">
@@ -117,15 +117,13 @@
                   @endif
 
                 </div>
-
               </div>
 
-              <div class="col-xs-8">
-                <p style="margin-bottom:1px;margin-top: 1px;"> <a href="{{ url('detail-produk/'.$detail_pesanan_pelanggans->id_produk.'') }}"><b>{{$detail_pesanan_pelanggans->NamaBarang}} </b></a></p>
-                <p style="margin-bottom:1px;margin-top: 1px;"><b>Rp. {{ number_format($detail_pesanan_pelanggans->produk->harga_jual,0,',','.') }}</b></p>
-                <b>{{ $detail_pesanan_pelanggans->jumlah_produk }} {{ $detail_pesanan_pelanggans->produk->satuan->nama_satuan }}</b>
+              <div class="col-xs-8" style="padding-left:0px; padding-right:0px; padding-top:10px">
+                <b> <a href="{{ url('detail-produk/'.$detail_pesanan_pelanggans->id_produk.'') }}"> {{$detail_pesanan_pelanggans->NamaBarang}} </a></b>
+                <p style="font-size: 15px">  {{ number_format($detail_pesanan_pelanggans->produk->harga_jual,0,',','.') }} x {{ $detail_pesanan_pelanggans->jumlah_produk }} {{ $detail_pesanan_pelanggans->produk->satuan->nama_satuan }}</p>
+                <p style="font-weight: bold; margin-top:10px; font-size: 14px; color:red;">Rp. {{ number_format($detail_pesanan_pelanggans->produk->harga_jual * $detail_pesanan_pelanggans->jumlah_produk,0,',','.') }}</p>
               </div>
-
             </div>
 
           </div>
