@@ -11,7 +11,7 @@
 		<div class="col-md-12">
 			<ul class="breadcrumb">
 				<li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li>
-				<li class="active">Laporan Laba Kotor</li>
+				<li class="active">Laporan Laba Kotor Penjualan /Pelanggan</li>
 			</ul>
 			<div class="card">
 				<div class="card-header card-header-icon" data-background-color="purple">
@@ -19,7 +19,7 @@
 				</div>
 
 				<div class="card-content">
-					<h4 class="card-title"> Laporan Laba Kotor </h4>
+					<h4 class="card-title"> Laporan Laba Kotor Penjualan /Pelanggan </h4>
 
 					<div class="row">
 						<div class="form-group col-md-2">
@@ -225,7 +225,7 @@ export default {
     		})
     		.catch(function (resp) {
     			console.log(resp);
-    			alert("Tidak Dapat Memuat Laporan Laba Kotor");
+    			alert("Tidak Dapat Memuat Laporan Laba Kotor Penjualan /Pelanggan");
     		});
     	},
     	prosesLaporanPesanan(page) {
@@ -243,7 +243,7 @@ export default {
     		})
     		.catch(function (resp) {
     			console.log(resp);
-    			alert("Tidak Dapat Memuat Laporan Laba Kotor");
+    			alert("Tidak Dapat Memuat Laporan Laba Kotor Penjualan /Pelanggan");
     		});
     	},
     	getHasilPencarianPos(page){
@@ -259,7 +259,7 @@ export default {
     		})
     		.catch(function (resp) {
     			console.log(resp);
-    			alert("Tidak Dapat Memuat Laporan Laba Kotor");
+    			alert("Tidak Dapat Memuat Laporan Laba Kotor Penjualan /Pelanggan");
     		});
     	},
     	getHasilPencarianPesanan(page){
@@ -275,7 +275,7 @@ export default {
     		})
     		.catch(function (resp) {
     			console.log(resp);
-    			alert("Tidak Dapat Memuat Laporan Laba Kotor");
+    			alert("Tidak Dapat Memuat Laporan Laba Kotor Penjualan /Pelanggan");
     		});
     	},
         dataPelanggan() {

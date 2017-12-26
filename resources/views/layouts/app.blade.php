@@ -323,7 +323,17 @@
                         LK
                     </span>
                     <span class="sidebar-normal">
-                        Laba Kotor Penjualan
+                        Laba Kotor /Pelanggan
+                    </span>
+                </router-link>
+            </li>
+            <li>
+                <router-link :to="{name: 'indexLaporanLabaKotorProduk'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        LK
+                    </span>
+                    <span class="sidebar-normal">
+                        Laba Kotor /Produk
                     </span>
                 </router-link>
             </li>
@@ -550,7 +560,7 @@
 <!--End of Tawk.to Script-->
 </body>
 <!--   Core JS Files   -->
-<script src="{{ asset('js/app.js?v=1.29')}}" type="text/javascript">
+<script src="{{ asset('js/app.js?v=1.30')}}" type="text/javascript">
 </script>
 <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript">
 </script>
