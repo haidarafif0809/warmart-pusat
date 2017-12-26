@@ -304,6 +304,32 @@
         </ul>
     </div>
 </li>
+<li>
+    <a data-toggle="collapse" href="#laporan">
+        <i class="material-icons">
+            assignment
+        </i>
+        <p>
+            Laporan
+            <b class="caret">
+            </b>
+        </p>
+    </a>
+    <div class="collapse" id="laporan">
+        <ul class="nav">
+            <li>
+                <router-link :to="{name: 'indexLaporanLabaKotor'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        LK
+                    </span>
+                    <span class="sidebar-normal">
+                        Laba Kotor Penjualan
+                    </span>
+                </router-link>
+            </li>
+        </ul>
+    </div>
+</li>
 @endif
 <!--END MASTER DATA WARUNG -->
 <!--MASTER DATA WARMART PUSAT-->

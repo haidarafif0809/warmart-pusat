@@ -525,6 +525,15 @@ Route::get('/laporan-laba-kotor/pilih-pelanggan', 'LaporanLabaKotorController@pi
 Route::post('/laporan-laba-kotor/subtotal-laba-kotor', 'LaporanLabaKotorController@subtotalLabaKotor')->middleware('auth');
 Route::post('/laporan-laba-kotor/subtotal-laba-kotor-pesanan', 'LaporanLabaKotorController@subtotalLabaKotorPesanan')->middleware('auth');
 
+// LABA KOTOR PRODUK VUE.JS
+Route::post('/laporan-laba-kotor-produk/view', 'LaporanLabaKotorProdukController@prosesLaporanLabaKotorProduk')->middleware('auth');
+Route::post('/laporan-laba-kotor-produk/pencarian', 'LaporanLabaKotorProdukController@pencarian')->middleware('auth');
+Route::post('/laporan-laba-kotor-produk/view-pesanan', 'LaporanLabaKotorProdukController@prosesLaporanLabaKotorProdukPesanan')->middleware('auth');
+Route::post('/laporan-laba-kotor-produk/pencarian-pesanan', 'LaporanLabaKotorProdukController@pencarianPesanan')->middleware('auth');
+Route::get('/laporan-laba-kotor-produk/pilih-produk', 'LaporanLabaKotorProdukController@pilihProduk')->middleware('auth');
+Route::post('/laporan-laba-kotor-produk/subtotal-laba-kotor-produk', 'LaporanLabaKotorProdukController@subtotalLabaKotorProduk')->middleware('auth');
+Route::post('/laporan-laba-kotor-produk/subtotal-laba-kotor-produk-pesanan', 'LaporanLabaKotorProdukController@subtotalLabaKotorProdukPesanan')->middleware('auth');
+
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
     Route::resource('user', 'UserController');
@@ -547,6 +556,7 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
     Route::resource('satuan', 'SatuanController');
     Route::resource('laporan-persediaan', 'LaporanPersediaanController');
     Route::resource('laporan-laba-kotor', 'LaporanLabaKotorController');
+    Route::resource('laporan-laba-kotor-produk', 'LaporanLabaKotorProdukController');
     Route::resource('pembelian', 'PembelianController');
     Route::resource('kelompok-produk', 'KelompokProdukController');
     Route::resource('profil-warung', 'WarungProfilController');
