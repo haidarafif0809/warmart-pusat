@@ -89,9 +89,14 @@ h6 {
                                 <div class="col-sm-6 col-xs-6">
                                     Pesanan Saya
                                 </div>
-                                <div class="col-sm-6 col-xs-6">
+                                <div class="col-sm-3 col-xs-3">
                                     <p align="right">
                                         Jumlah
+                                    </p>
+                                </div>
+                                <div class="col-sm-3 col-xs-3">
+                                    <p align="right">
+                                        Subtotal
                                     </p>
                                 </div>
                             </div>
@@ -99,28 +104,15 @@ h6 {
                     </div>
                     {!! $produk_belanjaan !!}
                     <div class="card" style="margin-bottom: 1px; margin-top: 1px;">
-                        <div class="col-md-12">
-                            <div class="col-sm-6 col-xs-6">
-                                Total Produk
+                        <div class="col-md-12" style="color:red; font-weight: bold">
+                            <div class="col-md-6 col-xs-6">
+                                TOTAL
                             </div>
-                            <div class="col-sm-6 col-xs-6">
-                                <p align="right" class="text-danger">
-                                    <b>
-                                        {{ $jumlah_produk->total_produk }}
-                                    </b>
-                                </p>
+                            <div class="col-md-2 col-xs-2" style="padding-left:40px; padding-right:0px">
+                                {{ $jumlah_produk->total_produk }}
                             </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="col-sm-6 col-xs-6">
-                                Subtotal
-                            </div>
-                            <div class="col-sm-6 col-xs-6">
-                                <p align="right" class="text-danger">
-                                    <b>
-                                        Rp. {{ $subtotal }}
-                                    </b>
-                                </p>
+                            <div class="col-md-4 col-xs-4" style="padding-left:40px; padding-right:0px">
+                                {{ $subtotal }}
                             </div>
                         </div>
                     </div>

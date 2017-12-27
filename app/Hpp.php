@@ -98,4 +98,25 @@ class Hpp extends Model
         return $query_sub_hpp;
     }
 
+    // HPP LABA KOTOR /PRODUK PENJUALAN POS
+    public function scopeHppLaporanLabaKotorProduk($query_sub_hpp, $request, $jenis_transaksi)
+    {
+        if ($request->produk == "") {
+            $query_sub_hpp = Hpp::select(DB::raw('SUM(total_nilai) as total_hpp'))
+                ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+                ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+                ->where('jenis_transaksi', $jenis_transaksi)
+                ->where('warung_id', Auth::user()->id_warung);
+        } else {
+            $query_sub_hpp = Hpp::select(DB::raw('SUM(total_nilai) as total_hpp'))
+                ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+                ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+                ->where('jenis_transaksi', $jenis_transaksi)
+                ->where('id_produk', $request->produk)
+                ->where('warung_id', Auth::user()->id_warung);
+        }
+
+        return $query_sub_hpp;
+    }
+
 }

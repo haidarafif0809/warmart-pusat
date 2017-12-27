@@ -21,6 +21,11 @@
     border-bottom: 2px solid #ddd;
     padding: 5px 0px 5px 0px;
   }
+  h6 {
+    font-size: 1.15em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
 </style>
 
 @if (Agent::isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
@@ -102,8 +107,8 @@
           <div class="col-md-12">
 
             <div class="row">
-              <div class="col-xs-4">
-                <div class="img-container" style="margin-bottom:10px;margin-top: 10px; margin-left: 10px; margin-right: 10px;">
+              <div class="col-xs-4" style="padding-right:0px">
+                <div class="img-container" style="margin:10px;">
 
                   @if($detail_pesanan_pelanggans->produk->foto != NULL)
                   <img src="../foto_produk/{{$detail_pesanan_pelanggans->produk->foto}}">
@@ -112,15 +117,13 @@
                   @endif
 
                 </div>
-
               </div>
 
-              <div class="col-xs-8">
-                <p style="margin-bottom:1px;margin-top: 1px;"> <a href="{{ url('detail-produk/'.$detail_pesanan_pelanggans->id_produk.'') }}"><b>{{$detail_pesanan_pelanggans->NamaBarang}} </b></a></p>
-                <p style="margin-bottom:1px;margin-top: 1px;"><b>Rp. {{ number_format($detail_pesanan_pelanggans->produk->harga_jual,0,',','.') }}</b></p>
-                <b>{{ $detail_pesanan_pelanggans->jumlah_produk }} {{ $detail_pesanan_pelanggans->produk->satuan->nama_satuan }}</b>
+              <div class="col-xs-8" style="padding-left:0px; padding-right:0px; padding-top:10px">
+                <b> <a href="{{ url('detail-produk/'.$detail_pesanan_pelanggans->id_produk.'') }}"> {{$detail_pesanan_pelanggans->NamaBarang}} </a></b>
+                <p style="font-size: 15px">  {{ number_format($detail_pesanan_pelanggans->produk->harga_jual,0,',','.') }} x {{ $detail_pesanan_pelanggans->jumlah_produk }} {{ $detail_pesanan_pelanggans->produk->satuan->nama_satuan }}</p>
+                <p style="font-weight: bold; margin-top:10px; font-size: 14px; color:red;">Rp. {{ number_format($detail_pesanan_pelanggans->produk->harga_jual * $detail_pesanan_pelanggans->jumlah_produk,0,',','.') }}</p>
               </div>
-
             </div>
 
           </div>
@@ -173,10 +176,11 @@
             <div class="card-header" style="margin-bottom: 1px;">
 
               <div class="row" style="margin-bottom: 1px;">
-                <div class="col-md-6">  <h4 class="card-title" align="center" style="color: black;"> Produk</h4> </div>
-                <div class="col-md-3">  <h4 class="card-title" style="color: black;"> Harga</h4> </div>
-                <div class="col-md-3">  <h4 class="card-title" style="color: black;"> Jumlah</h4> </div>
-              </div><hr  style="margin-bottom: 1px;">
+                <div class="col-md-5">  <h4 align="center" class="card-title" style="color: black;"> Produk</h4> </div>
+                <div class="col-md-2">  <h4 class="card-title" style="color: black; text-align: right"> Harga</h4> </div>
+                <div class="col-md-2">  <h4 class="card-title" style="color: black;"> Jumlah</h4> </div>
+                <div class="col-md-2">  <h4 class="card-title" style="color: black; padding-left: 0px;"> Subtotal</h4> </div>
+              </div><hr style="margin-top: 0px; margin-bottom: 0px;">
             </div>
 
             @foreach($detail_pesanan_pelanggan as $detail_pesanan_pelanggans)
@@ -185,11 +189,10 @@
                 <div class="col-md-12">
                   <div class="row">
 
-                    <div class="col-md-6">
+                    <div class="col-md-5">
                       <div class="row">
-                        <div class="col-sm-4">
-                          <div class="img-container"  style="padding-left: 5px; padding-top: 1px; padding-bottom: 1px; padding-right: 1px; width:100px;">
-
+                        <div class="col-md-4" style="padding-left:0px; padding-right: 0px">
+                          <div class="img-container"  style="padding-left: 5px; padding-top: 1px; padding-bottom: 1px; padding-right: 1px; width:75px;">
                             @if($detail_pesanan_pelanggans->produk->foto != NULL)
                             <img src="../foto_produk/{{$detail_pesanan_pelanggans->produk->foto}}">
                             @else
@@ -197,26 +200,26 @@
                             @endif
                           </div>
                         </div>
-                        <div class="col-sm-8">
-                          <h5><a href="#"><b>{{$detail_pesanan_pelanggans->NamaBarang}} </b> </a> </h5>
+                        <div class="col-md-8" style="padding-left:0px; padding-right: 0px">
+                          <h6><a href="#"><b>{{$detail_pesanan_pelanggans->NamaBarang}} </b> </a> </h6>
                         </div>
                       </div>
                     </div>
 
-                    <div class="col-md-3">
-
-                      <h5><b>Rp. {{number_format($detail_pesanan_pelanggans->produk->harga_jual,0,',','.') }}</b></h5>
+                    <div class="col-md-2" style="padding-left:0px; padding-right: 0px; text-align:right;">
+                      <h6 align="right"><b>Rp. {{number_format($detail_pesanan_pelanggans->produk->harga_jual,0,',','.') }}</b></h6>
                     </div>
 
-                    <div class="col-md-3">
-
-                      <h5><b>{{$detail_pesanan_pelanggans->jumlah_produk }} {{$detail_pesanan_pelanggans->produk->satuan->nama_satuan }}</b></h5>
-
+                    <div class="col-md-2" style="padding-left:0px; padding-right: 0px; text-align: center;">
+                      <h6><b>{{$detail_pesanan_pelanggans->jumlah_produk }} {{$detail_pesanan_pelanggans->produk->satuan->nama_satuan }}</b></h6>
+                    </div>
+                    <div class="col-md-2" style="padding-left:0px; padding-right: 0px; text-align:right;">
+                      <h6 align="right"><b> Rp. {{number_format($detail_pesanan_pelanggans->produk->harga_jual * $detail_pesanan_pelanggans->jumlah_produk,0,',','.') }} </b></h6>
                     </div>
                   </div>
                 </div>
               </div>
-            </div><hr>
+            </div><hr style="margin-top: 0px; margin-bottom: 0px;">
             @endforeach
 
           </div>

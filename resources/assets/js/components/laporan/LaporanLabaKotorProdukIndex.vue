@@ -11,7 +11,7 @@
 		<div class="col-md-12">
 			<ul class="breadcrumb">
 				<li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li>
-				<li class="active">Laporan Laba Kotor Penjualan /Pelanggan</li>
+				<li class="active">Laporan Laba Kotor Penjualan /Produk</li>
 			</ul>
 			<div class="card">
 				<div class="card-header card-header-icon" data-background-color="purple">
@@ -19,7 +19,7 @@
 				</div>
 
 				<div class="card-content">
-					<h4 class="card-title"> Laporan Laba Kotor Penjualan /Pelanggan </h4>
+					<h4 class="card-title"> Laporan Laba Kotor Penjualan /Produk </h4>
 
 					<div class="row">
 						<div class="form-group col-md-2">
@@ -29,8 +29,8 @@
 							<datepicker :input-class="'form-control'" placeholder="Sampai Tanggal" v-model="filter.sampai_tanggal" name="sampai_tanggal" v-bind:id="'sampai_tanggal'"></datepicker>
 						</div>
 						<div class="form-group col-md-2">
-							<selectize-component v-model="filter.pelanggan" :settings="placeholder_pelanggan" id="pilih_pelanggan"> 
-                            	<option v-for="pelanggans, index in pelanggan" v-bind:value="pelanggans.id" >{{ pelanggans.name }}</option>
+							<selectize-component v-model="filter.produk" :settings="placeholder_produk" id="pilih_produk"> 
+                            	<option v-for="produks, index in produk" v-bind:value="produks.id" >{{ produks.nama_produk }}</option>
                             </selectize-component>
 						</div>
 						<div class="form-group col-md-2">
@@ -47,27 +47,25 @@
 						<table class="table table-striped table-hover">
 							<thead class="text-primary">
 								<tr>
-									<th>No. Transaksi</th>
-									<th>Waktu</th>
-									<th>Pelanggan</th>
-									<th style="text-align:right">Penjualan</th>
+									<th>Kode Produk</th>
+									<th>Nama Produk</th>
 									<th style="text-align:right">Hpp</th>
+									<th style="text-align:right">Penjualan</th>
 									<th style="text-align:right">Laba Kotor</th>
-									<th style="text-align:right">Diskon Faktur</th>
-									<th style="text-align:right">Laba Jual</th>
+									<th style="text-align:right">Laba Kotor (%)</th>
+									<th style="text-align:right">Gross Profit Margin (%)</th>
 								</tr>
 							</thead>
 							<tbody v-if="labaKotor.length > 0 && loading == false"  class="data-ada">
 								<tr v-for="labaKotors, index in labaKotor" >
 
-									<td>{{ labaKotors.laba_kotor.id }}</td>
-									<td>{{ labaKotors.laba_kotor.created_at | tanggal }}</td>
-									<td>{{ labaKotors.laba_kotor.name }}</td>
-									<td align="right">{{ labaKotors.total | pemisahTitik }}</td>
+									<td>{{ labaKotors.laba_kotor.kode_barang }}</td>
+									<td>{{ labaKotors.laba_kotor.nama_barang }}</td>
 									<td align="right">{{ labaKotors.hpp | pemisahTitik }}</td>
+									<td align="right">{{ labaKotors.laba_kotor.subtotal | pemisahTitik }}</td>
 									<td align="right">{{ labaKotors.total_laba_kotor | pemisahTitik }}</td>
-									<td align="right">{{ labaKotors.laba_kotor.potongan | pemisahTitik }}</td>
-									<td align="right">{{ labaKotors.laba_jual | pemisahTitik }}</td>
+									<td align="right">{{ labaKotors.persentase_laba_kotor.toFixed(2) | pemisahTitik }}</td>
+									<td align="right">{{ labaKotors.persentase_gpm.toFixed(2) | pemisahTitik }}</td>
 
 								</tr>
 
@@ -75,17 +73,16 @@
 
 									<td>TOTAL</td>
 									<td></td>
-									<td></td>
-									<td align="right">{{ subtotalLabaKotor.subtotal_penjualan | pemisahTitik }}</td>
 									<td align="right">{{ subtotalLabaKotor.subtotal_hpp | pemisahTitik }}</td>
+									<td align="right">{{ subtotalLabaKotor.subtotal_penjualan | pemisahTitik }}</td>
 									<td align="right">{{ subtotalLabaKotor.subtotal_laba_kotor | pemisahTitik }}</td>
-									<td align="right">{{ subtotalLabaKotor.subtotal_potongan | pemisahTitik }}</td>
-									<td align="right">{{ subtotalLabaKotor.subtotal_laba_jual | pemisahTitik }}</td>
+									<td align="right">{{ subtotalLabaKotor.subtotal_persentase_laba_kotor.toFixed(2) | pemisahTitik }}</td>
+									<td align="right">{{ subtotalLabaKotor.subtotal_persentase_gpm.toFixed(2) | pemisahTitik }}</td>
 
 								</tr>
 							</tbody>					
 							<tbody class="data-tidak-ada" v-else-if="labaKotor.length == 0 && loading == false">
-								<tr ><td colspan="8"  class="text-center">Tidak Ada Data</td></tr>
+								<tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
 							</tbody>
 						</table>
 						</div><!--RESPONSIVE-->
@@ -102,27 +99,25 @@
 						<table class="table table-striped table-hover">
 							<thead class="text-primary">
 								<tr>
-									<th>No. Transaksi</th>
-									<th>Waktu</th>
-									<th>Pelanggan</th>
-									<th style="text-align:right">Penjualan</th>
+									<th>Kode Produk</th>
+									<th>Nama Produk</th>
 									<th style="text-align:right">Hpp</th>
+									<th style="text-align:right">Penjualan</th>
 									<th style="text-align:right">Laba Kotor</th>
-									<th style="text-align:right">Diskon Faktur</th>
-									<th style="text-align:right">Laba Jual</th>
+									<th style="text-align:right">Laba Kotor (%)</th>
+									<th style="text-align:right">Gross Profit Margin (%)</th>
 								</tr>
 							</thead>
-							<tbody v-if="labaKotorPesanan.length > 0 && loadingPesanan == false"  class="data-ada">
+							<tbody v-if="labaKotorPesanan.length > 0 && loading == false"  class="data-ada">
 								<tr v-for="labaKotorPesanans, index in labaKotorPesanan" >
 
-									<td>{{ labaKotorPesanans.laba_kotor.id }}</td>
-									<td>{{ labaKotorPesanans.laba_kotor.created_at | tanggal }}</td>
-									<td>{{ labaKotorPesanans.laba_kotor.name }}</td>
-									<td align="right">{{ labaKotorPesanans.total | pemisahTitik }}</td>
+									<td>{{ labaKotorPesanans.laba_kotor.kode_barang }}</td>
+									<td>{{ labaKotorPesanans.laba_kotor.nama_barang }}</td>
 									<td align="right">{{ labaKotorPesanans.hpp | pemisahTitik }}</td>
+									<td align="right">{{ labaKotorPesanans.laba_kotor.subtotal | pemisahTitik }}</td>
 									<td align="right">{{ labaKotorPesanans.total_laba_kotor | pemisahTitik }}</td>
-									<td align="right">0</td>
-									<td align="right">{{ labaKotorPesanans.laba_jual | pemisahTitik }}</td>
+									<td align="right">{{ labaKotorPesanans.persentase_laba_kotor.toFixed(2) | pemisahTitik }}</td>
+									<td align="right">{{ labaKotorPesanans.persentase_gpm.toFixed(2) | pemisahTitik }}</td>
 
 								</tr>
 
@@ -130,17 +125,16 @@
 
 									<td>TOTAL</td>
 									<td></td>
-									<td></td>
-									<td align="right">{{ subtotalLabaKotorPesanan.subtotal_penjualan | pemisahTitik }}</td>
 									<td align="right">{{ subtotalLabaKotorPesanan.subtotal_hpp | pemisahTitik }}</td>
+									<td align="right">{{ subtotalLabaKotorPesanan.subtotal_penjualan | pemisahTitik }}</td>
 									<td align="right">{{ subtotalLabaKotorPesanan.subtotal_laba_kotor | pemisahTitik }}</td>
-									<td align="right">{{ subtotalLabaKotorPesanan.subtotal_potongan | pemisahTitik }}</td>
-									<td align="right">{{ subtotalLabaKotorPesanan.subtotal_laba_jual | pemisahTitik }}</td>
+									<td align="right">{{ subtotalLabaKotorPesanan.subtotal_persentase_laba_kotor.toFixed(2) | pemisahTitik }}</td>
+									<td align="right">{{ subtotalLabaKotorPesanan.subtotal_persentase_gpm.toFixed(2) | pemisahTitik }}</td>
 
 								</tr>
 							</tbody>					
-							<tbody class="data-tidak-ada" v-else-if="labaKotorPesanan.length == 0 && loadingPesanan == false">
-								<tr ><td colspan="8"  class="text-center">Tidak Ada Data</td></tr>
+							<tbody class="data-tidak-ada" v-else-if="labaKotorPesanan.length == 0 && loading == false">
+								<tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
 							</tbody>
 						</table>
 					</div><!--RESPONSIVE-->
@@ -159,7 +153,7 @@
 export default {
 	data: function () {
 		return {
-			pelanggan: [],
+			produk: [],
 			labaKotor: [],
 			labaKotorData: {},
 			subtotalLabaKotor: {},
@@ -169,13 +163,13 @@ export default {
 			filter: {
 				dari_tanggal: '',
 				sampai_tanggal: '',
-				pelanggan: '',
+				produk: '',
             },
-			url : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-laba-kotor"),
+			url : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-laba-kotor-produk"),
 			pencarian_pos: '',
 			pencarian_pesanan: '',
-            placeholder_pelanggan: {
-                placeholder: '--PILIH PELANGGAN--'
+            placeholder_produk: {
+                placeholder: '--PILIH PRODUK--'
             },
 			loading: false,
 			loadingPesanan: false,
@@ -183,7 +177,7 @@ export default {
 	},
 	mounted() {
 		var app = this;
-		app.dataPelanggan();
+		app.dataProduk();
 	},
 	watch: {
         // whenever question changes, this function will run
@@ -222,10 +216,11 @@ export default {
     			app.labaKotor = resp.data.data;
     			app.labaKotorData = resp.data;
     			app.loading = false
+    			console.log(resp.data.data);
     		})
     		.catch(function (resp) {
     			console.log(resp);
-    			alert("Tidak Dapat Memuat Laporan Laba Kotor Penjualan /Pelanggan");
+    			alert("Tidak Dapat Memuat Laporan Laba Kotor Penjualan /Produk");
     		});
     	},
     	prosesLaporanPesanan(page) {
@@ -243,7 +238,7 @@ export default {
     		})
     		.catch(function (resp) {
     			console.log(resp);
-    			alert("Tidak Dapat Memuat Laporan Laba Kotor Penjualan /Pelanggan");
+    			alert("Tidak Dapat Memuat Laporan Laba Kotor Penjualan /Produk");
     		});
     	},
     	getHasilPencarianPos(page){
@@ -259,7 +254,7 @@ export default {
     		})
     		.catch(function (resp) {
     			console.log(resp);
-    			alert("Tidak Dapat Memuat Laporan Laba Kotor Penjualan /Pelanggan");
+    			alert("Tidak Dapat Memuat Laporan Laba Kotor Penjualan /Produk");
     		});
     	},
     	getHasilPencarianPesanan(page){
@@ -275,18 +270,18 @@ export default {
     		})
     		.catch(function (resp) {
     			console.log(resp);
-    			alert("Tidak Dapat Memuat Laporan Laba Kotor Penjualan /Pelanggan");
+    			alert("Tidak Dapat Memuat Laporan Laba Kotor Penjualan /Produk");
     		});
     	},
-        dataPelanggan() {
+        dataProduk() {
           var app = this;
-          axios.get(app.url+'/pilih-pelanggan')
+          axios.get(app.url+'/pilih-produk')
           .then(function (resp) {
-            app.pelanggan = resp.data;
+            app.produk = resp.data;
 
         })
           .catch(function (resp) {
-            alert("Tidak bisa memuat pelanggan ");
+            alert("Tidak bisa memuat produk ");
         });
       },
       totalLabaKotor() {
@@ -294,7 +289,7 @@ export default {
     		var newFilter = app.filter;
 
     		app.loading = true,
-    		axios.post(app.url+'/subtotal-laba-kotor', newFilter)
+    		axios.post(app.url+'/subtotal-laba-kotor-produk', newFilter)
     		.then(function (resp) {
     			app.subtotalLabaKotor = resp.data;
     			app.loading = false
@@ -302,7 +297,7 @@ export default {
     		})
     		.catch(function (resp) {
     			console.log(resp);
-    			alert("Tidak Dapat Memuat Subtotal Laba Kotor");
+    			alert("Tidak Dapat Memuat Subtotal Laba Kotor Produk");
     		});
     	},
       totalLabaKotorPesanan() {
@@ -310,14 +305,14 @@ export default {
     		var newFilter = app.filter;
 
     		app.loading = true,
-    		axios.post(app.url+'/subtotal-laba-kotor-pesanan', newFilter)
+    		axios.post(app.url+'/subtotal-laba-kotor-produk-pesanan', newFilter)
     		.then(function (resp) {
     			app.subtotalLabaKotorPesanan = resp.data;
     			app.loadingPesanan = false
     		})
     		.catch(function (resp) {
     			console.log(resp);
-    			alert("Tidak Dapat Memuat Subtotal Laba Kotor");
+    			alert("Tidak Dapat Memuat Subtotal Laba Kotor Produk");
     		});
     	}
     }

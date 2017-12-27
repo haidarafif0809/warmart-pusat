@@ -25,23 +25,41 @@ class LaporanLabaKotorController extends Controller
         return response()->json($pelanggan);
     }
 
-    public function dataPagination($laporan_laba_kotor, $array_laba_kotor)
+    public function dataPagination($laporan_laba_kotor, $array_laba_kotor, $link_view)
     {
 
         $respons['current_page']   = $laporan_laba_kotor->currentPage();
         $respons['data']           = $array_laba_kotor;
-        $respons['first_page_url'] = url('/laporan-laba-kotor/view?page=' . $laporan_laba_kotor->firstItem());
+        $respons['first_page_url'] = url('/laporan-laba-kotor/' . $link_view . '?page=' . $laporan_laba_kotor->firstItem());
         $respons['from']           = 1;
         $respons['last_page']      = $laporan_laba_kotor->lastPage();
-        $respons['last_page_url']  = url('/laporan-laba-kotor/view?page=' . $laporan_laba_kotor->lastPage());
+        $respons['last_page_url']  = url('/laporan-laba-kotor/' . $link_view . '?page=' . $laporan_laba_kotor->lastPage());
         $respons['next_page_url']  = $laporan_laba_kotor->nextPageUrl();
-        $respons['path']           = url('/laporan-laba-kotor/view');
+        $respons['path']           = url('/laporan-laba-kotor/' . $link_view . '');
         $respons['per_page']       = $laporan_laba_kotor->perPage();
         $respons['prev_page_url']  = $laporan_laba_kotor->previousPageUrl();
         $respons['to']             = $laporan_laba_kotor->perPage();
         $respons['total']          = $laporan_laba_kotor->total();
 
         return $respons;
+    }
+
+    public function subtotalLaporan($sub_total_penjualan, $potongan, $sub_hpp)
+    {
+
+        $subtotal_penjualan  = $sub_total_penjualan->subtotal;
+        $subtotal_hpp        = $sub_hpp->total_hpp;
+        $subtotal_laba_kotor = $subtotal_penjualan - $subtotal_hpp;
+        $subtotal_potongan   = $potongan;
+        $subtotal_laba_jual  = $subtotal_laba_kotor - $subtotal_potongan;
+
+        $response['subtotal_penjualan']  = $subtotal_penjualan;
+        $response['subtotal_hpp']        = $subtotal_hpp;
+        $response['subtotal_laba_kotor'] = $subtotal_laba_kotor;
+        $response['subtotal_potongan']   = $subtotal_potongan;
+        $response['subtotal_laba_jual']  = $subtotal_laba_jual;
+
+        return $response;
     }
 
     public function prosesLaporanLabaKotor(Request $request)
@@ -57,9 +75,9 @@ class LaporanLabaKotorController extends Controller
 
             array_push($array_laba_kotor, ['laba_kotor' => $laba_kotor, 'hpp' => $hpp->total_hpp, 'total_laba_kotor' => $total_laba_kotor, 'laba_jual' => $laba_jual, 'total' => $detail_penjualan->subtotal]);
         }
-
+        $link_view = 'view';
         //DATA PAGINATION
-        $respons = $this->dataPagination($laporan_laba_kotor, $array_laba_kotor);
+        $respons = $this->dataPagination($laporan_laba_kotor, $array_laba_kotor, $link_view);
         return response()->json($respons);
     }
 
@@ -76,9 +94,9 @@ class LaporanLabaKotorController extends Controller
 
             array_push($array_laba_kotor, ['laba_kotor' => $laba_kotor, 'hpp' => $hpp->total_hpp, 'total_laba_kotor' => $total_laba_kotor, 'laba_jual' => $laba_jual, 'total' => $detail_penjualan->subtotal]);
         }
-
+        $link_view = 'view-pesanan';
         //DATA PAGINATION
-        $respons = $this->dataPagination($laporan_laba_kotor, $array_laba_kotor);
+        $respons = $this->dataPagination($laporan_laba_kotor, $array_laba_kotor, $link_view);
         return response()->json($respons);
     }
 
@@ -95,9 +113,9 @@ class LaporanLabaKotorController extends Controller
 
             array_push($array_laba_kotor, ['laba_kotor' => $laba_kotor, 'hpp' => $hpp->total_hpp, 'total_laba_kotor' => $total_laba_kotor, 'laba_jual' => $laba_jual, 'total' => $detail_penjualan->subtotal]);
         }
-
+        $link_view = 'view';
         //DATA PAGINATION
-        $respons = $this->dataPagination($laporan_laba_kotor, $array_laba_kotor);
+        $respons = $this->dataPagination($laporan_laba_kotor, $array_laba_kotor, $link_view);
         return response()->json($respons);
     }
 
@@ -114,9 +132,9 @@ class LaporanLabaKotorController extends Controller
 
             array_push($array_laba_kotor, ['laba_kotor' => $laba_kotor, 'hpp' => $hpp->total_hpp, 'total_laba_kotor' => $total_laba_kotor, 'laba_jual' => $laba_jual, 'total' => $detail_penjualan->subtotal]);
         }
-
+        $link_view = 'view-pesanan';
         //DATA PAGINATION
-        $respons = $this->dataPagination($laporan_laba_kotor, $array_laba_kotor);
+        $respons = $this->dataPagination($laporan_laba_kotor, $array_laba_kotor, $link_view);
         return response()->json($respons);
     }
 
@@ -134,22 +152,12 @@ class LaporanLabaKotorController extends Controller
 
         //DISKON KESELURUHAN
         $sub_potongan = PenjualanPos::potonganLaporanLabaKotor($request)->first();
-
+        $potongan     = $sub_potongan->potongan;
         //TOTAL HPP KESELURUHAN
         $jenis_transaksi = "PenjualanPos";
         $sub_hpp         = Hpp::hppLaporanLabaKotor($request, $jenis_transaksi)->first();
 
-        $subtotal_penjualan  = $sub_total_penjualan->subtotal;
-        $subtotal_hpp        = $sub_hpp->total_hpp;
-        $subtotal_laba_kotor = $subtotal_penjualan - $subtotal_hpp;
-        $subtotal_potongan   = $sub_potongan->potongan;
-        $subtotal_laba_jual  = $subtotal_laba_kotor - $subtotal_potongan;
-
-        $response['subtotal_penjualan']  = $subtotal_penjualan;
-        $response['subtotal_hpp']        = $subtotal_hpp;
-        $response['subtotal_laba_kotor'] = $subtotal_laba_kotor;
-        $response['subtotal_potongan']   = $subtotal_potongan;
-        $response['subtotal_laba_jual']  = $subtotal_laba_jual;
+        $response = $this->subtotalLaporan($sub_total_penjualan, $potongan, $sub_hpp);
 
         return response()->json($response);
     }
@@ -158,22 +166,12 @@ class LaporanLabaKotorController extends Controller
     {
         //SUBTOTAL KESELURUHAN
         $sub_total_penjualan = DetailPenjualan::subtotalLaporanLabaKotorPesanan($request)->first();
-
+        $potongan            = 0;
         //TOTAL HPP KESELURUHAN
         $jenis_transaksi = "penjualan";
         $sub_hpp         = Hpp::hppLaporanLabaKotor($request, $jenis_transaksi)->first();
 
-        $subtotal_penjualan  = $sub_total_penjualan->subtotal;
-        $subtotal_hpp        = $sub_hpp->total_hpp;
-        $subtotal_laba_kotor = $subtotal_penjualan - $subtotal_hpp;
-        $subtotal_potongan   = 0;
-        $subtotal_laba_jual  = $subtotal_laba_kotor - $subtotal_potongan;
-
-        $response['subtotal_penjualan']  = $subtotal_penjualan;
-        $response['subtotal_hpp']        = $subtotal_hpp;
-        $response['subtotal_laba_kotor'] = $subtotal_laba_kotor;
-        $response['subtotal_potongan']   = $subtotal_potongan;
-        $response['subtotal_laba_jual']  = $subtotal_laba_jual;
+        $response = $this->subtotalLaporan($sub_total_penjualan, $potongan, $sub_hpp);
 
         return response()->json($response);
     }
