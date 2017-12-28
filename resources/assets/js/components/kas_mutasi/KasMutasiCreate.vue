@@ -40,7 +40,7 @@
 		                    <div class="form-group">
 		                        <label for="jumlah" class="col-md-2 control-label">Jumlah </label>
 		                        <div class="col-md-4">
-		                            <input class="form-control" ref="jumlah" required autocomplete="off" placeholder="Jumlah Mutasi" type="text" v-model="kasMutasi.jumlah" id="jumlah" name="jumlah"  autofocus="">
+		                            <money class="form-control" ref="jumlah" required autocomplete="off" v-model="kasMutasi.jumlah" v-bind="separator" id="jumlah" name="jumlah"></money>
 		                            <span v-if="errors.jumlah" id="jumlah_error" class="label label-danger">{{ errors.jumlah[0] }}</span>
 		                        </div>
 		                    </div>
@@ -84,7 +84,15 @@ export default {
             message : '',
             placeholderKas: {
                 placeholder: '--PILIH KAS--'
-            }
+            },
+            separator: {
+              decimal: ',',
+              thousands: '.',
+              prefix: '',
+              suffix: '',
+              precision: 2,
+              masked: false /* doesn't work with directive */
+          }
         }
         
     },
