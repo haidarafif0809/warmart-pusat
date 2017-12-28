@@ -83,6 +83,7 @@ import PesananWarungDetail from './components/pesanan_warung/PesananWarungDetail
 import PembelianIndex from './components/pembelian/PembelianIndex.vue';
 import PembelianCreate from './components/pembelian/PembelianCreate.vue';
 import PembelianEdit from './components/pembelian/PembelianEdit.vue';
+import PembelianProsesEdit from './components/pembelian/PembelianProsesEdit.vue';
 // ITEM KELUAR 
 import ItemKeluarIndex from './components/item_keluar/ItemKeluarIndex.vue';
 import ItemKeluarCreate from './components/item_keluar/ItemKeluarCreate.vue';
@@ -400,7 +401,12 @@ const routes = [{
         path: '/edit-pembelian/:id',
         component: PembelianEdit,
         name: 'editPembelian'
-    }, // ITEM KELUAR 
+    }, {
+        path: '/pembelian-edit/:id',
+        component: PembelianProsesEdit,
+        name: 'editPembelianProses'
+    },
+    // ITEM KELUAR 
     {
         path: '/item-keluar',
         component: ItemKeluarIndex,
