@@ -476,6 +476,10 @@ Route::get('/pembelian/view', 'PembelianController@view')->middleware('auth');
 Route::get('/pembelian/pencarian', 'PembelianController@pencarian')->middleware('auth');
 Route::get('/pembelian/view-tbs-pembelian', 'PembelianController@viewTbsPembelian')->middleware('auth');
 Route::get('/pembelian/pencarian-tbs-pembelian', 'PembelianController@pencarianTbsPembelian')->middleware('auth');
+Route::get('/pembelian/view-edit-tbs-pembelian/{id}', 'PembelianController@viewEditTbsPembelian')->middleware('auth');
+Route::get('/pembelian/pencarian-edit-tbs-pembelian/{id}', 'PembelianController@pencarianEditTbsPembelian')->middleware('auth');
+Route::get('/pembelian/ambil-faktur-pembelian/{id}', 'PembelianController@ambilFakturPembelian')->middleware('auth');
+
 Route::get('/pembelian/pilih-suplier', 'PembelianController@pilih_suplier')->middleware('auth');
 Route::get('/pembelian/cek-tbs-pembelian', 'PembelianController@cekTbsPembelian')->middleware('auth');
 Route::get('/pembelian/proses-tambah-tbs-pembelian', 'PembelianController@proses_tambah_tbs_pembelian')->middleware('auth');
@@ -585,41 +589,6 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
     ]);
 
     // PEMBELIAN
-
-    // TAMBAH TBS PEMBELIAN
-    Route::post('/pembelian/proses-tambah-tbs-pembelian', [
-        'middleware' => ['auth'],
-        'as'         => 'pembelian.proses_tambah_tbs_pembelian',
-        'uses'       => 'PembelianController@proses_tambah_tbs_pembelian',
-    ]);
-
-    // EDIT JUMLAH TBS PEMBELIAN
-    Route::post('/pembelian/proses-edit-jumlah-tbs-pembelian', [
-        'middleware' => ['auth'],
-        'as'         => 'pembelian.edit_jumlah_tbs_pembelian',
-        'uses'       => 'PembelianController@edit_jumlah_tbs_pembelian',
-    ]);
-
-    // EDIT HARGA TBS PEMBELIAN
-    Route::post('/pembelian/proses-edit-harga-tbs-pembelian', [
-        'middleware' => ['auth'],
-        'as'         => 'pembelian.edit_harga_tbs_pembelian',
-        'uses'       => 'PembelianController@edit_harga_tbs_pembelian',
-    ]);
-
-    // EDIT POTONGAN TBS PEMBELIAN
-    Route::post('/pembelian/proses-edit-potongan-tbs-pembelian', [
-        'middleware' => ['auth'],
-        'as'         => 'pembelian.edit_potongan_tbs_pembelian',
-        'uses'       => 'PembelianController@edit_potongan_tbs_pembelian',
-    ]);
-
-    // EDIT TAX TBS PEMBELIAN
-    Route::post('/pembelian/proses-edit-tax-tbs-pembelian', [
-        'middleware' => ['auth'],
-        'as'         => 'pembelian.edit_tax_tbs_pembelian',
-        'uses'       => 'PembelianController@editTaxTbsPembelian',
-    ]);
 
     // HAPUS TBS PEMBELIAN
     Route::delete('/pembelian/hapus-tbs-pembelian/{id}', [
