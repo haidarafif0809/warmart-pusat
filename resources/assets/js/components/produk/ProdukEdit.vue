@@ -95,6 +95,19 @@
                                     </div>
                                 </div>
 
+                                <div class="form-group" v-if="data_agent == 0">
+                                    <div class="col-md-2"></div>
+                                    <div class="col-md-10">
+                                        <button type="button" class="btn btn-info btn-xs" id="btnDeskripsi" data-toggle="collapse" data-target="#collDeskripsi"><i class="material-icons">add</i>Deskripsi Produk</button>
+                                    </div>                                  
+                                    <div class="col-md-12 col-xs-12 collapse" id="collDeskripsi">
+                                          <quill-editor v-model="produk.deskripsi_produk"
+                                                        ref="myQuillEditor"
+                                                        :options="editorOption">
+                                          </quill-editor>
+                                    </div>
+                                </div>
+
                                 <div class="form-group">
                                     <label for="foto" class="col-md-2 control-label">Foto Produk</label>
                                     <div class="col-md-10">
@@ -118,8 +131,11 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <froala :tag="'textarea'" :config="placeholder_deskripsi" v-model="produk.deskripsi_produk"></froala>
+                            <div class="col-md-6" style="height: 10%;" v-if="data_agent == 1">
+                                  <quill-editor v-model="produk.deskripsi_produk"
+                                                ref="myQuillEditor"
+                                                :options="editorOption">
+                                  </quill-editor>
                             </div>
                         </div>
                         
@@ -155,6 +171,7 @@ export default {
         });
         app.dataKategori();
         app.dataSatuan();
+        app.dataAgent();
         app.$refs.kode_barcode.$el.focus()
     },  
     data: function () {
@@ -182,13 +199,21 @@ export default {
                 status_aktif : 1
             },
             message : '',
+            data_agent : '',
             placeholder_kategori: {
                 placeholder: '--PILIH KATEGORI--'
             }, 
             placeholder_satuan: {
                 placeholder: '--PILIH SATUAN--'
-            }, 
+            },
+            editorOption: {
+            } 
         }
+    },
+    computed: {
+      editor() {
+        return this.$refs.myQuillEditor.quill
+      }
     },
     methods: {        
         saveForm() {
@@ -232,6 +257,15 @@ export default {
             })
             .catch(function (resp) {
                 alert("Tidak Bisa Memuat Satuan");
+            });
+        },
+        dataAgent() {
+            var app = this;
+            axios.get(app.url+'/pilih-agent').then(function (resp) {
+                app.data_agent = resp.data;
+            })
+            .catch(function (resp) {
+                alert("Tidak Bisa Memuat Agent");
             });
         },
         loading(){

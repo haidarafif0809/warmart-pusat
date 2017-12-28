@@ -430,6 +430,7 @@ Route::get('/produk/pilih-kategori', 'BarangController@pilih_kategori')->middlew
 Route::get('/produk/pilih-satuan', 'BarangController@pilih_satuan')->middleware('auth');
 Route::post('/produk/{id}', 'BarangController@update')->middleware('auth');
 Route::get('/produk/pilih-produk', 'BarangController@pilihProduk')->middleware('auth');
+Route::get('/produk/pilih-agent', 'BarangController@data_agent')->middleware('auth');
 
 Route::get('/kas/view', 'KasController@view')->middleware('auth');
 Route::get('/kas/pencarian', 'KasController@pencarian')->middleware('auth');

@@ -11,6 +11,7 @@ use Auth;
 use File;
 use Illuminate\Http\Request;
 use Intervention\Image\ImageManagerStatic as Image;
+use Jenssegers\Agent\Agent;
 use Yajra\Datatables\Html\Builder;
 
 class BarangController extends Controller
@@ -123,6 +124,17 @@ class BarangController extends Controller
     {
         $satuan = Satuan::all();
         return response()->json($satuan);
+    }
+
+    public function data_agent()
+    {
+        $agent = new Agent();
+        if ($agent->isMobile()) {
+            $data_agent = 0;
+        } else {
+            $data_agent = 1;
+        }
+        return response()->json($data_agent);
     }
 
     /**
