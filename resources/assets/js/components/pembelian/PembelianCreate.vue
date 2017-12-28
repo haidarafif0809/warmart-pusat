@@ -29,27 +29,27 @@
 			<form class="form-horizontal" v-on:submit.prevent="saveForm()"> 
 			<div class="modal-body"> 
 				<div class="row"> 
+					<div class="col-md-6 col-xs-6"> 
+						<h5>Subtotal</h5> 
+							<money v-bind="separator"  name="subtotal"  id="subtotal" autocomplete="off"  readonly="" v-model="inputPembayaranPembelian.subtotal"  class="form-control" style="height: 40px; width:90%; font-size:23px;"></money> 
+					</div> 
 					<div class="col-md-3  col-xs-3"> 
 						<h5>Disc(%)</h5> 
-					<input type="text" name="potongan_persen" id="potongan_persen" autocomplete="off"  v-model="inputPembayaranPembelian.potongan_persen" class="form-control" style="height: 40px;width:90%;font-size:20px;" v-on:keyup="hitungPotonganPersen()">
+					<input type="text"  name="potongan_persen" id="potongan_persen" autocomplete="off"  v-model="inputPembayaranPembelian.potongan_persen" class="form-control" style="height: 40px;width:90%;font-size:20px;" v-on:blur="hitungPotonganPersen"> 
 					</div> 
 					<div class="col-md-3 col-xs-3"> 
 						<h5>Disc(Rp)</h5> 
-						<input type="text" name="potongan_faktur" id="potongan_faktur" autocomplete="off"  v-model="inputPembayaranPembelian.potongan_faktur" class="form-control" style="height: 40px;width:90%;font-size:20px;" v-on:keyup="hitungPotonganFaktur()">
-					</div> 
-					<div class="col-md-6 col-xs-6"> 
-						<h5>Subtotal</h5> 
-							<input type="text" name="subtotal"  id="subtotal" autocomplete="off"  readonly="" v-model="inputPembayaranPembelian.subtotal"  class="form-control" style="height: 40px; width:90%; font-size:23px;">
+						<money v-bind="separator"  name="potongan_faktur" id="potongan_faktur" autocomplete="off"  v-model="inputPembayaranPembelian.potongan_faktur" class="form-control" style="height: 40px;width:90%;font-size:20px;" v-on:keyup="hitungPotonganFaktur()"></money> 
 					</div> 
 				</div>  
 				<div class="row"> 
 					<div class="col-md-6  col-xs-6"> 
-						<h5><i class="material-icons">info_outline</i> Pembayaran </h5> 
-						<input type="number" name="pembayaran" id="pembayaran" autocomplete="off"  v-model="inputPembayaranPembelian.pembayaran"  class="form-control" style="height: 40px; width:90%; font-size:25px;">
-					</div> 
-					<div class="col-md-6  col-xs-6"> 
 						<h5>Total Akhir</h5> 
-						<input type="text" name="total_akhir"  id="total_akhir" autocomplete="off" readonly="" v-model="inputPembayaranPembelian.total_akhir"  class="form-control" style="height: 40px; width:90%; font-size:25px;">
+						<money v-bind="separator"  name="total_akhir"  id="total_akhir" autocomplete="off" readonly="" v-model="inputPembayaranPembelian.total_akhir"  class="form-control" style="height: 40px; width:90%; font-size:25px;"></money> 
+					</div> 
+					<div class="col-md-6  col-xs-6 card-pembayaran"> 
+						<h5><i class="material-icons">info_outline</i> Pembayaran </h5> 
+						<money v-bind="separator" name="pembayaran" id="pembayaran" autocomplete="off"  v-model="inputPembayaranPembelian.pembayaran"  class="form-control" style="height: 40px; width:90%; font-size:25px;"></money> 
 					</div> 
 				</div> 
 
@@ -57,11 +57,11 @@
 				<div class="row"> 
 					<div class="col-md-6  col-xs-6"> 
 						<h5>Kembalian</h5> 
-						<input type="text" name="kembalian" id="kembalian" autocomplete="off" readonly="" v-model="inputPembayaranPembelian.kembalian"  class="form-control" style="height: 40px; width:90%; font-size:25px;">
+						<money v-bind="separator"  name="kembalian" id="kembalian" autocomplete="off" readonly="" v-model="inputPembayaranPembelian.kembalian"  class="form-control" style="height: 40px; width:90%; font-size:25px;"></money> 
 					</div> 
 					<div class="col-md-6  col-xs-6"> 
 						<h5>Kredit</h5> 
-						<input type="text" name="kredit"  id="kredit" autocomplete="off" readonly="" v-model="inputPembayaranPembelian.kredit"  class="form-control" style="height: 40px; width:90%; font-size:25px;">
+						<money v-bind="separator"  name="kredit"  id="kredit" autocomplete="off" readonly="" v-model="inputPembayaranPembelian.kredit"  class="form-control" style="height: 40px; width:90%; font-size:25px;"></money> 
 					</div> 
 
 				</div> 
@@ -230,6 +230,11 @@
 	</div> 
 </div> 
 </template>
+<style type="text/css">
+.card-pembayaran{
+    background-color:#82B1FF;
+}
+</style>
 
 <script>
 export default {
@@ -277,6 +282,14 @@ export default {
 			placeholder_cara_bayar: {
 				placeholder: '--PILIH CARA BAYAR--'
 			},
+			separator: {
+              decimal: ',',
+              thousands: '.',
+              prefix: '',
+              suffix: '',
+              precision: 2,
+              masked: false /* doesn't work with directive */
+          },
 			pencarian: '',
 			loading: true,
 			seen : false,
@@ -306,7 +319,10 @@ export default {
             val = 0
         }
         this.hitungKembalian(val)
-    	}
+    	},
+    	'inputPembayaranPembelian.potongan_faktur':function(){
+        this.hitungPotonganFaktur()
+    }
 
     },
     methods: {
@@ -906,7 +922,8 @@ export default {
 			        this.inputPembayaranPembelian.potongan_faktur = 0
 			        this.inputPembayaranPembelian.potongan_persen = 0
 			        this.inputPembayaranPembelian.potongan = 0
-
+					this.hitungKembalian(this.inputPembayaranPembelian.pembayaran)
+			    
 			    }else{
 
 			        if (potonganPersen == '') {
@@ -940,6 +957,7 @@ export default {
 		        this.inputPembayaranPembelian.potongan_faktur = 0
 		        this.inputPembayaranPembelian.potongan_persen = 0
 		        this.inputPembayaranPembelian.potongan = 0
+		        this.hitungKembalian(this.inputPembayaranPembelian.pembayaran)
 
 		    }else{
 		      this.inputPembayaranPembelian.potongan_persen = potongan_persen.toFixed(2)
@@ -975,6 +993,7 @@ export default {
 				swal("Oops...","Jatuh Tempo Belum Diisi!","error");
 				$("#jatuh_tempo").focus();
 			}else{
+			app.$router.replace('/create-pembelian');
 			app.prosesTransaksiSelesai();
 			}
 			
