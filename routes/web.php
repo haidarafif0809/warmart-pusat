@@ -511,6 +511,8 @@ Route::get('/kas-mutasi/pilih-kas', 'KasMutasiController@pilih_kas')->middleware
 
 // PENJUALAN VUE.JS
 
+Route::get('/penjualan/view', 'PenjualanController@view')->middleware('auth');
+Route::get('/penjualan/pencarian', 'PenjualanController@pencarian')->middleware('auth');
 Route::get('/penjualan/view-tbs-penjualan', 'PenjualanController@viewTbsPenjualan')->middleware('auth');
 Route::get('/penjualan/pencarian-tbs-penjualan', 'PenjualanController@pencarianTbsPenjualan')->middleware('auth');
 Route::get('/penjualan/cek-data-tbs-penjualan', 'PenjualanController@cekDataTbsPenjualan')->middleware('auth');

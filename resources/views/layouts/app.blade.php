@@ -33,9 +33,15 @@
 </meta>
 </head>
 <style type="text/css">
-    .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
-       padding: 1px;
-   }
+<<<<<<< HEAD
+.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+   padding: 1px;
+}
+=======
+.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+ padding: 1px;
+}
+>>>>>>> master
 </style>
 <body>
     <div class="wrapper" id="vue-app">
@@ -560,7 +566,9 @@
 <!--End of Tawk.to Script-->
 </body>
 <!--   Core JS Files   -->
+
 <script src="{{ asset('js/app.js?v=1.35')}}" type="text/javascript">
+
 </script>
 <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript">
 </script>

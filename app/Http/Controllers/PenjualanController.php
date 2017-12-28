@@ -82,6 +82,65 @@ class PenjualanController extends Controller
         return $respons;
     }
 
+
+    public function view()
+    {
+        $user_warung   = Auth::user()->id_warung;
+        $penjualan = PenjualanPos::with(['pelanggan'])->where('warung_id', $user_warung)->orderBy('id', 'desc')->paginate(10);
+        $array         = array();
+
+        foreach ($penjualan as $penjualans) {
+            array_push($array, [
+                'id' => $penjualans->id,
+                'waktu'    => $penjualans->Waktu,
+                'pelanggan'     => $penjualans->pelanggan->name,
+                'status_penjualan'         => $penjualans->status_penjualan,
+                'total'         => $penjualans->total
+            ]);
+        }
+
+        $url     = '/penjualan/view';
+        $respons = $this->paginationData($penjualan, $array, $url);
+
+        return response()->json($respons);
+    }
+
+    public function pencarian(Request $request)
+    {
+        $user_warung   = Auth::user()->id_warung;
+        $penjualan = PenjualanPos::select('penjualan_pos.id AS id', 'penjualan_pos.status_penjualan AS status_penjualan','penjualan_pos.total AS total','users.name AS pelanggan',DB::raw('DATE_FORMAT(penjualan_pos.created_at, "%d/%m/%Y %H:%i:%s") as waktu_jual'))
+        ->leftJoin('users', 'users.id', '=', 'penjualan_pos.pelanggan_id')
+        ->where('warung_id', $user_warung)
+        ->where(function ($query) use ($request) {
+
+            $query->orWhere('penjualan_pos.id', 'LIKE', $request->search . '%')
+            ->orWhere('penjualan_pos.status_penjualan', 'LIKE', $request->search . '%')
+            ->orWhere('penjualan_pos.total', 'LIKE', $request->search . '%')
+            ->orWhere('penjualan_pos.created_at', 'LIKE', $request->search . '%')
+            ->orWhere('users.name', 'LIKE', $request->search . '%');
+
+        })->orderBy('penjualan_pos.id', 'desc')->paginate(10);
+
+        $array = array();
+        foreach ($penjualan as $penjualans) {
+
+            array_push($array, [
+                'id' => $penjualans['id'],
+                'waktu'    => $penjualans['waktu_jual'],
+                'pelanggan'         => $penjualans['pelanggan'],
+                'status_penjualan'     => $penjualans['status_penjualan'],
+                'total'         => $penjualans['total']
+            ]);
+        }
+
+        $url    = '/penjualan/pencarian';
+        $search = $request->search;
+
+        $respons = $this->paginationPencarianData($penjualan, $array, $url, $search);
+
+        return response()->json($respons);
+    }
+
     public function viewTbsPenjualan()
     {
         $session_id    = session()->getId();
