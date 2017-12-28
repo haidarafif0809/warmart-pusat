@@ -23,6 +23,26 @@ class KasMasukController extends Controller
     {
         return view('kas_masuk.index')->with(compact('html'));
     }
+
+    public function dataPagination($kas_masuk, $kas_masuk_array)
+    {
+
+        $respons['current_page']   = $kas_masuk->currentPage();
+        $respons['data']           = $kas_masuk_array;
+        $respons['first_page_url'] = url('/kas/view?page=' . $kas_masuk->firstItem());
+        $respons['from']           = 1;
+        $respons['last_page']      = $kas_masuk->lastPage();
+        $respons['last_page_url']  = url('/kas/view?page=' . $kas_masuk->lastPage());
+        $respons['next_page_url']  = $kas_masuk->nextPageUrl();
+        $respons['path']           = url('/kas/view');
+        $respons['per_page']       = $kas_masuk->perPage();
+        $respons['prev_page_url']  = $kas_masuk->previousPageUrl();
+        $respons['to']             = $kas_masuk->perPage();
+        $respons['total']          = $kas_masuk->total();
+
+        return $respons;
+    }
+
     public function view()
     {
         $kas_masuk = KasMasuk::select('kas_masuks.id as id', 'kas_masuks.no_faktur as no_faktur', 'kas.nama_kas as nama_kas', 'kategori_transaksis.nama_kategori_transaksi as nama_kategori_transaksi', 'kas_masuks.jumlah as jumlah', 'kas_masuks.keterangan as keterangan', 'kas_masuks.kas as kas')->leftJoin('kas', 'kas_masuks.kas', '=', 'kas.id')
@@ -45,20 +65,7 @@ class KasMasukController extends Controller
             array_push($kas_masuk_array, ['kas_masuk' => $kas_masuks, 'status_transaksi' => $status_transaksi]);
         }
         //DATA PAGINATION
-        $respons['current_page']   = $kas_masuk->currentPage();
-        $respons['data']           = $kas_masuk_array;
-        $respons['first_page_url'] = url('/kas/view?page=' . $kas_masuk->firstItem());
-        $respons['from']           = 1;
-        $respons['last_page']      = $kas_masuk->lastPage();
-        $respons['last_page_url']  = url('/kas/view?page=' . $kas_masuk->lastPage());
-        $respons['next_page_url']  = $kas_masuk->nextPageUrl();
-        $respons['path']           = url('/kas/view');
-        $respons['per_page']       = $kas_masuk->perPage();
-        $respons['prev_page_url']  = $kas_masuk->previousPageUrl();
-        $respons['to']             = $kas_masuk->perPage();
-        $respons['total']          = $kas_masuk->total();
-        //DATA PAGINATION
-
+        $respons = $this->dataPagination($kas_masuk, $kas_masuk_array);
         return response()->json($respons);
     }
     public function pencarian(Request $request)
@@ -70,32 +77,20 @@ class KasMasukController extends Controller
             ->where('kas_masuks.id_warung', Auth::user()->id_warung)
             ->where(function ($query) use ($search) {
 // search
-                $query->where('kas.nama_kas', 'LIKE', $search . '%')
-                    ->orWhere('kategori_transaksis.nama_kategori_transaksi', 'LIKE', $search . '%')
-                    ->orWhere('kas_masuks.jumlah', 'LIKE', $search . '%')
-                    ->orWhere('kas_masuks.keterangan', 'LIKE', $search . '%')
-                    ->orWhere('kas_masuks.no_faktur', 'LIKE', $search . '%');
+                $query->where('kas.nama_kas', 'LIKE', '%' . $search . '%')
+                    ->orWhere('kategori_transaksis.nama_kategori_transaksi', 'LIKE', '%' . $search . '%')
+                    ->orWhere('kas_masuks.jumlah', 'LIKE', '%' . $search . '%')
+                    ->orWhere('kas_masuks.keterangan', 'LIKE', '%' . $search . '%')
+                    ->orWhere('kas_masuks.no_faktur', 'LIKE', '%' . $search . '%');
             })->paginate(10);
 
         $kas_masuk_array = array();
         foreach ($kas_masuk as $kas_masuks) {
             array_push($kas_masuk_array, ['kas_masuk' => $kas_masuks]);
         }
-        //DATA PAGINATION
-        $respons['current_page']   = $kas_masuk->currentPage();
-        $respons['data']           = $kas_masuk_array;
-        $respons['first_page_url'] = url('/kas/view?page=' . $kas_masuk->firstItem());
-        $respons['from']           = 1;
-        $respons['last_page']      = $kas_masuk->lastPage();
-        $respons['last_page_url']  = url('/kas/view?page=' . $kas_masuk->lastPage());
-        $respons['next_page_url']  = $kas_masuk->nextPageUrl();
-        $respons['path']           = url('/kas/view');
-        $respons['per_page']       = $kas_masuk->perPage();
-        $respons['prev_page_url']  = $kas_masuk->previousPageUrl();
-        $respons['to']             = $kas_masuk->perPage();
-        $respons['total']          = $kas_masuk->total();
-        //DATA PAGINATION
 
+        //DATA PAGINATION
+        $respons = $this->dataPagination($kas_masuk, $kas_masuk_array);
         return response()->json($respons);
     }
 
