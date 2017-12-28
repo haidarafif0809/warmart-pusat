@@ -35,12 +35,12 @@
 <style type="text/css">
 <<<<<<< HEAD
 .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
- padding: 1px;
+   padding: 1px;
 }
 =======
-    .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
-       padding: 1px;
-   }
+.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+ padding: 1px;
+}
 >>>>>>> master
 </style>
 <body>
@@ -202,7 +202,7 @@
             <div class="collapse" id="persediaan">
                 <ul class="nav">
                     <li>
-                       <router-link :to="{name: 'indexItemMasuk'}" class="menu-nav">
+                     <router-link :to="{name: 'indexItemMasuk'}" class="menu-nav">
                         <span class="sidebar-mini">
                             IM
                         </span>
@@ -566,11 +566,9 @@
 <!--End of Tawk.to Script-->
 </body>
 <!--   Core JS Files   -->
-<<<<<<< HEAD
-<script src="{{ asset('js/app.js?v=1.32')}}" type="text/javascript">
-=======
+
 <script src="{{ asset('js/app.js?v=1.35')}}" type="text/javascript">
->>>>>>> master
+
 </script>
 <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript">
 </script>
@@ -653,8 +651,8 @@
 </script>
 <script type="text/javascript">
     $(document).on('click', '.menu-nav', function(){
-       $('.navbar-toggle ').click();
-   });
+     $('.navbar-toggle ').click();
+ });
 </script>
 @yield('scripts')
 </html>
