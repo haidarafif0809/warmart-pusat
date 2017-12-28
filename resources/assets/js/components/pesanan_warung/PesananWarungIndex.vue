@@ -2,7 +2,6 @@
 .pencarian {
   color: red; 
   float: right;
-  padding-bottom: 10px;
 }
 </style>
 
@@ -49,13 +48,14 @@
 					<h4 class="card-title"> Pesanan</h4>
 
 					<div class="toolbar">
-                        <router-link :to="{name: 'indexDashboard'}" class="btn btn-primary" style="padding-bottom:10px"><i class="material-icons">add</i></router-link>
+                        <router-link class="btn btn-primary" style="padding-bottom:10px"><i class="material-icons">add</i></router-link>
 
                         <div class="pencarian">
                             <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
                         </div>
 					</div>
 
+                    <br><br><br>
 					<div class=" table-responsive">
 						<table class="table table-striped table-hover ">
 							<thead class="text-primary">

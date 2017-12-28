@@ -95,6 +95,19 @@
 				                    </div>
 				                </div>
 
+								<div class="form-group" v-if="data_agent == 0">
+									<div class="col-md-2"></div>
+									<div class="col-md-10">
+										<button type="button" class="btn btn-info btn-xs" id="btnDeskripsi" data-toggle="collapse" data-target="#collDeskripsi"><i class="material-icons">add</i>Deskripsi Produk</button>
+									</div>									
+									<div class="col-md-12 col-xs-12 collapse" id="collDeskripsi">
+										  <quill-editor v-model="produk.deskripsi_produk"
+										                ref="myQuillEditor"
+										                :options="editorOption">
+										  </quill-editor>
+									</div>
+								</div>
+
 				                <div class="form-group">
 									<label for="foto" class="col-md-2 control-label">Foto Produk</label>
 									<div class="col-md-10">
@@ -118,11 +131,14 @@
 									</div>
 								</div> 
 							</div>
-							<div class="col-md-6">
-								<froala :tag="'textarea'" :config="placeholder_deskripsi" v-model="produk.deskripsi_produk"></froala>
+							<div class="col-md-6" v-if="data_agent == 1">
+								  <quill-editor v-model="produk.deskripsi_produk"
+								                ref="myQuillEditor"
+								                :options="editorOption" style="height:10%">
+								  </quill-editor>
 							</div>
 						</div>
-						
+
 						<div class="form-group">
 							<div class="col-md-10 col-md-offset-1">
 								<button class="btn btn-primary" id="btnSimpanProduk" type="submit"><i class="material-icons">send</i> Submit</button>
@@ -161,6 +177,7 @@ export default {
 				status_aktif : 'true'
 			},
 			message : '',
+			data_agent : '',
             placeholder_kategori: {
                 placeholder: '--PILIH KATEGORI--'
             }, 
@@ -169,13 +186,21 @@ export default {
             },
             placeholder_deskripsi: {
 		        placeholderText: 'Edit Deskripsi Produk',
-		      },
+		    },
+		    editorOption: {
+        	}
 		}
 	},
     mounted() {
         var app = this;
         app.dataKategori();
         app.dataSatuan();
+        app.dataAgent();
+    },
+    computed: {
+      editor() {
+        return this.$refs.myQuillEditor.quill
+      }
     },
 	methods: {
 		saveForm() {
@@ -220,6 +245,15 @@ export default {
 	        })
 	        .catch(function (resp) {
 	        	alert("Tidak Bisa Memuat Satuan");
+	        });
+	    },
+      	dataAgent() {
+	      	var app = this;
+	      	axios.get(app.url+'/pilih-agent').then(function (resp) {
+	            app.data_agent = resp.data;
+	        })
+	        .catch(function (resp) {
+	        	alert("Tidak Bisa Memuat Agent");
 	        });
 	    },
 	    loading(){

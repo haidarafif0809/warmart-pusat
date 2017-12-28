@@ -430,6 +430,7 @@ Route::get('/produk/pilih-kategori', 'BarangController@pilih_kategori')->middlew
 Route::get('/produk/pilih-satuan', 'BarangController@pilih_satuan')->middleware('auth');
 Route::post('/produk/{id}', 'BarangController@update')->middleware('auth');
 Route::get('/produk/pilih-produk', 'BarangController@pilihProduk')->middleware('auth');
+Route::get('/produk/pilih-agent', 'BarangController@data_agent')->middleware('auth');
 
 Route::get('/kas/view', 'KasController@view')->middleware('auth');
 Route::get('/kas/pencarian', 'KasController@pencarian')->middleware('auth');
@@ -514,6 +515,8 @@ Route::get('/kas-mutasi/pilih-kas', 'KasMutasiController@pilih_kas')->middleware
 
 // PENJUALAN VUE.JS
 
+Route::get('/penjualan/view', 'PenjualanController@view')->middleware('auth');
+Route::get('/penjualan/pencarian', 'PenjualanController@pencarian')->middleware('auth');
 Route::get('/penjualan/view-tbs-penjualan', 'PenjualanController@viewTbsPenjualan')->middleware('auth');
 Route::get('/penjualan/pencarian-tbs-penjualan', 'PenjualanController@pencarianTbsPenjualan')->middleware('auth');
 Route::get('/penjualan/cek-data-tbs-penjualan', 'PenjualanController@cekDataTbsPenjualan')->middleware('auth');

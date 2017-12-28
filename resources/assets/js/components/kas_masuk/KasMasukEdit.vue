@@ -35,7 +35,7 @@
                             <div class="form-group">
                                 <label for="jumlah" class="col-md-2 control-label">Jumlah </label>
                                 <div class="col-md-4">
-                                    <input class="form-control" required autocomplete="off" placeholder="Jumlah" type="text" v-model="kasmasuk.jumlah" id="jumlah" name="jumlah"  autofocus="">
+                                    <money class="form-control" required autocomplete="off" v-model="kasmasuk.jumlah" v-bind="separator" id="jumlah" name="jumlah"></money>
                                     <span v-if="errors.jumlah" id="jumlah_error" class="label label-danger">{{ errors.jumlah[0] }}</span>
                                 </div>
                             </div>
@@ -43,7 +43,7 @@
                             <div class="form-group">
                                 <label for="keterangan" class="col-md-2 control-label">Keterangan</label>
                                 <div class="col-md-4">
-                                    <input class="form-control" required autocomplete="off" placeholder="Keterangan" type="text" v-model="kasmasuk.keterangan" id="jumlah" name="keterangan"  autofocus="">
+                                    <input class="form-control" autocomplete="off" placeholder="Keterangan" type="text" v-model="kasmasuk.keterangan" id="jumlah" name="keterangan"  autofocus="">
                                     <span v-if="errors.keterangan" id="keterangan_error" class="label label-danger">{{ errors.keterangan[0] }}</span>
                                 </div>
                             </div>
@@ -97,7 +97,15 @@ export default {
             },
             url : window.location.origin+(window.location.pathname).replace("dashboard", "kas-masuk"),
             url_update : window.location.origin+(window.location.pathname).replace("dashboard", "kas_masuk"),
-            errors: []
+            errors: [],
+            separator: {
+              decimal: ',',
+              thousands: '.',
+              prefix: '',
+              suffix: '',
+              precision: 2,
+              masked: false /* doesn't work with directive */
+          }
         }
     },
     methods: {
