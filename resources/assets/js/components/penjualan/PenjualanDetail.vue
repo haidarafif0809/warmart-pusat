@@ -23,46 +23,66 @@
 						<p> <router-link :to="{name: 'indexPenjualan'}" class="btn btn-primary">Kembali</router-link></p>
 					</div>
 
-					<div class=" table-responsive ">
+					<div class="row">
+						<div class="col-md-8">
+							<div class=" table-responsive ">
 
-						<div class="pencarian">
-							<input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
+								<div class="pencarian">
+									<input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
+								</div>
+
+								<table class="table table-striped table-hover" v-if="seen">
+									<thead class="text-primary">
+										<tr>
+
+											<th>No Transaksi</th>
+											<th>Produk</th>
+											<th>Jumlah</th>
+											<th>Harga</th>
+											<th>Potongan</th>
+											<th>Subtotal</th>
+
+										</tr>
+									</thead>
+									<tbody v-if="detailPenjualan.length"  class="data-ada">
+										<tr v-for="detailPenjualan, index in detailPenjualan" >
+
+											<td>{{ detailPenjualan.id_penjualan_pos }}</td>
+											<td>{{ detailPenjualan.nama_produk }}</td>
+											<td> {{ new Intl.NumberFormat().format(detailPenjualan.jumlah_produk) }},00</td>
+											<td> {{ new Intl.NumberFormat().format(detailPenjualan.harga_produk) }},00</td>
+											<td> {{ new Intl.NumberFormat().format(detailPenjualan.potongan) }},00</td>
+											<td> {{ new Intl.NumberFormat().format(detailPenjualan.subtotal) }},00</td>
+
+										</tr>
+									</tbody>                    
+									<tbody class="data-tidak-ada" v-else>
+										<tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
+									</tbody>
+								</table>    
+
+								<vue-simple-spinner v-if="loading"></vue-simple-spinner>
+
+								<div align="right"><pagination :data="detailPenjualanData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
+							</div>
 						</div>
 
-						<table class="table table-striped table-hover" v-if="seen">
-							<thead class="text-primary">
-								<tr>
+						<div class="col-md-4">
+							<div class="card card-stats">
+								<div class="card-header" data-background-color="blue">
+									<i class="material-icons">shopping_cart</i>
+								</div>
+								<div class="card-content">
+									<p class="category">Total Keseluruhan</p>
+									<h3 class="card-title">{{ new Intl.NumberFormat().format(subtotal) }},00</h3>
+								</div>
+								<div class="card-footer">
 
-									<th>No Transaksi</th>
-									<th>Produk</th>
-									<th>Jumlah</th>
-									<th>Harga</th>
-									<th>Potongan</th>
-									<th>Subtotal</th>
-
-								</tr>
-							</thead>
-							<tbody v-if="detailPenjualan.length"  class="data-ada">
-								<tr v-for="detailPenjualan, index in detailPenjualan" >
-
-									<td>{{ detailPenjualan.id_penjualan_pos }}</td>
-									<td>{{ detailPenjualan.nama_produk }}</td>
-									<td> {{ new Intl.NumberFormat().format(detailPenjualan.jumlah_produk) }},00</td>
-									<td> {{ new Intl.NumberFormat().format(detailPenjualan.harga_produk) }},00</td>
-									<td> {{ new Intl.NumberFormat().format(detailPenjualan.potongan) }},00</td>
-									<td> {{ new Intl.NumberFormat().format(detailPenjualan.subtotal) }},00</td>
-									
-								</tr>
-							</tbody>                    
-							<tbody class="data-tidak-ada" v-else>
-								<tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
-							</tbody>
-						</table>    
-
-						<vue-simple-spinner v-if="loading"></vue-simple-spinner>
-
-						<div align="right"><pagination :data="detailPenjualanData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
+								</div>
+							</div>
+						</div>
 					</div>
+
 
 				</div>
 			</div>
@@ -82,7 +102,8 @@ export default {
 			url : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
 			pencarian: '',
 			loading: true,
-			seen : false,           
+			seen : false,    
+			subtotal : 0,         
 		}
 	},
 	mounted() {   
@@ -109,6 +130,10 @@ methods: {
 			app.detailPenjualanData = resp.data;
 			app.loading = false;
 			app.seen = true;
+
+			$.each(resp.data.data, function (i, item) {
+				app.subtotal += resp.data.data[i].subtotal 
+			});
 		})
 		.catch(function (resp) {
 			console.log(resp);
