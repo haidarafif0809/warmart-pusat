@@ -46,7 +46,7 @@
                                     <td>{{ kas_masuk.kas_masuk.no_faktur }}</td>
                                      <td>{{ kas_masuk.kas_masuk.nama_kas }}</td>
                                      <td>{{ kas_masuk.kas_masuk.nama_kategori_transaksi }}</td>
-                                     <td>{{ kas_masuk.kas_masuk.jumlah }}</td>
+                                     <td>{{ kas_masuk.kas_masuk.jumlah | pemisahTitik }}</td>
                                      <td>{{ kas_masuk.kas_masuk.keterangan }}</td>
                                      <td>
                                         <router-link :to="{name: 'editKasMasuk', params: {id: kas_masuk.kas_masuk.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + kas_masuk.kas_masuk.id" > Edit
@@ -98,7 +98,11 @@ export default {
             this.getHasilPencarian()  
         }
     },
-
+    filters: {
+        pemisahTitik: function (value) {
+            return new Intl.NumberFormat().format(value)
+        }
+    },
     methods: {
         getResults(page) {
             var app = this; 
