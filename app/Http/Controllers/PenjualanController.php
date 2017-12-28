@@ -141,6 +141,86 @@ class PenjualanController extends Controller
         return response()->json($respons);
     }
 
+
+    public function viewDetailPenjualan($id)
+    {
+        $user_warung   = Auth::user()->id_warung;
+        $detail_penjualan = DetailPenjualanPos::with(['produk'])->where('warung_id', $user_warung)->where('id_penjualan_pos', $id)->orderBy('id_detail_penjualan_pos', 'desc')->paginate(10);
+        $array         = array();
+
+        foreach ($detail_penjualan as $detail_penjualans) {
+
+            $potongan_persen = ($detail_penjualans->potongan / ($detail_penjualans->jumlah_produk * $detail_penjualans->harga_produk)) * 100;
+
+            if ($detail_penjualans->potongan > 0) {
+                $potongan = number_format($detail_penjualans->potongan, 0, ',', '.') . ",00 (" . round($potongan_persen, 2) . "%)";
+            } else {
+                $potongan = $detail_penjualans->potongan;
+            }
+
+            array_push($array, [
+                'id_detail_penjualan_pos' => $detail_penjualans->id_detail_penjualan_pos,
+                'id_penjualan_pos' => $id,
+                'nama_produk'      => $detail_penjualans->NamaProduk,
+                'kode_produk'      => $detail_penjualans->produk->kode_barang,
+                'jumlah_produk'    => $detail_penjualans->jumlah_produk,
+                'harga_produk'     => $detail_penjualans->harga_produk,
+                'potongan'         => $potongan,
+                'subtotal'         => $detail_penjualans->subtotal,
+                'produk'           => $detail_penjualans->id_produk . "|" . $detail_penjualans->NamaProduk . "|" . $detail_penjualans->harga_produk]);
+        }
+
+        $url     = '/penjualan/view-detail-penjualan/'.$id;
+        $respons = $this->paginationData($detail_penjualan, $array, $url);
+
+        return response()->json($respons);
+    }
+
+    public function pencarianDetailPenjualan(Request $request,$id)
+    {
+        $session_id    = session()->getId();
+        $user_warung   = Auth::user()->id_warung;
+        $detail_penjualan = DetailPenjualanPos::select('detail_penjualan_pos.id_detail_penjualan_pos AS id_detail_penjualan_pos', 'detail_penjualan_pos.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'detail_penjualan_pos.id_produk AS id_produk', 'detail_penjualan_pos.potongan AS potongan', 'detail_penjualan_pos.subtotal AS subtotal', 'detail_penjualan_pos.harga_produk AS harga_produk')
+        ->leftJoin('barangs', 'barangs.id', '=', 'detail_penjualan_pos.id_produk')
+        ->where('warung_id', $user_warung)->where('detail_penjualan_pos.id_penjualan_pos', $id)
+        ->where(function ($query) use ($request) {
+
+            $query->orWhere('barangs.kode_barang', 'LIKE', $request->search . '%')
+            ->orWhere('barangs.nama_barang', 'LIKE', $request->search . '%')
+            ->orWhere('detail_penjualan_pos.id_penjualan_pos', 'LIKE', $request->search . '%');
+
+        })->orderBy('detail_penjualan_pos.id_detail_penjualan_pos', 'desc')->paginate(10);
+
+        $array = array();
+        foreach ($detail_penjualan as $detail_penjualans) {
+            $potongan_persen = ($detail_penjualans['potongan'] / ($detail_penjualans['jumlah_produk'] * $detail_penjualans['harga_produk'])) * 100;
+
+            if ($detail_penjualans['potongan'] > 0) {
+                $potongan = number_format($detail_penjualans['potongan'], 0, ',', '.') . ",00 (" . round($potongan_persen, 2) . "%)";
+            } else {
+                $potongan = $detail_penjualans['potongan'];
+            }
+
+            array_push($array, [
+                'id_detail_penjualan_pos' => $detail_penjualans['id_detail_penjualan_pos'],
+                'id_penjualan_pos' => $id,
+                'nama_produk'      => title_case($detail_penjualans['nama_barang']),
+                'kode_produk'      => $detail_penjualans['kode_barang'],
+                'jumlah_produk'    => $detail_penjualans['jumlah_produk'],
+                'potongan'         => $potongan,
+                'harga_produk'     => $detail_penjualans['harga_produk'],
+                'subtotal'         => $detail_penjualans['subtotal'],
+                'produk'           => $detail_penjualans['id_produk'] . "|" . title_case($detail_penjualans['nama_barang']) . "|" . $detail_penjualans->harga_jual]);
+        }
+
+        $url    = '/penjualan/pencarian-detail-penjualan/'.$id;
+        $search = $request->search;
+
+        $respons = $this->paginationPencarianData($detail_penjualan, $array, $url, $search);
+
+        return response()->json($respons);
+    }
+
     public function viewTbsPenjualan()
     {
         $session_id    = session()->getId();
