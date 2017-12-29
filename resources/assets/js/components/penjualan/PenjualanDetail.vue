@@ -10,7 +10,7 @@
 		<div class="col-md-12">
 			<ul class="breadcrumb">
 				<li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li>
-				<li><router-link :to="{name: 'indexPenjualan'}">Penjualan</router-link></li>
+				<li><router-link :to="{name: 'indexPenjualan'}">Lap. Penjualan</router-link></li>
 				<li class="active">Detail Penjualan</li>
 			</ul>
 			<div class="card">

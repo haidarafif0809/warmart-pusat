@@ -10,6 +10,7 @@ use App\TbsPenjualan;
 use App\TransaksiKas;
 use App\TransaksiPiutang;
 use App\User;
+use App\EditTbsPenjualan;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -602,7 +603,28 @@ public function show($id)
  */
 public function edit($id)
 {
-        //
+       //
+    $session_id             = session()->getId();
+    $data_produk_penjualan = DetailPenjualanPos::where('id_penjualan_pos', $id)->where('warung_id', Auth::user()->id_warung);
+
+    $hapus_semua_edit_tbs_penjualan = EditTbsPenjualan::where('id_penjualan_pos', $id)->where('warung_id', Auth::user()->id_warung)->delete();
+    foreach ($data_produk_penjualan->get() as $data_tbs) {
+        $detail_penjualan = EditTbsPenjualan::create([
+            'session_id'    => $session_id,
+            'id_penjualan_pos'  => $id,
+            'no_faktur'     => $data_tbs->no_faktur,
+            'id_produk'     => $data_tbs->id_produk,
+            'satuan_id'     => $data_tbs->satuan_id,
+            'jumlah_produk' => $data_tbs->jumlah_produk,
+            'harga_produk' => $data_tbs->harga_produk,
+            'subtotal' => $data_tbs->subtotal,            
+            'tax' => $data_tbs->tax,
+            'potongan' => $data_tbs->potongan,
+            'warung_id'     => Auth::user()->id_warung,
+        ]);
+    }
+
+    return response(200);
 }
 
 /**
