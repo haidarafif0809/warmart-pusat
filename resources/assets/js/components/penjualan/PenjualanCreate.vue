@@ -113,7 +113,7 @@
 
                                         <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
                                             <font style="color: black">Pembayaran(F10)</font>
-                                            <money class="form-penjualan" v-shortkey.focus="['f10']" id="pembayaran" name="pembayaran" placeholder="Pembayaran"  v-model="penjualan.pembayaran" v-bind="separator" ></money> 
+                                            <money class="form-penjualan" v-shortkey.focus="['f10']" id="pembayaran" name="pembayaran" placeholder="Pembayaran"  v-model="penjualan.pembayaran" v-bind="separator"  autocomplete="off"></money> 
                                         </div>
 
                                     </div>
@@ -136,20 +136,20 @@
 
                                  <button v-if="piutang" type="button" class="btn btn-success" id="btnSelesai" v-on:click="selesaiPenjualan()" v-shortkey.push="['alt']" @shortkey="selesaiPenjualan()"><i class="material-icons">credit_card</i> Piutang(Alt)</button>
 
-                                   <button type="button" class="btn btn-default"  v-on:click="closeModal()" v-shortkey.push="['esc']" @shortkey="closeModal()"><i class="material-icons">close</i> Tutup(Esc)</button>
-                               </div>
+                                 <button type="button" class="btn btn-default"  v-on:click="closeModal()" v-shortkey.push="['esc']" @shortkey="closeModal()"><i class="material-icons">close</i> Tutup(Esc)</button>
+                             </div>
 
-                           </div> 
-                       </div>
-                       <div class="modal-footer">  
-                       </div> 
-                   </form>
-               </div>       
-           </div> 
-       </div> 
-       <!-- / MODAL TOMBOL SELESAI --> 
+                         </div> 
+                     </div>
+                     <div class="modal-footer">  
+                     </div> 
+                 </form>
+             </div>       
+         </div> 
+     </div> 
+     <!-- / MODAL TOMBOL SELESAI --> 
 
-       <div class="card" style="margin-bottom: 1px; margin-top: 1px;">
+     <div class="card" style="margin-bottom: 1px; margin-top: 1px;">
         <div class="card-content">
             <h4 class="card-title" style="margin-bottom: 1px; margin-top: 1px;"> Penjualan </h4>
 

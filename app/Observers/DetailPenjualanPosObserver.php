@@ -18,7 +18,7 @@ class DetailPenjualanPosObserver
         if ($DetailPenjualanPos->produk->hitung_stok == 1) {
 
             $stok = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk),0) - IFNULL(SUM(jumlah_keluar),0) as stok_produk')])->where('id_produk', $DetailPenjualanPos->id_produk)
-                ->where('warung_id', Auth::user()->id_warung)->first();
+            ->where('warung_id', Auth::user()->id_warung)->first();
 
             $sisa_stok_keluar = $stok->stok_produk - $jumlah_produk_keluar;
 
@@ -48,5 +48,21 @@ class DetailPenjualanPosObserver
         } // END GOL. BARANG == BARANG
 
     } // OBERVERS CREATING
+
+
+    //HAPUS PENJUALAN
+    public function deleting(DetailPenjualanPos $DetailPenjualanPos)
+    {
+
+        $hpp = Hpp::where('no_faktur', $DetailPenjualanPos->id_penjualan_pos)->where('id_produk', $DetailPenjualanPos->id_produk)->where('jenis_hpp', 2)
+        ->where('warung_id', $DetailPenjualanPos->warung_id);
+
+        if (!$hpp->delete()) {
+            return false;
+        } else {
+            return true;
+        }
+
+    } //
 
 }

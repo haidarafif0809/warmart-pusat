@@ -18,7 +18,7 @@ class EditTbsPenjualan extends Model
 	{
 		return $this->hasOne('App\Barang','id','id_produk');
 	}
-	public function getNamaBarangAttribute()
+	public function getNamaProdukAttribute()
 	{
 		return title_case($this->produk->nama_barang);
 	}
