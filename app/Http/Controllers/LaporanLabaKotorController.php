@@ -179,6 +179,21 @@ class LaporanLabaKotorController extends Controller
         return response()->json($response);
     }
 
+    public function labelSheet($sheet, $row){
+
+        $sheet->row($row, [
+            'No. Transaksi',
+            'Waktu',
+            'Pelanggan',
+            'Penjualan',
+            'Hpp',
+            'Laba Kotor',
+            'Diskon Faktur',
+            'Laba Jual',
+            ]);
+        return $sheet;
+    }
+
     //DOWNLOAD EXCEL - LAPORAN LABA KOTOR /PELANGGAN
     public function downloadExcel(Request $request, $dari_tanggal, $sampai_tanggal, $pelanggan)
     {
@@ -187,7 +202,7 @@ class LaporanLabaKotorController extends Controller
         $request['pelanggan']      = $pelanggan;
 
     //QUERY LABA KOTOR POS
-        $laporan_laba_kotor = PenjualanPos::laporanLabaKotorPos($request)->get();
+        $laporan_laba_kotor = PenjualanPos::laporanLabaKotorPos($request);
         $sub_total_penjualan = DetailPenjualanPos::subtotalLaporanLabaKotor($request)->first();
         $sub_potongan = PenjualanPos::potonganLaporanLabaKotor($request)->first();
         $potongan     = $sub_potongan->potongan;
@@ -196,7 +211,7 @@ class LaporanLabaKotorController extends Controller
     //QUERY LABA KOTOR POS
 
     //QUERY LABA KOTOR PESANAN
-        $laporan_laba_kotor_pesanan = Penjualan::laporanLabaKotorPesanan($request)->get();
+        $laporan_laba_kotor_pesanan = Penjualan::laporanLabaKotorPesanan($request);
         $sub_total_penjualan_pesanan = DetailPenjualan::subtotalLaporanLabaKotorPesanan($request)->first();
         $jenis_transaksi = "penjualan";
         $sub_hpp_pesanan = Hpp::hppLaporanLabaKotor($request, $jenis_transaksi)->first();
@@ -211,84 +226,80 @@ class LaporanLabaKotorController extends Controller
                     ]);
 
                 $row = 3;
-                $sheet->row($row, [
+                $sheet = $this->labelSheet($sheet, $row);
 
-                    'No. Transaksi',
-                    'Waktu',
-                    'Pelanggan',
-                    'Penjualan',
-                    'Hpp',
-                    'Laba Kotor',
-                    'Diskon Faktur',
-                    'Laba Jual',
+                if ($laporan_laba_kotor->count() > 0) { //MENCEGAH JIKA DATA KOSONG KETIKA DI DOWLOAD, AGAR TIDAK ERROR
+                    //LABA KOTOR /PELANGGAN
+                    foreach ($laporan_laba_kotor->get() as $laba_kotor) {
+                        $hpp              = Hpp::select(DB::raw('SUM(total_nilai) as total_hpp'))->where('no_faktur', $laba_kotor->id)->where('jenis_transaksi', 'PenjualanPos')->where('warung_id', Auth::user()->id_warung)->first();
+                        $detail_penjualan = DetailPenjualanPos::select(DB::raw('SUM(subtotal) as subtotal'))->where('id_penjualan_pos', $laba_kotor->id)->where('warung_id', Auth::user()->id_warung)->first();
+                        $total_laba_kotor = $detail_penjualan->subtotal - $hpp->total_hpp;
+                        $laba_jual        = $total_laba_kotor - $laba_kotor->potongan;
 
-                    ]);
-
-                //LABA KOTOR /PELANGGAN
-                foreach ($laporan_laba_kotor as $laba_kotor) {
-                    $hpp              = Hpp::select(DB::raw('SUM(total_nilai) as total_hpp'))->where('no_faktur', $laba_kotor->id)->where('jenis_transaksi', 'PenjualanPos')->where('warung_id', Auth::user()->id_warung)->first();
-                    $detail_penjualan = DetailPenjualanPos::select(DB::raw('SUM(subtotal) as subtotal'))->where('id_penjualan_pos', $laba_kotor->id)->where('warung_id', Auth::user()->id_warung)->first();
-                    $total_laba_kotor = $detail_penjualan->subtotal - $hpp->total_hpp;
-                    $laba_jual        = $total_laba_kotor - $laba_kotor->potongan;
+                        $sheet->row(++$row, [
+                            $laba_kotor->id,
+                            $laba_kotor->created_at,
+                            $laba_kotor->name,
+                            $detail_penjualan->subtotal = round($detail_penjualan->subtotal, 2),
+                            $hpp->total_hpp = round($hpp->total_hpp, 2),
+                            $total_laba_kotor = round($total_laba_kotor, 2),
+                            $laba_kotor->potongan,
+                            $laba_jual = round($laba_jual, 2),
+                            ]);
+                    }
 
                     $sheet->row(++$row, [
-                        $laba_kotor->id,
-                        $laba_kotor->created_at,
-                        $laba_kotor->name,
-                        $detail_penjualan->subtotal = round($detail_penjualan->subtotal, 2),
-                        $hpp->total_hpp = round($hpp->total_hpp, 2),
-                        $total_laba_kotor = round($total_laba_kotor, 2),
-                        $laba_kotor->potongan,
-                        $laba_jual = round($laba_jual, 2),
+                        'TOTAL',
+                        '',
+                        '',
+                        $subtotal_penjualan = $sub_total_penjualan->subtotal,
+                        $subtotal_hpp = $sub_hpp->total_hpp,
+                        $subtotal_laba_kotor = $subtotal_penjualan - $subtotal_hpp,
+                        $subtotal_potongan = $potongan,
+                        $subtotal_laba_jual = $subtotal_laba_kotor - $subtotal_potongan,
                         ]);
                 }
-
-                $sheet->row(++$row, [
-                    'TOTAL',
-                    '',
-                    '',
-                    $subtotal_penjualan = $sub_total_penjualan->subtotal,
-                    $subtotal_hpp = $sub_hpp->total_hpp,
-                    $subtotal_laba_kotor = $subtotal_penjualan - $subtotal_hpp,
-                    $subtotal_potongan = $potongan,
-                    $subtotal_laba_jual = $subtotal_laba_kotor - $subtotal_potongan,
-                    ]);
 
                 $row = ++$row + 3;
                 $sheet->row($row, [
                     'LABA KOTOR PENJUALAN ONLINE',
                     ]);
 
-                //LABA KOTOR /PRODUK
-                foreach ($laporan_laba_kotor_pesanan as $laba_kotor_pesanan) {
-                    $hpp              = Hpp::select(DB::raw('SUM(total_nilai) as total_hpp'))->where('no_faktur', $laba_kotor_pesanan->id)->where('jenis_transaksi', 'penjualan')->where('warung_id', Auth::user()->id_warung)->first();
-                    $detail_penjualan = DetailPenjualan::select(DB::raw('SUM(subtotal) as subtotal'))->where('id_penjualan', $laba_kotor_pesanan->id)->first();
-                    $total_laba_kotor = $detail_penjualan->subtotal - $hpp->total_hpp;
-                    $laba_jual        = $total_laba_kotor - 0;
+                $row = ++$row + 1;
+                $sheet = $this->labelSheet($sheet, $row);
+
+                if ($laporan_laba_kotor_pesanan->count() > 0) { //MENCEGAH JIKA DATA KOSONG KETIKA DI DOWLOAD, AGAR TIDAK ERROR
+
+                    //LABA KOTOR /PRODUK
+                    foreach ($laporan_laba_kotor_pesanan->get() as $laba_kotor_pesanan) {
+                        $hpp              = Hpp::select(DB::raw('SUM(total_nilai) as total_hpp'))->where('no_faktur', $laba_kotor_pesanan->id)->where('jenis_transaksi', 'penjualan')->where('warung_id', Auth::user()->id_warung)->first();
+                        $detail_penjualan = DetailPenjualan::select(DB::raw('SUM(subtotal) as subtotal'))->where('id_penjualan', $laba_kotor_pesanan->id)->first();
+                        $total_laba_kotor = $detail_penjualan->subtotal - $hpp->total_hpp;
+                        $laba_jual        = $total_laba_kotor - 0;
+
+                        $sheet->row(++$row, [
+                            $laba_kotor_pesanan->id,
+                            $laba_kotor_pesanan->created_at,
+                            $laba_kotor_pesanan->name,
+                            $detail_penjualan->subtotal = round($detail_penjualan->subtotal, 2),
+                            $hpp->total_hpp = round($hpp->total_hpp, 2),
+                            $total_laba_kotor = round($total_laba_kotor, 2),
+                            0,
+                            $laba_jual = round($laba_jual, 2),
+                            ]);
+                    }
 
                     $sheet->row(++$row, [
-                        $laba_kotor_pesanan->id,
-                        $laba_kotor_pesanan->created_at,
-                        $laba_kotor_pesanan->name,
-                        $detail_penjualan->subtotal = round($detail_penjualan->subtotal, 2),
-                        $hpp->total_hpp = round($hpp->total_hpp, 2),
-                        $total_laba_kotor = round($total_laba_kotor, 2),
+                        'TOTAL',
+                        '',
+                        '',
+                        $subtotal_penjualan = $sub_total_penjualan_pesanan->subtotal,
+                        $subtotal_hpp = $sub_hpp_pesanan->total_hpp,
+                        $subtotal_laba_kotor = $subtotal_penjualan - $subtotal_hpp,
                         0,
-                        $laba_jual = round($laba_jual, 2),
+                        $subtotal_laba_jual = $subtotal_laba_kotor - 0,
                         ]);
                 }
-
-                $sheet->row(++$row, [
-                    'TOTAL',
-                    '',
-                    '',
-                    $subtotal_penjualan = $sub_total_penjualan_pesanan->subtotal,
-                    $subtotal_hpp = $sub_hpp_pesanan->total_hpp,
-                    $subtotal_laba_kotor = $subtotal_penjualan - $subtotal_hpp,
-                    0,
-                    $subtotal_laba_jual = $subtotal_laba_kotor - $subtotal_potongan,
-                    ]);
-
             });
 
 })->export('xls');
