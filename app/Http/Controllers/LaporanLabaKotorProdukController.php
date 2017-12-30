@@ -224,7 +224,7 @@ class LaporanLabaKotorProdukController extends Controller
         $request['produk']      = $produk;
 
     //QUERY LABA KOTOR POS
-        $laporan_laba_kotor = DetailPenjualanPos::laporanLabaKotorProdukPos($request)->get();
+        $laporan_laba_kotor = DetailPenjualanPos::laporanLabaKotorProdukPos($request);
         $sub_total_penjualan = DetailPenjualanPos::subtotalLaporanLabaKotorProduk($request)->first();
         $jenis_transaksi = "PenjualanPos";
         $sub_hpp         = Hpp::hppLaporanLabaKotorProduk($request, $jenis_transaksi)->first();
@@ -248,34 +248,37 @@ class LaporanLabaKotorProdukController extends Controller
                 $row = 3;                
                 $sheet = $this->labelSheet($sheet, $row);
 
-                //LABA KOTOR /PRODUK
-                foreach ($laporan_laba_kotor as $laba_kotor) {
-                    $hpp_masuk             = Hpp::select(DB::raw('SUM(total_nilai) as hpp'))->where('id_produk', $laba_kotor->id_produk)->where('jenis_transaksi', 'PenjualanPos')->where('warung_id', Auth::user()->id_warung)->first();
-                    $total_hpp             = $hpp_masuk->hpp;
-                    $total_laba_kotor      = $laba_kotor->subtotal - $total_hpp;
-                    $persentase_laba_kotor = ($total_laba_kotor * 100) / $total_hpp;
-                    $persentase_gpm        = ($total_laba_kotor * 100) / $laba_kotor->subtotal;
+                if ($laporan_laba_kotor->count() > 0) { //MENCEGAH JIKA DATA KOSONG KETIKA DI DOWLOAD, AGAR TIDAK ERROR
+                    
+                    //LABA KOTOR /PRODUK
+                    foreach ($laporan_laba_kotor->get() as $laba_kotor) {
+                        $hpp_masuk             = Hpp::select(DB::raw('SUM(total_nilai) as hpp'))->where('id_produk', $laba_kotor->id_produk)->where('jenis_transaksi', 'PenjualanPos')->where('warung_id', Auth::user()->id_warung)->first();
+                        $total_hpp             = $hpp_masuk->hpp;
+                        $total_laba_kotor      = $laba_kotor->subtotal - $total_hpp;
+                        $persentase_laba_kotor = ($total_laba_kotor * 100) / $total_hpp;
+                        $persentase_gpm        = ($total_laba_kotor * 100) / $laba_kotor->subtotal;
+
+                        $sheet->row(++$row, [
+                            $laba_kotor->kode_barang,
+                            $laba_kotor->nama_barang,
+                            $total_hpp = round($total_hpp, 2),
+                            $laba_kotor->subtotal = round($laba_kotor->subtotal, 2),
+                            $total_laba_kotor = round($total_laba_kotor, 2),
+                            $persentase_laba_kotor = round($persentase_laba_kotor, 2),
+                            $persentase_gpm = round($persentase_gpm, 2),
+                            ]);
+                    }
 
                     $sheet->row(++$row, [
-                        $laba_kotor->kode_barang,
-                        $laba_kotor->nama_barang,
-                        $total_hpp = round($total_hpp, 2),
-                        $laba_kotor->subtotal = round($laba_kotor->subtotal, 2),
-                        $total_laba_kotor = round($total_laba_kotor, 2),
-                        $persentase_laba_kotor = round($persentase_laba_kotor, 2),
-                        $persentase_gpm = round($persentase_gpm, 2),
+                        'TOTAL',
+                        '',
+                        $subtotal_hpp                   = round($sub_hpp->total_hpp ,2 ),
+                        $subtotal_penjualan             = round($sub_total_penjualan->subtotal ,2 ),
+                        $subtotal_laba_kotor            = round($subtotal_penjualan - $subtotal_hpp ,2 ),
+                        $subtotal_persentase_laba_kotor = round(($subtotal_laba_kotor * 100) / $subtotal_hpp ,2 ),
+                        $subtotal_persentase_gpm        = round(($subtotal_laba_kotor * 100) / $subtotal_penjualan ,2 ),
                         ]);
                 }
-
-                $sheet->row(++$row, [
-                    'TOTAL',
-                    '',
-                    $subtotal_hpp                   = round($sub_hpp->total_hpp ,2 ),
-                    $subtotal_penjualan             = round($sub_total_penjualan->subtotal ,2 ),
-                    $subtotal_laba_kotor            = round($subtotal_penjualan - $subtotal_hpp ,2 ),
-                    $subtotal_persentase_laba_kotor = round(($subtotal_laba_kotor * 100) / $subtotal_hpp ,2 ),
-                    $subtotal_persentase_gpm        = round(($subtotal_laba_kotor * 100) / $subtotal_penjualan ,2 ),
-                    ]);
 
                 $row = ++$row + 3;
                 $sheet->row($row, [
@@ -286,34 +289,38 @@ class LaporanLabaKotorProdukController extends Controller
                 
                 $sheet = $this->labelSheet($sheet, $row);
 
-                //LABA KOTOR /PRODUK
-                foreach ($laporan_laba_kotor_pesanan->get() as $laba_kotor_pesanan) {
-                    $hpp_masuk             = Hpp::select(DB::raw('SUM(total_nilai) as hpp'))->where('id_produk', $laba_kotor_pesanan->id_produk)->where('jenis_transaksi', 'penjualan')->where('warung_id', Auth::user()->id_warung)->first();
-                    $total_hpp             = $hpp_masuk->hpp;
-                    $total_laba_kotor      = $laba_kotor_pesanan->subtotal - $total_hpp;
-                    $persentase_laba_kotor = ($total_laba_kotor * 100) / $total_hpp;
-                    $persentase_gpm        = ($total_laba_kotor * 100) / $laba_kotor_pesanan->subtotal;
+                if ($laporan_laba_kotor_pesanan->count() > 0) { //MENCEGAH JIKA DATA KOSONG KETIKA DI DOWLOAD, AGAR TIDAK ERROR
+
+                    //LABA KOTOR /PRODUK
+                    foreach ($laporan_laba_kotor_pesanan->get() as $laba_kotor_pesanan) {
+                        $hpp_masuk             = Hpp::select(DB::raw('SUM(total_nilai) as hpp'))->where('id_produk', $laba_kotor_pesanan->id_produk)->where('jenis_transaksi', 'penjualan')->where('warung_id', Auth::user()->id_warung)->first();
+                        $total_hpp             = $hpp_masuk->hpp;
+                        $total_laba_kotor      = $laba_kotor_pesanan->subtotal - $total_hpp;
+                        $persentase_laba_kotor = ($total_laba_kotor * 100) / $total_hpp;
+                        $persentase_gpm        = ($total_laba_kotor * 100) / $laba_kotor_pesanan->subtotal;
+
+                        $sheet->row(++$row, [
+                            $laba_kotor_pesanan->kode_barang,
+                            $laba_kotor_pesanan->nama_barang,
+                            $total_hpp = round($total_hpp, 2),
+                            $laba_kotor_pesanan->subtotal = round($laba_kotor_pesanan->subtotal, 2),
+                            $total_laba_kotor = round($total_laba_kotor, 2),
+                            $persentase_laba_kotor = round($persentase_laba_kotor, 2),
+                            $persentase_gpm = round($persentase_gpm, 2),
+                            ]);
+                    }
 
                     $sheet->row(++$row, [
-                        $laba_kotor_pesanan->kode_barang,
-                        $laba_kotor_pesanan->nama_barang,
-                        $total_hpp = round($total_hpp, 2),
-                        $laba_kotor_pesanan->subtotal = round($laba_kotor_pesanan->subtotal, 2),
-                        $total_laba_kotor = round($total_laba_kotor, 2),
-                        $persentase_laba_kotor = round($persentase_laba_kotor, 2),
-                        $persentase_gpm = round($persentase_gpm, 2),
+                        'TOTAL',
+                        '',
+                        $subtotal_hpp                   = round($sub_hpp_pesanan->total_hpp ,2 ),
+                        $subtotal_penjualan             = round($sub_total_penjualan_pesanan->subtotal ,2 ),
+                        $subtotal_laba_kotor            = round($subtotal_penjualan - $subtotal_hpp ,2 ),
+                        $subtotal_persentase_laba_kotor = round(($subtotal_laba_kotor * 100) / $subtotal_hpp ,2 ),
+                        $subtotal_persentase_gpm        = round(($subtotal_laba_kotor * 100) / $subtotal_penjualan ,2 ),
                         ]);
-                }
 
-                $sheet->row(++$row, [
-                    'TOTAL',
-                    '',
-                    $subtotal_hpp                   = round($sub_hpp_pesanan->total_hpp ,2 ),
-                    $subtotal_penjualan             = round($sub_total_penjualan_pesanan->subtotal ,2 ),
-                    $subtotal_laba_kotor            = round($subtotal_penjualan - $subtotal_hpp ,2 ),
-                    $subtotal_persentase_laba_kotor = round(($subtotal_laba_kotor * 100) / $subtotal_hpp ,2 ),
-                    $subtotal_persentase_gpm        = round(($subtotal_laba_kotor * 100) / $subtotal_penjualan ,2 ),
-                    ]);
+                }
             });
 })->export('xls');
 }
