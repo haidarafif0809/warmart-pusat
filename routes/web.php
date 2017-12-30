@@ -547,6 +547,12 @@ Route::post('/laporan-laba-kotor-produk/subtotal-laba-kotor-produk', 'LaporanLab
 Route::post('/laporan-laba-kotor-produk/subtotal-laba-kotor-produk-pesanan', 'LaporanLabaKotorProdukController@subtotalLabaKotorProdukPesanan')->middleware('auth');
 Route::get('/laporan-laba-kotor-produk/download-excel-laba-kotor/{dari_tanggal}/{sampai_tanggal}/{pelanggan}', 'LaporanLabaKotorProdukController@downloadExcel')->middleware('auth');
 
+// LABA KOTOR PRODUK VUE.JS
+Route::post('/laporan-mutasi-stok/view', 'LaporanMutasiStokController@prosesLaporanMutasiStok')->middleware('auth');
+Route::post('/laporan-mutasi-stok/pencarian', 'LaporanMutasiStokController@pencarian')->middleware('auth');
+Route::post('/laporan-mutasi-stok/subtotal-mutasi-stok', 'LaporanMutasiStokController@subtotalMutasiStok')->middleware('auth');
+Route::get('/laporan-mutasi-stok/download-excel-laba-kotor/{dari_tanggal}/{sampai_tanggal}/{pelanggan}', 'LaporanMutasiStokController@downloadExcel')->middleware('auth');
+
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
     Route::resource('user', 'UserController');
@@ -570,6 +576,7 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
     Route::resource('laporan-persediaan', 'LaporanPersediaanController');
     Route::resource('laporan-laba-kotor', 'LaporanLabaKotorController');
     Route::resource('laporan-laba-kotor-produk', 'LaporanLabaKotorProdukController');
+    Route::resource('laporan-mutasi-stok', 'LaporanMutasiStokController');
     Route::resource('pembelian', 'PembelianController');
     Route::resource('kelompok-produk', 'KelompokProdukController');
     Route::resource('profil-warung', 'WarungProfilController');
