@@ -527,6 +527,7 @@ Route::post('/laporan-laba-kotor/pencarian-pesanan', 'LaporanLabaKotorController
 Route::get('/laporan-laba-kotor/pilih-pelanggan', 'LaporanLabaKotorController@pilihPelanggan')->middleware('auth');
 Route::post('/laporan-laba-kotor/subtotal-laba-kotor', 'LaporanLabaKotorController@subtotalLabaKotor')->middleware('auth');
 Route::post('/laporan-laba-kotor/subtotal-laba-kotor-pesanan', 'LaporanLabaKotorController@subtotalLabaKotorPesanan')->middleware('auth');
+Route::get('/laporan-laba-kotor/download-excel-laba-kotor/{dari_tanggal}/{sampai_tanggal}/{pelanggan}', 'LaporanLabaKotorController@downloadExcel')->middleware('auth');
 
 // LABA KOTOR PRODUK VUE.JS
 Route::post('/laporan-laba-kotor-produk/view', 'LaporanLabaKotorProdukController@prosesLaporanLabaKotorProduk')->middleware('auth');

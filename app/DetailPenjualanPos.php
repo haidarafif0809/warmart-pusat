@@ -40,7 +40,7 @@ class DetailPenjualanPos extends Model
     // SUBTOTAL LABA KOTOR PENJUALAN POS
     public function scopeSubtotalLaporanLabaKotor($query_sub_total_penjualan, $request)
     {
-        if ($request->pelanggan == "") {
+        if ($request->pelanggan == "" || $request->pelanggan == null || $request->pelanggan == 0) {
             $query_sub_total_penjualan = DetailPenjualanPos::select(DB::raw('SUM(subtotal) as subtotal'))
                 ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
                 ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))

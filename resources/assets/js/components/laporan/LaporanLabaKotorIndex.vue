@@ -144,6 +144,10 @@
 							</tbody>
 						</table>
 					</div><!--RESPONSIVE-->
+					<!--DOWNLOAD EXCEL-->
+					<a v-if="filter.pelanggan == '' || filter.pelanggan == null" :href="urlDownloadExcel+'/'+filter.dari_tanggal+'/'+filter.sampai_tanggal+'/0'" class='btn btn-warning' id="btnExcel" target='blank' :style="'display: none'"><i class="material-icons">file_download</i> Download Excel</a>
+					<a v-else :href="urlDownloadExcel+'/'+filter.dari_tanggal+'/'+filter.sampai_tanggal+'/'+filter.pelanggan" class='btn btn-warning' id="btnExcel" target='blank' :style="'display: none'"><i class="material-icons">file_download</i> Download Excel</a>
+
 						<vue-simple-spinner v-if="loadingPesanan"></vue-simple-spinner>
 						<div align="right"><pagination :data="labaKotorPesananData" v-on:pagination-change-page="prosesLaporanPesanan" :limit="4"></pagination></div>
 				</div>
@@ -172,6 +176,7 @@ export default {
 				pelanggan: '',
             },
 			url : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-laba-kotor"),
+			urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-laba-kotor/download-excel-laba-kotor"),
 			pencarian_pos: '',
 			pencarian_pesanan: '',
             placeholder_pelanggan: {
@@ -209,6 +214,7 @@ export default {
     		app.prosesLaporanPesanan();
     		app.totalLabaKotor();
     		app.totalLabaKotorPesanan();
+    		$("#btnExcel").show();
     	},
     	prosesLaporan(page) {
     		var app = this;	
@@ -314,6 +320,20 @@ export default {
     		.then(function (resp) {
     			app.subtotalLabaKotorPesanan = resp.data;
     			app.loadingPesanan = false
+    		})
+    		.catch(function (resp) {
+    			console.log(resp);
+    			alert("Tidak Dapat Memuat Subtotal Laba Kotor");
+    		});
+    	},
+      downloadExcel() {
+    		var app = this;	
+    		var newFilter = app.filter;
+    		if (newFilter.pelanggan == "" || newFilter.pelanggan == null) {
+    			newFilter.pelanggan = 0;
+    		}
+    		axios.get(app.urlDownloadExcel+'/'+newFilter.dari_tanggal+'/'+newFilter.sampai_tanggal+'/'+newFilter.pelanggan)
+    		.then(function (resp) {
     		})
     		.catch(function (resp) {
     			console.log(resp);
