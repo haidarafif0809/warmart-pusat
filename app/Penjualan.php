@@ -37,7 +37,7 @@ class Penjualan extends Model
     // LAP. LABA KOTOR PENJUALAN PESANAN
     public function scopeLaporanLabaKotorPesanan($query_laporan_laba_kotor, $request)
     {
-        if ($request->pelanggan == "") {
+        if ($request->pelanggan == "" || $request->pelanggan == null || $request->pelanggan == 0) {
             $query_laporan_laba_kotor = Penjualan::select(['penjualans.id', 'penjualans.id_pelanggan', 'penjualans.total', 'penjualans.created_at', 'users.name'])
                 ->leftJoin('users', 'users.id', '=', 'penjualans.id_pelanggan')
                 ->where(DB::raw('DATE(penjualans.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))

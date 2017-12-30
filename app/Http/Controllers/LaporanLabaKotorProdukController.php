@@ -7,6 +7,7 @@ use App\DetailPenjualan;
 use App\DetailPenjualanPos;
 use App\Hpp;
 use Auth;
+use Excel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -25,7 +26,7 @@ class LaporanLabaKotorProdukController extends Controller
             array_push($array_produk, [
                 'id'          => $produks->id,
                 'nama_produk' => title_case($produks->nama_barang),
-            ]);
+                ]);
         }
         return response()->json($array_produk);
     }
@@ -199,6 +200,76 @@ class LaporanLabaKotorProdukController extends Controller
 
         return response()->json($response);
     }
-
     //METHOD UNTUK TABEL PENJUALAN PESANAN (ONLINE)
+
+
+    //DOWNLOAD EXCEL - LAPORAN LABA KOTOR /PRODUK
+    public function downloadExcel(Request $request, $dari_tanggal, $sampai_tanggal, $produk)
+    {
+        $request['dari_tanggal']   = $dari_tanggal;
+        $request['sampai_tanggal'] = $sampai_tanggal;
+        $request['produk']      = $produk;
+
+    //QUERY LABA KOTOR POS
+        $laporan_laba_kotor = DetailPenjualanPos::laporanLabaKotorProdukPos($request)->get();
+        $sub_total_penjualan = DetailPenjualanPos::subtotalLaporanLabaKotorProduk($request)->first();
+        $jenis_transaksi = "PenjualanPos";
+        $sub_hpp         = Hpp::hppLaporanLabaKotorProduk($request, $jenis_transaksi)->first();
+    //QUERY LABA KOTOR POS
+
+    //QUERY LABA KOTOR PESANAN
+    //QUERY LABA KOTOR PESANAN
+
+        Excel::create('Laporan Laba Kotor Produk', function ($excel) use ($laporan_laba_kotor, $request, $sub_total_penjualan, $sub_hpp) {
+            // Set property
+            $excel->sheet('Laporan Laba Kotor Produk', function ($sheet) use ($laporan_laba_kotor, $request, $sub_total_penjualan, $sub_hpp) {
+                $row = 1;
+                $sheet->row($row, [
+                    'LABA KOTOR PENJUALAN POS',
+                    ]);
+
+                $row = 3;
+                $sheet->row($row, [
+
+                    'Kode Produk',
+                    'Nama Produk',
+                    'Hpp',
+                    'Penjualan',
+                    'Laba Kotor',
+                    'Laba Kotor (%)',
+                    'Gross Profit Margin (%)',
+
+                    ]);
+
+                //LABA KOTOR /PRODUK
+                foreach ($laporan_laba_kotor as $laba_kotor) {
+                    $hpp_masuk             = Hpp::select(DB::raw('SUM(total_nilai) as hpp'))->where('id_produk', $laba_kotor->id_produk)->where('jenis_transaksi', 'PenjualanPos')->where('warung_id', Auth::user()->id_warung)->first();
+                    $total_hpp             = $hpp_masuk->hpp;
+                    $total_laba_kotor      = $laba_kotor->subtotal - $total_hpp;
+                    $persentase_laba_kotor = ($total_laba_kotor * 100) / $total_hpp;
+                    $persentase_gpm        = ($total_laba_kotor * 100) / $laba_kotor->subtotal;
+
+                    $sheet->row(++$row, [
+                        $laba_kotor->kode_barang,
+                        $laba_kotor->nama_barang,
+                        $total_hpp = round($total_hpp, 2),
+                        $laba_kotor->subtotal = round($laba_kotor->subtotal, 2),
+                        $total_laba_kotor = round($total_laba_kotor, 2),
+                        $persentase_laba_kotor = round($persentase_laba_kotor, 2),
+                        $persentase_gpm = round($persentase_gpm, 2),
+                        ]);
+                }
+
+                $sheet->row(++$row, [
+                    'TOTAL',
+                    '',
+                    $subtotal_hpp                   = round($sub_hpp->total_hpp ,2 ),
+                    $subtotal_penjualan             = round($sub_total_penjualan->subtotal ,2 ),
+                    $subtotal_laba_kotor            = round($subtotal_penjualan - $subtotal_hpp ,2 ),
+                    $subtotal_persentase_laba_kotor = round(($subtotal_laba_kotor * 100) / $subtotal_hpp ,2 ),
+                    $subtotal_persentase_gpm        = round(($subtotal_laba_kotor * 100) / $subtotal_penjualan ,2 ),
+                    ]);
+            });
+        })->export('xls');
+    }
 }

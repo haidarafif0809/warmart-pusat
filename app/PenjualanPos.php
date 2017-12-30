@@ -22,7 +22,7 @@ class PenjualanPos extends Model
     {
         return $this->hasOne('App\Kas', 'id', 'id_kas');
     }
-    
+
     public function getWaktuAttribute()
     {
         $tanggal       = date($this->created_at);
@@ -105,21 +105,22 @@ class PenjualanPos extends Model
     // LAP. LABA KOTOR PENJUALAN POS
     public function scopeLaporanLabaKotorPos($query_laporan_laba_kotor, $request)
     {
-        if ($request->pelanggan == "") {
+
+        if ($request->pelanggan == "" || $request->pelanggan == null || $request->pelanggan == 0) {
             $query_laporan_laba_kotor = PenjualanPos::select(['penjualan_pos.id', 'penjualan_pos.pelanggan_id', 'penjualan_pos.no_faktur', 'penjualan_pos.total', 'penjualan_pos.potongan', 'penjualan_pos.created_at', 'users.name'])
-            ->leftJoin('users', 'users.id', '=', 'penjualan_pos.pelanggan_id')
-            ->where(DB::raw('DATE(penjualan_pos.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
-            ->where(DB::raw('DATE(penjualan_pos.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
-            ->where('penjualan_pos.warung_id', Auth::user()->id_warung)
-            ->orderBy('penjualan_pos.id', 'desc');
+                ->leftJoin('users', 'users.id', '=', 'penjualan_pos.pelanggan_id')
+                ->where(DB::raw('DATE(penjualan_pos.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+                ->where(DB::raw('DATE(penjualan_pos.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+                ->where('penjualan_pos.warung_id', Auth::user()->id_warung)
+                ->orderBy('penjualan_pos.id', 'desc');
         } else {
             $query_laporan_laba_kotor = PenjualanPos::select(['penjualan_pos.id', 'penjualan_pos.pelanggan_id', 'penjualan_pos.no_faktur', 'penjualan_pos.total', 'penjualan_pos.potongan', 'penjualan_pos.created_at', 'users.name'])
-            ->leftJoin('users', 'users.id', '=', 'penjualan_pos.pelanggan_id')
-            ->where(DB::raw('DATE(penjualan_pos.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
-            ->where(DB::raw('DATE(penjualan_pos.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
-            ->where('users.id', $request->pelanggan)
-            ->where('penjualan_pos.warung_id', Auth::user()->id_warung)
-            ->orderBy('penjualan_pos.id', 'desc');
+                ->leftJoin('users', 'users.id', '=', 'penjualan_pos.pelanggan_id')
+                ->where(DB::raw('DATE(penjualan_pos.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+                ->where(DB::raw('DATE(penjualan_pos.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+                ->where('users.id', $request->pelanggan)
+                ->where('penjualan_pos.warung_id', Auth::user()->id_warung)
+                ->orderBy('penjualan_pos.id', 'desc');
         }
 
         return $query_laporan_laba_kotor;
@@ -131,26 +132,26 @@ class PenjualanPos extends Model
         if ($request->pelanggan == "") {
             $search                   = $request->search;
             $query_laporan_laba_kotor = PenjualanPos::select(['penjualan_pos.id', 'penjualan_pos.pelanggan_id', 'penjualan_pos.no_faktur', 'penjualan_pos.total', 'penjualan_pos.potongan', 'penjualan_pos.created_at', 'users.name'])
-            ->leftJoin('users', 'users.id', '=', 'penjualan_pos.pelanggan_id')
-            ->where(DB::raw('DATE(penjualan_pos.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
-            ->where(DB::raw('DATE(penjualan_pos.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
-            ->where('penjualan_pos.warung_id', Auth::user()->id_warung)
-            ->where(function ($query) use ($search) {
-                $query->orwhere('penjualan_pos.no_faktur', 'LIKE', '%' . $search . '%')
-                ->orwhere('users.name', 'LIKE', '%' . $search . '%');
-            })->orderBy('penjualan_pos.id', 'desc');
+                ->leftJoin('users', 'users.id', '=', 'penjualan_pos.pelanggan_id')
+                ->where(DB::raw('DATE(penjualan_pos.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+                ->where(DB::raw('DATE(penjualan_pos.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+                ->where('penjualan_pos.warung_id', Auth::user()->id_warung)
+                ->where(function ($query) use ($search) {
+                    $query->orwhere('penjualan_pos.no_faktur', 'LIKE', '%' . $search . '%')
+                        ->orwhere('users.name', 'LIKE', '%' . $search . '%');
+                })->orderBy('penjualan_pos.id', 'desc');
         } else {
             $search                   = $request->search;
             $query_laporan_laba_kotor = PenjualanPos::select(['penjualan_pos.id', 'penjualan_pos.pelanggan_id', 'penjualan_pos.no_faktur', 'penjualan_pos.total', 'penjualan_pos.potongan', 'penjualan_pos.created_at', 'users.name'])
-            ->leftJoin('users', 'users.id', '=', 'penjualan_pos.pelanggan_id')
-            ->where(DB::raw('DATE(penjualan_pos.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
-            ->where(DB::raw('DATE(penjualan_pos.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
-            ->where('users.id', $request->pelanggan)
-            ->where('penjualan_pos.warung_id', Auth::user()->id_warung)
-            ->where(function ($query) use ($search) {
-                $query->orwhere('penjualan_pos.no_faktur', 'LIKE', '%' . $search . '%')
-                ->orwhere('users.name', 'LIKE', '%' . $search . '%');
-            })->orderBy('penjualan_pos.id', 'desc');
+                ->leftJoin('users', 'users.id', '=', 'penjualan_pos.pelanggan_id')
+                ->where(DB::raw('DATE(penjualan_pos.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+                ->where(DB::raw('DATE(penjualan_pos.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+                ->where('users.id', $request->pelanggan)
+                ->where('penjualan_pos.warung_id', Auth::user()->id_warung)
+                ->where(function ($query) use ($search) {
+                    $query->orwhere('penjualan_pos.no_faktur', 'LIKE', '%' . $search . '%')
+                        ->orwhere('users.name', 'LIKE', '%' . $search . '%');
+                })->orderBy('penjualan_pos.id', 'desc');
         }
 
         return $query_laporan_laba_kotor;
@@ -159,17 +160,17 @@ class PenjualanPos extends Model
     // DISKON LABA KOTOR PENJUALAN POS
     public function scopePotonganLaporanLabaKotor($query_sub_potongan, $request)
     {
-        if ($request->pelanggan == "") {
+        if ($request->pelanggan == "" || $request->pelanggan == null || $request->pelanggan == 0) {
             $query_sub_potongan = PenjualanPos::select(DB::raw('SUM(potongan) as potongan'))
-            ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
-            ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
-            ->where('warung_id', Auth::user()->id_warung);
+                ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+                ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+                ->where('warung_id', Auth::user()->id_warung);
         } else {
             $query_sub_potongan = PenjualanPos::select(DB::raw('SUM(potongan) as potongan'))
-            ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
-            ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
-            ->where('pelanggan_id', $request->pelanggan)
-            ->where('warung_id', Auth::user()->id_warung);
+                ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+                ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+                ->where('pelanggan_id', $request->pelanggan)
+                ->where('warung_id', Auth::user()->id_warung);
         }
 
         return $query_sub_potongan;
