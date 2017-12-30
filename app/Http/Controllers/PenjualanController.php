@@ -854,7 +854,17 @@ public function update(Request $request, $id)
  */
 public function destroy($id)
 {
-        //
+    //START TRANSAKSI
+    DB::beginTransaction();
+
+    
+    if (!PenjualanPos::destroy($id)) {
+       DB::rollBack();
+       return 0;
+   } else {
+      DB::commit();
+      return response(200);
+  }
 }
 
 // edit penjualan
