@@ -33,15 +33,11 @@
 </meta>
 </head>
 <style type="text/css">
-<<<<<<< HEAD
+
 .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
    padding: 1px;
 }
-=======
-.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
- padding: 1px;
-}
->>>>>>> master
+
 </style>
 <body>
     <div class="wrapper" id="vue-app">
@@ -202,7 +198,7 @@
             <div class="collapse" id="persediaan">
                 <ul class="nav">
                     <li>
-                     <router-link :to="{name: 'indexItemMasuk'}" class="menu-nav">
+                       <router-link :to="{name: 'indexItemMasuk'}" class="menu-nav">
                         <span class="sidebar-mini">
                             IM
                         </span>
@@ -567,7 +563,7 @@
 </body>
 <!--   Core JS Files   -->
 
-<script src="{{ asset('js/app.js?v=1.40')}}" type="text/javascript">
+<script src="{{ asset('js/app.js?v=1.41')}}" type="text/javascript">
 
 </script>
 <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript">
@@ -651,8 +647,8 @@
 </script>
 <script type="text/javascript">
     $(document).on('click', '.menu-nav', function(){
-     $('.navbar-toggle ').click();
- });
+       $('.navbar-toggle ').click();
+   });
 </script>
 @yield('scripts')
 </html>

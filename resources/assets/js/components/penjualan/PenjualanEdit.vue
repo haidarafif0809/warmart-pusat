@@ -1,4 +1,7 @@
 <style scoped>
+.modal {
+    overflow-y:auto;
+}
 .pencarian {
   color: red; 
   float: right;
@@ -129,9 +132,9 @@
                              </div>
 
                              <div align="right"  style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                               <button v-if="tunai" type="button" class="btn btn-success" id="btnSelesai" v-on:click="selesaiPenjualan()" v-shortkey.push="['alt']" @shortkey="selesaiPenjualan()"><i class="material-icons">credit_card</i>Tunai(Alt)</button>
+                               <button v-if="penjualan.kembalian >= 0 && penjualan.kredit == 0" type="button" class="btn btn-success" id="btnSelesai" v-on:click="selesaiPenjualan()" v-shortkey.push="['alt']" @shortkey="selesaiPenjualan()"><i class="material-icons">credit_card</i>Tunai(Alt)</button>
 
-                               <button v-if="piutang" type="button" class="btn btn-success" id="btnSelesai" v-on:click="selesaiPenjualan()" v-shortkey.push="['alt']" @shortkey="selesaiPenjualan()"><i class="material-icons">credit_card</i> Piutang(Alt)</button>
+                               <button v-if="penjualan.kredit > 0" type="button" class="btn btn-success" id="btnSelesai" v-on:click="selesaiPenjualan()" v-shortkey.push="['alt']" @shortkey="selesaiPenjualan()"><i class="material-icons">credit_card</i> Piutang(Alt)</button>
 
                                <button type="button" class="btn btn-default"  v-on:click="closeModal()" v-shortkey.push="['esc']" @shortkey="closeModal()"><i class="material-icons">close</i> Tutup(Esc)</button>
                            </div>
@@ -294,8 +297,6 @@ export default {
             pencarian: '',
             loading: true,
             seen : false,
-            tunai : false,
-            piutang : true,
             id_penjualan_pos : 0,
             separator: {
               decimal: ',',
@@ -343,14 +344,12 @@ methods: {
 
             this.penjualan.kembalian = kembalian 
             this.penjualan.kredit = 0
-            this.tunai = true
-            this.piutang = false
+
         }else{
 
           this.penjualan.kembalian = 0  
           this.penjualan.kredit = parseFloat(this.penjualan.total_akhir) -parseFloat(val)
-          this.tunai = false
-          this.piutang = true
+
       }        
   },
   potonganPersen(){
@@ -375,8 +374,8 @@ methods: {
         var potongan_nominal = parseFloat(this.penjualan.subtotal) * (parseFloat(potonganPersen) / 100) 
         var total_akhir = parseFloat(this.penjualan.subtotal,10) - parseFloat(potongan_nominal,10)
 
-        this.penjualan.potongan_faktur = potongan_nominal.toFixed(2)
-        this.penjualan.total_akhir = total_akhir.toFixed(2) 
+        this.penjualan.potongan_faktur = potongan_nominal
+        this.penjualan.total_akhir = total_akhir 
         this.penjualan.potongan = potongan_nominal
         this.hitungKembalian(this.penjualan.pembayaran)
 
@@ -400,10 +399,10 @@ if (potongan_persen > 100) {
     this.hitungKembalian(this.penjualan.pembayaran)
 
 }else{
-  this.penjualan.potongan_persen = potongan_persen.toFixed(2)
-  this.penjualan.total_akhir = total_akhir.toFixed(2)
-  this.penjualan.potongan = potonganFaktur
-  this.hitungKembalian(this.penjualan.pembayaran)
+    this.penjualan.potongan_persen = potongan_persen
+    this.penjualan.total_akhir = total_akhir
+    this.penjualan.potongan = potonganFaktur
+    this.hitungKembalian(this.penjualan.pembayaran)
 }
 
 },
@@ -421,17 +420,17 @@ getResults(page) {
         app.seen = true;
 
         if (app.penjualan.subtotal == 0) {        
-
-         $.each(resp.data.data, function (i,item) {
+            
+            $.each(resp.data.data, function (i,item) {
 
              app.penjualan.subtotal += resp.data.data[i].subtotal
              app.penjualan.total_akhir += resp.data.data[i].subtotal
              app.penjualan.kredit += resp.data.data[i].subtotal
 
          }); 
-     }
+        }
 
- })
+    })
     .catch(function (resp) {
         console.log(resp);
         app.loading = false;
@@ -564,7 +563,6 @@ submitProdukPenjualan(value){
                 app.getResults();
                 app.penjualan.subtotal = subtotal                        
                 app.penjualan.total_akhir  = subtotal 
-                app.hitungKembalian(app.penjualan.pembayaran)
                 app.potonganPersen()
                 app.alert("Menambahkan Produk "+nama_produk)
                 app.loading = false
@@ -626,7 +624,6 @@ editJumlahProdukPenjualan(value,id,nama_produk,subtotal_lama){
             app.getResults()
             app.penjualan.subtotal = subtotal
             app.penjualan.total_akhir = subtotal
-            app.hitungKembalian(app.penjualan.pembayaran)
             app.potonganPersen()
             app.alert("Mengubah Jumlah Produk "+nama_produk)
             app.loading = false;
@@ -698,7 +695,6 @@ editPotonganProdukPenjualan(value,id,nama_produk,subtotal_lama){
             app.getResults()
             app.penjualan.subtotal = subtotal
             app.penjualan.total_akhir = subtotal
-            app.hitungKembalian(app.penjualan.pembayaran)            
             app.potonganPersen()
             app.alert("Mengubah Potongan Produk "+nama_produk)
             app.loading = false
@@ -754,7 +750,6 @@ prosesDelete(id,nama_produk,subtotal_lama){
             app.getResults()
             app.penjualan.subtotal = subtotal
             app.penjualan.total_akhir = subtotal
-            app.hitungKembalian(app.penjualan.pembayaran)
             app.potonganPersen()
             app.alert("Menghapus Produk "+nama_produk)
             app.loading = false
@@ -867,7 +862,7 @@ prosesSelesaiPenjualan(value){
 
     })
     .catch(function (resp) {  
-        
+
         app.loading = false;
         console.log(resp);  
         alert("Tidak dapat Menyelesaikan Transaksi Penjualan");        
