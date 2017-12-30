@@ -61,7 +61,7 @@
                                 <div class="card" style="margin-bottom:1px; margin-top:1px; margin-right:1px; margin-left:1px;">
 
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-6 col-xs-12">
                                             <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
                                                 <label class="label-control">Pelanggan(F4)</label><br>
                                                 <selectize-component v-model="penjualan.pelanggan" :settings="placeholder_pelanggan" id="pelanggan" ref='pelanggan' v-shortkey.focus="['f4']"> 
@@ -70,7 +70,7 @@
                                               <br v-if="errors.pelanggan">  <span v-if="errors.pelanggan" id="pelanggan_error" class="label label-danger">{{ errors.pelanggan[0] }}</span>
                                           </div>
                                       </div>
-                                      <div class="col-md-6">
+                                      <div class="col-md-6 col-xs-12">
 
                                           <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
                                             <label class="label-control">Kas(F6)</label><br>
@@ -84,20 +84,20 @@
 
                                 <div class="row">
 
-                                    <div class="col-md-3">
+                                    <div class="col-md-3 col-xs-6">
                                         <div class="form-group" style="margin-right: 1px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px; width:130px;">
                                             <label class="label-control">Potongan(F7)</label>  
                                             <money class="form-subtotal" v-model="penjualan.potongan_faktur" v-bind="separator" v-shortkey.focus="['f7']"></money>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-3 col-xs-6">
                                         <div class="form-group" style="margin-right: 10px; margin-left: 1px; margin-bottom: 1px; margin-top: 1px;">
                                             <label class="label-control">(%)(F8)</label>    
                                             <input type="number" class="form-subtotal" value="0" v-model="penjualan.potongan_persen" v-on:blur="potonganPersen" v-shortkey.focus="['f8']" />
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6">
+                                    <div class="col-md-6 col-xs-12">
                                         <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
                                             <label class="label-control">Jatuh Tempo(F9)</label> 
                                             <datepicker :input-class="'form-control'" placeholder="Jatuh Tempo" v-model="penjualan.jatuh_tempo" v-shortkey.focus="['f9']" ></datepicker>

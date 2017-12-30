@@ -21,6 +21,75 @@
 					<div class="toolbar">
 					</div>
 
+
+					<div class="modal" id="modal_detail_transaksi" role="dialog" data-backdrop=""> 
+						<div class="modal-dialog"> 
+							<!-- Modal content--> 
+							<div class="modal-content"> 
+								<div class="modal-header"> 
+									<button type="button" class="close" v-on:click="closeModal()"> <i class="material-icons">close</i></button> 
+									<h4 class="modal-title"> 
+										<div class="alert-icon"> 
+											<b>Detail Penjualan POS #{{id_penjualan_pos}}</b> 
+										</div> 
+									</h4> 
+								</div> 
+								<form class="form-horizontal" > 
+									<div class="modal-body"> 
+										<div class="card" style="margin-bottom:1px; margin-top:1px;">
+
+											<table class="table" style="margin-bottom:10px; margin-top:10px; margin-right:10px; margin-left:10px;">
+
+												<tbody style="margin-bottom:10px; margin-top:10px; margin-right:10px; margin-left:10px;">
+													<tr>
+														<td class="text-primary"><b># Kas </b> </td>
+														<td class="text-primary"><b>: {{kas}} </b> </td>
+													</tr>
+													<tr>
+														<td class="text-primary"><b># Total </b> </td>
+														<td class="text-primary"><b>: {{ new Intl.NumberFormat().format(total) }},00 </b> </td>
+													</tr>
+													<tr>
+														<td class="text-primary"><b># Potongan </b> </td>
+														<td class="text-primary"><b>: {{ new Intl.NumberFormat().format(potongan) }},00 </b> </td>
+													</tr>
+													<tr>
+														<td class="text-primary"><b># Tunai </b> </td>
+														<td class="text-primary"><b>: {{ new Intl.NumberFormat().format(tunai) }},00 </b> </td>
+													</tr>
+													<tr>
+														<td class="text-primary"><b># Kembalian </b> </td>
+														<td class="text-primary"><b>: {{ new Intl.NumberFormat().format(kembalian) }},0 </b> </td>
+													</tr>
+													<tr>
+														<td class="text-primary"><b># Piutang </b> </td>
+														<td class="text-primary"><b>: {{ new Intl.NumberFormat().format(piutang) }},0 </b> </td>
+													</tr>
+													<tr>
+														<td class="text-primary"><b># Jatuh Tempo </b> </td>
+														<td class="text-primary"><b>: {{jatuh_tempo}} </b> </td>
+													</tr>
+													<tr>
+														<td class="text-primary"><b># Waktu Edit </b> </td>
+														<td class="text-primary"><b>: {{waktu_edit}} </b> </td>
+													</tr>
+													<tr>
+														<td class="text-primary"><b># User Edit </b> </td>
+														<td class="text-primary"><b>: {{user_edit}} </b> </td>
+													</tr>
+												</tbody>
+											</table>  
+
+										</div> 
+									</div>
+									<div class="modal-footer">  
+									</div> 
+								</form>
+							</div>       
+						</div> 
+					</div> 
+					<!-- / MODAL TOMBOL SELESAI --> 
+
 					<div class=" table-responsive ">
 
 						<div class="pencarian">
@@ -36,6 +105,7 @@
 									<th>Pelanggan</th>
 									<th>Status</th>
 									<th>Total</th>
+									<th>User Buat</th>
 									<th>Detail</th>
 									<th>Edit</th>
 									<th>Hapus</th>
@@ -45,11 +115,15 @@
 							<tbody v-if="penjualan.length"  class="data-ada">
 								<tr v-for="penjualan, index in penjualan" >
 
-									<td>{{ penjualan.id }}</td>
+									<td>
+										<a href="#penjualan" v-bind:id="'edit-' + penjualan.id" v-on:click="detailTransaksi(penjualan.id,penjualan.total,penjualan.potongan,
+										penjualan.tunai,penjualan.kembalian,penjualan.jatuh_tempo,penjualan.waktu_edit,penjualan.user_edit,penjualan.kas,penjualan.piutang)">{{ penjualan.id }}</a>
+									</td>
 									<td>{{ penjualan.waktu }}</td>
 									<td>{{ penjualan.pelanggan }}</td>
 									<td>{{ penjualan.status_penjualan }}</td>
 									<td> {{ new Intl.NumberFormat().format(penjualan.total) }},00</td>
+									<td> {{ penjualan.user_buat }}</td>
 									<td>
 										<router-link :to="{name: 'detailPenjualan', params: {id: penjualan.id}}" class="btn btn-xs btn-info" v-bind:id="'detail-' + penjualan.id" >
 										Detail </router-link> 
@@ -87,7 +161,18 @@ export default {
 			url : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
 			pencarian: '',
 			loading: true,
-			seen : false,           
+			seen : false,  
+			id_penjualan_pos : 0,
+			kas : '',
+			total : 0,
+			potongan : 0,
+			tunai : 0,
+			kembalian : 0,
+			piutang : 0,
+			jatuh_tempo : '',
+			waktu_edit : '',
+			user_edit : ''
+
 		}
 	},
 	mounted() {   
@@ -186,6 +271,24 @@ methods: {
 			app.loading = false;
 			alert("Tidak dapat Menghapus Penjualan "+no_faktur);
 		});
+	},
+	detailTransaksi(id_penjualan_pos,total,potongan,tunai,kembalian,jatuh_tempo,waktu_edit,user_edit,kas,piutang){
+
+		this.id_penjualan_pos = id_penjualan_pos
+		this.kas = kas
+		this.total = total		
+		this.potongan = potongan
+		this.tunai = tunai
+		this.kembalian = kembalian
+		this.jatuh_tempo = jatuh_tempo
+		this.waktu_edit = waktu_edit
+		this.user_edit = user_edit
+		this.piutang = piutang
+		$("#modal_detail_transaksi").show()
+
+	},
+	closeModal(){
+		$("#modal_detail_transaksi").hide();
 	},
 	alert(pesan) {
 		this.$swal({
