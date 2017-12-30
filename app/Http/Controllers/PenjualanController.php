@@ -87,7 +87,7 @@ class PenjualanController extends Controller
     public function view()
     {
         $user_warung   = Auth::user()->id_warung;
-        $penjualan = PenjualanPos::with(['pelanggan'])->where('warung_id', $user_warung)->orderBy('id', 'desc')->paginate(10);
+        $penjualan = PenjualanPos::with(['pelanggan','kas','user_edit','user_buat'])->where('warung_id', $user_warung)->orderBy('id', 'desc')->paginate(10);
         $array         = array();
 
         foreach ($penjualan as $penjualans) {
@@ -96,7 +96,16 @@ class PenjualanController extends Controller
                 'waktu'    => $penjualans->Waktu,
                 'pelanggan'     => $penjualans->pelanggan->name,
                 'status_penjualan'         => $penjualans->status_penjualan,
-                'total'         => $penjualans->total
+                'total'         => $penjualans->total,
+                'kas'   => $penjualans->kas->nama_kas,
+                'potongan' => $penjualans->potongan,
+                'tunai' => $penjualans->tunai,
+                'kembalian' => $penjualans->kembalian,
+                'piutang' => $penjualans->nilai_kredit,
+                'jatuh_tempo' => $penjualans->JatuhTempo,
+                'user_buat' => $penjualans->user_buat->name,
+                'user_edit' => $penjualans->user_edit->name,
+                'waktu_edit' => $penjualans->WaktuEdit
             ]);
         }
 
@@ -797,51 +806,51 @@ public function update(Request $request, $id)
 
       if ($data_penjualan_pos->kredit > 0) {
 
-       TransaksiPiutang::create([
-        'no_faktur'       => $id,
-        'jenis_transaksi' => 'PenjualanPos',
-        'jumlah_masuk'    => $data_penjualan_pos->kredit,
-        'pelanggan_id'    => $data_penjualan_pos->pelanggan_id,
-        'warung_id'       => $data_penjualan_pos->warung_id]);
+         TransaksiPiutang::create([
+            'no_faktur'       => $id,
+            'jenis_transaksi' => 'PenjualanPos',
+            'jumlah_masuk'    => $data_penjualan_pos->kredit,
+            'pelanggan_id'    => $data_penjualan_pos->pelanggan_id,
+            'warung_id'       => $data_penjualan_pos->warung_id]);
 
-   }
+     }
 
         // inset detail penjualan
-   foreach ($data_produk_penjualan_pos->get() as $data_tbs) {
+     foreach ($data_produk_penjualan_pos->get() as $data_tbs) {
 
-    $detail_penjualan = new DetailPenjualanPos();
-    $stok_produk      = $detail_penjualan->stok_produk($data_tbs->id_produk);
-    $sisa             = $stok_produk - $data_tbs->jumlah_produk;
+        $detail_penjualan = new DetailPenjualanPos();
+        $stok_produk      = $detail_penjualan->stok_produk($data_tbs->id_produk);
+        $sisa             = $stok_produk - $data_tbs->jumlah_produk;
 
-    if ($sisa < 0) {
+        if ($sisa < 0) {
                     //DI BATALKAN PROSES NYA
 
-        $respons['respons']     = 1;
-        $respons['nama_produk'] = title_case($data_tbs->produk->nama_barang);
-        $respons['stok_produk'] = $stok_produk;
-        DB::rollBack();
-        return response()->json($respons);
+            $respons['respons']     = 1;
+            $respons['nama_produk'] = title_case($data_tbs->produk->nama_barang);
+            $respons['stok_produk'] = $stok_produk;
+            DB::rollBack();
+            return response()->json($respons);
 
-    } else {
+        } else {
 
-        $detail_penjualan = DetailPenjualanPos::create([
-            'id_penjualan_pos' => $id,
-            'no_faktur'        => $data_penjualan_pos->no_faktur,
-            'satuan_id'        => $data_tbs->satuan_id,
-            'id_produk'        => $data_tbs->id_produk,
-            'jumlah_produk'    => $data_tbs->jumlah_produk,
-            'harga_produk'     => $data_tbs->harga_produk,
-            'subtotal'         => $data_tbs->subtotal,
-            'potongan'         => $data_tbs->potongan,
-            'warung_id'        => Auth::user()->id_warung,
-        ]);
+            $detail_penjualan = DetailPenjualanPos::create([
+                'id_penjualan_pos' => $id,
+                'no_faktur'        => $data_penjualan_pos->no_faktur,
+                'satuan_id'        => $data_tbs->satuan_id,
+                'id_produk'        => $data_tbs->id_produk,
+                'jumlah_produk'    => $data_tbs->jumlah_produk,
+                'harga_produk'     => $data_tbs->harga_produk,
+                'subtotal'         => $data_tbs->subtotal,
+                'potongan'         => $data_tbs->potongan,
+                'warung_id'        => Auth::user()->id_warung,
+            ]);
 
+        }
     }
-}
 
-$data_produk_penjualan_pos = EditTbsPenjualan::where('id_penjualan_pos', $id)->where('warung_id', Auth::user()->id_warung)->delete();
-DB::commit();
-return response(200);
+    $data_produk_penjualan_pos = EditTbsPenjualan::where('id_penjualan_pos', $id)->where('warung_id', Auth::user()->id_warung)->delete();
+    DB::commit();
+    return response(200);
 }
 
 }
@@ -859,12 +868,12 @@ public function destroy($id)
 
 
     if (!PenjualanPos::destroy($id)) {
-     DB::rollBack();
-     return 0;
- } else {
-  DB::commit();
-  return response(200);
-}
+       DB::rollBack();
+       return 0;
+   } else {
+      DB::commit();
+      return response(200);
+  }
 }
 
 // edit penjualan
