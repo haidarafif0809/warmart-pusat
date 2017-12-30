@@ -186,26 +186,21 @@ class LaporanLabaKotorController extends Controller
         $request['sampai_tanggal'] = $sampai_tanggal;
         $request['pelanggan']      = $pelanggan;
 
-        //QUERY LABA KOTOR POS
+    //QUERY LABA KOTOR POS
         $laporan_laba_kotor = PenjualanPos::laporanLabaKotorPos($request)->get();
-
-        //SUBTOTAL KESELURUHAN
         $sub_total_penjualan = DetailPenjualanPos::subtotalLaporanLabaKotor($request)->first();
-        //DISKON KESELURUHAN
         $sub_potongan = PenjualanPos::potonganLaporanLabaKotor($request)->first();
         $potongan     = $sub_potongan->potongan;
-        //TOTAL HPP KESELURUHAN
         $jenis_transaksi = "PenjualanPos";
         $sub_hpp         = Hpp::hppLaporanLabaKotor($request, $jenis_transaksi)->first();
+    //QUERY LABA KOTOR POS
 
-        //QUERY LABA KOTOR PESANAN
+    //QUERY LABA KOTOR PESANAN
         $laporan_laba_kotor_pesanan = Penjualan::laporanLabaKotorPesanan($request)->get();
-
-        //SUBTOTAL KESELURUHAN
         $sub_total_penjualan_pesanan = DetailPenjualan::subtotalLaporanLabaKotorPesanan($request)->first();
-        //TOTAL HPP KESELURUHAN
         $jenis_transaksi = "penjualan";
         $sub_hpp_pesanan = Hpp::hppLaporanLabaKotor($request, $jenis_transaksi)->first();
+    //QUERY LABA KOTOR PESANAN
 
         Excel::create('Laporan Laba Kotor Pelanggan', function ($excel) use ($laporan_laba_kotor, $request, $sub_total_penjualan, $potongan, $sub_hpp, $laporan_laba_kotor_pesanan, $sub_total_penjualan_pesanan, $sub_hpp_pesanan) {
             // Set property
@@ -213,7 +208,7 @@ class LaporanLabaKotorController extends Controller
                 $row = 1;
                 $sheet->row($row, [
                     'LABA KOTOR PENJUALAN POS',
-                ]);
+                    ]);
 
                 $row = 3;
                 $sheet->row($row, [
@@ -227,7 +222,7 @@ class LaporanLabaKotorController extends Controller
                     'Diskon Faktur',
                     'Laba Jual',
 
-                ]);
+                    ]);
 
                 //LABA KOTOR /PELANGGAN
                 foreach ($laporan_laba_kotor as $laba_kotor) {
@@ -245,7 +240,7 @@ class LaporanLabaKotorController extends Controller
                         $total_laba_kotor = round($total_laba_kotor, 2),
                         $laba_kotor->potongan,
                         $laba_jual = round($laba_jual, 2),
-                    ]);
+                        ]);
                 }
 
                 $sheet->row(++$row, [
@@ -257,12 +252,12 @@ class LaporanLabaKotorController extends Controller
                     $subtotal_laba_kotor = $subtotal_penjualan - $subtotal_hpp,
                     $subtotal_potongan = $potongan,
                     $subtotal_laba_jual = $subtotal_laba_kotor - $subtotal_potongan,
-                ]);
+                    ]);
 
                 $row = ++$row + 3;
                 $sheet->row($row, [
                     'LABA KOTOR PENJUALAN ONLINE',
-                ]);
+                    ]);
 
                 //LABA KOTOR /PRODUK
                 foreach ($laporan_laba_kotor_pesanan as $laba_kotor_pesanan) {
@@ -280,7 +275,7 @@ class LaporanLabaKotorController extends Controller
                         $total_laba_kotor = round($total_laba_kotor, 2),
                         0,
                         $laba_jual = round($laba_jual, 2),
-                    ]);
+                        ]);
                 }
 
                 $sheet->row(++$row, [
@@ -292,10 +287,10 @@ class LaporanLabaKotorController extends Controller
                     $subtotal_laba_kotor = $subtotal_penjualan - $subtotal_hpp,
                     0,
                     $subtotal_laba_jual = $subtotal_laba_kotor - $subtotal_potongan,
-                ]);
+                    ]);
 
             });
 
-        })->export('xls');
-    }
+})->export('xls');
+}
 }

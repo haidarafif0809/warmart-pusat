@@ -101,7 +101,7 @@ class Hpp extends Model
     // HPP LABA KOTOR /PRODUK PENJUALAN POS
     public function scopeHppLaporanLabaKotorProduk($query_sub_hpp, $request, $jenis_transaksi)
     {
-        if ($request->produk == "") {
+        if ($request->produk == "" || $request->produk == null || $request->produk == 0) {
             $query_sub_hpp = Hpp::select(DB::raw('SUM(total_nilai) as total_hpp'))
                 ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
                 ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))

@@ -67,109 +67,109 @@ Route::get('/dashboard', [
     'middleware' => ['auth', 'optimizeImages'],
     'as'         => 'home.dashboard',
     'uses'       => 'HomeController@dashboard',
-]);
+    ]);
 
 //PUNYA DAFTAR PRODUK
 Route::get('/daftar-produk', [
     'middleware' => ['auth'],
     'as'         => 'daftar_produk.index',
     'uses'       => 'DaftarProdukController@index',
-]);
+    ]);
 
 Route::get('/daftar-produk/{id}', [
     'middleware' => ['auth'],
     'as'         => 'daftar_produk.filter_kategori',
     'uses'       => 'DaftarProdukController@filter_kategori',
-]);
+    ]);
 
 Route::get('/daftar-produk/pencarian/search', [
     'as'   => 'daftar_produk.pencarian',
     'uses' => 'DaftarProdukController@pencarian',
-]);
+    ]);
 
 //PUNYA DETAIL PRODUK
 Route::get('/detail-produk/{id}', [
     'as'   => 'detail-produk.detail_produk',
     'uses' => 'DetailProdukController@detail_produk',
-]);
+    ]);
 
 //PUNYA HALAMAN WARUNG
 Route::get('/halaman-warung/{id}', [
     'middleware' => ['auth'],
     'as'         => 'halaman-warung.halaman_warung',
     'uses'       => 'HalamanWarungController@index',
-]);
+    ]);
 
 Route::get('/halaman-warung/filter/{id}/{id_warung}/', [
     'middleware' => ['auth'],
     'as'         => 'halaman_warung.filter_kategori',
     'uses'       => 'HalamanWarungController@filter_kategori',
-]);
+    ]);
 
 Route::get('/halaman-warung/pencarian/search', [
     'middleware' => ['auth'],
     'as'         => 'halaman_warung.pencarian',
     'uses'       => 'HalamanWarungController@pencarian',
-]);
+    ]);
 
 //PUNYA KERANJANG BELANJAAN
 Route::get('/keranjang-belanja', [
     'middleware' => ['auth'],
     'as'         => 'keranjang_belanja.daftar_belanja',
     'uses'       => 'KeranjangBelanjaController@daftar_belanja',
-]);
+    ]);
 
 Route::get('/keranjang-belanja/tambah-jumlah-produk-keranjang-belanja/{id}', [
     'middleware' => ['auth'],
     'as'         => 'keranjang-belanja.tambah_jumlah_produk_keranjang_belanjaan',
     'uses'       => 'KeranjangBelanjaController@tambah_jumlah_produk_keranjang_belanjaan',
-]);
+    ]);
 
 Route::get('/keranjang-belanja/kurang-jumlah-produk-keranjang-belanja/{id}', [
     'middleware' => ['auth'],
     'as'         => 'keranjang-belanja.kurang_jumlah_produk_keranjang_belanjaan',
     'uses'       => 'KeranjangBelanjaController@kurang_jumlah_produk_keranjang_belanjaan',
-]);
+    ]);
 
 Route::get('/keranjang-belanja/hapus-produk-keranjang-belanja/{id}', [
     'middleware' => ['auth'],
     'as'         => 'keranjang-belanja.hapus_produk_keranjang_belanjaan',
     'uses'       => 'KeranjangBelanjaController@hapus_produk_keranjang_belanjaan',
-]);
+    ]);
 
 Route::get('/keranjang-belanja/tambah-produk-keranjang-belanja/{id}', [
     'middleware' => ['auth'],
     'as'         => 'keranjang-belanja.tambah_produk_keranjang_belanjaan',
     'uses'       => 'KeranjangBelanjaController@tambah_produk_keranjang_belanjaan',
-]);
+    ]);
 
 //PUNYA SELESAI PEMESANAN
 Route::get('/selesaikan-pemesanan', [
     'middleware' => ['auth'],
     'as'         => 'selesaikan-pemesanan.index',
     'uses'       => 'PemesananController@selesaikanPemesanan',
-]);
+    ]);
 
 //PUNYA PROSES SELESAI PEMESANAN
 Route::put('proses/selesaikan-pemesanan', [
     'middleware' => ['auth'],
     'as'         => 'selesaikan-pemesanan.proses',
     'uses'       => 'PemesananController@prosesSelesaikanPemesanan',
-]);
+    ]);
 
 //PUNYA PESANAN PELANGGAN
 Route::get('/pesanan', [
     'middleware' => ['auth'],
     'as'         => 'pesanan.index',
     'uses'       => 'PesananPelangganController@pesananPelanggan',
-]);
+    ]);
 
 //PUNYA DETAIL PESANAN PELANGGAN
 Route::get('pesanan-detail/{id}', [
     'middleware' => ['auth'],
     'as'         => 'pesanan.detail',
     'uses'       => 'PesananPelangganController@detailPesananPelanggan',
-]);
+    ]);
 
 //BATAL PESANAN PELANGGAN
 Route::get('batal-pesanan-pelanggan/{id}', 'PesananPelangganController@batalPesananPelanggan')->middleware('auth');
@@ -182,49 +182,49 @@ Route::get('/pesanan-warung', [
     'middleware' => ['auth'],
     'as'         => 'pesanan-warung.index',
     'uses'       => 'PesananWarungController@pesananWarung',
-]);
+    ]);
 
 //PUNYA PESANAN WARUNG
 Route::get('detail-pesanan-warung/{id}', [
     'middleware' => ['auth'],
     'as'         => 'pesanan-warung.detail',
     'uses'       => 'PesananWarungController@detailPesananWarung',
-]);
+    ]);
 
 //PUNYA KONFIRMASI PESANAN WARUNG
 Route::get('konfirmasi-pesanan-warung/{id}', [
     'middleware' => ['auth'],
     'as'         => 'pesanan-warung.konfirmasi',
     'uses'       => 'PesananWarungController@konfirmasiPesananWarung',
-]);
+    ]);
 
 //PUNYA BATALKAN KONFIRMASI PESANAN WARUNG
 Route::get('batalkan-konfirmasi-pesanan-warung/{id}', [
     'middleware' => ['auth'],
     'as'         => 'pesanan-warung.batalkan_konfirmasi',
     'uses'       => 'PesananWarungController@batalkanKonfirmasiPesananWarung',
-]);
+    ]);
 
 //PUNYA TAMBAH JUMLAH PRODUK PESANAN WARUNG
 Route::get('tambah-produk-pesanan-warung/{id}', [
     'middleware' => ['auth'],
     'as'         => 'pesanan-warung.tambah',
     'uses'       => 'PesananWarungController@tambahProdukPesananWarung',
-]);
+    ]);
 
 //PUNYA KURANG JUMLAH PRODUK PESANAN WARUNG
 Route::get('kurang-produk-pesanan-warung/{id}', [
     'middleware' => ['auth'],
     'as'         => 'pesanan-warung.kurang',
     'uses'       => 'PesananWarungController@kurangProdukPesananWarung',
-]);
+    ]);
 
 //PUNYA EDIT JUMLAH  PESANAN WARUNG
 Route::post('/edit-jumlah-pesanan-warung}', [
     'middleware' => ['auth'],
     'as'         => 'pesanan-warung.edit_jumlah_pesanan',
     'uses'       => 'PesananWarungController@editJumlahPesanan',
-]);
+    ]);
 
 //PUNYA
 
@@ -255,12 +255,12 @@ Route::get('lupa-password', 'Auth\RegisterController@lupa_password');
 Route::put('/proses-kirim-kode-verifikasi/{nomor_hp}', [
     'as'   => 'user.proses_kirim_kode_verifikasi',
     'uses' => 'Auth\RegisterController@proses_kirim_kode_verifikasi',
-]);
+    ]);
 
 Route::post('/proses-lupa-password', [
     'as'   => 'user.proses_lupa_password',
     'uses' => 'Auth\RegisterController@proses_lupa_password',
-]);
+    ]);
 
 Route::get('/home', 'HomeController@index_home')->name('home');
 Route::get('/dashboard-admin', 'HomeController@dashboard_admin')->middleware(['auth', 'user-must-admin']);
@@ -270,90 +270,90 @@ Route::get('/ubah-password', [
     'middleware' => ['auth'],
     'as'         => 'user.ubah_password',
     'uses'       => 'UbahPasswordController@ubah_password',
-]);
+    ]);
 
 Route::put('/proses-ubah-password', [
     'middleware' => ['auth'],
     'as'         => 'user.proses_ubah_password',
     'uses'       => 'UbahPasswordController@proses_ubah_password',
-]);
+    ]);
 
 //UBAH PASSWORD PELANGGAN
 Route::get('/ubah-password-pelanggan', [
     'middleware' => ['auth'],
     'as'         => 'user.ubah_password_pelanggan',
     'uses'       => 'UbahPasswordController@ubah_password_pelanggan',
-]);
+    ]);
 
 //PROSES //UBAH PASSWORD PELANGGAN
 Route::put('/proses-ubah-password-pelanggan/{id}', [
     'middleware' => ['auth'],
     'as'         => 'user.proses_ubah_password_pelanggan',
     'uses'       => 'UbahPasswordController@proses_ubah_password_pelanggan',
-]);
+    ]);
 
 //UBAH PROFIL PELANGGAN
 Route::get('/ubah-profil-pelanggan', [
     'middleware' => ['auth'],
     'as'         => 'user.ubah_profil_pelanggan',
     'uses'       => 'UbahProfilController@ubah_profil_pelanggan',
-]);
+    ]);
 
 // PROSES CARI PROVINSI
 Route::get('/cek-wilayah', [
     'middleware' => ['auth'],
     'as'         => 'cek_wilayah',
     'uses'       => 'UbahProfilController@cek_wilayah',
-]);
+    ]);
 
 //PROSES UBAH PROFIL PELANGGAN
 Route::put('/proses-ubah-profil-pelanggan', [
     'middleware' => ['auth'],
     'as'         => 'user.proses_ubah_profil_pelanggan',
     'uses'       => 'UbahProfilController@proses_ubah_profil_pelanggan',
-]);
+    ]);
 
 //UBAH PROFIL WARUNG
 Route::get('/ubah-profil-user-warung', [
     'middleware' => ['auth'],
     'as'         => 'user.ubah_profil_warung',
     'uses'       => 'UbahProfilController@ubah_profil_user_warung',
-]);
+    ]);
 
 //PROSES UBAH PROFIL WARUNG
 Route::post('/ubah-profil-user-warung/{id}', [
     'middleware' => ['auth'],
     'as'         => 'user.proses_ubah_profil_warung',
     'uses'       => 'UbahProfilController@proses_ubah_profil_warung',
-]);
+    ]);
 
 //UBAH PROFIL KOMUNITAS
 Route::get('/ubah-profil-komunitas', [
     'middleware' => ['auth'],
     'as'         => 'user.proses_ubah_profil',
     'uses'       => 'UbahProfilController@proses_ubah_profil',
-]);
+    ]);
 
 //PROSES UBAH PROFIL KOMUNITAS
 Route::put('/proses-ubah-profil-komunitas', [
     'middleware' => ['auth'],
     'as'         => 'user.proses_ubah_profil_komunitas',
     'uses'       => 'UbahProfilController@proses_ubah_profil_komunitas',
-]);
+    ]);
 
 //UBAH PROFIL ADMIN
 Route::get('/ubah-profil-admin', [
     'middleware' => ['auth'],
     'as'         => 'user.ubah_profil_admin',
     'uses'       => 'UbahProfilController@ubah_profil_admin',
-]);
+    ]);
 
 //PROSES UBAH PROFIL ADMIN
 Route::put('/proses-ubah-profil-admin', [
     'middleware' => ['auth'],
     'as'         => 'user.proses_ubah_profil_admin',
     'uses'       => 'UbahProfilController@proses_ubah_profil_admin',
-]);
+    ]);
 
 //menampilkan data bank
 Route::get('/bank/view', 'BankController@view')->middleware('auth');
@@ -545,6 +545,7 @@ Route::post('/laporan-laba-kotor-produk/pencarian-pesanan', 'LaporanLabaKotorPro
 Route::get('/laporan-laba-kotor-produk/pilih-produk', 'LaporanLabaKotorProdukController@pilihProduk')->middleware('auth');
 Route::post('/laporan-laba-kotor-produk/subtotal-laba-kotor-produk', 'LaporanLabaKotorProdukController@subtotalLabaKotorProduk')->middleware('auth');
 Route::post('/laporan-laba-kotor-produk/subtotal-laba-kotor-produk-pesanan', 'LaporanLabaKotorProdukController@subtotalLabaKotorProdukPesanan')->middleware('auth');
+Route::get('/laporan-laba-kotor-produk/download-excel-laba-kotor/{dari_tanggal}/{sampai_tanggal}/{pelanggan}', 'LaporanLabaKotorProdukController@downloadExcel')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
@@ -580,21 +581,21 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
         'middleware' => ['auth'],
         'as'         => 'produk.detail_produk',
         'uses'       => 'BarangController@detail_produk',
-    ]);
+        ]);
 
     //PROSES UPDATE DESKRIPSI
     Route::put('/update-deskripsi', [
         'middleware' => ['auth'],
         'as'         => 'produk.update_deskripsi_produk',
         'uses'       => 'BarangController@update_deskripsi_produk',
-    ]);
+        ]);
 
     //LIHAT DESKRIPSI
     Route::get('/produk/lihat-deskripsi-produk/{id}', [
         'middleware' => ['auth'],
         'as'         => 'produk.lihat_deskripsi_produk',
         'uses'       => 'BarangController@lihat_deskripsi_produk',
-    ]);
+        ]);
 
     // PEMBELIAN
 
@@ -603,32 +604,32 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
         'middleware' => ['auth'],
         'as'         => 'pembelian.hapus_tbs_pembelian',
         'uses'       => 'PembelianController@hapus_tbs_pembelian',
-    ]);
+        ]);
 
     Route::post('/pembelian/batal-transaksi-pembelian/', [
         'middleware' => ['auth'],
         'as'         => 'pembelian.batal_transaksi_pembelian',
         'uses'       => 'PembelianController@proses_batal_transaksi_pembelian',
-    ]);
+        ]);
     // DATATABEL DETAIL PEMBELIAN
     Route::post('pembelian/detail-pembelian', [
         'middleware' => ['auth'],
         'as'         => 'datatable_detail.pembelian',
         'uses'       => 'PembelianController@datatableDetailPembelian',
-    ]);
+        ]);
     // DATATABEL DETAIL FAKTUR PEMBELIAN
     Route::post('pembelian/detail-faktur-pembelian', [
         'middleware' => ['auth'],
         'as'         => 'datatable_detail_faktur_beli',
         'uses'       => 'PembelianController@datatableFakturPembelian',
-    ]);
+        ]);
 
     // PROSES FROM EDIT BELI
     Route::get('/pembelian/proses-form-edit/{id}', [
         'middleware' => ['auth'],
         'as'         => 'pembelian.form_edit_beli',
         'uses'       => 'PembelianController@proses_form_edit',
-    ]);
+        ]);
     // END PEMBELIAN
 
     // EDIT PEMBELIAN
@@ -637,52 +638,52 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
         'middleware' => ['auth'],
         'as'         => 'editPembelian.proses_tambah_tbs_pembelian',
         'uses'       => 'EditPembelianController@proses_tambah_tbs_pembelian',
-    ]);
+        ]);
 
     // EDIT JUMLAH TBS PEMBELIAN
     Route::post('/editPembelian/proses-edit-jumlah-tbs-pembelian', [
         'middleware' => ['auth'],
         'as'         => 'editPembelian.edit_jumlah_tbs_pembelian',
         'uses'       => 'EditPembelianController@edit_jumlah_tbs_pembelian',
-    ]);
+        ]);
 
     // EDIT HARGA TBS PEMBELIAN
     Route::post('/editPembelian/proses-edit-harga-tbs-pembelian', [
         'middleware' => ['auth'],
         'as'         => 'editPembelian.edit_harga_tbs_pembelian',
         'uses'       => 'EditPembelianController@edit_harga_tbs_pembelian',
-    ]);
+        ]);
     // EDIT POTONGAN TBS PEMBELIAN
     Route::post('/editPembelian/proses-edit-potongan-tbs-pembelian', [
         'middleware' => ['auth'],
         'as'         => 'editPembelian.edit_potongan_tbs_pembelian',
         'uses'       => 'EditPembelianController@edit_potongan_tbs_pembelian',
-    ]);
+        ]);
 
     // EDIT TAX TBS PEMBELIAN
     Route::post('/editPembelian/proses-edit-tax-tbs-pembelian', [
         'middleware' => ['auth'],
         'as'         => 'editPembelian.edit_tax_tbs_pembelian',
         'uses'       => 'EditPembelianController@editTaxTbsPembelian',
-    ]);
+        ]);
     // HAPUS TBS PEMBELIAN
     Route::delete('/editPembelian/hapus-tbs-pembelian/{id}', [
         'middleware' => ['auth'],
         'as'         => 'editPembelian.hapus_tbs_pembelian',
         'uses'       => 'EditPembelianController@hapus_tbs_pembelian',
-    ]);
+        ]);
     // batal
     Route::post('/editPembelian/batal-transaksi-pembelian/', [
         'middleware' => ['auth'],
         'as'         => 'editPembelian.batal_transaksi_pembelian',
         'uses'       => 'EditPembelianController@proses_batal_transaksi_pembelian',
-    ]);
+        ]);
     // PROSES EDIT PEMBELIAN
     Route::post('/editPembelian/proses-edit-pembelian', [
         'middleware' => ['auth'],
         'as'         => 'editPembelian.prosesEditPembelian',
         'uses'       => 'EditPembelianController@prosesEditPembelian',
-    ]);
+        ]);
     // EDIT PEMBELIAN
 
 //ITEM KELUAR
@@ -690,59 +691,59 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
         'middleware' => ['auth'],
         'as'         => 'item-keluar.proses_tambah_tbs_item_keluar',
         'uses'       => 'ItemKeluarController@proses_tambah_tbs_item_keluar',
-    ]);
+        ]);
 
     Route::post('/item-keluar/proses-hapus-semua-tbs-item-keluar/', [
         'middleware' => ['auth'],
         'as'         => 'item-keluar.proses_hapus_semua_tbs_item_keluar',
         'uses'       => 'ItemKeluarController@proses_hapus_semua_tbs_item_keluar',
-    ]);
+        ]);
 
     Route::delete('/item-keluar/proses-hapus-tbs-item-keluar/{id}', [
         'middleware' => ['auth'],
         'as'         => 'item-keluar.proses_hapus_tbs_item_keluar',
         'uses'       => 'ItemKeluarController@proses_hapus_tbs_item_keluar',
-    ]);
+        ]);
 
     Route::post('/item-keluar/proses-hapus-semua-edit-tbs-item-keluar', [
         'middleware' => ['auth'],
         'as'         => 'item-keluar.proses_hapus_semua_edit_tbs_item_keluar',
         'uses'       => 'ItemKeluarController@proses_hapus_semua_edit_tbs_item_keluar',
-    ]);
+        ]);
 
     Route::post('/item-keluar/proses-edit-item-keluar/{id}', [
         'middleware' => ['auth'],
         'as'         => 'item-keluar.proses_edit_item_keluar',
         'uses'       => 'ItemKeluarController@proses_edit_item_keluar',
-    ]);
+        ]);
 
     Route::get('/item-keluar/proses-form-edit/{id}', [
         'middleware' => ['auth'],
         'as'         => 'item-keluar.proses_form_edit',
         'uses'       => 'ItemKeluarController@proses_form_edit',
-    ]);
+        ]);
     Route::post('/item-keluar/proses-tambah-edit-tbs-item-keluar', [
         'middleware' => ['auth'],
         'as'         => 'item-keluar.proses_tambah_edit_tbs_item_keluar',
         'uses'       => 'ItemKeluarController@proses_tambah_edit_tbs_item_keluar',
-    ]);
+        ]);
     Route::delete('/item-keluar/proses-hapus-edit-tbs-item-keluar/{id}', [
         'middleware' => ['auth'],
         'as'         => 'item-keluar.proses_hapus_edit_tbs_item_keluar',
         'uses'       => 'ItemKeluarController@proses_hapus_edit_tbs_item_keluar',
-    ]);
+        ]);
 
     Route::post('/item-keluar/edit-jumlah-tbs-item-keluar', [
         'middleware' => ['auth'],
         'as'         => 'item-keluar.edit_jumlah_tbs_item_keluar',
         'uses'       => 'ItemKeluarController@proses_edit_jumlah_tbs_item_keluar',
-    ]);
+        ]);
 
     Route::post('/item-keluar/edit-jumlah-edit-tbs-item-keluar', [
         'middleware' => ['auth'],
         'as'         => 'item-keluar.edit_jumlah_edit_tbs_item_keluar',
         'uses'       => 'ItemKeluarController@proses_edit_jumlah_edit_tbs_item_keluar',
-    ]);
+        ]);
 
 //ITEM KELUAR
 
@@ -750,7 +751,7 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
         'middleware' => ['auth'],
         'as'         => 'cek_total_kas',
         'uses'       => 'TransaksikasController@total_kas',
-    ]);
+        ]);
 
 //KOMUNITAS
 
@@ -758,146 +759,146 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
         'middleware' => ['auth', 'role:admin'],
         'as'         => 'komunitas.konfirmasi',
         'uses'       => 'KomunitasController@konfirmasi',
-    ]);
+        ]);
 
     Route::get('komunitas/no_konfirmasi/{id}', [
         'middleware' => ['auth'],
         'as'         => 'komunitas.no_konfirmasi',
         'uses'       => 'KomunitasController@no_konfirmasi',
-    ]);
+        ]);
 
     Route::get('otoritas/permission/{id}', [
         'middleware' => ['auth'],
         'as'         => 'otoritas.permission',
         'uses'       => 'OtoritasController@setting_permission',
-    ]);
+        ]);
     Route::put('otoritas/permission/{id}', [
         'middleware' => ['auth'],
         'as'         => 'otoritas.permission.edit',
         'uses'       => 'OtoritasController@proses_setting_permission',
-    ]);
+        ]);
 
 //ITEM MASUK
     Route::get('/item-masuk/proses-form-edit/{id}', [
         'middleware' => ['auth'],
         'as'         => 'item-masuk.proses_form_edit',
         'uses'       => 'ItemMasukController@proses_form_edit',
-    ]);
+        ]);
 
     Route::post('/item-masuk/proses-tambah-tbs-item-masuk', [
         'middleware' => ['auth'],
         'as'         => 'item-masuk.proses_tambah_tbs_item_masuk',
         'uses'       => 'ItemMasukController@proses_tambah_tbs_item_masuk',
-    ]);
+        ]);
 
     Route::post('/item-masuk/proses-tambah-edit-tbs-item-masuk', [
         'middleware' => ['auth'],
         'as'         => 'item-masuk.proses_tambah_edit_tbs_item_masuk',
         'uses'       => 'ItemMasukController@proses_tambah_edit_tbs_item_masuk',
-    ]);
+        ]);
 
     Route::post('/item-masuk/proses-hapus-tbs-item-masuk/{id}', [
         'middleware' => ['auth'],
         'as'         => 'item-masuk.proses_hapus_tbs_item_masuk',
         'uses'       => 'ItemMasukController@proses_hapus_tbs_item_masuk',
-    ]);
+        ]);
 
     Route::post('/item-masuk/proses-hapus-edit-tbs-item-masuk/{id}', [
         'middleware' => ['auth'],
         'as'         => 'item-masuk.proses_hapus_edit_tbs_item_masuk',
         'uses'       => 'ItemMasukController@proses_hapus_edit_tbs_item_masuk',
-    ]);
+        ]);
 
     Route::post('/item-masuk/proses-hapus-semua-tbs-item-masuk/', [
         'middleware' => ['auth'],
         'as'         => 'item-masuk.proses_hapus_semua_tbs_item_masuk',
         'uses'       => 'ItemMasukController@proses_hapus_semua_tbs_item_masuk',
-    ]);
+        ]);
 
     Route::post('/item-masuk/proses-hapus-semua-edit-tbs-item-masuk', [
         'middleware' => ['auth'],
         'as'         => 'item-masuk.proses_hapus_semua_edit_tbs_item_masuk',
         'uses'       => 'ItemMasukController@proses_hapus_semua_edit_tbs_item_masuk',
-    ]);
+        ]);
 
     Route::post('/item-masuk/proses-edit-item-masuk/{id}', [
         'middleware' => ['auth'],
         'as'         => 'item-masuk.proses_edit_item_masuk',
         'uses'       => 'ItemMasukController@proses_edit_item_masuk',
-    ]);
+        ]);
 
     Route::post('/item-masuk/edit-jumlah-item-masuk', [
         'middleware' => ['auth'],
         'as'         => 'item-masuk.edit_jumlah',
         'uses'       => 'ItemMasukController@proses_edit_jumlah',
-    ]);
+        ]);
 
     Route::post('/item-masuk/edit-jumlah-edit-item-masuk', [
         'middleware' => ['auth'],
         'as'         => 'item-masuk.edit_jumlah_edit',
         'uses'       => 'ItemMasukController@proses_edit_jumlah_edit',
-    ]);
+        ]);
 
     // penjualan
     Route::post('/penjualan/proses-tambah-tbs-penjualan', [
         'middleware' => ['auth'],
         'as'         => 'penjualan.proses_tambah_tbs_penjualan',
         'uses'       => 'PenjualanController@prosesTambahTbsPenjualan',
-    ]);
+        ]);
 
     Route::post('/penjualan/edit-jumlah-tbs-penjualan', [
         'middleware' => ['auth'],
         'as'         => 'penjualan.edit_jumlah_tbs_penjualan',
         'uses'       => 'PenjualanController@prosesEditJumlahTbsPenjualan',
-    ]);
+        ]);
 
     Route::post('/penjualan/edit-potongan-tbs-penjualan', [
         'middleware' => ['auth'],
         'as'         => 'penjualan.edit_potongan_tbs_penjualan',
         'uses'       => 'PenjualanController@prosesEditPotonganTbsPenjualan',
-    ]);
+        ]);
 
     Route::delete('/penjualan/proses-hapus-tbs-penjualan/{id}', [
         'middleware' => ['auth'],
         'as'         => 'penjualan.proses_hapus_tbs_penjualan',
         'uses'       => 'PenjualanController@prosesHapusTbsPenjualan',
-    ]);
+        ]);
 
     Route::post('/penjualan/proses-batal-penjualan/', [
         'middleware' => ['auth'],
         'as'         => 'penjualan.proses_batal_penjualan',
         'uses'       => 'PenjualanController@proses_batal_penjualan',
-    ]);
+        ]);
 
 // edit penjualan
     Route::post('/penjualan/proses-tambah-edit-tbs-penjualan/{id}', [
         'middleware' => ['auth'],
         'as'         => 'penjualan.proses_tambah_edit_tbs_penjualan',
         'uses'       => 'PenjualanController@prosesTambahEditTbsPenjualan',
-    ]);
+        ]);
 
     Route::post('/penjualan/edit-jumlah-edit-tbs-penjualan', [
         'middleware' => ['auth'],
         'as'         => 'penjualan.edit_jumlah_edit_tbs_penjualan',
         'uses'       => 'PenjualanController@prosesEditJumlahEditTbsPenjualan',
-    ]);
+        ]);
 
     Route::post('/penjualan/edit-potongan-edit-tbs-penjualan', [
         'middleware' => ['auth'],
         'as'         => 'penjualan.edit_potongan_edit_tbs_penjualan',
         'uses'       => 'PenjualanController@prosesEditPotonganEditTbsPenjualan',
-    ]);
+        ]);
 
     Route::delete('/penjualan/proses-hapus-edit-tbs-penjualan/{id}', [
         'middleware' => ['auth'],
         'as'         => 'penjualan.proses_hapus_edit_tbs_penjualan',
         'uses'       => 'PenjualanController@prosesHapusEditTbsPenjualan',
-    ]);
+        ]);
 
     Route::post('/penjualan/proses-batal-edit-penjualan/{id}', [
         'middleware' => ['auth'],
         'as'         => 'penjualan.proses_batal_edit_penjualan',
         'uses'       => 'PenjualanController@proses_batal_edit_penjualan',
-    ]);
+        ]);
 
 });

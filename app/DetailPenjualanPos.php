@@ -65,7 +65,7 @@ class DetailPenjualanPos extends Model
     // LAP. LABA KOTOR PENJUALAN PRODUK POS
     public function scopeLaporanLabaKotorProdukPos($query_laporan_laba_kotor, $request)
     {
-        if ($request->produk == "") {
+        if ($request->produk == "" || $request->produk == null || $request->produk == 0) {
             $query_laporan_laba_kotor = DetailPenjualanPos::select(['detail_penjualan_pos.id_produk', 'detail_penjualan_pos.harga_produk', DB::raw('SUM(detail_penjualan_pos.subtotal) as subtotal'), 'barangs.kode_barang', 'barangs.nama_barang'])
             ->leftJoin('barangs', 'barangs.id', '=', 'detail_penjualan_pos.id_produk')
             ->leftJoin('penjualan_pos', 'penjualan_pos.id', '=', 'detail_penjualan_pos.id_penjualan_pos')
@@ -128,7 +128,7 @@ class DetailPenjualanPos extends Model
     // SUBTOTAL LABA KOTOR /PRODUK PENJUALAN POS
     public function scopeSubtotalLaporanLabaKotorProduk($query_sub_total_penjualan, $request)
     {
-        if ($request->produk == "") {
+        if ($request->produk == "" || $request->produk == null || $request->produk == 0) {
             $query_sub_total_penjualan = DetailPenjualanPos::select(DB::raw('SUM(subtotal) as subtotal'))
             ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
             ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
