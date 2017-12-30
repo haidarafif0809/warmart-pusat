@@ -7,6 +7,7 @@ use App\DetailItemMasuk;
 use App\DetailPembelian;
 use App\DetailPenjualan;
 use App\DetailPenjualanPos;
+use App\PenjualanPos;
 use App\ItemKeluar;
 use App\ItemMasuk;
 use App\Kas;
@@ -25,6 +26,7 @@ use App\Observers\KasMutasiObserver;
 use App\Observers\KasObserver;
 use App\Observers\KategoriTransaksiObserver;
 use App\Observers\PembelianObserver;
+use App\Observers\PenjualanPosObserver;
 use App\Observers\UserWarungObserver;
 use App\Observers\WarungObserver;
 use App\Pembelian;
@@ -64,6 +66,7 @@ class AppServiceProvider extends ServiceProvider
         Pembelian::observe(PembelianObserver::class);
         DetailPenjualan::observe(DetailPenjualanObserver::class);
         DetailPenjualanPos::observe(DetailPenjualanPosObserver::class);
+        PenjualanPos::observe(PenjualanPosObserver::class);
     }
 
     /**

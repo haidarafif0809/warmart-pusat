@@ -56,7 +56,7 @@
 									</td>
 									<td><router-link :to="{name: 'prosesEditPenjualan', params: {id: penjualan.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + penjualan.id" >
 									Edit </router-link> </td> 
-									<td><a href="#penjualan" class="btn btn-xs btn-danger" v-bind:id="'delete-' + penjualan.id" v-on:click="deleteEntry(penjualan.id, index,penjualan.nama_produk,penjualan.subtotal)">Delete</a></td>
+									<td><a href="#penjualan" class="btn btn-xs btn-danger" v-bind:id="'delete-' + penjualan.id" v-on:click="deleteEntry(penjualan.id, index,penjualan.id,penjualan.subtotal)">Delete</a></td>
 								</tr>
 							</tbody>                    
 							<tbody class="data-tidak-ada" v-else>

@@ -51,7 +51,7 @@
 											<td>{{ detailPenjualan.nama_produk }}</td>
 											<td> {{ new Intl.NumberFormat().format(detailPenjualan.jumlah_produk) }},00</td>
 											<td> {{ new Intl.NumberFormat().format(detailPenjualan.harga_produk) }},00</td>
-											<td> {{ new Intl.NumberFormat().format(detailPenjualan.potongan) }},00</td>
+											<td> {{ detailPenjualan.potongan }}</td>
 											<td> {{ new Intl.NumberFormat().format(detailPenjualan.subtotal) }},00</td>
 
 										</tr>
