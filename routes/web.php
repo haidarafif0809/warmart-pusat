@@ -477,6 +477,10 @@ Route::get('/pembelian/view', 'PembelianController@view')->middleware('auth');
 Route::get('/pembelian/pencarian', 'PembelianController@pencarian')->middleware('auth');
 Route::get('/pembelian/view-tbs-pembelian', 'PembelianController@viewTbsPembelian')->middleware('auth');
 Route::get('/pembelian/pencarian-tbs-pembelian', 'PembelianController@pencarianTbsPembelian')->middleware('auth');
+Route::get('/pembelian/view-edit-tbs-pembelian/{id}', 'PembelianController@viewEditTbsPembelian')->middleware('auth');
+Route::get('/pembelian/pencarian-edit-tbs-pembelian/{id}', 'PembelianController@pencarianEditTbsPembelian')->middleware('auth');
+Route::get('/pembelian/ambil-faktur-pembelian/{id}', 'PembelianController@ambilFakturPembelian')->middleware('auth');
+
 Route::get('/pembelian/pilih-suplier', 'PembelianController@pilih_suplier')->middleware('auth');
 Route::get('/pembelian/cek-tbs-pembelian', 'PembelianController@cekTbsPembelian')->middleware('auth');
 Route::get('/pembelian/proses-tambah-tbs-pembelian', 'PembelianController@proses_tambah_tbs_pembelian')->middleware('auth');
@@ -513,6 +517,10 @@ Route::get('/kas-mutasi/pilih-kas', 'KasMutasiController@pilih_kas')->middleware
 
 Route::get('/penjualan/view', 'PenjualanController@view')->middleware('auth');
 Route::get('/penjualan/pencarian', 'PenjualanController@pencarian')->middleware('auth');
+Route::get('/penjualan/view-detail-penjualan/{id}', 'PenjualanController@viewDetailPenjualan')->middleware('auth');
+Route::get('/penjualan/pencarian-detail-penjualan/{id}', 'PenjualanController@pencarianDetailPenjualan')->middleware('auth');
+Route::get('/penjualan/view-edit-tbs-penjualan/{id}', 'PenjualanController@viewEditTbsPenjualan')->middleware('auth');
+Route::get('/penjualan/pencarian-edit-tbs-penjualan/{id}', 'PenjualanController@pencarianEditTbsPenjualan')->middleware('auth');
 Route::get('/penjualan/view-tbs-penjualan', 'PenjualanController@viewTbsPenjualan')->middleware('auth');
 Route::get('/penjualan/pencarian-tbs-penjualan', 'PenjualanController@pencarianTbsPenjualan')->middleware('auth');
 Route::get('/penjualan/cek-data-tbs-penjualan', 'PenjualanController@cekDataTbsPenjualan')->middleware('auth');
@@ -589,41 +597,6 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
     ]);
 
     // PEMBELIAN
-
-    // TAMBAH TBS PEMBELIAN
-    Route::post('/pembelian/proses-tambah-tbs-pembelian', [
-        'middleware' => ['auth'],
-        'as'         => 'pembelian.proses_tambah_tbs_pembelian',
-        'uses'       => 'PembelianController@proses_tambah_tbs_pembelian',
-    ]);
-
-    // EDIT JUMLAH TBS PEMBELIAN
-    Route::post('/pembelian/proses-edit-jumlah-tbs-pembelian', [
-        'middleware' => ['auth'],
-        'as'         => 'pembelian.edit_jumlah_tbs_pembelian',
-        'uses'       => 'PembelianController@edit_jumlah_tbs_pembelian',
-    ]);
-
-    // EDIT HARGA TBS PEMBELIAN
-    Route::post('/pembelian/proses-edit-harga-tbs-pembelian', [
-        'middleware' => ['auth'],
-        'as'         => 'pembelian.edit_harga_tbs_pembelian',
-        'uses'       => 'PembelianController@edit_harga_tbs_pembelian',
-    ]);
-
-    // EDIT POTONGAN TBS PEMBELIAN
-    Route::post('/pembelian/proses-edit-potongan-tbs-pembelian', [
-        'middleware' => ['auth'],
-        'as'         => 'pembelian.edit_potongan_tbs_pembelian',
-        'uses'       => 'PembelianController@edit_potongan_tbs_pembelian',
-    ]);
-
-    // EDIT TAX TBS PEMBELIAN
-    Route::post('/pembelian/proses-edit-tax-tbs-pembelian', [
-        'middleware' => ['auth'],
-        'as'         => 'pembelian.edit_tax_tbs_pembelian',
-        'uses'       => 'PembelianController@editTaxTbsPembelian',
-    ]);
 
     // HAPUS TBS PEMBELIAN
     Route::delete('/pembelian/hapus-tbs-pembelian/{id}', [
@@ -894,6 +867,37 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
         'middleware' => ['auth'],
         'as'         => 'penjualan.proses_batal_penjualan',
         'uses'       => 'PenjualanController@proses_batal_penjualan',
+    ]);
+
+// edit penjualan
+    Route::post('/penjualan/proses-tambah-edit-tbs-penjualan/{id}', [
+        'middleware' => ['auth'],
+        'as'         => 'penjualan.proses_tambah_edit_tbs_penjualan',
+        'uses'       => 'PenjualanController@prosesTambahEditTbsPenjualan',
+    ]);
+
+    Route::post('/penjualan/edit-jumlah-edit-tbs-penjualan', [
+        'middleware' => ['auth'],
+        'as'         => 'penjualan.edit_jumlah_edit_tbs_penjualan',
+        'uses'       => 'PenjualanController@prosesEditJumlahEditTbsPenjualan',
+    ]);
+
+    Route::post('/penjualan/edit-potongan-edit-tbs-penjualan', [
+        'middleware' => ['auth'],
+        'as'         => 'penjualan.edit_potongan_edit_tbs_penjualan',
+        'uses'       => 'PenjualanController@prosesEditPotonganEditTbsPenjualan',
+    ]);
+
+    Route::delete('/penjualan/proses-hapus-edit-tbs-penjualan/{id}', [
+        'middleware' => ['auth'],
+        'as'         => 'penjualan.proses_hapus_edit_tbs_penjualan',
+        'uses'       => 'PenjualanController@prosesHapusEditTbsPenjualan',
+    ]);
+
+    Route::post('/penjualan/proses-batal-edit-penjualan/{id}', [
+        'middleware' => ['auth'],
+        'as'         => 'penjualan.proses_batal_edit_penjualan',
+        'uses'       => 'PenjualanController@proses_batal_edit_penjualan',
     ]);
 
 });

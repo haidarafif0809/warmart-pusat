@@ -83,6 +83,7 @@ import PesananWarungDetail from './components/pesanan_warung/PesananWarungDetail
 import PembelianIndex from './components/pembelian/PembelianIndex.vue';
 import PembelianCreate from './components/pembelian/PembelianCreate.vue';
 import PembelianEdit from './components/pembelian/PembelianEdit.vue';
+import PembelianProsesEdit from './components/pembelian/PembelianProsesEdit.vue';
 // ITEM KELUAR 
 import ItemKeluarIndex from './components/item_keluar/ItemKeluarIndex.vue';
 import ItemKeluarCreate from './components/item_keluar/ItemKeluarCreate.vue';
@@ -98,108 +99,110 @@ import KasMutasiEdit from './components/kas_mutasi/KasMutasiEdit.vue';
 // PENJUALAN
 import PenjualanIndex from './components/penjualan/PenjualanIndex.vue';
 import PenjualanCreate from './components/penjualan/PenjualanCreate.vue';
+import PenjualanDetail from './components/penjualan/PenjualanDetail.vue';
+import PenjualanProsesEdit from './components/penjualan/PenjualanProsesEdit.vue';
 import PenjualanEdit from './components/penjualan/PenjualanEdit.vue';
 // LAPORAN LABA KOTOR
 import LaporanLabaKotorIndex from './components/laporan/LaporanLabaKotorIndex.vue';
 // LAPORAN LABA KOTOR PRODUK
 import LaporanLabaKotorProdukIndex from './components/laporan/LaporanLabaKotorProdukIndex.vue';
 const routes = [{
-        path: '/',
-        components: {
-            dashboardIndex: DashboardAdminIndex
-        },
-        name: 'indexDashboard'
-    }, {
-        path: '/create-bank',
-        component: BankCreate,
-        name: 'createBank'
-    }, {
-        path: '/satuan',
-        component: SatuanIndex,
-        name: 'indexSatuan'
-    }, {
-        path: '/bank',
-        component: BankIndex,
-        name: 'indexBank'
-    }, {
-        path: '/user',
-        component: UserIndex,
-        name: 'indexUser'
+    path: '/',
+    components: {
+        dashboardIndex: DashboardAdminIndex
     },
-    /*CUSTOMER*/
-    {
-        path: '/customer',
-        component: CustomerIndex,
-        name: 'indexCustomer'
-    },
-    /*ERROR LOG*/
-    {
-        path: '/error',
-        component: ErrorIndex,
-        name: 'indexError'
-    }, {
-        path: '/edit-bank/:id',
-        component: BankEdit,
-        name: 'editBank'
-    }, {
-        path: '/lazy_load',
-        component: LazyIndex,
-        name: 'indexLazy'
-    }, {
-        path: '/create-satuan',
-        component: SatuanCreate,
-        name: 'createSatuan'
-    }, {
-        path: '/edit-satuan/:id',
-        component: SatuanEdit,
-        name: 'editSatuan'
-    },
-    /*CUSTOMER*/
-    {
-        path: '/create-customer',
-        component: CustomerCreate,
-        name: 'createCustomer'
-    }, {
-        path: '/edit-customer/:id',
-        component: CustomerEdit,
-        name: 'editCustomer'
-    }, {
-        path: '/detail-customer/:id',
-        component: CustomerDetail,
-        name: 'detailCustomer'
-    }, {
-        path: '/create-user',
-        component: UserCreate,
-        name: 'createUser'
-    }, {
-        path: '/edit-user/:id',
-        component: UserEdit,
-        name: 'editUser'
-    },
-    /**Warung*/
-    {
-        path: '/warung',
-        component: WarungIndex,
-        name: 'indexWarung'
-    }, {
-        path: '/create-warung',
-        component: WarungCreate,
-        name: 'createWarung'
-    }, {
-        path: '/edit-warung/:id',
-        component: WarungEdit,
-        name: 'editWarung'
-    },
-    /**USER WARUNG*/
-    {
-        path: '/user-warung',
-        component: UserWarungIndex,
-        name: 'indexUserWarung'
-    }, {
-        path: '/edit-user-warung/:id',
-        component: UserWarungEdit,
-        name: 'editUserWarung'
-    },
+    name: 'indexDashboard'
+}, {
+    path: '/create-bank',
+    component: BankCreate,
+    name: 'createBank'
+}, {
+    path: '/satuan',
+    component: SatuanIndex,
+    name: 'indexSatuan'
+}, {
+    path: '/bank',
+    component: BankIndex,
+    name: 'indexBank'
+}, {
+    path: '/user',
+    component: UserIndex,
+    name: 'indexUser'
+},
+/*CUSTOMER*/
+{
+    path: '/customer',
+    component: CustomerIndex,
+    name: 'indexCustomer'
+},
+/*ERROR LOG*/
+{
+    path: '/error',
+    component: ErrorIndex,
+    name: 'indexError'
+}, {
+    path: '/edit-bank/:id',
+    component: BankEdit,
+    name: 'editBank'
+}, {
+    path: '/lazy_load',
+    component: LazyIndex,
+    name: 'indexLazy'
+}, {
+    path: '/create-satuan',
+    component: SatuanCreate,
+    name: 'createSatuan'
+}, {
+    path: '/edit-satuan/:id',
+    component: SatuanEdit,
+    name: 'editSatuan'
+},
+/*CUSTOMER*/
+{
+    path: '/create-customer',
+    component: CustomerCreate,
+    name: 'createCustomer'
+}, {
+    path: '/edit-customer/:id',
+    component: CustomerEdit,
+    name: 'editCustomer'
+}, {
+    path: '/detail-customer/:id',
+    component: CustomerDetail,
+    name: 'detailCustomer'
+}, {
+    path: '/create-user',
+    component: UserCreate,
+    name: 'createUser'
+}, {
+    path: '/edit-user/:id',
+    component: UserEdit,
+    name: 'editUser'
+},
+/**Warung*/
+{
+    path: '/warung',
+    component: WarungIndex,
+    name: 'indexWarung'
+}, {
+    path: '/create-warung',
+    component: WarungCreate,
+    name: 'createWarung'
+}, {
+    path: '/edit-warung/:id',
+    component: WarungEdit,
+    name: 'editWarung'
+},
+/**USER WARUNG*/
+{
+    path: '/user-warung',
+    component: UserWarungIndex,
+    name: 'indexUserWarung'
+}, {
+    path: '/edit-user-warung/:id',
+    component: UserWarungEdit,
+    name: 'editUserWarung'
+},
     // Komunitas
     {
         path: '/komunitas',
@@ -399,7 +402,12 @@ const routes = [{
         path: '/edit-pembelian/:id',
         component: PembelianEdit,
         name: 'editPembelian'
-    }, // ITEM KELUAR 
+    }, {
+        path: '/pembelian-edit/:id',
+        component: PembelianProsesEdit,
+        name: 'editPembelianProses'
+    },
+    // ITEM KELUAR 
     {
         path: '/item-keluar',
         component: ItemKeluarIndex,
@@ -453,6 +461,16 @@ const routes = [{
         component: PenjualanEdit,
         name: 'editPenjualan'
     },
+    {
+        path: '/detail-penjualan/:id',
+        component: PenjualanDetail,
+        name: 'detailPenjualan'
+    },
+    {
+        path: '/proses-edit-penjualan/:id',
+        component: PenjualanProsesEdit,
+        name: 'prosesEditPenjualan'
+    },
     // LAPORAN LABA KOTOR
     {
         path: '/laporan-laba-kotor',
@@ -465,5 +483,5 @@ const routes = [{
         component: LaporanLabaKotorProdukIndex,
         name: 'indexLaporanLabaKotorProduk'
     }
-]
-export default routes;
+    ]
+    export default routes;

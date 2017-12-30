@@ -91,7 +91,7 @@
 									<td>{{ pembelians.suplier }}</td>
 									<td>{{ pembelians.status_pembelian }}</td>
 									<td>Rp. {{ pembelians.total }}</td>
-									<td><router-link :to="{name: 'editPembelian', params: {id: pembelians.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + pembelians.id" >
+									<td><router-link :to="{name: 'editPembelianProses', params: {id: pembelians.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + pembelians.id" >
 									Edit </router-link> </td>
 									<td>
 										<button type="button" class="btn btn-xs btn-success btn-detail" id="btnDetail" data-toggle="modal" data-target="#data_detail" 
