@@ -783,86 +783,65 @@ public function update(Request $request, $id)
 
         $kas = intval($data_penjualan_pos->tunai) - intval($data_penjualan_pos->kembalian);
 
+        TransaksiPiutang::where('no_faktur', $id)->delete();
+        TransaksiKas::where('no_faktur', $id)->delete();
         if ($kas > 0) {
 
-            $transaksi_kas = TransaksiKas::where('no_faktur', $id);
-
-            if ($transaksi_kas->count() > 0) {
-
-                //PROSES UPDATE TRANSAKSI KAS
-                $transaksi_kas->update(['jumlah_masuk' => $kas,'kas'=> $data_penjualan_pos->id_kas]);
-
-            }else{
-
-              TransaksiKas::create([
-                'no_faktur'       => $id,
-                'jenis_transaksi' => 'PenjualanPos',
-                'jumlah_masuk'    => $kas,
-                'kas'             => $data_penjualan_pos->id_kas,
-                'warung_id'       => $data_penjualan_pos->warung_id]);     
-
-          }
-          TransaksiPiutang::where('no_faktur', $id)->delete();
-
+          TransaksiKas::create([
+            'no_faktur'       => $id,
+            'jenis_transaksi' => 'PenjualanPos',
+            'jumlah_masuk'    => $kas,
+            'kas'             => $data_penjualan_pos->id_kas,
+            'warung_id'       => $data_penjualan_pos->warung_id]);   
       }
 
       if ($data_penjualan_pos->kredit > 0) {
 
-        $transaksi_piutang = TransaksiPiutang::where('no_faktur', $id);
-
-        if ($transaksi_piutang->count() > 0) {
-                       //PROSES UPDATE TRANSAKSI PIUTANG
-           $transaksi_piutang->update(['jumlah_masuk' => $data_penjualan_pos->kredit,'pelanggan_id'=> $data_penjualan_pos->pelanggan_id]);
-
-       }else{
-
-           TransaksiPiutang::create([
+         TransaksiPiutang::create([
             'no_faktur'       => $id,
             'jenis_transaksi' => 'PenjualanPos',
             'jumlah_masuk'    => $data_penjualan_pos->kredit,
             'pelanggan_id'    => $data_penjualan_pos->pelanggan_id,
             'warung_id'       => $data_penjualan_pos->warung_id]);
-       }
-       TransaksiKas::where('no_faktur', $id)->delete();
 
-   }
+     }
 
         // inset detail penjualan
-   foreach ($data_produk_penjualan_pos->get() as $data_tbs) {
+     foreach ($data_produk_penjualan_pos->get() as $data_tbs) {
 
-    $detail_penjualan = new DetailPenjualanPos();
-    $stok_produk      = $detail_penjualan->stok_produk($data_tbs->id_produk);
-    $sisa             = $stok_produk - $data_tbs->jumlah_produk;
+        $detail_penjualan = new DetailPenjualanPos();
+        $stok_produk      = $detail_penjualan->stok_produk($data_tbs->id_produk);
+        $sisa             = $stok_produk - $data_tbs->jumlah_produk;
 
-    if ($sisa < 0) {
+        if ($sisa < 0) {
                     //DI BATALKAN PROSES NYA
 
-        $respons['respons']     = 1;
-        $respons['nama_produk'] = title_case($data_tbs->produk->nama_barang);
-        $respons['stok_produk'] = $stok_produk;
-        DB::rollBack();
-        return response()->json($respons);
+            $respons['respons']     = 1;
+            $respons['nama_produk'] = title_case($data_tbs->produk->nama_barang);
+            $respons['stok_produk'] = $stok_produk;
+            DB::rollBack();
+            return response()->json($respons);
 
-    } else {
+        } else {
 
-        $detail_penjualan = DetailPenjualanPos::create([
-            'id_penjualan_pos' => $id,
-            'no_faktur'        => $data_penjualan_pos->no_faktur,
-            'satuan_id'        => $data_tbs->satuan_id,
-            'id_produk'        => $data_tbs->id_produk,
-            'jumlah_produk'    => $data_tbs->jumlah_produk,
-            'harga_produk'     => $data_tbs->harga_produk,
-            'subtotal'         => $data_tbs->subtotal,
-            'potongan'         => $data_tbs->potongan,
-            'warung_id'        => Auth::user()->id_warung,
-        ]);
+            $detail_penjualan = DetailPenjualanPos::create([
+                'id_penjualan_pos' => $id,
+                'no_faktur'        => $data_penjualan_pos->no_faktur,
+                'satuan_id'        => $data_tbs->satuan_id,
+                'id_produk'        => $data_tbs->id_produk,
+                'jumlah_produk'    => $data_tbs->jumlah_produk,
+                'harga_produk'     => $data_tbs->harga_produk,
+                'subtotal'         => $data_tbs->subtotal,
+                'potongan'         => $data_tbs->potongan,
+                'warung_id'        => Auth::user()->id_warung,
+            ]);
 
+        }
     }
-}
 
-$data_produk_penjualan_pos = EditTbsPenjualan::where('id_penjualan_pos', $id)->where('warung_id', Auth::user()->id_warung)->delete();
-DB::commit();
-return response(200);
+    $data_produk_penjualan_pos = EditTbsPenjualan::where('id_penjualan_pos', $id)->where('warung_id', Auth::user()->id_warung)->delete();
+    DB::commit();
+    return response(200);
 }
 
 }
