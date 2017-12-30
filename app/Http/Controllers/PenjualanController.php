@@ -638,42 +638,60 @@ public function store(Request $request)
 
         foreach ($data_produk_penjualan->get() as $data_tbs) {
 
-            $detail_penjualan = new DetailPenjualanPos();
-            $stok_produk      = $detail_penjualan->stok_produk($data_tbs->id_produk);
-            $sisa             = $stok_produk - $data_tbs->jumlah_produk;
+            if ($data_tbs->produk->hitung_stok == 1) {
 
-            if ($sisa < 0) {
+                $detail_penjualan = new DetailPenjualanPos();
+                $stok_produk      = $detail_penjualan->stok_produk($data_tbs->id_produk);
+                $sisa             = $stok_produk - $data_tbs->jumlah_produk;
+
+                if ($sisa < 0) {
                     //DI BATALKAN PROSES NYA
 
-                $respons['respons']     = 1;
-                $respons['nama_produk'] = title_case($data_tbs->produk->nama_barang);
-                $respons['stok_produk'] = $stok_produk;
-                DB::rollBack();
-                return response()->json($respons);
+                    $respons['respons']     = 1;
+                    $respons['nama_produk'] = title_case($data_tbs->produk->nama_barang);
+                    $respons['stok_produk'] = $stok_produk;
+                    DB::rollBack();
+                    return response()->json($respons);
 
-            } else {
+                } else {
 
-                $detail_penjualan = DetailPenjualanPos::create([
-                    'id_penjualan_pos' => $penjualan->id,
-                    'no_faktur'        => $no_faktur,
-                    'satuan_id'        => $data_tbs->satuan_id,
-                    'id_produk'        => $data_tbs->id_produk,
-                    'jumlah_produk'    => $data_tbs->jumlah_produk,
-                    'harga_produk'     => $data_tbs->harga_produk,
-                    'subtotal'         => $data_tbs->subtotal,
-                    'potongan'         => $data_tbs->potongan,
-                    'warung_id'        => Auth::user()->id_warung,
-                ]);
+                    $detail_penjualan = DetailPenjualanPos::create([
+                        'id_penjualan_pos' => $penjualan->id,
+                        'no_faktur'        => $no_faktur,
+                        'satuan_id'        => $data_tbs->satuan_id,
+                        'id_produk'        => $data_tbs->id_produk,
+                        'jumlah_produk'    => $data_tbs->jumlah_produk,
+                        'harga_produk'     => $data_tbs->harga_produk,
+                        'subtotal'         => $data_tbs->subtotal,
+                        'potongan'         => $data_tbs->potongan,
+                        'warung_id'        => Auth::user()->id_warung,
+                    ]);
 
+                }
             }
-        }
+            else{
+
+               $detail_penjualan = DetailPenjualanPos::create([
+                'id_penjualan_pos' => $penjualan->id,
+                'no_faktur'        => $no_faktur,
+                'satuan_id'        => $data_tbs->satuan_id,
+                'id_produk'        => $data_tbs->id_produk,
+                'jumlah_produk'    => $data_tbs->jumlah_produk,
+                'harga_produk'     => $data_tbs->harga_produk,
+                'subtotal'         => $data_tbs->subtotal,
+                'potongan'         => $data_tbs->potongan,
+                'warung_id'        => Auth::user()->id_warung,
+            ]);
+
+           }
+       }
 
             //HAPUS TBS PENJUALAN
-        $data_produk_penjualan->delete();
-        DB::commit();
-        return response(200);
+       $data_produk_penjualan->delete();
+       DB::commit();
+       return response(200);
 
-    }
+   }
 }
 
 /**
@@ -765,7 +783,7 @@ public function update(Request $request, $id)
     }
     
 //INSERT DETAIL PENJUALAN POS
-    $data_produk_penjualan_pos = EditTbsPenjualan::where('id_penjualan_pos', $id)->where('warung_id', Auth::user()->id_warung);
+    $data_produk_penjualan_pos = EditTbsPenjualan::with('produk')->where('id_penjualan_pos', $id)->where('warung_id', Auth::user()->id_warung);
 
     if ($data_produk_penjualan_pos->count() == 0) {
 
@@ -818,39 +836,57 @@ public function update(Request $request, $id)
         // inset detail penjualan
      foreach ($data_produk_penjualan_pos->get() as $data_tbs) {
 
-        $detail_penjualan = new DetailPenjualanPos();
-        $stok_produk      = $detail_penjualan->stok_produk($data_tbs->id_produk);
-        $sisa             = $stok_produk - $data_tbs->jumlah_produk;
+        if ($data_tbs->produk->hitung_stok == 1) {
 
-        if ($sisa < 0) {
-                    //DI BATALKAN PROSES NYA
 
-            $respons['respons']     = 1;
-            $respons['nama_produk'] = title_case($data_tbs->produk->nama_barang);
-            $respons['stok_produk'] = $stok_produk;
-            DB::rollBack();
-            return response()->json($respons);
+            $detail_penjualan = new DetailPenjualanPos();
+            $stok_produk      = $detail_penjualan->stok_produk($data_tbs->id_produk);
+            $sisa             = $stok_produk - $data_tbs->jumlah_produk;
 
-        } else {
+            if ($sisa < 0) {
+                                //DI BATALKAN PROSES NYA
 
-            $detail_penjualan = DetailPenjualanPos::create([
-                'id_penjualan_pos' => $id,
-                'no_faktur'        => $data_penjualan_pos->no_faktur,
-                'satuan_id'        => $data_tbs->satuan_id,
-                'id_produk'        => $data_tbs->id_produk,
-                'jumlah_produk'    => $data_tbs->jumlah_produk,
-                'harga_produk'     => $data_tbs->harga_produk,
-                'subtotal'         => $data_tbs->subtotal,
-                'potongan'         => $data_tbs->potongan,
-                'warung_id'        => Auth::user()->id_warung,
-            ]);
+                $respons['respons']     = 1;
+                $respons['nama_produk'] = title_case($data_tbs->produk->nama_barang);
+                $respons['stok_produk'] = $stok_produk;
+                DB::rollBack();
+                return response()->json($respons);
 
-        }
-    }
+            } else {
 
-    $data_produk_penjualan_pos = EditTbsPenjualan::where('id_penjualan_pos', $id)->where('warung_id', Auth::user()->id_warung)->delete();
-    DB::commit();
-    return response(200);
+                $detail_penjualan = DetailPenjualanPos::create([
+                    'id_penjualan_pos' => $id,
+                    'no_faktur'        => $data_penjualan_pos->no_faktur,
+                    'satuan_id'        => $data_tbs->satuan_id,
+                    'id_produk'        => $data_tbs->id_produk,
+                    'jumlah_produk'    => $data_tbs->jumlah_produk,
+                    'harga_produk'     => $data_tbs->harga_produk,
+                    'subtotal'         => $data_tbs->subtotal,
+                    'potongan'         => $data_tbs->potongan,
+                    'warung_id'        => Auth::user()->id_warung,
+                ]);
+
+            } 
+        }else{
+
+           $detail_penjualan = DetailPenjualanPos::create([
+            'id_penjualan_pos' => $id,
+            'no_faktur'        => $data_penjualan_pos->no_faktur,
+            'satuan_id'        => $data_tbs->satuan_id,
+            'id_produk'        => $data_tbs->id_produk,
+            'jumlah_produk'    => $data_tbs->jumlah_produk,
+            'harga_produk'     => $data_tbs->harga_produk,
+            'subtotal'         => $data_tbs->subtotal,
+            'potongan'         => $data_tbs->potongan,
+            'warung_id'        => Auth::user()->id_warung,
+        ]);
+           
+       }
+   }
+
+   $data_produk_penjualan_pos = EditTbsPenjualan::where('id_penjualan_pos', $id)->where('warung_id', Auth::user()->id_warung)->delete();
+   DB::commit();
+   return response(200);
 }
 
 }
