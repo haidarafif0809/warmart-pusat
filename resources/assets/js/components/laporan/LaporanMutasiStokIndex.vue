@@ -30,7 +30,7 @@
 						</div>
 
 						<div class="form-group col-md-2">
-							<button class="btn btn-primary" id="btnSubmit" type="submit" style="margin: 0px 0px;" @click="submitmutasiStok()"><i class="material-icons">search</i> Cari</button>
+							<button class="btn btn-primary" id="btnSubmit" type="submit" style="margin: 0px 0px;" @click="submitMutasiStok()"><i class="material-icons">search</i> Cari</button>
 						</div>
 					</div>
 
@@ -58,17 +58,17 @@
 							<tbody v-if="mutasiStok.length > 0 && loading == false"  class="data-ada">
 								<tr v-for="mutasiStoks, index in mutasiStok" >
 
-									<td>{{ mutasiStoks.laba_kotor.kode_barang }}</td>
-									<td>{{ mutasiStoks.laba_kotor.nama_barang }}</td>
-									<td>{{ mutasiStoks.laba_kotor.kode_barang }}</td>
-									<td align="right">{{ mutasiStoks.hpp | pemisahTitik }}</td>
-									<td align="right">{{ mutasiStoks.hpp | pemisahTitik }}</td>
-									<td align="right">{{ mutasiStoks.hpp | pemisahTitik }}</td>
-									<td align="right">{{ mutasiStoks.hpp | pemisahTitik }}</td>
-									<td align="right">{{ mutasiStoks.hpp | pemisahTitik }}</td>
-									<td align="right">{{ mutasiStoks.hpp | pemisahTitik }}</td>
-									<td align="right">{{ mutasiStoks.hpp | pemisahTitik }}</td>
-									<td align="right">{{ mutasiStoks.hpp | pemisahTitik }}</td>
+									<td>{{ mutasiStoks.daftar_produks.kode_barang }}</td>
+									<td>{{ mutasiStoks.daftar_produks.nama_barang }}</td>
+									<td>{{ mutasiStoks.daftar_produks.nama_satuan }}</td>
+									<td align="right">{{ mutasiStoks.stok_awal | pemisahTitik }}</td>
+									<td align="right">{{ mutasiStoks.total_awal | pemisahTitik }}</td>
+									<td align="right">{{ mutasiStoks.stok_masuk | pemisahTitik }}</td>
+									<td align="right">{{ mutasiStoks.total_masuk | pemisahTitik }}</td>
+									<td align="right">{{ mutasiStoks.stok_keluar | pemisahTitik }}</td>
+									<td align="right">{{ mutasiStoks.total_keluar | pemisahTitik }}</td>
+									<td align="right">{{ mutasiStoks.stok_akhir | pemisahTitik }}</td>
+									<td align="right">{{ mutasiStoks.total_akhir | pemisahTitik }}</td>
 
 								</tr>
 
@@ -134,10 +134,9 @@ export default {
 	  }
 	},
     methods: {
-    	submitmutasiStok(){
+    	submitMutasiStok(){
     		var app = this;
     		app.prosesLaporan();
-    		app.totalmutasiStok();
     		$("#btnExcel").show();
     	},
     	prosesLaporan(page) {
