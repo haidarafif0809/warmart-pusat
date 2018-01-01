@@ -106,6 +106,8 @@ import PenjualanEdit from './components/penjualan/PenjualanEdit.vue';
 import LaporanLabaKotorIndex from './components/laporan/LaporanLabaKotorIndex.vue';
 // LAPORAN LABA KOTOR PRODUK
 import LaporanLabaKotorProdukIndex from './components/laporan/LaporanLabaKotorProdukIndex.vue';
+// LAPORAN MUTASI STOK
+import LaporanMutasiStokIndex from './components/laporan/LaporanMutasiStokIndex.vue';
 const routes = [{
     path: '/',
     components: {
@@ -482,6 +484,12 @@ const routes = [{
         path: '/laporan-laba-kotor-produk',
         component: LaporanLabaKotorProdukIndex,
         name: 'indexLaporanLabaKotorProduk'
+    },
+    // LAPORAN LABA KOTOR PENJUALAN
+    {
+        path: '/laporan-mutasi-stok',
+        component: LaporanMutasiStokIndex,
+        name: 'indexLaporanMutasiStok'
     }
     ]
     export default routes;

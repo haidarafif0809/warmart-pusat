@@ -18,11 +18,22 @@ class PenjualanPos extends Model
         return $this->hasOne('App\User', 'id', 'pelanggan_id');
     }
     // relasi ke kas
+    public function user_edit()
+    {
+        return $this->hasOne('App\User', 'id', 'updated_by');
+    }
+
+    // relasi ke kas
+    public function user_buat()
+    {
+        return $this->hasOne('App\User', 'id', 'created_by');
+    }
+    // relasi ke kas
     public function kas()
     {
         return $this->hasOne('App\Kas', 'id', 'id_kas');
     }
-    
+
     public function getWaktuAttribute()
     {
         $tanggal       = date($this->created_at);
@@ -31,55 +42,54 @@ class PenjualanPos extends Model
         return $date_terbalik;
     }
 
-    public function getPemisahTotalAttribute()
+    public function getWaktuEditAttribute()
     {
-        return number_format($this->total, 2, ',', '.');
-    }
-    public function getPemisahPotonganAttribute()
-    {
-        return number_format($this->potongan, 2, ',', '.');
-    }
-    public function getPemisahTunaiAttribute()
-    {
-        return number_format($this->tunai, 2, ',', '.');
-    }
-    public function getPemisahKreditAttribute()
-    {
-        return number_format($this->kredit, 2, ',', '.');
-    }
-    public function getPemisahKembalianAttribute()
-    {
-        return number_format($this->kembalian, 2, ',', '.');
+        $tanggal       = date($this->updated_at);
+        $date          = date_create($tanggal);
+        $date_terbalik = date_format($date, "d/m/Y H:i:s");
+        return $date_terbalik;
     }
 
-    public static function no_faktur($warung_id)
+    public function getJatuhTempoAttribute()
     {
+     $jatuh_tempo = $this->tanggal_jt_tempo;
+     if ($jatuh_tempo == '') {
+         return "-";
+     }else{
+        $tanggal       = date($this->tanggal_jt_tempo);
+        $date          = date_create($tanggal);
+        $date_terbalik = date_format($date, "d/m/Y");
+        return $date_terbalik;
+    }
+}
+public static function no_faktur($warung_id)
+{
 
-        $tahun_sekarang = date('Y');
-        $bulan_sekarang = date('m');
-        $tahun_terakhir = substr($tahun_sekarang, 2);
+    $tahun_sekarang = date('Y');
+    $bulan_sekarang = date('m');
+    $tahun_terakhir = substr($tahun_sekarang, 2);
 
         //mengecek jumlah karakter dari bulan sekarang
-        $cek_jumlah_bulan = strlen($bulan_sekarang);
+    $cek_jumlah_bulan = strlen($bulan_sekarang);
 
         //jika jumlah karakter dari bulannya sama dengan 1 maka di tambah 0 di depannya
-        if ($cek_jumlah_bulan == 1) {
-            $data_bulan_terakhir = "0" . $bulan_sekarang;
-        } else {
-            $data_bulan_terakhir = $bulan_sekarang;
-        }
+    if ($cek_jumlah_bulan == 1) {
+        $data_bulan_terakhir = "0" . $bulan_sekarang;
+    } else {
+        $data_bulan_terakhir = $bulan_sekarang;
+    }
 
         //ambil bulan dan no_faktur dari tanggal penjualan terakhir
-        $penjualan = PenjualanPos::select([DB::raw('MONTH(created_at) bulan'), 'no_faktur'])->where('warung_id', $warung_id)->orderBy('id', 'DESC')->first();
+    $penjualan = PenjualanPos::select([DB::raw('MONTH(created_at) bulan'), 'no_faktur'])->where('warung_id', $warung_id)->orderBy('id', 'DESC')->first();
 
-        if ($penjualan != null) {
-            $pisah_nomor = explode("/", $penjualan->no_faktur);
-            $ambil_nomor = $pisah_nomor[0];
-            $bulan_akhir = $penjualan->bulan;
-        } else {
-            $ambil_nomor = 1;
-            $bulan_akhir = 13;
-        }
+    if ($penjualan != null) {
+        $pisah_nomor = explode("/", $penjualan->no_faktur);
+        $ambil_nomor = $pisah_nomor[0];
+        $bulan_akhir = $penjualan->bulan;
+    } else {
+        $ambil_nomor = 1;
+        $bulan_akhir = 13;
+    }
 
         /*jika bulan terakhir dari penjualan tidak sama dengan bulan sekarang,
         maka nomor nya kembali mulai dari 1, jika tidak maka nomor terakhir ditambah dengan 1
@@ -102,10 +112,32 @@ class PenjualanPos extends Model
         return $date_format;
     }
 
+    // query pencarian
+    public function scopePencarian($query,$user_warung,$request){
+
+        $query->select('penjualan_pos.id AS id', 'penjualan_pos.status_penjualan AS status_penjualan','penjualan_pos.total AS total','users.name AS pelanggan',DB::raw('DATE_FORMAT(penjualan_pos.created_at, "%d/%m/%Y %H:%i:%s") as waktu_jual'),'kas.nama_kas AS nama_kas','penjualan_pos.potongan AS potongan','penjualan_pos.tunai AS tunai','penjualan_pos.kembalian AS kembalian','penjualan_pos.nilai_kredit AS nilai_kredit',DB::raw('DATE_FORMAT(penjualan_pos.tanggal_jt_tempo, "%d/%m/%Y") as jatuh_tempoo'),DB::raw('DATE_FORMAT(penjualan_pos.updated_at, "%d/%m/%Y %H:%i:%s") as waktu_edit'),'userbuat.name AS user_buat','useredit.name AS user_edit')
+        ->leftJoin('users', 'users.id', '=', 'penjualan_pos.pelanggan_id')
+        ->leftJoin('users AS userbuat', 'userbuat.id', '=', 'penjualan_pos.created_by')
+        ->leftJoin('users AS useredit', 'useredit.id', '=', 'penjualan_pos.updated_by')
+        ->leftJoin('kas', 'kas.id', '=', 'penjualan_pos.id_kas')
+        ->where('penjualan_pos.warung_id', $user_warung)
+        ->where(function ($query) use ($request) {
+
+            $query->orWhere('penjualan_pos.id', 'LIKE', $request->search . '%')
+            ->orWhere('penjualan_pos.status_penjualan', 'LIKE', $request->search . '%')
+            ->orWhere('penjualan_pos.total', 'LIKE', $request->search . '%')
+            ->orWhere(DB::raw('DATE_FORMAT(penjualan_pos.created_at, "%d/%m/%Y %H:%i:%s")'), 'LIKE', $request->search . '%')
+            ->orWhere('users.name', 'LIKE', $request->search . '%');
+
+        })->orderBy('penjualan_pos.id', 'desc');
+        return $query;
+    }
+
     // LAP. LABA KOTOR PENJUALAN POS
     public function scopeLaporanLabaKotorPos($query_laporan_laba_kotor, $request)
     {
-        if ($request->pelanggan == "") {
+
+        if ($request->pelanggan == "" || $request->pelanggan == null || $request->pelanggan == 0) {
             $query_laporan_laba_kotor = PenjualanPos::select(['penjualan_pos.id', 'penjualan_pos.pelanggan_id', 'penjualan_pos.no_faktur', 'penjualan_pos.total', 'penjualan_pos.potongan', 'penjualan_pos.created_at', 'users.name'])
             ->leftJoin('users', 'users.id', '=', 'penjualan_pos.pelanggan_id')
             ->where(DB::raw('DATE(penjualan_pos.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
@@ -159,7 +191,7 @@ class PenjualanPos extends Model
     // DISKON LABA KOTOR PENJUALAN POS
     public function scopePotonganLaporanLabaKotor($query_sub_potongan, $request)
     {
-        if ($request->pelanggan == "") {
+        if ($request->pelanggan == "" || $request->pelanggan == null || $request->pelanggan == 0) {
             $query_sub_potongan = PenjualanPos::select(DB::raw('SUM(potongan) as potongan'))
             ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
             ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))

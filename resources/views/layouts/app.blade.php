@@ -33,15 +33,11 @@
 </meta>
 </head>
 <style type="text/css">
-<<<<<<< HEAD
-.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
-   padding: 1px;
-}
-=======
+
 .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
  padding: 1px;
 }
->>>>>>> master
+
 </style>
 <body>
     <div class="wrapper" id="vue-app">
@@ -177,7 +173,6 @@
                 </p>
             </a>
         </li>
-        <!--PENJUALAN-
         <li>
             <router-link :to="{name: 'createPenjualan'}" class="menu-nav">
                 <i class="material-icons">
@@ -187,7 +182,7 @@
                     Penjualan
                 </p>
             </router-link>
-        </li>-MASTER DATA WARUNG -->
+        </li>
         <li>
             <a data-toggle="collapse" href="#persediaan">
                 <i class="material-icons">
@@ -323,6 +318,16 @@
     </a>
     <div class="collapse" id="laporan">
         <ul class="nav">
+            <li>
+                <router-link :to="{name: 'indexPenjualan'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        LP
+                    </span>
+                    <span class="sidebar-normal">
+                        Laba Penjualan
+                    </span>
+                </router-link>
+            </li>
             <li>
                 <router-link :to="{name: 'indexLaporanLabaKotor'}" class="menu-nav">
                     <span class="sidebar-mini">
@@ -567,7 +572,7 @@
 </body>
 <!--   Core JS Files   -->
 
-<script src="{{ asset('js/app.js?v=1.40')}}" type="text/javascript">
+<script src="{{ asset('js/app.js?v=1.45')}}" type="text/javascript">
 
 </script>
 <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript">
