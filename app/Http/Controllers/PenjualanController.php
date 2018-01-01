@@ -153,7 +153,6 @@ class PenjualanController extends Controller
        return response()->json($respons);
    }
 
-
    public function viewDetailPenjualan($id)
    {
     $user_warung   = Auth::user()->id_warung;
@@ -162,13 +161,7 @@ class PenjualanController extends Controller
 
     foreach ($detail_penjualan as $detail_penjualans) {
 
-        $potongan_persen = ($detail_penjualans->potongan / ($detail_penjualans->jumlah_produk * $detail_penjualans->harga_produk)) * 100;
-
-        if ($detail_penjualans->potongan > 0) {
-            $potongan = number_format($detail_penjualans->potongan, 0, ',', '.') . ",00 (" . round($potongan_persen, 2) . "%)";
-        } else {
-            $potongan = number_format($detail_penjualans->potongan, 2, ',', '.');
-        }
+        $potongan = $this->tampilPotongan($detail_penjualans->potongan,$detail_penjualans->jumlah_produk,$detail_penjualans->harga_produk);
 
         array_push($array, [
             'id_detail_penjualan_pos' => $detail_penjualans->id_detail_penjualan_pos,
@@ -196,13 +189,8 @@ public function pencarianDetailPenjualan(Request $request,$id)
 
     $array = array();
     foreach ($detail_penjualan as $detail_penjualans) {
-        $potongan_persen = ($detail_penjualans['potongan'] / ($detail_penjualans['jumlah_produk'] * $detail_penjualans['harga_produk'])) * 100;
 
-        if ($detail_penjualans['potongan'] > 0) {
-            $potongan = number_format($detail_penjualans['potongan'], 0, ',', '.') . ",00 (" . round($potongan_persen, 2) . "%)";
-        } else {
-            $potongan = number_format($detail_penjualans['potongan'], 2, ',', '.');
-        }
+        $potongan = $this->tampilPotongan($detail_penjualans['potongan'],$detail_penjualans['jumlah_produk'],$detail_penjualans['harga_produk']);
 
         array_push($array, [
             'id_detail_penjualan_pos' => $detail_penjualans['id_detail_penjualan_pos'],
@@ -231,13 +219,8 @@ public function viewTbsPenjualan()
     $array         = array();
 
     foreach ($tbs_penjualan as $tbs_penjualans) {
-        $potongan_persen = ($tbs_penjualans->potongan / ($tbs_penjualans->jumlah_produk * $tbs_penjualans->harga_produk)) * 100;
 
-        if ($tbs_penjualans->potongan > 0) {
-            $potongan = number_format($tbs_penjualans->potongan, 0, ',', '.') . ",00 (" . round($potongan_persen, 2) . "%)";
-        } else {
-            $potongan = $tbs_penjualans->potongan;
-        }
+        $potongan = $this->tampilPotongan($tbs_penjualans->potongan,$tbs_penjualans->jumlah_produk,$tbs_penjualans->harga_produk);
 
         array_push($array, [
             'id_tbs_penjualan' => $tbs_penjualans->id_tbs_penjualan,
@@ -265,13 +248,8 @@ public function pencarianTbsPenjualan(Request $request)
 
     $array = array();
     foreach ($tbs_penjualan as $tbs_penjualans) {
-        $potongan_persen = ($tbs_penjualans['potongan'] / ($tbs_penjualans['jumlah_produk'] * $tbs_penjualans['harga_produk'])) * 100;
 
-        if ($tbs_penjualans['potongan'] > 0) {
-            $potongan = number_format($tbs_penjualans['potongan'], 0, ',', '.') . ",00 (" . round($potongan_persen, 2) . "%)";
-        } else {
-            $potongan = $tbs_penjualans['potongan'];
-        }
+        $potongan = $this->tampilPotongan($tbs_penjualans['potongan'],$tbs_penjualans['jumlah_produk'],$tbs_penjualans['harga_produk']);
 
         array_push($array, [
             'id_tbs_penjualan' => $tbs_penjualans['id_tbs_penjualan'],
@@ -300,15 +278,9 @@ public function viewEditTbsPenjualan($id)
     $tbs_penjualan = EditTbsPenjualan::with(['produk'])->where('warung_id', $user_warung)->where('id_penjualan_pos', $id)->orderBy('id_edit_tbs_penjualans', 'desc')->paginate(10);
     $array         = array();
 
-
     foreach ($tbs_penjualan as $tbs_penjualans) {
-        $potongan_persen = ($tbs_penjualans->potongan / ($tbs_penjualans->jumlah_produk * $tbs_penjualans->harga_produk)) * 100;
 
-        if ($tbs_penjualans->potongan > 0) {
-            $potongan = number_format($tbs_penjualans->potongan, 0, ',', '.') . ",00 (" . round($potongan_persen, 2) . "%)";
-        } else {
-            $potongan = $tbs_penjualans->potongan;
-        }
+        $potongan = $this->tampilPotongan($tbs_penjualans->potongan,$tbs_penjualans->jumlah_produk,$tbs_penjualans->harga_produk);
 
         array_push($array, [
             'id_edit_tbs_penjualans' => $tbs_penjualans->id_edit_tbs_penjualans,
@@ -338,13 +310,8 @@ public function pencarianEditTbsPenjualan(Request $request,$id)
 
     $array = array();
     foreach ($tbs_penjualan as $tbs_penjualans) {
-        $potongan_persen = ($tbs_penjualans['potongan'] / ($tbs_penjualans['jumlah_produk'] * $tbs_penjualans['harga_produk'])) * 100;
 
-        if ($tbs_penjualans['potongan'] > 0) {
-            $potongan = number_format($tbs_penjualans['potongan'], 0, ',', '.') . ",00 (" . round($potongan_persen, 2) . "%)";
-        } else {
-            $potongan = $tbs_penjualans['potongan'];
-        }
+        $potongan = $this->tampilPotongan($tbs_penjualans['potongan'],$tbs_penjualans['jumlah_produk'],$tbs_penjualans['harga_produk']);
 
         array_push($array, [
             'id_edit_tbs_penjualans' => $tbs_penjualans['id_edit_tbs_penjualans'],
@@ -997,6 +964,21 @@ public function proses_batal_edit_penjualan($id){
     $data_tbs_penjualan = EditTbsPenjualan::where('id_penjualan_pos', $id)->where('warung_id', Auth::user()->id_warung)->delete();
 
     return response(200);
+}
+
+
+public function tampilPotongan($potongan_produk,$jumlah_produk,$harga_produk){
+
+    $potongan_persen = ($potongan_produk / ($jumlah_produk * $harga_produk)) * 100;
+
+    if ($potongan_produk > 0) {
+        $potongan = number_format($potongan_produk, 0, ',', '.') . ",00 (" . round($potongan_persen, 2) . "%)";
+    } else {
+        $potongan = number_format($potongan_produk, 2, ',', '.');
+    }
+
+    return $potongan;
+
 }
 
 }
