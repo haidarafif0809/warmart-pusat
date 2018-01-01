@@ -168,8 +168,9 @@
                     <input class="form-control" type="hidden"  v-model="inputTbsPenjualan.jumlah_produk"  name="jumlah_produk" id="jumlah_produk">
                     <input class="form-control" type="hidden"  v-model="inputTbsPenjualan.potongan_produk"  name="potongan_produk" id="potongan_produk">
                     <input class="form-control" type="hidden"  v-model="inputTbsPenjualan.id_tbs"  name="id_tbs" id="id_tbs">
-                    <input class="form-control" type="hidden"  v-model="penjualan.potongan"  name="potongan" id="potongan">
+                    <input class="form-control" type="text"  v-model="penjualan.potongan"  name="potongan" id="potongan">
                 </span>
+
             </div>
         </div>
     </div>
@@ -338,6 +339,30 @@ watch: {
 
 },
 methods: {
+    getDataPenjualan(){
+
+        var app = this
+        var id = app.$route.params.id;
+        axios.get(app.url+'/cek-data-tbs-penjualan/'+id)
+        .then(function (resp) {
+
+            app.penjualan.pelanggan = resp.data.pelanggan_id
+            app.penjualan.kas = resp.data.id_kas
+            app.penjualan.jatuh_tempo = resp.data.tanggal_jt_tempo
+            app.penjualan.pembayaran = resp.data.tunai
+            if (app.penjualan.subtotal > 0) {
+                app.penjualan.potongan = resp.data.potongan
+                app.penjualan.potongan_faktur = resp.data.potongan                
+            }
+            
+        })
+        .catch(function (resp) {
+
+            console.log(resp);
+            alert("Tidak Dapat Memuat Penjualan");
+
+        });
+    },
     hitungKembalian(val){
         var kembalian = parseFloat(val) - parseFloat(this.penjualan.total_akhir);   
         if (kembalian >= 0) {
@@ -399,7 +424,7 @@ if (potongan_persen > 100) {
     this.hitungKembalian(this.penjualan.pembayaran)
 
 }else{
-    this.penjualan.potongan_persen = potongan_persen
+    this.penjualan.potongan_persen = potongan_persen.toFixed(2)
     this.penjualan.total_akhir = total_akhir
     this.penjualan.potongan = potonganFaktur
     this.hitungKembalian(this.penjualan.pembayaran)
@@ -426,9 +451,11 @@ getResults(page) {
              app.penjualan.subtotal += resp.data.data[i].subtotal
              app.penjualan.total_akhir += resp.data.data[i].subtotal
              app.penjualan.kredit += resp.data.data[i].subtotal
+             app.getDataPenjualan();
 
          }); 
         }
+
 
     })
     .catch(function (resp) {
@@ -482,13 +509,6 @@ dataKas() {
     var app = this;
     axios.get(app.url+'/pilih-kas').then(function (resp) {
         app.kas = resp.data;   
-
-        $.each(resp.data, function (i, item) {
-            if (resp.data[i].default_kas == 1) {
-                app.penjualan.kas = resp.data[i].id 
-            }
-
-        });
         
     })
     .catch(function (resp) {
