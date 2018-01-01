@@ -168,6 +168,7 @@ export default {
       url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
       url_kas : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
       url_cek_total_kas : window.location.origin+(window.location.pathname).replace("dashboard", ""),
+      url_edit : window.location.origin+(window.location.pathname).replace("dashboard", "editPembelian"), 
       inputTbsPembelian: {
         produk : '',
         jumlah_produk : '',
@@ -329,7 +330,38 @@ export default {
         .catch(function (resp) {
           alert("Tidak Bisa Memuat Kas");
         });
-  },//END FUNGSI UNTUK SELECTIZE CARABAYAR  
+  },//END FUNGSI UNTUK SELECTIZE CARABAYAR 
+  deleteEntry(id, index,nama_produk) { 
+ 
+        var app = this; 
+        app.$swal({ 
+          text: "Anda Yakin Ingin Menghapus Produk "+nama_produk+ " ?", 
+          buttons: true, 
+          dangerMode: true, 
+        }) 
+        .then((willDelete) => { 
+          if (willDelete) { 
+            this.prosesDelete(id,nama_produk); 
+          } else { 
+            app.$swal.close(); 
+          } 
+        }); 
+ 
+      },//END fungsi deleteEntry (alert konfirmasi hapus) 
+      prosesDelete(id,nama_produk){ 
+        var app = this; 
+        app.loading = true; 
+        axios.delete(app.url_edit+'/hapus-tbs-pembelian/'+id) 
+        .then(function (resp) { 
+          app.getResults(); 
+          app.alert("Menghapus Produk "+nama_produk); 
+          app.loading = false; 
+          app.inputTbsPembelian.id_tbs = ''
+        }) 
+        .catch(function (resp) { 
+          app.loading = false; 
+        }); 
+      },//END fungsi prosesDelete  
 
 }
 
