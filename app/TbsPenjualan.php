@@ -19,16 +19,22 @@ class TbsPenjualan extends Model
     {
         return title_case($this->produk->nama_barang);
     }
-    public function getSubtotalTbsAttribute()
-    {
-        return number_format($this->subtotal, 2, ',', '.');
-    }
-    public function getHargaAttribute()
-    {
-        return number_format($this->harga_produk, 2, ',', '.');
-    }
-    public function getJumlahAttribute()
-    {
-        return number_format($this->jumlah_produk, 2, ',', '.');
+    
+    // SCOPE PENCARIAN TBS PENJUALAN
+    public function scopePencarian($query,$user_warung,$session_id,$request){
+
+        $query->select('tbs_penjualans.id_tbs_penjualan AS id_tbs_penjualan', 'tbs_penjualans.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'tbs_penjualans.id_produk AS id_produk', 'tbs_penjualans.potongan AS potongan', 'tbs_penjualans.subtotal AS subtotal', 'tbs_penjualans.harga_produk AS harga_produk','barangs.harga_jual AS harga_jual')
+        ->leftJoin('barangs', 'barangs.id', '=', 'tbs_penjualans.id_produk')
+        ->where('warung_id', $user_warung)
+        ->where('session_id', $session_id)
+        ->where(function ($query) use ($request) {
+
+            $query->orWhere('barangs.kode_barang', 'LIKE', $request->search . '%')
+            ->orWhere('barangs.nama_barang', 'LIKE', $request->search . '%');
+
+        })->orderBy('tbs_penjualans.id_tbs_penjualan', 'desc');
+
+        return $query;
+
     }
 }
