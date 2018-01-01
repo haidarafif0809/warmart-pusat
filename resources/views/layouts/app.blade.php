@@ -173,7 +173,6 @@
                 </p>
             </a>
         </li>
-        <!--PENJUALAN-
         <li>
             <router-link :to="{name: 'createPenjualan'}" class="menu-nav">
                 <i class="material-icons">
@@ -183,7 +182,7 @@
                     Penjualan
                 </p>
             </router-link>
-        </li>-MASTER DATA WARUNG -->
+        </li>
         <li>
             <a data-toggle="collapse" href="#persediaan">
                 <i class="material-icons">
@@ -319,6 +318,16 @@
     </a>
     <div class="collapse" id="laporan">
         <ul class="nav">
+            <li>
+                <router-link :to="{name: 'indexPenjualan'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        LP
+                    </span>
+                    <span class="sidebar-normal">
+                        Laba Penjualan
+                    </span>
+                </router-link>
+            </li>
             <li>
                 <router-link :to="{name: 'indexLaporanLabaKotor'}" class="menu-nav">
                     <span class="sidebar-mini">
