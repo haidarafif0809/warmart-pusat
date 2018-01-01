@@ -44,7 +44,7 @@ class PenjualanPos extends Model
 
     public function getWaktuEditAttribute()
     {
-        $tanggal       = date($this->update_at);
+        $tanggal       = date($this->updated_at);
         $date          = date_create($tanggal);
         $date_terbalik = date_format($date, "d/m/Y H:i:s");
         return $date_terbalik;
@@ -110,6 +110,27 @@ public static function no_faktur($warung_id)
         $date        = date_create($tangal);
         $date_format = date_format($date, "Y-m-d");
         return $date_format;
+    }
+
+    // query pencarian
+    public function scopePencarian($query,$user_warung,$request){
+
+        $query->select('penjualan_pos.id AS id', 'penjualan_pos.status_penjualan AS status_penjualan','penjualan_pos.total AS total','users.name AS pelanggan',DB::raw('DATE_FORMAT(penjualan_pos.created_at, "%d/%m/%Y %H:%i:%s") as waktu_jual'),'kas.nama_kas AS nama_kas','penjualan_pos.potongan AS potongan','penjualan_pos.tunai AS tunai','penjualan_pos.kembalian AS kembalian','penjualan_pos.nilai_kredit AS nilai_kredit',DB::raw('DATE_FORMAT(penjualan_pos.tanggal_jt_tempo, "%d/%m/%Y") as jatuh_tempoo'),DB::raw('DATE_FORMAT(penjualan_pos.updated_at, "%d/%m/%Y %H:%i:%s") as waktu_edit'),'userbuat.name AS user_buat','useredit.name AS user_edit')
+        ->leftJoin('users', 'users.id', '=', 'penjualan_pos.pelanggan_id')
+        ->leftJoin('users AS userbuat', 'userbuat.id', '=', 'penjualan_pos.created_by')
+        ->leftJoin('users AS useredit', 'useredit.id', '=', 'penjualan_pos.updated_by')
+        ->leftJoin('kas', 'kas.id', '=', 'penjualan_pos.id_kas')
+        ->where('penjualan_pos.warung_id', $user_warung)
+        ->where(function ($query) use ($request) {
+
+            $query->orWhere('penjualan_pos.id', 'LIKE', $request->search . '%')
+            ->orWhere('penjualan_pos.status_penjualan', 'LIKE', $request->search . '%')
+            ->orWhere('penjualan_pos.total', 'LIKE', $request->search . '%')
+            ->orWhere(DB::raw('DATE_FORMAT(penjualan_pos.created_at, "%d/%m/%Y %H:%i:%s")'), 'LIKE', $request->search . '%')
+            ->orWhere('users.name', 'LIKE', $request->search . '%');
+
+        })->orderBy('penjualan_pos.id', 'desc');
+        return $query;
     }
 
     // LAP. LABA KOTOR PENJUALAN POS
