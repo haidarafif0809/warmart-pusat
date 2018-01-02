@@ -113,137 +113,138 @@
 
                                         <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
                                             <font style="color: black">Pembayaran(F10)</font>
-                                            <money class="form-penjualan" v-shortkey.focus="['f10']" id="pembayaran" name="pembayaran" placeholder="Pembayaran"  v-model="penjualan.pembayaran" v-bind="separator" autocomplete="off"></money> 
+                                            <money class="form-penjualan" v-shortkey.focus="['f10']" id="pembayaran" name="pembayaran" placeholder="Pembayaran"  v-model="penjualan.pembayaran" v-bind="separator" autocomplete="off" ref="pembayaran"></money> 
                                         </div>
 
                                     </div>
                                     <div class="col-md-6 col-xs-12">
 
                                         <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                           <font style="color: black">Kembalian</font>
-                                           <money readonly="" class="form-penjualan" id="kembalian" name="kembalian" placeholder="Kembalian"  v-model="penjualan.kembalian" v-bind="separator" ></money> 
-                                       </div>
+                                         <font style="color: black">Kembalian</font>
+                                         <money readonly="" class="form-penjualan" id="kembalian" name="kembalian" placeholder="Kembalian"  v-model="penjualan.kembalian" v-bind="separator" ></money> 
+                                     </div>
 
-                                       <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                           <font style="color: black">Kredit</font>
-                                           <money readonly="" class="form-penjualan" id="kredit" name="kredit" placeholder="Kredit"  v-model="penjualan.kredit" v-bind="separator" ></money> 
-                                       </div>
-                                   </div>
-                               </div>
-
-                               <div align="right"  style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                 <button v-if="penjualan.kembalian >= 0 && penjualan.kredit == 0" type="button" class="btn btn-success" id="btnSelesai" v-on:click="selesaiPenjualan()" v-shortkey.push="['alt']" @shortkey="selesaiPenjualan()"><i class="material-icons">credit_card</i>Tunai(Alt)</button>
-
-                                 <button v-if="penjualan.kredit > 0" type="button" class="btn btn-success" id="btnSelesai" v-on:click="selesaiPenjualan()" v-shortkey.push="['alt']" @shortkey="selesaiPenjualan()"><i class="material-icons">credit_card</i> Piutang(Alt)</button>
-
-                                 <button type="button" class="btn btn-default"  v-on:click="closeModal()" v-shortkey.push="['esc']" @shortkey="closeModal()"><i class="material-icons">close</i> Tutup(Esc)</button>
+                                     <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                                         <font style="color: black">Kredit</font>
+                                         <money readonly="" class="form-penjualan" id="kredit" name="kredit" placeholder="Kredit"  v-model="penjualan.kredit" v-bind="separator" ></money> 
+                                     </div>
+                                 </div>
                              </div>
 
-                         </div> 
-                     </div>
-                     <div class="modal-footer">  
-                     </div> 
-                 </form>
-             </div>       
-         </div> 
-     </div> 
-     <!-- / MODAL TOMBOL SELESAI --> 
+                             <div align="right"  style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                               <button v-if="penjualan.kembalian >= 0 && penjualan.kredit == 0" type="button" class="btn btn-success" id="btnSelesai" v-on:click="selesaiPenjualan()" v-shortkey.push="['alt']" @shortkey="selesaiPenjualan()"><i class="material-icons">credit_card</i>Tunai(Alt)</button>
 
-     <div class="card" style="margin-bottom: 1px; margin-top: 1px;">
-        <div class="card-content">
-            <h4 class="card-title" style="margin-bottom: 1px; margin-top: 1px;">Edit Penjualan #{{id_penjualan_pos}}</h4>
+                               <button v-if="penjualan.kredit > 0" type="button" class="btn btn-success" id="btnSelesai" v-on:click="selesaiPenjualan()" v-shortkey.push="['alt']" @shortkey="selesaiPenjualan()"><i class="material-icons">credit_card</i> Piutang(Alt)</button>
 
-            <div class="row" style="margin-bottom: 1px; margin-top: 1px;">
+                               <button type="button" class="btn btn-default"  v-on:click="closeModal()" v-shortkey.push="['esc']" @shortkey="closeModal()"><i class="material-icons">close</i> Tutup(Esc)</button>
+                           </div>
 
-                <div class="col-md-3">
-                    <div class="card card-produk" style="margin-bottom: 1px; margin-top: 1px;">
+                       </div> 
+                   </div>
+                   <div class="modal-footer">  
+                   </div> 
+               </form>
+           </div>       
+       </div> 
+   </div> 
+   <!-- / MODAL TOMBOL SELESAI --> 
 
-                      <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
-                        <selectize-component v-model="inputTbsPenjualan.produk" :settings="placeholder_produk" id="produk" ref='produk' v-shortkey.focus="['f1']"> 
-                            <option v-for="produks, index in produk" v-bind:value="produks.produk">{{ produks.nama_produk }}</option>
-                        </selectize-component>
-                    </div>  
+   <div class="card" style="margin-bottom: 1px; margin-top: 1px;">
+    <div class="card-content">
+        <h4 class="card-title" style="margin-bottom: 1px; margin-top: 1px;">Edit Penjualan #{{id_penjualan_pos}}</h4>
 
-                    <span style="display: none;">
-                        <input class="form-control" type="hidden"  v-model="inputTbsPenjualan.jumlah_produk"  name="jumlah_produk" id="jumlah_produk">
-                        <input class="form-control" type="hidden"  v-model="inputTbsPenjualan.potongan_produk"  name="potongan_produk" id="potongan_produk">
-                        <input class="form-control" type="hidden"  v-model="inputTbsPenjualan.id_tbs"  name="id_tbs" id="id_tbs">
-                        <input class="form-control" type="hidden"  v-model="penjualan.potongan"  name="potongan" id="potongan">
-                    </span>
-                </div>
-            </div>
-        </div>
+        <div class="row" style="margin-bottom: 1px; margin-top: 1px;">
 
+            <div class="col-md-3">
+                <div class="card card-produk" style="margin-bottom: 1px; margin-top: 1px;">
 
-        <!--TABEL TBS ITEM  MASUK -->
-        <div class="row">
+                  <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
+                    <selectize-component v-model="inputTbsPenjualan.produk" :settings="placeholder_produk" id="produk" ref='produk' v-shortkey.focus="['f1']"> 
+                        <option v-for="produks, index in produk" v-bind:value="produks.produk">{{ produks.nama_produk }}</option>
+                    </selectize-component>
+                </div>  
 
-            <div class="col-md-8">
-                <div class=" table-responsive ">
-                  <div class="pencarian">
-                    <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
-                </div>
-                <table class="table table-striped table-hover" v-if="seen">
-                    <thead class="text-primary">
-                        <tr>
+                <span style="display: none;">
+                    <input class="form-control" type="hidden"  v-model="inputTbsPenjualan.jumlah_produk"  name="jumlah_produk" id="jumlah_produk">
+                    <input class="form-control" type="hidden"  v-model="inputTbsPenjualan.potongan_produk"  name="potongan_produk" id="potongan_produk">
+                    <input class="form-control" type="hidden"  v-model="inputTbsPenjualan.id_tbs"  name="id_tbs" id="id_tbs">
+                    <input class="form-control" type="text"  v-model="penjualan.potongan"  name="potongan" id="potongan">
+                </span>
 
-                            <th>Produk</th>
-                            <th>Jumlah</th>
-                            <th>Harga</th>
-                            <th>Potongan</th>
-                            <th>Subtotal</th>
-                            <th>Hapus</th>
-
-                        </tr>
-                    </thead>
-                    <tbody v-if="tbs_penjualan.length"  class="data-ada">
-                        <tr v-for="tbs_penjualan, index in tbs_penjualan" >
-
-                            <td>{{ tbs_penjualan.kode_produk }} - {{ tbs_penjualan.nama_produk }}</td>
-
-                            <td>
-                                <a v-bind:href="'#edit-penjualan/'+tbs_penjualan.id_penjualan_pos"  v-bind:id="'edit-' + tbs_penjualan.id_edit_tbs_penjualans" v-on:click="editEntry(tbs_penjualan.id_edit_tbs_penjualans, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">{{ new Intl.NumberFormat().format(tbs_penjualan.jumlah_produk) }},00</a>
-                            </td>
-
-                            <td>{{ new Intl.NumberFormat().format(tbs_penjualan.harga_produk) }},00</td>
-
-                            <td><a v-bind:href="'#edit-penjualan/'+tbs_penjualan.id_penjualan_pos"  v-bind:id="'edit-' + tbs_penjualan.id_edit_tbs_penjualans" v-on:click="potonganEntry(tbs_penjualan.id_edit_tbs_penjualans, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">{{ tbs_penjualan.potongan }}</a></td>
-
-                            <td> {{ new Intl.NumberFormat().format(tbs_penjualan.subtotal) }},00</td>
-
-                            <td><a v-bind:href="'#edit-penjualan/'+tbs_penjualan.id_penjualan_pos"  class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_penjualan.id_edit_tbs_penjualans" v-on:click="deleteEntry(tbs_penjualan.id_edit_tbs_penjualans, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">Delete</a></td>
-                        </tr>
-                    </tbody>                    
-                    <tbody class="data-tidak-ada" v-else>
-                        <tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
-                    </tbody>
-                </table>    
-
-                <vue-simple-spinner v-if="loading"></vue-simple-spinner>
-
-                <div align="right"><pagination :data="tbsPenjualanData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
-
-            </div>
-        </div>
-        <div class="col-md-4">
-
-            <div class="card card-stats">
-                <div class="card-header" data-background-color="blue">
-                    <i class="material-icons">shopping_cart</i>
-                </div>
-                <div class="card-content">
-                    <p class="category">Subtotal</p>
-                    <h3 class="card-title">{{ new Intl.NumberFormat().format(penjualan.subtotal) }},00</h3>
-                </div>
-                <div class="card-footer">
-                    <button type="button" class="btn btn-success" id="bayar" v-on:click="bayarPenjualan()" v-shortkey.push="['f2']" @shortkey="bayarPenjualan()"><i class="material-icons">payment</i>Bayar(F2)</button>
-                    <button type="submit" class="btn btn-danger" id="btnBatal" v-on:click="batalPenjualan()" v-shortkey.push="['f3']" @shortkey="batalPenjualan()"><i class="material-icons">cancel</i> Batal(F3) </button>
-                </div>
             </div>
         </div>
     </div>
 
-    <p style="color: red; font-style: italic;">*Note : Klik Kolom Jumlah, Harga, & Potongan Untuk Mengubah Nilai.</p>      
+
+    <!--TABEL TBS ITEM  MASUK -->
+    <div class="row">
+
+        <div class="col-md-8">
+            <div class=" table-responsive ">
+              <div class="pencarian">
+                <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
+            </div>
+            <table class="table table-striped table-hover" v-if="seen">
+                <thead class="text-primary">
+                    <tr>
+
+                        <th>Produk</th>
+                        <th>Jumlah</th>
+                        <th>Harga</th>
+                        <th>Potongan</th>
+                        <th>Subtotal</th>
+                        <th>Hapus</th>
+
+                    </tr>
+                </thead>
+                <tbody v-if="tbs_penjualan.length"  class="data-ada">
+                    <tr v-for="tbs_penjualan, index in tbs_penjualan" >
+
+                        <td>{{ tbs_penjualan.kode_produk }} - {{ tbs_penjualan.nama_produk }}</td>
+
+                        <td>
+                            <a v-bind:href="'#edit-penjualan/'+tbs_penjualan.id_penjualan_pos"  v-bind:id="'edit-' + tbs_penjualan.id_edit_tbs_penjualans" v-on:click="editEntry(tbs_penjualan.id_edit_tbs_penjualans, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">{{ new Intl.NumberFormat().format(tbs_penjualan.jumlah_produk) }},00</a>
+                        </td>
+
+                        <td>{{ new Intl.NumberFormat().format(tbs_penjualan.harga_produk) }},00</td>
+
+                        <td><a v-bind:href="'#edit-penjualan/'+tbs_penjualan.id_penjualan_pos"  v-bind:id="'edit-' + tbs_penjualan.id_edit_tbs_penjualans" v-on:click="potonganEntry(tbs_penjualan.id_edit_tbs_penjualans, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">{{ tbs_penjualan.potongan }}</a></td>
+
+                        <td> {{ new Intl.NumberFormat().format(tbs_penjualan.subtotal) }},00</td>
+
+                        <td><a v-bind:href="'#edit-penjualan/'+tbs_penjualan.id_penjualan_pos"  class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_penjualan.id_edit_tbs_penjualans" v-on:click="deleteEntry(tbs_penjualan.id_edit_tbs_penjualans, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">Delete</a></td>
+                    </tr>
+                </tbody>                    
+                <tbody class="data-tidak-ada" v-else>
+                    <tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
+                </tbody>
+            </table>    
+
+            <vue-simple-spinner v-if="loading"></vue-simple-spinner>
+
+            <div align="right"><pagination :data="tbsPenjualanData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
+
+        </div>
+    </div>
+    <div class="col-md-4">
+
+        <div class="card card-stats">
+            <div class="card-header" data-background-color="blue">
+                <i class="material-icons">shopping_cart</i>
+            </div>
+            <div class="card-content">
+                <p class="category">Subtotal</p>
+                <h3 class="card-title">{{ new Intl.NumberFormat().format(penjualan.subtotal) }},00</h3>
+            </div>
+            <div class="card-footer">
+                <button type="button" class="btn btn-success" id="bayar" v-on:click="bayarPenjualan()" v-shortkey.push="['f2']" @shortkey="bayarPenjualan()"><i class="material-icons">payment</i>Bayar(F2)</button>
+                <button type="submit" class="btn btn-danger" id="btnBatal" v-on:click="batalPenjualan()" v-shortkey.push="['f3']" @shortkey="batalPenjualan()"><i class="material-icons">cancel</i> Batal(F3) </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p style="color: red; font-style: italic;">*Note : Klik Kolom Jumlah, Harga, & Potongan Untuk Mengubah Nilai.</p>      
 
 
 </div><!-- / PANEL BODY -->
@@ -338,6 +339,30 @@ watch: {
 
 },
 methods: {
+    getDataPenjualan(){
+
+        var app = this
+        var id = app.$route.params.id;
+        axios.get(app.url+'/cek-data-tbs-penjualan/'+id)
+        .then(function (resp) {
+
+            app.penjualan.pelanggan = resp.data.pelanggan_id
+            app.penjualan.kas = resp.data.id_kas
+            app.penjualan.jatuh_tempo = resp.data.tanggal_jt_tempo
+            app.penjualan.pembayaran = resp.data.tunai
+            if (app.penjualan.subtotal > 0) {
+                app.penjualan.potongan = resp.data.potongan
+                app.penjualan.potongan_faktur = resp.data.potongan                
+            }
+            
+        })
+        .catch(function (resp) {
+
+            console.log(resp);
+            alert("Tidak Dapat Memuat Penjualan");
+
+        });
+    },
     hitungKembalian(val){
         var kembalian = parseFloat(val) - parseFloat(this.penjualan.total_akhir);   
         if (kembalian >= 0) {
@@ -382,8 +407,8 @@ methods: {
     }
 },
 potonganFaktur(){
- var potonganFaktur = this.penjualan.potongan_faktur
- if (potonganFaktur == '') {
+   var potonganFaktur = this.penjualan.potongan_faktur
+   if (potonganFaktur == '') {
     potonganFaktur = 0
 }
 var potongan_persen = (parseFloat(potonganFaktur) / parseFloat(this.penjualan.subtotal)) * 100
@@ -399,7 +424,7 @@ if (potongan_persen > 100) {
     this.hitungKembalian(this.penjualan.pembayaran)
 
 }else{
-    this.penjualan.potongan_persen = potongan_persen
+    this.penjualan.potongan_persen = potongan_persen.toFixed(2)
     this.penjualan.total_akhir = total_akhir
     this.penjualan.potongan = potonganFaktur
     this.hitungKembalian(this.penjualan.pembayaran)
@@ -423,12 +448,14 @@ getResults(page) {
 
             $.each(resp.data.data, function (i,item) {
 
-               app.penjualan.subtotal += resp.data.data[i].subtotal
-               app.penjualan.total_akhir += resp.data.data[i].subtotal
-               app.penjualan.kredit += resp.data.data[i].subtotal
+             app.penjualan.subtotal += resp.data.data[i].subtotal
+             app.penjualan.total_akhir += resp.data.data[i].subtotal
+             app.penjualan.kredit += resp.data.data[i].subtotal
+             app.getDataPenjualan();
 
-           }); 
+         }); 
         }
+
 
     })
     .catch(function (resp) {
@@ -482,13 +509,6 @@ dataKas() {
     var app = this;
     axios.get(app.url+'/pilih-kas').then(function (resp) {
         app.kas = resp.data;   
-
-        $.each(resp.data, function (i, item) {
-            if (resp.data[i].default_kas == 1) {
-                app.penjualan.kas = resp.data[i].id 
-            }
-
-        });
         
     })
     .catch(function (resp) {
@@ -871,7 +891,8 @@ prosesSelesaiPenjualan(value){
 
 },
 bayarPenjualan(){
-    $("#modal_selesai").show(); 
+    $("#modal_selesai").show();     
+    this.$refs.pembayaran.$el.focus()
 },
 closeModal(){
 
