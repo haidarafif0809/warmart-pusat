@@ -170,4 +170,51 @@ class Hpp extends Model
         return $query_keluar;
     }
 
+    // Total Awal
+    public function scopeTotalAwal($query_masuk, $request)
+    {
+        //HPP MASUK
+        $query_masuk = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk),0) as stok_masuk'), DB::raw('IFNULL(SUM(total_nilai),0) as total_masuk')])
+        ->where('jenis_hpp', 1)
+        ->where(DB::raw('DATE(created_at)'), '<', $this->tanggalSql($request->dari_tanggal))
+        ->where('warung_id', Auth::user()->id_warung)->first();
+
+        //HPP KELUAR
+        $query_keluar = Hpp::select([DB::raw('IFNULL(SUM(jumlah_keluar),0) as stok_keluar'), DB::raw('IFNULL(SUM(total_nilai),0) as total_keluar')])
+        ->where('jenis_hpp', 2)
+        ->where(DB::raw('DATE(created_at)'), '<', $this->tanggalSql($request->dari_tanggal))
+        ->where('warung_id', Auth::user()->id_warung)->first();
+
+        $query_masuk['stok_awal'] = $query_masuk->stok_masuk - $query_keluar->stok_keluar;
+        $query_masuk['total_awal'] = $query_masuk->total_masuk - $query_keluar->total_keluar;
+
+        return $query_masuk;
+    }
+
+    // Total Masuk
+    public function scopeTotalMasuk($query_masuk, $request)
+    {
+        //HPP MASUK
+        $query_masuk = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk),0) as stok_masuk'), DB::raw('IFNULL(SUM(total_nilai),0) as total_masuk')])
+        ->where('jenis_hpp', 1)
+        ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+        ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+        ->where('warung_id', Auth::user()->id_warung)->first();
+
+        return $query_masuk;
+    }
+
+    // Total Keluar
+    public function scopeTotalKeluar($query_keluar, $request)
+    {
+        //HPP KELUAR
+        $query_keluar = Hpp::select([DB::raw('IFNULL(SUM(jumlah_keluar),0) as stok_keluar'), DB::raw('IFNULL(SUM(total_nilai),0) as total_keluar')])
+        ->where('jenis_hpp', 2)
+        ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+        ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+        ->where('warung_id', Auth::user()->id_warung)->first();
+
+        return $query_keluar;
+    }
+
 }

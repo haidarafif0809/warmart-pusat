@@ -32,6 +32,29 @@ class LaporanMutasiStokController extends Controller
 		return $respons;
 	}
 
+	public function subtotalLaporan($total_hpp, $total_hpp_masuk, $total_hpp_keluar)
+	{
+		$total_stok_awal  = $total_hpp->stok_awal;
+		$total_nilai_awal = $total_hpp->total_awal;
+		$total_stok_masuk  = $total_hpp_masuk->stok_masuk;
+		$total_nilai_masuk = $total_hpp_masuk->total_masuk;
+		$total_stok_keluar  = $total_hpp_keluar->stok_keluar;
+		$total_nilai_keluar = $total_hpp_keluar->total_keluar;
+		$total_stok_akhir  = ($total_stok_awal + $total_stok_masuk) - $total_stok_keluar;
+		$total_nilai_akhir = ($total_nilai_awal + $total_nilai_masuk) - $total_nilai_keluar;
+
+		$response['total_stok_awal']  = round($total_stok_awal, 2);
+		$response['total_nilai_awal'] = round($total_nilai_awal, 2);
+		$response['total_stok_masuk']  = round($total_stok_masuk, 2);
+		$response['total_nilai_masuk'] = round($total_nilai_masuk, 2);
+		$response['total_stok_keluar']  = round($total_stok_keluar, 2);
+		$response['total_nilai_keluar'] = round($total_nilai_keluar, 2);
+		$response['total_stok_akhir']  = round($total_stok_akhir, 2);
+		$response['total_nilai_akhir'] = round($total_nilai_akhir, 2);
+
+		return $response;
+	}
+
 
 
 	public function prosesLaporanMutasiStok(Request $request)
@@ -61,5 +84,16 @@ class LaporanMutasiStokController extends Controller
         //DATA PAGINATION
 		$respons = $this->dataPagination($daftar_produk, $array_mutasi_kas);
 		return response()->json($respons);
+	}
+
+	public function subtotalMutasiStok(Request $request)
+	{
+		$total_hpp = Hpp::totalAwal($request);
+		$total_hpp_masuk = Hpp::totalMasuk($request);
+		$total_hpp_keluar = Hpp::totalKeluar($request);
+
+		$response = $this->subtotalLaporan($total_hpp, $total_hpp_masuk, $total_hpp_keluar);
+
+		return response()->json($response);
 	}
 }

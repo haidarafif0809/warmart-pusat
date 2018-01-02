@@ -73,18 +73,17 @@
 								</tr>
 
 								<tr style="color:red">
-
 									<td>TOTAL</td>
 									<td></td>
 									<td></td>
-									<td align="right">{{ subtotalmutasiStok.subtotal_hpp | pemisahTitik }}</td>
-									<td align="right">{{ subtotalmutasiStok.subtotal_hpp | pemisahTitik }}</td>
-									<td align="right">{{ subtotalmutasiStok.subtotal_hpp | pemisahTitik }}</td>
-									<td align="right">{{ subtotalmutasiStok.subtotal_hpp | pemisahTitik }}</td>
-									<td align="right">{{ subtotalmutasiStok.subtotal_hpp | pemisahTitik }}</td>
-									<td align="right">{{ subtotalmutasiStok.subtotal_hpp | pemisahTitik }}</td>
-									<td align="right">{{ subtotalmutasiStok.subtotal_hpp | pemisahTitik }}</td>
-									<td align="right">{{ subtotalmutasiStok.subtotal_hpp | pemisahTitik }}</td>
+									<td align="right">{{ subtotalMutasiStok.total_stok_awal | pemisahTitik }}</td>
+									<td align="right">{{ subtotalMutasiStok.total_nilai_awal | pemisahTitik }}</td>
+									<td align="right">{{ subtotalMutasiStok.total_stok_masuk | pemisahTitik }}</td>
+									<td align="right">{{ subtotalMutasiStok.total_nilai_masuk | pemisahTitik }}</td>
+									<td align="right">{{ subtotalMutasiStok.total_stok_keluar | pemisahTitik }}</td>
+									<td align="right">{{ subtotalMutasiStok.total_nilai_keluar | pemisahTitik }}</td>
+									<td align="right">{{ subtotalMutasiStok.total_stok_akhir | pemisahTitik }}</td>
+									<td align="right">{{ subtotalMutasiStok.total_nilai_akhir | pemisahTitik }}</td>
 
 								</tr>
 							</tbody>					
@@ -111,7 +110,7 @@ export default {
 			produk: [],
 			mutasiStok: [],
 			mutasiStokData: {},
-			subtotalmutasiStok: {},
+			subtotalMutasiStok: {},
 			filter: {
 				dari_tanggal: '',
 				sampai_tanggal: '',
@@ -137,6 +136,7 @@ export default {
     	submitMutasiStok(){
     		var app = this;
     		app.prosesLaporan();
+    		app.totalMutasiStok();
     		$("#btnExcel").show();
     	},
     	prosesLaporan(page) {
@@ -174,16 +174,15 @@ export default {
     			alert("Tidak Dapat Memuat Laporan Mutasi Stok");
     		});
     	},
-      totalmutasiStok() {
+      totalMutasiStok() {
     		var app = this;	
     		var newFilter = app.filter;
 
     		app.loading = true,
     		axios.post(app.url+'/subtotal-mutasi-stok', newFilter)
     		.then(function (resp) {
-    			app.subtotalmutasiStok = resp.data;
+    			app.subtotalMutasiStok = resp.data;
     			app.loading = false
-    			console.log(resp.data)
     		})
     		.catch(function (resp) {
     			console.log(resp);
