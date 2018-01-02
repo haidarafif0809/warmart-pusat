@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Yajra\Auditable\AuditableTrait;
 use Laravel\Scout\Searchable;
+use Auth;
 
 
 class Barang extends Model
@@ -62,6 +63,31 @@ class Barang extends Model
 		
 	}
 
+    // MUTASI STOK
+	public function scopeDaftarProduk($query_mutasi_stok)
+	{
+		$query_mutasi_stok = Barang::select(['barangs.id','barangs.kode_barang', 'barangs.nama_barang', 'satuans.nama_satuan'])
+		->leftJoin('satuans', 'satuans.id', '=', 'barangs.satuan_id')
+		->where('barangs.id_warung', Auth::user()->id_warung);
 
+		return $query_mutasi_stok;
+	}
+
+    // CARI MUTASI STOK
+	public function scopeCariDaftarProduk($query_mutasi_stok, $request)
+	{
+		$search = $request->search;
+
+		$query_mutasi_stok = Barang::select(['barangs.id','barangs.kode_barang', 'barangs.nama_barang', 'satuans.nama_satuan'])
+		->leftJoin('satuans', 'satuans.id', '=', 'barangs.satuan_id')
+		->where(function ($query) use ($search) {
+			$query->orwhere('barangs.kode_barang', 'LIKE', '%' . $search . '%')
+			->orwhere('barangs.nama_barang', 'LIKE', '%' . $search . '%')
+			->orwhere('satuans.nama_satuan', 'LIKE', '%' . $search . '%');
+		})
+		->where('barangs.id_warung', Auth::user()->id_warung);
+
+		return $query_mutasi_stok;
+	}
 
 }

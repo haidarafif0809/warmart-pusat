@@ -30,7 +30,7 @@
 						</div>
 
 						<div class="form-group col-md-2">
-							<button class="btn btn-primary" id="btnSubmit" type="submit" style="margin: 0px 0px;" @click="submitmutasiStok()"><i class="material-icons">search</i> Cari</button>
+							<button class="btn btn-primary" id="btnSubmit" type="submit" style="margin: 0px 0px;" @click="submitMutasiStok()"><i class="material-icons">search</i> Cari</button>
 						</div>
 					</div>
 
@@ -58,33 +58,32 @@
 							<tbody v-if="mutasiStok.length > 0 && loading == false"  class="data-ada">
 								<tr v-for="mutasiStoks, index in mutasiStok" >
 
-									<td>{{ mutasiStoks.laba_kotor.kode_barang }}</td>
-									<td>{{ mutasiStoks.laba_kotor.nama_barang }}</td>
-									<td>{{ mutasiStoks.laba_kotor.kode_barang }}</td>
-									<td align="right">{{ mutasiStoks.hpp | pemisahTitik }}</td>
-									<td align="right">{{ mutasiStoks.hpp | pemisahTitik }}</td>
-									<td align="right">{{ mutasiStoks.hpp | pemisahTitik }}</td>
-									<td align="right">{{ mutasiStoks.hpp | pemisahTitik }}</td>
-									<td align="right">{{ mutasiStoks.hpp | pemisahTitik }}</td>
-									<td align="right">{{ mutasiStoks.hpp | pemisahTitik }}</td>
-									<td align="right">{{ mutasiStoks.hpp | pemisahTitik }}</td>
-									<td align="right">{{ mutasiStoks.hpp | pemisahTitik }}</td>
+									<td>{{ mutasiStoks.daftar_produks.kode_barang }}</td>
+									<td>{{ mutasiStoks.daftar_produks.nama_barang }}</td>
+									<td>{{ mutasiStoks.daftar_produks.nama_satuan }}</td>
+									<td align="right">{{ mutasiStoks.stok_awal | pemisahTitik }}</td>
+									<td align="right">{{ mutasiStoks.total_awal | pemisahTitik }}</td>
+									<td align="right">{{ mutasiStoks.stok_masuk | pemisahTitik }}</td>
+									<td align="right">{{ mutasiStoks.total_masuk | pemisahTitik }}</td>
+									<td align="right">{{ mutasiStoks.stok_keluar | pemisahTitik }}</td>
+									<td align="right">{{ mutasiStoks.total_keluar | pemisahTitik }}</td>
+									<td align="right">{{ mutasiStoks.stok_akhir | pemisahTitik }}</td>
+									<td align="right">{{ mutasiStoks.total_akhir | pemisahTitik }}</td>
 
 								</tr>
 
 								<tr style="color:red">
-
 									<td>TOTAL</td>
 									<td></td>
 									<td></td>
-									<td align="right">{{ subtotalmutasiStok.subtotal_hpp | pemisahTitik }}</td>
-									<td align="right">{{ subtotalmutasiStok.subtotal_hpp | pemisahTitik }}</td>
-									<td align="right">{{ subtotalmutasiStok.subtotal_hpp | pemisahTitik }}</td>
-									<td align="right">{{ subtotalmutasiStok.subtotal_hpp | pemisahTitik }}</td>
-									<td align="right">{{ subtotalmutasiStok.subtotal_hpp | pemisahTitik }}</td>
-									<td align="right">{{ subtotalmutasiStok.subtotal_hpp | pemisahTitik }}</td>
-									<td align="right">{{ subtotalmutasiStok.subtotal_hpp | pemisahTitik }}</td>
-									<td align="right">{{ subtotalmutasiStok.subtotal_hpp | pemisahTitik }}</td>
+									<td align="right">{{ subtotalMutasiStok.total_stok_awal | pemisahTitik }}</td>
+									<td align="right">{{ subtotalMutasiStok.total_nilai_awal | pemisahTitik }}</td>
+									<td align="right">{{ subtotalMutasiStok.total_stok_masuk | pemisahTitik }}</td>
+									<td align="right">{{ subtotalMutasiStok.total_nilai_masuk | pemisahTitik }}</td>
+									<td align="right">{{ subtotalMutasiStok.total_stok_keluar | pemisahTitik }}</td>
+									<td align="right">{{ subtotalMutasiStok.total_nilai_keluar | pemisahTitik }}</td>
+									<td align="right">{{ subtotalMutasiStok.total_stok_akhir | pemisahTitik }}</td>
+									<td align="right">{{ subtotalMutasiStok.total_nilai_akhir | pemisahTitik }}</td>
 
 								</tr>
 							</tbody>					
@@ -111,7 +110,7 @@ export default {
 			produk: [],
 			mutasiStok: [],
 			mutasiStokData: {},
-			subtotalmutasiStok: {},
+			subtotalMutasiStok: {},
 			filter: {
 				dari_tanggal: '',
 				sampai_tanggal: '',
@@ -134,10 +133,10 @@ export default {
 	  }
 	},
     methods: {
-    	submitmutasiStok(){
+    	submitMutasiStok(){
     		var app = this;
     		app.prosesLaporan();
-    		app.totalmutasiStok();
+    		app.totalMutasiStok();
     		$("#btnExcel").show();
     	},
     	prosesLaporan(page) {
@@ -165,7 +164,7 @@ export default {
     		if (typeof page === 'undefined') {
     			page = 1;
     		}
-    		axios.post(app.url+'/pencarian?search='+app.pencarian_pos+'&page='+page, newFilter)
+    		axios.post(app.url+'/pencarian?search='+app.pencarian+'&page='+page, newFilter)
     		.then(function (resp) {
     			app.mutasiStok = resp.data.data;
     			app.mutasiStokData = resp.data;
@@ -175,16 +174,15 @@ export default {
     			alert("Tidak Dapat Memuat Laporan Mutasi Stok");
     		});
     	},
-      totalmutasiStok() {
+      totalMutasiStok() {
     		var app = this;	
     		var newFilter = app.filter;
 
     		app.loading = true,
     		axios.post(app.url+'/subtotal-mutasi-stok', newFilter)
     		.then(function (resp) {
-    			app.subtotalmutasiStok = resp.data;
+    			app.subtotalMutasiStok = resp.data;
     			app.loading = false
-    			console.log(resp.data)
     		})
     		.catch(function (resp) {
     			console.log(resp);
