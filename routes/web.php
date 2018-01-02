@@ -551,7 +551,7 @@ Route::get('/laporan-laba-kotor-produk/download-excel-laba-kotor/{dari_tanggal}/
 Route::post('/laporan-mutasi-stok/view', 'LaporanMutasiStokController@prosesLaporanMutasiStok')->middleware('auth');
 Route::post('/laporan-mutasi-stok/pencarian', 'LaporanMutasiStokController@pencarian')->middleware('auth');
 Route::post('/laporan-mutasi-stok/subtotal-mutasi-stok', 'LaporanMutasiStokController@subtotalMutasiStok')->middleware('auth');
-Route::get('/laporan-mutasi-stok/download-excel-laba-kotor/{dari_tanggal}/{sampai_tanggal}/{pelanggan}', 'LaporanMutasiStokController@downloadExcel')->middleware('auth');
+Route::get('/laporan-mutasi-stok/download-excel-mutasi-stok/{dari_tanggal}/{sampai_tanggal}', 'LaporanMutasiStokController@downloadExcel')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 

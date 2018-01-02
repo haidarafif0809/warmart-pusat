@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Barang;
 use App\Hpp;
+use Excel;
 
 class LaporanMutasiStokController extends Controller
 {
@@ -55,7 +56,22 @@ class LaporanMutasiStokController extends Controller
 		return $response;
 	}
 
-
+	public function labelSheet($sheet, $row){
+		$sheet->row($row, [
+			'Kode Produk',
+			'Nama Produk',
+			'Satuan',
+			'Awal',
+			'Nilai Awal',
+			'Masuk',
+			'Nilai Masuk',
+			'Keluar',
+			'Nilai Keluar',
+			'Akhir',
+			'Nilai Akhir',
+			]);
+		return $sheet;
+	}
 
 	public function prosesLaporanMutasiStok(Request $request)
 	{
@@ -66,7 +82,7 @@ class LaporanMutasiStokController extends Controller
 			$hpp = Hpp::dataAwal($daftar_produks, $request);
 			$hpp_masuk = Hpp::dataMasuk($daftar_produks, $request);
 			$hpp_keluar = Hpp::dataKeluar($daftar_produks, $request);
-			
+
 			$stok_awal = $hpp->stok_awal;
 			$total_awal = $hpp->total_awal;
 			
@@ -124,5 +140,77 @@ class LaporanMutasiStokController extends Controller
 		$response = $this->subtotalLaporan($total_hpp, $total_hpp_masuk, $total_hpp_keluar);
 
 		return response()->json($response);
+	}
+
+    //DOWNLOAD EXCEL - LAPORAN LABA KOTOR /PELANGGAN
+	public function downloadExcel(Request $request, $dari_tanggal, $sampai_tanggal)
+	{
+		$request['dari_tanggal']   = $dari_tanggal;
+		$request['sampai_tanggal'] = $sampai_tanggal;
+		$daftar_produk = Barang::daftarProduk()->get();
+
+		Excel::create('Laporan Mutasi Stok', function ($excel) use ($request, $daftar_produk) {
+            // Set property
+			$excel->sheet('Laporan Mutasi Stok', function ($sheet) use ($request, $daftar_produk) {
+				$row = 1;
+				$sheet->row($row, [
+					'LAPORAN MUTASI STOK',
+					]);
+
+				$row = 3;
+				$sheet = $this->labelSheet($sheet, $row);
+
+				foreach ($daftar_produk as $daftar_produks) {
+					$hpp = Hpp::dataAwal($daftar_produks, $request);
+					$hpp_masuk = Hpp::dataMasuk($daftar_produks, $request);
+					$hpp_keluar = Hpp::dataKeluar($daftar_produks, $request);
+
+					$stok_awal = $hpp->stok_awal;
+					$total_awal = $hpp->total_awal;
+
+					$stok_masuk = $hpp_masuk->stok_masuk;
+					$total_masuk = $hpp_masuk->total_masuk;
+
+					$stok_keluar = $hpp_keluar->stok_keluar;
+					$total_keluar = $hpp_keluar->total_keluar;
+
+					$stok_akhir = ($stok_awal + $stok_masuk) - $stok_keluar;
+					$total_akhir = ($total_awal + $total_masuk) - $total_keluar;
+
+					$sheet->row(++$row, [
+						$daftar_produks->kode_barang,
+						$daftar_produks->nama_barang,
+						$daftar_produks->nama_satuan,
+						$stok_awal,
+						$total_awal,
+						$stok_masuk,
+						$total_masuk,
+						$stok_keluar,
+						$total_keluar,
+						$stok_akhir,
+						$total_akhir,
+						]);
+				}
+
+				$total_hpp = Hpp::totalAwal($request);
+				$total_hpp_masuk = Hpp::totalMasuk($request);
+				$total_hpp_keluar = Hpp::totalKeluar($request);
+
+				$sheet->row(++$row, [
+					'TOTAL',
+					'',
+					'',
+					$total_stok_awal  = round($total_hpp->stok_awal, 2),
+					$total_nilai_awal = round($total_hpp->total_awal, 2),
+					$total_stok_masuk  = round($total_hpp_masuk->stok_masuk, 2),
+					$total_nilai_masuk = round($total_hpp_masuk->total_masuk, 2),
+					$total_stok_keluar  = round($total_hpp_keluar->stok_keluar, 2),
+					$total_nilai_keluar = round($total_hpp_keluar->total_keluar, 2),
+					$total_stok_akhir  = round(($total_stok_awal + $total_stok_masuk) - $total_stok_keluar, 2),
+					$total_nilai_akhir = round(($total_nilai_awal + $total_nilai_masuk) - $total_nilai_keluar, 2),
+					]);
+
+			});
+		})->export('xls');
 	}
 }

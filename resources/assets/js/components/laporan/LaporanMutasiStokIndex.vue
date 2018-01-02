@@ -92,6 +92,10 @@
 							</tbody>
 						</table>
 						</div><!--RESPONSIVE-->
+
+						<!--DOWNLOAD EXCEL-->
+						<a :href="urlDownloadExcel+'/'+filter.dari_tanggal+'/'+filter.sampai_tanggal" class='btn btn-warning' id="btnExcel" target='blank' :style="'display: none'"><i class="material-icons">file_download</i> Download Excel</a>
+
 						<vue-simple-spinner v-if="loading"></vue-simple-spinner>
 						<div align="right"><pagination :data="mutasiStokData" v-on:pagination-change-page="prosesLaporan" :limit="4"></pagination></div>
 				</div>
