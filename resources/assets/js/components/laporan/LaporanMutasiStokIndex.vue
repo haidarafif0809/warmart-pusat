@@ -164,7 +164,7 @@ export default {
     		if (typeof page === 'undefined') {
     			page = 1;
     		}
-    		axios.post(app.url+'/pencarian?search='+app.pencarian_pos+'&page='+page, newFilter)
+    		axios.post(app.url+'/pencarian?search='+app.pencarian+'&page='+page, newFilter)
     		.then(function (resp) {
     			app.mutasiStok = resp.data.data;
     			app.mutasiStokData = resp.data;

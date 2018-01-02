@@ -86,6 +86,35 @@ class LaporanMutasiStokController extends Controller
 		return response()->json($respons);
 	}
 
+	public function pencarian(Request $request)
+	{
+		$daftar_produk = Barang::cariDaftarProduk($request)->paginate(10);
+
+		$array_mutasi_kas = array();
+		foreach ($daftar_produk as $daftar_produks) {
+			$hpp = Hpp::dataAwal($daftar_produks, $request);
+			$hpp_masuk = Hpp::dataMasuk($daftar_produks, $request);
+			$hpp_keluar = Hpp::dataKeluar($daftar_produks, $request);
+			
+			$stok_awal = $hpp->stok_awal;
+			$total_awal = $hpp->total_awal;
+			
+			$stok_masuk = $hpp_masuk->stok_masuk;
+			$total_masuk = $hpp_masuk->total_masuk;
+			
+			$stok_keluar = $hpp_keluar->stok_keluar;
+			$total_keluar = $hpp_keluar->total_keluar;
+			
+			$stok_akhir = ($stok_awal + $stok_masuk) - $stok_keluar;
+			$total_akhir = ($total_awal + $total_masuk) - $total_keluar;
+
+			array_push($array_mutasi_kas, ['daftar_produks' => $daftar_produks, 'stok_awal' => $stok_awal, 'total_awal' => $total_awal, 'stok_masuk' => $stok_masuk, 'total_masuk' => $total_masuk, 'stok_keluar' => $stok_keluar, 'total_keluar' => $total_keluar, 'stok_akhir' => $stok_akhir, 'total_akhir' => $total_akhir]);
+		}
+        //DATA PAGINATION
+		$respons = $this->dataPagination($daftar_produk, $array_mutasi_kas);
+		return response()->json($respons);
+	}
+
 	public function subtotalMutasiStok(Request $request)
 	{
 		$total_hpp = Hpp::totalAwal($request);
