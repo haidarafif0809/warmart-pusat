@@ -54,6 +54,7 @@
 								<tr>
 									<th>Kode Produk</th>
 									<th>Nama Produk</th>
+									<th>Supplier</th>
 									<th style="text-align:right">Jumlah</th>
 									<th>Satuan</th>
 									<th style="text-align:right">Diskon</th>
@@ -66,6 +67,7 @@
 
 									<td>{{ pembelianProduks.laporan_pembelians.kode_barang }}</td>
 									<td>{{ pembelianProduks.laporan_pembelians.nama_barang }}</td>
+									<td>{{ pembelianProduks.laporan_pembelians.nama_suplier }}</td>
 									<td align="right">{{ pembelianProduks.laporan_pembelians.jumlah_produk }}</td>
 									<td>{{ pembelianProduks.laporan_pembelians.nama_satuan }}</td>
 									<td align="right">{{ pembelianProduks.laporan_pembelians.potongan }}</td>
@@ -77,11 +79,12 @@
 								<tr style="color:red">
 									<td>TOTAL</td>
 									<td></td>
-									<td align="right">{{ subtotalPembelianProduk.total_stok_awal | pemisahTitik }}</td>
 									<td></td>
-									<td align="right">{{ subtotalPembelianProduk.total_nilai_awal | pemisahTitik }}</td>
-									<td align="right">{{ subtotalPembelianProduk.total_stok_masuk | pemisahTitik }}</td>
-									<td align="right">{{ subtotalPembelianProduk.total_nilai_masuk | pemisahTitik }}</td>
+									<td align="right">{{ subtotalPembelianProduk.jumlah_produk | pemisahTitik }}</td>
+									<td></td>
+									<td align="right">{{ subtotalPembelianProduk.potongan | pemisahTitik }}</td>
+									<td align="right">{{ subtotalPembelianProduk.pajak | pemisahTitik }}</td>
+									<td align="right">{{ subtotalPembelianProduk.subtotal | pemisahTitik }}</td>
 
 								</tr>
 							</tbody>					
@@ -151,6 +154,7 @@ export default {
     	submitPembelianProduk(){
     		var app = this;
     		app.prosesLaporan();
+    		app.totalPembelianProduk();
     		$("#btnExcel").show();
     	},
     	prosesLaporan(page) {
@@ -193,10 +197,11 @@ export default {
     		var newFilter = app.filter;
 
     		app.loading = true,
-    		axios.post(app.url+'/subtotal-mutasi-stok', newFilter)
+    		axios.post(app.url+'/subtotal-pembelian-produk', newFilter)
     		.then(function (resp) {
     			app.subtotalPembelianProduk = resp.data;
     			app.loading = false
+    			console.log(resp.data);    			
     		})
     		.catch(function (resp) {
     			console.log(resp);

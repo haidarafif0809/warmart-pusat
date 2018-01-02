@@ -51,7 +51,7 @@ class DetailPembelian extends Model
 		return $date_format;
 	}
 
-	// SUBTOTAL LABA KOTOR /PRODUK PENJUALAN PESANAN
+	// LAPORAN PEMBELIAN /PRODUK
 	public function scopeLaporanPembelianProduk($query_laporan_pembelian, $request)
 	{
 		if ($request->suplier == "" && $request->produk != "") {
@@ -64,7 +64,6 @@ class DetailPembelian extends Model
 			->where(DB::raw('DATE(detail_pembelians.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
 			->where('detail_pembelians.id_produk', $request->produk)
 			->where('pembelians.warung_id', Auth::user()->id_warung)
-			->groupBy('detail_pembelians.id_produk')
 			->orderBy('detail_pembelians.created_at', 'desc');
 			# code...
 		}elseif ($request->suplier != "" && $request->produk == "") {
@@ -77,7 +76,6 @@ class DetailPembelian extends Model
 			->where(DB::raw('DATE(detail_pembelians.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
 			->where('pembelians.suplier_id', $request->suplier)
 			->where('pembelians.warung_id', Auth::user()->id_warung)
-			->groupBy('detail_pembelians.id_produk')
 			->orderBy('detail_pembelians.created_at', 'desc');
 			# code...		
 		}elseif ($request->suplier != "" && $request->produk != "") {
@@ -91,7 +89,6 @@ class DetailPembelian extends Model
 			->where('detail_pembelians.id_produk', $request->produk)
 			->where('pembelians.suplier_id', $request->suplier)
 			->where('pembelians.warung_id', Auth::user()->id_warung)
-			->groupBy('detail_pembelians.id_produk')
 			->orderBy('detail_pembelians.created_at', 'desc');
 			# code...
 		}else{
@@ -103,11 +100,54 @@ class DetailPembelian extends Model
 			->where(DB::raw('DATE(detail_pembelians.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
 			->where(DB::raw('DATE(detail_pembelians.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
 			->where('pembelians.warung_id', Auth::user()->id_warung)
-			->groupBy('detail_pembelians.id_produk')
 			->orderBy('detail_pembelians.created_at', 'desc');
 
 		}
 
 		return $query_laporan_pembelian;
+	}
+
+	// SUBTOTAL LAPORAN PEMBELIAN /PRODUK
+	public function scopeSubtotalLaporanPembelianProduk($query_subtotal_laporan_pembelian, $request)
+	{
+		if ($request->suplier == "" && $request->produk != "") {
+			$query_subtotal_laporan_pembelian = DetailPembelian::select(DB::raw('SUM(detail_pembelians.jumlah_produk) as jumlah_produk'), DB::raw('SUM(detail_pembelians.potongan) as potongan'), DB::raw('SUM(detail_pembelians.tax) as pajak'), DB::raw('SUM(detail_pembelians.subtotal) as subtotal'))
+			->leftJoin('pembelians', 'pembelians.no_faktur', '=', 'detail_pembelians.no_faktur')
+			->where(DB::raw('DATE(detail_pembelians.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+			->where(DB::raw('DATE(detail_pembelians.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+			->where('detail_pembelians.id_produk', $request->produk)
+			->where('pembelians.warung_id', Auth::user()->id_warung)
+			->orderBy('detail_pembelians.created_at', 'desc');
+			# code...
+		}elseif ($request->suplier != "" && $request->produk == "") {
+			$query_subtotal_laporan_pembelian = DetailPembelian::select(DB::raw('SUM(detail_pembelians.jumlah_produk) as jumlah_produk'), DB::raw('SUM(detail_pembelians.potongan) as potongan'), DB::raw('SUM(detail_pembelians.tax) as pajak'), DB::raw('SUM(detail_pembelians.subtotal) as subtotal'))
+			->leftJoin('pembelians', 'pembelians.no_faktur', '=', 'detail_pembelians.no_faktur')
+			->where(DB::raw('DATE(detail_pembelians.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+			->where(DB::raw('DATE(detail_pembelians.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+			->where('pembelians.suplier_id', $request->suplier)
+			->where('pembelians.warung_id', Auth::user()->id_warung)
+			->orderBy('detail_pembelians.created_at', 'desc');
+			# code...		
+		}elseif ($request->suplier != "" && $request->produk != "") {
+			$query_subtotal_laporan_pembelian = DetailPembelian::select(DB::raw('SUM(detail_pembelians.jumlah_produk) as jumlah_produk'), DB::raw('SUM(detail_pembelians.potongan) as potongan'), DB::raw('SUM(detail_pembelians.tax) as pajak'), DB::raw('SUM(detail_pembelians.subtotal) as subtotal'))
+			->leftJoin('pembelians', 'pembelians.no_faktur', '=', 'detail_pembelians.no_faktur')
+			->where(DB::raw('DATE(detail_pembelians.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+			->where(DB::raw('DATE(detail_pembelians.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+			->where('detail_pembelians.id_produk', $request->produk)
+			->where('pembelians.suplier_id', $request->suplier)
+			->where('pembelians.warung_id', Auth::user()->id_warung)
+			->orderBy('detail_pembelians.created_at', 'desc');
+			# code...
+		}else{
+			$query_subtotal_laporan_pembelian = DetailPembelian::select(DB::raw('SUM(detail_pembelians.jumlah_produk) as jumlah_produk'), DB::raw('SUM(detail_pembelians.potongan) as potongan'), DB::raw('SUM(detail_pembelians.tax) as pajak'), DB::raw('SUM(detail_pembelians.subtotal) as subtotal'))
+			->leftJoin('pembelians', 'pembelians.no_faktur', '=', 'detail_pembelians.no_faktur')
+			->where(DB::raw('DATE(detail_pembelians.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+			->where(DB::raw('DATE(detail_pembelians.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+			->where('pembelians.warung_id', Auth::user()->id_warung)
+			->orderBy('detail_pembelians.created_at', 'desc');
+
+		}
+
+		return $query_subtotal_laporan_pembelian;
 	}
 } 
