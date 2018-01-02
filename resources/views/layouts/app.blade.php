@@ -319,16 +319,6 @@
     <div class="collapse" id="laporan">
         <ul class="nav">
             <li>
-                <router-link :to="{name: 'indexPenjualan'}" class="menu-nav">
-                    <span class="sidebar-mini">
-                        LP
-                    </span>
-                    <span class="sidebar-normal">
-                        Laba Penjualan
-                    </span>
-                </router-link>
-            </li>
-            <li>
                 <router-link :to="{name: 'indexLaporanLabaKotor'}" class="menu-nav">
                     <span class="sidebar-mini">
                         LK
@@ -345,6 +335,26 @@
                     </span>
                     <span class="sidebar-normal">
                         Laba Kotor /Produk
+                    </span>
+                </router-link>
+            </li>
+            <li>
+                <router-link :to="{name: 'indexLaporanMutasiStok'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        LM
+                    </span>
+                    <span class="sidebar-normal">
+                        Laporan Mutasi Stok
+                    </span>
+                </router-link>
+            </li>
+            <li>
+                <router-link :to="{name: 'indexPenjualan'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        LP
+                    </span>
+                    <span class="sidebar-normal">
+                        Laporan Penjualan
                     </span>
                 </router-link>
             </li>
