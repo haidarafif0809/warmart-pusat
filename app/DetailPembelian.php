@@ -5,7 +5,6 @@ namespace App;
 use Illuminate\Database\Eloquent\Model; 
 use Illuminate\Support\Facades\DB; 
 use Yajra\Auditable\AuditableTrait; 
-
 use Session; 
 use Auth; 
 
@@ -44,4 +43,71 @@ class DetailPembelian extends Model
 	{   
 		return number_format($this->subtotal,2,',','.'); 
 	} 
+
+	public function tanggalSql($tangal)
+	{
+		$date        = date_create($tangal);
+		$date_format = date_format($date, "Y-m-d");
+		return $date_format;
+	}
+
+	// SUBTOTAL LABA KOTOR /PRODUK PENJUALAN PESANAN
+	public function scopeLaporanPembelianProduk($query_laporan_pembelian, $request)
+	{
+		if ($request->suplier == "" && $request->produk != "") {
+			$query_laporan_pembelian = DetailPembelian::select(['detail_pembelians.no_faktur', 'detail_pembelians.id_produk', 'detail_pembelians.jumlah_produk', 'detail_pembelians.harga_produk', 'detail_pembelians.subtotal', 'detail_pembelians.tax', 'detail_pembelians.potongan', 'satuans.nama_satuan', 'supliers.nama_suplier', 'barangs.kode_barang', 'barangs.nama_barang'])
+			->leftJoin('barangs', 'barangs.id', '=', 'detail_pembelians.id_produk')
+			->leftJoin('satuans', 'satuans.id', '=', 'detail_pembelians.satuan_id')
+			->leftJoin('pembelians', 'pembelians.no_faktur', '=', 'detail_pembelians.no_faktur')
+			->leftJoin('supliers', 'supliers.id', '=', 'pembelians.suplier_id')
+			->where(DB::raw('DATE(detail_pembelians.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+			->where(DB::raw('DATE(detail_pembelians.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+			->where('detail_pembelians.id_produk', $request->produk)
+			->where('pembelians.warung_id', Auth::user()->id_warung)
+			->groupBy('detail_pembelians.id_produk')
+			->orderBy('detail_pembelians.created_at', 'desc');
+			# code...
+		}elseif ($request->suplier != "" && $request->produk == "") {
+			$query_laporan_pembelian = DetailPembelian::select(['detail_pembelians.no_faktur', 'detail_pembelians.id_produk', 'detail_pembelians.jumlah_produk', 'detail_pembelians.harga_produk', 'detail_pembelians.subtotal', 'detail_pembelians.tax', 'detail_pembelians.potongan', 'satuans.nama_satuan', 'supliers.nama_suplier', 'barangs.kode_barang', 'barangs.nama_barang'])
+			->leftJoin('barangs', 'barangs.id', '=', 'detail_pembelians.id_produk')
+			->leftJoin('satuans', 'satuans.id', '=', 'detail_pembelians.satuan_id')
+			->leftJoin('pembelians', 'pembelians.no_faktur', '=', 'detail_pembelians.no_faktur')
+			->leftJoin('supliers', 'supliers.id', '=', 'pembelians.suplier_id')
+			->where(DB::raw('DATE(detail_pembelians.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+			->where(DB::raw('DATE(detail_pembelians.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+			->where('pembelians.suplier_id', $request->suplier)
+			->where('pembelians.warung_id', Auth::user()->id_warung)
+			->groupBy('detail_pembelians.id_produk')
+			->orderBy('detail_pembelians.created_at', 'desc');
+			# code...		
+		}elseif ($request->suplier != "" && $request->produk != "") {
+			$query_laporan_pembelian = DetailPembelian::select(['detail_pembelians.no_faktur', 'detail_pembelians.id_produk', 'detail_pembelians.jumlah_produk', 'detail_pembelians.harga_produk', 'detail_pembelians.subtotal', 'detail_pembelians.tax', 'detail_pembelians.potongan', 'satuans.nama_satuan', 'supliers.nama_suplier', 'barangs.kode_barang', 'barangs.nama_barang'])
+			->leftJoin('barangs', 'barangs.id', '=', 'detail_pembelians.id_produk')
+			->leftJoin('satuans', 'satuans.id', '=', 'detail_pembelians.satuan_id')
+			->leftJoin('pembelians', 'pembelians.no_faktur', '=', 'detail_pembelians.no_faktur')
+			->leftJoin('supliers', 'supliers.id', '=', 'pembelians.suplier_id')
+			->where(DB::raw('DATE(detail_pembelians.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+			->where(DB::raw('DATE(detail_pembelians.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+			->where('detail_pembelians.id_produk', $request->produk)
+			->where('pembelians.suplier_id', $request->suplier)
+			->where('pembelians.warung_id', Auth::user()->id_warung)
+			->groupBy('detail_pembelians.id_produk')
+			->orderBy('detail_pembelians.created_at', 'desc');
+			# code...
+		}else{
+			$query_laporan_pembelian = DetailPembelian::select(['detail_pembelians.no_faktur', 'detail_pembelians.id_produk', 'detail_pembelians.jumlah_produk', 'detail_pembelians.harga_produk', 'detail_pembelians.subtotal', 'detail_pembelians.tax', 'detail_pembelians.potongan', 'satuans.nama_satuan', 'supliers.nama_suplier', 'barangs.kode_barang', 'barangs.nama_barang'])
+			->leftJoin('barangs', 'barangs.id', '=', 'detail_pembelians.id_produk')
+			->leftJoin('satuans', 'satuans.id', '=', 'detail_pembelians.satuan_id')
+			->leftJoin('pembelians', 'pembelians.no_faktur', '=', 'detail_pembelians.no_faktur')
+			->leftJoin('supliers', 'supliers.id', '=', 'pembelians.suplier_id')
+			->where(DB::raw('DATE(detail_pembelians.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+			->where(DB::raw('DATE(detail_pembelians.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+			->where('pembelians.warung_id', Auth::user()->id_warung)
+			->groupBy('detail_pembelians.id_produk')
+			->orderBy('detail_pembelians.created_at', 'desc');
+
+		}
+
+		return $query_laporan_pembelian;
+	}
 } 

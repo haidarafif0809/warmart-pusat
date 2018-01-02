@@ -64,13 +64,13 @@
 							<tbody v-if="pembelianProduk.length > 0 && loading == false"  class="data-ada">
 								<tr v-for="pembelianProduks, index in pembelianProduk" >
 
-									<td>{{ pembelianProduks.daftar_produks.kode_barang }}</td>
-									<td>{{ pembelianProduks.daftar_produks.nama_barang }}</td>
-									<td align="right">{{ pembelianProduks.stok_awal | pemisahTitik }}</td>
-									<td>{{ pembelianProduks.daftar_produks.nama_satuan }}</td>
-									<td align="right">{{ pembelianProduks.total_awal | pemisahTitik }}</td>
-									<td align="right">{{ pembelianProduks.stok_masuk | pemisahTitik }}</td>
-									<td align="right">{{ pembelianProduks.total_masuk | pemisahTitik }}</td>
+									<td>{{ pembelianProduks.laporan_pembelians.kode_barang }}</td>
+									<td>{{ pembelianProduks.laporan_pembelians.nama_barang }}</td>
+									<td align="right">{{ pembelianProduks.laporan_pembelians.jumlah_produk }}</td>
+									<td>{{ pembelianProduks.laporan_pembelians.nama_satuan }}</td>
+									<td align="right">{{ pembelianProduks.laporan_pembelians.potongan }}</td>
+									<td align="right">{{ pembelianProduks.laporan_pembelians.tax }}</td>
+									<td align="right">{{ pembelianProduks.laporan_pembelians.subtotal }}</td>
 
 								</tr>
 
@@ -127,7 +127,7 @@ export default {
                 placeholder: '--PILIH PRODUK--'
             },
             placeholder_suplier: {
-                placeholder: '--PILIH SUPLIER--'
+                placeholder: '--PILIH SUPPLIER--'
             },
 		}
 	},
@@ -151,7 +151,6 @@ export default {
     	submitPembelianProduk(){
     		var app = this;
     		app.prosesLaporan();
-    		app.totalPembelianProduk();
     		$("#btnExcel").show();
     	},
     	prosesLaporan(page) {
@@ -217,7 +216,7 @@ export default {
       },
       dataSuplier() {
           var app = this;
-          axios.get(app.url+'/pilih-suplier')
+          axios.get(app.url+'/pilih-supplier')
           .then(function (resp) {
             app.suplier = resp.data;
 
