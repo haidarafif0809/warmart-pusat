@@ -163,15 +163,15 @@
         </li>
 
         <!--PEMBELIAN-->
-        <li class="vueJs">
-            <a href="#">
+        <li>
+            <router-link :to="{name: 'indexPembelian'}" class="menu-nav">
                 <i class="material-icons">
                     add_shopping_cart
                 </i>
                 <p>
                     Pembelian
                 </p>
-            </a>
+            </router-link>
         </li>
         <li>
             <router-link :to="{name: 'createPenjualan'}" class="menu-nav">
