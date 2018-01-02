@@ -517,11 +517,7 @@ dataKas() {
         alert("Tidak Bisa Memuat Kas");
     });
 },pilihProduk() {
-    if (this.inputTbsPenjualan.produk == '') {
-        this.$swal({
-            text: "Silakan Pilih Produk Telebih dahulu!",
-        });
-    }else{
+    if (this.inputTbsPenjualan.produk != '') {
 
         var app = this;
         var produk = app.inputTbsPenjualan.produk.split("|");
@@ -542,7 +538,7 @@ isiJumlahProduk(nama_produk){
         },
         buttons: {
             cancel: true,
-            confirm: "Submit"                   
+            confirm: "OK"                   
         }
 
 
@@ -789,43 +785,43 @@ batalPenjualan(){
 
     var app = this;
     app.$swal({
-        text: "Anda Yakin Ingin Membatalkan Transaksi Edit Penjualan Ini ?",
-        buttons: true,
-        dangerMode: true,
-    })
-    .then((willDelete) => {
-        if (willDelete) {
-            var id = app.$route.params.id;
-            app.loading = true;
-            axios.post(app.url+'/proses-batal-edit-penjualan/'+id)
-            .then(function (resp) {
+        text: "Anda Yakin Ingin Membatalkan Transaksi Ini ?",
+        buttons: {
+            cancel: true,
+            confirm: "OK"                   
+        },
 
-                app.getResults();
-                app.alert("Membatalkan Transaksi Edit Penjualan");
-                app.penjualan.pelanggan = ''
-                app.penjualan.subtotal = 0
-                app.penjualan.jatuh_tempo = ''
-                app.penjualan.potongan_persen = 0
-                app.penjualan.potongan_faktur = 0
-                app.penjualan.total_akhir = 0
-                app.penjualan.pembayaran = 0
-                app.hitungKembalian(app.penjualan.pembayaran)
-                app.$router.replace('/penjualan');
+    }).then((value) => {
 
-            })
-            .catch(function (resp) {
+        if (!value) throw null;
 
-                console.log(resp);
-                app.loading = false;
-                alert("Tidak dapat Membatalkan Transaksi Edit Penjualan");
-            });
+        var id = app.$route.params.id;
+        app.loading = true;
+        axios.post(app.url+'/proses-batal-edit-penjualan/'+id)
+        .then(function (resp) {
 
-        } else {
+            app.getResults();
+            app.alert("Membatalkan Transaksi Edit Penjualan");
+            app.penjualan.pelanggan = ''
+            app.penjualan.subtotal = 0
+            app.penjualan.jatuh_tempo = ''
+            app.penjualan.potongan_persen = 0
+            app.penjualan.potongan_faktur = 0
+            app.penjualan.total_akhir = 0
+            app.penjualan.pembayaran = 0
+            app.hitungKembalian(app.penjualan.pembayaran)
+            app.$router.replace('/penjualan');
 
-            app.$swal.close();
+        })
+        .catch(function (resp) {
 
-        }
+            console.log(resp);
+            app.loading = false;
+            alert("Tidak dapat Membatalkan Transaksi Edit Penjualan");
+        });
+
     });
+    
 },
 selesaiPenjualan(){
     this.$swal({
