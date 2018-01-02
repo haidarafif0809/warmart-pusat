@@ -46,32 +46,9 @@ class EditPembelianController extends Controller
 		$barang = Barang::select('nama_barang','satuan_id')->where('id',$request->id_produk_tbs)->where('id_warung',Auth::user()->id_warung)->first(); 
 //JIKA PRODUK YG DIPILIH SUDAH ADA DI TBS 
 		if ($data_tbs->count() > 0) { 
-
-			$pesan_alert =  
-			'<div class="container-fluid"> 
-			<div class="alert-icon"> 
-			<i class="material-icons">warning</i> 
-			</div> 
-			<b>Warning : Produk "'.$barang->nama_barang.'" Sudah Ada, Silakan Pilih Produk Lain !</b> 
-			</div>'; 
-
-			Session::flash("flash_notification", [ 
-				"level"   =>"warning", 
-				"message" => $pesan_alert 
-			]);  
-
-			return redirect()->back(); 
+			return 0;
 		} 
 		else{ 
-
-			$pesan_alert =  
-			'<div class="container-fluid"> 
-			<div class="alert-icon"> 
-			<i class="material-icons">check</i> 
-			</div> 
-			<b>Berhasil Menambah Produk "'.$barang->nama_barang.'"</b> 
-			</div>'; 
-
 			// SUBTOTAL = JUMLAH * HARGA
 			$subtotal = $request->jumlah_produk * $request->harga_produk; 
 			// INSERT EDIT TBS PEMBELIAN
@@ -85,12 +62,7 @@ class EditPembelianController extends Controller
 				'satuan_id'     => $barang->satuan_id, 
 				'warung_id'     => Auth::user()->id_warung                                                                                                        
 			]); 
-
-			Session::flash("flash_notification", [ 
-				"level"     =>"success", 
-				"message"   => $pesan_alert 
-			]); 
-			return redirect()->back(); 
+			return response(200);
 		} 
 	}
 } 
@@ -372,19 +344,8 @@ public function proses_batal_transaksi_pembelian(Request $request){
 	}else{
 		$no_faktur = $request->no_faktur_batal;
 		$data_tbs_pembelian = EditTbsPembelian::where('no_faktur', $no_faktur)->where('warung_id', Auth::user()->id_warung)->delete(); 
-		$pesan_alert =  
-		'<div class="container-fluid"> 
-		<div class="alert-icon"> 
-		<i class="material-icons">check</i> 
-		</div> 
-		<b>Berhasil Membatalkan Edit Pembelian</b> 
-		</div>'; 
 
-		Session::flash("flash_notification", [ 
-			"level"     => "success", 
-			"message"   => $pesan_alert 
-		]); 
-		return redirect()->route('pembelian.index'); 
+		return response(200); 
 	}
 }  
 

@@ -493,6 +493,57 @@ Route::get('/pembelian/proses-edit-tax-tbs-pembelian', 'PembelianController@edit
 Route::get('/pembelian/cek-total-kas-pembelian', 'PembelianController@total_kas')->middleware('auth');
 Route::get('/pembelian/detail-view', 'PembelianController@detailView')->middleware('auth');
 
+//Edit Pembelian
+Route::get('/edit-pembelian/proses-tambah-tbs-pembelian', 'EditPembelianController@proses_tambah_tbs_pembelian')->middleware('auth');
+
+
+    // EDIT JUMLAH TBS PEMBELIAN
+    Route::post('/edit-pembelian/proses-edit-jumlah-tbs-pembelian', [
+        'middleware' => ['auth'],
+        'as'         => 'editPembelian.edit_jumlah_tbs_pembelian',
+        'uses'       => 'EditPembelianController@edit_jumlah_tbs_pembelian',
+        ]);
+
+    // EDIT HARGA TBS PEMBELIAN
+    Route::post('/edit-pembelian/proses-edit-harga-tbs-pembelian', [
+        'middleware' => ['auth'],
+        'as'         => 'editPembelian.edit_harga_tbs_pembelian',
+        'uses'       => 'EditPembelianController@edit_harga_tbs_pembelian',
+        ]);
+    // EDIT POTONGAN TBS PEMBELIAN
+    Route::post('/edit-pembelian/proses-edit-potongan-tbs-pembelian', [
+        'middleware' => ['auth'],
+        'as'         => 'editPembelian.edit_potongan_tbs_pembelian',
+        'uses'       => 'EditPembelianController@edit_potongan_tbs_pembelian',
+        ]);
+
+    // EDIT TAX TBS PEMBELIAN
+    Route::post('/edit-pembelian/proses-edit-tax-tbs-pembelian', [
+        'middleware' => ['auth'],
+        'as'         => 'editPembelian.edit_tax_tbs_pembelian',
+        'uses'       => 'EditPembelianController@editTaxTbsPembelian',
+        ]);
+    // HAPUS TBS PEMBELIAN
+    Route::delete('/edit-pembelian/hapus-tbs-pembelian/{id}', [
+        'middleware' => ['auth'],
+        'as'         => 'editPembelian.hapus_tbs_pembelian',
+        'uses'       => 'EditPembelianController@hapus_tbs_pembelian',
+        ]);
+    // batal
+    Route::post('/edit-pembelian/batal-transaksi-pembelian/', [
+        'middleware' => ['auth'],
+        'as'         => 'editPembelian.batal_transaksi_pembelian',
+        'uses'       => 'EditPembelianController@proses_batal_transaksi_pembelian',
+        ]);
+    // PROSES EDIT PEMBELIAN
+    Route::post('/edit-pembelian/proses-edit-pembelian', [
+        'middleware' => ['auth'],
+        'as'         => 'editPembelian.prosesEditPembelian',
+        'uses'       => 'EditPembelianController@prosesEditPembelian',
+        ]);
+    // EDIT PEMBELIAN
+
+
 // ITEM MASUK
 Route::get('/item-keluar/view', 'ItemKeluarController@view')->middleware('auth');
 Route::get('/item-keluar/pencarian', 'ItemKeluarController@pencarian')->middleware('auth');
