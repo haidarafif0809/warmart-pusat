@@ -104,7 +104,7 @@
 									<th>Waktu</th>
 									<th>Pelanggan</th>
 									<th>Status</th>
-									<th>Total</th>
+									<th align="right">Total</th>
 									<th>User Buat</th>
 									<th>Detail</th>
 									<th>Edit</th>
@@ -122,7 +122,7 @@
 									<td>{{ penjualan.waktu }}</td>
 									<td>{{ penjualan.pelanggan }}</td>
 									<td>{{ penjualan.status_penjualan }}</td>
-									<td> {{ new Intl.NumberFormat().format(penjualan.total) }},00</td>
+									<td align="center"> {{ new Intl.NumberFormat().format(penjualan.total) }},00</td>
 									<td> {{ penjualan.user_buat }}</td>
 									<td>
 										<router-link :to="{name: 'detailPenjualan', params: {id: penjualan.id}}" class="btn btn-xs btn-info" v-bind:id="'detail-' + penjualan.id" >

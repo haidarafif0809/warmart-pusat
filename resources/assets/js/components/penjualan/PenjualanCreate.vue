@@ -191,10 +191,10 @@
                         <tr>
 
                             <th>Produk</th>
-                            <th>Jumlah</th>
-                            <th>Harga</th>
-                            <th>Potongan</th>
-                            <th>Subtotal</th>
+                            <th align="right">Jumlah</th>
+                            <th align="right">Harga</th>
+                            <th align="right">Potongan</th>
+                            <th align="right">Subtotal</th>
                             <th>Hapus</th>
 
                         </tr>
@@ -204,15 +204,15 @@
 
                             <td>{{ tbs_penjualan.kode_produk }} - {{ tbs_penjualan.nama_produk }}</td>
 
-                            <td>
+                            <td align="center" >
                                 <a href="#create-penjualan" v-bind:id="'edit-' + tbs_penjualan.id_tbs_penjualan" v-on:click="editEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">{{ new Intl.NumberFormat().format(tbs_penjualan.jumlah_produk) }},00</a>
                             </td>
 
-                            <td>{{ new Intl.NumberFormat().format(tbs_penjualan.harga_produk) }},00</td>
+                            <td align="center" >{{ new Intl.NumberFormat().format(tbs_penjualan.harga_produk) }},00</td>
 
-                            <td><a href="#create-penjualan" v-bind:id="'edit-' + tbs_penjualan.id_tbs_penjualan" v-on:click="potonganEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">{{ tbs_penjualan.potongan }}</a></td>
+                            <td align="center" ><a href="#create-penjualan" v-bind:id="'edit-' + tbs_penjualan.id_tbs_penjualan" v-on:click="potonganEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">{{ tbs_penjualan.potongan }}</a></td>
 
-                            <td> {{ new Intl.NumberFormat().format(tbs_penjualan.subtotal) }},00</td>
+                            <td align="center" > {{ new Intl.NumberFormat().format(tbs_penjualan.subtotal) }},00</td>
 
                             <td><a href="#create-penjualan" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_penjualan.id_tbs_penjualan" v-on:click="deleteEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">Delete</a></td>
                         </tr>
