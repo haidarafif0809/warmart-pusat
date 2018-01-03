@@ -972,12 +972,7 @@ public function tampilPotongan($potongan_produk,$jumlah_produk,$harga_produk){
 
 public function cetakBesar($id){
 
-    $penjualan = PenjualanPos::select('w.name AS nama_warung','w.alamat AS alamat_warung','p.name AS pelanggan','u.name AS kasir','penjualan_pos.potongan AS potongan','penjualan_pos.total AS total','penjualan_pos.tunai AS tunai','penjualan_pos.kembalian AS kembalian',DB::raw('DATE_FORMAT(penjualan_pos.created_at, "%d/%m/%Y %H:%i:%s") as waktu_jual'),'w.no_telpon AS no_telp_warung','penjualan_pos.id AS id','p.alamat AS alamat_pelanggan','penjualan_pos.status_penjualan AS status_penjualan','kas.nama_kas AS nama_kas')
-    ->leftJoin('warungs AS w','penjualan_pos.warung_id','=','w.id')
-    ->leftJoin('users AS u','u.id','=','penjualan_pos.created_by')
-    ->leftJoin('users AS p', 'p.id', '=', 'penjualan_pos.pelanggan_id')
-    ->leftJoin('kas', 'kas.id', '=', 'penjualan_pos.id_kas')
-    ->where('penjualan_pos.id',$id)->first();
+    $penjualan = PenjualanPos::QueryCetak($id)->first();
 
     $detail_penjualan = DetailPenjualanPos::with('produk')->where('id_penjualan_pos',$penjualan['id'])->get();
     $terbilang = $this->kekata($penjualan->total);
@@ -992,11 +987,7 @@ public function cetakBesar($id){
 
 public function cetakKecil($id){
 
-    $penjualan = PenjualanPos::select('w.name AS nama_warung','w.alamat AS alamat_warung','p.name AS pelanggan','u.name AS kasir','penjualan_pos.potongan AS potongan','penjualan_pos.total AS total','penjualan_pos.tunai AS tunai','penjualan_pos.kembalian AS kembalian',DB::raw('DATE_FORMAT(penjualan_pos.created_at, "%d/%m/%Y %H:%i:%s") as waktu_jual'),'w.no_telpon AS no_telp_warung','penjualan_pos.id AS id')
-    ->leftJoin('warungs AS w','penjualan_pos.warung_id','=','w.id')
-    ->leftJoin('users AS u','u.id','=','penjualan_pos.created_by')
-    ->leftJoin('users AS p', 'p.id', '=', 'penjualan_pos.pelanggan_id')
-    ->where('penjualan_pos.id',$id)->first();
+    $penjualan = PenjualanPos::QueryCetak($id)->first();
 
     $detail_penjualan = DetailPenjualanPos::with('produk')->where('id_penjualan_pos',$penjualan['id'])->get();
 
