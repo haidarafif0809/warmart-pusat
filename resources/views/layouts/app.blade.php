@@ -35,8 +35,8 @@
 <style type="text/css">
 
     .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
-       padding: 1px;
-   }
+     padding: 1px;
+ }
 
 </style>
 <body>
@@ -197,7 +197,7 @@
             <div class="collapse" id="persediaan">
                 <ul class="nav">
                     <li>
-                       <router-link :to="{name: 'indexItemMasuk'}" class="menu-nav">
+                     <router-link :to="{name: 'indexItemMasuk'}" class="menu-nav">
                         <span class="sidebar-mini">
                             IM
                         </span>
@@ -345,6 +345,16 @@
                     </span>
                     <span class="sidebar-normal">
                         Laporan Mutasi Stok
+                    </span>
+                </router-link>
+            </li>
+            <li>
+                <router-link :to="{name: 'indexLaporanPembelianProduk'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        LP
+                    </span>
+                    <span class="sidebar-normal">
+                        Laporan Pembelian /Produk
                     </span>
                 </router-link>
             </li>
@@ -582,7 +592,7 @@
 </body>
 <!--   Core JS Files   -->
 
-<script src="{{ asset('js/app.js?v=1.51')}}" type="text/javascript">
+<script src="{{ asset('js/app.js?v=1.52')}}" type="text/javascript">
 
 </script>
 <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript">
@@ -666,8 +676,8 @@
 </script>
 <script type="text/javascript">
     $(document).on('click', '.menu-nav', function(){
-       $('.navbar-toggle ').click();
-   });
+     $('.navbar-toggle ').click();
+ });
 </script>
 @yield('scripts')
 </html>

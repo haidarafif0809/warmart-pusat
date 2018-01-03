@@ -95,7 +95,8 @@
 						</div><!--RESPONSIVE-->
 
 						<!--DOWNLOAD EXCEL-->
-						<a :href="urlDownloadExcel+'/'+filter.dari_tanggal+'/'+filter.sampai_tanggal" class='btn btn-warning' id="btnExcel" target='blank' :style="'display: none'"><i class="material-icons">file_download</i> Download Excel</a>
+
+						<a href="#" class='btn btn-warning' id="btnExcel" target='blank' :style="'display: none'"><i class="material-icons">file_download</i> Download Excel</a>
 
 						<vue-simple-spinner v-if="loading"></vue-simple-spinner>
 						<div align="right"><pagination :data="pembelianProdukData" v-on:pagination-change-page="prosesLaporan" :limit="4"></pagination></div>
@@ -113,6 +114,7 @@ export default {
 	data: function () {
 		return {
 			produk: [],
+			suplier: [],
 			pembelianProduk: [],
 			pembelianProdukData: {},
 			subtotalPembelianProduk: {},
@@ -153,9 +155,19 @@ export default {
     methods: {
     	submitPembelianProduk(){
     		var app = this;
+    		var filter = app.filter;
     		app.prosesLaporan();
     		app.totalPembelianProduk();
+
+    		if (filter.produk == "") {
+    			filter.produk = 0;
+    		};
+    		if (filter.suplier == "") {
+    			filter.suplier = 0;
+    		};
+
     		$("#btnExcel").show();
+    		$("#btnExcel").attr('href', app.urlDownloadExcel+'/'+filter.dari_tanggal+'/'+filter.sampai_tanggal+'/'+filter.produk+'/'+filter.suplier);    		
     	},
     	prosesLaporan(page) {
     		var app = this;	

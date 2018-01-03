@@ -52,7 +52,7 @@ class DetailPembelian extends Model
 	}
 
 //QUERY PENCARIAN DAN PROSES LAPORAN PEMBELIAN
-	public function queryLaporanPembelian(){
+	public function queryLaporanPembelian($request){
 		$query_laporan_pembelian = DetailPembelian::select(['detail_pembelians.no_faktur', 'detail_pembelians.id_produk', 'detail_pembelians.jumlah_produk', 'detail_pembelians.harga_produk', 'detail_pembelians.subtotal', 'detail_pembelians.tax', 'detail_pembelians.potongan', 'satuans.nama_satuan', 'supliers.nama_suplier', 'barangs.kode_barang', 'barangs.nama_barang'])
 		->leftJoin('barangs', 'barangs.id', '=', 'detail_pembelians.id_produk')
 		->leftJoin('satuans', 'satuans.id', '=', 'detail_pembelians.satuan_id')
@@ -65,7 +65,7 @@ class DetailPembelian extends Model
 	}
 
 //QUERY SUBTOTAL LAPORAN PEMBELIAN
-	public function querySubtotalLaporanPembelian(){
+	public function querySubtotalLaporanPembelian($request){
 		$query_laporan_pembelian = DetailPembelian::select(DB::raw('SUM(detail_pembelians.jumlah_produk) as jumlah_produk'), DB::raw('SUM(detail_pembelians.potongan) as potongan'), DB::raw('SUM(detail_pembelians.tax) as pajak'), DB::raw('SUM(detail_pembelians.subtotal) as subtotal'))
 		->leftJoin('pembelians', 'pembelians.no_faktur', '=', 'detail_pembelians.no_faktur')
 		->where(DB::raw('DATE(detail_pembelians.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
@@ -78,26 +78,26 @@ class DetailPembelian extends Model
 	public function scopeLaporanPembelianProduk($query_laporan_pembelian, $request)
 	{
 		if ($request->suplier == "" && $request->produk != "") {
-			$query_laporan_pembelian = $this->queryLaporanPembelian()
+			$query_laporan_pembelian = $this->queryLaporanPembelian($request)
 			->where('detail_pembelians.id_produk', $request->produk)
 			->where('pembelians.warung_id', Auth::user()->id_warung)
 			->orderBy('detail_pembelians.created_at', 'desc');
 			# code...
 		}elseif ($request->suplier != "" && $request->produk == "") {
-			$query_laporan_pembelian = $this->queryLaporanPembelian()
+			$query_laporan_pembelian = $this->queryLaporanPembelian($request)
 			->where('pembelians.suplier_id', $request->suplier)
 			->where('pembelians.warung_id', Auth::user()->id_warung)
 			->orderBy('detail_pembelians.created_at', 'desc');
 			# code...		
 		}elseif ($request->suplier != "" && $request->produk != "") {
-			$query_laporan_pembelian = $this->queryLaporanPembelian()
+			$query_laporan_pembelian = $this->queryLaporanPembelian($request)
 			->where('detail_pembelians.id_produk', $request->produk)
 			->where('pembelians.suplier_id', $request->suplier)
 			->where('pembelians.warung_id', Auth::user()->id_warung)
 			->orderBy('detail_pembelians.created_at', 'desc');
 			# code...
 		}else{
-			$query_laporan_pembelian = $this->queryLaporanPembelian()
+			$query_laporan_pembelian = $this->queryLaporanPembelian($request)
 			->where('pembelians.warung_id', Auth::user()->id_warung)
 			->orderBy('detail_pembelians.created_at', 'desc');
 
@@ -110,26 +110,26 @@ class DetailPembelian extends Model
 	public function scopeSubtotalLaporanPembelianProduk($query_subtotal_laporan_pembelian, $request)
 	{
 		if ($request->suplier == "" && $request->produk != "") {
-			$query_subtotal_laporan_pembelian = $this->querySubtotalLaporanPembelian()
+			$query_subtotal_laporan_pembelian = $this->querySubtotalLaporanPembelian($request)
 			->where('detail_pembelians.id_produk', $request->produk)
 			->where('pembelians.warung_id', Auth::user()->id_warung)
 			->orderBy('detail_pembelians.created_at', 'desc');
 			# code...
 		}elseif ($request->suplier != "" && $request->produk == "") {
-			$query_subtotal_laporan_pembelian = $this->querySubtotalLaporanPembelian()
+			$query_subtotal_laporan_pembelian = $this->querySubtotalLaporanPembelian($request)
 			->where('pembelians.suplier_id', $request->suplier)
 			->where('pembelians.warung_id', Auth::user()->id_warung)
 			->orderBy('detail_pembelians.created_at', 'desc');
 			# code...		
 		}elseif ($request->suplier != "" && $request->produk != "") {
-			$query_subtotal_laporan_pembelian = $this->querySubtotalLaporanPembelian()
+			$query_subtotal_laporan_pembelian = $this->querySubtotalLaporanPembelian($request)
 			->where('detail_pembelians.id_produk', $request->produk)
 			->where('pembelians.suplier_id', $request->suplier)
 			->where('pembelians.warung_id', Auth::user()->id_warung)
 			->orderBy('detail_pembelians.created_at', 'desc');
 			# code...
 		}else{
-			$query_subtotal_laporan_pembelian = $this->querySubtotalLaporanPembelian()
+			$query_subtotal_laporan_pembelian = $this->querySubtotalLaporanPembelian($request)
 			->where('pembelians.warung_id', Auth::user()->id_warung)
 			->orderBy('detail_pembelians.created_at', 'desc');
 
@@ -143,7 +143,7 @@ class DetailPembelian extends Model
 	{
 		$search = $request->search;
 		if ($request->suplier == "" && $request->produk != "") {
-			$query_laporan_pembelian = $this->queryLaporanPembelian()
+			$query_laporan_pembelian = $this->queryLaporanPembelian($request)
 			->where('detail_pembelians.id_produk', $request->produk)
 			->where('pembelians.warung_id', Auth::user()->id_warung)
 			->where(function ($query) use ($search) {
@@ -154,7 +154,7 @@ class DetailPembelian extends Model
 			})->orderBy('detail_pembelians.created_at', 'desc');
 			# code...
 		}elseif ($request->suplier != "" && $request->produk == "") {
-			$query_laporan_pembelian = $this->queryLaporanPembelian()
+			$query_laporan_pembelian = $this->queryLaporanPembelian($request)
 			->where('pembelians.suplier_id', $request->suplier)
 			->where('pembelians.warung_id', Auth::user()->id_warung)
 			->where(function ($query) use ($search) {
@@ -165,7 +165,7 @@ class DetailPembelian extends Model
 			})->orderBy('detail_pembelians.created_at', 'desc');
 			# code...		
 		}elseif ($request->suplier != "" && $request->produk != "") {
-			$query_laporan_pembelian = $this->queryLaporanPembelian()
+			$query_laporan_pembelian = $this->queryLaporanPembelian($request)
 			->where('detail_pembelians.id_produk', $request->produk)
 			->where('pembelians.suplier_id', $request->suplier)
 			->where('pembelians.warung_id', Auth::user()->id_warung)
@@ -177,7 +177,7 @@ class DetailPembelian extends Model
 			})->orderBy('detail_pembelians.created_at', 'desc');
 			# code...
 		}else{
-			$query_laporan_pembelian = $this->queryLaporanPembelian()
+			$query_laporan_pembelian = $this->queryLaporanPembelian($request)
 			->where('pembelians.warung_id', Auth::user()->id_warung)
 			->where(function ($query) use ($search) {
 				$query->orwhere('barangs.kode_barang', 'LIKE', '%' . $search . '%')

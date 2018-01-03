@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Auth;
+use Excel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Barang;
@@ -60,6 +61,20 @@ class LaporanPembelianProdukController extends Controller
 		return $respons;
 	}
 
+	public function labelSheet($sheet, $row){
+		$sheet->row($row, [
+			'Kode Produk',
+			'Nama Produk',
+			'Supplier',
+			'Jumlah',
+			'Satuan',
+			'Diskon',
+			'Pajak',
+			'Total',
+			]);
+		return $sheet;
+	}
+
 	public function prosesLaporanPembelianProduk(Request $request)
 	{
 		$laporan_pembelian = DetailPembelian::laporanPembelianProduk($request)->paginate(10);
@@ -94,5 +109,64 @@ class LaporanPembelianProdukController extends Controller
         //DATA PAGINATION
 		$respons = $this->dataPagination($laporan_pembelian, $array_pembelian);
 		return response()->json($respons);
+	}
+
+    //DOWNLOAD EXCEL - LAPORAN PEMBELIAN /PRODUK
+	public function downloadExcel(Request $request, $dari_tanggal, $sampai_tanggal, $produk, $suplier)
+	{
+		$request['dari_tanggal']   = $dari_tanggal;
+		$request['sampai_tanggal'] = $sampai_tanggal;
+
+		if ($produk == 0) {
+			$request['produk'] = "";
+		};
+
+		if ($suplier == 0) {
+			$request['suplier'] = "";
+		};
+		
+		$laporan_pembelian = DetailPembelian::laporanPembelianProduk($request)->get();
+
+		Excel::create('Laporan Pembelian Produk', function ($excel) use ($request, $laporan_pembelian) {
+            // Set property
+			$excel->sheet('Laporan Pembelian Produk', function ($sheet) use ($request, $laporan_pembelian) {
+				$row = 1;
+				$sheet->row($row, [
+					'LAPORAN PEMBELIAN /PRODUK',
+					]);
+
+				$row = 3;
+				$sheet = $this->labelSheet($sheet, $row);
+
+				foreach ($laporan_pembelian as $laporan_pembelians) {
+
+					$sheet->row(++$row, [
+						$laporan_pembelians->kode_barang,
+						$laporan_pembelians->nama_barang,
+						$laporan_pembelians->nama_suplier,
+						$laporan_pembelians->jumlah_produk,
+						$laporan_pembelians->nama_satuan,
+						$laporan_pembelians->potongan,
+						$laporan_pembelians->tax,
+						$laporan_pembelians->subtotal,
+						]);
+				}
+
+				//SUBTOTAL KESELURUHAN
+				$sub_total_penjualan = DetailPembelian::subtotalLaporanPembelianProduk($request)->first();
+				$row = ++$row;
+				$sheet->row(++$row, [
+					'TOTAL',
+					'',
+					'',
+					$total_jumlah_produk  = round($sub_total_penjualan->jumlah_produk, 2),
+					'',
+					$total_potongan  = round($sub_total_penjualan->potongan, 2),
+					$total_pajak  = round($sub_total_penjualan->pajak, 2),
+					$total_subtotal  = round($sub_total_penjualan->subtotal, 2),
+					]);
+
+			});
+		})->export('xls');
 	}
 }

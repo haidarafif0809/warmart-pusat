@@ -178,6 +178,7 @@ class LaporanMutasiStokController extends Controller
 				$total_hpp_masuk = Hpp::totalMasuk($request);
 				$total_hpp_keluar = Hpp::totalKeluar($request);
 
+				$row = ++$row;
 				$sheet->row(++$row, [
 					'TOTAL',
 					'',

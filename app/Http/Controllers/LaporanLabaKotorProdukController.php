@@ -269,6 +269,8 @@ class LaporanLabaKotorProdukController extends Controller
                             ]);
                     }
 
+                    $row = ++$row;
+
                     $sheet->row(++$row, [
                         'TOTAL',
                         '',
@@ -310,6 +312,7 @@ class LaporanLabaKotorProdukController extends Controller
                             ]);
                     }
 
+                    $row = ++$row;
                     $sheet->row(++$row, [
                         'TOTAL',
                         '',
