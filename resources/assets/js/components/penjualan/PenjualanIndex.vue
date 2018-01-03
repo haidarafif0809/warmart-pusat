@@ -70,6 +70,10 @@
 														<td class="text-primary"><b>: {{jatuh_tempo}} </b> </td>
 													</tr>
 													<tr>
+														<td class="text-primary"><b># User Buat </b> </td>
+														<td class="text-primary"><b>: {{user_buat}} </b> </td>
+													</tr>
+													<tr>
 														<td class="text-primary"><b># Waktu Edit </b> </td>
 														<td class="text-primary"><b>: {{waktu_edit}} </b> </td>
 													</tr>
@@ -105,7 +109,7 @@
 									<th>Pelanggan</th>
 									<th>Status</th>
 									<th align="right">Total</th>
-									<th>User Buat</th>
+									<th>Cetak</th>
 									<th>Detail</th>
 									<th>Edit</th>
 									<th>Hapus</th>
@@ -117,13 +121,21 @@
 
 									<td>
 										<a href="#penjualan" v-bind:id="'edit-' + penjualan.id" v-on:click="detailTransaksi(penjualan.id,penjualan.total,penjualan.potongan,
-										penjualan.tunai,penjualan.kembalian,penjualan.jatuh_tempo,penjualan.waktu_edit,penjualan.user_edit,penjualan.kas,penjualan.piutang)">{{ penjualan.id }}</a>
+										penjualan.tunai,penjualan.kembalian,penjualan.jatuh_tempo,penjualan.waktu_edit,penjualan.user_edit,penjualan.kas,penjualan.piutang,penjualan.user_buat)">{{ penjualan.id }}</a>
 									</td>
 									<td>{{ penjualan.waktu }}</td>
 									<td>{{ penjualan.pelanggan }}</td>
 									<td>{{ penjualan.status_penjualan }}</td>
 									<td align="center"> {{ new Intl.NumberFormat().format(penjualan.total) }},00</td>
-									<td> {{ penjualan.user_buat }}</td>
+									<td>
+										<div class="dropdown">
+											<button href="#pablo" class="dropdown-toggle btn btn-primary btn-xs" data-toggle="dropdown">Cetak <b class="caret"></b></button>
+											<ul class="dropdown-menu dropdown-menu-right">
+												<li><a target="blank" v-bind:href="'penjualan/cetak-besar-penjualan/'+penjualan.id">Cetak Besar</a></li>
+												<li><a target="blank" v-bind:href="'penjualan/cetak-kecil-penjualan/'+penjualan.id">Cetak Kecil</a></li>
+											</ul>
+										</div>
+									</td>
 									<td>
 										<router-link :to="{name: 'detailPenjualan', params: {id: penjualan.id}}" class="btn btn-xs btn-info" v-bind:id="'detail-' + penjualan.id" >
 										Detail </router-link> 
@@ -170,6 +182,7 @@ export default {
 			kembalian : 0,
 			piutang : 0,
 			jatuh_tempo : '',
+			user_buat : '',
 			waktu_edit : '',
 			user_edit : ''
 
@@ -272,7 +285,7 @@ methods: {
 			alert("Tidak dapat Menghapus Penjualan "+no_faktur);
 		});
 	},
-	detailTransaksi(id_penjualan_pos,total,potongan,tunai,kembalian,jatuh_tempo,waktu_edit,user_edit,kas,piutang){
+	detailTransaksi(id_penjualan_pos,total,potongan,tunai,kembalian,jatuh_tempo,waktu_edit,user_edit,kas,piutang,user_buat){
 
 		this.id_penjualan_pos = id_penjualan_pos
 		this.kas = kas
@@ -284,6 +297,7 @@ methods: {
 		this.waktu_edit = waktu_edit
 		this.user_edit = user_edit
 		this.piutang = piutang
+		this.user_buat = user_buat
 		$("#modal_detail_transaksi").show()
 
 	},
