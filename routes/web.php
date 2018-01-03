@@ -526,6 +526,8 @@ Route::get('/penjualan/pencarian-tbs-penjualan', 'PenjualanController@pencarianT
 Route::get('/penjualan/cek-data-tbs-penjualan/{id}', 'PenjualanController@cekDataTbsPenjualan')->middleware('auth');
 Route::get('/penjualan/pilih-pelanggan', 'PenjualanController@pilihPelanggan')->middleware('auth');
 Route::get('/penjualan/pilih-kas', 'PenjualanController@pilih_kas')->middleware('auth');
+Route::get('/penjualan/cetak-besar-penjualan/{id}', 'PenjualanController@cetakBesar')->middleware('auth');
+Route::get('/penjualan/cetak-kecil-penjualan/{is}', 'PenjualanController@cetakKecil')->middleware('auth');
 
 // LABA KOTOR VUE.JS
 Route::post('/laporan-laba-kotor/view', 'LaporanLabaKotorController@prosesLaporanLabaKotor')->middleware('auth');
