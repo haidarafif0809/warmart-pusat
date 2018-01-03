@@ -495,34 +495,13 @@ Route::get('/pembelian/detail-view', 'PembelianController@detailView')->middlewa
 
 //Edit Pembelian
 Route::get('/edit-pembelian/proses-tambah-tbs-pembelian', 'EditPembelianController@proses_tambah_tbs_pembelian')->middleware('auth');
+Route::get('/edit-pembelian/proses-edit-jumlah-tbs-pembelian', 'EditPembelianController@edit_jumlah_tbs_pembelian')->middleware('auth');
+Route::get('/edit-pembelian/proses-edit-harga-tbs-pembelian', 'EditPembelianController@edit_harga_tbs_pembelian')->middleware('auth');
+Route::get('/edit-pembelian/proses-edit-potongan-tbs-pembelian', 'EditPembelianController@edit_potongan_tbs_pembelian')->middleware('auth');
+Route::get('/edit-pembelian/cek-persen-potongan-pembelian', 'EditPembelianController@cek_persen_potongan_pembelian')->middleware('auth');
+Route::get('/edit-pembelian/cek-persen-tax-pembelian', 'EditPembelianController@cek_persen_potongan_pembelian')->middleware('auth');
+Route::get('/edit-pembelian/proses-edit-tax-tbs-pembelian', 'EditPembelianController@editTaxTbsPembelian')->middleware('auth');
 
-
-    // EDIT JUMLAH TBS PEMBELIAN
-    Route::post('/edit-pembelian/proses-edit-jumlah-tbs-pembelian', [
-        'middleware' => ['auth'],
-        'as'         => 'editPembelian.edit_jumlah_tbs_pembelian',
-        'uses'       => 'EditPembelianController@edit_jumlah_tbs_pembelian',
-        ]);
-
-    // EDIT HARGA TBS PEMBELIAN
-    Route::post('/edit-pembelian/proses-edit-harga-tbs-pembelian', [
-        'middleware' => ['auth'],
-        'as'         => 'editPembelian.edit_harga_tbs_pembelian',
-        'uses'       => 'EditPembelianController@edit_harga_tbs_pembelian',
-        ]);
-    // EDIT POTONGAN TBS PEMBELIAN
-    Route::post('/edit-pembelian/proses-edit-potongan-tbs-pembelian', [
-        'middleware' => ['auth'],
-        'as'         => 'editPembelian.edit_potongan_tbs_pembelian',
-        'uses'       => 'EditPembelianController@edit_potongan_tbs_pembelian',
-        ]);
-
-    // EDIT TAX TBS PEMBELIAN
-    Route::post('/edit-pembelian/proses-edit-tax-tbs-pembelian', [
-        'middleware' => ['auth'],
-        'as'         => 'editPembelian.edit_tax_tbs_pembelian',
-        'uses'       => 'EditPembelianController@editTaxTbsPembelian',
-        ]);
     // HAPUS TBS PEMBELIAN
     Route::delete('/edit-pembelian/hapus-tbs-pembelian/{id}', [
         'middleware' => ['auth'],
