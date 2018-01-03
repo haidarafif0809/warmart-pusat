@@ -114,6 +114,7 @@ export default {
 	data: function () {
 		return {
 			produk: [],
+			suplier: [],
 			pembelianProduk: [],
 			pembelianProdukData: {},
 			subtotalPembelianProduk: {},
