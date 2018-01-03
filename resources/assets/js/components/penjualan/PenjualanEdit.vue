@@ -871,7 +871,8 @@ prosesSelesaiPenjualan(value){
             app.penjualan.total_akhir = 0
             app.penjualan.pembayaran = 0
             app.hitungKembalian(app.penjualan.pembayaran)
-            $("#modal_selesai").hide(); 
+            $("#modal_selesai").hide();             
+            window.open('penjualan/cetak-kecil-penjualan/'+id,'_blank');
             app.$router.replace('/penjualan');
 
         }

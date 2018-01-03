@@ -18,7 +18,9 @@
 				</div>
 				<div class="card-content">
 					<h4 class="card-title"> Laporan Penjualan </h4>
+
 					<div class="toolbar">
+						<p> <router-link :to="{name: 'createPenjualan'}" class="btn btn-primary"> <i class="material-icons">add</i>Penjualan</router-link></p>
 					</div>
 
 
