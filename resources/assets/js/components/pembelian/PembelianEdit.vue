@@ -168,20 +168,20 @@
 
                   <td>{{ tbs_pembelian.kode_produk }} - {{ tbs_pembelian.nama_produk }}</td>
                   <td>
-                    <a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-on:click="editEntryJumlah(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk)"><p align='right'>{{ tbs_pembelian.jumlah_produk_pemisah }}</p>
+                    <a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-on:click="editEntryJumlah(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk,tbs_pembelian.subtotal)"><p align='right'>{{ tbs_pembelian.jumlah_produk_pemisah }}</p>
                     </a>
                   </td>
                   <td>
-                    <a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-on:click="editEntryHarga(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk)" ><p align='right'>{{ tbs_pembelian.harga_pemisah }}</p>
+                    <a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-on:click="editEntryHarga(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk,tbs_pembelian.subtotal)" ><p align='right'>{{ tbs_pembelian.harga_pemisah }}</p>
                     </a>
                   </td>
                   <td>
-                    <a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-on:click="editEntryPotongan(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk,tbs_pembelian.jumlah_produk,tbs_pembelian.harga_produk)"
+                    <a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-on:click="editEntryPotongan(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk,tbs_pembelian.jumlah_produk,tbs_pembelian.harga_produk,tbs_pembelian.subtotal)"
                     ><p align='right'>{{ Math.round(tbs_pembelian.potongan,2) }} | {{ Math.round(tbs_pembelian.potongan_persen,2) }} %</p>
                     </a>
                   </td>
                   <td>
-                    <a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-on:click="editEntryTax(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk,tbs_pembelian.jumlah_produk,tbs_pembelian.harga_produk,tbs_pembelian.potongan,tbs_pembelian.ppn_produk)" ><p align='right'>{{ Math.round(tbs_pembelian.tax,2) }} | {{ Math.round(tbs_pembelian.tax_persen, 2) }} %</p>
+                    <a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-on:click="editEntryTax(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk,tbs_pembelian.jumlah_produk,tbs_pembelian.harga_produk,tbs_pembelian.potongan,tbs_pembelian.ppn_produk,tbs_pembelian.subtotal)" ><p align='right'>{{ Math.round(tbs_pembelian.tax,2) }} | {{ Math.round(tbs_pembelian.tax_persen, 2) }} %</p>
                     </a>
                   </td>
                   <td><p id="table-subtotal" align="right">{{ tbs_pembelian.subtotal_tbs }}</p></td>
@@ -570,6 +570,323 @@ export default {
                               }
               });
     },//END PROSES TAMBAH PRODUK TBS
+        editEntryJumlah(id, index,nama_produk,subtotal_lama) {    
+        var app = this; 
+        var id_pembelian = app.id_pembelian;  
+        swal({ 
+      title: titleCase(nama_produk), 
+      input: 'number', 
+      inputPlaceholder : 'Jumlah Produk',         
+      html:'Berapa Jumlah Produk Yang Akan Dimasukkan ?', 
+      animation: false, 
+      showCloseButton: true, 
+      showCancelButton: true, 
+      focusConfirm: true, 
+      confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> Submit', 
+      confirmButtonAriaLabel: 'Thumbs up, great!', 
+      cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal', 
+      closeOnConfirm: true, 
+      cancelButtonAriaLabel: 'Thumbs down', 
+      inputAttributes: { 
+        'name': 'edit_qty_produk', 
+      }, 
+      inputValidator : function (value) { 
+        return new Promise(function (resolve, reject) { 
+          if (value) { 
+            resolve(); 
+          }  
+          else { 
+            reject('Jumlah Harus Di Isi!'); 
+          } 
+        }) 
+      } 
+    }).then(function (jumlah_produk) { 
+      if (jumlah_produk != "0") { 
+            app.loading = true;
+            axios.get(app.url_edit+'/proses-edit-jumlah-tbs-pembelian?jumlah_edit_produk='+jumlah_produk+'&id_tbs_pembelian='+id)
+            .then(function (resp) {
+            app.alert("Mengubah Jumlah Produk "+titleCase(nama_produk));
+            app.loading = false;
+            var subtotal = (parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(subtotal_lama)) + parseInt(resp.data.subtotal);
+            app.getResults();
+            app.inputPembayaranPembelian.subtotal = subtotal                        
+                    app.inputPembayaranPembelian.total_akhir  = subtotal
+                    app.inputPembayaranPembelian.kredit = subtotal 
+
+            app.$router.replace('/edit-pembelian/'+id_pembelian);
+            })
+            .catch(function (resp) {
+            app.loading = false;
+            alert("Jumlah Produk tidak bisa diedit");
+            });
+      } 
+      else { 
+        swal('Oops...', 'Jumlah Tidak Boleh 0 !', 'error'); 
+        return false; 
+      } 
+    }); 
+        
+    },//END editEntryJumlah
+    editEntryHarga(id, index,nama_produk,subtotal_lama) {    
+        var app = this;  
+        var id_pembelian = app.id_pembelian;  
+        swal({ 
+      title: titleCase(nama_produk), 
+      input: 'number', 
+      inputPlaceholder : 'Harga Produk',         
+      html:'Berapa Harga Produk Yang Akan Dimasukkan ?', 
+      animation: false, 
+      showCloseButton: true, 
+      showCancelButton: true, 
+      focusConfirm: true, 
+      confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> Submit', 
+      confirmButtonAriaLabel: 'Thumbs up, great!', 
+      cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal', 
+      closeOnConfirm: true, 
+      cancelButtonAriaLabel: 'Thumbs down', 
+      inputAttributes: { 
+        'name': 'edit_harga_produk', 
+      }, 
+      inputValidator : function (value) { 
+        return new Promise(function (resolve, reject) { 
+          if (value) { 
+            resolve(); 
+          }  
+          else { 
+            reject('Harga Harus Di Isi!'); 
+          } 
+        }) 
+      } 
+    }).then(function (harga_produk) { 
+      if (harga_produk != "0") { 
+            app.loading = true;
+            axios.get(app.url_edit+'/proses-edit-harga-tbs-pembelian?harga_edit_produk='+harga_produk+'&id_harga='+id)
+            .then(function (resp) {
+            app.alert("Mengubah Harga Produk "+titleCase(nama_produk));
+            app.loading = false;
+            var subtotal = (parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(subtotal_lama)) + parseInt(resp.data.subtotal);
+            app.getResults();
+            app.inputPembayaranPembelian.subtotal = subtotal                        
+                    app.inputPembayaranPembelian.total_akhir  = subtotal
+                    app.inputPembayaranPembelian.kredit = subtotal
+            app.$router.replace('/edit-pembelian/'+id_pembelian);
+            })
+            .catch(function (resp) {
+            app.loading = false;
+            alert("Harga Produk tidak bisa diedit");
+            });
+      } 
+      else { 
+        swal('Oops...', 'Harga Tidak Boleh 0 !', 'error'); 
+        return false; 
+      } 
+    }); 
+        
+    },//END editEntryHarga
+    editEntryPotongan(id, index,nama_produk,jumlah,harga,subtotal_lama) {    
+        var app = this;   
+        var subtotal = parseFloat(jumlah) * parseFloat(harga);
+        swal({ 
+      title: titleCase(nama_produk), 
+      input: 'text', 
+      inputPlaceholder : 'Potongan Produk',         
+      html:'<i>Format : 10 (nominal) || 10% (persen)</i>', 
+      animation: false, 
+      showCloseButton: true, 
+      showCancelButton: true, 
+      focusConfirm: true, 
+      confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> Submit', 
+      confirmButtonAriaLabel: 'Thumbs up, great!', 
+      cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal', 
+      closeOnConfirm: true, 
+      cancelButtonAriaLabel: 'Thumbs down', 
+      inputAttributes: { 
+        'name': 'edit_potongan_produk', 
+      }, 
+      inputValidator : function (value) { 
+        return new Promise(function (resolve, reject) { 
+          if (value) { 
+            resolve(); 
+          }  
+          else { 
+            reject('Potongan Harus Di Isi!'); 
+          } 
+        }) 
+      } 
+    }).then(function (potongan) { 
+      var pos = potongan.search("%"); 
+      if (pos > 0)  
+      {   
+        var potongan_produk = potongan; 
+        potongan_produk = potongan_produk.replace("%","");       
+        if (potongan_produk > 100) { 
+          swal('Oops...', 'Potongan Tidak Boleh Lebih Dari 100%!', 'error'); 
+        } 
+        else if (potongan != "0") { 
+            axios.get(app.url_edit+'/cek-persen-potongan-pembelian?potongan_edit_produk='+potongan+'&id_potongan='+id)
+            .then(function (resp) {
+              if (resp.data == 1) {
+              swal({
+                title: "Peringatan",
+                text:"Potongan Tidak Boleh Lebih Dari 100%!",
+                });
+              }
+            else{
+              app.submitEditPotongan(potongan,id,nama_produk,subtotal_lama);
+            }
+          });
+        } 
+        else { 
+          swal('Oops...', 'Potongan Tidak Boleh 0 !', 'error'); 
+        } 
+
+      }else{ 
+        if (subtotal < potongan) { 
+          swal('Oops...', 'Potongan Tidak Boleh Melebihi Subtotal!', 'error'); 
+        } 
+        else if (potongan != "0") { 
+          app.submitEditPotongan(potongan,id,nama_produk,subtotal_lama);
+        } 
+        else { 
+          swal('Oops...', 'Potongan Tidak Boleh 0 !', 'error'); 
+        } 
+      } 
+    }); 
+        
+    },//END SWAL EDIT POTONGAN TBS
+    submitEditPotongan(potongan,id,nama_produk,subtotal_lama){
+            var app = this;
+            app.loading = true;
+          axios.get(app.url_edit+'/proses-edit-potongan-tbs-pembelian?potongan_edit_produk='+potongan+'&id_potongan='+id)
+          .then(function (resp) {
+          app.alert("Mengubah Potongan Produk "+titleCase(nama_produk));
+          app.loading = false;
+          var subtotal = (parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(subtotal_lama)) + parseInt(resp.data.subtotal);
+            app.getResults();
+            app.inputPembayaranPembelian.subtotal = subtotal                        
+            app.inputPembayaranPembelian.total_akhir  = subtotal
+            app.inputPembayaranPembelian.kredit = subtotal
+          
+            var id_pembelian = app.id_pembelian;  
+            app.$router.replace('/edit-pembelian/'+id_pembelian);
+          })
+          .catch(function (resp) {
+          app.loading = false;
+          alert("Potongan Produk tidak bisa diedit");
+        });
+    },//END PROSES UPDATE POTONGAN TBS 
+    editEntryTax(id, index,nama_produk,jumlah,harga,potongan,ppn,subtotal_lama){
+        var app = this;   
+        var subtotal = (parseFloat(jumlah) * parseFloat(harga)) - parseFloat(potongan); 
+      
+        if (ppn == '') { 
+      var ppn_produk = '<select id="ppn_swal" name="ppn_swal" class="swal2-input js-selectize-reguler">'+ 
+      '<option value"Non">Non</option>'+ 
+      '<option value"Include">Include</option>'+ 
+      '<option value"Exclude">Exclude</option>'+ 
+      '</select></div>'; 
+      }else { 
+      var ppn_produk = '<select id="ppn_swal" name="ppn_swal" class="swal2-input js-selectize-reguler">'+ 
+      '<option selected="selected" value="'+ppn+'">'+ppn+'</option>'+ 
+      '</select></div>'; 
+      } 
+
+    swal({ 
+      title: titleCase(nama_produk), 
+      html:'<i>Format : 10 (nominal) || 10% (persen)</i>'+ 
+      '<div class="row">'+ 
+      '<div class="col-sm-6 col-xs-6">'+ppn_produk+''+ 
+      '<div class="col-sm-6 col-xs-6">'+ 
+      '<input id="tax_swal" class="swal2-input" placeholder="PAJAK"></div>'+ 
+      '</div>', 
+      animation: false, 
+      showCloseButton: true, 
+      showCancelButton: true, 
+      confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> Submit', 
+      confirmButtonAriaLabel: 'Thumbs up, great!', 
+      cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal', 
+      cancelButtonAriaLabel: 'Thumbs down', 
+      preConfirm: function () { 
+        return new Promise(function (resolve) { 
+          resolve([ 
+            $('#tax_swal').val(), 
+            $('#ppn_swal').val() 
+            ]) 
+        }) 
+      } 
+    }).then(function (result) {   
+      if (result[0] == '' || result[0] == 0) { 
+
+        swal('Oops...', 'Pajak Tidak Boleh 0 !', 'error'); 
+        return false; 
+      }   
+      else if (result[1] == '') { 
+
+        swal('Oops...', 'PPN Belum Di Isi', 'error'); 
+        return false; 
+      }else{ 
+
+        var pajak = result[0]; 
+        var pos = pajak.search("%"); 
+
+        if (pos > 0) { 
+          pajak = pajak.replace("%",""); 
+          if (pajak > 100) { 
+
+            swal('Oops...', 'Pajak Tidak Boleh Lebih Dari 100%!', 'error'); 
+            return false; 
+          }else{ 
+            axios.get(app.url_edit+'/cek-persen-tax-pembelian?tax_edit_produk='+result[0]+'&id_tax='+id+'&ppn_produk='+result[1])
+            .then(function (resp) {
+                  if (resp.data == 1) {
+                  swal({
+                    title: "Peringatan",
+                    text:"Pajak Tidak Boleh Lebih Dari 100%!",
+                    });
+                  }
+                else{
+                var pajak = result[0];
+                var ppn_edit = result[1];
+                app.submitEditTax(pajak,id,nama_produk,ppn_edit,subtotal_lama);
+                }
+            });
+          } 
+        }else{ 
+
+          if (subtotal < result[0]) { 
+
+            swal('Oops...', 'Pajak Tidak Boleh Melebihi Subtotal!', 'error'); 
+            return false; 
+          }else{ 
+            var pajak = result[0];
+            var ppn_edit = result[1];
+            app.submitEditTax(pajak,id,nama_produk,ppn_edit,subtotal_lama);
+          } 
+
+        } 
+      } 
+    }); 
+    },//END SWAL EDIT TAX TBS
+    submitEditTax(pajak,id,nama_produk,ppn_edit,subtotal_lama){
+            var app = this;
+            app.loading = true;
+          axios.get(app.url_edit+'/proses-edit-tax-tbs-pembelian?tax_edit_produk='+pajak+'&id_tax='+id+'&ppn_produk='+ppn_edit)
+          .then(function (resp) {
+          app.alert("Mengubah Pajak Produk "+titleCase(nama_produk));
+          app.loading = false;
+          var subtotal = (parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(subtotal_lama)) + parseInt(resp.data.subtotal);
+            app.getResults();
+            app.inputPembayaranPembelian.subtotal = subtotal                        
+                    app.inputPembayaranPembelian.total_akhir  = subtotal
+                    app.inputPembayaranPembelian.kredit = subtotal
+            var id_pembelian = app.id_pembelian;  
+            app.$router.replace('/edit-pembelian/'+id_pembelian);
+          })
+          .catch(function (resp) {
+          app.loading = false;
+          alert("Pajak Produk tidak bisa diedit");
+        });
+    },//END METHOD EDIT TAX TBS
     alert(pesan) {
         this.$swal({
           title: "Berhasil ",

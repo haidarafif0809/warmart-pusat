@@ -323,6 +323,7 @@ class PembelianController extends Controller
                 'tax_persen'             => $tax_persen,
                 'kas_default'            => $kas_default,
                 'kas_pilih'              => $kas_pilih,
+                'subtotal'              => $tbs_pembelians->subtotal,
                 'subtotal_tbs'           => $subtotal_tbs,
                 'subtotal_number_format' => $subtotal,
             ]);
@@ -401,6 +402,7 @@ class PembelianController extends Controller
                 'ppn_produk'             => $ppn_produk,
                 'tax_persen'             => $tax_persen,
                 'kas_pilih'              => $kas_pilih,
+                'subtotal'              => $tbs_pembelians->subtotal,
                 'subtotal_tbs'           => $subtotal_tbs,
                 'subtotal_number_format' => $subtotal,
             ]);
