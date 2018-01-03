@@ -5,7 +5,6 @@ namespace App;
 use Illuminate\Database\Eloquent\Model; 
 use Illuminate\Support\Facades\DB; 
 use Yajra\Auditable\AuditableTrait; 
-
 use Session; 
 use Auth; 
 
@@ -44,4 +43,151 @@ class DetailPembelian extends Model
 	{   
 		return number_format($this->subtotal,2,',','.'); 
 	} 
+
+	public function tanggalSql($tangal)
+	{
+		$date        = date_create($tangal);
+		$date_format = date_format($date, "Y-m-d");
+		return $date_format;
+	}
+
+//QUERY PENCARIAN DAN PROSES LAPORAN PEMBELIAN
+	public function queryLaporanPembelian(){
+		$query_laporan_pembelian = DetailPembelian::select(['detail_pembelians.no_faktur', 'detail_pembelians.id_produk', 'detail_pembelians.jumlah_produk', 'detail_pembelians.harga_produk', 'detail_pembelians.subtotal', 'detail_pembelians.tax', 'detail_pembelians.potongan', 'satuans.nama_satuan', 'supliers.nama_suplier', 'barangs.kode_barang', 'barangs.nama_barang'])
+		->leftJoin('barangs', 'barangs.id', '=', 'detail_pembelians.id_produk')
+		->leftJoin('satuans', 'satuans.id', '=', 'detail_pembelians.satuan_id')
+		->leftJoin('pembelians', 'pembelians.no_faktur', '=', 'detail_pembelians.no_faktur')
+		->leftJoin('supliers', 'supliers.id', '=', 'pembelians.suplier_id')
+		->where(DB::raw('DATE(detail_pembelians.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+		->where(DB::raw('DATE(detail_pembelians.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal));
+
+		return $query_laporan_pembelian;
+	}
+
+//QUERY SUBTOTAL LAPORAN PEMBELIAN
+	public function querySubtotalLaporanPembelian(){
+		$query_laporan_pembelian = DetailPembelian::select(DB::raw('SUM(detail_pembelians.jumlah_produk) as jumlah_produk'), DB::raw('SUM(detail_pembelians.potongan) as potongan'), DB::raw('SUM(detail_pembelians.tax) as pajak'), DB::raw('SUM(detail_pembelians.subtotal) as subtotal'))
+		->leftJoin('pembelians', 'pembelians.no_faktur', '=', 'detail_pembelians.no_faktur')
+		->where(DB::raw('DATE(detail_pembelians.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+		->where(DB::raw('DATE(detail_pembelians.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal));
+
+		return $query_laporan_pembelian;
+	}
+
+	// LAPORAN PEMBELIAN /PRODUK
+	public function scopeLaporanPembelianProduk($query_laporan_pembelian, $request)
+	{
+		if ($request->suplier == "" && $request->produk != "") {
+			$query_laporan_pembelian = $this->queryLaporanPembelian()
+			->where('detail_pembelians.id_produk', $request->produk)
+			->where('pembelians.warung_id', Auth::user()->id_warung)
+			->orderBy('detail_pembelians.created_at', 'desc');
+			# code...
+		}elseif ($request->suplier != "" && $request->produk == "") {
+			$query_laporan_pembelian = $this->queryLaporanPembelian()
+			->where('pembelians.suplier_id', $request->suplier)
+			->where('pembelians.warung_id', Auth::user()->id_warung)
+			->orderBy('detail_pembelians.created_at', 'desc');
+			# code...		
+		}elseif ($request->suplier != "" && $request->produk != "") {
+			$query_laporan_pembelian = $this->queryLaporanPembelian()
+			->where('detail_pembelians.id_produk', $request->produk)
+			->where('pembelians.suplier_id', $request->suplier)
+			->where('pembelians.warung_id', Auth::user()->id_warung)
+			->orderBy('detail_pembelians.created_at', 'desc');
+			# code...
+		}else{
+			$query_laporan_pembelian = $this->queryLaporanPembelian()
+			->where('pembelians.warung_id', Auth::user()->id_warung)
+			->orderBy('detail_pembelians.created_at', 'desc');
+
+		}
+
+		return $query_laporan_pembelian;
+	}
+
+	// SUBTOTAL LAPORAN PEMBELIAN /PRODUK
+	public function scopeSubtotalLaporanPembelianProduk($query_subtotal_laporan_pembelian, $request)
+	{
+		if ($request->suplier == "" && $request->produk != "") {
+			$query_subtotal_laporan_pembelian = $this->querySubtotalLaporanPembelian()
+			->where('detail_pembelians.id_produk', $request->produk)
+			->where('pembelians.warung_id', Auth::user()->id_warung)
+			->orderBy('detail_pembelians.created_at', 'desc');
+			# code...
+		}elseif ($request->suplier != "" && $request->produk == "") {
+			$query_subtotal_laporan_pembelian = $this->querySubtotalLaporanPembelian()
+			->where('pembelians.suplier_id', $request->suplier)
+			->where('pembelians.warung_id', Auth::user()->id_warung)
+			->orderBy('detail_pembelians.created_at', 'desc');
+			# code...		
+		}elseif ($request->suplier != "" && $request->produk != "") {
+			$query_subtotal_laporan_pembelian = $this->querySubtotalLaporanPembelian()
+			->where('detail_pembelians.id_produk', $request->produk)
+			->where('pembelians.suplier_id', $request->suplier)
+			->where('pembelians.warung_id', Auth::user()->id_warung)
+			->orderBy('detail_pembelians.created_at', 'desc');
+			# code...
+		}else{
+			$query_subtotal_laporan_pembelian = $this->querySubtotalLaporanPembelian()
+			->where('pembelians.warung_id', Auth::user()->id_warung)
+			->orderBy('detail_pembelians.created_at', 'desc');
+
+		}
+
+		return $query_subtotal_laporan_pembelian;
+	}
+
+	// PENCARIAN LAPORAN PEMBELIAN /PRODUK
+	public function scopeCariLaporanPembelianProduk($query_laporan_pembelian, $request)
+	{
+		$search = $request->search;
+		if ($request->suplier == "" && $request->produk != "") {
+			$query_laporan_pembelian = $this->queryLaporanPembelian()
+			->where('detail_pembelians.id_produk', $request->produk)
+			->where('pembelians.warung_id', Auth::user()->id_warung)
+			->where(function ($query) use ($search) {
+				$query->orwhere('barangs.kode_barang', 'LIKE', '%' . $search . '%')
+				->orwhere('barangs.nama_barang', 'LIKE', '%' . $search . '%')
+				->orwhere('supliers.nama_suplier', 'LIKE', '%' . $search . '%')
+				->orwhere('satuans.nama_satuan', 'LIKE', '%' . $search . '%');
+			})->orderBy('detail_pembelians.created_at', 'desc');
+			# code...
+		}elseif ($request->suplier != "" && $request->produk == "") {
+			$query_laporan_pembelian = $this->queryLaporanPembelian()
+			->where('pembelians.suplier_id', $request->suplier)
+			->where('pembelians.warung_id', Auth::user()->id_warung)
+			->where(function ($query) use ($search) {
+				$query->orwhere('barangs.kode_barang', 'LIKE', '%' . $search . '%')
+				->orwhere('barangs.nama_barang', 'LIKE', '%' . $search . '%')
+				->orwhere('supliers.nama_suplier', 'LIKE', '%' . $search . '%')
+				->orwhere('satuans.nama_satuan', 'LIKE', '%' . $search . '%');
+			})->orderBy('detail_pembelians.created_at', 'desc');
+			# code...		
+		}elseif ($request->suplier != "" && $request->produk != "") {
+			$query_laporan_pembelian = $this->queryLaporanPembelian()
+			->where('detail_pembelians.id_produk', $request->produk)
+			->where('pembelians.suplier_id', $request->suplier)
+			->where('pembelians.warung_id', Auth::user()->id_warung)
+			->where(function ($query) use ($search) {
+				$query->orwhere('barangs.kode_barang', 'LIKE', '%' . $search . '%')
+				->orwhere('barangs.nama_barang', 'LIKE', '%' . $search . '%')
+				->orwhere('supliers.nama_suplier', 'LIKE', '%' . $search . '%')
+				->orwhere('satuans.nama_satuan', 'LIKE', '%' . $search . '%');
+			})->orderBy('detail_pembelians.created_at', 'desc');
+			# code...
+		}else{
+			$query_laporan_pembelian = $this->queryLaporanPembelian()
+			->where('pembelians.warung_id', Auth::user()->id_warung)
+			->where(function ($query) use ($search) {
+				$query->orwhere('barangs.kode_barang', 'LIKE', '%' . $search . '%')
+				->orwhere('barangs.nama_barang', 'LIKE', '%' . $search . '%')
+				->orwhere('supliers.nama_suplier', 'LIKE', '%' . $search . '%')
+				->orwhere('satuans.nama_satuan', 'LIKE', '%' . $search . '%');
+			})->orderBy('detail_pembelians.created_at', 'desc');
+
+		}
+
+		return $query_laporan_pembelian;
+	}
 } 

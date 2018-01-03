@@ -14,67 +14,63 @@
     </ul> 
 
 
-    <div class="row"><!-- ROW --> 
-      <div class="col-md-8"><!-- COL SM 8 --> 
-
-        <div class="card"><!-- CARD --> 
-
-          <div class="card-header card-header-icon" data-background-color="purple"> 
-            <i class="material-icons">add_shopping_cart</i> 
-          </div> 
-
+        <div class="card" style="margin-bottom: 1px; margin-top: 1px;" ><!-- CARD --> 
           <div class="card-content"> 
-            <h4 class="card-title">Edit Pembelian </h4> 
-            <div class="row"> 
+            <h4 class="card-title" style="margin-bottom: 1px; margin-top: 1px;"> Edit Pembelian </h4> 
+            <div class="row" style="margin-bottom: 1px; margin-top: 1px;"> 
 
-              <!--COL MD 8--> 
-              <div class="col-md-8"> 
-                <form class="form-horizontal" id="form-produk"> 
-                  <div class="form-group">
-                    <div class="col-md-4"><br> 
-                      <selectize-component :settings="placeholder_produk"  id="produk" ref='produk' name="jumlah_produk"> 
+              <div class="col-md-3">
+                <div class="card card-produk" style="margin-bottom: 1px; margin-top: 1px;">
+                  <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
+                   
+                    <selectize-component  id="produk" ref='produk' > 
                       <option ></option>
                       </selectize-component>
+                      </div><!--/COL MD  3 --> 
 
-
-                  </div>
-                </div><!--/COL MD 8--> 
-              </form>
-            </div> 
-            <div class="pencarian">
-              <input type="text" name="pencarian"  placeholder="Pencarian" class="form-control pencarian" autocomplete="">
+                <span style="display: none;">
+                </span>
             </div>
           </div>
+          </div>
 
+    <div class="row">
+        <div class="col-md-8">
+          <div class=" table-responsive ">
+               <div class="pencarian">
+                <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
+            </div>
             <vue-simple-spinner v-if="loading"></vue-simple-spinner>
+
+          </div>
+
           <p style="color: red; font-style: italic;">*Note : Klik Kolom Jumlah, Harga, Potongan & Tax Untuk Mengubah Nilai.</p> 
-
-
-          </div><!-- / PANEL BODY --> 
-
-        </div><!-- CARD --> 
-
       </div><!-- COL SM 8 --> 
 
       <div class="col-md-4"><!-- COL SM 4 --> 
-        <div class="card"><!-- CARD --> 
+        <div class="card card-stats"><!-- CARD --> 
           <div class="card-content"> 
             <div class="row"> 
-              <div class="col-md-6"> 
-                  <h4>Supplier</h4> 
-                  <selectize-component :settings="placeholder_produk"  id="suplier" name="suplier" ref='suplier'> 
+              <div class="col-md-6 col-xs-12"> 
+                  <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
+                  <label class="label-control">Suplier</label><br>
+                  <selectize-component  id="suplier" name="suplier" ref='suplier'> 
                       <option ></option>
                   </selectize-component>
+                </div>
               </div> 
 
-                <div class="col-md-6"> 
-                  <h4>Cara Bayar</h4> 
-                  <selectize-component :settings="placeholder_produk"  id="cara_bayar" name="cara_bayar" ref='cara_bayar'> 
-                  <option></option>
+                <div class="col-md-6 col-xs-12"> 
+                <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
+                 <label class="label-control">Kas</label><br>
+
+                  <selectize-component id="cara_bayar" name="cara_bayar" ref='cara_bayar'> 
+                  <option ></option>
                   </selectize-component>
+
+                </div>
                 </div> 
               </div> 
-            
 
             <!--- TOMBOL SELESAI --> 
             <button type="button" class="btn btn-primary" id="btnSelesai"  data-toggle="modal"><i class="material-icons">send</i> Selesai </button> 
@@ -83,8 +79,10 @@
           </div> 
         </div>             
       </div><!-- COL SM 4 --> 
-
     </div><!-- ROW --> 
+  </div>
+</div>
+
   </div> 
 </div> 
 </template>

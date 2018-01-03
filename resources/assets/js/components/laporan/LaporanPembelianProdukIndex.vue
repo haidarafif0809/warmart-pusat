@@ -54,6 +54,7 @@
 								<tr>
 									<th>Kode Produk</th>
 									<th>Nama Produk</th>
+									<th>Supplier</th>
 									<th style="text-align:right">Jumlah</th>
 									<th>Satuan</th>
 									<th style="text-align:right">Diskon</th>
@@ -64,29 +65,31 @@
 							<tbody v-if="pembelianProduk.length > 0 && loading == false"  class="data-ada">
 								<tr v-for="pembelianProduks, index in pembelianProduk" >
 
-									<td>{{ pembelianProduks.daftar_produks.kode_barang }}</td>
-									<td>{{ pembelianProduks.daftar_produks.nama_barang }}</td>
-									<td align="right">{{ pembelianProduks.stok_awal | pemisahTitik }}</td>
-									<td>{{ pembelianProduks.daftar_produks.nama_satuan }}</td>
-									<td align="right">{{ pembelianProduks.total_awal | pemisahTitik }}</td>
-									<td align="right">{{ pembelianProduks.stok_masuk | pemisahTitik }}</td>
-									<td align="right">{{ pembelianProduks.total_masuk | pemisahTitik }}</td>
+									<td>{{ pembelianProduks.laporan_pembelians.kode_barang }}</td>
+									<td>{{ pembelianProduks.laporan_pembelians.nama_barang }}</td>
+									<td>{{ pembelianProduks.laporan_pembelians.nama_suplier }}</td>
+									<td align="right">{{ pembelianProduks.laporan_pembelians.jumlah_produk }}</td>
+									<td>{{ pembelianProduks.laporan_pembelians.nama_satuan }}</td>
+									<td align="right">{{ pembelianProduks.laporan_pembelians.potongan }}</td>
+									<td align="right">{{ pembelianProduks.laporan_pembelians.tax }}</td>
+									<td align="right">{{ pembelianProduks.laporan_pembelians.subtotal }}</td>
 
 								</tr>
 
 								<tr style="color:red">
 									<td>TOTAL</td>
 									<td></td>
-									<td align="right">{{ subtotalPembelianProduk.total_stok_awal | pemisahTitik }}</td>
 									<td></td>
-									<td align="right">{{ subtotalPembelianProduk.total_nilai_awal | pemisahTitik }}</td>
-									<td align="right">{{ subtotalPembelianProduk.total_stok_masuk | pemisahTitik }}</td>
-									<td align="right">{{ subtotalPembelianProduk.total_nilai_masuk | pemisahTitik }}</td>
+									<td align="right">{{ subtotalPembelianProduk.jumlah_produk | pemisahTitik }}</td>
+									<td></td>
+									<td align="right">{{ subtotalPembelianProduk.potongan | pemisahTitik }}</td>
+									<td align="right">{{ subtotalPembelianProduk.pajak | pemisahTitik }}</td>
+									<td align="right">{{ subtotalPembelianProduk.subtotal | pemisahTitik }}</td>
 
 								</tr>
 							</tbody>					
 							<tbody class="data-tidak-ada" v-else-if="pembelianProduk.length == 0 && loading == false">
-								<tr ><td colspan="6"  class="text-center">Tidak Ada Data</td></tr>
+								<tr ><td colspan="8"  class="text-center">Tidak Ada Data</td></tr>
 							</tbody>
 						</table>
 						</div><!--RESPONSIVE-->
@@ -127,7 +130,7 @@ export default {
                 placeholder: '--PILIH PRODUK--'
             },
             placeholder_suplier: {
-                placeholder: '--PILIH SUPLIER--'
+                placeholder: '--PILIH SUPPLIER--'
             },
 		}
 	},
@@ -194,10 +197,11 @@ export default {
     		var newFilter = app.filter;
 
     		app.loading = true,
-    		axios.post(app.url+'/subtotal-mutasi-stok', newFilter)
+    		axios.post(app.url+'/subtotal-pembelian-produk', newFilter)
     		.then(function (resp) {
     			app.subtotalPembelianProduk = resp.data;
     			app.loading = false
+    			console.log(resp.data);    			
     		})
     		.catch(function (resp) {
     			console.log(resp);
@@ -217,7 +221,7 @@ export default {
       },
       dataSuplier() {
           var app = this;
-          axios.get(app.url+'/pilih-suplier')
+          axios.get(app.url+'/pilih-supplier')
           .then(function (resp) {
             app.suplier = resp.data;
 
