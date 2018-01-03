@@ -97,7 +97,7 @@
 					<div class=" table-responsive ">
 
 						<div class="pencarian">
-							<input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
+							<input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="" ref="pencarian">
 						</div>
 
 						<table class="table table-striped table-hover" v-if="seen">
@@ -190,7 +190,7 @@ export default {
 	},
 	mounted() {   
 		var app = this;
-		app.getResults();
+		app.getResults();		
 	},
 	watch: {
     // whenever question changes, this function will run
@@ -210,7 +210,8 @@ methods: {
 			app.penjualan = resp.data.data;
 			app.penjualanData = resp.data;
 			app.loading = false;
-			app.seen = true;
+			app.seen = true;			
+			app.$refs.pencarian.focus()
 		})
 		.catch(function (resp) {
 			console.log(resp);

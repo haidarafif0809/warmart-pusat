@@ -971,8 +971,23 @@ public function tampilPotongan($potongan_produk,$jumlah_produk,$harga_produk){
 }
 
 public function cetakBesar($id){
-    $penjualan = PenjualanPos::find($id);
-    return view('penjualan.cetak_besar',['penjualan'=> $penjualan])->with(compact('html'));
+
+    $penjualan = PenjualanPos::select('w.name AS nama_warung','w.alamat AS alamat_warung','p.name AS pelanggan','u.name AS kasir','penjualan_pos.potongan AS potongan','penjualan_pos.total AS total','penjualan_pos.tunai AS tunai','penjualan_pos.kembalian AS kembalian',DB::raw('DATE_FORMAT(penjualan_pos.created_at, "%d/%m/%Y %H:%i:%s") as waktu_jual'),'w.no_telpon AS no_telp_warung','penjualan_pos.id AS id','p.alamat AS alamat_pelanggan','penjualan_pos.status_penjualan AS status_penjualan','kas.nama_kas AS nama_kas')
+    ->leftJoin('warungs AS w','penjualan_pos.warung_id','=','w.id')
+    ->leftJoin('users AS u','u.id','=','penjualan_pos.created_by')
+    ->leftJoin('users AS p', 'p.id', '=', 'penjualan_pos.pelanggan_id')
+    ->leftJoin('kas', 'kas.id', '=', 'penjualan_pos.id_kas')
+    ->where('penjualan_pos.id',$id)->first();
+
+    $detail_penjualan = DetailPenjualanPos::with('produk')->where('id_penjualan_pos',$penjualan['id'])->get();
+    $terbilang = $this->kekata($penjualan->total);
+    $subtotal = 0;
+    foreach ($detail_penjualan as $detail_penjualans) {
+        $subtotal += $detail_penjualans->subtotal;
+
+    }
+
+    return view('penjualan.cetak_besar',['penjualan'=> $penjualan,'detail_penjualan'=>$detail_penjualan,'subtotal'=>$subtotal,'terbilang'=>$terbilang])->with(compact('html'));
 }
 
 public function cetakKecil($id){
@@ -992,6 +1007,35 @@ public function cetakKecil($id){
     }
 
     return view('penjualan.cetak_kecil',['penjualan'=> $penjualan,'detail_penjualan'=>$detail_penjualan,'subtotal'=>$subtotal])->with(compact('html'));
+}
+
+public function kekata($x) {
+    $x = abs($x);
+    $angka = array("", "satu", "dua", "tiga", "empat", "lima",
+        "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas");
+    $temp = "";
+    if ($x <12) {
+        $temp = " ". $angka[$x];
+    } else if ($x <20) {
+        $temp = $this->kekata($x - 10). " belas";
+    } else if ($x <100) {
+        $temp = $this->kekata($x/10)." puluh". $this->kekata($x % 10);
+    } else if ($x <200) {
+        $temp = " seratus" . $this->kekata($x - 100);
+    } else if ($x <1000) {
+        $temp = $this->kekata($x/100) . " ratus" . $this->kekata($x % 100);
+    } else if ($x <2000) {
+        $temp = " seribu" . $this->kekata($x - 1000);
+    } else if ($x <1000000) {
+        $temp = $this->kekata($x/1000) . " ribu" . $this->kekata($x % 1000);
+    } else if ($x <1000000000) {
+        $temp = $this->kekata($x/1000000) . " juta" . $this->kekata($x % 1000000);
+    } else if ($x <1000000000000) {
+        $temp = $this->kekata($x/1000000000) . " milyar" . $this->kekata(fmod($x,1000000000));
+    } else if ($x <1000000000000000) {
+        $temp = $this->kekata($x/1000000000000) . " trilyun" . $this->kekata(fmod($x,1000000000000));
+    }     
+    return $temp;
 }
 
 }
