@@ -81,4 +81,18 @@ class LaporanPembelianProdukController extends Controller
 
 		return response()->json($sub_total_penjualan);
 	}
+
+	public function pencarian(Request $request)
+	{
+		$laporan_pembelian = DetailPembelian::cariLaporanPembelianProduk($request)->paginate(10);
+
+		$array_pembelian = array();
+		foreach ($laporan_pembelian as $laporan_pembelians) {
+
+			array_push($array_pembelian, ['laporan_pembelians' => $laporan_pembelians]);
+		}
+        //DATA PAGINATION
+		$respons = $this->dataPagination($laporan_pembelian, $array_pembelian);
+		return response()->json($respons);
+	}
 }

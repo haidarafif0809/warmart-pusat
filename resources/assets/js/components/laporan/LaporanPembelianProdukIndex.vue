@@ -89,7 +89,7 @@
 								</tr>
 							</tbody>					
 							<tbody class="data-tidak-ada" v-else-if="pembelianProduk.length == 0 && loading == false">
-								<tr ><td colspan="6"  class="text-center">Tidak Ada Data</td></tr>
+								<tr ><td colspan="8"  class="text-center">Tidak Ada Data</td></tr>
 							</tbody>
 						</table>
 						</div><!--RESPONSIVE-->
