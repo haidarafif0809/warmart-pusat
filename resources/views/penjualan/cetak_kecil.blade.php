@@ -30,18 +30,18 @@ p{
 	<table>
 		<tbody>
 			@foreach ($detail_penjualan as $detail_penjualans)			
-			<tr><td width:"50%"> {{title_case($detail_penjualans->produk->nama_barang)}} </td><td style="padding:3px"> {{number_format($detail_penjualans->harga_produk, 0, ',', '.')}}</td><td style="padding:3px">{{number_format($detail_penjualans->jumlah_produk, 0, ',', '.')}}</td><td style="padding:3px">{{number_format($detail_penjualans->subtotal, 0, ',', '.')}}</td></tr>
+			<tr><td width:"50%"> {{title_case($detail_penjualans->produk->nama_barang)}} </td><td style="padding:3px"> {{number_format($detail_penjualans->harga_produk, 2, ',', '.')}}</td><td style="padding:3px">{{number_format($detail_penjualans->jumlah_produk, 2, ',', '.')}}</td><td style="padding:3px">{{number_format($detail_penjualans->subtotal, 2, ',', '.')}}</td></tr>
 			@endforeach
 
 		</tbody>
 	</table>
 
 	<p>-------------------------------------------------------------</p>
-	<p>Subtotal : {{number_format($subtotal, 0, ',', '.')}}</p>
-	<p>Diskon : {{number_format($penjualan->potongan, 0, ',', '.')}}</p>
-	<p>Total : {{number_format($penjualan->total, 0, ',', '.')}}</p>
-	<p>Tunai : {{number_format($penjualan->tunai, 0, ',', '.')}}</p>
-	<p>Kembalian : {{number_format($penjualan->kembalian, 0, ',', '.')}}</p>
+	<p>Subtotal : {{number_format($subtotal, 2, ',', '.')}}</p>
+	<p>Diskon : {{number_format($penjualan->potongan, 2, ',', '.')}}</p>
+	<p>Total : {{number_format($penjualan->total, 2, ',', '.')}}</p>
+	<p>Tunai : {{number_format($penjualan->tunai, 2, ',', '.')}}</p>
+	<p>Kembalian : {{number_format($penjualan->kembalian, 2, ',', '.')}}</p>
 	<p>======================================</p>
 	<p>{{$penjualan->waktu_jual}}</p>
 

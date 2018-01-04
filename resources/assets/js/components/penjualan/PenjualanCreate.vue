@@ -205,15 +205,14 @@
                             <td>{{ tbs_penjualan.kode_produk }} - {{ tbs_penjualan.nama_produk }}</td>
 
                             <td align="center" >
-                                <a href="#create-penjualan" v-bind:id="'edit-' + tbs_penjualan.id_tbs_penjualan" v-on:click="editEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">{{ new Intl.NumberFormat().format(tbs_penjualan.jumlah_produk) }},00</a>
+                                <a href="#create-penjualan" v-bind:id="'edit-' + tbs_penjualan.id_tbs_penjualan" v-on:click="editEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">{{ new Intl.NumberFormat().format(tbs_penjualan.jumlah_produk) }}</a>
                             </td>
 
-                            <td align="center" >{{ new Intl.NumberFormat().format(tbs_penjualan.harga_produk) }},00</td>
+                            <td align="center" >{{ new Intl.NumberFormat().format(tbs_penjualan.harga_produk) }}</td>
 
                             <td align="center" ><a href="#create-penjualan" v-bind:id="'edit-' + tbs_penjualan.id_tbs_penjualan" v-on:click="potonganEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">{{ tbs_penjualan.potongan }}</a></td>
 
-                            <td align="center" > {{ new Intl.NumberFormat().format(tbs_penjualan.subtotal) }},00</td>
-
+                            <td align="center" > {{ new Intl.NumberFormat().format(tbs_penjualan.subtotal) }}</td>
                             <td><a href="#create-penjualan" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_penjualan.id_tbs_penjualan" v-on:click="deleteEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">Delete</a></td>
                         </tr>
                     </tbody>                    
@@ -236,7 +235,7 @@
                 </div>
                 <div class="card-content">
                     <p class="category">Subtotal</p>
-                    <h3 class="card-title">{{ new Intl.NumberFormat().format(penjualan.subtotal) }},00</h3>
+                    <h3 class="card-title">{{ new Intl.NumberFormat().format(penjualan.subtotal) }}</h3>
                 </div>
                 <div class="card-footer">
                     <button type="button" class="btn btn-success" id="bayar" v-on:click="bayarPenjualan()" v-shortkey.push="['f2']" @shortkey="bayarPenjualan()"><i class="material-icons">payment</i>Bayar(F2)</button>
@@ -423,11 +422,11 @@ getResults(page) {
 
             $.each(resp.data.data, function (i,item) {
 
-               app.penjualan.subtotal += resp.data.data[i].subtotal
-               app.penjualan.total_akhir += resp.data.data[i].subtotal
-               app.penjualan.kredit += resp.data.data[i].subtotal
+             app.penjualan.subtotal += parseFloat(resp.data.data[i].subtotal)
+             app.penjualan.total_akhir += parseFloat(resp.data.data[i].subtotal)
+             app.penjualan.kredit += parseFloat(resp.data.data[i].subtotal)
 
-           }); 
+         }); 
         }
 
     })
@@ -553,11 +552,11 @@ submitProdukPenjualan(value){
 
             }else{
 
-                var subtotal = parseInt(app.penjualan.subtotal) + parseInt(resp.data.subtotal)
+                var subtotal = parseFloat(app.penjualan.subtotal) + parseFloat(resp.data.subtotal)
 
                 app.getResults()
-                app.penjualan.subtotal = subtotal                        
-                app.penjualan.total_akhir  = subtotal 
+                app.penjualan.subtotal = subtotal.toFixed(2)                        
+                app.penjualan.total_akhir  = subtotal.toFixed(2) 
                 app.potonganPersen()
                 app.alert("Menambahkan Produk "+nama_produk)
                 app.loading = false
@@ -614,11 +613,11 @@ editJumlahProdukPenjualan(value,id,nama_produk,subtotal_lama){
         axios.post(app.url+'/edit-jumlah-tbs-penjualan', newinputTbsPenjualan)
         .then(function (resp) {
 
-            var subtotal = (parseInt(app.penjualan.subtotal) - parseInt(subtotal_lama)) + parseInt(resp.data.subtotal)
+            var subtotal = (parseFloat(app.penjualan.subtotal) - parseFloat(subtotal_lama)) + parseFloat(resp.data.subtotal)
 
             app.getResults()
-            app.penjualan.subtotal = subtotal
-            app.penjualan.total_akhir = subtotal
+            app.penjualan.subtotal = subtotal.toFixed(2)
+            app.penjualan.total_akhir = subtotal.toFixed(2)
             app.potonganPersen()
             app.alert("Mengubah Jumlah Produk "+nama_produk)
             app.loading = false;
@@ -685,11 +684,11 @@ editPotonganProdukPenjualan(value,id,nama_produk,subtotal_lama){
 
         }else{
 
-            var subtotal = (parseInt(app.penjualan.subtotal) - parseInt(subtotal_lama)) + parseInt(resp.data.subtotal)
+            var subtotal = (parseFloat(app.penjualan.subtotal) - parseFloat(subtotal_lama)) + parseFloat(resp.data.subtotal)
 
             app.getResults()
-            app.penjualan.subtotal = subtotal
-            app.penjualan.total_akhir = subtotal           
+            app.penjualan.subtotal = subtotal.toFixed(2)
+            app.penjualan.total_akhir = subtotal.toFixed(2)           
             app.potonganPersen()
             app.alert("Mengubah Potongan Produk "+nama_produk)
             app.loading = false
@@ -741,10 +740,10 @@ prosesDelete(id,nama_produk,subtotal_lama){
             app.loading = false
 
         }else{
-            var subtotal = parseInt(app.penjualan.subtotal) - parseInt(subtotal_lama)
+            var subtotal = parseFloat(app.penjualan.subtotal) - parseFloat(subtotal_lama)
             app.getResults()
-            app.penjualan.subtotal = subtotal
-            app.penjualan.total_akhir = subtotal
+            app.penjualan.subtotal = subtotal.toFixed(2)
+            app.penjualan.total_akhir = subtotal.toFixed(2)
             app.potonganPersen()
             app.alert("Menghapus Produk "+nama_produk)
             app.loading = false

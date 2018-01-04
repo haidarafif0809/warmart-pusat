@@ -76,10 +76,10 @@ th,td{
 							<tr>
 								<td class='table1'>{{title_case($detail_penjualans->produk->nama_barang)}} </td>
 								<td class='table1' align='right'>{{$detail_penjualans->produk->satuan->nama_satuan}} </td>
-								<td class='table1' align='right'>{{number_format($detail_penjualans->jumlah_produk, 0, ',', '.')}} </td>
-								<td class='table1' align='right'>{{number_format($detail_penjualans->harga_produk, 0, ',', '.')}}</td>
-								<td class='table1' align='right'>{{number_format($detail_penjualans->potongan, 0, ',', '.')}}</td>
-								<td class='table1' align='right'>{{number_format($detail_penjualans->subtotal, 0, ',', '.')}}</td>
+								<td class='table1' align='right'>{{number_format($detail_penjualans->jumlah_produk, 2, ',', '.')}} </td>
+								<td class='table1' align='right'>{{number_format($detail_penjualans->harga_produk, 2, ',', '.')}}</td>
+								<td class='table1' align='right'>{{number_format($detail_penjualans->potongan, 2, ',', '.')}}</td>
+								<td class='table1' align='right'>{{number_format($detail_penjualans->subtotal, 2, ',', '.')}}</td>
 							</tr>
 							@endforeach
 
@@ -97,9 +97,9 @@ th,td{
 
 							<table>
 								<tbody>
-									<tr><td width="50%"><font class="satu">Sub Total</font></td> <td> :&nbsp;</td> <td><font class="satu"> {{number_format($subtotal, 0, ',', '.')}} </font></tr>
-										<tr><td width="50%"><font class="satu">Diskon</font></td> <td> :&nbsp;</td> <td><font class="satu"> {{number_format($penjualan->potongan, 0, ',', '.')}}</font> </tr>
-											<tr><td  width="50%"><font class="satu">Total Akhir</font></td> <td> :&nbsp;</td> <td><font class="satu"> {{number_format($penjualan->total, 0, ',', '.')}}</font>  </td></tr>
+									<tr><td width="50%"><font class="satu">Sub Total</font></td> <td> :&nbsp;</td> <td><font class="satu"> {{number_format($subtotal, 2, ',', '.')}} </font></tr>
+										<tr><td width="50%"><font class="satu">Diskon</font></td> <td> :&nbsp;</td> <td><font class="satu"> {{number_format($penjualan->potongan, 2, ',', '.')}}</font> </tr>
+											<tr><td  width="50%"><font class="satu">Total Akhir</font></td> <td> :&nbsp;</td> <td><font class="satu"> {{number_format($penjualan->total, 2, ',', '.')}}</font>  </td></tr>
 										</tbody>
 									</table>
 
@@ -109,8 +109,8 @@ th,td{
 									<table>
 										<tbody>
 
-											<tr><td  width="40%"><font class="satu">Bayar</font></td> <td> :&nbsp;</td> <td><font class="satu"> {{number_format($penjualan->tunai, 0, ',', '.')}}</font> </td></tr>
-											<tr><td  width="40%"><font class="satu">Kembali</font></td> <td> :&nbsp;</td> <td><font class="satu">{{number_format($penjualan->kembalian, 0, ',', '.')}}</font> </td></tr>
+											<tr><td  width="40%"><font class="satu">Bayar</font></td> <td> :&nbsp;</td> <td><font class="satu"> {{number_format($penjualan->tunai, 2, ',', '.')}}</font> </td></tr>
+											<tr><td  width="40%"><font class="satu">Kembali</font></td> <td> :&nbsp;</td> <td><font class="satu">{{number_format($penjualan->kembalian, 2, ',', '.')}}</font> </td></tr>
 											<tr><td  width="40%"><font class="satu">Kas</font></td> <td> :&nbsp;</td> <td><font class="satu">{{$penjualan->nama_kas}}</font> </td></tr>   
 
 										</tbody>
