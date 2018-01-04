@@ -6,12 +6,15 @@ use App\Customer;
 use App\DetailPenjualan;
 use App\DetailPenjualanPos;
 use App\Hpp;
+use App\Warung;
 use App\Penjualan;
 use App\PenjualanPos;
 use Auth;
 use Excel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Yajra\Datatables\Html\Builder;
+use Yajra\Datatables\Datatables;
 
 class LaporanLabaKotorController extends Controller
 {
@@ -141,10 +144,10 @@ class LaporanLabaKotorController extends Controller
         return response()->json($respons);
     }
 
-    public function tanggalSql($tangal)
+    public function tanggal($tangal)
     {
         $date        = date_create($tangal);
-        $date_format = date_format($date, "Y-m-d");
+        $date_format = date_format($date, "d-m-Y");
         return $date_format;
     }
 
@@ -305,5 +308,76 @@ class LaporanLabaKotorController extends Controller
             });
 
 })->export('xls');
+}
+
+public function foreachPos($laporan_laba_kotor){
+    $data_laba_kotor = array();
+    foreach ($laporan_laba_kotor as $laba_kotor) {
+        $hpp              = Hpp::select(DB::raw('SUM(total_nilai) as total_hpp'))->where('no_faktur', $laba_kotor->id)->where('jenis_transaksi', 'PenjualanPos')->where('warung_id', Auth::user()->id_warung)->first();
+        $detail_penjualan = DetailPenjualanPos::select(DB::raw('SUM(subtotal) as subtotal'))->where('id_penjualan_pos', $laba_kotor->id)->where('warung_id', Auth::user()->id_warung)->first();
+        $total_laba_kotor = $detail_penjualan->subtotal - $hpp->total_hpp;
+        $laba_jual        = $total_laba_kotor - $laba_kotor->potongan;
+
+        array_push($data_laba_kotor, ['laba_kotor' => $laba_kotor, 'hpp' => $hpp->total_hpp, 'total_laba_kotor' => $total_laba_kotor, 'laba_jual' => $laba_jual, 'total' => $detail_penjualan->subtotal]);
+    }
+
+    return $data_laba_kotor;
+}
+
+public function foreachPesanan($laporan_laba_kotor_pesanan){
+    $data_laba_kotor_pesanan = array();
+    foreach ($laporan_laba_kotor_pesanan as $laba_kotor_pesanan) {
+        $hpp              = Hpp::select(DB::raw('SUM(total_nilai) as total_hpp'))->where('no_faktur', $laba_kotor_pesanan->id)->where('jenis_transaksi', 'penjualan')->where('warung_id', Auth::user()->id_warung)->first();
+        $detail_penjualan = DetailPenjualan::select(DB::raw('SUM(subtotal) as subtotal'))->where('id_penjualan', $laba_kotor_pesanan->id)->first();
+        $total_laba_kotor_pesanan = $detail_penjualan->subtotal - $hpp->total_hpp;
+        $laba_jual        = $total_laba_kotor_pesanan - 0;
+
+        array_push($data_laba_kotor_pesanan, ['laba_kotor_pesanan' => $laba_kotor_pesanan, 'hpp' => $hpp->total_hpp, 'total_laba_kotor_pesanan' => $total_laba_kotor_pesanan, 'laba_jual' => $laba_jual, 'total' => $detail_penjualan->subtotal]);
+    }
+
+    return $data_laba_kotor_pesanan;
+}
+
+public function cetakLaporan(Request $request, $dari_tanggal, $sampai_tanggal, $pelanggan){
+    $request['dari_tanggal']   = $dari_tanggal;
+    $request['sampai_tanggal'] = $sampai_tanggal;
+    $request['pelanggan']      = $pelanggan;
+
+    //PENJUALAN POS
+    $laporan_laba_kotor = PenjualanPos::laporanLabaKotorPos($request)->get();
+
+    $sub_total_penjualan = DetailPenjualanPos::subtotalLaporanLabaKotor($request)->first();
+    $sub_potongan = PenjualanPos::potonganLaporanLabaKotor($request)->first();
+    $potongan     = $sub_potongan->potongan;
+    $jenis_transaksi = "PenjualanPos";
+    $sub_hpp         = Hpp::hppLaporanLabaKotor($request, $jenis_transaksi)->first();
+
+    $subtotal_penjualan = $sub_total_penjualan->subtotal;
+    $subtotal_hpp = $sub_hpp->total_hpp;
+    $subtotal_laba_kotor = $subtotal_penjualan - $subtotal_hpp;
+    $subtotal_potongan = $potongan;
+    $subtotal_laba_jual = $subtotal_laba_kotor - $subtotal_potongan;    
+
+    $data_laba_kotor = $this->foreachPos($laporan_laba_kotor);
+    //PENJUALAN POS
+
+    //PENJUALAN PESANAN
+    $laporan_laba_kotor_pesanan = Penjualan::laporanLabaKotorPesanan($request)->get();
+    
+    $sub_total_penjualan_pesanan = DetailPenjualan::subtotalLaporanLabaKotorPesanan($request)->first();
+    $jenis_transaksi = "penjualan";
+    $sub_hpp_pesanan = Hpp::hppLaporanLabaKotor($request, $jenis_transaksi)->first();
+
+    $subtotal_penjualan_pesanan = $sub_total_penjualan_pesanan->subtotal;
+    $subtotal_hpp_pesanan = $sub_hpp_pesanan->total_hpp;
+    $subtotal_laba_kotor_pesanan = $subtotal_penjualan_pesanan - $subtotal_hpp_pesanan;
+    $subtotal_laba_jual_pesanan = $subtotal_laba_kotor_pesanan - 0;
+
+    $data_laba_kotor_pesanan = $this->foreachPesanan($laporan_laba_kotor_pesanan);
+    //PENJUALAN PESANAN
+
+    $data_warung = Warung::where('id', Auth::user()->id_warung)->first();
+
+    return view('laporan.cetak_laba_kotor', ['data_laba_kotor' => $data_laba_kotor ,'data_laba_kotor_pesanan' => $data_laba_kotor_pesanan ,'data_warung' => $data_warung ,'subtotal_penjualan' => $subtotal_penjualan ,'subtotal_hpp' => $subtotal_hpp ,'subtotal_laba_kotor' => $subtotal_laba_kotor ,'subtotal_potongan' => $subtotal_potongan ,'subtotal_laba_jual' => $subtotal_laba_jual ,'subtotal_penjualan_pesanan' => $subtotal_penjualan_pesanan ,'subtotal_hpp_pesanan' => $subtotal_hpp_pesanan ,'subtotal_laba_kotor_pesanan' => $subtotal_laba_kotor_pesanan ,'subtotal_laba_jual_pesanan' => $subtotal_laba_jual_pesanan ,'dari_tanggal' => $this->tanggal($dari_tanggal), 'sampai_tanggal' => $this->tanggal($sampai_tanggal), 'pelanggan' => $pelanggan])->with(compact('html'));
 }
 }
