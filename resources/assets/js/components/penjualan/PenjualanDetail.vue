@@ -49,10 +49,10 @@
 
 											<td>{{ detailPenjualan.id_penjualan_pos }}</td>
 											<td>{{ detailPenjualan.nama_produk }}</td>
-											<td align="center"> {{ new Intl.NumberFormat().format(detailPenjualan.jumlah_produk) }},00</td>
-											<td align="center"> {{ new Intl.NumberFormat().format(detailPenjualan.harga_produk) }},00</td>
+											<td align="center"> {{ new Intl.NumberFormat().format(detailPenjualan.jumlah_produk) }}</td>
+											<td align="center"> {{ new Intl.NumberFormat().format(detailPenjualan.harga_produk) }}</td>
 											<td align="center"> {{ detailPenjualan.potongan }}</td>
-											<td align="center"> {{ new Intl.NumberFormat().format(detailPenjualan.subtotal) }},00</td>
+											<td align="center"> {{ new Intl.NumberFormat().format(detailPenjualan.subtotal) }}</td>
 
 										</tr>
 									</tbody>                    
@@ -74,7 +74,7 @@
 								</div>
 								<div class="card-content">
 									<p class="category">Total Keseluruhan</p>
-									<h3 class="card-title">{{ new Intl.NumberFormat().format(subtotal) }},00</h3>
+									<h3 class="card-title">{{ new Intl.NumberFormat().format(subtotal) }}</h3>
 								</div>
 								<div class="card-footer">
 
@@ -132,7 +132,7 @@ methods: {
 			app.seen = true;
 
 			$.each(resp.data.data, function (i, item) {
-				app.subtotal += resp.data.data[i].subtotal 
+				app.subtotal += parseFloat(resp.data.data[i].subtotal) 
 			});
 		})
 		.catch(function (resp) {
