@@ -53,7 +53,7 @@
             <div class="row"> 
               <div class="col-md-6 col-xs-12"> 
                   <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
-                  <label class="label-control">Suplier</label><br>
+                  <h4>Suplier</h4> 
                   <selectize-component  id="suplier" name="suplier" ref='suplier'> 
                       <option ></option>
                   </selectize-component>
@@ -62,8 +62,7 @@
 
                 <div class="col-md-6 col-xs-12"> 
                 <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
-                 <label class="label-control">Kas</label><br>
-
+                  <h4>Kas</h4> 
                   <selectize-component id="cara_bayar" name="cara_bayar" ref='cara_bayar'> 
                   <option ></option>
                   </selectize-component>
@@ -71,12 +70,13 @@
                 </div>
                 </div> 
               </div> 
-
             <!--- TOMBOL SELESAI --> 
-            <button type="button" class="btn btn-primary" id="btnSelesai"  data-toggle="modal"><i class="material-icons">send</i> Selesai </button> 
-
-            <button type="submit" class="btn btn-danger" id="btnBatal"  ><i class="material-icons">cancel</i> Batal </button> 
           </div> 
+           <div class="card-footer">
+                <button type="button" class="btn btn-success" id="bayar"  ><i class="material-icons">payment</i>Bayar(F2)</button>
+                <button type="submit" class="btn btn-danger" id="btnBatal"  ><i class="material-icons">cancel</i> Batal(F3) </button>
+          </div>
+
         </div>             
       </div><!-- COL SM 4 --> 
     </div><!-- ROW --> 
