@@ -25,7 +25,7 @@ class Hpp extends Model
         $stok_produk = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk),0) - IFNULL(SUM(jumlah_keluar),0) as jumlah_produk')])->where('id_produk', $id_produk)
         ->where('warung_id', Auth::user()->id_warung)->first();
 
-        return $sisa_stok_keluar = $stok_produk->jumlah_produk;
+        return $sisa_stok_keluar = number_format($stok_produk->jumlah_produk, 2, ',', '.');
 
     }
 
@@ -38,7 +38,7 @@ class Hpp extends Model
 
         $prose_total_persedian = $nilai_masuk->total_masuk - $nilai_keluar->total_keluar;
 
-        $total_persedian = number_format($prose_total_persedian, 0, ',', '.');
+        $total_persedian = number_format($prose_total_persedian, 2, ',', '.');
 
         return $total_persedian;
 
@@ -60,9 +60,9 @@ class Hpp extends Model
             $hpp = 0;
         } else {
             $proses_hpp = $total_nilai->total_masuk / $total_nilai->jumlah_masuk;
-            $hpp        = round($proses_hpp, 2);
+            $hpp        = $proses_hpp;
         }
-        return $hpp;
+        return number_format($hpp, 2, ',', '.');
 
     }
 
