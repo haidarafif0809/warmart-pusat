@@ -10,6 +10,7 @@ use App\Pembelian;
 use App\DetailPembelian;   
 use App\Barang;   
 use App\EditTbsPembelian;
+use App\TransaksiKas;
 use App\Kas;   
 use Session; 
 use Auth; 
@@ -298,24 +299,46 @@ public function hapus_tbs_pembelian($id){
         }
 }
 
-//PROSES BATAL TBS PEMBELIAN 
-public function proses_batal_transaksi_pembelian(Request $request){ 
+	//PROSES BATAL TBS PEMBELIAN 
+	public function proses_batal_transaksi_pembelian(Request $request){ 
 
-	if (Auth::user()->id_warung == '') {
-		Auth::logout();
-		return response()->view('error.403');
-	}else{
-		$no_faktur = $request->no_faktur_batal;
-		$data_tbs_pembelian = EditTbsPembelian::where('no_faktur', $no_faktur)->where('warung_id', Auth::user()->id_warung)->delete(); 
+		if (Auth::user()->id_warung == '') {
+			Auth::logout();
+			return response()->view('error.403');
+		}else{
+			$no_faktur = $request->no_faktur_batal;
+			$data_tbs_pembelian = EditTbsPembelian::where('no_faktur', $no_faktur)->where('warung_id', Auth::user()->id_warung)->delete(); 
 
-		return response(200); 
-	}
-}  
+			return response(200); 
+		}
+	}  
 
+    public function total_kas(Request $request)
+    {
+        $session_id            = session()->getId();
+        $total_kas             = TransaksiKas::total_kas($request);
+        $data_produk_pembelian = EditTbsPembelian::where('no_faktur', $request->no_faktur)->where('warung_id', Auth::user()->id_warung);
+        $kas = TransaksiKas::select('jumlah_keluar')->where('no_faktur', $request->no_faktur)->where('warung_id',Auth::user()->id_warung); 
+        if ($kas->count() == 0) {        
+          $jumlah_kas_lama = 0;
+        }else{
+          $jumlah_kas_lama = $kas->first()->jumlah_keluar;
+        }
 
+        $respons['total_kas']             = $total_kas;
+        $respons['data_produk_pembelian'] = $data_produk_pembelian;
+        $respons['jumlah_kas_lama'] = $jumlah_kas_lama;
+        
+        return $respons;
+    }
+        public function cekDataPembelian($id)
+    {
+
+      return  $penjualan = Pembelian::find($id);
+  }
 
     //PROSES SELESAI TRANSAKSI EDIT PEMBELIAN
-public function prosesEditPembelian(Request $request) {
+	public function prosesEditPembelian(Request $request) {
 
 	if (Auth::user()->id_warung == '') {
 		Auth::logout();
@@ -330,25 +353,7 @@ public function prosesEditPembelian(Request $request) {
 
 		$data_produk_pembelian = EditTbsPembelian::where('no_faktur', $no_faktur)->where('warung_id', Auth::user()->id_warung);
 
-		if ($data_produk_pembelian->count() == 0) {
-
-			$pesan_alert = 
-			'<div class="container-fluid">
-			<div class="alert-icon">
-			<i class="material-icons">error</i>
-			</div>
-			<b>Gagal : Belum Ada Produk Yang Diinputkan</b>
-			</div>';
-
-			Session::flash("flash_notification", [
-				"level"     => "danger",
-				"message"   => $pesan_alert
-			]);
-
-			return redirect()->back();
-		}
-		else{
-			$data_detail_pembelian = DetailPembelian::where('no_faktur', $no_faktur)->where('warung_id', Auth::user()->id_warung)->get();
+		$data_detail_pembelian = DetailPembelian::where('no_faktur', $no_faktur)->where('warung_id', Auth::user()->id_warung)->get();
 		//HAPUS DETAIL PEMBELIAN
 
 			foreach ($data_produk_pembelian->get() as $data_produk_tbs) {
@@ -420,19 +425,25 @@ public function prosesEditPembelian(Request $request) {
 				$kembalian = 0; 
 			}else{ 
 				$kembalian = $request->kembalian; 
-			} 
+			}
+			if ($pembayaran < $request->total_akhir) {
+                # code...
+                $status_pembelian = 'Hutang';
+            } else {
+                $status_pembelian = 'Tunai';
+            } 
 
 			$update_pembelian = Pembelian::find($request->id_pembelian)->update([			
-				'total'             => str_replace('.','',$request->total_akhir), 
-				'suplier_id'        => $request->suplier_id, 
-				'status_pembelian'  => $request->status_pembelian, 
+				'total'             => $request->total_akhir, 
+				'suplier_id'        => $request->suplier, 
+				'status_pembelian'  => $status_pembelian, 
 				'potongan'          => $request->potongan, 
 				'tunai'             => $pembayaran, 
-				'kembalian'         => str_replace('.','',$kembalian), 
-				'kredit'            => str_replace('.','',$request->kredit), 
-				'nilai_kredit'      => str_replace('.','',$request->kredit), 
-				'cara_bayar'        => $request->id_cara_bayar, 
-				'status_beli_awal'  => $request->status_pembelian, 
+				'kembalian'         => $kembalian, 
+				'kredit'            => $request->kredit, 
+				'nilai_kredit'      => $request->kredit, 
+				'cara_bayar'        => $request->cara_bayar, 
+				'status_beli_awal'  => $status_pembelian, 
 				'tanggal_jt_tempo'  => $request->jatuh_tempo, 
 				'keterangan'        => $request->keterangan, 
 				'ppn'               => $request->ppn
@@ -441,21 +452,9 @@ public function prosesEditPembelian(Request $request) {
           //HAPUS TBS PEMBELIAN 
 			$data_produk_pembelian->delete(); 
 
-			$pesan_alert = 
-			'<div class="container-fluid">
-			<div class="alert-icon">
-			<i class="material-icons">check</i>
-			</div>
-			<b>Sukses : Berhasil Melakukan Edit Transaksi Pembelian Faktur "'.$no_faktur.'"</b>
-			</div>';
-
-			Session::flash("flash_notification", [
-				"level"     => "success",
-				"message"   => $pesan_alert
-			]);
 			DB::commit(); 
-			return redirect()->route('pembelian.index');
-		}        
+			return response(200);
+		        
 
 	}
 }

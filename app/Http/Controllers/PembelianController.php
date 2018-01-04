@@ -343,7 +343,7 @@ class PembelianController extends Controller
         $user_warung = Auth::user()->id_warung;
 
         $sum_subtotal = EditTbsPembelian::select(DB::raw('SUM(subtotal) as subtotal'))->where('no_faktur', $pembelian->no_faktur)->where('warung_id', Auth::user()->id_warung)->first();
-        $subtotal     = number_format($sum_subtotal->subtotal, 2, ',', '.');
+        $subtotal     = $sum_subtotal->subtotal;
 
         $kas_default = Kas::where('warung_id', Auth::user()->id_warung)->where('default_kas', 1)->count();
         $kas_pilih   = Kas::where('warung_id', Auth::user()->id_warung)->where('default_kas', 1)->first();
