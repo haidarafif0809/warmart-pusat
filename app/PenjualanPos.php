@@ -52,15 +52,36 @@ class PenjualanPos extends Model
 
     public function getJatuhTempoAttribute()
     {
-     $jatuh_tempo = $this->tanggal_jt_tempo;
-     if ($jatuh_tempo == '') {
-         return "-";
-     }else{
+       $jatuh_tempo = $this->tanggal_jt_tempo;
+       if ($jatuh_tempo == '') {
+           return "-";
+       }else{
         $tanggal       = date($this->tanggal_jt_tempo);
         $date          = date_create($tanggal);
         $date_terbalik = date_format($date, "d/m/Y");
         return $date_terbalik;
     }
+}
+
+public function getTotalJualAttribute()
+{
+    return number_format($this->total, 2, ',', '.');
+}
+public function getPotonganJualAttribute()
+{
+    return number_format($this->potongan, 2, ',', '.');
+}
+public function getTunaiJualAttribute()
+{
+    return number_format($this->tunai, 2, ',', '.');
+}
+public function getKreditJualAttribute()
+{
+    return number_format($this->kredit, 2, ',', '.');
+}
+public function getKembalianJualAttribute()
+{
+    return number_format($this->kembalian, 2, ',', '.');
 }
 public static function no_faktur($warung_id)
 {

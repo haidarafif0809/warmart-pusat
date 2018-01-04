@@ -49,23 +49,23 @@
 													</tr>
 													<tr>
 														<td class="text-primary"><b># Total </b> </td>
-														<td class="text-primary"><b>: {{ new Intl.NumberFormat().format(total) }},00 </b> </td>
+														<td class="text-primary"><b>: {{ total }} </b> </td>
 													</tr>
 													<tr>
 														<td class="text-primary"><b># Potongan </b> </td>
-														<td class="text-primary"><b>: {{ new Intl.NumberFormat().format(potongan) }},00 </b> </td>
+														<td class="text-primary"><b>: {{ potongan }} </b> </td>
 													</tr>
 													<tr>
 														<td class="text-primary"><b># Tunai </b> </td>
-														<td class="text-primary"><b>: {{ new Intl.NumberFormat().format(tunai) }},00 </b> </td>
+														<td class="text-primary"><b>: {{ tunai }} </b> </td>
 													</tr>
 													<tr>
 														<td class="text-primary"><b># Kembalian </b> </td>
-														<td class="text-primary"><b>: {{ new Intl.NumberFormat().format(kembalian) }},0 </b> </td>
+														<td class="text-primary"><b>: {{ kembalian }} </b> </td>
 													</tr>
 													<tr>
 														<td class="text-primary"><b># Piutang </b> </td>
-														<td class="text-primary"><b>: {{ new Intl.NumberFormat().format(piutang) }},0 </b> </td>
+														<td class="text-primary"><b>: {{ piutang }}</b> </td>
 													</tr>
 													<tr>
 														<td class="text-primary"><b># Jatuh Tempo </b> </td>
@@ -128,7 +128,7 @@
 									<td>{{ penjualan.waktu }}</td>
 									<td>{{ penjualan.pelanggan }}</td>
 									<td>{{ penjualan.status_penjualan }}</td>
-									<td align="center"> {{ new Intl.NumberFormat().format(penjualan.total) }},00</td>
+									<td align="center"> {{ penjualan.total }}</td>
 									<td>
 										<div class="dropdown">
 											<button href="#pablo" class="dropdown-toggle btn btn-primary btn-xs" data-toggle="dropdown">Cetak <b class="caret"></b></button>
