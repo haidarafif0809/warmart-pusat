@@ -507,36 +507,36 @@ Route::get('/edit-pembelian/cek-data-tbs-pembelian/{id}', 'EditPembelianControll
     // PEMBELIAN
 
     // HAPUS TBS PEMBELIAN
-    Route::delete('/pembelian/hapus-tbs-pembelian/{id}', [
-        'middleware' => ['auth'],
-        'as'         => 'pembelian.hapus_tbs_pembelian',
-        'uses'       => 'PembelianController@hapus_tbs_pembelian',
-        ]);
+Route::delete('/pembelian/hapus-tbs-pembelian/{id}', [
+    'middleware' => ['auth'],
+    'as'         => 'pembelian.hapus_tbs_pembelian',
+    'uses'       => 'PembelianController@hapus_tbs_pembelian',
+    ]);
 
-    Route::post('/pembelian/batal-transaksi-pembelian/', [
-        'middleware' => ['auth'],
-        'as'         => 'pembelian.batal_transaksi_pembelian',
-        'uses'       => 'PembelianController@proses_batal_transaksi_pembelian',
-        ]);
+Route::post('/pembelian/batal-transaksi-pembelian/', [
+    'middleware' => ['auth'],
+    'as'         => 'pembelian.batal_transaksi_pembelian',
+    'uses'       => 'PembelianController@proses_batal_transaksi_pembelian',
+    ]);
     // DATATABEL DETAIL PEMBELIAN
-    Route::post('pembelian/detail-pembelian', [
-        'middleware' => ['auth'],
-        'as'         => 'datatable_detail.pembelian',
-        'uses'       => 'PembelianController@datatableDetailPembelian',
-        ]);
+Route::post('pembelian/detail-pembelian', [
+    'middleware' => ['auth'],
+    'as'         => 'datatable_detail.pembelian',
+    'uses'       => 'PembelianController@datatableDetailPembelian',
+    ]);
     // DATATABEL DETAIL FAKTUR PEMBELIAN
-    Route::post('pembelian/detail-faktur-pembelian', [
-        'middleware' => ['auth'],
-        'as'         => 'datatable_detail_faktur_beli',
-        'uses'       => 'PembelianController@datatableFakturPembelian',
-        ]);
+Route::post('pembelian/detail-faktur-pembelian', [
+    'middleware' => ['auth'],
+    'as'         => 'datatable_detail_faktur_beli',
+    'uses'       => 'PembelianController@datatableFakturPembelian',
+    ]);
 
     // PROSES FROM EDIT BELI
-    Route::get('/pembelian/proses-form-edit/{id}', [
-        'middleware' => ['auth'],
-        'as'         => 'pembelian.form_edit_beli',
-        'uses'       => 'PembelianController@proses_form_edit',
-        ]);
+Route::get('/pembelian/proses-form-edit/{id}', [
+    'middleware' => ['auth'],
+    'as'         => 'pembelian.form_edit_beli',
+    'uses'       => 'PembelianController@proses_form_edit',
+    ]);
     // END PEMBELIAN
 
 
@@ -607,6 +607,7 @@ Route::post('/laporan-laba-kotor/subtotal-laba-kotor', 'LaporanLabaKotorControll
 Route::post('/laporan-laba-kotor/subtotal-laba-kotor-pesanan', 'LaporanLabaKotorController@subtotalLabaKotorPesanan')->middleware('auth');
 Route::get('/laporan-laba-kotor/download-excel-laba-kotor/{dari_tanggal}/{sampai_tanggal}/{pelanggan}', 'LaporanLabaKotorController@downloadExcel')->middleware('auth');
 Route::get('/laporan-laba-kotor/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{pelanggan}', 'LaporanLabaKotorController@cetakLaporan')->middleware('auth');
+Route::post('/laporan-laba-kotor/total-akhir-laba-kotor', 'LaporanLabaKotorController@totalAkhirLabaKotor')->middleware('auth');
 
 // LABA KOTOR PRODUK VUE.JS
 Route::post('/laporan-laba-kotor-produk/view', 'LaporanLabaKotorProdukController@prosesLaporanLabaKotorProduk')->middleware('auth');

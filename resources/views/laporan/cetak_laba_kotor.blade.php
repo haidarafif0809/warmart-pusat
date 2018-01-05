@@ -76,7 +76,7 @@
 						@foreach ($data_laba_kotor as $data_laba_kotors)
 						<tr>
 							<td class="table1">{{ $data_laba_kotors['laba_kotor']->id }}</td>
-							<td class="table1">{{ $data_laba_kotors['laba_kotor']->created_at }}</td>
+							<td class="table1">{{ date_format($data_laba_kotors['laba_kotor']->created_at, "d M Y") }}</td>
 							<td class="table1">{{ $data_laba_kotors['laba_kotor']->name }}</td>
 							<td class="table1" align='right'>{{ number_format($data_laba_kotors['total'], 0, ',', '.') }}</td>
 							<td class="table1" align='right'>{{ number_format($data_laba_kotors['hpp'], 0, ',', '.') }}</td>
@@ -115,7 +115,7 @@
 						@foreach ($data_laba_kotor_pesanan as $data_laba_kotor_pesanans)
 						<tr>
 							<td class="table1">{{ $data_laba_kotor_pesanans['laba_kotor_pesanan']->id }}</td>
-							<td class="table1">{{ $data_laba_kotor_pesanans['laba_kotor_pesanan']->created_at }}</td>
+							<td class="table1">{{ date_format($data_laba_kotor_pesanans['laba_kotor_pesanan']->created_at, "d M Y") }}</td>
 							<td class="table1">{{ $data_laba_kotor_pesanans['laba_kotor_pesanan']->name }}</td>
 							<td class="table1" align='right'>{{ number_format($data_laba_kotor_pesanans['total'], 0, ',', '.') }}</td>
 							<td class="table1" align='right'>{{ number_format($data_laba_kotor_pesanans['hpp'], 0, ',', '.') }}</td>
