@@ -34,9 +34,9 @@
 </head>
 <style type="text/css">
 
-    .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
-     padding: 1px;
- }
+.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+ padding: 1px;
+}
 
 </style>
 <body>
@@ -146,7 +146,7 @@
                 <i class="material-icons">
                     store
                 </i>
-                Produk
+                <p>Produk</p>
             </router-link>
         </li>
 
@@ -543,6 +543,7 @@
                 <a class="navbar-brand" href="#">
                     Dashboard
                 </a>
+
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
