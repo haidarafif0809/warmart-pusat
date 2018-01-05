@@ -133,7 +133,10 @@ export default {
     },
     filters: {
 	  pemisahTitik: function (value) {
-	    return new Intl.NumberFormat().format(value)
+	  	var angka = [value];
+		var numberFormat = new Intl.NumberFormat('es-ES');
+		var formatted = angka.map(numberFormat.format);
+		return formatted.join('; ');
 	  }
 	},
     methods: {
