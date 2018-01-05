@@ -1,3 +1,9 @@
+<style scoped>
+.pencarian {
+	color: red; 
+	float: right;
+}
+</style>
 <template>
 	<div class="row">
 		<div class="col-md-12">
@@ -67,9 +73,8 @@
 
 
 					<div class=" table-responsive ">
-						<div  align="right">
-							pencarian
-							<input type="text" name="pencarian" v-model="pencarian" placeholder="Kolom Pencarian" >
+						<div class="pencarian">
+							<input type="text" class="form-control pencarian" name="pencarian" v-model="pencarian" placeholder="Kolom Pencarian" >
 						</div>
 
 						<table class="table table-striped table-hover">
