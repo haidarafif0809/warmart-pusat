@@ -8,6 +8,7 @@ use App\DetailPenjualanPos;
 use App\Hpp;
 use Auth;
 use Excel;
+use App\Warung;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -16,6 +17,13 @@ class LaporanLabaKotorProdukController extends Controller
     public function __construct()
     {
         $this->middleware('user-must-warung');
+    }
+
+    public function tanggal($tangal)
+    {
+        $date        = date_create($tangal);
+        $date_format = date_format($date, "d-m-Y");
+        return $date_format;
     }
 
     public function pilihProduk()
@@ -73,6 +81,31 @@ class LaporanLabaKotorProdukController extends Controller
         $response['subtotal_persentase_gpm']        = $subtotal_persentase_gpm;
 
         return $response;
+    }
+
+    public function subtotalLaporanPesanan($sub_hpp_pesanan, $sub_total_penjualan_pesanan)
+    {
+        if ($sub_hpp_pesanan->total_hpp == "" || $sub_total_penjualan_pesanan->subtotal == "" || $sub_hpp_pesanan->total_hpp == 0 || $sub_total_penjualan_pesanan->subtotal == 0) {
+            $subtotal_hpp                   = 0;
+            $subtotal_penjualan             = 0;
+            $subtotal_laba_kotor            = 0;
+            $subtotal_persentase_laba_kotor = 0;
+            $subtotal_persentase_gpm        = 0;
+        } else {
+            $subtotal_hpp                   = $sub_hpp_pesanan->total_hpp;
+            $subtotal_penjualan             = $sub_total_penjualan_pesanan->subtotal;
+            $subtotal_laba_kotor            = $subtotal_penjualan - $subtotal_hpp;
+            $subtotal_persentase_laba_kotor = ($subtotal_laba_kotor * 100) / $subtotal_hpp;
+            $subtotal_persentase_gpm        = ($subtotal_laba_kotor * 100) / $subtotal_penjualan;
+        }
+
+        $response_pesanan['subtotal_hpp']                   = $subtotal_hpp;
+        $response_pesanan['subtotal_penjualan']             = $subtotal_penjualan;
+        $response_pesanan['subtotal_laba_kotor']            = $subtotal_laba_kotor;
+        $response_pesanan['subtotal_persentase_laba_kotor'] = $subtotal_persentase_laba_kotor;
+        $response_pesanan['subtotal_persentase_gpm']        = $subtotal_persentase_gpm;
+
+        return $response_pesanan;
     }
 
 //METHOD UNTUK TABEL PENJUALAN POS (OFLLINE)
@@ -249,7 +282,7 @@ class LaporanLabaKotorProdukController extends Controller
                 $sheet = $this->labelSheet($sheet, $row);
 
                 if ($laporan_laba_kotor->count() > 0) { //MENCEGAH JIKA DATA KOSONG KETIKA DI DOWLOAD, AGAR TIDAK ERROR
-                    
+
                     //LABA KOTOR /PRODUK
                     foreach ($laporan_laba_kotor->get() as $laba_kotor) {
                         $hpp_masuk             = Hpp::select(DB::raw('SUM(total_nilai) as hpp'))->where('id_produk', $laba_kotor->id_produk)->where('jenis_transaksi', 'PenjualanPos')->where('warung_id', Auth::user()->id_warung)->first();
@@ -327,4 +360,69 @@ class LaporanLabaKotorProdukController extends Controller
             });
 })->export('xls');
 }
+
+public function foreachPos($laporan_laba_kotor){
+    $data_laba_kotor = array();
+    foreach ($laporan_laba_kotor as $laba_kotor) {
+        //HPP
+        $hpp_masuk             = Hpp::select(DB::raw('SUM(total_nilai) as hpp'))->where('id_produk', $laba_kotor->id_produk)->where('jenis_transaksi', 'PenjualanPos')->where('warung_id', Auth::user()->id_warung)->first();
+        $total_hpp             = $hpp_masuk->hpp;
+        $total_laba_kotor      = $laba_kotor->subtotal - $total_hpp;
+        $persentase_laba_kotor = ($total_laba_kotor * 100) / $total_hpp;
+        $persentase_gpm        = ($total_laba_kotor * 100) / $laba_kotor->subtotal;
+
+        array_push($data_laba_kotor, ['laba_kotor' => $laba_kotor, 'hpp' => $total_hpp, 'total_laba_kotor' => $total_laba_kotor, 'persentase_laba_kotor' => $persentase_laba_kotor, 'persentase_gpm' => $persentase_gpm]);
+    }
+
+    return $data_laba_kotor;
+}
+
+public function foreachPesanan($laporan_laba_kotor_pesanan){
+    $data_laba_kotor_pesanan = array();
+    foreach ($laporan_laba_kotor_pesanan as $laba_kotor_pesanan) {
+            //HPP
+        $hpp_masuk             = Hpp::select(DB::raw('SUM(total_nilai) as hpp'))->where('id_produk', $laba_kotor_pesanan->id_produk)->where('jenis_transaksi', 'penjualan')->where('warung_id', Auth::user()->id_warung)->first();
+        $total_hpp             = $hpp_masuk->hpp;
+        $total_laba_kotor_pesanan      = $laba_kotor_pesanan->subtotal - $total_hpp;
+        $persentase_laba_kotor_pesanan = ($total_laba_kotor_pesanan * 100) / $total_hpp;
+        $persentase_gpm        = ($total_laba_kotor_pesanan * 100) / $laba_kotor_pesanan->subtotal;
+
+        array_push($data_laba_kotor_pesanan, ['laba_kotor_pesanan' => $laba_kotor_pesanan, 'hpp' => $total_hpp, 'total_laba_kotor_pesanan' => $total_laba_kotor_pesanan, 'persentase_laba_kotor_pesanan' => $persentase_laba_kotor_pesanan, 'persentase_gpm' => $persentase_gpm]);
+    }
+
+    return $data_laba_kotor_pesanan;
+}
+
+public function cetakLaporan(Request $request, $dari_tanggal, $sampai_tanggal, $produk){
+    $request['dari_tanggal']   = $dari_tanggal;
+    $request['sampai_tanggal'] = $sampai_tanggal;
+    $request['produk']      = $produk;
+
+    //PENJUALAN POS
+    $laporan_laba_kotor = DetailPenjualanPos::laporanLabaKotorProdukPos($request)->get();
+
+    $sub_total_penjualan = DetailPenjualanPos::subtotalLaporanLabaKotorProduk($request)->first();
+    $jenis_transaksi = "PenjualanPos";
+    $sub_hpp         = Hpp::hppLaporanLabaKotorProduk($request, $jenis_transaksi)->first();
+    $response = $this->subtotalLaporan($sub_hpp, $sub_total_penjualan);
+
+    $data_laba_kotor = $this->foreachPos($laporan_laba_kotor);
+    //PENJUALAN POS
+
+    //PENJUALAN PESANAN
+    $laporan_laba_kotor_pesanan = DetailPenjualan::laporanLabaKotorProdukPesanan($request)->get();
+
+    $sub_total_penjualan_pesanan = DetailPenjualan::subtotalLaporanLabaKotorProdukPesanan($request)->first();
+    $jenis_transaksi = "penjualan";
+    $sub_hpp_pesanan         = Hpp::hppLaporanLabaKotorProduk($request, $jenis_transaksi)->first();
+    $response_pesanan = $this->subtotalLaporanPesanan($sub_hpp_pesanan, $sub_total_penjualan_pesanan);
+
+    $data_laba_kotor_pesanan = $this->foreachPesanan($laporan_laba_kotor_pesanan);
+    //PENJUALAN PESANAN
+
+    $data_warung = Warung::where('id', Auth::user()->id_warung)->first();
+
+    return view('laporan.cetak_laba_kotor_produk', ['data_laba_kotor' => $data_laba_kotor ,'data_laba_kotor_pesanan' => $data_laba_kotor_pesanan ,'data_warung' => $data_warung ,'subtotal_hpp' => $response['subtotal_hpp'] ,'subtotal_penjualan' => $response['subtotal_penjualan'] ,'subtotal_laba_kotor' => $response['subtotal_laba_kotor'] ,'subtotal_persentase_laba_kotor' => $response['subtotal_persentase_laba_kotor'] ,'subtotal_persentase_gpm' => $response['subtotal_persentase_gpm'] ,'subtotal_hpp_pesanan' => $response_pesanan['subtotal_hpp'] ,'subtotal_penjualan_pesanan' => $response_pesanan['subtotal_penjualan'] ,'subtotal_laba_kotor_pesanan' => $response_pesanan['subtotal_laba_kotor'] ,'subtotal_persentase_laba_kotor_pesanan' => $response_pesanan['subtotal_persentase_laba_kotor'] ,'subtotal_persentase_gpm_pesanan' => $response_pesanan['subtotal_persentase_gpm'] ,'dari_tanggal' => $this->tanggal($dari_tanggal),'sampai_tanggal' => $this->tanggal($sampai_tanggal),'produk' => $produk])->with(compact('html'));
+}
+
 }

@@ -616,7 +616,8 @@ Route::post('/laporan-laba-kotor-produk/pencarian-pesanan', 'LaporanLabaKotorPro
 Route::get('/laporan-laba-kotor-produk/pilih-produk', 'LaporanLabaKotorProdukController@pilihProduk')->middleware('auth');
 Route::post('/laporan-laba-kotor-produk/subtotal-laba-kotor-produk', 'LaporanLabaKotorProdukController@subtotalLabaKotorProduk')->middleware('auth');
 Route::post('/laporan-laba-kotor-produk/subtotal-laba-kotor-produk-pesanan', 'LaporanLabaKotorProdukController@subtotalLabaKotorProdukPesanan')->middleware('auth');
-Route::get('/laporan-laba-kotor-produk/download-excel-laba-kotor/{dari_tanggal}/{sampai_tanggal}/{pelanggan}', 'LaporanLabaKotorProdukController@downloadExcel')->middleware('auth');
+Route::get('/laporan-laba-kotor-produk/download-excel-laba-kotor/{dari_tanggal}/{sampai_tanggal}/{produk}', 'LaporanLabaKotorProdukController@downloadExcel')->middleware('auth');
+Route::get('/laporan-laba-kotor-produk/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{produk}', 'LaporanLabaKotorProdukController@cetakLaporan')->middleware('auth');
 
 // LAPORAN MUTASI STOK VUE.JS
 Route::post('/laporan-mutasi-stok/view', 'LaporanMutasiStokController@prosesLaporanMutasiStok')->middleware('auth');

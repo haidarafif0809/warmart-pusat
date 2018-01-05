@@ -142,6 +142,10 @@
 					<a v-if="filter.produk == '' || filter.produk == null" :href="urlDownloadExcel+'/'+filter.dari_tanggal+'/'+filter.sampai_tanggal+'/0'" class='btn btn-warning' id="btnExcel" target='blank' :style="'display: none'"><i class="material-icons">file_download</i> Download Excel</a>
 					<a v-else :href="urlDownloadExcel+'/'+filter.dari_tanggal+'/'+filter.sampai_tanggal+'/'+filter.produk" class='btn btn-warning' id="btnExcel" target='blank' :style="'display: none'"><i class="material-icons">file_download</i> Download Excel</a>
 
+					<!--CETAK LAPORAN-->
+					<a v-if="filter.produk == '' || filter.produk == null" :href="urlCetak+'/'+filter.dari_tanggal+'/'+filter.sampai_tanggal+'/0'" class='btn btn-success' id="btnCetak" target='blank' :style="'display: none'"><i class="material-icons">print</i> Cetak Laporan</a>
+					<a v-else :href="urlCetak+'/'+filter.dari_tanggal+'/'+filter.sampai_tanggal+'/'+filter.produk" class='btn btn-success' id="btnCetak" target='blank' :style="'display: none'"><i class="material-icons">print</i> Cetak Laporan</a>
+
 						<vue-simple-spinner v-if="loadingPesanan"></vue-simple-spinner>
 						<div align="right"><pagination :data="labaKotorPesananData" v-on:pagination-change-page="prosesLaporanPesanan" :limit="4"></pagination></div>
 				</div>
@@ -171,6 +175,7 @@ export default {
             },
 			url : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-laba-kotor-produk"),
 			urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-laba-kotor-produk/download-excel-laba-kotor"),
+			urlCetak : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-laba-kotor-produk/cetak-laporan"),
 			pencarian_pos: '',
 			pencarian_pesanan: '',
             placeholder_produk: {
@@ -194,8 +199,11 @@ export default {
         }
     },
     filters: {
-	  pemisahTitik: function (value) {
-	    return new Intl.NumberFormat().format(value)
+	  pemisahTitik: function (value) {	    
+	  	var angka = [value];
+		var numberFormat = new Intl.NumberFormat('es-ES');
+		var formatted = angka.map(numberFormat.format);
+		return formatted.join('; ');
 	  },
 	  tanggal: function (value) {
 	    return moment(String(value)).format('DD/MM/YYYY hh:mm')
@@ -209,6 +217,7 @@ export default {
     		app.totalLabaKotor();
     		app.totalLabaKotorPesanan();
     		$("#btnExcel").show();
+    		$("#btnCetak").show();
     	},
     	prosesLaporan(page) {
     		var app = this;	
