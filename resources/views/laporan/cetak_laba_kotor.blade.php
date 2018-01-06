@@ -44,7 +44,7 @@ function pemisahTitik($angka)
 	<div class="container">
 
 		<div class="row">
-			<div class="col-md-12"><h4><b><center> LAPORAN LABA KOTOR </center></b></h4><hr style="margin: 0px 0px"></div>
+			<div class="col-md-12"><h4><b><center> LAPORAN LABA KOTOR /PELANGGAN </center></b></h4><hr style="margin: 0px 0px"></div>
 			<div class="col-md-9">
 				<table>
 					<tbody>
