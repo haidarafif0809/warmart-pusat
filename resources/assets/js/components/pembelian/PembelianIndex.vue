@@ -135,7 +135,7 @@
 
 					<div class=" table-responsive ">
 						<div class="pencarian">
-							<input type="text" class="form-control pencarian" name="pencarian" v-model="pencarian" placeholder="Kolom Pencarian" >
+							<input type="text" class="form-control pencarian" autocomplete="off" name="pencarian" v-model="pencarian" placeholder="Kolom Pencarian" >
 						</div>
 
 						<table class="table table-striped table-hover">
@@ -183,7 +183,7 @@
 						<div align="right"><pagination :data="pembelianData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
 
 					</div>
-
+					 <p style="color: red; font-style: italic;">*Note : Klik Kolom No Transaksi, Untuk Melihat Detail Transaksi Pembelian .</p> 
 				</div>
 			</div>
 

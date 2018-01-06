@@ -83,7 +83,8 @@ class PembelianController extends Controller
 
         $search = $request->search;
 
-        $pembelian = Pembelian::select('pembelians.id as id', 'pembelians.no_faktur as no_faktur', 'supliers.nama_suplier as nama_suplier', 'pembelians.created_at as created_at', 'pembelians.status_pembelian as status_pembelian', 'pembelians.total as total')->leftJoin('supliers', 'pembelians.suplier_id', '=', 'supliers.id')->where('pembelians.warung_id', Auth::user()->id_warung)->orderBy('pembelians.id')
+        $pembelian = Pembelian::select('pembelians.id as id', 'pembelians.no_faktur as no_faktur', 'supliers.nama_suplier as nama_suplier', 'pembelians.created_at as created_at', 'pembelians.status_pembelian as status_pembelian', 'pembelians.total as total','kas.nama_kas as nama_kas','pembelians.potongan as potongan','pembelians.tunai as tunai','pembelians.kembalian as kembalian','pembelians.tanggal_jt_tempo as tanggal_jt_tempo','users.name as name')->leftJoin('supliers', 'pembelians.suplier_id', '=', 'supliers.id')->leftJoin('kas','pembelians.cara_bayar','=','kas.id')->leftJoin('users','pembelians.created_by','=','users.id')
+            ->where('pembelians.warung_id', Auth::user()->id_warung)->orderBy('pembelians.id')
             ->where(function ($query) use ($search) {
                 // search
                 $query->where('pembelians.status_pembelian', 'LIKE', $search . '%')
@@ -96,10 +97,17 @@ class PembelianController extends Controller
             array_push($array, [
                 'id'               => $pembelians->id,
                 'no_faktur'        => $pembelians->no_faktur,
-                'waktu'            => $pembelians->getWaktuAttribute(),
+                'waktu'            => $pembelians->Waktu,
                 'suplier'          => $pembelians->nama_suplier,
                 'status_pembelian' => $pembelians->status_pembelian,
-                'total'            => $pembelians->total]);
+                'total'            => $pembelians->getTotalSeparator(),
+                'kas'               => $pembelians->nama_kas,
+                'potongan'          => $pembelians->PemisahPotongan,
+                'tunai'             => $pembelians->PemisahTunai,
+                'kembalian'         => $pembelians->PemisahKredit,
+                'jatuh_tempo'       => $pembelians->JatuhTempo,
+                'user_buat'         => $pembelians->name
+            ]);
         }
 
         //DATA PAGINATION
