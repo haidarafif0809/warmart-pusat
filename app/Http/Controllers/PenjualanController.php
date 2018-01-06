@@ -91,70 +91,77 @@ class PenjualanController extends Controller
         $array         = array();
 
         foreach ($penjualan as $penjualans) {
-            array_push($array, [
-                'id' => $penjualans->id,
-                'waktu'    => $penjualans->Waktu,
-                'pelanggan'     => $penjualans->pelanggan->name,
-                'status_penjualan'         => $penjualans->status_penjualan,
-                'total'         => $penjualans->TotalJual,
-                'kas'   => $penjualans->kas->nama_kas,
-                'potongan' => $penjualans->PotonganJual,
-                'tunai' => $penjualans->TunaiJual,
-                'kembalian' => $penjualans->KembalianJual,
-                'piutang' => $penjualans->KreditJual,
-                'jatuh_tempo' => $penjualans->JatuhTempo,
-                'user_buat' => $penjualans->user_buat->name,
-                'user_edit' => $penjualans->user_edit->name,
-                'waktu_edit' => $penjualans->WaktuEdit
-            ]);
-        }
 
-        $url     = '/penjualan/view';
-        $respons = $this->paginationData($penjualan, $array, $url);
+            if ($penjualans->pelanggan_id == 'umum') {
+              $pelanggan = 'Umum';
+          }else{
+              $pelanggan = $penjualans->pelanggan->name;
+          }
 
-        return response()->json($respons);
-    }
-
-    public function pencarian(Request $request)
-    {
-        $user_warung   = Auth::user()->id_warung;
-        $penjualan = PenjualanPos::Pencarian($user_warung,$request)->paginate(10);
-        $array = array();
-        foreach ($penjualan as $penjualans) {
-
-            $jatuh_tempo = $penjualans['jatuh_tempoo'];
-            if ($jatuh_tempo == '' OR $jatuh_tempo == NULL) {
-             $jatuh_tempo = "-";
-         }
-
-         array_push($array, [
-            'id' => $penjualans['id'],
-            'waktu'    => $penjualans['waktu_jual'],
-            'pelanggan'         => $penjualans['pelanggan'],
-            'status_penjualan'     => $penjualans['status_penjualan'],
-            'total'         => $penjualans['total'],
-            'kas'   => $penjualans['nama_kas'],
-            'potongan' => $penjualans['potongan'],
-            'tunai' => $penjualans['tunai'],
-            'kembalian' => $penjualans['kembalian'],
-            'piutang' => $penjualans['nilai_kredit'],
-            'jatuh_tempo' => $jatuh_tempo,
-            'user_buat' => $penjualans['user_buat'],
-            'user_edit' => $penjualans['user_edit'],
-            'waktu_edit' => $penjualans['waktu_edit']
+          array_push($array, [
+            'id' => $penjualans->id,
+            'waktu'    => $penjualans->Waktu,
+            'pelanggan'     => $pelanggan,
+            'status_penjualan'         => $penjualans->status_penjualan,
+            'total'         => $penjualans->TotalJual,
+            'kas'   => $penjualans->kas->nama_kas,
+            'potongan' => $penjualans->PotonganJual,
+            'tunai' => $penjualans->TunaiJual,
+            'kembalian' => $penjualans->KembalianJual,
+            'piutang' => $penjualans->KreditJual,
+            'jatuh_tempo' => $penjualans->JatuhTempo,
+            'user_buat' => $penjualans->user_buat->name,
+            'user_edit' => $penjualans->user_edit->name,
+            'waktu_edit' => $penjualans->WaktuEdit
         ]);
+      }
+
+      $url     = '/penjualan/view';
+      $respons = $this->paginationData($penjualan, $array, $url);
+
+      return response()->json($respons);
+  }
+
+  public function pencarian(Request $request)
+  {
+    $user_warung   = Auth::user()->id_warung;
+    $penjualan = PenjualanPos::Pencarian($user_warung,$request)->paginate(10);
+    $array = array();
+    foreach ($penjualan as $penjualans) {
+
+        $jatuh_tempo = $penjualans['jatuh_tempoo'];
+        if ($jatuh_tempo == '' OR $jatuh_tempo == NULL) {
+         $jatuh_tempo = "-";
      }
 
-     $url    = '/penjualan/pencarian';
-     $search = $request->search;
-
-     $respons = $this->paginationPencarianData($penjualan, $array, $url, $search);
-
-     return response()->json($respons);
+     array_push($array, [
+        'id' => $penjualans['id'],
+        'waktu'    => $penjualans['waktu_jual'],
+        'pelanggan'         => $penjualans['pelanggan'],
+        'status_penjualan'     => $penjualans['status_penjualan'],
+        'total'         => $penjualans['total'],
+        'kas'   => $penjualans['nama_kas'],
+        'potongan' => $penjualans['potongan'],
+        'tunai' => $penjualans['tunai'],
+        'kembalian' => $penjualans['kembalian'],
+        'piutang' => $penjualans['nilai_kredit'],
+        'jatuh_tempo' => $jatuh_tempo,
+        'user_buat' => $penjualans['user_buat'],
+        'user_edit' => $penjualans['user_edit'],
+        'waktu_edit' => $penjualans['waktu_edit']
+    ]);
  }
 
- public function viewDetailPenjualan($id)
- {
+ $url    = '/penjualan/pencarian';
+ $search = $request->search;
+
+ $respons = $this->paginationPencarianData($penjualan, $array, $url, $search);
+
+ return response()->json($respons);
+}
+
+public function viewDetailPenjualan($id)
+{
     $user_warung   = Auth::user()->id_warung;
     $detail_penjualan = DetailPenjualanPos::with(['produk'])->where('warung_id', $user_warung)->where('id_penjualan_pos', $id)->orderBy('id_detail_penjualan_pos', 'desc')->paginate(10);
     $array         = array();
@@ -976,30 +983,46 @@ public function cetakBesar($id){
 
     $penjualan = PenjualanPos::QueryCetak($id)->first();
 
-    $detail_penjualan = DetailPenjualanPos::with('produk')->where('id_penjualan_pos',$penjualan['id'])->get();
-    $terbilang = $this->kekata($penjualan->total);
-    $subtotal = 0;
-    foreach ($detail_penjualan as $detail_penjualans) {
-        $subtotal += $detail_penjualans->subtotal;
 
-    }
+    if ($penjualan['pelanggan_id'] == '0') {
+        $nama_pelanggan = 'Umum';
+        $alamat_pelanggan = '-';
+    }else{
+       $nama_pelanggan = $penjualan['pelanggan'];
+       $alamat_pelanggan = $penjualan['alamat_pelanggan'];
+   }
 
-    return view('penjualan.cetak_besar',['penjualan'=> $penjualan,'detail_penjualan'=>$detail_penjualan,'subtotal'=>$subtotal,'terbilang'=>$terbilang])->with(compact('html'));
+   $detail_penjualan = DetailPenjualanPos::with('produk')->where('id_penjualan_pos',$penjualan['id'])->get();
+   $terbilang = $this->kekata($penjualan->total);
+   $subtotal = 0;
+   foreach ($detail_penjualan as $detail_penjualans) {
+    $subtotal += $detail_penjualans->subtotal;
+
+}
+
+return view('penjualan.cetak_besar',['penjualan'=> $penjualan,'detail_penjualan'=>$detail_penjualan,'subtotal'=>$subtotal,'terbilang'=>$terbilang,'nama_pelanggan'=>$nama_pelanggan,'alamat_pelanggan'=>$alamat_pelanggan])->with(compact('html'));
 }
 
 public function cetakKecil($id){
 
     $penjualan = PenjualanPos::QueryCetak($id)->first();
+    
+    if ($penjualan['pelanggan_id'] == '0') {
+        $nama_pelanggan = 'Umum';
+    }else{
+       $nama_pelanggan = $penjualan['pelanggan'];
+   }
 
-    $detail_penjualan = DetailPenjualanPos::with('produk')->where('id_penjualan_pos',$penjualan['id'])->get();
+   $detail_penjualan = DetailPenjualanPos::with('produk')->where('id_penjualan_pos',$penjualan['id'])->get();
+   $potongan = $penjualan['potongan'];
+   $subtotal = 0;
+   foreach ($detail_penjualan as $detail_penjualans) {
+    $subtotal += $detail_penjualans->jumlah_produk * $detail_penjualans->harga_produk;
+    $potongan += $detail_penjualans->potongan;
 
-    $subtotal = 0;
-    foreach ($detail_penjualan as $detail_penjualans) {
-        $subtotal += $detail_penjualans->subtotal;
+}
 
-    }
-
-    return view('penjualan.cetak_kecil',['penjualan'=> $penjualan,'detail_penjualan'=>$detail_penjualan,'subtotal'=>$subtotal])->with(compact('html'));
+return view('penjualan.cetak_kecil',['penjualan'=> $penjualan,'detail_penjualan'=>$detail_penjualan,'subtotal'=>$subtotal,'nama_pelanggan'=>$nama_pelanggan,'potongan'=>$potongan])->with(compact('html'));
 }
 
 public function kekata($x) {
