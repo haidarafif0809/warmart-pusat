@@ -54,6 +54,19 @@ class Pembelian extends Model
         return $total;
     }
 
+        public function getJatuhTempoAttribute()
+    {
+       $jatuh_tempo = $this->tanggal_jt_tempo;
+       if ($jatuh_tempo == '') {
+           return "-";
+       }else{
+        $tanggal       = date($this->tanggal_jt_tempo);
+        $date          = date_create($tanggal);
+        $date_terbalik = date_format($date, "d/m/Y");
+        return $date_terbalik;
+    }
+}
+
     public static function no_faktur($warung_id)
     {
 

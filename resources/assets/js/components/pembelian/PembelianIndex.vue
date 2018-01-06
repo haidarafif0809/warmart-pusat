@@ -1,3 +1,9 @@
+<style scoped>
+.pencarian {
+	color: red; 
+	float: right;
+}
+</style>
 <template>
 	<div class="row">
 		<div class="col-md-12">
@@ -65,11 +71,71 @@
 						<p> <router-link :to="{name: 'createPembelian'}" class="btn btn-primary">Tambah Pembelian</router-link></p>
 					</div>
 
+					<div class="modal" id="modal_detail_transaksi" role="dialog" data-backdrop=""> 
+						<div class="modal-dialog"> 
+							<!-- Modal content--> 
+							<div class="modal-content"> 
+								<div class="modal-header"> 
+									<button type="button" class="close" v-on:click="closeModal()"> <i class="material-icons">close</i></button> 
+									<h4 class="modal-title"> 
+										<div class="alert-icon"> 
+											<b>Detail Pembelian #{{no_faktur}}</b> 
+										</div> 
+									</h4> 
+								</div> 
+								<form class="form-horizontal" > 
+									<div class="modal-body"> 
+										<div class="card" style="margin-bottom:1px; margin-top:1px;">
+
+											<table class="table" style="margin-bottom:10px; margin-top:10px; margin-right:10px; margin-left:10px;">
+
+												<tbody style="margin-bottom:10px; margin-top:10px; margin-right:10px; margin-left:10px;">
+													<tr>
+														<td class="text-primary"><b># Kas </b> </td>
+														<td class="text-primary"><b>: {{kas}} </b> </td>
+													</tr>
+													<tr>
+														<td class="text-primary"><b># Total </b> </td>
+														<td class="text-primary"><b>: {{ total }} </b> </td>
+													</tr>
+													<tr>
+														<td class="text-primary"><b># Potongan </b> </td>
+														<td class="text-primary"><b>: {{ potongan }} </b> </td>
+													</tr>
+													<tr>
+														<td class="text-primary"><b># Tunai </b> </td>
+														<td class="text-primary"><b>: {{ tunai }} </b> </td>
+													</tr>
+													<tr>
+														<td class="text-primary"><b># Kembalian </b> </td>
+														<td class="text-primary"><b>: {{ kembalian }} </b> </td>
+													</tr>
+													<tr>
+														<td class="text-primary"><b># Jatuh Tempo </b> </td>
+														<td class="text-primary"><b>: {{jatuh_tempo}} </b> </td>
+													</tr>
+													<tr>
+														<td class="text-primary"><b># User Buat </b> </td>
+														<td class="text-primary"><b>: {{user_buat}} </b> </td>
+													</tr>
+												</tbody>
+											</table>  
+
+										</div> 
+									</div>
+									<div class="modal-footer">  
+										<button type="button" class="btn btn-default" v-on:click="closeModal()" v-shortkey.push="['esc']" @shortkey="closeModal()"><i class="material-icons">close</i> Tutup(Esc)</button>
+									</div> 
+								</form>
+							</div>       
+						</div> 
+					</div> 
+					<!-- / MODAL TOMBOL SELESAI --> 
+
 
 					<div class=" table-responsive ">
-						<div  align="right">
-							pencarian
-							<input type="text" name="pencarian" v-model="pencarian" placeholder="Kolom Pencarian" >
+						<div class="pencarian">
+							<input type="text" class="form-control pencarian" autocomplete="off" name="pencarian" v-model="pencarian" placeholder="Kolom Pencarian" >
 						</div>
 
 						<table class="table table-striped table-hover">
@@ -79,26 +145,31 @@
 									<th>Waktu</th>
 									<th>Suplier</th>
 									<th>Status</th>
-									<th>Total</th>
-									<th>Aksi</th>
+									<th style="text-align:right;">Total</th>
+									<th style="text-align:right;">Edit</th>
+									<th style="text-align:right;">Detail</th>
+									<th style="text-align:right;">Delete</th>
 								</tr>
 							</thead>
 							<tbody v-if="pembelian.length > 0 && loading == false"  class="data-ada">
 								<tr v-for="pembelians, index in pembelian" >
 
-									<td>{{ pembelians.no_faktur }}</td>
+									<td>
+										<a href="#pembelian" v-bind:id="'edit-' + pembelians.id" v-on:click="detailTransaksi(pembelians.no_faktur,pembelians.total,pembelians.potongan,
+										pembelians.tunai,pembelians.kembalian,pembelians.jatuh_tempo,pembelians.kas,pembelians.user_buat,pembelians.status_pembelian)">{{ pembelians.no_faktur }}</a>
+									</td>
 									<td>{{ pembelians.waktu }}</td>
 									<td>{{ pembelians.suplier }}</td>
 									<td>{{ pembelians.status_pembelian }}</td>
-									<td>Rp. {{ pembelians.total }}</td>
-									<td><router-link :to="{name: 'editPembelianProses', params: {id: pembelians.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + pembelians.id" >
+									<td style="text-align:right;" >Rp. {{ pembelians.total }}</td>
+									<td style="text-align:right;"><router-link :to="{name: 'editPembelianProses', params: {id: pembelians.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + pembelians.id" >
 									Edit </router-link> </td>
-									<td>
-										<button type="button" class="btn btn-xs btn-success btn-detail" id="btnDetail" data-toggle="modal" data-target="#data_detail" 
+									<td style="text-align:right;">
+										<button  type="button" class="btn btn-xs btn-success btn-detail" id="btnDetail" data-toggle="modal" data-target="#data_detail" 
 										v-on:click="detailModalPembelian(pembelians.id,index,pembelians.no_faktur)" >Detail</button>
 									</td>
-									<td> 
-										<a href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + pembelians.id" v-on:click="deleteEntry(pembelians.id, index,pembelians.no_faktur)">Delete</a>
+									<td style="text-align:right;"> 
+										<a  href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + pembelians.id" v-on:click="deleteEntry(pembelians.id, index,pembelians.no_faktur)">Delete</a>
 									</td>
 								</tr>
 							</tbody>					
@@ -112,7 +183,7 @@
 						<div align="right"><pagination :data="pembelianData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
 
 					</div>
-
+					 <p style="color: red; font-style: italic;">*Note : Klik Kolom No Transaksi, Untuk Melihat Detail Transaksi Pembelian .</p> 
 				</div>
 			</div>
 
@@ -132,6 +203,14 @@ export default {
 			url : window.location.origin+(window.location.pathname).replace("dashboard", "pembelian"),
 			pencarian: '',
 			loading: true,
+			no_faktur : 0,
+			kas : '',
+			total : 0,
+			potongan : 0,
+			tunai : 0,
+			kembalian : 0,
+			jatuh_tempo : '',
+			user_buat : '',
 		}
 	},
 	mounted() {
@@ -229,7 +308,26 @@ export default {
                 app.loading = false;
                 alert("Tidak Dapat Memuat Detail Pesanan");
             });
-        }
+        },
+        detailTransaksi(no_faktur,total,potongan,tunai,kembalian,jatuh_tempo,kas,user_buat,status_pembelian){
+		this.no_faktur = no_faktur
+		this.kas = kas
+		this.total = total		
+		this.potongan = potongan
+		this.tunai = tunai
+		this.kembalian = kembalian
+      	 if (status_pembelian == 'Tunai') {
+           this.jatuh_tempo = "-";
+       	}else{
+		this.jatuh_tempo = jatuh_tempo
+   		 }
+		this.user_buat = user_buat
+		$("#modal_detail_transaksi").show()
+
+	},
+		closeModal(){
+		$("#modal_detail_transaksi").hide();
+	},
     }
 }
 </script>

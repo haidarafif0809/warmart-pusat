@@ -33,7 +33,7 @@
                             <label for="nama_kas" class="col-md-2 control-label">Tampil Transaksi</label>
                                 <div class="togglebutton col-md-4">
                                 <label>
-                                    <input type="checkbox" v-model="kas.status_kas" value="1" name="status_kas" id="status_kas"> <b> *Note : kiri = (tidak) || kanan : (ya)</b>
+                                   <b>No</b>  <input type="checkbox" v-model="kas.status_kas" value="1" name="status_kas" id="status_kas"><b>Yes</b>
                                 </label>
                             </div>
                         </div>
@@ -41,7 +41,7 @@
                             <label for="nama_kas" class="col-md-2 control-label">Default Kas</label>
                                 <div class="togglebutton col-md-4">
                                 <label>
-                                    <input type="checkbox" v-on:change="defaultKas()" v-model="kas.default_kas" value="1" name="default_kas" id="default_kas"> <b> *Note : kiri = (tidak) || kanan : (ya)</b>
+                                    <b>No</b>  <input type="checkbox" v-on:change="defaultKas()" v-model="kas.default_kas" value="1" name="default_kas" id="default_kas"><b>Yes</b>
                                 </label>
                             </div>
                     </div>

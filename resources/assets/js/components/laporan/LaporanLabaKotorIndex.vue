@@ -144,6 +144,22 @@
 							</tbody>
 						</table>
 					</div><!--RESPONSIVE-->
+						<table class="table table-striped table-hover">
+							<tbody v-if="labaKotorPesanan.length > 0 && labaKotor.length > 0 && loadingAkhir == false"  class="data-ada">
+								<tr style="color:red">
+
+									<td>TOTAL</td>
+									<td></td>
+									<td></td>
+									<td align="right">{{ totalAkhir.total_penjualan | pemisahTitik }}</td>
+									<td align="right">{{ totalAkhir.total_hpp | pemisahTitik }}</td>
+									<td align="right">{{ totalAkhir.total_laba_kotor | pemisahTitik }}</td>
+									<td align="right">{{ totalAkhir.total_potongan | pemisahTitik }}</td>
+									<td align="right">{{ totalAkhir.total_laba_jual | pemisahTitik }}</td>
+
+								</tr>
+							</tbody>
+						</table>
 					<!--DOWNLOAD EXCEL-->
 					<a v-if="filter.pelanggan == '' || filter.pelanggan == null" :href="urlDownloadExcel+'/'+filter.dari_tanggal+'/'+filter.sampai_tanggal+'/0'" class='btn btn-warning' id="btnExcel" target='blank' :style="'display: none'"><i class="material-icons">file_download</i> Download Excel</a>
 					<a v-else :href="urlDownloadExcel+'/'+filter.dari_tanggal+'/'+filter.sampai_tanggal+'/'+filter.pelanggan" class='btn btn-warning' id="btnExcel" target='blank' :style="'display: none'"><i class="material-icons">file_download</i> Download Excel</a>
@@ -174,6 +190,7 @@ export default {
 			labaKotorPesanan: [],
 			labaKotorPesananData: {},
 			subtotalLabaKotorPesanan: {},
+			totalAkhir: {},
 			filter: {
 				dari_tanggal: '',
 				sampai_tanggal: '',
@@ -189,6 +206,7 @@ export default {
             },
 			loading: false,
 			loadingPesanan: false,
+			loadingAkhir: false,
 		}
 	},
 	mounted() {
@@ -206,7 +224,10 @@ export default {
     },
     filters: {
 	  pemisahTitik: function (value) {
-	    return new Intl.NumberFormat().format(value)
+	  	var angka = [value];
+		var numberFormat = new Intl.NumberFormat('es-ES');
+		var formatted = angka.map(numberFormat.format);
+		return formatted.join('; ');
 	  },
 	  tanggal: function (value) {
 	    return moment(String(value)).format('DD/MM/YYYY hh:mm')
@@ -219,6 +240,7 @@ export default {
     		app.prosesLaporanPesanan();
     		app.totalLabaKotor();
     		app.totalLabaKotorPesanan();
+    		app.totalAkhirLabaKotor();
     		$("#btnExcel").show();
     		$("#btnCetak").show();
     	},
@@ -326,6 +348,22 @@ export default {
     		.then(function (resp) {
     			app.subtotalLabaKotorPesanan = resp.data;
     			app.loadingPesanan = false
+    		})
+    		.catch(function (resp) {
+    			console.log(resp);
+    			alert("Tidak Dapat Memuat Subtotal Laba Kotor");
+    		});
+    	},
+      totalAkhirLabaKotor() {
+    		var app = this;	
+    		var newFilter = app.filter;
+
+    		app.loading = true,
+    		axios.post(app.url+'/total-akhir-laba-kotor', newFilter)
+    		.then(function (resp) {
+    			app.totalAkhir = resp.data;
+    			app.loadingAkhir = false;
+    			console.log(resp.data);
     		})
     		.catch(function (resp) {
     			console.log(resp);

@@ -199,8 +199,11 @@ export default {
         }
     },
     filters: {
-	  pemisahTitik: function (value) {
-	    return new Intl.NumberFormat().format(value)
+	  pemisahTitik: function (value) {	    
+	  	var angka = [value];
+		var numberFormat = new Intl.NumberFormat('es-ES');
+		var formatted = angka.map(numberFormat.format);
+		return formatted.join('; ');
 	  },
 	  tanggal: function (value) {
 	    return moment(String(value)).format('DD/MM/YYYY hh:mm')

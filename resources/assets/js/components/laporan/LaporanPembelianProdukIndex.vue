@@ -68,11 +68,11 @@
 									<td>{{ pembelianProduks.laporan_pembelians.kode_barang }}</td>
 									<td>{{ pembelianProduks.laporan_pembelians.nama_barang }}</td>
 									<td>{{ pembelianProduks.laporan_pembelians.nama_suplier }}</td>
-									<td align="right">{{ pembelianProduks.laporan_pembelians.jumlah_produk }}</td>
+									<td align="right">{{ pembelianProduks.laporan_pembelians.jumlah_produk | pemisahTitik }}</td>
 									<td>{{ pembelianProduks.laporan_pembelians.nama_satuan }}</td>
-									<td align="right">{{ pembelianProduks.laporan_pembelians.potongan }}</td>
-									<td align="right">{{ pembelianProduks.laporan_pembelians.tax }}</td>
-									<td align="right">{{ pembelianProduks.laporan_pembelians.subtotal }}</td>
+									<td align="right">{{ pembelianProduks.laporan_pembelians.potongan | pemisahTitik }}</td>
+									<td align="right">{{ pembelianProduks.laporan_pembelians.tax | pemisahTitik }}</td>
+									<td align="right">{{ pembelianProduks.laporan_pembelians.subtotal | pemisahTitik }}</td>
 
 								</tr>
 
@@ -149,7 +149,10 @@ export default {
     },
     filters: {
 	  pemisahTitik: function (value) {
-	    return new Intl.NumberFormat().format(value)
+	  	var angka = [value];
+		var numberFormat = new Intl.NumberFormat('es-ES');
+		var formatted = angka.map(numberFormat.format);
+		return formatted.join('; ');
 	  }
 	},
     methods: {
