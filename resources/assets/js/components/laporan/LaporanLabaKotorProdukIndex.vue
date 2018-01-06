@@ -132,6 +132,18 @@
 									<td align="right">{{ subtotalLabaKotorPesanan.subtotal_persentase_gpm.toFixed(2) | pemisahTitik }}</td>
 
 								</tr>
+
+								<tr v-if="labaKotorPesanan.length > 0 && labaKotor.length > 0 && loadingAkhir == false"  style="color:red; font-weight:bold">
+
+									<td>TOTAL KESELURUHAN</td>
+									<td></td>
+									<td align="right">{{ totalAkhir.subtotal_hpp | pemisahTitik }}</td>
+									<td align="right">{{ totalAkhir.subtotal_penjualan | pemisahTitik }}</td>
+									<td align="right">{{ totalAkhir.subtotal_laba_kotor | pemisahTitik }}</td>
+									<td align="right">{{ totalAkhir.subtotal_persentase_laba_kotor | pemisahTitik }}</td>
+									<td align="right">{{ totalAkhir.subtotal_persentase_gpm | pemisahTitik }}</td>
+
+								</tr>
 							</tbody>					
 							<tbody class="data-tidak-ada" v-else-if="labaKotorPesanan.length == 0 && loading == false">
 								<tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
@@ -168,6 +180,7 @@ export default {
 			labaKotorPesanan: [],
 			labaKotorPesananData: {},
 			subtotalLabaKotorPesanan: {},
+			totalAkhir: {},
 			filter: {
 				dari_tanggal: '',
 				sampai_tanggal: '',
@@ -183,6 +196,7 @@ export default {
             },
 			loading: false,
 			loadingPesanan: false,
+			loadingAkhir: false,
 		}
 	},
 	mounted() {
@@ -216,6 +230,7 @@ export default {
     		app.prosesLaporanPesanan();
     		app.totalLabaKotor();
     		app.totalLabaKotorPesanan();
+    		app.totalAkhirLabaKotor();
     		$("#btnExcel").show();
     		$("#btnCetak").show();
     	},
@@ -324,6 +339,22 @@ export default {
     		.then(function (resp) {
     			app.subtotalLabaKotorPesanan = resp.data;
     			app.loadingPesanan = false
+    		})
+    		.catch(function (resp) {
+    			console.log(resp);
+    			alert("Tidak Dapat Memuat Subtotal Laba Kotor Produk");
+    		});
+    	},
+      totalAkhirLabaKotor() {
+    		var app = this;	
+    		var newFilter = app.filter;
+
+    		app.loadingAkhir = true,
+    		axios.post(app.url+'/total-akhir-laba-kotor-produk', newFilter)
+    		.then(function (resp) {
+    			app.totalAkhir = resp.data;
+    			app.loadingAkhir = false;
+    			console.log(resp.data);
     		})
     		.catch(function (resp) {
     			console.log(resp);

@@ -20,7 +20,6 @@
 					<h4 class="card-title"> Laporan Penjualan </h4>
 
 					<div class="toolbar">
-						<p> <router-link :to="{name: 'createPenjualan'}" class="btn btn-primary"> <i class="material-icons">add</i>Penjualan</router-link></p>
 					</div>
 
 
@@ -107,11 +106,11 @@
 								<tr>
 
 									<th>No Transaksi</th>
-									<th>Waktu</th>
+									<th style="width:1px;">Waktu</th>
 									<th>Pelanggan</th>
 									<th>Status</th>
-									<th align="right">Total</th>
-									<th>Cetak</th>
+									<th class="text-right">Total</th>
+									<th class="text-center">Cetak</th>
 									<th>Detail</th>
 									<th>Edit</th>
 									<th>Hapus</th>
@@ -128,8 +127,8 @@
 									<td>{{ penjualan.waktu }}</td>
 									<td>{{ penjualan.pelanggan }}</td>
 									<td>{{ penjualan.status_penjualan }}</td>
-									<td align="center"> {{ penjualan.total }}</td>
-									<td>
+									<td align="right"> {{ penjualan.total }}</td>
+									<td align="center">
 										<div class="dropdown">
 											<button href="#pablo" class="dropdown-toggle btn btn-primary btn-xs" data-toggle="dropdown">Cetak <b class="caret"></b></button>
 											<ul class="dropdown-menu dropdown-menu-right">

@@ -138,17 +138,10 @@
 									<td align="right">{{ subtotalLabaKotorPesanan.subtotal_laba_jual | pemisahTitik }}</td>
 
 								</tr>
-							</tbody>					
-							<tbody class="data-tidak-ada" v-else-if="labaKotorPesanan.length == 0 && loadingPesanan == false">
-								<tr ><td colspan="8"  class="text-center">Tidak Ada Data</td></tr>
-							</tbody>
-						</table>
-					</div><!--RESPONSIVE-->
-						<table class="table table-striped table-hover">
-							<tbody v-if="labaKotorPesanan.length > 0 && labaKotor.length > 0 && loadingAkhir == false"  class="data-ada">
-								<tr style="color:red">
 
-									<td>TOTAL</td>
+								<tr v-if="labaKotorPesanan.length > 0 && labaKotor.length > 0 && loadingAkhir == false"  style="color:red; font-weight:bold">
+
+									<td>TOTAL KESELURUHAN</td>
 									<td></td>
 									<td></td>
 									<td align="right">{{ totalAkhir.total_penjualan | pemisahTitik }}</td>
@@ -158,8 +151,13 @@
 									<td align="right">{{ totalAkhir.total_laba_jual | pemisahTitik }}</td>
 
 								</tr>
+							</tbody>					
+							<tbody class="data-tidak-ada" v-else-if="labaKotorPesanan.length == 0 && loadingPesanan == false">
+								<tr ><td colspan="8"  class="text-center">Tidak Ada Data</td></tr>
 							</tbody>
 						</table>
+					</div><!--RESPONSIVE-->
+
 					<!--DOWNLOAD EXCEL-->
 					<a v-if="filter.pelanggan == '' || filter.pelanggan == null" :href="urlDownloadExcel+'/'+filter.dari_tanggal+'/'+filter.sampai_tanggal+'/0'" class='btn btn-warning' id="btnExcel" target='blank' :style="'display: none'"><i class="material-icons">file_download</i> Download Excel</a>
 					<a v-else :href="urlDownloadExcel+'/'+filter.dari_tanggal+'/'+filter.sampai_tanggal+'/'+filter.pelanggan" class='btn btn-warning' id="btnExcel" target='blank' :style="'display: none'"><i class="material-icons">file_download</i> Download Excel</a>
@@ -358,7 +356,7 @@ export default {
     		var app = this;	
     		var newFilter = app.filter;
 
-    		app.loading = true,
+    		app.loadingAkhir = true,
     		axios.post(app.url+'/total-akhir-laba-kotor', newFilter)
     		.then(function (resp) {
     			app.totalAkhir = resp.data;

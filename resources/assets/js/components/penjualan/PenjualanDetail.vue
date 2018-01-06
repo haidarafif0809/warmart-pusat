@@ -37,10 +37,10 @@
 
 											<th>No Transaksi</th>
 											<th>Produk</th>
-											<th align="right">Jumlah</th>
-											<th align="right">Harga</th>
-											<th align="right">Potongan</th>
-											<th align="right">Subtotal</th>
+											<th class="text-right">Jumlah</th>
+											<th class="text-right">Harga</th>
+											<th class="text-right">Potongan</th>
+											<th class="text-right">Subtotal</th>
 
 										</tr>
 									</thead>
@@ -49,10 +49,10 @@
 
 											<td>{{ detailPenjualan.id_penjualan_pos }}</td>
 											<td>{{ detailPenjualan.nama_produk }}</td>
-											<td align="center"> {{ new Intl.NumberFormat().format(detailPenjualan.jumlah_produk) }}</td>
-											<td align="center"> {{ new Intl.NumberFormat().format(detailPenjualan.harga_produk) }}</td>
-											<td align="center"> {{ detailPenjualan.potongan }}</td>
-											<td align="center"> {{ new Intl.NumberFormat().format(detailPenjualan.subtotal) }}</td>
+											<td align="right"> {{ new Intl.NumberFormat().format(detailPenjualan.jumlah_produk) }}</td>
+											<td align="right"> {{ new Intl.NumberFormat().format(detailPenjualan.harga_produk) }}</td>
+											<td align="right"> {{ detailPenjualan.potongan }}</td>
+											<td align="right"> {{ new Intl.NumberFormat().format(detailPenjualan.subtotal) }}</td>
 
 										</tr>
 									</tbody>                    

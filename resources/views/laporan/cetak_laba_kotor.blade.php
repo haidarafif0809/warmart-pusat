@@ -33,12 +33,18 @@
 	}
 </style>
 
+<?php
+function pemisahTitik($angka)
+{
+    return number_format($angka, 0, ',', '.');
+}
+?>
 <body>
 
 	<div class="container">
-		
+
 		<div class="row">
-			<div class="col-md-12"><h4><b><center> LAPORAN LABA KOTOR </center></b></h4><hr style="margin: 0px 0px"></div>
+			<div class="col-md-12"><h4><b><center> LAPORAN LABA KOTOR /PELANGGAN </center></b></h4><hr style="margin: 0px 0px"></div>
 			<div class="col-md-9">
 				<table>
 					<tbody>
@@ -78,22 +84,22 @@
 							<td class="table1">{{ $data_laba_kotors['laba_kotor']->id }}</td>
 							<td class="table1">{{ date_format($data_laba_kotors['laba_kotor']->created_at, "d M Y") }}</td>
 							<td class="table1">{{ $data_laba_kotors['laba_kotor']->name }}</td>
-							<td class="table1" align='right'>{{ number_format($data_laba_kotors['total'], 0, ',', '.') }}</td>
-							<td class="table1" align='right'>{{ number_format($data_laba_kotors['hpp'], 0, ',', '.') }}</td>
-							<td class="table1" align='right'>{{ number_format($data_laba_kotors['total_laba_kotor'], 0, ',', '.') }}</td>
-							<td class="table1" align='right'>{{ number_format($data_laba_kotors['laba_kotor']->potongan, 0, ',', '.') }}</td>
-							<td class="table1" align='right'>{{ number_format($data_laba_kotors['laba_jual'], 0, ',', '.') }}</td>
+							<td class="table1" align='right'>{{ pemisahTitik($data_laba_kotors['total']) }}</td>
+							<td class="table1" align='right'>{{ pemisahTitik($data_laba_kotors['hpp']) }}</td>
+							<td class="table1" align='right'>{{ pemisahTitik($data_laba_kotors['total_laba_kotor']) }}</td>
+							<td class="table1" align='right'>{{ pemisahTitik($data_laba_kotors['laba_kotor']->potongan) }}</td>
+							<td class="table1" align='right'>{{ pemisahTitik($data_laba_kotors['laba_jual']) }}</td>
 						</tr>
 						@endforeach
 						<tr style="color: red">
 							<td class="table1">TOTAL</td>
 							<td class="table1"></td>
 							<td class="table1"></td>
-							<td class="table1" align='right'>{{ number_format($subtotal_penjualan, 0, ',', '.') }}</td>
-							<td class="table1" align='right'>{{ number_format($subtotal_hpp, 0, ',', '.') }}</td>
-							<td class="table1" align='right'>{{ number_format($subtotal_laba_kotor, 0, ',', '.') }}</td>
-							<td class="table1" align='right'>{{ number_format($subtotal_potongan, 0, ',', '.') }}</td>
-							<td class="table1" align='right'>{{ number_format($subtotal_laba_jual, 0, ',', '.') }}</td>
+							<td class="table1" align='right'>{{ pemisahTitik($subtotal_penjualan) }}</td>
+							<td class="table1" align='right'>{{ pemisahTitik($subtotal_hpp) }}</td>
+							<td class="table1" align='right'>{{ pemisahTitik($subtotal_laba_kotor) }}</td>
+							<td class="table1" align='right'>{{ pemisahTitik($subtotal_potongan) }}</td>
+							<td class="table1" align='right'>{{ pemisahTitik($subtotal_laba_jual) }}</td>
 						</tr>
 					</tbody>
 				</table>
@@ -117,23 +123,36 @@
 							<td class="table1">{{ $data_laba_kotor_pesanans['laba_kotor_pesanan']->id }}</td>
 							<td class="table1">{{ date_format($data_laba_kotor_pesanans['laba_kotor_pesanan']->created_at, "d M Y") }}</td>
 							<td class="table1">{{ $data_laba_kotor_pesanans['laba_kotor_pesanan']->name }}</td>
-							<td class="table1" align='right'>{{ number_format($data_laba_kotor_pesanans['total'], 0, ',', '.') }}</td>
-							<td class="table1" align='right'>{{ number_format($data_laba_kotor_pesanans['hpp'], 0, ',', '.') }}</td>
-							<td class="table1" align='right'>{{ number_format($data_laba_kotor_pesanans['total_laba_kotor_pesanan'], 0, ',', '.') }}</td>
+							<td class="table1" align='right'>{{ pemisahTitik($data_laba_kotor_pesanans['total']) }}</td>
+							<td class="table1" align='right'>{{ pemisahTitik($data_laba_kotor_pesanans['hpp']) }}</td>
+							<td class="table1" align='right'>{{ pemisahTitik($data_laba_kotor_pesanans['total_laba_kotor_pesanan']) }}</td>
 							<td class="table1" align='right'>0</td>
-							<td class="table1" align='right'>{{ number_format($data_laba_kotor_pesanans['laba_jual'], 0, ',', '.') }}</td>
+							<td class="table1" align='right'>{{ pemisahTitik($data_laba_kotor_pesanans['laba_jual']) }}</td>
 						</tr>
 						@endforeach
 						<tr style="color: red">
 							<td class="table1">TOTAL</td>
 							<td class="table1"></td>
 							<td class="table1"></td>
-							<td class="table1" align='right'>{{ number_format($subtotal_penjualan_pesanan, 0, ',', '.') }}</td>
-							<td class="table1" align='right'>{{ number_format($subtotal_hpp_pesanan, 0, ',', '.') }}</td>
-							<td class="table1" align='right'>{{ number_format($subtotal_laba_kotor_pesanan, 0, ',', '.') }}</td>
+							<td class="table1" align='right'>{{ pemisahTitik($subtotal_penjualan_pesanan) }}</td>
+							<td class="table1" align='right'>{{ pemisahTitik($subtotal_hpp_pesanan) }}</td>
+							<td class="table1" align='right'>{{ pemisahTitik($subtotal_laba_kotor_pesanan) }}</td>
 							<td class="table1" align='right'>{{ 0 }}</td>
-							<td class="table1" align='right'>{{ number_format($subtotal_laba_jual_pesanan, 0, ',', '.') }}</td>
+							<td class="table1" align='right'>{{ pemisahTitik($subtotal_laba_jual_pesanan) }}</td>
 						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div class="col-md-9"></div>
+			<div class="col-md-3">
+				<table>
+					<tbody style="font-weight: bold">
+						<tr><td width="75%"><font class="satu">Total Penjualan</font></td> <td> :&nbsp;</td> <td><font class="satu"> {{ pemisahTitik($total_akhir['total_penjualan']) }} </font></tr>
+						<tr><td width="75%"><font class="satu">Total Hpp</font></td> <td> :&nbsp;</td> <td><font class="satu"> {{ pemisahTitik($total_akhir['total_hpp']) }} </font></tr>
+						<tr><td width="75%"><font class="satu">Total Laba Kotor</font></td> <td> :&nbsp;</td> <td><font class="satu"> {{ pemisahTitik($total_akhir['total_laba_kotor']) }} </font></tr>
+						<tr><td width="75%"><font class="satu">Total Diskon Faktur</font></td> <td> :&nbsp;</td> <td><font class="satu"> {{ pemisahTitik($total_akhir['total_potongan']) }} </font></tr>
+						<tr><td width="75%"><font class="satu">Total Laba Jual</font></td> <td> :&nbsp;</td> <td><font class="satu"> {{ pemisahTitik($total_akhir['total_laba_jual']) }} </font></tr>
 					</tbody>
 				</table>
 			</div>
