@@ -256,10 +256,10 @@
           <div class="card-footer">
 		          	 <div class="row"> 
 		              <div class="col-md-6 col-xs-12"> 
-		                <button type="button btn-lg" style="height:5%;width:100%" class="btn btn-success" id="bayar" v-on:click="selesaiPembelian()" v-shortkey.push="['f2']" @shortkey="selesaiPembelian()" ><i class="material-icons">payment</i><font style="font-size:20px;">Bayar(F2)</font></button>
+		                <button type="button btn-lg"  class="btn btn-success" id="bayar" v-on:click="selesaiPembelian()" v-shortkey.push="['f2']" @shortkey="selesaiPembelian()" ><i class="material-icons">payment</i><font style="font-size:20px;">Bayar(F2)</font></button>
 		              </div>
 		              <div class="col-md-6 col-xs-12"> 
-		                <button type="submit btn-lg" style="height:5%;width:100%;padding-rigth:" class="btn btn-danger" id="btnBatal" v-on:click="batalPembelian()" v-shortkey.push="['f3']" @shortkey="batalPembelian()" ><i class="material-icons">cancel</i><font style="font-size:20px;">Batal(F3)</font>  </button>
+		                <button type="submit btn-lg"  class="btn btn-danger" id="btnBatal" v-on:click="batalPembelian()" v-shortkey.push="['f3']" @shortkey="batalPembelian()" ><i class="material-icons">cancel</i><font style="font-size:20px;">Batal(F3)</font>  </button>
 		            </div>
 		        </div>
             </div>
