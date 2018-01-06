@@ -182,6 +182,38 @@ class LaporanLabaKotorController extends Controller
         return response()->json($response);
     }
 
+    public function totalAkhirLabaKotor(Request $request)
+    {
+    //SUBTOTAL PESANAN (ONLINE)
+        $sub_total_penjualan = DetailPenjualan::subtotalLaporanLabaKotorPesanan($request)->first();
+        $potongan            = 0;
+        $jenis_transaksi = "penjualan";
+        $sub_hpp         = Hpp::hppLaporanLabaKotor($request, $jenis_transaksi)->first();
+    //SUBTOTAL PESANAN (ONLINE)
+
+    //SUBTOTAL POS (OFFLINE)
+        $sub_total_penjualan_pos = DetailPenjualanPos::subtotalLaporanLabaKotor($request)->first();
+        $sub_potongan = PenjualanPos::potonganLaporanLabaKotor($request)->first();
+        $potongan_pos     = $sub_potongan->potongan;
+        $jenis_transaksi = "PenjualanPos";
+        $sub_hpp_pos         = Hpp::hppLaporanLabaKotor($request, $jenis_transaksi)->first();
+    //SUBTOTAL POS (OFFLINE)
+
+        $total_penjualan  = $sub_total_penjualan->subtotal + $sub_total_penjualan_pos->subtotal;
+        $total_hpp        = $sub_hpp->total_hpp + $sub_hpp_pos->total_hpp;
+        $total_laba_kotor = ( $total_penjualan - $total_hpp ) + ( $total_penjualan - $total_hpp );
+        $total_potongan   = $potongan + $potongan_pos;
+        $total_laba_jual  = ( $total_laba_kotor - $total_potongan ) + ( $total_laba_kotor - $total_potongan );
+
+        $response['total_penjualan']  = $total_penjualan;
+        $response['total_hpp']        = $total_hpp;
+        $response['total_laba_kotor'] = $total_laba_kotor;
+        $response['total_potongan']   = $total_potongan;
+        $response['total_laba_jual']  = $total_laba_jual;
+
+        return response()->json($response);
+    }
+
     public function labelSheet($sheet, $row){
 
         $sheet->row($row, [
