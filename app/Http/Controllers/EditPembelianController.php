@@ -215,20 +215,34 @@ public function edit_potongan_tbs_pembelian(Request $request){
     $tax = substr_count($request->tax_edit_produk, '%'); // UNTUK CEK APAKAH ADA STRING "%" 
     // JIKA TIDAK ADA
     if ($tax == 0) { 
-    	$tax_produk = filter_var($request->tax_edit_produk, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);// TAX DAALAM BENTUK NOMINAL
-
+       if ($request->ppn_produk == 'Exclude') {
+             $tax_produk = filter_var($request->tax_edit_produk, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION); // TAX DAALAM BENTUK NOMINAL
+       		 $tax_include = 0;
+       }else{
+             $tax_produk = 0;
+             $tax_include = filter_var($request->tax_edit_produk, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION); // TAX DAALAM BENTUK NOMINAL
+       }
     	$tax_persen = 0;  //  PISAH STRING BERDASRAKAN TANDA "%"
     }else{ // JIKA ADA
     	$tax_persen = filter_var($request->tax_edit_produk, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);  //  PISAH STRING BERDASRAKAN TANDA "%"
     	// TAX PRODUK = ((HARGA * JUMLAH) - POTONGAN) * TAX PERSEN / 100
-    	$tax_produk = (($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $tbs_pembelian->potongan) * $tax_persen / 100; 
+                if ($request->ppn_produk == 'Include') {
+                    $tax_produk = 0;
+                    //perhitungan tax include
+                    $default_tax              = 1;
+                    $subtotal_kurang_potongan = (($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $tbs_pembelian->potongan);
+                    $hasil_tax                = $default_tax + ($tax_persen / 100);
+                    $hasil_tax2               = $subtotal_kurang_potongan / $hasil_tax;
+                    $tax_include               = $subtotal_kurang_potongan - $hasil_tax2;
+                    //perhitungan tax include                    
+                } elseif ($request->ppn_produk == 'Exclude') {
+                    $tax_produk = (($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $tbs_pembelian->potongan) * $tax_persen / 100;
+                	$tax_include = 0;
+                }
     } 
     if ($tax_produk == '') {
     	$tax_produk = 0;
     }
-
-    if ($tax_persen > 100) { 	
-    }else{
 
 	    if ($request->ppn_produk == 'Include') {   // JIKA PPN INCLUDE MAKA PAJAK TIDAK MEMPENGARUHI SUBTOTAL
 	    	$subtotal = ($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $tbs_pembelian->potongan; 
@@ -237,10 +251,10 @@ public function edit_potongan_tbs_pembelian(Request $request){
 	    } 
 
 	    // UPDATE SUBTOTAL, TAX, PPN
-	    $tbs_pembelian->update(['subtotal'=>$subtotal,'tax'=>$tax_produk,'ppn'=>$request->ppn_produk]); 
+	    $tbs_pembelian->update(['subtotal'=>$subtotal,'tax'=>$tax_produk, 'tax_include' => $tax_include,'ppn'=>$request->ppn_produk]); 
 	    $nama_barang = $tbs_pembelian->TitleCaseBarang; // TITLE CASH
 	    return response(200);
-	}
+	
 }
 }
 
@@ -401,7 +415,8 @@ public function hapus_tbs_pembelian($id){
 					'jumlah_produk'     => $data_tbs->jumlah_produk, 
 					'harga_produk'      => $data_tbs->harga_produk, 
 					'subtotal'          => $data_tbs->subtotal, 
-					'tax'               => $data_tbs->tax, 
+					'tax'               => $data_tbs->tax,
+					'tax_include'   	=> $data_tbs->tax_include, 
 					'potongan'          => $data_tbs->potongan, 
 					'ppn'               => $data_tbs->ppn, 
 					'warung_id'         => Auth::user()->id_warung 

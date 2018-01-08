@@ -417,7 +417,7 @@ export default {
          app.inputPembayaranPembelian.subtotal = resp.data.subtotal;
          var total_akhir = parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(app.inputPembayaranPembelian.potongan_faktur);
          app.inputPembayaranPembelian.total_akhir = total_akhir;
-
+         app.hitungKembalian(app.inputPembayaranPembelian.pembayaran); 
 
          app.loading = false;
          app.seen = true;
@@ -690,6 +690,7 @@ export default {
             app.inputPembayaranPembelian.subtotal = subtotal                        
             app.inputPembayaranPembelian.total_akhir  = subtotal
 
+
             app.$router.replace('/edit-pembelian/'+id_pembelian);
             })
             .catch(function (resp) {
@@ -858,7 +859,6 @@ export default {
       
         if (ppn == '') { 
       var ppn_produk = '<select id="ppn_swal" name="ppn_swal" class="swal2-input js-selectize-reguler">'+ 
-      '<option value"Non">Non</option>'+ 
       '<option value"Include">Include</option>'+ 
       '<option value"Exclude">Exclude</option>'+ 
       '</select></div>'; 
