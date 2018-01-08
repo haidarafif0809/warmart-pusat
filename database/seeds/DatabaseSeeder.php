@@ -15,12 +15,13 @@ class DatabaseSeeder extends Seeder
         $this->call(UsersSeeder::class);
         $this->call(BankSeeder::class);
         $this->call(KelurahanSeeder::class);
-        $this->call(PermissionSeeder::class);        
-        $this->call(KasSeeder::class);      
-        $this->call(BarangSeeder::class);  
+        $this->call(PermissionSeeder::class);
+        $this->call(KasSeeder::class);
+        $this->call(BarangSeeder::class);
         $this->call(SatuanSeeder::class);
         $this->call(KategoriBarangSeeder::class);
         $this->call(KategoriTransaksiSeeder::class);
-        
+        $this->call(SettingAplikasiSeeder::class);
+
     }
 }

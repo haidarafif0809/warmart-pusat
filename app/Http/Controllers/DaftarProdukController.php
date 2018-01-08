@@ -7,6 +7,7 @@ use App\Hpp;
 use App\Http\Controllers\DaftarProdukController;
 use App\KategoriBarang;
 use App\KeranjangBelanja;
+use App\SettingAplikasi;
 use App\User;
 use App\Warung;
 use Auth;
@@ -55,6 +56,9 @@ class DaftarProdukController extends Controller
         $warung_data = Warung::select(['id', 'name', 'alamat', 'wilayah', 'no_telpon'])
             ->inRandomOrder()->get();
 
+        //SETTING APLIKASI
+        $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
+
         //PILIH DATA KATEGORI PRODUK
         $kategori = KategoriBarang::select(['id', 'nama_kategori_barang', 'kategori_icon']);
         //PERINTAH PAGINATION
@@ -70,7 +74,7 @@ class DaftarProdukController extends Controller
         $kategori_produk = DaftarProdukController::produkKategori($kategori);
         $nama_kategori   = "";
 
-        return view('layouts.daftar_produk', ['kategori_produk' => $kategori_produk, 'daftar_produk' => $daftar_produk, 'daftar_warung' => $daftar_warung, 'produk_pagination' => $produk_pagination, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'agent' => $agent, 'cek_belanjaan' => $cek_belanjaan, 'logo_warmart' => $logo_warmart]);
+        return view('layouts.daftar_produk', ['kategori_produk' => $kategori_produk, 'daftar_produk' => $daftar_produk, 'daftar_warung' => $daftar_warung, 'produk_pagination' => $produk_pagination, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'agent' => $agent, 'cek_belanjaan' => $cek_belanjaan, 'logo_warmart' => $logo_warmart, 'setting_aplikasi' => $setting_aplikasi]);
     }
 
     public static function produkKategori($kategori)
@@ -83,24 +87,24 @@ class DaftarProdukController extends Controller
         foreach ($kategori->paginate(4) as $kategori) {
             $jumlah_produk = Barang::where('kategori_barang_id', $kategori->id)->whereIn('id_warung', $array_warung)->count();
             $kategori_produk .= '
-      <li>
-      <a href="' . route('daftar_produk.filter_kategori', $kategori->id) . '" style="color:white"><i class="material-icons">' . $kategori->kategori_icon . '</i>' . $kategori->nama_kategori_barang . ' - ' . $jumlah_produk . '</a>
-      </li>';
+            <li>
+              <a href="' . route('daftar_produk.filter_kategori', $kategori->id) . '" style="color:white"><i class="material-icons">' . $kategori->kategori_icon . '</i>' . $kategori->nama_kategori_barang . ' - ' . $jumlah_produk . '</a>
+          </li>';
         }
         $kategori_produk .= '
-    <li class="dropdown">
-    <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color:white"><i class="material-icons">list</i> Lain - Lain <b class="caret"></b></a>
-    <ul class="dropdown-menu dropdown-with-icons">';
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color:white"><i class="material-icons">list</i> Lain - Lain <b class="caret"></b></a>
+        <ul class="dropdown-menu dropdown-with-icons">';
         foreach ($kategori->get() as $kategori) {
             $jumlah_produk = Barang::where('kategori_barang_id', $kategori->id)->whereIn('id_warung', $array_warung)->count();
             $kategori_produk .= '
-      <li>
-      <a href="' . route('daftar_produk.filter_kategori', $kategori->id) . '"><i class="material-icons">' . $kategori->kategori_icon . '</i>' . $kategori->nama_kategori_barang . ' - ' . $jumlah_produk . '</a>
-      </li>';
+                <li>
+                  <a href="' . route('daftar_produk.filter_kategori', $kategori->id) . '"><i class="material-icons">' . $kategori->kategori_icon . '</i>' . $kategori->nama_kategori_barang . ' - ' . $jumlah_produk . '</a>
+              </li>';
         }
         $kategori_produk .= '
-    </ul>
-    </li>';
+      </ul>
+  </li>';
 
         return $kategori_produk;
     }
@@ -130,6 +134,9 @@ class DaftarProdukController extends Controller
         $warung_data = Warung::select(['id', 'name', 'alamat', 'wilayah', 'no_telpon'])
             ->inRandomOrder()->get();
 
+        //SETTING APLIKASI
+        $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
+
         //FOTO HEADER
         $foto_latar_belakang = "background-image: url('../image/background2.jpg');";
         //FOTO WARMART
@@ -149,7 +156,7 @@ class DaftarProdukController extends Controller
         $daftar_produk = DaftarProdukController::daftarProduk($data_produk);
         $daftar_warung = DaftarProdukController::daftarWarung($warung_data);
 
-        return view('layouts.daftar_produk', ['kategori_produk' => $kategori_produk, 'daftar_warung' => $daftar_warung, 'daftar_produk' => $daftar_produk, 'produk_pagination' => $produk_pagination, 'id' => $id, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'agent' => $agent, 'cek_belanjaan' => $cek_belanjaan, 'logo_warmart' => $logo_warmart]);
+        return view('layouts.daftar_produk', ['kategori_produk' => $kategori_produk, 'daftar_warung' => $daftar_warung, 'daftar_produk' => $daftar_produk, 'produk_pagination' => $produk_pagination, 'id' => $id, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'agent' => $agent, 'cek_belanjaan' => $cek_belanjaan, 'logo_warmart' => $logo_warmart, 'setting_aplikasi' => $setting_aplikasi]);
     }
 
     public static function pencarian(Request $request)
@@ -191,8 +198,10 @@ class DaftarProdukController extends Controller
         }
 
         $daftar_warung = DaftarProdukController::daftarWarung($warung_data);
+        //SETTING APLIKASI
+        $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
 
-        return view('layouts.daftar_produk', ['kategori_produk' => $kategori_produk, 'daftar_warung' => $daftar_warung, 'daftar_produk' => $daftar_produk, 'produk_pagination' => $produk_pagination, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'agent' => $agent, 'cek_belanjaan' => $cek_belanjaan, 'logo_warmart' => $logo_warmart]);
+        return view('layouts.daftar_produk', ['kategori_produk' => $kategori_produk, 'daftar_warung' => $daftar_warung, 'daftar_produk' => $daftar_produk, 'produk_pagination' => $produk_pagination, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'agent' => $agent, 'cek_belanjaan' => $cek_belanjaan, 'logo_warmart' => $logo_warmart, 'setting_aplikasi' => $setting_aplikasi]);
     }
 
     public static function cekStokProduk($produks)
@@ -236,17 +245,17 @@ class DaftarProdukController extends Controller
         $pelanggan = 3;
         if (Auth::check() && Auth::user()->tipe_user == $pelanggan) {
             if ($cek_produk == 0) {
-                $tombol_beli = '<a disabled="true" style="background-color:#01573e" class="btn btn-block tombolBeli" rel="tooltip" title="Stok Tidak Ada"> Beli Sekarang </a>';
+                $tombol_beli = '<a disabled="true" class="btn btn-block tombolBeli buttonColor" rel="tooltip" title="Stok Tidak Ada"> Beli Sekarang </a>';
             } else {
-                $tombol_beli = '<a href="' . url('/keranjang-belanja/tambah-produk-keranjang-belanja/' . $produks->id . '') . '" id="btnBeliSekarang" style="background-color:#01573e" class="btn btn-block tombolBeli" > Beli Sekarang </a>';
+                $tombol_beli = '<a href="' . url('/keranjang-belanja/tambah-produk-keranjang-belanja/' . $produks->id . '') . '" id="btnBeliSekarang" class="btn btn-block tombolBeli buttonColor" > Beli Sekarang </a>';
             }
         } elseif (Auth::check() && Auth::user()->tipe_user != $pelanggan) {
-            $tombol_beli = '<a  disabled="true" style="background-color:#01573e" class="btn btn-block tombolBeli" rel="tooltip" title="Masuk Sebagai Pelanggan Untuk Beli" > Beli Sekarang </a>';
+            $tombol_beli = '<a  disabled="true" class="btn btn-block tombolBeli buttonColor" rel="tooltip" title="Masuk Sebagai Pelanggan Untuk Beli" > Beli Sekarang </a>';
         } else {
             if ($cek_produk == 0) {
-                $tombol_beli = '<a disabled="true" style="background-color:#01573e" class="btn btn-block tombolBeli" rel="tooltip" title="Stok Tidak Ada" > Beli Sekarang </a>';
+                $tombol_beli = '<a disabled="true" class="btn btn-block tombolBeli buttonColor" rel="tooltip" title="Stok Tidak Ada" > Beli Sekarang </a>';
             } else {
-                $tombol_beli = '<a href="' . url('/keranjang-belanja/tambah-produk-keranjang-belanja/' . $produks->id . '') . '" id="btnBeliSekarang" style="background-color:#01573e" class="btn btn-block tombolBeli" > Beli Sekarang </a>';
+                $tombol_beli = '<a href="' . url('/keranjang-belanja/tambah-produk-keranjang-belanja/' . $produks->id . '') . '" id="btnBeliSekarang" class="btn btn-block tombolBeli buttonColor" > Beli Sekarang </a>';
             }
         }
 
@@ -255,27 +264,27 @@ class DaftarProdukController extends Controller
 
     public function tomboBeliDisable($tool_tip)
     {
-        $tombol_beli = '<button type="button" style="background-color:#01573e" class="btn btn-block tombolBeli" id="btnBeli" disabled="" rel="tooltip" title="' . $tool_tip . '" > Beli Sekarang  </button>';
+        $tombol_beli = '<button type="button" class="btn btn-block tombolBeli buttonColor" id="btnBeli" disabled="" rel="tooltip" title="' . $tool_tip . '" > Beli Sekarang  </button>';
     }
 
     public static function tidakAdaProduk()
     {
         $produk_kosong = "";
         $produk_kosong .= '
-  <div class="col-md-12 col-s,-12 col-xs-12">
-  <div class="card" data-colored-shadow="false" style="background-color:#f7f7f7">
-  <div class="card-content">';
+    <div class="col-md-12 col-s,-12 col-xs-12">
+      <div class="card" data-colored-shadow="false" style="background-color:#f7f7f7">
+          <div class="card-content">';
         $agent = new Agent();
         if ($agent->isMobile()) {
             $produk_kosong .= '<h6 class="text-center" style="margin:0px">Oops... "Produk" Tidak Dapat Ditemukan.</h6>
-    <p class="text-center">Silakan menggunakan kata kunci lain.</p>';
+                <p class="text-center">Silakan menggunakan kata kunci lain.</p>';
         } else {
             $produk_kosong .= '<h3 class="title text-center" style="margin:0px">Oops... Hasil Pencarian "Produk" Tidak Dapat Ditemukan.</h3>
-    <h5 class="text-center" style="margin:0px">Silakan melakukan pencarian kembali dengan menggunakan kata kunci lain.</h5>';
+                <h5 class="text-center" style="margin:0px">Silakan melakukan pencarian kembali dengan menggunakan kata kunci lain.</h5>';
         }
         $produk_kosong .= '</div>
-  </div>
-  </div>';
+        </div>
+    </div>';
 
         return $produk_kosong;
     }
@@ -332,30 +341,30 @@ class DaftarProdukController extends Controller
                 $warung     = Warung::select(['name', 'id'])->where('id', $produks->id_warung)->first();
                 $cek_produk = DaftarProdukController::cekStokProduk($produks);
                 $card_produk .= '
-    <div class="col-md-3 col-sm-6 col-xs-6 list-produk " style=" margin-bottom:10px;">
-    <div class="card cards card-pricing">
-    <a href="' . url("/detail-produk/" . $produks->id . "") . '">
-    <div class="card-image">';
+            <div class="col-md-3 col-sm-6 col-xs-6 list-produk " style=" margin-bottom:10px;">
+                <div class="card cards card-pricing">
+                    <a href="' . url("/detail-produk/" . $produks->id . "") . '">
+                        <div class="card-image">';
                 $card_produk .= DaftarProdukController::fotoProduk($produks);
                 $card_produk .= '
-    </div>
-    </a>
-    <div class="card-content">
-    <div class="footer">
-    <p class=" flexFont">';
+                        </div>
+                    </a>
+                    <div class="card-content">
+                        <div class="footer">
+                            <p class=" flexFont">';
 
                 $card_produk .= '<a href="' . url("/detail-produk/" . $produks->id . "") . '" >';
                 $card_produk .= DaftarProdukController::namaProduk($produks);
                 $card_produk .= '</a></p>
-    <p style="color:#d21f30;" class="flexFont"> ' . $produks->rupiah . ' / ' . $produks->satuan->nama_satuan . ' </p>';
+                                <p style="color:#d21f30;" class="flexFont"> ' . $produks->rupiah . ' / ' . $produks->satuan->nama_satuan . ' </p>';
                 $card_produk .= '<p class="flexFont">' . DaftarProdukController::namaWarung($warung) . '</p>';
                 //tombol beli
                 $card_produk .= DaftarProdukController::tombolBeli($cek_produk, $produks);
                 $card_produk .= '
-    </div>
-    </div>
-    </div>
-    </div>';
+                            </div>
+                        </div>
+                    </div>
+                </div>';
             }
         }
         return $card_produk;
@@ -429,43 +438,43 @@ class DaftarProdukController extends Controller
     {
         $card_warung = "";
         $card_warung .= '
-  <div class="col-md-3 col-sm-6 col-xs-6 list-produk " style=" margin-bottom:10px;">
-  <div class="card cards card-pricing" style="text-align: left;">
-  <div class="card-content">
-  <div class="footer">
-  <div class="row">
-  <div class="col-md-1 col-sm-1 col-xs-1">
-  <p class="">
-  <i class="material-icons">store</i>
-  </p>
-  <p class="">
-  <i class="material-icons">place</i>
-  </p>
-  </div>
-  <div class="col-md-9 col-sm-9 col-xs-9">
-  <p class="">
-  <a href="halaman-warung/' . $warungs->id . '" >';
+        <div class="col-md-3 col-sm-6 col-xs-6 list-produk " style=" margin-bottom:10px;">
+          <div class="card cards card-pricing" style="text-align: left;">
+              <div class="card-content">
+                  <div class="footer">
+                      <div class="row">
+                          <div class="col-md-1 col-sm-1 col-xs-1">
+                              <p class="">
+                                  <i class="material-icons">store</i>
+                              </p>
+                              <p class="">
+                                  <i class="material-icons">place</i>
+                              </p>
+                          </div>
+                          <div class="col-md-9 col-sm-9 col-xs-9">
+                              <p class="">
+                                  <a href="halaman-warung/' . $warungs->id . '" >';
         $card_warung .= DaftarProdukController::warungNama($warungs);
         $card_warung .= '
-  </a>
-  </p>
-  <p class="">
-  <a href="halaman-warung/' . $warungs->id . '">';
+                                </a>
+                            </p>
+                            <p class="">
+                              <a href="halaman-warung/' . $warungs->id . '">';
         $card_warung .= DaftarProdukController::alamatWarung($warungs);
         $card_warung .= '
-  </a>
-  </p>
-  </div>
-  </div>
-  <p class="btnWarung">';
+                            </a>
+                        </p>
+                    </div>
+                </div>
+                <p class="btnWarung">';
         //tombol kunjungi
         $card_warung .= DaftarProdukController::tombolKunjungi($warungs);
         $card_warung .= '
-  </p>
-  </div>
-  </div>
-  </div>
-  </div>';
+                </p>
+            </div>
+        </div>
+    </div>
+</div>';
         return $card_warung;
     }
 
@@ -489,9 +498,9 @@ class DaftarProdukController extends Controller
     {
         $agent = new Agent();
         if ($agent->isMobile()) {
-            $tombol_kunjungi = '<a href="' . asset("halaman-warung/" . $warungs->id . "") . '" style="background-color:#01573e; position: relative" class="btn btn-block tombolBeli" id="btnKunjungi"> Kunjungi Warung </a>';
+            $tombol_kunjungi = '<a href="' . asset("halaman-warung/" . $warungs->id . "") . '" style="background-color:#01573e; position: relative" class="btn btn-block tombolBeli buttonColor" id="btnKunjungi"> Kunjungi Warung </a>';
         } else {
-            $tombol_kunjungi = '<a href="' . asset("halaman-warung/" . $warungs->id . "") . '" id="btnKunjungi" style="background-color:#01573e; position: relative" class="btn btn-block tombolBeli"> Kunjungi Warung </a>';
+            $tombol_kunjungi = '<a href="' . asset("halaman-warung/" . $warungs->id . "") . '" id="btnKunjungi" style="background-color:#01573e; position: relative" class="btn btn-block tombolBeli buttonColor"> Kunjungi Warung </a>';
         }
         return $tombol_kunjungi;
     }
@@ -513,20 +522,20 @@ class DaftarProdukController extends Controller
     {
         $warung_kosong = "";
         $warung_kosong .= '
-  <div class="col-md-12 col-s,-12 col-xs-12">
-  <div class="card" data-colored-shadow="false" style="background-color:#f7f7f7">
-  <div class="card-content">';
+    <div class="col-md-12 col-s,-12 col-xs-12">
+      <div class="card" data-colored-shadow="false" style="background-color:#f7f7f7">
+          <div class="card-content">';
         $agent = new Agent();
         if ($agent->isMobile()) {
             $warung_kosong .= '<h6 class="text-center" style="margin:0px">Oops... "Warung" Tidak Dapat Ditemukan.</h6>
-    <p class="text-center">Silakan menggunakan kata kunci lain.</p>';
+                <p class="text-center">Silakan menggunakan kata kunci lain.</p>';
         } else {
             $warung_kosong .= '<h3 class="title text-center" style="margin:0px">Oops... Hasil Pencarian "Warung" Tidak Dapat Ditemukan.</h3>
-    <h5 class="text-center" style="margin:0px">Silakan melakukan pencarian kembali dengan menggunakan kata kunci lain.</h5>';
+                <h5 class="text-center" style="margin:0px">Silakan melakukan pencarian kembali dengan menggunakan kata kunci lain.</h5>';
         }
         $warung_kosong .= '</div>
-  </div>
-  </div>';
+        </div>
+    </div>';
 
         return $warung_kosong;
     }
