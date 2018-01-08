@@ -253,6 +253,7 @@
                 </div> 
               </div> 
           </div> 
+          
           <div class="card-footer">
 		          	 <div class="row"> 
 		              <div class="col-md-6 col-xs-12"> 
@@ -335,6 +336,7 @@ export default {
 			pencarian: '',
 			loading: true,
 			seen : false,
+
 		}
 
 	},
@@ -828,15 +830,15 @@ export default {
 					alert("Potongan Produk tidak bisa diedit");
 				});
     },//END PROSES UPDATE POTONGAN TBS 
+
     editEntryTax(id, index,nama_produk,jumlah,harga,potongan,ppn,subtotal_lama){
     		var app = this;		
     		var subtotal = (parseFloat(jumlah) * parseFloat(harga)) - parseFloat(potongan); 
     	
     		if (ppn == '') { 
-			var ppn_produk = '<select id="ppn_swal" name="ppn_swal" class="swal2-input js-selectize-reguler">'+ 
-			'<option value"Non">Non</option>'+ 
-			'<option value"Include">Include</option>'+ 
-			'<option value"Exclude">Exclude</option>'+ 
+			var ppn_produk = '<select id="ppn_swal" name="ppn_swal"  class="swal2-input js-selectize-reguler">'+ 
+			'<option value="Include" >Include</option>'+ 
+			'<option value="Exclude" >Exclude</option>'+ 
 			'</select></div>'; 
 			}else { 
 			var ppn_produk = '<select id="ppn_swal" name="ppn_swal" class="swal2-input js-selectize-reguler">'+ 
@@ -850,7 +852,7 @@ export default {
 			'<div class="row">'+ 
 			'<div class="col-sm-6 col-xs-6">'+ppn_produk+''+ 
 			'<div class="col-sm-6 col-xs-6">'+ 
-			'<input id="tax_swal" class="swal2-input" placeholder="PAJAK"></div>'+ 
+			'<input type="text" id="tax_swal" v-model="ppn_swal_input" class="swal2-input" placeholder="PAJAK"></div>'+ 
 			'</div>', 
 			animation: false, 
 			showCloseButton: true, 
