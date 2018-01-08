@@ -50,8 +50,8 @@
 											<td>{{ detailPembelian.kode_produk }} - {{ detailPembelian.nama_produk }}</td>
 											<td style="text-align:right;"> {{ detailPembelian.jumlah_produk_pemisah }}</td>
 											<td style="text-align:right;"> {{ detailPembelian.harga_pemisah }}</td>
-											<td style="text-align:right;">{{ Math.round(detailPembelian.potongan,2) }} | {{ Math.round(detailPembelian.potongan_persen,2) }} %</td>
-											<td style="text-align:right;"> {{ Math.round(detailPembelian.tax,2) }} | {{ Math.round(detailPembelian.tax_persen, 2) }} %</td>
+											<td style="text-align:right;">{{ detailPembelian.potongan }} | {{ Math.round(detailPembelian.potongan_persen,2) }} %</td>
+											<td style="text-align:right;"> {{ detailPembelian.tax }} | {{ Math.round(detailPembelian.tax_persen, 2) }} %</td>
 											<td style="text-align:right;"> {{ detailPembelian.subtotal_tbs }} </td>
 										</tr>
 									</tbody>                    
