@@ -123,13 +123,12 @@
                               <input type="hidden" name="no_faktur_edit" id="no_faktur_edit" v-model="inputPembayaranPembelian.no_faktur_edit" >
                               <input type="hidden" name="id_pembelian" id="id_pembelian" v-model="inputPembayaranPembelian.id_pembelian" >
 
+                          <div align="right"  style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                               <button v-if="inputPembayaranPembelian.kembalian >= 0 && inputPembayaranPembelian.kredit == 0" v-shortkey.push="['alt']" type="submit" class="btn btn-success btn-lg" id="btnSelesai" ><font style="font-size:20px;">Tunai(Alt)</font></button>
 
-                             <div align="right"  style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                               <button v-if="inputPembayaranPembelian.kembalian >= 0 && inputPembayaranPembelian.kredit == 0" v-shortkey.push="['alt']" type="submit" class="btn btn-success" id="btnSelesai" ><i class="material-icons">credit_card</i>Tunai(Alt)</button>
+                               <button v-if="inputPembayaranPembelian.kredit > 0" type="submit" class="btn btn-success btn-lg" v-shortkey.push="['alt']" id="btnSelesai" ><i class="material-icons">credit_card</i><font style="font-size:20px;">Hutang(Alt)</font> </button>
 
-                               <button v-if="inputPembayaranPembelian.kredit > 0" type="submit" class="btn btn-success" v-shortkey.push="['alt']" id="btnSelesai" ><i class="material-icons">credit_card</i> Hutang(Alt)</button>
-
-                               <button type="button" class="btn btn-default"  v-on:click="closeModalX()" v-shortkey.push="['esc']" @shortkey="closeModalX()"><i class="material-icons">close</i> Tutup(Esc)</button>
+                               <button type="button" class="btn btn-default btn-lg"  v-on:click="closeModalX()" v-shortkey.push="['esc']" @shortkey="closeModalX()"><font style="font-size:20px;"> Tutup(Esc)</font></button>
                            </div>
 
                        </div> 
@@ -200,11 +199,11 @@
                   </td>
                   <td>
                     <a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-on:click="editEntryPotongan(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk,tbs_pembelian.jumlah_produk,tbs_pembelian.harga_produk,tbs_pembelian.subtotal)"
-                    ><p align='right'>{{ Math.round(tbs_pembelian.potongan,2) }} | {{ Math.round(tbs_pembelian.potongan_persen,2) }} %</p>
+                    ><p align='right'>{{ tbs_pembelian.potongan }} | {{ Math.round(tbs_pembelian.potongan_persen,2) }} %</p>
                     </a>
                   </td>
                   <td>
-                    <a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-on:click="editEntryTax(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk,tbs_pembelian.jumlah_produk,tbs_pembelian.harga_produk,tbs_pembelian.potongan,tbs_pembelian.ppn_produk,tbs_pembelian.subtotal)" ><p align='right'>{{ Math.round(tbs_pembelian.tax,2) }} | {{ Math.round(tbs_pembelian.tax_persen, 2) }} %</p>
+                    <a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-on:click="editEntryTax(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk,tbs_pembelian.jumlah_produk,tbs_pembelian.harga_produk,tbs_pembelian.potongan,tbs_pembelian.ppn_produk,tbs_pembelian.subtotal)" ><p align='right'>{{ tbs_pembelian.tax }} | {{ Math.round(tbs_pembelian.tax_persen, 2) }} %</p>
                     </a>
                   </td>
                   <td><p id="table-subtotal" align="right">{{ tbs_pembelian.subtotal_tbs }}</p></td>
@@ -229,10 +228,12 @@
 
       <div class="col-md-4"><!-- COL SM 4 --> 
         <div class="card card-stats"><!-- CARD --> 
-
+            <div class="card-header" data-background-color="blue">
+                <i class="material-icons">shopping_cart</i>
+            </div>
           <div class="card-content"> 
               <p class="category"><h4>Subtotal</h4></p>
-              <h3 class="card-title"><money v-bind="separator" name="subtotal"  id="subtotal" autocomplete="off"  readonly="" v-model="inputPembayaranPembelian.subtotal"></money></h3>
+              <h3 class="card-title"><money v-bind="separator" style="text-align:right;"  name="subtotal"  id="subtotal" class="form-subtotal" autocomplete="off"  readonly="" v-model="inputPembayaranPembelian.subtotal"></money></h3>
             <div class="row"> 
               <div class="col-md-6 col-xs-12"> 
                    <h4>Suplier </h4> 
@@ -258,8 +259,14 @@
               </div> 
           </div> 
           <div class="card-footer">
-                <button type="button" class="btn btn-success" id="bayar" v-on:click="selesaiPembelian()" v-shortkey.push="['f2']" @shortkey="selesaiPembelian()" ><i class="material-icons">payment</i>Bayar(F2)</button>
-                <button type="submit" class="btn btn-danger" id="btnBatal" v-on:click="batalPembelian()" v-shortkey.push="['f3']" @shortkey="batalPembelian()" ><i class="material-icons">cancel</i> Batal(F3) </button>
+                 <div class="row"> 
+                  <div class="col-md-6 col-xs-12"> 
+                    <button type="button btn-lg"  class="btn btn-success" id="bayar" v-on:click="selesaiPembelian()" v-shortkey.push="['f2']" @shortkey="selesaiPembelian()" ><font style="font-size:20px;">Bayar(F2)</font></button>
+                  </div>
+                  <div class="col-md-6 col-xs-12"> 
+                    <button type="submit btn-lg"  class="btn btn-danger" id="btnBatal" v-on:click="batalPembelian()" v-shortkey.push="['f3']" @shortkey="batalPembelian()" ><font style="font-size:20px;">Batal(F3)</font>  </button>
+                </div>
+            </div>
             </div>
         </div>             
       </div><!-- COL SM 4 --> 

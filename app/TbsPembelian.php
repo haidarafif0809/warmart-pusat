@@ -32,5 +32,12 @@ class TbsPembelian extends Model
     {
         return number_format($this->jumlah_produk, 2, ',', '.');
     }
-
+        public function getPemisahPotonganAttribute()
+    {
+        return number_format($this->potongan, 2, ',', '.');
+    }
+        public function getPemisahTaxAttribute()
+    {
+        return number_format($this->tax, 2, ',', '.');
+    }
 }
