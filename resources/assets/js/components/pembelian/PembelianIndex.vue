@@ -86,7 +86,7 @@
 								<form class="form-horizontal" > 
 									<div class="modal-body"> 
 										<div class="card" style="margin-bottom:1px; margin-top:1px;">
-
+											<div class="table-responsive">
 											<table class="table" style="margin-bottom:10px; margin-top:10px; margin-right:10px; margin-left:10px;">
 
 												<tbody style="margin-bottom:10px; margin-top:10px; margin-right:10px; margin-left:10px;">
@@ -96,19 +96,19 @@
 													</tr>
 													<tr>
 														<td class="text-primary"><b># Total </b> </td>
-														<td class="text-primary"><b>: {{ total }} </b> </td>
+														<td class="text-primary"><b style="text-align:right;">: {{ total }} </b> </td>
 													</tr>
 													<tr>
 														<td class="text-primary"><b># Potongan </b> </td>
-														<td class="text-primary"><b>: {{ potongan }} </b> </td>
+														<td class="text-primary"><b style="text-align:right;">: {{ potongan }} </b> </td>
 													</tr>
 													<tr>
 														<td class="text-primary"><b># Tunai </b> </td>
-														<td class="text-primary"><b>: {{ tunai }} </b> </td>
+														<td class="text-primary"><b style="text-align:right;">: {{ tunai }} </b> </td>
 													</tr>
 													<tr>
 														<td class="text-primary"><b># Kembalian </b> </td>
-														<td class="text-primary"><b>: {{ kembalian }} </b> </td>
+														<td class="text-primary"><b style="text-align:right;">: {{ kembalian }} </b> </td>
 													</tr>
 													<tr>
 														<td class="text-primary"><b># Jatuh Tempo </b> </td>
@@ -120,7 +120,7 @@
 													</tr>
 												</tbody>
 											</table>  
-
+											</div>
 										</div> 
 									</div>
 									<div class="modal-footer">  
@@ -165,8 +165,8 @@
 									<td style="text-align:right;"><router-link :to="{name: 'editPembelianProses', params: {id: pembelians.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + pembelians.id" >
 									Edit </router-link> </td>
 									<td style="text-align:right;">
-										<button  type="button" class="btn btn-xs btn-success btn-detail" id="btnDetail" data-toggle="modal" data-target="#data_detail" 
-										v-on:click="detailModalPembelian(pembelians.id,index,pembelians.no_faktur)" >Detail</button>
+										<router-link :to="{name: 'detailPembelian', params: {id: pembelians.id}}" class="btn btn-xs btn-info" v-bind:id="'detail-' + pembelians.no_faktur" >
+										Detail </router-link> 
 									</td>
 									<td style="text-align:right;"> 
 										<a  href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + pembelians.id" v-on:click="deleteEntry(pembelians.id, index,pembelians.no_faktur)">Delete</a>

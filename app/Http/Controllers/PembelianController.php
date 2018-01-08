@@ -150,6 +150,8 @@ class PembelianController extends Controller
             $harga_pemisah          = $tbs_pembelians->PemisahHarga;
             $nama_produk_title_case = $tbs_pembelians->TitleCaseBarang;
             $jumlah_produk          = $tbs_pembelians->PemisahJumlah;
+            $potongan_tampil        = $tbs_pembelians->PemisahPotongan;
+            $tax_tampil             = $tbs_pembelians->PemisahTax;
 
             $ppn = TbsPembelian::select('ppn')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->where('ppn', '!=', '')->limit(1);
             if ($ppn->count() > 0) {
@@ -180,9 +182,9 @@ class PembelianController extends Controller
                 'harga_pemisah'          => $tbs_pembelians->PemisahHarga,
                 'jumlah_produk'          => $tbs_pembelians->jumlah_produk,
                 'jumlah_produk_pemisah'  => $jumlah_produk,
-                'potongan'               => $tbs_pembelians->potongan,
+                'potongan'               => $potongan_tampil,
                 'potongan_persen'        => $potongan_persen,
-                'tax'                    => $tbs_pembelians->tax,
+                'tax'                    => $tax_tampil,
                 'ppn_produk'             => $ppn_produk,
                 'tax_persen'             => $tax_persen,
                 'kas_default'            => $kas_default,
@@ -228,6 +230,8 @@ class PembelianController extends Controller
             $harga_pemisah          = $tbs_pembelians->PemisahHarga;
             $nama_produk_title_case = $tbs_pembelians->TitleCaseBarang;
             $jumlah_produk          = $tbs_pembelians->PemisahJumlah;
+            $potongan_tampil        = $tbs_pembelians->PemisahPotongan;
+            $tax_tampil             = $tbs_pembelians->PemisahTax;
 
             $ppn = TbsPembelian::select('ppn')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->where('ppn', '!=', '')->limit(1);
             if ($ppn->count() > 0) {
@@ -259,9 +263,9 @@ class PembelianController extends Controller
                 'harga_pemisah'          => $tbs_pembelians->PemisahHarga,
                 'jumlah_produk'          => $tbs_pembelians->jumlah_produk,
                 'jumlah_produk_pemisah'  => $jumlah_produk,
-                'potongan'               => $tbs_pembelians->potongan,
+                'potongan'               => $potongan_tampil,
                 'potongan_persen'        => $potongan_persen,
-                'tax'                    => $tbs_pembelians->tax,
+                'tax'                    => $tax_tampil,
                 'ppn_produk'             => $ppn_produk,
                 'tax_persen'             => $tax_persen,
                 'kas_pilih'              => $kas_pilih,
@@ -301,6 +305,8 @@ class PembelianController extends Controller
             $harga_pemisah          = $tbs_pembelians->PemisahHarga;
             $nama_produk_title_case = $tbs_pembelians->TitleCaseBarang;
             $jumlah_produk          = $tbs_pembelians->PemisahJumlah;
+            $potongan_tampil        = $tbs_pembelians->PemisahPotongan;
+            $tax_tampil             = $tbs_pembelians->PemisahTax;
 
             $ppn = EditTbsPembelian::select('ppn')->where('no_faktur', $tbs_pembelians->no_faktur)->where('warung_id', Auth::user()->id_warung)->where('ppn', '!=', '')->limit(1);
             if ($ppn->count() > 0) {
@@ -331,9 +337,9 @@ class PembelianController extends Controller
                 'harga_pemisah'          => $tbs_pembelians->PemisahHarga,
                 'jumlah_produk'          => $tbs_pembelians->jumlah_produk,
                 'jumlah_produk_pemisah'  => $jumlah_produk,
-                'potongan'               => $tbs_pembelians->potongan,
+                'potongan'               => $potongan_tampil,
                 'potongan_persen'        => $potongan_persen,
-                'tax'                    => $tbs_pembelians->tax,
+                'tax'                    => $tax_tampil,
                 'ppn_produk'             => $ppn_produk,
                 'tax_persen'             => $tax_persen,
                 'kas_default'            => $kas_default,
@@ -380,6 +386,8 @@ class PembelianController extends Controller
             $harga_pemisah          = $tbs_pembelians->PemisahHarga;
             $nama_produk_title_case = $tbs_pembelians->TitleCaseBarang;
             $jumlah_produk          = $tbs_pembelians->PemisahJumlah;
+            $potongan_tampil        = $tbs_pembelians->PemisahPotongan;
+            $tax_tampil             = $tbs_pembelians->PemisahTax;
 
             $ppn = EditTbsPembelian::select('ppn')->where('no_faktur', $pembelian->no_faktur)->where('warung_id', Auth::user()->id_warung)->where('ppn', '!=', '')->limit(1);
             if ($ppn->count() > 0) {
@@ -411,9 +419,9 @@ class PembelianController extends Controller
                 'harga_pemisah'          => $tbs_pembelians->PemisahHarga,
                 'jumlah_produk'          => $tbs_pembelians->jumlah_produk,
                 'jumlah_produk_pemisah'  => $jumlah_produk,
-                'potongan'               => $tbs_pembelians->potongan,
+                'potongan'               => $potongan_tampil,
                 'potongan_persen'        => $potongan_persen,
-                'tax'                    => $tbs_pembelians->tax,
+                'tax'                    => $tax_tampil,
                 'ppn_produk'             => $ppn_produk,
                 'tax_persen'             => $tax_persen,
                 'kas_pilih'              => $kas_pilih,
@@ -430,6 +438,150 @@ class PembelianController extends Controller
         return response()->json($respons);
     }
     //END VIEW DAN PENCARIAN TBS PEMBELIAN
+
+//VIEW DETAIL PEMBELIAN & PENCARIAN
+     public function viewDetailPembelian($id)
+    {
+        $pembelian   = Pembelian::find($id);
+        $no_faktur = $pembelian->no_faktur;
+        $user_warung   = Auth::user()->id_warung;
+
+
+       $sum_subtotal = DetailPembelian::select(DB::raw('SUM(subtotal) as subtotal'))->where('no_faktur', $no_faktur)->where('warung_id', Auth::user()->id_warung)->first();
+       $subtotal     = $sum_subtotal->subtotal;
+
+      $detail_pembelian = DetailPembelian::select('detail_pembelians.id_detail_pembelian AS id_detail_pembelian', 'detail_pembelians.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'detail_pembelians.id_produk AS id_produk', 'detail_pembelians.harga_produk AS harga_produk', 'detail_pembelians.potongan AS potongan', 'detail_pembelians.tax AS tax', 'detail_pembelians.subtotal AS subtotal', 'detail_pembelians.ppn AS ppn','detail_pembelians.no_faktur AS no_faktur')->leftJoin('barangs', 'barangs.id', '=', 'detail_pembelians.id_produk')->where('detail_pembelians.no_faktur', $pembelian->no_faktur)->where('detail_pembelians.warung_id', Auth::user()->id_warung)->orderBy('detail_pembelians.id_detail_pembelian', 'desc')->paginate(10);
+
+          $array         = array();
+        $kas_default = Kas::where('warung_id', Auth::user()->id_warung)->where('default_kas', 1)->count();
+
+    foreach ($detail_pembelian as $detail_pembelians) {
+
+            $potongan_persen        = ($detail_pembelians->potongan / ($detail_pembelians->jumlah_produk * $detail_pembelians->harga_produk)) * 100;
+            $subtotal_tbs           = $detail_pembelians->PemisahSubtotal;
+            $harga_pemisah          = $detail_pembelians->PemisahHarga;
+            $nama_produk_title_case = $detail_pembelians->TitleCaseBarang;
+            $jumlah_produk          = $detail_pembelians->PemisahJumlah;
+            $potongan_tampil        = $detail_pembelians->PemisahPotongan;
+            $tax_tampil             = $detail_pembelians->PemisahTax;
+
+            $ppn = DetailPembelian::select('ppn')->where('no_faktur', $detail_pembelians->no_faktur)->where('warung_id', Auth::user()->id_warung)->where('ppn', '!=', '')->limit(1);
+            if ($ppn->count() > 0) {
+                $ppn_produk = $ppn->first()->ppn;
+                if ($detail_pembelians->tax == 0) {
+                    $tax_persen = 0;
+                } else {
+                    if ($detail_pembelians->ppn == "Include") {
+                        $tax_kembali = $detail_pembelians->subtotal - $detail_pembelians->tax;
+                        //tax untuk mendapatkan 1,1
+                        $tax_format = $detail_pembelians->subtotal / $tax_kembali - 1;
+                        $tax_persen = $tax_format * 100;
+
+                    } else if ($detail_pembelians->ppn == "Exclude") {
+                        $tax_persen = ($detail_pembelians->tax * 100) / ($detail_pembelians->jumlah_produk * $detail_pembelians->harga_produk - $detail_pembelians->potongan);
+                    }
+                }
+            } else {
+                $ppn_produk = "";
+                $tax_persen = 0;
+            }
+
+        array_push($array, [
+                'id_detail_pembelian'       => $detail_pembelians->id_detail_pembelian,
+                'nama_produk'            => $nama_produk_title_case,
+                'kode_produk'            => $detail_pembelians->produk->kode_barang,
+                'harga_produk'           => $detail_pembelians->harga_produk,
+                'harga_pemisah'          => $detail_pembelians->PemisahHarga,
+                'jumlah_produk'          => $detail_pembelians->jumlah_produk,
+                'jumlah_produk_pemisah'  => $jumlah_produk,
+                'potongan'               => $potongan_tampil,
+                'potongan_persen'        => $potongan_persen,
+                'tax'                    => $tax_tampil,
+                'ppn_produk'             => $ppn_produk,
+                'tax_persen'             => $tax_persen,
+                'subtotal'              => $detail_pembelians->subtotal,
+                'subtotal_tbs'           => $subtotal_tbs,
+            ]);
+    }
+
+            $url     = '/pembelian/view-detail-pembelian/' . $id;
+            $respons = $this->paginationData($detail_pembelian, $array, $kas_default,$subtotal, $no_faktur, $url);
+            return response()->json($respons);
+}
+
+public function pencarianDetailPembelian(Request $request,$id)
+{
+    $session_id    = session()->getId();
+    $pembelian   = Pembelian::find($id);
+    $no_faktur = $pembelian->no_faktur;
+    $user_warung   = Auth::user()->id_warung;
+
+    $sum_subtotal = DetailPembelian::select(DB::raw('SUM(subtotal) as subtotal'))->where('no_faktur', $no_faktur)->where('warung_id', Auth::user()->id_warung)->first();
+    $subtotal     = $sum_subtotal->subtotal;
+
+   $detail_pembelian = DetailPembelian::select('detail_pembelians.id_detail_pembelian AS id_detail_pembelian', 'detail_pembelians.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'detail_pembelians.id_produk AS id_produk', 'detail_pembelians.harga_produk AS harga_produk', 'detail_pembelians.potongan AS potongan', 'detail_pembelians.tax AS tax', 'detail_pembelians.subtotal AS subtotal', 'detail_pembelians.ppn AS ppn','detail_pembelians.no_faktur AS no_faktur')->leftJoin('barangs', 'barangs.id', '=', 'detail_pembelians.id_produk')->where('detail_pembelians.no_faktur', $no_faktur)->where('detail_pembelians.warung_id', Auth::user()->id_warung)
+            ->where(function ($query) use ($request) {
+
+                $query->orWhere('barangs.nama_barang', 'LIKE', $request->search . '%')
+                    ->orWhere('barangs.kode_barang', 'LIKE', $request->search . '%');
+
+            })->orderBy('detail_pembelians.id_detail_pembelian', 'desc')->paginate(10);
+    $array = array();
+    $kas_default = Kas::where('warung_id', Auth::user()->id_warung)->where('default_kas', 1)->count();
+    foreach ($detail_pembelian as $detail_pembelians) {
+
+            $potongan_persen        = ($detail_pembelians->potongan / ($detail_pembelians->jumlah_produk * $detail_pembelians->harga_produk)) * 100;
+            $subtotal_tbs           = $detail_pembelians->PemisahSubtotal;
+            $harga_pemisah          = $detail_pembelians->PemisahHarga;
+            $nama_produk_title_case = $detail_pembelians->TitleCaseBarang;
+            $jumlah_produk          = $detail_pembelians->PemisahJumlah;
+            $potongan_tampil        = $detail_pembelians->PemisahPotongan;
+            $tax_tampil             = $detail_pembelians->PemisahTax;
+
+            $ppn = DetailPembelian::select('ppn')->where('no_faktur', $detail_pembelians->no_faktur)->where('warung_id', Auth::user()->id_warung)->where('ppn', '!=', '')->limit(1);
+            if ($ppn->count() > 0) {
+                $ppn_produk = $ppn->first()->ppn;
+                if ($detail_pembelians->tax == 0) {
+                    $tax_persen = 0;
+                } else {
+                    if ($detail_pembelians->ppn == "Include") {
+                        $tax_kembali = $detail_pembelians->subtotal - $detail_pembelians->tax;
+                        //tax untuk mendapatkan 1,1
+                        $tax_format = $detail_pembelians->subtotal / $tax_kembali - 1;
+                        $tax_persen = $tax_format * 100;
+
+                    } else if ($detail_pembelians->ppn == "Exclude") {
+                        $tax_persen = ($detail_pembelians->tax * 100) / ($detail_pembelians->jumlah_produk * $detail_pembelians->harga_produk - $detail_pembelians->potongan);
+                    }
+                }
+            } else {
+                $ppn_produk = "";
+                $tax_persen = 0;
+            }
+
+        array_push($array, [
+                 'id_detail_pembelian'    => $detail_pembelians->id_detail_pembelian,
+                'nama_produk'            => $nama_produk_title_case,
+                'kode_produk'            => $detail_pembelians->produk->kode_barang,
+                'harga_produk'           => $detail_pembelians->harga_produk,
+                'harga_pemisah'          => $detail_pembelians->PemisahHarga,
+                'jumlah_produk'          => $detail_pembelians->jumlah_produk,
+                'jumlah_produk_pemisah'  => $jumlah_produk,
+                'potongan'               => $potongan_tampil,
+                'potongan_persen'        => $potongan_persen,
+                'tax'                    => $tax_tampil,
+                'ppn_produk'             => $ppn_produk,
+                'tax_persen'             => $tax_persen,
+                'subtotal'              => $detail_pembelians->subtotal,
+                'subtotal_tbs'           => $subtotal_tbs,
+            ]);
+    }
+
+            $url     = '/pembelian/pencarian-detail-pembelian/' . $id;
+            $respons = $this->paginationData($detail_pembelian, $array, $kas_default,$subtotal, $no_faktur, $url);
+            return response()->json($respons);
+}
+//END VIEW DETAIL PEMBELIAN & PENCARIAN
 
     public function paginationData($pembelian, $array, $kas_default, $subtotal,$no_faktur, $url)
     {
@@ -483,106 +635,11 @@ class PembelianController extends Controller
         return response()->json($suplier);
     }
 
-    public function detailView(Request $request)
-    {
-        $detail_pembelian = DetailPembelian::with(['produk'])->where('warung_id', Auth::user()->id_warung)->where('no_faktur', $request->no_faktur)->get();
-        $array            = array();
-        foreach ($detail_pembelian as $detail_pembelians) {
-            array_push($array, [
-                'no_faktur'       => $detail_pembelians->no_faktur,
-                'nama_produk'     => $detail_pembelians->TitleCaseBarang,
-                'jumlah_produk'   => $detail_pembelians->PemisahJumlah,
-                'harga_produk'    => $detail_pembelians->PemisahHarga,
-                'potongan_produk' => $detail_pembelians->PemisahPotongan,
-                'pajak_produk'    => $detail_pembelians->PemisahTax,
-                'subtotal'        => $detail_pembelians->PemisahSubtotal,
-            ]);
-        }
-
-        $respons['data'] = $array;
-
-        return $respons;
-    }
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request, Builder $htmlBuilder)
-    {
-
-        if (Auth::user()->id_warung == '') {
-            Auth::logout();
-            return response()->view('error.403');
-        } else {
-            // form pembelian
-            $session_id   = session()->getId();
-            $sum_subtotal = TbsPembelian::select(DB::raw('SUM(subtotal) as subtotal'))->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->first();
-            $subtotal     = number_format($sum_subtotal->subtotal, 2, ',', '.');
-            if ($request->ajax()) {
-
-                $tbs_pembelian = TbsPembelian::with(['produk'])->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->get();
-                return Datatables::of($tbs_pembelian)->addColumn('action', function ($TbsPembelian) {
-
-                    $pesan_alert = 'Anda Yakin Ingin Menghapus Produk "' . $TbsPembelian->TitleCaseBarang . '" ?';
-                    return view('pembelian._hapus_produk', [
-                        'model'           => $TbsPembelian,
-                        'form_url'        => route('pembelian.hapus_tbs_pembelian', $TbsPembelian->id_tbs_pembelian),
-                        'confirm_message' => $pesan_alert,
-                    ]);
-                })
-                    ->editColumn('data_produk_tbs', function ($data_produk_tbs) {
-
-                        return $data_produk_tbs->produk->kode_barang . ' - ' . $data_produk_tbs->TitleCaseBarang;
-                    })
-                    ->editColumn('jumlah_produk', function ($produk_tbs) {
-                        return "<a href='#edit-jumlah' align='right' id='edit_jumlah_produk' class='edit-jumlah' data-id='$produk_tbs->id_tbs_pembelian' data-nama='$produk_tbs->TitleCaseBarang'><p align='right'>" . $produk_tbs->PemisahJumlah . "</p></a>";
-                    })
-                    ->editColumn('harga_produk', function ($produk) {
-
-                        return "<a href='#edit-harga' align='right' id='edit_harga_produk' class='edit-harga' data-id='$produk->id_tbs_pembelian'  data-nama='$produk->TitleCaseBarang'><p align='right'>" . $produk->PemisahHarga . "</p></a>";
-                    })
-                    ->editColumn('potongan', function ($produk) {
-
-                        $potongan_persen = ($produk->potongan / ($produk->jumlah_produk * $produk->harga_produk)) * 100;
-                        return "<a href='#edit-potongan' id='edit_potongan' class='edit-potongan' data-id='$produk->id_tbs_pembelian' data-nama='$produk->TitleCaseBarang' data-jumlah='$produk->jumlah_produk' data-harga='$produk->harga_produk'><p align='right'>" . round($produk->potongan, 2) . " | " . round($potongan_persen, 2) . "%</p></a>";
-                    })
-                    ->editColumn('tax', function ($produk) use ($session_id) {
-                        $ppn = TbsPembelian::select('ppn')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->where('ppn', '!=', '')->limit(1);
-                        if ($ppn->count() > 0) {
-                            $ppn_produk = $ppn->first()->ppn;
-                            if ($produk->tax == 0) {
-                                $tax_persen = 0;
-                            } else {
-
-                                $tax_persen = ($produk->tax * 100) / ($produk->jumlah_produk * $produk->harga_produk - $produk->potongan);
-                            }
-                        } else {
-                            $ppn_produk = "";
-                            $tax_persen = 0;
-                        }
-                        return "<a href='#edit-tax'id='edit_tax_produk' class='edit-tax' data-id='$produk->id_tbs_pembelian'  data-jumlah='$produk->jumlah_produk' data-potongan='$produk->potongan' data-harga='$produk->harga_produk' data-ppn='$ppn_produk' data-nama='$produk->TitleCaseBarang'><p align='right'>" . round($produk->tax, 2) . " | " . round($tax_persen, 2) . "%</p></a>";
-                    })
-                    ->editColumn('subtotal', function ($produk) {
-                        return "<p id='table-subtotal' align='right'>" . $produk->PemisahSubtotal . "</p>";
-                    })->make(true);
-
-            }
-
-            $html = $htmlBuilder
-                ->addColumn(['data' => 'data_produk_tbs', 'name' => 'data_produk_tbs', 'title' => 'Produk', 'orderable' => false, 'searchable' => false])
-                ->addColumn(['data' => 'jumlah_produk', 'name' => 'jumlah_produk', 'title' => 'Jumlah'])
-                ->addColumn(['data' => 'harga_produk', 'name' => 'harga_produk', 'title' => 'Harga'])
-                ->addColumn(['data' => 'potongan', 'name' => 'potongan', 'title' => 'Potongan'])
-                ->addColumn(['data' => 'tax', 'name' => 'tax', 'title' => 'Pajak'])
-                ->addColumn(['data' => 'subtotal', 'name' => 'subtotal', 'title' => 'Subtotal'])
-                ->addColumn(['data' => 'action', 'name' => 'action', 'title' => 'Hapus', 'orderable' => false, 'searchable' => false]);
-
-            $kas_default = Kas::where('warung_id', Auth::user()->id_warung)->where('default_kas', 1);
-
-            return view('pembelian.create', ['subtotal_tbs' => $subtotal, 'kas_default' => $kas_default])->with(compact('html'));
-        }
-    }
 
     public function cekTbsPembelian(Request $request)
     {

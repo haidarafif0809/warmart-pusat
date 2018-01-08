@@ -481,6 +481,9 @@ Route::get('/pembelian/view-edit-tbs-pembelian/{id}', 'PembelianController@viewE
 Route::get('/pembelian/pencarian-edit-tbs-pembelian/{id}', 'PembelianController@pencarianEditTbsPembelian')->middleware('auth');
 Route::get('/pembelian/ambil-faktur-pembelian/{id}', 'PembelianController@ambilFakturPembelian')->middleware('auth');
 
+Route::get('/pembelian/view-detail-pembelian/{id}', 'PembelianController@viewDetailPembelian')->middleware('auth');
+Route::get('/pembelian/pencarian-detail-pembelian/{id}', 'PembelianController@pencarianDetailPembelian')->middleware('auth');
+
 Route::get('/pembelian/pilih-suplier', 'PembelianController@pilih_suplier')->middleware('auth');
 Route::get('/pembelian/cek-tbs-pembelian', 'PembelianController@cekTbsPembelian')->middleware('auth');
 Route::get('/pembelian/proses-tambah-tbs-pembelian', 'PembelianController@proses_tambah_tbs_pembelian')->middleware('auth');
