@@ -31,7 +31,13 @@
         text-decoration: none;
         font-size:15px;
     }
-
+    .buttonColor{
+        @if($setting_aplikasi->tipe_aplikasi == "1") /*tipe-aplikasi == 1, aplikasi topos*/
+        background-color: #2ac326;
+        @else
+        background-color: #01573e;
+        @endif
+    }
     @font-face {
       font-family: "San Francisco";
       font-weight: 200;
@@ -82,7 +88,6 @@ h4 {
     padding: 5px 0px 5px 0px;
 }
 </style>
-
 @if (Agent::isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
 
 <div class="page-header header-small" data-parallax="true"" style="{!! $foto_latar_belakang !!}">
@@ -92,7 +97,11 @@ h4 {
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
                 <div class="brand">
+                    @if($setting_aplikasi->tipe_aplikasi == 0)
                     <h3 class="title">PASAR MUSLIM INDONESIA</h3>
+                    @else
+                    <h3 class="title">TOKO ONLINE DAN POS</h3>
+                    @endif
                 </div>
             </div>
         </div>
@@ -113,11 +122,16 @@ h4 {
                             <span class="input-group-addon">
                                 <i class="material-icons">search</i>
                             </span>
+
+                            @if($setting_aplikasi->tipe_aplikasi == 0)
                             <input type="text" name="search" id="cari_produk" value="" placeholder="Cari Produk Atau Warung.." class="form-control" />
+                            @else
+                            <input type="text" name="search" id="cari_produk" value="" placeholder="Cari Produk.." class="form-control" />
+                            @endif
                         </div>
                     </div>
                     <div class="col-sm-2">
-                        <button type="submit" class="btn btn-block" style="background-color: #01573e">Cari</button>
+                        <button type="submit" class="btn btn-block" class="buttonColor">Cari</button>
                     </div>
                 </div>
                 {!! Form::close() !!}
@@ -138,11 +152,11 @@ h4 {
                     <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
                         <div class="panel-body">
 
-                            <ul class="nav" style="background-color: #01573e">
+                            <ul class="nav" class="buttonColor">
                                 <li><a style="color:white" href="{{route('daftar_produk.index')}}"><i class="material-icons">format_align_justify</i> SEMUA KATEGORI</a></li>
                             </ul>
 
-                            <ul class="nav" style="background-color: #01573e">
+                            <ul class="nav" class="buttonColor">
                                 {!! $kategori_produk !!}
                             </ul>
                         </div>
@@ -159,6 +173,7 @@ h4 {
                     </div>
                 </div>
 
+                @if($setting_aplikasi->tipe_aplikasi == 0)
                 @if(Auth::check())
                 @if( App\KeranjangBelanja::where('id_pelanggan',Auth::user()->id)->count() == 0)
                 <div class="row">
@@ -178,6 +193,7 @@ h4 {
                     <span class="span-warung">{!! $daftar_warung !!}</span>
                 </div>
                 @endif
+                @endif
             </div>
         </div>
     </div>
@@ -189,8 +205,12 @@ h4 {
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
                 <div class="brand">
+                    @if($setting_aplikasi->tipe_aplikasi == 0)
                     <h1 class="title">PASAR MUSLIM INDONESIA</h1>
                     <h3 class="title"> Segala Kemudahan Untuk Umat Muslim Berbelanja.</h3>
+                    @else
+                    <h1 class="title">TOKO ONLINE DAN POS</h1>
+                    @endif
                 </div>
             </div>
         </div>
@@ -211,11 +231,15 @@ h4 {
                             <span class="input-group-addon">
                                 <i class="material-icons">search</i>
                             </span>
+                            @if($setting_aplikasi->tipe_aplikasi == 0)
                             <input type="text" name="search" id="cari_produk" value="" placeholder="Cari Produk Atau Warung.." class="form-control" />
+                            @else
+                            <input type="text" name="search" id="cari_produk" value="" placeholder="Cari Produk.." class="form-control" />
+                            @endif
                         </div>
                     </div>
                     <div class="col-sm-2">
-                        <button type="submit" class="btn btn-block" style="background-color: #01573e">Cari</button>
+                        <button type="submit" class="btn btn-block" class="buttonColor">Cari</button>
                     </div>
                 </div>
                 {!! Form::close() !!}
@@ -224,14 +248,12 @@ h4 {
 
         <div class="row">
             <div class="col-md-3">
-                <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px"> Produk</h5>
-                <ul class="nav nav-tabs" data-tabs="tabs" style="background-color: #01573e">
+                <ul class="nav nav-tabs" data-tabs="tabs" class="buttonColor">
                     <li><a href="{{route('daftar_produk.index')}}"><i class="material-icons">format_align_justify</i> Semua Kategori</a></li>
                 </ul>
             </div>
             <div class="col-md-9">
-                <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px"><br></h5>
-                <ul class="nav nav-tabs" data-tabs="tabs" style="background-color: #01573e">
+                <ul class="nav nav-tabs" data-tabs="tabs" class="buttonColor">
                     {!! $kategori_produk !!}
                 </ul>
             </div>
@@ -249,6 +271,7 @@ h4 {
             </div>
 
 
+            @if($setting_aplikasi->tipe_aplikasi == 0)
             @if(Auth::check())
             @if(App\KeranjangBelanja::where('id_pelanggan',Auth::user()->id)->count() == 0)
             <!--Menampilkan Warung Secara Acak-->
@@ -262,6 +285,7 @@ h4 {
                 <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px"> Warung</h5>
                 <span id="span-warung">{!! $daftar_warung !!}</span>
             </div>
+            @endif
             @endif
         </div>
     </div>
