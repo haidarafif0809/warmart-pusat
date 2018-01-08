@@ -20,7 +20,7 @@
                                 <div class="form-group">
                                     <label for="kode_barcode" class="col-md-2 control-label">Kode Barcode</label>
                                     <div class="col-md-10">
-                                        <input class="form-control" :ref="kode_barcode" autocomplete="off" placeholder="Kode Barcode  (boleh tidak di isi)" v-model="produk.kode_barcode" type="text" name="kode_barcode" id="kode_barcode"  autofocus="">
+                                        <input class="form-control" :ref="kode_barcode" autocomplete="off" placeholder="Kode Barcode  (Jika Ada)" v-model="produk.kode_barcode" type="text" name="kode_barcode" id="kode_barcode"  autofocus="">
                                         <span v-if="errors.kode_barcode" id="kode_barcode_error" class="label label-danger">{{ errors.kode_barcode[0] }}</span>
                                     </div>
                                 </div>
@@ -78,8 +78,16 @@
                                 </div>
 
                                 <div class="form-group">
+                                    <label for="harga_jual2" class="col-md-2 control-label">Harga Jual 2</label>
+                                    <div class="col-md-10">
+                                        <input class="form-control" autocomplete="off" placeholder="Harga Jual 2(Jika Ada)" v-model="produk.harga_jual2" type="text" name="harga_jual2" id="harga_jual2"  autofocus="">
+                                        <span v-if="errors.harga_jual2" id="harga_jual2_error" class="label label-danger">{{ errors.harga_jual2[0] }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
                                     <label for="hitung_stok" class="col-md-2 control-label">Hitung Stok</label>
-                                       <div class="togglebutton col-md-10">
+                                    <div class="togglebutton col-md-10">
                                         <label>
                                             <input type="checkbox" v-model="produk.hitung_stok" name="hitung_stok" id="hitung_stok">
                                         </label>
@@ -88,7 +96,7 @@
 
                                 <div class="form-group">
                                     <label for="status_aktif" class="col-md-2 control-label">Bisa Dijual</label>
-                                       <div class="togglebutton col-md-10">
+                                    <div class="togglebutton col-md-10">
                                         <label>
                                             <input type="checkbox" v-model="produk.status_aktif" name="status_aktif" id="status_aktif">
                                         </label>
@@ -101,56 +109,56 @@
                                         <button type="button" class="btn btn-info btn-xs" id="btnDeskripsi" data-toggle="collapse" data-target="#collDeskripsi"><i class="material-icons">add</i>Deskripsi Produk</button>
                                     </div>                                  
                                     <div class="col-md-12 col-xs-12 collapse" id="collDeskripsi">
-                                          <quill-editor v-model="produk.deskripsi_produk"
-                                                        ref="myQuillEditor"
-                                                        :options="editorOption">
-                                          </quill-editor>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="foto" class="col-md-2 control-label">Foto Produk</label>
-                                    <div class="col-md-10">
-                                        <div class="fileinput fileinput-new text-center" data-provides="fileinput">
-                                            <div class="fileinput-new thumbnail">
-                                                <img v-if="produk.foto != ''" :src="url_picture+'/'+produk.foto" /> 
-                                                <img :src="url_origin+'/assets/img/image_placeholder.jpg'" alt="Foto Akan Tampil Disini" v-else>
-                                            </div>
-                                            <div class="fileinput-preview fileinput-exists thumbnail"></div>
-                                            <div>
-                                                <span class="btn btn-rose btn-round btn-file">
-                                                    <span class="fileinput-new">Ambil Foto</span>
-                                                    <span class="fileinput-exists">Ubah</span>
-                                                    <input class="form-control" type="file" name="foto" id="foto">
-                                                </span>
-                                                <a href="#pablo" class="btn btn-danger btn-round fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i> Batal</a>
-                                            </div>
-                                            <span v-if="errors.foto" id="foto_error" class="label label-danger">{{ errors.foto[0] }}</span>
-                                            <a style="color: red;">Size Foto (Ukuran Max : 3MB)</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6" style="height: 10%;" v-if="data_agent == 1">
-                                  <quill-editor v-model="produk.deskripsi_produk"
-                                                ref="myQuillEditor"
-                                                :options="editorOption">
+                                      <quill-editor v-model="produk.deskripsi_produk"
+                                      ref="myQuillEditor"
+                                      :options="editorOption">
                                   </quill-editor>
-                            </div>
-                        </div>
-                        
-                        <input class="form-control" autocomplete="off" v-model="produk.id" type="hidden" name="id" id="id"  autofocus="">
+                              </div>
+                          </div>
 
-                        <div class="form-group">
-                            <div class="col-md-10 col-md-offset-1">
-                                <button class="btn btn-primary" id="btnSimpanProduk" type="submit"><i class="material-icons">send</i> Submit</button>
+                          <div class="form-group">
+                            <label for="foto" class="col-md-2 control-label">Foto Produk</label>
+                            <div class="col-md-10">
+                                <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+                                    <div class="fileinput-new thumbnail">
+                                        <img v-if="produk.foto != ''" :src="url_picture+'/'+produk.foto" /> 
+                                        <img :src="url_origin+'/assets/img/image_placeholder.jpg'" alt="Foto Akan Tampil Disini" v-else>
+                                    </div>
+                                    <div class="fileinput-preview fileinput-exists thumbnail"></div>
+                                    <div>
+                                        <span class="btn btn-rose btn-round btn-file">
+                                            <span class="fileinput-new">Ambil Foto</span>
+                                            <span class="fileinput-exists">Ubah</span>
+                                            <input class="form-control" type="file" name="foto" id="foto">
+                                        </span>
+                                        <a href="#pablo" class="btn btn-danger btn-round fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i> Batal</a>
+                                    </div>
+                                    <span v-if="errors.foto" id="foto_error" class="label label-danger">{{ errors.foto[0] }}</span>
+                                    <a style="color: red;">Size Foto (Ukuran Max : 3MB)</a>
+                                </div>
                             </div>
                         </div>
-                    </form>
-                </div>
+                    </div>
+                    <div class="col-md-6" style="height: 10%;" v-if="data_agent == 1">
+                      <quill-editor v-model="produk.deskripsi_produk"
+                      ref="myQuillEditor"
+                      :options="editorOption">
+                  </quill-editor>
+              </div>
+          </div>
+
+          <input class="form-control" autocomplete="off" v-model="produk.id" type="hidden" name="id" id="id"  autofocus="">
+
+          <div class="form-group">
+            <div class="col-md-10 col-md-offset-1">
+                <button class="btn btn-primary" id="btnSimpanProduk" type="submit"><i class="material-icons">send</i> Submit</button>
             </div>
         </div>
-    </div>
+    </form>
+</div>
+</div>
+</div>
+</div>
 </template>
 
 
@@ -194,6 +202,7 @@ export default {
                 satuan_id : '',
                 harga_beli : '',
                 harga_jual : '',
+                harga_jual2 : '',
                 deskripsi_produk : '',
                 hitung_stok : 1,
                 status_aktif : 1
@@ -213,108 +222,110 @@ export default {
     computed: {
       editor() {
         return this.$refs.myQuillEditor.quill
-      }
-    },
-    methods: {        
-        saveForm() {
-            var app = this;
-            var newProduk = app.inputData();
-            app.loading();
-
-            axios.post(app.url+'/' + app.produkId, newProduk)
-            .then(function (resp) {
-                app.message = 'Berhasil Mengubah Produk '+app.produk.nama_barang;
-                app.alert(app.message);
-                app.kosongkanData();
-                app.$router.replace('/produk/');
-                app.$swal.close();
-            })
-            .catch(function (resp) {
-                app.errors = resp.response.data.errors;
-                app.$swal.close();
-            });
-        },
-        alert(pesan) {
-            this.$swal({
-                title: "Berhasil !",
-                text: pesan,
-                icon: "success",
-            });
-        },
-        dataKategori() {
-            var app = this;
-            axios.get(app.url+'/pilih-kategori').then(function (resp) {
-                app.kategori_barang_id = resp.data;
-            })
-            .catch(function (resp) {
-                alert("Tidak Bisa Memuat Kategori");
-            });
-        },
-        dataSatuan() {
-            var app = this;
-            axios.get(app.url+'/pilih-satuan').then(function (resp) {
-                app.satuan_id = resp.data;
-            })
-            .catch(function (resp) {
-                alert("Tidak Bisa Memuat Satuan");
-            });
-        },
-        dataAgent() {
-            var app = this;
-            axios.get(app.url+'/pilih-agent').then(function (resp) {
-                app.data_agent = resp.data;
-            })
-            .catch(function (resp) {
-                alert("Tidak Bisa Memuat Agent");
-            });
-        },
-        loading(){
-            this.$swal({
-                title: "Sedang Memproses Data ...",
-                text: "Harap Tunggu!",
-                icon: "info",
-                buttons:  false,
-                closeOnClickOutside: false,
-                closeOnEsc: false
-
-            });
-        },
-        inputData(){
-            var app = this;
-
-            let newProduk = new FormData();
-            if (document.getElementById('foto').files[0] != undefined) {
-                newProduk.append('foto', document.getElementById('foto').files[0]);
-            }           
-            newProduk.append('kode_barcode', app.produk.kode_barcode);
-            newProduk.append('kode_barang', app.produk.kode_barang);
-            newProduk.append('nama_barang', app.produk.nama_barang);
-            newProduk.append('kategori_barang_id', app.produk.kategori_barang_id);
-            newProduk.append('satuan_id', app.produk.satuan_id);
-            newProduk.append('harga_beli', app.produk.harga_beli);
-            newProduk.append('harga_jual', app.produk.harga_jual);
-            newProduk.append('hitung_stok', app.produk.hitung_stok);
-            newProduk.append('deskripsi_produk', app.produk.deskripsi_produk);
-            newProduk.append('status_aktif', app.produk.status_aktif);
-
-            return newProduk;
-        },
-        kosongkanData(){
-            var app = this;
-
-                app.produk.foto = '';
-                app.produk.kode_barcode = '';
-                app.produk.kode_barang = '';
-                app.produk.nama_barang = '';
-                app.produk.kategori_barang_id = '';
-                app.produk.satuan_id = '';
-                app.produk.harga_beli = '';
-                app.produk.harga_jual = '';
-                app.produk.deskripsi_produk = '';
-                app.produk.hitung_stok = 'true';
-                app.produk.status_aktif = 'true';
-                app.errors = '';
-        }
     }
+},
+methods: {        
+    saveForm() {
+        var app = this;
+        var newProduk = app.inputData();
+        app.loading();
+
+        axios.post(app.url+'/' + app.produkId, newProduk)
+        .then(function (resp) {
+            app.message = 'Berhasil Mengubah Produk '+app.produk.nama_barang;
+            app.alert(app.message);
+            app.kosongkanData();
+            app.$router.replace('/produk/');
+            app.$swal.close();
+        })
+        .catch(function (resp) {
+            app.errors = resp.response.data.errors;
+            app.$swal.close();
+        });
+    },
+    alert(pesan) {
+        this.$swal({
+            title: "Berhasil !",
+            text: pesan,
+            icon: "success",
+        });
+    },
+    dataKategori() {
+        var app = this;
+        axios.get(app.url+'/pilih-kategori').then(function (resp) {
+            app.kategori_barang_id = resp.data;
+        })
+        .catch(function (resp) {
+            alert("Tidak Bisa Memuat Kategori");
+        });
+    },
+    dataSatuan() {
+        var app = this;
+        axios.get(app.url+'/pilih-satuan').then(function (resp) {
+            app.satuan_id = resp.data;
+        })
+        .catch(function (resp) {
+            alert("Tidak Bisa Memuat Satuan");
+        });
+    },
+    dataAgent() {
+        var app = this;
+        axios.get(app.url+'/pilih-agent').then(function (resp) {
+            app.data_agent = resp.data;
+        })
+        .catch(function (resp) {
+            alert("Tidak Bisa Memuat Agent");
+        });
+    },
+    loading(){
+        this.$swal({
+            title: "Sedang Memproses Data ...",
+            text: "Harap Tunggu!",
+            icon: "info",
+            buttons:  false,
+            closeOnClickOutside: false,
+            closeOnEsc: false
+
+        });
+    },
+    inputData(){
+        var app = this;
+
+        let newProduk = new FormData();
+        if (document.getElementById('foto').files[0] != undefined) {
+            newProduk.append('foto', document.getElementById('foto').files[0]);
+        }           
+        newProduk.append('kode_barcode', app.produk.kode_barcode);
+        newProduk.append('kode_barang', app.produk.kode_barang);
+        newProduk.append('nama_barang', app.produk.nama_barang);
+        newProduk.append('kategori_barang_id', app.produk.kategori_barang_id);
+        newProduk.append('satuan_id', app.produk.satuan_id);
+        newProduk.append('harga_beli', app.produk.harga_beli);
+        newProduk.append('harga_jual', app.produk.harga_jual);
+        newProduk.append('harga_jual2', app.produk.harga_jual2);
+        newProduk.append('hitung_stok', app.produk.hitung_stok);
+        newProduk.append('deskripsi_produk', app.produk.deskripsi_produk);
+        newProduk.append('status_aktif', app.produk.status_aktif);
+
+        return newProduk;
+    },
+    kosongkanData(){
+        var app = this;
+
+        app.produk.foto = '';
+        app.produk.kode_barcode = '';
+        app.produk.kode_barang = '';
+        app.produk.nama_barang = '';
+        app.produk.kategori_barang_id = '';
+        app.produk.satuan_id = '';
+        app.produk.harga_beli = '';
+        app.produk.harga_jual = '';
+        app.produk.harga_jual2 = '';
+        app.produk.deskripsi_produk = '';
+        app.produk.hitung_stok = 'true';
+        app.produk.status_aktif = 'true';
+        app.errors = '';
+    }
+}
 }
 </script>

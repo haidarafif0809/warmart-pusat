@@ -38,7 +38,8 @@
                                     <th>Nama</th>
                                     <th>Satuan</th>
                                     <th>Harga Beli</th>
-                                    <th>Harga Jual</th>
+                                    <th>Harga Jual 1</th>
+                                    <th>Harga Jual 2</th>
                                     <th>Status</th>
                                     <th>Kategori</th>
                                     <th>Aksi</th>
@@ -46,45 +47,46 @@
                             </thead>
                             <tbody v-if="produk.length"  class="data-ada">
                                 <tr v-for="produk, index in produk" >
-                                     <td>{{ produk.produk.kode_barcode }}</td>
-                                     <td>{{ produk.produk.kode_barang }}</td>
-                                     <td>{{ produk.produk.nama_barang }}</td>
-                                     <td>{{ produk.produk.satuan.nama_satuan}}</td>
-                                     <td>{{ produk.harga_beli }}</td>
-                                     <td>{{ produk.harga_jual }}</td>
-                                     <td v-if="produk.produk.status_aktif == 1">Aktif</td>
-                                     <td v-else>Tidak Aktif</td>
-                                     <td>{{ produk.produk.kategori_barang.nama_kategori_barang }}</td>
-                                     <td>
+                                   <td>{{ produk.produk.kode_barcode }}</td>
+                                   <td>{{ produk.produk.kode_barang }}</td>
+                                   <td>{{ produk.nama_produk }}</td>
+                                   <td>{{ produk.produk.satuan.nama_satuan}}</td>
+                                   <td>{{ produk.harga_beli }}</td>
+                                   <td>{{ produk.harga_jual }}</td>
+                                   <td>{{ produk.harga_jual2 }}</td>
+                                   <td v-if="produk.produk.status_aktif == 1">Aktif</td>
+                                   <td v-else>Tidak Aktif</td>
+                                   <td>{{ produk.produk.kategori_barang.nama_kategori_barang }}</td>
+                                   <td>
 
-                                        <a :href="urlLihat+produk.produk.id" class="btn btn-xs btn-info" id="lihatDeskripsi" type="button"> Deskripsi</a>
+                                    <a :href="urlLihat+produk.produk.id" class="btn btn-xs btn-info" id="lihatDeskripsi" type="button"> Deskripsi</a>
 
-                                        <router-link :to="{name: 'editProduk', params: {id: produk.produk.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + produk.produk.id" > Edit
-                                        </router-link>
+                                    <router-link :to="{name: 'editProduk', params: {id: produk.produk.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + produk.produk.id" > Edit
+                                    </router-link>
 
-                                        <a v-if="produk.status_produk == 0" href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + produk.produk.id" v-on:click="deleteEntry(produk.produk.id, index, produk.produk.nama_barang)">Delete
-                                        </a>
+                                    <a v-if="produk.status_produk == 0" href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + produk.produk.id" v-on:click="deleteEntry(produk.produk.id, index, produk.nama_produk)">Delete
+                                    </a>
 
-                                        <a v-else href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + produk.produk.id" v-on:click="gagalHapus(produk.produk.id, index, produk.produk.nama_barang)">Delete
-                                        </a>
-                                    </td>
-                                </tr>
-                            </tbody>                    
-                            <tbody class="data-tidak-ada" v-else>
-                                <tr ><td colspan="9"  class="text-center">Tidak Ada Data</td></tr>
-                            </tbody>
+                                    <a v-else href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + produk.produk.id" v-on:click="gagalHapus(produk.produk.id, index, produk.prosnama_produk)">Delete
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>                    
+                        <tbody class="data-tidak-ada" v-else>
+                            <tr ><td colspan="9"  class="text-center">Tidak Ada Data</td></tr>
+                        </tbody>
                     </table>    
 
-                 <vue-simple-spinner v-if="loading"></vue-simple-spinner>
+                    <vue-simple-spinner v-if="loading"></vue-simple-spinner>
 
-                 <div align="right"><pagination :data="produkData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
-
-                    </div>
+                    <div align="right"><pagination :data="produkData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
 
                 </div>
+
             </div>
         </div>
     </div>
+</div>
 </template>
 
 <script>
@@ -167,19 +169,19 @@ export default {
                     app.getResults();
                     swal("Produk Berhasil Dihapus!  ", {
                       icon: "success",
-                    });
-                  })
+                  });
+                })
                   .catch(function (resp) {
                     app.$router.replace('/produk/');
                     swal("Gagal Menghapus produk!", {
                       icon: "warning",
-                    });
                   });
-               }
-               this.$router.replace('/produk/');
-            });
+                });
+              }
+              this.$router.replace('/produk/');
+          });
         },
-         gagalHapus(id, index,nama_barang) {
+        gagalHapus(id, index,nama_barang) {
             this.$swal({
                 title: "Gagal ",
                 text: ""+nama_barang+" Tidak Bisa Dihapus Karena Sudah Terpakai",
