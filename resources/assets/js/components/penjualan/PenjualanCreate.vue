@@ -42,6 +42,7 @@
             <ul class="breadcrumb" style="margin-bottom: 1px; margin-top: 1px;">
                 <li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li>
                 <li class="active">Penjualan</li>
+
             </ul>
 
             <div class="modal" id="modal_selesai" role="dialog" data-backdrop=""> 
@@ -153,13 +154,88 @@
        </div> 
        <!-- / MODAL TOMBOL SELESAI --> 
 
-       <div class="card" style="margin-bottom: 1px; margin-top: 1px;">
+
+       <div class="modal" id="modal_setting" role="dialog" data-backdrop=""> 
+        <div class="modal-dialog"> 
+            <!-- Modal content--> 
+            <div class="modal-content"> 
+                <div class="modal-header"> 
+                    <button type="button" class="close" data-dismiss="modal"> <i class="material-icons">close</i></button> 
+                    <h4 class="modal-title"> 
+                        <div class="alert-icon"> 
+                            <b>Setting Penjualan POS</b> 
+                        </div> 
+                    </h4> 
+                </div> 
+                <form class="form-horizontal" > 
+                    <div class="modal-body"> 
+                        <div class="card" style="margin-bottom:1px; margin-top:1px;">
+
+                            <table class="table" style="margin-bottom:10px; margin-top:10px; margin-right:10px; margin-left:10px;">
+
+                                <tbody style="margin-bottom:10px; margin-top:10px; margin-right:10px; margin-left:10px;">
+                                    <tr>
+                                        <td class="text-primary"><b># Jumlah Otomatis </b> </td>
+                                        <td class="text-primary"><b>:</b> </td>
+                                        <td class="text-primary"><b><input type="number" name="settings_jumlah_pos" v-model="setting_penjualan_pos.jumlah_produk"></b> </td>
+                                    </tr><br>
+
+                                    <tr>
+                                        <td class="text-primary"><b># Stok Boleh Minus ? </b> </td>
+                                        <td class="text-primary"><b>:</b> </td>
+                                        <td class="text-primary">
+                                            <div class="togglebutton">
+                                                <label>
+                                                    <input type="checkbox" v-model="setting_penjualan_pos.stok">
+                                                    <b v-if="setting_penjualan_pos.stok == 1">Ya</b>
+                                                    <b v-if="setting_penjualan_pos.stok == 0">Tidak</b>
+                                                </label>
+                                            </div>  
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="text-primary"><b># Harga Jual</b> </td>
+                                        <td class="text-primary"><b>:</b> </td>
+                                        <td class="text-primary">
+                                            <b> 
+                                                <div class="form-group" style="margin-right:110px;">
+                                                    <selectize-component :settings="hargaJual" v-model="setting_penjualan_pos.harga_jual" id="setting_harga_jual" ref='setting_harga_jual'> 
+                                                        <option v-bind:value="1">Level 1</option>
+                                                        <option v-bind:value="2">Level 2</option>
+                                                    </selectize-component>
+                                                </div>
+                                            </b> 
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>  
+
+
+                            <div align="right" class="form-group" style="margin-right:10px;">
+                                <button type="button" class="btn btn-primary btn-lg" v-on:click="simpanSetting"><font style="font-size:20px;">Simpan</font></button>
+                                <button type="button" class="btn btn-default btn-lg close" data-dismiss="modal"> <font style="font-size:20px;">Batal</font></button>
+                            </div>
+
+                        </div> 
+                    </div>
+                    <div class="modal-footer">  
+                    </div> 
+                </form>
+            </div>       
+        </div> 
+    </div> 
+    <!-- / MODAL TOMBOL SELESAI --> 
+
+    <div class="card" style="margin-bottom: 1px; margin-top: 1px;">
         <div class="card-content">
+
             <h4 class="card-title" style="margin-bottom: 1px; margin-top: 1px;"> Penjualan </h4>
 
             <div class="row" style="margin-bottom: 1px; margin-top: 1px;">
 
-                <div class="col-md-3">
+                <div class="col-md-3 col-xs-9">
                     <div class="card card-produk" style="margin-bottom: 1px; margin-top: 1px;">
 
                       <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
@@ -176,6 +252,15 @@
                     </span>
                 </div>
             </div>
+
+            <div class="col-md-3"></div>
+            <div class="col-md-5"></div>
+            <div class="col-md-1 col-xs-1">                
+                <button class="btn btn-primary btn-round btn-fab btn-fab-mini" data-toggle="modal" data-target="#modal_setting">
+                    <i class="material-icons">settings</i>
+                </button><b>Setting</b>
+            </div>
+
         </div>
 
 
@@ -288,6 +373,11 @@ export default {
                 kembalian: 0,
                 kredit: 0,
             }, 
+            setting_penjualan_pos :{
+                jumlah_produk : 1,
+                stok : 0,
+                harga_jual : 1
+            },
             placeholder_produk: {
                 placeholder: 'Cari Produk (F1) ...'
             },
@@ -296,6 +386,9 @@ export default {
             },
             placeholder_kas: {
                 placeholder: '--PILIH KAS--'
+            },
+            hargaJual: {
+                placeholder: '--HARGA JUAL--'
             },
             pencarian: '',
             loading: true,
@@ -315,7 +408,8 @@ export default {
     var app = this;
     app.dataProduk();
     app.dataPelanggan();
-    app.dataKas();
+    app.dataKas();    
+    app.dataSettingPenjualanPos();
     app.getResults();
 },
 watch: {
@@ -864,6 +958,47 @@ prosesSelesaiPenjualan(value){
     });
 
 },
+simpanSetting(){
+
+    var app = this
+    var newSettingPenjualanPos = app.setting_penjualan_pos;
+
+    if (app.setting_penjualan_pos.jumlah_produk == 0 || app.setting_penjualan_pos.jumlah_produk == '') {
+        app.alertTbs("Jumlah Produk Tidak Boleh Nol atau Kosong!")
+    }else{
+
+     axios.post(app.url+'/proses-setting-penjualan-pos',newSettingPenjualanPos)
+     .then(function (resp) {
+        app.alert("Menyimpan Setting Penjualan POS");        
+        $("#modal_setting").hide(); 
+    })
+     .catch(function (resp) {
+        console.log(resp);
+        alert("Tidak dapat Menyimpan Setting Penjualan POS");
+    });
+
+ }
+
+},
+dataSettingPenjualanPos(page) {
+    var app = this; 
+
+    axios.get(app.url+'/cek-setting-penjualan-pos')
+    .then(function (resp) {
+
+        if (resp.data.status == 1) {
+
+            app.setting_penjualan_pos.jumlah_produk = resp.data.jumlah_produk;
+            app.setting_penjualan_pos.stok = resp.data.stok;
+            app.setting_penjualan_pos.harga_jual = resp.data.harga_jual;
+        }
+
+    })
+    .catch(function (resp) {
+        console.log(resp);
+        alert("Tidak Dapat Memuat Penjualan");
+    });
+}, 
 bayarPenjualan(){
     $("#modal_selesai").show(); 
     this.$refs.pembayaran.$el.focus()
