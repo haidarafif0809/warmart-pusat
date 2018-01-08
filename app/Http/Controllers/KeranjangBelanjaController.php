@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Barang;
 use App\KeranjangBelanja;
+use App\SettingAplikasi;
 use Auth;
 use DB;
 use Jenssegers\Agent\Agent;
@@ -29,8 +30,10 @@ class KeranjangBelanjaController extends Controller
         $produk_belanjaan_dan_subtotal = $this->tampilanProdukKeranjangBelanja($keranjang_belanjaan);
         $subtotal                      = number_format($produk_belanjaan_dan_subtotal['subtotal'], 0, ',', '.');
         $produk_belanjaan              = $produk_belanjaan_dan_subtotal['produk_belanjaan'];
+        //SETTING APLIKASI
+        $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
 
-        return view('layouts.keranjang_belanja', ['keranjang_belanjaan' => $keranjang_belanjaan, 'cek_belanjaan' => $cek_belanjaan, 'agent' => $agent, 'produk_belanjaan' => $produk_belanjaan, 'jumlah_produk' => $jumlah_produk, 'subtotal' => $subtotal]);
+        return view('layouts.keranjang_belanja', ['keranjang_belanjaan' => $keranjang_belanjaan, 'cek_belanjaan' => $cek_belanjaan, 'agent' => $agent, 'produk_belanjaan' => $produk_belanjaan, 'jumlah_produk' => $jumlah_produk, 'subtotal' => $subtotal, 'setting_aplikasi' => $setting_aplikasi]);
 
     }
 

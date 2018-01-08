@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\DetailPesananPelanggan;
 use App\KeranjangBelanja;
 use App\PesananPelanggan;
+use App\SettingAplikasi;
 use Auth;
 use Indonesia;
 use Jenssegers\Agent\Agent;
@@ -31,6 +32,8 @@ class PesananPelangganController extends Controller
         $cek_belanjaan       = $keranjang_belanjaan->count();
         $logo_warmart        = "" . asset('/assets/img/examples/warmart_logo.png') . "";
         $user                = Auth::user();
+        //SETTING APLIKASI
+        $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
 
         $pesanan_pelanggan  = PesananPelanggan::with('warung')->where('id_pelanggan', Auth::user()->id)->orderBy('id', 'desc')->paginate(10);
         $cek_pesanan        = $pesanan_pelanggan->count();
@@ -96,7 +99,7 @@ class PesananPelangganController extends Controller
             $produk_pesanan_komputer .= '</tr>';
         }
 
-        return view('layouts.pesanan_pelanggan', ['produk_pesanan_mobile' => $produk_pesanan_mobile, 'produk_pesanan_komputer' => $produk_pesanan_komputer, 'cek_belanjaan' => $cek_belanjaan, 'agent' => $agent, 'logo_warmart' => $logo_warmart, 'user' => $user, 'cek_pesanan' => $cek_pesanan, 'pagination_pesanan' => $pagination_pesanan]);
+        return view('layouts.pesanan_pelanggan', ['produk_pesanan_mobile' => $produk_pesanan_mobile, 'produk_pesanan_komputer' => $produk_pesanan_komputer, 'cek_belanjaan' => $cek_belanjaan, 'agent' => $agent, 'logo_warmart' => $logo_warmart, 'user' => $user, 'cek_pesanan' => $cek_pesanan, 'pagination_pesanan' => $pagination_pesanan, 'setting_aplikasi' => $setting_aplikasi]);
     }
 
     public function detailPesananPelanggan($id)
