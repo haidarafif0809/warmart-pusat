@@ -3,7 +3,13 @@
 @section('content')
 
 @include('layouts._flash_login')
-       @if ($errors->has('no_telp'))
+
+<!-- PILIH TIPE APLIKASI -->
+<?php
+$setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
+?>
+
+@if ($errors->has('no_telp'))
 <div class="alert alert-danger alert-with-icon">
     <i class="material-icons" data-notify="icon">
         error_outline
@@ -36,59 +42,61 @@
                 </span>
                 <div class="form-group label-floating ">
                     <input autocomplete="off" class="form-control" name="no_telp" placeholder="Nomor Telpon" type="number" value="{{ old('no_telp') }}">
-                    </input>
-                </div>
+                </input>
             </div>
-            <div class="input-group">
-                <span class="input-group-addon">
-                    <i class="material-icons">
-                        lock_outline
-                    </i>
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon">
+                <i class="material-icons">
+                    lock_outline
+                </i>
+            </span>
+            <div class="form-group label-floating ">
+                <input class="form-control" name="password" placeholder="Password" type="password">
+                @if ($errors->has('password'))
+                <span class="label label-danger">
+                    <strong>
+                        {{ $errors->first('password') }}
+                    </strong>
                 </span>
-                <div class="form-group label-floating ">
-                    <input class="form-control" name="password" placeholder="Password" type="password">
-                        @if ($errors->has('password'))
-                        <span class="label label-danger">
-                            <strong>
-                                {{ $errors->first('password') }}
-                            </strong>
-                        </span>
-                        @endif
-                    </input>
-                </div>
-            </div>
+                @endif
+            </input>
         </div>
-        <div class="footer text-center">
-            <center>
-                <a href="{{ url('/lupa-password/') }}" style="padding-right: 40%;font-size: 90%">
-                    Lupa Password
-                </a>
-            </center>
-            <button class="btn btn-rose btn-simple btn-wd btn-lg" id="login" type="submit">
-                Login
-            </button>
-        </div>
-        <center>
-            <p>
-                Belum Daftar?
-                <a class="swal-pendaftaran" href="#">
-                    Daftar Sekarang
-                </a>
-            </p>
-        </center>
     </div>
+</div>
+<div class="footer text-center">
+    <center>
+        <a href="{{ url('/lupa-password/') }}" style="padding-right: 40%;font-size: 90%">
+            Lupa Password
+        </a>
+    </center>
+    <button class="btn btn-rose btn-simple btn-wd btn-lg" id="login" type="submit">
+        Login
+    </button>
+</div>
+<center>
+    <p>
+        Belum Daftar?
+        @if($setting_aplikasi->tipe_aplikasi == 0)
+        <a class="swal-pendaftaran" href="#"> Daftar Sekarang </a>
+        @else
+        <a href="{{ url('/register-customer') }}"> Daftar Sekarang </a>
+        @endif
+    </p>
+</center>
+</div>
 </form>
 @endsection 
 
 @section('scripts')
 <script type="text/javascript">
     $('.swal-pendaftaran').click(function(){
-    swal({
-        title: 'Daftar Sebagai?',
-        html:
+        swal({
+            title: 'Daftar Sebagai?',
+            html:
             '<li class="" style="list-style-type:none"><a href="{{ url('/register-customer') }}"  class="btn btn-info"><i class="material-icons">person_add</i> Pelanggan</a></li><li class="" style="list-style-type:none"><a href="{{ url('/register') }}"  class="btn btn-success"><i class="material-icons">people</i> Komunitas</a></li><li class=""  style="list-style-type:none"><a href="{{ url('/register-warung') }}"  class="btn btn-warning"><i class="material-icons">store</i> Warung</a></li> ',
-        showConfirmButton :  false,
+            showConfirmButton :  false,
+        });
     });
-});
 </script>
 @endsection
