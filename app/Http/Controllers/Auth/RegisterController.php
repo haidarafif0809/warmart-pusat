@@ -8,6 +8,7 @@ use App\Kas;
 use App\KomunitasCustomer;
 use App\Notifications\PendaftarWarung;
 use App\Role;
+use App\SettingAplikasi;
 use App\User;
 use App\UserWarung;
 use App\Warung;
@@ -286,7 +287,9 @@ class RegisterController extends Controller
 
     protected function register_customer()
     {
-        return view('auth.register_customer');
+        //SETTING APLIKASI
+        $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
+        return view('auth.register_customer', ['setting_aplikasi' => $setting_aplikasi->tipe_aplikasi]);
     }
 
     protected function syarat_ketentuan()

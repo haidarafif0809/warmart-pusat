@@ -31,16 +31,18 @@ h6 {
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
                 <div class="brand">
-                    <h1 class="title">
-                        PASAR MUSLIM INDONESIA
-                    </h1>
-                    <h4 class="title">
-                        Segala Kemudahan Untuk Umat Muslim Berbelanja.
-                    </h4>
-                </div>
-            </div>
-        </div>
-    </div>
+
+                  @if($setting_aplikasi->tipe_aplikasi == 0)
+                  <h1 class="title"> PASAR MUSLIM INDONESIA </h1>
+                  <h4 class="title"> Segala Kemudahan Untuk Umat Muslim Berbelanja. </h4>
+                  @else
+                  <h1 class="title"> TOKO ONLINE DAN POS </h1>
+                  @endif
+
+              </div>
+          </div>
+      </div>
+  </div>
 </div>
 <div class="main main-raised">
     @if ($agent->isMobile())

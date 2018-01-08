@@ -26,6 +26,11 @@
 </head>
 
 <body class="off-canvas-sidebar">
+    <!-- PILIH TIPE APLIKASI -->
+    <?php
+    $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
+    ?>
+
     <nav class="navbar navbar-primary navbar-transparent navbar-absolute">
         <div class="container">
             <div class="navbar-header">
@@ -35,7 +40,11 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
+                @if($setting_aplikasi->tipe_aplikasi == 0)
                 <a class="navbar-brand" href="{{ url('/')}}">War-Mart.id</a>
+                @else
+                <a class="navbar-brand" href="{{ url('/')}}">To-Pos.id</a>
+                @endif
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav navbar-right"> 
@@ -53,6 +62,7 @@
                                         <i class="material-icons">person_add</i> Pelanggan
                                     </a>
                                 </li>
+                                @if($setting_aplikasi->tipe_aplikasi == 0)
                                 <li class="">
                                     <a href="{{ url('/register') }}">
                                         <i class="material-icons">people</i> Komunitas
@@ -63,6 +73,7 @@
                                         <i class="material-icons">store</i> Warung
                                     </a>
                                 </li> 
+                                @endif
                             </ul>
                         </div>
                     </li>
