@@ -47,6 +47,12 @@
     color: inherit;
     padding: 10px 15px;
 }
+body {
+    @if($setting_aplikasi->tipe_aplikasi == 1)
+    background-color: #2ac326;
+    color: #3C4858;
+    @endif
+}
 </style>
 <body class="ecommerce-page">
 
