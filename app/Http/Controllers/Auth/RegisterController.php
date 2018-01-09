@@ -296,6 +296,11 @@ class RegisterController extends Controller
     {
         return view('auth.syarat_ketentuan');
     }
+    protected function syarat_ketentuan_topos()
+    {
+        return view('auth.syarat_ketentuan_topos');
+    }
+    
 
     protected function lupa_password()
     {
