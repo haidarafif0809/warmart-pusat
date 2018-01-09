@@ -1,252 +1,270 @@
 @extends('layouts.app_pelanggan')
 @section('content')
 <style type="text/css">
-.page-header.header-small {
-  height: 35vh;
-  min-height: 35vh;
-}
-.ecommerce-page .page-header .container {
-  padding-top: 10vh;
-}
-h4 {
-  @if(Agent::isMobile())
-  font-size: 1.2em;
-  line-height: 1.4em;
-  margin: 20px 0 10px;
-  @endif
-}
-.panel .panel-heading {
-  background-color: transparent;
-  border-bottom: 2px solid #ddd;
-  padding: 5px 0px 5px 0px;
-}
+  .page-header.header-small {
+    height: 35vh;
+    min-height: 35vh;
+  }
+  .ecommerce-page .page-header .container {
+    padding-top: 10vh;
+  }
+  h4 {
+    @if(Agent::isMobile())
+    font-size: 1.2em;
+    line-height: 1.4em;
+    margin: 20px 0 10px;
+    @endif
+  }
+  .panel .panel-heading {
+    background-color: transparent;
+    border-bottom: 2px solid #ddd;
+    padding: 5px 0px 5px 0px;
+  }
+  .buttonColor{
+    background-color: #2ac326  
+  }
 </style>
 
+<?php
+$setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
+?>
+
+@if($setting_aplikasi->tipe_aplikasi == 0)
 <div class="page-header header-filter header-small" data-parallax="true" style="background-image: url('image/background2.jpg');">
+  @else
+  <div class="page-header header-small buttonColor" data-parallax="true">
+    @endif
 
-  <div class="container">
-    <div class="row">
-      <div class="col-md-8 col-md-offset-2">
-        <div class="brand">
-          <?php
-          $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
-          ?>
-          @if($setting_aplikasi->tipe_aplikasi == 0)
-          <h1 class="title"> PASAR MUSLIM INDONESIA </h1>
-          <h4 class="title"> Segala Kemudahan Untuk Umat Muslim Berbelanja. </h4>
-          @else
-          <h1 class="title"> TOKO ONLINE DAN POS </h1>
-          @endif
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+          <div class="brand">
+
+            @if($setting_aplikasi->tipe_aplikasi == 0)
+            <h1 class="title"> PASAR MUSLIM INDONESIA </h1>
+            <h4 class="title"> Segala Kemudahan Untuk Umat Muslim Berbelanja. </h4>
+            @else
+            <h1 class="title"> TOKO ONLINE DAN POS </h1>
+            @endif
 
 
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 
-<div class="main main-raised">
-  <div class="container">
-    <ul class="breadcrumb" style="margin-top: 10px; margin-bottom: 10px;">
-      <li><a href="{{ url('/daftar-produk') }}"><b>Home</b></a></li>
-      <li><a href="{{ url('/keranjang-belanja') }}"><b>Keranjang Belanja</b></a></li>
-      <li class="active"><b>Pesanan</b></li>
-    </ul>
-    <div class="card-content">
-      <h3 class="title text-center">Selesaikan Pemesanan</h3>
-      <div class="row">
-        @if($cek_belanjaan == 0)
-        <div class="card">
-          <div class="col-md-12">
-            <center>
-              <h3>Keranjang Belanjaan Anda Kosong,Silahkan Berbelanja.</h3>
-              <a  href="{{ url('/daftar-produk') }}" type="button" class="btn btn-block" style="background-color: #01573e">Lanjut Belanja<i class="material-icons">keyboard_arrow_right</i></a>
-            </center>
-          </div>
-        </div>
-        @else
-        <div class="col-md-7">
-          <div class="card" style="margin-bottom: 5px; margin-top: 5px;">
-            <div class="card-header" style="margin-bottom: 1px; margin-top: 1px;">
-              <h6 class="card-title" style="color: black; padding-left: 10px ;" > Alamat Pengiriman</h6> <hr>
-            </div>
-
-            {!! Form::model($user, ['url' => route('selesaikan-pemesanan.proses'), 'method' => 'put', 'files'=>'true','class'=>'form-horizontal','id'=>'formSelesaikanPesanan']) !!}
-            <div style="margin-bottom: 1px; margin-top: 1px;" class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-              {!! Form::label('name', 'Nama', ['class'=>'col-md-2 control-label', 'style'=> 'margin-bottom:1px; margin-top:1px;']) !!}
-              <div class="col-md-6">
-                {!! Form::text('name', null, ['class'=>'form-control','required','autocomplete'=>'off', 'placeholder' => 'Nama', 'id' => 'nama_pelanggan']) !!}
-                {!! $errors->first('name', '<p class="help-block">:message</p>') !!}
-              </div>
-            </div>
-
-            <div style="margin-bottom: 1px; margin-top: 1px;" class="form-group{{ $errors->has('no_telp') ? ' has-error' : '' }}">
-              {!! Form::label('no_telp', 'No. Telpon', ['class'=>'col-md-2 control-label', 'style'=> 'margin-bottom:1px; margin-top:1px;']) !!}
-              <div class="col-md-6">
-                {!! Form::text('no_telp', null, ['class'=>'form-control','required','autocomplete'=>'off', 'placeholder' => 'No. Telpon', 'id' => 'nama_pelanggan']) !!}
-                {!! $errors->first('no_telp', '<p class="help-block">:message</p>') !!}
-              </div>
-            </div>
-
-            <div style="margin-bottom: 1px; margin-top: 1px;" class="form-group{{ $errors->has('alamat') ? ' has-error' : '' }}">
-              {!! Form::label('alamat', 'Alamat', ['class'=>'col-md-2 control-label', 'style'=> 'margin-bottom:1px; margin-top:1px;']) !!}
-              <div class="col-md-6">
-                {!! Form::textarea('alamat', null, ['class'=>'form-control','required','autocomplete'=>'off', 'placeholder' => 'Alamat', 'id' => 'nama_pelanggan']) !!}
-                {!! $errors->first('alamat', '<p class="help-block">:message</p>') !!}
-              </div>
-            </div>
-            <span style="display: none">
-              {!! Form::text('jumlah_produk',$jumlah_produk->total_produk , ['class'=>'form-control']) !!}
-              {!! Form::text('subtotal', $subtotal, ['class'=>'form-control']) !!}
-            </span>
-
-          </div>
-        </div>
-
-        <div class="col-md-5">
-          @if ($agent->isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
-
-          <div class="card" style="margin-top: 1px; margin-bottom: 1px; margin-left: 1px;">
-
-            @foreach($keranjang_belanjaan as $keranjang_belanjaans)
-            <div class="row" style="margin-bottom: 1px;">
-              <div class="col-md-12">
-
-                <div class="row">
-                  <div class="col-xs-4">
-                    <div class="img-container" style="margin-bottom:5px;margin-top: 5px; margin-left: 5px; margin-right: 5px;">
-                      @if($keranjang_belanjaans->produk->foto != NULL)
-                      <img src="foto_produk/{{$keranjang_belanjaans->produk->foto}}">
-                      @else
-                      <img src="image/foto_default.png">
-                      @endif
-                    </div>
-
-                  </div>
-
-                  <div class="col-xs-8">
-                    <p style="margin-bottom:1px;margin-top: 1px;"><a href="#"><b>{{$keranjang_belanjaans->NamaProdukMobile}}</b></a></p>
-                    <div class="responsive">
-                      <table>
-                        <tbody>
-                          <tr style="font-weight: bold">
-                            <td width="25%"> {{number_format($keranjang_belanjaans->produk->harga_jual,0,',','.') }} </td>
-                            <td>&nbsp; x </td>
-                            <td> {{$keranjang_belanjaans->jumlah_produk }} </td>
-                            <td> {{number_format($keranjang_belanjaans->produk->harga_jual * $keranjang_belanjaans->jumlah_produk,0,',','.') }} </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                    <p style="margin-bottom:1px;margin-top: 1px;"><small>{{$keranjang_belanjaans->produk->warung->name}}</small></p>
-
-                  </div>
-
-                </div>
-
-              </div>
-            </div><hr style="margin-bottom: 1px; margin-top: 1px;">
-
-            @endforeach
-
-          </div>
-
-          {{$pagination}}
-          <div class="card" style="margin-bottom: 1px; margin-top: 1px;">
-            <div class="row">
-              <div class="col-xs-6">
-                <p style="margin-left: 5px; margin-top: 5px; margin-bottom: 5px;"><b> Total Produk</b></p>
-              </div>
-              <div class="col-xs-6">
-                <p style="margin-left: 5px; margin-top: 5px; margin-bottom: 5px;"><b> {{ $jumlah_produk->total_produk }}</b></p>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-xs-4">
-                <p style="margin-left: 5px; margin-top: 5px; margin-bottom: 5px;"><b>Total</b></p>
-              </div>
-              <div class="col-xs-2">
-
-              </div>
-              <div class="col-xs-6">
-                <p style="margin-left: 5px; margin-top: 5px; margin-bottom: 5px;"><b>Rp. {{ number_format($subtotal,0,',','.') }}</b></p>
-              </div>
+  <div class="main main-raised">
+    <div class="container">
+      <ul class="breadcrumb" style="margin-top: 10px; margin-bottom: 10px;">
+        <li><a href="{{ url('/daftar-produk') }}"><b>Home</b></a></li>
+        <li><a href="{{ url('/keranjang-belanja') }}"><b>Keranjang Belanja</b></a></li>
+        <li class="active"><b>Pesanan</b></li>
+      </ul>
+      <div class="card-content">
+        <h3 class="title text-center">Selesaikan Pemesanan</h3>
+        <div class="row">
+          @if($cek_belanjaan == 0)
+          <div class="card">
+            <div class="col-md-12">
+              <center>
+                <h3>Keranjang Belanjaan Anda Kosong,Silahkan Berbelanja.</h3>
+                <a  href="{{ url('/daftar-produk') }}" type="button" class="btn btn-block buttonColor">Lanjut Belanja<i class="material-icons">keyboard_arrow_right</i></a>
+              </center>
             </div>
           </div>
-
-          <center>{!! Form::button('Selesai Pesanan <i class="material-icons">keyboard_arrow_right</i> ', ['id'=>'SelesaikanPesanan','class'=>'btn btn-round', 'type'=>'submit','style'=>'background-color: #01573e']) !!}</center>
-
           @else
-
-          <div class="card" style="margin-bottom: 5px; margin-top: 5px;">
-            <div class="card-header" style="padding-bottom: 1px;">
-              <h6 class="card-title" style="color: black; padding-left: 10px; margin-bottom: 1px;">Rincian Pesanan</h6> <hr>
-            </div>
-
-            <div class="card-content" style="padding-top: 1px; padding-bottom: 1px;">
-              <div class="row">
-                <div class="col-md-4"><h5><b>Produk</b></h5> </div>
-                <div class="col-md-2"><h5><b>Jumlah</b></h5> </div>
-                <div class="col-md-3"><h5><b>Harga</b></h5> </div>
-                <div class="col-md-3"><h5><b>Subtotal</b></h5> </div>
+          <div class="col-md-7">
+            <div class="card" style="margin-bottom: 5px; margin-top: 5px;">
+              <div class="card-header" style="margin-bottom: 1px; margin-top: 1px;">
+                <h6 class="card-title" style="color: black; padding-left: 10px ;" > Alamat Pengiriman</h6> <hr>
               </div>
+
+              {!! Form::model($user, ['url' => route('selesaikan-pemesanan.proses'), 'method' => 'put', 'files'=>'true','class'=>'form-horizontal','id'=>'formSelesaikanPesanan']) !!}
+              <div style="margin-bottom: 1px; margin-top: 1px;" class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
+                {!! Form::label('name', 'Nama', ['class'=>'col-md-2 control-label', 'style'=> 'margin-bottom:1px; margin-top:1px;']) !!}
+                <div class="col-md-6">
+                  {!! Form::text('name', null, ['class'=>'form-control','required','autocomplete'=>'off', 'placeholder' => 'Nama', 'id' => 'nama_pelanggan']) !!}
+                  {!! $errors->first('name', '<p class="help-block">:message</p>') !!}
+                </div>
+              </div>
+
+              <div style="margin-bottom: 1px; margin-top: 1px;" class="form-group{{ $errors->has('no_telp') ? ' has-error' : '' }}">
+                {!! Form::label('no_telp', 'No. Telpon', ['class'=>'col-md-2 control-label', 'style'=> 'margin-bottom:1px; margin-top:1px;']) !!}
+                <div class="col-md-6">
+                  {!! Form::text('no_telp', null, ['class'=>'form-control','required','autocomplete'=>'off', 'placeholder' => 'No. Telpon', 'id' => 'nama_pelanggan']) !!}
+                  {!! $errors->first('no_telp', '<p class="help-block">:message</p>') !!}
+                </div>
+              </div>
+
+              <div style="margin-bottom: 1px; margin-top: 1px;" class="form-group{{ $errors->has('alamat') ? ' has-error' : '' }}">
+                {!! Form::label('alamat', 'Alamat', ['class'=>'col-md-2 control-label', 'style'=> 'margin-bottom:1px; margin-top:1px;']) !!}
+                <div class="col-md-6">
+                  {!! Form::textarea('alamat', null, ['class'=>'form-control','required','autocomplete'=>'off', 'placeholder' => 'Alamat', 'id' => 'nama_pelanggan']) !!}
+                  {!! $errors->first('alamat', '<p class="help-block">:message</p>') !!}
+                </div>
+              </div>
+              <span style="display: none">
+                {!! Form::text('jumlah_produk',$jumlah_produk->total_produk , ['class'=>'form-control']) !!}
+                {!! Form::text('subtotal', $subtotal, ['class'=>'form-control']) !!}
+              </span>
+
+            </div>
+          </div>
+
+          <div class="col-md-5">
+            @if ($agent->isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
+
+            <div class="card" style="margin-top: 1px; margin-bottom: 1px; margin-left: 1px;">
 
               @foreach($keranjang_belanjaan as $keranjang_belanjaans)
+              <div class="row" style="margin-bottom: 1px;">
+                <div class="col-md-12">
+
+                  <div class="row">
+                    <div class="col-xs-4">
+                      <div class="img-container" style="margin-bottom:5px;margin-top: 5px; margin-left: 5px; margin-right: 5px;">
+                        @if($keranjang_belanjaans->produk->foto != NULL)
+                        <img src="foto_produk/{{$keranjang_belanjaans->produk->foto}}">
+                        @else
+                        <img src="image/foto_default.png">
+                        @endif
+                      </div>
+
+                    </div>
+
+                    <div class="col-xs-8">
+                      <p style="margin-bottom:1px;margin-top: 1px;"><a href="#"><b>{{$keranjang_belanjaans->NamaProdukMobile}}</b></a></p>
+                      <div class="responsive">
+                        <table>
+                          <tbody>
+                            <tr style="font-weight: bold">
+                              <td width="25%"> {{number_format($keranjang_belanjaans->produk->harga_jual,0,',','.') }} </td>
+                              <td>&nbsp; x </td>
+                              <td> {{$keranjang_belanjaans->jumlah_produk }} </td>
+                              <td> {{number_format($keranjang_belanjaans->produk->harga_jual * $keranjang_belanjaans->jumlah_produk,0,',','.') }} </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <p style="margin-bottom:1px;margin-top: 1px;"><small>{{$keranjang_belanjaans->produk->warung->name}}</small></p>
+
+                    </div>
+
+                  </div>
+
+                </div>
+              </div><hr style="margin-bottom: 1px; margin-top: 1px;">
+
+              @endforeach
+
+            </div>
+
+            {{$pagination}}
+            <div class="card" style="margin-bottom: 1px; margin-top: 1px;">
               <div class="row">
+                <div class="col-xs-6">
+                  <p style="margin-left: 5px; margin-top: 5px; margin-bottom: 5px;"><b> Total Produk</b></p>
+                </div>
+                <div class="col-xs-6">
+                  <p style="margin-left: 5px; margin-top: 5px; margin-bottom: 5px;"><b> {{ $jumlah_produk->total_produk }}</b></p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-4">
+                  <p style="margin-left: 5px; margin-top: 5px; margin-bottom: 5px;"><b>Total</b></p>
+                </div>
+                <div class="col-xs-2">
 
-                <div class="col-md-4">
-                  <li><b> <a href="{{ url('detail-produk/'.$keranjang_belanjaans->id_produk.'') }}">{{ $keranjang_belanjaans->NamaProduk }}</a></b></li>
+                </div>
+                <div class="col-xs-6">
+                  <p style="margin-left: 5px; margin-top: 5px; margin-bottom: 5px;"><b>Rp. {{ number_format($subtotal,0,',','.') }}</b></p>
+                </div>
+              </div>
+            </div>
+
+            @if($setting_aplikasi->tipe_aplikasi == 0)
+            <center>{!! Form::button('Selesai Pesanan <i class="material-icons">keyboard_arrow_right</i> ', ['id'=>'SelesaikanPesanan','class'=>'btn btn-round', 'type'=>'submit', 'style'=>'background-color: #01573e']) !!}</center>
+            @else
+            <center>{!! Form::button('Selesai Pesanan <i class="material-icons">keyboard_arrow_right</i> ', ['id'=>'SelesaikanPesanan','class'=>'btn btn-round buttonColor', 'type'=>'submit']) !!}</center>
+            @endif          
+
+            @else
+
+            <div class="card" style="margin-bottom: 5px; margin-top: 5px;">
+              <div class="card-header" style="padding-bottom: 1px;">
+                <h6 class="card-title" style="color: black; padding-left: 10px; margin-bottom: 1px;">Rincian Pesanan</h6> <hr>
+              </div>
+
+              <div class="card-content" style="padding-top: 1px; padding-bottom: 1px;">
+                <div class="row">
+                  <div class="col-md-4"><h5><b>Produk</b></h5> </div>
+                  <div class="col-md-2"><h5><b>Jumlah</b></h5> </div>
+                  <div class="col-md-3"><h5><b>Harga</b></h5> </div>
+                  <div class="col-md-3"><h5><b>Subtotal</b></h5> </div>
                 </div>
 
-                <div class="col-md-2">
-                  <b align="right">{{ $keranjang_belanjaans->jumlah_produk }}</b>
-                </div>
+                @foreach($keranjang_belanjaan as $keranjang_belanjaans)
+                <div class="row">
 
-                <div class="col-md-3">
-                  <b align="right">
-                    {{ number_format($keranjang_belanjaans->produk->harga_jual,0,',','.') }}</b>
+                  <div class="col-md-4">
+                    <li><b> <a href="{{ url('detail-produk/'.$keranjang_belanjaans->id_produk.'') }}">{{ $keranjang_belanjaans->NamaProduk }}</a></b></li>
+                  </div>
+
+                  <div class="col-md-2">
+                    <b align="right">{{ $keranjang_belanjaans->jumlah_produk }}</b>
                   </div>
 
                   <div class="col-md-3">
+                    <b align="right">
+                      {{ number_format($keranjang_belanjaans->produk->harga_jual,0,',','.') }}</b>
+                    </div>
 
-                    <div class="row">
+                    <div class="col-md-3">
 
-                      <div class="col-md-8">
-                        <b>{{ number_format($keranjang_belanjaans->produk->harga_jual * $keranjang_belanjaans->jumlah_produk,0,',','.') }}</b>
-                      </div>
+                      <div class="row">
 
-                      <div class="col-md-4">
-                        <a href="#" id="btnHapusProduk" data-nama="{{title_case($keranjang_belanjaans->produk->nama_barang)}}" data-id="{{$keranjang_belanjaans->id_keranjang_belanja}}" type="button"><i class="material-icons">close</i></a>
+                        <div class="col-md-8">
+                          <b>{{ number_format($keranjang_belanjaans->produk->harga_jual * $keranjang_belanjaans->jumlah_produk,0,',','.') }}</b>
+                        </div>
+
+                        <div class="col-md-4">
+                          <a href="#" id="btnHapusProduk" data-nama="{{title_case($keranjang_belanjaans->produk->nama_barang)}}" data-id="{{$keranjang_belanjaans->id_keranjang_belanja}}" type="button"><i class="material-icons">close</i></a>
+                        </div>
+
                       </div>
 
                     </div>
 
                   </div>
+                  @endforeach
+                  {{$pagination}}
 
                 </div>
-                @endforeach
-                {{$pagination}}
+                <hr style="margin-top: 1px;">
+                <div class="card-content" style="margin-top: 1px;">
 
-              </div>
-              <hr style="margin-top: 1px;">
-              <div class="card-content" style="margin-top: 1px;">
+                  <div class="row">
+                    <div class="col-md-4"><b>Total Produk</b></div>
+                    <div class="col-md-4"><b>:</b></div>
+                    <div class="col-md-4"><b>{{ $jumlah_produk->total_produk }}</b></div>
+                  </div>
 
-                <div class="row">
-                  <div class="col-md-4"><b>Total Produk</b></div>
-                  <div class="col-md-4"><b>:</b></div>
-                  <div class="col-md-4"><b>{{ $jumlah_produk->total_produk }}</b></div>
-                </div>
-
-                <div class="row">
-                  <div class="col-md-4"><h5><b>Total </b></h5></div>
-                  <div class="col-md-4"><h5><b>:</h5></div>
+                  <div class="row">
+                    <div class="col-md-4"><h5><b>Total </b></h5></div>
+                    <div class="col-md-4"><h5><b>:</h5></div>
                     <div class="col-md-4"><h5 class="text-danger"><b>RP {{ number_format($subtotal,0,',','.') }}</b></h5></div>
                   </div>
                 </div>
 
               </div>
 
-              {!! Form::button('Selesai Pesanan <i class="material-icons">keyboard_arrow_right</i> ', ['id'=>'SelesaikanPesanan','class'=>'btn btn-round pull-right', 'type'=>'submit','style'=>'background-color: #01573e']) !!}
+              @if($setting_aplikasi->tipe_aplikasi == 0)
+              {!! Form::button('Selesai Pesanan <i class="material-icons">keyboard_arrow_right</i> ', ['id'=>'SelesaikanPesanan','class'=>'btn btn-round pull-right', 'type'=>'submit', 'style'=>'background-color: #01573e']) !!}
+              @else
+              {!! Form::button('Selesai Pesanan <i class="material-icons">keyboard_arrow_right</i> ', ['id'=>'SelesaikanPesanan','class'=>'btn btn-round pull-right buttonColor', 'type'=>'submit']) !!}
+              @endif 
+
               @endif
 
               {!! Form::close() !!}
