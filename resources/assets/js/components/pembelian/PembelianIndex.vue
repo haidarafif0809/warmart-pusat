@@ -148,6 +148,7 @@
 									<th style="text-align:right;">Total</th>
 									<th style="text-align:right;">Edit</th>
 									<th style="text-align:right;">Detail</th>
+									<th style="text-align:right;">Cetak</th>									
 									<th style="text-align:right;">Delete</th>
 								</tr>
 							</thead>
@@ -167,6 +168,9 @@
 									<td style="text-align:right;">
 										<router-link :to="{name: 'detailPembelian', params: {id: pembelians.id}}" class="btn btn-xs btn-info" v-bind:id="'detail-' + pembelians.no_faktur" >
 										Detail </router-link> 
+									</td>
+									<td style="text-align:right;">
+										<a target="blank" class="btn btn-primary btn-xs" v-bind:href="'pembelian/cetak-besar-pembelian/'+pembelians.id">Cetak Ulang</a>
 									</td>
 									<td style="text-align:right;"> 
 										<a  href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + pembelians.id" v-on:click="deleteEntry(pembelians.id, index,pembelians.no_faktur)">Delete</a>
