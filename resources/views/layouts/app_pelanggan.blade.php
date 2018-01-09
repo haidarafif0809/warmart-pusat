@@ -180,16 +180,23 @@ body {
                             </a>
                         </li>
                         <li>
+
+                            @if($setting_aplikasi->tipe_aplikasi == 0)
                             <a href="{{ url('/tentang-warmart')}}">
                                 <i class="material-icons">
                                     info
                                 </i>
-                                @if($setting_aplikasi->tipe_aplikasi == 0)
                                 Tentang Warmart
-                                @else
+                            </a> 
+                            @else
+                            <a href="https://andaglos.id/topos">
+                                <i class="material-icons">
+                                    info
+                                </i>
                                 Tentang TOPOS
-                                @endif
                             </a>
+                            @endif
+                            
                         </li>
                         @if(Auth::check() && Auth::user()->tipe_user == 3)
                         <li class="button-container">

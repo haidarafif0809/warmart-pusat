@@ -9,6 +9,7 @@ use App\Komunitas;
 use App\KomunitasCustomer;
 use App\KomunitasPenggiat;
 use App\LokasiPelanggan;
+use App\SettingAplikasi;
 use App\User;
 use App\UserWarung;
 use Auth;
@@ -45,10 +46,12 @@ class UbahProfilController extends Controller
             $kecamatan = "";
             $kelurahan = "";
         }
+        //SETTING APLIKASI
+        $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
 
         $keranjang_belanjaan = KeranjangBelanja::with(['produk', 'pelanggan'])->where('id_pelanggan', Auth::user()->id)->get();
         $cek_belanjaan       = $keranjang_belanjaan->count();
-        return view('ubah_profil.ubah_profil_pelanggan', ['user' => $pelanggan, 'pelanggan' => $pelanggan, 'komunitas_pelanggan' => $komunitas_pelanggan, 'cek_belanjaan' => $cek_belanjaan, 'logo_warmart' => $logo_warmart, 'lokasi_pelanggan' => $lokasi_pelanggan, 'provinsi' => $provinsi, 'kabupaten' => $kabupaten, 'kecamatan' => $kecamatan, 'kelurahan' => $kelurahan]);
+        return view('ubah_profil.ubah_profil_pelanggan', ['user' => $pelanggan, 'pelanggan' => $pelanggan, 'komunitas_pelanggan' => $komunitas_pelanggan, 'cek_belanjaan' => $cek_belanjaan, 'logo_warmart' => $logo_warmart, 'lokasi_pelanggan' => $lokasi_pelanggan, 'provinsi' => $provinsi, 'kabupaten' => $kabupaten, 'kecamatan' => $kecamatan, 'kelurahan' => $kelurahan, 'setting_aplikasi' => $setting_aplikasi]);
     }
 
 //UBAH PROFIL USER PELANGGAN

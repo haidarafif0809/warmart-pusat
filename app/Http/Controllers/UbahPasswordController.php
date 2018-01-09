@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Auth;
+use App\KeranjangBelanja;
+use App\SettingAplikasi;
 use App\User;
+use Auth;
+use Illuminate\Http\Request;
 use Session;
-use App\KeranjangBelanja; 
 
 class UbahPasswordController extends Controller
 {
@@ -15,52 +16,53 @@ class UbahPasswordController extends Controller
     {
         //
         $user = Auth::user();
-        return view('ubah_password',['user'=>$user]);
+        return view('ubah_password', ['user' => $user]);
     }
 
     public function proses_ubah_password(Request $request)
     {
-        $this->validate($request, [ 
-            'password' => 'required|min:6|confirmed'
+        $this->validate($request, [
+            'password' => 'required|min:6|confirmed',
         ]);
-        
-        
-        $user = Auth::user();
-        $update_user = User::find($user->id);   
-        $update_user->password = bcrypt($request->password);
-        $update_user->save();  
 
-    } 	
+        $user                  = Auth::user();
+        $update_user           = User::find($user->id);
+        $update_user->password = bcrypt($request->password);
+        $update_user->save();
+
+    }
 
     //USER PELANGGAN
 
     public function ubah_password_pelanggan()
     {
-        $user = Auth::user();
-        $keranjang_belanjaan = KeranjangBelanja::with(['produk','pelanggan'])->where('id_pelanggan',Auth::user()->id)->get();
-        $cek_belanjaan = $keranjang_belanjaan->count();
+        $user                = Auth::user();
+        $keranjang_belanjaan = KeranjangBelanja::with(['produk', 'pelanggan'])->where('id_pelanggan', Auth::user()->id)->get();
+        $cek_belanjaan       = $keranjang_belanjaan->count();
         //FOTO WARMART
-        $logo_warmart = "".asset('/assets/img/examples/warmart_logo.png')."";
+        $logo_warmart = "" . asset('/assets/img/examples/warmart_logo.png') . "";
+        //SETTING APLIKASI
+        $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
 
-        return view('ubah_password_pelanggan',['user'=>$user, 'cek_belanjaan'=>$cek_belanjaan, 'logo_warmart'=>$logo_warmart]);
+        return view('ubah_password_pelanggan', ['user' => $user, 'cek_belanjaan' => $cek_belanjaan, 'logo_warmart' => $logo_warmart, 'setting_aplikasi' => $setting_aplikasi]);
     }
 
     public function proses_ubah_password_pelanggan(Request $request, $id)
     {
-        $this->validate($request, [ 
-            'password' => 'required|min:6|confirmed'
+        $this->validate($request, [
+            'password' => 'required|min:6|confirmed',
         ]);
 
-        $user = Auth::user();
-        $update_user = User::find($user->id);   
+        $user                  = Auth::user();
+        $update_user           = User::find($user->id);
         $update_user->password = bcrypt($request->password);
-        $update_user->save();  
+        $update_user->save();
 
         Session::flash("flash_notification", [
-           "level"     => "success",
-           "message"   => "Password Berhasil Di Ubah"
-       ]);
-        
+            "level"   => "success",
+            "message" => "Password Berhasil Di Ubah",
+        ]);
+
         return redirect()->route('daftar_produk.index');
-    } 
+    }
 }
