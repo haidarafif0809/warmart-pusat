@@ -40,6 +40,13 @@
     .navbar-nav .open .dropdown-menu{
       color: grey;
   }
+  .navbar .navbar-brand {
+    position: relative;
+    height: 65px;
+    line-height: 30px;
+    color: inherit;
+    padding: 10px 15px;
+}
 </style>
 <body class="ecommerce-page">
 
