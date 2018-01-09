@@ -1116,6 +1116,7 @@ export default {
 						app.alert(app.message);
 						app.$router.replace('/pembelian');
 						app.getResults();
+						window.open('pembelian/cetak-besar-pembelian/'+resp.data.respons_pembelian,'_blank');
 						})
 						.catch(function (resp) {
 						app.success = false;
