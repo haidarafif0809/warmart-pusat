@@ -135,7 +135,7 @@ h4 {
                         </div>
                     </div>
                     <div class="col-sm-2">
-                        <button type="submit" class="btn btn-block buttonColor"  >Cari</button>
+                        <button type="submit" class="btn btn-block buttonColor">Cari</button>
                     </div>
                 </div>
                 {!! Form::close() !!}

@@ -114,7 +114,7 @@ h4 {
         </div>
     </div>
 
-    <div class="main main-raised" >
+    <div class="main main-raised">
 
         <div class="container">
             <h4 class="title text-center">{!! $nama_kategori !!}</h4>
