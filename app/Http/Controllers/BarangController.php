@@ -393,7 +393,7 @@ class BarangController extends Controller
     public function lihat_deskripsi_produk($id)
     {
         $lihat_deskripsi_produk = Barang::find($id);
-        $nama_produk            = $lihat_deskripsi_produk->nama;
+        $nama_produk            = $lihat_deskripsi_produk->nama_barang;
 
         if ($lihat_deskripsi_produk->id_warung != Auth::user()->id_warung) {
             Auth::logout();

@@ -1,5 +1,7 @@
 <!DOCTYPE doctype html>
 <html lang="en">
+<!-- PILIH TIPE APLIKASI -->
+
 <head>
     <meta charset="utf-8"/>
     <link href="{{ asset('img/favicon.png') }}" rel="apple-touch-icon" sizes="76x76"/>
@@ -7,9 +9,11 @@
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
     <meta content="width=device-width" name="viewport"/>
-    <title>
-        War-Mart.id
-    </title>
+    @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
+    <title>War-Mart.id</title>
+    @else
+    <title>To-Pos.id</title>
+    @endif
     <!-- CSRF Token -->
     <meta content="{{ csrf_token() }}" name="csrf-token">
     <!--TIPE USER-->
@@ -47,13 +51,23 @@
         Tip 2: you can also add an image using data-image tag
         Tip 3: you can change the color of the sidebar with data-background-color="white | black"
     -->
+
     <div class="logo">
+         @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
         <a class="simple-text logo-mini" href="https://war-mart.id">
             WM
         </a>
         <a class="simple-text logo-normal" href="https://war-mart.id">
-            WAR-MART.ID
+            WAR-MART.ID    
         </a>
+         @else
+          <a class="simple-text logo-mini" href="https://to-pos.id">
+            TP
+        </a>
+        <a class="simple-text logo-normal" href="https://to-pos.id">
+            TO-POS.ID    
+        </a>
+        @endif
     </div>
     <div class="sidebar-wrapper">
         <ul class="nav">
