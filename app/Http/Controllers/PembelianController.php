@@ -1037,6 +1037,9 @@ public function pencarianDetailPembelian(Request $request,$id)
             $data_produk_pembelian->delete();
             DB::commit();
 
+             $respons['respons_pembelian']     = $pembelian->id;
+             return response()->json($respons);
+
         }
     }
 
@@ -1137,4 +1140,55 @@ public function pencarianDetailPembelian(Request $request,$id)
             }
         }
     }
+    public function cetakBesar($id){
+
+    $pembelian = Pembelian::QueryCetak($id)->first();
+    if ($pembelian['suplier_id'] == '0') {
+        $nama_suplier = '-';
+        $alamat_suplier = "-";
+    }else{
+       $nama_suplier = $pembelian['suplier'];
+       $alamat_suplier = $pembelian['alamat_suplier'];
+   }
+
+   $detail_pembelian = DetailPembelian::with('produk')->where('no_faktur',$pembelian['no_faktur'])->get();
+   $terbilang = $this->kekata($pembelian->total);
+   $subtotal = 0;
+   foreach ($detail_pembelian as $detail_pembelians) {
+    $subtotal += $detail_pembelians->subtotal;
+
+}
+
+return view('pembelian.cetak_besar',['pembelian'=> $pembelian,'detail_pembelian'=>$detail_pembelian,'subtotal'=>$subtotal,'terbilang'=>$terbilang,'nama_suplier'=>$nama_suplier,'alamat_suplier'=>$alamat_suplier])->with(compact('html'));
+}
+
+public function kekata($x) {
+    $x = abs($x);
+    $angka = array("", "satu", "dua", "tiga", "empat", "lima",
+        "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas");
+    $temp = "";
+    if ($x <12) {
+        $temp = " ". $angka[$x];
+    } else if ($x <20) {
+        $temp = $this->kekata($x - 10). " belas";
+    } else if ($x <100) {
+        $temp = $this->kekata($x/10)." puluh". $this->kekata($x % 10);
+    } else if ($x <200) {
+        $temp = " seratus" . $this->kekata($x - 100);
+    } else if ($x <1000) {
+        $temp = $this->kekata($x/100) . " ratus" . $this->kekata($x % 100);
+    } else if ($x <2000) {
+        $temp = " seribu" . $this->kekata($x - 1000);
+    } else if ($x <1000000) {
+        $temp = $this->kekata($x/1000) . " ribu" . $this->kekata($x % 1000);
+    } else if ($x <1000000000) {
+        $temp = $this->kekata($x/1000000) . " juta" . $this->kekata($x % 1000000);
+    } else if ($x <1000000000000) {
+        $temp = $this->kekata($x/1000000000) . " milyar" . $this->kekata(fmod($x,1000000000));
+    } else if ($x <1000000000000000) {
+        $temp = $this->kekata($x/1000000000000) . " trilyun" . $this->kekata(fmod($x,1000000000000));
+    }     
+    return $temp;
+}
+
 }
