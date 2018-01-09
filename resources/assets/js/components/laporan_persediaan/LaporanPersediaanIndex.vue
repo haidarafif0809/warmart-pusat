@@ -1,7 +1,11 @@
+	<style scoped>
+
+	.pencarian {
+		color: red; 
+		float: right;
+	}
+	</style>
 	<template>
-
-
-
 		<div class="row">
 			<div class="col-md-12">
 				<ul class="breadcrumb">
@@ -18,10 +22,8 @@
 						</div>
 
 						<div class=" table-responsive ">
-
-							<div  align="right">
-								pencarian
-								<input type="text" name="pencarian" v-model="pencarian" placeholder="Kolom Pencarian" >
+							<div class="pencarian">
+								<input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
 							</div>
 
 							<table class="table table-striped table-hover" v-if="seen">
@@ -31,9 +33,9 @@
 										<th>Kode Produk</th>
 										<th>Nama Produk</th>
 										<th>Satuan</th>
-										<th>Stok</th>
-										<th>Hpp</th>
-										<th>Nilai</th>
+										<th class="text-right">Stok</th>
+										<th class="text-right">Hpp</th>
+										<th class="text-right">Nilai</th>
 
 									</tr>
 								</thead>
@@ -43,9 +45,9 @@
 										<td>{{ lap_persediaan.kode_produk }}</td>
 										<td>{{ lap_persediaan.nama_produk }}</td>
 										<td>{{ lap_persediaan.satuan }}</td>
-										<td align="center">{{ lap_persediaan.stok }}</td>
-										<td align="center">{{ lap_persediaan.hpp }}</td>
-										<td align="center">{{ lap_persediaan.nilai }}</td>
+										<td align="right">{{ lap_persediaan.stok }}</td>
+										<td align="right">{{ lap_persediaan.hpp }}</td>
+										<td align="right">{{ lap_persediaan.nilai }}</td>
 									</tr>
 								</tbody>					
 								<tbody class="data-tidak-ada" v-else>

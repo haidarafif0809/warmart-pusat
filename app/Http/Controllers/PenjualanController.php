@@ -761,8 +761,11 @@ public function update(Request $request, $id)
 
         if (!$hapus_detail = DetailPenjualanPos::destroy($data_detail->id_detail_penjualan_pos)) {
                 //DI BATALKAN PROSES NYA
+
+            $respons['respons']     = 2;
+            $respons['info'] = "Gagal Hapus Hpp Penjualan";
             DB::rollBack();
-            return 2;
+            return response()->json($respons);
         }
     }
     
@@ -820,8 +823,8 @@ public function update(Request $request, $id)
         // inset detail penjualan
    foreach ($data_produk_penjualan_pos->get() as $data_tbs) {
 
-    if ($data_tbs->produk->hitung_stok == 1) {
 
+    if ($data_tbs->produk->hitung_stok == 1 AND $this->cekSettingStok() == 0) {
 
         $detail_penjualan = new DetailPenjualanPos();
         $stok_produk      = $detail_penjualan->stok_produk($data_tbs->id_produk);
@@ -870,7 +873,9 @@ public function update(Request $request, $id)
 
 $data_produk_penjualan_pos = EditTbsPenjualan::where('id_penjualan_pos', $id)->where('warung_id', Auth::user()->id_warung)->delete();
 DB::commit();
-return response(200);
+
+$respons['respons_penjualan']     = $id;
+return response()->json($respons);
 }
 
 }
@@ -903,37 +908,47 @@ public function prosesTambahEditTbsPenjualan(Request $request,$id)
 {
     $produk     = explode("|", $request->produk);
     $id_produk  = $produk[0];
-    $harga_jual = $produk[3];
     $satuan_id  = $produk[4];
     $session_id = session()->getId();
 
-    $data_tbs = EditTbsPenjualan::where('id_produk', $id_produk)
-    ->where('id_penjualan_pos', $id)->where('warung_id', Auth::user()->id_warung)
-    ->count();
+
+    $harga_jual = $this->cekHargaProduk($produk);
+
+    if ($harga_jual == '' || $harga_jual == 0) {
+
+        $respons['harga_jual'] = $harga_jual;
+        return response()->json($respons);
+
+    }else{
+
+        $data_tbs = EditTbsPenjualan::where('id_produk', $id_produk)
+        ->where('id_penjualan_pos', $id)->where('warung_id', Auth::user()->id_warung)
+        ->count();
 
 //JIKA PRODUK YG DIPILIH SUDAH ADA DI TBS
-    if ($data_tbs > 0) {
+        if ($data_tbs > 0) {
 
-        return 0;
+            return 0;
 
-    } else {
-        $penjualan = PenjualanPos::find($id);
-        $subtotal     = $request->jumlah_produk * $harga_jual;
-        $tbspenjualan = EditTbsPenjualan::create([
-            'id_penjualan_pos'    => $id,
-            'no_faktur'    => $penjualan->no_faktur,
-            'session_id'    => $session_id,
-            'satuan_id'     => $satuan_id,
-            'id_produk'     => $id_produk,
-            'jumlah_produk' => $request->jumlah_produk,
-            'harga_produk'  => $harga_jual,
-            'subtotal'      => $subtotal,
-            'warung_id'     => Auth::user()->id_warung,
-        ]);
+        } else {
+            $penjualan = PenjualanPos::find($id);
+            $subtotal     = $request->jumlah_produk * $harga_jual;
+            $tbspenjualan = EditTbsPenjualan::create([
+                'id_penjualan_pos'    => $id,
+                'no_faktur'    => $penjualan->no_faktur,
+                'session_id'    => $session_id,
+                'satuan_id'     => $satuan_id,
+                'id_produk'     => $id_produk,
+                'jumlah_produk' => $request->jumlah_produk,
+                'harga_produk'  => $harga_jual,
+                'subtotal'      => $subtotal,
+                'warung_id'     => Auth::user()->id_warung,
+            ]);
 
-        $respons['subtotal'] = $subtotal;
+            $respons['subtotal'] = $subtotal;
 
-        return response()->json($respons);
+            return response()->json($respons);
+        }
     }
 }
 
