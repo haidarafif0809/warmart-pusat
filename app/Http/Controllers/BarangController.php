@@ -78,7 +78,9 @@ class BarangController extends Controller
             array_push($array_produk, [
                 'produk'        => $produk,
                 'harga_jual'    => $this->tandaPemisahTitik($produk->harga_jual),
+                'harga_jual2'    => $this->tandaPemisahTitik($produk->harga_jual2),
                 'harga_beli'    => $this->tandaPemisahTitik($produk->harga_beli),
+                'nama_produk'   => $produk->NamaProduk,
                 'status_produk' => $status_produk,
             ]);
         }
@@ -95,7 +97,8 @@ class BarangController extends Controller
             ->orwhere('kode_barcode', 'LIKE', '%' . $request->search . '%')
             ->orwhere('nama_barang', 'LIKE', '%' . $request->search . '%')
             ->orwhere('harga_beli', 'LIKE', '%' . $request->search . '%')
-            ->orwhere('harga_jual', 'LIKE', '%' . $request->search . '%');
+            ->orwhere('harga_jual', 'LIKE', '%' . $request->search . '%')
+            ->orwhere('harga_jual2', 'LIKE', '%' . $request->search . '%');
         })->orderBy('id', 'desc')->paginate(10);
         $array_produk = array();
         foreach ($data_produk as $produk) {
@@ -104,7 +107,9 @@ class BarangController extends Controller
             array_push($array_produk, [
                 'produk'        => $produk,
                 'harga_jual'    => $this->tandaPemisahTitik($produk->harga_jual),
+                'harga_jual2'    => $this->tandaPemisahTitik($produk->harga_jual2),
                 'harga_beli'    => $this->tandaPemisahTitik($produk->harga_beli),
+                'nama_produk'   => $produk->NamaProduk,
                 'status_produk' => $status_produk,
             ]);
         }
@@ -172,6 +177,7 @@ class BarangController extends Controller
                 'nama_barang'        => 'required|max:191',
                 'harga_beli'         => 'required|numeric|digits_between:1,11',
                 'harga_jual'         => 'required|numeric|digits_between:1,11',
+                'harga_jual2'         => 'nullable|numeric|digits_between:1,11',
                 'kategori_barang_id' => 'required|exists:kategori_barangs,id',
                 'satuan_id'          => 'required|exists:satuans,id',
                 'foto'               => 'image|max:3072',
@@ -195,6 +201,7 @@ class BarangController extends Controller
                 'nama_barang'        => strtolower($request->nama_barang),
                 'harga_beli'         => $request->harga_beli,
                 'harga_jual'         => $request->harga_jual,
+                'harga_jual2'         => $request->harga_jual2,
                 'satuan_id'          => $request->satuan_id,
                 'kategori_barang_id' => $request->kategori_barang_id,
                 'deskripsi_produk'   => $request->deskripsi_produk,
@@ -279,6 +286,7 @@ class BarangController extends Controller
                 'nama_barang'        => 'required|max:191',
                 'harga_beli'         => 'required|numeric|digits_between:1,11',
                 'harga_jual'         => 'required|numeric|digits_between:1,11',
+                'harga_jual2'         => 'nullable|numeric|digits_between:1,11',
                 'kategori_barang_id' => 'required|exists:kategori_barangs,id',
                 'satuan_id'          => 'required|exists:satuans,id',
                 'foto'               => 'image|max:3072',
@@ -303,6 +311,7 @@ class BarangController extends Controller
                 'nama_barang'        => strtolower($request->nama_barang),
                 'harga_beli'         => $request->harga_beli,
                 'harga_jual'         => $request->harga_jual,
+                'harga_jual2'         => $request->harga_jual2,
                 'satuan_id'          => $request->satuan_id,
                 'kategori_barang_id' => $request->kategori_barang_id,
                 'deskripsi_produk'   => $request->deskripsi_produk,

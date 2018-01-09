@@ -123,39 +123,39 @@
                                     </div>
                                     <div class="col-md-6">
 
-                                     <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                         <font style="color: black">Kredit</font>
-                                         <money style="text-align:right" readonly="" class="form-penjualan" id="kredit" name="kredit" placeholder="Kredit"  v-model="penjualan.kredit" v-bind="separator" ></money> 
-                                     </div>
+                                       <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                                           <font style="color: black">Kredit</font>
+                                           <money style="text-align:right" readonly="" class="form-penjualan" id="kredit" name="kredit" placeholder="Kredit"  v-model="penjualan.kredit" v-bind="separator" ></money> 
+                                       </div>
 
-                                     <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                         <font style="color: black">Kembalian</font>
-                                         <money style="text-align:right" readonly="" class="form-penjualan" id="kembalian" name="kembalian" placeholder="Kembalian"  v-model="penjualan.kembalian" v-bind="separator" ></money> 
-                                     </div>
+                                       <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                                           <font style="color: black">Kembalian</font>
+                                           <money style="text-align:right" readonly="" class="form-penjualan" id="kembalian" name="kembalian" placeholder="Kembalian"  v-model="penjualan.kembalian" v-bind="separator" ></money> 
+                                       </div>
 
-                                 </div>
-                             </div>
+                                   </div>
+                               </div>
 
-                             <div align="right"  style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                 <button v-if="penjualan.kembalian >= 0 && penjualan.kredit == 0" type="button" class="btn btn-success btn-lg" id="btnSelesai" v-on:click="selesaiPenjualan()" v-shortkey.push="['alt']" @shortkey="selesaiPenjualan()"><font style="font-size:20px;">Tunai(Alt)</font></button>
+                               <div align="right"  style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                                   <button v-if="penjualan.kembalian >= 0 && penjualan.kredit == 0" type="button" class="btn btn-success btn-lg" id="btnSelesai" v-on:click="selesaiPenjualan()" v-shortkey.push="['alt']" @shortkey="selesaiPenjualan()"><font style="font-size:20px;">Tunai(Alt)</font></button>
 
-                                 <button v-if="penjualan.kredit > 0" type="button" class="btn btn-success btn-lg" id="btnSelesai" v-on:click="selesaiPenjualan()" v-shortkey.push="['alt']" @shortkey="selesaiPenjualan()"><font style="font-size:20px;">Piutang(Alt)</font></button>
+                                   <button v-if="penjualan.kredit > 0" type="button" class="btn btn-success btn-lg" id="btnSelesai" v-on:click="selesaiPenjualan()" v-shortkey.push="['alt']" @shortkey="selesaiPenjualan()"><font style="font-size:20px;">Piutang(Alt)</font></button>
 
-                                 <button type="button" class="btn btn-default btn-lg"  v-on:click="closeModal()" v-shortkey.push="['esc']" @shortkey="closeModal()"> <font style="font-size:20px;">Tutup(Esc)</font></button>
-                             </div>
+                                   <button type="button" class="btn btn-default btn-lg"  v-on:click="closeModal()" v-shortkey.push="['esc']" @shortkey="closeModal()"> <font style="font-size:20px;">Tutup(Esc)</font></button>
+                               </div>
 
-                         </div> 
-                     </div>
-                     <div class="modal-footer">  
-                     </div> 
-                 </form>
-             </div>       
-         </div> 
-     </div> 
-     <!-- / MODAL TOMBOL SELESAI --> 
+                           </div> 
+                       </div>
+                       <div class="modal-footer">  
+                       </div> 
+                   </form>
+               </div>       
+           </div> 
+       </div> 
+       <!-- / MODAL TOMBOL SELESAI --> 
 
 
-     <div class="modal" id="modal_setting" role="dialog" data-backdrop=""> 
+       <div class="modal" id="modal_setting" role="dialog" data-backdrop=""> 
         <div class="modal-dialog"> 
             <!-- Modal content--> 
             <div class="modal-content"> 
@@ -477,8 +477,8 @@ methods: {
     }
 },
 potonganFaktur(){
-   var potonganFaktur = this.penjualan.potongan_faktur
-   if (potonganFaktur == '') {
+ var potonganFaktur = this.penjualan.potongan_faktur
+ if (potonganFaktur == '') {
     potonganFaktur = 0
 }
 var potongan_persen = (parseFloat(potonganFaktur) / parseFloat(this.penjualan.subtotal)) * 100
@@ -517,11 +517,11 @@ getResults(page) {
 
             $.each(resp.data.data, function (i,item) {
 
-               app.penjualan.subtotal += parseFloat(resp.data.data[i].subtotal)
-               app.penjualan.total_akhir += parseFloat(resp.data.data[i].subtotal)
-               app.penjualan.kredit += parseFloat(resp.data.data[i].subtotal)
+             app.penjualan.subtotal += parseFloat(resp.data.data[i].subtotal)
+             app.penjualan.total_akhir += parseFloat(resp.data.data[i].subtotal)
+             app.penjualan.kredit += parseFloat(resp.data.data[i].subtotal)
 
-           }); 
+         }); 
         }
 
 
@@ -601,6 +601,7 @@ dataKas() {
 },
 isiJumlahProduk(nama_produk){
     var app = this;
+
     app.$swal({
         title: nama_produk,
         content: {
@@ -608,67 +609,74 @@ isiJumlahProduk(nama_produk){
             attributes: {
                 placeholder: "Jumlah Produk",
                 type: "number",
+                value : app.setting_penjualan_pos.jumlah_produk
             },
         },
+        closeOnEsc: true,
+        closeOnClickOutside: false,
+
         buttons: {
-            cancel: true,
             confirm: "OK"                   
         }
 
 
     }).then((value) => {
-        if (!value) throw null;
+        if (value == ''){
+            value = app.setting_penjualan_pos.jumlah_produk
+        }
         this.submitProdukPenjualan(value);
     });
 },
 submitProdukPenjualan(value){
 
-    if (value == 0) {
+  if (value == 0) {
 
-        this.$swal({
-            text: "Jumlah Produk Tidak Boleh Nol!",
-        });
+    this.$swal({
+        text: "Jumlah Produk Tidak Boleh Nol!",
+    });
 
-    }else{
+}else{
 
-        var app = this;
-        var produk = app.inputTbsPenjualan.produk.split("|");
-        var nama_produk = produk[1];
+    var app = this;
+    var produk = app.inputTbsPenjualan.produk.split("|");
+    var nama_produk = produk[1];
 
-        app.inputTbsPenjualan.jumlah_produk = value;
-        var newinputTbsPenjualan = app.inputTbsPenjualan;
-        app.loading = true;
-        axios.post(app.url+'/proses-tambah-tbs-penjualan', newinputTbsPenjualan)
-        .then(function (resp) {
+    app.inputTbsPenjualan.jumlah_produk = value;
+    var newinputTbsPenjualan = app.inputTbsPenjualan;
+    app.loading = true;
+    axios.post(app.url+'/proses-tambah-tbs-penjualan', newinputTbsPenjualan)
+    .then(function (resp) {
 
-            if (resp.data == 0) {
+        if (resp.data == 0) {
 
-                app.alertTbs("Produk "+nama_produk+" Sudah Ada, Silakan Pilih Produk Lain!");
-                app.loading = false;
-
-            }else{
-
-                var subtotal = parseFloat(app.penjualan.subtotal) + parseFloat(resp.data.subtotal)
-
-                app.getResults()
-                app.penjualan.subtotal = subtotal.toFixed(2)                        
-                app.penjualan.total_akhir  = subtotal.toFixed(2) 
-                app.potonganPersen()
-                app.alert("Menambahkan Produk "+nama_produk)
-                app.loading = false
-                app.inputTbsPenjualan.jumlah_produk = ''
-                app.inputTbsPenjualan.produk = ''
-
-            }
-
-        })
-        .catch(function (resp) {
-
-            console.log(resp);                  
+            app.alertTbs("Produk "+nama_produk+" Sudah Ada, Silakan Pilih Produk Lain!");
             app.loading = false;
-            alert("Tidak dapat Menambahkan Produk");
-        });
-    }
+            app.inputTbsPenjualan.jumlah_produk = ''
+            app.inputTbsPenjualan.produk = ''
+
+        }else{
+
+            var subtotal = parseFloat(app.penjualan.subtotal) + parseFloat(resp.data.subtotal)
+
+            app.getResults()
+            app.penjualan.subtotal = subtotal.toFixed(2)                        
+            app.penjualan.total_akhir  = subtotal.toFixed(2) 
+            app.potonganPersen()
+            app.alert("Menambahkan Produk "+nama_produk)
+            app.loading = false
+            app.inputTbsPenjualan.jumlah_produk = ''
+            app.inputTbsPenjualan.produk = ''
+
+        }
+
+    })
+    .catch(function (resp) {
+
+        console.log(resp);                  
+        app.loading = false;
+        alert("Tidak dapat Menambahkan Produk");
+    });
+}
 },
 editEntry(id, index,nama_produk,subtotal_lama) {    
     var app = this;     
@@ -976,17 +984,17 @@ simpanSetting(){
         app.alertTbs("Jumlah Produk Tidak Boleh Nol atau Kosong!")
     }else{
 
-       axios.post(app.url+'/proses-setting-penjualan-pos',newSettingPenjualanPos)
-       .then(function (resp) {
+     axios.post(app.url+'/proses-setting-penjualan-pos',newSettingPenjualanPos)
+     .then(function (resp) {
         app.alert("Menyimpan Setting Penjualan POS");        
         $("#modal_setting").hide(); 
     })
-       .catch(function (resp) {
+     .catch(function (resp) {
         console.log(resp);
         alert("Tidak dapat Menyimpan Setting Penjualan POS");
     });
 
-   }
+ }
 
 },
 dataSettingPenjualanPos(page) {
