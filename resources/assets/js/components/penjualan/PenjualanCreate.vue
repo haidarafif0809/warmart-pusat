@@ -201,8 +201,8 @@
                                             <b> 
                                                 <div class="form-group" style="margin-right:110px;">
                                                     <selectize-component :settings="hargaJual" v-model="setting_penjualan_pos.harga_jual" id="setting_harga_jual" ref='setting_harga_jual'> 
-                                                        <option v-bind:value="1">Level 1</option>
-                                                        <option v-bind:value="2">Level 2</option>
+                                                        <option v-bind:value="1">Harga Jual 1</option>
+                                                        <option v-bind:value="2">Harga Jual 2</option>
                                                     </selectize-component>
                                                 </div>
                                             </b> 
@@ -240,7 +240,7 @@
 
                       <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
                         <selectize-component v-model="inputTbsPenjualan.produk" :settings="placeholder_produk" id="produk" ref='produk' v-shortkey.focus="['f1']"> 
-                            <option v-for="produks, index in produk" v-bind:value="produks.produk">{{produks.kode_produk}} || {{ produks.nama_produk }}</option>
+                            <option v-for="produks, index in produk" v-bind:value="produks.produk">{{produks.barcode}} || {{produks.kode_produk}} || {{ produks.nama_produk }}</option>
                         </selectize-component>
                     </div>  
 
@@ -647,7 +647,14 @@ submitProdukPenjualan(value){
     axios.post(app.url+'/proses-tambah-tbs-penjualan', newinputTbsPenjualan)
     .then(function (resp) {
 
-        if (resp.data == 0) {
+        if (resp.data.harga_jual == 0 || resp.data.harga_jual == '') {
+
+            app.alertTbs("Harga Produk "+nama_produk+" 0!");
+            app.loading = false;
+            app.inputTbsPenjualan.jumlah_produk = ''
+            app.inputTbsPenjualan.produk = ''
+
+        }else if (resp.data == 0) {
 
             app.alertTbs("Produk "+nama_produk+" Sudah Ada, Silakan Pilih Produk Lain!");
             app.loading = false;
@@ -674,6 +681,8 @@ submitProdukPenjualan(value){
 
         console.log(resp);                  
         app.loading = false;
+        app.inputTbsPenjualan.jumlah_produk = ''
+        app.inputTbsPenjualan.produk = ''
         alert("Tidak dapat Menambahkan Produk");
     });
 }
@@ -997,7 +1006,7 @@ simpanSetting(){
  }
 
 },
-dataSettingPenjualanPos(page) {
+dataSettingPenjualanPos() {
     var app = this; 
 
     axios.get(app.url+'/cek-setting-penjualan-pos')

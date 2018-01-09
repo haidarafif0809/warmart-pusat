@@ -36,7 +36,7 @@ class LaporanPersediaanController extends Controller
 
             array_push($array, [
                 'kode_produk' => $laporan_persediaans->kode_barang,
-                'nama_produk' => $laporan_persediaans->Nama,
+                'nama_produk' => $laporan_persediaans->NamaProduk,
                 'satuan'      => $laporan_persediaans->satuan->nama_satuan,
                 'stok'        => $stok_produk,
                 'nilai'       => $nilai,
@@ -54,7 +54,7 @@ class LaporanPersediaanController extends Controller
 
         $laporan_persediaan = Barang::with('satuan')->where('id_warung', Auth::user()->id_warung)->where('hitung_stok', 1)->where(function ($query) use ($request) {
             $query->orWhere('kode_barang', 'LIKE', $request->search . '%')
-                ->orWhere('nama_barang', 'LIKE', $request->search . '%');
+            ->orWhere('nama_barang', 'LIKE', $request->search . '%');
         })->orderBy('id', 'desc')->paginate(10);
         $array = array();
 
@@ -67,7 +67,7 @@ class LaporanPersediaanController extends Controller
 
             array_push($array, [
                 'kode_produk' => $laporan_persediaans->kode_barang,
-                'nama_produk' => $laporan_persediaans->Nama,
+                'nama_produk' => $laporan_persediaans->NamaProduk,
                 'satuan'      => $laporan_persediaans->satuan->nama_satuan,
                 'stok'        => $stok_produk,
                 'nilai'       => $nilai,

@@ -85,10 +85,14 @@ class DetailPenjualanPosObserver
         $hpp = Hpp::where('no_faktur', $DetailPenjualanPos->id_penjualan_pos)->where('id_produk', $DetailPenjualanPos->id_produk)->where('jenis_hpp', 2)
         ->where('warung_id', $DetailPenjualanPos->warung_id);
 
-        if (!$hpp->delete()) {
-            return false;
-        } else {
-            return true;
+        if ($hpp->count() > 0) {            
+
+            if (!$hpp->delete()) {
+                return false;
+            } else {
+                return true;
+            }
+
         }
 
     } //

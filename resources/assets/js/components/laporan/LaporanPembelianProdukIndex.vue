@@ -57,6 +57,7 @@
 									<th>Supplier</th>
 									<th style="text-align:right">Jumlah</th>
 									<th>Satuan</th>
+									<th style="text-align:right">Subtotal</th>
 									<th style="text-align:right">Diskon</th>
 									<th style="text-align:right">Pajak</th>
 									<th style="text-align:right">Total</th>
@@ -70,9 +71,10 @@
 									<td>{{ pembelianProduks.laporan_pembelians.nama_suplier }}</td>
 									<td align="right">{{ pembelianProduks.laporan_pembelians.jumlah_produk | pemisahTitik }}</td>
 									<td>{{ pembelianProduks.laporan_pembelians.nama_satuan }}</td>
+									<td align="right">{{ pembelianProduks.laporan_pembelians.subtotal | pemisahTitik }}</td>
 									<td align="right">{{ pembelianProduks.laporan_pembelians.potongan | pemisahTitik }}</td>
 									<td align="right">{{ pembelianProduks.laporan_pembelians.tax | pemisahTitik }}</td>
-									<td align="right">{{ pembelianProduks.laporan_pembelians.subtotal | pemisahTitik }}</td>
+									<td align="right">{{ pembelianProduks.sub_total | pemisahTitik }}</td>
 
 								</tr>
 
@@ -82,14 +84,15 @@
 									<td></td>
 									<td align="right">{{ subtotalPembelianProduk.jumlah_produk | pemisahTitik }}</td>
 									<td></td>
+									<td align="right">{{ subtotalPembelianProduk.subtotal | pemisahTitik }}</td>
 									<td align="right">{{ subtotalPembelianProduk.potongan | pemisahTitik }}</td>
 									<td align="right">{{ subtotalPembelianProduk.pajak | pemisahTitik }}</td>
-									<td align="right">{{ subtotalPembelianProduk.subtotal | pemisahTitik }}</td>
+									<td align="right">{{ subtotalPembelianProduk.total | pemisahTitik }}</td>
 
 								</tr>
 							</tbody>					
 							<tbody class="data-tidak-ada" v-else-if="pembelianProduk.length == 0 && loading == false">
-								<tr ><td colspan="8"  class="text-center">Tidak Ada Data</td></tr>
+								<tr ><td colspan="9"  class="text-center">Tidak Ada Data</td></tr>
 							</tbody>
 						</table>
 						</div><!--RESPONSIVE-->
