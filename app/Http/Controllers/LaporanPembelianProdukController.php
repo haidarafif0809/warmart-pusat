@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Barang;
 use App\DetailPembelian;
 use App\Suplier;
+use App\Warung;
 use Auth;
 use Excel;
 use Illuminate\Http\Request;
@@ -14,6 +15,13 @@ class LaporanPembelianProdukController extends Controller
     public function __construct()
     {
         $this->middleware('user-must-warung');
+    }
+
+    public function tanggal($tangal)
+    {
+        $date        = date_create($tangal);
+        $date_format = date_format($date, "d-m-Y");
+        return $date_format;
     }
 
     public function dataProduk()
@@ -74,6 +82,18 @@ class LaporanPembelianProdukController extends Controller
             'Total',
         ]);
         return $sheet;
+    }
+
+    public function foreachLaporan($laporan_pembelian)
+    {
+        $data_pembelian = array();
+        foreach ($laporan_pembelian as $laporan_pembelians) {
+            $sub_total = $laporan_pembelians->subtotal - $laporan_pembelians->potongan + $laporan_pembelians->tax;
+
+            array_push($data_pembelian, ['laporan_pembelians' => $laporan_pembelians, 'sub_total' => $sub_total]);
+        }
+
+        return $data_pembelian;
     }
 
     public function prosesLaporanPembelianProduk(Request $request)
@@ -172,5 +192,38 @@ class LaporanPembelianProdukController extends Controller
 
             });
         })->export('xls');
+    }
+
+    public function cetakLaporan(Request $request, $dari_tanggal, $sampai_tanggal, $produk, $suplier)
+    {
+        $request['dari_tanggal']   = $dari_tanggal;
+        $request['sampai_tanggal'] = $sampai_tanggal;
+        $request['produk']         = $produk;
+        $request['suplier']        = $suplier;
+
+        if ($produk == 0) {
+            $request['produk'] = "";
+        };
+
+        if ($suplier == 0) {
+            $request['suplier'] = "";
+        };
+
+        $laporan_pembelian  = DetailPembelian::laporanPembelianProduk($request)->get();
+        $data_pembelian     = $this->foreachLaporan($laporan_pembelian);
+        $subtotal_pembelian = DetailPembelian::subtotalLaporanPembelianProduk($request)->first();
+        $data_warung        = Warung::where('id', Auth::user()->id_warung)->first();
+
+        return view('laporan.cetak_laporan_pembelian_produk',
+            [
+                'laporan_pembelian'  => $laporan_pembelian,
+                'data_pembelian'     => $data_pembelian,
+                'subtotal_pembelian' => $subtotal_pembelian,
+                'data_warung'        => $data_warung,
+                'dari_tanggal'       => $this->tanggal($dari_tanggal),
+                'sampai_tanggal'     => $this->tanggal($sampai_tanggal),
+                'produk'             => $produk,
+                'suplier'            => $suplier,
+            ])->with(compact('html'));
     }
 }
