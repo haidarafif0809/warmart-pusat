@@ -9,6 +9,7 @@ use App\KategoriBarang;
 use App\PesananPelanggan;
 use App\TransaksiKas;
 use App\User;
+use App\SettingAplikasi;
 use App\UserWarung;
 use App\Warung;
 use Auth;
@@ -190,6 +191,7 @@ class HomeController extends Controller
         $rata_rata_produk_perwarung   = $produk / $jumlah_warung;
         $pesanan                      = PesananPelanggan::all()->count();
         $pesanan_selesai              = PesananPelanggan::where('konfirmasi_pesanan', 2)->count();
+        $setting_aplikasi             = SettingAplikasi::select('tipe_aplikasi')->first();
 
         $response['komunitas']             = $jumlah_komunitas;
         $response['customer']              = $jumlah_customer;
@@ -201,6 +203,7 @@ class HomeController extends Controller
         $response['error_log']             = $error_log;
         $response['pesanan']               = $pesanan;
         $response['pesanan_selesai']       = $pesanan_selesai;
+        $response['setting_aplikasi']       = $setting_aplikasi;
 
         return response()->json($response);
 

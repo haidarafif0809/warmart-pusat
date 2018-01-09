@@ -37,13 +37,28 @@ class Barang extends Model
 
 	public function getHppAttribute(){
 
+// jika sama2 nol
+// jika a = 1 dan b 0
+
 		$hpp_masuk = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk), 0) as total_produk_masuk'), DB::raw('IFNULL(SUM(total_nilai), 0) as total_nilai_masuk')])
 		->where('id_produk', $this->id)
 		->where('warung_id', $this->id_warung)->where('jenis_hpp', 1)->first();
 
-		$hpp_produk = $hpp_masuk->total_nilai_masuk / $hpp_masuk->total_produk_masuk;
+		$total_nilai_masuk = $hpp_masuk->total_nilai_masuk;
+		$total_produk_masuk = $hpp_masuk->total_produk_masuk;
 
-		return $hpp_produk;
+		if ($total_nilai_masuk == 0 AND $total_produk_masuk == 0) {
+			$hpp_produk = 0;
+			return $hpp_produk;
+		}else if ($total_nilai_masuk > 0 AND $total_produk_masuk == 0) {
+			$hpp_produk = 0;
+			return $hpp_produk;
+		}else{
+
+			$hpp_produk = $hpp_masuk->total_nilai_masuk / $hpp_masuk->total_produk_masuk;
+			return $hpp_produk;
+		}
+		
 	}
 
 	public function getNamaProdukAttribute(){

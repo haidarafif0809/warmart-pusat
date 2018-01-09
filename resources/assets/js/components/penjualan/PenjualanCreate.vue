@@ -681,6 +681,8 @@ submitProdukPenjualan(value){
 
         console.log(resp);                  
         app.loading = false;
+        app.inputTbsPenjualan.jumlah_produk = ''
+        app.inputTbsPenjualan.produk = ''
         alert("Tidak dapat Menambahkan Produk");
     });
 }
@@ -1004,7 +1006,7 @@ simpanSetting(){
  }
 
 },
-dataSettingPenjualanPos(page) {
+dataSettingPenjualanPos() {
     var app = this; 
 
     axios.get(app.url+'/cek-setting-penjualan-pos')

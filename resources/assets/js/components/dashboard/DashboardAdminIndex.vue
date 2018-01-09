@@ -1,8 +1,11 @@
 <template>
 
-    <div class="row" v-if="tipeUser.content == 1">   
-        <center>
+    <div class="row" v-if="tipeUser.content == 1">  
+        <center v-if="dashboardData.setting_aplikasi == 0">
             <img v-bind:src="url+ 'image/warmart_logo.png'"class="img-responsive" width="500" height="160"> 
+        </center>
+         <center v-else>
+            <img v-bind:src="url+ 'assets/img/examples/topos_logo.png'"class="img-responsive" width="500" height="160"> 
         </center>
         <div class="col-lg-4 col-md-6 col-sm-6">
             <div class="card card-stats">
@@ -105,9 +108,13 @@
             </div>        
         </div>
         
-        <center>
+        <center v-if="dashboardData.setting_aplikasi == 0">
             <img v-bind:src="url+ 'image/warmart_logo.png'"class="img-responsive" width="500" height="160"> 
         </center>
+         <center v-else>
+            <img v-bind:src="url+ 'assets/img/examples/topos_logo.png'"class="img-responsive" width="500" height="160"> 
+        </center>
+
         <center v-if="dashboardData.konfirmasi_admin == 1">
              <div id="tab" class="btn-group" data-toggle="buttons-radio">
                 <router-link :to="{name: 'indexProduk'}"  class="btn btn-large btn-info activemenu-nav">
