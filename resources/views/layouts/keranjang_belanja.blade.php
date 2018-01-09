@@ -25,26 +25,35 @@ h6 {
     text-transform: uppercase;
     font-weight: 500;
 }
+.backgroundColor {
+    background-color: #2ac326
+}
 </style>
+
+@if($setting_aplikasi->tipe_aplikasi == 0)
 <div class="page-header header-filter header-small" data-parallax="true" style="background-image: url('image/background2.jpg');">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2">
-                <div class="brand">
+    @else
+    <div class="page-header header-small backgroundColor" data-parallax="true">
+        @endif
 
-                  @if($setting_aplikasi->tipe_aplikasi == 0)
-                  <h1 class="title"> PASAR MUSLIM INDONESIA </h1>
-                  <h4 class="title"> Segala Kemudahan Untuk Umat Muslim Berbelanja. </h4>
-                  @else
-                  <h1 class="title"> TOKO ONLINE DAN POS </h1>
-                  @endif
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="brand">
 
+                      @if($setting_aplikasi->tipe_aplikasi == 0)
+                      <h1 class="title"> PASAR MUSLIM INDONESIA </h1>
+                      <h4 class="title"> Segala Kemudahan Untuk Umat Muslim Berbelanja. </h4>
+                      @else
+                      <h1 class="title"> TOKO ONLINE DAN POS </h1>
+                      @endif
+
+                  </div>
               </div>
           </div>
       </div>
   </div>
-</div>
-<div class="main main-raised">
+  <div class="main main-raised">
     @if ($agent->isMobile())
     <!--JIKA DAKSES VIA HP/TAB-->
     <div class="container" style="margin-left: 5px; margin-right: 5px;">
