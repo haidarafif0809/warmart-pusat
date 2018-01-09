@@ -126,7 +126,7 @@
                           <div align="right"  style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
                                <button v-if="inputPembayaranPembelian.kembalian >= 0 && inputPembayaranPembelian.kredit == 0" v-shortkey.push="['alt']" type="submit" class="btn btn-success btn-lg" id="btnSelesai" ><font style="font-size:20px;">Tunai(Alt)</font></button>
 
-                               <button v-if="inputPembayaranPembelian.kredit > 0" type="submit" class="btn btn-success btn-lg" v-shortkey.push="['alt']" id="btnSelesai" ><i class="material-icons">credit_card</i><font style="font-size:20px;">Hutang(Alt)</font> </button>
+                               <button v-if="inputPembayaranPembelian.kredit > 0" type="submit" class="btn btn-success btn-lg" v-shortkey.push="['alt']" id="btnSelesai" ><font style="font-size:20px;">Hutang(Alt)</font> </button>
 
                                <button type="button" class="btn btn-default btn-lg"  v-on:click="closeModalX()" v-shortkey.push="['esc']" @shortkey="closeModalX()"><font style="font-size:20px;"> Tutup(Esc)</font></button>
                            </div>
@@ -1110,8 +1110,9 @@ export default {
     prosesTransaksiSelesai(){
         var app = this;
         var kas = app.inputPembayaranPembelian.cara_bayar;
-      var pembayaran = app.inputPembayaranPembelian.pembayaran;
-      var no_faktur = app.inputPembayaranPembelian.no_faktur_edit;
+        var pembayaran = app.inputPembayaranPembelian.pembayaran;
+        var no_faktur = app.inputPembayaranPembelian.no_faktur_edit;
+        var id = app.id_pembelian;
       if (pembayaran == '') {
         pembayaran = 0;
       }
@@ -1138,6 +1139,8 @@ export default {
             app.alert(app.message);
             app.getResults();
             app.$router.replace('/pembelian');
+            window.open('pembelian/cetak-besar-pembelian/'+id,'_blank');
+
             })
             .catch(function (resp) {
             app.success = false;

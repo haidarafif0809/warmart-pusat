@@ -1,9 +1,16 @@
 <!DOCTYPE doctype html>
 <html lang="en">
-<head>
-    <title>
-        War-Mart.id
-    </title>
+<head>    <!-- PILIH TIPE APLIKASI -->
+    <?php
+    $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
+    ?>
+    
+    @if($setting_aplikasi->tipe_aplikasi == 0)
+    <title>War-Mart.id</title>
+    @else
+    <title>To-Pos.id</title>
+    @endif
+
     <meta charset="utf-8"/>
     <link href="{{ asset('img/favicon.png') }}" rel="apple-touch-icon" sizes="76x76"/>
     <link href="{{ asset('img/favicon.png') }}" rel="icon" type="image/png"/>
@@ -35,10 +42,7 @@
   }
 </style>
 <body class="ecommerce-page">
-    <!-- PILIH TIPE APLIKASI -->
-    <?php
-    $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
-    ?>
+
 
     @if(Agent::isMobile())
     <nav class="navbar navbar-default navbar-fixed-top " id="sectionsNav">
