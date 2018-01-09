@@ -102,16 +102,17 @@
 
                                     </div>
                                     <div class="col-md-6 col-xs-12">
+                                     <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                                         <font style="color: black">Kredit</font>
+                                         <money style="text-align:right;" readonly="" class="form-pembelian" id="kredit" name="kredit" placeholder="Kredit"  v-model="inputPembayaranPembelian.kredit" v-bind="separator" ></money> 
+                                     </div>
 
                                         <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
                                          <font style="color: black">Kembalian</font>
                                          <money style="text-align:right;" readonly="" class="form-pembelian" id="kembalian" name="kembalian" placeholder="Kembalian"  v-model="inputPembayaranPembelian.kembalian" v-bind="separator" ></money> 
                                      </div>
 
-                                     <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                         <font style="color: black">Kredit</font>
-                                         <money style="text-align:right;" readonly="" class="form-pembelian" id="kredit" name="kredit" placeholder="Kredit"  v-model="inputPembayaranPembelian.kredit" v-bind="separator" ></money> 
-                                     </div>
+
                                  </div>
                              </div>
 
@@ -122,7 +123,7 @@
                              <div align="right"  style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
                                <button v-if="inputPembayaranPembelian.kembalian >= 0 && inputPembayaranPembelian.kredit == 0" v-shortkey.push="['alt']" type="submit" class="btn btn-success btn-lg" id="btnSelesai" ><font style="font-size:20px;">Tunai(Alt)</font></button>
 
-                               <button v-if="inputPembayaranPembelian.kredit > 0" type="submit" class="btn btn-success btn-lg" v-shortkey.push="['alt']" id="btnSelesai" ><i class="material-icons">credit_card</i><font style="font-size:20px;">Hutang(Alt)</font> </button>
+                               <button v-if="inputPembayaranPembelian.kredit > 0" type="submit" class="btn btn-success btn-lg" v-shortkey.push="['alt']" id="btnSelesai" ><font style="font-size:20px;">Hutang(Alt)</font> </button>
 
                                <button type="button" class="btn btn-default btn-lg"  v-on:click="closeModalX()" v-shortkey.push="['esc']" @shortkey="closeModalX()"><font style="font-size:20px;"> Tutup(Esc)</font></button>
                            </div>
@@ -147,7 +148,7 @@
                   <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
                    
                     <selectize-component v-model="inputTbsPembelian.produk" :settings="placeholder_produk" id="produk" ref='produk' v-shortkey.focus="['f1']" > 
-                      <option v-for="produks, index in produk" v-bind:value="produks.produk">{{ produks.nama_produk }}</option>
+                      <option v-for="produks, index in produk" v-bind:value="produks.produk">{{produks.barcode}} || {{produks.kode_produk}} || {{ produks.nama_produk }}</option>
                       </selectize-component>
                       </div><!--/COL MD  3 --> 
                       <span v-if="errors.produk" id="produk_error" class="label label-danger">{{ errors.produk[0] }}</span>
@@ -528,7 +529,7 @@ export default {
 					showCloseButton: true, 
 					showCancelButton: true,                        
 					focusConfirm: false, 
-					confirmButtonText:'<i class="fa fa-thumbs-o-up"></i> Submit', 
+					confirmButtonText:'<i class="fa fa-thumbs-o-up"></i> OK', 
 					confirmButtonAriaLabel: 'Thumbs up, great!', 
 					cancelButtonText:'<i class="fa fa-thumbs-o-down"> Batal', 
 					closeOnConfirm: false, 
@@ -636,7 +637,7 @@ export default {
 			showCloseButton: true, 
 			showCancelButton: true, 
 			focusConfirm: true, 
-			confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> Submit', 
+			confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> OK', 
 			confirmButtonAriaLabel: 'Thumbs up, great!', 
 			cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal', 
 			closeOnConfirm: true, 
@@ -692,7 +693,7 @@ export default {
 			showCloseButton: true, 
 			showCancelButton: true, 
 			focusConfirm: true, 
-			confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> Submit', 
+			confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> OK', 
 			confirmButtonAriaLabel: 'Thumbs up, great!', 
 			cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal', 
 			closeOnConfirm: true, 
@@ -750,7 +751,7 @@ export default {
 			showCloseButton: true, 
 			showCancelButton: true, 
 			focusConfirm: true, 
-			confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> Submit', 
+			confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> OK', 
 			confirmButtonAriaLabel: 'Thumbs up, great!', 
 			cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal', 
 			closeOnConfirm: true, 
@@ -857,7 +858,7 @@ export default {
 			animation: false, 
 			showCloseButton: true, 
 			showCancelButton: true, 
-			confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> Submit', 
+			confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> OK', 
 			confirmButtonAriaLabel: 'Thumbs up, great!', 
 			cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal', 
 			cancelButtonAriaLabel: 'Thumbs down', 
