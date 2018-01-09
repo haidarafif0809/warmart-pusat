@@ -18,7 +18,7 @@ class Barang extends Model
 	use Searchable;
 
 
-	protected $fillable = ['kode_barang','kode_barcode','nama_barang', 'harga_beli','harga_jual','satuan_id','kategori_barang_id','status_aktif','hitung_stok','id_warung', 'deskripsi_produk', 'konfirmasi_admin','foto'];
+	protected $fillable = ['kode_barang','kode_barcode','nama_barang', 'harga_beli','harga_jual','satuan_id','kategori_barang_id','status_aktif','hitung_stok','id_warung', 'deskripsi_produk', 'konfirmasi_admin','foto','harga_jual2'];
 
 	public function satuan()
 	{
@@ -46,7 +46,7 @@ class Barang extends Model
 		return $hpp_produk;
 	}
 
-	public function getNamaAttribute(){
+	public function getNamaProdukAttribute(){
 		return title_case($this->nama_barang);
 	}
 

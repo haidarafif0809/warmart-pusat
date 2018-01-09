@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="en">
-
+<!-- PILIH TIPE APLIKASI -->
+<?php
+$setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
+?>
 <head>
     <meta charset="utf-8" />
     <link rel="apple-touch-icon" sizes="76x76" href="img/favicon.png" />
@@ -8,8 +11,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     
+    @if($setting_aplikasi->tipe_aplikasi == 0)
     <title>War-Mart.id</title>
-
+    @else
+    <title>To-Pos.id</title>
+    @endif
 
     <meta name="viewport" content="width=device-width" />
     <!-- Bootstrap core CSS     -->
@@ -26,10 +32,7 @@
 </head>
 
 <body class="off-canvas-sidebar">
-    <!-- PILIH TIPE APLIKASI -->
-    <?php
-    $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
-    ?>
+
 
     <nav class="navbar navbar-primary navbar-transparent navbar-absolute">
         <div class="container">
