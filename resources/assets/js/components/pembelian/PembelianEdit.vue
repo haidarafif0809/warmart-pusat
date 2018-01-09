@@ -151,7 +151,7 @@
                   <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
                    
                     <selectize-component v-model="inputTbsPembelian.produk" :settings="placeholder_produk" id="produk" ref='produk' v-shortkey.focus="['f1']" > 
-                      <option v-for="produks, index in produk" v-bind:value="produks.produk">{{ produks.nama_produk }}</option>
+                      <option v-for="produks, index in produk" v-bind:value="produks.produk">{{produks.barcode}} || {{produks.kode_produk}} || {{ produks.nama_produk }}</option>
                       </selectize-component>
                       </div><!--/COL MD  3 --> 
                       <span v-if="errors.produk" id="produk_error" class="label label-danger">{{ errors.produk[0] }}</span>
@@ -177,12 +177,12 @@
               <thead class="text-primary">
                 <tr>
                   <th>Produk</th>
-                  <th>Jumlah</th>
-                  <th>Harga</th>
-                  <th>Potongan</th>
-                  <th>Pajak</th>
-                  <th>Subtotal</th>
-                  <th>Hapus</th>
+                  <th style="text-align:right;">Jumlah</th>
+                  <th style="text-align:right;">Harga</th>
+                  <th style="text-align:right;">Potongan</th>
+                  <th style="text-align:right;">Pajak</th>
+                  <th style="text-align:right;">Subtotal</th>
+                  <th style="text-align:right;">Hapus</th>
                 </tr>
               </thead>
               <tbody v-if="tbs_pembelians.length > 0 && loading == false"  class="data-ada">
@@ -207,8 +207,8 @@
                     </a>
                   </td>
                   <td><p id="table-subtotal" align="right">{{ tbs_pembelian.subtotal_tbs }}</p></td>
-                  <td> 
-                    <a href="#create-pembelian" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_pembelian.id_tbs_pembelian" v-on:click="deleteEntry(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk)">Delete</a>
+                  <td style="text-align:right;"> 
+                    <a href="#create-pembelian" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_pembelian.id_tbs_pembelian" v-on:click="deleteEntry(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk)" >Delete</a>
                   </td>
                 </tr>
               </tbody>          
@@ -570,7 +570,7 @@ export default {
           showCloseButton: true, 
           showCancelButton: true,                        
           focusConfirm: false, 
-          confirmButtonText:'<i class="fa fa-thumbs-o-up"></i> Submit', 
+          confirmButtonText:'<i class="fa fa-thumbs-o-up"></i> OK', 
           confirmButtonAriaLabel: 'Thumbs up, great!', 
           cancelButtonText:'<i class="fa fa-thumbs-o-down"> Batal', 
           closeOnConfirm: false, 
@@ -660,7 +660,7 @@ export default {
       showCloseButton: true, 
       showCancelButton: true, 
       focusConfirm: true, 
-      confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> Submit', 
+      confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> OK', 
       confirmButtonAriaLabel: 'Thumbs up, great!', 
       cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal', 
       closeOnConfirm: true, 
@@ -717,7 +717,7 @@ export default {
       showCloseButton: true, 
       showCancelButton: true, 
       focusConfirm: true, 
-      confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> Submit', 
+      confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> OK', 
       confirmButtonAriaLabel: 'Thumbs up, great!', 
       cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal', 
       closeOnConfirm: true, 
@@ -773,7 +773,7 @@ export default {
       showCloseButton: true, 
       showCancelButton: true, 
       focusConfirm: true, 
-      confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> Submit', 
+      confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> OK', 
       confirmButtonAriaLabel: 'Thumbs up, great!', 
       cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal', 
       closeOnConfirm: true, 
@@ -879,7 +879,7 @@ export default {
       animation: false, 
       showCloseButton: true, 
       showCancelButton: true, 
-      confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> Submit', 
+      confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> OK', 
       confirmButtonAriaLabel: 'Thumbs up, great!', 
       cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal', 
       cancelButtonAriaLabel: 'Thumbs down', 
