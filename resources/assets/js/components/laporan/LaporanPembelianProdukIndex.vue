@@ -98,8 +98,10 @@
 						</div><!--RESPONSIVE-->
 
 						<!--DOWNLOAD EXCEL-->
-
 						<a href="#" class='btn btn-warning' id="btnExcel" target='blank' :style="'display: none'"><i class="material-icons">file_download</i> Download Excel</a>
+
+						<!--CETAK LAPORAN-->
+						<a href="#" class='btn btn-success' id="btnCetak" target='blank' :style="'display: none'"><i class="material-icons">print</i> Cetak Laporan</a>
 
 						<vue-simple-spinner v-if="loading"></vue-simple-spinner>
 						<div align="right"><pagination :data="pembelianProdukData" v-on:pagination-change-page="prosesLaporan" :limit="4"></pagination></div>
@@ -129,6 +131,7 @@ export default {
             },
 			url : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-pembelian-produk"),
 			urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-pembelian-produk/download-excel-pembelian-produk"),
+			urlCetak : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-pembelian-produk/cetak-laporan"),
 			pencarian: '',
 			loading: false,
             placeholder_produk: {
@@ -173,7 +176,9 @@ export default {
     		};
 
     		$("#btnExcel").show();
-    		$("#btnExcel").attr('href', app.urlDownloadExcel+'/'+filter.dari_tanggal+'/'+filter.sampai_tanggal+'/'+filter.produk+'/'+filter.suplier);    		
+    		$("#btnCetak").show();
+    		$("#btnExcel").attr('href', app.urlDownloadExcel+'/'+filter.dari_tanggal+'/'+filter.sampai_tanggal+'/'+filter.produk+'/'+filter.suplier);
+    		$("#btnCetak").attr('href', app.urlCetak+'/'+filter.dari_tanggal+'/'+filter.sampai_tanggal+'/'+filter.produk+'/'+filter.suplier);    		
     	},
     	prosesLaporan(page) {
     		var app = this;	

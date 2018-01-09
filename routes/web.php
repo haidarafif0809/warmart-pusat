@@ -638,6 +638,7 @@ Route::post('/laporan-pembelian-produk/subtotal-pembelian-produk', 'LaporanPembe
 Route::get('/laporan-pembelian-produk/pilih-produk', 'LaporanPembelianProdukController@dataProduk')->middleware('auth');
 Route::get('/laporan-pembelian-produk/pilih-supplier', 'LaporanPembelianProdukController@dataSupplier')->middleware('auth');
 Route::get('/laporan-pembelian-produk/download-excel-pembelian-produk/{dari_tanggal}/{sampai_tanggal}/{produk}/{suplier}', 'LaporanPembelianProdukController@downloadExcel')->middleware('auth');
+Route::get('/laporan-pembelian-produk/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{produk}/{suplier}', 'LaporanPembelianProdukController@cetakLaporan')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 

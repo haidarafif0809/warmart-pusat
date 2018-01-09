@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Barang;
 use App\Http\Controllers\DaftarProdukController;
 use App\KeranjangBelanja;
+use App\SettingAplikasi;
 use App\User;
 use Auth;
 use OpenGraph;
@@ -26,9 +27,10 @@ class DetailProdukController extends Controller
         } else {
             $cek_belanjaan = 0;
         }
+        $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
 
         $sisa_stok_keluar = DaftarProdukController::cekStokProduk($barang);
-        return view('layouts.detail_produk', ['id' => $id, 'barang' => $barang, 'cek_belanjaan' => $cek_belanjaan, 'daftar_produk_sama' => $daftar_produk_sama, 'daftar_produk_warung' => $daftar_produk_warung, 'cek_produk' => $sisa_stok_keluar]);
+        return view('layouts.detail_produk', ['id' => $id, 'barang' => $barang, 'cek_belanjaan' => $cek_belanjaan, 'daftar_produk_sama' => $daftar_produk_sama, 'daftar_produk_warung' => $daftar_produk_warung, 'cek_produk' => $sisa_stok_keluar,'setting_aplikasi'=>$setting_aplikasi]);
 
     }
 
