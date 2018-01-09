@@ -87,14 +87,16 @@ h4 {
     border-bottom: 2px solid #ddd;
     padding: 5px 0px 5px 0px;
 }
+
 </style>
 @if (Agent::isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
 
 @if($setting_aplikasi->tipe_aplikasi == 0)
-<div class="page-header header-small" data-parallax="true"" style="{!! $foto_latar_belakang !!}">
+<div class="page-header header-filter header-small" data-parallax="true"" style="{!! $foto_latar_belakang !!}">
     @else
-    <div class="page-header header-small" data-parallax="true"" style="background-color: #2ac326;">
+    <div class="page-header header-small" data-parallax="true"" style="background-color: #2ac326">
         @endif
+        
         <a href="{{ url('/home') }}"><img  class="img img-raised" src="{!! $logo_warmart !!}" style="width: 10%"/></a>
 
         <div class="container">
@@ -156,13 +158,14 @@ h4 {
                         <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
                             <div class="panel-body">
 
-                            <ul class="nav buttonColor">
-                                <li><a style="color:white" href="{{route('daftar_produk.index')}}"><i class="material-icons">format_align_justify</i> SEMUA KATEGORI</a></li>
-                            </ul>
+                                <ul class="nav" class="buttonColor">
+                                    <li><a style="color:white" href="{{route('daftar_produk.index')}}"><i class="material-icons">format_align_justify</i> SEMUA KATEGORI</a></li>
+                                </ul>
 
-                            <ul class="nav buttonColor" >
-                                {!! $kategori_produk !!}
-                            </ul>
+                                <ul class="nav" class="buttonColor">
+                                    {!! $kategori_produk !!}
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -207,8 +210,9 @@ h4 {
     @if($setting_aplikasi->tipe_aplikasi == 0)
     <div class="page-header header-filter header-small" data-parallax="true"" style="{!! $foto_latar_belakang !!}">
         @else
-        <div class="page-header header-small" data-parallax="true"" style="background-color: #2ac326;">
+        <div class="page-header header-small" data-parallax="true"" style="background-color: #2ac326">
             @endif
+
             <div class="container">
                 <div class="row">
                     <div class="col-md-8 col-md-offset-2">
@@ -221,24 +225,11 @@ h4 {
                             @endif
                         </div>
                     </div>
-                    <div class="col-sm-2">
-                        <button type="submit" class="btn btn-block buttonColor" >Cari</button>
-                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-md-3">
-                <ul class="nav nav-tabs buttonColor" data-tabs="tabs" >
-                    <li><a href="{{route('daftar_produk.index')}}"><i class="material-icons">format_align_justify</i> Semua Kategori</a></li>
-                </ul>
-            </div>
-            <div class="col-md-9">
-                <ul class="nav nav-tabs buttonColor" data-tabs="tabs" >
-                    {!! $kategori_produk !!}
-                </ul>
-            </div>
+        <div class="main main-raised" >
 
             <div class="container">
                 <h3 class="title text-center">{!! $nama_kategori !!}</h3>
