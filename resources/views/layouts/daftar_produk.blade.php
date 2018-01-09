@@ -137,7 +137,7 @@ h4 {
                             </div>
                         </div>
                         <div class="col-sm-2">
-                            <button type="submit" class="btn btn-block" class="buttonColor">Cari</button>
+                            <button type="submit" class="btn btn-block buttonColor" >Cari</button>
                         </div>
                     </div>
                     {!! Form::close() !!}
@@ -158,11 +158,11 @@ h4 {
                         <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
                             <div class="panel-body">
 
-                                <ul class="nav" class="buttonColor">
+                                <ul class="nav buttonColor">
                                     <li><a style="color:white" href="{{route('daftar_produk.index')}}"><i class="material-icons">format_align_justify</i> SEMUA KATEGORI</a></li>
                                 </ul>
 
-                                <ul class="nav" class="buttonColor">
+                                <ul class="nav buttonColor">
                                     {!! $kategori_produk !!}
                                 </ul>
                             </div>
@@ -251,7 +251,7 @@ h4 {
                                 </div>
                             </div>
                             <div class="col-sm-2">
-                                <button type="submit" class="btn btn-block" class="buttonColor">Cari</button>
+                                <button type="submit" class="btn btn-block buttonColor">Cari</button>
                             </div>
                         </div>
                         {!! Form::close() !!}
@@ -260,12 +260,12 @@ h4 {
 
                 <div class="row">
                     <div class="col-md-3">
-                        <ul class="nav nav-tabs" data-tabs="tabs" class="buttonColor">
+                        <ul class="nav nav-tabs buttonColor" data-tabs="tabs" >
                             <li><a href="{{route('daftar_produk.index')}}"><i class="material-icons">format_align_justify</i> Semua Kategori</a></li>
                         </ul>
                     </div>
                     <div class="col-md-9">
-                        <ul class="nav nav-tabs" data-tabs="tabs" class="buttonColor">
+                        <ul class="nav nav-tabs buttonColor" data-tabs="tabs" >
                             {!! $kategori_produk !!}
                         </ul>
                     </div>

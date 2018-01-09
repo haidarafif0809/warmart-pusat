@@ -4,8 +4,13 @@
 
 <head>
     <meta charset="utf-8"/>
-    <link href="{{ asset('img/favicon.png') }}" rel="apple-touch-icon" sizes="76x76"/>
-    <link href="{{ asset('img/favicon.png') }}" rel="icon" type="image/png"/>
+    @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
+    <link rel="apple-touch-icon" sizes="76x76" href="img/favicon.png" />
+    <link rel="icon" type="image/png" href="img/favicon.png" />
+    @else
+    <link rel="apple-touch-icon" sizes="76x76" href="img/icon_topos.jpg" />
+    <link rel="icon" type="image/png" href="img/icon_topos.jpg" />
+    @endif
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
     <meta content="width=device-width" name="viewport"/>

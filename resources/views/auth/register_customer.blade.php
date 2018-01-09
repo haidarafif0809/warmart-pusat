@@ -152,12 +152,21 @@
                             </input>
                         </label>
                         <b>
+                         @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
                             * Anda memahami & menyetujui
-                            <a href="{{ url('/syarat-ketentuan') }}" target="_blank">
-                                <u>
-                                    Syarat & Ketentuan
-                                </u>
-                            </a>
+                                                <a href="{{ url('/syarat-ketentuan') }}" target="_blank">
+                                                    <u>
+                                                        Syarat & Ketentuan
+                                                    </u>
+                                                </a>
+                            @else
+                            * Anda memahami & menyetujui
+                                                <a href="{{ url('/syarat-ketentuan-topos') }}" target="_blank">
+                                                    <u>
+                                                        Syarat & Ketentuan
+                                                    </u>
+                                                </a>
+                            @endif
                         </b>
                     </div>
                 </div>

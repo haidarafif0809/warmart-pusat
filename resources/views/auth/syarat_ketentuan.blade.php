@@ -3,11 +3,20 @@
 
 <head>
     <meta charset="utf-8" />
+    @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
     <link rel="apple-touch-icon" sizes="76x76" href="img/favicon.png" />
     <link rel="icon" type="image/png" href="img/favicon.png" />
+    @else
+    <link rel="apple-touch-icon" sizes="76x76" href="img/icon_topos.jpg" />
+    <link rel="icon" type="image/png" href="img/icon_topos.jpg" />
+    @endif
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+    @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
     <title>War-Mart.id</title>
+    @else
+    <title>To-Pos.id</title>
+    @endif
 
     <meta name="viewport" content="width=device-width" />
     <!-- Bootstrap core CSS     -->
@@ -25,7 +34,7 @@
 
 </head>
 <body class="off-canvas-sidebar">
-    <nav class="navbar  navbar-fixed-top " color-on-scroll=" " id="sectionsNav" style="background-color:purple;">
+       <nav class="navbar  navbar-fixed-top " color-on-scroll=" " id="sectionsNav" style="background-color:#01573e;">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation-example-2">
@@ -37,7 +46,7 @@
                 <a class="navbar-brand" href="" ><p style="color:white;">War-mart.id</p></a>
             </div>
             <div class="collapse navbar-collapse">
-                <ul class="nav navbar-nav navbar-right" style="background-color:purple;"> 
+                <ul class="nav navbar-nav navbar-right"> 
                     <li>
                         <a data-toggle="collapse" href="#pagesExamples">
                             <p>
@@ -52,6 +61,7 @@
                                         <i class="material-icons">person_add</i> Pelanggan
                                     </a>
                                 </li>
+                                 @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
                                 <li class="">
                                     <a href="{{ url('/register') }}">
                                         <i class="material-icons">people</i> Komunitas
@@ -62,6 +72,7 @@
                                         <i class="material-icons">store</i> Warung
                                     </a>
                                 </li> 
+                                @endif
                             </ul>
                         </div>
                     </li>

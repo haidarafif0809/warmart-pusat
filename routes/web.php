@@ -236,7 +236,7 @@ Route::middleware('optimizeImages')->group(function () {
 
 //sarat & ketentuan
 Route::get('/syarat-ketentuan', 'Auth\RegisterController@syarat_ketentuan');
-
+Route::get('/syarat-ketentuan-topos', 'Auth\RegisterController@syarat_ketentuan_topos');
 //USER WARUNG
 Route::get('/register-warung', 'Auth\RegisterController@register_warung')->middleware('optimizeImages');
 
