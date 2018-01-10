@@ -383,7 +383,7 @@ export default {
     			app.seen = true;
                 if (app.inputPembayaranPembelian.subtotal == 0) {         
                     $.each(resp.data.data, function (i,item) { 
-                       app.inputPembayaranPembelian.subtotal += resp.data.data[i].subtotal 
+                       app.inputPembayaranPembelian.subtotal = app.inputPembayaranPembelian.subtotal + resp.data.data[i].subtotal 
                        app.inputPembayaranPembelian.total_akhir += resp.data.data[i].subtotal
                        app.inputPembayaranPembelian.kredit += resp.data.data[i].subtotal
                    });  
@@ -614,7 +614,6 @@ export default {
 							app.loading = false;
 							app.getResults();
 							if (app.inputPembayaranPembelian.subtotal != 0) { 
-              console.log(resp.data);   
 							var subtotal = parseInt(app.inputPembayaranPembelian.subtotal) + parseInt(resp.data.subtotal)
 							app.inputPembayaranPembelian.subtotal = subtotal                       
                 			app.inputPembayaranPembelian.total_akhir  = subtotal 
