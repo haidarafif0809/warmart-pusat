@@ -10,7 +10,8 @@
     <div class="col-md-12">
       <ul class="breadcrumb">
         <li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li>
-        <li class="active">Profil Warung</li>
+        <li class="active" v-if="warungData.setting_aplikasi == 0">Profil Warung</li>
+        <li class="active" v-else>Profil Toko</li>
       </ul>
 
       <div class="card">
@@ -19,7 +20,8 @@
       </div>
 
       <div class="card-content">
-        <h4 class="card-title">Profil Warung </h4>
+        <h4 class="card-title" v-if="warungData.setting_aplikasi == 0">Profil Warung </h4>
+        <h4 class="card-title" v-else >Profil Toko </h4>
 
           <table class="table table-striped table-hover ">
             <tbody v-if="warungs.length > 0 && loading == false" class="data-ada">
@@ -95,6 +97,7 @@ export default {
   data: function () {
     return {
       warungs: [],
+      warungData : {},
       url : window.location.origin+(window.location.pathname).replace("dashboard", "profil-warung"),
       pencarian: '',
       loading: true
@@ -120,6 +123,7 @@ export default {
           axios.get(app.url+'/view?page='+page)
           .then(function (resp) {
             app.warungs = resp.data.data;
+            app.warungData = resp.data;
             app.loading = false;
           })
           .catch(function (resp) {
