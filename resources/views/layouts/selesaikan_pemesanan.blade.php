@@ -35,23 +35,41 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
   <div class="page-header header-small buttonColor" data-parallax="true">
     @endif
 
-    <div class="container">
-      <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-          <div class="brand">
+@if (Agent::isMobile())
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="brand">
 
-            @if($setting_aplikasi->tipe_aplikasi == 0)
-            <h1 class="title"> PASAR MUSLIM INDONESIA </h1>
-            <h4 class="title"> Segala Kemudahan Untuk Umat Muslim Berbelanja. </h4>
-            @else
-            <h1 class="title"> TOKO ONLINE DAN POS </h1>
-            @endif
+                      @if($setting_aplikasi->tipe_aplikasi == 0)
+                      <h3 class="title"> PASAR MUSLIM INDONESIA </h1>
+                      <h4 class="title"> Segala Kemudahan Untuk Umat Muslim Berbelanja. </h4>
+                      @else
+                      <h3 class="title"> TOKO ONLINE DAN POS </h1>
+                      @endif
 
-
+                  </div>
+              </div>
           </div>
-        </div>
       </div>
-    </div>
+@else
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="brand">
+
+                      @if($setting_aplikasi->tipe_aplikasi == 0)
+                      <h1 class="title"> PASAR MUSLIM INDONESIA </h3>
+                      <h4 class="title"> Segala Kemudahan Untuk Umat Muslim Berbelanja. </h4>
+                      @else
+                        <h1 class="title">TOKO ONLINE DAN POS</h3>
+                      @endif
+
+                  </div>
+              </div>
+          </div>
+      </div>
+@endif
   </div>
 
   <div class="main main-raised">
