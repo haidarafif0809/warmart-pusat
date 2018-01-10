@@ -36,7 +36,7 @@ class LaporanPersediaanController extends Controller
 
             array_push($array, [
                 'kode_produk' => $laporan_persediaans->kode_barang,
-                'nama_produk' => $laporan_persediaans->NamaProduk,
+                'nama_produk' => $laporan_persediaans->Nama,
                 'satuan'      => $laporan_persediaans->satuan->nama_satuan,
                 'stok'        => $stok_produk,
                 'nilai'       => $nilai,
@@ -67,7 +67,7 @@ class LaporanPersediaanController extends Controller
 
             array_push($array, [
                 'kode_produk' => $laporan_persediaans->kode_barang,
-                'nama_produk' => $laporan_persediaans->NamaProduk,
+                'nama_produk' => $laporan_persediaans->Nama,
                 'satuan'      => $laporan_persediaans->satuan->nama_satuan,
                 'stok'        => $stok_produk,
                 'nilai'       => $nilai,

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Warung;
 use App\UserWarung;
 use App\BankWarung;
+use App\Bank;
 use App\Kelurahan;
 use Indonesia;
 use Session;
@@ -173,7 +174,7 @@ class WarungProfilController extends Controller
         'kecamatan' => 'required',
         'kelurahan' => 'required',
         'no_telpon' => 'required|max:15|unique:warungs,no_telpon,'.$id,
-        ]);
+    ]);
 
          //UPDATE MASTER DATA WARUNG
      $warung = Warung::where('id',$id)->update([
@@ -185,7 +186,7 @@ class WarungProfilController extends Controller
         'wilayah'   =>$request->kelurahan,
         'no_telpon' =>$request->no_telpon, 
         'email'     =>$request->email,
-        ]);
+    ]);
 
      $bank_warung_id = BankWarung::select('id')->where('warung_id', $id)->first();
 
@@ -194,14 +195,14 @@ class WarungProfilController extends Controller
         'nama_bank' => 'required',
         'atas_nama' => 'required', 
         'no_rek'    => 'required|numeric|unique:bank_warungs,no_rek,'.$bank_warung_id->id, 
-        ]);
+    ]);
 
          //UPDATE BANK WARUNG
      $bank_warung = BankWarung::where('warung_id',$id)->update([
         'nama_bank' =>$request->nama_bank,
         'atas_nama' =>$request->atas_nama,
         'no_rek' =>$request->no_rek,
-        ]);
+    ]);
  }
 
     /**
@@ -214,4 +215,13 @@ class WarungProfilController extends Controller
     {
         //
     }
+
+    public function dataWarung(){
+
+       return Warung::find(Auth::user()->id_warung);
+   }
+   public function dataBank(){
+    $bank = Bank::all();
+    return response()->json($bank);
+}
 }

@@ -111,6 +111,8 @@ import LaporanLabaKotorProdukIndex from './components/laporan/LaporanLabaKotorPr
 import LaporanMutasiStokIndex from './components/laporan/LaporanMutasiStokIndex.vue';
 // LAPORAN PEMBELIAN /PRODUK
 import LaporanPembelianProdukIndex from './components/laporan/LaporanPembelianProdukIndex.vue';
+// PENDAFTARAN TOPOS
+import PendaftaranToposIndex from './components/pendaftaran_topos/PendaftaranToposIndex.vue';
 const routes = [{
     path: '/',
     components: {
@@ -503,6 +505,12 @@ const routes = [{
         path: '/laporan-pembelian-produk',
         component: LaporanPembelianProdukIndex,
         name: 'indexLaporanPembelianProduk'
+    },
+    // PENDAFTARAN TOPOS
+    {
+        path: '/daftar-topos',
+        component: PendaftaranToposIndex,
+        name: 'indexPendaftaranTopos'
     }
     ]
     export default routes;

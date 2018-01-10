@@ -414,6 +414,8 @@ Route::get('/profil-warung/pencarian', 'WarungProfilController@pencarian')->midd
 Route::get('/profil-warung/pilih-provinsi', 'WarungProfilController@pilih_provinsi')->middleware('auth');
 Route::get('/profil-warung/pilih-wilayah/{id}/{type}', 'WarungProfilController@pilih_wilayah')->middleware('auth');
 Route::get('/profil-warung/view-detail/{id}', 'WarungProfilController@view_detail')->middleware('auth');
+Route::get('/daftar-topos/data-warung', 'WarungProfilController@dataWarung')->middleware('auth');
+Route::get('/daftar-topos/data-bank', 'WarungProfilController@dataBank')->middleware('auth');
 
 //KATEGORI TRANSAKSI VUE.JS
 Route::get('/kategori-transaksi/view', 'KategoriTransaksiController@view')->middleware('auth');
@@ -669,6 +671,7 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
     Route::resource('kelompok-produk', 'KelompokProdukController');
     Route::resource('profil-warung', 'WarungProfilController');
     Route::resource('penjualan', 'PenjualanController');
+    Route::resource('daftar-topos', 'PendaftarToposController');
 
 //BARANG
     //HALAMAN DESKRIPSI
