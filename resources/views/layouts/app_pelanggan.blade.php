@@ -12,13 +12,13 @@
     @endif
 
     <meta charset="utf-8"/>
-        @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
-            <link rel="apple-touch-icon" sizes="76x76" href="img/favicon.png" />
-             <link rel="icon" type="image/png" href="img/favicon.png" />
-             @else
-             <link rel="apple-touch-icon" sizes="76x76" href="img/icon_topos.jpg" />
-             <link rel="icon" type="image/png" href="img/icon_topos.jpg" />
-        @endif
+    @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
+    <link rel="apple-touch-icon" sizes="76x76" href="img/favicon.png" />
+    <link rel="icon" type="image/png" href="img/favicon.png" />
+    @else
+    <link rel="apple-touch-icon" sizes="76x76" href="img/icon_topos.jpg" />
+    <link rel="icon" type="image/png" href="img/icon_topos.jpg" />
+    @endif
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
     <meta content="width=device-width" name="viewport"/>
@@ -85,7 +85,7 @@ body {
                     @if($setting_aplikasi->tipe_aplikasi == 0)
                     <a href="{{ url('/') }}"> <img class="navbar-brand" src="{{asset('/assets/img/examples/warmart_logo.png')}}"/> </a>
                     @else
-                    <a href="{{ url('/') }}"> <img class="navbar-brand" src="{{asset('/assets/img/examples/topos_logo.png')}}"/> </a>
+                    <a href="{{ url('/') }}"> <img class="navbar-brand" src="{{asset('/assets/img/examples/topos_logo.png').'?v=1'}}"/> </a>
                     @endif
 
                     @if(Agent::isMobile() && !Auth::check())
