@@ -17,7 +17,7 @@
     @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
     <title>War-Mart.id</title>
     @else
-    <title>TOPOS</title>
+    <title>topos | Aplikasi POS & Toko Online</title>
     @endif
     <!-- CSRF Token -->
     <meta content="{{ csrf_token() }}" name="csrf-token">
@@ -44,8 +44,8 @@
 <style type="text/css">
 
     .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
-     padding: 1px;
- }
+       padding: 1px;
+   }
 
 </style>
 <body>
@@ -58,8 +58,8 @@
     -->
 
     <div class="logo">
-       @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
-       <a class="simple-text logo-mini" href="https://war-mart.id">
+     @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
+     <a class="simple-text logo-mini" href="https://war-mart.id">
         WM
     </a>
     <a class="simple-text logo-normal" href="https://war-mart.id">
@@ -220,7 +220,7 @@
         <div class="collapse" id="persediaan">
             <ul class="nav">
                 <li>
-                 <router-link :to="{name: 'indexItemMasuk'}" class="menu-nav">
+                   <router-link :to="{name: 'indexItemMasuk'}" class="menu-nav">
                     <span class="sidebar-mini">
                         IM
                     </span>
@@ -700,8 +700,8 @@
 </script>
 <script type="text/javascript">
     $(document).on('click', '.menu-nav', function(){
-     $('.navbar-toggle ').click();
- });
+       $('.navbar-toggle ').click();
+   });
 </script>
 @yield('scripts')
 </html>
