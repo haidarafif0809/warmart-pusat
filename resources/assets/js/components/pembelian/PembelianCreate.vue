@@ -383,9 +383,10 @@ export default {
     			app.seen = true;
                 if (app.inputPembayaranPembelian.subtotal == 0) {         
                     $.each(resp.data.data, function (i,item) { 
-                       app.inputPembayaranPembelian.subtotal = app.inputPembayaranPembelian.subtotal + resp.data.data[i].subtotal 
-                       app.inputPembayaranPembelian.total_akhir += resp.data.data[i].subtotal
-                       app.inputPembayaranPembelian.kredit += resp.data.data[i].subtotal
+                       app.inputPembayaranPembelian.subtotal += parseFloat(resp.data.data[i].subtotal)
+                       app.inputPembayaranPembelian.total_akhir += parseFloat(resp.data.data[i].subtotal)
+                       app.inputPembayaranPembelian.kredit += parseFloat(resp.data.data[i].subtotal)
+                    console.log(resp.data.data[i].subtotal);
                    });  
                 } 
 
