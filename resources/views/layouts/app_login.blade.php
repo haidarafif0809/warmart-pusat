@@ -10,8 +10,8 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
     <link rel="apple-touch-icon" sizes="76x76" href="img/favicon.png" />
     <link rel="icon" type="image/png" href="img/favicon.png" />
     @else
-    <link rel="apple-touch-icon" sizes="76x76" href="img/icon_topos.jpg" />
-    <link rel="icon" type="image/png" href="img/icon_topos.jpg" />
+    <link rel="apple-touch-icon" sizes="76x76" href="img/icon_topos.png?v=1" />
+    <link rel="icon" type="image/png" href="img/icon_topos.png?v=1" />
     @endif
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
