@@ -65,6 +65,11 @@ class Barang extends Model
         return title_case($this->nama_barang);
     }
 
+    public function getNamaProdukAttribute()
+    {
+        return title_case($this->nama_barang);
+    }
+
     public function getRupiahAttribute()
     {
         return 'Rp ' . number_format($this->harga_jual, 0, ',', '.');

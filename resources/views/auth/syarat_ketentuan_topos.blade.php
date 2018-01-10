@@ -7,8 +7,8 @@
     <link rel="apple-touch-icon" sizes="76x76" href="img/favicon.png" />
     <link rel="icon" type="image/png" href="img/favicon.png" />
     @else
-    <link rel="apple-touch-icon" sizes="76x76" href="img/icon_topos.jpg" />
-    <link rel="icon" type="image/png" href="img/icon_topos.jpg" />
+    <link rel="apple-touch-icon" sizes="76x76" href="img/icon_topos.png?v=1" />
+    <link rel="icon" type="image/png" href="img/icon_topos.png?v=1" />
     @endif
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
@@ -34,7 +34,7 @@
 
 </head>
 <body class="off-canvas-sidebar">
-        <nav class="navbar  navbar-fixed-top " color-on-scroll=" " id="sectionsNav" style="background-color:#2ac326;">
+    <nav class="navbar  navbar-fixed-top " color-on-scroll=" " id="sectionsNav" style="background-color:#2ac326;">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation-example-2">
@@ -43,7 +43,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{{ url('/')}}"><img class="navbar-brand" src="{{asset('/assets/img/examples/topos_logo.png')}}"/></a>
+                <a class="navbar-brand" href="{{ url('/')}}"><img class="navbar-brand" src="{{asset('/assets/img/examples/topos_logo.png'.'?v=1')}}"/></a>
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav navbar-right"> 
@@ -61,7 +61,7 @@
                                         <i class="material-icons">person_add</i> Pelanggan
                                     </a>
                                 </li>
-                                 @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
+                                @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
                                 <li class="">
                                     <a href="{{ url('/register') }}">
                                         <i class="material-icons">people</i> Komunitas
@@ -95,7 +95,7 @@
               <div class="main main-raised">
                 <div class="section section-basic">
                     <div class="container" style="color:black;">
-                     
+
                         <center><b><h3 style="font-weight:bold;">Syarat dan Ketentuan sebagai Member ToPos</h3></b></center>
 
                         <p>Kepatuhan Anda: Sebelum menggunakan, mengakses atau memanfaatkan Platform ini, Anda sudah membaca dengan baik setiap dan seluruh Syarat dan Ketentuan ini yang antara lain berisi mengenai pedoman, pemberitahuan, aturan operasional, kebijakan dan instruksi yang berkaitan dengan pelangganan produk melalui Platform. Dan dengan melanjutkan penggunaan atau pemanfaatan fasilitas yang diberikan oleh Platform maka Anda telah menyatakan persetujuan Anda terhadap setiap dan seluruh ketentuan dalam Syarat dan Ketentuan ini. Kami akan mempublikasikan setiap perubahan yang bersifat substansial atau amandemen dari Syarat dan Ketentuan ini (apabila ada) melalui Platform dan Anda diwajibkan untuk membaca dengan baik setiap perubahan atau amandemen tersebut sehingga apabila Anda tetap menggunakan, mengakses atau memanfaatkan Platform, Anda dianggap telah mengetahui, memahami dan menyetujui perubahan atau amandemen tersebut. Apabila Anda menghendakinya, kami akan menginformasikan kepada Anda melalui e-mail Anda yang terdaftar di data kami terhadap setiap perubahan yang bersifat substansial atau amandemen dari Syarat dan Ketentuan pada saat perubahan atau amandemen tersebut dipublikasikan melalui Platform. Setiap keberatan atas adanya perubahan yang bersifat substansial atau amandemen dari Syarat dan Ketentuan dapat diajukan kepada kami selambat-lambatnya dalam jangka waktu 7 (tujuh) hari sejak tanggal perubahan atau amandemen tersebut dipublikasikan melalui Platform.</p>
