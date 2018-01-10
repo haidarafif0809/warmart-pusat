@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Warung;
 use App\UserWarung;
 use App\BankWarung;
+use App\SettingAplikasi;
 use App\Kelurahan;
 use Indonesia;
 use Session;
@@ -29,6 +30,7 @@ class WarungProfilController extends Controller
 
     public function view(){
         $warung = Warung::with(['bank_warung'])->where('id', Auth::user()->id_warung)->paginate(10);
+        $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
 
         $warung_array = array();
         foreach ($warung as $warungs) {
@@ -48,7 +50,7 @@ class WarungProfilController extends Controller
                 $kelurahan = Indonesia::findVillage($warungs->wilayah);
             }
 
-            array_push($warung_array, ['warung'=>$warungs, 'no_rek'=>$no_rek, 'nama_bank'=>$nama_bank, 'atas_nama'=>$atas_nama, 'provinsi'=>$provinsi, 'kabupaten'=>$kabupaten, 'kecamatan'=>$kecamatan, 'kelurahan'=>$kelurahan]);
+            array_push($warung_array, ['warung'=>$warungs, 'no_rek'=>$no_rek, 'nama_bank'=>$nama_bank, 'atas_nama'=>$atas_nama, 'provinsi'=>$provinsi, 'kabupaten'=>$kabupaten, 'kecamatan'=>$kecamatan, 'kelurahan'=>$kelurahan,'setting_aplikasi'=>$setting_aplikasi]);
         }
 
         //DATA PAGINATION 
@@ -137,6 +139,7 @@ class WarungProfilController extends Controller
        $warung['nama_bank'] = $warung->bank_warung->nama_bank;
        $warung['atas_nama'] = $warung->bank_warung->atas_nama;
        $warung['no_rek'] = $warung->bank_warung->no_rek;
+       $warung['setting_aplikasi'] =  $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
 
        return $warung;
    }
