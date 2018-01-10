@@ -613,7 +613,8 @@ export default {
 							app.alert("Menambahkan Produk "+titleCase(nama_produk));
 							app.loading = false;
 							app.getResults();
-							if (app.inputPembayaranPembelian.subtotal != 0) {    
+							if (app.inputPembayaranPembelian.subtotal != 0) { 
+              console.log(resp.data);   
 							var subtotal = parseInt(app.inputPembayaranPembelian.subtotal) + parseInt(resp.data.subtotal)
 							app.inputPembayaranPembelian.subtotal = subtotal                       
                 			app.inputPembayaranPembelian.total_akhir  = subtotal 
