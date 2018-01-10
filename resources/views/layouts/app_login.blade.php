@@ -6,13 +6,13 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
 ?>
 <head>
     <meta charset="utf-8" />
-        @if($setting_aplikasi->tipe_aplikasi == 0)
-            <link rel="apple-touch-icon" sizes="76x76" href="img/favicon.png" />
-             <link rel="icon" type="image/png" href="img/favicon.png" />
-             @else
-             <link rel="apple-touch-icon" sizes="76x76" href="img/icon_topos.jpg" />
-             <link rel="icon" type="image/png" href="img/icon_topos.jpg" />
-        @endif
+    @if($setting_aplikasi->tipe_aplikasi == 0)
+    <link rel="apple-touch-icon" sizes="76x76" href="img/favicon.png" />
+    <link rel="icon" type="image/png" href="img/favicon.png" />
+    @else
+    <link rel="apple-touch-icon" sizes="76x76" href="img/icon_topos.jpg" />
+    <link rel="icon" type="image/png" href="img/icon_topos.jpg" />
+    @endif
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     
@@ -51,7 +51,7 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
                 @if($setting_aplikasi->tipe_aplikasi == 0)
                 <a class="navbar-brand" href="{{ url('/')}}">War-Mart.id</a>
                 @else
-                <a class="navbar-brand" href="{{ url('/')}}">To-Pos.id</a>
+                <a class="navbar-brand" href="{{ url('/')}}"><img class="navbar-brand" src="{{asset('/assets/img/examples/topos_logo.png')}}"/></a>
                 @endif
             </div>
             <div class="collapse navbar-collapse">
@@ -106,12 +106,12 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
 
                         <div class="col-md-4 col-sm-6 col-md-offset-4 col-sm-offset-3">
 
-                         @yield('content')
-                     </div>
-                 </div>
-             </div>
-         </div>
-         <footer class="footer">
+                           @yield('content')
+                       </div>
+                   </div>
+               </div>
+           </div>
+           <footer class="footer">
             <div class="container">
                 <p class="copyright pull-right">
                     &copy;
