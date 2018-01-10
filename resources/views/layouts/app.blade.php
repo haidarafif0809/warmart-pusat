@@ -43,9 +43,9 @@
 </head>
 <style type="text/css">
 
-    .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
-       padding: 1px;
-   }
+.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+ padding: 1px;
+}
 
 </style>
 <body>
@@ -58,19 +58,19 @@
     -->
 
     <div class="logo">
-     @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
-     <a class="simple-text logo-mini" href="https://war-mart.id">
+       @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
+       <a class="simple-text logo-mini" href="https://war-mart.id">
         WM
     </a>
     <a class="simple-text logo-normal" href="https://war-mart.id">
         WAR-MART.ID    
     </a>
     @else
-    <a class="simple-text logo-mini" href="https://topos.andaglos.id">
+    <a class="simple-text logo-mini" href="https://to-pos.id">
         TP
     </a>
-    <a class="simple-text logo-normal" href="https://topos.andaglos.id">
-        TOPOS    
+    <a class="simple-text logo-normal" href="https://to-pos.id">
+        TO-POS.ID    
     </a>
     @endif
 </div>
@@ -108,11 +108,7 @@
                     <li>
                         <router-link :to="{name: 'indexProfilWarung'}" class="menu-nav">
                             <span class="sidebar-normal">
-                                @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
                                 Ubah Profil Warung
-                                @else
-                                Ubah Profil Toko
-                                @endif
                             </span>
                         </router-link>
                     </li>
@@ -220,7 +216,7 @@
         <div class="collapse" id="persediaan">
             <ul class="nav">
                 <li>
-                   <router-link :to="{name: 'indexItemMasuk'}" class="menu-nav">
+                 <router-link :to="{name: 'indexItemMasuk'}" class="menu-nav">
                     <span class="sidebar-mini">
                         IM
                     </span>
@@ -570,34 +566,40 @@
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
-                </ul>
-            </div>
+
+                 @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 1)
+                 <router-link :to="{name: 'indexPendaftaranTopos'}" class="menu-nav">
+                    14 day(s) left in trial
+                </router-link>                
+                @endif
+            </ul>
         </div>
-    </nav>
-    <div class="content">
-        <div class="container-fluid">
-            <div class="row">
-                @include('layouts._flash')
-                @yield('content')
-            </div>
-        </div>
-        <!-- end container fluid -->
     </div>
-    <footer class="footer">
-        <div class="container-fluid">
-            <nav class="pull-left">
-            </nav>
-            <p class="copyright pull-right">
-                ©
-                <script type="text/javascript">
-                    document.write(new Date().getFullYear())
-                </script>
-                <a href="https://andaglos.id">
-                    PT Andaglos Global Teknologi
-                </a>
-            </p>
+</nav>
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            @include('layouts._flash')
+            @yield('content')
         </div>
-    </footer>
+    </div>
+    <!-- end container fluid -->
+</div>
+<footer class="footer">
+    <div class="container-fluid">
+        <nav class="pull-left">
+        </nav>
+        <p class="copyright pull-right">
+            ©
+            <script type="text/javascript">
+                document.write(new Date().getFullYear())
+            </script>
+            <a href="https://andaglos.id">
+                PT Andaglos Global Teknologi
+            </a>
+        </p>
+    </div>
+</footer>
 </div>
 </div>
 <!--Start of Tawk.to Script-->

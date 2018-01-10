@@ -87,7 +87,7 @@ class WarungController extends Controller
         'no_telpon' => 'required|without_spaces|max:15|unique:users,no_telp,',
         'email'     => 'required|without_spaces|unique:users,email,',
 
-        ]);
+    ]);
 
     //INSERT MASTER DATA WARUNG
      $warung = Warung::create([
@@ -96,7 +96,7 @@ class WarungController extends Controller
         'wilayah'   =>$request->kelurahan,
         'no_telpon' =>$request->no_telpon, 
         'email'     =>$request->email, 
-        ]);
+    ]);
 
     //INSERT BANK WARUNG
      $bank_warung = BankWarung::create([
@@ -104,7 +104,7 @@ class WarungController extends Controller
         'atas_nama' => $request->atas_nama,
         'no_rek' =>$request->no_rek,
         'warung_id' =>$warung->id,
-        ]);
+    ]);
 
     //INSERT USER WARUNG
      $user_warung = UserWarung::create([ 
@@ -117,7 +117,7 @@ class WarungController extends Controller
         'tipe_user'         => 4,
         'status_konfirmasi' => 1,
         'password'          => bcrypt('123456')
-        ]);
+    ]);
 
     //INSERT OTORITAS USER WARUNG
      $user_warung->attachRole(4);
@@ -169,7 +169,7 @@ class WarungController extends Controller
         'alamat'    => 'required',
         'kelurahan' => 'required',
         'no_telpon' => 'required|max:15',
-        ]);
+    ]);
 
          //UPDATE MASTER DATA WARUNG
      $warung = Warung::where('id',$id)->update([
@@ -178,7 +178,7 @@ class WarungController extends Controller
         'wilayah' =>$request->kelurahan,
         'no_telpon' =>$request->no_telpon, 
         'email' =>$request->email,
-        ]);
+    ]);
 
      $bank_warung_id = BankWarung::select('id')->where('warung_id', $id)->first();
 
@@ -187,14 +187,14 @@ class WarungController extends Controller
         'nama_bank' => 'required',
         'atas_nama' => 'required', 
         'no_rek'    => 'required|numeric|unique:bank_warungs,no_rek,'.$bank_warung_id->id, 
-        ]);
+    ]);
 
          //UPDATE BANK WARUNG
      $bank_warung = BankWarung::where('warung_id',$id)->update([
         'nama_bank' =>$request->nama_bank,
         'atas_nama' =>$request->atas_nama,
         'no_rek' =>$request->no_rek,
-        ]);
+    ]);
  }
 
     /**
