@@ -19,7 +19,7 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
     @if($setting_aplikasi->tipe_aplikasi == 0)
     <title>War-Mart.id</title>
     @else
-    <title>To-Pos.id</title>
+    <title>topos | Aplikasi POS & Toko Online</title>
     @endif
 
     <meta name="viewport" content="width=device-width" />
@@ -106,12 +106,12 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
 
                         <div class="col-md-4 col-sm-6 col-md-offset-4 col-sm-offset-3">
 
-                         @yield('content')
-                     </div>
-                 </div>
-             </div>
-         </div>
-         <footer class="footer">
+                           @yield('content')
+                       </div>
+                   </div>
+               </div>
+           </div>
+           <footer class="footer">
             <div class="container">
                 <p class="copyright pull-right">
                     &copy;

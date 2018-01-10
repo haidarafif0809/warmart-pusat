@@ -8,7 +8,7 @@
     @if($setting_aplikasi->tipe_aplikasi == 0)
     <title>War-Mart.id</title>
     @else
-    <title>To-Pos.id</title>
+    <title>topos | Aplikasi POS & Toko Online</title>
     @endif
 
     <meta charset="utf-8"/>
@@ -172,17 +172,22 @@ body {
                             </a>
                         </li>
                         @endif
-                        <li>
+                        <li>                        
+                            @if($setting_aplikasi->tipe_aplikasi == 0)
                             <a href="https://info.war-mart.id">
                                 <i class="material-icons">
                                     info
                                 </i>
-                                @if($setting_aplikasi->tipe_aplikasi == 0)
                                 SUPPORT Warmart
-                                @else
-                                SUPPORT TOPOS
-                                @endif
                             </a>
+                            @else
+                            <a href="https://andaglos.id/topos">
+                                <i class="material-icons">
+                                    info
+                                </i>
+                                SUPPORT TOPOS
+                            </a>
+                            @endif
                         </li>
                         <li>
 
