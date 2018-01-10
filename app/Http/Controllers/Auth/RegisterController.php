@@ -185,6 +185,16 @@ class RegisterController extends Controller
                 'warung_id' => $warung->id,
             ]);
 
+            //SETTING APLIKASI
+            $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
+
+            //APP WARMART == 1
+            if ($setting_aplikasi->tipe_aplikasi == 0) {
+                $konfirmasi_admin = 0;
+            } else {
+                $konfirmasi_admin = 1;
+            }
+
             //USER WARUNG
             $user = UserWarung::create([
                 'name'              => $data['name'],
@@ -195,6 +205,7 @@ class RegisterController extends Controller
                 'tipe_user'         => 4,
                 'status_konfirmasi' => 0,
                 'kode_verifikasi'   => $kode_verifikasi,
+                'konfirmasi_admin'  => $konfirmasi_admin,
             ]);
 
             // KAS WARUNG
@@ -300,7 +311,6 @@ class RegisterController extends Controller
     {
         return view('auth.syarat_ketentuan_topos');
     }
-    
 
     protected function lupa_password()
     {
