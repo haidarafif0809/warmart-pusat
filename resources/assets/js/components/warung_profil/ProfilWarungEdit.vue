@@ -1,17 +1,23 @@
 <template>
     <div class="row" >
         <div class="col-md-12">
-            <ul class="breadcrumb">
+            <ul class="breadcrumb" v-if="profilWarung.setting_aplikasi.tipe_aplikasi == 0">
                 <li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li>
                 <li><router-link :to="{name: 'indexProfilWarung'}">Profil Warung</router-link></li>
-                <li class="active">Edit Profil Warung</li>
+                <li class="active" >Edit Profil Warung</li>
+            </ul>
+            <ul class="breadcrumb" v-else>
+                <li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li>
+                <li><router-link :to="{name: 'indexProfilWarung'}">Profil Toko</router-link></li>
+                <li class="active" >Edit Profil Toko</li>
             </ul>
             <div class="card">
                <div class="card-header card-header-icon" data-background-color="purple">
                    <i class="material-icons">store</i>
                </div>
                <div class="card-content">
-                 <h4 class="card-title"> Edit Profil Warung </h4>
+                 <h4 class="card-title" v-if="profilWarung.setting_aplikasi.tipe_aplikasi == 0"> Edit Profil Warung </h4>
+                 <h4 class="card-title" v-else> Edit Profil Toko </h4>
                  <div>
                     <form v-on:submit.prevent="saveForm()" class="form-horizontal"> 
                         <div class="form-group">

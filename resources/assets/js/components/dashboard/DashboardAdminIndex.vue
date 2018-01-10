@@ -5,7 +5,7 @@
             <img v-bind:src="url+ 'image/warmart_logo.png'"class="img-responsive" width="500" height="160"> 
         </center>
          <center v-else>
-            <img v-bind:src="url+ 'assets/img/examples/topos_logo.png'"class="img-responsive" width="500" height="160"> 
+            <img v-bind:src="url+ 'assets/img/examples/topos_logo.png?v=1'"class="img-responsive" width="500" height="160"> 
         </center>
         <div class="col-lg-4 col-md-6 col-sm-6">
             <div class="card card-stats">
