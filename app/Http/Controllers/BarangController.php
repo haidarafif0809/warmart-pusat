@@ -7,6 +7,7 @@ use App\Hpp;
 use App\KategoriBarang;
 use App\Satuan;
 use App\User;
+use App\SettingAplikasi;
 use Auth;
 use File;
 use Illuminate\Http\Request;
@@ -394,12 +395,15 @@ class BarangController extends Controller
     {
         $lihat_deskripsi_produk = Barang::find($id);
         $nama_produk            = $lihat_deskripsi_produk->nama_barang;
+        $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
+        $foto_latar_belakang = "background-image: asset('image/background2.jpg');";
+        $agent = new Agent();
 
         if ($lihat_deskripsi_produk->id_warung != Auth::user()->id_warung) {
             Auth::logout();
             return response()->view('error.403');
         } else {
-            return view('barang.lihat_deskripsi_produk', ['id' => $id, 'lihat_deskripsi_produk' => $lihat_deskripsi_produk, 'nama_produk' => $nama_produk]);
+            return view('barang.lihat_deskripsi_produk', ['id' => $id, 'lihat_deskripsi_produk' => $lihat_deskripsi_produk, 'nama_produk' => $nama_produk,'setting_aplikasi'=> $setting_aplikasi,'foto_latar_belakang'=>$foto_latar_belakang,'agent' => $agent]);
         }
     }
 
