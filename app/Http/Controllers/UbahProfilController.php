@@ -99,6 +99,7 @@ class UbahProfilController extends Controller
         $user                = Auth::user();
         $user_warung         = UserWarung::find($user->id);
         $user_warung['nama'] = $user_warung->name;
+        $user_warung['setting_aplikasi'] = SettingAplikasi::select('tipe_aplikasi')->first();
 
         if ($user_warung->id_warung != Auth::user()->id_warung) {
             Auth::logout();
