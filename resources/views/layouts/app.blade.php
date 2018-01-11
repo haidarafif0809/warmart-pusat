@@ -107,9 +107,15 @@
                     @if(Auth::user()->tipe_user == 4 )
                     <li>
                         <router-link :to="{name: 'indexProfilWarung'}" class="menu-nav">
+                            @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
                             <span class="sidebar-normal">
                                 Ubah Profil Warung
                             </span>
+                            @else
+                           <span class="sidebar-normal">
+                                Ubah Profil Toko
+                            </span>
+                            @endif
                         </router-link>
                     </li>
                     @endif
