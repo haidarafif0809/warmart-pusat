@@ -94,7 +94,7 @@
 						</div><!--RESPONSIVE-->
 
 						<!--DOWNLOAD EXCEL-->
-						<a :href="urlDownloadExcel+'/'+filter.dari_tanggal+'/'+filter.sampai_tanggal" class='btn btn-warning' id="btnExcel" target='blank' :style="'display: none'"><i class="material-icons">file_download</i> Download Excel</a>
+						<a href="#" class='btn btn-warning' id="btnExcel" target='blank' :style="'display: none'"><i class="material-icons">file_download</i> Download Excel</a>
 
 						<vue-simple-spinner v-if="loading"></vue-simple-spinner>
 						<div align="right"><pagination :data="mutasiStokData" v-on:pagination-change-page="prosesLaporan" :limit="4"></pagination></div>
@@ -144,7 +144,7 @@ export default {
     		var app = this;
     		app.prosesLaporan();
     		app.totalMutasiStok();
-    		$("#btnExcel").show();
+    		app.showButton();
     	},
     	prosesLaporan(page) {
     		var app = this;	
@@ -195,7 +195,19 @@ export default {
     			console.log(resp);
     			alert("Tidak Dapat Memuat Subtotal Mutasi Stok");
     		});
-    	},
+    	},    	
+        showButton() {
+        	var app = this;
+    		var filter = app.filter;
+
+    		var date_dari_tanggal = filter.dari_tanggal;
+    		var date_sampai_tanggal = filter.sampai_tanggal;
+    		var dari_tanggal = "" + date_dari_tanggal.getFullYear() +'-'+ ((date_dari_tanggal.getMonth() + 1) > 9 ? '' : '0') + (date_dari_tanggal.getMonth() + 1) +'-'+ (date_dari_tanggal.getDate() > 9 ? '' : '0') + date_dari_tanggal.getDate();
+    		var sampai_tanggal = "" + date_sampai_tanggal.getFullYear() +'-'+ ((date_sampai_tanggal.getMonth() + 1) > 9 ? '' : '0') + (date_sampai_tanggal.getMonth() + 1) +'-'+ (date_sampai_tanggal.getDate() > 9 ? '' : '0') + date_sampai_tanggal.getDate();
+
+    		$("#btnExcel").show();
+    		$("#btnExcel").attr('href', app.urlDownloadExcel+'/'+dari_tanggal+'/'+sampai_tanggal);
+    	}
     }
 }
 </script>

@@ -167,18 +167,7 @@ export default {
     		var filter = app.filter;
     		app.prosesLaporan();
     		app.totalPembelianProduk();
-
-    		if (filter.produk == "") {
-    			filter.produk = 0;
-    		};
-    		if (filter.suplier == "") {
-    			filter.suplier = 0;
-    		};
-
-    		$("#btnExcel").show();
-    		$("#btnCetak").show();
-    		$("#btnExcel").attr('href', app.urlDownloadExcel+'/'+filter.dari_tanggal+'/'+filter.sampai_tanggal+'/'+filter.produk+'/'+filter.suplier);
-    		$("#btnCetak").attr('href', app.urlCetak+'/'+filter.dari_tanggal+'/'+filter.sampai_tanggal+'/'+filter.produk+'/'+filter.suplier);    		
+    		app.showButton();   		
     	},
     	prosesLaporan(page) {
     		var app = this;	
@@ -252,7 +241,28 @@ export default {
           .catch(function (resp) {
             alert("Tidak bisa memuat suplier ");
         });
-      },
+      },    	
+        showButton() {
+        	var app = this;
+    		var filter = app.filter;
+
+    		if (filter.produk == "") {
+    			filter.produk = 0;
+    		};
+    		if (filter.suplier == "") {
+    			filter.suplier = 0;
+    		};
+
+    		var date_dari_tanggal = filter.dari_tanggal;
+    		var date_sampai_tanggal = filter.sampai_tanggal;
+    		var dari_tanggal = "" + date_dari_tanggal.getFullYear() +'-'+ ((date_dari_tanggal.getMonth() + 1) > 9 ? '' : '0') + (date_dari_tanggal.getMonth() + 1) +'-'+ (date_dari_tanggal.getDate() > 9 ? '' : '0') + date_dari_tanggal.getDate();
+    		var sampai_tanggal = "" + date_sampai_tanggal.getFullYear() +'-'+ ((date_sampai_tanggal.getMonth() + 1) > 9 ? '' : '0') + (date_sampai_tanggal.getMonth() + 1) +'-'+ (date_sampai_tanggal.getDate() > 9 ? '' : '0') + date_sampai_tanggal.getDate();
+
+    		$("#btnExcel").show();
+    		$("#btnCetak").show();
+    		$("#btnExcel").attr('href', app.urlDownloadExcel+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.produk+'/'+filter.suplier);
+    		$("#btnCetak").attr('href', app.urlCetak+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.produk+'/'+filter.suplier); 
+    	}
     }
 }
 </script>
