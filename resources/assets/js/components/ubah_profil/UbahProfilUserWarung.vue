@@ -143,8 +143,8 @@ export default {
             .then(function (resp) {
                 app.message = 'Berhasil Mengubah Profil  '+app.profil_user_warung.nama;
                 app.alert(app.message);
+                window.location.replace(window.location.origin+(window.location.pathname))
                 app.kosongkanData();
-                app.$router.replace('/');
                 app.$swal.close();
             })
             .catch(function (resp) {
