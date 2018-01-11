@@ -1,9 +1,11 @@
 <!DOCTYPE doctype html>
 <html lang="en">
 <head>
-	<title>
-		War-Mart.id
-	</title>
+    @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
+    <title>War-Mart.id</title>
+    @else
+    <title>topos | Aplikasi POS & Toko Online</title>
+    @endif
 	<!-- Bootstrap core CSS     -->
 	<link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet"/>
 	<link href="{{ asset('css/selectize.bootstrap3.css') }}" rel="stylesheet">
