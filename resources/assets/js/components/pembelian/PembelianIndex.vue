@@ -295,7 +295,7 @@ export default {
 			                }
                   })
                   .catch(function (resp) {
-                      alert("Tidak dapat Menghapus Item Masuk");
+                      alert("Tidak dapat Menghapus Pembelian");
                   });
                }else {
     				app.$swal.close();
@@ -310,7 +310,7 @@ export default {
             })
             .catch(function (resp) {
                 app.loading = false;
-                alert("Tidak Dapat Memuat Detail Pesanan");
+                alert("Tidak Dapat Memuat Detail Pembelian");
             });
         },
         detailTransaksi(no_faktur,total,potongan,tunai,kembalian,jatuh_tempo,kas,user_buat,status_pembelian){

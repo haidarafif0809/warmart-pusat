@@ -60,14 +60,14 @@
                                 <div class="row">
                                     <div class="col-md-6 col-xs-12">
                                         <div class="form-group" style="margin-right: 10px; margin-left: 1px; margin-bottom: 1px; margin-top: 1px;">
-                                            <label class="label-control">Potongan(F7)</label>  
-                                            <money class="form-subtotal" v-model="inputPembayaranPembelian.potongan_faktur" v-bind="separator" v-shortkey.focus="['f7']"></money>
+                                            <font style="color: black">Potongan(F7)</font>  
+                                            <money class="form-subtotal" style="text-align:right;" v-model="inputPembayaranPembelian.potongan_faktur" v-bind="separator" v-shortkey.focus="['f7']"></money>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-xs-12">
                                         <div class="form-group" style="margin-right: 10px; margin-left: 1px; margin-bottom: 1px; margin-top: 1px;">
-                                            <label class="label-control">(%)(F8)</label>    
-                                            <input type="text" class="form-subtotal" value="0" v-model="inputPembayaranPembelian.potongan_persen" v-on:blur="hitungPotonganPersen" v-shortkey.focus="['f8']" />
+                                            <font style="color: black">(%)(F8)</font>    
+                                            <input type="text" class="form-subtotal" style="text-align:right;" value="0" v-model="inputPembayaranPembelian.potongan_persen" v-on:blur="hitungPotonganPersen" v-shortkey.focus="['f8']" />
                                         </div>
                                     </div>
 
@@ -76,14 +76,14 @@
                                 <div class="row">
                                     <div class="col-md-6 col-xs-12">
                                         <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                            <label class="label-control">Jatuh Tempo(F9)</label> 
+                                            <font style="color: black">Jatuh Tempo(F9)</font> 
                                             <datepicker :input-class="'form-control'" placeholder="Isi Bila Ada Jatuh Tempo" v-model="inputPembayaranPembelian.jatuh_tempo" v-shortkey.focus="['f9']" ></datepicker>
                                             <br v-if="errors.jatuh_tempo">  <span v-if="errors.jatuh_tempo" id="jatuh_tempo_error" class="label label-danger">{{ errors.jatuh_tempo[0] }}</span>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-xs-12">
                                         <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                            <label class="label-control">Keterangan</label> 
+                                            <font style="color: black">Keterangan</font> 
                                            <textarea class="form-control" v-model="inputPembayaranPembelian.keterangan"  name="keterangan" id="keterangan" placeholder="Isi Disini" rows="1"></textarea> 
                                             <br v-if="errors.keterangan">  <span v-if="errors.keterangan" id="jatuh_tempo_error" class="label label-danger">{{ errors.keterangan[0] }}</span>
                                         </div>
@@ -94,12 +94,12 @@
                                     <div class="col-md-6 col-xs-12">
                                         <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
                                             <font style="color: black">Total Akhir</font>
-                                            <money class="form-pembelian" readonly="" id="total_akhir" name="total_akhir" placeholder="Total Akhir"  v-model="inputPembayaranPembelian.total_akhir" v-bind="separator" ></money> 
+                                            <money class="form-pembelian" style="text-align:right;" readonly="" id="total_akhir" name="total_akhir" placeholder="Total Akhir"  v-model="inputPembayaranPembelian.total_akhir" v-bind="separator" ></money> 
                                         </div>
 
                                         <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
                                             <font style="color: black">Pembayaran(F10)</font>
-                                            <money class="form-pembelian" v-shortkey.focus="['f10']" id="pembayaran" name="pembayaran" placeholder="Pembayaran"  v-model="inputPembayaranPembelian.pembayaran" v-bind="separator" autocomplete="off" ref="pembayaran"></money> 
+                                            <money class="form-pembelian" style="text-align:right;" v-shortkey.focus="['f10']" id="pembayaran" name="pembayaran" placeholder="Pembayaran"  v-model="inputPembayaranPembelian.pembayaran" v-bind="separator" autocomplete="off" ref="pembayaran"></money> 
                                         </div>
 
                                     </div>
@@ -107,12 +107,12 @@
 
                                         <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
                                          <font style="color: black">Kembalian</font>
-                                         <money readonly="" class="form-pembelian" id="kembalian" name="kembalian" placeholder="Kembalian"  v-model="inputPembayaranPembelian.kembalian" v-bind="separator" ></money> 
+                                         <money readonly="" class="form-pembelian" style="text-align:right;" id="kembalian" name="kembalian" placeholder="Kembalian"  v-model="inputPembayaranPembelian.kembalian" v-bind="separator" ></money> 
                                      </div>
 
                                      <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
                                          <font style="color: black">Kredit</font>
-                                         <money readonly="" class="form-pembelian" id="kredit" name="kredit" placeholder="Kredit"  v-model="inputPembayaranPembelian.kredit" v-bind="separator" ></money> 
+                                         <money readonly="" class="form-pembelian" style="text-align:right;" id="kredit" name="kredit" placeholder="Kredit"  v-model="inputPembayaranPembelian.kredit" v-bind="separator" ></money> 
                                      </div>
                                  </div>
                              </div>
@@ -1097,10 +1097,10 @@ export default {
     saveForm(){
           var app = this;
       var status_pembelian = app.inputPembayaranPembelian.status_pembelian;
-      var jatuh_tempo = $("#jatuh_tempo").val();
+      var jatuh_tempo = app.inputPembayaranPembelian.jatuh_tempo;
       if ((status_pembelian == 'Hutang' || status_pembelian == '') && jatuh_tempo == '') {
         swal("Oops...","Jatuh Tempo Belum Diisi!","error");
-        $("#jatuh_tempo").focus();
+        this.$refs.jatuh_tempo.$el.focus();
 
       }else{
        app.prosesTransaksiSelesai();
