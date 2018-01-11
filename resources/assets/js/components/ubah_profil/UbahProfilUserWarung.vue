@@ -2,7 +2,7 @@
 	
 	<div class="row">
 		<div class="col-md-12">
-            <div class="alert alert-warning" v-if="profil_user_warung.foto_ktp == null && profil_user_warung.konfirmasi_admin == 0 ">
+            <div class="alert alert-warning" v-if="profil_user_warung.foto_ktp == null && profil_user_warung.konfirmasi_admin == 0 && profil_user_warung.setting_aplikasi.tipe_aplikasi == 0">
                  <div class="alert-icon">
                   <i class="material-icons">info_outline</i>
                 </div>
@@ -58,7 +58,8 @@
 								</div>
 							</div>		
 							<div class="form-group">
-                            <label for="foto_ktp" class="col-md-2 control-label">Foto Ktp </label>
+                            <label for="foto_ktp" class="col-md-2 control-label" v-if="profil_user_warung.setting_aplikasi.tipe_aplikasi == 0">Foto Ktp </label>
+                            <label for="foto_ktp" class="col-md-2 control-label" v-else>Foto Logo </label>
                             <div class="col-md-4">
                                 <div class="fileinput fileinput-new text-center" data-provides="fileinput">
                                     <div class="fileinput-new thumbnail">
@@ -68,7 +69,8 @@
                                     <div class="fileinput-preview fileinput-exists thumbnail"></div>
                                     <div>
                                         <span class="btn btn-rose btn-round btn-file">
-                                            <span class="fileinput-new">Ambil Foto Ktp</span>
+                                            <span class="fileinput-new" v-if="profil_user_warung.setting_aplikasi.tipe_aplikasi == 0">Ambil Foto Ktp</span>
+                                            <span class="fileinput-new" v-else>Ambil Foto Logo</span>
                                             <span class="fileinput-exists">Ubah</span>
                                             <input class="form-control" type="file" name="foto_ktp" id="foto_ktp">
                                         </span>

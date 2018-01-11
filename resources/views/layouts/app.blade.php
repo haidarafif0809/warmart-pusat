@@ -66,11 +66,11 @@
         WAR-MART.ID    
     </a>
     @else
-    <a class="simple-text logo-mini" href="https://to-pos.id">
+    <a class="simple-text logo-mini" href="http://topos.andaglos.id/">
         TP
     </a>
     <a class="simple-text logo-normal" href="http://topos.andaglos.id/">
-        TO-POS.ID    
+        TOPOS    
     </a>
     @endif
 </div>
@@ -164,8 +164,9 @@
         @endif
     </li>
 
-    @if(Auth::user()->tipe_user == 4 AND Auth::user()->konfirmasi_admin == 1 AND Auth::user()->foto_ktp != "")
+@if(Auth::user()->tipe_user == 4 AND Auth::user()->konfirmasi_admin == 1 AND Auth::user()->foto_ktp != '')
     <!--PRODUK -->
+
     <li>
         <router-link :to="{name: 'indexProduk'}" class="menu-nav">
             <i class="material-icons">
@@ -397,6 +398,7 @@
     </div>
 </li>
 @endif
+
 <!--END MASTER DATA WARUNG -->
 <!--MASTER DATA WARMART PUSAT-->
 @if(Auth::user()->tipe_user == 1)
