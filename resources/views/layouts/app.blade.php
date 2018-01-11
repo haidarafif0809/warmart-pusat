@@ -43,9 +43,9 @@
 </head>
 <style type="text/css">
 
-.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
- padding: 1px;
-}
+    .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+       padding: 1px;
+   }
 
 </style>
 <body>
@@ -58,8 +58,8 @@
     -->
 
     <div class="logo">
-       @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
-       <a class="simple-text logo-mini" href="https://war-mart.id">
+     @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
+     <a class="simple-text logo-mini" href="https://war-mart.id">
         WM
     </a>
     <a class="simple-text logo-normal" href="https://war-mart.id">
@@ -69,7 +69,7 @@
     <a class="simple-text logo-mini" href="https://to-pos.id">
         TP
     </a>
-    <a class="simple-text logo-normal" href="https://to-pos.id">
+    <a class="simple-text logo-normal" href="http://topos.andaglos.id/">
         TO-POS.ID    
     </a>
     @endif
@@ -112,7 +112,7 @@
                                 Ubah Profil Warung
                             </span>
                             @else
-                           <span class="sidebar-normal">
+                            <span class="sidebar-normal">
                                 Ubah Profil Toko
                             </span>
                             @endif
@@ -222,7 +222,7 @@
         <div class="collapse" id="persediaan">
             <ul class="nav">
                 <li>
-                 <router-link :to="{name: 'indexItemMasuk'}" class="menu-nav">
+                   <router-link :to="{name: 'indexItemMasuk'}" class="menu-nav">
                     <span class="sidebar-mini">
                         IM
                     </span>
@@ -573,8 +573,8 @@
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
 
-                 @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 1)
-                 <router-link :to="{name: 'indexPendaftaranTopos'}" class="menu-nav">
+                   @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 1)
+                   <router-link :to="{name: 'indexPendaftaranTopos'}" class="menu-nav">
                     14 day(s) left in trial
                 </router-link>                
                 @endif
@@ -708,8 +708,8 @@
 </script>
 <script type="text/javascript">
     $(document).on('click', '.menu-nav', function(){
-       $('.navbar-toggle ').click();
-   });
+     $('.navbar-toggle ').click();
+ });
 </script>
 @yield('scripts')
 </html>
