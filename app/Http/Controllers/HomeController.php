@@ -7,9 +7,9 @@ use App\Error;
 use App\Hpp;
 use App\KategoriBarang;
 use App\PesananPelanggan;
+use App\SettingAplikasi;
 use App\TransaksiKas;
 use App\User;
-use App\SettingAplikasi;
 use App\UserWarung;
 use App\Warung;
 use Auth;
@@ -123,14 +123,21 @@ class HomeController extends Controller
         OpenGraph::addProperty('type', 'articles');
 
         //MENAMPILKAN PRODUK ACAK
-        $data_produk     = Barang::select(['id', 'kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung'])->inRandomOrder()->paginate(4);
-        $kategori_produk = KategoriBarang::select(['id', 'nama_kategori_barang'])->get();
-        $daftar_produk   = $this->listProduk($data_produk);
+        $data_produk      = Barang::select(['id', 'kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung'])->inRandomOrder()->paginate(4);
+        $kategori_produk  = KategoriBarang::select(['id', 'nama_kategori_barang'])->get();
+        $daftar_produk    = $this->listProduk($data_produk);
+        $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
 
-        if (Auth::user()->tipe_user == 3) {
-            return redirect()->route('daftar_produk.index');
+        if ($setting_aplikasi->tipe_aplikasi == 0) {
+
+            if (Auth::user()->tipe_user == 3) {
+                return redirect()->route('daftar_produk.index');
+            } else {
+                return view('layouts.landing_page', ['daftar_produk' => $daftar_produk]);
+            }
+
         } else {
-            return view('layouts.landing_page', ['daftar_produk' => $daftar_produk]);
+            return redirect()->intended('/');
         }
 
     }
@@ -203,7 +210,7 @@ class HomeController extends Controller
         $response['error_log']             = $error_log;
         $response['pesanan']               = $pesanan;
         $response['pesanan_selesai']       = $pesanan_selesai;
-        $response['setting_aplikasi']       = $setting_aplikasi;
+        $response['setting_aplikasi']      = $setting_aplikasi;
 
         return response()->json($response);
 
