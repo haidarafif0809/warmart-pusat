@@ -96,6 +96,9 @@
 						<!--DOWNLOAD EXCEL-->
 						<a href="#" class='btn btn-warning' id="btnExcel" target='blank' :style="'display: none'"><i class="material-icons">file_download</i> Download Excel</a>
 
+						<!--CETAK LAPORAN-->
+						<a href="#" class='btn btn-success' id="btnCetak" target='blank' :style="'display: none'"><i class="material-icons">print</i> Cetak Laporan</a>
+
 						<vue-simple-spinner v-if="loading"></vue-simple-spinner>
 						<div align="right"><pagination :data="mutasiStokData" v-on:pagination-change-page="prosesLaporan" :limit="4"></pagination></div>
 				</div>
@@ -121,6 +124,7 @@ export default {
             },
 			url : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-mutasi-stok"),
 			urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-mutasi-stok/download-excel-mutasi-stok"),
+			urlCetak : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-mutasi-stok/cetak-laporan"),
 			pencarian: '',
 			loading: false,
 		}
@@ -206,7 +210,9 @@ export default {
     		var sampai_tanggal = "" + date_sampai_tanggal.getFullYear() +'-'+ ((date_sampai_tanggal.getMonth() + 1) > 9 ? '' : '0') + (date_sampai_tanggal.getMonth() + 1) +'-'+ (date_sampai_tanggal.getDate() > 9 ? '' : '0') + date_sampai_tanggal.getDate();
 
     		$("#btnExcel").show();
+    		$("#btnCetak").show();
     		$("#btnExcel").attr('href', app.urlDownloadExcel+'/'+dari_tanggal+'/'+sampai_tanggal);
+    		$("#btnCetak").attr('href', app.urlCetak+'/'+dari_tanggal+'/'+sampai_tanggal);
     	}
     }
 }
