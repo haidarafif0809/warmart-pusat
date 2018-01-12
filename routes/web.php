@@ -633,6 +633,7 @@ Route::post('/laporan-mutasi-stok/view', 'LaporanMutasiStokController@prosesLapo
 Route::post('/laporan-mutasi-stok/pencarian', 'LaporanMutasiStokController@pencarian')->middleware('auth');
 Route::post('/laporan-mutasi-stok/subtotal-mutasi-stok', 'LaporanMutasiStokController@subtotalMutasiStok')->middleware('auth');
 Route::get('/laporan-mutasi-stok/download-excel-mutasi-stok/{dari_tanggal}/{sampai_tanggal}', 'LaporanMutasiStokController@downloadExcel')->middleware('auth');
+Route::get('/laporan-mutasi-stok/cetak-laporan/{dari_tanggal}/{sampai_tanggal}', 'LaporanMutasiStokController@cetakLaporan')->middleware('auth');
 
 // LAPORAN PEMEBELIAN /PRODUK VUE.JS
 Route::post('/laporan-pembelian-produk/view', 'LaporanPembelianProdukController@prosesLaporanPembelianProduk')->middleware('auth');
