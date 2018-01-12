@@ -164,7 +164,8 @@
         @endif
     </li>
 
-    @if(Auth::user()->tipe_user == 4 AND Auth::user()->konfirmasi_admin == 1 AND Auth::user()->foto_ktp != '')
+@if(Auth::user()->tipe_user == 4 AND Auth::user()->konfirmasi_admin == 1 )
+    <!--PRODUK -->
 
     <li>
         <a data-toggle="collapse" href="#transaksiKas">

@@ -199,6 +199,8 @@ class HomeController extends Controller
         $pesanan                      = PesananPelanggan::all()->count();
         $pesanan_selesai              = PesananPelanggan::where('konfirmasi_pesanan', 2)->count();
         $setting_aplikasi             = SettingAplikasi::select('tipe_aplikasi')->first();
+        $user                         = Auth::user();
+        $logo_toko                    = UserWarung::find($user->id);
 
         $response['komunitas']             = $jumlah_komunitas;
         $response['customer']              = $jumlah_customer;
@@ -211,6 +213,7 @@ class HomeController extends Controller
         $response['pesanan']               = $pesanan;
         $response['pesanan_selesai']       = $pesanan_selesai;
         $response['setting_aplikasi']      = $setting_aplikasi;
+        $response['logo_toko']             = $logo_toko;
 
         return response()->json($response);
 
@@ -236,6 +239,8 @@ class HomeController extends Controller
         $nila_keluar           = Hpp::select([DB::raw('IFNULL(SUM(total_nilai),0) as total_keluar')])->where('jenis_hpp', 2)->where('warung_id', $data_warung)->first();
         $prose_total_persedian = $nila_masuk->total_masuk - $nila_keluar->total_keluar;
         $total_persedian       = $prose_total_persedian;
+        $user                         = Auth::user();
+        $logo_toko                    = UserWarung::find($user->id);
 
         $response['produk_warung']    = $this->tandaPemisahTitik($produk_warung);
         $response['transaksi_kas']    = 'Rp ' . $this->tandaPemisahTitik($transaksi_kas->jumlah_kas);
@@ -245,6 +250,8 @@ class HomeController extends Controller
         $response['stok_keluar']      = $this->tandaPemisahTitik($stok_keluar->jumlah_item_keluar);
         $response['total_persedian']  = 'Rp ' . $this->tandaPemisahTitik($total_persedian);
         $response['konfirmasi_admin'] = Auth::user()->konfirmasi_admin;
+        $response['logo_toko_2']             = $logo_toko;
+
         return response()->json($response);
 
     }
