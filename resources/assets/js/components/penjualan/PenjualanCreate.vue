@@ -123,39 +123,39 @@
                                     </div>
                                     <div class="col-md-6">
 
-                                       <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                           <font style="color: black">Kredit</font>
-                                           <money style="text-align:right" readonly="" class="form-penjualan" id="kredit" name="kredit" placeholder="Kredit"  v-model="penjualan.kredit" v-bind="separator" ></money> 
-                                       </div>
+                                     <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                                         <font style="color: black">Kredit</font>
+                                         <money style="text-align:right" readonly="" class="form-penjualan" id="kredit" name="kredit" placeholder="Kredit"  v-model="penjualan.kredit" v-bind="separator" ></money> 
+                                     </div>
 
-                                       <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                           <font style="color: black">Kembalian</font>
-                                           <money style="text-align:right" readonly="" class="form-penjualan" id="kembalian" name="kembalian" placeholder="Kembalian"  v-model="penjualan.kembalian" v-bind="separator" ></money> 
-                                       </div>
+                                     <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                                         <font style="color: black">Kembalian</font>
+                                         <money style="text-align:right" readonly="" class="form-penjualan" id="kembalian" name="kembalian" placeholder="Kembalian"  v-model="penjualan.kembalian" v-bind="separator" ></money> 
+                                     </div>
 
-                                   </div>
-                               </div>
+                                 </div>
+                             </div>
 
-                               <div align="right"  style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                   <button v-if="penjualan.kembalian >= 0 && penjualan.kredit == 0" type="button" class="btn btn-success btn-lg" id="btnSelesai" v-on:click="selesaiPenjualan()" v-shortkey.push="['alt']" @shortkey="selesaiPenjualan()"><font style="font-size:20px;">Tunai(Alt)</font></button>
+                             <div align="right"  style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                                 <button v-if="penjualan.kembalian >= 0 && penjualan.kredit == 0" type="button" class="btn btn-success btn-lg" id="btnSelesai" v-on:click="selesaiPenjualan()" v-shortkey.push="['alt']" @shortkey="selesaiPenjualan()"><font style="font-size:20px;">Tunai(Alt)</font></button>
 
-                                   <button v-if="penjualan.kredit > 0" type="button" class="btn btn-success btn-lg" id="btnSelesai" v-on:click="selesaiPenjualan()" v-shortkey.push="['alt']" @shortkey="selesaiPenjualan()"><font style="font-size:20px;">Piutang(Alt)</font></button>
+                                 <button v-if="penjualan.kredit > 0" type="button" class="btn btn-success btn-lg" id="btnSelesai" v-on:click="selesaiPenjualan()" v-shortkey.push="['alt']" @shortkey="selesaiPenjualan()"><font style="font-size:20px;">Piutang(Alt)</font></button>
 
-                                   <button type="button" class="btn btn-default btn-lg"  v-on:click="closeModal()" v-shortkey.push="['esc']" @shortkey="closeModal()"> <font style="font-size:20px;">Tutup(Esc)</font></button>
-                               </div>
+                                 <button type="button" class="btn btn-default btn-lg"  v-on:click="closeModal()" v-shortkey.push="['esc']" @shortkey="closeModal()"> <font style="font-size:20px;">Tutup(Esc)</font></button>
+                             </div>
 
-                           </div> 
-                       </div>
-                       <div class="modal-footer">  
-                       </div> 
-                   </form>
-               </div>       
-           </div> 
-       </div> 
-       <!-- / MODAL TOMBOL SELESAI --> 
+                         </div> 
+                     </div>
+                     <div class="modal-footer">  
+                     </div> 
+                 </form>
+             </div>       
+         </div> 
+     </div> 
+     <!-- / MODAL TOMBOL SELESAI --> 
 
 
-       <div class="modal" id="modal_setting" role="dialog" data-backdrop=""> 
+     <div class="modal" id="modal_setting" role="dialog" data-backdrop=""> 
         <div class="modal-dialog"> 
             <!-- Modal content--> 
             <div class="modal-content"> 
@@ -477,8 +477,8 @@ methods: {
     }
 },
 potonganFaktur(){
- var potonganFaktur = this.penjualan.potongan_faktur
- if (potonganFaktur == '') {
+   var potonganFaktur = this.penjualan.potongan_faktur
+   if (potonganFaktur == '') {
     potonganFaktur = 0
 }
 var potongan_persen = (parseFloat(potonganFaktur) / parseFloat(this.penjualan.subtotal)) * 100
@@ -517,11 +517,11 @@ getResults(page) {
 
             $.each(resp.data.data, function (i,item) {
 
-             app.penjualan.subtotal += parseFloat(resp.data.data[i].subtotal)
-             app.penjualan.total_akhir += parseFloat(resp.data.data[i].subtotal)
-             app.penjualan.kredit += parseFloat(resp.data.data[i].subtotal)
+               app.penjualan.subtotal += parseFloat(resp.data.data[i].subtotal)
+               app.penjualan.total_akhir += parseFloat(resp.data.data[i].subtotal)
+               app.penjualan.kredit += parseFloat(resp.data.data[i].subtotal)
 
-         }); 
+           }); 
         }
 
 
@@ -993,17 +993,17 @@ simpanSetting(){
         app.alertTbs("Jumlah Produk Tidak Boleh Nol atau Kosong!")
     }else{
 
-     axios.post(app.url+'/proses-setting-penjualan-pos',newSettingPenjualanPos)
-     .then(function (resp) {
+       axios.post(app.url+'/proses-setting-penjualan-pos',newSettingPenjualanPos)
+       .then(function (resp) {
         app.alert("Menyimpan Setting Penjualan POS");        
         $("#modal_setting").hide(); 
     })
-     .catch(function (resp) {
+       .catch(function (resp) {
         console.log(resp);
         alert("Tidak dapat Menyimpan Setting Penjualan POS");
     });
 
- }
+   }
 
 },
 dataSettingPenjualanPos() {
