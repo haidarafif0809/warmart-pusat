@@ -414,8 +414,9 @@ Route::get('/profil-warung/pencarian', 'WarungProfilController@pencarian')->midd
 Route::get('/profil-warung/pilih-provinsi', 'WarungProfilController@pilih_provinsi')->middleware('auth');
 Route::get('/profil-warung/pilih-wilayah/{id}/{type}', 'WarungProfilController@pilih_wilayah')->middleware('auth');
 Route::get('/profil-warung/view-detail/{id}', 'WarungProfilController@view_detail')->middleware('auth');
-Route::get('/daftar-topos/data-warung', 'WarungProfilController@dataWarung')->middleware('auth');
-Route::get('/daftar-topos/data-bank', 'WarungProfilController@dataBank')->middleware('auth');
+Route::get('/daftar-topos/data-warung', 'PendaftarToposController@dataWarung')->middleware('auth');
+Route::get('/daftar-topos/data-bank', 'PendaftarToposController@dataBank')->middleware('auth');
+Route::post('/daftar-topos/kirim-bukti-pembayaran/{id}', 'PendaftarToposController@update')->middleware('auth');
 
 //KATEGORI TRANSAKSI VUE.JS
 Route::get('/kategori-transaksi/view', 'KategoriTransaksiController@view')->middleware('auth');

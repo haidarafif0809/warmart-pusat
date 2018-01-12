@@ -14,3 +14,5 @@ yarn-error.log
 .env
 
 public/foto_ktp_user/
+
+public/foto_bukti_pembayaran/

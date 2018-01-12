@@ -10,5 +10,10 @@ class PendaftarTopos extends Model
 {
 
 	use AuditableTrait;
-	protected $fillable = ['name', 'no_telp', 'email', 'alamat', 'lama_berlangganan', 'berlaku_hingga', 'jenis_pembayaran', 'total', 'bank_id', 'no_rekening', 'atas_nama', 'warung_id'];
+	protected $fillable = ['name', 'no_telp', 'email', 'alamat', 'lama_berlangganan', 'berlaku_hingga', 'jenis_pembayaran', 'total', 'bank_id', 'no_rekening', 'atas_nama', 'warung_id','nama_subdomain','foto','keterangan','status_pembayaran'];
+
+	public function bank()
+	{
+		return $this->belongsTo('App\Bank', 'bank_id', 'id');
+	}
 }
