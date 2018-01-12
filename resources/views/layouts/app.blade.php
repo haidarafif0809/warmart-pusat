@@ -43,9 +43,9 @@
 </head>
 <style type="text/css">
 
-    .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
-     padding: 1px;
- }
+.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+ padding: 1px;
+}
 
 </style>
 <body>
@@ -164,7 +164,7 @@
         @endif
     </li>
 
-@if(Auth::user()->tipe_user == 4 AND Auth::user()->konfirmasi_admin == 1 )
+    @if(Auth::user()->tipe_user == 4 AND Auth::user()->konfirmasi_admin == 1 )
     <!--PRODUK -->
 
     <li>
@@ -668,7 +668,7 @@
 </body>
 <!--   Core JS Files   -->
 
-<script src="{{ asset('js/app.js?v=1.60')}}" type="text/javascript">
+<script src="{{ asset('js/app.js?v=1.70')}}" type="text/javascript">
 
 </script>
 <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript">
