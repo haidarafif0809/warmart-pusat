@@ -618,39 +618,45 @@
                 <ul class="nav navbar-nav navbar-right">
 
                  @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 1)
-                 <router-link :to="{name: 'indexPendaftaranTopos'}" class="menu-nav">
-                    14 day(s) left in trial
-                </router-link>                
-                @endif
-            </ul>
-        </div>
-    </div>
-</nav>
-<div class="content">
-    <div class="container-fluid">
-        <div class="row">
-            @include('layouts._flash')
-            @yield('content')
-        </div>
-    </div>
-    <!-- end container fluid -->
-</div>
-<footer class="footer">
-    <div class="container-fluid">
-        <nav class="pull-left">
+
+                 <b>Masa Percobaan Anda Tinggal 
+                    {{\App\Warung::select(DB::raw(' datediff(DATE_ADD(created_at, INTERVAL 14 DAY), current_date()) as sisa_waktu '))->where('id',Auth::user()->id_warung )->first()->sisa_waktu }} Hari Lagi! </b>
+                        <!-- Query diatas bila di masukan ke SQL = select datediff(DATE_ADD(created_at, INTERVAL 14 DAY), current_date()) as selisih from warungs WHERE id = id warung
+                            logika cara menentukan sisa waktu percobaan
+                            waktu daftar ditambah 14 hari kemudian hasilnya di hitung selisih nya dengan tanggal hari ini
+                        -->
+                        <router-link :to="{name: 'indexPendaftaranTopos'}" class="menu-nav"> Daftar Sekarang Juga!
+                        </router-link>                
+                        @endif
+                    </ul>
+                </div>
+            </div>
         </nav>
-        <p class="copyright pull-right">
-            ©
-            <script type="text/javascript">
-                document.write(new Date().getFullYear())
-            </script>
-            <a href="https://andaglos.id">
-                PT Andaglos Global Teknologi
-            </a>
-        </p>
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    @include('layouts._flash')
+                    @yield('content')
+                </div>
+            </div>
+            <!-- end container fluid -->
+        </div>
+        <footer class="footer">
+            <div class="container-fluid">
+                <nav class="pull-left">
+                </nav>
+                <p class="copyright pull-right">
+                    ©
+                    <script type="text/javascript">
+                        document.write(new Date().getFullYear())
+                    </script>
+                    <a href="https://andaglos.id">
+                        PT Andaglos Global Teknologi
+                    </a>
+                </p>
+            </div>
+        </footer>
     </div>
-</footer>
-</div>
 </div>
 <!--Start of Tawk.to Script-->
 <script type="text/javascript">
@@ -752,8 +758,8 @@
 </script>
 <script type="text/javascript">
     $(document).on('click', '.menu-nav', function(){
-       $('.navbar-toggle ').click();
-   });
+     $('.navbar-toggle ').click();
+ });
 </script>
 @yield('scripts')
 </html>
