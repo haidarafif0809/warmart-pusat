@@ -171,60 +171,60 @@
     @include('layouts.nav')
     @endif
 
-<!--END MASTER DATA WARUNG -->
-<!--MASTER DATA WARMART PUSAT-->
-@if(Auth::user()->tipe_user == 1)
+    <!--END MASTER DATA WARUNG -->
+    <!--MASTER DATA WARMART PUSAT-->
+    @if(Auth::user()->tipe_user == 1)
 
-@if(Laratrust::can('lihat_master_data'))
-<li>
-    <a data-toggle="collapse" href="#pagesExamples">
-        <i class="material-icons">
-            image
-        </i>
-        <p>
-            Master Data
-            <b class="caret">
-            </b>
-        </p>
-    </a>
-    <div class="collapse" id="pagesExamples">
-        <ul class="nav">
-            @if(Laratrust::can('lihat_bank'))
-            <li>
-                <router-link :to="{name: 'indexBank'}" class="menu-nav">
-                    <span class="sidebar-mini">
-                        B
-                    </span>
-                    <span class="sidebar-normal">
-                        Bank
-                    </span>
-                </router-link>
-            </li>
-            @endif
-            @if(Laratrust::can('lihat_customer'))
-            <li>
-                <router-link :to="{name: 'indexCustomer'}" class="menu-nav">
-                    <span class="sidebar-mini">
-                        C
-                    </span>
-                    <span class="sidebar-normal">
-                        Customer
-                    </span>
-                </router-link>
-            </li>
-            @endif
-            @if(Laratrust::can('lihat_komunitas'))
-            <li>
-                <router-link :to="{name: 'indexKomunitas'}" class="menu-nav">
-                    <span class="sidebar-mini">
-                        K
-                    </span>
-                    <span class="sidebar-normal">
-                        Komunitas
-                    </span>
-                </router-link>
-            </li>
-            @endif
+    @if(Laratrust::can('lihat_master_data'))
+    <li>
+        <a data-toggle="collapse" href="#pagesExamples">
+            <i class="material-icons">
+                image
+            </i>
+            <p>
+                Master Data
+                <b class="caret">
+                </b>
+            </p>
+        </a>
+        <div class="collapse" id="pagesExamples">
+            <ul class="nav">
+                @if(Laratrust::can('lihat_bank'))
+                <li>
+                    <router-link :to="{name: 'indexBank'}" class="menu-nav">
+                        <span class="sidebar-mini">
+                            B
+                        </span>
+                        <span class="sidebar-normal">
+                            Bank
+                        </span>
+                    </router-link>
+                </li>
+                @endif
+                @if(Laratrust::can('lihat_customer'))
+                <li>
+                    <router-link :to="{name: 'indexCustomer'}" class="menu-nav">
+                        <span class="sidebar-mini">
+                            C
+                        </span>
+                        <span class="sidebar-normal">
+                            Customer
+                        </span>
+                    </router-link>
+                </li>
+                @endif
+                @if(Laratrust::can('lihat_komunitas'))
+                <li>
+                    <router-link :to="{name: 'indexKomunitas'}" class="menu-nav">
+                        <span class="sidebar-mini">
+                            K
+                        </span>
+                        <span class="sidebar-normal">
+                            Komunitas
+                        </span>
+                    </router-link>
+                </li>
+                @endif
                                     <!-- OTORITAS ADMIN
 @if(Laratrust::can('lihat_otoritas'))
 <li>
@@ -337,39 +337,45 @@
                 <ul class="nav navbar-nav navbar-right">
 
                  @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 1)
-                 <router-link :to="{name: 'indexPendaftaranTopos'}" class="menu-nav">
-                    14 day(s) left in trial
-                </router-link>                
-                @endif
-            </ul>
-        </div>
-    </div>
-</nav>
-<div class="content">
-    <div class="container-fluid">
-        <div class="row">
-            @include('layouts._flash')
-            @yield('content')
-        </div>
-    </div>
-    <!-- end container fluid -->
-</div>
-<footer class="footer">
-    <div class="container-fluid">
-        <nav class="pull-left">
+
+                 <b>Masa Percobaan Anda Tinggal 
+                    {{\App\Warung::select(DB::raw(' datediff(DATE_ADD(created_at, INTERVAL 14 DAY), current_date()) as sisa_waktu '))->where('id',Auth::user()->id_warung )->first()->sisa_waktu }} Hari Lagi! </b>
+                        <!-- Query diatas bila di masukan ke SQL = select datediff(DATE_ADD(created_at, INTERVAL 14 DAY), current_date()) as selisih from warungs WHERE id = id warung
+                            logika cara menentukan sisa waktu percobaan
+                            waktu daftar ditambah 14 hari kemudian hasilnya di hitung selisih nya dengan tanggal hari ini
+                        -->
+                        <router-link :to="{name: 'indexPendaftaranTopos'}" class="menu-nav"> Daftar Sekarang Juga!
+                        </router-link>                
+                        @endif
+                    </ul>
+                </div>
+            </div>
         </nav>
-        <p class="copyright pull-right">
-            ©
-            <script type="text/javascript">
-                document.write(new Date().getFullYear())
-            </script>
-            <a href="https://andaglos.id">
-                PT Andaglos Global Teknologi
-            </a>
-        </p>
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    @include('layouts._flash')
+                    @yield('content')
+                </div>
+            </div>
+            <!-- end container fluid -->
+        </div>
+        <footer class="footer">
+            <div class="container-fluid">
+                <nav class="pull-left">
+                </nav>
+                <p class="copyright pull-right">
+                    ©
+                    <script type="text/javascript">
+                        document.write(new Date().getFullYear())
+                    </script>
+                    <a href="https://andaglos.id">
+                        PT Andaglos Global Teknologi
+                    </a>
+                </p>
+            </div>
+        </footer>
     </div>
-</footer>
-</div>
 </div>
 <!--Start of Tawk.to Script-->
 <script type="text/javascript">
@@ -387,7 +393,7 @@
 </body>
 <!--   Core JS Files   -->
 
-<script src="{{ asset('js/app.js?v=1.70')}}" type="text/javascript">
+<script src="{{ asset('js/app.js?v=1.72')}}" type="text/javascript">
 
 </script>
 <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript">
@@ -470,9 +476,12 @@
     });
 </script>
 <script type="text/javascript">
-    $(document).on('click', '.menu-nav', function(){
-       $('.navbar-toggle ').click();
-   });
+    $(document).ready(function(){
+        $("#minimizeSidebar").click();        
+        $(document).on('click', '.menu-nav', function(){
+         $('.navbar-toggle ').click();
+     });
+    });
 </script>
 @yield('scripts')
 </html>
