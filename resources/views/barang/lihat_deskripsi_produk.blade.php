@@ -89,7 +89,12 @@ h4 {
 
 <!doctype html>
 <html lang="en">
-
+<?php 
+    if (Auth::check()) {
+        $user      = \Auth::user()->id;
+        $foto_logo = \App\UserWarung::find($user);
+    }
+ ?>
 <head>
   <meta charset="utf-8" />
     @if($setting_aplikasi->tipe_aplikasi == 0)
@@ -150,7 +155,11 @@ h4 {
                 @if($setting_aplikasi->tipe_aplikasi == 0)
                 <a class="navbar-brand" href="{{ url('/')}}">War-Mart.id</a>
                 @else
-                <a class="navbar-brand" href="{{ url('/')}}"><img class="navbar-brand" src="{{asset('/assets/img/examples/topos_logo.png')}}"/></a>
+                 @if(Auth::check() && Auth::user()->tipe_user == 4)
+                    <a class="navbar-brand" href="{{ url('/')}}"><img class="navbar-brand" src="{{asset('/foto_ktp_user/'.$foto_logo->foto_ktp.'').'?v=1'}}"/></a>
+                 @else
+                    <a class="navbar-brand" href="{{ url('/')}}"><img class="navbar-brand" src="{{asset('/assets/img/examples/topos_logo.png'.'?v=1')}}"/></a>
+                 @endif
                 @endif
             </div>
 

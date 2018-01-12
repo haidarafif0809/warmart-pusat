@@ -3,6 +3,10 @@
 <head>    <!-- PILIH TIPE APLIKASI -->
     <?php
     $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
+    if (Auth::check()) {
+        $user      = \Auth::user()->id;
+        $foto_logo = \App\UserWarung::find($user);
+    }
     ?>
     
     @if($setting_aplikasi->tipe_aplikasi == 0)
@@ -85,7 +89,11 @@ body {
                     @if($setting_aplikasi->tipe_aplikasi == 0)
                     <a href="{{ url('/') }}"> <img class="navbar-brand" src="{{asset('/assets/img/examples/warmart_logo.png')}}"/> </a>
                     @else
-                    <a href="{{ url('/') }}"> <img class="navbar-brand" src="{{asset('/assets/img/examples/topos_logo.png').'?v=1'}}"/> </a>
+                    @if(Auth::check() && Auth::user()->tipe_user == 4)
+                    <a href="{{ url('/') }}"> <img class="navbar-brand" src="{{asset('/foto_ktp_user/'.$foto_logo->foto_ktp.'').'?v=1'}}"/></a>
+                    @else
+                    <a href="{{ url('/') }}"> <img class="navbar-brand" src="{{asset('/assets/img/examples/topos_logo.png'.'?v=1')}}"/></a>
+                    @endif
                     @endif
 
                     @if(Agent::isMobile() && !Auth::check())
