@@ -49,7 +49,7 @@ class HalamanWarungController extends Controller
 
         //TAMPIL KATEGORI
         $kategori_produk = HalamanWarungController::produkKategori($kategori, $id);
-        $nama_kategori   = "Warung : " . $warungs_data->name;
+        $nama_kategori   = "Toko : " . $warungs_data->name;
 
         return view('layouts.halaman_warung', ['kategori_produk' => $kategori_produk, 'daftar_produk' => $daftar_produk, 'produk_pagination' => $produk_pagination, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'cek_belanjaan' => $cek_belanjaan, 'logo_warmart' => $logo_warmart, 'list_warung' => $list_warung, 'id' => $id, 'nama_warung' => $nama_warung]);
     }
@@ -100,24 +100,24 @@ class HalamanWarungController extends Controller
         foreach ($kategori->paginate(4) as $kategori) {
             $jumlah_produk = Barang::where('kategori_barang_id', $kategori->id)->whereIn('id_warung', $array_warung)->count();
             $kategori_produk .= '
-      <li>
-      <a href="' . url('halaman-warung/filter/' . $kategori->id . '/' . $id) . '" style="color:white"><i class="material-icons">' . $kategori->kategori_icon . '</i>' . $kategori->nama_kategori_barang . ' - ' . $jumlah_produk . '</a>
-      </li>';
+            <li>
+              <a href="' . url('halaman-warung/filter/' . $kategori->id . '/' . $id) . '" style="color:white"><i class="material-icons">' . $kategori->kategori_icon . '</i>' . $kategori->nama_kategori_barang . ' - ' . $jumlah_produk . '</a>
+          </li>';
         }
         $kategori_produk .= '
-    <li class="dropdown">
-    <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color:white"><i class="material-icons">list</i> Lain - Lain <b class="caret"></b></a>
-    <ul class="dropdown-menu dropdown-with-icons">';
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color:white"><i class="material-icons">list</i> Lain - Lain <b class="caret"></b></a>
+        <ul class="dropdown-menu dropdown-with-icons">';
         foreach ($kategori->get() as $kategori) {
             $jumlah_produk = Barang::where('kategori_barang_id', $kategori->id)->whereIn('id_warung', $array_warung)->count();
             $kategori_produk .= '
-      <li>
-      <a href="' . url('halaman-warung/filter/' . $kategori->id . '/' . $id) . '"><i class="material-icons">' . $kategori->kategori_icon . '</i>' . $kategori->nama_kategori_barang . ' - ' . $jumlah_produk . '</a>
-      </li>';
+                <li>
+                  <a href="' . url('halaman-warung/filter/' . $kategori->id . '/' . $id) . '"><i class="material-icons">' . $kategori->kategori_icon . '</i>' . $kategori->nama_kategori_barang . ' - ' . $jumlah_produk . '</a>
+              </li>';
         }
         $kategori_produk .= '
-    </ul>
-    </li>';
+      </ul>
+  </li>';
 
         return $kategori_produk;
     }
@@ -174,71 +174,71 @@ class HalamanWarungController extends Controller
         if ($agent->isMobile()) {
             $card_warung = '';
             $card_warung .= '
-     <div class="card card-raised card-form-horizontal">
-     <div class="card-content">
-     <div class="col-md-2 col-sm-6 col-xs-6 nav-pills-icons">
-     <p class="text-center"><i  class="material-icons">store</i>  </p>
-     <p class="text-center">';
+        <div class="card card-raised card-form-horizontal">
+         <div class="card-content">
+             <div class="col-md-2 col-sm-6 col-xs-6 nav-pills-icons">
+                 <p class="text-center"><i  class="material-icons">store</i>  </p>
+                 <p class="text-center">';
             $card_warung .= DaftarProdukController::warungNama($warung);
             $card_warung .= '</p>
-     </div>
-     <div class="col-md-2 col-sm-6 col-xs-6">
-     <p class="text-center"><i  class="material-icons">place</i> </p>
-     <p class="text-center">';
+                </div>
+                <div class="col-md-2 col-sm-6 col-xs-6">
+                 <p class="text-center"><i  class="material-icons">place</i> </p>
+                 <p class="text-center">';
             $card_warung .= DaftarProdukController::alamatWarung($warung);
             $card_warung .= '</p>
-     </div>
-     <div class="col-md-2 col-sm-6 col-xs-6">
-     <p class="text-center"> <i  class="material-icons">call</i>  </p>
-     <p class="text-center">';
+                </div>
+                <div class="col-md-2 col-sm-6 col-xs-6">
+                 <p class="text-center"> <i  class="material-icons">call</i>  </p>
+                 <p class="text-center">';
             $card_warung .= HalamanWarungController::telponWarung($warung);
             $card_warung .= '</p>
-     </div>
-     <div class="col-md-2 col-sm-6 col-xs-6">
-     <p class="text-center"><i  class="material-icons">offline_pin</i> </p>
-     <p class="text-center">';
+                </div>
+                <div class="col-md-2 col-sm-6 col-xs-6">
+                 <p class="text-center"><i  class="material-icons">offline_pin</i> </p>
+                 <p class="text-center">';
             $card_warung .= HalamanWarungController::produkWarung($jumlah_produk_warung);
             $card_warung .= '</p>
-     </div>
-     </div>
-     </div>';
+                </div>
+            </div>
+        </div>';
         } else {
             $card_warung = '';
             $card_warung .= '
-    <div class="profile-tabs">
-    <div class="nav-align-center">
-    <ul class="nav nav-pills nav-pills-icons" role="tablist">
-    <li >
-    <a role="tab" >
-    <i class="material-icons">store</i>';
+        <div class="profile-tabs">
+            <div class="nav-align-center">
+                <ul class="nav nav-pills nav-pills-icons" role="tablist">
+                    <li >
+                        <a role="tab" >
+                            <i class="material-icons">store</i>';
             $card_warung .= DaftarProdukController::warungNama($warung);
             $card_warung .= '
-    </a>
-    </li>
-    <li>
-    <a role="tab" >
-    <i class="material-icons">place</i>';
+                        </a>
+                    </li>
+                    <li>
+                        <a role="tab" >
+                            <i class="material-icons">place</i>';
             $card_warung .= DaftarProdukController::alamatWarung($warung);
             $card_warung .= '
-    </a>
-    </li>
-    <li>
-    <a role="tab" >
-    <i class="material-icons">call</i>';
+                        </a>
+                    </li>
+                    <li>
+                        <a role="tab" >
+                            <i class="material-icons">call</i>';
             $card_warung .= HalamanWarungController::telponWarung($warung);
             $card_warung .= '
-    </a>
-    </li>
-    <li>
-    <a role="tab" >
-    <i class="material-icons">offline_pin</i>';
+                        </a>
+                    </li>
+                    <li>
+                        <a role="tab" >
+                            <i class="material-icons">offline_pin</i>';
             $card_warung .= HalamanWarungController::produkWarung($jumlah_produk_warung);
             $card_warung .= '
-    </a>
-    </li>
-    </ul>
-    </div>
-    </div>';
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>';
         }
 
         return $card_warung;
@@ -278,20 +278,20 @@ class HalamanWarungController extends Controller
     {
         $produk_kosong = "";
         $produk_kosong .= '
-  <div class="col-md-12 col-s,-12 col-xs-12">
-  <div class="card" data-colored-shadow="false" style="background-color:#f7f7f7">
-  <div class="card-content">';
+    <div class="col-md-12 col-s,-12 col-xs-12">
+      <div class="card" data-colored-shadow="false" style="background-color:#f7f7f7">
+          <div class="card-content">';
         $agent = new Agent();
         if ($agent->isMobile()) {
             $produk_kosong .= '<h6 class="text-center" style="margin:0px">Maaf Warung yang anda pilih tidak ada produk yang tersedia.</h6>
-    <p class="text-center">Silakan pilih warung lain</p>';
+                <p class="text-center">Silakan pilih warung lain</p>';
         } else {
             $produk_kosong .= '<h3 class="title text-center" style="margin:0px">Maaf Warung yang anda pilih tidak ada produk yang tersedia.</h3>
-    <h5 class="text-center" style="margin:0px">Silakan pilih warung lain</h5>';
+                <h5 class="text-center" style="margin:0px">Silakan pilih warung lain</h5>';
         }
         $produk_kosong .= '</div>
-  </div>
-  </div>';
+        </div>
+    </div>';
 
         return $produk_kosong;
     }
@@ -300,20 +300,20 @@ class HalamanWarungController extends Controller
     {
         $produk_kosong = "";
         $produk_kosong .= '
-  <div class="col-md-12 col-s,-12 col-xs-12">
-  <div class="card" data-colored-shadow="false" style="background-color:#f7f7f7">
-  <div class="card-content">';
+    <div class="col-md-12 col-s,-12 col-xs-12">
+      <div class="card" data-colored-shadow="false" style="background-color:#f7f7f7">
+          <div class="card-content">';
         $agent = new Agent();
         if ($agent->isMobile()) {
             $produk_kosong .= '<h6 class="text-center" style="margin:0px">Maaf Kategori yang anda pilih tidak ada produk yang tersedia.</h6>
-    <p class="text-center">Silakan pilih kategori lain</p>';
+                <p class="text-center">Silakan pilih kategori lain</p>';
         } else {
             $produk_kosong .= '<h3 class="title text-center" style="margin:0px">Maaf Kategori yang anda pilih tidak ada produk yang tersedia.</h3>
-    <h5 class="text-center" style="margin:0px">Silakan pilih kategori lain</h5>';
+                <h5 class="text-center" style="margin:0px">Silakan pilih kategori lain</h5>';
         }
         $produk_kosong .= '</div>
-  </div>
-  </div>';
+        </div>
+    </div>';
 
         return $produk_kosong;
     }
