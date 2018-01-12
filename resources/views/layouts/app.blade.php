@@ -171,60 +171,60 @@
     @include('layouts.nav')
     @endif
 
-<!--END MASTER DATA WARUNG -->
-<!--MASTER DATA WARMART PUSAT-->
-@if(Auth::user()->tipe_user == 1)
+    <!--END MASTER DATA WARUNG -->
+    <!--MASTER DATA WARMART PUSAT-->
+    @if(Auth::user()->tipe_user == 1)
 
-@if(Laratrust::can('lihat_master_data'))
-<li>
-    <a data-toggle="collapse" href="#pagesExamples">
-        <i class="material-icons">
-            image
-        </i>
-        <p>
-            Master Data
-            <b class="caret">
-            </b>
-        </p>
-    </a>
-    <div class="collapse" id="pagesExamples">
-        <ul class="nav">
-            @if(Laratrust::can('lihat_bank'))
-            <li>
-                <router-link :to="{name: 'indexBank'}" class="menu-nav">
-                    <span class="sidebar-mini">
-                        B
-                    </span>
-                    <span class="sidebar-normal">
-                        Bank
-                    </span>
-                </router-link>
-            </li>
-            @endif
-            @if(Laratrust::can('lihat_customer'))
-            <li>
-                <router-link :to="{name: 'indexCustomer'}" class="menu-nav">
-                    <span class="sidebar-mini">
-                        C
-                    </span>
-                    <span class="sidebar-normal">
-                        Customer
-                    </span>
-                </router-link>
-            </li>
-            @endif
-            @if(Laratrust::can('lihat_komunitas'))
-            <li>
-                <router-link :to="{name: 'indexKomunitas'}" class="menu-nav">
-                    <span class="sidebar-mini">
-                        K
-                    </span>
-                    <span class="sidebar-normal">
-                        Komunitas
-                    </span>
-                </router-link>
-            </li>
-            @endif
+    @if(Laratrust::can('lihat_master_data'))
+    <li>
+        <a data-toggle="collapse" href="#pagesExamples">
+            <i class="material-icons">
+                image
+            </i>
+            <p>
+                Master Data
+                <b class="caret">
+                </b>
+            </p>
+        </a>
+        <div class="collapse" id="pagesExamples">
+            <ul class="nav">
+                @if(Laratrust::can('lihat_bank'))
+                <li>
+                    <router-link :to="{name: 'indexBank'}" class="menu-nav">
+                        <span class="sidebar-mini">
+                            B
+                        </span>
+                        <span class="sidebar-normal">
+                            Bank
+                        </span>
+                    </router-link>
+                </li>
+                @endif
+                @if(Laratrust::can('lihat_customer'))
+                <li>
+                    <router-link :to="{name: 'indexCustomer'}" class="menu-nav">
+                        <span class="sidebar-mini">
+                            C
+                        </span>
+                        <span class="sidebar-normal">
+                            Customer
+                        </span>
+                    </router-link>
+                </li>
+                @endif
+                @if(Laratrust::can('lihat_komunitas'))
+                <li>
+                    <router-link :to="{name: 'indexKomunitas'}" class="menu-nav">
+                        <span class="sidebar-mini">
+                            K
+                        </span>
+                        <span class="sidebar-normal">
+                            Komunitas
+                        </span>
+                    </router-link>
+                </li>
+                @endif
                                     <!-- OTORITAS ADMIN
 @if(Laratrust::can('lihat_otoritas'))
 <li>
@@ -393,7 +393,7 @@
 </body>
 <!--   Core JS Files   -->
 
-<script src="{{ asset('js/app.js?v=1.70')}}" type="text/javascript">
+<script src="{{ asset('js/app.js?v=1.72')}}" type="text/javascript">
 
 </script>
 <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript">
@@ -476,9 +476,12 @@
     });
 </script>
 <script type="text/javascript">
-    $(document).on('click', '.menu-nav', function(){
-     $('.navbar-toggle ').click();
- });
+    $(document).ready(function(){
+        $("#minimizeSidebar").click();        
+        $(document).on('click', '.menu-nav', function(){
+         $('.navbar-toggle ').click();
+     });
+    });
 </script>
 @yield('scripts')
 </html>
