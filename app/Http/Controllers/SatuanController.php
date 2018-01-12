@@ -2,14 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Satuan;
+use App\SettingAplikasi;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Html\Builder;
-use Yajra\Datatables\Datatables;
-use Illuminate\Support\Facades\DB; 
-use Session;
-use Laratrust;
-use App\Satuan;
-use Auth;
 
 class SatuanController extends Controller
 {
@@ -19,9 +15,15 @@ class SatuanController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-        public function __construct()
+    public function __construct()
     {
-        $this->middleware('user-must-admin');
+//SETTING APLIKASI
+        $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
+        if ($setting_aplikasi->tipe_aplikasi == 0) {
+            $this->middleware('user-must-admin');
+        } else {
+            $this->middleware('user-must-warung');
+        }
     }
 
     public function index(Request $request, Builder $htmlBuilder)
@@ -30,14 +32,16 @@ class SatuanController extends Controller
         return view('satuan.index')->with(compact('html'));
     }
 
-     public function view(){
-        $satuan = Satuan::paginate(10);
+    public function view()
+    {
+        $satuan = Satuan::orderBy('id', 'DESC')->paginate(10);
         return response()->json($satuan);
     }
 
-    public function pencarian(Request $request){
+    public function pencarian(Request $request)
+    {
 
-        $satuan = Satuan::where('nama_satuan','LIKE',"%$request->search%")->paginate(10);
+        $satuan = Satuan::where('nama_satuan', 'LIKE', "%$request->search%")->paginate(10);
         return response()->json($satuan);
     }
     /**
@@ -60,14 +64,14 @@ class SatuanController extends Controller
     public function store(Request $request)
     {
         //
-                $this->validate($request, [
-            'nama_satuan'     => 'required|unique:satuans,nama_satuan',
-           
+        $this->validate($request, [
+            'nama_satuan' => 'required|unique:satuans,nama_satuan',
+
         ]);
-            
-             $master_satuan = Satuan::create([
-                'nama_satuan' =>$request->nama_satuan,
-            ]);
+
+        $master_satuan = Satuan::create([
+            'nama_satuan' => $request->nama_satuan,
+        ]);
     }
 
     /**
@@ -92,7 +96,7 @@ class SatuanController extends Controller
     {
         //
         $satuan = Satuan::find($id);
-        return url('satuan#/edit_satuan/'.$id);
+        return url('satuan#/edit_satuan/' . $id);
     }
 
     /**
@@ -105,13 +109,13 @@ class SatuanController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $this->validate($request, [            
-            'nama_satuan'     => 'required|unique:satuans,nama_satuan,'. $id
+        $this->validate($request, [
+            'nama_satuan' => 'required|unique:satuans,nama_satuan,' . $id,
         ]);
 
         Satuan::where('id', $id)->update([
-                'nama_satuan' =>$request->nama_satuan
-            ]);
+            'nama_satuan' => $request->nama_satuan,
+        ]);
     }
 
     /**
@@ -123,7 +127,7 @@ class SatuanController extends Controller
     public function destroy($id)
     {
         //
-         $satuan =  Satuan::destroy($id);  
+        $satuan = Satuan::destroy($id);
         return response(200);
     }
 }
