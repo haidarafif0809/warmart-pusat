@@ -2,7 +2,11 @@
 <html lang="en">
 <head>
 	<title>
+		@if($setting_aplikasi->tipe_aplikasi == 0)
 		War-Mart.id
+		@else
+		topos | Aplikasi POS & Toko Online
+		@endif
 	</title>
 	<!-- Bootstrap core CSS     -->
 	<link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet"/>
@@ -10,9 +14,9 @@
 </head>
 <style type="text/css">
 
-p{
-	margin-top: 1px; margin-bottom: 1px;
-}
+	p{
+		margin-top: 1px; margin-bottom: 1px;
+	}
 
 </style>
 <body>

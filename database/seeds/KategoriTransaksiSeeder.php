@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Seeder;
 use App\KategoriTransaksi;
+use Illuminate\Database\Seeder;
 
 class KategoriTransaksiSeeder extends Seeder
 {
@@ -12,7 +12,9 @@ class KategoriTransaksiSeeder extends Seeder
      */
     public function run()
     {
-        KategoriTransaksi::create(['nama_kategori_transaksi' => 'BIAYA OPERASIONAL', 'id_warung' => 1]);
-        KategoriTransaksi::create(['nama_kategori_transaksi' => 'GAJI KARYAWAN', 'id_warung' => 1]);
+        KategoriTransaksi::create(['nama_kategori_transaksi' => 'Modal', 'id_warung' => 1]);
+        KategoriTransaksi::create(['nama_kategori_transaksi' => 'Biaya Gaji', 'id_warung' => 1]);
+        KategoriTransaksi::create(['nama_kategori_transaksi' => 'Biaya Listrik', 'id_warung' => 1]);
+        KategoriTransaksi::create(['nama_kategori_transaksi' => 'Biaya Transportaso', 'id_warung' => 1]);
     }
 }

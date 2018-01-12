@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Barang;
 use App\KategoriBarang;
+use App\SettingAplikasi;
 use Illuminate\Http\Request;
 
 class KelompokProdukController extends Controller
@@ -16,7 +17,13 @@ class KelompokProdukController extends Controller
 
     public function __construct()
     {
-        $this->middleware('user-must-admin');
+//SETTING APLIKASI
+        $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
+        if ($setting_aplikasi->tipe_aplikasi == 0) {
+            $this->middleware('user-must-admin');
+        } else {
+            $this->middleware('user-must-warung');
+        }
     }
     public function index()
     {

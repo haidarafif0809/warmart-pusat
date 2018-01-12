@@ -110,7 +110,7 @@ export default {
             var newkasmasuk = app.kasmasuk;
             axios.post(app.url_create, newkasmasuk)
             .then(function (resp) {
-                app.message = 'Berhasil Menambah Kas Masuk '+ app.kasmasuk.kas;
+                app.message = 'Berhasil Menambah Kas Masuk';
                 app.alert(app.message);
                 app.kasmasuk.kas = ''
                 app.kasmasuk.kategori = ''

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Barang;
 use App\DetailPembelian;
+use App\SettingAplikasi;
 use App\Suplier;
 use App\Warung;
 use Auth;
@@ -196,6 +197,9 @@ class LaporanPembelianProdukController extends Controller
 
     public function cetakLaporan(Request $request, $dari_tanggal, $sampai_tanggal, $produk, $suplier)
     {
+        //SETTING APLIKASI
+        $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
+
         $request['dari_tanggal']   = $dari_tanggal;
         $request['sampai_tanggal'] = $sampai_tanggal;
         $request['produk']         = $produk;
@@ -224,6 +228,7 @@ class LaporanPembelianProdukController extends Controller
                 'sampai_tanggal'     => $this->tanggal($sampai_tanggal),
                 'produk'             => $produk,
                 'suplier'            => $suplier,
+                'setting_aplikasi'   => $setting_aplikasi,
             ])->with(compact('html'));
     }
 }

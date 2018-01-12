@@ -346,6 +346,8 @@ class RegisterController extends Controller
 
     protected function register_warung()
     {
-        return view('auth.register_warung   ');
+//SETTING APLIKASI
+        $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
+        return view('auth.register_warung', ['setting_aplikasi' => $setting_aplikasi]);
     }
 }

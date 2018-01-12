@@ -58,13 +58,13 @@
                                 <div class="row">
                                     <div class="col-md-6 col-xs-12">
                                         <div class="form-group" style="margin-right: 10px; margin-left: 1px; margin-bottom: 1px; margin-top: 1px;">
-                                            <label class="label-control">Potongan(F7)</label>  
+                                            <font style="color: black">Potongan(F7)</font>  
                                             <money style="text-align:right;" class="form-subtotal" v-model="inputPembayaranPembelian.potongan_faktur" v-bind="separator" v-shortkey.focus="['f7']"></money>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-xs-12">
                                         <div class="form-group" style="margin-right: 10px; margin-left: 1px; margin-bottom: 1px; margin-top: 1px;">
-                                            <label class="label-control">(%)(F8)</label>    
+                                            <font style="color: black">(%)(F8)</font>    
                                             <input type="text" class="form-subtotal" value="0" v-model="inputPembayaranPembelian.potongan_persen" v-on:blur="hitungPotonganPersen" v-shortkey.focus="['f8']" />
                                         </div>
                                     </div>
@@ -74,14 +74,14 @@
                                 <div class="row">
                                     <div class="col-md-6 col-xs-12">
                                         <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                            <label class="label-control">Jatuh Tempo(F9)</label> 
+                                            <font style="color: black">Jatuh Tempo(F9)</font> 
                                             <datepicker :input-class="'form-control'" placeholder="Isi Bila Ada Jatuh Tempo" v-model="inputPembayaranPembelian.jatuh_tempo" v-shortkey.focus="['f9']" ></datepicker>
                                             <br v-if="errors.jatuh_tempo">  <span v-if="errors.jatuh_tempo" id="jatuh_tempo_error" class="label label-danger">{{ errors.jatuh_tempo[0] }}</span>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-xs-12">
                                         <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                            <label class="label-control">Keterangan</label> 
+                                           <font style="color: black">Keterangan</font> 
                                            <textarea class="form-control" v-model="inputPembayaranPembelian.keterangan"  name="keterangan" id="keterangan" placeholder="Isi Disini" rows="1"></textarea> 
                                             <br v-if="errors.keterangan">  <span v-if="errors.keterangan" id="jatuh_tempo_error" class="label label-danger">{{ errors.keterangan[0] }}</span>
                                         </div>
@@ -121,9 +121,9 @@
                               <input type="hidden" name="potongan" id="potongan" v-model="inputPembayaranPembelian.potongan" >
 
                              <div align="right"  style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                               <button v-if="inputPembayaranPembelian.kembalian >= 0 && inputPembayaranPembelian.kredit == 0" v-shortkey.push="['alt']" type="submit" class="btn btn-success btn-lg" id="btnSelesai" ><font style="font-size:20px;">Tunai(Alt)</font></button>
+                               <button v-if="inputPembayaranPembelian.kembalian >= 0 && inputPembayaranPembelian.kredit == 0" v-shortkey.push="['alt']" @shortkey="saveForm()" type="submit" class="btn btn-success btn-lg" id="btnSelesai" ><font style="font-size:20px;">Tunai(Alt)</font></button>
 
-                               <button v-if="inputPembayaranPembelian.kredit > 0" type="submit" class="btn btn-success btn-lg" v-shortkey.push="['alt']" id="btnSelesai" ><font style="font-size:20px;">Hutang(Alt)</font> </button>
+                               <button v-if="inputPembayaranPembelian.kredit > 0" type="submit" class="btn btn-success btn-lg" v-shortkey.push="['alt']" @shortkey="saveForm()" id="btnSelesai" ><font style="font-size:20px;">Hutang(Alt)</font> </button>
 
                                <button type="button" class="btn btn-default btn-lg"  v-on:click="closeModalX()" v-shortkey.push="['esc']" @shortkey="closeModalX()"><font style="font-size:20px;"> Tutup(Esc)</font></button>
                            </div>
@@ -383,9 +383,10 @@ export default {
     			app.seen = true;
                 if (app.inputPembayaranPembelian.subtotal == 0) {         
                     $.each(resp.data.data, function (i,item) { 
-                       app.inputPembayaranPembelian.subtotal += resp.data.data[i].subtotal 
-                       app.inputPembayaranPembelian.total_akhir += resp.data.data[i].subtotal
-                       app.inputPembayaranPembelian.kredit += resp.data.data[i].subtotal
+                       app.inputPembayaranPembelian.subtotal += parseFloat(resp.data.data[i].subtotal)
+                       app.inputPembayaranPembelian.total_akhir += parseFloat(resp.data.data[i].subtotal)
+                       app.inputPembayaranPembelian.kredit += parseFloat(resp.data.data[i].subtotal)
+                    console.log(resp.data.data[i].subtotal);
                    });  
                 } 
 
@@ -614,7 +615,6 @@ export default {
 							app.loading = false;
 							app.getResults();
 							if (app.inputPembayaranPembelian.subtotal != 0) { 
-              console.log(resp.data);   
 							var subtotal = parseInt(app.inputPembayaranPembelian.subtotal) + parseInt(resp.data.subtotal)
 							app.inputPembayaranPembelian.subtotal = subtotal                       
                 			app.inputPembayaranPembelian.total_akhir  = subtotal 
@@ -1080,10 +1080,10 @@ export default {
     	saveForm(){
     	    var app = this;
 			var status_pembelian = app.inputPembayaranPembelian.status_pembelian;
-			var jatuh_tempo = $("#jatuh_tempo").val();
+			var jatuh_tempo = app.inputPembayaranPembelian.jatuh_tempo;
 			if ((status_pembelian == 'Hutang' || status_pembelian == '') && jatuh_tempo == '') {
 				swal("Oops...","Jatuh Tempo Belum Diisi!","error");
-				$("#jatuh_tempo").focus();
+				this.$refs.jatuh_tempo.$el.focus();
 			}else{
 			app.$router.replace('/create-pembelian');
 			app.prosesTransaksiSelesai();

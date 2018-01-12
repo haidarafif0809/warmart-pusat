@@ -4,7 +4,11 @@
 	<link href="{{ asset('img/favicon.png') }}" rel="apple-touch-icon" sizes="76x76"/>
 	<link href="{{ asset('img/favicon.png') }}" rel="icon" type="image/png"/>
 	<title>
+		@if($setting_aplikasi->tipe_aplikasi == 0)
 		War-Mart.id
+		@else
+		topos | Aplikasi POS & Toko Online
+		@endif
 	</title>
 	<!-- Bootstrap core CSS     -->
 	<link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet"/>
@@ -35,7 +39,7 @@
 <?php
 function pemisahTitik($angka)
 {
-    return number_format($angka, 0, ',', '.');
+	return number_format($angka, 0, ',', '.');
 }
 ?>
 <body>

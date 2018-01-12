@@ -6,6 +6,7 @@ use App\Barang;use App\DetailPembelian;
 use App\EditTbsPembelian;
 use App\Kas;
 use App\Pembelian;
+use App\SettingAplikasi;
 use App\Suplier;
 use App\TbsPembelian;
 use App\TransaksiKas;
@@ -1142,6 +1143,8 @@ class PembelianController extends Controller
     }
     public function cetakBesar($id)
     {
+        //SETTING APLIKASI
+        $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
 
         $pembelian = Pembelian::QueryCetak($id)->first();
         if ($pembelian['suplier_id'] == '0') {
@@ -1160,7 +1163,7 @@ class PembelianController extends Controller
 
         }
 
-        return view('pembelian.cetak_besar', ['pembelian' => $pembelian, 'detail_pembelian' => $detail_pembelian, 'subtotal' => $subtotal, 'terbilang' => $terbilang, 'nama_suplier' => $nama_suplier, 'alamat_suplier' => $alamat_suplier])->with(compact('html'));
+        return view('pembelian.cetak_besar', ['pembelian' => $pembelian, 'detail_pembelian' => $detail_pembelian, 'subtotal' => $subtotal, 'terbilang' => $terbilang, 'nama_suplier' => $nama_suplier, 'alamat_suplier' => $alamat_suplier, 'setting_aplikasi' => $setting_aplikasi])->with(compact('html'));
     }
 
     public function kekata($x)

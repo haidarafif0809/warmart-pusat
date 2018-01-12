@@ -7,6 +7,7 @@ use App\DetailPenjualanPos;
 use App\EditTbsPenjualan;
 use App\Kas;
 use App\PenjualanPos;
+use App\SettingAplikasi;
 use App\SettingPenjualanPos;
 use App\TbsPenjualan;
 use App\TransaksiKas;
@@ -1032,6 +1033,8 @@ class PenjualanController extends Controller
 
     public function cetakBesar($id)
     {
+        //SETTING APLIKASI
+        $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
 
         $penjualan = PenjualanPos::QueryCetak($id)->first();
 
@@ -1051,11 +1054,13 @@ class PenjualanController extends Controller
 
         }
 
-        return view('penjualan.cetak_besar', ['penjualan' => $penjualan, 'detail_penjualan' => $detail_penjualan, 'subtotal' => $subtotal, 'terbilang' => $terbilang, 'nama_pelanggan' => $nama_pelanggan, 'alamat_pelanggan' => $alamat_pelanggan])->with(compact('html'));
+        return view('penjualan.cetak_besar', ['penjualan' => $penjualan, 'detail_penjualan' => $detail_penjualan, 'subtotal' => $subtotal, 'terbilang' => $terbilang, 'nama_pelanggan' => $nama_pelanggan, 'alamat_pelanggan' => $alamat_pelanggan, 'setting_aplikasi' => $setting_aplikasi])->with(compact('html'));
     }
 
     public function cetakKecil($id)
     {
+        //SETTING APLIKASI
+        $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
 
         $penjualan = PenjualanPos::QueryCetak($id)->first();
 
@@ -1074,7 +1079,7 @@ class PenjualanController extends Controller
 
         }
 
-        return view('penjualan.cetak_kecil', ['penjualan' => $penjualan, 'detail_penjualan' => $detail_penjualan, 'subtotal' => $subtotal, 'nama_pelanggan' => $nama_pelanggan, 'potongan' => $potongan])->with(compact('html'));
+        return view('penjualan.cetak_kecil', ['penjualan' => $penjualan, 'detail_penjualan' => $detail_penjualan, 'subtotal' => $subtotal, 'nama_pelanggan' => $nama_pelanggan, 'potongan' => $potongan, 'setting_aplikasi' => $setting_aplikasi])->with(compact('html'));
     }
 
     public function cekSettingPenjualanPos()

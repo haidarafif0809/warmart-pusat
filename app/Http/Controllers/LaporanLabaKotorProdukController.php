@@ -6,6 +6,7 @@ use App\Barang;
 use App\DetailPenjualan;
 use App\DetailPenjualanPos;
 use App\Hpp;
+use App\SettingAplikasi;
 use App\Warung;
 use Auth;
 use Excel;
@@ -436,6 +437,9 @@ class LaporanLabaKotorProdukController extends Controller
 
     public function cetakLaporan(Request $request, $dari_tanggal, $sampai_tanggal, $produk)
     {
+        //SETTING APLIKASI
+        $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
+
         $request['dari_tanggal']   = $dari_tanggal;
         $request['sampai_tanggal'] = $sampai_tanggal;
         $request['produk']         = $produk;
@@ -486,6 +490,7 @@ class LaporanLabaKotorProdukController extends Controller
                 'dari_tanggal'                           => $this->tanggal($dari_tanggal),
                 'sampai_tanggal'                         => $this->tanggal($sampai_tanggal),
                 'produk'                                 => $produk,
+                'setting_aplikasi'                       => $setting_aplikasi,
             ])->with(compact('html'));
     }
 

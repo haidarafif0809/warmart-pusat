@@ -7,9 +7,9 @@ use App\Error;
 use App\Hpp;
 use App\KategoriBarang;
 use App\PesananPelanggan;
+use App\SettingAplikasi;
 use App\TransaksiKas;
 use App\User;
-use App\SettingAplikasi;
 use App\UserWarung;
 use App\Warung;
 use Auth;
@@ -123,14 +123,21 @@ class HomeController extends Controller
         OpenGraph::addProperty('type', 'articles');
 
         //MENAMPILKAN PRODUK ACAK
-        $data_produk     = Barang::select(['id', 'kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung'])->inRandomOrder()->paginate(4);
-        $kategori_produk = KategoriBarang::select(['id', 'nama_kategori_barang'])->get();
-        $daftar_produk   = $this->listProduk($data_produk);
+        $data_produk      = Barang::select(['id', 'kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung'])->inRandomOrder()->paginate(4);
+        $kategori_produk  = KategoriBarang::select(['id', 'nama_kategori_barang'])->get();
+        $daftar_produk    = $this->listProduk($data_produk);
+        $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
 
-        if (Auth::user()->tipe_user == 3) {
-            return redirect()->route('daftar_produk.index');
+        if ($setting_aplikasi->tipe_aplikasi == 0) {
+
+            if (Auth::user()->tipe_user == 3) {
+                return redirect()->route('daftar_produk.index');
+            } else {
+                return view('layouts.landing_page', ['daftar_produk' => $daftar_produk]);
+            }
+
         } else {
-            return view('layouts.landing_page', ['daftar_produk' => $daftar_produk]);
+            return redirect()->intended('/');
         }
 
     }
@@ -192,6 +199,8 @@ class HomeController extends Controller
         $pesanan                      = PesananPelanggan::all()->count();
         $pesanan_selesai              = PesananPelanggan::where('konfirmasi_pesanan', 2)->count();
         $setting_aplikasi             = SettingAplikasi::select('tipe_aplikasi')->first();
+        $user                         = Auth::user();
+        $logo_toko                    = UserWarung::find($user->id);
 
         $response['komunitas']             = $jumlah_komunitas;
         $response['customer']              = $jumlah_customer;
@@ -203,7 +212,8 @@ class HomeController extends Controller
         $response['error_log']             = $error_log;
         $response['pesanan']               = $pesanan;
         $response['pesanan_selesai']       = $pesanan_selesai;
-        $response['setting_aplikasi']       = $setting_aplikasi;
+        $response['setting_aplikasi']      = $setting_aplikasi;
+        $response['logo_toko']             = $logo_toko;
 
         return response()->json($response);
 
@@ -229,6 +239,8 @@ class HomeController extends Controller
         $nila_keluar           = Hpp::select([DB::raw('IFNULL(SUM(total_nilai),0) as total_keluar')])->where('jenis_hpp', 2)->where('warung_id', $data_warung)->first();
         $prose_total_persedian = $nila_masuk->total_masuk - $nila_keluar->total_keluar;
         $total_persedian       = $prose_total_persedian;
+        $user                         = Auth::user();
+        $logo_toko                    = UserWarung::find($user->id);
 
         $response['produk_warung']    = $this->tandaPemisahTitik($produk_warung);
         $response['transaksi_kas']    = 'Rp ' . $this->tandaPemisahTitik($transaksi_kas->jumlah_kas);
@@ -238,6 +250,8 @@ class HomeController extends Controller
         $response['stok_keluar']      = $this->tandaPemisahTitik($stok_keluar->jumlah_item_keluar);
         $response['total_persedian']  = 'Rp ' . $this->tandaPemisahTitik($total_persedian);
         $response['konfirmasi_admin'] = Auth::user()->konfirmasi_admin;
+        $response['logo_toko_2']             = $logo_toko;
+
         return response()->json($response);
 
     }

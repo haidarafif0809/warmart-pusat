@@ -5,7 +5,8 @@
             <img v-bind:src="url+ 'image/warmart_logo.png'"class="img-responsive" width="500" height="160"> 
         </center>
          <center v-else>
-            <img v-bind:src="url+ 'assets/img/examples/topos_logo.png?v=1'"class="img-responsive" width="500" height="160"> 
+             <img v-if="dashboardData.logo_toko.foto_ktp != null" v-bind:src="url_picture+'/'+dashboardData.logo_toko.foto_ktp"  class="img-responsive" width="500" height="160" /> 
+             <img v-bind:src="url+'/assets/img/image_placeholder.jpg'" class="img-responsive" width="500" height="160" v-else>
         </center>
         <div class="col-lg-4 col-md-6 col-sm-6">
             <div class="card card-stats">
@@ -98,6 +99,7 @@
         </div>
     </div>
 
+
     <div class="row" v-else-if="tipeUser.content == 4">   
         <div class="col-md-12">
             <div class="alert alert-info"  v-if="dashboardData.konfirmasi_admin == 0">
@@ -112,7 +114,8 @@
             <img v-bind:src="url+ 'image/warmart_logo.png'"class="img-responsive" width="500" height="160"> 
         </center>
          <center v-else>
-            <img v-bind:src="url+ 'assets/img/examples/topos_logo.png'"class="img-responsive" width="500" height="160"> 
+           <img v-if="dashboardData.logo_toko_2.foto_ktp != null" v-bind:src="url_picture+'/'+dashboardData.logo_toko_2.foto_ktp"  class="img-responsive" width="500" height="160" /> 
+             <img v-bind:src="url+'/assets/img/image_placeholder.jpg'" class="img-responsive" width="500" height="160" v-else>
         </center>
 
         <center v-if="dashboardData.konfirmasi_admin == 1">
@@ -222,6 +225,7 @@ export default {
     data: function () {
         return {
             url: window.location.origin + (window.location.pathname).replace("dashboard", ""),
+            url_picture : window.location.origin+(window.location.pathname).replace("dashboard", "foto_ktp_user"),
             dashboardData: [],
             tipeUser : document.head.querySelector('meta[name="tipe-user"]')
         }
