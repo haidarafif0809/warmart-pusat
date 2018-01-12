@@ -30,7 +30,7 @@ class PendaftarToposController extends Controller
 
             $waktu_daftar = date($pendaftar_topos->first()->created_at);
             $date = date_create($waktu_daftar);
-            date_add($date, date_interval_create_from_date_string('4 hours'));// hanay diberi waktu 4 jam
+            date_add($date, date_interval_create_from_date_string('4 hours'));// hanya diberi waktu 4 jam
             $batas_pendaftaran = date_format($date, 'Y-m-d H:i:s');
 
             $respons['status_pembayaran'] = $pendaftar_topos->first()->status_pembayaran;
@@ -196,9 +196,9 @@ class PendaftarToposController extends Controller
 
     public function dataWarung(){
 
-       return Warung::find(Auth::user()->id_warung);
-   }
-   public function dataBank(){
+     return Warung::find(Auth::user()->id_warung);
+ }
+ public function dataBank(){
     $bank = Bank::all();
     return response()->json($bank);
 }
