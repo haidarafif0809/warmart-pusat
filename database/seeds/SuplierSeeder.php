@@ -13,10 +13,20 @@ class SuplierSeeder extends Seeder
     public function run()
     {
         // sample suplier
+
+            $suplier = new Suplier();
+            $suplier->nama_suplier = "UMUM";
+            $suplier->alamat = "-";
+            $suplier->no_telp = "-";
+            $suplier->warung_id = "1";
+            $suplier->save();
+
             $suplier = new Suplier();
             $suplier->nama_suplier = "PT MAJU MUNDUR";
             $suplier->alamat = "Jln selayang pandang";
             $suplier->no_telp = "085249452658";
             $suplier->warung_id = "1";
+            $suplier->save();
+
     }
 }
