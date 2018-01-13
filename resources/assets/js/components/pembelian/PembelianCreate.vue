@@ -376,7 +376,7 @@
                   <button  v-on:click="tambahModalKas()" class="btn btn-primary btn-just-icon btn-round"><i class="material-icons">add</i></button>
               </div>
               </div> 
-              <di
+              
           </div> 
           
           <div class="card-footer">
