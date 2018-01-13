@@ -352,9 +352,11 @@
                       <option v-for="supliers, index in suplier" v-bind:value="supliers.id">{{ supliers.nama_suplier }}</option>
                   </selectize-component>
               </div> 
-              <div class="col-md-2 col-xs-2" style="padding-top:35;">
-                 <button v-on:click="tambahSupplier()" class="btn btn-primary btn-just-icon btn-round"><i class="material-icons">add</i></button>
-              </div>
+              <div class="col-md-1 col-xs-1" style="padding-left:0px;padding-top:43;">
+                <div class="row" style="margin-top:-10px">
+                <button class="btn btn-primary btn-icon waves-effect waves-light" v-on:click="tambahSupplier()" type="button"> <i class="material-icons" >add</i> </button>
+                </div>
+             </div>
               </div><!-- end row-->
               <div class="row">
                 <div class="col-md-10 col-xs-10" > 
@@ -372,9 +374,11 @@
                       </selectize-component>
                       </div>
                 </div> 
-                <div class="col-md-2 col-xs-2"  style="padding-top:35;">
-                  <button  v-on:click="tambahModalKas()" class="btn btn-primary btn-just-icon btn-round"><i class="material-icons">add</i></button>
-              </div>
+              <div class="col-md-1 col-xs-1" style="padding-left:0px;padding-top:43;">
+                <div class="row" style="margin-top:-10px">
+                <button class="btn btn-primary btn-icon waves-effect waves-light" v-on:click="tambahModalKas()" type="button"> <i class="material-icons" >add</i> </button>
+                </div>
+             </div>
               </div> 
               
           </div> 
