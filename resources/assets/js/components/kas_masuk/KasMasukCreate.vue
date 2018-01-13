@@ -24,15 +24,15 @@
 	               	<div>
 		               	<form v-on:submit.prevent="saveForm()" class="form-horizontal"> 
 		                    <div class="form-group">
-		                        <label for="kas" class="col-md-2 control-label">Kas</label>
+		                        <label for="kas" class="col-md-2 control-label">Pilih Kas</label>
 		                        <div class="col-md-4 col-xs-10">
 		                            <selectize-component v-model="kasmasuk.kas" :settings="setKas" id="kas"  name="kas"> 
 	                                    <option v-for="data_kas, index in kas" v-bind:value="data_kas.id">{{ data_kas.nama_kas }}</option>
 	                                </selectize-component>
 		                        </div>
                             <div class="col-md-1 col-xs-1" style="padding-left:0px">
-                              <div class="row">
-                                <button class="btn btn-primary btn-icon waves-effect waves-light" @click="kasBaru()"> <i class="material-icons" style="font-size:14px">add</i> </button>
+                              <div class="row" style="margin-top:-10px">
+                                <button class="btn btn-primary btn-icon waves-effect waves-light" @click="tambahKasBaru()" type="button"> <i class="material-icons" style="font-size:14px">add</i> </button>
                               </div>
                             </div>  
 		                    </div>
@@ -44,9 +44,9 @@
                                       <option v-for="data_kategori, index in kategori" v-bind:value="data_kategori.id">{{ data_kategori.nama_kategori_transaksi }}</option>
                                   </selectize-component>
                             </div>
-                            <div class="col-md-1 col-xs-1" style="padding-left:0px">
-                              <div class="row">
-                                <button class="btn btn-primary btn-icon waves-effect waves-light" @click="kategoriBaru()"> <i class="material-icons" style="font-size:14px">add</i> </button>
+                            <div class="col-md-1 col-xs-1" style="padding-left:0px;">
+                              <div class="row" style="margin-top:-10px">
+                                <button class="btn btn-primary btn-icon waves-effect waves-light" @click="kategoriBaru()" type="button"> <i class="material-icons" style="font-size:14px">add</i> </button>
                               </div>
                             </div>
 		                    </div>
@@ -92,6 +92,7 @@ export default {
             url : window.location.origin+(window.location.pathname).replace("dashboard", "kas-masuk"),
             url_create : window.location.origin+(window.location.pathname).replace("dashboard", "kas_masuk"),
             urlKategoriTransaksi : window.location.origin+(window.location.pathname).replace("dashboard", "kategori-transaksi"),
+            urlKas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
             kasmasuk: {
                 kas: '',
                 kategori: '',
@@ -101,10 +102,10 @@ export default {
             kategoriTransaksi: {
                 nama_kategori_transaksi: '',
             },
-            kas: {
-              kode_kas : '',
+            kasBaru: {
+              kode_kas : 'K001',
               nama_kas : '',
-              status_kas : 0,
+              status_kas : 1,
               default_kas : 0
             },
             message : '',
@@ -229,17 +230,13 @@ export default {
           });
         }
       },
-      kasBaru(){
+      tambahKasBaru(){
           var app = this;
           swal({
             title: "Kas",
             html:
-              '<input class="form-control" autocomplete="off" placeholder="Kode Kas" v-model="kas.kode_kas" type="text" name="kode_kas" id="kode_kas"  autofocus="">' +
-              '<input class="form-control" autocomplete="off" placeholder="Nama Kas" v-model="kas.nama_kas" type="text" name="nama_kas" id="nama_kas"  >' +
-              '<label for="nama_kas" class="col-md-12 control-label" style="padding-left:0px; text-align: left; color:red, font-weight: bold">Tampil Transaksi</label>' +
-                '<div class="togglebutton col-md-12" style="padding-left:0px; text-align: left; font-weight: bold"> <label> <b>No</b>  <input type="checkbox" v-model="kas.status_kas" value="1" name="status_kas" id="status_kas"><b>Yes</b> </label> </div>' +
-              '<label for="nama_kas" class="col-md-12 control-label" style="padding-left:0px; text-align: left; color:red, font-weight: bold">Default Kas</label>' +
-                '<div class="togglebutton col-md-12" style="padding-left:0px; text-align: left;"> <label> <b>No</b>  <input type="checkbox" v-on:change="defaultKas()" v-model="kas.default_kas" value="1" name="default_kas" id="default_kas"><b>Yes</b> </label> </div>',
+              '<input class="form-control" autocomplete="off" placeholder="Kode Kas" type="text" name="kode_kas" id="kode_kas" autofocus="" required="">' +
+              '<input class="form-control" autocomplete="off" placeholder="Nama Kas" type="text" name="nama_kas" id="nama_kas" required="">',
             allowEnterKey : false,
             showCloseButton: true, 
             showCancelButton: true,                        
@@ -249,20 +246,39 @@ export default {
             cancelButtonText:'<i class="fa fa-thumbs-o-down"> Batal', 
             closeOnConfirm: false, 
             cancelButtonAriaLabel: 'Thumbs down', 
-            preConfirm: function () { 
+            preConfirm: function () {
               return new Promise(function (resolve) { 
                 resolve([ 
                   $('#kode_kas').val(), 
                   $('#nama_kas').val(),
-                  $('#status_kas').val(),
-                  $('#default_kas').val(),
                 ]) 
               }) 
             }
-        }).then((value) => {
-              this.tambahKategoriTransaksiBaru(value);
+        }).then((result) => {
+              app.prosesTambahKasBaru(result);
         });
       },
+      prosesTambahKasBaru(result){
+        var app = this;
+        app.kasBaru.kode_kas = result[0];
+        app.kasBaru.nama_kas = result[1];
+        var newKas = app.kasBaru;
+
+        axios.post(app.urlKas, newKas)
+        .then(function (resp) {
+
+              app.dataKas();
+              app.message = 'Berhasil Menambah Kas '+ app.kasBaru.nama_kas;
+              app.alertBerhasil(app.message);
+              app.$router.replace('/create-kas-masuk');
+              timer: 2000
+        })
+        .catch(function (resp) {
+          console.log(resp);
+          app.success = false;
+          app.errors = resp.response.data.errors;
+        });
+      }
 
   }
 }
