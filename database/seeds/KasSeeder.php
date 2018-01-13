@@ -27,7 +27,7 @@ class KasSeeder extends Seeder
         $kas->kode_kas    = "K002";
         $kas->nama_kas    = "KAS TOKO";
         $kas->status_kas  = "1";
-        $kas->default_kas = "1";
+        $kas->default_kas = "0";
         $kas->warung_id   = "1";
         $kas->save();
 

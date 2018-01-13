@@ -111,13 +111,13 @@ class KasMasukController extends Controller
 
     public function pilih_kas()
     {
-        $kas = Kas::select('id', 'nama_kas')->where('warung_id', Auth::user()->id_warung)->get();
+        $kas = Kas::select('id', 'nama_kas')->where('warung_id', Auth::user()->id_warung)->orderBy('id', 'DESC')->get();
         return response()->json($kas);
     }
 
     public function pilih_kategori()
     {
-        $kategori_transaksi = KategoriTransaksi::select('id', 'nama_kategori_transaksi')->where('id_warung', Auth::user()->id_warung)->get();
+        $kategori_transaksi = KategoriTransaksi::select('id', 'nama_kategori_transaksi')->where('id_warung', Auth::user()->id_warung)->orderBy('id', 'DESC')->get();
         return response()->json($kategori_transaksi);
     }
 
