@@ -570,6 +570,11 @@ export default {
     		var app = this;
     		axios.get(app.url+'/pilih-suplier').then(function (resp) {
     			app.suplier = resp.data;
+              $.each(resp.data, function (i, item) {
+                  if (resp.data[i].nama_suplier == "UMUM") {
+                      app.inputPembayaranPembelian.suplier  = resp.data[i].id 
+                  }
+                });
     		})
     		.catch(function (resp) {
     			alert("Tidak Bisa Memuat Suplier");
@@ -665,6 +670,7 @@ export default {
     			title: "Berhasil ",
     			text: pesan,
     			icon: "success",
+          timer: 1500,
     		});
     	},//alert untuk berhasil proses crud
     	deleteEntry(id, index,nama_produk) {

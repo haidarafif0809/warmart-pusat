@@ -1372,6 +1372,7 @@ export default {
           title: "Berhasil ",
           text: pesan,
           icon: "success",
+          timer: 1500,
         });
       }//alert untuk berhasil proses crud
 }
