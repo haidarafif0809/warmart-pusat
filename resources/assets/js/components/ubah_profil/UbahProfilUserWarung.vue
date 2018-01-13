@@ -77,7 +77,8 @@
                                         <a href="#pablo" class="btn btn-danger btn-round fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i> Batal</a>
                                     </div>
                                     <span v-if="errors.foto_ktp" id="foto_ktp_error" class="label label-danger">{{ errors.foto_ktp[0] }}</span>
-                                    <a style="color: red;">Size Foto (Ukuran Max : 3MB)</a>
+                                    <a v-if="profil_user_warung.setting_aplikasi.tipe_aplikasi == 0" style="color: red;">Size Foto (Ukuran Max : 3MB) </a>
+                                    <a v-else style="color: red;">Size Foto (Ukuran Max : 3MB || Ukuran Logo : 160 X 500 ) </a>
                                 </div>
                             </div>
                         </div> 

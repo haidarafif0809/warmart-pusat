@@ -38,6 +38,121 @@
 			<li class="active">Tambah Pembelian</li> 
 		</ul> 
 
+          <div class="modal" id="modal_tambah_kas" role="dialog" data-backdrop=""> 
+                <div class="modal-dialog"> 
+                    <!-- Modal content--> 
+                    <div class="modal-content"> 
+                        <div class="modal-header"> 
+                            <button type="button" class="close"  v-on:click="closeModalX()" v-shortkey.push="['esc']" @shortkey="closeModalX()"> &times;</button> 
+                            <h4 class="modal-title"> 
+                                <div class="alert-icon"> 
+                                    <b>Silahkan Isi Kas!</b> 
+                                </div> 
+                            </h4> 
+                        </div> 
+                          <div class="modal-body">
+                        <form v-on:submit.prevent="saveFormKas()" class="form-horizontal"> 
+                          <div class="form-group">
+                            <label for="kode_kas" class="col-md-3 control-label">Kode Kas</label>
+                            <div class="col-md-9">
+                              <input class="form-control" autocomplete="off" placeholder="Kode Kas" v-model="tambahKas.kode_kas" type="text" name="kode_kas" id="kode_kas"  autofocus="">
+                              <span v-if="errors.kode_kas" id="kode_kas_error" class="label label-danger">{{ errors.kode_kas[0] }}</span>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label for="nama_kas" class="col-md-3 control-label">Nama Kas</label>
+                            <div class="col-md-9">
+                              <input class="form-control" autocomplete="off" placeholder="Nama Kas" v-model="tambahKas.nama_kas" type="text" name="nama_kas" id="nama_kas"  >
+                              <span v-if="errors.nama_kas" id="nama_kas_error" class="label label-danger">{{ errors.nama_kas[0] }}</span>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                          <label for="nama_kas" class="col-md-3 control-label">Tampil Transaksi</label>
+                               <div class="togglebutton col-md-9">
+                                     <label>
+                                         <b>No</b>  <input type="checkbox" v-model="tambahKas.status_kas" value="1" name="status_kas" id="status_kas"><b>Yes</b>
+                                         </label>
+                                          </div>
+                                      </div>
+                                      <div class="form-group">
+                                          <label for="nama_kas" class="col-md-3 control-label">Default Kas</label>
+                                              <div class="togglebutton col-md-9">
+                                              <label>
+                                                  <b>No</b>  <input type="checkbox" v-on:change="defaultKas()" v-model="tambahKas.default_kas" value="1" name="default_kas" id="default_kas"><b>Yes</b>
+                                              </label>
+                                          </div>
+                                  </div>
+                              <div class="form-group">
+                              <div class="col-md-9 col-md-offset-3">
+                                <p style="color: red; font-style: italic;">*Note : Hanya 1 Kas yang dijadikan default.</p>
+                              <button class="btn btn-primary" id="btnSimpanKas" type="submit"><i class="material-icons">send</i> Submit</button>
+                            </div>
+                          </div>
+                        </form>
+                          </div>
+                    <div class="modal-footer">  
+                   </div> 
+           </div>       
+       </div> 
+   </div> 
+   <!-- / MODAL TOMBOL SELESAI --> 
+
+          <div class="modal" id="modal_tambah_suplier" role="dialog" data-backdrop=""> 
+                  <div class="modal-dialog"> 
+                         <!-- Modal content--> 
+                            <div class="modal-content"> 
+                                <div class="modal-header"> 
+                                    <button type="button" class="close"  v-on:click="closeModalX()" v-shortkey.push="['esc']" @shortkey="closeModalX()"> &times;</button> 
+                                    <h4 class="modal-title"> 
+                                        <div class="alert-icon"> 
+                                            <b>Silahkan Isi Supplier!</b> 
+                                        </div> 
+                                    </h4> 
+                                </div> 
+                                  <div class="modal-body">
+                                      <form v-on:submit.prevent="saveFormSupplier()" class="form-horizontal"> 
+                                        <div class="form-group">
+                                          <label for="nama_suplier" class="col-md-3 control-label">Nama Supplier</label>
+                                          <div class="col-md-9">
+                                            <input class="form-control" autocomplete="off" placeholder="Nama Supplier" v-model="tambahSuplier.nama_suplier" type="text" name="nama_suplier" id="nama_suplier"  autofocus="">
+                                            <span v-if="errors.nama_suplier" id="nama_suplier_error" class="label label-danger">{{ errors.nama_suplier[0] }}</span>
+                                          </div>
+                                        </div>
+                                        <div class="form-group">
+                                          <label for="alamat" class="col-md-3 control-label">Alamat</label>
+                                          <div class="col-md-9">
+                                            <input class="form-control" autocomplete="off" placeholder="Alamat Supplier" v-model="tambahSuplier.alamat" type="text" name="alamat" id="alamat"  autofocus="">
+                                            <span v-if="errors.alamat" id="alamat_error" class="label label-danger">{{ errors.alamat[0] }}</span>
+                                          </div>
+                                        </div>
+                                        <div class="form-group">
+                                          <label for="no_telp" class="col-md-3 control-label">No. Telpon</label>
+                                          <div class="col-md-9">
+                                            <input class="form-control" autocomplete="off" placeholder="No. Telpon Supplier" v-model="tambahSuplier.no_telp" type="text" name="no_telp" id="no_telp"  autofocus="">
+                                            <span v-if="errors.no_telp" id="no_telp_error" class="label label-danger">{{ errors.no_telp[0] }}</span>
+                                          </div>
+                                        </div>
+                                        <div class="form-group">
+                                          <label for="contact_person" class="col-md-3 control-label">Contact Person</label>
+                                          <div class="col-md-9">
+                                            <input class="form-control" autocomplete="off" placeholder="Contact Person Supplier" v-model="tambahSuplier.contact_person" type="text" name="contact_person" id="contact_person"  autofocus="">
+                                            <span v-if="errors.contact_person" id="contact_person_error" class="label label-danger">{{ errors.contact_person[0] }}</span>
+                                          </div>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                          <div class="col-md-10 col-md-offset-3">
+                                            <button class="btn btn-primary" id="btnSimpanSuplier" type="submit"><i class="material-icons">send</i> Submit</button>
+                                          </div>
+                                        </div>
+                                      </form>
+                                  </div>
+                            <div class="modal-footer">  
+                           </div> 
+                   </div>       
+               </div> 
+           </div> 
+           <!-- / MODAL TOMBOL SELESAI --> 
 
            <div class="modal" id="modal_selesai" role="dialog" data-backdrop=""> 
                 <div class="modal-dialog"> 
@@ -163,7 +278,7 @@
           </div>
 
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-9">
           <div class=" table-responsive ">
                <div class="pencarian">
                 <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
@@ -222,45 +337,54 @@
           <p style="color: red; font-style: italic;">*Note : Klik Kolom Jumlah, Harga, Potongan & Tax Untuk Mengubah Nilai.</p> 
       </div><!-- COL SM 8 --> 
 
-      <div class="col-md-4"><!-- COL SM 4 --> 
+      <div class="col-md-3"><!-- COL SM 4 --> 
         <div class="card card-stats"><!-- CARD --> 
             <div class="card-header" data-background-color="blue">
                 <i class="material-icons">shopping_cart</i>
             </div>
           <div class="card-content"> 
               <p class="category"><h4>Subtotal</h4></p>
-              <h3 class="card-title"> <money class="form-subtotal" style="text-align:right;" v-model="inputPembayaranPembelian.subtotal" readonly v-bind="separator" ></money></h3>
+              <h3 class="card-title"><b><money class="form-subtotal" style="text-align:right;" v-model="inputPembayaranPembelian.subtotal" readonly v-bind="separator" ></money></b></h3>
             <div class="row"> 
-              <div class="col-md-6 col-xs-12"> 
+              <div class="col-md-10 col-xs-10"> 
                    <h4>Suplier </h4> 
                   <selectize-component v-model="inputPembayaranPembelian.suplier" :settings="placeholder_suplier"  id="suplier" name="suplier" ref='suplier'> 
                       <option v-for="supliers, index in suplier" v-bind:value="supliers.id">{{ supliers.nama_suplier }}</option>
                   </selectize-component>
               </div> 
-              <div class="col-md-6 col-xs-12"> 
+              <div class="col-md-2 col-xs-2" style="padding-top:35;">
+                 <button v-on:click="tambahSupplier()" class="btn btn-primary btn-just-icon btn-round"><i class="material-icons">add</i></button>
+              </div>
+              </div><!-- end row-->
+              <div class="row">
+                <div class="col-md-10 col-xs-10" > 
                       <h4>Kas </h4> 
                       <div v-if="tbsPembelianData.kas_default == 0">
-                      <selectize-component v-model="inputPembayaranPembelian.cara_bayar" :settings="placeholder_cara_bayar"  id="cara_bayar" name="cara_bayar" ref='cara_bayar'> 
+                      <selectize-component style="text-align:left;" v-model="inputPembayaranPembelian.cara_bayar" :settings="placeholder_cara_bayar"  id="cara_bayar" name="cara_bayar" ref='cara_bayar'> 
                       <option v-for="cara_bayars, index in cara_bayar" v-bind:value="cara_bayars.id" >{{ cara_bayars.nama_kas }}</option>
                       </selectize-component>
                       <br>
                       <span class="label label-danger"><router-link :to="{name: 'indexKas'}" class="menu-nav">Tambah Kas Disini</router-link></span> 
                       </div>
                       <div v-else>
-                      <selectize-component v-model="inputPembayaranPembelian.cara_bayar" :settings="placeholder_cara_bayar" id="cara_bayar" name="cara_bayar" ref='cara_bayar'> 
+                      <selectize-component style="text-align:left;" v-model="inputPembayaranPembelian.cara_bayar" :settings="placeholder_cara_bayar" id="cara_bayar" name="cara_bayar" ref='cara_bayar'> 
                       <option v-for="cara_bayars, index in cara_bayar" v-bind:value="cara_bayars.id">{{ cara_bayars.nama_kas }}</option>
                       </selectize-component>
                       </div>
                 </div> 
+                <div class="col-md-2 col-xs-2"  style="padding-top:35;">
+                  <button  v-on:click="tambahModalKas()" class="btn btn-primary btn-just-icon btn-round"><i class="material-icons">add</i></button>
+              </div>
               </div> 
+              <di
           </div> 
           
           <div class="card-footer">
 		          	 <div class="row"> 
-		              <div class="col-md-6 col-xs-12"> 
+		              <div class="col-md-6 col-xs-6"> 
 		                <button type="button btn-lg"  class="btn btn-success" id="bayar" v-on:click="selesaiPembelian()" v-shortkey.push="['f2']" @shortkey="selesaiPembelian()" ><font style="font-size:20px;">Bayar(F2)</font></button>
 		              </div>
-		              <div class="col-md-6 col-xs-12"> 
+		              <div class="col-md-6 col-xs-6"> 
 		                <button type="submit btn-lg"  class="btn btn-danger" id="btnBatal" v-on:click="batalPembelian()" v-shortkey.push="['f3']" @shortkey="batalPembelian()" ><font style="font-size:20px;">Batal(F3)</font>  </button>
 		            </div>
 		        </div>
@@ -294,6 +418,8 @@ export default {
 			url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
 			url_kas : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
 			url_cek_total_kas : window.location.origin+(window.location.pathname).replace("dashboard", ""),
+      url_suplier : window.location.origin+(window.location.pathname).replace("dashboard", "suplier"),
+      url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
 			inputTbsPembelian: {
 				produk : '',
 				jumlah_produk : '',
@@ -317,6 +443,18 @@ export default {
 				ppn: '',
 				potongan: 0,
 			},
+      tambahSuplier: {
+        nama_suplier : '',
+        alamat : '',
+        no_telp : '',
+        contact_person : '',
+      },
+      tambahKas: {
+        kode_kas : '',
+        nama_kas : '',
+        status_kas : 0,
+        default_kas : 0
+      },
 			placeholder_produk: {
 				placeholder: '--PILIH PRODUK--'
 			},
@@ -447,6 +585,77 @@ export default {
     			alert("Tidak Bisa Memuat Kas");
     		});
     	},//END FUNGSI UNTUK SELECTIZE CARABAYAR 	
+      tambahSupplier(){
+       $("#modal_tambah_suplier").show();
+       this.$refs.nama_suplier.$el.focus();
+      },
+      tambahModalKas(){
+       $("#modal_tambah_kas").show();
+       this.$refs.kode_kas.$el.focus(); 
+      },
+      saveFormSupplier() {
+      var app = this;
+      var newsuplier = app.tambahSuplier;
+      axios.post(app.url_suplier, newsuplier)
+      .then(function (resp) {
+        app.message = 'Menambah Suplier '+ app.tambahSuplier.nama_suplier;
+        app.alert(app.message);
+        app.tambahSuplier.nama_suplier = '';
+        app.tambahSuplier.alamat = '';
+        app.tambahSuplier.no_telp = '';
+        app.tambahSuplier.contact_person = '';
+        app.errors = '';
+        app.dataSuplier();
+        $("#modal_tambah_suplier").hide();
+      })
+      .catch(function (resp) {
+        app.success = false;
+        app.errors = resp.response.data.errors;
+      });
+    },
+    saveFormKas() {
+      var app = this;
+      var newkas = app.tambahKas;
+      axios.post(app.url_tambah_kas, newkas)
+      .then(function (resp) {
+        app.message = 'Menambah Kategori Transaksi '+ app.tambahKas.nama_kas;
+        app.alert(app.message);
+        app.tambahKas.kode_kas = ''
+        app.tambahKas.nama_kas = ''
+        app.tambahKas.status_kas = 0
+        app.tambahKas.default_kas = 0
+        app.errors = '';
+         app.dataCaraBayar();
+        $("#modal_tambah_kas").hide();
+
+      })
+      .catch(function (resp) {
+        app.success = false;
+        app.errors = resp.response.data.errors;
+      });
+    },
+    defaultKas() {
+         var app = this;
+          var toogle = app.tambahKas.default_kas;
+
+         if (toogle == true) {
+          app = this;
+      app.$swal({
+      title: "Konfirmasi",
+      text: "Apakah Anda Yakin Ingin Mengubah Kas Utama ?",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+      })
+      .then((confirm) => {
+        if (confirm) {
+        toogle.prop('checked', true);
+        } else {
+        toogle.prop('checked', false);
+      }
+      });
+         }  
+      },
     	alert(pesan) {
     		this.$swal({
     			title: "Berhasil ",
@@ -1001,7 +1210,9 @@ export default {
     		$("#modal_selesai").hide(); 
     	},
     	closeModalX(){
-    		$("#modal_selesai").hide(); 
+    		$("#modal_selesai").hide();
+        $("#modal_tambah_suplier").hide(); 
+        $("#modal_tambah_kas").hide();  
     	},
     	hitungPotonganPersen(){
 
