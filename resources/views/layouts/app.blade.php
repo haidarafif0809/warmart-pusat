@@ -336,64 +336,68 @@
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
 
-                 @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 1)
 
-                 <b>Masa Percobaan Anda Tinggal 
-                    {{\App\Warung::select(DB::raw(' datediff(DATE_ADD(created_at, INTERVAL 14 DAY), current_date()) as sisa_waktu '))->where('id',Auth::user()->id_warung )->first()->sisa_waktu }} Hari Lagi! </b>
-                        <!-- Query diatas bila di masukan ke SQL = select datediff(DATE_ADD(created_at, INTERVAL 14 DAY), current_date()) as selisih from warungs WHERE id = id warung
-                            logika cara menentukan sisa waktu percobaan
-                            waktu daftar ditambah 14 hari kemudian hasilnya di hitung selisih nya dengan tanggal hari ini
-                        -->
-                        <router-link :to="{name: 'indexPendaftaranTopos'}" class="menu-nav"> Daftar Sekarang Juga!
-                        </router-link>                
-                        @endif
-                    </ul>
+                    @if(Auth::user()->tipe_user == 4 )
+
+                    @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 1)
+
+                    <b>Masa Percobaan Anda Tinggal 
+                        {{\App\Warung::select(DB::raw(' datediff(DATE_ADD(created_at, INTERVAL 14 DAY), current_date()) as sisa_waktu '))->where('id',Auth::user()->id_warung )->first()->sisa_waktu }} Hari Lagi! </b>
+                            <!-- Query diatas bila di masukan ke SQL = select datediff(DATE_ADD(created_at, INTERVAL 14 DAY), current_date()) as selisih from warungs WHERE id = id warung
+                                logika cara menentukan sisa waktu percobaan
+                                waktu daftar ditambah 14 hari kemudian hasilnya di hitung selisih nya dengan tanggal hari ini
+                            -->
+                            <router-link :to="{name: 'indexPendaftaranTopos'}" class="menu-nav"> Daftar Sekarang Juga!
+                            </router-link>                
+                            @endif
+                            @endif
+                        </ul>
+                    </div>
                 </div>
-            </div>
-        </nav>
-        <div class="content">
-            <div class="container-fluid">
-                <div class="row">
-                    @include('layouts._flash')
-                    @yield('content')
+            </nav>
+            <div class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        @include('layouts._flash')
+                        @yield('content')
+                    </div>
                 </div>
+                <!-- end container fluid -->
             </div>
-            <!-- end container fluid -->
+            <footer class="footer">
+                <div class="container-fluid">
+                    <nav class="pull-left">
+                    </nav>
+                    <p class="copyright pull-right">
+                        ©
+                        <script type="text/javascript">
+                            document.write(new Date().getFullYear())
+                        </script>
+                        <a href="https://andaglos.id">
+                            PT Andaglos Global Teknologi
+                        </a>
+                    </p>
+                </div>
+            </footer>
         </div>
-        <footer class="footer">
-            <div class="container-fluid">
-                <nav class="pull-left">
-                </nav>
-                <p class="copyright pull-right">
-                    ©
-                    <script type="text/javascript">
-                        document.write(new Date().getFullYear())
-                    </script>
-                    <a href="https://andaglos.id">
-                        PT Andaglos Global Teknologi
-                    </a>
-                </p>
-            </div>
-        </footer>
     </div>
-</div>
-<!--Start of Tawk.to Script-->
-<script type="text/javascript">
-    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-    (function(){
-        var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-        s1.async=true;
-        s1.src='https://embed.tawk.to/5a051374bb0c3f433d4c84cd/default';
-        s1.charset='UTF-8';
-        s1.setAttribute('crossorigin','*');
-        s0.parentNode.insertBefore(s1,s0);
-    })();
-</script>
-<!--End of Tawk.to Script-->
+    <!--Start of Tawk.to Script-->
+    <script type="text/javascript">
+        var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+        (function(){
+            var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+            s1.async=true;
+            s1.src='https://embed.tawk.to/5a051374bb0c3f433d4c84cd/default';
+            s1.charset='UTF-8';
+            s1.setAttribute('crossorigin','*');
+            s0.parentNode.insertBefore(s1,s0);
+        })();
+    </script>
+    <!--End of Tawk.to Script-->
 </body>
 <!--   Core JS Files   -->
 
-<script src="{{ asset('js/app.js?v=1.72')}}" type="text/javascript">
+<script src="{{ asset('js/app.js?v=1.78')}}" type="text/javascript">
 
 </script>
 <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript">
