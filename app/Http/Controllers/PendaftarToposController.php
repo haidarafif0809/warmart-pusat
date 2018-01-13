@@ -8,10 +8,13 @@ use App\Bank;
 use Auth;
 use DateTime;
 use Session;
+use Notification;
 use File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Intervention\Image\ImageManagerStatic as Image;
+use App\Notifications\PendaftaranTopos;
+use App\Notifications\PembayaranTopos;
 
 
 class PendaftarToposController extends Controller
@@ -108,6 +111,8 @@ class PendaftarToposController extends Controller
             'warung_id'    => Auth::user()->id_warung
 
         ]);
+        Notification::send(PendaftarTopos::first(), new PendaftaranTopos($pendaftar_topos)); 
+
 
         return response(200);
     }
@@ -179,6 +184,7 @@ class PendaftarToposController extends Controller
         }
 
 
+        Notification::send(PendaftarTopos::first(), new PembayaranTopos($update_pendafataran_topos)); 
         return response(200);
     }
 
@@ -196,9 +202,9 @@ class PendaftarToposController extends Controller
 
     public function dataWarung(){
 
-     return Warung::find(Auth::user()->id_warung);
- }
- public function dataBank(){
+       return Warung::find(Auth::user()->id_warung);
+   }
+   public function dataBank(){
     $bank = Bank::all();
     return response()->json($bank);
 }
