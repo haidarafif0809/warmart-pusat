@@ -341,14 +341,20 @@
 
                     @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 1)
 
+                    @if(\App\Warung::select(DB::raw(' datediff(DATE_ADD(created_at, INTERVAL 14 DAY), current_date()) as sisa_waktu '))->where('id',Auth::user()->id_warung )->first()->sisa_waktu <= 0)
+                    <b>Masa Percobaan Anda Habis!!</b>
+                    @else
                     <b>Masa Percobaan Anda Tinggal 
                         {{\App\Warung::select(DB::raw(' datediff(DATE_ADD(created_at, INTERVAL 14 DAY), current_date()) as sisa_waktu '))->where('id',Auth::user()->id_warung )->first()->sisa_waktu }} Hari Lagi! </b>
                             <!-- Query diatas bila di masukan ke SQL = select datediff(DATE_ADD(created_at, INTERVAL 14 DAY), current_date()) as selisih from warungs WHERE id = id warung
                                 logika cara menentukan sisa waktu percobaan
                                 waktu daftar ditambah 14 hari kemudian hasilnya di hitung selisih nya dengan tanggal hari ini
                             -->
+
                             <router-link :to="{name: 'indexPendaftaranTopos'}" class="menu-nav"> Daftar Sekarang Juga!
-                            </router-link>                
+                            </router-link>      
+
+                            @endif          
                             @endif
                             @endif
                         </ul>
