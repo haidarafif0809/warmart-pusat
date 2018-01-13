@@ -241,9 +241,9 @@ export default {
             showCloseButton: true, 
             showCancelButton: true,                        
             focusConfirm: false, 
-            confirmButtonText:'<i class="fa fa-thumbs-o-up"></i> OK', 
+            confirmButtonText:'OK', 
             confirmButtonAriaLabel: 'Thumbs up, great!', 
-            cancelButtonText:'<i class="fa fa-thumbs-o-down"> Batal', 
+            cancelButtonText:'Batal', 
             closeOnConfirm: false, 
             cancelButtonAriaLabel: 'Thumbs down', 
             preConfirm: function () {
