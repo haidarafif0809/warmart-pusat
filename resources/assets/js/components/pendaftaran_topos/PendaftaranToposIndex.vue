@@ -38,6 +38,13 @@
 
 						<vue-simple-spinner v-if="loading"></vue-simple-spinner>
 
+						<div class="row" id="">
+							<div class="col-md-2"></div>
+							<div class="col-md-8">
+								<h3 id="timer" style="color:red"></h3>
+							</div>
+						</div>
+
 						<span v-if="seen">
 							<form v-on:submit.prevent="saveForm()" class="form-horizontal" v-if="status_daftar_topos == true"> 
 								<div class="form-group">
@@ -150,94 +157,89 @@
 								</div>
 							</form>
 
+
 							<form v-on:submit.prevent="kirimBuktiPembayaran()" class="form-horizontal" v-else> 
 
-								<div class="form-group">
-									<div class="col-md-2"></div>
-									<div class="col-md-8">
-										<h3 id="timer" style="color:red"></h3>
-									</div>
-								</div>
-
-
-								<div class="form-group">
-									<label for="total" class="col-md-2 control-label"><b>Mohon Lakukan Pembayaran Sebesar</b></label>
-									<div class="col-md-4">
-										<money  readonly="" class="form-penjualan" id="total" name="total" placeholder="Total"  v-model="total" v-bind="separator" ></money> 
-									</div>
-								</div>
-
-								<div class="form-group">
-									<div class="col-md-2"></div>
-									<div class="col-md-8">
-										<h6 style="color:red"><b>Melalui Transfer Ke</b></h6>
-									</div>
-								</div>
-
-								<div class="form-group">
-									<label for="tujuan_transfer" class="col-md-2 control-label">Tujuan Transfer</label>
-									<div class="col-md-4">
-										<input type="text" readonly="" class="form-control" id="tujuan_transfer" name="tujuan_transfer" placeholder="Tujuan Transfer"  v-model="tujuan_transfer">
-									</div>
-								</div>
-
-								<div class="form-group">
-									<label for="no_rek_transfer" class="col-md-2 control-label">No. Rekening Transfer</label>
-									<div class="col-md-4">									
-										<input type="text" readonly="" class="form-control" id="no_rek_transfer" name="no_rek_transfer" placeholder="No. Rekening Transfer"  v-model="no_rek_transfer">
-									</div>
-								</div>
-
-								<div class="form-group">
-									<label for="atas_nama" class="col-md-2 control-label">Atas Nama</label>
-									<div class="col-md-4">									
-										<input type="text" readonly="" class="form-control" id="atas_nama" name="atas_nama" placeholder="Atas Nama"  v-model="atas_nama">
-									</div>
-								</div>
-
-
-								<div class="form-group">
-									<div class="col-md-2"></div>
-									<div class="col-md-8">
-										<h6 style="color:red"><b>Lakukan Konfirmasi Pembayaran Dengan Meng-upload Foto Bukti Transfer</b></h6>
-									</div>
-								</div>
-
-								<div class="form-group">
-									<label for="foto" class="col-md-2 control-label"><b>Foto Bukti Transfer</b></label>
-									<div class="col-md-10">
-										<div class="fileinput fileinput-new text-center" data-provides="fileinput">
-											<div class="fileinput-new thumbnail">
-												<img v-if="buktiPembayaran.foto != ''" :src="url_picture+'/'+buktiPembayaran.foto" /> 
-												<img :src="url_origin+'/assets/img/image_placeholder.jpg'" alt="Foto Akan Tampil Disini" v-else>
-											</div>
-											<div class="fileinput-preview fileinput-exists thumbnail"></div>
-											<div>
-												<span class="btn btn-rose btn-round btn-file">
-													<span class="fileinput-new">Ambil Foto</span>
-													<span class="fileinput-exists">Ubah</span>
-													<input class="form-control" type="file" name="foto" id="foto">
-												</span>
-												<a href="#pablo" class="btn btn-danger btn-round fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i> Batal</a>
-											</div>
-											<span v-if="errors.foto" id="foto_error" class="label label-danger">{{ errors.foto[0] }}</span>
-											<a style="color: red;">Size Foto (Ukuran Max : 3MB)</a>
+								<span id="timerOut">
+									<div class="form-group">
+										<label for="total" class="col-md-2 control-label"><b>Mohon Lakukan Pembayaran Sebesar</b></label>
+										<div class="col-md-4">
+											<money  readonly="" class="form-penjualan" id="total" name="total" placeholder="Total"  v-model="total" v-bind="separator" ></money> 
 										</div>
 									</div>
-								</div> 
-								<div class="form-group">
-									<label for="foto" class="col-md-2 control-label"><b>Keterangan</b></label>
-									<div class="col-md-4">
-										<label class="control-label"> Tuliskan Keterangan Jika di Perlukan</label>
-										<textarea class="form-control col-md-4" rows="5" name="keterangan" id="keterangan" v-model="buktiPembayaran.keterangan"></textarea>
-									</div>
-								</div> 
 
-								<div class="form-group">
-									<div class="col-md-4 col-md-offset-2">
-										<button class="btn btn-primary" id="btnUbahProfil" type="submit"><i class="material-icons">send</i> Kirim Bukti Pembayaran</button>
+									<div class="form-group">
+										<div class="col-md-2"></div>
+										<div class="col-md-8">
+											<h6 style="color:red"><b>Melalui Transfer Ke</b></h6>
+										</div>
 									</div>
-								</div>
+
+									<div class="form-group">
+										<label for="tujuan_transfer" class="col-md-2 control-label"><b>Tujuan Transfer</b></label>
+										<div class="col-md-4">
+											<input type="text" readonly="" class="form-control" id="tujuan_transfer" name="tujuan_transfer" placeholder="Tujuan Transfer"  v-model="tujuan_transfer">
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label for="no_rek_transfer" class="col-md-2 control-label"><b>No. Rekening Transfer</b></label>
+										<div class="col-md-4">									
+											<input type="text" readonly="" class="form-control" id="no_rek_transfer" name="no_rek_transfer" placeholder="No. Rekening Transfer"  v-model="no_rek_transfer">
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label for="atas_nama" class="col-md-2 control-label"><b>Atas Nama</b></label>
+										<div class="col-md-4">									
+											<input type="text" readonly="" class="form-control" id="atas_nama" name="atas_nama" placeholder="Atas Nama"  v-model="atas_nama">
+										</div>
+									</div>
+
+
+									<div class="form-group">
+										<div class="col-md-2"></div>
+										<div class="col-md-8">
+											<h6 style="color:red"><b>Lakukan Konfirmasi Pembayaran Dengan Meng-upload Foto Bukti Transfer</b></h6>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label for="foto" class="col-md-2 control-label"><b>Foto Bukti Transfer</b></label>
+										<div class="col-md-10">
+											<div class="fileinput fileinput-new text-center" data-provides="fileinput">
+												<div class="fileinput-new thumbnail">
+													<img v-if="buktiPembayaran.foto != ''" :src="url_picture+'/'+buktiPembayaran.foto" /> 
+													<img :src="url_origin+'/assets/img/image_placeholder.jpg'" alt="Foto Akan Tampil Disini" v-else>
+												</div>
+												<div class="fileinput-preview fileinput-exists thumbnail"></div>
+												<div>
+													<span class="btn btn-rose btn-round btn-file">
+														<span class="fileinput-new">Ambil Foto</span>
+														<span class="fileinput-exists">Ubah</span>
+														<input class="form-control" type="file" name="foto" id="foto">
+													</span>
+													<a href="#pablo" class="btn btn-danger btn-round fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i> Batal</a>
+												</div>
+												<span v-if="errors.foto" id="foto_error" class="label label-danger">{{ errors.foto[0] }}</span>
+												<a style="color: red;">Size Foto (Ukuran Max : 3MB)</a>
+											</div>
+										</div>
+									</div> 
+									<div class="form-group">
+										<label for="foto" class="col-md-2 control-label"><b>Keterangan</b></label>
+										<div class="col-md-4">
+											<label class="control-label"> Tuliskan Keterangan Jika di Perlukan</label>
+											<textarea class="form-control col-md-4" rows="5" name="keterangan" id="keterangan" v-model="buktiPembayaran.keterangan"></textarea>
+										</div>
+									</div> 
+
+									<div class="form-group">
+										<div class="col-md-4 col-md-offset-2">
+											<button class="btn btn-primary" id="btnUbahProfil" type="submit"><i class="material-icons">send</i> Kirim Bukti Pembayaran</button>
+										</div>
+									</div>
+								</span>
 							</form>
 
 						</span>
@@ -453,7 +455,8 @@ export default {
 			app.seen = false
 			app.loading = true
 			axios.post(app.url,newWarung)
-			.then(function (resp) {
+			.then(function (resp) {				
+				app.message = 'Mendaftar';
 				app.alert(app.message);
 				app.cekPendaftaranTopos();
 			})
@@ -467,6 +470,7 @@ export default {
 		},
 		kirimBuktiPembayaran() {
 			var app = this; 
+			app.loadingSubmit()
 			var newBuktiPembayaran = app.inputData();
 			
 			axios.post(app.url+'/kirim-bukti-pembayaran/'+app.id_pendaftaran_topos,newBuktiPembayaran)
@@ -476,11 +480,16 @@ export default {
 				app.message = 'Mengirim Bukti Pembayaran';
 				app.alert(app.message);
 				app.$swal.close();
+				app.displayNoneTimer();
+
 			})
 			.catch(function (resp) {
 				app.errors = resp.response.data.errors;
 				app.$swal.close();
 			});
+		},
+		displayNoneTimer(){
+			$("#timer").hide()
 		},
 		inputData(){
 			var app = this;
@@ -491,6 +500,17 @@ export default {
 			newBuktiPembayaran.append('keterangan', app.buktiPembayaran.keterangan);
 			return newBuktiPembayaran;
 		},
+		loadingSubmit(){
+			this.$swal({
+				title: "Sedang Memproses Data ...",
+				text: "Harap Tunggu!",
+				icon: "info",
+				buttons:  false,
+				closeOnClickOutside: false,
+				closeOnEsc: false
+
+			});
+		},
 		alert(pesan) {
 			this.$swal({
 				title: "Berhasil",
@@ -498,8 +518,6 @@ export default {
 				icon: "success",
 			});
 		},
-
-
 		startTimer() {
 			var app = this
 			var presentTime = app.timer
@@ -553,7 +571,8 @@ export default {
 				  //  Jika hitungan mundur selesai, tuliskan beberapa teks
 				  if (distance < 0) {
 				  	clearInterval(x);
-				  	document.getElementById("timer").innerHTML = "Transaksi Ini Telah Melebihi Batas Waktu yang ditentukan";
+				  	document.getElementById("timer").innerHTML = "Waktu Pembayaran Anda Habis, Karena Telah Melebihi Batas Waktu yang ditentukan";
+				  	$("#timerOut").hide();
 				  }
 				}, 1000);
 			}
