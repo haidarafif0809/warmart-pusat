@@ -139,7 +139,7 @@ export default {
             });
         },
         deleteEntry(id, index,nama_suplier) {
-            swal({
+            this.$swal({
                 title: "Konfirmasi Hapus",
                 text : "Anda Yakin Ingin Menghapus "+nama_suplier+" ?",
                 icon : "warning",
