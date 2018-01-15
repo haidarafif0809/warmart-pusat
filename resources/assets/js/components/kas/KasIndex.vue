@@ -19,14 +19,12 @@
                         	<h4 class="card-title"> Kas </h4>
 	                       	<div class="toolbar">
 	                       	        <p> <router-link :to="{name: 'createKas'}" class="btn btn-primary">Tambah Kas</router-link></p>
-
-                            <div  class="pencarian">
-                             <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control" autocomplete="">
-                           </div>
      						     </div>
                      <br>
      						 <div class="table-responsive">
-      
+                         <div  class="pencarian">
+                             <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control" autocomplete="">
+                           </div>
                    <table class="table table-striped table-hover ">
                     <thead class="text-primary">
                       <tr>
