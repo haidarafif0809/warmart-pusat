@@ -43,9 +43,9 @@
 </head>
 <style type="text/css">
 
-    .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
-       padding: 1px;
-   }
+.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+ padding: 1px;
+}
 
 </style>
 <body>
@@ -58,8 +58,8 @@
     -->
 
     <div class="logo">
-     @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
-     <a class="simple-text logo-mini" href="https://war-mart.id">
+       @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
+       <a class="simple-text logo-mini" href="https://war-mart.id">
         WM
     </a>
     <a class="simple-text logo-normal" href="https://war-mart.id">
@@ -413,7 +413,7 @@
 </body>
 <!--   Core JS Files   -->
 
-<script src="{{ asset('js/app.js?v=1.78')}}" type="text/javascript">
+<script src="{{ asset('js/app.js?v=1.80')}}" type="text/javascript">
 
 </script>
 <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript">
@@ -499,8 +499,8 @@
     $(document).ready(function(){
         $("#minimizeSidebar").click();        
         $(document).on('click', '.menu-nav', function(){
-           $('.navbar-toggle ').click();
-       });
+         $('.navbar-toggle ').click();
+     });
     });
 </script>
 @yield('scripts')
