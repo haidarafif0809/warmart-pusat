@@ -113,6 +113,8 @@ import LaporanMutasiStokIndex from './components/laporan/LaporanMutasiStokIndex.
 import LaporanPembelianProdukIndex from './components/laporan/LaporanPembelianProdukIndex.vue';
 // PENDAFTARAN TOPOS
 import PendaftaranToposIndex from './components/pendaftaran_topos/PendaftaranToposIndex.vue';
+// PENDAFTARAN TOPOS
+import LaporanKartuStokIndex from './components/laporan/LaporanKartuStokIndex.vue';
 const routes = [{
     path: '/',
     components: {
@@ -511,6 +513,12 @@ const routes = [{
         path: '/daftar-topos',
         component: PendaftaranToposIndex,
         name: 'indexPendaftaranTopos'
+    },
+    // LAORAN KARTU STOK
+    {
+        path: '/laporan-kartu-stok',
+        component: LaporanKartuStokIndex,
+        name: 'indexLaporanKartuStok'
     }
     ]
     export default routes;

@@ -644,6 +644,11 @@ Route::get('/laporan-pembelian-produk/pilih-supplier', 'LaporanPembelianProdukCo
 Route::get('/laporan-pembelian-produk/download-excel-pembelian-produk/{dari_tanggal}/{sampai_tanggal}/{produk}/{suplier}', 'LaporanPembelianProdukController@downloadExcel')->middleware('auth');
 Route::get('/laporan-pembelian-produk/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{produk}/{suplier}', 'LaporanPembelianProdukController@cetakLaporan')->middleware('auth');
 
+// LAPORAN KARTU STOK VUE.JS
+Route::post('/laporan-kartu-stok/view', 'LaporanKartuStokController@prosesLaporanKartuStok')->middleware('auth');
+Route::post('/laporan-kartu-stok/pencarian', 'LaporanKartuStokController@pencarian')->middleware('auth');
+Route::get('/laporan-kartu-stok/pilih-produk', 'LaporanKartuStokController@dataProduk')->middleware('auth');
+
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
     Route::resource('user', 'UserController');
@@ -674,6 +679,7 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
     Route::resource('profil-warung', 'WarungProfilController');
     Route::resource('penjualan', 'PenjualanController');
     Route::resource('daftar-topos', 'PendaftarToposController');
+    Route::resource('laporan-kartu-stok', 'LaporanKartuStokController');
 
 //BARANG
     //HALAMAN DESKRIPSI
