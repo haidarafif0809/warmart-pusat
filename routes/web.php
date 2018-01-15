@@ -237,9 +237,13 @@ Route::middleware('optimizeImages')->group(function () {
 //sarat & ketentuan
 Route::get('/syarat-ketentuan', 'Auth\RegisterController@syarat_ketentuan');
 Route::get('/syarat-ketentuan-topos', 'Auth\RegisterController@syarat_ketentuan_topos');
+Route::get('/pendaftaran-topos/{id}', 'PendaftarToposController@pendaftaranTopos')->middleware('optimizeImages');
+Route::post('/proses-daftar-topos', 'PendaftarToposController@prosesDaftarTopos');
+Route::get('/kirim-bukti-pembayaran/{id}', 'PendaftarToposController@kirimBuktiPembayaran')->middleware('optimizeImages');
 //USER WARUNG
 Route::get('/register-warung', 'Auth\RegisterController@register_warung')->middleware('optimizeImages');
 
+Route::get('/register-customer', 'Auth\RegisterController@register_customer')->middleware('optimizeImages');
 Route::get('/register-customer', 'Auth\RegisterController@register_customer')->middleware('optimizeImages');
 
 //registrasi lewat link affiliasi
@@ -252,6 +256,10 @@ Route::get('kirim-kode-verifikasi', 'Auth\RegisterController@kirim_kode_verifika
 Route::get('kirim-ulang-kode-verifikasi/{id}', 'Auth\RegisterController@kirim_ulang_kode_verifikasi');
 Route::get('lupa-password', 'Auth\RegisterController@lupa_password');
 
+Route::put('/proses-kirim-bukti-pembayaran/{id}', [
+    'as'   => 'pendaftar_topos.proses_kirim_bukti_pembayaran',
+    'uses' => 'PendaftarToposController@prosesKirimBuktiPembayaran',
+]);
 Route::put('/proses-kirim-kode-verifikasi/{nomor_hp}', [
     'as'   => 'user.proses_kirim_kode_verifikasi',
     'uses' => 'Auth\RegisterController@proses_kirim_kode_verifikasi',

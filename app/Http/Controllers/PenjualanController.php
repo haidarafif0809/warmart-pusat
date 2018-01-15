@@ -373,8 +373,8 @@ class PenjualanController extends Controller
         } else {
 
             $data_tbs = TbsPenjualan::where('id_produk', $id_produk)
-                ->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)
-                ->count();
+            ->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)
+            ->count();
 
 //JIKA PRODUK YG DIPILIH SUDAH ADA DI TBS
             if ($data_tbs > 0) {

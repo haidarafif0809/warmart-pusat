@@ -1,11 +1,11 @@
 <!doctype html>
 <html lang="en">
 <?php 
-    if (Auth::check()) {
-        $user      = \Auth::user()->id;
-        $foto_logo = \App\UserWarung::find($user);
-    }
- ?>
+if (Auth::check()) {
+    $user      = \Auth::user()->id;
+    $foto_logo = \App\UserWarung::find($user);
+}
+?>
 <head>
 
     <meta charset="utf-8" />
@@ -21,7 +21,7 @@
     @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
     <title>War-Mart.id</title>
     @else
-    <title>To-Pos.id</title>
+    <title>topos.id</title>
     @endif
 
     <meta name="viewport" content="width=device-width" />
@@ -49,11 +49,11 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                  @if(Auth::check() && Auth::user()->tipe_user == 4)
-                    <a class="navbar-brand" href="{{ url('/')}}"><img class="navbar-brand" src="{{asset('/foto_ktp_user/'.$foto_logo->foto_ktp.'').'?v=1'}}"/></a>
-                 @else
-                    <a class="navbar-brand" href="{{ url('/')}}"><img class="navbar-brand" src="{{asset('/assets/img/examples/topos_logo.png'.'?v=1')}}"/></a>
-                 @endif
+                @if(Auth::check() && Auth::user()->tipe_user == 4)
+                <a class="navbar-brand" href="{{ url('/')}}"><img class="navbar-brand" src="{{asset('/foto_ktp_user/'.$foto_logo->foto_ktp.'').'?v=1'}}"/></a>
+                @else
+                <a class="navbar-brand" href="{{ url('/')}}"><img class="navbar-brand" src="{{asset('/assets/img/examples/topos_logo.png'.'?v=1')}}"/></a>
+                @endif
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav navbar-right"> 
@@ -106,7 +106,7 @@
                 <div class="section section-basic">
                     <div class="container" style="color:black;">
 
-                        <center><b><h3 style="font-weight:bold;">Syarat dan Ketentuan sebagai Member ToPos</h3></b></center>
+                        <center><b><h3 style="font-weight:bold;">Syarat dan Ketentuan sebagai Member topos</h3></b></center>
 
                         <p>Kepatuhan Anda: Sebelum menggunakan, mengakses atau memanfaatkan Platform ini, Anda sudah membaca dengan baik setiap dan seluruh Syarat dan Ketentuan ini yang antara lain berisi mengenai pedoman, pemberitahuan, aturan operasional, kebijakan dan instruksi yang berkaitan dengan pelangganan produk melalui Platform. Dan dengan melanjutkan penggunaan atau pemanfaatan fasilitas yang diberikan oleh Platform maka Anda telah menyatakan persetujuan Anda terhadap setiap dan seluruh ketentuan dalam Syarat dan Ketentuan ini. Kami akan mempublikasikan setiap perubahan yang bersifat substansial atau amandemen dari Syarat dan Ketentuan ini (apabila ada) melalui Platform dan Anda diwajibkan untuk membaca dengan baik setiap perubahan atau amandemen tersebut sehingga apabila Anda tetap menggunakan, mengakses atau memanfaatkan Platform, Anda dianggap telah mengetahui, memahami dan menyetujui perubahan atau amandemen tersebut. Apabila Anda menghendakinya, kami akan menginformasikan kepada Anda melalui e-mail Anda yang terdaftar di data kami terhadap setiap perubahan yang bersifat substansial atau amandemen dari Syarat dan Ketentuan pada saat perubahan atau amandemen tersebut dipublikasikan melalui Platform. Setiap keberatan atas adanya perubahan yang bersifat substansial atau amandemen dari Syarat dan Ketentuan dapat diajukan kepada kami selambat-lambatnya dalam jangka waktu 7 (tujuh) hari sejak tanggal perubahan atau amandemen tersebut dipublikasikan melalui Platform.</p>
 
