@@ -55,13 +55,6 @@
 									</div>
 								</div>
 								<div class="form-group">
-									<label for="nama_subdomain" class="col-md-2 control-label">Nama Subdomain</label>
-									<div class="col-md-4">
-										<input class="form-control" autocomplete="off" placeholder="andaglos.id" v-model="warung.nama_subdomain" type="text" name="nama_subdomain" id="nama_subdomain"  autofocus="">
-										<span v-if="errors.nama_subdomain" id="nama_subdomain_error" class="label label-danger">{{ errors.nama_subdomain[0] }}</span>
-									</div>
-								</div>
-								<div class="form-group">
 									<label for="no_telpon" class="col-md-2 control-label">No. Telp</label>
 									<div class="col-md-4">
 										<input class="form-control" autocomplete="off" placeholder="No. Telp" v-model="warung.no_telpon" type="number" name="no_telpon" id="no_telpon"  autofocus="">
@@ -274,7 +267,6 @@ export default {
 			warung: {
 				id : '',
 				name : '',
-				nama_subdomain : '',
 				no_telpon : '',
 				email : '',
 				alamat : '',

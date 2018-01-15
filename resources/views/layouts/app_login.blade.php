@@ -225,7 +225,6 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
     }); 
 </script>
 
-
 <script type="text/javascript">
     $(document).ready(function(){
         $(document).on("click", "#ceklis_syarat_komunitas", function(){

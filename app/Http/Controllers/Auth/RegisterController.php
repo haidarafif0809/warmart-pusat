@@ -9,6 +9,7 @@ use App\KomunitasCustomer;
 use App\Notifications\PendaftarWarung;
 use App\Role;
 use App\SettingAplikasi;
+use App\PendaftarTopos;
 use App\User;
 use App\UserWarung;
 use App\Warung;
@@ -19,6 +20,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Notification;
+use App\Notifications\PendaftaranTopos;
 
 class RegisterController extends Controller
 {
