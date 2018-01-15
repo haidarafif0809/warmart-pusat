@@ -168,7 +168,7 @@ export default {
             kasBaru: {
               kode_kas : '',
               nama_kas : '',
-              status_kas : 1,
+              status_kas : 0,
               default_kas : 0
             },
             message : '',
