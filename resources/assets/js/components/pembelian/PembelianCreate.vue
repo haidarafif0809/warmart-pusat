@@ -27,6 +27,10 @@
 .card-produk{
     background-color:#82B1FF;
 }
+  .btn-icon{
+    border-radius: 1px solid;
+    padding: 10px 10px;
+  }
 
 </style>
 <template>
@@ -352,9 +356,11 @@
                       <option v-for="supliers, index in suplier" v-bind:value="supliers.id">{{ supliers.nama_suplier }}</option>
                   </selectize-component>
               </div> 
-              <div class="col-md-2 col-xs-2" style="padding-top:35;">
-                 <button v-on:click="tambahSupplier()" class="btn btn-primary btn-just-icon btn-round"><i class="material-icons">add</i></button>
-              </div>
+              <div class="col-md-1 col-xs-1" style="padding-left:0px;padding-top:43;">
+                <div class="row" style="margin-top:-10px">
+                <button class="btn btn-primary btn-icon waves-effect waves-light" v-on:click="tambahSupplier()" type="button"> <i class="material-icons" >add</i> </button>
+                </div>
+             </div>
               </div><!-- end row-->
               <div class="row">
                 <div class="col-md-10 col-xs-10" > 
@@ -372,11 +378,13 @@
                       </selectize-component>
                       </div>
                 </div> 
-                <div class="col-md-2 col-xs-2"  style="padding-top:35;">
-                  <button  v-on:click="tambahModalKas()" class="btn btn-primary btn-just-icon btn-round"><i class="material-icons">add</i></button>
-              </div>
+              <div class="col-md-1 col-xs-1" style="padding-left:0px;padding-top:43;">
+                <div class="row" style="margin-top:-10px">
+                <button class="btn btn-primary btn-icon waves-effect waves-light" v-on:click="tambahModalKas()" type="button"> <i class="material-icons" >add</i> </button>
+                </div>
+             </div>
               </div> 
-              <di
+              
           </div> 
           
           <div class="card-footer">
@@ -566,6 +574,11 @@ export default {
     		var app = this;
     		axios.get(app.url+'/pilih-suplier').then(function (resp) {
     			app.suplier = resp.data;
+              $.each(resp.data, function (i, item) {
+                  if (resp.data[i].nama_suplier == "UMUM") {
+                      app.inputPembayaranPembelian.suplier  = resp.data[i].id 
+                  }
+                });
     		})
     		.catch(function (resp) {
     			alert("Tidak Bisa Memuat Suplier");
@@ -661,6 +674,7 @@ export default {
     			title: "Berhasil ",
     			text: pesan,
     			icon: "success",
+          timer: 1500,
     		});
     	},//alert untuk berhasil proses crud
     	deleteEntry(id, index,nama_produk) {

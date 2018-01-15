@@ -22,14 +22,11 @@
 
                     <div class="toolbar">
                         <router-link :to="{name: 'createSuplier'}" class="btn btn-primary"><i class="material-icons">add</i>  Supplier</router-link>
-
-                        <div class="pencarian">
-                            <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control" autocomplete="">
-                        </div>
                     </div>
-
-                    <br>
                     <div class=" table-responsive ">
+                               <div class="pencarian">
+                             <input type="text" class="form-control pencarian" autocomplete="off" name="pencarian" v-model="pencarian" placeholder="Pencarian" >
+                            </div>
                         <table class="table table-striped table-hover ">
                             <thead class="text-primary">
                                 <tr>
@@ -139,7 +136,7 @@ export default {
             });
         },
         deleteEntry(id, index,nama_suplier) {
-            swal({
+            this.$swal({
                 title: "Konfirmasi Hapus",
                 text : "Anda Yakin Ingin Menghapus "+nama_suplier+" ?",
                 icon : "warning",

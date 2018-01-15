@@ -443,16 +443,18 @@ body {
 </script>
 <script type="text/javascript">
     $(document).on('click', '#btnBeliSekarang', function(){
-      swal({
-        text :  "Produk Berhasil Di Tambahkan Ke Keranjang Belanja",
-        showConfirmButton :  false,
-        type: "success",
-        timer: 10000,
-        onOpen: () => {
-          swal.showLoading()
-      }
-  });
-  });
+
+        swal({
+            text :  "Produk Berhasil Di Tambahkan Ke Keranjang Belanja",
+            showConfirmButton :  false,
+            type: "success",
+            timer: 10000,
+            onOpen: () => {
+              swal.showLoading()
+          }
+      });
+
+    });
 </script>
 @yield('scripts')
 </html>

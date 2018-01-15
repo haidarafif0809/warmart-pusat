@@ -27,6 +27,14 @@
 .card-produk{
     background-color:#82B1FF;
 }
+.card-pembayaran{
+    background-color:#82B1FF;
+}
+.btn-icon{
+    border-radius: 1px solid;
+    padding: 10px 10px;
+  }
+
 
 </style>
 
@@ -40,6 +48,66 @@
                 <li><router-link :to="{name: 'indexPenjualan'}">Lap. Penjualan</router-link></li>
                 <li class="active">Edit Penjualan</li>
             </ul>
+
+            <div class="modal" id="modal_tambah_kas" role="dialog" data-backdrop=""> 
+                <div class="modal-dialog"> 
+                    <!-- Modal content--> 
+                    <div class="modal-content"> 
+                        <div class="modal-header"> 
+                            <button type="button" class="close"  v-on:click="closeModalX()" v-shortkey.push="['esc']" @shortkey="closeModalX()"> &times;</button> 
+                            <h4 class="modal-title"> 
+                                <div class="alert-icon"> 
+                                    <b>Silahkan Isi Kas!</b> 
+                                </div> 
+                            </h4> 
+                        </div> 
+                          <div class="modal-body">
+                        <form v-on:submit.prevent="saveFormKas()" class="form-horizontal"> 
+                          <div class="form-group">
+                            <label for="kode_kas" class="col-md-3 control-label">Kode Kas</label>
+                            <div class="col-md-9">
+                              <input class="form-control" autocomplete="off" placeholder="Kode Kas" v-model="tambahKas.kode_kas" type="text" name="kode_kas" id="kode_kas"  autofocus="">
+                              <span v-if="errors.kode_kas" id="kode_kas_error" class="label label-danger">{{ errors.kode_kas[0] }}</span>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label for="nama_kas" class="col-md-3 control-label">Nama Kas</label>
+                            <div class="col-md-9">
+                              <input class="form-control" autocomplete="off" placeholder="Nama Kas" v-model="tambahKas.nama_kas" type="text" name="nama_kas" id="nama_kas"  >
+                              <span v-if="errors.nama_kas" id="nama_kas_error" class="label label-danger">{{ errors.nama_kas[0] }}</span>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                          <label for="nama_kas" class="col-md-3 control-label">Tampil Transaksi</label>
+                               <div class="togglebutton col-md-9">
+                                     <label>
+                                         <b>No</b>  <input type="checkbox" v-model="tambahKas.status_kas" value="1" name="status_kas" id="status_kas"><b>Yes</b>
+                                         </label>
+                                          </div>
+                                      </div>
+                                      <div class="form-group">
+                                          <label for="nama_kas" class="col-md-3 control-label">Default Kas</label>
+                                              <div class="togglebutton col-md-9">
+                                              <label>
+                                                  <b>No</b>  <input type="checkbox" v-on:change="defaultKas()" v-model="tambahKas.default_kas" value="1" name="default_kas" id="default_kas"><b>Yes</b>
+                                              </label>
+                                          </div>
+                                  </div>
+                              <div class="form-group">
+                              <div class="col-md-9 col-md-offset-3">
+                                <p style="color: red; font-style: italic;">*Note : Hanya 1 Kas yang dijadikan default.</p>
+                              <button class="btn btn-primary" id="btnSimpanKas" type="submit"><i class="material-icons">send</i> Submit</button>
+                            </div>
+                          </div>
+                        </form>
+                          </div>
+                    <div class="modal-footer">  
+                   </div> 
+           </div>       
+       </div> 
+   </div> 
+   <!-- / MODAL TOMBOL SELESAI --> 
+
 
             <div class="modal" id="modal_selesai" role="dialog" data-backdrop=""> 
                 <div class="modal-dialog"> 
@@ -60,43 +128,49 @@
                                     <div class="row">
                                         <div class="col-md-6 col-xs-12">
                                             <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
-                                                <label class="label-control">Pelanggan(F4)</label><br>
+                                                 <font style="color: black">Pelanggan(F4)</font><br>
                                                 <selectize-component v-model="penjualan.pelanggan" :settings="placeholder_pelanggan" id="pelanggan" ref='pelanggan' v-shortkey.focus="['f4']"> 
                                                   <option v-for="pelanggans, index in pelanggan" v-bind:value="pelanggans.id">{{ pelanggans.nama_pelanggan }}</option>
                                               </selectize-component>
                                               <br v-if="errors.pelanggan">  <span v-if="errors.pelanggan" id="pelanggan_error" class="label label-danger">{{ errors.pelanggan[0] }}</span>
                                           </div>
                                       </div>
-                                      <div class="col-md-6 col-xs-12">
-
+                                      <div class="col-md-5 col-xs-10">
                                           <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
-                                            <label class="label-control">Kas(F6)</label><br>
+                                            <font style="color: black">Kas(F6)</font><br>
                                             <selectize-component v-model="penjualan.kas" :settings="placeholder_kas" id="kas" ref='kas' v-shortkey.focus="['f6']" > 
                                                 <option v-for="kass, index in kas" v-bind:value="kass.id">{{ kass.nama_kas }}</option>
                                             </selectize-component>
                                             <br v-if="errors.kas">   <span v-if="errors.kas" id="kas_error" class="label label-danger">{{ errors.kas[0] }}</span>
                                         </div>
                                     </div>
+                                     <div class="col-md-1 col-xs-1" style="padding-left:0px">
+                                         <div class="form-group">
+                                        <div class="row" style="margin-top:11px">
+                                        <button class="btn btn-primary btn-icon waves-effect waves-light" v-on:click="tambahModalKas()" type="button"> <i class="material-icons" >add</i> </button>
+                                        </div>
+                                     </div>
+                                 </div>
                                 </div>
 
                                 <div class="row">
 
                                     <div class="col-md-3 col-xs-6">
                                         <div class="form-group" style="margin-right: 1px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px; width:130px;">
-                                            <label class="label-control">Potongan(F7)</label>  
+                                            <font style="color: black">Potongan(F7)</font>  
                                             <money class="form-subtotal" style="text-align:right" v-model="penjualan.potongan_faktur" v-bind="separator" v-shortkey.focus="['f7']"></money>
                                         </div>
                                     </div>
                                     <div class="col-md-3 col-xs-6">
                                         <div class="form-group" style="margin-right: 10px; margin-left: 1px; margin-bottom: 1px; margin-top: 1px;">
-                                            <label class="label-control">(%)(F8)</label>    
+                                            <font style="color: black">(%)(F8)</font>      
                                             <input type="number" class="form-subtotal" style="text-align:right" value="0" v-model="penjualan.potongan_persen" v-on:blur="potonganPersen" v-shortkey.focus="['f8']" />
                                         </div>
                                     </div>
 
                                     <div class="col-md-6 col-xs-12">
                                         <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                            <label class="label-control">Jatuh Tempo(F9)</label> 
+                                            <font style="color: black">Jatuh Tempo(F9)</font> 
                                             <datepicker :input-class="'form-control'" placeholder="Jatuh Tempo" v-model="penjualan.jatuh_tempo" v-shortkey.focus="['f9']" ></datepicker>
                                             <br v-if="errors.jatuh_tempo">  <span v-if="errors.jatuh_tempo" id="jatuh_tempo_error" class="label label-danger">{{ errors.jatuh_tempo[0] }}</span>
                                         </div>
@@ -262,7 +336,7 @@
         <!--TABEL TBS ITEM  MASUK -->
         <div class="row">
 
-            <div class="col-md-8">
+            <div class="col-md-9">
                 <div class=" table-responsive ">
                   <div class="pencarian">
                     <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
@@ -309,7 +383,7 @@
 
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
 
             <div class="card card-stats">
                 <div class="card-header" data-background-color="blue">
@@ -317,11 +391,17 @@
                 </div>
                 <div class="card-content">
                     <p class="category">Subtotal</p>
-                    <h3 class="card-title">{{ new Intl.NumberFormat().format(penjualan.subtotal) }}</h3>
+                    <h3 class="card-title"><b><font style="font-size:32px;">{{ new Intl.NumberFormat().format(penjualan.subtotal) }}</font></b></h3>
                 </div>
                 <div class="card-footer">
+                      <div class="row"> 
+                      <div class="col-md-6 col-xs-6"> 
                     <button type="button" class="btn btn-success btn-lg" id="bayar" v-on:click="bayarPenjualan()" v-shortkey.push="['f2']" @shortkey="bayarPenjualan()"><font style="font-size:20px;">Bayar(F2)</font></button>
-                    <button type="submit" class="btn btn-danger btn-lg" id="btnBatal" v-on:click="batalPenjualan()" v-shortkey.push="['f3']" @shortkey="batalPenjualan()"><font style="font-size:20px;"> Batal(F3) </font></button>
+                     </div>
+                    <div class="col-md-6 col-xs-6">
+                    <button type="submit" class="btn btn-danger btn-lg" id="btnBatal" v-on:click="batalPenjualan()" v-shortkey.push="['f3']" @shortkey="batalPenjualan()"> <font style="font-size:20px;">Batal(F3) </font></button>
+                    </div>
+                </div>
                 </div>
             </div>
         </div>
@@ -350,6 +430,8 @@ export default {
             tbsPenjualanData : {},
             url : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
             url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
+            url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
+
             inputTbsPenjualan: {
                 produk : '',
                 jumlah_produk : '',
@@ -377,6 +459,12 @@ export default {
             hargaJual: {
                 placeholder: '--HARGA JUAL--'
             },
+           tambahKas: {
+                kode_kas : '',
+                nama_kas : '',
+                status_kas : 0,
+                default_kas : 0
+              },
             placeholder_produk: {
                 placeholder: 'Cari Produk (F1) ...'
             },
@@ -617,6 +705,54 @@ dataKas() {
         this.isiJumlahProduk(nama_produk);
     }
 },
+tambahModalKas(){
+       $("#modal_tambah_kas").show();
+       $("#modal_selesai").hide();
+       this.$refs.kode_kas.$el.focus(); 
+ },
+  saveFormKas() {
+      var app = this;
+      var newkas = app.tambahKas;
+      axios.post(app.url_tambah_kas, newkas)
+      .then(function (resp) {
+        app.message = 'Menambah Kategori Transaksi '+ app.tambahKas.nama_kas;
+        app.alert(app.message);
+        app.tambahKas.kode_kas = ''
+        app.tambahKas.nama_kas = ''
+        app.tambahKas.status_kas = 0
+        app.tambahKas.default_kas = 0
+        app.errors = '';
+         app.dataKas();
+        $("#modal_tambah_kas").hide();
+        $("#modal_selesai").show();
+      })
+      .catch(function (resp) {
+        app.success = false;
+        app.errors = resp.response.data.errors;
+      });
+    },
+    defaultKas() {
+         var app = this;
+          var toogle = app.tambahKas.default_kas;
+
+         if (toogle == true) {
+          app = this;
+      app.$swal({
+      title: "Konfirmasi",
+      text: "Apakah Anda Yakin Ingin Mengubah Kas Utama ?",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+      })
+      .then((confirm) => {
+        if (confirm) {
+        toogle.prop('checked', true);
+        } else {
+        toogle.prop('checked', false);
+      }
+      });
+         }  
+      },
 isiJumlahProduk(nama_produk){
     var app = this;
     app.$swal({
@@ -1049,6 +1185,10 @@ dataSettingPenjualanPos() {
 closeModal(){
 
     $("#modal_selesai").hide(); 
+},
+closeModalX(){
+    $("#modal_tambah_kas").hide(); 
+    $("#modal_selesai").show(); 
 },
 alertTbs(pesan) {
     this.$swal({

@@ -1,3 +1,9 @@
+<style scoped>
+.pencarian {
+  color: red; 
+  float: right;
+}
+</style>
 <template>
 
 
@@ -18,16 +24,13 @@
        <h4 class="card-title"> Satuan </h4>
 
        <div class="toolbar">
-
         <p> <router-link :to="{name: 'createSatuan'}" class="btn btn-primary">Tambah Satuan</router-link></p>
-
       </div>
+      <br>
       <div class=" table-responsive ">
-       <div  align="right">
-         pencarian
-         <input type="text" name="pencarian" v-model="pencarian" placeholder="Kolom Pencarian" >
-       </div>
-
+       <div class="pencarian">
+              <input type="text" class="form-control pencarian" autocomplete="off" name="pencarian" v-model="pencarian" placeholder="Kolom Pencarian" >
+            </div>
        <table class="table table-striped table-hover ">
         <thead class="text-primary">
           <tr>

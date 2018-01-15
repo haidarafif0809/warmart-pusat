@@ -1,92 +1,3 @@
-<style type="text/css">
-    .list-produk {
-
-        padding-left: 4px;
-        padding-right: 4px;
-
-    }
-    .card .card-image{
-
-        height: auto; /*this makes sure to maintain the aspect ratio*/
-        margin-top: 0px;
-    }
-    .card-pricing {
-        margin-bottom: 0px;
-    }
-    .tombolBeli {
-        padding: 10px 0px;
-        margin:0px;
-    }
-    .card-pricing .card-content {
-        padding: 5px !important;
-    }
-    .card .footer {
-        margin-top: 0px;
-        font-family: Helvetica,Arial,sans-serif;
-        font-weight: 400;
-        line-height:1.2em;
-        text-decoration: none;
-        font-size:15px;
-    }
-    .buttonColor{
-        @if($setting_aplikasi->tipe_aplikasi == "1") /*tipe-aplikasi == 1, aplikasi topos*/
-        background-color: #2ac326;
-        @else
-        background-color: #01573e;
-        @endif
-    }
-    @font-face {
-      font-family: "San Francisco";
-      font-weight: 200;
-      src: url("//applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-thin-webfont.woff2");
-  }
-
-  .flexFont {
-    @if(Agent::isMobile())
-    height:3em;
-    @else
-    height:3em;
-    @endif
-    padding:1%;
-    margin: 5px;
-
-}
-.btnWarung {
-    padding:1%;
-    margin: 0px;
-}
-
-.smaller {
-    font-size: 0.7em;
-    background-color:red;
-    width: 10em;
-}
-.page-header.header-small {
-    height: 35vh;
-    min-height: 35vh;
-}
-.ecommerce-page .page-header .container {
-    @if(Agent::isMobile())
-    padding-top: 7vh;
-    @else
-    padding-top: 10vh;
-    @endif
-}
-h4 {
-    @if(Agent::isMobile())
-    font-size: 1.2em;
-    line-height: 1.4em;
-    margin: 20px 0 10px;
-    @endif
-}
-.panel .panel-heading {
-    background-color: transparent;
-    border-bottom: 2px solid #ddd;
-    padding: 5px 0px 5px 0px;
-}
-
-</style>
-
 <!doctype html>
 <html lang="en">
 <?php 
@@ -96,25 +7,25 @@ h4 {
     }
  ?>
 <head>
-  <meta charset="utf-8" />
-    @if($setting_aplikasi->tipe_aplikasi == 0)
+
+    @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
+    <title>War-Mart.id</title>
+    @else
+    <title>topos | Aplikasi POS & Toko Online</title>
+    @endif
+ 
+   <meta charset="utf-8" />
+    @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
     <link rel="apple-touch-icon" sizes="76x76" href="img/favicon.png" />
     <link rel="icon" type="image/png" href="img/favicon.png" />
     @else
     <link rel="apple-touch-icon" sizes="76x76" href="img/icon_topos.png?v=1" />
     <link rel="icon" type="image/png" href="img/icon_topos.png?v=1" />
     @endif
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
-
-    @if($setting_aplikasi->tipe_aplikasi == 0)
-    <title>War-Mart.id</title>
-    @else
-    <title>To-Pos.id</title>
-    @endif
-
 
   <meta name="viewport" content="width=device-width" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
   <!-- Bootstrap core CSS     -->
   <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" />
   <!--  Material Dashboard CSS    -->
@@ -140,7 +51,22 @@ h4 {
   {!! app('seotools')->generate() !!}
 
 </head>
-
+<style type="text/css">
+      .navbar .navbar-brand {
+        position: relative;
+        height: 65px;
+        line-height: 30px;
+        color: inherit;
+        padding: 10px 15px;
+    }
+h4 {
+    @if(Agent::isMobile())
+    font-size: 1.2em;
+    line-height: 1.4em;
+    margin: 20px 0 10px;
+    @endif
+}
+</style>
 <body class="product-page">
 
       <nav class="navbar navbar-primary navbar-transparent navbar-absolute">
@@ -152,13 +78,13 @@ h4 {
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @if($setting_aplikasi->tipe_aplikasi == 0)
-                <a class="navbar-brand" href="{{ url('/')}}">War-Mart.id</a>
+                @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
+                <a href="{{ url('/') }}"> <img class="navbar-brand" src="{{asset('/assets/img/examples/warmart_logo.png')}}"/> </a>
                 @else
                  @if(Auth::check() && Auth::user()->tipe_user == 4)
-                    <a class="navbar-brand" href="{{ url('/')}}"><img class="navbar-brand" src="{{asset('/foto_ktp_user/'.$foto_logo->foto_ktp.'').'?v=1'}}"/></a>
+                    <a  href="{{ url('/')}}"><img class="navbar-brand" src="{{asset('/foto_ktp_user/'.$foto_logo->foto_ktp.'').'?v=1'}}"/></a>
                  @else
-                    <a class="navbar-brand" href="{{ url('/')}}"><img class="navbar-brand" src="{{asset('/assets/img/examples/topos_logo.png'.'?v=1')}}"/></a>
+                    <a  href="{{ url('/')}}"><img class="navbar-brand" src="{{asset('/assets/img/examples/topos_logo.png'.'?v=1')}}"/></a>
                  @endif
                 @endif
             </div>
@@ -166,7 +92,7 @@ h4 {
         </div>
     </nav>
 
-    @if($setting_aplikasi->tipe_aplikasi == 0)
+    @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
       {!! Html::image(asset('image/background2.jpg')) !!} 
     @else
     <div class="page-header  header-small" data-parallax="true"" style="background-color: #2ac326">
@@ -176,7 +102,7 @@ h4 {
             <div class="row">
                 <div class="col-md-8 col-md-offset-2">
                     <div class="brand">
-                        @if($setting_aplikasi->tipe_aplikasi == 0)
+                        @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
                         <h3 class="title"  align="center">PASAR MUSLIM INDONESIA</h3>
                         @else
                         <h3 class="title"  align="center">TOKO ONLINE DAN POS</h3>
@@ -190,7 +116,7 @@ h4 {
                 <div class="row">
                     <div class="col-md-8 col-md-offset-2">
                         <div class="brand">
-                            @if($setting_aplikasi->tipe_aplikasi == 0)
+                            @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
                             <h1 class="title">PASAR MUSLIM INDONESIA</h1>
                             @else
                             <h1 class="title">TOKO ONLINE DAN POS</h1>

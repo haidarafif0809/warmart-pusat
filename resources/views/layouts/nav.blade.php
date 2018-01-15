@@ -1,125 +1,125 @@
   <li>
-        <a data-toggle="collapse" href="#transaksiKas">
-            <i class="material-icons">
-                autorenew
-            </i>
-            <p>
-                Kas
-                <b class="caret">
-                </b>
-            </p>
-        </a>
-        <div class="collapse" id="transaksiKas">
-            <ul class="nav">
-                <li>
-                    <router-link :to="{name: 'indexKas'}" class="menu-nav">
-                        <span class="sidebar-mini">
-                            K
-                        </span>
-                        <span class="sidebar-normal">
-                            Kas
-                        </span>
-                    </router-link>
-                </li>
-                <li>
-                    <router-link :to="{name: 'indexKategoriTransaksi'}" class="menu-nav">
-                        <span class="sidebar-mini">
-                            KT
-                        </span>
-                        <span class="sidebar-normal">
-                            Kategori Transaksi
-                        </span>
-                    </router-link>
-                </li>
-                <li>
-                    <router-link :to="{name: 'indexKasMasuk'}" class="menu-nav">
-                        <span class="sidebar-mini">
-                            KM
-                        </span>
-                        <span class="sidebar-normal">
-                            Kas Masuk
-                        </span>
-                    </router-link>
-                </li>
-                <li>
-                    <router-link :to="{name: 'indexKasKeluar'}" class="menu-nav">
-                        <span class="sidebar-mini">
-                            KK
-                        </span>
-                        <span class="sidebar-normal">
-                            Kas Keluar
-                        </span>
-                    </router-link>
-                </li>
-                <li>
-                    <router-link :to="{name: 'indexKasMutasi'}" class="menu-nav">
-                        <span class="sidebar-mini">
-                            KMT
-                        </span>
-                        <span class="sidebar-normal">
-                            Kas Mutasi
-                        </span>
-                    </router-link>
-                </li>
-            </ul>
-        </div>
-    </li>
-
-    <!--PRODUK -->
-    <li>
-        <router-link :to="{name: 'indexProduk'}" class="menu-nav">
-            <i class="material-icons">
-                store
-            </i>
-            <p>Produk</p>
-        </router-link>
-    </li>
-
-    <li>
-        <a data-toggle="collapse" href="#persediaan">
-            <i class="material-icons">
-                assessment
-            </i>
-            <p>
-                Persediaan
-                <b class="caret">
-                </b>
-            </p>
-        </a>
-        <div class="collapse" id="persediaan">
-            <ul class="nav">
-                <li>
-                 <router-link :to="{name: 'indexItemMasuk'}" class="menu-nav">
+    <a data-toggle="collapse" href="#transaksiKas">
+        <i class="material-icons">
+            autorenew
+        </i>
+        <p>
+            Kas
+            <b class="caret">
+            </b>
+        </p>
+    </a>
+    <div class="collapse" id="transaksiKas">
+        <ul class="nav">
+            <li>
+                <router-link :to="{name: 'indexKas'}" class="menu-nav">
                     <span class="sidebar-mini">
-                        IM
+                        K
                     </span>
                     <span class="sidebar-normal">
-                        Item Masuk
+                        Kas
                     </span>
                 </router-link>
             </li>
             <li>
-                <router-link :to="{name: 'indexItemKeluar'}" class="menu-nav">
+                <router-link :to="{name: 'indexKategoriTransaksi'}" class="menu-nav">
                     <span class="sidebar-mini">
-                        IK
+                        KT
                     </span>
                     <span class="sidebar-normal">
-                        Item Keluar
+                        Kategori Transaksi
                     </span>
                 </router-link>
             </li>
             <li>
-                <router-link :to="{name: 'indexLaporanPersediaan'}" class="menu-nav">
+                <router-link :to="{name: 'indexKasMasuk'}" class="menu-nav">
                     <span class="sidebar-mini">
-                        LP
+                        KM
                     </span>
                     <span class="sidebar-normal">
-                        Laporan Persediaan
+                        Kas Masuk
+                    </span>
+                </router-link>
+            </li>
+            <li>
+                <router-link :to="{name: 'indexKasKeluar'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        KK
+                    </span>
+                    <span class="sidebar-normal">
+                        Kas Keluar
+                    </span>
+                </router-link>
+            </li>
+            <li>
+                <router-link :to="{name: 'indexKasMutasi'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        KMT
+                    </span>
+                    <span class="sidebar-normal">
+                        Kas Mutasi
                     </span>
                 </router-link>
             </li>
         </ul>
     </div>
+</li>
+
+<!--PRODUK -->
+<li>
+    <router-link :to="{name: 'indexProduk'}" class="menu-nav">
+        <i class="material-icons">
+            store
+        </i>
+        <p>Produk</p>
+    </router-link>
+</li>
+
+<li>
+    <a data-toggle="collapse" href="#persediaan">
+        <i class="material-icons">
+            assessment
+        </i>
+        <p>
+            Persediaan
+            <b class="caret">
+            </b>
+        </p>
+    </a>
+    <div class="collapse" id="persediaan">
+        <ul class="nav">
+            <li>
+               <router-link :to="{name: 'indexItemMasuk'}" class="menu-nav">
+                <span class="sidebar-mini">
+                    IM
+                </span>
+                <span class="sidebar-normal">
+                    Item Masuk
+                </span>
+            </router-link>
+        </li>
+        <li>
+            <router-link :to="{name: 'indexItemKeluar'}" class="menu-nav">
+                <span class="sidebar-mini">
+                    IK
+                </span>
+                <span class="sidebar-normal">
+                    Item Keluar
+                </span>
+            </router-link>
+        </li>
+        <li>
+            <router-link :to="{name: 'indexLaporanPersediaan'}" class="menu-nav">
+                <span class="sidebar-mini">
+                    LP
+                </span>
+                <span class="sidebar-normal">
+                    Laporan Persediaan
+                </span>
+            </router-link>
+        </li>
+    </ul>
+</div>
 </li>
 
 <!--PEMBELIAN-->
@@ -238,6 +238,7 @@
     </a>
     <div class="collapse" id="pagesExamples">
         <ul class="nav">
+            @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 1)
             <li>
                 <router-link :to="{name: 'indexCustomer'}" class="menu-nav">
                     <span class="sidebar-mini">
@@ -248,6 +249,8 @@
                     </span>
                 </router-link>
             </li>
+            @endif
+            @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 1)
             <li>
                 <router-link :to="{name: 'indexKelompokProduk'}" class="menu-nav">
                     <span class="sidebar-mini">
@@ -268,6 +271,7 @@
                     </span>
                 </router-link>
             </li>
+            @endif
             <li>
                 <router-link :to="{name: 'indexSuplier'}" class="menu-nav">
                     <span class="sidebar-mini">
