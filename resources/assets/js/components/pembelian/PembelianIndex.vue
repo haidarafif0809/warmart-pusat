@@ -135,7 +135,7 @@
 
 					<div class=" table-responsive ">
 						<div class="pencarian">
-							<input type="text" class="form-control pencarian" autocomplete="off" name="pencarian" v-model="pencarian" placeholder="Kolom Pencarian" >
+							<input type="text" class="form-control pencarian" autocomplete="off" name="pencarian" v-model="pencarian" placeholder="Pencarian" >
 						</div>
 
 						<table class="table table-striped table-hover">

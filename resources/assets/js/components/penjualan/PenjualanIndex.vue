@@ -3,6 +3,10 @@
 	color: red; 
 	float: right;
 }
+.dropdown-menu {
+top: -50;
+left: 80%;
+}
 </style>
 
 <template>

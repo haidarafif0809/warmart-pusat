@@ -1,3 +1,9 @@
+<style scoped>
+.pencarian {
+  color: red; 
+  float: right;
+}
+</style>
 <template>
 	<div class="row">
 		<div class="col-md-12">
@@ -20,12 +26,9 @@
 					</div>
 
 					<div class=" table-responsive ">
-
-						<div  align="right">
-							pencarian
-							<input type="text" name="pencarian" v-model="pencarian" placeholder="Kolom Pencarian" >
-						</div>
-
+                         <div  class="pencarian">
+                             <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control" autocomplete="">
+                           </div>
 						<table class="table table-striped table-hover" v-if="seen">
 							<thead class="text-primary">
 								<tr>
@@ -62,7 +65,7 @@
 								</tr>
 							</tbody>					
 							<tbody class="data-tidak-ada" v-else>
-								<tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
+								<tr ><td colspan="8"  class="text-center">Tidak Ada Data</td></tr>
 							</tbody>
 						</table>	
 
