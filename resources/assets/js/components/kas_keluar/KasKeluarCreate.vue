@@ -15,6 +15,66 @@
                 <li class="active">Tambah Kas Keluar</li>
             </ul>
 
+		    <!--MODAL KAS BARU -->
+		    <div class="modal" id="modal_tambah_kas" role="dialog" data-backdrop="">
+				<div class="modal-dialog">
+					<!-- Modal content-->
+					<div class="modal-content">
+					    <div class="modal-header">
+					      <button type="button" class="close"  v-on:click="tutupModal()" v-shortkey.push="['esc']" @shortkey="tutupModal()"> <i class="material-icons">close</i></button>
+					      <h4 class="modal-title">
+					        <div class="alert-icon">
+					          <b>Silahkan Isi Kas!</b>
+					        </div>
+					      </h4>
+					    </div>
+
+					    <div class="modal-body">
+					    	<form v-on:submit.prevent="saveFormKas()" class="form-horizontal">
+					    		<div class="form-group">
+		                            <label for="kode_kas" class="col-md-3 control-label">Kode Kas</label>
+		                            <div class="col-md-9">
+		                              <input class="form-control" autocomplete="off" placeholder="Kode Kas" v-model="kasBaru.kode_kas" type="text" name="kode_kas" id="kode_kas"  autofocus="">
+		                              <span v-if="errors.kode_kas" id="kode_kas_error" class="label label-danger">{{ errors.kode_kas[0] }}</span>
+		                            </div>
+		                        </div>
+		                        <div class="form-group">
+		                            <label for="nama_kas" class="col-md-3 control-label">Nama Kas</label>
+		                            <div class="col-md-9">
+		                              <input class="form-control" autocomplete="off" placeholder="Nama Kas" v-model="kasBaru.nama_kas" type="text" name="nama_kas" id="nama_kas"  >
+		                              <span v-if="errors.nama_kas" id="nama_kas_error" class="label label-danger">{{ errors.nama_kas[0] }}</span>
+		                            </div>
+		                        </div>
+		                        <div class="form-group">
+		                          <label for="nama_kas" class="col-md-3 control-label">Tampil Transaksi</label>
+		                               <div class="togglebutton col-md-9">
+		                               		<label>
+		                                        <b>No</b>  <input type="checkbox" v-model="kasBaru.status_kas" value="1" name="status_kas" id="status_kas"><b>Yes</b>
+		                                    </label>
+		                                </div>
+		                        </div>
+		                        <div class="form-group">
+		                        	<label for="nama_kas" class="col-md-3 control-label">Default Kas</label>
+		                        		<div class="togglebutton col-md-9">
+		                        			<label>
+		                        				<b>No</b>  <input type="checkbox" v-on:change="defaultKas()" v-model="kasBaru.default_kas" value="1" name="default_kas" id="default_kas"><b>Yes</b>
+		                        			</label>
+		                        		</div>
+		                        </div>
+		                        <div class="form-group">
+		                        	<div class="col-md-9 col-md-offset-3">
+		                                <p style="color: red; font-style: italic;">*Note : Hanya 1 Kas yang dijadikan default.</p>
+		                              	<button class="btn btn-primary" id="btnSimpanKas" type="submit"><i class="material-icons">send</i> Submit</button>
+			                        </div>
+			                    </div>
+		                    </form>
+		                </div>
+
+		                <div class="modal-footer"></div> 
+		           	</div>       
+		       	</div> 
+		   	</div> 
+
             <div class="card">
 	            <div class="card-header card-header-icon" data-background-color="purple">
 	                 <i class="material-icons">money_off</i>
@@ -105,10 +165,10 @@ export default {
                 nama_kategori_transaksi: '',
             },
             kasBaru: {
-              kode_kas : 'K001',
-              nama_kas : '',
-              status_kas : 1,
-              default_kas : 0
+		        kode_kas : '',
+		        nama_kas : '',
+		        status_kas : 0,
+		        default_kas : 0
             },
             message : '',
             placeholderKas: {
@@ -249,54 +309,54 @@ export default {
         }
       },
       tambahKasBaru(){
-          var app = this;
-          swal({
-            title: "Kas",
-            html:
-              '<input class="form-control" autocomplete="off" placeholder="Kode Kas" type="text" name="kode_kas" id="kode_kas" autofocus="" required="">' +
-              '<input class="form-control" autocomplete="off" placeholder="Nama Kas" type="text" name="nama_kas" id="nama_kas" required="">',
-            allowEnterKey : false,
-            showCloseButton: true, 
-            showCancelButton: true,                        
-            focusConfirm: false, 
-            confirmButtonText:'OK', 
-            confirmButtonAriaLabel: 'Thumbs up, great!', 
-            cancelButtonText:'Batal', 
-            closeOnConfirm: false, 
-            cancelButtonAriaLabel: 'Thumbs down', 
-            preConfirm: function () {
-              return new Promise(function (resolve) { 
-                resolve([ 
-                  $('#kode_kas').val(), 
-                  $('#nama_kas').val(),
-                ]) 
-              }) 
-            }
-        }).then((result) => {
-              app.prosesTambahKasBaru(result);
-        });
+      	$("#modal_tambah_kas").show();
+      	this.$refs.kode_kas.$el.focus(); 
       },
-      prosesTambahKasBaru(result){
-        var app = this;
-        app.kasBaru.kode_kas = result[0];
-        app.kasBaru.nama_kas = result[1];
-        var newKas = app.kasBaru;
+	    saveFormKas() {
+	      var app = this;
+	      var newKas = app.kasBaru;
+	      axios.post(app.urlKas, newKas)
+	      .then(function (resp) {
+	        app.message = 'Menambah Kas '+ app.kasBaru.nama_kas;
+	        app.alertBerhasil(app.message);
+	        app.kasBaru.kode_kas = ''
+	        app.kasBaru.nama_kas = ''
+	        app.kasBaru.status_kas = 0
+	        app.kasBaru.default_kas = 0
+	        app.errors = '';
+	        app.dataKas();
+	        $("#modal_tambah_kas").hide();
+	      })
+	      .catch(function (resp) {
+	        app.success = false;
+	        app.errors = resp.response.data.errors;
+	      });
+	    },
+	    defaultKas() {
+	    	var app = this;
+	        var toogle = app.kasBaru.default_kas;
 
-        axios.post(app.urlKas, newKas)
-        .then(function (resp) {
-
-              app.dataKas();
-              app.message = 'Berhasil Menambah Kas '+ app.kasBaru.nama_kas;
-              app.alertBerhasil(app.message);
-              app.$router.replace('/create-kas-keluar');
-              timer: 2000
-        })
-        .catch(function (resp) {
-          console.log(resp);
-          app.success = false;
-          app.errors = resp.response.data.errors;
-        });
-      }
+	        if (toogle == true) {
+	        	app = this;
+		      	app.$swal({
+			      title: "Konfirmasi",
+			      text: "Apakah Anda Yakin Ingin Mengubah Kas Utama ?",
+			      icon: "warning",
+			      buttons: true,
+			      dangerMode: true,
+			    })
+		      	.then((confirm) => {
+		        	if (confirm) {
+		        		toogle.prop('checked', true);
+		        	} else {
+		        		toogle.prop('checked', false);
+		      		}
+		      });
+	        }  
+	    },
+    	tutupModal(){
+    		$("#modal_tambah_kas").hide();  
+    	},
   	}
 }
 </script>
