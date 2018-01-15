@@ -84,7 +84,6 @@ class PendaftarToposController extends Controller
 
         $this->validate($request, [
             'name'    => 'required',
-            'nama_subdomain'    => 'required',
             'no_telpon' => 'required|without_spaces|unique:pendaftar_topos,no_telp,',
             'email'   => 'nullable|unique:users,email',
             'alamat'  => 'required',
@@ -102,7 +101,6 @@ class PendaftarToposController extends Controller
         
         $pendaftar_topos = PendaftarTopos::create([
             'name'      => $request->name,
-            'nama_subdomain'      => $request->nama_subdomain,
             'no_telp'   => $request->no_telpon,
             'alamat'     => $request->alamat,
             'email'     => $request->email,
@@ -343,9 +341,9 @@ class PendaftarToposController extends Controller
 
     public function dataWarung(){
 
-     return Warung::find(Auth::user()->id_warung);
- }
- public function dataBank(){
+       return Warung::find(Auth::user()->id_warung);
+   }
+   public function dataBank(){
     $bank = Bank::all();
     return response()->json($bank);
 }
