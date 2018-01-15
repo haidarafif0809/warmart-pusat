@@ -27,6 +27,10 @@
 .card-produk{
     background-color:#82B1FF;
 }
+  .btn-icon{
+    border-radius: 1px solid;
+    padding: 10px 10px;
+  }
 
 </style>
 <template>
