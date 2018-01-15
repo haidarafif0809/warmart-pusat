@@ -69,4 +69,21 @@ class LaporanKartuStokController extends Controller
         return response()->json($respons);
     }
 
+    public function pencarian(Request $request)
+    {
+        $laporan_kartu_stok = Hpp::cariKartuStok($request)->paginate(10);
+        $saldo_awal         = Hpp::dataSaldoAwal($request)->first()->saldo_awal;
+        $data_kartu_stok    = $this->foreachLaporan($laporan_kartu_stok, $saldo_awal);
+
+        //DATA PAGINATION
+        $respons = $this->dataPagination($laporan_kartu_stok, $data_kartu_stok);
+        return response()->json($respons);
+    }
+
+    public function totalSaldoAwal(Request $request)
+    {
+        $saldo_awal = Hpp::dataSaldoAwal($request)->first()->saldo_awal;
+        return $saldo_awal;
+    }
+
 }
