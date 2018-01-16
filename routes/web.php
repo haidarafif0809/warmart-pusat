@@ -660,6 +660,10 @@ Route::post('/laporan-kartu-stok/total-saldo-awal', 'LaporanKartuStokController@
 Route::get('/laporan-kartu-stok/download-excel-kartu-stok/{dari_tanggal}/{sampai_tanggal}/{produk}', 'LaporanKartuStokController@downloadExcel')->middleware('auth');
 Route::get('/laporan-kartu-stok/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{produk}', 'LaporanKartuStokController@cetakLaporan')->middleware('auth');
 
+//
+Route::get('/pembayaran-hutang/view', 'PembayaranHutangController@view')->middleware('auth');
+Route::get('/pembayaran-hutang/pencarian', 'PembayaranHutangController@pencarian')->middleware('auth');
+
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
     Route::resource('user', 'UserController');
@@ -691,6 +695,7 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
     Route::resource('penjualan', 'PenjualanController');
     Route::resource('daftar-topos', 'PendaftarToposController');
     Route::resource('laporan-kartu-stok', 'LaporanKartuStokController');
+    Route::resource('pembayaran-hutang', 'PembayaranHutangController');
 
 //BARANG
     //HALAMAN DESKRIPSI

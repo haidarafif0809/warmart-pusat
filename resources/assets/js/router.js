@@ -115,6 +115,10 @@ import LaporanPembelianProdukIndex from './components/laporan/LaporanPembelianPr
 import PendaftaranToposIndex from './components/pendaftaran_topos/PendaftaranToposIndex.vue';
 // PENDAFTARAN TOPOS
 import LaporanKartuStokIndex from './components/laporan/LaporanKartuStokIndex.vue';
+
+//PEMBAYARAN HUTANG
+import PembayaranHutangIndex from './components/pembayaran_hutang/PembayaranHutangIndex.vue';
+
 const routes = [{
     path: '/',
     components: {
@@ -519,6 +523,13 @@ const routes = [{
         path: '/laporan-kartu-stok',
         component: LaporanKartuStokIndex,
         name: 'indexLaporanKartuStok'
+    },
+    //PEMBAYARAN HUTANG
+    {
+        path: '/pembayaran-hutang',
+        component: PembayaranHutangIndex,
+        name: 'indexPembayaranHutang'
     }
+
     ]
     export default routes;
