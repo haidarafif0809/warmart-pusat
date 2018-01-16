@@ -51,7 +51,7 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
                 @if($setting_aplikasi->tipe_aplikasi == 0)
                 <a class="navbar-brand" href="{{ url('/')}}">War-Mart.id</a>
                 @else
-                <a class="navbar-brand" href="{{ url('/')}}"><img class="navbar-brand" src="{{asset('/assets/img/examples/topos_logo.png'.'?v=1')}}"/></a>
+                <a class="navbar-brand" href="{{ url('/')}}"><img class="navbar-brand" src="{{asset('/assets/img/examples/topos_logo.png'.'?v=2')}}"/></a>
                 @endif
             </div>
             <div class="collapse navbar-collapse">
