@@ -206,7 +206,12 @@ class PendaftarToposController extends Controller
     }
 
     public function pendaftaranTopos($id){    
-        return view('daftar_topos.index',['id'=>$id]);
+
+        if ($id == 0 OR $id > 3) {
+            return response()->view('error.404');
+        }else{
+            return view('daftar_topos.index',['id'=>$id]);
+        }
     }
     public function prosesDaftarTopos(Request $request){     
         $kode_verifikasi = rand(1111, 9999);
