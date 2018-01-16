@@ -121,6 +121,9 @@ import PembayaranHutangIndex from './components/pembayaran_hutang/PembayaranHuta
 
 //PEMBAYARAN PIUTANG
 import PembayaranPiutangIndex from './components/pembayaran_piutang/PembayaranPiutangIndex.vue';
+import PembayaranPiutangDetail from './components/pembayaran_piutang/PembayaranPiutangDetail.vue';
+import PembayaranPiutangCreate from './components/pembayaran_piutang/PembayaranPiutangCreate.vue';
+import PembayaranPiutangEdit from './components/pembayaran_piutang/PembayaranPiutangEdit.vue';
 
 const routes = [{
     path: '/',
@@ -533,11 +536,25 @@ const routes = [{
         component: PembayaranHutangIndex,
         name: 'indexPembayaranHutang'
     },
-    //PEMBAYARAN PUTANG
     {
         path: '/pembayaran-piutang',
         component: PembayaranPiutangIndex,
         name: 'indexPembayaranPiutang'
+    },
+    {
+        path: '/detail-pembayaran-piutang/:id',
+        component: PembayaranPiutangDetail,
+        name: 'detailPembayaranPiutang'
+    },
+    {
+        path: '/create-pembayaran-piutang',
+        component: PembayaranPiutangCreate,
+        name: 'createPembayaranPiutang'
+    },
+    {
+        path: '/edit-pembayaran-piutang/:id',
+        component: PembayaranPiutangEdit,
+        name: 'editPembayaranPiutang'
     }
 
     ]
