@@ -230,10 +230,29 @@ class Hpp extends Model
         return $query_kartu_stok;
     }
 
+    //PENCARIAN KARTU STOK PRODUK
+    public function scopeCariKartuStok($query_kartu_stok, $request)
+    {
+        $search = $request->search;
+
+        $query_kartu_stok = Hpp::select(['no_faktur', 'id_produk', 'jenis_transaksi', 'jumlah_masuk', 'jumlah_keluar', 'harga_unit', 'jenis_hpp', 'created_at'])
+            ->where('id_produk', $request->produk)
+            ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+            ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+            ->where('warung_id', Auth::user()->id_warung)
+            ->where(function ($query) use ($search) {
+                $query->orwhere('no_faktur', 'LIKE', '%' . $search . '%')
+                    ->orwhere('jenis_transaksi', 'LIKE', '%' . $search . '%');
+            })
+            ->orderBy('created_at', 'ASC');
+
+        return $query_kartu_stok;
+    }
+
     public function scopeDataSaldoAwal($query_saldo_awal, $request)
     {
         //SALDO AWAL PRODUK
-        $query_saldo_awal = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk + jumlah_keluar),0) AS saldo_awal')])
+        $query_saldo_awal = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk - jumlah_keluar),0) AS saldo_awal')])
             ->where('id_produk', $request->produk)
             ->where(DB::raw('DATE(created_at)'), '<', $this->tanggalSql($request->dari_tanggal))
             ->where('warung_id', Auth::user()->id_warung);
