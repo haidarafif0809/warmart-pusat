@@ -64,16 +64,16 @@ class BankController extends Controller
         $this->validate($request, [
             'nama_bank'     => 'required',
             'atas_nama'     => 'required',
-            'no_rek'        => 'required|numeric|unique:banks,no_rek,',
+            'no_rek'        => 'required|unique:banks,no_rek,',
             'tampil_customer'     => 'required',
         ]);
-            
-             $master_bank = Bank::create([
-                'nama_bank' =>$request->nama_bank,              
-                'atas_nama' => $request->atas_nama,
-                'no_rek' =>$request->no_rek,
-                'tampil_customer' =>$request->tampil_customer,
-            ]);
+        
+        $master_bank = Bank::create([
+            'nama_bank' =>$request->nama_bank,              
+            'atas_nama' => $request->atas_nama,
+            'no_rek' =>$request->no_rek,
+            'tampil_customer' =>$request->tampil_customer,
+        ]);
     }
 
     /**
@@ -117,11 +117,11 @@ class BankController extends Controller
         ]);
 
         Bank::where('id', $id)->update([
-                'nama_bank' =>$request->nama_bank,
-                'atas_nama' =>$request->atas_nama,
-                'no_rek'    =>$request->no_rek,
-                'tampil_customer'    =>$request->tampil_customer,
-            ]);
+            'nama_bank' =>$request->nama_bank,
+            'atas_nama' =>$request->atas_nama,
+            'no_rek'    =>$request->no_rek,
+            'tampil_customer'    =>$request->tampil_customer,
+        ]);
     }
 
     /**
@@ -133,7 +133,7 @@ class BankController extends Controller
     public function destroy($id)
     {
        $bank =  Bank::destroy($id);  
-        return response(200);
-    }
+       return response(200);
+   }
 
 }// END CLASS BankController

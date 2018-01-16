@@ -85,7 +85,7 @@ class PendaftarToposController extends Controller
         $this->validate($request, [
             'name'    => 'required',
             'no_telpon' => 'required|without_spaces|unique:pendaftar_topos,no_telp,',
-            'email'   => 'nullable|unique:users,email',
+            'email'       => 'required|without_spaces|unique:users,email|email',
             'alamat'  => 'required',
             'lama_berlangganan' => 'required',
             'berlaku_hingga' => 'required',
@@ -206,13 +206,18 @@ class PendaftarToposController extends Controller
     }
 
     public function pendaftaranTopos($id){    
-        return view('daftar_topos.index',['id'=>$id]);
+
+        if ($id == 0 OR $id > 3) {
+            return response()->view('error.404');
+        }else{
+            return view('daftar_topos.index',['id'=>$id]);
+        }
     }
     public function prosesDaftarTopos(Request $request){     
         $kode_verifikasi = rand(1111, 9999);
             // PENDAFTARAN WARUNG
         $this->validate($request, [
-            'email'       => 'nullable|without_spaces|unique:users,email|email',
+            'email'       => 'required|without_spaces|unique:users,email|email',
             'name'        => 'required',
             'nama_warung' => 'required',
             'no_telp'     => 'required|numeric|without_spaces|unique:users,no_telp',
@@ -230,6 +235,7 @@ class PendaftarToposController extends Controller
             'name'      => $request->nama_warung,
             'alamat'    => $request->alamat,
             'no_telpon' => $request->no_telp,
+            'email' => $request->email,
             'wilayah'   => "-",
         ]);
 
@@ -245,6 +251,7 @@ class PendaftarToposController extends Controller
             //USER WARUNG
         $user = UserWarung::create([
             'name'              => $request->name,
+            'email'              => $request->email,
             'password'          => $password,
             'alamat'            => $request->alamat,
             'no_telp'           => $request->no_telp,
@@ -267,6 +274,7 @@ class PendaftarToposController extends Controller
 
         $pendaftar_topos = PendaftarTopos::create([
             'name'      => $request->name,
+            'email'      => $request->email,
             'no_telp'   => $request->no_telp,
             'alamat'     => $request->alamat,
             'lama_berlangganan'    => $request->lama_berlangganan,

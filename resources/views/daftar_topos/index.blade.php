@@ -79,6 +79,16 @@
         <div class="input-group ">
             <span class="input-group-addon">
                 <i class="material-icons">
+                    email
+                </i>
+            </span>
+            <div class="form-group label-floating">
+                {!! Form::email('email', null, ['class'=>'form-control','required','autocomplete'=>'off','placeholder'=>'Email','id'=>'email']) !!}
+            </div>
+        </div>
+        <div class="input-group ">
+            <span class="input-group-addon">
+                <i class="material-icons">
                     home
                 </i>
             </span>
@@ -215,89 +225,89 @@
 @endsection
 @section('scripts')
 <script type="text/javascript">
-$('select').selectize({
-   sortField: 'text'
-});
-Number.prototype.format = function(n, x, s, c) {
-    var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\D' : '$') + ')',
-    num = this.toFixed(Math.max(0, ~~n));
+    $('select').selectize({
+       sortField: 'text'
+   });
+    Number.prototype.format = function(n, x, s, c) {
+        var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\D' : '$') + ')',
+        num = this.toFixed(Math.max(0, ~~n));
 
-    return (c ? num.replace('.', c) : num).replace(new RegExp(re, 'g'), '$&' + (s || ','));
-};
+        return (c ? num.replace('.', c) : num).replace(new RegExp(re, 'g'), '$&' + (s || ','));
+    };
 
 </script>
 
 <script type="text/javascript">
-$(document).ready(function(){
+    $(document).ready(function(){
 
-    var lama_berlangganan = "{{$id}}";  
-    document.getElementById('lama_berlangganan').selectize.setValue(lama_berlangganan);
-    berlakuHingga();
-    
-    function berlakuHingga(){
-      var now = new Date(); 
-      var nowDay= now.getDate();
-      var nowMonth = now.getMonth();
-      var nowYear= now.getFullYear();
+        var lama_berlangganan = "{{$id}}";  
+        document.getElementById('lama_berlangganan').selectize.setValue(lama_berlangganan);
+        berlakuHingga();
 
-      var monthNames = [
-      "Januari", "Februari", "Maret",
-      "April", "Mei", "Juni", "Juli",
-      "Agustus", "September", "Oktober",
-      "November", "Desember"
-      ];
-      var total = $("#total").val();
-      var lama_berlangganan = $("#lama_berlangganan").val();
-      var harga = $("#harga").val();
-      var berlaku_hingga = $("#berlaku_hingga").val();
+        function berlakuHingga(){
+          var now = new Date(); 
+          var nowDay= now.getDate();
+          var nowMonth = now.getMonth();
+          var nowYear= now.getFullYear();
 
-      if (total > 0) {                 
-        total = 0;
+          var monthNames = [
+          "Januari", "Februari", "Maret",
+          "April", "Mei", "Juni", "Juli",
+          "Agustus", "September", "Oktober",
+          "November", "Desember"
+          ];
+          var total = $("#total").val();
+          var lama_berlangganan = $("#lama_berlangganan").val();
+          var harga = $("#harga").val();
+          var berlaku_hingga = $("#berlaku_hingga").val();
+
+          if (total > 0) {                 
+            total = 0;
+        }
+        if (total == '') {
+            total = 0
+        }
+        if (lama_berlangganan == 1) {
+            var satu_bulan = monthNames[nowMonth + 1];
+            var harga_perbulan = 500000;
+            harga = '500.000/Bulan';
+            berlaku_hingga = nowDay + ' ' + satu_bulan + ' ' + nowYear;
+            total = parseInt(harga_perbulan) * parseInt(1);
+
+        }else if (lama_berlangganan == 2) {
+            var enam_bulan = monthNames[nowMonth + 6];
+            var harga_perbulan = 300000;
+            harga = '300.000/Bulan';
+            berlaku_hingga = nowDay + ' ' + enam_bulan + ' ' + nowYear;
+            total = parseInt(harga_perbulan) * parseInt(6);
+
+        }else if (lama_berlangganan == 3) {
+
+            var duabelas_bulan = nowYear + 1;
+            var harga_perbulan = 200000;
+            harga = '200.000/Bulan';
+            berlaku_hingga = nowDay + ' ' + monthNames[nowMonth] + ' ' + duabelas_bulan;
+            total = parseInt(harga_perbulan) * parseInt(12);
+        }
+
+        $("#total").val(total.format(0, 3, '.', ','));
+        $("#berlaku_hingga").val(berlaku_hingga);
+        $("#harga").val(harga);
     }
-    if (total == '') {
-        total = 0
-    }
-    if (lama_berlangganan == 1) {
-        var satu_bulan = monthNames[nowMonth + 1];
-        var harga_perbulan = 500000;
-        harga = '500.000/Bulan';
-        berlaku_hingga = nowDay + ' ' + satu_bulan + ' ' + nowYear;
-        total = parseInt(harga_perbulan) * parseInt(1);
 
-    }else if (lama_berlangganan == 2) {
-        var enam_bulan = monthNames[nowMonth + 6];
-        var harga_perbulan = 300000;
-        harga = '300.000/Bulan';
-        berlaku_hingga = nowDay + ' ' + enam_bulan + ' ' + nowYear;
-        total = parseInt(harga_perbulan) * parseInt(6);
-
-    }else if (lama_berlangganan == 3) {
-
-        var duabelas_bulan = nowYear + 1;
-        var harga_perbulan = 200000;
-        harga = '200.000/Bulan';
-        berlaku_hingga = nowDay + ' ' + monthNames[nowMonth] + ' ' + duabelas_bulan;
-        total = parseInt(harga_perbulan) * parseInt(12);
-    }
-
-    $("#total").val(total.format(0, 3, '.', ','));
-    $("#berlaku_hingga").val(berlaku_hingga);
-    $("#harga").val(harga);
-}
-
-$(document).on('change','#lama_berlangganan', function(){
-    berlakuHingga();
-});
+    $(document).on('change','#lama_berlangganan', function(){
+        berlakuHingga();
+    });
 
 
-$(document).on('change','#tujuan_transfer', function(){
+    $(document).on('change','#tujuan_transfer', function(){
 
-    var bank_transfer = $(this).val();
-    var bank_transfer = bank_transfer.split("|");      
+        var bank_transfer = $(this).val();
+        var bank_transfer = bank_transfer.split("|");      
 
-    $("#no_rek_transfer").val(bank_transfer[1]);
-    $("#atas_nama").val(bank_transfer[2]);
-});
+        $("#no_rek_transfer").val(bank_transfer[1]);
+        $("#atas_nama").val(bank_transfer[2]);
+    });
 
 
 }); 
