@@ -15,7 +15,7 @@
 			</ul>
 			<div class="card">
 				<div class="card-header card-header-icon" data-background-color="purple">
-					<i class="material-icons">swap_vertical_circle</i>
+					<i class="material-icons">content_paste</i>
 				</div>
 
 				<div class="card-content">
@@ -56,7 +56,21 @@
 									<th style="text-align:right">Saldo</th>
 								</tr>
 							</thead>
+
+								<tr style="color:red" v-if="subtotalSaldoAwal.status == 200">
+
+									<td></td>
+									<td>SALDO AWAL</td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td align="right">{{ subtotalSaldoAwal.data | pemisahTitik }}</td>
+
+								</tr>
+
 							<tbody v-if="kartuStok.length > 0 && loading == false"  class="data-ada">
+
 								<tr v-for="kartuStoks, index in kartuStok" >
 
 									<td>{{ kartuStoks.data_kartu_stoks.no_faktur }}</td>
@@ -66,17 +80,6 @@
 									<td align="right">{{ kartuStoks.data_kartu_stoks.jumlah_masuk | pemisahTitik }}</td>
 									<td align="right">{{ kartuStoks.data_kartu_stoks.jumlah_keluar | pemisahTitik }}</td>
 									<td align="right">{{ kartuStoks.saldo_awal | pemisahTitik }}</td>
-
-								</tr>
-
-								<tr style="color:red">
-									<td>TOTAL</td>
-									<td></td>
-									<td align="right">{{ subtotalKartuStok.total_stok_awal | pemisahTitik }}</td>
-									<td></td>
-									<td align="right">{{ subtotalKartuStok.total_nilai_awal | pemisahTitik }}</td>
-									<td align="right">{{ subtotalKartuStok.total_stok_masuk | pemisahTitik }}</td>
-									<td align="right">{{ subtotalKartuStok.total_nilai_masuk | pemisahTitik }}</td>
 
 								</tr>
 							</tbody>					
@@ -110,7 +113,7 @@ export default {
 			produk: [],
 			kartuStok: [],
 			kartuStokData: {},
-			subtotalKartuStok: {},
+			subtotalSaldoAwal: {},
 			filter: {
 				produk: '',
 				dari_tanggal: '',
@@ -161,6 +164,7 @@ export default {
     	submitKartuStok(){
     		var app = this;
     		app.prosesLaporan();
+    		app.totalSaldoAwal();
     		app.showButton();
     	},
     	prosesLaporan(page) {
@@ -182,6 +186,21 @@ export default {
     			alert("Tidak Dapat Memuat Laporan Kartu Stok");
     		});
     	},
+      	totalSaldoAwal() {
+    		var app = this;	
+    		var newFilter = app.filter;
+
+    		app.loading = true,
+    		axios.post(app.url+'/total-saldo-awal', newFilter)
+    		.then(function (resp) {
+    			app.subtotalSaldoAwal = resp;
+    			app.loading = false
+    		})
+    		.catch(function (resp) {
+    			console.log(resp);
+    			alert("Tidak Dapat Memuat Subtotal Saldo Awal");
+    		});
+    	},
     	getHasilPencarian(page){
     		var app = this;
     		var newFilter = app.filter;
@@ -190,6 +209,7 @@ export default {
     		}
     		axios.post(app.url+'/pencarian?search='+app.pencarian+'&page='+page, newFilter)
     		.then(function (resp) {
+    			console.log(resp);
     			app.kartuStok = resp.data.data;
     			app.kartuStokData = resp.data;
     		})
@@ -197,25 +217,14 @@ export default {
     			console.log(resp);
     			alert("Tidak Dapat Memuat Laporan Kartu Stok");
     		});
-    	},
-      totalKartuStok() {
-    		var app = this;	
-    		var newFilter = app.filter;
-
-    		app.loading = true,
-    		axios.post(app.url+'/subtotal-kartu-stok', newFilter)
-    		.then(function (resp) {
-    			app.subtotalKartuStok = resp.data;
-    			app.loading = false
-    		})
-    		.catch(function (resp) {
-    			console.log(resp);
-    			alert("Tidak Dapat Memuat Subtotal Kartu Stok");
-    		});
-    	},    	
+    	},  	
         showButton() {
         	var app = this;
     		var filter = app.filter;
+
+    		if (filter.produk == "") {
+    			filter.produk = 0;
+    		};
 
     		var date_dari_tanggal = filter.dari_tanggal;
     		var date_sampai_tanggal = filter.sampai_tanggal;
@@ -224,8 +233,8 @@ export default {
 
     		$("#btnExcel").show();
     		$("#btnCetak").show();
-    		$("#btnExcel").attr('href', app.urlDownloadExcel+'/'+dari_tanggal+'/'+sampai_tanggal);
-    		$("#btnCetak").attr('href', app.urlCetak+'/'+dari_tanggal+'/'+sampai_tanggal);
+    		$("#btnExcel").attr('href', app.urlDownloadExcel+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.produk);
+    		$("#btnCetak").attr('href', app.urlCetak+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.produk);
     	}
     }
 }

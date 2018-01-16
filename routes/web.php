@@ -656,6 +656,9 @@ Route::get('/laporan-pembelian-produk/cetak-laporan/{dari_tanggal}/{sampai_tangg
 Route::post('/laporan-kartu-stok/view', 'LaporanKartuStokController@prosesLaporanKartuStok')->middleware('auth');
 Route::post('/laporan-kartu-stok/pencarian', 'LaporanKartuStokController@pencarian')->middleware('auth');
 Route::get('/laporan-kartu-stok/pilih-produk', 'LaporanKartuStokController@dataProduk')->middleware('auth');
+Route::post('/laporan-kartu-stok/total-saldo-awal', 'LaporanKartuStokController@totalSaldoAwal')->middleware('auth');
+Route::get('/laporan-kartu-stok/download-excel-kartu-stok/{dari_tanggal}/{sampai_tanggal}/{produk}', 'LaporanKartuStokController@downloadExcel')->middleware('auth');
+Route::get('/laporan-kartu-stok/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{produk}', 'LaporanKartuStokController@cetakLaporan')->middleware('auth');
 
 //
 Route::get('/pembayaran-hutang/view', 'PembayaranHutangController@view')->middleware('auth');
