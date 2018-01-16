@@ -657,6 +657,10 @@ Route::post('/laporan-kartu-stok/view', 'LaporanKartuStokController@prosesLapora
 Route::post('/laporan-kartu-stok/pencarian', 'LaporanKartuStokController@pencarian')->middleware('auth');
 Route::get('/laporan-kartu-stok/pilih-produk', 'LaporanKartuStokController@dataProduk')->middleware('auth');
 
+//
+Route::get('/pembayaran-hutang/view', 'PembayaranHutangController@view')->middleware('auth');
+Route::get('/pembayaran-hutang/pencarian', 'PembayaranHutangController@pencarian')->middleware('auth');
+
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
     Route::resource('user', 'UserController');
@@ -688,6 +692,7 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
     Route::resource('penjualan', 'PenjualanController');
     Route::resource('daftar-topos', 'PendaftarToposController');
     Route::resource('laporan-kartu-stok', 'LaporanKartuStokController');
+    Route::resource('pembayaran-hutang', 'PembayaranHutangController');
 
 //BARANG
     //HALAMAN DESKRIPSI
