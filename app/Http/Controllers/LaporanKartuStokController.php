@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Barang;
 use App\Hpp;
+use App\SettingAplikasi;
+use App\Warung;
 use Auth;
 use Excel;
 use Illuminate\Http\Request;
@@ -71,6 +73,13 @@ class LaporanKartuStokController extends Controller
             'Saldo',
         ]);
         return $sheet;
+    }
+
+    public function tanggal($tangal)
+    {
+        $date        = date_create($tangal);
+        $date_format = date_format($date, "d-m-Y");
+        return $date_format;
     }
 
     public function prosesLaporanKartuStok(Request $request)
@@ -157,6 +166,36 @@ class LaporanKartuStokController extends Controller
 
             });
         })->export('xls');
+    }
+
+    public function cetakLaporan(Request $request, $dari_tanggal, $sampai_tanggal, $produk)
+    {
+        //SETTING APLIKASI
+        $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
+
+        $request['dari_tanggal']   = $dari_tanggal;
+        $request['sampai_tanggal'] = $sampai_tanggal;
+        $request['produk']         = $produk;
+
+        $laporan_kartu_stok = Hpp::dataKartuStok($request)->paginate(10);
+        $saldo_awal         = Hpp::dataSaldoAwal($request)->first()->saldo_awal;
+        $data_kartu_stok    = $this->foreachLaporan($laporan_kartu_stok, $saldo_awal);
+        $total_saldo_awal   = $this->totalSaldoAwal($request);
+
+        $data_warung = Warung::where('id', Auth::user()->id_warung)->first();
+        $produk      = Barang::select(['id', 'kode_barang', 'nama_barang'])->where('id', $produk)->first();
+
+        return view('laporan.cetak_kartu_stok',
+            [
+                'data_kartu_stok'  => $data_kartu_stok,
+                'total_saldo_awal' => $total_saldo_awal,
+                'produk'           => $produk,
+                'data_warung'      => $data_warung,
+                'petugas'          => Auth::user()->name,
+                'dari_tanggal'     => $this->tanggal($dari_tanggal),
+                'sampai_tanggal'   => $this->tanggal($sampai_tanggal),
+                'setting_aplikasi' => $setting_aplikasi,
+            ])->with(compact('html'));
     }
 
 }
