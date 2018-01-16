@@ -59,12 +59,12 @@ class PembayaranHutangController extends Controller
         //DATA PAGINATION
         $respons['current_page']   = $pembayaranhutang->currentPage();
         $respons['data']           = $array;
-        $respons['first_page_url'] = url('/pembayaranhutang/view?page=' . $pembayaranhutang->firstItem());
+        $respons['first_page_url'] = url('/pembayaran-hutang/view?page=' . $pembayaranhutang->firstItem());
         $respons['from']           = 1;
         $respons['last_page']      = $pembayaranhutang->lastPage();
-        $respons['last_page_url']  = url('/pembayaranhutang/view?page=' . $pembayaranhutang->lastPage());
+        $respons['last_page_url']  = url('/pembayaran-hutang/view?page=' . $pembayaranhutang->lastPage());
         $respons['next_page_url']  = $pembayaranhutang->nextPageUrl();
-        $respons['path']           = url('/pembayaranhutang/view');
+        $respons['path']           = url('/pembayaran-hutang/view');
         $respons['per_page']       = $pembayaranhutang->perPage();
         $respons['prev_page_url']  = $pembayaranhutang->previousPageUrl();
         $respons['to']             = $pembayaranhutang->perPage();
@@ -73,6 +73,55 @@ class PembayaranHutangController extends Controller
         return response()->json($respons);
     }
 
+    //VIEW DAN PENCARIAN TBS PEMBELIAN
+     public function viewTbsPembayaranHutang()
+    {
+        $session_id    = session()->getId();
+        $user_warung   = Auth::user()->id_warung;
+        $tbs_pembayaran_hutang = TbsPembayaranHutang::with(['suplier'])->where('warung_id', $user_warung)->where('session_id', $session_id)->orderBy('id_tbs_pembayaran_hutang', 'desc')->paginate(10);
+        $array         = array();
+
+        foreach ($tbs_pembayaran_hutang as $tbs_pembayaran_hutangs) {
+
+            array_push($array, [
+                'id'                => $tbs_pembayaran_hutangs->id_tbs_pembayaran_hutang,
+                'no_faktur_pembelian'  => $tbs_pembayaran_hutangs->no_faktur_pembeliann,
+                'suplier'          => $tbs_pembayaran_hutangs->suplier->nama,
+                'jatuh_tempo'      => $tbs_pembayaran_hutangs->jatuh_tempo,
+                'hutang'           => $tbs_pembayaran_hutangs->hutang,
+                'potongan'         => $tbs_pembayaran_hutangs->potongan,
+                'jumlah_bayar'     => $tbs_pembayaran_hutangs->jumlah_bayar
+            ]);
+        }
+
+         //DATA PAGINATION
+        $respons['current_page']   = $tbs_pembayaran_hutang->currentPage();
+        $respons['data']           = $array;
+        $respons['first_page_url'] = url('/pembayaran-hutang/view-tbs-pembayaran-hutang?page=' . $tbs_pembayaran_hutang->firstItem());
+        $respons['from']           = 1;
+        $respons['last_page']      = $tbs_pembayaran_hutang->lastPage();
+        $respons['last_page_url']  = url('/pembayaran-hutang/view-tbs-pembayaran-hutang?page=' . $tbs_pembayaran_hutang->lastPage());
+        $respons['next_page_url']  = $tbs_pembayaran_hutang->nextPageUrl();
+        $respons['path']           = url('/pembayaran-hutang/view-tbs-pembayaran-hutang');
+        $respons['per_page']       = $tbs_pembayaran_hutang->perPage();
+        $respons['prev_page_url']  = $tbs_pembayaran_hutang->previousPageUrl();
+        $respons['to']             = $tbs_pembayaran_hutang->perPage();
+        //DATA PAGINATION
+        return response()->json($respons);
+    }
+
+        public function pilihSuplier()
+    {
+        $suplier = Suplier::where('warung_id', Auth::user()->id_warung)->get();
+        $array  = array();
+        foreach ($suplier as $supliers) {
+            array_push($array, [
+                'id'          => $supliers->id,
+                'nama_suplier'      => $supliers->nama_suplier]);
+        }
+
+        return response()->json($array);
+    }
 
     /**
      * Show the form for creating a new resource.

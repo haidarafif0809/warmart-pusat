@@ -663,6 +663,10 @@ Route::get('/laporan-kartu-stok/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{p
 //
 Route::get('/pembayaran-hutang/view', 'PembayaranHutangController@view')->middleware('auth');
 Route::get('/pembayaran-hutang/pencarian', 'PembayaranHutangController@pencarian')->middleware('auth');
+Route::get('/pembayaran-hutang/view-tbs-pembayaran-hutang', 'PembayaranHutangController@viewTbsPembayaranHutang')->middleware('auth');
+Route::get('/pembayaran-hutang/pencarian-tbs-pembayaran-hutang', 'PembayaranHutangController@pencarianTbsPembayaranHutang')->middleware('auth');
+Route::get('/pembayaran-hutang/pilih-suplier', 'PembayaranHutangController@pilihSuplier')->middleware('auth');
+
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 

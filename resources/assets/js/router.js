@@ -118,6 +118,7 @@ import LaporanKartuStokIndex from './components/laporan/LaporanKartuStokIndex.vu
 
 //PEMBAYARAN HUTANG
 import PembayaranHutangIndex from './components/pembayaran_hutang/PembayaranHutangIndex.vue';
+import PembayaranHutangCreate from './components/pembayaran_hutang/PembayaranHutangCreate.vue';
 
 const routes = [{
     path: '/',
@@ -529,7 +530,12 @@ const routes = [{
         path: '/pembayaran-hutang',
         component: PembayaranHutangIndex,
         name: 'indexPembayaranHutang'
+    },{
+        path: '/create-pembayaran-hutang',
+        component: PembayaranHutangCreate,
+        name: 'createPembayaranHutang'
     }
+
 
     ]
     export default routes;
