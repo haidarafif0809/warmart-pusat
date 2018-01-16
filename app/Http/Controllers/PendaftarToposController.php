@@ -217,7 +217,7 @@ class PendaftarToposController extends Controller
         $kode_verifikasi = rand(1111, 9999);
             // PENDAFTARAN WARUNG
         $this->validate($request, [
-            'email'       => 'nullable|without_spaces|unique:users,email|email',
+            'email'       => 'required|without_spaces|unique:users,email|email',
             'name'        => 'required',
             'nama_warung' => 'required',
             'no_telp'     => 'required|numeric|without_spaces|unique:users,no_telp',
@@ -235,6 +235,7 @@ class PendaftarToposController extends Controller
             'name'      => $request->nama_warung,
             'alamat'    => $request->alamat,
             'no_telpon' => $request->no_telp,
+            'email' => $request->email,
             'wilayah'   => "-",
         ]);
 
@@ -250,6 +251,7 @@ class PendaftarToposController extends Controller
             //USER WARUNG
         $user = UserWarung::create([
             'name'              => $request->name,
+            'email'              => $request->email,
             'password'          => $password,
             'alamat'            => $request->alamat,
             'no_telp'           => $request->no_telp,
@@ -272,6 +274,7 @@ class PendaftarToposController extends Controller
 
         $pendaftar_topos = PendaftarTopos::create([
             'name'      => $request->name,
+            'email'      => $request->email,
             'no_telp'   => $request->no_telp,
             'alamat'     => $request->alamat,
             'lama_berlangganan'    => $request->lama_berlangganan,
@@ -346,9 +349,9 @@ class PendaftarToposController extends Controller
 
     public function dataWarung(){
 
-       return Warung::find(Auth::user()->id_warung);
-   }
-   public function dataBank(){
+     return Warung::find(Auth::user()->id_warung);
+ }
+ public function dataBank(){
     $bank = Bank::all();
     return response()->json($bank);
 }
