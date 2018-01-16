@@ -192,6 +192,16 @@
                 </router-link>
             </li>
             <li>
+                <router-link :to="{name: 'indexLaporanKartuStok'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        LM
+                    </span>
+                    <span class="sidebar-normal">
+                        Laporan Kartu Stok
+                    </span>
+                </router-link>
+            </li>
+            <li>
                 <router-link :to="{name: 'indexLaporanMutasiStok'}" class="menu-nav">
                     <span class="sidebar-mini">
                         LM

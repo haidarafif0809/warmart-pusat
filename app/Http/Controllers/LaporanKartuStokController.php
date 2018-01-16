@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Barang;
 use App\Hpp;
+use App\SettingAplikasi;
+use App\Warung;
 use Auth;
+use Excel;
 use Illuminate\Http\Request;
 
 class LaporanKartuStokController extends Controller
@@ -58,6 +61,27 @@ class LaporanKartuStokController extends Controller
         return $data_kartu_stok;
     }
 
+    public function labelSheet($sheet, $row)
+    {
+        $sheet->row($row, [
+            'No Faktur',
+            'Jenis Transaksi',
+            'Harga',
+            'Waktu',
+            'Jumlah Masuk',
+            'Jumlah Keluar',
+            'Saldo',
+        ]);
+        return $sheet;
+    }
+
+    public function tanggal($tangal)
+    {
+        $date        = date_create($tangal);
+        $date_format = date_format($date, "d-m-Y");
+        return $date_format;
+    }
+
     public function prosesLaporanKartuStok(Request $request)
     {
         $laporan_kartu_stok = Hpp::dataKartuStok($request)->paginate(10);
@@ -84,6 +108,94 @@ class LaporanKartuStokController extends Controller
     {
         $saldo_awal = Hpp::dataSaldoAwal($request)->first()->saldo_awal;
         return $saldo_awal;
+    }
+
+    //DOWNLOAD EXCEL - LAPORAN LABA KOTOR /PELANGGAN
+    public function downloadExcel(Request $request, $dari_tanggal, $sampai_tanggal, $produk)
+    {
+        $request['dari_tanggal']   = $dari_tanggal;
+        $request['sampai_tanggal'] = $sampai_tanggal;
+        $request['produk']         = $produk;
+
+        $laporan_kartu_stok = Hpp::dataKartuStok($request)->get();
+        $saldo_awal         = Hpp::dataSaldoAwal($request)->first()->saldo_awal;
+
+        Excel::create('Laporan Kartu Stok', function ($excel) use ($request, $laporan_kartu_stok, $saldo_awal) {
+            // Set property
+            $excel->sheet('Laporan Kartu Stok', function ($sheet) use ($request, $laporan_kartu_stok, $saldo_awal) {
+                $row = 1;
+                $sheet->row($row, [
+                    'LAPORAN KARTU STOK',
+                ]);
+
+                $row   = 3;
+                $sheet = $this->labelSheet($sheet, $row);
+
+                $total_saldo_awal = $this->totalSaldoAwal($request);
+
+                $row = ++$row;
+                $sheet->row(++$row, [
+                    '',
+                    'SALDO AWAL',
+                    '',
+                    '',
+                    '',
+                    '',
+                    $total_nilai_akhir = round($total_saldo_awal, 2),
+                ]);
+
+                foreach ($laporan_kartu_stok as $laporan_kartu_stoks) {
+
+                    if ($laporan_kartu_stoks->jenis_hpp == 1) {
+                        $saldo_awal = ($saldo_awal + $laporan_kartu_stoks->jumlah_masuk);
+                    } else {
+                        $saldo_awal = $saldo_awal - $laporan_kartu_stoks->jumlah_keluar;
+                    }
+
+                    $sheet->row(++$row, [
+                        $laporan_kartu_stoks->no_faktur,
+                        $laporan_kartu_stoks->jenis_transaksi,
+                        $laporan_kartu_stoks->harga_unit,
+                        $laporan_kartu_stoks->created_at,
+                        $laporan_kartu_stoks->jumlah_masuk,
+                        $laporan_kartu_stoks->jumlah_keluar,
+                        $saldo_awal,
+                    ]);
+
+                }
+
+            });
+        })->export('xls');
+    }
+
+    public function cetakLaporan(Request $request, $dari_tanggal, $sampai_tanggal, $produk)
+    {
+        //SETTING APLIKASI
+        $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
+
+        $request['dari_tanggal']   = $dari_tanggal;
+        $request['sampai_tanggal'] = $sampai_tanggal;
+        $request['produk']         = $produk;
+
+        $laporan_kartu_stok = Hpp::dataKartuStok($request)->paginate(10);
+        $saldo_awal         = Hpp::dataSaldoAwal($request)->first()->saldo_awal;
+        $data_kartu_stok    = $this->foreachLaporan($laporan_kartu_stok, $saldo_awal);
+        $total_saldo_awal   = $this->totalSaldoAwal($request);
+
+        $data_warung = Warung::where('id', Auth::user()->id_warung)->first();
+        $produk      = Barang::select(['id', 'kode_barang', 'nama_barang'])->where('id', $produk)->first();
+
+        return view('laporan.cetak_kartu_stok',
+            [
+                'data_kartu_stok'  => $data_kartu_stok,
+                'total_saldo_awal' => $total_saldo_awal,
+                'produk'           => $produk,
+                'data_warung'      => $data_warung,
+                'petugas'          => Auth::user()->name,
+                'dari_tanggal'     => $this->tanggal($dari_tanggal),
+                'sampai_tanggal'   => $this->tanggal($sampai_tanggal),
+                'setting_aplikasi' => $setting_aplikasi,
+            ])->with(compact('html'));
     }
 
 }
