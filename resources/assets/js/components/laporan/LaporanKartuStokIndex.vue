@@ -15,7 +15,7 @@
 			</ul>
 			<div class="card">
 				<div class="card-header card-header-icon" data-background-color="purple">
-					<i class="material-icons">swap_vertical_circle</i>
+					<i class="material-icons">content_paste</i>
 				</div>
 
 				<div class="card-content">
@@ -222,6 +222,10 @@ export default {
         	var app = this;
     		var filter = app.filter;
 
+    		if (filter.produk == "") {
+    			filter.produk = 0;
+    		};
+
     		var date_dari_tanggal = filter.dari_tanggal;
     		var date_sampai_tanggal = filter.sampai_tanggal;
     		var dari_tanggal = "" + date_dari_tanggal.getFullYear() +'-'+ ((date_dari_tanggal.getMonth() + 1) > 9 ? '' : '0') + (date_dari_tanggal.getMonth() + 1) +'-'+ (date_dari_tanggal.getDate() > 9 ? '' : '0') + date_dari_tanggal.getDate();
@@ -229,8 +233,8 @@ export default {
 
     		$("#btnExcel").show();
     		$("#btnCetak").show();
-    		$("#btnExcel").attr('href', app.urlDownloadExcel+'/'+dari_tanggal+'/'+sampai_tanggal);
-    		$("#btnCetak").attr('href', app.urlCetak+'/'+dari_tanggal+'/'+sampai_tanggal);
+    		$("#btnExcel").attr('href', app.urlDownloadExcel+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.produk);
+    		$("#btnCetak").attr('href', app.urlCetak+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.produk);
     	}
     }
 }

@@ -657,6 +657,7 @@ Route::post('/laporan-kartu-stok/view', 'LaporanKartuStokController@prosesLapora
 Route::post('/laporan-kartu-stok/pencarian', 'LaporanKartuStokController@pencarian')->middleware('auth');
 Route::get('/laporan-kartu-stok/pilih-produk', 'LaporanKartuStokController@dataProduk')->middleware('auth');
 Route::post('/laporan-kartu-stok/total-saldo-awal', 'LaporanKartuStokController@totalSaldoAwal')->middleware('auth');
+Route::get('/laporan-kartu-stok/download-excel-kartu-stok/{dari_tanggal}/{sampai_tanggal}/{produk}', 'LaporanKartuStokController@downloadExcel')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
