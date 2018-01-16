@@ -664,6 +664,10 @@ Route::get('/laporan-kartu-stok/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{p
 Route::get('/pembayaran-hutang/view', 'PembayaranHutangController@view')->middleware('auth');
 Route::get('/pembayaran-hutang/pencarian', 'PembayaranHutangController@pencarian')->middleware('auth');
 
+// PEMBAYARAN PIUTANG VUE.JS
+Route::get('/pembayaran-piutang/view', 'PembayaranPiutangController@view')->middleware('auth');
+Route::get('/pembayaran-piutang/pencarian', 'PembayaranPiutangController@pencarian')->middleware('auth');
+
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
     Route::resource('user', 'UserController');
@@ -696,6 +700,7 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
     Route::resource('daftar-topos', 'PendaftarToposController');
     Route::resource('laporan-kartu-stok', 'LaporanKartuStokController');
     Route::resource('pembayaran-hutang', 'PembayaranHutangController');
+    Route::resource('pembayaran-piutang', 'PembayaranPiutangController');
 
 //BARANG
     //HALAMAN DESKRIPSI
