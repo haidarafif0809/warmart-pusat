@@ -120,6 +120,7 @@ import LaporanKartuStokIndex from './components/laporan/LaporanKartuStokIndex.vu
 
 //PEMBAYARAN HUTANG
 import PembayaranHutangIndex from './components/pembayaran_hutang/PembayaranHutangIndex.vue';
+import PembayaranHutangCreate from './components/pembayaran_hutang/PembayaranHutangCreate.vue';
 
 //PEMBAYARAN PIUTANG
 import PembayaranPiutangIndex from './components/pembayaran_piutang/PembayaranPiutangIndex.vue';
@@ -547,6 +548,10 @@ const routes = [{
         path: '/pembayaran-hutang',
         component: PembayaranHutangIndex,
         name: 'indexPembayaranHutang'
+    },{
+        path: '/create-pembayaran-hutang',
+        component: PembayaranHutangCreate,
+        name: 'createPembayaranHutang'
     },
     {
         path: '/pembayaran-piutang',
@@ -568,6 +573,7 @@ const routes = [{
         component: PembayaranPiutangEdit,
         name: 'editPembayaranPiutang'
     }
+
 
     ]
     export default routes;
