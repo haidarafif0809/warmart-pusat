@@ -113,11 +113,14 @@ import LaporanMutasiStokIndex from './components/laporan/LaporanMutasiStokIndex.
 import LaporanPembelianProdukIndex from './components/laporan/LaporanPembelianProdukIndex.vue';
 // PENDAFTARAN TOPOS
 import PendaftaranToposIndex from './components/pendaftaran_topos/PendaftaranToposIndex.vue';
+import PendaftaranToposList from './components/pendaftaran_topos/PendaftaranToposList.vue';
+import PendaftaranToposDetail from './components/pendaftaran_topos/PendaftaranToposDetail.vue';
 // PENDAFTARAN TOPOS
 import LaporanKartuStokIndex from './components/laporan/LaporanKartuStokIndex.vue';
 
 //PEMBAYARAN HUTANG
 import PembayaranHutangIndex from './components/pembayaran_hutang/PembayaranHutangIndex.vue';
+import PembayaranHutangCreate from './components/pembayaran_hutang/PembayaranHutangCreate.vue';
 
 //PEMBAYARAN PIUTANG
 import PembayaranPiutangIndex from './components/pembayaran_piutang/PembayaranPiutangIndex.vue';
@@ -524,6 +527,16 @@ const routes = [{
         component: PendaftaranToposIndex,
         name: 'indexPendaftaranTopos'
     },
+    {
+        path: '/user-topos',
+        component: PendaftaranToposList,
+        name: 'listPendaftaranTopos'
+    },
+    {
+        path: '/detail-user-topos/:id',
+        component: PendaftaranToposDetail,
+        name: 'detailPendaftaranTopos'
+    },
     // LAORAN KARTU STOK
     {
         path: '/laporan-kartu-stok',
@@ -535,6 +548,10 @@ const routes = [{
         path: '/pembayaran-hutang',
         component: PembayaranHutangIndex,
         name: 'indexPembayaranHutang'
+    },{
+        path: '/create-pembayaran-hutang',
+        component: PembayaranHutangCreate,
+        name: 'createPembayaranHutang'
     },
     {
         path: '/pembayaran-piutang',
@@ -556,6 +573,7 @@ const routes = [{
         component: PembayaranPiutangEdit,
         name: 'editPembayaranPiutang'
     }
+
 
     ]
     export default routes;

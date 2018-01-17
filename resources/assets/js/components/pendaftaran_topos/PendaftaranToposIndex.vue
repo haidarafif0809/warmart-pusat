@@ -332,7 +332,7 @@ export default {
 				app.seen = true
 				app.loading = false
 
-				if (resp.data.status_pembayaran == 1) {		
+				if (resp.data.status_pembayaran >= 1) {		
 					app.selesai = true	
 					app.seen = false	
 				}else{

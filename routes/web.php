@@ -422,9 +422,16 @@ Route::get('/profil-warung/pencarian', 'WarungProfilController@pencarian')->midd
 Route::get('/profil-warung/pilih-provinsi', 'WarungProfilController@pilih_provinsi')->middleware('auth');
 Route::get('/profil-warung/pilih-wilayah/{id}/{type}', 'WarungProfilController@pilih_wilayah')->middleware('auth');
 Route::get('/profil-warung/view-detail/{id}', 'WarungProfilController@view_detail')->middleware('auth');
+
+// daftar topos
 Route::get('/daftar-topos/data-warung', 'PendaftarToposController@dataWarung')->middleware('auth');
 Route::get('/daftar-topos/data-bank', 'PendaftarToposController@dataBank')->middleware('auth');
 Route::post('/daftar-topos/kirim-bukti-pembayaran/{id}', 'PendaftarToposController@update')->middleware('auth');
+Route::get('/daftar-topos/view', 'PendaftarToposController@view')->middleware('auth');
+Route::get('/daftar-topos/pencarian', 'PendaftarToposController@pencarian')->middleware('auth');
+Route::get('/daftar-topos/konfirmasi/{id}', 'PendaftarToposController@konfirmasi')->middleware('auth');
+Route::get('/daftar-topos/view-detail-user-topos/{id}', 'PendaftarToposController@viewDetailUserTopos')->middleware('auth');
+Route::get('/daftar-topos/pencarian-detail-user-topos/{id}', 'PendaftarToposController@pencarianDetailUserTopos')->middleware('auth');
 
 //KATEGORI TRANSAKSI VUE.JS
 Route::get('/kategori-transaksi/view', 'KategoriTransaksiController@view')->middleware('auth');
@@ -663,6 +670,11 @@ Route::get('/laporan-kartu-stok/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{p
 //
 Route::get('/pembayaran-hutang/view', 'PembayaranHutangController@view')->middleware('auth');
 Route::get('/pembayaran-hutang/pencarian', 'PembayaranHutangController@pencarian')->middleware('auth');
+Route::get('/pembayaran-hutang/view-tbs-pembayaran-hutang', 'PembayaranHutangController@viewTbsPembayaranHutang')->middleware('auth');
+Route::get('/pembayaran-hutang/pencarian-tbs-pembayaran-hutang', 'PembayaranHutangController@pencarianTbsPembayaranHutang')->middleware('auth');
+Route::get('/pembayaran-hutang/pilih-suplier', 'PembayaranHutangController@pilihSuplier')->middleware('auth');
+Route::get('/pembayaran-hutang/data-suplier-hutang', 'PembayaranHutangController@dataSupplierHutang')->middleware('auth');
+
 
 // PEMBAYARAN PIUTANG VUE.JS
 Route::get('/pembayaran-piutang/view', 'PembayaranPiutangController@view')->middleware('auth');
