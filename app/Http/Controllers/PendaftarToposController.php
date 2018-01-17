@@ -111,6 +111,42 @@ class PendaftarToposController extends Controller
   return response()->json($respons);
 }
 
+public function viewDetailUserTopos($id){
+
+    $pendaftaran_topos = PendaftarTopos::with(['bank'])->whereId($id)->orderBy('id', 'desc')->paginate(10);
+    $array       = array();
+
+    foreach ($pendaftaran_topos as $pendaftaran_toposs) {
+      array_push($array, ['pendaftar_topos'=>$pendaftaran_toposs]);
+  }
+
+  $url     = '/daftar-topos/view-detail-user-topos/'.$id;
+  $respons = $this->paginationData($pendaftaran_topos, $array, $url);
+
+  return response()->json($respons);
+}
+
+public function pencarianDetailUserTopos(Request $request, $id){
+
+    $pendaftaran_topos = PendaftarTopos::with(['bank'])->whereId($id)->where(function ($query) use ($request) {
+        $query->orWhere('name', 'LIKE', $request->search . '%')
+        ->orWhere('lama_berlangganan', 'LIKE', $request->search . '%')
+        ->orWhere('berlaku_hingga', 'LIKE', $request->search . '%');
+    })->orderBy('id', 'desc')->paginate(10);
+    $array       = array();
+
+    foreach ($pendaftaran_topos as $pendaftaran_toposs) {
+      array_push($array, ['pendaftar_topos'=>$pendaftaran_toposs]);
+  }
+
+  $url    = '/daftar-topos/pencarian-detail-user-topos/'.$id;
+  $search = $request->search;
+
+  $respons = $this->paginationPencarianData($pendaftaran_topos, $array, $url, $search);
+
+  return response()->json($respons);
+}
+
 public function index()
 {
         //
@@ -479,9 +515,9 @@ public function index()
 
         public function dataWarung(){
 
-           return Warung::find(Auth::user()->id_warung);
-       }
-       public function dataBank(){
+         return Warung::find(Auth::user()->id_warung);
+     }
+     public function dataBank(){
         $bank = Bank::all();
         return response()->json($bank);
     }

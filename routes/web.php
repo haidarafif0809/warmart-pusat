@@ -430,6 +430,8 @@ Route::post('/daftar-topos/kirim-bukti-pembayaran/{id}', 'PendaftarToposControll
 Route::get('/daftar-topos/view', 'PendaftarToposController@view')->middleware('auth');
 Route::get('/daftar-topos/pencarian', 'PendaftarToposController@pencarian')->middleware('auth');
 Route::get('/daftar-topos/konfirmasi/{id}', 'PendaftarToposController@konfirmasi')->middleware('auth');
+Route::get('/daftar-topos/view-detail-user-topos/{id}', 'PendaftarToposController@viewDetailUserTopos')->middleware('auth');
+Route::get('/daftar-topos/pencarian-detail-user-topos/{id}', 'PendaftarToposController@pencarianDetailUserTopos')->middleware('auth');
 
 //KATEGORI TRANSAKSI VUE.JS
 Route::get('/kategori-transaksi/view', 'KategoriTransaksiController@view')->middleware('auth');
