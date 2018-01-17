@@ -397,7 +397,7 @@
                 <ul class="nav navbar-nav navbar-right">
 
 
-                    @if(Auth::user()->tipe_user == 4 )
+                    @if(Auth::user()->tipe_user == 4 && \App\PendaftarTopos::where('warung_id',Auth::user()->id_warung)->first()->status_pembayaran < 2)
 
                     @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 1)
 
@@ -406,152 +406,152 @@
                     @else
                     <b>Masa Percobaan Anda Tinggal 
                         {{\App\Warung::select(DB::raw(' datediff(DATE_ADD(created_at, INTERVAL 14 DAY), current_date()) as sisa_waktu '))->where('id',Auth::user()->id_warung )->first()->sisa_waktu }} Hari Lagi! </b>
-                            <!-- Query diatas bila di masukan ke SQL = select datediff(DATE_ADD(created_at, INTERVAL 14 DAY), current_date()) as selisih from warungs WHERE id = id warung
-                                logika cara menentukan sisa waktu percobaan
-                                waktu daftar ditambah 14 hari kemudian hasilnya di hitung selisih nya dengan tanggal hari ini
-                            -->
+                                    <!-- Query diatas bila di masukan ke SQL = select datediff(DATE_ADD(created_at, INTERVAL 14 DAY), current_date()) as selisih from warungs WHERE id = id warung
+                                        logika cara menentukan sisa waktu percobaan
+                                        waktu daftar ditambah 14 hari kemudian hasilnya di hitung selisih nya dengan tanggal hari ini
+                                    -->
 
-                            <router-link :to="{name: 'indexPendaftaranTopos'}" class="btn btn-primary btn-round"> Daftar Sekarang !
-                            </router-link>      
+                                    <router-link :to="{name: 'indexPendaftaranTopos'}" class="btn btn-primary btn-round"> Daftar Sekarang !
+                                    </router-link>      
 
-                            @endif          
-                            @endif
-                            @endif
-                        </ul>
-                    </div>
-                </div>
-            </nav>
-            <div class="content">
-                <div class="container-fluid">
-                    <div class="row">
-                        @include('layouts._flash')
-                        @yield('content')
-                    </div>
-                </div>
-                <!-- end container fluid -->
-            </div>
-            <footer class="footer">
-                <div class="container-fluid">
-                    <nav class="pull-left">
+                                    @endif          
+                                    @endif
+                                    @endif
+                                </ul>
+                            </div>
+                        </div>
                     </nav>
-                    <p class="copyright pull-right">
-                        ©
-                        <script type="text/javascript">
-                            document.write(new Date().getFullYear())
-                        </script>
-                        <a href="https://andaglos.id">
-                            PT Andaglos Global Teknologi
-                        </a>
-                    </p>
+                    <div class="content">
+                        <div class="container-fluid">
+                            <div class="row">
+                                @include('layouts._flash')
+                                @yield('content')
+                            </div>
+                        </div>
+                        <!-- end container fluid -->
+                    </div>
+                    <footer class="footer">
+                        <div class="container-fluid">
+                            <nav class="pull-left">
+                            </nav>
+                            <p class="copyright pull-right">
+                                ©
+                                <script type="text/javascript">
+                                    document.write(new Date().getFullYear())
+                                </script>
+                                <a href="https://andaglos.id">
+                                    PT Andaglos Global Teknologi
+                                </a>
+                            </p>
+                        </div>
+                    </footer>
                 </div>
-            </footer>
-        </div>
-    </div>
-    <!--Start of Tawk.to Script-->
-    <script type="text/javascript">
-        var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-        (function(){
-            var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-            s1.async=true;
-            s1.src='https://embed.tawk.to/5a051374bb0c3f433d4c84cd/default';
-            s1.charset='UTF-8';
-            s1.setAttribute('crossorigin','*');
-            s0.parentNode.insertBefore(s1,s0);
-        })();
-    </script>
-    <!--End of Tawk.to Script-->
-</body>
-<!--   Core JS Files   -->
+            </div>
+            <!--Start of Tawk.to Script-->
+            <script type="text/javascript">
+                var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+                (function(){
+                    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+                    s1.async=true;
+                    s1.src='https://embed.tawk.to/5a051374bb0c3f433d4c84cd/default';
+                    s1.charset='UTF-8';
+                    s1.setAttribute('crossorigin','*');
+                    s0.parentNode.insertBefore(s1,s0);
+                })();
+            </script>
+            <!--End of Tawk.to Script-->
+        </body>
+        <!--   Core JS Files   -->
 
-<script src="{{ asset('js/app.js?v=1.86')}}" type="text/javascript">
+        <script src="{{ asset('js/app.js?v=1.86')}}" type="text/javascript">
 
-</script>
-<script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript">
-</script>
-<script src="{{ asset('js/material.min.js') }}" type="text/javascript">
-</script>
-<script src="{{ asset('js/bootstrap-datepicker.min.js') }}">
-</script>
-<script src="{{ asset('js/perfect-scrollbar.jquery.min.js') }}" type="text/javascript">
-</script>
-<!-- Library for adding dinamically elements -->
-<script src="{{ asset('js/arrive.min.js') }}" type="text/javascript">
-</script>
-<!-- Forms Validations Plugin -->
-<script src="{{ asset('js/jquery.validate.min.js') }}">
-</script>
-<!-- Promise Library for SweetAlert2 working on IE -->
-<script src="{{ asset('js/es6-promise-auto.min.js') }}">
-</script>
-<!--  Plugin for Date Time Picker and Full Calendar Plugin-->
-<script src="{{ asset('js/moment.min.js') }}">
-</script>
-<!--  Charts Plugin, full documentation here: https://gionkunz.github.io/chartist-js/ -->
-<script src="{{ asset('js/chartist.min.js') }}">
-</script>
-<!--  Plugin for the Wizard, full documentation here: https://github.com/VinceG/twitter-bootstrap-wizard -->
-<script src="{{ asset('js/jquery.bootstrap-wizard.js') }}">
-</script>
-<!--  Notifications Plugin, full documentation here: http://bootstrap-notify.remabledesigns.com/    -->
-<script src="{{ asset('js/bootstrap-notify.js') }}">
-</script>
-<!--  Plugin for the DateTimePicker, full documentation here: https://eonasdan.github.io/bootstrap-datetimepicker/ -->
-<script src="{{ asset('js/bootstrap-datetimepicker.js') }}">
-</script>
-<!-- Vector Map plugin, full documentation here: http://jvectormap.com/documentation/ -->
-<script src="{{ asset('js/jquery-jvectormap.js') }}">
-</script>
-<!-- Sliders Plugin, full documentation here: https://refreshless.com/nouislider/ -->
-<script src="{{ asset('js/nouislider.min.js') }}">
-</script>
-<!--  Plugin for Select, full documentation here: http://silviomoreto.github.io/bootstrap-select -->
-<script src="{{ asset('js/jquery.select-bootstrap.js') }}">
-</script>
-<!--  DataTables.net Plugin, full documentation here: https://datatables.net/    -->
-<script src="{{ asset('js/jquery.dataTables.js') }}">
-</script>
-<!-- Sweet Alert 2 plugin, full documentation here: https://limonte.github.io/sweetalert2/ -->
-<script src="{{ asset('js/sweetalert2.js') }}">
-</script>
-<!-- Plugin for Fileupload, full documentation here: http://www.jasny.net/bootstrap/javascript/#fileinput -->
-<script src="{{ asset('js/jasny-bootstrap.min.js') }}">
-</script>
-<!--  Full Calendar Plugin, full documentation here: https://github.com/fullcalendar/fullcalendar    -->
-<script src="{{ asset('js/fullcalendar.min.js') }}">
-</script>
-<!-- Plugin for Tags, full documentation here: https://github.com/bootstrap-tagsinput/bootstrap-tagsinputs  -->
-<script src="{{ asset('js/jquery.tagsinput.js') }}">
-</script>
-<!-- Material Dashboard javascript methods -->
-<script src="{{ asset('js/material-dashboard.js?v=1.2.0') }}">
-</script>
-<!-- Material Dashboard DEMO methods, don't include it in your project! -->
-<script src="{{ asset('js/demo.js') }}">
-</script>
-<script src="{{ asset('js/selectize.min.js') }}">
-</script>
-<script src="{{ asset('js/custom.js') }}">
-</script>
-<script src="{{ asset('js/ckeditor/ckeditor.js') }}">
-</script>
-<!-- SHORTCUT JS -->
-<script src="{{ asset('js/shortcut.js') }}">
-</script>
-<script src="https://cdn.rawgit.com/chrisvfritz/5f0a639590d6e648933416f90ba7ae4e/raw/974aa47f8f9c5361c5233bd56be37db8ed765a09/currency-validator.js"></script>
+        </script>
+        <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript">
+        </script>
+        <script src="{{ asset('js/material.min.js') }}" type="text/javascript">
+        </script>
+        <script src="{{ asset('js/bootstrap-datepicker.min.js') }}">
+        </script>
+        <script src="{{ asset('js/perfect-scrollbar.jquery.min.js') }}" type="text/javascript">
+        </script>
+        <!-- Library for adding dinamically elements -->
+        <script src="{{ asset('js/arrive.min.js') }}" type="text/javascript">
+        </script>
+        <!-- Forms Validations Plugin -->
+        <script src="{{ asset('js/jquery.validate.min.js') }}">
+        </script>
+        <!-- Promise Library for SweetAlert2 working on IE -->
+        <script src="{{ asset('js/es6-promise-auto.min.js') }}">
+        </script>
+        <!--  Plugin for Date Time Picker and Full Calendar Plugin-->
+        <script src="{{ asset('js/moment.min.js') }}">
+        </script>
+        <!--  Charts Plugin, full documentation here: https://gionkunz.github.io/chartist-js/ -->
+        <script src="{{ asset('js/chartist.min.js') }}">
+        </script>
+        <!--  Plugin for the Wizard, full documentation here: https://github.com/VinceG/twitter-bootstrap-wizard -->
+        <script src="{{ asset('js/jquery.bootstrap-wizard.js') }}">
+        </script>
+        <!--  Notifications Plugin, full documentation here: http://bootstrap-notify.remabledesigns.com/    -->
+        <script src="{{ asset('js/bootstrap-notify.js') }}">
+        </script>
+        <!--  Plugin for the DateTimePicker, full documentation here: https://eonasdan.github.io/bootstrap-datetimepicker/ -->
+        <script src="{{ asset('js/bootstrap-datetimepicker.js') }}">
+        </script>
+        <!-- Vector Map plugin, full documentation here: http://jvectormap.com/documentation/ -->
+        <script src="{{ asset('js/jquery-jvectormap.js') }}">
+        </script>
+        <!-- Sliders Plugin, full documentation here: https://refreshless.com/nouislider/ -->
+        <script src="{{ asset('js/nouislider.min.js') }}">
+        </script>
+        <!--  Plugin for Select, full documentation here: http://silviomoreto.github.io/bootstrap-select -->
+        <script src="{{ asset('js/jquery.select-bootstrap.js') }}">
+        </script>
+        <!--  DataTables.net Plugin, full documentation here: https://datatables.net/    -->
+        <script src="{{ asset('js/jquery.dataTables.js') }}">
+        </script>
+        <!-- Sweet Alert 2 plugin, full documentation here: https://limonte.github.io/sweetalert2/ -->
+        <script src="{{ asset('js/sweetalert2.js') }}">
+        </script>
+        <!-- Plugin for Fileupload, full documentation here: http://www.jasny.net/bootstrap/javascript/#fileinput -->
+        <script src="{{ asset('js/jasny-bootstrap.min.js') }}">
+        </script>
+        <!--  Full Calendar Plugin, full documentation here: https://github.com/fullcalendar/fullcalendar    -->
+        <script src="{{ asset('js/fullcalendar.min.js') }}">
+        </script>
+        <!-- Plugin for Tags, full documentation here: https://github.com/bootstrap-tagsinput/bootstrap-tagsinputs  -->
+        <script src="{{ asset('js/jquery.tagsinput.js') }}">
+        </script>
+        <!-- Material Dashboard javascript methods -->
+        <script src="{{ asset('js/material-dashboard.js?v=1.2.0') }}">
+        </script>
+        <!-- Material Dashboard DEMO methods, don't include it in your project! -->
+        <script src="{{ asset('js/demo.js') }}">
+        </script>
+        <script src="{{ asset('js/selectize.min.js') }}">
+        </script>
+        <script src="{{ asset('js/custom.js') }}">
+        </script>
+        <script src="{{ asset('js/ckeditor/ckeditor.js') }}">
+        </script>
+        <!-- SHORTCUT JS -->
+        <script src="{{ asset('js/shortcut.js') }}">
+        </script>
+        <script src="https://cdn.rawgit.com/chrisvfritz/5f0a639590d6e648933416f90ba7ae4e/raw/974aa47f8f9c5361c5233bd56be37db8ed765a09/currency-validator.js"></script>
 
-<!--MENU YG SEDANG DI MIGRASI KE VUEJS TIDAK BISA DIAKSES SEMENTARA-->
-<script type="text/javascript">
-    $(document).on('click', '.vueJs', function(){
-        swal("Pemberitahuan!", "Menu Tidak Dapat Diakses. Karena Dalam Proses Perbaikan!", "info");
-    });
-</script>
-<script type="text/javascript">
-    $(document).ready(function(){
-        $("#minimizeSidebar").click();        
-        $(document).on('click', '.menu-nav', function(){
-         $('.navbar-toggle ').click();
-     });
-    });
-</script>
-@yield('scripts')
-</html>
+        <!--MENU YG SEDANG DI MIGRASI KE VUEJS TIDAK BISA DIAKSES SEMENTARA-->
+        <script type="text/javascript">
+            $(document).on('click', '.vueJs', function(){
+                swal("Pemberitahuan!", "Menu Tidak Dapat Diakses. Karena Dalam Proses Perbaikan!", "info");
+            });
+        </script>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $("#minimizeSidebar").click();        
+                $(document).on('click', '.menu-nav', function(){
+                 $('.navbar-toggle ').click();
+             });
+            });
+        </script>
+        @yield('scripts')
+        </html>
