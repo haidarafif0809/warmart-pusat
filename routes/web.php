@@ -667,6 +667,11 @@ Route::get('/pembayaran-hutang/pencarian', 'PembayaranHutangController@pencarian
 // PEMBAYARAN PIUTANG VUE.JS
 Route::get('/pembayaran-piutang/view', 'PembayaranPiutangController@view')->middleware('auth');
 Route::get('/pembayaran-piutang/pencarian', 'PembayaranPiutangController@pencarian')->middleware('auth');
+Route::get('/pembayaran-piutang/pilih-penjualan-piutang', 'PembayaranPiutangController@dataPiutang')->middleware('auth');
+Route::get('/pembayaran-piutang/data-penjualan-piutang/{id}', 'PembayaranPiutangController@getDataFakturPiutang')->middleware('auth');
+Route::post('/pembayaran-piutang/proses-tambah-tbs-pembayaran-piutang', 'PembayaranPiutangController@prosesTbsPembayaranPiutang')->middleware('auth');
+Route::get('/pembayaran-piutang/view-tbs-pembayaran-piutang', 'PembayaranPiutangController@viewTbs')->middleware('auth');
+Route::get('/pembayaran-piutang/pencarian-tbs-pembayaran-piutang', 'PembayaranPiutangController@pencarianTbs')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
