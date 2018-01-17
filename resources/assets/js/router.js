@@ -113,12 +113,20 @@ import LaporanMutasiStokIndex from './components/laporan/LaporanMutasiStokIndex.
 import LaporanPembelianProdukIndex from './components/laporan/LaporanPembelianProdukIndex.vue';
 // PENDAFTARAN TOPOS
 import PendaftaranToposIndex from './components/pendaftaran_topos/PendaftaranToposIndex.vue';
+import PendaftaranToposList from './components/pendaftaran_topos/PendaftaranToposList.vue';
+import PendaftaranToposDetail from './components/pendaftaran_topos/PendaftaranToposDetail.vue';
 // PENDAFTARAN TOPOS
 import LaporanKartuStokIndex from './components/laporan/LaporanKartuStokIndex.vue';
 
 //PEMBAYARAN HUTANG
 import PembayaranHutangIndex from './components/pembayaran_hutang/PembayaranHutangIndex.vue';
 import PembayaranHutangCreate from './components/pembayaran_hutang/PembayaranHutangCreate.vue';
+
+//PEMBAYARAN PIUTANG
+import PembayaranPiutangIndex from './components/pembayaran_piutang/PembayaranPiutangIndex.vue';
+import PembayaranPiutangDetail from './components/pembayaran_piutang/PembayaranPiutangDetail.vue';
+import PembayaranPiutangCreate from './components/pembayaran_piutang/PembayaranPiutangCreate.vue';
+import PembayaranPiutangEdit from './components/pembayaran_piutang/PembayaranPiutangEdit.vue';
 
 const routes = [{
     path: '/',
@@ -519,6 +527,16 @@ const routes = [{
         component: PendaftaranToposIndex,
         name: 'indexPendaftaranTopos'
     },
+    {
+        path: '/user-topos',
+        component: PendaftaranToposList,
+        name: 'listPendaftaranTopos'
+    },
+    {
+        path: '/detail-user-topos/:id',
+        component: PendaftaranToposDetail,
+        name: 'detailPendaftaranTopos'
+    },
     // LAORAN KARTU STOK
     {
         path: '/laporan-kartu-stok',
@@ -534,6 +552,26 @@ const routes = [{
         path: '/create-pembayaran-hutang',
         component: PembayaranHutangCreate,
         name: 'createPembayaranHutang'
+    },
+    {
+        path: '/pembayaran-piutang',
+        component: PembayaranPiutangIndex,
+        name: 'indexPembayaranPiutang'
+    },
+    {
+        path: '/detail-pembayaran-piutang/:id',
+        component: PembayaranPiutangDetail,
+        name: 'detailPembayaranPiutang'
+    },
+    {
+        path: '/create-pembayaran-piutang',
+        component: PembayaranPiutangCreate,
+        name: 'createPembayaranPiutang'
+    },
+    {
+        path: '/edit-pembayaran-piutang/:id',
+        component: PembayaranPiutangEdit,
+        name: 'editPembayaranPiutang'
     }
 
 

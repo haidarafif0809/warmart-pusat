@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\DB;
 use Intervention\Image\ImageManagerStatic as Image;
 use App\Notifications\PendaftaranTopos;
 use App\Notifications\PembayaranTopos;
-
+use GuzzleHttp\Client;
 
 class PendaftarToposController extends Controller
 {
@@ -29,15 +29,97 @@ class PendaftarToposController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+
+
+    public function paginationData($pendaftar_topos, $array, $url)
     {
+
+        //DATA PAGINATION
+        $respons['current_page']   = $pendaftar_topos->currentPage();
+        $respons['data']           = $array;
+        $respons['first_page_url'] = url($url . '?page=' . $pendaftar_topos->firstItem());
+        $respons['from']           = 1;
+        $respons['last_page']      = $pendaftar_topos->lastPage();
+        $respons['last_page_url']  = url($url . '?page=' . $pendaftar_topos->lastPage());
+        $respons['next_page_url']  = $pendaftar_topos->nextPageUrl();
+        $respons['path']           = url($url);
+        $respons['per_page']       = $pendaftar_topos->perPage();
+        $respons['prev_page_url']  = $pendaftar_topos->previousPageUrl();
+        $respons['to']             = $pendaftar_topos->perPage();
+        $respons['total']          = $pendaftar_topos->total();
+        //DATA PAGINATION
+
+        return $respons;
+    }
+    public function paginationPencarianData($pendaftar_topos, $array, $url, $search)
+    {
+        //DATA PAGINATION
+        $respons['current_page']   = $pendaftar_topos->currentPage();
+        $respons['data']           = $array;
+        $respons['first_page_url'] = url($url . '?page=' . $pendaftar_topos->firstItem() . '&search=' . $search);
+        $respons['from']           = 1;
+        $respons['last_page']      = $pendaftar_topos->lastPage();
+        $respons['last_page_url']  = url($url . '?page=' . $pendaftar_topos->lastPage() . '&search=' . $search);
+        $respons['next_page_url']  = $pendaftar_topos->nextPageUrl();
+        $respons['path']           = url($url);
+        $respons['per_page']       = $pendaftar_topos->perPage();
+        $respons['prev_page_url']  = $pendaftar_topos->previousPageUrl();
+        $respons['to']             = $pendaftar_topos->perPage();
+        $respons['total']          = $pendaftar_topos->total();
+        //DATA PAGINATION
+
+        return $respons;
+    }
+
+
+    public function view()
+    {
+        $pendaftaran_topos = PendaftarTopos::with(['bank'])->orderBy('id', 'desc')->paginate(10);
+        $array       = array();
+
+        foreach ($pendaftaran_topos as $pendaftaran_toposs) {
+          array_push($array, ['pendaftar_topos'=>$pendaftaran_toposs]);
+      }
+
+      $url     = '/daftar-topos/view';
+      $respons = $this->paginationData($pendaftaran_topos, $array, $url);
+
+      return response()->json($respons);
+  }
+
+
+  public function pencarian(Request $request)
+  {
+
+    $pendaftaran_topos = PendaftarTopos::with(['bank'])->where(function ($query) use ($request) {
+
+        $query->orWhere('name', 'LIKE', $request->search . '%')
+        ->orWhere('email', 'LIKE', $request->search . '%')
+        ->orWhere('no_telp', 'LIKE', $request->search . '%');
+    })->orderBy('id', 'desc')->paginate(10);
+    $array       = array();
+
+    foreach ($pendaftaran_topos as $pendaftaran_toposs) {
+      array_push($array, ['pendaftar_topos'=>$pendaftaran_toposs]);
+  }
+
+  $url    = '/daftar-topos/pencarian';
+  $search = $request->search;
+
+  $respons = $this->paginationPencarianData($pendaftaran_topos, $array, $url, $search);
+
+  return response()->json($respons);
+}
+
+public function index()
+{
         //
-        $pendaftar_topos = PendaftarTopos::with('bank')->where('warung_id',Auth::user()->id_warung);
+    $pendaftar_topos = PendaftarTopos::with('bank')->where('warung_id',Auth::user()->id_warung);
 
-        if ($pendaftar_topos->count() > 0) {
+    if ($pendaftar_topos->count() > 0) {
 
-            $waktu_daftar = date($pendaftar_topos->first()->created_at);
-            $date = date_create($waktu_daftar);
+        $waktu_daftar = date($pendaftar_topos->first()->created_at);
+        $date = date_create($waktu_daftar);
             date_add($date, date_interval_create_from_date_string('4 hours'));// hanya diberi waktu 4 jam
             $batas_pendaftaran = date_format($date, 'Y-m-d H:i:s');
 
@@ -114,6 +196,10 @@ class PendaftarToposController extends Controller
             'warung_id'    => Auth::user()->id_warung
 
         ]);
+
+        // arahkan ke methode smsPendaftaran()
+        $this->smsPendaftaran($pendaftar_topos);
+        // Notification slack
         Notification::send(PendaftarTopos::first(), new PendaftaranTopos($pendaftar_topos)); 
 
 
@@ -172,38 +258,6 @@ class PendaftarToposController extends Controller
         //
     }
 
-    public function uploadBuktiPembayaran($id,$request){
-
-        $update_pendafataran_topos = PendaftarTopos::find($id);
-        $update_pendafataran_topos->update(['keterangan'=>$request->keterangan,'status_pembayaran'=>1]);
-        if ($request->hasFile('foto')) {
-
-                // Mengambil file yang diupload
-            $foto          = $request->file('foto');
-            $uploaded_foto = $foto;
-                // mengambil extension file
-            $extension = $uploaded_foto->getClientOriginalExtension();
-                // membuat nama file random berikut extension
-            $filename     = str_random(40) . '.' . $extension;
-            $image_resize = Image::make($foto->getRealPath());
-            $image_resize->fit(300);
-            $image_resize->save(public_path('foto_bukti_pembayaran/' . $filename));
-                // hapus foto_home lama, jika ada
-            if ($update_pendafataran_topos->foto) {
-                $old_foto = $update_pendafataran_topos->foto;
-                $filepath = public_path() . DIRECTORY_SEPARATOR . 'foto_bukti_pembayaran'
-                . DIRECTORY_SEPARATOR . $update_pendafataran_topos->foto;
-                try {
-                    File::delete($filepath);
-                } catch (FileNotFoundException $e) {
-                        // File sudah dihapus/tidak ada
-                }
-            }
-            $update_pendafataran_topos->foto = $filename;
-            $update_pendafataran_topos->save();
-        }
-        Notification::send(PendaftarTopos::first(), new PembayaranTopos($update_pendafataran_topos)); 
-    }
 
     public function pendaftaranTopos($id){    
 
@@ -273,7 +327,7 @@ class PendaftarToposController extends Controller
         $bank_id  = $bank[0];
 
         $pendaftar_topos = PendaftarTopos::create([
-            'name'      => $request->name,
+            'name'      => $request->nama_warung,
             'email'      => $request->email,
             'no_telp'   => $request->no_telp,
             'alamat'     => $request->alamat,
@@ -287,6 +341,11 @@ class PendaftarToposController extends Controller
             'warung_id'    => $warung->id
 
         ]);
+
+        // arahkan ke methode smsPendaftaran()
+        $this->smsPendaftaran($pendaftar_topos);
+
+        // kirim Notification ke Slack
         Notification::send(PendaftarTopos::first(), new PendaftaranTopos($pendaftar_topos)); 
 
         return redirect('/kirim-bukti-pembayaran/'.$pendaftar_topos->id);
@@ -301,10 +360,7 @@ class PendaftarToposController extends Controller
             return response()->view('error.404');
         }else{
 
-            $waktu_daftar = date($pendaftar_topos->first()->created_at);
-            $date = date_create($waktu_daftar);
-            date_add($date, date_interval_create_from_date_string('4 hours'));// hanya diberi waktu 4 jam
-            $batas_pendaftaran = date_format($date, 'd/m/Y H:i:s');
+            $batas_pendaftaran =  $this->batasPendaftaran($pendaftar_topos->first()->created_at);
 
             if ($pendaftar_topos->first()->status_pembayaran == 0) {
 
@@ -312,7 +368,7 @@ class PendaftarToposController extends Controller
                     "alert" => 'warning',
                     "icon" => 'error_outline',
                     "judul" => 'PERHATIAN',
-                    "message" => 'Mohon Selesaikan Pembayaran Sebelum <b>'.$batas_pendaftaran.'</b> Sebesar <b>Rp. '. number_format($pendaftar_topos->first()->total, 0, ',', '.').'</b> melalui <b>'.$pendaftar_topos->first()->jenis_pembayaran.'</b> Ke Rekening: <br>
+                    "message" => 'Kami Sudah Mengirimkan SMS ke Nomor <b>'.$pendaftar_topos->first()->no_telp.'</b>. <br>Mohon Selesaikan Pembayaran Sebelum <b>'.$batas_pendaftaran.'</b> Sebesar <b>Rp. '. number_format($pendaftar_topos->first()->total, 0, ',', '.').'</b> melalui <b>'.$pendaftar_topos->first()->jenis_pembayaran.'</b> Ke Rekening: <br>
                     <table>
                     <tbody>
                     <tr><td width="50%"><font><b>Bank</b></font></td> <td> :&nbsp;</td> <td><font> <b>'.$pendaftar_topos->first()->bank->nama_bank.'</b></font></tr>
@@ -337,22 +393,112 @@ class PendaftarToposController extends Controller
         }
     }
 
-    public function prosesKirimBuktiPembayaran(Request $request,$id){        
-            //validate
-        $this->validate($request, [
-            'foto'               => 'required|image|max:3072',
-        ]);
 
-        $this->uploadBuktiPembayaran($id,$request);
-        return back();
+    public function uploadBuktiPembayaran($id,$request){
+
+        $update_pendafataran_topos = PendaftarTopos::find($id);
+        $update_pendafataran_topos->update(['keterangan'=>$request->keterangan,'status_pembayaran'=>1]);
+        if ($request->hasFile('foto')) {
+
+                // Mengambil file yang diupload
+            $foto          = $request->file('foto');
+            $uploaded_foto = $foto;
+                // mengambil extension file
+            $extension = $uploaded_foto->getClientOriginalExtension();
+                // membuat nama file random berikut extension
+            $filename     = str_random(40) . '.' . $extension;
+            $image_resize = Image::make($foto->getRealPath());
+            $image_resize->fit(300);
+            $image_resize->save(public_path('foto_bukti_pembayaran/' . $filename));
+                // hapus foto_home lama, jika ada
+            if ($update_pendafataran_topos->foto) {
+                $old_foto = $update_pendafataran_topos->foto;
+                $filepath = public_path() . DIRECTORY_SEPARATOR . 'foto_bukti_pembayaran'
+                . DIRECTORY_SEPARATOR . $update_pendafataran_topos->foto;
+                try {
+                    File::delete($filepath);
+                } catch (FileNotFoundException $e) {
+                        // File sudah dihapus/tidak ada
+                }
+            }
+            $update_pendafataran_topos->foto = $filename;
+            $update_pendafataran_topos->save();
+        }
+        Notification::send(PendaftarTopos::first(), new PembayaranTopos($update_pendafataran_topos)); 
     }
 
-    public function dataWarung(){
 
-       return Warung::find(Auth::user()->id_warung);
-   }
-   public function dataBank(){
-    $bank = Bank::all();
-    return response()->json($bank);
-}
+
+    public function smsPendaftaran($pendaftar_topos){
+                // url_form_upload_bukti_pembayaran 
+        $url_form_upload_bukti_pembayaran = url('/kirim-bukti-pembayaran/'.$pendaftar_topos->id);
+        $total = number_format($pendaftar_topos->total, 0, ',', '.');
+
+        // menghitung batas waktu pengiriman bukti pembayaran
+        $batas_pendaftaran =  $this->batasPendaftaran($pendaftar_topos->created_at);
+        //085709064029
+        // isi pesan SMS
+        $isi_pesan = urlencode('Terima Kasih Telah Mendaftar di Topos, Mohon Selesaikan Pembayaran Sebelum '.$batas_pendaftaran.' Sebesar Rp. '. $total .' melalui '.$pendaftar_topos->jenis_pembayaran.' Ke Rekening '.$pendaftar_topos->bank->nama_bank.' dengan No. Rekening '.$pendaftar_topos->no_rekening.' Atas Nama '.$pendaftar_topos->atas_nama.'. Jika Anda Sudah Menyelesaikan Pembayaran Silakan Kunjungi Laman Ini '.$url_form_upload_bukti_pembayaran);
+        // no telp
+        $no_telpon = $pendaftar_topos->no_telp;
+        // arahkan ke methode kirimSms()
+        $this->kirimSms($no_telpon,$isi_pesan);
+    }
+
+
+    public function kirimSms($nomor_tujuan,$isi_pesan){
+
+        $userkey      = env('USERKEY');
+        $passkey      = env('PASSKEY');
+
+        if (env('STATUS_SMS') == 1) {
+                $client = new Client(); //GuzzleHttp\Client
+                $result = $client->get('https://reguler.zenziva.net/apps/smsapi.php?userkey=' . $userkey . '&passkey=' . $passkey . '&nohp=' . $nomor_tujuan . '&pesan=' . $isi_pesan . '');
+
+            }
+        }
+
+        public function batasPendaftaran($waktu_daftar){
+
+            $waktu_daftar = date($waktu_daftar);
+            $date = date_create($waktu_daftar);
+            date_add($date, date_interval_create_from_date_string('4 hours'));// hanya diberi waktu 4 jam
+            $batas_pendaftaran = date_format($date, 'd/m/Y H:i:s'); 
+
+            return $batas_pendaftaran;
+        }
+        public function prosesKirimBuktiPembayaran(Request $request,$id){        
+            //validate
+            $this->validate($request, [
+                'foto'               => 'required|image|max:3072',
+            ]);
+
+            $this->uploadBuktiPembayaran($id,$request);
+            return back();
+        }
+
+        public function dataWarung(){
+
+           return Warung::find(Auth::user()->id_warung);
+       }
+       public function dataBank(){
+        $bank = Bank::all();
+        return response()->json($bank);
+    }
+
+    public function konfirmasi($id){
+
+        $update_pendafataran_topos = PendaftarTopos::find($id);
+        $update_pendafataran_topos->update(['status_pembayaran'=> '2']);
+
+        // isi pesan SMS
+        $isi_pesan = urlencode('Topos : Terima Kasih Telah Mengirimkan Bukti Pembayaran,  Pembayaran Anda Sudah Kami Terima.');
+        // no telp
+        $no_telpon = $update_pendafataran_topos->no_telp;
+        // arahkan ke methode kirimSms()
+        $this->kirimSms($no_telpon,$isi_pesan);
+
+        return response(200);
+    }
+
 }
