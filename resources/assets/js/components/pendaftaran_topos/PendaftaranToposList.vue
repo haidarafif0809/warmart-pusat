@@ -1,3 +1,9 @@
+<style scoped>
+.pencarian {
+  color: red; 
+  float: right;
+}
+</style>
 <template>
 
   <div class="row" >
@@ -18,67 +24,67 @@
           <h4 class="card-title"> User Topos </h4>
 
           <div class=" table-responsive ">
-            <div  align="right">
-             Pencarian
-             <input type="text" name="pencarian" v-model="pencarian" placeholder="Kolom Pencarian" >
-           </div>
 
-           <table class="table table-striped table-hover">
-            <thead class="text-primary">
-              <tr>
-                <th>Nama Toko</th>
-                <th>Email</th>
-                <th>No. Telpon</th>
-                <th>Alamat</th>
-                <th>Foto Bukti Pembayaran</th>
-                <th>Detail</th>
-                <th>Konfirmasi</th>
-              </tr>
-            </thead>
+            <div class="pencarian">
+              <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
+            </div>
 
-            <tbody v-if="pendaftaranTopos.length > 0 && loading== false" class="data-ada">
-              <tr v-for="pendaftaranTopos, index in pendaftaranTopos">
-                <td>{{ pendaftaranTopos.pendaftar_topos.name }}</td>
-                <td>{{ pendaftaranTopos.pendaftar_topos.email }}</td>
-                <td>{{ pendaftaranTopos.pendaftar_topos.no_telp }}</td>
-                <td>{{ pendaftaranTopos.pendaftar_topos.alamat }}</td>
-                <td><a v-if="pendaftaranTopos.pendaftar_topos.foto != undefined" v-bind:href="url_foto_bukti_pembayaran+ '/'+pendaftaranTopos.pendaftar_topos.foto" target="blank">Lihat Foto</a>
-                  <p v-else >Belum Membayar</p>
-                </td>
-                <td><router-link :to="{name: 'detailPendaftaranTopos', params: {id: pendaftaranTopos.pendaftar_topos.id }}" class="btn btn-xs btn-info" v-bind:id="'detail-' + pendaftaranTopos.pendaftar_topos.id">
-                Detail </router-link> </td>
-                <td>
-                  <a v-if="pendaftaranTopos.pendaftar_topos.foto != undefined && pendaftaranTopos.pendaftar_topos.status_pembayaran == 1" href="#user-topos" class="btn btn-xs btn-primary" v-bind:id="'confirm-ya-' + pendaftaranTopos.pendaftar_topos.id" v-on:click="konfirmasiEntry(pendaftaranTopos.pendaftar_topos.id, index,pendaftaranTopos.pendaftar_topos.name)">
-                  Iya  </a>
+            <table class="table table-striped table-hover">
+              <thead class="text-primary">
+                <tr>
+                  <th>Nama Toko</th>
+                  <th>Email</th>
+                  <th>No. Telpon</th>
+                  <th>Alamat</th>
+                  <th>Foto Bukti Pembayaran</th>
+                  <th>Detail</th>
+                  <th>Konfirmasi</th>
+                </tr>
+              </thead>
 
-                  <a v-else-if="pendaftaranTopos.pendaftar_topos.foto != undefined && pendaftaranTopos.pendaftar_topos.status_pembayaran == 2" href="#user-topos" class="btn btn-xs btn-warning">
-                  Sudah Terkonfirmasi </a>
+              <tbody v-if="pendaftaranTopos.length > 0 && loading== false" class="data-ada">
+                <tr v-for="pendaftaranTopos, index in pendaftaranTopos">
+                  <td>{{ pendaftaranTopos.pendaftar_topos.name }}</td>
+                  <td>{{ pendaftaranTopos.pendaftar_topos.email }}</td>
+                  <td>{{ pendaftaranTopos.pendaftar_topos.no_telp }}</td>
+                  <td>{{ pendaftaranTopos.pendaftar_topos.alamat }}</td>
+                  <td><a v-if="pendaftaranTopos.pendaftar_topos.foto != undefined" v-bind:href="url_foto_bukti_pembayaran+ '/'+pendaftaranTopos.pendaftar_topos.foto" target="blank">Lihat Foto</a>
+                    <p v-else >Belum Membayar</p>
+                  </td>
+                  <td><router-link :to="{name: 'detailPendaftaranTopos', params: {id: pendaftaranTopos.pendaftar_topos.id }}" class="btn btn-xs btn-info" v-bind:id="'detail-' + pendaftaranTopos.pendaftar_topos.id">
+                  Detail </router-link> </td>
+                  <td>
+                    <a v-if="pendaftaranTopos.pendaftar_topos.foto != undefined && pendaftaranTopos.pendaftar_topos.status_pembayaran == 1" href="#user-topos" class="btn btn-xs btn-primary" v-bind:id="'confirm-ya-' + pendaftaranTopos.pendaftar_topos.id" v-on:click="konfirmasiEntry(pendaftaranTopos.pendaftar_topos.id, index,pendaftaranTopos.pendaftar_topos.name)">
+                    Iya  </a>
 
-                  <a v-else-if="pendaftaranTopos.pendaftar_topos.foto == null && pendaftaranTopos.pendaftar_topos.status_pembayaran == null" href="#user-topos" class="btn btn-xs btn-warning" >
-                  Belum Membayar </a>
-                </td>
-              </tr>
-            </tbody>
-            <!--JIKA DATA pendaftaranTopos KOSONG-->
-            <tbody class="data-tidak-ada" v-else-if="pendaftaranTopos.length == 0 && loading== false">
-              <tr>
-                <td colspan="8"  class="text-center">Tidak Ada Data</td>
-              </tr>
-            </tbody>
-          </table>
+                    <a v-else-if="pendaftaranTopos.pendaftar_topos.foto != undefined && pendaftaranTopos.pendaftar_topos.status_pembayaran == 2" href="#user-topos" class="btn btn-xs btn-warning">
+                    Sudah Terkonfirmasi </a>
 
-          <!--LOADING-->
-          <vue-simple-spinner v-if="loading"></vue-simple-spinner>
-          <!--PAGINATION TABLE-->
-          <div align="right"><pagination :data="pendaftaranToposData" :limit="4" v-on:pagination-change-page="getResults"></pagination></div>
+                    <a v-else-if="pendaftaranTopos.pendaftar_topos.foto == null && pendaftaranTopos.pendaftar_topos.status_pembayaran == null" href="#user-topos" class="btn btn-xs btn-warning" >
+                    Belum Membayar </a>
+                  </td>
+                </tr>
+              </tbody>
+              <!--JIKA DATA pendaftaranTopos KOSONG-->
+              <tbody class="data-tidak-ada" v-else-if="pendaftaranTopos.length == 0 && loading== false">
+                <tr>
+                  <td colspan="8"  class="text-center">Tidak Ada Data</td>
+                </tr>
+              </tbody>
+            </table>
 
-        </div><!-- /END RESPONSIVE-->
+            <!--LOADING-->
+            <vue-simple-spinner v-if="loading"></vue-simple-spinner>
+            <!--PAGINATION TABLE-->
+            <div align="right"><pagination :data="pendaftaranToposData" :limit="4" v-on:pagination-change-page="getResults"></pagination></div>
 
+          </div><!-- /END RESPONSIVE-->
+
+        </div>
       </div>
-    </div>
 
-  </div><!--/END-COL-SM-10-->
-</div><!--/END ROW-->
+    </div><!--/END-COL-SM-10-->
+  </div><!--/END ROW-->
 
 </template>
 

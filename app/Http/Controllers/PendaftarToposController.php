@@ -87,8 +87,32 @@ class PendaftarToposController extends Controller
       return response()->json($respons);
   }
 
-  public function index()
+
+  public function pencarian(Request $request)
   {
+
+    $pendaftaran_topos = PendaftarTopos::with(['bank'])->where(function ($query) use ($request) {
+
+        $query->orWhere('name', 'LIKE', $request->search . '%')
+        ->orWhere('email', 'LIKE', $request->search . '%')
+        ->orWhere('no_telp', 'LIKE', $request->search . '%');
+    })->orderBy('id', 'desc')->paginate(10);
+    $array       = array();
+
+    foreach ($pendaftaran_topos as $pendaftaran_toposs) {
+      array_push($array, ['pendaftar_topos'=>$pendaftaran_toposs]);
+  }
+
+  $url    = '/daftar-topos/pencarian';
+  $search = $request->search;
+
+  $respons = $this->paginationPencarianData($pendaftaran_topos, $array, $url, $search);
+
+  return response()->json($respons);
+}
+
+public function index()
+{
         //
     $pendaftar_topos = PendaftarTopos::with('bank')->where('warung_id',Auth::user()->id_warung);
 
