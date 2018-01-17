@@ -327,6 +327,19 @@
         </span>
     </router-link>
 </li>
+@if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 1)
+<li>
+    <router-link :to="{name: 'listPendaftaranTopos'}" class="menu-nav">
+        <span class="sidebar-mini">
+            PT
+        </span>
+        <span class="sidebar-normal">
+            Pendaftar Topos
+        </span>
+    </router-link>
+</li>
+@endif
+
 </ul>
 </div>
 </li>

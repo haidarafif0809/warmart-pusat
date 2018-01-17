@@ -29,15 +29,73 @@ class PendaftarToposController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+
+
+    public function paginationData($pendaftar_topos, $array, $url)
     {
+
+        //DATA PAGINATION
+        $respons['current_page']   = $pendaftar_topos->currentPage();
+        $respons['data']           = $array;
+        $respons['first_page_url'] = url($url . '?page=' . $pendaftar_topos->firstItem());
+        $respons['from']           = 1;
+        $respons['last_page']      = $pendaftar_topos->lastPage();
+        $respons['last_page_url']  = url($url . '?page=' . $pendaftar_topos->lastPage());
+        $respons['next_page_url']  = $pendaftar_topos->nextPageUrl();
+        $respons['path']           = url($url);
+        $respons['per_page']       = $pendaftar_topos->perPage();
+        $respons['prev_page_url']  = $pendaftar_topos->previousPageUrl();
+        $respons['to']             = $pendaftar_topos->perPage();
+        $respons['total']          = $pendaftar_topos->total();
+        //DATA PAGINATION
+
+        return $respons;
+    }
+    public function paginationPencarianData($pendaftar_topos, $array, $url, $search)
+    {
+        //DATA PAGINATION
+        $respons['current_page']   = $pendaftar_topos->currentPage();
+        $respons['data']           = $array;
+        $respons['first_page_url'] = url($url . '?page=' . $pendaftar_topos->firstItem() . '&search=' . $search);
+        $respons['from']           = 1;
+        $respons['last_page']      = $pendaftar_topos->lastPage();
+        $respons['last_page_url']  = url($url . '?page=' . $pendaftar_topos->lastPage() . '&search=' . $search);
+        $respons['next_page_url']  = $pendaftar_topos->nextPageUrl();
+        $respons['path']           = url($url);
+        $respons['per_page']       = $pendaftar_topos->perPage();
+        $respons['prev_page_url']  = $pendaftar_topos->previousPageUrl();
+        $respons['to']             = $pendaftar_topos->perPage();
+        $respons['total']          = $pendaftar_topos->total();
+        //DATA PAGINATION
+
+        return $respons;
+    }
+
+
+    public function view()
+    {
+        $pendaftaran_topos = PendaftarTopos::with(['bank'])->orderBy('id', 'desc')->paginate(10);
+        $array       = array();
+
+        foreach ($pendaftaran_topos as $pendaftaran_toposs) {
+          array_push($array, ['pendaftar_topos'=>$pendaftaran_toposs]);
+      }
+
+      $url     = '/daftar-topos/view';
+      $respons = $this->paginationData($pendaftaran_topos, $array, $url);
+
+      return response()->json($respons);
+  }
+
+  public function index()
+  {
         //
-        $pendaftar_topos = PendaftarTopos::with('bank')->where('warung_id',Auth::user()->id_warung);
+    $pendaftar_topos = PendaftarTopos::with('bank')->where('warung_id',Auth::user()->id_warung);
 
-        if ($pendaftar_topos->count() > 0) {
+    if ($pendaftar_topos->count() > 0) {
 
-            $waktu_daftar = date($pendaftar_topos->first()->created_at);
-            $date = date_create($waktu_daftar);
+        $waktu_daftar = date($pendaftar_topos->first()->created_at);
+        $date = date_create($waktu_daftar);
             date_add($date, date_interval_create_from_date_string('4 hours'));// hanya diberi waktu 4 jam
             $batas_pendaftaran = date_format($date, 'Y-m-d H:i:s');
 
@@ -245,7 +303,7 @@ class PendaftarToposController extends Controller
         $bank_id  = $bank[0];
 
         $pendaftar_topos = PendaftarTopos::create([
-            'name'      => $request->name,
+            'name'      => $request->nama_warung,
             'email'      => $request->email,
             'no_telp'   => $request->no_telp,
             'alamat'     => $request->alamat,
@@ -397,10 +455,26 @@ class PendaftarToposController extends Controller
 
         public function dataWarung(){
 
-         return Warung::find(Auth::user()->id_warung);
-     }
-     public function dataBank(){
+           return Warung::find(Auth::user()->id_warung);
+       }
+       public function dataBank(){
         $bank = Bank::all();
         return response()->json($bank);
     }
+
+    public function konfirmasi($id){
+
+        $update_pendafataran_topos = PendaftarTopos::find($id);
+        $update_pendafataran_topos->update(['status_pembayaran'=> '2']);
+
+        // isi pesan SMS
+        $isi_pesan = urlencode('Topos : Terima Kasih Telah Mengirimkan Bukti Pembayaran,  Pembayaran Anda Sudah Kami Terima.');
+        // no telp
+        $no_telpon = $update_pendafataran_topos->no_telp;
+        // arahkan ke methode kirimSms()
+        $this->kirimSms($no_telpon,$isi_pesan);
+
+        return response(200);
+    }
+
 }
