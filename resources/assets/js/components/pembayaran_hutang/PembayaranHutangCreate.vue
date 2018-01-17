@@ -37,11 +37,67 @@
 			<ul class="breadcrumb">
 
 				<li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li>
-				<li style="color: purple">Persediaan</li>
 				<li><router-link :to="{name: 'indexPembayaranHutang'}">Pembayaran Hutang</router-link></li>
 				<li class="active">Tambah Pembayaran Hutang</li>
-
 			</ul>
+
+
+          <div class="modal" id="modal_pilih_hutang" role="dialog" data-backdrop=""> 
+                  <div class="modal-dialog modal-lg"> 
+                         <!-- Modal content--> 
+                            <div class="modal-content"> 
+                                <div class="modal-header"> 
+                                    <button type="button" class="close"  v-on:click="closeModalX()" v-shortkey.push="['esc']" @shortkey="closeModalX()"> &times;</button> 
+                                    <h4 class="modal-title"> 
+                                        <div class="alert-icon"> 
+                                            <b>Silahkan Pilih Pembelian Hutang !</b> 
+                                        </div> 
+                                    </h4> 
+                                </div> 
+                                  <div class="modal-body">
+                                                <div class=" table-responsive ">
+                                                   <div class="pencarian">
+                                                    <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
+                                                </div>
+
+                                                <table class="table table-striped table-hover" v-if="seen">
+                                                  <thead class="text-primary">
+                                                    <tr>
+                                                      <th >No Faktur</th>
+                                                      <th>Total Pembelian</th>
+                                                      <th  style="text-align:right;">Hutang</th>
+                                                      <th  style="text-align:right;">Jatuh Tempo</th>
+                                                      <th  style="text-align:right;">Waktu</th>
+                                                      <th  style="text-align:right;">Status</th>
+                                                    </tr>
+                                                  </thead>
+                                                  <tbody v-if="dataSuplierHutang.length > 0 && loading == false"  class="data-ada">
+                                                    <tr v-for="dataSuplierHutangs, index in dataSuplierHutang" >
+                                                      <td>{{ dataSuplierHutangs.no_faktur }}</td>
+                                                       <td>{{ dataSuplierHutangs.total }}</td>
+                                                        <td style="text-align:right;">{{ dataSuplierHutangs.nilai_kredit }}</td>
+                                                        <td style="text-align:right;">{{ dataSuplierHutangs.tanggal_jatuh_tempo }}</td>
+                                                        <td style="text-align:right;">{{ dataSuplierHutangs.waktu }}</td>
+                                                        <td style="text-align:right;">{{ dataSuplierHutangs.status_pembelian }}</td>
+                                                    </tr>
+                                                  </tbody>          
+                                                  <tbody class="data-tidak-ada"  v-else-if="dataSuplierHutang.length == 0 && loading == false" >
+                                                    <tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
+                                                  </tbody>
+                                                </table>  
+
+                                                <vue-simple-spinner v-if="loading"></vue-simple-spinner>
+                                                <div align="right"><pagination :data="dataSuplierHutangData" v-on:pagination-change-page="getResults" :limit="6"></pagination></div>
+                                              </div>
+                                  </div>
+                            <div class="modal-footer">  
+                           </div> 
+                   </div>       
+               </div> 
+           </div> 
+           <!-- / MODAL TOMBOL SELESAI --> 
+
+
     <div class="card" style="margin-bottom: 1px; margin-top: 1px;" ><!-- CARD --> 
           <div class="card-content"> 
             <h4 class="card-title" style="margin-bottom: 1px; margin-top: 1px;"> Pembayaran Hutang </h4> 
@@ -164,6 +220,8 @@ export default {
             cara_bayar:[],
 			tbs_pembayaran_hutang: [],
 			tbspPembayaranHutangData : {},
+            dataSuplierHutang : [],
+            dataSuplierHutangData: {},
 			url : window.location.origin+(window.location.pathname).replace("dashboard", "pembayaran-hutang"),
             url_kas : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
 			placeholder_suplier: {
@@ -197,7 +255,7 @@ export default {
         	this.loading = true;  
         },
         'inputTbsPembayaranHutang.suplier': function (newQuestion) {
-        	this.pilihProduk();  
+        	this.pilihSuplier();  
         },
 
     },
@@ -300,82 +358,38 @@ export default {
     			alert("Tidak dapat Menghapus Produk "+nama_produk);
     		});
     	},
-    	pilihProduk() {
+    	pilihSuplier() {
     		if (this.inputTbsPembayaranHutang.suplier == '') {
     			this.$swal({
     				text: "Silakan Pilih Supplier Telebih dahulu!",
     			});
     		}else{
-
     			var app = this;
-    			var produk = app.inputTbsPembayaranHutang.produk.split("|");
-    			var nama_produk = produk[1];
-    			this.isiJumlahProduk(nama_produk);
+    			var suplier = app.inputTbsPembayaranHutang.suplier.split("|");
+    			var id = suplier[0];
+    			this.dataSupplierHutang(id);
+                $("#modal_pilih_hutang").show();
     		}
     	},
-    	isiJumlahProduk(nama_produk){
-    		var app = this;
-    		app.$swal({
-    			title: nama_produk,
-    			content: {
-    				element: "input",
-    				attributes: {
-    					placeholder: "Jumlah Produk",
-    					type: "number",
-    				},
-    			},
-    			buttons: {
-    				cancel: true,
-    				confirm: "Submit"    				
-    			}
-
-
-    		}).then((value) => {
-    			if (!value) throw null;
-    			this.submitProdukPembayaranHutang(value);
-    		});
+    	dataSupplierHutang(id){
+            var app = this;
+    		  axios.get(app.url+'/data-suplier-hutang?id='+id+'?page='+page)
+                .then(function (resp) {
+                app.dataSuplierHutang = resp.data.data;
+                app.dataSuplierHutangData = resp.data;
+                app.loading = false;
+                app.seen = true;
+            })
+            .catch(function (resp) {
+                console.log(resp);
+                app.loading = false;
+                app.seen = true;
+                alert("Tidak Dapat Memuat Pembayaran Hutang");
+            });
     	},
-    	submitProdukPembayaranHutang(value){
-
-    		if (value == 0) {
-
-    			this.$swal({
-    				text: "Jumlah Produk Tidak Boleh Nol!",
-    			});
-
-    		}else{
-
-    			var app = this;
-    			var produk = app.inputTbsPembayaranHutang.produk.split("|");
-    			var nama_produk = produk[1];
-
-    			app.inputTbsPembayaranHutang.jumlah_produk = value;
-    			var newinputTbsPembayaranHutang = app.inputTbsPembayaranHutang;
-    			app.loading = true;
-    			axios.post(app.url+'/proses-tambah-tbs-item-masuk', newinputTbsPembayaranHutang)
-    			.then(function (resp) {
-
-    				if (resp.data == 0) {
-
-    					app.alertTbs("Produk "+nama_produk+" Sudah Ada, Silakan Pilih Produk Lain!");
-    					app.loading = false;
-
-    				}else{
-
-    					app.getResults();
-    					app.alert("Menambahkan Produk "+nama_produk);
-    					app.loading = false;
-    					app.inputTbsPembayaranHutang.jumlah_produk = ''
-
-    				}
-    				
-    			})
-    			.catch(function (resp) {    				
-    				app.loading = false;
-    				alert("Tidak dapat Menambahkan Produk");
-    			});
-    		}
-    	},
+        closeModalX(){
+        $("#modal_pilih_hutang").hide();  
+        },
     	alertTbs(pesan) {
     		this.$swal({
     			text: pesan,
