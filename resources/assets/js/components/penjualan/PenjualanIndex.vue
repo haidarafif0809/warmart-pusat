@@ -4,8 +4,8 @@
 	float: right;
 }
 .dropdown-menu {
-top: -50;
-left: 80%;
+	top: -50;
+	left: 80%;
 }
 </style>
 

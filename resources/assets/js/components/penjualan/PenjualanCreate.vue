@@ -1,415 +1,415 @@
 <style scoped>
 .modal {
-    overflow-y:auto;
+  overflow-y:auto;
 }
 .pencarian {
   color: red; 
   float: right;
 }
 .form-penjualan{
-    width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    display: inline-block;
-    border: 3px solid #555;
-    border-radius: 4px;
-    box-sizing: border-box;
-    font-size: 30px;
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 3px solid #555;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 30px;
 }
 .form-subtotal{
-    width: 100%;
-    margin: 8px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
+  width: 100%;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
 }
 .card-produk{
-    background-color:#82B1FF;
+  background-color:#82B1FF;
 }
 
 .card-pembayaran{
-    background-color:#82B1FF;
+  background-color:#82B1FF;
 }
-  .btn-icon{
-    border-radius: 1px solid;
-    padding: 10px 10px;
-  }
+.btn-icon{
+  border-radius: 1px solid;
+  padding: 10px 10px;
+}
 
 </style>
 
 <template>
 
 
-    <div class="row">
-        <div class="col-md-12">
-            <ul class="breadcrumb" style="margin-bottom: 1px; margin-top: 1px;">
-                <li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li>
-                <li class="active">Penjualan</li>
+  <div class="row">
+    <div class="col-md-12">
+      <ul class="breadcrumb" style="margin-bottom: 1px; margin-top: 1px;">
+        <li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li>
+        <li class="active">Penjualan</li>
 
-            </ul>
+      </ul>
 
-                      <div class="modal" id="modal_tambah_kas" role="dialog" data-backdrop=""> 
-                <div class="modal-dialog"> 
-                    <!-- Modal content--> 
-                    <div class="modal-content"> 
-                        <div class="modal-header"> 
-                            <button type="button" class="close"  v-on:click="closeModalX()" v-shortkey.push="['esc']" @shortkey="closeModalX()"> &times;</button> 
-                            <h4 class="modal-title"> 
-                                <div class="alert-icon"> 
-                                    <b>Silahkan Isi Kas!</b> 
-                                </div> 
-                            </h4> 
-                        </div> 
-                          <div class="modal-body">
-                        <form v-on:submit.prevent="saveFormKas()" class="form-horizontal"> 
-                          <div class="form-group">
-                            <label for="kode_kas" class="col-md-3 control-label">Kode Kas</label>
-                            <div class="col-md-9">
-                              <input class="form-control" autocomplete="off" placeholder="Kode Kas" v-model="tambahKas.kode_kas" type="text" name="kode_kas" id="kode_kas"  autofocus="">
-                              <span v-if="errors.kode_kas" id="kode_kas_error" class="label label-danger">{{ errors.kode_kas[0] }}</span>
-                            </div>
-                          </div>
-                          <div class="form-group">
-                            <label for="nama_kas" class="col-md-3 control-label">Nama Kas</label>
-                            <div class="col-md-9">
-                              <input class="form-control" autocomplete="off" placeholder="Nama Kas" v-model="tambahKas.nama_kas" type="text" name="nama_kas" id="nama_kas"  >
-                              <span v-if="errors.nama_kas" id="nama_kas_error" class="label label-danger">{{ errors.nama_kas[0] }}</span>
-                            </div>
-                          </div>
-                          <div class="form-group">
-                          <label for="nama_kas" class="col-md-3 control-label">Tampil Transaksi</label>
-                               <div class="togglebutton col-md-9">
-                                     <label>
-                                         <b>No</b>  <input type="checkbox" v-model="tambahKas.status_kas" value="1" name="status_kas" id="status_kas"><b>Yes</b>
-                                         </label>
-                                          </div>
-                                      </div>
-                                      <div class="form-group">
-                                          <label for="nama_kas" class="col-md-3 control-label">Default Kas</label>
-                                              <div class="togglebutton col-md-9">
-                                              <label>
-                                                  <b>No</b>  <input type="checkbox" v-on:change="defaultKas()" v-model="tambahKas.default_kas" value="1" name="default_kas" id="default_kas"><b>Yes</b>
-                                              </label>
-                                          </div>
-                                  </div>
-                              <div class="form-group">
-                              <div class="col-md-9 col-md-offset-3">
-                                <p style="color: red; font-style: italic;">*Note : Hanya 1 Kas yang dijadikan default.</p>
-                              <button class="btn btn-primary" id="btnSimpanKas" type="submit"><i class="material-icons">send</i> Submit</button>
-                            </div>
-                          </div>
-                        </form>
-                          </div>
-                    <div class="modal-footer">  
-                   </div> 
-           </div>       
-       </div> 
-   </div> 
-   <!-- / MODAL TOMBOL SELESAI --> 
-
-            <div class="modal" id="modal_selesai" role="dialog" data-backdrop=""> 
-                <div class="modal-dialog"> 
-                    <!-- Modal content--> 
-                    <div class="modal-content"> 
-                        <div class="modal-header"> 
-                            <button type="button" class="close"  v-on:click="closeModal()" v-shortkey.push="['esc']" @shortkey="closeModal()"> &times;</button> 
-                            <h4 class="modal-title"> 
-                                <div class="alert-icon"> 
-                                    <b>Silahkan Lengkapi Pembayaran!</b> 
-                                </div> 
-                            </h4> 
-                        </div> 
-                        <form class="form-horizontal" > 
-                            <div class="modal-body"> 
-                                <div class="card" style="margin-bottom:1px; margin-top:1px; margin-right:1px; margin-left:1px;">
-
-                                    <div class="row">
-                                        <div class="col-md-6 col-xs-12">
-                                            <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
-                                                <font style="color: black">Pelanggan(F4)</font><br>
-                                                <selectize-component v-model="penjualan.pelanggan" :settings="placeholder_pelanggan" id="pelanggan" ref='pelanggan' v-shortkey.focus="['f4']"> 
-                                                    <option v-for="pelanggans, index in pelanggan" v-bind:value="pelanggans.id">{{ pelanggans.nama_pelanggan }}</option>
-                                                </selectize-component>
-                                                <br v-if="errors.pelanggan">  <span v-if="errors.pelanggan" id="pelanggan_error" class="label label-danger">{{ errors.pelanggan[0] }}</span>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-5 col-xs-10">
-                                          <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
-                                            <font style="color: black">Kas(F6)</font><br>
-                                            <selectize-component v-model="penjualan.kas" :settings="placeholder_kas" id="kas" ref='kas' v-shortkey.focus="['f6']" > 
-                                                <option v-for="kass, index in kas" v-bind:value="kass.id">{{ kass.nama_kas }}</option>
-                                            </selectize-component>
-                                            <br v-if="errors.kas">   <span v-if="errors.kas" id="kas_error" class="label label-danger">{{ errors.kas[0] }}</span>
-                                        </div>
-                                    </div>
-                                     <div class="col-md-1 col-xs-1" style="padding-left:0px">
-                                         <div class="form-group">
-                                        <div class="row" style="margin-top:11px">
-                                        <button class="btn btn-primary btn-icon waves-effect waves-light" v-on:click="tambahModalKas()" type="button"> <i class="material-icons" >add</i> </button>
-                                        </div>
-                                     </div>
-                                 </div>
-                                </div>
-
-                                <div class="row">
-
-                                    <div class="col-md-3 col-xs-6">
-                                        <div class="form-group" style="margin-right: 1px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px; width:130px;">
-                                            <font style="color: black">Potongan(F7)</font>  
-                                            <money style="text-align:right" class="form-subtotal" v-model="penjualan.potongan_faktur" v-bind="separator" v-shortkey.focus="['f7']"></money>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3 col-xs-6">
-                                        <div class="form-group" style="margin-right: 10px; margin-left: 1px; margin-bottom: 1px; margin-top: 1px;">
-                                            <font style="color: black">(%)(F8)</font>    
-                                            <input style="text-align:right" type="number" class="form-subtotal" value="0" v-model="penjualan.potongan_persen" v-on:blur="potonganPersen" v-shortkey.focus="['f8']" />
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6 col-xs-12">
-                                        <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                            <font style="color: black">Jatuh Tempo(F9)</font> 
-                                            <datepicker :input-class="'form-control'" placeholder="Jatuh Tempo" v-model="penjualan.jatuh_tempo" v-shortkey.focus="['f9']" ></datepicker>
-                                            <br v-if="errors.jatuh_tempo">  <span v-if="errors.jatuh_tempo" id="jatuh_tempo_error" class="label label-danger">{{ errors.jatuh_tempo[0] }}</span>
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                            <font style="color: black">Total Akhir</font>
-                                            <money style="text-align:right" class="form-penjualan" readonly="" id="total_akhir" name="total_akhir" placeholder="Total Akhir"  v-model="penjualan.total_akhir" v-bind="separator" ></money> 
-                                        </div>
-
-                                        <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                            <font style="color: black">Pembayaran(F10)</font>
-                                            <money style="text-align:right" class="form-penjualan" v-shortkey.focus="['f10']" id="pembayaran" name="pembayaran" placeholder="Pembayaran"  v-model="penjualan.pembayaran" v-bind="separator"  autocomplete="off" ref="pembayaran"></money> 
-                                        </div>
-
-                                    </div>
-                                    <div class="col-md-6">
-
-                                     <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                         <font style="color: black">Kredit</font>
-                                         <money style="text-align:right" readonly="" class="form-penjualan" id="kredit" name="kredit" placeholder="Kredit"  v-model="penjualan.kredit" v-bind="separator" ></money> 
-                                     </div>
-
-                                     <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                         <font style="color: black">Kembalian</font>
-                                         <money style="text-align:right" readonly="" class="form-penjualan" id="kembalian" name="kembalian" placeholder="Kembalian"  v-model="penjualan.kembalian" v-bind="separator" ></money> 
-                                     </div>
-
-                                 </div>
-                             </div>
-
-                             <div align="right"  style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                 <button v-if="penjualan.kembalian >= 0 && penjualan.kredit == 0" type="button" class="btn btn-success btn-lg" id="btnSelesai" v-on:click="selesaiPenjualan()" v-shortkey.push="['alt']" @shortkey="selesaiPenjualan()"><font style="font-size:20px;">Tunai(Alt)</font></button>
-
-                                 <button v-if="penjualan.kredit > 0" type="button" class="btn btn-success btn-lg" id="btnSelesai" v-on:click="selesaiPenjualan()" v-shortkey.push="['alt']" @shortkey="selesaiPenjualan()"><font style="font-size:20px;">Piutang(Alt)</font></button>
-
-                                 <button type="button" class="btn btn-default btn-lg"  v-on:click="closeModal()" v-shortkey.push="['esc']" @shortkey="closeModal()"> <font style="font-size:20px;">Tutup(Esc)</font></button>
-                             </div>
-
-                         </div> 
-                     </div>
-                     <div class="modal-footer">  
-                     </div> 
-                 </form>
-             </div>       
-         </div> 
-     </div> 
-     <!-- / MODAL TOMBOL SELESAI --> 
-
-
-     <div class="modal" id="modal_setting" role="dialog" data-backdrop=""> 
+      <div class="modal" id="modal_tambah_kas" role="dialog" data-backdrop=""> 
         <div class="modal-dialog"> 
-            <!-- Modal content--> 
-            <div class="modal-content"> 
-                <div class="modal-header"> 
-                    <button type="button" class="close" data-dismiss="modal"> <i class="material-icons">close</i></button> 
-                    <h4 class="modal-title"> 
-                        <div class="alert-icon"> 
-                            <b>Setting Penjualan POS</b> 
-                        </div> 
-                    </h4> 
+          <!-- Modal content--> 
+          <div class="modal-content"> 
+            <div class="modal-header"> 
+              <button type="button" class="close"  v-on:click="closeModalX()" v-shortkey.push="['esc']" @shortkey="closeModalX()"> &times;</button> 
+              <h4 class="modal-title"> 
+                <div class="alert-icon"> 
+                  <b>Silahkan Isi Kas!</b> 
                 </div> 
-                <form class="form-horizontal" > 
-                    <div class="modal-body"> 
-                        <div class="card" style="margin-bottom:1px; margin-top:1px;">
-
-                            <table class="table" style="margin-bottom:10px; margin-top:10px; margin-right:10px; margin-left:10px;">
-
-                                <tbody style="margin-bottom:10px; margin-top:10px; margin-right:10px; margin-left:10px;">
-                                    <tr>
-                                        <td class="text-primary"><b># Jumlah Otomatis </b> </td>
-                                        <td class="text-primary"><b>:</b> </td>
-                                        <td class="text-primary"><b><input type="number" name="settings_jumlah_pos" v-model="setting_penjualan_pos.jumlah_produk"></b> </td>
-                                    </tr><br>
-
-                                    <tr>
-                                        <td class="text-primary"><b># Stok Boleh Minus ? </b> </td>
-                                        <td class="text-primary"><b>:</b> </td>
-                                        <td class="text-primary">
-                                            <div class="togglebutton">
-                                                <label>
-                                                    <input type="checkbox" v-model="setting_penjualan_pos.stok">
-                                                    <b v-if="setting_penjualan_pos.stok == 1">Ya</b>
-                                                    <b v-if="setting_penjualan_pos.stok == 0">Tidak</b>
-                                                </label>
-                                            </div>  
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td class="text-primary"><b># Harga Jual</b> </td>
-                                        <td class="text-primary"><b>:</b> </td>
-                                        <td class="text-primary">
-                                            <b> 
-                                                <div class="form-group" style="margin-right:110px;">
-                                                    <selectize-component :settings="hargaJual" v-model="setting_penjualan_pos.harga_jual" id="setting_harga_jual" ref='setting_harga_jual'> 
-                                                        <option v-bind:value="1">Harga Jual 1</option>
-                                                        <option v-bind:value="2">Harga Jual 2</option>
-                                                    </selectize-component>
-                                                </div>
-                                            </b> 
-                                        </td>
-                                    </tr>
-
-                                </tbody>
-                            </table>  
-
-
-                            <div align="right" class="form-group" style="margin-right:10px;">
-                                <button type="button" class="btn btn-primary btn-lg" v-on:click="simpanSetting"><font style="font-size:20px;">Simpan</font></button>
-                                <button type="button" class="btn btn-default btn-lg close" data-dismiss="modal"> <font style="font-size:20px;">Batal</font></button>
-                            </div>
-
-                        </div> 
-                    </div>
-                    <div class="modal-footer">  
-                    </div> 
-                </form>
-            </div>       
-        </div> 
+              </h4> 
+            </div> 
+            <div class="modal-body">
+              <form v-on:submit.prevent="saveFormKas()" class="form-horizontal"> 
+                <div class="form-group">
+                  <label for="kode_kas" class="col-md-3 control-label">Kode Kas</label>
+                  <div class="col-md-9">
+                    <input class="form-control" autocomplete="off" placeholder="Kode Kas" v-model="tambahKas.kode_kas" type="text" name="kode_kas" id="kode_kas"  autofocus="" ref="kode_kas">
+                    <span v-if="errors.kode_kas" id="kode_kas_error" class="label label-danger">{{ errors.kode_kas[0] }}</span>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="nama_kas" class="col-md-3 control-label">Nama Kas</label>
+                  <div class="col-md-9">
+                    <input class="form-control" autocomplete="off" placeholder="Nama Kas" v-model="tambahKas.nama_kas" type="text" name="nama_kas" id="nama_kas"  ref="nama_kas">
+                    <span v-if="errors.nama_kas" id="nama_kas_error" class="label label-danger">{{ errors.nama_kas[0] }}</span>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="nama_kas" class="col-md-3 control-label">Tampil Transaksi</label>
+                  <div class="togglebutton col-md-9">
+                   <label>
+                     <b>No</b>  <input type="checkbox" v-model="tambahKas.status_kas" value="1" name="status_kas" id="status_kas" ref="status_kas"><b>Yes</b>
+                   </label>
+                 </div>
+               </div>
+               <div class="form-group">
+                <label for="nama_kas" class="col-md-3 control-label">Default Kas</label>
+                <div class="togglebutton col-md-9">
+                  <label>
+                    <b>No</b>  <input type="checkbox" v-on:change="defaultKas()" v-model="tambahKas.default_kas" value="1" name="default_kas" id="default_kas" ref="default_kas"><b>Yes</b>
+                  </label>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-md-9 col-md-offset-3">
+                  <p style="color: red; font-style: italic;">*Note : Hanya 1 Kas yang dijadikan default.</p>
+                  <button class="btn btn-primary" id="btnSimpanKas" type="submit"><i class="material-icons">send</i> Submit</button>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">  
+          </div> 
+        </div>       
+      </div> 
     </div> 
     <!-- / MODAL TOMBOL SELESAI --> 
 
-    <div class="card" style="margin-bottom: 1px; margin-top: 1px;">
-        <div class="card-content">
+    <div class="modal" id="modal_selesai" role="dialog" data-backdrop=""> 
+      <div class="modal-dialog"> 
+        <!-- Modal content--> 
+        <div class="modal-content"> 
+          <div class="modal-header"> 
+            <button type="button" class="close"  v-on:click="closeModal()" v-shortkey.push="['esc']" @shortkey="closeModal()"> &times;</button> 
+            <h4 class="modal-title"> 
+              <div class="alert-icon"> 
+                <b>Silahkan Lengkapi Pembayaran!</b> 
+              </div> 
+            </h4> 
+          </div> 
+          <form class="form-horizontal" > 
+            <div class="modal-body"> 
+              <div class="card" style="margin-bottom:1px; margin-top:1px; margin-right:1px; margin-left:1px;">
 
-            <h4 class="card-title" style="margin-bottom: 1px; margin-top: 1px;"> Penjualan </h4>
-
-            <div class="row" style="margin-bottom: 1px; margin-top: 1px;">
-
-                <div class="col-md-3 col-xs-9">
-                    <div class="card card-produk" style="margin-bottom: 1px; margin-top: 1px;">
-
-                      <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
-                        <selectize-component v-model="inputTbsPenjualan.produk" :settings="placeholder_produk" id="produk" ref='produk' v-shortkey.focus="['f1']"> 
-                            <option v-for="produks, index in produk" v-bind:value="produks.produk">{{produks.barcode}} || {{produks.kode_produk}} || {{ produks.nama_produk }}</option>
-                        </selectize-component>
-                    </div>  
-
-                    <span style="display: none;">
-                        <input class="form-control" type="hidden"  v-model="inputTbsPenjualan.jumlah_produk"  name="jumlah_produk" id="jumlah_produk">
-                        <input class="form-control" type="hidden"  v-model="inputTbsPenjualan.potongan_produk"  name="potongan_produk" id="potongan_produk">
-                        <input class="form-control" type="hidden"  v-model="inputTbsPenjualan.id_tbs"  name="id_tbs" id="id_tbs">
-                        <input class="form-control" type="hidden"  v-model="penjualan.potongan"  name="potongan" id="potongan">
-                    </span>
-                </div>
-            </div>
-
-            <div class="col-md-3"></div>
-            <div class="col-md-5"></div>
-            <div class="col-md-1 col-xs-1">                
-                <button class="btn btn-primary btn-round btn-fab btn-fab-mini" data-toggle="modal" data-target="#modal_setting">
-                    <i class="material-icons">settings</i>
-                </button><b>Setting</b>
-            </div>
-
-        </div>
-
-
-        <!--TABEL TBS ITEM  MASUK -->
-        <div class="row">
-
-            <div class="col-md-9">
-                <div class=" table-responsive ">
-                  <div class="pencarian">
-                    <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
-                </div>
-                <table class="table table-striped table-hover" v-if="seen">
-                    <thead class="text-primary">
-                        <tr>
-
-                            <th>Produk</th>
-                            <th class="text-right">Jumlah</th>
-                            <th class="text-right">Harga</th>
-                            <th class="text-right">Potongan</th>
-                            <th class="text-right">Subtotal</th>
-                            <th class="text-center">Hapus</th>
-
-                        </tr>
-                    </thead>
-                    <tbody v-if="tbs_penjualan.length"  class="data-ada">
-                        <tr v-for="tbs_penjualan, index in tbs_penjualan" >
-
-                            <td>{{ tbs_penjualan.kode_produk }} - {{ tbs_penjualan.nama_produk }}</td>
-
-                            <td align="right" >
-                                <a href="#create-penjualan" v-bind:id="'edit-' + tbs_penjualan.id_tbs_penjualan" v-on:click="editEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">{{ new Intl.NumberFormat().format(tbs_penjualan.jumlah_produk) }}</a>
-                            </td>
-
-                            <td align="right" >{{ new Intl.NumberFormat().format(tbs_penjualan.harga_produk) }}</td>
-
-                            <td align="right" ><a href="#create-penjualan" v-bind:id="'edit-' + tbs_penjualan.id_tbs_penjualan" v-on:click="potonganEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">{{ tbs_penjualan.potongan }}</a></td>
-
-                            <td align="right" > {{ new Intl.NumberFormat().format(tbs_penjualan.subtotal) }}</td>
-                            <td align="center"><a href="#create-penjualan" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_penjualan.id_tbs_penjualan" v-on:click="deleteEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">Delete</a></td>
-                        </tr>
-                    </tbody>                    
-                    <tbody class="data-tidak-ada" v-else>
-                        <tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
-                    </tbody>
-                </table>    
-
-                <vue-simple-spinner v-if="loading"></vue-simple-spinner>
-
-                <div align="right"><pagination :data="tbsPenjualanData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
-
-            </div>
-        </div>
-        <div class="col-md-3">
-
-            <div class="card card-stats">
-                <div class="card-header" data-background-color="blue">
-                    <i class="material-icons">shopping_cart</i>
-                </div>
-                <div class="card-content">
-                    <p class="category"><font style="font-size:20px;">Subtotal</font></p>
-                    <h3 class="card-title"><b><font style="font-size:32px;">{{ new Intl.NumberFormat().format(penjualan.subtotal) }}</font></b></h3>
-                </div>
-                <div class="card-footer">
-                    <div class="row"> 
-                      <div class="col-md-6 col-xs-6"> 
-                    <button type="button" class="btn btn-success btn-lg" id="bayar" v-on:click="bayarPenjualan()" v-shortkey.push="['f2']" @shortkey="bayarPenjualan()"><font style="font-size:20px;">Bayar(F2)</font></button>
-                     </div>
-                    <div class="col-md-6 col-xs-6">
-                    <button type="submit" class="btn btn-danger btn-lg" id="btnBatal" v-on:click="batalPenjualan()" v-shortkey.push="['f3']" @shortkey="batalPenjualan()"> <font style="font-size:20px;">Batal(F3) </font></button>
+                <div class="row">
+                  <div class="col-md-6 col-xs-12">
+                    <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
+                      <font style="color: black">Pelanggan(F4)</font><br>
+                      <selectize-component v-model="penjualan.pelanggan" :settings="placeholder_pelanggan" id="pelanggan" ref='pelanggan'> 
+                        <option v-for="pelanggans, index in pelanggan" v-bind:value="pelanggans.id">{{ pelanggans.nama_pelanggan }}</option>
+                      </selectize-component>
+                      <br v-if="errors.pelanggan">  <span v-if="errors.pelanggan" id="pelanggan_error" class="label label-danger">{{ errors.pelanggan[0] }}</span>
                     </div>
+                  </div>
+                  <div class="col-md-5 col-xs-10">
+                    <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
+                      <font style="color: black">Kas(F6)</font><br>
+                      <selectize-component v-model="penjualan.kas" :settings="placeholder_kas" id="kas" ref='kas'> 
+                        <option v-for="kass, index in kas" v-bind:value="kass.id">{{ kass.nama_kas }}</option>
+                      </selectize-component>
+                      <br v-if="errors.kas">   <span v-if="errors.kas" id="kas_error" class="label label-danger">{{ errors.kas[0] }}</span>
+                    </div>
+                  </div>
+                  <div class="col-md-1 col-xs-1" style="padding-left:0px">
+                   <div class="form-group">
+                    <div class="row" style="margin-top:11px">
+                      <button class="btn btn-primary btn-icon waves-effect waves-light" v-on:click="tambahModalKas()" type="button"> <i class="material-icons" >add</i> </button>
+                    </div>
+                  </div>
                 </div>
+              </div>
+
+              <div class="row">
+
+                <div class="col-md-3 col-xs-6">
+                  <div class="form-group" style="margin-right: 1px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px; width:130px;">
+                    <font style="color: black">Potongan(F7)</font>  
+                    <money style="text-align:right" class="form-subtotal" v-model="penjualan.potongan_faktur" v-bind="separator" v-shortkey.focus="['f7']"></money>
+                  </div>
                 </div>
+                <div class="col-md-3 col-xs-6">
+                  <div class="form-group" style="margin-right: 10px; margin-left: 1px; margin-bottom: 1px; margin-top: 1px;">
+                    <font style="color: black">(%)(F8)</font>    
+                    <input style="text-align:right" type="number" class="form-subtotal" value="0" v-model="penjualan.potongan_persen" v-on:blur="potonganPersen" v-shortkey.focus="['f8']" />
+                  </div>
+                </div>
+
+                <div class="col-md-6 col-xs-12">
+                  <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                    <font style="color: black">Jatuh Tempo</font> 
+                    <datepicker :input-class="'form-control'" placeholder="Jatuh Tempo" v-model="penjualan.jatuh_tempo" ref='jatuh_tempo'></datepicker>
+                    <br v-if="errors.jatuh_tempo">  <span v-if="errors.jatuh_tempo" id="jatuh_tempo_error" class="label label-danger">{{ errors.jatuh_tempo[0] }}</span>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                    <font style="color: black">Total Akhir</font>
+                    <money style="text-align:right" class="form-penjualan" readonly="" id="total_akhir" name="total_akhir" placeholder="Total Akhir"  v-model="penjualan.total_akhir" v-bind="separator" ></money> 
+                  </div>
+
+                  <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                    <font style="color: black">Pembayaran(F10)</font>
+                    <money style="text-align:right" class="form-penjualan" v-shortkey.focus="['f10']" id="pembayaran" name="pembayaran" placeholder="Pembayaran"  v-model="penjualan.pembayaran" v-bind="separator"  autocomplete="off" ref="pembayaran"></money> 
+                  </div>
+
+                </div>
+                <div class="col-md-6">
+
+                 <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                   <font style="color: black">Kredit</font>
+                   <money style="text-align:right" readonly="" class="form-penjualan" id="kredit" name="kredit" placeholder="Kredit"  v-model="penjualan.kredit" v-bind="separator" ></money> 
+                 </div>
+
+                 <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                   <font style="color: black">Kembalian</font>
+                   <money style="text-align:right" readonly="" class="form-penjualan" id="kembalian" name="kembalian" placeholder="Kembalian"  v-model="penjualan.kembalian" v-bind="separator" ></money> 
+                 </div>
+
+               </div>
+             </div>
+
+             <div align="right"  style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+               <button v-if="penjualan.kembalian >= 0 && penjualan.kredit == 0" type="button" class="btn btn-success btn-lg" id="btnSelesai" v-on:click="selesaiPenjualan()" v-shortkey.push="['alt']" @shortkey="selesaiPenjualan()"><font style="font-size:20px;">Tunai(Alt)</font></button>
+
+               <button v-if="penjualan.kredit > 0" type="button" class="btn btn-success btn-lg" id="btnSelesai" v-on:click="selesaiPenjualan()" v-shortkey.push="['alt']" @shortkey="selesaiPenjualan()"><font style="font-size:20px;">Piutang(Alt)</font></button>
+
+               <button type="button" class="btn btn-default btn-lg"  v-on:click="closeModal()" v-shortkey.push="['esc']" @shortkey="closeModal()"> <font style="font-size:20px;">Tutup(Esc)</font></button>
+             </div>
+
+           </div> 
+         </div>
+         <div class="modal-footer">  
+         </div> 
+       </form>
+     </div>       
+   </div> 
+ </div> 
+ <!-- / MODAL TOMBOL SELESAI --> 
+
+
+ <div class="modal" id="modal_setting" role="dialog" data-backdrop=""> 
+  <div class="modal-dialog"> 
+    <!-- Modal content--> 
+    <div class="modal-content"> 
+      <div class="modal-header"> 
+        <button type="button" class="close" data-dismiss="modal"> <i class="material-icons">close</i></button> 
+        <h4 class="modal-title"> 
+          <div class="alert-icon"> 
+            <b>Setting Penjualan POS</b> 
+          </div> 
+        </h4> 
+      </div> 
+      <form class="form-horizontal" > 
+        <div class="modal-body"> 
+          <div class="card" style="margin-bottom:1px; margin-top:1px;">
+
+            <table class="table" style="margin-bottom:10px; margin-top:10px; margin-right:10px; margin-left:10px;">
+
+              <tbody style="margin-bottom:10px; margin-top:10px; margin-right:10px; margin-left:10px;">
+                <tr>
+                  <td class="text-primary"><b># Jumlah Otomatis </b> </td>
+                  <td class="text-primary"><b>:</b> </td>
+                  <td class="text-primary"><b><input type="number" name="settings_jumlah_pos" v-model="setting_penjualan_pos.jumlah_produk"></b> </td>
+                </tr><br>
+
+                <tr>
+                  <td class="text-primary"><b># Stok Boleh Minus ? </b> </td>
+                  <td class="text-primary"><b>:</b> </td>
+                  <td class="text-primary">
+                    <div class="togglebutton">
+                      <label>
+                        <input type="checkbox" v-model="setting_penjualan_pos.stok">
+                        <b v-if="setting_penjualan_pos.stok == 1">Ya</b>
+                        <b v-if="setting_penjualan_pos.stok == 0">Tidak</b>
+                      </label>
+                    </div>  
+                  </td>
+                </tr>
+
+                <tr>
+                  <td class="text-primary"><b># Harga Jual</b> </td>
+                  <td class="text-primary"><b>:</b> </td>
+                  <td class="text-primary">
+                    <b> 
+                      <div class="form-group" style="margin-right:110px;">
+                        <selectize-component :settings="hargaJual" v-model="setting_penjualan_pos.harga_jual" id="setting_harga_jual" ref='setting_harga_jual'> 
+                          <option v-bind:value="1">Harga Jual 1</option>
+                          <option v-bind:value="2">Harga Jual 2</option>
+                        </selectize-component>
+                      </div>
+                    </b> 
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>  
+
+
+            <div align="right" class="form-group" style="margin-right:10px;">
+              <button type="button" class="btn btn-primary btn-lg" v-on:click="simpanSetting"><font style="font-size:20px;">Simpan</font></button>
+              <button type="button" class="btn btn-default btn-lg close" data-dismiss="modal"> <font style="font-size:20px;">Batal</font></button>
             </div>
+
+          </div> 
         </div>
+        <div class="modal-footer">  
+        </div> 
+      </form>
+    </div>       
+  </div> 
+</div> 
+<!-- / MODAL TOMBOL SELESAI --> 
+
+<div class="card" style="margin-bottom: 1px; margin-top: 1px;">
+  <div class="card-content">
+
+    <h4 class="card-title" style="margin-bottom: 1px; margin-top: 1px;"> Penjualan </h4>
+
+    <div class="row" style="margin-bottom: 1px; margin-top: 1px;">
+
+      <div class="col-md-3 col-xs-9">
+        <div class="card card-produk" style="margin-bottom: 1px; margin-top: 1px;">
+
+          <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
+            <selectize-component v-model="inputTbsPenjualan.produk" :settings="placeholder_produk" id="produk" ref='produk' > 
+              <option v-for="produks, index in produk" v-bind:value="produks.produk">{{produks.barcode}} || {{produks.kode_produk}} || {{ produks.nama_produk }}</option>
+            </selectize-component>
+          </div>  
+
+          <span style="display: none;">
+            <input class="form-control" type="hidden"  v-model="inputTbsPenjualan.jumlah_produk"  name="jumlah_produk" id="jumlah_produk">
+            <input class="form-control" type="hidden"  v-model="inputTbsPenjualan.potongan_produk"  name="potongan_produk" id="potongan_produk" v-shortkey="['f6']" @shortkey="openSelectizeKas()">
+            <input class="form-control" type="hidden"  v-model="inputTbsPenjualan.id_tbs"  name="id_tbs" id="id_tbs"  v-shortkey="['f4']" @shortkey="openSelectizePelanggan()">
+            <input class="form-control" type="hidden"  v-model="penjualan.potongan"  name="potongan" id="potongan" v-shortkey="['f1']" @shortkey="openSelectizeProduk()">
+          </span>
+        </div>
+      </div>
+
+      <div class="col-md-3"></div>
+      <div class="col-md-5"></div>
+      <div class="col-md-1 col-xs-1">                
+        <button class="btn btn-primary btn-round btn-fab btn-fab-mini" data-toggle="modal" data-target="#modal_setting">
+          <i class="material-icons">settings</i>
+        </button><b>Setting</b>
+      </div>
+
+    </div>
+
+
+    <!--TABEL TBS ITEM  MASUK -->
+    <div class="row">
+
+      <div class="col-md-9">
+        <div class=" table-responsive ">
+          <div class="pencarian">
+            <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
+          </div>
+          <table class="table table-striped table-hover" v-if="seen">
+            <thead class="text-primary">
+              <tr>
+
+                <th>Produk</th>
+                <th class="text-right">Jumlah</th>
+                <th class="text-right">Harga</th>
+                <th class="text-right">Potongan</th>
+                <th class="text-right">Subtotal</th>
+                <th class="text-center">Hapus</th>
+
+              </tr>
+            </thead>
+            <tbody v-if="tbs_penjualan.length"  class="data-ada">
+              <tr v-for="tbs_penjualan, index in tbs_penjualan" >
+
+                <td>{{ tbs_penjualan.kode_produk }} - {{ tbs_penjualan.nama_produk }}</td>
+
+                <td align="right" >
+                  <a href="#create-penjualan" v-bind:id="'edit-' + tbs_penjualan.id_tbs_penjualan" v-on:click="editEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">{{ new Intl.NumberFormat().format(tbs_penjualan.jumlah_produk) }}</a>
+                </td>
+
+                <td align="right" >{{ new Intl.NumberFormat().format(tbs_penjualan.harga_produk) }}</td>
+
+                <td align="right" ><a href="#create-penjualan" v-bind:id="'edit-' + tbs_penjualan.id_tbs_penjualan" v-on:click="potonganEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">{{ tbs_penjualan.potongan }}</a></td>
+
+                <td align="right" > {{ new Intl.NumberFormat().format(tbs_penjualan.subtotal) }}</td>
+                <td align="center"><a href="#create-penjualan" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_penjualan.id_tbs_penjualan" v-on:click="deleteEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">Delete</a></td>
+              </tr>
+            </tbody>                    
+            <tbody class="data-tidak-ada" v-else>
+              <tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
+            </tbody>
+          </table>    
+
+          <vue-simple-spinner v-if="loading"></vue-simple-spinner>
+
+          <div align="right"><pagination :data="tbsPenjualanData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
+
+        </div>
+      </div>
+      <div class="col-md-3">
+
+        <div class="card card-stats">
+          <div class="card-header" data-background-color="blue">
+            <i class="material-icons">shopping_cart</i>
+          </div>
+          <div class="card-content">
+            <p class="category"><font style="font-size:20px;">Subtotal</font></p>
+            <h3 class="card-title"><b><font style="font-size:32px;">{{ new Intl.NumberFormat().format(penjualan.subtotal) }}</font></b></h3>
+          </div>
+          <div class="card-footer">
+            <div class="row"> 
+              <div class="col-md-6 col-xs-6"> 
+                <button type="button" class="btn btn-success btn-lg" id="bayar" v-on:click="bayarPenjualan()" v-shortkey.push="['f2']" @shortkey="bayarPenjualan()"><font style="font-size:20px;">Bayar(F2)</font></button>
+              </div>
+              <div class="col-md-6 col-xs-6">
+                <button type="submit" class="btn btn-danger btn-lg" id="btnBatal" v-on:click="batalPenjualan()" v-shortkey.push="['f3']" @shortkey="batalPenjualan()"> <font style="font-size:20px;">Batal(F3) </font></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <p style="color: red; font-style: italic;">*Note : Klik Kolom Jumlah, Harga, & Potongan Untuk Mengubah Nilai.</p>      
 
 
-</div><!-- / PANEL BODY -->
+  </div><!-- / PANEL BODY -->
 
 </div>
 </div>
@@ -419,73 +419,80 @@
 
 <script>
 export default {
-    data: function () {
-        return {
-            errors: [],
-            produk: [],
-            pelanggan: [],
-            kas: [],
-            tbs_penjualan: [],
-            tbsPenjualanData : {},
-            url : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
-            url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
-            url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
+  data: function () {
+    return {
+      errors: [],
+      produk: [],
+      pelanggan: [],
+      kas: [],
+      tbs_penjualan: [],
+      tbsPenjualanData : {},
+      url : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
+      url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
+      url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
 
-            inputTbsPenjualan: {
-                produk : '',
-                jumlah_produk : '',
-                potongan_produk : '',
-                id_tbs : '',
-            },
-            penjualan : {
-                pelanggan : '0',
-                kas : '',
-                jatuh_tempo : '',
-                subtotal : 0,
-                potongan : 0,
-                potongan_faktur : 0,
-                potongan_persen : 0,
-                total_akhir : 0,
-                pembayaran : 0,
-                kembalian: 0,
-                kredit: 0,
-            }, 
-            setting_penjualan_pos :{
-                jumlah_produk : 1,
-                stok : 0,
-                harga_jual : 1
-            },
-            placeholder_produk: {
-                placeholder: 'Cari Produk (F1) ...'
-            },
-            placeholder_pelanggan: {
-                placeholder: '--PILIH PELANGGAN (F4)--'
-            },
-            placeholder_kas: {
-                placeholder: '--PILIH KAS--'
-            },
-            hargaJual: {
-                placeholder: '--HARGA JUAL--'
-            },
-            tambahKas: {
-                kode_kas : '',
-                nama_kas : '',
-                status_kas : 0,
-                default_kas : 0
-              },
-            pencarian: '',
-            loading: true,
-            seen : false,
-            separator: {
-              decimal: ',',
-              thousands: '.',
-              prefix: '',
-              suffix: '',
-              precision: 2,
-              masked: false /* doesn't work with directive */
-          }
-
+      inputTbsPenjualan: {
+        produk : '',
+        jumlah_produk : '',
+        potongan_produk : '',
+        id_tbs : '',
+      },
+      penjualan : {
+        pelanggan : '0',
+        kas : '',
+        jatuh_tempo : '',
+        subtotal : 0,
+        potongan : 0,
+        potongan_faktur : 0,
+        potongan_persen : 0,
+        total_akhir : 0,
+        pembayaran : 0,
+        kembalian: 0,
+        kredit: 0,
+      }, 
+      setting_penjualan_pos :{
+        jumlah_produk : 1,
+        stok : 0,
+        harga_jual : 1
+      },
+      placeholder_produk: {
+        placeholder: 'Cari Produk (F1) ...',
+        sortField: 'text',
+        openOnFocus : true
+      },
+      placeholder_pelanggan: {
+        placeholder: '--PILIH PELANGGAN (F4)--',
+        sortField: 'text',
+        openOnFocus : true
+        
+      },
+      placeholder_kas: {
+        placeholder: '--PILIH KAS--',
+        sortField: 'text',
+        openOnFocus : true
+      },
+      hargaJual: {
+        placeholder: '--HARGA JUAL--'
+      },
+      tambahKas: {
+        kode_kas : '',
+        nama_kas : '',
+        status_kas : 0,
+        default_kas : 0
+      },
+      pencarian: '',
+      loading: true,
+      seen : false,
+      separator: {
+        decimal: ',',
+        thousands: '.',
+        prefix: '',
+        suffix: '',
+        precision: 2,
+        masked: false /* doesn't work with directive */
       }
+
+    }
   },
   mounted() {   
     var app = this;
@@ -493,48 +500,58 @@ export default {
     app.dataPelanggan();
     app.dataKas();    
     app.dataSettingPenjualanPos();
-    app.getResults();
-},
-watch: {
+    app.getResults();     
+
+  },
+  watch: {
     // whenever question changes, this function will run
     pencarian: function (newQuestion) {
-        this.getHasilPencarian()
-        this.loading = true
+      this.getHasilPencarian()
+      this.loading = true
     },
     'inputTbsPenjualan.produk': function () {
-        this.pilihProduk()
+      this.pilihProduk()
     },
     'penjualan.pembayaran':function (val){
-        if (val == '') {
-            val = 0
-        }
-        this.hitungKembalian(val)
+      if (val == '') {
+        val = 0
+      }
+      this.hitungKembalian(val)
     },
     'penjualan.potongan_faktur':function(){
-        this.potonganFaktur()
+      this.potonganFaktur()
     }
 
-},
-methods: {
+  },
+  methods: {
+    openSelectizeProduk(){      
+      this.$refs.produk.$el.selectize.focus();
+    },
+    openSelectizePelanggan(){      
+      this.$refs.pelanggan.$el.selectize.focus();
+    },
+    openSelectizeKas(){      
+      this.$refs.kas.$el.selectize.focus();
+    },
     hitungKembalian(val){
-        var kembalian = parseFloat(val) - parseFloat(this.penjualan.total_akhir);   
-        if (kembalian >= 0) {
+      var kembalian = parseFloat(val) - parseFloat(this.penjualan.total_akhir);   
+      if (kembalian >= 0) {
 
-            this.penjualan.kembalian = kembalian 
-            this.penjualan.kredit = 0
+        this.penjualan.kembalian = kembalian 
+        this.penjualan.kredit = 0
 
-        }else{
+      }else{
 
-          this.penjualan.kembalian = 0  
-          this.penjualan.kredit = parseFloat(this.penjualan.total_akhir) -parseFloat(val)
+        this.penjualan.kembalian = 0  
+        this.penjualan.kredit = parseFloat(this.penjualan.total_akhir) -parseFloat(val)
 
       }        
-  },
-  potonganPersen(){
+    },
+    potonganPersen(){
 
-    var potonganPersen = this.penjualan.potongan_persen
+      var potonganPersen = this.penjualan.potongan_persen
 
-    if (potonganPersen > 100) {
+      if (potonganPersen > 100) {
 
         this.alertTbs("Potongan Tidak Bisa Lebih Dari 100%")
         this.penjualan.total_akhir = this.penjualan.subtotal
@@ -543,10 +560,10 @@ methods: {
         this.penjualan.potongan = 0
         this.hitungKembalian(this.penjualan.pembayaran)
 
-    }else{
+      }else{
 
         if (potonganPersen == '') {
-            potonganPersen = 0
+          potonganPersen = 0
         }
 
         var potongan_nominal = parseFloat(this.penjualan.subtotal) * (parseFloat(potonganPersen) / 100) 
@@ -557,216 +574,217 @@ methods: {
         this.penjualan.potongan = potongan_nominal
         this.hitungKembalian(this.penjualan.pembayaran)
 
+      }
+    },
+    potonganFaktur(){
+     var potonganFaktur = this.penjualan.potongan_faktur
+     if (potonganFaktur == '') {
+      potonganFaktur = 0
     }
-},
-potonganFaktur(){
-   var potonganFaktur = this.penjualan.potongan_faktur
-   if (potonganFaktur == '') {
-    potonganFaktur = 0
-}
-var potongan_persen = (parseFloat(potonganFaktur) / parseFloat(this.penjualan.subtotal)) * 100
-var total_akhir = parseFloat(this.penjualan.subtotal) - parseFloat(potonganFaktur)
+    var potongan_persen = (parseFloat(potonganFaktur) / parseFloat(this.penjualan.subtotal)) * 100
+    var total_akhir = parseFloat(this.penjualan.subtotal) - parseFloat(potonganFaktur)
 
-if (potongan_persen > 100) {
+    if (potongan_persen > 100) {
 
-    this.alertTbs("Potongan Tidak Bisa Lebih Dari 100%")
-    this.penjualan.total_akhir = this.penjualan.subtotal
-    this.penjualan.potongan_faktur = 0
-    this.penjualan.potongan_persen = 0
-    this.penjualan.potongan = 0        
-    this.hitungKembalian(this.penjualan.pembayaran)
+      this.alertTbs("Potongan Tidak Bisa Lebih Dari 100%")
+      this.penjualan.total_akhir = this.penjualan.subtotal
+      this.penjualan.potongan_faktur = 0
+      this.penjualan.potongan_persen = 0
+      this.penjualan.potongan = 0        
+      this.hitungKembalian(this.penjualan.pembayaran)
 
-}else{
-  this.penjualan.potongan_persen = potongan_persen.toFixed(2)
-  this.penjualan.total_akhir = total_akhir
-  this.penjualan.potongan = potonganFaktur
-  this.hitungKembalian(this.penjualan.pembayaran)
-}
+    }else{
+      this.penjualan.potongan_persen = potongan_persen.toFixed(2)
+      this.penjualan.total_akhir = total_akhir
+      this.penjualan.potongan = potonganFaktur
+      this.hitungKembalian(this.penjualan.pembayaran)
+    }
 
-},
-getResults(page) {
+  },
+  getResults(page) {
     var app = this; 
     if (typeof page === 'undefined') {
-        page = 1;
+      page = 1;
     }
     axios.get(app.url+'/view-tbs-penjualan?page='+page)
     .then(function (resp) {
-        app.tbs_penjualan = resp.data.data;
-        app.tbsPenjualanData = resp.data;
-        app.loading = false;
-        app.seen = true;
+      app.tbs_penjualan = resp.data.data;
+      app.tbsPenjualanData = resp.data;
+      app.loading = false;
+      app.seen = true;      
+      app.openSelectizeProduk();
 
-        if (app.penjualan.subtotal == 0) {        
+      if (app.penjualan.subtotal == 0) {        
 
-            $.each(resp.data.data, function (i,item) {
+        $.each(resp.data.data, function (i,item) {
 
-               app.penjualan.subtotal += parseFloat(resp.data.data[i].subtotal)
-               app.penjualan.total_akhir += parseFloat(resp.data.data[i].subtotal)
-               app.penjualan.kredit += parseFloat(resp.data.data[i].subtotal)
+         app.penjualan.subtotal += parseFloat(resp.data.data[i].subtotal)
+         app.penjualan.total_akhir += parseFloat(resp.data.data[i].subtotal)
+         app.penjualan.kredit += parseFloat(resp.data.data[i].subtotal)
 
-           }); 
-        }
+       }); 
+      }
 
 
     })
     .catch(function (resp) {
-        console.log(resp);
-        app.loading = false;
-        app.seen = true;
-        alert("Tidak Dapat Memuat Penjualan");
+      console.log(resp);
+      app.loading = false;
+      app.seen = true;
+      alert("Tidak Dapat Memuat Penjualan");
     });
-}, 
-getHasilPencarian(page){
+  }, 
+  getHasilPencarian(page){
     var app = this;
     if (typeof page === 'undefined') {
-        page = 1;
+      page = 1;
     }
     axios.get(app.url+'/pencarian-tbs-penjualan?search='+app.pencarian+'&page='+page)
     .then(function (resp) {
-        app.tbs_penjualan = resp.data.data;
-        app.tbsPenjualanData = resp.data;
-        app.loading = false;
-        app.seen = true;
+      app.tbs_penjualan = resp.data.data;
+      app.tbsPenjualanData = resp.data;
+      app.loading = false;
+      app.seen = true;
     })
     .catch(function (resp) {
-        console.log(resp);
-        alert("Tidak Dapat Memuat Penjualan");
+      console.log(resp);
+      alert("Tidak Dapat Memuat Penjualan");
     });
-},    
-dataProduk() {
+  },    
+  dataProduk() {
     var app = this;
     axios.get(app.url_produk+'/pilih-produk').then(function (resp) {
-        app.produk = resp.data;
+      app.produk = resp.data;
     })
     .catch(function (resp) {
 
-        console.log(resp);
-        alert("Tidak Bisa Memuat Produk");
+      console.log(resp);
+      alert("Tidak Bisa Memuat Produk");
     });
-},   
-dataPelanggan() {
+  },   
+  dataPelanggan() {
     var app = this;
     axios.get(app.url+'/pilih-pelanggan').then(function (resp) {
-        app.pelanggan = resp.data;
+      app.pelanggan = resp.data;
     })
     .catch(function (resp) {
 
-        console.log(resp);
-        alert("Tidak Bisa Memuat Pelanggan");
+      console.log(resp);
+      alert("Tidak Bisa Memuat Pelanggan");
     });
-},   
-dataKas() {
+  },   
+  dataKas() {
     var app = this;
     axios.get(app.url+'/pilih-kas').then(function (resp) {
-        app.kas = resp.data;   
+      app.kas = resp.data;   
 
-        $.each(resp.data, function (i, item) {
-            if (resp.data[i].default_kas == 1) {
-                app.penjualan.kas = resp.data[i].id 
-            }
+      $.each(resp.data, function (i, item) {
+        if (resp.data[i].default_kas == 1) {
+          app.penjualan.kas = resp.data[i].id 
+        }
 
-        });
-        
+      });
+
     })
     .catch(function (resp) {
 
-        console.log(resp);
-        alert("Tidak Bisa Memuat Kas");
+      console.log(resp);
+      alert("Tidak Bisa Memuat Kas");
     });
-},pilihProduk() {
+  },pilihProduk() {
     if (this.inputTbsPenjualan.produk != '') {
 
-        var app = this;
-        var produk = app.inputTbsPenjualan.produk.split("|");
-        var nama_produk = produk[1];
-        this.isiJumlahProduk(nama_produk);
-    }
-},
-tambahModalKas(){
-       $("#modal_tambah_kas").show();
-       $("#modal_selesai").hide();
-       this.$refs.kode_kas.$el.focus(); 
- },
-  saveFormKas() {
       var app = this;
-      var newkas = app.tambahKas;
-      axios.post(app.url_tambah_kas, newkas)
-      .then(function (resp) {
-        app.message = 'Menambah Kategori Transaksi '+ app.tambahKas.nama_kas;
-        app.alert(app.message);
-        app.tambahKas.kode_kas = ''
-        app.tambahKas.nama_kas = ''
-        app.tambahKas.status_kas = 0
-        app.tambahKas.default_kas = 0
-        app.errors = '';
-         app.dataKas();
-        $("#modal_tambah_kas").hide();
-        $("#modal_selesai").show();
-      })
-      .catch(function (resp) {
-        app.success = false;
-        app.errors = resp.response.data.errors;
-      });
-    },
-    defaultKas() {
-         var app = this;
-          var toogle = app.tambahKas.default_kas;
+      var produk = app.inputTbsPenjualan.produk.split("|");
+      var nama_produk = produk[1];
+      this.isiJumlahProduk(nama_produk);
+    }
+  },
+  tambahModalKas(){
+   $("#modal_tambah_kas").show();
+   $("#modal_selesai").hide();
+   this.$refs.kode_kas.focus(); 
+ },
+ saveFormKas() {
+  var app = this;
+  var newkas = app.tambahKas;
+  axios.post(app.url_tambah_kas, newkas)
+  .then(function (resp) {
+    app.message = 'Menambah Kategori Transaksi '+ app.tambahKas.nama_kas;
+    app.alert(app.message);
+    app.tambahKas.kode_kas = ''
+    app.tambahKas.nama_kas = ''
+    app.tambahKas.status_kas = 0
+    app.tambahKas.default_kas = 0
+    app.errors = '';
+    app.dataKas();
+    $("#modal_tambah_kas").hide();
+    $("#modal_selesai").show();
+  })
+  .catch(function (resp) {
+    app.success = false;
+    app.errors = resp.response.data.errors;
+  });
+},
+defaultKas() {
+ var app = this;
+ var toogle = app.tambahKas.default_kas;
 
-         if (toogle == true) {
-          app = this;
-      app.$swal({
-      title: "Konfirmasi",
-      text: "Apakah Anda Yakin Ingin Mengubah Kas Utama ?",
-      icon: "warning",
-      buttons: true,
-      dangerMode: true,
-      })
-      .then((confirm) => {
-        if (confirm) {
-        toogle.prop('checked', true);
-        } else {
-        toogle.prop('checked', false);
-      }
-      });
-         }  
-      },
+ if (toogle == true) {
+  app = this;
+  app.$swal({
+    title: "Konfirmasi",
+    text: "Apakah Anda Yakin Ingin Mengubah Kas Utama ?",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  })
+  .then((confirm) => {
+    if (confirm) {
+      toogle.prop('checked', true);
+    } else {
+      toogle.prop('checked', false);
+    }
+  });
+}  
+},
 isiJumlahProduk(nama_produk){
-    var app = this;
+  var app = this;
 
-    app.$swal({
-        title: nama_produk,
-        content: {
-            element: "input",
-            attributes: {
-                placeholder: "Jumlah Produk",
-                type: "number",
-                value : app.setting_penjualan_pos.jumlah_produk
-            },
-        },
-        closeOnEsc: true,
-        closeOnClickOutside: false,
+  app.$swal({
+    title: nama_produk,
+    content: {
+      element: "input",
+      attributes: {
+        placeholder: "Jumlah Produk",
+        type: "number",
+        value : app.setting_penjualan_pos.jumlah_produk
+      },
+    },
+    closeOnEsc: true,
+    closeOnClickOutside: false,
 
-        buttons: {
-            confirm: "OK"                   
-        }
+    buttons: {
+      confirm: "OK"                   
+    }
 
 
-    }).then((value) => {
-        if (value == ''){
-            value = app.setting_penjualan_pos.jumlah_produk
-        }
-        this.submitProdukPenjualan(value);
-    });
+  }).then((value) => {
+    if (value == ''){
+      value = app.setting_penjualan_pos.jumlah_produk
+    }
+    this.submitProdukPenjualan(value);
+  });
 },
 submitProdukPenjualan(value){
 
   if (value == 0) {
 
     this.$swal({
-        text: "Jumlah Produk Tidak Boleh Nol!",
+      text: "Jumlah Produk Tidak Boleh Nol!",
     });
 
-}else{
+  }else{
 
     var app = this;
     var produk = app.inputTbsPenjualan.produk.split("|");
@@ -778,408 +796,411 @@ submitProdukPenjualan(value){
     axios.post(app.url+'/proses-tambah-tbs-penjualan', newinputTbsPenjualan)
     .then(function (resp) {
 
-        if (resp.data.harga_jual == 0 || resp.data.harga_jual == '') {
+      if (resp.data.harga_jual == 0 || resp.data.harga_jual == '') {
 
-            app.alertTbs("Harga Produk "+nama_produk+" 0!");
-            app.loading = false;
-            app.inputTbsPenjualan.jumlah_produk = ''
-            app.inputTbsPenjualan.produk = ''
+        app.alertTbs("Harga Produk "+nama_produk+" 0!");
+        app.loading = false;
+        app.inputTbsPenjualan.jumlah_produk = ''
+        app.inputTbsPenjualan.produk = ''
 
-        }else if (resp.data == 0) {
+      }else if (resp.data == 0) {
 
-            app.alertTbs("Produk "+nama_produk+" Sudah Ada, Silakan Pilih Produk Lain!");
-            app.loading = false;
-            app.inputTbsPenjualan.jumlah_produk = ''
-            app.inputTbsPenjualan.produk = ''
+        app.alertTbs("Produk "+nama_produk+" Sudah Ada, Silakan Pilih Produk Lain!");
+        app.loading = false;
+        app.inputTbsPenjualan.jumlah_produk = ''
+        app.inputTbsPenjualan.produk = ''
 
-        }else{
+      }else{
 
-            var subtotal = parseFloat(app.penjualan.subtotal) + parseFloat(resp.data.subtotal)
+        var subtotal = parseFloat(app.penjualan.subtotal) + parseFloat(resp.data.subtotal)
 
-            app.getResults()
-            app.penjualan.subtotal = subtotal.toFixed(2)                        
-            app.penjualan.total_akhir  = subtotal.toFixed(2) 
-            app.potonganPersen()
-            app.alert("Menambahkan Produk "+nama_produk)
-            app.loading = false
-            app.inputTbsPenjualan.jumlah_produk = ''
-            app.inputTbsPenjualan.produk = ''
+        app.alert("Menambahkan Produk "+nama_produk)      
+        app.getResults()
+        app.penjualan.subtotal = subtotal.toFixed(2)                        
+        app.penjualan.total_akhir  = subtotal.toFixed(2) 
+        app.potonganPersen()
+        app.loading = false
+        app.inputTbsPenjualan.jumlah_produk = ''
+        app.inputTbsPenjualan.produk = ''
 
-        }
+      }
 
     })
     .catch(function (resp) {
 
-        console.log(resp);                  
-        app.loading = false;
-        app.inputTbsPenjualan.jumlah_produk = ''
-        app.inputTbsPenjualan.produk = ''
-        alert("Tidak dapat Menambahkan Produk");
+      console.log(resp);                  
+      app.loading = false;
+      app.inputTbsPenjualan.jumlah_produk = ''
+      app.inputTbsPenjualan.produk = ''
+      alert("Tidak dapat Menambahkan Produk");
     });
-}
+  }
 },
 editEntry(id, index,nama_produk,subtotal_lama) {    
-    var app = this;     
-    app.$swal({
-        title: nama_produk,
-        content: {
-            element: "input",
-            attributes: {
-                placeholder: "Edit Jumlah Produk",
-                type: "number",
-            },
-        },
-        buttons: {
-            cancel: true,
-            confirm: "OK"                   
-        },
+  var app = this;     
+  app.$swal({
+    title: nama_produk,
+    content: {
+      element: "input",
+      attributes: {
+        placeholder: "Edit Jumlah Produk",
+        type: "number",
+      },
+    },
+    buttons: {
+      cancel: true,
+      confirm: "OK"                   
+    },
 
-    }).then((value) => {
-        if (!value) throw null;
-        this.editJumlahProdukPenjualan(value,id,nama_produk,subtotal_lama);
-    });
+  }).then((value) => {
+    if (!value) throw null;
+    this.editJumlahProdukPenjualan(value,id,nama_produk,subtotal_lama);
+  });
 
 },
 editJumlahProdukPenjualan(value,id,nama_produk,subtotal_lama){
-    if (value == 0) {
+  if (value == 0) {
 
-        this.$swal({
-            text: "Jumlah Produk Tidak Boleh Nol!",
-        });
-
-    }else{
-
-        var app = this;
-
-        app.inputTbsPenjualan.id_tbs = id;
-        app.inputTbsPenjualan.jumlah_produk = value;
-        var newinputTbsPenjualan = app.inputTbsPenjualan;
-        app.loading = true;
-        axios.post(app.url+'/edit-jumlah-tbs-penjualan', newinputTbsPenjualan)
-        .then(function (resp) {
-
-            var subtotal = (parseFloat(app.penjualan.subtotal) - parseFloat(subtotal_lama)) + parseFloat(resp.data.subtotal)
-
-            app.getResults()
-            app.penjualan.subtotal = subtotal.toFixed(2)
-            app.penjualan.total_akhir = subtotal.toFixed(2)
-            app.potonganPersen()
-            app.alert("Mengubah Jumlah Produk "+nama_produk)
-            app.loading = false;
-            app.inputTbsPenjualan.jumlah_produk = ''
-            app.inputTbsPenjualan.id_tbs = ''
-
-        })
-        .catch(function (resp) { 
-
-            console.log(resp);                  
-            app.loading = false;
-            alert("Tidak dapat Mengubah Jumlah Produk");
-        });
-    }
-},
-potonganEntry(id, index,nama_produk,subtotal_lama) {    
-    var app = this;     
-    app.$swal({
-        title: nama_produk,
-        text : 'Format : 10 (nominal) || 10% (persen)',
-        content: {
-            element: "input",
-            attributes: {
-                placeholder: "Edit Potongan Produk",
-                type: "text",
-            },
-        },
-        buttons: {
-            cancel: true,
-            confirm: "OK"                   
-        },
-
-    }).then((value) => {
-        if (!value) throw null;
-        this.editPotonganProdukPenjualan(value,id,nama_produk,subtotal_lama);
+    this.$swal({
+      text: "Jumlah Produk Tidak Boleh Nol!",
     });
 
-},
-editPotonganProdukPenjualan(value,id,nama_produk,subtotal_lama){
+  }else{
 
     var app = this;
 
     app.inputTbsPenjualan.id_tbs = id;
-    app.inputTbsPenjualan.potongan_produk = value;
+    app.inputTbsPenjualan.jumlah_produk = value;
     var newinputTbsPenjualan = app.inputTbsPenjualan;
-
     app.loading = true;
-    axios.post(app.url+'/edit-potongan-tbs-penjualan', newinputTbsPenjualan)
+    axios.post(app.url+'/edit-jumlah-tbs-penjualan', newinputTbsPenjualan)
     .then(function (resp) {
 
-        if (resp.data.status == 0) {
+      var subtotal = (parseFloat(app.penjualan.subtotal) - parseFloat(subtotal_lama)) + parseFloat(resp.data.subtotal)
 
-            app.$swal({
-                text: "Tidak dapat Mengubah Potongan Produk, Periksa Kembali Inputan Anda!",
-            });            
-            app.loading = false;
-
-        }else if (resp.data.status == 1) {
-
-            app.$swal({
-                text: "Potongan Yang Anda Masukan Melebihi Subtotal!",
-            });
-            app.loading = false;
-
-        }else{
-
-            var subtotal = (parseFloat(app.penjualan.subtotal) - parseFloat(subtotal_lama)) + parseFloat(resp.data.subtotal)
-
-            app.getResults()
-            app.penjualan.subtotal = subtotal.toFixed(2)
-            app.penjualan.total_akhir = subtotal.toFixed(2)           
-            app.potonganPersen()
-            app.alert("Mengubah Potongan Produk "+nama_produk)
-            app.loading = false
-            app.inputTbsPenjualan.potongan_produk = ''
-            app.inputTbsPenjualan.id_tbs = ''
-
-        }
-
+      app.getResults()
+      app.penjualan.subtotal = subtotal.toFixed(2)
+      app.penjualan.total_akhir = subtotal.toFixed(2)
+      app.potonganPersen()
+      app.alert("Mengubah Jumlah Produk "+nama_produk)
+      app.loading = false;
+      app.inputTbsPenjualan.jumlah_produk = ''
+      app.inputTbsPenjualan.id_tbs = ''
 
     })
     .catch(function (resp) { 
 
-        console.log(resp);                  
-        app.loading = false;
+      console.log(resp);                  
+      app.loading = false;
+      alert("Tidak dapat Mengubah Jumlah Produk");
     });
+  }
+},
+potonganEntry(id, index,nama_produk,subtotal_lama) {    
+  var app = this;     
+  app.$swal({
+    title: nama_produk,
+    text : 'Format : 10 (nominal) || 10% (persen)',
+    content: {
+      element: "input",
+      attributes: {
+        placeholder: "Edit Potongan Produk",
+        type: "text",
+      },
+    },
+    buttons: {
+      cancel: true,
+      confirm: "OK"                   
+    },
+
+  }).then((value) => {
+    if (!value) throw null;
+    this.editPotonganProdukPenjualan(value,id,nama_produk,subtotal_lama);
+  });
+
+},
+editPotonganProdukPenjualan(value,id,nama_produk,subtotal_lama){
+
+  var app = this;
+
+  app.inputTbsPenjualan.id_tbs = id;
+  app.inputTbsPenjualan.potongan_produk = value;
+  var newinputTbsPenjualan = app.inputTbsPenjualan;
+
+  app.loading = true;
+  axios.post(app.url+'/edit-potongan-tbs-penjualan', newinputTbsPenjualan)
+  .then(function (resp) {
+
+    if (resp.data.status == 0) {
+
+      app.$swal({
+        text: "Tidak dapat Mengubah Potongan Produk, Periksa Kembali Inputan Anda!",
+      });            
+      app.loading = false;
+
+    }else if (resp.data.status == 1) {
+
+      app.$swal({
+        text: "Potongan Yang Anda Masukan Melebihi Subtotal!",
+      });
+      app.loading = false;
+
+    }else{
+
+      var subtotal = (parseFloat(app.penjualan.subtotal) - parseFloat(subtotal_lama)) + parseFloat(resp.data.subtotal)
+
+      app.getResults()
+      app.penjualan.subtotal = subtotal.toFixed(2)
+      app.penjualan.total_akhir = subtotal.toFixed(2)           
+      app.potonganPersen()
+      app.alert("Mengubah Potongan Produk "+nama_produk)
+      app.loading = false
+      app.inputTbsPenjualan.potongan_produk = ''
+      app.inputTbsPenjualan.id_tbs = ''
+
+    }
+
+
+  })
+  .catch(function (resp) { 
+
+    console.log(resp);                  
+    app.loading = false;
+  });
 
 },
 deleteEntry(id, index,nama_produk,subtotal_lama) {
 
-    var app = this;
-    app.$swal({
-        text: "Anda Yakin Ingin Menghapus Produk "+nama_produk+ " ?",
-        buttons: true,
-        dangerMode: true,
-    })
-    .then((willDelete) => {
-        if (willDelete) {
+  var app = this;
+  app.$swal({
+    text: "Anda Yakin Ingin Menghapus Produk "+nama_produk+ " ?",
+    buttons: true,
+    dangerMode: true,
+  })
+  .then((willDelete) => {
+    if (willDelete) {
 
-            this.prosesDelete(id,nama_produk,subtotal_lama);
+      this.prosesDelete(id,nama_produk,subtotal_lama);
 
-        } else {
+    } else {
 
-            app.$swal.close();
+      app.$swal.close();
 
-        }
-    });
+    }
+  });
 
 },
 prosesDelete(id,nama_produk,subtotal_lama){
 
-    var app = this;
+  var app = this;
+  app.loading = true;
+  axios.delete(app.url+'/proses-hapus-tbs-penjualan/'+id)
+  .then(function (resp) {
+
+    if (resp.data == 0) {
+
+      app.alertTbs("Produk "+nama_produk+" Gagal Dihapus!")
+      app.loading = false
+
+    }else{
+      var subtotal = parseFloat(app.penjualan.subtotal) - parseFloat(subtotal_lama)
+      app.getResults()
+      app.penjualan.subtotal = subtotal.toFixed(2)
+      app.penjualan.total_akhir = subtotal.toFixed(2)
+      app.potonganPersen()
+      app.alert("Menghapus Produk "+nama_produk)
+      app.loading = false
+      app.inputTbsPenjualan.id_tbs = ''  
+      app.inputTbsPenjualan.produk = ''  
+    }
+
+
+  })
+  .catch(function (resp) {
+
+    console.log(resp);
+    app.loading = false;
+    alert("Tidak dapat Menghapus Produk "+nama_produk);
+  });
+},
+batalPenjualan(){
+  var app = this
+  app.$swal({
+    text: "Anda Yakin Ingin Membatalkan Transaksi Ini ?",
+    buttons: {
+      cancel: true,
+      confirm: "OK"                   
+    },
+
+  }).then((value) => {
+
+    if (!value) throw null;
+
     app.loading = true;
-    axios.delete(app.url+'/proses-hapus-tbs-penjualan/'+id)
+    axios.post(app.url+'/proses-batal-penjualan')
     .then(function (resp) {
 
-        if (resp.data == 0) {
-
-            app.alertTbs("Produk "+nama_produk+" Gagal Dihapus!")
-            app.loading = false
-
-        }else{
-            var subtotal = parseFloat(app.penjualan.subtotal) - parseFloat(subtotal_lama)
-            app.getResults()
-            app.penjualan.subtotal = subtotal.toFixed(2)
-            app.penjualan.total_akhir = subtotal.toFixed(2)
-            app.potonganPersen()
-            app.alert("Menghapus Produk "+nama_produk)
-            app.loading = false
-            app.inputTbsPenjualan.id_tbs = ''  
-            app.inputTbsPenjualan.produk = ''  
-        }
-
+      app.getResults();
+      app.alert("Membatalkan Transaksi Penjualan");
+      app.penjualan.pelanggan = ''
+      app.penjualan.subtotal = 0
+      app.penjualan.jatuh_tempo = ''
+      app.penjualan.potongan_persen = 0
+      app.penjualan.potongan_faktur = 0
+      app.penjualan.total_akhir = 0
+      app.penjualan.pembayaran = 0
+      app.hitungKembalian(app.penjualan.pembayaran)
 
     })
     .catch(function (resp) {
 
-        console.log(resp);
-        app.loading = false;
-        alert("Tidak dapat Menghapus Produk "+nama_produk);
+      console.log(resp);
+      app.loading = false;
+      alert("Tidak dapat Membatalkan Transaksi Penjualan");
     });
-},
-batalPenjualan(){
-    var app = this
-    app.$swal({
-        text: "Anda Yakin Ingin Membatalkan Transaksi Ini ?",
-        buttons: {
-            cancel: true,
-            confirm: "OK"                   
-        },
 
-    }).then((value) => {
-
-        if (!value) throw null;
-
-        app.loading = true;
-        axios.post(app.url+'/proses-batal-penjualan')
-        .then(function (resp) {
-
-            app.getResults();
-            app.alert("Membatalkan Transaksi Penjualan");
-            app.penjualan.pelanggan = ''
-            app.penjualan.subtotal = 0
-            app.penjualan.jatuh_tempo = ''
-            app.penjualan.potongan_persen = 0
-            app.penjualan.potongan_faktur = 0
-            app.penjualan.total_akhir = 0
-            app.penjualan.pembayaran = 0
-            app.hitungKembalian(app.penjualan.pembayaran)
-
-        })
-        .catch(function (resp) {
-
-            console.log(resp);
-            app.loading = false;
-            alert("Tidak dapat Membatalkan Transaksi Penjualan");
-        });
-
-    });
+  });
 
 },
 selesaiPenjualan(){
 
-    this.$swal({
-        text: "Anda Yakin Ingin Menyelesaikan Transaksi Ini ?",
-        buttons: {
-            cancel: true,
-            confirm: "OK"                   
-        },
+  this.$swal({
+    text: "Anda Yakin Ingin Menyelesaikan Transaksi Ini ?",
+    buttons: {
+      cancel: true,
+      confirm: "OK"                   
+    },
 
-    }).then((value) => {
+  }).then((value) => {
 
-        if (!value) throw null;
+    if (!value) throw null;
 
-        this.prosesSelesaiPenjualan(value);
+    this.prosesSelesaiPenjualan(value);
 
-    });
+  });
 },
 prosesSelesaiPenjualan(value){
 
-    var app = this;
-    var newPenjualan = app.penjualan;
-    app.loading = true;
+  var app = this;
+  var newPenjualan = app.penjualan;
+  app.loading = true;
 
-    axios.post(app.url,newPenjualan)
-    .then(function (resp) {
+  axios.post(app.url,newPenjualan)
+  .then(function (resp) {
 
-        if (resp.data == 0) {
+    if (resp.data == 0) {
 
-            app.alertTbs("Anda Belum Memasukan Produk");
-            app.loading = false;
+      app.alertTbs("Anda Belum Memasukan Produk");
+      app.loading = false;
 
-        }else if(resp.data.respons == 1){
+    }else if(resp.data.respons == 1){
 
-            app.alertTbs("Gagal : Stok " + resp.data.nama_produk + " Tidak Mencukupi Untuk di Jual, Sisa Produk = "+resp.data.stok_produk);
-            app.loading = false;
+      app.alertTbs("Gagal : Stok " + resp.data.nama_produk + " Tidak Mencukupi Untuk di Jual, Sisa Produk = "+resp.data.stok_produk);
+      app.loading = false;
 
-        }else if(resp.data.respons == 2){
+    }else if(resp.data.respons == 2){
 
-            app.alertTbs("Gagal : Terjadi Kesalahan , Silakan Coba Lagi!");
-            app.loading = false;
+      app.alertTbs("Gagal : Terjadi Kesalahan , Silakan Coba Lagi!");
+      app.loading = false;
 
-        }else{
+    }else{
 
-            app.getResults();
-            app.alert("Menyelesaikan Transaksi Penjualan");
-            app.penjualan.pelanggan = ''
-            app.penjualan.subtotal = 0
-            app.penjualan.jatuh_tempo = ''
-            app.penjualan.potongan_persen = 0
-            app.penjualan.potongan_faktur = 0
-            app.penjualan.total_akhir = 0
-            app.penjualan.pembayaran = 0
-            app.inputTbsPenjualan.produk = ''            
-            app.$refs.produk.$el.focus()
-            app.hitungKembalian(app.penjualan.pembayaran)
-            $("#modal_selesai").hide();
-            window.open('penjualan/cetak-kecil-penjualan/'+resp.data.respons_penjualan,'_blank');
-            app.loading = false;
+      app.getResults();
+      app.alert("Menyelesaikan Transaksi Penjualan");
+      app.penjualan.pelanggan = ''
+      app.penjualan.subtotal = 0
+      app.penjualan.jatuh_tempo = ''
+      app.penjualan.potongan_persen = 0
+      app.penjualan.potongan_faktur = 0
+      app.penjualan.total_akhir = 0
+      app.penjualan.pembayaran = 0
+      app.inputTbsPenjualan.produk = ''            
+      app.$refs.produk.$el.focus()
+      app.hitungKembalian(app.penjualan.pembayaran)
+      $("#modal_selesai").hide();
+      window.open('penjualan/cetak-kecil-penjualan/'+resp.data.respons_penjualan,'_blank');
+      app.loading = false;
 
-        }
+    }
 
-    })
-    .catch(function (resp) {  
+  })
+  .catch(function (resp) {  
 
-        console.log(resp);              
-        app.loading = false;
-        alert("Tidak dapat Menyelesaikan Transaksi Penjualan");        
-        app.errors = resp.response.data.errors;
-    });
+    console.log(resp);              
+    app.loading = false;
+    alert("Tidak dapat Menyelesaikan Transaksi Penjualan");        
+    app.errors = resp.response.data.errors;
+  });
 
 },
 simpanSetting(){
 
-    var app = this
-    var newSettingPenjualanPos = app.setting_penjualan_pos;
+  var app = this
+  var newSettingPenjualanPos = app.setting_penjualan_pos;
 
-    if (app.setting_penjualan_pos.jumlah_produk == 0 || app.setting_penjualan_pos.jumlah_produk == '') {
-        app.alertTbs("Jumlah Produk Tidak Boleh Nol atau Kosong!")
-    }else{
+  if (app.setting_penjualan_pos.jumlah_produk == 0 || app.setting_penjualan_pos.jumlah_produk == '') {
+    app.alertTbs("Jumlah Produk Tidak Boleh Nol atau Kosong!")
+  }else{
 
-       axios.post(app.url+'/proses-setting-penjualan-pos',newSettingPenjualanPos)
-       .then(function (resp) {
-        app.alert("Menyimpan Setting Penjualan POS");        
-        $("#modal_setting").hide(); 
-    })
-       .catch(function (resp) {
-        console.log(resp);
-        alert("Tidak dapat Menyimpan Setting Penjualan POS");
-    });
+   axios.post(app.url+'/proses-setting-penjualan-pos',newSettingPenjualanPos)
+   .then(function (resp) {
+    app.alert("Menyimpan Setting Penjualan POS");        
+    $("#modal_setting").hide(); 
+  })
+   .catch(function (resp) {
+    console.log(resp);
+    alert("Tidak dapat Menyimpan Setting Penjualan POS");
+  });
 
-   }
+ }
 
 },
 dataSettingPenjualanPos() {
-    var app = this; 
+  var app = this; 
 
-    axios.get(app.url+'/cek-setting-penjualan-pos')
-    .then(function (resp) {
+  axios.get(app.url+'/cek-setting-penjualan-pos')
+  .then(function (resp) {
 
-        if (resp.data.status == 1) {
+    if (resp.data.status == 1) {
 
-            app.setting_penjualan_pos.jumlah_produk = resp.data.jumlah_produk;
-            app.setting_penjualan_pos.stok = resp.data.stok;
-            app.setting_penjualan_pos.harga_jual = resp.data.harga_jual;
-        }
+      app.setting_penjualan_pos.jumlah_produk = resp.data.jumlah_produk;
+      app.setting_penjualan_pos.stok = resp.data.stok;
+      app.setting_penjualan_pos.harga_jual = resp.data.harga_jual;
+    }
 
-    })
-    .catch(function (resp) {
-        console.log(resp);
-        alert("Tidak Dapat Memuat Penjualan");
-    });
+  })
+  .catch(function (resp) {
+    console.log(resp);
+    alert("Tidak Dapat Memuat Penjualan");
+  });
 }, 
 bayarPenjualan(){
-    $("#modal_selesai").show(); 
-    this.$refs.pembayaran.$el.focus()
+  $("#modal_selesai").show(); 
+  this.$refs.pembayaran.$el.focus()
 },
 closeModal(){
 
-    $("#modal_selesai").hide(); 
+  $("#modal_selesai").hide(); 
 },
 closeModalX(){
-    $("#modal_tambah_kas").hide(); 
-    $("#modal_selesai").show(); 
+  $("#modal_tambah_kas").hide(); 
+  $("#modal_selesai").show(); 
 },
 alertTbs(pesan) {
-    this.$swal({
-        text: pesan,
-        icon: "warning",
-    });
+  this.$swal({
+    text: pesan,
+    icon: "warning",
+  });
 },
 alert(pesan) {
-    this.$swal({
-        title: "Berhasil ",
-        text: pesan,
-        icon: "success",
-    });
+  this.$swal({
+    title: "Berhasil ",
+    text: pesan,
+    icon: "success",
+    buttons: false,
+    timer: 1000,
+
+  });
 }
 }
 }
