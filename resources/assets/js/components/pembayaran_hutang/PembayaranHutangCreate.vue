@@ -6,7 +6,7 @@
   color: red; 
   float: right;
 }
-.form-pembelian{
+.form-penjualan{
     width: 100%;
     padding: 12px 20px;
     margin: 8px 0;
@@ -57,22 +57,22 @@
                                   <div class="modal-body">
                                                 <div class=" table-responsive ">
                                                    <div class="pencarian">
-                                                    <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
+                                                    <input type="text" name="pencarian" v-model="pencarianhutang" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
                                                 </div>
 
                                                 <table class="table table-striped table-hover" v-if="seen">
                                                   <thead class="text-primary">
                                                     <tr>
                                                       <th >No Faktur</th>
-                                                      <th>Total Pembelian</th>
+                                                      <th >Total Pembelian</th>
                                                       <th  style="text-align:right;">Hutang</th>
                                                       <th  style="text-align:right;">Jatuh Tempo</th>
                                                       <th  style="text-align:right;">Waktu</th>
                                                       <th  style="text-align:right;">Status</th>
                                                     </tr>
                                                   </thead>
-                                                  <tbody v-if="dataSuplierHutang.length > 0 && loading == false"  class="data-ada">
-                                                    <tr v-for="dataSuplierHutangs, index in dataSuplierHutang" >
+                                                  <tbody v-if="dataSuplierHutang.length > 0 && loading == false"  class="data-ada" >
+                                                    <tr v-for="dataSuplierHutangs, index in dataSuplierHutang" v-bind:id="'bayar-' + dataSuplierHutangs.id_pembelian" v-on:click="bayarHutangEntry(dataSuplierHutangs.id_pembelian, index,dataSuplierHutangs.no_faktur,dataSuplierHutangs.nilai_kredit,dataSuplierHutangs.jatuh_tempo)">
                                                       <td>{{ dataSuplierHutangs.no_faktur }}</td>
                                                        <td>{{ dataSuplierHutangs.total }}</td>
                                                         <td style="text-align:right;">{{ dataSuplierHutangs.nilai_kredit }}</td>
@@ -87,11 +87,67 @@
                                                 </table>  
 
                                                 <vue-simple-spinner v-if="loading"></vue-simple-spinner>
-                                                <div align="right"><pagination :data="dataSuplierHutangData" v-on:pagination-change-page="getResults" :limit="6"></pagination></div>
+                                                <div align="right"><pagination :data="dataSuplierHutangData" v-on:pagination-change-page="dataSupplierHutang" :limit="6"></pagination></div>
                                               </div>
                                   </div>
                             <div class="modal-footer">  
                            </div> 
+                   </div>       
+               </div> 
+           </div> 
+           <!-- / MODAL TOMBOL SELESAI --> 
+
+
+          <div class="modal" id="modal_form_bayar_hutang" role="dialog" data-backdrop=""> 
+                  <div class="modal-dialog"> 
+                         <!-- Modal content--> 
+                            <div class="modal-content"> 
+                                <div class="modal-header"> 
+                                    <button type="button" class="close"  v-on:click="closeModalBayarHutang()" v-shortkey.push="['esc']" @shortkey="closeModalBayarHutang()"> &times;</button> 
+                                    <h4 class="modal-title"> 
+                                        <div class="alert-icon"> 
+                                            <b>Silahkan Isi Pembayaran Hutang !</b> 
+                                        </div> 
+                                    </h4> 
+                                </div> 
+                        <form class="form-horizontal"  v-on:submit.prevent="saveFormBayarHutang()"> 
+                            <div class="modal-body"> 
+                                <div class="card" style="margin-bottom:1px; margin-top:1px; margin-right:1px; margin-left:1px;">
+
+                                    <div class="row">
+                                      <div class="col-md-6">
+                                        <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                                            <font style="color: black">Piutang</font>
+                                            <money style="text-align:right; font-size: 30px;" readonly="" class="form-control" id="nilai_kredit" name="nilai_kredit" placeholder="Kredit"  v-model="formBayarHutangTbs.nilai_kredit" v-bind="separator" ></money> 
+                                        </div> 
+                                      </div>
+
+                                      <div class="col-md-6">
+                                        <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                                            <font style="color: black">Potongan</font>
+                                            <money style="text-align:right; font-size: 30px;" class="form-control" id="potongan" name="potongan" placeholder="Kredit"  v-model="formBayarHutangTbs.potongan" v-bind="separator" ></money> 
+                                        </div>                                        
+                                      </div>
+
+                                      <div class="col-md-12">
+                                        <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                                            <font style="color: black">Jumlah Bayar(F10)</font>
+                                            <money style="text-align:right" class="form-penjualan" v-shortkey.focus="['f10']" id="jumlah_bayar" name="jumlah_bayar" v-model="formBayarHutangTbs.jumlah_bayar" v-bind="separator"  autocomplete="off" ref="jumlah_bayar"></money> 
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <div align="right"  style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                                        <button type="submit" class="btn btn-success btn-lg" id="btnTbs" ><font style="font-size:20px;">Tambah(Enter)</font></button>
+                                        <button type="button" class="btn btn-default btn-lg"  v-on:click="closeModalBayarHutang()" v-shortkey.push="['esc']" @shortkey="closeModalBayarHutang()"> <font style="font-size:20px;">Tutup(Esc)</font></button>
+                                    </div>
+
+                                </div> 
+                            </div>
+                            <div class="modal-footer">
+                                
+                            </div> 
+                        </form>
                    </div>       
                </div> 
            </div> 
@@ -110,7 +166,6 @@
                      <selectize-component v-model="inputTbsPembayaranHutang.suplier" :settings="placeholder_suplier"  id="suplier" name="suplier" ref='suplier'> 
                       <option v-for="supliers, index in suplier" v-bind:value="supliers.id">{{ supliers.nama_suplier }}</option>
                      </selectize-component>
-
                       </div><!--/COL MD  3 --> 
                       <span v-if="errors.suplier" id="produk_error" class="label label-danger">{{ errors.suplier[0] }}</span>
             </div>
@@ -132,6 +187,7 @@
                   <th>Jatuh Tempo</th>
                   <th  style="text-align:right;">Hutang</th>
                   <th  style="text-align:right;">Potongan</th>
+                  <th  style="text-align:right;">Subtotal Hutang</th>
                   <th  style="text-align:right;">Pembayaran</th>
                   <th  style="text-align:right;">Hapus</th>
                 </tr>
@@ -139,12 +195,13 @@
               <tbody v-if="tbs_pembayaran_hutang.length > 0 && loading == false"  class="data-ada">
                 <tr v-for="tbs_pembayaran_hutangs, index in tbs_pembayaran_hutang" >
 
-                  <td>{{ tbs_pembayaran_hutangs.no }}</td>
+                  <td>{{ tbs_pembayaran_hutangs.no_faktur_pembelian }}</td>
                    <td>{{ tbs_pembayaran_hutangs.suplier }}</td>
                     <td>{{ tbs_pembayaran_hutangs.jatuh_tempo }}</td>
-                    <td style="text-align:right;">{{ tbs_pembayaran_hutangs.hutang }}</td>
-                    <td style="text-align:right;">{{ tbs_pembayaran_hutangs.potongan }}</td>
-                    <td style="text-align:right;">>{{ tbs_pembayaran_hutangs.jumlah_bayar }}</td>
+                    <td style="text-align:right;">{{ tbs_pembayaran_hutangs.hutang | pemisahTitik  }}</td>
+                    <td style="text-align:right;">{{ tbs_pembayaran_hutangs.potongan | pemisahTitik }}</td>
+                     <td style="text-align:right;">{{ tbs_pembayaran_hutangs.subtotal_hutang | pemisahTitik }}</td>
+                    <td style="text-align:right;">{{ tbs_pembayaran_hutangs.jumlah_bayar | pemisahTitik }}</td>
                     <td style="text-align:right;"> 
                     <a href="#create-pembelian" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_pembayaran_hutangs.id_tbs_pembayaran_hutangs" >Delete</a>
                   </td>
@@ -164,43 +221,28 @@
           <p style="color: red; font-style: italic;">*Note : Klik Kolom Subtotal Pembayaran,Potongan  Untuk Mengubah Nilai.</p> 
       </div><!-- COL SM 8 --> 
 
-      <div class="col-md-3"><!-- COL SM 4 --> 
-        <div class="card card-stats"><!-- CARD --> 
-            <div class="card-header" data-background-color="blue">
-                <i class="material-icons">shopping_cart</i>
-            </div>
-          <div class="card-content"> 
-              <p class="category"><h4>Total Pembayaran</h4></p>
-              <h3 class="card-title"><b><money class="form-subtotal" style="text-align:right;" v-model="inputPembayaranHutang.subtotal" readonly v-bind="separator" ></money></b></h3>
-
-              <div class="row">
-                <div class="col-md-10 col-xs-10" > 
-                      <h4>Kas </h4> 
-                      <selectize-component style="text-align:left;" v-model="inputPembayaranHutang.cara_bayar" :settings="placeholder_cara_bayar"  id="cara_bayar" name="cara_bayar" ref='cara_bayar'> 
-                      <option v-for="cara_bayars, index in cara_bayar" v-bind:value="cara_bayars.id" >{{ cara_bayars.nama_kas }}</option>
-                      </selectize-component>        
-                </div> 
-              <div class="col-md-1 col-xs-1" style="padding-left:0px;padding-top:43;">
-                <div class="row" style="margin-top:-10px">
-                <button class="btn btn-primary btn-icon waves-effect waves-light" v-on:click="tambahModalKas()" type="button"> <i class="material-icons" >add</i> </button>
-                </div>
-             </div>
-              </div> 
-              
-          </div> 
-          
-          <div class="card-footer">
-                     <div class="row"> 
-                      <div class="col-md-6 col-xs-6"> 
-                        <button type="button btn-lg"  class="btn btn-success" id="bayar" v-on:click="selesaiPembelian()" v-shortkey.push="['f2']" @shortkey="selesaiPembelian()" ><font style="font-size:20px;">Bayar(F2)</font></button>
-                      </div>
-                      <div class="col-md-6 col-xs-6"> 
-                        <button type="submit btn-lg"  class="btn btn-danger" id="btnBatal" v-on:click="batalPembelian()" v-shortkey.push="['f3']" @shortkey="batalPembelian()" ><font style="font-size:20px;">Batal(F3)</font>  </button>
-                    </div>
-                </div>
-            </div>
-        </div>             
-      </div><!-- COL SM 4 --> 
+              <div class="col-md-3">
+                            <div class="card card-stats">
+                                <div class="card-header" data-background-color="blue">
+                                    <i class="material-icons">local_atm</i>
+                                </div>
+                                <div class="card-content">
+                                    <p class="category"><font style="font-size:20px;">Subtotal</font></p>
+                                    <h3 class="card-title"><b><font style="font-size:32px;">{{ inputPembayaranHutang.subtotal | pemisahTitik }}</font></b></h3>
+                                </div>
+                                <div class="card-footer">
+                                    <div class="row"> 
+                                        <div class="col-md-6 col-xs-6"> 
+                                            <button type="button" class="btn btn-success btn-lg" id="bayar" v-on:click="bayarPembayaranPiutang()" v-shortkey.push="['f2']" @shortkey="bayarPembayaranPiutang()"><font style="font-size:20px;">Bayar(F2)</font></button>
+                                        </div>
+                                        <div class="col-md-6 col-xs-6">
+                                            <button type="submit" class="btn btn-danger btn-lg" id="btnBatal" v-on:click="batalPembayaranPiutang()" v-shortkey.push="['f3']" @shortkey="batalPembayaranPiutang()"> <font style="font-size:20px;">Batal(F3) </font></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+      
     </div><!-- ROW --> 
   </div>
 </div>
@@ -218,26 +260,42 @@ export default {
 			errors: [],
 			suplier: [],
             cara_bayar:[],
-			tbs_pembayaran_hutang: [],
-			tbspPembayaranHutangData : {},
+		      	tbs_pembayaran_hutang: [],
+			       tbsPembayaranHutangData : {},
             dataSuplierHutang : [],
             dataSuplierHutangData: {},
-			url : window.location.origin+(window.location.pathname).replace("dashboard", "pembayaran-hutang"),
+			     url : window.location.origin+(window.location.pathname).replace("dashboard", "pembayaran-hutang"),
             url_kas : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
-			placeholder_suplier: {
-				placeholder: '--PILIH SUPLIER--'
-			},
+		      	placeholder_suplier: {
+				    placeholder: '--PILIH SUPLIER--'
+			     },
             placeholder_cara_bayar:{
                 placeholder: '--PILIH KAS--'
             },
             inputTbsPembayaranHutang:{
               suplier : '',
             },
+            formBayarHutangTbs:{
+                nilai_kredit : 0,
+                jumlah_bayar : 0,
+                potongan : 0,
+                id_pembelian:'',
+                no_faktur : '',
+            },
             inputPembayaranHutang:{
                 subtotal: 0,
                 cara_bayar: '',
             },
+           separator: {
+              decimal: ',',
+              thousands: '.',
+              prefix: '',
+              suffix: '',
+              precision: 2,
+              masked: false /* doesn't work with directive */
+          },
 			pencarian: '',
+            pencarianhutang:'',
 			loading: true,
 			seen : false
 		}
@@ -247,6 +305,7 @@ export default {
 		app.dataSuplier();
         app.dataCaraBayar();
 		app.getResults();
+        app.dataSupplierHutang();
 	},
 	watch: {
         // whenever question changes, this function will run
@@ -254,12 +313,59 @@ export default {
         	this.getHasilPencarian();
         	this.loading = true;  
         },
+        pencarianhutang: function (newQuestion) {
+            this.pencarianSupplierHutang();
+            this.loading = true;  
+        },
         'inputTbsPembayaranHutang.suplier': function (newQuestion) {
         	this.pilihSuplier();  
         },
+        'formBayarHutangTbs.potongan':function(){
+            this.potonganTbs()
+        },
+        'formBayarHutangTbs.jumlah_bayar':function(){
+            this.jumlahBayarPiutang()
+        }
 
     },
+    filters: {
+    pemisahTitik: function (value) {      
+        var angka = [value];
+        var numberFormat = new Intl.NumberFormat('es-ES');
+        var formatted = angka.map(numberFormat.format);
+        return formatted.join('; ');
+    },
+    tanggal: function (value) {
+        return moment(String(value)).format('DD/MM/YYYY')
+    }
+},
     methods: {
+            potonganTbs(){
+            var potonganTbs = this.formBayarHutangTbs.potongan
+
+            if (potonganTbs == '') {
+                potonganTbs = 0
+            }
+            var jumlah_bayar = parseFloat(this.formBayarHutangTbs.nilai_kredit) - parseFloat(potonganTbs)
+            this.formBayarHutangTbs.jumlah_bayar = jumlah_bayar.toFixed(2)
+        },
+        jumlahBayarPiutang(){
+            var app = this;
+            var jumlah_bayar = app.formBayarHutangTbs.jumlah_bayar
+
+            if (jumlah_bayar == '') {
+                jumlah_bayar = 0
+            }
+            var piutang_setelah_diskon = parseFloat(app.formBayarHutangTbs.nilai_kredit) - parseFloat(app.formBayarHutangTbs.potongan)
+            var sisa_piutang = parseFloat(piutang_setelah_diskon) - parseFloat(jumlah_bayar);
+
+            if (sisa_piutang < 0) {
+                app.alertTbs("Jumlah Bayar Anda Melebihi Total Hutang !")
+                app.formBayarHutangTbs.jumlah_bayar = 0;
+                app.$refs.jumlah_bayar.$el.focus(); 
+            }
+
+        },
     	getResults(page) {
     		var app = this;	
     		if (typeof page === 'undefined') {
@@ -269,6 +375,11 @@ export default {
     		.then(function (resp) {
     			app.tbs_pembayaran_hutang = resp.data.data;
     			app.tbsPembayaranHutangData = resp.data;
+            if (app.inputPembayaranHutang.subtotal == 0) {
+                $.each(resp.data.data, function (i,item) {
+                    app.inputPembayaranHutang.subtotal += parseFloat(resp.data.data[i].jumlah_bayar)
+                }); 
+            }
     			app.loading = false;
     			app.seen = true;
     		})
@@ -281,20 +392,6 @@ export default {
     	},
     	getHasilPencarian(page){
     		var app = this;
-    		if (typeof page === 'undefined') {
-    			page = 1;
-    		}
-    		axios.get(app.url+'/pencarian-tbs-item-masuk?search='+app.pencarian+'&page='+page)
-    		.then(function (resp) {
-    			app.tbs_pembayaran_hutang = resp.data.data;
-    			app.tbsPembayaranHutangData = resp.data;
-    			app.loading = false;
-    			app.seen = true;
-    		})
-    		.catch(function (resp) {
-    			console.log(resp);
-    			alert("Tidak Dapat Memuat Item Masuk");
-    		});
     	},    
     	dataSuplier() {
     		var app = this;
@@ -348,7 +445,7 @@ export default {
     		axios.post(app.url+'/proses-hapus-tbs-item-masuk/'+id)
     		.then(function (resp) {
     			app.getResults();
-    			app.alert("Menghapus Produk "+nama_produk);
+    			app.alert("Menghapus "+nama_produk);
     			app.loading = false;
     			app.inputTbsPembayaranHutang.id_tbs = ''
     		})
@@ -365,15 +462,18 @@ export default {
     			});
     		}else{
     			var app = this;
-    			var suplier = app.inputTbsPembayaranHutang.suplier.split("|");
-    			var id = suplier[0];
-    			this.dataSupplierHutang(id);
+    			this.dataSupplierHutang();
                 $("#modal_pilih_hutang").show();
     		}
     	},
-    	dataSupplierHutang(id){
+    	dataSupplierHutang(page){
             var app = this;
-    		  axios.get(app.url+'/data-suplier-hutang?id='+id+'?page='+page)
+            var suplier = app.inputTbsPembayaranHutang.suplier.split("|");
+            var id = suplier[0];
+            if (typeof page === 'undefined') {
+                page = 1;
+            }
+    		  axios.get(app.url+'/data-suplier-hutang/'+id+'?page='+page)
                 .then(function (resp) {
                 app.dataSuplierHutang = resp.data.data;
                 app.dataSuplierHutangData = resp.data;
@@ -384,11 +484,73 @@ export default {
                 console.log(resp);
                 app.loading = false;
                 app.seen = true;
-                alert("Tidak Dapat Memuat Pembayaran Hutang");
+                alert("Tidak Dapat Memuat Data hutang");
             });
     	},
+        pencarianSupplierHutang(page){
+            var app = this;
+            var suplier = app.inputTbsPembayaranHutang.suplier.split("|");
+            var id = suplier[0];
+            if (typeof page === 'undefined') {
+                page = 1;
+            }
+            axios.get(app.url+'/pencarian-suplier-hutang/'+id+'?search='+app.pencarianhutang+'&page='+page)
+            .then(function (resp) {
+                app.dataSuplierHutang = resp.data.data;
+                app.dataSuplierHutangData = resp.data;
+                app.loading = false;
+                app.seen = true;
+            })
+            .catch(function (resp) {
+                console.log(resp);
+                alert("Tidak Dapat Memuat Data hutang");
+            });
+        },
+        bayarHutangEntry(id,index,no_faktur,nilai_kredit,jatuh_tempo){
+             var app = this;
+             $("#modal_form_bayar_hutang").show();
+             $("#modal_pilih_hutang").hide();
+                app.formBayarHutangTbs.nilai_kredit = nilai_kredit;
+                app.formBayarHutangTbs.jumlah_bayar = nilai_kredit;
+                app.formBayarHutangTbs.id_pembelian = id;
+                app.formBayarHutangTbs.no_faktur = no_faktur;
+                this.$refs.jumlah_bayar.$el.focus();
+        },
+       saveFormBayarHutang() {
+          var app = this;
+          var newbayarhutang = app.formBayarHutangTbs;
+         axios.post(app.url+'/proses-tambah-tbs-pembayaran-hutang',newbayarhutang)
+          .then(function (resp) {
+             console.log(resp.data)
+            if (resp.data == 0) {
+                app.loading = false;
+                app.getResults();
+                $("#modal_form_bayar_hutang").hide();
+                app.alertTbs("Faktur "+app.formBayarHutangTbs.no_faktur+" Sudah Ada, Silakan Pilih Faktur Hutang Lain!");
+            }else{
+                var subtotal = parseFloat(app.inputPembayaranHutang.subtotal) + parseFloat(resp.data.jumlah_bayar)
+                app.getResults();
+                app.inputPembayaranHutang.subtotal = subtotal.toFixed(2)
+                app.alert("Berhasil Menambahkan Faktur Hutang"+ app.formBayarHutangTbs.no_faktur);
+                app.formBayarHutangTbs.nilai_kredit = 0
+                app.formBayarHutangTbs.jumlah_bayar = 0
+                app.formBayarHutangTbs.potongan = 0
+                app.formBayarHutangTbs.no_faktur = ''
+                $("#modal_form_bayar_hutang").hide();
+                app.loading = false;
+            }
+          })
+          .catch(function (resp) {
+            app.success = false;
+            app.errors = resp.response.data.errors;
+          });
+        },
         closeModalX(){
-        $("#modal_pilih_hutang").hide();  
+        $("#modal_pilih_hutang").hide(); 
+        },
+        closeModalBayarHutang(){
+        $("#modal_form_bayar_hutang").hide();
+        $("#modal_pilih_hutang").show();    
         },
     	alertTbs(pesan) {
     		this.$swal({
