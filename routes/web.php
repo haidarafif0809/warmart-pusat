@@ -677,6 +677,13 @@ Route::get('/pembayaran-hutang/data-suplier-hutang/{id}', 'PembayaranHutangContr
 Route::get('/pembayaran-hutang/pencarian-suplier-hutang/{id}', 'PembayaranHutangController@pencarianDataSupplierHutang')->middleware('auth');
 Route::post('/pembayaran-hutang/proses-tambah-tbs-pembayaran-hutang', 'PembayaranHutangController@prosesTbsPembayaranHutang')->middleware('auth');
 
+//PEMBAYARAN Hutang
+    Route::delete('/pembayaran-hutang/proses-hapus-tbs-pembayaran-hutang/{id}', [
+        'middleware' => ['auth'],
+        'as'         => 'pembayaran-hutang.proses_hapus_tbs_pembayaran_hutang',
+        'uses'       => 'PembayaranHutangController@prosesHapusTbsPembayaranHutang',
+    ]);
+
 // PEMBAYARAN PIUTANG VUE.JS
 Route::get('/pembayaran-piutang/view', 'PembayaranPiutangController@view')->middleware('auth');
 Route::get('/pembayaran-piutang/pencarian', 'PembayaranPiutangController@pencarian')->middleware('auth');
@@ -963,5 +970,7 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
         'as'         => 'pembayaran-piutang.proses_hapus_tbs_pembayaran_piutang',
         'uses'       => 'PembayaranPiutangController@prosesHapusTbsPembayaranPiutang',
     ]);
+
+
 
 });
