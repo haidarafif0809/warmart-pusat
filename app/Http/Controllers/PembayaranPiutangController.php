@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\PembayaranPiutang;
+use App\PenjualanPos;
+use App\TbsPembayaranPiutang;
 use Auth;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Html\Builder;
@@ -24,17 +26,49 @@ class PembayaranPiutangController extends Controller
         }
     }
 
-    public function dataPagination($pembayaran_piutang, $array_pembayaran_piutang)
+    public function dataPiutang()
+    {
+        $penjualan_piutang = PenjualanPos::select(['penjualan_pos.id', 'penjualan_pos.no_faktur', 'penjualan_pos.pelanggan_id', 'penjualan_pos.kredit', 'penjualan_pos.tanggal_jt_tempo', 'users.name'])->where('status_penjualan', 'Piutang')->where('warung_id', Auth::user()->id_warung)
+            ->leftJoin('users', 'users.id', '=', 'penjualan_pos.pelanggan_id')->get();
+        $array = array();
+        foreach ($penjualan_piutang as $penjualan_piutangs) {
+            if ($penjualan_piutangs->pelanggan_id == 0) {
+                $nama_pelanggan = "Umum";
+            } else {
+                $nama_pelanggan = $penjualan_piutangs->name;
+            }
+
+            array_push($array, [
+                'id'                  => $penjualan_piutangs->id,
+                'no_faktur_penjualan' => $penjualan_piutangs->no_faktur,
+                'pelanggan_id'        => $penjualan_piutangs->pelanggan_id,
+                'piutang'             => $penjualan_piutangs->kredit,
+                'jatuh_tempo'         => $penjualan_piutangs->tanggal_jt_tempo,
+                'nama_pelanggan'      => $nama_pelanggan,
+            ]);
+        }
+
+        return response()->json($array);
+    }
+
+    public function getDataFakturPiutang($id)
+    {
+        $penjualan_piutang = PenjualanPos::select(['id', 'no_faktur', 'pelanggan_id', 'kredit', 'tanggal_jt_tempo'])->where('id', $id)->where('warung_id', Auth::user()->id_warung)->first();
+
+        return response()->json($penjualan_piutang);
+    }
+
+    public function dataPagination($pembayaran_piutang, $array_pembayaran_piutang, $link_view)
     {
 
         $respons['current_page']   = $pembayaran_piutang->currentPage();
         $respons['data']           = $array_pembayaran_piutang;
-        $respons['first_page_url'] = url('/pembayaran-piutang/view?page=' . $pembayaran_piutang->firstItem());
+        $respons['first_page_url'] = url('/pembayaran-piutang/' . $link_view . '?page=' . $pembayaran_piutang->firstItem());
         $respons['from']           = 1;
         $respons['last_page']      = $pembayaran_piutang->lastPage();
-        $respons['last_page_url']  = url('/pembayaran-piutang/view?page=' . $pembayaran_piutang->lastPage());
+        $respons['last_page_url']  = url('/pembayaran-piutang/' . $link_view . '?page=' . $pembayaran_piutang->lastPage());
         $respons['next_page_url']  = $pembayaran_piutang->nextPageUrl();
-        $respons['path']           = url('/pembayaran-piutang/view');
+        $respons['path']           = url('/pembayaran-piutang/' . $link_view . '');
         $respons['per_page']       = $pembayaran_piutang->perPage();
         $respons['prev_page_url']  = $pembayaran_piutang->previousPageUrl();
         $respons['to']             = $pembayaran_piutang->perPage();
@@ -62,8 +96,114 @@ class PembayaranPiutangController extends Controller
             ]);
         }
 
+        $link_view = 'view';
+
         //DATA PAGINATION
-        $respons = $this->dataPagination($pembayaran_piutang, $array_pembayaran_piutang);
+        $respons = $this->dataPagination($pembayaran_piutang, $array_pembayaran_piutang, $link_view);
         return response()->json($respons);
+    }
+
+    //INSERT TBS
+    public function prosesTbsPembayaranPiutang(Request $request)
+    {
+        $session_id = session()->getId();
+        $data_tbs   = TbsPembayaranPiutang::where('no_faktur_penjualan', $request->no_faktur_penjualan)
+            ->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->count();
+
+        //JIKA FAKTUR YG DIPILIH SUDAH ADA DI TBS
+        if ($data_tbs > 0) {
+
+            return 0;
+
+        } else {
+
+            $tbs_pembayaran_piutang = TbsPembayaranPiutang::create([
+                'session_id'          => $session_id,
+                'no_faktur_penjualan' => $request->no_faktur_penjualan,
+                'jatuh_tempo'         => $request->jatuh_tempo,
+                'piutang'             => $request->piutang,
+                'potongan'            => $request->potongan,
+                'jumlah_bayar'        => $request->jumlah_bayar,
+                'pelanggan_id'        => $request->pelanggan_id,
+                'warung_id'           => Auth::user()->id_warung,
+            ]);
+
+            $respons['jumlah_bayar'] = $request->jumlah_bayar;
+
+            return response()->json($respons);
+        }
+    }
+
+    public function viewTbs()
+    {
+        $session_id         = session()->getId();
+        $pembayaran_piutang = TbsPembayaranPiutang::dataTbsPembayaranPiutang($session_id)->paginate(10);
+
+        $array_pembayaran_piutang = array();
+        foreach ($pembayaran_piutang as $pembayaran_piutangs) {
+            $total = $pembayaran_piutangs->piutang - $pembayaran_piutangs->potongan;
+            if ($pembayaran_piutangs->pelanggan_id == 0) {
+                $pelanggan = 'Umum';
+            } else {
+                $pelanggan = $pembayaran_piutangs->name;
+            }
+
+            array_push($array_pembayaran_piutang, [
+                'no_faktur_penjualan'       => $pembayaran_piutangs->no_faktur_penjualan,
+                'jatuh_tempo'               => $pembayaran_piutangs->jatuh_tempo,
+                'piutang'                   => $pembayaran_piutangs->piutang,
+                'potongan'                  => $pembayaran_piutangs->potongan,
+                'total'                     => $total,
+                'jumlah_bayar'              => $pembayaran_piutangs->jumlah_bayar,
+                'pelanggan'                 => $pelanggan,
+                'id_tbs_pembayaran_piutang' => $pembayaran_piutangs->id_tbs_pembayaran_piutang,
+            ]);
+        }
+        $link_view = 'view-tbs-pembayaran-piutang';
+
+        //DATA PAGINATION
+        $respons = $this->dataPagination($pembayaran_piutang, $array_pembayaran_piutang, $link_view);
+        return response()->json($respons);
+    }
+
+    public function pencarianTbs(Request $request)
+    {
+        $session_id         = session()->getId();
+        $pembayaran_piutang = TbsPembayaranPiutang::cariTbsPembayaranPiutang($request, $session_id)->paginate(10);
+
+        $array_pembayaran_piutang = array();
+        foreach ($pembayaran_piutang as $pembayaran_piutangs) {
+            $total = $pembayaran_piutangs->piutang - $pembayaran_piutangs->potongan;
+            if ($pembayaran_piutangs->pelanggan_id == 0) {
+                $pelanggan = 'Umum';
+            } else {
+                $pelanggan = $pembayaran_piutangs->name;
+            }
+
+            array_push($array_pembayaran_piutang, [
+                'no_faktur_penjualan'       => $pembayaran_piutangs->no_faktur_penjualan,
+                'jatuh_tempo'               => $pembayaran_piutangs->jatuh_tempo,
+                'piutang'                   => $pembayaran_piutangs->piutang,
+                'potongan'                  => $pembayaran_piutangs->potongan,
+                'total'                     => $total,
+                'jumlah_bayar'              => $pembayaran_piutangs->jumlah_bayar,
+                'pelanggan'                 => $pelanggan,
+                'id_tbs_pembayaran_piutang' => $pembayaran_piutangs->id_tbs_pembayaran_piutang,
+            ]);
+        }
+        $link_view = 'view-tbs-pembayaran-piutang';
+
+        //DATA PAGINATION
+        $respons = $this->dataPagination($pembayaran_piutang, $array_pembayaran_piutang, $link_view);
+        return response()->json($respons);
+    }
+
+    public function prosesHapusTbsPembayaranPiutang($id)
+    {
+        if (!TbsPembayaranPiutang::destroy($id)) {
+            return 0;
+        } else {
+            return response(200);
+        }
     }
 }

@@ -675,10 +675,14 @@ Route::get('/pembayaran-hutang/pencarian-tbs-pembayaran-hutang', 'PembayaranHuta
 Route::get('/pembayaran-hutang/pilih-suplier', 'PembayaranHutangController@pilihSuplier')->middleware('auth');
 Route::get('/pembayaran-hutang/data-suplier-hutang', 'PembayaranHutangController@dataSupplierHutang')->middleware('auth');
 
-
 // PEMBAYARAN PIUTANG VUE.JS
 Route::get('/pembayaran-piutang/view', 'PembayaranPiutangController@view')->middleware('auth');
 Route::get('/pembayaran-piutang/pencarian', 'PembayaranPiutangController@pencarian')->middleware('auth');
+Route::get('/pembayaran-piutang/pilih-penjualan-piutang', 'PembayaranPiutangController@dataPiutang')->middleware('auth');
+Route::get('/pembayaran-piutang/data-penjualan-piutang/{id}', 'PembayaranPiutangController@getDataFakturPiutang')->middleware('auth');
+Route::post('/pembayaran-piutang/proses-tambah-tbs-pembayaran-piutang', 'PembayaranPiutangController@prosesTbsPembayaranPiutang')->middleware('auth');
+Route::get('/pembayaran-piutang/view-tbs-pembayaran-piutang', 'PembayaranPiutangController@viewTbs')->middleware('auth');
+Route::get('/pembayaran-piutang/pencarian-tbs-pembayaran-piutang', 'PembayaranPiutangController@pencarianTbs')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
@@ -949,6 +953,13 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
         'middleware' => ['auth'],
         'as'         => 'penjualan.proses_batal_edit_penjualan',
         'uses'       => 'PenjualanController@proses_batal_edit_penjualan',
+    ]);
+
+    //PEMBAYARAN PIUTANG
+    Route::delete('/pembayaran-piutang/proses-hapus-tbs-pembayaran-piutang/{id}', [
+        'middleware' => ['auth'],
+        'as'         => 'pembayaran-piutang.proses_hapus_tbs_pembayaran_piutang',
+        'uses'       => 'PembayaranPiutangController@prosesHapusTbsPembayaranPiutang',
     ]);
 
 });
