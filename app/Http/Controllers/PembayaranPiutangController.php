@@ -116,6 +116,7 @@ class PembayaranPiutangController extends Controller
             return 0;
 
         } else {
+            $subtotal_piutang = $request->piutang - $request->potongan;
 
             $tbs_pembayaran_piutang = TbsPembayaranPiutang::create([
                 'session_id'          => $session_id,
@@ -124,6 +125,7 @@ class PembayaranPiutangController extends Controller
                 'piutang'             => $request->piutang,
                 'potongan'            => $request->potongan,
                 'jumlah_bayar'        => $request->jumlah_bayar,
+                'subtotal_piutang'    => $subtotal_piutang,
                 'pelanggan_id'        => $request->pelanggan_id,
                 'warung_id'           => Auth::user()->id_warung,
             ]);
@@ -141,7 +143,7 @@ class PembayaranPiutangController extends Controller
 
         $array_pembayaran_piutang = array();
         foreach ($pembayaran_piutang as $pembayaran_piutangs) {
-            $total = $pembayaran_piutangs->piutang - $pembayaran_piutangs->potongan;
+
             if ($pembayaran_piutangs->pelanggan_id == 0) {
                 $pelanggan = 'Umum';
             } else {
@@ -153,7 +155,7 @@ class PembayaranPiutangController extends Controller
                 'jatuh_tempo'               => $pembayaran_piutangs->jatuh_tempo,
                 'piutang'                   => $pembayaran_piutangs->piutang,
                 'potongan'                  => $pembayaran_piutangs->potongan,
-                'total'                     => $total,
+                'total'                     => $pembayaran_piutangs->subtotal_piutang,
                 'jumlah_bayar'              => $pembayaran_piutangs->jumlah_bayar,
                 'pelanggan'                 => $pelanggan,
                 'id_tbs_pembayaran_piutang' => $pembayaran_piutangs->id_tbs_pembayaran_piutang,

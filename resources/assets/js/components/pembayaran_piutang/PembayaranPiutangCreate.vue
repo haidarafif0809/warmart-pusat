@@ -63,14 +63,14 @@
                                 </div> 
                             </h4> 
                         </div> 
-                        <form class="form-horizontal" > 
+                        <form class="form-horizontal" v-on:submit.prevent="tambahTbsPembayaranPiutang()"> 
                             <div class="modal-body"> 
                                 <div class="card" style="margin-bottom:1px; margin-top:1px; margin-right:1px; margin-left:1px;">
 
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                                <font style="color: black">Piutang</font>
+                                                <font style="color: black">Total Piutang</font>
                                                 <money style="text-align:right; font-size: 30px;" readonly="" class="form-control" id="piutang" name="piutang" placeholder="Kredit"  v-model="inputTbsPembayaranPiutang.piutang" v-bind="separator" ></money> 
                                             </div> 
                                         </div>
@@ -78,20 +78,20 @@
                                         <div class="col-md-6">
                                             <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
                                                 <font style="color: black">Potongan</font>
-                                                <money style="text-align:right; font-size: 30px;" class="form-control" id="potongan" name="potongan" autocomplete="off" placeholder="Kredit"  v-model="inputTbsPembayaranPiutang.potongan" v-bind="separator" ></money> 
+                                                <money style="text-align:right; font-size: 30px;" class="form-control" id="potongan" name="potongan" autocomplete="off" placeholder="Kredit"  v-model="inputTbsPembayaranPiutang.potongan" v-bind="separator" ref="potongan"></money> 
                                             </div>                                        
                                         </div>
 
                                         <div class="col-md-12">
                                             <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                                <font style="color: black">Jumlah Bayar(F10)</font>
+                                                <font style="color: black">Pembayaran(F10)</font>
                                                 <money style="text-align:right" class="form-penjualan" v-shortkey.focus="['f10']" id="jumlah_bayar" name="jumlah_bayar" v-model="inputTbsPembayaranPiutang.jumlah_bayar" v-bind="separator"  autocomplete="off" ref="jumlah_bayar"></money> 
                                             </div>
                                         </div>
                                     </div>
 
                                     <div align="right"  style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                        <button type="button" class="btn btn-success btn-lg" id="btnTbs" v-on:click="tambahTbsPembayaranPiutang()" v-shortkey.push="['shift']" @shortkey="tambahTbsPembayaranPiutang()"><font style="font-size:20px;">Tambah</font></button>
+                                        <button type="submit" class="btn btn-success btn-lg" id="btnTbs"><font style="font-size:20px;">Tambah(Enter)</font></button>
 
                                         <button type="button" class="btn btn-default btn-lg"  v-on:click="closeModal()" v-shortkey.push="['esc']" @shortkey="closeModal()"> <font style="font-size:20px;">Tutup(Esc)</font></button>
                                     </div>
@@ -144,8 +144,8 @@
                                             <th class="text-center">Tanggal JT</th>
                                             <th class="text-right">Piutang</th>
                                             <th class="text-right">Potongan</th>
-                                            <th class="text-right">Total</th>
-                                            <th class="text-right">Jumlah Bayar</th>
+                                            <th class="text-right">Subtotal Piutang</th>
+                                            <th class="text-right">Pembayaran</th>
                                             <th class="text-center">Hapus</th>
 
                                         </tr>
@@ -159,17 +159,17 @@
                                             <td align="right">{{ tbs_pembayaran_piutang.piutang | pemisahTitik }}</td>
 
                                             <td align="right">
-                                                <a href="#create-penjualan" v-bind:id="'edit-' + tbs_pembayaran_piutang.id_tbs_pembayaran_piutang" v-on:click="potonganEntry(tbs_pembayaran_piutang.id_tbs_pembayaran_piutang, index,tbs_pembayaran_piutang.pelanggan_id, tbs_pembayaran_piutang.total)">{{ tbs_pembayaran_piutang.potongan | pemisahTitik }}</a>
+                                                <a href="#create-pembayaran-piutang" v-bind:id="'edit-' + tbs_pembayaran_piutang.id_tbs_pembayaran_piutang" v-on:click="potonganEntry(tbs_pembayaran_piutang.id_tbs_pembayaran_piutang, index,tbs_pembayaran_piutang.pelanggan_id, tbs_pembayaran_piutang.total)">{{ tbs_pembayaran_piutang.potongan | pemisahTitik }}</a>
                                             </td>
 
                                             <td align="right">{{ tbs_pembayaran_piutang.total | pemisahTitik }}</td>
 
                                             <td align="right">
-                                                <a href="#create-penjualan" v-bind:id="'edit-' + tbs_pembayaran_piutang.id_tbs_pembayaran_piutang" v-on:click="editEntry(tbs_pembayaran_piutang.id_tbs_pembayaran_piutang, index, tbs_pembayaran_piutang.pelanggan_id,tbs_pembayaran_piutang.total)">{{ tbs_pembayaran_piutang.jumlah_bayar | pemisahTitik }}</a>
+                                                <a href="#create-pembayaran-piutang" v-bind:id="'edit-' + tbs_pembayaran_piutang.id_tbs_pembayaran_piutang" v-on:click="editEntry(tbs_pembayaran_piutang.id_tbs_pembayaran_piutang, index, tbs_pembayaran_piutang.pelanggan_id,tbs_pembayaran_piutang.total)">{{ tbs_pembayaran_piutang.jumlah_bayar | pemisahTitik }}</a>
                                             </td>
 
                                             <td align="center">
-                                                <a href="#create-penjualan" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_pembayaran_piutang.id_tbs_pembayaran_piutang" v-on:click="deleteEntry(tbs_pembayaran_piutang.id_tbs_pembayaran_piutang, index,tbs_pembayaran_piutang.jumlah_bayar,tbs_pembayaran_piutang.no_faktur_penjualan)">Delete</a>
+                                                <a href="#create-pembayaran-piutang" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_pembayaran_piutang.id_tbs_pembayaran_piutang" v-on:click="deleteEntry(tbs_pembayaran_piutang.id_tbs_pembayaran_piutang, index,tbs_pembayaran_piutang.jumlah_bayar,tbs_pembayaran_piutang.no_faktur_penjualan)">Delete</a>
                                             </td>
 
                                         </tr>
@@ -386,42 +386,50 @@ methods: {
         var newTbsPembayaranPiutang = app.inputTbsPembayaranPiutang;
         app.loading = true;
 
-        axios.post(app.url_piutang+'/proses-tambah-tbs-pembayaran-piutang',newTbsPembayaranPiutang)
-        .then(function (resp) {
-            console.log(resp.data)
-            if (resp.data == 0) {
-                app.loading = false;
-                app.inputTbsPembayaranPiutang.penjualan_piutang = ''
-                app.getResults();
-                $("#modal_tbs").hide();
-                app.alertTbs("Faktur "+app.inputTbsPembayaranPiutang.no_faktur_penjualan+" Sudah Ada, Silakan Pilih Faktur Piutang Lain!");
-
-            }else{
-                var subtotal = parseFloat(app.pembayaranPiutang.subtotal) + parseFloat(resp.data.jumlah_bayar)
-
-                app.getResults();
-                app.pembayaranPiutang.subtotal = subtotal.toFixed(2)
-                app.alert("Berhasil Menambahkan Faktur Piutang"+ app.inputTbsPembayaranPiutang.no_faktur_penjualan);
-                app.inputTbsPembayaranPiutang.penjualan_piutang = '';
-                app.inputTbsPembayaranPiutang.piutang = 0
-                app.inputTbsPembayaranPiutang.jumlah_bayar = 0
-                app.inputTbsPembayaranPiutang.potongan = 0
-                app.inputTbsPembayaranPiutang.no_faktur_penjualan = ''
-                app.inputTbsPembayaranPiutang.pelanggan_id = ''
-                app.inputTbsPembayaranPiutang.jatuh_tempo = ''
-
-                $("#modal_tbs").hide();
-                app.loading = false;
-            }
-
-        })
-        .catch(function (resp) { 
-
-            console.log(resp);              
+        if (app.inputTbsPembayaranPiutang.jumlah_bayar < 0) {
+            app.alertTbs("Potongan Anda Melebihi Total Piutang");
             app.loading = false;
-            alert("Tidak dapat Menambahkan Faktur Penjualan Piutang");        
-            app.errors = resp.response.data.errors;
-        });
+            app.inputTbsPembayaranPiutang.potongan = 0;
+            app.$refs.potongan.$el.focus();
+        }else{
+
+            axios.post(app.url_piutang+'/proses-tambah-tbs-pembayaran-piutang',newTbsPembayaranPiutang)
+            .then(function (resp) {
+
+                if (resp.data != 0) {
+                    var subtotal = parseFloat(app.pembayaranPiutang.subtotal) + parseFloat(resp.data.jumlah_bayar)
+
+                    app.getResults();
+                    app.pembayaranPiutang.subtotal = subtotal.toFixed(2)
+                    app.alert("Berhasil Menambahkan Faktur Piutang"+ app.inputTbsPembayaranPiutang.no_faktur_penjualan);
+                    app.inputTbsPembayaranPiutang.penjualan_piutang = '';
+                    app.inputTbsPembayaranPiutang.piutang = 0
+                    app.inputTbsPembayaranPiutang.jumlah_bayar = 0
+                    app.inputTbsPembayaranPiutang.potongan = 0
+                    app.inputTbsPembayaranPiutang.no_faktur_penjualan = ''
+                    app.inputTbsPembayaranPiutang.pelanggan_id = ''
+                    app.inputTbsPembayaranPiutang.jatuh_tempo = ''
+
+                    $("#modal_tbs").hide();
+                    app.loading = false;
+                }else{
+                    $("#modal_tbs").hide();
+                    app.alertTbs("Faktur "+app.inputTbsPembayaranPiutang.no_faktur_penjualan+" Sudah Ada, Silakan Pilih Faktur Piutang Lain!");
+                    app.inputTbsPembayaranPiutang.penjualan_piutang = ''
+                    app.getResults();
+                    app.loading = false;
+                }
+
+            })
+            .catch(function (resp) { 
+
+                console.log(resp);              
+                app.loading = false;
+                alert("Tidak dapat Menambahkan Faktur Penjualan Piutang");        
+                app.errors = resp.response.data.errors;
+            });
+
+        }
     },
     potonganTbs(){
         var potonganTbs = this.inputTbsPembayaranPiutang.potongan
