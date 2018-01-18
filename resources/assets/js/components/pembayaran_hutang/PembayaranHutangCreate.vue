@@ -163,9 +163,10 @@
                 <div class="card card-produk" style="margin-bottom: 1px; margin-top: 1px;">
                   <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
                    
-                     <selectize-component v-model="inputTbsPembayaranHutang.suplier" :settings="placeholder_suplier"  id="suplier" name="suplier" ref='suplier' v-shortkey.focus="['f1']"> 
+                     <selectize-component v-model="inputTbsPembayaranHutang.suplier" :settings="placeholder_suplier"  id="suplier" name="suplier" ref='suplier'> 
                       <option v-for="supliers, index in suplier" v-bind:value="supliers.id">{{ supliers.nama_suplier }}</option>
                      </selectize-component>
+                    <input class="form-control" type="hidden"  v-model="inputTbsPembayaranHutang.id_suplier"  name="id_tbs" id="id_tbs"  v-shortkey="['f1']" @shortkey="openSelectizeSuplier()">
                       </div><!--/COL MD  3 --> 
                       <span v-if="errors.suplier" id="produk_error" class="label label-danger">{{ errors.suplier[0] }}</span>
               </div>
@@ -267,13 +268,13 @@ export default {
 			     url : window.location.origin+(window.location.pathname).replace("dashboard", "pembayaran-hutang"),
             url_kas : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
 		      	placeholder_suplier: {
-				    placeholder: '--PILIH SUPLIER--'
+				    placeholder: '--PILIH SUPLIER (F1)--',
+            sortField: 'text',
+            openOnFocus : true
 			     },
-            placeholder_cara_bayar:{
-                placeholder: '--PILIH KAS--'
-            },
             inputTbsPembayaranHutang:{
               suplier : '',
+              id_suplier: '',
             },
             formBayarHutangTbs:{
                 nilai_kredit : 0,
@@ -339,6 +340,9 @@ export default {
         }
     },
     methods: {
+            openSelectizeSuplier(){      
+             this.$refs.suplier.$el.selectize.focus();
+           },
             potonganTbs(){
             var potonganTbs = this.formBayarHutangTbs.potongan
 
@@ -379,6 +383,7 @@ export default {
                     app.inputPembayaranHutang.subtotal += parseFloat(resp.data.data[i].jumlah_bayar)
                 }); 
             }
+            app.openSelectizeSuplier();
     			app.loading = false;
     			app.seen = true;
     		})
