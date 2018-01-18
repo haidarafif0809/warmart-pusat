@@ -117,7 +117,7 @@ class PembayaranPiutangController extends Controller
 
         } else {
 
-            $tbspenjualan = TbsPembayaranPiutang::create([
+            $tbs_pembayaran_piutang = TbsPembayaranPiutang::create([
                 'session_id'          => $session_id,
                 'no_faktur_penjualan' => $request->no_faktur_penjualan,
                 'jatuh_tempo'         => $request->jatuh_tempo,
@@ -149,13 +149,14 @@ class PembayaranPiutangController extends Controller
             }
 
             array_push($array_pembayaran_piutang, [
-                'no_faktur_penjualan' => $pembayaran_piutangs->no_faktur_penjualan,
-                'jatuh_tempo'         => $pembayaran_piutangs->jatuh_tempo,
-                'piutang'             => $pembayaran_piutangs->piutang,
-                'potongan'            => $pembayaran_piutangs->potongan,
-                'total'               => $total,
-                'jumlah_bayar'        => $pembayaran_piutangs->jumlah_bayar,
-                'pelanggan'           => $pelanggan,
+                'no_faktur_penjualan'       => $pembayaran_piutangs->no_faktur_penjualan,
+                'jatuh_tempo'               => $pembayaran_piutangs->jatuh_tempo,
+                'piutang'                   => $pembayaran_piutangs->piutang,
+                'potongan'                  => $pembayaran_piutangs->potongan,
+                'total'                     => $total,
+                'jumlah_bayar'              => $pembayaran_piutangs->jumlah_bayar,
+                'pelanggan'                 => $pelanggan,
+                'id_tbs_pembayaran_piutang' => $pembayaran_piutangs->id_tbs_pembayaran_piutang,
             ]);
         }
         $link_view = 'view-tbs-pembayaran-piutang';
@@ -180,13 +181,14 @@ class PembayaranPiutangController extends Controller
             }
 
             array_push($array_pembayaran_piutang, [
-                'no_faktur_penjualan' => $pembayaran_piutangs->no_faktur_penjualan,
-                'jatuh_tempo'         => $pembayaran_piutangs->jatuh_tempo,
-                'piutang'             => $pembayaran_piutangs->piutang,
-                'potongan'            => $pembayaran_piutangs->potongan,
-                'total'               => $total,
-                'jumlah_bayar'        => $pembayaran_piutangs->jumlah_bayar,
-                'pelanggan'           => $pelanggan,
+                'no_faktur_penjualan'       => $pembayaran_piutangs->no_faktur_penjualan,
+                'jatuh_tempo'               => $pembayaran_piutangs->jatuh_tempo,
+                'piutang'                   => $pembayaran_piutangs->piutang,
+                'potongan'                  => $pembayaran_piutangs->potongan,
+                'total'                     => $total,
+                'jumlah_bayar'              => $pembayaran_piutangs->jumlah_bayar,
+                'pelanggan'                 => $pelanggan,
+                'id_tbs_pembayaran_piutang' => $pembayaran_piutangs->id_tbs_pembayaran_piutang,
             ]);
         }
         $link_view = 'view-tbs-pembayaran-piutang';
@@ -194,5 +196,14 @@ class PembayaranPiutangController extends Controller
         //DATA PAGINATION
         $respons = $this->dataPagination($pembayaran_piutang, $array_pembayaran_piutang, $link_view);
         return response()->json($respons);
+    }
+
+    public function prosesHapusTbsPembayaranPiutang($id)
+    {
+        if (!TbsPembayaranPiutang::destroy($id)) {
+            return 0;
+        } else {
+            return response(200);
+        }
     }
 }

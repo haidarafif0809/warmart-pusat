@@ -15,7 +15,7 @@ class TbsPembayaranPiutang extends Model
     // DATA TBS PEMBAYARAN PIUTANG
     public function scopeDataTbsPembayaranPiutang($query_tbs, $session_id)
     {
-        $query_tbs = TbsPembayaranPiutang::select(['tbs_pembayaran_piutangs.no_faktur_penjualan', 'tbs_pembayaran_piutangs.pelanggan_id', 'tbs_pembayaran_piutangs.jatuh_tempo', 'tbs_pembayaran_piutangs.piutang', 'tbs_pembayaran_piutangs.potongan', 'tbs_pembayaran_piutangs.jumlah_bayar', 'users.name'])
+        $query_tbs = TbsPembayaranPiutang::select(['tbs_pembayaran_piutangs.no_faktur_penjualan', 'tbs_pembayaran_piutangs.id_tbs_pembayaran_piutang', 'tbs_pembayaran_piutangs.pelanggan_id', 'tbs_pembayaran_piutangs.jatuh_tempo', 'tbs_pembayaran_piutangs.piutang', 'tbs_pembayaran_piutangs.potongan', 'tbs_pembayaran_piutangs.jumlah_bayar', 'users.name'])
             ->leftJoin('users', 'tbs_pembayaran_piutangs.pelanggan_id', '=', 'users.id')
             ->where('tbs_pembayaran_piutangs.warung_id', Auth::user()->id_warung)
             ->where('tbs_pembayaran_piutangs.session_id', $session_id)->orderBy('tbs_pembayaran_piutangs.id_tbs_pembayaran_piutang', 'desc');
@@ -27,7 +27,7 @@ class TbsPembayaranPiutang extends Model
     public function scopeCariTbsPembayaranPiutang($query_tbs, $request, $session_id)
     {
         $search    = $request->search;
-        $query_tbs = TbsPembayaranPiutang::select(['tbs_pembayaran_piutangs.no_faktur_penjualan', 'tbs_pembayaran_piutangs.pelanggan_id', 'tbs_pembayaran_piutangs.jatuh_tempo', 'tbs_pembayaran_piutangs.piutang', 'tbs_pembayaran_piutangs.potongan', 'tbs_pembayaran_piutangs.jumlah_bayar', 'users.name'])
+        $query_tbs = TbsPembayaranPiutang::select(['tbs_pembayaran_piutangs.no_faktur_penjualan', 'tbs_pembayaran_piutangs.id_tbs_pembayaran_piutang', 'tbs_pembayaran_piutangs.pelanggan_id', 'tbs_pembayaran_piutangs.jatuh_tempo', 'tbs_pembayaran_piutangs.piutang', 'tbs_pembayaran_piutangs.potongan', 'tbs_pembayaran_piutangs.jumlah_bayar', 'users.name'])
             ->leftJoin('users', 'tbs_pembayaran_piutangs.pelanggan_id', '=', 'users.id')
             ->where('tbs_pembayaran_piutangs.warung_id', Auth::user()->id_warung)
             ->where('tbs_pembayaran_piutangs.session_id', $session_id)

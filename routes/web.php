@@ -955,4 +955,11 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
         'uses'       => 'PenjualanController@proses_batal_edit_penjualan',
     ]);
 
+    //PEMBAYARAN PIUTANG
+    Route::delete('/pembayaran-piutang/proses-hapus-tbs-pembayaran-piutang/{id}', [
+        'middleware' => ['auth'],
+        'as'         => 'pembayaran-piutang.proses_hapus_tbs_pembayaran_piutang',
+        'uses'       => 'PembayaranPiutangController@prosesHapusTbsPembayaranPiutang',
+    ]);
+
 });
