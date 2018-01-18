@@ -675,7 +675,6 @@ Route::get('/pembayaran-hutang/pencarian-tbs-pembayaran-hutang', 'PembayaranHuta
 Route::get('/pembayaran-hutang/pilih-suplier', 'PembayaranHutangController@pilihSuplier')->middleware('auth');
 Route::get('/pembayaran-hutang/data-suplier-hutang', 'PembayaranHutangController@dataSupplierHutang')->middleware('auth');
 
-
 // PEMBAYARAN PIUTANG VUE.JS
 Route::get('/pembayaran-piutang/view', 'PembayaranPiutangController@view')->middleware('auth');
 Route::get('/pembayaran-piutang/pencarian', 'PembayaranPiutangController@pencarian')->middleware('auth');

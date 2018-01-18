@@ -45,7 +45,8 @@
         <div class="col-md-12">
             <ul class="breadcrumb" style="margin-bottom: 1px; margin-top: 1px;">
                 <li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li>
-                <li class="active">Pembayaran Piutang</li>
+                <li><router-link :to="{name: 'indexPembayaranPiutang'}">Pembayaran Piutang</router-link></li>
+                <li class="active">Tambah Pembayaran Piutang</li>
 
             </ul>
 
@@ -285,6 +286,9 @@ watch: {
     },
     'inputTbsPembayaranPiutang.penjualan_piutang': function () {
         this.pilihFakturPiutang()
+    },
+    'inputTbsPembayaranPiutang.potongan':function(){
+        this.potonganFaktur()
     }
 },
 filters: {
@@ -328,8 +332,9 @@ getHasilPencarian(page){
     if (typeof page === 'undefined') {
         page = 1;
     }
-    axios.get(app.url+'/pencarian-tbs-pembayaran-piutang?search='+app.pencarian+'&page='+page)
+    axios.get(app.url_piutang+'/pencarian-tbs-pembayaran-piutang?search='+app.pencarian+'&page='+page)
     .then(function (resp) {
+        console.log(resp);
         app.tbs_pembayaran_piutang = resp.data.data;
         app.tbsPembayaranPiutangData = resp.data;
         app.loading = false;
