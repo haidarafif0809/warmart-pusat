@@ -295,10 +295,10 @@
                                 <div class="card-footer">
                                     <div class="row"> 
                                         <div class="col-md-6 col-xs-6"> 
-                                            <button type="button" class="btn btn-success btn-lg" id="bayar" v-on:click="bayarPembayaranPiutang()" v-shortkey.push="['f2']" @shortkey="bayarPembayaranPiutang()"><font style="font-size:20px;">Bayar(F2)</font></button>
+                                            <button type="button" class="btn btn-success btn-lg" id="bayar" v-on:click="bayarPembayaranHutang()" v-shortkey.push="['f2']" @shortkey="bayarPembayaranHutang()"><font style="font-size:20px;">Bayar(F2)</font></button>
                                         </div>
                                         <div class="col-md-6 col-xs-6">
-                                            <button type="submit" class="btn btn-danger btn-lg" id="btnBatal" v-on:click="batalPembayaranPiutang()" v-shortkey.push="['f3']" @shortkey="batalPembayaranPiutang()"> <font style="font-size:20px;">Batal(F3) </font></button>
+                                            <button type="submit" class="btn btn-danger btn-lg" id="btnBatal" v-on:click="batalPembayaranHutang()" v-shortkey.push="['f3']" @shortkey="batalPembayaranHutang()"> <font style="font-size:20px;">Batal(F3) </font></button>
                                         </div>
                                     </div>
                                 </div>
@@ -688,7 +688,7 @@ export default {
             axios.post(app.url+'/edit-jumlah-tbs-pembayaran-hutang', newformEditBayarHutangTbs)
             .then(function (resp) {
                 if (resp.data.status == 0) {
-                    app.getResults()
+                    app.getResults();
                     app.$swal({
                         text: "Potongan Yang Anda Masukan Melebihi Subtotal Hutang!",
                     });
@@ -699,7 +699,7 @@ export default {
                     app.formEditBayarHutangTbs.id_tbs = ''
                 }else{
                     var subtotal = (parseFloat(app.inputPembayaranHutang.subtotal) - parseFloat(jumlah_bayar_lama)) + parseFloat(resp.data.jumlah_bayar)
-                    app.getResults()
+                    app.getResults();
                     app.inputPembayaranHutang.subtotal = subtotal.toFixed(2)
                     app.alert("Mengubah Faktur Hutang")
                     app.formEditBayarHutangTbs.nilai_kredit = ''
@@ -717,6 +717,32 @@ export default {
             });
         }
         },
+       batalPembayaranHutang(){
+        var app = this;
+        app.$swal({
+          text: "Anda Yakin Ingin Membatalkan Transaksi Pembayaran Hutang Ini ?",
+          buttons: true,
+          dangerMode: true,
+        })
+        .then((willDelete) => {
+          if (willDelete) {
+            app.loading = true;
+            axios.post(app.url+'/batal-transaksi-pembayaran-hutang')
+            .then(function (resp) {
+              var subtotal = parseFloat(app.inputPembayaranHutang.subtotal) - parseFloat(resp.data.subtotal)
+                    app.getResults();
+                    app.alert("Membatalkan Transaksi Pembayaran Hutang");
+                    app.inputPembayaranHutang.subtotal = 0
+            })
+            .catch(function (resp) {
+              app.loading = false;
+              alert("Tidak dapat Membatalkan Transaksi Pembayaran Hutang");
+            });
+          } else {
+            app.$swal.close();
+          }
+        });
+        },//END BATAL PEMBAYARAN HUTANG
         closeModalX(){
         $("#modal_pilih_hutang").hide(); 
         },
