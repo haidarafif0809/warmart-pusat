@@ -208,4 +208,14 @@ class PembayaranPiutangController extends Controller
             return response(200);
         }
     }
+
+    public function prosesEditPotonganTbsPembayaranPiutang(Request $request)
+    {
+        $tbs_pembayaran_piutang = TbsPembayaranPiutang::find($request->id_tbs);
+        $subtotal               = $request->piutang - $request->potongan;
+        $tbs_pembayaran_piutang->update(['potongan' => $request->potongan, 'subtotal_piutang' => $subtotal, 'jumlah_bayar' => $request->jumlah_bayar]);
+        $respons['jumlah_bayar'] = $request->jumlah_bayar;
+
+        return response()->json($respons);
+    }
 }

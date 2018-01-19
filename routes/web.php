@@ -962,4 +962,10 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
         'uses'       => 'PembayaranPiutangController@prosesHapusTbsPembayaranPiutang',
     ]);
 
+    Route::post('pembayaran-piutang/edit-jumlah-tbs-pembayaran-piutang', [
+        'middleware' => ['auth'],
+        'as'         => 'pembayaran-piutang.edit_jumlah_tbs_pembayaran_piutang',
+        'uses'       => 'PembayaranPiutangController@prosesEditPotonganTbsPembayaranPiutang',
+    ]);
+
 });
