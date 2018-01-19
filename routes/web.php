@@ -432,6 +432,7 @@ Route::get('/daftar-topos/pencarian', 'PendaftarToposController@pencarian')->mid
 Route::get('/daftar-topos/konfirmasi/{id}', 'PendaftarToposController@konfirmasi')->middleware('auth');
 Route::get('/daftar-topos/view-detail-user-topos/{id}', 'PendaftarToposController@viewDetailUserTopos')->middleware('auth');
 Route::get('/daftar-topos/pencarian-detail-user-topos/{id}', 'PendaftarToposController@pencarianDetailUserTopos')->middleware('auth');
+Route::get('/daftar-topos/cek-sisa-demo', 'PendaftarToposController@cekSisaDemo')->middleware('auth');
 
 //KATEGORI TRANSAKSI VUE.JS
 Route::get('/kategori-transaksi/view', 'KategoriTransaksiController@view')->middleware('auth');
