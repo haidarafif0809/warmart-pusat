@@ -166,10 +166,11 @@
                      <selectize-component v-model="inputTbsPembayaranHutang.suplier" :settings="placeholder_suplier"  id="suplier" name="suplier" ref='suplier'> 
                       <option v-for="supliers, index in suplier" v-bind:value="supliers.id">{{ supliers.nama_suplier }}</option>
                      </selectize-component>
+                    <input class="form-control" type="hidden"  v-model="inputTbsPembayaranHutang.id_suplier"  name="id_tbs" id="id_tbs"  v-shortkey="['f1']" @shortkey="openSelectizeSuplier()">
                       </div><!--/COL MD  3 --> 
                       <span v-if="errors.suplier" id="produk_error" class="label label-danger">{{ errors.suplier[0] }}</span>
+              </div>
             </div>
-          </div>
           </div>
 
     <div class="row">
@@ -203,7 +204,7 @@
                      <td style="text-align:right;">{{ tbs_pembayaran_hutangs.subtotal_hutang | pemisahTitik }}</td>
                     <td style="text-align:right;">{{ tbs_pembayaran_hutangs.jumlah_bayar | pemisahTitik }}</td>
                     <td style="text-align:right;"> 
-                    <a href="#create-pembelian" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_pembayaran_hutangs.id_tbs_pembayaran_hutangs" >Delete</a>
+                   <a href="#create-pembayaran-hutang" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_pembayaran_hutangs.id" v-on:click="deleteEntry(tbs_pembayaran_hutangs.id, index,tbs_pembayaran_hutangs.jumlah_bayar,tbs_pembayaran_hutangs.no_faktur_pembelian)">Delete</a>
                   </td>
                 </tr>
               </tbody>          
@@ -214,11 +215,11 @@
 
             <vue-simple-spinner v-if="loading"></vue-simple-spinner>
 
-            <div align="right"><pagination :data="tbsPembayaranHutangData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
+            <div align="right"><pagination :data="tbsPembayaranHutangData" v-on:pagination-change-page="getResults" :limit="8"></pagination></div>
 
           </div>
 
-          <p style="color: red; font-style: italic;">*Note : Klik Kolom Subtotal Pembayaran,Potongan  Untuk Mengubah Nilai.</p> 
+          <p style="color: red; font-style: italic;">*Note : Klik Kolom  Potongan , Pembayaran Untuk Mengubah Nilai.</p> 
       </div><!-- COL SM 8 --> 
 
               <div class="col-md-3">
@@ -267,13 +268,13 @@ export default {
 			     url : window.location.origin+(window.location.pathname).replace("dashboard", "pembayaran-hutang"),
             url_kas : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
 		      	placeholder_suplier: {
-				    placeholder: '--PILIH SUPLIER--'
+				    placeholder: '--PILIH SUPLIER (F1)--',
+            sortField: 'text',
+            openOnFocus : true
 			     },
-            placeholder_cara_bayar:{
-                placeholder: '--PILIH KAS--'
-            },
             inputTbsPembayaranHutang:{
               suplier : '',
+              id_suplier: '',
             },
             formBayarHutangTbs:{
                 nilai_kredit : 0,
@@ -295,7 +296,7 @@ export default {
               masked: false /* doesn't work with directive */
           },
 			pencarian: '',
-            pencarianhutang:'',
+      pencarianhutang:'',
 			loading: true,
 			seen : false
 		}
@@ -303,9 +304,8 @@ export default {
 	mounted() {
 		var app = this;
 		app.dataSuplier();
-        app.dataCaraBayar();
 		app.getResults();
-        app.dataSupplierHutang();
+    app.dataSupplierHutang();
 	},
 	watch: {
         // whenever question changes, this function will run
@@ -329,17 +329,20 @@ export default {
 
     },
     filters: {
-    pemisahTitik: function (value) {      
+       pemisahTitik: function (value) {      
         var angka = [value];
         var numberFormat = new Intl.NumberFormat('es-ES');
         var formatted = angka.map(numberFormat.format);
         return formatted.join('; ');
+      },
+        tanggal: function (value) {
+            return moment(String(value)).format('DD/MM/YYYY')
+        }
     },
-    tanggal: function (value) {
-        return moment(String(value)).format('DD/MM/YYYY')
-    }
-},
     methods: {
+            openSelectizeSuplier(){      
+             this.$refs.suplier.$el.selectize.focus();
+           },
             potonganTbs(){
             var potonganTbs = this.formBayarHutangTbs.potongan
 
@@ -380,6 +383,7 @@ export default {
                     app.inputPembayaranHutang.subtotal += parseFloat(resp.data.data[i].jumlah_bayar)
                 }); 
             }
+            app.openSelectizeSuplier();
     			app.loading = false;
     			app.seen = true;
     		})
@@ -392,6 +396,21 @@ export default {
     	},
     	getHasilPencarian(page){
     		var app = this;
+        if (typeof page === 'undefined') {
+            page = 1;
+        }
+        axios.get(app.url+'/pencarian-tbs-pembayaran-hutang?search='+app.pencarian+'&page='+page)
+        .then(function (resp) {
+            console.log(resp.data.data);
+            app.tbs_pembayaran_hutang = resp.data.data;
+            app.tbsPembayaranHutangData = resp.data;
+            app.loading = false;
+            app.seen = true;
+        })
+        .catch(function (resp) {
+            console.log(resp);
+            alert("Tidak Dapat Memuat  Pembayaran Hutang");
+        });
     	},    
     	dataSuplier() {
     		var app = this;
@@ -402,20 +421,6 @@ export default {
     			alert("Tidak Bisa Memuat Produk");
     		});
     	},	
-        dataCaraBayar() {
-            var app = this;
-            axios.get(app.url_kas+'/pilih-kas').then(function (resp) {
-                    app.cara_bayar = resp.data;
-                    $.each(resp.data, function (i, item) {
-                        if (resp.data[i].default_kas == 1) {
-                            app.inputPembayaranHutang.cara_bayar  = resp.data[i].id 
-                        }
-                    });
-            })
-            .catch(function (resp) {
-                alert("Tidak Bisa Memuat Kas");
-            });
-        },//END FUNGSI UNTUK SELECTIZE CARABAYAR    
     	alert(pesan) {
     		this.$swal({
     			title: "Berhasil ",
@@ -423,38 +428,44 @@ export default {
     			icon: "success",
     		});
     	},
-    	deleteEntry(id, index,nama_produk) {
-    		var app = this;
-    		app.$swal({
-    			text: "Anda Yakin Ingin Menghapus Produk "+nama_produk+ " ?",
-    			buttons: true,
-    			dangerMode: true,
-    		})
-    		.then((willDelete) => {
-    			if (willDelete) {
-    				this.prosesDelete(id,nama_produk);
-    			} else {
-    				app.$swal.close();
-    			}
-    		});
+    deleteEntry(id, index,jumlah_bayar_lama,no_faktur_pembelian) {
+        var app = this;
+        app.$swal({
+            text: "Anda Yakin Ingin Menghapus Faktur "+no_faktur_pembelian+ " ?",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((willDelete) => {
+            if (willDelete) {
+                this.prosesDelete(id,no_faktur_pembelian,jumlah_bayar_lama);
+            } else {
+                app.$swal.close();
+            }
+        });
 
-    	},
-    	prosesDelete(id,nama_produk){
-    		var app = this;
-    		app.loading = true;
-    		axios.post(app.url+'/proses-hapus-tbs-item-masuk/'+id)
-    		.then(function (resp) {
-    			app.getResults();
-    			app.alert("Menghapus "+nama_produk);
-    			app.loading = false;
-    			app.inputTbsPembayaranHutang.id_tbs = ''
-    		})
-    		.catch(function (resp) {
-
-    			app.loading = false;
-    			alert("Tidak dapat Menghapus Produk "+nama_produk);
-    		});
-    	},
+    },
+    prosesDelete(id,no_faktur_pembelian,jumlah_bayar_lama){
+        var app = this;
+        app.loading = true;
+        axios.delete(app.url+'/proses-hapus-tbs-pembayaran-hutang/'+id)
+        .then(function (resp) {
+            if (resp.data == 0) {
+                app.alertTbs("Faktur "+no_faktur_pembelian+" Gagal Dihapus!")
+                app.loading = false
+            }else{
+                var subtotal = parseFloat(app.inputPembayaranHutang.subtotal) - parseFloat(jumlah_bayar_lama)
+                app.inputPembayaranHutang.subtotal = subtotal.toFixed(2)
+                app.alert("Menghapus Faktur "+no_faktur_pembelian)
+                app.getResults();
+                app.loading = false
+            }
+        })
+        .catch(function (resp) {
+            console.log(resp);
+            app.loading = false;
+            alert("Tidak dapat Menghapus tbs Pembayaran Hutang");
+        });
+    },
     	pilihSuplier() {
     		if (this.inputTbsPembayaranHutang.suplier == '') {
     			this.$swal({

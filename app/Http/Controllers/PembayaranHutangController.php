@@ -67,7 +67,7 @@ class PembayaranHutangController extends Controller
     {
         $session_id    = session()->getId();
         $user_warung   = Auth::user()->id_warung;
-        $tbs_pembayaran_hutang = TbsPembayaranHutang::with(['suplier'])->where('warung_id', $user_warung)->where('session_id', $session_id)->orderBy('id_tbs_pembayaran_hutang', 'desc')->paginate(10);
+        $tbs_pembayaran_hutang = TbsPembayaranHutang::dataTbsPembayaranHutang($session_id)->paginate(10);
         $array         = array();
 
         foreach ($tbs_pembayaran_hutang as $tbs_pembayaran_hutangs) {
@@ -75,7 +75,7 @@ class PembayaranHutangController extends Controller
             array_push($array, [
                 'id'                => $tbs_pembayaran_hutangs->id_tbs_pembayaran_hutang,
                 'no_faktur_pembelian'  => $tbs_pembayaran_hutangs->no_faktur_pembelian,
-                'suplier'          => $tbs_pembayaran_hutangs->suplier->nama_suplier,
+                'suplier'          => $tbs_pembayaran_hutangs->nama_suplier,
                 'jatuh_tempo'      => $tbs_pembayaran_hutangs->jatuh_tempo,
                 'subtotal_hutang'      => $tbs_pembayaran_hutangs->subtotal_hutang,
                 'hutang'           => $tbs_pembayaran_hutangs->hutang,
@@ -87,6 +87,32 @@ class PembayaranHutangController extends Controller
         $respons = $this->dataPagination($tbs_pembayaran_hutang, $array,$url); 
         return response()->json($respons); 
     }
+         public function pencarianTbsPembayaranHutang(Request $request)
+    {
+        $session_id    = session()->getId();
+        $user_warung   = Auth::user()->id_warung;
+        $search = $request->search;
+        $tbs_pembayaran_hutang = TbsPembayaranHutang::cariTbsPembayaranHutang($request, $session_id)->paginate(10);;
+        $array         = array();
+
+        foreach ($tbs_pembayaran_hutang as $tbs_pembayaran_hutangs) {
+
+            array_push($array, [
+                'id'                => $tbs_pembayaran_hutangs->id_tbs_pembayaran_hutang,
+                'no_faktur_pembelian'  => $tbs_pembayaran_hutangs->no_faktur_pembelian,
+                'suplier'          => $tbs_pembayaran_hutangs->nama_suplier,
+                'jatuh_tempo'      => $tbs_pembayaran_hutangs->jatuh_tempo,
+                'subtotal_hutang'      => $tbs_pembayaran_hutangs->subtotal_hutang,
+                'hutang'           => $tbs_pembayaran_hutangs->hutang,
+                'potongan'         => $tbs_pembayaran_hutangs->potongan,
+                'jumlah_bayar'     => $tbs_pembayaran_hutangs->jumlah_bayar
+            ]);
+        }
+        $url     = '/pembayaran-hutang/view-tbs-pembayaran-hutang';
+        $respons = $this->dataPaginationPencarianData($tbs_pembayaran_hutang, $array,$url,$search); 
+        return response()->json($respons); 
+    }
+
         //VIEW DAN PENCARIAN dataSupplierHutang
      public function dataSupplierHutang($id)
     {
@@ -216,6 +242,15 @@ class PembayaranHutangController extends Controller
             return response()->json($respons);
         }
     }
+        public function prosesHapusTbsPembayaranHutang($id)
+    {
+        if (!TbsPembayaranHutang::destroy($id)) {
+            return 0;
+        } else {
+            return response(200);
+        }
+    }
+
     /**
      * Show the form for creating a new resource.
      *
