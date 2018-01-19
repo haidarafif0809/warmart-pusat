@@ -648,6 +648,8 @@ export default {
     })
     .catch(function (resp) {
       console.log(resp);
+      app.loading = false;
+      app.seen = true;
       alert("Tidak Dapat Memuat Penjualan");
     });
   },    

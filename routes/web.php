@@ -610,6 +610,8 @@ Route::get('/penjualan/view-online', 'PenjualanController@viewOnline')->middlewa
 Route::get('/penjualan/pencarian-online', 'PenjualanController@pencarianOnline')->middleware('auth');
 Route::get('/penjualan/view-detail-penjualan/{id}', 'PenjualanController@viewDetailPenjualan')->middleware('auth');
 Route::get('/penjualan/pencarian-detail-penjualan/{id}', 'PenjualanController@pencarianDetailPenjualan')->middleware('auth');
+Route::get('/penjualan/view-detail-penjualan-online/{id}', 'PenjualanController@viewDetailPenjualanOnline')->middleware('auth');
+Route::get('/penjualan/pencarian-detail-penjualan-online/{id}', 'PenjualanController@pencarianDetailPenjualanOnline')->middleware('auth');
 Route::get('/penjualan/view-edit-tbs-penjualan/{id}', 'PenjualanController@viewEditTbsPenjualan')->middleware('auth');
 Route::get('/penjualan/pencarian-edit-tbs-penjualan/{id}', 'PenjualanController@pencarianEditTbsPenjualan')->middleware('auth');
 Route::get('/penjualan/view-tbs-penjualan', 'PenjualanController@viewTbsPenjualan')->middleware('auth');

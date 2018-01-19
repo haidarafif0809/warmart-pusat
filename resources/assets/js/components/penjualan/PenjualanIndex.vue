@@ -113,6 +113,7 @@
 	    											<th>Pelanggan</th>
 	    											<th>Kas</th>
 	    											<th class="text-right">Total</th>
+	    											<th class="text-center">Detail</th>
 
 	    										</tr>
 	    									</thead>
@@ -123,141 +124,146 @@
 	    											<td>{{ penjualanOnline.waktu }}</td>
 	    											<td>{{ penjualanOnline.pelanggan }}</td>
 	    											<td>{{ penjualanOnline.kas }}</td>
-	    											<td align="right"> {{ penjualanOnline.total }}</td></tr>
-	    										</tbody>                    
-	    										<tbody class="data-tidak-ada" v-else>
-	    											<tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
-	    										</tbody>
-	    									</table>    
+	    											<td align="right"> {{ penjualanOnline.total }}</td>
+	    											<td class="text-center">
+	    												<router-link :to="{name: 'detailPenjualanOnline', params: {id: penjualanOnline.id}}" class="btn btn-xs btn-info" v-bind:id="'detail-' + penjualanOnline.id" >
+	    												Detail </router-link> 
+	    											</td>
+	    										</tr>
+	    									</tbody>                    
+	    									<tbody class="data-tidak-ada" v-else>
+	    										<tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
+	    									</tbody>
+	    								</table>    
 
-	    									<vue-simple-spinner v-if="loadingOnline"></vue-simple-spinner>
+	    								<vue-simple-spinner v-if="loadingOnline"></vue-simple-spinner>
 
-	    									<div align="right"><pagination :data="penjualanOnlineData" v-on:pagination-change-page="getResultsOnline" :limit="4"></pagination></div>
-	    								</div>
+	    								<div align="right"><pagination :data="penjualanOnlineData" v-on:pagination-change-page="getResultsOnline" :limit="4"></pagination></div>
 	    							</div>
 	    						</div>
 	    					</div>
-
-	    					<!-- MODAL DETAIL TRANSAKSI PENJUALAN -->
-
-	    					<div class="modal" id="modal_detail_transaksi" role="dialog" data-backdrop=""> 
-	    						<div class="modal-dialog"> 
-	    							<!-- Modal content--> 
-	    							<div class="modal-content"> 
-	    								<div class="modal-header"> 
-	    									<button type="button" class="close" v-on:click="closeModal()"> <i class="material-icons">close</i></button> 
-	    									<h4 class="modal-title"> 
-	    										<div class="alert-icon"> 
-	    											<b>Detail Penjualan POS #{{penjualan_pos.id_penjualan_pos}}</b> 
-	    										</div> 
-	    									</h4> 
-	    								</div> 
-	    								<form class="form-horizontal" > 
-	    									<div class="modal-body"> 
-	    										<div class="card" style="margin-bottom:1px; margin-top:1px;">
-
-	    											<table class="table" style="margin-bottom:10px; margin-top:10px; margin-right:10px; margin-left:10px;">
-
-	    												<tbody style="margin-bottom:10px; margin-top:10px; margin-right:10px; margin-left:10px;">
-	    													<tr>
-	    														<td class="text-primary"><b># Kas </b> </td>
-	    														<td class="text-primary"><b>: {{penjualan_pos.kas}} </b> </td>
-	    													</tr>
-	    													<tr>
-	    														<td class="text-primary"><b># Total </b> </td>
-	    														<td class="text-primary"><b>: {{ penjualan_pos.total }} </b> </td>
-	    													</tr>
-	    													<tr>
-	    														<td class="text-primary"><b># Potongan </b> </td>
-	    														<td class="text-primary"><b>: {{ penjualan_pos.potongan }} </b> </td>
-	    													</tr>
-	    													<tr>
-	    														<td class="text-primary"><b># Tunai </b> </td>
-	    														<td class="text-primary"><b>: {{ penjualan_pos.tunai }} </b> </td>
-	    													</tr>
-	    													<tr>
-	    														<td class="text-primary"><b># Kembalian </b> </td>
-	    														<td class="text-primary"><b>: {{ penjualan_pos.kembalian }} </b> </td>
-	    													</tr>
-	    													<tr>
-	    														<td class="text-primary"><b># Piutang </b> </td>
-	    														<td class="text-primary"><b>: {{ penjualan_pos.piutang }}</b> </td>
-	    													</tr>
-	    													<tr>
-	    														<td class="text-primary"><b># Jatuh Tempo </b> </td>
-	    														<td class="text-primary"><b>: {{penjualan_pos.jatuh_tempo}} </b> </td>
-	    													</tr>
-	    													<tr>
-	    														<td class="text-primary"><b># User Buat </b> </td>
-	    														<td class="text-primary"><b>: {{penjualan_pos.user_buat}} </b> </td>
-	    													</tr>
-	    													<tr>
-	    														<td class="text-primary"><b># Waktu Edit </b> </td>
-	    														<td class="text-primary"><b>: {{penjualan_pos.waktu_edit}} </b> </td>
-	    													</tr>
-	    													<tr>
-	    														<td class="text-primary"><b># User Edit </b> </td>
-	    														<td class="text-primary"><b>: {{penjualan_pos.user_edit}} </b> </td>
-	    													</tr>
-	    												</tbody>
-	    											</table>  
-
-	    										</div> 
-	    									</div>
-	    									<div class="modal-footer">  
-	    									</div> 
-	    								</form>
-	    							</div>       
-	    						</div> 
-	    					</div> 
-	    					<!-- / MODAL DETAIL TRANSAKSI PENJUALAN --> 
-
-
 	    				</div>
+
+	    				<!-- MODAL DETAIL TRANSAKSI PENJUALAN -->
+
+	    				<div class="modal" id="modal_detail_transaksi" role="dialog" data-backdrop=""> 
+	    					<div class="modal-dialog"> 
+	    						<!-- Modal content--> 
+	    						<div class="modal-content"> 
+	    							<div class="modal-header"> 
+	    								<button type="button" class="close" v-on:click="closeModal()"> <i class="material-icons">close</i></button> 
+	    								<h4 class="modal-title"> 
+	    									<div class="alert-icon"> 
+	    										<b>Detail Penjualan POS #{{penjualan_pos.id_penjualan_pos}}</b> 
+	    									</div> 
+	    								</h4> 
+	    							</div> 
+	    							<form class="form-horizontal" > 
+	    								<div class="modal-body"> 
+	    									<div class="card" style="margin-bottom:1px; margin-top:1px;">
+
+	    										<table class="table" style="margin-bottom:10px; margin-top:10px; margin-right:10px; margin-left:10px;">
+
+	    											<tbody style="margin-bottom:10px; margin-top:10px; margin-right:10px; margin-left:10px;">
+	    												<tr>
+	    													<td class="text-primary"><b># Kas </b> </td>
+	    													<td class="text-primary"><b>: {{penjualan_pos.kas}} </b> </td>
+	    												</tr>
+	    												<tr>
+	    													<td class="text-primary"><b># Total </b> </td>
+	    													<td class="text-primary"><b>: {{ penjualan_pos.total }} </b> </td>
+	    												</tr>
+	    												<tr>
+	    													<td class="text-primary"><b># Potongan </b> </td>
+	    													<td class="text-primary"><b>: {{ penjualan_pos.potongan }} </b> </td>
+	    												</tr>
+	    												<tr>
+	    													<td class="text-primary"><b># Tunai </b> </td>
+	    													<td class="text-primary"><b>: {{ penjualan_pos.tunai }} </b> </td>
+	    												</tr>
+	    												<tr>
+	    													<td class="text-primary"><b># Kembalian </b> </td>
+	    													<td class="text-primary"><b>: {{ penjualan_pos.kembalian }} </b> </td>
+	    												</tr>
+	    												<tr>
+	    													<td class="text-primary"><b># Piutang </b> </td>
+	    													<td class="text-primary"><b>: {{ penjualan_pos.piutang }}</b> </td>
+	    												</tr>
+	    												<tr>
+	    													<td class="text-primary"><b># Jatuh Tempo </b> </td>
+	    													<td class="text-primary"><b>: {{penjualan_pos.jatuh_tempo}} </b> </td>
+	    												</tr>
+	    												<tr>
+	    													<td class="text-primary"><b># User Buat </b> </td>
+	    													<td class="text-primary"><b>: {{penjualan_pos.user_buat}} </b> </td>
+	    												</tr>
+	    												<tr>
+	    													<td class="text-primary"><b># Waktu Edit </b> </td>
+	    													<td class="text-primary"><b>: {{penjualan_pos.waktu_edit}} </b> </td>
+	    												</tr>
+	    												<tr>
+	    													<td class="text-primary"><b># User Edit </b> </td>
+	    													<td class="text-primary"><b>: {{penjualan_pos.user_edit}} </b> </td>
+	    												</tr>
+	    											</tbody>
+	    										</table>  
+
+	    									</div> 
+	    								</div>
+	    								<div class="modal-footer">  
+	    								</div> 
+	    							</form>
+	    						</div>       
+	    					</div> 
+	    				</div> 
+	    				<!-- / MODAL DETAIL TRANSAKSI PENJUALAN --> 
+
+
 	    			</div>
 	    		</div>
+	    	</div>
 
-	    	</template>
-
-
-	    	<script>
-	    	export default {
-	    		data: function () {
-	    			return {
-	    				errors: [],
-	    				penjualan: [],
-	    				penjualanData : {},
-	    				penjualanOnline: [],
-	    				penjualanOnlineData : {},
-	    				url : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
-	    				pencarian: '',
-	    				loading: true,
-	    				seen : false,  
-	    				pencarianOnline: '',
-	    				loadingOnline: true,
-	    				seenOnline : false,  
-	    				penjualan_pos :{
-	    					id_penjualan_pos : 0,
-	    					kas : '',
-	    					total : 0,
-	    					potongan : 0,
-	    					tunai : 0,
-	    					kembalian : 0,
-	    					piutang : 0,
-	    					jatuh_tempo : '',
-	    					user_buat : '',
-	    					waktu_edit : '',
-	    					user_edit : ''
-	    				}
+	    </template>
 
 
+	    <script>
+	    export default {
+	    	data: function () {
+	    		return {
+	    			errors: [],
+	    			penjualan: [],
+	    			penjualanData : {},
+	    			penjualanOnline: [],
+	    			penjualanOnlineData : {},
+	    			url : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
+	    			pencarian: '',
+	    			loading: true,
+	    			seen : false,  
+	    			pencarianOnline: '',
+	    			loadingOnline: true,
+	    			seenOnline : false,  
+	    			penjualan_pos :{
+	    				id_penjualan_pos : 0,
+	    				kas : '',
+	    				total : 0,
+	    				potongan : 0,
+	    				tunai : 0,
+	    				kembalian : 0,
+	    				piutang : 0,
+	    				jatuh_tempo : '',
+	    				user_buat : '',
+	    				waktu_edit : '',
+	    				user_edit : ''
 	    			}
-	    		},
-	    		mounted() {   
-	    			var app = this;
-	    			app.getResults();		
-	    		},
-	    		watch: {
+
+
+	    		}
+	    	},
+	    	mounted() {   
+	    		var app = this;
+	    		app.getResults();		
+	    	},
+	    	watch: {
 			// whenever question changes, this function will run
 			pencarian: function (newQuestion) {
 				this.getHasilPencarian()
@@ -304,6 +310,8 @@
 				})
 				.catch(function (resp) {
 					console.log(resp);
+					app.loading = false;
+					app.seen = true;
 					alert("Tidak Dapat Memuat Penjualan");
 				});
 			},  
