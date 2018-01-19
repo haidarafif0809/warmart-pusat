@@ -250,6 +250,15 @@ class PembayaranHutangController extends Controller
             return response(200);
         }
     }
+        public function prosesEditTbsPembayaranHutang(Request $request)
+    {
+        $tbs_pembayaran_hutang = TbsPembayaranHutang::find($request->id_tbs);
+        $subtotal               = $request->nilai_kredit - $request->potongan;
+        $tbs_pembayaran_hutang->update(['potongan' => $request->potongan, 'subtotal_hutang' => $subtotal, 'jumlah_bayar' => $request->jumlah_bayar]);
+        $respons['jumlah_bayar'] = $request->jumlah_bayar;
+
+        return response()->json($respons);
+    }
 
     /**
      * Show the form for creating a new resource.
