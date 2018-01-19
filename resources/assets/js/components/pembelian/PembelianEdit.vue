@@ -275,9 +275,9 @@
                       <span v-if="errors.produk" id="produk_error" class="label label-danger">{{ errors.produk[0] }}</span>
 
                 <span style="display: none;">
-                <input class="form-control" type="text"  v-model="inputTbsPembelian.jumlah_produk"  name="jumlah_produk" id="jumlah_produk">
-                <input class="form-control" type="text"  v-model="inputTbsPembelian.harga_produk"  name="harga_produk" id="harga_produk">
-                <input class="form-control" type="text"  v-model="inputTbsPembelian.id_produk_tbs"  name="id_produk_tbs" id="id_produk_tbs">
+                <input class="form-control" type="text"  v-model="inputTbsPembelian.jumlah_produk"  name="jumlah_produk" id="jumlah_produk" @shortkey="openSelectizeKas()">
+                <input class="form-control" type="text"  v-model="inputTbsPembelian.harga_produk"  name="harga_produk" id="harga_produk" @shortkey="openSelectizeSuplier()">
+                <input class="form-control" type="text"  v-model="inputTbsPembelian.id_produk_tbs"  name="id_produk_tbs" id="id_produk_tbs" @shortkey="openSelectizeProduk()">
                 <input class="form-control" type="text"  v-model="inputTbsPembelian.no_faktur"   name="no_faktur" id="no_faktur">
                 </span>
             </div>
@@ -465,13 +465,20 @@ export default {
         default_kas : 0
       },
       placeholder_produk: {
-        placeholder: '--PILIH PRODUK--'
+        placeholder: '--PILIH PRODUK--',
+        sortField: 'text',
+        openOnFocus : true
       },
       placeholder_suplier: {
-        placeholder: '--PILIH SUPPLIER--'
+        placeholder: '--PILIH SUPPLIER--',
+        sortField: 'text',
+        openOnFocus : true
+
       },
       placeholder_cara_bayar: {
-        placeholder: '--PILIH CARA BAYAR--'
+        placeholder: '--PILIH CARA BAYAR--',
+        sortField: 'text',
+        openOnFocus : true
       },
       separator: {
               decimal: ',',
@@ -515,8 +522,16 @@ export default {
         }
   },
   methods: { 
+        openSelectizeProduk(){      
+          this.$refs.produk.$el.selectize.focus();
+        },
+        openSelectizeSuplier(){      
+          this.$refs.suplier.$el.selectize.focus();
+        },
+        openSelectizeKas(){      
+          this.$refs.cara_bayar.$el.selectize.focus();
+        },
         getDataPembelian(){
-
         var app = this
         var id = app.$route.params.id;
         axios.get(app.url_edit+'/cek-data-tbs-pembelian/'+id)
@@ -566,6 +581,7 @@ export default {
 
          app.loading = false;
          app.seen = true;
+          app.openSelectizeProduk();
 
        })
        .catch(function (resp) {
@@ -1352,14 +1368,15 @@ export default {
             swal('Oops...','Belum Ada Produk Yang Diinputkan','error'); 
           }
           else{
+
             var newPembelian = app.inputPembayaranPembelian;
             axios.post(app.url_edit+'/proses-edit-pembelian', newPembelian)
             .then(function (resp) {
             app.message = 'Berhasil Mengubah Pembelian';
             app.alert(app.message);
-            app.getResults();
             app.$router.replace('/pembelian');
             window.open('pembelian/cetak-besar-pembelian/'+id,'_blank');
+
 
             })
             .catch(function (resp) {
@@ -1376,7 +1393,8 @@ export default {
           title: "Berhasil ",
           text: pesan,
           icon: "success",
-          timer: 1500,
+          buttons: false,
+          timer: 1000,
         });
       }//alert untuk berhasil proses crud
 }
