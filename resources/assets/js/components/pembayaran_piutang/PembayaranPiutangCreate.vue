@@ -84,8 +84,8 @@
 
                                         <div class="col-md-12">
                                             <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                                <font style="color: black">Pembayaran(F10)</font>
-                                                <money style="text-align:right" class="form-penjualan" v-shortkey.focus="['f10']" id="jumlah_bayar" name="jumlah_bayar" v-model="inputTbsPembayaranPiutang.jumlah_bayar" v-bind="separator"  autocomplete="off" ref="jumlah_bayar"></money> 
+                                                <font style="color: black">Pembayaran(F9)</font>
+                                                <money style="text-align:right" class="form-penjualan" v-shortkey.focus="['f9']" id="jumlah_bayar" name="jumlah_bayar" v-model="inputTbsPembayaranPiutang.jumlah_bayar" v-bind="separator"  autocomplete="off" ref="jumlah_bayar"></money> 
                                             </div>
                                         </div>
                                     </div>
@@ -142,7 +142,7 @@
                                         <div class="col-md-12">
                                             <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
                                                 <font style="color: black">Pembayaran(F10)</font>
-                                                <money style="text-align:right" class="form-penjualan" v-shortkey.focus="['f10']" id="jumlah_bayar" name="jumlah_bayar" v-model="inputEditTbsPembayaranPiutang.jumlah_bayar" v-bind="separator"  autocomplete="off" ref="jumlah_bayar_edit"></money> 
+                                                <money style="text-align:right" class="form-penjualan" v-shortkey.focus="['f10']" id="jumlah_bayar_edit" name="jumlah_bayar_edit" v-model="inputEditTbsPembayaranPiutang.jumlah_bayar" v-bind="separator"  autocomplete="off" ref="jumlah_bayar_edit"></money> 
                                             </div>
                                         </div>
                                     </div>
@@ -175,9 +175,10 @@
                             <div class="card card-produk" style="margin-bottom: 1px; margin-top: 1px;">
 
                                 <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
-                                    <selectize-component v-model="inputTbsPembayaranPiutang.penjualan_piutang" :settings="placeholder_piutang" id="penjualan_piutang" ref='penjualan_piutang' v-shortkey.focus="['f1']"> 
+                                    <selectize-component v-model="inputTbsPembayaranPiutang.penjualan_piutang" :settings="placeholder_piutang" id="penjualan_piutang" ref='penjualan_piutang'> 
                                         <option v-for="piutangs, index in penjualan_piutang" v-bind:value="piutangs.id">{{piutangs.no_faktur_penjualan}} || {{ piutangs.nama_pelanggan }}</option>
                                     </selectize-component>
+                                    <input class="form-control" type="hidden"  v-model="inputTbsPembayaranPiutang.id_tbs"  name="id_tbs" id="id_tbs"  v-shortkey="['f1']" @shortkey="openSelectizeFakturPiutang()">
                                 </div>
                             </div>
                         </div>
@@ -321,7 +322,9 @@
                     kredit: 0,
                 }, 
                 placeholder_piutang: {
-                    placeholder: 'Cari Piutang (F1) ...'
+                    placeholder: 'Cari Piutang (F1) ...',
+                    sortField: 'text',
+                    openOnFocus : true
                 },
                 pencarian: '',
                 loading: true,
@@ -376,6 +379,9 @@ filters: {
     }
 },
 methods: {
+    openSelectizeFakturPiutang(){      
+        this.$refs.penjualan_piutang.$el.selectize.focus();
+    },
     getResults(page) {
         var app = this; 
         if (typeof page === 'undefined') {
@@ -387,6 +393,7 @@ methods: {
             app.tbsPembayaranPiutangData = resp.data;
             app.loading = false;
             app.seen = true;
+            app.openSelectizeFakturPiutang();
 
             if (app.pembayaranPiutang.subtotal == 0) {
                 $.each(resp.data.data, function (i,item) {
@@ -634,23 +641,46 @@ methods: {
         .then(function (resp) {
 
             if (resp.data == 0) {
-
                 app.alertTbs("Faktur "+no_faktur_penjualan+" Gagal Dihapus!")
                 app.loading = false
-
             }else{
                 var subtotal = parseFloat(app.pembayaranPiutang.subtotal) - parseFloat(jumlah_bayar_lama)
                 app.getResults()
                 app.pembayaranPiutang.subtotal = subtotal.toFixed(2)
                 app.alert("Menghapus Faktur "+no_faktur_penjualan)
                 app.loading = false
-
             }
         })
         .catch(function (resp) {
             console.log(resp);
             app.loading = false;
             alert("Tidak dapat Menghapus Faktur "+no_faktur_penjualan);
+        });
+    },
+    batalPembayaranPiutang(){
+        var app = this
+        app.$swal({
+            text: "Anda Yakin Ingin Membatalkan Transaksi Ini ?",
+            buttons: {
+                cancel: true,
+                confirm: "OK"
+            },
+        }).then((value) => {
+
+            if (!value) throw null;
+
+            app.loading = true;
+            axios.post(app.url_piutang+'/proses-batal-pembayaran-piutang')
+            .then(function (resp) {
+                app.getResults();
+                app.alert("Membatalkan Transaksi Pembayaran Piutang");
+                app.pembayaranPiutang.subtotal = 0
+            })
+            .catch(function (resp) {
+                app.loading = false;
+                alert("Tidak dapat Membatalkan Transaksi Pembayaran Piutang");
+            });
+
         });
     },
     closeModal(){
@@ -675,7 +705,7 @@ methods: {
             title: "Berhasil ",
             text: pesan,
             icon: "success",
-            timer: 2000
+            timer: 1000
         });
     }
 }

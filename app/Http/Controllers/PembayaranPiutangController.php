@@ -218,4 +218,12 @@ class PembayaranPiutangController extends Controller
 
         return response()->json($respons);
     }
+
+    public function prosesBatalPembayaranPiutang()
+    {
+        $session_id         = session()->getId();
+        $data_tbs_penjualan = TbsPembayaranPiutang::where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->delete();
+
+        return response(200);
+    }
 }
