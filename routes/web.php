@@ -606,6 +606,8 @@ Route::get('/kas-mutasi/pilih-kas', 'KasMutasiController@pilih_kas')->middleware
 
 Route::get('/penjualan/view', 'PenjualanController@view')->middleware('auth');
 Route::get('/penjualan/pencarian', 'PenjualanController@pencarian')->middleware('auth');
+Route::get('/penjualan/view-online', 'PenjualanController@viewOnline')->middleware('auth');
+Route::get('/penjualan/pencarian-online', 'PenjualanController@pencarianOnline')->middleware('auth');
 Route::get('/penjualan/view-detail-penjualan/{id}', 'PenjualanController@viewDetailPenjualan')->middleware('auth');
 Route::get('/penjualan/pencarian-detail-penjualan/{id}', 'PenjualanController@pencarianDetailPenjualan')->middleware('auth');
 Route::get('/penjualan/view-edit-tbs-penjualan/{id}', 'PenjualanController@viewEditTbsPenjualan')->middleware('auth');
