@@ -379,14 +379,21 @@ class PenjualanController extends Controller
 
         } else {
 
-            $data_tbs = TbsPenjualan::where('id_produk', $id_produk)
-            ->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)
-            ->count();
+            $data_tbs = TbsPenjualan::where('id_produk', $id_produk)->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
 
 //JIKA PRODUK YG DIPILIH SUDAH ADA DI TBS
-            if ($data_tbs > 0) {
+            if ($data_tbs->count() > 0) {
 
-                return 0;
+                $jumlah_produk = $data_tbs->first()->jumlah_produk + $request->jumlah_produk;
+
+                $subtotal_edit = ($jumlah_produk * $data_tbs->first()->harga_produk) - $data_tbs->first()->potongan;
+
+                $data_tbs->update(['jumlah_produk'=> $jumlah_produk, 'subtotal'=> $subtotal_edit ]);
+
+                $subtotal = $request->jumlah_produk * $data_tbs->first()->harga_produk;
+
+                $respons['subtotal'] = $subtotal;
+                return response()->json($respons);
 
             } else {
 
@@ -926,13 +933,21 @@ public function prosesTambahEditTbsPenjualan(Request $request, $id)
     } else {
 
         $data_tbs = EditTbsPenjualan::where('id_produk', $id_produk)
-        ->where('id_penjualan_pos', $id)->where('warung_id', Auth::user()->id_warung)
-        ->count();
+        ->where('id_penjualan_pos', $id)->where('warung_id', Auth::user()->id_warung);
 
 //JIKA PRODUK YG DIPILIH SUDAH ADA DI TBS
-        if ($data_tbs > 0) {
+        if ($data_tbs->count() > 0) {
 
-            return 0;
+            $jumlah_produk = $data_tbs->first()->jumlah_produk + $request->jumlah_produk;
+
+            $subtotal_edit = ($jumlah_produk * $data_tbs->first()->harga_produk) - $data_tbs->first()->potongan;
+
+            $data_tbs->update(['jumlah_produk'=> $jumlah_produk, 'subtotal'=> $subtotal_edit ]);
+
+            $subtotal = $request->jumlah_produk * $data_tbs->first()->harga_produk;
+
+            $respons['subtotal'] = $subtotal;
+            return response()->json($respons);
 
         } else {
             $penjualan    = PenjualanPos::find($id);
@@ -1031,7 +1046,7 @@ public function tampilPotongan($potongan_produk, $jumlah_produk, $harga_produk)
     if ($potongan_produk > 0) {
         $potongan = number_format($potongan_produk, 2, ',', '.') . " (" . round($potongan_persen, 2) . "%)";
     } else {
-        $potongan = $potongan_produk;
+        $potongan = number_format($potongan_produk, 0, ',', '.');
     }
 
     return $potongan;
