@@ -66,14 +66,14 @@
                 <div class="form-group">
                   <label for="kode_kas" class="col-md-3 control-label">Kode Kas</label>
                   <div class="col-md-9">
-                    <input class="form-control" autocomplete="off" placeholder="Kode Kas" v-model="tambahKas.kode_kas" type="text" name="kode_kas" id="kode_kas"  autofocus="">
+                    <input class="form-control" autocomplete="off" placeholder="Kode Kas" v-model="tambahKas.kode_kas" type="text" name="kode_kas" id="kode_kas"  autofocus="" ref="kode_kas">
                     <span v-if="errors.kode_kas" id="kode_kas_error" class="label label-danger">{{ errors.kode_kas[0] }}</span>
                   </div>
                 </div>
                 <div class="form-group">
                   <label for="nama_kas" class="col-md-3 control-label">Nama Kas</label>
                   <div class="col-md-9">
-                    <input class="form-control" autocomplete="off" placeholder="Nama Kas" v-model="tambahKas.nama_kas" type="text" name="nama_kas" id="nama_kas"  >
+                    <input class="form-control" autocomplete="off" placeholder="Nama Kas" v-model="tambahKas.nama_kas" type="text" name="nama_kas" id="nama_kas" ref="nama_kas" >
                     <span v-if="errors.nama_kas" id="nama_kas_error" class="label label-danger">{{ errors.nama_kas[0] }}</span>
                   </div>
                 </div>
@@ -81,7 +81,7 @@
                   <label for="nama_kas" class="col-md-3 control-label">Tampil Transaksi</label>
                   <div class="togglebutton col-md-9">
                    <label>
-                     <b>No</b>  <input type="checkbox" v-model="tambahKas.status_kas" value="1" name="status_kas" id="status_kas"><b>Yes</b>
+                     <b>No</b>  <input type="checkbox" v-model="tambahKas.status_kas" value="1" name="status_kas" id="status_kas" ref="status_kas"><b>Yes</b>
                    </label>
                  </div>
                </div>
@@ -89,7 +89,7 @@
                 <label for="nama_kas" class="col-md-3 control-label">Default Kas</label>
                 <div class="togglebutton col-md-9">
                   <label>
-                    <b>No</b>  <input type="checkbox" v-on:change="defaultKas()" v-model="tambahKas.default_kas" value="1" name="default_kas" id="default_kas"><b>Yes</b>
+                    <b>No</b>  <input type="checkbox" v-on:change="defaultKas()" v-model="tambahKas.default_kas" value="1" name="default_kas" id="default_kas" ref="default_kas"><b>Yes</b>
                   </label>
                 </div>
               </div>
@@ -725,7 +725,7 @@ export default {
   tambahModalKas(){
    $("#modal_tambah_kas").show();
    $("#modal_selesai").hide();
-   this.$refs.kode_kas.$el.focus(); 
+   this.$refs.kode_kas.focus(); 
  },
  saveFormKas() {
   var app = this;
@@ -1060,17 +1060,7 @@ batalPenjualan(){
     app.loading = true;
     axios.post(app.url+'/proses-batal-edit-penjualan/'+id)
     .then(function (resp) {
-
-      app.getResults();
       app.alert("Membatalkan Transaksi Edit Penjualan");
-      app.penjualan.pelanggan = ''
-      app.penjualan.subtotal = 0
-      app.penjualan.jatuh_tempo = ''
-      app.penjualan.potongan_persen = 0
-      app.penjualan.potongan_faktur = 0
-      app.penjualan.total_akhir = 0
-      app.penjualan.pembayaran = 0
-      app.hitungKembalian(app.penjualan.pembayaran)
       app.$router.replace('/penjualan');
 
     })
