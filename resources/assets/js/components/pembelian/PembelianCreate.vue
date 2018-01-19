@@ -273,9 +273,9 @@
                       <span v-if="errors.produk" id="produk_error" class="label label-danger">{{ errors.produk[0] }}</span>
 
                 <span style="display: none;">
-                <input class="form-control" type="text"  v-model="inputTbsPembelian.jumlah_produk"  name="jumlah_produk" id="jumlah_produk">
-                <input class="form-control" type="text"  v-model="inputTbsPembelian.harga_produk"  name="harga_produk" id="harga_produk">
-                <input class="form-control" type="text"  v-model="inputTbsPembelian.id_produk_tbs"  name="id_produk_tbs" id="id_produk_tbs">
+                <input class="form-control" type="text"  v-model="inputTbsPembelian.jumlah_produk"  name="jumlah_produk" id="jumlah_produk" @shortkey="openSelectizeKas()">
+                <input class="form-control" type="text"  v-model="inputTbsPembelian.harga_produk"  name="harga_produk" id="harga_produk" @shortkey="openSelectizeSuplier()">
+                <input class="form-control" type="text"  v-model="inputTbsPembelian.id_produk_tbs"  name="id_produk_tbs" id="id_produk_tbs" @shortkey="openSelectizeProduk()">
                 </span>
             </div>
           </div>
@@ -352,7 +352,7 @@
             <div class="row"> 
               <div class="col-md-10 col-xs-10"> 
                    <h4>Suplier </h4> 
-                  <selectize-component v-model="inputPembayaranPembelian.suplier" :settings="placeholder_suplier"  id="suplier" name="suplier" ref='suplier'> 
+                  <selectize-component v-model="inputPembayaranPembelian.suplier" :settings="placeholder_suplier" v-shortkey.focus="['f4']" id="suplier" name="suplier" ref='suplier'> 
                       <option v-for="supliers, index in suplier" v-bind:value="supliers.id">{{ supliers.nama_suplier }}</option>
                   </selectize-component>
               </div> 
@@ -464,13 +464,19 @@ export default {
         default_kas : 0
       },
 			placeholder_produk: {
-				placeholder: '--PILIH PRODUK--'
+				placeholder: '--PILIH PRODUK (F1)--',
+        sortField: 'text',
+        openOnFocus : true
 			},
 			placeholder_suplier: {
-				placeholder: '--PILIH SUPPLIER--'
+				placeholder: '--PILIH SUPPLIER (F4)--',
+        sortField: 'text',
+        openOnFocus : true
 			},
 			placeholder_cara_bayar: {
-				placeholder: '--PILIH CARA BAYAR--'
+				placeholder: '--PILIH CARA BAYAR--',
+        sortField: 'text',
+        openOnFocus : true
 			},
 			separator: {
               decimal: ',',
@@ -515,7 +521,15 @@ export default {
 
     },
     methods: {
-
+          openSelectizeProduk(){      
+          this.$refs.produk.$el.selectize.focus();
+        },
+        openSelectizeSuplier(){      
+          this.$refs.suplier.$el.selectize.focus();
+        },
+        openSelectizeKas(){      
+          this.$refs.cara_bayar.$el.selectize.focus();
+        },
     	getResults(page) {
     		var app = this;	
     		if (typeof page === 'undefined') {
@@ -527,6 +541,8 @@ export default {
     			app.tbsPembelianData = resp.data; 			
     			app.loading = false;
     			app.seen = true;
+          app.openSelectizeProduk();
+
                 if (app.inputPembayaranPembelian.subtotal == 0) {         
                     $.each(resp.data.data, function (i,item) { 
                        app.inputPembayaranPembelian.subtotal += parseFloat(resp.data.data[i].subtotal)
@@ -674,7 +690,8 @@ export default {
     			title: "Berhasil ",
     			text: pesan,
     			icon: "success",
-          timer: 1500,
+          buttons: false,
+          timer: 1000,
     		});
     	},//alert untuk berhasil proses crud
     	deleteEntry(id, index,nama_produk) {
@@ -1342,7 +1359,6 @@ export default {
 						app.message = 'Berhasil Menambah Pembelian';
 						app.alert(app.message);
 						app.$router.replace('/pembelian');
-						app.getResults();
 						window.open('pembelian/cetak-besar-pembelian/'+resp.data.respons_pembelian,'_blank');
 						})
 						.catch(function (resp) {
