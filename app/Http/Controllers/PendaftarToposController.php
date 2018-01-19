@@ -515,9 +515,9 @@ public function index()
 
         public function dataWarung(){
 
-         return Warung::find(Auth::user()->id_warung);
-     }
-     public function dataBank(){
+           return Warung::find(Auth::user()->id_warung);
+       }
+       public function dataBank(){
         $bank = Bank::all();
         return response()->json($bank);
     }
@@ -536,5 +536,22 @@ public function index()
 
         return response(200);
     }
+    public function cekSisaDemo(){
+
+      $warung = Warung::select(DB::raw(' datediff(DATE_ADD(created_at, INTERVAL 14 DAY), current_date()) as sisa_waktu '))->where('id',Auth::user()->id_warung )->first();
+      $sisa_waktu = $warung->sisa_waktu;
+      $pendaftar_topos = PendaftarTopos::select('status_pembayaran')->where('warung_id',Auth::user()->id_warung);
+
+      if ($pendaftar_topos->count() == 0) {
+       $status_pembayaran = 0;
+   }else{        
+       $status_pembayaran = $pendaftar_topos->first()->status_pembayaran;
+   }
+
+   $respons['status_pembayaran'] = $status_pembayaran;
+   $respons['sisa_waktu'] = $sisa_waktu;
+
+   return response()->json($respons);
+}
 
 }
