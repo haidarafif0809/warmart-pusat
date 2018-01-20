@@ -35,6 +35,17 @@
         border-radius: 1px solid;
         padding: 10px 10px;
     }
+    .table>thead>tr>th {
+        border-bottom-width: 1px;
+        font-size: 1em;
+        font-weight: 300;
+    }
+    .card-stats .card-header i {
+        font-size: 36px;
+        line-height: 36px;
+        width: 36px;
+        height: 36px;
+    }
 
 </style>
 
@@ -148,7 +159,7 @@
                                     </div>
 
                                     <div align="right"  style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                        <button type="submit" class="btn btn-success btn-lg" id="btnTbs"><font style="font-size:20px;">Tambah(Enter)</font></button>
+                                        <button type="submit" class="btn btn-success btn-lg" id="btnTbs"><font style="font-size:20px;">Tambah</font></button>
 
                                         <button type="button" class="btn btn-default btn-lg"  v-on:click="closeModal()" v-shortkey.push="['esc']" @shortkey="closeModal()"> <font style="font-size:20px;">Tutup(Esc)</font></button>
                                     </div>
@@ -269,13 +280,14 @@
                                     <thead class="text-primary">
                                         <tr>
 
-                                            <th>No. Faktur Penjualan</th>
+                                            <th>No. Faktur</th>
                                             <th> Pelanggan </th>
                                             <th class="text-center">Tanggal JT</th>
                                             <th class="text-right">Piutang</th>
                                             <th class="text-right">Potongan</th>
-                                            <th class="text-right">Subtotal Piutang</th>
+                                            <th class="text-right">Subtotal</th>
                                             <th class="text-right">Pembayaran</th>
+                                            <th class="text-right">Sisa</th>
                                             <th class="text-center">Edit</th>
                                             <th class="text-center">Hapus</th>
 
@@ -291,6 +303,7 @@
                                             <td align="right">{{ tbs_pembayaran_piutang.potongan | pemisahTitik }}</td>
                                             <td align="right">{{ tbs_pembayaran_piutang.total | pemisahTitik }}</td>
                                             <td align="right">{{ tbs_pembayaran_piutang.jumlah_bayar | pemisahTitik }}</td>
+                                            <td align="right">{{ tbs_pembayaran_piutang.sisa_piutang | pemisahTitik }}</td>
 
                                             <td align="center">
                                                 <a href="#create-pembayaran-piutang" class="btn btn-xs btn-success" v-bind:id="'edit-' + tbs_pembayaran_piutang.id_tbs_pembayaran_piutang" v-on:click="editEntry(tbs_pembayaran_piutang.id_tbs_pembayaran_piutang, index, tbs_pembayaran_piutang.no_faktur_penjualan,tbs_pembayaran_piutang.pelanggan,tbs_pembayaran_piutang.jumlah_bayar,tbs_pembayaran_piutang.potongan,tbs_pembayaran_piutang.piutang)">Edit</a>
@@ -303,7 +316,7 @@
                                         </tr>
                                     </tbody>                    
                                     <tbody class="data-tidak-ada" v-else>
-                                        <tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
+                                        <tr ><td colspan="10"  class="text-center">Tidak Ada Data</td></tr>
                                     </tbody>
                                 </table>    
 
@@ -325,11 +338,11 @@
                                 </div>
                                 <div class="card-footer">
                                     <div class="row"> 
-                                        <div class="col-md-6 col-xs-6"> 
-                                            <button type="button" class="btn btn-success btn-lg" id="bayar" v-on:click="bayarPembayaranPiutang()" v-shortkey.push="['f2']" @shortkey="bayarPembayaranPiutang()"><font style="font-size:20px;">Bayar(F2)</font></button>
+                                        <div class="col-md-5 col-xs-5"> 
+                                            <button type="button" class="btn btn-success" id="bayar" v-on:click="bayarPembayaranPiutang()" v-shortkey.push="['f2']" @shortkey="bayarPembayaranPiutang()" style="padding: 10px 15px;">Bayar(F2)</button>
                                         </div>
-                                        <div class="col-md-6 col-xs-6">
-                                            <button type="submit" class="btn btn-danger btn-lg" id="btnBatal" v-on:click="batalPembayaranPiutang()" v-shortkey.push="['f3']" @shortkey="batalPembayaranPiutang()"> <font style="font-size:20px;">Batal(F3) </font></button>
+                                        <div class="col-md-5 col-xs-5">
+                                            <button type="submit" class="btn btn-danger" id="btnBatal" v-on:click="batalPembayaranPiutang()" v-shortkey.push="['f3']" @shortkey="batalPembayaranPiutang()" style="padding: 10px 15px;"> Batal(F3)</button>
                                         </div>
                                     </div>
                                 </div>
@@ -845,6 +858,7 @@ methods: {
             title: "Berhasil ",
             text: pesan,
             icon: "success",
+            buttons: false,
             timer: 1000
         });
     }
