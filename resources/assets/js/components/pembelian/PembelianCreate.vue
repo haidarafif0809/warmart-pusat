@@ -266,16 +266,16 @@
                 <div class="card card-produk" style="margin-bottom: 1px; margin-top: 1px;">
                   <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
                    
-                    <selectize-component v-model="inputTbsPembelian.produk" :settings="placeholder_produk" id="produk" ref='produk' v-shortkey.focus="['f1']" > 
+                    <selectize-component v-model="inputTbsPembelian.produk" :settings="placeholder_produk" id="produk" ref='produk'  > 
                       <option v-for="produks, index in produk" v-bind:value="produks.produk">{{produks.barcode}} || {{produks.kode_produk}} || {{ produks.nama_produk }}</option>
                       </selectize-component>
                       </div><!--/COL MD  3 --> 
                       <span v-if="errors.produk" id="produk_error" class="label label-danger">{{ errors.produk[0] }}</span>
 
                 <span style="display: none;">
-                <input class="form-control" type="text"  v-model="inputTbsPembelian.jumlah_produk"  name="jumlah_produk" id="jumlah_produk" @shortkey="openSelectizeKas()">
-                <input class="form-control" type="text"  v-model="inputTbsPembelian.harga_produk"  name="harga_produk" id="harga_produk" @shortkey="openSelectizeSuplier()">
-                <input class="form-control" type="text"  v-model="inputTbsPembelian.id_produk_tbs"  name="id_produk_tbs" id="id_produk_tbs" @shortkey="openSelectizeProduk()">
+                <input class="form-control" type="text"  v-model="inputTbsPembelian.jumlah_produk"  name="jumlah_produk" id="jumlah_produk"  v-shortkey="['f6']" @shortkey="openSelectizeKas()">
+                <input class="form-control" type="text"  v-model="inputTbsPembelian.harga_produk"  name="harga_produk" id="harga_produk" v-shortkey="['f4']" @shortkey="openSelectizeSuplier()">
+                <input class="form-control" type="text"  v-model="inputTbsPembelian.id_produk_tbs"  name="id_produk_tbs" id="id_produk_tbs" v-shortkey="['f1']" @shortkey="openSelectizeProduk()">
                 </span>
             </div>
           </div>
@@ -352,7 +352,7 @@
             <div class="row"> 
               <div class="col-md-10 col-xs-10"> 
                    <h4>Suplier </h4> 
-                  <selectize-component v-model="inputPembayaranPembelian.suplier" :settings="placeholder_suplier" v-shortkey.focus="['f4']" id="suplier" name="suplier" ref='suplier'> 
+                  <selectize-component v-model="inputPembayaranPembelian.suplier" :settings="placeholder_suplier" id="suplier" name="suplier" ref='suplier'> 
                       <option v-for="supliers, index in suplier" v-bind:value="supliers.id">{{ supliers.nama_suplier }}</option>
                   </selectize-component>
               </div> 
@@ -474,7 +474,7 @@ export default {
         openOnFocus : true
 			},
 			placeholder_cara_bayar: {
-				placeholder: '--PILIH CARA BAYAR--',
+				placeholder: '--PILIH CARA BAYAR (F6)--',
         sortField: 'text',
         openOnFocus : true
 			},
