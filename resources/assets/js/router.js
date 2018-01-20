@@ -101,8 +101,10 @@ import KasMutasiEdit from './components/kas_mutasi/KasMutasiEdit.vue';
 import PenjualanIndex from './components/penjualan/PenjualanIndex.vue';
 import PenjualanCreate from './components/penjualan/PenjualanCreate.vue';
 import PenjualanDetail from './components/penjualan/PenjualanDetail.vue';
+import PenjualanOnlineDetail from './components/penjualan/PenjualanOnlineDetail.vue';
 import PenjualanProsesEdit from './components/penjualan/PenjualanProsesEdit.vue';
 import PenjualanEdit from './components/penjualan/PenjualanEdit.vue';
+
 // LAPORAN LABA KOTOR
 import LaporanLabaKotorIndex from './components/laporan/LaporanLabaKotorIndex.vue';
 // LAPORAN LABA KOTOR PRODUK
@@ -496,6 +498,11 @@ const routes = [{
         path: '/proses-edit-penjualan/:id',
         component: PenjualanProsesEdit,
         name: 'prosesEditPenjualan'
+    },
+    {
+        path: '/detail-penjualan-online/:id',
+        component: PenjualanOnlineDetail,
+        name: 'detailPenjualanOnline'
     },
     // LAPORAN LABA KOTOR
     {

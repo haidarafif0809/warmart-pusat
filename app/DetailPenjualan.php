@@ -22,11 +22,35 @@ class DetailPenjualan extends Model
         return $this->hasOne('App\Barang', 'id', 'id_produk');
     }
 
+
+    public function getNamaProdukAttribute()
+    {
+        return title_case($this->produk->nama_barang);
+    }
+
     public function tanggalSql($tangal)
     {
         $date        = date_create($tangal);
         $date_format = date_format($date, "Y-m-d");
         return $date_format;
+    }
+
+     //pencarian
+    public function scopePencarian($query,$id,$request){
+
+        $query->select('detail_penjualans.id AS id', 'detail_penjualans.jumlah AS jumlah', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'detail_penjualans.id_produk AS id_produk', 'detail_penjualans.subtotal AS subtotal', 'detail_penjualans.harga AS harga')
+        ->leftJoin('barangs', 'barangs.id', '=', 'detail_penjualans.id_produk')
+        ->where('detail_penjualans.id_penjualan', $id)
+        ->where(function ($query) use ($request) {
+
+            $query->orWhere('barangs.kode_barang', 'LIKE', $request->search . '%')
+            ->orWhere('barangs.nama_barang', 'LIKE', $request->search . '%')
+            ->orWhere('detail_penjualans.id_penjualan', 'LIKE', $request->search . '%');
+
+        })->orderBy('detail_penjualans.id', 'desc');
+
+        return $query;
+
     }
 
     // SUBTOTAL LABA KOTOR PENJUALAN POS

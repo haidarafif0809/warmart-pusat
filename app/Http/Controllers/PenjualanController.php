@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Barang;
 use App\DetailPenjualanPos;
+use App\DetailPenjualan;
 use App\EditTbsPenjualan;
 use App\Kas;
 use App\PenjualanPos;
+use App\Penjualan;
 use App\SettingAplikasi;
 use App\SettingPenjualanPos;
 use App\TbsPenjualan;
@@ -83,6 +85,67 @@ class PenjualanController extends Controller
         //DATA PAGINATION
 
         return $respons;
+    }
+
+    public function viewOnline(){
+        $user_warung = Auth::user()->id_warung;
+        $penjualan   = Penjualan::with(['pelanggan', 'kas'])->where('id_warung', $user_warung)->orderBy('id', 'desc')->paginate(10);
+        $array       = array();
+
+        foreach ($penjualan as $penjualans) {
+
+            if ($penjualans->pelanggan_id == '0') {
+                $pelanggan = 'Umum';
+            } else {
+                $pelanggan = $penjualans->pelanggan->name;
+            }
+
+            array_push($array, [
+                'id'               => $penjualans->id,
+                'waktu'            => $penjualans->Waktu,
+                'pelanggan'        => $pelanggan,
+                'kas'               => $penjualans->kas->nama_kas,
+                'id_pesanan'      => $penjualans->id_pesanan,
+                'kas'              => $penjualans->kas->nama_kas,
+                'total'         => $penjualans->TotalJual,
+                'waktu_edit'       => $penjualans->WaktuEdit,
+            ]);
+        }
+
+        $url     = '/penjualan/view-online';
+        $respons = $this->paginationData($penjualan, $array, $url);
+
+        return response()->json($respons);
+    }
+
+    public function pencarianOnline(Request $request){
+        $user_warung = Auth::user()->id_warung;
+        $penjualan   = Penjualan::Pencarian($user_warung, $request)->paginate(10);
+        $array       = array();
+        foreach ($penjualan as $penjualans) {
+
+            if ($penjualans['pelanggan_id'] == '0') {
+                $nama_pelanggan = 'Umum';
+            } else {
+                $nama_pelanggan = $penjualans['nama_pelanggan'];
+            }
+
+            array_push($array, [
+                'id'               => $penjualans['id'],
+                'waktu'            => $penjualans['Waktu'],
+                'pelanggan'        => $nama_pelanggan,
+                'total'            => number_format($penjualans['total'], 2, ',', '.'),
+                'kas'              => $penjualans['nama_kas'],
+                'waktu_edit'       => $penjualans['WaktuEdit'],
+            ]);
+        }
+
+        $url    = '/penjualan/pencarian-online';
+        $search = $request->search;
+
+        $respons = $this->paginationPencarianData($penjualan, $array, $url, $search);
+
+        return response()->json($respons);
     }
 
     public function view()
@@ -168,6 +231,56 @@ class PenjualanController extends Controller
         return response()->json($respons);
     }
 
+    public function viewDetailPenjualanOnline($id)
+    {
+        $detail_penjualan = DetailPenjualan::with(['produk'])->where('id_penjualan', $id)->orderBy('id', 'desc')->paginate(10);
+        $array            = array();
+
+        foreach ($detail_penjualan as $detail_penjualans) {
+
+            array_push($array, [
+                'id' => $detail_penjualans->id,
+                'id_penjualan'        => $id,
+                'nama_produk'             => $detail_penjualans->NamaProduk,
+                'kode_produk'             => $detail_penjualans->produk->kode_barang,
+                'jumlah'           => $detail_penjualans->jumlah,
+                'harga'            => $detail_penjualans->harga,
+                'subtotal'                => $detail_penjualans->subtotal,
+                'produk'                  => $detail_penjualans->id_produk . "|" . $detail_penjualans->NamaProduk . "|" . $detail_penjualans->harga]);
+        }
+
+        $url     = '/penjualan/view-detail-penjualan-online/' . $id;
+        $respons = $this->paginationData($detail_penjualan, $array, $url);
+
+        return response()->json($respons);
+    }
+
+    public function pencarianDetailPenjualanOnline(Request $request, $id)
+    {
+        $detail_penjualan = DetailPenjualan::Pencarian($id, $request)->paginate(10);
+
+        $array = array();
+        foreach ($detail_penjualan as $detail_penjualans) {
+
+
+            array_push($array, [
+                'id' => $detail_penjualans['id'],
+                'id_penjualan'        => $id,
+                'nama_produk'             => title_case($detail_penjualans['nama_barang']),
+                'kode_produk'             => $detail_penjualans['kode_barang'],
+                'jumlah'           => $detail_penjualans['jumlah'],
+                'harga'            => $detail_penjualans['harga'],
+                'subtotal'                => $detail_penjualans['subtotal'],
+                'produk'                  => $detail_penjualans['id_produk'] . "|" . title_case($detail_penjualans['nama_barang']) . "|" . $detail_penjualans->harga]);
+        }
+
+        $url    = '/penjualan/pencarian-detail-penjualan-online/' . $id;
+        $search = $request->search;
+
+        $respons = $this->paginationPencarianData($detail_penjualan, $array, $url, $search);
+
+        return response()->json($respons);
+    }
     public function viewDetailPenjualan($id)
     {
         $user_warung      = Auth::user()->id_warung;
@@ -198,7 +311,6 @@ class PenjualanController extends Controller
 
     public function pencarianDetailPenjualan(Request $request, $id)
     {
-        $session_id       = session()->getId();
         $user_warung      = Auth::user()->id_warung;
         $detail_penjualan = DetailPenjualanPos::Pencarian($user_warung, $id, $request)->paginate(10);
 

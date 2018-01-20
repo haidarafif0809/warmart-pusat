@@ -259,6 +259,17 @@ class PembayaranHutangController extends Controller
 
         return response()->json($respons);
     }
+    //PROSES BATAL 
+    public function proses_batal_transaksi_pembayaran_hutang()
+    {
+        if (Auth::user()->id_warung == '') {
+            Auth::logout();
+            return response()->view('error.403');
+        } else {
+            $session_id         = session()->getId();
+            $data_tbs_pembelian = TbsPembayaranHutang::where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->delete();
+        }
+    }
 
     /**
      * Show the form for creating a new resource.

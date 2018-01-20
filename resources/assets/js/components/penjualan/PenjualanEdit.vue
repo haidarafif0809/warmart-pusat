@@ -1117,18 +1117,7 @@ prosesSelesaiPenjualan(value){
 
     }else{
 
-      app.getResults();
       app.alert("Menyelesaikan Edit Penjualan");
-      app.penjualan.pelanggan = ''
-      app.penjualan.subtotal = 0
-      app.penjualan.jatuh_tempo = ''
-      app.penjualan.potongan_persen = 0
-      app.penjualan.potongan_faktur = 0
-      app.penjualan.total_akhir = 0
-      app.penjualan.pembayaran = 0
-      app.inputTbsPenjualan.produk = ''            
-      app.$refs.produk.$el.focus()
-      app.hitungKembalian(app.penjualan.pembayaran)
       window.open('penjualan/cetak-kecil-penjualan/'+resp.data.respons_penjualan,'_blank');   
       app.$router.replace('/penjualan');         
 
