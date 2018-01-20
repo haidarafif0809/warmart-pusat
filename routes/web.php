@@ -694,6 +694,12 @@ Route::post('/pembayaran-hutang/edit-jumlah-tbs-pembayaran-hutang', [
     'uses'       => 'PembayaranHutangController@prosesEditTbsPembayaranHutang',
 ]);
 
+Route::post('/pembayaran-hutang/batal-transaksi-pembayaran-hutang/', [
+    'middleware' => ['auth'],
+    'as'         => 'pembayaran-hutang.batal_transaksi_pembayaran_hutang',
+    'uses'       => 'PembayaranHutangController@proses_batal_transaksi_pembayaran_hutang',
+]);
+
 // PEMBAYARAN PIUTANG VUE.JS
 Route::get('/pembayaran-piutang/view', 'PembayaranPiutangController@view')->middleware('auth');
 Route::get('/pembayaran-piutang/pencarian', 'PembayaranPiutangController@pencarian')->middleware('auth');
