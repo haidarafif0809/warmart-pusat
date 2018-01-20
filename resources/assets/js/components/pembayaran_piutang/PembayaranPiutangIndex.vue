@@ -13,14 +13,14 @@
 				<li class="active">Pembayaran Piutang</li>
 			</ul>
 
-			
+
 			<div class="card">
 				<div class="card-header card-header-icon" data-background-color="purple">
 					<i class="material-icons">local_atm</i>
 				</div>
 				<div class="card-content">
 					<h4 class="card-title"> Pembayaran Piutang </h4>
-					
+
 					<div class="toolbar">
 						<p> <router-link :to="{name: 'createPembayaranPiutang'}" class="btn btn-primary">Tambah Pembayaran Piutang</router-link></p>
 					</div>
@@ -55,7 +55,7 @@
 										Edit </router-link> </td>
 
 										<td style="text-align:right;"> 
-											<a  href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + pembayaranPiutangs.id" v-on:click="deleteEntry(pembayaranPiutangs.id, index,pembayaranPiutangs.no_faktur)">Delete</a>
+											<a  href="#pembayaran-piutang" class="btn btn-xs btn-danger" v-bind:id="'delete-' + pembayaranPiutangs.id" v-on:click="deleteEntry(pembayaranPiutangs.id, index,pembayaranPiutangs.no_faktur)">Delete</a>
 										</td>
 									</tr>
 								</tbody>					
@@ -95,87 +95,88 @@
 				app.getResults();
 			},
 			watch: {
-        // whenever question changes, this function will run
-        pencarian: function (newQuestion) {
-        	this.getHasilPencarian();
-        	this.loading = true;  
-        }
-    },
+// whenever question changes, this function will run
+pencarian: function (newQuestion) {
+	this.getHasilPencarian();
+	this.loading = true;  
+}
+},
 
-    methods: {
-    	getResults(page) {
-    		var app = this;	
-    		if (typeof page === 'undefined') {
-    			page = 1;
-    		}
-    		axios.get(app.url+'/view?page='+page)
-    		.then(function (resp) {
-    			app.pembayaranPiutang = resp.data.data;
-    			app.pembayaranPiutangData = resp.data;
-    			app.loading = false;
-    		})
-    		.catch(function (resp) {
-    			console.log(resp);
-    			app.loading = false;
-    			alert("Tidak Dapat Memuat Pembayaran Piutang");
-    		});
-    	},
-    	getHasilPencarian(page){
-    		var app = this;
-    		if (typeof page === 'undefined') {
-    			page = 1;
-    		}
-    		axios.get(app.url+'/pencarian?search='+app.pencarian+'&page='+page)
-    		.then(function (resp) {
-    			app.pembayaranPiutang = resp.data.data;
-    			app.pembayaranPiutangData = resp.data;
-    			app.loading = false;
-    		})
-    		.catch(function (resp) {
-    			console.log(resp);
-    			alert("Tidak Dapat Memuat Pembayaran Piutang");
-    		});
-    	},
-    	alert(pesan) {
-    		this.$swal({
-    			title: "Berhasil ",
-    			text: pesan,
-    			icon: "success",
-    		});
-    	},
-    	deleteEntry(id, index,no_faktur) {
-    		this.$swal({
-    			title: "Konfirmasi Hapus",
-    			text : "Anda Yakin Ingin Menghapus "+no_faktur+" ?",
-    			icon : "warning",
-    			buttons: true,
-    			dangerMode: true,
-    		})
-    		.then((willDelete) => {
-    			if (willDelete) {
-    				var app = this;
-    				app.loading = true;
-    				axios.delete(app.url+'/' + id)
-    				.then(function (resp) {
-    					if (resp.data == 0) {
-    						app.$swal('Oops...','Pembayaran Piutang Tidak Dapat Dihapus, Karena Sudah Terpakai','error');
-    						app.loading = false;
-
-    					}else{
-    						app.getResults();
-    						app.alert("Menghapus Pembelian "+no_faktur);
-    						app.loading = false;  
-    					}
-    				})
-    				.catch(function (resp) {
-    					alert("Tidak dapat Menghapus Pembelian");
-    				});
-    			}else {
-    				app.$swal.close();
-    			}
-    		});
-    	}
-    }
+methods: {
+	getResults(page) {
+		var app = this;	
+		if (typeof page === 'undefined') {
+			page = 1;
+		}
+		axios.get(app.url+'/view?page='+page)
+		.then(function (resp) {
+			app.pembayaranPiutang = resp.data.data;
+			app.pembayaranPiutangData = resp.data;
+			app.loading = false;
+		})
+		.catch(function (resp) {
+			console.log(resp);
+			app.loading = false;
+			alert("Tidak Dapat Memuat Pembayaran Piutang");
+		});
+	},
+	getHasilPencarian(page){
+		var app = this;
+		if (typeof page === 'undefined') {
+			page = 1;
+		}
+		axios.get(app.url+'/pencarian?search='+app.pencarian+'&page='+page)
+		.then(function (resp) {
+			app.pembayaranPiutang = resp.data.data;
+			app.pembayaranPiutangData = resp.data;
+			app.loading = false;
+		})
+		.catch(function (resp) {
+			console.log(resp);
+			alert("Tidak Dapat Memuat Pembayaran Piutang");
+		});
+	},
+	alert(pesan) {
+		this.$swal({
+			title: "Berhasil ",
+			text: pesan,
+			icon: "success",
+			buttons: false,
+			timer: 1000
+		});
+	},
+	deleteEntry(id, index,no_faktur) {
+		this.$swal({
+			title: "Konfirmasi Hapus",
+			text : "Anda Yakin Ingin Menghapus "+no_faktur+" ?",
+			icon : "warning",
+			buttons: true,
+			dangerMode: true,
+		})
+		.then((willDelete) => {
+			if (willDelete) {
+				var app = this;
+				app.loading = true;
+				axios.delete(app.url+'/' + id)
+				.then(function (resp) {
+					if (resp.data == 0) {
+						app.$swal('Oops...','Pembayaran Piutang Gagal Terhapus','error');
+						app.loading = false;
+					}else{
+						app.getResults();
+						app.alert("Menghapus Pembayaran Piutang "+no_faktur);
+						app.loading = false;
+					}
+				})
+				.catch(function (resp) {
+					alert("Tidak dapat Menghapus Pembayaran Piutang");
+				});
+			}else {
+				app.$swal.close();
+			}
+		});
+	}
+}
 }
 </script>
 
