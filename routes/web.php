@@ -685,16 +685,16 @@ Route::delete('/pembayaran-hutang/proses-hapus-tbs-pembayaran-hutang/{id}', [
 ]);
 
 Route::post('/pembayaran-hutang/edit-jumlah-tbs-pembayaran-hutang', [
-        'middleware' => ['auth'],
-        'as'         => 'pembayaran-hutang.edit_jumlah_tbs_pembayaran_hutang',
-        'uses'       => 'PembayaranHutangController@prosesEditTbsPembayaranHutang',
+    'middleware' => ['auth'],
+    'as'         => 'pembayaran-hutang.edit_jumlah_tbs_pembayaran_hutang',
+    'uses'       => 'PembayaranHutangController@prosesEditTbsPembayaranHutang',
 ]);
-
 
 // PEMBAYARAN PIUTANG VUE.JS
 Route::get('/pembayaran-piutang/view', 'PembayaranPiutangController@view')->middleware('auth');
 Route::get('/pembayaran-piutang/pencarian', 'PembayaranPiutangController@pencarian')->middleware('auth');
 Route::get('/pembayaran-piutang/pilih-penjualan-piutang', 'PembayaranPiutangController@dataPiutang')->middleware('auth');
+Route::get('/pembayaran-piutang/pilih-kas', 'PembayaranPiutangController@dataKas')->middleware('auth');
 Route::get('/pembayaran-piutang/data-penjualan-piutang/{id}', 'PembayaranPiutangController@getDataFakturPiutang')->middleware('auth');
 Route::post('/pembayaran-piutang/proses-tambah-tbs-pembayaran-piutang', 'PembayaranPiutangController@prosesTbsPembayaranPiutang')->middleware('auth');
 Route::get('/pembayaran-piutang/view-tbs-pembayaran-piutang', 'PembayaranPiutangController@viewTbs')->middleware('auth');

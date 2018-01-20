@@ -1,8 +1,8 @@
 <style scoped>
-.pencarian {
-	color: red; 
-	float: right;
-}
+	.pencarian {
+		color: red; 
+		float: right;
+	}
 </style>
 <template>
 	<div class="row">
@@ -35,7 +35,7 @@
 								<tr>
 									<th>No. Transaksi</th>
 									<th style="text-align:right;">Total</th>
-									<th>Kas</th>
+									<th style="text-align:center;">Kas</th>
 									<th>Waktu</th>
 									<th>Keterangan</th>
 									<th style="text-align:right;">Edit</th>								
@@ -46,55 +46,55 @@
 								<tr v-for="pembayaranPiutangs, index in pembayaranPiutang" >
 
 									<td>{{ pembayaranPiutangs.no_faktur }}</td>
-									<td style="text-align:right;" >Rp. {{ pembayaranPiutangs.total }}</td>
-									<td>{{ pembayaranPiutangs.kas }}</td>
+									<td style="text-align:right;" >{{ pembayaranPiutangs.total }}</td>
+									<td align="center">{{ pembayaranPiutangs.kas }}</td>
 									<td>{{ pembayaranPiutangs.waktu }}</td>
 									<td>{{ pembayaranPiutangs.keterangan }}</td>
 
 									<td style="text-align:right;"><router-link :to="{name: 'editPembayaranPiutangProses', params: {id: pembayaranPiutangs.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + pembayaranPiutangs.id" >
-									Edit </router-link> </td>
-									
-									<td style="text-align:right;"> 
-										<a  href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + pembayaranPiutangs.id" v-on:click="deleteEntry(pembayaranPiutangs.id, index,pembayaranPiutangs.no_faktur)">Delete</a>
-									</td>
-								</tr>
-							</tbody>					
-							<tbody class="data-tidak-ada" v-else-if="pembayaranPiutang.length == 0 && loading == false">
-								<tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
-							</tbody>
-						</table>	
+										Edit </router-link> </td>
 
-						<vue-simple-spinner v-if="loading"></vue-simple-spinner>
+										<td style="text-align:right;"> 
+											<a  href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + pembayaranPiutangs.id" v-on:click="deleteEntry(pembayaranPiutangs.id, index,pembayaranPiutangs.no_faktur)">Delete</a>
+										</td>
+									</tr>
+								</tbody>					
+								<tbody class="data-tidak-ada" v-else-if="pembayaranPiutang.length == 0 && loading == false">
+									<tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
+								</tbody>
+							</table>	
 
-						<div align="right"><pagination :data="pembayaranPiutangData" v-on:pagination-change-page="getResults" :limit="7"></pagination></div>
+							<vue-simple-spinner v-if="loading"></vue-simple-spinner>
 
+							<div align="right"><pagination :data="pembayaranPiutangData" v-on:pagination-change-page="getResults" :limit="7"></pagination></div>
+
+						</div>
+						<p style="color: red; font-style: italic;">*Note : Klik Kolom No Transaksi, Untuk Melihat Detail Transaksi Pembayaranan Piutang .</p> 
 					</div>
-					 <p style="color: red; font-style: italic;">*Note : Klik Kolom No Transaksi, Untuk Melihat Detail Transaksi Pembayaranan Piutang .</p> 
 				</div>
+
 			</div>
-
 		</div>
-	</div>
 
-</template>
+	</template>
 
 
-<script>
-export default {
-	data: function () {
-		return {
-			pembayaranPiutang: [],
-			pembayaranPiutangData: {},
-			url : window.location.origin+(window.location.pathname).replace("dashboard", "pembayaran-piutang"),
-			pencarian: '',
-			loading: true,
-		}
-	},
-	mounted() {
-		var app = this;
-		app.getResults();
-	},
-	watch: {
+	<script>
+		export default {
+			data: function () {
+				return {
+					pembayaranPiutang: [],
+					pembayaranPiutangData: {},
+					url : window.location.origin+(window.location.pathname).replace("dashboard", "pembayaran-piutang"),
+					pencarian: '',
+					loading: true,
+				}
+			},
+			mounted() {
+				var app = this;
+				app.getResults();
+			},
+			watch: {
         // whenever question changes, this function will run
         pencarian: function (newQuestion) {
         	this.getHasilPencarian();
@@ -144,36 +144,36 @@ export default {
     		});
     	},
     	deleteEntry(id, index,no_faktur) {
-            this.$swal({
-                title: "Konfirmasi Hapus",
-                text : "Anda Yakin Ingin Menghapus "+no_faktur+" ?",
-                icon : "warning",
-                buttons: true,
-                dangerMode: true,
-            })
-            .then((willDelete) => {
-                if (willDelete) {
-                  var app = this;
-                  app.loading = true;
-                  axios.delete(app.url+'/' + id)
-                  .then(function (resp) {
-			                if (resp.data == 0) {
-			                    app.$swal('Oops...','Pembayaran Piutang Tidak Dapat Dihapus, Karena Sudah Terpakai','error');
-			                    app.loading = false;
+    		this.$swal({
+    			title: "Konfirmasi Hapus",
+    			text : "Anda Yakin Ingin Menghapus "+no_faktur+" ?",
+    			icon : "warning",
+    			buttons: true,
+    			dangerMode: true,
+    		})
+    		.then((willDelete) => {
+    			if (willDelete) {
+    				var app = this;
+    				app.loading = true;
+    				axios.delete(app.url+'/' + id)
+    				.then(function (resp) {
+    					if (resp.data == 0) {
+    						app.$swal('Oops...','Pembayaran Piutang Tidak Dapat Dihapus, Karena Sudah Terpakai','error');
+    						app.loading = false;
 
-			                }else{
-			                    app.getResults();
-			                    app.alert("Menghapus Pembelian "+no_faktur);
-			                    app.loading = false;  
-			                }
-                  })
-                  .catch(function (resp) {
-                      alert("Tidak dapat Menghapus Pembelian");
-                  });
-               }else {
+    					}else{
+    						app.getResults();
+    						app.alert("Menghapus Pembelian "+no_faktur);
+    						app.loading = false;  
+    					}
+    				})
+    				.catch(function (resp) {
+    					alert("Tidak dapat Menghapus Pembelian");
+    				});
+    			}else {
     				app.$swal.close();
     			}
-            });
+    		});
     	}
     }
 }

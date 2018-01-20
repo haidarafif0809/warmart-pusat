@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\DetailPembayaranPiutang;
+use App\Kas;
 use App\PembayaranPiutang;
 use App\PenjualanPos;
 use App\TbsPembayaranPiutang;
+use App\TransaksiPiutang;
 use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Yajra\Datatables\Html\Builder;
 
 class PembayaranPiutangController extends Controller
@@ -24,6 +28,12 @@ class PembayaranPiutangController extends Controller
         } else {
             return response(200);
         }
+    }
+
+    public function dataKas()
+    {
+        $kas = Kas::select('id', 'nama_kas', 'default_kas')->where('warung_id', Auth::user()->id_warung)->where('status_kas', 1)->get();
+        return response()->json($kas);
     }
 
     public function dataPiutang()
@@ -217,6 +227,69 @@ class PembayaranPiutangController extends Controller
         $respons['jumlah_bayar'] = $request->jumlah_bayar;
 
         return response()->json($respons);
+    }
+
+    public function store(Request $request)
+    {
+        //START TRANSAKSI
+        DB::beginTransaction();
+        $warung_id  = Auth::user()->id_warung;
+        $session_id = session()->getId();
+        $user       = Auth::user()->id;
+        $no_faktur  = PembayaranPiutang::no_faktur($warung_id);
+
+        $this->validate($request, [
+            'kas'     => 'required',
+            'tanggal' => 'required',
+        ]);
+
+        $data_pembayaran_piutang = TbsPembayaranPiutang::where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
+
+        if ($data_pembayaran_piutang->count() == 0) {
+            return 0;
+        } else {
+            //INSERT PEMBAYARAN PIUTANG
+            $pembayaran_piutang = PembayaranPiutang::create([
+                'no_faktur_pembayaran' => $no_faktur,
+                'total'                => $request->subtotal,
+                'cara_bayar'           => $request->kas,
+                'keterangan'           => $request->keterangan,
+                'warung_id'            => $warung_id,
+            ]);
+
+            // INSERT DETAIL PEMBAYARAN PIUTANG
+            foreach ($data_pembayaran_piutang->get() as $data_tbs) {
+
+                $detail_pembayaran_piutang = DetailPembayaranPiutang::create([
+                    'no_faktur_pembayaran' => $no_faktur,
+                    'no_faktur_penjualan'  => $data_tbs->no_faktur_penjualan,
+                    'jatuh_tempo'          => $data_tbs->jatuh_tempo,
+                    'piutang'              => $data_tbs->piutang,
+                    'potongan'             => $data_tbs->potongan,
+                    'jumlah_bayar'         => $data_tbs->jumlah_bayar,
+                    'pelanggan_id'         => $data_tbs->pelanggan_id,
+                    'warung_id'            => $data_tbs->warung_id,
+                ]);
+
+                // INSERT TRANSAKSI PIUTANG TIDAK DIBUAT DI OBSERVER KARENA DI OBSERVER ID PENJUALAN DI ANGGAP NULL
+                $id_penjualan_pos  = PenjualanPos::select('id')->where('no_faktur', $data_tbs->no_faktur_penjualan)->first();
+                $transaksi_piutang = TransaksiPiutang::create([
+                    'no_faktur'       => $no_faktur,
+                    'jenis_transaksi' => 'Pembayaran Piutang',
+                    'jumlah_keluar'   => $data_tbs->jumlah_bayar,
+                    'pelanggan_id'    => $data_tbs->pelanggan_id,
+                    'warung_id'       => $data_tbs->warung_id,
+                ]);
+            }
+
+            //HAPUS TBS PEMBAYARAN PIUTANG
+            $data_pembayaran_piutang->delete();
+            DB::commit();
+
+            $respons['respons_pembayaran'] = $pembayaran_piutang->id_pembayaran_piutang;
+
+            return response()->json($respons);
+        }
     }
 
     public function prosesBatalPembayaranPiutang()

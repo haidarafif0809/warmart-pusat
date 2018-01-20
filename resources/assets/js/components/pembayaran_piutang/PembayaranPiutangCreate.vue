@@ -91,7 +91,7 @@
                                     </div>
 
                                     <div align="right"  style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                        <button type="submit" class="btn btn-success btn-lg" id="btnTbs"><font style="font-size:20px;">Tambah(Enter)</font></button>
+                                        <button type="submit" class="btn btn-success btn-lg" id="btnTbs"><font style="font-size:20px;">Tambah</font></button>
 
                                         <button type="button" class="btn btn-default btn-lg"  v-on:click="closeModal()" v-shortkey.push="['esc']" @shortkey="closeModal()"> <font style="font-size:20px;">Tutup(Esc)</font></button>
                                     </div>
@@ -163,6 +163,78 @@
                 </div> 
             </div> 
             <!-- / MODAL EDIT TBS --> 
+
+            <!-- / MODAL SELESAI --> 
+            <div class="modal" id="modal_selesai" role="dialog" data-backdrop="">
+                <div class="modal-dialog"> 
+                    <!-- Modal content--> 
+                    <div class="modal-content"> 
+                        <div class="modal-header"> 
+                            <button type="button" class="close"  v-on:click="closeModal()" v-shortkey.push="['esc']" @shortkey="closeModal()"> &times;
+                            </button> 
+                            <h4 class="modal-title"> 
+                                <div class="alert-icon"> 
+                                    <b>Silahkan Lengkapi Pembayaran!</b> 
+                                </div> 
+                            </h4>
+                        </div> 
+
+                        <form class="form-horizontal"  v-on:submit.prevent="selesaiPembayaranPiutang()"> 
+                            <div class="modal-body"> 
+                                <div class="card" style="margin-bottom:1px; margin-top:1px; margin-right:1px; margin-left:1px;">
+
+                                    <div class="row">
+                                        <div class="col-md-6 col-xs-12">                                            
+                                            <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                                                <font style="color: black">Tanggal</font> 
+                                                <datepicker :input-class="'form-control'" placeholder="Jatuh Tempo" v-model="pembayaranPiutang.tanggal" ref='tanggal'></datepicker>
+                                                <br v-if="errors.tanggal">  <span v-if="errors.tanggal" id="tanggal_error" class="label label-danger">{{ errors.tanggal[0] }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-5 col-xs-10">
+                                            <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
+                                                <font style="color: black">Kas(F4)</font><br>
+                                                <selectize-component v-model="pembayaranPiutang.kas" :settings="placeholder_kas" id="kas" ref='kas'> 
+                                                    <option v-for="kass, index in kas" v-bind:value="kass.id">{{ kass.nama_kas }}</option>
+                                                </selectize-component>                                                
+                                                <input class="form-control" type="hidden"  v-model="pembayaranPiutang.kas"  name="id_tbs" id="id_tbs"  v-shortkey="['f4']" @shortkey="openSelectizeKas()">
+                                                <br v-if="errors.kas">
+                                                <span v-if="errors.kas" id="kas_error" class="label label-danger">{{ errors.kas[0] }}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-1 col-xs-1" style="padding-left:0px">
+                                            <div class="form-group">
+                                                <div class="row" style="margin-top:11px">
+                                                    <button class="btn btn-primary btn-icon waves-effect waves-light" v-on:click="tambahModalKas()" type="button"> <i class="material-icons" >add</i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12 col-xs-12">
+                                            <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
+                                                <font style="color: black">Keterangan</font><br>
+                                                <textarea v-model="pembayaranPiutang.keterangan" class="form-control" placeholder="Keterangan.." id="keterangan" name="keterangan" ref="keterangan"></textarea>
+                                            </div>
+                                        </div>
+
+                                        <div align="right"  style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                                            <button type="submit" class="btn btn-success btn-lg" id="btnTbs"><font style="font-size:20px;">Selesai</font></button>
+
+                                            <button type="button" class="btn btn-default btn-lg"  v-on:click="closeModal()" v-shortkey.push="['esc']" @shortkey="closeModal()"> <font style="font-size:20px;">Tutup(Esc)</font></button>
+                                        </div>
+                                    </div>                                  
+                                </div> 
+                            </div>
+                            <div class="modal-footer">  
+                            </div> 
+                        </form>
+                    </div>       
+                </div> 
+            </div> 
+            <!-- / MODAL TOMBOL SELESAI --> 
 
             <div class="card" style="margin-bottom: 1px; margin-top: 1px;">
                 <div class="card-content">
@@ -281,6 +353,7 @@
         data: function () {
             return {
                 errors: [],
+                kas: [],
                 penjualan_piutang: [],
                 pelanggan: [],
                 kas: [],
@@ -308,21 +381,19 @@
                     jumlah_bayar : '',
                     jumlah_bayar_lama : '',
                 },
-                pembayaranPiutang : {
-                    pelanggan : '0',
-                    kas : '',
-                    jatuh_tempo : '',
-                    subtotal : 0,
-                    potongan : 0,
-                    potongan_faktur : 0,
-                    potongan_persen : 0,
-                    total_akhir : 0,
-                    pembayaran : 0,
-                    kembalian: 0,
-                    kredit: 0,
+                pembayaranPiutang: {
+                    kas: '',
+                    tanggal: new Date,
+                    keterangan: '',
+                    subtotal: 0,
                 }, 
                 placeholder_piutang: {
                     placeholder: 'Cari Piutang (F1) ...',
+                    sortField: 'text',
+                    openOnFocus : true
+                },
+                placeholder_kas: {
+                    placeholder: '--PILIH KAS--',
                     sortField: 'text',
                     openOnFocus : true
                 },
@@ -343,6 +414,7 @@
         mounted() {   
             var app = this;
             app.dataPiutang();
+            app.dataKas(); 
             app.getResults();
         },
         watch: {
@@ -381,6 +453,28 @@ filters: {
 methods: {
     openSelectizeFakturPiutang(){      
         this.$refs.penjualan_piutang.$el.selectize.focus();
+    },   
+    openSelectizeKas(){      
+        this.$refs.kas.$el.selectize.focus();
+    },   
+    dataKas() {
+        var app = this;
+        axios.get(app.url_piutang+'/pilih-kas').then(function (resp) {
+            app.kas = resp.data;   
+
+            $.each(resp.data, function (i, item) {
+                if (resp.data[i].default_kas == 1) {
+                    app.pembayaranPiutang.kas = resp.data[i].id 
+                }
+
+            });
+
+        })
+        .catch(function (resp) {
+
+            console.log(resp);
+            alert("Tidak Bisa Memuat Kas");
+        });
     },
     getResults(page) {
         var app = this; 
@@ -683,6 +777,51 @@ methods: {
 
         });
     },
+    bayarPembayaranPiutang(){        
+        $("#modal_selesai").show();
+        this.$refs.keterangan.$el.focus()
+    },
+    selesaiPembayaranPiutang(){
+        this.$swal({
+            text: "Anda Yakin Ingin Menyelesaikan Transaksi Ini ?",
+            buttons: {
+                cancel: true,
+                confirm: "OK"                   
+            },
+        }).then((value) => {
+            if (!value) throw null;
+            this.prosesSelesaiPembayaranPiutang(value);
+        });
+    },
+    prosesSelesaiPembayaranPiutang(value){
+        var app = this;
+        var newPembayaranPiutang = app.pembayaranPiutang;
+        app.loading = true;
+
+        axios.post(app.url_piutang,newPembayaranPiutang)
+        .then(function (resp) {
+
+            if (resp.data == 0) {
+                app.alertTbs("Anda Belum Memasukan Faktur Penjualan Piutang");
+                app.loading = false;
+            }else{
+                app.alert("Menyelesaikan Transaksi Pembayaran Piutang");
+                app.pembayaranPiutang.tanggal = new Date;
+                app.pembayaranPiutang.keterangan = ''
+                app.pembayaranPiutang.subtotal = 0
+
+                $("#modal_selesai").hide();
+                app.loading = false;                
+                app.$router.replace('/pembayaran-piutang');
+            }
+        })
+        .catch(function (resp) {
+            console.log(resp);              
+            app.loading = false;
+            alert("Tidak dapat Menyelesaikan Transaksi Pembayaran Penjualan");        
+            app.errors = resp.response.data.errors;
+        });
+    },
     closeModal(){
         this.inputTbsPembayaranPiutang.penjualan_piutang = '';
         this.inputTbsPembayaranPiutang.piutang = 0
@@ -693,6 +832,7 @@ methods: {
         this.inputEditTbsPembayaranPiutang.potongan = 0
         $("#modal_tbs").hide();
         $("#modal_edit_tbs").hide();
+        $("#modal_selesai").hide();
     },
     alertTbs(pesan) {
         this.$swal({
