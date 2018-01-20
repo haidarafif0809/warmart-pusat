@@ -160,6 +160,8 @@ class PembayaranPiutangController extends Controller
                 $pelanggan = $pembayaran_piutangs->name;
             }
 
+            $sisa_piutang = $pembayaran_piutangs->subtotal_piutang - $pembayaran_piutangs->jumlah_bayar;
+
             array_push($array_pembayaran_piutang, [
                 'no_faktur_penjualan'       => $pembayaran_piutangs->no_faktur_penjualan,
                 'jatuh_tempo'               => $pembayaran_piutangs->jatuh_tempo,
@@ -167,6 +169,7 @@ class PembayaranPiutangController extends Controller
                 'potongan'                  => $pembayaran_piutangs->potongan,
                 'total'                     => $pembayaran_piutangs->subtotal_piutang,
                 'jumlah_bayar'              => $pembayaran_piutangs->jumlah_bayar,
+                'sisa_piutang'              => $sisa_piutang,
                 'pelanggan'                 => $pelanggan,
                 'id_tbs_pembayaran_piutang' => $pembayaran_piutangs->id_tbs_pembayaran_piutang,
             ]);
@@ -275,6 +278,7 @@ class PembayaranPiutangController extends Controller
                 $id_penjualan_pos  = PenjualanPos::select('id')->where('no_faktur', $data_tbs->no_faktur_penjualan)->first();
                 $transaksi_piutang = TransaksiPiutang::create([
                     'no_faktur'       => $no_faktur,
+                    'id_transaksi'    => $id_penjualan_pos->id,
                     'jenis_transaksi' => 'Pembayaran Piutang',
                     'jumlah_keluar'   => $data_tbs->jumlah_bayar,
                     'pelanggan_id'    => $data_tbs->pelanggan_id,
