@@ -269,23 +269,23 @@
         }
         if (lama_berlangganan == 1) {
             var satu_bulan = monthNames[nowMonth + 1];
-            var harga_perbulan = 500000;
-            harga = '500.000/Bulan';
+            var harga_perbulan = 299000;
+            harga = '299.000/Bulan';
             berlaku_hingga = nowDay + ' ' + satu_bulan + ' ' + nowYear;
             total = parseInt(harga_perbulan) * parseInt(1);
 
         }else if (lama_berlangganan == 2) {
             var enam_bulan = monthNames[nowMonth + 6];
-            var harga_perbulan = 300000;
-            harga = '300.000/Bulan';
+            var harga_perbulan = 249000;
+            harga = '249.000/Bulan';
             berlaku_hingga = nowDay + ' ' + enam_bulan + ' ' + nowYear;
             total = parseInt(harga_perbulan) * parseInt(6);
 
         }else if (lama_berlangganan == 3) {
 
             var duabelas_bulan = nowYear + 1;
-            var harga_perbulan = 200000;
-            harga = '200.000/Bulan';
+            var harga_perbulan = 199000;
+            harga = '199.000/Bulan';
             berlaku_hingga = nowDay + ' ' + monthNames[nowMonth] + ' ' + duabelas_bulan;
             total = parseInt(harga_perbulan) * parseInt(12);
         }
