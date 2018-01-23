@@ -113,7 +113,7 @@ class BankController extends Controller
         $this->validate($request, [            
             'nama_bank'     => 'required',
             'atas_nama'     => 'required',
-            'no_rek'        => 'required|numeric|unique:banks,no_rek,'. $id,
+            'no_rek'        => 'required|unique:banks,no_rek,'. $id,
         ]);
 
         Bank::where('id', $id)->update([

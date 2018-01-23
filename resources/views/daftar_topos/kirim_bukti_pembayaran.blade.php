@@ -5,6 +5,8 @@
 
 @include('layouts._flash_daftar_topos') 
 
+
+@if($pendaftar_topos->status_pembayaran == 0)
 {!! Form::model($pendaftar_topos->id,['url' => route('pendaftar_topos.proses_kirim_bukti_pembayaran',$pendaftar_topos->id), 'method' => 'put', 'files'=>'true','class'=>'form-horizontal']) !!}
 {{ csrf_field() }}
 <div class="card card-login ">
@@ -19,10 +21,10 @@
                 <i class="material-icons">file_upload</i>
             </span>
             <div class="form-group label-floating {{ $errors->has('foto') ? ' has-error' : '' }}"> 
-             <input type="file" id="foto" name="foto" class="form-control">
-             <input type="text" readonly="" class="form-control" placeholder="Upload Foto Bukti Transfer disini ...">
-             {!! $errors->first('foto', '
-             <p class="label label-danger">
+               <input type="file" id="foto" name="foto" class="form-control">
+               <input type="text" readonly="" class="form-control" placeholder="Upload Foto Bukti Transfer disini ...">
+               {!! $errors->first('foto', '
+               <p class="label label-danger">
                 :message
             </p>
             ') !!}
@@ -40,13 +42,9 @@
     </div>
 </div>
 <div class="footer text-center">
-    @if($pendaftar_topos->status_pembayaran == 0)
     <button type="submit" class="btn btn-rose btn-simple btn-wd btn-lg">Kirim Bukti Transfer</button>
-    @else
-    <button type="submit" disabled="" class="btn btn-rose btn-simple btn-wd btn-lg">Kirim Bukti Transfer</button>
-    @endif
 </div>
 </div>
 {!! Form::close() !!}
-
+@endif
 @endsection
