@@ -145,6 +145,16 @@ class PembayaranPiutangController extends Controller
         return $array_pembayaran_piutang;
     }
 
+    public function fakturPembayaran($id)
+    {
+        $pembayaran_piutang = PembayaranPiutang::select('no_faktur_pembayaran')
+            ->where('id_pembayaran_piutang', $id)
+            ->where('warung_id', Auth::user()->id_warung)->first();
+        $no_faktur = $pembayaran_piutang->no_faktur_pembayaran;
+
+        return $no_faktur;
+    }
+
     public function view()
     {
         $pembayaran_piutang = PembayaranPiutang::dataPembayaranPiutang()->paginate(10);
@@ -362,11 +372,8 @@ class PembayaranPiutangController extends Controller
 //PROSES EDIT PEMBAYARAN PIUTANG
     public function edit($id)
     {
-        $session_id         = session()->getId();
-        $pembayaran_piutang = PembayaranPiutang::select('no_faktur_pembayaran')
-            ->where('id_pembayaran_piutang', $id)
-            ->where('warung_id', Auth::user()->id_warung)->first();
-        $no_faktur = $pembayaran_piutang->no_faktur_pembayaran;
+        $session_id = session()->getId();
+        $no_faktur  = $this->fakturPembayaran($id);
 
         //PILIH DATA DETAIL PEMBAYARAN PIUTANG
         $detail_pembayaran_piutang = DetailPembayaranPiutang::where('no_faktur_pembayaran', $no_faktur)
@@ -396,10 +403,12 @@ class PembayaranPiutangController extends Controller
         return response(200);
     }
 
-    public function viewTbsEdit()
+    public function viewTbsEdit($id)
     {
-        $session_id         = session()->getId();
-        $pembayaran_piutang = EditTbsPembayaranPiutang::dataEditTbsPembayaranPiutang($session_id)->paginate(10);
+        $session_id = session()->getId();
+        //AMBIL NO FAKTUR
+        $no_faktur          = $this->fakturPembayaran($id);
+        $pembayaran_piutang = EditTbsPembayaranPiutang::dataEditTbsPembayaranPiutang($session_id, $no_faktur)->paginate(10);
 
         $array_pembayaran_piutang = $this->foreachTbs($pembayaran_piutang);
         $link_view                = 'view-edit-tbs-pembayaran-piutang';
@@ -409,10 +418,12 @@ class PembayaranPiutangController extends Controller
         return response()->json($respons);
     }
 
-    public function pencarianTbsEdit(Request $request)
+    public function pencarianTbsEdit(Request $request, $id)
     {
-        $session_id         = session()->getId();
-        $pembayaran_piutang = EditTbsPembayaranPiutang::cariEditTbsPembayaranPiutang($request, $session_id)->paginate(10);
+        $session_id = session()->getId();
+        //AMBIL NO FAKTUR
+        $no_faktur          = $this->fakturPembayaran($id);
+        $pembayaran_piutang = EditTbsPembayaranPiutang::cariEditTbsPembayaranPiutang($request, $session_id, $no_faktur)->paginate(10);
 
         $array_pembayaran_piutang = $this->foreachTbs($pembayaran_piutang);
         $link_view                = 'view-edit-tbs-pembayaran-piutang';
@@ -427,10 +438,7 @@ class PembayaranPiutangController extends Controller
     {
         $session_id = session()->getId();
         //AMBIL NO FAKTUR
-        $pembayaran_piutang = PembayaranPiutang::select('no_faktur_pembayaran')
-            ->where('id_pembayaran_piutang', $id)
-            ->where('warung_id', Auth::user()->id_warung)->first();
-        $no_faktur = $pembayaran_piutang->no_faktur_pembayaran;
+        $no_faktur = $this->fakturPembayaran($id);
 
         $data_tbs = EditTbsPembayaranPiutang::where('no_faktur_penjualan', $request->no_faktur_penjualan)
             ->where('session_id', $session_id)
@@ -461,6 +469,15 @@ class PembayaranPiutangController extends Controller
             $respons['jumlah_bayar'] = $request->jumlah_bayar;
 
             return response()->json($respons);
+        }
+    }
+
+    public function prosesHapusEditTbsPembayaranPiutang($id)
+    {
+        if (!EditTbsPembayaranPiutang::destroy($id)) {
+            return 0;
+        } else {
+            return response(200);
         }
     }
 }
