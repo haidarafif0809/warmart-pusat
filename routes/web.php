@@ -711,6 +711,7 @@ Route::post('/pembayaran-piutang/proses-tambah-tbs-pembayaran-piutang', 'Pembaya
 Route::get('/pembayaran-piutang/view-tbs-pembayaran-piutang', 'PembayaranPiutangController@viewTbs')->middleware('auth');
 Route::get('/pembayaran-piutang/pencarian-tbs-pembayaran-piutang', 'PembayaranPiutangController@pencarianTbs')->middleware('auth');
 Route::get('/pembayaran-piutang/view-detail-pembayaran-piutang/{id}', 'PembayaranPiutangController@viewDetail')->middleware('auth');
+Route::get('/pembayaran-piutang/pencarian-detail-pembayaran-piutang/{id}', 'PembayaranPiutangController@pencarianDetail')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 

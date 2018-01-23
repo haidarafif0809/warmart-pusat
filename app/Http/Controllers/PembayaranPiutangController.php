@@ -351,4 +351,39 @@ class PembayaranPiutangController extends Controller
         $respons = $this->dataPagination($pembayaran_piutang, $array_pembayaran_piutang, $link_view);
         return response()->json($respons);
     }
+
+    public function pencarianDetail(Request $request, $id)
+    {
+        $user_warung        = Auth::user()->id_warung;
+        $pembayaran_piutang = DetailPembayaranPiutang::cariDetailPembayaranPiutang($request, $user_warung)->paginate(10);
+
+        $array_pembayaran_piutang = array();
+        foreach ($pembayaran_piutang as $detail_pembayaran_piutangs) {
+
+            if ($detail_pembayaran_piutangs->pelanggan_id == 0) {
+                $pelanggan = 'Umum';
+            } else {
+                $pelanggan = $detail_pembayaran_piutangs->name;
+            }
+            $subtotal_piutang = $detail_pembayaran_piutangs->piutang - $detail_pembayaran_piutangs->potongan;
+            $sisa_piutang     = $subtotal_piutang - $detail_pembayaran_piutangs->jumlah_bayar;
+
+            array_push($array_pembayaran_piutang, [
+                'no_faktur_penjualan'       => $detail_pembayaran_piutangs->no_faktur_penjualan,
+                'jatuh_tempo'               => $detail_pembayaran_piutangs->jatuh_tempo,
+                'piutang'                   => $detail_pembayaran_piutangs->piutang,
+                'potongan'                  => $detail_pembayaran_piutangs->potongan,
+                'total'                     => $subtotal_piutang,
+                'jumlah_bayar'              => $detail_pembayaran_piutangs->jumlah_bayar,
+                'sisa_piutang'              => $sisa_piutang,
+                'pelanggan'                 => $pelanggan,
+                'id_tbs_pembayaran_piutang' => $detail_pembayaran_piutangs->id_tbs_pembayaran_piutang,
+            ]);
+        }
+        $link_view = 'pencarian-detail-pembayaran-piutang/' . $id;
+
+        //DATA PAGINATION
+        $respons = $this->dataPagination($pembayaran_piutang, $array_pembayaran_piutang, $link_view);
+        return response()->json($respons);
+    }
 }
