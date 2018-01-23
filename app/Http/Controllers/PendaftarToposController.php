@@ -420,7 +420,7 @@ public function index()
                     "alert" => 'success',
                     "icon" => 'error_outline',
                     "judul" => 'Info',
-                    "message" => 'Terima Kasih Telah Mengirimkan Bukti Pembayaran, Aplikasi Yang Anda Pesan Akan di Proses. Kami Akan Segera Menghubungi Anda'
+                    "message" => 'Terima Kasih Telah Melakukan Pembayaran, Aplikasi Yang Anda Pesan Akan di Proses. Kami Akan Segera Menghubungi Anda'
                 ]);
 
             }
@@ -528,7 +528,7 @@ public function index()
         $update_pendafataran_topos->update(['status_pembayaran'=> '2']);
 
         // isi pesan SMS
-        $isi_pesan = urlencode('Topos : Terima Kasih Telah Mengirimkan Bukti Pembayaran,  Pembayaran Anda Sudah Kami Terima.');
+        $isi_pesan = urlencode('Topos : Terima Kasih Telah Melakukan Pembayaran,  Pembayaran Anda Sudah Kami Terima. Petugas Kami Sedang Menyiapkan Aplikasi Untuk Anda');
         // no telp
         $no_telpon = $update_pendafataran_topos->no_telp;
         // arahkan ke methode kirimSms()
