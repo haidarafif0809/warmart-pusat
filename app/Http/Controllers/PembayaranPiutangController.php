@@ -394,4 +394,30 @@ class PembayaranPiutangController extends Controller
 
         return response(200);
     }
+
+    public function viewTbsEdit()
+    {
+        $session_id         = session()->getId();
+        $pembayaran_piutang = EditTbsPembayaranPiutang::dataEditTbsPembayaranPiutang($session_id)->paginate(10);
+
+        $array_pembayaran_piutang = $this->foreachTbs($pembayaran_piutang);
+        $link_view                = 'view-edit-tbs-pembayaran-piutang';
+
+        //DATA PAGINATION
+        $respons = $this->dataPagination($pembayaran_piutang, $array_pembayaran_piutang, $link_view);
+        return response()->json($respons);
+    }
+
+    public function pencarianTbsEdit(Request $request)
+    {
+        $session_id         = session()->getId();
+        $pembayaran_piutang = EditTbsPembayaranPiutang::cariEditTbsPembayaranPiutang($request, $session_id)->paginate(10);
+
+        $array_pembayaran_piutang = $this->foreachTbs($pembayaran_piutang);
+        $link_view                = 'view-edit-tbs-pembayaran-piutang';
+
+        //DATA PAGINATION
+        $respons = $this->dataPagination($pembayaran_piutang, $array_pembayaran_piutang, $link_view);
+        return response()->json($respons);
+    }
 }
