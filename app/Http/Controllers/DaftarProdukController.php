@@ -244,7 +244,7 @@ class DaftarProdukController extends Controller
     {
         $pelanggan = 3;
         if (Auth::check() && Auth::user()->tipe_user == $pelanggan) {
-            if ($cek_produk == 0) {
+            if ($cek_produk < 1) {
                 $tombol_beli = '<a disabled="true" class="btn btn-block tombolBeli buttonColor" rel="tooltip" title="Stok Tidak Ada"> Beli Sekarang </a>';
             } else {
                 $tombol_beli = '<a href="' . url('/keranjang-belanja/tambah-produk-keranjang-belanja/' . $produks->id . '') . '" id="btnBeliSekarang" class="btn btn-block tombolBeli buttonColor" > Beli Sekarang </a>';
@@ -252,7 +252,7 @@ class DaftarProdukController extends Controller
         } elseif (Auth::check() && Auth::user()->tipe_user != $pelanggan) {
             $tombol_beli = '<a  disabled="true" class="btn btn-block tombolBeli buttonColor" rel="tooltip" title="Masuk Sebagai Pelanggan Untuk Beli" > Beli Sekarang </a>';
         } else {
-            if ($cek_produk == 0) {
+            if ($cek_produk < 1) {
                 $tombol_beli = '<a disabled="true" class="btn btn-block tombolBeli buttonColor" rel="tooltip" title="Stok Tidak Ada" > Beli Sekarang </a>';
             } else {
                 $tombol_beli = '<a href="' . url('/keranjang-belanja/tambah-produk-keranjang-belanja/' . $produks->id . '') . '" id="btnBeliSekarang" class="btn btn-block tombolBeli buttonColor" > Beli Sekarang </a>';
