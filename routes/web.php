@@ -715,6 +715,8 @@ Route::get('/pembayaran-piutang/pencarian-detail-pembayaran-piutang/{id}', 'Pemb
 
 //PEMBAYARAN PIUTANG EDIT
 Route::get('/pembayaran-piutang/view-edit-tbs-pembayaran-piutang', 'PembayaranPiutangController@viewTbsEdit')->middleware('auth');
+Route::get('/pembayaran-piutang/pencarian-edit-tbs-pembayaran-piutang', 'PembayaranPiutangController@pencarianTbsEdit')->middleware('auth');
+Route::post('/pembayaran-piutang/proses-tambah-edit-tbs-pembayaran-piutang/{id}', 'PembayaranPiutangController@prosesEditTbsPembayaranPiutang')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 

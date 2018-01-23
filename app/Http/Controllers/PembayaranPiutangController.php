@@ -359,6 +359,7 @@ class PembayaranPiutangController extends Controller
         return response()->json($respons);
     }
 
+//PROSES EDIT PEMBAYARAN PIUTANG
     public function edit($id)
     {
         $session_id         = session()->getId();
@@ -419,5 +420,47 @@ class PembayaranPiutangController extends Controller
         //DATA PAGINATION
         $respons = $this->dataPagination($pembayaran_piutang, $array_pembayaran_piutang, $link_view);
         return response()->json($respons);
+    }
+
+    //INSERT EDIT TBS
+    public function prosesEditTbsPembayaranPiutang(Request $request, $id)
+    {
+        $session_id = session()->getId();
+        //AMBIL NO FAKTUR
+        $pembayaran_piutang = PembayaranPiutang::select('no_faktur_pembayaran')
+            ->where('id_pembayaran_piutang', $id)
+            ->where('warung_id', Auth::user()->id_warung)->first();
+        $no_faktur = $pembayaran_piutang->no_faktur_pembayaran;
+
+        $data_tbs = EditTbsPembayaranPiutang::where('no_faktur_penjualan', $request->no_faktur_penjualan)
+            ->where('session_id', $session_id)
+            ->where('no_faktur_pembayaran', $no_faktur)
+            ->where('warung_id', Auth::user()->id_warung)->count();
+
+        //JIKA FAKTUR YG DIPILIH SUDAH ADA DI TBS
+        if ($data_tbs > 0) {
+
+            return 0;
+
+        } else {
+            $subtotal_piutang = $request->piutang - $request->potongan;
+
+            $tbs_pembayaran_piutang = EditTbsPembayaranPiutang::create([
+                'session_id'           => $session_id,
+                'no_faktur_pembayaran' => $no_faktur,
+                'no_faktur_penjualan'  => $request->no_faktur_penjualan,
+                'jatuh_tempo'          => $request->jatuh_tempo,
+                'piutang'              => $request->piutang,
+                'potongan'             => $request->potongan,
+                'jumlah_bayar'         => $request->jumlah_bayar,
+                'subtotal_piutang'     => $subtotal_piutang,
+                'pelanggan_id'         => $request->pelanggan_id,
+                'warung_id'            => Auth::user()->id_warung,
+            ]);
+
+            $respons['jumlah_bayar'] = $request->jumlah_bayar;
+
+            return response()->json($respons);
+        }
     }
 }
