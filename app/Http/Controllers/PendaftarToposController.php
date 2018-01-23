@@ -303,86 +303,116 @@ public function index()
             return view('daftar_topos.index',['id'=>$id]);
         }
     }
-    public function prosesDaftarTopos(Request $request){     
-        $kode_verifikasi = rand(1111, 9999);
+    public function prosesDaftarTopos(Request $request){   
+
+        if (Auth::check() == false) {
+            $kode_verifikasi = rand(1111, 9999);
             // PENDAFTARAN WARUNG
-        $this->validate($request, [
-            'email'       => 'required|without_spaces|unique:users,email|email',
-            'name'        => 'required',
-            'nama_warung' => 'required',
-            'no_telp'     => 'required|numeric|without_spaces|unique:users,no_telp',
-            'alamat'      => 'required',
-            'lama_berlangganan' => 'required',
-            'berlaku_hingga' => 'required',
-            'total' => 'required',
-            'tujuan_transfer' => 'required',
-            'no_rek_transfer' => 'required',
-            'atas_nama' => 'required'
-        ]);
+            $this->validate($request, [
+                'email'       => 'required|without_spaces|unique:users,email|email',
+                'name'        => 'required',
+                'nama_warung' => 'required',
+                'no_telp'     => 'required|numeric|without_spaces|unique:users,no_telp',
+                'alamat'      => 'required',
+                'lama_berlangganan' => 'required',
+                'berlaku_hingga' => 'required',
+                'total' => 'required',
+                'tujuan_transfer' => 'required',
+                'no_rek_transfer' => 'required',
+                'atas_nama' => 'required'
+            ]);
 
             //MASTER WARUNG
-        $warung = Warung::create([
-            'name'      => $request->nama_warung,
-            'alamat'    => $request->alamat,
-            'no_telpon' => $request->no_telp,
-            'email' => $request->email,
-            'wilayah'   => "-",
-        ]);
+            $warung = Warung::create([
+                'name'      => $request->nama_warung,
+                'alamat'    => $request->alamat,
+                'no_telpon' => $request->no_telp,
+                'email' => $request->email,
+                'wilayah'   => "-",
+            ]);
 
             //INSERT BANK WARUNG
-        $bank_warung = BankWarung::create([
-            'nama_bank' => "-",
-            'atas_nama' => "-",
-            'no_rek'    => "-",
-            'warung_id' => $warung->id,
-        ]);
+            $bank_warung = BankWarung::create([
+                'nama_bank' => "-",
+                'atas_nama' => "-",
+                'no_rek'    => "-",
+                'warung_id' => $warung->id,
+            ]);
 
-        $password = bcrypt(123456);
+            $password = bcrypt(123456);
             //USER WARUNG
-        $user = UserWarung::create([
-            'name'              => $request->name,
-            'email'              => $request->email,
-            'password'          => $password,
-            'alamat'            => $request->alamat,
-            'no_telp'           => $request->no_telp,
-            'id_warung'         => $warung->id,
-            'tipe_user'         => 4,
-            'status_konfirmasi' => 1,
-            'kode_verifikasi'   => $kode_verifikasi,
-            'konfirmasi_admin'  => 1,
-        ]);
+            $user = UserWarung::create([
+                'name'              => $request->name,
+                'email'              => $request->email,
+                'password'          => $password,
+                'alamat'            => $request->alamat,
+                'no_telp'           => $request->no_telp,
+                'id_warung'         => $warung->id,
+                'tipe_user'         => 4,
+                'status_konfirmasi' => 0,
+                'kode_verifikasi'   => $kode_verifikasi,
+                'konfirmasi_admin'  => 1,
+            ]);
 
             // KAS WARUNG
 
-        Kas::create(['kode_kas' => 'K01', 'nama_kas' => 'Kas Warung', 'status_kas' => 1, 'default_kas' => 1, 'warung_id' => $warung->id]);
+            Kas::create(['kode_kas' => 'K01', 'nama_kas' => 'Kas Warung', 'status_kas' => 1, 'default_kas' => 1, 'warung_id' => $warung->id]);
 
-        $userWarungRole = Role::where('name', 'warung')->first();
-        $user->attachRole($userWarungRole);
+            $userWarungRole = Role::where('name', 'warung')->first();
+            $user->attachRole($userWarungRole);
 
-        $bank     = explode("|", $request->tujuan_transfer);
-        $bank_id  = $bank[0];
+            $bank     = explode("|", $request->tujuan_transfer);
+            $bank_id  = $bank[0];
 
-        $pendaftar_topos = PendaftarTopos::create([
-            'name'      => $request->nama_warung,
-            'email'      => $request->email,
-            'no_telp'   => $request->no_telp,
-            'alamat'     => $request->alamat,
-            'lama_berlangganan'    => $request->lama_berlangganan,
-            'berlaku_hingga'    => $request->berlaku_hingga,
-            'jenis_pembayaran'    => "ATM/BANK TRANSFER",
-            'total'    => str_replace('.','',$request->total) ,
-            'bank_id'    => $bank_id,
-            'no_rekening'    => $request->no_rek_transfer,
-            'atas_nama'    => $request->atas_nama,
-            'warung_id'    => $warung->id
+            $pendaftar_topos = PendaftarTopos::create([
+                'name'      => $request->nama_warung,
+                'email'      => $request->email,
+                'no_telp'   => $request->no_telp,
+                'alamat'     => $request->alamat,
+                'lama_berlangganan'    => $request->lama_berlangganan,
+                'berlaku_hingga'    => $request->berlaku_hingga,
+                'jenis_pembayaran'    => "ATM/BANK TRANSFER",
+                'total'    => str_replace('.','',$request->total) ,
+                'bank_id'    => $bank_id,
+                'no_rekening'    => $request->no_rek_transfer,
+                'atas_nama'    => $request->atas_nama,
+                'warung_id'    => $warung->id
 
-        ]);
+            ]);
 
         // arahkan ke methode smsPendaftaran()
-        $this->smsPendaftaran($pendaftar_topos);
+            $this->smsPendaftaran($pendaftar_topos);
 
         // kirim Notification ke Slack
-        Notification::send(PendaftarTopos::first(), new PendaftaranTopos($pendaftar_topos)); 
+            Notification::send(PendaftarTopos::first(), new PendaftaranTopos($pendaftar_topos)); 
+        }else{
+
+            $bank     = explode("|", $request->tujuan_transfer);
+            $bank_id  = $bank[0];
+
+            $pendaftar_topos = PendaftarTopos::create([
+                'name'      => $request->nama_warung,
+                'email'      => $request->email,
+                'no_telp'   => $request->no_telp,
+                'alamat'     => $request->alamat,
+                'lama_berlangganan'    => $request->lama_berlangganan,
+                'berlaku_hingga'    => $request->berlaku_hingga,
+                'jenis_pembayaran'    => "ATM/BANK TRANSFER",
+                'total'    => str_replace('.','',$request->total) ,
+                'bank_id'    => $bank_id,
+                'no_rekening'    => $request->no_rek_transfer,
+                'atas_nama'    => $request->atas_nama,
+                'warung_id'    => Auth::user()->id_warung
+
+            ]);
+
+        // arahkan ke methode smsPendaftaran()
+            $this->smsPendaftaran($pendaftar_topos);
+
+        // kirim Notification ke Slack
+            Notification::send(PendaftarTopos::first(), new PendaftaranTopos($pendaftar_topos)); 
+        }
+
 
         return redirect('/kirim-bukti-pembayaran/'.$pendaftar_topos->id);
 
@@ -540,16 +570,21 @@ public function index()
 
       $warung = Warung::select(DB::raw(' datediff(DATE_ADD(created_at, INTERVAL 14 DAY), current_date()) as sisa_waktu '))->where('id',Auth::user()->id_warung )->first();
       $sisa_waktu = $warung->sisa_waktu;
-      $pendaftar_topos = PendaftarTopos::select('status_pembayaran')->where('warung_id',Auth::user()->id_warung);
+      $pendaftar_topos = PendaftarTopos::select('status_pembayaran','id')->where('warung_id',Auth::user()->id_warung);
 
       if ($pendaftar_topos->count() == 0) {
-       $status_pembayaran = 0;
-   }else{        
+        $status_pembayaran = 0;   
+        $respons['id'] = 0;    
+        $respons['status_pembayaran'] = $status_pembayaran;
+        $respons['sisa_waktu'] = $sisa_waktu;
+    }else{        
        $status_pembayaran = $pendaftar_topos->first()->status_pembayaran;
+
+       $respons['id'] = $pendaftar_topos->first()->id;
+       $respons['status_pembayaran'] = $status_pembayaran;
+       $respons['sisa_waktu'] = $sisa_waktu;
    }
 
-   $respons['status_pembayaran'] = $status_pembayaran;
-   $respons['sisa_waktu'] = $sisa_waktu;
 
    return response()->json($respons);
 }
