@@ -61,7 +61,7 @@ class Penjualan extends Model
     // query pencarian
     public function scopePencarian($query,$user_warung,$request){
 
-        $query->select('penjualans.id_pelanggan AS id_pelanggan', 'penjualans.id AS id','users.name AS nama_pelanggan','kas.nama_kas AS nama_kas','penjualans.total AS total')
+        $query->select('penjualans.id_pelanggan AS id_pelanggan', 'penjualans.id AS id','users.name AS nama_pelanggan','kas.nama_kas AS nama_kas','penjualans.total AS total','penjualans.id_pesanan AS id_pesanan')
         ->leftJoin('users', 'users.id', '=', 'penjualans.id_pelanggan')
         ->leftJoin('kas', 'kas.id', '=', 'penjualans.id_kas')
         ->where('penjualans.id_warung', $user_warung)

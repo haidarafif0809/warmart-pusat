@@ -109,6 +109,7 @@
 	    										<tr>
 
 	    											<th>No Transaksi</th>
+	    											<th>ID Pesanan</th>
 	    											<th style="width:1px;">Waktu</th>
 	    											<th>Pelanggan</th>
 	    											<th>Kas</th>
@@ -121,6 +122,7 @@
 	    										<tr v-for="penjualanOnline, index in penjualanOnline" >
 
 	    											<td>{{ penjualanOnline.id }}</td>
+	    											<td>{{ penjualanOnline.id_pesanan }}</td>
 	    											<td>{{ penjualanOnline.waktu }}</td>
 	    											<td>{{ penjualanOnline.pelanggan }}</td>
 	    											<td>{{ penjualanOnline.kas }}</td>

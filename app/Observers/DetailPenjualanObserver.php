@@ -25,19 +25,6 @@ class DetailPenjualanObserver
 
 			if ($sisa_stok_keluar < 0) {
 
-				$pesan_alert = 
-				'<div class="container-fluid">
-				<div class="alert-icon">
-				<i class="material-icons">error</i>
-				</div>
-				<b>Gagal : Stok " '.$DetailPenjualan->produk->nama_barang.' " Tidak Mencukupi Untuk Dijual, Sisa Produk = " '.$stok->stok_produk.' "</b>
-				</div>';
-
-				Session::flash("flash_notification", [
-					"level"     => "danger",
-					"message"   => $pesan_alert
-				]);
-
 				return false;
 			}
 			else{

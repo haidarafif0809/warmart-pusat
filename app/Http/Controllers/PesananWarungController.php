@@ -7,6 +7,7 @@ use App\DetailPesananPelanggan;
 use App\Hpp;
 use App\Penjualan;
 use App\PesananPelanggan;
+use App\DetailPenjualanPos;
 use App\TransaksiKas;
 use Auth;
 use Illuminate\Http\Request;
@@ -33,40 +34,40 @@ class PesananWarungController extends Controller
             if ($request->ajax()) {
                 $pesanan_warung = PesananPelanggan::where('id_warung', Auth::user()->id_warung)->orderBy('id', 'desc');
                 return Datatables::of($pesanan_warung)
-                    ->addColumn('konfirmasi_pesanan', function ($konfirmasi_pesanan) {
-                        $status = "";
-                        if ($konfirmasi_pesanan->konfirmasi_pesanan == 0) {
-                            $status .= '<b  style="color:red">Belum Di Konfirmasi</b>';
-                        } elseif ($konfirmasi_pesanan->konfirmasi_pesanan == 1) {
-                            $status .= '<b  style="color:orange">Sudah Konfirmasi</b>';
-                        } elseif ($konfirmasi_pesanan->konfirmasi_pesanan == 2) {
-                            $status .= '<b  style="color:#01573e">Selesai</b>';
-                        } elseif ($konfirmasi_pesanan->konfirmasi_pesanan == 3) {
-                            $status .= '<b  style="color:#01573e">Batal</b>';
-                        }
-                        return $status;
-                    })->addColumn('subtotal', function ($subtotal) {
+                ->addColumn('konfirmasi_pesanan', function ($konfirmasi_pesanan) {
+                    $status = "";
+                    if ($konfirmasi_pesanan->konfirmasi_pesanan == 0) {
+                        $status .= '<b  style="color:red">Belum Di Konfirmasi</b>';
+                    } elseif ($konfirmasi_pesanan->konfirmasi_pesanan == 1) {
+                        $status .= '<b  style="color:orange">Sudah Konfirmasi</b>';
+                    } elseif ($konfirmasi_pesanan->konfirmasi_pesanan == 2) {
+                        $status .= '<b  style="color:#01573e">Selesai</b>';
+                    } elseif ($konfirmasi_pesanan->konfirmasi_pesanan == 3) {
+                        $status .= '<b  style="color:#01573e">Batal</b>';
+                    }
+                    return $status;
+                })->addColumn('subtotal', function ($subtotal) {
                     $subtotal_baru = number_format($subtotal->subtotal, 0, ',', '.');
                     return $subtotal_baru;
                 })
-                    ->addColumn('data_pengirim', function ($data) {
-                        return view('pesanan_warung.detail_pengirim', [
-                            'detail_pengirim' => $data,
-                        ]);
-                    })->addColumn('pemesan', function ($pemesan) {
+                ->addColumn('data_pengirim', function ($data) {
+                    return view('pesanan_warung.detail_pengirim', [
+                        'detail_pengirim' => $data,
+                    ]);
+                })->addColumn('pemesan', function ($pemesan) {
                     $data_pemesan = "" . $pemesan->nama_pemesan . "(" . $pemesan->no_telp_pemesan . ")";
                     return $data_pemesan;
                 })->make(true);
             }
             $html = $htmlBuilder
-                ->addColumn(['data' => 'id', 'name' => 'id', 'title' => 'Pesanan'])
-                ->addColumn(['data' => 'pemesan', 'name' => 'pemesan', 'title' => 'Pemesan', 'orderable' => false, 'searchable' => false])
-                ->addColumn(['data' => 'jumlah_produk', 'name' => 'jumlah_produk', 'title' => 'Jumlah', 'orderable' => false, 'searchable' => false])
-                ->addColumn(['data' => 'subtotal', 'name' => 'subtotal', 'title' => 'Total', 'orderable' => false, 'searchable' => false])
-                ->addColumn(['data' => 'konfirmasi_pesanan', 'name' => 'konfirmasi_pesanan', 'title' => 'Status', 'orderable' => false, 'searchable' => false])
-                ->addColumn(['data' => 'created_at', 'name' => 'created_at', 'title' => 'Waktu', 'orderable' => false, 'searchable' => false])
+            ->addColumn(['data' => 'id', 'name' => 'id', 'title' => 'Pesanan'])
+            ->addColumn(['data' => 'pemesan', 'name' => 'pemesan', 'title' => 'Pemesan', 'orderable' => false, 'searchable' => false])
+            ->addColumn(['data' => 'jumlah_produk', 'name' => 'jumlah_produk', 'title' => 'Jumlah', 'orderable' => false, 'searchable' => false])
+            ->addColumn(['data' => 'subtotal', 'name' => 'subtotal', 'title' => 'Total', 'orderable' => false, 'searchable' => false])
+            ->addColumn(['data' => 'konfirmasi_pesanan', 'name' => 'konfirmasi_pesanan', 'title' => 'Status', 'orderable' => false, 'searchable' => false])
+            ->addColumn(['data' => 'created_at', 'name' => 'created_at', 'title' => 'Waktu', 'orderable' => false, 'searchable' => false])
 
-                ->addColumn(['data' => 'data_pengirim', 'name' => 'data_pengirim', 'title' => 'Detail', 'orderable' => false, 'searchable' => false]);
+            ->addColumn(['data' => 'data_pengirim', 'name' => 'data_pengirim', 'title' => 'Detail', 'orderable' => false, 'searchable' => false]);
             return view('pesanan_warung.index')->with(compact('html'));
         }
     }
@@ -137,13 +138,13 @@ class PesananWarungController extends Controller
         }
 
         $data_pesanan_warung = PesananPelanggan::where('id_warung', Auth::user()->id_warung)
-            ->where(function ($query) use ($search) {
-                $query->orwhere('id', 'LIKE', '%' . $search . '%')
-                    ->orWhere('nama_pemesan', 'LIKE', '%' . $search . '%')
-                    ->orWhere('no_telp_pemesan', 'LIKE', '%' . $search . '%')
-                    ->orWhere('alamat_pemesan', 'LIKE', '%' . $search . '%')
-                    ->orWhere('created_at', 'LIKE', '%' . $search . '%');
-            })->orderBy('id', 'desc')->paginate(10);
+        ->where(function ($query) use ($search) {
+            $query->orwhere('id', 'LIKE', '%' . $search . '%')
+            ->orWhere('nama_pemesan', 'LIKE', '%' . $search . '%')
+            ->orWhere('no_telp_pemesan', 'LIKE', '%' . $search . '%')
+            ->orWhere('alamat_pemesan', 'LIKE', '%' . $search . '%')
+            ->orWhere('created_at', 'LIKE', '%' . $search . '%');
+        })->orderBy('id', 'desc')->paginate(10);
         $array_pesanan_warung = array();
         foreach ($data_pesanan_warung as $pesanan_warung) {
             array_push($array_pesanan_warung, [
@@ -274,20 +275,59 @@ class PesananWarungController extends Controller
             'total'        => $pesanna_pelanggan->subtotal,
         ]);
 
-        $detail_pesanan_pelanggan = DetailPesananPelanggan::where('id_pesanan_pelanggan', $request->id_pesanan)->get();
+        $detail_pesanan_pelanggan = DetailPesananPelanggan::with('produk')->where('id_pesanan_pelanggan', $request->id_pesanan)->get();
 
         $jumlah_masuk = 0;
         foreach ($detail_pesanan_pelanggan as $detail_pesanan_pelanggans) {
-            $subtotal = $detail_pesanan_pelanggans->harga_produk * $detail_pesanan_pelanggans->jumlah_produk;
 
-            DetailPenjualan::create([
-                'id_penjualan' => $penjualan->id,
-                'id_produk'    => $detail_pesanan_pelanggans->id_produk,
-                'harga'        => $detail_pesanan_pelanggans->harga_produk,
-                'jumlah'       => $detail_pesanan_pelanggans->jumlah_produk,
-                'subtotal'     => $subtotal,
-            ]);
-            $jumlah_masuk = $jumlah_masuk + $subtotal;
+            // JIKA PRODUK NYA BERKAITAN DENGAN STOK
+            if ($detail_pesanan_pelanggans->produk->hitung_stok == 1) {
+
+                // MAKA CEK DULU STOK NYA
+                $detail_penjualan = new DetailPenjualanPos();
+                $stok_produk      = $detail_penjualan->stok_produk($detail_pesanan_pelanggans->id_produk);
+                $sisa             = $stok_produk - $detail_pesanan_pelanggans->jumlah_produk;
+
+                // JIKA STOK NYA KURANG DARI NOL
+                if ($sisa < 0) {
+                            //DI BATALKAN PROSES NYA
+
+                    $respons['respons']     = 1;
+                    $respons['nama_produk'] = title_case($detail_pesanan_pelanggans->produk->nama_barang);
+                    $respons['stok_produk'] = round($stok_produk,2);
+                    DB::rollBack();
+                    return response()->json($respons);
+
+                    // JIKA STOK BARANG MENCUKUPI
+                }else{
+                    //INSERT KE DETAIL PENJUALAN
+                    $subtotal = $detail_pesanan_pelanggans->harga_produk * $detail_pesanan_pelanggans->jumlah_produk;
+                    DetailPenjualan::create([
+                        'id_penjualan' => $penjualan->id,
+                        'id_produk'    => $detail_pesanan_pelanggans->id_produk,
+                        'harga'        => $detail_pesanan_pelanggans->harga_produk,
+                        'jumlah'       => $detail_pesanan_pelanggans->jumlah_produk,
+                        'subtotal'     => $subtotal,
+                    ]);
+                    $jumlah_masuk = $jumlah_masuk + $subtotal;
+
+                }
+
+            // JIKA BARANG TIDAK BERKAITAN DENGAN STOK , MAKA LANGSUNG INSERT KE DETAIL PENJUALAN
+            }else{
+
+                $subtotal = $detail_pesanan_pelanggans->harga_produk * $detail_pesanan_pelanggans->jumlah_produk;
+                DetailPenjualan::create([
+                    'id_penjualan' => $penjualan->id,
+                    'id_produk'    => $detail_pesanan_pelanggans->id_produk,
+                    'harga'        => $detail_pesanan_pelanggans->harga_produk,
+                    'jumlah'       => $detail_pesanan_pelanggans->jumlah_produk,
+                    'subtotal'     => $subtotal,
+                ]);
+                $jumlah_masuk = $jumlah_masuk + $subtotal;
+            }
+
+
         }
 
         //PROSES MEMBUAT TRANSAKSI KAS
@@ -295,9 +335,10 @@ class PesananWarungController extends Controller
 
         PesananPelanggan::where('id', $request->id_pesanan)->update(['konfirmasi_pesanan' => '2']);
 
-        DB::commit();
+        DB::commit();        
         // return redirect()->back();
     }
+
 
     public function batalkanPesananWarung($id)
     {
