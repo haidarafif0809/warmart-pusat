@@ -347,7 +347,7 @@ public function index()
             'no_telp'           => $request->no_telp,
             'id_warung'         => $warung->id,
             'tipe_user'         => 4,
-            'status_konfirmasi' => 0,
+            'status_konfirmasi' => 1,
             'kode_verifikasi'   => $kode_verifikasi,
             'konfirmasi_admin'  => 1,
         ]);
