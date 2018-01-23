@@ -275,9 +275,9 @@
                       <span v-if="errors.produk" id="produk_error" class="label label-danger">{{ errors.produk[0] }}</span>
 
                 <span style="display: none;">
-                <input class="form-control" type="text"  v-model="inputTbsPembelian.jumlah_produk"  name="jumlah_produk" id="jumlah_produk" @shortkey="openSelectizeKas()">
-                <input class="form-control" type="text"  v-model="inputTbsPembelian.harga_produk"  name="harga_produk" id="harga_produk" @shortkey="openSelectizeSuplier()">
-                <input class="form-control" type="text"  v-model="inputTbsPembelian.id_produk_tbs"  name="id_produk_tbs" id="id_produk_tbs" @shortkey="openSelectizeProduk()">
+                <input class="form-control" type="text"  v-model="inputTbsPembelian.jumlah_produk"  name="jumlah_produk" id="jumlah_produk" v-shortkey="['f6']" @shortkey="openSelectizeKas()">
+                <input class="form-control" type="text"  v-model="inputTbsPembelian.harga_produk"  name="harga_produk" id="harga_produk" v-shortkey="['f4']" @shortkey="openSelectizeSuplier()">
+                <input class="form-control" type="text"  v-model="inputTbsPembelian.id_produk_tbs"  name="id_produk_tbs" id="id_produk_tbs" v-shortkey="['f1']" @shortkey="openSelectizeProduk()">
                 <input class="form-control" type="text"  v-model="inputTbsPembelian.no_faktur"   name="no_faktur" id="no_faktur">
                 </span>
             </div>

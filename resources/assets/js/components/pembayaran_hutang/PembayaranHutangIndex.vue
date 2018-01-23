@@ -49,7 +49,7 @@
 									<td>{{ pembayaranhutangs.no_faktur }}</td>
 									<td>{{ pembayaranhutangs.waktu }}</td>
 									<td>{{ pembayaranhutangs.suplier }}</td>
-									<td>{{ pembayaranhutangs.cara_bayar }}</td>
+									<td>{{ pembayaranhutangs.kas }}</td>
 									<td>{{ pembayaranhutangs.keterangan }}</td>
 									<td style="text-align:right;" >Rp. {{ pembayaranhutangs.total }}</td>
 									<td style="text-align:right;"><router-link :to="{name: 'editPembayaranHutangProses', params: {id: pembayaranhutangs.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + pembayaranhutangs.id" >

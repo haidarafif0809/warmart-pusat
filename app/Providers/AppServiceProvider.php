@@ -7,7 +7,6 @@ use App\DetailItemMasuk;
 use App\DetailPembelian;
 use App\DetailPenjualan;
 use App\DetailPenjualanPos;
-use App\PenjualanPos;
 use App\ItemKeluar;
 use App\ItemMasuk;
 use App\Kas;
@@ -25,11 +24,14 @@ use App\Observers\KasKeluarObserver;
 use App\Observers\KasMutasiObserver;
 use App\Observers\KasObserver;
 use App\Observers\KategoriTransaksiObserver;
+use App\Observers\PembayaranPiutangObserver;
 use App\Observers\PembelianObserver;
 use App\Observers\PenjualanPosObserver;
 use App\Observers\UserWarungObserver;
 use App\Observers\WarungObserver;
+use App\PembayaranPiutang;
 use App\Pembelian;
+use App\PenjualanPos;
 use App\UserWarung;
 use App\Warung;
 use Illuminate\Support\Facades\Schema;
@@ -67,6 +69,7 @@ class AppServiceProvider extends ServiceProvider
         DetailPenjualan::observe(DetailPenjualanObserver::class);
         DetailPenjualanPos::observe(DetailPenjualanPosObserver::class);
         PenjualanPos::observe(PenjualanPosObserver::class);
+        PembayaranPiutang::observe(PembayaranPiutangObserver::class);
     }
 
     /**
