@@ -87,7 +87,7 @@ class PembayaranPiutangController extends Controller
         return $respons;
     }
 
-    public function foreachTbs($pembayaran_piutang)
+    public function foreachTbs($pembayaran_piutang, $jenis_tbs)
     {
         $array_pembayaran_piutang = array();
         foreach ($pembayaran_piutang as $pembayaran_piutangs) {
@@ -96,6 +96,14 @@ class PembayaranPiutangController extends Controller
                 $pelanggan = 'Umum';
             } else {
                 $pelanggan = $pembayaran_piutangs->name;
+            }
+
+            if ($jenis_tbs == 1) {
+                // JIKA JENIS TBS == 1, MAKA ambil "id_tbs_pembayaran_piutang"
+                $id_tbs = $pembayaran_piutangs->id_tbs_pembayaran_piutang;
+            } else {
+// JIKA JENIS TBS == 2, MAKA ambil "id_edit_tbs_pembayaran_piutang"
+                $id_tbs = $pembayaran_piutangs->id_edit_tbs_pembayaran_piutang;
             }
 
             $sisa_piutang = $pembayaran_piutangs->subtotal_piutang - $pembayaran_piutangs->jumlah_bayar;
@@ -109,7 +117,7 @@ class PembayaranPiutangController extends Controller
                 'jumlah_bayar'              => $pembayaran_piutangs->jumlah_bayar,
                 'sisa_piutang'              => $sisa_piutang,
                 'pelanggan'                 => $pelanggan,
-                'id_tbs_pembayaran_piutang' => $pembayaran_piutangs->id_tbs_pembayaran_piutang,
+                'id_tbs_pembayaran_piutang' => $id_tbs,
             ]);
         }
 
@@ -216,8 +224,9 @@ class PembayaranPiutangController extends Controller
     {
         $session_id         = session()->getId();
         $pembayaran_piutang = TbsPembayaranPiutang::dataTbsPembayaranPiutang($session_id)->paginate(10);
+        $jenis_tbs          = 1;
 
-        $array_pembayaran_piutang = $this->foreachTbs($pembayaran_piutang);
+        $array_pembayaran_piutang = $this->foreachTbs($pembayaran_piutang, $jenis_tbs);
         $link_view                = 'view-tbs-pembayaran-piutang';
 
         //DATA PAGINATION
@@ -229,8 +238,9 @@ class PembayaranPiutangController extends Controller
     {
         $session_id         = session()->getId();
         $pembayaran_piutang = TbsPembayaranPiutang::cariTbsPembayaranPiutang($request, $session_id)->paginate(10);
+        $jenis_tbs          = 1;
 
-        $array_pembayaran_piutang = $this->foreachTbs($pembayaran_piutang);
+        $array_pembayaran_piutang = $this->foreachTbs($pembayaran_piutang, $jenis_tbs);
         $link_view                = 'view-tbs-pembayaran-piutang';
 
         //DATA PAGINATION
@@ -409,8 +419,9 @@ class PembayaranPiutangController extends Controller
         //AMBIL NO FAKTUR
         $no_faktur          = $this->fakturPembayaran($id);
         $pembayaran_piutang = EditTbsPembayaranPiutang::dataEditTbsPembayaranPiutang($session_id, $no_faktur)->paginate(10);
+        $jenis_tbs          = 2;
 
-        $array_pembayaran_piutang = $this->foreachTbs($pembayaran_piutang);
+        $array_pembayaran_piutang = $this->foreachTbs($pembayaran_piutang, $jenis_tbs);
         $link_view                = 'view-edit-tbs-pembayaran-piutang';
 
         //DATA PAGINATION
@@ -424,8 +435,9 @@ class PembayaranPiutangController extends Controller
         //AMBIL NO FAKTUR
         $no_faktur          = $this->fakturPembayaran($id);
         $pembayaran_piutang = EditTbsPembayaranPiutang::cariEditTbsPembayaranPiutang($request, $session_id, $no_faktur)->paginate(10);
+        $jenis_tbs          = 2;
 
-        $array_pembayaran_piutang = $this->foreachTbs($pembayaran_piutang);
+        $array_pembayaran_piutang = $this->foreachTbs($pembayaran_piutang, $jenis_tbs);
         $link_view                = 'view-edit-tbs-pembayaran-piutang';
 
         //DATA PAGINATION
@@ -479,5 +491,16 @@ class PembayaranPiutangController extends Controller
         } else {
             return response(200);
         }
+    }
+
+    public function updateEditTbsPembayaranPiutang(Request $request)
+    {
+        $tbs_pembayaran_piutang = EditTbsPembayaranPiutang::find($request->id_tbs);
+        $subtotal               = $request->piutang - $request->potongan;
+
+        $tbs_pembayaran_piutang->update(['potongan' => $request->potongan, 'subtotal_piutang' => $subtotal, 'jumlah_bayar' => $request->jumlah_bayar]);
+        $respons['jumlah_bayar'] = $request->jumlah_bayar;
+
+        return response()->json($respons);
     }
 }

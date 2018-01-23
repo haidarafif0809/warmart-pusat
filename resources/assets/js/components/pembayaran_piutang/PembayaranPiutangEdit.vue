@@ -306,11 +306,11 @@
                                             <td align="right">{{ tbs_pembayaran_piutang.sisa_piutang | pemisahTitik }}</td>
 
                                             <td align="center">
-                                                <a href="#create-pembayaran-piutang" class="btn btn-xs btn-success" v-bind:id="'edit-' + tbs_pembayaran_piutang.id_edit_tbs_pembayaran_piutang" v-on:click="editEntry(tbs_pembayaran_piutang.id_edit_tbs_pembayaran_piutang, index, tbs_pembayaran_piutang.no_faktur_penjualan,tbs_pembayaran_piutang.pelanggan,tbs_pembayaran_piutang.jumlah_bayar,tbs_pembayaran_piutang.potongan,tbs_pembayaran_piutang.piutang)">Edit</a>
+                                                <a @href="'#edit-pembayaran-piutang/'+tbs_pembayaran_piutang.id_tbs_pembayaran_piutang" class="btn btn-xs btn-success" v-bind:id="'edit-' + tbs_pembayaran_piutang.id_tbs_pembayaran_piutang" v-on:click="editEntry(tbs_pembayaran_piutang.id_tbs_pembayaran_piutang, index, tbs_pembayaran_piutang.no_faktur_penjualan,tbs_pembayaran_piutang.pelanggan,tbs_pembayaran_piutang.jumlah_bayar,tbs_pembayaran_piutang.potongan,tbs_pembayaran_piutang.piutang)">Edit</a>
                                             </td>
 
                                             <td align="center">
-                                                <a href="#create-pembayaran-piutang" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_pembayaran_piutang.id_edit_tbs_pembayaran_piutang" v-on:click="deleteEntry(tbs_pembayaran_piutang.id_edit_tbs_pembayaran_piutang, index,tbs_pembayaran_piutang.jumlah_bayar,tbs_pembayaran_piutang.no_faktur_penjualan)">Delete</a>
+                                                <a @href="'#edit-pembayaran-piutang/'+tbs_pembayaran_piutang.id_tbs_pembayaran_piutang" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_pembayaran_piutang.id_tbs_pembayaran_piutang" v-on:click="deleteEntry(tbs_pembayaran_piutang.id_tbs_pembayaran_piutang, index,tbs_pembayaran_piutang.jumlah_bayar,tbs_pembayaran_piutang.no_faktur_penjualan)">Delete</a>
                                             </td>
 
                                         </tr>
@@ -691,7 +691,7 @@ methods: {
             app.$refs.potongan_edit.$el.focus();
         }else{
             app.loading = true;
-            axios.post(app.url_piutang+'/edit-jumlah-tbs-pembayaran-piutang', newinputEditTbsPembayaranPiutang)
+            axios.post(app.url_piutang+'/edit-jumlah-edit-tbs-pembayaran-piutang', newinputEditTbsPembayaranPiutang)
             .then(function (resp) {
                 if (resp.data.status == 0) {
                     app.getResults()
