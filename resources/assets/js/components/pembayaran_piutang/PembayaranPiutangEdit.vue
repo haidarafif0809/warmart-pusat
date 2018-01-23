@@ -350,7 +350,7 @@
                         </div>
                     </div>
 
-                    <p style="color: red; font-style: italic;">*Note : Klik Kolom Jumlah, Harga, & Potongan Untuk Mengubah Nilai.</p>      
+                    <p style="color: red; font-style: italic;">*Note : Klik Tombol Edit, Untuk Mengubah Nilai.</p>      
 
 
                 </div><!-- / PANEL BODY -->
@@ -372,7 +372,6 @@
                 kas: [],
                 tbs_pembayaran_piutang: [],
                 tbsPembayaranPiutangData : {},
-                url : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
                 url_piutang : window.location.origin+(window.location.pathname).replace("dashboard", "pembayaran-piutang"),
                 url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
 
@@ -519,7 +518,7 @@ methods: {
         if (typeof page === 'undefined') {
             page = 1;
         }
-        axios.get(app.url_piutang+'/pencarian-tbs-pembayaran-piutang?search='+app.pencarian+'&page='+page)
+        axios.get(app.url_piutang+'/pencarian-edit-tbs-pembayaran-piutang?search='+app.pencarian+'&page='+page)
         .then(function (resp) {
             console.log(resp);
             app.tbs_pembayaran_piutang = resp.data.data;
@@ -567,6 +566,7 @@ methods: {
     },
     tambahTbsPembayaranPiutang(){
         var app = this;
+        var id = app.$route.params.id;
         var newTbsPembayaranPiutang = app.inputTbsPembayaranPiutang;
         app.loading = true;
 
@@ -577,7 +577,7 @@ methods: {
             app.$refs.potongan.$el.focus();
         }else{
 
-            axios.post(app.url_piutang+'/proses-tambah-tbs-pembayaran-piutang',newTbsPembayaranPiutang)
+            axios.post(app.url_piutang+'/proses-tambah-edit-tbs-pembayaran-piutang/'+id,newTbsPembayaranPiutang)
             .then(function (resp) {
 
                 if (resp.data != 0) {
