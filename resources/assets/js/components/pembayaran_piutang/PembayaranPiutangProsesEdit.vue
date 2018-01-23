@@ -1,0 +1,40 @@
+<template>
+	<div class="row">
+		<div class="col-md-12">
+			<ul class="breadcrumb" style="margin-bottom: 1px; margin-top: 1px;">
+				<li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li>
+				<li><router-link :to="{name: 'indexPembayaranPiutang'}">Pembayaran Piutang</router-link></li>
+				<li class="active">Proses Edit Pembayaran Piutang</li>
+			</ul>
+		</div>
+	</div>
+</template>
+
+<script>
+	export default {
+		data: function () {
+			return {
+				url : window.location.origin+(window.location.pathname).replace("dashboard", "pembayaran-piutang")
+			}
+		},
+		mounted() {   
+			var app = this;
+			app.insertEditTbsPembayaranPiutang();
+		},
+		methods: {
+			insertEditTbsPembayaranPiutang() {
+				var app = this; 			
+				var id = app.$route.params.id;
+				axios.get(app.url+'/'+id+'/edit')
+				.then(function (resp) {
+					app.$router.replace('/edit-pembayaran-piutang/'+id);
+				})
+				.catch(function (resp) {
+					console.log(resp);
+					alert("Tidak Dapat Memuat Edit Pembayaran Piutang");
+					app.$router.replace('/pembayaran-piutang');
+				});
+			}
+		}
+	}
+</script>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DetailPembayaranPiutang;
+use App\EditTbsPembayaranPiutang;
 use App\Kas;
 use App\PembayaranPiutang;
 use App\PenjualanPos;
@@ -315,5 +316,111 @@ class PembayaranPiutangController extends Controller
             DB::commit();
             return response(200);
         }
+    }
+
+    public function viewDetail($id)
+    {
+        $user_warung        = Auth::user()->id_warung;
+        $pembayaran_piutang = DetailPembayaranPiutang::dataDetailPembayaranPiutang($user_warung)->paginate(10);
+
+        $array_pembayaran_piutang = array();
+        foreach ($pembayaran_piutang as $detail_pembayaran_piutangs) {
+
+            if ($detail_pembayaran_piutangs->pelanggan_id == 0) {
+                $pelanggan = 'Umum';
+            } else {
+                $pelanggan = $detail_pembayaran_piutangs->name;
+            }
+            $subtotal_piutang = $detail_pembayaran_piutangs->piutang - $detail_pembayaran_piutangs->potongan;
+            $sisa_piutang     = $subtotal_piutang - $detail_pembayaran_piutangs->jumlah_bayar;
+
+            array_push($array_pembayaran_piutang, [
+                'no_faktur_penjualan'       => $detail_pembayaran_piutangs->no_faktur_penjualan,
+                'jatuh_tempo'               => $detail_pembayaran_piutangs->jatuh_tempo,
+                'piutang'                   => $detail_pembayaran_piutangs->piutang,
+                'potongan'                  => $detail_pembayaran_piutangs->potongan,
+                'total'                     => $subtotal_piutang,
+                'jumlah_bayar'              => $detail_pembayaran_piutangs->jumlah_bayar,
+                'sisa_piutang'              => $sisa_piutang,
+                'pelanggan'                 => $pelanggan,
+                'id_tbs_pembayaran_piutang' => $detail_pembayaran_piutangs->id_tbs_pembayaran_piutang,
+            ]);
+        }
+        $link_view = 'view-detail-pembayaran-piutang/' . $id;
+
+        //DATA PAGINATION
+        $respons = $this->dataPagination($pembayaran_piutang, $array_pembayaran_piutang, $link_view);
+        return response()->json($respons);
+    }
+
+    public function pencarianDetail(Request $request, $id)
+    {
+        $user_warung        = Auth::user()->id_warung;
+        $pembayaran_piutang = DetailPembayaranPiutang::cariDetailPembayaranPiutang($request, $user_warung)->paginate(10);
+
+        $array_pembayaran_piutang = array();
+        foreach ($pembayaran_piutang as $detail_pembayaran_piutangs) {
+
+            if ($detail_pembayaran_piutangs->pelanggan_id == 0) {
+                $pelanggan = 'Umum';
+            } else {
+                $pelanggan = $detail_pembayaran_piutangs->name;
+            }
+            $subtotal_piutang = $detail_pembayaran_piutangs->piutang - $detail_pembayaran_piutangs->potongan;
+            $sisa_piutang     = $subtotal_piutang - $detail_pembayaran_piutangs->jumlah_bayar;
+
+            array_push($array_pembayaran_piutang, [
+                'no_faktur_penjualan'       => $detail_pembayaran_piutangs->no_faktur_penjualan,
+                'jatuh_tempo'               => $detail_pembayaran_piutangs->jatuh_tempo,
+                'piutang'                   => $detail_pembayaran_piutangs->piutang,
+                'potongan'                  => $detail_pembayaran_piutangs->potongan,
+                'total'                     => $subtotal_piutang,
+                'jumlah_bayar'              => $detail_pembayaran_piutangs->jumlah_bayar,
+                'sisa_piutang'              => $sisa_piutang,
+                'pelanggan'                 => $pelanggan,
+                'id_tbs_pembayaran_piutang' => $detail_pembayaran_piutangs->id_tbs_pembayaran_piutang,
+            ]);
+        }
+        $link_view = 'pencarian-detail-pembayaran-piutang/' . $id;
+
+        //DATA PAGINATION
+        $respons = $this->dataPagination($pembayaran_piutang, $array_pembayaran_piutang, $link_view);
+        return response()->json($respons);
+    }
+
+    public function edit($id)
+    {
+        $session_id         = session()->getId();
+        $pembayaran_piutang = PembayaranPiutang::select('no_faktur_pembayaran')
+            ->where('id_pembayaran_piutang', $id)
+            ->where('warung_id', Auth::user()->id_warung)->first();
+        $no_faktur = $pembayaran_piutang->no_faktur_pembayaran;
+
+        //PILIH DATA DETAIL PEMBAYARAN PIUTANG
+        $detail_pembayaran_piutang = DetailPembayaranPiutang::where('no_faktur_pembayaran', $no_faktur)
+            ->where('warung_id', Auth::user()->id_warung);
+
+        //HAPUS DATA DI EDIT TBS
+        $hapus_semua_edit_tbs_pembayaran_piutang = EditTbsPembayaranPiutang::where('no_faktur_pembayaran', $no_faktur)
+            ->where('warung_id', Auth::user()->id_warung)->delete();
+
+        foreach ($detail_pembayaran_piutang->get() as $data_tbs) {
+            $subtotal_piutang = $data_tbs->piutang - $data_tbs->potongan;
+
+            $detail_penjualan = EditTbsPembayaranPiutang::create([
+                'session_id'           => $session_id,
+                'no_faktur_pembayaran' => $data_tbs->no_faktur_pembayaran,
+                'subtotal_piutang'     => $subtotal_piutang,
+                'no_faktur_penjualan'  => $data_tbs->no_faktur_penjualan,
+                'jatuh_tempo'          => $data_tbs->jatuh_tempo,
+                'piutang'              => $data_tbs->piutang,
+                'potongan'             => $data_tbs->potongan,
+                'jumlah_bayar'         => $data_tbs->jumlah_bayar,
+                'pelanggan_id'         => $data_tbs->pelanggan_id,
+                'warung_id'            => Auth::user()->id_warung,
+            ]);
+        }
+
+        return response(200);
     }
 }

@@ -45,56 +45,64 @@
 							<tbody v-if="pembayaranPiutang.length > 0 && loading == false"  class="data-ada">
 								<tr v-for="pembayaranPiutangs, index in pembayaranPiutang" >
 
-									<td>{{ pembayaranPiutangs.no_faktur }}</td>
+									<td>
+										<router-link :to="{name: 'detailPembayaranPiutang', params: {id: pembayaranPiutangs.id}}" v-bind:id="'detail-' + pembayaranPiutangs.id" >
+											{{pembayaranPiutangs.no_faktur}}
+										</router-link>
+									</td>
+
 									<td style="text-align:right;" >{{ pembayaranPiutangs.total }}</td>
 									<td align="center">{{ pembayaranPiutangs.kas }}</td>
 									<td>{{ pembayaranPiutangs.waktu }}</td>
 									<td>{{ pembayaranPiutangs.keterangan }}</td>
 
-									<td style="text-align:right;"><router-link :to="{name: 'editPembayaranPiutangProses', params: {id: pembayaranPiutangs.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + pembayaranPiutangs.id" >
-										Edit </router-link> </td>
+									<td style="text-align:right;">
+										<router-link :to="{name: 'prosesEditPembayaranPiutang', params: {id: pembayaranPiutangs.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + pembayaranPiutangs.id" >
+											Edit
+										</router-link>
+									</td>
 
-										<td style="text-align:right;"> 
-											<a  href="#pembayaran-piutang" class="btn btn-xs btn-danger" v-bind:id="'delete-' + pembayaranPiutangs.id" v-on:click="deleteEntry(pembayaranPiutangs.id, index,pembayaranPiutangs.no_faktur)">Delete</a>
-										</td>
-									</tr>
-								</tbody>					
-								<tbody class="data-tidak-ada" v-else-if="pembayaranPiutang.length == 0 && loading == false">
-									<tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
-								</tbody>
-							</table>	
+									<td style="text-align:right;"> 
+										<a  href="#pembayaran-piutang" class="btn btn-xs btn-danger" v-bind:id="'delete-' + pembayaranPiutangs.id" v-on:click="deleteEntry(pembayaranPiutangs.id, index,pembayaranPiutangs.no_faktur)">Delete</a>
+									</td>
+								</tr>
+							</tbody>					
+							<tbody class="data-tidak-ada" v-else-if="pembayaranPiutang.length == 0 && loading == false">
+								<tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
+							</tbody>
+						</table>	
 
-							<vue-simple-spinner v-if="loading"></vue-simple-spinner>
+						<vue-simple-spinner v-if="loading"></vue-simple-spinner>
 
-							<div align="right"><pagination :data="pembayaranPiutangData" v-on:pagination-change-page="getResults" :limit="7"></pagination></div>
+						<div align="right"><pagination :data="pembayaranPiutangData" v-on:pagination-change-page="getResults" :limit="7"></pagination></div>
 
-						</div>
-						<p style="color: red; font-style: italic;">*Note : Klik Kolom No Transaksi, Untuk Melihat Detail Transaksi Pembayaranan Piutang .</p> 
 					</div>
+					<p style="color: red; font-style: italic;">*Note : Klik Kolom No Transaksi, Untuk Melihat Detail Transaksi Pembayaranan Piutang .</p> 
 				</div>
-
 			</div>
+
 		</div>
+	</div>
 
-	</template>
+</template>
 
 
-	<script>
-		export default {
-			data: function () {
-				return {
-					pembayaranPiutang: [],
-					pembayaranPiutangData: {},
-					url : window.location.origin+(window.location.pathname).replace("dashboard", "pembayaran-piutang"),
-					pencarian: '',
-					loading: true,
-				}
-			},
-			mounted() {
-				var app = this;
-				app.getResults();
-			},
-			watch: {
+<script>
+	export default {
+		data: function () {
+			return {
+				pembayaranPiutang: [],
+				pembayaranPiutangData: {},
+				url : window.location.origin+(window.location.pathname).replace("dashboard", "pembayaran-piutang"),
+				pencarian: '',
+				loading: true,
+			}
+		},
+		mounted() {
+			var app = this;
+			app.getResults();
+		},
+		watch: {
 // whenever question changes, this function will run
 pencarian: function (newQuestion) {
 	this.getHasilPencarian();
