@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DetailPembayaranPiutang;
+use App\EditTbsPembayaranPiutang;
 use App\Kas;
 use App\PembayaranPiutang;
 use App\PenjualanPos;
@@ -385,5 +386,41 @@ class PembayaranPiutangController extends Controller
         //DATA PAGINATION
         $respons = $this->dataPagination($pembayaran_piutang, $array_pembayaran_piutang, $link_view);
         return response()->json($respons);
+    }
+
+    public function edit($id)
+    {
+        $session_id         = session()->getId();
+        $pembayaran_piutang = PembayaranPiutang::select('no_faktur_pembayaran')
+            ->where('id_pembayaran_piutang', $id)
+            ->where('warung_id', Auth::user()->id_warung)->first();
+        $no_faktur = $pembayaran_piutang->no_faktur_pembayaran;
+
+        //PILIH DATA DETAIL PEMBAYARAN PIUTANG
+        $detail_pembayaran_piutang = DetailPembayaranPiutang::where('no_faktur_pembayaran', $no_faktur)
+            ->where('warung_id', Auth::user()->id_warung);
+
+        //HAPUS DATA DI EDIT TBS
+        $hapus_semua_edit_tbs_pembayaran_piutang = EditTbsPembayaranPiutang::where('no_faktur_pembayaran', $no_faktur)
+            ->where('warung_id', Auth::user()->id_warung)->delete();
+
+        foreach ($detail_pembayaran_piutang->get() as $data_tbs) {
+            $subtotal_piutang = $data_tbs->piutang - $data_tbs->potongan;
+
+            $detail_penjualan = EditTbsPembayaranPiutang::create([
+                'session_id'           => $session_id,
+                'no_faktur_pembayaran' => $data_tbs->no_faktur_pembayaran,
+                'subtotal_piutang'     => $subtotal_piutang,
+                'no_faktur_penjualan'  => $data_tbs->no_faktur_penjualan,
+                'jatuh_tempo'          => $data_tbs->jatuh_tempo,
+                'piutang'              => $data_tbs->piutang,
+                'potongan'             => $data_tbs->potongan,
+                'jumlah_bayar'         => $data_tbs->jumlah_bayar,
+                'pelanggan_id'         => $data_tbs->pelanggan_id,
+                'warung_id'            => Auth::user()->id_warung,
+            ]);
+        }
+
+        return response(200);
     }
 }

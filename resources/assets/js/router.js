@@ -129,6 +129,7 @@ import PembayaranPiutangIndex from './components/pembayaran_piutang/PembayaranPi
 import PembayaranPiutangDetail from './components/pembayaran_piutang/PembayaranPiutangDetail.vue';
 import PembayaranPiutangCreate from './components/pembayaran_piutang/PembayaranPiutangCreate.vue';
 import PembayaranPiutangEdit from './components/pembayaran_piutang/PembayaranPiutangEdit.vue';
+import PembayaranPiutangProsesEdit from './components/pembayaran_piutang/PembayaranPiutangProsesEdit.vue';
 
 const routes = [{
     path: '/',
@@ -579,6 +580,11 @@ const routes = [{
         path: '/edit-pembayaran-piutang/:id',
         component: PembayaranPiutangEdit,
         name: 'editPembayaranPiutang'
+    },
+    {
+        path: '/proses-edit-pembayaran-piutang/:id',
+        component: PembayaranPiutangProsesEdit,
+        name: 'prosesEditPembayaranPiutang'
     }
 
 

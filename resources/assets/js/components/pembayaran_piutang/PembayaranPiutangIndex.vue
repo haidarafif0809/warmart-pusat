@@ -57,7 +57,7 @@
 									<td>{{ pembayaranPiutangs.keterangan }}</td>
 
 									<td style="text-align:right;">
-										<router-link :to="{name: 'editPembayaranPiutang', params: {id: pembayaranPiutangs.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + pembayaranPiutangs.id" >
+										<router-link :to="{name: 'prosesEditPembayaranPiutang', params: {id: pembayaranPiutangs.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + pembayaranPiutangs.id" >
 											Edit
 										</router-link>
 									</td>
