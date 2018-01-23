@@ -425,37 +425,48 @@ public function index()
         if ($pendaftar_topos->count() == 0 ) {
             return response()->view('error.404');
         }else{
-
+            $tanggal_sekarang = date('d/m/Y H:i:s');
             $batas_pendaftaran =  $this->batasPendaftaran($pendaftar_topos->first()->created_at);
 
-            if ($pendaftar_topos->first()->status_pembayaran == 0) {
+            if ($batas_pendaftaran >= $tanggal_sekarang) {
 
-                Session::flash("flash_notification", [ 
-                    "alert" => 'warning',
-                    "icon" => 'error_outline',
-                    "judul" => 'PERHATIAN',
-                    "message" => 'Kami Sudah Mengirimkan SMS ke Nomor <b>'.$pendaftar_topos->first()->no_telp.'</b>. <br>Mohon Selesaikan Pembayaran Sebelum <b>'.$batas_pendaftaran.'</b> Sebesar <b>Rp. '. number_format($pendaftar_topos->first()->total, 0, ',', '.').'</b> melalui <b>'.$pendaftar_topos->first()->jenis_pembayaran.'</b> Ke Rekening: <br>
-                    <table>
-                    <tbody>
-                    <tr><td width="50%"><font><b>Bank</b></font></td> <td> :&nbsp;</td> <td><font> <b>'.$pendaftar_topos->first()->bank->nama_bank.'</b></font></tr>
-                    <tr><td width="50%"><font><b>No. Rekening</b></font></td> <td> :&nbsp;</td> <td c><font> <b>'.$pendaftar_topos->first()->no_rekening.'</b></font> </tr>
-                    <tr><td  width="50%"><font><b>Atas Nama</b></font></td> <td> :&nbsp;</td> <td><font> <b>'.$pendaftar_topos->first()->atas_nama.'</b></font>  </td></tr>
-                    </tbody>
-                    </table>'
-                ]);
+
+                if ($pendaftar_topos->first()->status_pembayaran == 0) {
+
+                    Session::flash("flash_notification", [ 
+                        "alert" => 'warning',
+                        "icon" => 'error_outline',
+                        "judul" => 'PERHATIAN',
+                        "message" => 'Kami Sudah Mengirimkan SMS ke Nomor <b>'.$pendaftar_topos->first()->no_telp.'</b>. <br>Mohon Selesaikan Pembayaran Sebelum <b>'.$batas_pendaftaran.'</b> Sebesar <b>Rp. '. number_format($pendaftar_topos->first()->total, 0, ',', '.').'</b> melalui <b>'.$pendaftar_topos->first()->jenis_pembayaran.'</b> Ke Rekening: <br>
+                        <table>
+                        <tbody>
+                        <tr><td width="50%"><font><b>Bank</b></font></td> <td> :&nbsp;</td> <td><font> <b>'.$pendaftar_topos->first()->bank->nama_bank.'</b></font></tr>
+                        <tr><td width="50%"><font><b>No. Rekening</b></font></td> <td> :&nbsp;</td> <td c><font> <b>'.$pendaftar_topos->first()->no_rekening.'</b></font> </tr>
+                        <tr><td  width="50%"><font><b>Atas Nama</b></font></td> <td> :&nbsp;</td> <td><font> <b>'.$pendaftar_topos->first()->atas_nama.'</b></font>  </td></tr>
+                        </tbody>
+                        </table>'
+                    ]);
+
+                }else{
+
+                    Session::flash("flash_notification", [ 
+                        "alert" => 'success',
+                        "icon" => 'error_outline',
+                        "judul" => 'Info',
+                        "message" => 'Terima Kasih Telah Melakukan Pembayaran, Aplikasi Yang Anda Pesan Akan di Proses. Kami Akan Segera Menghubungi Anda'
+                    ]);
+
+                }
 
             }else{
-
                 Session::flash("flash_notification", [ 
-                    "alert" => 'success',
+                    "alert" => 'danger',
                     "icon" => 'error_outline',
                     "judul" => 'Info',
-                    "message" => 'Terima Kasih Telah Melakukan Pembayaran, Aplikasi Yang Anda Pesan Akan di Proses. Kami Akan Segera Menghubungi Anda'
+                    "message" => 'Waktu Pembayaran Anda Habis, Karena Telah Melebihi Batas Waktu yang ditentukan'
                 ]);
-
             }
-
-            return view('daftar_topos.kirim_bukti_pembayaran', ['pendaftar_topos'=>$pendaftar_topos->first()]);
+            return view('daftar_topos.kirim_bukti_pembayaran', ['pendaftar_topos'=>$pendaftar_topos->first()    ]);
         }
     }
 
@@ -545,9 +556,9 @@ public function index()
 
         public function dataWarung(){
 
-           return Warung::find(Auth::user()->id_warung);
-       }
-       public function dataBank(){
+         return Warung::find(Auth::user()->id_warung);
+     }
+     public function dataBank(){
         $bank = Bank::all();
         return response()->json($bank);
     }
@@ -578,15 +589,15 @@ public function index()
         $respons['status_pembayaran'] = $status_pembayaran;
         $respons['sisa_waktu'] = $sisa_waktu;
     }else{        
-       $status_pembayaran = $pendaftar_topos->first()->status_pembayaran;
+     $status_pembayaran = $pendaftar_topos->first()->status_pembayaran;
 
-       $respons['id'] = $pendaftar_topos->first()->id;
-       $respons['status_pembayaran'] = $status_pembayaran;
-       $respons['sisa_waktu'] = $sisa_waktu;
-   }
+     $respons['id'] = $pendaftar_topos->first()->id;
+     $respons['status_pembayaran'] = $status_pembayaran;
+     $respons['sisa_waktu'] = $sisa_waktu;
+ }
 
 
-   return response()->json($respons);
+ return response()->json($respons);
 }
 
 }
