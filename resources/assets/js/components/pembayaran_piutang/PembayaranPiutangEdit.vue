@@ -306,11 +306,11 @@
                                             <td align="right">{{ tbs_pembayaran_piutang.sisa_piutang | pemisahTitik }}</td>
 
                                             <td align="center">
-                                                <a href="#create-pembayaran-piutang" class="btn btn-xs btn-success" v-bind:id="'edit-' + tbs_pembayaran_piutang.id_tbs_pembayaran_piutang" v-on:click="editEntry(tbs_pembayaran_piutang.id_tbs_pembayaran_piutang, index, tbs_pembayaran_piutang.no_faktur_penjualan,tbs_pembayaran_piutang.pelanggan,tbs_pembayaran_piutang.jumlah_bayar,tbs_pembayaran_piutang.potongan,tbs_pembayaran_piutang.piutang)">Edit</a>
+                                                <a href="#create-pembayaran-piutang" class="btn btn-xs btn-success" v-bind:id="'edit-' + tbs_pembayaran_piutang.id_edit_tbs_pembayaran_piutang" v-on:click="editEntry(tbs_pembayaran_piutang.id_edit_tbs_pembayaran_piutang, index, tbs_pembayaran_piutang.no_faktur_penjualan,tbs_pembayaran_piutang.pelanggan,tbs_pembayaran_piutang.jumlah_bayar,tbs_pembayaran_piutang.potongan,tbs_pembayaran_piutang.piutang)">Edit</a>
                                             </td>
 
                                             <td align="center">
-                                                <a href="#create-pembayaran-piutang" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_pembayaran_piutang.id_tbs_pembayaran_piutang" v-on:click="deleteEntry(tbs_pembayaran_piutang.id_tbs_pembayaran_piutang, index,tbs_pembayaran_piutang.jumlah_bayar,tbs_pembayaran_piutang.no_faktur_penjualan)">Delete</a>
+                                                <a href="#create-pembayaran-piutang" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_pembayaran_piutang.id_edit_tbs_pembayaran_piutang" v-on:click="deleteEntry(tbs_pembayaran_piutang.id_edit_tbs_pembayaran_piutang, index,tbs_pembayaran_piutang.jumlah_bayar,tbs_pembayaran_piutang.no_faktur_penjualan)">Delete</a>
                                             </td>
 
                                         </tr>
@@ -490,10 +490,11 @@ methods: {
     },
     getResults(page) {
         var app = this; 
+        var id = app.$route.params.id;
         if (typeof page === 'undefined') {
             page = 1;
         }
-        axios.get(app.url_piutang+'/view-edit-tbs-pembayaran-piutang?page='+page)
+        axios.get(app.url_piutang+'/view-edit-tbs-pembayaran-piutang/'+id+'?page='+page)
         .then(function (resp) {
             app.tbs_pembayaran_piutang = resp.data.data;
             app.tbsPembayaranPiutangData = resp.data;
@@ -515,10 +516,11 @@ methods: {
     }, 
     getHasilPencarian(page){
         var app = this;
+        var id = app.$route.params.id;
         if (typeof page === 'undefined') {
             page = 1;
         }
-        axios.get(app.url_piutang+'/pencarian-edit-tbs-pembayaran-piutang?search='+app.pencarian+'&page='+page)
+        axios.get(app.url_piutang+'/pencarian-edit-tbs-pembayaran-piutang/'+id+'?search='+app.pencarian+'&page='+page)
         .then(function (resp) {
             console.log(resp);
             app.tbs_pembayaran_piutang = resp.data.data;
@@ -744,7 +746,7 @@ methods: {
     prosesDelete(id,no_faktur_penjualan,jumlah_bayar_lama){
         var app = this;
         app.loading = true;
-        axios.delete(app.url_piutang+'/proses-hapus-tbs-pembayaran-piutang/'+id)
+        axios.delete(app.url_piutang+'/proses-hapus-edit-tbs-pembayaran-piutang/'+id)
         .then(function (resp) {
 
             if (resp.data == 0) {
