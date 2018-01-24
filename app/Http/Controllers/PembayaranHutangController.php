@@ -406,6 +406,14 @@ class PembayaranHutangController extends Controller
      */
     public function destroy($id)
     {
-        //
+        //START TRANSAKSI
+        DB::beginTransaction();
+        if (!PembayaranHutang::destroy($id)) {
+            DB::rollBack();
+            return 0;
+        } else {
+            DB::commit();
+            return response(200);
+        }
     }
 }

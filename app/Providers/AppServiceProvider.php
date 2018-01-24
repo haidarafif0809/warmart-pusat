@@ -25,11 +25,13 @@ use App\Observers\KasMutasiObserver;
 use App\Observers\KasObserver;
 use App\Observers\KategoriTransaksiObserver;
 use App\Observers\PembayaranPiutangObserver;
+use App\Observers\PembayaranHutangObserver;
 use App\Observers\PembelianObserver;
 use App\Observers\PenjualanPosObserver;
 use App\Observers\UserWarungObserver;
 use App\Observers\WarungObserver;
 use App\PembayaranPiutang;
+use App\PembayaranHutang;
 use App\Pembelian;
 use App\PenjualanPos;
 use App\UserWarung;
@@ -70,6 +72,7 @@ class AppServiceProvider extends ServiceProvider
         DetailPenjualanPos::observe(DetailPenjualanPosObserver::class);
         PenjualanPos::observe(PenjualanPosObserver::class);
         PembayaranPiutang::observe(PembayaranPiutangObserver::class);
+        PembayaranHutang::observe(PembayaranHutangObserver::class);
     }
 
     /**
