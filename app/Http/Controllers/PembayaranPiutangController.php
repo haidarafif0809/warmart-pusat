@@ -172,7 +172,31 @@ class PembayaranPiutangController extends Controller
             array_push($array_pembayaran_piutang, [
                 'id'         => $pembayaran_piutangs->id,
                 'no_faktur'  => $pembayaran_piutangs->no_faktur,
-                'waktu'      => $pembayaran_piutangs->waktu,
+                'waktu'      => $pembayaran_piutangs->Waktu,
+                'total'      => $pembayaran_piutangs->getTotalSeparator(),
+                'kas'        => $pembayaran_piutangs->nama_kas,
+                'keterangan' => $pembayaran_piutangs->keterangan,
+                'user_buat'  => $pembayaran_piutangs->petugas,
+            ]);
+        }
+
+        $link_view = 'view';
+
+        //DATA PAGINATION
+        $respons = $this->dataPagination($pembayaran_piutang, $array_pembayaran_piutang, $link_view);
+        return response()->json($respons);
+    }
+
+    public function pencarian(Request $request)
+    {
+        $pembayaran_piutang = PembayaranPiutang::cariPembayaranPiutang($request)->paginate(10);
+
+        $array_pembayaran_piutang = array();
+        foreach ($pembayaran_piutang as $pembayaran_piutangs) {
+            array_push($array_pembayaran_piutang, [
+                'id'         => $pembayaran_piutangs->id,
+                'no_faktur'  => $pembayaran_piutangs->no_faktur,
+                'waktu'      => $pembayaran_piutangs->Waktu,
                 'total'      => $pembayaran_piutangs->getTotalSeparator(),
                 'kas'        => $pembayaran_piutangs->nama_kas,
                 'keterangan' => $pembayaran_piutangs->keterangan,
