@@ -87,6 +87,24 @@ class PembayaranPiutangController extends Controller
         return $respons;
     }
 
+    public function foreachPembayaranPiutang($pembayaran_piutang)
+    {
+        $array_pembayaran_piutang = array();
+        foreach ($pembayaran_piutang as $pembayaran_piutangs) {
+            array_push($array_pembayaran_piutang, [
+                'id'         => $pembayaran_piutangs->id,
+                'no_faktur'  => $pembayaran_piutangs->no_faktur,
+                'waktu'      => $pembayaran_piutangs->Waktu,
+                'total'      => $pembayaran_piutangs->getTotalSeparator(),
+                'kas'        => $pembayaran_piutangs->nama_kas,
+                'keterangan' => $pembayaran_piutangs->keterangan,
+                'user_buat'  => $pembayaran_piutangs->petugas,
+            ]);
+        }
+
+        return $array_pembayaran_piutang;
+    }
+
     public function foreachTbs($pembayaran_piutang, $jenis_tbs)
     {
         $array_pembayaran_piutang = array();
@@ -167,20 +185,8 @@ class PembayaranPiutangController extends Controller
     {
         $pembayaran_piutang = PembayaranPiutang::dataPembayaranPiutang()->paginate(10);
 
-        $array_pembayaran_piutang = array();
-        foreach ($pembayaran_piutang as $pembayaran_piutangs) {
-            array_push($array_pembayaran_piutang, [
-                'id'         => $pembayaran_piutangs->id,
-                'no_faktur'  => $pembayaran_piutangs->no_faktur,
-                'waktu'      => $pembayaran_piutangs->Waktu,
-                'total'      => $pembayaran_piutangs->getTotalSeparator(),
-                'kas'        => $pembayaran_piutangs->nama_kas,
-                'keterangan' => $pembayaran_piutangs->keterangan,
-                'user_buat'  => $pembayaran_piutangs->petugas,
-            ]);
-        }
-
-        $link_view = 'view';
+        $array_pembayaran_piutang = $this->foreachPembayaranPiutang($pembayaran_piutang);
+        $link_view                = 'view';
 
         //DATA PAGINATION
         $respons = $this->dataPagination($pembayaran_piutang, $array_pembayaran_piutang, $link_view);
@@ -191,20 +197,8 @@ class PembayaranPiutangController extends Controller
     {
         $pembayaran_piutang = PembayaranPiutang::cariPembayaranPiutang($request)->paginate(10);
 
-        $array_pembayaran_piutang = array();
-        foreach ($pembayaran_piutang as $pembayaran_piutangs) {
-            array_push($array_pembayaran_piutang, [
-                'id'         => $pembayaran_piutangs->id,
-                'no_faktur'  => $pembayaran_piutangs->no_faktur,
-                'waktu'      => $pembayaran_piutangs->Waktu,
-                'total'      => $pembayaran_piutangs->getTotalSeparator(),
-                'kas'        => $pembayaran_piutangs->nama_kas,
-                'keterangan' => $pembayaran_piutangs->keterangan,
-                'user_buat'  => $pembayaran_piutangs->petugas,
-            ]);
-        }
-
-        $link_view = 'view';
+        $array_pembayaran_piutang = $this->foreachPembayaranPiutang($pembayaran_piutang);
+        $link_view                = 'view';
 
         //DATA PAGINATION
         $respons = $this->dataPagination($pembayaran_piutang, $array_pembayaran_piutang, $link_view);
