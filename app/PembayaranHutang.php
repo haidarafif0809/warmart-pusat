@@ -2,12 +2,18 @@
 
 namespace App;
 
+use Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Yajra\Auditable\AuditableTrait;
 
 class PembayaranHutang extends Model
 {
+
+
+
+
+
     //
         use AuditableTrait;
     protected $fillable = ['no_faktur_pembayaran', 'total', 'suplier_id', 'cara_bayar', 'warung_id', 'keterangan'];
@@ -64,5 +70,27 @@ class PembayaranHutang extends Model
         public function getPemisahTotalAttribute()
     {
         return number_format($this->total, 2, ',', '.');
+    }
+
+        public function scopeDatapembayaranHutang($query_pembayaran_hutang)
+    {
+        $query_pembayaran_hutang =  PembayaranHutang::select('pembayaran_hutangs.id_pembayaran_hutang as id', 'pembayaran_hutangs.no_faktur_pembayaran as no_faktur', 'supliers.nama_suplier as nama_suplier', 'pembayaran_hutangs.created_at as created_at', 'pembayaran_hutangs.total as total', 'kas.nama_kas as nama_kas','users.name as name','pembayaran_hutangs.keterangan as keterangan')->leftJoin('supliers', 'pembayaran_hutangs.suplier_id', '=', 'supliers.id')->leftJoin('kas', 'pembayaran_hutangs.cara_bayar', '=', 'kas.id')->leftJoin('users', 'pembayaran_hutangs.created_by', '=', 'users.id')
+            ->where('pembayaran_hutangs.warung_id', Auth::user()->id_warung)->orderBy('pembayaran_hutangs.id_pembayaran_hutang');
+
+        return $query_pembayaran_hutang;
+    }
+
+        // PENCARIAN TBS PEMBAYARAN hutang
+    public function scopeDatacariPembayaranHutang($query_pembayaran_hutang, $request)
+    {
+        $search    = $request->search;
+        $query_pembayaran_hutang = PembayaranHutang::select('pembayaran_hutangs.id_pembayaran_hutang as id', 'pembayaran_hutangs.no_faktur_pembayaran as no_faktur', 'supliers.nama_suplier as nama_suplier', 'pembayaran_hutangs.created_at as created_at', 'pembayaran_hutangs.total as total', 'kas.nama_kas as nama_kas','users.name as name','pembayaran_hutangs.keterangan as keterangan')->leftJoin('supliers', 'pembayaran_hutangs.suplier_id', '=', 'supliers.id')->leftJoin('kas', 'pembayaran_hutangs.cara_bayar', '=', 'kas.id')->leftJoin('users', 'pembayaran_hutangs.created_by', '=', 'users.id')
+            ->where('pembayaran_hutangs.warung_id', Auth::user()->id_warung)
+            ->where(function ($query) use ($search) {
+                $query->orwhere('pembayaran_hutangs.no_faktur_pembayaran', 'LIKE', '%' . $search . '%')
+                     ->orwhere('pembayaran_hutangs.keterangan', 'LIKE', '%' . $search . '%');
+            })->orderBy('pembayaran_hutangs.id_pembayaran_hutang', 'desc');
+
+        return $query_pembayaran_hutang;
     }
 }

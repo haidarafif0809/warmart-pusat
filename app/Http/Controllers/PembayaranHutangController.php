@@ -43,8 +43,7 @@ class PembayaranHutangController extends Controller
 
      public function view()
     {
-        $pembayaranhutang = PembayaranHutang::select('pembayaran_hutangs.id_pembayaran_hutang as id', 'pembayaran_hutangs.no_faktur_pembayaran as no_faktur', 'supliers.nama_suplier as nama_suplier', 'pembayaran_hutangs.created_at as created_at', 'pembayaran_hutangs.total as total', 'kas.nama_kas as nama_kas','users.name as name','pembayaran_hutangs.keterangan as keterangan')->leftJoin('supliers', 'pembayaran_hutangs.suplier_id', '=', 'supliers.id')->leftJoin('kas', 'pembayaran_hutangs.cara_bayar', '=', 'kas.id')->leftJoin('users', 'pembayaran_hutangs.created_by', '=', 'users.id')
-            ->where('pembayaran_hutangs.warung_id', Auth::user()->id_warung)->orderBy('pembayaran_hutangs.id_pembayaran_hutang')->paginate(10);
+        $pembayaranhutang = PembayaranHutang::datapembayaranHutang()->paginate(10);
         $array = array();
         foreach ($pembayaranhutang as $pembayaranhutangs) {
             array_push($array, [
@@ -61,6 +60,28 @@ class PembayaranHutangController extends Controller
 
         $url     = '/pembayaran-hutang/view';
         $respons = $this->dataPagination($pembayaranhutang, $array,$url); 
+        return response()->json($respons); 
+    }
+         public function pencarian(Request $request)
+    {
+        $search = $request->search;
+        $pembayaranhutang = PembayaranHutang::datacariPembayaranHutang($request)->paginate(10);
+        $array = array();
+        foreach ($pembayaranhutang as $pembayaranhutangs) {
+            array_push($array, [
+                'id'               => $pembayaranhutangs->id,
+                'no_faktur'        => $pembayaranhutangs->no_faktur,
+                'waktu'            => $pembayaranhutangs->Waktu,
+                'suplier'          => $pembayaranhutangs->nama_suplier,
+                'total'            => $pembayaranhutangs->PemisahTotal,
+                'kas'              => $pembayaranhutangs->nama_kas,
+                'keterangan'       => $pembayaranhutangs->keterangan,
+                'user_buat'        => $pembayaranhutangs->name,
+            ]);
+        }
+
+        $url     = '/pembayaran-hutang/view';
+        $respons = $this->dataPaginationPencarianData($pembayaranhutang, $array,$url,$search); 
         return response()->json($respons); 
     }
 
@@ -95,7 +116,7 @@ class PembayaranHutangController extends Controller
         $session_id    = session()->getId();
         $user_warung   = Auth::user()->id_warung;
         $search = $request->search;
-        $tbs_pembayaran_hutang = TbsPembayaranHutang::cariTbsPembayaranHutang($request, $session_id)->paginate(10);;
+        $tbs_pembayaran_hutang = TbsPembayaranHutang::cariTbsPembayaranHutang($request, $session_id)->paginate(10);
         $array         = array();
 
         foreach ($tbs_pembayaran_hutang as $tbs_pembayaran_hutangs) {
