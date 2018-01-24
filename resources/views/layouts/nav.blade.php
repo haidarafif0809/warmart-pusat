@@ -1,5 +1,5 @@
   <li>
-    <a data-toggle="collapse" href="#transaksiKas">
+    <a data-toggle="collapse" href="#transaksiKas" class="disabled-menu">
         <i class="material-icons">
             autorenew
         </i>
@@ -67,7 +67,7 @@
 
 <!--PRODUK -->
 <li>
-    <router-link :to="{name: 'indexProduk'}" class="menu-nav">
+    <router-link :to="{name: 'indexProduk'}" class="menu-nav disabled-menu">
         <i class="material-icons">
             store
         </i>
@@ -76,7 +76,7 @@
 </li>
 
 <li>
-    <a data-toggle="collapse" href="#persediaan">
+    <a data-toggle="collapse" href="#persediaan" class="disabled-menu">
         <i class="material-icons">
             assessment
         </i>
@@ -124,7 +124,7 @@
 
 <!--PEMBELIAN-->
 <li>
-    <router-link :to="{name: 'indexPembelian'}" class="menu-nav">
+    <router-link :to="{name: 'indexPembelian'}" class="menu-nav disabled-menu">
         <i class="material-icons">
             add_shopping_cart
         </i>
@@ -136,7 +136,7 @@
 
 <!--PESANAN -->
 <li>
-    <router-link :to="{name: 'indexPesananWarung'}" class="menu-nav">
+    <router-link :to="{name: 'indexPesananWarung'}" class="menu-nav disabled-menu">
         <i class="material-icons">
             archive
         </i>
@@ -148,7 +148,7 @@
 
 {{-- PENJUALAN --}}
 <li>
-    <router-link :to="{name: 'createPenjualan'}" class="menu-nav">
+    <router-link :to="{name: 'createPenjualan'}" class="menu-nav disabled-menu">
         <i class="material-icons">
             shop
         </i>
@@ -159,7 +159,7 @@
 </li>
 
 <li>
-    <a data-toggle="collapse" href="#laporan">
+    <a data-toggle="collapse" href="#laporan" class="disabled-menu"> 
         <i class="material-icons">
             assignment
         </i>
@@ -236,7 +236,7 @@
 </li>
 
 <li>
-    <a data-toggle="collapse" href="#pagesExamples">
+    <a data-toggle="collapse" href="#pagesExamples" class="disabled-menu">
         <i class="material-icons">
             image
         </i>
