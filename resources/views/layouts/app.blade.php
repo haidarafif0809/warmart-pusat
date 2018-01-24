@@ -44,7 +44,7 @@
 <style type="text/css">
 
 .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
- padding: 1px;
+   padding: 1px;
 }
 
 </style>
@@ -58,8 +58,8 @@
     -->
 
     <div class="logo">
-       @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
-       <a class="simple-text logo-mini" href="https://war-mart.id">
+     @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
+     <a class="simple-text logo-mini" href="https://war-mart.id">
         WM
     </a>
     <a class="simple-text logo-normal" href="https://war-mart.id">
@@ -96,31 +96,31 @@
                                 UPU
                             </span>
                             <span class="sidebar-normal">
-                             Ubah Profil User
-                         </span>
-                     </router-link>
-                     @elseif(Auth::user()->tipe_user == 2 )
-                     <a href="{{ url('/ubah-profil-komunitas') }}">
+                               Ubah Profil User
+                           </span>
+                       </router-link>
+                       @elseif(Auth::user()->tipe_user == 2 )
+                       <a href="{{ url('/ubah-profil-komunitas') }}">
                         <span class="sidebar-mini">
                             UPU
                         </span>
                         <span class="sidebar-normal">
-                         Ubah Profil
-                     </span>
-                 </a>
-                 @elseif(Auth::user()->tipe_user == 1 )
-                 <router-link :to="{name: 'ubahProfilAdmin'}" class="menu-nav">
+                           Ubah Profil
+                       </span>
+                   </a>
+                   @elseif(Auth::user()->tipe_user == 1 )
+                   <router-link :to="{name: 'ubahProfilAdmin'}" class="menu-nav">
                     <span class="sidebar-mini">
                         UP
                     </span>
                     <span class="sidebar-normal">
-                     Ubah Profil
-                 </span>
-             </router-link>
-             @endif
-         </li>
-         @if(Auth::user()->tipe_user == 4 )
-         <li>
+                       Ubah Profil
+                   </span>
+               </router-link>
+               @endif
+           </li>
+           @if(Auth::user()->tipe_user == 4 )
+           <li>
             <router-link :to="{name: 'indexProfilWarung'}" class="menu-nav">
                 @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
                 <span class="sidebar-mini">
@@ -153,7 +153,7 @@
             </router-link>
             @else
             <router-link :to="{name: 'ubahPasswordUserWarung'}" class="menu-nav" v-on:click="closeMenu()">
-             <span class="sidebar-mini">
+               <span class="sidebar-mini">
                 UP
             </span>
             <span class="sidebar-normal">
@@ -181,7 +181,7 @@
 </li>
 <li class="active">
     @if(Auth::user()->tipe_user == 1 OR Auth::user()->tipe_user == 4)
-    <router-link :to="{name: 'indexDashboard'}" class="menu-nav">
+    <router-link :to="{name: 'indexDashboard'}" class="menu-nav" id="dashboard">
         <i class="material-icons">
             dashboard
         </i>
@@ -205,6 +205,7 @@
 <!--PRODUK -->
 @include('layouts.nav')
 @elseif(Auth::user()->tipe_user == 4 AND Auth::user()->konfirmasi_admin == 1  AND \App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 1 )
+
 @include('layouts.nav')
 @endif
 
@@ -396,7 +397,7 @@
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
 
-                    @if(Auth::user()->tipe_user == 4 && \App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 1)
+                    @if(Auth::user()->tipe_user == 4)
 
                     <span id="masa_demo">
                         <b id="sisa_waktu_demo"></b>
@@ -534,26 +535,50 @@
 <script type="text/javascript">
     $(document).ready(function(){
 
-        $.get('{{ Url("daftar-topos/cek-sisa-demo") }}',{'_token': $('meta[name=csrf-token]').attr('content')}, function(data){ 
+        var setting_aplikasi = "{{\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi}}";
 
-            if (data.status_pembayaran < 2) {
-                if (data.sisa_waktu > 0) {
-                  $("#sisa_waktu_demo").text("Masa Percobaan Anda Tinggal "+data.sisa_waktu+" Hari Lagi! ");   
-                  $("#sisa_waktu_demo").append("<a href='pendaftaran-topos/1' class='btn btn-primary btn-round' target='blank'> Daftar Sekarang !</a>"); 
-              }
-              else{         
-                  $("#sisa_waktu_demo").text("Masa Percobaan Anda Habis!");  
-                  $("#sisa_waktu_demo").append("<a href='pendaftaran-topos/1' class='btn btn-primary btn-round' target='blank'> Daftar Sekarang !</a>");  
-              }
-          }
+        if (setting_aplikasi == 1) {
 
-      }); 
+            $.get('{{ Url("daftar-topos/cek-sisa-demo") }}',{'_token': $('meta[name=csrf-token]').attr('content')}, function(data){ 
+
+                if (data.status_pembayaran < 2) {
+                    if (data.sisa_waktu > 0) {
+                      $("#sisa_waktu_demo").text("Masa Percobaan Anda Tinggal "+data.sisa_waktu+" Hari Lagi! ");   
+                      $("#sisa_waktu_demo").append("<a href='pendaftaran-topos/1' class='btn btn-primary btn-round' target='blank'> Daftar Sekarang !</a>"); 
+                  }
+                  else{         
+                      $("#sisa_waktu_demo").text("Masa Percobaan Anda Sudah Habis!");  
+                      $("#sisa_waktu_demo").append("<a href='pendaftaran-topos/1' class='btn btn-primary btn-round' target='blank'> Daftar Sekarang !</a>"); 
+                      $(document).on('click', '.disabled-menu', function(){
+
+                        swal({
+                          text: "Menu Tidak Dapat Diakses. Karena Masa Percobaan Anda Sudah Habis!!",
+                          type: 'info',
+                          confirmButtonColor: '#3085d6',
+                          confirmButtonText: 'OK',
+                          confirmButtonClass: 'btn btn-success',
+                          buttonsStyling: false,
+                          allowEscapeKey  :false,   
+                          allowOutsideClick :false
+                      }).then(function () {
+                        window.location.replace(window.location.origin+(window.location.pathname));
+                    })
+
+                  });
+                  }
+              }
+
+          }); 
+
+        }
+
+
 
         $("#minimizeSidebar").click();  
 
         $(document).on('click', '.menu-nav', function(){
-         $('.navbar-toggle ').click();
-     });
+           $('.navbar-toggle ').click();
+       });
 
     });
 </script>
