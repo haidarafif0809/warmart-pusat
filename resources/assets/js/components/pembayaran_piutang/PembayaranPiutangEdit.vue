@@ -768,6 +768,7 @@ methods: {
     },
     batalPembayaranPiutang(){
         var app = this
+        var id = app.$route.params.id;
         app.$swal({
             text: "Anda Yakin Ingin Membatalkan Transaksi Ini ?",
             buttons: {
@@ -779,7 +780,7 @@ methods: {
             if (!value) throw null;
 
             app.loading = true;
-            axios.post(app.url_piutang+'/proses-batal-pembayaran-piutang')
+            axios.post(app.url_piutang+'/proses-batal-edit-pembayaran-piutang/'+id)
             .then(function (resp) {
                 app.getResults();
                 app.alert("Membatalkan Transaksi Pembayaran Piutang");

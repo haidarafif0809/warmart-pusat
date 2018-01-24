@@ -503,4 +503,13 @@ class PembayaranPiutangController extends Controller
 
         return response()->json($respons);
     }
+
+    public function prosesBatalEditPembayaranPiutang($id)
+    {
+        //AMBIL NO FAKTUR
+        $no_faktur          = $this->fakturPembayaran($id);
+        $data_tbs_penjualan = EditTbsPembayaranPiutang::where('no_faktur_pembayaran', $no_faktur)->where('warung_id', Auth::user()->id_warung)->delete();
+
+        return response(200);
+    }
 }
