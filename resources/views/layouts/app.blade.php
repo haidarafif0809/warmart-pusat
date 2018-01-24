@@ -449,7 +449,7 @@
 </body>
 <!--   Core JS Files   -->
 
-<script src="{{ asset('js/app.js?v=1.102')}}" type="text/javascript">
+<script src="{{ asset('js/app.js?v=1.110')}}" type="text/javascript">
 
 </script>
 <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript">
@@ -537,12 +537,13 @@
         $.get('{{ Url("daftar-topos/cek-sisa-demo") }}',{'_token': $('meta[name=csrf-token]').attr('content')}, function(data){ 
 
             if (data.status_pembayaran < 2) {
-                if (data.sisa_waktu >= 0) {
+                if (data.sisa_waktu > 0) {
                   $("#sisa_waktu_demo").text("Masa Percobaan Anda Tinggal "+data.sisa_waktu+" Hari Lagi! ");   
                   $("#sisa_waktu_demo").append("<a href='pendaftaran-topos/1' class='btn btn-primary btn-round' target='blank'> Daftar Sekarang !</a>"); 
               }
               else{         
-                  $("#sisa_waktu_demo").text("Masa Percobaan Anda Habis!");   
+                  $("#sisa_waktu_demo").text("Masa Percobaan Anda Habis!");  
+                  $("#sisa_waktu_demo").append("<a href='pendaftaran-topos/1' class='btn btn-primary btn-round' target='blank'> Daftar Sekarang !</a>");  
               }
           }
 

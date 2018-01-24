@@ -303,86 +303,116 @@ public function index()
             return view('daftar_topos.index',['id'=>$id]);
         }
     }
-    public function prosesDaftarTopos(Request $request){     
-        $kode_verifikasi = rand(1111, 9999);
+    public function prosesDaftarTopos(Request $request){   
+
+        if (Auth::check() == false) {
+            $kode_verifikasi = rand(1111, 9999);
             // PENDAFTARAN WARUNG
-        $this->validate($request, [
-            'email'       => 'required|without_spaces|unique:users,email|email',
-            'name'        => 'required',
-            'nama_warung' => 'required',
-            'no_telp'     => 'required|numeric|without_spaces|unique:users,no_telp',
-            'alamat'      => 'required',
-            'lama_berlangganan' => 'required',
-            'berlaku_hingga' => 'required',
-            'total' => 'required',
-            'tujuan_transfer' => 'required',
-            'no_rek_transfer' => 'required',
-            'atas_nama' => 'required'
-        ]);
+            $this->validate($request, [
+                'email'       => 'required|without_spaces|unique:users,email|email',
+                'name'        => 'required',
+                'nama_warung' => 'required',
+                'no_telp'     => 'required|numeric|without_spaces|unique:users,no_telp',
+                'alamat'      => 'required',
+                'lama_berlangganan' => 'required',
+                'berlaku_hingga' => 'required',
+                'total' => 'required',
+                'tujuan_transfer' => 'required',
+                'no_rek_transfer' => 'required',
+                'atas_nama' => 'required'
+            ]);
 
             //MASTER WARUNG
-        $warung = Warung::create([
-            'name'      => $request->nama_warung,
-            'alamat'    => $request->alamat,
-            'no_telpon' => $request->no_telp,
-            'email' => $request->email,
-            'wilayah'   => "-",
-        ]);
+            $warung = Warung::create([
+                'name'      => $request->nama_warung,
+                'alamat'    => $request->alamat,
+                'no_telpon' => $request->no_telp,
+                'email' => $request->email,
+                'wilayah'   => "-",
+            ]);
 
             //INSERT BANK WARUNG
-        $bank_warung = BankWarung::create([
-            'nama_bank' => "-",
-            'atas_nama' => "-",
-            'no_rek'    => "-",
-            'warung_id' => $warung->id,
-        ]);
+            $bank_warung = BankWarung::create([
+                'nama_bank' => "-",
+                'atas_nama' => "-",
+                'no_rek'    => "-",
+                'warung_id' => $warung->id,
+            ]);
 
-        $password = bcrypt(123456);
+            $password = bcrypt(123456);
             //USER WARUNG
-        $user = UserWarung::create([
-            'name'              => $request->name,
-            'email'              => $request->email,
-            'password'          => $password,
-            'alamat'            => $request->alamat,
-            'no_telp'           => $request->no_telp,
-            'id_warung'         => $warung->id,
-            'tipe_user'         => 4,
-            'status_konfirmasi' => 0,
-            'kode_verifikasi'   => $kode_verifikasi,
-            'konfirmasi_admin'  => 1,
-        ]);
+            $user = UserWarung::create([
+                'name'              => $request->name,
+                'email'              => $request->email,
+                'password'          => $password,
+                'alamat'            => $request->alamat,
+                'no_telp'           => $request->no_telp,
+                'id_warung'         => $warung->id,
+                'tipe_user'         => 4,
+                'status_konfirmasi' => 0,
+                'kode_verifikasi'   => $kode_verifikasi,
+                'konfirmasi_admin'  => 1,
+            ]);
 
             // KAS WARUNG
 
-        Kas::create(['kode_kas' => 'K01', 'nama_kas' => 'Kas Warung', 'status_kas' => 1, 'default_kas' => 1, 'warung_id' => $warung->id]);
+            Kas::create(['kode_kas' => 'K01', 'nama_kas' => 'Kas Warung', 'status_kas' => 1, 'default_kas' => 1, 'warung_id' => $warung->id]);
 
-        $userWarungRole = Role::where('name', 'warung')->first();
-        $user->attachRole($userWarungRole);
+            $userWarungRole = Role::where('name', 'warung')->first();
+            $user->attachRole($userWarungRole);
 
-        $bank     = explode("|", $request->tujuan_transfer);
-        $bank_id  = $bank[0];
+            $bank     = explode("|", $request->tujuan_transfer);
+            $bank_id  = $bank[0];
 
-        $pendaftar_topos = PendaftarTopos::create([
-            'name'      => $request->nama_warung,
-            'email'      => $request->email,
-            'no_telp'   => $request->no_telp,
-            'alamat'     => $request->alamat,
-            'lama_berlangganan'    => $request->lama_berlangganan,
-            'berlaku_hingga'    => $request->berlaku_hingga,
-            'jenis_pembayaran'    => "ATM/BANK TRANSFER",
-            'total'    => str_replace('.','',$request->total) ,
-            'bank_id'    => $bank_id,
-            'no_rekening'    => $request->no_rek_transfer,
-            'atas_nama'    => $request->atas_nama,
-            'warung_id'    => $warung->id
+            $pendaftar_topos = PendaftarTopos::create([
+                'name'      => $request->nama_warung,
+                'email'      => $request->email,
+                'no_telp'   => $request->no_telp,
+                'alamat'     => $request->alamat,
+                'lama_berlangganan'    => $request->lama_berlangganan,
+                'berlaku_hingga'    => $request->berlaku_hingga,
+                'jenis_pembayaran'    => "ATM/BANK TRANSFER",
+                'total'    => str_replace('.','',$request->total) ,
+                'bank_id'    => $bank_id,
+                'no_rekening'    => $request->no_rek_transfer,
+                'atas_nama'    => $request->atas_nama,
+                'warung_id'    => $warung->id
 
-        ]);
+            ]);
 
         // arahkan ke methode smsPendaftaran()
-        $this->smsPendaftaran($pendaftar_topos);
+            $this->smsPendaftaran($pendaftar_topos);
 
         // kirim Notification ke Slack
-        Notification::send(PendaftarTopos::first(), new PendaftaranTopos($pendaftar_topos)); 
+            Notification::send(PendaftarTopos::first(), new PendaftaranTopos($pendaftar_topos)); 
+        }else{
+
+            $bank     = explode("|", $request->tujuan_transfer);
+            $bank_id  = $bank[0];
+
+            $pendaftar_topos = PendaftarTopos::create([
+                'name'      => $request->nama_warung,
+                'email'      => $request->email,
+                'no_telp'   => $request->no_telp,
+                'alamat'     => $request->alamat,
+                'lama_berlangganan'    => $request->lama_berlangganan,
+                'berlaku_hingga'    => $request->berlaku_hingga,
+                'jenis_pembayaran'    => "ATM/BANK TRANSFER",
+                'total'    => str_replace('.','',$request->total) ,
+                'bank_id'    => $bank_id,
+                'no_rekening'    => $request->no_rek_transfer,
+                'atas_nama'    => $request->atas_nama,
+                'warung_id'    => Auth::user()->id_warung
+
+            ]);
+
+        // arahkan ke methode smsPendaftaran()
+            $this->smsPendaftaran($pendaftar_topos);
+
+        // kirim Notification ke Slack
+            Notification::send(PendaftarTopos::first(), new PendaftaranTopos($pendaftar_topos)); 
+        }
+
 
         return redirect('/kirim-bukti-pembayaran/'.$pendaftar_topos->id);
 
@@ -395,37 +425,48 @@ public function index()
         if ($pendaftar_topos->count() == 0 ) {
             return response()->view('error.404');
         }else{
-
+            $tanggal_sekarang = date('d/m/Y H:i:s');
             $batas_pendaftaran =  $this->batasPendaftaran($pendaftar_topos->first()->created_at);
 
-            if ($pendaftar_topos->first()->status_pembayaran == 0) {
+            if ($batas_pendaftaran >= $tanggal_sekarang) {
 
-                Session::flash("flash_notification", [ 
-                    "alert" => 'warning',
-                    "icon" => 'error_outline',
-                    "judul" => 'PERHATIAN',
-                    "message" => 'Kami Sudah Mengirimkan SMS ke Nomor <b>'.$pendaftar_topos->first()->no_telp.'</b>. <br>Mohon Selesaikan Pembayaran Sebelum <b>'.$batas_pendaftaran.'</b> Sebesar <b>Rp. '. number_format($pendaftar_topos->first()->total, 0, ',', '.').'</b> melalui <b>'.$pendaftar_topos->first()->jenis_pembayaran.'</b> Ke Rekening: <br>
-                    <table>
-                    <tbody>
-                    <tr><td width="50%"><font><b>Bank</b></font></td> <td> :&nbsp;</td> <td><font> <b>'.$pendaftar_topos->first()->bank->nama_bank.'</b></font></tr>
-                    <tr><td width="50%"><font><b>No. Rekening</b></font></td> <td> :&nbsp;</td> <td c><font> <b>'.$pendaftar_topos->first()->no_rekening.'</b></font> </tr>
-                    <tr><td  width="50%"><font><b>Atas Nama</b></font></td> <td> :&nbsp;</td> <td><font> <b>'.$pendaftar_topos->first()->atas_nama.'</b></font>  </td></tr>
-                    </tbody>
-                    </table>'
-                ]);
+
+                if ($pendaftar_topos->first()->status_pembayaran == 0) {
+
+                    Session::flash("flash_notification", [ 
+                        "alert" => 'warning',
+                        "icon" => 'error_outline',
+                        "judul" => 'PERHATIAN',
+                        "message" => 'Kami Sudah Mengirimkan SMS ke Nomor <b>'.$pendaftar_topos->first()->no_telp.'</b>. <br>Mohon Selesaikan Pembayaran Sebelum <b>'.$batas_pendaftaran.'</b> Sebesar <b>Rp. '. number_format($pendaftar_topos->first()->total, 0, ',', '.').'</b> melalui <b>'.$pendaftar_topos->first()->jenis_pembayaran.'</b> Ke Rekening: <br>
+                        <table>
+                        <tbody>
+                        <tr><td width="50%"><font><b>Bank</b></font></td> <td> :&nbsp;</td> <td><font> <b>'.$pendaftar_topos->first()->bank->nama_bank.'</b></font></tr>
+                        <tr><td width="50%"><font><b>No. Rekening</b></font></td> <td> :&nbsp;</td> <td c><font> <b>'.$pendaftar_topos->first()->no_rekening.'</b></font> </tr>
+                        <tr><td  width="50%"><font><b>Atas Nama</b></font></td> <td> :&nbsp;</td> <td><font> <b>'.$pendaftar_topos->first()->atas_nama.'</b></font>  </td></tr>
+                        </tbody>
+                        </table>'
+                    ]);
+
+                }else{
+
+                    Session::flash("flash_notification", [ 
+                        "alert" => 'success',
+                        "icon" => 'error_outline',
+                        "judul" => 'Info',
+                        "message" => 'Terima Kasih Telah Melakukan Pembayaran, Aplikasi Yang Anda Pesan Akan di Proses. Kami Akan Segera Menghubungi Anda'
+                    ]);
+
+                }
 
             }else{
-
                 Session::flash("flash_notification", [ 
-                    "alert" => 'success',
+                    "alert" => 'danger',
                     "icon" => 'error_outline',
                     "judul" => 'Info',
-                    "message" => 'Terima Kasih Telah Mengirimkan Bukti Pembayaran, Aplikasi Yang Anda Pesan Akan di Proses. Kami Akan Segera Menghubungi Anda'
+                    "message" => 'Waktu Pembayaran Anda Habis, Karena Telah Melebihi Batas Waktu yang ditentukan'
                 ]);
-
             }
-
-            return view('daftar_topos.kirim_bukti_pembayaran', ['pendaftar_topos'=>$pendaftar_topos->first()]);
+            return view('daftar_topos.kirim_bukti_pembayaran', ['pendaftar_topos'=>$pendaftar_topos->first()    ]);
         }
     }
 
@@ -515,9 +556,9 @@ public function index()
 
         public function dataWarung(){
 
-           return Warung::find(Auth::user()->id_warung);
-       }
-       public function dataBank(){
+         return Warung::find(Auth::user()->id_warung);
+     }
+     public function dataBank(){
         $bank = Bank::all();
         return response()->json($bank);
     }
@@ -528,7 +569,7 @@ public function index()
         $update_pendafataran_topos->update(['status_pembayaran'=> '2']);
 
         // isi pesan SMS
-        $isi_pesan = urlencode('Topos : Terima Kasih Telah Mengirimkan Bukti Pembayaran,  Pembayaran Anda Sudah Kami Terima.');
+        $isi_pesan = urlencode('Topos : Terima Kasih Telah Melakukan Pembayaran,  Pembayaran Anda Sudah Kami Terima. Petugas Kami Sedang Menyiapkan Aplikasi Untuk Anda');
         // no telp
         $no_telpon = $update_pendafataran_topos->no_telp;
         // arahkan ke methode kirimSms()
@@ -540,18 +581,23 @@ public function index()
 
       $warung = Warung::select(DB::raw(' datediff(DATE_ADD(created_at, INTERVAL 14 DAY), current_date()) as sisa_waktu '))->where('id',Auth::user()->id_warung )->first();
       $sisa_waktu = $warung->sisa_waktu;
-      $pendaftar_topos = PendaftarTopos::select('status_pembayaran')->where('warung_id',Auth::user()->id_warung);
+      $pendaftar_topos = PendaftarTopos::select('status_pembayaran','id')->where('warung_id',Auth::user()->id_warung);
 
       if ($pendaftar_topos->count() == 0) {
-       $status_pembayaran = 0;
-   }else{        
-       $status_pembayaran = $pendaftar_topos->first()->status_pembayaran;
-   }
+        $status_pembayaran = 0;   
+        $respons['id'] = 0;    
+        $respons['status_pembayaran'] = $status_pembayaran;
+        $respons['sisa_waktu'] = $sisa_waktu;
+    }else{        
+     $status_pembayaran = $pendaftar_topos->first()->status_pembayaran;
 
-   $respons['status_pembayaran'] = $status_pembayaran;
-   $respons['sisa_waktu'] = $sisa_waktu;
+     $respons['id'] = $pendaftar_topos->first()->id;
+     $respons['status_pembayaran'] = $status_pembayaran;
+     $respons['sisa_waktu'] = $sisa_waktu;
+ }
 
-   return response()->json($respons);
+
+ return response()->json($respons);
 }
 
 }

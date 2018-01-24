@@ -350,7 +350,7 @@
                         </div>
                     </div>
 
-                    <p style="color: red; font-style: italic;">*Note : Klik Kolom Jumlah, Harga, & Potongan Untuk Mengubah Nilai.</p>      
+                    <p style="color: red; font-style: italic;">*Note : Klik Tombol Edit, Untuk Mengubah Nilai.</p>    
 
 
                 </div><!-- / PANEL BODY -->
@@ -372,7 +372,6 @@
                 kas: [],
                 tbs_pembayaran_piutang: [],
                 tbsPembayaranPiutangData : {},
-                url : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
                 url_piutang : window.location.origin+(window.location.pathname).replace("dashboard", "pembayaran-piutang"),
                 url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
 

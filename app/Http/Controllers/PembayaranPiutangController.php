@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DetailPembayaranPiutang;
+use App\EditTbsPembayaranPiutang;
 use App\Kas;
 use App\PembayaranPiutang;
 use App\PenjualanPos;
@@ -38,9 +39,8 @@ class PembayaranPiutangController extends Controller
 
     public function dataPiutang()
     {
-        $penjualan_piutang = PenjualanPos::select(['penjualan_pos.id', 'penjualan_pos.no_faktur', 'penjualan_pos.pelanggan_id', 'penjualan_pos.kredit', 'penjualan_pos.tanggal_jt_tempo', 'users.name'])->where('status_penjualan', 'Piutang')->where('warung_id', Auth::user()->id_warung)
-            ->leftJoin('users', 'users.id', '=', 'penjualan_pos.pelanggan_id')->get();
-        $array = array();
+        $penjualan_piutang = PenjualanPos::dataPenjualanPiutang()->get();
+        $array             = array();
         foreach ($penjualan_piutang as $penjualan_piutangs) {
             if ($penjualan_piutangs->pelanggan_id == 0) {
                 $nama_pelanggan = "Umum";
@@ -87,11 +87,85 @@ class PembayaranPiutangController extends Controller
         return $respons;
     }
 
+    public function foreachTbs($pembayaran_piutang, $jenis_tbs)
+    {
+        $array_pembayaran_piutang = array();
+        foreach ($pembayaran_piutang as $pembayaran_piutangs) {
+
+            if ($pembayaran_piutangs->pelanggan_id == 0) {
+                $pelanggan = 'Umum';
+            } else {
+                $pelanggan = $pembayaran_piutangs->name;
+            }
+
+            if ($jenis_tbs == 1) {
+                // JIKA JENIS TBS == 1, MAKA ambil "id_tbs_pembayaran_piutang"
+                $id_tbs = $pembayaran_piutangs->id_tbs_pembayaran_piutang;
+            } else {
+// JIKA JENIS TBS == 2, MAKA ambil "id_edit_tbs_pembayaran_piutang"
+                $id_tbs = $pembayaran_piutangs->id_edit_tbs_pembayaran_piutang;
+            }
+
+            $sisa_piutang = $pembayaran_piutangs->subtotal_piutang - $pembayaran_piutangs->jumlah_bayar;
+
+            array_push($array_pembayaran_piutang, [
+                'no_faktur_penjualan'       => $pembayaran_piutangs->no_faktur_penjualan,
+                'jatuh_tempo'               => $pembayaran_piutangs->jatuh_tempo,
+                'piutang'                   => $pembayaran_piutangs->piutang,
+                'potongan'                  => $pembayaran_piutangs->potongan,
+                'total'                     => $pembayaran_piutangs->subtotal_piutang,
+                'jumlah_bayar'              => $pembayaran_piutangs->jumlah_bayar,
+                'sisa_piutang'              => $sisa_piutang,
+                'pelanggan'                 => $pelanggan,
+                'id_tbs_pembayaran_piutang' => $id_tbs,
+            ]);
+        }
+
+        return $array_pembayaran_piutang;
+    }
+
+    public function foreachDetail($pembayaran_piutang)
+    {
+        $array_pembayaran_piutang = array();
+        foreach ($pembayaran_piutang as $detail_pembayaran_piutangs) {
+
+            if ($detail_pembayaran_piutangs->pelanggan_id == 0) {
+                $pelanggan = 'Umum';
+            } else {
+                $pelanggan = $detail_pembayaran_piutangs->name;
+            }
+            $subtotal_piutang = $detail_pembayaran_piutangs->piutang - $detail_pembayaran_piutangs->potongan;
+            $sisa_piutang     = $subtotal_piutang - $detail_pembayaran_piutangs->jumlah_bayar;
+
+            array_push($array_pembayaran_piutang, [
+                'no_faktur_penjualan'       => $detail_pembayaran_piutangs->no_faktur_penjualan,
+                'jatuh_tempo'               => $detail_pembayaran_piutangs->jatuh_tempo,
+                'piutang'                   => $detail_pembayaran_piutangs->piutang,
+                'potongan'                  => $detail_pembayaran_piutangs->potongan,
+                'total'                     => $subtotal_piutang,
+                'jumlah_bayar'              => $detail_pembayaran_piutangs->jumlah_bayar,
+                'sisa_piutang'              => $sisa_piutang,
+                'pelanggan'                 => $pelanggan,
+                'id_tbs_pembayaran_piutang' => $detail_pembayaran_piutangs->id_tbs_pembayaran_piutang,
+            ]);
+        }
+
+        return $array_pembayaran_piutang;
+    }
+
+    public function fakturPembayaran($id)
+    {
+        $pembayaran_piutang = PembayaranPiutang::select('no_faktur_pembayaran')
+            ->where('id_pembayaran_piutang', $id)
+            ->where('warung_id', Auth::user()->id_warung)->first();
+        $no_faktur = $pembayaran_piutang->no_faktur_pembayaran;
+
+        return $no_faktur;
+    }
+
     public function view()
     {
-        $pembayaran_piutang = PembayaranPiutang::select('pembayaran_piutangs.id_pembayaran_piutang as id', 'pembayaran_piutangs.no_faktur_pembayaran as no_faktur', 'pembayaran_piutangs.created_at as waktu', 'pembayaran_piutangs.total as total', 'kas.nama_kas as nama_kas', 'users.name as petugas', 'pembayaran_piutangs.keterangan as keterangan')->leftJoin('kas', 'pembayaran_piutangs.cara_bayar', '=', 'kas.id')->leftJoin('users', 'pembayaran_piutangs.created_by', '=', 'users.id')
-            ->where('pembayaran_piutangs.warung_id', Auth::user()->id_warung)
-            ->orderBy('pembayaran_piutangs.id_pembayaran_piutang')->paginate(10);
+        $pembayaran_piutang = PembayaranPiutang::dataPembayaranPiutang()->paginate(10);
 
         $array_pembayaran_piutang = array();
         foreach ($pembayaran_piutang as $pembayaran_piutangs) {
@@ -150,31 +224,10 @@ class PembayaranPiutangController extends Controller
     {
         $session_id         = session()->getId();
         $pembayaran_piutang = TbsPembayaranPiutang::dataTbsPembayaranPiutang($session_id)->paginate(10);
+        $jenis_tbs          = 1;
 
-        $array_pembayaran_piutang = array();
-        foreach ($pembayaran_piutang as $pembayaran_piutangs) {
-
-            if ($pembayaran_piutangs->pelanggan_id == 0) {
-                $pelanggan = 'Umum';
-            } else {
-                $pelanggan = $pembayaran_piutangs->name;
-            }
-
-            $sisa_piutang = $pembayaran_piutangs->subtotal_piutang - $pembayaran_piutangs->jumlah_bayar;
-
-            array_push($array_pembayaran_piutang, [
-                'no_faktur_penjualan'       => $pembayaran_piutangs->no_faktur_penjualan,
-                'jatuh_tempo'               => $pembayaran_piutangs->jatuh_tempo,
-                'piutang'                   => $pembayaran_piutangs->piutang,
-                'potongan'                  => $pembayaran_piutangs->potongan,
-                'total'                     => $pembayaran_piutangs->subtotal_piutang,
-                'jumlah_bayar'              => $pembayaran_piutangs->jumlah_bayar,
-                'sisa_piutang'              => $sisa_piutang,
-                'pelanggan'                 => $pelanggan,
-                'id_tbs_pembayaran_piutang' => $pembayaran_piutangs->id_tbs_pembayaran_piutang,
-            ]);
-        }
-        $link_view = 'view-tbs-pembayaran-piutang';
+        $array_pembayaran_piutang = $this->foreachTbs($pembayaran_piutang, $jenis_tbs);
+        $link_view                = 'view-tbs-pembayaran-piutang';
 
         //DATA PAGINATION
         $respons = $this->dataPagination($pembayaran_piutang, $array_pembayaran_piutang, $link_view);
@@ -185,28 +238,10 @@ class PembayaranPiutangController extends Controller
     {
         $session_id         = session()->getId();
         $pembayaran_piutang = TbsPembayaranPiutang::cariTbsPembayaranPiutang($request, $session_id)->paginate(10);
+        $jenis_tbs          = 1;
 
-        $array_pembayaran_piutang = array();
-        foreach ($pembayaran_piutang as $pembayaran_piutangs) {
-            $total = $pembayaran_piutangs->piutang - $pembayaran_piutangs->potongan;
-            if ($pembayaran_piutangs->pelanggan_id == 0) {
-                $pelanggan = 'Umum';
-            } else {
-                $pelanggan = $pembayaran_piutangs->name;
-            }
-
-            array_push($array_pembayaran_piutang, [
-                'no_faktur_penjualan'       => $pembayaran_piutangs->no_faktur_penjualan,
-                'jatuh_tempo'               => $pembayaran_piutangs->jatuh_tempo,
-                'piutang'                   => $pembayaran_piutangs->piutang,
-                'potongan'                  => $pembayaran_piutangs->potongan,
-                'total'                     => $total,
-                'jumlah_bayar'              => $pembayaran_piutangs->jumlah_bayar,
-                'pelanggan'                 => $pelanggan,
-                'id_tbs_pembayaran_piutang' => $pembayaran_piutangs->id_tbs_pembayaran_piutang,
-            ]);
-        }
-        $link_view = 'view-tbs-pembayaran-piutang';
+        $array_pembayaran_piutang = $this->foreachTbs($pembayaran_piutang, $jenis_tbs);
+        $link_view                = 'view-tbs-pembayaran-piutang';
 
         //DATA PAGINATION
         $respons = $this->dataPagination($pembayaran_piutang, $array_pembayaran_piutang, $link_view);
@@ -226,6 +261,7 @@ class PembayaranPiutangController extends Controller
     {
         $tbs_pembayaran_piutang = TbsPembayaranPiutang::find($request->id_tbs);
         $subtotal               = $request->piutang - $request->potongan;
+
         $tbs_pembayaran_piutang->update(['potongan' => $request->potongan, 'subtotal_piutang' => $subtotal, 'jumlah_bayar' => $request->jumlah_bayar]);
         $respons['jumlah_bayar'] = $request->jumlah_bayar;
 
@@ -315,5 +351,156 @@ class PembayaranPiutangController extends Controller
             DB::commit();
             return response(200);
         }
+    }
+
+    public function viewDetail($id)
+    {
+        $user_warung        = Auth::user()->id_warung;
+        $pembayaran_piutang = DetailPembayaranPiutang::dataDetailPembayaranPiutang($user_warung)->paginate(10);
+
+        $array_pembayaran_piutang = $this->foreachDetail($pembayaran_piutang);
+        $link_view                = 'view-detail-pembayaran-piutang/' . $id;
+
+        //DATA PAGINATION
+        $respons = $this->dataPagination($pembayaran_piutang, $array_pembayaran_piutang, $link_view);
+        return response()->json($respons);
+    }
+
+    public function pencarianDetail(Request $request, $id)
+    {
+        $user_warung        = Auth::user()->id_warung;
+        $pembayaran_piutang = DetailPembayaranPiutang::cariDetailPembayaranPiutang($request, $user_warung)->paginate(10);
+
+        $array_pembayaran_piutang = $this->foreachDetail($pembayaran_piutang);
+        $link_view                = 'pencarian-detail-pembayaran-piutang/' . $id;
+
+        //DATA PAGINATION
+        $respons = $this->dataPagination($pembayaran_piutang, $array_pembayaran_piutang, $link_view);
+        return response()->json($respons);
+    }
+
+//PROSES EDIT PEMBAYARAN PIUTANG
+    public function edit($id)
+    {
+        $session_id = session()->getId();
+        $no_faktur  = $this->fakturPembayaran($id);
+
+        //PILIH DATA DETAIL PEMBAYARAN PIUTANG
+        $detail_pembayaran_piutang = DetailPembayaranPiutang::where('no_faktur_pembayaran', $no_faktur)
+            ->where('warung_id', Auth::user()->id_warung);
+
+        //HAPUS DATA DI EDIT TBS
+        $hapus_semua_edit_tbs_pembayaran_piutang = EditTbsPembayaranPiutang::where('no_faktur_pembayaran', $no_faktur)
+            ->where('warung_id', Auth::user()->id_warung)->delete();
+
+        foreach ($detail_pembayaran_piutang->get() as $data_tbs) {
+            $subtotal_piutang = $data_tbs->piutang - $data_tbs->potongan;
+
+            $detail_penjualan = EditTbsPembayaranPiutang::create([
+                'session_id'           => $session_id,
+                'no_faktur_pembayaran' => $data_tbs->no_faktur_pembayaran,
+                'subtotal_piutang'     => $subtotal_piutang,
+                'no_faktur_penjualan'  => $data_tbs->no_faktur_penjualan,
+                'jatuh_tempo'          => $data_tbs->jatuh_tempo,
+                'piutang'              => $data_tbs->piutang,
+                'potongan'             => $data_tbs->potongan,
+                'jumlah_bayar'         => $data_tbs->jumlah_bayar,
+                'pelanggan_id'         => $data_tbs->pelanggan_id,
+                'warung_id'            => Auth::user()->id_warung,
+            ]);
+        }
+
+        return response(200);
+    }
+
+    public function viewTbsEdit($id)
+    {
+        $session_id = session()->getId();
+        //AMBIL NO FAKTUR
+        $no_faktur          = $this->fakturPembayaran($id);
+        $pembayaran_piutang = EditTbsPembayaranPiutang::dataEditTbsPembayaranPiutang($session_id, $no_faktur)->paginate(10);
+        $jenis_tbs          = 2;
+
+        $array_pembayaran_piutang = $this->foreachTbs($pembayaran_piutang, $jenis_tbs);
+        $link_view                = 'view-edit-tbs-pembayaran-piutang';
+
+        //DATA PAGINATION
+        $respons = $this->dataPagination($pembayaran_piutang, $array_pembayaran_piutang, $link_view);
+        return response()->json($respons);
+    }
+
+    public function pencarianTbsEdit(Request $request, $id)
+    {
+        $session_id = session()->getId();
+        //AMBIL NO FAKTUR
+        $no_faktur          = $this->fakturPembayaran($id);
+        $pembayaran_piutang = EditTbsPembayaranPiutang::cariEditTbsPembayaranPiutang($request, $session_id, $no_faktur)->paginate(10);
+        $jenis_tbs          = 2;
+
+        $array_pembayaran_piutang = $this->foreachTbs($pembayaran_piutang, $jenis_tbs);
+        $link_view                = 'view-edit-tbs-pembayaran-piutang';
+
+        //DATA PAGINATION
+        $respons = $this->dataPagination($pembayaran_piutang, $array_pembayaran_piutang, $link_view);
+        return response()->json($respons);
+    }
+
+    //INSERT EDIT TBS
+    public function prosesEditTbsPembayaranPiutang(Request $request, $id)
+    {
+        $session_id = session()->getId();
+        //AMBIL NO FAKTUR
+        $no_faktur = $this->fakturPembayaran($id);
+
+        $data_tbs = EditTbsPembayaranPiutang::where('no_faktur_penjualan', $request->no_faktur_penjualan)
+            ->where('session_id', $session_id)
+            ->where('no_faktur_pembayaran', $no_faktur)
+            ->where('warung_id', Auth::user()->id_warung)->count();
+
+        //JIKA FAKTUR YG DIPILIH SUDAH ADA DI TBS
+        if ($data_tbs > 0) {
+
+            return 0;
+
+        } else {
+            $subtotal_piutang = $request->piutang - $request->potongan;
+
+            $tbs_pembayaran_piutang = EditTbsPembayaranPiutang::create([
+                'session_id'           => $session_id,
+                'no_faktur_pembayaran' => $no_faktur,
+                'no_faktur_penjualan'  => $request->no_faktur_penjualan,
+                'jatuh_tempo'          => $request->jatuh_tempo,
+                'piutang'              => $request->piutang,
+                'potongan'             => $request->potongan,
+                'jumlah_bayar'         => $request->jumlah_bayar,
+                'subtotal_piutang'     => $subtotal_piutang,
+                'pelanggan_id'         => $request->pelanggan_id,
+                'warung_id'            => Auth::user()->id_warung,
+            ]);
+
+            $respons['jumlah_bayar'] = $request->jumlah_bayar;
+
+            return response()->json($respons);
+        }
+    }
+
+    public function prosesHapusEditTbsPembayaranPiutang($id)
+    {
+        if (!EditTbsPembayaranPiutang::destroy($id)) {
+            return 0;
+        } else {
+            return response(200);
+        }
+    }
+
+    public function updateEditTbsPembayaranPiutang(Request $request)
+    {
+        $tbs_pembayaran_piutang = EditTbsPembayaranPiutang::find($request->id_tbs);
+        $subtotal               = $request->piutang - $request->potongan;
+
+        $tbs_pembayaran_piutang->update(['potongan' => $request->potongan, 'subtotal_piutang' => $subtotal, 'jumlah_bayar' => $request->jumlah_bayar]);
+        $respons['jumlah_bayar'] = $request->jumlah_bayar;
+
+        return response()->json($respons);
     }
 }

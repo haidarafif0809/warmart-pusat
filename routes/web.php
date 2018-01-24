@@ -710,6 +710,14 @@ Route::get('/pembayaran-piutang/data-penjualan-piutang/{id}', 'PembayaranPiutang
 Route::post('/pembayaran-piutang/proses-tambah-tbs-pembayaran-piutang', 'PembayaranPiutangController@prosesTbsPembayaranPiutang')->middleware('auth');
 Route::get('/pembayaran-piutang/view-tbs-pembayaran-piutang', 'PembayaranPiutangController@viewTbs')->middleware('auth');
 Route::get('/pembayaran-piutang/pencarian-tbs-pembayaran-piutang', 'PembayaranPiutangController@pencarianTbs')->middleware('auth');
+Route::get('/pembayaran-piutang/view-detail-pembayaran-piutang/{id}', 'PembayaranPiutangController@viewDetail')->middleware('auth');
+Route::get('/pembayaran-piutang/pencarian-detail-pembayaran-piutang/{id}', 'PembayaranPiutangController@pencarianDetail')->middleware('auth');
+
+//PEMBAYARAN PIUTANG EDIT
+Route::get('/pembayaran-piutang/view-edit-tbs-pembayaran-piutang/{id}', 'PembayaranPiutangController@viewTbsEdit')->middleware('auth');
+Route::get('/pembayaran-piutang/pencarian-edit-tbs-pembayaran-piutang/{id}', 'PembayaranPiutangController@pencarianTbsEdit')->middleware('auth');
+Route::post('/pembayaran-piutang/proses-tambah-edit-tbs-pembayaran-piutang/{id}', 'PembayaranPiutangController@prosesEditTbsPembayaranPiutang')->middleware('auth');
+Route::delete('/pembayaran-piutang/proses-hapus-edit-tbs-pembayaran-piutang/{id}', 'PembayaranPiutangController@prosesHapusEditTbsPenjualan')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
@@ -999,6 +1007,13 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
         'middleware' => ['auth'],
         'as'         => 'pembayaran-piutang.proses_batal_pembayaran_piutang',
         'uses'       => 'PembayaranPiutangController@prosesBatalPembayaranPiutang',
+    ]);
+
+    //EDIT PEMBAYARAN PIUTANG
+    Route::post('pembayaran-piutang/edit-jumlah-edit-tbs-pembayaran-piutang', [
+        'middleware' => ['auth'],
+        'as'         => 'pembayaran-piutang.edit_jumlah_edit_tbs_pembayaran_piutang',
+        'uses'       => 'PembayaranPiutangController@updateEditTbsPembayaranPiutang',
     ]);
 
 });
