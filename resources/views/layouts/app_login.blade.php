@@ -51,7 +51,7 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
                 @if($setting_aplikasi->tipe_aplikasi == 0)
                 <a class="navbar-brand" href="{{ url('/')}}">War-Mart.id</a>
                 @else
-                <a class="navbar-brand" href="{{ url('/')}}"><img class="navbar-brand" src="{{asset('/assets/img/examples/topos_logo.png'.'?v=2')}}"/></a>
+                <a class="navbar-brand" href="{{ url('/')}}"><img class="navbar-brand" src="{{asset('/assets/img/examples/topos_logo.png'.'?v=3')}}"/></a>
                 @endif
             </div>
             <div class="collapse navbar-collapse">
@@ -106,12 +106,12 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
 
                         <div class="col-md-4 col-sm-6 col-md-offset-4 col-sm-offset-3">
 
-                           @yield('content')
-                       </div>
-                   </div>
-               </div>
-           </div>
-           <footer class="footer">
+                         @yield('content')
+                     </div>
+                 </div>
+             </div>
+         </div>
+         <footer class="footer">
             <div class="container">
                 <p class="copyright pull-right">
                     &copy;

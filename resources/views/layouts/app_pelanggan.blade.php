@@ -92,7 +92,7 @@ body {
                     @if(Auth::check() && Auth::user()->tipe_user == 4)
                     <a href="{{ url('/') }}"> <img class="navbar-brand" src="{{asset('/foto_ktp_user/'.$foto_logo->foto_ktp.'').'?v=1'}}"/></a>
                     @else
-                    <a href="{{ url('/') }}"> <img class="navbar-brand" src="{{asset('/assets/img/examples/topos_logo.png'.'?v=2')}}"/></a>
+                    <a href="{{ url('/') }}"> <img class="navbar-brand" src="{{asset('/assets/img/examples/topos_logo.png'.'?v=3')}}"/></a>
                     @endif
                     @endif
 

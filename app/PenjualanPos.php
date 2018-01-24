@@ -243,7 +243,8 @@ class PenjualanPos extends Model
     // DATA PENJUALAN PIUTANG
     public function scopeDataPenjualanPiutang($query_penjualan_piutang)
     {
-        $query_penjualan_piutang = PenjualanPos::select(['penjualan_pos.id', 'penjualan_pos.no_faktur', 'penjualan_pos.pelanggan_id', 'penjualan_pos.kredit', 'penjualan_pos.tanggal_jt_tempo', 'users.name'])->where('status_penjualan', 'Piutang')
+        $query_penjualan_piutang = PenjualanPos::select(['penjualan_pos.id', 'penjualan_pos.no_faktur', 'penjualan_pos.pelanggan_id', 'penjualan_pos.kredit', 'penjualan_pos.tanggal_jt_tempo', 'users.name'])
+            ->where('status_penjualan', 'Piutang')
             ->where('warung_id', Auth::user()->id_warung)
             ->leftJoin('users', 'users.id', '=', 'penjualan_pos.pelanggan_id');
 

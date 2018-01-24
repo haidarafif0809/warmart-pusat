@@ -69,10 +69,29 @@ class PembayaranPiutang extends Model
     // DATA PEMBAYARAN PIUTANG
     public function scopeDataPembayaranPiutang($query_pembayaran_piutang)
     {
-        $query_pembayaran_piutang = PembayaranPiutang::select('pembayaran_piutangs.id_pembayaran_piutang as id', 'pembayaran_piutangs.no_faktur_pembayaran as no_faktur', 'pembayaran_piutangs.created_at as waktu', 'pembayaran_piutangs.total as total', 'kas.nama_kas as nama_kas', 'users.name as petugas', 'pembayaran_piutangs.keterangan as keterangan')
+        $query_pembayaran_piutang = PembayaranPiutang::select('pembayaran_piutangs.id_pembayaran_piutang as id', 'pembayaran_piutangs.no_faktur_pembayaran as no_faktur', 'pembayaran_piutangs.created_at', 'pembayaran_piutangs.total as total', 'kas.nama_kas as nama_kas', 'users.name as petugas', 'pembayaran_piutangs.keterangan as keterangan')
             ->leftJoin('kas', 'pembayaran_piutangs.cara_bayar', '=', 'kas.id')
             ->leftJoin('users', 'pembayaran_piutangs.created_by', '=', 'users.id')
             ->where('pembayaran_piutangs.warung_id', Auth::user()->id_warung)
+            ->orderBy('pembayaran_piutangs.id_pembayaran_piutang');
+
+        return $query_pembayaran_piutang;
+    }
+
+    // CARI PEMBAYARAN PIUTANG
+    public function scopeCariPembayaranPiutang($query_pembayaran_piutang, $request)
+    {
+        $search                   = $request->search;
+        $query_pembayaran_piutang = PembayaranPiutang::select('pembayaran_piutangs.id_pembayaran_piutang as id', 'pembayaran_piutangs.no_faktur_pembayaran as no_faktur', 'pembayaran_piutangs.created_at', 'pembayaran_piutangs.total as total', 'kas.nama_kas as nama_kas', 'users.name as petugas', 'pembayaran_piutangs.keterangan as keterangan')
+            ->leftJoin('kas', 'pembayaran_piutangs.cara_bayar', '=', 'kas.id')
+            ->leftJoin('users', 'pembayaran_piutangs.created_by', '=', 'users.id')
+            ->where('pembayaran_piutangs.warung_id', Auth::user()->id_warung)
+            ->where(function ($query) use ($search) {
+                $query->orwhere('pembayaran_piutangs.no_faktur_pembayaran', 'LIKE', '%' . $search . '%')
+                    ->orwhere('pembayaran_piutangs.keterangan', 'LIKE', '%' . $search . '%')
+                    ->orwhere('pembayaran_piutangs.created_at', 'LIKE', '%' . $search . '%')
+                    ->orwhere('kas.nama_kas', 'LIKE', '%' . $search . '%');
+            })
             ->orderBy('pembayaran_piutangs.id_pembayaran_piutang');
 
         return $query_pembayaran_piutang;

@@ -96,9 +96,9 @@ class UbahProfilController extends Controller
     public function ubah_profil_user_warung()
     {
         //PILIH USER -> LOGIN
-        $user                = Auth::user();
-        $user_warung         = UserWarung::find($user->id);
-        $user_warung['nama'] = $user_warung->name;
+        $user                            = Auth::user();
+        $user_warung                     = UserWarung::find($user->id);
+        $user_warung['nama']             = $user_warung->name;
         $user_warung['setting_aplikasi'] = SettingAplikasi::select('tipe_aplikasi')->first();
 
         if ($user_warung->id_warung != Auth::user()->id_warung) {
@@ -146,7 +146,7 @@ class UbahProfilController extends Controller
                 // membuat nama file random berikut extension
                 $filename     = str_random(40) . '.' . $extension;
                 $image_resize = Image::make($foto_ktp->getRealPath());
-                $image_resize->fit(300);
+                $image_resize->resize(300, 130);
                 $image_resize->save(public_path('foto_ktp_user/' . $filename));
 
                 // hapus foto ktp lama, jika ada
