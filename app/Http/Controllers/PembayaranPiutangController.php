@@ -39,7 +39,7 @@ class PembayaranPiutangController extends Controller
 
     public function dataPiutang()
     {
-        $penjualan_piutang = PenjualanPos::dataPenjualanPiutang()->get();
+        $penjualan_piutang = TransaksiPiutang::dataPenjualanPiutang()->get();
         $array             = array();
         foreach ($penjualan_piutang as $penjualan_piutangs) {
             if ($penjualan_piutangs->pelanggan_id == 0) {
@@ -52,7 +52,7 @@ class PembayaranPiutangController extends Controller
                 'id'                  => $penjualan_piutangs->id,
                 'no_faktur_penjualan' => $penjualan_piutangs->no_faktur,
                 'pelanggan_id'        => $penjualan_piutangs->pelanggan_id,
-                'piutang'             => $penjualan_piutangs->kredit,
+                'piutang'             => $penjualan_piutangs->sisa_piutang,
                 'jatuh_tempo'         => $penjualan_piutangs->tanggal_jt_tempo,
                 'nama_pelanggan'      => $nama_pelanggan,
             ]);
@@ -63,7 +63,7 @@ class PembayaranPiutangController extends Controller
 
     public function getDataFakturPiutang($id)
     {
-        $penjualan_piutang = PenjualanPos::select(['id', 'no_faktur', 'pelanggan_id', 'kredit', 'tanggal_jt_tempo'])->where('id', $id)->where('warung_id', Auth::user()->id_warung)->first();
+        $penjualan_piutang = TransaksiPiutang::dataPenjualanPiutangPerFaktur($id)->first();
 
         return response()->json($penjualan_piutang);
     }
@@ -316,7 +316,7 @@ class PembayaranPiutangController extends Controller
                     'no_faktur'       => $no_faktur,
                     'id_transaksi'    => $id_penjualan_pos->id,
                     'jenis_transaksi' => 'Pembayaran Piutang',
-                    'jumlah_keluar'   => $data_tbs->jumlah_bayar,
+                    'jumlah_keluar'   => $data_tbs->jumlah_bayar + $data_tbs->potongan,
                     'pelanggan_id'    => $data_tbs->pelanggan_id,
                     'warung_id'       => $data_tbs->warung_id,
                 ]);
@@ -573,7 +573,7 @@ class PembayaranPiutangController extends Controller
                     'no_faktur'       => $pembayaran_piutang->no_faktur_pembayaran,
                     'id_transaksi'    => $id_penjualan_pos->id,
                     'jenis_transaksi' => 'Pembayaran Piutang',
-                    'jumlah_keluar'   => $data_tbs->jumlah_bayar,
+                    'jumlah_keluar'   => $data_tbs->jumlah_bayar + $data_tbs->potongan,
                     'pelanggan_id'    => $data_tbs->pelanggan_id,
                     'warung_id'       => $data_tbs->warung_id,
                 ]);

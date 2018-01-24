@@ -543,8 +543,9 @@ methods: {
     getDataFakturPiutang(id) {
         var app = this;
         axios.get(app.url_piutang+'/data-penjualan-piutang/'+id).then(function (resp) {
-            app.inputTbsPembayaranPiutang.piutang = resp.data.kredit;
-            app.inputTbsPembayaranPiutang.jumlah_bayar = resp.data.kredit;
+            console.log(resp.data)
+            app.inputTbsPembayaranPiutang.piutang = resp.data.sisa_piutang;
+            app.inputTbsPembayaranPiutang.jumlah_bayar = resp.data.sisa_piutang;
             app.inputTbsPembayaranPiutang.no_faktur_penjualan = resp.data.no_faktur;
             app.inputTbsPembayaranPiutang.pelanggan_id = resp.data.pelanggan_id;
             app.inputTbsPembayaranPiutang.jatuh_tempo = resp.data.tanggal_jt_tempo;
