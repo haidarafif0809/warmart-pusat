@@ -306,11 +306,11 @@
                                             <td align="right">{{ tbs_pembayaran_piutang.sisa_piutang | pemisahTitik }}</td>
 
                                             <td align="center">
-                                                <a href="#create-pembayaran-piutang" class="btn btn-xs btn-success" v-bind:id="'edit-' + tbs_pembayaran_piutang.id_edit_tbs_pembayaran_piutang" v-on:click="editEntry(tbs_pembayaran_piutang.id_edit_tbs_pembayaran_piutang, index, tbs_pembayaran_piutang.no_faktur_penjualan,tbs_pembayaran_piutang.pelanggan,tbs_pembayaran_piutang.jumlah_bayar,tbs_pembayaran_piutang.potongan,tbs_pembayaran_piutang.piutang)">Edit</a>
+                                                <a @href="'#edit-pembayaran-piutang/'+tbs_pembayaran_piutang.id_tbs_pembayaran_piutang" class="btn btn-xs btn-success" v-bind:id="'edit-' + tbs_pembayaran_piutang.id_tbs_pembayaran_piutang" v-on:click="editEntry(tbs_pembayaran_piutang.id_tbs_pembayaran_piutang, index, tbs_pembayaran_piutang.no_faktur_penjualan,tbs_pembayaran_piutang.pelanggan,tbs_pembayaran_piutang.jumlah_bayar,tbs_pembayaran_piutang.potongan,tbs_pembayaran_piutang.piutang)">Edit</a>
                                             </td>
 
                                             <td align="center">
-                                                <a href="#create-pembayaran-piutang" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_pembayaran_piutang.id_edit_tbs_pembayaran_piutang" v-on:click="deleteEntry(tbs_pembayaran_piutang.id_edit_tbs_pembayaran_piutang, index,tbs_pembayaran_piutang.jumlah_bayar,tbs_pembayaran_piutang.no_faktur_penjualan)">Delete</a>
+                                                <a @href="'#edit-pembayaran-piutang/'+tbs_pembayaran_piutang.id_tbs_pembayaran_piutang" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_pembayaran_piutang.id_tbs_pembayaran_piutang" v-on:click="deleteEntry(tbs_pembayaran_piutang.id_tbs_pembayaran_piutang, index,tbs_pembayaran_piutang.jumlah_bayar,tbs_pembayaran_piutang.no_faktur_penjualan)">Delete</a>
                                             </td>
 
                                         </tr>
@@ -691,7 +691,7 @@ methods: {
             app.$refs.potongan_edit.$el.focus();
         }else{
             app.loading = true;
-            axios.post(app.url_piutang+'/edit-jumlah-tbs-pembayaran-piutang', newinputEditTbsPembayaranPiutang)
+            axios.post(app.url_piutang+'/edit-jumlah-edit-tbs-pembayaran-piutang', newinputEditTbsPembayaranPiutang)
             .then(function (resp) {
                 if (resp.data.status == 0) {
                     app.getResults()
@@ -768,6 +768,7 @@ methods: {
     },
     batalPembayaranPiutang(){
         var app = this
+        var id = app.$route.params.id;
         app.$swal({
             text: "Anda Yakin Ingin Membatalkan Transaksi Ini ?",
             buttons: {
@@ -779,7 +780,7 @@ methods: {
             if (!value) throw null;
 
             app.loading = true;
-            axios.post(app.url_piutang+'/proses-batal-pembayaran-piutang')
+            axios.post(app.url_piutang+'/proses-batal-edit-pembayaran-piutang/'+id)
             .then(function (resp) {
                 app.getResults();
                 app.alert("Membatalkan Transaksi Pembayaran Piutang");
@@ -810,13 +811,17 @@ methods: {
     },
     prosesSelesaiPembayaranPiutang(value){
         var app = this;
+        var id = app.$route.params.id;
         var newPembayaranPiutang = app.pembayaranPiutang;
         app.loading = true;
 
-        axios.post(app.url_piutang,newPembayaranPiutang)
+        axios.patch(app.url_piutang+'/'+id,newPembayaranPiutang)
         .then(function (resp) {
 
-            if (resp.data == 0) {
+            if (resp.data.respons == 0) {
+                app.alertTbs("Gagal : Terjadi Kesalahan , Silakan Coba Lagi!");
+                app.loading = false;
+            } else if (resp.data == 0) {
                 app.alertTbs("Anda Belum Memasukan Faktur Penjualan Piutang");
                 app.loading = false;
             }else{

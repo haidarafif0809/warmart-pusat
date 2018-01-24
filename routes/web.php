@@ -682,6 +682,9 @@ Route::get('/pembayaran-hutang/data-suplier-hutang/{id}', 'PembayaranHutangContr
 Route::get('/pembayaran-hutang/pencarian-suplier-hutang/{id}', 'PembayaranHutangController@pencarianDataSupplierHutang')->middleware('auth');
 Route::post('/pembayaran-hutang/proses-tambah-tbs-pembayaran-hutang', 'PembayaranHutangController@prosesTbsPembayaranHutang')->middleware('auth');
 Route::get('/pembayaran-hutang/pilih-kas', 'PembayaranHutangController@dataKas')->middleware('auth');
+Route::get('/pembayaran-hutang/view-detail-pembayaran-hutang/{id}', 'PembayaranHutangController@viewDetail')->middleware('auth');
+Route::get('/pembayaran-hutang/pencarian-detail-pembayaran-hutang/{id}', 'PembayaranHutangController@pencarianDetail')->middleware('auth');
+
 
 Route::delete('/pembayaran-hutang/proses-hapus-tbs-pembayaran-hutang/{id}', [
     'middleware' => ['auth'],
@@ -1007,6 +1010,19 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
         'middleware' => ['auth'],
         'as'         => 'pembayaran-piutang.proses_batal_pembayaran_piutang',
         'uses'       => 'PembayaranPiutangController@prosesBatalPembayaranPiutang',
+    ]);
+
+    //EDIT PEMBAYARAN PIUTANG
+    Route::post('pembayaran-piutang/edit-jumlah-edit-tbs-pembayaran-piutang', [
+        'middleware' => ['auth'],
+        'as'         => 'pembayaran-piutang.edit_jumlah_edit_tbs_pembayaran_piutang',
+        'uses'       => 'PembayaranPiutangController@updateEditTbsPembayaranPiutang',
+    ]);
+
+    Route::post('/pembayaran-piutang/proses-batal-edit-pembayaran-piutang/{id}', [
+        'middleware' => ['auth'],
+        'as'         => 'pembayaran-piutang.proses_batal_pembayaran_piutang',
+        'uses'       => 'PembayaranPiutangController@prosesBatalEditPembayaranPiutang',
     ]);
 
 });

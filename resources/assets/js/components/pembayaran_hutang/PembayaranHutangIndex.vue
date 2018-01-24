@@ -35,7 +35,6 @@
 								<tr>
 									<th>No. Transaksi</th>
 									<th>Waktu</th>
-									<th>Suplier</th>
 									<th>Kas</th>
 									<th>Keterangan</th>
 									<th style="text-align:right;">Total</th>
@@ -46,9 +45,12 @@
 							<tbody v-if="pembayaranhutang.length > 0 && loading == false"  class="data-ada">
 								<tr v-for="pembayaranhutangs, index in pembayaranhutang" >
 
-									<td>{{ pembayaranhutangs.no_faktur }}</td>
+									<td>
+										<router-link :to="{name: 'detailPembayaranHutang', params: {id: pembayaranhutangs.id}}" v-bind:id="'detail-' + pembayaranhutangs.id" >
+											{{pembayaranhutangs.no_faktur}}
+										</router-link>
+									</td>
 									<td>{{ pembayaranhutangs.waktu }}</td>
-									<td>{{ pembayaranhutangs.suplier }}</td>
 									<td>{{ pembayaranhutangs.kas }}</td>
 									<td>{{ pembayaranhutangs.keterangan }}</td>
 									<td style="text-align:right;" >Rp. {{ pembayaranhutangs.total }}</td>
