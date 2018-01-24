@@ -355,8 +355,10 @@ class PembayaranPiutangController extends Controller
 
     public function viewDetail($id)
     {
-        $user_warung        = Auth::user()->id_warung;
-        $pembayaran_piutang = DetailPembayaranPiutang::dataDetailPembayaranPiutang($user_warung)->paginate(10);
+        $user_warung = Auth::user()->id_warung;
+        //AMBIL NO FAKTUR
+        $no_faktur          = $this->fakturPembayaran($id);
+        $pembayaran_piutang = DetailPembayaranPiutang::dataDetailPembayaranPiutang($user_warung, $no_faktur)->paginate(10);
 
         $array_pembayaran_piutang = $this->foreachDetail($pembayaran_piutang);
         $link_view                = 'view-detail-pembayaran-piutang/' . $id;
@@ -368,8 +370,10 @@ class PembayaranPiutangController extends Controller
 
     public function pencarianDetail(Request $request, $id)
     {
-        $user_warung        = Auth::user()->id_warung;
-        $pembayaran_piutang = DetailPembayaranPiutang::cariDetailPembayaranPiutang($request, $user_warung)->paginate(10);
+        $user_warung = Auth::user()->id_warung;
+        //AMBIL NO FAKTUR
+        $no_faktur          = $this->fakturPembayaran($id);
+        $pembayaran_piutang = DetailPembayaranPiutang::cariDetailPembayaranPiutang($request, $user_warung, $no_faktur)->paginate(10);
 
         $array_pembayaran_piutang = $this->foreachDetail($pembayaran_piutang);
         $link_view                = 'pencarian-detail-pembayaran-piutang/' . $id;
@@ -502,5 +506,87 @@ class PembayaranPiutangController extends Controller
         $respons['jumlah_bayar'] = $request->jumlah_bayar;
 
         return response()->json($respons);
+    }
+
+    public function prosesBatalEditPembayaranPiutang($id)
+    {
+        //AMBIL NO FAKTUR
+        $no_faktur          = $this->fakturPembayaran($id);
+        $data_tbs_penjualan = EditTbsPembayaranPiutang::where('no_faktur_pembayaran', $no_faktur)->where('warung_id', Auth::user()->id_warung)->delete();
+
+        return response(200);
+    }
+
+    public function update(Request $request, $id)
+    {
+//START TRANSAKSI
+        DB::beginTransaction();
+
+        $pembayaran_piutang = PembayaranPiutang::find($id);
+
+//HAPUS DETAIL PEMBAYARAN PIUTANG
+        $detail_pembayaran_piutang = DetailPembayaranPiutang::where('no_faktur_pembayaran', $pembayaran_piutang->no_faktur_pembayaran)
+            ->where('warung_id', Auth::user()->id_warung)->get();
+        foreach ($detail_pembayaran_piutang as $data_detail) {
+
+            if (!$hapus_detail = DetailPembayaranPiutang::destroy($data_detail->id_detail_pembayaran_piutang)) {
+                //DI BATALKAN PROSES NYA
+                $respons['respons'] = 0;
+                DB::rollBack();
+                return response()->json($respons);
+            }
+
+            $hapus_transaksi_piutang = TransaksiPiutang::where('no_faktur', $pembayaran_piutang->no_faktur_pembayaran)->delete();
+        }
+
+//INSERT DETAIL PEMBAYARAN PIUTANG
+        $tbs_pembayaran_piutang = EditTbsPembayaranPiutang::where('no_faktur_pembayaran', $pembayaran_piutang->no_faktur_pembayaran)->where('warung_id', Auth::user()->id_warung);
+
+        if ($tbs_pembayaran_piutang->count() == 0) {
+            DB::rollBack();
+            return 0;
+        } else {
+//UPDATE PEMBAYARAN
+            $pembayaran_piutang->update([
+                'total'      => $request->subtotal,
+                'cara_bayar' => $request->kas,
+                'keterangan' => $request->keterangan,
+            ]);
+
+            // INSERT DETAIL PEMBAYARAN PIUTANG
+            foreach ($tbs_pembayaran_piutang->get() as $data_tbs) {
+
+                $detail_pembayaran_piutang = DetailPembayaranPiutang::create([
+                    'no_faktur_pembayaran' => $pembayaran_piutang->no_faktur_pembayaran,
+                    'no_faktur_penjualan'  => $data_tbs->no_faktur_penjualan,
+                    'jatuh_tempo'          => $data_tbs->jatuh_tempo,
+                    'piutang'              => $data_tbs->piutang,
+                    'potongan'             => $data_tbs->potongan,
+                    'jumlah_bayar'         => $data_tbs->jumlah_bayar,
+                    'pelanggan_id'         => $data_tbs->pelanggan_id,
+                    'warung_id'            => $data_tbs->warung_id,
+                ]);
+
+                // INSERT TRANSAKSI PIUTANG TIDAK DIBUAT DI OBSERVER KARENA DI OBSERVER ID PENJUALAN DI ANGGAP NULL
+                $id_penjualan_pos  = PenjualanPos::select('id')->where('no_faktur', $data_tbs->no_faktur_penjualan)->first();
+                $transaksi_piutang = TransaksiPiutang::create([
+                    'no_faktur'       => $pembayaran_piutang->no_faktur_pembayaran,
+                    'id_transaksi'    => $id_penjualan_pos->id,
+                    'jenis_transaksi' => 'Pembayaran Piutang',
+                    'jumlah_keluar'   => $data_tbs->jumlah_bayar,
+                    'pelanggan_id'    => $data_tbs->pelanggan_id,
+                    'warung_id'       => $data_tbs->warung_id,
+                ]);
+            }
+
+            $tbs_pembayaran_piutang = EditTbsPembayaranPiutang::where('no_faktur_pembayaran', $pembayaran_piutang->no_faktur_pembayaran)
+                ->where('warung_id', Auth::user()->id_warung)->delete();
+
+            DB::commit();
+
+            $respons['respon_piutang'] = $id;
+            return response()->json($respons);
+        }
+
     }
 }

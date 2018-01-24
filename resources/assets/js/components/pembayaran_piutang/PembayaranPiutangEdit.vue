@@ -768,6 +768,7 @@ methods: {
     },
     batalPembayaranPiutang(){
         var app = this
+        var id = app.$route.params.id;
         app.$swal({
             text: "Anda Yakin Ingin Membatalkan Transaksi Ini ?",
             buttons: {
@@ -779,7 +780,7 @@ methods: {
             if (!value) throw null;
 
             app.loading = true;
-            axios.post(app.url_piutang+'/proses-batal-pembayaran-piutang')
+            axios.post(app.url_piutang+'/proses-batal-edit-pembayaran-piutang/'+id)
             .then(function (resp) {
                 app.getResults();
                 app.alert("Membatalkan Transaksi Pembayaran Piutang");
@@ -810,13 +811,17 @@ methods: {
     },
     prosesSelesaiPembayaranPiutang(value){
         var app = this;
+        var id = app.$route.params.id;
         var newPembayaranPiutang = app.pembayaranPiutang;
         app.loading = true;
 
-        axios.post(app.url_piutang,newPembayaranPiutang)
+        axios.patch(app.url_piutang+'/'+id,newPembayaranPiutang)
         .then(function (resp) {
 
-            if (resp.data == 0) {
+            if (resp.data.respons == 0) {
+                app.alertTbs("Gagal : Terjadi Kesalahan , Silakan Coba Lagi!");
+                app.loading = false;
+            } else if (resp.data == 0) {
                 app.alertTbs("Anda Belum Memasukan Faktur Penjualan Piutang");
                 app.loading = false;
             }else{
