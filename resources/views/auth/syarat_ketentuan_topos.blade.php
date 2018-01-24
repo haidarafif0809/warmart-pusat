@@ -52,7 +52,7 @@ if (Auth::check()) {
                 @if(Auth::check() && Auth::user()->tipe_user == 4)
                 <a class="navbar-brand" href="{{ url('/')}}"><img class="navbar-brand" src="{{asset('/foto_ktp_user/'.$foto_logo->foto_ktp.'').'?v=1'}}"/></a>
                 @else
-                <a class="navbar-brand" href="{{ url('/')}}"><img class="navbar-brand" src="{{asset('/assets/img/examples/topos_logo.png'.'?v=1')}}"/></a>
+                <a class="navbar-brand" href="{{ url('/')}}"><img class="navbar-brand" src="{{asset('/assets/img/examples/topos_logo.png'.'?v=2')}}"/></a>
                 @endif
             </div>
             <div class="collapse navbar-collapse">

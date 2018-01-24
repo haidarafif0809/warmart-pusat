@@ -142,7 +142,7 @@
             @if($setting_aplikasi->tipe_aplikasi == 0)
             <img class="navbar-brand" src="{{asset('/assets/img/examples/warmart_logo.png')}}"/> </a>
             @else
-            <img class="navbar-brand" src="{{asset('/assets/img/examples/topos_logo.png'.'?v=1')}}"/> </a>
+            <img class="navbar-brand" src="{{asset('/assets/img/examples/topos_logo.png'.'?v=2')}}"/> </a>
             @endif
           </a>
           @if(Agent::isMobile() && !Auth::check())
