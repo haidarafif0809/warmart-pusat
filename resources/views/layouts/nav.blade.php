@@ -159,6 +159,33 @@
 </li>
 
 <li>
+    <a data-toggle="collapse" href="#pembayaran" class="disabled-menu"> 
+        <i class="material-icons">
+            local_atm
+        </i>
+        <p>
+            Pembayaran
+            <b class="caret">
+            </b>
+        </p>
+    </a>
+    <div class="collapse" id="pembayaran">
+        <ul class="nav">
+            <li>
+                <router-link :to="{name: 'indexPembayaranPiutang'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        PP
+                    </span>
+                    <span class="sidebar-normal">
+                        Pembayaran Piutang
+                    </span>
+                </router-link>
+            </li>
+        </ul>
+    </div>
+</li>
+
+<li>
     <a data-toggle="collapse" href="#laporan" class="disabled-menu"> 
         <i class="material-icons">
             assignment

@@ -1,9 +1,9 @@
 <style scoped>
-.pencarian {
-  color: red; 
-  float: right;
-  padding-bottom: 10px;
-}
+	.pencarian {
+		color: red; 
+		float: right;
+		padding-bottom: 10px;
+	}
 </style>
 
 <template>
@@ -30,13 +30,13 @@
 						</div>
 						<div class="form-group col-md-2">
 							<selectize-component v-model="filter.suplier" :settings="placeholder_suplier" id="pilih_suplier"> 
-                            	<option v-for="supliers, index in suplier" v-bind:value="supliers.id" >{{ supliers.nama_suplier }}</option>
-                            </selectize-component>
+								<option v-for="supliers, index in suplier" v-bind:value="supliers.id" >{{ supliers.nama_suplier }}</option>
+							</selectize-component>
 						</div>
 						<div class="form-group col-md-2">
 							<selectize-component v-model="filter.produk" :settings="placeholder_produk" id="pilih_produk"> 
-                            	<option v-for="produks, index in produk" v-bind:value="produks.id" >{{ produks.nama_produk }}</option>
-                            </selectize-component>
+								<option v-for="produks, index in produk" v-bind:value="produks.id" >{{ produks.nama_produk }}</option>
+							</selectize-component>
 						</div>
 
 						<div class="form-group col-md-2">
@@ -95,174 +95,178 @@
 								<tr ><td colspan="9"  class="text-center">Tidak Ada Data</td></tr>
 							</tbody>
 						</table>
-						</div><!--RESPONSIVE-->
+					</div><!--RESPONSIVE-->
 
-						<!--DOWNLOAD EXCEL-->
-						<a href="#" class='btn btn-warning' id="btnExcel" target='blank' :style="'display: none'"><i class="material-icons">file_download</i> Download Excel</a>
+					<!--DOWNLOAD EXCEL-->
+					<a href="#" class='btn btn-warning' id="btnExcel" target='blank' :style="'display: none'"><i class="material-icons">file_download</i> Download Excel</a>
 
-						<!--CETAK LAPORAN-->
-						<a href="#" class='btn btn-success' id="btnCetak" target='blank' :style="'display: none'"><i class="material-icons">print</i> Cetak Laporan</a>
+					<!--CETAK LAPORAN-->
+					<a href="#" class='btn btn-success' id="btnCetak" target='blank' :style="'display: none'"><i class="material-icons">print</i> Cetak Laporan</a>
 
-						<vue-simple-spinner v-if="loading"></vue-simple-spinner>
-						<div align="right"><pagination :data="pembelianProdukData" v-on:pagination-change-page="prosesLaporan" :limit="4"></pagination></div>
+					<vue-simple-spinner v-if="loading"></vue-simple-spinner>
+					<div align="right"><pagination :data="pembelianProdukData" v-on:pagination-change-page="prosesLaporan" :limit="4"></pagination></div>
 				</div>
 			</div>
 		</div>
 	</div>
-	
+
 
 </template>
 
 
 <script>
-export default {
-	data: function () {
-		return {
-			produk: [],
-			suplier: [],
-			pembelianProduk: [],
-			pembelianProdukData: {},
-			subtotalPembelianProduk: {},
-			filter: {
-				dari_tanggal: '',
-				sampai_tanggal: '',
-				produk: '',
-				suplier: '',
-            },
-			url : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-pembelian-produk"),
-			urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-pembelian-produk/download-excel-pembelian-produk"),
-			urlCetak : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-pembelian-produk/cetak-laporan"),
-			pencarian: '',
-			loading: false,
-            placeholder_produk: {
-                placeholder: '--PILIH PRODUK--'
-            },
-            placeholder_suplier: {
-                placeholder: '--PILIH SUPPLIER--'
-            },
-		}
-	},
-	mounted() {
-		var app = this;
-		app.dataProduk();
-		app.dataSuplier();
-	},
-	watch: {
-        // whenever question changes, this function will run
-        pencarian: function (newQuestion) {
-        	this.getHasilPencarian();
-        }
-    },
-    filters: {
-	  pemisahTitik: function (value) {
-	  	var angka = [value];
+	export default {
+		data: function () {
+			return {
+				produk: [],
+				suplier: [],
+				pembelianProduk: [],
+				pembelianProdukData: {},
+				subtotalPembelianProduk: {},
+				filter: {
+					dari_tanggal: '',
+					sampai_tanggal: new Date(),
+					produk: '',
+					suplier: '',
+				},
+				url : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-pembelian-produk"),
+				urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-pembelian-produk/download-excel-pembelian-produk"),
+				urlCetak : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-pembelian-produk/cetak-laporan"),
+				pencarian: '',
+				loading: false,
+				placeholder_produk: {
+					placeholder: '--PILIH PRODUK--'
+				},
+				placeholder_suplier: {
+					placeholder: '--PILIH SUPPLIER--'
+				},
+			}
+		},
+		mounted() {
+			var app = this;
+			var awal_tanggal = new Date();
+			awal_tanggal.setDate(1);
+
+			app.dataProduk();
+			app.dataSuplier();
+			app.filter.dari_tanggal = awal_tanggal;
+		},
+		watch: {
+// whenever question changes, this function will run
+pencarian: function (newQuestion) {
+	this.getHasilPencarian();
+}
+},
+filters: {
+	pemisahTitik: function (value) {
+		var angka = [value];
 		var numberFormat = new Intl.NumberFormat('es-ES');
 		var formatted = angka.map(numberFormat.format);
 		return formatted.join('; ');
-	  }
+	}
+},
+methods: {
+	submitPembelianProduk(){
+		var app = this;
+		var filter = app.filter;
+		app.prosesLaporan();
+		app.totalPembelianProduk();
+		app.showButton();   		
 	},
-    methods: {
-    	submitPembelianProduk(){
-    		var app = this;
-    		var filter = app.filter;
-    		app.prosesLaporan();
-    		app.totalPembelianProduk();
-    		app.showButton();   		
-    	},
-    	prosesLaporan(page) {
-    		var app = this;	
-    		var newFilter = app.filter;
-    		if (typeof page === 'undefined') {
-    			page = 1;
-    		}
-    		app.loading = true,
-    		axios.post(app.url+'/view?page='+page, newFilter)
-    		.then(function (resp) {
-    			app.pembelianProduk = resp.data.data;
-    			app.pembelianProdukData = resp.data;
-    			app.loading = false
-    			console.log(resp.data.data);
-    		})
-    		.catch(function (resp) {
-    			console.log(resp);
-    			alert("Tidak Dapat Memuat Laporan Pembelian /Produk");
-    		});
-    	},
-    	getHasilPencarian(page){
-    		var app = this;
-    		var newFilter = app.filter;
-    		if (typeof page === 'undefined') {
-    			page = 1;
-    		}
-    		axios.post(app.url+'/pencarian?search='+app.pencarian+'&page='+page, newFilter)
-    		.then(function (resp) {
-    			app.pembelianProduk = resp.data.data;
-    			app.pembelianProdukData = resp.data;
-    		})
-    		.catch(function (resp) {
-    			console.log(resp);
-    			alert("Tidak Dapat Memuat Laporan Pembelian /Produk");
-    		});
-    	},
-      totalPembelianProduk() {
-    		var app = this;	
-    		var newFilter = app.filter;
+	prosesLaporan(page) {
+		var app = this;	
+		var newFilter = app.filter;
+		if (typeof page === 'undefined') {
+			page = 1;
+		}
+		app.loading = true,
+		axios.post(app.url+'/view?page='+page, newFilter)
+		.then(function (resp) {
+			app.pembelianProduk = resp.data.data;
+			app.pembelianProdukData = resp.data;
+			app.loading = false
+			console.log(resp.data.data);
+		})
+		.catch(function (resp) {
+			console.log(resp);
+			alert("Tidak Dapat Memuat Laporan Pembelian /Produk");
+		});
+	},
+	getHasilPencarian(page){
+		var app = this;
+		var newFilter = app.filter;
+		if (typeof page === 'undefined') {
+			page = 1;
+		}
+		axios.post(app.url+'/pencarian?search='+app.pencarian+'&page='+page, newFilter)
+		.then(function (resp) {
+			app.pembelianProduk = resp.data.data;
+			app.pembelianProdukData = resp.data;
+		})
+		.catch(function (resp) {
+			console.log(resp);
+			alert("Tidak Dapat Memuat Laporan Pembelian /Produk");
+		});
+	},
+	totalPembelianProduk() {
+		var app = this;	
+		var newFilter = app.filter;
 
-    		app.loading = true,
-    		axios.post(app.url+'/subtotal-pembelian-produk', newFilter)
-    		.then(function (resp) {
-    			app.subtotalPembelianProduk = resp.data;
-    			app.loading = false
-    			console.log(resp.data);    			
-    		})
-    		.catch(function (resp) {
-    			console.log(resp);
-    			alert("Tidak Dapat Memuat Subtotal Mutasi Stok");
-    		});
-    	},
-        dataProduk() {
-          var app = this;
-          axios.get(app.url+'/pilih-produk')
-          .then(function (resp) {
-            app.produk = resp.data;
+		app.loading = true,
+		axios.post(app.url+'/subtotal-pembelian-produk', newFilter)
+		.then(function (resp) {
+			app.subtotalPembelianProduk = resp.data;
+			app.loading = false
+			console.log(resp.data);    			
+		})
+		.catch(function (resp) {
+			console.log(resp);
+			alert("Tidak Dapat Memuat Subtotal Mutasi Stok");
+		});
+	},
+	dataProduk() {
+		var app = this;
+		axios.get(app.url+'/pilih-produk')
+		.then(function (resp) {
+			app.produk = resp.data;
 
-        })
-          .catch(function (resp) {
-            alert("Tidak bisa memuat produk ");
-        });
-      },
-      dataSuplier() {
-          var app = this;
-          axios.get(app.url+'/pilih-supplier')
-          .then(function (resp) {
-            app.suplier = resp.data;
+		})
+		.catch(function (resp) {
+			alert("Tidak bisa memuat produk ");
+		});
+	},
+	dataSuplier() {
+		var app = this;
+		axios.get(app.url+'/pilih-supplier')
+		.then(function (resp) {
+			app.suplier = resp.data;
 
-        })
-          .catch(function (resp) {
-            alert("Tidak bisa memuat suplier ");
-        });
-      },    	
-        showButton() {
-        	var app = this;
-    		var filter = app.filter;
+		})
+		.catch(function (resp) {
+			alert("Tidak bisa memuat suplier ");
+		});
+	},    	
+	showButton() {
+		var app = this;
+		var filter = app.filter;
 
-    		if (filter.produk == "") {
-    			filter.produk = 0;
-    		};
-    		if (filter.suplier == "") {
-    			filter.suplier = 0;
-    		};
+		if (filter.produk == "") {
+			filter.produk = 0;
+		};
+		if (filter.suplier == "") {
+			filter.suplier = 0;
+		};
 
-    		var date_dari_tanggal = filter.dari_tanggal;
-    		var date_sampai_tanggal = filter.sampai_tanggal;
-    		var dari_tanggal = "" + date_dari_tanggal.getFullYear() +'-'+ ((date_dari_tanggal.getMonth() + 1) > 9 ? '' : '0') + (date_dari_tanggal.getMonth() + 1) +'-'+ (date_dari_tanggal.getDate() > 9 ? '' : '0') + date_dari_tanggal.getDate();
-    		var sampai_tanggal = "" + date_sampai_tanggal.getFullYear() +'-'+ ((date_sampai_tanggal.getMonth() + 1) > 9 ? '' : '0') + (date_sampai_tanggal.getMonth() + 1) +'-'+ (date_sampai_tanggal.getDate() > 9 ? '' : '0') + date_sampai_tanggal.getDate();
+		var date_dari_tanggal = filter.dari_tanggal;
+		var date_sampai_tanggal = filter.sampai_tanggal;
+		var dari_tanggal = "" + date_dari_tanggal.getFullYear() +'-'+ ((date_dari_tanggal.getMonth() + 1) > 9 ? '' : '0') + (date_dari_tanggal.getMonth() + 1) +'-'+ (date_dari_tanggal.getDate() > 9 ? '' : '0') + date_dari_tanggal.getDate();
+		var sampai_tanggal = "" + date_sampai_tanggal.getFullYear() +'-'+ ((date_sampai_tanggal.getMonth() + 1) > 9 ? '' : '0') + (date_sampai_tanggal.getMonth() + 1) +'-'+ (date_sampai_tanggal.getDate() > 9 ? '' : '0') + date_sampai_tanggal.getDate();
 
-    		$("#btnExcel").show();
-    		$("#btnCetak").show();
-    		$("#btnExcel").attr('href', app.urlDownloadExcel+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.produk+'/'+filter.suplier);
-    		$("#btnCetak").attr('href', app.urlCetak+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.produk+'/'+filter.suplier); 
-    	}
-    }
+		$("#btnExcel").show();
+		$("#btnCetak").show();
+		$("#btnExcel").attr('href', app.urlDownloadExcel+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.produk+'/'+filter.suplier);
+		$("#btnCetak").attr('href', app.urlCetak+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.produk+'/'+filter.suplier); 
+	}
+}
 }
 </script>
