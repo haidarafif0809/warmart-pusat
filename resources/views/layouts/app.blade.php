@@ -1,7 +1,10 @@
 <!DOCTYPE doctype html>
 <html lang="en">
 <!-- PILIH TIPE APLIKASI -->
-
+<?php
+use Jenssegers\Agent\Agent;
+$agent = new Agent();
+?>
 <head>
     <meta charset="utf-8"/>
     @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
@@ -44,7 +47,7 @@
 <style type="text/css">
 
 .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
- padding: 1px;
+   padding: 1px;
 }
 
 </style>
@@ -58,8 +61,8 @@
     -->
 
     <div class="logo">
-       @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
-       <a class="simple-text logo-mini" href="https://war-mart.id">
+     @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
+     <a class="simple-text logo-mini" href="https://war-mart.id">
         WM
     </a>
     <a class="simple-text logo-normal" href="https://war-mart.id">
@@ -96,31 +99,31 @@
                                 UPU
                             </span>
                             <span class="sidebar-normal">
-                             Ubah Profil User
-                         </span>
-                     </router-link>
-                     @elseif(Auth::user()->tipe_user == 2 )
-                     <a href="{{ url('/ubah-profil-komunitas') }}">
+                               Ubah Profil User
+                           </span>
+                       </router-link>
+                       @elseif(Auth::user()->tipe_user == 2 )
+                       <a href="{{ url('/ubah-profil-komunitas') }}">
                         <span class="sidebar-mini">
                             UPU
                         </span>
                         <span class="sidebar-normal">
-                         Ubah Profil
-                     </span>
-                 </a>
-                 @elseif(Auth::user()->tipe_user == 1 )
-                 <router-link :to="{name: 'ubahProfilAdmin'}" class="menu-nav">
+                           Ubah Profil
+                       </span>
+                   </a>
+                   @elseif(Auth::user()->tipe_user == 1 )
+                   <router-link :to="{name: 'ubahProfilAdmin'}" class="menu-nav">
                     <span class="sidebar-mini">
                         UP
                     </span>
                     <span class="sidebar-normal">
-                     Ubah Profil
-                 </span>
-             </router-link>
-             @endif
-         </li>
-         @if(Auth::user()->tipe_user == 4 )
-         <li>
+                       Ubah Profil
+                   </span>
+               </router-link>
+               @endif
+           </li>
+           @if(Auth::user()->tipe_user == 4 )
+           <li>
             <router-link :to="{name: 'indexProfilWarung'}" class="menu-nav">
                 @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
                 <span class="sidebar-mini">
@@ -153,7 +156,7 @@
             </router-link>
             @else
             <router-link :to="{name: 'ubahPasswordUserWarung'}" class="menu-nav" v-on:click="closeMenu()">
-             <span class="sidebar-mini">
+               <span class="sidebar-mini">
                 UP
             </span>
             <span class="sidebar-normal">
@@ -392,17 +395,15 @@
                 <a class="navbar-brand" href="#">
                     Dashboard
                 </a>
+                @if ($agent->isMobile() && Auth::user()->tipe_user == 4) <!--JIKA DAKSES VIA HP/TAB-->
+                <p id="sisa_waktu_demo"></p>
+                @endif
 
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
-
                     @if(Auth::user()->tipe_user == 4)
-
-                    <span id="masa_demo">
-                        <b id="sisa_waktu_demo"></b>
-                    </span>
-
+                    <b id="sisa_waktu_demo"></b>
                     @endif
                 </ul>
             </div>
@@ -542,13 +543,18 @@
             $.get('{{ Url("daftar-topos/cek-sisa-demo") }}',{'_token': $('meta[name=csrf-token]').attr('content')}, function(data){ 
 
                 if (data.status_pembayaran < 2) {
-                    if (data.sisa_waktu > 0) {
+
+
+                  if (data.sisa_waktu > 0) {
+
                       $("#sisa_waktu_demo").text("Masa Percobaan Anda Tinggal "+data.sisa_waktu+" Hari Lagi! ");   
-                      $("#sisa_waktu_demo").append("<a href='pendaftaran-topos/1' class='btn btn-primary btn-round' target='blank'> Daftar Sekarang !</a>"); 
-                  }
-                  else{         
+                      $("#sisa_waktu_demo").append("<a href='pendaftaran-topos/1' target='blank'>Daftar Sekarang!</a>"); 
+
+                  }else{  
+
                       $("#sisa_waktu_demo").text("Masa Percobaan Anda Sudah Habis!");  
-                      $("#sisa_waktu_demo").append("<a href='pendaftaran-topos/1' class='btn btn-primary btn-round' target='blank'> Daftar Sekarang !</a>"); 
+                      $("#sisa_waktu_demo").append("<a href='pendaftaran-topos/1' target='blank'>Daftar Sekarang!</a>"); 
+
                       $(document).on('click', '.disabled-menu', function(){
 
                         swal({
@@ -572,13 +578,11 @@
 
         }
 
-
-
         $("#minimizeSidebar").click();  
 
         $(document).on('click', '.menu-nav', function(){
-         $('.navbar-toggle ').click();
-     });
+           $('.navbar-toggle ').click();
+       });
 
     });
 </script>
