@@ -1,9 +1,9 @@
 <style scoped>
-.pencarian {
-  color: red; 
-  float: right;
-  padding-bottom: 10px;
-}
+	.pencarian {
+		color: red; 
+		float: right;
+		padding-bottom: 10px;
+	}
 </style>
 
 <template>
@@ -91,129 +91,136 @@
 								<tr ><td colspan="11"  class="text-center">Tidak Ada Data</td></tr>
 							</tbody>
 						</table>
-						</div><!--RESPONSIVE-->
+					</div><!--RESPONSIVE-->
 
-						<!--DOWNLOAD EXCEL-->
-						<a href="#" class='btn btn-warning' id="btnExcel" target='blank' :style="'display: none'"><i class="material-icons">file_download</i> Download Excel</a>
+					<!--DOWNLOAD EXCEL-->
+					<a href="#" class='btn btn-warning' id="btnExcel" target='blank' :style="'display: none'"><i class="material-icons">file_download</i> Download Excel</a>
 
-						<!--CETAK LAPORAN-->
-						<a href="#" class='btn btn-success' id="btnCetak" target='blank' :style="'display: none'"><i class="material-icons">print</i> Cetak Laporan</a>
+					<!--CETAK LAPORAN-->
+					<a href="#" class='btn btn-success' id="btnCetak" target='blank' :style="'display: none'"><i class="material-icons">print</i> Cetak Laporan</a>
 
-						<vue-simple-spinner v-if="loading"></vue-simple-spinner>
-						<div align="right"><pagination :data="mutasiStokData" v-on:pagination-change-page="prosesLaporan" :limit="4"></pagination></div>
+					<vue-simple-spinner v-if="loading"></vue-simple-spinner>
+					<div align="right"><pagination :data="mutasiStokData" v-on:pagination-change-page="prosesLaporan" :limit="4"></pagination></div>
 				</div>
 			</div>
 		</div>
 	</div>
-	
+
 
 </template>
 
 
 <script>
-export default {
-	data: function () {
-		return {
-			produk: [],
-			mutasiStok: [],
-			mutasiStokData: {},
-			subtotalMutasiStok: {},
-			filter: {
-				dari_tanggal: '',
-				sampai_tanggal: '',
-            },
-			url : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-mutasi-stok"),
-			urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-mutasi-stok/download-excel-mutasi-stok"),
-			urlCetak : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-mutasi-stok/cetak-laporan"),
-			pencarian: '',
-			loading: false,
-		}
-	},
-	watch: {
-        // whenever question changes, this function will run
-        pencarian: function (newQuestion) {
-        	this.getHasilPencarian();
-        }
-    },
-    filters: {
-	  pemisahTitik: function (value) {
-	  	var angka = [value];
+	export default {
+		data: function () {
+			return {
+				produk: [],
+				mutasiStok: [],
+				mutasiStokData: {},
+				subtotalMutasiStok: {},
+				filter: {
+					dari_tanggal: '',
+					sampai_tanggal: new Date(),
+				},
+				url : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-mutasi-stok"),
+				urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-mutasi-stok/download-excel-mutasi-stok"),
+				urlCetak : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-mutasi-stok/cetak-laporan"),
+				pencarian: '',
+				loading: false,
+			}
+		},
+		watch: {
+// whenever question changes, this function will run
+pencarian: function (newQuestion) {
+	this.getHasilPencarian();
+}
+},
+mounted(){
+	var app = this;		
+	var awal_tanggal = new Date();
+	awal_tanggal.setDate(1);
+
+	app.filter.dari_tanggal = awal_tanggal;
+},
+filters: {
+	pemisahTitik: function (value) {
+		var angka = [value];
 		var numberFormat = new Intl.NumberFormat('es-ES');
 		var formatted = angka.map(numberFormat.format);
 		return formatted.join('; ');
-	  }
+	}
+},
+methods: {
+	submitMutasiStok(){
+		var app = this;
+		app.prosesLaporan();
+		app.totalMutasiStok();
+		app.showButton();
 	},
-    methods: {
-    	submitMutasiStok(){
-    		var app = this;
-    		app.prosesLaporan();
-    		app.totalMutasiStok();
-    		app.showButton();
-    	},
-    	prosesLaporan(page) {
-    		var app = this;	
-    		var newFilter = app.filter;
-    		if (typeof page === 'undefined') {
-    			page = 1;
-    		}
-    		app.loading = true,
-    		axios.post(app.url+'/view?page='+page, newFilter)
-    		.then(function (resp) {
-    			app.mutasiStok = resp.data.data;
-    			app.mutasiStokData = resp.data;
-    			app.loading = false
-    			console.log(resp.data.data);
-    		})
-    		.catch(function (resp) {
-    			console.log(resp);
-    			alert("Tidak Dapat Memuat Laporan Mutasi Stok");
-    		});
-    	},
-    	getHasilPencarian(page){
-    		var app = this;
-    		var newFilter = app.filter;
-    		if (typeof page === 'undefined') {
-    			page = 1;
-    		}
-    		axios.post(app.url+'/pencarian?search='+app.pencarian+'&page='+page, newFilter)
-    		.then(function (resp) {
-    			app.mutasiStok = resp.data.data;
-    			app.mutasiStokData = resp.data;
-    		})
-    		.catch(function (resp) {
-    			console.log(resp);
-    			alert("Tidak Dapat Memuat Laporan Mutasi Stok");
-    		});
-    	},
-      totalMutasiStok() {
-    		var app = this;	
-    		var newFilter = app.filter;
+	prosesLaporan(page) {
+		var app = this;	
+		var newFilter = app.filter;
+		if (typeof page === 'undefined') {
+			page = 1;
+		}
+		app.loading = true,
+		axios.post(app.url+'/view?page='+page, newFilter)
+		.then(function (resp) {
+			app.mutasiStok = resp.data.data;
+			app.mutasiStokData = resp.data;
+			app.loading = false
+			console.log(resp.data.data);
+		})
+		.catch(function (resp) {
+			console.log(resp);
+			alert("Tidak Dapat Memuat Laporan Mutasi Stok");
+		});
+	},
+	getHasilPencarian(page){
+		var app = this;
+		var newFilter = app.filter;
+		if (typeof page === 'undefined') {
+			page = 1;
+		}
+		axios.post(app.url+'/pencarian?search='+app.pencarian+'&page='+page, newFilter)
+		.then(function (resp) {
+			app.mutasiStok = resp.data.data;
+			app.mutasiStokData = resp.data;
+		})
+		.catch(function (resp) {
+			console.log(resp);
+			alert("Tidak Dapat Memuat Laporan Mutasi Stok");
+		});
+	},
+	totalMutasiStok() {
+		var app = this;	
+		var newFilter = app.filter;
 
-    		app.loading = true,
-    		axios.post(app.url+'/subtotal-mutasi-stok', newFilter)
-    		.then(function (resp) {
-    			app.subtotalMutasiStok = resp.data;
-    			app.loading = false
-    		})
-    		.catch(function (resp) {
-    			console.log(resp);
-    			alert("Tidak Dapat Memuat Subtotal Mutasi Stok");
-    		});
-    	},    	
-        showButton() {
-        	var app = this;
-    		var filter = app.filter;
+		app.loading = true,
+		axios.post(app.url+'/subtotal-mutasi-stok', newFilter)
+		.then(function (resp) {
+			app.subtotalMutasiStok = resp.data;
+			app.loading = false
+		})
+		.catch(function (resp) {
+			console.log(resp);
+			alert("Tidak Dapat Memuat Subtotal Mutasi Stok");
+		});
+	},    	
+	showButton() {
+		var app = this;
+		var filter = app.filter;
 
-    		var date_dari_tanggal = filter.dari_tanggal;
-    		var date_sampai_tanggal = filter.sampai_tanggal;
-    		var dari_tanggal = "" + date_dari_tanggal.getFullYear() +'-'+ ((date_dari_tanggal.getMonth() + 1) > 9 ? '' : '0') + (date_dari_tanggal.getMonth() + 1) +'-'+ (date_dari_tanggal.getDate() > 9 ? '' : '0') + date_dari_tanggal.getDate();
-    		var sampai_tanggal = "" + date_sampai_tanggal.getFullYear() +'-'+ ((date_sampai_tanggal.getMonth() + 1) > 9 ? '' : '0') + (date_sampai_tanggal.getMonth() + 1) +'-'+ (date_sampai_tanggal.getDate() > 9 ? '' : '0') + date_sampai_tanggal.getDate();
+		var date_dari_tanggal = filter.dari_tanggal;
+		var date_sampai_tanggal = filter.sampai_tanggal;
+		var dari_tanggal = "" + date_dari_tanggal.getFullYear() +'-'+ ((date_dari_tanggal.getMonth() + 1) > 9 ? '' : '0') + (date_dari_tanggal.getMonth() + 1) +'-'+ (date_dari_tanggal.getDate() > 9 ? '' : '0') + date_dari_tanggal.getDate();
+		var sampai_tanggal = "" + date_sampai_tanggal.getFullYear() +'-'+ ((date_sampai_tanggal.getMonth() + 1) > 9 ? '' : '0') + (date_sampai_tanggal.getMonth() + 1) +'-'+ (date_sampai_tanggal.getDate() > 9 ? '' : '0') + date_sampai_tanggal.getDate();
 
-    		$("#btnExcel").show();
-    		$("#btnCetak").show();
-    		$("#btnExcel").attr('href', app.urlDownloadExcel+'/'+dari_tanggal+'/'+sampai_tanggal);
-    		$("#btnCetak").attr('href', app.urlCetak+'/'+dari_tanggal+'/'+sampai_tanggal);
-    	}
-    }
+		$("#btnExcel").show();
+		$("#btnCetak").show();
+		$("#btnExcel").attr('href', app.urlDownloadExcel+'/'+dari_tanggal+'/'+sampai_tanggal);
+		$("#btnCetak").attr('href', app.urlCetak+'/'+dari_tanggal+'/'+sampai_tanggal);
+	}
+}
 }
 </script>

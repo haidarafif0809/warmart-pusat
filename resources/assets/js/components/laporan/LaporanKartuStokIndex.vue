@@ -1,9 +1,9 @@
 <style scoped>
-.pencarian {
-  color: red; 
-  float: right;
-  padding-bottom: 10px;
-}
+	.pencarian {
+		color: red; 
+		float: right;
+		padding-bottom: 10px;
+	}
 </style>
 
 <template>
@@ -24,8 +24,8 @@
 					<div class="row">
 						<div class="form-group col-md-2">
 							<selectize-component v-model="filter.produk" :settings="placeholder_produk" id="pilih_produk"> 
-                            	<option v-for="produks, index in produk" v-bind:value="produks.id" >{{ produks.nama_produk }}</option>
-                            </selectize-component>
+								<option v-for="produks, index in produk" v-bind:value="produks.id" >{{ produks.nama_produk }}</option>
+							</selectize-component>
 						</div>
 						<div class="form-group col-md-2">
 							<datepicker :input-class="'form-control'" placeholder="Dari Tanggal" v-model="filter.dari_tanggal" name="dari_tanggal" v-bind:id="'dari_tanggal'"></datepicker>				
@@ -57,17 +57,17 @@
 								</tr>
 							</thead>
 
-								<tr style="color:red" v-if="subtotalSaldoAwal.status == 200">
+							<tr style="color:red" v-if="subtotalSaldoAwal.status == 200">
 
-									<td></td>
-									<td>SALDO AWAL</td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td align="right">{{ subtotalSaldoAwal.data | pemisahTitik }}</td>
+								<td></td>
+								<td>SALDO AWAL</td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td align="right">{{ subtotalSaldoAwal.data | pemisahTitik }}</td>
 
-								</tr>
+							</tr>
 
 							<tbody v-if="kartuStok.length > 0 && loading == false"  class="data-ada">
 
@@ -87,16 +87,16 @@
 								<tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
 							</tbody>
 						</table>
-						</div><!--RESPONSIVE-->
+					</div><!--RESPONSIVE-->
 
-						<!--DOWNLOAD EXCEL-->
-						<a href="#" class='btn btn-warning' id="btnExcel" target='blank' :style="'display: none'"><i class="material-icons">file_download</i> Download Excel</a>
+					<!--DOWNLOAD EXCEL-->
+					<a href="#" class='btn btn-warning' id="btnExcel" target='blank' :style="'display: none'"><i class="material-icons">file_download</i> Download Excel</a>
 
-						<!--CETAK LAPORAN-->
-						<a href="#" class='btn btn-success' id="btnCetak" target='blank' :style="'display: none'"><i class="material-icons">print</i> Cetak Laporan</a>
+					<!--CETAK LAPORAN-->
+					<a href="#" class='btn btn-success' id="btnCetak" target='blank' :style="'display: none'"><i class="material-icons">print</i> Cetak Laporan</a>
 
-						<vue-simple-spinner v-if="loading"></vue-simple-spinner>
-						<div align="right"><pagination :data="kartuStokData" v-on:pagination-change-page="prosesLaporan" :limit="4"></pagination></div>
+					<vue-simple-spinner v-if="loading"></vue-simple-spinner>
+					<div align="right"><pagination :data="kartuStokData" v-on:pagination-change-page="prosesLaporan" :limit="4"></pagination></div>
 				</div>
 			</div>
 		</div>
@@ -107,60 +107,64 @@
 
 
 <script>
-export default {
-	data: function () {
-		return {
-			produk: [],
-			kartuStok: [],
-			kartuStokData: {},
-			subtotalSaldoAwal: {},
-			filter: {
-				produk: '',
-				dari_tanggal: '',
-				sampai_tanggal: '',
-            },
-			url : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-kartu-stok"),
-			urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-kartu-stok/download-excel-kartu-stok"),
-			urlCetak : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-kartu-stok/cetak-laporan"),
-			pencarian: '',
-			loading: false,
-	        placeholder_produk: {
-	        	placeholder: '--PILIH PRODUK--'
-	        }
-		}
-	},
-	watch: {
+	export default {
+		data: function () {
+			return {
+				produk: [],
+				kartuStok: [],
+				kartuStokData: {},
+				subtotalSaldoAwal: {},
+				filter: {
+					produk: '',
+					dari_tanggal: '',
+					sampai_tanggal: new Date(),
+				},
+				url : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-kartu-stok"),
+				urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-kartu-stok/download-excel-kartu-stok"),
+				urlCetak : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-kartu-stok/cetak-laporan"),
+				pencarian: '',
+				loading: false,
+				placeholder_produk: {
+					placeholder: '--PILIH PRODUK--'
+				}
+			}
+		},
+		watch: {
         // whenever question changes, this function will run
         pencarian: function (newQuestion) {
         	this.getHasilPencarian();
         }
     },
     filters: {
-	  pemisahTitik: function (value) {
-	  	var angka = [value];
-		var numberFormat = new Intl.NumberFormat('es-ES');
-		var formatted = angka.map(numberFormat.format);
-		return formatted.join('; ');
-	  },
-	  tanggal: function (value) {
-	    return moment(String(value)).format('DD/MM/YYYY hh:mm')
-	  }
-	},
-	mounted() {
-		var app = this;
-		app.dataProduk();
-	},
+    	pemisahTitik: function (value) {
+    		var angka = [value];
+    		var numberFormat = new Intl.NumberFormat('es-ES');
+    		var formatted = angka.map(numberFormat.format);
+    		return formatted.join('; ');
+    	},
+    	tanggal: function (value) {
+    		return moment(String(value)).format('DD/MM/YYYY hh:mm')
+    	}
+    },
+    mounted() {
+    	var app = this;
+    	var awal_tanggal = new Date();
+    	awal_tanggal.setDate(1);
+
+    	app.dataProduk();
+    	app.filter.dari_tanggal = awal_tanggal;
+    },
     methods: {
-        dataProduk() {
-	        var app = this;
-	        axios.get(app.url+'/pilih-produk')
-	        .then(function (resp) {
-	        	app.produk = resp.data;
-	        })
-	        .catch(function (resp) {
-	          	alert("Tidak Bisa Memuat Produk ");
-	        });
-      	},
+    	dataProduk() {
+    		var app = this;
+    		axios.get(app.url+'/pilih-produk')
+    		.then(function (resp) {
+    			app.produk = resp.data;
+    		})
+    		.catch(function (resp) {
+    			alert("Tidak Bisa Memuat Produk ");
+    		});
+    	},
     	submitKartuStok(){
     		var app = this;
     		app.prosesLaporan();
@@ -186,7 +190,7 @@ export default {
     			alert("Tidak Dapat Memuat Laporan Kartu Stok");
     		});
     	},
-      	totalSaldoAwal() {
+    	totalSaldoAwal() {
     		var app = this;	
     		var newFilter = app.filter;
 
@@ -218,8 +222,8 @@ export default {
     			alert("Tidak Dapat Memuat Laporan Kartu Stok");
     		});
     	},  	
-        showButton() {
-        	var app = this;
+    	showButton() {
+    		var app = this;
     		var filter = app.filter;
 
     		if (filter.produk == "") {

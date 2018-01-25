@@ -1,9 +1,9 @@
 <style scoped>
-.pencarian {
-  color: red; 
-  float: right;
-  padding-bottom: 10px;
-}
+	.pencarian {
+		color: red; 
+		float: right;
+		padding-bottom: 10px;
+	}
 </style>
 
 <template>
@@ -30,8 +30,8 @@
 						</div>
 						<div class="form-group col-md-2">
 							<selectize-component v-model="filter.pelanggan" :settings="placeholder_pelanggan" id="pilih_pelanggan"> 
-                            	<option v-for="pelanggans, index in pelanggan" v-bind:value="pelanggans.id" >{{ pelanggans.name }}</option>
-                            </selectize-component>
+								<option v-for="pelanggans, index in pelanggan" v-bind:value="pelanggans.id" >{{ pelanggans.name }}</option>
+							</selectize-component>
 						</div>
 						<div class="form-group col-md-2">
 							<button class="btn btn-primary" id="btnSubmit" type="submit" style="margin: 0px 0px;" @click="submitLabaKotor()"><i class="material-icons">search</i> Cari</button>
@@ -88,10 +88,10 @@
 								<tr ><td colspan="8"  class="text-center">Tidak Ada Data</td></tr>
 							</tbody>
 						</table>
-						</div><!--RESPONSIVE-->
-						<vue-simple-spinner v-if="loading"></vue-simple-spinner>
-						<div align="right"><pagination :data="labaKotorData" v-on:pagination-change-page="prosesLaporan" :limit="4"></pagination></div>
-						<hr style="margin-top: 30px; margin-bottom: 15px; border-top: 5px solid #eeeeee;">
+					</div><!--RESPONSIVE-->
+					<vue-simple-spinner v-if="loading"></vue-simple-spinner>
+					<div align="right"><pagination :data="labaKotorData" v-on:pagination-change-page="prosesLaporan" :limit="4"></pagination></div>
+					<hr style="margin-top: 30px; margin-bottom: 15px; border-top: 5px solid #eeeeee;">
 
 					<div class=" table-responsive">
 						<div class="pencarian">
@@ -164,8 +164,8 @@
 					<!--CETAK LAPORAN-->
 					<a href="#" class='btn btn-success' id="btnCetak" target='blank' :style="'display: none'"><i class="material-icons">print</i> Cetak Laporan</a>
 
-						<vue-simple-spinner v-if="loadingPesanan"></vue-simple-spinner>
-						<div align="right"><pagination :data="labaKotorPesananData" v-on:pagination-change-page="prosesLaporanPesanan" :limit="4"></pagination></div>
+					<vue-simple-spinner v-if="loadingPesanan"></vue-simple-spinner>
+					<div align="right"><pagination :data="labaKotorPesananData" v-on:pagination-change-page="prosesLaporanPesanan" :limit="4"></pagination></div>
 				</div>
 			</div>
 		</div>
@@ -176,40 +176,45 @@
 
 
 <script>
-export default {
-	data: function () {
-		return {
-			pelanggan: [],
-			labaKotor: [],
-			labaKotorData: {},
-			subtotalLabaKotor: {},
-			labaKotorPesanan: [],
-			labaKotorPesananData: {},
-			subtotalLabaKotorPesanan: {},
-			totalAkhir: {},
-			filter: {
-				dari_tanggal: '',
-				sampai_tanggal: '',
-				pelanggan: '',
-            },
-			url : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-laba-kotor"),
-			urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-laba-kotor/download-excel-laba-kotor"),
-			urlCetak : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-laba-kotor/cetak-laporan"),
-			pencarian_pos: '',
-			pencarian_pesanan: '',
-            placeholder_pelanggan: {
-                placeholder: '--PILIH PELANGGAN--'
-            },
-			loading: false,
-			loadingPesanan: false,
-			loadingAkhir: false,
-		}
-	},
-	mounted() {
-		var app = this;
-		app.dataPelanggan();
-	},
-	watch: {
+	export default {
+		data: function () {
+			return {
+				pelanggan: [],
+				labaKotor: [],
+				labaKotorData: {},
+				subtotalLabaKotor: {},
+				labaKotorPesanan: [],
+				labaKotorPesananData: {},
+				subtotalLabaKotorPesanan: {},
+				totalAkhir: {},
+				filter: {
+					dari_tanggal: '',
+					sampai_tanggal: new Date(),
+					pelanggan: '',
+				},
+				url : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-laba-kotor"),
+				urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-laba-kotor/download-excel-laba-kotor"),
+				urlCetak : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-laba-kotor/cetak-laporan"),
+				pencarian_pos: '',
+				pencarian_pesanan: '',
+				placeholder_pelanggan: {
+					placeholder: '--PILIH PELANGGAN--'
+				},
+				loading: false,
+				loadingPesanan: false,
+				loadingAkhir: false,
+			}
+		},
+		mounted() {
+			var app = this;
+			var awal_tanggal = new Date();
+			awal_tanggal.setDate(1);
+
+			app.dataPelanggan();
+			app.filter.dari_tanggal = awal_tanggal;
+
+		},
+		watch: {
         // whenever question changes, this function will run
         pencarian_pos: function (newQuestion) {
         	this.getHasilPencarianPos();
@@ -219,16 +224,16 @@ export default {
         }
     },
     filters: {
-	  pemisahTitik: function (value) {
-	  	var angka = [value];
-		var numberFormat = new Intl.NumberFormat('es-ES');
-		var formatted = angka.map(numberFormat.format);
-		return formatted.join('; ');
-	  },
-	  tanggal: function (value) {
-	    return moment(String(value)).format('DD/MM/YYYY hh:mm')
-	  }
-	},
+    	pemisahTitik: function (value) {
+    		var angka = [value];
+    		var numberFormat = new Intl.NumberFormat('es-ES');
+    		var formatted = angka.map(numberFormat.format);
+    		return formatted.join('; ');
+    	},
+    	tanggal: function (value) {
+    		return moment(String(value)).format('DD/MM/YYYY hh:mm')
+    	}
+    },
     methods: {
     	submitLabaKotor(){
     		var app = this;
@@ -308,18 +313,18 @@ export default {
     			alert("Tidak Dapat Memuat Laporan Laba Kotor Penjualan /Pelanggan");
     		});
     	},
-        dataPelanggan() {
-          var app = this;
-          axios.get(app.url+'/pilih-pelanggan')
-          .then(function (resp) {
-            app.pelanggan = resp.data;
+    	dataPelanggan() {
+    		var app = this;
+    		axios.get(app.url+'/pilih-pelanggan')
+    		.then(function (resp) {
+    			app.pelanggan = resp.data;
 
-        })
-          .catch(function (resp) {
-            alert("Tidak bisa memuat pelanggan ");
-        });
-      },
-      totalLabaKotor() {
+    		})
+    		.catch(function (resp) {
+    			alert("Tidak bisa memuat pelanggan ");
+    		});
+    	},
+    	totalLabaKotor() {
     		var app = this;	
     		var newFilter = app.filter;
 
@@ -335,7 +340,7 @@ export default {
     			alert("Tidak Dapat Memuat Subtotal Laba Kotor");
     		});
     	},
-      totalLabaKotorPesanan() {
+    	totalLabaKotorPesanan() {
     		var app = this;	
     		var newFilter = app.filter;
 
@@ -350,7 +355,7 @@ export default {
     			alert("Tidak Dapat Memuat Subtotal Laba Kotor");
     		});
     	},
-      totalAkhirLabaKotor() {
+    	totalAkhirLabaKotor() {
     		var app = this;	
     		var newFilter = app.filter;
 
@@ -366,22 +371,22 @@ export default {
     			alert("Tidak Dapat Memuat Subtotal Laba Kotor");
     		});
     	},
-	    downloadExcel() {
-	    		var app = this;	
-	    		var newFilter = app.filter;
-	    		if (newFilter.pelanggan == "" || newFilter.pelanggan == null) {
-	    			newFilter.pelanggan = 0;
-	    		}
-	    		axios.get(app.urlDownloadExcel+'/'+newFilter.dari_tanggal+'/'+newFilter.sampai_tanggal+'/'+newFilter.pelanggan)
-	    		.then(function (resp) {
-	    		})
-	    		.catch(function (resp) {
-	    			console.log(resp);
-	    			alert("Tidak Dapat Memuat Subtotal Laba Kotor");
-	    		});
-	    },
-        showButton() {
-        	var app = this;
+    	downloadExcel() {
+    		var app = this;	
+    		var newFilter = app.filter;
+    		if (newFilter.pelanggan == "" || newFilter.pelanggan == null) {
+    			newFilter.pelanggan = 0;
+    		}
+    		axios.get(app.urlDownloadExcel+'/'+newFilter.dari_tanggal+'/'+newFilter.sampai_tanggal+'/'+newFilter.pelanggan)
+    		.then(function (resp) {
+    		})
+    		.catch(function (resp) {
+    			console.log(resp);
+    			alert("Tidak Dapat Memuat Subtotal Laba Kotor");
+    		});
+    	},
+    	showButton() {
+    		var app = this;
     		var filter = app.filter;
 
     		if (filter.pelanggan == "") {
