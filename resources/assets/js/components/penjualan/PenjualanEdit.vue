@@ -672,20 +672,16 @@ export default {
       app.seen = true;
       app.openSelectizeProduk();
 
-      if (app.penjualan.subtotal == 0) {        
+      if (app.penjualan.subtotal == 0) {     
 
-        $.each(resp.data.data, function (i,item) {
-
-         app.penjualan.subtotal += parseFloat(resp.data.data[i].subtotal)
-         app.penjualan.total_akhir += parseFloat(resp.data.data[i].subtotal)
-         app.penjualan.kredit += parseFloat(resp.data.data[i].subtotal)
-         app.getDataPenjualan();
-
-       }); 
-      }
+       app.penjualan.subtotal += parseFloat(resp.data.subtotal)
+       app.penjualan.total_akhir += parseFloat(resp.data.subtotal)
+       app.penjualan.kredit += parseFloat(resp.data.subtotal)
+       app.getDataPenjualan();
+     }
 
 
-    })
+   })
     .catch(function (resp) {
       console.log(resp);
       app.loading = false;

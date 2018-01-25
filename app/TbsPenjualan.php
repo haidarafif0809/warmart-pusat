@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Yajra\Auditable\AuditableTrait;
+use Illuminate\Support\Facades\DB;
 
 class TbsPenjualan extends Model
 {
@@ -37,4 +38,15 @@ class TbsPenjualan extends Model
         return $query;
 
     }
+
+    public function subtotalTbs($user_warung,$session_id)
+    {
+        $tbs_penjualan = TbsPenjualan::select([DB::raw('SUM(subtotal) as subtotal')])->where('warung_id', $user_warung)->where('session_id', $session_id)->first();
+        if ($tbs_penjualan->subtotal == null || $tbs_penjualan->subtotal == '') {
+          return 0;
+      }
+      else{
+        return $tbs_penjualan->subtotal;
+    }
+}
 }

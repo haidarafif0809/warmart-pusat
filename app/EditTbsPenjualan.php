@@ -29,6 +29,17 @@ class EditTbsPenjualan extends Model
 		return $query;
 	}
 
+	public function subtotalTbs($user_warung,$id)
+	{
+		$tbs_penjualan = EditTbsPenjualan::select([DB::raw('SUM(subtotal) as subtotal')])->where('warung_id', $user_warung)->where('id_penjualan_pos', $id)->first();
+		if ($tbs_penjualan->subtotal == null || $tbs_penjualan->subtotal == '') {
+			return 0;
+		}
+		else{
+			return $tbs_penjualan->subtotal;
+		}
+	}
+
 	public function produk()
 	{
 		return $this->hasOne('App\Barang','id','id_produk');
