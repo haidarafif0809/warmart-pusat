@@ -289,6 +289,9 @@ class PenjualanController extends Controller
         $detail_penjualan = DetailPenjualanPos::with(['produk'])->where('warung_id', $user_warung)->where('id_penjualan_pos', $id)->orderBy('id_detail_penjualan_pos', 'desc')->paginate(10);
         $array            = array();
 
+        $DetailPenjualanPos = new DetailPenjualanPos();
+        $subtotal      = $DetailPenjualanPos->subtotalTbs($user_warung,$id);
+
         foreach ($detail_penjualan as $detail_penjualans) {
 
             $potongan = $this->tampilPotongan($detail_penjualans->potongan, $detail_penjualans->jumlah_produk, $detail_penjualans->harga_produk);
@@ -307,6 +310,7 @@ class PenjualanController extends Controller
 
         $url     = '/penjualan/view-detail-penjualan/' . $id;
         $respons = $this->paginationData($detail_penjualan, $array, $url);
+        $respons['subtotal'] = $subtotal;
 
         return response()->json($respons);
     }

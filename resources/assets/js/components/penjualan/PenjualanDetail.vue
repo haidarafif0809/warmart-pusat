@@ -74,7 +74,7 @@
 								</div>
 								<div class="card-content">
 									<p class="category">Total Keseluruhan</p>
-									<h3 class="card-title">{{ new Intl.NumberFormat().format(subtotal) }}</h3>
+									<h3 class="card-title"><b><font style="font-size:32px;">{{ new Intl.NumberFormat().format(subtotal) }}</font></b></h3>
 								</div>
 								<div class="card-footer">
 
@@ -131,9 +131,12 @@ methods: {
 			app.loading = false;
 			app.seen = true;
 
-			$.each(resp.data.data, function (i, item) {
-				app.subtotal += parseFloat(resp.data.data[i].subtotal) 
-			});
+			if (app.subtotal == 0) {
+				
+				app.subtotal += parseFloat(resp.data.subtotal) 
+
+			}
+
 		})
 		.catch(function (resp) {
 			console.log(resp);
