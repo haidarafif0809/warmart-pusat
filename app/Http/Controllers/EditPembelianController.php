@@ -11,6 +11,7 @@ use App\DetailPembelian;
 use App\Barang;   
 use App\EditTbsPembelian;
 use App\TransaksiKas;
+use App\TransaksiHutang;
 use App\Kas;   
 use Session; 
 use Auth; 
@@ -457,6 +458,28 @@ public function hapus_tbs_pembelian($id){
 				'keterangan'        => $request->keterangan, 
 				'ppn'               => $request->ppn
 			]);
+
+         $kas = intval($update_pembelian->tunai) - intval($update_pembelian->kembalian);
+         if ($kas > 0) {
+
+            TransaksiKas::where('no_faktur',$update_pembelian->no_faktur)->where('warung_id', Auth::user()->id_warung)->delete();
+            TransaksiKas::create([ 
+               'no_faktur'         => $update_pembelian->no_faktur, 
+               'jenis_transaksi'   =>'pembelian' , 
+               'jumlah_keluar'     => $kas, 
+               'kas'               => $update_pembelian->cara_bayar, 
+               'warung_id'         => $update_pembelian->warung_id] );  
+         }
+         if ($update_pembelian->kredit > 0) {
+            TransaksiHutang::where('no_faktur',$update_pembelian->no_faktur)->where('warung_id', Auth::user()->id_warung)->delete();
+            TransaksiHutang::create([ 
+               'no_faktur'         => $update_pembelian->no_faktur, 
+               'jenis_transaksi'   => 'pembelian' , 
+               'id_transaksi'      => $update_pembelian->id,
+               'jumlah_masuk'      => $update_pembelian->kredit, 
+               'suplier_id'        => $update_pembelian->suplier_id, 
+               'warung_id'         => $update_pembelian->warung_id] );  
+         }
 
           //HAPUS TBS PEMBELIAN 
 			$data_produk_pembelian->delete(); 

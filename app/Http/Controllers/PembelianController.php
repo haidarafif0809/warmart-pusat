@@ -10,6 +10,7 @@ use App\SettingAplikasi;
 use App\Suplier;
 use App\TbsPembelian;
 use App\TransaksiKas;
+use App\TransaksiHutang;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -1033,6 +1034,27 @@ class PembelianController extends Controller
                 'ppn'              => $request->ppn,
                 'warung_id'        => Auth::user()->id_warung,
             ]);
+
+            //Transaksi Hutang & kas 
+                $kas = intval($pembelian->tunai) - intval($pembelian->kembalian);
+                if ($kas > 0) {
+                    TransaksiKas::create([ 
+                        'no_faktur'         => $pembelian->no_faktur, 
+                        'jenis_transaksi'   =>'pembelian' , 
+                        'jumlah_keluar'     => $kas, 
+                        'kas'               => $pembelian->cara_bayar, 
+                        'warung_id'         => $pembelian->warung_id] );  
+                }
+                if ($pembelian->kredit > 0) {
+                    TransaksiHutang::create([ 
+                        'no_faktur'         => $pembelian->no_faktur, 
+                        'jenis_transaksi'   => 'pembelian' , 
+                        'id_transaksi'      => $pembelian->id,
+                        'jumlah_masuk'      => $pembelian->kredit, 
+                        'suplier_id'        => $pembelian->suplier_id, 
+                        'warung_id'         => $pembelian->warung_id] );  
+                }
+            //Transaksi Hutang & kas 
 
             //HAPUS TBS PEMBELIAN
             $data_produk_pembelian->delete();

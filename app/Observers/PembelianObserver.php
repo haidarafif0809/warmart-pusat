@@ -12,54 +12,7 @@ use Session;
 
 class PembelianObserver
 {
-	public function creating(Pembelian $Pembelian){
-		$kas = intval($Pembelian->tunai) - intval($Pembelian->kembalian);
-		if ($kas > 0) {
-			TransaksiKas::create([ 
-				'no_faktur'         => $Pembelian->no_faktur, 
-				'jenis_transaksi'   =>'pembelian' , 
-				'jumlah_keluar'     => $kas, 
-				'kas'               => $Pembelian->cara_bayar, 
-				'warung_id'         => $Pembelian->warung_id] );  
-		}
-		if ($Pembelian->kredit > 0) {
-			TransaksiHutang::create([ 
-				'no_faktur'         => $Pembelian->no_faktur, 
-				'jenis_transaksi'   => 'pembelian' , 
-				'jumlah_masuk'      => $Pembelian->kredit, 
-				'suplier_id'        => $Pembelian->suplier_id, 
-				'warung_id'         => $Pembelian->warung_id] );  
-		}
-
-		return true;
-   	} // OBERVERS CREATING
-
-   	public function updating(Pembelian $Pembelian){
-
-         $kas = intval($Pembelian->tunai) - intval($Pembelian->kembalian);
-         if ($kas > 0) {
-
-            TransaksiKas::where('no_faktur',$Pembelian->no_faktur)->where('warung_id', Auth::user()->id_warung)->delete();
-            TransaksiKas::create([ 
-               'no_faktur'         => $Pembelian->no_faktur, 
-               'jenis_transaksi'   =>'pembelian' , 
-               'jumlah_keluar'     => $kas, 
-               'kas'               => $Pembelian->cara_bayar, 
-               'warung_id'         => $Pembelian->warung_id] );  
-         }
-         if ($Pembelian->kredit > 0) {
-            
-            TransaksiHutang::where('no_faktur',$Pembelian->no_faktur)->where('warung_id', Auth::user()->id_warung)->delete();
-            TransaksiHutang::create([ 
-               'no_faktur'         => $Pembelian->no_faktur, 
-               'jenis_transaksi'   => 'pembelian' , 
-               'jumlah_masuk'      => $Pembelian->kredit, 
-               'suplier_id'        => $Pembelian->suplier_id, 
-               'warung_id'         => $Pembelian->warung_id] );  
-         }
-
-         return true;
-      }  	
+	
       public function deleting(Pembelian $Pembelian){
         $detail_pembelian =  DetailPembelian::where('no_faktur', $Pembelian->no_faktur)->where('warung_id', $Pembelian->warung_id)->first();
 
