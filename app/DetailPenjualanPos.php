@@ -35,6 +35,17 @@ class DetailPenjualanPos extends Model
 
     }
 
+    public function subtotalTbs($user_warung,$id)
+    {
+        $detail_penjualan = DetailPenjualanPos::select([DB::raw('SUM(subtotal) as subtotal')])->where('warung_id', $user_warung)->where('id_penjualan_pos', $id)->first();
+        if ($detail_penjualan->subtotal == null || $detail_penjualan->subtotal == '') {
+            return 0;
+        }
+        else{
+            return $detail_penjualan->subtotal;
+        }
+    }
+
     public function tanggalSql($tangal)
     {
         $date        = date_create($tangal);
