@@ -143,19 +143,21 @@ class PembayaranHutangController extends Controller
     {
         $session_id    = session()->getId();
         $user_warung   = Auth::user()->id_warung;
-        $id_suplier     = $id;
-        $data_supplier_hutang = Pembelian::where('suplier_id', $id_suplier)->where('warung_id',$user_warung)->orderBy('id', 'desc')->paginate(10);
+        $id_suplier     = $id;         
+
+        $data_supplier_hutang = TransaksiHutang::getDataPembelianHutang($id_suplier)->paginate(10);
+        $data_supplier_hutang_get = TransaksiHutang::getDataPembelianHutang($id_suplier)->having('sisa_hutang', '>', 0)->get();
+
         $array         = array();
-        foreach ($data_supplier_hutang as $data_supplier_hutangs) {
+        foreach ($data_supplier_hutang_get as $data_supplier_hutangs) {
             array_push($array, [
                 'id_pembelian'             => $data_supplier_hutangs->id,
                 'no_faktur'                 => $data_supplier_hutangs->no_faktur,
                 'total'                     => $data_supplier_hutangs->total,
-                'nilai_kredit'              => $data_supplier_hutangs->nilai_kredit,
-                'tanggal_jatuh_tempo'       => $data_supplier_hutangs->JatuhTempo,
-                'waktu'                     => $data_supplier_hutangs->Waktu,
-                'status_pembelian'          => $data_supplier_hutangs->status_pembelian
-            ]);
+                'nilai_kredit'              => $data_supplier_hutangs->sisa_hutang,
+                'tanggal_jatuh_tempo'       => $data_supplier_hutangs->tanggal_jt_tempo,
+                'waktu'                     => $data_supplier_hutangs->Waktu
+             ]);
         }
         $url     = '/pembayaran-hutang/data-suplier-hutang';
         $respons = $this->dataPagination($data_supplier_hutang, $array,$url); 
@@ -167,22 +169,18 @@ class PembayaranHutangController extends Controller
         $user_warung   = Auth::user()->id_warung;
         $id_suplier = $id;
         $search = $request->search;
-        $data_supplier_hutang = Pembelian::where('suplier_id', $id_suplier)->where('warung_id',$user_warung)
-        ->where(function ($query) use ($request) {
-        $query->orWhere('no_faktur', 'LIKE', $request->search . '%')
-         ->orWhere('nilai_kredit', 'LIKE', $request->search . '%');
-        })->orderBy('id', 'desc')->paginate(10);
+        $data_supplier_hutang = TransaksiHutang::getDataCariPembelianHutang($id_suplier,$request)->paginate(10);
+        $data_supplier_hutang_get = TransaksiHutang::getDataCariPembelianHutang($id_suplier,$request)->having('sisa_hutang', '>', 0)->get();
 
         $array         = array();
-        foreach ($data_supplier_hutang as $data_supplier_hutangs) {
+        foreach ($data_supplier_hutang_get as $data_supplier_hutangs) {
             array_push($array, [
                 'id_pembelian'             => $data_supplier_hutangs->id,
                 'no_faktur'                 => $data_supplier_hutangs->no_faktur,
                 'total'                     => $data_supplier_hutangs->total,
-                'nilai_kredit'              => $data_supplier_hutangs->nilai_kredit,
-                'tanggal_jatuh_tempo'       => $data_supplier_hutangs->JatuhTempo,
-                'waktu'                     => $data_supplier_hutangs->Waktu,
-                'status_pembelian'          => $data_supplier_hutangs->status_pembelian
+                'nilai_kredit'              => $data_supplier_hutangs->sisa_hutang,
+                'tanggal_jatuh_tempo'       => $data_supplier_hutangs->tanggal_jt_tempo,
+                'waktu'                     => $data_supplier_hutangs->Waktu
             ]);
         }
         $url     = '/pembayaran-hutang/data-suplier-hutang';
@@ -282,12 +280,13 @@ class PembayaranHutangController extends Controller
 
         public function pilihSuplier()
     {
-        $suplier = Suplier::where('warung_id', Auth::user()->id_warung)->get();
+        $data_supplier_hutang = TransaksiHutang::dataPembelianHutang()->get();
         $array  = array();
-        foreach ($suplier as $supliers) {
+        foreach ($data_supplier_hutang as $data_supplier_hutangs) {
             array_push($array, [
-                'id'          => $supliers->id,
-                'nama_suplier'      => $supliers->nama_suplier]);
+                'id'          => $data_supplier_hutangs->suplier_id,
+                'nama_suplier'      => $data_supplier_hutangs->nama_suplier
+            ]);
         }
 
         return response()->json($array);
@@ -425,7 +424,7 @@ class PembayaranHutangController extends Controller
                     'no_faktur'       => $no_faktur,
                     'id_transaksi'    => $id_pembelian->id,
                     'jenis_transaksi' => 'Pembayaran Hutang',
-                    'jumlah_keluar'   => $data_tbs->jumlah_bayar,
+                    'jumlah_keluar'   => $data_tbs->jumlah_bayar + $data_tbs->potongan,
                     'suplier_id'    => $data_tbs->suplier_id,
                     'warung_id'       => $data_tbs->warung_id,
                 ]);
