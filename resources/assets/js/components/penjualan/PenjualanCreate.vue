@@ -244,9 +244,17 @@
 
               <tbody style="margin-bottom:10px; margin-top:10px; margin-right:10px; margin-left:10px;">
                 <tr>
-                  <td class="text-primary"><b># Jumlah Otomatis </b> </td>
+                  <td class="text-primary"><b># Jumlah Otomatis Satu ? </b> </td>
                   <td class="text-primary"><b>:</b> </td>
-                  <td class="text-primary"><b><input type="number" name="settings_jumlah_pos" v-model="setting_penjualan_pos.jumlah_produk"></b> </td>
+                  <td class="text-primary">
+                    <div class="togglebutton">
+                      <label>
+                        <input type="checkbox" v-model="setting_penjualan_pos.jumlah_produk">
+                        <b v-if="setting_penjualan_pos.jumlah_produk == 1">Ya</b>
+                        <b v-if="setting_penjualan_pos.jumlah_produk == 0">Tidak</b>
+                      </label>
+                    </div> 
+                  </td>
                 </tr><br>
 
                 <tr>
@@ -296,6 +304,28 @@
   </div> 
 </div> 
 <!-- / MODAL TOMBOL SELESAI --> 
+
+<!-- small modal -->
+<div class="modal" id="modalJumlahProduk" role="dialog" tabindex="-1"  aria-labelledby="myModalLabel" aria-hidden="true" >
+  <div class="modal-dialog modal-medium">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close"  v-on:click="closeModalJumlahProduk()" v-shortkey.push="['shift']" @shortkey="closeModalJumlahProduk()"> &times;</button> 
+      </div>
+      <form class="form-horizontal" v-on:submit.prevent="submitProdukPenjualan(inputTbsPenjualan.jumlah_produk)"> 
+        <div class="modal-body text-center">
+          <h3><b>{{inputTbsPenjualan.nama_produk}}</b> </h3>
+          <input class="form-control" type="number" v-model="inputTbsPenjualan.jumlah_produk" placeholder="Isi Jumlah Produk" name="jumlah_produk" id="jumlah_produk" ref="jumlah_produk" autocomplete="off">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-simple"   v-on:click="closeModalJumlahProduk()" v-shortkey.push="['shift']" @shortkey="closeModalJumlahProduk()">Close(Shift)</button>
+          <button type="button" class="btn btn-info btn-lg"   v-on:click="submitProdukPenjualan(inputTbsPenjualan.jumlah_produk)">Tambah</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!--    end small modal -->
 
 <div class="card" style="margin-bottom: 1px; margin-top: 1px;">
   <div class="card-content">
@@ -432,6 +462,7 @@ export default {
       url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
 
       inputTbsPenjualan: {
+        nama_produk : '',
         produk : '',
         jumlah_produk : '',
         potongan_produk : '',
@@ -699,8 +730,21 @@ export default {
       var app = this;
       var produk = app.inputTbsPenjualan.produk.split("|");
       var nama_produk = produk[1];
-      this.isiJumlahProduk(nama_produk);
+
+      if (this.setting_penjualan_pos.jumlah_produk == 1) {
+        this.submitProdukPenjualan(this.setting_penjualan_pos.jumlah_produk);
+      }else{
+        //this.isiJumlahProduk(nama_produk);//
+        this.inputJumlahProduk(nama_produk);
+      }    
+      
     }
+  },
+  inputJumlahProduk(nama_produk){
+    var app = this
+    app.inputTbsPenjualan.nama_produk = nama_produk
+    $("#modalJumlahProduk").show();
+    app.$refs.jumlah_produk.focus(); 
   },
   tambahModalKas(){
    $("#modal_tambah_kas").show();
@@ -759,8 +803,7 @@ isiJumlahProduk(nama_produk){
       element: "input",
       attributes: {
         placeholder: "Jumlah Produk",
-        type: "number",
-        value : app.setting_penjualan_pos.jumlah_produk
+        type: "number"
       },
     },
     closeOnEsc: true,
@@ -782,8 +825,9 @@ submitProdukPenjualan(value){
 
   if (value == 0) {
 
-    this.$swal({
-      text: "Jumlah Produk Tidak Boleh Nol!",
+    this.$swal("Jumlah Produk Tidak Boleh Nol!")
+    .then((value) => {
+      this.$refs.jumlah_produk.focus(); 
     });
 
   }else{
@@ -824,6 +868,7 @@ submitProdukPenjualan(value){
         app.loading = false
         app.inputTbsPenjualan.jumlah_produk = ''
         app.inputTbsPenjualan.produk = ''
+        $("#modalJumlahProduk").hide();
 
       }
 
@@ -1140,21 +1185,16 @@ simpanSetting(){
   var app = this
   var newSettingPenjualanPos = app.setting_penjualan_pos;
 
-  if (app.setting_penjualan_pos.jumlah_produk == 0 || app.setting_penjualan_pos.jumlah_produk == '') {
-    app.alertTbs("Jumlah Produk Tidak Boleh Nol atau Kosong!")
-  }else{
-
-   axios.post(app.url+'/proses-setting-penjualan-pos',newSettingPenjualanPos)
-   .then(function (resp) {
+  axios.post(app.url+'/proses-setting-penjualan-pos',newSettingPenjualanPos)
+  .then(function (resp) {
     app.alert("Menyimpan Setting Penjualan POS");        
     $("#modal_setting").hide(); 
   })
-   .catch(function (resp) {
+  .catch(function (resp) {
     console.log(resp);
     alert("Tidak dapat Menyimpan Setting Penjualan POS");
   });
 
- }
 
 },
 dataSettingPenjualanPos() {
@@ -1183,6 +1223,10 @@ bayarPenjualan(){
 closeModal(){
 
   $("#modal_selesai").hide(); 
+},
+closeModalJumlahProduk(){  
+  $("#modalJumlahProduk").hide(); 
+  this.openSelectizeProduk();
 },
 closeModalX(){
   $("#modal_tambah_kas").hide(); 
