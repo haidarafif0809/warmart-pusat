@@ -387,6 +387,21 @@ public function index()
             Notification::send(PendaftarTopos::first(), new PendaftaranTopos($pendaftar_topos)); 
         }else{
 
+                        // PENDAFTARAN WARUNG
+            $this->validate($request, [
+                'email'       => 'required|without_spaces|unique:pendaftar_topos,email|email',
+                'name'        => 'required',
+                'nama_warung' => 'required',
+                'no_telp'     => 'required|numeric|without_spaces|unique:pendaftar_topos,no_telp',
+                'alamat'      => 'required',
+                'lama_berlangganan' => 'required',
+                'berlaku_hingga' => 'required',
+                'total' => 'required',
+                'tujuan_transfer' => 'required',
+                'no_rek_transfer' => 'required',
+                'atas_nama' => 'required'
+            ]);
+
             $bank     = explode("|", $request->tujuan_transfer);
             $bank_id  = $bank[0];
 
@@ -556,9 +571,9 @@ public function index()
 
         public function dataWarung(){
 
-         return Warung::find(Auth::user()->id_warung);
-     }
-     public function dataBank(){
+           return Warung::find(Auth::user()->id_warung);
+       }
+       public function dataBank(){
         $bank = Bank::all();
         return response()->json($bank);
     }
@@ -589,15 +604,15 @@ public function index()
         $respons['status_pembayaran'] = $status_pembayaran;
         $respons['sisa_waktu'] = $sisa_waktu;
     }else{        
-     $status_pembayaran = $pendaftar_topos->first()->status_pembayaran;
+       $status_pembayaran = $pendaftar_topos->first()->status_pembayaran;
 
-     $respons['id'] = $pendaftar_topos->first()->id;
-     $respons['status_pembayaran'] = $status_pembayaran;
-     $respons['sisa_waktu'] = $sisa_waktu;
- }
+       $respons['id'] = $pendaftar_topos->first()->id;
+       $respons['status_pembayaran'] = $status_pembayaran;
+       $respons['sisa_waktu'] = $sisa_waktu;
+   }
 
 
- return response()->json($respons);
+   return response()->json($respons);
 }
 
 }
