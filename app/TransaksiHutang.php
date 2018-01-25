@@ -15,7 +15,7 @@ class TransaksiHutang extends Model
 	use LaratrustUserTrait;
 	use AuditableTrait;
 
-	protected $fillable = ['jenis_transaksi','suplier_id','no_faktur','jumlah_masuk','jumlah_keluar','warung_id','id_transaksi',];
+	protected $fillable = ['jenis_transaksi','suplier_id','no_faktur','jumlah_masuk','jumlah_keluar','warung_id','id_transaksi'];
 
         public function getWaktuAttribute()
     {
