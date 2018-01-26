@@ -23,9 +23,10 @@
 
 					<div class="row">
 						<div class="form-group col-md-2">
-							<selectize-component v-model="filter.produk" :settings="placeholder_produk" id="pilih_produk"> 
+							<selectize-component v-model="filter.produk" :settings="placeholder_produk" id="pilih_produk" ref ="pilih_produk"> 
 								<option v-for="produks, index in produk" v-bind:value="produks.id" >{{ produks.nama_produk }}</option>
 							</selectize-component>
+							<input class="form-control" type="hidden"  v-model="filter.produk"  name="pilih_produk" id="pilih_produk"  v-shortkey="['f1']" @shortkey="bukaPilihProduk()">
 						</div>
 						<div class="form-group col-md-2">
 							<datepicker :input-class="'form-control'" placeholder="Dari Tanggal" v-model="filter.dari_tanggal" name="dari_tanggal" v-bind:id="'dari_tanggal'"></datepicker>				
@@ -125,7 +126,7 @@
 				pencarian: '',
 				loading: false,
 				placeholder_produk: {
-					placeholder: '--PILIH PRODUK--'
+					placeholder: '--PILIH PRODUK (F1)--'
 				}
 			}
 		},
@@ -155,11 +156,15 @@
     	app.filter.dari_tanggal = awal_tanggal;
     },
     methods: {
+    	bukaPilihProduk(){      
+    		this.$refs.pilih_produk.$el.selectize.focus();
+    	},
     	dataProduk() {
     		var app = this;
     		axios.get(app.url+'/pilih-produk')
     		.then(function (resp) {
     			app.produk = resp.data;
+    			app.bukaPilihProduk();
     		})
     		.catch(function (resp) {
     			alert("Tidak Bisa Memuat Produk ");
