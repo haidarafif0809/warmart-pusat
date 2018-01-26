@@ -54,8 +54,11 @@
 									<td>{{ pembayaranhutangs.kas }}</td>
 									<td>{{ pembayaranhutangs.keterangan }}</td>
 									<td style="text-align:right;" >Rp. {{ pembayaranhutangs.total }}</td>
-									<td style="text-align:right;"><router-link :to="{name: 'editPembayaranHutangProses', params: {id: pembayaranhutangs.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + pembayaranhutangs.id" >
-									Edit </router-link> </td>
+									<td style="text-align:right;">
+										<router-link :to="{name: 'prosesEditPembayaranHutang', params: {id: pembayaranhutangs.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + pembayaranhutangs.id" >
+											Edit
+										</router-link>
+									 </td>
 									<td style="text-align:right;"> 
 										<a  href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + pembayaranhutangs.id" v-on:click="deleteEntry(pembayaranhutangs.id, index,pembayaranhutangs.no_faktur)">Delete</a>
 									</td>
