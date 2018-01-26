@@ -566,30 +566,6 @@ export default {
     openSelectizeKas(){      
       this.$refs.kas.$el.selectize.focus();
     },
-    getDataPenjualan(){
-
-      var app = this
-      var id = app.$route.params.id;
-      axios.get(app.url+'/cek-data-tbs-penjualan/'+id)
-      .then(function (resp) {
-
-        app.penjualan.pelanggan = resp.data.pelanggan_id
-        app.penjualan.kas = resp.data.id_kas
-        app.penjualan.jatuh_tempo = resp.data.tanggal_jt_tempo
-        app.penjualan.pembayaran = resp.data.tunai
-        if (app.penjualan.subtotal > 0) {
-          app.penjualan.potongan = resp.data.potongan
-          app.penjualan.potongan_faktur = resp.data.potongan                
-        }
-
-      })
-      .catch(function (resp) {
-
-        console.log(resp);
-        alert("Tidak Dapat Memuat Penjualan");
-
-      });
-    },
     hitungKembalian(val){
       var kembalian = parseFloat(val) - parseFloat(this.penjualan.total_akhir);   
       if (kembalian >= 0) {
@@ -673,10 +649,6 @@ export default {
       app.openSelectizeProduk();
 
       if (app.penjualan.subtotal == 0) {     
-
-       app.penjualan.subtotal += parseFloat(resp.data.subtotal)
-       app.penjualan.total_akhir += parseFloat(resp.data.subtotal)
-       app.penjualan.kredit += parseFloat(resp.data.subtotal)
        app.getDataPenjualan();
      }
 
@@ -706,7 +678,36 @@ export default {
       console.log(resp);
       alert("Tidak Dapat Memuat Penjualan");
     });
-  },    
+  },   
+  getDataPenjualan(){
+
+    var app = this
+    var id = app.$route.params.id;
+    axios.get(app.url+'/cek-data-tbs-penjualan/'+id)
+    .then(function (resp) {
+
+     app.penjualan.subtotal += parseFloat(resp.data.subtotal)
+     app.penjualan.total_akhir += parseFloat(resp.data.subtotal)
+     app.penjualan.kredit += parseFloat(resp.data.subtotal)
+
+     app.penjualan.pelanggan = resp.data.penjualan.pelanggan_id
+     app.penjualan.kas = resp.data.penjualan.id_kas
+     app.penjualan.jatuh_tempo = resp.data.penjualan.tanggal_jt_tempo
+     app.penjualan.pembayaran = resp.data.penjualan.tunai
+
+     if (app.penjualan.subtotal > 0) {
+      app.penjualan.potongan = resp.data.penjualan.potongan
+      app.penjualan.potongan_faktur = resp.data.penjualan.potongan                
+    }
+
+  })
+    .catch(function (resp) {
+
+      console.log(resp);
+      alert("Tidak Dapat Memuat Penjualan");
+
+    });
+  }, 
   dataProduk() {
     var app = this;
     axios.get(app.url_produk+'/pilih-produk').then(function (resp) {

@@ -384,7 +384,6 @@
     </div> 
 </div> 
 </template>
-</template>
 
 
 <script>
@@ -473,7 +472,7 @@ export default {
             this.potonganTbs()
         },
         'formBayarHutangTbs.jumlah_bayar':function(){
-            this.jumlahBayarPiutang()
+            this.jumlahBayarHutang()
         },
         'formEditBayarHutangTbs.potongan':function(){
           this.potonganEditTbs()
@@ -510,7 +509,7 @@ export default {
             var jumlah_bayar = parseFloat(this.formBayarHutangTbs.nilai_kredit) - parseFloat(potonganTbs)
             this.formBayarHutangTbs.jumlah_bayar = jumlah_bayar.toFixed(2)
         },
-        jumlahBayarPiutang(){
+        jumlahBayarHutang(){
             var app = this;
             var jumlah_bayar = app.formBayarHutangTbs.jumlah_bayar
 
