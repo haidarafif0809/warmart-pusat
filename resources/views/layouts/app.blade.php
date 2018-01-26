@@ -1,7 +1,10 @@
 <!DOCTYPE doctype html>
 <html lang="en">
 <!-- PILIH TIPE APLIKASI -->
-
+<?php
+use Jenssegers\Agent\Agent;
+$agent = new Agent();
+?>
 <head>
     <meta charset="utf-8"/>
     @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
@@ -392,17 +395,15 @@
                 <a class="navbar-brand" href="#">
                     Dashboard
                 </a>
+                @if ($agent->isMobile() && Auth::user()->tipe_user == 4) <!--JIKA DAKSES VIA HP/TAB-->
+                <p id="sisa_waktu_demo"></p>
+                @endif
 
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
-
                     @if(Auth::user()->tipe_user == 4)
-
-                    <span id="masa_demo">
-                        <b id="sisa_waktu_demo"></b>
-                    </span>
-
+                    <b id="sisa_waktu_demo"></b>
                     @endif
                 </ul>
             </div>
@@ -450,7 +451,7 @@
 </body>
 <!--   Core JS Files   -->
 
-<script src="{{ asset('js/app.js?v=1.110')}}" type="text/javascript">
+<script src="{{ asset('js/app.js?v=1.111')}}" type="text/javascript">
 
 </script>
 <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript">
@@ -542,13 +543,18 @@
             $.get('{{ Url("daftar-topos/cek-sisa-demo") }}',{'_token': $('meta[name=csrf-token]').attr('content')}, function(data){ 
 
                 if (data.status_pembayaran < 2) {
-                    if (data.sisa_waktu > 0) {
+
+
+                  if (data.sisa_waktu > 0) {
+
                       $("#sisa_waktu_demo").text("Masa Percobaan Anda Tinggal "+data.sisa_waktu+" Hari Lagi! ");   
-                      $("#sisa_waktu_demo").append("<a href='pendaftaran-topos/1' class='btn btn-primary btn-round' target='blank'> Daftar Sekarang !</a>"); 
-                  }
-                  else{         
+                      $("#sisa_waktu_demo").append("<a href='pendaftaran-topos/1' target='blank'>Daftar Sekarang!</a>"); 
+
+                  }else{  
+
                       $("#sisa_waktu_demo").text("Masa Percobaan Anda Sudah Habis!");  
-                      $("#sisa_waktu_demo").append("<a href='pendaftaran-topos/1' class='btn btn-primary btn-round' target='blank'> Daftar Sekarang !</a>"); 
+                      $("#sisa_waktu_demo").append("<a href='pendaftaran-topos/1' target='blank'>Daftar Sekarang!</a>"); 
+
                       $(document).on('click', '.disabled-menu', function(){
 
                         swal({
@@ -571,8 +577,6 @@
           }); 
 
         }
-
-
 
         $("#minimizeSidebar").click();  
 
