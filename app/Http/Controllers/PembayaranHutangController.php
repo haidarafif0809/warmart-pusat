@@ -365,6 +365,39 @@ class PembayaranHutangController extends Controller
                     return response()->json($respons);
                 }
     }
+        //INSERT TBS
+    public function prosesTbsEditPembayaranHutang(Request $request)
+    {
+        $session_id = session()->getId();
+        $pembelian   = Pembelian::find($request->id_pembelian);
+        $data_tbs   = EditTbsPembayaranHutang::where('no_faktur_pembelian', $request->no_faktur)
+            ->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
+        $data_suplier_tbs   = EditTbsPembayaranHutang::select('suplier_id')->where('no_faktur_pembelian', $request->no_faktur)
+            ->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->get();    
+            
+         $subtotal_hutang       = $request->nilai_kredit  - $request->potongan;
+        //JIKA FAKTUR YG DIPILIH SUDAH ADA DI TBS
+            if ($data_tbs->count() > 0  ) {
+                return 0;
+            }
+             else {
+                    $tbs_pembayaran_piutang = EditTbsPembayaranHutang::create([
+                            'session_id'          => $session_id,
+                            'no_faktur_pembelian' => $request->no_faktur,
+                            'jatuh_tempo'         => $pembelian->tanggal_jt_tempo,
+                            'hutang'             => $request->nilai_kredit,
+                            'potongan'            => $request->potongan,
+                            'subtotal_hutang'      => $subtotal_hutang,
+                            'jumlah_bayar'        => $request->jumlah_bayar,
+                            'suplier_id'        => $pembelian->suplier_id,
+                            'warung_id'           => Auth::user()->id_warung,
+                    ]);
+                    $respons['jumlah_bayar'] = $request->jumlah_bayar;
+                    return response()->json($respons);
+                }
+    }
+    
+    //hapus tbs pembayaran hutang
         public function prosesHapusTbsPembayaranHutang($id)
     {
         if (!TbsPembayaranHutang::destroy($id)) {
@@ -373,6 +406,16 @@ class PembayaranHutangController extends Controller
             return response(200);
         }
     }
+     //hapus tbs edit pembayaran hutang
+     public function prosesHapusEditTbsPembayaranHutang($id)
+    {
+        if (!EditTbsPembayaranHutang::destroy($id)) {
+            return 0;
+        } else {
+            return response(200);
+        }
+    }
+
         public function prosesEditTbsPembayaranHutang(Request $request)
     {
         $tbs_pembayaran_hutang = TbsPembayaranHutang::find($request->id_tbs);
