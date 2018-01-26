@@ -75,34 +75,39 @@
 								<tr v-for="kartuStoks, index in kartuStok" >
 
 									<td>{{ kartuStoks.data_kartu_stoks.no_faktur }}</td>
-									<td>{{ kartuStoks.data_kartu_stoks.jenis_transaksi }}</td>
-									<td align="right">{{ kartuStoks.data_kartu_stoks.harga_unit | pemisahTitik }}</td>
-									<td align="center">{{ kartuStoks.data_kartu_stoks.created_at | tanggal }}</td>
-									<td align="right">{{ kartuStoks.data_kartu_stoks.jumlah_masuk | pemisahTitik }}</td>
-									<td align="right">{{ kartuStoks.data_kartu_stoks.jumlah_keluar | pemisahTitik }}</td>
-									<td align="right">{{ kartuStoks.saldo_awal | pemisahTitik }}</td>
 
-								</tr>
-							</tbody>					
-							<tbody class="data-tidak-ada" v-else-if="kartuStok.length == 0 && loading == false">
-								<tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
-							</tbody>
-						</table>
-					</div><!--RESPONSIVE-->
+                                    <td v-if="kartuStoks.data_kartu_stoks.jenis_transaksi == 'item_masuk'">Item Masuk</td>
+                                    <td v-else-if="kartuStoks.data_kartu_stoks.jenis_transaksi == 'item_keluar'">Item Keluar</td>
+                                    <td v-else-if="kartuStoks.data_kartu_stoks.jenis_transaksi == 'PenjualanPos'">Penjualan POS - {{kartuStoks.pelanggan}}</td>
+                                    <td v-else-if="kartuStoks.data_kartu_stoks.jenis_transaksi == 'pembelian'" >Pembelian - {{kartuStoks.suplier}}</td>
 
-					<!--DOWNLOAD EXCEL-->
-					<a href="#" class='btn btn-warning' id="btnExcel" target='blank' :style="'display: none'"><i class="material-icons">file_download</i> Download Excel</a>
+                                    <td align="right">{{ kartuStoks.data_kartu_stoks.harga_unit | pemisahTitik }}</td>
+                                    <td align="center">{{ kartuStoks.data_kartu_stoks.created_at | tanggal }}</td>
+                                    <td align="right">{{ kartuStoks.data_kartu_stoks.jumlah_masuk | pemisahTitik }}</td>
+                                    <td align="right">{{ kartuStoks.data_kartu_stoks.jumlah_keluar | pemisahTitik }}</td>
+                                    <td align="right">{{ kartuStoks.saldo_awal | pemisahTitik }}</td>
 
-					<!--CETAK LAPORAN-->
-					<a href="#" class='btn btn-success' id="btnCetak" target='blank' :style="'display: none'"><i class="material-icons">print</i> Cetak Laporan</a>
+                                </tr>
+                            </tbody>					
+                            <tbody class="data-tidak-ada" v-else-if="kartuStok.length == 0 && loading == false">
+                                <tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
+                            </tbody>
+                        </table>
+                    </div><!--RESPONSIVE-->
 
-					<vue-simple-spinner v-if="loading"></vue-simple-spinner>
-					<div align="right"><pagination :data="kartuStokData" v-on:pagination-change-page="prosesLaporan" :limit="4"></pagination></div>
-				</div>
-			</div>
-		</div>
-	</div>
-	
+                    <!--DOWNLOAD EXCEL-->
+                    <a href="#" class='btn btn-warning' id="btnExcel" target='blank' :style="'display: none'"><i class="material-icons">file_download</i> Download Excel</a>
+
+                    <!--CETAK LAPORAN-->
+                    <a href="#" class='btn btn-success' id="btnCetak" target='blank' :style="'display: none'"><i class="material-icons">print</i> Cetak Laporan</a>
+
+                    <vue-simple-spinner v-if="loading"></vue-simple-spinner>
+                    <div align="right"><pagination :data="kartuStokData" v-on:pagination-change-page="prosesLaporan" :limit="4"></pagination></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 </template>
 
