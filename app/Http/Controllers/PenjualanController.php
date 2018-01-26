@@ -350,8 +350,6 @@ class PenjualanController extends Controller
         $user_warung   = Auth::user()->id_warung;
         $tbs_penjualan = TbsPenjualan::with(['produk'])->where('warung_id', $user_warung)->where('session_id', $session_id)->orderBy('id_tbs_penjualan', 'desc')->paginate(10);
         $array         = array();
-        $TbsPenjualan = new TbsPenjualan();
-        $subtotal      = $TbsPenjualan->subtotalTbs($user_warung,$session_id);
 
         foreach ($tbs_penjualan as $tbs_penjualans) {
 
@@ -370,7 +368,6 @@ class PenjualanController extends Controller
 
         $url     = '/penjualan/view-tbs-penjualan';
         $respons = $this->paginationData($tbs_penjualan, $array, $url);
-        $respons['subtotal'] = $subtotal;
 
         return response()->json($respons);
     }
@@ -414,9 +411,6 @@ class PenjualanController extends Controller
         $tbs_penjualan = EditTbsPenjualan::with(['produk'])->where('warung_id', $user_warung)->where('id_penjualan_pos', $id)->orderBy('id_edit_tbs_penjualans', 'desc')->paginate(10);
         $array         = array();
 
-        $TbsPenjualan = new EditTbsPenjualan();
-        $subtotal      = $TbsPenjualan->subtotalTbs($user_warung,$id);
-
         foreach ($tbs_penjualan as $tbs_penjualans) {
 
             $potongan = $this->tampilPotongan($tbs_penjualans->potongan, $tbs_penjualans->jumlah_produk, $tbs_penjualans->harga_produk);
@@ -435,7 +429,6 @@ class PenjualanController extends Controller
 
         $url     = '/penjualan/view-edit-tbs-penjualan/' . $id;
         $respons = $this->paginationData($tbs_penjualan, $array, $url);
-        $respons['subtotal'] = $subtotal;
 
         return response()->json($respons);
     }
@@ -635,8 +628,14 @@ class PenjualanController extends Controller
 
     public function cekDataTbsPenjualan($id)
     {
-
-        return $penjualan = PenjualanPos::find($id);
+        $user_warung   = Auth::user()->id_warung;
+        $TbsPenjualan = new EditTbsPenjualan();
+        $subtotal      = $TbsPenjualan->subtotalTbs($user_warung,$id);
+        $respons['subtotal'] = $subtotal;
+        return response()->json([
+            "subtotal" => $subtotal,
+            "penjualan"     => PenjualanPos::find($id)->toArray(),
+        ]);
     }
 
     public function queryProduk($id_produk)
@@ -1297,6 +1296,16 @@ public function kekata($x)
         $temp = $this->kekata($x / 1000000000000) . " trilyun" . $this->kekata(fmod($x, 1000000000000));
     }
     return $temp;
+}
+
+public function cekSubtotalTbsPenjualan(){
+    $session_id    = session()->getId();
+    $user_warung   = Auth::user()->id_warung;
+    $TbsPenjualan = new TbsPenjualan();
+    $subtotal      = $TbsPenjualan->subtotalTbs($user_warung,$session_id);
+    $respons['subtotal'] = $subtotal;
+
+    return response()->json($respons);
 }
 
 }

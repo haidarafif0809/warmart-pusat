@@ -8,6 +8,7 @@ use App\Kas;
 use App\PembayaranPiutang;
 use App\PenjualanPos;
 use App\TbsPembayaranPiutang;
+use App\TransaksiKas;
 use App\TransaksiPiutang;
 use Auth;
 use Illuminate\Http\Request;
@@ -338,6 +339,15 @@ class PembayaranPiutangController extends Controller
                     'pelanggan_id'    => $data_tbs->pelanggan_id,
                     'warung_id'       => $data_tbs->warung_id,
                 ]);
+
+                //INSERT TRANSAKSI KAS
+                $transaksi_kas = TransaksiKas::create([
+                    'no_faktur'       => $no_faktur,
+                    'jenis_transaksi' => 'Pembayaran Piutang',
+                    'jumlah_masuk'    => $data_tbs->jumlah_bayar + $data_tbs->potongan,
+                    'kas'             => $request->kas,
+                    'warung_id'       => $data_tbs->warung_id,
+                ]);
             }
 
             //HAPUS TBS PEMBAYARAN PIUTANG
@@ -555,6 +565,8 @@ class PembayaranPiutangController extends Controller
             }
 
             $hapus_transaksi_piutang = TransaksiPiutang::where('no_faktur', $pembayaran_piutang->no_faktur_pembayaran)->delete();
+
+            $hapus_transaksi_kas = TransaksiKas::where('no_faktur', $pembayaran_piutang->no_faktur_pembayaran)->delete();
         }
 
 //INSERT DETAIL PEMBAYARAN PIUTANG
@@ -593,6 +605,15 @@ class PembayaranPiutangController extends Controller
                     'jenis_transaksi' => 'Pembayaran Piutang',
                     'jumlah_keluar'   => $data_tbs->jumlah_bayar + $data_tbs->potongan,
                     'pelanggan_id'    => $data_tbs->pelanggan_id,
+                    'warung_id'       => $data_tbs->warung_id,
+                ]);
+
+                //INSERT TRANSAKSI KAS
+                $transaksi_kas = TransaksiKas::create([
+                    'no_faktur'       => $pembayaran_piutang->no_faktur_pembayaran,
+                    'jenis_transaksi' => 'Pembayaran Piutang',
+                    'jumlah_masuk'    => $data_tbs->jumlah_bayar + $data_tbs->potongan,
+                    'kas'             => $request->kas,
                     'warung_id'       => $data_tbs->warung_id,
                 ]);
             }

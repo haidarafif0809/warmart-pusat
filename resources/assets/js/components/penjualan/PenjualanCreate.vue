@@ -645,16 +645,10 @@ export default {
       app.seen = true;      
       app.openSelectizeProduk();
 
-      if (app.penjualan.subtotal == 0) {        
-
-       app.penjualan.subtotal += parseFloat(resp.data.subtotal)
-       app.penjualan.total_akhir += parseFloat(resp.data.subtotal)
-       app.penjualan.kredit += parseFloat(resp.data.subtotal)
-
-      }
-
-
-    })
+      if (app.penjualan.subtotal == 0) { 
+       app.getSubtotalTbs();
+     }
+   })
     .catch(function (resp) {
       console.log(resp);
       app.loading = false;
@@ -681,6 +675,18 @@ export default {
       alert("Tidak Dapat Memuat Penjualan");
     });
   },    
+  getSubtotalTbs(){
+    var app =  this
+    axios.get(app.url+'/subtotal-tbs-penjualan')
+    .then(function (resp) {
+     app.penjualan.subtotal += parseFloat(resp.data.subtotal)
+     app.penjualan.total_akhir += parseFloat(resp.data.subtotal)
+     app.penjualan.kredit += parseFloat(resp.data.subtotal)
+   })
+    .catch(function (resp) {
+      console.log(resp);
+    });
+  },
   dataProduk() {
     var app = this;
     axios.get(app.url_produk+'/pilih-produk').then(function (resp) {
@@ -1158,8 +1164,7 @@ prosesSelesaiPenjualan(value){
       app.penjualan.potongan_faktur = 0
       app.penjualan.total_akhir = 0
       app.penjualan.pembayaran = 0
-      app.inputTbsPenjualan.produk = ''            
-      app.$refs.produk.$el.focus()
+      app.inputTbsPenjualan.produk = ''   
       app.hitungKembalian(app.penjualan.pembayaran)
       $("#modal_selesai").hide();
       window.open('penjualan/cetak-kecil-penjualan/'+resp.data.respons_penjualan,'_blank');
