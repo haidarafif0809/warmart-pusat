@@ -122,6 +122,17 @@ class LaporanKartuStokController extends Controller
         return $saldo_awal;
     }
 
+    public function totalSaldoAkhir(Request $request)
+    {
+        $response = Hpp::dataSaldoAkhir($request)->first();
+
+        $saldo_akhir['jumlah_masuk']  = $response->jumlah_masuk;
+        $saldo_akhir['jumlah_keluar'] = $response->jumlah_keluar;
+        $saldo_akhir['saldo_akhir']   = $response->jumlah_masuk - $response->jumlah_keluar;
+
+        return $saldo_akhir;
+    }
+
     //DOWNLOAD EXCEL - LAPORAN LABA KOTOR /PELANGGAN
     public function downloadExcel(Request $request, $dari_tanggal, $sampai_tanggal, $produk)
     {
@@ -130,7 +141,7 @@ class LaporanKartuStokController extends Controller
         $request['produk']         = $produk;
 
         $laporan_kartu_stok = Hpp::dataKartuStok($request)->get();
-        $saldo_awal         = Hpp::dataSaldoAwal($request)->first()->saldo_awal;
+        $saldo_awal         = Hpp::dataSaldoAwal($request);
 
         Excel::create('Laporan Kartu Stok', function ($excel) use ($request, $laporan_kartu_stok, $saldo_awal) {
             // Set property
@@ -190,7 +201,7 @@ class LaporanKartuStokController extends Controller
         $request['produk']         = $produk;
 
         $laporan_kartu_stok = Hpp::dataKartuStok($request)->paginate(10);
-        $saldo_awal         = Hpp::dataSaldoAwal($request)->first()->saldo_awal;
+        $saldo_awal         = Hpp::dataSaldoAwal($request);
         $data_kartu_stok    = $this->foreachLaporan($laporan_kartu_stok, $saldo_awal);
         $total_saldo_awal   = $this->totalSaldoAwal($request);
 

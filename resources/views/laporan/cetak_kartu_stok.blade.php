@@ -109,7 +109,17 @@ function pemisahTitik($angka)
 					@foreach ($data_kartu_stok as $kartu_stok)
 					<tr>
 						<td class="table1">{{ $kartu_stok['data_kartu_stoks']->no_faktur }}</td>
-						<td class="table1">{{ $kartu_stok['data_kartu_stoks']->jenis_transaksi }}</td>
+						<td class="table1">
+							@if($kartu_stok['data_kartu_stoks']->jenis_transaksi == 'item_masuk')
+							Item Masuk
+							@elseif($kartu_stok['data_kartu_stoks']->jenis_transaksi == 'item_keluar')
+							Item Keluar
+							@elseif($kartu_stok['data_kartu_stoks']->jenis_transaksi == 'PenjualanPos')
+							Penjualan POS - {{$kartu_stok['pelanggan']}}
+							@elseif($kartu_stok['data_kartu_stoks']->jenis_transaksi == 'pembelian')
+							Pembelian - {{$kartu_stok['suplier']}}
+							@endif
+						</td>
 						<td class="table1" align='right'>{{ pemisahTitik($kartu_stok['data_kartu_stoks']->harga_unit) }}</td>
 						<td class="table1">{{ date_format($kartu_stok['data_kartu_stoks']->created_at, "d M Y") }}</td>
 						<td class="table1" align='right'>{{ pemisahTitik($kartu_stok['data_kartu_stoks']->jumlah_masuk) }}</td>

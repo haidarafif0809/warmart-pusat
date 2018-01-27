@@ -273,4 +273,17 @@ class Hpp extends Model
 
     }
 
+    public function scopeDataSaldoAkhir($query_saldo_akhir, $request)
+    {
+        //SALDO AWAL PRODUK
+        $query_saldo_akhir = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk),0) AS jumlah_masuk'), DB::raw('IFNULL(SUM(jumlah_keluar),0) AS jumlah_keluar')])
+            ->where('id_produk', $request->produk)
+            ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+            ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+            ->where('warung_id', Auth::user()->id_warung);
+
+        return $query_saldo_akhir;
+
+    }
+
 }

@@ -85,10 +85,24 @@
                                     <td align="center">{{ kartuStoks.data_kartu_stoks.created_at | tanggal }}</td>
                                     <td align="right">{{ kartuStoks.data_kartu_stoks.jumlah_masuk | pemisahTitik }}</td>
                                     <td align="right">{{ kartuStoks.data_kartu_stoks.jumlah_keluar | pemisahTitik }}</td>
-                                    <td align="right">{{ kartuStoks.saldo_awal | pemisahTitik }}</td>
+                                    <td align="right" v-if="kartuStoks.data_kartu_stoks.jenis_hpp == 1"> +{{ kartuStoks.data_kartu_stoks.jumlah_masuk | pemisahTitik }}</td>
+                                    <td align="right" v-else> -{{ kartuStoks.data_kartu_stoks.jumlah_keluar | pemisahTitik }}</td>
 
                                 </tr>
-                            </tbody>					
+                            </tbody>
+
+                            <tr style="color:red" v-if="subtotalSaldoAkhir.status == 200">
+
+                                <td></td>
+                                <td>SALDO AKHIR</td>
+                                <td></td>
+                                <td></td>
+                                <td align="right">{{ subtotalSaldoAkhir.data.jumlah_masuk | pemisahTitik }}</td>
+                                <td align="right">{{ subtotalSaldoAkhir.data.jumlah_keluar | pemisahTitik }}</td>
+                                <td align="right">{{ subtotalSaldoAkhir.data.saldo_akhir | pemisahTitik }}</td>
+
+                            </tr>
+
                             <tbody class="data-tidak-ada" v-else-if="kartuStok.length == 0 && loading == false">
                                 <tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
                             </tbody>
@@ -119,23 +133,24 @@
 				produk: [],
 				kartuStok: [],
 				kartuStokData: {},
-				subtotalSaldoAwal: {},
-				filter: {
-					produk: '',
-					dari_tanggal: '',
-					sampai_tanggal: new Date(),
-				},
-				url : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-kartu-stok"),
-				urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-kartu-stok/download-excel-kartu-stok"),
-				urlCetak : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-kartu-stok/cetak-laporan"),
-				pencarian: '',
-				loading: false,
-				placeholder_produk: {
-					placeholder: '--PILIH PRODUK (F1)--'
-				}
-			}
-		},
-		watch: {
+                subtotalSaldoAwal: {},
+                subtotalSaldoAkhir: {},
+                filter: {
+                 produk: '',
+                 dari_tanggal: '',
+                 sampai_tanggal: new Date(),
+             },
+             url : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-kartu-stok"),
+             urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-kartu-stok/download-excel-kartu-stok"),
+             urlCetak : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-kartu-stok/cetak-laporan"),
+             pencarian: '',
+             loading: false,
+             placeholder_produk: {
+                 placeholder: '--PILIH PRODUK (F1)--'
+             }
+         }
+     },
+     watch: {
         // whenever question changes, this function will run
         pencarian: function (newQuestion) {
         	this.getHasilPencarian();
@@ -178,78 +193,94 @@
     	submitKartuStok(){
     		var app = this;
     		app.prosesLaporan();
-    		app.totalSaldoAwal();
-    		app.showButton();
-    	},
-    	prosesLaporan(page) {
-    		var app = this;	
-    		var newFilter = app.filter;
-    		if (typeof page === 'undefined') {
-    			page = 1;
-    		}
-    		app.loading = true,
-    		axios.post(app.url+'/view?page='+page, newFilter)
-    		.then(function (resp) {
-    			app.kartuStok = resp.data.data;
-    			app.kartuStokData = resp.data;
-    			app.loading = false
-    			console.log(resp.data.data);
-    		})
-    		.catch(function (resp) {
-    			console.log(resp);
-    			alert("Tidak Dapat Memuat Laporan Kartu Stok");
-    		});
-    	},
-    	totalSaldoAwal() {
-    		var app = this;	
-    		var newFilter = app.filter;
+            app.totalSaldoAwal();
+            app.totalSaldoAkhir();
+            app.showButton();
+        },
+        prosesLaporan(page) {
+          var app = this;	
+          var newFilter = app.filter;
+          if (typeof page === 'undefined') {
+           page = 1;
+       }
+       app.loading = true,
+       axios.post(app.url+'/view?page='+page, newFilter)
+       .then(function (resp) {
+           app.kartuStok = resp.data.data;
+           app.kartuStokData = resp.data;
+           app.loading = false
+           console.log(resp.data.data);
+       })
+       .catch(function (resp) {
+           console.log(resp);
+           alert("Tidak Dapat Memuat Laporan Kartu Stok");
+       });
+   },
+   totalSaldoAwal() {
+    var app = this; 
+    var newFilter = app.filter;
 
-    		app.loading = true,
-    		axios.post(app.url+'/total-saldo-awal', newFilter)
-    		.then(function (resp) {
-    			app.subtotalSaldoAwal = resp;
-    			app.loading = false
-    		})
-    		.catch(function (resp) {
-    			console.log(resp);
-    			alert("Tidak Dapat Memuat Subtotal Saldo Awal");
-    		});
-    	},
-    	getHasilPencarian(page){
-    		var app = this;
-    		var newFilter = app.filter;
-    		if (typeof page === 'undefined') {
-    			page = 1;
-    		}
-    		axios.post(app.url+'/pencarian?search='+app.pencarian+'&page='+page, newFilter)
-    		.then(function (resp) {
-    			console.log(resp);
-    			app.kartuStok = resp.data.data;
-    			app.kartuStokData = resp.data;
-    		})
-    		.catch(function (resp) {
-    			console.log(resp);
-    			alert("Tidak Dapat Memuat Laporan Kartu Stok");
-    		});
-    	},  	
-    	showButton() {
-    		var app = this;
-    		var filter = app.filter;
+    app.loading = true,
+    axios.post(app.url+'/total-saldo-awal', newFilter)
+    .then(function (resp) {
+        app.subtotalSaldoAwal = resp;
+        app.loading = false
+    })
+    .catch(function (resp) {
+        console.log(resp);
+        alert("Tidak Dapat Memuat Subtotal Saldo Awal");
+    });
+},
+totalSaldoAkhir() {
+    var app = this; 
+    var newFilter = app.filter;
 
-    		if (filter.produk == "") {
-    			filter.produk = 0;
-    		};
+    app.loading = true,
+    axios.post(app.url+'/total-saldo-akhir', newFilter)
+    .then(function (resp) {
+        app.subtotalSaldoAkhir = resp;
+        app.loading = false
+    })
+    .catch(function (resp) {
+        console.log(resp);
+        alert("Tidak Dapat Memuat Subtotal Saldo Akhir");
+    });
+},
+getHasilPencarian(page){
+  var app = this;
+  var newFilter = app.filter;
+  if (typeof page === 'undefined') {
+   page = 1;
+}
+axios.post(app.url+'/pencarian?search='+app.pencarian+'&page='+page, newFilter)
+.then(function (resp) {
+   console.log(resp);
+   app.kartuStok = resp.data.data;
+   app.kartuStokData = resp.data;
+})
+.catch(function (resp) {
+   console.log(resp);
+   alert("Tidak Dapat Memuat Laporan Kartu Stok");
+});
+},  	
+showButton() {
+  var app = this;
+  var filter = app.filter;
 
-    		var date_dari_tanggal = filter.dari_tanggal;
-    		var date_sampai_tanggal = filter.sampai_tanggal;
-    		var dari_tanggal = "" + date_dari_tanggal.getFullYear() +'-'+ ((date_dari_tanggal.getMonth() + 1) > 9 ? '' : '0') + (date_dari_tanggal.getMonth() + 1) +'-'+ (date_dari_tanggal.getDate() > 9 ? '' : '0') + date_dari_tanggal.getDate();
-    		var sampai_tanggal = "" + date_sampai_tanggal.getFullYear() +'-'+ ((date_sampai_tanggal.getMonth() + 1) > 9 ? '' : '0') + (date_sampai_tanggal.getMonth() + 1) +'-'+ (date_sampai_tanggal.getDate() > 9 ? '' : '0') + date_sampai_tanggal.getDate();
+  if (filter.produk == "") {
+   filter.produk = 0;
+};
 
-    		$("#btnExcel").show();
-    		$("#btnCetak").show();
-    		$("#btnExcel").attr('href', app.urlDownloadExcel+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.produk);
-    		$("#btnCetak").attr('href', app.urlCetak+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.produk);
-    	}
-    }
+var date_dari_tanggal = filter.dari_tanggal;
+var date_sampai_tanggal = filter.sampai_tanggal;
+var dari_tanggal = "" + date_dari_tanggal.getFullYear() +'-'+ ((date_dari_tanggal.getMonth() + 1) > 9 ? '' : '0') + (date_dari_tanggal.getMonth() + 1) +'-'+ (date_dari_tanggal.getDate() > 9 ? '' : '0') + date_dari_tanggal.getDate();
+var sampai_tanggal = "" + date_sampai_tanggal.getFullYear() +'-'+ ((date_sampai_tanggal.getMonth() + 1) > 9 ? '' : '0') + (date_sampai_tanggal.getMonth() + 1) +'-'+ (date_sampai_tanggal.getDate() > 9 ? '' : '0') + date_sampai_tanggal.getDate();
+
+$("#btnExcel").show();
+$("#btnCetak").show();
+$("#btnExcel").attr('href', app.urlDownloadExcel+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.produk);
+$("#btnCetak").attr('href', app.urlCetak+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.produk);
+}
+}
 }
 </script>
