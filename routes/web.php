@@ -733,6 +733,7 @@ Route::delete('/pembayaran-piutang/proses-hapus-edit-tbs-pembayaran-piutang/{id}
 Route::post('/laporan-kas/view', 'LaporanKasController@prosesLaporanKasDetail')->middleware('auth');
 Route::post('/laporan-kas/pencarian', 'LaporanKasController@pencarianLaporanKasDetail')->middleware('auth');
 Route::get('/laporan-kas/pilih-kas', 'LaporanKasController@dataKas')->middleware('auth');
+Route::post('/laporan-kas/subtotal-laporan-kas-detail-masuk', 'LaporanKasController@subtotalLaporanKasDetailMasuk')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 

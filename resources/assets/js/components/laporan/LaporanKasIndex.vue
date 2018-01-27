@@ -55,7 +55,7 @@
 							<input type="text" name="pencarian" v-model="pencarian_kas_masuk" placeholder="Pencarian" class="form-control">
 						</div>
 
-						<h4><b>KAS MASUK {{subtotalLaporanKasDetail | pemisahTitik}}</b></h4>
+						<h4><b>KAS MASUK <span style="color:red">Rp. {{subtotalLaporanKasDetail | pemisahTitik}}</span></b></h4>
 						<table class="table table-striped table-hover">
 							<thead class="text-primary">
 								<tr>
@@ -232,7 +232,7 @@
     		var newFilter = app.filter;
 
     		app.loading = true,
-    		axios.get(app.url+'/subtotal-laporan-kas-detail-masuk', newFilter)
+    		axios.post(app.url+'/subtotal-laporan-kas-detail-masuk', newFilter)
     		.then(function (resp) {
     			app.subtotalLaporanKasDetail = resp.data;
     			app.loading = false
