@@ -729,6 +729,11 @@ Route::get('/pembayaran-piutang/pencarian-edit-tbs-pembayaran-piutang/{id}', 'Pe
 Route::post('/pembayaran-piutang/proses-tambah-edit-tbs-pembayaran-piutang/{id}', 'PembayaranPiutangController@prosesEditTbsPembayaranPiutang')->middleware('auth');
 Route::delete('/pembayaran-piutang/proses-hapus-edit-tbs-pembayaran-piutang/{id}', 'PembayaranPiutangController@prosesHapusEditTbsPenjualan')->middleware('auth');
 
+//LAPORAN KAS DETAIL
+Route::post('/laporan-kas/view', 'LaporanKasController@prosesLaporanKasDetail')->middleware('auth');
+Route::post('/laporan-kas/pencarian', 'LaporanKasController@pencarianLaporanKasDetail')->middleware('auth');
+Route::get('/laporan-kas/pilih-kas', 'LaporanKasController@dataKas')->middleware('auth');
+
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
     Route::resource('user', 'UserController');
@@ -754,6 +759,7 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
     Route::resource('laporan-laba-kotor-produk', 'LaporanLabaKotorProdukController');
     Route::resource('laporan-mutasi-stok', 'LaporanMutasiStokController');
     Route::resource('laporan-pembelian-produk', 'LaporanPembelianProdukController');
+    Route::resource('laporan-kas', 'LaporanKasController');
     Route::resource('pembelian', 'PembelianController');
     Route::resource('kelompok-produk', 'KelompokProdukController');
     Route::resource('profil-warung', 'WarungProfilController');

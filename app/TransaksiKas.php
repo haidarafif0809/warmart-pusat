@@ -26,4 +26,25 @@ class TransaksiKas extends Model
             ->where('warung_id', Auth::user()->id_warung)->first();
         return $sum_kas->total_kas;
     }
+
+    public function tanggalSql($tangal)
+    {
+        $date        = date_create($tangal);
+        $date_format = date_format($date, "Y-m-d");
+        return $date_format;
+    }
+
+    //DATA KAS MASUK
+    public function scopeDataKasMasuk($query_kas_masuk, $request)
+    {
+        $query_kas_masuk = TransaksiKas::select(['transaksi_kas.no_faktur', 'transaksi_kas.jenis_transaksi', 'transaksi_kas.jumlah_masuk', 'transaksi_kas.kas', 'transaksi_kas.created_at', 'kas.nama_kas'])
+            ->leftJoin('kas', 'kas.id', '=', 'transaksi_kas.kas')
+            ->where(DB::raw('DATE(transaksi_kas.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+            ->where(DB::raw('DATE(transaksi_kas.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+            ->where('transaksi_kas.kas', $request->kas)
+            ->where('transaksi_kas.jumlah_keluar', 0)
+            ->where('transaksi_kas.warung_id', Auth::user()->id_warung);
+
+        return $query_kas_masuk;
+    }
 }
