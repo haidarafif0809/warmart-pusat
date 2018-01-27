@@ -63,4 +63,15 @@ class LaporanKasController extends Controller
         $respons = $this->dataPagination($laporan_kas, $data_laporan_kas);
         return response()->json($respons);
     }
+
+    public function pencarianLaporanKasDetail(Request $request)
+    {
+        //KAS MASUK
+        $laporan_kas      = TransaksiKas::cariKasMasuk($request)->paginate(10);
+        $data_laporan_kas = $this->foreachLaporan($laporan_kas);
+
+        //DATA PAGINATION
+        $respons = $this->dataPagination($laporan_kas, $data_laporan_kas);
+        return response()->json($respons);
+    }
 }

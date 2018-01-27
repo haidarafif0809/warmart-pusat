@@ -55,7 +55,7 @@
 							<input type="text" name="pencarian" v-model="pencarian_kas_masuk" placeholder="Pencarian" class="form-control">
 						</div>
 
-						<h4><b>KAS MASUK</b></h4>
+						<h4><b>KAS MASUK {{subtotalLaporanKasDetail | pemisahTitik}}</b></h4>
 						<table class="table table-striped table-hover">
 							<thead class="text-primary">
 								<tr>
@@ -74,18 +74,6 @@
 									<td>{{ laporanKasDetails.data_laporan.nama_kas }}</td>
 									<td align="right">{{ laporanKasDetails.data_laporan.jumlah_masuk | pemisahTitik }}</td>
 									<td align="center">{{ laporanKasDetails.data_laporan.created_at | tanggal }}</td>
-
-								</tr>
-
-								<tr style="color:red">
-
-									<td>TOTAL</td>
-									<td></td>
-									<td></td>
-									<td align="right">
-										{{ subtotalLaporanKasDetail.subtotal_penjualan | pemisahTitik }}
-									</td>									
-									<td></td>
 
 								</tr>
 							</tbody>					
@@ -121,7 +109,7 @@
 				kas : [],
 				laporanKasDetail: [],
 				laporanKasDetailData: {},
-				subtotalLaporanKasDetail: {},
+				subtotalLaporanKasDetail: '',
 				totalAkhir: {},
 				filter: {
 					dari_tanggal: '',
@@ -198,6 +186,7 @@
     			app.pilihJenisLaporan();
     		}else{
     			app.prosesLaporan();
+    			app.totalLaporanKasDetail();    			
     			app.showButton();     			
     		} 
 
@@ -229,8 +218,9 @@
     		}
     		axios.post(app.url+'/pencarian?search='+app.pencarian_kas_masuk+'&page='+page, newFilter)
     		.then(function (resp) {
-    			app.labaKotor = resp.data.data;
-    			app.labaKotorData = resp.data;
+    			console.log(resp.data.data)
+    			app.laporanKasDetail = resp.data.data;
+    			app.laporanKasDetailData = resp.data;
     		})
     		.catch(function (resp) {
     			console.log(resp);
@@ -242,7 +232,7 @@
     		var newFilter = app.filter;
 
     		app.loading = true,
-    		axios.post(app.url+'/subtotal-laba-kotor', newFilter)
+    		axios.get(app.url+'/subtotal-laporan-kas-detail-masuk', newFilter)
     		.then(function (resp) {
     			app.subtotalLaporanKasDetail = resp.data;
     			app.loading = false
