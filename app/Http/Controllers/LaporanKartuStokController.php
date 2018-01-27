@@ -49,14 +49,26 @@ class LaporanKartuStokController extends Controller
     {
         $data_kartu_stok = array();
         foreach ($laporan_kartu_stok as $data_kartu_stoks) {
-
+            //SALDO AWAL
             if ($data_kartu_stoks->jenis_hpp == 1) {
                 $saldo_awal = ($saldo_awal + $data_kartu_stoks->jumlah_masuk);
             } else {
                 $saldo_awal = $saldo_awal - $data_kartu_stoks->jumlah_keluar;
             }
+            //PELANGGAN
+            if ($data_kartu_stoks->pelanggan == null) {
+                $pelanggan = 'Umum';
+            } else {
+                $pelanggan = $data_kartu_stoks->pelanggan;
+            }
+            //SUPLIER
+            if ($data_kartu_stoks->suplier == null) {
+                $suplier = 'Umum';
+            } else {
+                $suplier = $data_kartu_stoks->suplier;
+            }
 
-            array_push($data_kartu_stok, ['data_kartu_stoks' => $data_kartu_stoks, 'saldo_awal' => $saldo_awal]);
+            array_push($data_kartu_stok, ['data_kartu_stoks' => $data_kartu_stoks, 'saldo_awal' => $saldo_awal, 'pelanggan' => $pelanggan, 'suplier' => $suplier]);
         }
         return $data_kartu_stok;
     }
@@ -85,7 +97,7 @@ class LaporanKartuStokController extends Controller
     public function prosesLaporanKartuStok(Request $request)
     {
         $laporan_kartu_stok = Hpp::dataKartuStok($request)->paginate(10);
-        $saldo_awal         = Hpp::dataSaldoAwal($request)->first()->saldo_awal;
+        $saldo_awal         = Hpp::dataSaldoAwal($request);
         $data_kartu_stok    = $this->foreachLaporan($laporan_kartu_stok, $saldo_awal);
 
         //DATA PAGINATION
@@ -96,7 +108,7 @@ class LaporanKartuStokController extends Controller
     public function pencarian(Request $request)
     {
         $laporan_kartu_stok = Hpp::cariKartuStok($request)->paginate(10);
-        $saldo_awal         = Hpp::dataSaldoAwal($request)->first()->saldo_awal;
+        $saldo_awal         = Hpp::dataSaldoAwal($request);
         $data_kartu_stok    = $this->foreachLaporan($laporan_kartu_stok, $saldo_awal);
 
         //DATA PAGINATION
@@ -106,8 +118,19 @@ class LaporanKartuStokController extends Controller
 
     public function totalSaldoAwal(Request $request)
     {
-        $saldo_awal = Hpp::dataSaldoAwal($request)->first()->saldo_awal;
+        $saldo_awal = Hpp::dataSaldoAwal($request);
         return $saldo_awal;
+    }
+
+    public function totalSaldoAkhir(Request $request)
+    {
+        $response = Hpp::dataSaldoAkhir($request)->first();
+
+        $saldo_akhir['jumlah_masuk']  = $response->jumlah_masuk;
+        $saldo_akhir['jumlah_keluar'] = $response->jumlah_keluar;
+        $saldo_akhir['saldo_akhir']   = $response->jumlah_masuk - $response->jumlah_keluar;
+
+        return $saldo_akhir;
     }
 
     //DOWNLOAD EXCEL - LAPORAN LABA KOTOR /PELANGGAN
@@ -118,7 +141,7 @@ class LaporanKartuStokController extends Controller
         $request['produk']         = $produk;
 
         $laporan_kartu_stok = Hpp::dataKartuStok($request)->get();
-        $saldo_awal         = Hpp::dataSaldoAwal($request)->first()->saldo_awal;
+        $saldo_awal         = Hpp::dataSaldoAwal($request);
 
         Excel::create('Laporan Kartu Stok', function ($excel) use ($request, $laporan_kartu_stok, $saldo_awal) {
             // Set property
@@ -178,7 +201,7 @@ class LaporanKartuStokController extends Controller
         $request['produk']         = $produk;
 
         $laporan_kartu_stok = Hpp::dataKartuStok($request)->paginate(10);
-        $saldo_awal         = Hpp::dataSaldoAwal($request)->first()->saldo_awal;
+        $saldo_awal         = Hpp::dataSaldoAwal($request);
         $data_kartu_stok    = $this->foreachLaporan($laporan_kartu_stok, $saldo_awal);
         $total_saldo_awal   = $this->totalSaldoAwal($request);
 
