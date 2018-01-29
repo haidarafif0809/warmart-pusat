@@ -45,6 +45,10 @@ class LaporanKasController extends Controller
                 $jenis_transaksi = "Kas Masuk";
             } elseif ($data_laporan_kass->jenis_transaksi == 'kas_mutasi') {
                 $jenis_transaksi = "Kas Mutasi";
+            } elseif ($data_laporan_kass->jenis_transaksi == 'kas_keluar') {
+                $jenis_transaksi = "Kas Keluar";
+            } elseif ($data_laporan_kass->jenis_transaksi == 'pembelian') {
+                $jenis_transaksi = "Pembelian";
             } else {
                 $jenis_transaksi = $data_laporan_kass->jenis_transaksi;
             }
@@ -53,6 +57,7 @@ class LaporanKasController extends Controller
         return $data_laporan_kas;
     }
 
+//KAS MASUK
     public function prosesLaporanKasDetail(Request $request)
     {
         //KAS MASUK
@@ -60,7 +65,8 @@ class LaporanKasController extends Controller
         $data_laporan_kas = $this->foreachLaporan($laporan_kas);
 
         //DATA PAGINATION
-        $respons = $this->dataPagination($laporan_kas, $data_laporan_kas);
+        $link_view = "view";
+        $respons   = $this->dataPagination($laporan_kas, $data_laporan_kas, $link_view);
         return response()->json($respons);
     }
 
@@ -71,7 +77,8 @@ class LaporanKasController extends Controller
         $data_laporan_kas = $this->foreachLaporan($laporan_kas);
 
         //DATA PAGINATION
-        $respons = $this->dataPagination($laporan_kas, $data_laporan_kas);
+        $link_view = "view";
+        $respons   = $this->dataPagination($laporan_kas, $data_laporan_kas, $link_view);
         return response()->json($respons);
     }
 
@@ -80,4 +87,20 @@ class LaporanKasController extends Controller
         $subtotal_lap_kas_masuk_detail = TransaksiKas::subtotalLaporanKasMasukDetail($request)->first()->subtotal;
         return $subtotal_lap_kas_masuk_detail;
     }
+//KAS MASUK
+
+//KAS KELUAR
+    public function prosesLaporanKasKeluarDetail(Request $request)
+    {
+        //KAS KELUAR
+        $laporan_kas      = TransaksiKas::dataKasKeluar($request)->paginate(10);
+        $data_laporan_kas = $this->foreachLaporan($laporan_kas);
+
+        //DATA PAGINATION
+        $link_view = "view-keluar";
+        $respons   = $this->dataPagination($laporan_kas, $data_laporan_kas, $link_view);
+        return response()->json($respons);
+    }
+
+//KAS KELUAR
 }

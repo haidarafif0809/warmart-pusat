@@ -48,6 +48,20 @@ class TransaksiKas extends Model
         return $query_kas_masuk;
     }
 
+    //DATA KAS KELUAR
+    public function scopeDataKasKeluar($query_kas_keluar, $request)
+    {
+        $query_kas_keluar = TransaksiKas::select(['transaksi_kas.no_faktur', 'transaksi_kas.jenis_transaksi', 'transaksi_kas.jumlah_keluar', 'transaksi_kas.kas', 'transaksi_kas.created_at', 'kas.nama_kas'])
+            ->leftJoin('kas', 'kas.id', '=', 'transaksi_kas.kas')
+            ->where(DB::raw('DATE(transaksi_kas.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+            ->where(DB::raw('DATE(transaksi_kas.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+            ->where('transaksi_kas.kas', $request->kas)
+            ->where('transaksi_kas.jumlah_masuk', 0)
+            ->where('transaksi_kas.warung_id', Auth::user()->id_warung);
+
+        return $query_kas_keluar;
+    }
+
     //CARI KAS MASUK
     public function scopeCariKasMasuk($query_kas_masuk, $request)
     {
