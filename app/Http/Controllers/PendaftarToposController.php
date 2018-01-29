@@ -74,7 +74,7 @@ class PendaftarToposController extends Controller
 
     public function view()
     {
-        $pendaftaran_topos = PendaftarTopos::with(['bank'])->orderBy('id', 'desc')->paginate(10);
+        $pendaftaran_topos = PendaftarTopos::with(['bank','user_warung'])->orderBy('id', 'desc')->paginate(10);
         $array       = array();
 
         foreach ($pendaftaran_topos as $pendaftaran_toposs) {
@@ -571,9 +571,9 @@ public function index()
 
         public function dataWarung(){
 
-           return Warung::find(Auth::user()->id_warung);
-       }
-       public function dataBank(){
+         return Warung::find(Auth::user()->id_warung);
+     }
+     public function dataBank(){
         $bank = Bank::all();
         return response()->json($bank);
     }
@@ -604,15 +604,15 @@ public function index()
         $respons['status_pembayaran'] = $status_pembayaran;
         $respons['sisa_waktu'] = $sisa_waktu;
     }else{        
-       $status_pembayaran = $pendaftar_topos->first()->status_pembayaran;
+     $status_pembayaran = $pendaftar_topos->first()->status_pembayaran;
 
-       $respons['id'] = $pendaftar_topos->first()->id;
-       $respons['status_pembayaran'] = $status_pembayaran;
-       $respons['sisa_waktu'] = $sisa_waktu;
-   }
+     $respons['id'] = $pendaftar_topos->first()->id;
+     $respons['status_pembayaran'] = $status_pembayaran;
+     $respons['sisa_waktu'] = $sisa_waktu;
+ }
 
 
-   return response()->json($respons);
+ return response()->json($respons);
 }
 
 }

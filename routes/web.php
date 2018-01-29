@@ -744,10 +744,18 @@ Route::post('/pembayaran-piutang/proses-tambah-edit-tbs-pembayaran-piutang/{id}'
 Route::delete('/pembayaran-piutang/proses-hapus-edit-tbs-pembayaran-piutang/{id}', 'PembayaranPiutangController@prosesHapusEditTbsPenjualan')->middleware('auth');
 
 //LAPORAN KAS DETAIL
+Route::get('/laporan-kas/pilih-kas', 'LaporanKasController@dataKas')->middleware('auth');
 Route::post('/laporan-kas/view', 'LaporanKasController@prosesLaporanKasDetail')->middleware('auth');
 Route::post('/laporan-kas/pencarian', 'LaporanKasController@pencarianLaporanKasDetail')->middleware('auth');
-Route::get('/laporan-kas/pilih-kas', 'LaporanKasController@dataKas')->middleware('auth');
 Route::post('/laporan-kas/subtotal-laporan-kas-detail-masuk', 'LaporanKasController@subtotalLaporanKasDetailMasuk')->middleware('auth');
+
+Route::post('/laporan-kas/view-keluar', 'LaporanKasController@prosesLaporanKasKeluarDetail')->middleware('auth');
+Route::post('/laporan-kas/pencarian-keluar', 'LaporanKasController@pencarianLaporanKasKeluarDetail')->middleware('auth');
+Route::post('/laporan-kas/subtotal-laporan-kas-detail-keluar', 'LaporanKasController@subtotalLaporanKasDetailKeluar')->middleware('auth');
+
+Route::post('/laporan-kas/view-mutasi-masuk', 'LaporanKasController@prosesLaporanKasMutasiMasukDetail')->middleware('auth');
+Route::post('/laporan-kas/pencarian-mutasi-masuk', 'LaporanKasController@pencarianLaporanKasMutasiMasukDetail')->middleware('auth');
+Route::post('/laporan-kas/subtotal-laporan-kas-detail-mutasi-masuk', 'LaporanKasController@subtotalLaporanKasDetailMutasiMasuk')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
