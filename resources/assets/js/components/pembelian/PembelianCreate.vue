@@ -240,9 +240,9 @@
                   <input type="hidden" name="potongan" id="potongan" v-model="inputPembayaranPembelian.potongan" >
 
                   <div align="right"  style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                    <button v-if="inputPembayaranPembelian.kembalian >= 0 && inputPembayaranPembelian.kredit == 0" v-on:click="selesaiTransaksi()" v-shortkey.push="['alt']" @shortkey="selesaiTransaksi()" type="submit" class="btn btn-success btn-lg" id="btnSelesai" ><font style="font-size:20px;">Tunai(Alt)</font></button>
+                    <button v-if="inputPembayaranPembelian.kembalian >= 0 && inputPembayaranPembelian.kredit == 0" v-on:click="selesaiTransaksi()" v-shortkey.push="['alt']" @shortkey="selesaiTransaksi()" type="button" class="btn btn-success btn-lg" id="btnSelesai" ><font style="font-size:20px;">Tunai(Alt)</font></button>
 
-                    <button v-if="inputPembayaranPembelian.kredit > 0" type="submit" class="btn btn-success btn-lg" v-on:click="selesaiTransaksi()" v-shortkey.push="['alt']" @shortkey="selesaiTransaksi()" id="btnSelesai" ><font style="font-size:20px;">Hutang(Alt)</font> </button>
+                    <button v-if="inputPembayaranPembelian.kredit > 0" type="button" class="btn btn-success btn-lg" v-on:click="selesaiTransaksi()" v-shortkey.push="['alt']" @shortkey="selesaiTransaksi()" id="btnSelesai" ><font style="font-size:20px;">Hutang(Alt)</font> </button>
 
                     <button type="button" class="btn btn-default btn-lg"  v-on:click="closeModalX()" v-shortkey.push="['esc']" @shortkey="closeModalX()"><font style="font-size:20px;"> Tutup(Esc)</font></button>
                   </div>
