@@ -227,6 +227,78 @@
             <!-- / MODAL EDIT TBS --> 
 
 
+            <!-- / MODAL SELESAI --> 
+            <div class="modal" id="modal_selesai" role="dialog" data-backdrop="">
+                <div class="modal-dialog"> 
+                    <!-- Modal content--> 
+                    <div class="modal-content"> 
+                        <div class="modal-header"> 
+                            <button type="button" class="close"  v-on:click="closeModalSelesai()" v-shortkey.push="['esc']" @shortkey="closeModalSelesai()"> &times;
+                            </button> 
+                            <h4 class="modal-title"> 
+                                <div class="alert-icon"> 
+                                    <b>Silahkan Lengkapi Pembayaran!</b> 
+                                </div> 
+                            </h4>
+                        </div> 
+
+                        <form class="form-horizontal"  v-on:submit.prevent="selesaiPembayaranHutang()"> 
+                            <div class="modal-body"> 
+                                <div class="card" style="margin-bottom:1px; margin-top:1px; margin-right:1px; margin-left:1px;">
+
+                                    <div class="row">
+                                        <div class="col-md-6 col-xs-12">                                            
+                                            <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                                                <font style="color: black">Tanggal</font> 
+                                                <datepicker :input-class="'form-control'" placeholder="Jatuh Tempo" v-model="inputPembayaranHutang.tanggal" ref='tanggal'></datepicker>
+                                                <br v-if="errors.tanggal">  <span v-if="errors.tanggal" id="tanggal_error" class="label label-danger">{{ errors.tanggal[0] }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-5 col-xs-10">
+                                            <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
+                                                <font style="color: black">Kas(F4)</font><br>
+                                                <selectize-component v-model="inputPembayaranHutang.kas" :settings="placeholder_kas" id="kas" ref='kas'> 
+                                                    <option v-for="kass, index in kas" v-bind:value="kass.id">{{ kass.nama_kas }}</option>
+                                                </selectize-component>                                                
+                                                <input class="form-control" type="hidden"  v-model="inputPembayaranHutang.kas"  name="id_tbs" id="id_tbs"  v-shortkey="['f4']" @shortkey="openSelectizeKas()">
+                                                <br v-if="errors.kas">
+                                                <span v-if="errors.kas" id="kas_error" class="label label-danger">{{ errors.kas[0] }}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-1 col-xs-1" style="padding-left:0px">
+                                            <div class="form-group">
+                                                <div class="row" style="margin-top:11px">
+                                                    <button class="btn btn-primary btn-icon waves-effect waves-light" v-on:click="tambahModalKas()" type="button"> <i class="material-icons" >add</i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12 col-xs-12">
+                                            <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
+                                                <font style="color: black">Keterangan</font><br>
+                                                <textarea v-model="inputPembayaranHutang.keterangan" class="form-control" placeholder="Keterangan.." id="keterangan" name="keterangan" ref="keterangan"></textarea>
+                                            </div>
+                                        </div>
+
+                                        <div align="right"  style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                                            <button type="submit" class="btn btn-success btn-lg" id="btnTbs"><font style="font-size:20px;">Selesai</font></button>
+
+                                            <button type="button" class="btn btn-default btn-lg"  v-on:click="closeModalSelesai()" v-shortkey.push="['esc']" @shortkey="closeModalSelesai()"> <font style="font-size:20px;">Tutup(Esc)</font></button>
+                                        </div>
+                                    </div>                                  
+                                </div> 
+                            </div>
+                            <div class="modal-footer">  
+                            </div> 
+                        </form>
+                    </div>       
+                </div> 
+            </div> 
+            <!-- / MODAL TOMBOL SELESAI --> 
+
     <div class="card" style="margin-bottom: 1px; margin-top: 1px;" ><!-- CARD --> 
           <div class="card-content"> 
             <h4 class="card-title" style="margin-bottom: 1px; margin-top: 1px;">Edit Pembayaran Hutang </h4> 
@@ -338,18 +410,18 @@
             errors: [],
             suplier: [],
             cara_bayar:[],
-                tbs_pembayaran_hutang: [],
-                   tbsPembayaranHutangData : {},
+            tbs_pembayaran_hutang: [],
+            tbsPembayaranHutangData : {},
             dataSuplierHutang : [],
             dataSuplierHutangData: {},
                  url : window.location.origin+(window.location.pathname).replace("dashboard", "pembayaran-hutang"),
-            url_kas : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
+                 url_kas : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
                 placeholder_suplier: {
-                    placeholder: '--PILIH SUPLIER (F1)--',
-            sortField: 'text',
-            openOnFocus : true
+                placeholder: '--PILIH SUPLIER (F1)--',
+                sortField: 'text',
+                openOnFocus : true
                  },
-           placeholder_kas: {
+                placeholder_kas: {
                     placeholder: '--PILIH KAS--',
                     sortField: 'text',
                     openOnFocus : true
@@ -364,6 +436,7 @@
                 potongan : 0,
                 id_pembelian:'',
                 no_faktur : '',
+                no_faktur_pembayaran : '',
             },
             formEditBayarHutangTbs: {
                     id_tbs: '',
@@ -401,6 +474,7 @@
             app.getResults();
             app.dataSupplierHutang();
             app.getSubtotalTbs();
+
         },
         watch: {
         // whenever question changes, this function will run
@@ -415,6 +489,7 @@
         'inputTbsPembayaranHutang.suplier': function (newQuestion) {
             this.pilihSuplier();  
         },
+
         'formBayarHutangTbs.potongan':function(){
             this.potonganTbs()
         },
@@ -528,16 +603,15 @@ methods: {
             app.tbsPembayaranHutangData = resp.data;
             app.loading = false;
             app.seen = true;
-            app.openSelectizeSuplier();
-
-            if (app.inputPembayaranHutang.subtotal == 0) {
-              app.getSubtotalTbs();
-            }
+           if (app.inputPembayaranHutang.subtotal == 0) {
+                app.getSubtotalTbs();
+            }            
+             app.openSelectizeSuplier();
         })
         .catch(function (resp) {
             app.loading = false;
             app.seen = true;
-            alert("Tidak Dapat Memuat Faktur Penjualan Piutang");
+            alert("Tidak Dapat Memuat Faktur Pembelian Hutang");
         });
     }, 
     getHasilPencarian(page){
@@ -556,7 +630,7 @@ methods: {
         })
         .catch(function (resp) {
             console.log(resp);
-            alert("Tidak Dapat Memuat Faktur Penjualan Piutang");
+            alert("Tidak Dapat Memuat Faktur Pembelian Hutang");
         });
     },
     getSubtotalTbs(){
@@ -564,9 +638,11 @@ methods: {
     var id = app.$route.params.id;
     axios.get(app.url+'/cek-data-tbs-pembayan-hutang/'+id)
     .then(function (resp) {
+
       app.inputPembayaranHutang.subtotal += resp.data.subtotal;
       app.inputPembayaranHutang.keterangan = resp.data.pembayaran_hutang.keterangan
       app.inputPembayaranHutang.kas = resp.data.pembayaran_hutang.cara_bayar
+      app.formBayarHutangTbs.no_faktur_pembayaran = resp.data.pembayaran_hutang.no_faktur_pembayaran
 
      })
     .catch(function (resp) {
@@ -626,6 +702,7 @@ methods: {
         },
        saveFormBayarHutang() {
           var app = this;
+          var id = app.$route.params.id;
           var newbayarhutang = app.formBayarHutangTbs;
 
         if (app.formBayarHutangTbs.jumlah_bayar < 0) {
@@ -634,7 +711,7 @@ methods: {
             app.inputTbsPembayaranHutang.potongan = 0;
             app.$refs.potongan.$el.focus();
         }else{
-                 axios.post(app.url+'/proses-tambah-tbs-edit-pembayaran-hutang',newbayarhutang)
+                 axios.post(app.url+'/proses-tambah-tbs-edit-pembayaran-hutang/'+id,newbayarhutang)
                   .then(function (resp) {
                      console.log(resp.data)
                     if (resp.data == 0) {
@@ -762,6 +839,81 @@ methods: {
             alert("Tidak dapat Menghapus tbs Pembayaran Hutang");
         });
     },
+    batalPembayaranHutang(){
+        var app = this
+        var id = app.$route.params.id;
+        app.$swal({
+            text: "Anda Yakin Ingin Membatalkan Transaksi Ini ?",
+            buttons: {
+                cancel: true,
+                confirm: "OK"
+            },
+        }).then((value) => {
+            if (!value) throw null;
+
+            app.loading = true;
+            axios.post(app.url+'/proses-batal-edit-pembayaran-hutang/'+id)
+            .then(function (resp) {
+                app.getResults();
+                app.alert("Membatalkan Transaksi Pembayaran Hutang");
+                app.inputPembayaranHutang.subtotal = 0
+                app.$router.replace('/pembayaran-hutang');
+            })
+            .catch(function (resp) {
+                app.loading = false;
+                alert("Tidak dapat Membatalkan Transaksi Pembayaran Hutang");
+            });
+        });
+    },
+       bayarPembayaranHutang(){        
+        $("#modal_selesai").show();
+        this.$refs.keterangan.$el.focus()
+    },
+    selesaiPembayaranHutang(){
+        this.$swal({
+            text: "Anda Yakin Ingin Menyelesaikan Transaksi Ini ?",
+            buttons: {
+                cancel: true,
+                confirm: "OK"                   
+            },
+        }).then((value) => {
+            if (!value) throw null;
+            this.prosesSelesaiPembayaranHutang(value);
+        });
+    },
+    prosesSelesaiPembayaranHutang(value){
+        var app = this;
+        var id = app.$route.params.id;
+        var newinputPembayaranHutang = app.inputPembayaranHutang;
+        app.loading = true;
+
+        axios.patch(app.url+'/'+id,newinputPembayaranHutang)
+        .then(function (resp) {
+
+            if (resp.data.respons == 0) {
+                app.alertTbs("Gagal : Terjadi Kesalahan , Silakan Coba Lagi!");
+                app.loading = false;
+            } else if (resp.data == 0) {
+                app.alertTbs("Anda Belum Memasukan Faktur Pembelian Hutang");
+                app.loading = false;
+            }else{
+                app.alert("Menyelesaikan Transaksi Pembayaran Hutang");
+                app.inputPembayaranHutang.tanggal = new Date;
+                app.inputPembayaranHutang.keterangan = ''
+                app.inputPembayaranHutang.subtotal = 0
+
+                $("#modal_selesai").hide();
+                app.loading = false;                
+                app.$router.replace('/pembayaran-hutang');
+            }
+        })
+        .catch(function (resp) {
+            console.log(resp);              
+            app.loading = false;
+            alert("Tidak dapat Menyelesaikan Transaksi Pembayaran Hutang");        
+            app.errors = resp.response.data.errors;
+        });
+    },
        closeModalX(){
         $("#modal_pilih_hutang").hide(); 
         },
@@ -771,6 +923,9 @@ methods: {
         },
         closeModalEditBayarHutang(){
           $("#modal_form_edit_bayar_hutang").hide();
+        },
+         closeModalSelesai(){
+          $("#modal_selesai").hide(); 
         },
            alertTbs(pesan) {
               this.$swal({
