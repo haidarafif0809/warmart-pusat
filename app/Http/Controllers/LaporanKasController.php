@@ -84,7 +84,7 @@ class LaporanKasController extends Controller
 
     public function subtotalLaporanKasDetailMasuk(Request $request)
     {
-        $subtotal_lap_kas_masuk_detail = TransaksiKas::subtotalLaporanKasMasukDetail($request)->first()->subtotal;
+        $subtotal_lap_kas_masuk_detail = TransaksiKas::subtotalLaporanKasMasukDetail($request)->first()->jumlah_masuk;
         return $subtotal_lap_kas_masuk_detail;
     }
 //KAS MASUK
@@ -116,7 +116,7 @@ class LaporanKasController extends Controller
 
     public function subtotalLaporanKasDetailKeluar(Request $request)
     {
-        $subtotal_lap_kas_keluar_detail = TransaksiKas::subtotalLaporanKasKeluarDetail($request)->first()->subtotal;
+        $subtotal_lap_kas_keluar_detail = TransaksiKas::subtotalLaporanKasKeluarDetail($request)->first()->jumlah_keluar;
         return $subtotal_lap_kas_keluar_detail;
     }
 //KAS KELUAR
@@ -148,7 +148,7 @@ class LaporanKasController extends Controller
 
     public function subtotalLaporanKasDetailMutasiMasuk(Request $request)
     {
-        $subtotal_lap_kas_mutasi_masuk_detail = TransaksiKas::subtotalLaporanKasMutasiMasukDetail($request)->first()->subtotal;
+        $subtotal_lap_kas_mutasi_masuk_detail = TransaksiKas::subtotalLaporanKasMutasiMasukDetail($request)->first()->jumlah_masuk;
         return $subtotal_lap_kas_mutasi_masuk_detail;
     }
 //KAS MUTASI (MASUK)
@@ -180,7 +180,7 @@ class LaporanKasController extends Controller
 
     public function subtotalLaporanKasDetailMutasiKeluar(Request $request)
     {
-        $subtotal_lap_kas_mutasi_masuk_detail = TransaksiKas::subtotalLaporanKasMutasiKeluarDetail($request)->first()->subtotal;
+        $subtotal_lap_kas_mutasi_masuk_detail = TransaksiKas::subtotalLaporanKasMutasiKeluarDetail($request)->first()->jumlah_keluar;
         return $subtotal_lap_kas_mutasi_masuk_detail;
     }
 //KAS MUTASI (KELUAR)
