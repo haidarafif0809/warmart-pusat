@@ -100,7 +100,7 @@
 								<tr>
 									<th>No. Transaksi</th>
 									<th>Jenis Transaksi</th>
-									<th>Ke Kas</th>
+									<th>Dari Kas</th>
 									<th style="text-align:right">Total</th>
 									<th style="text-align:center">Waktu</th>
 								</tr>
@@ -124,6 +124,44 @@
 
 					<vue-simple-spinner v-if="loading"></vue-simple-spinner>
 					<div align="right"><pagination :data="laporanKasKeluarDetailData" v-on:pagination-change-page="prosesLaporanKeluar" :limit="4"></pagination></div>
+					<hr style="margin-top: 30px; margin-bottom: 15px; border-top: 5px solid #eeeeee;">
+
+					<!--KAS MUTASI (MASUK)-->
+					<div class=" table-responsive">
+						<div class="pencarian">
+							<input type="text" name="pencarian" v-model="pencarian_mutasi_masuk" placeholder="Pencarian" class="form-control">
+						</div>
+
+						<h4><b>KAS MUTASI (MASUK) : <span style="color:red">Rp. {{subtotalLaporanKasMutasiMasukDetail | pemisahTitik}}</span></b></h4>
+						<table class="table table-striped table-hover">
+							<thead class="text-primary">
+								<tr>
+									<th>No. Transaksi</th>
+									<th>Jenis Transaksi</th>
+									<th>Ke Kas</th>
+									<th style="text-align:right">Total</th>
+									<th style="text-align:center">Waktu</th>
+								</tr>
+							</thead>
+							<tbody v-if="laporanKasMutasiMasukDetail.length > 0 && loading == false"  class="data-ada">
+								<tr v-for="laporanKasMutasiMasukDetails, index in laporanKasMutasiMasukDetail" >
+
+									<td>{{ laporanKasMutasiMasukDetails.data_laporan.no_faktur }}</td>
+									<td>{{ laporanKasMutasiMasukDetails.jenis_transaksi }}</td>
+									<td>{{ laporanKasMutasiMasukDetails.data_laporan.nama_kas }}</td>
+									<td align="right">{{ laporanKasMutasiMasukDetails.data_laporan.jumlah_masuk | pemisahTitik }}</td>
+									<td align="center">{{ laporanKasMutasiMasukDetails.data_laporan.created_at | tanggal }}</td>
+
+								</tr>
+							</tbody>					
+							<tbody class="data-tidak-ada" v-else-if="laporanKasMutasiMasukDetail.length == 0 && loading == false">
+								<tr ><td colspan="5"  class="text-center">Tidak Ada Data</td></tr>
+							</tbody>
+						</table>
+					</div><!--RESPONSIVE-->
+
+					<vue-simple-spinner v-if="loading"></vue-simple-spinner>
+					<div align="right"><pagination :data="laporanKasMutasiMasukDetailData" v-on:pagination-change-page="prosesLaporanMutasiMasuk" :limit="4"></pagination></div>
 					<hr style="margin-top: 30px; margin-bottom: 15px; border-top: 5px solid #eeeeee;">
 
 
@@ -156,6 +194,10 @@
 				laporanKasKeluarDetailData: {},
 				subtotalLaporanKasKeluarDetail: '',
 
+				laporanKasMutasiMasukDetail: [],
+				laporanKasMutasiMasukDetailData: {},
+				subtotalLaporanKasMutasiMasukDetail: '',
+
 				filter: {
 					dari_tanggal: '',
 					sampai_tanggal: new Date(),
@@ -169,6 +211,7 @@
 
 				pencarian_kas_masuk: '',
 				pencarian_kas_keluar: '',
+				pencarian_mutasi_masuk: '',
 
 				placeholder_laporan: {
 					placeholder: '--JENIS LAPORAN--'
@@ -195,6 +238,9 @@
 			},
 			pencarian_kas_keluar: function (newQuestion) {
 				this.getHasilPencarianKeluar();
+			},
+			pencarian_mutasi_masuk: function (newQuestion) {
+				this.getHasilPencarianMutasiMasuk();
 			}
 		},
 		filters: {
@@ -240,7 +286,10 @@
 					app.totalLaporanKasDetail();   
 
 					app.prosesLaporanKeluar();
-					app.totalLaporanKasKeluarDetail();   
+					app.totalLaporanKasKeluarDetail(); 
+
+					app.prosesLaporanMutasiMasuk();
+
 					app.showButton();     			
 				} 
 
@@ -283,6 +332,25 @@
 					alert("Tidak Dapat Memuat Laporan Kas Keluar Detail");
 				});
 			},
+			prosesLaporanMutasiMasuk(page) {
+				var app = this;	
+				var newFilter = app.filter;
+				if (typeof page === 'undefined') {
+					page = 1;
+				}
+				app.loading = true,
+				axios.post(app.url+'/view-mutasi-masuk?page='+page, newFilter)
+				.then(function (resp) {
+					console.log(resp.data.data);
+					app.laporanKasMutasiMasukDetail = resp.data.data;
+					app.laporanKasMutasiMasukDetailData = resp.data;
+					app.loading = false
+				})
+				.catch(function (resp) {
+					console.log(resp);
+					alert("Tidak Dapat Memuat Laporan Kas Mutasi (Masuk) Detail");
+				});
+			},
 			getHasilPencarian(page){
 				var app = this;
 				var newFilter = app.filter;
@@ -317,6 +385,23 @@
 					alert("Tidak Dapat Memuat Laporan Kas Keluar Detail");
 				});
 			},
+			getHasilPencarianMutasiMasuk(page){
+				var app = this;
+				var newFilter = app.filter;
+				if (typeof page === 'undefined') {
+					page = 1;
+				}
+				axios.post(app.url+'/pencarian-mutasi-masuk?search='+app.pencarian_mutasi_masuk+'&page='+page, newFilter)
+				.then(function (resp) {
+					console.log(resp.data.data)
+					app.laporanKasMutasiMasukDetail = resp.data.data;
+					app.laporanKasMutasiMasukDetailData = resp.data;
+				})
+				.catch(function (resp) {
+					console.log(resp);
+					alert("Tidak Dapat Memuat Laporan Kas Mutasi (Masuk) Detail");
+				});
+			},
 			totalLaporanKasDetail() {
 				var app = this;	
 				var newFilter = app.filter;
@@ -341,6 +426,22 @@
 				axios.post(app.url+'/subtotal-laporan-kas-detail-keluar', newFilter)
 				.then(function (resp) {
 					app.subtotalLaporanKasKeluarDetail = resp.data;
+					app.loading = false
+					console.log(resp.data)
+				})
+				.catch(function (resp) {
+					console.log(resp);
+					alert("Tidak Dapat Memuat Subtotal Laporan Kas");
+				});
+			},
+			totalLaporanKasMutasiMasukDetail() {
+				var app = this;	
+				var newFilter = app.filter;
+
+				app.loading = true,
+				axios.post(app.url+'/subtotal-laporan-kas-detail-mutasi-masuk', newFilter)
+				.then(function (resp) {
+					app.subtotalLaporanKasMutasiMasukDetail = resp.data;
 					app.loading = false
 					console.log(resp.data)
 				})

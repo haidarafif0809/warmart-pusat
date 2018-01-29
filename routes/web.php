@@ -719,7 +719,6 @@ Route::post('/pembayaran-hutang/edit-jumlah-tbs-edit-pembayaran-hutang', [
     'uses'       => 'PembayaranHutangController@prosesUpdateTbsEditPembayaranHutang',
 ]);
 
-
 // PEMBAYARAN PIUTANG VUE.JS
 Route::get('/pembayaran-piutang/view', 'PembayaranPiutangController@view')->middleware('auth');
 Route::get('/pembayaran-piutang/pencarian', 'PembayaranPiutangController@pencarian')->middleware('auth');
@@ -747,6 +746,10 @@ Route::post('/laporan-kas/subtotal-laporan-kas-detail-masuk', 'LaporanKasControl
 Route::post('/laporan-kas/view-keluar', 'LaporanKasController@prosesLaporanKasKeluarDetail')->middleware('auth');
 Route::post('/laporan-kas/pencarian-keluar', 'LaporanKasController@pencarianLaporanKasKeluarDetail')->middleware('auth');
 Route::post('/laporan-kas/subtotal-laporan-kas-detail-keluar', 'LaporanKasController@subtotalLaporanKasDetailKeluar')->middleware('auth');
+
+Route::post('/laporan-kas/view-mutasi-masuk', 'LaporanKasController@prosesLaporanKasMutasiMasukDetail')->middleware('auth');
+Route::post('/laporan-kas/pencarian-mutasi-masuk', 'LaporanKasController@pencarianLaporanKasMutasiMasukDetail')->middleware('auth');
+Route::post('/laporan-kas/subtotal-laporan-kas-detail-mutasi-masuk', 'LaporanKasController@subtotalLaporanKasDetailMutasiMasuk')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
