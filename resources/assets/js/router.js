@@ -117,7 +117,8 @@ import LaporanPembelianProdukIndex from './components/laporan/LaporanPembelianPr
 import PendaftaranToposIndex from './components/pendaftaran_topos/PendaftaranToposIndex.vue';
 import PendaftaranToposList from './components/pendaftaran_topos/PendaftaranToposList.vue';
 import PendaftaranToposDetail from './components/pendaftaran_topos/PendaftaranToposDetail.vue';
-// PENDAFTARAN TOPOS
+
+// LAPORAN KARTU STOK
 import LaporanKartuStokIndex from './components/laporan/LaporanKartuStokIndex.vue';
 
 //PEMBAYARAN HUTANG
@@ -134,6 +135,8 @@ import PembayaranPiutangDetail from './components/pembayaran_piutang/PembayaranP
 import PembayaranPiutangCreate from './components/pembayaran_piutang/PembayaranPiutangCreate.vue';
 import PembayaranPiutangEdit from './components/pembayaran_piutang/PembayaranPiutangEdit.vue';
 import PembayaranPiutangProsesEdit from './components/pembayaran_piutang/PembayaranPiutangProsesEdit.vue';
+// LAPORAN KAS
+import LaporanKasIndex from './components/laporan/LaporanKasIndex.vue';
 
 const routes = [{
     path: '/',
@@ -605,6 +608,12 @@ const routes = [{
         path: '/proses-edit-pembayaran-piutang/:id',
         component: PembayaranPiutangProsesEdit,
         name: 'prosesEditPembayaranPiutang'
+    },
+    // LAPORAN KAS
+    {
+        path: '/laporan-kas',
+        component: LaporanKasIndex,
+        name: 'indexLaporanKas'
     }
 
 

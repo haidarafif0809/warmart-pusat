@@ -113,7 +113,7 @@ class KeranjangBelanjaController extends Controller
 
             if ($keranjang_belanjaans->jumlah_produk == 1) {
                 $tombolKurangiProduk = '
-                <a class="btn btn-round btn-info btn-xs"   style="background-color: #01573e" disabled="true"> <i class="material-icons">remove</i> </a>';
+                <a class="btn btn-round btn-info btn-xs" style="background-color: #01573e"> <i class="material-icons">remove</i></a>';
             } else {
                 $tombolKurangiProduk = '
                 <a href=" ' . url('/keranjang-belanja/kurang-jumlah-produk-keranjang-belanja/' . $keranjang_belanjaans->id_keranjang_belanja . '') . '" class="btn btn-round btn-info btn-xs"   style="background-color: #01573e"> <i class="material-icons">remove</i></a>';
@@ -137,7 +137,7 @@ class KeranjangBelanjaController extends Controller
         } else {
             if ($sisa_stok <= 0 && $keranjang_belanjaans->produk->hitung_stok == 1) {
                 $tombolTambahiProduk = '
-                <a class="btn btn-round btn-info btn-Fxs"   style="background-color: #01573e" disabled="true"> <i class="material-icons">add</i> </a>';
+                <a class="btn btn-round btn-info btn-xs"   style="background-color: #01573e"> <i class="material-icons">add</i> </a>';
             } else {
                 $tombolTambahiProduk = '
                 <a href=" ' . url('/keranjang-belanja/tambah-jumlah-produk-keranjang-belanja/' . $keranjang_belanjaans->id_keranjang_belanja . '') . '" class="btn btn-round btn-info btn-xs"   style="background-color: #01573e"> <i class="material-icons">add</i> </a>';
@@ -155,75 +155,76 @@ class KeranjangBelanjaController extends Controller
 
             $produk_belanjaan = '
             <div class="card" style="margin-bottom: 1px; margin-top: 1px;">
-                <div class="row">
-                    <div class="col-md-12">
+            <div class="row">
+            <div class="col-md-12">
 
-                        <div class="row">
-                            <div class="col-xs-4" style="padding-right:0px">
-                                <div class="img-container" style="margin:10px;">';
+            <div class="row">
+            <div class="col-xs-4" style="padding-right:0px">
+            <div class="img-container" style="margin:10px;">';
             $produk_belanjaan .= $this->fotoProduk($keranjang_belanjaans);
             $produk_belanjaan .= '</div>
-                                </div>
+            </div>
 
-                                <div class="col-xs-2" style="padding-left:0px; padding-right:0px; padding-top:23px">
-                                    <b><a href="' . url('detail-produk/' . $keranjang_belanjaans->id_produk . '') . '" style="font-size: 12px;">' . $this->namaProduk($keranjang_belanjaans->produk->nama_barang) . '</a></b><br>
-                                    <b style="color:red">' . number_format($harga_produk, 0, ',', '.') . '</b>
-                                    <p style="font-size: 10px; margin-top:10px">' . $keranjang_belanjaans->produk->warung->name . '</p>
-                                </div>
+            <div class="col-xs-3" style="padding-left:0px; padding-right:0px; padding-top:23px">
+            <b><a href="' . url('detail-produk/' . $keranjang_belanjaans->id_produk . '') . '" style="font-size: 12px;">' . $this->namaProduk($keranjang_belanjaans->produk->nama_barang) . '</a></b><br>
+            <b style="color:red">' . number_format($harga_produk, 0, ',', '.') . '</b>
+            <p style="font-size: 10px; margin-top:10px">' . $keranjang_belanjaans->produk->warung->name . '</p>
+            </div>
 
-                                <div class="col-xs-3" style="padding-left:0px; padding-right:0px">
-                                    <center>
-                                        <div class="btn-group">';
+            <div class="col-xs-5" style="padding-left:0px; padding-right:0px">
+            <center>
+            <div class="btn-group">';
             //tombol kurangi produk
-            $produk_belanjaan .= $this->tombolKurangiProduk($keranjang_belanjaans);
-            $produk_belanjaan .= $this->tombolTambahiProduk($sisa_stok, $keranjang_belanjaans);
+            $produk_belanjaan .= $this->tombolKurangiProduk($keranjang_belanjaans); 
+            $produk_belanjaan .= $this->tombolTambahiProduk($sisa_stok, $keranjang_belanjaans); 
+
 
             $produk_belanjaan .= '
-                                        </div><br>
-                                        <b>' . $keranjang_belanjaans->jumlah_produk . ' </b><br>
-                                        <div class="btn-group">
+            </div><br>
+            <b>' . $keranjang_belanjaans->jumlah_produk . ' </b><br>
+            <div class="btn-group">
 
-                                            <button id="btnHapusProduk" data-nama="' . title_case($keranjang_belanjaans->produk->nama_barang) . '" data-id="' . $keranjang_belanjaans->id_keranjang_belanja . '" class="btn btn-danger btn-xs"><i class="material-icons">delete</i></button>
-                                        </div></center>
-                                    </div>
-                                    <div class="col-md-2" style="padding-top:43px">
-                                        <b>' . number_format($subtotal_produk, 0, ',', '.') . '</b>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>';
+            <button id="btnHapusProduk" data-nama="' . title_case($keranjang_belanjaans->produk->nama_barang) . '" data-id="' . $keranjang_belanjaans->id_keranjang_belanja . '" class="btn btn-danger btn-xs"><i class="material-icons">delete</i></button>
+            </div><br>
+            <b align="right">' . number_format($subtotal_produk, 0, ',', '.') . '</b>
+            </center>
+            </div>
+
+            </div>
+            </div>
+            </div>
+            </div>';
 
         } else {
 
             $produk_belanjaan = '
 
-                    <div class="card-content" style="padding-left: 5px; padding-top: 1px; padding-bottom: 1px; padding-right: 1px;">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="row">
+            <div class="card-content" style="padding-left: 5px; padding-top: 1px; padding-bottom: 1px; padding-right: 1px;">
+            <div class="row">
+            <div class="col-md-12">
+            <div class="row">
 
-                                    <div class="col-md-4">
-                                        <div class="row">
-                                            <div class="col-sm-4">
-                                                <div class="img-container"  style="padding-left: 5px; padding-top: 1px; padding-bottom: 1px; padding-right: 1px; width:75px;">';
+            <div class="col-md-4">
+            <div class="row">
+            <div class="col-sm-4">
+            <div class="img-container"  style="padding-left: 5px; padding-top: 1px; padding-bottom: 1px; padding-right: 1px; width:75px;">';
             $produk_belanjaan .= $this->fotoProduk($keranjang_belanjaans);
             $produk_belanjaan .= '
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-8">
-                                                <h6><a href="' . url('detail-produk/' . $keranjang_belanjaans->id_produk . '') . '">' . $this->namaProduk($keranjang_belanjaans->produk->nama_barang) . '</a> </h6>
-                                                <p><small> ' . $keranjang_belanjaans->produk->warung->name . '</small></p>
-                                            </div>
-                                        </div>
-                                    </div>
+            </div>
+            </div>
+            <div class="col-sm-8">
+            <h6><a href="' . url('detail-produk/' . $keranjang_belanjaans->id_produk . '') . '">' . $this->namaProduk($keranjang_belanjaans->produk->nama_barang) . '</a> </h6>
+            <p><small> ' . $keranjang_belanjaans->produk->warung->name . '</small></p>
+            </div>
+            </div>
+            </div>
 
-                                    <div class="col-md-2">
-                                        <h6 align="right"><b>Rp. ' . number_format($harga_produk, 0, ',', '.') . '</b></h6>
-                                    </div>
+            <div class="col-md-2">
+            <h6 align="right"><b>' . number_format($harga_produk, 0, ',', '.') . '</b></h6>
+            </div>
 
-                                    <div class="col-md-3">
-                                        <div class="btn-group">';
+            <div class="col-md-3">
+            <div class="btn-group">';
 
             //tombol kurangi produk
             $produk_belanjaan .= $this->tombolKurangiProduk($keranjang_belanjaans);
@@ -233,21 +234,21 @@ class KeranjangBelanjaController extends Controller
             $produk_belanjaan .= $this->tombolTambahiProduk($sisa_stok, $keranjang_belanjaans);
 
             $produk_belanjaan .= '
-                                        </div><br>
-                                        <button id="btnHapusProduk" data-id="' . $keranjang_belanjaans->id_keranjang_belanja . '" data-nama="' . title_case($keranjang_belanjaans->produk->nama_barang) . '" class="btn btn-danger btn-xs">Hapus</button>
+            </div><br>
+            <button id="btnHapusProduk" data-id="' . $keranjang_belanjaans->id_keranjang_belanja . '" data-nama="' . title_case($keranjang_belanjaans->produk->nama_barang) . '" class="btn btn-danger btn-xs">Hapus</button>
 
-                                    </div>
+            </div>
 
 
-                                    <div class="col-md-2">
-                                        <h6 align="right"><b>Rp. ' . number_format($subtotal_produk, 0, ',', '.') . '</b></h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div><hr style="margin-top: 0px; margin-bottom: 0px;">
+            <div class="col-md-2">
+            <b>Rp.</b><h6 align="right"><b> ' . number_format($subtotal_produk, 0, ',', '.') . '</b></h6>
+            </div>
+            </div>
+            </div>
+            </div>
+            </div><hr style="margin-top: 0px; margin-bottom: 0px;">
 
-                    ';
+            ';
 
         }
 
