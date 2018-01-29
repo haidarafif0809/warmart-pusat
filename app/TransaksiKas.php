@@ -89,6 +89,7 @@ class TransaksiKas extends Model
             ->where(DB::raw('DATE(transaksi_kas.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
             ->where('transaksi_kas.kas', $request->kas)
             ->where('transaksi_kas.jumlah_keluar', 0)
+            ->where('transaksi_kas.jenis_transaksi', '!=', 'kas_mutasi')
             ->where(function ($query) use ($search) {
                 $query->orwhere('transaksi_kas.no_faktur', 'LIKE', '%' . $search . '%')
                     ->orwhere('transaksi_kas.jenis_transaksi', 'LIKE', '%' . $search . '%');
@@ -108,6 +109,7 @@ class TransaksiKas extends Model
             ->where(DB::raw('DATE(transaksi_kas.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
             ->where('transaksi_kas.kas', $request->kas)
             ->where('transaksi_kas.jumlah_masuk', 0)
+            ->where('transaksi_kas.jenis_transaksi', '!=', 'kas_mutasi')
             ->where(function ($query) use ($search) {
                 $query->orwhere('transaksi_kas.no_faktur', 'LIKE', '%' . $search . '%')
                     ->orwhere('transaksi_kas.jenis_transaksi', 'LIKE', '%' . $search . '%');
@@ -115,6 +117,26 @@ class TransaksiKas extends Model
             ->where('transaksi_kas.warung_id', Auth::user()->id_warung);
 
         return $query_kas_keluar;
+    }
+
+    //CARI KAS MUTASI (MASUK)
+    public function scopeCariKasMutasiMasuk($query_kas_mutasi_masuk, $request)
+    {
+        $search                 = $request->search;
+        $query_kas_mutasi_masuk = TransaksiKas::select(['transaksi_kas.no_faktur', 'transaksi_kas.jenis_transaksi', 'transaksi_kas.jumlah_masuk', 'transaksi_kas.kas', 'transaksi_kas.created_at', 'kas.nama_kas'])
+            ->leftJoin('kas', 'kas.id', '=', 'transaksi_kas.kas')
+            ->where(DB::raw('DATE(transaksi_kas.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+            ->where(DB::raw('DATE(transaksi_kas.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+            ->where('transaksi_kas.kas', $request->kas)
+            ->where('transaksi_kas.jumlah_keluar', 0)
+            ->where('transaksi_kas.jenis_transaksi', '=', 'kas_mutasi')
+            ->where(function ($query) use ($search) {
+                $query->orwhere('transaksi_kas.no_faktur', 'LIKE', '%' . $search . '%')
+                    ->orwhere('transaksi_kas.jenis_transaksi', 'LIKE', '%' . $search . '%');
+            })
+            ->where('transaksi_kas.warung_id', Auth::user()->id_warung);
+
+        return $query_kas_mutasi_masuk;
     }
 
     //SUBTOTAL KAS MASUK
@@ -125,6 +147,7 @@ class TransaksiKas extends Model
             ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
             ->where('kas', $request->kas)
             ->where('jumlah_keluar', 0)
+            ->where('transaksi_kas.jenis_transaksi', '!=', 'kas_mutasi')
             ->where('warung_id', Auth::user()->id_warung);
 
         return $query_kas_masuk;
@@ -138,6 +161,7 @@ class TransaksiKas extends Model
             ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
             ->where('kas', $request->kas)
             ->where('jumlah_masuk', 0)
+            ->where('transaksi_kas.jenis_transaksi', '!=', 'kas_mutasi')
             ->where('warung_id', Auth::user()->id_warung);
 
         return $query_kas_keluar;

@@ -137,19 +137,13 @@ class LaporanKasController extends Controller
     public function pencarianLaporanKasMutasiMasukDetail(Request $request)
     {
         //KAS MASUK
-        $laporan_kas      = TransaksiKas::cariKasKeluar($request)->paginate(10);
+        $laporan_kas      = TransaksiKas::cariKasMutasiMasuk($request)->paginate(10);
         $data_laporan_kas = $this->foreachLaporan($laporan_kas);
 
         //DATA PAGINATION
         $link_view = "view";
         $respons   = $this->dataPagination($laporan_kas, $data_laporan_kas, $link_view);
         return response()->json($respons);
-    }
-
-    public function subtotalLaporanKasDetailMutasiMasuk(Request $request)
-    {
-        $subtotal_lap_kas_keluar_detail = TransaksiKas::subtotalLaporanKasKeluarDetail($request)->first()->subtotal;
-        return $subtotal_lap_kas_keluar_detail;
     }
 //KAS MUTASI (MASUK)
 
