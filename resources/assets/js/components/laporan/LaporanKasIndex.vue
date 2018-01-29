@@ -338,6 +338,7 @@
 					app.totalLaporanKasMutasiMasukDetail(); 
 
 					app.prosesLaporanMutasiKeluar();
+					app.totalLaporanKasMutasiKeluarDetail(); 
 
 					app.showButton();     			
 				} 
