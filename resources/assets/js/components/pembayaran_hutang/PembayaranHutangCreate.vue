@@ -911,6 +911,9 @@ export default {
         closeModalEditBayarHutang(){
           $("#modal_form_edit_bayar_hutang").hide();
         },
+        closeModalSelesai(){
+          $("#modal_selesai").hide(); 
+        },
     	   alertTbs(pesan) {
     		  this.$swal({
     			text: pesan,
