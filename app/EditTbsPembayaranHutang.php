@@ -5,6 +5,7 @@ namespace App;
 use Auth;
 use Illuminate\Database\Eloquent\Model;
 use Yajra\Auditable\AuditableTrait;
+use Illuminate\Support\Facades\DB;
 
 class EditTbsPembayaranHutang extends Model
 {
@@ -40,6 +41,16 @@ class EditTbsPembayaranHutang extends Model
             })->orderBy('edit_tbs_pembayaran_hutangs.id_edit_tbs_pembayaran_hutang', 'desc');
 
         return $query_tbs;
+    }
+
+            public function subtotalTbs($user_warung,$session_id)
+    {
+        $tbs_penjualan = EditTbsPembayaranHutang::select([DB::raw('SUM(jumlah_bayar) as jumlah_bayar')])->where('warung_id', $user_warung)->where('session_id', $session_id)->first();
+                if ($tbs_penjualan->jumlah_bayar == null || $tbs_penjualan->jumlah_bayar == '') {
+                  return 0;
+                 }else{
+                return $tbs_penjualan->jumlah_bayar;
+                }
     }
 
 
