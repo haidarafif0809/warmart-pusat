@@ -112,4 +112,17 @@ class TransaksiKas extends Model
 
         return $query_kas_masuk;
     }
+
+    //SUBTOTAL KAS KELUAR
+    public function scopeSubtotalLaporanKasKeluarDetail($query_kas_keluar, $request)
+    {
+        $query_kas_keluar = TransaksiKas::select([DB::raw('IFNULL(SUM(jumlah_keluar),0) as subtotal')])
+            ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+            ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+            ->where('kas', $request->kas)
+            ->where('jumlah_masuk', 0)
+            ->where('warung_id', Auth::user()->id_warung);
+
+        return $query_kas_keluar;
+    }
 }

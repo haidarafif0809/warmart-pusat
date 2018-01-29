@@ -114,5 +114,11 @@ class LaporanKasController extends Controller
         return response()->json($respons);
     }
 
+    public function subtotalLaporanKasDetailKeluar(Request $request)
+    {
+        $subtotal_lap_kas_keluar_detail = TransaksiKas::subtotalLaporanKasKeluarDetail($request)->first()->subtotal;
+        return $subtotal_lap_kas_keluar_detail;
+    }
 //KAS KELUAR
+
 }

@@ -240,6 +240,7 @@
 					app.totalLaporanKasDetail();   
 
 					app.prosesLaporanKeluar();
+					app.totalLaporanKasKeluarDetail();   
 					app.showButton();     			
 				} 
 
@@ -324,6 +325,22 @@
 				axios.post(app.url+'/subtotal-laporan-kas-detail-masuk', newFilter)
 				.then(function (resp) {
 					app.subtotalLaporanKasDetail = resp.data;
+					app.loading = false
+					console.log(resp.data)
+				})
+				.catch(function (resp) {
+					console.log(resp);
+					alert("Tidak Dapat Memuat Subtotal Laporan Kas");
+				});
+			},
+			totalLaporanKasKeluarDetail() {
+				var app = this;	
+				var newFilter = app.filter;
+
+				app.loading = true,
+				axios.post(app.url+'/subtotal-laporan-kas-detail-keluar', newFilter)
+				.then(function (resp) {
+					app.subtotalLaporanKasKeluarDetail = resp.data;
 					app.loading = false
 					console.log(resp.data)
 				})
