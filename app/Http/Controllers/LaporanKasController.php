@@ -145,6 +145,12 @@ class LaporanKasController extends Controller
         $respons   = $this->dataPagination($laporan_kas, $data_laporan_kas, $link_view);
         return response()->json($respons);
     }
+
+    public function subtotalLaporanKasDetailMutasiMasuk(Request $request)
+    {
+        $subtotal_lap_kas_mutasi_masuk_detail = TransaksiKas::subtotalLaporanKasMutasiMasukDetail($request)->first()->subtotal;
+        return $subtotal_lap_kas_mutasi_masuk_detail;
+    }
 //KAS MUTASI (MASUK)
 
 }
