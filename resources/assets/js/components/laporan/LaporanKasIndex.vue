@@ -305,7 +305,7 @@
 				if (typeof page === 'undefined') {
 					page = 1;
 				}
-				axios.post(app.url+'/pencarian?search='+app.pencarian_kas_keluar+'&page='+page, newFilter)
+				axios.post(app.url+'/pencarian-keluar?search='+app.pencarian_kas_keluar+'&page='+page, newFilter)
 				.then(function (resp) {
 					console.log(resp.data.data)
 					app.laporanKasKeluarDetail = resp.data.data;
