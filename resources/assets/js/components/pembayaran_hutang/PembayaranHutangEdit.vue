@@ -169,6 +169,63 @@
            <!-- / MODAL TOMBOL SELESAI --> 
 
 
+            <!-- MODAL EDIT TBS --> 
+            <div class="modal" id="modal_form_edit_bayar_hutang" role="dialog" data-backdrop=""> 
+                <div class="modal-dialog"> 
+                    <!-- Modal content--> 
+                    <div class="modal-content"> 
+                        <div class="modal-header"> 
+                            <button type="button" class="close"  v-on:click="closeModalEditBayarHutang()" v-shortkey.push="['esc']" @shortkey="closeModalEditBayarHutang()"> &times;</button> 
+                            <h4 class="modal-title"> 
+                                <div class="alert-icon"> 
+                                    <b>Edit Faktur Hutang : <span id="faktur_hutang_edit"></span></b> 
+                                </div> 
+                            </h4> 
+                        </div> 
+                        <form class="form-horizontal" v-on:submit.prevent="saveFormEditBayarHutang(formEditBayarHutangTbs.jumlah_bayar_lama)"> 
+                            <div class="modal-body"> 
+                                <div class="card" style="margin-bottom:1px; margin-top:1px; margin-right:1px; margin-left:1px;">
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                                                <font style="color: black">Hutang</font>
+                                                <money style="text-align:right; font-size: 30px;" readonly="" class="form-control" id="nilai_kredit" name="nilai_kredit" placeholder="Kredit"  v-model="formEditBayarHutangTbs.nilai_kredit" v-bind="separator" ></money> 
+                                            </div> 
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                                                <font style="color: black">Potongan</font>
+                                                <money style="text-align:right; font-size: 30px;" class="form-control" id="potongan" name="potongan" autocomplete="off" placeholder="Kredit"  v-model="formEditBayarHutangTbs.potongan" v-bind="separator" ref="potongan_edit"></money> 
+                                            </div>                                        
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                                                <font style="color: black">Pembayaran(F10)</font>
+                                                <money style="text-align:right" class="form-penjualan" v-shortkey.focus="['f10']" id="jumlah_bayar" name="jumlah_bayar" v-model="formEditBayarHutangTbs.jumlah_bayar" v-bind="separator"  autocomplete="off" ref="jumlah_bayar_edit"></money> 
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div align="right"  style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                                        <button type="submit" class="btn btn-success btn-lg" id="btnTbs"><font style="font-size:20px;">Tambah(Enter)</font></button>
+
+                                        <button type="button" class="btn btn-default btn-lg"  v-on:click="closeModalEditBayarHutang()" v-shortkey.push="['esc']" @shortkey="closeModalEditBayarHutang()"> <font style="font-size:20px;">Tutup(Esc)</font></button>
+                                    </div>
+
+                                </div> 
+                            </div>
+                            <div class="modal-footer">
+
+                            </div> 
+                        </form>
+                    </div>       
+                </div> 
+            </div> 
+            <!-- / MODAL EDIT TBS --> 
+
 
     <div class="card" style="margin-bottom: 1px; margin-top: 1px;" ><!-- CARD --> 
           <div class="card-content"> 
@@ -223,10 +280,10 @@
                     <td style="text-align:right;">{{ tbs_pembayaran_hutangs.jumlah_bayar | pemisahTitik }}</td>
                     <td style="text-align:right;">{{ tbs_pembayaran_hutangs.sisa_hutang | pemisahTitik }}</td>
                     <td style="text-align:right;">
-                     <a href="#create-pembayaran-hutang" class="btn btn-xs btn-warning" v-bind:id="'edit-' + tbs_pembayaran_hutangs.id" v-on:click="editEntry(tbs_pembayaran_hutangs.id, index, tbs_pembayaran_hutangs.no_faktur_pembelian,tbs_pembayaran_hutangs.suplier,tbs_pembayaran_hutangs.jumlah_bayar,tbs_pembayaran_hutangs.potongan,tbs_pembayaran_hutangs.hutang)">Edit</a>
+                     <a  class="btn btn-xs btn-warning" v-bind:id="'edit-' + tbs_pembayaran_hutangs.id" v-on:click="editEntry(tbs_pembayaran_hutangs.id, index, tbs_pembayaran_hutangs.no_faktur_pembelian,tbs_pembayaran_hutangs.suplier,tbs_pembayaran_hutangs.jumlah_bayar,tbs_pembayaran_hutangs.potongan,tbs_pembayaran_hutangs.hutang)">Edit</a>
                     </td>
                     <td style="text-align:right;"> 
-                   <a href="#create-pembayaran-hutang" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_pembayaran_hutangs.id" v-on:click="deleteEntry(tbs_pembayaran_hutangs.id, index,tbs_pembayaran_hutangs.jumlah_bayar,tbs_pembayaran_hutangs.no_faktur_pembelian)">Delete</a>
+                   <a  class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_pembayaran_hutangs.id" v-on:click="deleteEntry(tbs_pembayaran_hutangs.id, index,tbs_pembayaran_hutangs.jumlah_bayar,tbs_pembayaran_hutangs.no_faktur_pembelian)">Delete</a>
                   </td>
                 </tr>
               </tbody>          
@@ -343,6 +400,7 @@
             app.dataKas(); 
             app.getResults();
             app.dataSupplierHutang();
+            app.getSubtotalTbs();
         },
         watch: {
         // whenever question changes, this function will run
@@ -473,9 +531,7 @@ methods: {
             app.openSelectizeSuplier();
 
             if (app.inputPembayaranHutang.subtotal == 0) {
-                $.each(resp.data.data, function (i,item) {
-                    app.inputPembayaranHutang.subtotal += parseFloat(resp.data.data[i].jumlah_bayar)
-                }); 
+              app.getSubtotalTbs();
             }
         })
         .catch(function (resp) {
@@ -503,6 +559,20 @@ methods: {
             alert("Tidak Dapat Memuat Faktur Penjualan Piutang");
         });
     },
+    getSubtotalTbs(){
+    var app =  this
+    var id = app.$route.params.id;
+    axios.get(app.url+'/cek-data-tbs-pembayan-hutang/'+id)
+    .then(function (resp) {
+      app.inputPembayaranHutang.subtotal += resp.data.subtotal;
+      app.inputPembayaranHutang.keterangan = resp.data.pembayaran_hutang.keterangan
+      app.inputPembayaranHutang.kas = resp.data.pembayaran_hutang.cara_bayar
+
+     })
+    .catch(function (resp) {
+      console.log(resp);
+    });
+  },   
     dataSuplier() {
             var app = this;
             axios.get(app.url+'/pilih-suplier').then(function (resp) {
@@ -590,6 +660,60 @@ methods: {
                     app.errors = resp.response.data.errors;
                   });
             }
+        },
+       editEntry(id, index, no_faktur_pembelian, suplier, jumlah_bayar, potongan, hutang) {
+        var app = this;
+        app.formEditBayarHutangTbs.nilai_kredit = hutang;
+        app.formEditBayarHutangTbs.jumlah_bayar = jumlah_bayar;
+        app.formEditBayarHutangTbs.jumlah_bayar_lama = jumlah_bayar;
+        app.formEditBayarHutangTbs.potongan = potongan;
+        app.formEditBayarHutangTbs.id_tbs = id;
+
+        $("#faktur_hutang_edit").text(no_faktur_pembelian+' || '+suplier);
+        $("#modal_form_edit_bayar_hutang").show();     
+        app.$refs.jumlah_bayar_edit.$el.focus();
+    },
+    saveFormEditBayarHutang(jumlah_bayar_lama){
+        var app = this;
+        var newformEditBayarHutangTbs = app.formEditBayarHutangTbs;
+        if (app.formEditBayarHutangTbs.jumlah_bayar < 0) {
+            app.alertTbs("Potongan Anda Melebihi Total Hutang");
+            app.loading = false;
+            app.formEditBayarHutangTbs.potongan = 0;
+            app.$refs.potongan_edit.$el.focus();
+        }else{
+            app.loading = true;
+            axios.post(app.url+'/edit-jumlah-tbs-edit-pembayaran-hutang', newformEditBayarHutangTbs)
+            .then(function (resp) {
+                if (resp.data.status == 0) {
+                    app.getResults();
+                    app.$swal({
+                        text: "Potongan Yang Anda Masukan Melebihi Subtotal Hutang!",
+                    });
+                    app.loading = false;
+                    app.formEditBayarHutangTbs.nilai_kredit = ''
+                    app.formEditBayarHutangTbs.jumlah_bayar = ''
+                    app.formEditBayarHutangTbs.potongan = ''
+                    app.formEditBayarHutangTbs.id_tbs = ''
+                }else{
+                    var subtotal = (parseFloat(app.inputPembayaranHutang.subtotal) - parseFloat(jumlah_bayar_lama)) + parseFloat(resp.data.jumlah_bayar)
+                    app.getResults();
+                    app.inputPembayaranHutang.subtotal = subtotal.toFixed(2)
+                    app.alert("Mengubah Faktur Hutang")
+                    app.formEditBayarHutangTbs.nilai_kredit = ''
+                    app.formEditBayarHutangTbs.jumlah_bayar = ''
+                    app.formEditBayarHutangTbs.potongan = ''
+                    app.formEditBayarHutangTbs.id_tbs = ''
+                    $("#modal_form_edit_bayar_hutang").hide();
+                    app.loading = false;
+                }
+            })
+            .catch(function (resp) { 
+                console.log(resp);                  
+                app.loading = false;
+                alert("Tidak Dapat Mengubah Potongan");
+            });
+        }
         },
       alert(pesan) {
             this.$swal({

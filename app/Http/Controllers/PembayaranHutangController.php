@@ -396,7 +396,7 @@ class PembayaranHutangController extends Controller
                     return response()->json($respons);
                 }
     }
-    
+
     //hapus tbs pembayaran hutang
         public function prosesHapusTbsPembayaranHutang($id)
     {
@@ -425,6 +425,16 @@ class PembayaranHutangController extends Controller
 
         return response()->json($respons);
     }
+        public function prosesUpdateTbsEditPembayaranHutang(Request $request)
+    {
+        $tbs_pembayaran_hutang = EditTbsPembayaranHutang::find($request->id_tbs);
+        $subtotal               = $request->nilai_kredit - $request->potongan;
+        $tbs_pembayaran_hutang->update(['potongan' => $request->potongan, 'subtotal_hutang' => $subtotal, 'jumlah_bayar' => $request->jumlah_bayar]);
+        $respons['jumlah_bayar'] = $request->jumlah_bayar;
+
+        return response()->json($respons);
+    }
+
     //PROSES BATAL 
     public function proses_batal_transaksi_pembayaran_hutang()
     {
@@ -607,6 +617,35 @@ class PembayaranHutangController extends Controller
     public function update(Request $request, $id)
     {
         //
+    }
+
+    public function cekSubtotalTbsPembayaranHutang($jenis_tbs){
+    $session_id    = session()->getId();
+    $user_warung   = Auth::user()->id_warung;
+    if ($jenis_tbs == 1) {
+            $TbsPembayaranHutang = new TbsPembayaranHutang();
+            $subtotal      = $TbsPembayaranHutang->subtotalTbs($user_warung,$session_id);
+            $respons['subtotal'] = $subtotal;
+    }else if ($jenis_tbs == 2){
+             $TbsPembayaranHutang = new EditTbsPembayaranHutang();
+            $subtotal      = $TbsPembayaranHutang->subtotalTbs($user_warung,$session_id);
+            $respons['subtotal'] = $subtotal;
+    }
+
+    return response()->json($respons);
+    }
+
+        public function cekDataTbsPembayaranHutang($id)
+    {
+        $user_warung   = Auth::user()->id_warung;
+        $session_id    = session()->getId();
+        $TbsPembayaranHutang = new EditTbsPembayaranHutang();
+        $subtotal      = $TbsPembayaranHutang->subtotalTbs($user_warung,$session_id);
+        $respons['subtotal'] = $subtotal;
+        return response()->json([
+            "subtotal" => $subtotal,
+            "pembayaran_hutang"     => PembayaranHutang::find($id)->toArray(),
+        ]);
     }
 
     /**

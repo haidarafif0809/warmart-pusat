@@ -454,6 +454,7 @@ export default {
     app.dataKas();
 		app.getResults();
     app.dataSupplierHutang();
+    app.getSubtotalTbs();
 	},
 	watch: {
         // whenever question changes, this function will run
@@ -579,9 +580,7 @@ export default {
     			app.tbs_pembayaran_hutang = resp.data.data;
     			app.tbsPembayaranHutangData = resp.data;
             if (app.inputPembayaranHutang.subtotal == 0) {
-                $.each(resp.data.data, function (i,item) {
-                    app.inputPembayaranHutang.subtotal += parseFloat(resp.data.data[i].jumlah_bayar)
-                }); 
+                app.getSubtotalTbs();
             }
              app.openSelectizeSuplier();
     			app.loading = false;
@@ -611,7 +610,18 @@ export default {
             console.log(resp);
             alert("Tidak Dapat Memuat  Pembayaran Hutang");
         });
-    	},    
+    	},
+     getSubtotalTbs(){
+    var app =  this;
+    var jenis_tbs = 1;
+    axios.get(app.url+'/subtotal-tbs-pembayaran-hutang/'+jenis_tbs)
+    .then(function (resp) {
+     app.inputPembayaranHutang.subtotal += resp.data.subtotal;
+     })
+    .catch(function (resp) {
+      console.log(resp);
+    });
+  },    
     	dataSuplier() {
     		var app = this;
     		axios.get(app.url+'/pilih-suplier').then(function (resp) {
