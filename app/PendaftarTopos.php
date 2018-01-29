@@ -16,6 +16,10 @@ class PendaftarTopos extends Model
 	{
 		return $this->belongsTo('App\Bank', 'bank_id', 'id');
 	}
+	public function user_warung()
+	{
+		return $this->belongsTo('App\UserWarung', 'warung_id', 'id_warung');
+	}
 
 	           // Specify Slack Webhook URL to route notifications to 
 	public function routeNotificationForSlack() {
