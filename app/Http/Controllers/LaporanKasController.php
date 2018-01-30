@@ -261,8 +261,8 @@ class LaporanKasController extends Controller
 
     public function subtotalLaporanKasRekapKeluar(Request $request)
     {
-        $subtotal_lap_kas_masuk_rekap = TransaksiKas::subtotalLaporanKasKeluarRekap($request)->first()->jumlah_masuk;
-        return $subtotal_lap_kas_masuk_rekap;
+        $subtotal_lap_kas_keluar_rekap = TransaksiKas::subtotalLaporanKasKeluarRekap($request)->first()->jumlah_keluar;
+        return $subtotal_lap_kas_keluar_rekap;
     }
     //KAS KELUAR
 

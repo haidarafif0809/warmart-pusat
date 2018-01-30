@@ -479,7 +479,7 @@
 						app.totalLaporanKasRekap();
 
 						app.prosesLaporanKeluarRekap();
-						// app.totalLaporanKasRekap();
+						app.totalLaporanKasKeluarRekap();
 
 						$("#span-detail").hide();
 						$("#span-rekap").show();
@@ -692,6 +692,23 @@
 					alert("Tidak Dapat Memuat Laporan Kas Masuk Rekap");
 				});
 			},
+			getHasilPencarianKeluarRekap(page){
+				var app = this;
+				var newFilter = app.filter;
+				if (typeof page === 'undefined') {
+					page = 1;
+				}
+				axios.post(app.url+'/pencarian-keluar-rekap?search='+app.pencarian_kas_keluar_rekap+'&page='+page, newFilter)
+				.then(function (resp) {
+					console.log(resp.data.data)
+					app.laporanKasKeluarRekap = resp.data.data;
+					app.laporanKasKeluarRekapData = resp.data;
+				})
+				.catch(function (resp) {
+					console.log(resp);
+					alert("Tidak Dapat Memuat Laporan Kas Keluar Rekap");
+				});
+			},
 
 
 			totalLaporanKasDetail() {
@@ -802,6 +819,22 @@
 				axios.post(app.url+'/subtotal-laporan-kas-rekap-masuk', newFilter)
 				.then(function (resp) {
 					app.subtotalLaporanKasRekap = resp.data;
+					app.loading = false
+					console.log(resp.data)
+				})
+				.catch(function (resp) {
+					console.log(resp);
+					alert("Tidak Dapat Memuat Subtotal Laporan Kas");
+				});
+			},
+			totalLaporanKasKeluarRekap() {
+				var app = this;	
+				var newFilter = app.filter;
+
+				app.loading = true,
+				axios.post(app.url+'/subtotal-laporan-kas-rekap-keluar', newFilter)
+				.then(function (resp) {
+					app.subtotalLaporanKasKeluarRekap = resp.data;
 					app.loading = false
 					console.log(resp.data)
 				})

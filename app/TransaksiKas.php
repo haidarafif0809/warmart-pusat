@@ -278,6 +278,20 @@ class TransaksiKas extends Model
         return $query_kas_masuk_rekap;
     }
 
+    //CARI KAS KELUAR REKAP
+    public function scopeCariKasKeluarRekap($query_kas_keluar_rekap, $request)
+    {
+        $search                 = $request->search;
+        $query_kas_keluar_rekap = $this->queryLaporanKasRekap($request)
+            ->where('transaksi_kas.jumlah_masuk', 0)
+            ->where('transaksi_kas.jenis_transaksi', '!=', 'kas_mutasi')
+            ->where(function ($query) use ($search) {
+                $query->orwhere('transaksi_kas.created_at', 'LIKE', '%' . $search . '%');
+            })->groupBy(DB::raw('DATE(transaksi_kas.created_at)'));
+
+        return $query_kas_keluar_rekap;
+    }
+
     //SUBTOTAL KAS MASUK REKAP
     public function scopeSubtotalLaporanKasMasukRekap($query_kas_masuk, $request)
     {
@@ -286,5 +300,15 @@ class TransaksiKas extends Model
             ->where('transaksi_kas.jenis_transaksi', '!=', 'kas_mutasi');
 
         return $query_kas_masuk;
+    }
+
+    //SUBTOTAL KAS KELUAR REKAP
+    public function scopeSubtotalLaporanKasKeluarRekap($query_kas_keluar, $request)
+    {
+        $query_kas_keluar = $this->querySubtotalLaporanKasDetail($request)
+            ->where('jumlah_masuk', 0)
+            ->where('transaksi_kas.jenis_transaksi', '!=', 'kas_mutasi');
+
+        return $query_kas_keluar;
     }
 }
