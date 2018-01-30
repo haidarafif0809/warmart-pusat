@@ -248,7 +248,7 @@ class TransaksiKas extends Model
         $query_kas_masuk_rekap = $this->queryLaporanKasRekap($request)
             ->where('transaksi_kas.jumlah_keluar', 0)
             ->where('transaksi_kas.jenis_transaksi', '!=', 'kas_mutasi')
-            ->groupBy('transaksi_kas.created_at');
+            ->groupBy(DB::raw('DATE(transaksi_kas.created_at)'));
 
         return $query_kas_masuk_rekap;
     }
@@ -262,7 +262,7 @@ class TransaksiKas extends Model
             ->where('transaksi_kas.jenis_transaksi', '!=', 'kas_mutasi')
             ->where(function ($query) use ($search) {
                 $query->orwhere('transaksi_kas.created_at', 'LIKE', '%' . $search . '%');
-            })->groupBy('transaksi_kas.created_at');
+            })->groupBy(DB::raw('DATE(transaksi_kas.created_at)'));
 
         return $query_kas_masuk_rekap;
     }
