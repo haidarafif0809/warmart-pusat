@@ -245,6 +245,40 @@
 						<div align="right"><pagination :data="laporanKasRekapData" v-on:pagination-change-page="prosesLaporanRekap" :limit="4"></pagination></div>
 						<hr style="margin-top: 30px; margin-bottom: 15px; border-top: 5px solid #eeeeee;">
 
+						<!--KAS KELUAR-->
+						<div class=" table-responsive">
+							<div class="pencarian">
+								<input type="text" name="pencarian" v-model="pencarian_kas_keluar_rekap" placeholder="Pencarian" class="form-control">
+							</div>
+
+							<h4><b>KAS KELUAR : <span style="color:red">Rp. {{subtotalLaporanKasKeluarRekap | pemisahTitik}}</span></b></h4>
+							<table class="table table-striped table-hover">
+								<thead class="text-primary">
+									<tr>
+										<th>Waktu</th>
+										<th>Ke Kas</th>
+										<th style="text-align:right">Total</th>
+									</tr>
+								</thead>
+								<tbody v-if="laporanKasKeluarRekap.length > 0 && loading == false"  class="data-ada">
+									<tr v-for="laporanKasKeluarRekaps, index in laporanKasKeluarRekap" >
+
+										<td>{{ laporanKasKeluarRekaps.data_laporan.created_at | tanggal }}</td>
+										<td>{{ laporanKasKeluarRekaps.data_laporan.nama_kas }}</td>
+										<td align="right">{{ laporanKasKeluarRekaps.data_laporan.jumlah_keluar | pemisahTitik }}</td>
+
+									</tr>
+								</tbody>					
+								<tbody class="data-tidak-ada" v-else-if="laporanKasKeluarRekap.length == 0 && loading == false">
+									<tr ><td colspan="3"  class="text-center">Tidak Ada Data</td></tr>
+								</tbody>
+							</table>
+						</div><!--RESPONSIVE-->
+
+						<vue-simple-spinner v-if="loading"></vue-simple-spinner>
+						<div align="right"><pagination :data="laporanKasKeluarRekapData" v-on:pagination-change-page="prosesLaporanRekap" :limit="4"></pagination></div>
+						<hr style="margin-top: 30px; margin-bottom: 15px; border-top: 5px solid #eeeeee;">
+
 					</span>
 					<!-- JENIS LAPORAN == LAPORAN REKAP -->
 
@@ -317,7 +351,11 @@
 
 				laporanKasRekap: [],
 				laporanKasRekapData: {},
-				subtotalLaporanKasRekap: '',
+				subtotalLaporanKasRekap: '',	
+
+				laporanKasKeluarRekap: [],
+				laporanKasKeluarRekapData: {},
+				subtotalLaporanKasKeluarRekap: '',
 
 				filter: {
 					dari_tanggal: '',
@@ -336,6 +374,7 @@
 				pencarian_mutasi_keluar: '',
 
 				pencarian_kas_masuk_rekap: '',
+				pencarian_kas_keluar_rekap: '',
 
 				placeholder_laporan: {
 					placeholder: '--JENIS LAPORAN--'
@@ -372,6 +411,9 @@
 
 			pencarian_kas_masuk_rekap: function (newQuestion) {
 				this.getHasilPencarianRekap();
+			},
+			pencarian_kas_keluar_rekap: function (newQuestion) {
+				this.getHasilPencarianKeluarRekap();
 			},
 		},
 		filters: {
@@ -435,6 +477,9 @@
 
 						app.prosesLaporanRekap();
 						app.totalLaporanKasRekap();
+
+						app.prosesLaporanKeluarRekap();
+						app.totalLaporanKasKeluarRekap();
 
 						$("#span-detail").hide();
 						$("#span-rekap").show();
@@ -540,6 +585,25 @@
 					alert("Tidak Dapat Memuat Laporan Kas Masuk Rekap");
 				});
 			},
+			prosesLaporanKeluarRekap(page) {
+				var app = this;	
+				var newFilter = app.filter;
+				if (typeof page === 'undefined') {
+					page = 1;
+				}
+				app.loading = true,
+				axios.post(app.url+'/view-keluar-rekap?page='+page, newFilter)
+				.then(function (resp) {
+					console.log(resp.data.data);
+					app.laporanKasKeluarRekap = resp.data.data;
+					app.laporanKasKeluarRekapData = resp.data;
+					app.loading = false
+				})
+				.catch(function (resp) {
+					console.log(resp);
+					alert("Tidak Dapat Memuat Laporan Kas Keluar Rekap");
+				});
+			},
 
 
 			getHasilPencarian(page){
@@ -626,6 +690,23 @@
 				.catch(function (resp) {
 					console.log(resp);
 					alert("Tidak Dapat Memuat Laporan Kas Masuk Rekap");
+				});
+			},
+			getHasilPencarianKeluarRekap(page){
+				var app = this;
+				var newFilter = app.filter;
+				if (typeof page === 'undefined') {
+					page = 1;
+				}
+				axios.post(app.url+'/pencarian-keluar-rekap?search='+app.pencarian_kas_keluar_rekap+'&page='+page, newFilter)
+				.then(function (resp) {
+					console.log(resp.data.data)
+					app.laporanKasKeluarRekap = resp.data.data;
+					app.laporanKasKeluarRekapData = resp.data;
+				})
+				.catch(function (resp) {
+					console.log(resp);
+					alert("Tidak Dapat Memuat Laporan Kas Keluar Rekap");
 				});
 			},
 
@@ -738,6 +819,22 @@
 				axios.post(app.url+'/subtotal-laporan-kas-rekap-masuk', newFilter)
 				.then(function (resp) {
 					app.subtotalLaporanKasRekap = resp.data;
+					app.loading = false
+					console.log(resp.data)
+				})
+				.catch(function (resp) {
+					console.log(resp);
+					alert("Tidak Dapat Memuat Subtotal Laporan Kas");
+				});
+			},
+			totalLaporanKasKeluarRekap() {
+				var app = this;	
+				var newFilter = app.filter;
+
+				app.loading = true,
+				axios.post(app.url+'/subtotal-laporan-kas-rekap-keluar', newFilter)
+				.then(function (resp) {
+					app.subtotalLaporanKasKeluarRekap = resp.data;
 					app.loading = false
 					console.log(resp.data)
 				})
