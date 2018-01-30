@@ -960,30 +960,51 @@ export default {
     prosesSelesaiPembayaranHutang(value){
         var app = this;
         var newPembayaranHutang = app.inputPembayaranHutang;
+        var kas = app.inputPembayaranHutang.kas;
+        var subtotal = app.inputPembayaranHutang.subtotal;
         app.loading = true;
+        
+        axios.get(app.url+'/cek-total-kas?kas='+kas)
+              .then(function (resp) {
+                if (resp.data.total_kas == '' || resp.data.total_kas == null) {
+                  var total_kas = 0;
+                }else{
+                  var total_kas = resp.data.total_kas;
+                }
+                  var data_tbs_pembayaran_hutang = resp.data.data_tbs_pembayaran_hutang;
+                   var hitung_sisa_kas = parseFloat(total_kas) - parseFloat(subtotal);
 
-        axios.post(app.url,newPembayaranHutang)
-        .then(function (resp) {
+                      if (hitung_sisa_kas >= 0) {
+                           if (data_tbs_pembayaran_hutang == 0){
+                          swal('Oops...','Belum Ada Transaksi Hutang Yang Diinputkan','error'); 
+                      }
+                      else{
+                      axios.post(app.url,newPembayaranHutang)
+                      .then(function (resp) {
+                          if (resp.data == 0) {
+                              app.alertTbs("Anda Belum Memasukan Faktur Pembelian Hutang");
+                              app.loading = false;
+                          }else{
+                              app.alert("Menyelesaikan Transaksi Pembayaran Hutang");
+                              app.inputPembayaranHutang.tanggal = new Date;
+                              app.inputPembayaranHutang.keterangan = ''
+                              app.inputPembayaranHutang.subtotal = 0
 
-            if (resp.data == 0) {
-                app.alertTbs("Anda Belum Memasukan Faktur Pembelian Hutang");
-                app.loading = false;
-            }else{
-                app.alert("Menyelesaikan Transaksi Pembayaran Hutang");
-                app.inputPembayaranHutang.tanggal = new Date;
-                app.inputPembayaranHutang.keterangan = ''
-                app.inputPembayaranHutang.subtotal = 0
-
-                $("#modal_selesai").hide();
-                app.loading = false;                
-                app.$router.replace('/pembayaran-hutang');
-            }
-        })
-        .catch(function (resp) {
-            console.log(resp);              
-            app.loading = false;
-            alert("Tidak dapat Menyelesaikan Transaksi Pembayaran Hutang");        
-            app.errors = resp.response.data.errors;
+                              $("#modal_selesai").hide();
+                              app.loading = false;                
+                              app.$router.replace('/pembayaran-hutang');
+                          }
+                      })
+                      .catch(function (resp) {
+                          console.log(resp);              
+                          app.loading = false;
+                          alert("Tidak dapat Menyelesaikan Transaksi Pembayaran Hutang");        
+                          app.errors = resp.response.data.errors;
+                      });
+                    }
+             }else{
+                swal('Oops...','Kas Anda Tidak Cukup Untuk Melakukan Pembayaran','error');
+              }
         });
     },
     tambahModalKas(){
