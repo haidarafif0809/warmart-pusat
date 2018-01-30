@@ -4,6 +4,7 @@ namespace App;
 use Auth;
 use Illuminate\Database\Eloquent\Model;
 use Yajra\Auditable\AuditableTrait;
+use Illuminate\Support\Facades\DB;
 
 class TbsPembayaranHutang extends Model
 {
@@ -49,6 +50,16 @@ class TbsPembayaranHutang extends Model
     public function kas()
     {
         return $this->hasOne('App\Kas', 'id', 'cara_bayar');
+    }
+
+        public function subtotalTbs($user_warung,$session_id)
+    {
+        $tbs_penjualan = TbsPembayaranHutang::select([DB::raw('SUM(jumlah_bayar) as jumlah_bayar')])->where('warung_id', $user_warung)->where('session_id', $session_id)->first();
+                if ($tbs_penjualan->jumlah_bayar == null || $tbs_penjualan->jumlah_bayar == '') {
+                  return 0;
+                 }else{
+                return $tbs_penjualan->jumlah_bayar;
+                }
     }
     
 }

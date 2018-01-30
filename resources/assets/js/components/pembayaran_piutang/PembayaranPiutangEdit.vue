@@ -61,303 +61,363 @@
 
             </ul>
 
-            <!-- MODAL TBS --> 
-            <div class="modal" id="modal_tbs" role="dialog" data-backdrop=""> 
+            <!--MODAL PINTAS TAMBAH KAS-->
+            <div class="modal" id="modal_tambah_kas" role="dialog" data-backdrop=""> 
                 <div class="modal-dialog"> 
-                    <!-- Modal content--> 
-                    <div class="modal-content"> 
-                        <div class="modal-header"> 
-                            <button type="button" class="close"  v-on:click="closeModal()" v-shortkey.push="['esc']" @shortkey="closeModal()"> &times;</button> 
-                            <h4 class="modal-title"> 
-                                <div class="alert-icon"> 
-                                    <b>Pembayaran Piutang <span id="faktur_piutang"></span></b> 
-                                </div> 
-                            </h4> 
-                        </div> 
-                        <form class="form-horizontal" v-on:submit.prevent="tambahTbsPembayaranPiutang()"> 
-                            <div class="modal-body"> 
-                                <div class="card" style="margin-bottom:1px; margin-top:1px; margin-right:1px; margin-left:1px;">
+                  <!-- Modal content--> 
+                  <div class="modal-content"> 
+                    <div class="modal-header"> 
+                      <button type="button" class="close"  v-on:click="closeModalTambahKas()" v-shortkey.push="['esc']" @shortkey="closeModalTambahKas()"> &times;</button> 
+                      <h4 class="modal-title"> 
+                        <div class="alert-icon"> 
+                          <b>Silahkan Isi Kas!</b> 
+                      </div> 
+                  </h4> 
+              </div> 
+              <div class="modal-body">
+                  <form v-on:submit.prevent="saveFormKas()" class="form-horizontal"> 
+                    <div class="form-group">
+                      <label for="kode_kas" class="col-md-3 control-label">Kode Kas</label>
+                      <div class="col-md-9">
+                        <input class="form-control" autocomplete="off" placeholder="Kode Kas" v-model="tambahKas.kode_kas" type="text" name="kode_kas" id="kode_kas"  autofocus="">
+                        <span v-if="errors.kode_kas" id="kode_kas_error" class="label label-danger">{{ errors.kode_kas[0] }}</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                  <label for="nama_kas" class="col-md-3 control-label">Nama Kas</label>
+                  <div class="col-md-9">
+                    <input class="form-control" autocomplete="off" placeholder="Nama Kas" v-model="tambahKas.nama_kas" type="text" name="nama_kas" id="nama_kas"  >
+                    <span v-if="errors.nama_kas" id="nama_kas_error" class="label label-danger">{{ errors.nama_kas[0] }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+              <label for="nama_kas" class="col-md-3 control-label">Tampil Transaksi</label>
+              <div class="togglebutton col-md-9">
+                <label>
+                  <b>No</b>  <input type="checkbox" v-model="tambahKas.status_kas" value="1" name="status_kas" id="status_kas"><b>Yes</b>
+              </label>
+          </div>
+      </div>
+      <div class="form-group">
+          <label for="nama_kas" class="col-md-3 control-label">Default Kas</label>
+          <div class="togglebutton col-md-9">
+            <label>
+              <b>No</b>  <input type="checkbox" v-on:change="defaultKas()" v-model="tambahKas.default_kas" value="1" name="default_kas" id="default_kas"><b>Yes</b>
+          </label>
+      </div>
+  </div>
+  <div class="form-group">
+    <div class="col-md-9 col-md-offset-3">
+        <p style="color: red; font-style: italic;">*Note : Hanya 1 Kas yang dijadikan default.</p>
+        <button class="btn btn-primary" id="btnSimpanKas" type="submit"><i class="material-icons">send</i> Submit</button>
+    </div>
+</div>
+</form>
+</div>
+<div class="modal-footer">  
+</div> 
+</div>       
+</div> 
+</div> 
+<!-- / MODAL PINTAS TAMBAH KAS --> 
 
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                                <font style="color: black">Total Piutang</font>
-                                                <money style="text-align:right; font-size: 30px;" readonly="" class="form-control" id="piutang" name="piutang" placeholder="Kredit"  v-model="inputTbsPembayaranPiutang.piutang" v-bind="separator" ></money> 
-                                            </div> 
-                                        </div>
+<!-- MODAL TBS --> 
+<div class="modal" id="modal_tbs" role="dialog" data-backdrop=""> 
+    <div class="modal-dialog"> 
+        <!-- Modal content--> 
+        <div class="modal-content"> 
+            <div class="modal-header"> 
+                <button type="button" class="close"  v-on:click="closeModal()" v-shortkey.push="['esc']" @shortkey="closeModal()"> &times;</button> 
+                <h4 class="modal-title"> 
+                    <div class="alert-icon"> 
+                        <b>Pembayaran Piutang <span id="faktur_piutang"></span></b> 
+                    </div> 
+                </h4> 
+            </div> 
+            <form class="form-horizontal" v-on:submit.prevent="tambahTbsPembayaranPiutang()"> 
+                <div class="modal-body"> 
+                    <div class="card" style="margin-bottom:1px; margin-top:1px; margin-right:1px; margin-left:1px;">
 
-                                        <div class="col-md-6">
-                                            <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                                <font style="color: black">Potongan</font>
-                                                <money style="text-align:right; font-size: 30px;" class="form-control" id="potongan" name="potongan" autocomplete="off" placeholder="Kredit"  v-model="inputTbsPembayaranPiutang.potongan" v-bind="separator" ref="potongan"></money> 
-                                            </div>                                        
-                                        </div>
-
-                                        <div class="col-md-12">
-                                            <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                                <font style="color: black">Pembayaran(F9)</font>
-                                                <money style="text-align:right" class="form-penjualan" v-shortkey.focus="['f9']" id="jumlah_bayar" name="jumlah_bayar" v-model="inputTbsPembayaranPiutang.jumlah_bayar" v-bind="separator"  autocomplete="off" ref="jumlah_bayar"></money> 
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div align="right"  style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                        <button type="submit" class="btn btn-success btn-lg" id="btnTbs"><font style="font-size:20px;">Tambah</font></button>
-
-                                        <button type="button" class="btn btn-default btn-lg"  v-on:click="closeModal()" v-shortkey.push="['esc']" @shortkey="closeModal()"> <font style="font-size:20px;">Tutup(Esc)</font></button>
-                                    </div>
-
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                                    <font style="color: black">Total Piutang</font>
+                                    <money style="text-align:right; font-size: 30px;" readonly="" class="form-control" id="piutang" name="piutang" placeholder="Kredit"  v-model="inputTbsPembayaranPiutang.piutang" v-bind="separator" ></money> 
                                 </div> 
                             </div>
-                            <div class="modal-footer">
 
-                            </div> 
-                        </form>
-                    </div>       
+                            <div class="col-md-6">
+                                <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                                    <font style="color: black">Potongan</font>
+                                    <money style="text-align:right; font-size: 30px;" class="form-control" id="potongan" name="potongan" autocomplete="off" placeholder="Kredit"  v-model="inputTbsPembayaranPiutang.potongan" v-bind="separator" ref="potongan"></money> 
+                                </div>                                        
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                                    <font style="color: black">Pembayaran(F9)</font>
+                                    <money style="text-align:right" class="form-penjualan" v-shortkey.focus="['f9']" id="jumlah_bayar" name="jumlah_bayar" v-model="inputTbsPembayaranPiutang.jumlah_bayar" v-bind="separator"  autocomplete="off" ref="jumlah_bayar"></money> 
+                                </div>
+                            </div>
+                        </div>
+
+                        <div align="right"  style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                            <button type="submit" class="btn btn-success btn-lg" id="btnTbs"><font style="font-size:20px;">Tambah</font></button>
+
+                            <button type="button" class="btn btn-default btn-lg"  v-on:click="closeModal()" v-shortkey.push="['esc']" @shortkey="closeModal()"> <font style="font-size:20px;">Tutup(Esc)</font></button>
+                        </div>
+
+                    </div> 
+                </div>
+                <div class="modal-footer">
+
                 </div> 
+            </form>
+        </div>       
+    </div> 
+</div> 
+<!-- / MODAL TBS --> 
+
+<!-- MODAL EDIT TBS --> 
+<div class="modal" id="modal_edit_tbs" role="dialog" data-backdrop=""> 
+    <div class="modal-dialog"> 
+        <!-- Modal content--> 
+        <div class="modal-content"> 
+            <div class="modal-header"> 
+                <button type="button" class="close"  v-on:click="closeModal()" v-shortkey.push="['esc']" @shortkey="closeModal()"> &times;</button> 
+                <h4 class="modal-title"> 
+                    <div class="alert-icon"> 
+                        <b>Edit Faktur Piutang : <span id="faktur_piutang_edit"></span></b> 
+                    </div> 
+                </h4> 
             </div> 
-            <!-- / MODAL TBS --> 
+            <form class="form-horizontal" v-on:submit.prevent="editTbsPembayaranPiutang(inputEditTbsPembayaranPiutang.jumlah_bayar_lama)"> 
+                <div class="modal-body"> 
+                    <div class="card" style="margin-bottom:1px; margin-top:1px; margin-right:1px; margin-left:1px;">
 
-            <!-- MODAL EDIT TBS --> 
-            <div class="modal" id="modal_edit_tbs" role="dialog" data-backdrop=""> 
-                <div class="modal-dialog"> 
-                    <!-- Modal content--> 
-                    <div class="modal-content"> 
-                        <div class="modal-header"> 
-                            <button type="button" class="close"  v-on:click="closeModal()" v-shortkey.push="['esc']" @shortkey="closeModal()"> &times;</button> 
-                            <h4 class="modal-title"> 
-                                <div class="alert-icon"> 
-                                    <b>Edit Faktur Piutang : <span id="faktur_piutang_edit"></span></b> 
-                                </div> 
-                            </h4> 
-                        </div> 
-                        <form class="form-horizontal" v-on:submit.prevent="editTbsPembayaranPiutang(inputEditTbsPembayaranPiutang.jumlah_bayar_lama)"> 
-                            <div class="modal-body"> 
-                                <div class="card" style="margin-bottom:1px; margin-top:1px; margin-right:1px; margin-left:1px;">
-
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                                <font style="color: black">Total Piutang</font>
-                                                <money style="text-align:right; font-size: 30px;" readonly="" class="form-control" id="piutang" name="piutang" placeholder="Kredit"  v-model="inputEditTbsPembayaranPiutang.piutang" v-bind="separator" ></money> 
-                                            </div> 
-                                        </div>
-
-                                        <div class="col-md-6">
-                                            <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                                <font style="color: black">Potongan</font>
-                                                <money style="text-align:right; font-size: 30px;" class="form-control" id="potongan" name="potongan" autocomplete="off" placeholder="Kredit"  v-model="inputEditTbsPembayaranPiutang.potongan" v-bind="separator" ref="potongan_edit"></money> 
-                                            </div>                                        
-                                        </div>
-
-                                        <div class="col-md-12">
-                                            <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                                <font style="color: black">Pembayaran(F10)</font>
-                                                <money style="text-align:right" class="form-penjualan" v-shortkey.focus="['f10']" id="jumlah_bayar_edit" name="jumlah_bayar_edit" v-model="inputEditTbsPembayaranPiutang.jumlah_bayar" v-bind="separator"  autocomplete="off" ref="jumlah_bayar_edit"></money> 
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div align="right"  style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                        <button type="submit" class="btn btn-success btn-lg" id="btnTbs"><font style="font-size:20px;">Tambah</font></button>
-
-                                        <button type="button" class="btn btn-default btn-lg"  v-on:click="closeModal()" v-shortkey.push="['esc']" @shortkey="closeModal()"> <font style="font-size:20px;">Tutup(Esc)</font></button>
-                                    </div>
-
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                                    <font style="color: black">Total Piutang</font>
+                                    <money style="text-align:right; font-size: 30px;" readonly="" class="form-control" id="piutang" name="piutang" placeholder="Kredit"  v-model="inputEditTbsPembayaranPiutang.piutang" v-bind="separator" ></money> 
                                 </div> 
                             </div>
-                            <div class="modal-footer">
 
-                            </div> 
-                        </form>
-                    </div>       
-                </div> 
-            </div> 
-            <!-- / MODAL EDIT TBS --> 
-
-            <!-- / MODAL SELESAI --> 
-            <div class="modal" id="modal_selesai" role="dialog" data-backdrop="">
-                <div class="modal-dialog"> 
-                    <!-- Modal content--> 
-                    <div class="modal-content"> 
-                        <div class="modal-header"> 
-                            <button type="button" class="close"  v-on:click="closeModal()" v-shortkey.push="['esc']" @shortkey="closeModal()"> &times;
-                            </button> 
-                            <h4 class="modal-title"> 
-                                <div class="alert-icon"> 
-                                    <b>Silahkan Lengkapi Pembayaran!</b> 
-                                </div> 
-                            </h4>
-                        </div> 
-
-                        <form class="form-horizontal"  v-on:submit.prevent="selesaiPembayaranPiutang()"> 
-                            <div class="modal-body"> 
-                                <div class="card" style="margin-bottom:1px; margin-top:1px; margin-right:1px; margin-left:1px;">
-
-                                    <div class="row">
-                                        <div class="col-md-6 col-xs-12">                                            
-                                            <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                                <font style="color: black">Tanggal</font> 
-                                                <datepicker :input-class="'form-control'" placeholder="Jatuh Tempo" v-model="pembayaranPiutang.tanggal" ref='tanggal'></datepicker>
-                                                <br v-if="errors.tanggal">  <span v-if="errors.tanggal" id="tanggal_error" class="label label-danger">{{ errors.tanggal[0] }}</span>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-5 col-xs-10">
-                                            <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
-                                                <font style="color: black">Kas(F4)</font><br>
-                                                <selectize-component v-model="pembayaranPiutang.kas" :settings="placeholder_kas" id="kas" ref='kas'> 
-                                                    <option v-for="kass, index in kas" v-bind:value="kass.id">{{ kass.nama_kas }}</option>
-                                                </selectize-component>                                                
-                                                <input class="form-control" type="hidden"  v-model="pembayaranPiutang.kas"  name="id_tbs" id="id_tbs"  v-shortkey="['f4']" @shortkey="openSelectizeKas()">
-                                                <br v-if="errors.kas">
-                                                <span v-if="errors.kas" id="kas_error" class="label label-danger">{{ errors.kas[0] }}
-                                                </span>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-1 col-xs-1" style="padding-left:0px">
-                                            <div class="form-group">
-                                                <div class="row" style="margin-top:11px">
-                                                    <button class="btn btn-primary btn-icon waves-effect waves-light" v-on:click="tambahModalKas()" type="button"> <i class="material-icons" >add</i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-12 col-xs-12">
-                                            <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
-                                                <font style="color: black">Keterangan</font><br>
-                                                <textarea v-model="pembayaranPiutang.keterangan" class="form-control" placeholder="Keterangan.." id="keterangan" name="keterangan" ref="keterangan"></textarea>
-                                            </div>
-                                        </div>
-
-                                        <div align="right"  style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                            <button type="submit" class="btn btn-success btn-lg" id="btnTbs"><font style="font-size:20px;">Selesai</font></button>
-
-                                            <button type="button" class="btn btn-default btn-lg"  v-on:click="closeModal()" v-shortkey.push="['esc']" @shortkey="closeModal()"> <font style="font-size:20px;">Tutup(Esc)</font></button>
-                                        </div>
-                                    </div>                                  
-                                </div> 
+                            <div class="col-md-6">
+                                <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                                    <font style="color: black">Potongan</font>
+                                    <money style="text-align:right; font-size: 30px;" class="form-control" id="potongan" name="potongan" autocomplete="off" placeholder="Kredit"  v-model="inputEditTbsPembayaranPiutang.potongan" v-bind="separator" ref="potongan_edit"></money> 
+                                </div>                                        
                             </div>
-                            <div class="modal-footer">  
-                            </div> 
-                        </form>
-                    </div>       
+
+                            <div class="col-md-12">
+                                <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                                    <font style="color: black">Pembayaran(F10)</font>
+                                    <money style="text-align:right" class="form-penjualan" v-shortkey.focus="['f10']" id="jumlah_bayar_edit" name="jumlah_bayar_edit" v-model="inputEditTbsPembayaranPiutang.jumlah_bayar" v-bind="separator"  autocomplete="off" ref="jumlah_bayar_edit"></money> 
+                                </div>
+                            </div>
+                        </div>
+
+                        <div align="right"  style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                            <button type="submit" class="btn btn-success btn-lg" id="btnTbs"><font style="font-size:20px;">Tambah</font></button>
+
+                            <button type="button" class="btn btn-default btn-lg"  v-on:click="closeModal()" v-shortkey.push="['esc']" @shortkey="closeModal()"> <font style="font-size:20px;">Tutup(Esc)</font></button>
+                        </div>
+
+                    </div> 
+                </div>
+                <div class="modal-footer">
+
                 </div> 
+            </form>
+        </div>       
+    </div> 
+</div> 
+<!-- / MODAL EDIT TBS --> 
+
+<!-- / MODAL SELESAI --> 
+<div class="modal" id="modal_selesai" role="dialog" data-backdrop="">
+    <div class="modal-dialog"> 
+        <!-- Modal content--> 
+        <div class="modal-content"> 
+            <div class="modal-header"> 
+                <button type="button" class="close"  v-on:click="closeModal()" v-shortkey.push="['esc']" @shortkey="closeModal()"> &times;
+                </button> 
+                <h4 class="modal-title"> 
+                    <div class="alert-icon"> 
+                        <b>Silahkan Lengkapi Pembayaran!</b> 
+                    </div> 
+                </h4>
             </div> 
-            <!-- / MODAL TOMBOL SELESAI --> 
 
-            <div class="card" style="margin-bottom: 1px; margin-top: 1px;">
-                <div class="card-content">
+            <form class="form-horizontal"  v-on:submit.prevent="selesaiPembayaranPiutang()"> 
+                <div class="modal-body"> 
+                    <div class="card" style="margin-bottom:1px; margin-top:1px; margin-right:1px; margin-left:1px;">
 
-                    <h4 class="card-title" style="margin-bottom: 1px; margin-top: 1px;"> Pembayaran Piutang </h4>
-
-                    <div class="row" style="margin-bottom: 1px; margin-top: 1px;">
-
-                        <div class="col-md-3 col-xs-9">
-                            <div class="card card-produk" style="margin-bottom: 1px; margin-top: 1px;">
-
+                        <div class="row">
+                            <div class="col-md-6 col-xs-12">                                            
+                                <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                                    <font style="color: black">Tanggal</font> 
+                                    <datepicker :input-class="'form-control'" placeholder="Jatuh Tempo" v-model="pembayaranPiutang.tanggal" ref='tanggal'></datepicker>
+                                    <br v-if="errors.tanggal">  <span v-if="errors.tanggal" id="tanggal_error" class="label label-danger">{{ errors.tanggal[0] }}</span>
+                                </div>
+                            </div>
+                            <div class="col-md-5 col-xs-10">
                                 <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
-                                    <selectize-component v-model="inputTbsPembayaranPiutang.penjualan_piutang" :settings="placeholder_piutang" id="penjualan_piutang" ref='penjualan_piutang'> 
-                                        <option v-for="piutangs, index in penjualan_piutang" v-bind:value="piutangs.id">{{piutangs.no_faktur_penjualan}} || {{ piutangs.nama_pelanggan }}</option>
-                                    </selectize-component>
-                                    <input class="form-control" type="hidden"  v-model="inputTbsPembayaranPiutang.id_tbs"  name="id_tbs" id="id_tbs"  v-shortkey="['f1']" @shortkey="openSelectizeFakturPiutang()">
+                                    <font style="color: black">Kas(F4)</font><br>
+                                    <selectize-component v-model="pembayaranPiutang.kas" :settings="placeholder_kas" id="kas" ref='kas'> 
+                                        <option v-for="kass, index in kas" v-bind:value="kass.id">{{ kass.nama_kas }}</option>
+                                    </selectize-component>                                                
+                                    <input class="form-control" type="hidden"  v-model="pembayaranPiutang.kas"  name="id_tbs" id="id_tbs"  v-shortkey="['f4']" @shortkey="openSelectizeKas()">
+                                    <br v-if="errors.kas">
+                                    <span v-if="errors.kas" id="kas_error" class="label label-danger">{{ errors.kas[0] }}
+                                    </span>
                                 </div>
                             </div>
-                        </div>
-                    </div>
 
-
-                    <!--TABEL TBS ITEM  MASUK -->
-                    <div class="row">
-
-                        <div class="col-md-9">
-                            <div class=" table-responsive ">
-                                <div class="pencarian">
-                                    <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
-                                </div>
-                                <table class="table table-striped table-hover" v-if="seen">
-                                    <thead class="text-primary">
-                                        <tr>
-
-                                            <th>No. Faktur</th>
-                                            <th> Pelanggan </th>
-                                            <th class="text-center">Tanggal JT</th>
-                                            <th class="text-right">Piutang</th>
-                                            <th class="text-right">Potongan</th>
-                                            <th class="text-right">Subtotal</th>
-                                            <th class="text-right">Pembayaran</th>
-                                            <th class="text-right">Sisa</th>
-                                            <th class="text-center">Edit</th>
-                                            <th class="text-center">Hapus</th>
-
-                                        </tr>
-                                    </thead>
-                                    <tbody v-if="tbs_pembayaran_piutang.length"  class="data-ada">
-                                        <tr v-for="tbs_pembayaran_piutang, index in tbs_pembayaran_piutang" >
-
-                                            <td>{{ tbs_pembayaran_piutang.no_faktur_penjualan }}</td>
-                                            <td>{{ tbs_pembayaran_piutang.pelanggan }}</td>
-                                            <td align="center">{{ tbs_pembayaran_piutang.jatuh_tempo | tanggal }}</td>
-                                            <td align="right">{{ tbs_pembayaran_piutang.piutang | pemisahTitik }}</td>
-                                            <td align="right">{{ tbs_pembayaran_piutang.potongan | pemisahTitik }}</td>
-                                            <td align="right">{{ tbs_pembayaran_piutang.total | pemisahTitik }}</td>
-                                            <td align="right">{{ tbs_pembayaran_piutang.jumlah_bayar | pemisahTitik }}</td>
-                                            <td align="right">{{ tbs_pembayaran_piutang.sisa_piutang | pemisahTitik }}</td>
-
-                                            <td align="center">
-                                                <a @href="'#edit-pembayaran-piutang/'+tbs_pembayaran_piutang.id_tbs_pembayaran_piutang" class="btn btn-xs btn-success" v-bind:id="'edit-' + tbs_pembayaran_piutang.id_tbs_pembayaran_piutang" v-on:click="editEntry(tbs_pembayaran_piutang.id_tbs_pembayaran_piutang, index, tbs_pembayaran_piutang.no_faktur_penjualan,tbs_pembayaran_piutang.pelanggan,tbs_pembayaran_piutang.jumlah_bayar,tbs_pembayaran_piutang.potongan,tbs_pembayaran_piutang.piutang)">Edit</a>
-                                            </td>
-
-                                            <td align="center">
-                                                <a @href="'#edit-pembayaran-piutang/'+tbs_pembayaran_piutang.id_tbs_pembayaran_piutang" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_pembayaran_piutang.id_tbs_pembayaran_piutang" v-on:click="deleteEntry(tbs_pembayaran_piutang.id_tbs_pembayaran_piutang, index,tbs_pembayaran_piutang.jumlah_bayar,tbs_pembayaran_piutang.no_faktur_penjualan)">Delete</a>
-                                            </td>
-
-                                        </tr>
-                                    </tbody>                    
-                                    <tbody class="data-tidak-ada" v-else>
-                                        <tr ><td colspan="10"  class="text-center">Tidak Ada Data</td></tr>
-                                    </tbody>
-                                </table>    
-
-                                <vue-simple-spinner v-if="loading"></vue-simple-spinner>
-
-                                <div align="right"><pagination :data="tbsPembayaranPiutangData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
-
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-
-                            <div class="card card-stats">
-                                <div class="card-header" data-background-color="blue">
-                                    <i class="material-icons">local_atm</i>
-                                </div>
-                                <div class="card-content">
-                                    <p class="category"><font style="font-size:20px;">Subtotal</font></p>
-                                    <h3 class="card-title"><b><font style="font-size:32px;">{{ pembayaranPiutang.subtotal | pemisahTitik }}</font></b></h3>
-                                </div>
-                                <div class="card-footer">
-                                    <div class="row"> 
-                                        <div class="col-md-5 col-xs-5"> 
-                                            <button type="button" class="btn btn-success" id="bayar" v-on:click="bayarPembayaranPiutang()" v-shortkey.push="['f2']" @shortkey="bayarPembayaranPiutang()" style="padding: 10px 15px;">Bayar(F2)</button>
-                                        </div>
-                                        <div class="col-md-5 col-xs-5">
-                                            <button type="submit" class="btn btn-danger" id="btnBatal" v-on:click="batalPembayaranPiutang()" v-shortkey.push="['f3']" @shortkey="batalPembayaranPiutang()" style="padding: 10px 15px;"> Batal(F3)</button>
-                                        </div>
+                            <div class="col-md-1 col-xs-1" style="padding-left:0px">
+                                <div class="form-group">
+                                    <div class="row" style="margin-top:11px">
+                                        <button class="btn btn-primary btn-icon waves-effect waves-light" v-on:click="tambahModalKas()" type="button"> <i class="material-icons" >add</i>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+
+                            <div class="col-md-12 col-xs-12">
+                                <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
+                                    <font style="color: black">Keterangan</font><br>
+                                    <textarea v-model="pembayaranPiutang.keterangan" class="form-control" placeholder="Keterangan.." id="keterangan" name="keterangan" ref="keterangan"></textarea>
+                                </div>
+                            </div>
+
+                            <div align="right"  style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                                <button type="submit" class="btn btn-success btn-lg" id="btnTbs"><font style="font-size:20px;">Selesai</font></button>
+
+                                <button type="button" class="btn btn-default btn-lg"  v-on:click="closeModal()" v-shortkey.push="['esc']" @shortkey="closeModal()"> <font style="font-size:20px;">Tutup(Esc)</font></button>
+                            </div>
+                        </div>                                  
+                    </div> 
+                </div>
+                <div class="modal-footer">  
+                </div> 
+            </form>
+        </div>       
+    </div> 
+</div> 
+<!-- / MODAL TOMBOL SELESAI --> 
+
+<div class="card" style="margin-bottom: 1px; margin-top: 1px;">
+    <div class="card-content">
+
+        <h4 class="card-title" style="margin-bottom: 1px; margin-top: 1px;"> Pembayaran Piutang </h4>
+
+        <div class="row" style="margin-bottom: 1px; margin-top: 1px;">
+
+            <div class="col-md-3 col-xs-9">
+                <div class="card card-produk" style="margin-bottom: 1px; margin-top: 1px;">
+
+                    <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
+                        <selectize-component v-model="inputTbsPembayaranPiutang.penjualan_piutang" :settings="placeholder_piutang" id="penjualan_piutang" ref='penjualan_piutang'> 
+                            <option v-for="piutangs, index in penjualan_piutang" v-bind:value="piutangs.id">{{piutangs.no_faktur_penjualan}} || {{ piutangs.nama_pelanggan }}</option>
+                        </selectize-component>
+                        <input class="form-control" type="hidden"  v-model="inputTbsPembayaranPiutang.id_tbs"  name="id_tbs" id="id_tbs"  v-shortkey="['f1']" @shortkey="openSelectizeFakturPiutang()">
                     </div>
-
-                    <p style="color: red; font-style: italic;">*Note : Klik Tombol Edit, Untuk Mengubah Nilai.</p>      
-
-
-                </div><!-- / PANEL BODY -->
-
+                </div>
             </div>
         </div>
-    </div>
+
+
+        <!--TABEL TBS ITEM  MASUK -->
+        <div class="row">
+
+            <div class="col-md-9">
+                <div class=" table-responsive ">
+                    <div class="pencarian">
+                        <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
+                    </div>
+                    <table class="table table-striped table-hover" v-if="seen">
+                        <thead class="text-primary">
+                            <tr>
+
+                                <th>No. Faktur</th>
+                                <th> Pelanggan </th>
+                                <th class="text-center">Tanggal JT</th>
+                                <th class="text-right">Piutang</th>
+                                <th class="text-right">Potongan</th>
+                                <th class="text-right">Subtotal</th>
+                                <th class="text-right">Pembayaran</th>
+                                <th class="text-right">Sisa</th>
+                                <th class="text-center">Edit</th>
+                                <th class="text-center">Hapus</th>
+
+                            </tr>
+                        </thead>
+                        <tbody v-if="tbs_pembayaran_piutang.length"  class="data-ada">
+                            <tr v-for="tbs_pembayaran_piutang, index in tbs_pembayaran_piutang" >
+
+                                <td>{{ tbs_pembayaran_piutang.no_faktur_penjualan }}</td>
+                                <td>{{ tbs_pembayaran_piutang.pelanggan }}</td>
+                                <td align="center">{{ tbs_pembayaran_piutang.jatuh_tempo | tanggal }}</td>
+                                <td align="right">{{ tbs_pembayaran_piutang.piutang | pemisahTitik }}</td>
+                                <td align="right">{{ tbs_pembayaran_piutang.potongan | pemisahTitik }}</td>
+                                <td align="right">{{ tbs_pembayaran_piutang.total | pemisahTitik }}</td>
+                                <td align="right">{{ tbs_pembayaran_piutang.jumlah_bayar | pemisahTitik }}</td>
+                                <td align="right">{{ tbs_pembayaran_piutang.sisa_piutang | pemisahTitik }}</td>
+
+                                <td align="center">
+                                    <a @href="'#edit-pembayaran-piutang/'+tbs_pembayaran_piutang.id_tbs_pembayaran_piutang" class="btn btn-xs btn-success" v-bind:id="'edit-' + tbs_pembayaran_piutang.id_tbs_pembayaran_piutang" v-on:click="editEntry(tbs_pembayaran_piutang.id_tbs_pembayaran_piutang, index, tbs_pembayaran_piutang.no_faktur_penjualan,tbs_pembayaran_piutang.pelanggan,tbs_pembayaran_piutang.jumlah_bayar,tbs_pembayaran_piutang.potongan,tbs_pembayaran_piutang.piutang)">Edit</a>
+                                </td>
+
+                                <td align="center">
+                                    <a @href="'#edit-pembayaran-piutang/'+tbs_pembayaran_piutang.id_tbs_pembayaran_piutang" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_pembayaran_piutang.id_tbs_pembayaran_piutang" v-on:click="deleteEntry(tbs_pembayaran_piutang.id_tbs_pembayaran_piutang, index,tbs_pembayaran_piutang.jumlah_bayar,tbs_pembayaran_piutang.no_faktur_penjualan)">Delete</a>
+                                </td>
+
+                            </tr>
+                        </tbody>                    
+                        <tbody class="data-tidak-ada" v-else>
+                            <tr ><td colspan="10"  class="text-center">Tidak Ada Data</td></tr>
+                        </tbody>
+                    </table>    
+
+                    <vue-simple-spinner v-if="loading"></vue-simple-spinner>
+
+                    <div align="right"><pagination :data="tbsPembayaranPiutangData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
+
+                </div>
+            </div>
+            <div class="col-md-3">
+
+                <div class="card card-stats">
+                    <div class="card-header" data-background-color="blue">
+                        <i class="material-icons">local_atm</i>
+                    </div>
+                    <div class="card-content">
+                        <p class="category"><font style="font-size:20px;">Subtotal</font></p>
+                        <h3 class="card-title"><b><font style="font-size:32px;">{{ pembayaranPiutang.subtotal | pemisahTitik }}</font></b></h3>
+                    </div>
+                    <div class="card-footer">
+                        <div class="row"> 
+                            <div class="col-md-5 col-xs-5"> 
+                                <button type="button" class="btn btn-success" id="bayar" v-on:click="bayarPembayaranPiutang()" v-shortkey.push="['f2']" @shortkey="bayarPembayaranPiutang()" style="padding: 10px 15px;">Bayar(F2)</button>
+                            </div>
+                            <div class="col-md-5 col-xs-5">
+                                <button type="submit" class="btn btn-danger" id="btnBatal" v-on:click="batalPembayaranPiutang()" v-shortkey.push="['f3']" @shortkey="batalPembayaranPiutang()" style="padding: 10px 15px;"> Batal(F3)</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <p style="color: red; font-style: italic;">*Note : Klik Tombol Edit, Untuk Mengubah Nilai.</p>      
+
+
+    </div><!-- / PANEL BODY -->
+
+</div>
+</div>
+</div>
 
 </template>
 
@@ -399,37 +459,43 @@
                     keterangan: '',
                     subtotal: 0,
                 }, 
-                placeholder_piutang: {
-                    placeholder: 'Cari Piutang (F1) ...',
-                    sortField: 'text',
-                    openOnFocus : true
-                },
-                placeholder_kas: {
-                    placeholder: '--PILIH KAS--',
-                    sortField: 'text',
-                    openOnFocus : true
-                },
-                pencarian: '',
-                loading: true,
-                seen : false,
-                separator: {
-                    decimal: ',',
-                    thousands: '.',
-                    prefix: '',
-                    suffix: '',
-                    precision: 2,
-                    masked: false /* doesn't work with directive */
-                }
-
+                tambahKas: {
+                  kode_kas : '',
+                  nama_kas : '',
+                  status_kas : 0,
+                  default_kas : 0
+              },
+              placeholder_piutang: {
+                placeholder: 'Cari Piutang (F1) ...',
+                sortField: 'text',
+                openOnFocus : true
+            },
+            placeholder_kas: {
+                placeholder: '--PILIH KAS--',
+                sortField: 'text',
+                openOnFocus : true
+            },
+            pencarian: '',
+            loading: true,
+            seen : false,
+            separator: {
+                decimal: ',',
+                thousands: '.',
+                prefix: '',
+                suffix: '',
+                precision: 2,
+                masked: false /* doesn't work with directive */
             }
-        },
-        mounted() {   
-            var app = this;
-            app.dataPiutang();
-            app.dataKas(); 
-            app.getResults();
-        },
-        watch: {
+
+        }
+    },
+    mounted() {   
+        var app = this;
+        app.dataPiutang();
+        app.dataKas(); 
+        app.getResults();
+    },
+    watch: {
 // whenever question changes, this function will run
 pencarian: function (newQuestion) {
     this.getHasilPencarian()
@@ -842,33 +908,85 @@ methods: {
             app.errors = resp.response.data.errors;
         });
     },
-    closeModal(){
-        this.inputTbsPembayaranPiutang.penjualan_piutang = '';
-        this.inputTbsPembayaranPiutang.piutang = 0
-        this.inputTbsPembayaranPiutang.jumlah_bayar = 0
-        this.inputTbsPembayaranPiutang.potongan = 0
-        this.inputEditTbsPembayaranPiutang.piutang = 0
-        this.inputEditTbsPembayaranPiutang.jumlah_bayar = 0
-        this.inputEditTbsPembayaranPiutang.potongan = 0
-        $("#modal_tbs").hide();
-        $("#modal_edit_tbs").hide();
+    tambahModalKas(){
+        var app = this;
+        $("#modal_tambah_kas").show();
         $("#modal_selesai").hide();
     },
-    alertTbs(pesan) {
-        this.$swal({
-            text: pesan,
-            icon: "warning",
-        });
-    },
-    alert(pesan) {
-        this.$swal({
-            title: "Berhasil ",
-            text: pesan,
-            icon: "success",
-            buttons: false,
-            timer: 1000
-        });
-    }
+    saveFormKas() {
+      var app = this;
+      var newKas = app.tambahKas;
+      axios.post(app.url_tambah_kas, newKas)
+      .then(function (resp) {
+        app.message = 'Menambah '+ app.tambahKas.nama_kas;
+        app.alert(app.message);
+        app.tambahKas.kode_kas = ''
+        app.tambahKas.nama_kas = ''
+        app.tambahKas.status_kas = 0
+        app.tambahKas.default_kas = 0
+        app.errors = '';
+        $("#modal_tambah_kas").hide();
+        $("#modal_selesai").show();
+        app.dataKas();
+    })
+      .catch(function (resp) {
+        app.success = false;
+        app.errors = resp.response.data.errors;
+    });
+  },
+  defaultKas() {
+      var app = this;
+      var toogle = app.tambahKas.default_kas;
+
+      if (toogle == true) {
+        app = this;
+        app.$swal({
+          title: "Konfirmasi",
+          text: "Apakah Anda Yakin Ingin Mengubah Kas Utama ?",
+          icon: "warning",
+          buttons: true,
+          dangerMode: true,
+      })
+        .then((confirm) => {
+          if (confirm) {
+            toogle.prop('checked', true);
+        } else {
+            toogle.prop('checked', false);
+        }
+    });
+    }  
+},
+closeModal(){
+    this.inputTbsPembayaranPiutang.penjualan_piutang = '';
+    this.inputTbsPembayaranPiutang.piutang = 0
+    this.inputTbsPembayaranPiutang.jumlah_bayar = 0
+    this.inputTbsPembayaranPiutang.potongan = 0
+    this.inputEditTbsPembayaranPiutang.piutang = 0
+    this.inputEditTbsPembayaranPiutang.jumlah_bayar = 0
+    this.inputEditTbsPembayaranPiutang.potongan = 0
+    $("#modal_tbs").hide();
+    $("#modal_edit_tbs").hide();
+    $("#modal_selesai").hide();
+},
+closeModalTambahKas(){
+    $("#modal_selesai").show();
+    $("#modal_tambah_kas").hide();    
+},
+alertTbs(pesan) {
+    this.$swal({
+        text: pesan,
+        icon: "warning",
+    });
+},
+alert(pesan) {
+    this.$swal({
+        title: "Berhasil ",
+        text: pesan,
+        icon: "success",
+        buttons: false,
+        timer: 1000
+    });
+}
 }
 }
 </script>
