@@ -742,17 +742,37 @@ export default {
             alert("Tidak dapat Menghapus tbs Pembayaran Hutang");
         });
     },
-    	pilihSuplier() {
-    		if (this.inputTbsPembayaranHutang.suplier == '') {
-    			this.$swal({
-    				text: "Silakan Pilih Supplier Telebih dahulu!",
-    			});
-    		}else{
-    			var app = this;
-    			this.dataSupplierHutang();
-                $("#modal_pilih_hutang").show();
-    		}
-    	},
+    	 pilihSuplier() {
+          var app = this;
+          var supplier = app.inputTbsPembayaranHutang.suplier;
+          if (supplier == '') {
+                  app.$swal({
+                    text: "Silakan Pilih Supplier Telebih dahulu!",
+                  });
+        }else{
+                axios.get(app.url+'/cek-supplier-double/'+supplier).then(function (resp) {
+                    if(resp.data.data_tbs > 0){
+                            if(resp.data.data_supplier.suplier_id != supplier){
+                                  app.$swal({
+                                    text: "Transaksi tidak boleh dari satu supplier !!",
+                                  }); 
+                            }else{
+                               app.dataSupplierHutang();
+                               $("#modal_pilih_hutang").show();
+                            }
+                      }
+                      else{
+                        app.dataSupplierHutang();
+                        $("#modal_pilih_hutang").show();
+                      }
+               })
+              .catch(function (resp) {
+                  
+                  app.loading = false;
+                  alert(resp);
+              });
+        }
+      },
     	dataSupplierHutang(page){
             var app = this;
             var suplier = app.inputTbsPembayaranHutang.suplier.split("|");
@@ -820,7 +840,7 @@ export default {
                         app.loading = false;
                         app.getResults();
                         $("#modal_form_bayar_hutang").hide();
-                        app.alertTbs("Faktur "+app.formBayarHutangTbs.no_faktur+" Sudah Ada, Silakan Pilih Faktur Hutang Lain!");
+                        app.alertTbs("Faktur "+app.formBayarHutangTbs.no_faktur+" Sudah Ada, Silakan Pilih Faktur Hutang Lain! ");
                     }else{
                         var subtotal = parseFloat(app.inputPembayaranHutang.subtotal) + parseFloat(resp.data.jumlah_bayar)
                         app.getResults();

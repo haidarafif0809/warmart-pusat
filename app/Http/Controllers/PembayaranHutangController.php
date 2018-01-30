@@ -341,15 +341,15 @@ class PembayaranHutangController extends Controller
         $pembelian   = Pembelian::find($request->id_pembelian);
         $data_tbs   = TbsPembayaranHutang::where('no_faktur_pembelian', $request->no_faktur)
             ->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
-        $data_suplier_tbs   = TbsPembayaranHutang::select('suplier_id')->where('no_faktur_pembelian', $request->no_faktur)
+        $data_suplier_tbs   = TbsPembayaranHutang::select('suplier_id')
             ->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->get();    
             
          $subtotal_hutang       = $request->nilai_kredit  - $request->potongan;
         //JIKA FAKTUR YG DIPILIH SUDAH ADA DI TBS
-            if ($data_tbs->count() > 0  ) {
+            if ($data_tbs->count() > 0) {
                 return 0;
             }
-             else {
+            else {
                     $tbs_pembayaran_piutang = TbsPembayaranHutang::create([
                             'session_id'          => $session_id,
                             'no_faktur_pembelian' => $request->no_faktur,
@@ -609,8 +609,6 @@ class PembayaranHutangController extends Controller
         return $no_faktur;
     }
 
-
-
     /**
      * Update the specified resource in storage.
      *
@@ -735,6 +733,15 @@ class PembayaranHutangController extends Controller
         $data_tbs_pembayaran_hutang = EditTbsPembayaranHutang::where('no_faktur_pembayaran', $no_faktur)->where('warung_id', Auth::user()->id_warung)->delete();
 
         return response(200);
+    }
+        public function cekSupplierDouble($supplier){
+        $session_id    = session()->getId();
+        $data_suplier_tbs   = TbsPembayaranHutang::where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
+
+        return response()->json([
+            "data_supplier" => $data_suplier_tbs->first(),
+            "data_tbs"      => $data_suplier_tbs->count(),
+        ]);
     }
 
     /**
