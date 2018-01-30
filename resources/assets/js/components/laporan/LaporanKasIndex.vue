@@ -221,17 +221,17 @@
 						<table>
 							<tbody>
 								<tr>
-									<td width="75%">Kas Awal</td>
+									<td width="50%">Kas Awal</td>
 									<td> :&nbsp;</td>
 									<td class="text-right"> Rp. {{totalAwalLaporanKasDetail | pemisahTitik}} </td>
 								</tr>
 								<tr>
-									<td width="75%">Perubahan Kas</td>
+									<td width="50%">Perubahan Kas</td>
 									<td> :&nbsp;</td>
 									<td class="text-right"> Rp. {{totalPerubahanLaporanKasDetail | pemisahTitik}} </td>
 								</tr>
 								<tr>
-									<td width="75%">Kas Akhir</td>
+									<td width="50%">Kas Akhir</td>
 									<td> :&nbsp;</td>
 									<td class="text-right"> Rp. {{totalAkhirLaporanKasDetail | pemisahTitik}} </td>
 								</tr>
@@ -369,21 +369,21 @@
 					app.alertGagal('Silakan Pilih Jenis Laporan Terlebih Dahulu');
 					app.pilihJenisLaporan();
 				}else{
-					app.prosesLaporan();
-					app.totalLaporanKasDetail();   
-
-					app.prosesLaporanKeluar();
-					app.totalLaporanKasKeluarDetail(); 
-
-					app.prosesLaporanMutasiMasuk();
-					app.totalLaporanKasMutasiMasukDetail(); 
-
-					app.prosesLaporanMutasiKeluar();
-					app.totalLaporanKasMutasiKeluarDetail(); 
-
-					app.totalLaporanKas(); 
-
 					if (app.filter.jenis_laporan == 0) {
+						app.prosesLaporan();
+						app.totalLaporanKasDetail();   
+
+						app.prosesLaporanKeluar();
+						app.totalLaporanKasKeluarDetail(); 
+
+						app.prosesLaporanMutasiMasuk();
+						app.totalLaporanKasMutasiMasukDetail(); 
+
+						app.prosesLaporanMutasiKeluar();
+						app.totalLaporanKasMutasiKeluarDetail(); 
+
+						app.totalLaporanKas();
+						
 						$("#span-detail").show();
 						$("#span-rekap").hide();
 						$("#span-kas").show();
