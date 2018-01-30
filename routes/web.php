@@ -768,6 +768,10 @@ Route::post('/laporan-kas/view-rekap', 'LaporanKasController@prosesLaporanKasRek
 Route::post('/laporan-kas/pencarian-rekap', 'LaporanKasController@pencarianLaporanKasRekap')->middleware('auth');
 Route::post('/laporan-kas/subtotal-laporan-kas-rekap-masuk', 'LaporanKasController@subtotalLaporanKasRekapMasuk')->middleware('auth');
 
+Route::post('/laporan-kas/view-keluar-rekap', 'LaporanKasController@prosesLaporanKasKeluarRekap')->middleware('auth');
+Route::post('/laporan-kas/pencarian-keluar-rekap', 'LaporanKasController@pencarianLaporanKasKeluarRekap')->middleware('auth');
+Route::post('/laporan-kas/subtotal-laporan-kas-rekap-keluar', 'LaporanKasController@subtotalLaporanKasRekapKeluar')->middleware('auth');
+
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
     Route::resource('user', 'UserController');
