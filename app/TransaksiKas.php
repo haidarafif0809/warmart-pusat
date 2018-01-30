@@ -34,10 +34,30 @@ class TransaksiKas extends Model
         return $date_format;
     }
 
+    public function tanggalTampil($tangal)
+    {
+        $date        = date_create($tangal);
+        $date_format = date_format($date, "d/m/Y");
+        return $date_format;
+    }
+
     //QUERY PENCARIAN DAN PROSES LAPORAN KAS (DETAIL)
     public function queryLaporanKasDetail($request)
     {
         $query_laporan_kas = TransaksiKas::select(['transaksi_kas.no_faktur', 'transaksi_kas.jenis_transaksi', 'transaksi_kas.jumlah_masuk', 'transaksi_kas.jumlah_keluar', 'transaksi_kas.kas', 'transaksi_kas.created_at', 'kas.nama_kas'])
+            ->leftJoin('kas', 'kas.id', '=', 'transaksi_kas.kas')
+            ->where(DB::raw('DATE(transaksi_kas.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+            ->where(DB::raw('DATE(transaksi_kas.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+            ->where('transaksi_kas.kas', $request->kas)
+            ->where('transaksi_kas.warung_id', Auth::user()->id_warung);
+
+        return $query_laporan_kas;
+    }
+
+    //QUERY PENCARIAN DAN PROSES LAPORAN KAS (REKAP)
+    public function queryLaporanKasRekap($request)
+    {
+        $query_laporan_kas = TransaksiKas::select([DB::raw('IFNULL(SUM(transaksi_kas.jumlah_masuk),0) as jumlah_masuk'), DB::raw('IFNULL(SUM(transaksi_kas.jumlah_keluar),0) as jumlah_keluar'), 'transaksi_kas.kas', 'transaksi_kas.created_at', 'kas.nama_kas'])
             ->leftJoin('kas', 'kas.id', '=', 'transaksi_kas.kas')
             ->where(DB::raw('DATE(transaksi_kas.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
             ->where(DB::raw('DATE(transaksi_kas.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
@@ -220,5 +240,40 @@ class TransaksiKas extends Model
             ->where('warung_id', Auth::user()->id_warung);
 
         return $query_laporan;
+    }
+
+    //DATA KAS MASUK REKAP
+    public function scopeDataKasMasukRekap($query_kas_masuk_rekap, $request)
+    {
+        $query_kas_masuk_rekap = $this->queryLaporanKasRekap($request)
+            ->where('transaksi_kas.jumlah_keluar', 0)
+            ->where('transaksi_kas.jenis_transaksi', '!=', 'kas_mutasi')
+            ->groupBy('transaksi_kas.created_at');
+
+        return $query_kas_masuk_rekap;
+    }
+
+    //CARI KAS MASUK REKAP
+    public function scopeCariKasMasukRekap($query_kas_masuk_rekap, $request)
+    {
+        $search                = $request->search;
+        $query_kas_masuk_rekap = $this->queryLaporanKasRekap($request)
+            ->where('transaksi_kas.jumlah_keluar', 0)
+            ->where('transaksi_kas.jenis_transaksi', '!=', 'kas_mutasi')
+            ->where(function ($query) use ($search) {
+                $query->orwhere('transaksi_kas.created_at', 'LIKE', '%' . $search . '%');
+            })->groupBy('transaksi_kas.created_at');
+
+        return $query_kas_masuk_rekap;
+    }
+
+    //SUBTOTAL KAS MASUK REKAP
+    public function scopeSubtotalLaporanKasMasukRekap($query_kas_masuk, $request)
+    {
+        $query_kas_masuk = $this->querySubtotalLaporanKasDetail($request)
+            ->where('jumlah_keluar', 0)
+            ->where('transaksi_kas.jenis_transaksi', '!=', 'kas_mutasi');
+
+        return $query_kas_masuk;
     }
 }

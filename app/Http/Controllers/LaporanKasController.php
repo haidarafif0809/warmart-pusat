@@ -57,7 +57,8 @@ class LaporanKasController extends Controller
         return $data_laporan_kas;
     }
 
-//KAS MASUK
+//LAPORAN DETAIL
+    //KAS MASUK
     public function prosesLaporanKasDetail(Request $request)
     {
         //KAS MASUK
@@ -198,5 +199,39 @@ class LaporanKasController extends Controller
         return $respon_total;
     }
 //TOTAL KAS
+    //LAPORAN DETAIL
 
+//LAPORAN REKAP
+    //KAS MASUK
+    public function prosesLaporanKasRekap(Request $request)
+    {
+        //KAS MASUK
+        $laporan_kas      = TransaksiKas::dataKasMasukRekap($request)->paginate(10);
+        $data_laporan_kas = $this->foreachLaporan($laporan_kas);
+
+        //DATA PAGINATION
+        $link_view = "view-rekap";
+        $respons   = $this->dataPagination($laporan_kas, $data_laporan_kas, $link_view);
+        return response()->json($respons);
+    }
+
+    public function pencarianLaporanKasRekap(Request $request)
+    {
+        //KAS MASUK
+        $laporan_kas      = TransaksiKas::cariKasMasukRekap($request)->paginate(10);
+        $data_laporan_kas = $this->foreachLaporan($laporan_kas);
+
+        //DATA PAGINATION
+        $link_view = "view-rekap";
+        $respons   = $this->dataPagination($laporan_kas, $data_laporan_kas, $link_view);
+        return response()->json($respons);
+    }
+
+    public function subtotalLaporanKasRekapMasuk(Request $request)
+    {
+        $subtotal_lap_kas_masuk_rekap = TransaksiKas::subtotalLaporanKasMasukRekap($request)->first()->jumlah_masuk;
+        return $subtotal_lap_kas_masuk_rekap;
+    }
+
+//LAPORAN REKAP
 }
