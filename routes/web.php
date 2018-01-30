@@ -762,6 +762,7 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
     Route::resource('laporan-kartu-stok', 'LaporanKartuStokController');
     Route::resource('pembayaran-hutang', 'PembayaranHutangController');
     Route::resource('pembayaran-piutang', 'PembayaranPiutangController');
+    Route::resource('setting-footer', 'SettingFooterController');
 
 //BARANG
     //HALAMAN DESKRIPSI
