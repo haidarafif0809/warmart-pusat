@@ -719,15 +719,36 @@ methods: {
             });
         }, 
        pilihSuplier() {
-            if (this.inputTbsPembayaranHutang.suplier == '') {
-                this.$swal({
-                    text: "Silakan Pilih Supplier Telebih dahulu!",
-                });
-            }else{
-                var app = this;
-                this.dataSupplierHutang();
-                $("#modal_pilih_hutang").show();
-            }
+                  var app = this;
+                  var supplier = app.inputTbsPembayaranHutang.suplier;
+                  var no_faktur_pembayaran = app.formBayarHutangTbs.no_faktur_pembayaran;
+                  if (supplier == '') {
+                          app.$swal({
+                            text: "Silakan Pilih Supplier Telebih dahulu!",
+                          });
+                }else{
+                        axios.get(app.url+'/cek-supplier-double-edit?no_faktur_pembayaran='+no_faktur_pembayaran).then(function (resp) {
+                            if(resp.data.data_tbs > 0){
+                                    if(resp.data.data_supplier.suplier_id != supplier){
+                                          app.$swal({
+                                            text: "Transaksi tidak boleh dari satu supplier !!",
+                                          }); 
+                                    }else{
+                                       app.dataSupplierHutang();
+                                       $("#modal_pilih_hutang").show();
+                                    }
+                              }
+                              else{
+                                app.dataSupplierHutang();
+                                $("#modal_pilih_hutang").show();
+                              }
+                       })
+                      .catch(function (resp) {
+                          
+                          app.loading = false;
+                          alert(resp);
+                      });
+                }
         },
        dataSupplierHutang(page){
             var app = this;

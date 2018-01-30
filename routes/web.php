@@ -687,7 +687,9 @@ Route::get('/pembayaran-hutang/pilih-kas', 'PembayaranHutangController@dataKas')
 Route::get('/pembayaran-hutang/view-detail-pembayaran-hutang/{id}', 'PembayaranHutangController@viewDetail')->middleware('auth');
 Route::get('/pembayaran-hutang/pencarian-detail-pembayaran-hutang/{id}', 'PembayaranHutangController@pencarianDetail')->middleware('auth');
 Route::get('/pembayaran-hutang/subtotal-tbs-pembayaran-hutang/{jenis_tbs}', 'PembayaranHutangController@cekSubtotalTbsPembayaranHutang')->middleware('auth');
-Route::get('/pembayaran-hutang/cek-supplier-double/{supplier}', 'PembayaranHutangController@cekSupplierDouble')->middleware('auth');
+Route::get('/pembayaran-hutang/cek-supplier-double', 'PembayaranHutangController@cekSupplierDouble')->middleware('auth');
+Route::get('/pembayaran-hutang/cek-supplier-double-edit', 'PembayaranHutangController@cekSupplierDoubleEdit')->middleware('auth');
+Route::get('/pembayaran-hutang/cek-total-kas', 'PembayaranHutangController@total_kas')->middleware('auth');
 
 Route::delete('/pembayaran-hutang/proses-hapus-tbs-pembayaran-hutang/{id}', [
     'middleware' => ['auth'],
