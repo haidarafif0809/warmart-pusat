@@ -763,6 +763,10 @@ Route::post('/laporan-kas/subtotal-laporan-kas-detail-mutasi-keluar', 'LaporanKa
 
 Route::post('/laporan-kas/subtotal-laporan-kas-detail', 'LaporanKasController@subtotalLaporanKasDetail')->middleware('auth');
 
+Route::post('/laporan-kas/view-rekap', 'LaporanKasController@prosesLaporanKasRekap')->middleware('auth');
+Route::post('/laporan-kas/pencarian-rekap', 'LaporanKasController@pencarianLaporanKasRekap')->middleware('auth');
+Route::post('/laporan-kas/subtotal-laporan-kas-rekap-masuk', 'LaporanKasController@subtotalLaporanKasRekapMasuk')->middleware('auth');
+
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
     Route::resource('user', 'UserController');
