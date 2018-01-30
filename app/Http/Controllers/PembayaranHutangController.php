@@ -734,10 +734,18 @@ class PembayaranHutangController extends Controller
 
         return response(200);
     }
-        public function cekSupplierDouble($supplier){
+        public function cekSupplierDouble(){
         $session_id    = session()->getId();
         $data_suplier_tbs   = TbsPembayaranHutang::where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
+        return response()->json([
+            "data_supplier" => $data_suplier_tbs->first(),
+            "data_tbs"      => $data_suplier_tbs->count(),
+        ]);
+    }
 
+    public function cekSupplierDoubleEdit(Request $request){
+        $session_id    = session()->getId();
+        $data_suplier_tbs   = EditTbsPembayaranHutang::where('no_faktur_pembayaran', $request->no_faktur_pembayaran)->where('warung_id', Auth::user()->id_warung);
         return response()->json([
             "data_supplier" => $data_suplier_tbs->first(),
             "data_tbs"      => $data_suplier_tbs->count(),

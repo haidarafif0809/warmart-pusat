@@ -750,7 +750,7 @@ export default {
                     text: "Silakan Pilih Supplier Telebih dahulu!",
                   });
         }else{
-                axios.get(app.url+'/cek-supplier-double/'+supplier).then(function (resp) {
+                axios.get(app.url+'/cek-supplier-double').then(function (resp) {
                     if(resp.data.data_tbs > 0){
                             if(resp.data.data_supplier.suplier_id != supplier){
                                   app.$swal({
