@@ -198,4 +198,27 @@ class TransaksiKas extends Model
 
         return $query_kas_mutasi_keluar;
     }
+
+    //TOTAL AWAL KAS
+    public function scopeTotalAwalLaporan($query_laporan, $request)
+    {
+        $query_laporan = TransaksiKas::select([DB::raw('IFNULL(SUM(jumlah_masuk),0) - IFNULL(SUM(jumlah_keluar),0) as kas_awal')])
+            ->where(DB::raw('DATE(created_at)'), '<', $this->tanggalSql($request->dari_tanggal))
+            ->where('kas', $request->kas)
+            ->where('warung_id', Auth::user()->id_warung);
+
+        return $query_laporan;
+    }
+
+    //TOTAL AKHIR KAS
+    public function scopeTotalAkhirLaporan($query_laporan, $request)
+    {
+        $query_laporan = TransaksiKas::select([DB::raw('IFNULL(SUM(jumlah_masuk),0) - IFNULL(SUM(jumlah_keluar),0) as kas_akhir')])
+            ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+            ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+            ->where('kas', $request->kas)
+            ->where('warung_id', Auth::user()->id_warung);
+
+        return $query_laporan;
+    }
 }

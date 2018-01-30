@@ -185,4 +185,18 @@ class LaporanKasController extends Controller
     }
 //KAS MUTASI (KELUAR)
 
+//TOTAL KAS
+    public function subtotalLaporanKasDetail(Request $request)
+    {
+        $total_awal  = TransaksiKas::totalAwalLaporan($request)->first()->kas_awal;
+        $total_akhir = TransaksiKas::totalAkhirLaporan($request)->first()->kas_akhir;
+
+        $respon_total['total_awal']    = $total_awal;
+        $respon_total['total_akhir']   = $total_awal + $total_akhir;
+        $respon_total['perubahan_kas'] = ($total_awal + $total_akhir) - $total_awal;
+
+        return $respon_total;
+    }
+//TOTAL KAS
+
 }
