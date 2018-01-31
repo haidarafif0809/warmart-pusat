@@ -1177,7 +1177,7 @@ class PembelianController extends Controller
             $alamat_suplier = $pembelian['alamat_suplier'];
         }
 
-        $detail_pembelian = DetailPembelian::with('produk')->where('no_faktur', $pembelian['no_faktur'])->get();
+        $detail_pembelian = DetailPembelian::with('produk')->where('no_faktur', $pembelian['no_faktur'])->where('warung_id',Auth::user()->id_warung)->get();
         $terbilang        = $this->kekata($pembelian->total);
         $subtotal         = 0;
         foreach ($detail_pembelian as $detail_pembelians) {
