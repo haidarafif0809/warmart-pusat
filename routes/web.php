@@ -754,6 +754,7 @@ Route::get('/pembayaran-piutang/view-edit-tbs-pembayaran-piutang/{id}', 'Pembaya
 Route::get('/pembayaran-piutang/pencarian-edit-tbs-pembayaran-piutang/{id}', 'PembayaranPiutangController@pencarianTbsEdit')->middleware('auth');
 Route::post('/pembayaran-piutang/proses-tambah-edit-tbs-pembayaran-piutang/{id}', 'PembayaranPiutangController@prosesEditTbsPembayaranPiutang')->middleware('auth');
 Route::delete('/pembayaran-piutang/proses-hapus-edit-tbs-pembayaran-piutang/{id}', 'PembayaranPiutangController@prosesHapusEditTbsPenjualan')->middleware('auth');
+Route::get('/pembayaran-piutang/edit-pembayaran-piutang/{id}', 'PembayaranPiutangController@editPembayaranPiutang')->middleware('auth');
 
 //LAPORAN KAS DETAIL
 Route::get('/laporan-kas/pilih-kas', 'LaporanKasController@dataKas')->middleware('auth');

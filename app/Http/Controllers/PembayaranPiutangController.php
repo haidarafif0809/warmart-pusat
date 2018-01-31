@@ -96,6 +96,7 @@ class PembayaranPiutangController extends Controller
                 'id'         => $pembayaran_piutangs->id,
                 'no_faktur'  => $pembayaran_piutangs->no_faktur,
                 'waktu'      => $pembayaran_piutangs->Waktu,
+                'waktu_edit' => $pembayaran_piutangs->WaktuEdit,
                 'total'      => $pembayaran_piutangs->getTotalSeparator(),
                 'kas'        => $pembayaran_piutangs->nama_kas,
                 'keterangan' => $pembayaran_piutangs->keterangan,
@@ -180,6 +181,13 @@ class PembayaranPiutangController extends Controller
         $no_faktur = $pembayaran_piutang->no_faktur_pembayaran;
 
         return $no_faktur;
+    }
+
+    public function tanggalSql($tangal)
+    {
+        $date        = date_create($tangal);
+        $date_format = date_format($date, "Y-m-d");
+        return $date_format;
     }
 
     public function view()
@@ -307,12 +315,15 @@ class PembayaranPiutangController extends Controller
             return 0;
         } else {
             //INSERT PEMBAYARAN PIUTANG
+            $jam                = date("h:i:s");
             $pembayaran_piutang = PembayaranPiutang::create([
                 'no_faktur_pembayaran' => $no_faktur,
                 'total'                => $request->subtotal,
                 'cara_bayar'           => $request->kas,
                 'keterangan'           => $request->keterangan,
                 'warung_id'            => $warung_id,
+                'created_at'           => $this->tanggalSql($request->tanggal) . " " . $jam,
+                'updated_at'           => $this->tanggalSql($request->tanggal) . " " . $jam,
             ]);
 
             // INSERT DETAIL PEMBAYARAN PIUTANG
@@ -327,6 +338,8 @@ class PembayaranPiutangController extends Controller
                     'jumlah_bayar'         => $data_tbs->jumlah_bayar,
                     'pelanggan_id'         => $data_tbs->pelanggan_id,
                     'warung_id'            => $data_tbs->warung_id,
+                    'created_at'           => $this->tanggalSql($request->tanggal) . " " . $jam,
+                    'updated_at'           => $this->tanggalSql($request->tanggal) . " " . $jam,
                 ]);
 
                 // INSERT TRANSAKSI PIUTANG TIDAK DIBUAT DI OBSERVER KARENA DI OBSERVER ID PENJUALAN DI ANGGAP NULL
@@ -545,6 +558,12 @@ class PembayaranPiutangController extends Controller
         return response(200);
     }
 
+    public function editPembayaranPiutang($id)
+    {
+        $pembayaran_piutang = PembayaranPiutang::find($id);
+        return response()->json($pembayaran_piutang);
+    }
+
     public function update(Request $request, $id)
     {
 //START TRANSAKSI
@@ -577,10 +596,13 @@ class PembayaranPiutangController extends Controller
             return 0;
         } else {
 //UPDATE PEMBAYARAN
+            $jam = date("h:i:s");
             $pembayaran_piutang->update([
                 'total'      => $request->subtotal,
                 'cara_bayar' => $request->kas,
                 'keterangan' => $request->keterangan,
+                'created_at' => $this->tanggalSql($request->tanggal) . " " . $jam,
+                'updated_at' => $this->tanggalSql($request->tanggal) . " " . $jam,
             ]);
 
             // INSERT DETAIL PEMBAYARAN PIUTANG
@@ -595,6 +617,8 @@ class PembayaranPiutangController extends Controller
                     'jumlah_bayar'         => $data_tbs->jumlah_bayar,
                     'pelanggan_id'         => $data_tbs->pelanggan_id,
                     'warung_id'            => $data_tbs->warung_id,
+                    'created_at'           => $this->tanggalSql($request->tanggal) . " " . $jam,
+                    'updated_at'           => $this->tanggalSql($request->tanggal) . " " . $jam,
                 ]);
 
                 // INSERT TRANSAKSI PIUTANG TIDAK DIBUAT DI OBSERVER KARENA DI OBSERVER ID PENJUALAN DI ANGGAP NULL
