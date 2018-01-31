@@ -264,6 +264,16 @@ class TransaksiKas extends Model
         return $query_kas_keluar_rekap;
     }
 
+    //DATA KAS MUTASI MASUK (REKAP)
+    public function scopeDataKasMutasiMasukRekap($query_kas_mutasi_masuk, $request)
+    {
+        $query_kas_mutasi_masuk = $this->queryLaporanKasRekap($request)
+            ->where('transaksi_kas.jumlah_keluar', 0)
+            ->where('transaksi_kas.jenis_transaksi', '=', 'kas_mutasi');
+
+        return $query_kas_mutasi_masuk;
+    }
+
     //CARI KAS MASUK REKAP
     public function scopeCariKasMasukRekap($query_kas_masuk_rekap, $request)
     {

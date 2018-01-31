@@ -110,7 +110,7 @@ class LaporanKasController extends Controller
         $data_laporan_kas = $this->foreachLaporan($laporan_kas);
 
         //DATA PAGINATION
-        $link_view = "view";
+        $link_view = "view-keluar";
         $respons   = $this->dataPagination($laporan_kas, $data_laporan_kas, $link_view);
         return response()->json($respons);
     }
@@ -130,7 +130,7 @@ class LaporanKasController extends Controller
         $data_laporan_kas = $this->foreachLaporan($laporan_kas);
 
         //DATA PAGINATION
-        $link_view = "view-keluar";
+        $link_view = "view-mutasi-masuk";
         $respons   = $this->dataPagination($laporan_kas, $data_laporan_kas, $link_view);
         return response()->json($respons);
     }
@@ -142,7 +142,7 @@ class LaporanKasController extends Controller
         $data_laporan_kas = $this->foreachLaporan($laporan_kas);
 
         //DATA PAGINATION
-        $link_view = "view";
+        $link_view = "view-mutasi-masuk";
         $respons   = $this->dataPagination($laporan_kas, $data_laporan_kas, $link_view);
         return response()->json($respons);
     }
@@ -162,7 +162,7 @@ class LaporanKasController extends Controller
         $data_laporan_kas = $this->foreachLaporan($laporan_kas);
 
         //DATA PAGINATION
-        $link_view = "view-keluar";
+        $link_view = "view-mutasi-keluar";
         $respons   = $this->dataPagination($laporan_kas, $data_laporan_kas, $link_view);
         return response()->json($respons);
     }
@@ -174,7 +174,7 @@ class LaporanKasController extends Controller
         $data_laporan_kas = $this->foreachLaporan($laporan_kas);
 
         //DATA PAGINATION
-        $link_view = "view";
+        $link_view = "view-mutasi-keluar";
         $respons   = $this->dataPagination($laporan_kas, $data_laporan_kas, $link_view);
         return response()->json($respons);
     }
@@ -242,7 +242,7 @@ class LaporanKasController extends Controller
         $data_laporan_kas = $this->foreachLaporan($laporan_kas);
 
         //DATA PAGINATION
-        $link_view = "view-rekap";
+        $link_view = "view-keluar-rekap";
         $respons   = $this->dataPagination($laporan_kas, $data_laporan_kas, $link_view);
         return response()->json($respons);
     }
@@ -254,7 +254,7 @@ class LaporanKasController extends Controller
         $data_laporan_kas = $this->foreachLaporan($laporan_kas);
 
         //DATA PAGINATION
-        $link_view = "view-rekap";
+        $link_view = "view-keluar-rekap";
         $respons   = $this->dataPagination($laporan_kas, $data_laporan_kas, $link_view);
         return response()->json($respons);
     }
@@ -266,5 +266,19 @@ class LaporanKasController extends Controller
     }
     //KAS KELUAR
 
-//LAPORAN REKAP
+//KAS MUTASI (MASUK) REKAP
+    public function prosesLaporanKasMutasiMasukRekap(Request $request)
+    {
+        //KAS MUTASI (MASUK)
+        $laporan_kas      = TransaksiKas::dataKasMutasiMasukRekap($request)->paginate(10);
+        $data_laporan_kas = $this->foreachLaporan($laporan_kas);
+
+        //DATA PAGINATION
+        $link_view = "view-mutasi-masuk-rekap";
+        $respons   = $this->dataPagination($laporan_kas, $data_laporan_kas, $link_view);
+        return response()->json($respons);
+    }
+
+//KAS MUTASI (MASUK) REKAP
+    //LAPORAN REKAP
 }
