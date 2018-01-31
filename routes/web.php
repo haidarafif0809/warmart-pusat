@@ -665,6 +665,15 @@ Route::get('/laporan-pembelian-produk/pilih-supplier', 'LaporanPembelianProdukCo
 Route::get('/laporan-pembelian-produk/download-excel-pembelian-produk/{dari_tanggal}/{sampai_tanggal}/{produk}/{suplier}', 'LaporanPembelianProdukController@downloadExcel')->middleware('auth');
 Route::get('/laporan-pembelian-produk/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{produk}/{suplier}', 'LaporanPembelianProdukController@cetakLaporan')->middleware('auth');
 
+// LAPORAN PENJUALAN /PRODUK VUE.JS
+Route::post('/laporan-penjualan-pos-produk/view', 'LaporanPenjualanPosProdukController@prosesLaporanPenjualanPosProduk')->middleware('auth');
+Route::post('/laporan-penjualan-pos-produk/pencarian', 'LaporanPenjualanPosProdukController@pencarian')->middleware('auth');
+Route::post('/laporan-penjualan-pos-produk/total-penjualan-pos-produk', 'LaporanPenjualanPosProdukController@totalPenjualanPosProduk')->middleware('auth');
+Route::get('/laporan-penjualan-pos-produk/pilih-produk', 'LaporanPenjualanPosProdukController@dataProduk')->middleware('auth');
+Route::get('/laporan-penjualan-pos-produk/pilih-pelanggan', 'LaporanPenjualanPosProdukController@dataPelanggan')->middleware('auth');
+Route::get('/laporan-penjualan-pos-produk/download-excel-penjualan-produk/{dari_tanggal}/{sampai_tanggal}/{produk}/{suplier}', 'LaporanPenjualanPosProdukController@downloadExcel')->middleware('auth');
+Route::get('/laporan-penjualan-pos-produk/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{produk}/{suplier}', 'LaporanPenjualanPosProdukController@cetakLaporan')->middleware('auth');
+
 // LAPORAN KARTU STOK VUE.JS
 Route::post('/laporan-kartu-stok/view', 'LaporanKartuStokController@prosesLaporanKartuStok')->middleware('auth');
 Route::post('/laporan-kartu-stok/pencarian', 'LaporanKartuStokController@pencarian')->middleware('auth');

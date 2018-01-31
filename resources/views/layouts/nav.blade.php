@@ -159,7 +159,7 @@
 </li>
 
 <li>
-    <a data-toggle="collapse" href="#pembayaran" class="disabled-menu"> 
+    <a data-toggle="collapse" href="#pembayaran" class="disabled-menu">
         <i class="material-icons">
             local_atm
         </i>
@@ -186,7 +186,7 @@
 </li>
 
 <li>
-    <a data-toggle="collapse" href="#laporan" class="disabled-menu"> 
+    <a data-toggle="collapse" href="#laporan" class="disabled-menu">
         <i class="material-icons">
             assignment
         </i>
@@ -255,6 +255,16 @@
                     </span>
                     <span class="sidebar-normal">
                         Laporan Penjualan
+                    </span>
+                </router-link>
+            </li>
+             <li>
+                <router-link :to="{name: 'indexLaporanPenjualanPosProduk'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        LP
+                    </span>
+                    <span class="sidebar-normal">
+                        Laporan Penjualan Pos / Produk
                     </span>
                 </router-link>
             </li>
