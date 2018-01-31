@@ -8,7 +8,7 @@ use Yajra\Auditable\AuditableTrait;
 class DetailPembayaranPiutang extends Model
 {
     use AuditableTrait;
-    protected $fillable   = ['no_faktur_pembayaran', 'no_faktur_penjualan', 'jatuh_tempo', 'piutang', 'potongan', 'jumlah_bayar', 'pelanggan_id', 'warung_id'];
+    protected $fillable   = ['no_faktur_pembayaran', 'no_faktur_penjualan', 'jatuh_tempo', 'piutang', 'potongan', 'jumlah_bayar', 'pelanggan_id', 'warung_id', 'created_at', 'updated_at'];
     protected $primaryKey = 'id_detail_pembayaran_piutang';
 
     // DATA DETAIL PEMBAYARAN PIUTANG

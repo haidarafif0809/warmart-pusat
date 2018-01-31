@@ -359,7 +359,7 @@
 								<tr>
 									<td width="50%">Kas Awal</td>
 									<td> :&nbsp;</td>
-									<td class="text-right"> Rp. {{totalAwalLaporanKasDetail | pemisahTitik}} </td>
+									<td class="text-right"> Rp. {{totalAwalLaporanKas | pemisahTitik}} </td>
 								</tr>
 								<tr>
 									<td width="50%">Perubahan Kas</td>
@@ -369,7 +369,7 @@
 								<tr>
 									<td width="50%">Kas Akhir</td>
 									<td> :&nbsp;</td>
-									<td class="text-right"> Rp. {{totalAkhirLaporanKasDetail | pemisahTitik}} </td>
+									<td class="text-right"> Rp. {{totalAkhirLaporanKas | pemisahTitik}} </td>
 								</tr>
 							</tbody>
 						</table>
@@ -413,9 +413,9 @@
 				laporanKasMutasiKeluarDetailData: {},
 				subtotalLaporanKasMutasiKeluarDetail: '',
 
-				totalAwalLaporanKasDetail: '',
+				totalAwalLaporanKas: '',
 				totalPerubahanLaporanKasDetail: '',
-				totalAkhirLaporanKasDetail: '',				
+				totalAkhirLaporanKas: '',				
 
 				laporanKasRekap: [],
 				laporanKasRekapData: {},
@@ -570,6 +570,8 @@
 
 						app.prosesLaporanMutasiKeluarRekap();
 						app.totalLaporanKasMutasiKeluarRekap();
+
+						app.totalLaporanKas();
 
 						$("#span-detail").hide();
 						$("#span-rekap").show();
@@ -945,30 +947,14 @@
 				axios.post(app.url+'/subtotal-laporan-kas-detail', newFilter)
 				.then(function (resp) {
 					console.log(resp.data);
-					app.totalAwalLaporanKasDetail = resp.data.total_awal;
-					app.totalAkhirLaporanKasDetail = resp.data.total_akhir;
+					app.totalAwalLaporanKas = resp.data.total_awal;
+					app.totalAkhirLaporanKas = resp.data.total_akhir;
 					app.totalPerubahanLaporanKasDetail = resp.data.perubahan_kas;
 					app.loading = false
 				})
 				.catch(function (resp) {
 					console.log(resp);
 					alert("Tidak Dapat Memuat Total Kas");
-				});
-			},
-			totalLaporanKasKeluarDetail() {
-				var app = this;	
-				var newFilter = app.filter;
-
-				app.loading = true,
-				axios.post(app.url+'/subtotal-laporan-kas-detail-keluar', newFilter)
-				.then(function (resp) {
-					app.subtotalLaporanKasKeluarDetail = resp.data;
-					app.loading = false
-					console.log(resp.data)
-				})
-				.catch(function (resp) {
-					console.log(resp);
-					alert("Tidak Dapat Memuat Subtotal Laporan Kas");
 				});
 			},
 
@@ -1037,6 +1023,7 @@
 					alert("Tidak Dapat Memuat Subtotal Laporan Kas");
 				});
 			},
+
 
 			downloadExcel() {
 				var app = this;	
