@@ -104,7 +104,6 @@ import PenjualanDetail from './components/penjualan/PenjualanDetail.vue';
 import PenjualanOnlineDetail from './components/penjualan/PenjualanOnlineDetail.vue';
 import PenjualanProsesEdit from './components/penjualan/PenjualanProsesEdit.vue';
 import PenjualanEdit from './components/penjualan/PenjualanEdit.vue';
-
 // LAPORAN LABA KOTOR
 import LaporanLabaKotorIndex from './components/laporan/LaporanLabaKotorIndex.vue';
 // LAPORAN LABA KOTOR PRODUK
@@ -113,22 +112,20 @@ import LaporanLabaKotorProdukIndex from './components/laporan/LaporanLabaKotorPr
 import LaporanMutasiStokIndex from './components/laporan/LaporanMutasiStokIndex.vue';
 // LAPORAN PEMBELIAN /PRODUK
 import LaporanPembelianProdukIndex from './components/laporan/LaporanPembelianProdukIndex.vue';
+// LAPORAN PENJUALAN /PRODUK
+import LaporanPenjualanPosProdukIndex from './components/laporan/LaporanPenjualanPosProdukIndex.vue';
 // PENDAFTARAN TOPOS
 import PendaftaranToposIndex from './components/pendaftaran_topos/PendaftaranToposIndex.vue';
 import PendaftaranToposList from './components/pendaftaran_topos/PendaftaranToposList.vue';
 import PendaftaranToposDetail from './components/pendaftaran_topos/PendaftaranToposDetail.vue';
-
 // LAPORAN KARTU STOK
 import LaporanKartuStokIndex from './components/laporan/LaporanKartuStokIndex.vue';
-
 //PEMBAYARAN HUTANG
 import PembayaranHutangIndex from './components/pembayaran_hutang/PembayaranHutangIndex.vue';
 import PembayaranHutangCreate from './components/pembayaran_hutang/PembayaranHutangCreate.vue';
 import PembayaranHutangDetail from './components/pembayaran_hutang/PembayaranHutangDetail.vue';
 import PembayaranHutangEdit from './components/pembayaran_hutang/PembayaranHutangEdit.vue';
 import PembayaranHutangProsesEdit from './components/pembayaran_hutang/PembayaranHutangProsesEdit.vue';
-
-
 //PEMBAYARAN PIUTANG
 import PembayaranPiutangIndex from './components/pembayaran_piutang/PembayaranPiutangIndex.vue';
 import PembayaranPiutangDetail from './components/pembayaran_piutang/PembayaranPiutangDetail.vue';
@@ -137,104 +134,103 @@ import PembayaranPiutangEdit from './components/pembayaran_piutang/PembayaranPiu
 import PembayaranPiutangProsesEdit from './components/pembayaran_piutang/PembayaranPiutangProsesEdit.vue';
 // LAPORAN KAS
 import LaporanKasIndex from './components/laporan/LaporanKasIndex.vue';
-
 const routes = [{
-    path: '/',
-    components: {
-        dashboardIndex: DashboardAdminIndex
+        path: '/',
+        components: {
+            dashboardIndex: DashboardAdminIndex
+        },
+        name: 'indexDashboard'
+    }, {
+        path: '/create-bank',
+        component: BankCreate,
+        name: 'createBank'
+    }, {
+        path: '/satuan',
+        component: SatuanIndex,
+        name: 'indexSatuan'
+    }, {
+        path: '/bank',
+        component: BankIndex,
+        name: 'indexBank'
+    }, {
+        path: '/user',
+        component: UserIndex,
+        name: 'indexUser'
     },
-    name: 'indexDashboard'
-}, {
-    path: '/create-bank',
-    component: BankCreate,
-    name: 'createBank'
-}, {
-    path: '/satuan',
-    component: SatuanIndex,
-    name: 'indexSatuan'
-}, {
-    path: '/bank',
-    component: BankIndex,
-    name: 'indexBank'
-}, {
-    path: '/user',
-    component: UserIndex,
-    name: 'indexUser'
-},
-/*CUSTOMER*/
-{
-    path: '/customer',
-    component: CustomerIndex,
-    name: 'indexCustomer'
-},
-/*ERROR LOG*/
-{
-    path: '/error',
-    component: ErrorIndex,
-    name: 'indexError'
-}, {
-    path: '/edit-bank/:id',
-    component: BankEdit,
-    name: 'editBank'
-}, {
-    path: '/lazy_load',
-    component: LazyIndex,
-    name: 'indexLazy'
-}, {
-    path: '/create-satuan',
-    component: SatuanCreate,
-    name: 'createSatuan'
-}, {
-    path: '/edit-satuan/:id',
-    component: SatuanEdit,
-    name: 'editSatuan'
-},
-/*CUSTOMER*/
-{
-    path: '/create-customer',
-    component: CustomerCreate,
-    name: 'createCustomer'
-}, {
-    path: '/edit-customer/:id',
-    component: CustomerEdit,
-    name: 'editCustomer'
-}, {
-    path: '/detail-customer/:id',
-    component: CustomerDetail,
-    name: 'detailCustomer'
-}, {
-    path: '/create-user',
-    component: UserCreate,
-    name: 'createUser'
-}, {
-    path: '/edit-user/:id',
-    component: UserEdit,
-    name: 'editUser'
-},
-/**Warung*/
-{
-    path: '/warung',
-    component: WarungIndex,
-    name: 'indexWarung'
-}, {
-    path: '/create-warung',
-    component: WarungCreate,
-    name: 'createWarung'
-}, {
-    path: '/edit-warung/:id',
-    component: WarungEdit,
-    name: 'editWarung'
-},
-/**USER WARUNG*/
-{
-    path: '/user-warung',
-    component: UserWarungIndex,
-    name: 'indexUserWarung'
-}, {
-    path: '/edit-user-warung/:id',
-    component: UserWarungEdit,
-    name: 'editUserWarung'
-},
+    /*CUSTOMER*/
+    {
+        path: '/customer',
+        component: CustomerIndex,
+        name: 'indexCustomer'
+    },
+    /*ERROR LOG*/
+    {
+        path: '/error',
+        component: ErrorIndex,
+        name: 'indexError'
+    }, {
+        path: '/edit-bank/:id',
+        component: BankEdit,
+        name: 'editBank'
+    }, {
+        path: '/lazy_load',
+        component: LazyIndex,
+        name: 'indexLazy'
+    }, {
+        path: '/create-satuan',
+        component: SatuanCreate,
+        name: 'createSatuan'
+    }, {
+        path: '/edit-satuan/:id',
+        component: SatuanEdit,
+        name: 'editSatuan'
+    },
+    /*CUSTOMER*/
+    {
+        path: '/create-customer',
+        component: CustomerCreate,
+        name: 'createCustomer'
+    }, {
+        path: '/edit-customer/:id',
+        component: CustomerEdit,
+        name: 'editCustomer'
+    }, {
+        path: '/detail-customer/:id',
+        component: CustomerDetail,
+        name: 'detailCustomer'
+    }, {
+        path: '/create-user',
+        component: UserCreate,
+        name: 'createUser'
+    }, {
+        path: '/edit-user/:id',
+        component: UserEdit,
+        name: 'editUser'
+    },
+    /**Warung*/
+    {
+        path: '/warung',
+        component: WarungIndex,
+        name: 'indexWarung'
+    }, {
+        path: '/create-warung',
+        component: WarungCreate,
+        name: 'createWarung'
+    }, {
+        path: '/edit-warung/:id',
+        component: WarungEdit,
+        name: 'editWarung'
+    },
+    /**USER WARUNG*/
+    {
+        path: '/user-warung',
+        component: UserWarungIndex,
+        name: 'indexUserWarung'
+    }, {
+        path: '/edit-user-warung/:id',
+        component: UserWarungEdit,
+        name: 'editUserWarung'
+    },
     // Komunitas
     {
         path: '/komunitas',
@@ -434,7 +430,7 @@ const routes = [{
         path: '/edit-pembelian/:id',
         component: PembelianEdit,
         name: 'editPembelian'
-    },  {
+    }, {
         path: '/detail-pembelian/:id',
         component: PembelianDetail,
         name: 'detailPembelian'
@@ -496,18 +492,15 @@ const routes = [{
         path: '/edit-penjualan/:id',
         component: PenjualanEdit,
         name: 'editPenjualan'
-    },
-    {
+    }, {
         path: '/detail-penjualan/:id',
         component: PenjualanDetail,
         name: 'detailPenjualan'
-    },
-    {
+    }, {
         path: '/proses-edit-penjualan/:id',
         component: PenjualanProsesEdit,
         name: 'prosesEditPenjualan'
-    },
-    {
+    }, {
         path: '/detail-penjualan-online/:id',
         component: PenjualanOnlineDetail,
         name: 'detailPenjualanOnline'
@@ -536,18 +529,22 @@ const routes = [{
         component: LaporanPembelianProdukIndex,
         name: 'indexLaporanPembelianProduk'
     },
+    // LAPORAN PENJUALAN / PRODUK
+    {
+        path: '/laporan-penjualan-pos-produk',
+        component: LaporanPenjualanPosProdukIndex,
+        name: 'indexLaporanPenjualanPosProduk'
+    },
     // PENDAFTARAN TOPOS
     {
         path: '/daftar-topos',
         component: PendaftaranToposIndex,
         name: 'indexPendaftaranTopos'
-    },
-    {
+    }, {
         path: '/user-topos',
         component: PendaftaranToposList,
         name: 'listPendaftaranTopos'
-    },
-    {
+    }, {
         path: '/detail-user-topos/:id',
         component: PendaftaranToposDetail,
         name: 'detailPendaftaranTopos'
@@ -563,22 +560,19 @@ const routes = [{
         path: '/pembayaran-hutang',
         component: PembayaranHutangIndex,
         name: 'indexPembayaranHutang'
-    },{
+    }, {
         path: '/create-pembayaran-hutang',
         component: PembayaranHutangCreate,
         name: 'createPembayaranHutang'
-    },
-        {
+    }, {
         path: '/detail-pembayaran-hutang/:id',
         component: PembayaranHutangDetail,
         name: 'detailPembayaranHutang'
-    },
-    {
+    }, {
         path: '/edit-pembayaran-hutang/:id',
         component: PembayaranHutangEdit,
         name: 'editPembayaranHutang'
-    },
-    {
+    }, {
         path: '/proses-edit-pembayaran-hutang/:id',
         component: PembayaranHutangProsesEdit,
         name: 'prosesEditPembayaranHutang'
@@ -588,23 +582,19 @@ const routes = [{
         path: '/pembayaran-piutang',
         component: PembayaranPiutangIndex,
         name: 'indexPembayaranPiutang'
-    },
-    {
+    }, {
         path: '/detail-pembayaran-piutang/:id',
         component: PembayaranPiutangDetail,
         name: 'detailPembayaranPiutang'
-    },
-    {
+    }, {
         path: '/create-pembayaran-piutang',
         component: PembayaranPiutangCreate,
         name: 'createPembayaranPiutang'
-    },
-    {
+    }, {
         path: '/edit-pembayaran-piutang/:id',
         component: PembayaranPiutangEdit,
         name: 'editPembayaranPiutang'
-    },
-    {
+    }, {
         path: '/proses-edit-pembayaran-piutang/:id',
         component: PembayaranPiutangProsesEdit,
         name: 'prosesEditPembayaranPiutang'
@@ -615,7 +605,5 @@ const routes = [{
         component: LaporanKasIndex,
         name: 'indexLaporanKas'
     }
-
-
-    ]
-    export default routes;
+]
+export default routes;
