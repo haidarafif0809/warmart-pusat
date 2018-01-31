@@ -171,20 +171,20 @@ Route::get('pesanan-detail/{id}', [
     'uses'       => 'PesananPelangganController@detailPesananPelanggan',
 ]);
 
-Route::get('/provinsi-destinasi-pengiriman', [ 
-    'middleware' => ['auth'], 
-    'uses'       => 'PemesananController@dataProvinsi', 
-]); 
+Route::get('/provinsi-destinasi-pengiriman', [
+    'middleware' => ['auth'],
+    'uses'       => 'PemesananController@dataProvinsi',
+]);
 
-Route::get('/kota-destinasi-pengiriman', [ 
-    'middleware' => ['auth'], 
-    'uses'       => 'PemesananController@dataKota', 
-]); 
+Route::get('/kota-destinasi-pengiriman', [
+    'middleware' => ['auth'],
+    'uses'       => 'PemesananController@dataKota',
+]);
 
-Route::get('/hitung-ongkir', [ 
-    'middleware' => ['auth'], 
-    'uses'       => 'PemesananController@hitungOngkir', 
-]); 
+Route::get('/hitung-ongkir', [
+    'middleware' => ['auth'],
+    'uses'       => 'PemesananController@hitungOngkir',
+]);
 
 //BATAL PESANAN PELANGGAN
 Route::get('batal-pesanan-pelanggan/{id}', 'PesananPelangganController@batalPesananPelanggan')->middleware('auth');
