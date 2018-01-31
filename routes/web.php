@@ -23,6 +23,8 @@ Route::get('copy-produk-alfatih', function () {
     }
 });
 
+
+
 Route::get('/tentang-warmart', 'HomeController@index');
 
 Route::get('/cek-deposit', 'PortaPulsaController@cekDeposit');
@@ -156,6 +158,22 @@ Route::put('proses/selesaikan-pemesanan', [
     'as'         => 'selesaikan-pemesanan.proses',
     'uses'       => 'PemesananController@prosesSelesaikanPemesanan',
 ]);
+
+Route::get('/provinsi-destinasi-pengiriman', [
+    'middleware' => ['auth'],
+    'uses'       => 'PemesananController@dataProvinsi',
+]);
+
+Route::get('/kota-destinasi-pengiriman', [
+    'middleware' => ['auth'],
+    'uses'       => 'PemesananController@dataKota',
+]);
+
+Route::get('/hitung-ongkir', [
+    'middleware' => ['auth'],
+    'uses'       => 'PemesananController@hitungOngkir',
+]);
+
 
 //PUNYA PESANAN PELANGGAN
 Route::get('/pesanan', [
@@ -688,7 +706,6 @@ Route::get('/pembayaran-hutang/view-detail-pembayaran-hutang/{id}', 'PembayaranH
 Route::get('/pembayaran-hutang/pencarian-detail-pembayaran-hutang/{id}', 'PembayaranHutangController@pencarianDetail')->middleware('auth');
 Route::get('/pembayaran-hutang/subtotal-tbs-pembayaran-hutang/{jenis_tbs}', 'PembayaranHutangController@cekSubtotalTbsPembayaranHutang')->middleware('auth');
 Route::get('/pembayaran-hutang/cek-supplier-double', 'PembayaranHutangController@cekSupplierDouble')->middleware('auth');
-Route::get('/pembayaran-hutang/cek-supplier-double-edit', 'PembayaranHutangController@cekSupplierDoubleEdit')->middleware('auth');
 Route::get('/pembayaran-hutang/cek-total-kas', 'PembayaranHutangController@total_kas')->middleware('auth');
 
 Route::delete('/pembayaran-hutang/proses-hapus-tbs-pembayaran-hutang/{id}', [
@@ -715,6 +732,8 @@ Route::get('/pembayaran-hutang/pencarian-edit-tbs-pembayaran-hutang/{id}', 'Pemb
 Route::post('/pembayaran-hutang/proses-tambah-tbs-edit-pembayaran-hutang/{id}', 'PembayaranHutangController@prosesTbsEditPembayaranHutang')->middleware('auth');
 Route::delete('/pembayaran-hutang/proses-hapus-tbs-edit-pembayaran-hutang/{id}', 'PembayaranHutangController@prosesHapusEditTbsPembayaranHutang')->middleware('auth');
 Route::get('/pembayaran-hutang/cek-data-tbs-pembayan-hutang/{id}', 'PembayaranHutangController@cekDataTbsPembayaranHutang')->middleware('auth');
+Route::get('/pembayaran-hutang/cek-supplier-double-edit', 'PembayaranHutangController@cekSupplierDoubleEdit')->middleware('auth');
+Route::get('/pembayaran-hutang/cek-total-kas-edit', 'PembayaranHutangController@total_kas_edit')->middleware('auth');
 
 Route::post('/pembayaran-hutang/edit-jumlah-tbs-edit-pembayaran-hutang', [
     'middleware' => ['auth'],

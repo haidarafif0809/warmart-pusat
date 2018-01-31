@@ -213,7 +213,7 @@ class KeranjangBelanjaController extends Controller
             </div>
             </div>
             <div class="col-sm-8">
-            <h6><a href="' . url('detail-produk/' . $keranjang_belanjaans->id_produk . '') . '">' . $this->namaProduk($keranjang_belanjaans->produk->nama_barang) . '</a> </h6>
+            <font><b><a href="' . url('detail-produk/' . $keranjang_belanjaans->id_produk . '') . '">' . $this->namaProduk($keranjang_belanjaans->produk->nama_barang) . '</a></b> </font>
             <p><small> ' . $keranjang_belanjaans->produk->warung->name . '</small></p>
             </div>
             </div>

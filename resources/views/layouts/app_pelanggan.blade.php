@@ -46,10 +46,10 @@
 </link>
 </head>
 <style type="text/css">
-    .navbar-nav .open .dropdown-menu{
-      color: grey;
-  }
-  .navbar .navbar-brand {
+.navbar-nav .open .dropdown-menu{
+  color: grey;
+}
+.navbar .navbar-brand {
     position: relative;
     height: 75px;
     line-height: 30px;
@@ -61,6 +61,40 @@ body {
     background-color: #2ac326;
     color: #3C4858;
     @endif
+}
+@keyframes spinner {
+  to {transform: rotate(360deg);}
+}
+
+.spinner:before {
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin-top: -10px;
+  margin-left: -10px;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+  border-top-color: #333;
+  animation: spinner .6s linear infinite;
+}
+
+.selectize-control .option .title {
+    display: block;
+}
+.selectize-control .option .url {
+    font-size: 12px;
+    display: block;
+    color: #a0a0a0;
+}
+.selectize-control .item a {
+    color: #006ef5;
+}
+.selectize-control .item.active a {
+    color: #303030;
 }
 </style>
 <body class="ecommerce-page">
