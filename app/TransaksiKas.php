@@ -274,6 +274,16 @@ class TransaksiKas extends Model
         return $query_kas_mutasi_masuk;
     }
 
+    //DATA KAS MUTASI KELUAR (REKAP)
+    public function scopeDataKasMutasiKeluarRekap($query_kas_mutasi_keluar, $request)
+    {
+        $query_kas_mutasi_keluar = $this->queryLaporanKasRekap($request)
+            ->where('transaksi_kas.jumlah_masuk', 0)
+            ->where('transaksi_kas.jenis_transaksi', '=', 'kas_mutasi');
+
+        return $query_kas_mutasi_keluar;
+    }
+
     //CARI KAS MASUK REKAP
     public function scopeCariKasMasukRekap($query_kas_masuk_rekap, $request)
     {
@@ -316,6 +326,20 @@ class TransaksiKas extends Model
         return $query_kas_mutasi_masuk_rekap;
     }
 
+    //CARI KAS MUTASI (KELUAR)
+    public function scopeCariKasMutasiKeluarRekap($query_kas_mutasi_keluar_rekap, $request)
+    {
+        $search                        = $request->search;
+        $query_kas_mutasi_keluar_rekap = $this->queryLaporanKasRekap($request)
+            ->where('transaksi_kas.jumlah_masuk', 0)
+            ->where('transaksi_kas.jenis_transaksi', '=', 'kas_mutasi')
+            ->where(function ($query) use ($search) {
+                $query->orwhere('transaksi_kas.created_at', 'LIKE', '%' . $search . '%');
+            })->groupBy(DB::raw('DATE(transaksi_kas.created_at)'));
+
+        return $query_kas_mutasi_keluar_rekap;
+    }
+
     //SUBTOTAL KAS MASUK REKAP
     public function scopeSubtotalLaporanKasMasukRekap($query_kas_masuk, $request)
     {
@@ -337,10 +361,20 @@ class TransaksiKas extends Model
     }
 
     //SUBTOTAL KAS MUTASI (MASUK) REKAP
-    public function scopeSubtotalLaporanKasMutasiMasukRekap($query_kas_keluar, $request)
+    public function scopeSubtotalLaporanKasMutasiMasukRekap($query_kas_masuk, $request)
+    {
+        $query_kas_masuk = $this->querySubtotalLaporanKasDetail($request)
+            ->where('jumlah_keluar', 0)
+            ->where('transaksi_kas.jenis_transaksi', '=', 'kas_mutasi');
+
+        return $query_kas_masuk;
+    }
+
+    //SUBTOTAL KAS MUTASI (KELUAR) REKAP
+    public function scopeSubtotalLaporanKasMutasiKeluarRekap($query_kas_keluar, $request)
     {
         $query_kas_keluar = $this->querySubtotalLaporanKasDetail($request)
-            ->where('jumlah_keluar', 0)
+            ->where('jumlah_masuk', 0)
             ->where('transaksi_kas.jenis_transaksi', '=', 'kas_mutasi');
 
         return $query_kas_keluar;
