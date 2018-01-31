@@ -524,7 +524,7 @@
 						app.totalLaporanKasKeluarRekap();
 
 						app.prosesLaporanMutasiMasukRekap();
-						// app.totalLaporanKasMutasiMasukDetail();
+						app.totalLaporanKasMutasiMasukRekap();
 
 						$("#span-detail").hide();
 						$("#span-rekap").show();
@@ -773,6 +773,23 @@
 					alert("Tidak Dapat Memuat Laporan Kas Keluar Rekap");
 				});
 			},
+			getHasilPencarianMutasiMasukRekap(page){
+				var app = this;
+				var newFilter = app.filter;
+				if (typeof page === 'undefined') {
+					page = 1;
+				}
+				axios.post(app.url+'/pencarian-mutasi-masuk-rekap?search='+app.pencarian_mutasi_masuk_rekap+'&page='+page, newFilter)
+				.then(function (resp) {
+					console.log(resp.data.data)
+					app.laporanKasMutasiMasukRekap = resp.data.data;
+					app.laporanKasMutasiMasukRekapData = resp.data;
+				})
+				.catch(function (resp) {
+					console.log(resp);
+					alert("Tidak Dapat Memuat Laporan Kas Mutasi (Masuk) Rekap");
+				});
+			},
 
 
 			totalLaporanKasDetail() {
@@ -899,6 +916,22 @@
 				axios.post(app.url+'/subtotal-laporan-kas-rekap-keluar', newFilter)
 				.then(function (resp) {
 					app.subtotalLaporanKasKeluarRekap = resp.data;
+					app.loading = false
+					console.log(resp.data)
+				})
+				.catch(function (resp) {
+					console.log(resp);
+					alert("Tidak Dapat Memuat Subtotal Laporan Kas");
+				});
+			},
+			totalLaporanKasMutasiMasukRekap() {
+				var app = this;	
+				var newFilter = app.filter;
+
+				app.loading = true,
+				axios.post(app.url+'/subtotal-laporan-kas-rekap-mutasi-masuk', newFilter)
+				.then(function (resp) {
+					app.subtotalLaporanKasMutasiMasukRekap = resp.data;
 					app.loading = false
 					console.log(resp.data)
 				})
