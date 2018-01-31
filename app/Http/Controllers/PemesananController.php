@@ -178,4 +178,99 @@ class PemesananController extends Controller
 
     }
 
+    public function dataProvinsi(){
+     $curl = curl_init();
+
+     curl_setopt_array($curl, array(
+      CURLOPT_URL => "https://api.rajaongkir.com/starter/province",
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_ENCODING => "",
+      CURLOPT_MAXREDIRS => 10,
+      CURLOPT_TIMEOUT => 30,
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+      CURLOPT_CUSTOMREQUEST => "GET",
+      CURLOPT_HTTPHEADER => array(
+        "key: f038d4bff2cc5732df792e9b97cae16d"
+    ),
+  ));
+
+     $response = curl_exec($curl);
+     $err = curl_error($curl);
+
+     curl_close($curl);
+
+     if ($err) {
+      echo "cURL Error #:" . $err;
+  } else {
+   echo $response;
+
+}
+
+
+}
+
+public function dataKota(Request $request){
+    $curl = curl_init();
+
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => "https://api.rajaongkir.com/starter/city?province=".$request->id_provinsi,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => "",
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 30,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => "GET",
+        CURLOPT_HTTPHEADER => array(
+            "key: f038d4bff2cc5732df792e9b97cae16d"
+        ),
+    ));
+
+    $response = curl_exec($curl);
+    $err = curl_error($curl);
+
+    curl_close($curl);
+
+    if ($err) {
+      echo "cURL Error #:" . $err;
+  } else {
+      echo $response;
+  }
+}
+
+public function hitungOngkir(Request $request){
+
+    $origin = $request->kota_pengirim;
+    $destination = $request->kota_tujuan;
+    $weight = $request->berat_barang;
+    $courier = $request->kurir;
+
+    $curl = curl_init();
+
+    curl_setopt_array($curl, array(
+      CURLOPT_URL => "https://api.rajaongkir.com/starter/cost",
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_ENCODING => "",
+      CURLOPT_MAXREDIRS => 10,
+      CURLOPT_TIMEOUT => 30,
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+      CURLOPT_CUSTOMREQUEST => "POST",
+      CURLOPT_POSTFIELDS => "origin=".$origin."&destination=".$destination."&weight=".$weight."&courier=".$courier,//origin = ID kota atau kabupaten asal, destination = ID kota atau kabupaten tujuan, weight = Berat kiriman dalam gram,courier = Kode kurir: jne, pos, tiki. cek lengkapnya  https://rajaongkir.com/dokumentasi/starter
+      CURLOPT_HTTPHEADER => array(
+        "content-type: application/x-www-form-urlencoded",
+        "key: f038d4bff2cc5732df792e9b97cae16d"
+    ),
+  ));
+
+    $response = curl_exec($curl);
+    $err = curl_error($curl);
+
+    curl_close($curl);
+
+    if ($err) {
+      echo "cURL Error #:" . $err;
+  } else {
+      echo $response;
+  }
+}
+
 }

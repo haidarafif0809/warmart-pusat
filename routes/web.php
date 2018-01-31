@@ -23,6 +23,8 @@ Route::get('copy-produk-alfatih', function () {
     }
 });
 
+
+
 Route::get('/tentang-warmart', 'HomeController@index');
 
 Route::get('/cek-deposit', 'PortaPulsaController@cekDeposit');
@@ -156,6 +158,22 @@ Route::put('proses/selesaikan-pemesanan', [
     'as'         => 'selesaikan-pemesanan.proses',
     'uses'       => 'PemesananController@prosesSelesaikanPemesanan',
 ]);
+
+Route::get('/provinsi-destinasi-pengiriman', [
+    'middleware' => ['auth'],
+    'uses'       => 'PemesananController@dataProvinsi',
+]);
+
+Route::get('/kota-destinasi-pengiriman', [
+    'middleware' => ['auth'],
+    'uses'       => 'PemesananController@dataKota',
+]);
+
+Route::get('/hitung-ongkir', [
+    'middleware' => ['auth'],
+    'uses'       => 'PemesananController@hitungOngkir',
+]);
+
 
 //PUNYA PESANAN PELANGGAN
 Route::get('/pesanan', [
@@ -774,6 +792,10 @@ Route::post('/laporan-kas/subtotal-laporan-kas-rekap-masuk', 'LaporanKasControll
 Route::post('/laporan-kas/view-keluar-rekap', 'LaporanKasController@prosesLaporanKasKeluarRekap')->middleware('auth');
 Route::post('/laporan-kas/pencarian-keluar-rekap', 'LaporanKasController@pencarianLaporanKasKeluarRekap')->middleware('auth');
 Route::post('/laporan-kas/subtotal-laporan-kas-rekap-keluar', 'LaporanKasController@subtotalLaporanKasRekapKeluar')->middleware('auth');
+
+Route::post('/laporan-kas/view-mutasi-masuk-rekap', 'LaporanKasController@prosesLaporanKasMutasiMasukRekap')->middleware('auth');
+Route::post('/laporan-kas/pencarian-mutasi-masuk-rekap', 'LaporanKasController@pencarianLaporanKasMutasiMasukRekap')->middleware('auth');
+Route::post('/laporan-kas/subtotal-laporan-kas-rekap-mutasi-masuk', 'LaporanKasController@subtotalLaporanKasRekapMutasiMasuk')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
