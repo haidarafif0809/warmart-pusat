@@ -41,6 +41,64 @@
 				<li class="active">Tambah Pembayaran Hutang</li>
 			</ul>
 
+      <div class="modal" id="modal_tambah_kas" role="dialog" data-backdrop=""> 
+        <div class="modal-dialog"> 
+          <!-- Modal content--> 
+          <div class="modal-content"> 
+            <div class="modal-header"> 
+              <button type="button" class="close"  v-on:click="closeModalTambahKas()" v-shortkey.push="['esc']" @shortkey="closeModalTambahKas()"> &times;</button> 
+              <h4 class="modal-title"> 
+                <div class="alert-icon"> 
+                  <b>Silahkan Isi Kas!</b> 
+                </div> 
+              </h4> 
+            </div> 
+            <div class="modal-body">
+              <form v-on:submit.prevent="saveFormKas()" class="form-horizontal"> 
+                <div class="form-group">
+                  <label for="kode_kas" class="col-md-3 control-label">Kode Kas</label>
+                  <div class="col-md-9">
+                    <input class="form-control" autocomplete="off" placeholder="Kode Kas" v-model="tambahKas.kode_kas" type="text" name="kode_kas" id="kode_kas"  autofocus="">
+                    <span v-if="errors.kode_kas" id="kode_kas_error" class="label label-danger">{{ errors.kode_kas[0] }}</span>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="nama_kas" class="col-md-3 control-label">Nama Kas</label>
+                  <div class="col-md-9">
+                    <input class="form-control" autocomplete="off" placeholder="Nama Kas" v-model="tambahKas.nama_kas" type="text" name="nama_kas" id="nama_kas"  >
+                    <span v-if="errors.nama_kas" id="nama_kas_error" class="label label-danger">{{ errors.nama_kas[0] }}</span>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="nama_kas" class="col-md-3 control-label">Tampil Transaksi</label>
+                  <div class="togglebutton col-md-9">
+                    <label>
+                      <b>No</b>  <input type="checkbox" v-model="tambahKas.status_kas" value="1" name="status_kas" id="status_kas"><b>Yes</b>
+                    </label>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="nama_kas" class="col-md-3 control-label">Default Kas</label>
+                  <div class="togglebutton col-md-9">
+                    <label>
+                      <b>No</b>  <input type="checkbox" v-on:change="defaultKas()" v-model="tambahKas.default_kas" value="1" name="default_kas" id="default_kas"><b>Yes</b>
+                    </label>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="col-md-9 col-md-offset-3">
+                    <p style="color: red; font-style: italic;">*Note : Hanya 1 Kas yang dijadikan default.</p>
+                    <button class="btn btn-primary" id="btnSimpanKas" type="submit"><i class="material-icons">send</i> Submit</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">  
+            </div> 
+          </div>       
+        </div> 
+      </div> 
+      <!-- / MODAL TOMBOL SELESAI --> 
 
           <div class="modal" id="modal_pilih_hutang" role="dialog" data-backdrop=""> 
                   <div class="modal-dialog modal-lg"> 
@@ -390,15 +448,16 @@
 export default {
 	data: function () {
 		return {
-			errors: [],
-			suplier: [],
-            cara_bayar:[],
+			     errors: [],
+			     suplier: [],
+            kas:[],
 		      	tbs_pembayaran_hutang: [],
-			       tbsPembayaranHutangData : {},
+			      tbsPembayaranHutangData : {},
             dataSuplierHutang : [],
             dataSuplierHutangData: {},
 			     url : window.location.origin+(window.location.pathname).replace("dashboard", "pembayaran-hutang"),
             url_kas : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
+            url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
 		      	placeholder_suplier: {
 				    placeholder: '--PILIH SUPLIER (F1)--',
             sortField: 'text',
@@ -433,6 +492,12 @@ export default {
                 tanggal: new Date,
                 keterangan: '',
             },
+            tambahKas: {
+              kode_kas : '',
+              nama_kas : '',
+              status_kas : 0,
+              default_kas : 0
+            },
            separator: {
               decimal: ',',
               thousands: '.',
@@ -453,8 +518,6 @@ export default {
 		app.dataSuplier();
     app.dataKas();
 		app.getResults();
-    app.dataSupplierHutang();
-    app.getSubtotalTbs();
 	},
 	watch: {
         // whenever question changes, this function will run
@@ -510,6 +573,7 @@ export default {
             var jumlah_bayar = parseFloat(this.formBayarHutangTbs.nilai_kredit) - parseFloat(potonganTbs)
             this.formBayarHutangTbs.jumlah_bayar = jumlah_bayar.toFixed(2)
         },
+        
         jumlahBayarHutang(){
             var app = this;
             var jumlah_bayar = app.formBayarHutangTbs.jumlah_bayar
@@ -678,17 +742,37 @@ export default {
             alert("Tidak dapat Menghapus tbs Pembayaran Hutang");
         });
     },
-    	pilihSuplier() {
-    		if (this.inputTbsPembayaranHutang.suplier == '') {
-    			this.$swal({
-    				text: "Silakan Pilih Supplier Telebih dahulu!",
-    			});
-    		}else{
-    			var app = this;
-    			this.dataSupplierHutang();
-                $("#modal_pilih_hutang").show();
-    		}
-    	},
+    	 pilihSuplier() {
+          var app = this;
+          var supplier = app.inputTbsPembayaranHutang.suplier;
+          if (supplier == '') {
+                  app.$swal({
+                    text: "Silakan Pilih Supplier Telebih dahulu!",
+                  });
+        }else{
+                axios.get(app.url+'/cek-supplier-double').then(function (resp) {
+                    if(resp.data.data_tbs > 0){
+                            if(resp.data.data_supplier.suplier_id != supplier){
+                                  app.$swal({
+                                    text: "Transaksi tidak boleh dari satu supplier !!",
+                                  }); 
+                            }else{
+                               app.dataSupplierHutang();
+                               $("#modal_pilih_hutang").show();
+                            }
+                      }
+                      else{
+                        app.dataSupplierHutang();
+                        $("#modal_pilih_hutang").show();
+                      }
+               })
+              .catch(function (resp) {
+                  
+                  app.loading = false;
+                  alert(resp);
+              });
+        }
+      },
     	dataSupplierHutang(page){
             var app = this;
             var suplier = app.inputTbsPembayaranHutang.suplier.split("|");
@@ -756,7 +840,7 @@ export default {
                         app.loading = false;
                         app.getResults();
                         $("#modal_form_bayar_hutang").hide();
-                        app.alertTbs("Faktur "+app.formBayarHutangTbs.no_faktur+" Sudah Ada, Silakan Pilih Faktur Hutang Lain!");
+                        app.alertTbs("Faktur "+app.formBayarHutangTbs.no_faktur+" Sudah Ada, Silakan Pilih Faktur Hutang Lain! ");
                     }else{
                         var subtotal = parseFloat(app.inputPembayaranHutang.subtotal) + parseFloat(resp.data.jumlah_bayar)
                         app.getResults();
@@ -856,9 +940,10 @@ export default {
           }
         });
         },//END BATAL PEMBAYARAN HUTANG
-     bayarPembayaranHutang(){        
+     bayarPembayaranHutang(){  
+        var app = this;    
+        app.dataKas();  
         $("#modal_selesai").show();
-        this.$refs.keterangan.$el.focus()
     },
     selesaiPembayaranHutang(){
         this.$swal({
@@ -875,32 +960,101 @@ export default {
     prosesSelesaiPembayaranHutang(value){
         var app = this;
         var newPembayaranHutang = app.inputPembayaranHutang;
+        var kas = app.inputPembayaranHutang.kas;
+        var subtotal = app.inputPembayaranHutang.subtotal;
         app.loading = true;
+        
+        axios.get(app.url+'/cek-total-kas?kas='+kas)
+              .then(function (resp) {
+                if (resp.data.total_kas == '' || resp.data.total_kas == null) {
+                  var total_kas = 0;
+                }else{
+                  var total_kas = resp.data.total_kas;
+                }
+                  var data_tbs_pembayaran_hutang = resp.data.data_tbs_pembayaran_hutang;
+                   var hitung_sisa_kas = parseFloat(total_kas) - parseFloat(subtotal);
 
-        axios.post(app.url,newPembayaranHutang)
-        .then(function (resp) {
+                      if (hitung_sisa_kas >= 0) {
+                           if (data_tbs_pembayaran_hutang == 0){
+                          swal('Oops...','Belum Ada Transaksi Hutang Yang Diinputkan','error'); 
+                      }
+                      else{
+                      axios.post(app.url,newPembayaranHutang)
+                      .then(function (resp) {
+                          if (resp.data == 0) {
+                              app.alertTbs("Anda Belum Memasukan Faktur Pembelian Hutang");
+                              app.loading = false;
+                          }else{
+                              app.alert("Menyelesaikan Transaksi Pembayaran Hutang");
+                              app.inputPembayaranHutang.tanggal = new Date;
+                              app.inputPembayaranHutang.keterangan = ''
+                              app.inputPembayaranHutang.subtotal = 0
 
-            if (resp.data == 0) {
-                app.alertTbs("Anda Belum Memasukan Faktur Pembelian Hutang");
-                app.loading = false;
-            }else{
-                app.alert("Menyelesaikan Transaksi Pembayaran Hutang");
-                app.inputPembayaranHutang.tanggal = new Date;
-                app.inputPembayaranHutang.keterangan = ''
-                app.inputPembayaranHutang.subtotal = 0
-
-                $("#modal_selesai").hide();
-                app.loading = false;                
-                app.$router.replace('/pembayaran-hutang');
-            }
-        })
-        .catch(function (resp) {
-            console.log(resp);              
-            app.loading = false;
-            alert("Tidak dapat Menyelesaikan Transaksi Pembayaran Hutang");        
-            app.errors = resp.response.data.errors;
+                              $("#modal_selesai").hide();
+                              app.loading = false;                
+                              app.$router.replace('/pembayaran-hutang');
+                          }
+                      })
+                      .catch(function (resp) {
+                          console.log(resp);              
+                          app.loading = false;
+                          alert("Tidak dapat Menyelesaikan Transaksi Pembayaran Hutang");        
+                          app.errors = resp.response.data.errors;
+                      });
+                    }
+             }else{
+                swal('Oops...','Kas Anda Tidak Cukup Untuk Melakukan Pembayaran','error');
+              }
         });
     },
+    tambahModalKas(){
+         var app = this;
+          $("#modal_tambah_kas").show();
+           $("#modal_selesai").hide();
+        },
+        saveFormKas() {
+          var app = this;
+          var newkas = app.tambahKas;
+          axios.post(app.url_tambah_kas, newkas)
+          .then(function (resp) {
+            app.message = 'Menambah '+ app.tambahKas.nama_kas;
+            app.alert(app.message);
+            app.tambahKas.kode_kas = ''
+            app.tambahKas.nama_kas = ''
+            app.tambahKas.status_kas = 0
+            app.tambahKas.default_kas = 0
+            app.errors = '';
+            $("#modal_tambah_kas").hide();
+             $("#modal_selesai").show();
+             app.dataKas();
+          })
+          .catch(function (resp) {
+            app.success = false;
+            app.errors = resp.response.data.errors;
+          });
+        },
+        defaultKas() {
+          var app = this;
+          var toogle = app.tambahKas.default_kas;
+
+          if (toogle == true) {
+            app = this;
+            app.$swal({
+              title: "Konfirmasi",
+              text: "Apakah Anda Yakin Ingin Mengubah Kas Utama ?",
+              icon: "warning",
+              buttons: true,
+              dangerMode: true,
+            })
+            .then((confirm) => {
+              if (confirm) {
+                toogle.prop('checked', true);
+              } else {
+                toogle.prop('checked', false);
+              }
+            });
+          }  
+        },
         closeModalX(){
         $("#modal_pilih_hutang").hide(); 
         },
@@ -910,6 +1064,13 @@ export default {
         },
         closeModalEditBayarHutang(){
           $("#modal_form_edit_bayar_hutang").hide();
+        },
+        closeModalSelesai(){
+          $("#modal_selesai").hide(); 
+        },
+       closeModalTambahKas(){
+        $("#modal_selesai").show();
+        $("#modal_tambah_kas").hide();    
         },
     	   alertTbs(pesan) {
     		  this.$swal({

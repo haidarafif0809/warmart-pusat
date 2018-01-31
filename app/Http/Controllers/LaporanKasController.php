@@ -15,16 +15,16 @@ class LaporanKasController extends Controller
         return response()->json($kas);
     }
 
-    public function dataPagination($laporan_kas, $data_laporan_kas)
+    public function dataPagination($laporan_kas, $data_laporan_kas, $link_view)
     {
         $respons['current_page']   = $laporan_kas->currentPage();
         $respons['data']           = $data_laporan_kas;
-        $respons['first_page_url'] = url('/laporan-kas/view?page=' . $laporan_kas->firstItem());
+        $respons['first_page_url'] = url('/laporan-kas/' . $link_view . '?page=' . $laporan_kas->firstItem());
         $respons['from']           = 1;
         $respons['last_page']      = $laporan_kas->lastPage();
-        $respons['last_page_url']  = url('/laporan-kas/view?page=' . $laporan_kas->lastPage());
+        $respons['last_page_url']  = url('/laporan-kas/' . $link_view . '?page=' . $laporan_kas->lastPage());
         $respons['next_page_url']  = $laporan_kas->nextPageUrl();
-        $respons['path']           = url('/laporan-kas/view');
+        $respons['path']           = url('/laporan-kas/' . $link_view . '');
         $respons['per_page']       = $laporan_kas->perPage();
         $respons['prev_page_url']  = $laporan_kas->previousPageUrl();
         $respons['to']             = $laporan_kas->perPage();
@@ -57,7 +57,8 @@ class LaporanKasController extends Controller
         return $data_laporan_kas;
     }
 
-//KAS MASUK
+//LAPORAN DETAIL
+    //KAS MASUK
     public function prosesLaporanKasDetail(Request $request)
     {
         //KAS MASUK
@@ -84,7 +85,7 @@ class LaporanKasController extends Controller
 
     public function subtotalLaporanKasDetailMasuk(Request $request)
     {
-        $subtotal_lap_kas_masuk_detail = TransaksiKas::subtotalLaporanKasMasukDetail($request)->first()->subtotal;
+        $subtotal_lap_kas_masuk_detail = TransaksiKas::subtotalLaporanKasMasukDetail($request)->first()->jumlah_masuk;
         return $subtotal_lap_kas_masuk_detail;
     }
 //KAS MASUK
@@ -109,14 +110,14 @@ class LaporanKasController extends Controller
         $data_laporan_kas = $this->foreachLaporan($laporan_kas);
 
         //DATA PAGINATION
-        $link_view = "view";
+        $link_view = "view-keluar";
         $respons   = $this->dataPagination($laporan_kas, $data_laporan_kas, $link_view);
         return response()->json($respons);
     }
 
     public function subtotalLaporanKasDetailKeluar(Request $request)
     {
-        $subtotal_lap_kas_keluar_detail = TransaksiKas::subtotalLaporanKasKeluarDetail($request)->first()->subtotal;
+        $subtotal_lap_kas_keluar_detail = TransaksiKas::subtotalLaporanKasKeluarDetail($request)->first()->jumlah_keluar;
         return $subtotal_lap_kas_keluar_detail;
     }
 //KAS KELUAR
@@ -129,7 +130,7 @@ class LaporanKasController extends Controller
         $data_laporan_kas = $this->foreachLaporan($laporan_kas);
 
         //DATA PAGINATION
-        $link_view = "view-keluar";
+        $link_view = "view-mutasi-masuk";
         $respons   = $this->dataPagination($laporan_kas, $data_laporan_kas, $link_view);
         return response()->json($respons);
     }
@@ -141,10 +142,143 @@ class LaporanKasController extends Controller
         $data_laporan_kas = $this->foreachLaporan($laporan_kas);
 
         //DATA PAGINATION
-        $link_view = "view";
+        $link_view = "view-mutasi-masuk";
         $respons   = $this->dataPagination($laporan_kas, $data_laporan_kas, $link_view);
         return response()->json($respons);
     }
+
+    public function subtotalLaporanKasDetailMutasiMasuk(Request $request)
+    {
+        $subtotal_lap_kas_mutasi_masuk_detail = TransaksiKas::subtotalLaporanKasMutasiMasukDetail($request)->first()->jumlah_masuk;
+        return $subtotal_lap_kas_mutasi_masuk_detail;
+    }
 //KAS MUTASI (MASUK)
 
+//KAS MUTASI (KELUAR)
+    public function prosesLaporanKasMutasiKeluarDetail(Request $request)
+    {
+        //KAS MUTASI (KELUAR)
+        $laporan_kas      = TransaksiKas::dataKasMutasiKeluar($request)->paginate(10);
+        $data_laporan_kas = $this->foreachLaporan($laporan_kas);
+
+        //DATA PAGINATION
+        $link_view = "view-mutasi-keluar";
+        $respons   = $this->dataPagination($laporan_kas, $data_laporan_kas, $link_view);
+        return response()->json($respons);
+    }
+
+    public function pencarianLaporanKasMutasiKeluarDetail(Request $request)
+    {
+        //KAS KELUAR
+        $laporan_kas      = TransaksiKas::cariKasMutasiKeluar($request)->paginate(10);
+        $data_laporan_kas = $this->foreachLaporan($laporan_kas);
+
+        //DATA PAGINATION
+        $link_view = "view-mutasi-keluar";
+        $respons   = $this->dataPagination($laporan_kas, $data_laporan_kas, $link_view);
+        return response()->json($respons);
+    }
+
+    public function subtotalLaporanKasDetailMutasiKeluar(Request $request)
+    {
+        $subtotal_lap_kas_mutasi_masuk_detail = TransaksiKas::subtotalLaporanKasMutasiKeluarDetail($request)->first()->jumlah_keluar;
+        return $subtotal_lap_kas_mutasi_masuk_detail;
+    }
+//KAS MUTASI (KELUAR)
+
+//TOTAL KAS
+    public function subtotalLaporanKasDetail(Request $request)
+    {
+        $total_awal  = TransaksiKas::totalAwalLaporan($request)->first()->kas_awal;
+        $total_akhir = TransaksiKas::totalAkhirLaporan($request)->first()->kas_akhir;
+
+        $respon_total['total_awal']    = $total_awal;
+        $respon_total['total_akhir']   = $total_awal + $total_akhir;
+        $respon_total['perubahan_kas'] = ($total_awal + $total_akhir) - $total_awal;
+
+        return $respon_total;
+    }
+//TOTAL KAS
+    //LAPORAN DETAIL
+
+//LAPORAN REKAP
+    //KAS MASUK
+    public function prosesLaporanKasRekap(Request $request)
+    {
+        //KAS MASUK
+        $laporan_kas      = TransaksiKas::dataKasMasukRekap($request)->paginate(10);
+        $data_laporan_kas = $this->foreachLaporan($laporan_kas);
+
+        //DATA PAGINATION
+        $link_view = "view-rekap";
+        $respons   = $this->dataPagination($laporan_kas, $data_laporan_kas, $link_view);
+        return response()->json($respons);
+    }
+
+    public function pencarianLaporanKasRekap(Request $request)
+    {
+        //KAS MASUK
+        $laporan_kas      = TransaksiKas::cariKasMasukRekap($request)->paginate(10);
+        $data_laporan_kas = $this->foreachLaporan($laporan_kas);
+
+        //DATA PAGINATION
+        $link_view = "view-rekap";
+        $respons   = $this->dataPagination($laporan_kas, $data_laporan_kas, $link_view);
+        return response()->json($respons);
+    }
+
+    public function subtotalLaporanKasRekapMasuk(Request $request)
+    {
+        $subtotal_lap_kas_masuk_rekap = TransaksiKas::subtotalLaporanKasMasukRekap($request)->first()->jumlah_masuk;
+        return $subtotal_lap_kas_masuk_rekap;
+    }
+    //KAS MASUK
+
+    //KAS KELUAR
+    public function prosesLaporanKasKeluarRekap(Request $request)
+    {
+        //KAS KELUAR
+        $laporan_kas      = TransaksiKas::dataKasKeluarRekap($request)->paginate(10);
+        $data_laporan_kas = $this->foreachLaporan($laporan_kas);
+
+        //DATA PAGINATION
+        $link_view = "view-keluar-rekap";
+        $respons   = $this->dataPagination($laporan_kas, $data_laporan_kas, $link_view);
+        return response()->json($respons);
+    }
+
+    public function pencarianLaporanKasKeluarRekap(Request $request)
+    {
+        //KAS KELUAR
+        $laporan_kas      = TransaksiKas::cariKasKeluarRekap($request)->paginate(10);
+        $data_laporan_kas = $this->foreachLaporan($laporan_kas);
+
+        //DATA PAGINATION
+        $link_view = "view-keluar-rekap";
+        $respons   = $this->dataPagination($laporan_kas, $data_laporan_kas, $link_view);
+        return response()->json($respons);
+    }
+
+    public function subtotalLaporanKasRekapKeluar(Request $request)
+    {
+        $subtotal_lap_kas_keluar_rekap = TransaksiKas::subtotalLaporanKasKeluarRekap($request)->first()->jumlah_keluar;
+        return $subtotal_lap_kas_keluar_rekap;
+    }
+    //KAS KELUAR
+
+//KAS MUTASI (MASUK) REKAP
+    public function prosesLaporanKasMutasiMasukRekap(Request $request)
+    {
+        //KAS MUTASI (MASUK)
+        $laporan_kas      = TransaksiKas::dataKasMutasiMasukRekap($request)->paginate(10);
+        $data_laporan_kas = $this->foreachLaporan($laporan_kas);
+
+        //DATA PAGINATION
+        $link_view = "view-mutasi-masuk-rekap";
+        $respons   = $this->dataPagination($laporan_kas, $data_laporan_kas, $link_view);
+        return response()->json($respons);
+    }
+
+//KAS MUTASI (MASUK) REKAP
+    //LAPORAN REKAP
 }
