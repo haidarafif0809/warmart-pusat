@@ -23,6 +23,8 @@ Route::get('copy-produk-alfatih', function () {
     }
 });
 
+
+
 Route::get('/tentang-warmart', 'HomeController@index');
 
 Route::get('/cek-deposit', 'PortaPulsaController@cekDeposit');
@@ -156,6 +158,22 @@ Route::put('proses/selesaikan-pemesanan', [
     'as'         => 'selesaikan-pemesanan.proses',
     'uses'       => 'PemesananController@prosesSelesaikanPemesanan',
 ]);
+
+Route::get('/provinsi-destinasi-pengiriman', [
+    'middleware' => ['auth'],
+    'uses'       => 'PemesananController@dataProvinsi',
+]);
+
+Route::get('/kota-destinasi-pengiriman', [
+    'middleware' => ['auth'],
+    'uses'       => 'PemesananController@dataKota',
+]);
+
+Route::get('/hitung-ongkir', [
+    'middleware' => ['auth'],
+    'uses'       => 'PemesananController@hitungOngkir',
+]);
+
 
 //PUNYA PESANAN PELANGGAN
 Route::get('/pesanan', [

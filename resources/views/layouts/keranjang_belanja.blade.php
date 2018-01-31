@@ -145,14 +145,23 @@ h4 {
                       </div>
                     </div>
                     {!! $produk_belanjaan !!}
-                    
+
                     <center>
+                      @if($setting_aplikasi->tipe_aplikasi == 0)
                       <a class="btn btn-round" href="{{ url('/selesaikan-pemesanan') }}" style="background-color: #01573e">
                         Lanjut Ke Pembayaran
                         <i class="material-icons">
                           keyboard_arrow_right
                         </i>
                       </a>
+                      @else
+                      <a class="btn btn-round backgroundColor" href="{{ url('/selesaikan-pemesanan') }}" >
+                        Lanjut Ke Pembayaran
+                        <i class="material-icons">
+                          keyboard_arrow_right
+                        </i>
+                      </a>
+                      @endif
                     </center>
                     @else
                     <div class="row">
@@ -232,12 +241,22 @@ h4 {
                         </hr>
                       </div>
                     </div>
+
+                    @if($setting_aplikasi->tipe_aplikasi == 0)
                     <a class="btn btn-round" href="{{ url('/selesaikan-pemesanan') }}" style="background-color: #01573e">
                       Lanjut Ke Pembayaran
                       <i class="material-icons">
                         keyboard_arrow_right
                       </i>
                     </a>
+                    @else
+                    <a class="btn btn-round backgroundColor" href="{{ url('/selesaikan-pemesanan') }}">
+                      Lanjut Ke Pembayaran
+                      <i class="material-icons">
+                        keyboard_arrow_right
+                      </i>
+                    </a>
+                    @endif
                   </div>
                   @endif
                 </div>
