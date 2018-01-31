@@ -276,7 +276,7 @@
 						</div><!--RESPONSIVE-->
 
 						<vue-simple-spinner v-if="loading"></vue-simple-spinner>
-						<div align="right"><pagination :data="laporanKasKeluarRekapData" v-on:pagination-change-page="prosesLaporanRekap" :limit="4"></pagination></div>
+						<div align="right"><pagination :data="laporanKasKeluarRekapData" v-on:pagination-change-page="prosesLaporanKeluarRekap" :limit="4"></pagination></div>
 						<hr style="margin-top: 30px; margin-bottom: 15px; border-top: 5px solid #eeeeee;">
 
 						<!--KAS MUTASI MASUK-->
@@ -310,7 +310,41 @@
 						</div><!--RESPONSIVE-->
 
 						<vue-simple-spinner v-if="loading"></vue-simple-spinner>
-						<div align="right"><pagination :data="laporanKasMutasiMasukRekapData" v-on:pagination-change-page="prosesLaporanRekap" :limit="4"></pagination></div>
+						<div align="right"><pagination :data="laporanKasMutasiMasukRekapData" v-on:pagination-change-page="prosesLaporanMutasiMasukRekap" :limit="4"></pagination></div>
+						<hr style="margin-top: 30px; margin-bottom: 15px; border-top: 5px solid #eeeeee;">
+
+						<!--KAS MUTASI KELUAR-->
+						<div class=" table-responsive">
+							<div class="pencarian">
+								<input type="text" name="pencarian" v-model="pencarian_mutasi_keluar_rekap" placeholder="Pencarian" class="form-control">
+							</div>
+
+							<h4><b>KAS MUTASI KELUAR : <span style="color:red">Rp. {{subtotalLaporanKasMutasiKeluarRekap | pemisahTitik}}</span></b></h4>
+							<table class="table table-striped table-hover">
+								<thead class="text-primary">
+									<tr>
+										<th>Waktu</th>
+										<th>Ke Kas</th>
+										<th style="text-align:right">Total</th>
+									</tr>
+								</thead>
+								<tbody v-if="laporanKasMutasiKeluarRekap.length > 0 && loading == false"  class="data-ada">
+									<tr v-for="laporanKasMutasiKeluarRekaps, index in laporanKasMutasiKeluarRekap" >
+
+										<td>{{ laporanKasMutasiKeluarRekaps.data_laporan.created_at | tanggal }}</td>
+										<td>{{ laporanKasMutasiKeluarRekaps.data_laporan.nama_kas }}</td>
+										<td align="right">{{ laporanKasMutasiKeluarRekaps.data_laporan.jumlah_keluar | pemisahTitik }}</td>
+
+									</tr>
+								</tbody>					
+								<tbody class="data-tidak-ada" v-else-if="laporanKasMutasiKeluarRekap.length == 0 && loading == false">
+									<tr ><td colspan="3"  class="text-center">Tidak Ada Data</td></tr>
+								</tbody>
+							</table>
+						</div><!--RESPONSIVE-->
+
+						<vue-simple-spinner v-if="loading"></vue-simple-spinner>
+						<div align="right"><pagination :data="laporanKasMutasiKeluarRekapData" v-on:pagination-change-page="prosesLaporanMutasiKeluarRekap" :limit="4"></pagination></div>
 						<hr style="margin-top: 30px; margin-bottom: 15px; border-top: 5px solid #eeeeee;">
 
 					</span>
@@ -395,6 +429,10 @@
 				laporanKasMutasiMasukRekapData: {},
 				subtotalLaporanKasMutasiMasukRekap: '',
 
+				laporanKasMutasiKeluarRekap: [],
+				laporanKasMutasiKeluarRekapData: {},
+				subtotalLaporanKasMutasiKeluarRekap: '',
+
 				filter: {
 					dari_tanggal: '',
 					sampai_tanggal: new Date(),
@@ -414,6 +452,7 @@
 				pencarian_kas_masuk_rekap: '',
 				pencarian_kas_keluar_rekap: '',
 				pencarian_mutasi_masuk_rekap: '',
+				pencarian_mutasi_keluar_rekap: '',
 
 				placeholder_laporan: {
 					placeholder: '--JENIS LAPORAN--'
@@ -456,6 +495,9 @@
 			},
 			pencarian_mutasi_masuk_rekap: function (newQuestion) {
 				this.getHasilPencarianMutasiMasukRekap();
+			},
+			pencarian_mutasi_keluar_rekap: function (newQuestion) {
+				this.getHasilPencarianMutasiKeluarRekap();
 			},
 		},
 		filters: {
@@ -524,7 +566,10 @@
 						app.totalLaporanKasKeluarRekap();
 
 						app.prosesLaporanMutasiMasukRekap();
-						// app.totalLaporanKasMutasiMasukDetail();
+						app.totalLaporanKasMutasiMasukRekap();
+
+						app.prosesLaporanMutasiKeluarRekap();
+						app.totalLaporanKasMutasiKeluarRekap();
 
 						$("#span-detail").hide();
 						$("#span-rekap").show();
@@ -668,6 +713,25 @@
 					alert("Tidak Dapat Memuat Laporan Kas Mutasi (Masuk) Rekap");
 				});
 			},
+			prosesLaporanMutasiKeluarRekap(page) {
+				var app = this;	
+				var newFilter = app.filter;
+				if (typeof page === 'undefined') {
+					page = 1;
+				}
+				app.loading = true,
+				axios.post(app.url+'/view-mutasi-keluar-rekap?page='+page, newFilter)
+				.then(function (resp) {
+					console.log(resp.data.data);
+					app.laporanKasMutasiKeluarRekap = resp.data.data;
+					app.laporanKasMutasiKeluarRekapData = resp.data;
+					app.loading = false
+				})
+				.catch(function (resp) {
+					console.log(resp);
+					alert("Tidak Dapat Memuat Laporan Kas Mutasi (Keluar) Rekap");
+				});
+			},
 
 
 			getHasilPencarian(page){
@@ -771,6 +835,40 @@
 				.catch(function (resp) {
 					console.log(resp);
 					alert("Tidak Dapat Memuat Laporan Kas Keluar Rekap");
+				});
+			},
+			getHasilPencarianMutasiMasukRekap(page){
+				var app = this;
+				var newFilter = app.filter;
+				if (typeof page === 'undefined') {
+					page = 1;
+				}
+				axios.post(app.url+'/pencarian-mutasi-masuk-rekap?search='+app.pencarian_mutasi_masuk_rekap+'&page='+page, newFilter)
+				.then(function (resp) {
+					console.log(resp.data.data)
+					app.laporanKasMutasiMasukRekap = resp.data.data;
+					app.laporanKasMutasiMasukRekapData = resp.data;
+				})
+				.catch(function (resp) {
+					console.log(resp);
+					alert("Tidak Dapat Memuat Laporan Kas Mutasi (Masuk) Rekap");
+				});
+			},
+			getHasilPencarianMutasiKeluarRekap(page){
+				var app = this;
+				var newFilter = app.filter;
+				if (typeof page === 'undefined') {
+					page = 1;
+				}
+				axios.post(app.url+'/pencarian-mutasi-keluar-rekap?search='+app.pencarian_mutasi_keluar_rekap+'&page='+page, newFilter)
+				.then(function (resp) {
+					console.log(resp.data.data)
+					app.laporanKasMutasiKeluarRekap = resp.data.data;
+					app.laporanKasMutasiKeluarRekapData = resp.data;
+				})
+				.catch(function (resp) {
+					console.log(resp);
+					alert("Tidak Dapat Memuat Laporan Kas Mutasi (Masuk) Rekap");
 				});
 			},
 
@@ -907,6 +1005,39 @@
 					alert("Tidak Dapat Memuat Subtotal Laporan Kas");
 				});
 			},
+			totalLaporanKasMutasiMasukRekap() {
+				var app = this;	
+				var newFilter = app.filter;
+
+				app.loading = true,
+				axios.post(app.url+'/subtotal-laporan-kas-rekap-mutasi-masuk', newFilter)
+				.then(function (resp) {
+					app.subtotalLaporanKasMutasiMasukRekap = resp.data;
+					app.loading = false
+					console.log(resp.data)
+				})
+				.catch(function (resp) {
+					console.log(resp);
+					alert("Tidak Dapat Memuat Subtotal Laporan Kas");
+				});
+			},
+			totalLaporanKasMutasiKeluarRekap() {
+				var app = this;	
+				var newFilter = app.filter;
+
+				app.loading = true,
+				axios.post(app.url+'/subtotal-laporan-kas-rekap-mutasi-keluar', newFilter)
+				.then(function (resp) {
+					app.subtotalLaporanKasMutasiKeluarRekap = resp.data;
+					app.loading = false
+					console.log(resp.data)
+				})
+				.catch(function (resp) {
+					console.log(resp);
+					alert("Tidak Dapat Memuat Subtotal Laporan Kas");
+				});
+			},
+
 			downloadExcel() {
 				var app = this;	
 				var newFilter = app.filter;

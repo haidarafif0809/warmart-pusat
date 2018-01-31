@@ -266,7 +266,7 @@ class LaporanKasController extends Controller
     }
     //KAS KELUAR
 
-//KAS MUTASI (MASUK) REKAP
+    //KAS MUTASI (MASUK) REKAP
     public function prosesLaporanKasMutasiMasukRekap(Request $request)
     {
         //KAS MUTASI (MASUK)
@@ -279,6 +279,56 @@ class LaporanKasController extends Controller
         return response()->json($respons);
     }
 
-//KAS MUTASI (MASUK) REKAP
-    //LAPORAN REKAP
+    public function pencarianLaporanKasMutasiMasukRekap(Request $request)
+    {
+        //KAS MUTASI (MASUK)
+        $laporan_kas      = TransaksiKas::cariKasMutasiMasukRekap($request)->paginate(10);
+        $data_laporan_kas = $this->foreachLaporan($laporan_kas);
+
+        //DATA PAGINATION
+        $link_view = "view-mutasi-masuk-rekap";
+        $respons   = $this->dataPagination($laporan_kas, $data_laporan_kas, $link_view);
+        return response()->json($respons);
+    }
+
+    public function subtotalLaporanKasRekapMutasiMasuk(Request $request)
+    {
+        $subtotal_lap_kas_mutasi_masuk_rekap = TransaksiKas::subtotalLaporanKasMutasiMasukRekap($request)->first()->jumlah_masuk;
+        return $subtotal_lap_kas_mutasi_masuk_rekap;
+    }
+    //KAS MUTASI (MASUK) REKAP
+
+    //KAS MUTASI (KELUAR) REKAP
+    public function prosesLaporanKasMutasiKeluarRekap(Request $request)
+    {
+        //KAS MUTASI (KELUAR)
+        $laporan_kas      = TransaksiKas::dataKasMutasiKeluarRekap($request)->paginate(10);
+        $data_laporan_kas = $this->foreachLaporan($laporan_kas);
+
+        //DATA PAGINATION
+        $link_view = "view-mutasi-masuk-rekap";
+        $respons   = $this->dataPagination($laporan_kas, $data_laporan_kas, $link_view);
+        return response()->json($respons);
+    }
+
+    public function pencarianLaporanKasMutasiKeluarRekap(Request $request)
+    {
+        //KAS MUTASI (KELUAR)
+        $laporan_kas      = TransaksiKas::cariKasMutasiKeluarRekap($request)->paginate(10);
+        $data_laporan_kas = $this->foreachLaporan($laporan_kas);
+
+        //DATA PAGINATION
+        $link_view = "view-mutasi-masuk-rekap";
+        $respons   = $this->dataPagination($laporan_kas, $data_laporan_kas, $link_view);
+        return response()->json($respons);
+    }
+
+    public function subtotalLaporanKasRekapMutasiKeluar(Request $request)
+    {
+        $subtotal_lap_kas_mutasi_keluar_rekap = TransaksiKas::subtotalLaporanKasMutasiKeluarRekap($request)->first()->jumlah_keluar;
+        return $subtotal_lap_kas_mutasi_keluar_rekap;
+    }
+    //KAS MUTASI (KELUAR) REKAP
+
+//LAPORAN REKAP
 }
