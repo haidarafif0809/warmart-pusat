@@ -33,6 +33,7 @@
               <thead class="text-primary">
                 <tr>
                   <th>Nama Toko</th>
+                  <th>Nama Pemilik</th>
                   <th>Email</th>
                   <th>No. Telpon</th>
                   <th>Alamat</th>
@@ -45,6 +46,7 @@
               <tbody v-if="pendaftaranTopos.length > 0 && loading== false" class="data-ada">
                 <tr v-for="pendaftaranTopos, index in pendaftaranTopos">
                   <td>{{ pendaftaranTopos.pendaftar_topos.name }}</td>
+                  <td>{{ pendaftaranTopos.pendaftar_topos.user_warung.name }}</td>
                   <td>{{ pendaftaranTopos.pendaftar_topos.email }}</td>
                   <td>{{ pendaftaranTopos.pendaftar_topos.no_telp }}</td>
                   <td>{{ pendaftaranTopos.pendaftar_topos.alamat }}</td>

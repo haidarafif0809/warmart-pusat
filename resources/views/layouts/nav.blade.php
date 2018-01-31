@@ -89,7 +89,7 @@
     <div class="collapse" id="persediaan">
         <ul class="nav">
             <li>
-               <router-link :to="{name: 'indexItemMasuk'}" class="menu-nav">
+             <router-link :to="{name: 'indexItemMasuk'}" class="menu-nav">
                 <span class="sidebar-mini">
                     IM
                 </span>
@@ -150,7 +150,7 @@
 <li>
     <router-link :to="{name: 'createPenjualan'}" class="menu-nav disabled-menu">
         <i class="material-icons">
-            shop
+            shopping_cart
         </i>
         <p>
             Penjualan

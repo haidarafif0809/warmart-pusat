@@ -341,15 +341,15 @@ class PembayaranHutangController extends Controller
         $pembelian   = Pembelian::find($request->id_pembelian);
         $data_tbs   = TbsPembayaranHutang::where('no_faktur_pembelian', $request->no_faktur)
             ->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
-        $data_suplier_tbs   = TbsPembayaranHutang::select('suplier_id')->where('no_faktur_pembelian', $request->no_faktur)
+        $data_suplier_tbs   = TbsPembayaranHutang::select('suplier_id')
             ->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->get();    
             
          $subtotal_hutang       = $request->nilai_kredit  - $request->potongan;
         //JIKA FAKTUR YG DIPILIH SUDAH ADA DI TBS
-            if ($data_tbs->count() > 0  ) {
+            if ($data_tbs->count() > 0) {
                 return 0;
             }
-             else {
+            else {
                     $tbs_pembayaran_piutang = TbsPembayaranHutang::create([
                             'session_id'          => $session_id,
                             'no_faktur_pembelian' => $request->no_faktur,
@@ -366,7 +366,7 @@ class PembayaranHutangController extends Controller
                 }
     }
         //INSERT TBS
-    public function prosesTbsEditPembayaranHutang(Request $request)
+    public function prosesTbsEditPembayaranHutang(Request $request,$id)
     {
         $session_id = session()->getId();
         $pembelian   = Pembelian::find($request->id_pembelian);
@@ -384,6 +384,7 @@ class PembayaranHutangController extends Controller
                     $tbs_pembayaran_piutang = EditTbsPembayaranHutang::create([
                             'session_id'          => $session_id,
                             'no_faktur_pembelian' => $request->no_faktur,
+                            'no_faktur_pembayaran' => $request->no_faktur_pembayaran,
                             'jatuh_tempo'         => $pembelian->tanggal_jt_tempo,
                             'hutang'             => $request->nilai_kredit,
                             'potongan'            => $request->potongan,
@@ -499,13 +500,7 @@ class PembayaranHutangController extends Controller
                 'warung_id'            => $warung_id,
             ]);
             
-            //INSERT transaksi hutang
-              $create_transaksi_kas = TransaksiKas::create([ 
-                'no_faktur'         => $pembayaran_hutang->no_faktur_pembayaran, 
-                'jenis_transaksi'   =>'PembayaranHutang' , 
-                'jumlah_keluar'     => $pembayaran_hutang->total, 
-                'kas'               => $pembayaran_hutang->cara_bayar, 
-                'warung_id'         => $pembayaran_hutang->warung_id] );  
+
 
             // INSERT DETAIL PEMBAYARAN hutang
             foreach ($data_pembayaran_hutang->get() as $data_tbs) {
@@ -532,6 +527,15 @@ class PembayaranHutangController extends Controller
                     'suplier_id'    => $data_tbs->suplier_id,
                     'warung_id'       => $data_tbs->warung_id,
                 ]);
+
+               //INSERT transaksi hutang
+                $create_transaksi_kas = TransaksiKas::create([ 
+                'no_faktur'         => $no_faktur, 
+                'jenis_transaksi'   =>'Pembayaran Hutang' , 
+                'jumlah_keluar'     => $data_tbs->jumlah_bayar + $data_tbs->potongan, 
+                'kas'               => $request->kas, 
+                'warung_id'         => $data_tbs->warung_id]);  
+
             }
 
             //HAPUS TBS PEMBAYARAN hutang
@@ -605,8 +609,6 @@ class PembayaranHutangController extends Controller
         return $no_faktur;
     }
 
-
-
     /**
      * Update the specified resource in storage.
      *
@@ -617,6 +619,83 @@ class PembayaranHutangController extends Controller
     public function update(Request $request, $id)
     {
         //
+        //START TRANSAKSI
+        DB::beginTransaction();
+
+        $pembayaran_hutang = PembayaranHutang::find($id);
+
+//HAPUS DETAIL PEMBAYARAN PIUTANG
+        $detail_pembayaran_hutang = DetailPembayaranHutang::where('no_faktur_pembayaran', $pembayaran_hutang->no_faktur_pembayaran)
+            ->where('warung_id', Auth::user()->id_warung)->get();
+        foreach ($detail_pembayaran_hutang as $data_detail) {
+            if (!$hapus_detail = DetailPembayaranHutang::destroy($data_detail->id_detail_pembayaran_hutang)) {
+                //DI BATALKAN PROSES NYA
+                $respons['respons'] = 0;
+                DB::rollBack();
+                return response()->json($respons);
+            }
+            $hapus_transaksi_hutang = TransaksiHutang::where('no_faktur', $pembayaran_hutang->no_faktur_pembayaran)->delete();
+            $hapus_transaksi_kas = TransaksiKas::where('no_faktur', $pembayaran_hutang->no_faktur_pembayaran)->delete();
+        }
+
+//INSERT DETAIL PEMBAYARAN PIUTANG
+        $tbs_pembayaran_hutang = EditTbsPembayaranHutang::where('no_faktur_pembayaran', $pembayaran_hutang->no_faktur_pembayaran)->where('warung_id', Auth::user()->id_warung);
+
+        if ($tbs_pembayaran_hutang->count() == 0) {
+            DB::rollBack();
+            return 0;
+        } else {
+//UPDATE PEMBAYARAN
+            $pembayaran_hutang->update([
+                'total'      => $request->subtotal,
+                'cara_bayar' => $request->kas,
+                'keterangan' => $request->keterangan,
+            ]);
+
+            // INSERT DETAIL PEMBAYARAN PIUTANG
+            foreach ($tbs_pembayaran_hutang->get() as $data_tbs) {
+
+                $detail_pembayaran_hutang = DetailPembayaranHutang::create([
+                    'no_faktur_pembayaran' => $pembayaran_hutang->no_faktur_pembayaran,
+                    'no_faktur_pembelian'  => $data_tbs->no_faktur_pembelian,
+                    'jatuh_tempo'          => $data_tbs->jatuh_tempo,
+                    'hutang'              => $data_tbs->hutang,
+                    'potongan'             => $data_tbs->potongan,
+                    'jumlah_bayar'         => $data_tbs->jumlah_bayar,
+                    'suplier_id'         => $data_tbs->suplier_id,
+                    'warung_id'            => $data_tbs->warung_id,
+                     'subtotal_hutang'       => $data_tbs->subtotal_hutang,
+                ]);
+
+                // INSERT TRANSAKSI PIUTANG TIDAK DIBUAT DI OBSERVER KARENA DI OBSERVER ID PENJUALAN DI ANGGAP NULL
+                $id_pembelian  = Pembelian::select('id')->where('no_faktur', $data_tbs->no_faktur_pembelian)->first();
+                $transaksi_hutang = TransaksiHutang::create([
+                    'no_faktur'       => $pembayaran_hutang->no_faktur_pembayaran,
+                    'id_transaksi'    => $id_pembelian->id,
+                    'jenis_transaksi' => 'Pembayaran Hutang',
+                    'jumlah_keluar'   => $data_tbs->jumlah_bayar + $data_tbs->potongan,
+                    'suplier_id'    => $data_tbs->suplier_id,
+                    'warung_id'       => $data_tbs->warung_id,
+                ]);
+
+                //INSERT TRANSAKSI KAS
+                $transaksi_kas = TransaksiKas::create([
+                    'no_faktur'       => $pembayaran_hutang->no_faktur_pembayaran,
+                    'jenis_transaksi' => 'Pembayaran Hutang',
+                    'jumlah_masuk'    => $data_tbs->jumlah_bayar + $data_tbs->potongan,
+                    'kas'             => $request->kas,
+                    'warung_id'       => $data_tbs->warung_id,
+                ]);
+            }
+
+            $tbs_pembayaran_hutang = EditTbsPembayaranHutang::where('no_faktur_pembayaran', $pembayaran_hutang->no_faktur_pembayaran)
+                ->where('warung_id', Auth::user()->id_warung)->delete();
+
+            DB::commit();
+
+            $respons['respon_hutang'] = $id;
+            return response()->json($respons);
+        }
     }
 
     public function cekSubtotalTbsPembayaranHutang($jenis_tbs){
@@ -647,6 +726,53 @@ class PembayaranHutangController extends Controller
             "pembayaran_hutang"     => PembayaranHutang::find($id)->toArray(),
         ]);
     }
+        public function prosesBatalEditPembayaranHutang($id)
+    {
+        //AMBIL NO FAKTUR
+        $no_faktur          = $this->fakturPembayaran($id);
+        $data_tbs_pembayaran_hutang = EditTbsPembayaranHutang::where('no_faktur_pembayaran', $no_faktur)->where('warung_id', Auth::user()->id_warung)->delete();
+
+        return response(200);
+    }
+        public function cekSupplierDouble(){
+        $session_id    = session()->getId();
+        $data_suplier_tbs   = TbsPembayaranHutang::where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
+        return response()->json([
+            "data_supplier" => $data_suplier_tbs->first(),
+            "data_tbs"      => $data_suplier_tbs->count(),
+        ]);
+    }
+
+    public function cekSupplierDoubleEdit(Request $request){
+        $session_id    = session()->getId();
+        $data_suplier_tbs   = EditTbsPembayaranHutang::where('no_faktur_pembayaran', $request->no_faktur_pembayaran)->where('warung_id', Auth::user()->id_warung);
+        return response()->json([
+            "data_supplier" => $data_suplier_tbs->first(),
+            "data_tbs"      => $data_suplier_tbs->count(),
+        ]);
+    }
+        public function total_kas(Request $request)
+    {
+        $session_id            = session()->getId();
+        $total_kas             = TransaksiKas::total_kas($request);
+        $data_tbs_pembayaran_hutang = TbsPembayaranHutang::where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->count();
+
+        $respons['total_kas']             = $total_kas;
+        $respons['data_tbs_pembayaran_hutang'] = $data_tbs_pembayaran_hutang;
+
+        return $respons;
+    }
+         public function total_kas_edit(Request $request)
+    {
+        $session_id            = session()->getId();
+        $total_kas             = TransaksiKas::total_kas($request);
+        $data_tbs_pembayaran_hutang = EditTbsPembayaranHutang::where('no_faktur_pembayaran', $request->no_faktur)->where('warung_id', Auth::user()->id_warung)->count();
+
+        $respons['total_kas']             = $total_kas;
+        $respons['data_tbs_pembayaran_hutang'] = $data_tbs_pembayaran_hutang;
+
+        return $respons;
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -658,6 +784,7 @@ class PembayaranHutangController extends Controller
     {
         //START TRANSAKSI
         DB::beginTransaction();
+        
         if (!PembayaranHutang::destroy($id)) {
             DB::rollBack();
             return 0;

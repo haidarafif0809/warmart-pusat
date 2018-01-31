@@ -146,7 +146,9 @@ class UbahProfilController extends Controller
                 // membuat nama file random berikut extension
                 $filename     = str_random(40) . '.' . $extension;
                 $image_resize = Image::make($foto_ktp->getRealPath());
-                $image_resize->resize(300, 130);
+                $image_resize->resize(null, 130, function ($constraint) {
+                    $constraint->aspectRatio();
+                });
                 $image_resize->save(public_path('foto_ktp_user/' . $filename));
 
                 // hapus foto ktp lama, jika ada

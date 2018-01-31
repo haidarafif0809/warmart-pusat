@@ -64,7 +64,7 @@
 								<div class="form-group">
 									<label for="harga_beli" class="col-md-2 control-label">Harga Beli</label>
 									<div class="col-md-10">
-										<input class="form-control" autocomplete="off" placeholder="Harga Beli" v-model="produk.harga_beli" type="text" name="harga_beli" id="harga_beli"  autofocus="">
+										<money class="form-control" autocomplete="off" placeholder="Harga Beli" v-model="produk.harga_beli" type="text" name="harga_beli" id="harga_beli"  autofocus="" v-bind="separator"></money>
 										<span v-if="errors.harga_beli" id="harga_beli_error" class="label label-danger">{{ errors.harga_beli[0] }}</span>
 									</div>
 								</div>
@@ -72,16 +72,30 @@
 								<div class="form-group">
 									<label for="harga_jual" class="col-md-2 control-label">Harga Jual 1</label>
 									<div class="col-md-10">
-										<input class="form-control" autocomplete="off" placeholder="Harga Jual" v-model="produk.harga_jual" type="text" name="harga_jual" id="harga_jual"  autofocus="">
+										<money class="form-control" autocomplete="off" placeholder="Harga Jual" v-model="produk.harga_jual" type="text" name="harga_jual" id="harga_jual"  autofocus="" v-bind="separator"></money>
 										<span v-if="errors.harga_jual" id="harga_jual_error" class="label label-danger">{{ errors.harga_jual[0] }}</span>
 									</div>
 								</div>
 
 								<div class="form-group">
 									<label for="harga_jual2" class="col-md-2 control-label">Harga Jual 2</label>
-									<div class="col-md-10">
-										<input class="form-control" autocomplete="off" placeholder="Harga Jual 2(Jika Ada)" v-model="produk.harga_jual2" type="text" name="harga_jual2" id="harga_jual2"  autofocus="">
+									<div class="col-md-5">
+										<money class="form-control" autocomplete="off" placeholder="Harga Jual 2(Jika Ada)" v-model="produk.harga_jual2" type="text" name="harga_jual2" id="harga_jual2"  autofocus="" v-bind="separator"></money>
 										<span v-if="errors.harga_jual2" id="harga_jual2_error" class="label label-danger">{{ errors.harga_jual2[0] }}</span>
+									</div>
+									<div class="col-md-5">
+										<p style="color: grey; font-style: italic;">Harga Jual 2 digunakan jika ingin membedakan harga jual untuk toko online dengan toko offline.</p>     
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label for="perkiraan_berat" class="col-md-2 control-label">Perkiraan Berat(Jika Barang Dijual Online)</label>
+									<div class="col-md-5">
+										<money class="form-control" autocomplete="off" placeholder="Perkiraan Berat(Jika Barang Dijual Online)" v-model="produk.perkiraan_berat" type="text" name="perkiraan_berat" id="perkiraan_berat"  autofocus="" v-bind="separator"></money>
+										<span v-if="errors.perkiraan_berat" id="perkiraan_berat_error" class="label label-danger">{{ errors.perkiraan_berat[0] }}</span>
+									</div>
+									<div class="col-md-5">
+										<p style="color: grey; font-style: italic;">Berat barang diperlukan untuk estimasi ongkos kirim. Coba gunakan perhitungan berat volumetrik.(Gram)</p>     
 									</div>
 								</div>
 
@@ -181,6 +195,7 @@ export default {
 				harga_beli : '',
 				harga_jual : '',
 				harga_jual2 : '',
+				perkiraan_berat : '',
 				deskripsi_produk : '',
 				hitung_stok : 'true',
 				status_aktif : 'true'
@@ -197,6 +212,14 @@ export default {
 				placeholderText: 'Edit Deskripsi Produk',
 			},
 			editorOption: {
+			},
+			separator: {
+				decimal: ',',
+				thousands: '.',
+				prefix: '',
+				suffix: '',
+				precision: 0,
+				masked: false /* doesn't work with directive */
 			}
 		}
 	},
@@ -226,6 +249,7 @@ export default {
 				app.$swal.close();
 			})
 			.catch(function (resp) {
+				alert("Periksa Kembali Inputan Anda!")
 				app.success = false;
 				app.errors = resp.response.data.errors;
 				app.$swal.close();
@@ -291,6 +315,7 @@ export default {
 			newProduk.append('harga_beli', app.produk.harga_beli);
 			newProduk.append('harga_jual', app.produk.harga_jual);
 			newProduk.append('harga_jual2', app.produk.harga_jual2);
+			newProduk.append('perkiraan_berat', app.produk.perkiraan_berat);
 			newProduk.append('hitung_stok', app.produk.hitung_stok);
 			newProduk.append('status_aktif', app.produk.status_aktif);
 			newProduk.append('deskripsi_produk', app.produk.deskripsi_produk);
@@ -309,6 +334,7 @@ export default {
 			app.produk.harga_beli = '';
 			app.produk.harga_jual = '';
 			app.produk.harga_jual2 = '';
+			app.produk.perkiraan_berat = '';
 			app.produk.hitung_stok = 'true';
 			app.produk.status_aktif = 'true';
 			app.produk.deskripsi_produk = '';

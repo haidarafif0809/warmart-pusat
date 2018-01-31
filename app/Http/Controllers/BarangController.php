@@ -178,7 +178,8 @@ class BarangController extends Controller
                 'nama_barang'        => 'required|max:191',
                 'harga_beli'         => 'required|numeric|digits_between:1,11',
                 'harga_jual'         => 'required|numeric|digits_between:1,11',
-                'harga_jual2'         => 'nullable|numeric|digits_between:1,11',
+                'harga_jual2'        => 'nullable|numeric|digits_between:1,11',
+                'perkiraan_berat'    => 'nullable|numeric',
                 'kategori_barang_id' => 'required|exists:kategori_barangs,id',
                 'satuan_id'          => 'required|exists:satuans,id',
                 'foto'               => 'image|max:3072',
@@ -196,44 +197,51 @@ class BarangController extends Controller
                 $hitung_stok = 0;
             }
 
-            $insert_barang = Barang::create([
-                'kode_barang'        => $request->kode_barang,
-                'kode_barcode'       => $request->kode_barcode,
-                'nama_barang'        => strtolower($request->nama_barang),
-                'harga_beli'         => $request->harga_beli,
-                'harga_jual'         => $request->harga_jual,
-                'harga_jual2'         => $request->harga_jual2,
-                'satuan_id'          => $request->satuan_id,
-                'kategori_barang_id' => $request->kategori_barang_id,
-                'deskripsi_produk'   => $request->deskripsi_produk,
-                'status_aktif'       => $status_aktif,
-                'hitung_stok'        => $hitung_stok,
-                'konfirmasi_admin'   => 1,
-                'id_warung'          => Auth::user()->id_warung]);
+            if ($request->perkiraan_berat == "" OR $request->perkiraan_berat == 0) {
+               $perkiraan_berat = 1000;
+           }else{
+            $perkiraan_berat = $request->perkiraan_berat;
+        }
 
-            if ($request->hasFile('foto')) {
-                $foto = $request->file('foto');
+        $insert_barang = Barang::create([
+            'kode_barang'        => $request->kode_barang,
+            'kode_barcode'       => $request->kode_barcode,
+            'nama_barang'        => strtolower($request->nama_barang),
+            'harga_beli'         => $request->harga_beli,
+            'harga_jual'         => $request->harga_jual,
+            'harga_jual2'         => $request->harga_jual2,
+            'berat'             => $perkiraan_berat,
+            'satuan_id'          => $request->satuan_id,
+            'kategori_barang_id' => $request->kategori_barang_id,
+            'deskripsi_produk'   => $request->deskripsi_produk,
+            'status_aktif'       => $status_aktif,
+            'hitung_stok'        => $hitung_stok,
+            'konfirmasi_admin'   => 1,
+            'id_warung'          => Auth::user()->id_warung]);
 
-                if (is_array($foto) || is_object($foto)) {
+        if ($request->hasFile('foto')) {
+            $foto = $request->file('foto');
+
+            if (is_array($foto) || is_object($foto)) {
                     // Mengambil file yang diupload
-                    $uploaded_foto = $foto;
+                $uploaded_foto = $foto;
                     // mengambil extension file
-                    $extension = $uploaded_foto->getClientOriginalExtension();
+                $extension = $uploaded_foto->getClientOriginalExtension();
                     // membuat nama file random berikut extension
-                    $filename     = str_random(40) . '.' . $extension;
-                    $image_resize = Image::make($foto->getRealPath());
-                    $image_resize->fit(300);
-                    $image_resize->save(public_path('foto_produk/' . $filename));
-                    $insert_barang->foto = $filename;
+                $filename     = str_random(40) . '.' . $extension;
+                $image_resize = Image::make($foto->getRealPath());
+                $image_resize->fit(300);
+                $image_resize->save(public_path('foto_produk/' . $filename));
+                $insert_barang->foto = $filename;
                     // menyimpan field foto_kamar di database kamar dengan filename yang baru dibuat
-                    $insert_barang->save();
-                }
-
+                $insert_barang->save();
             }
 
         }
 
     }
+
+}
 
     /**
      * Display the specified resource.

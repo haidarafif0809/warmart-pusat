@@ -16,7 +16,7 @@ class Barang extends Model
     use LogsActivity;
     use Searchable;
 
-    protected $fillable = ['kode_barang', 'kode_barcode', 'nama_barang', 'harga_beli', 'harga_jual', 'satuan_id', 'kategori_barang_id', 'status_aktif', 'hitung_stok', 'id_warung', 'deskripsi_produk', 'konfirmasi_admin', 'foto', 'harga_jual2'];
+    protected $fillable = ['kode_barang', 'kode_barcode', 'nama_barang', 'harga_beli', 'harga_jual', 'satuan_id', 'kategori_barang_id', 'status_aktif', 'hitung_stok', 'id_warung', 'deskripsi_produk', 'konfirmasi_admin', 'foto', 'harga_jual2', 'berat'];
 
     public function satuan()
     {
@@ -40,8 +40,8 @@ class Barang extends Model
         // jika a = 1 dan b 0
 
         $hpp_masuk = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk), 0) as total_produk_masuk'), DB::raw('IFNULL(SUM(total_nilai), 0) as total_nilai_masuk')])
-            ->where('id_produk', $this->id)
-            ->where('warung_id', $this->id_warung)->where('jenis_hpp', 1)->first();
+        ->where('id_produk', $this->id)
+        ->where('warung_id', $this->id_warung)->where('jenis_hpp', 1)->first();
 
         $total_nilai_masuk  = $hpp_masuk->total_nilai_masuk;
         $total_produk_masuk = $hpp_masuk->total_produk_masuk;
@@ -88,8 +88,8 @@ class Barang extends Model
     public function scopeDaftarProduk($query_mutasi_stok)
     {
         $query_mutasi_stok = Barang::select(['barangs.id', 'barangs.kode_barang', 'barangs.nama_barang', 'satuans.nama_satuan'])
-            ->leftJoin('satuans', 'satuans.id', '=', 'barangs.satuan_id')
-            ->where('barangs.id_warung', Auth::user()->id_warung);
+        ->leftJoin('satuans', 'satuans.id', '=', 'barangs.satuan_id')
+        ->where('barangs.id_warung', Auth::user()->id_warung);
 
         return $query_mutasi_stok;
     }
@@ -100,13 +100,13 @@ class Barang extends Model
         $search = $request->search;
 
         $query_mutasi_stok = Barang::select(['barangs.id', 'barangs.kode_barang', 'barangs.nama_barang', 'satuans.nama_satuan'])
-            ->leftJoin('satuans', 'satuans.id', '=', 'barangs.satuan_id')
-            ->where(function ($query) use ($search) {
-                $query->orwhere('barangs.kode_barang', 'LIKE', '%' . $search . '%')
-                    ->orwhere('barangs.nama_barang', 'LIKE', '%' . $search . '%')
-                    ->orwhere('satuans.nama_satuan', 'LIKE', '%' . $search . '%');
-            })
-            ->where('barangs.id_warung', Auth::user()->id_warung);
+        ->leftJoin('satuans', 'satuans.id', '=', 'barangs.satuan_id')
+        ->where(function ($query) use ($search) {
+            $query->orwhere('barangs.kode_barang', 'LIKE', '%' . $search . '%')
+            ->orwhere('barangs.nama_barang', 'LIKE', '%' . $search . '%')
+            ->orwhere('satuans.nama_satuan', 'LIKE', '%' . $search . '%');
+        })
+        ->where('barangs.id_warung', Auth::user()->id_warung);
 
         return $query_mutasi_stok;
     }

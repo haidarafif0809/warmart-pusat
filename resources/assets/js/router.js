@@ -134,6 +134,11 @@ import PembayaranPiutangEdit from './components/pembayaran_piutang/PembayaranPiu
 import PembayaranPiutangProsesEdit from './components/pembayaran_piutang/PembayaranPiutangProsesEdit.vue';
 // LAPORAN KAS
 import LaporanKasIndex from './components/laporan/LaporanKasIndex.vue';
+
+// SETTING FOOTER
+import SettingFooterIndex from './components/setting_footer/SettingFooterIndex.vue';
+import indexSettingFooter from './components/setting_footer/SettingFooterIndex.vue';
+
 const routes = [{
         path: '/',
         components: {
@@ -599,11 +604,19 @@ const routes = [{
         component: PembayaranPiutangProsesEdit,
         name: 'prosesEditPembayaranPiutang'
     },
+
+    // SETTING FOOTER
+    {
+        path: '/setting-footer/:id_warung',
+        component: SettingFooterIndex,
+        name:indexSettingFooter
+    },
     // LAPORAN KAS
     {
         path: '/laporan-kas',
         component: LaporanKasIndex,
         name: 'indexLaporanKas'
     }
-]
-export default routes;
+
+    ]
+    export default routes;
