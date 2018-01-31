@@ -290,7 +290,7 @@
                                         <div class="col-md-6 col-xs-12">                                            
                                             <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
                                                 <font style="color: black">Tanggal</font> 
-                                                <datepicker :input-class="'form-control'" placeholder="Jatuh Tempo" v-model="inputPembayaranHutang.tanggal" ref='tanggal'></datepicker>
+                                                <datepicker :input-class="'form-control'" placeholder="Tanggal" v-model="inputPembayaranHutang.tanggal" ref='tanggal'></datepicker>
                                                 <br v-if="errors.tanggal">  <span v-if="errors.tanggal" id="tanggal_error" class="label label-danger">{{ errors.tanggal[0] }}</span>
                                             </div>
                                         </div>
@@ -979,6 +979,7 @@ export default {
                           swal('Oops...','Belum Ada Transaksi Hutang Yang Diinputkan','error'); 
                       }
                       else{
+                      $("#modal_selesai").hide();
                       axios.post(app.url,newPembayaranHutang)
                       .then(function (resp) {
                           if (resp.data == 0) {
@@ -989,8 +990,6 @@ export default {
                               app.inputPembayaranHutang.tanggal = new Date;
                               app.inputPembayaranHutang.keterangan = ''
                               app.inputPembayaranHutang.subtotal = 0
-
-                              $("#modal_selesai").hide();
                               app.loading = false;                
                               app.$router.replace('/pembayaran-hutang');
                           }

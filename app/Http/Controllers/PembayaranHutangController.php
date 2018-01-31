@@ -530,7 +530,7 @@ class PembayaranHutangController extends Controller
 
                //INSERT transaksi hutang
                 $create_transaksi_kas = TransaksiKas::create([ 
-                'no_faktur'         => $data_tbs->no_faktur_pembelian, 
+                'no_faktur'         => $no_faktur, 
                 'jenis_transaksi'   =>'Pembayaran Hutang' , 
                 'jumlah_keluar'     => $data_tbs->jumlah_bayar + $data_tbs->potongan, 
                 'kas'               => $request->kas, 
@@ -680,7 +680,7 @@ class PembayaranHutangController extends Controller
 
                 //INSERT TRANSAKSI KAS
                 $transaksi_kas = TransaksiKas::create([
-                    'no_faktur'       => $pembayaran_hutang->no_faktur_pembelian,
+                    'no_faktur'       => $pembayaran_hutang->no_faktur_pembayaran,
                     'jenis_transaksi' => 'Pembayaran Hutang',
                     'jumlah_masuk'    => $data_tbs->jumlah_bayar + $data_tbs->potongan,
                     'kas'             => $request->kas,
@@ -762,6 +762,17 @@ class PembayaranHutangController extends Controller
 
         return $respons;
     }
+         public function total_kas_edit(Request $request)
+    {
+        $session_id            = session()->getId();
+        $total_kas             = TransaksiKas::total_kas($request);
+        $data_tbs_pembayaran_hutang = EditTbsPembayaranHutang::where('no_faktur_pembayaran', $request->no_faktur)->where('warung_id', Auth::user()->id_warung)->count();
+
+        $respons['total_kas']             = $total_kas;
+        $respons['data_tbs_pembayaran_hutang'] = $data_tbs_pembayaran_hutang;
+
+        return $respons;
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -773,6 +784,7 @@ class PembayaranHutangController extends Controller
     {
         //START TRANSAKSI
         DB::beginTransaction();
+        
         if (!PembayaranHutang::destroy($id)) {
             DB::rollBack();
             return 0;
