@@ -917,7 +917,8 @@ methods: {
 
                 $("#modal_selesai").hide();
                 app.loading = false;                
-                app.$router.replace('/pembayaran-piutang');
+                app.$router.replace('/pembayaran-piutang');                
+                window.open('pembayaran-piutang/cetak-pembayaran-piutang/'+resp.data.respon_piutang,'_blank');
             }
         })
         .catch(function (resp) {
