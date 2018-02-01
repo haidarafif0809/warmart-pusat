@@ -162,15 +162,13 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
                       {!! Form::label('name', 'Nama', ['class'=>'col-md-2 control-label', 'style'=> 'margin-bottom:1px; margin-top:1px;']) !!}
                       <div class="col-md-6">
                         {!! Form::text('name', null, ['class'=>'form-control','required','autocomplete'=>'off', 'placeholder' => 'Nama', 'id' => 'nama_pelanggan']) !!}
-                        {!! $errors->first('name', '<p class="help-block">:message</p>') !!}
                       </div>
                     </div>
 
                     <div style="margin-bottom: 1px; margin-top: 1px;" class="form-group{{ $errors->has('no_telp') ? ' has-error' : '' }}">
                       {!! Form::label('no_telp', 'No. Telpon', ['class'=>'col-md-2 control-label', 'style'=> 'margin-bottom:1px; margin-top:1px;']) !!}
                       <div class="col-md-6">
-                        {!! Form::text('no_telp', null, ['class'=>'form-control','required','autocomplete'=>'off', 'placeholder' => 'No. Telpon', 'id' => 'nama_pelanggan']) !!}
-                        {!! $errors->first('no_telp', '<p class="help-block">:message</p>') !!}
+                        {!! Form::text('no_telp', null, ['class'=>'form-control','required','autocomplete'=>'off', 'placeholder' => 'No. Telpon', 'id' => 'no_telp']) !!}
                       </div>
                     </div>
 
@@ -181,7 +179,6 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
                       {!! Form::label('alamat', 'Alamat', ['class'=>'col-md-2 control-label', 'style'=> 'margin-bottom:1px; margin-top:1px;']) !!}
                       <div class="col-md-6">
                         {!! Form::textarea('alamat', null, ['class'=>'form-control','required','autocomplete'=>'off', 'placeholder' => 'Alamat', 'id' => 'alamatPelanggan', 'rows'=>'5','readonly']) !!}
-                        {!! $errors->first('alamat', '<p class="help-block">:message</p>') !!}
                         <button  style="margin-bottom: 1px; margin-top: 1px;"  class="btn btn-primary btn-simple " type="button" id="ubah_alamat">
                           Ubah Alamat
                         </button>
@@ -191,8 +188,7 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
                     <div style="margin-bottom: 1px; margin-top: 1px;" class="form-group{{ $errors->has('kurir') ? ' has-error' : '' }}">
                       {!! Form::label('kurir', 'Kurir', ['class'=>'col-md-2 control-label', 'style'=> 'margin-bottom:1px; margin-top:1px;']) !!}
                       <div class="col-md-6">
-                        {!! Form::select('kurir', ['jne'=>'JNE','pos'=>'POS','tiki'=>'TIKI'],null, ['required'=> 'true','placeholder' => 'Cari Kurir','id'=>'kurir']) !!}
-                        {!! $errors->first('kurir', '<p class="help-block">:message</p>') !!}
+                        {!! Form::select('kurir', ['jne'=>'JNE','pos'=>'POS','tiki'=>'TIKI','cod'=>'Bayar di Tempat(COD)'],null, ['required'=> 'true','placeholder' => 'Cari Kurir','id'=>'kurir']) !!}
                       </div>
                     </div>
 
@@ -200,7 +196,6 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
                       {!! Form::label('layanan_kurir', 'Layanan Kurir', ['class'=>'col-md-2 control-label', 'style'=> 'margin-bottom:1px; margin-top:1px;']) !!}
                       <div class="col-md-6">
                         {!! Form::select('layanan_kurir', [''=>''],null, ['required'=> 'true','placeholder' => 'Cari Layanan','id'=>'layanan_kurir']) !!}
-                        {!! $errors->first('layanan_kurir', '<p class="help-block">:message</p>') !!}
                       </div>
                       <div class="col-md-4">
                         <font style="font-size:25px;" id="ongkir"></font>
@@ -210,14 +205,25 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
                     <div class="col-md-2"></div>
                     <p id="waktu_pengiriman" style="color: red; font-style: italic;"></p>
 
+                    <div style="margin-bottom: 1px; margin-top: 1px;" class="form-group{{ $errors->has('metode_pembayaran') ? ' has-error' : '' }}">
+                      {!! Form::label('metode_pembayaran', 'Pembayaran', ['class'=>'col-md-2 control-label', 'style'=> 'margin-bottom:1px; margin-top:1px;']) !!}
+                      <div class="col-md-6">
+                        {!! Form::text('metode_pembayaran', null, ['class'=>'form-control','required','autocomplete'=>'off', 'placeholder' => 'Metode Pembayaran', 'id' => 'metode_pembayaran','readonly']) !!}
+                      </div>
+                    </div>
+
+                    <div class="col-md-2"></div>
+                    <p id="note_pembayaran" style="color: red; font-style: italic;"></p>
 
                     <span style="display: none">
                       {!! Form::text('jumlah_produk',$jumlah_produk->total_produk , ['class'=>'form-control']) !!}
-                      {!! Form::text('subtotal', $subtotal, ['class'=>'form-control']) !!}
                       {!! Form::text('kota_pengirim',null, ['class'=>'form-control','id'=>'kota_pengirim']) !!}
+                      {!! Form::text('subtotal', $subtotal, ['class'=>'form-control','id'=>'subtotal']) !!}
+                      {!! Form::text('ongkos_kirim', 0, ['class'=>'form-control','id'=>'ongkos_kirim']) !!}
                     </span>
 
                   </div>
+
                 </div>
 
                 <div class="col-md-5">
@@ -380,9 +386,9 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
                       </div>
 
                       @if($setting_aplikasi->tipe_aplikasi == 0)
-                      {!! Form::button('Selesai Pesanan <i class="material-icons">keyboard_arrow_right</i> ', ['id'=>'SelesaikanPesanan','class'=>'btn btn-round pull-right', 'type'=>'submit', 'style'=>'background-color: #01573e']) !!}
+                      {!! Form::button('Selesai Pesanan <i class="material-icons">keyboard_arrow_right</i> ', ['id'=>'SelesaikanPesanan','class'=>'btn btn-round pull-right', 'type'=>'button', 'style'=>'background-color: #01573e']) !!}
                       @else
-                      {!! Form::button('Selesai Pesanan <i class="material-icons">keyboard_arrow_right</i> ', ['id'=>'SelesaikanPesanan','class'=>'btn btn-round pull-right buttonColor', 'type'=>'submit']) !!}
+                      {!! Form::button('Selesai Pesanan <i class="material-icons">keyboard_arrow_right</i> ', ['id'=>'SelesaikanPesanan','class'=>'btn btn-round pull-right buttonColor', 'type'=>'button']) !!}
                       @endif 
 
                       @endif
@@ -472,10 +478,29 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
                   alertAlamatBelumLengkap();
                 }
                 else{
-                  hitungOngkir(kurir,kota_pengirim,kota_tujuan,berat_barang);
+                  if (kurir != 'cod') {                        
+                    hitungOngkir(kurir,kota_pengirim,kota_tujuan,berat_barang);
+                  }else{
+                    pengirimanCod();
+                  }
                 }
 
               });
+
+              function pengirimanCod(){    
+                var subtotal = parseInt($("#total_belanja").attr("data-total"));                
+                $("#subtotal").val(subtotal);
+                var subtotal = subtotal.format(0, 3, '.', ',');
+                $("#ongkos_kirim").val("0");
+                $("#biaya_kirim").text("0");
+                $("#ongkir").text("");
+                $("#waktu_pengiriman").text(""); 
+                document.getElementById('layanan_kurir').selectize.setValue("");   
+                $selectLayananKurir[0].selectize.clearOptions(); 
+                $("#total_belanja").text("Rp. "+subtotal);
+                $("#metode_pembayaran").val("Bayar di Tempat");
+                $("#note_pembayaran").text("Anda dapat melakukan pembayaran saat Anda menerima pesanan.");
+              }
 
               function alertAlamatBelumLengkap(){
                swal({
@@ -503,7 +528,7 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
                 $.each(resp.rajaongkir.results[0].costs, function (i, item) { 
                   status_layanan += 1;
                   options_layanan.push({
-                    id: resp.rajaongkir.results[0].costs[i].service+"|"+resp.rajaongkir.results[0].costs[i].cost[0].value+"|"+resp.rajaongkir.results[0].costs[i].cost[0].etd,
+                    id: resp.rajaongkir.results[0].costs[i].service+"|"+resp.rajaongkir.results[0].costs[i].cost[0].value+"|"+resp.rajaongkir.results[0].costs[i].cost[0].etd+"|"+resp.rajaongkir.results[0].costs[i].description,
                     service: resp.rajaongkir.results[0].costs[i].service+" | "+resp.rajaongkir.results[0].costs[i].description
                   });
 
@@ -537,7 +562,7 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
 
                   var resp_ongkir = resp.rajaongkir.results[0].costs[0].cost[0].value;
                   var total_belanja = parseInt(subtotal) + parseInt(resp_ongkir);
-                  var layanan_kurir = resp.rajaongkir.results[0].costs[0].service+"|"+resp.rajaongkir.results[0].costs[0].cost[0].value+"|"+resp.rajaongkir.results[0].costs[0].cost[0].etd;
+                  var layanan_kurir = resp.rajaongkir.results[0].costs[0].service+"|"+resp.rajaongkir.results[0].costs[0].cost[0].value+"|"+resp.rajaongkir.results[0].costs[0].cost[0].etd+"|"+resp.rajaongkir.results[0].costs[0].description;
 
                   var ongkir = resp_ongkir.format(0, 3, '.', ',');
                   var total_belanja = total_belanja.format(0, 3, '.', ',');
@@ -550,7 +575,8 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
             } 
 
             function updateOngkir(ongkir,waktu_pengiriman,layanan_kurir,total_belanja){
-
+              $("#subtotal").val(ongkir);
+              $("#ongkos_kirim").val(total_belanja);
               $("#biaya_kirim").text("Rp. "+ongkir);
               $("#biaya_kirim").removeClass('spinner');
               $("#ongkir").text("Rp. "+ongkir);
@@ -559,6 +585,8 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
               document.getElementById('layanan_kurir').selectize.setValue(layanan_kurir);    
               $("#total_belanja").removeClass('spinner'); 
               $("#total_belanja").text("Rp. "+total_belanja);
+              $("#metode_pembayaran").val("TRANSFER");
+              $("#note_pembayaran").text("Pembayaran dapat dilakukan melalui transfer ke rekening Bank BCA, Bank Mandiri, Bank Syariah Mandiri, Bank BNI, atau Bank BRI. Mohon transfer tepat sampai 3 digit terakhir.");
             }
 
             $selectLayananKurir.on('change', function(){
@@ -578,8 +606,10 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
 
               var subtotal = $("#total_belanja").attr("data-total");
               var total_belanja = parseInt(subtotal) + parseInt(ongkir);
-              var ongkir = ongkir.format(0, 3, '.', ',');;
+              var ongkir = ongkir.format(0, 3, '.', ',');
               var total_belanja = total_belanja.format(0, 3, '.', ',');
+              $("#subtotal").val(ongkir);
+              $("#ongkos_kirim").val(total_belanja);
               $("#biaya_kirim").text("Rp. "+ongkir);
               $("#ongkir").text("Rp. "+ongkir);
               $("#waktu_pengiriman").text(waktu_pengiriman); 
@@ -620,6 +650,10 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
               $("#myModal").hide();
             });  
 
+            $(document).on('click', '#pembayaran', function () {  
+              $("#modalPembayaran").show();
+            });  
+
             $(document).on('click', '#selesaiAlamatPengiriman', function () {
 
               var provinsi = $("#provinsi").text();
@@ -648,10 +682,55 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
             });
 
             $(document).on('click', '#SelesaikanPesanan', function () {
-
               $("#formSelesaikanPesanan").submit(function(){
                 return false;
               });
+              var setting_aplikasi = "{{$setting_aplikasi->tipe_aplikasi}}";
+              if (setting_aplikasi == 0) {
+                var pesan = "Berhasil Menyelesaikan Pesanan."+"<p>Terima Kasih Telah Berbelanja Di Warmart , Silahkan Tunggu Konfirmasi Dari Warung<p>";
+              }else{
+                var pesan = "Berhasil Menyelesaikan Pesanan."+"<p>Terima Kasih Telah Berbelanja Di Tempat Kami , Silahkan Tunggu Konfirmasi Dari Kami<p>";
+              }
+              var nama_pelanggan = $("#nama_pelanggan").val();
+              var no_telp = $("#no_telp").val();
+              var alamatPelanggan = $("#alamatPelanggan").val();
+              var kurir = $("#kurir").val();
+              var metode_pembayaran = $("#metode_pembayaran").val();
+
+
+              if (nama_pelanggan == '') {
+
+                swal({
+                  text: 'Nama harus di isi!'
+                }).then((result) => {
+                  if (result.value) {
+                    $("#nama_pelanggan").focus();
+                  }
+                }); 
+                
+
+              }else if(no_telp == ""){
+
+                swal({
+                  text: 'No. Telp harus di isi!'
+                }).then((result) => {
+                  if (result.value) {
+                    $("#no_telp").focus();
+                  }
+                });  
+
+              }else if(kurir == ""){   
+
+               swal({
+                text: 'Kurir harus di isi!'
+              }).then((result) => {
+                if (result.value) {
+                 document.getElementById('kurir').selectize.focus(); 
+               }
+             });
+
+            }else{
+
 
               swal({
                 html: "Anda Yakin Ingin Menyelesaikan Pesanan Ini ?",
@@ -666,7 +745,7 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
                   document.getElementById("formSelesaikanPesanan").submit();
 
                   swal({
-                    html :  "Berhasil Menyelesaikan Pesanan."+"<p>Terima Kasih Telah Berbelanja Di Warmart , Silahkan Tunggu Konfirmasi Dari Warung<p>",
+                    html : pesan,
                     showConfirmButton :  false,
                     type: "success",
                     timer: 10000,
@@ -676,10 +755,21 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
                   });
 
                 }
-              })
+              });
 
+            }
 
-            });
+          });
+
+            function alertValidationSelesaiPesanan(){
+              swal({
+                text: 'Kurir yang anda pilih tidak tersedia, silakan pilih yang lain!'
+              }).then((result) => {
+                if (result.value) {
+                  $selectKurir[0].selectize.focus();
+                }
+              }); 
+            }
 
             $(document).on('click', '#btnHapusProduk', function () {
               var id = $(this).attr("data-id");

@@ -58,23 +58,45 @@ class PemesananController extends Controller
         }
 
         $user = Auth::user();
-        $id_warung = $keranjang_belanja->first()->produk->id_warung;
-        $warung = Warung::find($id_warung);
-        $kabupaten = Indonesia::findCity($warung->kabupaten);
-        $nama_kabupaten = $kabupaten->name;
+        if ($cek_belanjaan == 0) {
+            $id_warung = 0;
+            $warung = 0;
+            $kabupaten = 0;
+            $nama_kabupaten = 0;
+        }else{
+            $id_warung = $keranjang_belanja->first()->produk->id_warung;
+            $warung = Warung::find($id_warung);
+            if ($warung->kabupaten != "") {
+                $kabupaten = Indonesia::findCity($warung->kabupaten);
+                $nama_kabupaten = $kabupaten->name;
+            }else{
+                $kabupaten = 0;
+                $nama_kabupaten = 0;
+            }
+        }
 
         return view('layouts.selesaikan_pemesanan', ['pagination' => $pagination, 'keranjang_belanjaan' => $keranjang_belanjaan, 'cek_belanjaan' => $cek_belanjaan, 'agent' => $agent, 'jumlah_produk' => $jumlah_produk, 'logo_warmart' => $logo_warmart, 'subtotal' => $subtotal, 'user' => $user,'berat_barang'=>$berat_barang,'kabupaten'=>$nama_kabupaten]);
+        
+
     }
 
     public function prosesSelesaikanPemesanan(Request $request)
     {
+
         //START TRANSAKSI
         DB::beginTransaction();
+        if ($request->layanan_kurir != '') {
+         $layanan_kurir     = explode("|", $request->layanan_kurir);
+         $layanan_kurir  = $layanan_kurir[0] ." | ".$layanan_kurir[3];
+     }else{
+        $layanan_kurir     = $request->layanan_kurir;
+    }
+
 
         // QUERY LENGKAPNYA ADA DI scopeKeranjangBelanjaPelanggan di model Keranjang Belanja
-        $keranjang_belanjaan = KeranjangBelanja::KeranjangBelanjaPelanggan()->get();
+    $keranjang_belanjaan = KeranjangBelanja::KeranjangBelanjaPelanggan()->get();
 
-        $id_user = Auth::user()->id;
+    $id_user = Auth::user()->id;
 
         $cek_pesanan = 0; // BUAT VARIABEL CEK PESANAN YANG KITA SET  0
         foreach ($keranjang_belanjaan as $key => $keranjang_belanjaans) {
@@ -88,6 +110,7 @@ class PemesananController extends Controller
 
                 // QUERY LENGKAPMNYA ADA DI scopeHitungTotalPesanan di mmodel Keranjang Belanja
                 $query_hitung_total = KeranjangBelanja::HitungTotalPesanan($id_warung)->first();
+                $subtotal = str_replace('.','',$request->ongkos_kirim) + $query_hitung_total['total_pesanan'];
 
                 // INSERT KE PESANAN PELANGGAN
                 $pesanan_pelanggan = PesananPelanggan::create([
@@ -96,8 +119,13 @@ class PemesananController extends Controller
                     'no_telp_pemesan' => $request->no_telp,
                     'alamat_pemesan'  => $request->alamat,
                     'jumlah_produk'   => $query_hitung_total['total_produk'],
-                    'subtotal'        => $query_hitung_total['total_pesanan'],
+                    'subtotal'        => $subtotal,
                     'id_warung'       => $id_warung,
+                    'kurir'             => $request->kurir,
+                    'layanan_kurir'             => $layanan_kurir,
+                    'metode_pembayaran'             => $request->metode_pembayaran,
+                    'biaya_kirim'       => str_replace('.','',$request->ongkos_kirim),
+                    'bank_transfer'       => "-",
                 ]);
 
                 // UBAH NILAI VARIABEL CEK PESANAN JADI ID WARUNG
@@ -175,7 +203,8 @@ class PemesananController extends Controller
 
         $userkey   = env('USERKEY');
         $passkey   = env('PASSKEY');
-        $isi_pesan = urlencode('Warmart: Assalamualaikum, Ada Pesanan baru Silakan Cek war-mart.id/detail-pesanan-warung/' . $id_pesanan_pelanggan);
+        $url_warung = url('/detail-pesanan-warung/'.$id_pesanan_pelanggan);
+        $isi_pesan = urlencode('Assalamualaikum, Ada Pesanan baru Silakan Cek ' . $url_warung);
 
         if (env('STATUS_SMS') == 1) {
             $client = new Client(); //GuzzleHttp\Client
