@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Jenssegers\Agent\Agent;
 use OpenGraph;
 use SEOMeta;
+use Indonesia;
 
 class PemesananController extends Controller
 {
@@ -49,14 +50,20 @@ class PemesananController extends Controller
         $logo_warmart = "" . asset('/assets/img/examples/warmart_logo.png') . "";
 
         $subtotal = 0;
+        $berat_barang = 0;
         foreach ($keranjang_belanja->get() as $keranjang_belanjaans) {
             $harga_produk = $keranjang_belanjaans->produk->harga_jual * $keranjang_belanjaans->jumlah_produk;
             $subtotal     = $subtotal += $harga_produk;
+            $berat_barang     = $berat_barang += $keranjang_belanjaans->produk->berat;
         }
 
         $user = Auth::user();
+        $id_warung = $keranjang_belanja->first()->produk->id_warung;
+        $warung = Warung::find($id_warung);
+        $kabupaten = Indonesia::findCity($warung->kabupaten);
+        $nama_kabupaten = $kabupaten->name;
 
-        return view('layouts.selesaikan_pemesanan', ['pagination' => $pagination, 'keranjang_belanjaan' => $keranjang_belanjaan, 'cek_belanjaan' => $cek_belanjaan, 'agent' => $agent, 'jumlah_produk' => $jumlah_produk, 'logo_warmart' => $logo_warmart, 'subtotal' => $subtotal, 'user' => $user]);
+        return view('layouts.selesaikan_pemesanan', ['pagination' => $pagination, 'keranjang_belanjaan' => $keranjang_belanjaan, 'cek_belanjaan' => $cek_belanjaan, 'agent' => $agent, 'jumlah_produk' => $jumlah_produk, 'logo_warmart' => $logo_warmart, 'subtotal' => $subtotal, 'user' => $user,'berat_barang'=>$berat_barang,'kabupaten'=>$nama_kabupaten]);
     }
 
     public function prosesSelesaikanPemesanan(Request $request)
@@ -179,37 +186,36 @@ class PemesananController extends Controller
     }
 
     public function dataProvinsi(){
-     $curl = curl_init();
+        $curl = curl_init();
 
-     curl_setopt_array($curl, array(
-      CURLOPT_URL => "https://api.rajaongkir.com/starter/province",
-      CURLOPT_RETURNTRANSFER => true,
-      CURLOPT_ENCODING => "",
-      CURLOPT_MAXREDIRS => 10,
-      CURLOPT_TIMEOUT => 30,
-      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-      CURLOPT_CUSTOMREQUEST => "GET",
-      CURLOPT_HTTPHEADER => array(
-        "key: f038d4bff2cc5732df792e9b97cae16d"
-    ),
-  ));
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://api.rajaongkir.com/starter/city?province=",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_HTTPHEADER => array(
+                "key: f038d4bff2cc5732df792e9b97cae16d"
+            ),
+        ));
 
-     $response = curl_exec($curl);
-     $err = curl_error($curl);
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
 
-     curl_close($curl);
+        curl_close($curl);
 
-     if ($err) {
-      echo "cURL Error #:" . $err;
-  } else {
-   echo $response;
+        if ($err) {
+          echo "cURL Error #:" . $err;
+      } else {
+          echo $response;
+      }
 
-}
 
+  }
 
-}
-
-public function dataKota(Request $request){
+  public function dataKota(Request $request){
     $curl = curl_init();
 
     curl_setopt_array($curl, array(

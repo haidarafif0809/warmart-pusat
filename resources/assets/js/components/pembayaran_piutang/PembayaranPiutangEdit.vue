@@ -494,6 +494,7 @@
         app.dataPiutang();
         app.dataKas(); 
         app.getResults();
+        app.getPembayaranPiutang();
     },
     watch: {
 // whenever question changes, this function will run
@@ -554,6 +555,24 @@ methods: {
             alert("Tidak Bisa Memuat Kas");
         });
     },
+    getPembayaranPiutang() {
+        var app = this; 
+        var id = app.$route.params.id;
+
+        axios.get(app.url_piutang+'/edit-pembayaran-piutang/'+id)
+        .then(function (resp) {
+            console.log(resp.data)
+            app.pembayaranPiutang.tanggal = resp.data.created_at;
+            app.pembayaranPiutang.keterangan = resp.data.keterangan;
+            app.pembayaranPiutang.kas = resp.data.cara_bayar;
+            app.loading = false;
+
+        })
+        .catch(function (resp) {
+            app.loading = false;
+            alert("Tidak Dapat Memuat Pembayaran Piutang");
+        });
+    }, 
     getResults(page) {
         var app = this; 
         var id = app.$route.params.id;

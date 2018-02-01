@@ -38,7 +38,9 @@ h4 {
 #formAlamat{
   display: none;
 }
-
+.modal {
+  overflow-y:auto;
+}
 </style>
 
 <?php
@@ -51,86 +53,86 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
   <div class="page-header header-small buttonColor" data-parallax="true">
     @endif
 
+    @if (Agent::isMobile())
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+          <div class="brand">
 
-    <!-- Classic Modal -->
-    <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close closeModal" data-dismiss="modal" aria-hidden="true">
-              <i class="material-icons">clear</i>
-            </button>
-            <h4 class="modal-title">Alamat Pengiriman</h4>
-          </div>
-          <div class="modal-body">
-            <p>
-             <div class="form-group">
-              <font class="validationProvinsi">Provinsi Harus di Isi</font>
-              {!! Form::select('provinsi', [''=>''],null, ['required'=> 'true','placeholder' => 'Cari Provinsi','id'=>'provinsi']) !!} 
-            </div>
+            @if($setting_aplikasi->tipe_aplikasi == 0)
+            <h3 class="title"> PASAR MUSLIM INDONESIA </h1>
+              <h4 class="title"> Segala Kemudahan Untuk Umat Muslim Berbelanja. </h4>
+              @else
+              <h3 class="title"> TOKO ONLINE DAN POS </h1>
+                @endif
 
-            <div class="form-group">
-              <font class="validationKota">Kota Harus di Isi</font>
-              {!! Form::select('kota', [''=>''],null, ['required'=> 'true','placeholder' => 'Cari Kota/Kab.','id'=>'kota']) !!}
-            </div>
-
-            <div class="form-group">
-              <font class="validationAlamat">Alamat Harus di Isi</font>
-              {!! Form::textarea('alamat', null, ['class'=>'form-control field','required','autocomplete'=>'off', 'placeholder' => 'Alamat Lengkap', 'id' => 'alamat', 'rows'=>'3']) !!}
-            </div>
-
-          </p>
-        </div>
-        <div class="modal-footer">
-          {!! Form::button('Simpan', ['id'=>'selesaiAlamatPengiriman','class'=>'btn buttonColor', 'type'=>'submit']) !!}
-          <button type="button" class="btn btn-danger btn-simple closeModal" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!--  End Modal -->
-
-
-
-  @if (Agent::isMobile())
-  <div class="container">
-    <div class="row">
-      <div class="col-md-8 col-md-offset-2">
-        <div class="brand">
-
-          @if($setting_aplikasi->tipe_aplikasi == 0)
-          <h3 class="title"> PASAR MUSLIM INDONESIA </h1>
-            <h4 class="title"> Segala Kemudahan Untuk Umat Muslim Berbelanja. </h4>
-            @else
-            <h3 class="title"> TOKO ONLINE DAN POS </h1>
-              @endif
-
-            </div>
-          </div>
-        </div>
-      </div>
-      @else
-      <div class="container">
-        <div class="row">
-          <div class="col-md-8 col-md-offset-2">
-            <div class="brand">
-
-              @if($setting_aplikasi->tipe_aplikasi == 0)
-              <h1 class="title"> PASAR MUSLIM INDONESIA </h3>
-                <h4 class="title"> Segala Kemudahan Untuk Umat Muslim Berbelanja. </h4>
-                @else
-                <h1 class="title">TOKO ONLINE DAN POS</h3>
-                  @endif
-
-                </div>
               </div>
             </div>
           </div>
-          @endif
         </div>
+        @else
+        <div class="container">
+          <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+              <div class="brand">
 
-        <div class="main main-raised">
-          <div class="container">
+                @if($setting_aplikasi->tipe_aplikasi == 0)
+                <h1 class="title"> PASAR MUSLIM INDONESIA </h3>
+                  <h4 class="title"> Segala Kemudahan Untuk Umat Muslim Berbelanja. </h4>
+                  @else
+                  <h1 class="title">TOKO ONLINE DAN POS</h3>
+                    @endif
+
+                  </div>
+                </div>
+              </div>
+            </div>
+            @endif
+          </div>
+
+          <div class="main main-raised">
+
+            <div class="container">
+
+
+              <!-- Classic Modal -->
+              <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close closeModal" data-dismiss="modal" aria-hidden="true">
+                        <i class="material-icons">clear</i>
+                      </button>
+                      <h4 class="modal-title">Alamat Pengiriman</h4>
+                    </div>
+                    <div class="modal-body">
+                      <p>
+                       <div class="form-group">
+                        <font class="validationProvinsi">Provinsi Harus di Isi</font>
+                        {!! Form::select('provinsi', [''=>''],null, ['required'=> 'true','placeholder' => 'Cari Provinsi','id'=>'provinsi']) !!} 
+                      </div>
+
+                      <div class="form-group">
+                        <font class="validationKota">Kota Harus di Isi</font>
+                        {!! Form::select('kota', [''=>''],null, ['required'=> 'true','placeholder' => 'Cari Kota/Kab.','id'=>'kota']) !!}
+                      </div>
+
+                      <div class="form-group">
+                        <font class="validationAlamat">Alamat Harus di Isi</font>
+                        {!! Form::textarea('alamat', null, ['class'=>'form-control field','required','autocomplete'=>'off', 'placeholder' => 'Alamat Lengkap', 'id' => 'alamat', 'rows'=>'3']) !!}
+                      </div>
+
+                    </p>
+                  </div>
+                  <div class="modal-footer">
+                    {!! Form::button('Simpan', ['id'=>'selesaiAlamatPengiriman','class'=>'btn buttonColor', 'type'=>'submit']) !!}
+                    <button type="button" class="btn btn-danger btn-simple closeModal" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--  End Modal -->
+
             <ul class="breadcrumb" style="margin-top: 10px; margin-bottom: 10px;">
               <li><a href="{{ url('/daftar-produk') }}"><b>Home</b></a></li>
               <li><a href="{{ url('/keranjang-belanja') }}"><b>Keranjang Belanja</b></a></li>
@@ -212,6 +214,7 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
                     <span style="display: none">
                       {!! Form::text('jumlah_produk',$jumlah_produk->total_produk , ['class'=>'form-control']) !!}
                       {!! Form::text('subtotal', $subtotal, ['class'=>'form-control']) !!}
+                      {!! Form::text('kota_pengirim',null, ['class'=>'form-control','id'=>'kota_pengirim']) !!}
                     </span>
 
                   </div>
@@ -268,7 +271,7 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
                   {{$pagination}}
                   <div class="card" style="margin-bottom: 1px; margin-top: 1px;">
                     <div class="row">
-                      <div class="col-xs-6">
+                      <div class="col-xs-8">
                         <p style="margin-left: 5px; margin-top: 5px; margin-bottom: 5px;"><b> Total Produk</b></p>
                       </div>
                       <div class="col-xs-6">
@@ -351,20 +354,26 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
 
                         <div class="row">
                           <div class="col-md-4"><b>Total Produk</b></div>
-                          <div class="col-md-4"><b>:</b></div>
-                          <div class="col-md-4"><b>{{ $jumlah_produk->total_produk }}</b></div>
+                          <div class="col-md-3"><b>:</b></div>
+                          <div class="col-md-5"><b class="text-right">{{ $jumlah_produk->total_produk }}</b></div>
+                        </div>
+
+                        <div class="row">
+                          <div class="col-md-4"><b>Subtotal</b></div>
+                          <div class="col-md-3"><b>:</b></div>
+                          <div class="col-md-5"><b class="text-right">Rp. {{ number_format($subtotal,0,',','.') }} </b></div>
                         </div>
 
                         <div class="row">
                           <div class="col-md-4"><b>Biaya Kirim</b></div>
-                          <div class="col-md-4"><b>:</b></div>
-                          <div class="col-md-4""><b id="biaya_kirim">0</b></div>
+                          <div class="col-md-3"><b>:</b></div>
+                          <div class="col-md-5"><b class="text-right" id="biaya_kirim">0</b></div>
                         </div>
 
                         <div class="row">
-                          <div class="col-md-4"><h5><b>Total </b></h5></div>
-                          <div class="col-md-4"><h5><b>:</h5></div>
-                            <div class="col-md-4"><h5 class="text-danger"><b>RP {{ number_format($subtotal,0,',','.') }}</b></h5></div>
+                          <div class="col-md-4"><h5><b>Total Belanja</b></h5></div>
+                          <div class="col-md-3"><h5><b>:</h5></div>
+                            <div class="col-md-5"><h5 class="text-danger"><b class="text-right" id="total_belanja" data-total="{{$subtotal}}">Rp. {{ number_format($subtotal,0,',','.') }}</b></h5></div>
                           </div>
                         </div>
 
@@ -427,17 +436,33 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
 
 
               $.getJSON('{{ Url("provinsi-destinasi-pengiriman") }}',{'_token': $('meta[name=csrf-token]').attr('content')}, function(resp){ 
-                $select[0].selectize.addOption(resp.rajaongkir.results);               
-              });
+                $select[0].selectize.addOption(resp.rajaongkir.results);   
+                var kabupaten = "{{$kabupaten}}";
+                var kota_pengirim = $("#kota_pengirim").val();
+
+                if (kota_pengirim == '') {
+
+                 $.each(resp.rajaongkir.results, function (i, item) { 
+
+                  if (kabupaten == resp.rajaongkir.results[i].type+" "+resp.rajaongkir.results[i].city_name) {
+                    var city_id = resp.rajaongkir.results[i].city_id;
+                    $("#kota_pengirim").val(city_id);
+
+                  }
+
+                }); 
+
+               }          
+             });
 
               $selectKurir.on('change', function(){
 
                 var kurir = $(this).val();
-                var kota_pengirim = "21";
+                var kota_pengirim = $("#kota_pengirim").val();
                 var kota_tujuan = $("#kota").val();
                 var provinsi = $("#provinsi").val();
                 var alamat = $("#alamat").val();
-                var berat_barang = "2000";
+                var berat_barang = "{{$berat_barang}}";
 
                 if (kota_tujuan == '') {
                   alertAlamatBelumLengkap();
@@ -461,75 +486,108 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
 
              function hitungOngkir(kurir,kota_pengirim,kota_tujuan,berat_barang){
 
+              $("#total_belanja").addClass('spinner');
+              $("#total_belanja").text('');
               $("#ongkir").addClass('spinner');
               $("#ongkir").text('');
               $("#biaya_kirim").addClass('spinner');
               $("#biaya_kirim").text('');
-              $("#waktu_pengiriman").text('');    
+              $("#waktu_pengiriman").text('');  
 
               $.getJSON('{{ Url("hitung-ongkir") }}',{'_token': $('meta[name=csrf-token]').attr('content'),kurir:kurir,kota_pengirim:kota_pengirim,kota_tujuan:kota_tujuan,berat_barang:berat_barang}, function(resp){ 
                 $selectLayananKurir[0].selectize.clearOptions();
-                var options_layanan = []; 
+                var subtotal = $("#total_belanja").attr("data-total");
+                var options_layanan = [];
+                var status_layanan = 0; 
 
                 $.each(resp.rajaongkir.results[0].costs, function (i, item) { 
-
+                  status_layanan += 1;
                   options_layanan.push({
                     id: resp.rajaongkir.results[0].costs[i].service+"|"+resp.rajaongkir.results[0].costs[i].cost[0].value+"|"+resp.rajaongkir.results[0].costs[i].cost[0].etd,
                     service: resp.rajaongkir.results[0].costs[i].service+" | "+resp.rajaongkir.results[0].costs[i].description
                   });
 
                 });
-
                 $selectLayananKurir[0].selectize.addOption(options_layanan);    
 
-                if (resp.rajaongkir.results[0].code == "pos") {
+                if (status_layanan == 0) {
+                  swal({
+                    text: 'Kurir yang anda pilih tidak tersedia, silakan pilih yang lain!'
+                  }).then((result) => {
+                    if (result.value) {
+                      $selectKurir[0].selectize.focus();
+                    }
+                  });  
 
-                  var waktu_pengiriman = "Waktu Pengiriman " +resp.rajaongkir.results[0].costs[0].cost[0].etd;
+                  var ongkir = 0;
+                  var waktu_pengiriman = "";
+                  var layanan_kurir = "";
+                  var total_belanja = parseInt(subtotal);             
+                  updateOngkir(ongkir,waktu_pengiriman,layanan_kurir,total_belanja);
+
                 }else{
 
-                  var waktu_pengiriman = "Waktu Pengiriman " +resp.rajaongkir.results[0].costs[0].cost[0].etd+ " HARI.";
+                  if (resp.rajaongkir.results[0].code == "pos") {
+
+                    var waktu_pengiriman = "Waktu Pengiriman " +resp.rajaongkir.results[0].costs[0].cost[0].etd;
+                  }else{
+
+                    var waktu_pengiriman = "Waktu Pengiriman " +resp.rajaongkir.results[0].costs[0].cost[0].etd+ " HARI.";
+                  }
+
+                  var resp_ongkir = resp.rajaongkir.results[0].costs[0].cost[0].value;
+                  var total_belanja = parseInt(subtotal) + parseInt(resp_ongkir);
+                  var layanan_kurir = resp.rajaongkir.results[0].costs[0].service+"|"+resp.rajaongkir.results[0].costs[0].cost[0].value+"|"+resp.rajaongkir.results[0].costs[0].cost[0].etd;
+
+                  var ongkir = resp_ongkir.format(0, 3, '.', ',');
+                  var total_belanja = total_belanja.format(0, 3, '.', ',');
+                  updateOngkir(ongkir,waktu_pengiriman,layanan_kurir,total_belanja);
+
                 }
 
-                var resp_ongkir = resp.rajaongkir.results[0].costs[0].cost[0].value;
-                var layanan_kurir = resp.rajaongkir.results[0].costs[0].service+"|"+resp.rajaongkir.results[0].costs[0].cost[0].value+"|"+resp.rajaongkir.results[0].costs[0].cost[0].etd;
-
-                var ongkir = resp_ongkir.format(0, 3, '.', ',');
-                $("#biaya_kirim").text("Rp. "+ongkir);
-                $("#biaya_kirim").removeClass('spinner');
-                $("#ongkir").text("Rp. "+ongkir);
-                $("#ongkir").removeClass('spinner');
-                $("#waktu_pengiriman").text(waktu_pengiriman); 
-                document.getElementById('layanan_kurir').selectize.setValue(layanan_kurir)
 
               });
             } 
 
-            $selectLayananKurir.on('change', function(){
+            function updateOngkir(ongkir,waktu_pengiriman,layanan_kurir,total_belanja){
 
-              $("#ongkir").addClass('spinner');
-              $("#ongkir").text('');
-              $("#biaya_kirim").addClass('spinner');
-              $("#biaya_kirim").text('');
-              $("#waktu_pengiriman").text('');   
-
-              var layanan = $(this).val();
-              var kurir = $("#kurir").val();
-              var service = layanan.split("|");         
-              var ongkir = parseInt(service[1]);
-              if (kurir == "pos") {
-                var waktu_pengiriman = "Waktu Pengiriman " +service[2];
-              }else{
-                var waktu_pengiriman = "Waktu Pengiriman " +service[2]+ " HARI.";
-              }
-
-              var ongkir = ongkir.format(0, 3, '.', ',');
               $("#biaya_kirim").text("Rp. "+ongkir);
               $("#biaya_kirim").removeClass('spinner');
               $("#ongkir").text("Rp. "+ongkir);
               $("#ongkir").removeClass('spinner');
               $("#waktu_pengiriman").text(waktu_pengiriman); 
+              document.getElementById('layanan_kurir').selectize.setValue(layanan_kurir);    
+              $("#total_belanja").removeClass('spinner'); 
+              $("#total_belanja").text("Rp. "+total_belanja);
+            }
 
-            });
+            $selectLayananKurir.on('change', function(){
+
+              var layanan = $(this).val();
+              var kurir = $("#kurir").val();
+              var service = layanan.split("|");         
+              var ongkir = parseInt(service[1]);
+
+              if (layanan != "") {
+
+               if (kurir == "pos") {
+                var waktu_pengiriman = "Waktu Pengiriman " +service[2];
+              }else{
+                var waktu_pengiriman = "Waktu Pengiriman " +service[2]+ " HARI.";
+              }
+
+              var subtotal = $("#total_belanja").attr("data-total");
+              var total_belanja = parseInt(subtotal) + parseInt(ongkir);
+              var ongkir = ongkir.format(0, 3, '.', ',');;
+              var total_belanja = total_belanja.format(0, 3, '.', ',');
+              $("#biaya_kirim").text("Rp. "+ongkir);
+              $("#ongkir").text("Rp. "+ongkir);
+              $("#waktu_pengiriman").text(waktu_pengiriman); 
+              $("#total_belanja").text("Rp. "+total_belanja);
+
+            }
+
+          });
 
             $(document).on('change', '#provinsi', function () {     
 
