@@ -51,6 +51,14 @@ h4 {
   border-bottom: 2px solid #ddd;
   padding: 5px 0px 5px 0px;
 }
+
+.buttonColor{
+  @if($setting_aplikasi->tipe_aplikasi == "1") /*tipe-aplikasi == 1, aplikasi topos*/
+  background-color: #2ac326;
+  @else
+  background-color: #01573e;
+  @endif
+}
 </style>
 
 @if($setting_aplikasi->tipe_aplikasi == 0)
@@ -123,12 +131,9 @@ h4 {
                           <h3>
                             Keranjang Belanjaan Anda Kosong, Silahkan Berbelanja.
                           </h3>
-                          <a class="btn btn-block" href="{{ url('/daftar-produk') }}" style="background-color: #01573e" type="button">
-                            Lanjut Belanja
-                            <i class="material-icons">
-                              keyboard_arrow_right
-                            </i>
-                          </a>
+
+                          <a  href="{{ url('/daftar-produk') }}" type="button" class="btn btn-block buttonColor">Lanjut Belanja<i class="material-icons">keyboard_arrow_right</i></a>
+                          
                         </center>
                       </div>
                     </div>

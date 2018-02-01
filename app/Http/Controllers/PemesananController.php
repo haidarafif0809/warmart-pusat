@@ -58,12 +58,21 @@ class PemesananController extends Controller
         }
 
         $user = Auth::user();
-        $id_warung = $keranjang_belanja->first()->produk->id_warung;
-        $warung = Warung::find($id_warung);
-        $kabupaten = Indonesia::findCity($warung->kabupaten);
-        $nama_kabupaten = $kabupaten->name;
+        if ($cek_belanjaan == 0) {
+            $id_warung = 0;
+            $warung = 0;
+            $kabupaten = 0;
+            $nama_kabupaten = 0;
+        }else{
+            $id_warung = $keranjang_belanja->first()->produk->id_warung;
+            $warung = Warung::find($id_warung);
+            $kabupaten = Indonesia::findCity($warung->kabupaten);
+            $nama_kabupaten = $kabupaten->name;
+        }
 
         return view('layouts.selesaikan_pemesanan', ['pagination' => $pagination, 'keranjang_belanjaan' => $keranjang_belanjaan, 'cek_belanjaan' => $cek_belanjaan, 'agent' => $agent, 'jumlah_produk' => $jumlah_produk, 'logo_warmart' => $logo_warmart, 'subtotal' => $subtotal, 'user' => $user,'berat_barang'=>$berat_barang,'kabupaten'=>$nama_kabupaten]);
+        
+
     }
 
     public function prosesSelesaikanPemesanan(Request $request)
