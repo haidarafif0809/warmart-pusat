@@ -181,6 +181,16 @@
                     </span>
                 </router-link>
             </li>
+            <li>
+                <router-link :to="{name: 'indexPembayaranHutang'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        PH
+                    </span>
+                    <span class="sidebar-normal">
+                        Pembayaran Hutang
+                    </span>
+                </router-link>
+            </li>
         </ul>
     </div>
 </li>

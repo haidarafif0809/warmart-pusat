@@ -1003,6 +1003,7 @@ methods: {
                                     app.inputPembayaranHutang.subtotal = 0
                                     app.loading = false;                
                                     app.$router.replace('/pembayaran-hutang');
+                                     window.open('pembayaran-hutang/cetak-besar-pembayaran-hutang/'+id,'_blank');
                                 }
                                 })
                                 .catch(function (resp) {

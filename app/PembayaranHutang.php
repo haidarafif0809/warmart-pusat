@@ -93,4 +93,17 @@ class PembayaranHutang extends Model
 
         return $query_pembayaran_hutang;
     }
+
+            public function scopeQueryCetak($query_pembayaran_hutang,$id)
+    {
+        $query_pembayaran_hutang =  PembayaranHutang::select('warungs.name AS nama_warung','warungs.alamat AS alamat_warung','warungs.no_telpon AS no_telp_warung','pembayaran_hutangs.id_pembayaran_hutang as id', 'pembayaran_hutangs.no_faktur_pembayaran as no_faktur', 'supliers.nama_suplier as nama_suplier', DB::raw('DATE_FORMAT(pembayaran_hutangs.created_at, "%d/%m/%Y %H:%i:%s") as waktu_beli'), 'pembayaran_hutangs.total as total', 'kas.nama_kas as nama_kas','users.name as name','pembayaran_hutangs.keterangan as keterangan')
+            ->leftJoin('supliers', 'pembayaran_hutangs.suplier_id', '=', 'supliers.id')
+            ->leftJoin('kas', 'pembayaran_hutangs.cara_bayar', '=', 'kas.id')
+            ->leftJoin('users', 'pembayaran_hutangs.created_by', '=', 'users.id')
+            ->leftJoin('warungs','pembayaran_hutangs.warung_id','=','warungs.id')
+            ->where('pembayaran_hutangs.id_pembayaran_hutang',$id)
+            ->where('pembayaran_hutangs.warung_id', Auth::user()->id_warung)->orderBy('pembayaran_hutangs.id_pembayaran_hutang');
+
+        return $query_pembayaran_hutang;
+    }
 }

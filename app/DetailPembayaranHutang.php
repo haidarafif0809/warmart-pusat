@@ -2,8 +2,9 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
 use Auth;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Yajra\Auditable\AuditableTrait;
 
 class DetailPembayaranHutang extends Model
@@ -16,7 +17,7 @@ class DetailPembayaranHutang extends Model
     // DATA DETAIL PEMBAYARAN hutang
     public function scopeDataDetailPembayaranHutang($query_detail, $no_faktur_pembayaran)
     {
-        $query_detail = DetailPembayaranHutang::select(['detail_pembayaran_hutangs.no_faktur_pembelian', 'detail_pembayaran_hutangs.subtotal_hutang', 'detail_pembayaran_hutangs.id_detail_pembayaran_hutang', 'detail_pembayaran_hutangs.suplier_id', 'detail_pembayaran_hutangs.jatuh_tempo', 'detail_pembayaran_hutangs.hutang', 'detail_pembayaran_hutangs.potongan', 'detail_pembayaran_hutangs.jumlah_bayar', 'supliers.nama_suplier'])
+        $query_detail = DetailPembayaranHutang::select(['detail_pembayaran_hutangs.no_faktur_pembelian', 'detail_pembayaran_hutangs.subtotal_hutang', 'detail_pembayaran_hutangs.id_detail_pembayaran_hutang', 'detail_pembayaran_hutangs.suplier_id',DB::raw('DATE_FORMAT(detail_pembayaran_hutangs.jatuh_tempo, "%d/%m/%Y") as jatuh_tempo'), 'detail_pembayaran_hutangs.hutang', 'detail_pembayaran_hutangs.potongan', 'detail_pembayaran_hutangs.jumlah_bayar', 'supliers.nama_suplier'])
             ->leftJoin('supliers', 'detail_pembayaran_hutangs.suplier_id', '=', 'supliers.id')
             ->where('detail_pembayaran_hutangs.warung_id', Auth::user()->id_warung)
             ->where('detail_pembayaran_hutangs.no_faktur_pembayaran', $no_faktur_pembayaran)
@@ -29,7 +30,7 @@ class DetailPembayaranHutang extends Model
     public function scopeCariDetailPembayaranHutang($query_detail, $request, $no_faktur_pembayaran)
     {
         $search    = $request->search;
-        $query_detail = DetailPembayaranHutang::select(['detail_pembayaran_hutangs.no_faktur_pembelian', 'detail_pembayaran_hutangs.subtotal_hutang', 'detail_pembayaran_hutangs.id_detail_pembayaran_hutang', 'detail_pembayaran_hutangs.suplier_id', 'detail_pembayaran_hutangs.jatuh_tempo', 'detail_pembayaran_hutangs.hutang', 'detail_pembayaran_hutangs.potongan', 'detail_pembayaran_hutangs.jumlah_bayar', 'supliers.nama_suplier'])
+        $query_detail = DetailPembayaranHutang::select(['detail_pembayaran_hutangs.no_faktur_pembelian', 'detail_pembayaran_hutangs.subtotal_hutang', 'detail_pembayaran_hutangs.id_detail_pembayaran_hutang', 'detail_pembayaran_hutangs.suplier_id', DB::raw('DATE_FORMAT(detail_pembayaran_hutangs.jatuh_tempo, "%d/%m/%Y") as jatuh_tempo'), 'detail_pembayaran_hutangs.hutang', 'detail_pembayaran_hutangs.potongan', 'detail_pembayaran_hutangs.jumlah_bayar', 'supliers.nama_suplier'])
             ->leftJoin('supliers', 'detail_pembayaran_hutangs.suplier_id', '=', 'supliers.id')
             ->where('detail_pembayaran_hutangs.no_faktur_pembayaran', $no_faktur_pembayaran)
             ->where('detail_pembayaran_hutangs.warung_id', Auth::user()->id_warung)

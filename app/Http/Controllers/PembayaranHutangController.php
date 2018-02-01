@@ -492,12 +492,15 @@ class PembayaranHutangController extends Controller
             return 0;
         } else {
             //INSERT PEMBAYARAN hutang
+            $jam                = date("h:i:s");
             $pembayaran_hutang = PembayaranHutang::create([
                 'no_faktur_pembayaran' => $no_faktur,
                 'total'                => $request->subtotal,
                 'cara_bayar'           => $request->kas,
                 'keterangan'           => $request->keterangan,
                 'warung_id'            => $warung_id,
+                'created_at' => $this->tanggalSql($request->tanggal) . " " . $jam,
+                'updated_at' => $this->tanggalSql($request->tanggal) . " " . $jam,
             ]);
             
 
@@ -515,6 +518,9 @@ class PembayaranHutangController extends Controller
                     'suplier_id'            => $data_tbs->suplier_id,
                     'warung_id'            => $data_tbs->warung_id,
                     'subtotal_hutang'       => $data_tbs->subtotal_hutang,
+                    'created_at' => $this->tanggalSql($request->tanggal) . " " . $jam,
+                    'updated_at' => $this->tanggalSql($request->tanggal) . " " . $jam,
+
                 ]);
 
                 // INSERT TRANSAKSI hutang TIDAK DIBUAT DI OBSERVER KARENA DI OBSERVER ID pembelian DI ANGGAP NULL
@@ -546,6 +552,13 @@ class PembayaranHutangController extends Controller
 
             return response()->json($respons);
         }
+    }
+
+     public function tanggalSql($tangal)
+    {
+        $date        = date_create($tangal);
+        $date_format = date_format($date, "Y-m-d");
+        return $date_format;
     }
 
     /**
@@ -650,6 +663,8 @@ class PembayaranHutangController extends Controller
                 'total'      => $request->subtotal,
                 'cara_bayar' => $request->kas,
                 'keterangan' => $request->keterangan,
+                'created_at' => $this->tanggalSql($request->tanggal) . " " . $jam,
+                'updated_at' => $this->tanggalSql($request->tanggal) . " " . $jam,
             ]);
 
             // INSERT DETAIL PEMBAYARAN PIUTANG
@@ -665,6 +680,8 @@ class PembayaranHutangController extends Controller
                     'suplier_id'         => $data_tbs->suplier_id,
                     'warung_id'            => $data_tbs->warung_id,
                      'subtotal_hutang'       => $data_tbs->subtotal_hutang,
+                    'created_at'           => $this->tanggalSql($request->tanggal) . " " . $jam,
+                    'updated_at'           => $this->tanggalSql($request->tanggal) . " " . $jam,
                 ]);
 
                 // INSERT TRANSAKSI PIUTANG TIDAK DIBUAT DI OBSERVER KARENA DI OBSERVER ID PENJUALAN DI ANGGAP NULL
@@ -784,7 +801,7 @@ class PembayaranHutangController extends Controller
     {
         //START TRANSAKSI
         DB::beginTransaction();
-        
+
         if (!PembayaranHutang::destroy($id)) {
             DB::rollBack();
             return 0;
@@ -792,5 +809,53 @@ class PembayaranHutangController extends Controller
             DB::commit();
             return response(200);
         }
+    }
+
+           public function cetakBesarPembayaranHutang($id)
+    {
+        //SETTING APLIKASI
+        $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
+
+        $pembayaran_hutang = PembayaranHutang::QueryCetak($id)->first();
+
+        $detail_pembayaran_hutang = DetailPembayaranHutang::dataDetailPembayaranHutang($pembayaran_hutang->no_faktur)->get();
+        $terbilang        = $this->kekata($pembayaran_hutang->total);
+        $subtotal         = 0;
+        foreach ($detail_pembayaran_hutang as $detail_pembayaran_hutangs) {
+            $subtotal += $detail_pembayaran_hutangs->jumlah_bayar;
+
+        }
+
+        return view('pembayaran_hutang.cetak_besar', ['pembayaran_hutang' => $pembayaran_hutang, 'detail_pembayaran_hutang' => $detail_pembayaran_hutang, 'subtotal' => $subtotal, 'terbilang' => $terbilang,'setting_aplikasi' => $setting_aplikasi])->with(compact('html'));
+    }
+
+        public function kekata($x)
+    {
+        $x     = abs($x);
+        $angka = array("", "satu", "dua", "tiga", "empat", "lima",
+            "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas");
+        $temp = "";
+        if ($x < 12) {
+            $temp = " " . $angka[$x];
+        } else if ($x < 20) {
+            $temp = $this->kekata($x - 10) . " belas";
+        } else if ($x < 100) {
+            $temp = $this->kekata($x / 10) . " puluh" . $this->kekata($x % 10);
+        } else if ($x < 200) {
+            $temp = " seratus" . $this->kekata($x - 100);
+        } else if ($x < 1000) {
+            $temp = $this->kekata($x / 100) . " ratus" . $this->kekata($x % 100);
+        } else if ($x < 2000) {
+            $temp = " seribu" . $this->kekata($x - 1000);
+        } else if ($x < 1000000) {
+            $temp = $this->kekata($x / 1000) . " ribu" . $this->kekata($x % 1000);
+        } else if ($x < 1000000000) {
+            $temp = $this->kekata($x / 1000000) . " juta" . $this->kekata($x % 1000000);
+        } else if ($x < 1000000000000) {
+            $temp = $this->kekata($x / 1000000000) . " milyar" . $this->kekata(fmod($x, 1000000000));
+        } else if ($x < 1000000000000000) {
+            $temp = $this->kekata($x / 1000000000000) . " trilyun" . $this->kekata(fmod($x, 1000000000000));
+        }
+        return $temp;
     }
 }
