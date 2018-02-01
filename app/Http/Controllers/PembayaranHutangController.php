@@ -492,12 +492,15 @@ class PembayaranHutangController extends Controller
             return 0;
         } else {
             //INSERT PEMBAYARAN hutang
+            $jam                = date("h:i:s");
             $pembayaran_hutang = PembayaranHutang::create([
                 'no_faktur_pembayaran' => $no_faktur,
                 'total'                => $request->subtotal,
                 'cara_bayar'           => $request->kas,
                 'keterangan'           => $request->keterangan,
                 'warung_id'            => $warung_id,
+                'created_at' => $this->tanggalSql($request->tanggal) . " " . $jam,
+                'updated_at' => $this->tanggalSql($request->tanggal) . " " . $jam,
             ]);
             
 
@@ -515,6 +518,9 @@ class PembayaranHutangController extends Controller
                     'suplier_id'            => $data_tbs->suplier_id,
                     'warung_id'            => $data_tbs->warung_id,
                     'subtotal_hutang'       => $data_tbs->subtotal_hutang,
+                    'created_at' => $this->tanggalSql($request->tanggal) . " " . $jam,
+                    'updated_at' => $this->tanggalSql($request->tanggal) . " " . $jam,
+
                 ]);
 
                 // INSERT TRANSAKSI hutang TIDAK DIBUAT DI OBSERVER KARENA DI OBSERVER ID pembelian DI ANGGAP NULL
@@ -548,7 +554,12 @@ class PembayaranHutangController extends Controller
         }
     }
 
- 
+     public function tanggalSql($tangal)
+    {
+        $date        = date_create($tangal);
+        $date_format = date_format($date, "Y-m-d");
+        return $date_format;
+    }
 
     /**
      * Display the specified resource.
@@ -652,6 +663,8 @@ class PembayaranHutangController extends Controller
                 'total'      => $request->subtotal,
                 'cara_bayar' => $request->kas,
                 'keterangan' => $request->keterangan,
+                'created_at' => $this->tanggalSql($request->tanggal) . " " . $jam,
+                'updated_at' => $this->tanggalSql($request->tanggal) . " " . $jam,
             ]);
 
             // INSERT DETAIL PEMBAYARAN PIUTANG
@@ -667,6 +680,8 @@ class PembayaranHutangController extends Controller
                     'suplier_id'         => $data_tbs->suplier_id,
                     'warung_id'            => $data_tbs->warung_id,
                      'subtotal_hutang'       => $data_tbs->subtotal_hutang,
+                    'created_at'           => $this->tanggalSql($request->tanggal) . " " . $jam,
+                    'updated_at'           => $this->tanggalSql($request->tanggal) . " " . $jam,
                 ]);
 
                 // INSERT TRANSAKSI PIUTANG TIDAK DIBUAT DI OBSERVER KARENA DI OBSERVER ID PENJUALAN DI ANGGAP NULL
