@@ -82,7 +82,7 @@
                <div class="card-content">
                  <h4 class="card-title"> Edit Kas Keluar </h4>
                  <div>
-                    <form v-on:submit.prevent="saveForm()" class="form-horizontal"> 
+                    <form  class="form-horizontal"> 
                             <div class="form-group">
                                 <label for="kas" class="col-md-2 control-label">Kas</label>
                                 <div class="col-md-4 col-xs-10">
@@ -130,7 +130,7 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-md-offset-2">
-                                    <button class="btn btn-primary" id="btnSimpanKasKeluar" type="submit"><i class="material-icons">send</i> Submit</button>
+                                    <button class="btn btn-primary" id="btnSimpanKasKeluar" v-on:click="selesaiTransaksi()"><i class="material-icons">send</i> Submit</button>
                                 </div>
                             </div>
                         </form>
@@ -206,6 +206,18 @@ export default {
         });
 
         },
+        selesaiTransaksi(){
+        this.$swal({
+          text: "Anda Yakin Ingin Menyelesaikan Transaksi Ini ?",
+          buttons: {
+            cancel: true,
+            confirm: "OK"                   
+          },
+        }).then((value) => {
+          if (!value) throw null;
+          this.saveForm(value);
+        });
+      },
         saveForm() {
             var app = this;
             var newkasKeluar = app.kasKeluar;
