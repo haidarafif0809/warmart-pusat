@@ -68,8 +68,11 @@ class PemesananController extends Controller
 
     public function prosesSelesaikanPemesanan(Request $request)
     {
+
         //START TRANSAKSI
         DB::beginTransaction();
+        $layanan_kurir     = explode("|", $request->layanan_kurir);
+        $layanan_kurir  = $layanan_kurir[0] ." | ".$layanan_kurir[3];
 
         // QUERY LENGKAPNYA ADA DI scopeKeranjangBelanjaPelanggan di model Keranjang Belanja
         $keranjang_belanjaan = KeranjangBelanja::KeranjangBelanjaPelanggan()->get();
@@ -88,6 +91,7 @@ class PemesananController extends Controller
 
                 // QUERY LENGKAPMNYA ADA DI scopeHitungTotalPesanan di mmodel Keranjang Belanja
                 $query_hitung_total = KeranjangBelanja::HitungTotalPesanan($id_warung)->first();
+                $subtotal = str_replace('.','',$request->ongkos_kirim) + $query_hitung_total['total_pesanan'];
 
                 // INSERT KE PESANAN PELANGGAN
                 $pesanan_pelanggan = PesananPelanggan::create([
@@ -96,8 +100,13 @@ class PemesananController extends Controller
                     'no_telp_pemesan' => $request->no_telp,
                     'alamat_pemesan'  => $request->alamat,
                     'jumlah_produk'   => $query_hitung_total['total_produk'],
-                    'subtotal'        => $query_hitung_total['total_pesanan'],
+                    'subtotal'        => $subtotal,
                     'id_warung'       => $id_warung,
+                    'kurir'             => $request->kurir,
+                    'layanan_kurir'             => $layanan_kurir,
+                    'metode_pembayaran'             => $request->metode_pembayaran,
+                    'biaya_kirim'       => str_replace('.','',$request->ongkos_kirim),
+                    'bank_transfer'       => "-",
                 ]);
 
                 // UBAH NILAI VARIABEL CEK PESANAN JADI ID WARUNG
@@ -175,7 +184,8 @@ class PemesananController extends Controller
 
         $userkey   = env('USERKEY');
         $passkey   = env('PASSKEY');
-        $isi_pesan = urlencode('Warmart: Assalamualaikum, Ada Pesanan baru Silakan Cek war-mart.id/detail-pesanan-warung/' . $id_pesanan_pelanggan);
+        $url_warung = url('/detail-pesanan-warung/'.$id_pesanan_pelanggan);
+        $isi_pesan = urlencode('Warmart: Assalamualaikum, Ada Pesanan baru Silakan Cek ' . $url_warung);
 
         if (env('STATUS_SMS') == 1) {
             $client = new Client(); //GuzzleHttp\Client
