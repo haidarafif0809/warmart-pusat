@@ -7,9 +7,11 @@ use App\EditTbsPembayaranPiutang;
 use App\Kas;
 use App\PembayaranPiutang;
 use App\PenjualanPos;
+use App\SettingAplikasi;
 use App\TbsPembayaranPiutang;
 use App\TransaksiKas;
 use App\TransaksiPiutang;
+use App\Warung;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -651,5 +653,32 @@ class PembayaranPiutangController extends Controller
             return response()->json($respons);
         }
 
+    }
+
+    public function cetakUlang($id)
+    {
+        //SETTING APLIKASI
+        $user_warung      = Auth::user()->id_warung;
+        $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
+        $data_warung      = Warung::where('id', $user_warung)->first();
+
+        $pembayaran_piutang = PembayaranPiutang::dataPembayaranPiutang()->where('pembayaran_piutangs.id_pembayaran_piutang', $id)->first();
+
+        $detail_pembayaran_piutang = DetailPembayaranPiutang::dataDetailPembayaranPiutang($user_warung, $pembayaran_piutang->no_faktur)->get();
+
+        $subtotal = 0;
+        foreach ($detail_pembayaran_piutang as $detail_pembayaran_piutangs) {
+            $subtotal += $detail_pembayaran_piutangs->jumlah_bayar;
+        }
+
+        return view('pembayaran_piutang.cetak_besar',
+            [
+                'pembayaran_piutang'        => $pembayaran_piutang,
+                'detail_pembayaran_piutang' => $detail_pembayaran_piutang,
+                'data_warung'               => $data_warung,
+                'petugas'                   => Auth::user()->name,
+                'setting_aplikasi'          => $setting_aplikasi,
+                'subtotal'                  => $subtotal,
+            ])->with(compact('html'));
     }
 }

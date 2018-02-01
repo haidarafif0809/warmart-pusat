@@ -716,7 +716,6 @@ Route::get('/pembayaran-hutang/cek-supplier-double-edit', 'PembayaranHutangContr
 Route::get('/pembayaran-hutang/cek-total-kas', 'PembayaranHutangController@total_kas')->middleware('auth');
 Route::get('/pembayaran-hutang/cetak-besar-pembayaran-hutang/{id}', 'PembayaranHutangController@cetakBesarPembayaranHutang')->middleware('auth');
 
-
 Route::delete('/pembayaran-hutang/proses-hapus-tbs-pembayaran-hutang/{id}', [
     'middleware' => ['auth'],
     'as'         => 'pembayaran-hutang.proses_hapus_tbs_pembayaran_hutang',
@@ -772,6 +771,7 @@ Route::get('/pembayaran-piutang/pencarian-edit-tbs-pembayaran-piutang/{id}', 'Pe
 Route::post('/pembayaran-piutang/proses-tambah-edit-tbs-pembayaran-piutang/{id}', 'PembayaranPiutangController@prosesEditTbsPembayaranPiutang')->middleware('auth');
 Route::delete('/pembayaran-piutang/proses-hapus-edit-tbs-pembayaran-piutang/{id}', 'PembayaranPiutangController@prosesHapusEditTbsPenjualan')->middleware('auth');
 Route::get('/pembayaran-piutang/edit-pembayaran-piutang/{id}', 'PembayaranPiutangController@editPembayaranPiutang')->middleware('auth');
+Route::get('/pembayaran-piutang/cetak-pembayaran-piutang/{id}', 'PembayaranPiutangController@cetakUlang')->middleware('auth');
 
 //LAPORAN KAS DETAIL
 Route::get('/laporan-kas/pilih-kas', 'LaporanKasController@dataKas')->middleware('auth');
