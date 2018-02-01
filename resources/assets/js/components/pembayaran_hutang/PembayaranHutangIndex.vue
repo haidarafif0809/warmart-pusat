@@ -38,6 +38,7 @@
 									<th>Kas</th>
 									<th>Keterangan</th>
 									<th style="text-align:right;">Total</th>
+									<th style="text-align:right;">Cetak</th>									
 									<th style="text-align:right;">Edit</th>								
 									<th style="text-align:right;">Delete</th>
 								</tr>
@@ -54,6 +55,9 @@
 									<td>{{ pembayaranhutangs.kas }}</td>
 									<td>{{ pembayaranhutangs.keterangan }}</td>
 									<td style="text-align:right;" >Rp. {{ pembayaranhutangs.total }}</td>
+									<td style="text-align:right;">
+										<a target="blank" class="btn btn-primary btn-xs" v-bind:href="'pembayaran-hutang/cetak-besar-pembayaran-hutang/'+pembayaranhutangs.id">Cetak Ulang</a>
+									</td>
 									<td style="text-align:right;">
 										<router-link :to="{name: 'prosesEditPembayaranHutang', params: {id: pembayaranhutangs.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + pembayaranhutangs.id" >
 											Edit

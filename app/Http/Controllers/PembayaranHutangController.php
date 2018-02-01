@@ -548,6 +548,8 @@ class PembayaranHutangController extends Controller
         }
     }
 
+ 
+
     /**
      * Display the specified resource.
      *
@@ -784,7 +786,7 @@ class PembayaranHutangController extends Controller
     {
         //START TRANSAKSI
         DB::beginTransaction();
-        
+
         if (!PembayaranHutang::destroy($id)) {
             DB::rollBack();
             return 0;
@@ -792,5 +794,53 @@ class PembayaranHutangController extends Controller
             DB::commit();
             return response(200);
         }
+    }
+
+           public function cetakBesarPembayaranHutang($id)
+    {
+        //SETTING APLIKASI
+        $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
+
+        $pembayaran_hutang = PembayaranHutang::QueryCetak($id)->first();
+
+        $detail_pembayaran_hutang = DetailPembayaranHutang::dataDetailPembayaranHutang($pembayaran_hutang->no_faktur)->get();
+        $terbilang        = $this->kekata($pembayaran_hutang->total);
+        $subtotal         = 0;
+        foreach ($detail_pembayaran_hutang as $detail_pembayaran_hutangs) {
+            $subtotal += $detail_pembayaran_hutangs->jumlah_bayar;
+
+        }
+
+        return view('pembayaran_hutang.cetak_besar', ['pembayaran_hutang' => $pembayaran_hutang, 'detail_pembayaran_hutang' => $detail_pembayaran_hutang, 'subtotal' => $subtotal, 'terbilang' => $terbilang,'setting_aplikasi' => $setting_aplikasi])->with(compact('html'));
+    }
+
+        public function kekata($x)
+    {
+        $x     = abs($x);
+        $angka = array("", "satu", "dua", "tiga", "empat", "lima",
+            "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas");
+        $temp = "";
+        if ($x < 12) {
+            $temp = " " . $angka[$x];
+        } else if ($x < 20) {
+            $temp = $this->kekata($x - 10) . " belas";
+        } else if ($x < 100) {
+            $temp = $this->kekata($x / 10) . " puluh" . $this->kekata($x % 10);
+        } else if ($x < 200) {
+            $temp = " seratus" . $this->kekata($x - 100);
+        } else if ($x < 1000) {
+            $temp = $this->kekata($x / 100) . " ratus" . $this->kekata($x % 100);
+        } else if ($x < 2000) {
+            $temp = " seribu" . $this->kekata($x - 1000);
+        } else if ($x < 1000000) {
+            $temp = $this->kekata($x / 1000) . " ribu" . $this->kekata($x % 1000);
+        } else if ($x < 1000000000) {
+            $temp = $this->kekata($x / 1000000) . " juta" . $this->kekata($x % 1000000);
+        } else if ($x < 1000000000000) {
+            $temp = $this->kekata($x / 1000000000) . " milyar" . $this->kekata(fmod($x, 1000000000));
+        } else if ($x < 1000000000000000) {
+            $temp = $this->kekata($x / 1000000000000) . " trilyun" . $this->kekata(fmod($x, 1000000000000));
+        }
+        return $temp;
     }
 }

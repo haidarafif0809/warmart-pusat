@@ -707,6 +707,8 @@ Route::get('/pembayaran-hutang/pencarian-detail-pembayaran-hutang/{id}', 'Pembay
 Route::get('/pembayaran-hutang/subtotal-tbs-pembayaran-hutang/{jenis_tbs}', 'PembayaranHutangController@cekSubtotalTbsPembayaranHutang')->middleware('auth');
 Route::get('/pembayaran-hutang/cek-supplier-double', 'PembayaranHutangController@cekSupplierDouble')->middleware('auth');
 Route::get('/pembayaran-hutang/cek-total-kas', 'PembayaranHutangController@total_kas')->middleware('auth');
+Route::get('/pembayaran-hutang/cetak-besar-pembayaran-hutang/{id}', 'PembayaranHutangController@cetakBesarPembayaranHutang')->middleware('auth');
+
 
 Route::delete('/pembayaran-hutang/proses-hapus-tbs-pembayaran-hutang/{id}', [
     'middleware' => ['auth'],

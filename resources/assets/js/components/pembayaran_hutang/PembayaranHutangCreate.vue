@@ -992,6 +992,7 @@ export default {
                               app.inputPembayaranHutang.subtotal = 0
                               app.loading = false;                
                               app.$router.replace('/pembayaran-hutang');
+                              window.open('pembayaran-hutang/cetak-besar-pembayaran-hutang/'+resp.data.respons_pembayaran,'_blank');
                           }
                       })
                       .catch(function (resp) {
