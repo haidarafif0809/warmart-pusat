@@ -71,13 +71,18 @@ class PemesananController extends Controller
 
         //START TRANSAKSI
         DB::beginTransaction();
-        $layanan_kurir     = explode("|", $request->layanan_kurir);
-        $layanan_kurir  = $layanan_kurir[0] ." | ".$layanan_kurir[3];
+        if ($request->layanan_kurir != '') {
+           $layanan_kurir     = explode("|", $request->layanan_kurir);
+           $layanan_kurir  = $layanan_kurir[0] ." | ".$layanan_kurir[3];
+       }else{
+        $layanan_kurir     = $request->layanan_kurir;
+    }
+
 
         // QUERY LENGKAPNYA ADA DI scopeKeranjangBelanjaPelanggan di model Keranjang Belanja
-        $keranjang_belanjaan = KeranjangBelanja::KeranjangBelanjaPelanggan()->get();
+    $keranjang_belanjaan = KeranjangBelanja::KeranjangBelanjaPelanggan()->get();
 
-        $id_user = Auth::user()->id;
+    $id_user = Auth::user()->id;
 
         $cek_pesanan = 0; // BUAT VARIABEL CEK PESANAN YANG KITA SET  0
         foreach ($keranjang_belanjaan as $key => $keranjang_belanjaans) {
