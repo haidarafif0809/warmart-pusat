@@ -66,8 +66,13 @@ class PemesananController extends Controller
         }else{
             $id_warung = $keranjang_belanja->first()->produk->id_warung;
             $warung = Warung::find($id_warung);
-            $kabupaten = Indonesia::findCity($warung->kabupaten);
-            $nama_kabupaten = $kabupaten->name;
+            if ($warung->kabupaten != "") {
+                $kabupaten = Indonesia::findCity($warung->kabupaten);
+                $nama_kabupaten = $kabupaten->name;
+            }else{
+                $kabupaten = 0;
+                $nama_kabupaten = 0;
+            }
         }
 
         return view('layouts.selesaikan_pemesanan', ['pagination' => $pagination, 'keranjang_belanjaan' => $keranjang_belanjaan, 'cek_belanjaan' => $cek_belanjaan, 'agent' => $agent, 'jumlah_produk' => $jumlah_produk, 'logo_warmart' => $logo_warmart, 'subtotal' => $subtotal, 'user' => $user,'berat_barang'=>$berat_barang,'kabupaten'=>$nama_kabupaten]);
@@ -81,9 +86,9 @@ class PemesananController extends Controller
         //START TRANSAKSI
         DB::beginTransaction();
         if ($request->layanan_kurir != '') {
-           $layanan_kurir     = explode("|", $request->layanan_kurir);
-           $layanan_kurir  = $layanan_kurir[0] ." | ".$layanan_kurir[3];
-       }else{
+         $layanan_kurir     = explode("|", $request->layanan_kurir);
+         $layanan_kurir  = $layanan_kurir[0] ." | ".$layanan_kurir[3];
+     }else{
         $layanan_kurir     = $request->layanan_kurir;
     }
 
@@ -199,7 +204,7 @@ class PemesananController extends Controller
         $userkey   = env('USERKEY');
         $passkey   = env('PASSKEY');
         $url_warung = url('/detail-pesanan-warung/'.$id_pesanan_pelanggan);
-        $isi_pesan = urlencode('Warmart: Assalamualaikum, Ada Pesanan baru Silakan Cek ' . $url_warung);
+        $isi_pesan = urlencode('Assalamualaikum, Ada Pesanan baru Silakan Cek ' . $url_warung);
 
         if (env('STATUS_SMS') == 1) {
             $client = new Client(); //GuzzleHttp\Client
