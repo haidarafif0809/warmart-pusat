@@ -13,7 +13,7 @@ class SettingFooterSeeder extends Seeder
     public function run()
     {
         SettingFooter::create([
-            'warung_id'     => 1,
+            'id_warung'     => 1,
             'header_warung' => 'Toko Online dan Pos',
             'support_link'  => 'https://andaglos.id/support/',
             'about_link'    => 'https://andaglos.id/topos/',
