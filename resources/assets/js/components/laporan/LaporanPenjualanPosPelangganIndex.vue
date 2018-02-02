@@ -29,7 +29,13 @@
 							<datepicker :input-class="'form-control'" placeholder="Sampai Tanggal" v-model="filter.sampai_tanggal" name="sampai_tanggal" v-bind:id="'sampai_tanggal'"></datepicker>
 						</div>
 						<div class="form-group col-md-2">
+							<selectize-component v-model="filter.pelanggan" :settings="placeholder_pelangan" id="pilih_pelanggan"> 
+								<option v-for="pelanggans, index in pelanggan" v-bind:value="pelanggans.id" >{{ pelanggans.nama_pelanggan }}</option>
+							</selectize-component>
+						</div>
+						<div class="form-group col-md-2">
 							<selectize-component v-model="filter.produk" :settings="placeholder_produk" id="pilih_produk"> 
+								<option v-bind:value="produks.id == 0" >Semua</option>
 								<option v-for="produks, index in produk" v-bind:value="produks.id" >{{ produks.nama_produk }}</option>
 							</selectize-component>
 						</div>
@@ -49,6 +55,7 @@
 								<tr>
 									<th>Kode Produk</th>
 									<th>Nama Produk</th>
+									<th>Pelanggan</th>
 									<th style="text-align:right">Jumlah</th>
 									<th>Satuan</th>
 									<th style="text-align:right">Subtotal</th>
@@ -62,6 +69,10 @@
 
 									<td>{{ penjualanProduks.laporan_penjualans.kode_barang }}</td>
 									<td>{{ penjualanProduks.laporan_penjualans.nama_barang }}</td>
+
+									<td v-if="penjualanProduks.laporan_penjualans.pelanggan_id == 0">Umum</td>
+									<td v-else>{{ penjualanProduks.laporan_penjualans.name }}</td>
+
 									<td align="right">{{ penjualanProduks.laporan_penjualans.jumlah_produk | pemisahTitik }}</td>
 									<td>{{ penjualanProduks.laporan_penjualans.nama_satuan }}</td>
 									<td align="right">{{ penjualanProduks.laporan_penjualans.subtotal | pemisahTitik }}</td>
@@ -73,6 +84,7 @@
 
 								<tr style="color:red">
 									<td>TOTAL</td>
+									<td></td>
 									<td></td>
 									<td align="right">{{ totalPenjualanPosProduk.jumlah_produk | pemisahTitik }}</td>
 									<td></td>
@@ -106,6 +118,7 @@ export default {
 	data: function () {
 		return {
 			produk: [],
+			pelanggan: [],
 			penjualanProduk: [],
 			penjualanProdukData: {},
 			totalPenjualanPosProduk: {},
@@ -113,9 +126,10 @@ export default {
 				dari_tanggal: '',
 				sampai_tanggal: new Date(),
 				produk: '',
+				pelanggan: '',
 			},
 			url : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-penjualan-pos-produk"),
-			urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-penjualan-pos-produk/download-excel-penjualan-pos-produk"),
+			urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-penjualan-pos-produk/download-excel-penjualan-produk"),
 			urlCetak : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-penjualan-pos-produk/cetak-laporan"),
 			pencarian: '',
 			loading: false,
@@ -133,6 +147,7 @@ export default {
 		awal_tanggal.setDate(1);
 
 		app.dataProduk();
+		app.dataPelanggan();
 		app.filter.dari_tanggal = awal_tanggal;
 	},
 	watch: {
@@ -188,6 +203,17 @@ methods: {
 			alert("Tidak bisa memuat produk ");
 		});
 	},
+	dataPelanggan() {
+		var app = this;
+		axios.get(app.url+'/pilih-pelanggan')
+		.then(function (resp) {
+			app.pelanggan = resp.data;
+
+		})
+		.catch(function (resp) {
+			alert("Tidak bisa memuat pelanggan ");
+		});
+	},    
 	getHasilPencarian(page){
 		var app = this;
 		var newFilter = app.filter;
@@ -227,6 +253,9 @@ methods: {
 		if (filter.produk == "") {
 			filter.produk = 0;
 		};
+		if (filter.pelanggan == "") {
+			filter.pelanggan = 0;
+		};
 
 		var date_dari_tanggal = filter.dari_tanggal;
 		var date_sampai_tanggal = filter.sampai_tanggal;
@@ -235,8 +264,8 @@ methods: {
 
 		$("#btnExcel").show();
 		$("#btnCetak").show();
-		$("#btnExcel").attr('href', app.urlDownloadExcel+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.produk);
-		$("#btnCetak").attr('href', app.urlCetak+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.produk); 
+		$("#btnExcel").attr('href', app.urlDownloadExcel+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.produk+'/'+filter.pelanggan);
+		$("#btnCetak").attr('href', app.urlCetak+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.produk+'/'+filter.pelanggan); 
 	}
 }
 }

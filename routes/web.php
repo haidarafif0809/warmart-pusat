@@ -23,8 +23,6 @@ Route::get('copy-produk-alfatih', function () {
     }
 });
 
-
-
 Route::get('/tentang-warmart', 'HomeController@index');
 
 Route::get('/cek-deposit', 'PortaPulsaController@cekDeposit');
@@ -173,7 +171,6 @@ Route::get('/hitung-ongkir', [
     'middleware' => ['auth'],
     'uses'       => 'PemesananController@hitungOngkir',
 ]);
-
 
 //PUNYA PESANAN PELANGGAN
 Route::get('/pesanan', [
@@ -689,8 +686,8 @@ Route::post('/laporan-penjualan-pos-produk/pencarian', 'LaporanPenjualanPosProdu
 Route::post('/laporan-penjualan-pos-produk/total-penjualan-pos-produk', 'LaporanPenjualanPosProdukController@totalPenjualanPosProduk')->middleware('auth');
 Route::get('/laporan-penjualan-pos-produk/pilih-produk', 'LaporanPenjualanPosProdukController@dataProduk')->middleware('auth');
 Route::get('/laporan-penjualan-pos-produk/pilih-pelanggan', 'LaporanPenjualanPosProdukController@dataPelanggan')->middleware('auth');
-Route::get('/laporan-penjualan-pos-produk/download-excel-penjualan-produk/{dari_tanggal}/{sampai_tanggal}/{produk}/{suplier}', 'LaporanPenjualanPosProdukController@downloadExcel')->middleware('auth');
-Route::get('/laporan-penjualan-pos-produk/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{produk}/{suplier}', 'LaporanPenjualanPosProdukController@cetakLaporan')->middleware('auth');
+Route::get('/laporan-penjualan-pos-produk/download-excel-penjualan-pos-produk/{dari_tanggal}/{sampai_tanggal}/{produk}', 'LaporanPenjualanPosProdukController@downloadExcel')->middleware('auth');
+Route::get('/laporan-penjualan-pos-produk/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{produk}', 'LaporanPenjualanPosProdukController@cetakLaporan')->middleware('auth');
 
 // LAPORAN KARTU STOK VUE.JS
 Route::post('/laporan-kartu-stok/view', 'LaporanKartuStokController@prosesLaporanKartuStok')->middleware('auth');
