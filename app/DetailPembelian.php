@@ -54,7 +54,7 @@ class DetailPembelian extends Model
 //QUERY PENCARIAN DAN PROSES LAPORAN PEMBELIAN
     public function queryLaporanPembelian($request)
     {
-        $query_laporan_pembelian = DetailPembelian::select(['detail_pembelians.no_faktur', 'detail_pembelians.id_produk', DB::raw('SUM(detail_pembelians.jumlah_produk) as jumlah_produk'), 'detail_pembelians.harga_produk', DB::raw('SUM(detail_pembelians.subtotal) as total'), DB::raw('SUM(detail_pembelians.tax) as tax'), DB::raw('SUM(detail_pembelians.potongan) as potongan'), 'satuans.nama_satuan', 'supliers.nama_suplier', 'barangs.kode_barang', 'barangs.nama_barang', DB::raw('SUM(detail_pembelians.harga_produk * detail_pembelians.jumlah_produk) as subtotal')])
+        $query_laporan_pembelian = DetailPembelian::select(['detail_pembelians.no_faktur AS no_faktur', 'detail_pembelians.id_produk', DB::raw('SUM(detail_pembelians.jumlah_produk) as jumlah_produk'), 'detail_pembelians.harga_produk', DB::raw('SUM(detail_pembelians.subtotal) as total'), DB::raw('SUM(detail_pembelians.tax) as tax'), DB::raw('SUM(detail_pembelians.potongan) as potongan'), 'satuans.nama_satuan', 'supliers.nama_suplier', 'barangs.kode_barang', 'barangs.nama_barang', DB::raw('SUM(detail_pembelians.harga_produk * detail_pembelians.jumlah_produk) as subtotal')])
             ->leftJoin('barangs', 'barangs.id', '=', 'detail_pembelians.id_produk')
             ->leftJoin('satuans', 'satuans.id', '=', 'detail_pembelians.satuan_id')
             ->leftJoin('pembelians', function ($join) {

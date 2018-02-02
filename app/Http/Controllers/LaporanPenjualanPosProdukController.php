@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Barang;
-use App\Customer;
 use App\DetailPenjualanPos;
 use App\SettingAplikasi;
+use App\User;
 use App\Warung;
 use Auth;
 use Excel;
@@ -40,7 +40,7 @@ class LaporanPenjualanPosProdukController extends Controller
 
     public function dataPelanggan()
     {
-        $pelanggan       = Customer::select(['id', 'name'])->where('tipe_user', 3)->get();
+        $pelanggan       = User::select(['id', 'name'])->where('tipe_user', 3)->get();
         $array_pelanggan = array();
         foreach ($pelanggan as $pelanggans) {
             array_push($array_pelanggan, [
@@ -55,12 +55,12 @@ class LaporanPenjualanPosProdukController extends Controller
     {
         $respons['current_page']   = $laporan_penjualan->currentPage();
         $respons['data']           = $array_penjualan;
-        $respons['first_page_url'] = url('/laporan-penjualan-produk/view?page=' . $laporan_penjualan->firstItem());
+        $respons['first_page_url'] = url('/laporan-penjualan-pos-produk/view?page=' . $laporan_penjualan->firstItem());
         $respons['from']           = 1;
         $respons['last_page']      = $laporan_penjualan->lastPage();
-        $respons['last_page_url']  = url('/laporan-penjualan-produk/view?page=' . $laporan_penjualan->lastPage());
+        $respons['last_page_url']  = url('/laporan-penjualan-pos-produk/view?page=' . $laporan_penjualan->lastPage());
         $respons['next_page_url']  = $laporan_penjualan->nextPageUrl();
-        $respons['path']           = url('/laporan-penjualan-produk/view');
+        $respons['path']           = url('/laporan-penjualan-pos-produk/view');
         $respons['per_page']       = $laporan_penjualan->perPage();
         $respons['prev_page_url']  = $laporan_penjualan->previousPageUrl();
         $respons['to']             = $laporan_penjualan->perPage();
@@ -74,7 +74,6 @@ class LaporanPenjualanPosProdukController extends Controller
         $sheet->row($row, [
             'Kode Produk',
             'Nama Produk',
-            'pelanggan',
             'Jumlah',
             'Satuan',
             'Subtotal',
@@ -91,7 +90,6 @@ class LaporanPenjualanPosProdukController extends Controller
         $array_penjualan   = array();
         foreach ($laporan_penjualan as $laporan_penjualans) {
             $sub_total = $laporan_penjualans->subtotal - $laporan_penjualans->potongan + $laporan_penjualans->tax;
-
             array_push($array_penjualan, ['laporan_penjualans' => $laporan_penjualans, 'sub_total' => $sub_total]);
         }
         //DATA PAGINATION
@@ -103,16 +101,22 @@ class LaporanPenjualanPosProdukController extends Controller
     {
         // SUBTOTAL KESELURUHAN
         $total_penjualan = DetailPenjualanPos::totalLaporanPenjualanPosProduk($request)->first();
-        return response()->json($total_penjualan);
+
+        $respons['jumlah_produk'] = $total_penjualan->jumlah_produk;
+        $respons['subtotal']      = $total_penjualan->subtotal;
+        $respons['potongan']      = $total_penjualan->potongan;
+        $respons['pajak']         = $total_penjualan->pajak;
+        $respons['total']         = $total_penjualan->total;
+        return response()->json($respons);
     }
 
     public function pencarian(Request $request)
     {
-        $laporan_penjualan = DetailPenjualanPos::cariLaporanPembelianProduk($request)->paginate(10);
-
-        $array_penjualan = array();
+        $laporan_penjualan = DetailPenjualanPos::cariLaporanPenjualanPosProduk($request)->paginate(10);
+        $array_penjualan   = array();
         foreach ($laporan_penjualan as $laporan_penjualans) {
-            array_push($array_penjualan, ['laporan_penjualans' => $laporan_penjualans]);
+            $sub_total = $laporan_penjualans->subtotal - $laporan_penjualans->potongan + $laporan_penjualans->tax;
+            array_push($array_penjualan, ['laporan_penjualans' => $laporan_penjualans, 'sub_total' => $sub_total]);
         }
         //DATA PAGINATION
         $respons = $this->dataPagination($laporan_penjualan, $array_penjualan);
@@ -120,7 +124,7 @@ class LaporanPenjualanPosProdukController extends Controller
     }
 
     //DOWNLOAD EXCEL - LAPORAN PEMBELIAN /PRODUK
-    public function downloadExcel(Request $request, $dari_tanggal, $sampai_tanggal, $produk, $suplier)
+    public function downloadExcel(Request $request, $dari_tanggal, $sampai_tanggal, $produk)
     {
         $request['dari_tanggal']   = $dari_tanggal;
         $request['sampai_tanggal'] = $sampai_tanggal;
@@ -129,18 +133,14 @@ class LaporanPenjualanPosProdukController extends Controller
             $request['produk'] = "";
         };
 
-        if ($suplier == 0) {
-            $request['suplier'] = "";
-        };
+        $laporan_penjualan = DetailPenjualanPos::laporanPenjualanPosProduk($request)->get();
 
-        $laporan_penjualan = DetailPenjualanPos::laporanPembelianProduk($request)->get();
-
-        Excel::create('Laporan Pembelian Produk', function ($excel) use ($request, $laporan_penjualan) {
+        Excel::create('Laporan Penjualan Pos Produk', function ($excel) use ($request, $laporan_penjualan) {
             // Set property
-            $excel->sheet('Laporan Pembelian Produk', function ($sheet) use ($request, $laporan_penjualan) {
+            $excel->sheet('Laporan Penjualan Pos Produk', function ($sheet) use ($request, $laporan_penjualan) {
                 $row = 1;
                 $sheet->row($row, [
-                    'LAPORAN PEMBELIAN /PRODUK',
+                    'LAPORAN PENJUALAN POS /PRODUK',
                 ]);
 
                 $row   = 3;
@@ -152,7 +152,6 @@ class LaporanPenjualanPosProdukController extends Controller
                     $sheet->row(++$row, [
                         $laporan_penjualans->kode_barang,
                         $laporan_penjualans->nama_barang,
-                        $laporan_penjualans->nama_suplier,
                         $laporan_penjualans->jumlah_produk,
                         $laporan_penjualans->nama_satuan,
                         $laporan_penjualans->subtotal,
@@ -163,11 +162,10 @@ class LaporanPenjualanPosProdukController extends Controller
                 }
 
                 //SUBTOTAL KESELURUHAN
-                $sub_total_penjualan = DetailPenjualanPos::subtotalLaporanPembelianProduk($request)->first();
+                $sub_total_penjualan = DetailPenjualanPos::totalLaporanPenjualanPosProduk($request)->first();
                 $row                 = ++$row;
                 $sheet->row(++$row, [
                     'TOTAL',
-                    '',
                     '',
                     $total_jumlah_produk = round($sub_total_penjualan->jumlah_produk, 2),
                     '',
@@ -192,7 +190,7 @@ class LaporanPenjualanPosProdukController extends Controller
         return $data_penjualan;
     }
 
-    public function cetakLaporan(Request $request, $dari_tanggal, $sampai_tanggal, $produk, $suplier)
+    public function cetakLaporan(Request $request, $dari_tanggal, $sampai_tanggal, $produk)
     {
         //SETTING APLIKASI
         $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
@@ -200,32 +198,25 @@ class LaporanPenjualanPosProdukController extends Controller
         $request['dari_tanggal']   = $dari_tanggal;
         $request['sampai_tanggal'] = $sampai_tanggal;
         $request['produk']         = $produk;
-        $request['suplier']        = $suplier;
 
         if ($produk == 0) {
             $request['produk'] = "";
         };
 
-        if ($suplier == 0) {
-            $request['suplier'] = "";
-        };
+        $laporan_penjualan = DetailPenjualanPos::laporanPenjualanPosProduk($request)->get();
+        $data_penjualan    = $this->foreachLaporan($laporan_penjualan);
+        $total_penjualan   = DetailPenjualanPos::totalLaporanPenjualanPosProduk($request)->first();
+        $data_warung       = Warung::where('id', Auth::user()->id_warung)->first();
 
-        $laporan_penjualan  = DetailPenjualanPos::laporanPembelianProduk($request)->get();
-        $data_penjualan     = $this->foreachLaporan($laporan_penjualan);
-        $subtotal_pembelian = DetailPenjualanPos::subtotalLaporanPembelianProduk($request)->first();
-        $data_warung        = Warung::where('id', Auth::user()->id_warung)->first();
-
-        return view('laporan.cetak_laporan_penjualan_produk',
+        return view('laporan.cetak_laporan_penjualan_pos_produk',
             [
-                'laporan_penjualan'  => $laporan_penjualan,
-                'data_penjualan'     => $data_penjualan,
-                'subtotal_pembelian' => $subtotal_pembelian,
-                'data_warung'        => $data_warung,
-                'dari_tanggal'       => $this->tanggal($dari_tanggal),
-                'sampai_tanggal'     => $this->tanggal($sampai_tanggal),
-                'produk'             => $produk,
-                'suplier'            => $suplier,
-                'setting_aplikasi'   => $setting_aplikasi,
+                'laporan_penjualan' => $laporan_penjualan,
+                'data_penjualan'    => $data_penjualan,
+                'total_penjualan'   => $total_penjualan,
+                'data_warung'       => $data_warung,
+                'dari_tanggal'      => $this->tanggal($dari_tanggal),
+                'sampai_tanggal'    => $this->tanggal($sampai_tanggal),
+                'setting_aplikasi'  => $setting_aplikasi,
             ])->with(compact('html'));
     }
 }

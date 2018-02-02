@@ -686,8 +686,8 @@ Route::post('/laporan-penjualan-pos-produk/pencarian', 'LaporanPenjualanPosProdu
 Route::post('/laporan-penjualan-pos-produk/total-penjualan-pos-produk', 'LaporanPenjualanPosProdukController@totalPenjualanPosProduk')->middleware('auth');
 Route::get('/laporan-penjualan-pos-produk/pilih-produk', 'LaporanPenjualanPosProdukController@dataProduk')->middleware('auth');
 Route::get('/laporan-penjualan-pos-produk/pilih-pelanggan', 'LaporanPenjualanPosProdukController@dataPelanggan')->middleware('auth');
-Route::get('/laporan-penjualan-pos-produk/download-excel-penjualan-produk/{dari_tanggal}/{sampai_tanggal}/{produk}/{suplier}', 'LaporanPenjualanPosProdukController@downloadExcel')->middleware('auth');
-Route::get('/laporan-penjualan-pos-produk/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{produk}/{suplier}', 'LaporanPenjualanPosProdukController@cetakLaporan')->middleware('auth');
+Route::get('/laporan-penjualan-pos-produk/download-excel-penjualan-pos-produk/{dari_tanggal}/{sampai_tanggal}/{produk}', 'LaporanPenjualanPosProdukController@downloadExcel')->middleware('auth');
+Route::get('/laporan-penjualan-pos-produk/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{produk}', 'LaporanPenjualanPosProdukController@cetakLaporan')->middleware('auth');
 
 // LAPORAN KARTU STOK VUE.JS
 Route::post('/laporan-kartu-stok/view', 'LaporanKartuStokController@prosesLaporanKartuStok')->middleware('auth');
@@ -715,7 +715,6 @@ Route::get('/pembayaran-hutang/cek-supplier-double', 'PembayaranHutangController
 Route::get('/pembayaran-hutang/cek-supplier-double-edit', 'PembayaranHutangController@cekSupplierDoubleEdit')->middleware('auth');
 Route::get('/pembayaran-hutang/cek-total-kas', 'PembayaranHutangController@total_kas')->middleware('auth');
 Route::get('/pembayaran-hutang/cetak-besar-pembayaran-hutang/{id}', 'PembayaranHutangController@cetakBesarPembayaranHutang')->middleware('auth');
-
 
 Route::delete('/pembayaran-hutang/proses-hapus-tbs-pembayaran-hutang/{id}', [
     'middleware' => ['auth'],
@@ -772,6 +771,7 @@ Route::get('/pembayaran-piutang/pencarian-edit-tbs-pembayaran-piutang/{id}', 'Pe
 Route::post('/pembayaran-piutang/proses-tambah-edit-tbs-pembayaran-piutang/{id}', 'PembayaranPiutangController@prosesEditTbsPembayaranPiutang')->middleware('auth');
 Route::delete('/pembayaran-piutang/proses-hapus-edit-tbs-pembayaran-piutang/{id}', 'PembayaranPiutangController@prosesHapusEditTbsPenjualan')->middleware('auth');
 Route::get('/pembayaran-piutang/edit-pembayaran-piutang/{id}', 'PembayaranPiutangController@editPembayaranPiutang')->middleware('auth');
+Route::get('/pembayaran-piutang/cetak-pembayaran-piutang/{id}', 'PembayaranPiutangController@cetakUlang')->middleware('auth');
 
 //LAPORAN KAS DETAIL
 Route::get('/laporan-kas/pilih-kas', 'LaporanKasController@dataKas')->middleware('auth');

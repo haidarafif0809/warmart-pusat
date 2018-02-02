@@ -38,7 +38,8 @@
 									<th style="text-align:center;">Kas</th>
 									<th>Waktu</th>
 									<th>Keterangan</th>
-									<th style="text-align:right;">Edit</th>								
+									<th style="text-align:right;">Cetak</th>
+									<th style="text-align:right;">Edit</th>	
 									<th style="text-align:right;">Delete</th>
 								</tr>
 							</thead>
@@ -55,6 +56,10 @@
 									<td align="center">{{ pembayaranPiutangs.kas }}</td>
 									<td>{{ pembayaranPiutangs.waktu }}</td>
 									<td>{{ pembayaranPiutangs.keterangan }}</td>
+
+									<td style="text-align:right;">
+										<a target="blank" class="btn btn-primary btn-xs" v-bind:href="'pembayaran-piutang/cetak-pembayaran-piutang/'+pembayaranPiutangs.id">Cetak Ulang</a>
+									</td>
 
 									<td style="text-align:right;">
 										<router-link :to="{name: 'prosesEditPembayaranPiutang', params: {id: pembayaranPiutangs.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + pembayaranPiutangs.id" >
