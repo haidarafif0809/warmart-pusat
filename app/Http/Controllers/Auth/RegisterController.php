@@ -9,18 +9,16 @@ use App\KomunitasCustomer;
 use App\Notifications\PendaftarWarung;
 use App\Role;
 use App\SettingAplikasi;
-use App\PendaftarTopos;
 use App\User;
 use App\UserWarung;
 use App\Warung;
-use Auth;
 use GuzzleHttp\Client;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Notification;
-use App\Notifications\PendaftaranTopos;
 
 class RegisterController extends Controller
 {
@@ -118,6 +116,7 @@ class RegisterController extends Controller
 
             $customerRole = Role::where('name', 'customer')->first();
             $user->attachRole($customerRole);
+            $user->sendVerification();
 
             // registrasi berasal dari link affiliasi atau memilih komunitas saat registrasi
             if (isset($data['komunitas_id'])) {
@@ -352,4 +351,26 @@ class RegisterController extends Controller
         $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
         return view('auth.register_warung', ['setting_aplikasi' => $setting_aplikasi]);
     }
+
+    public function verifyEmail(Request $request, $token)
+    {
+        $email = $request->get('email');
+        $user  = User::where('email', $email)->first();
+        if ($user->status_konfirmasi == 1) {
+            Auth::login($user);
+            return redirect('/');
+        } else {
+            $user = User::where('verification_token', $token)->where('email', $email)->first();
+            if ($user) {
+                $user->verifyEmail();
+                Session::flash("flash_notification", [
+                    "level"   => "success",
+                    "message" => "Berhasil melakukan verifikasi.",
+                ]);
+                Auth::login($user);
+            }
+            return redirect('/');
+        }
+    }
+
 }
