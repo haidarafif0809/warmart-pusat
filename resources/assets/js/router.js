@@ -609,7 +609,7 @@ const routes = [{
     {
         path: '/setting-footer/:id_warung',
         component: SettingFooterIndex,
-        name:indexSettingFooter
+        name: 'indexSettingFooter'
     },
     // LAPORAN KAS
     {
