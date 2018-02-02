@@ -9,7 +9,9 @@
         $user      = \Auth::user()->id;
         $foto_logo = \App\UserWarung::find($user);
 
+        if (Auth::user()->tipe_user == 4) {
         $settingFooter = \App\SettingFooter::select()->where('warung_id', \Auth::user()->id_warung)->first();
+        }
     }
     else {
         $settingFooter = \App\SettingFooter::select()->first();
@@ -202,7 +204,7 @@ body {
                                     SUPPORT Warmart
                                 </a>
                                 @else
-                                <a href="<?=$settingFooter->support_link;?>">
+                                <a href="<?=@$settingFooter->support_link;?>">
                                     <i class="material-icons">
                                         info
                                     </i>
@@ -219,7 +221,7 @@ body {
                                     Tentang Warmart
                                 </a>
                                 @else
-                                <a href="<?=$settingFooter->about_link;?>">
+                                <a href="<?=@$settingFooter->about_link;?>">
                                     <i class="material-icons">
                                         info
                                     </i>
@@ -273,7 +275,7 @@ body {
                                 </p>
                                 @else
                                 <p>
-                                    <?=$settingFooter->
+                                    <?=@$settingFooter->
                                     about_us;?>
                                 </p>
                                 @endif
@@ -287,7 +289,7 @@ body {
                                         <i class="fa fa-phone-square">
                                         </i>
                                         <p>
-                                            <?=$settingFooter->
+                                            <?=@$settingFooter->
                                             no_telp;?>
                                         </p>
                                     </div>
@@ -295,7 +297,7 @@ body {
                                         <i class="fa fa-home">
                                         </i>
                                         <p>
-                                            <?=$settingFooter->
+                                            <?=@$settingFooter->
                                             alamat;?>
                                         </p>
                                     </div>
@@ -303,7 +305,7 @@ body {
                                         <i class="fa fa-envelope">
                                         </i>
                                         <p>
-                                            <?=$settingFooter->
+                                            <?=@$settingFooter->
                                             email;?>
                                         </p>
                                     </div>
@@ -311,7 +313,7 @@ body {
                                         <i class="fa fa-whatsapp">
                                         </i>
                                         <p>
-                                            <?=$settingFooter->
+                                            <?=@$settingFooter->
                                             whatsapp;?>
                                         </p>
                                     </div>
@@ -326,7 +328,7 @@ body {
                                         <i class="fa fa-facebook-square">
                                         </i>
                                         <p>
-                                            <a href="<?=$settingFooter->facebook;?>">
+                                            <a href="<?=@$settingFooter->facebook;?>">
                                                 Facebook
                                             </a>
                                         </p>
@@ -335,7 +337,7 @@ body {
                                         <i class="fa fa-twitter-square">
                                         </i>
                                         <p>
-                                            <a href="<?=$settingFooter->twitter;?>">
+                                            <a href="<?=@$settingFooter->twitter;?>">
                                                 Twitter
                                             </a>
                                         </p>
@@ -344,7 +346,7 @@ body {
                                         <i class="fa fa-instagram">
                                         </i>
                                         <p>
-                                            <a href="<?=$settingFooter->instagram;?>">
+                                            <a href="<?=@$settingFooter->instagram;?>">
                                                 Instagram
                                             </a>
                                         </p>
@@ -353,7 +355,7 @@ body {
                                         <i class="fa fa-google-plus-square">
                                         </i>
                                         <p>
-                                            <a href="<?=$settingFooter->google_plus;?>">
+                                            <a href="<?=@$settingFooter->google_plus;?>">
                                                 Google +
                                             </a>
                                         </p>
