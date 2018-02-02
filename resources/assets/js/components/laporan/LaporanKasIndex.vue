@@ -1056,7 +1056,7 @@
 				$("#btnExcel").show();
 				$("#btnCetak").show();
 				$("#btnExcel").attr('href', app.urlDownloadExcel+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.pelanggan);
-				$("#btnCetak").attr('href', app.urlCetak+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.pelanggan);  
+				$("#btnCetak").attr('href', app.urlCetak+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.kas+'/'+filter.jenis_laporan);  
 			},
 			alertGagal(pesan) {
 				this.$swal({
