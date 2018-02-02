@@ -214,9 +214,9 @@ function tanggal($tanggal)
 <!--   Core JS Files   -->
 <script src="{{ asset('js/app.js?v=1.51')}}" type="text/javascript"></script>
 <script>
-	// $(document).ready(function(){
-	// 	window.print();
-	// });
+	$(document).ready(function(){
+		window.print();
+	});
 </script>
 @yield('scripts')
 </html>
