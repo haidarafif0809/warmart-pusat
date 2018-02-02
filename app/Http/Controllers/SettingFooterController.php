@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\SettingFooter;
 use Illuminate\Http\Request;
 
 class SettingFooterController extends Controller
@@ -43,9 +44,10 @@ class SettingFooterController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id_warung)
     {
-        //
+        $setting_footer = SettingFooter::select()->where('id_warung', $id_warung)->first();
+        return response()->json($setting_footer);
     }
 
     /**
@@ -66,9 +68,9 @@ class SettingFooterController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id_warung)
     {
-        //
+        SettingFooter::find($id_warung)->update($request->all());
     }
 
     /**
