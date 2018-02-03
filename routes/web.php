@@ -277,7 +277,7 @@ Route::get('/aff/{id}/', function ($id) {
 Route::get('kirim-kode-verifikasi', 'Auth\RegisterController@kirim_kode_verifikasi')->middleware('optimizeImages');
 Route::get('kirim-ulang-kode-verifikasi/{id}', 'Auth\RegisterController@kirim_ulang_kode_verifikasi');
 Route::get('lupa-password', 'Auth\RegisterController@lupa_password');
-
+Route::get('auth/verifyEmail/{token}', 'Auth\RegisterController@verifyEmail');
 Route::put('/proses-kirim-bukti-pembayaran/{id}', [
     'as'   => 'pendaftar_topos.proses_kirim_bukti_pembayaran',
     'uses' => 'PendaftarToposController@prosesKirimBuktiPembayaran',
@@ -815,6 +815,9 @@ Route::post('/laporan-kas/subtotal-laporan-kas-rekap-mutasi-masuk', 'LaporanKasC
 Route::post('/laporan-kas/view-mutasi-keluar-rekap', 'LaporanKasController@prosesLaporanKasMutasiKeluarRekap')->middleware('auth');
 Route::post('/laporan-kas/pencarian-mutasi-keluar-rekap', 'LaporanKasController@pencarianLaporanKasMutasiKeluarRekap')->middleware('auth');
 Route::post('/laporan-kas/subtotal-laporan-kas-rekap-mutasi-keluar', 'LaporanKasController@subtotalLaporanKasRekapMutasiKeluar')->middleware('auth');
+
+Route::get('/laporan-kas/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{kas}/{jenis_laporan}', 'LaporanKasController@cetakLaporan')->middleware('auth');
+Route::get('/laporan-kas/download-excel/{dari_tanggal}/{sampai_tanggal}/{kas}/{jenis_laporan}', 'LaporanKasController@downloadLaporan')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
