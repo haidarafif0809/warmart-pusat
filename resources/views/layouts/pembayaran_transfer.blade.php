@@ -113,10 +113,8 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
             <h4 class="text-center" ><b rel="tooltip" data-placement="bottom" title="Transfer tepat hingga 3 digit terakhir" id="jumlah_tagihan">Rp. {{number_format($pesanan_pelanggan->subtotal,0,',','.')}}</b></h4>
             <br><br>
             <br>
-            <p>Pembayaran dapat dilakukan ke salah satu rekening kami berikut ini:</p>
-            @foreach($bank as $banks)
-            <li>Bank {{$banks->nama_bank}}, {{$banks->no_rek}} a/n {{$banks->atas_nama}}</li>
-            @endforeach
+            <p class="text-center">Pembayaran dapat dilakukan ke Rekening Bank {{$bank->nama_bank}}({{$bank->no_rek}}) a/n {{$bank->atas_nama}}</p>
+
           </div>
         </div>
 
