@@ -87,7 +87,9 @@ function tanggal($tanggal)
 		<hr style="margin: 0px 0px">
 
 		<div class="row">
-			<div class="col-md-12">				
+			<div class="col-md-12">	
+				@if($jenis_laporan == 0) <!-- LAPORAN DETAIL -->
+
 				<h5><b> KAS MASUK : <span style="color:red">Rp. {{pemisahTitik($subtotal_kas_masuk)}}</span> </b></h5>
 				<table class="table table-bordered">
 					<thead>
@@ -95,7 +97,7 @@ function tanggal($tanggal)
 						<th class="table1">Jenis Transaksi</th>
 						<th class="table1">Ke Kas</th>
 						<th class="table1" style="text-align:right">Total</th>
-						<th class="table1" style="text-align:center">Waktu</th>
+						<th class="table1">Waktu</th>
 					</thead>
 					<tbody>
 						@foreach ($data_laporan_kas as $data_laporan_kass)
@@ -104,7 +106,7 @@ function tanggal($tanggal)
 							<td class="table1">{{ $data_laporan_kass['jenis_transaksi'] }}</td>
 							<td class="table1">{{ $data_laporan_kass['data_laporan']->nama_kas }}</td>
 							<td class="table1" align="right">{{ pemisahTitik($data_laporan_kass['data_laporan']->jumlah_masuk) }}</td>
-							<td class="table1" align="center">{{ tanggal($data_laporan_kass['data_laporan']->created_at) }}</td>
+							<td class="table1">{{ tanggal($data_laporan_kass['data_laporan']->created_at) }}</td>
 						</tr>
 						@endforeach
 					</tbody>
@@ -117,7 +119,7 @@ function tanggal($tanggal)
 						<th class="table1">Jenis Transaksi</th>
 						<th class="table1">Ke Kas</th>
 						<th class="table1" style="text-align:right">Total</th>
-						<th class="table1" style="text-align:center">Waktu</th>
+						<th class="table1">Waktu</th>
 					</thead>
 					<tbody>
 						@foreach ($data_laporan_kas_keluar as $data_laporan_kas_keluars)
@@ -126,7 +128,7 @@ function tanggal($tanggal)
 							<td class="table1">{{ $data_laporan_kas_keluars['jenis_transaksi'] }}</td>
 							<td class="table1">{{ $data_laporan_kas_keluars['data_laporan']->nama_kas }}</td>
 							<td class="table1" align="right">{{ pemisahTitik($data_laporan_kas_keluars['data_laporan']->jumlah_keluar) }}</td>
-							<td class="table1" align="center">{{ tanggal($data_laporan_kas_keluars['data_laporan']->created_at) }}</td>
+							<td class="table1">{{ tanggal($data_laporan_kas_keluars['data_laporan']->created_at) }}</td>
 						</tr>
 						@endforeach
 					</tbody>
@@ -139,7 +141,7 @@ function tanggal($tanggal)
 						<th class="table1">Jenis Transaksi</th>
 						<th class="table1">Ke Kas</th>
 						<th class="table1" style="text-align:right">Total</th>
-						<th class="table1" style="text-align:center">Waktu</th>
+						<th class="table1">Waktu</th>
 					</thead>
 					<tbody>
 						@foreach ($data_laporan_kas_mutasi_masuk as $data_laporan_kas_mutasi_masuks)
@@ -148,7 +150,7 @@ function tanggal($tanggal)
 							<td class="table1">{{ $data_laporan_kas_mutasi_masuks['jenis_transaksi'] }}</td>
 							<td class="table1">{{ $data_laporan_kas_mutasi_masuks['data_laporan']->nama_kas }}</td>
 							<td class="table1" align="right">{{ pemisahTitik($data_laporan_kas_mutasi_masuks['data_laporan']->jumlah_masuk) }}</td>
-							<td class="table1" align="center">{{ tanggal($data_laporan_kas_mutasi_masuks['data_laporan']->created_at) }}</td>
+							<td class="table1">{{ tanggal($data_laporan_kas_mutasi_masuks['data_laporan']->created_at) }}</td>
 						</tr>
 						@endforeach
 					</tbody>
@@ -161,7 +163,7 @@ function tanggal($tanggal)
 						<th class="table1">Jenis Transaksi</th>
 						<th class="table1">Ke Kas</th>
 						<th class="table1" style="text-align:right">Total</th>
-						<th class="table1" style="text-align:center">Waktu</th>
+						<th class="table1">Waktu</th>
 					</thead>
 					<tbody>
 						@foreach ($data_laporan_kas_mutasi_keluar as $data_laporan_kas_mutasi_keluars)
@@ -170,12 +172,89 @@ function tanggal($tanggal)
 							<td class="table1">{{ $data_laporan_kas_mutasi_keluars['jenis_transaksi'] }}</td>
 							<td class="table1">{{ $data_laporan_kas_mutasi_keluars['data_laporan']->nama_kas }}</td>
 							<td class="table1" align="right">{{ pemisahTitik($data_laporan_kas_mutasi_keluars['data_laporan']->jumlah_keluar) }}</td>
-							<td class="table1" align="center">{{ tanggal($data_laporan_kas_mutasi_keluars['data_laporan']->created_at) }}</td>
+							<td class="table1">{{ tanggal($data_laporan_kas_mutasi_keluars['data_laporan']->created_at) }}</td>
 						</tr>
 						@endforeach
 					</tbody>
 				</table>
 				<hr style="margin-top: 30px; margin-bottom: 15px; border-top: 5px solid #eeeeee;">
+
+				@else <!-- LAPORAN REKAP -->
+
+				<h5><b> KAS MASUK : <span style="color:red">Rp. {{pemisahTitik($subtotal_kas_masuk)}}</span> </b></h5>
+				<table class="table table-bordered">
+					<thead>
+						<th class="table1">Waktu</th>
+						<th class="table1">Ke Kas</th>
+						<th class="table1" style="text-align:right">Total</th>
+					</thead>
+					<tbody>
+						@foreach ($data_laporan_kas as $data_laporan_kass)
+						<tr>
+							<td class="table1">{{ tanggal($data_laporan_kass['data_laporan']->created_at) }}</td>
+							<td class="table1">{{ $data_laporan_kass['data_laporan']->nama_kas }}</td>
+							<td class="table1" align="right">{{ pemisahTitik($data_laporan_kass['data_laporan']->jumlah_masuk) }}</td>
+						</tr>
+						@endforeach
+					</tbody>
+				</table>
+				<hr style="margin-top: 30px; margin-bottom: 15px; border-top: 5px solid #eeeeee;">				
+				<h5><b> KAS KELUAR : <span style="color:red">Rp. {{pemisahTitik($subtotal_kas_keluar)}}</span> </b></h5>
+				<table class="table table-bordered">
+					<thead>
+						<th class="table1">Waktu</th>
+						<th class="table1">Ke Kas</th>
+						<th class="table1" style="text-align:right">Total</th>
+					</thead>
+					<tbody>
+						@foreach ($data_laporan_kas_keluar as $data_laporan_kas_keluars)
+						<tr>
+							<td class="table1">{{ tanggal($data_laporan_kas_keluars['data_laporan']->created_at) }}</td>
+							<td class="table1">{{ $data_laporan_kas_keluars['data_laporan']->nama_kas }}</td>
+							<td class="table1" align="right">{{ pemisahTitik($data_laporan_kas_keluars['data_laporan']->jumlah_keluar) }}</td>
+						</tr>
+						@endforeach
+					</tbody>
+				</table>
+				<hr style="margin-top: 30px; margin-bottom: 15px; border-top: 5px solid #eeeeee;">				
+				<h5><b> KAS MUTASI (MASUK) : <span style="color:red">Rp. {{pemisahTitik($subtotal_kas_mutasi_masuk)}}</span> </b></h5>
+				<table class="table table-bordered">
+					<thead>
+						<th class="table1">Waktu</th>
+						<th class="table1">Ke Kas</th>
+						<th class="table1" style="text-align:right">Total</th>
+					</thead>
+					<tbody>
+						@foreach ($data_laporan_kas_mutasi_masuk as $data_laporan_kas_mutasi_masuks)
+						<tr>
+							<td class="table1">{{ tanggal($data_laporan_kas_mutasi_masuks['data_laporan']->created_at) }}</td>
+							<td class="table1">{{ $data_laporan_kas_mutasi_masuks['data_laporan']->nama_kas }}</td>
+							<td class="table1" align="right">{{ pemisahTitik($data_laporan_kas_mutasi_masuks['data_laporan']->jumlah_masuk) }}</td>
+						</tr>
+						@endforeach
+					</tbody>
+				</table>
+				<hr style="margin-top: 30px; margin-bottom: 15px; border-top: 5px solid #eeeeee;">				
+				<h5><b> KAS MUTASI (KELUAR) : <span style="color:red">Rp. {{pemisahTitik($subtotal_kas_mutasi_keluar)}}</span> </b></h5>
+				<table class="table table-bordered">
+					<thead>
+						<th class="table1">Waktu</th>
+						<th class="table1">Ke Kas</th>
+						<th class="table1" style="text-align:right">Total</th>
+					</thead>
+					<tbody>
+						@foreach ($data_laporan_kas_mutasi_keluar as $data_laporan_kas_mutasi_keluars)
+						<tr>
+							<td class="table1">{{ tanggal($data_laporan_kas_mutasi_keluars['data_laporan']->created_at) }}</td>
+							<td class="table1">{{ $data_laporan_kas_mutasi_keluars['data_laporan']->nama_kas }}</td>
+							<td class="table1" align="right">{{ pemisahTitik($data_laporan_kas_mutasi_keluars['data_laporan']->jumlah_keluar) }}</td>
+						</tr>
+						@endforeach
+					</tbody>
+				</table>
+				<hr style="margin-top: 30px; margin-bottom: 15px; border-top: 5px solid #eeeeee;">
+
+				@endif
 			</div>
 			<div class="col-sm-10">
 				<h4><b>TOTAL KAS</b></h4>
@@ -184,17 +263,17 @@ function tanggal($tanggal)
 						<tr>
 							<td width="50%">Kas Awal</td>
 							<td> :&nbsp;</td>
-							<td class="text-right"> Rp. {{pemisahTitik($total_kas_detail['total_awal'])}} </td>
+							<td class="text-right"> Rp. {{pemisahTitik($total_kas['total_awal'])}} </td>
 						</tr>
 						<tr>
 							<td width="50%">Perubahan Kas</td>
 							<td> :&nbsp;</td>
-							<td class="text-right"> Rp. {{pemisahTitik($total_kas_detail['perubahan_kas'])}} </td>
+							<td class="text-right"> Rp. {{pemisahTitik($total_kas['perubahan_kas'])}} </td>
 						</tr>
 						<tr>
 							<td width="50%">Kas Akhir</td>
 							<td> :&nbsp;</td>
-							<td class="text-right"> Rp. {{pemisahTitik($total_kas_detail['total_akhir'])}} </td>
+							<td class="text-right"> Rp. {{pemisahTitik($total_kas['total_akhir'])}} </td>
 						</tr>
 					</tbody>
 				</table>
