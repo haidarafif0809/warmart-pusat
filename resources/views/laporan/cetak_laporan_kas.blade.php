@@ -72,6 +72,9 @@ function tanggal($tanggal)
 				<table>
 					<tbody>
 						<tr style="text-align: right">
+							<td  width="20%"></td><br><td></td><td></td>
+						</tr>
+						<tr style="text-align: right">
 							<td  width="20%">Periode</td> <td> &nbsp;:&nbsp; </td> 
 							<td> {{ $dari_tanggal }} s/d {{ $sampai_tanggal }}</td>
 						</tr>
