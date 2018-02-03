@@ -157,6 +157,13 @@ Route::put('proses/selesaikan-pemesanan', [
     'uses'       => 'PemesananController@prosesSelesaikanPemesanan',
 ]);
 
+//PUNYA Info Pembayaran
+Route::get('/info-pembayaran/{id}', [
+    'middleware' => ['auth'],
+    'as'         => 'info.pembayaran',
+    'uses'       => 'PemesananController@halamanInfoPembayaran',
+]);
+
 //PUNYA PESANAN PELANGGAN
 Route::get('/pesanan', [
     'middleware' => ['auth'],
