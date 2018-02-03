@@ -87,9 +87,9 @@ class PemesananController extends Controller
         //START TRANSAKSI
         DB::beginTransaction();
         if ($request->layanan_kurir != '') {
-           $layanan_kurir     = explode("|", $request->layanan_kurir);
-           $layanan_kurir  = $layanan_kurir[0] ." | ".$layanan_kurir[2]." | ".$layanan_kurir[3];
-       }else{
+         $layanan_kurir     = explode("|", $request->layanan_kurir);
+         $layanan_kurir  = $layanan_kurir[0] ." | ".$layanan_kurir[2]." | ".$layanan_kurir[3];
+     }else{
         $layanan_kurir     = $request->layanan_kurir;
     }
 
@@ -199,15 +199,15 @@ class PemesananController extends Controller
             return redirect()->route('daftar_produk.index');
         }else{
 
-            return redirect()->route('info.pembayaran',$id_pesanan_pelanggan);
+            return redirect()->route('info.pembayaran',['id'=>$id_pesanan_pelanggan]);
         }
 
 
     }
 
-    public function halamanInfoPembayaran($id){
+    public function halamanInfoPembayaran(Request $request){
       $agent = new Agent();
-      $pesanan_pelanggan = PesananPelanggan::whereId($id);
+      $pesanan_pelanggan = PesananPelanggan::whereId($request->id);
 
       if ($pesanan_pelanggan->count() == 0) {
           return response()->view('error.404');
@@ -216,7 +216,7 @@ class PemesananController extends Controller
           $keranjang_belanja = KeranjangBelanja::with(['produk', 'pelanggan'])->where('id_pelanggan', Auth::user()->id);
           $cek_belanjaan = $keranjang_belanja->count();
 
-          $bank = BankWarung::whereWarungId($keranjang_belanja->first()->produk->id_warung)->get();
+          $bank = BankWarung::whereWarungId($pesanan_pelanggan->first()->id_warung)->get();
 
           $waktu_daftar = date($pesanan_pelanggan->first()->created_at);
           $date = date_create($waktu_daftar);
