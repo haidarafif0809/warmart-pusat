@@ -272,6 +272,15 @@ class LaporanPenjualanPosProdukController extends Controller
 
         return $data_penjualan;
     }
+    public function foreachLaporanOnline($laporan_penjualan_online)
+    {
+        $data_penjualan_online = array();
+        foreach ($laporan_penjualan_online as $laporan_penjualan_onlines) {
+            array_push($data_penjualan_online, ['laporan_penjualan_online' => $laporan_penjualan_onlines]);
+        }
+
+        return $data_penjualan_online;
+    }
 
     public function cetakLaporan(Request $request, $dari_tanggal, $sampai_tanggal, $produk)
     {
@@ -285,21 +294,26 @@ class LaporanPenjualanPosProdukController extends Controller
         if ($produk == 0) {
             $request['produk'] = "";
         };
-
+        // data penjualan pos
         $laporan_penjualan = DetailPenjualanPos::laporanPenjualanPosProduk($request)->get();
         $data_penjualan    = $this->foreachLaporan($laporan_penjualan);
         $total_penjualan   = DetailPenjualanPos::totalLaporanPenjualanPosProduk($request)->first();
-        $data_warung       = Warung::where('id', Auth::user()->id_warung)->first();
+        // data penjualan online
+        $laporan_penjualan_online = DetailPenjualan::laporanPenjualanOnlineProduk($request)->get();
+        $data_penjualan_online    = $this->foreachLaporanOnline($laporan_penjualan_online);
+        $total_penjualan_online   = DetailPenjualan::totalLaporanPenjualanOnlineProduk($request)->first();
+        $data_warung              = Warung::where('id', Auth::user()->id_warung)->first();
 
         return view('laporan.cetak_laporan_penjualan_pos_produk',
             [
-                'laporan_penjualan' => $laporan_penjualan,
-                'data_penjualan'    => $data_penjualan,
-                'total_penjualan'   => $total_penjualan,
-                'data_warung'       => $data_warung,
-                'dari_tanggal'      => $this->tanggal($dari_tanggal),
-                'sampai_tanggal'    => $this->tanggal($sampai_tanggal),
-                'setting_aplikasi'  => $setting_aplikasi,
+                'data_penjualan'         => $data_penjualan,
+                'total_penjualan'        => $total_penjualan,
+                'data_penjualan_online'  => $data_penjualan_online,
+                'total_penjualan_online' => $total_penjualan_online,
+                'data_warung'            => $data_warung,
+                'dari_tanggal'           => $this->tanggal($dari_tanggal),
+                'sampai_tanggal'         => $this->tanggal($sampai_tanggal),
+                'setting_aplikasi'       => $setting_aplikasi,
             ])->with(compact('html'));
     }
 }
