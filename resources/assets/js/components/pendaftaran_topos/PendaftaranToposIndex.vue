@@ -536,7 +536,7 @@ export default {
  			 };
  			 return sec;
  			},
- 			cobaTimer(batas_pendaftaran){9
+ 			cobaTimer(batas_pendaftaran){
 
 		 		// Tetapkan tanggal yang harus kita hitung
 		 		var countDownDate = new Date(batas_pendaftaran).getTime();

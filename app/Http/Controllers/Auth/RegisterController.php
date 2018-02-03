@@ -192,8 +192,10 @@ class RegisterController extends Controller
             //APP WARMART == 1
             if ($setting_aplikasi->tipe_aplikasi == 0) {
                 $konfirmasi_admin = 0;
+                $nama_toko        = "Warung Warmart";
             } else {
                 $konfirmasi_admin = 1;
+                $nama_toko        = "Toko Topos";
             }
 
             //USER WARUNG
@@ -221,7 +223,7 @@ class RegisterController extends Controller
             $userkey      = env('USERKEY');
             $passkey      = env('PASSKEY');
             $nomor_tujuan = $data['no_telp'];
-            $isi_pesan    = urlencode($kode_verifikasi . ', masukkan angka tersebut untuk Verfikasi User Warmart, Terima Kasih Telah Mendaftar Sebagai Warung Warmart.');
+            $isi_pesan    = urlencode($kode_verifikasi . ', masukkan angka tersebut untuk Verfikasi User Warmart, Terima Kasih Telah Mendaftar Sebagai ' . $nama_toko . '.');
 
             if (env('STATUS_SMS') == 1) {
                 $client = new Client(); //GuzzleHttp\Client

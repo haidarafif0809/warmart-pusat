@@ -206,10 +206,10 @@ $tanggal = date_format(now(), "d-m-Y h:i:s");
 </body>
 <!--   Core JS Files   -->
 <script src="{{ asset('js/app.js?v=1.51')}}" type="text/javascript"></script>
-{{-- <script>
+<script>
 	$(document).ready(function(){
 		window.print();
 	});
-</script> --}}
+</script>
 @yield('scripts')
 </html>
