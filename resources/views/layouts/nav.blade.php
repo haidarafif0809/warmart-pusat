@@ -234,6 +234,16 @@
                 </router-link>
             </li>
             <li>
+                <router-link :to="{name: 'indexLaporanKas'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        LK
+                    </span>
+                    <span class="sidebar-normal">
+                        Laporan Kas
+                    </span>
+                </router-link>
+            </li>
+            <li>
                 <router-link :to="{name: 'indexLaporanMutasiStok'}" class="menu-nav">
                     <span class="sidebar-mini">
                         LM
