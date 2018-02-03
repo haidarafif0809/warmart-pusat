@@ -73,10 +73,10 @@ h4 {
           <div class="brand">
 
             @if($setting_aplikasi->tipe_aplikasi == 0)
-            <h3 class="title"> PASAR MUSLIM INDONESIA </h1>
+            <h3 class="title"> PASAR MUSLIM INDONESIA </h3>
               <h4 class="title"> Segala Kemudahan Untuk Umat Muslim Berbelanja. </h4>
               @else
-              <h3 class="title"> TOKO ONLINE DAN POS </h1>
+              <h3 class="title"> TOKO ONLINE DAN POS </h3>
                 @endif
 
               </div>
@@ -151,23 +151,28 @@ h4 {
                     </div>
                     {!! $produk_belanjaan !!}
 
-                    <center>
-                      @if($setting_aplikasi->tipe_aplikasi == 0)
-                      <a class="btn btn-round" href="{{ url('/selesaikan-pemesanan') }}" style="background-color: #01573e">
-                        Lanjut Ke Pembayaran
-                        <i class="material-icons">
-                          keyboard_arrow_right
-                        </i>
-                      </a>
-                      @else
-                      <a class="btn btn-round backgroundColor" href="{{ url('/selesaikan-pemesanan') }}" >
-                        Lanjut Ke Pembayaran
-                        <i class="material-icons">
-                          keyboard_arrow_right
-                        </i>
-                      </a>
-                      @endif
-                    </center>
+
+                    @if($setting_aplikasi->tipe_aplikasi == 0)
+                    <a class="btn btn-round" href="{{ url('/daftar-produk') }}" style="background-color: #01573e">
+                      Lanjut Belanja
+                    </a>
+                    <a class="btn btn-round" href="{{ url('/selesaikan-pemesanan') }}" style="background-color: #01573e">
+                      Pembayaran
+                      <i class="material-icons">
+                        keyboard_arrow_right
+                      </i>
+                    </a>
+                    @else
+                    <a class="btn btn-round backgroundColor" href="{{ url('/daftar-produk') }}" >
+                      Lanjut Belanja
+                    </a>
+                    <a class="btn btn-round backgroundColor" href="{{ url('/selesaikan-pemesanan') }}" >
+                      Pembayaran
+                      <i class="material-icons">
+                        keyboard_arrow_right
+                      </i>
+                    </a>
+                    @endif
                     @else
                     <div class="row">
                       <div class="col-md-8">
@@ -222,7 +227,7 @@ h4 {
                                 </td>
                                 <td>
                                   <b>
-                                    {{ $cek_belanjaan }}
+                                    &nbsp;{{ $cek_belanjaan }}
                                   </b>
                                 </td>
                               </tr>
@@ -237,7 +242,7 @@ h4 {
                                 </td>
                                 <td>
                                   <b>
-                                    RP {{ $subtotal }}
+                                    &nbsp;Rp. {{ $subtotal }}
                                   </b>
                                 </td>
                               </tr>
@@ -248,15 +253,27 @@ h4 {
                     </div>
 
                     @if($setting_aplikasi->tipe_aplikasi == 0)
+                    <a class="btn btn-round" href="{{ url('/daftar-produk') }}" style="background-color: #01573e">
+                      Lanjut Belanja
+                      <i class="material-icons">
+                        shopping_cart
+                      </i>
+                    </a>
                     <a class="btn btn-round" href="{{ url('/selesaikan-pemesanan') }}" style="background-color: #01573e">
-                      Lanjut Ke Pembayaran
+                      Pembayaran
                       <i class="material-icons">
                         keyboard_arrow_right
                       </i>
                     </a>
                     @else
+                    <a class="btn btn-round backgroundColor" href="{{ url('/daftar-produk') }}">
+                      Lanjut Belanja
+                      <i class="material-icons">
+                        shopping_cart
+                      </i>
+                    </a>
                     <a class="btn btn-round backgroundColor" href="{{ url('/selesaikan-pemesanan') }}">
-                      Lanjut Ke Pembayaran
+                      Pembayaran
                       <i class="material-icons">
                         keyboard_arrow_right
                       </i>
@@ -305,6 +322,6 @@ h4 {
 
         });
 
-        
+
       </script>
       @endsection
