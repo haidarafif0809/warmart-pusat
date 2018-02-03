@@ -99,7 +99,7 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
       <ul class="breadcrumb" style="margin-top: 10px; margin-bottom: 10px;">
         <li><a href="{{ url('/daftar-produk') }}"><b>Home</b></a></li>
         <li><a href="{{ url('/keranjang-belanja') }}"><b>Keranjang Belanja</b></a></li>
-        <li class="active"><b>Pembayaran via Transfer</b></li>
+        <li class="active"><b>Pembayaran Transfer</b></li>
       </ul>
       <div class="card-content">
         <div class="card">

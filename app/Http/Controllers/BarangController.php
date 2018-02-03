@@ -198,8 +198,8 @@ class BarangController extends Controller
             }
 
             if ($request->perkiraan_berat == "" OR $request->perkiraan_berat == 0) {
-               $perkiraan_berat = 1000;
-           }else{
+             $perkiraan_berat = 1000;
+         }else{
             $perkiraan_berat = $request->perkiraan_berat;
         }
 
@@ -296,6 +296,7 @@ class BarangController extends Controller
                 'harga_beli'         => 'required|numeric|digits_between:1,11',
                 'harga_jual'         => 'required|numeric|digits_between:1,11',
                 'harga_jual2'         => 'nullable|numeric|digits_between:1,11',
+                'berat'    => 'nullable|numeric',
                 'kategori_barang_id' => 'required|exists:kategori_barangs,id',
                 'satuan_id'          => 'required|exists:satuans,id',
                 'foto'               => 'image|max:3072',
@@ -313,7 +314,11 @@ class BarangController extends Controller
             } else {
                 $hitung_stok = 0;
             }
-
+            if ($request->berat == "" OR $request->berat == 0) {
+                $berat = 1000;
+            }else{
+                $berat = $request->berat;
+            }
             $update_barang->update([
                 'kode_barang'        => $request->kode_barang,
                 'kode_barcode'       => $request->kode_barcode,
@@ -321,6 +326,7 @@ class BarangController extends Controller
                 'harga_beli'         => $request->harga_beli,
                 'harga_jual'         => $request->harga_jual,
                 'harga_jual2'         => $request->harga_jual2,
+                'berat'             => $berat,
                 'satuan_id'          => $request->satuan_id,
                 'kategori_barang_id' => $request->kategori_barang_id,
                 'deskripsi_produk'   => $request->deskripsi_produk,

@@ -586,7 +586,6 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
               $("#total_belanja").removeClass('spinner'); 
               $("#total_belanja").text("Rp. "+total_belanja);
               $("#metode_pembayaran").val("TRANSFER");
-              $("#note_pembayaran").text("Pembayaran dapat dilakukan melalui transfer ke rekening Bank BCA, Bank Mandiri, Bank Syariah Mandiri, Bank BNI, atau Bank BRI. Mohon transfer tepat sampai 3 digit terakhir.");
             }
 
             $selectLayananKurir.on('change', function(){
