@@ -88,6 +88,60 @@
 						</table>
 					</div><!--RESPONSIVE-->
 
+					<vue-simple-spinner v-if="loading"></vue-simple-spinner>
+					<div align="right"><pagination :data="penjualanProdukData" v-on:pagination-change-page="prosesLaporan" :limit="4"></pagination></div>
+				</div>
+				<!-- laporan penjualan online per peroduk -->
+				<div class="card-content">
+					<h4 class="card-title"> Laporan Penjualan Online / Produk </h4>
+
+					<div class=" table-responsive">
+						<div class="pencarian">
+							<input type="text" name="pencarianOnline" v-model="pencarianOnline" placeholder="Pencarian" class="form-control">
+						</div>
+
+						<table class="table table-striped table-hover">
+							<thead class="text-primary">
+								<tr>
+									<th>Kode Produk</th>
+									<th>Nama Produk</th>
+									<th style="text-align:right">Harga</th>
+									<th style="text-align:right">Jumlah</th>
+									<th style="text-align:right">Subtotal</th>
+									<th style="text-align:right">Diskon</th>
+									<th style="text-align:right">Total</th>
+								</tr>
+							</thead>
+							<tbody v-if="penjualanOnlineProduk.length > 0 && loading == false"  class="data-ada">
+								<tr v-for="penjualanOnlineProduks, index in penjualanOnlineProduk" >
+
+									<td>{{ penjualanOnlineProduks.laporan_penjualan_online.kode_barang }}</td>
+									<td>{{ penjualanOnlineProduks.laporan_penjualan_online.nama_barang }}</td>
+									<td align="right">{{ penjualanOnlineProduks.laporan_penjualan_online.harga | pemisahTitik }}</td>
+									<td align="right">{{ penjualanOnlineProduks.laporan_penjualan_online.jumlah | pemisahTitik }}</td>
+									<td align="right">{{ penjualanOnlineProduks.laporan_penjualan_online.total | pemisahTitik }}</td>
+									<td align="right">{{ penjualanOnlineProduks.laporan_penjualan_online.potongan | pemisahTitik }}</td>
+									<td align="right">{{ penjualanOnlineProduks.laporan_penjualan_online.subtotal | pemisahTitik }}</td>
+
+								</tr>
+
+								<tr style="color:red">
+									<td>TOTAL</td>
+									<td></td>
+									<td></td>
+									<td align="right">{{ totalPenjualanOnlineProduk.jumlah | pemisahTitik }}</td>
+									<td align="right">{{ totalPenjualanOnlineProduk.total | pemisahTitik }}</td>
+									<td align="right">{{ totalPenjualanOnlineProduk.potongan | pemisahTitik }}</td>
+									<td align="right">{{ totalPenjualanOnlineProduk.subtotal | pemisahTitik }}</td>
+								</tr>
+							</tbody>					
+							<tbody class="data-tidak-ada" v-else-if="penjualanOnlineProduk.length == 0 && loading == false">
+								<tr ><td colspan="9"  class="text-center">Tidak Ada Data</td></tr>
+							</tbody>
+						</table>
+					</div><!--RESPONSIVE-->
+
+					<hr>
 					<!--DOWNLOAD EXCEL-->
 					<a href="#" class='btn btn-warning' id="btnExcel" target='blank' :style="'display: none'"><i class="material-icons">file_download</i> Download Excel</a>
 
@@ -95,7 +149,7 @@
 					<a href="#" class='btn btn-success' id="btnCetak" target='blank' :style="'display: none'"><i class="material-icons">print</i> Cetak Laporan</a>
 
 					<vue-simple-spinner v-if="loading"></vue-simple-spinner>
-					<div align="right"><pagination :data="penjualanProdukData" v-on:pagination-change-page="prosesLaporan" :limit="4"></pagination></div>
+					<div align="right"><pagination :data="penjualanOnlineProdukData" v-on:pagination-change-page="prosesLaporan" :limit="4"></pagination></div>
 				</div>
 			</div>
 		</div>
@@ -107,8 +161,11 @@ export default {
 		return {
 			produk: [],
 			penjualanProduk: [],
+			penjualanOnlineProduk:[],
 			penjualanProdukData: {},
+			penjualanOnlineProdukData: {},
 			totalPenjualanPosProduk: {},
+			totalPenjualanOnlineProduk: {},
 			filter: {
 				dari_tanggal: '',
 				sampai_tanggal: new Date(),
@@ -118,6 +175,7 @@ export default {
 			urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-penjualan-pos-produk/download-excel-penjualan-pos-produk"),
 			urlCetak : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-penjualan-pos-produk/cetak-laporan"),
 			pencarian: '',
+			pencarianOnline: '',
 			loading: false,
 			placeholder_produk: {
 				placeholder: '--PILIH PRODUK--'
@@ -139,6 +197,9 @@ export default {
 // whenever question changes, this function will run
 pencarian: function (newQuestion) {
 	this.getHasilPencarian();
+},
+pencarianOnline: function (newQuestion) {
+	this.getHasilPencarianOnline();
 }
 },
 filters: {
@@ -154,7 +215,9 @@ methods: {
 		var app = this;
 		var filter = app.filter;
 		app.prosesLaporan();
+		app.prosesLaporanOnline();
 		app.totalPenjualanProduk();
+		app.totalPenjualanOnlineProduks();
 		app.showButton();   		
 	},
 	prosesLaporan(page) {
@@ -169,11 +232,29 @@ methods: {
 			app.penjualanProduk = resp.data.data;
 			app.penjualanProdukData = resp.data;
 			app.loading = false
-			console.log(resp.data.data);
+			// console.log(resp.data.data);
 		})
 		.catch(function (resp) {
 			console.log(resp);
 			alert("Tidak Dapat Memuat Laporan Penjualan Pos /Produk");
+		});
+	},prosesLaporanOnline(page) {
+		var app = this;	
+		var newFilter = app.filter;
+		if (typeof page === 'undefined') {
+			page = 1;
+		}
+		app.loading = true,
+		axios.post(app.url+'/view-online?page='+page, newFilter)
+		.then(function (resp) {
+			app.penjualanOnlineProduk = resp.data.data;
+			app.penjualanOnlineProdukData = resp.data;
+			app.loading = false
+			console.log(resp.data.data);
+		})
+		.catch(function (resp) {
+			console.log(resp);
+			alert("Tidak Dapat Memuat Laporan Penjualan Online /Produk");
 		});
 	},
 	
@@ -204,6 +285,22 @@ methods: {
 			alert("Tidak Dapat Memuat Laporan Penjualan Pos /Produk");
 		});
 	},
+	getHasilPencarianOnline(page){
+		var app = this;
+		var newFilter = app.filter;
+		if (typeof page === 'undefined') {
+			page = 1;
+		}
+		axios.post(app.url+'/pencarian-online?search='+app.pencarianOnline+'&page='+page, newFilter)
+		.then(function (resp) {
+			app.penjualanOnlineProduk = resp.data.data;
+			app.penjualanOnlineProdukData = resp.data;
+		})
+		.catch(function (resp) {
+			// console.log(resp);
+			alert("Tidak Dapat Memuat Laporan Penjualan Pos /Produk");
+		});
+	},
 	totalPenjualanProduk() {
 		var app = this;	
 		var newFilter = app.filter;
@@ -218,6 +315,21 @@ methods: {
 		.catch(function (resp) {
 			// console.log(resp);
 			alert("Tidak Dapat Memuat Subtotal Mutasi Stok");
+		});
+	},	totalPenjualanOnlineProduks() {
+		var app = this;	
+		var newFilter = app.filter;
+
+		app.loading = true,
+		axios.post(app.url+'/total-penjualan-online-produk', newFilter)
+		.then(function (resp) {
+			app.totalPenjualanOnlineProduk = resp.data;
+			app.loading = false
+			console.log(resp.data);    			
+		})
+		.catch(function (resp) {
+			// console.log(resp);
+			alert("Tidak Dapat Memuat Total Penjualan Online /Produk");
 		});
 	},	
 	showButton() {
@@ -236,7 +348,7 @@ methods: {
 		$("#btnExcel").show();
 		$("#btnCetak").show();
 		$("#btnExcel").attr('href', app.urlDownloadExcel+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.produk);
-		$("#btnCetak").attr('href', app.urlCetak+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.produk); 
+		$("#btnCetak").attr('href', app.urlCetak+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.produk);
 	}
 }
 }
