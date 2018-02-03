@@ -46,9 +46,9 @@ $agent = new Agent();
 </head>
 <style type="text/css">
 
-.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
-   padding: 1px;
-}
+    .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+     padding: 1px;
+ }
 
 </style>
 <body>
@@ -61,8 +61,8 @@ $agent = new Agent();
     -->
 
     <div class="logo">
-     @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
-     <a class="simple-text logo-mini" href="https://war-mart.id">
+       @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
+       <a class="simple-text logo-mini" href="https://war-mart.id">
         WM
     </a>
     <a class="simple-text logo-normal" href="https://war-mart.id">
@@ -99,31 +99,31 @@ $agent = new Agent();
                                 UPU
                             </span>
                             <span class="sidebar-normal">
-                               Ubah Profil User
-                           </span>
-                       </router-link>
-                       @elseif(Auth::user()->tipe_user == 2 )
-                       <a href="{{ url('/ubah-profil-komunitas') }}">
+                             Ubah Profil User
+                         </span>
+                     </router-link>
+                     @elseif(Auth::user()->tipe_user == 2 )
+                     <a href="{{ url('/ubah-profil-komunitas') }}">
                         <span class="sidebar-mini">
                             UPU
                         </span>
                         <span class="sidebar-normal">
-                           Ubah Profil
-                       </span>
-                   </a>
-                   @elseif(Auth::user()->tipe_user == 1 )
-                   <router-link :to="{name: 'ubahProfilAdmin'}" class="menu-nav">
+                         Ubah Profil
+                     </span>
+                 </a>
+                 @elseif(Auth::user()->tipe_user == 1 )
+                 <router-link :to="{name: 'ubahProfilAdmin'}" class="menu-nav">
                     <span class="sidebar-mini">
                         UP
                     </span>
                     <span class="sidebar-normal">
-                       Ubah Profil
-                   </span>
-               </router-link>
-               @endif
-           </li>
-           @if(Auth::user()->tipe_user == 4 )
-           <li>
+                     Ubah Profil
+                 </span>
+             </router-link>
+             @endif
+         </li>
+         @if(Auth::user()->tipe_user == 4 )
+         <li>
             <router-link :to="{name: 'indexProfilWarung'}" class="menu-nav">
                 @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
                 <span class="sidebar-mini">
@@ -156,7 +156,7 @@ $agent = new Agent();
             </router-link>
             @else
             <router-link :to="{name: 'ubahPasswordUserWarung'}" class="menu-nav" v-on:click="closeMenu()">
-               <span class="sidebar-mini">
+             <span class="sidebar-mini">
                 UP
             </span>
             <span class="sidebar-normal">
@@ -392,21 +392,26 @@ $agent = new Agent();
                     <span class="icon-bar">
                     </span>
                 </button>
-                <a class="navbar-brand" href="#">
-                    Dashboard
-                </a>
-                @if ($agent->isMobile() && Auth::user()->tipe_user == 4) <!--JIKA DAKSES VIA HP/TAB-->
-                <p id="sisa_waktu_demo"></p>
-                @endif
 
+                @if ($agent->isMobile() && Auth::user()->tipe_user == 4) <!--JIKA DAKSES VIA HP/TAB-->
+                <span id="sisa_waktu_demo" style="margin-left: 10px"></span>
+
+                <span>                    
+                    <a  href="{{ url('/halaman-warung/'.Auth::user()->id_warung.'') }}" class="btn btn-xs btn-rose" style="margin-left: 10px">Preview Online Shop</a>
+                    @endif
+                </span>
             </div>
             <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <a href="{{ url('/halaman-warung/'.Auth::user()->id_warung.'') }}" class="btn btn-round btn-rose">Preview Online Shop</a>
+                </ul>
                 <ul class="nav navbar-nav navbar-right">
                     @if(Auth::user()->tipe_user == 4)
                     <b id="sisa_waktu_demo"></b>
                     @endif
                 </ul>
             </div>
+
         </div>
     </nav>
     <div class="content">
@@ -547,15 +552,24 @@ $agent = new Agent();
 
                   if (data.sisa_waktu > 0) {
 
-                      $("#sisa_waktu_demo").text("Masa Percobaan Anda Tinggal "+data.sisa_waktu+" Hari Lagi! ");   
-                      $("#sisa_waktu_demo").append("<a href='pendaftaran-topos/1' target='blank'>Daftar Sekarang!</a>"); 
+                    $("#sisa_waktu_demo").text("Masa Percobaan Anda Tinggal "+data.sisa_waktu+" Hari Lagi! ");
+                    @if ($agent->isMobile() && Auth::user()->tipe_user == 4)
+                    $("#sisa_waktu_demo").append("<a href='pendaftaran-topos/1' class='btn btn-xs btn-rose' target='blank' style='margin-left: 10px'>Daftar Sekarang!</a>");
+                    @else
+                    $("#sisa_waktu_demo").append("<a href='pendaftaran-topos/1' class='btn btn-round btn-rose' target='blank' style='margin-left: 10px'>Daftar Sekarang!</a>");
+                    @endif 
 
-                  }else{  
+                }else{  
 
-                      $("#sisa_waktu_demo").text("Masa Percobaan Anda Sudah Habis!");  
-                      $("#sisa_waktu_demo").append("<a href='pendaftaran-topos/1' target='blank'>Daftar Sekarang!</a>"); 
+                    $("#sisa_waktu_demo").text("Masa Percobaan Anda Sudah Habis!");
 
-                      $(document).on('click', '.disabled-menu', function(){
+                    @if ($agent->isMobile() && Auth::user()->tipe_user == 4)
+                    $("#sisa_waktu_demo").append("<a href='pendaftaran-topos/1' class='btn btn-xs btn-rose' target='blank'>Daftar Sekarang!</a>");
+                    @else
+                    $("#sisa_waktu_demo").append("<a href='pendaftaran-topos/1' class='btn btn-round btn-rose' target='blank'>Daftar Sekarang!</a>");
+                    @endif
+
+                    $(document).on('click', '.disabled-menu', function(){
 
                         swal({
                           text: "Menu Tidak Dapat Diakses. Karena Masa Percobaan Anda Sudah Habis!!",
@@ -571,18 +585,18 @@ $agent = new Agent();
                     })
 
                   });
-                  }
-              }
+                }
+            }
 
-          }); 
+        }); 
 
         }
 
         $("#minimizeSidebar").click();  
 
         $(document).on('click', '.menu-nav', function(){
-           $('.navbar-toggle ').click();
-       });
+         $('.navbar-toggle ').click();
+     });
 
     });
 </script>
