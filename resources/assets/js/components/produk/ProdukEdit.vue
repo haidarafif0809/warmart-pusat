@@ -87,12 +87,12 @@
 
                                 <div class="form-group">
                                     <label for="berat" class="col-md-2 control-label">Perkiraan Berat(Jika Barang Dijual Online)</label>
-                                    <div class="col-md-5">
+                                    <div class="col-md-6">
                                         <money class="form-control" autocomplete="off" placeholder="Perkiraan Berat(Jika Barang Dijual Online)" v-model="produk.berat" type="text" name="berat" id="berat"  v-bind="separator"></money>
                                         <span v-if="errors.berat" id="berat_error" class="label label-danger">{{ errors.berat[0] }}</span>
                                     </div>
-                                    <div class="col-md-5">
-                                        <p style="color: grey; font-style: italic;">Berat barang diperlukan untuk estimasi ongkos kirim. Coba gunakan perhitungan berat volumetrik.(Gram)</p>     
+                                    <div class="col-md-4">
+                                        <p style="color: grey; font-style: italic;">Satuan dalam bentuk Gram.</p>     
                                     </div>
                                 </div>
 
@@ -101,6 +101,8 @@
                                     <div class="togglebutton col-md-10">
                                         <label>
                                             <input type="checkbox" v-model="produk.hitung_stok" name="hitung_stok" id="hitung_stok">
+                                            <font v-if="produk.hitung_stok == 1">Ya</font>
+                                            <font v-else>Tidak</font>
                                         </label>
                                     </div>
                                 </div>
@@ -110,6 +112,8 @@
                                     <div class="togglebutton col-md-10">
                                         <label>
                                             <input type="checkbox" v-model="produk.status_aktif" name="status_aktif" id="status_aktif">
+                                            <font v-if="produk.status_aktif == 1">Ya</font>
+                                            <font v-else>Tidak</font>
                                         </label>
                                     </div>
                                 </div>

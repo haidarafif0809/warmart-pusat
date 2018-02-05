@@ -185,18 +185,6 @@ class BarangController extends Controller
                 'foto'               => 'image|max:3072',
             ]);
 
-            if ($request->status_aktif == 'true') {
-                $status_aktif = 1;
-            } else {
-                $status_aktif = 0;
-            }
-
-            if ($request->hitung_stok == 'true') {
-                $hitung_stok = 1;
-            } else {
-                $hitung_stok = 0;
-            }
-
             if ($request->perkiraan_berat == "" OR $request->perkiraan_berat == 0) {
              $perkiraan_berat = 1000;
          }else{
@@ -214,8 +202,8 @@ class BarangController extends Controller
             'satuan_id'          => $request->satuan_id,
             'kategori_barang_id' => $request->kategori_barang_id,
             'deskripsi_produk'   => $request->deskripsi_produk,
-            'status_aktif'       => $status_aktif,
-            'hitung_stok'        => $hitung_stok,
+            'status_aktif'       => $request->status_aktif,
+            'hitung_stok'        => $request->hitung_stok,
             'konfirmasi_admin'   => 1,
             'id_warung'          => Auth::user()->id_warung]);
 
@@ -303,13 +291,13 @@ class BarangController extends Controller
 
             ]);
 
-            if ($request->status_aktif == 1 || $request->status_aktif == 'true') {
+            if ($request->status_aktif == 1) {
                 $status_aktif = 1;
             } else {
                 $status_aktif = 0;
             }
 
-            if ($request->hitung_stok == 1 || $request->hitung_stok == 'true') {
+            if ($request->hitung_stok == 1) {
                 $hitung_stok = 1;
             } else {
                 $hitung_stok = 0;
