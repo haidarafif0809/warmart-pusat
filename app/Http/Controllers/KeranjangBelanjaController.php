@@ -104,9 +104,9 @@ class KeranjangBelanjaController extends Controller
         if ($agent->isMobile()) {
 
             if ($keranjang_belanjaans->jumlah_produk == 1) {
-                $tombolKurangiProduk = '<a class="btn btn-xs" disabled="true">-</a>';
+                $tombolKurangiProduk = '<a class="btn btn-xs" disabled="true"> <i class="material-icons">remove</i> </a>';
             } else {
-                $tombolKurangiProduk = '<a href=" ' . url('/keranjang-belanja/kurang-jumlah-produk-keranjang-belanja/' . $keranjang_belanjaans->id_keranjang_belanja . '') . '" class="btn btn-xs">-</a>';
+                $tombolKurangiProduk = '<a href=" ' . url('/keranjang-belanja/kurang-jumlah-produk-keranjang-belanja/' . $keranjang_belanjaans->id_keranjang_belanja . '') . '" class="btn btn-xs"> <i class="material-icons">remove</i> </a>';
             }
 
         } else {
@@ -129,10 +129,10 @@ class KeranjangBelanjaController extends Controller
         $agent = new Agent();
         if ($agent->isMobile()) {
             if ($sisa_stok <= 0 && $keranjang_belanjaans->produk->hitung_stok == 1) {
-                $tombolTambahiProduk = '<a class="btn btn-xs" disabled="true">+</a>';
+                $tombolTambahiProduk = '<a class="btn btn-xs" disabled="true"> <i class="material-icons">add</i> </a>';
             } else {
                 $tombolTambahiProduk = '
-                <a href=" ' . url('/keranjang-belanja/tambah-jumlah-produk-keranjang-belanja/' . $keranjang_belanjaans->id_keranjang_belanja . '') . '" class="btn btn-xs">+</a>';
+                <a href=" ' . url('/keranjang-belanja/tambah-jumlah-produk-keranjang-belanja/' . $keranjang_belanjaans->id_keranjang_belanja . '') . '" class="btn btn-xs"> <i class="material-icons">add</i> </a>';
             }
         } else {
             if ($sisa_stok <= 0 && $keranjang_belanjaans->produk->hitung_stok == 1) {
