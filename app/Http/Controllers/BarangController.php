@@ -419,6 +419,7 @@ class BarangController extends Controller
                 'nama_produk' => title_case($produks->nama_barang),
                 'kode_produk' => $produks->kode_barang,
                 'barcode' => $produks->kode_barcode,
+                'hitung_stok' => $produks->hitung_stok,
                 'produk'      => $produks->id . "|" . title_case($produks->nama_barang) . "|" . $produks->harga_beli . "|" . $produks->harga_jual . "|" . $produks->satuan_id . "|" . $produks->harga_jual2]);
 
         }
