@@ -157,6 +157,13 @@ Route::put('proses/selesaikan-pemesanan', [
     'uses'       => 'PemesananController@prosesSelesaikanPemesanan',
 ]);
 
+//PUNYA Info Pembayaran
+Route::get('/info-pembayaran/', [
+    'middleware' => ['auth'],
+    'as'         => 'info.pembayaran',
+    'uses'       => 'PemesananController@halamanInfoPembayaran',
+]);
+
 //PUNYA PESANAN PELANGGAN
 Route::get('/pesanan', [
     'middleware' => ['auth'],
@@ -689,6 +696,13 @@ Route::get('/laporan-penjualan-pos-produk/pilih-pelanggan', 'LaporanPenjualanPos
 Route::get('/laporan-penjualan-pos-produk/download-excel-penjualan-pos-produk/{dari_tanggal}/{sampai_tanggal}/{produk}', 'LaporanPenjualanPosProdukController@downloadExcel')->middleware('auth');
 Route::get('/laporan-penjualan-pos-produk/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{produk}', 'LaporanPenjualanPosProdukController@cetakLaporan')->middleware('auth');
 
+// LAP PENJUALAN ONLINE /PRODUK
+Route::post('/laporan-penjualan-pos-produk/view-online', 'LaporanPenjualanPosProdukController@prosesLaporanPenjualanOnlineProduk')->middleware('auth');
+Route::post('/laporan-penjualan-pos-produk/pencarian-online', 'LaporanPenjualanPosProdukController@pencarianOnline')->middleware('auth');
+Route::post('/laporan-penjualan-pos-produk/total-penjualan-online-produk', 'LaporanPenjualanPosProdukController@totalPenjualanOnlineProduk')->middleware('auth');
+Route::get('/laporan-penjualan-pos-produk/pilih-produk-online', 'LaporanPenjualanPosProdukController@dataProdukOnline')->middleware('auth');
+Route::get('/laporan-penjualan-pos-produk/pilih-pelanggan-online', 'LaporanPenjualanPosProdukController@dataPelangganOnline')->middleware('auth');
+
 // LAPORAN KARTU STOK VUE.JS
 Route::post('/laporan-kartu-stok/view', 'LaporanKartuStokController@prosesLaporanKartuStok')->middleware('auth');
 Route::post('/laporan-kartu-stok/pencarian', 'LaporanKartuStokController@pencarian')->middleware('auth');
@@ -810,6 +824,7 @@ Route::post('/laporan-kas/pencarian-mutasi-keluar-rekap', 'LaporanKasController@
 Route::post('/laporan-kas/subtotal-laporan-kas-rekap-mutasi-keluar', 'LaporanKasController@subtotalLaporanKasRekapMutasiKeluar')->middleware('auth');
 
 Route::get('/laporan-kas/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{kas}/{jenis_laporan}', 'LaporanKasController@cetakLaporan')->middleware('auth');
+Route::get('/laporan-kas/download-excel/{dari_tanggal}/{sampai_tanggal}/{kas}/{jenis_laporan}', 'LaporanKasController@downloadLaporan')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
@@ -846,6 +861,7 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
     Route::resource('pembayaran-hutang', 'PembayaranHutangController');
     Route::resource('pembayaran-piutang', 'PembayaranPiutangController');
     Route::resource('setting-footer', 'SettingFooterController');
+    Route::resource('setting-verifikasi', 'SettingVerifikasiController');
 
 //BARANG
     //HALAMAN DESKRIPSI

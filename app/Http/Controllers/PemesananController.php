@@ -6,6 +6,7 @@ use App\DetailPesananPelanggan;
 use App\KeranjangBelanja;
 use App\PesananPelanggan;
 use App\Warung;
+use App\BankWarung;
 use Auth;
 use DB;
 use GuzzleHttp\Client;
@@ -87,7 +88,7 @@ class PemesananController extends Controller
         DB::beginTransaction();
         if ($request->layanan_kurir != '') {
          $layanan_kurir     = explode("|", $request->layanan_kurir);
-         $layanan_kurir  = $layanan_kurir[0] ." | ".$layanan_kurir[3];
+         $layanan_kurir  = $layanan_kurir[0] ." | ".$layanan_kurir[2]." | ".$layanan_kurir[3];
      }else{
         $layanan_kurir     = $request->layanan_kurir;
     }
@@ -194,19 +195,48 @@ class PemesananController extends Controller
 
         DB::commit();
 
-        return redirect()->route('daftar_produk.index');
+        if ($request->metode_pembayaran == "Bayar di Tempat") {
+            return redirect()->route('daftar_produk.index');
+        }else{
+
+            return redirect()->route('info.pembayaran',['id'=>$id_pesanan_pelanggan]);
+        }
+
 
     }
 
-    public function kirimSmsKeWarung($nomor_tujuan, $id_pesanan_pelanggan)
-    {
+    public function halamanInfoPembayaran(Request $request){
+      $agent = new Agent();
+      $pesanan_pelanggan = PesananPelanggan::whereId($request->id);
 
-        $userkey   = env('USERKEY');
-        $passkey   = env('PASSKEY');
-        $url_warung = url('/detail-pesanan-warung/'.$id_pesanan_pelanggan);
-        $isi_pesan = urlencode('Assalamualaikum, Ada Pesanan baru Silakan Cek ' . $url_warung);
+      if ($pesanan_pelanggan->count() == 0) {
+          return response()->view('error.404');
+      }else{
 
-        if (env('STATUS_SMS') == 1) {
+          $keranjang_belanja = KeranjangBelanja::with(['produk', 'pelanggan'])->where('id_pelanggan', Auth::user()->id);
+          $cek_belanjaan = $keranjang_belanja->count();
+
+          $bank = BankWarung::whereWarungId($pesanan_pelanggan->first()->id_warung)->first();
+
+          $waktu_daftar = date($pesanan_pelanggan->first()->created_at);
+          $date = date_create($waktu_daftar);
+      date_add($date, date_interval_create_from_date_string('12 hours'));// hanya diberi waktu 12 jam
+      $batas_pembayaran = date_format($date, 'Y-m-d H:i:s');
+
+      return view('layouts.pembayaran_transfer', ['agent' => $agent,'cek_belanjaan'=>$cek_belanjaan,'pesanan_pelanggan'=>$pesanan_pelanggan->first(),'batas_pembayaran'=>$batas_pembayaran,'bank'=>$bank ]);
+  }
+
+}
+
+public function kirimSmsKeWarung($nomor_tujuan, $id_pesanan_pelanggan)
+{
+
+    $userkey   = env('USERKEY');
+    $passkey   = env('PASSKEY');
+    $url_warung = url('/detail-pesanan-warung/'.$id_pesanan_pelanggan);
+    $isi_pesan = urlencode('Assalamualaikum, Ada Pesanan baru Silakan Cek ' . $url_warung);
+
+    if (env('STATUS_SMS') == 1) {
             $client = new Client(); //GuzzleHttp\Client
             $result = $client->get('https://reguler.zenziva.net/apps/smsapi.php?userkey=' . $userkey . '&passkey=' . $passkey . '&nohp=' . $nomor_tujuan . '&pesan=' . $isi_pesan . '');
 
