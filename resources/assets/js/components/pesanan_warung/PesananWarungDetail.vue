@@ -141,13 +141,16 @@
 										</center>
 									</td>
 									<td>Rp. {{ detailPesanans.harga_produk * detailPesanans.jumlah_produk | pemisahTitik }}</td>		          			
-									<td>
-										<b style="color:red" v-if="detailPesanans.pesanan_pelanggan.konfirmasi_pesanan == 0" >Belum Di Konfirmasi</b>
+									<td v-if="detailPesanans.jumlah_produk > 0">
+										<b style="color:red" v-if="detailPesanans.pesanan_pelanggan.konfirmasi_pesanan == 0">Belum Di Konfirmasi</b>
 										<b style="color:orange" v-else-if="detailPesanans.pesanan_pelanggan.konfirmasi_pesanan == 1" >Sudah Di Konfirmasi</b>
 										<b style="color:#01573e" v-else-if="detailPesanans.pesanan_pelanggan.konfirmasi_pesanan == 2" >Selesai</b>
 										<b style="color:red" v-else-if="detailPesanans.pesanan_pelanggan.konfirmasi_pesanan == 3" >Batal</b>
 										<b style="color:orange" v-else > Batal Pelanggan</b>
-									</td>			          			
+									</td>	
+									<td v-else>
+										<b style="color:red" >Batal</b>
+									</td>		          			
 								</tr>
 
 							</tbody>	
@@ -541,7 +544,7 @@ export default {
 
 				swal({
 					title: "Pilih Kas",
-					html: kas_warung+'<p style="color: red; font-style: italic; font-size:15px; text-align:left">*Jika Anda Menyelesaikan Pesanan Ini, Maka "Kas" Anda Akan Bertambah & "Stok Produk" Akan Berkurang',
+					html: kas_warung+'<p style="color: red; font-style: italic; font-size:15px; text-align:left">*Jika Anda Menyelesaikan Pesanan Ini, Maka "Kas" Anda Akan Bertambah & "Stok Produk(Jika Produk Bukan Jasa)" Akan Berkurang',
 					showCancelButton: true,
 					confirmButtonColor: '#3085d6',
 					cancelButtonColor: '#d33',
