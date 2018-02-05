@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
         $this->call(SuplierSeeder::class);
         $this->call(KasMasukSeeder::class);
         $this->call(SettingFooterSeeder::class);
+        $this->call(SettingVerifikasiSeeder::class);
 
     }
 }
