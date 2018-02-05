@@ -861,6 +861,7 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
     Route::resource('pembayaran-hutang', 'PembayaranHutangController');
     Route::resource('pembayaran-piutang', 'PembayaranPiutangController');
     Route::resource('setting-footer', 'SettingFooterController');
+    Route::resource('setting-verifikasi', 'SettingVerifikasiController');
 
 //BARANG
     //HALAMAN DESKRIPSI

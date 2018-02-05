@@ -18,7 +18,6 @@
         <div class="col-md-12">
             <ul class="breadcrumb">
                 <li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li>
-                <li><router-link :to="{name: 'indexProduk'}">Setting Footer</router-link></li>
                 <li class="active">Edit Setting Footer</li>
             </ul>
             <div class="card">
@@ -32,10 +31,10 @@
                     <form v-on:submit.prevent="saveForm()" class="form-horizontal">
                         <div class="row" style="margin-left: 2%;">
                             <div class="form-group">
-                                <label for="header_warung" class="col-md-2 control-label label-font-style">Header Warung</label>
+                                <label for="judul_warung" class="col-md-2 control-label label-font-style">Header Warung</label>
                                 <div class="col-md-8">
                                     <div class="col-md-10">
-                                        <input type="text" v-model="setting_footer.header_warung" class="form-control input-font-style" autocomplete="off" :placeholder="placeholders.header_warung" name="header_warung">
+                                        <input type="text" v-model="setting_footer.judul_warung" class="form-control input-font-style" autocomplete="off" :placeholder="placeholders.judul_warung" name="judul_warung">
                                     </div>
                                 </div>
                             </div>
@@ -151,7 +150,7 @@ export default {
             url : window.location.origin+(window.location.pathname).replace("dashboard", "setting-footer"),
             setting_footer: {},
             placeholders: {
-                header_warung: 'Nama Warung Anda',
+                judul_warung: 'Nama Warung Anda',
                 support_link: 'https://andaglos.id/support/',
                 about_link: 'https://andaglos.id/topos/',
                 about_us: 'Tentang kami...',
