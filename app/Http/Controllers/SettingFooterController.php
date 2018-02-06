@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\SettingFooter;
+use Auth;
 use Illuminate\Http\Request;
 
 class SettingFooterController extends Controller
@@ -10,11 +11,19 @@ class SettingFooterController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\
      */
     public function index()
     {
         //
+    }
+
+    public function idWarung()
+    {
+        $idWarung = Auth::user()->id_warung;
+        // $idWarung = 1;
+        // $idWarung = ['id' => $idWarung];
+        return response()->json($idWarung);
     }
 
     /**
