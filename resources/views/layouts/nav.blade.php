@@ -360,12 +360,22 @@
     <div class="collapse" id="settingWarung">
         <ul class="nav">
             <li>
-                <router-link :to="{name: 'indexSettingFooter', params: {id_warung: <?=\Auth::user()->id_warung;?>}}" class="menu-nav">
+                <router-link :to="{name: 'indexSettingFooter'}" class="menu-nav">
                     <span class="sidebar-mini">
                         SF
                     </span>
                     <span class="sidebar-normal">
                         Setting Footer
+                    </span>
+                </router-link>
+            </li>
+            <li>
+                <router-link :to="{name: 'indexSettingVerifikasi', params: {id_warung: <?=\Auth::user()->id_warung;?>}}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        SV
+                    </span>
+                    <span class="sidebar-normal">
+                        Setting Verifikasi
                     </span>
                 </router-link>
             </li>

@@ -139,6 +139,11 @@ import LaporanKasIndex from './components/laporan/LaporanKasIndex.vue';
 // SETTING FOOTER
 import SettingFooterIndex from './components/setting_footer/SettingFooterIndex.vue';
 import indexSettingFooter from './components/setting_footer/SettingFooterIndex.vue';
+
+// SETTING VERIFIKASI
+import SettingVerifikasiIndex from './components/setting_verifikasi/SettingVerifikasiIndex.vue';
+import indexSettingVerifikasi from './components/setting_verifikasi/SettingVerifikasiIndex.vue';
+
 const routes = [{
         path: '/',
         components: {
@@ -612,7 +617,7 @@ const routes = [{
     },
     // SETTING FOOTER
     {
-        path: '/setting-footer/:id_warung',
+        path: '/setting-footer',
         component: SettingFooterIndex,
         name: 'indexSettingFooter'
     },
@@ -621,6 +626,12 @@ const routes = [{
         path: '/laporan-kas',
         component: LaporanKasIndex,
         name: 'indexLaporanKas'
+    },
+    // SETTING VERIFIKASI
+    {
+        path: '/setting-verifikasi/:id_warung',
+        component: SettingVerifikasiIndex,
+        name: 'indexSettingVerifikasi'
     }
 ]
 export default routes;

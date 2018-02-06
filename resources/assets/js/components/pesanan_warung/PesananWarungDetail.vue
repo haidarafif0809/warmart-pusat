@@ -59,14 +59,33 @@
 
 						</div> <!--END ORDER PESANAN ID-->
 
-						<div class="col-md-3">Waktu Pesan : {{pesananData.pesanan.created_at}}</div>					
-						<div class="col-md-2">Total :Rp. {{ pesananData.subtotal | pemisahTitik }}</div>					
+						<div class="col-md-3">
+							<table>
+								<tbody>
+									<tr><td> Waktu Pesan </td><td style="padding:3px">:</td><td  style="padding:3px"></td><td  style="padding:3px">{{ pesananData.pesanan.created_at}}</td></tr>
+									<tr><td> Kurir </td><td style="padding:3px">:</td><td  style="padding:3px"></td><td  style="padding:3px"> {{pesananData.pesanan.kurir }}</td></tr>
+									<tr><td> Service </td><td style="padding:3px">:</td><td  style="padding:3px"></td><td  style="padding:3px">{{ servicePengiriman }}</td></tr>
+									<tr><td> Waktu Pengiriman </td><td style="padding:3px">:</td><td  style="padding:3px"></td><td  style="padding:3px"> {{ waktuPengiriman }}</td></tr>
+								</tbody>
+							</table>
+
+						</div>					
+						<div class="col-md-2">
+							<table>
+								<tbody>
+									<tr><td> Subtotal </td><td style="padding:3px" align="right">:</td><td  align="right" style="padding:3px"></td><td  align="right" style="padding:3px">{{ pesananData.subtotal | pemisahTitik }}</td></tr>
+									<tr><td> Biaya Kirim </td><td style="padding:3px" align="right">:</td><td  align="right" style="padding:3px"></td><td  align="right" style="padding:3px">{{pesananData.pesanan.biaya_kirim | pemisahTitik}}</td></tr>
+									<tr><td> Total </td><td style="padding:3px" align="right">:</td><td  align="right" style="padding:3px"></td><td  align="right" style="padding:3px">{{pesananData.pesanan.biaya_kirim + pesananData.subtotal | pemisahTitik}}</td></tr>
+								</tbody>
+							</table>
+						</div>					
 						<div class="col-md-2">Status : 
 							<b style="color:red" v-if="pesananData.pesanan.konfirmasi_pesanan == 0" >Belum Di Konfirmasi</b>
 							<b style="color:orange" v-else-if="pesananData.pesanan.konfirmasi_pesanan == 1" >Sudah Di Konfirmasi</b>
 							<b style="color:#01573e" v-else-if="pesananData.pesanan.konfirmasi_pesanan == 2" >Selesai</b>
 							<b style="color:red" v-else-if="pesananData.pesanan.konfirmasi_pesanan == 3" >Batal</b>
 							<b style="color:orange" v-else > Batal Pelanggan</b>
+							<br>Metode Pembayaran : {{pesananData.pesanan.metode_pembayaran}}
 						</div>
 
 						<div class="col-md-4" v-if="pesananData.pesanan.konfirmasi_pesanan != 4">
@@ -141,13 +160,16 @@
 										</center>
 									</td>
 									<td>Rp. {{ detailPesanans.harga_produk * detailPesanans.jumlah_produk | pemisahTitik }}</td>		          			
-									<td>
-										<b style="color:red" v-if="detailPesanans.pesanan_pelanggan.konfirmasi_pesanan == 0" >Belum Di Konfirmasi</b>
+									<td v-if="detailPesanans.jumlah_produk > 0">
+										<b style="color:red" v-if="detailPesanans.pesanan_pelanggan.konfirmasi_pesanan == 0">Belum Di Konfirmasi</b>
 										<b style="color:orange" v-else-if="detailPesanans.pesanan_pelanggan.konfirmasi_pesanan == 1" >Sudah Di Konfirmasi</b>
 										<b style="color:#01573e" v-else-if="detailPesanans.pesanan_pelanggan.konfirmasi_pesanan == 2" >Selesai</b>
 										<b style="color:red" v-else-if="detailPesanans.pesanan_pelanggan.konfirmasi_pesanan == 3" >Batal</b>
 										<b style="color:orange" v-else > Batal Pelanggan</b>
-									</td>			          			
+									</td>	
+									<td v-else>
+										<b style="color:red" >Batal</b>
+									</td>		          			
 								</tr>
 
 							</tbody>	
@@ -182,6 +204,17 @@
 					<p style="margin-top: 1px; margin-bottom: 1px;">{{pesananData.pesanan.created_at}}</p>
 					<hr style="margin-top: 1x; margin-bottom: 1px;">
 
+					<b class="card-title" style="margin-top: 1px; margin-bottom: 1px;">Pengiriman</b>
+					<div class="row">
+						<div class="col-sm-6 col-xs-6">Kurir </div>
+						<div class="col-sm-6 col-xs-6"><p align="right">{{ pesananData.pesanan.kurir }}</p></div>
+						<div class="col-sm-6 col-xs-6">Service </div>
+						<div class="col-sm-6 col-xs-6"><p align="right">{{servicePengiriman}}</p></div>
+						<div class="col-sm-6 col-xs-6">Waktu Pengiriman </div>
+						<div class="col-sm-6 col-xs-6"><p align="right">{{ waktuPengiriman }}</p></div>
+					</div>
+					<hr style="margin-top: 1x; margin-bottom: 1px;">
+
 					<b class="card-title" style="margin-top: 1px; margin-bottom: 1px;">Alamat Pelanggan</b>
 					<p style="margin-top: 1px; margin-bottom: 1px;"> {{ pesananData.pesanan.nama_pemesan }}</p>
 					<p style="margin-top: 1px; margin-bottom: 1px;">{{ pesananData.pesanan.no_telp_pemesan }}</p>
@@ -207,8 +240,14 @@
 
 					<b class="card-title" style="margin-top: 1px; margin-bottom: 1px;">Info Pembayaran</b>
 					<div class="row">
-						<div class="col-sm-6 col-xs-6">Total </div>
+						<div class="col-sm-6 col-xs-6">Subotal </div>
 						<div class="col-sm-6 col-xs-6"><p align="right" class="text-danger"><b>Rp. {{ pesananData.subtotal | pemisahTitik }}</b></p></div>
+						<div class="col-sm-6 col-xs-6">Biaya Kirim </div>
+						<div class="col-sm-6 col-xs-6"><p align="right" class="text-danger"><b>Rp. {{pesananData.pesanan.biaya_kirim | pemisahTitik}}</b></p></div>
+						<div class="col-sm-6 col-xs-6">Total </div>
+						<div class="col-sm-6 col-xs-6"><p align="right" class="text-danger"><b>Rp. {{ pesananData.subtotal + pesananData.pesanan.biaya_kirim | pemisahTitik }}</b></p></div>
+						<div class="col-sm-6 col-xs-6">Metode Pembayaran </div>
+						<div class="col-sm-6 col-xs-6"><p align="right"><b>{{ pesananData.pesanan.metode_pembayaran  }}</b></p></div>
 					</div>
 					<hr style="margin-top: 1x; margin-bottom: 1px;">
 
@@ -293,7 +332,7 @@
 					</div>
 				</div>
 			</div>
-			
+
 		</div><!-- JIKA DIAKSES VIA MOBILE-->
 	</div>
 </template>
@@ -314,6 +353,8 @@ export default {
 				id_kas : '',
 			}, 			
 			dataAgent: '',
+			servicePengiriman : '',
+			waktuPengiriman : '',
 			detailPesananId: null,
 			loading: true,
 			url: window.location.origin + (window.location.pathname).replace("dashboard", "pesanan-warung"),
@@ -351,6 +392,10 @@ export default {
 				app.pesananData = resp.data.data;
 				app.dataAgent = resp.data.data.agent;
 				app.loading = false;
+				let layanan_kurir = resp.data.data.pesanan.layanan_kurir.split(" | ");
+				app.servicePengiriman = layanan_kurir[0]+" | "+layanan_kurir[2]
+				app.waktuPengiriman	= layanan_kurir[1]+" Hari" 
+
 			})
 			.catch(function (resp) {
 				app.loading = false;
@@ -541,7 +586,7 @@ export default {
 
 				swal({
 					title: "Pilih Kas",
-					html: kas_warung+'<p style="color: red; font-style: italic; font-size:15px; text-align:left">*Jika Anda Menyelesaikan Pesanan Ini, Maka "Kas" Anda Akan Bertambah & "Stok Produk" Akan Berkurang',
+					html: kas_warung+'<p style="color: red; font-style: italic; font-size:15px; text-align:left">*Jika Anda Menyelesaikan Pesanan Ini, Maka "Kas" Anda Akan Bertambah & "Stok Produk(Jika Produk Bukan Jasa)" Akan Berkurang',
 					showCancelButton: true,
 					confirmButtonColor: '#3085d6',
 					cancelButtonColor: '#d33',

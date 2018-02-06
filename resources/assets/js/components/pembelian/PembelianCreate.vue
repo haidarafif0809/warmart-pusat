@@ -1,36 +1,36 @@
 <style scoped>
-  .modal {
-    overflow-y:auto;
-  }
-  .pencarian {
-    color: red; 
-    float: right;
-  }
-  .form-pembelian{
-    width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    display: inline-block;
-    border: 3px solid #555;
-    border-radius: 4px;
-    box-sizing: border-box;
-    font-size: 30px;
-  }
-  .form-subtotal{
-    width: 100%;
-    margin: 8px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-  }
-  .card-produk{
-    background-color:#82B1FF;
-  }
-  .btn-icon{
-    border-radius: 1px solid;
-    padding: 10px 10px;
-  }
+.modal {
+  overflow-y:auto;
+}
+.pencarian {
+  color: red; 
+  float: right;
+}
+.form-pembelian{
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 3px solid #555;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 30px;
+}
+.form-subtotal{
+  width: 100%;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+.card-produk{
+  background-color:#82B1FF;
+}
+.btn-icon{
+  border-radius: 1px solid;
+  padding: 10px 10px;
+}
 
 </style>
 <template>
@@ -267,7 +267,7 @@
                 <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
 
                   <selectize-component v-model="inputTbsPembelian.produk" :settings="placeholder_produk" id="produk" ref='produk'  > 
-                    <option v-for="produks, index in produk" v-bind:value="produks.produk">{{produks.barcode}} || {{produks.kode_produk}} || {{ produks.nama_produk }}</option>
+                    <option v-for="produks, index in produk" v-bind:value="produks.produk" v-if="produks.hitung_stok == 1" >{{produks.barcode}} || {{produks.kode_produk}} || {{ produks.nama_produk }}</option>
                   </selectize-component>
                 </div><!--/COL MD  3 --> 
                 <span v-if="errors.produk" id="produk_error" class="label label-danger">{{ errors.produk[0] }}</span>
@@ -407,100 +407,100 @@
 </div> 
 </template>
 <style type="text/css">
-  .card-pembayaran{
-    background-color:#82B1FF;
-  }
+.card-pembayaran{
+  background-color:#82B1FF;
+}
 </style>
 
 <script>
-  export default {
-    data: function () {
-      return {
-        errors: [],
-        produk: [],
-        suplier: [],
-        cara_bayar: [],
-        tbs_pembelians: [],
-        tbsPembelianData : {},
-        url : window.location.origin+(window.location.pathname).replace("dashboard", "pembelian"),
-        url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
-        url_kas : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
-        url_cek_total_kas : window.location.origin+(window.location.pathname).replace("dashboard", ""),
-        url_suplier : window.location.origin+(window.location.pathname).replace("dashboard", "suplier"),
-        url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
-        inputTbsPembelian: {
-          produk : '',
-          jumlah_produk : '',
-          harga_produk : '',
-          id_tbs : '',
-        },
-        inputPembayaranPembelian:{
-          potongan_persen: 0,
-          potongan_faktur: 0,
-          subtotal: 0,
-          pembayaran: 0,
-          total_akhir: 0,
-          kembalian: 0,
-          kredit: 0,
-          jatuh_tempo: '',
-          keterangan: '',
-          subtotal_number_format:0,	
-          suplier: '',
-          cara_bayar: '',
-          status_pembelian: '',
-          ppn: '',
-          potongan: 0,
-        },
-        tambahSuplier: {
-          nama_suplier : '',
-          alamat : '',
-          no_telp : '',
-          contact_person : '',
-        },
-        tambahKas: {
-          kode_kas : '',
-          nama_kas : '',
-          status_kas : 0,
-          default_kas : 0
-        },
-        placeholder_produk: {
-          placeholder: '--PILIH PRODUK (F1)--',
-          sortField: 'text',
-          openOnFocus : true
-        },
-        placeholder_suplier: {
-          placeholder: '--PILIH SUPPLIER (F4)--',
-          sortField: 'text',
-          openOnFocus : true
-        },
-        placeholder_cara_bayar: {
-          placeholder: '--PILIH CARA BAYAR (F6)--',
-          sortField: 'text',
-          openOnFocus : true
-        },
-        separator: {
-          decimal: ',',
-          thousands: '.',
-          prefix: '',
-          suffix: '',
-          precision: 2,
-          masked: false /* doesn't work with directive */
-        },
-        pencarian: '',
-        loading: true,
-        seen : false,
+export default {
+  data: function () {
+    return {
+      errors: [],
+      produk: [],
+      suplier: [],
+      cara_bayar: [],
+      tbs_pembelians: [],
+      tbsPembelianData : {},
+      url : window.location.origin+(window.location.pathname).replace("dashboard", "pembelian"),
+      url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
+      url_kas : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
+      url_cek_total_kas : window.location.origin+(window.location.pathname).replace("dashboard", ""),
+      url_suplier : window.location.origin+(window.location.pathname).replace("dashboard", "suplier"),
+      url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
+      inputTbsPembelian: {
+        produk : '',
+        jumlah_produk : '',
+        harga_produk : '',
+        id_tbs : '',
+      },
+      inputPembayaranPembelian:{
+        potongan_persen: 0,
+        potongan_faktur: 0,
+        subtotal: 0,
+        pembayaran: 0,
+        total_akhir: 0,
+        kembalian: 0,
+        kredit: 0,
+        jatuh_tempo: '',
+        keterangan: '',
+        subtotal_number_format:0,	
+        suplier: '',
+        cara_bayar: '',
+        status_pembelian: '',
+        ppn: '',
+        potongan: 0,
+      },
+      tambahSuplier: {
+        nama_suplier : '',
+        alamat : '',
+        no_telp : '',
+        contact_person : '',
+      },
+      tambahKas: {
+        kode_kas : '',
+        nama_kas : '',
+        status_kas : 0,
+        default_kas : 0
+      },
+      placeholder_produk: {
+        placeholder: '--PILIH PRODUK (F1)--',
+        sortField: 'text',
+        openOnFocus : true
+      },
+      placeholder_suplier: {
+        placeholder: '--PILIH SUPPLIER (F4)--',
+        sortField: 'text',
+        openOnFocus : true
+      },
+      placeholder_cara_bayar: {
+        placeholder: '--PILIH CARA BAYAR (F6)--',
+        sortField: 'text',
+        openOnFocus : true
+      },
+      separator: {
+        decimal: ',',
+        thousands: '.',
+        prefix: '',
+        suffix: '',
+        precision: 2,
+        masked: false /* doesn't work with directive */
+      },
+      pencarian: '',
+      loading: true,
+      seen : false,
 
-      }
+    }
 
-    },
-    mounted() {
-      var app = this;
-      app.dataProduk();
-      app.dataSuplier();
-      app.dataCaraBayar();
-      app.getResults();
-    },
-    watch: {
+  },
+  mounted() {
+    var app = this;
+    app.dataProduk();
+    app.dataSuplier();
+    app.dataCaraBayar();
+    app.getResults();
+  },
+  watch: {
 // whenever question changes, this function will run
 pencarian: function (newQuestion) {
   this.getHasilPencarian();

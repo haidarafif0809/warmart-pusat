@@ -18,13 +18,12 @@
         <div class="col-md-12">
             <ul class="breadcrumb">
                 <li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li>
-                <li><router-link :to="{name: 'indexProduk'}">Setting Footer</router-link></li>
                 <li class="active">Edit Setting Footer</li>
             </ul>
             <div class="card">
 
                 <div class="card-header card-header-icon" data-background-color="purple">
-                    <i class="material-icons">dns</i>
+                    <i class="material-icons">settings_applications</i>
                 </div>
 
                 <div class="card-content">
@@ -32,10 +31,10 @@
                     <form v-on:submit.prevent="saveForm()" class="form-horizontal">
                         <div class="row" style="margin-left: 2%;">
                             <div class="form-group">
-                                <label for="header_warung" class="col-md-2 control-label label-font-style">Header Warung</label>
+                                <label for="judul_warung" class="col-md-2 control-label label-font-style">Header Warung</label>
                                 <div class="col-md-8">
                                     <div class="col-md-10">
-                                        <input type="text" v-model="setting_footer.header_warung" class="form-control input-font-style" autocomplete="off" :placeholder="placeholders.header_warung" name="header_warung">
+                                        <input type="text" v-model="setting_footer.judul_warung" class="form-control input-font-style" autocomplete="off" :placeholder="placeholders.judul_warung" name="judul_warung">
                                     </div>
                                 </div>
                             </div>
@@ -142,16 +141,16 @@
 <script>
 export default {
     mounted() {
-        this.getDataSettingFooter();
+        this.getIdWarung();
     },
     data: function () {
         return {
-            warung_id: '',
+            id_warung: '',
             errors: [],
             url : window.location.origin+(window.location.pathname).replace("dashboard", "setting-footer"),
             setting_footer: {},
             placeholders: {
-                header_warung: 'Nama Warung Anda',
+                judul_warung: 'Nama Warung Anda',
                 support_link: 'https://andaglos.id/support/',
                 about_link: 'https://andaglos.id/topos/',
                 about_us: 'Tentang kami...',
@@ -167,15 +166,14 @@ export default {
                     instagram: 'https://www.instagram.com/andaglos',
                     google_plus: 'https://plus.google.com/u/0/102529791461131425545'
                 },
-            }
+            },
         }
     },
     methods: {
         saveForm() {
             let app = this;
-            let id_warung = app.$route.params.id_warung;
 
-            axios.patch(app.url + '/' + id_warung, app.setting_footer)
+            axios.patch(app.url + '/' + app.id_warung, app.setting_footer)
             .then(function (resp) {
                 console.log(resp);
                 swal({
@@ -188,14 +186,14 @@ export default {
             })
             .catch(function (resp) {
                 console.log(resp);
-                alert('tidak dapat menyimpan perubahan.');
+                alert('Tidak dapat menyimpan perubahan.');
             })
         },
-        getDataSettingFooter() {
+        getDataSettingFooter(id_warung) {
             let app = this;
-            let id_warung = app.$route.params.id_warung;
-
-            axios.get(app.url + '/' + id_warung)
+            app.id_warung = id_warung;
+            console.log(id_warung)
+            axios.get(app.url + '/' + 2)
             .then(function (resp) {
                 console.log(resp);
                 app.setting_footer = resp.data;
@@ -208,8 +206,18 @@ export default {
             })
             .catch(function (resp) {
                 console.log(resp);
-                alert('tidak dapat memuat data setting footer');
+                alert('Tidak dapat memuat data setting footer');
             })
+        },
+        getIdWarung() {
+            let app = this
+            axios.get(app.url + '/id-warung')
+            .then(function (resp) {
+                app.getDataSettingFooter(resp.data);
+            })
+            .catch(function (resp) {
+                alert('Tidak dapat mengambil id warung!');
+            });
         }
     }
 }

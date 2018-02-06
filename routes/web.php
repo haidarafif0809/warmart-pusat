@@ -838,6 +838,8 @@ Route::post('/laporan-kas/subtotal-laporan-kas-rekap-mutasi-keluar', 'LaporanKas
 Route::get('/laporan-kas/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{kas}/{jenis_laporan}', 'LaporanKasController@cetakLaporan')->middleware('auth');
 Route::get('/laporan-kas/download-excel/{dari_tanggal}/{sampai_tanggal}/{kas}/{jenis_laporan}', 'LaporanKasController@downloadLaporan')->middleware('auth');
 
+Route::get('/setting-footer/id-warung', 'SettingFooterController@idWarung')->middleware('auth');
+
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
     Route::resource('user', 'UserController');
@@ -873,6 +875,7 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
     Route::resource('pembayaran-hutang', 'PembayaranHutangController');
     Route::resource('pembayaran-piutang', 'PembayaranPiutangController');
     Route::resource('setting-footer', 'SettingFooterController');
+    Route::resource('setting-verifikasi', 'SettingVerifikasiController');
 
 //BARANG
     //HALAMAN DESKRIPSI

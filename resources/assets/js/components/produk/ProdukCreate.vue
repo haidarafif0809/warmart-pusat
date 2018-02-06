@@ -79,23 +79,20 @@
 
 								<div class="form-group">
 									<label for="harga_jual2" class="col-md-2 control-label">Harga Jual 2</label>
-									<div class="col-md-5">
+									<div class="col-md-10">
 										<money class="form-control" autocomplete="off" placeholder="Harga Jual 2(Jika Ada)" v-model="produk.harga_jual2" type="text" name="harga_jual2" id="harga_jual2"  autofocus="" v-bind="separator"></money>
 										<span v-if="errors.harga_jual2" id="harga_jual2_error" class="label label-danger">{{ errors.harga_jual2[0] }}</span>
-									</div>
-									<div class="col-md-5">
-										<p style="color: grey; font-style: italic;">Harga Jual 2 digunakan jika ingin membedakan harga jual untuk toko online dengan toko offline.</p>     
 									</div>
 								</div>
 
 								<div class="form-group">
-									<label for="perkiraan_berat" class="col-md-2 control-label">Perkiraan Berat(Jika Barang Dijual Online)</label>
-									<div class="col-md-5">
+									<label for="perkiraan_berat" class="col-md-2 control-label">Perkiraan Berat</label>
+									<div class="col-md-6">
 										<money class="form-control" autocomplete="off" placeholder="Perkiraan Berat(Jika Barang Dijual Online)" v-model="produk.perkiraan_berat" type="text" name="perkiraan_berat" id="perkiraan_berat"  autofocus="" v-bind="separator"></money>
 										<span v-if="errors.perkiraan_berat" id="perkiraan_berat_error" class="label label-danger">{{ errors.perkiraan_berat[0] }}</span>
 									</div>
-									<div class="col-md-5">
-										<p style="color: grey; font-style: italic;">Berat barang diperlukan untuk estimasi ongkos kirim. Coba gunakan perhitungan berat volumetrik.(Gram)</p>     
+									<div class="col-md-4">
+										<p style="color: grey; font-style: italic;">Satuan dalam bentuk Gram.</p>     
 									</div>
 								</div>
 
@@ -104,6 +101,8 @@
 									<div class="togglebutton col-md-10">
 										<label>
 											<input type="checkbox" v-model="produk.hitung_stok" name="hitung_stok" id="hitung_stok" value="1">
+											<font v-if="produk.hitung_stok == 1">Ya</font>
+											<font v-else>Tidak</font>
 										</label>
 									</div>
 								</div>
@@ -113,6 +112,8 @@
 									<div class="togglebutton col-md-10">
 										<label>
 											<input type="checkbox" v-model="produk.status_aktif" name="status_aktif" id="status_aktif" value="1">
+											<font v-if="produk.status_aktif == 1">Ya</font>
+											<font v-else>Tidak</font>
 										</label>
 									</div>
 								</div>
@@ -197,8 +198,8 @@ export default {
 				harga_jual2 : '',
 				perkiraan_berat : '',
 				deskripsi_produk : '',
-				hitung_stok : 'true',
-				status_aktif : 'true'
+				hitung_stok : 1,
+				status_aktif : 1
 			},
 			message : '',
 			data_agent : '',
