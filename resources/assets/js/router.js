@@ -114,6 +114,8 @@ import LaporanMutasiStokIndex from './components/laporan/LaporanMutasiStokIndex.
 import LaporanPembelianProdukIndex from './components/laporan/LaporanPembelianProdukIndex.vue';
 // LAPORAN PENJUALAN /PRODUK
 import LaporanPenjualanPosProdukIndex from './components/laporan/LaporanPenjualanPosProdukIndex.vue';
+// LAPORAN PENJUALAN /PELANGGAN
+import LaporanPenjualanPelangganIndex from './components/laporan/LaporanPenjualanPelangganIndex.vue';
 // PENDAFTARAN TOPOS
 import PendaftaranToposIndex from './components/pendaftaran_topos/PendaftaranToposIndex.vue';
 import PendaftaranToposList from './components/pendaftaran_topos/PendaftaranToposList.vue';
@@ -134,11 +136,9 @@ import PembayaranPiutangEdit from './components/pembayaran_piutang/PembayaranPiu
 import PembayaranPiutangProsesEdit from './components/pembayaran_piutang/PembayaranPiutangProsesEdit.vue';
 // LAPORAN KAS
 import LaporanKasIndex from './components/laporan/LaporanKasIndex.vue';
-
 // SETTING FOOTER
 import SettingFooterIndex from './components/setting_footer/SettingFooterIndex.vue';
 import indexSettingFooter from './components/setting_footer/SettingFooterIndex.vue';
-
 const routes = [{
         path: '/',
         components: {
@@ -540,6 +540,12 @@ const routes = [{
         component: LaporanPenjualanPosProdukIndex,
         name: 'indexLaporanPenjualanPosProduk'
     },
+    // LAPORAN PENJUALAN / PELANGGAN
+    {
+        path: '/laporan-penjualan-pelanggan',
+        component: LaporanPenjualanPelangganIndex,
+        name: 'indexLaporanPenjualanPelanggan'
+    },
     // PENDAFTARAN TOPOS
     {
         path: '/daftar-topos',
@@ -604,7 +610,6 @@ const routes = [{
         component: PembayaranPiutangProsesEdit,
         name: 'prosesEditPembayaranPiutang'
     },
-
     // SETTING FOOTER
     {
         path: '/setting-footer/:id_warung',
@@ -617,6 +622,5 @@ const routes = [{
         component: LaporanKasIndex,
         name: 'indexLaporanKas'
     }
-
-    ]
-    export default routes;
+]
+export default routes;
