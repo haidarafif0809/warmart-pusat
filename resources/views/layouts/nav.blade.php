@@ -350,7 +350,7 @@
     <div class="collapse" id="settingWarung">
         <ul class="nav">
             <li>
-                <router-link :to="{name: 'indexSettingFooter', params: {id_warung: <?=\Auth::user()->id_warung;?>}}" class="menu-nav">
+                <router-link :to="{name: 'indexSettingFooter'}" class="menu-nav">
                     <span class="sidebar-mini">
                         SF
                     </span>

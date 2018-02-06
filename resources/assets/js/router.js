@@ -611,7 +611,7 @@ const routes = [{
 
     // SETTING FOOTER
     {
-        path: '/setting-footer/:id_warung',
+        path: '/setting-footer',
         component: SettingFooterIndex,
         name: 'indexSettingFooter'
     },
