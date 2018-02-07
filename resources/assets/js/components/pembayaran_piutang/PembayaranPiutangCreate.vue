@@ -892,6 +892,7 @@ methods: {
                 $("#modal_selesai").hide();
                 app.loading = false;                
                 app.$router.replace('/pembayaran-piutang');
+                window.open('pembayaran-piutang/cetak-pembayaran-piutang/'+resp.data.respons_pembayaran,'_blank');
             }
         })
         .catch(function (resp) {
