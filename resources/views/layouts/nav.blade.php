@@ -269,7 +269,17 @@
                         LP
                     </span>
                     <span class="sidebar-normal">
-                        Laporan Penjualan Pos / Produk
+                        Laporan Penjualan /Produk
+                    </span>
+                </router-link>
+            </li>
+            <li>
+                <router-link :to="{name: 'indexLaporanPenjualanPelanggan'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        LP
+                    </span>
+                    <span class="sidebar-normal">
+                        Laporan Penjualan /Pelanggan
                     </span>
                 </router-link>
             </li>

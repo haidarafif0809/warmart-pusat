@@ -692,16 +692,28 @@ Route::post('/laporan-penjualan-pos-produk/view', 'LaporanPenjualanPosProdukCont
 Route::post('/laporan-penjualan-pos-produk/pencarian', 'LaporanPenjualanPosProdukController@pencarian')->middleware('auth');
 Route::post('/laporan-penjualan-pos-produk/total-penjualan-pos-produk', 'LaporanPenjualanPosProdukController@totalPenjualanPosProduk')->middleware('auth');
 Route::get('/laporan-penjualan-pos-produk/pilih-produk', 'LaporanPenjualanPosProdukController@dataProduk')->middleware('auth');
-Route::get('/laporan-penjualan-pos-produk/pilih-pelanggan', 'LaporanPenjualanPosProdukController@dataPelanggan')->middleware('auth');
-Route::get('/laporan-penjualan-pos-produk/download-excel-penjualan-pos-produk/{dari_tanggal}/{sampai_tanggal}/{produk}', 'LaporanPenjualanPosProdukController@downloadExcel')->middleware('auth');
-Route::get('/laporan-penjualan-pos-produk/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{produk}', 'LaporanPenjualanPosProdukController@cetakLaporan')->middleware('auth');
 
 // LAP PENJUALAN ONLINE /PRODUK
-Route::post('/laporan-penjualan-pos-produk/view-online', 'LaporanPenjualanPosProdukController@prosesLaporanPenjualanOnlineProduk')->middleware('auth');
+Route::post('/laporan-penjualan-pos-produk/view-online', 'LaporanPenjualanPosProdukController@pr osesLaporanPenjualanOnlineProduk')->middleware('auth');
 Route::post('/laporan-penjualan-pos-produk/pencarian-online', 'LaporanPenjualanPosProdukController@pencarianOnline')->middleware('auth');
 Route::post('/laporan-penjualan-pos-produk/total-penjualan-online-produk', 'LaporanPenjualanPosProdukController@totalPenjualanOnlineProduk')->middleware('auth');
 Route::get('/laporan-penjualan-pos-produk/pilih-produk-online', 'LaporanPenjualanPosProdukController@dataProdukOnline')->middleware('auth');
-Route::get('/laporan-penjualan-pos-produk/pilih-pelanggan-online', 'LaporanPenjualanPosProdukController@dataPelangganOnline')->middleware('auth');
+Route::get('/laporan-penjualan-pos-produk/download-excel-penjualan-pos-produk/{dari_tanggal}/{sampai_tanggal}/{produk}', 'LaporanPenjualanPosProdukController@downloadExcel')->middleware('auth');
+Route::get('/laporan-penjualan-pos-produk/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{produk}', 'LaporanPenjualanPosProdukController@cetakLaporan')->middleware('auth');
+
+// LAP PENJUALAN POS /PELANGGAN
+Route::post('/laporan-penjualan-pelanggan/view', 'LaporanPenjualanPelangganController@prosesLaporanPenjualanPosPelanggan')->middleware('auth');
+Route::post('/laporan-penjualan-pelanggan/pencarian', 'LaporanPenjualanPelangganController@pencarian')->middleware('auth');
+Route::post('/laporan-penjualan-pelanggan/total-penjualan-pos-pelanggan', 'LaporanPenjualanPelangganController@totalPenjualanPosPelanggan')->middleware('auth');
+Route::get('/laporan-penjualan-pelanggan/pilih-pelanggan', 'LaporanPenjualanPelangganController@dataPelanggan')->middleware('auth');
+
+// LAP PENJUALAN ONLINE /PELANGGAN
+Route::post('/laporan-penjualan-pelanggan/view-online', 'LaporanPenjualanPelangganController@prosesLaporanPenjualanOnlinePelanggan')->middleware('auth');
+Route::post('/laporan-penjualan-pelanggan/pencarian-online', 'LaporanPenjualanPelangganController@pencarianOnline')->middleware('auth');
+Route::post('/laporan-penjualan-pelanggan/total-penjualan-online-pelanggan', 'LaporanPenjualanPelangganController@totalPenjualanOnlinePelanggan')->middleware('auth');
+Route::get('/laporan-penjualan-pelanggan/pilih-pelanggan-online', 'LaporanPenjualanPelangganController@dataPelangganOnline')->middleware('auth');
+Route::get('/laporan-penjualan-pelanggan/download-excel-penjualan-pelanggan/{dari_tanggal}/{sampai_tanggal}/{pelanggan}', 'LaporanPenjualanPelangganController@downloadExcel')->middleware('auth');
+Route::get('/laporan-penjualan-pelanggan/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{pelanggan}', 'LaporanPenjualanPelangganController@cetakLaporan')->middleware('auth');
 
 // LAPORAN KARTU STOK VUE.JS
 Route::post('/laporan-kartu-stok/view', 'LaporanKartuStokController@prosesLaporanKartuStok')->middleware('auth');
@@ -726,7 +738,6 @@ Route::get('/pembayaran-hutang/view-detail-pembayaran-hutang/{id}', 'PembayaranH
 Route::get('/pembayaran-hutang/pencarian-detail-pembayaran-hutang/{id}', 'PembayaranHutangController@pencarianDetail')->middleware('auth');
 Route::get('/pembayaran-hutang/subtotal-tbs-pembayaran-hutang/{jenis_tbs}', 'PembayaranHutangController@cekSubtotalTbsPembayaranHutang')->middleware('auth');
 Route::get('/pembayaran-hutang/cek-supplier-double', 'PembayaranHutangController@cekSupplierDouble')->middleware('auth');
-Route::get('/pembayaran-hutang/cek-supplier-double-edit', 'PembayaranHutangController@cekSupplierDoubleEdit')->middleware('auth');
 Route::get('/pembayaran-hutang/cek-total-kas', 'PembayaranHutangController@total_kas')->middleware('auth');
 Route::get('/pembayaran-hutang/cetak-besar-pembayaran-hutang/{id}', 'PembayaranHutangController@cetakBesarPembayaranHutang')->middleware('auth');
 
@@ -753,7 +764,10 @@ Route::get('/pembayaran-hutang/view-edit-tbs-pembayaran-hutang/{id}', 'Pembayara
 Route::get('/pembayaran-hutang/pencarian-edit-tbs-pembayaran-hutang/{id}', 'PembayaranHutangController@pencarianTbsEdit')->middleware('auth');
 Route::post('/pembayaran-hutang/proses-tambah-tbs-edit-pembayaran-hutang/{id}', 'PembayaranHutangController@prosesTbsEditPembayaranHutang')->middleware('auth');
 Route::delete('/pembayaran-hutang/proses-hapus-tbs-edit-pembayaran-hutang/{id}', 'PembayaranHutangController@prosesHapusEditTbsPembayaranHutang')->middleware('auth');
-Route::get('/pembayaran-hutang/cek-data-tbs-pembayan-hutang/{id}', 'PembayaranHutangController@cekDataTbsPembayaranHutang')->middleware('auth');
+Route::get('/pembayaran-hutang/cek-data-tbs-pembayaran-hutang/{id}', 'PembayaranHutangController@cekDataTbsPembayaranHutang')->middleware('auth');
+Route::get('/pembayaran-hutang/cek-total-kas-edit', 'PembayaranHutangController@total_kas_edit')->middleware('auth'); 
+Route::get('/pembayaran-hutang/cek-supplier-double-edit', 'PembayaranHutangController@cekSupplierDoubleEdit')->middleware('auth');
+
 
 Route::post('/pembayaran-hutang/edit-jumlah-tbs-edit-pembayaran-hutang', [
     'middleware' => ['auth'],

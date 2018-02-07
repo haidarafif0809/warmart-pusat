@@ -29,7 +29,10 @@ class PendaftarToposController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-
+        public function __construct()
+    {
+        $this->middleware('user-must-admin');
+    }
 
     public function paginationData($pendaftar_topos, $array, $url)
     {

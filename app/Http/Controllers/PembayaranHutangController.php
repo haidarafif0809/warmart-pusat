@@ -659,6 +659,7 @@ class PembayaranHutangController extends Controller
             return 0;
         } else {
 //UPDATE PEMBAYARAN
+            $jam                = date("h:i:s");
             $pembayaran_hutang->update([
                 'total'      => $request->subtotal,
                 'cara_bayar' => $request->kas,
@@ -734,13 +735,13 @@ class PembayaranHutangController extends Controller
         public function cekDataTbsPembayaranHutang($id)
     {
         $user_warung   = Auth::user()->id_warung;
-        $session_id    = session()->getId();
+        $pembayaran_hutang    = PembayaranHutang::find($id);
         $TbsPembayaranHutang = new EditTbsPembayaranHutang();
-        $subtotal      = $TbsPembayaranHutang->subtotalTbs($user_warung,$session_id);
+        $subtotal      = $TbsPembayaranHutang->subtotalTbs($user_warung,$pembayaran_hutang->no_faktur_pembayaran);
         $respons['subtotal'] = $subtotal;
         return response()->json([
             "subtotal" => $subtotal,
-            "pembayaran_hutang"     => PembayaranHutang::find($id)->toArray(),
+            "pembayaran_hutang"     => $pembayaran_hutang->toArray(),
         ]);
     }
         public function prosesBatalEditPembayaranHutang($id)

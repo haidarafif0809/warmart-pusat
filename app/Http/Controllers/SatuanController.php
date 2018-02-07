@@ -17,13 +17,7 @@ class SatuanController extends Controller
 
     public function __construct()
     {
-//SETTING APLIKASI
-        $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
-        if ($setting_aplikasi->tipe_aplikasi == 0) {
-            $this->middleware('user-must-admin');
-        } else {
-            $this->middleware('user-must-warung');
-        }
+        $this->middleware('user-must-admin');
     }
 
     public function index(Request $request, Builder $htmlBuilder)
