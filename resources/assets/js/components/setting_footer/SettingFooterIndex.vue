@@ -141,7 +141,7 @@
 <script>
 export default {
     mounted() {
-        this.getIdWarung();
+        this.getDataSettingFooter();
     },
     data: function () {
         return {
@@ -173,7 +173,7 @@ export default {
         saveForm() {
             let app = this;
 
-            axios.patch(app.url + '/' + app.id_warung, app.setting_footer)
+            axios.patch(app.url + '/' + 1, app.setting_footer)
             .then(function (resp) {
                 console.log(resp);
                 swal({
@@ -189,11 +189,10 @@ export default {
                 alert('Tidak dapat menyimpan perubahan.');
             })
         },
-        getDataSettingFooter(id_warung) {
+        getDataSettingFooter() {
             let app = this;
-            app.id_warung = id_warung;
-            console.log(id_warung)
-            axios.get(app.url + '/' + 2)
+
+            axios.get(app.url)
             .then(function (resp) {
                 console.log(resp);
                 app.setting_footer = resp.data;
@@ -209,16 +208,6 @@ export default {
                 alert('Tidak dapat memuat data setting footer');
             })
         },
-        getIdWarung() {
-            let app = this
-            axios.get(app.url + '/id-warung')
-            .then(function (resp) {
-                app.getDataSettingFooter(resp.data);
-            })
-            .catch(function (resp) {
-                alert('Tidak dapat mengambil id warung!');
-            });
-        }
     }
 }
 </script>

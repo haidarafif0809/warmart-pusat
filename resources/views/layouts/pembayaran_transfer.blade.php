@@ -1,7 +1,11 @@
+<?php
+$settingFooter = \App\SettingFooter::select()->
+first();
+?>
 @extends('layouts.app_pelanggan')
 @section('content')
 <style type="text/css">
-.page-header.header-small {
+    .page-header.header-small {
   height: 35vh;
   min-height: 35vh;
 }
@@ -42,93 +46,132 @@ h4 {
   overflow-y:auto;
 }
 </style>
-
 <?php
-$setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
+$setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->
+first();
 ?>
 
 @if($setting_aplikasi->tipe_aplikasi == 0)
 <div class="page-header header-filter header-small" data-parallax="true" style="background-image: url('image/background2.jpg');">
-  @else
-  <div class="page-header header-small buttonColor" data-parallax="true">
-    @endif
+    @else
+    <div class="page-header header-small buttonColor" data-parallax="true">
+        @endif
 
     @if (Agent::isMobile())
-    <div class="container">
-      <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-          <div class="brand">
-
-            @if($setting_aplikasi->tipe_aplikasi == 0)
-            <h1 class="title"> PASAR MUSLIM INDONESIA </h1>
-            <h4 class="title"> Segala Kemudahan Untuk Umat Muslim Berbelanja. </h4>
-            @else
-            <br>
-            <h3 class="title"> TOKO ONLINE DAN POS </h3>
-            @endif
-
-          </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="brand">
+                        @if($setting_aplikasi->tipe_aplikasi == 0)
+                        <h1 class="title">
+                            PASAR MUSLIM INDONESIA
+                        </h1>
+                        <h4 class="title">
+                            Segala Kemudahan Untuk Umat Muslim Berbelanja.
+                        </h4>
+                        @else
+                        <br>
+                            <h3 class="title">
+                                <?=$settingFooter->
+                                judul_warung;?>
+                            </h3>
+                            @endif
+                        </br>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-    @else
-    <div class="container">
-      <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-          <div class="brand">
-
-            @if($setting_aplikasi->tipe_aplikasi == 0)
-            <h1 class="title"> PASAR MUSLIM INDONESIA </h1>
-            <h4 class="title"> Segala Kemudahan Untuk Umat Muslim Berbelanja. </h4>
-            @else
-            <h1 class="title">TOKO ONLINE DAN POS</h1>
-            @endif
-
-          </div>
+        @else
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="brand">
+                        @if($setting_aplikasi->tipe_aplikasi == 0)
+                        <h1 class="title">
+                            PASAR MUSLIM INDONESIA
+                        </h1>
+                        <h4 class="title">
+                            Segala Kemudahan Untuk Umat Muslim Berbelanja.
+                        </h4>
+                        @else
+                        <h1 class="title">
+                            <?=$settingFooter->
+                            judul_warung;?>
+                        </h1>
+                        @endif
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
+        @endif
     </div>
-    @endif
-  </div>
-
-  <div class="main main-raised">
-
-    <div class="container">
-
-
-      <ul class="breadcrumb" style="margin-top: 10px; margin-bottom: 10px;">
-        <li><a href="{{ url('/daftar-produk') }}"><b>Home</b></a></li>
-        <li><a href="{{ url('/keranjang-belanja') }}"><b>Keranjang Belanja</b></a></li>
-        <li class="active"><b>Pembayaran Transfer</b></li>
-      </ul>
-      <div class="card-content">
-        <div class="card">
-          <div class="card-header">
-            <h6 class="card-title" style="color: black; padding-left: 10px ;"> Pembayaran via Transfer</h6> <hr>
-          </div>
-
-          <div class="card-content">
-            <p class="text-center" style="display: none" id="batas_pembayaran">Batas Pembayaran :<b id="timer"></b></p>      
-            <p class="text-center">Jumlah tagihan :</p>
-            <h4 class="text-center" ><b rel="tooltip" data-placement="bottom" title="Transfer tepat hingga 3 digit terakhir" id="jumlah_tagihan">Rp. {{number_format($pesanan_pelanggan->subtotal,0,',','.')}}</b></h4>
-            <br><br>
-            <br>
-            <p class="text-center">Pembayaran dapat dilakukan ke Rekening Bank {{$bank->nama_bank}}({{$bank->no_rek}}) a/n {{$bank->atas_nama}}</p>
-
-          </div>
+    <div class="main main-raised">
+        <div class="container">
+            <ul class="breadcrumb" style="margin-top: 10px; margin-bottom: 10px;">
+                <li>
+                    <a href="{{ url('/daftar-produk') }}">
+                        <b>
+                            Home
+                        </b>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url('/keranjang-belanja') }}">
+                        <b>
+                            Keranjang Belanja
+                        </b>
+                    </a>
+                </li>
+                <li class="active">
+                    <b>
+                        Pembayaran Transfer
+                    </b>
+                </li>
+            </ul>
+            <div class="card-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="card-title" style="color: black; padding-left: 10px ;">
+                            Pembayaran via Transfer
+                        </h6>
+                        <hr>
+                        </hr>
+                    </div>
+                    <div class="card-content">
+                        <p class="text-center" id="batas_pembayaran" style="display: none">
+                            Batas Pembayaran :
+                            <b id="timer">
+                            </b>
+                        </p>
+                        <p class="text-center">
+                            Jumlah tagihan :
+                        </p>
+                        <h4 class="text-center">
+                            <b data-placement="bottom" id="jumlah_tagihan" rel="tooltip" title="Transfer tepat hingga 3 digit terakhir">
+                                Rp. {{number_format($pesanan_pelanggan->subtotal,0,',','.')}}
+                            </b>
+                        </h4>
+                        <br>
+                            <br>
+                                <br>
+                                    <p class="text-center">
+                                        Pembayaran dapat dilakukan ke Rekening Bank {{$bank->nama_bank}}({{$bank->no_rek}}) a/n {{$bank->atas_nama}}
+                                    </p>
+                                </br>
+                            </br>
+                        </br>
+                    </div>
+                </div>
+            </div>
         </div>
-
-
-
-      </div>
     </div>
-  </div> <!-- end-main-raised -->
-  @endsection
+    <!-- end-main-raised -->
+    @endsection
 
 
   @section('scripts')
-  <script type="text/javascript">
-    $(document).ready(function(){
+    <script type="text/javascript">
+        $(document).ready(function(){
       var countDownDate = new Date("{{$batas_pembayaran}}").getTime();
       var x = setInterval(function() {
         var now = new Date().getTime();
@@ -151,6 +194,6 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
         }
       }, 1000);
     });
-  </script>
-
-  @endsection
+    </script>
+    @endsection
+</div>
