@@ -157,6 +157,13 @@ Route::put('proses/selesaikan-pemesanan', [
     'uses'       => 'PemesananController@prosesSelesaikanPemesanan',
 ]);
 
+//PUNYA Info Pembayaran
+Route::get('/info-pembayaran/', [
+    'middleware' => ['auth'],
+    'as'         => 'info.pembayaran',
+    'uses'       => 'PemesananController@halamanInfoPembayaran',
+]);
+
 //PUNYA PESANAN PELANGGAN
 Route::get('/pesanan', [
     'middleware' => ['auth'],
@@ -270,7 +277,7 @@ Route::get('/aff/{id}/', function ($id) {
 Route::get('kirim-kode-verifikasi', 'Auth\RegisterController@kirim_kode_verifikasi')->middleware('optimizeImages');
 Route::get('kirim-ulang-kode-verifikasi/{id}', 'Auth\RegisterController@kirim_ulang_kode_verifikasi');
 Route::get('lupa-password', 'Auth\RegisterController@lupa_password');
-
+Route::get('auth/verifyEmail/{token}', 'Auth\RegisterController@verifyEmail');
 Route::put('/proses-kirim-bukti-pembayaran/{id}', [
     'as'   => 'pendaftar_topos.proses_kirim_bukti_pembayaran',
     'uses' => 'PendaftarToposController@prosesKirimBuktiPembayaran',
@@ -685,9 +692,28 @@ Route::post('/laporan-penjualan-pos-produk/view', 'LaporanPenjualanPosProdukCont
 Route::post('/laporan-penjualan-pos-produk/pencarian', 'LaporanPenjualanPosProdukController@pencarian')->middleware('auth');
 Route::post('/laporan-penjualan-pos-produk/total-penjualan-pos-produk', 'LaporanPenjualanPosProdukController@totalPenjualanPosProduk')->middleware('auth');
 Route::get('/laporan-penjualan-pos-produk/pilih-produk', 'LaporanPenjualanPosProdukController@dataProduk')->middleware('auth');
-Route::get('/laporan-penjualan-pos-produk/pilih-pelanggan', 'LaporanPenjualanPosProdukController@dataPelanggan')->middleware('auth');
-Route::get('/laporan-penjualan-pos-produk/download-excel-penjualan-produk/{dari_tanggal}/{sampai_tanggal}/{produk}/{suplier}', 'LaporanPenjualanPosProdukController@downloadExcel')->middleware('auth');
-Route::get('/laporan-penjualan-pos-produk/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{produk}/{suplier}', 'LaporanPenjualanPosProdukController@cetakLaporan')->middleware('auth');
+
+// LAP PENJUALAN ONLINE /PRODUK
+Route::post('/laporan-penjualan-pos-produk/view-online', 'LaporanPenjualanPosProdukController@pr osesLaporanPenjualanOnlineProduk')->middleware('auth');
+Route::post('/laporan-penjualan-pos-produk/pencarian-online', 'LaporanPenjualanPosProdukController@pencarianOnline')->middleware('auth');
+Route::post('/laporan-penjualan-pos-produk/total-penjualan-online-produk', 'LaporanPenjualanPosProdukController@totalPenjualanOnlineProduk')->middleware('auth');
+Route::get('/laporan-penjualan-pos-produk/pilih-produk-online', 'LaporanPenjualanPosProdukController@dataProdukOnline')->middleware('auth');
+Route::get('/laporan-penjualan-pos-produk/download-excel-penjualan-pos-produk/{dari_tanggal}/{sampai_tanggal}/{produk}', 'LaporanPenjualanPosProdukController@downloadExcel')->middleware('auth');
+Route::get('/laporan-penjualan-pos-produk/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{produk}', 'LaporanPenjualanPosProdukController@cetakLaporan')->middleware('auth');
+
+// LAP PENJUALAN POS /PELANGGAN
+Route::post('/laporan-penjualan-pelanggan/view', 'LaporanPenjualanPelangganController@prosesLaporanPenjualanPosPelanggan')->middleware('auth');
+Route::post('/laporan-penjualan-pelanggan/pencarian', 'LaporanPenjualanPelangganController@pencarian')->middleware('auth');
+Route::post('/laporan-penjualan-pelanggan/total-penjualan-pos-pelanggan', 'LaporanPenjualanPelangganController@totalPenjualanPosPelanggan')->middleware('auth');
+Route::get('/laporan-penjualan-pelanggan/pilih-pelanggan', 'LaporanPenjualanPelangganController@dataPelanggan')->middleware('auth');
+
+// LAP PENJUALAN ONLINE /PELANGGAN
+Route::post('/laporan-penjualan-pelanggan/view-online', 'LaporanPenjualanPelangganController@prosesLaporanPenjualanOnlinePelanggan')->middleware('auth');
+Route::post('/laporan-penjualan-pelanggan/pencarian-online', 'LaporanPenjualanPelangganController@pencarianOnline')->middleware('auth');
+Route::post('/laporan-penjualan-pelanggan/total-penjualan-online-pelanggan', 'LaporanPenjualanPelangganController@totalPenjualanOnlinePelanggan')->middleware('auth');
+Route::get('/laporan-penjualan-pelanggan/pilih-pelanggan-online', 'LaporanPenjualanPelangganController@dataPelangganOnline')->middleware('auth');
+Route::get('/laporan-penjualan-pelanggan/download-excel-penjualan-pelanggan/{dari_tanggal}/{sampai_tanggal}/{pelanggan}', 'LaporanPenjualanPelangganController@downloadExcel')->middleware('auth');
+Route::get('/laporan-penjualan-pelanggan/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{pelanggan}', 'LaporanPenjualanPelangganController@cetakLaporan')->middleware('auth');
 
 // LAPORAN KARTU STOK VUE.JS
 Route::post('/laporan-kartu-stok/view', 'LaporanKartuStokController@prosesLaporanKartuStok')->middleware('auth');
@@ -811,6 +837,11 @@ Route::post('/laporan-kas/view-mutasi-keluar-rekap', 'LaporanKasController@prose
 Route::post('/laporan-kas/pencarian-mutasi-keluar-rekap', 'LaporanKasController@pencarianLaporanKasMutasiKeluarRekap')->middleware('auth');
 Route::post('/laporan-kas/subtotal-laporan-kas-rekap-mutasi-keluar', 'LaporanKasController@subtotalLaporanKasRekapMutasiKeluar')->middleware('auth');
 
+Route::get('/laporan-kas/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{kas}/{jenis_laporan}', 'LaporanKasController@cetakLaporan')->middleware('auth');
+Route::get('/laporan-kas/download-excel/{dari_tanggal}/{sampai_tanggal}/{kas}/{jenis_laporan}', 'LaporanKasController@downloadLaporan')->middleware('auth');
+
+Route::get('/setting-footer/id-warung', 'SettingFooterController@idWarung')->middleware('auth');
+
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
     Route::resource('user', 'UserController');
@@ -846,6 +877,7 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
     Route::resource('pembayaran-hutang', 'PembayaranHutangController');
     Route::resource('pembayaran-piutang', 'PembayaranPiutangController');
     Route::resource('setting-footer', 'SettingFooterController');
+    Route::resource('setting-verifikasi', 'SettingVerifikasiController');
 
 //BARANG
     //HALAMAN DESKRIPSI

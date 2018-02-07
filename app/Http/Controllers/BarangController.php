@@ -185,21 +185,9 @@ class BarangController extends Controller
                 'foto'               => 'image|max:3072',
             ]);
 
-            if ($request->status_aktif == 'true') {
-                $status_aktif = 1;
-            } else {
-                $status_aktif = 0;
-            }
-
-            if ($request->hitung_stok == 'true') {
-                $hitung_stok = 1;
-            } else {
-                $hitung_stok = 0;
-            }
-
             if ($request->perkiraan_berat == "" OR $request->perkiraan_berat == 0) {
-               $perkiraan_berat = 1000;
-           }else{
+             $perkiraan_berat = 1000;
+         }else{
             $perkiraan_berat = $request->perkiraan_berat;
         }
 
@@ -214,8 +202,8 @@ class BarangController extends Controller
             'satuan_id'          => $request->satuan_id,
             'kategori_barang_id' => $request->kategori_barang_id,
             'deskripsi_produk'   => $request->deskripsi_produk,
-            'status_aktif'       => $status_aktif,
-            'hitung_stok'        => $hitung_stok,
+            'status_aktif'       => $request->status_aktif,
+            'hitung_stok'        => $request->hitung_stok,
             'konfirmasi_admin'   => 1,
             'id_warung'          => Auth::user()->id_warung]);
 
@@ -296,24 +284,29 @@ class BarangController extends Controller
                 'harga_beli'         => 'required|numeric|digits_between:1,11',
                 'harga_jual'         => 'required|numeric|digits_between:1,11',
                 'harga_jual2'         => 'nullable|numeric|digits_between:1,11',
+                'berat'    => 'nullable|numeric',
                 'kategori_barang_id' => 'required|exists:kategori_barangs,id',
                 'satuan_id'          => 'required|exists:satuans,id',
                 'foto'               => 'image|max:3072',
 
             ]);
 
-            if ($request->status_aktif == 1 || $request->status_aktif == 'true') {
+            if ($request->status_aktif == 1) {
                 $status_aktif = 1;
             } else {
                 $status_aktif = 0;
             }
 
-            if ($request->hitung_stok == 1 || $request->hitung_stok == 'true') {
+            if ($request->hitung_stok == 1) {
                 $hitung_stok = 1;
             } else {
                 $hitung_stok = 0;
             }
-
+            if ($request->berat == "" OR $request->berat == 0) {
+                $berat = 1000;
+            }else{
+                $berat = $request->berat;
+            }
             $update_barang->update([
                 'kode_barang'        => $request->kode_barang,
                 'kode_barcode'       => $request->kode_barcode,
@@ -321,6 +314,7 @@ class BarangController extends Controller
                 'harga_beli'         => $request->harga_beli,
                 'harga_jual'         => $request->harga_jual,
                 'harga_jual2'         => $request->harga_jual2,
+                'berat'             => $berat,
                 'satuan_id'          => $request->satuan_id,
                 'kategori_barang_id' => $request->kategori_barang_id,
                 'deskripsi_produk'   => $request->deskripsi_produk,
@@ -425,6 +419,7 @@ class BarangController extends Controller
                 'nama_produk' => title_case($produks->nama_barang),
                 'kode_produk' => $produks->kode_barang,
                 'barcode' => $produks->kode_barcode,
+                'hitung_stok' => $produks->hitung_stok,
                 'produk'      => $produks->id . "|" . title_case($produks->nama_barang) . "|" . $produks->harga_beli . "|" . $produks->harga_jual . "|" . $produks->satuan_id . "|" . $produks->harga_jual2]);
 
         }

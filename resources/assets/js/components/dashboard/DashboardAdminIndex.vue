@@ -114,8 +114,8 @@
             <img v-bind:src="url+ 'image/warmart_logo.png'"class="img-responsive" width="500" height="160"> 
         </center>
          <center v-else>
-           <img v-if="dashboardData.logo_toko_2.foto_ktp != null" v-bind:src="url_picture+'/'+dashboardData.logo_toko_2.foto_ktp"  class="img-responsive" width="500" height="160" /> 
-             <img v-bind:src="url+'img/icon_topos.png?v=1'" class="img-responsive" width="500" height="160" v-else>
+             <img v-if="dashboardData.logo_toko_2.foto_ktp != null" v-bind:src="url_picture+'/'+dashboardData.logo_toko_2.foto_ktp"  class="img-responsive" /> 
+             <img v-bind:src="url+'img/icon_topos.png?v=1'" class="img-responsive" v-else>
         </center>
 
         <center v-if="dashboardData.konfirmasi_admin == 1">

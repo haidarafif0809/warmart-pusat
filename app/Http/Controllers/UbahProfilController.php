@@ -123,7 +123,7 @@ class UbahProfilController extends Controller
                 'alamat'   => 'required',
                 'email'    => 'required|without_spaces|unique:users,email,' . $request->id . ',id,id_warung,' . Auth::user()->id_warung,
                 'no_telp'  => 'required|without_spaces|unique:users,no_telp,' . $request->id . ',id,id_warung,' . Auth::user()->id_warung,
-                'foto_ktp' => 'image|max:3072',
+                'foto_ktp' => 'required|image|max:3072',
             ]);
 
             //UPDATE USER WARUNG
@@ -304,9 +304,9 @@ class UbahProfilController extends Controller
         # Buat pilihan "Switch Case" berdasarkan variabel "type" dari form
         switch ($type_wilayah):
     # untuk kasus "kabupaten"
-    case 'kabupaten':
+        case 'kabupaten':
         if ($lokasi_pelanggan != null) {
-                $return = $this->editLokasi($lokasi_pelanggan, $type_wilayah);
+            $return = $this->editLokasi($lokasi_pelanggan, $type_wilayah);
         } else {
             $return = "<option value=''>--PILIH KABUPATEN--</option>";
         }
@@ -319,7 +319,7 @@ class UbahProfilController extends Controller
         return $return;
         break;
     # untuk kasus "kecamatan"
-    case 'kecamatan':
+        case 'kecamatan':
         if ($lokasi_pelanggan != null) {
             $return = $this->editLokasi($lokasi_pelanggan, $type_wilayah);
         } else {
@@ -333,7 +333,7 @@ class UbahProfilController extends Controller
         return $return;
         break;
     # untuk kasus "kelurahan"
-    case 'kelurahan':
+        case 'kelurahan':
         if ($lokasi_pelanggan != null) {
             $return = $this->editLokasi($lokasi_pelanggan, $type_wilayah);
         } else {

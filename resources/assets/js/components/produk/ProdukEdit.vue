@@ -20,7 +20,7 @@
                                 <div class="form-group">
                                     <label for="kode_barcode" class="col-md-2 control-label">Kode Barcode</label>
                                     <div class="col-md-10">
-                                        <input class="form-control" :ref="kode_barcode" autocomplete="off" placeholder="Kode Barcode  (Jika Ada)" v-model="produk.kode_barcode" type="text" name="kode_barcode" id="kode_barcode"  autofocus="">
+                                        <input class="form-control" ref="kode_barcode" autocomplete="off" placeholder="Kode Barcode  (Jika Ada)" v-model="produk.kode_barcode" type="text" name="kode_barcode" id="kode_barcode"  autofocus="">
                                         <span v-if="errors.kode_barcode" id="kode_barcode_error" class="label label-danger">{{ errors.kode_barcode[0] }}</span>
                                     </div>
                                 </div>
@@ -28,7 +28,7 @@
                                 <div class="form-group">
                                     <label for="kode_barang" class="col-md-2 control-label">Kode Produk</label>
                                     <div class="col-md-10">
-                                        <input class="form-control" autocomplete="off" placeholder="Kode Produk" v-model="produk.kode_barang" type="text" name="kode_barang" id="kode_barang"  autofocus="">
+                                        <input class="form-control" autocomplete="off" placeholder="Kode Produk" v-model="produk.kode_barang" type="text" name="kode_barang" id="kode_barang" >
                                         <span v-if="errors.kode_barang" id="kode_barang_error" class="label label-danger">{{ errors.kode_barang[0] }}</span>
                                     </div>
                                 </div>
@@ -36,7 +36,7 @@
                                 <div class="form-group">
                                     <label for="nama_barang" class="col-md-2 control-label">Nama Produk</label>
                                     <div class="col-md-10">
-                                        <input class="form-control" autocomplete="off" placeholder="Nama Produk" v-model="produk.nama_barang" type="text" name="nama_barang" id="nama_barang"  autofocus="">
+                                        <input class="form-control" autocomplete="off" placeholder="Nama Produk" v-model="produk.nama_barang" type="text" name="nama_barang" id="nama_barang" >
                                         <span v-if="errors.nama_barang" id="nama_barang_error" class="label label-danger">{{ errors.nama_barang[0] }}</span>
                                     </div>
                                 </div>
@@ -64,7 +64,7 @@
                                 <div class="form-group">
                                     <label for="harga_beli" class="col-md-2 control-label">Harga Beli</label>
                                     <div class="col-md-10">
-                                        <input class="form-control" autocomplete="off" placeholder="Harga Beli" v-model="produk.harga_beli" type="text" name="harga_beli" id="harga_beli"  autofocus="">
+                                        <money class="form-control" autocomplete="off" placeholder="Harga Beli" v-model="produk.harga_beli" type="text" name="harga_beli" id="harga_beli" v-bind="separator" ></money>
                                         <span v-if="errors.harga_beli" id="harga_beli_error" class="label label-danger">{{ errors.harga_beli[0] }}</span>
                                     </div>
                                 </div>
@@ -72,7 +72,7 @@
                                 <div class="form-group">
                                     <label for="harga_jual" class="col-md-2 control-label">Harga Jual</label>
                                     <div class="col-md-10">
-                                        <input class="form-control" autocomplete="off" placeholder="Harga Jual" v-model="produk.harga_jual" type="text" name="harga_jual" id="harga_jual"  autofocus="">
+                                        <money class="form-control" autocomplete="off" placeholder="Harga Jual" v-model="produk.harga_jual" type="text" name="harga_jual" id="harga_jual" v-bind="separator"></money>
                                         <span v-if="errors.harga_jual" id="harga_jual_error" class="label label-danger">{{ errors.harga_jual[0] }}</span>
                                     </div>
                                 </div>
@@ -80,8 +80,19 @@
                                 <div class="form-group">
                                     <label for="harga_jual2" class="col-md-2 control-label">Harga Jual 2</label>
                                     <div class="col-md-10">
-                                        <input class="form-control" autocomplete="off" placeholder="Harga Jual 2(Jika Ada)" v-model="produk.harga_jual2" type="text" name="harga_jual2" id="harga_jual2"  autofocus="">
+                                        <money class="form-control" autocomplete="off" placeholder="Harga Jual 2(Jika Ada)" v-model="produk.harga_jual2" type="text" name="harga_jual2" id="harga_jual2" v-bind="separator"></money>
                                         <span v-if="errors.harga_jual2" id="harga_jual2_error" class="label label-danger">{{ errors.harga_jual2[0] }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="berat" class="col-md-2 control-label">Perkiraan Berat(Jika Barang Dijual Online)</label>
+                                    <div class="col-md-6">
+                                        <money class="form-control" autocomplete="off" placeholder="Perkiraan Berat(Jika Barang Dijual Online)" v-model="produk.berat" type="text" name="berat" id="berat"  v-bind="separator"></money>
+                                        <span v-if="errors.berat" id="berat_error" class="label label-danger">{{ errors.berat[0] }}</span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p style="color: grey; font-style: italic;">Satuan dalam bentuk Gram.</p>     
                                     </div>
                                 </div>
 
@@ -90,6 +101,8 @@
                                     <div class="togglebutton col-md-10">
                                         <label>
                                             <input type="checkbox" v-model="produk.hitung_stok" name="hitung_stok" id="hitung_stok">
+                                            <font v-if="produk.hitung_stok == 1">Ya</font>
+                                            <font v-else>Tidak</font>
                                         </label>
                                     </div>
                                 </div>
@@ -99,6 +112,8 @@
                                     <div class="togglebutton col-md-10">
                                         <label>
                                             <input type="checkbox" v-model="produk.status_aktif" name="status_aktif" id="status_aktif">
+                                            <font v-if="produk.status_aktif == 1">Ya</font>
+                                            <font v-else>Tidak</font>
                                         </label>
                                     </div>
                                 </div>
@@ -121,8 +136,8 @@
                             <div class="col-md-10">
                                 <div class="fileinput fileinput-new text-center" data-provides="fileinput">
                                     <div class="fileinput-new thumbnail">
-                                        <img v-if="produk.foto != ''" :src="url_picture+'/'+produk.foto" /> 
-                                        <img :src="url_origin+'/assets/img/image_placeholder.jpg'" alt="Foto Akan Tampil Disini" v-else>
+                                        <img :src="url_origin+'/assets/img/image_placeholder.jpg'" alt="Foto Akan Tampil Disini" v-if="produk.foto == '' || produk.foto == null">
+                                        <img v-else :src="url_picture+'/'+produk.foto" /> 
                                     </div>
                                     <div class="fileinput-preview fileinput-exists thumbnail"></div>
                                     <div>
@@ -147,7 +162,7 @@
               </div>
           </div>
 
-          <input class="form-control" autocomplete="off" v-model="produk.id" type="hidden" name="id" id="id"  autofocus="">
+          <input class="form-control" autocomplete="off" v-model="produk.id" type="hidden" name="id" id="id" >
 
           <div class="form-group">
             <div class="col-md-10 col-md-offset-1">
@@ -180,7 +195,6 @@ export default {
         app.dataKategori();
         app.dataSatuan();
         app.dataAgent();
-        app.$refs.kode_barcode.$el.focus()
     },  
     data: function () {
         return {
@@ -203,6 +217,7 @@ export default {
                 harga_beli : '',
                 harga_jual : '',
                 harga_jual2 : '',
+                berat : '',
                 deskripsi_produk : '',
                 hitung_stok : 1,
                 status_aktif : 1
@@ -216,6 +231,14 @@ export default {
                 placeholder: '--PILIH SATUAN--'
             },
             editorOption: {
+            },
+            separator: {
+                decimal: ',',
+                thousands: '.',
+                prefix: '',
+                suffix: '',
+                precision: 0,
+                masked: false /* doesn't work with directive */
             } 
         }
     },
@@ -303,6 +326,7 @@ methods: {
         newProduk.append('harga_beli', app.produk.harga_beli);
         newProduk.append('harga_jual', app.produk.harga_jual);
         newProduk.append('harga_jual2', app.produk.harga_jual2);
+        newProduk.append('berat', app.produk.berat);
         newProduk.append('hitung_stok', app.produk.hitung_stok);
         newProduk.append('deskripsi_produk', app.produk.deskripsi_produk);
         newProduk.append('status_aktif', app.produk.status_aktif);
@@ -321,6 +345,7 @@ methods: {
         app.produk.harga_beli = '';
         app.produk.harga_jual = '';
         app.produk.harga_jual2 = '';
+        app.produk.berat = '';
         app.produk.deskripsi_produk = '';
         app.produk.hitung_stok = 'true';
         app.produk.status_aktif = 'true';

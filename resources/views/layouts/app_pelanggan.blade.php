@@ -9,10 +9,17 @@
         $user      = \Auth::user()->id;
         $foto_logo = \App\UserWarung::find($user);
 
-        $settingFooter = \App\SettingFooter::select()->where('warung_id', \Auth::user()->id_warung)->first();
+        if (Auth::user()->tipe_user == 4) {
+            $settingFooter = \App\SettingFooter::select()->where('id_warung', \Auth::user()->id_warung)->first();
+        } else {
+            // Jika tidak login sebagai warung tampilkan data default
+        $settingFooter = \App\SettingFooter::defaultData();
+        }
     }
     else {
-        $settingFooter = \App\SettingFooter::select()->first();
+
+        // Jika tidak login tampilkan data default
+        $settingFooter = \App\SettingFooter::defaultData();
     }
     ?>
     
@@ -57,9 +64,9 @@
     </head>
     <style type="text/css">
         .navbar-nav .open .dropdown-menu{
-      color: grey;
-  }
-  .navbar .navbar-brand {
+  color: grey;
+}
+.navbar .navbar-brand {
     position: relative;
     height: 75px;
     line-height: 30px;
@@ -71,6 +78,38 @@ body {
     background-color: #2ac326;
     color: #3C4858;
     @endif
+}
+@keyframes spinner { 
+  to {transform: rotate(360deg);} 
+} 
+.spinner:before { 
+  content: ''; 
+  box-sizing: border-box; 
+  position: absolute; 
+  top: 50%; 
+  left: 50%; 
+  width: 20px; 
+  height: 20px; 
+  margin-top: -10px; 
+  margin-left: -10px; 
+  border-radius: 50%; 
+  border: 2px solid #ccc; 
+  border-top-color: #333; 
+  animation: spinner .6s linear infinite; 
+} 
+.selectize-control .option .title { 
+    display: block; 
+} 
+.selectize-control .option .url { 
+    font-size: 12px; 
+    display: block; 
+    color: #a0a0a0; 
+} 
+.selectize-control .item a { 
+    color: #006ef5; 
+} 
+.selectize-control .item.active a { 
+    color: #303030; 
 }
     </style>
     <body class="ecommerce-page">
@@ -259,7 +298,7 @@ body {
                 </div>
             </nav>
             @yield('content')
-            <footer class="footer footer-black footer-big">
+            <footer class="footer footer-black footer-big" style="bottom: 0;">
                 <div class="container">
                     <div class="content">
                         <div class="row">
@@ -406,14 +445,14 @@ body {
             <!--Start of Tawk.to Script-->
             <script type="text/javascript">
                 var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-    (function(){
-        var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-        s1.async=true;
-        s1.src='https://embed.tawk.to/5a051374bb0c3f433d4c84cd/default';
-        s1.charset='UTF-8';
-        s1.setAttribute('crossorigin','*');
-        s0.parentNode.insertBefore(s1,s0);
-    })();
+            (function(){
+                var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+                s1.async=true;
+                s1.src='https://embed.tawk.to/5a051374bb0c3f433d4c84cd/default';
+                s1.charset='UTF-8';
+                s1.setAttribute('crossorigin','*');
+                s0.parentNode.insertBefore(s1,s0);
+            })();
             </script>
             <!--End of Tawk.to Script-->
         </nav>

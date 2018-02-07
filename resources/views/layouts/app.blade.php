@@ -392,21 +392,26 @@ $agent = new Agent();
                     <span class="icon-bar">
                     </span>
                 </button>
-                <a class="navbar-brand" href="#">
-                    Dashboard
-                </a>
-                @if ($agent->isMobile() && Auth::user()->tipe_user == 4) <!--JIKA DAKSES VIA HP/TAB-->
-                <p id="sisa_waktu_demo"></p>
-                @endif
 
+                @if ($agent->isMobile() && Auth::user()->tipe_user == 4) <!--JIKA DAKSES VIA HP/TAB-->
+                <span id="sisa_waktu_demo" style="margin-left: 10px"></span>
+
+                <span>                    
+                    <a  href="{{ url('/halaman-warung/'.Auth::user()->id_warung.'') }}" class="btn btn-xs btn-rose" style="margin-left: 10px">Preview Online Shop</a>
+                    @endif
+                </span>
             </div>
             <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <a href="{{ url('/halaman-warung/'.Auth::user()->id_warung.'') }}" class="btn btn-round btn-rose">Preview Online Shop</a>
+                </ul>
                 <ul class="nav navbar-nav navbar-right">
                     @if(Auth::user()->tipe_user == 4)
                     <b id="sisa_waktu_demo"></b>
                     @endif
                 </ul>
             </div>
+
         </div>
     </nav>
     <div class="content">
@@ -451,7 +456,7 @@ $agent = new Agent();
 </body>
 <!--   Core JS Files   -->
 
-<script src="{{ asset('js/app.js?v=1.135')}}" type="text/javascript">
+<script src="{{ asset('js/app.js?v=1.142')}}" type="text/javascript">
 
 </script>
 <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript">
@@ -547,15 +552,24 @@ $agent = new Agent();
 
                   if (data.sisa_waktu > 0) {
 
-                      $("#sisa_waktu_demo").text("Masa Percobaan Anda Tinggal "+data.sisa_waktu+" Hari Lagi! ");   
-                      $("#sisa_waktu_demo").append("<a href='pendaftaran-topos/1' target='blank'>Daftar Sekarang!</a>"); 
+                    $("#sisa_waktu_demo").text("Masa Percobaan Anda Tinggal "+data.sisa_waktu+" Hari Lagi! ");
+                    @if ($agent->isMobile() && Auth::user()->tipe_user == 4)
+                    $("#sisa_waktu_demo").append("<a href='pendaftaran-topos/1' class='btn btn-xs btn-rose' target='blank' style='margin-left: 10px'>Daftar Sekarang!</a>");
+                    @else
+                    $("#sisa_waktu_demo").append("<a href='pendaftaran-topos/1' class='btn btn-round btn-rose' target='blank' style='margin-left: 10px'>Daftar Sekarang!</a>");
+                    @endif 
 
-                  }else{  
+                }else{  
 
-                      $("#sisa_waktu_demo").text("Masa Percobaan Anda Sudah Habis!");  
-                      $("#sisa_waktu_demo").append("<a href='pendaftaran-topos/1' target='blank'>Daftar Sekarang!</a>"); 
+                    $("#sisa_waktu_demo").text("Masa Percobaan Anda Sudah Habis!");
 
-                      $(document).on('click', '.disabled-menu', function(){
+                    @if ($agent->isMobile() && Auth::user()->tipe_user == 4)
+                    $("#sisa_waktu_demo").append("<a href='pendaftaran-topos/1' class='btn btn-xs btn-rose' target='blank'>Daftar Sekarang!</a>");
+                    @else
+                    $("#sisa_waktu_demo").append("<a href='pendaftaran-topos/1' class='btn btn-round btn-rose' target='blank'>Daftar Sekarang!</a>");
+                    @endif
+
+                    $(document).on('click', '.disabled-menu', function(){
 
                         swal({
                           text: "Menu Tidak Dapat Diakses. Karena Masa Percobaan Anda Sudah Habis!!",
@@ -571,10 +585,10 @@ $agent = new Agent();
                     })
 
                   });
-                  }
-              }
+                }
+            }
 
-          }); 
+        }); 
 
         }
 

@@ -1,5 +1,5 @@
-  <li>
-    <a data-toggle="collapse" href="#transaksiKas" class="disabled-menu">
+<li>
+    <a class="disabled-menu" data-toggle="collapse" href="#transaksiKas">
         <i class="material-icons">
             autorenew
         </i>
@@ -64,19 +64,19 @@
         </ul>
     </div>
 </li>
-
 <!--PRODUK -->
 <li>
     <router-link :to="{name: 'indexProduk'}" class="menu-nav disabled-menu">
         <i class="material-icons">
             store
         </i>
-        <p>Produk</p>
+        <p>
+            Produk
+        </p>
     </router-link>
 </li>
-
 <li>
-    <a data-toggle="collapse" href="#persediaan" class="disabled-menu">
+    <a class="disabled-menu" data-toggle="collapse" href="#persediaan">
         <i class="material-icons">
             assessment
         </i>
@@ -89,39 +89,38 @@
     <div class="collapse" id="persediaan">
         <ul class="nav">
             <li>
-             <router-link :to="{name: 'indexItemMasuk'}" class="menu-nav">
-                <span class="sidebar-mini">
-                    IM
-                </span>
-                <span class="sidebar-normal">
-                    Item Masuk
-                </span>
-            </router-link>
-        </li>
-        <li>
-            <router-link :to="{name: 'indexItemKeluar'}" class="menu-nav">
-                <span class="sidebar-mini">
-                    IK
-                </span>
-                <span class="sidebar-normal">
-                    Item Keluar
-                </span>
-            </router-link>
-        </li>
-        <li>
-            <router-link :to="{name: 'indexLaporanPersediaan'}" class="menu-nav">
-                <span class="sidebar-mini">
-                    LP
-                </span>
-                <span class="sidebar-normal">
-                    Laporan Persediaan
-                </span>
-            </router-link>
-        </li>
-    </ul>
-</div>
+                <router-link :to="{name: 'indexItemMasuk'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        IM
+                    </span>
+                    <span class="sidebar-normal">
+                        Item Masuk
+                    </span>
+                </router-link>
+            </li>
+            <li>
+                <router-link :to="{name: 'indexItemKeluar'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        IK
+                    </span>
+                    <span class="sidebar-normal">
+                        Item Keluar
+                    </span>
+                </router-link>
+            </li>
+            <li>
+                <router-link :to="{name: 'indexLaporanPersediaan'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        LP
+                    </span>
+                    <span class="sidebar-normal">
+                        Laporan Persediaan
+                    </span>
+                </router-link>
+            </li>
+        </ul>
+    </div>
 </li>
-
 <!--PEMBELIAN-->
 <li>
     <router-link :to="{name: 'indexPembelian'}" class="menu-nav disabled-menu">
@@ -133,7 +132,6 @@
         </p>
     </router-link>
 </li>
-
 <!--PESANAN -->
 <li>
     <router-link :to="{name: 'indexPesananWarung'}" class="menu-nav disabled-menu">
@@ -145,7 +143,6 @@
         </p>
     </router-link>
 </li>
-
 {{-- PENJUALAN --}}
 <li>
     <router-link :to="{name: 'createPenjualan'}" class="menu-nav disabled-menu">
@@ -157,9 +154,8 @@
         </p>
     </router-link>
 </li>
-
 <li>
-    <a data-toggle="collapse" href="#pembayaran" class="disabled-menu">
+    <a class="disabled-menu" data-toggle="collapse" href="#pembayaran">
         <i class="material-icons">
             local_atm
         </i>
@@ -194,9 +190,8 @@
         </ul>
     </div>
 </li>
-
 <li>
-    <a data-toggle="collapse" href="#laporan" class="disabled-menu">
+    <a class="disabled-menu" data-toggle="collapse" href="#laporan">
         <i class="material-icons">
             assignment
         </i>
@@ -268,22 +263,31 @@
                     </span>
                 </router-link>
             </li>
-             <li>
+            <li>
                 <router-link :to="{name: 'indexLaporanPenjualanPosProduk'}" class="menu-nav">
                     <span class="sidebar-mini">
                         LP
                     </span>
                     <span class="sidebar-normal">
-                        Laporan Penjualan Pos / Produk
+                        Laporan Penjualan /Produk
+                    </span>
+                </router-link>
+            </li>
+            <li>
+                <router-link :to="{name: 'indexLaporanPenjualanPelanggan'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        LP
+                    </span>
+                    <span class="sidebar-normal">
+                        Laporan Penjualan /Pelanggan
                     </span>
                 </router-link>
             </li>
         </ul>
     </div>
 </li>
-
 <li>
-    <a data-toggle="collapse" href="#pagesExamples" class="disabled-menu">
+    <a class="disabled-menu" data-toggle="collapse" href="#pagesExamples">
         <i class="material-icons">
             image
         </i>
@@ -336,6 +340,42 @@
                     </span>
                     <span class="sidebar-normal">
                         Supplier
+                    </span>
+                </router-link>
+            </li>
+        </ul>
+    </div>
+</li>
+<li>
+    <a class="disabled-menu" data-toggle="collapse" href="#settingWarung">
+        <i class="material-icons">
+            settings
+        </i>
+        <p>
+            Setting
+            <b class="caret">
+            </b>
+        </p>
+    </a>
+    <div class="collapse" id="settingWarung">
+        <ul class="nav">
+            <li>
+                <router-link :to="{name: 'indexSettingFooter'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        SF
+                    </span>
+                    <span class="sidebar-normal">
+                        Setting Footer
+                    </span>
+                </router-link>
+            </li>
+            <li>
+                <router-link :to="{name: 'indexSettingVerifikasi', params: {id_warung: <?=\Auth::user()->id_warung;?>}}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        SV
+                    </span>
+                    <span class="sidebar-normal">
+                        Setting Verifikasi
                     </span>
                 </router-link>
             </li>

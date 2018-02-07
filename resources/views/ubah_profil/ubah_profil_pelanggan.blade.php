@@ -131,6 +131,7 @@
                         </div>
                     </div>
 
+                    @if($setting_aplikasi->tipe_aplikasi == 0) {{-- HANYA APLIKASI WARMART --}}
                     <div class="form-group{{ $errors->has('komunitas') ? ' has-error' : '' }}">
                         {!! Form::label('komunitas', 'Komunitas', ['class'=>'col-md-2 control-label']) !!}
                         <div class="col-md-10">
@@ -145,6 +146,7 @@
                                 @endif
                             </div>
                         </div>
+                        @endif
 
                         <div class="form-group{{ $errors->has('provinsi') ? ' has-error' : '' }}">
                             {!! Form::label('provinsi', 'Provinsi', ['class'=>'col-md-2 control-label']) !!}

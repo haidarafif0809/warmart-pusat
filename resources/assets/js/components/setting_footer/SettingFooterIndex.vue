@@ -18,13 +18,12 @@
         <div class="col-md-12">
             <ul class="breadcrumb">
                 <li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li>
-                <li><router-link :to="{name: 'indexProduk'}">Setting Footer</router-link></li>
                 <li class="active">Edit Setting Footer</li>
             </ul>
             <div class="card">
 
                 <div class="card-header card-header-icon" data-background-color="purple">
-                    <i class="material-icons">dns</i>
+                    <i class="material-icons">settings_applications</i>
                 </div>
 
                 <div class="card-content">
@@ -32,10 +31,10 @@
                     <form v-on:submit.prevent="saveForm()" class="form-horizontal">
                         <div class="row" style="margin-left: 2%;">
                             <div class="form-group">
-                                <label for="header_warung" class="col-md-2 control-label label-font-style">Header Warung</label>
+                                <label for="judul_warung" class="col-md-2 control-label label-font-style">Header Warung</label>
                                 <div class="col-md-8">
                                     <div class="col-md-10">
-                                        <input type="text" v-model="setting_footer.header_warung" class="form-control input-font-style" autocomplete="off" :placeholder="placeholders.header_warung" name="header_warung">
+                                        <input type="text" v-model="setting_footer.judul_warung" class="form-control input-font-style" autocomplete="off" :placeholder="placeholders.judul_warung" name="judul_warung">
                                     </div>
                                 </div>
                             </div>
@@ -70,25 +69,25 @@
                                         <div class="form-group">
                                             <label for="no_telp" class="col-md-2 control-label label-font-style">Nomor Telepon</label>
                                             <div class="col-md-6">
-                                                <input type="number" v-model="setting_footer.contact_us.no_telp" class="form-control input-font-style" autocomplete="off" :placeholder="placeholders.contact_us.no_telp" name="no_telp">
+                                                <input type="number" v-model="setting_footer.no_telp" class="form-control input-font-style" autocomplete="off" :placeholder="placeholders.contact_us.no_telp" name="no_telp">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="alamat" class="col-md-2 control-label label-font-style">Alamat</label>
                                             <div class="col-md-6">
-                                                <input type="text" v-model="setting_footer.contact_us.alamat" class="form-control input-font-style" autocomplete="off" :placeholder="placeholders.contact_us.alamat" name="alamat">
+                                                <input type="text" v-model="setting_footer.alamat" class="form-control input-font-style" autocomplete="off" :placeholder="placeholders.contact_us.alamat" name="alamat">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="email" class="col-md-2 control-label label-font-style">Email</label>
                                             <div class="col-md-6">
-                                                <input type="email" v-model="setting_footer.contact_us.email" class="form-control input-font-style" autocomplete="off" :placeholder="placeholders.contact_us.email" name="email">
+                                                <input type="email" v-model="setting_footer.email" class="form-control input-font-style" autocomplete="off" :placeholder="placeholders.contact_us.email" name="email">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="whatsapp" class="col-md-2 control-label label-font-style">Whatsapp</label>
                                             <div class="col-md-6">
-                                                <input type="text" v-model="setting_footer.contact_us.whatsapp" class="form-control input-font-style" autocomplete="off" :placeholder="placeholders.contact_us.whatsapp" name="whatsapp">
+                                                <input type="text" v-model="setting_footer.whatsapp" class="form-control input-font-style" autocomplete="off" :placeholder="placeholders.contact_us.whatsapp" name="whatsapp">
                                             </div>
                                         </div>
                                     </div>
@@ -101,25 +100,25 @@
                                         <div class="form-group">
                                             <label for="facebook" class="col-md-2 control-label label-font-style">Facebook</label>
                                             <div class="col-md-6">
-                                                <input type="text" v-model="setting_footer.sosmed.facebook" class="form-control input-font-style" autocomplete="off" :placeholder="placeholders.sosmed.facebook" name="facebook">
+                                                <input type="text" v-model="setting_footer.facebook" class="form-control input-font-style" autocomplete="off" :placeholder="placeholders.sosmed.facebook" name="facebook">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="twitter" class="col-md-2 control-label label-font-style">Twitter</label>
                                             <div class="col-md-6">
-                                                <input type="text" v-model="setting_footer.sosmed.twitter" class="form-control input-font-style" autocomplete="off" :placeholder="placeholders.sosmed.twitter" name="twitter">
+                                                <input type="text" v-model="setting_footer.twitter" class="form-control input-font-style" autocomplete="off" :placeholder="placeholders.sosmed.twitter" name="twitter">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="instagram" class="col-md-2 control-label label-font-style">Instagram</label>
                                             <div class="col-md-6">
-                                                <input type="text" v-model="setting_footer.sosmed.instagram" class="form-control input-font-style" autocomplete="off" :placeholder="placeholders.sosmed.instagram" name="instagram">
+                                                <input type="text" v-model="setting_footer.instagram" class="form-control input-font-style" autocomplete="off" :placeholder="placeholders.sosmed.instagram" name="instagram">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="google_plus" class="col-md-2 control-label label-font-style">Google plus</label>
                                             <div class="col-md-6">
-                                                <input type="text" v-model="setting_footer.sosmed.google_plus" class="form-control input-font-style" autocomplete="off" :placeholder="placeholders.sosmed.google_plus" name="google_plus">
+                                                <input type="text" v-model="setting_footer.google_plus" class="form-control input-font-style" autocomplete="off" :placeholder="placeholders.sosmed.google_plus" name="google_plus">
                                             </div>
                                         </div>
                                     </div>
@@ -142,33 +141,16 @@
 <script>
 export default {
     mounted() {
-
+        this.getIdWarung();
     },
     data: function () {
         return {
-            warung_id: '',
+            id_warung: '',
             errors: [],
             url : window.location.origin+(window.location.pathname).replace("dashboard", "setting-footer"),
-            setting_footer: {
-                header_warung: '',
-                support_link: '',
-                about_link: '',
-                about_us: '',
-                contact_us: {
-                    no_telp: '',
-                    alamat: '',
-                    email: '',
-                    whatsapp: ''
-                },
-                sosmed: {
-                    facebook: '',
-                    twitter: '',
-                    instagram: '',
-                    google_plus: ''
-                },
-            },
+            setting_footer: {},
             placeholders: {
-                header_warung: 'Nama Warung Anda',
+                judul_warung: 'Nama Warung Anda',
                 support_link: 'https://andaglos.id/support/',
                 about_link: 'https://andaglos.id/topos/',
                 about_us: 'Tentang kami...',
@@ -184,12 +166,58 @@ export default {
                     instagram: 'https://www.instagram.com/andaglos',
                     google_plus: 'https://plus.google.com/u/0/102529791461131425545'
                 },
-            }
+            },
         }
     },
     methods: {
-        saveFrom() {
+        saveForm() {
+            let app = this;
 
+            axios.patch(app.url + '/' + app.id_warung, app.setting_footer)
+            .then(function (resp) {
+                console.log(resp);
+                swal({
+                    title: 'Berhasil!',
+                    type: 'success',
+                    text: 'Berhasil mengubah setting.',
+                    timer: 1800,
+                    showConfirmButton: false
+                });
+            })
+            .catch(function (resp) {
+                console.log(resp);
+                alert('Tidak dapat menyimpan perubahan.');
+            })
+        },
+        getDataSettingFooter(id_warung) {
+            let app = this;
+            app.id_warung = id_warung;
+            console.log(id_warung)
+            axios.get(app.url + '/' + 2)
+            .then(function (resp) {
+                console.log(resp);
+                app.setting_footer = resp.data;
+                app.setting_footer.support_link = 'https:' + resp.data.support_link;
+                app.setting_footer.about_link   = 'https:' + resp.data.about_link;
+                app.setting_footer.facebook     = 'https:' + resp.data.facebook;
+                app.setting_footer.twitter      = 'https:' + resp.data.twitter;
+                app.setting_footer.instagram    = 'https:' + resp.data.instagram;
+                app.setting_footer.google_plus  = 'https:' + resp.data.google_plus;
+            })
+            .catch(function (resp) {
+                console.log(resp);
+                alert('Tidak dapat memuat data setting footer');
+            })
+        },
+        getIdWarung() {
+            let app = this
+            axios.get(app.url + '/id-warung')
+            .then(function (resp) {
+                app.getDataSettingFooter(resp.data);
+            })
+            .catch(function (resp) {
+                alert('Tidak dapat mengambil id warung!');
+            });
         }
     }
 }
