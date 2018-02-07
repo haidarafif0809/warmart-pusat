@@ -9,18 +9,8 @@
         $user      = \Auth::user()->id;
         $foto_logo = \App\UserWarung::find($user);
 
-        if (Auth::user()->tipe_user == 4) {
-            $settingFooter = \App\SettingFooter::select()->where('id_warung', \Auth::user()->id_warung)->first();
-        } else {
-            // Jika tidak login sebagai warung tampilkan data default
-        $settingFooter = \App\SettingFooter::defaultData();
-        }
     }
-    else {
-
-        // Jika tidak login tampilkan data default
-        $settingFooter = \App\SettingFooter::defaultData();
-    }
+    $settingFooter = \App\SettingFooter::select()->first();
     ?>
     
     @if($setting_aplikasi->tipe_aplikasi == 0)

@@ -5,6 +5,7 @@ use Illuminate\Database\Seeder;
 
 class SettingFooterSeeder extends Seeder
 {
+
     /**
      * Run the database seeds.
      *
