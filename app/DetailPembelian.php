@@ -199,4 +199,13 @@ class DetailPembelian extends Model
 
         return $query_laporan_pembelian;
     }
+        public function subtotalTbs($user_warung, $no_faktur)
+    {
+        $detail_pembelian = DetailPembelian::select([DB::raw('SUM(subtotal) as subtotal')])->where('warung_id', $user_warung)->where('no_faktur', $no_faktur)->first();
+        if ($detail_pembelian->subtotal == null || $detail_pembelian->subtotal == '') {
+            return 0;
+        } else {
+            return $detail_pembelian->subtotal;
+        }
+    }
 }

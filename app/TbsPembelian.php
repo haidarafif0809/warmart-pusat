@@ -1,9 +1,10 @@
 <?php
 
 namespace App;
-
+use Auth;
 use Illuminate\Database\Eloquent\Model;
 use Yajra\Auditable\AuditableTrait;
+use Illuminate\Support\Facades\DB;
 
 class TbsPembelian extends Model
 {
@@ -39,5 +40,15 @@ class TbsPembelian extends Model
         public function getPemisahTaxAttribute()
     {
         return number_format($this->tax, 2, ',', '.');
+    }
+
+            public function subtotalTbs($user_warung,$session_id)
+    {
+        $tbs_pembelian = TbsPembelian::select(DB::raw('SUM(subtotal) as subtotal'))->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->first();
+                if ($tbs_pembelian->subtotal == null || $tbs_pembelian->subtotal == '') {
+                  return 0;
+                 }else{
+                return $tbs_pembelian->subtotal;
+                }
     }
 }

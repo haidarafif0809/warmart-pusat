@@ -139,9 +139,11 @@ methods: {
 			app.no_faktur = resp.data.no_faktur;
 			app.loading = false;
 			app.seen = true;
-			$.each(resp.data.data, function (i, item) {
-				app.subtotal += parseFloat(resp.data.data[i].subtotal) 
-			});
+			if (app.subtotal == 0) {
+				
+				app.subtotal += parseFloat(resp.data.subtotal) 
+
+			}
 		})
 		.catch(function (resp) {
 			console.log(resp);

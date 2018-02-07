@@ -537,6 +537,7 @@ Route::get('/pembelian/proses-edit-tax-tbs-pembelian', 'PembelianController@edit
 Route::get('/pembelian/cek-total-kas-pembelian', 'PembelianController@total_kas')->middleware('auth');
 Route::get('/pembelian/detail-view', 'PembelianController@detailView')->middleware('auth');
 Route::get('/pembelian/cetak-besar-pembelian/{id}', 'PembelianController@cetakBesar')->middleware('auth');
+Route::get('/pembelian/subtotal-tbs-pembelian/{jenis_tbs}', 'PembelianController@cekSubtotalTbsPembelian')->middleware('auth');
 
 //Edit Pembelian
 Route::get('/edit-pembelian/proses-tambah-tbs-pembelian', 'EditPembelianController@proses_tambah_tbs_pembelian')->middleware('auth');
