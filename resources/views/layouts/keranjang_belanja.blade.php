@@ -1,7 +1,11 @@
+<?php
+$settingFooter = \App\SettingFooter::select()->
+first();
+?>
 @extends('layouts.app_pelanggan')
 @section('content')
 <style type="text/css">
-.flexFont {
+    .flexFont {
   @if(Agent::isMobile())
   height:3em;
   @else
@@ -60,239 +64,252 @@ h4 {
   @endif
 }
 </style>
-
 @if($setting_aplikasi->tipe_aplikasi == 0)
 <div class="page-header header-filter header-small" data-parallax="true" style="background-image: url('image/background2.jpg');">
-  @else
-  <div class="page-header header-small backgroundColor" data-parallax="true">
-    @endif
+    @else
+    <div class="page-header header-small backgroundColor" data-parallax="true">
+        @endif
     @if (Agent::isMobile())
-    <div class="container">
-      <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-          <div class="brand">
-
-            @if($setting_aplikasi->tipe_aplikasi == 0)
-            <h3 class="title"> PASAR MUSLIM INDONESIA </h3>
-              <h4 class="title"> Segala Kemudahan Untuk Umat Muslim Berbelanja. </h4>
-              @else
-              <h3 class="title"> TOKO ONLINE DAN POS </h3>
-                @endif
-
-              </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="brand">
+                        @if($setting_aplikasi->tipe_aplikasi == 0)
+                        <h3 class="title">
+                            PASAR MUSLIM INDONESIA
+                        </h3>
+                        <h4 class="title">
+                            Segala Kemudahan Untuk Umat Muslim Berbelanja.
+                        </h4>
+                        @else
+                        <h3 class="title">
+                            <?=$settingFooter->
+                            judul_warung;?>
+                        </h3>
+                        @endif
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
         @else
         <div class="container">
-          <div class="row">
-            <div class="col-md-8 col-md-offset-2">
-              <div class="brand">
-
-                @if($setting_aplikasi->tipe_aplikasi == 0)
-                <h1 class="title"> PASAR MUSLIM INDONESIA </h3>
-                  <h3 class="title"> Segala Kemudahan Untuk Umat Muslim Berbelanja. </h3>
-                  @else
-                  <h1 class="title">TOKO ONLINE DAN POS</h3>
-                    @endif
-
-                  </div>
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="brand">
+                        @if($setting_aplikasi->tipe_aplikasi == 0)
+                        <h1 class="title">
+                            PASAR MUSLIM INDONESIA
+                        </h1>
+                    </div>
                 </div>
-              </div>
             </div>
+        </div>
+    </div>
+</div>
+<h3 class="title">
+    Segala Kemudahan Untuk Umat Muslim Berbelanja.
+</h3>
+@else
+<h1 class="title">
+    <?=$settingFooter->
+    judul_warung;?>
+</h1>
+@endif
+@endif
+<div class="main main-raised">
+    @if ($agent->isMobile())
+    <!--JIKA DAKSES VIA HP/TAB-->
+    <div class="container" style="margin-left: 5px; margin-right: 5px;">
+        @else
+        <div class="container">
             @endif
-          </div>
-          <div class="main main-raised">
-            @if ($agent->isMobile())
-            <!--JIKA DAKSES VIA HP/TAB-->
-            <div class="container" style="margin-left: 5px; margin-right: 5px;">
-              @else
-              <div class="container">
-                @endif
-                <div class="card-content">
-                  <h3 class="title text-center">
+            <div class="card-content">
+                <h3 class="title text-center">
                     Keranjang Belanjaan
-                  </h3>
-                  <div class="row">
+                </h3>
+                <div class="row">
                     <ul class="breadcrumb" style="margin-top:10px ">
-                      <li>
-                        <a href="{{ url('/daftar-produk') }}">
-                          Home
-                        </a>
-                      </li>
-                      <li class="active">
-                        Keranjang Belanja
-                      </li>
+                        <li>
+                            <a href="{{ url('/daftar-produk') }}">
+                                Home
+                            </a>
+                        </li>
+                        <li class="active">
+                            Keranjang Belanja
+                        </li>
                     </ul>
                     @if($cek_belanjaan == 0)
                     <div class="card">
-                      <div class="col-md-12">
-                        <center>
-                          <h3>
-                            Keranjang Belanjaan Anda Kosong, Silahkan Berbelanja.
-                          </h3>
-
-                          <a  href="{{ url('/daftar-produk') }}" type="button" class="btn btn-block buttonColor">Lanjut Belanja<i class="material-icons">keyboard_arrow_right</i></a>
-                          
-                        </center>
-                      </div>
+                        <div class="col-md-12">
+                            <center>
+                                <h3>
+                                    Keranjang Belanjaan Anda Kosong, Silahkan Berbelanja.
+                                </h3>
+                                <a class="btn btn-block buttonColor" href="{{ url('/daftar-produk') }}" type="button">
+                                    Lanjut Belanja
+                                    <i class="material-icons">
+                                        keyboard_arrow_right
+                                    </i>
+                                </a>
+                            </center>
+                        </div>
                     </div>
                     @else
                     @if ($agent->isMobile())
                     <!--JIKA DAKSES VIA HP/TAB-->
                     <div class="card" style="margin-bottom: 1px; margin-top: 1px;">
-                      <div class="row">
-                        <div class="col-md-12">
-                          <div class="col-sm-6 col-xs-6">
-                            Pesanan Saya
-                          </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="col-sm-6 col-xs-6">
+                                    Pesanan Saya
+                                </div>
+                            </div>
                         </div>
-                      </div>
                     </div>
                     {!! $produk_belanjaan !!}
 
 
                     @if($setting_aplikasi->tipe_aplikasi == 0)
                     <a class="btn btn-round" href="{{ url('/daftar-produk') }}" style="background-color: #01573e">
-                      Lanjut Belanja
+                        Lanjut Belanja
                     </a>
                     <a class="btn btn-round" href="{{ url('/selesaikan-pemesanan') }}" style="background-color: #01573e">
-                      Pembayaran
-                      <i class="material-icons">
-                        keyboard_arrow_right
-                      </i>
+                        Pembayaran
+                        <i class="material-icons">
+                            keyboard_arrow_right
+                        </i>
                     </a>
                     @else
-                    <a class="btn btn-round backgroundColor" href="{{ url('/daftar-produk') }}" >
-                      Lanjut Belanja
+                    <a class="btn btn-round backgroundColor" href="{{ url('/daftar-produk') }}">
+                        Lanjut Belanja
                     </a>
-                    <a class="btn btn-round backgroundColor" href="{{ url('/selesaikan-pemesanan') }}" >
-                      Pembayaran
-                      <i class="material-icons">
-                        keyboard_arrow_right
-                      </i>
+                    <a class="btn btn-round backgroundColor" href="{{ url('/selesaikan-pemesanan') }}">
+                        Pembayaran
+                        <i class="material-icons">
+                            keyboard_arrow_right
+                        </i>
                     </a>
                     @endif
                     @else
                     <div class="row">
-                      <div class="col-md-8">
-                        <div class="card" style="margin-bottom: 5px; padding-bottom: 15px;">
-                          <div class="card-header">
-                            <div class="row">
-                              <div class="col-md-3">
-                                <h4 align="center" class="card-title" style="color: black;">
-                                  Produk
-                                </h4>
-                              </div>
-                              <div class="col-md-3">
-                                <h4 class="card-title" style="color: black; text-align: right">
-                                  Harga
-                                </h4>
-                              </div>
-                              <div class="col-md-3">
-                                <h4 class="card-title" style="color: black;">
-                                  Jumlah
-                                </h4>
-                              </div>
-                              <div class="col-md-3">
-                                <h4 class="card-title" style="color: black; padding-left: 25px;">
-                                  Subtotal
-                                </h4>
-                              </div>
-                            </div><hr style="margin-top: 0px; margin-bottom: 0px;">
-                          </div>
-                          {!! $produk_belanjaan !!}
+                        <div class="col-md-8">
+                            <div class="card" style="margin-bottom: 5px; padding-bottom: 15px;">
+                                <div class="card-header">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <h4 align="center" class="card-title" style="color: black;">
+                                                Produk
+                                            </h4>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <h4 class="card-title" style="color: black; text-align: right">
+                                                Harga
+                                            </h4>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <h4 class="card-title" style="color: black;">
+                                                Jumlah
+                                            </h4>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <h4 class="card-title" style="color: black; padding-left: 25px;">
+                                                Subtotal
+                                            </h4>
+                                        </div>
+                                    </div>
+                                    <hr style="margin-top: 0px; margin-bottom: 0px;">
+                                    </hr>
+                                </div>
+                                {!! $produk_belanjaan !!}
+                            </div>
                         </div>
-                      </div>
-                      <div class="col-md-4">
-                        <div class="card" style="margin-bottom: 5px; padding-bottom: 15px;">
-                          <div class="card-header">
-                            <h6 class="card-title" style="color: black; padding-left: 10px">
-                              Rincian Pesanan
-                            </h6>
-                            <hr>
-                          </hr>
+                        <div class="col-md-4">
+                            <div class="card" style="margin-bottom: 5px; padding-bottom: 15px;">
+                                <div class="card-header">
+                                    <h6 class="card-title" style="color: black; padding-left: 10px">
+                                        Rincian Pesanan
+                                    </h6>
+                                    <hr>
+                                    </hr>
+                                </div>
+                                <div class="card-content table-responsive">
+                                    <table>
+                                        <tbody>
+                                            <tr>
+                                                <td width="60%">
+                                                    <b>
+                                                        Total Produk
+                                                    </b>
+                                                </td>
+                                                <td>
+                                                    :
+                                                </td>
+                                                <td>
+                                                    <b>
+                                                        {{ $cek_belanjaan }}
+                                                    </b>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td width="60%">
+                                                    <b>
+                                                        Subtotal
+                                                    </b>
+                                                </td>
+                                                <td>
+                                                    :
+                                                </td>
+                                                <td>
+                                                    <b>
+                                                        Rp. {{ $subtotal }}
+                                                    </b>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
-                        <div class="card-content table-responsive">
-                          <table>
-                            <tbody>
-                              <tr>
-                                <td width="60%">
-                                  <b>
-                                    Total Produk
-                                  </b>
-                                </td>
-                                <td>
-                                  :
-                                </td>
-                                <td>
-                                  <b>
-                                    &nbsp;{{ $cek_belanjaan }}
-                                  </b>
-                                </td>
-                              </tr>
-                              <tr>
-                                <td width="60%">
-                                  <b>
-                                    Subtotal
-                                  </b>
-                                </td>
-                                <td>
-                                  :
-                                </td>
-                                <td>
-                                  <b>
-                                    &nbsp;Rp. {{ $subtotal }}
-                                  </b>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </hr>
-                      </div>
                     </div>
-
-                    @if($setting_aplikasi->tipe_aplikasi == 0)
-                    <a class="btn btn-round" href="{{ url('/daftar-produk') }}" style="background-color: #01573e">
-                      Lanjut Belanja
-                      <i class="material-icons">
-                        shopping_cart
-                      </i>
-                    </a>
-                    <a class="btn btn-round" href="{{ url('/selesaikan-pemesanan') }}" style="background-color: #01573e">
-                      Pembayaran
-                      <i class="material-icons">
-                        keyboard_arrow_right
-                      </i>
-                    </a>
-                    @else
-                    <a class="btn btn-round backgroundColor" href="{{ url('/daftar-produk') }}">
-                      Lanjut Belanja
-                      <i class="material-icons">
-                        shopping_cart
-                      </i>
-                    </a>
-                    <a class="btn btn-round backgroundColor" href="{{ url('/selesaikan-pemesanan') }}">
-                      Pembayaran
-                      <i class="material-icons">
-                        keyboard_arrow_right
-                      </i>
-                    </a>
-                    @endif
-                  </div>
-                  @endif
                 </div>
-              </div>
-              @endif
             </div>
-          </div>
         </div>
-      </div>
-      @endsection
+    </div>
+</div>
+@if($setting_aplikasi->tipe_aplikasi == 0)
+<a class="btn btn-round" href="{{ url('/daftar-produk') }}" style="background-color: #01573e">
+    Lanjut Belanja
+    <i class="material-icons">
+        shopping_cart
+    </i>
+</a>
+<a class="btn btn-round" href="{{ url('/selesaikan-pemesanan') }}" style="background-color: #01573e">
+    Pembayaran
+    <i class="material-icons">
+        keyboard_arrow_right
+    </i>
+</a>
+@else
+<a class="btn btn-round backgroundColor" href="{{ url('/daftar-produk') }}">
+    Lanjut Belanja
+    <i class="material-icons">
+        shopping_cart
+    </i>
+</a>
+<a class="btn btn-round backgroundColor" href="{{ url('/selesaikan-pemesanan') }}">
+    Pembayaran
+    <i class="material-icons">
+        keyboard_arrow_right
+    </i>
+</a>
+@endif
+@endif
+@endif
+@endsection
 
       @section('scripts')
-      <script type="text/javascript">
-        $(document).on('click', '#btnHapusProduk', function () {
+<script type="text/javascript">
+    $(document).on('click', '#btnHapusProduk', function () {
           var id = $(this).attr("data-id");
           var nama = $(this).attr("data-nama");
 
@@ -321,7 +338,5 @@ h4 {
           })
 
         });
-
-
-      </script>
-      @endsection
+</script>
+@endsection
