@@ -13,6 +13,7 @@ use App\User;
 use App\Role;
 use App\Komunitas;
 use App\KomunitasCustomer;
+use App\SettingAplikasi;
 
 class CustomerController extends Controller
 {

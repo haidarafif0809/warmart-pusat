@@ -15,7 +15,8 @@ class SettingFooterController extends Controller
      */
     public function index()
     {
-        //
+        $setting_footer = SettingFooter::select()->first();
+        return response()->json($setting_footer);
     }
 
     public function idWarung()
@@ -55,8 +56,7 @@ class SettingFooterController extends Controller
      */
     public function show($id_warung)
     {
-        $setting_footer = SettingFooter::select()->where('id_warung', $id_warung)->first();
-        return response()->json($setting_footer);
+        //
     }
 
     /**
