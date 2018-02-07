@@ -17,13 +17,7 @@ class KelompokProdukController extends Controller
 
     public function __construct()
     {
-//SETTING APLIKASI
-        $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
-        if ($setting_aplikasi->tipe_aplikasi == 0) {
-            $this->middleware('user-must-admin');
-        } else {
-            $this->middleware('user-must-warung');
-        }
+        $this->middleware('user-must-admin');
     }
     public function index()
     {
@@ -121,8 +115,7 @@ class KelompokProdukController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'nama_kelompok' => 'required|unique:kategori_barangs,nama_kategori_barang',
-            'icon_kelompok' => 'required']);
+            'nama_kelompok' => 'required|unique:kategori_barangs,nama_kategori_barang']);
 
         $kelompok_produk = KategoriBarang::create([
             'nama_kategori_barang' => $request->nama_kelompok,
@@ -166,8 +159,7 @@ class KelompokProdukController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'nama_kelompok' => 'required|unique:kategori_barangs,nama_kategori_barang,' . $id,
-            'icon_kelompok' => 'required']);
+            'nama_kelompok' => 'required|unique:kategori_barangs,nama_kategori_barang,' . $id]);
 
         $kelompok_produk = KategoriBarang::find($id)->update([
             'nama_kategori_barang' => $request->nama_kelompok,
