@@ -34,7 +34,6 @@
 								<tr>
 
 									<th>Kelompok Produk</th>
-									<th>Icon</th>
 									<th>Edit</th>
                                     <th>Delete</th>
 
@@ -44,7 +43,6 @@
                                 <tr v-for="kelompok_produk, index in kelompok_produk" >
 
                                  <td>{{ kelompok_produk.nama_kategori_barang }}</td>
-                                 <td><i class="material-icons">{{ kelompok_produk.kategori_icon }}</i></td>
                                  <td><router-link :to="{name: 'editKelompokProduk', params: {id: kelompok_produk.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + kelompok_produk.id" >
                                  Edit </router-link> </td>
 

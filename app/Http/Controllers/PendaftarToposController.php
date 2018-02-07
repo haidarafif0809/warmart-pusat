@@ -29,7 +29,16 @@ class PendaftarToposController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-
+        public function __construct()
+    {
+        //SETTING APLIKASI 
+        $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first(); 
+        if ($setting_aplikasi->tipe_aplikasi == 0) { 
+        $this->middleware('user-must-admin'); 
+        } else { 
+            $this->middleware('user-must-topos'); 
+        } 
+    }
 
     public function paginationData($pendaftar_topos, $array, $url)
     {

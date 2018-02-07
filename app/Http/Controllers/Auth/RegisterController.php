@@ -6,9 +6,9 @@ use App\BankWarung;
 use App\Http\Controllers\Controller;
 use App\Kas;
 use App\KomunitasCustomer;
+use App\Notification\PendaftarWarung;
 use App\Role;
 use App\SettingAplikasi;
-use App\SettingFooter;
 use App\User;
 use App\UserWarung;
 use App\Warung;
@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use Notification;
 
 class RegisterController extends Controller
 {
@@ -174,26 +175,6 @@ class RegisterController extends Controller
                 'alamat'    => $data['alamat'],
                 'no_telpon' => $data['no_telp'],
                 'wilayah'   => "-",
-            ]);
-
-            // Mengambil default data dari Model SettingFooter
-            $settingFooterDefault = SettingFooter::defaultData();
-
-            // Membuat Setting Footer untuk setiap warung yang baru daftar untuk dijadikan pengaturan default
-            $setting_footer = SettingFooter::create([
-                'id_warung'    => $warung->id,
-                'judul_warung' => $settingFooterDefault->judul_warung,
-                'support_link' => $settingFooterDefault->support_link,
-                'about_link'   => $settingFooterDefault->about_link,
-                'about_us'     => $settingFooterDefault->about_us,
-                'no_telp'      => $settingFooterDefault->no_telp,
-                'alamat'       => $settingFooterDefault->alamat,
-                'email'        => $settingFooterDefault->email,
-                'whatsapp'     => $settingFooterDefault->whatsapp,
-                'facebook'     => $settingFooterDefault->facebook,
-                'twitter'      => $settingFooterDefault->twitter,
-                'instagram'    => $settingFooterDefault->instagram,
-                'google_plus'  => $settingFooterDefault->google_plus,
             ]);
 
             //INSERT BANK WARUNG
