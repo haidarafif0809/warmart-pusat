@@ -6,7 +6,7 @@ use App\BankWarung;
 use App\Http\Controllers\Controller;
 use App\Kas;
 use App\KomunitasCustomer;
-use App\Notification\PendaftarWarung;
+use App\Notifications\PendaftarWarung;
 use App\Role;
 use App\SettingAplikasi;
 use App\User;
@@ -218,6 +218,7 @@ class RegisterController extends Controller
             $user->attachRole($userWarungRole);
 
             Notification::send(User::first(), new PendaftarWarung($user));
+            
 
             $userkey      = env('USERKEY');
             $passkey      = env('PASSKEY');
