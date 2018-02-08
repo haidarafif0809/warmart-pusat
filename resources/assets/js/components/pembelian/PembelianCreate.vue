@@ -545,10 +545,7 @@ methods: {
 
       if (app.inputPembayaranPembelian.subtotal == 0) {         
         $.each(resp.data.data, function (i,item) { 
-          app.inputPembayaranPembelian.subtotal += parseFloat(resp.data.data[i].subtotal)
-          app.inputPembayaranPembelian.total_akhir += parseFloat(resp.data.data[i].subtotal)
-          app.inputPembayaranPembelian.kredit += parseFloat(resp.data.data[i].subtotal)
-          console.log(resp.data.data[i].subtotal);
+          app.getSubtotalTbs();
         });  
       } 
 
@@ -560,6 +557,17 @@ methods: {
       alert("Tidak Dapat Memuat Pembelian");
     });
 },//END FUNGSI UNTUK PAGINATION TAMPILAN AWAL / DOCUMENT READY 
+  getSubtotalTbs(){
+    var app =  this;
+    var jenis_tbs = 1;
+    axios.get(app.url+'/subtotal-tbs-pembelian/'+jenis_tbs)
+    .then(function (resp) {
+     app.inputPembayaranPembelian.subtotal += resp.data.subtotal;
+     })
+    .catch(function (resp) {
+      console.log(resp);
+    });
+},    
 getHasilPencarian(page){
   var app = this;
   if (typeof page === 'undefined') {

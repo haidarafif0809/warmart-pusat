@@ -67,7 +67,7 @@ class PembayaranPiutangController extends Controller
     public function getDataFakturPiutang($id)
     {
         $penjualan_piutang = TransaksiPiutang::dataPenjualanPiutangPerFaktur($id)->first();
-
+        
         return response()->json($penjualan_piutang);
     }
 
@@ -653,6 +653,17 @@ class PembayaranPiutangController extends Controller
             return response()->json($respons);
         }
 
+    }
+
+        public function cekSubtotalTbsPembayaranPiutang($jenis_tbs){
+    $session_id    = session()->getId();
+    $user_warung   = Auth::user()->id_warung;
+
+            $TbsPembayaranPiutang = new TbsPembayaranPiutang();
+            $subtotal      = $TbsPembayaranPiutang->subtotalTbs($user_warung,$session_id);
+            $respons['subtotal'] = $subtotal;
+
+    return response()->json($respons);
     }
 
     public function cetakUlang($id)
