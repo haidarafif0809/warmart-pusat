@@ -16,7 +16,7 @@ class CreateSettingFootersTable extends Migration
         Schema::create('setting_footers', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('warung_id')->nullable();
-            $table->string('judul_warung')->nullable();
+            $table->string('header_warung')->nullable();
             $table->string('support_link')->nullable();
             $table->string('about_link')->nullable();
             $table->string('about_us')->nullable();
