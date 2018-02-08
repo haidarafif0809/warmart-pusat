@@ -443,89 +443,91 @@ body {
                 s1.setAttribute('crossorigin','*');
                 s0.parentNode.insertBefore(s1,s0);
             })();
-            </script>
-            <!--End of Tawk.to Script-->
-        </nav>
-    </body>
-    <!--   Core JS Files   -->
-    <script src="{{ asset('js/jquery-3.2.1.min.js') }}" type="text/javascript">
-    </script>
-    <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript">
-    </script>
-    <script src="{{ asset('js/material.min.js') }}" type="text/javascript">
-    </script>
-    <script src="{{ asset('js/bootstrap-datepicker.min.js') }}">
-    </script>
-    <script src="{{ asset('js/perfect-scrollbar.jquery.min.js') }}" type="text/javascript">
-    </script>
-    <!-- Library for adding dinamically elements -->
-    <script src="{{ asset('js/arrive.min.js') }}" type="text/javascript">
-    </script>
-    <!-- Forms Validations Plugin -->
-    <script src="{{ asset('js/jquery.validate.min.js') }}">
-    </script>
-    <!-- Promise Library for SweetAlert2 working on IE -->
-    <script src="{{ asset('js/es6-promise-auto.min.js') }}">
-    </script>
-    <!--  Plugin for Date Time Picker and Full Calendar Plugin-->
-    <script src="{{ asset('js/moment.min.js') }}">
-    </script>
-    <!--  Charts Plugin, full documentation here: https://gionkunz.github.io/chartist-js/ -->
-    <script src="{{ asset('js/chartist.min.js') }}">
-    </script>
-    <!--  Plugin for the Wizard, full documentation here: https://github.com/VinceG/twitter-bootstrap-wizard -->
-    <script src="{{ asset('js/jquery.bootstrap-wizard.js') }}">
-    </script>
-    <!--  Notifications Plugin, full documentation here: http://bootstrap-notify.remabledesigns.com/    -->
-    <script src="{{ asset('js/bootstrap-notify.js') }}">
-    </script>
-    <!--  Plugin for the DateTimePicker, full documentation here: https://eonasdan.github.io/bootstrap-datetimepicker/ -->
-    <script src="{{ asset('js/bootstrap-datetimepicker.js') }}">
-    </script>
-    <!--    Plugin for Select, full documentation here: http://silviomoreto.github.io/bootstrap-select   -->
-    <!-- Vector Map plugin, full documentation here: http://jvectormap.com/documentation/ -->
-    <script src="{{ asset('js/jquery-jvectormap.js') }}">
-    </script>
-    <!-- Sliders Plugin, full documentation here: https://refreshless.com/nouislider/ -->
-    <script src="{{ asset('js/nouislider.min.js') }}">
-    </script>
-    <!--  Plugin for Select, full documentation here: http://silviomoreto.github.io/bootstrap-select -->
-    <script src="{{ asset('js/jquery.select-bootstrap.js') }}">
-    </script>
-    <!--  DataTables.net Plugin, full documentation here: https://datatables.net/    -->
-    <script src="{{ asset('js/jquery.dataTables.js') }}">
-    </script>
-    <!-- Sweet Alert 2 plugin, full documentation here: https://limonte.github.io/sweetalert2/ -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.0.5/sweetalert2.all.min.js" type="text/javascript">
-    </script>
-    <!-- Sertakan polibill untuk Prompt ES6 (opsional) untuk browser IE11 dan Android -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.js">
-    </script>
-    <!-- Plugin for Fileupload, full documentation here: http://www.jasny.net/bootstrap/javascript/#fileinput -->
-    <script src="{{ asset('js/jasny-bootstrap.min.js') }}">
-    </script>
-    <!--  Full Calendar Plugin, full documentation here: https://github.com/fullcalendar/fullcalendar    -->
-    <script src="{{ asset('js/fullcalendar.min.js') }}">
-    </script>
-    <!-- Plugin for Tags, full documentation here: https://github.com/bootstrap-tagsinput/bootstrap-tagsinputs  -->
-    <script src="{{ asset('js/jquery.tagsinput.js') }}">
-    </script>
-    <script src="{{ asset('js/material-dashboard.js?v=1.2.0') }}">
-    </script>
-    <script src="{{ asset('js/demo.js') }}">
-    </script>
-    <script src="{{ asset('js/selectize.min.js') }}">
-    </script>
-    <script src="{{ asset('js/material-kit.js?v=1.2.0')}}" type="text/javascript">
-    </script>
-    {{-- lazy load image --}}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-lazyload/10.3.5/lazyload.min.js">
-    </script>
-    <script type="text/javascript">
-        var myLazyLoad = new LazyLoad();
-    </script>
-    <script type="text/javascript">
-        $(document).on('click', '#btnBeliSekarang', function(){
+        </script>
+        <!--End of Tawk.to Script-->
+    </nav>
+</body>
+<!--   Core JS Files   -->
+<script src="{{ asset('js/jquery-3.2.1.min.js') }}" type="text/javascript">
+</script>
+<script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript">
+</script>
+<script src="{{ asset('js/material.min.js') }}" type="text/javascript">
+</script>
+<script src="{{ asset('js/bootstrap-datepicker.min.js') }}">
+</script>
+<script src="{{ asset('js/perfect-scrollbar.jquery.min.js') }}" type="text/javascript">
+</script>
+<!-- Library for adding dinamically elements -->
+<script src="{{ asset('js/arrive.min.js') }}" type="text/javascript">
+</script>
+<!-- Forms Validations Plugin -->
+<script src="{{ asset('js/jquery.validate.min.js') }}">
+</script>
+<!-- Promise Library for SweetAlert2 working on IE -->
+<script src="{{ asset('js/es6-promise-auto.min.js') }}">
+</script>
+<!--  Plugin for Date Time Picker and Full Calendar Plugin-->
+<script src="{{ asset('js/moment.min.js') }}">
+</script>
+<!--  Charts Plugin, full documentation here: https://gionkunz.github.io/chartist-js/ -->
+<script src="{{ asset('js/chartist.min.js') }}">
+</script>
+<!--  Plugin for the Wizard, full documentation here: https://github.com/VinceG/twitter-bootstrap-wizard -->
+<script src="{{ asset('js/jquery.bootstrap-wizard.js') }}">
+</script>
+<!--  Notifications Plugin, full documentation here: http://bootstrap-notify.remabledesigns.com/    -->
+<script src="{{ asset('js/bootstrap-notify.js') }}">
+</script>
+<!--  Plugin for the DateTimePicker, full documentation here: https://eonasdan.github.io/bootstrap-datetimepicker/ -->
+<script src="{{ asset('js/bootstrap-datetimepicker.js') }}">
+</script>
+<!--    Plugin for Select, full documentation here: http://silviomoreto.github.io/bootstrap-select   -->
+<!-- Vector Map plugin, full documentation here: http://jvectormap.com/documentation/ -->
+<script src="{{ asset('js/jquery-jvectormap.js') }}">
+</script>
+<!-- Sliders Plugin, full documentation here: https://refreshless.com/nouislider/ -->
+<script src="{{ asset('js/nouislider.min.js') }}">
+</script>
+<!--  Plugin for Select, full documentation here: http://silviomoreto.github.io/bootstrap-select -->
+<script src="{{ asset('js/jquery.select-bootstrap.js') }}">
+</script>
+<!--  DataTables.net Plugin, full documentation here: https://datatables.net/    -->
+<script src="{{ asset('js/jquery.dataTables.js') }}">
+</script>
+<!-- Sweet Alert 2 plugin, full documentation here: https://limonte.github.io/sweetalert2/ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.0.5/sweetalert2.all.min.js" type="text/javascript">
+</script>
+<!-- Sertakan polibill untuk Prompt ES6 (opsional) untuk browser IE11 dan Android -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.js">
+</script>
+<!-- Plugin for Fileupload, full documentation here: http://www.jasny.net/bootstrap/javascript/#fileinput -->
+<script src="{{ asset('js/jasny-bootstrap.min.js') }}">
+</script>
+<!--  Full Calendar Plugin, full documentation here: https://github.com/fullcalendar/fullcalendar    -->
+<script src="{{ asset('js/fullcalendar.min.js') }}">
+</script>
+<!-- Plugin for Tags, full documentation here: https://github.com/bootstrap-tagsinput/bootstrap-tagsinputs  -->
+<script src="{{ asset('js/jquery.tagsinput.js') }}">
+</script>
+<script src="{{ asset('js/material-dashboard.js?v=1.2.0') }}">
+</script>
+<script src="{{ asset('js/demo.js') }}">
+</script>
+<script src="{{ asset('js/selectize.min.js') }}">
+</script>
+<script src="{{ asset('js/custom.js') }}">
+</script>
+<script src="{{ asset('js/material-kit.js?v=1.2.0')}}" type="text/javascript">
+</script>
+{{-- lazy load image --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-lazyload/10.3.5/lazyload.min.js">
+</script>
+<script type="text/javascript">
+    var myLazyLoad = new LazyLoad();
+</script>
+<script type="text/javascript">
+    $(document).on('click', '#btnBeliSekarang', function(){
 
         swal({
             text :  "Produk Berhasil Di Tambahkan Ke Keranjang Belanja",
