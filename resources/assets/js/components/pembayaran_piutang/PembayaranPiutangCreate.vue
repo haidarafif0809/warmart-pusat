@@ -568,9 +568,7 @@ methods: {
             app.openSelectizeFakturPiutang();
 
             if (app.pembayaranPiutang.subtotal == 0) {
-                $.each(resp.data.data, function (i,item) {
-                    app.pembayaranPiutang.subtotal += parseFloat(resp.data.data[i].jumlah_bayar)
-                }); 
+                app.getSubtotalTbs(); 
             }
         })
         .catch(function (resp) {
@@ -596,7 +594,18 @@ methods: {
             console.log(resp);
             alert("Tidak Dapat Memuat Faktur Penjualan Piutang");
         });
-    },    
+    }, 
+    getSubtotalTbs(){
+    var app =  this;
+    var jenis_tbs = 1;
+    axios.get(app.url_piutang+'/subtotal-tbs-pembayaran-piutang/'+jenis_tbs)
+    .then(function (resp) {
+     app.pembayaranPiutang.subtotal += resp.data.subtotal;
+     })
+    .catch(function (resp) {
+      console.log(resp);
+    });
+  },       
     dataPiutang() {
         var app = this;
         axios.get(app.url_piutang+'/pilih-penjualan-piutang').then(function (resp) {

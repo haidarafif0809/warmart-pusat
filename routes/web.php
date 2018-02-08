@@ -793,6 +793,8 @@ Route::get('/pembayaran-piutang/view-tbs-pembayaran-piutang', 'PembayaranPiutang
 Route::get('/pembayaran-piutang/pencarian-tbs-pembayaran-piutang', 'PembayaranPiutangController@pencarianTbs')->middleware('auth');
 Route::get('/pembayaran-piutang/view-detail-pembayaran-piutang/{id}', 'PembayaranPiutangController@viewDetail')->middleware('auth');
 Route::get('/pembayaran-piutang/pencarian-detail-pembayaran-piutang/{id}', 'PembayaranPiutangController@pencarianDetail')->middleware('auth');
+Route::get('/pembayaran-piutang/subtotal-tbs-pembayaran-piutang/{jenis_tbs}', 'PembayaranPiutangController@cekSubtotalTbsPembayaranPiutang')->middleware('auth');
+
 
 //PEMBAYARAN PIUTANG EDIT
 Route::get('/pembayaran-piutang/view-edit-tbs-pembayaran-piutang/{id}', 'PembayaranPiutangController@viewTbsEdit')->middleware('auth');
