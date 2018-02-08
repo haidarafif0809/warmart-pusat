@@ -58,161 +58,177 @@
                 </i>
             </span>
             <div class="form-group label-floating {{ $errors->has('name') ? ' has-error' : '' }}">
-                {!! Form::text('name', null, ['class'=>'form-control','required','autocomplete'=>'off','placeholder'=>'Nama Pemilik','id'=>'name']) !!}
-                {!! $errors->first('name', '
+               @if(Auth::check() == false)
+               {!! Form::text('name', null, ['class'=>'form-control','required','autocomplete'=>'off','placeholder'=>'Nama Pemilik','id'=>'name']) !!}
+               @else
+               {!! Form::text('name', Auth::user()->name, ['class'=>'form-control','required','autocomplete'=>'off','placeholder'=>'Nama Pemilik','id'=>'name']) !!}
+               @endif
+               {!! $errors->first('name', '
+               <p class="label label-danger">
+                :message
+            </p>
+            ') !!}
+        </div>
+    </div>
+    <div class="input-group ">
+        <span class="input-group-addon">
+            <i class="material-icons">
+                local_phone
+            </i>
+        </span>
+        <div class="form-group label-floating">
+            @if(Auth::check() == false)
+            {!! Form::tel('no_telp', null, ['class'=>'form-control','required','autocomplete'=>'off','placeholder'=>'Nomor Telpon','id'=>'no_telp']) !!}
+            @else
+            {!! Form::tel('no_telp', Auth::user()->no_telp, ['class'=>'form-control','required','autocomplete'=>'off','placeholder'=>'Nomor Telpon','id'=>'no_telp']) !!}
+            @endif
+        </div>
+    </div>
+    <div class="input-group ">
+        <span class="input-group-addon">
+            <i class="material-icons">
+                email
+            </i>
+        </span>
+        <div class="form-group label-floating">
+           @if(Auth::check() == false)
+           {!! Form::email('email', null, ['class'=>'form-control','required','autocomplete'=>'off','placeholder'=>'Email','id'=>'email']) !!}
+           @else
+           {!! Form::email('email', Auth::user()->email, ['class'=>'form-control','required','autocomplete'=>'off','placeholder'=>'Email','id'=>'email']) !!}
+           @endif
+       </div>
+   </div>
+   <div class="input-group ">
+    <span class="input-group-addon">
+        <i class="material-icons">
+            home
+        </i>
+    </span>
+    <div class="form-group label-floating {{ $errors->has('alamat') ? ' has-error' : '' }}">
+        @if(Auth::check() == false)
+        {!! Form::text('alamat', null, ['class'=>'form-control','required','autocomplete'=>'off','placeholder'=>'Alamat','id'=>'alamat']) !!}
+        @else
+        {!! Form::text('alamat', Auth::user()->alamat, ['class'=>'form-control','required','autocomplete'=>'off','placeholder'=>'Alamat','id'=>'alamat']) !!}
+        @endif
+        {!! $errors->first('alamat', '
+        <p class="label label-danger">
+            :message
+        </p>
+        ') !!}
+    </div>
+</div>
+
+<div class="input-group ">
+    <span class="input-group-addon">
+        <i class="material-icons">
+            alarm
+        </i>
+    </span>
+    <div class="row">
+        <div class="col-md-7">
+            <div class="form-group label-floating ">
+                {!! Form::select('lama_berlangganan', [
+                '1'=>'1 Bulan',
+                '2'=>'6 Bulan',
+                '3'=>'12 Bulan'
+                ],null, ['class'=>'js-selectize-reguler', 'placeholder' => 'Berlangganan','id' => 'lama_berlangganan']) !!}
+                {!! $errors->first('lama_berlangganan', '
                 <p class="label label-danger">
                     :message
                 </p>
                 ') !!}
             </div>
         </div>
-        <div class="input-group ">
-            <span class="input-group-addon">
-                <i class="material-icons">
-                    local_phone
-                </i>
-            </span>
-            <div class="form-group label-floating">
-                {!! Form::tel('no_telp', null, ['class'=>'form-control','required','autocomplete'=>'off','placeholder'=>'Nomor Telpon','id'=>'no_telp']) !!}
-            </div>
-        </div>
-        <div class="input-group ">
-            <span class="input-group-addon">
-                <i class="material-icons">
-                    email
-                </i>
-            </span>
-            <div class="form-group label-floating">
-                {!! Form::email('email', null, ['class'=>'form-control','required','autocomplete'=>'off','placeholder'=>'Email','id'=>'email']) !!}
-            </div>
-        </div>
-        <div class="input-group ">
-            <span class="input-group-addon">
-                <i class="material-icons">
-                    home
-                </i>
-            </span>
-            <div class="form-group label-floating {{ $errors->has('alamat') ? ' has-error' : '' }}">
-                {!! Form::text('alamat', null, ['class'=>'form-control','required','autocomplete'=>'off','placeholder'=>'Alamat','id'=>'alamat']) !!}
-                {!! $errors->first('alamat', '
+        <div class="col-md-5">
+            <div class="form-group label-floating {{ $errors->has('harga') ? ' has-error' : '' }}">
+                {!! Form::text('harga', null, ['class'=>'form-control','autocomplete'=>'off','readonly','id' => 'harga']) !!}
+                {!! $errors->first('harga', '
                 <p class="label label-danger">
                     :message
                 </p>
                 ') !!}
             </div>
         </div>
-
-        <div class="input-group ">
-            <span class="input-group-addon">
-                <i class="material-icons">
-                    alarm
-                </i>
-            </span>
-            <div class="row">
-                <div class="col-md-7">
-                    <div class="form-group label-floating ">
-                        {!! Form::select('lama_berlangganan', [
-                        '1'=>'1 Bulan',
-                        '2'=>'6 Bulan',
-                        '3'=>'12 Bulan'
-                        ],null, ['class'=>'js-selectize-reguler', 'placeholder' => 'Berlangganan','id' => 'lama_berlangganan']) !!}
-                        {!! $errors->first('lama_berlangganan', '
-                        <p class="label label-danger">
-                            :message
-                        </p>
-                        ') !!}
-                    </div>
-                </div>
-                <div class="col-md-5">
-                    <div class="form-group label-floating {{ $errors->has('harga') ? ' has-error' : '' }}">
-                        {!! Form::text('harga', null, ['class'=>'form-control','autocomplete'=>'off','readonly','id' => 'harga']) !!}
-                        {!! $errors->first('harga', '
-                        <p class="label label-danger">
-                            :message
-                        </p>
-                        ') !!}
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="input-group ">
-            <span class="input-group-addon">
-                <i class="material-icons">
-                    date_range
-                </i>
-            </span>
-            <div class="form-group label-floating {{ $errors->has('berlaku_hingga') ? ' has-error' : '' }}">
-                {!! Form::text('berlaku_hingga', null, ['class'=>'form-control','autocomplete'=>'off','placeholder'=>'Berlaku Hingga','readonly','id' => 'berlaku_hingga']) !!}
-                {!! $errors->first('berlaku_hingga', '
-                <p class="label label-danger">
-                    :message
-                </p>
-                ') !!}
-            </div>
-        </div>
-
-        <div class="input-group ">
-            <span class="input-group-addon">
-              <b>Rp.</b>
-          </span>
-          <div class="form-group label-floating {{ $errors->has('total') ? ' has-error' : '' }}">
-            {!! Form::text('total', null, ['class'=>'form-control form-total','autocomplete'=>'off','placeholder'=>'Total Yang Harus di Bayar','readonly','id' => 'total' ]) !!}
-            {!! $errors->first('total', '
-            <p class="label label-danger">
-                :message
-            </p>
-            ') !!}
-        </div>
     </div>
+</div>
 
-    <div class="input-group ">
-        <span class="input-group-addon">
-            <i class="material-icons">
-                account_balance
-            </i>
-        </span>
-        <div class="form-group label-floating ">
-            {!! Form::select('tujuan_transfer', [''=>'']+App\Bank::select([DB::raw('CONCAT(id, "|", no_rek,"|",atas_nama) AS id'),'nama_bank AS nama_bank'])->pluck('nama_bank','id')->all(),null, ['class'=>'js-selectize-reguler', 'placeholder' => 'Tujuan Transfer','id' => 'tujuan_transfer']) !!}
-            {!! $errors->first('tujuan_transfer', '
-            <p class="label label-danger">
-                :message
-            </p>
-            ') !!}
-        </div>
+<div class="input-group ">
+    <span class="input-group-addon">
+        <i class="material-icons">
+            date_range
+        </i>
+    </span>
+    <div class="form-group label-floating {{ $errors->has('berlaku_hingga') ? ' has-error' : '' }}">
+        {!! Form::text('berlaku_hingga', null, ['class'=>'form-control','autocomplete'=>'off','placeholder'=>'Berlaku Hingga','readonly','id' => 'berlaku_hingga']) !!}
+        {!! $errors->first('berlaku_hingga', '
+        <p class="label label-danger">
+            :message
+        </p>
+        ') !!}
     </div>
+</div>
 
-    <div class="input-group ">
-        <span class="input-group-addon">
-            <i class="material-icons">
-                payment
-            </i>
-        </span>
-        <div class="form-group label-floating {{ $errors->has('no_rek_transfer') ? ' has-error' : '' }}">
-            {!! Form::text('no_rek_transfer', null, ['class'=>'form-control','autocomplete'=>'off','placeholder'=>'No. Rekening','readonly','id'=>'no_rek_transfer']) !!}
-            {!! $errors->first('no_rek_transfer', '
-            <p class="label label-danger">
-                :message
-            </p>
-            ') !!}
-        </div>
-    </div>
+<div class="input-group ">
+    <span class="input-group-addon">
+      <b>Rp.</b>
+  </span>
+  <div class="form-group label-floating {{ $errors->has('total') ? ' has-error' : '' }}">
+    {!! Form::text('total', null, ['class'=>'form-control form-total','autocomplete'=>'off','placeholder'=>'Total Yang Harus di Bayar','readonly','id' => 'total' ]) !!}
+    {!! $errors->first('total', '
+    <p class="label label-danger">
+        :message
+    </p>
+    ') !!}
+</div>
+</div>
 
-    <div class="input-group ">
-        <span class="input-group-addon">
-            <i class="material-icons">
-                person
-            </i>
-        </span>
-        <div class="form-group label-floating {{ $errors->has('atas_nama') ? ' has-error' : '' }}">
-            {!! Form::text('atas_nama', null, ['class'=>'form-control','autocomplete'=>'off','placeholder'=>'Atas Nama','readonly','id'=>'atas_nama']) !!}
-            {!! $errors->first('atas_nama', '
-            <p class="label label-danger">
-                :message
-            </p>
-            ') !!}
-        </div>
+<div class="input-group ">
+    <span class="input-group-addon">
+        <i class="material-icons">
+            account_balance
+        </i>
+    </span>
+    <div class="form-group label-floating ">
+        {!! Form::select('tujuan_transfer', [''=>'']+App\Bank::select([DB::raw('CONCAT(id, "|", no_rek,"|",atas_nama) AS id'),'nama_bank AS nama_bank'])->pluck('nama_bank','id')->all(),null, ['class'=>'js-selectize-reguler', 'placeholder' => 'Tujuan Transfer','id' => 'tujuan_transfer']) !!}
+        {!! $errors->first('tujuan_transfer', '
+        <p class="label label-danger">
+            :message
+        </p>
+        ') !!}
     </div>
+</div>
+
+<div class="input-group ">
+    <span class="input-group-addon">
+        <i class="material-icons">
+            payment
+        </i>
+    </span>
+    <div class="form-group label-floating {{ $errors->has('no_rek_transfer') ? ' has-error' : '' }}">
+        {!! Form::text('no_rek_transfer', null, ['class'=>'form-control','autocomplete'=>'off','placeholder'=>'No. Rekening','readonly','id'=>'no_rek_transfer']) !!}
+        {!! $errors->first('no_rek_transfer', '
+        <p class="label label-danger">
+            :message
+        </p>
+        ') !!}
+    </div>
+</div>
+
+<div class="input-group ">
+    <span class="input-group-addon">
+        <i class="material-icons">
+            person
+        </i>
+    </span>
+    <div class="form-group label-floating {{ $errors->has('atas_nama') ? ' has-error' : '' }}">
+        {!! Form::text('atas_nama', null, ['class'=>'form-control','autocomplete'=>'off','placeholder'=>'Atas Nama','readonly','id'=>'atas_nama']) !!}
+        {!! $errors->first('atas_nama', '
+        <p class="label label-danger">
+            :message
+        </p>
+        ') !!}
+    </div>
+</div>
 </div>
 
 <div class="footer text-center">
@@ -226,8 +242,8 @@
 @section('scripts')
 <script type="text/javascript">
     $('select').selectize({
-       sortField: 'text'
-   });
+     sortField: 'text'
+ });
     Number.prototype.format = function(n, x, s, c) {
         var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\D' : '$') + ')',
         num = this.toFixed(Math.max(0, ~~n));
