@@ -633,7 +633,8 @@ export default {
 					app.selesaiPesanan.id_kas = ''
 					app.selesaiPesanan.id_pesanan = ''
 					app.$router.replace('/pesanan-warung');    
-					app.alert("Pesanan order #"+id+" Berhasil Di Selesaikan");     
+					app.alert("Pesanan order #"+id+" Berhasil Di Selesaikan");  
+					window.open('pesanan-warung/cetak-kecil-penjualan/'+resp.data.respons_penjualan,'_blank');   
 				}
 
 
