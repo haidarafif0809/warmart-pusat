@@ -169,7 +169,6 @@ class RegisterController extends Controller
             return $user;
 
         } elseif ($data['id_register'] == 3) {
-
             //MASTER WARUNG
             $warung = Warung::create([
                 'name'      => $data['nama_warung'],
@@ -219,6 +218,7 @@ class RegisterController extends Controller
             $user->attachRole($userWarungRole);
 
             Notification::send(User::first(), new PendaftarWarung($user));
+            
 
             $userkey      = env('USERKEY');
             $passkey      = env('PASSKEY');

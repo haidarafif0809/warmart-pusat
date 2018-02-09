@@ -23,10 +23,8 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="icon_kelompok" class="col-md-2 control-label">Icon</label>
 							<div class="col-md-4">
-								<input class="form-control" autocomplete="off" placeholder="Icon"  v-model="kelompok_produk.icon_kelompok"  type="text" name="icon_kelompok" id="icon_kelompok" >
-								<span class="label label-info"><a href="https://material.io/icons/" target="blank" >Lihat Icon</a></span> 
+								<input  class="form-control" autocomplete="off" placeholder="Icon"  v-model="kelompok_produk.icon_kelompok"  type="hidden" name="icon_kelompok" id="icon_kelompok" >
 								<span v-if="errors.icon_kelompok" id="icon_kelompok_error" class="label label-danger">{{ errors.icon_kelompok[0] }}</span>
 							</div>
 						</div>

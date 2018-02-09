@@ -2,29 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\SettingFooter;
-use Auth;
+use App\SettingVerifikasi;
 use Illuminate\Http\Request;
 
-class SettingFooterController extends Controller
+class SettingVerifikasiController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\
+     * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        $setting_footer = SettingFooter::select()->first();
-        return response()->json($setting_footer);
-    }
-
-    public function idWarung()
-    {
-        $idWarung = Auth::user()->id_warung;
-        // $idWarung = 1;
-        // $idWarung = ['id' => $idWarung];
-        return response()->json($idWarung);
+        //
     }
 
     /**
@@ -56,7 +46,8 @@ class SettingFooterController extends Controller
      */
     public function show($id_warung)
     {
-        //
+        $setting_verifikasi = SettingVerifikasi::select()->where('id_warung', $id_warung)->first();
+        return response()->json($setting_verifikasi);
     }
 
     /**
@@ -79,7 +70,7 @@ class SettingFooterController extends Controller
      */
     public function update(Request $request, $id_warung)
     {
-        SettingFooter::find($id_warung)->update($request->all());
+        SettingVerifikasi::find($id_warung)->update($request->all());
     }
 
     /**

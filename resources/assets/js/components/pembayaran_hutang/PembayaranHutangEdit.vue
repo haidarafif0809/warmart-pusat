@@ -696,11 +696,12 @@ methods: {
     getSubtotalTbs(){
     var app =  this
     var id = app.$route.params.id;
-    axios.get(app.url+'/cek-data-tbs-pembayan-hutang/'+id)
+    axios.get(app.url+'/cek-data-tbs-pembayaran-hutang/'+id)
     .then(function (resp) {
 
       app.inputPembayaranHutang.subtotal += resp.data.subtotal;
       app.inputPembayaranHutang.keterangan = resp.data.pembayaran_hutang.keterangan
+      app.inputPembayaranHutang.tanggal = resp.data.pembayaran_hutang.created_at
       app.inputPembayaranHutang.kas = resp.data.pembayaran_hutang.cara_bayar
       app.formBayarHutangTbs.no_faktur_pembayaran = resp.data.pembayaran_hutang.no_faktur_pembayaran
 

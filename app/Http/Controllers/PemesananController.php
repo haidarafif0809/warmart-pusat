@@ -216,7 +216,7 @@ class PemesananController extends Controller
           $keranjang_belanja = KeranjangBelanja::with(['produk', 'pelanggan'])->where('id_pelanggan', Auth::user()->id);
           $cek_belanjaan = $keranjang_belanja->count();
 
-          $bank = BankWarung::whereWarungId($pesanan_pelanggan->first()->id_warung)->get();
+          $bank = BankWarung::whereWarungId($pesanan_pelanggan->first()->id_warung)->first();
 
           $waktu_daftar = date($pesanan_pelanggan->first()->created_at);
           $date = date_create($waktu_daftar);

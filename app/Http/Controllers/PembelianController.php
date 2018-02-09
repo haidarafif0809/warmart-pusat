@@ -455,6 +455,9 @@ class PembelianController extends Controller
         $array       = array();
         $kas_default = Kas::where('warung_id', Auth::user()->id_warung)->where('default_kas', 1)->count();
 
+        $dataPembelian = new DetailPembelian();
+        $subtotal      = $dataPembelian->subtotalTbs($user_warung,$no_faktur);
+
         foreach ($detail_pembelian as $detail_pembelians) {
 
             $potongan_persen        = ($detail_pembelians->potongan / ($detail_pembelians->jumlah_produk * $detail_pembelians->harga_produk)) * 100;
@@ -506,6 +509,7 @@ class PembelianController extends Controller
 
         $url     = '/pembelian/view-detail-pembelian/' . $id;
         $respons = $this->paginationData($detail_pembelian, $array, $kas_default, $subtotal, $no_faktur, $url);
+        $respons['subtotal'] = $subtotal;
         return response()->json($respons);
     }
 
@@ -1187,6 +1191,20 @@ class PembelianController extends Controller
 
         return view('pembelian.cetak_besar', ['pembelian' => $pembelian, 'detail_pembelian' => $detail_pembelian, 'subtotal' => $subtotal, 'terbilang' => $terbilang, 'nama_suplier' => $nama_suplier, 'alamat_suplier' => $alamat_suplier, 'setting_aplikasi' => $setting_aplikasi])->with(compact('html'));
     }
+
+    public function cekSubtotalTbsPembelian($jenis_tbs){
+    $session_id    = session()->getId();
+    $user_warung   = Auth::user()->id_warung;
+
+            $TbsPembelian = new TbsPembelian();
+            $subtotal      = $TbsPembelian->subtotalTbs($user_warung,$session_id);
+            $respons['subtotal'] = $subtotal;
+  
+
+    return response()->json($respons);
+    }
+
+
 
     public function kekata($x)
     {

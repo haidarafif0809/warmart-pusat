@@ -1,64 +1,59 @@
 <!DOCTYPE doctype html>
 <html lang="en">
-<head>
-    <!-- PILIH TIPE APLIKASI -->
-    <?php
+    <head>
+        <!-- PILIH TIPE APLIKASI -->
+        <?php
     $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->
-    first();
+        first();
     if (Auth::check()) {
         $user      = \Auth::user()->id;
         $foto_logo = \App\UserWarung::find($user);
 
-        if (Auth::user()->tipe_user == 4) {
-            $settingFooter = \App\SettingFooter::select()->where('warung_id', \Auth::user()->id_warung)->first();
-        }
     }
-    else {
-        $settingFooter = \App\SettingFooter::select()->first();
-    }
+    $settingFooter = \App\SettingFooter::select()->first();
     ?>
     
     @if($setting_aplikasi->tipe_aplikasi == 0)
-    <title>
-        War-Mart.id
-    </title>
-    @else
-    <title>
-        topos | Aplikasi POS & Toko Online
-    </title>
-    @endif
-    <meta charset="utf-8"/>
-    @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
-    <link href="img/favicon.png" rel="apple-touch-icon" sizes="76x76"/>
-    <link href="img/favicon.png" rel="icon" type="image/png"/>
-    @else
-    <link href="img/icon_topos.png?v=1" rel="apple-touch-icon" sizes="76x76"/>
-    <link href="img/icon_topos.png?v=1" rel="icon" type="image/png"/>
-    @endif
-    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
-    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
-    <meta content="width=device-width" name="viewport"/>
-    <!-- Bootstrap core CSS     -->
-    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet"/>
-    <link href="{{ asset('css/selectize.bootstrap3.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
-    <!--     Fonts and icons     -->
-    <link href="{{ asset('css/material-kit.css?v=1.2.0')}}" rel="stylesheet"/>
-    <link href="{{ asset('assets/assets-for-demo/vertical-nav.css')}}" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" rel="stylesheet" type="text/css"/>
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet"/>
-    {!! SEOMeta::generate() !!}
+        <title>
+            War-Mart.id
+        </title>
+        @else
+        <title>
+            topos | Aplikasi POS & Toko Online
+        </title>
+        @endif
+        <meta charset="utf-8"/>
+        @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
+        <link href="img/favicon.png" rel="apple-touch-icon" sizes="76x76"/>
+        <link href="img/favicon.png" rel="icon" type="image/png"/>
+        @else
+        <link href="img/icon_topos.png?v=1" rel="apple-touch-icon" sizes="76x76"/>
+        <link href="img/icon_topos.png?v=1" rel="icon" type="image/png"/>
+        @endif
+        <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
+        <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
+        <meta content="width=device-width" name="viewport"/>
+        <!-- Bootstrap core CSS     -->
+        <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet"/>
+        <link href="{{ asset('css/selectize.bootstrap3.css') }}" rel="stylesheet">
+            <link href="{{ asset('css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
+                <!--     Fonts and icons     -->
+                <link href="{{ asset('css/material-kit.css?v=1.2.0')}}" rel="stylesheet"/>
+                <link href="{{ asset('assets/assets-for-demo/vertical-nav.css')}}" rel="stylesheet"/>
+                <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" rel="stylesheet" type="text/css"/>
+                <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet"/>
+                {!! SEOMeta::generate() !!}
     {!! OpenGraph::generate() !!}
     {!! Twitter::generate() !!}
-    <!-- MINIFIED -->
-    {!! SEO::generate(true) !!}
-    <!-- LUMEN -->
-    {!! app('seotools')->generate() !!}
-</link>
-</link>
-</head>
-<style type="text/css">
-.navbar-nav .open .dropdown-menu{
+                <!-- MINIFIED -->
+                {!! SEO::generate(true) !!}
+                <!-- LUMEN -->
+                {!! app('seotools')->generate() !!}
+            </link>
+        </link>
+    </head>
+    <style type="text/css">
+        .navbar-nav .open .dropdown-menu{
   color: grey;
 }
 .navbar .navbar-brand {
@@ -106,340 +101,340 @@ body {
 .selectize-control .item.active a { 
     color: #303030; 
 }
-</style>
-<body class="ecommerce-page">
-    @if(Agent::isMobile())
-    <nav class="navbar navbar-default navbar-fixed-top " id="sectionsNav">
-        @else
-        <nav class="navbar navbar-default navbar-transparent navbar-fixed-top navbar-color-on-scroll" color-on-scroll=" " id="sectionsNav">
-            @endif
-            <div class="container">
-                <!-- Brand and toggle get grouped for better mobile display -->
-                <div class="navbar-header">
-                    <button class="navbar-toggle" data-toggle="collapse" type="button">
-                        <span class="sr-only">
-                            Toggle navigation
-                        </span>
-                        <span class="icon-bar">
-                        </span>
-                        <span class="icon-bar">
-                        </span>
-                        <span class="icon-bar">
-                        </span>
-                    </button>
-                    @if($setting_aplikasi->tipe_aplikasi == 0)
-                    <a href="{{ url('/') }}">
-                        <img class="navbar-brand" src="{{asset('/assets/img/examples/warmart_logo.png')}}"/>
-                    </a>
-                    @else
+    </style>
+    <body class="ecommerce-page">
+        @if(Agent::isMobile())
+        <nav class="navbar navbar-default navbar-fixed-top " id="sectionsNav">
+            @else
+            <nav class="navbar navbar-default navbar-transparent navbar-fixed-top navbar-color-on-scroll" color-on-scroll=" " id="sectionsNav">
+                @endif
+                <div class="container">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <div class="navbar-header">
+                        <button class="navbar-toggle" data-toggle="collapse" type="button">
+                            <span class="sr-only">
+                                Toggle navigation
+                            </span>
+                            <span class="icon-bar">
+                            </span>
+                            <span class="icon-bar">
+                            </span>
+                            <span class="icon-bar">
+                            </span>
+                        </button>
+                        @if($setting_aplikasi->tipe_aplikasi == 0)
+                        <a href="{{ url('/') }}">
+                            <img class="navbar-brand" src="{{asset('/assets/img/examples/warmart_logo.png')}}"/>
+                        </a>
+                        @else
                     @if(Auth::check() && Auth::user()->tipe_user == 4)
-                    <a href="{{ url('/') }}">
-                        <img class="navbar-brand" src="{{asset('/foto_ktp_user/'.$foto_logo->foto_ktp.'').'?v=1'}}"/>
-                    </a>
-                    @else
-                    <a href="{{ url('/') }}">
-                        <img class="navbar-brand" src="{{asset('/assets/img/examples/topos_logo.png'.'?v=3')}}"/>
-                    </a>
-                    @endif
+                        <a href="{{ url('/') }}">
+                            <img class="navbar-brand" src="{{asset('/foto_ktp_user/'.$foto_logo->foto_ktp.'').'?v=1'}}"/>
+                        </a>
+                        @else
+                        <a href="{{ url('/') }}">
+                            <img class="navbar-brand" src="{{asset('/assets/img/examples/topos_logo.png'.'?v=3')}}"/>
+                        </a>
+                        @endif
                     @endif
 
                     @if(Agent::isMobile() && !Auth::check())
-                    <a class="navbar-brand pull-right" href="{{ url('/login') }}">
-                        <i class="material-icons">
-                            account_circle
-                        </i>
-                        Masuk
-                    </a>
-                    @endif
-                    @if(Agent::isMobile() && Auth::check() && Auth::user()->tipe_user == 3)
-                    <a class="navbar-brand pull-right" href="{{ url('/keranjang-belanja') }}">
-                        <i class="material-icons">
-                            shopping_cart
-                        </i>
-                        <b style="font-size: 15px">
-                            | {{ $cek_belanjaan }}
-                        </b>
-                    </a>
-                    @endif
-                </div>
-                <div class="collapse navbar-collapse">
-                    <ul class="nav navbar-nav navbar-right">
-                        @if(Auth::check())
-                        <li class="dropdown button-container ">
-                            <a class="dropdown-toggle btn btn-rose btn-round" data-toggle="dropdown" href="#">
-                                <i class="material-icons">
-                                    account_circle
-                                </i>
-                                {{ Auth::user()->name}}
-                                <b class="caret">
-                                </b>
-                            </a>
-                            <ul class="dropdown-menu dropdown-with-icons">
-                                @if(Auth::user()->tipe_user == 3)
-                                <li style="color:black">
-                                    <a href="{{ url('/ubah-profil-pelanggan') }}">
-                                        <i class="material-icons">
-                                            settings
-                                        </i>
-                                        Ubah Profil
-                                    </a>
-                                </li>
-                                <li style="color:black">
-                                    <a href="{{ url('/ubah-password-pelanggan') }}">
-                                        <i class="material-icons">
-                                            lock_outline
-                                        </i>
-                                        Ubah Password
-                                    </a>
-                                </li>
-                                @endif
-                                <li>
-                                    <a href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                        <i class="material-icons">
-                                            reply_all
-                                        </i>
-                                        Logout
-                                    </a>
-                                    <form action="{{ url('/logout') }}" id="logout-form" method="POST" style="display: none;">
-                                        {{ csrf_field() }}
-                                    </form>
-                                </li>
-                            </ul>
-                        </li>
-                        @if(Auth::user()->tipe_user == 3)
-                        <li class="button-container">
-                            <a href="{{ url('/pesanan') }}">
-                                <i class="material-icons">
-                                    archive
-                                </i>
-                                Pesanan
-                            </a>
-                        </li>
+                        <a class="navbar-brand pull-right" href="{{ url('/login') }}">
+                            <i class="material-icons">
+                                account_circle
+                            </i>
+                            Masuk
+                        </a>
                         @endif
+                    @if(Agent::isMobile() && Auth::check() && Auth::user()->tipe_user == 3)
+                        <a class="navbar-brand pull-right" href="{{ url('/keranjang-belanja') }}">
+                            <i class="material-icons">
+                                shopping_cart
+                            </i>
+                            <b style="font-size: 15px">
+                                | {{ $cek_belanjaan }}
+                            </b>
+                        </a>
+                        @endif
+                    </div>
+                    <div class="collapse navbar-collapse">
+                        <ul class="nav navbar-nav navbar-right">
+                            @if(Auth::check())
+                            <li class="dropdown button-container ">
+                                <a class="dropdown-toggle btn btn-rose btn-round" data-toggle="dropdown" href="#">
+                                    <i class="material-icons">
+                                        account_circle
+                                    </i>
+                                    {{ Auth::user()->name}}
+                                    <b class="caret">
+                                    </b>
+                                </a>
+                                <ul class="dropdown-menu dropdown-with-icons">
+                                    @if(Auth::user()->tipe_user == 3)
+                                    <li style="color:black">
+                                        <a href="{{ url('/ubah-profil-pelanggan') }}">
+                                            <i class="material-icons">
+                                                settings
+                                            </i>
+                                            Ubah Profil
+                                        </a>
+                                    </li>
+                                    <li style="color:black">
+                                        <a href="{{ url('/ubah-password-pelanggan') }}">
+                                            <i class="material-icons">
+                                                lock_outline
+                                            </i>
+                                            Ubah Password
+                                        </a>
+                                    </li>
+                                    @endif
+                                    <li>
+                                        <a href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                            <i class="material-icons">
+                                                reply_all
+                                            </i>
+                                            Logout
+                                        </a>
+                                        <form action="{{ url('/logout') }}" id="logout-form" method="POST" style="display: none;">
+                                            {{ csrf_field() }}
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                            @if(Auth::user()->tipe_user == 3)
+                            <li class="button-container">
+                                <a href="{{ url('/pesanan') }}">
+                                    <i class="material-icons">
+                                        archive
+                                    </i>
+                                    Pesanan
+                                </a>
+                            </li>
+                            @endif
                         @endif
                         @if(Auth::check() && (Auth::user()->tipe_user == 4 OR Auth::user()->tipe_user == 1 ))
-                        <li>
-                            <a href="{{ url('/dashboard')}}">
-                                <i class="material-icons">
+                            <li>
+                                <a href="{{ url('/dashboard')}}">
+                                    <i class="material-icons">
+                                        dashboard
+                                    </i>
                                     dashboard
-                                </i>
-                                dashboard
-                            </a>
-                        </li>
-                        @endif
-                        <li>
-                            @if($setting_aplikasi->tipe_aplikasi == 0)
-                            <a href="https://info.war-mart.id">
-                                <i class="material-icons">
-                                    info
-                                </i>
-                                SUPPORT Warmart
-                            </a>
-                            @else
-                            <a href="<?=@$settingFooter->support_link;?>">
-                                <i class="material-icons">
-                                    info
-                                </i>
-                                SUPPORT TOPOS
-                            </a>
+                                </a>
+                            </li>
                             @endif
-                        </li>
-                        <li>
-                            @if($setting_aplikasi->tipe_aplikasi == 0)
-                            <a href="{{ url('/tentang-warmart')}}">
-                                <i class="material-icons">
-                                    info
-                                </i>
-                                Tentang Warmart
-                            </a>
-                            @else
-                            <a href="<?=@$settingFooter->about_link;?>">
-                                <i class="material-icons">
-                                    info
-                                </i>
-                                Tentang TOPOS
-                            </a>
+                            <li>
+                                @if($setting_aplikasi->tipe_aplikasi == 0)
+                                <a href="https://info.war-mart.id">
+                                    <i class="material-icons">
+                                        info
+                                    </i>
+                                    SUPPORT Warmart
+                                </a>
+                                @else
+                                <a href="<?=$settingFooter->support_link;?>">
+                                    <i class="material-icons">
+                                        info
+                                    </i>
+                                    SUPPORT TOPOS
+                                </a>
+                                @endif
+                            </li>
+                            <li>
+                                @if($setting_aplikasi->tipe_aplikasi == 0)
+                                <a href="{{ url('/tentang-warmart')}}">
+                                    <i class="material-icons">
+                                        info
+                                    </i>
+                                    Tentang Warmart
+                                </a>
+                                @else
+                                <a href="<?=$settingFooter->about_link;?>">
+                                    <i class="material-icons">
+                                        info
+                                    </i>
+                                    Tentang TOPOS
+                                </a>
+                                @endif
+                            </li>
+                            @if(Auth::check() && Auth::user()->tipe_user == 3)
+                            <li class="button-container">
+                                <a class="btn btn-round btn-rose" href="{{ url('/keranjang-belanja') }}">
+                                    <i class="material-icons">
+                                        shopping_cart
+                                    </i>
+                                    Keranjang Belanja
+                                    <b style="font-size: 15px">
+                                        | {{ $cek_belanjaan }}
+                                    </b>
+                                </a>
+                            </li>
                             @endif
-                        </li>
-                        @if(Auth::check() && Auth::user()->tipe_user == 3)
-                        <li class="button-container">
-                            <a class="btn btn-round btn-rose" href="{{ url('/keranjang-belanja') }}">
-                                <i class="material-icons">
-                                    shopping_cart
-                                </i>
-                                Keranjang Belanja
-                                <b style="font-size: 15px">
-                                    | {{ $cek_belanjaan }}
-                                </b>
-                            </a>
-                        </li>
-                        @endif
 
 
 
 
                         @if(!Auth::check())
-                        <li class="button-container">
-                            <a class="btn btn-rose btn-round" href="{{ url('/login')}}">
-                                <i class="material-icons">
-                                    account_circle
-                                </i>
-                                Masuk
-                            </a>
-                        </li>
-                        @endif
-                    </ul>
-                </div>
-            </div>
-        </nav>
-        @yield('content')
-        <footer class="footer footer-black footer-big" style="bottom: 0;">
-            <div class="container">
-                <div class="content">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <h5>
-                                Tentang Kami
-                            </h5>
-                            @if($setting_aplikasi->tipe_aplikasi == 0)
-                            <p>
-                                Warmart adalah marketplace warung muslim pertama di Indonesia. Kami menghubungkan usaha-usaha muslim dengan pelanggan seluruh Umat Islam di Indonesia. Jenis usaha yang dapat bergabung dengan Warmart diantaranya: Warung, Toko, Minimarket, Pedagang Kaki Lima, Bengkel, Rumah Makan, Klinik, Home Industri, Peternakan, Pertanian, Perikanan, Kerajinan, Fashion dan usaha lainya.
-                            </p>
-                            @else
-                            <p>
-                                <?=@$settingFooter->
-                                about_us;?>
-                            </p>
+                            <li class="button-container">
+                                <a class="btn btn-rose btn-round" href="{{ url('/login')}}">
+                                    <i class="material-icons">
+                                        account_circle
+                                    </i>
+                                    Masuk
+                                </a>
+                            </li>
                             @endif
-                        </div>
-                        <div class="col-md-4">
-                            <h5>
-                                Hubungi Kami
-                            </h5>
-                            <div class="social-feed">
-                                <div class="feed-line">
-                                    <i class="fa fa-phone-square">
-                                    </i>
-                                    <p>
-                                        <?=@$settingFooter->
-                                        no_telp;?>
-                                    </p>
-                                </div>
-                                <div class="feed-line">
-                                    <i class="fa fa-home">
-                                    </i>
-                                    <p>
-                                        <?=@$settingFooter->
-                                        alamat;?>
-                                    </p>
-                                </div>
-                                <div class="feed-line">
-                                    <i class="fa fa-envelope">
-                                    </i>
-                                    <p>
-                                        <?=@$settingFooter->
-                                        email;?>
-                                    </p>
-                                </div>
-                                <div class="feed-line">
-                                    <i class="fa fa-whatsapp">
-                                    </i>
-                                    <p>
-                                        <?=@$settingFooter->
-                                        whatsapp;?>
-                                    </p>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            @yield('content')
+            <footer class="footer footer-black footer-big" style="bottom: 0;">
+                <div class="container">
+                    <div class="content">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h5>
+                                    Tentang Kami
+                                </h5>
+                                @if($setting_aplikasi->tipe_aplikasi == 0)
+                                <p>
+                                    Warmart adalah marketplace warung muslim pertama di Indonesia. Kami menghubungkan usaha-usaha muslim dengan pelanggan seluruh Umat Islam di Indonesia. Jenis usaha yang dapat bergabung dengan Warmart diantaranya: Warung, Toko, Minimarket, Pedagang Kaki Lima, Bengkel, Rumah Makan, Klinik, Home Industri, Peternakan, Pertanian, Perikanan, Kerajinan, Fashion dan usaha lainya.
+                                </p>
+                                @else
+                                <p>
+                                    <?=$settingFooter->
+                                    about_us;?>
+                                </p>
+                                @endif
+                            </div>
+                            <div class="col-md-4">
+                                <h5>
+                                    Hubungi Kami
+                                </h5>
+                                <div class="social-feed">
+                                    <div class="feed-line">
+                                        <i class="fa fa-phone-square">
+                                        </i>
+                                        <p>
+                                            <?=$settingFooter->
+                                            no_telp;?>
+                                        </p>
+                                    </div>
+                                    <div class="feed-line">
+                                        <i class="fa fa-home">
+                                        </i>
+                                        <p>
+                                            <?=$settingFooter->
+                                            alamat;?>
+                                        </p>
+                                    </div>
+                                    <div class="feed-line">
+                                        <i class="fa fa-envelope">
+                                        </i>
+                                        <p>
+                                            <?=$settingFooter->
+                                            email;?>
+                                        </p>
+                                    </div>
+                                    <div class="feed-line">
+                                        <i class="fa fa-whatsapp">
+                                        </i>
+                                        <p>
+                                            <?=$settingFooter->
+                                            whatsapp;?>
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-4">
-                            <h5>
-                                Sosial Media
-                            </h5>
-                            <div class="social-feed">
-                                <div class="feed-line">
-                                    <i class="fa fa-facebook-square">
-                                    </i>
-                                    <p>
-                                        <a href="<?=@$settingFooter->facebook;?>">
-                                            Facebook
-                                        </a>
-                                    </p>
+                            <div class="col-md-4">
+                                <h5>
+                                    Sosial Media
+                                </h5>
+                                <div class="social-feed">
+                                    <div class="feed-line">
+                                        <i class="fa fa-facebook-square">
+                                        </i>
+                                        <p>
+                                            <a href="<?=$settingFooter->facebook;?>">
+                                                Facebook
+                                            </a>
+                                        </p>
+                                    </div>
+                                    <div class="feed-line">
+                                        <i class="fa fa-twitter-square">
+                                        </i>
+                                        <p>
+                                            <a href="<?=$settingFooter->twitter;?>">
+                                                Twitter
+                                            </a>
+                                        </p>
+                                    </div>
+                                    <div class="feed-line">
+                                        <i class="fa fa-instagram">
+                                        </i>
+                                        <p>
+                                            <a href="<?=$settingFooter->instagram;?>">
+                                                Instagram
+                                            </a>
+                                        </p>
+                                    </div>
+                                    <div class="feed-line">
+                                        <i class="fa fa-google-plus-square">
+                                        </i>
+                                        <p>
+                                            <a href="<?=$settingFooter->google_plus;?>">
+                                                Google +
+                                            </a>
+                                        </p>
+                                    </div>
                                 </div>
-                                <div class="feed-line">
-                                    <i class="fa fa-twitter-square">
-                                    </i>
-                                    <p>
-                                        <a href="<?=@$settingFooter->twitter;?>">
-                                            Twitter
-                                        </a>
-                                    </p>
+                                <div class="gallery-feed">
                                 </div>
-                                <div class="feed-line">
-                                    <i class="fa fa-instagram">
-                                    </i>
-                                    <p>
-                                        <a href="<?=@$settingFooter->instagram;?>">
-                                            Instagram
-                                        </a>
-                                    </p>
-                                </div>
-                                <div class="feed-line">
-                                    <i class="fa fa-google-plus-square">
-                                    </i>
-                                    <p>
-                                        <a href="<?=@$settingFooter->google_plus;?>">
-                                            Google +
-                                        </a>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="gallery-feed">
                             </div>
                         </div>
                     </div>
+                    <hr/>
+                    <ul class="pull-left">
+                        <li>
+                            <a href="#pablo">
+                                Blog
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#pablo">
+                                Presentation
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#pablo">
+                                Discover
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#pablo">
+                                Payment
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#pablo">
+                                Contact Us
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="copyright pull-right">
+                        Copyright ©
+                        <script>
+                            document.write(new Date().getFullYear())
+                        </script>
+                        <a href="https://andaglos.id/">
+                            PT. Andaglos Global Teknologi.
+                        </a>
+                    </div>
                 </div>
-                <hr/>
-                <ul class="pull-left">
-                    <li>
-                        <a href="#pablo">
-                            Blog
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#pablo">
-                            Presentation
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#pablo">
-                            Discover
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#pablo">
-                            Payment
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#pablo">
-                            Contact Us
-                        </a>
-                    </li>
-                </ul>
-                <div class="copyright pull-right">
-                    Copyright ©
-                    <script>
-                        document.write(new Date().getFullYear())
-                    </script>
-                    <a href="https://andaglos.id/">
-                        PT. Andaglos Global Teknologi.
-                    </a>
-                </div>
-            </div>
-        </footer>
-        <!--Start of Tawk.to Script-->
-        <script type="text/javascript">
-            var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+            </footer>
+            <!--Start of Tawk.to Script-->
+            <script type="text/javascript">
+                var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
             (function(){
                 var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
                 s1.async=true;
@@ -521,6 +516,8 @@ body {
 </script>
 <script src="{{ asset('js/selectize.min.js') }}">
 </script>
+<script src="{{ asset('js/custom.js') }}">
+</script>
 <script src="{{ asset('js/material-kit.js?v=1.2.0')}}" type="text/javascript">
 </script>
 {{-- lazy load image --}}
@@ -543,6 +540,6 @@ body {
       });
 
     });
-</script>
-@yield('scripts')
+    </script>
+    @yield('scripts')
 </html>
