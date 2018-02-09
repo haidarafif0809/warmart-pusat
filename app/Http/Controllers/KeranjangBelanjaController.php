@@ -54,29 +54,37 @@ class KeranjangBelanjaController extends Controller
 
         $keranjang_belanjaans = KeranjangBelanja::with('produk')->find($request->id); 
 
-        $sisa_stok       = $keranjang_belanjaans->produk->stok - ($keranjang_belanjaans->jumlah_produk);
-        
-        $respons['sisa_stok'] = $sisa_stok;
-        if ($sisa_stok < 1) {
-            $respons['respons'] = 0;
+        $sisa_stok       = $keranjang_belanjaans->produk->stok - $request->jumlah_produk;
+        $respons['sisa_stok'] = floor($keranjang_belanjaans->produk->stok);
+
+        if ($keranjang_belanjaans->produk->hitung_stok == 1) {
+
+            $respons['produk'] = "barang";
+            if ($sisa_stok < 0) {
+                $respons['respons'] = 0;
+            }else{
+
+                $keranjang_belanjaans->update(['jumlah_produk'=>$request->jumlah_produk]);
+                $respons['respons'] = 1;
+            }
+
         }else{
 
-            $keranjang_belanjaans->jumlah_produk += 1; 
-            $keranjang_belanjaans->save();             
+            $keranjang_belanjaans->update(['jumlah_produk'=>$request->jumlah_produk]); 
+            $respons['produk'] = "jasa";           
             $respons['respons'] = 1;
         }
+
 
         return response()->json($respons);
 
     }
 
-    public function kurang_jumlah_produk_keranjang_belanjaan($id)
+    public function kurang_jumlah_produk_keranjang_belanjaan(Request $request)
     {
-        $produk = KeranjangBelanja::find($id);
-        $produk->jumlah_produk -= 1;
-        $produk->save();
-
-        return redirect()->back();
+        $produk = KeranjangBelanja::find($request->id);
+        $produk->update(['jumlah_produk'=>$request->jumlah_produk]);
+        return response(200);
 
     }
 
@@ -128,8 +136,9 @@ class KeranjangBelanjaController extends Controller
                 $tombolKurangiProduk = '
                 <a class="btn btn-round btn-info btn-xs" style="background-color: #01573e"> <i class="material-icons">remove</i></a>';
             } else {
-                $tombolKurangiProduk = '
-                <a href=" ' . url('/keranjang-belanja/kurang-jumlah-produk-keranjang-belanja/' . $keranjang_belanjaans->id_keranjang_belanja . '') . '" class="btn btn-round btn-info btn-xs"   style="background-color: #01573e"> <i class="material-icons">remove</i></a>';
+                // $tombolKurangiProduk = '
+                // <a href=" ' . url('/keranjang-belanja/kurang-jumlah-produk-keranjang-belanja/' . $keranjang_belanjaans->id_keranjang_belanja . '') . '" class="btn btn-round btn-info btn-xs"   style="background-color: #01573e"> <i class="material-icons">remove</i></a>';
+                $tombolKurangiProduk = '<button type="button" class="btn btn-round btn-info btn-xs kurangProduk" style="background-color: #01573e" data-id="'.$keranjang_belanjaans->id_keranjang_belanja.'" id="kurangProduk-'.$keranjang_belanjaans->id_keranjang_belanja.'"><i class="material-icons">remove</i> </button>';
             }
         }
 
@@ -239,7 +248,7 @@ class KeranjangBelanjaController extends Controller
             </div>
 
             <div class="col-md-3">
-            <div class="btn-group">';
+            <div class="btn-group btn-'.$keranjang_belanjaans->id_keranjang_belanja.'" data-jumlah-produk="'.$keranjang_belanjaans->jumlah_produk.'" data-nama-produk="' . title_case($keranjang_belanjaans->produk->nama_barang) . '">';
 
             //tombol kurangi produk
             $produk_belanjaan .= $this->tombolKurangiProduk($keranjang_belanjaans);
