@@ -3,6 +3,9 @@
 <!-- PILIH TIPE APLIKASI -->
 <?php
 $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
+
+    $foto_logo = \App\UserWarung::select()->where('tipe_user',4)->orderBy('id', 'desc')->first();
+
 ?>
 <head>
     <meta charset="utf-8" />
@@ -35,7 +38,15 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="{{ asset('css/selectize.bootstrap3.css') }}" rel="stylesheet">
 </head>
-
+<style type="text/css">
+    .navbar .navbar-brand {
+    position: relative;
+    height: 75px;
+    line-height: 30px;
+    color: inherit;
+    padding: 10px 15px;
+}
+</style>
 <body class="off-canvas-sidebar">
 
 
@@ -49,10 +60,20 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
                     <span class="icon-bar"></span>
                 </button>
                 @if($setting_aplikasi->tipe_aplikasi == 0)
-                <a class="navbar-brand" href="{{ url('/')}}">War-Mart.id</a>
-                @else
-                <a class="navbar-brand" href="{{ url('/')}}"><img class="navbar-brand" src="{{asset('/assets/img/examples/topos_logo.png'.'?v=3')}}"/></a>
-                @endif
+                        <a href="{{ url('/') }}">
+                            <img class="navbar-brand" src="{{asset('/assets/img/examples/warmart_logo.png')}}"/>
+                        </a>
+                        @else
+                    @if( $foto_logo->foto_ktp != null)
+                        <a href="{{ url('/') }}">
+                            <img class="navbar-brand" src="{{asset('/foto_ktp_user/'.$foto_logo->foto_ktp.'').'?v=1'}}"/>
+                        </a>
+                        @else
+                        <a href="{{ url('/') }}">
+                            <img class="navbar-brand" src="{{asset('/assets/img/examples/topos_logo.png'.'?v=3')}}"/>
+                        </a>
+                        @endif
+                    @endif
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav navbar-right"> 

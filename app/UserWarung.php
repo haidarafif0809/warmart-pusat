@@ -2,35 +2,36 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use Laratrust\Traits\LaratrustUserTrait;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 class UserWarung extends Authenticatable
 {
 
-  use LogsActivity;
-  use Notifiable;
-  use LaratrustUserTrait;
+    use LogsActivity;
+    use Notifiable;
+    use LaratrustUserTrait;
 
-  protected $table = 'users';
+    protected $table = 'users';
 
-  protected $fillable = ['email','password','name', 'alamat', 'wilayah', 'tipe_user', 'id_warung', 'status_konfirmasi', 'no_telp', 'kode_verifikasi', 'konfirmasi_admin', 'foto_ktp'];
+    protected $fillable = ['email', 'password', 'name', 'alamat', 'wilayah', 'tipe_user', 'id_warung', 'status_konfirmasi', 'no_telp', 'kode_verifikasi', 'konfirmasi_admin', 'foto_ktp', 'kasir_id'];
 
-  protected $hidden = [
-  'password', 'remember_token',
-  ];   
+    protected $hidden = [
+        'password', 'remember_token',
+    ];
 
     //relasi dengan model kelurahan
-  public function kelurahan(){
-    return $this->hasOne('App\Kelurahan','id','wilayah');
-  }
+    public function kelurahan()
+    {
+        return $this->hasOne('App\Kelurahan', 'id', 'wilayah');
+    }
 
     //relasi dengan model warung
-  public function warung(){
-    return $this->hasOne('App\Warung','id','id_warung');
-  }
+    public function warung()
+    {
+        return $this->hasOne('App\Warung', 'id', 'id_warung');
+    }
 
 }

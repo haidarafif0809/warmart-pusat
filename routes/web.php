@@ -251,7 +251,6 @@ Route::post('/edit-jumlah-pesanan-warung}', [
 Route::get('/pesanan-warung/cetak-kecil-penjualan/{id}', 'PesananWarungController@cetakKecil')->middleware('auth');
 Route::get('/pesanan-warung/cetak-kecil-pesanan/{id}', 'PesananWarungController@cetakKecilPesanan')->middleware('auth');
 
-
 //PUNYA
 
 Route::middleware('optimizeImages')->group(function () {
@@ -888,6 +887,7 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
     Route::resource('pembayaran-piutang', 'PembayaranPiutangController');
     Route::resource('setting-footer', 'SettingFooterController');
     Route::resource('setting-verifikasi', 'SettingVerifikasiController');
+    Route::resource('user-kasir', 'UserKasirController');
 
 //BARANG
     //HALAMAN DESKRIPSI
