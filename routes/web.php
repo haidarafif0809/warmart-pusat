@@ -844,6 +844,10 @@ Route::get('/laporan-kas/download-excel/{dari_tanggal}/{sampai_tanggal}/{kas}/{j
 
 Route::get('/setting-footer/id-warung', 'SettingFooterController@idWarung')->middleware('auth');
 
+//MENAMPILKAN DATA USER KASIR
+Route::get('/user-kasir/view', 'UserKasirController@view')->middleware('auth');
+Route::get('/user-kasir/pencarian', 'UserKasirController@pencarian')->middleware('auth');
+
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
     Route::resource('user', 'UserController');
