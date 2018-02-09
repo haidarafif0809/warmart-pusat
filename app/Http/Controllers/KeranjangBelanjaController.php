@@ -118,24 +118,12 @@ class KeranjangBelanjaController extends Controller
         $agent = new Agent();
         if ($agent->isMobile()) {
 
-            if ($keranjang_belanjaans->jumlah_produk == 1) {
-                $tombolKurangiProduk = '<a class="btn btn-xs" disabled="true"> <i class="material-icons">remove</i> </a>';
-            } else {
-                // $tombolKurangiProduk = '<a href=" ' . url('/keranjang-belanja/kurang-jumlah-produk-keranjang-belanja/' . $keranjang_belanjaans->id_keranjang_belanja . '') . '" class="btn btn-xs"> <i class="material-icons">remove</i> </a>';
-
-                $tombolKurangiProduk = '<button type="button" class="btn btn-xs kurangProdukMobile" data-id="'.$keranjang_belanjaans->id_keranjang_belanja.'" id="kurangProduk-'.$keranjang_belanjaans->id_keranjang_belanja.'"><i class="material-icons">remove</i> </button>';
-            }
+            $tombolKurangiProduk = '<button type="button" class="btn btn-xs kurangProdukMobile" data-id="'.$keranjang_belanjaans->id_keranjang_belanja.'" id="kurangProduk-'.$keranjang_belanjaans->id_keranjang_belanja.'"><i class="material-icons">remove</i> </button>';
 
         } else {
 
-            if ($keranjang_belanjaans->jumlah_produk == 1) {
-                $tombolKurangiProduk = '
-                <a class="btn btn-round btn-info btn-xs" style="background-color: #01573e"> <i class="material-icons">remove</i></a>';
-            } else {
-                // $tombolKurangiProduk = '
-                // <a href=" ' . url('/keranjang-belanja/kurang-jumlah-produk-keranjang-belanja/' . $keranjang_belanjaans->id_keranjang_belanja . '') . '" class="btn btn-round btn-info btn-xs"   style="background-color: #01573e"> <i class="material-icons">remove</i></a>';
-                $tombolKurangiProduk = '<button type="button" class="btn btn-round btn-info btn-xs kurangProduk" style="background-color: #01573e" data-id="'.$keranjang_belanjaans->id_keranjang_belanja.'" id="kurangProduk-'.$keranjang_belanjaans->id_keranjang_belanja.'"><i class="material-icons">remove</i> </button>';
-            }
+            $tombolKurangiProduk = '<button type="button" class="btn btn-round btn-info btn-xs kurangProduk" style="background-color: #01573e" data-id="'.$keranjang_belanjaans->id_keranjang_belanja.'" id="kurangProduk-'.$keranjang_belanjaans->id_keranjang_belanja.'"><i class="material-icons">remove</i> </button>';
+            
         }
 
         return $tombolKurangiProduk;
@@ -146,22 +134,13 @@ class KeranjangBelanjaController extends Controller
 
         $agent = new Agent();
         if ($agent->isMobile()) {
-            if ($sisa_stok <= 0 && $keranjang_belanjaans->produk->hitung_stok == 1) {
-                $tombolTambahiProduk = '<a class="btn btn-xs" disabled="true"> <i class="material-icons">add</i> </a>';
-            } else {
-                // $tombolTambahiProduk = '<a href=" ' . url('/keranjang-belanja/tambah-jumlah-produk-keranjang-belanja/' . $keranjang_belanjaans->id_keranjang_belanja . '') . '" class="btn btn-xs"> <i class="material-icons">add</i> </a>';
-                $tombolTambahiProduk = '<button type="button" class="btn btn-xs tambahProdukMobile" data-id="'.$keranjang_belanjaans->id_keranjang_belanja.'" id="tambahProduk-'.$keranjang_belanjaans->id_keranjang_belanja.'"><i class="material-icons">add</i> </button>';
-            }
-        } else {
-            if ($sisa_stok <= 0 && $keranjang_belanjaans->produk->hitung_stok == 1) {
-                $tombolTambahiProduk = '
-                <a class="btn btn-round btn-info btn-xs" style="background-color: #01573e"> <i class="material-icons">add</i> </a>';
-            } else {
-               // $tombolTambahiProduk = '
-                //<a href=" ' . url('/keranjang-belanja/tambah-jumlah-produk-keranjang-belanja/' . $keranjang_belanjaans->id_keranjang_belanja . '') . '" class="btn btn-round btn-info btn-xs"   style="background-color: #01573e"> <i class="material-icons">add</i> </a>';
-                $tombolTambahiProduk = '<button type="button" class="btn btn-round btn-info btn-xs tambahProduk" style="background-color: #01573e" data-id="'.$keranjang_belanjaans->id_keranjang_belanja.'" id="tambahProduk-'.$keranjang_belanjaans->id_keranjang_belanja.'"><i class="material-icons">add</i> </button>';
 
-            }
+            $tombolTambahiProduk = '<button type="button" class="btn btn-xs tambahProdukMobile" data-id="'.$keranjang_belanjaans->id_keranjang_belanja.'" id="tambahProduk-'.$keranjang_belanjaans->id_keranjang_belanja.'"><i class="material-icons">add</i> </button>';
+            
+        } else {
+
+            $tombolTambahiProduk = '<button type="button" class="btn btn-round btn-info btn-xs tambahProduk" style="background-color: #01573e" data-id="'.$keranjang_belanjaans->id_keranjang_belanja.'" id="tambahProduk-'.$keranjang_belanjaans->id_keranjang_belanja.'"><i class="material-icons">add</i> </button>';
+
         }
 
         return $tombolTambahiProduk;
