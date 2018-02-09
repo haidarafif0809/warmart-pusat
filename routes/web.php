@@ -694,7 +694,7 @@ Route::post('/laporan-penjualan-pos-produk/total-penjualan-pos-produk', 'Laporan
 Route::get('/laporan-penjualan-pos-produk/pilih-produk', 'LaporanPenjualanPosProdukController@dataProduk')->middleware('auth');
 
 // LAP PENJUALAN ONLINE /PRODUK
-Route::post('/laporan-penjualan-pos-produk/view-online', 'LaporanPenjualanPosProdukController@pr osesLaporanPenjualanOnlineProduk')->middleware('auth');
+Route::post('/laporan-penjualan-pos-produk/view-online', 'LaporanPenjualanPosProdukController@prosesLaporanPenjualanOnlineProduk')->middleware('auth');
 Route::post('/laporan-penjualan-pos-produk/pencarian-online', 'LaporanPenjualanPosProdukController@pencarianOnline')->middleware('auth');
 Route::post('/laporan-penjualan-pos-produk/total-penjualan-online-produk', 'LaporanPenjualanPosProdukController@totalPenjualanOnlineProduk')->middleware('auth');
 Route::get('/laporan-penjualan-pos-produk/pilih-produk-online', 'LaporanPenjualanPosProdukController@dataProdukOnline')->middleware('auth');
@@ -765,9 +765,8 @@ Route::get('/pembayaran-hutang/pencarian-edit-tbs-pembayaran-hutang/{id}', 'Pemb
 Route::post('/pembayaran-hutang/proses-tambah-tbs-edit-pembayaran-hutang/{id}', 'PembayaranHutangController@prosesTbsEditPembayaranHutang')->middleware('auth');
 Route::delete('/pembayaran-hutang/proses-hapus-tbs-edit-pembayaran-hutang/{id}', 'PembayaranHutangController@prosesHapusEditTbsPembayaranHutang')->middleware('auth');
 Route::get('/pembayaran-hutang/cek-data-tbs-pembayaran-hutang/{id}', 'PembayaranHutangController@cekDataTbsPembayaranHutang')->middleware('auth');
-Route::get('/pembayaran-hutang/cek-total-kas-edit', 'PembayaranHutangController@total_kas_edit')->middleware('auth'); 
+Route::get('/pembayaran-hutang/cek-total-kas-edit', 'PembayaranHutangController@total_kas_edit')->middleware('auth');
 Route::get('/pembayaran-hutang/cek-supplier-double-edit', 'PembayaranHutangController@cekSupplierDoubleEdit')->middleware('auth');
-
 
 Route::post('/pembayaran-hutang/edit-jumlah-tbs-edit-pembayaran-hutang', [
     'middleware' => ['auth'],

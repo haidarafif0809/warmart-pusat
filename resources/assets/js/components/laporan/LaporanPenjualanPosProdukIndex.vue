@@ -77,8 +77,8 @@
 									<td align="right">{{ totalPenjualanPosProduk.jumlah_produk | pemisahTitik }}</td>
 									<td></td>
 									<td align="right">{{ totalPenjualanPosProduk.subtotal | pemisahTitik }}</td>
-									<td align="right">{{ totalPenjualanPosProduk.potongan | pemisahTitik }}</td>
-									<td align="right">{{ totalPenjualanPosProduk.pajak | pemisahTitik }}</td>
+									<td></td>
+									<td></td>
 									<td align="right">{{ totalPenjualanPosProduk.total | pemisahTitik }}</td>
 								</tr>
 							</tbody>					
@@ -132,7 +132,7 @@
 									<td></td>
 									<td align="right">{{ totalPenjualanOnlineProduk.jumlah | pemisahTitik }}</td>
 									<td align="right">{{ totalPenjualanOnlineProduk.total | pemisahTitik }}</td>
-									<td align="right">{{ totalPenjualanOnlineProduk.potongan | pemisahTitik }}</td>
+									<td></td>
 									<td align="right">{{ totalPenjualanOnlineProduk.subtotal | pemisahTitik }}</td>
 								</tr>
 							</tbody>					
