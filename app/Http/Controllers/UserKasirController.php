@@ -98,6 +98,27 @@ class UserKasirController extends Controller
         ]);
     }
 
+    public function show($id)
+    {
+        $user_kasir = UserWarung::find($id);
+        return $user_kasir;
+    }
+
+    public function update(Request $request, $id)
+    {
+        $this->validate($request, [
+            'name'    => 'required',
+            'alamat'  => 'required',
+            'no_telp' => 'required|without_spaces|max:15|unique:users,no_telp,' . $id,
+        ]);
+
+        $user_kasir = UserWarung::find($id)->update([
+            'name'    => $request->name,
+            'no_telp' => $request->no_telp,
+            'alamat'  => $request->alamat,
+        ]);
+    }
+
     public function destroy($id)
     {
         $user_kasir = UserWarung::destroy($id);
