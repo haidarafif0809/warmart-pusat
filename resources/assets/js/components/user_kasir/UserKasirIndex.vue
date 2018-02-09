@@ -43,14 +43,14 @@
 
             <tbody v-if="userKasirs.length > 0 && loading== false" class="data-ada">
               <tr v-for="userKasir, index in userKasirs">
-                <td>{{ userKasir.user_warung.no_telp }}</td>
-                <td>{{ userKasir.user_warung.name }}</td>
-                <td>{{ userKasir.user_warung.alamat }}</td>
+                <td>{{ userKasir.data_kasir.no_telp }}</td>
+                <td>{{ userKasir.data_kasir.name }}</td>
+                <td>{{ userKasir.data_kasir.alamat }}</td>
                 <td> 
-                  <router-link :to="{name: 'editUserKasir', params: {id: userKasir.user_warung.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + userKasir.user_warung.id" >
+                  <router-link :to="{name: 'editUserKasir', params: {id: userKasir.data_kasir.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + userKasir.data_kasir.id" >
                     Edit 
                   </router-link>
-                  <a href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + userKasir.user_warung.id" v-on:click="deleteEntry(userKasir.user_warung.id, index,userKasir.user_warung.name)"> 
+                  <a href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + userKasir.data_kasir.id" v-on:click="deleteEntry(userKasir.data_kasir.id, index,userKasir.data_kasir.name)"> 
                     Delete
                   </a>
                 </td>
