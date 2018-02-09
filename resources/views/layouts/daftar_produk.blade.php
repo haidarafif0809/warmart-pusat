@@ -111,8 +111,7 @@ h4 {
                         </h3>
                         @else
                         <h3 class="title">
-                            <?=$settingFooter->
-                            judul_warung;?>
+                            <?=$settingFooter->judul_warung;?>
                         </h3>
                         @endif
                     </div>
@@ -248,8 +247,7 @@ h4 {
                             </h3>
                             @else
                             <h1 class="title">
-                                <?=$settingFooter->
-                                judul_warung;?>
+                                <?=$settingFooter->judul_warung;?>
                             </h1>
                             @endif
                         </div>
