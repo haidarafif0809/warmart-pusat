@@ -43,14 +43,14 @@
 
             <tbody v-if="userKasirs.length > 0 && loading== false" class="data-ada">
               <tr v-for="userKasir, index in userKasirs">
-            <td>{{ userKasir.user_warung.no_telp }}</td>
-                <td>{{ userKasir.user_warung.name }}</td>
-                <td>{{ userKasir.user_warung.alamat }}</td>
+                <td>{{ userKasir.data_kasir.no_telp }}</td>
+                <td>{{ userKasir.data_kasir.name }}</td>
+                <td>{{ userKasir.data_kasir.alamat }}</td>
                 <td> 
-                <router-link :to="{name: 'editUserKasir', params: {id: userKasir.user_warung.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + userKasir.user_warung.id" >
+                  <router-link :to="{name: 'editUserKasir', params: {id: userKasir.data_kasir.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + userKasir.data_kasir.id" >
                     Edit 
                   </router-link>
-                  <a href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + userKasir.user_warung.id" v-on:click="deleteEntry(userKasir.user_warung.id, index,userKasir.user_warung.name)"> 
+                  <a href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + userKasir.data_kasir.id" v-on:click="deleteEntry(userKasir.data_kasir.id, index,userKasir.data_kasir.name)"> 
                     Delete
                   </a>
                 </td>
@@ -59,7 +59,7 @@
             <!--JIKA DATA UserKasir KOSONG-->
             <tbody class="data-tidak-ada" v-else-if="userKasirs.length == 0 && loading== false">
               <tr>
-                <td colspan="8"  class="text-center">Tidak Ada Data</td>
+                <td colspan="4"  class="text-center">Tidak Ada Data</td>
               </tr>
             </tbody>
           </table>
@@ -85,10 +85,8 @@
       return {
         userKasirs: [],
         userKasirsData: {},
-        url : window.location.origin+(window.location.pathname).replace("dashboard", "user-warung"),
-        url_foto_ktp : window.location.origin+(window.location.pathname).replace("dashboard", "foto_ktp_user"),
+        url : window.location.origin+(window.location.pathname).replace("dashboard", "user-kasir"),
         pencarian: '',
-        contoh : '',
         loading: true
       }
     },
@@ -116,7 +114,7 @@
         .catch(function (resp) {
           console.log(resp);
           app.loading = false;
-          alert("Tidak Bisa Memuat User Warung");
+          alert("Tidak Bisa Memuat User Kasir");
         });
       },
       getHasilPencarian(page){
@@ -131,13 +129,13 @@
         })
         .catch(function (resp) {
           console.log(resp);
-          alert("Tidak Bisa Memuat User Warung");
+          alert("Tidak Bisa Memuat User Kasir");
         });
       },
       deleteEntry(id, index,name) {
         swal({ 
           title: "Konfirmasi Hapus", 
-          text : "Anda Yakin Ingin Menghapus User Warung "+name+" ?", 
+          text : "Anda Yakin Ingin Menghapus User Kasir "+name+" ?", 
           icon : "warning", 
           buttons: true, 
           dangerMode: true,
@@ -147,85 +145,29 @@
             var app = this; 
             axios.delete(app.url+'/' + id) 
             .then(function (resp) { 
-              app.$router.replace('/user-warung/'); 
+              app.$router.replace('/user-kasir/'); 
               app.getResults();
               console.log(resp)
               if (resp.status == 200) {
                 swal({ 
                   title: "Berhasil !",
-                  text: "User Warung Berhasil Dihapus!",
+                  text: "User Kasir Berhasil Dihapus!",
                   icon: "success",
                 }); 
               }
               else{
                 swal({ 
                   title: "Gagal !",
-                  text: "User Warung Tidak Bisa Dihapus!",
+                  text: "User Kasir Tidak Bisa Dihapus!",
                   icon: "warning",
                 }); 
               }
             }) 
             .catch(function (resp) { 
-              swal("Gagal! User Warung Tidak Bisa Dihapus!  ", { 
+              swal("Gagal! User Kasir Tidak Bisa Dihapus!  ", { 
                 icon: "warning", 
               }); 
             });  
-          }
-        });
-      },
-      konfirmasiEntry(id, index,name) {
-        swal({
-          title: "Konfirmasi User",
-          text : "Apakah Anda Yakin Ingin Mengkonfirmasi User "+name+" ?",
-          icon : "warning",
-          buttons: true,
-          dangerMode: true,
-        })
-        .then((willDelete) => {
-          if (willDelete) {
-            var app = this;
-            axios.get(app.url+'/konfirmasi?confirm=' + id)
-            .then(function (resp) {
-              app.$router.replace('/user-warung/');
-              app.getResults();
-              swal("Berhasil Mengkonfirmasi Warung!  ", {
-                icon: "success",
-              });
-            })
-            .catch(function (resp) {
-              swal("Gagal Mengkonfirmasi User Warung !  ", {
-                icon: "warning",
-              });
-            });
-
-          }
-        });
-      },
-      nokonfirmasiEntry(id, index,name) {
-        swal({
-          title: "Konfirmasi User",
-          text : "Apakah Anda Yakin Batal Mengkonfirmasi User "+name+" ?",
-          icon : "warning",
-          buttons: true,
-          dangerMode: true,
-        })
-        .then((willDelete) => {
-          if (willDelete) {
-            var app = this;
-            axios.get(app.url+'/no-konfirmasi?confirm=' + id)
-            .then(function (resp) {
-              app.$router.replace('/user-warung/');
-              app.getResults();
-              swal("Berhasil Membatalkan Konfirmasi Warung!  ", {
-                icon: "success",
-              });
-            })
-            .catch(function (resp) {
-              swal("Gagal batal konfirmasi User!  ", {
-                icon: "warning",
-              });
-            });
-
           }
         });
       }

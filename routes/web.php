@@ -251,7 +251,6 @@ Route::post('/edit-jumlah-pesanan-warung}', [
 Route::get('/pesanan-warung/cetak-kecil-penjualan/{id}', 'PesananWarungController@cetakKecil')->middleware('auth');
 Route::get('/pesanan-warung/cetak-kecil-pesanan/{id}', 'PesananWarungController@cetakKecilPesanan')->middleware('auth');
 
-
 //PUNYA
 
 Route::middleware('optimizeImages')->group(function () {
@@ -848,6 +847,10 @@ Route::get('/laporan-kas/download-excel/{dari_tanggal}/{sampai_tanggal}/{kas}/{j
 
 Route::get('/setting-footer/id-warung', 'SettingFooterController@idWarung')->middleware('auth');
 
+//MENAMPILKAN DATA USER KASIR
+Route::get('/user-kasir/view', 'UserKasirController@view')->middleware('auth');
+Route::get('/user-kasir/pencarian', 'UserKasirController@pencarian')->middleware('auth');
+
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
     Route::resource('user', 'UserController');
@@ -884,6 +887,7 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
     Route::resource('pembayaran-piutang', 'PembayaranPiutangController');
     Route::resource('setting-footer', 'SettingFooterController');
     Route::resource('setting-verifikasi', 'SettingVerifikasiController');
+    Route::resource('user-kasir', 'UserKasirController');
 
 //BARANG
     //HALAMAN DESKRIPSI
