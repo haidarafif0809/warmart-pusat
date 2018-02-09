@@ -304,31 +304,37 @@ h4 {
   });
 
     $(document).on('click', '.kurangProdukMobile', function () { 
-     var id = $(this).attr("data-id"); 
-     var jumlah_produk = $("#jumlahProdukKeranjangMobile-"+id).text(); 
-     var hargaProdukKeranjang = bersihPemisah(bersihPemisah(bersihPemisah(bersihPemisah($("#hargaProdukKeranjangMobile-"+id).text())))); 
-     var subtotalProdukKeranjang = bersihPemisah(bersihPemisah(bersihPemisah(bersihPemisah($("#subtotalProdukKeranjangMobile-"+id).attr("data-subtotal"))))); 
+       var id = $(this).attr("data-id"); 
+       var jumlah_produk = $("#jumlahProdukKeranjangMobile-"+id).text(); 
+       var hargaProdukKeranjang = bersihPemisah(bersihPemisah(bersihPemisah(bersihPemisah($("#hargaProdukKeranjangMobile-"+id).text())))); 
+       var subtotalProdukKeranjang = bersihPemisah(bersihPemisah(bersihPemisah(bersihPemisah($("#subtotalProdukKeranjangMobile-"+id).attr("data-subtotal"))))); 
 
-     var kurangProduk = parseInt(jumlah_produk) - 1; 
-     var kurangSubtotal = parseInt(subtotalProdukKeranjang) - parseInt(hargaProdukKeranjang); 
+       var kurangProduk = parseInt(jumlah_produk) - 1; 
+       var kurangSubtotal = parseInt(subtotalProdukKeranjang) - parseInt(hargaProdukKeranjang); 
 
-     if (kurangProduk >= 1) {
+       if (kurangProduk >= 1) {
 
-         $("#subtotalProdukKeranjangMobile-"+id).addClass('spinner'); 
-         $("#subtotalProdukKeranjangMobile-"+id).text('');
-         $.get('{{ Url("keranjang-belanja/kurang-jumlah-produk-keranjang-belanja") }}',{'_token': $('meta[name=csrf-token]').attr('content'),id:id,jumlah_produk:kurangProduk}, function(resp){  
+           $("#subtotalProdukKeranjangMobile-"+id).addClass('spinner'); 
+           $("#subtotalProdukKeranjangMobile-"+id).text('');
+           $.get('{{ Url("keranjang-belanja/kurang-jumlah-produk-keranjang-belanja") }}',{'_token': $('meta[name=csrf-token]').attr('content'),id:id,jumlah_produk:kurangProduk}, function(resp){  
 
             displayHasilMobile(id,kurangProduk,kurangSubtotal);
 
         });
 
-     }
+       }
 
- }); 
+   }); 
 
     $(document).on('click', '#btnHapusProduk', function () {
       var id = $(this).attr("data-id");
       var nama = $(this).attr("data-nama");
+      var subtotal = $(this).attr("data-subtotal"); 
+      var totalProduk = $("#totalProduk").attr("data-totalProduk");
+
+      var subtotalKesuluruhan = bersihPemisah(bersihPemisah(bersihPemisah(bersihPemisah($("#subtotal").attr("data-subtotal"))))); 
+      var hasil = parseInt(subtotalKesuluruhan) - parseInt(subtotal);
+      var totalProduk = parseInt(totalProduk) - 1; 
 
       swal({
         html: "Anda Yakin Ingin Menghapus Produk <b>"+nama+"</b> Dari Keranjang Belanja ?",
@@ -339,17 +345,41 @@ h4 {
         cancelButtonText: 'Batal'
     }).then((result) => {
         if (result.value) {
-          var url_hapus_produk_keranjang_belanja = window.location.origin + (window.location.pathname).replace("keranjang-belanja", "keranjang-belanja/hapus-produk-keranjang-belanja/"+id);
-          window.location.href=url_hapus_produk_keranjang_belanja;
-          swal({
-            html :  "Produk <b>"+nama+"</b> Berhasil Dihapus Dari Keranjang Belanjaan",
-            showConfirmButton :  false,
-            type: "success",
-            timer: 10000,
-            onOpen: () => {
-              swal.showLoading()
-          }
-      });
+
+          $("#card-produk-"+id).remove();
+          $("#subtotal").text("Rp. "+hasil.format(0, 3, '.', ',')); 
+          $("#subtotal").attr("data-subtotal",hasil); 
+          $("#totalProduk").attr("data-totalProduk",totalProduk);
+          $("#totalProduk").text(totalProduk);
+          alertBerhasilHapus(nama);
+          hapusProduk(id,totalProduk);
+
+      }
+  });
+
+});
+
+    $(document).on('click', '#btnHapusProdukMobile', function () {
+      var id = $(this).attr("data-id");
+      var nama = $(this).attr("data-nama");
+      var subtotal = $(this).attr("data-subtotal"); 
+      var totalProduk = $("#jumlah-keranjang").attr("data-jumlah");
+      var totalProduk = parseInt(totalProduk) - 1; 
+
+      swal({
+        html: "Anda Yakin Ingin Menghapus Produk <b>"+nama+"</b> Dari Keranjang Belanja ?",
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ya',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.value) {
+
+          $("#card-produk-"+id).remove();
+          $("#jumlah-keranjang").attr("data-jumlah",totalProduk);
+          alertBerhasilHapus(nama);
+          hapusProduk(id,totalProduk);
 
       }
   });
@@ -378,32 +408,32 @@ h4 {
 
       if (cekJumlahProduk != 0) {
 
-       $("#subtotalProdukKeranjang-"+id).addClass('spinner'); 
-       $("#subtotalProdukKeranjang-"+id).text('');
-       $("#subtotal").addClass('spinner'); 
-       $("#subtotal").text(''); 
+         $("#subtotalProdukKeranjang-"+id).addClass('spinner'); 
+         $("#subtotalProdukKeranjang-"+id).text('');
+         $("#subtotal").addClass('spinner'); 
+         $("#subtotal").text(''); 
 
-       $.get('{{ Url("keranjang-belanja/tambah-jumlah-produk-keranjang-belanja") }}',{'_token': $('meta[name=csrf-token]').attr('content'),id:id,jumlah_produk:jumlah_produk}, function(resp){  
+         $.get('{{ Url("keranjang-belanja/tambah-jumlah-produk-keranjang-belanja") }}',{'_token': $('meta[name=csrf-token]').attr('content'),id:id,jumlah_produk:jumlah_produk}, function(resp){  
 
-        if (resp.respons == 0) {
-            displayHasil(id,dataJumlahProduk,subtotalProdukKeranjang,subtotal);
-            alertStokTidakCukup(dataNamaProduk,resp.sisa_stok,dataJumlahProduk);
-        }else{
-            displayHasil(id,jumlah_produk,tambahSubtotal,tambahSubtotalKesuluruhan);
-        }
-    });
-   }
+            if (resp.respons == 0) {
+                displayHasil(id,dataJumlahProduk,subtotalProdukKeranjang,subtotal);
+                alertStokTidakCukup(dataNamaProduk,resp.sisa_stok,dataJumlahProduk);
+            }else{
+                displayHasil(id,jumlah_produk,tambahSubtotal,tambahSubtotalKesuluruhan);
+            }
+        });
+     }
 
-});  
+ });  
 
     $(document).on('click', '.kurangProduk', function () { 
-     var id = $(this).attr("data-id"); 
-     var jumlah_produk = $("#jumlahProdukKeranjang-"+id).text(); 
-     var kurangProduk = parseInt(jumlah_produk) - 1; 
-     if (kurangProduk >= 1) {
-         $("#jumlahProdukKeranjang-"+id).text(kurangProduk); 
-     }
- }); 
+       var id = $(this).attr("data-id"); 
+       var jumlah_produk = $("#jumlahProdukKeranjang-"+id).text(); 
+       var kurangProduk = parseInt(jumlah_produk) - 1; 
+       if (kurangProduk >= 1) {
+           $("#jumlahProdukKeranjang-"+id).text(kurangProduk); 
+       }
+   }); 
 
     $(document).on('mouseleave', '.kurangProduk', function () {
         var id = $(this).attr("data-id");
@@ -419,19 +449,19 @@ h4 {
 
         if (cekJumlahProduk != 0) {
 
-         $("#subtotalProdukKeranjang-"+id).addClass('spinner'); 
-         $("#subtotalProdukKeranjang-"+id).text('');
-         $("#subtotal").addClass('spinner'); 
-         $("#subtotal").text(''); 
+           $("#subtotalProdukKeranjang-"+id).addClass('spinner'); 
+           $("#subtotalProdukKeranjang-"+id).text('');
+           $("#subtotal").addClass('spinner'); 
+           $("#subtotal").text(''); 
 
-         $.get('{{ Url("keranjang-belanja/kurang-jumlah-produk-keranjang-belanja") }}',{'_token': $('meta[name=csrf-token]').attr('content'),id:id,jumlah_produk:jumlah_produk}, function(resp){  
+           $.get('{{ Url("keranjang-belanja/kurang-jumlah-produk-keranjang-belanja") }}',{'_token': $('meta[name=csrf-token]').attr('content'),id:id,jumlah_produk:jumlah_produk}, function(resp){  
 
             displayHasil(id,jumlah_produk,kurangSubtotal,kurangSubtotalKesuluruhan);
 
         });
 
-     }
- }); 
+       }
+   }); 
 
     function displayHasil(id,jumlah_produk,tambahSubtotal,tambahSubtotalKesuluruhan){
 
@@ -460,10 +490,24 @@ h4 {
     }
 
     function alertStokTidakCukup(nama_produk,stok_produk){
-     swal({
+       swal({
         html: 'Stok Produk <b>'+nama_produk+'</b> Tidak Cukup, Sisa Produk : <b>'+stok_produk+'</b>!'
     });
+   }
+   function alertBerhasilHapus(nama){
+     swal({
+        html :  "Produk <b>"+nama+"</b> Berhasil Dihapus Dari Keranjang Belanjaan",
+        showConfirmButton :  false,
+        type: "success",
+        timer: 1000
+    });
  }
+ function hapusProduk(id,totalProduk){
+    var sisa_jumlah_produk = "| "+totalProduk;
+    $("#jumlah-keranjang").text(sisa_jumlah_produk);
+    $.get('{{ Url("keranjang-belanja/hapus-produk-keranjang-belanja") }}',{'_token': $('meta[name=csrf-token]').attr('content'),id:id}, function(resp){
+    });
+}
 
 
 

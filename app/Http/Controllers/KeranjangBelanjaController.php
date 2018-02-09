@@ -38,15 +38,9 @@ class KeranjangBelanjaController extends Controller
 
     }
 
-    public function hapus_produk_keranjang_belanjaan($id)
+    public function hapus_produk_keranjang_belanjaan(Request $request)
     {
-
-        // jika gagal hapus
-        if (!KeranjangBelanja::destroy($id)) {
-            return redirect()->back();
-        } else {
-            return redirect()->back();
-        }
+        KeranjangBelanja::destroy($request->id);
     }
 
     public function tambah_jumlah_produk_keranjang_belanjaan(Request $request)
@@ -180,7 +174,7 @@ class KeranjangBelanjaController extends Controller
         if ($agent->isMobile()) {
 
             $produk_belanjaan = '
-            <div class="card" style="margin-bottom: 1px; margin-top: 1px;">
+            <div class="card" style="margin-bottom: 1px; margin-top: 1px;" id="card-produk-'.$keranjang_belanjaans->id_keranjang_belanja.'">
             <div class="row">
             <div class="col-md-12">
 
@@ -210,7 +204,7 @@ class KeranjangBelanjaController extends Controller
             <b id="jumlahProdukKeranjangMobile-'.$keranjang_belanjaans->id_keranjang_belanja.'">' . $keranjang_belanjaans->jumlah_produk . ' </b><br>
             <div class="btn-group  btnMobile-'.$keranjang_belanjaans->id_keranjang_belanja.'" data-nama-produk="' . title_case($keranjang_belanjaans->produk->nama_barang) . '">
 
-            <button id="btnHapusProduk" data-nama="' . title_case($keranjang_belanjaans->produk->nama_barang) . '" data-id="' . $keranjang_belanjaans->id_keranjang_belanja . '" class="btn btn-danger btn-xs"><i class="material-icons">delete</i></button>
+            <button id="btnHapusProdukMobile" data-nama="' . title_case($keranjang_belanjaans->produk->nama_barang) . '" data-id="' . $keranjang_belanjaans->id_keranjang_belanja . '" data-subtotal="'.$subtotal_produk.'" class="btn btn-danger btn-xs"><i class="material-icons">delete</i></button>
             </div><br>
             <b align="right" id="subtotalProdukKeranjangMobile-'.$keranjang_belanjaans->id_keranjang_belanja.'" data-subtotal="'.$subtotal_produk.'">' . number_format($subtotal_produk, 0, ',', '.') . '</b>
             </center>
@@ -225,7 +219,7 @@ class KeranjangBelanjaController extends Controller
 
             $produk_belanjaan = '
 
-            <div class="card-content" style="padding-left: 5px; padding-top: 1px; padding-bottom: 1px; padding-right: 1px;">
+            <div class="card-content" style="padding-left: 5px; padding-top: 1px; padding-bottom: 1px; padding-right: 1px;" id="card-produk-'.$keranjang_belanjaans->id_keranjang_belanja.'">
             <div class="row">
             <div class="col-md-12">
             <div class="row">
@@ -261,7 +255,7 @@ class KeranjangBelanjaController extends Controller
 
             $produk_belanjaan .= '
             </div><br>
-            <button id="btnHapusProduk" data-id="' . $keranjang_belanjaans->id_keranjang_belanja . '" data-nama="' . title_case($keranjang_belanjaans->produk->nama_barang) . '" class="btn btn-danger btn-xs">Hapus</button>
+            <button id="btnHapusProduk" data-id="' . $keranjang_belanjaans->id_keranjang_belanja . '" data-nama="' . title_case($keranjang_belanjaans->produk->nama_barang) . '" data-subtotal="'.$subtotal_produk.'" class="btn btn-danger btn-xs">Hapus</button>
 
             </div>
 
