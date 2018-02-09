@@ -50,7 +50,7 @@
                   <router-link :to="{name: 'editUserKasir', params: {id: userKasir.data_kasir.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + userKasir.data_kasir.id" >
                     Edit 
                   </router-link>
-                  <a href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + userKasir.data_kasir.id" v-on:click="deleteEntry(userKasir.data_kasir.id, index,userKasir.data_kasir.name)"> 
+                  <a href="#user-kasir" class="btn btn-xs btn-danger" v-bind:id="'delete-' + userKasir.data_kasir.id" v-on:click="deleteEntry(userKasir.data_kasir.id, index,userKasir.data_kasir.name)"> 
                     Delete
                   </a>
                 </td>
@@ -145,23 +145,8 @@
             var app = this; 
             axios.delete(app.url+'/' + id) 
             .then(function (resp) { 
-              app.$router.replace('/user-kasir/'); 
               app.getResults();
-              console.log(resp)
-              if (resp.status == 200) {
-                swal({ 
-                  title: "Berhasil !",
-                  text: "User Kasir Berhasil Dihapus!",
-                  icon: "success",
-                }); 
-              }
-              else{
-                swal({ 
-                  title: "Gagal !",
-                  text: "User Kasir Tidak Bisa Dihapus!",
-                  icon: "warning",
-                }); 
-              }
+              app.alert('User Kasir Berhasil Dihapus!');
             }) 
             .catch(function (resp) { 
               swal("Gagal! User Kasir Tidak Bisa Dihapus!  ", { 
@@ -169,6 +154,15 @@
               }); 
             });  
           }
+        });
+      },
+      alert(pesan) {
+        this.$swal({
+          title: "Berhasil ",
+          text: pesan,
+          icon: "success",
+          buttons: false,
+          timer: 1000
         });
       }
     }

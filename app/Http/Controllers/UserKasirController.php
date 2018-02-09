@@ -37,7 +37,7 @@ class UserKasirController extends Controller
     public function view() //tipe user == 4 (User Kasir)
 
     {
-        $data_kasir = UserWarung::where('tipe_user', 4)->orderBy('id', 'desc')->paginate(10);
+        $data_kasir = UserWarung::where('tipe_user', 4)->where('kasir_id', '!=', 0)->orderBy('id', 'desc')->paginate(10);
 
         $data_kasir_array = array();
         foreach ($data_kasir as $data_kasirs) {
@@ -55,7 +55,7 @@ class UserKasirController extends Controller
     public function pencarian(Request $request)
     {
         $search     = $request->search;
-        $data_kasir = UserWarung::where('tipe_user', 4)->orderBy('id', 'desc')
+        $data_kasir = UserWarung::where('tipe_user', 4)->where('kasir_id', '!=', 0)->orderBy('id', 'desc')
             ->where(function ($query) use ($search) {
                 $query->orwhere('name', 'LIKE', $search . '%')
                     ->orWhere('no_telp', 'LIKE', $search . '%');
@@ -96,5 +96,10 @@ class UserKasirController extends Controller
             'kasir_id'          => $data_warung->id,
             'password'          => bcrypt('123456'),
         ]);
+    }
+
+    public function destroy($id)
+    {
+        $user_kasir = UserWarung::destroy($id);
     }
 }
