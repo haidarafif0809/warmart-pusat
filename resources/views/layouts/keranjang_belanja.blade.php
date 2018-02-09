@@ -303,6 +303,29 @@ h4 {
 
   });
 
+    $(document).on('click', '.kurangProdukMobile', function () { 
+     var id = $(this).attr("data-id"); 
+     var jumlah_produk = $("#jumlahProdukKeranjangMobile-"+id).text(); 
+     var hargaProdukKeranjang = bersihPemisah(bersihPemisah(bersihPemisah(bersihPemisah($("#hargaProdukKeranjangMobile-"+id).text())))); 
+     var subtotalProdukKeranjang = bersihPemisah(bersihPemisah(bersihPemisah(bersihPemisah($("#subtotalProdukKeranjangMobile-"+id).attr("data-subtotal"))))); 
+
+     var kurangProduk = parseInt(jumlah_produk) - 1; 
+     var kurangSubtotal = parseInt(subtotalProdukKeranjang) - parseInt(hargaProdukKeranjang); 
+
+     if (kurangProduk >= 1) {
+
+         $("#subtotalProdukKeranjangMobile-"+id).addClass('spinner'); 
+         $("#subtotalProdukKeranjangMobile-"+id).text('');
+         $.get('{{ Url("keranjang-belanja/kurang-jumlah-produk-keranjang-belanja") }}',{'_token': $('meta[name=csrf-token]').attr('content'),id:id,jumlah_produk:kurangProduk}, function(resp){  
+
+            displayHasilMobile(id,kurangProduk,kurangSubtotal);
+
+        });
+
+     }
+
+ }); 
+
     $(document).on('click', '#btnHapusProduk', function () {
       var id = $(this).attr("data-id");
       var nama = $(this).attr("data-nama");
