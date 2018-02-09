@@ -125,7 +125,7 @@ Route::get('/keranjang-belanja/tambah-jumlah-produk-keranjang-belanja/', [
     'uses'       => 'KeranjangBelanjaController@tambah_jumlah_produk_keranjang_belanjaan',
 ]);
 
-Route::get('/keranjang-belanja/kurang-jumlah-produk-keranjang-belanja/{id}', [
+Route::get('/keranjang-belanja/kurang-jumlah-produk-keranjang-belanja/', [
     'middleware' => ['auth'],
     'as'         => 'keranjang-belanja.kurang_jumlah_produk_keranjang_belanjaan',
     'uses'       => 'KeranjangBelanjaController@kurang_jumlah_produk_keranjang_belanjaan',
@@ -247,6 +247,10 @@ Route::post('/edit-jumlah-pesanan-warung}', [
     'as'         => 'pesanan-warung.edit_jumlah_pesanan',
     'uses'       => 'PesananWarungController@editJumlahPesanan',
 ]);
+
+Route::get('/pesanan-warung/cetak-kecil-penjualan/{id}', 'PesananWarungController@cetakKecil')->middleware('auth');
+Route::get('/pesanan-warung/cetak-kecil-pesanan/{id}', 'PesananWarungController@cetakKecilPesanan')->middleware('auth');
+
 
 //PUNYA
 
@@ -843,6 +847,10 @@ Route::get('/laporan-kas/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{kas}/{je
 Route::get('/laporan-kas/download-excel/{dari_tanggal}/{sampai_tanggal}/{kas}/{jenis_laporan}', 'LaporanKasController@downloadLaporan')->middleware('auth');
 
 Route::get('/setting-footer/id-warung', 'SettingFooterController@idWarung')->middleware('auth');
+
+//MENAMPILKAN DATA USER KASIR
+Route::get('/user-kasir/view', 'UserKasirController@view')->middleware('auth');
+Route::get('/user-kasir/pencarian', 'UserKasirController@pencarian')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
