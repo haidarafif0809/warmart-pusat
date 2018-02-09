@@ -67,6 +67,76 @@ class LaporanKasController extends Controller
         return $data_laporan_kas;
     }
 
+    public function queryLaporanDetail($request)
+    {
+
+        //KAS MASUK
+        $laporan_kas        = TransaksiKas::dataKasMasuk($request)->get();
+        $data_laporan_kas   = $this->foreachLaporan($laporan_kas);
+        $subtotal_kas_masuk = $this->subtotalLaporanKasDetailMasuk($request);
+
+        //KAS KELUAR
+        $laporan_kas_keluar      = TransaksiKas::dataKasKeluar($request)->get();
+        $data_laporan_kas_keluar = $this->foreachLaporan($laporan_kas_keluar);
+        $subtotal_kas_keluar     = $this->subtotalLaporanKasDetailKeluar($request);
+
+        //KAS MUTASI (MASUK)
+        $laporan_kas_mutasi_masuk      = TransaksiKas::dataKasMutasiMasuk($request)->paginate(10);
+        $data_laporan_kas_mutasi_masuk = $this->foreachLaporan($laporan_kas_mutasi_masuk);
+        $subtotal_kas_mutasi_masuk     = $this->subtotalLaporanKasDetailMutasiMasuk($request);
+
+        //KAS MUTASI (KELUAR)
+        $laporan_kas_mutasi_keluar      = TransaksiKas::dataKasMutasiKeluar($request)->paginate(10);
+        $data_laporan_kas_mutasi_keluar = $this->foreachLaporan($laporan_kas_mutasi_keluar);
+        $subtotal_kas_mutasi_keluar     = $this->subtotalLaporanKasDetailMutasiKeluar($request);
+
+        $respon_detail['data_laporan_kas']               = $data_laporan_kas;
+        $respon_detail['subtotal_kas_masuk']             = $subtotal_kas_masuk;
+        $respon_detail['data_laporan_kas_keluar']        = $data_laporan_kas_keluar;
+        $respon_detail['subtotal_kas_keluar']            = $subtotal_kas_keluar;
+        $respon_detail['data_laporan_kas_mutasi_masuk']  = $data_laporan_kas_mutasi_masuk;
+        $respon_detail['subtotal_kas_mutasi_masuk']      = $subtotal_kas_mutasi_masuk;
+        $respon_detail['data_laporan_kas_mutasi_keluar'] = $data_laporan_kas_mutasi_keluar;
+        $respon_detail['subtotal_kas_mutasi_keluar']     = $subtotal_kas_mutasi_keluar;
+
+        return $respon_detail;
+    }
+
+    public function queryLaporanRekap($request)
+    {
+        //KAS MASUK
+        $laporan_kas        = TransaksiKas::dataKasMasukRekap($request)->paginate(10);
+        $data_laporan_kas   = $this->foreachLaporan($laporan_kas);
+        $subtotal_kas_masuk = $this->subtotalLaporanKasRekapMasuk($request);
+
+        //KAS KELUAR
+        $laporan_kas_keluar      = TransaksiKas::dataKasKeluarRekap($request)->get();
+        $data_laporan_kas_keluar = $this->foreachLaporan($laporan_kas_keluar);
+        $subtotal_kas_keluar     = $this->subtotalLaporanKasRekapKeluar($request);
+
+        //KAS MUTASI (MASUK)
+        $laporan_kas_mutasi_masuk      = TransaksiKas::dataKasMutasiMasukRekap($request)->paginate(10);
+        $data_laporan_kas_mutasi_masuk = $this->foreachLaporan($laporan_kas_mutasi_masuk);
+        $subtotal_kas_mutasi_masuk     = $this->subtotalLaporanKasRekapMutasiMasuk($request);
+
+        //KAS MUTASI (KELUAR)
+        $laporan_kas_mutasi_keluar      = TransaksiKas::dataKasMutasiKeluarRekap($request)->paginate(10);
+        $data_laporan_kas_mutasi_keluar = $this->foreachLaporan($laporan_kas_mutasi_keluar);
+        $subtotal_kas_mutasi_keluar     = $this->subtotalLaporanKasRekapMutasiKeluar($request);
+
+        $respon_rekap['data_laporan_kas']               = $data_laporan_kas;
+        $respon_rekap['subtotal_kas_masuk']             = $subtotal_kas_masuk;
+        $respon_rekap['data_laporan_kas_keluar']        = $data_laporan_kas_keluar;
+        $respon_rekap['subtotal_kas_keluar']            = $subtotal_kas_keluar;
+        $respon_rekap['data_laporan_kas_mutasi_masuk']  = $data_laporan_kas_mutasi_masuk;
+        $respon_rekap['subtotal_kas_mutasi_masuk']      = $subtotal_kas_mutasi_masuk;
+        $respon_rekap['data_laporan_kas_mutasi_keluar'] = $data_laporan_kas_mutasi_keluar;
+        $respon_rekap['subtotal_kas_mutasi_keluar']     = $subtotal_kas_mutasi_keluar;
+
+        return $respon_rekap;
+
+    }
+
 //LAPORAN DETAIL
     //KAS MASUK
     public function prosesLaporanKasDetail(Request $request)
@@ -355,56 +425,11 @@ class LaporanKasController extends Controller
         $request['jenis_laporan']  = $jenis_laporan;
 
         if ($jenis_laporan == 0) {
-//DETAIL
-
-            //KAS MASUK
-            $laporan_kas        = TransaksiKas::dataKasMasuk($request)->get();
-            $data_laporan_kas   = $this->foreachLaporan($laporan_kas);
-            $subtotal_kas_masuk = $this->subtotalLaporanKasDetailMasuk($request);
-
-            //KAS KELUAR
-            $laporan_kas_keluar      = TransaksiKas::dataKasKeluar($request)->get();
-            $data_laporan_kas_keluar = $this->foreachLaporan($laporan_kas_keluar);
-            $subtotal_kas_keluar     = $this->subtotalLaporanKasDetailKeluar($request);
-
-            //KAS MUTASI (MASUK)
-            $laporan_kas_mutasi_masuk      = TransaksiKas::dataKasMutasiMasuk($request)->paginate(10);
-            $data_laporan_kas_mutasi_masuk = $this->foreachLaporan($laporan_kas_mutasi_masuk);
-            $subtotal_kas_mutasi_masuk     = $this->subtotalLaporanKasDetailMutasiMasuk($request);
-
-            //KAS MUTASI (KELUAR)
-            $laporan_kas_mutasi_keluar      = TransaksiKas::dataKasMutasiKeluar($request)->paginate(10);
-            $data_laporan_kas_mutasi_keluar = $this->foreachLaporan($laporan_kas_mutasi_keluar);
-            $subtotal_kas_mutasi_keluar     = $this->subtotalLaporanKasDetailMutasiKeluar($request);
-
             //LAPORAN KAS DETAIL
-
+            $query_cetak = $this->queryLaporanDetail($request);
         } else {
-//REKAP
-
             //LAPORAN KAS REKAP
-            //KAS MASUK
-            $laporan_kas        = TransaksiKas::dataKasMasukRekap($request)->paginate(10);
-            $data_laporan_kas   = $this->foreachLaporan($laporan_kas);
-            $subtotal_kas_masuk = $this->subtotalLaporanKasRekapMasuk($request);
-
-            //KAS KELUAR
-            $laporan_kas_keluar      = TransaksiKas::dataKasKeluarRekap($request)->get();
-            $data_laporan_kas_keluar = $this->foreachLaporan($laporan_kas_keluar);
-            $subtotal_kas_keluar     = $this->subtotalLaporanKasRekapKeluar($request);
-
-            //KAS MUTASI (MASUK)
-            $laporan_kas_mutasi_masuk      = TransaksiKas::dataKasMutasiMasukRekap($request)->paginate(10);
-            $data_laporan_kas_mutasi_masuk = $this->foreachLaporan($laporan_kas_mutasi_masuk);
-            $subtotal_kas_mutasi_masuk     = $this->subtotalLaporanKasRekapMutasiMasuk($request);
-
-            //KAS MUTASI (KELUAR)
-            $laporan_kas_mutasi_keluar      = TransaksiKas::dataKasMutasiKeluarRekap($request)->paginate(10);
-            $data_laporan_kas_mutasi_keluar = $this->foreachLaporan($laporan_kas_mutasi_keluar);
-            $subtotal_kas_mutasi_keluar     = $this->subtotalLaporanKasRekapMutasiKeluar($request);
-
-            //LAPORAN KAS REKAP
-
+            $query_cetak = $this->queryLaporanRekap($request);
         }
         //TOTAL KAS
         $total_kas = $this->subtotalLaporanKasDetail($request);
@@ -417,14 +442,14 @@ class LaporanKasController extends Controller
                 'sampai_tanggal'                 => $this->tanggal($sampai_tanggal),
                 'petugas'                        => Auth::user()->name,
                 'jenis_laporan'                  => $jenis_laporan,
-                'data_laporan_kas'               => $data_laporan_kas,
-                'subtotal_kas_masuk'             => $subtotal_kas_masuk,
-                'data_laporan_kas_keluar'        => $data_laporan_kas_keluar,
-                'subtotal_kas_keluar'            => $subtotal_kas_keluar,
-                'data_laporan_kas_mutasi_masuk'  => $data_laporan_kas_mutasi_masuk,
-                'subtotal_kas_mutasi_masuk'      => $subtotal_kas_mutasi_masuk,
-                'data_laporan_kas_mutasi_keluar' => $data_laporan_kas_mutasi_keluar,
-                'subtotal_kas_mutasi_keluar'     => $subtotal_kas_mutasi_keluar,
+                'data_laporan_kas'               => $query_cetak['data_laporan_kas'],
+                'subtotal_kas_masuk'             => $query_cetak['subtotal_kas_masuk'],
+                'data_laporan_kas_keluar'        => $query_cetak['data_laporan_kas_keluar'],
+                'subtotal_kas_keluar'            => $query_cetak['subtotal_kas_keluar'],
+                'data_laporan_kas_mutasi_masuk'  => $query_cetak['data_laporan_kas_mutasi_masuk'],
+                'subtotal_kas_mutasi_masuk'      => $query_cetak['subtotal_kas_mutasi_masuk'],
+                'data_laporan_kas_mutasi_keluar' => $query_cetak['data_laporan_kas_mutasi_keluar'],
+                'subtotal_kas_mutasi_keluar'     => $query_cetak['subtotal_kas_mutasi_keluar'],
                 'total_kas'                      => $total_kas,
             ])->with(compact('html'));
     }
@@ -443,57 +468,18 @@ class LaporanKasController extends Controller
 
         if ($jenis_laporan == 0) {
             //DOWNLOAD DETAIL
-
-            //KAS MASUK
-            $laporan_kas        = TransaksiKas::dataKasMasuk($request)->get();
-            $data_laporan_kas   = $this->foreachLaporan($laporan_kas);
-            $subtotal_kas_masuk = $this->subtotalLaporanKasDetailMasuk($request);
-
-            //KAS KELUAR
-            $laporan_kas_keluar      = TransaksiKas::dataKasKeluar($request)->get();
-            $data_laporan_kas_keluar = $this->foreachLaporan($laporan_kas_keluar);
-            $subtotal_kas_keluar     = $this->subtotalLaporanKasDetailKeluar($request);
-
-            //KAS MUTASI (MASUK)
-            $laporan_kas_mutasi_masuk      = TransaksiKas::dataKasMutasiMasuk($request)->paginate(10);
-            $data_laporan_kas_mutasi_masuk = $this->foreachLaporan($laporan_kas_mutasi_masuk);
-            $subtotal_kas_mutasi_masuk     = $this->subtotalLaporanKasDetailMutasiMasuk($request);
-
-            //KAS MUTASI (KELUAR)
-            $laporan_kas_mutasi_keluar      = TransaksiKas::dataKasMutasiKeluar($request)->paginate(10);
-            $data_laporan_kas_mutasi_keluar = $this->foreachLaporan($laporan_kas_mutasi_keluar);
-            $subtotal_kas_mutasi_keluar     = $this->subtotalLaporanKasDetailMutasiKeluar($request);
-
+            $query_download = $this->queryLaporanDetail($request);
         } else {
             //DOWNLOAD REKAP
-
-            //KAS MASUK
-            $laporan_kas        = TransaksiKas::dataKasMasukRekap($request)->paginate(10);
-            $data_laporan_kas   = $this->foreachLaporan($laporan_kas);
-            $subtotal_kas_masuk = $this->subtotalLaporanKasRekapMasuk($request);
-
-            //KAS KELUAR
-            $laporan_kas_keluar      = TransaksiKas::dataKasKeluarRekap($request)->get();
-            $data_laporan_kas_keluar = $this->foreachLaporan($laporan_kas_keluar);
-            $subtotal_kas_keluar     = $this->subtotalLaporanKasRekapKeluar($request);
-
-            //KAS MUTASI (MASUK)
-            $laporan_kas_mutasi_masuk      = TransaksiKas::dataKasMutasiMasukRekap($request)->paginate(10);
-            $data_laporan_kas_mutasi_masuk = $this->foreachLaporan($laporan_kas_mutasi_masuk);
-            $subtotal_kas_mutasi_masuk     = $this->subtotalLaporanKasRekapMutasiMasuk($request);
-
-            //KAS MUTASI (KELUAR)
-            $laporan_kas_mutasi_keluar      = TransaksiKas::dataKasMutasiKeluarRekap($request)->paginate(10);
-            $data_laporan_kas_mutasi_keluar = $this->foreachLaporan($laporan_kas_mutasi_keluar);
-            $subtotal_kas_mutasi_keluar     = $this->subtotalLaporanKasRekapMutasiKeluar($request);
+            $query_download = $this->queryLaporanRekap($request);
         }
 
         //TOTAL KAS
         $total_kas = $this->subtotalLaporanKasDetail($request);
 
-        Excel::create('Laporan Kas Periode', function ($excel) use ($data_warung, $setting_aplikasi, $dari_tanggal, $sampai_tanggal, $jenis_laporan, $data_laporan_kas, $subtotal_kas_masuk, $data_laporan_kas_keluar, $subtotal_kas_keluar, $data_laporan_kas_mutasi_masuk, $subtotal_kas_mutasi_masuk, $data_laporan_kas_mutasi_keluar, $subtotal_kas_mutasi_keluar, $total_kas) {
+        Excel::create('Laporan Kas Periode', function ($excel) use ($data_warung, $setting_aplikasi, $dari_tanggal, $sampai_tanggal, $jenis_laporan, $query_download, $total_kas) {
             // Set property
-            $excel->sheet('Laporan Kas Periode', function ($sheet) use ($data_warung, $setting_aplikasi, $dari_tanggal, $sampai_tanggal, $jenis_laporan, $data_laporan_kas, $subtotal_kas_masuk, $data_laporan_kas_keluar, $subtotal_kas_keluar, $data_laporan_kas_mutasi_masuk, $subtotal_kas_mutasi_masuk, $data_laporan_kas_mutasi_keluar, $subtotal_kas_mutasi_keluar, $total_kas) {
+            $excel->sheet('Laporan Kas Periode', function ($sheet) use ($data_warung, $setting_aplikasi, $dari_tanggal, $sampai_tanggal, $jenis_laporan, $query_download, $total_kas) {
 
                 $sheet->loadView('laporan.download_laporan_kas', [
                     'data_warung'                    => $data_warung,
@@ -502,14 +488,14 @@ class LaporanKasController extends Controller
                     'sampai_tanggal'                 => $this->tanggal($sampai_tanggal),
                     'petugas'                        => Auth::user()->name,
                     'jenis_laporan'                  => $jenis_laporan,
-                    'data_laporan_kas'               => $data_laporan_kas,
-                    'subtotal_kas_masuk'             => $subtotal_kas_masuk,
-                    'data_laporan_kas_keluar'        => $data_laporan_kas_keluar,
-                    'subtotal_kas_keluar'            => $subtotal_kas_keluar,
-                    'data_laporan_kas_mutasi_masuk'  => $data_laporan_kas_mutasi_masuk,
-                    'subtotal_kas_mutasi_masuk'      => $subtotal_kas_mutasi_masuk,
-                    'data_laporan_kas_mutasi_keluar' => $data_laporan_kas_mutasi_keluar,
-                    'subtotal_kas_mutasi_keluar'     => $subtotal_kas_mutasi_keluar,
+                    'data_laporan_kas'               => $query_download['data_laporan_kas'],
+                    'subtotal_kas_masuk'             => $query_download['subtotal_kas_masuk'],
+                    'data_laporan_kas_keluar'        => $query_download['data_laporan_kas_keluar'],
+                    'subtotal_kas_keluar'            => $query_download['subtotal_kas_keluar'],
+                    'data_laporan_kas_mutasi_masuk'  => $query_download['data_laporan_kas_mutasi_masuk'],
+                    'subtotal_kas_mutasi_masuk'      => $query_download['subtotal_kas_mutasi_masuk'],
+                    'data_laporan_kas_mutasi_keluar' => $query_download['data_laporan_kas_mutasi_keluar'],
+                    'subtotal_kas_mutasi_keluar'     => $query_download['subtotal_kas_mutasi_keluar'],
                     'total_kas'                      => $total_kas,
                 ]);
 

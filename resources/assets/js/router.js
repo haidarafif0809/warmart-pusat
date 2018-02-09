@@ -144,6 +144,11 @@ import indexSettingFooter from './components/setting_footer/SettingFooterIndex.v
 import SettingVerifikasiIndex from './components/setting_verifikasi/SettingVerifikasiIndex.vue';
 import indexSettingVerifikasi from './components/setting_verifikasi/SettingVerifikasiIndex.vue';
 
+/**USER KASIR*/
+import UserKasirIndex from './components/user_kasir/UserKasirIndex.vue';
+import UserKasirCreate from './components/user_kasir/UserKasirCreate.vue';
+import UserKasirEdit from './components/user_kasir/UserKasirEdit.vue';
+
 const routes = [{
         path: '/',
         components: {
@@ -632,6 +637,22 @@ const routes = [{
         path: '/setting-verifikasi/:id_warung',
         component: SettingVerifikasiIndex,
         name: 'indexSettingVerifikasi'
+    },
+    /**USER KASIR*/
+    {
+        path: '/user-kasir',
+        component: UserKasirIndex,
+        name: 'indexUserKasir'
+    },
+    {
+        path: '/user-kasir-create',
+        component: UserKasirCreate,
+        name: 'createUserKasir'
+    },
+    {
+        path: '/edit-user-kasir/:id',
+        component: UserKasirEdit,
+        name: 'editUserKasir'
     }
 ]
 export default routes;

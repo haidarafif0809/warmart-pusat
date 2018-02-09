@@ -119,13 +119,13 @@ Route::get('/keranjang-belanja', [
     'uses'       => 'KeranjangBelanjaController@daftar_belanja',
 ]);
 
-Route::get('/keranjang-belanja/tambah-jumlah-produk-keranjang-belanja/{id}', [
+Route::get('/keranjang-belanja/tambah-jumlah-produk-keranjang-belanja/', [
     'middleware' => ['auth'],
     'as'         => 'keranjang-belanja.tambah_jumlah_produk_keranjang_belanjaan',
     'uses'       => 'KeranjangBelanjaController@tambah_jumlah_produk_keranjang_belanjaan',
 ]);
 
-Route::get('/keranjang-belanja/kurang-jumlah-produk-keranjang-belanja/{id}', [
+Route::get('/keranjang-belanja/kurang-jumlah-produk-keranjang-belanja/', [
     'middleware' => ['auth'],
     'as'         => 'keranjang-belanja.kurang_jumlah_produk_keranjang_belanjaan',
     'uses'       => 'KeranjangBelanjaController@kurang_jumlah_produk_keranjang_belanjaan',
@@ -402,6 +402,7 @@ Route::get('/customer/view', 'CustomerController@view')->middleware('auth');
 Route::get('/customer/view-detail/{id}', 'CustomerController@view_detail')->middleware('auth');
 Route::get('/customer/pencarian', 'CustomerController@pencarian')->middleware('auth');
 Route::get('/customer/pilih-komunitas', 'CustomerController@pilih_komunitas')->middleware('auth');
+Route::get('/customer/setting-aplikasi', 'CustomerController@settingAplikasi')->middleware('auth');
 
 //menampilkan data user
 Route::get('/user/view', 'UserController@view')->middleware('auth');
@@ -770,9 +771,8 @@ Route::get('/pembayaran-hutang/pencarian-edit-tbs-pembayaran-hutang/{id}', 'Pemb
 Route::post('/pembayaran-hutang/proses-tambah-tbs-edit-pembayaran-hutang/{id}', 'PembayaranHutangController@prosesTbsEditPembayaranHutang')->middleware('auth');
 Route::delete('/pembayaran-hutang/proses-hapus-tbs-edit-pembayaran-hutang/{id}', 'PembayaranHutangController@prosesHapusEditTbsPembayaranHutang')->middleware('auth');
 Route::get('/pembayaran-hutang/cek-data-tbs-pembayaran-hutang/{id}', 'PembayaranHutangController@cekDataTbsPembayaranHutang')->middleware('auth');
-Route::get('/pembayaran-hutang/cek-total-kas-edit', 'PembayaranHutangController@total_kas_edit')->middleware('auth'); 
+Route::get('/pembayaran-hutang/cek-total-kas-edit', 'PembayaranHutangController@total_kas_edit')->middleware('auth');
 Route::get('/pembayaran-hutang/cek-supplier-double-edit', 'PembayaranHutangController@cekSupplierDoubleEdit')->middleware('auth');
-
 
 Route::post('/pembayaran-hutang/edit-jumlah-tbs-edit-pembayaran-hutang', [
     'middleware' => ['auth'],
@@ -798,7 +798,6 @@ Route::get('/pembayaran-piutang/pencarian-tbs-pembayaran-piutang', 'PembayaranPi
 Route::get('/pembayaran-piutang/view-detail-pembayaran-piutang/{id}', 'PembayaranPiutangController@viewDetail')->middleware('auth');
 Route::get('/pembayaran-piutang/pencarian-detail-pembayaran-piutang/{id}', 'PembayaranPiutangController@pencarianDetail')->middleware('auth');
 Route::get('/pembayaran-piutang/subtotal-tbs-pembayaran-piutang/{jenis_tbs}', 'PembayaranPiutangController@cekSubtotalTbsPembayaranPiutang')->middleware('auth');
-
 
 //PEMBAYARAN PIUTANG EDIT
 Route::get('/pembayaran-piutang/view-edit-tbs-pembayaran-piutang/{id}', 'PembayaranPiutangController@viewTbsEdit')->middleware('auth');
