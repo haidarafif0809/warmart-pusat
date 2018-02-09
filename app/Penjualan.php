@@ -130,4 +130,14 @@ class Penjualan extends Model
         return $query_laporan_laba_kotor;
     }
 
+        public function scopeQueryCetak($query, $id)
+    {
+        $query->select('w.name AS nama_warung', 'w.alamat AS alamat_warung', 'p.name AS pelanggan', 'penjualans.total AS total', DB::raw('DATE_FORMAT(penjualans.created_at, "%d/%m/%Y %H:%i:%s") as waktu_jual'), 'w.no_telpon AS no_telp_warung','penjualans.id AS id', 'kas.nama_kas AS nama_kas', 'penjualans.id_pelanggan AS id_pelanggan')
+            ->leftJoin('warungs AS w', 'penjualans.id_warung', '=', 'w.id')
+            ->leftJoin('users AS p', 'p.id', '=', 'penjualans.id_pelanggan')
+            ->leftJoin('kas', 'kas.id', '=', 'penjualans.id_kas')
+            ->where('penjualans.id_pesanan', $id);
+        return $query;
+    }
+
 }

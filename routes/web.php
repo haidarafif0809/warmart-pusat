@@ -248,6 +248,10 @@ Route::post('/edit-jumlah-pesanan-warung}', [
     'uses'       => 'PesananWarungController@editJumlahPesanan',
 ]);
 
+Route::get('/pesanan-warung/cetak-kecil-penjualan/{id}', 'PesananWarungController@cetakKecil')->middleware('auth');
+Route::get('/pesanan-warung/cetak-kecil-pesanan/{id}', 'PesananWarungController@cetakKecilPesanan')->middleware('auth');
+
+
 //PUNYA
 
 Route::middleware('optimizeImages')->group(function () {
