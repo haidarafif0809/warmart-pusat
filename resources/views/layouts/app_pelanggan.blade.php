@@ -5,11 +5,9 @@
         <?php
     $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->
         first();
-    if (Auth::check()) {
-        $user      = \Auth::user()->id;
-        $foto_logo = \App\UserWarung::find($user);
 
-    }
+    $foto_logo = \App\UserWarung::select()->where('tipe_user',4)->orderBy('id', 'desc')->first();
+
     $settingFooter = \App\SettingFooter::select()->first();
     ?>
     
@@ -43,8 +41,8 @@
                 <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" rel="stylesheet" type="text/css"/>
                 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet"/>
                 {!! SEOMeta::generate() !!}
-    {!! OpenGraph::generate() !!}
-    {!! Twitter::generate() !!}
+                {!! OpenGraph::generate() !!}
+                {!! Twitter::generate() !!}
                 <!-- MINIFIED -->
                 {!! SEO::generate(true) !!}
                 <!-- LUMEN -->
@@ -127,7 +125,7 @@ body {
                             <img class="navbar-brand" src="{{asset('/assets/img/examples/warmart_logo.png')}}"/>
                         </a>
                         @else
-                    @if(Auth::check() && Auth::user()->tipe_user == 4)
+                    @if( $foto_logo->foto_ktp != null)
                         <a href="{{ url('/') }}">
                             <img class="navbar-brand" src="{{asset('/foto_ktp_user/'.$foto_logo->foto_ktp.'').'?v=1'}}"/>
                         </a>
