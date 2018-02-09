@@ -276,6 +276,33 @@ h4 {
 
 @section('scripts')
 <script type="text/javascript">
+
+    $(document).on('click', '.tambahProdukMobile', function () { 
+      var id = $(this).attr("data-id"); 
+      var jumlah_produk = $("#jumlahProdukKeranjangMobile-"+id).text(); 
+      var dataNamaProduk = $(".btnMobile-"+id).attr("data-nama-produk");
+      var hargaProdukKeranjang = bersihPemisah(bersihPemisah(bersihPemisah(bersihPemisah($("#hargaProdukKeranjangMobile-"+id).text())))); 
+      var subtotalProdukKeranjang = bersihPemisah(bersihPemisah(bersihPemisah(bersihPemisah($("#subtotalProdukKeranjangMobile-"+id).attr("data-subtotal"))))); 
+      
+      var tambahProduk = parseInt(jumlah_produk) + 1; 
+      var tambahSubtotal = parseInt(subtotalProdukKeranjang) + parseInt(hargaProdukKeranjang); 
+      
+      $("#subtotalProdukKeranjangMobile-"+id).addClass('spinner'); 
+      $("#subtotalProdukKeranjangMobile-"+id).text('');
+      
+      $.get('{{ Url("keranjang-belanja/tambah-jumlah-produk-keranjang-belanja") }}',{'_token': $('meta[name=csrf-token]').attr('content'),id:id,jumlah_produk:tambahProduk}, function(resp){  
+
+        if (resp.respons == 0) {
+            displayHasilMobile(id,jumlah_produk,subtotalProdukKeranjang);
+            alertStokTidakCukup(dataNamaProduk,resp.sisa_stok);
+        }else{
+            displayHasilMobile(id,tambahProduk,tambahSubtotal);
+        }
+
+    });
+
+  });
+
     $(document).on('click', '#btnHapusProduk', function () {
       var id = $(this).attr("data-id");
       var nama = $(this).attr("data-nama");
@@ -398,14 +425,20 @@ h4 {
         $("#subtotal").attr("data-subtotal",tambahSubtotalKesuluruhan); 
     }
 
-    function alertStokTidakCukup(nama_produk,stok_produk,jumlah_produk){
+    function displayHasilMobile(id,tambahProduk,tambahSubtotal){
+
+        var tambahSubtotal = parseInt(tambahSubtotal);
+
+        $("#subtotalProdukKeranjangMobile-"+id).removeClass('spinner');  
+        $(".btnMobile-"+id).attr("data-jumlah-produk",tambahProduk);
+        $("#jumlahProdukKeranjangMobile-"+id).text(tambahProduk); 
+        $("#subtotalProdukKeranjangMobile-"+id).text(tambahSubtotal.format(0, 3, '.', ',')); 
+        $("#subtotalProdukKeranjangMobile-"+id).attr("data-subtotal",tambahSubtotal);
+    }
+
+    function alertStokTidakCukup(nama_produk,stok_produk){
      swal({
-        text: 'Stok Produk '+nama_produk+' Tidak Cukup, Sisa Produk : '+stok_produk+'!'
-    });
- }
- function alertJumlahTidakBisaKurangDariSatu(){
-     swal({
-        text: 'Stok Produk Ini Sudah Habis!'
+        html: 'Stok Produk <b>'+nama_produk+'</b> Tidak Cukup, Sisa Produk : <b>'+stok_produk+'</b>!'
     });
  }
 
