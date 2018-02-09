@@ -4,7 +4,7 @@
     <!-- PILIH TIPE APLIKASI -->
     <?php
     $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->
-        first();
+    first();
 
     $foto_logo = \App\UserWarung::select()->where('tipe_user',4)->orderBy('id', 'desc')->first();
 
@@ -12,46 +12,46 @@
     ?>
     
     @if($setting_aplikasi->tipe_aplikasi == 0)
-        <title>
-            War-Mart.id
-        </title>
-        @else
-        <title>
-            topos | Aplikasi POS & Toko Online
-        </title>
-        @endif
-        <meta charset="utf-8"/>
-        @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
-        <link href="img/favicon.png" rel="apple-touch-icon" sizes="76x76"/>
-        <link href="img/favicon.png" rel="icon" type="image/png"/>
-        @else
-        <link href="img/icon_topos.png?v=1" rel="apple-touch-icon" sizes="76x76"/>
-        <link href="img/icon_topos.png?v=1" rel="icon" type="image/png"/>
-        @endif
-        <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
-        <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
-        <meta content="width=device-width" name="viewport"/>
-        <!-- Bootstrap core CSS     -->
-        <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet"/>
-        <link href="{{ asset('css/selectize.bootstrap3.css') }}" rel="stylesheet">
-            <link href="{{ asset('css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
-                <!--     Fonts and icons     -->
-                <link href="{{ asset('css/material-kit.css?v=1.2.0')}}" rel="stylesheet"/>
-                <link href="{{ asset('assets/assets-for-demo/vertical-nav.css')}}" rel="stylesheet"/>
-                <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" rel="stylesheet" type="text/css"/>
-                <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet"/>
-                {!! SEOMeta::generate() !!}
-                {!! OpenGraph::generate() !!}
-                {!! Twitter::generate() !!}
-                <!-- MINIFIED -->
-                {!! SEO::generate(true) !!}
-                <!-- LUMEN -->
-                {!! app('seotools')->generate() !!}
-            </link>
-        </link>
-    </head>
-    <style type="text/css">
-        .navbar-nav .open .dropdown-menu{
+    <title>
+        War-Mart.id
+    </title>
+    @else
+    <title>
+        topos | Aplikasi POS & Toko Online
+    </title>
+    @endif
+    <meta charset="utf-8"/>
+    @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
+    <link href="img/favicon.png" rel="apple-touch-icon" sizes="76x76"/>
+    <link href="img/favicon.png" rel="icon" type="image/png"/>
+    @else
+    <link href="img/icon_topos.png?v=1" rel="apple-touch-icon" sizes="76x76"/>
+    <link href="img/icon_topos.png?v=1" rel="icon" type="image/png"/>
+    @endif
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
+    <meta content="width=device-width" name="viewport"/>
+    <!-- Bootstrap core CSS     -->
+    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet"/>
+    <link href="{{ asset('css/selectize.bootstrap3.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
+    <!--     Fonts and icons     -->
+    <link href="{{ asset('css/material-kit.css?v=1.2.0')}}" rel="stylesheet"/>
+    <link href="{{ asset('assets/assets-for-demo/vertical-nav.css')}}" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" rel="stylesheet" type="text/css"/>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet"/>
+    {!! SEOMeta::generate() !!}
+    {!! OpenGraph::generate() !!}
+    {!! Twitter::generate() !!}
+    <!-- MINIFIED -->
+    {!! SEO::generate(true) !!}
+    <!-- LUMEN -->
+    {!! app('seotools')->generate() !!}
+</link>
+</link>
+</head>
+<style type="text/css">
+.navbar-nav .open .dropdown-menu{
   color: grey;
 }
 .navbar .navbar-brand {
@@ -99,41 +99,40 @@ body {
 .selectize-control .item.active a { 
     color: #303030; 
 }
-    </style>
-    <body class="ecommerce-page">
-        @if(Agent::isMobile())
-        <nav class="navbar navbar-default navbar-fixed-top " id="sectionsNav">
-            @else
-            <nav class="navbar navbar-default navbar-transparent navbar-fixed-top navbar-color-on-scroll" color-on-scroll=" " id="sectionsNav">
-                @endif
-                <div class="container">
-                    <!-- Brand and toggle get grouped for better mobile display -->
-                    <div class="navbar-header">
-                        <button class="navbar-toggle" data-toggle="collapse" type="button">
-                            <span class="sr-only">
-                                Toggle navigation
-                            </span>
-                            <span class="icon-bar">
-                            </span>
-                            <span class="icon-bar">
-                            </span>
-                            <span class="icon-bar">
-                            </span>
-                        </button>
-                        @if($setting_aplikasi->tipe_aplikasi == 0)
-                        <a href="{{ url('/') }}">
-                            <img class="navbar-brand" src="{{asset('/assets/img/examples/warmart_logo.png')}}"/>
-                        </a>
-                        @else
+</style>
+<body class="ecommerce-page">
+    @if(Agent::isMobile())
+    <nav class="navbar navbar-default navbar-fixed-top " id="sectionsNav">
+        @else
+        <nav class="navbar navbar-default navbar-transparent navbar-fixed-top navbar-color-on-scroll" color-on-scroll=" " id="sectionsNav">
+            @endif
+            <div class="container">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button class="navbar-toggle" data-toggle="collapse" type="button">
+                        <span class="sr-only">
+                            Toggle navigation
+                        </span>
+                        <span class="icon-bar">
+                        </span>
+                        <span class="icon-bar">
+                        </span>
+                        <span class="icon-bar">
+                        </span>
+                    </button>
+                    @if($setting_aplikasi->tipe_aplikasi == 0)
+                    <a href="{{ url('/') }}">
+                        <img class="navbar-brand" src="{{asset('/assets/img/examples/warmart_logo.png')}}"/>
+                    </a>
+                    @else
                     @if( $foto_logo->foto_ktp != null)
-                        <a href="{{ url('/') }}">
-                            <img class="navbar-brand" src="{{asset('/foto_ktp_user/'.$foto_logo->foto_ktp.'').'?v=1'}}"/>
-                        </a>
-                        @else
-                        <a href="{{ url('/') }}">
-                            <img class="navbar-brand" src="{{asset('/assets/img/examples/topos_logo.png'.'?v=3')}}"/>
-                        </a>
-                        @endif
+                    <a href="{{ url('/') }}">
+                        <img class="navbar-brand" src="{{asset('/foto_ktp_user/'.$foto_logo->foto_ktp.'').'?v=1'}}"/>
+                    </a>
+                    @else
+                    <a href="{{ url('/') }}">
+                        <img class="navbar-brand" src="{{asset('/assets/img/examples/topos_logo.png'.'?v=3')}}"/>
+                    </a>
                     @endif
                     @endif
 
