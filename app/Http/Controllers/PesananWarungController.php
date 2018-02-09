@@ -9,6 +9,7 @@ use App\Penjualan;
 use App\PesananPelanggan;
 use App\DetailPenjualanPos;
 use App\TransaksiKas;
+use App\SettingAplikasi;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -335,9 +336,62 @@ class PesananWarungController extends Controller
 
         PesananPelanggan::where('id', $request->id_pesanan)->update(['konfirmasi_pesanan' => '2']);
 
-        DB::commit();        
+        DB::commit(); 
+
+        $respons['respons_penjualan'] = $penjualan->id_pesanan;
+         return response()->json($respons);       
         // return redirect()->back();
     }
+
+    public function cetakKecil($id)
+{
+        //SETTING APLIKASI
+    $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
+
+    $penjualan = Penjualan::QueryCetak($id)->first();
+
+    if ($penjualan['id_pelanggan'] == '0') {
+        $nama_pelanggan = 'Umum';
+    } else {
+        $nama_pelanggan = $penjualan['pelanggan'];
+    }
+
+    $detail_penjualan = DetailPenjualan::with('produk')->where('id_penjualan', $penjualan['id'])->get();
+    $potongan         = $penjualan['potongan'];
+    if ($potongan == null) {
+        $potongan = 0;
+    }
+    $subtotal         = 0;
+    foreach ($detail_penjualan as $detail_penjualans) {
+        $subtotal += $detail_penjualans->jumlah * $detail_penjualans->harga;
+        $potongan += $detail_penjualans->potongan;
+
+    }
+
+    return view('penjualan.cetak_kecil_pesanan_selesai', ['penjualan' => $penjualan, 'detail_penjualan' => $detail_penjualan, 'subtotal' => $subtotal, 'nama_pelanggan' => $nama_pelanggan, 'potongan' => $potongan, 'setting_aplikasi' => $setting_aplikasi])->with(compact('html'));
+}
+
+  public function cetakKecilPesanan($id)
+{
+        //SETTING APLIKASI
+    $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
+
+    $penjualan = PesananPelanggan::QueryCetak($id)->first();
+
+    if ($penjualan['id_pelanggan'] == '0') {
+        $nama_pelanggan = 'Umum';
+    } else {
+        $nama_pelanggan = $penjualan['pelanggan'];
+    }
+
+    $detail_penjualan = DetailPesananPelanggan::with('produk')->where('id_pesanan_pelanggan', $penjualan['id'])->get();
+    $subtotal         = 0;
+    foreach ($detail_penjualan as $detail_penjualans) {
+        $subtotal += $detail_penjualans->jumlah_produk * $detail_penjualans->harga_produk;
+    }
+
+    return view('penjualan.cetak_kecil_pesanan', ['penjualan' => $penjualan, 'detail_penjualan' => $detail_penjualan, 'subtotal' => $subtotal, 'nama_pelanggan' => $nama_pelanggan,'setting_aplikasi' => $setting_aplikasi])->with(compact('html'));
+}
 
 
     public function batalkanPesananWarung($id)

@@ -10,6 +10,7 @@ use DB;
 use Jenssegers\Agent\Agent;
 use OpenGraph;
 use SEOMeta;
+use Illuminate\Http\Request;
 
 class KeranjangBelanjaController extends Controller
 {
@@ -48,22 +49,42 @@ class KeranjangBelanjaController extends Controller
         }
     }
 
-    public function tambah_jumlah_produk_keranjang_belanjaan($id)
+    public function tambah_jumlah_produk_keranjang_belanjaan(Request $request)
     {
-        $produk = KeranjangBelanja::find($id);
-        $produk->jumlah_produk += 1;
-        $produk->save();
 
-        return redirect()->back();
+        $keranjang_belanjaans = KeranjangBelanja::with('produk')->find($request->id); 
+
+        $sisa_stok       = $keranjang_belanjaans->produk->stok - $request->jumlah_produk;
+        $respons['sisa_stok'] = floor($keranjang_belanjaans->produk->stok);
+
+        if ($keranjang_belanjaans->produk->hitung_stok == 1) {
+
+            $respons['produk'] = "barang";
+            if ($sisa_stok < 0) {
+                $respons['respons'] = 0;
+            }else{
+
+                $keranjang_belanjaans->update(['jumlah_produk'=>$request->jumlah_produk]);
+                $respons['respons'] = 1;
+            }
+
+        }else{
+
+            $keranjang_belanjaans->update(['jumlah_produk'=>$request->jumlah_produk]); 
+            $respons['produk'] = "jasa";           
+            $respons['respons'] = 1;
+        }
+
+
+        return response()->json($respons);
+
     }
 
-    public function kurang_jumlah_produk_keranjang_belanjaan($id)
+    public function kurang_jumlah_produk_keranjang_belanjaan(Request $request)
     {
-        $produk = KeranjangBelanja::find($id);
-        $produk->jumlah_produk -= 1;
-        $produk->save();
-
-        return redirect()->back();
+        $produk = KeranjangBelanja::find($request->id);
+        $produk->update(['jumlah_produk'=>$request->jumlah_produk]);
+        return response(200);
 
     }
 
@@ -106,7 +127,9 @@ class KeranjangBelanjaController extends Controller
             if ($keranjang_belanjaans->jumlah_produk == 1) {
                 $tombolKurangiProduk = '<a class="btn btn-xs" disabled="true"> <i class="material-icons">remove</i> </a>';
             } else {
-                $tombolKurangiProduk = '<a href=" ' . url('/keranjang-belanja/kurang-jumlah-produk-keranjang-belanja/' . $keranjang_belanjaans->id_keranjang_belanja . '') . '" class="btn btn-xs"> <i class="material-icons">remove</i> </a>';
+                // $tombolKurangiProduk = '<a href=" ' . url('/keranjang-belanja/kurang-jumlah-produk-keranjang-belanja/' . $keranjang_belanjaans->id_keranjang_belanja . '') . '" class="btn btn-xs"> <i class="material-icons">remove</i> </a>';
+
+                $tombolKurangiProduk = '<button type="button" class="btn btn-xs kurangProdukMobile" data-id="'.$keranjang_belanjaans->id_keranjang_belanja.'" id="kurangProduk-'.$keranjang_belanjaans->id_keranjang_belanja.'"><i class="material-icons">remove</i> </button>';
             }
 
         } else {
@@ -115,8 +138,9 @@ class KeranjangBelanjaController extends Controller
                 $tombolKurangiProduk = '
                 <a class="btn btn-round btn-info btn-xs" style="background-color: #01573e"> <i class="material-icons">remove</i></a>';
             } else {
-                $tombolKurangiProduk = '
-                <a href=" ' . url('/keranjang-belanja/kurang-jumlah-produk-keranjang-belanja/' . $keranjang_belanjaans->id_keranjang_belanja . '') . '" class="btn btn-round btn-info btn-xs"   style="background-color: #01573e"> <i class="material-icons">remove</i></a>';
+                // $tombolKurangiProduk = '
+                // <a href=" ' . url('/keranjang-belanja/kurang-jumlah-produk-keranjang-belanja/' . $keranjang_belanjaans->id_keranjang_belanja . '') . '" class="btn btn-round btn-info btn-xs"   style="background-color: #01573e"> <i class="material-icons">remove</i></a>';
+                $tombolKurangiProduk = '<button type="button" class="btn btn-round btn-info btn-xs kurangProduk" style="background-color: #01573e" data-id="'.$keranjang_belanjaans->id_keranjang_belanja.'" id="kurangProduk-'.$keranjang_belanjaans->id_keranjang_belanja.'"><i class="material-icons">remove</i> </button>';
             }
         }
 
@@ -131,16 +155,18 @@ class KeranjangBelanjaController extends Controller
             if ($sisa_stok <= 0 && $keranjang_belanjaans->produk->hitung_stok == 1) {
                 $tombolTambahiProduk = '<a class="btn btn-xs" disabled="true"> <i class="material-icons">add</i> </a>';
             } else {
-                $tombolTambahiProduk = '
-                <a href=" ' . url('/keranjang-belanja/tambah-jumlah-produk-keranjang-belanja/' . $keranjang_belanjaans->id_keranjang_belanja . '') . '" class="btn btn-xs"> <i class="material-icons">add</i> </a>';
+                // $tombolTambahiProduk = '<a href=" ' . url('/keranjang-belanja/tambah-jumlah-produk-keranjang-belanja/' . $keranjang_belanjaans->id_keranjang_belanja . '') . '" class="btn btn-xs"> <i class="material-icons">add</i> </a>';
+                $tombolTambahiProduk = '<button type="button" class="btn btn-xs tambahProdukMobile" data-id="'.$keranjang_belanjaans->id_keranjang_belanja.'" id="tambahProduk-'.$keranjang_belanjaans->id_keranjang_belanja.'"><i class="material-icons">add</i> </button>';
             }
         } else {
             if ($sisa_stok <= 0 && $keranjang_belanjaans->produk->hitung_stok == 1) {
                 $tombolTambahiProduk = '
-                <a class="btn btn-round btn-info btn-xs"   style="background-color: #01573e"> <i class="material-icons">add</i> </a>';
+                <a class="btn btn-round btn-info btn-xs" style="background-color: #01573e"> <i class="material-icons">add</i> </a>';
             } else {
-                $tombolTambahiProduk = '
-                <a href=" ' . url('/keranjang-belanja/tambah-jumlah-produk-keranjang-belanja/' . $keranjang_belanjaans->id_keranjang_belanja . '') . '" class="btn btn-round btn-info btn-xs"   style="background-color: #01573e"> <i class="material-icons">add</i> </a>';
+               // $tombolTambahiProduk = '
+                //<a href=" ' . url('/keranjang-belanja/tambah-jumlah-produk-keranjang-belanja/' . $keranjang_belanjaans->id_keranjang_belanja . '') . '" class="btn btn-round btn-info btn-xs"   style="background-color: #01573e"> <i class="material-icons">add</i> </a>';
+                $tombolTambahiProduk = '<button type="button" class="btn btn-round btn-info btn-xs tambahProduk" style="background-color: #01573e" data-id="'.$keranjang_belanjaans->id_keranjang_belanja.'" id="tambahProduk-'.$keranjang_belanjaans->id_keranjang_belanja.'"><i class="material-icons">add</i> </button>';
+
             }
         }
 
@@ -167,7 +193,7 @@ class KeranjangBelanjaController extends Controller
 
             <div class="col-xs-3" style="padding-left:0px; padding-right:0px; padding-top:23px">
             <b><a href="' . url('detail-produk/' . $keranjang_belanjaans->id_produk . '') . '" style="font-size: 12px;">' . $this->namaProduk($keranjang_belanjaans->produk->nama_barang) . '</a></b><br>
-            <b style="color:red">' . number_format($harga_produk, 0, ',', '.') . '</b>
+            <b style="color:red" id="hargaProdukKeranjangMobile-'.$keranjang_belanjaans->id_keranjang_belanja.'">' . number_format($harga_produk, 0, ',', '.') . '</b>
             <p style="font-size: 10px; margin-top:10px">' . $keranjang_belanjaans->produk->warung->name . '</p>
             </div>
 
@@ -181,12 +207,12 @@ class KeranjangBelanjaController extends Controller
 
             $produk_belanjaan .= '
             </div><br>
-            <b>' . $keranjang_belanjaans->jumlah_produk . ' </b><br>
-            <div class="btn-group">
+            <b id="jumlahProdukKeranjangMobile-'.$keranjang_belanjaans->id_keranjang_belanja.'">' . $keranjang_belanjaans->jumlah_produk . ' </b><br>
+            <div class="btn-group  btnMobile-'.$keranjang_belanjaans->id_keranjang_belanja.'" data-nama-produk="' . title_case($keranjang_belanjaans->produk->nama_barang) . '">
 
             <button id="btnHapusProduk" data-nama="' . title_case($keranjang_belanjaans->produk->nama_barang) . '" data-id="' . $keranjang_belanjaans->id_keranjang_belanja . '" class="btn btn-danger btn-xs"><i class="material-icons">delete</i></button>
             </div><br>
-            <b align="right">' . number_format($subtotal_produk, 0, ',', '.') . '</b>
+            <b align="right" id="subtotalProdukKeranjangMobile-'.$keranjang_belanjaans->id_keranjang_belanja.'" data-subtotal="'.$subtotal_produk.'">' . number_format($subtotal_produk, 0, ',', '.') . '</b>
             </center>
             </div>
 
@@ -220,16 +246,16 @@ class KeranjangBelanjaController extends Controller
             </div>
 
             <div class="col-md-2">
-            <h6 align="right"><b>' . number_format($harga_produk, 0, ',', '.') . '</b></h6>
+            <h6 align="right"><b id="hargaProdukKeranjang-'.$keranjang_belanjaans->id_keranjang_belanja.'">' . number_format($harga_produk, 0, ',', '.') . '</b></h6>
             </div>
 
             <div class="col-md-3">
-            <div class="btn-group">';
+            <div class="btn-group btn-'.$keranjang_belanjaans->id_keranjang_belanja.'" data-jumlah-produk="'.$keranjang_belanjaans->jumlah_produk.'" data-nama-produk="' . title_case($keranjang_belanjaans->produk->nama_barang) . '">';
 
             //tombol kurangi produk
             $produk_belanjaan .= $this->tombolKurangiProduk($keranjang_belanjaans);
 
-            $produk_belanjaan .= ' <a class="btn btn-round btn-info btn-xs"   style="background-color: #01573e"><font style="font-size: 11.5px;">' . $keranjang_belanjaans->jumlah_produk . ' </font></a>';
+            $produk_belanjaan .= ' <button class="btn btn-round btn-info btn-xs" style="background-color: #01573e"><font id="jumlahProdukKeranjang-'.$keranjang_belanjaans->id_keranjang_belanja.'" style="font-size: 11.5px;">' . $keranjang_belanjaans->jumlah_produk . ' </font></button>';
             //tombol tambahi
             $produk_belanjaan .= $this->tombolTambahiProduk($sisa_stok, $keranjang_belanjaans);
 
@@ -241,7 +267,7 @@ class KeranjangBelanjaController extends Controller
 
 
             <div class="col-md-2">
-            <b>Rp.</b><h6 align="right"><b> ' . number_format($subtotal_produk, 0, ',', '.') . '</b></h6>
+            <b>Rp.</b><h6 align="right"><b id="subtotalProdukKeranjang-'.$keranjang_belanjaans->id_keranjang_belanja.'" data-subtotal="'.$subtotal_produk.'"> ' . number_format($subtotal_produk, 0, ',', '.') . '</b></h6>
             </div>
             </div>
             </div>

@@ -516,6 +516,8 @@ body {
     </script>
     <script src="{{ asset('js/selectize.min.js') }}">
     </script>
+    <script src="{{ asset('js/custom.js') }}">
+    </script>
     <script src="{{ asset('js/material-kit.js?v=1.2.0')}}" type="text/javascript">
     </script>
     {{-- lazy load image --}}

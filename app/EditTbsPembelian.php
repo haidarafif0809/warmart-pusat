@@ -42,4 +42,14 @@ class EditTbsPembelian extends Model
     {
         return number_format($this->tax, 2, ',', '.');
     }
+
+       public function subtotalTbs($user_warung,$no_faktur)
+    {
+        $tbs_penjualan = EditTbsPembelian::select([DB::raw('SUM(subtotal) as subtotal')])->where('warung_id', $user_warung)->where('no_faktur', $no_faktur)->first();
+                if ($tbs_penjualan->subtotal == null || $tbs_penjualan->subtotal == '') {
+                  return 0;
+                 }else{
+                return $tbs_penjualan->subtotal;
+                }
+    }
 }

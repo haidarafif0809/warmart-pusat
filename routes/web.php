@@ -119,13 +119,13 @@ Route::get('/keranjang-belanja', [
     'uses'       => 'KeranjangBelanjaController@daftar_belanja',
 ]);
 
-Route::get('/keranjang-belanja/tambah-jumlah-produk-keranjang-belanja/{id}', [
+Route::get('/keranjang-belanja/tambah-jumlah-produk-keranjang-belanja/', [
     'middleware' => ['auth'],
     'as'         => 'keranjang-belanja.tambah_jumlah_produk_keranjang_belanjaan',
     'uses'       => 'KeranjangBelanjaController@tambah_jumlah_produk_keranjang_belanjaan',
 ]);
 
-Route::get('/keranjang-belanja/kurang-jumlah-produk-keranjang-belanja/{id}', [
+Route::get('/keranjang-belanja/kurang-jumlah-produk-keranjang-belanja/', [
     'middleware' => ['auth'],
     'as'         => 'keranjang-belanja.kurang_jumlah_produk_keranjang_belanjaan',
     'uses'       => 'KeranjangBelanjaController@kurang_jumlah_produk_keranjang_belanjaan',
@@ -247,6 +247,9 @@ Route::post('/edit-jumlah-pesanan-warung}', [
     'as'         => 'pesanan-warung.edit_jumlah_pesanan',
     'uses'       => 'PesananWarungController@editJumlahPesanan',
 ]);
+
+Route::get('/pesanan-warung/cetak-kecil-penjualan/{id}', 'PesananWarungController@cetakKecil')->middleware('auth');
+Route::get('/pesanan-warung/cetak-kecil-pesanan/{id}', 'PesananWarungController@cetakKecilPesanan')->middleware('auth');
 
 //PUNYA
 
@@ -398,6 +401,7 @@ Route::get('/customer/view', 'CustomerController@view')->middleware('auth');
 Route::get('/customer/view-detail/{id}', 'CustomerController@view_detail')->middleware('auth');
 Route::get('/customer/pencarian', 'CustomerController@pencarian')->middleware('auth');
 Route::get('/customer/pilih-komunitas', 'CustomerController@pilih_komunitas')->middleware('auth');
+Route::get('/customer/setting-aplikasi', 'CustomerController@settingAplikasi')->middleware('auth');
 
 //menampilkan data user
 Route::get('/user/view', 'UserController@view')->middleware('auth');
@@ -537,6 +541,7 @@ Route::get('/pembelian/proses-edit-tax-tbs-pembelian', 'PembelianController@edit
 Route::get('/pembelian/cek-total-kas-pembelian', 'PembelianController@total_kas')->middleware('auth');
 Route::get('/pembelian/detail-view', 'PembelianController@detailView')->middleware('auth');
 Route::get('/pembelian/cetak-besar-pembelian/{id}', 'PembelianController@cetakBesar')->middleware('auth');
+Route::get('/pembelian/subtotal-tbs-pembelian/{jenis_tbs}', 'PembelianController@cekSubtotalTbsPembelian')->middleware('auth');
 
 //Edit Pembelian
 Route::get('/edit-pembelian/proses-tambah-tbs-pembelian', 'EditPembelianController@proses_tambah_tbs_pembelian')->middleware('auth');
@@ -791,6 +796,7 @@ Route::get('/pembayaran-piutang/view-tbs-pembayaran-piutang', 'PembayaranPiutang
 Route::get('/pembayaran-piutang/pencarian-tbs-pembayaran-piutang', 'PembayaranPiutangController@pencarianTbs')->middleware('auth');
 Route::get('/pembayaran-piutang/view-detail-pembayaran-piutang/{id}', 'PembayaranPiutangController@viewDetail')->middleware('auth');
 Route::get('/pembayaran-piutang/pencarian-detail-pembayaran-piutang/{id}', 'PembayaranPiutangController@pencarianDetail')->middleware('auth');
+Route::get('/pembayaran-piutang/subtotal-tbs-pembayaran-piutang/{jenis_tbs}', 'PembayaranPiutangController@cekSubtotalTbsPembayaranPiutang')->middleware('auth');
 
 //PEMBAYARAN PIUTANG EDIT
 Route::get('/pembayaran-piutang/view-edit-tbs-pembayaran-piutang/{id}', 'PembayaranPiutangController@viewTbsEdit')->middleware('auth');
@@ -841,6 +847,10 @@ Route::get('/laporan-kas/download-excel/{dari_tanggal}/{sampai_tanggal}/{kas}/{j
 
 Route::get('/setting-footer/id-warung', 'SettingFooterController@idWarung')->middleware('auth');
 
+//MENAMPILKAN DATA USER KASIR
+Route::get('/user-kasir/view', 'UserKasirController@view')->middleware('auth');
+Route::get('/user-kasir/pencarian', 'UserKasirController@pencarian')->middleware('auth');
+
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
     Route::resource('user', 'UserController');
@@ -877,6 +887,7 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
     Route::resource('pembayaran-piutang', 'PembayaranPiutangController');
     Route::resource('setting-footer', 'SettingFooterController');
     Route::resource('setting-verifikasi', 'SettingVerifikasiController');
+    Route::resource('user-kasir', 'UserKasirController');
 
 //BARANG
     //HALAMAN DESKRIPSI

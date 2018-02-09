@@ -86,6 +86,10 @@
                                         </router-link>
 
                                         <button type="button" class="btn btn-sm btn-primary" id="btnDetail" data-toggle="modal" data-target="#data_pemesan" @click="detailPesanan(pesananWarung.pesanan_warung.id)">Pemesan</button>
+
+                                        <a v-if="pesananWarung.pesanan_warung.konfirmasi_pesanan == 2" target="blank" class="btn btn-warning btn-xs" v-bind:href="'pesanan-warung/cetak-kecil-penjualan/'+pesananWarung.pesanan_warung.id">Cetak Ulang</a>
+                                        <a v-else target="blank" class="btn btn-warning btn-xs" v-bind:href="'pesanan-warung/cetak-kecil-pesanan/'+pesananWarung.pesanan_warung.id">Cetak Ulang</a>
+
                                     </td>
                                 </tr>
                             </tbody>					
