@@ -14,7 +14,8 @@ class SettingVerifikasiController extends Controller
      */
     public function index()
     {
-        //
+        $setting_verifikasi = SettingVerifikasi::select()->first();
+        return response()->json($setting_verifikasi);
     }
 
     /**
@@ -46,8 +47,7 @@ class SettingVerifikasiController extends Controller
      */
     public function show($id_warung)
     {
-        $setting_verifikasi = SettingVerifikasi::select()->where('id_warung', $id_warung)->first();
-        return response()->json($setting_verifikasi);
+        //
     }
 
     /**
