@@ -203,12 +203,12 @@ class DetailPenjualan extends Model
             $query_laporan_penjualan_online_pelanggan = $this->queryLaporanPenjualanOnline($request)
                 ->where('penjualans.id_pelanggan', $request->pelanggan)
                 ->where('penjualans.id_warung', Auth::user()->id_warung)
-                ->groupBy('penjualans.id_pelanggan')
+                ->groupBy('penjualans.id_pelanggan', 'barangs.id')
                 ->orderBy('detail_penjualans.created_at', 'desc');
         } else {
             $query_laporan_penjualan_online_pelanggan = $this->queryLaporanPenjualanOnline($request)
                 ->where('penjualans.id_warung', Auth::user()->id_warung)
-                ->groupBy('penjualans.id_pelanggan')
+                ->groupBy('penjualans.id_pelanggan', 'barangs.id')
                 ->orderBy('detail_penjualans.created_at', 'desc');
         }
 

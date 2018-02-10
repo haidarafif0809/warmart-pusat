@@ -400,7 +400,7 @@
                 </router-link>
             </li>
             <li>
-                <router-link :to="{name: 'indexSettingVerifikasi', params: {id_warung: <?=\Auth::user()->id_warung;?>}}" class="menu-nav">
+                <router-link :to="{name: 'indexSettingVerifikasi'}" class="menu-nav">
                     <span class="sidebar-mini">
                         SV
                     </span>

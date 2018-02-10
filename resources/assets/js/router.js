@@ -632,7 +632,7 @@ const routes = [{
     },
     // SETTING VERIFIKASI
     {
-        path: '/setting-verifikasi/:id_warung',
+        path: '/setting-verifikasi',
         component: SettingVerifikasiIndex,
         name: 'indexSettingVerifikasi'
     },

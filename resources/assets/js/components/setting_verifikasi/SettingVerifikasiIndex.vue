@@ -83,26 +83,28 @@ export default {
     },
     methods: {
         saveForm() {
-            let app = this;
+            let app       = this;
             let id_warung = app.$route.params.id_warung;
+            let email     = app.setting_verifikasi.email;
+            let no_telp   = app.setting_verifikasi.no_telp;
 
-            if (app.setting_verifikasi.email == false) app.setting_verifikasi.email = 0;
-            if (app.setting_verifikasi.no_telp == false) app.setting_verifikasi.no_telp = 0;
-            if (app.setting_verifikasi.email == false && app.setting_verifikasi.no_telp == false) {
-                app.setting_verifikasi.email   = 0;
-                app.setting_verifikasi.no_telp = 0;
+            if (email == false) email = 0;
+            if (no_telp == false) no_telp = 0;
+            if (email == false && no_telp == false) {
+                email   = 0;
+                no_telp = 0;
             }
 
-            if (app.setting_verifikasi.email == true) app.setting_verifikasi.email = 1;
-            if (app.setting_verifikasi.no_telp == true) app.setting_verifikasi.no_telp = 1;
-            if (app.setting_verifikasi.email == true && app.setting_verifikasi.no_telp == true) {
-                app.setting_verifikasi.email   = 1;
-                app.setting_verifikasi.no_telp = 1;
+            if (email == true) email = 1;
+            if (no_telp == true) no_telp = 1;
+            if (email == true && no_telp == true) {
+                email   = 1;
+                no_telp = 1;
             }
 
-            console.log(app.setting_verifikasi.email);
-            console.log(app.setting_verifikasi.no_telp);
-            axios.patch(app.url + '/' + id_warung, app.setting_verifikasi)
+            console.log(email);
+            console.log(no_telp);
+            axios.patch(app.url + '/' + 1, app.setting_verifikasi)
             .then(function (resp) {
                 console.log(resp);
                 
@@ -123,7 +125,7 @@ export default {
             let app = this;
             let id_warung = app.$route.params.id_warung;
 
-            axios.get(app.url + '/' + id_warung)
+            axios.get(app.url)
             .then(function (resp) {
                 console.log(resp);
                 app.setting_verifikasi = resp.data;
