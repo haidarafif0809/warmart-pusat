@@ -3,6 +3,7 @@ import BankIndex from './components/bank/BankIndex.vue';
 import BankEdit from './components/bank/BankEdit.vue';
 import LazyIndex from './components/lazy_load/LazyIndex.vue';
 import DashboardAdminIndex from './components/dashboard/DashboardAdminIndex.vue';
+import SampleChart from './components/dashboard/SampleChart.vue';
 /**Satuan*/
 import SatuanIndex from './components/satuan/SatuanIndex.vue';
 import SatuanCreate from './components/satuan/SatuanCreate.vue';
@@ -648,6 +649,10 @@ const routes = [{
         path: '/edit-user-kasir/:id',
         component: UserKasirEdit,
         name: 'editUserKasir'
+    }, {
+        path: '/sample-chart',
+        component: SampleChart,
+        name: 'sampleChart'
     }
 ]
 export default routes;

@@ -18,6 +18,8 @@ import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
 import quillEditor from 'vue-quill-editor'
+// chart.js
+import VueChartJs from 'vue-chartjs'
 // You need a specific loader for CSS files like https://github.com/webpack/css-loader
 import routes from './router.js'
 window.$ = window.jQuery = require('jquery');
@@ -43,10 +45,13 @@ Vue.component('pagination', require('laravel-vue-pagination'));
 Vue.component('vue-simple-spinner', require('vue-simple-spinner'))
 Vue.component('selectize-component', require('vue2-selectize'));
 Vue.component('datepicker', require('vuejs-datepicker'));
+Vue.component('vue-chartjs', require('vue-chartjs'));
 Vue.use(require('vue-shortkey'))
 window.Vue.use(VueSwal)
 window.Vue.use(Spinner)
+window.Vue.use(VueChartJs)
 window.Vue.use(VueRouter);
+
 const router = new VueRouter({
 	routes
 })
