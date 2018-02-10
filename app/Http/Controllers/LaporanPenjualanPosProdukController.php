@@ -186,9 +186,9 @@ class LaporanPenjualanPosProdukController extends Controller
         // TOTAL PENJUALAN ONLINE
         $total_penjualan_online = DetailPenjualan::totalLaporanPenjualanOnlineProduk($request)->first();
 
-        Excel::create('Laporan Penjualan Pos Produk', function ($excel) use ($request, $laporan_penjualan, $laporan_penjualan_online, $sub_total_penjualan, $total_penjualan_online) {
+        Excel::create('Laporan Penjualan Produk', function ($excel) use ($request, $laporan_penjualan, $laporan_penjualan_online, $sub_total_penjualan, $total_penjualan_online) {
             // Set property
-            $excel->sheet('Laporan Penjualan Pos Produk', function ($sheet) use ($request, $laporan_penjualan, $laporan_penjualan_online, $sub_total_penjualan, $total_penjualan_online) {
+            $excel->sheet('Laporan Penjualan Produk', function ($sheet) use ($request, $laporan_penjualan, $laporan_penjualan_online, $sub_total_penjualan, $total_penjualan_online) {
                 $row = 1;
                 $sheet->row($row, [
                     'LAPORAN PENJUALAN POS /PRODUK',
@@ -220,14 +220,14 @@ class LaporanPenjualanPosProdukController extends Controller
                         $total_jumlah_produk = round($sub_total_penjualan->jumlah_produk, 2),
                         '',
                         $total_potongan = round($sub_total_penjualan->subtotal, 2),
-                        $total_potongan = round($sub_total_penjualan->potongan, 2),
-                        $total_pajak = round($sub_total_penjualan->pajak, 2),
+                        '',
+                        '',
                         $total_subtotal = round($sub_total_penjualan->total, 2),
                     ]);
                 }
                 $row = ++$row + 3;
                 $sheet->row($row, [
-                    'LABA KOTOR PENJUALAN ONLINE /PRODUK',
+                    'LAPORAN PENJUALAN ONLINE /PRODUK',
                 ]);
 
                 $row = ++$row + 1;
@@ -252,7 +252,7 @@ class LaporanPenjualanPosProdukController extends Controller
                         '',
                         $total = round($total_penjualan_online->jumlah, 2),
                         $total = round($total_penjualan_online->total, 2),
-                        $total = round($total_penjualan_online->potongan, 2),
+                        '',
                         $total = round($total_penjualan_online->subtotal, 2),
                     ]);
                     # code...
@@ -304,7 +304,7 @@ class LaporanPenjualanPosProdukController extends Controller
         $total_penjualan_online   = DetailPenjualan::totalLaporanPenjualanOnlineProduk($request)->first();
         $data_warung              = Warung::where('id', Auth::user()->id_warung)->first();
 
-        return view('laporan.cetak_laporan_penjualan_pos_produk',
+        return view('laporan.cetak_laporan_penjualan_produk',
             [
                 'data_penjualan'         => $data_penjualan,
                 'total_penjualan'        => $total_penjualan,
