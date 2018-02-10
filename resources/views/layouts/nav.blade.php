@@ -274,12 +274,12 @@
                 </router-link>
             </li>
             <li>
-                <router-link :to="{name: 'indexLaporanPenjualanPosProduk'}" class="menu-nav">
+                <router-link :to="{name: 'indexLaporanPenjualanProduk'}" class="menu-nav">
                     <span class="sidebar-mini">
                         LP
                     </span>
                     <span class="sidebar-normal">
-                        Laporan Penjualan /Produk
+                        Laporan Penjualan /Produks
                     </span>
                 </router-link>
             </li>

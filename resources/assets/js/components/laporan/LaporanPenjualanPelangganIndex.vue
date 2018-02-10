@@ -184,7 +184,7 @@ export default {
 			pencarianOnline: '',
 			loading: false,
 			placeholder_pelanggan: {
-				placeholder: '--PILIH PELANGGAN--'
+				placeholder: '--SEMUA PELANGGAN--'
 			},
 		}
 	},

@@ -693,18 +693,18 @@ Route::get('/laporan-pembelian-produk/download-excel-pembelian-produk/{dari_tang
 Route::get('/laporan-pembelian-produk/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{produk}/{suplier}', 'LaporanPembelianProdukController@cetakLaporan')->middleware('auth');
 
 // LAPORAN PENJUALAN /PRODUK VUE.JS
-Route::post('/laporan-penjualan-pos-produk/view', 'LaporanPenjualanPosProdukController@prosesLaporanPenjualanPosProduk')->middleware('auth');
-Route::post('/laporan-penjualan-pos-produk/pencarian', 'LaporanPenjualanPosProdukController@pencarian')->middleware('auth');
-Route::post('/laporan-penjualan-pos-produk/total-penjualan-pos-produk', 'LaporanPenjualanPosProdukController@totalPenjualanPosProduk')->middleware('auth');
-Route::get('/laporan-penjualan-pos-produk/pilih-produk', 'LaporanPenjualanPosProdukController@dataProduk')->middleware('auth');
+Route::post('/laporan-penjualan-produk/view', 'LaporanPenjualanPosProdukController@prosesLaporanPenjualanPosProduk')->middleware('auth');
+Route::post('/laporan-penjualan-produk/pencarian', 'LaporanPenjualanPosProdukController@pencarian')->middleware('auth');
+Route::post('/laporan-penjualan-produk/total-penjualan-pos-produk', 'LaporanPenjualanPosProdukController@totalPenjualanPosProduk')->middleware('auth');
+Route::get('/laporan-penjualan-produk/pilih-produk', 'LaporanPenjualanPosProdukController@dataProduk')->middleware('auth');
 
 // LAP PENJUALAN ONLINE /PRODUK
-Route::post('/laporan-penjualan-pos-produk/view-online', 'LaporanPenjualanPosProdukController@prosesLaporanPenjualanOnlineProduk')->middleware('auth');
-Route::post('/laporan-penjualan-pos-produk/pencarian-online', 'LaporanPenjualanPosProdukController@pencarianOnline')->middleware('auth');
-Route::post('/laporan-penjualan-pos-produk/total-penjualan-online-produk', 'LaporanPenjualanPosProdukController@totalPenjualanOnlineProduk')->middleware('auth');
-Route::get('/laporan-penjualan-pos-produk/pilih-produk-online', 'LaporanPenjualanPosProdukController@dataProdukOnline')->middleware('auth');
-Route::get('/laporan-penjualan-pos-produk/download-excel-penjualan-pos-produk/{dari_tanggal}/{sampai_tanggal}/{produk}', 'LaporanPenjualanPosProdukController@downloadExcel')->middleware('auth');
-Route::get('/laporan-penjualan-pos-produk/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{produk}', 'LaporanPenjualanPosProdukController@cetakLaporan')->middleware('auth');
+Route::post('/laporan-penjualan-produk/view-online', 'LaporanPenjualanPosProdukController@prosesLaporanPenjualanOnlineProduk')->middleware('auth');
+Route::post('/laporan-penjualan-produk/pencarian-online', 'LaporanPenjualanPosProdukController@pencarianOnline')->middleware('auth');
+Route::post('/laporan-penjualan-produk/total-penjualan-online-produk', 'LaporanPenjualanPosProdukController@totalPenjualanOnlineProduk')->middleware('auth');
+Route::get('/laporan-penjualan-produk/pilih-produk-online', 'LaporanPenjualanPosProdukController@dataProdukOnline')->middleware('auth');
+Route::get('/laporan-penjualan-produk/download-excel-penjualan-pos-produk/{dari_tanggal}/{sampai_tanggal}/{produk}', 'LaporanPenjualanPosProdukController@downloadExcel')->middleware('auth');
+Route::get('/laporan-penjualan-produk/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{produk}', 'LaporanPenjualanPosProdukController@cetakLaporan')->middleware('auth');
 
 // LAP PENJUALAN POS /PELANGGAN
 Route::post('/laporan-penjualan-pelanggan/view', 'LaporanPenjualanPelangganController@prosesLaporanPenjualanPosPelanggan')->middleware('auth');
