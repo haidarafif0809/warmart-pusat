@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use App\UserWarung;
+use Auth;
 use Illuminate\Http\Request;
 
 class UserKasirController extends Controller
@@ -32,10 +34,10 @@ class UserKasirController extends Controller
     }
 
     //VIEW USER KASIR
-    public function view() //tipe user == 5 (User Kasir)
+    public function view() //tipe user == 4 (User Kasir)
 
     {
-        $data_kasir = UserWarung::where('tipe_user', 5)->orderBy('id', 'desc')->paginate(10);
+        $data_kasir = UserWarung::where('tipe_user', 4)->where('kasir_id', '!=', 0)->orderBy('id', 'desc')->paginate(10);
 
         $data_kasir_array = array();
         foreach ($data_kasir as $data_kasirs) {
@@ -53,7 +55,7 @@ class UserKasirController extends Controller
     public function pencarian(Request $request)
     {
         $search     = $request->search;
-        $data_kasir = UserWarung::where('tipe_user', 5)->orderBy('id', 'desc')
+        $data_kasir = UserWarung::where('tipe_user', 4)->where('kasir_id', '!=', 0)->orderBy('id', 'desc')
             ->where(function ($query) use ($search) {
                 $query->orwhere('name', 'LIKE', $search . '%')
                     ->orWhere('no_telp', 'LIKE', $search . '%');
@@ -69,5 +71,56 @@ class UserKasirController extends Controller
         $respons = $this->dataPagination($data_kasir, $data_kasir_array);
 
         return response()->json($respons);
+    }
+
+    public function store(Request $request)
+    {
+        $this->validate($request, [
+            'name'    => 'required',
+            'alamat'  => 'required',
+            'no_telp' => 'required|without_spaces|max:15|unique:users,no_telp,',
+        ]);
+
+        $data_warung = User::where('id', Auth::user()->id)->first();
+
+        //INSERT USER KASIR
+        $user_kasir = UserWarung::create([
+            'name'              => $request->name,
+            'no_telp'           => $request->no_telp,
+            'alamat'            => $request->alamat,
+            'id_warung'         => $data_warung->id_warung,
+            'tipe_user'         => 4, //USER KASIR
+            'status_konfirmasi' => $data_warung->status_konfirmasi,
+            'konfirmasi_admin'  => $data_warung->konfirmasi_admin,
+            'foto_ktp'          => $data_warung->foto_ktp,
+            'kasir_id'          => $data_warung->id,
+            'password'          => bcrypt('123456'),
+        ]);
+    }
+
+    public function show($id)
+    {
+        $user_kasir = UserWarung::find($id);
+        return $user_kasir;
+    }
+
+    public function update(Request $request, $id)
+    {
+        $this->validate($request, [
+            'name'    => 'required',
+            'alamat'  => 'required',
+            'no_telp' => 'required|without_spaces|max:15|unique:users,no_telp,' . $id,
+        ]);
+
+        $user_kasir = UserWarung::find($id)->update([
+            'name'    => $request->name,
+            'no_telp' => $request->no_telp,
+            'alamat'  => $request->alamat,
+        ]);
+    }
+
+    public function destroy($id)
+    {
+        $user_kasir = UserWarung::destroy($id);
     }
 }

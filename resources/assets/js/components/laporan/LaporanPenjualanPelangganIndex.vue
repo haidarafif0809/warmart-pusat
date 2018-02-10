@@ -11,7 +11,7 @@
 		<div class="col-md-12">
 			<ul class="breadcrumb">
 				<li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li>
-				<li class="active">Laporan Penjualan /Produk</li>
+				<li class="active">Laporan Penjualan /Pelanggan</li>
 			</ul>
 			<div class="card">
 				<div class="card-header card-header-icon" data-background-color="purple">
@@ -19,7 +19,7 @@
 				</div>
 
 				<div class="card-content">
-					<h4 class="card-title"> Laporan Penjualan Pos /Produk </h4>
+					<h4 class="card-title"> Laporan Penjualan Pos /Pelanggan </h4>
 
 					<div class="row">
 						<div class="form-group col-md-2">
@@ -29,13 +29,13 @@
 							<datepicker :input-class="'form-control'" placeholder="Sampai Tanggal" v-model="filter.sampai_tanggal" name="sampai_tanggal" v-bind:id="'sampai_tanggal'"></datepicker>
 						</div>
 						<div class="form-group col-md-2">
-							<selectize-component v-model="filter.produk" :settings="placeholder_produk" id="pilih_produk"> 
-								<option v-for="produks, index in produk" v-bind:value="produks.id" >{{ produks.nama_produk }}</option>
+							<selectize-component v-model="filter.pelanggan" :settings="placeholder_pelanggan" id="pilih_pelanggan"> 
+								<option v-for="pelanggans, index in pelanggan" v-bind:value="pelanggans.id" >{{ pelanggans.nama_pelanggan }}</option>
 							</selectize-component>
 						</div>
 
 						<div class="form-group col-md-2">
-							<button class="btn btn-primary" id="btnSubmit" type="submit" style="margin: 0px 0px;" @click="submitPenjualanProduk()"><i class="material-icons">search</i> Cari</button>
+							<button class="btn btn-primary" id="btnSubmit" type="submit" style="margin: 0px 0px;" @click="submitPenjualanPelanggan()"><i class="material-icons">search</i> Cari</button>
 						</div>
 					</div>
 
@@ -48,6 +48,7 @@
 							<thead class="text-primary">
 								<tr>
 									<th>Kode Produk</th>
+									<th>Nama Pelanggan</th>
 									<th>Nama Produk</th>
 									<th style="text-align:right">Jumlah</th>
 									<th>Satuan</th>
@@ -57,44 +58,46 @@
 									<th style="text-align:right">Total</th>
 								</tr>
 							</thead>
-							<tbody v-if="penjualanProduk.length > 0 && loading == false"  class="data-ada">
-								<tr v-for="penjualanProduks, index in penjualanProduk" >
+							<tbody v-if="penjualanPelanggan.length > 0 && loading == false"  class="data-ada">
+								<tr v-for="penjualanPelanggans, index in penjualanPelanggan" >
 
-									<td>{{ penjualanProduks.laporan_penjualans.kode_barang }}</td>
-									<td>{{ penjualanProduks.laporan_penjualans.nama_barang }}</td>
-									<td align="right">{{ penjualanProduks.laporan_penjualans.jumlah_produk | pemisahTitik }}</td>
-									<td>{{ penjualanProduks.laporan_penjualans.nama_satuan }}</td>
-									<td align="right">{{ penjualanProduks.laporan_penjualans.subtotal | pemisahTitik }}</td>
-									<td align="right">{{ penjualanProduks.laporan_penjualans.potongan | pemisahTitik }}</td>
-									<td align="right">{{ penjualanProduks.laporan_penjualans.tax | pemisahTitik }}</td>
-									<td align="right">{{ penjualanProduks.sub_total | pemisahTitik }}</td>
+									<td>{{ penjualanPelanggans.laporan_penjualans.kode_barang }}</td>
+									<td>{{ penjualanPelanggans.laporan_penjualans.name }}</td>
+									<td>{{ penjualanPelanggans.laporan_penjualans.nama_barang }}</td>
+									<td align="right">{{ penjualanPelanggans.laporan_penjualans.jumlah_produk | pemisahTitik }}</td>
+									<td>{{ penjualanPelanggans.laporan_penjualans.nama_satuan }}</td>
+									<td align="right">{{ penjualanPelanggans.laporan_penjualans.subtotal | pemisahTitik }}</td>
+									<td align="right">{{ penjualanPelanggans.laporan_penjualans.potongan | pemisahTitik }}</td>
+									<td align="right">{{ penjualanPelanggans.laporan_penjualans.tax | pemisahTitik }}</td>
+									<td align="right">{{ penjualanPelanggans.sub_total | pemisahTitik }}</td>
 
 								</tr>
 
 								<tr style="color:red">
 									<td>TOTAL</td>
 									<td></td>
-									<td align="right">{{ totalPenjualanPosProduk.jumlah_produk | pemisahTitik }}</td>
 									<td></td>
-									<td align="right">{{ totalPenjualanPosProduk.subtotal | pemisahTitik }}</td>
-									<td align="right">{{ totalPenjualanPosProduk.potongan | pemisahTitik }}</td>
-									<td align="right">{{ totalPenjualanPosProduk.pajak | pemisahTitik }}</td>
-									<td align="right">{{ totalPenjualanPosProduk.total | pemisahTitik }}</td>
+									<td align="right">{{ totalPenjualanPosPelanggan.jumlah_produk | pemisahTitik }}</td>
+									<td></td>
+									<td align="right">{{ totalPenjualanPosPelanggan.subtotal | pemisahTitik }}</td>
+									<td></td>
+									<td></td>
+									<td align="right">{{ totalPenjualanPosPelanggan.total | pemisahTitik }}</td>
 								</tr>
 							</tbody>					
-							<tbody class="data-tidak-ada" v-else-if="penjualanProduk.length == 0 && loading == false">
+							<tbody class="data-tidak-ada" v-else-if="penjualanPelanggan.length == 0 && loading == false">
 								<tr ><td colspan="9"  class="text-center">Tidak Ada Data</td></tr>
 							</tbody>
 						</table>
 					</div><!--RESPONSIVE-->
 
 					<vue-simple-spinner v-if="loading"></vue-simple-spinner>
-					<div align="right"><pagination :data="penjualanProdukData" v-on:pagination-change-page="prosesLaporan" :limit="4"></pagination></div>
+					<div align="right"><pagination :data="penjualanPelangganData" v-on:pagination-change-page="prosesLaporan" :limit="4"></pagination></div>
 				</div>
 				<hr>
 				<!-- laporan penjualan online per peroduk -->
 				<div class="card-content">
-					<h4 class="card-title"> Laporan Penjualan Online /Produk </h4>
+					<h4 class="card-title"> Laporan Penjualan Online /Pelanggan </h4>
 
 					<div class=" table-responsive">
 						<div class="pencarian">
@@ -105,6 +108,7 @@
 							<thead class="text-primary">
 								<tr>
 									<th>Kode Produk</th>
+									<th>Nama Pelanggan</th>
 									<th>Nama Produk</th>
 									<th style="text-align:right">Harga</th>
 									<th style="text-align:right">Jumlah</th>
@@ -113,16 +117,16 @@
 									<th style="text-align:right">Total</th>
 								</tr>
 							</thead>
-							<tbody v-if="penjualanOnlineProduk.length > 0 && loading == false"  class="data-ada">
-								<tr v-for="penjualanOnlineProduks, index in penjualanOnlineProduk" >
-
-									<td>{{ penjualanOnlineProduks.laporan_penjualan_online.kode_barang }}</td>
-									<td>{{ penjualanOnlineProduks.laporan_penjualan_online.nama_barang }}</td>
-									<td align="right">{{ penjualanOnlineProduks.laporan_penjualan_online.harga | pemisahTitik }}</td>
-									<td align="right">{{ penjualanOnlineProduks.laporan_penjualan_online.jumlah | pemisahTitik }}</td>
-									<td align="right">{{ penjualanOnlineProduks.laporan_penjualan_online.total | pemisahTitik }}</td>
-									<td align="right">{{ penjualanOnlineProduks.laporan_penjualan_online.potongan | pemisahTitik }}</td>
-									<td align="right">{{ penjualanOnlineProduks.laporan_penjualan_online.subtotal | pemisahTitik }}</td>
+							<tbody v-if="penjualanOnlinePelanggan.length > 0 && loading == false"  class="data-ada">
+								<tr v-for="penjualanOnlinePelanggans, index in penjualanOnlinePelanggan" >
+									<td>{{ penjualanOnlinePelanggans.laporan_penjualan_online.kode_barang }}</td>
+									<td>{{ penjualanOnlinePelanggans.laporan_penjualan_online.name }}</td>
+									<td>{{ penjualanOnlinePelanggans.laporan_penjualan_online.nama_barang }}</td>
+									<td align="right">{{ penjualanOnlinePelanggans.laporan_penjualan_online.harga | pemisahTitik }}</td>
+									<td align="right">{{ penjualanOnlinePelanggans.laporan_penjualan_online.jumlah | pemisahTitik }}</td>
+									<td align="right">{{ penjualanOnlinePelanggans.laporan_penjualan_online.total | pemisahTitik }}</td>
+									<td align="right">{{ penjualanOnlinePelanggans.laporan_penjualan_online.potongan | pemisahTitik }}</td>
+									<td align="right">{{ penjualanOnlinePelanggans.laporan_penjualan_online.subtotal | pemisahTitik }}</td>
 
 								</tr>
 
@@ -130,13 +134,14 @@
 									<td>TOTAL</td>
 									<td></td>
 									<td></td>
-									<td align="right">{{ totalPenjualanOnlineProduk.jumlah | pemisahTitik }}</td>
-									<td align="right">{{ totalPenjualanOnlineProduk.total | pemisahTitik }}</td>
-									<td align="right">{{ totalPenjualanOnlineProduk.potongan | pemisahTitik }}</td>
-									<td align="right">{{ totalPenjualanOnlineProduk.subtotal | pemisahTitik }}</td>
+									<td align="right">{{ totalLaporanPenjualanOnlinePelanggan.harga | pemisahTitik }}</td>
+									<td align="right">{{ totalLaporanPenjualanOnlinePelanggan.jumlah | pemisahTitik }}</td>
+									<td align="right">{{ totalLaporanPenjualanOnlinePelanggan.total | pemisahTitik }}</td>
+									<td></td>
+									<td align="right">{{ totalLaporanPenjualanOnlinePelanggan.subtotal | pemisahTitik }}</td>
 								</tr>
 							</tbody>					
-							<tbody class="data-tidak-ada" v-else-if="penjualanOnlineProduk.length == 0 && loading == false">
+							<tbody class="data-tidak-ada" v-else-if="penjualanOnlinePelanggan.length == 0 && loading == false">
 								<tr ><td colspan="9"  class="text-center">Tidak Ada Data</td></tr>
 							</tbody>
 						</table>
@@ -150,7 +155,7 @@
 					<a href="#" class='btn btn-success' id="btnCetak" target='blank' :style="'display: none'"><i class="material-icons">print</i> Cetak Laporan</a>
 
 					<vue-simple-spinner v-if="loading"></vue-simple-spinner>
-					<div align="right"><pagination :data="penjualanOnlineProdukData" v-on:pagination-change-page="prosesLaporan" :limit="4"></pagination></div>
+					<div align="right"><pagination :data="penjualanOnlinePelangganData" v-on:pagination-change-page="prosesLaporan" :limit="4"></pagination></div>
 				</div>
 			</div>
 		</div>
@@ -160,29 +165,26 @@
 export default {
 	data: function () {
 		return {
-			produk: [],
-			penjualanProduk: [],
-			penjualanOnlineProduk:[],
-			penjualanProdukData: {},
-			penjualanOnlineProdukData: {},
-			totalPenjualanPosProduk: {},
-			totalPenjualanOnlineProduk: {},
+			pelanggan: [],
+			penjualanPelanggan: [],
+			penjualanOnlinePelanggan:[],
+			penjualanPelangganData: {},
+			penjualanOnlinePelangganData: {},
+			totalPenjualanPosPelanggan: {},
+			totalLaporanPenjualanOnlinePelanggan: {},
 			filter: {
 				dari_tanggal: '',
 				sampai_tanggal: new Date(),
-				produk: '',
+				pelanggan: '',
 			},
-			url : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-penjualan-pos-produk"),
-			urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-penjualan-pos-produk/download-excel-penjualan-pos-produk"),
-			urlCetak : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-penjualan-pos-produk/cetak-laporan"),
+			url : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-penjualan-pelanggan"),
+			urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-penjualan-pelanggan/download-excel-penjualan-pelanggan"),
+			urlCetak : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-penjualan-pelanggan/cetak-laporan"),
 			pencarian: '',
 			pencarianOnline: '',
 			loading: false,
-			placeholder_produk: {
-				placeholder: '--PILIH PRODUK--'
-			},
-			placeholder_pelangan: {
-				placeholder: '--PILIH PELANGGAN--'
+			placeholder_pelanggan: {
+				placeholder: '--SEMUA PELANGGAN--'
 			},
 		}
 	},
@@ -191,7 +193,7 @@ export default {
 		var awal_tanggal = new Date();
 		awal_tanggal.setDate(1);
 
-		app.dataProduk();
+		app.dataPelanggan();
 		app.filter.dari_tanggal = awal_tanggal;
 	},
 	watch: {
@@ -212,13 +214,13 @@ filters: {
 	}
 },
 methods: {
-	submitPenjualanProduk(){
+	submitPenjualanPelanggan(){
 		var app = this;
 		var filter = app.filter;
 		app.prosesLaporan();
 		app.prosesLaporanOnline();
-		app.totalPenjualanProduk();
-		app.totalPenjualanOnlineProduks();
+		app.totalPenjualanPelanggan();
+		app.totalPenjualanOnlinePelanggan();
 		app.showButton();   		
 	},
 	prosesLaporan(page) {
@@ -230,14 +232,14 @@ methods: {
 		app.loading = true,
 		axios.post(app.url+'/view?page='+page, newFilter)
 		.then(function (resp) {
-			app.penjualanProduk = resp.data.data;
-			app.penjualanProdukData = resp.data;
+			app.penjualanPelanggan = resp.data.data;
+			app.penjualanpelangganData = resp.data;
 			app.loading = false
-			// console.log(resp.data.data);
+			console.log(resp.data.data);
 		})
 		.catch(function (resp) {
-			console.log(resp);
-			alert("Tidak Dapat Memuat Laporan Penjualan Pos /Produk");
+			// console.log(resp);
+			alert("Tidak Dapat Memuat Laporan Penjualan Pos /pelanggan");
 		});
 	},prosesLaporanOnline(page) {
 		var app = this;	
@@ -248,26 +250,26 @@ methods: {
 		app.loading = true,
 		axios.post(app.url+'/view-online?page='+page, newFilter)
 		.then(function (resp) {
-			app.penjualanOnlineProduk = resp.data.data;
-			app.penjualanOnlineProdukData = resp.data;
+			app.penjualanOnlinePelanggan = resp.data.data;
+			app.penjualanOnlinePelangganData = resp.data;
 			app.loading = false
 			console.log(resp.data.data);
 		})
 		.catch(function (resp) {
-			console.log(resp);
-			alert("Tidak Dapat Memuat Laporan Penjualan Online /Produk");
+			// console.log(resp);
+			alert("Tidak Dapat Memuat Laporan Penjualan Online /pelanggan");
 		});
 	},
 	
-	dataProduk() {
+	dataPelanggan() {
 		var app = this;
-		axios.get(app.url+'/pilih-produk')
+		axios.get(app.url+'/pilih-pelanggan')
 		.then(function (resp) {
-			app.produk = resp.data;
-			console.log(resp.data)
+			app.pelanggan = resp.data;
+			// console.log(resp.data)
 		})
 		.catch(function (resp) {
-			alert("Tidak bisa memuat produk ");
+			alert("Tidak bisa memuat pelanggan ");
 		});
 	},
 	getHasilPencarian(page){
@@ -278,12 +280,12 @@ methods: {
 		}
 		axios.post(app.url+'/pencarian?search='+app.pencarian+'&page='+page, newFilter)
 		.then(function (resp) {
-			app.penjualanProduk = resp.data.data;
-			app.penjualanProdukData = resp.data;
+			app.penjualanPelanggan = resp.data.data;
+			app.penjualanpelangganData = resp.data;
 		})
 		.catch(function (resp) {
 			// console.log(resp);
-			alert("Tidak Dapat Memuat Laporan Penjualan Pos /Produk");
+			alert("Tidak Dapat Memuat Laporan Penjualan Pos /pelanggan");
 		});
 	},
 	getHasilPencarianOnline(page){
@@ -294,22 +296,22 @@ methods: {
 		}
 		axios.post(app.url+'/pencarian-online?search='+app.pencarianOnline+'&page='+page, newFilter)
 		.then(function (resp) {
-			app.penjualanOnlineProduk = resp.data.data;
-			app.penjualanOnlineProdukData = resp.data;
+			app.penjualanOnlinePelanggan = resp.data.data;
+			app.penjualanOnlinePelangganData = resp.data;
 		})
 		.catch(function (resp) {
 			// console.log(resp);
-			alert("Tidak Dapat Memuat Laporan Penjualan Pos /Produk");
+			alert("Tidak Dapat Memuat Laporan Penjualan Pos /pelanggan");
 		});
 	},
-	totalPenjualanProduk() {
+	totalPenjualanPelanggan() {
 		var app = this;	
 		var newFilter = app.filter;
 
 		app.loading = true,
-		axios.post(app.url+'/total-penjualan-pos-produk', newFilter)
+		axios.post(app.url+'/total-penjualan-pos-pelanggan', newFilter)
 		.then(function (resp) {
-			app.totalPenjualanPosProduk = resp.data;
+			app.totalPenjualanPosPelanggan = resp.data;
 			app.loading = false
 			console.log(resp.data);    			
 		})
@@ -317,28 +319,28 @@ methods: {
 			// console.log(resp);
 			alert("Tidak Dapat Memuat Subtotal Mutasi Stok");
 		});
-	},	totalPenjualanOnlineProduks() {
+	},	totalPenjualanOnlinePelanggan() {
 		var app = this;	
 		var newFilter = app.filter;
 
 		app.loading = true,
-		axios.post(app.url+'/total-penjualan-online-produk', newFilter)
+		axios.post(app.url+'/total-penjualan-online-pelanggan', newFilter)
 		.then(function (resp) {
-			app.totalPenjualanOnlineProduk = resp.data;
+			app.totalLaporanPenjualanOnlinePelanggan = resp.data;
 			app.loading = false
 			console.log(resp.data);    			
 		})
 		.catch(function (resp) {
 			// console.log(resp);
-			alert("Tidak Dapat Memuat Total Penjualan Online /Produk");
+			alert("Tidak Dapat Memuat Total Penjualan Online /pelanggan");
 		});
 	},	
 	showButton() {
 		var app = this;
 		var filter = app.filter;
 
-		if (filter.produk == "") {
-			filter.produk = 0;
+		if (filter.pelanggan == "") {
+			filter.pelanggan = 0;
 		};
 
 		var date_dari_tanggal = filter.dari_tanggal;
@@ -348,8 +350,8 @@ methods: {
 
 		$("#btnExcel").show();
 		$("#btnCetak").show();
-		$("#btnExcel").attr('href', app.urlDownloadExcel+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.produk);
-		$("#btnCetak").attr('href', app.urlCetak+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.produk);
+		$("#btnExcel").attr('href', app.urlDownloadExcel+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.pelanggan);
+		$("#btnCetak").attr('href', app.urlCetak+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.pelanggan);
 	}
 }
 }
