@@ -47,7 +47,7 @@ function pemisahTitik($angka)
 	<div class="container">
 
 		<div class="row">
-			<div class="col-md-12"><h4><b><center> LAPORAN PENJUALAN POS /PRODUK</center></b></h4><hr style="margin: 0px 0px"></div>
+			<div class="col-md-12"><h4><b><center> LAPORAN PENJUALAN POS /PELANGGAN</center></b></h4><hr style="margin: 0px 0px"></div>
 			<div class="col-md-9">
 				<table>
 					<tbody>
@@ -73,6 +73,7 @@ function pemisahTitik($angka)
 			<table class="table table-bordered">
 				<thead>
 					<th class="table1" style="width: 10%">Kode Produk</th>
+					<th class="table1" style="width: 25%">Nama Pelanggan</th>
 					<th class="table1" style="width: 25%">Nama Produk</th>
 					<th class="table1" style="width: 10%" style="text-align:right">Jumlah</th>
 					<th class="table1" style="width: 10%">Satuan</th>
@@ -85,6 +86,7 @@ function pemisahTitik($angka)
 					@foreach ($data_penjualan as $data_penjualans)
 					<tr>
 						<td class="table1">{{ $data_penjualans['laporan_penjualans']->kode_barang }}</td>
+						<td class="table1">{{ $data_penjualans['laporan_penjualans']->name }}</td>
 						<td class="table1">{{ $data_penjualans['laporan_penjualans']->nama_barang }}</td>
 						<td class="table1" align="right">{{ pemisahTitik($data_penjualans['laporan_penjualans']->jumlah_produk) }}</td>
 						<td class="table1">{{ $data_penjualans['laporan_penjualans']->nama_satuan }}</td>
@@ -97,11 +99,12 @@ function pemisahTitik($angka)
 					<tr style="color: red">
 						<td>TOTAL</td>
 						<td></td>
+						<td></td>
 						<td align="right">{{ pemisahTitik($total_penjualan->jumlah_produk) }}</td>
 						<td></td>
 						<td align="right">{{ pemisahTitik($total_penjualan->subtotal) }}</td>
-						<td align="right">{{ pemisahTitik($total_penjualan->potongan) }}</td>
-						<td align="right">{{ pemisahTitik($total_penjualan->pajak) }}</td>
+						<td></td>
+						<td></td>
 						<td align="right">{{ pemisahTitik($total_penjualan->total) }}</td>
 					</tr>
 				</tbody>
@@ -109,7 +112,7 @@ function pemisahTitik($angka)
 		</div>
 	</div>
 	<div class="row">
-			<div class="col-md-12"><h4><b><center> LAPORAN PENJUALAN ONLINE /PRODUK</center></b></h4><hr style="margin: 0px 0px"></div>
+			<div class="col-md-12"><h4><b><center> LAPORAN PENJUALAN ONLINE /PELANGGAN</center></b></h4><hr style="margin: 0px 0px"></div>
 			<div class="col-md-9">
 				<table>
 					<tbody>
@@ -135,6 +138,7 @@ function pemisahTitik($angka)
 			<table class="table table-bordered">
 				<thead>
 					<th class="table1" style="width: 10%">Kode Produk</th>
+					<th class="table1" style="width: 25%">Nama Pelanggan</th>
 					<th class="table1" style="width: 25%">Nama Produk</th>
 					<th class="table1" style="width: 10%" style="text-align:right">Harga</th>
 					<th class="table1" style="width: 10%" style="text-align:right">Jumlah</th>
@@ -146,6 +150,7 @@ function pemisahTitik($angka)
 					@foreach ($data_penjualan_online as $data_penjualan_onlines)
 					<tr>
 						<td class="table1">{{ $data_penjualan_onlines['laporan_penjualan_online']->kode_barang }}</td>
+						<td class="table1">{{ $data_penjualan_onlines['laporan_penjualan_online']->name }}</td>
 						<td class="table1">{{ $data_penjualan_onlines['laporan_penjualan_online']->nama_barang }}</td>
 						<td class="table1" align="right">{{ pemisahTitik($data_penjualan_onlines['laporan_penjualan_online']->harga) }}</td>
 						<td class="table1" align="right">{{ pemisahTitik($data_penjualan_onlines['laporan_penjualan_online']->jumlah) }}</td>
@@ -158,9 +163,10 @@ function pemisahTitik($angka)
 						<td>TOTAL</td>
 						<td></td>
 						<td></td>
+						<td></td>
 						<td align="right">{{ pemisahTitik($total_penjualan_online->jumlah) }}</td>
 						<td align="right">{{ pemisahTitik($total_penjualan_online->total) }}</td>
-						<td align="right">{{ pemisahTitik($total_penjualan_online->potongan) }}</td>
+						<td></td>
 						<td align="right">{{ pemisahTitik($total_penjualan_online->subtotal) }}</td>
 					</tr>
 				</tbody>
