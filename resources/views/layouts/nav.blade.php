@@ -1,3 +1,5 @@
+@if(Auth::user()->kasir_id == 0)
+
 <li>
     <a class="disabled-menu" data-toggle="collapse" href="#transaksiKas">
         <i class="material-icons">
@@ -132,6 +134,10 @@
         </p>
     </router-link>
 </li>
+
+@endif
+
+
 <!--PESANAN -->
 <li>
     <router-link :to="{name: 'indexPesananWarung'}" class="menu-nav disabled-menu">
@@ -154,6 +160,9 @@
         </p>
     </router-link>
 </li>
+
+@if(Auth::user()->kasir_id == 0)
+
 <li>
     <a class="disabled-menu" data-toggle="collapse" href="#pembayaran">
         <i class="material-icons">
@@ -296,6 +305,9 @@
         </ul>
     </div>
 </li>
+
+@endif
+
 <li>
     <a class="disabled-menu" data-toggle="collapse" href="#pagesExamples">
         <i class="material-icons">
@@ -320,8 +332,8 @@
                     </span>
                 </router-link>
             </li>
-            @endif
-            @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 1)
+
+            @if(Auth::user()->kasir_id == 0)
             <li>
                 <router-link :to="{name: 'indexKelompokProduk'}" class="menu-nav">
                     <span class="sidebar-mini">
@@ -343,6 +355,9 @@
                 </router-link>
             </li>
             @endif
+            @endif
+
+            @if(Auth::user()->kasir_id == 0)
             <li>
                 <router-link :to="{name: 'indexSuplier'}" class="menu-nav">
                     <span class="sidebar-mini">
@@ -353,9 +368,14 @@
                     </span>
                 </router-link>
             </li>
+            @endif
         </ul>
     </div>
 </li>
+
+
+@if(Auth::user()->kasir_id == 0)
+
 <li>
     <a class="disabled-menu" data-toggle="collapse" href="#settingWarung">
         <i class="material-icons">
@@ -392,3 +412,5 @@
         </ul>
     </div>
 </li>
+
+@endif
