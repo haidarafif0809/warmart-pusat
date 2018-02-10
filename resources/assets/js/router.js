@@ -113,7 +113,7 @@ import LaporanMutasiStokIndex from './components/laporan/LaporanMutasiStokIndex.
 // LAPORAN PEMBELIAN /PRODUK
 import LaporanPembelianProdukIndex from './components/laporan/LaporanPembelianProdukIndex.vue';
 // LAPORAN PENJUALAN /PRODUK
-import LaporanPenjualanPosProdukIndex from './components/laporan/LaporanPenjualanPosProdukIndex.vue';
+import LaporanPenjualanProdukIndex from './components/laporan/LaporanPenjualanProdukIndex.vue';
 // LAPORAN PENJUALAN /PELANGGAN
 import LaporanPenjualanPelangganIndex from './components/laporan/LaporanPenjualanPelangganIndex.vue';
 // PENDAFTARAN TOPOS
@@ -139,16 +139,13 @@ import LaporanKasIndex from './components/laporan/LaporanKasIndex.vue';
 // SETTING FOOTER
 import SettingFooterIndex from './components/setting_footer/SettingFooterIndex.vue';
 import indexSettingFooter from './components/setting_footer/SettingFooterIndex.vue';
-
 // SETTING VERIFIKASI
 import SettingVerifikasiIndex from './components/setting_verifikasi/SettingVerifikasiIndex.vue';
 import indexSettingVerifikasi from './components/setting_verifikasi/SettingVerifikasiIndex.vue';
-
 /**USER KASIR*/
 import UserKasirIndex from './components/user_kasir/UserKasirIndex.vue';
 import UserKasirCreate from './components/user_kasir/UserKasirCreate.vue';
 import UserKasirEdit from './components/user_kasir/UserKasirEdit.vue';
-
 const routes = [{
         path: '/',
         components: {
@@ -546,9 +543,9 @@ const routes = [{
     },
     // LAPORAN PENJUALAN / PRODUK
     {
-        path: '/laporan-penjualan-pos-produk',
-        component: LaporanPenjualanPosProdukIndex,
-        name: 'indexLaporanPenjualanPosProduk'
+        path: '/laporan-penjualan-produk',
+        component: LaporanPenjualanProdukIndex,
+        name: 'indexLaporanPenjualanProduk'
     },
     // LAPORAN PENJUALAN / PELANGGAN
     {
@@ -634,7 +631,7 @@ const routes = [{
     },
     // SETTING VERIFIKASI
     {
-        path: '/setting-verifikasi/:id_warung',
+        path: '/setting-verifikasi',
         component: SettingVerifikasiIndex,
         name: 'indexSettingVerifikasi'
     },
@@ -643,13 +640,11 @@ const routes = [{
         path: '/user-kasir',
         component: UserKasirIndex,
         name: 'indexUserKasir'
-    },
-    {
+    }, {
         path: '/user-kasir-create',
         component: UserKasirCreate,
         name: 'createUserKasir'
-    },
-    {
+    }, {
         path: '/edit-user-kasir/:id',
         component: UserKasirEdit,
         name: 'editUserKasir'

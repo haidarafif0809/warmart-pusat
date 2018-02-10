@@ -9,14 +9,9 @@ use Yajra\Auditable\AuditableTrait;
 
 class PembayaranHutang extends Model
 {
-
-
-
-
-
     //
         use AuditableTrait;
-    protected $fillable = ['no_faktur_pembayaran', 'total', 'suplier_id', 'cara_bayar', 'warung_id', 'keterangan'];
+    protected $fillable = ['no_faktur_pembayaran', 'total', 'suplier_id', 'cara_bayar', 'warung_id', 'keterangan', 'created_at', 'updated_at'];
     protected $primaryKey = 'id_pembayaran_hutang';
 
     public static function no_faktur($warung_id)

@@ -156,40 +156,39 @@ class DetailPenjualan extends Model
 
         return $query_sub_total_penjualan;
     }
+
+    // QUERY LAPORAN PENJUALAN ONLINE
+    public function queryLaporanPenjualanOnline($request)
+    {
+        $laporan_penjualan_online = DetailPenjualan::select([
+            'detail_penjualans.id_produk',
+            'detail_penjualans.harga',
+            'detail_penjualans.potongan',
+            'detail_penjualans.jumlah',
+            'barangs.kode_barang',
+            'users.name',
+            'barangs.nama_barang',
+            DB::raw('SUM(detail_penjualans.subtotal) as subtotal'),
+            DB::raw('SUM(detail_penjualans.jumlah * detail_penjualans.harga) as total')])
+            ->leftJoin('barangs', 'barangs.id', '=', 'detail_penjualans.id_produk')
+            ->leftJoin('penjualans', 'penjualans.id', '=', 'detail_penjualans.id_penjualan')
+            ->leftJoin('users', 'users.id', '=', 'penjualans.id_pelanggan')
+            ->where(DB::raw('DATE(detail_penjualans.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+            ->where(DB::raw('DATE(detail_penjualans.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal));
+
+        return $laporan_penjualan_online;
+    }
+    // LAPORAN PENJUALAN ONLINE PER PRODUK
     public function scopeLaporanPenjualanOnlineProduk($query_laporan_penjualan_online_produk, $request)
     {
-        if ($request->produk == "") {
-            $query_laporan_penjualan_online_produk = DetailPenjualan::select([
-                'detail_penjualans.id_produk',
-                'detail_penjualans.harga',
-                'detail_penjualans.potongan',
-                'detail_penjualans.jumlah',
-                'barangs.kode_barang',
-                'barangs.nama_barang',
-                DB::raw('SUM(detail_penjualans.subtotal) as subtotal'),
-                DB::raw('SUM(detail_penjualans.jumlah * detail_penjualans.harga) as total')])
-                ->leftJoin('barangs', 'barangs.id', '=', 'detail_penjualans.id_produk')
-                ->leftJoin('penjualans', 'penjualans.id', '=', 'detail_penjualans.id_penjualan')
-                ->where(DB::raw('DATE(detail_penjualans.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
-                ->where(DB::raw('DATE(detail_penjualans.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+        if ($request->produk != "") {
+            $query_laporan_penjualan_online_produk = $this->queryLaporanPenjualanOnline($request)
+                ->where('detail_penjualans.id_produk', $request->produk)
                 ->where('penjualans.id_warung', Auth::user()->id_warung)
                 ->groupBy('detail_penjualans.id_produk')
                 ->orderBy('detail_penjualans.created_at', 'desc');
         } else {
-            $query_laporan_penjualan_online_produk = DetailPenjualan::select([
-                'detail_penjualans.id_produk',
-                'detail_penjualans.harga',
-                'detail_penjualans.potongan',
-                'detail_penjualans.jumlah',
-                'barangs.kode_barang',
-                'barangs.nama_barang',
-                DB::raw('SUM(detail_penjualans.subtotal) as subtotal'),
-                DB::raw('SUM(detail_penjualans.jumlah * detail_penjualans.harga) as total')])
-                ->leftJoin('barangs', 'barangs.id', '=', 'detail_penjualans.id_produk')
-                ->leftJoin('penjualans', 'penjualans.id', '=', 'detail_penjualans.id_penjualan')
-                ->where(DB::raw('DATE(detail_penjualans.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
-                ->where(DB::raw('DATE(detail_penjualans.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
-                ->where('detail_penjualans.id_produk', $request->produk)
+            $query_laporan_penjualan_online_produk = $this->queryLaporanPenjualanOnline($request)
                 ->where('penjualans.id_warung', Auth::user()->id_warung)
                 ->groupBy('detail_penjualans.id_produk')
                 ->orderBy('detail_penjualans.created_at', 'desc');
@@ -197,7 +196,26 @@ class DetailPenjualan extends Model
 
         return $query_laporan_penjualan_online_produk;
     }
-    public function queryLaporanPenjualanOnlineProduk($request)
+    // LAPORAN PENJUALAN ONLINE PER PELANGGAN
+    public function scopeLaporanPenjualanOnlinePelanggan($query_laporan_penjualan_online_pelanggan, $request)
+    {
+        if ($request->pelanggan != "") {
+            $query_laporan_penjualan_online_pelanggan = $this->queryLaporanPenjualanOnline($request)
+                ->where('penjualans.id_pelanggan', $request->pelanggan)
+                ->where('penjualans.id_warung', Auth::user()->id_warung)
+                ->groupBy('penjualans.id_pelanggan', 'barangs.id')
+                ->orderBy('detail_penjualans.created_at', 'desc');
+        } else {
+            $query_laporan_penjualan_online_pelanggan = $this->queryLaporanPenjualanOnline($request)
+                ->where('penjualans.id_warung', Auth::user()->id_warung)
+                ->groupBy('penjualans.id_pelanggan', 'barangs.id')
+                ->orderBy('detail_penjualans.created_at', 'desc');
+        }
+
+        return $query_laporan_penjualan_online_pelanggan;
+    }
+    // QUERY TOTAL PENJUALAN ONLINE
+    public function queryTotalPenjualanOnline($request)
     {
         $total_penjualan_online_produk = DetailPenjualan::select(
             'detail_penjualans.id_produk',
@@ -213,21 +231,39 @@ class DetailPenjualan extends Model
             ->where('penjualans.id_warung', Auth::user()->id_warung);
         return $total_penjualan_online_produk;
     }
+
+    // TOTAL PENJUALAN ONLINE PER PRODUK
     public function scopeTotalLaporanPenjualanOnlineProduk($query_total_penjualan_online_produk, $request)
     {
         if ($request->produk != "") {
-            $query_total_penjualan_online_produk = $this->queryLaporanPenjualanOnlineProduk($request)
+            $query_total_penjualan_online_produk = $this->queryTotalPenjualanOnline($request)
                 ->where('detail_penjualans.id_produk', $request->produk)
                 ->orderBy('detail_penjualans.created_at', 'desc');
         } else {
-            $query_total_penjualan_online_produk = $this->queryLaporanPenjualanOnlineProduk($request)
+            $query_total_penjualan_online_produk = $this->queryTotalPenjualanOnline($request)
                 ->orderBy('detail_penjualans.created_at', 'desc');
         }
 
         return $query_total_penjualan_online_produk;
 
     }
-    public function queryCariLaporanPenjualanProduk($request)
+    // TOTAL PENJUALAN ONLINE PER PELANGGAN
+    public function scopeTotalLaporanPenjualanOnlinePelanggan($query_total_penjualan_online_pelanggan, $request)
+    {
+        if ($request->pelanggan != "") {
+            $query_total_penjualan_online_pelanggan = $this->queryTotalPenjualanOnline($request)
+                ->where('penjualans.id_pelanggan', $request->pelanggan)
+                ->orderBy('detail_penjualans.created_at', 'desc');
+        } else {
+            $query_total_penjualan_online_pelanggan = $this->queryTotalPenjualanOnline($request)
+                ->orderBy('detail_penjualans.created_at', 'desc');
+        }
+
+        return $query_total_penjualan_online_pelanggan;
+
+    }
+    // QUERY CARI LAPORAN PENJUALAN ONLINE PER PRODUK
+    public function queryCariLaporanPenjualanOnline($request)
     {
         $cari_laporan_penjualan_produk = DetailPenjualan::select([
             'detail_penjualans.id_produk',
@@ -236,10 +272,12 @@ class DetailPenjualan extends Model
             'detail_penjualans.jumlah',
             'barangs.kode_barang',
             'barangs.nama_barang',
+            'users.name',
             DB::raw('SUM(detail_penjualans.subtotal) as subtotal'),
             DB::raw('SUM(detail_penjualans.jumlah * detail_penjualans.harga) as total')])
             ->leftJoin('barangs', 'barangs.id', '=', 'detail_penjualans.id_produk')
             ->leftJoin('penjualans', 'penjualans.id', '=', 'detail_penjualans.id_penjualan')
+            ->leftJoin('users', 'users.id', '=', 'penjualans.id_pelanggan')
             ->where(DB::raw('DATE(detail_penjualans.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
             ->where(DB::raw('DATE(detail_penjualans.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
             ->where('penjualans.id_warung', Auth::user()->id_warung)
@@ -251,7 +289,7 @@ class DetailPenjualan extends Model
     {
         $search = $request->search;
         if ($request->produk != "") {
-            $query_cari_laporan_penjualan_produk = $this->queryCariLaporanPenjualanProduk($request)
+            $query_cari_laporan_penjualan_produk = $this->queryCariLaporanPenjualanOnline($request)
                 ->where('detail_penjualans.id_produk', $request->produk)
                 ->where(function ($query) use ($search) {
                     $query->orWhere('barangs.kode_barang', 'LIKE', '%' . $search . '%')
@@ -263,7 +301,7 @@ class DetailPenjualan extends Model
                 });
 
         } else {
-            $query_cari_laporan_penjualan_produk = $this->queryCariLaporanPenjualanProduk($request)
+            $query_cari_laporan_penjualan_produk = $this->queryCariLaporanPenjualanOnline($request)
                 ->where(function ($query) use ($search) {
                     $query->orWhere('barangs.kode_barang', 'LIKE', '%' . $search . '%')
                         ->orWhere('barangs.nama_barang', 'LIKE', '%' . $search . '%')
@@ -274,5 +312,33 @@ class DetailPenjualan extends Model
                 });
         }
         return $query_cari_laporan_penjualan_produk;
+    }
+    public function scopeCariLaporanPenjualanOnlinePelanggan($query_cari_laporan_penjualan_pelanggan, $request)
+    {
+        $search = $request->search;
+        if ($request->pelanggan != "") {
+            $query_cari_laporan_penjualan_pelanggan = $this->queryCariLaporanPenjualanOnline($request)
+                ->where('penjualans.id_pelanggan', $request->pelanggan)
+                ->where(function ($query) use ($search) {
+                    $query->orWhere('barangs.kode_barang', 'LIKE', '%' . $search . '%')
+                        ->orWhere('users.name', 'LIKE', '%' . $search . '%')
+                        ->orWhere('barangs.nama_barang', 'LIKE', '%' . $search . '%')
+                        ->orWhere('detail_penjualans.harga', 'LIKE', '%' . $search . '%')
+                        ->orWhere('detail_penjualans.jumlah', 'LIKE', '%' . $search . '%')
+                        ->orWhere('detail_penjualans.subtotal', 'LIKE', '%' . $search . '%');
+                });
+
+        } else {
+            $query_cari_laporan_penjualan_pelanggan = $this->queryCariLaporanPenjualanOnline($request)
+                ->where(function ($query) use ($search) {
+                    $query->orWhere('barangs.kode_barang', 'LIKE', '%' . $search . '%')
+                        ->orWhere('users.name', 'LIKE', '%' . $search . '%')
+                        ->orWhere('barangs.nama_barang', 'LIKE', '%' . $search . '%')
+                        ->orWhere('detail_penjualans.harga', 'LIKE', '%' . $search . '%')
+                        ->orWhere('detail_penjualans.jumlah', 'LIKE', '%' . $search . '%')
+                        ->orWhere('detail_penjualans.subtotal', 'LIKE', '%' . $search . '%');
+                });
+        }
+        return $query_cari_laporan_penjualan_pelanggan;
     }
 }

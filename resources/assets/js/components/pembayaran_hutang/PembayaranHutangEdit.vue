@@ -790,7 +790,7 @@ methods: {
         if (app.formBayarHutangTbs.jumlah_bayar < 0) {
             app.alertTbs("Potongan Anda Melebihi Total Hutang");
             app.loading = false;
-            app.inputTbsPembayaranHutang.potongan = 0;
+            app.formBayarHutangTbs.potongan = 0;
             app.$refs.potongan.$el.focus();
         }else{
                  axios.post(app.url+'/proses-tambah-tbs-edit-pembayaran-hutang/'+id,newbayarhutang)
@@ -960,6 +960,7 @@ methods: {
             },
         }).then((value) => {
             if (!value) throw null;
+            $("#modal_selesai").hide();
             this.prosesSelesaiPembayaranHutang(value);
         });
     },
