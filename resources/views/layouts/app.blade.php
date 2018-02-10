@@ -46,9 +46,9 @@ $agent = new Agent();
 </head>
 <style type="text/css">
 
-    .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
-       padding: 1px;
-   }
+.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+ padding: 1px;
+}
 
 </style>
 <body>
@@ -61,8 +61,8 @@ $agent = new Agent();
     -->
 
     <div class="logo">
-     @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
-     <a class="simple-text logo-mini" href="https://war-mart.id">
+       @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
+       <a class="simple-text logo-mini" href="https://war-mart.id">
         WM
     </a>
     <a class="simple-text logo-normal" href="https://war-mart.id">
@@ -99,31 +99,31 @@ $agent = new Agent();
                                 UPU
                             </span>
                             <span class="sidebar-normal">
-                               Ubah Profil User
-                           </span>
-                       </router-link>
-                       @elseif(Auth::user()->tipe_user == 2 )
-                       <a href="{{ url('/ubah-profil-komunitas') }}">
+                             Ubah Profil User
+                         </span>
+                     </router-link>
+                     @elseif(Auth::user()->tipe_user == 2 )
+                     <a href="{{ url('/ubah-profil-komunitas') }}">
                         <span class="sidebar-mini">
                             UPU
                         </span>
                         <span class="sidebar-normal">
-                           Ubah Profil
-                       </span>
-                   </a>
-                   @elseif(Auth::user()->tipe_user == 1 )
-                   <router-link :to="{name: 'ubahProfilAdmin'}" class="menu-nav">
+                         Ubah Profil
+                     </span>
+                 </a>
+                 @elseif(Auth::user()->tipe_user == 1 )
+                 <router-link :to="{name: 'ubahProfilAdmin'}" class="menu-nav">
                     <span class="sidebar-mini">
                         UP
                     </span>
                     <span class="sidebar-normal">
-                       Ubah Profil
-                   </span>
-               </router-link>
-               @endif
-           </li>
-           @if(Auth::user()->tipe_user == 4 AND Auth::user()->kasir_id == 0)
-           <li>
+                     Ubah Profil
+                 </span>
+             </router-link>
+             @endif
+         </li>
+         @if(Auth::user()->tipe_user == 4 AND Auth::user()->kasir_id == 0)
+         <li>
             <router-link :to="{name: 'indexProfilWarung'}" class="menu-nav">
                 @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
                 <span class="sidebar-mini">
@@ -156,7 +156,7 @@ $agent = new Agent();
             </router-link>
             @else
             <router-link :to="{name: 'ubahPasswordUserWarung'}" class="menu-nav" v-on:click="closeMenu()">
-               <span class="sidebar-mini">
+             <span class="sidebar-mini">
                 UP
             </span>
             <span class="sidebar-normal">
@@ -456,7 +456,7 @@ $agent = new Agent();
 </body>
 <!--   Core JS Files   -->
 
-<script src="{{ asset('js/app.js?v=1.145')}}" type="text/javascript">
+<script src="{{ asset('js/app.js?v=1.149')}}" type="text/javascript">
 
 </script>
 <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript">
@@ -595,8 +595,8 @@ $agent = new Agent();
         $("#minimizeSidebar").click();  
 
         $(document).on('click', '.menu-nav', function(){
-           $('.navbar-toggle ').click();
-       });
+         $('.navbar-toggle ').click();
+     });
 
     });
 </script>
