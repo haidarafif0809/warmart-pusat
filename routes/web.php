@@ -851,6 +851,9 @@ Route::get('/setting-footer/id-warung', 'SettingFooterController@idWarung')->mid
 Route::get('/user-kasir/view', 'UserKasirController@view')->middleware('auth');
 Route::get('/user-kasir/pencarian', 'UserKasirController@pencarian')->middleware('auth');
 
+// LAPORAN BUCKET SIZE VUE.JS
+Route::get('/laporan-bucket-size/view', 'LaporanBucketSizeController@prosesLaporanBucketSize')->middleware('auth');
+
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
     Route::resource('user', 'UserController');
@@ -888,6 +891,7 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
     Route::resource('setting-footer', 'SettingFooterController');
     Route::resource('setting-verifikasi', 'SettingVerifikasiController');
     Route::resource('user-kasir', 'UserKasirController');
+    Route::resource('laporan-bucket-size', 'LaporanBucketSizeController');
 
 //BARANG
     //HALAMAN DESKRIPSI
