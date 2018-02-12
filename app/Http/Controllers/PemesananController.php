@@ -39,7 +39,7 @@ class PemesananController extends Controller
         //PERINTAH PAGINATION
         if ($agent->isMobile()) {
 
-            $keranjang_belanjaan = $keranjang_belanja->paginate(4);
+            $keranjang_belanjaan = $keranjang_belanja->paginate(20);
         } else {
 
             $keranjang_belanjaan = $keranjang_belanja->paginate(8);

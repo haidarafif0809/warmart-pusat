@@ -6,7 +6,7 @@
     $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->
     first();
 
-    $foto_logo = \App\UserWarung::select()->where('tipe_user',4)->orderBy('id', 'desc')->first();
+    $foto_logo = \App\UserWarung::select()->where('tipe_user',4)->orderBy('id', 'asc')->limit(1)->first();
 
     $settingFooter = \App\SettingFooter::select()->first();
     ?>

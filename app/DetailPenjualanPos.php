@@ -228,13 +228,13 @@ class DetailPenjualanPos extends Model
             $query_laporan_penjualan_pos_pelanggan = $this->queryLaporanPenjualanPos($request)
                 ->where('penjualan_pos.pelanggan_id', $request->pelanggan)
                 ->where('detail_penjualan_pos.warung_id', Auth::user()->id_warung)
-                ->groupBy('penjualan_pos.pelanggan_id')
+                ->groupBy('penjualan_pos.pelanggan_id', 'barangs.id')
                 ->orderBy('detail_penjualan_pos.created_at', 'desc');
             # code...
         } else {
             $query_laporan_penjualan_pos_pelanggan = $this->queryLaporanPenjualanPos($request)
                 ->where('detail_penjualan_pos.warung_id', Auth::user()->id_warung)
-                ->groupBy('penjualan_pos.pelanggan_id')
+                ->groupBy('penjualan_pos.pelanggan_id', 'barangs.id')
                 ->orderBy('detail_penjualan_pos.created_at', 'desc');
 
         }

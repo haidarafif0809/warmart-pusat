@@ -571,7 +571,8 @@ export default {
                 potonganTbs = 0
             }
             var jumlah_bayar = parseFloat(this.formBayarHutangTbs.nilai_kredit) - parseFloat(potonganTbs)
-            this.formBayarHutangTbs.jumlah_bayar = jumlah_bayar.toFixed(2)
+
+              this.formBayarHutangTbs.jumlah_bayar = jumlah_bayar.toFixed(2)
         },
         
         jumlahBayarHutang(){
@@ -830,7 +831,7 @@ export default {
         if (app.formBayarHutangTbs.jumlah_bayar < 0) {
             app.alertTbs("Potongan Anda Melebihi Total Hutang");
             app.loading = false;
-            app.inputTbsPembayaranHutang.potongan = 0;
+            app.formBayarHutangTbs.potongan = 0;
             app.$refs.potongan.$el.focus();
         }else{
                  axios.post(app.url+'/proses-tambah-tbs-pembayaran-hutang',newbayarhutang)
@@ -954,6 +955,7 @@ export default {
             },
         }).then((value) => {
             if (!value) throw null;
+            $("#modal_selesai").hide();
             this.prosesSelesaiPembayaranHutang(value);
         });
     },

@@ -46,9 +46,9 @@ $agent = new Agent();
 </head>
 <style type="text/css">
 
-    .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
-       padding: 1px;
-   }
+.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+   padding: 1px;
+}
 
 </style>
 <body>
@@ -69,10 +69,10 @@ $agent = new Agent();
         WAR-MART.ID    
     </a>
     @else
-    <a class="simple-text logo-mini" href="http://topos.andaglos.id/">
+    <a class="simple-text logo-mini" href="http://andaglos.id/topos">
         TP
     </a>
-    <a class="simple-text logo-normal" href="http://topos.andaglos.id/">
+    <a class="simple-text logo-normal" href="http://andaglos.id/topos">
         TOPOS    
     </a>
     @endif
@@ -456,7 +456,7 @@ $agent = new Agent();
 </body>
 <!--   Core JS Files   -->
 
-<script src="{{ asset('js/app.js?v=1.145')}}" type="text/javascript">
+<script src="{{ asset('js/app.js?v=1.150')}}" type="text/javascript">
 
 </script>
 <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript">
@@ -531,7 +531,8 @@ $agent = new Agent();
 <script src="{{ asset('js/shortcut.js') }}">
 </script>
 <script src="https://cdn.rawgit.com/chrisvfritz/5f0a639590d6e648933416f90ba7ae4e/raw/974aa47f8f9c5361c5233bd56be37db8ed765a09/currency-validator.js"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+<script src="https://unpkg.com/vue-chartjs/dist/vue-chartjs.min.js"></script>
 <!--MENU YG SEDANG DI MIGRASI KE VUEJS TIDAK BISA DIAKSES SEMENTARA-->
 <script type="text/javascript">
     $(document).on('click', '.vueJs', function(){
