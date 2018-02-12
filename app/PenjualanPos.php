@@ -251,4 +251,14 @@ class PenjualanPos extends Model
         return $query_penjualan_piutang;
     }
 
+    // DATA PENJUALAN PIUTANG
+    public function scopeCountFaktur($query_count_faktur, $dari_tanggal, $sampai_tanggal)
+    {
+        $query_count_faktur = PenjualanPos::select([DB::raw('COUNT(no_faktur) as no_faktur')])
+            ->where(DB::raw('DATE(created_at)'), '>=', $dari_tanggal)
+            ->where(DB::raw('DATE(created_at)'), '<=', $sampai_tanggal);
+
+        return $query_count_faktur;
+    }
+
 }

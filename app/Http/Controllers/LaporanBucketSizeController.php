@@ -34,17 +34,27 @@ class LaporanBucketSizeController extends Controller
 
     public function prosesLaporanBucketSize(Request $request)
     {
-        $satu = 1;
+        $satu                     = 1;
+        $kelipatan                = 100000;
+        $dari_tanggal             = '2018-01-01';
+        $sampai_tanggal           = '2018-02-12';
+        $data_penjualan_pos       = PenjualanPos::select([DB::raw('MAX(total) as total')])->first();
+        $total_penjualan_terbesar = $satu + $data_penjualan_pos->total;
 
-        $data_penjualan_pos = PenjualanPos::select([DB::raw('MAX(total) as total')])->first();
-        $total_kelipatan    = $satu + $data_penjualan_pos->total;
-        while (50000 <= $total_kelipatan) {
-            $total_semua_faktur = PenjualanPos::select([DB::raw('COUNT(no_faktur)')])->first();
-            $total_faktur       = PenjualanPos::select([DB::raw('COUNT(no_fakturr)')])
-                ->whereBetween('total', array($satu, 50000))->first();
-            $respons['kelipatan']    = $satu;
-            $respons['total_faktur'] = $total_semua_faktur;
+        while ($kelipatan <= $total_penjualan_terbesar) {
+            $total_faktur           = PenjualanPos::countFaktur($dari_tanggal, $sampai_tanggal)->first()->no_faktur;
+            $total_faktur_kelipatan = PenjualanPos::countFaktur($dari_tanggal, $sampai_tanggal)
+                ->whereBetween('total', array($satu, $kelipatan))
+                ->first()->no_faktur;
+
+            $respons['kelipatan'][]                = $satu . " - " . $kelipatan;
+            $respons['datasets']['total_faktur'][] = $total_faktur_kelipatan;
+
+            $data_kelipatan = 100000;
+            $kelipatan += $data_kelipatan;
+            $satu += $data_kelipatan;
         }
+
         return response()->json($respons);
     }
 

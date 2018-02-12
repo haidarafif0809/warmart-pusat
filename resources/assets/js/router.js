@@ -142,6 +142,8 @@ import indexSettingFooter from './components/setting_footer/SettingFooterIndex.v
 // SETTING VERIFIKASI
 import SettingVerifikasiIndex from './components/setting_verifikasi/SettingVerifikasiIndex.vue';
 import indexSettingVerifikasi from './components/setting_verifikasi/SettingVerifikasiIndex.vue';
+//SAMPLE CHART
+import SampleChart from './components/dashboard/SampleChart.vue';
 /**USER KASIR*/
 import UserKasirIndex from './components/user_kasir/UserKasirIndex.vue';
 import UserKasirCreate from './components/user_kasir/UserKasirCreate.vue';
@@ -648,6 +650,10 @@ const routes = [{
         path: '/edit-user-kasir/:id',
         component: UserKasirEdit,
         name: 'editUserKasir'
+    }, {
+        path: '/sample-chart',
+        component: SampleChart,
+        name: 'sampleChart'
     }
     ]
     export default routes;

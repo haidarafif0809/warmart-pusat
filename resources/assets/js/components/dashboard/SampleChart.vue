@@ -18,7 +18,8 @@
 					suffix: '',
 					precision: 2,
 					masked: false /* doesn't work with directive */
-				}
+				},
+				url: window.location.origin + (window.location.pathname).replace("dashboard", "laporan-bucket-size"),
 			}
 		},
 		mounted () {
@@ -30,38 +31,24 @@
 			app.barChart();
 		},
 		methods: {	
-			barChart(){
+			barChart(){var app = this;
+				axios.get(app.url+'/view')
+				.then(function (resp) {
+					console.log(resp.data)
 
-				console.log("12345")
-				var app = this;
-				app.renderChart({
-					labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-					datasets: [
+					app.renderChart(
 					{
-						label: 'Satu',
-						backgroundColor: '#FC2525',
-						data: [40, 39, 10, 40, 39, 100, 40]
-					},{
-						label: 'Dua',
-						backgroundColor: '#05CBE1',
-						data: [60, 55, 32, 10, 52, 24, 53]
-					},{
-						label: 'Tiga',
-						backgroundColor: '#65499c',
-						data: [30, 25, 15, 8, 72, 52, 63]
-					},{
-						label: 'Empat',
-						backgroundColor: '#ff6090',
-						data: [90, 65, 32, 20, 12, 74, 45]
-					},{
-						label: 'Lima',
-						backgroundColor: '#00701a',
-						data: [25, 77, 24, 20, 52, 85, 87]
-					}
-					]
-				},
-				{
-					responsive: true, maintainAspectRatio: false
+						labels: resp.data.kelipatan,
+						datasets: [{
+							label: 'Satu',
+							backgroundColor: '#FC2525',
+							data: resp.data.datasets.total_faktur
+						}]
+					},
+					{
+						responsive: true, maintainAspectRatio: false
+					})
+
 				})
 			}
 		}

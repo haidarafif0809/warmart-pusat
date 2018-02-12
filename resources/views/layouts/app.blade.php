@@ -46,9 +46,9 @@ $agent = new Agent();
 </head>
 <style type="text/css">
 
-.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
-   padding: 1px;
-}
+    .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+     padding: 1px;
+ }
 
 </style>
 <body>
@@ -61,8 +61,8 @@ $agent = new Agent();
     -->
 
     <div class="logo">
-     @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
-     <a class="simple-text logo-mini" href="https://war-mart.id">
+       @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
+       <a class="simple-text logo-mini" href="https://war-mart.id">
         WM
     </a>
     <a class="simple-text logo-normal" href="https://war-mart.id">
@@ -99,31 +99,31 @@ $agent = new Agent();
                                 UPU
                             </span>
                             <span class="sidebar-normal">
-                               Ubah Profil User
-                           </span>
-                       </router-link>
-                       @elseif(Auth::user()->tipe_user == 2 )
-                       <a href="{{ url('/ubah-profil-komunitas') }}">
+                             Ubah Profil User
+                         </span>
+                     </router-link>
+                     @elseif(Auth::user()->tipe_user == 2 )
+                     <a href="{{ url('/ubah-profil-komunitas') }}">
                         <span class="sidebar-mini">
                             UPU
                         </span>
                         <span class="sidebar-normal">
-                           Ubah Profil
-                       </span>
-                   </a>
-                   @elseif(Auth::user()->tipe_user == 1 )
-                   <router-link :to="{name: 'ubahProfilAdmin'}" class="menu-nav">
+                         Ubah Profil
+                     </span>
+                 </a>
+                 @elseif(Auth::user()->tipe_user == 1 )
+                 <router-link :to="{name: 'ubahProfilAdmin'}" class="menu-nav">
                     <span class="sidebar-mini">
                         UP
                     </span>
                     <span class="sidebar-normal">
-                       Ubah Profil
-                   </span>
-               </router-link>
-               @endif
-           </li>
-           @if(Auth::user()->tipe_user == 4 AND Auth::user()->kasir_id == 0)
-           <li>
+                     Ubah Profil
+                 </span>
+             </router-link>
+             @endif
+         </li>
+         @if(Auth::user()->tipe_user == 4 AND Auth::user()->kasir_id == 0)
+         <li>
             <router-link :to="{name: 'indexProfilWarung'}" class="menu-nav">
                 @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
                 <span class="sidebar-mini">
@@ -156,7 +156,7 @@ $agent = new Agent();
             </router-link>
             @else
             <router-link :to="{name: 'ubahPasswordUserWarung'}" class="menu-nav" v-on:click="closeMenu()">
-               <span class="sidebar-mini">
+             <span class="sidebar-mini">
                 UP
             </span>
             <span class="sidebar-normal">
@@ -531,8 +531,8 @@ $agent = new Agent();
 <script src="{{ asset('js/shortcut.js') }}">
 </script>
 <script src="https://cdn.rawgit.com/chrisvfritz/5f0a639590d6e648933416f90ba7ae4e/raw/974aa47f8f9c5361c5233bd56be37db8ed765a09/currency-validator.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
-<script src="https://unpkg.com/vue-chartjs/dist/vue-chartjs.min.js"></script>
+
+
 <!--MENU YG SEDANG DI MIGRASI KE VUEJS TIDAK BISA DIAKSES SEMENTARA-->
 <script type="text/javascript">
     $(document).on('click', '.vueJs', function(){
@@ -596,8 +596,8 @@ $agent = new Agent();
         $("#minimizeSidebar").click();  
 
         $(document).on('click', '.menu-nav', function(){
-           $('.navbar-toggle ').click();
-       });
+         $('.navbar-toggle ').click();
+     });
 
     });
 </script>
