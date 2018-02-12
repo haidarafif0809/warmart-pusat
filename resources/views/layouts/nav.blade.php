@@ -335,6 +335,16 @@
 
             @if(Auth::user()->kasir_id == 0)
             <li>
+                <router-link :to="{name: 'indexUserKasir'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        KA
+                    </span>
+                    <span class="sidebar-normal">
+                        Kasir
+                    </span>
+                </router-link>
+            </li>
+            <li>
                 <router-link :to="{name: 'indexKelompokProduk'}" class="menu-nav">
                     <span class="sidebar-mini">
                         KP
