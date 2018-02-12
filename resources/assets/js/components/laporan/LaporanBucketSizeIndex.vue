@@ -1,5 +1,4 @@
 <script>
-
 	import {Bar} from 'vue-chartjs'
 
 	export default {
@@ -34,15 +33,13 @@
 			barChart(){var app = this;
 				axios.get(app.url+'/view')
 				.then(function (resp) {
-					console.log(resp.data)
-
 					app.renderChart(
 					{
 						labels: resp.data.kelipatan,
 						datasets: [{
-							label: 'Satu',
-							backgroundColor: '#FC2525',
-							data: resp.data.datasets.total_faktur
+							label: '',
+							backgroundColor: resp.data.color,
+							data: resp.data.total_faktur,
 						}]
 					},
 					{

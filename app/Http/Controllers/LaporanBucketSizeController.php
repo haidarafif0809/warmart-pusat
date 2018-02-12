@@ -13,23 +13,14 @@ class LaporanBucketSizeController extends Controller
         $this->middleware('user-must-warung');
     }
 
-    //METHOD PAGINATION
-    public function dataPagination($bucket_size_pos, $array_bucket_size_pos)
+    public function random_color_part()
     {
-        $respons['current_page']   = $bucket_size_pos->currentPage();
-        $respons['data']           = $array_bucket_size_pos;
-        $respons['first_page_url'] = url('/laporan-bucket-size/view?page=' . $bucket_size_pos->firstItem());
-        $respons['from']           = 1;
-        $respons['last_page']      = $bucket_size_pos->lastPage();
-        $respons['last_page_url']  = url('/laporan-bucket-size/view?page=' . $bucket_size_pos->lastPage());
-        $respons['next_page_url']  = $bucket_size_pos->nextPageUrl();
-        $respons['path']           = url('/laporan-bucket-size/view');
-        $respons['per_page']       = $bucket_size_pos->perPage();
-        $respons['prev_page_url']  = $bucket_size_pos->previousPageUrl();
-        $respons['to']             = $bucket_size_pos->perPage();
-        $respons['total']          = $bucket_size_pos->total();
+        return str_pad(dechex(mt_rand(0, 255)), 2, '0', STR_PAD_LEFT);
+    }
 
-        return $respons;
+    public function random_color()
+    {
+        return '#' . $this->random_color_part() . $this->random_color_part() . $this->random_color_part();
     }
 
     public function prosesLaporanBucketSize(Request $request)
@@ -47,8 +38,16 @@ class LaporanBucketSizeController extends Controller
                 ->whereBetween('total', array($satu, $kelipatan))
                 ->first()->no_faktur;
 
-            $respons['kelipatan'][]                = $satu . " - " . $kelipatan;
-            $respons['datasets']['total_faktur'][] = $total_faktur_kelipatan;
+            if ($total_faktur == 0 or $total_faktur_kelipatan == 0) {
+                $persentase = 0;
+            } else {
+                $persentase = ($total_faktur_kelipatan / $total_faktur) * 100;
+            }
+
+            $respons['kelipatan'][]    = $satu . " - " . $kelipatan;
+            $respons['total_faktur'][] = $total_faktur_kelipatan;
+            $respons['color'][]        = $this->random_color();
+            $respons['persentase'][]   = $persentase;
 
             $data_kelipatan = 100000;
             $kelipatan += $data_kelipatan;

@@ -122,6 +122,8 @@ import PendaftaranToposList from './components/pendaftaran_topos/PendaftaranTopo
 import PendaftaranToposDetail from './components/pendaftaran_topos/PendaftaranToposDetail.vue';
 // LAPORAN KARTU STOK
 import LaporanKartuStokIndex from './components/laporan/LaporanKartuStokIndex.vue';
+// LAPORAN BUCKET SIZE GRAFIK
+import LaporanBucketSizeIndex from './components/laporan/LaporanBucketSizeIndex.vue';
 //PEMBAYARAN HUTANG
 import PembayaranHutangIndex from './components/pembayaran_hutang/PembayaranHutangIndex.vue';
 import PembayaranHutangCreate from './components/pembayaran_hutang/PembayaranHutangCreate.vue';
@@ -142,8 +144,6 @@ import indexSettingFooter from './components/setting_footer/SettingFooterIndex.v
 // SETTING VERIFIKASI
 import SettingVerifikasiIndex from './components/setting_verifikasi/SettingVerifikasiIndex.vue';
 import indexSettingVerifikasi from './components/setting_verifikasi/SettingVerifikasiIndex.vue';
-//SAMPLE CHART
-import SampleChart from './components/dashboard/SampleChart.vue';
 /**USER KASIR*/
 import UserKasirIndex from './components/user_kasir/UserKasirIndex.vue';
 import UserKasirCreate from './components/user_kasir/UserKasirCreate.vue';
@@ -651,9 +651,9 @@ const routes = [{
         component: UserKasirEdit,
         name: 'editUserKasir'
     }, {
-        path: '/sample-chart',
-        component: SampleChart,
-        name: 'sampleChart'
+        path: '/laporan-bucket-size',
+        component: LaporanBucketSizeIndex,
+        name: 'indexLaporanBucketSize'
     }
     ]
     export default routes;
