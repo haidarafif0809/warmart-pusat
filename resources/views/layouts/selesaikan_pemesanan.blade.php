@@ -235,7 +235,6 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
                 {!! Form::text('ongkos_kirim', 0, ['class'=>'form-control','id'=>'ongkos_kirim','placeholder'=>'ongkos kirim']) !!}
                 {!! Form::text('subtotal', $subtotal, ['class'=>'form-control','id'=>'subtotal','placeholder'=>'subtotal']) !!}
               </span>
-
             </div>
 
           </div>
@@ -585,8 +584,8 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
     var total_belanja = parseInt(subtotal) + parseInt(ongkir);
     var ongkir = ongkir.format(0, 3, '.', ',');
     var total_belanja = total_belanja.format(0, 3, '.', ',');
-    $("#subtotal").val(ongkir);
-    $("#ongkos_kirim").val(total_belanja);
+    $("#subtotal").val(total_belanja);
+    $("#ongkos_kirim").val(ongkir);
     $("#biaya_kirim").text("Rp. "+ongkir);
     $("#biaya_kirim").attr("data-biayaKirim",ongkir);
     $("#ongkir").text("Rp. "+ongkir);

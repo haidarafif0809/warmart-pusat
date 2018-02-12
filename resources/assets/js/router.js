@@ -3,7 +3,6 @@ import BankIndex from './components/bank/BankIndex.vue';
 import BankEdit from './components/bank/BankEdit.vue';
 import LazyIndex from './components/lazy_load/LazyIndex.vue';
 import DashboardAdminIndex from './components/dashboard/DashboardAdminIndex.vue';
-import SampleChart from './components/dashboard/SampleChart.vue';
 /**Satuan*/
 import SatuanIndex from './components/satuan/SatuanIndex.vue';
 import SatuanCreate from './components/satuan/SatuanCreate.vue';
@@ -148,102 +147,102 @@ import UserKasirIndex from './components/user_kasir/UserKasirIndex.vue';
 import UserKasirCreate from './components/user_kasir/UserKasirCreate.vue';
 import UserKasirEdit from './components/user_kasir/UserKasirEdit.vue';
 const routes = [{
-        path: '/',
-        components: {
-            dashboardIndex: DashboardAdminIndex
-        },
-        name: 'indexDashboard'
-    }, {
-        path: '/create-bank',
-        component: BankCreate,
-        name: 'createBank'
-    }, {
-        path: '/satuan',
-        component: SatuanIndex,
-        name: 'indexSatuan'
-    }, {
-        path: '/bank',
-        component: BankIndex,
-        name: 'indexBank'
-    }, {
-        path: '/user',
-        component: UserIndex,
-        name: 'indexUser'
+    path: '/',
+    components: {
+        dashboardIndex: DashboardAdminIndex
     },
-    /*CUSTOMER*/
-    {
-        path: '/customer',
-        component: CustomerIndex,
-        name: 'indexCustomer'
-    },
-    /*ERROR LOG*/
-    {
-        path: '/error',
-        component: ErrorIndex,
-        name: 'indexError'
-    }, {
-        path: '/edit-bank/:id',
-        component: BankEdit,
-        name: 'editBank'
-    }, {
-        path: '/lazy_load',
-        component: LazyIndex,
-        name: 'indexLazy'
-    }, {
-        path: '/create-satuan',
-        component: SatuanCreate,
-        name: 'createSatuan'
-    }, {
-        path: '/edit-satuan/:id',
-        component: SatuanEdit,
-        name: 'editSatuan'
-    },
-    /*CUSTOMER*/
-    {
-        path: '/create-customer',
-        component: CustomerCreate,
-        name: 'createCustomer'
-    }, {
-        path: '/edit-customer/:id',
-        component: CustomerEdit,
-        name: 'editCustomer'
-    }, {
-        path: '/detail-customer/:id',
-        component: CustomerDetail,
-        name: 'detailCustomer'
-    }, {
-        path: '/create-user',
-        component: UserCreate,
-        name: 'createUser'
-    }, {
-        path: '/edit-user/:id',
-        component: UserEdit,
-        name: 'editUser'
-    },
-    /**Warung*/
-    {
-        path: '/warung',
-        component: WarungIndex,
-        name: 'indexWarung'
-    }, {
-        path: '/create-warung',
-        component: WarungCreate,
-        name: 'createWarung'
-    }, {
-        path: '/edit-warung/:id',
-        component: WarungEdit,
-        name: 'editWarung'
-    },
-    /**USER WARUNG*/
-    {
-        path: '/user-warung',
-        component: UserWarungIndex,
-        name: 'indexUserWarung'
-    }, {
-        path: '/edit-user-warung/:id',
-        component: UserWarungEdit,
-        name: 'editUserWarung'
-    },
+    name: 'indexDashboard'
+}, {
+    path: '/create-bank',
+    component: BankCreate,
+    name: 'createBank'
+}, {
+    path: '/satuan',
+    component: SatuanIndex,
+    name: 'indexSatuan'
+}, {
+    path: '/bank',
+    component: BankIndex,
+    name: 'indexBank'
+}, {
+    path: '/user',
+    component: UserIndex,
+    name: 'indexUser'
+},
+/*CUSTOMER*/
+{
+    path: '/customer',
+    component: CustomerIndex,
+    name: 'indexCustomer'
+},
+/*ERROR LOG*/
+{
+    path: '/error',
+    component: ErrorIndex,
+    name: 'indexError'
+}, {
+    path: '/edit-bank/:id',
+    component: BankEdit,
+    name: 'editBank'
+}, {
+    path: '/lazy_load',
+    component: LazyIndex,
+    name: 'indexLazy'
+}, {
+    path: '/create-satuan',
+    component: SatuanCreate,
+    name: 'createSatuan'
+}, {
+    path: '/edit-satuan/:id',
+    component: SatuanEdit,
+    name: 'editSatuan'
+},
+/*CUSTOMER*/
+{
+    path: '/create-customer',
+    component: CustomerCreate,
+    name: 'createCustomer'
+}, {
+    path: '/edit-customer/:id',
+    component: CustomerEdit,
+    name: 'editCustomer'
+}, {
+    path: '/detail-customer/:id',
+    component: CustomerDetail,
+    name: 'detailCustomer'
+}, {
+    path: '/create-user',
+    component: UserCreate,
+    name: 'createUser'
+}, {
+    path: '/edit-user/:id',
+    component: UserEdit,
+    name: 'editUser'
+},
+/**Warung*/
+{
+    path: '/warung',
+    component: WarungIndex,
+    name: 'indexWarung'
+}, {
+    path: '/create-warung',
+    component: WarungCreate,
+    name: 'createWarung'
+}, {
+    path: '/edit-warung/:id',
+    component: WarungEdit,
+    name: 'editWarung'
+},
+/**USER WARUNG*/
+{
+    path: '/user-warung',
+    component: UserWarungIndex,
+    name: 'indexUserWarung'
+}, {
+    path: '/edit-user-warung/:id',
+    component: UserWarungEdit,
+    name: 'editUserWarung'
+},
     // Komunitas
     {
         path: '/komunitas',
@@ -649,10 +648,6 @@ const routes = [{
         path: '/edit-user-kasir/:id',
         component: UserKasirEdit,
         name: 'editUserKasir'
-    }, {
-        path: '/sample-chart',
-        component: SampleChart,
-        name: 'sampleChart'
     }
-]
-export default routes;
+    ]
+    export default routes;
