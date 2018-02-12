@@ -69,10 +69,10 @@ $agent = new Agent();
         WAR-MART.ID    
     </a>
     @else
-    <a class="simple-text logo-mini" href="http://topos.andaglos.id/">
+    <a class="simple-text logo-mini" href="http://andaglos.id/topos">
         TP
     </a>
-    <a class="simple-text logo-normal" href="http://topos.andaglos.id/">
+    <a class="simple-text logo-normal" href="http://andaglos.id/topos">
         TOPOS    
     </a>
     @endif

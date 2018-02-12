@@ -68,9 +68,10 @@ class SettingVerifikasiController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id_warung)
+    public function update(Request $request, $id)
     {
-        SettingVerifikasi::find($id_warung)->update($request->all());
+
+        SettingVerifikasi::find($id)->update($request->all());
     }
 
     /**
