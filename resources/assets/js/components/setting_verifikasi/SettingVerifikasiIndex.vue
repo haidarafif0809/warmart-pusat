@@ -75,7 +75,6 @@ export default {
     },
     data: function () {
         return {
-            warung_id: '',
             errors: [],
             url : window.location.origin+(window.location.pathname).replace("dashboard", "setting-verifikasi"),
             setting_verifikasi: {},
@@ -84,7 +83,6 @@ export default {
     methods: {
         saveForm() {
             let app       = this;
-            let id_warung = app.$route.params.id_warung;
             let email     = app.setting_verifikasi.email;
             let no_telp   = app.setting_verifikasi.no_telp;
 
@@ -104,7 +102,7 @@ export default {
 
             console.log(email);
             console.log(no_telp);
-            axios.patch(app.url + '/' + 1, app.setting_verifikasi)
+            axios.put(app.url + '/' + app.setting_verifikasi.id, app.setting_verifikasi)
             .then(function (resp) {
                 console.log(resp);
                 
@@ -123,7 +121,6 @@ export default {
         },
         getDataSettingVerifikasi() {
             let app = this;
-            let id_warung = app.$route.params.id_warung;
 
             axios.get(app.url)
             .then(function (resp) {
