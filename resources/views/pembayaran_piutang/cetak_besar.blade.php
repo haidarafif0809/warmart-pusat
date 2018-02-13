@@ -1,46 +1,53 @@
 <!DOCTYPE doctype html>
 <html lang="en">
 <head>
+
+	@if($setting_aplikasi->tipe_aplikasi == 0)
 	<link href="{{ asset('img/favicon.png') }}" rel="apple-touch-icon" sizes="76x76"/>
 	<link href="{{ asset('img/favicon.png') }}" rel="icon" type="image/png"/>
 	<title>
-		@if($setting_aplikasi->tipe_aplikasi == 0)
 		War-Mart.id
-		@else
-		topos | Aplikasi POS & Toko Online
-		@endif
 	</title>
+	@else
+	<link href="{{ asset('img/icon_topos.png?v=1') }}" rel="apple-touch-icon" sizes="76x76"/>
+	<link href="{{ asset('img/icon_topos.png?v=1') }}" rel="icon" type="image/png"/>
+	<title>
+		topos | Aplikasi POS & Toko Online
+	</title>
+	@endif
+
+
 	<!-- Bootstrap core CSS     -->
 	<link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet"/>
 	<link href="{{ asset('css/selectize.bootstrap3.css') }}" rel="stylesheet">
 </head>
 
 <style type="text/css">
-	p{
-		margin-top: 1px; margin-bottom: 1px;
-	}
-	th,td{
-		padding: 1px;
-	}
-	.table1, .th, .td {
-		font-size: 15px;
-		font: verdana;
-	}
-	.table>thead>tr>th, .table>tbody>tr>td {
-		padding: 1px;
-		line-height: 1.42857143;
-		vertical-align: top;
-		border: 3px solid #eeeeee;
-	}
-	.table-bordered {
-		border: 3px solid #eeeeee;
-	}
-	.text-center{
-		text-align: center;
-	}
-	.text-right{
-		text-align: right;
-	}
+p{
+	margin-top: 1px; margin-bottom: 1px;
+}
+th,td{
+	padding: 1px;
+}
+.table1, .th, .td {
+	font-size: 15px;
+	font: verdana;
+}
+.table>thead>tr>th, .table>tbody>tr>td {
+	padding: 1px;
+	line-height: 1.42857143;
+	vertical-align: top;
+	border: 3px solid #eeeeee;
+}
+.table-bordered {
+	border: 3px solid #eeeeee;
+}
+.text-center{
+	text-align: center;
+}
+.text-right{
+	text-align: right;
+}
 </style>
 <?php
 function pemisahTitik($angka)
