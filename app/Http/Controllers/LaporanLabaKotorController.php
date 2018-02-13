@@ -77,7 +77,13 @@ class LaporanLabaKotorController extends Controller
             $total_laba_kotor = $detail_penjualan->subtotal - $hpp->total_hpp;
             $laba_jual        = $total_laba_kotor - $laba_kotor->potongan;
 
-            array_push($array_laba_kotor, ['laba_kotor' => $laba_kotor, 'hpp' => $hpp->total_hpp, 'total_laba_kotor' => $total_laba_kotor, 'laba_jual' => $laba_jual, 'total' => $detail_penjualan->subtotal]);
+            if ($laba_kotor->pelanggan_id == 0) {
+                $pelanggan = "Umum";
+            } else {
+                $pelanggan = $laba_kotor->name;
+            }
+
+            array_push($array_laba_kotor, ['laba_kotor' => $laba_kotor, 'hpp' => $hpp->total_hpp, 'total_laba_kotor' => $total_laba_kotor, 'laba_jual' => $laba_jual, 'total' => $detail_penjualan->subtotal, 'pelanggan' => $pelanggan]);
         }
         $link_view = 'view';
         //DATA PAGINATION
