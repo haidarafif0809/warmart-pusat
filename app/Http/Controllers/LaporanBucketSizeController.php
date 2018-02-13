@@ -37,16 +37,9 @@ class LaporanBucketSizeController extends Controller
                 ->whereBetween('total', array($satu, $kelipatan))
                 ->first()->no_faktur;
 
-            if ($total_faktur == 0 or $total_faktur_kelipatan == 0) {
-                $persentase = 0;
-            } else {
-                $persentase = ($total_faktur_kelipatan / $total_faktur) * 100;
-            }
-
             $respons['kelipatan'][]    = $satu . " - " . $kelipatan;
             $respons['total_faktur'][] = $total_faktur_kelipatan;
             $respons['color'][]        = $this->random_color();
-            $respons['persentase'][]   = $persentase;
 
             $data_kelipatan = $request->kelipatan;
             $kelipatan += $data_kelipatan;
