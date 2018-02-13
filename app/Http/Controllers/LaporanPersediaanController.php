@@ -26,10 +26,11 @@ class LaporanPersediaanController extends Controller
 
         $laporan_persediaan = Barang::with('satuan')->where('id_warung', Auth::user()->id_warung)->where('hitung_stok', 1)->orderBy('id', 'desc')->paginate(10);
         $array              = array();
+        $hpp                = new Hpp();
+        $total_nilai        = $hpp->totalnilai();
 
         foreach ($laporan_persediaan as $laporan_persediaans) {
 
-            $hpp         = new Hpp();
             $stok_produk = $hpp->stok_produk($laporan_persediaans->id);
             $nilai       = $hpp->nilai($laporan_persediaans->id);
             $hpp_produk  = $hpp->hpp($laporan_persediaans->id);
@@ -44,7 +45,7 @@ class LaporanPersediaanController extends Controller
         }
 
         $url     = '/laporan-persediaan/view';
-        $respons = $this->paginationData($laporan_persediaan, $array, $url);
+        $respons = $this->paginationData($laporan_persediaan, $array, $total_nilai, $url);
 
         return response()->json($respons);
     }
@@ -54,13 +55,14 @@ class LaporanPersediaanController extends Controller
 
         $laporan_persediaan = Barang::with('satuan')->where('id_warung', Auth::user()->id_warung)->where('hitung_stok', 1)->where(function ($query) use ($request) {
             $query->orWhere('kode_barang', 'LIKE', $request->search . '%')
-            ->orWhere('nama_barang', 'LIKE', $request->search . '%');
+                ->orWhere('nama_barang', 'LIKE', $request->search . '%');
         })->orderBy('id', 'desc')->paginate(10);
-        $array = array();
+        $array       = array();
+        $hpp         = new Hpp();
+        $total_nilai = $hpp->totalnilai();
 
         foreach ($laporan_persediaan as $laporan_persediaans) {
 
-            $hpp         = new Hpp();
             $stok_produk = $hpp->stok_produk($laporan_persediaans->id);
             $nilai       = $hpp->nilai($laporan_persediaans->id);
             $hpp_produk  = $hpp->hpp($laporan_persediaans->id);
@@ -77,17 +79,18 @@ class LaporanPersediaanController extends Controller
         $url    = '/laporan-persediaan/pencarian';
         $search = $request->search;
 
-        $respons = $this->paginationPencarianData($laporan_persediaan, $array, $url, $search);
+        $respons = $this->paginationPencarianData($laporan_persediaan, $array, $total_nilai, $url, $search);
 
         return response()->json($respons);
     }
 
-    public function paginationData($laporan_persediaan, $array, $url)
+    public function paginationData($laporan_persediaan, $array, $total_nilai, $url)
     {
 
         //DATA PAGINATION
         $respons['current_page']   = $laporan_persediaan->currentPage();
         $respons['data']           = $array;
+        $respons['totalnilai']     = $total_nilai;
         $respons['first_page_url'] = url($url . '?page=' . $laporan_persediaan->firstItem());
         $respons['from']           = 1;
         $respons['last_page']      = $laporan_persediaan->lastPage();
@@ -102,11 +105,12 @@ class LaporanPersediaanController extends Controller
 
         return $respons;
     }
-    public function paginationPencarianData($laporan_persediaan, $array, $url, $search)
+    public function paginationPencarianData($laporan_persediaan, $array, $total_nilai, $url, $search)
     {
         //DATA PAGINATION
         $respons['current_page']   = $laporan_persediaan->currentPage();
         $respons['data']           = $array;
+        $respons['totalnilai']     = $total_nilai;
         $respons['first_page_url'] = url($url . '?page=' . $laporan_persediaan->firstItem() . '&search=' . $search);
         $respons['from']           = 1;
         $respons['last_page']      = $laporan_persediaan->lastPage();

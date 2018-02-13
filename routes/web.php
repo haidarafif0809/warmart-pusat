@@ -852,7 +852,7 @@ Route::get('/user-kasir/view', 'UserKasirController@view')->middleware('auth');
 Route::get('/user-kasir/pencarian', 'UserKasirController@pencarian')->middleware('auth');
 
 // LAPORAN BUCKET SIZE VUE.JS
-Route::get('/laporan-bucket-size/view', 'LaporanBucketSizeController@prosesLaporanBucketSize')->middleware('auth');
+Route::get('/laporan-bucket-size/view/{dari_tanggal}/{sampai_tanggal}/{kelipatan}', 'LaporanBucketSizeController@prosesLaporanBucketSize')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 

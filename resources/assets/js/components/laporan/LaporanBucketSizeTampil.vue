@@ -1,5 +1,4 @@
 <script>
-
 	import {Bar} from 'vue-chartjs'
 
 	export default {
@@ -8,7 +7,7 @@
 			return {
 				filter: {
 					dari_tanggal: '',
-					sampai_tanggal: new Date(),
+					sampai_tanggal: '',
 					kelipatan: '',
 				},
 				separator: {
@@ -23,26 +22,30 @@
 			}
 		},
 		mounted () {
-			var app = this;		
-			var awal_tanggal = new Date();
-			awal_tanggal.setDate(1);
+			var app = this;
+			var dari_tanggal = app.$route.params.dari_tanggal;
+			var sampai_tanggal = app.$route.params.sampai_tanggal;
+			var kelipatan = app.$route.params.kelipatan;
 
-			app.filter.dari_tanggal = awal_tanggal;
+			app.filter.dari_tanggal = dari_tanggal;
+			app.filter.sampai_tanggal = sampai_tanggal;
+			app.filter.kelipatan = kelipatan;
+
 			app.barChart();
 		},
 		methods: {	
-			barChart(){var app = this;
-				axios.get(app.url+'/view')
+			barChart(){
+				var app = this;
+				var filter = app.filter;
+				axios.get(app.url+'/view/'+filter.dari_tanggal+'/'+filter.sampai_tanggal+'/'+filter.kelipatan)
 				.then(function (resp) {
-					console.log(resp.data)
-
 					app.renderChart(
 					{
 						labels: resp.data.kelipatan,
 						datasets: [{
-							label: 'Satu',
-							backgroundColor: '#FC2525',
-							data: resp.data.datasets.total_faktur
+							label: '',
+							backgroundColor: resp.data.color,
+							data: resp.data.total_faktur,
 						}]
 					},
 					{
