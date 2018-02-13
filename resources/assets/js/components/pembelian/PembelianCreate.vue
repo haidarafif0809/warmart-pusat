@@ -323,7 +323,7 @@
                     </td>
                     <td><p id="table-subtotal" align="right">{{ tbs_pembelian.subtotal_tbs }}</p></td>
                     <td style="text-align:right;"> 
-                      <a href="#create-pembelian" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_pembelian.id_tbs_pembelian" v-on:click="deleteEntry(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk)">Delete</a>
+                      <a href="#create-pembelian" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_pembelian.id_tbs_pembelian" v-on:click="deleteEntry(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk,tbs_pembelian.subtotal_tbs)">Delete</a>
                     </td>
                   </tr>
                 </tbody>          
@@ -444,7 +444,7 @@ export default {
         kredit: 0,
         jatuh_tempo: '',
         keterangan: '',
-        subtotal_number_format:0,	
+        subtotal_number_format:0, 
         suplier: '',
         cara_bayar: '',
         status_pembelian: '',
@@ -531,22 +531,20 @@ methods: {
     this.$refs.cara_bayar.$el.selectize.focus();
   },
   getResults(page) {
-    var app = this;	
+    var app = this; 
     if (typeof page === 'undefined') {
       page = 1;
     }
     axios.get(app.url+'/view-tbs-pembelian?page='+page)
     .then(function (resp) {
       app.tbs_pembelians = resp.data.data;
-      app.tbsPembelianData = resp.data; 			
+      app.tbsPembelianData = resp.data;       
       app.loading = false;
       app.seen = true;
       app.openSelectizeProduk();
 
       if (app.inputPembayaranPembelian.subtotal == 0) {         
-        $.each(resp.data.data, function (i,item) { 
-          app.getSubtotalTbs();
-        });  
+        app.getSubtotalTbs();
       } 
 
     })
@@ -557,16 +555,18 @@ methods: {
       alert("Tidak Dapat Memuat Pembelian");
     });
 },//END FUNGSI UNTUK PAGINATION TAMPILAN AWAL / DOCUMENT READY 
-  getSubtotalTbs(){
-    var app =  this;
-    var jenis_tbs = 1;
-    axios.get(app.url+'/subtotal-tbs-pembelian/'+jenis_tbs)
-    .then(function (resp) {
-     app.inputPembayaranPembelian.subtotal += resp.data.subtotal;
-     })
-    .catch(function (resp) {
-      console.log(resp);
-    });
+getSubtotalTbs(){
+  var app =  this;
+  var jenis_tbs = 1;
+  axios.get(app.url+'/subtotal-tbs-pembelian/'+jenis_tbs)
+  .then(function (resp) {
+   app.inputPembayaranPembelian.subtotal += resp.data.subtotal;
+   app.inputPembayaranPembelian.total_akhir += resp.data.subtotal;
+   app.inputPembayaranPembelian.kredit += resp.data.subtotal;
+ })
+  .catch(function (resp) {
+    console.log(resp);
+  });
 },    
 getHasilPencarian(page){
   var app = this;
@@ -621,7 +621,7 @@ dataCaraBayar() {
   .catch(function (resp) {
     alert("Tidak Bisa Memuat Kas");
   });
-},//END FUNGSI UNTUK SELECTIZE CARABAYAR 	
+},//END FUNGSI UNTUK SELECTIZE CARABAYAR  
 tambahSupplier(){
   $("#modal_tambah_suplier").show();
   this.$refs.nama_suplier.$el.focus();
@@ -702,7 +702,7 @@ alert(pesan) {
     timer: 1000,
   });
 },//alert untuk berhasil proses crud
-deleteEntry(id, index,nama_produk) {
+deleteEntry(id, index,nama_produk,subtotal_lama) {
 
   var app = this;
   app.$swal({
@@ -713,7 +713,7 @@ deleteEntry(id, index,nama_produk) {
   .then((willDelete) => {
     if (willDelete) {
 
-      this.prosesDelete(id,nama_produk);
+      this.prosesDelete(id,nama_produk,subtotal_lama);
 
     } else {
 
@@ -723,19 +723,18 @@ deleteEntry(id, index,nama_produk) {
   });
 
 },//END fungsi deleteEntry (alert konfirmasi hapus)
-prosesDelete(id,nama_produk){
+prosesDelete(id,nama_produk,subtotal_lama){
 
   var app = this;
   app.loading = true;
   axios.delete(app.url+'/hapus-tbs-pembelian/'+id)
   .then(function (resp) {
     app.getResults();
-    if (app.inputPembayaranPembelian.subtotal != 0) {    
-      var subtotal = parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(resp.data.subtotal)
-      app.inputPembayaranPembelian.subtotal = subtotal                       
-      app.inputPembayaranPembelian.total_akhir  = subtotal 
-      app.inputPembayaranPembelian.kredit  = subtotal
-    }
+    
+    var subtotal = parseFloat(app.inputPembayaranPembelian.subtotal) - parseFloat(resp.data.subtotal)
+    app.inputPembayaranPembelian.subtotal = subtotal                       
+    app.inputPembayaranPembelian.total_akhir  = subtotal
+    app.hitungPotonganPersen()
     app.alert("Menghapus Produk "+nama_produk);
     app.loading = false;
     app.inputTbsPembelian.id_tbs = ''
@@ -768,7 +767,7 @@ pilihProduk() {
   }
 },//END FUNGSI pilihProduk
 isiJumlahProduk(id_produk,nama_produk,harga_produk){
-  var app = this;		
+  var app = this;   
   swal({
     title: titleCase(nama_produk),
     html:
@@ -862,12 +861,10 @@ submitJumlahProduk(id_produk,jumlah_produk,harga_produk,nama_produk){
     app.alert("Menambahkan Produk "+titleCase(nama_produk));
     app.loading = false;
     app.getResults();
-    if (app.inputPembayaranPembelian.subtotal != 0) { 
-      var subtotal = parseInt(app.inputPembayaranPembelian.subtotal) + parseInt(resp.data.subtotal)
-      app.inputPembayaranPembelian.subtotal = subtotal                       
-      app.inputPembayaranPembelian.total_akhir  = subtotal 
-      app.inputPembayaranPembelian.kredit  = subtotal
-    }
+    var subtotal = parseInt(app.inputPembayaranPembelian.subtotal) + parseInt(resp.data.subtotal)
+    app.inputPembayaranPembelian.subtotal = subtotal                       
+    app.inputPembayaranPembelian.total_akhir  = subtotal
+    app.hitungPotonganPersen();
 
   })
   .catch(function (resp) {
@@ -876,7 +873,7 @@ submitJumlahProduk(id_produk,jumlah_produk,harga_produk,nama_produk){
   });
 },//END PROSES TAMBAH PRODUK TBS
 editEntryJumlah(id, index,nama_produk,subtotal_lama) {    
-  var app = this;		
+  var app = this;   
   swal({ 
     title: titleCase(nama_produk), 
     input: 'number', 
@@ -911,13 +908,11 @@ editEntryJumlah(id, index,nama_produk,subtotal_lama) {
       .then(function (resp) {
         app.alert("Mengubah Jumlah Produk "+titleCase(nama_produk));
         app.loading = false;
-        app.getResults();
-        if (app.inputPembayaranPembelian.subtotal != 0) {    
-          var subtotal = (parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(subtotal_lama)) + parseInt(resp.data.subtotal);
-          app.inputPembayaranPembelian.subtotal = subtotal                       
-          app.inputPembayaranPembelian.total_akhir  = subtotal 
-          app.inputPembayaranPembelian.kredit  = subtotal
-        }
+        app.getResults();      
+        var subtotal = parseInt(app.inputPembayaranPembelian.subtotal) + parseInt(resp.data.subtotal)
+        app.inputPembayaranPembelian.subtotal = subtotal                       
+        app.inputPembayaranPembelian.total_akhir  = subtotal
+        app.hitungPotonganPersen();
       })
       .catch(function (resp) {
         app.loading = false;
@@ -932,7 +927,7 @@ editEntryJumlah(id, index,nama_produk,subtotal_lama) {
 
 },//END editEntryJumlah
 editEntryHarga(id, index,nama_produk,subtotal_lama) {    
-  var app = this;		
+  var app = this;   
   swal({ 
     title: titleCase(nama_produk), 
     input: 'number', 
@@ -968,12 +963,10 @@ editEntryHarga(id, index,nama_produk,subtotal_lama) {
         app.alert("Mengubah Harga Produk "+titleCase(nama_produk));
         app.loading = false;
         app.getResults();
-        if (app.inputPembayaranPembelian.subtotal != 0) {    
-          var subtotal = (parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(subtotal_lama)) + parseInt(resp.data.subtotal);
-          app.inputPembayaranPembelian.subtotal = subtotal                       
-          app.inputPembayaranPembelian.total_akhir  = subtotal 
-          app.inputPembayaranPembelian.kredit  = subtotal
-        }
+        var subtotal = (parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(subtotal_lama)) + parseInt(resp.data.subtotal);
+        app.inputPembayaranPembelian.subtotal = subtotal                       
+        app.inputPembayaranPembelian.total_akhir  = subtotal 
+        app.hitungPotonganPersen();
 
       })
       .catch(function (resp) {
@@ -989,7 +982,7 @@ editEntryHarga(id, index,nama_produk,subtotal_lama) {
 
 },//END editEntryHarga
 editEntryPotongan(id, index,nama_produk,jumlah,harga,subtotal_lama) {    
-  var app = this;		
+  var app = this;   
   var subtotal = parseFloat(jumlah) * parseFloat(harga);
   swal({ 
     title: titleCase(nama_produk), 
@@ -1067,12 +1060,10 @@ submitEditPotongan(potongan,id,nama_produk,subtotal_lama){
     app.alert("Mengubah Potongan Produk "+titleCase(nama_produk));
     app.loading = false;
     app.getResults();
-    if (app.inputPembayaranPembelian.subtotal != 0) {    
-      var subtotal = (parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(subtotal_lama)) + parseInt(resp.data.subtotal);
-      app.inputPembayaranPembelian.subtotal = subtotal                       
-      app.inputPembayaranPembelian.total_akhir  = subtotal 
-      app.inputPembayaranPembelian.kredit  = subtotal
-    }
+    var subtotal = (parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(subtotal_lama)) + parseInt(resp.data.subtotal);
+    app.inputPembayaranPembelian.subtotal = subtotal                       
+    app.inputPembayaranPembelian.total_akhir  = subtotal 
+    app.hitungPotonganPersen()
 
   })
   .catch(function (resp) {
@@ -1082,7 +1073,7 @@ submitEditPotongan(potongan,id,nama_produk,subtotal_lama){
 },//END PROSES UPDATE POTONGAN TBS 
 
 editEntryTax(id, index,nama_produk,jumlah,harga,potongan,ppn,subtotal_lama){
-  var app = this;		
+  var app = this;   
   var subtotal = (parseFloat(jumlah) * parseFloat(harga)) - parseFloat(potongan); 
 
   if (ppn == '') { 
@@ -1179,13 +1170,13 @@ submitEditTax(pajak,id,nama_produk,ppn_edit,subtotal_lama){
   .then(function (resp) {
     app.alert("Mengubah Pajak Produk "+titleCase(nama_produk));
     app.loading = false;
-    app.getResults();
-    if (app.inputPembayaranPembelian.subtotal != 0) {    
-      var subtotal = (parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(subtotal_lama)) + parseInt(resp.data.subtotal);
-      app.inputPembayaranPembelian.subtotal = subtotal                       
-      app.inputPembayaranPembelian.total_akhir  = subtotal 
-      app.inputPembayaranPembelian.kredit  = subtotal
-    }
+    app.getResults();  
+
+    var subtotal = (parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(subtotal_lama)) + parseInt(resp.data.subtotal);
+    app.inputPembayaranPembelian.subtotal = subtotal                       
+    app.inputPembayaranPembelian.total_akhir  = subtotal 
+    app.hitungPotonganPersen()
+    
 
   })
   .catch(function (resp) {
@@ -1235,10 +1226,18 @@ batalPembelian(){
 selesaiPembelian(){
   var app = this;
   if (app.inputPembayaranPembelian.suplier == '') { 
-    swal('Oops...', 'Suplier Belum Dipilih!', 'error'); 
+    swal({
+      text: 'Suplier Belum Dipilih!!'
+    }).then((result) => {
+      app.openSelectizeSuplier();
+    });
   }
   else if (app.inputPembayaranPembelian.cara_bayar == '') { 
-    swal('Oops...', 'Cara Barang Belum Dipilih!', 'error'); 
+    swal({
+      text: 'Cara Bayar Belum Dipilih!!'
+    }).then((result) => {
+      app.openSelectizeKas();
+    });
   } 
   else{ 
     $("#modal_selesai").show();
@@ -1277,9 +1276,9 @@ hitungPotonganPersen(){
 
     this.inputPembayaranPembelian.potongan_faktur = potongan_nominal.toFixed(2)
     this.inputPembayaranPembelian.total_akhir = total_akhir.toFixed(2)
-    this.inputPembayaranPembelian.kredit = total_akhir.toFixed(2)  
     this.inputPembayaranPembelian.potongan = potongan_nominal
     this.hitungKembalian(this.inputPembayaranPembelian.pembayaran)
+
 
   }
 },
