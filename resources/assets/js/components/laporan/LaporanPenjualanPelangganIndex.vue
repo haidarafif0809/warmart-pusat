@@ -62,7 +62,7 @@
 								<tr v-for="penjualanPelanggans, index in penjualanPelanggan" >
 
 									<td>{{ penjualanPelanggans.laporan_penjualans.kode_barang }}</td>
-									<td>{{ penjualanPelanggans.laporan_penjualans.name }}</td>
+									<td>{{ penjualanPelanggans.pelanggan }}</td>
 									<td>{{ penjualanPelanggans.laporan_penjualans.nama_barang }}</td>
 									<td align="right">{{ penjualanPelanggans.laporan_penjualans.jumlah_produk | pemisahTitik }}</td>
 									<td>{{ penjualanPelanggans.laporan_penjualans.nama_satuan }}</td>

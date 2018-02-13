@@ -62,7 +62,12 @@ class LaporanPenjualanPelangganController extends Controller
         $array_penjualan   = array();
         foreach ($laporan_penjualan as $laporan_penjualans) {
             $sub_total = $laporan_penjualans->subtotal - $laporan_penjualans->potongan + $laporan_penjualans->tax;
-            array_push($array_penjualan, ['laporan_penjualans' => $laporan_penjualans, 'sub_total' => $sub_total]);
+            if ($laporan_penjualans->pelanggan_id == 0) {
+                $pelanggan = 'Umum';
+            } else {
+                $pelanggan = $laporan_penjualans->name;
+            }
+            array_push($array_penjualan, ['laporan_penjualans' => $laporan_penjualans, 'sub_total' => $sub_total, 'pelanggan' => $pelanggan]);
         }
         $link = 'view';
         //DATA PAGINATION
@@ -105,7 +110,12 @@ class LaporanPenjualanPelangganController extends Controller
         $array_penjualan   = array();
         foreach ($laporan_penjualan as $laporan_penjualans) {
             $sub_total = $laporan_penjualans->subtotal - $laporan_penjualans->potongan + $laporan_penjualans->tax;
-            array_push($array_penjualan, ['laporan_penjualans' => $laporan_penjualans, 'sub_total' => $sub_total]);
+            if ($laporan_penjualans->pelanggan_id == 0) {
+                $pelanggan = 'Umum';
+            } else {
+                $pelanggan = $laporan_penjualans->name;
+            }
+            array_push($array_penjualan, ['laporan_penjualans' => $laporan_penjualans, 'sub_total' => $sub_total, 'pelanggan' => $pelanggan]);
         }
         //DATA PAGINATION
         $link    = 'pencarian';
