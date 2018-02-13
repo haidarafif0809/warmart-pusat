@@ -43,7 +43,7 @@ class PembelianController extends Controller
     public function view()
     {
         $pembelian = Pembelian::select('pembelians.id as id', 'pembelians.no_faktur as no_faktur', 'supliers.nama_suplier as nama_suplier', 'pembelians.created_at as created_at', 'pembelians.status_pembelian as status_pembelian', 'pembelians.total as total', 'kas.nama_kas as nama_kas', 'pembelians.potongan as potongan', 'pembelians.tunai as tunai', 'pembelians.kembalian as kembalian', 'pembelians.tanggal_jt_tempo as tanggal_jt_tempo', 'users.name as name')->leftJoin('supliers', 'pembelians.suplier_id', '=', 'supliers.id')->leftJoin('kas', 'pembelians.cara_bayar', '=', 'kas.id')->leftJoin('users', 'pembelians.created_by', '=', 'users.id')
-            ->where('pembelians.warung_id', Auth::user()->id_warung)->orderBy('pembelians.id')->paginate(10);
+        ->where('pembelians.warung_id', Auth::user()->id_warung)->orderBy('pembelians.id')->paginate(10);
         $array = array();
         foreach ($pembelian as $pembelians) {
             array_push($array, [
@@ -85,13 +85,13 @@ class PembelianController extends Controller
         $search = $request->search;
 
         $pembelian = Pembelian::select('pembelians.id as id', 'pembelians.no_faktur as no_faktur', 'supliers.nama_suplier as nama_suplier', 'pembelians.created_at as created_at', 'pembelians.status_pembelian as status_pembelian', 'pembelians.total as total', 'kas.nama_kas as nama_kas', 'pembelians.potongan as potongan', 'pembelians.tunai as tunai', 'pembelians.kembalian as kembalian', 'pembelians.tanggal_jt_tempo as tanggal_jt_tempo', 'users.name as name')->leftJoin('supliers', 'pembelians.suplier_id', '=', 'supliers.id')->leftJoin('kas', 'pembelians.cara_bayar', '=', 'kas.id')->leftJoin('users', 'pembelians.created_by', '=', 'users.id')
-            ->where('pembelians.warung_id', Auth::user()->id_warung)->orderBy('pembelians.id')
-            ->where(function ($query) use ($search) {
+        ->where('pembelians.warung_id', Auth::user()->id_warung)->orderBy('pembelians.id')
+        ->where(function ($query) use ($search) {
                 // search
-                $query->where('pembelians.status_pembelian', 'LIKE', $search . '%')
-                    ->orWhere('pembelians.no_faktur', 'LIKE', $search . '%')
-                    ->orWhere('pembelians.total', 'LIKE', $search . '%');
-            })->paginate(10);
+            $query->where('pembelians.status_pembelian', 'LIKE', $search . '%')
+            ->orWhere('pembelians.no_faktur', 'LIKE', $search . '%')
+            ->orWhere('pembelians.total', 'LIKE', $search . '%');
+        })->paginate(10);
 
         $array = array();
         foreach ($pembelian as $pembelians) {
@@ -215,12 +215,12 @@ class PembelianController extends Controller
         $kas_pilih   = Kas::where('warung_id', Auth::user()->id_warung)->where('default_kas', 1)->first();
 
         $tbs_pembelian = TbsPembelian::select('tbs_pembelians.id_tbs_pembelian AS id_tbs_pembelian', 'tbs_pembelians.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'tbs_pembelians.id_produk AS id_produk', 'tbs_pembelians.harga_produk AS harga_produk', 'tbs_pembelians.potongan AS potongan', 'tbs_pembelians.tax AS tax', 'tbs_pembelians.subtotal AS subtotal', 'tbs_pembelians.ppn AS ppn')->leftJoin('barangs', 'barangs.id', '=', 'tbs_pembelians.id_produk')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)
-            ->where(function ($query) use ($request) {
+        ->where(function ($query) use ($request) {
 
-                $query->orWhere('barangs.nama_barang', 'LIKE', $request->search . '%')
-                    ->orWhere('barangs.kode_barang', 'LIKE', $request->search . '%');
+            $query->orWhere('barangs.nama_barang', 'LIKE', $request->search . '%')
+            ->orWhere('barangs.kode_barang', 'LIKE', $request->search . '%');
 
-            })->orderBy('id_tbs_pembelian', 'desc')->paginate(10);
+        })->orderBy('id_tbs_pembelian', 'desc')->paginate(10);
 
         $array = array();
 
@@ -371,12 +371,12 @@ class PembelianController extends Controller
         $kas_pilih   = Kas::where('warung_id', Auth::user()->id_warung)->where('default_kas', 1)->first();
 
         $tbs_pembelian = EditTbsPembelian::select('edit_tbs_pembelians.id_edit_tbs_pembelians AS id_edit_tbs_pembelian', 'edit_tbs_pembelians.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'edit_tbs_pembelians.id_produk AS id_produk', 'edit_tbs_pembelians.harga_produk AS harga_produk', 'edit_tbs_pembelians.potongan AS potongan', 'edit_tbs_pembelians.tax AS tax', 'edit_tbs_pembelians.subtotal AS subtotal', 'edit_tbs_pembelians.ppn AS ppn', 'edit_tbs_pembelians.no_faktur AS no_faktur')->leftJoin('barangs', 'barangs.id', '=', 'edit_tbs_pembelians.id_produk')->where('edit_tbs_pembelians.no_faktur', $pembelian->no_faktur)->where('edit_tbs_pembelians.warung_id', Auth::user()->id_warung)
-            ->where(function ($query) use ($request) {
+        ->where(function ($query) use ($request) {
 
-                $query->orWhere('barangs.nama_barang', 'LIKE', $request->search . '%')
-                    ->orWhere('barangs.kode_barang', 'LIKE', $request->search . '%');
+            $query->orWhere('barangs.nama_barang', 'LIKE', $request->search . '%')
+            ->orWhere('barangs.kode_barang', 'LIKE', $request->search . '%');
 
-            })->orderBy('edit_tbs_pembelians.id_edit_tbs_pembelians', 'desc')->paginate(10);
+        })->orderBy('edit_tbs_pembelians.id_edit_tbs_pembelians', 'desc')->paginate(10);
 
         $array = array();
 
@@ -524,12 +524,12 @@ class PembelianController extends Controller
         $subtotal     = $sum_subtotal->subtotal;
 
         $detail_pembelian = DetailPembelian::select('detail_pembelians.id_detail_pembelian AS id_detail_pembelian', 'detail_pembelians.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'detail_pembelians.id_produk AS id_produk', 'detail_pembelians.harga_produk AS harga_produk', 'detail_pembelians.potongan AS potongan', 'detail_pembelians.tax AS tax', 'detail_pembelians.subtotal AS subtotal', 'detail_pembelians.ppn AS ppn', 'detail_pembelians.no_faktur AS no_faktur')->leftJoin('barangs', 'barangs.id', '=', 'detail_pembelians.id_produk')->where('detail_pembelians.no_faktur', $no_faktur)->where('detail_pembelians.warung_id', Auth::user()->id_warung)
-            ->where(function ($query) use ($request) {
+        ->where(function ($query) use ($request) {
 
-                $query->orWhere('barangs.nama_barang', 'LIKE', $request->search . '%')
-                    ->orWhere('barangs.kode_barang', 'LIKE', $request->search . '%');
+            $query->orWhere('barangs.nama_barang', 'LIKE', $request->search . '%')
+            ->orWhere('barangs.kode_barang', 'LIKE', $request->search . '%');
 
-            })->orderBy('detail_pembelians.id_detail_pembelian', 'desc')->paginate(10);
+        })->orderBy('detail_pembelians.id_detail_pembelian', 'desc')->paginate(10);
         $array       = array();
         $kas_default = Kas::where('warung_id', Auth::user()->id_warung)->where('default_kas', 1)->count();
         foreach ($detail_pembelian as $detail_pembelians) {
@@ -650,7 +650,7 @@ class PembelianController extends Controller
         $session_id = session()->getId(); // SESSION ID
         // CEK TBS PEMBELIAN
         $data_tbs = TbsPembelian::where('id_produk', $request->id)
-            ->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
+        ->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
         return $data_tbs->count();
     }
 
@@ -716,6 +716,11 @@ class PembelianController extends Controller
             $tbs_pembelian->update(['jumlah_produk' => $request->jumlah_edit_produk, 'subtotal' => $subtotal, 'tax' => $tax_produk]);
             $nama_barang = $tbs_pembelian->TitleCaseBarang; // TITLE CASH
 
+
+            $respons['subtotal'] = $subtotal;
+
+            return response()->json($respons);
+
         }
     }
 
@@ -763,6 +768,11 @@ class PembelianController extends Controller
             // UPDATE HARGA, SUBTOTAL, POTONGAN, TAX
             $tbs_pembelian->update(['harga_produk' => $request->harga_edit_produk, 'subtotal' => $subtotal, 'potongan' => $potongan_produk, 'tax' => $tax_produk]);
             $nama_barang = $tbs_pembelian->TitleCaseBarang; // TITLE CASH
+
+
+            $respons['subtotal'] = $subtotal;
+
+            return response()->json($respons);
         }
     }
 
@@ -842,6 +852,11 @@ class PembelianController extends Controller
                 // UPDATE POTONGAN, SUBTOTAL, TAX
                 $tbs_pembelian->update(['potongan' => $potongan_produk, 'subtotal' => $subtotal, 'tax' => $tax_produk]);
                 $nama_barang = $tbs_pembelian->TitleCaseBarang; // TITLE CASH
+
+
+                $respons['subtotal'] = $subtotal;
+
+                return response()->json($respons);
 
             }
 
@@ -924,6 +939,11 @@ class PembelianController extends Controller
             $tbs_pembelian->update(['subtotal' => $subtotal, 'tax' => $tax_produk, 'tax_include' => $tax_include, 'ppn' => $request->ppn_produk]);
             $nama_barang = $tbs_pembelian->TitleCaseBarang; // TITLE CASH
 
+
+            $respons['subtotal'] = $subtotal;
+
+            return response()->json($respons);
+
         }
     }
 
@@ -934,24 +954,32 @@ class PembelianController extends Controller
             Auth::logout();
             return response()->view('error.403');
         } else {
-            TbsPembelian::destroy($id);
-        }
-    }
+         $tbs_pembelian = TbsPembelian::find($id);
+
+
+         $respons['subtotal'] = $tbs_pembelian->subtotal;
+
+         $tbs_pembelian->delete();
+
+         return response()->json($respons);
+
+     }
+ }
 
 //PROSES BATAL TBS PEMBELIAN
-    public function proses_batal_transaksi_pembelian()
-    {
+ public function proses_batal_transaksi_pembelian()
+ {
 
-        if (Auth::user()->id_warung == '') {
-            Auth::logout();
-            return response()->view('error.403');
-        } else {
-            $session_id         = session()->getId();
-            $data_tbs_pembelian = TbsPembelian::where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->delete();
+    if (Auth::user()->id_warung == '') {
+        Auth::logout();
+        return response()->view('error.403');
+    } else {
+        $session_id         = session()->getId();
+        $data_tbs_pembelian = TbsPembelian::where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->delete();
 
-            return response(200);
-        }
+        return response(200);
     }
+}
     /**
      * Store a newly created resource in storage.
      *
@@ -1040,24 +1068,24 @@ class PembelianController extends Controller
             ]);
 
             //Transaksi Hutang & kas 
-                $kas = intval($pembelian->tunai) - intval($pembelian->kembalian);
-                if ($kas > 0) {
-                    TransaksiKas::create([ 
-                        'no_faktur'         => $pembelian->no_faktur, 
-                        'jenis_transaksi'   =>'pembelian' , 
-                        'jumlah_keluar'     => $kas, 
-                        'kas'               => $pembelian->cara_bayar, 
-                        'warung_id'         => $pembelian->warung_id] );  
-                }
-                if ($pembelian->kredit > 0) {
-                    TransaksiHutang::create([ 
-                        'no_faktur'         => $pembelian->no_faktur, 
-                        'jenis_transaksi'   => 'pembelian' , 
-                        'id_transaksi'      => $pembelian->id,
-                        'jumlah_masuk'      => $pembelian->kredit, 
-                        'suplier_id'        => $pembelian->suplier_id, 
-                        'warung_id'         => $pembelian->warung_id] );  
-                }
+            $kas = intval($pembelian->tunai) - intval($pembelian->kembalian);
+            if ($kas > 0) {
+                TransaksiKas::create([ 
+                    'no_faktur'         => $pembelian->no_faktur, 
+                    'jenis_transaksi'   =>'pembelian' , 
+                    'jumlah_keluar'     => $kas, 
+                    'kas'               => $pembelian->cara_bayar, 
+                    'warung_id'         => $pembelian->warung_id] );  
+            }
+            if ($pembelian->kredit > 0) {
+                TransaksiHutang::create([ 
+                    'no_faktur'         => $pembelian->no_faktur, 
+                    'jenis_transaksi'   => 'pembelian' , 
+                    'id_transaksi'      => $pembelian->id,
+                    'jumlah_masuk'      => $pembelian->kredit, 
+                    'suplier_id'        => $pembelian->suplier_id, 
+                    'warung_id'         => $pembelian->warung_id] );  
+            }
             //Transaksi Hutang & kas 
 
             //HAPUS TBS PEMBELIAN
@@ -1105,7 +1133,7 @@ class PembelianController extends Controller
         $data_produk_pembelian = DetailPembelian::where('no_faktur', $data_pembelian->no_faktur)->where('warung_id', Auth::user()->id_warung);
 
         $hapus_semua_edit_tbs_pembelian = EditTbsPembelian::where('no_faktur', $data_pembelian->no_faktur)->where('warung_id', Auth::user()->id_warung)
-            ->delete();
+        ->delete();
 
         foreach ($data_produk_pembelian->get() as $data_tbs) {
             $detail_pembelian = EditTbsPembelian::create([
@@ -1193,15 +1221,15 @@ class PembelianController extends Controller
     }
 
     public function cekSubtotalTbsPembelian($jenis_tbs){
-    $session_id    = session()->getId();
-    $user_warung   = Auth::user()->id_warung;
+        $session_id    = session()->getId();
+        $user_warung   = Auth::user()->id_warung;
 
-            $TbsPembelian = new TbsPembelian();
-            $subtotal      = $TbsPembelian->subtotalTbs($user_warung,$session_id);
-            $respons['subtotal'] = $subtotal;
-  
+        $TbsPembelian = new TbsPembelian();
+        $subtotal      = $TbsPembelian->subtotalTbs($user_warung,$session_id);
+        $respons['subtotal'] = $subtotal;
 
-    return response()->json($respons);
+
+        return response()->json($respons);
     }
 
 
