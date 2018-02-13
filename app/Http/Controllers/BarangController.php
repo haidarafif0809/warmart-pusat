@@ -173,9 +173,9 @@ class BarangController extends Controller
             return response()->view('error.403');
         } else {
             $this->validate($request, [
-                'kode_barcode'       => 'nullable|unique:barangs,kode_barcode,NULL,id,id_warung,' . Auth::user()->id_warung . '|max:191',
-                'kode_barang'        => 'required|unique:barangs,kode_barang,NULL,id,id_warung,' . Auth::user()->id_warung . '|max:191',
-                'nama_barang'        => 'required|max:191',
+                'kode_barcode'       => 'nullable|unique:barangs,kode_barcode,NULL,id,id_warung,' . Auth::user()->id_warung . '|max:50',
+                'kode_barang'        => 'required|unique:barangs,kode_barang,NULL,id,id_warung,' . Auth::user()->id_warung . '|max:50',
+                'nama_barang'        => 'required|max:300',
                 'harga_beli'         => 'required|numeric|digits_between:1,11',
                 'harga_jual'         => 'required|numeric|digits_between:1,11',
                 'harga_jual2'        => 'nullable|numeric|digits_between:1,11',
@@ -278,9 +278,9 @@ class BarangController extends Controller
 
             //validate
             $this->validate($request, [
-                'kode_barcode'       => 'nullable|max:191|unique:barangs,kode_barcode,' . $request->id . ',id,id_warung,' . Auth::user()->id_warung,
-                'kode_barang'        => 'required|max:191|unique:barangs,kode_barang,' . $request->id . ',id,id_warung,' . Auth::user()->id_warung,
-                'nama_barang'        => 'required|max:191',
+                'kode_barcode'       => 'nullable|max:50|unique:barangs,kode_barcode,' . $request->id . ',id,id_warung,' . Auth::user()->id_warung,
+                'kode_barang'        => 'required|max:50|unique:barangs,kode_barang,' . $request->id . ',id,id_warung,' . Auth::user()->id_warung,
+                'nama_barang'        => 'required|max:300',
                 'harga_beli'         => 'required|numeric|digits_between:1,11',
                 'harga_jual'         => 'required|numeric|digits_between:1,11',
                 'harga_jual2'         => 'nullable|numeric|digits_between:1,11',

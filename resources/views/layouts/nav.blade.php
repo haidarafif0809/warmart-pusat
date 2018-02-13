@@ -288,7 +288,7 @@
                         LP
                     </span>
                     <span class="sidebar-normal">
-                        Laporan Penjualan /Produks
+                        Laporan Penjualan /Produk
                     </span>
                 </router-link>
             </li>
