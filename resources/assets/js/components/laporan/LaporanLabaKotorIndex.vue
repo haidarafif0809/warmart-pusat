@@ -62,7 +62,7 @@
 
 									<td>{{ labaKotors.laba_kotor.id }}</td>
 									<td>{{ labaKotors.laba_kotor.created_at | tanggal }}</td>
-									<td>{{ labaKotors.laba_kotor.name }}</td>
+									<td>{{ labaKotors.pelanggan }}</td>
 									<td align="right">{{ labaKotors.total | pemisahTitik }}</td>
 									<td align="right">{{ labaKotors.hpp | pemisahTitik }}</td>
 									<td align="right">{{ labaKotors.total_laba_kotor | pemisahTitik }}</td>
