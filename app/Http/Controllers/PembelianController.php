@@ -43,7 +43,7 @@ class PembelianController extends Controller
     public function view()
     {
         $pembelian = Pembelian::select('pembelians.id as id', 'pembelians.no_faktur as no_faktur', 'supliers.nama_suplier as nama_suplier', 'pembelians.created_at as created_at', 'pembelians.status_pembelian as status_pembelian', 'pembelians.total as total', 'kas.nama_kas as nama_kas', 'pembelians.potongan as potongan', 'pembelians.tunai as tunai', 'pembelians.kembalian as kembalian', 'pembelians.tanggal_jt_tempo as tanggal_jt_tempo', 'users.name as name')->leftJoin('supliers', 'pembelians.suplier_id', '=', 'supliers.id')->leftJoin('kas', 'pembelians.cara_bayar', '=', 'kas.id')->leftJoin('users', 'pembelians.created_by', '=', 'users.id')
-        ->where('pembelians.warung_id', Auth::user()->id_warung)->orderBy('pembelians.id')->paginate(10);
+        ->where('pembelians.warung_id', Auth::user()->id_warung)->orderBy('pembelians.id','desc')->paginate(10);
         $array = array();
         foreach ($pembelian as $pembelians) {
             array_push($array, [
@@ -954,21 +954,21 @@ class PembelianController extends Controller
             Auth::logout();
             return response()->view('error.403');
         } else {
-         $tbs_pembelian = TbsPembelian::find($id);
+           $tbs_pembelian = TbsPembelian::find($id);
 
 
-         $respons['subtotal'] = $tbs_pembelian->subtotal;
+           $respons['subtotal'] = $tbs_pembelian->subtotal;
 
-         $tbs_pembelian->delete();
+           $tbs_pembelian->delete();
 
-         return response()->json($respons);
+           return response()->json($respons);
 
-     }
- }
+       }
+   }
 
 //PROSES BATAL TBS PEMBELIAN
- public function proses_batal_transaksi_pembelian()
- {
+   public function proses_batal_transaksi_pembelian()
+   {
 
     if (Auth::user()->id_warung == '') {
         Auth::logout();
