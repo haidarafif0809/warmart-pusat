@@ -124,6 +124,7 @@ import PendaftaranToposDetail from './components/pendaftaran_topos/PendaftaranTo
 import LaporanKartuStokIndex from './components/laporan/LaporanKartuStokIndex.vue';
 // LAPORAN BUCKET SIZE GRAFIK
 import LaporanBucketSizeIndex from './components/laporan/LaporanBucketSizeIndex.vue';
+import LaporanBucketSizeTampil from './components/laporan/LaporanBucketSizeTampil.vue';
 //PEMBAYARAN HUTANG
 import PembayaranHutangIndex from './components/pembayaran_hutang/PembayaranHutangIndex.vue';
 import PembayaranHutangCreate from './components/pembayaran_hutang/PembayaranHutangCreate.vue';
@@ -654,6 +655,10 @@ const routes = [{
         path: '/laporan-bucket-size',
         component: LaporanBucketSizeIndex,
         name: 'indexLaporanBucketSize'
+    }, {
+        path: '/laporan-bucket-size/view/:dari_tanggal/:sampai_tanggal/:kelipatan',
+        component: LaporanBucketSizeTampil,
+        name: 'tampilLaporanBucketSize'
     }
     ]
     export default routes;
