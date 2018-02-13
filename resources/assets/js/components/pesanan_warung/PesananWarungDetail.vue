@@ -392,9 +392,16 @@ export default {
 				app.pesananData = resp.data.data;
 				app.dataAgent = resp.data.data.agent;
 				app.loading = false;
-				let layanan_kurir = resp.data.data.pesanan.layanan_kurir.split(" | ");
-				app.servicePengiriman = layanan_kurir[0]+" | "+layanan_kurir[2]
-				app.waktuPengiriman	= layanan_kurir[1]+" Hari" 
+				if (resp.data.data.pesanan.kurir == 'cod' ||  resp.data.data.pesanan.kurir == '') {
+
+					app.servicePengiriman = "Bayar di Tempat"
+					app.waktuPengiriman	= "-"
+
+				}else{
+					let layanan_kurir = resp.data.data.pesanan.layanan_kurir.split(" | ");
+					app.servicePengiriman = layanan_kurir[0]+" | "+layanan_kurir[2]
+					app.waktuPengiriman	= layanan_kurir[1]+" Hari" 
+				}
 
 			})
 			.catch(function (resp) {
