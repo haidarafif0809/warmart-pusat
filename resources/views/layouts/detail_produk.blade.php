@@ -463,107 +463,150 @@ first();
 </div>
 
 
-<footer class="footer footer-black footer-big">
-  <div class="container">
-    <div class="content">
-      <div class="row">
-        <div class="col-md-4">
-          <h5>
-            Tentang Kami
-          </h5>
-          @if($setting_aplikasi->tipe_aplikasi == 0)
-          <p>
-            Warmart adalah marketplace warung muslim pertama di Indonesia. Kami menghubungkan usaha-usaha muslim dengan pelanggan seluruh Umat Islam di Indonesia. Jenis usaha yang dapat bergabung dengan Warmart diantaranya: Warung, Toko, Minimarket, Pedagang Kaki Lima, Bengkel, Rumah Makan, Klinik, Home Industri, Peternakan, Pertanian, Perikanan, Kerajinan, Fashion dan usaha lainya.
-          </p>
-          @else
-          <p>
-            Topos adalah...
-          </p>
-          @endif
-        </div>
-        <div class="col-md-4">
-          <h5>
-            Contact Us
-          </h5>
-          <div class="social-feed">
-            <div class="feed-line">
-              <i class="fa fa-phone-square">
-              </i>
-              <p>
-                +62-721-8050-299
-                <br>
-                Bandar Lampung, Indonesia
-                solusibisnis@andaglos.id
-              </br>
-            </p>
-          </div>
-          <div class="feed-line">
-            <i class="fa fa-phone-square">
-            </i>
-            <p>
-              Whatsapp
-              <br>
-              +62-811-728-549
-            </br>
-          </p>
-        </div>
-        <div class="feed-line">
-          <a href="https://id-id.facebook.com/andaglos/" target="blank">
-            <i class="fa fa-facebook-square">
-            </i>
-            Andaglos
-          </a>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <h5>
-        Facebook
-      </h5>
-      <div class="gallery-feed">
-      </div>
-    </div>
-  </div>
-</div>
-<hr/>
-<ul class="pull-left">
-  <li>
-    <a href="#pablo">
-      Blog
-    </a>
-  </li>
-  <li>
-    <a href="#pablo">
-      Presentation
-    </a>
-  </li>
-  <li>
-    <a href="#pablo">
-      Discover
-    </a>
-  </li>
-  <li>
-    <a href="#pablo">
-      Payment
-    </a>
-  </li>
-  <li>
-    <a href="#pablo">
-      Contact Us
-    </a>
-  </li>
-</ul>
-<div class="copyright pull-right">
-  Copyright ©
-  <script>
-    document.write(new Date().getFullYear())
-  </script>
-  <a href="https://andaglos.id/">
-    PT. Andaglos Global Teknologi.
-  </a>
-</div>
-</div>
-</footer>
+<footer class="footer footer-black footer-big" style="bottom: 0;">
+            <div class="container">
+                <div class="content">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h5>
+                                Tentang Kami
+                            </h5>
+                            @if($setting_aplikasi->tipe_aplikasi == 0)
+                            <p>
+                                Warmart adalah marketplace warung muslim pertama di Indonesia. Kami menghubungkan usaha-usaha muslim dengan pelanggan seluruh Umat Islam di Indonesia. Jenis usaha yang dapat bergabung dengan Warmart diantaranya: Warung, Toko, Minimarket, Pedagang Kaki Lima, Bengkel, Rumah Makan, Klinik, Home Industri, Peternakan, Pertanian, Perikanan, Kerajinan, Fashion dan usaha lainya.
+                            </p>
+                            @else
+                            <p>
+                                <?=$settingFooter->
+                                about_us;?>
+                            </p>
+                            @endif
+                        </div>
+                        <div class="col-md-4">
+                            <h5>
+                                Hubungi Kami
+                            </h5>
+                            <div class="social-feed">
+                                <div class="feed-line">
+                                    <i class="fa fa-phone-square">
+                                    </i>
+                                    <p>
+                                        <?=$settingFooter->
+                                        no_telp;?>
+                                    </p>
+                                </div>
+                                <div class="feed-line">
+                                    <i class="fa fa-home">
+                                    </i>
+                                    <p>
+                                        <?=$settingFooter->
+                                        alamat;?>
+                                    </p>
+                                </div>
+                                <div class="feed-line">
+                                    <i class="fa fa-envelope">
+                                    </i>
+                                    <p>
+                                        <?=$settingFooter->
+                                        email;?>
+                                    </p>
+                                </div>
+                                <div class="feed-line">
+                                    <i class="fa fa-whatsapp">
+                                    </i>
+                                    <p>
+                                        <?=$settingFooter->
+                                        whatsapp;?>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <h5>
+                                Sosial Media
+                            </h5>
+                            <div class="social-feed">
+                                <div class="feed-line">
+                                    <i class="fa fa-facebook-square">
+                                    </i>
+                                    <p>
+                                        <a href="<?=$settingFooter->facebook;?>">
+                                            Facebook
+                                        </a>
+                                    </p>
+                                </div>
+                                <div class="feed-line">
+                                    <i class="fa fa-twitter-square">
+                                    </i>
+                                    <p>
+                                        <a href="<?=$settingFooter->twitter;?>">
+                                            Twitter
+                                        </a>
+                                    </p>
+                                </div>
+                                <div class="feed-line">
+                                    <i class="fa fa-instagram">
+                                    </i>
+                                    <p>
+                                        <a href="<?=$settingFooter->instagram;?>">
+                                            Instagram
+                                        </a>
+                                    </p>
+                                </div>
+                                <div class="feed-line">
+                                    <i class="fa fa-google-plus-square">
+                                    </i>
+                                    <p>
+                                        <a href="<?=$settingFooter->google_plus;?>">
+                                            Google +
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="gallery-feed">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr/>
+                <ul class="pull-left">
+                    <li>
+                        <a href="#pablo">
+                            Blog
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#pablo">
+                            Presentation
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#pablo">
+                            Discover
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#pablo">
+                            Payment
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#pablo">
+                            Contact Us
+                        </a>
+                    </li>
+                </ul>
+                <div class="copyright pull-right">
+                    Copyright ©
+                    <script>
+                        document.write(new Date().getFullYear())
+                    </script>
+                    <a href="https://andaglos.id/">
+                        PT. Andaglos Global Teknologi.
+                    </a>
+                </div>
+            </div>
+        </footer>
 <!--Start of Tawk.to Script-->
 <script type="text/javascript">
   var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
