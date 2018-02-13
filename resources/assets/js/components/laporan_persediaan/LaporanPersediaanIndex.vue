@@ -26,6 +26,7 @@
 								<input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
 							</div>
 
+							
 							<table class="table table-striped table-hover" v-if="seen">
 								<thead class="text-primary">
 									<tr>
@@ -48,6 +49,13 @@
 										<td align="right">{{ lap_persediaan.stok }}</td>
 										<td align="right">{{ lap_persediaan.hpp }}</td>
 										<td align="right">{{ lap_persediaan.nilai }}</td>
+									</tr>
+									<tr><td style="color:red">Total Nilai</td>
+										<td></td>
+										<td></td>
+										<td align="right"></td>
+										<td align="right"></td>
+										<td style="color:red" align="right">{{totalNilai}}</td>
 									</tr>
 								</tbody>					
 								<tbody class="data-tidak-ada" v-else>
@@ -76,11 +84,22 @@
 		data: function () {
 			return {
 				lap_persediaan: [],
-				lapPersediaanData: {},
+				totalNilai: '',
 				url : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-persediaan"),
 				pencarian: '',
 				loading: true,
 				seen : false
+			}
+		},
+		filters: {
+			pemisahTitik: function (value) {
+				var angka = [value];
+				var numberFormat = new Intl.NumberFormat('es-ES');
+				var formatted = angka.map(numberFormat.format);
+				return formatted.join('; ');
+			},
+			tanggal: function (value) {
+				return moment(String(value)).format('DD/MM/YYYY hh:mm')
 			}
 		},
 		mounted() {
@@ -105,6 +124,7 @@
     		.then(function (resp) {
     			app.lap_persediaan = resp.data.data;
     			app.lapPersediaanData = resp.data;
+    			app.totalNilai = resp.data.totalnilai;
     			app.loading = false;
     			app.seen = true;
     		})

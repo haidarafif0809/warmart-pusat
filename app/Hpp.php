@@ -44,6 +44,21 @@ class Hpp extends Model
 
     }
 
+    public function totalnilai()
+    {
+
+        $nilai_masuk = Hpp::select([DB::raw('IFNULL(SUM(total_nilai),0) as total_masuk')])->where('jenis_hpp', 1)->where('warung_id', Auth::user()->id_warung)->first();
+
+        $nilai_keluar = Hpp::select([DB::raw('IFNULL(SUM(total_nilai),0) as total_keluar')])->where('jenis_hpp', 2)->where('warung_id', Auth::user()->id_warung)->first();
+
+        $prose_total_persedian = $nilai_masuk->total_masuk - $nilai_keluar->total_keluar;
+
+        $total_persedian = number_format($prose_total_persedian, 2, ',', '.');
+
+        return $total_persedian;
+
+    }
+
     public function tanggalSql($tangal)
     {
         $date        = date_create($tangal);
