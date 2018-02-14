@@ -377,6 +377,7 @@
 
                 <th>Produk</th>
                 <th class="text-right">Jumlah</th>
+                <th class="text-center">Satuan</th>
                 <th class="text-right">Harga</th>
                 <th class="text-right">Potongan</th>
                 <th class="text-right">Subtotal</th>
@@ -392,6 +393,9 @@
                 <td align="right" >
                   <a href="#create-penjualan" v-bind:id="'edit-' + tbs_penjualan.id_tbs_penjualan" v-on:click="editEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">{{ new Intl.NumberFormat().format(tbs_penjualan.jumlah_produk) }}</a>
                 </td>
+
+
+                <td align="center">{{ tbs_penjualan.satuan }}</td>
 
                 <td align="right" >{{ new Intl.NumberFormat().format(tbs_penjualan.harga_produk) }}</td>
 
