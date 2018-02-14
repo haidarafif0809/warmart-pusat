@@ -125,6 +125,11 @@ import LaporanKartuStokIndex from './components/laporan/LaporanKartuStokIndex.vu
 // LAPORAN BUCKET SIZE GRAFIK
 import LaporanBucketSizeIndex from './components/laporan/LaporanBucketSizeIndex.vue';
 import LaporanBucketSizeTampil from './components/laporan/LaporanBucketSizeTampil.vue';
+import LaporanBucketSizeOnlineTampil from './components/laporan/LaporanBucketSizeOnlineTampil.vue';
+
+// LAPORAN Grafik JAM TRANSAKSI PENJUALAN
+import GrafikJamTransaksiPenjualanIndex from './components/laporan/GrafikJamTransaksiPenjualanIndex.vue';
+
 //PEMBAYARAN HUTANG
 import PembayaranHutangIndex from './components/pembayaran_hutang/PembayaranHutangIndex.vue';
 import PembayaranHutangCreate from './components/pembayaran_hutang/PembayaranHutangCreate.vue';
