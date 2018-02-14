@@ -45,7 +45,7 @@
 						datasets: [{
 							label: 'LAPORAN BUCKET SIZE PENJUALAN POS',
 							backgroundColor: resp.data.color,
-							data: resp.data.data.total_faktur,
+							data: resp.data.total_faktur,
 						}]
 					},
 					{
