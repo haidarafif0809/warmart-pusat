@@ -729,6 +729,9 @@ Route::post('/laporan-kartu-stok/total-saldo-akhir', 'LaporanKartuStokController
 Route::get('/laporan-kartu-stok/download-excel-kartu-stok/{dari_tanggal}/{sampai_tanggal}/{produk}', 'LaporanKartuStokController@downloadExcel')->middleware('auth');
 Route::get('/laporan-kartu-stok/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{produk}', 'LaporanKartuStokController@cetakLaporan')->middleware('auth');
 
+// GRAFIK JAM TRANSAKSI PENJUALAN
+Route::get('/grafik-jam-transaksi-penjualan/view/{tanggal}/', 'GrafikJamTransaksiPenjualanController@prosesGrafikJamPenjuaalan')->middleware('auth');
+
 ////PEMBAYARAN Hutang
 Route::get('/pembayaran-hutang/view', 'PembayaranHutangController@view')->middleware('auth');
 Route::get('/pembayaran-hutang/pencarian', 'PembayaranHutangController@pencarian')->middleware('auth');

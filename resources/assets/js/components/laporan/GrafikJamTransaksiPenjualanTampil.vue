@@ -6,9 +6,7 @@
 		data: function () {
 			return {
 				filter: {
-					dari_tanggal: '',
-					sampai_tanggal: '',
-					kelipatan: '',
+					tanggal : ''
 				},
 				separator: {
 					decimal: ',',
@@ -18,34 +16,27 @@
 					precision: 2,
 					masked: false /* doesn't work with directive */
 				},
-				url: window.location.origin + (window.location.pathname).replace("dashboard", "laporan-bucket-size"),
+				url: window.location.origin + (window.location.pathname).replace("dashboard", "grafik-jam-transaksi-penjualan"),
 			}
 		},
 		mounted () {
 			var app = this;
-			var dari_tanggal = app.$route.params.dari_tanggal;
-			var sampai_tanggal = app.$route.params.sampai_tanggal;
-			var kelipatan = app.$route.params.kelipatan;
-
-			app.filter.dari_tanggal = dari_tanggal;
-			app.filter.sampai_tanggal = sampai_tanggal;
-			app.filter.kelipatan = kelipatan;
-
+			var tanggal = app.$route.params.tanggal;
+			app.filter.tanggal = tanggal;
 			app.barChart();
 		},
 		methods: {	
 			barChart(){
 				var app = this;
 				var filter = app.filter;
-				axios.get(app.url+'/view/'+filter.dari_tanggal+'/'+filter.sampai_tanggal+'/'+filter.kelipatan)
+				axios.get(app.url+'/view/'+filter.dari_tanggal)
 				.then(function (resp) {
 					app.renderChart(
 					{
-						labels: resp.data.kelipatan,
+						labels: "Grafik Jam Transaksi Penjualan" resp.data.tanggal,
 						datasets: [{
 							label: '',
 							backgroundColor: resp.data.color,
-							data: resp.data.data.total_faktur,
 						}]
 					},
 					{
