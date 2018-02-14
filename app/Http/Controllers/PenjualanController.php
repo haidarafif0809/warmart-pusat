@@ -286,7 +286,7 @@ class PenjualanController extends Controller
     public function viewDetailPenjualan($id)
     {
         $user_warung      = Auth::user()->id_warung;
-        $detail_penjualan = DetailPenjualanPos::with(['produk'])->where('warung_id', $user_warung)->where('id_penjualan_pos', $id)->orderBy('id_detail_penjualan_pos', 'desc')->paginate(10);
+        $detail_penjualan = DetailPenjualanPos::with(['produk','satuan'])->where('warung_id', $user_warung)->where('id_penjualan_pos', $id)->orderBy('id_detail_penjualan_pos', 'desc')->paginate(10);
         $array            = array();
 
         $DetailPenjualanPos = new DetailPenjualanPos();
@@ -301,6 +301,7 @@ class PenjualanController extends Controller
                 'id_penjualan_pos'        => $id,
                 'nama_produk'             => $detail_penjualans->NamaProduk,
                 'kode_produk'             => $detail_penjualans->produk->kode_barang,
+                'satuan'             => $detail_penjualans->satuan->nama_satuan,
                 'jumlah_produk'           => $detail_penjualans->jumlah_produk,
                 'harga_produk'            => $detail_penjualans->harga_produk,
                 'potongan'                => $potongan,
@@ -331,6 +332,7 @@ class PenjualanController extends Controller
                 'nama_produk'             => title_case($detail_penjualans['nama_barang']),
                 'kode_produk'             => $detail_penjualans['kode_barang'],
                 'jumlah_produk'           => $detail_penjualans['jumlah_produk'],
+                'satuan'           => $detail_penjualans['satuan'],
                 'potongan'                => $potongan,
                 'harga_produk'            => $detail_penjualans['harga_produk'],
                 'subtotal'                => $detail_penjualans['subtotal'],
@@ -348,7 +350,7 @@ class PenjualanController extends Controller
     {
         $session_id    = session()->getId();
         $user_warung   = Auth::user()->id_warung;
-        $tbs_penjualan = TbsPenjualan::with(['produk'])->where('warung_id', $user_warung)->where('session_id', $session_id)->orderBy('id_tbs_penjualan', 'desc')->paginate(10);
+        $tbs_penjualan = TbsPenjualan::with(['produk','satuan'])->where('warung_id', $user_warung)->where('session_id', $session_id)->orderBy('id_tbs_penjualan', 'desc')->paginate(10);
         $array         = array();
 
         foreach ($tbs_penjualan as $tbs_penjualans) {
@@ -360,6 +362,7 @@ class PenjualanController extends Controller
                 'nama_produk'      => $tbs_penjualans->NamaProduk,
                 'kode_produk'      => $tbs_penjualans->produk->kode_barang,
                 'jumlah_produk'    => $tbs_penjualans->jumlah_produk,
+                'satuan'    => $tbs_penjualans->satuan->nama_satuan,
                 'harga_produk'     => $tbs_penjualans->harga_produk,
                 'potongan'         => $potongan,
                 'subtotal'         => $tbs_penjualans->subtotal,
@@ -389,6 +392,7 @@ class PenjualanController extends Controller
                 'nama_produk'      => title_case($tbs_penjualans['nama_barang']),
                 'kode_produk'      => $tbs_penjualans['kode_barang'],
                 'jumlah_produk'    => $tbs_penjualans['jumlah_produk'],
+                'satuan'    => $tbs_penjualans['satuan'],
                 'potongan'         => $potongan,
                 'harga_produk'     => $tbs_penjualans['harga_produk'],
                 'subtotal'         => $tbs_penjualans['subtotal'],
@@ -420,6 +424,7 @@ class PenjualanController extends Controller
                 'id_penjualan_pos'       => $tbs_penjualans->id_penjualan_pos,
                 'nama_produk'            => $tbs_penjualans->NamaProduk,
                 'kode_produk'            => $tbs_penjualans->produk->kode_barang,
+                'satuan'            => $tbs_penjualans->produk->satuan->nama_satuan,
                 'jumlah_produk'          => $tbs_penjualans->jumlah_produk,
                 'harga_produk'           => $tbs_penjualans->harga_produk,
                 'potongan'               => $potongan,
@@ -450,6 +455,7 @@ class PenjualanController extends Controller
                 'nama_produk'            => title_case($tbs_penjualans['nama_barang']),
                 'kode_produk'            => $tbs_penjualans['kode_barang'],
                 'jumlah_produk'          => $tbs_penjualans['jumlah_produk'],
+                'satuan'          => $tbs_penjualans['satuan'],
                 'potongan'               => $potongan,
                 'harga_produk'           => $tbs_penjualans['harga_produk'],
                 'subtotal'               => $tbs_penjualans['subtotal'],

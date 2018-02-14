@@ -1,8 +1,8 @@
 <style scoped>
-  .btn-icon{
-    border-radius: 1px solid;
-    padding: 10px 10px;
-  }
+.btn-icon{
+  border-radius: 1px solid;
+  padding: 10px 10px;
+}
 </style>
 
 <template>
@@ -143,214 +143,216 @@
 </template>
 
 <script>
-  export default {
-    data: function () {
-      return {
-        errors: [],
-        kas : [],
-        kategori :[],
-        url : window.location.origin+(window.location.pathname).replace("dashboard", "kas-masuk"),
-        url_create : window.location.origin+(window.location.pathname).replace("dashboard", "kas_masuk"),
-        urlKategoriTransaksi : window.location.origin+(window.location.pathname).replace("dashboard", "kategori-transaksi"),
-        urlKas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
-        kasmasuk: {
-          kas: '',
-          kategori: '',
-          jumlah: '',
-          keterangan: '',
-        },
-        kategoriTransaksi: {
-          nama_kategori_transaksi: '',
-        },
-        kasBaru: {
-          kode_kas : '',
-          nama_kas : '',
-          status_kas : 0,
-          default_kas : 0
-        },
-        message : '',
-        setKas: {
-          placeholder: '--PILIH KAS--'
-        },
-        setKategori: {
-          placeholder: '--PILIH KATEGORI--'
-        },
-        separator: {
-          decimal: ',',
-          thousands: '.',
-          prefix: '',
-          suffix: '',
-          precision: 2,
-          masked: false /* doesn't work with directive */
-        }
-      }
-
-    },
-    mounted() {
-      var app = this;
-      app.dataKas();
-      app.dataKategori();
-    },
-    methods: {
-      selesaiTransaksi(){
-        this.$swal({
-          text: "Anda Yakin Ingin Menyelesaikan Transaksi Ini ?",
-          buttons: {
-            cancel: true,
-            confirm: "OK"                   
-          },
-        }).then((value) => {
-          if (!value) throw null;
-          this.saveForm(value);
-        });
+export default {
+  data: function () {
+    return {
+      errors: [],
+      kas : [],
+      kategori :[],
+      url : window.location.origin+(window.location.pathname).replace("dashboard", "kas-masuk"),
+      url_create : window.location.origin+(window.location.pathname).replace("dashboard", "kas_masuk"),
+      urlKategoriTransaksi : window.location.origin+(window.location.pathname).replace("dashboard", "kategori-transaksi"),
+      urlKas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
+      kasmasuk: {
+        kas: '',
+        kategori: '',
+        jumlah: '',
+        keterangan: '',
       },
-      saveForm() {
-        var app = this;
-        var newkasmasuk = app.kasmasuk;
-        axios.post(app.url_create, newkasmasuk)
-        .then(function (resp) {
-          app.message = 'Berhasil Menambah Kas Masuk';
-          app.alert(app.message);
-          app.kasmasuk.kas = ''
-          app.kasmasuk.kategori = ''
-          app.kasmasuk.jumlah = ''
-          app.kasmasuk.keterangan = ''
-          app.errors = '';
-          app.$router.replace('/kas-masuk');
-
-        })
-        .catch(function (resp) {
-          app.success = false;
-          app.errors = resp.response.data.errors;
-        });
+      kategoriTransaksi: {
+        nama_kategori_transaksi: '',
       },
-      alert(pesan) {
-        this.$swal({
-          title: "Sukses!",
-          text: pesan,
-          icon: "success",
-        });
+      kasBaru: {
+        kode_kas : '',
+        nama_kas : '',
+        status_kas : 0,
+        default_kas : 0
       },
-      alertBerhasil(pesan) {
-        this.$swal({
-          title: "Sukses!",
-          text: pesan,
-          icon: "success",
-          timer: 1500,
-        });
+      message : '',
+      setKas: {
+        placeholder: '--PILIH KAS--'
       },
-      dataKas() {
-        var app = this;
-        axios.get(app.url+'/pilih-kas').then(function (resp) {
-         app.kas = resp.data;
-       })
-        .catch(function (resp) {
-          alert("Tidak Bisa Memuat Kas");
-        });
+      setKategori: {
+        placeholder: '--PILIH KATEGORI--'
       },
-      dataKategori() {
-        var app = this;
-        axios.get(app.url+'/pilih-kategori').then(function (resp) {
-         app.kategori = resp.data;
-       })
-        .catch(function (resp) {
-          alert("Tidak Bisa Memuat Kategori");
-        });
-      },
-      kategoriBaru(){
-        var app = this;
-        app.$swal({
-          title: "Kategori Transaksi",
-          content: {
-            element: "input",
-            attributes: {
-              placeholder: "Nama Kategori Transaksi",
-              type: "text",
-            },
-          },
-          closeOnEsc: true,
-          buttons: {
-            confirm: "OK"                   
-          }
-        }).then((value) => {
-          this.tambahKategoriTransaksiBaru(value);
-        });
-      },
-      tambahKategoriTransaksiBaru(value){
-        if (value == "") {
-          this.$swal({
-            text: "Nama Kategori Transaksi Tidak Boleh Kosong!",
-          });
-        }else{
-          var app = this;
-          app.kategoriTransaksi.nama_kategori_transaksi = value;
-          var newKategoriTransaksi = app.kategoriTransaksi;
-
-          axios.post(app.urlKategoriTransaksi, newKategoriTransaksi).then(function (resp) {
-
-            app.dataKategori();
-            app.message = 'Berhasil Menambah Kategori Transaksi '+ app.kategoriTransaksi.nama_kategori_transaksi;
-            app.alertBerhasil(app.message);
-            app.$router.replace('/create-kas-masuk');
-            timer: 2000
-            console.log(resp);
-          })
-          .catch(function (resp) {
-            console.log(resp);
-            app.kategoriTransaksi = ''
-            app.$router.replace('/create-kas-masuk');
-          });
-        }
-      },
-      tambahKasBaru(){
-        $("#modal_tambah_kas").show();
-        this.$refs.kode_kas.$el.focus(); 
-      },
-      saveFormKas() {
-        var app = this;
-        var newKas = app.kasBaru;
-        axios.post(app.urlKas, newKas)
-        .then(function (resp) {
-          app.message = 'Menambah Kas '+ app.kasBaru.nama_kas;
-          app.alertBerhasil(app.message);
-          app.kasBaru.kode_kas = ''
-          app.kasBaru.nama_kas = ''
-          app.kasBaru.status_kas = 0
-          app.kasBaru.default_kas = 0
-          app.errors = '';
-          app.dataKas();
-          $("#modal_tambah_kas").hide();
-        })
-        .catch(function (resp) {
-          app.success = false;
-          app.errors = resp.response.data.errors;
-        });
-      },
-      defaultKas() {
-        var app = this;
-        var toogle = app.kasBaru.default_kas;
-
-        if (toogle == true) {
-          app = this;
-          app.$swal({
-            title: "Konfirmasi",
-            text: "Apakah Anda Yakin Ingin Mengubah Kas Utama ?",
-            icon: "warning",
-            buttons: true,
-            dangerMode: true,
-          })
-          .then((confirm) => {
-            if (confirm) {
-              toogle.prop('checked', true);
-            } else {
-              toogle.prop('checked', false);
-            }
-          });
-        }  
-      },
-      tutupModal(){
-        $("#modal_tambah_kas").hide();  
+      separator: {
+        decimal: ',',
+        thousands: '.',
+        prefix: '',
+        suffix: '',
+        precision: 2,
+        masked: false /* doesn't work with directive */
       }
     }
+
+  },
+  mounted() {
+    var app = this;
+    app.dataKas();
+    app.dataKategori();
+  },
+  methods: {
+    selesaiTransaksi(){
+      this.$swal({
+        text: "Anda Yakin Ingin Menyelesaikan Transaksi Ini ?",
+        buttons: {
+          cancel: true,
+          confirm: "OK"                   
+        },
+      }).then((value) => {
+        if (!value) throw null;
+        this.saveForm(value);
+      });
+    },
+    saveForm() {
+      var app = this;
+      var newkasmasuk = app.kasmasuk;
+      axios.post(app.url_create, newkasmasuk)
+      .then(function (resp) {
+        app.message = 'Berhasil Menambah Kas Masuk';
+        app.alert(app.message);
+        app.kasmasuk.kas = ''
+        app.kasmasuk.kategori = ''
+        app.kasmasuk.jumlah = ''
+        app.kasmasuk.keterangan = ''
+        app.errors = '';
+        app.$router.replace('/kas-masuk');
+
+      })
+      .catch(function (resp) {
+        app.success = false;
+        app.errors = resp.response.data.errors;
+      });
+    },
+    alert(pesan) {
+      this.$swal({
+        title: "Sukses!",
+        text: pesan,
+        icon: "success",
+        buttons: false,
+        timer: 1000,
+      });
+    },
+    alertBerhasil(pesan) {
+      this.$swal({
+        title: "Sukses!",
+        text: pesan,
+        icon: "success",
+        timer: 1500,
+      });
+    },
+    dataKas() {
+      var app = this;
+      axios.get(app.url+'/pilih-kas').then(function (resp) {
+       app.kas = resp.data;
+     })
+      .catch(function (resp) {
+        alert("Tidak Bisa Memuat Kas");
+      });
+    },
+    dataKategori() {
+      var app = this;
+      axios.get(app.url+'/pilih-kategori').then(function (resp) {
+       app.kategori = resp.data;
+     })
+      .catch(function (resp) {
+        alert("Tidak Bisa Memuat Kategori");
+      });
+    },
+    kategoriBaru(){
+      var app = this;
+      app.$swal({
+        title: "Kategori Transaksi",
+        content: {
+          element: "input",
+          attributes: {
+            placeholder: "Nama Kategori Transaksi",
+            type: "text",
+          },
+        },
+        closeOnEsc: true,
+        buttons: {
+          confirm: "OK"                   
+        }
+      }).then((value) => {
+        this.tambahKategoriTransaksiBaru(value);
+      });
+    },
+    tambahKategoriTransaksiBaru(value){
+      if (value == "") {
+        this.$swal({
+          text: "Nama Kategori Transaksi Tidak Boleh Kosong!",
+        });
+      }else{
+        var app = this;
+        app.kategoriTransaksi.nama_kategori_transaksi = value;
+        var newKategoriTransaksi = app.kategoriTransaksi;
+
+        axios.post(app.urlKategoriTransaksi, newKategoriTransaksi).then(function (resp) {
+
+          app.dataKategori();
+          app.message = 'Berhasil Menambah Kategori Transaksi '+ app.kategoriTransaksi.nama_kategori_transaksi;
+          app.alertBerhasil(app.message);
+          app.$router.replace('/create-kas-masuk');
+          timer: 2000
+          console.log(resp);
+        })
+        .catch(function (resp) {
+          console.log(resp);
+          app.kategoriTransaksi = ''
+          app.$router.replace('/create-kas-masuk');
+        });
+      }
+    },
+    tambahKasBaru(){
+      $("#modal_tambah_kas").show();
+      this.$refs.kode_kas.$el.focus(); 
+    },
+    saveFormKas() {
+      var app = this;
+      var newKas = app.kasBaru;
+      axios.post(app.urlKas, newKas)
+      .then(function (resp) {
+        app.message = 'Menambah Kas '+ app.kasBaru.nama_kas;
+        app.alertBerhasil(app.message);
+        app.kasBaru.kode_kas = ''
+        app.kasBaru.nama_kas = ''
+        app.kasBaru.status_kas = 0
+        app.kasBaru.default_kas = 0
+        app.errors = '';
+        app.dataKas();
+        $("#modal_tambah_kas").hide();
+      })
+      .catch(function (resp) {
+        app.success = false;
+        app.errors = resp.response.data.errors;
+      });
+    },
+    defaultKas() {
+      var app = this;
+      var toogle = app.kasBaru.default_kas;
+
+      if (toogle == true) {
+        app = this;
+        app.$swal({
+          title: "Konfirmasi",
+          text: "Apakah Anda Yakin Ingin Mengubah Kas Utama ?",
+          icon: "warning",
+          buttons: true,
+          dangerMode: true,
+        })
+        .then((confirm) => {
+          if (confirm) {
+            toogle.prop('checked', true);
+          } else {
+            toogle.prop('checked', false);
+          }
+        });
+      }  
+    },
+    tutupModal(){
+      $("#modal_tambah_kas").hide();  
+    }
   }
+}
 </script>
