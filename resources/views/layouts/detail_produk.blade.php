@@ -6,28 +6,36 @@ first();
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <title>  
-    @if($setting_aplikasi->tipe_aplikasi == 0)
-    War-Mart.id
+  @if($setting_aplikasi->tipe_aplikasi == 0)
+    <title>
+        War-Mart.id
+    </title>
     @else
-    To-Pos.id
+    <title>
+        topos | Aplikasi POS & Toko Online
+    </title>
     @endif
-  </title>
 
-  <meta charset="utf-8"/>
-  <link href="{{ asset('img/favicon.png') }}" rel="apple-touch-icon" sizes="76x76"/>
-  <link href="{{ asset('img/favicon.png') }}" rel="icon" type="image/png"/>
-  <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
-  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
-  <meta content="width=device-width" name="viewport"/>
-  <!-- Bootstrap core CSS     -->
-  <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet"/>
-  <link href="{{ asset('css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
-  <!--     Fonts and icons     -->
-  <link href="{{ asset('css/material-kit.css?v=1.2.0')}}" rel="stylesheet"/>
-  <link href="{{ asset('assets/assets-for-demo/vertical-nav.css')}}" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" rel="stylesheet" type="text/css"/>
-  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet"/>
+    <meta charset="utf-8"/>
+    @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
+    <link href="{{ asset('img/favicon.png') }}" rel="apple-touch-icon" sizes="76x76"/>
+    <link href="{{ asset('img/favicon.png') }}" rel="icon" type="image/png"/>
+    @else
+    <link href="{{ asset('img/icon_topos.png') }}?v=1" rel="apple-touch-icon" sizes="76x76"/>
+    <link href="{{ asset('img/icon_topos.png') }}?v=1" rel="icon" type="image/png"/>
+    @endif
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
+    <meta content="width=device-width" name="viewport"/>
+    <!-- Bootstrap core CSS     -->
+    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet"/>
+    <link href="{{ asset('css/selectize.bootstrap3.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
+    <!--     Fonts and icons     -->
+    <link href="{{ asset('css/material-kit.css?v=1.2.0')}}" rel="stylesheet"/>
+    <link href="{{ asset('assets/assets-for-demo/vertical-nav.css')}}" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" rel="stylesheet" type="text/css"/>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet"/>
   {!! SEOMeta::generate() !!}
   {!! OpenGraph::generate() !!}
   {!! Twitter::generate() !!}
@@ -323,9 +331,9 @@ first();
 
             <div class="col-md-6 col-sm-6">
               @if($barang->foto != NULL)
-              <img class="img-produk" src="../foto_produk/{{$barang->foto}}"/>
+              <img class="img-produk" src="{{ asset('foto_produk')}}/{{$barang->foto}}"/>
               @else
-              <img class="img-produk" src="../image/foto_default.png"/>
+              <img class="img-produk" src="{{ asset('image')}}/foto_default.png"/>
               @endif
             </div>
             <div class="col-md-6 col-sm-6">
