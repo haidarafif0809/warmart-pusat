@@ -213,6 +213,16 @@
     <div class="collapse" id="laporan">
         <ul class="nav">
             <li>
+                <router-link :to="{name: 'indexLaporanBucketSize'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        LB
+                    </span>
+                    <span class="sidebar-normal">
+                        Laporan Bucket Size
+                    </span>
+                </router-link>
+            </li>
+            <li>
                 <router-link :to="{name: 'indexLaporanLabaKotor'}" class="menu-nav">
                     <span class="sidebar-mini">
                         LK
