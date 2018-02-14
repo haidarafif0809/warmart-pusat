@@ -44,17 +44,17 @@
                             <tbody v-if="kasmasuks.length > 0 && loading == false"  class="data-ada">
                                 <tr v-for="kas_masuk, index in kasmasuks" >
                                     <td>{{ kas_masuk.kas_masuk.no_faktur }}</td>
-                                     <td>{{ kas_masuk.kas_masuk.nama_kas }}</td>
-                                     <td>{{ kas_masuk.kas_masuk.nama_kategori_transaksi }}</td>
-                                     <td>{{ kas_masuk.kas_masuk.jumlah | pemisahTitik }}</td>
-                                     <td>{{ kas_masuk.kas_masuk.keterangan }}</td>
-                                     <td>
+                                    <td>{{ kas_masuk.kas_masuk.nama_kas }}</td>
+                                    <td>{{ kas_masuk.kas_masuk.nama_kategori_transaksi }}</td>
+                                    <td>{{ kas_masuk.kas_masuk.jumlah | pemisahTitik }}</td>
+                                    <td>{{ kas_masuk.kas_masuk.keterangan }}</td>
+                                    <td>
                                         <router-link :to="{name: 'editKasMasuk', params: {id: kas_masuk.kas_masuk.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + kas_masuk.kas_masuk.id" > Edit
                                         </router-link>
 
-                                        <a v-if="kas_masuk.status_transaksi == 0" href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + kas_masuk.kas_masuk.id" v-on:click="deleteEntry(kas_masuk.kas_masuk.id, index,kas_masuk.kas_masuk.nama_kas)">Delete
+                                        <a v-if="kas_masuk.status_transaksi == 0" href="#kas-masuk" class="btn btn-xs btn-danger" v-bind:id="'delete-' + kas_masuk.kas_masuk.id" v-on:click="deleteEntry(kas_masuk.kas_masuk.id, index,kas_masuk.kas_masuk.nama_kas)">Delete
                                         </a>
-                                        <a v-if="kas_masuk.status_transaksi == 1" href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + kas_masuk.kas_masuk.id" v-on:click="gagalHapus(kas_masuk.kas_masuk.id, index,kas_masuk.kas_masuk.nama_kas)">Delete
+                                        <a v-if="kas_masuk.status_transaksi == 1" href="#kas-masuk" class="btn btn-xs btn-danger" v-bind:id="'delete-' + kas_masuk.kas_masuk.id" v-on:click="gagalHapus(kas_masuk.kas_masuk.id, index,kas_masuk.kas_masuk.nama_kas)">Delete
                                         </a>
                                     </td>
                                 </tr>
@@ -62,11 +62,11 @@
                             <tbody class="data-tidak-ada" v-else-if="kasmasuks.length == 0 && loading == false">
                                 <tr ><td colspan="6"  class="text-center">Tidak Ada Data</td></tr>
                             </tbody>
-                    </table>    
+                        </table>    
 
-                 <vue-simple-spinner v-if="loading"></vue-simple-spinner>
+                        <vue-simple-spinner v-if="loading"></vue-simple-spinner>
 
-                 <div align="right"><pagination :data="kasmasuksData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
+                        <div align="right"><pagination :data="kasmasuksData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
 
                     </div>
 
@@ -142,6 +142,8 @@ export default {
                 title: "Berhasil ",
                 text: pesan,
                 icon: "success",
+                buttons: false,
+                timer: 1000,
             });
         },
         deleteEntry(id, index,nama_kas) {
@@ -156,24 +158,22 @@ export default {
             .then((willDelete) => {
                 if (willDelete) {
                   var app = this;
+                  app.loading = true
                   axios.delete(app.url_delete+'/' + id)
                   .then(function (resp) {
                     app.getResults();
-                    swal("Kas Masuk Berhasil Dihapus!  ", {
-                      icon: "success",
-                    });
-                  })
+                    app.loading = true
+                    app.alert("Menghapus Kas Masuk "+nama_kas)
+                })
                   .catch(function (resp) {
-                    app.$router.replace('/kas-masuk/');
-                    swal("Gagal Menghapus Kas Masuk!", {
-                      icon: "warning",
-                    });
-                  });
-               }
-               this.$router.replace('/kas-masuk/');
-            });
+                    console.log(resp);  
+                    app.loading = false
+                    alert("Tidak dapat Menghapus Kas Masuk")
+                });
+              }
+          });
         },
-         gagalHapus(id, index,nama_kas) {
+        gagalHapus(id, index,nama_kas) {
             this.$swal({
                 title: "Warning",
                 text: "Kas  '"+nama_kas+"' akan Minus , jika terjadi penghapusan",

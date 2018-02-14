@@ -267,7 +267,7 @@
       <div class="col-md-3">
         <div class="card card-produk" style="margin-bottom: 1px; margin-top: 1px;">
           <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
-           
+
             <selectize-component v-model="inputTbsPembelian.produk" :settings="placeholder_produk" id="produk" ref='produk' v-shortkey.focus="['f1']" > 
               <option v-for="produks, index in produk" v-bind:value="produks.produk" v-if="produks.hitung_stok == 1" >{{produks.barcode}} || {{produks.kode_produk}} || {{ produks.nama_produk }}</option>
             </selectize-component>
@@ -308,25 +308,25 @@
 
               <td>{{ tbs_pembelian.kode_produk }} - {{ tbs_pembelian.nama_produk }}</td>
               <td>
-                <a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-on:click="editEntryJumlah(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk,tbs_pembelian.subtotal)"><p align='right'>{{ tbs_pembelian.jumlah_produk_pemisah }}</p>
+                <a v-bind:href="'#edit-pembelian/'+id_pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-on:click="editEntryJumlah(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk,tbs_pembelian.subtotal)"><p align='right'>{{ tbs_pembelian.jumlah_produk_pemisah }}</p>
                 </a>
               </td>
               <td>
-                <a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-on:click="editEntryHarga(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk,tbs_pembelian.subtotal)" ><p align='right'>{{ tbs_pembelian.harga_pemisah }}</p>
+                <a v-bind:href="'#edit-pembelian/'+id_pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-on:click="editEntryHarga(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk,tbs_pembelian.subtotal)" ><p align='right'>{{ tbs_pembelian.harga_pemisah }}</p>
                 </a>
               </td>
               <td>
-                <a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-on:click="editEntryPotongan(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk,tbs_pembelian.jumlah_produk,tbs_pembelian.harga_produk,tbs_pembelian.subtotal)"
+                <a v-bind:href="'#edit-pembelian/'+id_pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-on:click="editEntryPotongan(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk,tbs_pembelian.jumlah_produk,tbs_pembelian.harga_produk,tbs_pembelian.subtotal)"
                 ><p align='right'>{{ tbs_pembelian.potongan }} | {{ Math.round(tbs_pembelian.potongan_persen,2) }} %</p>
               </a>
             </td>
             <td>
-              <a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-on:click="editEntryTax(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk,tbs_pembelian.jumlah_produk,tbs_pembelian.harga_produk,tbs_pembelian.potongan,tbs_pembelian.ppn_produk,tbs_pembelian.subtotal)" ><p align='right'>{{ tbs_pembelian.tax }} | {{ Math.round(tbs_pembelian.tax_persen, 2) }} %</p>
+              <a v-bind:href="'#edit-pembelian/'+id_pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-on:click="editEntryTax(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk,tbs_pembelian.jumlah_produk,tbs_pembelian.harga_produk,tbs_pembelian.potongan,tbs_pembelian.ppn_produk,tbs_pembelian.subtotal)" ><p align='right'>{{ tbs_pembelian.tax }} | {{ Math.round(tbs_pembelian.tax_persen, 2) }} %</p>
               </a>
             </td>
             <td><p id="table-subtotal" align="right">{{ tbs_pembelian.subtotal_tbs }}</p></td>
             <td style="text-align:right;"> 
-              <a href="#create-pembelian" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_pembelian.id_tbs_pembelian" v-on:click="deleteEntry(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk)" >Delete</a>
+              <a v-bind:href="'#edit-pembelian/'+id_pembelian" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_pembelian.id_tbs_pembelian" v-on:click="deleteEntry(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk)" >Delete</a>
             </td>
           </tr>
         </tbody>          
@@ -741,7 +741,7 @@ defaultKas() {
 }  
 },
 deleteEntry(id, index,nama_produk) { 
- 
+
   var app = this; 
   app.$swal({ 
     text: "Anda Yakin Ingin Menghapus Produk "+nama_produk+ " ?", 

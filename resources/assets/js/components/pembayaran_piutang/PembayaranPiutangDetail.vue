@@ -1,19 +1,19 @@
 <style scoped>
-    .pencarian {
-        color: red; 
-        float: right;
-    }    
-    .table>thead>tr>th {
-        border-bottom-width: 1px;
-        font-size: 1em;
-        font-weight: 300;
-    }
-    .card-stats .card-header i {
-        font-size: 36px;
-        line-height: 36px;
-        width: 36px;
-        height: 36px;
-    }
+.pencarian {
+    color: red; 
+    float: right;
+}    
+.table>thead>tr>th {
+    border-bottom-width: 1px;
+    font-size: 1em;
+    font-weight: 300;
+}
+.card-stats .card-header i {
+    font-size: 36px;
+    line-height: 36px;
+    width: 36px;
+    height: 36px;
+}
 </style>
 
 <template>
@@ -62,7 +62,7 @@
 
                                             <td>{{ detailPembayaranPiutang.no_faktur_penjualan }}</td>
                                             <td>{{ detailPembayaranPiutang.pelanggan }}</td>
-                                            <td align="center">{{ detailPembayaranPiutang.jatuh_tempo | tanggal }}</td>
+                                            <td align="center">{{ detailPembayaranPiutang.jatuh_tempo  }}</td>
                                             <td align="right">{{ detailPembayaranPiutang.piutang | pemisahTitik }}</td>
                                             <td align="right">{{ detailPembayaranPiutang.potongan | pemisahTitik }}</td>
                                             <td align="right">{{ detailPembayaranPiutang.total | pemisahTitik }}</td>
@@ -108,24 +108,24 @@
 
 
 <script>
-    export default {
-        data: function () {
-            return {
-                errors: [],
-                detailPembayaranPiutang: [],
-                detailPembayaranPiutangData : {},
-                url : window.location.origin+(window.location.pathname).replace("dashboard", "pembayaran-piutang"),
-                pencarian: '',
-                loading: true,
-                seen : false,    
-                subtotal : 0,         
-            }
-        },
-        mounted() {   
-            var app = this;
-            app.getResults();
-        },
-        watch: {
+export default {
+    data: function () {
+        return {
+            errors: [],
+            detailPembayaranPiutang: [],
+            detailPembayaranPiutangData : {},
+            url : window.location.origin+(window.location.pathname).replace("dashboard", "pembayaran-piutang"),
+            pencarian: '',
+            loading: true,
+            seen : false,    
+            subtotal : 0,         
+        }
+    },
+    mounted() {   
+        var app = this;
+        app.getResults();
+    },
+    watch: {
     // whenever question changes, this function will run
     pencarian: function (newQuestion) {
         this.getHasilPencarian()

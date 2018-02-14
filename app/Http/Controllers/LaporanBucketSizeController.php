@@ -13,44 +13,35 @@ class LaporanBucketSizeController extends Controller
         $this->middleware('user-must-warung');
     }
 
-    //METHOD PAGINATION
-    public function dataPagination($bucket_size_pos, $array_bucket_size_pos)
+    public function random_color_part()
     {
-        $respons['current_page']   = $bucket_size_pos->currentPage();
-        $respons['data']           = $array_bucket_size_pos;
-        $respons['first_page_url'] = url('/laporan-bucket-size/view?page=' . $bucket_size_pos->firstItem());
-        $respons['from']           = 1;
-        $respons['last_page']      = $bucket_size_pos->lastPage();
-        $respons['last_page_url']  = url('/laporan-bucket-size/view?page=' . $bucket_size_pos->lastPage());
-        $respons['next_page_url']  = $bucket_size_pos->nextPageUrl();
-        $respons['path']           = url('/laporan-bucket-size/view');
-        $respons['per_page']       = $bucket_size_pos->perPage();
-        $respons['prev_page_url']  = $bucket_size_pos->previousPageUrl();
-        $respons['to']             = $bucket_size_pos->perPage();
-        $respons['total']          = $bucket_size_pos->total();
-
-        return $respons;
+        return str_pad(dechex(mt_rand(0, 255)), 2, '0', STR_PAD_LEFT);
     }
 
-    public function prosesLaporanBucketSize(Request $request)
+    public function random_color()
     {
-        $satu                     = 1;
-        $kelipatan                = 100000;
-        $dari_tanggal             = '2018-01-01';
-        $sampai_tanggal           = '2018-02-12';
+        return '#' . $this->random_color_part() . $this->random_color_part() . $this->random_color_part();
+    }
+
+    public function prosesLaporanBucketSize(Request $request, $dari_tanggal, $sampai_tanggal, $kelipatan)
+    {
+        $satu      = 1;
+        $kelipatan = $request->kelipatan;
+
         $data_penjualan_pos       = PenjualanPos::select([DB::raw('MAX(total) as total')])->first();
         $total_penjualan_terbesar = $satu + $data_penjualan_pos->total;
 
         while ($kelipatan <= $total_penjualan_terbesar) {
-            $total_faktur           = PenjualanPos::countFaktur($dari_tanggal, $sampai_tanggal)->first()->no_faktur;
-            $total_faktur_kelipatan = PenjualanPos::countFaktur($dari_tanggal, $sampai_tanggal)
+            $total_faktur           = PenjualanPos::countFaktur($request)->first()->no_faktur;
+            $total_faktur_kelipatan = PenjualanPos::countFaktur($request)
                 ->whereBetween('total', array($satu, $kelipatan))
                 ->first()->no_faktur;
 
-            $respons['kelipatan'][]                = $satu . " - " . $kelipatan;
-            $respons['datasets']['total_faktur'][] = $total_faktur_kelipatan;
+            $respons['kelipatan'][]    = $satu . " - " . $kelipatan;
+            $respons['total_faktur'][] = $total_faktur_kelipatan;
+            $respons['color'][]        = $this->random_color();
 
-            $data_kelipatan = 100000;
+            $data_kelipatan = $request->kelipatan;
             $kelipatan += $data_kelipatan;
             $satu += $data_kelipatan;
         }

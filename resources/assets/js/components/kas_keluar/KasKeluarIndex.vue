@@ -54,11 +54,11 @@
                     <router-link :to="{name: 'editKasKeluar', params: {id: dataKas.kas_keluar.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + dataKas.kas_keluar.id" >
                       Edit
                     </router-link>
-                      <a href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + dataKas.kas_keluar.id" v-on:click="deleteEntry(dataKas.kas_keluar.id, index,dataKas.kas_keluar.nama_kas)">
-                        Delete
-                      </a>
-                    </td>
-                  </tr>
+                    <a href="#kas-keluar" class="btn btn-xs btn-danger" v-bind:id="'delete-' + dataKas.kas_keluar.id" v-on:click="deleteEntry(dataKas.kas_keluar.id, index,dataKas.kas_keluar.nama_kas)">
+                      Delete
+                    </a>
+                  </td>
+                </tr>
               </tbody>
               <tbody class="data-tidak-ada" v-else-if="kasKeluar.length == 0 && loading == false">
                 <tr><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
@@ -96,85 +96,86 @@ export default {
         pencarian: function (newQuestion) {
           this.getHasilPencarian()  
         }
-    },
+      },
 
-    methods: {
-      getResults(page) {
-        var app = this; 
-        if (typeof page === 'undefined') {
-          page = 1;
-        }
-        axios.get(app.url+'/view?page='+page)
-        .then(function (resp) {
-          app.kasKeluar = resp.data.data;
-          app.kasKeluarData = resp.data;
-          app.loading = false;
-          console.log(resp.data)
-        })
-        .catch(function (resp) {
-          console.log(resp);
-          app.loading = false;
-          alert("Tidak Dapat Memuat Kas Keluar");
-        });
-      },
-      getHasilPencarian(page){
-        var app = this;
-        if (typeof page === 'undefined') {
-          page = 1;
-        }
-        axios.get(app.url+'/pencarian?search='+app.pencarian+'&page='+page)
-        .then(function (resp) {
-          app.kasKeluar = resp.data.data;
-          app.kasKeluarData = resp.data;
-          app.loading = false;
-        })
-        .catch(function (resp) {
-          console.log(resp);
-          alert("Tidak Dapat Memuat Kas Keluar");
-        });
-      },
-      alert(pesan) {
-        this.$swal({
-          title: "Berhasil ",
-          text: pesan,
-          icon: "success",
-        });
-      },
-        deleteEntry(id, index,name) {
-            swal({
-                title: "Konfirmasi Hapus",
-                text : "Anda Yakin Ingin Menghapus "+name+" ?",
-                icon : "warning",
-                buttons: true,
-                dangerMode: true,
-            })
-            .then((willDelete) => {
-                if (willDelete) {
-                  var app = this;
-                  axios.delete(app.url+'/' + id)
-                  .then(function (resp) {
-                    app.getResults();
-                    swal("Kas Keluar Berhasil Dihapus!  ", {
-                      icon: "success",
-                    });
-                  })
-                  .catch(function (resp) {
-                    app.$router.replace('/kas-keluar/');
-                    swal("Gagal Menghapus Kas Keluar!", {
-                      icon: "warning",
-                    });
-                  });
-               }
-               this.$router.replace('/kas-keluar/');
-            });
+      methods: {
+        getResults(page) {
+          var app = this; 
+          if (typeof page === 'undefined') {
+            page = 1;
+          }
+          axios.get(app.url+'/view?page='+page)
+          .then(function (resp) {
+            app.kasKeluar = resp.data.data;
+            app.kasKeluarData = resp.data;
+            app.loading = false;
+            console.log(resp.data)
+          })
+          .catch(function (resp) {
+            console.log(resp);
+            app.loading = false;
+            alert("Tidak Dapat Memuat Kas Keluar");
+          });
         },
-         gagalHapus(id, index,nama_kategori_transaksi) {
-            this.$swal({
-                title: "Gagal ",
-                text: "Kas Keluar '"+nama_kategori_transaksi+"' Sudah Terpakai",
-                icon: "warning",
-            });
+        getHasilPencarian(page){
+          var app = this;
+          if (typeof page === 'undefined') {
+            page = 1;
+          }
+          axios.get(app.url+'/pencarian?search='+app.pencarian+'&page='+page)
+          .then(function (resp) {
+            app.kasKeluar = resp.data.data;
+            app.kasKeluarData = resp.data;
+            app.loading = false;
+          })
+          .catch(function (resp) {
+            console.log(resp);
+            alert("Tidak Dapat Memuat Kas Keluar");
+          });
+        },
+        alert(pesan) {
+          this.$swal({
+            title: "Berhasil ",
+            text: pesan,
+            icon: "success",
+            buttons: false,
+            timer: 1000,
+          });
+        },
+        deleteEntry(id, index,name) {
+
+          this.$swal({
+            title: "Konfirmasi Hapus",
+            text : "Anda Yakin Ingin Menghapus "+name+" ?",
+            icon : "warning",
+            buttons: true,
+            dangerMode: true,
+          })
+          .then((willDelete) => {
+            if (willDelete) {
+              var app = this;
+              app.loading = true
+              axios.delete(app.url+'/' + id)
+              .then(function (resp) {
+                app.loading = false
+                app.getResults();
+                app.alert("Menghapus Kas Keluar "+name)
+              })
+              .catch(function (resp) {
+                console.log(resp);
+                app.loading = false
+                alert("Tidak dapat Menghapus Keluar")
+              });
+            }
+          });
+        },
+        gagalHapus(id, index,nama_kategori_transaksi) {
+          this.$swal({
+            title: "Gagal ",
+            text: "Kas Keluar '"+nama_kategori_transaksi+"' Sudah Terpakai",
+            icon: "warning",
+          });
         }
+      }
     }
-}
-</script>
+    </script>

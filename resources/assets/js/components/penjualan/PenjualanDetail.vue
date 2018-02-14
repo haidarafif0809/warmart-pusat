@@ -38,6 +38,7 @@
 											<th>No Transaksi</th>
 											<th>Produk</th>
 											<th class="text-right">Jumlah</th>
+											<th class="text-center">Satuan</th>
 											<th class="text-right">Harga</th>
 											<th class="text-right">Potongan</th>
 											<th class="text-right">Subtotal</th>
@@ -50,6 +51,7 @@
 											<td>{{ detailPenjualan.id_penjualan_pos }}</td>
 											<td>{{ detailPenjualan.nama_produk }}</td>
 											<td align="right"> {{ new Intl.NumberFormat().format(detailPenjualan.jumlah_produk) }}</td>
+											<td align="center">{{ detailPenjualan.satuan }}</td>
 											<td align="right"> {{ new Intl.NumberFormat().format(detailPenjualan.harga_produk) }}</td>
 											<td align="right"> {{ detailPenjualan.potongan }}</td>
 											<td align="right"> {{ new Intl.NumberFormat().format(detailPenjualan.subtotal) }}</td>

@@ -239,7 +239,7 @@ class LaporanMutasiStokController extends Controller
 
         $data_warung = Warung::where('id', Auth::user()->id_warung)->first();
 
-        return view('laporan.cetak_kartu_stok',
+        return view('laporan.cetak_mutasi_stok',
             [
                 'daftar_produk'        => $daftar_produk,
                 'data_mutasi_stok'     => $data_mutasi_stok,

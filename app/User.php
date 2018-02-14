@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\SettingVerifikasi;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Mail;
@@ -47,13 +48,27 @@ class User extends Authenticatable
 
     public function sendVerification()
     {
-        $user                     = $this;
-        $token                    = str_random(40);
-        $user->verification_token = $token;
-        $user->save();
-        Mail::send('auth.emails.verification', compact('user', 'token'), function ($message) use ($user) {
-            $message->to($user->email, $user->name)->subject('Konfirmasi Registrasi Akun Topos Anda');
-        });
+        $setiing_verifikasi = SettingVerifikasi::select()->first();
+        if ($setiing_verifikasi->email == 1 && $setiing_verifikasi->no_telp == 1) {
+            $user                     = $this;
+            $token                    = str_random(40);
+            $user->verification_token = $token;
+            $user->save();
+            Mail::send('auth.emails.verification', compact('user', 'token'), function ($message) use ($user) {
+                $message->to($user->email, $user->name)->subject('Konfirmasi Registrasi Akun Topos Anda');
+            });
+
+        } elseif ($setiing_verifikasi->email == 1 && $setiing_verifikasi->no_telp != 1) {
+            $user                     = $this;
+            $token                    = str_random(40);
+            $user->verification_token = $token;
+            $user->save();
+            Mail::send('auth.emails.verification', compact('user', 'token'), function ($message) use ($user) {
+                $message->to($user->email, $user->name)->subject('Konfirmasi Registrasi Akun Topos Anda');
+            });
+        } else {
+            return;
+        }
     }
 
     public function verifyEmail()
