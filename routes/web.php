@@ -269,7 +269,6 @@ Route::get('/kirim-bukti-pembayaran/{id}', 'PendaftarToposController@kirimBuktiP
 Route::get('/register-warung', 'Auth\RegisterController@register_warung')->middleware('optimizeImages');
 
 Route::get('/register-customer', 'Auth\RegisterController@register_customer')->middleware('optimizeImages');
-Route::get('/register-customer', 'Auth\RegisterController@register_customer')->middleware('optimizeImages');
 
 //registrasi lewat link affiliasi
 Route::get('/aff/{id}/', function ($id) {

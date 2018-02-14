@@ -55,7 +55,7 @@ class User extends Authenticatable
             $user->verification_token = $token;
             $user->save();
             Mail::send('auth.emails.verification', compact('user', 'token'), function ($message) use ($user) {
-                $message->to($user->email, $user->name)->subject('Konfirmasi Registrasi Akun Topos Anda');
+                $message->to($user->email, $user->name)->subject('Verifikasi Akun Topos Anda');
             });
 
         } elseif ($setiing_verifikasi->email == 1 && $setiing_verifikasi->no_telp != 1) {
@@ -64,7 +64,7 @@ class User extends Authenticatable
             $user->verification_token = $token;
             $user->save();
             Mail::send('auth.emails.verification', compact('user', 'token'), function ($message) use ($user) {
-                $message->to($user->email, $user->name)->subject('Konfirmasi Registrasi Akun Topos Anda');
+                $message->to($user->email, $user->name)->subject('Verifikasi Akun Topos Anda');
             });
         } else {
             return;
