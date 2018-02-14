@@ -17,8 +17,9 @@ class EditTbsPenjualan extends Model
 	// pencarian edit tbs penjualan
 	public function scopePencarian($query,$user_warung,$id,$request){
 		
-		$query->select('edit_tbs_penjualans.id_edit_tbs_penjualans AS id_edit_tbs_penjualans', 'edit_tbs_penjualans.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'edit_tbs_penjualans.id_produk AS id_produk', 'edit_tbs_penjualans.potongan AS potongan', 'edit_tbs_penjualans.subtotal AS subtotal', 'edit_tbs_penjualans.harga_produk AS harga_produk','barangs.harga_jual AS harga_jual')
+		$query->select('edit_tbs_penjualans.id_edit_tbs_penjualans AS id_edit_tbs_penjualans', 'edit_tbs_penjualans.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'edit_tbs_penjualans.id_produk AS id_produk', 'edit_tbs_penjualans.potongan AS potongan', 'edit_tbs_penjualans.subtotal AS subtotal', 'edit_tbs_penjualans.harga_produk AS harga_produk','barangs.harga_jual AS harga_jual','satuans.nama_satuan AS satuan')
 		->leftJoin('barangs', 'barangs.id', '=', 'edit_tbs_penjualans.id_produk')
+		->leftJoin('satuans', 'satuans.id', '=', 'edit_tbs_penjualans.satuan_id')
 		->where('warung_id', $user_warung)->where('id_penjualan_pos', $id)
 		->where(function ($query) use ($request) {
 
