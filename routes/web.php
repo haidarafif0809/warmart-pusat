@@ -853,6 +853,7 @@ Route::get('/user-kasir/pencarian', 'UserKasirController@pencarian')->middleware
 
 // LAPORAN BUCKET SIZE VUE.JS
 Route::get('/laporan-bucket-size/view/{dari_tanggal}/{sampai_tanggal}/{kelipatan}', 'LaporanBucketSizeController@prosesLaporanBucketSize')->middleware('auth');
+Route::get('/laporan-bucket-size-online/view/{dari_tanggal}/{sampai_tanggal}/{kelipatan}', 'LaporanBucketSizeController@prosesLaporanBucketSizeOnline')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
