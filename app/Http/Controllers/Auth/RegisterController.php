@@ -133,9 +133,9 @@ class RegisterController extends Controller
             //SETTING APLIKASI
             $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
             if ($setting_aplikasi->tipe_aplikasi == 0) {
-                $isi_pesan = urlencode($kode_verifikasi . ', masukkan angka tersebut untuk Verfikasi User Warmart, Terima Kasih Telah Mendaftar Sebagai Customer Warmart. ');
+                $isi_pesan = urlencode($kode_verifikasi . ', masukkan angka tersebut untuk Verifikasi User Warmart, Terima Kasih Telah Mendaftar Sebagai Customer Warmart. ');
             } else {
-                $isi_pesan = urlencode($kode_verifikasi . ', masukkan angka tersebut untuk Verfikasi User , Terima Kasih Telah Mendaftar Sebagai Customer . ');
+                $isi_pesan = urlencode($kode_verifikasi . ', masukkan angka tersebut untuk Verifikasi User , Terima Kasih Telah Mendaftar Sebagai Customer . ');
             }
             $setting_verifikasi = SettingVerifikasi::select()->first();
             if ($setting_verifikasi->no_telp == 1) {
@@ -167,7 +167,7 @@ class RegisterController extends Controller
             $userkey      = env('USERKEY');
             $passkey      = env('PASSKEY');
             $nomor_tujuan = $data['no_telp'];
-            $isi_pesan    = urlencode($kode_verifikasi . ', masukkan angka tersebut untuk Verfikasi User Warmart, Terima Kasih Telah Mendaftar Sebagai Komunitas Warmart.');
+            $isi_pesan    = urlencode($kode_verifikasi . ', masukkan angka tersebut untuk Verifikasi User Warmart, Terima Kasih Telah Mendaftar Sebagai Komunitas Warmart.');
 
             if (env('STATUS_SMS') == 1) {
                 $client = new Client(); //GuzzleHttp\Client
@@ -231,7 +231,7 @@ class RegisterController extends Controller
             $userkey      = env('USERKEY');
             $passkey      = env('PASSKEY');
             $nomor_tujuan = $data['no_telp'];
-            $isi_pesan    = urlencode($kode_verifikasi . ', masukkan angka tersebut untuk Verfikasi User ' . $nama_toko . ', Terima Kasih Telah Mendaftar Sebagai ' . $nama_toko . '.');
+            $isi_pesan    = urlencode($kode_verifikasi . ', masukkan angka tersebut untuk Verifikasi User ' . $nama_toko . ', Terima Kasih Telah Mendaftar Sebagai ' . $nama_toko . '.');
 
             if (env('STATUS_SMS') == 1) {
                 $client = new Client(); //GuzzleHttp\Client
@@ -261,7 +261,7 @@ class RegisterController extends Controller
                 "alert"   => 'danger',
                 "icon"    => 'error_outline',
                 "judul"   => 'FAILED',
-                "message" => 'Mohon Maaf Nomor Verfikasi Yang Anda Isi Tidak Sama']);
+                "message" => 'Mohon Maaf Nomor Verifikasi Yang Anda Isi Tidak Sama']);
             return back();
         } else {
 
@@ -291,7 +291,7 @@ class RegisterController extends Controller
         $userkey      = env('USERKEY');
         $passkey      = env('PASSKEY');
         $nomor_tujuan = $user->no_telp;
-        $isi_pesan    = urlencode($kode_verifikasi . ', masukkan angka tersebut untuk memverfikasi User');
+        $isi_pesan    = urlencode($kode_verifikasi . ', masukkan angka tersebut untuk memverifikasi User');
 
         if (env('STATUS_SMS') == 1) {
             $client = new Client(); //GuzzleHttp\Client

@@ -260,9 +260,9 @@
                                                                                     <table border="0" cellpadding="0" cellspacing="0">
                                                                                           <tr>
                                                                                                 <td>
-                                                                                                       <h1 style="color:#737373;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:24px;font-style:normal;font-weight:600;letter-spacing:normal;margin:0;padding:0;text-align:center">Topos</h1><br><br><br>
-                                                                                                      <h4><p>Hi Topos Lovers,</p></h4>
-                                                                                                      <p>Terima kasih telah mendaftar di Topos. </p>
+                                                                                                       <h1 style="color:#737373;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:24px;font-style:normal;font-weight:600;letter-spacing:normal;margin:0;padding:0;text-align:center"><b>{{$nama}}</b></h1><br><br><br>
+                                                                                                      <h4><p>Hi <b>{{$nama}}</b> Lovers,</p></h4>
+                                                                                                      <p>Terima kasih telah mendaftar di <b>{{$nama}}</b> sebagai pelanggan. </p>
 
                                                                                                       <table border="0" cellpadding="0" cellspacing="0">
                                                                                                             <tbody>
@@ -273,7 +273,7 @@
                                                                                                                                           <tr>
                                                                                                                                                 <td> <div class="container">
 
-                                                                                                                                                      <center><p>Klik tombol di bawah ini untuk aktivasi akun Topos Anda :</p></center>
+                                                                                                                                                      <center><p>Klik tombol di bawah ini untuk aktivasi akun Anda :</p></center>
                                                                                                                                                       <hr>
                                                                                                                                                       <center>
                                                                                                                                                             <p>
@@ -284,10 +284,10 @@
                                                                                                                                                             </p>
                                                                                                                                                       </center>
                                                                                                                                                       <hr>
-                                                                                                                                                      <center><p>Jika Anda membutuhkan bantuan, silahkan hubungi kami di 0721-8050-299 atau email ke solusibisnis@andaglos.id</p></center><p>
+                                                                                                                                                      <center><p>Jika Anda membutuhkan bantuan, silahkan hubungi kami di {{ $no_telpon}} atau email ke {{ $emails}}</p></center><p>
                                                                                                                                                             Salam,<br>
 
-                                                                                                                                                            Topos
+                                                                                                                                                            <p><b>{{$nama}}</b></p>
                                                                                                                                                       </p>
                                                                                                                                                 </div>
                                                                                                                                           </td>
