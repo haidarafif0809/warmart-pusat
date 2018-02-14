@@ -18,7 +18,7 @@
 					precision: 2,
 					masked: false /* doesn't work with directive */
 				},
-				url: window.location.origin + (window.location.pathname).replace("dashboard", "laporan-bucket-size"),
+				url: window.location.origin + (window.location.pathname).replace("dashboard", "laporan-bucket-size-online"),
 			}
 		},
 		mounted () {
@@ -43,9 +43,9 @@
 					{
 						labels: resp.data.kelipatan,
 						datasets: [{
-							label: 'LAPORAN BUCKET SIZE PENJUALAN POS',
+							label: 'LAPORAN BUCKET SIZE PENJUALAN ONLINE',
 							backgroundColor: resp.data.color,
-							data: resp.data.data.total_faktur,
+							data: resp.data.total_faktur,
 						}]
 					},
 					{

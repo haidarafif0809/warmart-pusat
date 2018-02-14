@@ -58,7 +58,7 @@
                     </i>
                 </span>
                 <div class="form-group label-floating ">
-                    {!! Form::email('email', null, ['class'=>'form-control','autocomplete'=>'off','placeholder'=>'Email (tidak wajib)']) !!}
+                    {!! Form::email('email', null, ['class'=>'form-control','required','autocomplete'=>'off','placeholder'=>'Email']) !!}
                     {!! $errors->first('email', '
                         <p class="label label-danger">
                             :message
@@ -81,7 +81,7 @@
                             ') !!}
                         </div>
                     </div>
-                    
+
                     @if($setting_aplikasi == 0) <!--JIKA TIPE APLIKASI == 0, maka tampil komunitas / Warmart-->
                     <div class="input-group ">
                         <span class="input-group-addon">

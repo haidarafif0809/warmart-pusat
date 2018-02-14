@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Penjualan;
 use App\PenjualanPos;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -32,10 +33,30 @@ class LaporanBucketSizeController extends Controller
         $total_penjualan_terbesar = $satu + $data_penjualan_pos->total;
 
         while ($kelipatan <= $total_penjualan_terbesar) {
-            $total_faktur           = PenjualanPos::countFaktur($request)->first()->no_faktur;
-            $total_faktur_kelipatan = PenjualanPos::countFaktur($request)
-                ->whereBetween('total', array($satu, $kelipatan))
-                ->first()->no_faktur;
+            $total_faktur_kelipatan = PenjualanPos::countFaktur($request)->whereBetween('total', array($satu, $kelipatan))->first()->no_faktur;
+
+            $respons['kelipatan'][]    = $satu . " - " . $kelipatan;
+            $respons['total_faktur'][] = $total_faktur_kelipatan;
+            $respons['color'][]        = $this->random_color();
+
+            $data_kelipatan = $request->kelipatan;
+            $kelipatan += $data_kelipatan;
+            $satu += $data_kelipatan;
+        }
+
+        return response()->json($respons);
+    }
+
+    public function prosesLaporanBucketSizeOnline(Request $request, $dari_tanggal, $sampai_tanggal, $kelipatan)
+    {
+        $satu      = 1;
+        $kelipatan = $request->kelipatan;
+
+        $data_penjualan_pos       = Penjualan::select([DB::raw('MAX(total) as total')])->first();
+        $total_penjualan_terbesar = $satu + $data_penjualan_pos->total;
+
+        while ($kelipatan <= $total_penjualan_terbesar) {
+            $total_faktur_kelipatan = Penjualan::countFaktur($request)->whereBetween('total', array($satu, $kelipatan))->first()->id_pesanan;
 
             $respons['kelipatan'][]    = $satu . " - " . $kelipatan;
             $respons['total_faktur'][] = $total_faktur_kelipatan;

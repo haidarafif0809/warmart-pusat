@@ -23,6 +23,13 @@
 						<div class="form-group col-md-2">
 							<money style="text-align:right" class="form-control" v-model="filter.kelipatan" v-bind="separator" v-shortkey.focus="['f7']"></money>
 						</div>
+						<div class="form-group col-md-2">
+							<selectize-component v-model="filter.jenis_penjualan" :settings="placeholder_penjualan" id="jenis_penjualan" ref="jenis_penjualan"> 
+								<option v-bind:value="0" > Penjualan POS </option>
+								<option v-bind:value="1" > Penjualan Online </option>
+							</selectize-component>
+							<input class="form-control" type="hidden"  v-model="filter.jenis_penjualan"  name="jenis_penjualan" id="jenis_penjualan"  v-shortkey="['f1']" @shortkey="pilihJenisLaporan()">
+						</div>
 
 						<div class="form-group col-md-2">
 							<button class="btn btn-primary" id="btnSubmit" type="submit" style="margin: 0px 0px;" @click="submitLaporan()"><i class="material-icons">search</i> Cari</button>
@@ -45,6 +52,7 @@
 					dari_tanggal: '',
 					sampai_tanggal: new Date(),
 					kelipatan: '',
+					jenis_penjualan: '',
 				},
 				separator: {
 					decimal: ',',
@@ -53,6 +61,9 @@
 					suffix: '',
 					precision: 2,
 					masked: false /* doesn't work with directive */
+				},
+				placeholder_penjualan: {
+					placeholder: '--JENIS PENJUALAN--'
 				},
 				url: window.location.origin + (window.location.pathname).replace("dashboard", "laporan-bucket-size"),
 			}
@@ -76,9 +87,23 @@
 
 				var sampai_tanggal = "" + date_sampai_tanggal.getFullYear() +'-'+ ((date_sampai_tanggal.getMonth() + 1) > 9 ? '' : '0') + (date_sampai_tanggal.getMonth() + 1) +'-'+ (date_sampai_tanggal.getDate() > 9 ? '' : '0') + date_sampai_tanggal.getDate();
 
-				// window.location.replace(window.location.origin+(window.location.pathname)+'#/laporan-bucket-size/view/'+dari_tanggal+'/'+sampai_tanggal+'/'+app.filter.kelipatan)
-				app.$router.replace('/laporan-bucket-size/view/'+dari_tanggal+'/'+sampai_tanggal+'/'+app.filter.kelipatan);
-			}
+				if (filter.jenis_penjualan == "") {
+					app.alertGagal('Silakan Pilih Jenis Penjualan Terlebih Dahulu');					
+				}else{
+					if (filter.jenis_penjualan == 0) {
+						app.$router.replace('/laporan-bucket-size/view/'+dari_tanggal+'/'+sampai_tanggal+'/'+app.filter.kelipatan);
+					}else{
+						app.$router.replace('/laporan-bucket-size-online/view/'+dari_tanggal+'/'+sampai_tanggal+'/'+app.filter.kelipatan);
+					}					
+				}
+			},
+			alertGagal(pesan) {
+				this.$swal({
+					title: "Peringatan!",
+					text: pesan,
+					icon: "warning",
+				});
+			},
 		}
 	}
 </script>

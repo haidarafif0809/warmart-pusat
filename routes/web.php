@@ -269,7 +269,6 @@ Route::get('/kirim-bukti-pembayaran/{id}', 'PendaftarToposController@kirimBuktiP
 Route::get('/register-warung', 'Auth\RegisterController@register_warung')->middleware('optimizeImages');
 
 Route::get('/register-customer', 'Auth\RegisterController@register_customer')->middleware('optimizeImages');
-Route::get('/register-customer', 'Auth\RegisterController@register_customer')->middleware('optimizeImages');
 
 //registrasi lewat link affiliasi
 Route::get('/aff/{id}/', function ($id) {
@@ -856,6 +855,7 @@ Route::get('/user-kasir/pencarian', 'UserKasirController@pencarian')->middleware
 
 // LAPORAN BUCKET SIZE VUE.JS
 Route::get('/laporan-bucket-size/view/{dari_tanggal}/{sampai_tanggal}/{kelipatan}', 'LaporanBucketSizeController@prosesLaporanBucketSize')->middleware('auth');
+Route::get('/laporan-bucket-size-online/view/{dari_tanggal}/{sampai_tanggal}/{kelipatan}', 'LaporanBucketSizeController@prosesLaporanBucketSizeOnline')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 

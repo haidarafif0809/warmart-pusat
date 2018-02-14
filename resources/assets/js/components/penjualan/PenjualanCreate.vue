@@ -310,15 +310,15 @@
   <div class="modal-dialog modal-medium">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close"  v-on:click="closeModalJumlahProduk()" v-shortkey.push="['shift']" @shortkey="closeModalJumlahProduk()"> &times;</button> 
+        <button type="button" class="close"  v-on:click="closeModalJumlahProduk()" v-shortkey.push="['f9']" @shortkey="closeModalJumlahProduk()"> &times;</button> 
       </div>
       <form class="form-horizontal" v-on:submit.prevent="submitProdukPenjualan(inputTbsPenjualan.jumlah_produk)"> 
         <div class="modal-body text-center">
           <h3><b>{{inputTbsPenjualan.nama_produk}}</b> </h3>
-          <input class="form-control" type="number" v-model="inputTbsPenjualan.jumlah_produk" placeholder="Isi Jumlah Produk" name="jumlah_produk" id="jumlah_produk" ref="jumlah_produk" autocomplete="off">
+          <input class="form-control" type="number" v-model="inputTbsPenjualan.jumlah_produk" placeholder="Isi Jumlah Produk" name="jumlah_produk" id="jumlah_produk" ref="jumlah_produk" autocomplete="off" step="0.01">
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-simple"   v-on:click="closeModalJumlahProduk()" v-shortkey.push="['shift']" @shortkey="closeModalJumlahProduk()">Close(Shift)</button>
+          <button type="button" class="btn btn-simple"   v-on:click="closeModalJumlahProduk()" v-shortkey.push="['f9']" @shortkey="closeModalJumlahProduk()">Close(F9)</button>
           <button type="button" class="btn btn-info btn-lg"   v-on:click="submitProdukPenjualan(inputTbsPenjualan.jumlah_produk)">Tambah</button>
         </div>
       </form>

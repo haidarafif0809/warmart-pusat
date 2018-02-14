@@ -9,6 +9,7 @@ use App\KomunitasCustomer;
 use App\Notifications\PendaftarWarung;
 use App\Role;
 use App\SettingAplikasi;
+use App\SettingVerifikasi;
 use App\User;
 use App\UserWarung;
 use App\Warung;
@@ -65,7 +66,7 @@ class RegisterController extends Controller
             //Customer
             return Validator::make($data, [
                 'name'     => 'required',
-                'email'    => 'nullable|without_spaces|unique:users,email|email',
+                'email'    => 'required|without_spaces|unique:users,email|email',
                 'alamat'   => 'required',
                 'no_telp'  => 'required|numeric|without_spaces|unique:users,no_telp',
                 'password' => 'required|string|min:6|confirmed',
@@ -132,15 +133,17 @@ class RegisterController extends Controller
             //SETTING APLIKASI
             $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
             if ($setting_aplikasi->tipe_aplikasi == 0) {
-                $isi_pesan    = urlencode($kode_verifikasi . ', masukkan angka tersebut untuk Verfikasi User Warmart, Terima Kasih Telah Mendaftar Sebagai Customer Warmart. ');
+                $isi_pesan = urlencode($kode_verifikasi . ', masukkan angka tersebut untuk Verfikasi User Warmart, Terima Kasih Telah Mendaftar Sebagai Customer Warmart. ');
             } else {
-                $isi_pesan    = urlencode($kode_verifikasi . ', masukkan angka tersebut untuk Verfikasi User , Terima Kasih Telah Mendaftar Sebagai Customer . ');
+                $isi_pesan = urlencode($kode_verifikasi . ', masukkan angka tersebut untuk Verfikasi User , Terima Kasih Telah Mendaftar Sebagai Customer . ');
             }
-
-            if (env('STATUS_SMS') == 1) {
-                $client = new Client(); //GuzzleHttp\Client
-                $result = $client->get('https://reguler.zenziva.net/apps/smsapi.php?userkey=' . $userkey . '&passkey=' . $passkey . '&nohp=' . $nomor_tujuan . '&pesan=' . $isi_pesan . '');
-
+            $setting_verifikasi = SettingVerifikasi::select()->first();
+            if ($setting_verifikasi->no_telp == 1) {
+                if (env('STATUS_SMS') == 1) {
+                    $client = new Client(); //GuzzleHttp\Client
+                    $result = $client->get('https://reguler.zenziva.net/apps/smsapi.php?userkey=' . $userkey . '&passkey=' . $passkey . '&nohp=' . $nomor_tujuan . '&pesan=' . $isi_pesan . '');
+                }
+                # code...
             }
 
             return $user;
@@ -224,7 +227,6 @@ class RegisterController extends Controller
             $user->attachRole($userWarungRole);
 
             Notification::send(User::first(), new PendaftarWarung($user));
-            
 
             $userkey      = env('USERKEY');
             $passkey      = env('PASSKEY');
@@ -285,7 +287,6 @@ class RegisterController extends Controller
         $kode_verifikasi = rand(1111, 9999);
         User::where('id', $id)->update(['kode_verifikasi' => $kode_verifikasi]);
         $user = User::where('id', $id)->first();
-
 
         $userkey      = env('USERKEY');
         $passkey      = env('PASSKEY');
