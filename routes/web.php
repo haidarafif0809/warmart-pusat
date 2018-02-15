@@ -857,6 +857,9 @@ Route::get('/user-kasir/pencarian', 'UserKasirController@pencarian')->middleware
 Route::get('/laporan-bucket-size/view/{dari_tanggal}/{sampai_tanggal}/{kelipatan}', 'LaporanBucketSizeController@prosesLaporanBucketSize')->middleware('auth');
 Route::get('/laporan-bucket-size-online/view/{dari_tanggal}/{sampai_tanggal}/{kelipatan}', 'LaporanBucketSizeController@prosesLaporanBucketSizeOnline')->middleware('auth');
 
+// LAPORAN PENJUALAN HARIAN VUE.JS
+Route::get('/laporan-penjualan-harian/view/{dari_tanggal}/{sampai_tanggal}', 'LaporanPenjualanHarianController@prosesLaporanPenjualanHarian')->middleware('auth');
+
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
     Route::resource('user', 'UserController');

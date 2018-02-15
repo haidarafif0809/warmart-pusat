@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Penjualan;
 use App\PenjualanPos;
+use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -29,7 +30,7 @@ class LaporanBucketSizeController extends Controller
         $satu      = 1;
         $kelipatan = $request->kelipatan;
 
-        $data_penjualan_pos       = PenjualanPos::select([DB::raw('MAX(total) as total')])->first();
+        $data_penjualan_pos       = PenjualanPos::select([DB::raw('MAX(total) as total')])->where('warung_id', Auth::user()->id_warung)->first();
         $total_penjualan_terbesar = $satu + $data_penjualan_pos->total;
 
         while ($kelipatan <= $total_penjualan_terbesar) {
