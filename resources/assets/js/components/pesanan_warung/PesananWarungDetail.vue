@@ -75,7 +75,7 @@
 								<tbody>
 									<tr><td> Subtotal </td><td style="padding:3px" align="right">:</td><td  align="right" style="padding:3px"></td><td  align="right" style="padding:3px">{{ pesananData.subtotal | pemisahTitik }}</td></tr>
 									<tr><td> Biaya Kirim </td><td style="padding:3px" align="right">:</td><td  align="right" style="padding:3px"></td><td  align="right" style="padding:3px">{{pesananData.pesanan.biaya_kirim | pemisahTitik}}</td></tr>
-									<tr><td> Total </td><td style="padding:3px" align="right">:</td><td  align="right" style="padding:3px"></td><td  align="right" style="padding:3px">{{pesananData.pesanan.biaya_kirim + pesananData.subtotal | pemisahTitik}}</td></tr>
+									<tr><td> Total </td><td style="padding:3px" align="right">:</td><td  align="right" style="padding:3px"></td><td  align="right" style="padding:3px">{{ parseInt(pesananData.pesanan.biaya_kirim) + parseInt(pesananData.subtotal) | pemisahTitik}}</td></tr>
 								</tbody>
 							</table>
 						</div>					
@@ -245,7 +245,7 @@
 						<div class="col-sm-6 col-xs-6">Biaya Kirim </div>
 						<div class="col-sm-6 col-xs-6"><p align="right" class="text-danger"><b>Rp. {{pesananData.pesanan.biaya_kirim | pemisahTitik}}</b></p></div>
 						<div class="col-sm-6 col-xs-6">Total </div>
-						<div class="col-sm-6 col-xs-6"><p align="right" class="text-danger"><b>Rp. {{ pesananData.subtotal + pesananData.pesanan.biaya_kirim | pemisahTitik }}</b></p></div>
+						<div class="col-sm-6 col-xs-6"><p align="right" class="text-danger"><b>Rp. {{ parseInt(pesananData.subtotal) + parseInt(pesananData.pesanan.biaya_kirim) | pemisahTitik }}</b></p></div>
 						<div class="col-sm-6 col-xs-6">Metode Pembayaran </div>
 						<div class="col-sm-6 col-xs-6"><p align="right"><b>{{ pesananData.pesanan.metode_pembayaran  }}</b></p></div>
 					</div>
