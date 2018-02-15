@@ -38,66 +38,73 @@ class PesananPelangganController extends Controller
         $pesanan_pelanggan  = PesananPelanggan::with('warung')->where('id_pelanggan', Auth::user()->id)->orderBy('id', 'desc')->paginate(10);
         $cek_pesanan        = $pesanan_pelanggan->count();
         $pagination_pesanan = $pesanan_pelanggan->links();
-
-        //MEANMPILKAN PRODUK PESANAN VERSI MOBILE
-        $produk_pesanan_mobile = '';
-        foreach ($pesanan_pelanggan as $pesanan_pelanggans) {
-
-            $produk_pesanan_mobile .= '
-            <div class="card">
-            <div class="col-sm-6">
-            <b>Pesanan : <a href="' . url('pesanan-detail/' . $pesanan_pelanggans->id . '') . '">#' . $pesanan_pelanggans->id . '</a></b>
-            </div><hr style="margin-bottom: 0px;margin-top: 1px">
-            <div class="col-sm-6">
-            Waktu Pesan : ' . $pesanan_pelanggans->WaktuPesan . '
-            </div>
-            <div class="container">
-            <a> Jumlah  : ' . $pesanan_pelanggans->jumlah_produk . '<a><br>
-            Total &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: Rp. ' . number_format($pesanan_pelanggans->subtotal, 0, ',', '.') . '<br>
-            Status &nbsp;&nbsp;: ';
-
-            if ($pesanan_pelanggans->konfirmasi_pesanan == 0) {
-                $produk_pesanan_mobile .= '<b  style="color:red">Belum Di Konfirmasi</b>';
-            } elseif ($pesanan_pelanggans->konfirmasi_pesanan == 1) {
-                $produk_pesanan_mobile .= '<b  style="color:orange">Sudah Diterima Warung</b>';
-            } elseif ($pesanan_pelanggans->konfirmasi_pesanan == 2) {
-                $produk_pesanan_mobile .= '<b  style="color:#01573e">Selesai</b>';
-            } elseif ($pesanan_pelanggans->konfirmasi_pesanan == 3) {
-                $produk_pesanan_mobile .= '<b  style="color:red">Batal</b>';
-            } elseif ($pesanan_pelanggans->konfirmasi_pesanan == 4) {
-                $produk_pesanan_mobile .= '<td><b  style="color:orange">Batal Pelanggan</b></td>';
-            }
-
-            $produk_pesanan_mobile .= '<br>Warung : <a href="' . url('halaman-warung/' . $pesanan_pelanggans->id_warung . '') . '"><b>' . $pesanan_pelanggans->warung->name . '</b></a>';
-            $produk_pesanan_mobile .= '
-            <a href="' . url('pesanan-detail/' . $pesanan_pelanggans->id . '') . '" style="background-color: #01573e" class="btn btn-block">Detail Pesanan</a>
-            </div>
-            </div>';
-        }
-
         //MEANMPILKAN PRODUK PESANAN VERSI KOMPUTER
         $produk_pesanan_komputer = '';
-        foreach ($pesanan_pelanggan as $pesanan_pelanggans) {
+        $produk_pesanan_mobile = '';
+        if ($agent->isMobile()) {
+        //MEANMPILKAN PRODUK PESANAN VERSI MOBILE
+            foreach ($pesanan_pelanggan as $pesanan_pelanggans) {
 
-            $produk_pesanan_komputer .= '
-            <tr  style="margin-top:0px;margin-bottom: 0px;">
-            <td><a href="' . url('pesanan-detail/' . $pesanan_pelanggans->id . '') . '"><b>#' . $pesanan_pelanggans->id . '</b></a></td>
-            <td><b>' . $pesanan_pelanggans->WaktuPesan . '</b></td>
-            <td><b>Rp. ' . number_format($pesanan_pelanggans->subtotal, 0, ',', '.') . '</b></td>';
-            if ($pesanan_pelanggans->konfirmasi_pesanan == 0) {
-                $produk_pesanan_komputer .= '<td><b  style="color:red">Belum Di Konfirmasi</b></td>';
-            } elseif ($pesanan_pelanggans->konfirmasi_pesanan == 1) {
-                $produk_pesanan_komputer .= '<td><b  style="color:orange">Sudah Diterima Warung</b></td>';
-            } elseif ($pesanan_pelanggans->konfirmasi_pesanan == 2) {
-                $produk_pesanan_komputer .= '<td><b  style="color:#01573e">Selesai</b></td>';
-            } elseif ($pesanan_pelanggans->konfirmasi_pesanan == 3) {
-                $produk_pesanan_komputer .= '<td><b  style="color:red">Batal</b></td>';
-            } elseif ($pesanan_pelanggans->konfirmasi_pesanan == 4) {
-                $produk_pesanan_komputer .= '<td><b  style="color:orange">Batal Pelanggan</b></td>';
+                $produk_pesanan_mobile .= '
+                <div class="card">
+                <div class="col-sm-6">
+                <b>Pesanan : <a href="' . url('pesanan-detail/' . $pesanan_pelanggans->id . '') . '">#' . $pesanan_pelanggans->id . '</a></b>
+                </div><hr style="margin-bottom: 0px;margin-top: 1px">
+                <div class="col-sm-6">
+                Waktu Pesan : ' . $pesanan_pelanggans->WaktuPesan . '
+                </div>
+                <div class="container">
+                <a> Jumlah  : ' . $pesanan_pelanggans->jumlah_produk . '<a><br>
+                Total &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: Rp. ' . number_format($pesanan_pelanggans->subtotal, 0, ',', '.') . '<br>
+                Status &nbsp;&nbsp;: ';
+
+                if ($pesanan_pelanggans->konfirmasi_pesanan == 0) {
+                    $produk_pesanan_mobile .= '<b  style="color:red">Belum Di Konfirmasi</b>';
+                } elseif ($pesanan_pelanggans->konfirmasi_pesanan == 1) {
+                    $produk_pesanan_mobile .= '<b  style="color:orange">Sudah Diterima Warung</b>';
+                } elseif ($pesanan_pelanggans->konfirmasi_pesanan == 2) {
+                    $produk_pesanan_mobile .= '<b  style="color:#01573e">Selesai</b>';
+                } elseif ($pesanan_pelanggans->konfirmasi_pesanan == 3) {
+                    $produk_pesanan_mobile .= '<b  style="color:red">Batal</b>';
+                } elseif ($pesanan_pelanggans->konfirmasi_pesanan == 4) {
+                    $produk_pesanan_mobile .= '<td><b  style="color:orange">Batal Pelanggan</b></td>';
+                }
+                if ($setting_aplikasi->tipe_aplikasi == 0) {
+                    $produk_pesanan_mobile .= '<br>Warung : <a href="' . url('halaman-warung/' . $pesanan_pelanggans->id_warung . '') . '"><b>' . $pesanan_pelanggans->warung->name . '</b></a>';
+                }
+
+                $produk_pesanan_mobile .= '
+                <a href="' . url('pesanan-detail/' . $pesanan_pelanggans->id . '') . '" style="background-color: #01573e" class="btn btn-block">Detail Pesanan</a>
+                </div>
+                </div>';
             }
-            $produk_pesanan_komputer .= '<td><a href="' . url('halaman-warung/' . $pesanan_pelanggans->id_warung . '') . '"><b>' . $pesanan_pelanggans->warung->name . '</b></a></td>';
-            $produk_pesanan_komputer .= '</tr>';
+        }else{
+            foreach ($pesanan_pelanggan as $pesanan_pelanggans) {
+
+                $produk_pesanan_komputer .= '
+                <tr  style="margin-top:0px;margin-bottom: 0px;">
+                <td><a href="' . url('pesanan-detail/' . $pesanan_pelanggans->id . '') . '"><b>#' . $pesanan_pelanggans->id . '</b></a></td>
+                <td><b>' . $pesanan_pelanggans->WaktuPesan . '</b></td>
+                <td class="text-right"><b class="text-right">Rp. ' . number_format($pesanan_pelanggans->subtotal, 0, ',', '.') . '</b></td>';
+                if ($pesanan_pelanggans->konfirmasi_pesanan == 0) {
+                    $produk_pesanan_komputer .= '<td class="text-center"><b  style="color:red">Belum Di Konfirmasi</b></td>';
+                } elseif ($pesanan_pelanggans->konfirmasi_pesanan == 1) {
+                    $produk_pesanan_komputer .= '<td class="text-center"><b  style="color:orange">Sudah Diterima Warung</b></td>';
+                } elseif ($pesanan_pelanggans->konfirmasi_pesanan == 2) {
+                    $produk_pesanan_komputer .= '<td class="text-center"><b  style="color:#01573e">Selesai</b></td>';
+                } elseif ($pesanan_pelanggans->konfirmasi_pesanan == 3) {
+                    $produk_pesanan_komputer .= '<td class="text-center"><b  style="color:red">Batal</b></td>';
+                } elseif ($pesanan_pelanggans->konfirmasi_pesanan == 4) {
+                    $produk_pesanan_komputer .= '<td class="text-center"><b  style="color:orange">Batal Pelanggan</b></td>';
+                }
+                if ($setting_aplikasi->tipe_aplikasi == 0) {
+                    $produk_pesanan_komputer .= '<td><a href="' . url('halaman-warung/' . $pesanan_pelanggans->id_warung . '') . '"><b>' . $pesanan_pelanggans->warung->name . '</b></a></td>';
+                }
+                $produk_pesanan_komputer .= '</tr>';
+            }
         }
+
+
 
         return view('layouts.pesanan_pelanggan', ['produk_pesanan_mobile' => $produk_pesanan_mobile, 'produk_pesanan_komputer' => $produk_pesanan_komputer, 'cek_belanjaan' => $cek_belanjaan, 'agent' => $agent, 'logo_warmart' => $logo_warmart, 'user' => $user, 'cek_pesanan' => $cek_pesanan, 'pagination_pesanan' => $pagination_pesanan, 'setting_aplikasi' => $setting_aplikasi]);
     }
