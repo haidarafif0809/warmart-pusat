@@ -172,7 +172,7 @@ Route::get('/pesanan', [
 ]);
 
 //PUNYA DETAIL PESANAN PELANGGAN
-Route::get('pesanan-detail/{id}', [
+Route::get('pesanan-detail', [
     'middleware' => ['auth'],
     'as'         => 'pesanan.detail',
     'uses'       => 'PesananPelangganController@detailPesananPelanggan',
