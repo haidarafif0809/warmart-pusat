@@ -30,11 +30,11 @@
 				.then(function (resp) {
 					app.renderChart(
 					{
-						labels: resp.data.total,
+						labels: resp.data.tanggal,
 						datasets: [{
 							label: 'LAPORAN HARIAN PENJUALAN POS',
-							backgroundColor: resp.data.color,
-							data: resp.data.tanggal,
+							backgroundColor: '#ed79a1',
+							data: resp.data.total,
 						}]
 					},
 					{
