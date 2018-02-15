@@ -223,6 +223,16 @@
                 </router-link>
             </li>
             <li>
+                <router-link :to="{name: 'indexGrafikJamTransaksiPenjualan'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        LJ
+                    </span>
+                    <span class="sidebar-normal">
+                        Laporan Jam Transaksi Penjualan
+                    </span>
+                </router-link>
+            </li>
+            <li>
                 <router-link :to="{name: 'indexLaporanLabaKotor'}" class="menu-nav">
                     <span class="sidebar-mini">
                         LK
