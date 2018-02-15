@@ -729,7 +729,7 @@ Route::get('/laporan-kartu-stok/download-excel-kartu-stok/{dari_tanggal}/{sampai
 Route::get('/laporan-kartu-stok/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{produk}', 'LaporanKartuStokController@cetakLaporan')->middleware('auth');
 
 // GRAFIK JAM TRANSAKSI PENJUALAN
-Route::get('/grafik-jam-transaksi-penjualan/view/{tanggal}/', 'GrafikJamTransaksiPenjualanController@prosesGrafikJamPenjuaalan')->middleware('auth');
+Route::get('/grafik-jam-transaksi-penjualan/view/{tanggal}', 'GrafikJamTransaksiPenjualanController@prosesGrafikJamPenjuaalan')->middleware('auth');
 
 ////PEMBAYARAN Hutang
 Route::get('/pembayaran-hutang/view', 'PembayaranHutangController@view')->middleware('auth');
@@ -856,6 +856,9 @@ Route::get('/user-kasir/pencarian', 'UserKasirController@pencarian')->middleware
 // LAPORAN BUCKET SIZE VUE.JS
 Route::get('/laporan-bucket-size/view/{dari_tanggal}/{sampai_tanggal}/{kelipatan}', 'LaporanBucketSizeController@prosesLaporanBucketSize')->middleware('auth');
 Route::get('/laporan-bucket-size-online/view/{dari_tanggal}/{sampai_tanggal}/{kelipatan}', 'LaporanBucketSizeController@prosesLaporanBucketSizeOnline')->middleware('auth');
+
+// LAPORAN PENJUALAN HARIAN VUE.JS
+Route::get('/laporan-penjualan-harian/view/{dari_tanggal}/{sampai_tanggal}', 'LaporanPenjualanHarianController@prosesLaporanPenjualanHarian')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 

@@ -29,14 +29,15 @@
 			barChart(){
 				var app = this;
 				var filter = app.filter;
-				axios.get(app.url+'/view/'+filter.dari_tanggal)
+				axios.get(app.url+'/view/'+filter.tanggal)
 				.then(function (resp) {
 					app.renderChart(
 					{
-						labels: "Grafik Jam Transaksi Penjualan" resp.data.tanggal,
+						labels: resp.data.waktu_jual,
 						datasets: [{
-							label: '',
+							label: 'Laporan Jam Transaksi Penjualan',
 							backgroundColor: resp.data.color,
+							data: resp.data.hitung,
 						}]
 					},
 					{
