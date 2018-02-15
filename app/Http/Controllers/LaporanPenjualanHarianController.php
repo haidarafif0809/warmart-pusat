@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Penjualan;
 use App\PenjualanPos;
 use Illuminate\Http\Request;
 
@@ -29,6 +30,17 @@ class LaporanPenjualanHarianController extends Controller
         foreach ($data_penjualan_pos as $penjualan_pos) {
             $respons['tanggal'][] = $penjualan_pos->tanggal;
             $respons['total'][]   = $penjualan_pos->total;
+        }
+        return response()->json($respons);
+    }
+
+    public function prosesLaporanPenjualanHarianOnline(Request $request, $dari_tanggal, $sampai_tanggal)
+    {
+        $data_penjualan = Penjualan::dataPenjualanHarian($request)->get();
+
+        foreach ($data_penjualan as $penjualan) {
+            $respons['tanggal'][] = $penjualan->tanggal;
+            $respons['total'][]   = $penjualan->total;
         }
         return response()->json($respons);
     }

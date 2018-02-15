@@ -303,6 +303,16 @@
                 </router-link>
             </li>
             <li>
+                <router-link :to="{name: 'indexLaporanPenjualanHarian'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        LP
+                    </span>
+                    <span class="sidebar-normal">
+                        Laporan Penjualan Harian
+                    </span>
+                </router-link>
+            </li>
+            <li>
                 <router-link :to="{name: 'indexLaporanPenjualanProduk'}" class="menu-nav">
                     <span class="sidebar-mini">
                         LP

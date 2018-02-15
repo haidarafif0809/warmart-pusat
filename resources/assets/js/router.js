@@ -670,6 +670,10 @@ const routes = [{
         component: LaporanBucketSizeTampil,
         name: 'tampilLaporanBucketSize'
     }, {
+        path: '/laporan-bucket-size-online/view/:dari_tanggal/:sampai_tanggal/:kelipatan',
+        component: LaporanBucketSizeOnlineTampil,
+        name: 'tampilLaporanBucketSizeOnline'
+    }, {
         path: '/laporan-penjualan-harian',
         component: LaporanPenjualanHarianIndex,
         name: 'indexLaporanPenjualanHarian'

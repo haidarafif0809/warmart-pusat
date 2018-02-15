@@ -1,6 +1,5 @@
 <?php
 $settingFooter = \App\SettingFooter::select()->first();
-$setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
 ?>
 @extends('layouts.app_pelanggan')
 @section('content')
@@ -47,7 +46,9 @@ h4 {
   overflow-y:auto;
 }
 </style>
-
+<?php
+$setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
+?>
 @if (Agent::isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
 
 @if($setting_aplikasi->tipe_aplikasi == 0)
@@ -175,9 +176,9 @@ h4 {
                     <div class="img-container" style="margin:10px;">
 
                       @if($detail_pesanan_pelanggans->produk->foto != NULL)
-                      <img src="../foto_produk/{{$detail_pesanan_pelanggans->produk->foto}}">
+                      <img src="{{Url('/foto_produk')}}/{{$detail_pesanan_pelanggans->produk->foto}}">
                       @else
-                      <img src="../image/foto_default.png">
+                      <img src="{{Url('/image/foto_default.png')}}">
                       @endif
 
                     </div>
@@ -261,9 +262,9 @@ h4 {
                             <div class="col-md-4" style="padding-left:0px; padding-right: 0px">
                               <div class="img-container"  style="padding-left: 5px; padding-top: 1px; padding-bottom: 1px; padding-right: 1px; width:75px;">
                                 @if($detail_pesanan_pelanggans->produk->foto != NULL)
-                                <img src="../foto_produk/{{$detail_pesanan_pelanggans->produk->foto}}">
+                                <img src="{{Url('/foto_produk')}}/{{$detail_pesanan_pelanggans->produk->foto}}">
                                 @else
-                                <img src="../image/foto_default.png">
+                                <img src="{{Url('/image/foto_default.png')}}">
                                 @endif
                               </div>
                             </div>

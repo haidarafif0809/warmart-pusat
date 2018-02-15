@@ -172,7 +172,7 @@ Route::get('/pesanan', [
 ]);
 
 //PUNYA DETAIL PESANAN PELANGGAN
-Route::get('pesanan-detail/{id}', [
+Route::get('pesanan-detail', [
     'middleware' => ['auth'],
     'as'         => 'pesanan.detail',
     'uses'       => 'PesananPelangganController@detailPesananPelanggan',
@@ -732,7 +732,6 @@ Route::get('/laporan-kartu-stok/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{p
 Route::get('/grafik-jam-transaksi-penjualan/view/{tanggal}', 'GrafikJamTransaksiPenjualanController@prosesGrafikJamPenjualan')->middleware('auth');
 Route::get('/grafik-jam-transaksi-penjualan-online/view/{tanggal}', 'GrafikJamTransaksiPenjualanController@prosesGrafikJamPenjualanOnline')->middleware('auth');
 
-
 ////PEMBAYARAN Hutang
 Route::get('/pembayaran-hutang/view', 'PembayaranHutangController@view')->middleware('auth');
 Route::get('/pembayaran-hutang/pencarian', 'PembayaranHutangController@pencarian')->middleware('auth');
@@ -861,6 +860,7 @@ Route::get('/laporan-bucket-size-online/view/{dari_tanggal}/{sampai_tanggal}/{ke
 
 // LAPORAN PENJUALAN HARIAN VUE.JS
 Route::get('/laporan-penjualan-harian/view/{dari_tanggal}/{sampai_tanggal}', 'LaporanPenjualanHarianController@prosesLaporanPenjualanHarian')->middleware('auth');
+Route::get('/laporan-penjualan-harian-online/view/{dari_tanggal}/{sampai_tanggal}', 'LaporanPenjualanHarianController@prosesLaporanPenjualanHarianOnline')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 

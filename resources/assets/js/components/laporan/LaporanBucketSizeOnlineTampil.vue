@@ -34,6 +34,9 @@
 			app.barChart();
 		},
 		methods: {	
+			tanggal(tanggal){
+				return moment(String(tanggal)).format('DD/MM/YYYY')
+			},
 			barChart(){
 				var app = this;
 				var filter = app.filter;
@@ -43,7 +46,7 @@
 					{
 						labels: resp.data.kelipatan,
 						datasets: [{
-							label: 'LAPORAN BUCKET SIZE PENJUALAN ONLINE',
+							label: 'LAPORAN BUCKET SIZE PENJUALAN ONLINE '+ app.tanggal(filter.dari_tanggal) +" - "+ app.tanggal(filter.sampai_tanggal),
 							backgroundColor: resp.data.color,
 							data: resp.data.total_faktur,
 						}]

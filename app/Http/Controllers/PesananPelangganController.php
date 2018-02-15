@@ -11,6 +11,7 @@ use Indonesia;
 use Jenssegers\Agent\Agent;
 use OpenGraph;
 use SEOMeta;
+use Illuminate\Http\Request;
 
 class PesananPelangganController extends Controller
 {
@@ -48,7 +49,7 @@ class PesananPelangganController extends Controller
                 $produk_pesanan_mobile .= '
                 <div class="card">
                 <div class="col-sm-6">
-                <b>Pesanan : <a href="' . url('pesanan-detail/' . $pesanan_pelanggans->id . '') . '">#' . $pesanan_pelanggans->id . '</a></b>
+                <b>Pesanan : <a href="' . url('pesanan-detail?xasq=' . $pesanan_pelanggans->id . '') . '">#' . $pesanan_pelanggans->id . '</a></b>
                 </div><hr style="margin-bottom: 0px;margin-top: 1px">
                 <div class="col-sm-6">
                 Waktu Pesan : ' . $pesanan_pelanggans->WaktuPesan . '
@@ -83,7 +84,7 @@ class PesananPelangganController extends Controller
 
                 $produk_pesanan_komputer .= '
                 <tr  style="margin-top:0px;margin-bottom: 0px;">
-                <td><a href="' . url('pesanan-detail/' . $pesanan_pelanggans->id . '') . '"><b>#' . $pesanan_pelanggans->id . '</b></a></td>
+                <td><a href="' . url('pesanan-detail?xasq=' . $pesanan_pelanggans->id . '') . '"><b>#' . $pesanan_pelanggans->id . '</b></a></td>
                 <td><b>' . $pesanan_pelanggans->WaktuPesan . '</b></td>
                 <td class="text-right"><b class="text-right">Rp. ' . number_format($pesanan_pelanggans->subtotal, 0, ',', '.') . '</b></td>';
                 if ($pesanan_pelanggans->konfirmasi_pesanan == 0) {
@@ -109,7 +110,7 @@ class PesananPelangganController extends Controller
         return view('layouts.pesanan_pelanggan', ['produk_pesanan_mobile' => $produk_pesanan_mobile, 'produk_pesanan_komputer' => $produk_pesanan_komputer, 'cek_belanjaan' => $cek_belanjaan, 'agent' => $agent, 'logo_warmart' => $logo_warmart, 'user' => $user, 'cek_pesanan' => $cek_pesanan, 'pagination_pesanan' => $pagination_pesanan, 'setting_aplikasi' => $setting_aplikasi]);
     }
 
-    public function detailPesananPelanggan($id)
+    public function detailPesananPelanggan(Request $request)
     {
 
         SEOMeta::setTitle('War-Mart.id');
@@ -128,7 +129,7 @@ class PesananPelangganController extends Controller
         $logo_warmart        = "" . asset('/assets/img/examples/warmart_logo.png') . "";
         $user                = Auth::user();
 
-        $pesanan_pelanggan        = PesananPelanggan::with('warung')->where('id_pelanggan', Auth::user()->id)->where('id', $id)->first();
+        $pesanan_pelanggan        = PesananPelanggan::with('warung')->where('id_pelanggan', Auth::user()->id)->where('id', $request->xasq)->first();
         $detail_pesanan_pelanggan = DetailPesananPelanggan::with(['produk', 'pelanggan', 'pesanan_pelanggan'])->where('id_pelanggan', Auth::user()->id)->where('id_pesanan_pelanggan', $pesanan_pelanggan->id)->paginate(10);
         //PERINTAH PAGINATION
         $pagination = $detail_pesanan_pelanggan->links();
