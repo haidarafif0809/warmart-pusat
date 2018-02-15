@@ -262,7 +262,7 @@ class PenjualanPos extends Model
         return $query_count_faktur;
     }
 
-    // DATA PENJUALAN PIUTANG
+    // DATA Jam Penjualan 
     public function scopeGrafikJamTransaksiPenjualan($query_grafik, $tanggal)
     {
         $query_grafik = PenjualanPos::select([DB::raw('COUNT(DATE_FORMAT(created_at, "%H")) as hitung')])

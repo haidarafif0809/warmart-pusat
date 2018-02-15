@@ -130,7 +130,7 @@ import LaporanBucketSizeOnlineTampil from './components/laporan/LaporanBucketSiz
 // LAPORAN Grafik JAM TRANSAKSI PENJUALAN
 import GrafikJamTransaksiPenjualanIndex from './components/laporan/GrafikJamTransaksiPenjualanIndex.vue';
 import GrafikJamTransaksiPenjualanTampil from './components/laporan/GrafikJamTransaksiPenjualanTampil.vue';
-
+import GrafikJamTransaksiPenjualanOnlineTampil  from './components/laporan/GrafikJamTransaksiPenjualanOnlineTampil.vue';
 // LAPORAN BUCKET SIZE GRAFIK
 import LaporanPenjualanHarianIndex from './components/laporan/LaporanPenjualanHarianIndex.vue';
 import LaporanPenjualanHarianTampil from './components/laporan/LaporanPenjualanHarianTampil.vue';
@@ -691,6 +691,11 @@ const routes = [{
         path: '/grafik-jam-transaksi-penjualan/view/:tanggal/',
         component: GrafikJamTransaksiPenjualanTampil,
         name: 'tampilGrafikJamTransaksiPenjualan'
+    },
+    {
+        path: '/grafik-jam-transaksi-penjualan-online/view/:tanggal/',
+        component: GrafikJamTransaksiPenjualanOnlineTampil,
+        name: 'tampilGrafikJamTransaksiPenjualanOnline'
     },
     ]
     export default routes;
