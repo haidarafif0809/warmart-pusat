@@ -8,7 +8,7 @@
 				filter: {
 					dari_tanggal: '',
 					sampai_tanggal: '',
-				}
+				},
 				url: window.location.origin + (window.location.pathname).replace("dashboard", "laporan-penjualan-harian"),
 			}
 		},

@@ -133,6 +133,7 @@ import GrafikJamTransaksiPenjualanTampil from './components/laporan/GrafikJamTra
 
 // LAPORAN BUCKET SIZE GRAFIK
 import LaporanPenjualanHarianIndex from './components/laporan/LaporanPenjualanHarianIndex.vue';
+import LaporanPenjualanHarianTampil from './components/laporan/LaporanPenjualanHarianTampil.vue';
 
 //PEMBAYARAN HUTANG
 import PembayaranHutangIndex from './components/pembayaran_hutang/PembayaranHutangIndex.vue';
