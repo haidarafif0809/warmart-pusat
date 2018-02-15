@@ -676,7 +676,6 @@ const routes = [{
         path: '/laporan-penjualan-harian/view/:dari_tanggal/:sampai_tanggal',
         component: LaporanPenjualanHarianTampil,
         name: 'tampilLaporanPenjualanHarian'
-    }
     },
     {
         path: '/grafik-jam-transaksi-penjualan',
