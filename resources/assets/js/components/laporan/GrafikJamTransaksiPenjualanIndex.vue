@@ -24,9 +24,17 @@
                   <div class="form-group col-sm-4">
                     <datepicker :input-class="'form-control'" placeholder="tanggal" v-model="filter.tanggal" name="tanggal" v-bind:id="'tanggal'"></datepicker>
                   </div>
+                  <div class="form-group col-md-2">
+                  <selectize-component v-model="filter.jenis_penjualan" :settings="placeholder_penjualan" id="jenis_penjualan" ref="jenis_penjualan"> 
+                    <option v-bind:value="0" > Penjualan POS </option>
+                    <option v-bind:value="1" > Penjualan Online </option>
+                  </selectize-component>
+                  <input class="form-control" type="hidden"  v-model="filter.jenis_penjualan"  name="jenis_penjualan" id="jenis_penjualan"  v-shortkey="['f1']">
+                </div>
                   <div class="form-group col-sm-4">
                     <button class="btn btn-primary" id="btnSubmit" type="submit" style="margin: 0px 0px;" @click="submitJamTransaksiPenjualan()"><i class="material-icons">search</i> Cari</button>
                   </div>
+
                 </div>
             </div>
           </div>
@@ -43,9 +51,13 @@
         jamTransaksiPenjualanData: {},
         filter: {
           tanggal: new Date(),
+          jenis_penjualan: '',
         },
         url : window.location.origin+(window.location.pathname).replace("dashboard", "grafik-jam-transaksi-penjualan"),
         pencarian: '',
+        placeholder_penjualan: {
+          placeholder: '--JENIS PENJUALAN--'
+        },
         loading: false,
 
       }
@@ -79,9 +91,26 @@
 
         var tanggal = "" + date_tanggal.getFullYear() +'-'+ ((date_tanggal.getMonth() + 1) > 9 ? '' : '0') + (date_tanggal.getMonth() + 1) +'-'+ (date_tanggal.getDate() > 9 ? '' : '0') + date_tanggal.getDate();
 
-        // window.location.replace(window.location.origin+(window.location.pathname)+'#/laporan-bucket-size/view/'+dari_tanggal+'/'+sampai_tanggal+'/'+app.filter.kelipatan)
-        app.$router.replace('/grafik-jam-transaksi-penjualan/view/'+tanggal);
-      }
-}
+        if (filter.jenis_penjualan == "") {
+          app.alertGagal('Silakan Pilih Jenis Penjualan Terlebih Dahulu');          
+        }else{
+          if (filter.jenis_penjualan == 0) {
+            app.$router.replace('/grafik-jam-transaksi-penjualan/view/'+tanggal);
+          }else{
+            app.$router.replace('/grafik-jam-transaksi-penjualan-online/view/'+tanggal);
+          }
+        }
+        // window.location.replace(window.location.origin+(window.location.pathname)+'#/laporan-bucket-size/view/'+dari_tanggal+'/'+sampai_tanggal+'/'+app.filter.kelipatan) 
+        
+      },
+      alertGagal(pesan) {
+        this.$swal({
+          title: "Peringatan!",
+          text: pesan,
+          icon: "warning",
+        });
+      },
+
+    }
 }
 </script>
