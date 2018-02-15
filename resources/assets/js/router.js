@@ -129,6 +129,7 @@ import LaporanBucketSizeOnlineTampil from './components/laporan/LaporanBucketSiz
 
 // LAPORAN Grafik JAM TRANSAKSI PENJUALAN
 import GrafikJamTransaksiPenjualanIndex from './components/laporan/GrafikJamTransaksiPenjualanIndex.vue';
+import GrafikJamTransaksiPenjualanTampil from './components/laporan/GrafikJamTransaksiPenjualanTampil.vue';
 
 //PEMBAYARAN HUTANG
 import PembayaranHutangIndex from './components/pembayaran_hutang/PembayaranHutangIndex.vue';
@@ -664,6 +665,16 @@ const routes = [{
         path: '/laporan-bucket-size/view/:dari_tanggal/:sampai_tanggal/:kelipatan',
         component: LaporanBucketSizeTampil,
         name: 'tampilLaporanBucketSize'
-    }
+    },
+    {
+        path: '/grafik-jam-transaksi-penjualan',
+        component: GrafikJamTransaksiPenjualanIndex,
+        name: 'indexGrafikJamTransaksiPenjualan'
+    },
+    {
+        path: '/grafik-jam-transaksi-penjualan/view/:tanggal/',
+        component: GrafikJamTransaksiPenjualanTampil,
+        name: 'tampilGrafikJamTransaksiPenjualan'
+    },
     ]
     export default routes;

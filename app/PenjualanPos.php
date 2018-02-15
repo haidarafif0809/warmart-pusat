@@ -264,10 +264,9 @@ class PenjualanPos extends Model
         // DATA PENJUALAN PIUTANG
     public function scopeGrafikJamTransaksiPenjualan($query_grafik,$tanggal)
     {
-        $query_grafik = PenjualanPos::select([DB::raw('DATE_FORMAT(created_at, "%H") as waktu_jual'),DB::raw('COUNT(DATE_FORMAT(created_at, "%H")) as hitung')])
+        $query_grafik = PenjualanPos::select([DB::raw('COUNT(DATE_FORMAT(created_at, "%H")) as hitung')])
             ->where('warung_id', Auth::user()->id_warung)
-            ->where(DB::raw('DATE(created_at)'), '=', $this->tanggalSql($tanggal))
-            ->groupBy(DB::raw('DATE_FORMAT(created_at, "%H")'));
+            ->where(DB::raw('DATE(created_at)'), '=', $this->tanggalSql($tanggal));
 
         return $query_grafik;
     }

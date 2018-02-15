@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\PenjualanPos;
+use Illuminate\Support\Facades\DB;
 
 class GrafikJamTransaksiPenjualanController extends Controller
 {
@@ -33,14 +34,22 @@ class GrafikJamTransaksiPenjualanController extends Controller
     }
 
         public function prosesGrafikJamPenjuaalan(Request $request, $tanggal)
-    {
-        $laporan_jam_transaksi_penjualan = PenjualanPos::grafikJamTransaksiPenjualan($tanggal)->get();
-      
-        $respons['data'] = $laporan_jam_transaksi_penjualan;
+    {  
 
+      $jam_kelipatan = 0;
+      while ($jam_kelipatan <= 23) { 
+            $laporan_jam_transaksi_penjualan = PenjualanPos::grafikJamTransaksiPenjualan($tanggal)->where(DB::raw('DATE_FORMAT(created_at, "%H")'), $jam_kelipatan)->first()->hitung;
+           $respons['waktu_jual'][] =  $jam_kelipatan;
+           $respons['hitung'][]     = $laporan_jam_transaksi_penjualan;   
+           $respons['color'][]      = $this->random_color();   
+
+            $data_kelipatan = 1;
+            $jam_kelipatan += $data_kelipatan;
+        }
+        
         //DATA PAGINATION
         return response()->json($respons);
-    }
+     }
 
 
     /**
