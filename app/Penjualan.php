@@ -148,7 +148,7 @@ class Penjualan extends Model
         return $query_count_faktur;
     }
 
-        // DATA Jam Penjualan 
+    // DATA Jam Penjualan
     public function scopeGrafikJamTransaksiPenjualan($query_grafik, $tanggal)
     {
         $query_grafik = Penjualan::select([DB::raw('COUNT(DATE_FORMAT(created_at, "%H")) as hitung')])
@@ -156,6 +156,18 @@ class Penjualan extends Model
             ->where(DB::raw('DATE(created_at)'), '=', $this->tanggalSql($tanggal));
 
         return $query_grafik;
+    }
+
+    // DATA PENJUALAN HARIAN
+    public function scopeDataPenjualanHarian($query_laporan, $request)
+    {
+        $query_laporan = Penjualan::select([DB::raw('DATE(created_at) as tanggal'), DB::raw('SUM(total) as total')])
+            ->where('id_warung', Auth::user()->id_warung)
+            ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+            ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+            ->groupBy(DB::raw('DATE(created_at)'));
+
+        return $query_laporan;
     }
 
 }
