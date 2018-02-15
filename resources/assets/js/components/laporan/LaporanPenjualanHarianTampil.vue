@@ -23,6 +23,9 @@
 			app.barChart();
 		},
 		methods: {	
+			tanggal(tanggal){
+				return moment(String(tanggal)).format('DD/MM/YYYY')
+			},
 			barChart(){
 				var app = this;
 				var filter = app.filter;
@@ -32,7 +35,7 @@
 					{
 						labels: resp.data.tanggal,
 						datasets: [{
-							label: 'LAPORAN HARIAN PENJUALAN POS',
+							label: 'LAPORAN HARIAN PENJUALAN POS '+ app.tanggal(filter.dari_tanggal) +" - "+ app.tanggal(filter.sampai_tanggal),
 							backgroundColor: '#ed79a1',
 							data: resp.data.total,
 						}]

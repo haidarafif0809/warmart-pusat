@@ -76,16 +76,22 @@
 			app.filter.dari_tanggal = awal_tanggal;
 		},
 		methods: {
+			dariTanggal(filter){
+				var dari_tanggal = "" + filter.dari_tanggal.getFullYear() +'-'+ ((filter.dari_tanggal.getMonth() + 1) > 9 ? '' : '0') + (filter.dari_tanggal.getMonth() + 1) +'-'+ (filter.dari_tanggal.getDate() > 9 ? '' : '0') + filter.dari_tanggal.getDate();
+
+				return dari_tanggal;
+			},
+			sampaiTanggal(filter){
+				var sampai_tanggal = "" + filter.sampai_tanggal.getFullYear() +'-'+ ((filter.sampai_tanggal.getMonth() + 1) > 9 ? '' : '0') + (filter.sampai_tanggal.getMonth() + 1) +'-'+ (filter.sampai_tanggal.getDate() > 9 ? '' : '0') + filter.sampai_tanggal.getDate();
+
+				return sampai_tanggal;
+			},
 			submitLaporan(){
 				var app = this;
 				var filter = app.filter;
 
-				var date_dari_tanggal = filter.dari_tanggal;
-				var date_sampai_tanggal = filter.sampai_tanggal;
-
-				var dari_tanggal = "" + date_dari_tanggal.getFullYear() +'-'+ ((date_dari_tanggal.getMonth() + 1) > 9 ? '' : '0') + (date_dari_tanggal.getMonth() + 1) +'-'+ (date_dari_tanggal.getDate() > 9 ? '' : '0') + date_dari_tanggal.getDate();
-
-				var sampai_tanggal = "" + date_sampai_tanggal.getFullYear() +'-'+ ((date_sampai_tanggal.getMonth() + 1) > 9 ? '' : '0') + (date_sampai_tanggal.getMonth() + 1) +'-'+ (date_sampai_tanggal.getDate() > 9 ? '' : '0') + date_sampai_tanggal.getDate();
+				var dari_tanggal = app.dariTanggal(filter);
+				var sampai_tanggal = app.sampaiTanggal(filter);
 
 				if (filter.jenis_penjualan == "") {
 					app.alertGagal('Silakan Pilih Jenis Penjualan Terlebih Dahulu');					
