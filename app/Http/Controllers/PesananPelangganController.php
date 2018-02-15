@@ -75,7 +75,7 @@ class PesananPelangganController extends Controller
                 }
 
                 $produk_pesanan_mobile .= '
-                <a href="' . url('pesanan-detail/' . $pesanan_pelanggans->id . '') . '" style="background-color: #01573e" class="btn btn-block">Detail Pesanan</a>
+                <a href="' . url('pesanan-detail?xasq=' . $pesanan_pelanggans->id . '') . '" style="background-color: #01573e" class="btn btn-block">Detail Pesanan</a>
                 </div>
                 </div>';
             }
