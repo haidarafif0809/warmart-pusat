@@ -189,6 +189,8 @@ export default {
         .then(function (resp) {
             app.produk = resp.data;
 
+            app.toogleChange(resp.data.status_aktif,resp.data.hitung_stok);
+
         })
         .catch(function () {
             alert("Tidak Dapat Memuat Produk")
@@ -196,7 +198,6 @@ export default {
         app.dataKategori();
         app.dataSatuan();
         app.dataAgent();
-        app.toogleChange();
 
 
     },  
@@ -223,8 +224,8 @@ export default {
                 harga_jual2 : '',
                 berat : '',
                 deskripsi_produk : '',
-                hitung_stok : 1,
-                status_aktif : 1
+                hitung_stok : '',
+                status_aktif : ''
             },
             message : '',
             data_agent : '',
@@ -357,21 +358,21 @@ methods: {
         app.produk.status_aktif = 'true';
         app.errors = '';
     },
-    toogleChange(){
+    toogleChange(status_aktif,hitung_stok){
         let app = this
-        if (app.produk.status_aktif == 1) {
+        if (status_aktif == 1) {
             $('#status_aktif').attr("checked", true);
-            console.log(app.produk.status_aktif);
+            console.log(status_aktif);
         }else{
             $('#status_aktif').attr("checked", false);
-            console.log(app.produk.status_aktif);
+            console.log(status_aktif);
         }
-        if (app.produk.hitung_stok == 1) {
+        if (hitung_stok == 1) {
             $('#hitung_stok').attr("checked", true);
-            console.log(app.produk.hitung_stok);
+            console.log(hitung_stok);
         }else{
             $('#hitung_stok').attr("checked", false);
-            console.log(app.produk.hitung_stok);
+            console.log(hitung_stok);
         }
     }
 }
