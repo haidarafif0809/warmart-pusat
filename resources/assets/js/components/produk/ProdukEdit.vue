@@ -100,8 +100,9 @@
                                     <label for="hitung_stok" class="col-md-2 control-label">Hitung Stok</label>
                                     <div class="togglebutton col-md-10">
                                         <label>
-                                            <input type="checkbox" v-model="produk.hitung_stok" name="hitung_stok" id="hitung_stok">
-                                            <font v-if="produk.hitung_stok == 1">Ya</font>
+                                            <input type="checkbox" v-model="produk.hitung_stok" name="hitung_stok" id="hitung_stok" value="true" v-if="produk.hitung_stok == 1 || produk.hitung_stok == true">
+                                            <input type="checkbox" v-model="produk.hitung_stok" name="hitung_stok" id="hitung_stok" value="false" v-else>
+                                            <font v-if="produk.hitung_stok == 1 || produk.hitung_stok == true">Ya</font>
                                             <font v-else>Tidak</font>
                                         </label>
                                     </div>
@@ -111,8 +112,9 @@
                                     <label for="status_aktif" class="col-md-2 control-label">Bisa Dijual</label>
                                     <div class="togglebutton col-md-10">
                                         <label>
-                                            <input type="checkbox" v-model="produk.status_aktif" name="status_aktif" id="status_aktif">
-                                            <font v-if="produk.status_aktif == 1">Ya</font>
+                                            <input type="checkbox" v-model="produk.status_aktif" name="status_aktif" id="status_aktif" value="true" v-if="produk.status_aktif == 1 || produk.status_aktif == true">
+                                            <input type="checkbox" v-model="produk.status_aktif" name="status_aktif" id="status_aktif" value="false" v-else>
+                                            <font v-if="produk.status_aktif == 1 || produk.status_aktif == true">Ya</font>
                                             <font v-else>Tidak</font>
                                         </label>
                                     </div>
@@ -271,6 +273,8 @@ methods: {
             title: "Berhasil !",
             text: pesan,
             icon: "success",
+            buttons: false,
+            timer: 1000,
         });
     },
     dataKategori() {
