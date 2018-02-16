@@ -92,7 +92,7 @@
                                         <span v-if="errors.berat" id="berat_error" class="label label-danger">{{ errors.berat[0] }}</span>
                                     </div>
                                     <div class="col-md-4">
-                                        <p style="color: grey; font-style: italic;">Satuan dalam bentuk Gram.</p>     
+                                        <p style="color: grey; font-style: italic;">Satuan(Berat) dalam bentuk Gram.</p>     
                                     </div>
                                 </div>
 
@@ -101,7 +101,7 @@
                                     <div class="togglebutton col-md-10">
                                         <label>
                                             <input type="checkbox" v-model="produk.hitung_stok" name="hitung_stok" id="hitung_stok">
-                                            <font v-if="produk.hitung_stok == 1">Ya</font>
+                                            <font v-if="produk.hitung_stok == 1 || produk.hitung_stok == true">Ya</font>
                                             <font v-else>Tidak</font>
                                         </label>
                                     </div>
@@ -112,7 +112,7 @@
                                     <div class="togglebutton col-md-10">
                                         <label>
                                             <input type="checkbox" v-model="produk.status_aktif" name="status_aktif" id="status_aktif">
-                                            <font v-if="produk.status_aktif == 1">Ya</font>
+                                            <font v-if="produk.status_aktif == 1 || produk.status_aktif == true">Ya</font>
                                             <font v-else>Tidak</font>
                                         </label>
                                     </div>
@@ -188,6 +188,9 @@ export default {
         axios.get(app.url+'/' + id)
         .then(function (resp) {
             app.produk = resp.data;
+
+            app.toogleChange(resp.data.status_aktif,resp.data.hitung_stok);
+
         })
         .catch(function () {
             alert("Tidak Dapat Memuat Produk")
@@ -195,6 +198,8 @@ export default {
         app.dataKategori();
         app.dataSatuan();
         app.dataAgent();
+
+
     },  
     data: function () {
         return {
@@ -219,8 +224,8 @@ export default {
                 harga_jual2 : '',
                 berat : '',
                 deskripsi_produk : '',
-                hitung_stok : 1,
-                status_aktif : 1
+                hitung_stok : '',
+                status_aktif : ''
             },
             message : '',
             data_agent : '',
@@ -271,6 +276,8 @@ methods: {
             title: "Berhasil !",
             text: pesan,
             icon: "success",
+            buttons: false,
+            timer: 1000,
         });
     },
     dataKategori() {
@@ -350,6 +357,23 @@ methods: {
         app.produk.hitung_stok = 'true';
         app.produk.status_aktif = 'true';
         app.errors = '';
+    },
+    toogleChange(status_aktif,hitung_stok){
+        let app = this
+        if (status_aktif == 1) {
+            $('#status_aktif').attr("checked", true);
+            console.log(status_aktif);
+        }else{
+            $('#status_aktif').attr("checked", false);
+            console.log(status_aktif);
+        }
+        if (hitung_stok == 1) {
+            $('#hitung_stok').attr("checked", true);
+            console.log(hitung_stok);
+        }else{
+            $('#hitung_stok').attr("checked", false);
+            console.log(hitung_stok);
+        }
     }
 }
 }

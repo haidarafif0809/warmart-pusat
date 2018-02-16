@@ -136,12 +136,12 @@
                         {!! Form::label('komunitas', 'Komunitas', ['class'=>'col-md-2 control-label']) !!}
                         <div class="col-md-10">
                             @if (isset($komunitas_pelanggan))
-                            {!! Form::select('komunitas', [''=>'']+App\Komunitas::where('tipe_user','2')->pluck('name','id')->all(),$komunitas_pelanggan->komunitas_id, ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH KOMUNITAS--','id'=>'pilih_komunitas']) !!}
+                            {!! Form::select('komunitas', [''=>'']+App\Komunitas::where('tipe_user','2')->pluck('name','id')->all(),$komunitas_pelanggan->komunitas_id, ['class'=>'form-control', 'placeholder' => '--PILIH KOMUNITAS--','id'=>'pilih_komunitas']) !!}
                             {!! $errors->first('komunitas', '<p class="help-block">:message</p>') !!}
                             @else
                             {!! Form::select('komunitas',
                                 [''=>'']+App\Komunitas::where('tipe_user','2')->pluck('name','id')->all(),null
-                                , ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH KOMUNITAS--','id'=>'pilih_komunitas']) !!}
+                                , ['class'=>'form-control', 'placeholder' => '--PILIH KOMUNITAS--','id'=>'pilih_komunitas']) !!}
                                 {!! $errors->first('komunitas', '<p class="help-block">:message</p>') !!}
                                 @endif
                             </div>
@@ -152,11 +152,11 @@
                             {!! Form::label('provinsi', 'Provinsi', ['class'=>'col-md-2 control-label']) !!}
                             <div class="col-md-10">
                                 @if (isset($lokasi_pelanggan))
-                                {!! Form::select('provinsi', $provinsi ,$lokasi_pelanggan->provinsi, ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH PROVINSI--','id'=>'pilih_provinsi']) !!}
+                                {!! Form::select('provinsi', $provinsi ,$lokasi_pelanggan->provinsi, ['class'=>'form-control', 'placeholder' => '--PILIH PROVINSI--','id'=>'pilih_provinsi']) !!}
                                 {!! $errors->first('provinsi', '<p class="help-block">:message</p>') !!}
                                 @else
                                 {!! Form::select('provinsi',$provinsi,null
-                                , ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH PROVINSI--','id'=>'pilih_provinsi']) !!}
+                                , ['class'=>'form-control', 'placeholder' => '--PILIH PROVINSI--','id'=>'pilih_provinsi']) !!}
                                 {!! $errors->first('provinsi', '<p class="help-block">:message</p>') !!}
                                 @endif
                             </div>
@@ -166,54 +166,53 @@
                             {!! Form::label('kabupaten', 'Kabupaten', ['class'=>'col-md-2 control-label']) !!}
                             <div class="col-md-10">
 
-                             @if (isset($lokasi_pelanggan))
-                             {!! Form::select('kabupaten', $kabupaten,$lokasi_pelanggan->kabupaten, ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH KABUPATEN--','id'=>'pilih_kabupaten']) !!}
-                             {!! $errors->first('kabupaten', '<p class="help-block">:message</p>') !!}
-                             @else
-                             {!! Form::select('kabupaten',array(),null
-                             , ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH KABUPATEN--','id'=>'pilih_kabupaten']) !!}
-                             {!! $errors->first('kabupaten', '<p class="help-block">:message</p>') !!}
-                             @endif
+                               @if (isset($lokasi_pelanggan))
+                               {!! Form::select('kabupaten', $kabupaten,$lokasi_pelanggan->kabupaten, ['class'=>'form-control', 'placeholder' => '--PILIH KABUPATEN--','id'=>'pilih_kabupaten']) !!}
+                               {!! $errors->first('kabupaten', '<p class="help-block">:message</p>') !!}
+                               @else
+                               {!! Form::select('kabupaten',array(), null, ['class'=>'form-control', 'placeholder' => '--PILIH KABUPATEN--','id'=>'pilih_kabupaten']) !!}
+                               {!! $errors->first('kabupaten', '<p class="help-block">:message</p>') !!}
+                               @endif
 
-                         </div>
-                     </div>
+                           </div>
+                       </div>
 
-                     <div class="form-group{{ $errors->has('kecamatan') ? ' has-error' : '' }}">
+                       <div class="form-group{{ $errors->has('kecamatan') ? ' has-error' : '' }}">
                         {!! Form::label('kecamatan', 'Kecamatan', ['class'=>'col-md-2 control-label']) !!}
                         <div class="col-md-10">
 
-                         @if (isset($lokasi_pelanggan))
-                         {!! Form::select('kecamatan',$kecamatan, $lokasi_pelanggan->kecamatan, ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH KECAMATAN--','id'=>'pilih_kecamatan']) !!}
-                         {!! $errors->first('kecamatan', '<p class="help-block">:message</p>') !!}
-                         @else
-                         {!! Form::select('kecamatan',array(),null
-                         , ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH KECAMATAN--','id'=>'pilih_kecamatan']) !!}
-                         {!! $errors->first('kecamatan', '<p class="help-block">:message</p>') !!}
-                         @endif
+                           @if (isset($lokasi_pelanggan))
+                           {!! Form::select('kecamatan',$kecamatan, $lokasi_pelanggan->kecamatan, ['class'=>'form-control', 'placeholder' => '--PILIH KECAMATAN--','id'=>'pilih_kecamatan']) !!}
+                           {!! $errors->first('kecamatan', '<p class="help-block">:message</p>') !!}
+                           @else
+                           {!! Form::select('kecamatan',array(),null
+                           , ['class'=>'form-control', 'placeholder' => '--PILIH KECAMATAN--','id'=>'pilih_kecamatan']) !!}
+                           {!! $errors->first('kecamatan', '<p class="help-block">:message</p>') !!}
+                           @endif
 
-                     </div>
-                 </div>
+                       </div>
+                   </div>
 
-                 <div class="form-group{{ $errors->has('kelurahan') ? ' has-error' : '' }}">
+                   <div class="form-group{{ $errors->has('kelurahan') ? ' has-error' : '' }}">
                     {!! Form::label('kelurahan', 'Kelurahan', ['class'=>'col-md-2 control-label']) !!}
                     <div class="col-md-10">
 
-                     @if (isset($lokasi_pelanggan))
-                     {!! Form::select('kelurahan',$kelurahan, $lokasi_pelanggan->kelurahan, ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH KELURAHAN--','id'=>'pilih_kelurahan']) !!}
-                     {!! $errors->first('kelurahan', '<p class="help-block">:message</p>') !!}
-                     @else
-                     {!! Form::select('kelurahan',array(),null
-                     , ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH KELURAHAN--','id'=>'pilih_kelurahan']) !!}
-                     {!! $errors->first('kelurahan', '<p class="help-block">:message</p>') !!}
-                     @endif
+                       @if (isset($lokasi_pelanggan))
+                       {!! Form::select('kelurahan',$kelurahan, $lokasi_pelanggan->kelurahan, ['class'=>'form-control', 'placeholder' => '--PILIH KELURAHAN--','id'=>'pilih_kelurahan']) !!}
+                       {!! $errors->first('kelurahan', '<p class="help-block">:message</p>') !!}
+                       @else
+                       {!! Form::select('kelurahan',array(),null
+                       , ['class'=>'form-control', 'placeholder' => '--PILIH KELURAHAN--','id'=>'pilih_kelurahan']) !!}
+                       {!! $errors->first('kelurahan', '<p class="help-block">:message</p>') !!}
+                       @endif
 
-                 </div>
-             </div>
+                   </div>
+               </div>
 
 
-             {!! Form::hidden('id', $user->id, ['class'=>'form-control','autocomplete'=>'off']) !!}
-             <div class="col-md-2"></div>
-             <div class="col-md-4">
+               {!! Form::hidden('id', $user->id, ['class'=>'form-control','autocomplete'=>'off']) !!}
+               <div class="col-md-2"></div>
+               <div class="col-md-4">
                 {!! Form::button('<i class="material-icons">save</i>Simpan Profil', ['class'=>'btn btn-rose ', 'type'=>'submit', 'id' => 'btnSimpanProfil']) !!}
             </div>
 
@@ -306,12 +305,12 @@
                         {!! Form::label('komunitas', 'Komunitas', ['class'=>'col-md-2 control-label']) !!}
                         <div class="col-md-10">
                             @if (isset($komunitas_pelanggan))
-                            {!! Form::select('komunitas', [''=>'']+App\Komunitas::where('tipe_user','2')->pluck('name','id')->all(),$komunitas_pelanggan->komunitas_id, ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH KOMUNITAS--','id'=>'pilih_komunitas']) !!}
+                            {!! Form::select('komunitas', [''=>'']+App\Komunitas::where('tipe_user','2')->pluck('name','id')->all(),$komunitas_pelanggan->komunitas_id, ['class'=>'form-control', 'placeholder' => '--PILIH KOMUNITAS--','id'=>'pilih_komunitas']) !!}
                             {!! $errors->first('komunitas', '<p class="help-block">:message</p>') !!}
                             @else
                             {!! Form::select('komunitas',
                                 [''=>'']+App\Komunitas::where('tipe_user','2')->pluck('name','id')->all(),null
-                                , ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH KOMUNITAS--','id'=>'pilih_komunitas']) !!}
+                                , ['class'=>'form-control', 'placeholder' => '--PILIH KOMUNITAS--','id'=>'pilih_komunitas']) !!}
                                 {!! $errors->first('komunitas', '<p class="help-block">:message</p>') !!}
                                 @endif
                             </div>
@@ -321,11 +320,11 @@
                             {!! Form::label('provinsi', 'Provinsi', ['class'=>'col-md-2 control-label']) !!}
                             <div class="col-md-10">
                                 @if (isset($lokasi_pelanggan))
-                                {!! Form::select('provinsi', $provinsi ,$lokasi_pelanggan->provinsi, ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH PROVINSI--','id'=>'pilih_provinsi']) !!}
+                                {!! Form::select('provinsi', $provinsi ,$lokasi_pelanggan->provinsi, ['class'=>'form-control', 'placeholder' => '--PILIH PROVINSI--','id'=>'pilih_provinsi']) !!}
                                 {!! $errors->first('provinsi', '<p class="help-block">:message</p>') !!}
                                 @else
                                 {!! Form::select('provinsi',$provinsi,null
-                                , ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH PROVINSI--','id'=>'pilih_provinsi']) !!}
+                                , ['class'=>'form-control', 'placeholder' => '--PILIH PROVINSI--','id'=>'pilih_provinsi']) !!}
                                 {!! $errors->first('provinsi', '<p class="help-block">:message</p>') !!}
                                 @endif
                             </div>
@@ -335,53 +334,53 @@
                             {!! Form::label('kabupaten', 'Kabupaten', ['class'=>'col-md-2 control-label']) !!}
                             <div class="col-md-10">
 
-                             @if (isset($lokasi_pelanggan))
-                             {!! Form::select('kabupaten', $kabupaten,$lokasi_pelanggan->kabupaten, ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH KABUPATEN--','id'=>'pilih_kabupaten']) !!}
-                             {!! $errors->first('kabupaten', '<p class="help-block">:message</p>') !!}
-                             @else
-                             {!! Form::select('kabupaten',array(),null
-                             , ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH KABUPATEN--','id'=>'pilih_kabupaten']) !!}
-                             {!! $errors->first('kabupaten', '<p class="help-block">:message</p>') !!}
-                             @endif
+                               @if (isset($lokasi_pelanggan))
+                               {!! Form::select('kabupaten', $kabupaten,$lokasi_pelanggan->kabupaten, ['class'=>'form-control', 'placeholder' => '--PILIH KABUPATEN--','id'=>'pilih_kabupaten']) !!}
+                               {!! $errors->first('kabupaten', '<p class="help-block">:message</p>') !!}
+                               @else
+                               {!! Form::select('kabupaten',array(),null
+                               , ['class'=>'form-control', 'placeholder' => '--PILIH KABUPATEN--','id'=>'pilih_kabupaten']) !!}
+                               {!! $errors->first('kabupaten', '<p class="help-block">:message</p>') !!}
+                               @endif
 
-                         </div>
-                     </div>
+                           </div>
+                       </div>
 
-                     <div class="form-group{{ $errors->has('kecamatan') ? ' has-error' : '' }}">
+                       <div class="form-group{{ $errors->has('kecamatan') ? ' has-error' : '' }}">
                         {!! Form::label('kecamatan', 'Kecamatan', ['class'=>'col-md-2 control-label']) !!}
                         <div class="col-md-10">
 
-                         @if (isset($lokasi_pelanggan))
-                         {!! Form::select('kecamatan',$kecamatan, $lokasi_pelanggan->kecamatan, ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH KECAMATAN--','id'=>'pilih_kecamatan']) !!}
-                         {!! $errors->first('kecamatan', '<p class="help-block">:message</p>') !!}
-                         @else
-                         {!! Form::select('kecamatan',array(),null
-                         , ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH KECAMATAN--','id'=>'pilih_kecamatan']) !!}
-                         {!! $errors->first('kecamatan', '<p class="help-block">:message</p>') !!}
-                         @endif
+                           @if (isset($lokasi_pelanggan))
+                           {!! Form::select('kecamatan',$kecamatan, $lokasi_pelanggan->kecamatan, ['class'=>'form-control', 'placeholder' => '--PILIH KECAMATAN--','id'=>'pilih_kecamatan']) !!}
+                           {!! $errors->first('kecamatan', '<p class="help-block">:message</p>') !!}
+                           @else
+                           {!! Form::select('kecamatan',array(),null
+                           , ['class'=>'form-control', 'placeholder' => '--PILIH KECAMATAN--','id'=>'pilih_kecamatan']) !!}
+                           {!! $errors->first('kecamatan', '<p class="help-block">:message</p>') !!}
+                           @endif
 
-                     </div>
-                 </div>
+                       </div>
+                   </div>
 
-                 <div class="form-group{{ $errors->has('kelurahan') ? ' has-error' : '' }}">
+                   <div class="form-group{{ $errors->has('kelurahan') ? ' has-error' : '' }}">
                     {!! Form::label('kelurahan', 'Kelurahan', ['class'=>'col-md-2 control-label']) !!}
                     <div class="col-md-10">
 
-                     @if (isset($lokasi_pelanggan))
-                     {!! Form::select('kelurahan',$kelurahan, $lokasi_pelanggan->kelurahan, ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH KELURAHAN--','id'=>'pilih_kelurahan']) !!}
-                     {!! $errors->first('kelurahan', '<p class="help-block">:message</p>') !!}
-                     @else
-                     {!! Form::select('kelurahan',array(),null
-                     , ['class'=>'form-control js-selectize-reguler', 'placeholder' => '--PILIH KELURAHAN--','id'=>'pilih_kelurahan']) !!}
-                     {!! $errors->first('kelurahan', '<p class="help-block">:message</p>') !!}
-                     @endif
+                       @if (isset($lokasi_pelanggan))
+                       {!! Form::select('kelurahan',$kelurahan, $lokasi_pelanggan->kelurahan, ['class'=>'form-control', 'placeholder' => '--PILIH KELURAHAN--','id'=>'pilih_kelurahan']) !!}
+                       {!! $errors->first('kelurahan', '<p class="help-block">:message</p>') !!}
+                       @else
+                       {!! Form::select('kelurahan',array(),null
+                       , ['class'=>'form-control', 'placeholder' => '--PILIH KELURAHAN--','id'=>'pilih_kelurahan']) !!}
+                       {!! $errors->first('kelurahan', '<p class="help-block">:message</p>') !!}
+                       @endif
 
-                 </div>
-             </div>
+                   </div>
+               </div>
 
-             {!! Form::hidden('id', $user->id, ['class'=>'form-control','autocomplete'=>'off']) !!}
-             <div class="col-md-2"></div>
-             <div class="col-md-4">
+               {!! Form::hidden('id', $user->id, ['class'=>'form-control','autocomplete'=>'off']) !!}
+               <div class="col-md-2"></div>
+               <div class="col-md-4">
                 {!! Form::button('<i class="material-icons">save</i>Simpan Profil', ['class'=>'btn btn-rose ', 'type'=>'submit', 'id' => 'btnSimpanProfil']) !!}
             </div>
 
@@ -396,7 +395,7 @@
 @section('scripts')
 
 <script type="text/javascript">
- $(document).ready(function(){
+   $(document).ready(function(){
     $("#nama_pelanggan").focus();
 
     var id_provinsi = $("#pilih_provinsi").val();
@@ -422,12 +421,12 @@
 });
 
 
- $('.datepicker').datepicker({
+   $('.datepicker').datepicker({
     format: 'dd-mm-yyyy',
     autoclose: true
 });
 
- $(document).on('click', '#btnSimpanProfil', function(){
+   $(document).on('click', '#btnSimpanProfil', function(){
     swal("Berhasil!", "Profil Berhasil Diubah", "success");
 });
 </script>

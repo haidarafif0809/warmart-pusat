@@ -4,6 +4,7 @@
 <?php
 use Jenssegers\Agent\Agent;
 $agent = new Agent();
+$judul_warung = \App\SettingFooter::select()->first()->judul_warung;
 ?>
 <head>
     <meta charset="utf-8"/>
@@ -20,7 +21,7 @@ $agent = new Agent();
     @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
     <title>War-Mart.id</title>
     @else
-    <title>topos | Aplikasi POS & Toko Online</title>
+    <title>{{$judul_warung}}</title>
     @endif
     <!-- CSRF Token -->
     <meta content="{{ csrf_token() }}" name="csrf-token">
@@ -73,7 +74,7 @@ $agent = new Agent();
         TP
     </a>
     <a class="simple-text logo-normal" href="http://andaglos.id/topos">
-        TOPOS    
+        {{strtoupper($judul_warung)}}    
     </a>
     @endif
 </div>
@@ -456,7 +457,7 @@ $agent = new Agent();
 </body>
 <!--   Core JS Files   -->
 
-<script src="{{ asset('js/app.js?v=1.151')}}" type="text/javascript">
+<script src="{{ asset('js/app.js?v=1.154')}}" type="text/javascript">
 
 </script>
 <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript">

@@ -7,35 +7,35 @@ first();
 <head>
   <meta charset="utf-8"/>
   @if($setting_aplikasi->tipe_aplikasi == 0)
-    <title>
-        War-Mart.id
-    </title>
-    @else
-    <title>
-        topos | Aplikasi POS & Toko Online
-    </title>
-    @endif
+  <title>
+    War-Mart.id
+  </title>
+  @else
+  <title>
+    {{$judul_warung = \App\SettingFooter::select()->first()->judul_warung}}
+  </title>
+  @endif
 
-    <meta charset="utf-8"/>
-    @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
-    <link href="{{ asset('img/favicon.png') }}" rel="apple-touch-icon" sizes="76x76"/>
-    <link href="{{ asset('img/favicon.png') }}" rel="icon" type="image/png"/>
-    @else
-    <link href="{{ asset('img/icon_topos.png') }}?v=1" rel="apple-touch-icon" sizes="76x76"/>
-    <link href="{{ asset('img/icon_topos.png') }}?v=1" rel="icon" type="image/png"/>
-    @endif
-    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
-    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
-    <meta content="width=device-width" name="viewport"/>
-    <!-- Bootstrap core CSS     -->
-    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet"/>
-    <link href="{{ asset('css/selectize.bootstrap3.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
-    <!--     Fonts and icons     -->
-    <link href="{{ asset('css/material-kit.css?v=1.2.0')}}" rel="stylesheet"/>
-    <link href="{{ asset('assets/assets-for-demo/vertical-nav.css')}}" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" rel="stylesheet" type="text/css"/>
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet"/>
+  <meta charset="utf-8"/>
+  @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
+  <link href="{{ asset('img/favicon.png') }}" rel="apple-touch-icon" sizes="76x76"/>
+  <link href="{{ asset('img/favicon.png') }}" rel="icon" type="image/png"/>
+  @else
+  <link href="{{ asset('img/icon_topos.png') }}?v=1" rel="apple-touch-icon" sizes="76x76"/>
+  <link href="{{ asset('img/icon_topos.png') }}?v=1" rel="icon" type="image/png"/>
+  @endif
+  <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
+  <meta content="width=device-width" name="viewport"/>
+  <!-- Bootstrap core CSS     -->
+  <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet"/>
+  <link href="{{ asset('css/selectize.bootstrap3.css') }}" rel="stylesheet">
+  <link href="{{ asset('css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
+  <!--     Fonts and icons     -->
+  <link href="{{ asset('css/material-kit.css?v=1.2.0')}}" rel="stylesheet"/>
+  <link href="{{ asset('assets/assets-for-demo/vertical-nav.css')}}" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" rel="stylesheet" type="text/css"/>
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet"/>
   {!! SEOMeta::generate() !!}
   {!! OpenGraph::generate() !!}
   {!! Twitter::generate() !!}
@@ -472,149 +472,149 @@ first();
 
 
 <footer class="footer footer-black footer-big" style="bottom: 0;">
-            <div class="container">
-                <div class="content">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <h5>
-                                Tentang Kami
-                            </h5>
-                            @if($setting_aplikasi->tipe_aplikasi == 0)
-                            <p>
-                                Warmart adalah marketplace warung muslim pertama di Indonesia. Kami menghubungkan usaha-usaha muslim dengan pelanggan seluruh Umat Islam di Indonesia. Jenis usaha yang dapat bergabung dengan Warmart diantaranya: Warung, Toko, Minimarket, Pedagang Kaki Lima, Bengkel, Rumah Makan, Klinik, Home Industri, Peternakan, Pertanian, Perikanan, Kerajinan, Fashion dan usaha lainya.
-                            </p>
-                            @else
-                            <p>
-                                <?=$settingFooter->
-                                about_us;?>
-                            </p>
-                            @endif
-                        </div>
-                        <div class="col-md-4">
-                            <h5>
-                                Hubungi Kami
-                            </h5>
-                            <div class="social-feed">
-                                <div class="feed-line">
-                                    <i class="fa fa-phone-square">
-                                    </i>
-                                    <p>
-                                        <?=$settingFooter->
-                                        no_telp;?>
-                                    </p>
-                                </div>
-                                <div class="feed-line">
-                                    <i class="fa fa-home">
-                                    </i>
-                                    <p>
-                                        <?=$settingFooter->
-                                        alamat;?>
-                                    </p>
-                                </div>
-                                <div class="feed-line">
-                                    <i class="fa fa-envelope">
-                                    </i>
-                                    <p>
-                                        <?=$settingFooter->
-                                        email;?>
-                                    </p>
-                                </div>
-                                <div class="feed-line">
-                                    <i class="fa fa-whatsapp">
-                                    </i>
-                                    <p>
-                                        <?=$settingFooter->
-                                        whatsapp;?>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <h5>
-                                Sosial Media
-                            </h5>
-                            <div class="social-feed">
-                                <div class="feed-line">
-                                    <i class="fa fa-facebook-square">
-                                    </i>
-                                    <p>
-                                        <a href="<?=$settingFooter->facebook;?>">
-                                            Facebook
-                                        </a>
-                                    </p>
-                                </div>
-                                <div class="feed-line">
-                                    <i class="fa fa-twitter-square">
-                                    </i>
-                                    <p>
-                                        <a href="<?=$settingFooter->twitter;?>">
-                                            Twitter
-                                        </a>
-                                    </p>
-                                </div>
-                                <div class="feed-line">
-                                    <i class="fa fa-instagram">
-                                    </i>
-                                    <p>
-                                        <a href="<?=$settingFooter->instagram;?>">
-                                            Instagram
-                                        </a>
-                                    </p>
-                                </div>
-                                <div class="feed-line">
-                                    <i class="fa fa-google-plus-square">
-                                    </i>
-                                    <p>
-                                        <a href="<?=$settingFooter->google_plus;?>">
-                                            Google +
-                                        </a>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="gallery-feed">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <hr/>
-                <ul class="pull-left">
-                    <li>
-                        <a href="#pablo">
-                            Blog
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#pablo">
-                            Presentation
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#pablo">
-                            Discover
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#pablo">
-                            Payment
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#pablo">
-                            Contact Us
-                        </a>
-                    </li>
-                </ul>
-                <div class="copyright pull-right">
-                    Copyright ©
-                    <script>
-                        document.write(new Date().getFullYear())
-                    </script>
-                    <a href="https://andaglos.id/">
-                        PT. Andaglos Global Teknologi.
-                    </a>
-                </div>
+  <div class="container">
+    <div class="content">
+      <div class="row">
+        <div class="col-md-4">
+          <h5>
+            Tentang Kami
+          </h5>
+          @if($setting_aplikasi->tipe_aplikasi == 0)
+          <p>
+            Warmart adalah marketplace warung muslim pertama di Indonesia. Kami menghubungkan usaha-usaha muslim dengan pelanggan seluruh Umat Islam di Indonesia. Jenis usaha yang dapat bergabung dengan Warmart diantaranya: Warung, Toko, Minimarket, Pedagang Kaki Lima, Bengkel, Rumah Makan, Klinik, Home Industri, Peternakan, Pertanian, Perikanan, Kerajinan, Fashion dan usaha lainya.
+          </p>
+          @else
+          <p>
+            <?=$settingFooter->
+            about_us;?>
+          </p>
+          @endif
+        </div>
+        <div class="col-md-4">
+          <h5>
+            Hubungi Kami
+          </h5>
+          <div class="social-feed">
+            <div class="feed-line">
+              <i class="fa fa-phone-square">
+              </i>
+              <p>
+                <?=$settingFooter->
+                no_telp;?>
+              </p>
             </div>
-        </footer>
+            <div class="feed-line">
+              <i class="fa fa-home">
+              </i>
+              <p>
+                <?=$settingFooter->
+                alamat;?>
+              </p>
+            </div>
+            <div class="feed-line">
+              <i class="fa fa-envelope">
+              </i>
+              <p>
+                <?=$settingFooter->
+                email;?>
+              </p>
+            </div>
+            <div class="feed-line">
+              <i class="fa fa-whatsapp">
+              </i>
+              <p>
+                <?=$settingFooter->
+                whatsapp;?>
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <h5>
+            Sosial Media
+          </h5>
+          <div class="social-feed">
+            <div class="feed-line">
+              <i class="fa fa-facebook-square">
+              </i>
+              <p>
+                <a href="<?=$settingFooter->facebook;?>">
+                  Facebook
+                </a>
+              </p>
+            </div>
+            <div class="feed-line">
+              <i class="fa fa-twitter-square">
+              </i>
+              <p>
+                <a href="<?=$settingFooter->twitter;?>">
+                  Twitter
+                </a>
+              </p>
+            </div>
+            <div class="feed-line">
+              <i class="fa fa-instagram">
+              </i>
+              <p>
+                <a href="<?=$settingFooter->instagram;?>">
+                  Instagram
+                </a>
+              </p>
+            </div>
+            <div class="feed-line">
+              <i class="fa fa-google-plus-square">
+              </i>
+              <p>
+                <a href="<?=$settingFooter->google_plus;?>">
+                  Google +
+                </a>
+              </p>
+            </div>
+          </div>
+          <div class="gallery-feed">
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr/>
+    <ul class="pull-left">
+      <li>
+        <a href="#pablo">
+          Blog
+        </a>
+      </li>
+      <li>
+        <a href="#pablo">
+          Presentation
+        </a>
+      </li>
+      <li>
+        <a href="#pablo">
+          Discover
+        </a>
+      </li>
+      <li>
+        <a href="#pablo">
+          Payment
+        </a>
+      </li>
+      <li>
+        <a href="#pablo">
+          Contact Us
+        </a>
+      </li>
+    </ul>
+    <div class="copyright pull-right">
+      Copyright ©
+      <script>
+        document.write(new Date().getFullYear())
+      </script>
+      <a href="https://andaglos.id/">
+        PT. Andaglos Global Teknologi.
+      </a>
+    </div>
+  </div>
+</footer>
 <!--Start of Tawk.to Script-->
 <script type="text/javascript">
   var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();

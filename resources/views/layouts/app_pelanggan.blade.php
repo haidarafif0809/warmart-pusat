@@ -17,7 +17,7 @@
     </title>
     @else
     <title>
-        topos | Aplikasi POS & Toko Online
+        {{$settingFooter->judul_warung}}
     </title>
     @endif
     <meta charset="utf-8"/>
@@ -51,10 +51,10 @@
 </link>
 </head>
 <style type="text/css">
-.navbar-nav .open .dropdown-menu{
-  color: grey;
-}
-.navbar .navbar-brand {
+    .navbar-nav .open .dropdown-menu{
+      color: grey;
+  }
+  .navbar .navbar-brand {
     position: relative;
     height: 75px;
     line-height: 30px;

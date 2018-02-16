@@ -186,8 +186,8 @@ class BarangController extends Controller
             ]);
 
             if ($request->perkiraan_berat == "" OR $request->perkiraan_berat == 0) {
-             $perkiraan_berat = 1000;
-         }else{
+               $perkiraan_berat = 1000;
+           }else{
             $perkiraan_berat = $request->perkiraan_berat;
         }
 
@@ -291,13 +291,13 @@ class BarangController extends Controller
 
             ]);
 
-            if ($request->status_aktif == 1) {
+            if ($request->status_aktif == "1" || $request->status_aktif == "true") {
                 $status_aktif = 1;
             } else {
                 $status_aktif = 0;
             }
 
-            if ($request->hitung_stok == 1) {
+            if ($request->hitung_stok == "1" || $request->hitung_stok == "true") {
                 $hitung_stok = 1;
             } else {
                 $hitung_stok = 0;
