@@ -134,6 +134,7 @@ import GrafikJamTransaksiPenjualanOnlineTampil  from './components/laporan/Grafi
 // LAPORAN BUCKET SIZE GRAFIK
 import LaporanPenjualanHarianIndex from './components/laporan/LaporanPenjualanHarianIndex.vue';
 import LaporanPenjualanHarianTampil from './components/laporan/LaporanPenjualanHarianTampil.vue';
+import LaporanPenjualanHarianOnlineTampil from './components/laporan/LaporanPenjualanHarianOnlineTampil.vue';
 
 //PEMBAYARAN HUTANG
 import PembayaranHutangIndex from './components/pembayaran_hutang/PembayaranHutangIndex.vue';
@@ -681,6 +682,10 @@ const routes = [{
         path: '/laporan-penjualan-harian/view/:dari_tanggal/:sampai_tanggal',
         component: LaporanPenjualanHarianTampil,
         name: 'tampilLaporanPenjualanHarian'
+    }, {
+        path: '/laporan-penjualan-harian-online/view/:dari_tanggal/:sampai_tanggal',
+        component: LaporanPenjualanHarianOnlineTampil,
+        name: 'tampilLaporanPenjualanHarianOnline'
     },
     {
         path: '/grafik-jam-transaksi-penjualan',
