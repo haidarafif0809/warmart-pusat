@@ -100,8 +100,7 @@
                                     <label for="hitung_stok" class="col-md-2 control-label">Hitung Stok</label>
                                     <div class="togglebutton col-md-10">
                                         <label>
-                                            <input type="checkbox" v-model="produk.hitung_stok" name="hitung_stok" id="hitung_stok" checked v-if="produk.hitung_stok == 1 || produk.hitung_stok == true">
-                                            <input type="checkbox" v-model="produk.hitung_stok" name="hitung_stok" id="hitung_stok" v-else>
+                                            <input type="checkbox" v-model="produk.hitung_stok" name="hitung_stok" id="hitung_stok">
                                             <font v-if="produk.hitung_stok == 1 || produk.hitung_stok == true">Ya</font>
                                             <font v-else>Tidak</font>
                                         </label>
@@ -112,8 +111,7 @@
                                     <label for="status_aktif" class="col-md-2 control-label">Bisa Dijual</label>
                                     <div class="togglebutton col-md-10">
                                         <label>
-                                            <input type="checkbox" v-model="produk.status_aktif" name="status_aktif" id="status_aktif" checked v-if="produk.status_aktif == 1 || produk.status_aktif == true">
-                                            <input type="checkbox" v-model="produk.status_aktif" name="status_aktif" id="status_aktif" v-else>
+                                            <input type="checkbox" v-model="produk.status_aktif" name="status_aktif" id="status_aktif">
                                             <font v-if="produk.status_aktif == 1 || produk.status_aktif == true">Ya</font>
                                             <font v-else>Tidak</font>
                                         </label>
@@ -190,6 +188,7 @@ export default {
         axios.get(app.url+'/' + id)
         .then(function (resp) {
             app.produk = resp.data;
+
         })
         .catch(function () {
             alert("Tidak Dapat Memuat Produk")
@@ -197,6 +196,9 @@ export default {
         app.dataKategori();
         app.dataSatuan();
         app.dataAgent();
+        app.toogleChange();
+
+
     },  
     data: function () {
         return {
@@ -354,6 +356,19 @@ methods: {
         app.produk.hitung_stok = 'true';
         app.produk.status_aktif = 'true';
         app.errors = '';
+    },
+    toogleChange(){
+        let app = this
+        if (app.produk.status_aktif == 1) {
+            $('#status_aktif').attr("checked", true);
+        }else{
+            $('#status_aktif').attr("checked", false);
+        }
+        if (app.produk.hitung_stok == 1) {
+            $('#hitung_stok').attr("checked", true);
+        }else{
+            $('#hitung_stok').attr("checked", false);
+        }
     }
 }
 }
