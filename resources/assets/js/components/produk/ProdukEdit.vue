@@ -92,7 +92,7 @@
                                         <span v-if="errors.berat" id="berat_error" class="label label-danger">{{ errors.berat[0] }}</span>
                                     </div>
                                     <div class="col-md-4">
-                                        <p style="color: grey; font-style: italic;">Satuan dalam bentuk Gram.</p>     
+                                        <p style="color: grey; font-style: italic;">Satuan(Berat) dalam bentuk Gram.</p>     
                                     </div>
                                 </div>
 

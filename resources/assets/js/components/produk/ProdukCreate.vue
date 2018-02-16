@@ -92,7 +92,7 @@
 										<span v-if="errors.perkiraan_berat" id="perkiraan_berat_error" class="label label-danger">{{ errors.perkiraan_berat[0] }}</span>
 									</div>
 									<div class="col-md-4">
-										<p style="color: grey; font-style: italic;">Satuan dalam bentuk Gram.</p>     
+										<p style="color: grey; font-style: italic;">Satuan(Berat) dalam bentuk Gram.</p>     
 									</div>
 								</div>
 
@@ -261,6 +261,8 @@ export default {
 				title: "Berhasil!",
 				text: pesan,
 				icon: "success",
+				buttons: false,
+				timer: 1000,
 			});
 		},
 		dataKategori() {
