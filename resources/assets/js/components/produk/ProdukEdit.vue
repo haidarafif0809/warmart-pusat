@@ -361,13 +361,17 @@ methods: {
         let app = this
         if (app.produk.status_aktif == 1) {
             $('#status_aktif').attr("checked", true);
+            console.log(app.produk.status_aktif);
         }else{
             $('#status_aktif').attr("checked", false);
+            console.log(app.produk.status_aktif);
         }
         if (app.produk.hitung_stok == 1) {
             $('#hitung_stok').attr("checked", true);
+            console.log(app.produk.hitung_stok);
         }else{
             $('#hitung_stok').attr("checked", false);
+            console.log(app.produk.hitung_stok);
         }
     }
 }
