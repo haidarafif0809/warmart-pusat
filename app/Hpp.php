@@ -46,10 +46,9 @@ class Hpp extends Model
 
     public function totalnilai()
     {
+        $nilai_masuk = Hpp::select([DB::raw('IFNULL(SUM(total_nilai),0) as total_masuk')])->leftJoin('barangs', 'barangs.id', '=', 'hpps.id_produk')->where('barangs.hitung_stok', 1)->where('hpps.jenis_hpp', 1)->where('hpps.warung_id', Auth::user()->id_warung)->first();
 
-        $nilai_masuk = Hpp::select([DB::raw('IFNULL(SUM(total_nilai),0) as total_masuk')])->where('jenis_hpp', 1)->where('warung_id', Auth::user()->id_warung)->first();
-
-        $nilai_keluar = Hpp::select([DB::raw('IFNULL(SUM(total_nilai),0) as total_keluar')])->where('jenis_hpp', 2)->where('warung_id', Auth::user()->id_warung)->first();
+        $nilai_keluar = Hpp::select([DB::raw('IFNULL(SUM(total_nilai),0) as total_keluar')])->leftJoin('barangs', 'barangs.id', '=', 'hpps.id_produk')->where('barangs.hitung_stok', 1)->where('hpps.jenis_hpp', 2)->where('hpps.warung_id', Auth::user()->id_warung)->first();
 
         $prose_total_persedian = $nilai_masuk->total_masuk - $nilai_keluar->total_keluar;
 
