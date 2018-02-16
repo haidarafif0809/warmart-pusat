@@ -3,9 +3,8 @@
 <!-- PILIH TIPE APLIKASI -->
 <?php
 $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
-
-    $foto_logo = \App\UserWarung::select()->where('tipe_user',4)->orderBy('id', 'desc')->first();
-
+$foto_logo = \App\UserWarung::select()->where('tipe_user',4)->orderBy('id', 'desc')->first();
+$judul_warung = \App\SettingFooter::select()->first()->judul_warung;
 ?>
 <head>
     <meta charset="utf-8" />
@@ -22,7 +21,7 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
     @if($setting_aplikasi->tipe_aplikasi == 0)
     <title>War-Mart.id</title>
     @else
-    <title>topos | Aplikasi POS & Toko Online</title>
+    <title>{{$judul_warung}}</title>
     @endif
 
     <meta name="viewport" content="width=device-width" />
@@ -40,12 +39,12 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
 </head>
 <style type="text/css">
     .navbar .navbar-brand {
-    position: relative;
-    height: 75px;
-    line-height: 30px;
-    color: inherit;
-    padding: 10px 15px;
-}
+        position: relative;
+        height: 75px;
+        line-height: 30px;
+        color: inherit;
+        padding: 10px 15px;
+    }
 </style>
 <body class="off-canvas-sidebar">
 
@@ -60,20 +59,20 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
                     <span class="icon-bar"></span>
                 </button>
                 @if($setting_aplikasi->tipe_aplikasi == 0)
-                        <a href="{{ url('/') }}">
-                            <img class="navbar-brand" src="{{asset('/assets/img/examples/warmart_logo.png')}}"/>
-                        </a>
-                        @else
-                    @if( $foto_logo->foto_ktp != null)
-                        <a href="{{ url('/') }}">
-                            <img class="navbar-brand" src="{{asset('/foto_ktp_user/'.$foto_logo->foto_ktp.'').'?v=1'}}"/>
-                        </a>
-                        @else
-                        <a href="{{ url('/') }}">
-                            <img class="navbar-brand" src="{{asset('/assets/img/examples/topos_logo.png'.'?v=3')}}"/>
-                        </a>
-                        @endif
-                    @endif
+                <a href="{{ url('/') }}">
+                    <img class="navbar-brand" src="{{asset('/assets/img/examples/warmart_logo.png')}}"/>
+                </a>
+                @else
+                @if( $foto_logo->foto_ktp != null)
+                <a href="{{ url('/') }}">
+                    <img class="navbar-brand" src="{{asset('/foto_ktp_user/'.$foto_logo->foto_ktp.'').'?v=1'}}"/>
+                </a>
+                @else
+                <a href="{{ url('/') }}">
+                    <img class="navbar-brand" src="{{asset('/assets/img/examples/topos_logo.png'.'?v=3')}}"/>
+                </a>
+                @endif
+                @endif
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav navbar-right"> 
@@ -127,12 +126,12 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
 
                         <div class="col-md-4 col-sm-6 col-md-offset-4 col-sm-offset-3">
 
-                         @yield('content')
-                     </div>
-                 </div>
-             </div>
-         </div>
-         <footer class="footer">
+                           @yield('content')
+                       </div>
+                   </div>
+               </div>
+           </div>
+           <footer class="footer">
             <div class="container">
                 <p class="copyright pull-right">
                     &copy;

@@ -1,13 +1,18 @@
 <!DOCTYPE doctype html>
 <html lang="en">
 <head>
+	@if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
 	<link href="{{ asset('img/favicon.png') }}" rel="apple-touch-icon" sizes="76x76"/>
 	<link href="{{ asset('img/favicon.png') }}" rel="icon" type="image/png"/>
+	@else
+	<link href="{{ asset('img/icon_topos.png') }}" rel="apple-touch-icon" sizes="76x76"/>
+	<link href="{{ asset('img/icon_topos.png') }}" rel="icon" type="image/png"/>
+	@endif
 	<title>
 		@if($setting_aplikasi->tipe_aplikasi == 0)
 		War-Mart.id
 		@else
-		topos | Aplikasi POS & Toko Online
+		{{$judul_warung = \App\SettingFooter::select()->first()->judul_warung}}
 		@endif
 	</title>
 	<!-- Bootstrap core CSS     -->
