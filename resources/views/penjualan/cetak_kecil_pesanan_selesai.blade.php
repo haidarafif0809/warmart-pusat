@@ -12,7 +12,7 @@
 	<link href="{{ asset('img/icon_topos.png?v=1') }}" rel="apple-touch-icon" sizes="76x76"/>
 	<link href="{{ asset('img/icon_topos.png?v=1') }}" rel="icon" type="image/png"/>
 	<title>
-		topos | Aplikasi POS & Toko Online
+		{{$judul_warung = \App\SettingFooter::select()->first()->judul_warung}}
 	</title>
 	@endif
 	<!-- Bootstrap core CSS     -->
@@ -21,9 +21,9 @@
 </head>
 <style type="text/css">
 
-p{
-	margin-top: 1px; margin-bottom: 1px;
-}
+	p{
+		margin-top: 1px; margin-bottom: 1px;
+	}
 
 </style>
 <body>

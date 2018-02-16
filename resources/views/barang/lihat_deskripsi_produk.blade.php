@@ -1,27 +1,28 @@
 <!doctype html>
 <html lang="en">
 <?php 
-    if (Auth::check()) {
-        $user      = \Auth::user()->id;
-        $foto_logo = \App\UserWarung::find($user);
-    }
- ?>
+if (Auth::check()) {
+  $user      = \Auth::user()->id;
+  $foto_logo = \App\UserWarung::find($user);
+}
+$judul_warung = \App\SettingFooter::select()->first()->judul_warung;
+?>
 <head>
 
-    @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
-    <title>War-Mart.id</title>
-    @else
-    <title>topos | Aplikasi POS & Toko Online</title>
-    @endif
- 
-   <meta charset="utf-8" />
-    @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
-    <link rel="apple-touch-icon" sizes="76x76" href="img/favicon.png" />
-    <link rel="icon" type="image/png" href="img/favicon.png" />
-    @else
-    <link rel="apple-touch-icon" sizes="76x76" href="img/icon_topos.png?v=1" />
-    <link rel="icon" type="image/png" href="img/icon_topos.png?v=1" />
-    @endif
+  @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
+  <title>War-Mart.id</title>
+  @else
+  <title>{{$judul_warung}}</title>
+  @endif
+
+  <meta charset="utf-8" />
+  @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
+  <link rel="apple-touch-icon" sizes="76x76" href="../../img/favicon.png" />
+  <link rel="icon" type="image/png" href="../../img/favicon.png" />
+  @else
+  <link rel="apple-touch-icon" sizes="76x76" href="../../img/icon_topos.png?v=1" />
+  <link rel="icon" type="image/png" href="../../img/icon_topos.png?v=1" />
+  @endif
 
   <meta name="viewport" content="width=device-width" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -52,123 +53,123 @@
 
 </head>
 <style type="text/css">
-      .navbar .navbar-brand {
-        position: relative;
-        height: 65px;
-        line-height: 30px;
-        color: inherit;
-        padding: 10px 15px;
-    }
-h4 {
+  .navbar .navbar-brand {
+    position: relative;
+    height: 65px;
+    line-height: 30px;
+    color: inherit;
+    padding: 10px 15px;
+  }
+  h4 {
     @if(Agent::isMobile())
     font-size: 1.2em;
     line-height: 1.4em;
     margin: 20px 0 10px;
     @endif
-}
+  }
 </style>
 <body class="product-page">
 
-      <nav class="navbar navbar-primary navbar-transparent navbar-absolute">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation-example-2">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
-                <a href="{{ url('/') }}"> <img class="navbar-brand" src="{{asset('/assets/img/examples/warmart_logo.png')}}"/> </a>
-                @else
-                 @if(Auth::check() && Auth::user()->tipe_user == 4)
-                    <a  href="{{ url('/')}}"><img class="navbar-brand" src="{{asset('/foto_ktp_user/'.$foto_logo->foto_ktp.'').'?v=1'}}"/></a>
-                 @else
-                 <a  href="{{ url('/')}}"><img class="navbar-brand" src="{{asset('/assets/img/examples/topos_logo.png'.'?v=2')}}"/></a>
-                 @endif
-                @endif
-            </div>
+  <nav class="navbar navbar-primary navbar-transparent navbar-absolute">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation-example-2">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
+        <a href="{{ url('/') }}"> <img class="navbar-brand" src="{{asset('/assets/img/examples/warmart_logo.png')}}"/> </a>
+        @else
+        @if(Auth::check() && Auth::user()->tipe_user == 4)
+        <a  href="{{ url('/')}}"><img class="navbar-brand" src="{{asset('/foto_ktp_user/'.$foto_logo->foto_ktp.'').'?v=1'}}"/></a>
+        @else
+        <a  href="{{ url('/')}}"><img class="navbar-brand" src="{{asset('/assets/img/examples/topos_logo.png'.'?v=2')}}"/></a>
+        @endif
+        @endif
+      </div>
 
-        </div>
-    </nav>
+    </div>
+  </nav>
 
-    @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
-      {!! Html::image(asset('image/background2.jpg')) !!} 
-    @else
-    <div class="page-header  header-small" data-parallax="true"" style="background-color: #2ac326">
+  @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
+  {!! Html::image(asset('image/background2.jpg')) !!} 
+  @else
+  <div class="page-header  header-small" data-parallax="true"" style="background-color: #2ac326">
    @endif
    @if (Agent::isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
    <div class="container">
-            <div class="row">
-                <div class="col-md-8 col-md-offset-2">
-                    <div class="brand">
-                        @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
-                        <h3 class="title"  align="center">PASAR MUSLIM INDONESIA</h3>
-                        @else
-                        <h3 class="title"  align="center">TOKO ONLINE DAN POS</h3>
-                        @endif
-                    </div>
-                </div>
-            </div>
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        <div class="brand">
+          @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
+          <h3 class="title"  align="center">PASAR MUSLIM INDONESIA</h3>
+          @else
+          <h3 class="title"  align="center">TOKO ONLINE DAN POS</h3>
+          @endif
         </div>
-       @else <!--JIKA DIAKSES VIA KOMPUTER-->
-                 <div class="container">
-                <div class="row">
-                    <div class="col-md-8 col-md-offset-2">
-                        <div class="brand">
-                            @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
-                            <h1 class="title">PASAR MUSLIM INDONESIA</h1>
-                            @else
-                            <h1 class="title">TOKO ONLINE DAN POS</h1>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @endif
+      </div>
     </div>
+  </div>
+  @else <!--JIKA DIAKSES VIA KOMPUTER-->
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        <div class="brand">
+          @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
+          <h1 class="title">PASAR MUSLIM INDONESIA</h1>
+          @else
+          <h1 class="title">TOKO ONLINE DAN POS</h1>
+          @endif
+        </div>
+      </div>
+    </div>
+  </div>
+  @endif
+</div>
 
-  <div class="section section-gray">
-   <div class="container">
-    <div class="main main-raised main-product">
-      <div class="row">
-        <div class="col-md-6 col-sm-6">
-         @if(isset($lihat_deskripsi_produk->foto))
-         {!! Html::image(asset('foto_produk/'.$lihat_deskripsi_produk->foto)) !!}
-         @else
-         {!! Html::image(asset('image/foto_default.png')) !!}
-         @endif
-       </div>
-       <div class="col-md-6 col-sm-6">
-        <h2 class="title"> {{ $nama_produk }} </h2>
-        <h3 class="main-price">Rp. {{ number_format($lihat_deskripsi_produk->harga_jual,0,',','.') }}</h3>
-        {!! substr($lihat_deskripsi_produk->deskripsi_produk, 0, 300) !!}...
-        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-         <h4 class="panel-title">
-           <b> Baca Selengkapnya... </b><i class="material-icons">keyboard_arrow_down</i>
-         </h4>
-       </a>
+<div class="section section-gray">
+ <div class="container">
+  <div class="main main-raised main-product">
+    <div class="row">
+      <div class="col-md-6 col-sm-6">
+       @if(isset($lihat_deskripsi_produk->foto))
+       {!! Html::image(asset('foto_produk/'.$lihat_deskripsi_produk->foto)) !!}
+       @else
+       {!! Html::image(asset('image/foto_default.png')) !!}
+       @endif
      </div>
-     <div class="col-sm-12 col-md-12">
-      <div id="acordeon">
-        <div class="panel-group" id="accordion">
-         <div class="panel panel-border panel-default">
-           <div id="collapseOne" class="panel-collapse collapse">
-             <div class="panel-body"><hr style="border-width: 1px; border-color: black">
-              <h3>Detail Produk Dari {{$nama_produk}}</h3>
-              {!!$lihat_deskripsi_produk->deskripsi_produk!!}
-            </div>
+     <div class="col-md-6 col-sm-6">
+      <h2 class="title"> {{ $nama_produk }} </h2>
+      <h3 class="main-price">Rp. {{ number_format($lihat_deskripsi_produk->harga_jual,0,',','.') }}</h3>
+      {!! substr($lihat_deskripsi_produk->deskripsi_produk, 0, 300) !!}...
+      <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+       <h4 class="panel-title">
+         <b> Baca Selengkapnya... </b><i class="material-icons">keyboard_arrow_down</i>
+       </h4>
+     </a>
+   </div>
+   <div class="col-sm-12 col-md-12">
+    <div id="acordeon">
+      <div class="panel-group" id="accordion">
+       <div class="panel panel-border panel-default">
+         <div id="collapseOne" class="panel-collapse collapse">
+           <div class="panel-body"><hr style="border-width: 1px; border-color: black">
+            <h3>Detail Produk Dari {{$nama_produk}}</h3>
+            {!!$lihat_deskripsi_produk->deskripsi_produk!!}
           </div>
         </div>
-
       </div>
-    </div><!--  end acordeon -->
 
-    <div class="row text-right">
-      <a href="{{url('/dashboard#/produk')}}" class="btn btn-rose btn-round">Kembali &nbsp;<i class="material-icons">reply</i></a>
     </div>
+  </div><!--  end acordeon -->
 
+  <div class="row text-right">
+    <a href="{{url('/dashboard#/produk')}}" class="btn btn-rose btn-round">Kembali &nbsp;<i class="material-icons">reply</i></a>
   </div>
+
+</div>
 </div>
 </div>
 </div>
@@ -219,10 +220,10 @@ h4 {
 <script src="{{ asset('js/demo.js') }}"></script>
 <script src="{{ asset('js/material-kit.js?v=1.2.0')}}" type="text/javascript"></script>
 <script type="text/javascript">
-      $().ready(function() {
-        demo.checkFullPageBackgroundImage();
+  $().ready(function() {
+    demo.checkFullPageBackgroundImage();
 
-        
-    });
+
+  });
 </script>
 </html>
