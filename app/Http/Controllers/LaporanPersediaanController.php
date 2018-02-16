@@ -28,7 +28,6 @@ class LaporanPersediaanController extends Controller
         $array              = array();
         $hpp                = new Hpp();
         $total_nilai        = $hpp->totalnilai();
-
         foreach ($laporan_persediaan as $laporan_persediaans) {
 
             $stok_produk = $hpp->stok_produk($laporan_persediaans->id);
