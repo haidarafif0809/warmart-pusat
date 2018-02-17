@@ -6,7 +6,8 @@ import axios from 'axios'
 Vue.use(Vuex)
 
 const state = {
-	produk : []
+	produk : [],
+	pelanggan : []
 }
 const getters = {
 
@@ -14,6 +15,9 @@ const getters = {
 const mutations = {
 	SET_PRODUK_LIST : (state, { list }) => {
 		state.produk = list
+	},
+	SET_PELANGGAN_LIST : (state, { list }) => {
+		state.pelanggan = list
 	}
 }
 const actions = {
@@ -29,7 +33,19 @@ const actions = {
 		(err) => {
 			console.log(err)
 		})
-	}
+	},
+	LOAD_PELANGGAN_LIST : function({commit}){
+		axios.get('penjualan/pilih-pelanggan')
+		.then((resp) => {
+			commit('SET_PELANGGAN_LIST',
+			{
+				list:resp.data
+			})
+		},
+		(err) => {
+			console.log(err)
+		})
+	},
 }
 
 export default new Vuex.Store({

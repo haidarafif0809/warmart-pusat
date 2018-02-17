@@ -1,3 +1,11 @@
+<style scoped>
+
+.btn-icon{
+  border-radius: 1px solid;
+  padding: 10px 10px;
+}
+
+</style>
 <template>
 	<div class="row">
 		<div class="col-md-12">
@@ -7,6 +15,83 @@
 				<li class="active">Tambah Produk</li>
 			</ul>
 			<div class="card">
+
+
+      <!--MODAL kategori produk BARU -->
+      <div class="modal" id="modal_kategori" role="dialog" data-backdrop="">
+        <div class="modal-dialog">
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close"  v-on:click="tutupModal()" v-shortkey.push="['esc']" @shortkey="tutupModal()"> <i class="material-icons">close</i></button>
+              <h4 class="modal-title">
+                <div class="alert-icon">
+                  <b>Silahkan Isi Kategori Produk !</b>
+                </div>
+              </h4>
+            </div>
+            <div class="modal-body">
+             		 <form v-on:submit.prevent="saveFormKategori()" class="form-horizontal">
+							<div class="form-group">
+							<label for="nama_kelompok" class="col-md-2 control-label">Nama</label>
+								<div class="col-md-10">
+									<input class="form-control" autocomplete="off" placeholder="Nama" v-model="kelompok_produk.nama_kelompok" type="text" name="nama_kelompok" id="nama_kelompok"  autofocus="">
+									<span v-if="errors.nama_kelompok" id="nama_kelompok_error" class="label label-danger">{{ errors.nama_kelompok[0] }}</span>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-md-4">
+									<input  class="form-control" autocomplete="off" placeholder="Icon"  v-model="kelompok_produk.icon_kelompok"  type="hidden" name="icon_kelompok" id="icon_kelompok" >
+									<span v-if="errors.icon_kelompok" id="icon_kelompok_error" class="label label-danger">{{ errors.icon_kelompok[0] }}</span>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-md-4 col-md-offset-2">
+									<button class="btn btn-primary" id="btnSimpanKategoriTransaksi" type="submit"><i class="material-icons">send</i> Submit</button>
+								</div>
+							</div>
+              		</form>
+            	</div>
+            <div class="modal-footer"></div> 
+          </div>       
+        </div> 
+      </div> 
+
+
+            <!--MODAL Satuan BARU -->
+      <div class="modal" id="modal_satuan" role="dialog" data-backdrop="">
+        <div class="modal-dialog">
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close"  v-on:click="tutupModal()" v-shortkey.push="['esc']" @shortkey="tutupModal()"> <i class="material-icons">close</i></button>
+              <h4 class="modal-title">
+                <div class="alert-icon">
+                  <b>Silahkan Isi Satuan !</b>
+                </div>
+              </h4>
+            </div>
+            <div class="modal-body">
+             		 <form v-on:submit.prevent="saveFormSatuan()" class="form-horizontal">
+							<div class="form-group">
+		                        	<label for="name" class="col-md-2 control-label">Nama Satuan</label>
+		                        	<div class="col-md-4">
+		                            <input class="form-control" required autocomplete="off" placeholder="Nama Satuan" type="text" v-model="satuan.nama_satuan" name="nama_satuan"  autofocus="">
+		                            <span v-if="errors.nama_satuan" id="nama_satuan_error" class="label label-danger">{{ errors.nama_satuan[0] }}</span>
+		                        </div>
+		                    </div>
+							<div class="form-group">
+								<div class="col-md-4 col-md-offset-2">
+									<button class="btn btn-primary" id="btnSimpanKategoriTransaksi" type="submit"><i class="material-icons">send</i> Submit</button>
+								</div>
+							</div>
+              		</form>
+            	</div>
+            <div class="modal-footer"></div> 
+          </div>       
+        </div> 
+      </div> 
+
 
 				<div class="card-header card-header-icon" data-background-color="purple">
 					<i class="material-icons">dns</i>
@@ -43,22 +128,32 @@
 
 								<div class="form-group">
 									<label for="kategori_barang_id" class="col-md-2 control-label">Kategori Produk</label>
-									<div class="col-md-10">
+									<div class="col-md-9">
 										<selectize-component v-model="produk.kategori_barang_id" :settings="placeholder_kategori" id="pilih_kategori_barang_id"> 
 											<option v-for="kategoris, index in kategori_barang_id" v-bind:value="kategoris.id" >{{ kategoris.nama_kategori_barang }}</option>
 										</selectize-component>
 										<span v-if="errors.kategori_barang_id" id="kategori_barang_id_error" class="label label-danger">{{ errors.kategori_barang_id[0] }}</span>
-									</div> 
+									</div>
+									 <div class="col-md-1" style="padding-left:0px">
+					                    <div class="row" style="margin-top:-10px">
+					                      <button class="btn btn-primary btn-icon waves-effect waves-light" v-on:click="tambahKategori()" type="button"> <i class="material-icons" >add</i> </button>
+					                    </div>
+					                  </div> 
 								</div>
 
 								<div class="form-group">
 									<label for="satuan_id" class="col-md-2 control-label">Satuan Produk</label>
-									<div class="col-md-10">
+									<div class="col-md-9">
 										<selectize-component v-model="produk.satuan_id" :settings="placeholder_satuan" id="pilih_satuan_id"> 
 											<option v-for="satuans, index in satuan_id" v-bind:value="satuans.id" >{{ satuans.nama_satuan }}</option>
 										</selectize-component>
 										<span v-if="errors.satuan_id" id="satuan_id_error" class="label label-danger">{{ errors.satuan_id[0] }}</span>
 									</div> 
+									 <div class="col-md-1" style="padding-left:0px">
+					                    <div class="row" style="margin-top:-10px">
+					                      <button class="btn btn-primary btn-icon waves-effect waves-light" v-on:click="tambahSatuan()" type="button"> <i class="material-icons" >add</i> </button>
+					                    </div>
+					                  </div> 
 								</div>
 								
 								<div class="form-group">
@@ -186,6 +281,8 @@ export default {
 			url : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
 			url_picture : window.location.origin+(window.location.pathname).replace("dashboard", "foto_produk"),
 			url_origin : window.location.origin+(window.location.pathname).replace("dashboard", ""),
+			url_kategori : window.location.origin+(window.location.pathname).replace("dashboard", "kelompok-produk"),
+			url_satuan : window.location.origin+(window.location.pathname).replace("dashboard", "satuan"),
 			produk: {
 				foto : '',
 				kode_barcode : '',
@@ -201,6 +298,13 @@ export default {
 				hitung_stok : 1,
 				status_aktif : 1
 			},
+			kelompok_produk: {
+				nama_kelompok : '',
+				icon_kelompok : ''
+			},
+			satuan: {
+                nama_satuan: '',
+            },
 			message : '',
 			data_agent : '',
 			placeholder_kategori: {
@@ -324,6 +428,53 @@ export default {
 			newProduk.append('deskripsi_produk', app.produk.deskripsi_produk);
 
 			return newProduk;
+		},
+		tambahKategori(){
+	      $("#modal_kategori").show();
+	      this.$refs.nama_kategori_transaksi.$el.focus(); 
+	    },
+	    tambahSatuan(){
+	      $("#modal_satuan").show();
+	      this.$refs.nama_satuan.$el.focus(); 
+	    },
+		saveFormKategori() {
+			var app = this;
+			var newkelompok_produk = app.kelompok_produk;
+			axios.post(app.url_kategori, newkelompok_produk)
+			.then(function (resp) {
+				app.message = 'Menambah Kelompok Produk '+ app.kelompok_produk.nama_kelompok;
+				app.alert(app.message);
+				app.kelompok_produk.nama_kelompok = ''
+				app.kelompok_produk.icon_kelompok = ''
+				app.errors = '';
+				app.dataKategori();
+				$("#modal_kategori").hide();
+			})
+			.catch(function (resp) {
+				app.success = false;
+				app.errors = resp.response.data.errors;
+			});
+		},
+		saveFormSatuan() {
+            var app = this;
+            var newsatuan = app.satuan;
+            axios.post(app.url_satuan, newsatuan)
+            .then(function (resp) {
+                app.message = 'Berhasil Menambah Satuan '+ app.satuan.nama_satuan;
+                app.alert(app.message);
+                app.satuan.nama_satuan = ''
+                app.errors = '';
+				app.dataSatuan();
+				$("#modal_satuan").hide();
+            })
+            .catch(function (resp) {
+                app.success = false;
+                app.errors = resp.response.data.errors;
+            });
+        },
+		tutupModal(){
+		    $("#modal_kategori").hide();  
+		    $("#modal_satuan").hide();  
 		},
 		kosongkanData(){
 			var app = this;
