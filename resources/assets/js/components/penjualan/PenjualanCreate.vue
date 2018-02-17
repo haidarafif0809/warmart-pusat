@@ -452,12 +452,11 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 export default {
   data: function () {
     return {
       errors: [],
-      produk: [],
-      pelanggan: [],
       kas: [],
       tbs_penjualan: [],
       tbsPenjualanData : {},
@@ -531,13 +530,21 @@ export default {
   },
   mounted() {   
     var app = this;
-    app.dataProduk();
-    app.dataPelanggan();
+    app.$store.dispatch('LOAD_PRODUK_LIST')
+    app.$store.dispatch('LOAD_PELANGGAN_LIST')
     app.dataKas();    
     app.dataSettingPenjualanPos();
     app.getResults();     
 
   },
+  computed : mapState ({    
+    produk(){
+      return this.$store.state.produk
+    },
+    pelanggan(){
+      return this.$store.state.pelanggan
+    }
+  }),
   watch: {
     // whenever question changes, this function will run
     pencarian: function (newQuestion) {
@@ -689,28 +696,6 @@ export default {
    })
     .catch(function (resp) {
       console.log(resp);
-    });
-  },
-  dataProduk() {
-    var app = this;
-    axios.get(app.url_produk+'/pilih-produk').then(function (resp) {
-      app.produk = resp.data;
-    })
-    .catch(function (resp) {
-
-      console.log(resp);
-      alert("Tidak Bisa Memuat Produk");
-    });
-  },   
-  dataPelanggan() {
-    var app = this;
-    axios.get(app.url+'/pilih-pelanggan').then(function (resp) {
-      app.pelanggan = resp.data;
-    })
-    .catch(function (resp) {
-
-      console.log(resp);
-      alert("Tidak Bisa Memuat Pelanggan");
     });
   },   
   dataKas() {
