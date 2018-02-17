@@ -22,6 +22,7 @@ import quillEditor from 'vue-quill-editor'
 import VueChartJs from 'vue-chartjs'
 // You need a specific loader for CSS files like https://github.com/webpack/css-loader
 import routes from './router.js'
+import store from './store'
 window.$ = window.jQuery = require('jquery');
 // Require Froala Editor js file.
 require('froala-editor/js/froala_editor.pkgd.min')
@@ -56,5 +57,5 @@ const router = new VueRouter({
 	routes
 })
 const app = new Vue({
-	router
+	router,store
 }).$mount('#vue-app')
