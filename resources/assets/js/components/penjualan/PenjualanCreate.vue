@@ -1096,7 +1096,7 @@ batalPenjualan(){
 
       app.getResults();
       app.alert("Membatalkan Transaksi Penjualan");
-      app.penjualan.pelanggan = ''
+      app.penjualan.pelanggan = 0
       app.penjualan.subtotal = 0
       app.penjualan.jatuh_tempo = ''
       app.penjualan.potongan_persen = 0
@@ -1161,7 +1161,7 @@ prosesSelesaiPenjualan(value){
 
       app.getResults();
       app.alert("Menyelesaikan Transaksi Penjualan");
-      app.penjualan.pelanggan = ''
+      app.penjualan.pelanggan = 0
       app.penjualan.subtotal = 0
       app.penjualan.jatuh_tempo = ''
       app.penjualan.potongan_persen = 0

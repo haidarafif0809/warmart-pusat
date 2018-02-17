@@ -67,8 +67,12 @@
 							<vue-simple-spinner v-if="loading"></vue-simple-spinner>
 
 							<div align="right"><pagination :data="lapPersediaanData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
-
 						</div>
+
+							<!--DOWNLOAD EXCEL-->
+		                    <a href="laporan-kartu-stok/download-excel-kartu-stok" class='btn btn-warning' id="btnExcel" target='blank' :style="'display: none'"><i class="material-icons">file_download</i> Download Excel</a>
+		                    <!--CETAK LAPORAN-->
+		                    <a href="laporan-kartu-stok/cetak-laporan" class='btn btn-success' id="btnCetak" target='blank' :style="'display: none'"><i class="material-icons">print</i> Cetak Laporan</a>
 
 					</div>
 				</div>
@@ -86,6 +90,8 @@
 				lap_persediaan: [],
 				totalNilai: '',
 				url : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-persediaan"),
+				urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-persediaan/download-excel-persediaan"),
+             	urlCetak : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-persediaan/cetak-laporan"),
 				pencarian: '',
 				loading: true,
 				seen : false
@@ -105,6 +111,7 @@
 		mounted() {
 			var app = this;
 			app.getResults();
+			app.showButton();
 		},
 		watch: {
         // whenever question changes, this function will run
@@ -151,7 +158,14 @@
     			console.log(resp);
     			alert("Tidak Dapat Memuat Laporan Persediaan");
     		});
-    	}
+    	},
+    	showButton() {
+					var app = this;
+					$("#btnExcel").show();
+					$("#btnCetak").show();
+					$("#btnExcel").attr('href', app.urlDownloadExcel);
+					$("#btnCetak").attr('href', app.urlCetak);
+		}
     }
 }
 </script>

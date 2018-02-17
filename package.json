@@ -12,28 +12,29 @@
   "devDependencies": {
     "axios": "^0.16.2",
     "bootstrap-sass": "^3.3.7",
-    "cross-env": "^5.1.1",
-    "jquery": "^3.2.1",
-    "laravel-mix": "^1.6.1",
-    "lodash": "^4.17.4",
-    "vue": "^2.5.3"
+    "cross-env": "^5.1.3",
+    "jquery": "^3.3.1",
+    "laravel-mix": "^1.7.2",
+    "lodash": "^4.17.5",
+    "vue": "^2.5.13"
   },
   "dependencies": {
     "chart.js": "^2.7.1",
-    "laravel-vue-pagination": "^1.0.6",
+    "laravel-vue-pagination": "^1.2.0",
     "numeral": "^2.0.6",
     "v-money": "^0.8.1",
-    "vue-chartjs": "^3.1.1",
+    "vue-chartjs": "^3.2.1",
     "vue-clazy-load": "^0.2.0",
-    "vue-froala-wysiwyg": "^2.7.2",
-    "vue-js-toggle-button": "^1.2.0",
-    "vue-quill-editor": "^3.0.4",
-    "vue-resource": "^1.3.4",
+    "vue-froala-wysiwyg": "^2.7.5",
+    "vue-js-toggle-button": "^1.2.2",
+    "vue-quill-editor": "^3.0.5",
+    "vue-resource": "^1.3.6",
     "vue-router": "^3.0.1",
     "vue-shortkey": "^3.0.4",
     "vue-simple-spinner": "^1.2.8",
     "vue-swal": "0.0.6",
     "vue2-selectize": "^1.1.4",
-    "vuejs-datepicker": "^0.9.19"
+    "vuejs-datepicker": "^0.9.26",
+    "vuex": "^3.0.1"
   }
 }

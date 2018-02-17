@@ -622,6 +622,8 @@ Route::get('/item-keluar/pencarian-edit-tbs-item-keluar/{id}', 'ItemKeluarContro
 // LAPORAN PERSEDIAAN
 Route::get('/laporan-persediaan/view', 'LaporanPersediaanController@view')->middleware('auth');
 Route::get('/laporan-persediaan/pencarian', 'LaporanPersediaanController@pencarian')->middleware('auth');
+Route::get('/laporan-persediaan/download-excel-persediaan', 'LaporanPersediaanController@downloadExcel')->middleware('auth');
+Route::get('/laporan-persediaan/cetak-laporan', 'LaporanPersediaanController@cetakLaporan')->middleware('auth');
 
 //KAS MUTASI VUE.JS
 Route::get('/kas-mutasi/view', 'KasMutasiController@view')->middleware('auth');
