@@ -58,7 +58,7 @@
                 </tr>
               </thead>
 
-              <tr style="color:red">
+              <tr style="color:red"  v-if="kartuStok.length > 0 && loading == false"  >
 
                 <td></td>
                 <td>SALDO AWAL</td>
@@ -80,6 +80,7 @@
                   <td v-else-if="kartuStoks.data_kartu_stoks.jenis_transaksi == 'item_keluar'">Item Keluar</td>
                   <td v-else-if="kartuStoks.data_kartu_stoks.jenis_transaksi == 'PenjualanPos'">Penjualan POS - {{kartuStoks.pelanggan}}</td>
                   <td v-else-if="kartuStoks.data_kartu_stoks.jenis_transaksi == 'pembelian'" >Pembelian - {{kartuStoks.suplier}}</td>
+                  <td v-else-if="kartuStoks.data_kartu_stoks.jenis_transaksi == 'penjualan'" >Penjualan Online - {{kartuStoks.data_kartu_stoks.pelanggan_online}}</td>
 
                   <td align="right">{{ kartuStoks.data_kartu_stoks.harga_unit | pemisahTitik }}</td>
                   <td align="center">{{ kartuStoks.data_kartu_stoks.created_at | tanggal }}</td>

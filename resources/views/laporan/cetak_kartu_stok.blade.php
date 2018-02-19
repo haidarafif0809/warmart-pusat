@@ -123,6 +123,10 @@ function pemisahTitik($angka)
 							Penjualan POS - {{$kartu_stok['pelanggan']}}
 							@elseif($kartu_stok['data_kartu_stoks']->jenis_transaksi == 'pembelian')
 							Pembelian - {{$kartu_stok['suplier']}}
+							@elseif($kartu_stok['data_kartu_stoks']->jenis_transaksi == 'pembelian')
+							Pembelian - {{$kartu_stok['suplier']}}
+							@elseif($kartu_stok['data_kartu_stoks']->jenis_transaksi == 'penjualan')
+							Penjualan Online - {{$kartu_stok['data_kartu_stoks']->pelanggan_online}}
 							@endif
 						</td>
 						<td class="table1" align='right'>{{ pemisahTitik($kartu_stok['data_kartu_stoks']->harga_unit) }}</td>

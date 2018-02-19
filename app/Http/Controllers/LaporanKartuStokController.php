@@ -239,19 +239,25 @@ class LaporanKartuStokController extends Controller
                         $saldo_awal = $saldo_awal - $laporan_kartu_stoks->jumlah_keluar;
                     }
 
-                    $sheet->row(++$row, [
-                        $laporan_kartu_stoks->no_faktur,
-                        $laporan_kartu_stoks->jenis_transaksi,
-                        $laporan_kartu_stoks->harga_unit,
-                        $laporan_kartu_stoks->created_at,
-                        $laporan_kartu_stoks->jumlah_masuk,
-                        $laporan_kartu_stoks->jumlah_keluar,
-                        $saldo_awal,
-                    ]);
+                    if ($laporan_kartu_stoks->jenis_transaksi == 'penjualan') {
+                       $jenis_transaksi = "Penjualan Online";
+                   }else{
+                      $jenis_transaksi = $laporan_kartu_stoks->jenis_transaksi;
+                  }
 
-                }
+                  $sheet->row(++$row, [
+                    $laporan_kartu_stoks->no_faktur,
+                    $jenis_transaksi,
+                    $laporan_kartu_stoks->harga_unit,
+                    $laporan_kartu_stoks->created_at,
+                    $laporan_kartu_stoks->jumlah_masuk,
+                    $laporan_kartu_stoks->jumlah_keluar,
+                    $saldo_awal,
+                ]);
 
-            });
+              }
+
+          });
         })->export('xls');
     }
 
