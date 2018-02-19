@@ -160,6 +160,11 @@ import indexSettingVerifikasi from './components/setting_verifikasi/SettingVerif
 import UserKasirIndex from './components/user_kasir/UserKasirIndex.vue';
 import UserKasirCreate from './components/user_kasir/UserKasirCreate.vue';
 import UserKasirEdit from './components/user_kasir/UserKasirEdit.vue';
+/**STOK OPNAME*/
+import StokOpnameIndex from './components/stok_opname/StokOpnameIndex.vue';
+import StokOpnameCreate from './components/stok_opname/StokOpnameCreate.vue';
+import StokOpnameEdit from './components/stok_opname/StokOpnameEdit.vue';
+
 const routes = [{
     path: '/',
     components: {
@@ -702,5 +707,19 @@ const routes = [{
         component: GrafikJamTransaksiPenjualanOnlineTampil,
         name: 'tampilGrafikJamTransaksiPenjualanOnline'
     },
+    /**STOK OPNAME*/
+    {
+        path: '/stok-opname',
+        component: StokOpnameIndex,
+        name: 'indexStokOpname'
+    }, {
+        path: '/stok-opname-create',
+        component: StokOpnameCreate,
+        name: 'createStokOpname'
+    }, {
+        path: '/edit-stok-opname/:id',
+        component: StokOpnameEdit,
+        name: 'editStokOpname'
+    }
     ]
     export default routes;

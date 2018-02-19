@@ -864,6 +864,10 @@ Route::get('/laporan-bucket-size-online/view/{dari_tanggal}/{sampai_tanggal}/{ke
 Route::get('/laporan-penjualan-harian/view/{dari_tanggal}/{sampai_tanggal}', 'LaporanPenjualanHarianController@prosesLaporanPenjualanHarian')->middleware('auth');
 Route::get('/laporan-penjualan-harian-online/view/{dari_tanggal}/{sampai_tanggal}', 'LaporanPenjualanHarianController@prosesLaporanPenjualanHarianOnline')->middleware('auth');
 
+//STOK OPNAME  VUE JS
+Route::get('/stok-opname/view', 'StokOpnameController@view')->middleware('auth');
+Route::get('/stok-opname/pencarian', 'StokOpnameController@pencarian')->middleware('auth');
+
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
     Route::resource('user', 'UserController');
@@ -902,6 +906,7 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
     Route::resource('setting-verifikasi', 'SettingVerifikasiController');
     Route::resource('user-kasir', 'UserKasirController');
     Route::resource('laporan-bucket-size', 'LaporanBucketSizeController');
+    Route::resource('stok-opname', 'StokOpnameController');
 
 //BARANG
     //HALAMAN DESKRIPSI

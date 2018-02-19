@@ -14,12 +14,14 @@ class LaporanKartuStokController extends Controller
 {
 
     //METHOD PAGINATION
-    public function dataPagination($laporan_kartu_stok, $array_kartu_stok)
+    public function dataPagination($laporan_kartu_stok, $array_kartu_stok,$saldo_awal,$total_saldo)
     {
         $respons['current_page']   = $laporan_kartu_stok->currentPage();
         $respons['data']           = $array_kartu_stok;
         $respons['first_page_url'] = url('/laporan-kartu-stok/view?page=' . $laporan_kartu_stok->firstItem());
         $respons['from']           = 1;
+        $respons['total_saldo']    = $total_saldo;
+        $respons['saldo_awal']    = $saldo_awal;
         $respons['last_page']      = $laporan_kartu_stok->lastPage();
         $respons['last_page_url']  = url('/laporan-kartu-stok/view?page=' . $laporan_kartu_stok->lastPage());
         $respons['next_page_url']  = $laporan_kartu_stok->nextPageUrl();
@@ -97,22 +99,84 @@ class LaporanKartuStokController extends Controller
     public function prosesLaporanKartuStok(Request $request)
     {
         $laporan_kartu_stok = Hpp::dataKartuStok($request)->paginate(10);
-        $saldo_awal         = Hpp::dataSaldoAwal($request);
-        $data_kartu_stok    = $this->foreachLaporan($laporan_kartu_stok, $saldo_awal);
+        $page = $laporan_kartu_stok->currentPage();
+        if ($page == 1) {
+            $saldo = Hpp::dataSaldoAwal($request);
+            $saldo_awal = $saldo;
+            $total_saldo = $saldo;
+        }else{
+            $saldo_awal = $request->saldoAwal;
+            $total_saldo = $saldo_awal;
+        }
+        
+        $data_kartu_stok = array();
+        foreach ($laporan_kartu_stok as $data_kartu_stoks) {
+            //SALDO AWAL
+            if ($data_kartu_stoks->jenis_hpp == 1) {
+                $saldo_awal = ($saldo_awal + $data_kartu_stoks->jumlah_masuk);
+            } else {
+                $saldo_awal = $saldo_awal - $data_kartu_stoks->jumlah_keluar;
+            }
+            //PELANGGAN
+            if ($data_kartu_stoks->pelanggan == null) {
+                $pelanggan = 'Umum';
+            } else {
+                $pelanggan = $data_kartu_stoks->pelanggan;
+            }
+            //SUPLIER
+            if ($data_kartu_stoks->suplier == null) {
+                $suplier = 'Umum';
+            } else {
+                $suplier = $data_kartu_stoks->suplier;
+            }
+
+            array_push($data_kartu_stok, ['data_kartu_stoks' => $data_kartu_stoks, 'saldo_awal' => $saldo_awal, 'pelanggan' => $pelanggan, 'suplier' => $suplier]);
+        }
 
         //DATA PAGINATION
-        $respons = $this->dataPagination($laporan_kartu_stok, $data_kartu_stok);
+        $respons = $this->dataPagination($laporan_kartu_stok, $data_kartu_stok,$saldo_awal,$total_saldo);
         return response()->json($respons);
     }
 
     public function pencarian(Request $request)
     {
         $laporan_kartu_stok = Hpp::cariKartuStok($request)->paginate(10);
-        $saldo_awal         = Hpp::dataSaldoAwal($request);
-        $data_kartu_stok    = $this->foreachLaporan($laporan_kartu_stok, $saldo_awal);
+        $page = $laporan_kartu_stok->currentPage();
+        if ($page == 1) {
+            $saldo = Hpp::dataSaldoAwal($request);
+            $saldo_awal = $saldo;
+            $total_saldo = $saldo;
+        }else{
+            $saldo_awal = $request->saldoAwal;
+            $total_saldo = $saldo_awal;
+        }
 
-        //DATA PAGINATION
-        $respons = $this->dataPagination($laporan_kartu_stok, $data_kartu_stok);
+        $data_kartu_stok = array();
+        foreach ($laporan_kartu_stok as $data_kartu_stoks) {
+            //SALDO AWAL
+            if ($data_kartu_stoks->jenis_hpp == 1) {
+                $saldo_awal = ($saldo_awal + $data_kartu_stoks->jumlah_masuk);
+            } else {
+                $saldo_awal = $saldo_awal - $data_kartu_stoks->jumlah_keluar;
+            }
+            //PELANGGAN
+            if ($data_kartu_stoks->pelanggan == null) {
+                $pelanggan = 'Umum';
+            } else {
+                $pelanggan = $data_kartu_stoks->pelanggan;
+            }
+            //SUPLIER
+            if ($data_kartu_stoks->suplier == null) {
+                $suplier = 'Umum';
+            } else {
+                $suplier = $data_kartu_stoks->suplier;
+            }
+
+            array_push($data_kartu_stok, ['data_kartu_stoks' => $data_kartu_stoks, 'saldo_awal' => $saldo_awal, 'pelanggan' => $pelanggan, 'suplier' => $suplier]);
+        }
+
+       //DATA PAGINATION
+        $respons = $this->dataPagination($laporan_kartu_stok, $data_kartu_stok,$saldo_awal,$total_saldo);
         return response()->json($respons);
     }
 
@@ -175,19 +239,25 @@ class LaporanKartuStokController extends Controller
                         $saldo_awal = $saldo_awal - $laporan_kartu_stoks->jumlah_keluar;
                     }
 
-                    $sheet->row(++$row, [
-                        $laporan_kartu_stoks->no_faktur,
-                        $laporan_kartu_stoks->jenis_transaksi,
-                        $laporan_kartu_stoks->harga_unit,
-                        $laporan_kartu_stoks->created_at,
-                        $laporan_kartu_stoks->jumlah_masuk,
-                        $laporan_kartu_stoks->jumlah_keluar,
-                        $saldo_awal,
-                    ]);
+                    if ($laporan_kartu_stoks->jenis_transaksi == 'penjualan') {
+                       $jenis_transaksi = "Penjualan Online";
+                   }else{
+                      $jenis_transaksi = $laporan_kartu_stoks->jenis_transaksi;
+                  }
 
-                }
+                  $sheet->row(++$row, [
+                    $laporan_kartu_stoks->no_faktur,
+                    $jenis_transaksi,
+                    $laporan_kartu_stoks->harga_unit,
+                    $laporan_kartu_stoks->created_at,
+                    $laporan_kartu_stoks->jumlah_masuk,
+                    $laporan_kartu_stoks->jumlah_keluar,
+                    $saldo_awal,
+                ]);
 
-            });
+              }
+
+          });
         })->export('xls');
     }
 
@@ -200,7 +270,7 @@ class LaporanKartuStokController extends Controller
         $request['sampai_tanggal'] = $sampai_tanggal;
         $request['produk']         = $produk;
 
-        $laporan_kartu_stok = Hpp::dataKartuStok($request)->paginate(10);
+        $laporan_kartu_stok = Hpp::dataKartuStok($request)->get();
         $saldo_awal         = Hpp::dataSaldoAwal($request);
         $data_kartu_stok    = $this->foreachLaporan($laporan_kartu_stok, $saldo_awal);
         $total_saldo_awal   = $this->totalSaldoAwal($request);

@@ -23,7 +23,7 @@ class Hpp extends Model
     {
 
         $stok_produk = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk),0) - IFNULL(SUM(jumlah_keluar),0) as jumlah_produk')])->where('id_produk', $id_produk)
-            ->where('warung_id', Auth::user()->id_warung)->first();
+        ->where('warung_id', Auth::user()->id_warung)->first();
 
         return $sisa_stok_keluar = number_format($stok_produk->jumlah_produk, 2, ',', '.');
 
@@ -85,27 +85,27 @@ class Hpp extends Model
     {
         if ($request->pelanggan == "" || $request->pelanggan == null || $request->pelanggan == 0) {
             $query_sub_hpp = Hpp::select(DB::raw('SUM(total_nilai) as total_hpp'))
-                ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
-                ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
-                ->where('jenis_transaksi', $jenis_transaksi)
-                ->where('warung_id', Auth::user()->id_warung);
+            ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+            ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+            ->where('jenis_transaksi', $jenis_transaksi)
+            ->where('warung_id', Auth::user()->id_warung);
         } else {
             if ($jenis_transaksi == "PenjualanPos") {
                 $query_sub_hpp = Hpp::select(DB::raw('SUM(hpps.total_nilai) as total_hpp'))
-                    ->leftJoin('penjualan_pos', 'penjualan_pos.id', '=', 'hpps.no_faktur')
-                    ->where(DB::raw('DATE(hpps.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
-                    ->where(DB::raw('DATE(hpps.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
-                    ->where('hpps.jenis_transaksi', 'PenjualanPos')
-                    ->where('penjualan_pos.pelanggan_id', $request->pelanggan)
-                    ->where('hpps.warung_id', Auth::user()->id_warung);
+                ->leftJoin('penjualan_pos', 'penjualan_pos.id', '=', 'hpps.no_faktur')
+                ->where(DB::raw('DATE(hpps.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+                ->where(DB::raw('DATE(hpps.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+                ->where('hpps.jenis_transaksi', 'PenjualanPos')
+                ->where('penjualan_pos.pelanggan_id', $request->pelanggan)
+                ->where('hpps.warung_id', Auth::user()->id_warung);
             } else {
                 $query_sub_hpp = Hpp::select(DB::raw('SUM(hpps.total_nilai) as total_hpp'))
-                    ->leftJoin('penjualans', 'penjualans.id', '=', 'hpps.no_faktur')
-                    ->where(DB::raw('DATE(hpps.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
-                    ->where(DB::raw('DATE(hpps.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
-                    ->where('hpps.jenis_transaksi', 'penjualan')
-                    ->where('penjualans.id_pelanggan', $request->pelanggan)
-                    ->where('hpps.warung_id', Auth::user()->id_warung);
+                ->leftJoin('penjualans', 'penjualans.id', '=', 'hpps.no_faktur')
+                ->where(DB::raw('DATE(hpps.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+                ->where(DB::raw('DATE(hpps.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+                ->where('hpps.jenis_transaksi', 'penjualan')
+                ->where('penjualans.id_pelanggan', $request->pelanggan)
+                ->where('hpps.warung_id', Auth::user()->id_warung);
             }
         }
 
@@ -117,17 +117,17 @@ class Hpp extends Model
     {
         if ($request->produk == "" || $request->produk == null || $request->produk == 0) {
             $query_sub_hpp = Hpp::select(DB::raw('SUM(total_nilai) as total_hpp'))
-                ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
-                ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
-                ->where('jenis_transaksi', $jenis_transaksi)
-                ->where('warung_id', Auth::user()->id_warung);
+            ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+            ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+            ->where('jenis_transaksi', $jenis_transaksi)
+            ->where('warung_id', Auth::user()->id_warung);
         } else {
             $query_sub_hpp = Hpp::select(DB::raw('SUM(total_nilai) as total_hpp'))
-                ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
-                ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
-                ->where('jenis_transaksi', $jenis_transaksi)
-                ->where('id_produk', $request->produk)
-                ->where('warung_id', Auth::user()->id_warung);
+            ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+            ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+            ->where('jenis_transaksi', $jenis_transaksi)
+            ->where('id_produk', $request->produk)
+            ->where('warung_id', Auth::user()->id_warung);
         }
 
         return $query_sub_hpp;
@@ -138,17 +138,17 @@ class Hpp extends Model
     {
         //HPP MASUK
         $query_masuk = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk),0) as stok_masuk'), DB::raw('IFNULL(SUM(total_nilai),0) as total_masuk')])
-            ->where('id_produk', $daftar_produks->id)
-            ->where('jenis_hpp', 1)
-            ->where(DB::raw('DATE(created_at)'), '<', $this->tanggalSql($request->dari_tanggal))
-            ->where('warung_id', Auth::user()->id_warung)->first();
+        ->where('id_produk', $daftar_produks->id)
+        ->where('jenis_hpp', 1)
+        ->where(DB::raw('DATE(created_at)'), '<', $this->tanggalSql($request->dari_tanggal))
+        ->where('warung_id', Auth::user()->id_warung)->first();
 
         //HPP KELUAR
         $query_keluar = Hpp::select([DB::raw('IFNULL(SUM(jumlah_keluar),0) as stok_keluar'), DB::raw('IFNULL(SUM(total_nilai),0) as total_keluar')])
-            ->where('id_produk', $daftar_produks->id)
-            ->where('jenis_hpp', 2)
-            ->where(DB::raw('DATE(created_at)'), '<', $this->tanggalSql($request->dari_tanggal))
-            ->where('warung_id', Auth::user()->id_warung)->first();
+        ->where('id_produk', $daftar_produks->id)
+        ->where('jenis_hpp', 2)
+        ->where(DB::raw('DATE(created_at)'), '<', $this->tanggalSql($request->dari_tanggal))
+        ->where('warung_id', Auth::user()->id_warung)->first();
 
         $query_masuk['stok_awal']  = $query_masuk->stok_masuk - $query_keluar->stok_keluar;
         $query_masuk['total_awal'] = $query_masuk->total_masuk - $query_keluar->total_keluar;
@@ -161,11 +161,11 @@ class Hpp extends Model
     {
         //HPP MASUK
         $query_masuk = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk),0) as stok_masuk'), DB::raw('IFNULL(SUM(total_nilai),0) as total_masuk')])
-            ->where('id_produk', $daftar_produks->id)
-            ->where('jenis_hpp', 1)
-            ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
-            ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
-            ->where('warung_id', Auth::user()->id_warung)->first();
+        ->where('id_produk', $daftar_produks->id)
+        ->where('jenis_hpp', 1)
+        ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+        ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+        ->where('warung_id', Auth::user()->id_warung)->first();
 
         return $query_masuk;
     }
@@ -175,11 +175,11 @@ class Hpp extends Model
     {
         //HPP KELUAR
         $query_keluar = Hpp::select([DB::raw('IFNULL(SUM(jumlah_keluar),0) as stok_keluar'), DB::raw('IFNULL(SUM(total_nilai),0) as total_keluar')])
-            ->where('id_produk', $daftar_produks->id)
-            ->where('jenis_hpp', 2)
-            ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
-            ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
-            ->where('warung_id', Auth::user()->id_warung)->first();
+        ->where('id_produk', $daftar_produks->id)
+        ->where('jenis_hpp', 2)
+        ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+        ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+        ->where('warung_id', Auth::user()->id_warung)->first();
 
         return $query_keluar;
     }
@@ -189,15 +189,15 @@ class Hpp extends Model
     {
         //HPP MASUK
         $query_masuk = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk),0) as stok_masuk'), DB::raw('IFNULL(SUM(total_nilai),0) as total_masuk')])
-            ->where('jenis_hpp', 1)
-            ->where(DB::raw('DATE(created_at)'), '<', $this->tanggalSql($request->dari_tanggal))
-            ->where('warung_id', Auth::user()->id_warung)->first();
+        ->where('jenis_hpp', 1)
+        ->where(DB::raw('DATE(created_at)'), '<', $this->tanggalSql($request->dari_tanggal))
+        ->where('warung_id', Auth::user()->id_warung)->first();
 
         //HPP KELUAR
         $query_keluar = Hpp::select([DB::raw('IFNULL(SUM(jumlah_keluar),0) as stok_keluar'), DB::raw('IFNULL(SUM(total_nilai),0) as total_keluar')])
-            ->where('jenis_hpp', 2)
-            ->where(DB::raw('DATE(created_at)'), '<', $this->tanggalSql($request->dari_tanggal))
-            ->where('warung_id', Auth::user()->id_warung)->first();
+        ->where('jenis_hpp', 2)
+        ->where(DB::raw('DATE(created_at)'), '<', $this->tanggalSql($request->dari_tanggal))
+        ->where('warung_id', Auth::user()->id_warung)->first();
 
         $query_masuk['stok_awal']  = $query_masuk->stok_masuk - $query_keluar->stok_keluar;
         $query_masuk['total_awal'] = $query_masuk->total_masuk - $query_keluar->total_keluar;
@@ -210,10 +210,10 @@ class Hpp extends Model
     {
         //HPP MASUK
         $query_masuk = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk),0) as stok_masuk'), DB::raw('IFNULL(SUM(total_nilai),0) as total_masuk')])
-            ->where('jenis_hpp', 1)
-            ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
-            ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
-            ->where('warung_id', Auth::user()->id_warung)->first();
+        ->where('jenis_hpp', 1)
+        ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+        ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+        ->where('warung_id', Auth::user()->id_warung)->first();
 
         return $query_masuk;
     }
@@ -223,10 +223,10 @@ class Hpp extends Model
     {
         //HPP KELUAR
         $query_keluar = Hpp::select([DB::raw('IFNULL(SUM(jumlah_keluar),0) as stok_keluar'), DB::raw('IFNULL(SUM(total_nilai),0) as total_keluar')])
-            ->where('jenis_hpp', 2)
-            ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
-            ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
-            ->where('warung_id', Auth::user()->id_warung)->first();
+        ->where('jenis_hpp', 2)
+        ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+        ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+        ->where('warung_id', Auth::user()->id_warung)->first();
 
         return $query_keluar;
     }
@@ -234,16 +234,18 @@ class Hpp extends Model
     //DATA KARTU STOK PRODUK
     public function scopeDataKartuStok($query_kartu_stok, $request)
     {
-        $query_kartu_stok = Hpp::select(['hpps.no_faktur', 'hpps.id_produk', 'hpps.jenis_transaksi', 'hpps.jumlah_masuk', 'hpps.jumlah_keluar', 'hpps.harga_unit', 'hpps.jenis_hpp', 'hpps.created_at', 'users.name as pelanggan', 'supliers.nama_suplier as suplier'])
-            ->leftJoin('penjualan_pos', 'penjualan_pos.id', '=', 'hpps.no_faktur')
-            ->leftJoin('pembelians', 'pembelians.no_faktur', '=', 'hpps.no_faktur')
-            ->leftJoin('users', 'users.id', '=', 'penjualan_pos.pelanggan_id')
-            ->leftJoin('supliers', 'supliers.id', '=', 'pembelians.suplier_id')
-            ->where('id_produk', $request->produk)
-            ->where(DB::raw('DATE(hpps.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
-            ->where(DB::raw('DATE(hpps.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
-            ->where('hpps.warung_id', Auth::user()->id_warung)
-            ->orderBy('hpps.created_at', 'ASC');
+        $query_kartu_stok = Hpp::select(['hpps.no_faktur', 'hpps.id_produk', 'hpps.jenis_transaksi', 'hpps.jumlah_masuk', 'hpps.jumlah_keluar', 'hpps.harga_unit', 'hpps.jenis_hpp', 'hpps.created_at', 'users.name as pelanggan', 'supliers.nama_suplier as suplier','pelanggan_online.name as pelanggan_online'])
+        ->leftJoin('penjualan_pos', 'penjualan_pos.id', '=', 'hpps.no_faktur')
+        ->leftJoin('pembelians', 'pembelians.no_faktur', '=', 'hpps.no_faktur')
+        ->leftJoin('penjualans', 'penjualans.id', '=', 'hpps.no_faktur')
+        ->leftJoin('users', 'users.id', '=', 'penjualan_pos.pelanggan_id')
+        ->leftJoin('supliers', 'supliers.id', '=', 'pembelians.suplier_id')
+        ->leftJoin('users as pelanggan_online', 'pelanggan_online.id', '=', 'penjualans.id_pelanggan')
+        ->where('id_produk', $request->produk)
+        ->where(DB::raw('DATE(hpps.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+        ->where(DB::raw('DATE(hpps.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+        ->where('hpps.warung_id', Auth::user()->id_warung)
+        ->orderBy('hpps.created_at', 'ASC');
 
         return $query_kartu_stok;
     }
@@ -253,22 +255,24 @@ class Hpp extends Model
     {
         $search = $request->search;
 
-        $query_kartu_stok = Hpp::select(['hpps.no_faktur', 'hpps.id_produk', 'hpps.jenis_transaksi', 'hpps.jumlah_masuk', 'hpps.jumlah_keluar', 'hpps.harga_unit', 'hpps.jenis_hpp', 'hpps.created_at', 'users.name as pelanggan', 'supliers.nama_suplier as suplier'])
-            ->leftJoin('penjualan_pos', 'penjualan_pos.id', '=', 'hpps.no_faktur')
-            ->leftJoin('pembelians', 'pembelians.no_faktur', '=', 'hpps.no_faktur')
-            ->leftJoin('users', 'users.id', '=', 'penjualan_pos.pelanggan_id')
-            ->leftJoin('supliers', 'supliers.id', '=', 'pembelians.suplier_id')
-            ->where('id_produk', $request->produk)
-            ->where(DB::raw('DATE(hpps.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
-            ->where(DB::raw('DATE(hpps.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
-            ->where('hpps.warung_id', Auth::user()->id_warung)
-            ->where(function ($query) use ($search) {
-                $query->orwhere('hpps.no_faktur', 'LIKE', '%' . $search . '%')
-                    ->orwhere('hpps.jenis_transaksi', 'LIKE', '%' . $search . '%')
-                    ->orwhere('users.name', 'LIKE', '%' . $search . '%')
-                    ->orwhere('supliers.nama_suplier', 'LIKE', '%' . $search . '%');
-            })
-            ->orderBy('hpps.created_at', 'ASC');
+        $query_kartu_stok = Hpp::select(['hpps.no_faktur', 'hpps.id_produk', 'hpps.jenis_transaksi', 'hpps.jumlah_masuk', 'hpps.jumlah_keluar', 'hpps.harga_unit', 'hpps.jenis_hpp', 'hpps.created_at', 'users.name as pelanggan', 'supliers.nama_suplier as suplier','pelanggan_online.name as pelanggan_online'])
+        ->leftJoin('penjualan_pos', 'penjualan_pos.id', '=', 'hpps.no_faktur')
+        ->leftJoin('pembelians', 'pembelians.no_faktur', '=', 'hpps.no_faktur')
+        ->leftJoin('penjualans', 'penjualans.id', '=', 'hpps.no_faktur')
+        ->leftJoin('users', 'users.id', '=', 'penjualan_pos.pelanggan_id')
+        ->leftJoin('supliers', 'supliers.id', '=', 'pembelians.suplier_id')
+        ->leftJoin('users as pelanggan_online', 'pelanggan_online.id', '=', 'penjualans.id_pelanggan')
+        ->where('id_produk', $request->produk)
+        ->where(DB::raw('DATE(hpps.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+        ->where(DB::raw('DATE(hpps.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+        ->where('hpps.warung_id', Auth::user()->id_warung)
+        ->where(function ($query) use ($search) {
+            $query->orwhere('hpps.no_faktur', 'LIKE', '%' . $search . '%')
+            ->orwhere('hpps.jenis_transaksi', 'LIKE', '%' . $search . '%')
+            ->orwhere('users.name', 'LIKE', '%' . $search . '%')
+            ->orwhere('supliers.nama_suplier', 'LIKE', '%' . $search . '%');
+        })
+        ->orderBy('hpps.created_at', 'ASC');
 
         return $query_kartu_stok;
     }
@@ -277,9 +281,9 @@ class Hpp extends Model
     {
         //SALDO AWAL PRODUK
         $data_saldo_awal = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk - jumlah_keluar),0) AS saldo_awal')])
-            ->where('id_produk', $request->produk)
-            ->where(DB::raw('DATE(created_at)'), '<', $this->tanggalSql($request->dari_tanggal))
-            ->where('warung_id', Auth::user()->id_warung);
+        ->where('id_produk', $request->produk)
+        ->where(DB::raw('DATE(created_at)'), '<', $this->tanggalSql($request->dari_tanggal))
+        ->where('warung_id', Auth::user()->id_warung);
 
         $query_saldo_awal = $data_saldo_awal->first()->saldo_awal;
 
@@ -291,10 +295,10 @@ class Hpp extends Model
     {
         //SALDO AWAL PRODUK
         $query_saldo_akhir = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk),0) AS jumlah_masuk'), DB::raw('IFNULL(SUM(jumlah_keluar),0) AS jumlah_keluar')])
-            ->where('id_produk', $request->produk)
-            ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
-            ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
-            ->where('warung_id', Auth::user()->id_warung);
+        ->where('id_produk', $request->produk)
+        ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+        ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+        ->where('warung_id', Auth::user()->id_warung);
 
         return $query_saldo_akhir;
 

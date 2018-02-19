@@ -824,6 +824,7 @@ class PembayaranHutangController extends Controller
         $subtotal         = 0;
         foreach ($detail_pembayaran_hutang as $detail_pembayaran_hutangs) {
             $subtotal += $detail_pembayaran_hutangs->jumlah_bayar;
+            
 
         }
 

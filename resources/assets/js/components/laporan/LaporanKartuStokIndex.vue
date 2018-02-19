@@ -58,7 +58,7 @@
                 </tr>
               </thead>
 
-              <tr style="color:red" v-if="subtotalSaldoAwal.status == 200">
+              <tr style="color:red"  v-if="kartuStok.length > 0 && loading == false"  >
 
                 <td></td>
                 <td>SALDO AWAL</td>
@@ -66,7 +66,7 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td align="right">{{ subtotalSaldoAwal.data | pemisahTitik }}</td>
+                <td align="right">{{ saldoAwal | pemisahTitik }}</td>
 
               </tr>
 
@@ -80,28 +80,16 @@
                   <td v-else-if="kartuStoks.data_kartu_stoks.jenis_transaksi == 'item_keluar'">Item Keluar</td>
                   <td v-else-if="kartuStoks.data_kartu_stoks.jenis_transaksi == 'PenjualanPos'">Penjualan POS - {{kartuStoks.pelanggan}}</td>
                   <td v-else-if="kartuStoks.data_kartu_stoks.jenis_transaksi == 'pembelian'" >Pembelian - {{kartuStoks.suplier}}</td>
+                  <td v-else-if="kartuStoks.data_kartu_stoks.jenis_transaksi == 'penjualan'" >Penjualan Online - {{kartuStoks.data_kartu_stoks.pelanggan_online}}</td>
 
                   <td align="right">{{ kartuStoks.data_kartu_stoks.harga_unit | pemisahTitik }}</td>
                   <td align="center">{{ kartuStoks.data_kartu_stoks.created_at | tanggal }}</td>
                   <td align="right">{{ kartuStoks.data_kartu_stoks.jumlah_masuk | pemisahTitik }}</td>
                   <td align="right">{{ kartuStoks.data_kartu_stoks.jumlah_keluar | pemisahTitik }}</td>
-                  <td align="right" v-if="kartuStoks.data_kartu_stoks.jenis_hpp == 1"> +{{ kartuStoks.data_kartu_stoks.jumlah_masuk | pemisahTitik }}</td>
-                  <td align="right" v-else> -{{ kartuStoks.data_kartu_stoks.jumlah_keluar | pemisahTitik }}</td>
+                  <td align="right"> {{ kartuStoks.saldo_awal | pemisahTitik }}</td>
 
                 </tr>
               </tbody>
-
-              <tr style="color:red" v-if="subtotalSaldoAkhir.status == 200">
-
-                <td></td>
-                <td>SALDO AKHIR</td>
-                <td></td>
-                <td></td>
-                <td align="right">{{ subtotalSaldoAkhir.data.jumlah_masuk | pemisahTitik }}</td>
-                <td align="right">{{ subtotalSaldoAkhir.data.jumlah_keluar | pemisahTitik }}</td>
-                <td align="right">{{ subtotalSaldoAkhir.data.saldo_akhir | pemisahTitik }}</td>
-
-              </tr>
 
               <tbody class="data-tidak-ada" v-else-if="kartuStok.length == 0 && loading == false">
                 <tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
@@ -131,21 +119,21 @@ import { mapState } from 'vuex';
 export default {
   data: function () {
    return {
+    saldoAwal : 0,
     kartuStok: [],
     kartuStokData: {},
-    subtotalSaldoAwal: {},
-    subtotalSaldoAkhir: {},
     filter: {
-     produk: '',
-     dari_tanggal: '',
-     sampai_tanggal: new Date(),
-   },
-   url : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-kartu-stok"),
-   urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-kartu-stok/download-excel-kartu-stok"),
-   urlCetak : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-kartu-stok/cetak-laporan"),
-   pencarian: '',
-   loading: false,
-   placeholder_produk: {
+      saldoAwal : 0,
+      produk: '',
+      dari_tanggal: '',
+      sampai_tanggal: new Date(),
+    },
+    url : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-kartu-stok"),
+    urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-kartu-stok/download-excel-kartu-stok"),
+    urlCetak : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-kartu-stok/cetak-laporan"),
+    pencarian: '',
+    loading: false,
+    placeholder_produk: {
      placeholder: '--PILIH PRODUK (F1)--'
    }
  }
@@ -187,8 +175,6 @@ watch: {
       submitKartuStok(){
         var app = this;
         app.prosesLaporan();
-        app.totalSaldoAwal();
-        app.totalSaldoAkhir();
         app.showButton();
       },
       prosesLaporan(page) {
@@ -200,47 +186,19 @@ watch: {
        app.loading = true,
        axios.post(app.url+'/view?page='+page, newFilter)
        .then(function (resp) {
-         app.kartuStok = resp.data.data;
-         app.kartuStokData = resp.data;
-         app.loading = false
-         console.log(resp.data.data);
-       })
+        app.filter.saldoAwal = resp.data.saldo_awal
+        app.saldoAwal = resp.data.total_saldo
+        app.kartuStok = resp.data.data;
+        app.kartuStokData = resp.data;
+        app.loading = false
+        console.log(resp.data.data);
+      })
        .catch(function (resp) {
          console.log(resp);
          alert("Tidak Dapat Memuat Laporan Kartu Stok");
        });
      },
-     totalSaldoAwal() {
-      var app = this; 
-      var newFilter = app.filter;
-
-      app.loading = true,
-      axios.post(app.url+'/total-saldo-awal', newFilter)
-      .then(function (resp) {
-        app.subtotalSaldoAwal = resp;
-        app.loading = false
-      })
-      .catch(function (resp) {
-        console.log(resp);
-        alert("Tidak Dapat Memuat Subtotal Saldo Awal");
-      });
-    },
-    totalSaldoAkhir() {
-      var app = this; 
-      var newFilter = app.filter;
-
-      app.loading = true,
-      axios.post(app.url+'/total-saldo-akhir', newFilter)
-      .then(function (resp) {
-        app.subtotalSaldoAkhir = resp;
-        app.loading = false
-      })
-      .catch(function (resp) {
-        console.log(resp);
-        alert("Tidak Dapat Memuat Subtotal Saldo Akhir");
-      });
-    },
-    getHasilPencarian(page){
+     getHasilPencarian(page){
       var app = this;
       var newFilter = app.filter;
       if (typeof page === 'undefined') {
