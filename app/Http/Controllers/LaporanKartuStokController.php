@@ -150,7 +150,7 @@ class LaporanKartuStokController extends Controller
             $saldo_awal = $request->saldoAwal;
             $total_saldo = $saldo_awal;
         }
-        
+
         $data_kartu_stok = array();
         foreach ($laporan_kartu_stok as $data_kartu_stoks) {
             //SALDO AWAL
@@ -239,19 +239,25 @@ class LaporanKartuStokController extends Controller
                         $saldo_awal = $saldo_awal - $laporan_kartu_stoks->jumlah_keluar;
                     }
 
-                    $sheet->row(++$row, [
-                        $laporan_kartu_stoks->no_faktur,
-                        $laporan_kartu_stoks->jenis_transaksi,
-                        $laporan_kartu_stoks->harga_unit,
-                        $laporan_kartu_stoks->created_at,
-                        $laporan_kartu_stoks->jumlah_masuk,
-                        $laporan_kartu_stoks->jumlah_keluar,
-                        $saldo_awal,
-                    ]);
+                    if ($laporan_kartu_stoks->jenis_transaksi == 'penjualan') {
+                       $jenis_transaksi = "Penjualan Online";
+                   }else{
+                      $jenis_transaksi = $laporan_kartu_stoks->jenis_transaksi;
+                  }
 
-                }
+                  $sheet->row(++$row, [
+                    $laporan_kartu_stoks->no_faktur,
+                    $jenis_transaksi,
+                    $laporan_kartu_stoks->harga_unit,
+                    $laporan_kartu_stoks->created_at,
+                    $laporan_kartu_stoks->jumlah_masuk,
+                    $laporan_kartu_stoks->jumlah_keluar,
+                    $saldo_awal,
+                ]);
 
-            });
+              }
+
+          });
         })->export('xls');
     }
 
@@ -264,7 +270,7 @@ class LaporanKartuStokController extends Controller
         $request['sampai_tanggal'] = $sampai_tanggal;
         $request['produk']         = $produk;
 
-        $laporan_kartu_stok = Hpp::dataKartuStok($request)->paginate(10);
+        $laporan_kartu_stok = Hpp::dataKartuStok($request)->get();
         $saldo_awal         = Hpp::dataSaldoAwal($request);
         $data_kartu_stok    = $this->foreachLaporan($laporan_kartu_stok, $saldo_awal);
         $total_saldo_awal   = $this->totalSaldoAwal($request);
