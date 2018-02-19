@@ -1,40 +1,40 @@
 <style scoped>
-.modal {
-  overflow-y:auto;
-}
-.pencarian {
-  color: red; 
-  float: right;
-}
-.form-penjualan{
-  width: 100%;
-  padding: 12px 20px;
-  margin: 8px 0;
-  display: inline-block;
-  border: 3px solid #555;
-  border-radius: 4px;
-  box-sizing: border-box;
-  font-size: 30px;
-}
-.form-subtotal{
-  width: 100%;
-  margin: 8px 0;
-  display: inline-block;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-.card-produk{
-  background-color:#82B1FF;
-}
+  .modal {
+    overflow-y:auto;
+  }
+  .pencarian {
+    color: red; 
+    float: right;
+  }
+  .form-penjualan{
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 3px solid #555;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 30px;
+  }
+  .form-subtotal{
+    width: 100%;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  .card-produk{
+    background-color:#82B1FF;
+  }
 
-.card-pembayaran{
-  background-color:#82B1FF;
-}
-.btn-icon{
-  border-radius: 1px solid;
-  padding: 10px 10px;
-}
+  .card-pembayaran{
+    background-color:#82B1FF;
+  }
+  .btn-icon{
+    border-radius: 1px solid;
+    padding: 10px 10px;
+  }
 
 </style>
 
@@ -170,7 +170,7 @@
                 <div class="col-md-6 col-xs-12">
                   <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
                     <font style="color: black">Jatuh Tempo</font> 
-                    <datepicker :input-class="'form-control'" placeholder="Jatuh Tempo" v-model="penjualan.jatuh_tempo" ref='jatuh_tempo'></datepicker>
+                    <datepicker :input-class="'form-control'" placeholder="Jatuh Tempo" v-model="penjualan.jatuh_tempo" ref='jatuh_tempo' :disabled="disabled"></datepicker>
                     <br v-if="errors.jatuh_tempo">  <span v-if="errors.jatuh_tempo" id="jatuh_tempo_error" class="label label-danger">{{ errors.jatuh_tempo[0] }}</span>
                   </div>
                 </div>
@@ -452,100 +452,103 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-export default {
-  data: function () {
-    return {
-      errors: [],
-      kas: [],
-      tbs_penjualan: [],
-      tbsPenjualanData : {},
-      url : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
-      url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
-      url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
+  import { mapState } from 'vuex';
+  export default {
+    data: function () {
+      return {
+        errors: [],
+        kas: [],
+        tbs_penjualan: [],
+        tbsPenjualanData : {},
+        url : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
+        url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
+        url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
 
-      inputTbsPenjualan: {
-        nama_produk : '',
-        produk : '',
-        jumlah_produk : '',
-        potongan_produk : '',
-        id_tbs : '',
-      },
-      penjualan : {
-        pelanggan : '0',
-        kas : '',
-        jatuh_tempo : '',
-        subtotal : 0,
-        potongan : 0,
-        potongan_faktur : 0,
-        potongan_persen : 0,
-        total_akhir : 0,
-        pembayaran : 0,
-        kembalian: 0,
-        kredit: 0,
-      }, 
-      setting_penjualan_pos :{
-        jumlah_produk : 1,
-        stok : 0,
-        harga_jual : 1
-      },
-      placeholder_produk: {
-        placeholder: 'Cari Produk (F1) ...',
-        sortField: 'text',
-        openOnFocus : true
-      },
-      placeholder_pelanggan: {
-        placeholder: '--PILIH PELANGGAN (F4)--',
-        sortField: 'text',
-        openOnFocus : true
-        
-      },
-      placeholder_kas: {
-        placeholder: '--PILIH KAS--',
-        sortField: 'text',
-        openOnFocus : true
-      },
-      hargaJual: {
-        placeholder: '--HARGA JUAL--'
-      },
-      tambahKas: {
-        kode_kas : '',
-        nama_kas : '',
-        status_kas : 0,
-        default_kas : 0
-      },
-      pencarian: '',
-      loading: true,
-      seen : false,
-      separator: {
-        decimal: ',',
-        thousands: '.',
-        prefix: '',
-        suffix: '',
-        precision: 2,
-        masked: false /* doesn't work with directive */
+        inputTbsPenjualan: {
+          nama_produk : '',
+          produk : '',
+          jumlah_produk : '',
+          potongan_produk : '',
+          id_tbs : '',
+        },
+        penjualan : {
+          pelanggan : '0',
+          kas : '',
+          jatuh_tempo : '',
+          subtotal : 0,
+          potongan : 0,
+          potongan_faktur : 0,
+          potongan_persen : 0,
+          total_akhir : 0,
+          pembayaran : 0,
+          kembalian: 0,
+          kredit: 0,
+        }, 
+        setting_penjualan_pos :{
+          jumlah_produk : 1,
+          stok : 0,
+          harga_jual : 1
+        },
+        placeholder_produk: {
+          placeholder: 'Cari Produk (F1) ...',
+          sortField: 'text',
+          openOnFocus : true
+        },
+        placeholder_pelanggan: {
+          placeholder: '--PILIH PELANGGAN (F4)--',
+          sortField: 'text',
+          openOnFocus : true
+
+        },
+        placeholder_kas: {
+          placeholder: '--PILIH KAS--',
+          sortField: 'text',
+          openOnFocus : true
+        },
+        hargaJual: {
+          placeholder: '--HARGA JUAL--'
+        },
+        tambahKas: {
+          kode_kas : '',
+          nama_kas : '',
+          status_kas : 0,
+          default_kas : 0
+        },
+        pencarian: '',
+        loading: true,
+        seen : false,
+        separator: {
+          decimal: ',',
+          thousands: '.',
+          prefix: '',
+          suffix: '',
+          precision: 2,
+          masked: false /* doesn't work with directive */
+        },
+        disabled: {
+          to: new Date(), // Disable all dates up to specific date
+        }
+
       }
-
-    }
-  },
-  mounted() {   
-    var app = this;
-    app.$store.dispatch('LOAD_PRODUK_LIST')
-    app.$store.dispatch('LOAD_PELANGGAN_LIST')
-    app.dataKas();    
-    app.dataSettingPenjualanPos();
-    app.getResults();     
-
-  },
-  computed : mapState ({    
-    produk(){
-      return this.$store.state.produk
     },
-    pelanggan(){
-      return this.$store.state.pelanggan
-    }
-  }),
-  watch: {
+    mounted() {   
+      var app = this;
+      app.$store.dispatch('LOAD_PRODUK_LIST')
+      app.$store.dispatch('LOAD_PELANGGAN_LIST')
+      app.dataKas();    
+      app.dataSettingPenjualanPos();
+      app.getResults();     
+
+    },
+    computed : mapState ({    
+      produk(){
+        return this.$store.state.produk
+      },
+      pelanggan(){
+        return this.$store.state.pelanggan
+      }
+    }),
+    watch: {
     // whenever question changes, this function will run
     pencarian: function (newQuestion) {
       this.getHasilPencarian()
