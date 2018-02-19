@@ -850,7 +850,7 @@ Route::post('/laporan-kas/subtotal-laporan-kas-rekap-mutasi-keluar', 'LaporanKas
 Route::get('/laporan-kas/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{kas}/{jenis_laporan}', 'LaporanKasController@cetakLaporan')->middleware('auth');
 Route::get('/laporan-kas/download-excel/{dari_tanggal}/{sampai_tanggal}/{kas}/{jenis_laporan}', 'LaporanKasController@downloadLaporan')->middleware('auth');
 
-Route::get('/setting-footer/id-warung', 'SettingFooterController@idWarung')->middleware('auth');
+Route::get('/setting-footer/default-data-setting-footer', 'SettingFooterController@getDefaultData')->middleware('auth');
 
 //MENAMPILKAN DATA USER KASIR
 Route::get('/user-kasir/view', 'UserKasirController@view')->middleware('auth');
