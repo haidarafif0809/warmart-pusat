@@ -179,7 +179,7 @@
 									<tr>
 										<th>No. Transaksi</th>
 										<th>Jenis Transaksi</th>
-										<th>Ke Kas</th>
+										<th>Dari Kas</th>
 										<th style="text-align:right">Total</th>
 										<th style="text-align:center">Waktu</th>
 									</tr>

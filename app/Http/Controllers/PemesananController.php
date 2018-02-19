@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\BankWarung;
 use App\DetailPesananPelanggan;
 use App\KeranjangBelanja;
+use App\LokasiPelanggan;
 use App\PesananPelanggan;
 use App\Warung;
-use App\BankWarung;
 use Auth;
 use DB;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Indonesia;
 use Jenssegers\Agent\Agent;
 use OpenGraph;
 use SEOMeta;
-use Indonesia;
 
 class PemesananController extends Controller
 {
@@ -50,34 +51,43 @@ class PemesananController extends Controller
         //FOTO WARMART
         $logo_warmart = "" . asset('/assets/img/examples/warmart_logo.png') . "";
 
-        $subtotal = 0;
+        $subtotal     = 0;
         $berat_barang = 0;
         foreach ($keranjang_belanja->get() as $keranjang_belanjaans) {
             $harga_produk = $keranjang_belanjaans->produk->harga_jual * $keranjang_belanjaans->jumlah_produk;
             $subtotal     = $subtotal += $harga_produk;
-            $berat_barang     = $berat_barang += $keranjang_belanjaans->produk->berat;
+            $berat_barang = $berat_barang += $keranjang_belanjaans->produk->berat;
         }
 
         $user = Auth::user();
         if ($cek_belanjaan == 0) {
-            $id_warung = 0;
-            $warung = 0;
-            $kabupaten = 0;
+            $id_warung      = 0;
+            $warung         = 0;
+            $kabupaten      = 0;
             $nama_kabupaten = 0;
-        }else{
+        } else {
             $id_warung = $keranjang_belanja->first()->produk->id_warung;
-            $warung = Warung::find($id_warung);
+            $warung    = Warung::find($id_warung);
             if ($warung->kabupaten != "") {
-                $kabupaten = Indonesia::findCity($warung->kabupaten);
+                $kabupaten      = Indonesia::findCity($warung->kabupaten);
                 $nama_kabupaten = $kabupaten->name;
-            }else{
-                $kabupaten = 0;
+            } else {
+                $kabupaten      = 0;
                 $nama_kabupaten = 0;
             }
         }
+        $alamat_customer = LokasiPelanggan::select(['provinsi', 'kabupaten'])
+            ->where('id_pelanggan', Auth::user()->id);
+        if ($alamat_customer->count() > 0) {
+            $alamat                                = $alamat_customer->first();
+            $data_pelanggan['provinsi_pelanggan']  = Indonesia::findProvince($alamat->provinsi)->name;
+            $data_pelanggan['kabupaten_pelanggan'] = Indonesia::findCity($alamat->kabupaten)->name;
+        } else {
+            $data_pelanggan['provinsi_pelanggan']  = '';
+            $data_pelanggan['kabupaten_pelanggan'] = '';
+        }
 
-        return view('layouts.selesaikan_pemesanan', ['pagination' => $pagination, 'keranjang_belanjaan' => $keranjang_belanjaan, 'cek_belanjaan' => $cek_belanjaan, 'agent' => $agent, 'jumlah_produk' => $jumlah_produk, 'logo_warmart' => $logo_warmart, 'subtotal' => $subtotal, 'user' => $user,'berat_barang'=>$berat_barang,'kabupaten'=>$nama_kabupaten]);
-        
+        return view('layouts.selesaikan_pemesanan', ['pagination' => $pagination, 'keranjang_belanjaan' => $keranjang_belanjaan, 'cek_belanjaan' => $cek_belanjaan, 'agent' => $agent, 'jumlah_produk' => $jumlah_produk, 'logo_warmart' => $logo_warmart, 'subtotal' => $subtotal, 'user' => $user, 'berat_barang' => $berat_barang, 'kabupaten' => $nama_kabupaten, 'data_pelanggan' => $data_pelanggan]);
 
     }
 
@@ -87,17 +97,16 @@ class PemesananController extends Controller
         //START TRANSAKSI
         DB::beginTransaction();
         if ($request->layanan_kurir != '') {
-         $layanan_kurir     = explode("|", $request->layanan_kurir);
-         $layanan_kurir  = $layanan_kurir[0] ." | ".$layanan_kurir[2]." | ".$layanan_kurir[3];
-     }else{
-        $layanan_kurir     = $request->layanan_kurir;
-    }
-
+            $layanan_kurir = explode("|", $request->layanan_kurir);
+            $layanan_kurir = $layanan_kurir[0] . " | " . $layanan_kurir[2] . " | " . $layanan_kurir[3];
+        } else {
+            $layanan_kurir = $request->layanan_kurir;
+        }
 
         // QUERY LENGKAPNYA ADA DI scopeKeranjangBelanjaPelanggan di model Keranjang Belanja
-    $keranjang_belanjaan = KeranjangBelanja::KeranjangBelanjaPelanggan()->get();
+        $keranjang_belanjaan = KeranjangBelanja::KeranjangBelanjaPelanggan()->get();
 
-    $id_user = Auth::user()->id;
+        $id_user = Auth::user()->id;
 
         $cek_pesanan = 0; // BUAT VARIABEL CEK PESANAN YANG KITA SET  0
         foreach ($keranjang_belanjaan as $key => $keranjang_belanjaans) {
@@ -111,22 +120,22 @@ class PemesananController extends Controller
 
                 // QUERY LENGKAPMNYA ADA DI scopeHitungTotalPesanan di mmodel Keranjang Belanja
                 $query_hitung_total = KeranjangBelanja::HitungTotalPesanan($id_warung)->first();
-                $subtotal = str_replace('.','',$request->ongkos_kirim) + $query_hitung_total['total_pesanan'];
+                $subtotal           = str_replace('.', '', $request->ongkos_kirim) + $query_hitung_total['total_pesanan'];
 
                 // INSERT KE PESANAN PELANGGAN
                 $pesanan_pelanggan = PesananPelanggan::create([
-                    'id_pelanggan'    => $id_user,
-                    'nama_pemesan'    => $request->name,
-                    'no_telp_pemesan' => $request->no_telp,
-                    'alamat_pemesan'  => $request->alamat,
-                    'jumlah_produk'   => $query_hitung_total['total_produk'],
-                    'subtotal'        => $subtotal,
-                    'id_warung'       => $id_warung,
+                    'id_pelanggan'      => $id_user,
+                    'nama_pemesan'      => $request->name,
+                    'no_telp_pemesan'   => $request->no_telp,
+                    'alamat_pemesan'    => $request->alamat,
+                    'jumlah_produk'     => $query_hitung_total['total_produk'],
+                    'subtotal'          => $subtotal,
+                    'id_warung'         => $id_warung,
                     'kurir'             => $request->kurir,
-                    'layanan_kurir'             => $layanan_kurir,
-                    'metode_pembayaran'             => $request->metode_pembayaran,
-                    'biaya_kirim'       => str_replace('.','',$request->ongkos_kirim),
-                    'bank_transfer'       => "-",
+                    'layanan_kurir'     => $layanan_kurir,
+                    'metode_pembayaran' => $request->metode_pembayaran,
+                    'biaya_kirim'       => str_replace('.', '', $request->ongkos_kirim),
+                    'bank_transfer'     => "-",
                 ]);
 
                 // UBAH NILAI VARIABEL CEK PESANAN JADI ID WARUNG
@@ -197,46 +206,46 @@ class PemesananController extends Controller
 
         if ($request->metode_pembayaran == "Bayar di Tempat") {
             return redirect()->route('daftar_produk.index');
-        }else{
+        } else {
 
-            return redirect()->route('info.pembayaran',['id'=>$id_pesanan_pelanggan]);
+            return redirect()->route('info.pembayaran', ['id' => $id_pesanan_pelanggan]);
         }
-
 
     }
 
-    public function halamanInfoPembayaran(Request $request){
-      $agent = new Agent();
-      $pesanan_pelanggan = PesananPelanggan::whereId($request->id);
+    public function halamanInfoPembayaran(Request $request)
+    {
+        $agent             = new Agent();
+        $pesanan_pelanggan = PesananPelanggan::whereId($request->id);
 
-      if ($pesanan_pelanggan->count() == 0) {
-          return response()->view('error.404');
-      }else{
+        if ($pesanan_pelanggan->count() == 0) {
+            return response()->view('error.404');
+        } else {
 
-          $keranjang_belanja = KeranjangBelanja::with(['produk', 'pelanggan'])->where('id_pelanggan', Auth::user()->id);
-          $cek_belanjaan = $keranjang_belanja->count();
+            $keranjang_belanja = KeranjangBelanja::with(['produk', 'pelanggan'])->where('id_pelanggan', Auth::user()->id);
+            $cek_belanjaan     = $keranjang_belanja->count();
 
-          $bank = BankWarung::whereWarungId($pesanan_pelanggan->first()->id_warung)->first();
+            $bank = BankWarung::whereWarungId($pesanan_pelanggan->first()->id_warung)->first();
 
-          $waktu_daftar = date($pesanan_pelanggan->first()->created_at);
-          $date = date_create($waktu_daftar);
-      date_add($date, date_interval_create_from_date_string('12 hours'));// hanya diberi waktu 12 jam
-      $batas_pembayaran = date_format($date, 'Y-m-d H:i:s');
+            $waktu_daftar = date($pesanan_pelanggan->first()->created_at);
+            $date         = date_create($waktu_daftar);
+            date_add($date, date_interval_create_from_date_string('12 hours')); // hanya diberi waktu 12 jam
+            $batas_pembayaran = date_format($date, 'Y-m-d H:i:s');
 
-      return view('layouts.pembayaran_transfer', ['agent' => $agent,'cek_belanjaan'=>$cek_belanjaan,'pesanan_pelanggan'=>$pesanan_pelanggan->first(),'batas_pembayaran'=>$batas_pembayaran,'bank'=>$bank ]);
-  }
+            return view('layouts.pembayaran_transfer', ['agent' => $agent, 'cek_belanjaan' => $cek_belanjaan, 'pesanan_pelanggan' => $pesanan_pelanggan->first(), 'batas_pembayaran' => $batas_pembayaran, 'bank' => $bank]);
+        }
 
-}
+    }
 
-public function kirimSmsKeWarung($nomor_tujuan, $id_pesanan_pelanggan)
-{
+    public function kirimSmsKeWarung($nomor_tujuan, $id_pesanan_pelanggan)
+    {
 
-    $userkey   = env('USERKEY');
-    $passkey   = env('PASSKEY');
-    $url_warung = url('/detail-pesanan-warung/'.$id_pesanan_pelanggan);
-    $isi_pesan = urlencode('Assalamualaikum, Ada Pesanan baru Silakan Cek ' . $url_warung);
+        $userkey    = env('USERKEY');
+        $passkey    = env('PASSKEY');
+        $url_warung = url('/detail-pesanan-warung/' . $id_pesanan_pelanggan);
+        $isi_pesan  = urlencode('Assalamualaikum, Ada Pesanan baru Silakan Cek ' . $url_warung);
 
-    if (env('STATUS_SMS') == 1) {
+        if (env('STATUS_SMS') == 1) {
             $client = new Client(); //GuzzleHttp\Client
             $result = $client->get('https://reguler.zenziva.net/apps/smsapi.php?userkey=' . $userkey . '&passkey=' . $passkey . '&nohp=' . $nomor_tujuan . '&pesan=' . $isi_pesan . '');
 
@@ -244,98 +253,100 @@ public function kirimSmsKeWarung($nomor_tujuan, $id_pesanan_pelanggan)
 
     }
 
-    public function dataProvinsi(){
+    public function dataProvinsi()
+    {
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://api.rajaongkir.com/starter/city?province=",
+            CURLOPT_URL            => "https://api.rajaongkir.com/starter/city?province=",
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "GET",
-            CURLOPT_HTTPHEADER => array(
-                "key: f038d4bff2cc5732df792e9b97cae16d"
+            CURLOPT_ENCODING       => "",
+            CURLOPT_MAXREDIRS      => 10,
+            CURLOPT_TIMEOUT        => 30,
+            CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST  => "GET",
+            CURLOPT_HTTPHEADER     => array(
+                "key: f038d4bff2cc5732df792e9b97cae16d",
             ),
         ));
 
         $response = curl_exec($curl);
-        $err = curl_error($curl);
+        $err      = curl_error($curl);
 
         curl_close($curl);
 
         if ($err) {
-          echo "cURL Error #:" . $err;
-      } else {
-          echo $response;
-      }
+            echo "cURL Error #:" . $err;
+        } else {
+            echo $response;
+        }
 
+    }
 
-  }
+    public function dataKota(Request $request)
+    {
+        $curl = curl_init();
 
-  public function dataKota(Request $request){
-    $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL            => "https://api.rajaongkir.com/starter/city?province=" . $request->id_provinsi,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING       => "",
+            CURLOPT_MAXREDIRS      => 10,
+            CURLOPT_TIMEOUT        => 30,
+            CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST  => "GET",
+            CURLOPT_HTTPHEADER     => array(
+                "key: f038d4bff2cc5732df792e9b97cae16d",
+            ),
+        ));
 
-    curl_setopt_array($curl, array(
-        CURLOPT_URL => "https://api.rajaongkir.com/starter/city?province=".$request->id_provinsi,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => "",
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 30,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => "GET",
-        CURLOPT_HTTPHEADER => array(
-            "key: f038d4bff2cc5732df792e9b97cae16d"
-        ),
-    ));
+        $response = curl_exec($curl);
+        $err      = curl_error($curl);
 
-    $response = curl_exec($curl);
-    $err = curl_error($curl);
+        curl_close($curl);
 
-    curl_close($curl);
+        if ($err) {
+            echo "cURL Error #:" . $err;
+        } else {
+            echo $response;
+        }
+    }
 
-    if ($err) {
-      echo "cURL Error #:" . $err;
-  } else {
-      echo $response;
-  }
-}
+    public function hitungOngkir(Request $request)
+    {
 
-public function hitungOngkir(Request $request){
+        $origin      = $request->kota_pengirim;
+        $destination = $request->kota_tujuan;
+        $weight      = $request->berat_barang;
+        $courier     = $request->kurir;
 
-    $origin = $request->kota_pengirim;
-    $destination = $request->kota_tujuan;
-    $weight = $request->berat_barang;
-    $courier = $request->kurir;
+        $curl = curl_init();
 
-    $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL            => "https://api.rajaongkir.com/starter/cost",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING       => "",
+            CURLOPT_MAXREDIRS      => 10,
+            CURLOPT_TIMEOUT        => 30,
+            CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST  => "POST",
+            CURLOPT_POSTFIELDS     => "origin=" . $origin . "&destination=" . $destination . "&weight=" . $weight . "&courier=" . $courier, //origin = ID kota atau kabupaten asal, destination = ID kota atau kabupaten tujuan, weight = Berat kiriman dalam gram,courier = Kode kurir: jne, pos, tiki. cek lengkapnya  https://rajaongkir.com/dokumentasi/starter
+            CURLOPT_HTTPHEADER     => array(
+                "content-type: application/x-www-form-urlencoded",
+                "key: f038d4bff2cc5732df792e9b97cae16d",
+            ),
+        ));
 
-    curl_setopt_array($curl, array(
-      CURLOPT_URL => "https://api.rajaongkir.com/starter/cost",
-      CURLOPT_RETURNTRANSFER => true,
-      CURLOPT_ENCODING => "",
-      CURLOPT_MAXREDIRS => 10,
-      CURLOPT_TIMEOUT => 30,
-      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-      CURLOPT_CUSTOMREQUEST => "POST",
-      CURLOPT_POSTFIELDS => "origin=".$origin."&destination=".$destination."&weight=".$weight."&courier=".$courier,//origin = ID kota atau kabupaten asal, destination = ID kota atau kabupaten tujuan, weight = Berat kiriman dalam gram,courier = Kode kurir: jne, pos, tiki. cek lengkapnya  https://rajaongkir.com/dokumentasi/starter
-      CURLOPT_HTTPHEADER => array(
-        "content-type: application/x-www-form-urlencoded",
-        "key: f038d4bff2cc5732df792e9b97cae16d"
-    ),
-  ));
+        $response = curl_exec($curl);
+        $err      = curl_error($curl);
 
-    $response = curl_exec($curl);
-    $err = curl_error($curl);
+        curl_close($curl);
 
-    curl_close($curl);
-
-    if ($err) {
-      echo "cURL Error #:" . $err;
-  } else {
-      echo $response;
-  }
-}
+        if ($err) {
+            echo "cURL Error #:" . $err;
+        } else {
+            echo $response;
+        }
+    }
 
 }
