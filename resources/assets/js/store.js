@@ -10,7 +10,11 @@ const state = {
 	pelanggan : []
 }
 const getters = {
-
+	produk_barang(state){
+		return state.produk.filter(function(produk){
+			return produk.hitung_stok == 1
+    	})
+  	},
 }
 const mutations = {
 	SET_PRODUK_LIST : (state, { list }) => {
