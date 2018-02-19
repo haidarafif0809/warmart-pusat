@@ -1,7 +1,7 @@
 <!DOCTYPE doctype html>
 <html lang="en">
 <head>
-
+	
 	@if($setting_aplikasi->tipe_aplikasi == 0)
 	<link href="{{ asset('img/favicon.png') }}" rel="apple-touch-icon" sizes="76x76"/>
 	<link href="{{ asset('img/favicon.png') }}" rel="icon" type="image/png"/>
