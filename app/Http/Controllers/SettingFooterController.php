@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\SettingFooter;
-use Auth;
 use Illuminate\Http\Request;
 
 class SettingFooterController extends Controller
@@ -19,12 +18,11 @@ class SettingFooterController extends Controller
         return response()->json($setting_footer);
     }
 
-    public function idWarung()
+    public function getDefaultData()
     {
-        $idWarung = Auth::user()->id_warung;
-        // $idWarung = 1;
-        // $idWarung = ['id' => $idWarung];
-        return response()->json($idWarung);
+        $default_data_setting_footer = SettingFooter::defaultData();
+
+        return response()->json($default_data_setting_footer);
     }
 
     /**
