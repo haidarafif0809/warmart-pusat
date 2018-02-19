@@ -5,46 +5,46 @@ first();
 @extends('layouts.app_pelanggan')
 @section('content')
 <style type="text/css">
-.page-header.header-small {
-  height: 35vh;
-  min-height: 35vh;
-}
-.ecommerce-page .page-header .container {
-  padding-top: 10vh;
-}
-h4 {
-  @if(Agent::isMobile())
-  font-size: 1.2em;
-  line-height: 1.4em;
-  margin: 20px 0 10px;
-  @endif
-}
-.panel .panel-heading {
-  background-color: transparent;
-  border-bottom: 2px solid #ddd;
-  padding: 5px 0px 5px 0px;
-}
-.buttonColor{
-  background-color: #2ac326  
-}
-.validationProvinsi{
-  display: none;
-  color: red;
-}
-.validationKota{
-  display: none;
-  color: red;
-}
-.validationAlamat{
-  display: none;
-  color: red;
-}
-#formAlamat{
-  display: none;
-}
-.modal {
-  overflow-y:auto;
-}
+  .page-header.header-small {
+    height: 35vh;
+    min-height: 35vh;
+  }
+  .ecommerce-page .page-header .container {
+    padding-top: 10vh;
+  }
+  h4 {
+    @if(Agent::isMobile())
+    font-size: 1.2em;
+    line-height: 1.4em;
+    margin: 20px 0 10px;
+    @endif
+  }
+  .panel .panel-heading {
+    background-color: transparent;
+    border-bottom: 2px solid #ddd;
+    padding: 5px 0px 5px 0px;
+  }
+  .buttonColor{
+    background-color: #2ac326  
+  }
+  .validationProvinsi{
+    display: none;
+    color: red;
+  }
+  .validationKota{
+    display: none;
+    color: red;
+  }
+  .validationAlamat{
+    display: none;
+    color: red;
+  }
+  #formAlamat{
+    display: none;
+  }
+  .modal {
+    overflow-y:auto;
+  }
 </style>
 
 <?php
@@ -125,7 +125,7 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
 
                   <div class="form-group">
                     <font class="validationAlamat">Alamat Harus di Isi</font>
-                    {!! Form::textarea('alamat', null, ['class'=>'form-control field','required','autocomplete'=>'off', 'placeholder' => 'Alamat Lengkap', 'id' => 'alamat', 'rows'=>'3']) !!}
+                    {!! Form::textarea('alamat', $user->alamat, ['class'=>'form-control field','required','autocomplete'=>'off', 'placeholder' => 'Alamat Lengkap', 'id' => 'alamat', 'rows'=>'3']) !!}
                   </div>
 
                 </p>
@@ -234,6 +234,10 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
                 {!! Form::text('kota_pengirim',null, ['class'=>'form-control','id'=>'kota_pengirim']) !!}
                 {!! Form::text('ongkos_kirim', 0, ['class'=>'form-control','id'=>'ongkos_kirim','placeholder'=>'ongkos kirim']) !!}
                 {!! Form::text('subtotal', $subtotal, ['class'=>'form-control','id'=>'subtotal','placeholder'=>'subtotal']) !!}
+
+                {{-- Data Pelanggan --}}
+                {!! Form::text('provinsi_pelanggan',$data_pelanggan['provinsi_pelanggan'], ['class'=>'form-control','id'=>'provinsi_pelanggan']) !!}
+                {!! Form::text('kabupaten_pelanggan',$data_pelanggan['kabupaten_pelanggan'], ['class'=>'form-control','id'=>'kabupaten_pelanggan']) !!}
               </span>
             </div>
 
@@ -354,27 +358,27 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
               <div class="row">
                 <div class="col-md-4"><h5><b>Total Belanja</b></h5></div>
                 <div class="col-md-3"><h5><b>:</h5></div>
-                  <div class="col-md-5"><h5 class="text-danger"><b class="text-right" id="total_belanja" data-total="{{$subtotal}}">Rp. {{ number_format($subtotal,0,',','.') }}</b></h5></div>
-                </div>
+                <div class="col-md-5"><h5 class="text-danger"><b class="text-right" id="total_belanja" data-total="{{$subtotal}}">Rp. {{ number_format($subtotal,0,',','.') }}</b></h5></div>
               </div>
-
             </div>
 
-            @if($setting_aplikasi->tipe_aplikasi == 0)
-            {!! Form::button('Selesai Pesanan <i class="material-icons">keyboard_arrow_right</i> ', ['id'=>'SelesaikanPesanan','class'=>'btn btn-round pull-right', 'type'=>'button', 'style'=>'background-color: #01573e']) !!}
-            @else
-            {!! Form::button('Selesai Pesanan <i class="material-icons">keyboard_arrow_right</i> ', ['id'=>'SelesaikanPesanan','class'=>'btn btn-round pull-right buttonColor', 'type'=>'button']) !!}
-            @endif 
-
-            @endif
-
-            {!! Form::close() !!}
           </div>
+
+          @if($setting_aplikasi->tipe_aplikasi == 0)
+          {!! Form::button('Selesai Pesanan <i class="material-icons">keyboard_arrow_right</i> ', ['id'=>'SelesaikanPesanan','class'=>'btn btn-round pull-right', 'type'=>'button', 'style'=>'background-color: #01573e']) !!}
+          @else
+          {!! Form::button('Selesai Pesanan <i class="material-icons">keyboard_arrow_right</i> ', ['id'=>'SelesaikanPesanan','class'=>'btn btn-round pull-right buttonColor', 'type'=>'button']) !!}
+          @endif 
+
           @endif
+
+          {!! Form::close() !!}
         </div>
+        @endif
       </div>
     </div>
   </div>
+</div>
 </div> <!-- end-main-raised -->
 @endsection
 
@@ -417,24 +421,31 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
 
 
     $.getJSON('{{ Url("provinsi-destinasi-pengiriman") }}',{'_token': $('meta[name=csrf-token]').attr('content')}, function(resp){ 
+
       $select[0].selectize.addOption(resp.rajaongkir.results);   
       var kabupaten = "{{$kabupaten}}";
       var kota_pengirim = $("#kota_pengirim").val();
+      var provinsi_pelanggan = $("#provinsi_pelanggan").val();
+      var kabupaten_pelanggan = $("#kabupaten_pelanggan").val();
+
 
       if (kota_pengirim == '') {
+        $.each(resp.rajaongkir.results, function (i, item) { 
 
-       $.each(resp.rajaongkir.results, function (i, item) { 
+          if (provinsi_pelanggan == resp.rajaongkir.results[i].province && kabupaten_pelanggan == resp.rajaongkir.results[i].type+" "+resp.rajaongkir.results[i].city_name) {
+            var provinsi = resp.rajaongkir.results[i].province_id;
+            document.getElementById('provinsi').selectize.setValue(provinsi);
+          };
 
-        if (kabupaten == resp.rajaongkir.results[i].type+" "+resp.rajaongkir.results[i].city_name) {
-          var city_id = resp.rajaongkir.results[i].city_id;
-          $("#kota_pengirim").val(city_id);
+          if (kabupaten == resp.rajaongkir.results[i].type+" "+resp.rajaongkir.results[i].city_name) {
+            var city_id = resp.rajaongkir.results[i].city_id;
+            $("#kota_pengirim").val(city_id);
+          };
 
-        }
+        }); 
 
-      }); 
-
-     }          
-   });
+      }          
+    });
 
     $selectKurir.on('change', function(){
 
@@ -604,9 +615,23 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
 
       $selectKota[0].selectize.clearOptions();               
       $selectKota[0].selectize.focus();
+      var kabupaten_pelanggan = $("#kabupaten_pelanggan").val();
+
       $.getJSON('{{ Url("kota-destinasi-pengiriman") }}',{'_token': $('meta[name=csrf-token]').attr('content'),id_provinsi:id_provinsi}, function(resp){
+
        $selectKota[0].selectize.addOption(resp.rajaongkir.results);    
-       $selectKota[0].selectize.focus();
+       $.each(resp.rajaongkir.results, function (i, item) { 
+        if (kabupaten_pelanggan == resp.rajaongkir.results[i].type+" "+resp.rajaongkir.results[i].city_name) {
+          var kota = resp.rajaongkir.results[i].city_id;
+          var alamat = $("#alamatPelanggan").val();
+          var alamat_pengiriman = alamat +", Kota/Kab. "+resp.rajaongkir.results[i].city_name+",  "+resp.rajaongkir.results[i].province;
+
+          document.getElementById('kota').selectize.setValue(kota);
+          $("#alamatPelanggan").val(alamat_pengiriman);
+          $(".alamat_pengiriman").hide();
+          $("#formAlamat").show();
+        };
+      }); 
      });
 
     }

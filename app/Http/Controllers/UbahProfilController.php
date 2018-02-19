@@ -77,17 +77,17 @@ class UbahProfilController extends Controller
         if ($request['komunitas'] != "") {
             //HAPUS KOMUNITAS LAMA
             KomunitasCustomer::where('user_id', $request->id)->delete();
-            LokasiPelanggan::where('id_pelanggan', $request->id)->delete();
 
             //INSERT KOMUNITAS BARU
             if (isset($request['komunitas'])) {
                 KomunitasCustomer::create(['user_id' => $request->id, 'komunitas_id' => $request['komunitas']]);
-
-                //UPDATE USER PELANGGAN
-                LokasiPelanggan::create(['id_pelanggan' => $request->id, 'provinsi' => $request['provinsi'], 'kabupaten' => $request['kabupaten'], 'kecamatan' => $request['kecamatan'], 'kelurahan' => $request['kelurahan']]);
-
             }
+
         }
+
+        LokasiPelanggan::where('id_pelanggan', $request->id)->delete();
+        //UPDATE USER PELANGGAN
+        LokasiPelanggan::create(['id_pelanggan' => $request->id, 'provinsi' => $request['provinsi'], 'kabupaten' => $request['kabupaten'], 'kecamatan' => $request['kecamatan'], 'kelurahan' => $request['kelurahan']]);
 
         return redirect()->route('daftar_produk.index');
     }
@@ -304,9 +304,9 @@ class UbahProfilController extends Controller
         # Buat pilihan "Switch Case" berdasarkan variabel "type" dari form
         switch ($type_wilayah):
     # untuk kasus "kabupaten"
-        case 'kabupaten':
+    case 'kabupaten':
         if ($lokasi_pelanggan != null) {
-            $return = $this->editLokasi($lokasi_pelanggan, $type_wilayah);
+                $return = $this->editLokasi($lokasi_pelanggan, $type_wilayah);
         } else {
             $return = "<option value=''>--PILIH KABUPATEN--</option>";
         }
@@ -319,7 +319,7 @@ class UbahProfilController extends Controller
         return $return;
         break;
     # untuk kasus "kecamatan"
-        case 'kecamatan':
+    case 'kecamatan':
         if ($lokasi_pelanggan != null) {
             $return = $this->editLokasi($lokasi_pelanggan, $type_wilayah);
         } else {
@@ -333,7 +333,7 @@ class UbahProfilController extends Controller
         return $return;
         break;
     # untuk kasus "kelurahan"
-        case 'kelurahan':
+    case 'kelurahan':
         if ($lokasi_pelanggan != null) {
             $return = $this->editLokasi($lokasi_pelanggan, $type_wilayah);
         } else {
