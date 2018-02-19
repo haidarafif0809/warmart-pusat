@@ -100,8 +100,8 @@ class LaporanKartuStokController extends Controller
     {
         $laporan_kartu_stok = Hpp::dataKartuStok($request)->paginate(10);
         $page = $laporan_kartu_stok->currentPage();
-        $saldo = Hpp::dataSaldoAwal($request);
         if ($page == 1) {
+            $saldo = Hpp::dataSaldoAwal($request);
             $saldo_awal = $saldo;
             $total_saldo = $saldo;
         }else{
@@ -141,11 +141,42 @@ class LaporanKartuStokController extends Controller
     public function pencarian(Request $request)
     {
         $laporan_kartu_stok = Hpp::cariKartuStok($request)->paginate(10);
-        $saldo_awal         = Hpp::dataSaldoAwal($request);
-        $data_kartu_stok    = $this->foreachLaporan($laporan_kartu_stok, $saldo_awal);
+        $page = $laporan_kartu_stok->currentPage();
+        if ($page == 1) {
+            $saldo = Hpp::dataSaldoAwal($request);
+            $saldo_awal = $saldo;
+            $total_saldo = $saldo;
+        }else{
+            $saldo_awal = $request->saldoAwal;
+            $total_saldo = $saldo_awal;
+        }
+        
+        $data_kartu_stok = array();
+        foreach ($laporan_kartu_stok as $data_kartu_stoks) {
+            //SALDO AWAL
+            if ($data_kartu_stoks->jenis_hpp == 1) {
+                $saldo_awal = ($saldo_awal + $data_kartu_stoks->jumlah_masuk);
+            } else {
+                $saldo_awal = $saldo_awal - $data_kartu_stoks->jumlah_keluar;
+            }
+            //PELANGGAN
+            if ($data_kartu_stoks->pelanggan == null) {
+                $pelanggan = 'Umum';
+            } else {
+                $pelanggan = $data_kartu_stoks->pelanggan;
+            }
+            //SUPLIER
+            if ($data_kartu_stoks->suplier == null) {
+                $suplier = 'Umum';
+            } else {
+                $suplier = $data_kartu_stoks->suplier;
+            }
 
-        //DATA PAGINATION
-        $respons = $this->dataPagination($laporan_kartu_stok, $data_kartu_stok);
+            array_push($data_kartu_stok, ['data_kartu_stoks' => $data_kartu_stoks, 'saldo_awal' => $saldo_awal, 'pelanggan' => $pelanggan, 'suplier' => $suplier]);
+        }
+
+       //DATA PAGINATION
+        $respons = $this->dataPagination($laporan_kartu_stok, $data_kartu_stok,$saldo_awal,$total_saldo);
         return response()->json($respons);
     }
 
