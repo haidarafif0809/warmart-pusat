@@ -150,7 +150,7 @@ class LaporanKartuStokController extends Controller
             $saldo_awal = $request->saldoAwal;
             $total_saldo = $saldo_awal;
         }
-        
+
         $data_kartu_stok = array();
         foreach ($laporan_kartu_stok as $data_kartu_stoks) {
             //SALDO AWAL
@@ -264,7 +264,7 @@ class LaporanKartuStokController extends Controller
         $request['sampai_tanggal'] = $sampai_tanggal;
         $request['produk']         = $produk;
 
-        $laporan_kartu_stok = Hpp::dataKartuStok($request)->paginate(10);
+        $laporan_kartu_stok = Hpp::dataKartuStok($request)->get();
         $saldo_awal         = Hpp::dataSaldoAwal($request);
         $data_kartu_stok    = $this->foreachLaporan($laporan_kartu_stok, $saldo_awal);
         $total_saldo_awal   = $this->totalSaldoAwal($request);
