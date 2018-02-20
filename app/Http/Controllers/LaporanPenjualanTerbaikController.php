@@ -57,4 +57,18 @@ class LaporanPenjualanTerbaikController extends Controller
         return response()->json($respons);
      }
 
+        public function cekTampilTerbaik(Request $request, $dari_tanggal, $sampai_tanggal, $jenis_penjualan)
+    {  
+                if ($jenis_penjualan == 0) {
+                    # code...
+                    $laporan_penjualan_terbaik = DetailPenjualanPos::penjualanTerbaik($request)->count();
+                }else{
+                    $laporan_penjualan_terbaik = DetailPenjualan::penjualanTerbaik($request)->count();
+                } 
+               $response['count_barang_terbaik'] = $laporan_penjualan_terbaik;
+                //DATA PAGINATION
+                return response()->json($response);
+     }
+
+
 }

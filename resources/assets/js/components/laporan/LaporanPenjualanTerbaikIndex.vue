@@ -91,17 +91,24 @@
         var dari_tanggal = app.dariTanggal(filter);
         var sampai_tanggal = app.sampaiTanggal(filter);
 
-        if (filter.jenis_penjualan == "") {
-          app.alertGagal('Silakan Pilih Jenis Penjualan Terlebih Dahulu');          
-        }else{
-          if (filter.jenis_penjualan == 0) {
-            app.$router.replace('/laporan-penjualan-terbaik/view/'+dari_tanggal+'/'+sampai_tanggal+'/'+app.filter.tampil_terbaik);
-          }else{
-            app.$router.replace('/laporan-penjualan-terbaik-online/view/'+dari_tanggal+'/'+sampai_tanggal+'/'+app.filter.tampil_terbaik);
-          }
-        }
-        // window.location.replace(window.location.origin+(window.location.pathname)+'#/laporan-bucket-size/view/'+dari_tanggal+'/'+sampai_tanggal+'/'+app.filter.kelipatan) 
-        
+            if (filter.jenis_penjualan == "") {
+              app.alertGagal('Silakan Pilih Jenis Penjualan Terlebih Dahulu');          
+            }else{
+                axios.get(app.url+'/cek-tampil-terbaik/'+dari_tanggal+'/'+sampai_tanggal+'/'+app.filter.jenis_penjualan)
+                .then(function (resp) {
+                  if (resp.data.count_barang_terbaik < app.filter.tampil_terbaik) {
+                      app.alertGagal('Item Terbaik yang Tampil '+app.filter.tampil_terbaik);
+                  }
+                  else{
+                  if (filter.jenis_penjualan == 0) {
+                    app.$router.replace('/laporan-penjualan-terbaik/view/'+dari_tanggal+'/'+sampai_tanggal+'/'+app.filter.tampil_terbaik);
+                  }else{
+                    app.$router.replace('/laporan-penjualan-terbaik-online/view/'+dari_tanggal+'/'+sampai_tanggal+'/'+app.filter.tampil_terbaik);
+                  }
+                }
+                // window.location.replace(window.location.origin+(window.location.pathname)+'#/laporan-bucket-size/view/'+dari_tanggal+'/'+sampai_tanggal+'/'+app.filter.kelipatan) 
+            })
+         }
       },
       alertGagal(pesan) {
         this.$swal({
