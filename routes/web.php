@@ -854,7 +854,7 @@ Route::post('/laporan-kas/subtotal-laporan-kas-rekap-mutasi-keluar', 'LaporanKas
 Route::get('/laporan-kas/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{kas}/{jenis_laporan}', 'LaporanKasController@cetakLaporan')->middleware('auth');
 Route::get('/laporan-kas/download-excel/{dari_tanggal}/{sampai_tanggal}/{kas}/{jenis_laporan}', 'LaporanKasController@downloadLaporan')->middleware('auth');
 
-Route::get('/setting-footer/id-warung', 'SettingFooterController@idWarung')->middleware('auth');
+Route::get('/setting-footer/default-data-setting-footer', 'SettingFooterController@getDefaultData')->middleware('auth');
 
 //MENAMPILKAN DATA USER KASIR
 Route::get('/user-kasir/view', 'UserKasirController@view')->middleware('auth');
@@ -867,6 +867,10 @@ Route::get('/laporan-bucket-size-online/view/{dari_tanggal}/{sampai_tanggal}/{ke
 // LAPORAN PENJUALAN HARIAN VUE.JS
 Route::get('/laporan-penjualan-harian/view/{dari_tanggal}/{sampai_tanggal}', 'LaporanPenjualanHarianController@prosesLaporanPenjualanHarian')->middleware('auth');
 Route::get('/laporan-penjualan-harian-online/view/{dari_tanggal}/{sampai_tanggal}', 'LaporanPenjualanHarianController@prosesLaporanPenjualanHarianOnline')->middleware('auth');
+
+//STOK OPNAME  VUE JS
+Route::get('/stok-opname/view', 'StokOpnameController@view')->middleware('auth');
+Route::get('/stok-opname/pencarian', 'StokOpnameController@pencarian')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
@@ -906,6 +910,7 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
     Route::resource('setting-verifikasi', 'SettingVerifikasiController');
     Route::resource('user-kasir', 'UserKasirController');
     Route::resource('laporan-bucket-size', 'LaporanBucketSizeController');
+    Route::resource('stok-opname', 'StokOpnameController');
 
 //BARANG
     //HALAMAN DESKRIPSI
