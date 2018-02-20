@@ -69,7 +69,7 @@
                                         <div class="form-group">
                                             <label for="no_telp" class="col-md-2 control-label label-font-style">Nomor Telepon</label>
                                             <div class="col-md-6">
-                                                <input type="number" v-model="setting_footer.no_telp" class="form-control input-font-style" autocomplete="off" :placeholder="placeholders.contact_us.no_telp" name="no_telp">
+                                                <input type="text" v-model="setting_footer.no_telp" class="form-control input-font-style" autocomplete="off" :placeholder="placeholders.contact_us.no_telp" name="no_telp">
                                             </div>
                                         </div>
                                         <div class="form-group">

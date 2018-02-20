@@ -322,6 +322,16 @@
                     </span>
                 </router-link>
             </li>
+             <li>
+                <router-link :to="{name: 'indexLaporanPenjualanTerbaik'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        LP
+                    </span>
+                    <span class="sidebar-normal">
+                        Laporan Penjualan Terbaik / Item
+                    </span>
+                </router-link>
+            </li>
             <li>
                 <router-link :to="{name: 'indexLaporanPenjualanPelanggan'}" class="menu-nav">
                     <span class="sidebar-mini">
