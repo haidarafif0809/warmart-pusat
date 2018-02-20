@@ -352,4 +352,18 @@ class DetailPenjualanPos extends Model
         }
         return $query_cari_laporan_pos_pelanggan;
     }
+
+
+    // TOTAL PEJUALAN POS PER PRODUK
+    public function scopePenjualanTerbaik($detail_penjualan_pos,$request)
+    {
+        $detail_penjualan_pos = DetailPenjualanPos::select([DB::raw('SUM(detail_penjualan_pos.jumlah_produk) as jumlah_produk'),'barangs.nama_barang as nama_barang','detail_penjualan_pos.id_produk as id_produk'])
+            ->where(DB::raw('DATE(detail_penjualan_pos.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+            ->where(DB::raw('DATE(detail_penjualan_pos.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+             ->leftJoin('barangs', 'barangs.id', '=', 'detail_penjualan_pos.id_produk');
+        return $detail_penjualan_pos;
+    }
+
+
+
 }
