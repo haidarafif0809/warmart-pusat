@@ -420,6 +420,7 @@ class BarangController extends Controller
                 'kode_produk' => $produks->kode_barang,
                 'barcode' => $produks->kode_barcode,
                 'hitung_stok' => $produks->hitung_stok,
+                'status_aktif' => $produks->status_aktif,
                 'produk'      => $produks->id . "|" . title_case($produks->nama_barang) . "|" . $produks->harga_beli . "|" . $produks->harga_jual . "|" . $produks->satuan_id . "|" . $produks->harga_jual2]);
 
         }
