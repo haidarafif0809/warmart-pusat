@@ -480,6 +480,7 @@ Route::get('/kas/view', 'KasController@view')->middleware('auth');
 Route::get('/kas/pencarian', 'KasController@pencarian')->middleware('auth');
 Route::get('/kas/cek-default-kas', 'KasController@cekDefaultKas')->middleware('auth');
 Route::get('/kas/cek-kas-warung', 'KasController@cekKasWarung')->middleware('auth');
+Route::get('/kas/daftar-kas', 'KasController@pilih_kas')->middleware('auth');
 
 // ITEM MASUK
 Route::get('/item-masuk/view', 'ItemMasukController@view')->middleware('auth');
@@ -733,6 +734,13 @@ Route::get('/laporan-kartu-stok/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{p
 // GRAFIK JAM TRANSAKSI PENJUALAN
 Route::get('/grafik-jam-transaksi-penjualan/view/{tanggal}', 'GrafikJamTransaksiPenjualanController@prosesGrafikJamPenjualan')->middleware('auth');
 Route::get('/grafik-jam-transaksi-penjualan-online/view/{tanggal}', 'GrafikJamTransaksiPenjualanController@prosesGrafikJamPenjualanOnline')->middleware('auth');
+
+
+// LAPORAN PENJUALAN TERBAIK
+Route::get('/laporan-penjualan-terbaik/view/{dari_tanggal}/{sampai_tanggal}/{tampil_terbaik}', 'LaporanPenjualanTerbaikController@prosesPenjualanTerbaik')->middleware('auth');
+Route::get('/laporan-penjualan-terbaik-online/view/{dari_tanggal}/{sampai_tanggal}/{tampil_terbaik}', 'LaporanPenjualanTerbaikController@prosesPenjualanTerbaikOnline')->middleware('auth');
+Route::get('/laporan-penjualan-terbaik/cek-tampil-terbaik/{dari_tanggal}/{sampai_tanggal}/{jenis_penjualan}', 'LaporanPenjualanTerbaikController@cekTampilTerbaik')->middleware('auth');
+
 
 ////PEMBAYARAN Hutang
 Route::get('/pembayaran-hutang/view', 'PembayaranHutangController@view')->middleware('auth');

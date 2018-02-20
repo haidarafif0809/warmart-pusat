@@ -1,40 +1,40 @@
 <style scoped>
-  .modal {
-    overflow-y:auto;
-  }
-  .pencarian {
-    color: red; 
-    float: right;
-  }
-  .form-penjualan{
-    width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    display: inline-block;
-    border: 3px solid #555;
-    border-radius: 4px;
-    box-sizing: border-box;
-    font-size: 30px;
-  }
-  .form-subtotal{
-    width: 100%;
-    margin: 8px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-  }
-  .card-produk{
-    background-color:#82B1FF;
-  }
+.modal {
+  overflow-y:auto;
+}
+.pencarian {
+  color: red; 
+  float: right;
+}
+.form-penjualan{
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 3px solid #555;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 30px;
+}
+.form-subtotal{
+  width: 100%;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+.card-produk{
+  background-color:#82B1FF;
+}
 
-  .card-pembayaran{
-    background-color:#82B1FF;
-  }
-  .btn-icon{
-    border-radius: 1px solid;
-    padding: 10px 10px;
-  }
+.card-pembayaran{
+  background-color:#82B1FF;
+}
+.btn-icon{
+  border-radius: 1px solid;
+  padding: 10px 10px;
+}
 
 </style>
 
@@ -137,7 +137,7 @@
                   <div class="col-md-5 col-xs-10">
                     <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
                       <font style="color: black">Kas(F6)</font><br>
-                      <selectize-component v-model="penjualan.kas" :settings="placeholder_kas" id="kas" ref='kas'> 
+                      <selectize-component v-model="penjualan.kas" :settings="placeholder_kas" id="kas" ref='kas'>  
                         <option v-for="kass, index in kas" v-bind:value="kass.id">{{ kass.nama_kas }}</option>
                       </selectize-component>
                       <br v-if="errors.kas">   <span v-if="errors.kas" id="kas_error" class="label label-danger">{{ errors.kas[0] }}</span>
@@ -452,93 +452,91 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex';
-  export default {
-    data: function () {
-      return {
-        errors: [],
-        kas: [],
-        tbs_penjualan: [],
-        tbsPenjualanData : {},
-        url : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
-        url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
-        url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
+import { mapState } from 'vuex';
+export default {
+  data: function () {
+    return {
+      errors: [],
+      tbs_penjualan: [],
+      tbsPenjualanData : {},
+      url : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
+      url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
+      url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
 
-        inputTbsPenjualan: {
-          nama_produk : '',
-          produk : '',
-          jumlah_produk : '',
-          potongan_produk : '',
-          id_tbs : '',
-        },
-        penjualan : {
-          pelanggan : '0',
-          kas : '',
-          jatuh_tempo : '',
-          subtotal : 0,
-          potongan : 0,
-          potongan_faktur : 0,
-          potongan_persen : 0,
-          total_akhir : 0,
-          pembayaran : 0,
-          kembalian: 0,
-          kredit: 0,
-        }, 
-        setting_penjualan_pos :{
-          jumlah_produk : 1,
-          stok : 0,
-          harga_jual : 1
-        },
-        placeholder_produk: {
-          placeholder: 'Cari Produk (F1) ...',
-          sortField: 'text',
-          openOnFocus : true
-        },
-        placeholder_pelanggan: {
-          placeholder: '--PILIH PELANGGAN (F4)--',
-          sortField: 'text',
-          openOnFocus : true
+      inputTbsPenjualan: {
+        nama_produk : '',
+        produk : '',
+        jumlah_produk : '',
+        potongan_produk : '',
+        id_tbs : '',
+      },
+      penjualan : {
+        pelanggan : '0',
+        kas : '',
+        jatuh_tempo : '',
+        subtotal : 0,
+        potongan : 0,
+        potongan_faktur : 0,
+        potongan_persen : 0,
+        total_akhir : 0,
+        pembayaran : 0,
+        kembalian: 0,
+        kredit: 0,
+      }, 
+      setting_penjualan_pos :{
+        jumlah_produk : 1,
+        stok : 0,
+        harga_jual : 1
+      },
+      placeholder_produk: {
+        placeholder: 'Cari Produk (F1) ...',
+        sortField: 'text',
+        openOnFocus : true
+      },
+      placeholder_pelanggan: {
+        placeholder: '--PILIH PELANGGAN (F4)--',
+        sortField: 'text',
+        openOnFocus : true
 
-        },
-        placeholder_kas: {
-          placeholder: '--PILIH KAS--',
-          sortField: 'text',
-          openOnFocus : true
-        },
-        hargaJual: {
-          placeholder: '--HARGA JUAL--'
-        },
-        tambahKas: {
-          kode_kas : '',
-          nama_kas : '',
-          status_kas : 0,
-          default_kas : 0
-        },
-        pencarian: '',
-        loading: true,
-        seen : false,
-        separator: {
-          decimal: ',',
-          thousands: '.',
-          prefix: '',
-          suffix: '',
-          precision: 2,
-          masked: false /* doesn't work with directive */
-        },
-        disabled: {
+      },
+      placeholder_kas: {
+        placeholder: '--PILIH KAS--',
+        sortField: 'text',
+        openOnFocus : true
+      },
+      hargaJual: {
+        placeholder: '--HARGA JUAL--'
+      },
+      tambahKas: {
+        kode_kas : '',
+        nama_kas : '',
+        status_kas : 0,
+        default_kas : 0
+      },
+      pencarian: '',
+      loading: true,
+      seen : false,
+      separator: {
+        decimal: ',',
+        thousands: '.',
+        prefix: '',
+        suffix: '',
+        precision: 2,
+        masked: false /* doesn't work with directive */
+      },
+      disabled: {
           to: new Date(), // Disable all dates up to specific date
         }
 
       }
     },
     mounted() {   
-      var app = this;
+      var app = this
       app.$store.dispatch('LOAD_PRODUK_LIST')
       app.$store.dispatch('LOAD_PELANGGAN_LIST')
-      app.dataKas();    
-      app.dataSettingPenjualanPos();
-      app.getResults();     
-
+      app.$store.dispatch('LOAD_KAS_LIST')  
+      app.dataSettingPenjualanPos()
+      app.getResults()   
     },
     computed : mapState ({    
       produk(){
@@ -546,7 +544,11 @@
       },
       pelanggan(){
         return this.$store.state.pelanggan
-      }
+      },
+      kas(){
+        return this.$store.state.kas
+      },
+      default_kas: state => state.default_kas
     }),
     watch: {
     // whenever question changes, this function will run
@@ -588,7 +590,7 @@
       }else{
 
         this.penjualan.kembalian = 0  
-        this.penjualan.kredit = parseFloat(this.penjualan.total_akhir) -parseFloat(val)
+        this.penjualan.kredit = parseFloat(this.penjualan.total_akhir) - parseFloat(val)
 
       }        
     },
@@ -658,6 +660,7 @@
       app.loading = false;
       app.seen = true;      
       app.openSelectizeProduk();
+      app.penjualan.kas = app.default_kas
 
       if (app.penjualan.subtotal == 0) { 
        app.getSubtotalTbs();
@@ -701,25 +704,7 @@
       console.log(resp);
     });
   },   
-  dataKas() {
-    var app = this;
-    axios.get(app.url+'/pilih-kas').then(function (resp) {
-      app.kas = resp.data;   
-
-      $.each(resp.data, function (i, item) {
-        if (resp.data[i].default_kas == 1) {
-          app.penjualan.kas = resp.data[i].id 
-        }
-
-      });
-
-    })
-    .catch(function (resp) {
-
-      console.log(resp);
-      alert("Tidak Bisa Memuat Kas");
-    });
-  },pilihProduk() {
+  pilihProduk() {
     if (this.inputTbsPenjualan.produk != '') {
 
       var app = this;
@@ -758,7 +743,7 @@
     app.tambahKas.status_kas = 0
     app.tambahKas.default_kas = 0
     app.errors = '';
-    app.dataKas();
+    app.$store.dispatch('LOAD_KAS_LIST')
     $("#modal_tambah_kas").hide();
     $("#modal_selesai").show();
   })
