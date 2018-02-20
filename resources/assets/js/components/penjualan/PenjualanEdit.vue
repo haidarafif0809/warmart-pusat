@@ -452,13 +452,12 @@
 </template>
 
 <script>
+
+import { mapState } from 'vuex';
 export default {
   data: function () {
     return {
       errors: [],
-      produk: [],
-      pelanggan: [],
-      kas: [],
       tbs_penjualan: [],
       tbsPenjualanData : {},
       url : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
@@ -531,13 +530,24 @@ export default {
   },
   mounted() {   
     var app = this;
-    app.dataProduk();
-    app.dataPelanggan();
-    app.dataKas();
+    app.$store.dispatch('LOAD_PRODUK_LIST')
+    app.$store.dispatch('LOAD_PELANGGAN_LIST')
+    app.$store.dispatch('LOAD_KAS_LIST')
     app.getResults();
     app.dataSettingPenjualanPos();
     app.id_penjualan_pos = app.$route.params.id;
   },
+  computed : mapState ({    
+    produk(){
+      return this.$store.state.produk
+    },
+    pelanggan(){
+      return this.$store.state.pelanggan
+    },
+    kas(){
+      return this.$store.state.kas
+    }
+  }),
   watch: {
     // whenever question changes, this function will run
     pencarian: function (newQuestion) {
@@ -710,41 +720,8 @@ export default {
       alert("Tidak Dapat Memuat Penjualan");
 
     });
-  }, 
-  dataProduk() {
-    var app = this;
-    axios.get(app.url_produk+'/pilih-produk').then(function (resp) {
-      app.produk = resp.data;
-    })
-    .catch(function (resp) {
-
-      console.log(resp);
-      alert("Tidak Bisa Memuat Produk");
-    });
-  },   
-  dataPelanggan() {
-    var app = this;
-    axios.get(app.url+'/pilih-pelanggan').then(function (resp) {
-      app.pelanggan = resp.data;
-    })
-    .catch(function (resp) {
-
-      console.log(resp);
-      alert("Tidak Bisa Memuat Pelanggan");
-    });
-  },   
-  dataKas() {
-    var app = this;
-    axios.get(app.url+'/pilih-kas').then(function (resp) {
-      app.kas = resp.data;   
-
-    })
-    .catch(function (resp) {
-
-      console.log(resp);
-      alert("Tidak Bisa Memuat Kas");
-    });
-  },pilihProduk() {
+  },  
+  pilihProduk() {
     if (this.inputTbsPenjualan.produk != '') {
 
       var app = this;
@@ -781,7 +758,7 @@ export default {
     app.tambahKas.status_kas = 0
     app.tambahKas.default_kas = 0
     app.errors = '';
-    app.dataKas();
+    app.$store.dispatch('LOAD_KAS_LIST')
     $("#modal_tambah_kas").hide();
     $("#modal_selesai").show();
   })

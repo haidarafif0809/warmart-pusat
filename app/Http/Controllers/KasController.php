@@ -52,11 +52,11 @@ class KasController extends Controller
         $search = $request->search; // REQUEST SEARCH
         //query pencarian
         $kas = Kas::where('warung_id', Auth::user()->id_warung)
-            ->where(function ($query) use ($search) {
+        ->where(function ($query) use ($search) {
 // search
-                $query->orwhere('nama_kas', 'LIKE', $search . '%')
-                    ->orWhere('kode_kas', 'LIKE', $search . '%');
-            })->paginate(10);
+            $query->orwhere('nama_kas', 'LIKE', $search . '%')
+            ->orWhere('kode_kas', 'LIKE', $search . '%');
+        })->paginate(10);
 
         $kas_array = array();
         foreach ($kas as $kass) {
@@ -129,7 +129,7 @@ class KasController extends Controller
             if ($request->default_kas == 1) {
                 //UPDATE MASTER DATA KAS WARUNG, JADI TIDAK DEFAULT KAS
                 $kas_default = Kas::where('default_kas', $request->default_kas)
-                    ->where('warung_id', Auth::user()->id_warung)->update([
+                ->where('warung_id', Auth::user()->id_warung)->update([
                     'default_kas' => 0,
                 ]);
 
@@ -230,7 +230,7 @@ class KasController extends Controller
             //UPDATE MASTER DATA KAS WARUNG, JADI TIDAK DEFAULT KAS
             if ($request->default_kas == 1) {
                 $kas_default = Kas::where('default_kas', $request->default_kas)
-                    ->where('warung_id', Auth::user()->id_warung)->update([
+                ->where('warung_id', Auth::user()->id_warung)->update([
                     'default_kas' => 0,
                 ]);
                 //UPDATE MASTER DATA KAS WARUNG
@@ -242,13 +242,13 @@ class KasController extends Controller
                 ]);
             } else {
                 Kas::where('id', $id)
-                    ->where('warung_id', Auth::user()->id_warung)
-                    ->update([
-                        'kode_kas'    => $request->kode_kas,
-                        'nama_kas'    => $request->nama_kas,
-                        'status_kas'  => $status_kas,
-                        'default_kas' => $default_kas,
-                    ]);
+                ->where('warung_id', Auth::user()->id_warung)
+                ->update([
+                    'kode_kas'    => $request->kode_kas,
+                    'nama_kas'    => $request->nama_kas,
+                    'status_kas'  => $status_kas,
+                    'default_kas' => $default_kas,
+                ]);
             }
 
         } else {
@@ -297,5 +297,19 @@ class KasController extends Controller
             "kas"     => $kas->get()->toArray(),
         ]);
 
+    }
+
+    public function pilih_kas()
+    {
+        $kas = Kas::select('id', 'nama_kas', 'default_kas')->where('warung_id', Auth::user()->id_warung)->where('status_kas', 1);
+        $default_kas = 0;
+        foreach ($kas->get() as $kass) {
+            if ($kass->default_kas == 1) {
+                $default_kas =+ $kass->id; 
+            }
+        }
+        $response['default_kas'] = $default_kas;
+        $response['kas'] = $kas->get();
+        return response()->json($response);
     }
 }
