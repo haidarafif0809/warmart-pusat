@@ -737,6 +737,7 @@ Route::get('/grafik-jam-transaksi-penjualan-online/view/{tanggal}', 'GrafikJamTr
 
 // LAPORAN PENJUALAN TERBAIK
 Route::get('/laporan-penjualan-terbaik/view/{dari_tanggal}/{sampai_tanggal}/{tampil_terbaik}', 'LaporanPenjualanTerbaikController@prosesPenjualanTerbaik')->middleware('auth');
+Route::get('/laporan-penjualan-terbaik-online/view/{dari_tanggal}/{sampai_tanggal}/{tampil_terbaik}', 'LaporanPenjualanTerbaikController@prosesPenjualanTerbaikOnline')->middleware('auth');
 
 ////PEMBAYARAN Hutang
 Route::get('/pembayaran-hutang/view', 'PembayaranHutangController@view')->middleware('auth');

@@ -42,4 +42,19 @@ class LaporanPenjualanTerbaikController extends Controller
         return response()->json($respons);
      }
 
+       public function prosesPenjualanTerbaikOnline(Request $request, $dari_tanggal, $sampai_tanggal, $tampil_terbaik)
+    {  
+
+	       	$data_barang  = Barang::where('id_warung', Auth::user()->id_warung)->count();
+	       	
+	           $laporan_penjualan_terbaik = DetailPenjualan::penjualanTerbaik($request)->groupBy('id_produk')->orderBy('jumlah_produk', 'desc')->limit($tampil_terbaik)->get();
+	           foreach ($laporan_penjualan_terbaik as $laporan_penjualan_terbaiks) {
+			        $respons['nama_barang'][] =  $laporan_penjualan_terbaiks->nama_barang;
+		           $respons['jumlah_produk'][]     = $laporan_penjualan_terbaiks->jumlah_produk;   
+		           $respons['color'][]      = $this->random_color();  
+	       }
+        //DATA PAGINATION
+        return response()->json($respons);
+     }
+
 }
