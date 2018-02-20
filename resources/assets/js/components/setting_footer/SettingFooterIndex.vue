@@ -142,6 +142,7 @@
 export default {
     mounted() {
         this.getDataSettingFooter();
+        this.getDefaultData();
     },
     data: function () {
         return {
@@ -150,22 +151,8 @@ export default {
             url : window.location.origin+(window.location.pathname).replace("dashboard", "setting-footer"),
             setting_footer: {},
             placeholders: {
-                judul_warung: 'Nama Warung Anda',
-                support_link: 'https://andaglos.id/support/',
-                about_link: 'https://andaglos.id/topos/',
-                about_us: 'Tentang kami...',
-                contact_us: {
-                    no_telp: '07218050299',
-                    alamat: 'Jl. Pramuka, Sentra Bisnis Terminal Kemiling Blok R3 No.7 Bandar Lampung',
-                    email: 'solusibisnis@andaglos.id',
-                    whatsapp: '0811728549'
-                },
-                sosmed: {
-                    facebook: 'https://facebook.com/andaglos',
-                    twitter: 'https://www.twitter.com/andaglos',
-                    instagram: 'https://www.instagram.com/andaglos',
-                    google_plus: 'https://plus.google.com/u/0/102529791461131425545'
-                },
+                contact_us: {},
+                sosmed: {}
             },
         }
     },
@@ -173,7 +160,7 @@ export default {
         saveForm() {
             let app = this;
 
-            axios.patch(app.url + '/' + 1, app.setting_footer)
+            axios.patch(app.url + '/' + app.setting_footer.id, app.setting_footer)
             .then(function (resp) {
                 console.log(resp);
                 swal({
@@ -187,6 +174,31 @@ export default {
             .catch(function (resp) {
                 console.log(resp);
                 alert('Tidak dapat menyimpan perubahan.');
+            })
+        },
+        getDefaultData() {
+            let app = this;
+
+            axios.get(app.url + '/default-data-setting-footer')
+            .then(function (resp) {
+                let data = resp.data;
+                console.log(data.no_telp);
+
+                app.placeholders.judul_warung           = data.judul_warung;
+                app.placeholders.support_link           = data.support_link;
+                app.placeholders.about_link             = data.about_link;
+                app.placeholders.about_us               = data.about_us;
+                app.placeholders.contact_us.no_telp     = data.no_telp;
+                app.placeholders.contact_us.alamat      = data.alamat;
+                app.placeholders.contact_us.email       = data.email;
+                app.placeholders.contact_us.whatsapp    = data.whatsapp;
+                app.placeholders.sosmed.facebook        = data.facebook;
+                app.placeholders.sosmed.twitter         = data.twitter;
+                app.placeholders.sosmed.instagram       = data.instagram;
+                app.placeholders.sosmed.google_plus     = data.google_plus;
+            })
+            .catch(function (resp) {
+                console.log(resp);
             })
         },
         getDataSettingFooter() {
