@@ -735,6 +735,10 @@ Route::get('/laporan-kartu-stok/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{p
 Route::get('/grafik-jam-transaksi-penjualan/view/{tanggal}', 'GrafikJamTransaksiPenjualanController@prosesGrafikJamPenjualan')->middleware('auth');
 Route::get('/grafik-jam-transaksi-penjualan-online/view/{tanggal}', 'GrafikJamTransaksiPenjualanController@prosesGrafikJamPenjualanOnline')->middleware('auth');
 
+
+// LAPORAN PENJUALAN TERBAIK
+Route::get('/laporan-penjualan-terbaik/view/{dari_tanggal}/{sampai_tanggal}/{tampil_terbaik}', 'LaporanPenjualanTerbaikController@prosesPenjualanTerbaik')->middleware('auth');
+
 ////PEMBAYARAN Hutang
 Route::get('/pembayaran-hutang/view', 'PembayaranHutangController@view')->middleware('auth');
 Route::get('/pembayaran-hutang/pencarian', 'PembayaranHutangController@pencarian')->middleware('auth');

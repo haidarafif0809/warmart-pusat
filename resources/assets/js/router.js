@@ -136,6 +136,11 @@ import LaporanPenjualanHarianIndex from './components/laporan/LaporanPenjualanHa
 import LaporanPenjualanHarianTampil from './components/laporan/LaporanPenjualanHarianTampil.vue';
 import LaporanPenjualanHarianOnlineTampil from './components/laporan/LaporanPenjualanHarianOnlineTampil.vue';
 
+// LAPORAN PENJUALAN TERBAIK
+import LaporanPenjualanTerbaikIndex from './components/laporan/LaporanPenjualanTerbaikIndex.vue';
+import LaporanPenjualanTerbaikTampil from './components/laporan/LaporanPenjualanTerbaikTampil.vue';
+
+
 //PEMBAYARAN HUTANG
 import PembayaranHutangIndex from './components/pembayaran_hutang/PembayaranHutangIndex.vue';
 import PembayaranHutangCreate from './components/pembayaran_hutang/PembayaranHutangCreate.vue';
@@ -701,8 +706,7 @@ const routes = [{
         path: '/grafik-jam-transaksi-penjualan/view/:tanggal/',
         component: GrafikJamTransaksiPenjualanTampil,
         name: 'tampilGrafikJamTransaksiPenjualan'
-    },
-    {
+    },{
         path: '/grafik-jam-transaksi-penjualan-online/view/:tanggal/',
         component: GrafikJamTransaksiPenjualanOnlineTampil,
         name: 'tampilGrafikJamTransaksiPenjualanOnline'
@@ -720,6 +724,14 @@ const routes = [{
         path: '/edit-stok-opname/:id',
         component: StokOpnameEdit,
         name: 'editStokOpname'
+    },{
+        path: '/laporan-penjualan-terbaik/',
+        component: LaporanPenjualanTerbaikIndex,
+        name: 'indexLaporanPenjualanTerbaik'
+    },{
+        path: '/laporan-penjualan-terbaik/view/:dari_tanggal/:sampai_tanggal/:tampil_terbaik',
+        component: LaporanPenjualanTerbaikTampil,
+        name: 'tampilLaporanPenjualanTerbaik'
     }
     ]
     export default routes;
