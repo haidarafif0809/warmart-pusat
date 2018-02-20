@@ -139,7 +139,7 @@ import LaporanPenjualanHarianOnlineTampil from './components/laporan/LaporanPenj
 // LAPORAN PENJUALAN TERBAIK
 import LaporanPenjualanTerbaikIndex from './components/laporan/LaporanPenjualanTerbaikIndex.vue';
 import LaporanPenjualanTerbaikTampil from './components/laporan/LaporanPenjualanTerbaikTampil.vue';
-
+import LaporanPenjualanTerbaikOnlineTampil from './components/laporan/LaporanPenjualanTerbaikOnlineTampil.vue';
 
 //PEMBAYARAN HUTANG
 import PembayaranHutangIndex from './components/pembayaran_hutang/PembayaranHutangIndex.vue';
@@ -732,6 +732,11 @@ const routes = [{
         path: '/laporan-penjualan-terbaik/view/:dari_tanggal/:sampai_tanggal/:tampil_terbaik',
         component: LaporanPenjualanTerbaikTampil,
         name: 'tampilLaporanPenjualanTerbaik'
+    },{
+        path: '/laporan-penjualan-terbaik-online/view/:dari_tanggal/:sampai_tanggal/:tampil_terbaik',
+        component: LaporanPenjualanTerbaikOnlineTampil,
+        name: 'tampilLaporanPenjualanTerbaikOnline'
     }
+
     ]
     export default routes;

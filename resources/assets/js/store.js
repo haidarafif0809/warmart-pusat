@@ -22,6 +22,11 @@ const getters = {
 			return produk.hitung_stok == 1 && produk.status_aktif == 1
 		})
 	},
+	produk_barang(state){
+		return state.produk.filter(function(produk){
+			return produk.hitung_stok == 1
+		})
+	}
 }
 // Mutation adalah satu-satunya cara untuk merubah state
 const mutations = {
