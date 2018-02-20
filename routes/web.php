@@ -480,6 +480,7 @@ Route::get('/kas/view', 'KasController@view')->middleware('auth');
 Route::get('/kas/pencarian', 'KasController@pencarian')->middleware('auth');
 Route::get('/kas/cek-default-kas', 'KasController@cekDefaultKas')->middleware('auth');
 Route::get('/kas/cek-kas-warung', 'KasController@cekKasWarung')->middleware('auth');
+Route::get('/kas/daftar-kas', 'KasController@pilih_kas')->middleware('auth');
 
 // ITEM MASUK
 Route::get('/item-masuk/view', 'ItemMasukController@view')->middleware('auth');
