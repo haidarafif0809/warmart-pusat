@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DetailPembelian;
 use App\Hpp;
 use App\StokOpname;
 use Auth;
@@ -91,7 +92,7 @@ class StokOpnameController extends Controller
         $warung_id     = Auth::user()->id_warung;
         $no_faktur     = StokOpname::no_faktur($warung_id);
         $stok_sekarang = Hpp::stok_produk($request->produk);
-        $selisih_fisik = $stok_sekarang - $request->jumlah_produk;
+        $selisih_fisik = $request->jumlah_produk - $stok_sekarang;
 
         if ($selisih_fisik < 0) {
             // Harga Hpp
