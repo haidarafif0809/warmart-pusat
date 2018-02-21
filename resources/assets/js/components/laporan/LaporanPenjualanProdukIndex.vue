@@ -33,6 +33,11 @@
 								<option v-for="produks, index in produk" v-bind:value="produks.id" >{{ produks.nama_produk }}</option>
 							</selectize-component>
 						</div>
+						<div class="form-group col-md-2">
+							<selectize-component v-model="filter.kasir" :settings="placeholder_kasir" id="pilih_kasir"> 
+								<option v-for="kasirs, index in kasir" v-bind:value="kasirs.id" >{{ kasirs.nama_kasir }}</option>
+							</selectize-component>
+						</div>
 
 						<div class="form-group col-md-2">
 							<button class="btn btn-primary" id="btnSubmit" type="submit" style="margin: 0px 0px;" @click="submitPenjualanProduk()"><i class="material-icons">search</i> Cari</button>
@@ -161,6 +166,7 @@ export default {
 	data: function () {
 		return {
 			produk: [],
+			kasir: [],
 			penjualanProduk: [],
 			penjualanOnlineProduk:[],
 			penjualanProdukData: {},
@@ -171,6 +177,7 @@ export default {
 				dari_tanggal: '',
 				sampai_tanggal: new Date(),
 				produk: '',
+				kasir: '',
 			},
 			url : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-penjualan-produk"),
 			urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-penjualan-produk/download-excel-penjualan-pos-produk"),
@@ -181,6 +188,9 @@ export default {
 			placeholder_produk: {
 				placeholder: '--SEMUA PRODUK--'
 			},
+			placeholder_kasir: {
+				placeholder: '--SEMUA KASIR--'
+			},
 		}
 	},
 	mounted() {
@@ -189,6 +199,7 @@ export default {
 		awal_tanggal.setDate(1);
 
 		app.dataProduk();
+		app.dataKasir();
 		app.filter.dari_tanggal = awal_tanggal;
 	},
 	watch: {
@@ -267,6 +278,17 @@ methods: {
 			alert("Tidak bisa memuat produk ");
 		});
 	},
+	dataKasir() {
+		var app = this;
+		axios.get(app.url+'/pilih-kasir')
+		.then(function (resp) {
+			app.kasir = resp.data;
+			console.log(resp.data)
+		})
+		.catch(function (resp) {
+			alert("Tidak bisa memuat kasir ");
+		});
+	},
 	getHasilPencarian(page){
 		var app = this;
 		var newFilter = app.filter;
@@ -337,6 +359,9 @@ methods: {
 		if (filter.produk == "") {
 			filter.produk = 0;
 		};
+		if (filter.kasir == "") {
+			filter.kasir = 0;
+		};
 
 		var date_dari_tanggal = filter.dari_tanggal;
 		var date_sampai_tanggal = filter.sampai_tanggal;
@@ -345,8 +370,8 @@ methods: {
 
 		$("#btnExcel").show();
 		$("#btnCetak").show();
-		$("#btnExcel").attr('href', app.urlDownloadExcel+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.produk);
-		$("#btnCetak").attr('href', app.urlCetak+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.produk);
+		$("#btnExcel").attr('href', app.urlDownloadExcel+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.produk+'/'+filter.kasir);
+		$("#btnCetak").attr('href', app.urlCetak+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.produk+'/'+filter.kasir);
 	}
 }
 }

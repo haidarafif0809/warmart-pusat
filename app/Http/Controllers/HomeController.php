@@ -265,4 +265,9 @@ class HomeController extends Controller
 
         return $result->getBody();
     }
+
+    public function caraMemesan()
+    {
+        return view('auth.cara_memesan');
+    }
 }
