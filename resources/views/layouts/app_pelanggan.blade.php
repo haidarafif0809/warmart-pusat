@@ -56,8 +56,8 @@
   }
   .navbar .navbar-brand {
     position: relative;
-    height: 75px;
-    line-height: 30px;
+    height: 50px;
+    line-height: 0px;
     color: inherit;
     padding: 10px 15px;
 }
