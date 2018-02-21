@@ -26,7 +26,7 @@ class LaporanPenjualanPosProdukController extends Controller
         return $date_format;
     }
 
-    public function dataProduk()
+        public function dataProduk()
     {
         $produk       = Barang::select(['id', 'nama_barang'])->where('id_warung', Auth::user()->id_warung)->get();
         $array_produk = array();
@@ -37,6 +37,18 @@ class LaporanPenjualanPosProdukController extends Controller
             ]);
         }
         return response()->json($array_produk);
+    }
+        public function dataKasir()
+    {
+        $kasir       = User::select(['id', 'name'])->where('id_warung', Auth::user()->id_warung)->where('tipe_user',4)->get();
+        $array_kasir = array();
+        foreach ($kasir as $kasirs) {
+            array_push($array_kasir, [
+                'id'          => $kasirs->id,
+                'nama_kasir' => title_case($kasirs->name),
+            ]);
+        }
+        return response()->json($array_kasir);
     }
 
     public function dataPelanggan()
@@ -169,7 +181,7 @@ class LaporanPenjualanPosProdukController extends Controller
         return $sheet;
     }
     //DOWNLOAD EXCEL - LAPORAN PEMBELIAN /PRODUK
-    public function downloadExcel(Request $request, $dari_tanggal, $sampai_tanggal, $produk)
+    public function downloadExcel(Request $request, $dari_tanggal, $sampai_tanggal, $produk,$kasir)
     {
         $request['dari_tanggal']   = $dari_tanggal;
         $request['sampai_tanggal'] = $sampai_tanggal;
@@ -177,6 +189,10 @@ class LaporanPenjualanPosProdukController extends Controller
         if ($produk == 0) {
             $request['produk'] = "";
         };
+        if ($kasir == 0) {
+            $request['kasir'] = "";
+        };
+
         // laporan penjualan pos
         $laporan_penjualan = DetailPenjualanPos::laporanPenjualanPosProduk($request)->get();
         // laporan penjualan Online
@@ -282,18 +298,21 @@ class LaporanPenjualanPosProdukController extends Controller
         return $data_penjualan_online;
     }
 
-    public function cetakLaporan(Request $request, $dari_tanggal, $sampai_tanggal, $produk)
+    public function cetakLaporan(Request $request, $dari_tanggal, $sampai_tanggal, $produk,$kasir)
     {
         //SETTING APLIKASI
         $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
 
         $request['dari_tanggal']   = $dari_tanggal;
         $request['sampai_tanggal'] = $sampai_tanggal;
-        $request['produk']         = $produk;
 
         if ($produk == 0) {
             $request['produk'] = "";
         };
+        if ($kasir == 0) {
+            $request['kasir'] = "";
+        };
+        
         // data penjualan pos
         $laporan_penjualan = DetailPenjualanPos::laporanPenjualanPosProduk($request)->get();
         $data_penjualan    = $this->foreachLaporan($laporan_penjualan);
