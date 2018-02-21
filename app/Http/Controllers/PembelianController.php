@@ -677,6 +677,8 @@ class PembelianController extends Controller
 
               $subtotal = $request->jumlah_produk * $request->harga_produk;
 
+              $respons['status'] = 1;
+              $respons['subtotal_lama'] = $data_tbs->first()->subtotal_lama;
               $respons['subtotal'] = $subtotal;
               return response()->json($respons);
 
@@ -695,6 +697,8 @@ class PembelianController extends Controller
                 'satuan_id'     => $barang->satuan_id,
                 'warung_id'     => Auth::user()->id_warung,
             ]);
+
+            $respons['status'] = 0;
             $respons['subtotal'] = $subtotal;
 
             return response()->json($respons);

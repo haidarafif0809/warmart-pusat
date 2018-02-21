@@ -789,7 +789,6 @@ pilihProduk() {
     var id_produk = produk[0]; 
     var nama_produk = produk[1];
     var harga_produk = produk[2]; 
-    //this.isiJumlahProduk(id_produk,nama_produk,harga_produk);
     this.inputJumlahProduk(id_produk,nama_produk,harga_produk);
   }
 },//END FUNGSI pilihProduk
@@ -801,93 +800,6 @@ inputJumlahProduk(id_produk,nama_produk,harga_produk){
   $("#modalJumlahProduk").show();
   app.$refs.jumlah_produk.focus(); 
 },
-isiJumlahProduk(id_produk,nama_produk,harga_produk){
-  var app = this;   
-  swal({
-    title: titleCase(nama_produk),
-    html:
-    '<div class="col-sm-6  col-xs-6"><lable>Jumlah</lable><br><input type="number" id="swal-input1" class="swal2-input" autofocus></div>' +
-    '<div class="col-sm-6  col-xs-6"><lable>Harga</lable><br><input type="number" id="swal-input2" class="swal2-input" value="'+harga_produk+'"></div>',
-    allowEnterKey : false,
-    showCloseButton: true, 
-    showCancelButton: true,                        
-    focusConfirm: false, 
-    confirmButtonText:'<i class="fa fa-thumbs-o-up"></i> OK', 
-    confirmButtonAriaLabel: 'Thumbs up, great!', 
-    cancelButtonText:'<i class="fa fa-thumbs-o-down"> Batal', 
-    closeOnConfirm: false, 
-    cancelButtonAriaLabel: 'Thumbs down', 
-    preConfirm: function () { 
-      return new Promise(function (resolve) { 
-        resolve([ 
-          $('#swal-input1').val(), 
-          $('#swal-input2').val() 
-          ]) 
-      }) 
-    }
-  }).then(function (result) { 
-
-    if (result[0] == '' || result[0] == 0) { 
-
-      swal('Oops...', 'Jumlah Produk Tidak Boleh 0 atau Kosong !', 'error'); 
-      return false; 
-    }else if (result[1] == '' || result[1] == 0) { 
-
-      swal('Oops...', 'Harga Produk Tidak Boleh 0 atau Kosong !', 'error'); 
-      return false; 
-    }
-    else if (result[1] != harga_produk) { 
-      app.$swal({
-        title: "Konfirmasi",
-        text: "Anda Yakin Ingin Merubah Harga Beli Produk "+titleCase(nama_produk)+ "?",
-        icon: "warning",
-        buttons: true,
-        dangerMode: true,
-      })
-      .then((willDelete) => {
-        if (willDelete) {
-          $("#id_produk_tbs").val(id_produk); 
-          $("#jumlah_produk").val(result[0]); 
-          $("#harga_produk").val(result[1]);
-
-          axios.get(app.url+'/cek-tbs-pembelian?id='+id_produk)
-          .then(function (resp) {
-            if (resp.data > 0) {
-              swal({
-                title: "Peringatan",
-                text:"Produk "+titleCase(nama_produk)+" Sudah Ada, Silakan Pilih Produk Lain !",
-              });
-            }
-            else{
-              var jumlah_produk = result[0];
-              var harga_produk = result[1];
-              app.submitJumlahProduk(id_produk,jumlah_produk,harga_produk,nama_produk);
-            }
-          });
-        } else {
-          app.$swal.close();
-        }
-      });
-    }else{ 
-      $("#id_produk_tbs").val(id_produk); 
-      $("#jumlah_produk").val(result[0]); 
-      $("#harga_produk").val(harga_produk); 
-      axios.get(app.url+'/cek-tbs-pembelian?id='+id_produk)
-      .then(function (resp) {
-        if (resp.data > 0) {
-          swal({
-            title: "Peringatan",
-            text:"Produk "+titleCase(nama_produk)+" Sudah Ada, Silakan Pilih Produk Lain !",
-          });
-        }
-        else{
-          var jumlah_produk = result[0];
-          app.submitJumlahProduk(id_produk,jumlah_produk,harga_produk,nama_produk);
-        }
-      });
-    } 
-  });
-},//END fungsi isiJumlahProduk
 submitJumlahProduk(id_produk,jumlah_produk,harga_produk,nama_produk){
   var app = this
   var produk = app.inputTbsPembelian.produk.split("|");
@@ -942,7 +854,15 @@ prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk){
     app.alert("Menambahkan Produk "+titleCase(nama_produk));
     app.loading = false;
     app.getResults();
-    var subtotal = parseInt(app.inputPembayaranPembelian.subtotal) + parseInt(resp.data.subtotal)
+
+    if (resp.data.status == 1) {
+      var subtotal = (parseInt(app.inputPembayaranPembelian.subtotal) + parseInt(resp.data.subtotal_lama) + parseInt(resp.data.subtotal))
+      console.log(subtotal)
+    }else{      
+      var subtotal = parseInt(app.inputPembayaranPembelian.subtotal) + parseInt(resp.data.subtotal)
+      console.log(subtotal)
+    }
+
     app.inputPembayaranPembelian.subtotal = subtotal                       
     app.inputPembayaranPembelian.total_akhir  = subtotal
     app.hitungPotonganPersen();
