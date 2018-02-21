@@ -80,8 +80,7 @@
                                         <th class="text-kanan">Selisih Fisik</th>
                                         <th class="text-kanan">Harga</th>
                                         <th class="text-kanan">Selisih Harga</th>
-                                        <th>Petugas</th>
-                                        <th>Waktu</th>
+                                        <th style="text-align:center">Waktu</th>
                                         <th>Aksi</th>
 
                                     </tr>
@@ -94,9 +93,15 @@
                                         <td align="right">{{ stokOpname.stok_opname.jumlah_fisik | pemisahTitik}}</td>
                                         <td align="right">{{ stokOpname.stok_opname.selisih_fisik | pemisahTitik}}</td>
                                         <td align="right">{{ stokOpname.stok_opname.harga | pemisahTitik}}</td>
-                                        <td align="right">{{ stokOpname.stok_opname.total | pemisahTitik}}</td>
-                                        <td>{{ stokOpname.stok_opname.petugas }}</td>
-                                        <td>{{ stokOpname.stok_opname.created_at | tanggal}}</td>
+
+                                        <td align="right" v-if="stokOpname.stok_opname.selisih_fisik < 0">
+                                            (-){{ stokOpname.stok_opname.total * -1 | pemisahTitik}}
+                                        </td>
+                                        <td align="right" v-else>
+                                            (+){{ stokOpname.stok_opname.total | pemisahTitik}}
+                                        </td>
+
+                                        <td align="center">{{ stokOpname.stok_opname.created_at | tanggal}}</td>
                                         <td>
                                             <router-link :to="{name: 'editstokOpname.stok_opname', params: {id: stokOpname.stok_opname.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + stokOpname.stok_opname.id" > Edit
                                             </router-link>

@@ -22,7 +22,7 @@ class DetailPembelian extends Model
     public static function hargaProduk($produk_id, $warung_id)
     {
         $harga = DetailPembelian::select('harga_produk')->where('id_produk', $produk_id)
-            ->where('warung_id', $warung_id)->orderBy('id', 'DESC');
+            ->where('warung_id', $warung_id)->orderBy('id_detail_pembelian', 'DESC');
 
         return $harga;
     }
