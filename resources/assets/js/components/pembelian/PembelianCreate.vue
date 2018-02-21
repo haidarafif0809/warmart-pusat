@@ -851,16 +851,14 @@ prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk){
   axios.get(app.url+'/proses-tambah-tbs-pembelian?id_produk_tbs='+id_produk+'&jumlah_produk='+jumlah_produk+'&harga_produk='+harga_produk)
   .then(function (resp) {
     $("#modalJumlahProduk").hide();
-    app.alert("Menambahkan Produk "+titleCase(nama_produk));
+    app.alert("Menambahkan Produk dssds "+titleCase(nama_produk));
     app.loading = false;
     app.getResults();
 
     if (resp.data.status == 1) {
-      var subtotal = (parseInt(app.inputPembayaranPembelian.subtotal) + parseInt(resp.data.subtotal_lama) + parseInt(resp.data.subtotal))
-      console.log(subtotal)
+      var subtotal = (parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(resp.data.subtotal_lama) + parseInt(resp.data.subtotal))
     }else{      
       var subtotal = parseInt(app.inputPembayaranPembelian.subtotal) + parseInt(resp.data.subtotal)
-      console.log(subtotal)
     }
 
     app.inputPembayaranPembelian.subtotal = subtotal                       

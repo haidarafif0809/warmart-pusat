@@ -669,16 +669,18 @@ class PembelianController extends Controller
 
             if ($data_tbs->count() > 0) {
 
+              $subtotal_lama = $data_tbs->first()->subtotal;
+
               $jumlah_produk = $data_tbs->first()->jumlah_produk + $request->jumlah_produk;
 
               $subtotal_edit = ($jumlah_produk * $request->harga_produk) - $data_tbs->first()->potongan;
 
               $data_tbs->update(['jumlah_produk' => $jumlah_produk, 'subtotal' => $subtotal_edit, 'harga_produk'=> $request->harga_produk]);
 
-              $subtotal = $request->jumlah_produk * $request->harga_produk;
+              $subtotal = $jumlah_produk * $request->harga_produk;
 
               $respons['status'] = 1;
-              $respons['subtotal_lama'] = $data_tbs->first()->subtotal_lama;
+              $respons['subtotal_lama'] = $subtotal_lama;;
               $respons['subtotal'] = $subtotal;
               return response()->json($respons);
 
