@@ -176,6 +176,7 @@ class PembelianController extends Controller
             }
 
             array_push($array, [
+                'id_produk'       => $tbs_pembelians->id_produk,
                 'id_tbs_pembelian'       => $tbs_pembelians->id_tbs_pembelian,
                 'nama_produk'            => $nama_produk_title_case,
                 'kode_produk'            => $tbs_pembelians->produk->kode_barang,
