@@ -24,16 +24,18 @@ use App\Observers\KasKeluarObserver;
 use App\Observers\KasMutasiObserver;
 use App\Observers\KasObserver;
 use App\Observers\KategoriTransaksiObserver;
-use App\Observers\PembayaranPiutangObserver;
 use App\Observers\PembayaranHutangObserver;
+use App\Observers\PembayaranPiutangObserver;
 use App\Observers\PembelianObserver;
 use App\Observers\PenjualanPosObserver;
+use App\Observers\StokOpnameObserver;
 use App\Observers\UserWarungObserver;
 use App\Observers\WarungObserver;
-use App\PembayaranPiutang;
 use App\PembayaranHutang;
+use App\PembayaranPiutang;
 use App\Pembelian;
 use App\PenjualanPos;
+use App\StokOpname;
 use App\UserWarung;
 use App\Warung;
 use Illuminate\Support\Facades\Schema;
@@ -73,6 +75,7 @@ class AppServiceProvider extends ServiceProvider
         PenjualanPos::observe(PenjualanPosObserver::class);
         PembayaranPiutang::observe(PembayaranPiutangObserver::class);
         PembayaranHutang::observe(PembayaranHutangObserver::class);
+        StokOpname::observe(StokOpnameObserver::class);
     }
 
     /**
