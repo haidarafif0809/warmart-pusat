@@ -7,6 +7,7 @@ use App\Hpp;
 use App\StokOpname;
 use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class StokOpnameController extends Controller
 {
@@ -89,6 +90,7 @@ class StokOpnameController extends Controller
  */
     public function store(Request $request)
     {
+        DB::beginTransaction();
         $warung_id     = Auth::user()->id_warung;
         $no_faktur     = StokOpname::no_faktur($warung_id);
         $stok_sekarang = Hpp::stok_produk($request->produk);
@@ -125,6 +127,7 @@ class StokOpnameController extends Controller
             'keterangan'    => "Tes #0",
         ]);
 
+        DB::commit();
         return response(200);
     }
 
