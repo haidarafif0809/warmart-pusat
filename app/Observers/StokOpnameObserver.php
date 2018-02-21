@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Hpp;
 use App\StokOpname;
+use Illuminate\Support\Facades\DB;
 
 class StokOpnameObserver
 {
@@ -48,5 +49,29 @@ class StokOpnameObserver
     //HAPUS ITEM MASUK
     public function deleting(StokOpname $StokOpname)
     {
+        $stok = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk),0) - IFNULL(SUM(jumlah_keluar),0) as stok_produk')])
+            ->where('no_faktur', '!=', $StokOpname->no_faktur)
+            ->where('id_produk', $StokOpname->produk_id)
+            ->where('warung_id', $StokOpname->warung_id)->first()->stok_produk;
+
+        if ($stok < 0) {
+            return false;
+        } else {
+            if ($StokOpname->selisih_fisik < 0) {
+                $jenis_hpp = 2;
+            } else {
+                $jenis_hpp = 1;
+            }
+            $hpp = Hpp::where('no_faktur', $StokOpname->no_faktur)
+                ->where('id_produk', $StokOpname->produk_id)
+                ->where('jenis_hpp', $jenis_hpp)
+                ->where('warung_id', $StokOpname->warung_id);
+
+            if (!$hpp->delete()) {
+                return false;
+            } else {
+                return true;
+            }
+        }
     }
 }
