@@ -699,14 +699,15 @@ Route::post('/laporan-penjualan-produk/view', 'LaporanPenjualanPosProdukControll
 Route::post('/laporan-penjualan-produk/pencarian', 'LaporanPenjualanPosProdukController@pencarian')->middleware('auth');
 Route::post('/laporan-penjualan-produk/total-penjualan-pos-produk', 'LaporanPenjualanPosProdukController@totalPenjualanPosProduk')->middleware('auth');
 Route::get('/laporan-penjualan-produk/pilih-produk', 'LaporanPenjualanPosProdukController@dataProduk')->middleware('auth');
+Route::get('/laporan-penjualan-produk/pilih-kasir', 'LaporanPenjualanPosProdukController@dataKasir')->middleware('auth');
 
 // LAP PENJUALAN ONLINE /PRODUK
 Route::post('/laporan-penjualan-produk/view-online', 'LaporanPenjualanPosProdukController@prosesLaporanPenjualanOnlineProduk')->middleware('auth');
 Route::post('/laporan-penjualan-produk/pencarian-online', 'LaporanPenjualanPosProdukController@pencarianOnline')->middleware('auth');
 Route::post('/laporan-penjualan-produk/total-penjualan-online-produk', 'LaporanPenjualanPosProdukController@totalPenjualanOnlineProduk')->middleware('auth');
 Route::get('/laporan-penjualan-produk/pilih-produk-online', 'LaporanPenjualanPosProdukController@dataProdukOnline')->middleware('auth');
-Route::get('/laporan-penjualan-produk/download-excel-penjualan-pos-produk/{dari_tanggal}/{sampai_tanggal}/{produk}', 'LaporanPenjualanPosProdukController@downloadExcel')->middleware('auth');
-Route::get('/laporan-penjualan-produk/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{produk}', 'LaporanPenjualanPosProdukController@cetakLaporan')->middleware('auth');
+Route::get('/laporan-penjualan-produk/download-excel-penjualan-pos-produk/{dari_tanggal}/{sampai_tanggal}/{produk}/{kasir}', 'LaporanPenjualanPosProdukController@downloadExcel')->middleware('auth');
+Route::get('/laporan-penjualan-produk/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{produk}/{kasir}', 'LaporanPenjualanPosProdukController@cetakLaporan')->middleware('auth');
 
 // LAP PENJUALAN POS /PELANGGAN
 Route::post('/laporan-penjualan-pelanggan/view', 'LaporanPenjualanPelangganController@prosesLaporanPenjualanPosPelanggan')->middleware('auth');
