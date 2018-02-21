@@ -318,6 +318,11 @@ class RegisterController extends Controller
     {
         return view('auth.syarat_ketentuan');
     }
+
+    public function caraMemesan()
+    {
+        return view('auth.cara_memesan');
+    }
     protected function syarat_ketentuan_topos()
     {
         return view('auth.syarat_ketentuan_topos');
