@@ -817,7 +817,7 @@ submitJumlahProduk(id_produk,jumlah_produk,harga_produk,nama_produk){
    }else {
      var harga = harga_tbs; // harga produk sebelum di edit
    }
-   
+
 
    if (jumlah_produk == "" || jumlah_produk == 0) {
 
@@ -928,7 +928,7 @@ editEntryJumlah(id, index,nama_produk,subtotal_lama) {
         app.alert("Mengubah Jumlah Produk "+titleCase(nama_produk));
         app.loading = false;
         app.getResults();      
-        var subtotal = parseInt(app.inputPembayaranPembelian.subtotal) + parseInt(resp.data.subtotal)
+        var subtotal = (parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(subtotal_lama))  + parseInt(resp.data.subtotal)
         app.inputPembayaranPembelian.subtotal = subtotal                       
         app.inputPembayaranPembelian.total_akhir  = subtotal
         app.hitungPotonganPersen();
