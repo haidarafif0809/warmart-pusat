@@ -42,6 +42,15 @@
             </div>
 
             <div class="form-group">
+              <label for="password" class="col-md-2 control-label">Password </label>
+              <div class="col-md-4">
+                <input class="form-control" autocomplete placeholder="Password " v-model="userKasir.password" type="password" name="password" id="password">
+                <span v-if="errors.password" id="password_error" class="label label-danger">{{ errors.password[0] }}</span>
+              </div>
+            </div>
+
+
+            <div class="form-group">
               <div class="col-md-4 col-md-offset-2">
                 <button class="btn btn-primary" id="btnSimpanuserKasir" type="submit"><i class="material-icons">send</i> Submit</button>
               </div>
@@ -67,6 +76,7 @@
           name: '',
           no_telp: '',
           alamat: '',
+          password: '',
         },
         message : '',
         url : window.location.origin+(window.location.pathname).replace("dashboard", "user-kasir"),
