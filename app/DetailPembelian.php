@@ -19,6 +19,14 @@ class DetailPembelian extends Model
         return $this->hasOne('App\Barang', 'id', 'id_produk');
     }
 
+    public static function hargaProduk($produk_id, $warung_id)
+    {
+        $harga = DetailPembelian::select('harga_produk')->where('id_produk', $produk_id)
+            ->where('warung_id', $warung_id)->orderBy('id', 'DESC');
+
+        return $harga;
+    }
+
     public function getTitleCaseBarangAttribute()
     {
         return title_case($this->produk->nama_barang);
@@ -199,7 +207,7 @@ class DetailPembelian extends Model
 
         return $query_laporan_pembelian;
     }
-        public function subtotalTbs($user_warung, $no_faktur)
+    public function subtotalTbs($user_warung, $no_faktur)
     {
         $detail_pembelian = DetailPembelian::select([DB::raw('SUM(subtotal) as subtotal')])->where('warung_id', $user_warung)->where('no_faktur', $no_faktur)->first();
         if ($detail_pembelian->subtotal == null || $detail_pembelian->subtotal == '') {

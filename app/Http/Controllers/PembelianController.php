@@ -664,6 +664,28 @@ class PembelianController extends Controller
         } else {
 
             $session_id = session()->getId();
+            $data_tbs = TbsPembelian::where('id_produk', $request->id_produk_tbs)
+            ->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
+
+            if ($data_tbs->count() > 0) {
+
+              $subtotal_lama = $data_tbs->first()->subtotal;
+
+              $jumlah_produk = $data_tbs->first()->jumlah_produk + $request->jumlah_produk;
+
+              $subtotal_edit = ($jumlah_produk * $request->harga_produk) - $data_tbs->first()->potongan;
+
+              $data_tbs->update(['jumlah_produk' => $jumlah_produk, 'subtotal' => $subtotal_edit, 'harga_produk'=> $request->harga_produk]);
+
+              $subtotal = $jumlah_produk * $request->harga_produk;
+
+              $respons['status'] = 1;
+              $respons['subtotal_lama'] = $subtotal_lama;;
+              $respons['subtotal'] = $subtotal;
+              return response()->json($respons);
+
+          }else{
+
             $barang     = Barang::select('nama_barang', 'satuan_id')->where('id', $request->id_produk_tbs)->where('id_warung', Auth::user()->id_warung)->first();
             // SUBTOTAL = JUMLAH * HARGA
             $subtotal = $request->jumlah_produk * $request->harga_produk;
@@ -677,26 +699,31 @@ class PembelianController extends Controller
                 'satuan_id'     => $barang->satuan_id,
                 'warung_id'     => Auth::user()->id_warung,
             ]);
+
+            $respons['status'] = 0;
             $respons['subtotal'] = $subtotal;
 
             return response()->json($respons);
+
         }
+
     }
+}
 
 //PROSES EDIT JUMLAH TBS PEMBELIAN
-    public function edit_jumlah_tbs_pembelian(Request $request)
-    {
+public function edit_jumlah_tbs_pembelian(Request $request)
+{
 
-        if (Auth::user()->id_warung == '') {
-            Auth::logout();
-            return response()->view('error.403');
-        } else {
+    if (Auth::user()->id_warung == '') {
+        Auth::logout();
+        return response()->view('error.403');
+    } else {
             // SELECT  TBS PEMBELIAN
-            $tbs_pembelian = TbsPembelian::find($request->id_tbs_pembelian);
+        $tbs_pembelian = TbsPembelian::find($request->id_tbs_pembelian);
             // JIKA TAX/ PAJAKK EDIT TBS PEMBELIAN == 0
-            if ($tbs_pembelian->tax == 0) {
-                $tax_produk = 0;
-            } else {
+        if ($tbs_pembelian->tax == 0) {
+            $tax_produk = 0;
+        } else {
                 // TAX PERSEN = (TAX TBS PEMBELIAN * 100) / (JUMLAH PRODUK * HARGA - POTONGAN)
                 $tax = ($tbs_pembelian->tax * 100) / ($request->jumlah_edit_produk * $tbs_pembelian->harga_produk - $tbs_pembelian->potongan); // TAX DALAM BENTUK PERSEN
                 // TAX PRODUK = (HARGA * JUMLAH - POTONGAN) * TAX /100
@@ -954,21 +981,21 @@ class PembelianController extends Controller
             Auth::logout();
             return response()->view('error.403');
         } else {
-           $tbs_pembelian = TbsPembelian::find($id);
+         $tbs_pembelian = TbsPembelian::find($id);
 
 
-           $respons['subtotal'] = $tbs_pembelian->subtotal;
+         $respons['subtotal'] = $tbs_pembelian->subtotal;
 
-           $tbs_pembelian->delete();
+         $tbs_pembelian->delete();
 
-           return response()->json($respons);
+         return response()->json($respons);
 
-       }
-   }
+     }
+ }
 
 //PROSES BATAL TBS PEMBELIAN
-   public function proses_batal_transaksi_pembelian()
-   {
+ public function proses_batal_transaksi_pembelian()
+ {
 
     if (Auth::user()->id_warung == '') {
         Auth::logout();

@@ -318,8 +318,8 @@
           <input class="form-control" type="number" v-model="inputTbsPenjualan.jumlah_produk" placeholder="Isi Jumlah Produk" name="jumlah_produk" id="jumlah_produk" ref="jumlah_produk" autocomplete="off" step="0.01">
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-simple"   v-on:click="closeModalJumlahProduk()" v-shortkey.push="['f9']" @shortkey="closeModalJumlahProduk()">Close(F9)</button>
-          <button type="button" class="btn btn-info btn-lg"   v-on:click="submitProdukPenjualan(inputTbsPenjualan.jumlah_produk)">Tambah</button>
+          <button type="button" class="btn btn-simple" v-on:click="closeModalJumlahProduk()" v-shortkey.push="['f9']" @shortkey="closeModalJumlahProduk()">Close(F9)</button>
+          <button type="button" class="btn btn-info btn-lg" v-on:click="submitProdukPenjualan(inputTbsPenjualan.jumlah_produk)">Tambah</button>
         </div>
       </form>
     </div>
@@ -805,7 +805,7 @@ submitProdukPenjualan(value){
 
   if (value == 0) {
 
-    this.$swal("Jumlah Produk Tidak Boleh Nol!")
+    this.$swal("Jumlah Produk Tidak Boleh Nol atau kosong!")
     .then((value) => {
       this.$refs.jumlah_produk.focus(); 
     });

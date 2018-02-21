@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Hpp;
 use App\StokOpname;
+use Auth;
 use Illuminate\Http\Request;
 
 class StokOpnameController extends Controller
@@ -32,7 +34,9 @@ class StokOpnameController extends Controller
 
         $array_stok_opname = array();
         foreach ($data_stok_opname as $stok_opname) {
-            array_push($array_stok_opname);
+            $nama_produk = title_case($stok_opname->nama_barang);
+
+            array_push($array_stok_opname, ['stok_opname' => $stok_opname, 'nama_produk' => $nama_produk]);
         }
 
         //DATA PAGINATION
@@ -46,12 +50,14 @@ class StokOpnameController extends Controller
 
         $array_stok_opname = array();
         foreach ($data_stok_opname as $stok_opname) {
-            array_push($array_stok_opname);
+            $nama_produk = title_case($stok_opname->nama_barang);
+
+            array_push($array_stok_opname, ['stok_opname' => $stok_opname, 'nama_produk' => $nama_produk]);
         }
 
         //DATA PAGINATION
         $respons = $this->dataPagination($data_stok_opname, $array_stok_opname);
-        return response()->json($respons);
+        return response()->json($data_stok_opname);
     }
 
 /**
@@ -82,7 +88,43 @@ class StokOpnameController extends Controller
  */
     public function store(Request $request)
     {
-        //
+        $warung_id     = Auth::user()->id_warung;
+        $no_faktur     = StokOpname::no_faktur($warung_id);
+        $stok_sekarang = Hpp::stok_produk($request->produk);
+        $selisih_fisik = $stok_sekarang - $request->jumlah_produk;
+
+        if ($selisih_fisik < 0) {
+            // Harga Hpp
+            $harga = Hpp::hargaHpp($request->produk, $warung_id);
+        } else {
+            // Harga Produk / Pembelian
+            $data_pembelian = DetailPembelian::hargaProduk($request->produk, $warung_id);
+            if ($data_pembelian->count() > 0) {
+                $harga = $data_pembelian->first()->harga_produk;
+            } else {
+                $harga = $request->harga_produk;
+            }
+        }
+
+        $total_selisih = $harga * $selisih_fisik;
+
+        $this->validate($request, [
+            'jumlah_produk' => 'required',
+        ]);
+
+        $master_bank = StokOpname::create([
+            'no_faktur'     => $no_faktur,
+            'produk_id'     => $request->produk,
+            'stok_sekarang' => $stok_sekarang,
+            'jumlah_fisik'  => $request->jumlah_produk,
+            'selisih_fisik' => $selisih_fisik,
+            'harga'         => $harga,
+            'total'         => $total_selisih,
+            'warung_id'     => $warung_id,
+            'keterangan'    => "Tes #0",
+        ]);
+
+        return response(200);
     }
 
 /**

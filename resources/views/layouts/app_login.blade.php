@@ -3,7 +3,7 @@
 <!-- PILIH TIPE APLIKASI -->
 <?php
 $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
-$foto_logo = \App\UserWarung::select()->where('tipe_user',4)->orderBy('id', 'desc')->first();
+$foto_logo = \App\UserWarung::select()->where('tipe_user',4)->orderBy('id', 'asc')->limit(1)->first();
 $judul_warung = \App\SettingFooter::select()->first()->judul_warung;
 ?>
 <head>
@@ -38,13 +38,13 @@ $judul_warung = \App\SettingFooter::select()->first()->judul_warung;
     <link href="{{ asset('css/selectize.bootstrap3.css') }}" rel="stylesheet">
 </head>
 <style type="text/css">
-    .navbar .navbar-brand {
-        position: relative;
-        height: 75px;
-        line-height: 30px;
-        color: inherit;
-        padding: 10px 15px;
-    }
+.navbar .navbar-brand {
+    position: relative;
+    height: 75px;
+    line-height: 30px;
+    color: inherit;
+    padding: 10px 15px;
+}
 </style>
 <body class="off-canvas-sidebar">
 

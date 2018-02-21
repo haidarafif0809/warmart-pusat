@@ -16,7 +16,17 @@ const state = {
 //Getter berfungsi untuk mengakses state
 // Dengan menggunakan Getter kita bisa mengolah terlebih dahulu state yang akan kita ambil seperti fungsi computed yang ada di VueJS. Jadi kita bisa memfilter data state sebelum di panggil. 
 const getters = {
-
+	// filter produk yg berkaitan dengan stok dan produk yg bisa dijual
+	produkStok(state){
+		return state.produk.filter(function(produk){
+			return produk.hitung_stok == 1 && produk.status_aktif == 1
+		})
+	},
+	produk_barang(state){
+		return state.produk.filter(function(produk){
+			return produk.hitung_stok == 1
+		})
+	}
 }
 // Mutation adalah satu-satunya cara untuk merubah state
 const mutations = {
@@ -41,7 +51,7 @@ const mutations = {
 // Action mirip dengan mutation
 // Nah action ini tidak merubah state, tapi action akan memanggil mutation dan mutation yang akan merubah state.
 const actions = {
-	
+
 	LOAD_PRODUK_LIST : function({commit}){
 		axios.get('produk/pilih-produk')
 		.then((resp) => {

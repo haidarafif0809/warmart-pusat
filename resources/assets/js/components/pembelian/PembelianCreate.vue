@@ -1,36 +1,36 @@
 <style scoped>
-  .modal {
-    overflow-y:auto;
-  }
-  .pencarian {
-    color: red; 
-    float: right;
-  }
-  .form-pembelian{
-    width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    display: inline-block;
-    border: 3px solid #555;
-    border-radius: 4px;
-    box-sizing: border-box;
-    font-size: 30px;
-  }
-  .form-subtotal{
-    width: 100%;
-    margin: 8px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-  }
-  .card-produk{
-    background-color:#82B1FF;
-  }
-  .btn-icon{
-    border-radius: 1px solid;
-    padding: 10px 10px;
-  }
+.modal {
+  overflow-y:auto;
+}
+.pencarian {
+  color: red; 
+  float: right;
+}
+.form-pembelian{
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 3px solid #555;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 30px;
+}
+.form-subtotal{
+  width: 100%;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+.card-produk{
+  background-color:#82B1FF;
+}
+.btn-icon{
+  border-radius: 1px solid;
+  padding: 10px 10px;
+}
 
 </style>
 <template>
@@ -256,6 +256,38 @@
         </div> 
       </div> 
       <!-- / MODAL TOMBOL SELESAI --> 
+      <!-- small modal -->
+      <div class="modal" id="modalJumlahProduk" role="dialog" tabindex="-1"  aria-labelledby="myModalLabel" aria-hidden="true" >
+        <div class="modal-dialog modal-medium">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close"  v-on:click="closeModalJumlahProduk()" v-shortkey.push="['f9']" @shortkey="closeModalJumlahProduk()"> &times;</button> 
+            </div>
+
+            <form class="form-horizontal" v-on:submit.prevent="submitJumlahProduk(inputTbsPembelian.id_produk,inputTbsPembelian.jumlah_produk,inputTbsPembelian.harga_produk,inputTbsPembelian.nama_produk)"> 
+              <div class="modal-body text-center">
+                <h3><b>{{inputTbsPembelian.nama_produk}}</b></h3>
+
+                <div class="form-group">
+                  <div class="col-md-6">
+                    <input class="form-control" type="number" v-model="inputTbsPembelian.jumlah_produk" placeholder="Isi Jumlah Produk" name="jumlah_produk" id="jumlah_produk" ref="jumlah_produk" autocomplete="off" step="0.01">
+                  </div>
+                  <div class="col-md-6">
+                    <money class="form-control" v-model="inputTbsPembelian.harga_produk" v-bind="pemisahTitik" placeholder="Isi Harga Produk" name="harga_produk" id="harga_produk" ref="harga_produk" autocomplete="off"></money>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-simple" v-on:click="closeModalJumlahProduk()" v-shortkey.push="['f9']" @shortkey="closeModalJumlahProduk()">Close(F9)</button>
+                <button type="submit" class="btn btn-info btn-lg">Tambah</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <!--    end small modal -->
 
       <div class="card" style="margin-bottom: 1px; margin-top: 1px;" ><!-- CARD --> 
         <div class="card-content"> 
@@ -267,7 +299,7 @@
                 <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
 
                   <selectize-component v-model="inputTbsPembelian.produk" :settings="placeholder_produk" id="produk" ref='produk'  > 
-                    <option v-for="produks, index in produk" v-bind:value="produks.produk" v-if="produks.hitung_stok == 1" >{{produks.barcode}} || {{produks.kode_produk}} || {{ produks.nama_produk }}</option>
+                    <option v-for="produks, index in produk" v-bind:value="produks.produk">{{produks.barcode}} || {{produks.kode_produk}} || {{ produks.nama_produk }}</option>
                   </selectize-component>
                 </div><!--/COL MD  3 --> 
                 <span v-if="errors.produk" id="produk_error" class="label label-danger">{{ errors.produk[0] }}</span>
@@ -407,86 +439,95 @@
 </div> 
 </template>
 <style type="text/css">
-  .card-pembayaran{
-    background-color:#82B1FF;
-  }
+.card-pembayaran{
+  background-color:#82B1FF;
+}
 </style>
 
 <script>
-  export default {
-    data: function () {
-      return {
-        errors: [],
-        produk: [],
-        suplier: [],
-        cara_bayar: [],
-        tbs_pembelians: [],
-        tbsPembelianData : {},
-        url : window.location.origin+(window.location.pathname).replace("dashboard", "pembelian"),
-        url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
-        url_kas : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
-        url_cek_total_kas : window.location.origin+(window.location.pathname).replace("dashboard", ""),
-        url_suplier : window.location.origin+(window.location.pathname).replace("dashboard", "suplier"),
-        url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
-        inputTbsPembelian: {
-          produk : '',
-          jumlah_produk : '',
-          harga_produk : '',
-          id_tbs : '',
-        },
-        inputPembayaranPembelian:{
-          potongan_persen: 0,
-          potongan_faktur: 0,
-          subtotal: 0,
-          pembayaran: 0,
-          total_akhir: 0,
-          kembalian: 0,
-          kredit: 0,
-          jatuh_tempo: '',
-          keterangan: '',
-          subtotal_number_format:0, 
-          suplier: '',
-          cara_bayar: '',
-          status_pembelian: '',
-          ppn: '',
-          potongan: 0,
-        },
-        tambahSuplier: {
-          nama_suplier : '',
-          alamat : '',
-          no_telp : '',
-          contact_person : '',
-        },
-        tambahKas: {
-          kode_kas : '',
-          nama_kas : '',
-          status_kas : 0,
-          default_kas : 0
-        },
-        placeholder_produk: {
-          placeholder: '--PILIH PRODUK (F1)--',
-          sortField: 'text',
-          openOnFocus : true
-        },
-        placeholder_suplier: {
-          placeholder: '--PILIH SUPPLIER (F4)--',
-          sortField: 'text',
-          openOnFocus : true
-        },
-        placeholder_cara_bayar: {
-          placeholder: '--PILIH CARA BAYAR (F6)--',
-          sortField: 'text',
-          openOnFocus : true
-        },
-        separator: {
-          decimal: ',',
-          thousands: '.',
-          prefix: '',
-          suffix: '',
-          precision: 2,
-          masked: false /* doesn't work with directive */
-        },      
-        disabled: {
+import { mapState } from 'vuex';
+export default {
+  data: function () {
+    return {
+      errors: [],
+      suplier: [],
+      tbs_pembelians: [],
+      tbsPembelianData : {},
+      url : window.location.origin+(window.location.pathname).replace("dashboard", "pembelian"),
+      url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
+      url_kas : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
+      url_cek_total_kas : window.location.origin+(window.location.pathname).replace("dashboard", ""),
+      url_suplier : window.location.origin+(window.location.pathname).replace("dashboard", "suplier"),
+      url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
+      inputTbsPembelian: {
+        nama_produk : '',
+        produk : '',
+        id_produk : '',
+        jumlah_produk : '',
+        harga_produk : '',
+        id_tbs : '',
+      },
+      inputPembayaranPembelian:{
+        potongan_persen: 0,
+        potongan_faktur: 0,
+        subtotal: 0,
+        pembayaran: 0,
+        total_akhir: 0,
+        kembalian: 0,
+        kredit: 0,
+        jatuh_tempo: '',
+        keterangan: '',
+        subtotal_number_format:0, 
+        suplier: '',
+        cara_bayar: '',
+        status_pembelian: '',
+        ppn: '',
+        potongan: 0,
+      },
+      tambahSuplier: {
+        nama_suplier : '',
+        alamat : '',
+        no_telp : '',
+        contact_person : '',
+      },
+      tambahKas: {
+        kode_kas : '',
+        nama_kas : '',
+        status_kas : 0,
+        default_kas : 0
+      },
+      placeholder_produk: {
+        placeholder: '--PILIH PRODUK (F1)--',
+        sortField: 'text',
+        openOnFocus : true
+      },
+      placeholder_suplier: {
+        placeholder: '--PILIH SUPPLIER (F4)--',
+        sortField: 'text',
+        openOnFocus : true
+      },
+      placeholder_cara_bayar: {
+        placeholder: '--PILIH CARA BAYAR (F6)--',
+        sortField: 'text',
+        openOnFocus : true
+      },
+      separator: {
+        decimal: ',',
+        thousands: '.',
+        prefix: '',
+        suffix: '',
+        precision: 2,
+        masked: false /* doesn't work with directive */
+      },
+      pemisahTitik: {
+        decimal: ',',
+        thousands: '.',
+        prefix: '',
+        suffix: '',
+        precision: 0,
+        masked: false /* doesn't work with directive */
+      },      
+      disabled: {
           to: new Date(), // Disable all dates up to specific date
         },
         pencarian: '',
@@ -498,11 +539,20 @@
     },
     mounted() {
       var app = this;
-      app.dataProduk();
+      app.$store.dispatch('LOAD_PRODUK_LIST')
+      app.$store.dispatch('LOAD_KAS_LIST')  
       app.dataSuplier();
-      app.dataCaraBayar();
       app.getResults();
     },
+    computed : mapState ({    
+      produk(){
+        return this.$store.getters.produkStok
+      },
+      cara_bayar(){
+        return this.$store.state.kas
+      },
+      default_kas: state => state.default_kas
+    }),
     watch: {
 // whenever question changes, this function will run
 pencarian: function (newQuestion) {
@@ -545,6 +595,7 @@ methods: {
       app.loading = false;
       app.seen = true;
       app.openSelectizeProduk();
+      app.inputPembayaranPembelian.cara_bayar = app.default_kas
 
       if (app.inputPembayaranPembelian.subtotal == 0) {         
         app.getSubtotalTbs();
@@ -588,15 +639,6 @@ getHasilPencarian(page){
     alert("Tidak Dapat Memuat Pembelian");
   });
 }, //END FUNGSI UNTUK PAGINATION SEARCH     
-dataProduk() {
-  var app = this;
-  axios.get(app.url_produk+'/pilih-produk').then(function (resp) {
-    app.produk = resp.data;
-  })
-  .catch(function (resp) {
-    alert("Tidak Bisa Memuat Produk");
-  });
-},//END FUNGSI UNTUK SELECTIZE PRODUK 
 dataSuplier() {
   var app = this;
   axios.get(app.url+'/pilih-suplier').then(function (resp) {
@@ -611,20 +653,6 @@ dataSuplier() {
     alert("Tidak Bisa Memuat Suplier");
   });
 },//END FUNGSI UNTUK SELECTIZE SUPLIER 
-dataCaraBayar() {
-  var app = this;
-  axios.get(app.url_kas+'/pilih-kas').then(function (resp) {
-    app.cara_bayar = resp.data;
-    $.each(resp.data, function (i, item) {
-      if (resp.data[i].default_kas == 1) {
-        app.inputPembayaranPembelian.cara_bayar  = resp.data[i].id 
-      }
-    });
-  })
-  .catch(function (resp) {
-    alert("Tidak Bisa Memuat Kas");
-  });
-},//END FUNGSI UNTUK SELECTIZE CARABAYAR  
 tambahSupplier(){
   $("#modal_tambah_suplier").show();
   this.$refs.nama_suplier.$el.focus();
@@ -665,7 +693,7 @@ saveFormKas() {
     app.tambahKas.status_kas = 0
     app.tambahKas.default_kas = 0
     app.errors = '';
-    app.dataCaraBayar();
+    app.$store.dispatch('LOAD_KAS_LIST') 
     $("#modal_tambah_kas").hide();
 
   })
@@ -695,6 +723,12 @@ defaultKas() {
       }
     });
   }  
+},
+alertTbs(pesan) {
+  this.$swal({
+    text: pesan,
+    icon: "warning",
+  });
 },
 alert(pesan) {
   this.$swal({
@@ -749,132 +783,100 @@ prosesDelete(id,nama_produk,subtotal_lama){
   });
 },//END fungsi prosesDelete
 pilihProduk() {
-  if (this.inputTbsPembelian.produk == '') {
-    this.$swal({
-      text: "Silakan Pilih Produk Telebih dahulu!",
-    });
-  }
-  else if(this.inputTbsPembelian.jumlah_produk == ''){
-
+  if (this.inputTbsPembelian.produk != '') {
     var app = this;
     var produk = app.inputTbsPembelian.produk.split("|");
     var id_produk = produk[0]; 
     var nama_produk = produk[1];
     var harga_produk = produk[2]; 
-    var jumlah = $("#jumlah_produk").val(); 
-
-    this.isiJumlahProduk(id_produk,nama_produk,harga_produk);
-  }
-  else if (this.inputTbsPembelian.jumlah_produk == '' && this.inputTbsPembelian.produk == ''){
-
+    this.inputJumlahProduk(id_produk,nama_produk,harga_produk);
   }
 },//END FUNGSI pilihProduk
-isiJumlahProduk(id_produk,nama_produk,harga_produk){
-  var app = this;   
-  swal({
-    title: titleCase(nama_produk),
-    html:
-    '<div class="col-sm-6  col-xs-6"><lable>Jumlah</lable><br><input type="number" id="swal-input1" class="swal2-input" autofocus></div>' +
-    '<div class="col-sm-6  col-xs-6"><lable>Harga</lable><br><input type="number" id="swal-input2" class="swal2-input" value="'+harga_produk+'"></div>',
-    allowEnterKey : false,
-    showCloseButton: true, 
-    showCancelButton: true,                        
-    focusConfirm: false, 
-    confirmButtonText:'<i class="fa fa-thumbs-o-up"></i> OK', 
-    confirmButtonAriaLabel: 'Thumbs up, great!', 
-    cancelButtonText:'<i class="fa fa-thumbs-o-down"> Batal', 
-    closeOnConfirm: false, 
-    cancelButtonAriaLabel: 'Thumbs down', 
-    preConfirm: function () { 
-      return new Promise(function (resolve) { 
-        resolve([ 
-          $('#swal-input1').val(), 
-          $('#swal-input2').val() 
-          ]) 
-      }) 
-    }
-  }).then(function (result) { 
-
-    if (result[0] == '' || result[0] == 0) { 
-
-      swal('Oops...', 'Jumlah Produk Tidak Boleh 0 atau Kosong !', 'error'); 
-      return false; 
-    }else if (result[1] == '' || result[1] == 0) { 
-
-      swal('Oops...', 'Harga Produk Tidak Boleh 0 atau Kosong !', 'error'); 
-      return false; 
-    }
-    else if (result[1] != harga_produk) { 
-      app.$swal({
-        title: "Konfirmasi",
-        text: "Anda Yakin Ingin Merubah Harga Beli Produk "+titleCase(nama_produk)+ "?",
-        icon: "warning",
-        buttons: true,
-        dangerMode: true,
-      })
-      .then((willDelete) => {
-        if (willDelete) {
-          $("#id_produk_tbs").val(id_produk); 
-          $("#jumlah_produk").val(result[0]); 
-          $("#harga_produk").val(result[1]);
-
-          axios.get(app.url+'/cek-tbs-pembelian?id='+id_produk)
-          .then(function (resp) {
-            if (resp.data > 0) {
-              swal({
-                title: "Peringatan",
-                text:"Produk "+titleCase(nama_produk)+" Sudah Ada, Silakan Pilih Produk Lain !",
-              });
-            }
-            else{
-              var jumlah_produk = result[0];
-              var harga_produk = result[1];
-              app.submitJumlahProduk(id_produk,jumlah_produk,harga_produk,nama_produk);
-            }
-          });
-        } else {
-          app.$swal.close();
-        }
-      });
-    }else{ 
-      $("#id_produk_tbs").val(id_produk); 
-      $("#jumlah_produk").val(result[0]); 
-      $("#harga_produk").val(harga_produk); 
-      axios.get(app.url+'/cek-tbs-pembelian?id='+id_produk)
-      .then(function (resp) {
-        if (resp.data > 0) {
-          swal({
-            title: "Peringatan",
-            text:"Produk "+titleCase(nama_produk)+" Sudah Ada, Silakan Pilih Produk Lain !",
-          });
-        }
-        else{
-          var jumlah_produk = result[0];
-          app.submitJumlahProduk(id_produk,jumlah_produk,harga_produk,nama_produk);
-        }
-      });
-    } 
-  });
-},//END fungsi isiJumlahProduk
+inputJumlahProduk(id_produk,nama_produk,harga_produk){
+  var app = this
+  app.inputTbsPembelian.id_produk = id_produk
+  app.inputTbsPembelian.nama_produk = nama_produk
+  app.inputTbsPembelian.harga_produk = harga_produk
+  $("#modalJumlahProduk").show();
+  app.$refs.jumlah_produk.focus(); 
+},
 submitJumlahProduk(id_produk,jumlah_produk,harga_produk,nama_produk){
+  var app = this
+  var produk = app.inputTbsPembelian.produk.split("|");
+  var harga = produk[2]; // harga produk sebelum di edit
+
+  if (jumlah_produk == "" || jumlah_produk == 0) {
+
+    app.$swal("Jumlah Produk Tidak Boleh Nol atau kosong!")
+    .then((value) => {
+      app.$refs.jumlah_produk.focus() 
+    })
+
+  }else if (harga_produk == "" || harga_produk == 0) {
+
+    app.$swal("Harga Produk Tidak Boleh Nol atau kosong!")
+    .then((value) => {
+      app.$refs.harga_produk.focus() 
+    })
+
+  }else if (harga != harga_produk) {
+    app.konfirmasiPerubahanHarga(id_produk,jumlah_produk,harga_produk,nama_produk)
+  }else{
+    app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk)
+  }
+
+},//END PROSES TAMBAH PRODUK TBS
+konfirmasiPerubahanHarga(id_produk,jumlah_produk,harga_produk,nama_produk){
+  let app = this
+  app.$swal({
+    text: "Anda Yakin Ingin Merubah Harga Beli Produk "+titleCase(nama_produk)+ " ?",
+    closeOnEsc: true,
+    buttons: {
+      cancel: true,
+      confirm: "OK"                   
+    },
+
+  }).then((value) => {
+
+    if (!value) throw null;
+
+    app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk);
+
+  });
+},
+prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk){
+
   var app = this;
   app.loading = true;
   axios.get(app.url+'/proses-tambah-tbs-pembelian?id_produk_tbs='+id_produk+'&jumlah_produk='+jumlah_produk+'&harga_produk='+harga_produk)
   .then(function (resp) {
-    app.alert("Menambahkan Produk "+titleCase(nama_produk));
+    $("#modalJumlahProduk").hide();
+    app.alert("Menambahkan Produk dssds "+titleCase(nama_produk));
     app.loading = false;
     app.getResults();
-    var subtotal = parseInt(app.inputPembayaranPembelian.subtotal) + parseInt(resp.data.subtotal)
+
+    if (resp.data.status == 1) {
+      var subtotal = (parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(resp.data.subtotal_lama) + parseInt(resp.data.subtotal))
+    }else{      
+      var subtotal = parseInt(app.inputPembayaranPembelian.subtotal) + parseInt(resp.data.subtotal)
+    }
+
     app.inputPembayaranPembelian.subtotal = subtotal                       
     app.inputPembayaranPembelian.total_akhir  = subtotal
     app.hitungPotonganPersen();
+    app.inputTbsPembelian.id_produk = ''
+    app.inputTbsPembelian.nama_produk = ''
+    app.inputTbsPembelian.harga_produk = ''
+    app.inputTbsPembelian.jumlah_produk = ''
+    app.inputTbsPembelian.produk = ''
 
   })
   .catch(function (resp) {
     app.loading = false;
     alert("Tbs Pembelian tidak bisa ditambahkan");
   });
-},//END PROSES TAMBAH PRODUK TBS
+
+},
 editEntryJumlah(id, index,nama_produk,subtotal_lama) {    
   var app = this;   
   swal({ 
@@ -1390,7 +1392,11 @@ prosesTransaksiSelesai(){
       swal('Oops...','Kas Anda Tidak Cukup Untuk Melakukan Pembayaran','error');
     }
   });
-}//akhir prosesTransaksiSelesai
+},//akhir prosesTransaksiSelesai
+closeModalJumlahProduk(){  
+  $("#modalJumlahProduk").hide(); 
+  this.openSelectizeProduk();
+},
 }
 }
 </script>
