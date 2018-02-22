@@ -475,6 +475,7 @@ Route::get('/kategori-transaksi/pencarian', 'KategoriTransaksiController@pencari
 //SUPLIER VUE.JS
 Route::get('/suplier/view', 'SuplierController@view')->middleware('auth');
 Route::get('/suplier/pencarian', 'SuplierController@pencarian')->middleware('auth');
+Route::get('/suplier/pilih-suplier', 'SuplierController@dataSuplier')->middleware('auth');
 
 //PRODUK VUE.JS
 Route::get('/produk/view', 'BarangController@view')->middleware('auth');

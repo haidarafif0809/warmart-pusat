@@ -11,7 +11,8 @@ const state = {
 	default_kas : '',
 	produk : [],
 	kas : [],
-	pelanggan : []
+	pelanggan : [],
+	suplier : []
 }
 //Getter berfungsi untuk mengakses state
 // Dengan menggunakan Getter kita bisa mengolah terlebih dahulu state yang akan kita ambil seperti fungsi computed yang ada di VueJS. Jadi kita bisa memfilter data state sebelum di panggil. 
@@ -41,6 +42,10 @@ const mutations = {
 	// untuk memuat data kas
 	SET_KAS_LIST : (state, { list }) => {
 		state.kas = list
+	},
+	// untuk memuat data suplier
+	SET_SUPLIER_LIST : (state, { list }) => {
+		state.suplier = list
 	},
 	// untuk mengetahui default kas
 	SET_DEFAULT_KAS (state,default_kas) {
@@ -84,6 +89,18 @@ const actions = {
 				list:resp.data.kas
 			}),
 			commit('SET_DEFAULT_KAS',	resp.data.default_kas)
+		},
+		(err) => {
+			console.log(err)
+		})
+	},
+	LOAD_SUPLIER_LIST : function({commit}){
+		axios.get('suplier/pilih-suplier')
+		.then((resp) => {
+			commit('SET_SUPLIER_LIST',
+			{
+				list:resp.data
+			})
 		},
 		(err) => {
 			console.log(err)
