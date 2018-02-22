@@ -165,14 +165,18 @@ class LaporanPenjualanPelangganController extends Controller
         return $sheet;
     }
     //DOWNLOAD EXCEL - LAPORAN PENJUALAN /PELANGGAN
-    public function downloadExcel(Request $request, $dari_tanggal, $sampai_tanggal, $pelanggan)
+    public function downloadExcel(Request $request, $dari_tanggal, $sampai_tanggal, $pelanggan,$kasir)
     {
         $request['dari_tanggal']   = $dari_tanggal;
         $request['sampai_tanggal'] = $sampai_tanggal;
 
-        if ($pelanggan == 0) {
+        if ($pelanggan == "semua") {
             $request['pelanggan'] = "";
         };
+        if ($kasir == 0) {
+            $request['kasir'] = "";
+        };
+
         // laporan penjualan pos
         $laporan_penjualan = DetailPenjualanPos::laporanPenjualanPosPelanggan($request)->get();
         // laporan penjualan Online
@@ -196,10 +200,14 @@ class LaporanPenjualanPelangganController extends Controller
                     # code...
                     foreach ($laporan_penjualan as $laporan_penjualans) {
                         $sub_total = $laporan_penjualans->subtotal - $laporan_penjualans->potongan + $laporan_penjualans->tax;
-
+                        if ($laporan_penjualans->id_pelanggan == 0) {
+                            $pelanggan = 'Umum';
+                        } else {
+                            $pelanggan = $laporan_penjualans->name;
+                        }   
                         $sheet->row(++$row, [
                             $laporan_penjualans->kode_barang,
-                            $laporan_penjualans->name,
+                            $pelanggan,
                             $laporan_penjualans->nama_barang,
                             $laporan_penjualans->jumlah_produk,
                             $laporan_penjualans->nama_satuan,
@@ -225,7 +233,7 @@ class LaporanPenjualanPelangganController extends Controller
                 }
                 $row = ++$row + 3;
                 $sheet->row($row, [
-                    'LAPORAN PENJUALAN ONLINE /PRODUK',
+                    'LAPORAN PENJUALAN ONLINE /PELANGGAN',
                 ]);
 
                 $row = ++$row + 1;
@@ -266,8 +274,12 @@ class LaporanPenjualanPelangganController extends Controller
         $data_penjualan = array();
         foreach ($laporan_penjualan as $laporan_penjualans) {
             $sub_total = $laporan_penjualans->subtotal - $laporan_penjualans->potongan + $laporan_penjualans->tax;
-
-            array_push($data_penjualan, ['laporan_penjualans' => $laporan_penjualans, 'sub_total' => $sub_total]);
+               if ($laporan_penjualans->id_pelanggan == 0) {
+                   $pelanggan = 'Umum';
+                } else {
+                   $pelanggan = $laporan_penjualans->name;
+               }   
+            array_push($data_penjualan, ['laporan_penjualans' => $laporan_penjualans, 'sub_total' => $sub_total,'pelanggan' => $pelanggan]);
         }
 
         return $data_penjualan;
@@ -282,17 +294,20 @@ class LaporanPenjualanPelangganController extends Controller
         return $data_penjualan_online;
     }
 
-    public function cetakLaporan(Request $request, $dari_tanggal, $sampai_tanggal, $pelanggan)
+    public function cetakLaporan(Request $request, $dari_tanggal, $sampai_tanggal, $pelanggan,$kasir)
     {
         //SETTING APLIKASI
         $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
 
         $request['dari_tanggal']   = $dari_tanggal;
         $request['sampai_tanggal'] = $sampai_tanggal;
-        $request['pelanggan']      = $pelanggan;
 
-        if ($pelanggan == 0) {
+
+        if ($pelanggan == "semua") {
             $request['pelanggan'] = "";
+        };
+        if ($kasir == 0) {
+            $request['kasir'] = "";
         };
         // data penjualan pos
         $laporan_penjualan = DetailPenjualanPos::laporanPenjualanPosPelanggan($request)->get();

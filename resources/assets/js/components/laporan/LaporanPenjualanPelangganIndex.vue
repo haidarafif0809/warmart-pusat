@@ -33,6 +33,11 @@
 								<option v-for="pelanggans, index in pelanggan" v-bind:value="pelanggans.id" >{{ pelanggans.nama_pelanggan }}</option>
 							</selectize-component>
 						</div>
+						<div class="form-group col-md-2">
+							<selectize-component v-model="filter.kasir" :settings="placeholder_kasir" id="pilih_kasir"> 
+								<option v-for="kasirs, index in kasir" v-bind:value="kasirs.id" >{{ kasirs.nama_kasir }}</option>
+							</selectize-component>
+						</div>
 
 						<div class="form-group col-md-2">
 							<button class="btn btn-primary" id="btnSubmit" type="submit" style="margin: 0px 0px;" @click="submitPenjualanPelanggan()"><i class="material-icons">search</i> Cari</button>
@@ -162,10 +167,11 @@
 	</div>
 </template>
 <script type="text/javascript">
+import { mapState } from 'vuex';
 export default {
 	data: function () {
 		return {
-			pelanggan: [],
+
 			penjualanPelanggan: [],
 			penjualanOnlinePelanggan:[],
 			penjualanPelangganData: {},
@@ -176,6 +182,7 @@ export default {
 				dari_tanggal: '',
 				sampai_tanggal: new Date(),
 				pelanggan: '',
+				kasir: '',
 			},
 			url : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-penjualan-pelanggan"),
 			urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-penjualan-pelanggan/download-excel-penjualan-pelanggan"),
@@ -186,16 +193,27 @@ export default {
 			placeholder_pelanggan: {
 				placeholder: '--SEMUA PELANGGAN--'
 			},
+			placeholder_kasir: {
+				placeholder: '--SEMUA KASIR--'
+			},
 		}
 	},
 	mounted() {
 		var app = this;
 		var awal_tanggal = new Date();
 		awal_tanggal.setDate(1);
-
-		app.dataPelanggan();
+		app.$store.dispatch('LOAD_PELANGGAN_LIST');
+		app.$store.dispatch('LOAD_KASIR_LIST');
 		app.filter.dari_tanggal = awal_tanggal;
 	},
+	computed : mapState ({    
+      pelanggan(){
+        return this.$store.state.pelanggan
+      },
+       kasir(){
+        return this.$store.state.kasir
+      }
+    }),
 	watch: {
 // whenever question changes, this function will run
 pencarian: function (newQuestion) {
@@ -258,18 +276,6 @@ methods: {
 		.catch(function (resp) {
 			// console.log(resp);
 			alert("Tidak Dapat Memuat Laporan Penjualan Online /pelanggan");
-		});
-	},
-	
-	dataPelanggan() {
-		var app = this;
-		axios.get(app.url+'/pilih-pelanggan')
-		.then(function (resp) {
-			app.pelanggan = resp.data;
-			// console.log(resp.data)
-		})
-		.catch(function (resp) {
-			alert("Tidak bisa memuat pelanggan ");
 		});
 	},
 	getHasilPencarian(page){
@@ -340,7 +346,10 @@ methods: {
 		var filter = app.filter;
 
 		if (filter.pelanggan == "") {
-			filter.pelanggan = 0;
+			filter.pelanggan = "semua";
+		};
+		if (filter.kasir == "") {
+			filter.kasir = 0;
 		};
 
 		var date_dari_tanggal = filter.dari_tanggal;
@@ -350,8 +359,8 @@ methods: {
 
 		$("#btnExcel").show();
 		$("#btnCetak").show();
-		$("#btnExcel").attr('href', app.urlDownloadExcel+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.pelanggan);
-		$("#btnCetak").attr('href', app.urlCetak+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.pelanggan);
+		$("#btnExcel").attr('href', app.urlDownloadExcel+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.pelanggan+'/'+filter.kasir);
+		$("#btnCetak").attr('href', app.urlCetak+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.pelanggan+'/'+filter.kasir);
 	}
 }
 }

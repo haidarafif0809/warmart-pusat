@@ -162,11 +162,11 @@
 	</div>
 </template>
 <script type="text/javascript">
+import { mapState } from 'vuex';
 export default {
 	data: function () {
 		return {
 			produk: [],
-			kasir: [],
 			penjualanProduk: [],
 			penjualanOnlineProduk:[],
 			penjualanProdukData: {},
@@ -197,11 +197,15 @@ export default {
 		var app = this;
 		var awal_tanggal = new Date();
 		awal_tanggal.setDate(1);
-
+		app.$store.dispatch('LOAD_KASIR_LIST');
 		app.dataProduk();
-		app.dataKasir();
 		app.filter.dari_tanggal = awal_tanggal;
 	},
+	computed : mapState ({    
+       kasir(){
+        return this.$store.state.kasir
+      }
+    }),
 	watch: {
 // whenever question changes, this function will run
 pencarian: function (newQuestion) {
@@ -276,17 +280,6 @@ methods: {
 		})
 		.catch(function (resp) {
 			alert("Tidak bisa memuat produk ");
-		});
-	},
-	dataKasir() {
-		var app = this;
-		axios.get(app.url+'/pilih-kasir')
-		.then(function (resp) {
-			app.kasir = resp.data;
-			console.log(resp.data)
-		})
-		.catch(function (resp) {
-			alert("Tidak bisa memuat kasir ");
 		});
 	},
 	getHasilPencarian(page){

@@ -163,6 +163,7 @@ class DetailPenjualan extends Model
         $laporan_penjualan_online = DetailPenjualan::select([
             'detail_penjualans.id_produk',
             'detail_penjualans.harga',
+            'penjualans.id_pelanggan',
             'detail_penjualans.potongan',
             'detail_penjualans.jumlah',
             'barangs.kode_barang',

@@ -658,6 +658,7 @@ Route::get('/penjualan/pencarian-tbs-penjualan', 'PenjualanController@pencarianT
 Route::get('/penjualan/cek-data-tbs-penjualan/{id}', 'PenjualanController@cekDataTbsPenjualan')->middleware('auth');
 Route::get('/penjualan/pilih-pelanggan', 'PenjualanController@pilihPelanggan')->middleware('auth');
 Route::get('/penjualan/pilih-kas', 'PenjualanController@pilih_kas')->middleware('auth');
+Route::get('/penjualan/pilih-kasir', 'PenjualanController@pilihKasir')->middleware('auth');
 Route::get('/penjualan/cetak-besar-penjualan/{id}', 'PenjualanController@cetakBesar')->middleware('auth');
 Route::get('/penjualan/cetak-kecil-penjualan/{id}', 'PenjualanController@cetakKecil')->middleware('auth');
 Route::post('/penjualan/proses-setting-penjualan-pos', 'PenjualanController@settingPenjualanPos')->middleware('auth');
@@ -709,7 +710,7 @@ Route::post('/laporan-penjualan-produk/view', 'LaporanPenjualanPosProdukControll
 Route::post('/laporan-penjualan-produk/pencarian', 'LaporanPenjualanPosProdukController@pencarian')->middleware('auth');
 Route::post('/laporan-penjualan-produk/total-penjualan-pos-produk', 'LaporanPenjualanPosProdukController@totalPenjualanPosProduk')->middleware('auth');
 Route::get('/laporan-penjualan-produk/pilih-produk', 'LaporanPenjualanPosProdukController@dataProduk')->middleware('auth');
-Route::get('/laporan-penjualan-produk/pilih-kasir', 'LaporanPenjualanPosProdukController@dataKasir')->middleware('auth');
+
 
 // LAP PENJUALAN ONLINE /PRODUK
 Route::post('/laporan-penjualan-produk/view-online', 'LaporanPenjualanPosProdukController@prosesLaporanPenjualanOnlineProduk')->middleware('auth');
@@ -730,8 +731,8 @@ Route::post('/laporan-penjualan-pelanggan/view-online', 'LaporanPenjualanPelangg
 Route::post('/laporan-penjualan-pelanggan/pencarian-online', 'LaporanPenjualanPelangganController@pencarianOnline')->middleware('auth');
 Route::post('/laporan-penjualan-pelanggan/total-penjualan-online-pelanggan', 'LaporanPenjualanPelangganController@totalPenjualanOnlinePelanggan')->middleware('auth');
 Route::get('/laporan-penjualan-pelanggan/pilih-pelanggan-online', 'LaporanPenjualanPelangganController@dataPelangganOnline')->middleware('auth');
-Route::get('/laporan-penjualan-pelanggan/download-excel-penjualan-pelanggan/{dari_tanggal}/{sampai_tanggal}/{pelanggan}', 'LaporanPenjualanPelangganController@downloadExcel')->middleware('auth');
-Route::get('/laporan-penjualan-pelanggan/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{pelanggan}', 'LaporanPenjualanPelangganController@cetakLaporan')->middleware('auth');
+Route::get('/laporan-penjualan-pelanggan/download-excel-penjualan-pelanggan/{dari_tanggal}/{sampai_tanggal}/{pelanggan}/{kasir}', 'LaporanPenjualanPelangganController@downloadExcel')->middleware('auth');
+Route::get('/laporan-penjualan-pelanggan/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{pelanggan}/{kasir}', 'LaporanPenjualanPelangganController@cetakLaporan')->middleware('auth');
 
 // LAPORAN KARTU STOK VUE.JS
 Route::post('/laporan-kartu-stok/view', 'LaporanKartuStokController@prosesLaporanKartuStok')->middleware('auth');

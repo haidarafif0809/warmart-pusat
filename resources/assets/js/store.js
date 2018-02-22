@@ -12,6 +12,7 @@ const state = {
 	produk : [],
 	kas : [],
 	pelanggan : [],
+	kasir:[],
 	suplier : []
 }
 //Getter berfungsi untuk mengakses state
@@ -43,6 +44,10 @@ const mutations = {
 	SET_KAS_LIST : (state, { list }) => {
 		state.kas = list
 	},
+	// untuk memuat data kasir
+	SET_KASIR_LIST : (state, { list }) => {
+		state.kasir = list
+	},
 	// untuk memuat data suplier
 	SET_SUPLIER_LIST : (state, { list }) => {
 		state.suplier = list
@@ -73,6 +78,18 @@ const actions = {
 		axios.get('penjualan/pilih-pelanggan')
 		.then((resp) => {
 			commit('SET_PELANGGAN_LIST',
+			{
+				list:resp.data
+			})
+		},
+		(err) => {
+			console.log(err)
+		})
+	},
+	LOAD_KASIR_LIST : function({commit}){
+		axios.get('penjualan/pilih-kasir')
+		.then((resp) => {
+			commit('SET_KASIR_LIST',
 			{
 				list:resp.data
 			})

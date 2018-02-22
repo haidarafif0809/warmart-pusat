@@ -259,7 +259,40 @@
  </div> 
  <!-- / MODAL TOMBOL SELESAI --> 
 
- <div class="card" style="margin-bottom: 1px; margin-top: 1px;" ><!-- CARD --> 
+ <!-- small modal -->
+ <div class="modal" id="modalJumlahProduk" role="dialog" tabindex="-1"  aria-labelledby="myModalLabel" aria-hidden="true" >
+  <div class="modal-dialog modal-medium">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" v-on:click="closeModalJumlahProduk()" v-shortkey.push="['f9']" @shortkey="closeModalJumlahProduk()"> &times;</button> 
+      </div>
+
+      <form class="form-horizontal" v-on:submit.prevent="submitJumlahProduk(inputTbsPembelian.id_produk,inputTbsPembelian.jumlah_produk,inputTbsPembelian.harga_produk,inputTbsPembelian.nama_produk,inputTbsPembelian.no_faktur)"> 
+        <div class="modal-body text-center">
+          <h3><b>{{inputTbsPembelian.nama_produk}}</b></h3>
+
+          <div class="form-group">
+            <div class="col-md-6">
+              <input class="form-control" type="number" v-model="inputTbsPembelian.jumlah_produk" placeholder="Isi Jumlah Produk" name="jumlah_produk" id="jumlah_produk" ref="jumlah_produk" autocomplete="off" step="0.01">
+            </div>
+            <div class="col-md-6">
+              <money class="form-control" v-model="inputTbsPembelian.harga_produk" v-bind="pemisahTitik" placeholder="Isi Harga Produk" name="harga_produk" id="harga_produk" ref="harga_produk" autocomplete="off"></money>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-simple" v-on:click="closeModalJumlahProduk()" v-shortkey.push="['f9']" @shortkey="closeModalJumlahProduk()">Close(F9)</button>
+          <button type="submit" class="btn btn-info btn-lg">Tambah</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!--    end small modal -->
+
+<div class="card" style="margin-bottom: 1px; margin-top: 1px;" ><!-- CARD --> 
   <div class="card-content"> 
     <h4 class="card-title" style="margin-bottom: 1px; margin-top: 1px;"> Edit Pembelian {{ inputTbsPembelian.no_faktur }}</h4> 
     <div class="row" style="margin-bottom: 1px; margin-top: 1px;"> 
@@ -312,7 +345,7 @@
                 </a>
               </td>
               <td>
-                <a v-bind:href="'#edit-pembelian/'+id_pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-on:click="editEntryHarga(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk,tbs_pembelian.subtotal)" ><p align='right'>{{ tbs_pembelian.harga_pemisah }}</p>
+                <a v-bind:href="'#edit-pembelian/'+id_pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-on:click="editEntryHarga(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk,tbs_pembelian.subtotal)"  v-bind:class="'harga-' + tbs_pembelian.id_produk" v-bind:data-harga="''+tbs_pembelian.harga_produk" ><p align='right'>{{ tbs_pembelian.harga_pemisah }}</p>
                 </a>
               </td>
               <td>
@@ -424,6 +457,7 @@ export default {
       url_suplier : window.location.origin+(window.location.pathname).replace("dashboard", "suplier"),
       url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"), 
       inputTbsPembelian: {
+        nama_produk : '',
         produk : '',
         jumlah_produk : '',
         harga_produk : '',
@@ -486,6 +520,14 @@ export default {
         precision: 2,
         masked: false /* doesn't work with directive */
       },
+      pemisahTitik: {
+        decimal: ',',
+        thousands: '.',
+        prefix: '',
+        suffix: '',
+        precision: 0,
+        masked: false /* doesn't work with directive */
+      },   
       pencarian: '',
       id_pembelian : 0,
       loading: true,
@@ -749,172 +791,156 @@ deleteEntry(id, index,nama_produk) {
         }); 
       },//END fungsi prosesDelete 
       pilihProduk() {
-        if (this.inputTbsPembelian.produk == '') {
-          this.$swal({
-            text: "Silakan Pilih Produk Telebih dahulu!",
-          });
-        }
-        else if(this.inputTbsPembelian.jumlah_produk == ''){
 
+        if (this.inputTbsPembelian.produk != '') {
           var app = this;
           var produk = app.inputTbsPembelian.produk.split("|");
           var id_produk = produk[0]; 
           var nama_produk = produk[1];
           var harga_produk = produk[2]; 
-          var jumlah = $("#jumlah_produk").val(); 
-          this.isiJumlahProduk(id_produk,nama_produk,harga_produk);
 
+          this.inputJumlahProduk(id_produk,nama_produk,harga_produk);
         }
-        else if (this.inputTbsPembelian.jumlah_produk == '' && this.inputTbsPembelian.produk == ''){
 
-        }
       },//END FUNGSI pilihProduk
-      isiJumlahProduk(id_produk,nama_produk,harga_produk){
-        var app = this;   
-        var no_faktur = app.inputTbsPembelian.no_faktur; 
-        swal({
-          title: titleCase(nama_produk),
-          html:
-          '<div class="col-sm-6  col-xs-6"><lable>Jumlah</lable><br><input type="number" id="swal-input1" class="swal2-input" autofocus></div>' +
-          '<div class="col-sm-6  col-xs-6"><lable>Harga</lable><br><input type="number" id="swal-input2" class="swal2-input" value="'+harga_produk+'"></div>',
-          allowEnterKey : false,
-          showCloseButton: true, 
-          showCancelButton: true,                        
-          focusConfirm: false, 
-          confirmButtonText:'<i class="fa fa-thumbs-o-up"></i> OK', 
-          confirmButtonAriaLabel: 'Thumbs up, great!', 
-          cancelButtonText:'<i class="fa fa-thumbs-o-down"> Batal', 
-          closeOnConfirm: false, 
-          cancelButtonAriaLabel: 'Thumbs down', 
-          preConfirm: function () { 
-            return new Promise(function (resolve) { 
-              resolve([ 
-                $('#swal-input1').val(), 
-                $('#swal-input2').val() 
-                ]) 
-            }) 
-          }
-        }).then(function (result) { 
+      inputJumlahProduk(id_produk,nama_produk,harga_produk){
+        var app = this
+        app.inputTbsPembelian.id_produk = id_produk
+        app.inputTbsPembelian.nama_produk = nama_produk  
+        var harga_tbs = $(".harga-"+id_produk).attr("data-harga")
 
-          if (result[0] == '' || result[0] == 0) { 
-
-            swal('Oops...', 'Jumlah Produk Tidak Boleh 0 atau Kosong !', 'error'); 
-            return false; 
-          }else if (result[1] == '' || result[1] == 0) { 
-
-            swal('Oops...', 'Harga Produk Tidak Boleh 0 atau Kosong !', 'error'); 
-            return false; 
-          }
-          else if (result[1] != harga_produk) { 
-            app.$swal({
-              title: "Konfirmasi",
-              text: "Anda Yakin Ingin Merubah Harga Beli Produk "+titleCase(nama_produk)+ "?",
-              icon: "warning",
-              buttons: true,
-              dangerMode: true,
-            })
-            .then((willDelete) => {
-              if (willDelete) {
-                $("#id_produk_tbs").val(id_produk); 
-                $("#jumlah_produk").val(result[0]); 
-                $("#harga_produk").val(result[1]);
-                var jumlah_produk = result[0];
-                var harga_produk = result[1];
-
-                app.submitJumlahProduk(id_produk,jumlah_produk,harga_produk,nama_produk,no_faktur);
-
-              } else {
-                app.$swal.close();
-              }
-            });
-          }else{ 
-            $("#id_produk_tbs").val(id_produk); 
-            $("#jumlah_produk").val(result[0]); 
-            $("#harga_produk").val(harga_produk); 
-
-            var jumlah_produk = result[0];
-            app.submitJumlahProduk(id_produk,jumlah_produk,harga_produk,nama_produk,no_faktur);
-
-          } 
-        });
-    },//END fungsi isiJumlahProduk 
-    submitJumlahProduk(id_produk,jumlah_produk,harga_produk,nama_produk,no_faktur){
-      var app = this;
-      var id_pembelian = app.id_pembelian;
-      app.loading = true;
-      axios.get(app.url_edit+'/proses-tambah-tbs-pembelian?id_produk_tbs='+id_produk+'&jumlah_produk='+jumlah_produk+'&harga_produk='+harga_produk+'&no_faktur='+no_faktur)
-      .then(function (resp) {
-        if (resp.data == 0) {
-          swal({
-            title: "Peringatan",
-            text:"Produk "+titleCase(nama_produk)+" Sudah Ada, Silakan Pilih Produk Lain !",
-          });
-          app.loading = false;
+        if (typeof harga_tbs === 'undefined'){
+          app.inputTbsPembelian.harga_produk = harga_produk;
+        }else {
+          app.inputTbsPembelian.harga_produk = harga_tbs;
         }
-        else{
-          app.alert("Menambahkan Produk "+titleCase(nama_produk));
-          app.loading = false;
-          app.getResults();
-          app.$router.replace('/edit-pembelian/'+id_pembelian);
-        }
-      });
-    },//END PROSES TAMBAH PRODUK TBS
-    editEntryJumlah(id, index,nama_produk,subtotal_lama) {    
-      var app = this; 
-      var id_pembelian = app.id_pembelian;  
-      swal({ 
-        title: titleCase(nama_produk), 
-        input: 'number', 
-        inputPlaceholder : 'Jumlah Produk',         
-        html:'Berapa Jumlah Produk Yang Akan Dimasukkan ?', 
-        animation: false, 
-        showCloseButton: true, 
-        showCancelButton: true, 
-        focusConfirm: true, 
-        confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> OK', 
-        confirmButtonAriaLabel: 'Thumbs up, great!', 
-        cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal', 
-        closeOnConfirm: true, 
-        cancelButtonAriaLabel: 'Thumbs down', 
-        inputAttributes: { 
-          'name': 'edit_qty_produk', 
-        }, 
-        inputValidator : function (value) { 
-          return new Promise(function (resolve, reject) { 
-            if (value) { 
-              resolve(); 
-            }  
-            else { 
-              reject('Jumlah Harus Di Isi!'); 
-            } 
-          }) 
-        } 
-      }).then(function (jumlah_produk) { 
-        if (jumlah_produk != "0") { 
-          app.loading = true;
-          axios.get(app.url_edit+'/proses-edit-jumlah-tbs-pembelian?jumlah_edit_produk='+jumlah_produk+'&id_tbs_pembelian='+id)
-          .then(function (resp) {
-            app.alert("Mengubah Jumlah Produk "+titleCase(nama_produk));
-            app.loading = false;
-            var subtotal = (parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(subtotal_lama)) + parseInt(resp.data.subtotal);
-            app.getResults();
-            app.inputPembayaranPembelian.subtotal = subtotal                        
-            app.inputPembayaranPembelian.total_akhir  = subtotal
+        $("#modalJumlahProduk").show();
+        app.$refs.jumlah_produk.focus(); 
+      },
+      submitJumlahProduk(id_produk,jumlah_produk,harga_produk,nama_produk,no_faktur){
+       var app = this
+       var produk = app.inputTbsPembelian.produk.split("|");
+       var harga_tbs = $(".harga-"+produk[0]).attr("data-harga")
 
+       if (typeof harga_tbs === 'undefined'){
+           var harga = produk[2]; // harga produk sebelum di edit
+         }else {
+           var harga = harga_tbs; // harga produk sebelum di edit
+         }
 
-            app.$router.replace('/edit-pembelian/'+id_pembelian);
+         if (jumlah_produk == "" || jumlah_produk == 0) {
+
+          app.$swal("Jumlah Produk Tidak Boleh Nol atau kosong!")
+          .then((value) => {
+            app.$refs.jumlah_produk.focus() 
           })
-          .catch(function (resp) {
-            app.loading = false;
-            alert("Jumlah Produk tidak bisa diedit");
-          });
-        } 
-        else { 
-          swal('Oops...', 'Jumlah Tidak Boleh 0 !', 'error'); 
-          return false; 
-        } 
-      }); 
-      
+
+        }else if (harga_produk == "" || harga_produk == 0) {
+
+          app.$swal("Harga Produk Tidak Boleh Nol atau kosong!")
+          .then((value) => {
+            app.$refs.harga_produk.focus() 
+          })
+
+        }else if (harga != harga_produk) {
+          app.konfirmasiPerubahanHarga(id_produk,jumlah_produk,harga_produk,nama_produk,no_faktur)
+        }else{
+          app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,no_faktur)
+        }
+    },//END PROSES TAMBAH PRODUK TBS
+    konfirmasiPerubahanHarga(id_produk,jumlah_produk,harga_produk,nama_produk,no_faktur){
+      let app = this
+      app.$swal({
+        text: "Anda Yakin Ingin Merubah Harga Beli Produk "+titleCase(nama_produk)+ " ?",
+        closeOnEsc: true,
+        buttons: {
+          cancel: true,
+          confirm: "OK"                   
+        },
+
+      }).then((value) => {
+
+        if (!value) throw null;
+
+        app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,no_faktur);
+
+      });
+    },
+    prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,no_faktur){
+     var app = this;
+     var id_pembelian = app.id_pembelian;
+     app.loading = true;
+     axios.get(app.url_edit+'/proses-tambah-tbs-pembelian?id_produk_tbs='+id_produk+'&jumlah_produk='+jumlah_produk+'&harga_produk='+harga_produk+'&no_faktur='+no_faktur)
+     .then(function (resp) {
+
+      $("#modalJumlahProduk").hide();
+      app.alert("Menambahkan Produk "+titleCase(nama_produk));
+      app.loading = false;
+      app.getResults();
+      app.inputTbsPembelian.id_produk = ''
+      app.inputTbsPembelian.nama_produk = ''
+      app.inputTbsPembelian.harga_produk = ''
+      app.inputTbsPembelian.jumlah_produk = ''
+      app.inputTbsPembelian.produk = ''
+
+    });
+   },
+   editEntryJumlah(id, index,nama_produk,subtotal_lama) {    
+    var app = this; 
+    var id_pembelian = app.id_pembelian;  
+    swal({ 
+      title: titleCase(nama_produk), 
+      input: 'number', 
+      inputPlaceholder : 'Jumlah Produk',         
+      html:'Berapa Jumlah Produk Yang Akan Dimasukkan ?', 
+      animation: false, 
+      showCloseButton: true, 
+      showCancelButton: true, 
+      focusConfirm: true, 
+      confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> OK', 
+      confirmButtonAriaLabel: 'Thumbs up, great!', 
+      cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal', 
+      closeOnConfirm: true, 
+      cancelButtonAriaLabel: 'Thumbs down', 
+      inputAttributes: { 
+        'name': 'edit_qty_produk', 
+      }, 
+      inputValidator : function (value) { 
+        return new Promise(function (resolve, reject) { 
+          if (value) { 
+            resolve(); 
+          }  
+          else { 
+            reject('Jumlah Harus Di Isi!'); 
+          } 
+        }) 
+      } 
+    }).then(function (jumlah_produk) { 
+      if (jumlah_produk != "0") { 
+        app.loading = true;
+        axios.get(app.url_edit+'/proses-edit-jumlah-tbs-pembelian?jumlah_edit_produk='+jumlah_produk+'&id_tbs_pembelian='+id)
+        .then(function (resp) {
+          app.alert("Mengubah Jumlah Produk "+titleCase(nama_produk));
+          app.loading = false;
+          var subtotal = (parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(subtotal_lama)) + parseInt(resp.data.subtotal);
+          app.getResults();
+          app.inputPembayaranPembelian.subtotal = subtotal                        
+          app.inputPembayaranPembelian.total_akhir  = subtotal
+
+
+          app.$router.replace('/edit-pembelian/'+id_pembelian);
+        })
+        .catch(function (resp) {
+          app.loading = false;
+          alert("Jumlah Produk tidak bisa diedit");
+        });
+      } 
+      else { 
+        swal('Oops...', 'Jumlah Tidak Boleh 0 !', 'error'); 
+        return false; 
+      } 
+    }); 
+
     },//END editEntryJumlah
     editEntryHarga(id, index,nama_produk,subtotal_lama) {    
       var app = this;  
@@ -1373,7 +1399,11 @@ deleteEntry(id, index,nama_produk) {
         buttons: false,
         timer: 1000,
       });
-      }//alert untuk berhasil proses crud
+      },//alert untuk berhasil proses crud
+      closeModalJumlahProduk(){  
+        $("#modalJumlahProduk").hide(); 
+        this.openSelectizeProduk();
+      }
     }
 
   }
