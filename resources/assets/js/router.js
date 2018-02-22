@@ -701,11 +701,11 @@ const routes = [{
         name: 'indexGrafikJamTransaksiPenjualan'
     },
     {
-        path: '/grafik-jam-transaksi-penjualan/view/:tanggal/',
+        path: '/grafik-jam-transaksi-penjualan/view/:dari_tanggal/:sampai_tanggal',
         component: GrafikJamTransaksiPenjualanTampil,
         name: 'tampilGrafikJamTransaksiPenjualan'
     },{
-        path: '/grafik-jam-transaksi-penjualan-online/view/:tanggal/',
+        path: '/grafik-jam-transaksi-penjualan-online/view/:dari_tanggal/:sampai_tanggal',
         component: GrafikJamTransaksiPenjualanOnlineTampil,
         name: 'tampilGrafikJamTransaksiPenjualanOnline'
     },

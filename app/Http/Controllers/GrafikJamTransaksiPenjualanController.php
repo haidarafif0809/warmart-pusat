@@ -34,12 +34,12 @@ class GrafikJamTransaksiPenjualanController extends Controller
         return '#' . $this->random_color_part() . $this->random_color_part() . $this->random_color_part();
     }
 
-        public function prosesGrafikJamPenjualan(Request $request, $tanggal)
+        public function prosesGrafikJamPenjualan(Request $request, $dari_tanggal,$sampai_tanggal)
     {  
 
       $jam_kelipatan = 0;
       while ($jam_kelipatan <= 23) { 
-            $laporan_jam_transaksi_penjualan = PenjualanPos::grafikJamTransaksiPenjualan($tanggal)->where(DB::raw('DATE_FORMAT(created_at, "%H")'), $jam_kelipatan)->first()->hitung;
+            $laporan_jam_transaksi_penjualan = PenjualanPos::grafikJamTransaksiPenjualan($request)->where(DB::raw('DATE_FORMAT(created_at, "%H")'), $jam_kelipatan)->first()->hitung;
            $respons['waktu_jual'][] =  $jam_kelipatan;
            $respons['hitung'][]     = $laporan_jam_transaksi_penjualan;   
            $respons['color'][]      = $this->random_color();   
@@ -52,12 +52,12 @@ class GrafikJamTransaksiPenjualanController extends Controller
         return response()->json($respons);
      }
 
-        public function prosesGrafikJamPenjualanOnline(Request $request, $tanggal)
+        public function prosesGrafikJamPenjualanOnline(Request $request, $dari_tanggal,$sampai_tanggal)
     {  
 
       $jam_kelipatan = 0;
       while ($jam_kelipatan <= 23) { 
-            $laporan_jam_transaksi_penjualan = Penjualan::grafikJamTransaksiPenjualan($tanggal)->where(DB::raw('DATE_FORMAT(created_at, "%H")'), $jam_kelipatan)->first()->hitung;
+            $laporan_jam_transaksi_penjualan = Penjualan::grafikJamTransaksiPenjualan($request)->where(DB::raw('DATE_FORMAT(created_at, "%H")'), $jam_kelipatan)->first()->hitung;
            $respons['waktu_jual'][] =  $jam_kelipatan;
            $respons['hitung'][]     = $laporan_jam_transaksi_penjualan;   
            $respons['color'][]      = $this->random_color();   
