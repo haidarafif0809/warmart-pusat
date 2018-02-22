@@ -126,7 +126,7 @@
                         SO
                     </span>
                     <span class="sidebar-normal">
-                        STOK OPNAME
+                        Stok Opname
                     </span>
                 </router-link>
             </li>

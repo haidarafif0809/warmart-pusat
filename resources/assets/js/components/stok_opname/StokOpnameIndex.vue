@@ -127,6 +127,7 @@
                             <div align="right"><pagination :data="stokOpnameData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
 
                         </div>
+                        <p style="color: red; font-style: italic;">*Note : Klik Kolom <strong>Stok Fisik</strong> Untuk Mengubah Nilai.</p>
                     </div>
                 </div>
             </div>
