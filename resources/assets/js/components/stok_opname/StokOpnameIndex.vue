@@ -200,7 +200,6 @@
                 }
                 axios.get(app.url+'/view?page='+page)
                 .then(function (resp) {
-                    console.log(resp.data)
                     app.stokOpname = resp.data.data;
                     app.stokOpnameData = resp.data;
                     app.loading = false;
@@ -219,6 +218,7 @@
                 }
                 axios.get(app.url+'/pencarian?search='+app.pencarian+'&page='+page)
                 .then(function (resp) {
+                    console.log(resp.data.data)
                     app.stokOpname = resp.data.data;
                     app.stokOpnameData = resp.data;
                     app.loading = false;
