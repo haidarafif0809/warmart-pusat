@@ -29,10 +29,8 @@ class PesananPelangganController extends Controller
         OpenGraph::addProperty('type', 'articles');
         $agent = new Agent();
 
-        $keranjang_belanjaan = KeranjangBelanja::with(['produk', 'pelanggan'])->where('id_pelanggan', Auth::user()->id)->get();
-        $cek_belanjaan       = $keranjang_belanjaan->count();
-        $logo_warmart        = "" . asset('/assets/img/examples/warmart_logo.png') . "";
-        $user                = Auth::user();
+        $cek_belanjaan = KeranjangBelanja::where('id_pelanggan', Auth::user()->id)->count();
+        
         //SETTING APLIKASI
         $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
 
@@ -107,7 +105,7 @@ class PesananPelangganController extends Controller
 
 
 
-        return view('layouts.pesanan_pelanggan', ['produk_pesanan_mobile' => $produk_pesanan_mobile, 'produk_pesanan_komputer' => $produk_pesanan_komputer, 'cek_belanjaan' => $cek_belanjaan, 'agent' => $agent, 'logo_warmart' => $logo_warmart, 'user' => $user, 'cek_pesanan' => $cek_pesanan, 'pagination_pesanan' => $pagination_pesanan, 'setting_aplikasi' => $setting_aplikasi]);
+        return view('layouts.pesanan_pelanggan', ['produk_pesanan_mobile' => $produk_pesanan_mobile, 'produk_pesanan_komputer' => $produk_pesanan_komputer, 'cek_belanjaan' => $cek_belanjaan,'cek_pesanan' => $cek_pesanan, 'pagination_pesanan' => $pagination_pesanan, 'setting_aplikasi' => $setting_aplikasi]);
     }
 
     public function detailPesananPelanggan(Request $request)
@@ -124,10 +122,7 @@ class PesananPelangganController extends Controller
         OpenGraph::addProperty('type', 'articles');
         $agent = new Agent();
 
-        $keranjang_belanjaan = KeranjangBelanja::with(['produk', 'pelanggan'])->where('id_pelanggan', Auth::user()->id)->get();
-        $cek_belanjaan       = $keranjang_belanjaan->count();
-        $logo_warmart        = "" . asset('/assets/img/examples/warmart_logo.png') . "";
-        $user                = Auth::user();
+        $cek_belanjaan = KeranjangBelanja::where('id_pelanggan', Auth::user()->id)->count();
 
         $pesanan_pelanggan        = PesananPelanggan::with('warung')->where('id_pelanggan', Auth::user()->id)->where('id', $request->xasq)->first();
         $detail_pesanan_pelanggan = DetailPesananPelanggan::with(['produk', 'pelanggan', 'pesanan_pelanggan'])->where('id_pelanggan', Auth::user()->id)->where('id_pesanan_pelanggan', $pesanan_pelanggan->id)->paginate(10);
@@ -156,7 +151,7 @@ class PesananPelangganController extends Controller
         }
         $lokasi_warung = Indonesia::allVillages()->where('id', $pesanan_pelanggan->warung->wilayah)->first();
 
-        return view('layouts.detail_pesanan_pelanggan', ['detail_pesanan_pelanggan' => $detail_pesanan_pelanggan, 'pesanan_pelanggan' => $pesanan_pelanggan, 'cek_belanjaan' => $cek_belanjaan, 'agent' => $agent, 'logo_warmart' => $logo_warmart, 'user' => $user, 'status_pesanan' => $status_pesanan, 'lokasi_warung' => $lokasi_warung->name, 'pagination' => $pagination, 'service'=>$service, 'waktu_pengiriman'=>$waktu_pengiriman]);
+        return view('layouts.detail_pesanan_pelanggan', ['detail_pesanan_pelanggan' => $detail_pesanan_pelanggan, 'pesanan_pelanggan' => $pesanan_pelanggan, 'cek_belanjaan' => $cek_belanjaan, 'agent' => $agent,'status_pesanan' => $status_pesanan, 'lokasi_warung' => $lokasi_warung->name, 'pagination' => $pagination, 'service'=>$service, 'waktu_pengiriman'=>$waktu_pengiriman]);
     }
 
     public function batalPesananPelanggan($id)

@@ -30,9 +30,8 @@ class StokOpnameController extends Controller
         return $respons;
     }
 
-    public function view()
+    public function foreachStokOpname($data_stok_opname)
     {
-        $data_stok_opname = StokOpname::dataStokOpname()->paginate(10);
 
         $array_stok_opname = array();
         foreach ($data_stok_opname as $stok_opname) {
@@ -43,23 +42,22 @@ class StokOpnameController extends Controller
 
         //DATA PAGINATION
         $respons = $this->dataPagination($data_stok_opname, $array_stok_opname);
+
+        return $respons;
+    }
+
+    public function view()
+    {
+        $data_stok_opname = StokOpname::dataStokOpname()->paginate(10);
+        $respons          = $this->foreachStokOpname($data_stok_opname);
         return response()->json($respons);
     }
 
     public function pencarian(Request $request)
     {
         $data_stok_opname = StokOpname::cariDataStokOpname($request)->paginate(10);
-
-        $array_stok_opname = array();
-        foreach ($data_stok_opname as $stok_opname) {
-            $nama_produk = title_case($stok_opname->nama_barang);
-
-            array_push($array_stok_opname, ['stok_opname' => $stok_opname, 'nama_produk' => $nama_produk]);
-        }
-
-        //DATA PAGINATION
-        $respons = $this->dataPagination($data_stok_opname, $array_stok_opname);
-        return response()->json($data_stok_opname);
+        $respons          = $this->foreachStokOpname($data_stok_opname);
+        return response()->json($respons);
     }
 
 /**
@@ -115,7 +113,7 @@ class StokOpnameController extends Controller
             'jumlah_produk' => 'required',
         ]);
 
-        $master_bank = StokOpname::create([
+        $stok_opname = StokOpname::create([
             'no_faktur'     => $no_faktur,
             'produk_id'     => $request->produk,
             'stok_sekarang' => $stok_sekarang,
@@ -162,7 +160,23 @@ class StokOpnameController extends Controller
  */
     public function update(Request $request, $id)
     {
-        //
+        DB::beginTransaction();
+        $data_stok_opname = StokOpname::find($id);
+        $selisih_fisik    = $request->jumlah_produk - $data_stok_opname->stok_sekarang;
+        $total            = $data_stok_opname->harga * $selisih_fisik;
+
+        $this->validate($request, [
+            'jumlah_produk' => 'required',
+        ]);
+        $data_stok_opname->update([
+            'jumlah_fisik'  => $request->jumlah_produk,
+            'selisih_fisik' => $selisih_fisik,
+            'total'         => $total,
+        ]);
+
+        DB::commit();
+        return response(200);
+
     }
 
 /**

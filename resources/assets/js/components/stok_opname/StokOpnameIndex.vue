@@ -10,6 +10,11 @@
     .text-kanan{
         text-align:right;
     }
+    .table>thead>tr>th {
+        border-bottom-width: 1px;
+        font-size: 1em;
+        font-weight: 300;
+    }
 </style>
 
 <template>  
@@ -46,7 +51,7 @@
 
             <div class="card">
                 <div class="card-header card-header-icon" data-background-color="purple">
-                    <i class="material-icons">local_offer</i>
+                    <i class="material-icons">swap_vert</i>
                 </div>
                 <div class="card-content">
                     <h4 class="card-title"> Stok Opname</h4>
@@ -80,7 +85,7 @@
                                         <th class="text-kanan">Selisih Fisik</th>
                                         <th class="text-kanan">Harga</th>
                                         <th class="text-kanan">Selisih Harga</th>
-                                        <th style="text-align:center">Waktu</th>
+                                        <th style="text-align:center">Tanggal</th>
                                         <th>Aksi</th>
 
                                     </tr>
@@ -90,22 +95,23 @@
                                         <td>{{ stokOpname.stok_opname.no_faktur }}</td>
                                         <td>{{ stokOpname.nama_produk }}</td>
                                         <td align="right">{{ stokOpname.stok_opname.stok_sekarang | pemisahTitik}}</td>
-                                        <td align="right">{{ stokOpname.stok_opname.jumlah_fisik | pemisahTitik}}</td>
+                                        <td align="right">
+                                            <a href="#stok-opname" v-bind:id="'edit-' + stokOpname.stok_opname.id" v-on:click="editEntry(stokOpname.stok_opname.id, index,stokOpname.stok_opname.no_faktur, stokOpname.nama_produk)">
+                                                {{ stokOpname.stok_opname.jumlah_fisik | pemisahTitik}}
+                                            </a>
+                                        </td>
                                         <td align="right">{{ stokOpname.stok_opname.selisih_fisik | pemisahTitik}}</td>
                                         <td align="right">{{ stokOpname.stok_opname.harga | pemisahTitik}}</td>
 
                                         <td align="right" v-if="stokOpname.stok_opname.selisih_fisik < 0">
-                                            (-){{ stokOpname.stok_opname.total * -1 | pemisahTitik}}
+                                            {{ stokOpname.stok_opname.total * -1 | pemisahTitik}}
                                         </td>
                                         <td align="right" v-else>
-                                            (+){{ stokOpname.stok_opname.total | pemisahTitik}}
+                                            {{ stokOpname.stok_opname.total | pemisahTitik}}
                                         </td>
 
                                         <td align="center">{{ stokOpname.stok_opname.created_at | tanggal}}</td>
                                         <td>
-                                            <router-link :to="{name: 'editstokOpname.stok_opname', params: {id: stokOpname.stok_opname.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + stokOpname.stok_opname.id" > Edit
-                                            </router-link>
-
                                             <a href="#/stok-opname" class="btn btn-xs btn-danger" v-bind:id="'delete-' + stokOpname.stok_opname.id" v-on:click="deleteEntry(stokOpname.stok_opname.id, index,stokOpname.stok_opname.no_faktur)">Delete
                                             </a>
                                         </td>
@@ -121,6 +127,7 @@
                             <div align="right"><pagination :data="stokOpnameData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
 
                         </div>
+                        <p style="color: red; font-style: italic;">*Note : Klik Kolom <strong>Stok Fisik</strong> Untuk Mengubah Nilai.</p>
                     </div>
                 </div>
             </div>
@@ -140,6 +147,11 @@
                     nama_produk: '',
                     jumlah_produk: '',
                     harga_produk: '',
+                },
+                editStokOpname: {
+                    id_stok_opname: '',
+                    no_faktur: '',
+                    jumlah_produk: '',
                 },
                 placeholder_produk:{
                     placeholder: 'Cari Produk (F1) ...'
@@ -162,7 +174,7 @@
                 return formatted.join('; ');
             },
             tanggal: function (value) {
-                return moment(String(value)).format('DD/MM/YYYY hh:mm')
+                return moment(String(value)).format('DD/MM/YYYY')
             }
         },
         watch: {
@@ -189,7 +201,6 @@
                 }
                 axios.get(app.url+'/view?page='+page)
                 .then(function (resp) {
-                    console.log(resp.data)
                     app.stokOpname = resp.data.data;
                     app.stokOpnameData = resp.data;
                     app.loading = false;
@@ -208,6 +219,7 @@
                 }
                 axios.get(app.url+'/pencarian?search='+app.pencarian+'&page='+page)
                 .then(function (resp) {
+                    console.log(resp.data.data)
                     app.stokOpname = resp.data.data;
                     app.stokOpnameData = resp.data;
                     app.loading = false;
@@ -268,6 +280,55 @@
                   });
                 }
             },
+            editEntry(id, index,no_faktur,nama_produk) {
+                var app = this;
+                app.$swal({
+                    title: nama_produk,
+                    content: {
+                        element: "input",
+                        attributes: {
+                            placeholder: "Edit Jumlah Produk",
+                            type: "number",
+                        },
+                    },
+                    buttons: {
+                        cancel: true,
+                        confirm: "OK"                   
+                    },
+                }).then((value) => {
+                    if (!value) throw null;
+                    this.prosesEditStokOpname(value,id,no_faktur,nama_produk);
+                });
+            },
+            prosesEditStokOpname(value,id,no_faktur,nama_produk){
+                if (value == 0) {
+                    this.$swal({
+                        text: "Jumlah Produk Tidak Boleh Nol!",
+                    });
+                }else{
+                    var app = this;
+                    var id = id;
+                    app.editStokOpname.id_stok_opname = id;
+                    app.editStokOpname.no_faktur = no_faktur;
+                    app.editStokOpname.jumlah_produk = value;
+                    var newEditStokOpname = app.editStokOpname;
+                    app.loading = true;
+                    axios.patch(app.url+'/'+id, newEditStokOpname)
+                    .then(function (resp) {
+                        app.getResults()
+                        app.alert("Mengubah Stok Opname Produk "+nama_produk)
+                        app.loading = false;
+                        app.editStokOpname.jumlah_produk = ''
+                        app.editStokOpname.no_faktur = ''
+                        app.editStokOpname.id_stok_opname = ''
+                    })
+                    .catch(function (resp) {
+                      console.log(resp);                  
+                      app.loading = false;
+                      app.alertGagal("Tidak Dapat Mengubah Stok Opname Produk "+nama_produk);
+                  });
+                }
+            },
             deleteEntry(id, index,no_faktur) {
                 var app = this;
                 app.$swal({
@@ -312,7 +373,7 @@
                     text: pesan,
                     icon: "success",
                     buttons: false,
-                    timer: 1000,
+                    timer: 2000,
 
                 });
             },

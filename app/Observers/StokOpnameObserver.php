@@ -4,11 +4,12 @@ namespace App\Observers;
 
 use App\Hpp;
 use App\StokOpname;
+use Auth;
 use Illuminate\Support\Facades\DB;
 
 class StokOpnameObserver
 {
-    //MEMBUAT HPP MASUK
+    //INSERT HPP
     public function creating(StokOpname $StokOpname)
     {
         $selisih_fisik = $StokOpname->selisih_fisik;
@@ -46,7 +47,39 @@ class StokOpnameObserver
         return true;
     } // OBERVERS CREATING
 
-    //HAPUS ITEM MASUK
+    //UPDATE HPP
+    public function updating(StokOpname $StokOpname)
+    {
+        $selisih_fisik = $StokOpname->selisih_fisik;
+
+        if ($selisih_fisik < 0) {
+
+            $selisih_fisik = $selisih_fisik * -1;
+            $total_nilai   = $StokOpname->total * -1;
+
+            Hpp::where('no_faktur', $StokOpname->no_faktur)
+                ->where('warung_id', Auth::user()->id_warung)
+                ->update([
+                    'jumlah_masuk'  => 0,
+                    'jumlah_keluar' => $selisih_fisik,
+                    'total_nilai'   => $total_nilai,
+                ]);
+
+        } else {
+
+            Hpp::where('no_faktur', $StokOpname->no_faktur)
+                ->where('warung_id', Auth::user()->id_warung)
+                ->update([
+                    'jumlah_keluar' => 0,
+                    'jumlah_masuk'  => $selisih_fisik,
+                    'total_nilai'   => $StokOpname->total,
+                ]);
+        }
+
+        return true;
+    } // OBERVERS UPDATING
+
+    //DELETE HPP
     public function deleting(StokOpname $StokOpname)
     {
         $stok = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk),0) - IFNULL(SUM(jumlah_keluar),0) as stok_produk')])

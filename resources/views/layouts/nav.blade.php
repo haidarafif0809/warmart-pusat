@@ -120,6 +120,16 @@
                     </span>
                 </router-link>
             </li>
+            <li>
+                <router-link :to="{name: 'indexStokOpname'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        SO
+                    </span>
+                    <span class="sidebar-normal">
+                        Stok Opname
+                    </span>
+                </router-link>
+            </li>
         </ul>
     </div>
 </li>
@@ -322,7 +332,7 @@
                     </span>
                 </router-link>
             </li>
-             <li>
+            <li>
                 <router-link :to="{name: 'indexLaporanPenjualanTerbaik'}" class="menu-nav">
                     <span class="sidebar-mini">
                         LP

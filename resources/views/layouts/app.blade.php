@@ -47,14 +47,14 @@ $judul_warung = \App\SettingFooter::select()->first()->judul_warung;
 </head>
 <style type="text/css">
 
-.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
- padding: 1px;
-}
+    .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+     padding: 1px;
+ }
 
 </style>
 <body>
     <div class="wrapper" id="vue-app">
-        <div class="sidebar" data-active-color="rose" data-background-color="black" data-image="{{ asset('img/sidebar-1.jpg') }}">
+        <div class="sidebar" data-active-color="rose" data-background-color="black" data-image="">
                 <!--
         Tip 1: You can change the color of active element of the sidebar using: data-active-color="purple | blue | green | orange | red | rose"
         Tip 2: you can also add an image using data-image tag
@@ -457,7 +457,7 @@ $judul_warung = \App\SettingFooter::select()->first()->judul_warung;
 </body>
 <!--   Core JS Files   -->
 
-<script src="{{ asset('js/app.js?v=1.68')}}" type="text/javascript">
+<script src="{{ asset('js/app.js?v=1.70')}}" type="text/javascript">
 
 </script>
 <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript">
