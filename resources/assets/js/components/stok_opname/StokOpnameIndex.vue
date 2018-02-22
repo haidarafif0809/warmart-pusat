@@ -10,6 +10,11 @@
     .text-kanan{
         text-align:right;
     }
+    .table>thead>tr>th {
+        border-bottom-width: 1px;
+        font-size: 1em;
+        font-weight: 300;
+    }
 </style>
 
 <template>  
@@ -80,7 +85,7 @@
                                         <th class="text-kanan">Selisih Fisik</th>
                                         <th class="text-kanan">Harga</th>
                                         <th class="text-kanan">Selisih Harga</th>
-                                        <th style="text-align:center">Waktu</th>
+                                        <th style="text-align:center">Tanggal</th>
                                         <th>Aksi</th>
 
                                     </tr>
@@ -90,22 +95,23 @@
                                         <td>{{ stokOpname.stok_opname.no_faktur }}</td>
                                         <td>{{ stokOpname.nama_produk }}</td>
                                         <td align="right">{{ stokOpname.stok_opname.stok_sekarang | pemisahTitik}}</td>
-                                        <td align="right">{{ stokOpname.stok_opname.jumlah_fisik | pemisahTitik}}</td>
+                                        <td align="right">
+                                            <a href="#stok-opname" v-bind:id="'edit-' + stokOpname.stok_opname.id" v-on:click="editEntry(stokOpname.stok_opname.id, index,stokOpname.stok_opname.no_faktur, stokOpname.nama_produk)">
+                                                {{ stokOpname.stok_opname.jumlah_fisik | pemisahTitik}}
+                                            </a>
+                                        </td>
                                         <td align="right">{{ stokOpname.stok_opname.selisih_fisik | pemisahTitik}}</td>
                                         <td align="right">{{ stokOpname.stok_opname.harga | pemisahTitik}}</td>
 
                                         <td align="right" v-if="stokOpname.stok_opname.selisih_fisik < 0">
-                                            (-){{ stokOpname.stok_opname.total * -1 | pemisahTitik}}
+                                            {{ stokOpname.stok_opname.total * -1 | pemisahTitik}}
                                         </td>
                                         <td align="right" v-else>
-                                            (+){{ stokOpname.stok_opname.total | pemisahTitik}}
+                                            {{ stokOpname.stok_opname.total | pemisahTitik}}
                                         </td>
 
                                         <td align="center">{{ stokOpname.stok_opname.created_at | tanggal}}</td>
                                         <td>
-                                            <router-link :to="{name: 'editstokOpname.stok_opname', params: {id: stokOpname.stok_opname.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + stokOpname.stok_opname.id" > Edit
-                                            </router-link>
-
                                             <a href="#/stok-opname" class="btn btn-xs btn-danger" v-bind:id="'delete-' + stokOpname.stok_opname.id" v-on:click="deleteEntry(stokOpname.stok_opname.id, index,stokOpname.stok_opname.no_faktur)">Delete
                                             </a>
                                         </td>
@@ -141,6 +147,11 @@
                     jumlah_produk: '',
                     harga_produk: '',
                 },
+                editStokOpname: {
+                    id_stok_opname: '',
+                    no_faktur: '',
+                    jumlah_produk: '',
+                },
                 placeholder_produk:{
                     placeholder: 'Cari Produk (F1) ...'
                 },
@@ -162,7 +173,7 @@
                 return formatted.join('; ');
             },
             tanggal: function (value) {
-                return moment(String(value)).format('DD/MM/YYYY hh:mm')
+                return moment(String(value)).format('DD/MM/YYYY')
             }
         },
         watch: {
@@ -265,6 +276,55 @@
                       app.inputStokOpname.produk = ''
                       $("#modalJumlahProduk").hide();
                       alert("Tidak Dapat Menambahkan Produk "+nama_produk);
+                  });
+                }
+            },
+            editEntry(id, index,no_faktur,nama_produk) {
+                var app = this;
+                app.$swal({
+                    title: nama_produk,
+                    content: {
+                        element: "input",
+                        attributes: {
+                            placeholder: "Edit Jumlah Produk",
+                            type: "number",
+                        },
+                    },
+                    buttons: {
+                        cancel: true,
+                        confirm: "OK"                   
+                    },
+                }).then((value) => {
+                    if (!value) throw null;
+                    this.prosesEditStokOpname(value,id,no_faktur,nama_produk);
+                });
+            },
+            prosesEditStokOpname(value,id,no_faktur,nama_produk){
+                if (value == 0) {
+                    this.$swal({
+                        text: "Jumlah Produk Tidak Boleh Nol!",
+                    });
+                }else{
+                    var app = this;
+                    var id = id;
+                    app.editStokOpname.id_stok_opname = id;
+                    app.editStokOpname.no_faktur = no_faktur;
+                    app.editStokOpname.jumlah_produk = value;
+                    var newEditStokOpname = app.editStokOpname;
+                    app.loading = true;
+                    axios.patch(app.url+'/'+id, newEditStokOpname)
+                    .then(function (resp) {
+                        app.getResults()
+                        app.alert("Mengubah Stok Opname Produk "+nama_produk)
+                        app.loading = false;
+                        app.editStokOpname.jumlah_produk = ''
+                        app.editStokOpname.no_faktur = ''
+                        app.editStokOpname.id_stok_opname = ''
+                    })
+                    .catch(function (resp) {
+                      console.log(resp);                  
+                      app.loading = false;
+                      app.alertGagal("Tidak Dapat Mengubah Stok Opname Produk "+nama_produk);
                   });
                 }
             },

@@ -115,7 +115,7 @@ class StokOpnameController extends Controller
             'jumlah_produk' => 'required',
         ]);
 
-        $master_bank = StokOpname::create([
+        $stok_opname = StokOpname::create([
             'no_faktur'     => $no_faktur,
             'produk_id'     => $request->produk,
             'stok_sekarang' => $stok_sekarang,
@@ -162,7 +162,23 @@ class StokOpnameController extends Controller
  */
     public function update(Request $request, $id)
     {
-        //
+        DB::beginTransaction();
+        $data_stok_opname = StokOpname::find($id);
+        $selisih_fisik    = $request->jumlah_produk - $data_stok_opname->stok_sekarang;
+        $total            = $data_stok_opname->harga * $selisih_fisik;
+
+        $this->validate($request, [
+            'jumlah_produk' => 'required',
+        ]);
+        $data_stok_opname->update([
+            'jumlah_fisik'  => $request->jumlah_produk,
+            'selisih_fisik' => $selisih_fisik,
+            'total'         => $total,
+        ]);
+
+        DB::commit();
+        return response(200);
+
     }
 
 /**
