@@ -86,13 +86,6 @@ export default {
             let email     = app.setting_verifikasi.email;
             let no_telp   = app.setting_verifikasi.no_telp;
 
-            if (email == false) email = 0;
-            if (no_telp == false) no_telp = 0;
-            if (email == false && no_telp == false) {
-                email   = 0;
-                no_telp = 0;
-            }
-
             if (email == true) email = 1;
             if (no_telp == true) no_telp = 1;
             if (email == true && no_telp == true) {
@@ -100,24 +93,35 @@ export default {
                 no_telp = 1;
             }
 
-            console.log(email);
-            console.log(no_telp);
-            axios.put(app.url + '/' + app.setting_verifikasi.id, app.setting_verifikasi)
-            .then(function (resp) {
-                console.log(resp);
-                
-                swal({
-                    title: 'Berhasil!',
-                    type: 'success',
-                    text: 'Berhasil mengubah setting.',
-                    timer: 1800,
-                    showConfirmButton: false
+            if (email == false) email = 0;
+            if (no_telp == false) no_telp = 0;
+            if (email == false && no_telp == false) {
+                email   = 0;
+                no_telp = 0;
+                app.$swal("Anda harus memilih salah satu atau keduanya!");
+            }else{
+
+                console.log(email);
+                console.log(no_telp);
+                axios.put(app.url + '/' + app.setting_verifikasi.id, app.setting_verifikasi)
+                .then(function (resp) {
+                    console.log(resp);
+
+                    swal({
+                        title: 'Berhasil!',
+                        type: 'success',
+                        text: 'Berhasil mengubah setting.',
+                        timer: 1800,
+                        showConfirmButton: false
+                    });
+                })
+                .catch(function (resp) {
+                    console.log(resp);
+                    alert('tidak dapat menyimpan perubahan.');
                 });
-            })
-            .catch(function (resp) {
-                console.log(resp);
-                alert('tidak dapat menyimpan perubahan.');
-            });
+
+            }
+
         },
         getDataSettingVerifikasi() {
             let app = this;
