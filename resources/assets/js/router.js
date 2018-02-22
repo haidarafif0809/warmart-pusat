@@ -167,8 +167,6 @@ import UserKasirCreate from './components/user_kasir/UserKasirCreate.vue';
 import UserKasirEdit from './components/user_kasir/UserKasirEdit.vue';
 /**STOK OPNAME*/
 import StokOpnameIndex from './components/stok_opname/StokOpnameIndex.vue';
-import StokOpnameCreate from './components/stok_opname/StokOpnameCreate.vue';
-import StokOpnameEdit from './components/stok_opname/StokOpnameEdit.vue';
 
 const routes = [{
     path: '/',
@@ -717,14 +715,6 @@ const routes = [{
         component: StokOpnameIndex,
         name: 'indexStokOpname'
     }, {
-        path: '/stok-opname-create',
-        component: StokOpnameCreate,
-        name: 'createStokOpname'
-    }, {
-        path: '/edit-stok-opname/:id',
-        component: StokOpnameEdit,
-        name: 'editStokOpname'
-    },{
         path: '/laporan-penjualan-terbaik/',
         component: LaporanPenjualanTerbaikIndex,
         name: 'indexLaporanPenjualanTerbaik'

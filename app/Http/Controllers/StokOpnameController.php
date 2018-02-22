@@ -30,9 +30,8 @@ class StokOpnameController extends Controller
         return $respons;
     }
 
-    public function view()
+    public function foreachStokOpname($data_stok_opname)
     {
-        $data_stok_opname = StokOpname::dataStokOpname()->paginate(10);
 
         $array_stok_opname = array();
         foreach ($data_stok_opname as $stok_opname) {
@@ -43,22 +42,21 @@ class StokOpnameController extends Controller
 
         //DATA PAGINATION
         $respons = $this->dataPagination($data_stok_opname, $array_stok_opname);
+
+        return $respons;
+    }
+
+    public function view()
+    {
+        $data_stok_opname = StokOpname::dataStokOpname()->paginate(10);
+        $respons          = $this->foreachStokOpname($data_stok_opname);
         return response()->json($respons);
     }
 
     public function pencarian(Request $request)
     {
         $data_stok_opname = StokOpname::cariDataStokOpname($request)->paginate(10);
-
-        $array_stok_opname = array();
-        foreach ($data_stok_opname as $stok_opname) {
-            $nama_produk = title_case($stok_opname->nama_barang);
-
-            array_push($array_stok_opname, ['stok_opname' => $stok_opname, 'nama_produk' => $nama_produk]);
-        }
-
-        //DATA PAGINATION
-        $respons = $this->dataPagination($data_stok_opname, $array_stok_opname);
+        $respons          = $this->foreachStokOpname($data_stok_opname);
         return response()->json($respons);
     }
 
