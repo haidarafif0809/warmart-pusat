@@ -185,6 +185,7 @@ class DetailPenjualanPos extends Model
         $laporan_penjualan_pos = DetailPenjualanPos::select([
             'detail_penjualan_pos.no_faktur',
             'detail_penjualan_pos.satuan_id',
+            'penjualan_pos.pelanggan_id',
             'barangs.kode_barang',
             'detail_penjualan_pos.id_produk',
             'barangs.nama_barang',
@@ -244,13 +245,26 @@ class DetailPenjualanPos extends Model
 // LAPORAN PENJUALAN POS / PELANGGAN
     public function scopeLaporanPenjualanPosPelanggan($query_laporan_penjualan_pos_pelanggan, $request)
     {
-        if ($request->pelanggan != "") {
+        if ($request->pelanggan != "" AND $request->kasir != "") {
             $query_laporan_penjualan_pos_pelanggan = $this->queryLaporanPenjualanPos($request)
                 ->where('penjualan_pos.pelanggan_id', $request->pelanggan)
+                ->where('detail_penjualan_pos.created_by', $request->kasir)
                 ->where('detail_penjualan_pos.warung_id', Auth::user()->id_warung)
                 ->groupBy('penjualan_pos.pelanggan_id', 'barangs.id')
                 ->orderBy('detail_penjualan_pos.created_at', 'desc');
             # code...
+        }elseif($request->pelanggan != "" AND $request->kasir == ""){
+                $query_laporan_penjualan_pos_pelanggan = $this->queryLaporanPenjualanPos($request)
+                ->where('penjualan_pos.pelanggan_id', $request->pelanggan)
+                ->where('detail_penjualan_pos.warung_id', Auth::user()->id_warung)
+                ->groupBy('detail_penjualan_pos.id_produk')
+                ->orderBy('detail_penjualan_pos.created_at', 'desc');
+        }elseif($request->pelanggan == "" AND $request->kasir != ""){
+                $query_laporan_penjualan_pos_pelanggan = $this->queryLaporanPenjualanPos($request)
+                ->where('detail_penjualan_pos.created_by', $request->kasir)
+                ->where('detail_penjualan_pos.warung_id', Auth::user()->id_warung)
+                ->groupBy('detail_penjualan_pos.id_produk')
+                ->orderBy('detail_penjualan_pos.created_at', 'desc');
         } else {
             $query_laporan_penjualan_pos_pelanggan = $this->queryLaporanPenjualanPos($request)
                 ->where('detail_penjualan_pos.warung_id', Auth::user()->id_warung)
@@ -308,11 +322,22 @@ class DetailPenjualanPos extends Model
     // TOTAL PEJUALAN POS PER PELANGGAN
     public function scopeTotalLaporanPenjualanPosPelanggan($query_total_penjualan_pos_pelanggan, $request)
     {
-        if ($request->pelanggan != "") {
+        if ($request->pelanggan != "" AND $request->kasir != "") {
             $query_total_penjualan_pos_pelanggan = $this->queryTotalPenjualanPos($request)
                 ->where('penjualan_pos.pelanggan_id', $request->pelanggan)
+                 ->where('detail_penjualan_pos.created_by', $request->kasir)
                 ->where('detail_penjualan_pos.warung_id', Auth::user()->id_warung)
             // ->groupBy('detail_penjualan_pos.id_produk', 'penjualan_pos.pelanggan_id')
+                ->orderBy('detail_penjualan_pos.created_at', 'desc');
+        }else if($request->pelanggan != "" AND $request->kasir == ""){
+               $query_total_penjualan_pos_pelanggan = $this->queryTotalPenjualanPos($request)
+                ->where('penjualan_pos.pelanggan_id', $request->pelanggan)
+                ->where('penjualan_pos.warung_id', Auth::user()->id_warung)
+                ->orderBy('detail_penjualan_pos.created_at', 'desc');
+        }else if($request->pelanggan == "" AND $request->kasir != ""){
+               $query_total_penjualan_pos_pelanggan = $this->queryTotalPenjualanPos($request)
+                ->where('detail_penjualan_pos.created_by', $request->kasir)
+                ->where('penjualan_pos.warung_id', Auth::user()->id_warung)
                 ->orderBy('detail_penjualan_pos.created_at', 'desc');
         } else {
             $query_total_penjualan_pos_pelanggan = $this->queryTotalPenjualanPos($request)
@@ -375,9 +400,30 @@ class DetailPenjualanPos extends Model
     public function scopeCariLaporanPenjualanPosPelanggan($query_cari_laporan_pos_pelanggan, $request)
     {
         $search = $request->search;
-        if ($request->pelanggan != "") {
+        if ($request->pelanggan != "" AND $request->kasir != "") {
             $query_cari_laporan_pos_pelanggan = $this->queryLaporanPenjualanPos($request)
                 ->where('penjualan_pos.pelanggan_id', $request->pelanggan)
+                ->where('detail_penjualan_pos.created_by', $request->kasir)
+                ->where('detail_penjualan_pos.warung_id', Auth::user()->id_warung)
+                ->where(function ($query) use ($search) {
+                    $query->orWhere('users.name', 'LIKE', '%' . $search . '%')
+                        ->orWhere('barangs.nama_barang', 'LIKE', '%' . $search . '%')
+                        ->orWhere('barangs.kode_barang', 'LIKE', '%' . $search . '%')
+                        ->orWhere('detail_penjualan_pos.jumlah_produk', 'LIKE', '%' . $search . '%');
+                });
+        }elseif ($request->pelanggan != "" AND $request->kasir == "") {
+            $query_cari_laporan_pos_pelanggan = $this->queryLaporanPenjualanPos($request)
+                ->where('penjualan_pos.pelanggan_id', $request->pelanggan)
+                ->where('detail_penjualan_pos.warung_id', Auth::user()->id_warung)
+                ->where(function ($query) use ($search) {
+                    $query->orWhere('users.name', 'LIKE', '%' . $search . '%')
+                        ->orWhere('barangs.nama_barang', 'LIKE', '%' . $search . '%')
+                        ->orWhere('barangs.kode_barang', 'LIKE', '%' . $search . '%')
+                        ->orWhere('detail_penjualan_pos.jumlah_produk', 'LIKE', '%' . $search . '%');
+                });
+        }elseif ($request->pelanggan == "" AND $request->kasir != "") {
+            $query_cari_laporan_pos_pelanggan = $this->queryLaporanPenjualanPos($request)
+                ->where('detail_penjualan_pos.created_by', $request->kasir)
                 ->where('detail_penjualan_pos.warung_id', Auth::user()->id_warung)
                 ->where(function ($query) use ($search) {
                     $query->orWhere('users.name', 'LIKE', '%' . $search . '%')

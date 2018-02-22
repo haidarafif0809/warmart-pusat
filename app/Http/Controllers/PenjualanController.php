@@ -40,6 +40,18 @@ class PenjualanController extends Controller
 
         return response()->json($array);
     }
+        public function pilihKasir()
+    {
+        $kasir = User::where('tipe_user', 4)->where('id_warung', Auth::user()->id_warung)->get();
+        $array     = array();
+        foreach ($kasir as $kasirs) {
+            array_push($array, [
+                'id'             => $kasirs->id,
+                'nama_kasir' => $kasirs->name]);
+        }
+
+        return response()->json($array);
+    }
 
     public function pilih_kas()
     {

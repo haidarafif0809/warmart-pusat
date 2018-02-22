@@ -91,7 +91,7 @@ function pemisahTitik($angka)
 						@foreach ($data_penjualan as $data_penjualans)
 						<tr>
 							<td class="table1">{{ $data_penjualans['laporan_penjualans']->kode_barang }}</td>
-							<td class="table1">{{ $data_penjualans['laporan_penjualans']->name }}</td>
+							<td class="table1">{{  $data_penjualans['pelanggan']}}</td>
 							<td class="table1">{{ $data_penjualans['laporan_penjualans']->nama_barang }}</td>
 							<td class="table1" align="right">{{ pemisahTitik($data_penjualans['laporan_penjualans']->jumlah_produk) }}</td>
 							<td class="table1">{{ $data_penjualans['laporan_penjualans']->nama_satuan }}</td>
