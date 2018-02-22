@@ -259,6 +259,15 @@ Route::middleware('optimizeImages')->group(function () {
 
 });
 
+//CARA MEMESAN
+Route::get('/cara-memesan', [
+    'middleware' => ['auth'],
+    'as'         => 'cara_memesan.index',
+    'uses'       => 'HomeController@caraMemesan',
+]);
+
+// // CARA MEMESAN
+Route::get('/cara-pemesanan', 'Auth\RegisterController@caraMemesan');
 //sarat & ketentuan
 Route::get('/syarat-ketentuan', 'Auth\RegisterController@syarat_ketentuan');
 Route::get('/syarat-ketentuan-topos', 'Auth\RegisterController@syarat_ketentuan_topos');
@@ -466,6 +475,7 @@ Route::get('/kategori-transaksi/pencarian', 'KategoriTransaksiController@pencari
 //SUPLIER VUE.JS
 Route::get('/suplier/view', 'SuplierController@view')->middleware('auth');
 Route::get('/suplier/pencarian', 'SuplierController@pencarian')->middleware('auth');
+Route::get('/suplier/pilih-suplier', 'SuplierController@dataSuplier')->middleware('auth');
 
 //PRODUK VUE.JS
 Route::get('/produk/view', 'BarangController@view')->middleware('auth');
@@ -737,12 +747,10 @@ Route::get('/laporan-kartu-stok/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{p
 Route::get('/grafik-jam-transaksi-penjualan/view/{tanggal}', 'GrafikJamTransaksiPenjualanController@prosesGrafikJamPenjualan')->middleware('auth');
 Route::get('/grafik-jam-transaksi-penjualan-online/view/{tanggal}', 'GrafikJamTransaksiPenjualanController@prosesGrafikJamPenjualanOnline')->middleware('auth');
 
-
 // LAPORAN PENJUALAN TERBAIK
 Route::get('/laporan-penjualan-terbaik/view/{dari_tanggal}/{sampai_tanggal}/{tampil_terbaik}', 'LaporanPenjualanTerbaikController@prosesPenjualanTerbaik')->middleware('auth');
 Route::get('/laporan-penjualan-terbaik-online/view/{dari_tanggal}/{sampai_tanggal}/{tampil_terbaik}', 'LaporanPenjualanTerbaikController@prosesPenjualanTerbaikOnline')->middleware('auth');
 Route::get('/laporan-penjualan-terbaik/cek-tampil-terbaik/{dari_tanggal}/{sampai_tanggal}/{jenis_penjualan}', 'LaporanPenjualanTerbaikController@cekTampilTerbaik')->middleware('auth');
-
 
 ////PEMBAYARAN Hutang
 Route::get('/pembayaran-hutang/view', 'PembayaranHutangController@view')->middleware('auth');

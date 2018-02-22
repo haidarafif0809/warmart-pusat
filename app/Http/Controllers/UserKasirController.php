@@ -94,7 +94,7 @@ class UserKasirController extends Controller
             'konfirmasi_admin'  => $data_warung->konfirmasi_admin,
             'foto_ktp'          => $data_warung->foto_ktp,
             'kasir_id'          => $data_warung->id,
-            'password'          => bcrypt('123456'),
+            'password'          => bcrypt($request->password),
         ]);
     }
 
@@ -113,9 +113,10 @@ class UserKasirController extends Controller
         ]);
 
         $user_kasir = UserWarung::find($id)->update([
-            'name'    => $request->name,
-            'no_telp' => $request->no_telp,
-            'alamat'  => $request->alamat,
+            'name'     => $request->name,
+            'no_telp'  => $request->no_telp,
+            'alamat'   => $request->alamat,
+            'password' => bcrypt($request->password),
         ]);
     }
 

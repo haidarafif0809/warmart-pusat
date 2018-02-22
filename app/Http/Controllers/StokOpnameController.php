@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\DetailPembelian;
 use App\Hpp;
 use App\StokOpname;
 use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class StokOpnameController extends Controller
 {
@@ -88,10 +90,11 @@ class StokOpnameController extends Controller
  */
     public function store(Request $request)
     {
+        DB::beginTransaction();
         $warung_id     = Auth::user()->id_warung;
         $no_faktur     = StokOpname::no_faktur($warung_id);
         $stok_sekarang = Hpp::stok_produk($request->produk);
-        $selisih_fisik = $stok_sekarang - $request->jumlah_produk;
+        $selisih_fisik = $request->jumlah_produk - $stok_sekarang;
 
         if ($selisih_fisik < 0) {
             // Harga Hpp
@@ -124,6 +127,7 @@ class StokOpnameController extends Controller
             'keterangan'    => "Tes #0",
         ]);
 
+        DB::commit();
         return response(200);
     }
 
@@ -169,6 +173,10 @@ class StokOpnameController extends Controller
  */
     public function destroy($id)
     {
-        //
+        if (!StokOpname::destroy($id)) {
+            return 0;
+        } else {
+            return response(200);
+        }
     }
 }

@@ -229,12 +229,21 @@ body {
                                 SUPPORT Warmart
                             </a>
                             @else
-                            <a href="<?=$settingFooter->support_link;?>">
+                            @if(Auth::check())                            
+                            <a href="{{ url('/cara-memesan')}}" target='blank'>
                                 <i class="material-icons">
                                     info
                                 </i>
-                                SUPPORT TOPOS
+                                CARA MEMESAN
                             </a>
+                            @else
+                            <a href="{{ url('/cara-pemesanan')}}" target='blank'>
+                                <i class="material-icons">
+                                    info
+                                </i>
+                                CARA MEMESAN
+                            </a>
+                            @endif
                             @endif
                         </li>
                         <li>

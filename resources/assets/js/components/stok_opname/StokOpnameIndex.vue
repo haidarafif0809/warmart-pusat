@@ -80,8 +80,7 @@
                                         <th class="text-kanan">Selisih Fisik</th>
                                         <th class="text-kanan">Harga</th>
                                         <th class="text-kanan">Selisih Harga</th>
-                                        <th>Petugas</th>
-                                        <th>Waktu</th>
+                                        <th style="text-align:center">Waktu</th>
                                         <th>Aksi</th>
 
                                     </tr>
@@ -94,17 +93,20 @@
                                         <td align="right">{{ stokOpname.stok_opname.jumlah_fisik | pemisahTitik}}</td>
                                         <td align="right">{{ stokOpname.stok_opname.selisih_fisik | pemisahTitik}}</td>
                                         <td align="right">{{ stokOpname.stok_opname.harga | pemisahTitik}}</td>
-                                        <td align="right">{{ stokOpname.stok_opname.total | pemisahTitik}}</td>
-                                        <td>{{ stokOpname.stok_opname.petugas }}</td>
-                                        <td>{{ stokOpname.stok_opname.created_at | tanggal}}</td>
+
+                                        <td align="right" v-if="stokOpname.stok_opname.selisih_fisik < 0">
+                                            (-){{ stokOpname.stok_opname.total * -1 | pemisahTitik}}
+                                        </td>
+                                        <td align="right" v-else>
+                                            (+){{ stokOpname.stok_opname.total | pemisahTitik}}
+                                        </td>
+
+                                        <td align="center">{{ stokOpname.stok_opname.created_at | tanggal}}</td>
                                         <td>
                                             <router-link :to="{name: 'editstokOpname.stok_opname', params: {id: stokOpname.stok_opname.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + stokOpname.stok_opname.id" > Edit
                                             </router-link>
 
-                                            <a v-if="stokOpname.stok_opname.status_transaksi == 0" href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + stokOpname.stok_opname.id" v-on:click="deleteEntry(stokOpname.stok_opname.id, index,stokOpname.stok_opname.nama_kategori_transaksi)">Delete
-                                            </a>
-
-                                            <a v-else href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + stokOpname.stok_opname.id" v-on:click="gagalHapus(stokOpname.stok_opname.id, index,stokOpname.stok_opname.nama_kategori_transaksi)">Delete
+                                            <a href="#/stok-opname" class="btn btn-xs btn-danger" v-bind:id="'delete-' + stokOpname.stok_opname.id" v-on:click="deleteEntry(stokOpname.stok_opname.id, index,stokOpname.stok_opname.no_faktur)">Delete
                                             </a>
                                         </td>
                                     </tr>
@@ -266,21 +268,64 @@
                   });
                 }
             },
+            deleteEntry(id, index,no_faktur) {
+                var app = this;
+                app.$swal({
+                    text: "Anda Yakin Ingin Menghapus Transaksi "+no_faktur+ " ?",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        this.prosesHapus(id,no_faktur);
+                    } else {
+                        app.$swal.close();
+                    }
+                });
+            },
+            prosesHapus(id,no_faktur){
+                var app = this;
+                app.loading = true;
+
+                axios.delete(app.url+'/' + id).then(function (resp) {
+                    if (resp.data == 0) {
+                        app.alertGagal("Stok Opname Tidak Dapat Dihapus, Karena Sudah Terpakai");
+                        app.loading = false;
+                    }else{
+                        app.getResults();
+                        app.alert("Menghapus Stok Opname "+no_faktur);
+                        app.loading = false;  
+                    }
+                })
+                .catch(function (resp) {
+                    alert("Tidak Dapat Menghapus Stok Opname");
+                });
+            },
             closeModalJumlahProduk(){  
                 $("#modalJumlahProduk").hide();
                 this.inputStokOpname.produk = '';
                 this.openSelectizeProduk();
             },
             alert(pesan) {
-              this.$swal({
-                title: "Berhasil ",
-                text: pesan,
-                icon: "success",
-                buttons: false,
-                timer: 1000,
+                this.$swal({
+                    title: "Berhasil ",
+                    text: pesan,
+                    icon: "success",
+                    buttons: false,
+                    timer: 1000,
 
-            });
-          }
-      }
-  }
+                });
+            },
+            alertGagal(pesan) {
+                this.$swal({
+                    title: "Gagal ",
+                    text: pesan,
+                    icon: "warning",
+                    buttons: false,
+                    timer: 2000,
+
+                });
+            }
+        }
+    }
 </script>

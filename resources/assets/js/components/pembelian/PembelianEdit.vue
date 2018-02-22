@@ -40,7 +40,7 @@
       <ul class="breadcrumb"> 
         <li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li> 
         <li><router-link :to="{name: 'indexPembelian'}">Pembelian</router-link></li> 
-        <li class="active">Edit Pembelian </li> 
+        <li class="active">Edit Pembelian</li> 
       </ul> 
 
       <div class="modal" id="modal_tambah_kas" role="dialog" data-backdrop=""> 
@@ -60,7 +60,7 @@
                 <div class="form-group">
                   <label for="kode_kas" class="col-md-3 control-label">Kode Kas</label>
                   <div class="col-md-9">
-                    <input class="form-control" autocomplete="off" placeholder="Kode Kas" v-model="tambahKas.kode_kas" type="text" name="kode_kas" id="kode_kas"  autofocus="">
+                    <input class="form-control" autocomplete="off" placeholder="Kode Kas" v-model="tambahKas.kode_kas" type="text" name="kode_kas" id="kode_kas"  autofocus="" ref="kode_kas">
                     <span v-if="errors.kode_kas" id="kode_kas_error" class="label label-danger">{{ errors.kode_kas[0] }}</span>
                   </div>
                 </div>
@@ -119,7 +119,7 @@
             <div class="form-group">
               <label for="nama_suplier" class="col-md-3 control-label">Nama Supplier</label>
               <div class="col-md-9">
-                <input class="form-control" autocomplete="off" placeholder="Nama Supplier" v-model="tambahSuplier.nama_suplier" type="text" name="nama_suplier" id="nama_suplier"  autofocus="">
+                <input class="form-control" autocomplete="off" placeholder="Nama Supplier" v-model="tambahSuplier.nama_suplier" type="text" name="nama_suplier" id="nama_suplier"  autofocus=""  ref="nama_suplier">
                 <span v-if="errors.nama_suplier" id="nama_suplier_error" class="label label-danger">{{ errors.nama_suplier[0] }}</span>
               </div>
             </div>
@@ -409,13 +409,11 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 export default {
   data: function () {
     return {
       errors: [],
-      produk: [],
-      suplier: [],
-      cara_bayar: [],
       tbs_pembelians: [],
       tbsPembelianData : {},
       url : window.location.origin+(window.location.pathname).replace("dashboard", "pembelian"),
@@ -496,13 +494,24 @@ export default {
   },
   mounted() {
     var app = this;
-    app.dataProduk();
-    app.dataSuplier();
-    app.dataCaraBayar();
+    app.$store.dispatch('LOAD_PRODUK_LIST')
+    app.$store.dispatch('LOAD_KAS_LIST')
+    app.$store.dispatch('LOAD_SUPLIER_LIST')
     app.getResults();
     app.id_pembelian = app.$route.params.id;
 
   },
+  computed : mapState ({    
+    produk(){
+      return this.$store.getters.produkStok
+    },
+    cara_bayar(){
+      return this.$store.state.kas
+    },
+    suplier(){
+      return this.$store.state.suplier
+    }
+  }),
   watch: {
     pencarian: function (newQuestion) {
       this.getHasilPencarian();
@@ -637,47 +646,15 @@ closeModalX(){
   $("#modal_tambah_suplier").hide(); 
   $("#modal_tambah_kas").hide();   
 }, 
-dataProduk() {
-  var app = this;
-  axios.get(app.url_produk+'/pilih-produk').then(function (resp) {
-    app.produk = resp.data;
-  })
-  .catch(function (resp) {
-    alert("Tidak Bisa Memuat Produk");
-  });
-      },//END FUNGSI UNTUK SELECTIZE PRODUK 
-      dataSuplier() {
-        var app = this;
-        axios.get(app.url+'/pilih-suplier').then(function (resp) {
-          app.suplier = resp.data;
-        })
-        .catch(function (resp) {
-          alert("Tidak Bisa Memuat Suplier");
-        });
-      },//END FUNGSI UNTUK SELECTIZE SUPLIER 
-      dataCaraBayar() {
-        var app = this;
-        axios.get(app.url_kas+'/pilih-kas').then(function (resp) {
-          app.cara_bayar = resp.data;
-          $.each(resp.data, function (i, item) {
-            if (resp.data[i].default_kas == 1) {
-              app.inputPembayaranPembelian.cara_bayar  = resp.data[i].id 
-            }
-          });
-        })
-        .catch(function (resp) {
-          alert("Tidak Bisa Memuat Kas");
-        });
-  },//END FUNGSI UNTUK SELECTIZE CARABAYAR 
-  tambahSupplier(){
-   $("#modal_tambah_suplier").show();
-   this.$refs.nama_suplier.$el.focus();
- },
- tambahModalKas(){
-   $("#modal_tambah_kas").show();
-   this.$refs.kode_kas.$el.focus(); 
- },
- saveFormSupplier() {
+tambahSupplier(){
+ $("#modal_tambah_suplier").show();
+ this.$refs.nama_suplier.focus();
+},
+tambahModalKas(){
+ $("#modal_tambah_kas").show();
+ this.$refs.kode_kas.focus(); 
+},
+saveFormSupplier() {
   var app = this;
   var newsuplier = app.tambahSuplier;
   axios.post(app.url_suplier, newsuplier)
@@ -689,7 +666,7 @@ dataProduk() {
     app.tambahSuplier.no_telp = '';
     app.tambahSuplier.contact_person = '';
     app.errors = '';
-    app.dataSuplier();
+    app.$store.dispatch('LOAD_SUPLIER_LIST')
     $("#modal_tambah_suplier").hide();
   })
   .catch(function (resp) {
@@ -709,7 +686,7 @@ saveFormKas() {
     app.tambahKas.status_kas = 0
     app.tambahKas.default_kas = 0
     app.errors = '';
-    app.dataCaraBayar();
+    app.$store.dispatch('LOAD_KAS_LIST')
     $("#modal_tambah_kas").hide();
 
   })
@@ -755,7 +732,7 @@ deleteEntry(id, index,nama_produk) {
       app.$swal.close(); 
     } 
   }); 
-  
+
       },//END fungsi deleteEntry (alert konfirmasi hapus) 
       prosesDelete(id,nama_produk){ 
         var app = this; 

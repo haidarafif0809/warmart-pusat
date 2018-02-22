@@ -76,11 +76,11 @@ class SuplierController extends Controller
     public function pencarian(Request $request)
     {
         $data_suplier = Suplier::where('warung_id', Auth::user()->id_warung)
-            ->where('nama_suplier', 'LIKE', "%$request->search%")
-            ->orwhere('no_telp', 'LIKE', "%$request->search%")
-            ->orwhere('alamat', 'LIKE', "%$request->search%")
-            ->orwhere('contact_person', 'LIKE', "%$request->search%")
-            ->orderBy('id', 'desc')->paginate(10);
+        ->where('nama_suplier', 'LIKE', "%$request->search%")
+        ->orwhere('no_telp', 'LIKE', "%$request->search%")
+        ->orwhere('alamat', 'LIKE', "%$request->search%")
+        ->orwhere('contact_person', 'LIKE', "%$request->search%")
+        ->orderBy('id', 'desc')->paginate(10);
 
         $array_suplier = array();
         foreach ($data_suplier as $suplier) {
@@ -215,5 +215,10 @@ class SuplierController extends Controller
             Auth::logout();
             return response()->view('error.403');
         }
+    }
+
+    public function dataSuplier(){
+        $suplier = Suplier::select('id', 'nama_suplier')->where('warung_id', Auth::user()->id_warung)->get();
+        return response()->json($suplier);
     }
 }

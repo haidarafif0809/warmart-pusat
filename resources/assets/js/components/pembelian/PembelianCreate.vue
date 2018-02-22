@@ -341,7 +341,7 @@
                         </a>
                       </td>
                       <td>
-                        <a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-on:click="editEntryHarga(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk,tbs_pembelian.subtotal)" ><p align='right'>{{ tbs_pembelian.harga_pemisah }}</p>
+                        <a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-on:click="editEntryHarga(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk,tbs_pembelian.subtotal)" v-bind:class="'harga-' + tbs_pembelian.id_produk" v-bind:data-harga="''+tbs_pembelian.harga_produk"><p align='right'>{{ tbs_pembelian.harga_pemisah }}</p>
                         </a>
                       </td>
                       <td>
@@ -789,23 +789,37 @@ pilihProduk() {
     var id_produk = produk[0]; 
     var nama_produk = produk[1];
     var harga_produk = produk[2]; 
+
     this.inputJumlahProduk(id_produk,nama_produk,harga_produk);
   }
 },//END FUNGSI pilihProduk
 inputJumlahProduk(id_produk,nama_produk,harga_produk){
   var app = this
   app.inputTbsPembelian.id_produk = id_produk
-  app.inputTbsPembelian.nama_produk = nama_produk
-  app.inputTbsPembelian.harga_produk = harga_produk
+  app.inputTbsPembelian.nama_produk = nama_produk  
+  var harga_tbs = $(".harga-"+id_produk).attr("data-harga")
+
+  if (typeof harga_tbs === 'undefined'){
+    app.inputTbsPembelian.harga_produk = harga_produk;
+  }else {
+    app.inputTbsPembelian.harga_produk = harga_tbs;
+  }
   $("#modalJumlahProduk").show();
   app.$refs.jumlah_produk.focus(); 
 },
 submitJumlahProduk(id_produk,jumlah_produk,harga_produk,nama_produk){
   var app = this
   var produk = app.inputTbsPembelian.produk.split("|");
-  var harga = produk[2]; // harga produk sebelum di edit
+  var harga_tbs = $(".harga-"+produk[0]).attr("data-harga")
 
-  if (jumlah_produk == "" || jumlah_produk == 0) {
+  if (typeof harga_tbs === 'undefined'){
+     var harga = produk[2]; // harga produk sebelum di edit
+   }else {
+     var harga = harga_tbs; // harga produk sebelum di edit
+   }
+
+
+   if (jumlah_produk == "" || jumlah_produk == 0) {
 
     app.$swal("Jumlah Produk Tidak Boleh Nol atau kosong!")
     .then((value) => {
@@ -914,7 +928,7 @@ editEntryJumlah(id, index,nama_produk,subtotal_lama) {
         app.alert("Mengubah Jumlah Produk "+titleCase(nama_produk));
         app.loading = false;
         app.getResults();      
-        var subtotal = parseInt(app.inputPembayaranPembelian.subtotal) + parseInt(resp.data.subtotal)
+        var subtotal = (parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(subtotal_lama))  + parseInt(resp.data.subtotal)
         app.inputPembayaranPembelian.subtotal = subtotal                       
         app.inputPembayaranPembelian.total_akhir  = subtotal
         app.hitungPotonganPersen();
