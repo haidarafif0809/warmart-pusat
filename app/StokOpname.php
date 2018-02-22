@@ -57,7 +57,7 @@ class StokOpname extends Model
 
     public function scopeDataStokOpname($query_stok_opname)
     {
-        $query_stok_opname->select(['stok_opnames.no_faktur', 'stok_opnames.produk_id', 'stok_opnames.stok_sekarang', 'stok_opnames.jumlah_fisik', 'stok_opnames.selisih_fisik', 'stok_opnames.harga', 'stok_opnames.total', 'stok_opnames.keterangan', 'stok_opnames.created_by', 'stok_opnames.created_at', 'barangs.nama_barang', 'users.name as petugas'])
+        $query_stok_opname->select(['stok_opnames.id', 'stok_opnames.no_faktur', 'stok_opnames.produk_id', 'stok_opnames.stok_sekarang', 'stok_opnames.jumlah_fisik', 'stok_opnames.selisih_fisik', 'stok_opnames.harga', 'stok_opnames.total', 'stok_opnames.keterangan', 'stok_opnames.created_by', 'stok_opnames.created_at', 'barangs.nama_barang', 'users.name as petugas'])
             ->leftJoin('barangs', 'barangs.id', '=', 'stok_opnames.produk_id')
             ->leftJoin('users', 'users.id', '=', 'stok_opnames.created_by')
             ->where('stok_opnames.warung_id', Auth::user()->id_warung)->orderBy('stok_opnames.id', 'desc');
@@ -68,7 +68,7 @@ class StokOpname extends Model
     public function scopeCariDataStokOpname($query_cari_stok_opname, $request)
     {
         $search = $request->search;
-        $query_cari_stok_opname->select(['stok_opnames.no_faktur', 'stok_opnames.produk_id', 'stok_opnames.stok_sekarang', 'stok_opnames.jumlah_fisik', 'stok_opnames.selisih_fisik', 'stok_opnames.harga', 'stok_opnames.total', 'stok_opnames.keterangan', 'stok_opnames.created_by', 'stok_opnames.created_at', 'barangs.nama_barang'])
+        $query_cari_stok_opname->select(['stok_opnames.id', 'stok_opnames.no_faktur', 'stok_opnames.produk_id', 'stok_opnames.stok_sekarang', 'stok_opnames.jumlah_fisik', 'stok_opnames.selisih_fisik', 'stok_opnames.harga', 'stok_opnames.total', 'stok_opnames.keterangan', 'stok_opnames.created_by', 'stok_opnames.created_at', 'barangs.nama_barang'])
             ->leftJoin('barangs', 'barangs.id', '=', 'stok_opnames.produk_id')
             ->where('stok_opnames.warung_id', Auth::user()->id_warung)
             ->where(function ($query) use ($search) {

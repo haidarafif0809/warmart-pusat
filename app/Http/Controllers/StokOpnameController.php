@@ -173,6 +173,10 @@ class StokOpnameController extends Controller
  */
     public function destroy($id)
     {
-        //
+        if (!StokOpname::destroy($id)) {
+            return 0;
+        } else {
+            return response(200);
+        }
     }
 }
