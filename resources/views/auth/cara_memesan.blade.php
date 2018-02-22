@@ -150,19 +150,12 @@ $nama_toko = \App\Warung::select('name')->first()->name;
                                 </li>
                                 {{-- 5 --}}
                                 <center>                                    
-                                    <img class="cara-memesan" src="{{asset('/foto_cara_memesan/5.png').'?v=1'}}"/>
+                                    <img class="cara-memesan" src="{{asset('/foto_cara_memesan/55.png').'?v=1'}}"/>
                                 </center>
                                 <li style="margin-bottom: 30px">
-                                    Tahap selanjutnya silahkan cek email Anda, kami akan memproses pesanan setelah email konfirmasi kami kirimkan.
+                                    Tahap selanjutnya, kami akan menghubungi Anda untuk mengkonfirmasi dan  memproses pesanan Anda.
                                 </li>
                                 {{-- 6 --}}
-                                <center>                                    
-                                    <img class="cara-memesan" src="{{asset('/foto_cara_memesan/6.png').'?v=1'}}"/>
-                                </center>
-                                <li style="margin-bottom: 30px">
-                                    Klik tautan konfirmasi pembayaran untuk mengkonfirmasi bahwa Anda sudah menyelesaikan pembayaran.
-                                </li>
-                                {{-- 7 --}}
                                 <center>                                    
                                     <img class="cara-memesan" src="{{asset('/foto_cara_memesan/7.png').'?v=1'}}"/>
                                 </center>
