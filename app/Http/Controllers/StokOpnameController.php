@@ -59,7 +59,7 @@ class StokOpnameController extends Controller
 
         //DATA PAGINATION
         $respons = $this->dataPagination($data_stok_opname, $array_stok_opname);
-        return response()->json($data_stok_opname);
+        return response()->json($respons);
     }
 
 /**
