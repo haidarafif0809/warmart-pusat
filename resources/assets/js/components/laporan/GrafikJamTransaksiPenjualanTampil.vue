@@ -6,7 +6,8 @@
 		data: function () {
 			return {
 				filter: {
-					tanggal : ''
+				 dari_tanggal: '',
+     			 sampai_tanggal: '',
 				},
 				separator: {
 					decimal: ',',
@@ -21,21 +22,27 @@
 		},
 		mounted () {
 			var app = this;
-			var tanggal = app.$route.params.tanggal;
-			app.filter.tanggal = tanggal;
+			var dari_tanggal = app.$route.params.dari_tanggal;
+			var sampai_tanggal = app.$route.params.sampai_tanggal;
+			app.filter.dari_tanggal = dari_tanggal;
+			app.filter.sampai_tanggal = sampai_tanggal;
+
 			app.barChart();
 		},
 		methods: {	
+			tanggal(tanggal){
+				return moment(String(tanggal)).format('DD/MM/YYYY')
+			},
 			barChart(){
 				var app = this;
 				var filter = app.filter;
-				axios.get(app.url+'/view/'+filter.tanggal)
+				axios.get(app.url+'/view/'+filter.dari_tanggal+'/'+filter.sampai_tanggal)
 				.then(function (resp) {
 					app.renderChart(
 					{
 						labels: resp.data.waktu_jual,
 						datasets: [{
-							label: 'Laporan Jam Transaksi Penjualan',
+							label: 'Laporan Jam Transaksi Penjualan '+ app.tanggal(filter.dari_tanggal) +" - "+ app.tanggal(filter.sampai_tanggal) ,
 							backgroundColor: resp.data.color,
 							data: resp.data.hitung,
 						}]

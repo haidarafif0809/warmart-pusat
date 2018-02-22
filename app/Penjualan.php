@@ -151,11 +151,12 @@ class Penjualan extends Model
     }
 
     // DATA Jam Penjualan
-    public function scopeGrafikJamTransaksiPenjualan($query_grafik, $tanggal)
+    public function scopeGrafikJamTransaksiPenjualan($query_grafik, $request)
     {
         $query_grafik = Penjualan::select([DB::raw('COUNT(DATE_FORMAT(created_at, "%H")) as hitung')])
             ->where('id_warung', Auth::user()->id_warung)
-            ->where(DB::raw('DATE(created_at)'), '=', $this->tanggalSql($tanggal));
+            ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+            ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal));
 
         return $query_grafik;
     }

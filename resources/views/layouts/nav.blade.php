@@ -238,7 +238,7 @@
                         LJ
                     </span>
                     <span class="sidebar-normal">
-                        Laporan Jam Transaksi Penjualan
+                      Jam Transaksi Penjualan
                     </span>
                 </router-link>
             </li>

@@ -744,8 +744,8 @@ Route::get('/laporan-kartu-stok/download-excel-kartu-stok/{dari_tanggal}/{sampai
 Route::get('/laporan-kartu-stok/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{produk}', 'LaporanKartuStokController@cetakLaporan')->middleware('auth');
 
 // GRAFIK JAM TRANSAKSI PENJUALAN
-Route::get('/grafik-jam-transaksi-penjualan/view/{tanggal}', 'GrafikJamTransaksiPenjualanController@prosesGrafikJamPenjualan')->middleware('auth');
-Route::get('/grafik-jam-transaksi-penjualan-online/view/{tanggal}', 'GrafikJamTransaksiPenjualanController@prosesGrafikJamPenjualanOnline')->middleware('auth');
+Route::get('/grafik-jam-transaksi-penjualan/view/{dari_tanggal}/{sampai_tanggal}', 'GrafikJamTransaksiPenjualanController@prosesGrafikJamPenjualan')->middleware('auth');
+Route::get('/grafik-jam-transaksi-penjualan-online/view/{dari_tanggal}/{sampai_tanggal}', 'GrafikJamTransaksiPenjualanController@prosesGrafikJamPenjualanOnline')->middleware('auth');
 
 // LAPORAN PENJUALAN TERBAIK
 Route::get('/laporan-penjualan-terbaik/view/{dari_tanggal}/{sampai_tanggal}/{tampil_terbaik}', 'LaporanPenjualanTerbaikController@prosesPenjualanTerbaik')->middleware('auth');
