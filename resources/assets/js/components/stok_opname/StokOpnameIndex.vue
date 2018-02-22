@@ -372,7 +372,7 @@
                     text: pesan,
                     icon: "success",
                     buttons: false,
-                    timer: 1000,
+                    timer: 2000,
 
                 });
             },
