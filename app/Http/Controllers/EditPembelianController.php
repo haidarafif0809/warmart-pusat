@@ -31,12 +31,6 @@ class EditPembelianController extends Controller
 			Auth::logout();
 			return response()->view('error.403');
 		}else{
-		//VALIDATE
-			$this->validate($request, [ 
-				'id_produk_tbs'     => 'required|numeric', 
-				'jumlah_produk' => 'required|numeric|digits_between:1,15', 
-			]); 
-
 		$no_faktur = $request->no_faktur; // NO FAKTUR
 		$session_id = session()->getId();  // SESSION ID
 
@@ -44,13 +38,21 @@ class EditPembelianController extends Controller
 		$data_tbs = EditTbsPembelian::where('id_produk', $request->id_produk_tbs) 
 		->where('no_faktur', $no_faktur)->where('warung_id', Auth::user()->id_warung); 
 
-		// SELECT PRODUK
-		$barang = Barang::select('nama_barang','satuan_id')->where('id',$request->id_produk_tbs)->where('id_warung',Auth::user()->id_warung)->first(); 
 //JIKA PRODUK YG DIPILIH SUDAH ADA DI TBS 
-		if ($data_tbs->count() > 0) { 
-			return 0;
+		if ($data_tbs->count() > 0) { 			
+
+			$jumlah_produk = $data_tbs->first()->jumlah_produk + $request->jumlah_produk;
+
+			$subtotal_edit = ($jumlah_produk * $request->harga_produk) - $data_tbs->first()->potongan;
+
+			$data_tbs->update(['jumlah_produk' => $jumlah_produk, 'subtotal' => $subtotal_edit, 'harga_produk'=> $request->harga_produk]);
+
+			return response(200);
 		} 
 		else{ 
+
+			// SELECT PRODUK
+			$barang = Barang::select('nama_barang','satuan_id')->where('id',$request->id_produk_tbs)->where('id_warung',Auth::user()->id_warung)->first(); 
 			// SUBTOTAL = JUMLAH * HARGA
 			$subtotal = $request->jumlah_produk * $request->harga_produk; 
 			// INSERT EDIT TBS PEMBELIAN
@@ -147,7 +149,7 @@ public function edit_harga_tbs_pembelian(Request $request){
 		$tbs_pembelian->update(['harga_produk' => $request->harga_edit_produk,'subtotal'=>$subtotal,'potongan'=>$potongan_produk,'tax'=>$tax_produk]); 
 		$nama_barang = $tbs_pembelian->TitleCaseBarang; // TITLE CASH
 
-			return response(200);
+		return response(200);
 	}
 } 
 
@@ -199,7 +201,7 @@ public function edit_potongan_tbs_pembelian(Request $request){
 			    $tbs_pembelian->update(['potongan' => $potongan_produk,'subtotal'=>$subtotal,'tax'=>$tax_produk]); 
 			    $nama_barang = $tbs_pembelian->TitleCaseBarang; // TITLE CASH
 
-			  return response(200);
+			    return response(200);
 			}
 		}
 	} 
@@ -216,30 +218,30 @@ public function edit_potongan_tbs_pembelian(Request $request){
     $tax = substr_count($request->tax_edit_produk, '%'); // UNTUK CEK APAKAH ADA STRING "%" 
     // JIKA TIDAK ADA
     if ($tax == 0) { 
-       if ($request->ppn_produk == 'Exclude') {
+    	if ($request->ppn_produk == 'Exclude') {
              $tax_produk = filter_var($request->tax_edit_produk, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION); // TAX DAALAM BENTUK NOMINAL
-       		 $tax_include = 0;
-       }else{
-             $tax_produk = 0;
+             $tax_include = 0;
+         }else{
+         	$tax_produk = 0;
              $tax_include = filter_var($request->tax_edit_produk, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION); // TAX DAALAM BENTUK NOMINAL
-       }
+         }
     	$tax_persen = 0;  //  PISAH STRING BERDASRAKAN TANDA "%"
     }else{ // JIKA ADA
     	$tax_persen = filter_var($request->tax_edit_produk, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);  //  PISAH STRING BERDASRAKAN TANDA "%"
     	// TAX PRODUK = ((HARGA * JUMLAH) - POTONGAN) * TAX PERSEN / 100
-                if ($request->ppn_produk == 'Include') {
-                    $tax_produk = 0;
+    	if ($request->ppn_produk == 'Include') {
+    		$tax_produk = 0;
                     //perhitungan tax include
-                    $default_tax              = 1;
-                    $subtotal_kurang_potongan = (($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $tbs_pembelian->potongan);
-                    $hasil_tax                = $default_tax + ($tax_persen / 100);
-                    $hasil_tax2               = $subtotal_kurang_potongan / $hasil_tax;
-                    $tax_include               = $subtotal_kurang_potongan - $hasil_tax2;
+    		$default_tax              = 1;
+    		$subtotal_kurang_potongan = (($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $tbs_pembelian->potongan);
+    		$hasil_tax                = $default_tax + ($tax_persen / 100);
+    		$hasil_tax2               = $subtotal_kurang_potongan / $hasil_tax;
+    		$tax_include               = $subtotal_kurang_potongan - $hasil_tax2;
                     //perhitungan tax include                    
-                } elseif ($request->ppn_produk == 'Exclude') {
-                    $tax_produk = (($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $tbs_pembelian->potongan) * $tax_persen / 100;
-                	$tax_include = 0;
-                }
+    	} elseif ($request->ppn_produk == 'Exclude') {
+    		$tax_produk = (($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $tbs_pembelian->potongan) * $tax_persen / 100;
+    		$tax_include = 0;
+    	}
     } 
     if ($tax_produk == '') {
     	$tax_produk = 0;
@@ -255,27 +257,27 @@ public function edit_potongan_tbs_pembelian(Request $request){
 	    $tbs_pembelian->update(['subtotal'=>$subtotal,'tax'=>$tax_produk, 'tax_include' => $tax_include,'ppn'=>$request->ppn_produk]); 
 	    $nama_barang = $tbs_pembelian->TitleCaseBarang; // TITLE CASH
 	    return response(200);
-	
-}
+
+	}
 }
 
     //PROSES CEK PERSEN MELEBIHI BATAS
-    public function cek_persen_potongan_pembelian(Request $request)
-    {
+public function cek_persen_potongan_pembelian(Request $request)
+{
         // SELECT EDIT TBS PEMBELIAN
-        $tbs_pembelian = EditTbsPembelian::find($request->id_potongan);
+	$tbs_pembelian = EditTbsPembelian::find($request->id_potongan);
         $potongan      = substr_count($request->potongan_edit_produk, '%'); // UNTUK CEK APAKAH ADA STRING "%"
         // JIKA TIDAK ADA
         if ($potongan == 0) {
-            $potongan_persen = 0;
+        	$potongan_persen = 0;
         } else {
             $potongan_persen = filter_var($request->potongan_edit_produk, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION); //  PISAH STRING BERDASRAKAN TANDA "%"
         }
 
         if ($potongan_persen > 100) {
-            return $persen_alert = 1;
+        	return $persen_alert = 1;
         } else {
-            return $persen_alert = 0;
+        	return $persen_alert = 0;
         }
 
     }
@@ -284,210 +286,210 @@ public function edit_potongan_tbs_pembelian(Request $request){
     public function cek_persen_tax_pembelian(Request $request)
     {
         // SELECT EDIT TBS PEMBELIAN
-        $tbs_pembelian = EditTbsPembelian::find($request->id_tax);
+    	$tbs_pembelian = EditTbsPembelian::find($request->id_tax);
         $tax           = substr_count($request->tax_edit_produk, '%'); // UNTUK CEK APAKAH ADA STRING "%"
         // JIKA TIDAK ADA
         if ($tax == 0) {
-            $tax_persen = 0;
+        	$tax_persen = 0;
         } else {
             // JIKA ADA
             $tax_persen = filter_var($request->tax_edit_produk, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION); //  PISAH STRING BERDASRAKAN TANDA "%"
         }
 
         if ($tax_persen > 100) {
-            return $persen_alert = 1;
+        	return $persen_alert = 1;
         } else {
-            return $persen_alert = 0;
+        	return $persen_alert = 0;
         }
 
     }
 
 //PROSES HAPUS TBS PEMBELIAN 
-public function hapus_tbs_pembelian($id){ 
+    public function hapus_tbs_pembelian($id){ 
 
-	        if (Auth::user()->id_warung == '') {
-            Auth::logout();
-            return response()->view('error.403');
-        } else {
-            EditTbsPembelian::destroy($id);
-            return response(200);
-        }
-}
+    	if (Auth::user()->id_warung == '') {
+    		Auth::logout();
+    		return response()->view('error.403');
+    	} else {
+    		EditTbsPembelian::destroy($id);
+    		return response(200);
+    	}
+    }
 
 	//PROSES BATAL TBS PEMBELIAN 
-	public function proses_batal_transaksi_pembelian(Request $request){ 
+    public function proses_batal_transaksi_pembelian(Request $request){ 
 
-		if (Auth::user()->id_warung == '') {
-			Auth::logout();
-			return response()->view('error.403');
-		}else{
-			$no_faktur = $request->no_faktur_batal;
-			$data_tbs_pembelian = EditTbsPembelian::where('no_faktur', $no_faktur)->where('warung_id', Auth::user()->id_warung)->delete(); 
+    	if (Auth::user()->id_warung == '') {
+    		Auth::logout();
+    		return response()->view('error.403');
+    	}else{
+    		$no_faktur = $request->no_faktur_batal;
+    		$data_tbs_pembelian = EditTbsPembelian::where('no_faktur', $no_faktur)->where('warung_id', Auth::user()->id_warung)->delete(); 
 
-			return response(200); 
-		}
-	}  
+    		return response(200); 
+    	}
+    }  
 
     public function total_kas(Request $request)
     {
-        $session_id            = session()->getId();
-        $total_kas             = TransaksiKas::total_kas($request);
-        $data_produk_pembelian = EditTbsPembelian::where('no_faktur', $request->no_faktur)->where('warung_id', Auth::user()->id_warung);
-        $kas = TransaksiKas::select('jumlah_keluar')->where('no_faktur', $request->no_faktur)->where('warung_id',Auth::user()->id_warung); 
-        if ($kas->count() == 0) {        
-          $jumlah_kas_lama = 0;
-        }else{
-          $jumlah_kas_lama = $kas->first()->jumlah_keluar;
-        }
+    	$session_id            = session()->getId();
+    	$total_kas             = TransaksiKas::total_kas($request);
+    	$data_produk_pembelian = EditTbsPembelian::where('no_faktur', $request->no_faktur)->where('warung_id', Auth::user()->id_warung);
+    	$kas = TransaksiKas::select('jumlah_keluar')->where('no_faktur', $request->no_faktur)->where('warung_id',Auth::user()->id_warung); 
+    	if ($kas->count() == 0) {        
+    		$jumlah_kas_lama = 0;
+    	}else{
+    		$jumlah_kas_lama = $kas->first()->jumlah_keluar;
+    	}
 
-        $respons['total_kas']             = $total_kas;
-        $respons['data_produk_pembelian'] = $data_produk_pembelian;
-        $respons['jumlah_kas_lama'] = $jumlah_kas_lama;
-        
-        return $respons;
+    	$respons['total_kas']             = $total_kas;
+    	$respons['data_produk_pembelian'] = $data_produk_pembelian;
+    	$respons['jumlah_kas_lama'] = $jumlah_kas_lama;
+
+    	return $respons;
     }
-        public function cekDataPembelian($id)
+    public function cekDataPembelian($id)
     {
 
-      return  $penjualan = Pembelian::find($id);
-  }
+    	return  $penjualan = Pembelian::find($id);
+    }
 
     //PROSES SELESAI TRANSAKSI EDIT PEMBELIAN
-	public function prosesEditPembelian(Request $request) {
+    public function prosesEditPembelian(Request $request) {
 
-	if (Auth::user()->id_warung == '') {
-		Auth::logout();
-		return response()->view('error.403');
-	}else{
+    	if (Auth::user()->id_warung == '') {
+    		Auth::logout();
+    		return response()->view('error.403');
+    	}else{
 	//START TRANSAKSI 
-		DB::beginTransaction(); 
-		$no_faktur = $request->no_faktur_edit;
-		$session_id = session()->getId();
-		$user = Auth::user()->id; 
+    		DB::beginTransaction(); 
+    		$no_faktur = $request->no_faktur_edit;
+    		$session_id = session()->getId();
+    		$user = Auth::user()->id; 
 
 
-		$data_produk_pembelian = EditTbsPembelian::where('no_faktur', $no_faktur)->where('warung_id', Auth::user()->id_warung);
+    		$data_produk_pembelian = EditTbsPembelian::where('no_faktur', $no_faktur)->where('warung_id', Auth::user()->id_warung);
 
-		$data_detail_pembelian = DetailPembelian::where('no_faktur', $no_faktur)->where('warung_id', Auth::user()->id_warung)->get();
+    		$data_detail_pembelian = DetailPembelian::where('no_faktur', $no_faktur)->where('warung_id', Auth::user()->id_warung)->get();
 		//HAPUS DETAIL PEMBELIAN
 
-			foreach ($data_produk_pembelian->get() as $data_produk_tbs) {
+    		foreach ($data_produk_pembelian->get() as $data_produk_tbs) {
 
-				$detail_pembelian = DetailPembelian::select('harga_produk')->where('no_faktur',$data_produk_tbs->no_faktur)->where('id_produk',$data_produk_tbs->id_produk)->where('warung_id',Auth::user()->id_warung);   
+    			$detail_pembelian = DetailPembelian::select('harga_produk')->where('no_faktur',$data_produk_tbs->no_faktur)->where('id_produk',$data_produk_tbs->id_produk)->where('warung_id',Auth::user()->id_warung);   
 
-				if ($detail_pembelian->count() > 0) {
-					if ($detail_pembelian->first()->harga_produk != $data_produk_tbs->harga_produk) {
-						Barang::find($data_detail->id_produk)->update(['harga_beli'=>$harga_tbs->harga_produk]); 
-					}
-				}else{
-					$barang = Barang::select('harga_beli')->where('id',$data_produk_tbs->id_produk)->where('id_warung',Auth::user()->id_warung); 
-					if ($barang->first()->harga_beli != $data_produk_tbs->harga_produk) {
-						$barang->update(['harga_beli'=>$data_produk_tbs->harga_produk]); 
-					}
-				}
-			}
+    			if ($detail_pembelian->count() > 0) {
+    				if ($detail_pembelian->first()->harga_produk != $data_produk_tbs->harga_produk) {
+    					Barang::find($data_detail->id_produk)->update(['harga_beli'=>$harga_tbs->harga_produk]); 
+    				}
+    			}else{
+    				$barang = Barang::select('harga_beli')->where('id',$data_produk_tbs->id_produk)->where('id_warung',Auth::user()->id_warung); 
+    				if ($barang->first()->harga_beli != $data_produk_tbs->harga_produk) {
+    					$barang->update(['harga_beli'=>$data_produk_tbs->harga_produk]); 
+    				}
+    			}
+    		}
 
-			foreach ($data_detail_pembelian as $data_detail) {       
+    		foreach ($data_detail_pembelian as $data_detail) {       
 
-				$harga_tbs = EditTbsPembelian::select('harga_produk')->where('no_faktur',$data_detail->no_faktur)->where('id_produk',$data_detail->id_produk)->where('warung_id',Auth::user()->id_warung);
-				if ($harga_tbs->count() > 0 AND $harga_tbs->first()->harga_produk != $data_detail->harga_produk) {
-					Barang::find($data_detail->id_produk)->update(['harga_beli'=>$harga_tbs->harga_produk]); 
-				}
+    			$harga_tbs = EditTbsPembelian::select('harga_produk')->where('no_faktur',$data_detail->no_faktur)->where('id_produk',$data_detail->id_produk)->where('warung_id',Auth::user()->id_warung);
+    			if ($harga_tbs->count() > 0 AND $harga_tbs->first()->harga_produk != $data_detail->harga_produk) {
+    				Barang::find($data_detail->id_produk)->update(['harga_beli'=>$harga_tbs->harga_produk]); 
+    			}
 
-				if (!$hapus_detail = DetailPembelian::destroy($data_detail->id_detail_pembelian)) {
+    			if (!$hapus_detail = DetailPembelian::destroy($data_detail->id_detail_pembelian)) {
                 //DI BATALKAN PROSES NYA
-					DB::rollBack();
-					return $respons['harga_tbs'] = $harga_tbs;
-				}
-			}
+    				DB::rollBack();
+    				return $respons['harga_tbs'] = $harga_tbs;
+    			}
+    		}
 
-			foreach ($data_produk_pembelian->get() as $data_tbs) {
+    		foreach ($data_produk_pembelian->get() as $data_tbs) {
 			//INSERT DETAIL PEMBELIAN
-				$detail_pembelian = DetailPembelian::create([ 
-					'no_faktur'         => $no_faktur, 
-					'satuan_id'         => $data_tbs->satuan_id, 
-					'id_produk'         => $data_tbs->id_produk, 
-					'jumlah_produk'     => $data_tbs->jumlah_produk, 
-					'harga_produk'      => $data_tbs->harga_produk, 
-					'subtotal'          => $data_tbs->subtotal, 
-					'tax'               => $data_tbs->tax,
-					'tax_include'   	=> $data_tbs->tax_include, 
-					'potongan'          => $data_tbs->potongan, 
-					'ppn'               => $data_tbs->ppn, 
-					'warung_id'         => Auth::user()->id_warung 
-				]);   
-			}
+    			$detail_pembelian = DetailPembelian::create([ 
+    				'no_faktur'         => $no_faktur, 
+    				'satuan_id'         => $data_tbs->satuan_id, 
+    				'id_produk'         => $data_tbs->id_produk, 
+    				'jumlah_produk'     => $data_tbs->jumlah_produk, 
+    				'harga_produk'      => $data_tbs->harga_produk, 
+    				'subtotal'          => $data_tbs->subtotal, 
+    				'tax'               => $data_tbs->tax,
+    				'tax_include'   	=> $data_tbs->tax_include, 
+    				'potongan'          => $data_tbs->potongan, 
+    				'ppn'               => $data_tbs->ppn, 
+    				'warung_id'         => Auth::user()->id_warung 
+    			]);   
+    		}
 
           //INSERT PEMBELIAN 
-			if ($request->keterangan == "") { 
-				$keterangan = "-"; 
-			} 
-			else{ 
-				$keterangan = $request->keterangan; 
-			} 
+    		if ($request->keterangan == "") { 
+    			$keterangan = "-"; 
+    		} 
+    		else{ 
+    			$keterangan = $request->keterangan; 
+    		} 
 
-			if ($request->pembayaran == '') { 
-				$pembayaran = 0; 
-			}else{ 
-				$pembayaran = $request->pembayaran; 
-			} 
-			if ($request->kembalian == '') { 
-				$kembalian = 0; 
-			}else{ 
-				$kembalian = $request->kembalian; 
-			}
-			if ($pembayaran < $request->total_akhir) {
+    		if ($request->pembayaran == '') { 
+    			$pembayaran = 0; 
+    		}else{ 
+    			$pembayaran = $request->pembayaran; 
+    		} 
+    		if ($request->kembalian == '') { 
+    			$kembalian = 0; 
+    		}else{ 
+    			$kembalian = $request->kembalian; 
+    		}
+    		if ($pembayaran < $request->total_akhir) {
                 # code...
-                $status_pembelian = 'Hutang';
-            } else {
-                $status_pembelian = 'Tunai';
-            } 
+    			$status_pembelian = 'Hutang';
+    		} else {
+    			$status_pembelian = 'Tunai';
+    		} 
 
-			$update_pembelian = Pembelian::find($request->id_pembelian)->update([			
-				'total'             => $request->total_akhir, 
-				'suplier_id'        => $request->suplier, 
-				'status_pembelian'  => $status_pembelian, 
-				'potongan'          => $request->potongan, 
-				'tunai'             => $pembayaran, 
-				'kembalian'         => $kembalian, 
-				'kredit'            => $request->kredit, 
-				'nilai_kredit'      => $request->kredit, 
-				'cara_bayar'        => $request->cara_bayar, 
-				'status_beli_awal'  => $status_pembelian, 
-				'tanggal_jt_tempo'  => $request->jatuh_tempo, 
-				'keterangan'        => $request->keterangan, 
-				'ppn'               => $request->ppn
-			]);
+    		$update_pembelian = Pembelian::find($request->id_pembelian)->update([			
+    			'total'             => $request->total_akhir, 
+    			'suplier_id'        => $request->suplier, 
+    			'status_pembelian'  => $status_pembelian, 
+    			'potongan'          => $request->potongan, 
+    			'tunai'             => $pembayaran, 
+    			'kembalian'         => $kembalian, 
+    			'kredit'            => $request->kredit, 
+    			'nilai_kredit'      => $request->kredit, 
+    			'cara_bayar'        => $request->cara_bayar, 
+    			'status_beli_awal'  => $status_pembelian, 
+    			'tanggal_jt_tempo'  => $request->jatuh_tempo, 
+    			'keterangan'        => $request->keterangan, 
+    			'ppn'               => $request->ppn
+    		]);
 
-         $kas = intval($update_pembelian->tunai) - intval($update_pembelian->kembalian);
-         if ($kas > 0) {
+    		$kas = intval($update_pembelian->tunai) - intval($update_pembelian->kembalian);
+    		if ($kas > 0) {
 
-            TransaksiKas::where('no_faktur',$update_pembelian->no_faktur)->where('warung_id', Auth::user()->id_warung)->delete();
-            TransaksiKas::create([ 
-               'no_faktur'         => $update_pembelian->no_faktur, 
-               'jenis_transaksi'   =>'pembelian' , 
-               'jumlah_keluar'     => $kas, 
-               'kas'               => $update_pembelian->cara_bayar, 
-               'warung_id'         => $update_pembelian->warung_id] );  
-         }
-         if ($update_pembelian->kredit > 0) {
-            TransaksiHutang::where('no_faktur',$update_pembelian->no_faktur)->where('warung_id', Auth::user()->id_warung)->delete();
-            TransaksiHutang::create([ 
-               'no_faktur'         => $update_pembelian->no_faktur, 
-               'jenis_transaksi'   => 'pembelian' , 
-               'id_transaksi'      => $update_pembelian->id,
-               'jumlah_masuk'      => $update_pembelian->kredit, 
-               'suplier_id'        => $update_pembelian->suplier_id, 
-               'warung_id'         => $update_pembelian->warung_id] );  
-         }
+    			TransaksiKas::where('no_faktur',$update_pembelian->no_faktur)->where('warung_id', Auth::user()->id_warung)->delete();
+    			TransaksiKas::create([ 
+    				'no_faktur'         => $update_pembelian->no_faktur, 
+    				'jenis_transaksi'   =>'pembelian' , 
+    				'jumlah_keluar'     => $kas, 
+    				'kas'               => $update_pembelian->cara_bayar, 
+    				'warung_id'         => $update_pembelian->warung_id] );  
+    		}
+    		if ($update_pembelian->kredit > 0) {
+    			TransaksiHutang::where('no_faktur',$update_pembelian->no_faktur)->where('warung_id', Auth::user()->id_warung)->delete();
+    			TransaksiHutang::create([ 
+    				'no_faktur'         => $update_pembelian->no_faktur, 
+    				'jenis_transaksi'   => 'pembelian' , 
+    				'id_transaksi'      => $update_pembelian->id,
+    				'jumlah_masuk'      => $update_pembelian->kredit, 
+    				'suplier_id'        => $update_pembelian->suplier_id, 
+    				'warung_id'         => $update_pembelian->warung_id] );  
+    		}
 
           //HAPUS TBS PEMBELIAN 
-			$data_produk_pembelian->delete(); 
+    		$data_produk_pembelian->delete(); 
 
-			DB::commit(); 
-			return response(200);
-		        
+    		DB::commit(); 
+    		return response(200);
 
-	}
-}
+
+    	}
+    }
 }
