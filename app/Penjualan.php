@@ -5,9 +5,11 @@ namespace App;
 use Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Yajra\Auditable\AuditableTrait;
 
 class Penjualan extends Model
 {
+    use AuditableTrait;
     protected $fillable = ['id_kas', 'id_pesanan', 'id_pelanggan', 'total', 'id_warung'];
 
     // relasi ke kas
