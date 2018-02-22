@@ -58,6 +58,9 @@ class LaporanPenjualanPelangganController extends Controller
 
     public function prosesLaporanPenjualanPosPelanggan(Request $request)
     {
+        if ($request->pelanggan == "semua") {
+            $request['pelanggan'] = "";
+        };
         $laporan_penjualan = DetailPenjualanPos::laporanPenjualanPosPelanggan($request)->paginate(10);
         $array_penjualan   = array();
         foreach ($laporan_penjualan as $laporan_penjualans) {
@@ -76,6 +79,9 @@ class LaporanPenjualanPelangganController extends Controller
     }
     public function prosesLaporanPenjualanOnlinePelanggan(Request $request)
     {
+        if ($request->pelanggan == "semua") {
+            $request['pelanggan'] = "";
+        };
         $laporan_penjualan = DetailPenjualan::LaporanPenjualanOnlinePelanggan($request)->paginate(10);
         $array_penjualan   = array();
         foreach ($laporan_penjualan as $laporan_penjualans) {
