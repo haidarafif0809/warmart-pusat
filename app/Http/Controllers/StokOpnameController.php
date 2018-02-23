@@ -6,6 +6,7 @@ use App\DetailPembelian;
 use App\Hpp;
 use App\StokOpname;
 use Auth;
+use Excel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -46,6 +47,21 @@ class StokOpnameController extends Controller
         return $respons;
     }
 
+    public function labelSheet($sheet, $row)
+    {
+        $sheet->row($row, [
+            'No. Faktur',
+            'Produk',
+            'Stok Komputer',
+            'Stok Fisik',
+            'Selisih Fisik',
+            'Harga',
+            'Selisih Harga',
+            'Tanggal',
+        ]);
+        return $sheet;
+    }
+
     public function view()
     {
         $data_stok_opname = StokOpname::dataStokOpname()->paginate(10);
@@ -60,32 +76,6 @@ class StokOpnameController extends Controller
         return response()->json($respons);
     }
 
-/**
- * Display a listing of the resource.
- *
- * @return \Illuminate\Http\Response
- */
-    public function index()
-    {
-        //
-    }
-
-/**
- * Show the form for creating a new resource.
- *
- * @return \Illuminate\Http\Response
- */
-    public function create()
-    {
-        //
-    }
-
-/**
- * Store a newly created resource in storage.
- *
- * @param  \Illuminate\Http\Request  $request
- * @return \Illuminate\Http\Response
- */
     public function store(Request $request)
     {
         DB::beginTransaction();
@@ -129,35 +119,6 @@ class StokOpnameController extends Controller
         return response(200);
     }
 
-/**
- * Display the specified resource.
- *
- * @param  int  $id
- * @return \Illuminate\Http\Response
- */
-    public function show($id)
-    {
-        //
-    }
-
-/**
- * Show the form for editing the specified resource.
- *
- * @param  int  $id
- * @return \Illuminate\Http\Response
- */
-    public function edit($id)
-    {
-        //
-    }
-
-/**
- * Update the specified resource in storage.
- *
- * @param  \Illuminate\Http\Request  $request
- * @param  int  $id
- * @return \Illuminate\Http\Response
- */
     public function update(Request $request, $id)
     {
         DB::beginTransaction();
@@ -179,12 +140,6 @@ class StokOpnameController extends Controller
 
     }
 
-/**
- * Remove the specified resource from storage.
- *
- * @param  int  $id
- * @return \Illuminate\Http\Response
- */
     public function destroy($id)
     {
         if (!StokOpname::destroy($id)) {
@@ -192,5 +147,34 @@ class StokOpnameController extends Controller
         } else {
             return response(200);
         }
+    }
+
+    public function downloadExcelFaktur($id)
+    {
+        $stok_opname = StokOpname::dataStokOpnamePerfaktur($id)->first();
+        Excel::create('Stok Opname Faktur', function ($excel) use ($stok_opname) {
+            // Set property
+            $excel->sheet('Stok Opname Faktur', function ($sheet) use ($stok_opname) {
+                $row = 1;
+                $sheet->row($row, [
+                    'STOK OPNAME /FAKTUR : ' . $stok_opname->no_faktur,
+                ]);
+
+                $row   = 3;
+                $sheet = $this->labelSheet($sheet, $row);
+
+                $sheet->row(++$row, [
+                    $stok_opname->no_faktur,
+                    title_case($stok_opname->nama_barang),
+                    $stok_opname->stok_sekarang,
+                    $stok_opname->jumlah_fisik,
+                    $stok_opname->selisih_fisik,
+                    $stok_opname->harga,
+                    $stok_opname->total,
+                    $stok_opname->created_at,
+                ]);
+
+            });
+        })->export('xls');
     }
 }

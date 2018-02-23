@@ -112,6 +112,8 @@
 
                                         <td align="center">{{ stokOpname.stok_opname.created_at | tanggal}}</td>
                                         <td>
+                                            <a :href="url+'/download-excel-faktur/'+stokOpname.stok_opname.id" class="btn btn-xs btn-success" v-bind:id="'excel-' + stokOpname.stok_opname.id" target="_blank"> Excel
+                                            </a>
                                             <a href="#/stok-opname" class="btn btn-xs btn-danger" v-bind:id="'delete-' + stokOpname.stok_opname.id" v-on:click="deleteEntry(stokOpname.stok_opname.id, index,stokOpname.stok_opname.no_faktur)">Delete
                                             </a>
                                         </td>

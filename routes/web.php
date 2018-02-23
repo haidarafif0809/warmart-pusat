@@ -711,7 +711,6 @@ Route::post('/laporan-penjualan-produk/pencarian', 'LaporanPenjualanPosProdukCon
 Route::post('/laporan-penjualan-produk/total-penjualan-pos-produk', 'LaporanPenjualanPosProdukController@totalPenjualanPosProduk')->middleware('auth');
 Route::get('/laporan-penjualan-produk/pilih-produk', 'LaporanPenjualanPosProdukController@dataProduk')->middleware('auth');
 
-
 // LAP PENJUALAN ONLINE /PRODUK
 Route::post('/laporan-penjualan-produk/view-online', 'LaporanPenjualanPosProdukController@prosesLaporanPenjualanOnlineProduk')->middleware('auth');
 Route::post('/laporan-penjualan-produk/pencarian-online', 'LaporanPenjualanPosProdukController@pencarianOnline')->middleware('auth');
@@ -885,6 +884,7 @@ Route::get('/laporan-penjualan-harian-online/view/{dari_tanggal}/{sampai_tanggal
 //STOK OPNAME  VUE JS
 Route::get('/stok-opname/view', 'StokOpnameController@view')->middleware('auth');
 Route::get('/stok-opname/pencarian', 'StokOpnameController@pencarian')->middleware('auth');
+Route::get('/stok-opname/download-excel-faktur/{id}', 'StokOpnameController@downloadExcelFaktur')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
