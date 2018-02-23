@@ -30,7 +30,7 @@
 						</div>
 						<div class="form-group col-md-2">
 							<selectize-component v-model="filter.pelanggan" :settings="placeholder_pelanggan" id="pilih_pelanggan"> 
-								<option v-for="pelanggans, index in pelanggan" v-bind:value="pelanggans.id" >{{ pelanggans.name }}</option>
+								<option v-for="pelanggans, index in pelanggan" v-bind:value="pelanggans.id" >{{ pelanggans.nama_pelanggan }}</option>
 							</selectize-component>
 						</div>
 						<div class="form-group col-md-2">
@@ -176,10 +176,10 @@
 
 
 <script>
+import { mapState } from 'vuex';
 	export default {
 		data: function () {
 			return {
-				pelanggan: [],
 				labaKotor: [],
 				labaKotorData: {},
 				subtotalLabaKotor: {},
@@ -207,13 +207,17 @@
 		},
 		mounted() {
 			var app = this;
+			app.$store.dispatch('LOAD_PELANGGAN_LIST');
 			var awal_tanggal = new Date();
 			awal_tanggal.setDate(1);
-
-			app.dataPelanggan();
 			app.filter.dari_tanggal = awal_tanggal;
 
 		},
+		computed : mapState ({    
+	      pelanggan(){
+	        return this.$store.state.pelanggan
+	      }
+	    }),
 		watch: {
         // whenever question changes, this function will run
         pencarian_pos: function (newQuestion) {
@@ -251,6 +255,7 @@
     		if (typeof page === 'undefined') {
     			page = 1;
     		}
+
     		app.loading = true,
     		axios.post(app.url+'/view?page='+page, newFilter)
     		.then(function (resp) {
@@ -311,17 +316,6 @@
     		.catch(function (resp) {
     			console.log(resp);
     			alert("Tidak Dapat Memuat Laporan Laba Kotor Penjualan /Pelanggan");
-    		});
-    	},
-    	dataPelanggan() {
-    		var app = this;
-    		axios.get(app.url+'/pilih-pelanggan')
-    		.then(function (resp) {
-    			app.pelanggan = resp.data;
-
-    		})
-    		.catch(function (resp) {
-    			alert("Tidak bisa memuat pelanggan ");
     		});
     	},
     	totalLabaKotor() {
@@ -390,7 +384,7 @@
     		var filter = app.filter;
 
     		if (filter.pelanggan == "") {
-    			filter.pelanggan = 0;
+    			filter.pelanggan = "semua";
     		};
 
     		var date_dari_tanggal = filter.dari_tanggal;
