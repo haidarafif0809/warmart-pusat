@@ -157,7 +157,7 @@ $nama_toko = \App\Warung::select('name')->first()->name;
                                 </li>
                                 {{-- 6 --}}
                                 <center>                                    
-                                    <img class="cara-memesan" src="{{asset('/foto_cara_memesan/7.png').'?v=1'}}"/>
+                                    <img class="cara-memesan" src="{{asset('/foto_cara_memesan/77.png').'?v=1'}}"/>
                                 </center>
                                 <li>
                                     Silahkan menunggu pesanan Anda sampai ke alamat tujuan Anda. <strong>Terima Kasih sudah Berbelanja di {{$nama_toko}}.</strong>
