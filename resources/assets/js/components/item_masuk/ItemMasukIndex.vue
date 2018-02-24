@@ -50,7 +50,7 @@
                                 <tr v-for="item_masuk, index in item_masuk" >
 
                                    <td>{{ item_masuk.no_faktur }}</td>
-                                   <td>{{ item_masuk.total }}</td>
+                                   <td>{{ item_masuk.total | pemisahTitik }}</td>
                                    <td>{{ item_masuk.keterangan }}</td>
                                    <td>{{ item_masuk.waktu }}</td>
                                    <td>{{ item_masuk.waktu_edit }}</td>
@@ -109,7 +109,17 @@ export default {
         	this.loading = true;  
         }
     },
-
+    filters: {
+    pemisahTitik: function (value) {      
+        var angka = [value];
+        var numberFormat = new Intl.NumberFormat('es-ES');
+        var formatted = angka.map(numberFormat.format);
+        return formatted.join('; ');
+    },
+    tanggal: function (value) {
+            return moment(String(value)).format('DD/MM/YYYY')
+        }
+    },
     methods: {
     	getResults(page) {
     		var app = this;	
