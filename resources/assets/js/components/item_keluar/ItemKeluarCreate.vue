@@ -88,7 +88,7 @@
 
 									<td>{{ tbs_item_keluar.kode_produk }} - {{ tbs_item_keluar.nama_produk }}</td>
 									<td>
-										<a href="#create-item-keluar" v-bind:id="'edit-' + tbs_item_keluar.id_tbs_item_keluar" v-on:click="editEntry(tbs_item_keluar.id_tbs_item_keluar, index,tbs_item_keluar.nama_produk)">{{ tbs_item_keluar.jumlah_produk }}
+										<a href="#create-item-keluar" v-bind:id="'edit-' + tbs_item_keluar.id_tbs_item_keluar" v-on:click="editEntry(tbs_item_keluar.id_tbs_item_keluar, index,tbs_item_keluar.nama_produk)">{{ tbs_item_keluar.jumlah_produk | pemisahTitik }}
 										</a>
 									</td>
 									<td> 
@@ -180,6 +180,17 @@ export default {
     			alert("Tidak Dapat Memuat Item Keluar");
     		});
     	},
+      filters: {
+        pemisahTitik: function (value) {      
+            var angka = [value];
+            var numberFormat = new Intl.NumberFormat('es-ES');
+            var formatted = angka.map(numberFormat.format);
+            return formatted.join('; ');
+        },
+        tanggal: function (value) {
+                return moment(String(value)).format('DD/MM/YYYY')
+            }
+        },
     	getHasilPencarian(page){
     		var app = this;
     		if (typeof page === 'undefined') {

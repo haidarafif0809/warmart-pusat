@@ -88,7 +88,7 @@
 
 									<td>{{ tbs_item_keluar.kode_produk }} - {{ tbs_item_keluar.nama_produk }}</td>
 									<td>
-										<a v-bind:href="'#edit-item-keluar/'+tbs_item_keluar.id_item_keluar" v-bind:id="'edit-' + tbs_item_keluar.id_edit_tbs_item_keluar" v-on:click="editEntry(tbs_item_keluar.id_edit_tbs_item_keluar, index,tbs_item_keluar.nama_produk)">{{ tbs_item_keluar.jumlah_produk }}
+										<a v-bind:href="'#edit-item-keluar/'+tbs_item_keluar.id_item_keluar" v-bind:id="'edit-' + tbs_item_keluar.id_edit_tbs_item_keluar" v-on:click="editEntry(tbs_item_keluar.id_edit_tbs_item_keluar, index,tbs_item_keluar.nama_produk)">{{ tbs_item_keluar.jumlah_produk | pemisahTitik }}
 										</a>
 									</td>
 									<td> 
@@ -151,7 +151,7 @@ export default {
     app.getResults();
 
   },
-  watch: {
+   watch: {
         // whenever question changes, this function will run
         pencarian: function (newQuestion) {
         	this.getHasilPencarian();
@@ -161,6 +161,14 @@ export default {
         	this.pilihProduk();  
         },
 
+      },
+    filters: {
+        pemisahTitik: function (value) {      
+            var angka = [value];
+            var numberFormat = new Intl.NumberFormat('es-ES');
+            var formatted = angka.map(numberFormat.format);
+            return formatted.join('; ');
+        }
       },
       methods: {
        getResults(page) {

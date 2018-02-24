@@ -50,7 +50,7 @@
                                 <tr v-for="item_masuk, index in item_masuk" >
 
                                    <td>{{ item_masuk.no_faktur }}</td>
-                                   <td>{{ item_masuk.total | pemisahTitik }}</td>
+                                   <td>{{ item_masuk.total  }}</td>
                                    <td>{{ item_masuk.keterangan }}</td>
                                    <td>{{ item_masuk.waktu }}</td>
                                    <td>{{ item_masuk.waktu_edit }}</td>

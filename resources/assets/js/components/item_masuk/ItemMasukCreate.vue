@@ -88,7 +88,7 @@
 
 									<td>{{ tbs_item_masuk.kode_produk }} - {{ tbs_item_masuk.nama_produk }}</td>
 									<td>
-										<a href="#create-item-masuk" v-bind:id="'edit-' + tbs_item_masuk.id_tbs_item_masuk" v-on:click="editEntry(tbs_item_masuk.id_tbs_item_masuk, index,tbs_item_masuk.nama_produk)">{{ tbs_item_masuk.jumlah_produk }}
+										<a href="#create-item-masuk" v-bind:id="'edit-' + tbs_item_masuk.id_tbs_item_masuk" v-on:click="editEntry(tbs_item_masuk.id_tbs_item_masuk, index,tbs_item_masuk.nama_produk)">{{ tbs_item_masuk.jumlah_produk | pemisahTitik }}
 										</a>
 									</td>
 									<td> 
@@ -159,6 +159,17 @@ export default {
         	this.pilihProduk();  
         },
 
+    },
+   filters: {
+    pemisahTitik: function (value) {      
+        var angka = [value];
+        var numberFormat = new Intl.NumberFormat('es-ES');
+        var formatted = angka.map(numberFormat.format);
+        return formatted.join('; ');
+    },
+    tanggal: function (value) {
+            return moment(String(value)).format('DD/MM/YYYY')
+        }
     },
     methods: {
     	getResults(page) {
