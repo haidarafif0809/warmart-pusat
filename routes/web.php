@@ -893,6 +893,8 @@ Route::get('/stok-opname/view', 'StokOpnameController@view')->middleware('auth')
 Route::get('/stok-opname/pencarian', 'StokOpnameController@pencarian')->middleware('auth');
 Route::get('/stok-opname/download-excel-faktur/{id}', 'StokOpnameController@downloadExcelFaktur')->middleware('auth');
 Route::post('/stok-opname/filter-periode', 'StokOpnameController@filterPeriode')->middleware('auth');
+Route::post('/stok-opname/subtotal', 'StokOpnameController@totalStokOpname')->middleware('auth');
+Route::get('/stok-opname/download-excel/{dari_tanggal}/{sampai_tanggal}', 'StokOpnameController@downloadExcelPeriode')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
