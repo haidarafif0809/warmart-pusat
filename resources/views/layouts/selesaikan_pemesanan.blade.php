@@ -198,7 +198,7 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
                 <div style="margin-bottom: 1px; margin-top: 1px;" class="form-group{{ $errors->has('kurir') ? ' has-error' : '' }}">
                   {!! Form::label('kurir', 'Kurir', ['class'=>'col-md-2 control-label', 'style'=> 'margin-bottom:1px; margin-top:1px;']) !!}
                   <div class="col-md-6">
-                    {!! Form::select('kurir', ['jne'=>'JNE','pos'=>'POS','tiki'=>'TIKI','cod'=>'Bayar di Tempat(COD)'],null, ['required'=> 'true','placeholder' => 'Cari Kurir','id'=>'kurir']) !!}
+                    {!! Form::select('kurir', ['jne'=>'JNE','pos'=>'POS','tiki'=>'TIKI','cod'=>'Bayar di Tempat(COD)','ojek'=>'Ojek'],null, ['required'=> 'true','placeholder' => 'Cari Kurir','id'=>'kurir']) !!}
                   </div>
                 </div>
 
@@ -222,7 +222,7 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
                <div style="margin-bottom: 1px; margin-top: 1px;" class="form-group{{ $errors->has('metode_pembayaran') ? ' has-error' : '' }}">
                 {!! Form::label('metode_pembayaran', 'Pembayaran', ['class'=>'col-md-2 control-label', 'style'=> 'margin-bottom:1px; margin-top:1px;']) !!}
                 <div class="col-md-6">
-                  {!! Form::text('metode_pembayaran', null, ['class'=>'form-control','required','autocomplete'=>'off', 'placeholder' => 'Metode Pembayaran', 'id' => 'metode_pembayaran','readonly']) !!}
+                  {!! Form::select('metode_pembayaran', ['Bayar di Tempat'=>'Bayar di Tempat','TRANSFER'=>'TRANSFER'],null, ['required'=> 'true','placeholder' => 'Pilih Metode Pembayaran','id'=>'metode_pembayaran']) !!}
                 </div>
               </div>
 
@@ -388,23 +388,34 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
   $(document).ready(function(){
 
     var $select = $('#provinsi').selectize({
-      valueField: 'province_id',
-      labelField: 'province',
-      searchField: 'province'
-    });
+     loadingClass: 'selectizeLoading',
+     valueField: 'province_id',
+     labelField: 'province',
+     searchField: 'province',
+     onChange: function (province_id) 
+     {
+      if (!province_id.length) return;
+      selectKota.clearOptions(); 
+      selectKota.settings.placeholder = "Tunggu Sebentar ...";
+      selectKota.updatePlaceholder();
+      selectKota.load(function (callback) { timeOutS = setTimeout(setKotaOptions, 500, callback, province_id); });
+    }
+  });
 
     var $selectKota = $('#kota').selectize({
-      valueField: 'city_id',
-      labelField: 'city_name',
-      searchField: 'city_name',
-      create: false
-    });
+     loadingClass: 'selectizeLoading',
+     valueField: 'city_id',
+     labelField: 'city_name',
+     searchField: 'city_name',
+     create: false
+   });
 
     var $selectKurir = $('#kurir').selectize({
       sortField: 'text'
     });
 
     var $selectLayananKurir = $('#layanan_kurir').selectize({
+     loadingClass: 'selectizeLoading',
      valueField: 'id',
      labelField: 'service',
      searchField: 'service',
@@ -412,6 +423,13 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
 
    });
 
+    $('#metode_pembayaran').selectize({
+     sortField: 'text'        
+   });
+
+    var selectKota = $('#kota').data('selectize');
+    var selectMetodePembayaran = $('#metode_pembayaran').data('selectize');
+    var selectLayananKurir = $('#layanan_kurir').data('selectize');
     Number.prototype.format = function(n, x, s, c) {
       var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\D' : '$') + ')',
       num = this.toFixed(Math.max(0, ~~n));
@@ -464,16 +482,16 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
         alertAlamatBelumLengkap();
       }
       else{
-        if (kurir != 'cod') {                        
-          hitungOngkir(kurir,kota_pengirim,kota_tujuan,berat_barang);
+        if (kurir == 'cod' || kurir == 'ojek') {     
+          pengirimanBiasa(kurir); 
         }else{
-          pengirimanCod();
+          hitungOngkir(kurir,kota_pengirim,kota_tujuan,berat_barang);
         }
       }
 
     });
 
-    function pengirimanCod(){    
+    function pengirimanBiasa(kurir){    
       var subtotal = parseInt($("#total_belanja").attr("data-total"));                
       $("#subtotal").val(subtotal);
       var subtotal = subtotal.format(0, 3, '.', ',');
@@ -481,12 +499,21 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
       $("#biaya_kirim").text("0");
       $("#biaya_kirim").attr("data-biayaKirim",0);
       $("#ongkir").text("");
-      $("#waktu_pengiriman").text(""); 
-      document.getElementById('layanan_kurir').selectize.setValue("");   
-      $selectLayananKurir[0].selectize.clearOptions(); 
+      $("#waktu_pengiriman").text("");  
+      selectLayananKurir.setValue("");
+      selectLayananKurir.disable();
+      selectLayananKurir.clearOptions(); 
       $("#total_belanja").text("Rp. "+subtotal);
-      $("#metode_pembayaran").val("Bayar di Tempat");
-      $("#note_pembayaran").text("Anda dapat melakukan pembayaran saat Anda menerima pesanan.");
+      if (kurir == 'cod') {
+        selectMetodePembayaran.setValue("Bayar di Tempat");
+        selectMetodePembayaran.disable();
+      }else{
+        selectMetodePembayaran.focus();
+        selectMetodePembayaran.enable();
+      }
+    }
+
+    function pengirimanOjek(){   
     }
 
     function alertAlamatBelumLengkap(){
@@ -570,11 +597,13 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
     $("#biaya_kirim").removeClass('spinner');
     $("#ongkir").text("Rp. "+ongkir);
     $("#ongkir").removeClass('spinner');
-    $("#waktu_pengiriman").text(waktu_pengiriman); 
-    document.getElementById('layanan_kurir').selectize.setValue(layanan_kurir);    
+    $("#waktu_pengiriman").text(waktu_pengiriman);   
+    selectLayananKurir.setValue(layanan_kurir);
+    selectLayananKurir.enable(); 
     $("#total_belanja").removeClass('spinner'); 
     $("#total_belanja").text("Rp. "+total_belanja);
-    $("#metode_pembayaran").val("TRANSFER");
+    selectMetodePembayaran.setValue("TRANSFER");
+    selectMetodePembayaran.disable();
   }
 
   $selectLayananKurir.on('change', function(){
@@ -608,36 +637,46 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
 
 });
 
-  $(document).on('change', '#provinsi', function () {     
+  var setKotaOptions = function (callback, id_provinsi)
+  {
+    clearTimeout(timeOutS);
 
-    var id_provinsi = $(this).val();
+    $.getJSON('{{ Url("kota-destinasi-pengiriman") }}',{'_token': $('meta[name=csrf-token]').attr('content'),id_provinsi:id_provinsi}, function(resp){               
 
-    if (id_provinsi != '') {
+      callback(resp.rajaongkir.results);
+      var kabupaten_pelanggan = $("#kabupaten_pelanggan").val(); 
+      $.each(resp.rajaongkir.results, function (i, item) { 
 
-      $selectKota[0].selectize.clearOptions();               
-      $selectKota[0].selectize.focus();
-      var kabupaten_pelanggan = $("#kabupaten_pelanggan").val();
-
-      $.getJSON('{{ Url("kota-destinasi-pengiriman") }}',{'_token': $('meta[name=csrf-token]').attr('content'),id_provinsi:id_provinsi}, function(resp){
-
-       $selectKota[0].selectize.addOption(resp.rajaongkir.results);    
-       $.each(resp.rajaongkir.results, function (i, item) { 
         if (kabupaten_pelanggan == resp.rajaongkir.results[i].type+" "+resp.rajaongkir.results[i].city_name) {
           var kota = resp.rajaongkir.results[i].city_id;
           var alamat = $("#alamatPelanggan").val();
           var alamat_pengiriman = alamat +", Kota/Kab. "+resp.rajaongkir.results[i].city_name+",  "+resp.rajaongkir.results[i].province;
 
-          document.getElementById('kota').selectize.setValue(kota);
+          selectKota.setValue(kota); 
           $("#alamatPelanggan").val(alamat_pengiriman);
           $(".alamat_pengiriman").hide();
           $("#formAlamat").show();
+          document.getElementById('kurir').selectize.setValue('cod');
+
+        }else{
+          selectKota.settings.placeholder = "Cari Kabupaten atau Kota ...";
+          selectKota.updatePlaceholder();  
+          selectKota.focus();  
         };
       }); 
-     });
+      console.log(resp.rajaongkir.results);
+    });
+  };
 
-    }
 
-  });
+  selectMetodePembayaran.on('change', function(){
+    var metode_pembayaran = selectMetodePembayaran.getValue();
+    if (metode_pembayaran == "TRANSFER") {
+      $("#note_pembayaran").text("");
+    }else{
+     $("#note_pembayaran").text("Anda dapat melakukan pembayaran saat Anda menerima pesanan.");
+   }
+ }); 
 
   $(document).on('click', '.alamat_pengiriman', function () {  
     $("#myModal").show();
