@@ -76,6 +76,13 @@ class StokOpnameController extends Controller
         return response()->json($respons);
     }
 
+    public function filterPeriode(Request $request)
+    {
+        $data_stok_opname = StokOpname::dataFilterStokOpname($request)->paginate(10);
+        $respons          = $this->foreachStokOpname($data_stok_opname);
+        return response()->json($respons);
+    }
+
     public function store(Request $request)
     {
         DB::beginTransaction();
