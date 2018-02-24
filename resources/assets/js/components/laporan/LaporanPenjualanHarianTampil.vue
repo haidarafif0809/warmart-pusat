@@ -36,7 +36,7 @@
 						labels: resp.data.tanggal,
 						datasets: [{
 							label: 'LAPORAN HARIAN PENJUALAN POS '+ app.tanggal(filter.dari_tanggal) +" - "+ app.tanggal(filter.sampai_tanggal),
-							backgroundColor: '#ed79a1',
+							backgroundColor: '#2ac326',
 							data: resp.data.total,
 						}]
 					},
