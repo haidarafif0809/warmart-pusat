@@ -51,10 +51,10 @@
 </link>
 </head>
 <style type="text/css">
-    .navbar-nav .open .dropdown-menu{
-      color: grey;
-  }
-  .navbar .navbar-brand {
+.navbar-nav .open .dropdown-menu{
+  color: grey;
+}
+.navbar .navbar-brand {
     position: relative;
     height: 50px;
     line-height: 0px;
@@ -85,19 +85,18 @@ body {
   border-top-color: #333; 
   animation: spinner .6s linear infinite; 
 } 
-.selectize-control .option .title { 
-    display: block; 
-} 
-.selectize-control .option .url { 
-    font-size: 12px; 
-    display: block; 
-    color: #a0a0a0; 
-} 
-.selectize-control .item a { 
-    color: #006ef5; 
-} 
-.selectize-control .item.active a { 
-    color: #303030; 
+.selectizeLoading > .selectize-input, .selectizeLoading > .selectize-input > input
+{
+  cursor: wait !important;
+  font-style: italic;
+  background:
+  url('http://www.hsi.com.hk/HSI-Net/pages/images/en/share/ajax-loader.gif')
+  no-repeat
+  center center;
+}
+.marginFrom{
+    margin-bottom: 1px;
+    margin-top: 1px;
 }
 </style>
 <body class="ecommerce-page">
