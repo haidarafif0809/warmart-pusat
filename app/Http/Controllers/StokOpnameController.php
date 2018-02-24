@@ -83,6 +83,14 @@ class StokOpnameController extends Controller
         return response()->json($respons);
     }
 
+    public function totalStokOpname(Request $request)
+    {
+        //SUBTOTAL STOK OPNAME FILTER
+        $sub_total_stok_opname = StokOpname::subtotalStokOpname($request)->first();
+
+        return $sub_total_stok_opname;
+    }
+
     public function store(Request $request)
     {
         DB::beginTransaction();
@@ -179,6 +187,52 @@ class StokOpnameController extends Controller
                     $stok_opname->harga,
                     $stok_opname->total,
                     $stok_opname->created_at,
+                ]);
+
+            });
+        })->export('xls');
+    }
+
+    public function downloadExcelPeriode(Request $request, $dari_tanggal, $sampai_tanggal)
+    {
+        $request['dari_tanggal']   = $dari_tanggal;
+        $request['sampai_tanggal'] = $sampai_tanggal;
+        $stok_opname               = StokOpname::dataFilterStokOpname($request)->get();
+        Excel::create('Stok Opname Faktur', function ($excel) use ($stok_opname, $request) {
+            // Set property
+            $excel->sheet('Stok Opname Faktur', function ($sheet) use ($stok_opname, $request) {
+                $row = 1;
+                $sheet->row($row, [
+                    'STOK OPNAME /PERIODE : ' . $request->dari_tanggal . ' - ' . $request->sampai_tanggal,
+                ]);
+
+                $row   = 3;
+                $sheet = $this->labelSheet($sheet, $row);
+
+                foreach ($stok_opname as $stok_opnames) {
+                    $sheet->row(++$row, [
+                        $stok_opnames->no_faktur,
+                        title_case($stok_opnames->nama_barang),
+                        $stok_opnames->stok_sekarang,
+                        $stok_opnames->jumlah_fisik,
+                        $stok_opnames->selisih_fisik,
+                        $stok_opnames->harga,
+                        $stok_opnames->total,
+                        $stok_opnames->created_at,
+                    ]);
+                }
+
+                $total_stok_opname = $this->totalStokOpname($request);
+                $row               = ++$row;
+                $sheet->row(++$row, [
+                    'TOTAL',
+                    '',
+                    '',
+                    '',
+                    $total_stok_opname->selisih_fisik,
+                    '',
+                    $total_stok_opname->total_selisih,
+                    '',
                 ]);
 
             });

@@ -99,6 +99,15 @@ class StokOpname extends Model
         return $query_stok_opname;
     }
 
+    public function scopeSubtotalStokOpname($query_stok_opname, $request)
+    {
+        $query_stok_opname->select(DB::raw('SUM(selisih_fisik) as selisih_fisik'), DB::raw('SUM(total) as total_selisih'))
+            ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+            ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal));
+
+        return $query_stok_opname;
+    }
+
     public function scopeDataStokOpnamePerfaktur($query_stok_opname, $id)
     {
         $query_stok_opname->select(['stok_opnames.id', 'stok_opnames.no_faktur', 'stok_opnames.produk_id', 'stok_opnames.stok_sekarang', 'stok_opnames.jumlah_fisik', 'stok_opnames.selisih_fisik', 'stok_opnames.harga', 'stok_opnames.total', 'stok_opnames.keterangan', 'stok_opnames.created_by', 'stok_opnames.created_at', 'barangs.nama_barang'])

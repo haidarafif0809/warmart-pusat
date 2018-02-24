@@ -78,8 +78,8 @@
 
                     <div class="col-md-2 col-xs-12">
                         <div class="panel panel-default">
-                            <button class="btn btn-info collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                <i class="material-icons">date_range</i> Filter Periode
+                            <button id="btnFilter" class="btn btn-info collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" v-shortkey="['f2']" @shortkey="filterPeriode()" @click="filterPeriode()">
+                                <i class="material-icons">date_range</i> Filter Periode (F2)
                             </button>
                         </div>
                     </div>
@@ -95,7 +95,7 @@
                                         <datepicker :input-class="'form-control'" placeholder="Sampai Tanggal" v-model="filter.sampai_tanggal" name="sampai_tanggal" v-bind:id="'sampai_tanggal'"></datepicker>
                                     </div>
 
-                                    <div class="form-group col-md-4">
+                                    <div class="col-md-2">
                                         <button class="btn btn-primary" id="btnSubmit" type="submit" style="margin: 0px 0px;" @click="submitStokOpname()"><i class="material-icons">search</i> Cari</button>
                                     </div>
                                 </div>
@@ -135,11 +135,18 @@
                                                 {{ stokOpname.stok_opname.jumlah_fisik | pemisahTitik}}
                                             </a>
                                         </td>
-                                        <td align="right">{{ stokOpname.stok_opname.selisih_fisik | pemisahTitik}}</td>
+                                        
+                                        <td align="right" v-if="stokOpname.stok_opname.selisih_fisik < 0">
+                                            ({{ stokOpname.stok_opname.selisih_fisik * -1 | pemisahTitik}})
+                                        </td>
+                                        <td align="right" v-else>
+                                            {{ stokOpname.stok_opname.selisih_fisik | pemisahTitik}}
+                                        </td>
+
                                         <td align="right">{{ stokOpname.stok_opname.harga | pemisahTitik}}</td>
 
                                         <td align="right" v-if="stokOpname.stok_opname.selisih_fisik < 0">
-                                            {{ stokOpname.stok_opname.total * -1 | pemisahTitik}}
+                                            ({{ stokOpname.stok_opname.total * -1 | pemisahTitik}})
                                         </td>
                                         <td align="right" v-else>
                                             {{ stokOpname.stok_opname.total | pemisahTitik}}
@@ -153,6 +160,34 @@
                                             </a>
                                         </td>
                                     </tr>
+
+                                    <!-- TOTAL STOK OPNAME -->
+                                    <tr v-if="seen" style="color:red;">
+                                        <td>TOTAL</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+
+                                        <td align="right" v-if="totalStokOpname.selisih_fisik < 0">
+                                            ({{ totalStokOpname.selisih_fisik * -1 | pemisahTitik}})
+                                        </td>
+                                        <td align="right" v-else>
+                                            {{totalStokOpname.selisih_fisik | pemisahTitik}}
+                                        </td>
+
+                                        <td></td>
+
+                                        <td align="right" v-if="totalStokOpname.selisih_fisik < 0">
+                                            ({{ totalStokOpname.total_selisih * -1 | pemisahTitik}})
+                                        </td>
+                                        <td align="right" v-else>
+                                            {{totalStokOpname.total_selisih | pemisahTitik}}
+                                        </td>
+
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
                                 </tbody>                    
                                 <tbody class="data-tidak-ada" v-else>
                                     <tr ><td colspan="10"  class="text-center">Tidak Ada Data</td></tr>
@@ -164,7 +199,9 @@
                             <div align="right"><pagination :data="stokOpnameData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
 
                         </div>
-                        <p style="color: red; font-style: italic;">*Note : Klik Kolom <strong>Stok Fisik</strong> Untuk Mengubah Nilai.</p>
+
+                        <a href="#" align="right" class='btn btn-warning' id="btnExcel" target='blank' style="display:none"><i class="material-icons">file_download</i> Download Excel</a>
+                        <p v-if="seen == false" style="color: red; font-style: italic;">*Note : Klik Kolom <strong>Stok Fisik</strong> Untuk Mengubah Nilai.</p>
                     </div>
                 </div>
             </div>
@@ -179,6 +216,7 @@
             return {
                 stokOpname: [],
                 stokOpnameData: {},
+                totalStokOpname: {},
                 inputStokOpname: {
                     produk: '',
                     nama_produk: '',
@@ -199,7 +237,8 @@
                 },
                 url : window.location.origin+(window.location.pathname).replace("dashboard", "stok-opname"),
                 pencarian: '',
-                loading: true
+                loading: true,
+                seen: false,
             }
         },
         mounted() {
@@ -248,6 +287,8 @@
                     app.stokOpname = resp.data.data;
                     app.stokOpnameData = resp.data;
                     app.loading = false;
+                    app.seen = false;
+                    $("#btnExcel").hide();
                     app.openSelectizeProduk();
                 })
                 .catch(function (resp) {
@@ -267,6 +308,8 @@
                     app.stokOpname = resp.data.data;
                     app.stokOpnameData = resp.data;
                     app.loading = false;
+                    app.seen = false;
+                    $("#btnExcel").hide();
                 })
                 .catch(function (resp) {
                     console.log(resp);
@@ -308,6 +351,8 @@
                         app.alert("Menambahkan Produk "+nama_produk)      
                         app.getResults()
                         app.loading = false
+                        app.seen = false;
+                        $("#btnExcel").hide();
                         app.inputStokOpname.jumlah_produk = ''
                         app.inputStokOpname.nama_produk = ''
                         app.inputStokOpname.produk = ''
@@ -362,6 +407,8 @@
                         app.getResults()
                         app.alert("Mengubah Stok Opname Produk "+nama_produk)
                         app.loading = false;
+                        app.seen = false;
+                        $("#btnExcel").hide();
                         app.editStokOpname.jumlah_produk = ''
                         app.editStokOpname.no_faktur = ''
                         app.editStokOpname.id_stok_opname = ''
@@ -396,6 +443,8 @@
                     if (resp.data == 0) {
                         app.alertGagal("Stok Opname Tidak Dapat Dihapus, Karena Sudah Terpakai");
                         app.loading = false;
+                        app.seen = false;
+                        $("#btnExcel").hide();
                     }else{
                         app.getResults();
                         app.alert("Menghapus Stok Opname "+no_faktur);
@@ -406,10 +455,15 @@
                     alert("Tidak Dapat Menghapus Stok Opname");
                 });
             },
+            filterPeriode(){
+                $("#btnFilter").click();
+                this.getResults();
+            },
             submitStokOpname(){
                 var app = this;
+                app.showButton();
                 app.prosesFilterPeriode();
-                // app.showButton();
+                app.subtotalStokOpname();
             },
             prosesFilterPeriode(page) {
                 var app = this; 
@@ -429,6 +483,33 @@
                     console.log(resp);
                     alert("Tidak Dapat Memuat Stok Opname");
                 });
+            },
+            subtotalStokOpname() {
+                var app = this; 
+                var newFilter = app.filter;
+
+                app.loading = true,
+                axios.post(app.url+'/subtotal', newFilter)
+                .then(function (resp) {
+                    app.totalStokOpname = resp.data;
+                    app.loading = false
+                    app.seen = true
+                    console.log(resp.data);             
+                })
+                .catch(function (resp) {
+                    alert("Tidak Dapat Memuat Subtotal Stok Opname");
+                });
+            },
+            showButton() {
+                var app = this;
+                var filter = app.filter;
+
+                var date_dari_tanggal = filter.dari_tanggal;
+                var date_sampai_tanggal = filter.sampai_tanggal;
+                var dari_tanggal = "" + date_dari_tanggal.getFullYear() +'-'+ ((date_dari_tanggal.getMonth() + 1) > 9 ? '' : '0') + (date_dari_tanggal.getMonth() + 1) +'-'+ (date_dari_tanggal.getDate() > 9 ? '' : '0') + date_dari_tanggal.getDate();
+                var sampai_tanggal = "" + date_sampai_tanggal.getFullYear() +'-'+ ((date_sampai_tanggal.getMonth() + 1) > 9 ? '' : '0') + (date_sampai_tanggal.getMonth() + 1) +'-'+ (date_sampai_tanggal.getDate() > 9 ? '' : '0') + date_sampai_tanggal.getDate();
+                $("#btnExcel").show();
+                $("#btnExcel").attr('href', app.url+'/download-excel/'+dari_tanggal+'/'+sampai_tanggal);
             },
             closeModalJumlahProduk(){  
                 $("#modalJumlahProduk").hide();
