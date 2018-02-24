@@ -48,7 +48,7 @@
 
               <td>{{ detail_item_keluar.no_faktur }} </td>
               <td>{{ detail_item_keluar.kode_produk }} - {{ detail_item_keluar.nama_produk }}</td>
-              <td>{{ detail_item_keluar.jumlah_produk }} </td>
+              <td>{{ detail_item_keluar.jumlah_produk | pemisahTitik }} </td>
             </tr>
           </tbody>					
           <tbody class="data-tidak-ada" v-else>
@@ -91,19 +91,27 @@ export default {
       seen : false
     }
   },
-  mounted() {
-    var app = this;
-    app.getFakturItemKeluar();
-    app.getResults();
+      mounted() {
+        var app = this;
+        app.getFakturItemKeluar();
+        app.getResults();
 
-  },
-  watch: {
+      },
+      watch: {
         // whenever question changes, this function will run
         pencarian: function (newQuestion) {
         	this.getHasilPencarian();
         	this.loading = true;  
         },
 
+      },
+    filters: {
+        pemisahTitik: function (value) {      
+            var angka = [value];
+            var numberFormat = new Intl.NumberFormat('es-ES');
+            var formatted = angka.map(numberFormat.format);
+            return formatted.join('; ');
+        }
       },
       methods: {
        getResults(page) {

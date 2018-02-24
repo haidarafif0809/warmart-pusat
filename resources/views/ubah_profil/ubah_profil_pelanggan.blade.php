@@ -151,12 +151,8 @@ h4 {
                         <div class="marginFrom form-group{{ $errors->has('provinsi') ? ' has-error' : '' }}">
                             {!! Form::label('provinsi', 'Provinsi', ['class'=>'col-md-2 control-label']) !!}
                             <div class="col-md-10">
-                                @if ($lokasi_pelanggan->count() > 0 )
-                                {!! Form::select('provinsi', $provinsi,$lokasi_pelanggan->first()->provinsi, ['placeholder' => 'Cari Provinsi ...','id'=>'provinsi']) !!}
-                                @else
                                 {!! Form::select('provinsi', $provinsi,null, ['placeholder' => 'Cari Provinsi ...','id'=>'provinsi']) !!}
                                 {!! $errors->first('provinsi', '<p class="help-block">:message</p>') !!}
-                                @endif
                             </div>
                         </div>
 
@@ -200,33 +196,40 @@ h4 {
 
     <script type="text/javascript">
         $(document).ready(function(){
+            var lokasi_pelanggan = "{{ $lokasi_pelanggan->count() }}";    
+            if (lokasi_pelanggan > 0) {            
+             var provinsi_pelanggan =  "{{$provinsi_pelanggan}}"; 
+             var kabupaten_pelanggan =  "{{$kabupaten_pelanggan}}"; 
+             var kecamatan_pelanggan =  "{{$kecamatan_pelanggan}}"; 
+             var kelurahan_pelanggan =  "{{$kelurahan_pelanggan}}"; 
+         }
 
-           $('.datepicker').datepicker({
+         $('.datepicker').datepicker({
             format: 'dd-mm-yyyy',
             autoclose: true
         });
 
-           $('#pilih_komunitas').selectize({
-              sortField: 'text'
-          });
-           $('#provinsi').selectize({
-               loadingClass: 'selectizeLoading',
-               valueField: 'id',
-               labelField: 'name',
-               searchField: 'name',
-               create: false,
-               onChange: function (id) 
-               {
-                if (!id.length) return;
-                selectKota.clearOptions(); 
-                selectKecamatan.clearOptions(); 
-                selectKelurahan.clearOptions(); 
-                selectKota.settings.placeholder = "Tunggu Sebentar ...";
-                selectKota.updatePlaceholder();
-                selectKota.load(function (callback) { timeOutS = setTimeout(setKotaOptions, 500, callback, id); });
-            }
-        });
-           $('#kabupaten').selectize({
+         $('#pilih_komunitas').selectize({
+          sortField: 'text'
+      });
+         $('#provinsi').selectize({
+           loadingClass: 'selectizeLoading',
+           valueField: 'id',
+           labelField: 'name',
+           searchField: 'name',
+           create: false,
+           onChange: function (id) 
+           {
+            if (!id.length) return;
+            selectKota.clearOptions(); 
+            selectKecamatan.clearOptions(); 
+            selectKelurahan.clearOptions(); 
+            selectKota.settings.placeholder = "Tunggu Sebentar ...";
+            selectKota.updatePlaceholder();
+            selectKota.load(function (callback) { timeOutS = setTimeout(setKotaOptions, 500, callback, id); });
+        }
+    });
+         $('#kabupaten').selectize({
             loadingClass: 'selectizeLoading',
             valueField: 'id',
             labelField: 'name',
@@ -242,7 +245,7 @@ h4 {
                 selectKecamatan.load(function (callback) { timeOutS = setTimeout(setKecamatanOptions, 500, callback, id); });
             }
         });
-           $('#kecamatan').selectize({
+         $('#kecamatan').selectize({
             loadingClass: 'selectizeLoading',
             valueField: 'id',
             labelField: 'name',
@@ -257,7 +260,7 @@ h4 {
                 selectKelurahan.load(function (callback) { timeOutS = setTimeout(setKelurahanOptions, 500, callback, id); });
             }
         });
-           $('#kelurahan').selectize({
+         $('#kelurahan').selectize({
             loadingClass: 'selectizeLoading',
             valueField: 'id',
             labelField: 'name',
@@ -265,19 +268,19 @@ h4 {
             create: false
         });
 
-           var selectProvinsi = $('#provinsi').data('selectize');
+         var selectProvinsi = $('#provinsi').data('selectize');
 
-           var selectKota = $('#kabupaten').data('selectize');
-           selectKota.disable();
+         var selectKota = $('#kabupaten').data('selectize');
+         selectKota.disable();
 
-           var selectKecamatan = $('#kecamatan').data('selectize');
-           selectKecamatan.disable();
+         var selectKecamatan = $('#kecamatan').data('selectize');
+         selectKecamatan.disable();
 
-           var selectKelurahan = $('#kelurahan').data('selectize');
-           selectKelurahan.disable();
+         var selectKelurahan = $('#kelurahan').data('selectize');
+         selectKelurahan.disable();
 
-           var setKecamatanOptions = function (callback, id)
-           {
+         var setKecamatanOptions = function (callback, id)
+         {
             clearTimeout(timeOutS);
             var id_kabupaten = $('#kabupaten').val();
             var kecamatan = [];
@@ -297,9 +300,13 @@ h4 {
                 selectKecamatan.settings.placeholder = "Cari Kecamatan ...";
                 selectKecamatan.updatePlaceholder();
                 selectKecamatan.enable();
-                selectKecamatan.focus();
-                console.log(kecamatan);
-            });
+                if (lokasi_pelanggan > 0) {
+                    selectKecamatan.setValue(kecamatan_pelanggan);
+                }else{
+                 selectKecamatan.focus(); 
+               }
+               console.log(kecamatan);
+           });
         };
 
         var setKotaOptions = function (callback, id)
@@ -322,9 +329,13 @@ h4 {
                 selectKota.settings.placeholder = "Cari Kabupaten atau Kota ...";
                 selectKota.updatePlaceholder();
                 selectKota.enable();
-                selectKota.focus();
-                console.log(kabupaten);
-            });
+                if (lokasi_pelanggan > 0) {
+                 selectKota.setValue(kabupaten_pelanggan);
+             }else{
+                 selectKota.focus(); 
+             }
+             console.log(kabupaten);
+         });
         };
 
         var setKelurahanOptions = function (callback, id)
@@ -347,11 +358,18 @@ h4 {
                 selectKelurahan.settings.placeholder = "Cari Kelurahan ...";
                 selectKelurahan.updatePlaceholder();
                 selectKelurahan.enable();
-                selectKelurahan.focus();
-                console.log(kelurahan);
-            });
+                if (lokasi_pelanggan > 0) {
+                   selectKelurahan.setValue(kelurahan_pelanggan);
+               }else{
+                   selectKelurahan.focus(); 
+               }
+               console.log(kelurahan);
+           });
         };
 
+        if (lokasi_pelanggan > 0) {        
+            selectProvinsi.setValue(provinsi_pelanggan);
+        }
 
     });
 

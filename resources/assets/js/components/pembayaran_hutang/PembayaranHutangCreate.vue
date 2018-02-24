@@ -131,8 +131,8 @@
                                                   <tbody v-if="dataSuplierHutang.length > 0 && loading == false"  class="data-ada" >
                                                     <tr v-for="dataSuplierHutangs, index in dataSuplierHutang" v-bind:id="'bayar-' + dataSuplierHutangs.id_pembelian" v-on:click="bayarHutangEntry(dataSuplierHutangs.id_pembelian, index,dataSuplierHutangs.no_faktur,dataSuplierHutangs.nilai_kredit,dataSuplierHutangs.jatuh_tempo)">
                                                       <td>{{ dataSuplierHutangs.no_faktur }}</td>
-                                                       <td>{{ dataSuplierHutangs.total }}</td>
-                                                        <td style="text-align:right;">{{ dataSuplierHutangs.nilai_kredit }}</td>
+                                                       <td>{{ dataSuplierHutangs.total | pemisahTitik }}</td>
+                                                        <td style="text-align:right;">{{ dataSuplierHutangs.nilai_kredit | pemisahTitik }}</td>
                                                         <td style="text-align:right;">{{ dataSuplierHutangs.tanggal_jatuh_tempo }}</td>
                                                         <td style="text-align:right;">{{ dataSuplierHutangs.waktu }}</td>
                                                     </tr>

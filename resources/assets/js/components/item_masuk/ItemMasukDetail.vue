@@ -48,7 +48,7 @@
 
              <td>{{ detail_item_masuk.no_faktur }} </td>
              <td>{{ detail_item_masuk.kode_produk }} - {{ detail_item_masuk.nama_produk }}</td>
-             <td>{{ detail_item_masuk.jumlah_produk }} </td>
+             <td>{{ detail_item_masuk.jumlah_produk | pemisahTitik }} </td>
            </tr>
          </tbody>					
          <tbody class="data-tidak-ada" v-else>
@@ -96,8 +96,8 @@ export default {
     app.getFakturItemMasuk();
     app.getResults();
 
-  },
-  watch: {
+    },
+    watch: {
         // whenever question changes, this function will run
         pencarian: function (newQuestion) {
         	this.getHasilPencarian();
@@ -105,6 +105,17 @@ export default {
         },
 
       },
+    filters: {
+    pemisahTitik: function (value) {      
+        var angka = [value];
+        var numberFormat = new Intl.NumberFormat('es-ES');
+        var formatted = angka.map(numberFormat.format);
+        return formatted.join('; ');
+    },
+    tanggal: function (value) {
+            return moment(String(value)).format('DD/MM/YYYY')
+        }
+    },   
       methods: {
        getResults(page) {
         var app = this;	
