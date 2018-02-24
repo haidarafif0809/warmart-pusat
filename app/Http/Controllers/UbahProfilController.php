@@ -34,6 +34,17 @@ class UbahProfilController extends Controller
 
         //DATA LOKASI PELANGGAN
         $lokasi_pelanggan = LokasiPelanggan::where('id_pelanggan', $user->id);
+        if ($lokasi_pelanggan->count() > 0 ) {          
+            $provinsi_pelanggan = $lokasi_pelanggan->first()->provinsi;
+            $kabupaten_pelanggan = $lokasi_pelanggan->first()->kabupaten;
+            $kecamatan_pelanggan = $lokasi_pelanggan->first()->kecamatan;
+            $kelurahan_pelanggan = $lokasi_pelanggan->first()->kelurahan;
+        }else{            
+            $provinsi_pelanggan = "";
+            $kabupaten_pelanggan = "";
+            $kecamatan_pelanggan = "";
+            $kelurahan_pelanggan = "";
+        }
 
         $provinsi = Indonesia::allProvinces()->pluck('name', 'id');
 
@@ -42,7 +53,7 @@ class UbahProfilController extends Controller
 
         $keranjang_belanjaan = KeranjangBelanja::with(['produk', 'pelanggan'])->where('id_pelanggan', Auth::user()->id)->get();
         $cek_belanjaan       = $keranjang_belanjaan->count();
-        return view('ubah_profil.ubah_profil_pelanggan', ['user' => $pelanggan, 'pelanggan' => $pelanggan, 'komunitas_pelanggan' => $komunitas_pelanggan, 'cek_belanjaan' => $cek_belanjaan, 'logo_warmart' => $logo_warmart, 'lokasi_pelanggan' => $lokasi_pelanggan, 'setting_aplikasi' => $setting_aplikasi, 'provinsi' => $provinsi]);
+        return view('ubah_profil.ubah_profil_pelanggan', ['user' => $pelanggan, 'pelanggan' => $pelanggan, 'komunitas_pelanggan' => $komunitas_pelanggan, 'cek_belanjaan' => $cek_belanjaan, 'logo_warmart' => $logo_warmart, 'lokasi_pelanggan' => $lokasi_pelanggan, 'setting_aplikasi' => $setting_aplikasi, 'provinsi' => $provinsi, 'provinsi_pelanggan' => $provinsi_pelanggan,'kabupaten_pelanggan'=>$kabupaten_pelanggan,'kecamatan_pelanggan'=> $kecamatan_pelanggan,'kelurahan_pelanggan'=>$kelurahan_pelanggan]);
     }
 
 //UBAH PROFIL USER PELANGGAN
