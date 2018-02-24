@@ -33,25 +33,16 @@ class UbahProfilController extends Controller
         $komunitas_pelanggan = KomunitasCustomer::where('user_id', $user->id)->first();
 
         //DATA LOKASI PELANGGAN
-        $lokasi_pelanggan = LokasiPelanggan::where('id_pelanggan', $user->id)->first();
+        $lokasi_pelanggan = LokasiPelanggan::where('id_pelanggan', $user->id);
 
         $provinsi = Indonesia::allProvinces()->pluck('name', 'id');
 
-        if ($lokasi_pelanggan != null) {
-            $kabupaten = Indonesia::allCities()->where('province_id', $lokasi_pelanggan->provinsi)->pluck('name', 'id');
-            $kecamatan = Indonesia::allDistricts()->where('city_id', $lokasi_pelanggan->kabupaten)->pluck('name', 'id');
-            $kelurahan = Indonesia::allVillages()->where('district_id', $lokasi_pelanggan->kecamatan)->pluck('name', 'id');
-        } else {
-            $kabupaten = "";
-            $kecamatan = "";
-            $kelurahan = "";
-        }
         //SETTING APLIKASI
         $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
 
         $keranjang_belanjaan = KeranjangBelanja::with(['produk', 'pelanggan'])->where('id_pelanggan', Auth::user()->id)->get();
         $cek_belanjaan       = $keranjang_belanjaan->count();
-        return view('ubah_profil.ubah_profil_pelanggan', ['user' => $pelanggan, 'pelanggan' => $pelanggan, 'komunitas_pelanggan' => $komunitas_pelanggan, 'cek_belanjaan' => $cek_belanjaan, 'logo_warmart' => $logo_warmart, 'lokasi_pelanggan' => $lokasi_pelanggan, 'provinsi' => $provinsi, 'kabupaten' => $kabupaten, 'kecamatan' => $kecamatan, 'kelurahan' => $kelurahan, 'setting_aplikasi' => $setting_aplikasi]);
+        return view('ubah_profil.ubah_profil_pelanggan', ['user' => $pelanggan, 'pelanggan' => $pelanggan, 'komunitas_pelanggan' => $komunitas_pelanggan, 'cek_belanjaan' => $cek_belanjaan, 'logo_warmart' => $logo_warmart, 'lokasi_pelanggan' => $lokasi_pelanggan, 'setting_aplikasi' => $setting_aplikasi, 'provinsi' => $provinsi]);
     }
 
 //UBAH PROFIL USER PELANGGAN
@@ -304,9 +295,9 @@ class UbahProfilController extends Controller
         # Buat pilihan "Switch Case" berdasarkan variabel "type" dari form
         switch ($type_wilayah):
     # untuk kasus "kabupaten"
-    case 'kabupaten':
+        case 'kabupaten':
         if ($lokasi_pelanggan != null) {
-                $return = $this->editLokasi($lokasi_pelanggan, $type_wilayah);
+            $return = $this->editLokasi($lokasi_pelanggan, $type_wilayah);
         } else {
             $return = "<option value=''>--PILIH KABUPATEN--</option>";
         }
@@ -319,7 +310,7 @@ class UbahProfilController extends Controller
         return $return;
         break;
     # untuk kasus "kecamatan"
-    case 'kecamatan':
+        case 'kecamatan':
         if ($lokasi_pelanggan != null) {
             $return = $this->editLokasi($lokasi_pelanggan, $type_wilayah);
         } else {
@@ -333,7 +324,7 @@ class UbahProfilController extends Controller
         return $return;
         break;
     # untuk kasus "kelurahan"
-    case 'kelurahan':
+        case 'kelurahan':
         if ($lokasi_pelanggan != null) {
             $return = $this->editLokasi($lokasi_pelanggan, $type_wilayah);
         } else {
@@ -367,6 +358,16 @@ class UbahProfilController extends Controller
             return "<option value='$lokasi_kelurahan->id'>$lokasi_kelurahan->name</option>";
         }
         throw new Exception('Tidak ada type ');
+    }
+
+    public function cekWilayahPelanggan(Request $request){        
+        if ($request->type == "kabupaten") {
+            return Indonesia::allCities()->where('province_id', $request->id_provinsi);
+        }else if ($request->type == "kecamatan") {
+            return Indonesia::allDistricts()->where('city_id', $request->id_kabupaten);
+        }else if ($request->type == "kelurahan") {
+            return Indonesia::allVillages()->where('district_id', $request->id_kecamatan);
+        }
     }
 
 }
