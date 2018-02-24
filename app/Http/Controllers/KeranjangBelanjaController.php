@@ -22,7 +22,7 @@ class KeranjangBelanjaController extends Controller
         $this->seo();
         $agent = new Agent();
 
-        $keranjang_belanjaan = KeranjangBelanja::with(['produk', 'pelanggan'])->where('id_pelanggan', Auth::user()->id)->get();
+        $keranjang_belanjaan = KeranjangBelanja::with(['produk', 'pelanggan'])->where('id_pelanggan', Auth::user()->id)->orderBy('id_keranjang_belanja','desc')->get();
         $cek_belanjaan       = $keranjang_belanjaan->count();
 
         $jumlah_produk = KeranjangBelanja::select([DB::raw('IFNULL(SUM(jumlah_produk),0) as total_produk')])->where('id_pelanggan', Auth::user()->id)->first();

@@ -5,46 +5,46 @@ first();
 @extends('layouts.app_pelanggan')
 @section('content')
 <style type="text/css">
-  .page-header.header-small {
-    height: 35vh;
-    min-height: 35vh;
-  }
-  .ecommerce-page .page-header .container {
-    padding-top: 10vh;
-  }
-  h4 {
-    @if(Agent::isMobile())
-    font-size: 1.2em;
-    line-height: 1.4em;
-    margin: 20px 0 10px;
-    @endif
-  }
-  .panel .panel-heading {
-    background-color: transparent;
-    border-bottom: 2px solid #ddd;
-    padding: 5px 0px 5px 0px;
-  }
-  .buttonColor{
-    background-color: #2ac326  
-  }
-  .validationProvinsi{
-    display: none;
-    color: red;
-  }
-  .validationKota{
-    display: none;
-    color: red;
-  }
-  .validationAlamat{
-    display: none;
-    color: red;
-  }
-  #formAlamat{
-    display: none;
-  }
-  .modal {
-    overflow-y:auto;
-  }
+.page-header.header-small {
+  height: 35vh;
+  min-height: 35vh;
+}
+.ecommerce-page .page-header .container {
+  padding-top: 10vh;
+}
+h4 {
+  @if(Agent::isMobile())
+  font-size: 1.2em;
+  line-height: 1.4em;
+  margin: 20px 0 10px;
+  @endif
+}
+.panel .panel-heading {
+  background-color: transparent;
+  border-bottom: 2px solid #ddd;
+  padding: 5px 0px 5px 0px;
+}
+.buttonColor{
+  background-color: #2ac326  
+}
+.validationProvinsi{
+  display: none;
+  color: red;
+}
+.validationKota{
+  display: none;
+  color: red;
+}
+.validationAlamat{
+  display: none;
+  color: red;
+}
+#formAlamat{
+  display: none;
+}
+.modal {
+  overflow-y:auto;
+}
 </style>
 
 <?php
@@ -358,27 +358,27 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
               <div class="row">
                 <div class="col-md-4"><h5><b>Total Belanja</b></h5></div>
                 <div class="col-md-3"><h5><b>:</h5></div>
-                <div class="col-md-5"><h5 class="text-danger"><b class="text-right" id="total_belanja" data-total="{{$subtotal}}">Rp. {{ number_format($subtotal,0,',','.') }}</b></h5></div>
+                  <div class="col-md-5"><h5 class="text-danger"><b class="text-right" id="total_belanja" data-total="{{$subtotal}}">Rp. {{ number_format($subtotal,0,',','.') }}</b></h5></div>
+                </div>
               </div>
+
             </div>
 
+            @if($setting_aplikasi->tipe_aplikasi == 0)
+            {!! Form::button('Selesai Pesanan <i class="material-icons">keyboard_arrow_right</i> ', ['id'=>'SelesaikanPesanan','class'=>'btn btn-round pull-right', 'type'=>'button', 'style'=>'background-color: #01573e']) !!}
+            @else
+            {!! Form::button('Selesai Pesanan <i class="material-icons">keyboard_arrow_right</i> ', ['id'=>'SelesaikanPesanan','class'=>'btn btn-round pull-right buttonColor', 'type'=>'button']) !!}
+            @endif 
+
+            @endif
+
+            {!! Form::close() !!}
           </div>
-
-          @if($setting_aplikasi->tipe_aplikasi == 0)
-          {!! Form::button('Selesai Pesanan <i class="material-icons">keyboard_arrow_right</i> ', ['id'=>'SelesaikanPesanan','class'=>'btn btn-round pull-right', 'type'=>'button', 'style'=>'background-color: #01573e']) !!}
-          @else
-          {!! Form::button('Selesai Pesanan <i class="material-icons">keyboard_arrow_right</i> ', ['id'=>'SelesaikanPesanan','class'=>'btn btn-round pull-right buttonColor', 'type'=>'button']) !!}
-          @endif 
-
           @endif
-
-          {!! Form::close() !!}
         </div>
-        @endif
       </div>
     </div>
   </div>
-</div>
 </div> <!-- end-main-raised -->
 @endsection
 
@@ -520,7 +520,8 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
         });
 
       });
-      $selectLayananKurir[0].selectize.addOption(options_layanan);    
+      $selectLayananKurir[0].selectize.addOption(options_layanan);   
+      console.log(options_layanan); 
 
       if (status_layanan == 0) {
         swal({
