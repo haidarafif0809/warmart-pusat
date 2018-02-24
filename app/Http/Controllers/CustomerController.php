@@ -35,7 +35,7 @@ class CustomerController extends Controller
 
     public function view()
     {
-        $customer = Customer::where('tipe_user', 3)->paginate(10);
+        $customer = Customer::where('tipe_user', 3)->orderBy('created_at', 'DESC')->paginate(10);
         return response()->json($customer);
     }
 
