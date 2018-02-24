@@ -41,10 +41,10 @@
 		<tbody>
 
 			@foreach ($detail_penjualan as $detail_penjualans)			
-			<tr><td style="padding: 3px;"> {{title_case($detail_penjualans->produk->nama_barang)}} </td><td style="padding:3px" align="right"> {{number_format($detail_penjualans->harga_produk, 2, ',', '.')}}</td><td  align="right" style="padding:3px">{{number_format($detail_penjualans->jumlah_produk, 2, ',', '.')}}</td><td  align="right" style="padding:3px">{{number_format($detail_penjualans->harga_produk * $detail_penjualans->jumlah_produk, 2, ',', '.')}}</td></tr>
+			<tr><td style="padding: 3px;"> {{title_case($detail_penjualans->produk->nama_barang)}} </td><td style="padding:3px" align="right"> {{number_format($detail_penjualans->harga_produk, 0, ',', '.')}}</td><td  align="right" style="padding:3px">{{$detail_penjualans->jumlah_produk}}</td><td  align="right" style="padding:3px">{{number_format($detail_penjualans->harga_produk * $detail_penjualans->jumlah_produk, 0, ',', '.')}}</td></tr>
 			@endforeach
-			<tr><td style="padding: 3px;"> Subtotal </td><td style="padding:3px" align="right">:</td><td  align="right" style="padding:3px"></td><td  align="right" style="padding:3px">{{number_format($subtotal, 2, ',', '.')}}</td></tr>
-			<tr><td style="padding: 3px;"> Total </td><td style="padding:3px" align="right">:</td><td  align="right" style="padding:3px"></td><td  align="right" style="padding:3px">{{number_format($penjualan->total, 2, ',', '.')}}</td></tr>
+			<tr><td style="padding: 3px;"> Subtotal </td><td style="padding:3px" align="right">:</td><td  align="right" style="padding:3px"></td><td  align="right" style="padding:3px">{{number_format($subtotal, 0, ',', '.')}}</td></tr>
+			<tr><td style="padding: 3px;"> Total </td><td style="padding:3px" align="right">:</td><td  align="right" style="padding:3px"></td><td  align="right" style="padding:3px">{{number_format($penjualan->total, 0, ',', '.')}}</td></tr>
 		</tbody>
 	</table>
 	
