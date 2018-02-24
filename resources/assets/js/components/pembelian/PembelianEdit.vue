@@ -551,7 +551,7 @@ export default {
       return this.$store.state.kas
     },
     suplier(){
-      return this.$store.state.suplier
+      return this.$store.getters.suplier_pembelian
     }
   }),
   watch: {

@@ -218,7 +218,17 @@ class SuplierController extends Controller
     }
 
     public function dataSuplier(){
+                
         $suplier = Suplier::select('id', 'nama_suplier')->where('warung_id', Auth::user()->id_warung)->get();
-        return response()->json($suplier);
+        $array     = array(['id' => '', 'nama_suplier' => 'SEMUA SUPLIER']);
+        foreach ($suplier as $supliers) {
+            array_push($array, [
+                'id'             => $supliers->id,
+                'nama_suplier' => $supliers->nama_suplier]);
+        }
+
+        return response()->json($array);
+
     }
+
 }
