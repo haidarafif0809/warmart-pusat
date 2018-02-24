@@ -185,13 +185,26 @@ class DetailPenjualan extends Model
     // LAPORAN PENJUALAN ONLINE PER PRODUK
     public function scopeLaporanPenjualanOnlineProduk($query_laporan_penjualan_online_produk, $request)
     {
-        if ($request->produk != "") {
+        if ($request->produk != "" AND $request->kasir != "") {
             $query_laporan_penjualan_online_produk = $this->queryLaporanPenjualanOnline($request)
                 ->where('detail_penjualans.id_produk', $request->produk)
+                ->where('detail_penjualans.created_by', $request->kasir)
                 ->where('penjualans.id_warung', Auth::user()->id_warung)
                 ->groupBy('detail_penjualans.id_produk')
                 ->orderBy('detail_penjualans.created_at', 'desc');
-        } else {
+        }elseif($request->produk != "" AND $request->kasir == ""){
+                $query_laporan_penjualan_online_produk = $this->queryLaporanPenjualanOnline($request)
+                 ->where('detail_penjualans.id_produk', $request->produk)
+                ->where('penjualans.id_warung', Auth::user()->id_warung)
+                ->groupBy('detail_penjualans.id_produk')
+                ->orderBy('detail_penjualans.created_at', 'desc');
+        }elseif($request->produk == "" AND $request->kasir != ""){
+                $query_laporan_penjualan_online_produk = $this->queryLaporanPenjualanOnline($request)
+                ->where('detail_penjualans.created_by', $request->kasir)
+                ->where('penjualans.id_warung', Auth::user()->id_warung)
+                ->groupBy('detail_penjualans.id_produk')
+                ->orderBy('detail_penjualans.created_at', 'desc');
+        }  else {
             $query_laporan_penjualan_online_produk = $this->queryLaporanPenjualanOnline($request)
                 ->where('penjualans.id_warung', Auth::user()->id_warung)
                 ->groupBy('detail_penjualans.id_produk')
@@ -203,11 +216,24 @@ class DetailPenjualan extends Model
     // LAPORAN PENJUALAN ONLINE PER PELANGGAN
     public function scopeLaporanPenjualanOnlinePelanggan($query_laporan_penjualan_online_pelanggan, $request)
     {
-        if ($request->pelanggan != "") {
+        if ($request->pelanggan != "" AND $request->kasir != "") {
+            $query_laporan_penjualan_online_pelanggan = $this->queryLaporanPenjualanOnline($request)
+                ->where('penjualans.id_pelanggan', $request->pelanggan)
+                ->where('detail_penjualans.created_by', $request->kasir)
+                ->where('penjualans.id_warung', Auth::user()->id_warung)
+                ->groupBy('penjualans.id_pelanggan', 'barangs.id')
+                ->orderBy('detail_penjualans.created_at', 'desc');
+         } elseif ($request->pelanggan != "" AND $request->kasir == "") {
             $query_laporan_penjualan_online_pelanggan = $this->queryLaporanPenjualanOnline($request)
                 ->where('penjualans.id_pelanggan', $request->pelanggan)
                 ->where('penjualans.id_warung', Auth::user()->id_warung)
-                ->groupBy('penjualans.id_pelanggan', 'barangs.id')
+                ->groupBy('detail_penjualans.id_produk')
+                ->orderBy('detail_penjualans.created_at', 'desc');
+         } elseif ($request->pelanggan == "" AND $request->kasir != "") {
+            $query_laporan_penjualan_online_pelanggan = $this->queryLaporanPenjualanOnline($request)
+                ->where('detail_penjualans.created_by', $request->kasir)
+                ->where('penjualans.id_warung', Auth::user()->id_warung)
+                ->groupBy('detail_penjualans.id_produk')
                 ->orderBy('detail_penjualans.created_at', 'desc');
         } else {
             $query_laporan_penjualan_online_pelanggan = $this->queryLaporanPenjualanOnline($request)
@@ -239,12 +265,25 @@ class DetailPenjualan extends Model
     // TOTAL PENJUALAN ONLINE PER PRODUK
     public function scopeTotalLaporanPenjualanOnlineProduk($query_total_penjualan_online_produk, $request)
     {
-        if ($request->produk != "") {
+        if ($request->produk != "" AND $request->kasir != "") {
             $query_total_penjualan_online_produk = $this->queryTotalPenjualanOnline($request)
+                ->where('detail_penjualans.created_by', $request->kasir)
                 ->where('detail_penjualans.id_produk', $request->produk)
+                ->where('penjualans.id_warung', Auth::user()->id_warung)
+                ->orderBy('detail_penjualans.created_at', 'desc');
+        }elseif ($request->produk != "" AND $request->kasir == "") {
+             $query_total_penjualan_online_produk = $this->queryTotalPenjualanOnline($request)
+                ->where('detail_penjualans.id_produk', $request->produk)
+                ->where('penjualans.id_warung', Auth::user()->id_warung)
+                ->orderBy('detail_penjualans.created_at', 'desc');
+        }elseif ($request->produk == "" AND $request->kasir != "") {
+             $query_total_penjualan_online_produk = $this->queryTotalPenjualanOnline($request)
+                ->where('detail_penjualans.created_by', $request->kasir)
+                ->where('penjualans.id_warung', Auth::user()->id_warung)
                 ->orderBy('detail_penjualans.created_at', 'desc');
         } else {
             $query_total_penjualan_online_produk = $this->queryTotalPenjualanOnline($request)
+                ->where('penjualans.id_warung', Auth::user()->id_warung)
                 ->orderBy('detail_penjualans.created_at', 'desc');
         }
 
@@ -254,12 +293,25 @@ class DetailPenjualan extends Model
     // TOTAL PENJUALAN ONLINE PER PELANGGAN
     public function scopeTotalLaporanPenjualanOnlinePelanggan($query_total_penjualan_online_pelanggan, $request)
     {
-        if ($request->pelanggan != "") {
+        if ($request->pelanggan != "" AND $request->kasir != "") {
             $query_total_penjualan_online_pelanggan = $this->queryTotalPenjualanOnline($request)
+                ->where('detail_penjualans.created_by', $request->kasir)
                 ->where('penjualans.id_pelanggan', $request->pelanggan)
+                ->where('penjualans.id_warung', Auth::user()->id_warung)
+                ->orderBy('detail_penjualans.created_at', 'desc');
+        }elseif ($request->pelanggan != "" AND $request->kasir == "") {
+             $query_total_penjualan_online_pelanggan = $this->queryTotalPenjualanOnline($request)
+                ->where('penjualans.id_pelanggan', $request->pelanggan)
+                ->where('penjualans.id_warung', Auth::user()->id_warung)
+                ->orderBy('detail_penjualans.created_at', 'desc');
+        }elseif ($request->pelanggan == "" AND $request->kasir != "") {
+             $query_total_penjualan_online_pelanggan = $this->queryTotalPenjualanOnline($request)
+                ->where('detail_penjualans.created_by', $request->kasir)
+                ->where('penjualans.id_warung', Auth::user()->id_warung)
                 ->orderBy('detail_penjualans.created_at', 'desc');
         } else {
             $query_total_penjualan_online_pelanggan = $this->queryTotalPenjualanOnline($request)
+                ->where('penjualans.id_warung', Auth::user()->id_warung)
                 ->orderBy('detail_penjualans.created_at', 'desc');
         }
 
@@ -292,9 +344,11 @@ class DetailPenjualan extends Model
     public function scopeCariLaporanPenjualanOnlineProduk($query_cari_laporan_penjualan_produk, $request)
     {
         $search = $request->search;
-        if ($request->produk != "") {
+        if ($request->produk != "" AND $request->kasir != "") {
             $query_cari_laporan_penjualan_produk = $this->queryCariLaporanPenjualanOnline($request)
                 ->where('detail_penjualans.id_produk', $request->produk)
+                ->where('detail_penjualans.created_by', $request->kasir)
+                ->where('penjualans.id_warung', Auth::user()->id_warung)
                 ->where(function ($query) use ($search) {
                     $query->orWhere('barangs.kode_barang', 'LIKE', '%' . $search . '%')
                         ->orWhere('barangs.nama_barang', 'LIKE', '%' . $search . '%')
@@ -304,8 +358,33 @@ class DetailPenjualan extends Model
                         ->orWhere('detail_penjualans.subtotal', 'LIKE', '%' . $search . '%');
                 });
 
+        }elseif ($request->produk != "" AND $request->kasir == "") {
+            $query_cari_laporan_penjualan_produk = $this->queryCariLaporanPenjualanOnline($request)
+                ->where('detail_penjualans.id_produk', $request->produk)
+                ->where('penjualans.id_warung', Auth::user()->id_warung)
+                ->where(function ($query) use ($search) {
+                    $query->orWhere('barangs.kode_barang', 'LIKE', '%' . $search . '%')
+                        ->orWhere('barangs.nama_barang', 'LIKE', '%' . $search . '%')
+                        ->orWhere('detail_penjualans.harga', 'LIKE', '%' . $search . '%')
+                        ->orWhere('detail_penjualans.potongan', 'LIKE', '%' . $search . '%')
+                        ->orWhere('detail_penjualans.jumlah', 'LIKE', '%' . $search . '%')
+                        ->orWhere('detail_penjualans.subtotal', 'LIKE', '%' . $search . '%');
+                });
+        }elseif ($request->produk == "" AND $request->kasir != "") {
+            $query_cari_laporan_penjualan_produk = $this->queryCariLaporanPenjualanOnline($request)
+                ->where('detail_penjualans.created_by', $request->kasir)
+                ->where('penjualans.id_warung', Auth::user()->id_warung)
+                ->where(function ($query) use ($search) {
+                    $query->orWhere('barangs.kode_barang', 'LIKE', '%' . $search . '%')
+                        ->orWhere('barangs.nama_barang', 'LIKE', '%' . $search . '%')
+                        ->orWhere('detail_penjualans.harga', 'LIKE', '%' . $search . '%')
+                        ->orWhere('detail_penjualans.potongan', 'LIKE', '%' . $search . '%')
+                        ->orWhere('detail_penjualans.jumlah', 'LIKE', '%' . $search . '%')
+                        ->orWhere('detail_penjualans.subtotal', 'LIKE', '%' . $search . '%');
+                });
         } else {
             $query_cari_laporan_penjualan_produk = $this->queryCariLaporanPenjualanOnline($request)
+                ->where('penjualans.id_warung', Auth::user()->id_warung)
                 ->where(function ($query) use ($search) {
                     $query->orWhere('barangs.kode_barang', 'LIKE', '%' . $search . '%')
                         ->orWhere('barangs.nama_barang', 'LIKE', '%' . $search . '%')
@@ -320,9 +399,37 @@ class DetailPenjualan extends Model
     public function scopeCariLaporanPenjualanOnlinePelanggan($query_cari_laporan_penjualan_pelanggan, $request)
     {
         $search = $request->search;
-        if ($request->pelanggan != "") {
+        if ($request->pelanggan != "" AND $request->kasir != "") {
             $query_cari_laporan_penjualan_pelanggan = $this->queryCariLaporanPenjualanOnline($request)
                 ->where('penjualans.id_pelanggan', $request->pelanggan)
+                ->where('detail_penjualans.created_by', $request->kasir)
+                ->where('penjualans.id_warung', Auth::user()->id_warung)
+                ->where(function ($query) use ($search) {
+                    $query->orWhere('barangs.kode_barang', 'LIKE', '%' . $search . '%')
+                        ->orWhere('users.name', 'LIKE', '%' . $search . '%')
+                        ->orWhere('barangs.nama_barang', 'LIKE', '%' . $search . '%')
+                        ->orWhere('detail_penjualans.harga', 'LIKE', '%' . $search . '%')
+                        ->orWhere('detail_penjualans.jumlah', 'LIKE', '%' . $search . '%')
+                        ->orWhere('detail_penjualans.subtotal', 'LIKE', '%' . $search . '%');
+                });
+
+        }elseif ($request->pelanggan != "" AND $request->kasir == "") {
+           $query_cari_laporan_penjualan_pelanggan = $this->queryCariLaporanPenjualanOnline($request)
+                ->where('penjualans.id_pelanggan', $request->pelanggan)
+                ->where('penjualans.id_warung', Auth::user()->id_warung)
+                ->where(function ($query) use ($search) {
+                    $query->orWhere('barangs.kode_barang', 'LIKE', '%' . $search . '%')
+                        ->orWhere('users.name', 'LIKE', '%' . $search . '%')
+                        ->orWhere('barangs.nama_barang', 'LIKE', '%' . $search . '%')
+                        ->orWhere('detail_penjualans.harga', 'LIKE', '%' . $search . '%')
+                        ->orWhere('detail_penjualans.jumlah', 'LIKE', '%' . $search . '%')
+                        ->orWhere('detail_penjualans.subtotal', 'LIKE', '%' . $search . '%');
+                });
+
+        }elseif ($request->pelanggan == "" AND $request->kasir != "") {
+           $query_cari_laporan_penjualan_pelanggan = $this->queryCariLaporanPenjualanOnline($request)
+                ->where('detail_penjualans.created_by', $request->kasir)
+                ->where('penjualans.id_warung', Auth::user()->id_warung)
                 ->where(function ($query) use ($search) {
                     $query->orWhere('barangs.kode_barang', 'LIKE', '%' . $search . '%')
                         ->orWhere('users.name', 'LIKE', '%' . $search . '%')
@@ -334,6 +441,7 @@ class DetailPenjualan extends Model
 
         } else {
             $query_cari_laporan_penjualan_pelanggan = $this->queryCariLaporanPenjualanOnline($request)
+                ->where('penjualans.id_warung', Auth::user()->id_warung)
                 ->where(function ($query) use ($search) {
                     $query->orWhere('barangs.kode_barang', 'LIKE', '%' . $search . '%')
                         ->orWhere('users.name', 'LIKE', '%' . $search . '%')

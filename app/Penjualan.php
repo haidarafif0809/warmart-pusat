@@ -79,7 +79,7 @@ class Penjualan extends Model
     // LAP. LABA KOTOR PENJUALAN PESANAN
     public function scopeLaporanLabaKotorPesanan($query_laporan_laba_kotor, $request)
     {
-        if ($request->pelanggan == "" || $request->pelanggan == null || $request->pelanggan == 0) {
+        if ($request->pelanggan == "" ) {
             $query_laporan_laba_kotor = Penjualan::select(['penjualans.id', 'penjualans.id_pelanggan', 'penjualans.total', 'penjualans.created_at', 'users.name'])
                 ->leftJoin('users', 'users.id', '=', 'penjualans.id_pelanggan')
                 ->where(DB::raw('DATE(penjualans.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
@@ -91,7 +91,7 @@ class Penjualan extends Model
                 ->leftJoin('users', 'users.id', '=', 'penjualans.id_pelanggan')
                 ->where(DB::raw('DATE(penjualans.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
                 ->where(DB::raw('DATE(penjualans.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
-                ->where('users.id', $request->pelanggan)
+                ->where('penjualans.id_pelanggan', $request->pelanggan)
                 ->where('penjualans.id_warung', Auth::user()->id_warung)
                 ->orderBy('penjualans.id', 'desc');
         }
@@ -119,7 +119,7 @@ class Penjualan extends Model
                 ->leftJoin('users', 'users.id', '=', 'penjualans.id_pelanggan')
                 ->where(DB::raw('DATE(penjualans.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
                 ->where(DB::raw('DATE(penjualans.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
-                ->where('users.id', $request->pelanggan)
+                ->where('penjualans.id_pelanggan', $request->pelanggan)
                 ->where('penjualans.id_warung', Auth::user()->id_warung)
                 ->where(function ($query) use ($search) {
                     $query->orwhere('penjualans.id', 'LIKE', '%' . $search . '%')
@@ -151,11 +151,12 @@ class Penjualan extends Model
     }
 
     // DATA Jam Penjualan
-    public function scopeGrafikJamTransaksiPenjualan($query_grafik, $tanggal)
+    public function scopeGrafikJamTransaksiPenjualan($query_grafik, $request)
     {
         $query_grafik = Penjualan::select([DB::raw('COUNT(DATE_FORMAT(created_at, "%H")) as hitung')])
             ->where('id_warung', Auth::user()->id_warung)
-            ->where(DB::raw('DATE(created_at)'), '=', $this->tanggalSql($tanggal));
+            ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+            ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal));
 
         return $query_grafik;
     }

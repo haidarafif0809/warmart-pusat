@@ -126,7 +126,7 @@
                         SO
                     </span>
                     <span class="sidebar-normal">
-                        STOK OPNAME
+                        Stok Opname
                     </span>
                 </router-link>
             </li>
@@ -238,7 +238,7 @@
                         LJ
                     </span>
                     <span class="sidebar-normal">
-                        Laporan Jam Transaksi Penjualan
+                      Jam Transaksi Penjualan
                     </span>
                 </router-link>
             </li>
@@ -333,22 +333,22 @@
                 </router-link>
             </li>
             <li>
-                <router-link :to="{name: 'indexLaporanPenjualanTerbaik'}" class="menu-nav">
-                    <span class="sidebar-mini">
-                        LP
-                    </span>
-                    <span class="sidebar-normal">
-                        Laporan Penjualan Terbaik / Item
-                    </span>
-                </router-link>
-            </li>
-            <li>
                 <router-link :to="{name: 'indexLaporanPenjualanPelanggan'}" class="menu-nav">
                     <span class="sidebar-mini">
                         LP
                     </span>
                     <span class="sidebar-normal">
                         Laporan Penjualan /Pelanggan
+                    </span>
+                </router-link>
+            </li>
+            <li>
+                <router-link :to="{name: 'indexLaporanPenjualanTerbaik'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        LP
+                    </span>
+                    <span class="sidebar-normal">
+                        Penjualan Terbaik /Produk
                     </span>
                 </router-link>
             </li>

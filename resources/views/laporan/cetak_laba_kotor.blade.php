@@ -92,7 +92,7 @@ function pemisahTitik($angka)
 						<tr>
 							<td class="table1">{{ $data_laba_kotors['laba_kotor']->id }}</td>
 							<td class="table1">{{ date_format($data_laba_kotors['laba_kotor']->created_at, "d M Y") }}</td>
-							<td class="table1">{{ $data_laba_kotors['laba_kotor']->name }}</td>
+							<td class="table1">{{ $data_laba_kotors['pelanggan'] }}</td>
 							<td class="table1" align='right'>{{ pemisahTitik($data_laba_kotors['total']) }}</td>
 							<td class="table1" align='right'>{{ pemisahTitik($data_laba_kotors['hpp']) }}</td>
 							<td class="table1" align='right'>{{ pemisahTitik($data_laba_kotors['total_laba_kotor']) }}</td>

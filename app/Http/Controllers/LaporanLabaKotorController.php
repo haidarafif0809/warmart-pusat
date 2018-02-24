@@ -68,6 +68,9 @@ class LaporanLabaKotorController extends Controller
 //PROSES LABA KOTOR POS (OFFLINE)
     public function prosesLaporanLabaKotor(Request $request)
     {
+        if ($request->pelanggan == "semua") {
+            $request['pelanggan'] = "";
+        };
         $laporan_laba_kotor = PenjualanPos::laporanLabaKotorPos($request)->paginate(10);
 
         $array_laba_kotor = array();
@@ -94,6 +97,9 @@ class LaporanLabaKotorController extends Controller
 //PROSES LABA KOTOR PESANAN (ONLINE)
     public function prosesLaporanLabaKotorPesanan(Request $request)
     {
+        if ($request->pelanggan == "semua") {
+            $request['pelanggan'] = "";
+        };
         $laporan_laba_kotor = Penjualan::laporanLabaKotorPesanan($request)->paginate(10);
 
         $array_laba_kotor = array();
@@ -240,7 +246,9 @@ class LaporanLabaKotorController extends Controller
     {
         $request['dari_tanggal']   = $dari_tanggal;
         $request['sampai_tanggal'] = $sampai_tanggal;
-        $request['pelanggan']      = $pelanggan;
+        if ($pelanggan == "semua") {
+            $request['pelanggan'] = "";
+        };
 
         //QUERY LABA KOTOR POS
         $laporan_laba_kotor  = PenjualanPos::laporanLabaKotorPos($request);
@@ -277,11 +285,15 @@ class LaporanLabaKotorController extends Controller
                         $detail_penjualan = DetailPenjualanPos::select(DB::raw('SUM(subtotal) as subtotal'))->where('id_penjualan_pos', $laba_kotor->id)->where('warung_id', Auth::user()->id_warung)->first();
                         $total_laba_kotor = $detail_penjualan->subtotal - $hpp->total_hpp;
                         $laba_jual        = $total_laba_kotor - $laba_kotor->potongan;
-
+                        if ($laba_kotor->id_pelanggan == 0) {
+                            $pelanggan = 'Umum';
+                        } else {
+                            $pelanggan = $laba_kotor->name;
+                        }  
                         $sheet->row(++$row, [
                             $laba_kotor->id,
                             $laba_kotor->created_at,
-                            $laba_kotor->name,
+                            $pelanggan,
                             $detail_penjualan->subtotal = round($detail_penjualan->subtotal, 2),
                             $hpp->total_hpp = round($hpp->total_hpp, 2),
                             $total_laba_kotor = round($total_laba_kotor, 2),
@@ -358,8 +370,13 @@ class LaporanLabaKotorController extends Controller
             $detail_penjualan = DetailPenjualanPos::select(DB::raw('SUM(subtotal) as subtotal'))->where('id_penjualan_pos', $laba_kotor->id)->where('warung_id', Auth::user()->id_warung)->first();
             $total_laba_kotor = $detail_penjualan->subtotal - $hpp->total_hpp;
             $laba_jual        = $total_laba_kotor - $laba_kotor->potongan;
+                if ($laba_kotor->id_pelanggan == 0) {
+                   $pelanggan = 'Umum';
+                } else {
+                   $pelanggan = $laba_kotor->name;
+               }  
 
-            array_push($data_laba_kotor, ['laba_kotor' => $laba_kotor, 'hpp' => $hpp->total_hpp, 'total_laba_kotor' => $total_laba_kotor, 'laba_jual' => $laba_jual, 'total' => $detail_penjualan->subtotal]);
+            array_push($data_laba_kotor, ['laba_kotor' => $laba_kotor, 'hpp' => $hpp->total_hpp, 'total_laba_kotor' => $total_laba_kotor, 'laba_jual' => $laba_jual, 'total' => $detail_penjualan->subtotal,'pelanggan' => $pelanggan]);
         }
 
         return $data_laba_kotor;
@@ -387,7 +404,10 @@ class LaporanLabaKotorController extends Controller
 
         $request['dari_tanggal']   = $dari_tanggal;
         $request['sampai_tanggal'] = $sampai_tanggal;
-        $request['pelanggan']      = $pelanggan;
+
+        if ($pelanggan == "semua") {
+            $request['pelanggan'] = "";
+        };
 
         //PENJUALAN POS
         $laporan_laba_kotor = PenjualanPos::laporanLabaKotorPos($request)->get();
