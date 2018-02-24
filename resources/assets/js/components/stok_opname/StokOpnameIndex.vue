@@ -15,6 +15,14 @@
         font-size: 1em;
         font-weight: 300;
     }
+    .panel .panel-heading {
+        background-color: transparent;
+        border-bottom: 0px solid #ddd;
+        padding: 0px;
+    }
+    .btn {
+        margin: 6px 1px;
+    }
 </style>
 
 <template>  
@@ -56,7 +64,7 @@
                 <div class="card-content">
                     <h4 class="card-title"> Stok Opname</h4>
 
-                    <div class="col-md-3 col-xs-9">
+                    <div class="col-md-4 col-xs-12">
                         <div class="card card-produk" style="margin-bottom: 1px; margin-top: 1px;">
 
                             <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
@@ -66,7 +74,34 @@
                                 <input class="form-control" type="hidden"  v-model="inputStokOpname.produk"  name="produk" id="produk" v-shortkey="['f1']" @shortkey="openSelectizeProduk()">
                             </div>  
                         </div>
-                    </div>                   
+                    </div>
+
+                    <div class="col-md-2 col-xs-12">
+                        <div class="panel panel-default">
+                            <button class="btn btn-info collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                <i class="material-icons">date_range</i> Filter Periode
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 col-xs-12">
+                        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="form-group col-md-2">
+                                        <datepicker :input-class="'form-control'" placeholder="Dari Tanggal" v-model="filter.dari_tanggal" name="dari_tanggal" v-bind:id="'dari_tanggal'"></datepicker>             
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                        <datepicker :input-class="'form-control'" placeholder="Sampai Tanggal" v-model="filter.sampai_tanggal" name="sampai_tanggal" v-bind:id="'sampai_tanggal'"></datepicker>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <button class="btn btn-primary" id="btnSubmit" type="submit" style="margin: 0px 0px;" @click="submitStokOpname()"><i class="material-icons">search</i> Cari</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <br>
                     <div class="col-md-12 col-xs-12">
@@ -155,6 +190,10 @@
                     no_faktur: '',
                     jumlah_produk: '',
                 },
+                filter: {
+                    dari_tanggal: '',
+                    sampai_tanggal: new Date(),
+                },
                 placeholder_produk:{
                     placeholder: 'Cari Produk (F1) ...'
                 },
@@ -165,6 +204,9 @@
         },
         mounted() {
             var app = this;
+            var awal_tanggal = new Date();
+            awal_tanggal.setDate(1);
+            app.filter.dari_tanggal = awal_tanggal;
             app.$store.dispatch('LOAD_PRODUK_LIST')
             app.getResults();
         },
@@ -362,6 +404,30 @@
                 })
                 .catch(function (resp) {
                     alert("Tidak Dapat Menghapus Stok Opname");
+                });
+            },
+            submitStokOpname(){
+                var app = this;
+                app.prosesFilterPeriode();
+                // app.showButton();
+            },
+            prosesFilterPeriode(page) {
+                var app = this; 
+                var newFilter = app.filter;
+                if (typeof page === 'undefined') {
+                    page = 1;
+                }
+                app.loading = true,
+                axios.post(app.url+'/filter-periode?page='+page, newFilter)
+                .then(function (resp) {
+                    app.stokOpname = resp.data.data;
+                    app.stokOpnameData = resp.data;
+                    app.loading = false
+                    console.log(resp.data.data);
+                })
+                .catch(function (resp) {
+                    console.log(resp);
+                    alert("Tidak Dapat Memuat Stok Opname");
                 });
             },
             closeModalJumlahProduk(){  

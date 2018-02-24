@@ -88,7 +88,7 @@
 							<td >{{ $detail_pembayaran_hutangs->jatuh_tempo }}</td>
 							<td align="right">{{ number_format($detail_pembayaran_hutangs->hutang, 2, ',', '.') }}</td>
 							<td align="right">{{ number_format($detail_pembayaran_hutangs->potongan, 2, ',', '.') }}</td>
-							<td align="right">{{ number_format($detail_pembayaran_hutangs->total, 2, ',', '.') }}</td>
+							<td align="right">{{ number_format($detail_pembayaran_hutangs->hutang - $detail_pembayaran_hutangs->potongan, 2, ',', '.') }}</td>
 							<td align="right">{{ number_format($detail_pembayaran_hutangs->jumlah_bayar, 2, ',', '.') }}</td>
 							<td align="right">{{ number_format($detail_pembayaran_hutangs->subtotal_hutang - $detail_pembayaran_hutangs->jumlah_bayar, 2, ',', '.') }}</td>
 						</tr>

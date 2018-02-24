@@ -1,6 +1,6 @@
 <?php
-$settingFooter = \App\SettingFooter::select()->
-first();
+$settingFooter = \App\SettingFooter::select()->first();
+$foto_logo = \App\UserWarung::select()->where('tipe_user',4)->orderBy('id', 'asc')->limit(1)->first();
 ?>
 <!DOCTYPE doctype html>
 <html lang="en">
@@ -154,7 +154,15 @@ first();
             @if($setting_aplikasi->tipe_aplikasi == 0)
             <img class="navbar-brand" src="{{asset('/assets/img/examples/warmart_logo.png')}}"/> </a>
             @else
-            <img class="navbar-brand" src="{{asset('/assets/img/examples/topos_logo.png'.'?v=2')}}"/> </a>
+            @if( $foto_logo->foto_ktp != null)
+            <a href="{{ url('/') }}">
+              <img class="navbar-brand" src="{{asset('/foto_ktp_user/'.$foto_logo->foto_ktp.'').'?v=1'}}"/>
+            </a>
+            @else
+            <a href="{{ url('/') }}">
+              <img class="navbar-brand" src="{{asset('/assets/img/examples/topos_logo.png'.'?v=3')}}"/>
+            </a>
+            @endif
             @endif
           </a>
           @if(Agent::isMobile() && !Auth::check())
@@ -242,20 +250,47 @@ first();
             </li>
             @endif
             <li>
+              @if($setting_aplikasi->tipe_aplikasi == 0)
               <a href="https://info.war-mart.id">
                 <i class="material-icons">
                   info
                 </i>
                 SUPPORT Warmart
               </a>
+              @else
+              @if(Auth::check())                            
+              <a href="{{ url('/cara-memesan')}}" target='blank'>
+                <i class="material-icons">
+                  info
+                </i>
+                CARA MEMESAN
+              </a>
+              @else
+              <a href="{{ url('/cara-pemesanan')}}" target='blank'>
+                <i class="material-icons">
+                  info
+                </i>
+                CARA MEMESAN
+              </a>
+              @endif
+              @endif
             </li>
             <li>
+              @if($setting_aplikasi->tipe_aplikasi == 0)
               <a href="{{ url('/tentang-warmart')}}">
                 <i class="material-icons">
                   info
                 </i>
                 Tentang Warmart
               </a>
+              @else
+              <a href="<?=$settingFooter->about_link;?>">
+                <i class="material-icons">
+                  info
+                </i>
+                Tentang {{ $barang->warung->name }}
+              </a>
+              @endif
             </li>
             @if(Auth::check() && Auth::user()->tipe_user == 3)
             <li class="button-container">

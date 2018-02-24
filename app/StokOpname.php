@@ -55,6 +55,13 @@ class StokOpname extends Model
         //PROSES MEMBUAT NO. FAKTUR STOK OPNAME
     }
 
+    public function tanggalSql($tangal)
+    {
+        $date        = date_create($tangal);
+        $date_format = date_format($date, "Y-m-d");
+        return $date_format;
+    }
+
     public function scopeDataStokOpname($query_stok_opname)
     {
         $query_stok_opname->select(['stok_opnames.id', 'stok_opnames.no_faktur', 'stok_opnames.produk_id', 'stok_opnames.stok_sekarang', 'stok_opnames.jumlah_fisik', 'stok_opnames.selisih_fisik', 'stok_opnames.harga', 'stok_opnames.total', 'stok_opnames.keterangan', 'stok_opnames.created_by', 'stok_opnames.created_at', 'barangs.nama_barang', 'users.name as petugas'])
@@ -77,6 +84,19 @@ class StokOpname extends Model
             })->orderBy('stok_opnames.id', 'desc');
 
         return $query_cari_stok_opname;
+    }
+
+    public function scopeDataFilterStokOpname($query_stok_opname, $request)
+    {
+        $query_stok_opname->select(['stok_opnames.id', 'stok_opnames.no_faktur', 'stok_opnames.produk_id', 'stok_opnames.stok_sekarang', 'stok_opnames.jumlah_fisik', 'stok_opnames.selisih_fisik', 'stok_opnames.harga', 'stok_opnames.total', 'stok_opnames.keterangan', 'stok_opnames.created_by', 'stok_opnames.created_at', 'barangs.nama_barang', 'users.name as petugas'])
+            ->leftJoin('barangs', 'barangs.id', '=', 'stok_opnames.produk_id')
+            ->leftJoin('users', 'users.id', '=', 'stok_opnames.created_by')
+            ->where(DB::raw('DATE(stok_opnames.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+            ->where(DB::raw('DATE(stok_opnames.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+            ->where('stok_opnames.warung_id', Auth::user()->id_warung)
+            ->orderBy('stok_opnames.id', 'desc');
+
+        return $query_stok_opname;
     }
 
     public function scopeDataStokOpnamePerfaktur($query_stok_opname, $id)
