@@ -388,23 +388,35 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
   $(document).ready(function(){
 
     var $select = $('#provinsi').selectize({
-      valueField: 'province_id',
-      labelField: 'province',
-      searchField: 'province'
-    });
+     loadingClass: 'selectizeLoading',
+     valueField: 'province_id',
+     labelField: 'province',
+     searchField: 'province',
+     onChange: function (province_id) 
+     {
+      if (!province_id.length) return;
+      selectKota.clearOptions(); 
+      selectKota.settings.placeholder = "Tunggu Sebentar ...";
+      selectKota.updatePlaceholder();
+      selectKota.load(function (callback) { timeOutS = setTimeout(setKotaOptions, 500, callback, province_id); });
+    }
+  });
 
     var $selectKota = $('#kota').selectize({
-      valueField: 'city_id',
-      labelField: 'city_name',
-      searchField: 'city_name',
-      create: false
-    });
+     loadingClass: 'selectizeLoading',
+     valueField: 'city_id',
+     labelField: 'city_name',
+     searchField: 'city_name',
+     create: false
+   });
+    var selectKota = $('#kota').data('selectize');
 
     var $selectKurir = $('#kurir').selectize({
       sortField: 'text'
     });
 
     var $selectLayananKurir = $('#layanan_kurir').selectize({
+     loadingClass: 'selectizeLoading',
      valueField: 'id',
      labelField: 'service',
      searchField: 'service',
@@ -608,36 +620,35 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
 
 });
 
-  $(document).on('change', '#provinsi', function () {     
+  var setKotaOptions = function (callback, id_provinsi)
+  {
+    clearTimeout(timeOutS);
 
-    var id_provinsi = $(this).val();
+    $.getJSON('{{ Url("kota-destinasi-pengiriman") }}',{'_token': $('meta[name=csrf-token]').attr('content'),id_provinsi:id_provinsi}, function(resp){               
 
-    if (id_provinsi != '') {
+      callback(resp.rajaongkir.results);
+      var kabupaten_pelanggan = $("#kabupaten_pelanggan").val(); 
+      $.each(resp.rajaongkir.results, function (i, item) { 
 
-      $selectKota[0].selectize.clearOptions();               
-      $selectKota[0].selectize.focus();
-      var kabupaten_pelanggan = $("#kabupaten_pelanggan").val();
-
-      $.getJSON('{{ Url("kota-destinasi-pengiriman") }}',{'_token': $('meta[name=csrf-token]').attr('content'),id_provinsi:id_provinsi}, function(resp){
-
-       $selectKota[0].selectize.addOption(resp.rajaongkir.results);    
-       $.each(resp.rajaongkir.results, function (i, item) { 
         if (kabupaten_pelanggan == resp.rajaongkir.results[i].type+" "+resp.rajaongkir.results[i].city_name) {
           var kota = resp.rajaongkir.results[i].city_id;
           var alamat = $("#alamatPelanggan").val();
           var alamat_pengiriman = alamat +", Kota/Kab. "+resp.rajaongkir.results[i].city_name+",  "+resp.rajaongkir.results[i].province;
 
-          document.getElementById('kota').selectize.setValue(kota);
+          selectKota.setValue(kota); 
           $("#alamatPelanggan").val(alamat_pengiriman);
           $(".alamat_pengiriman").hide();
           $("#formAlamat").show();
+
+        }else{
+          selectKota.settings.placeholder = "Cari Kabupaten atau Kota ...";
+          selectKota.updatePlaceholder();  
+          selectKota.focus();  
         };
       }); 
-     });
-
-    }
-
-  });
+      console.log(resp.rajaongkir.results);
+    });
+  };
 
   $(document).on('click', '.alamat_pengiriman', function () {  
     $("#myModal").show();
