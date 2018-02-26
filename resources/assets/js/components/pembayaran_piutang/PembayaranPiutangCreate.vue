@@ -510,9 +510,6 @@ pencarian: function (newQuestion) {
 'inputTbsPembayaranPiutang.jumlah_bayar':function(){
     this.jumlahBayarPiutang()
 },
-'inputEditTbsPembayaranPiutang.potongan':function(){
-    this.potonganEditTbs()
-},
 'inputEditTbsPembayaranPiutang.jumlah_bayar':function(){
     this.editJumlahBayarPiutang()
 }
@@ -596,16 +593,16 @@ methods: {
         });
     }, 
     getSubtotalTbs(){
-    var app =  this;
-    var jenis_tbs = 1;
-    axios.get(app.url_piutang+'/subtotal-tbs-pembayaran-piutang/'+jenis_tbs)
-    .then(function (resp) {
-     app.pembayaranPiutang.subtotal += resp.data.subtotal;
+        var app =  this;
+        var jenis_tbs = 1;
+        axios.get(app.url_piutang+'/subtotal-tbs-pembayaran-piutang/'+jenis_tbs)
+        .then(function (resp) {
+         app.pembayaranPiutang.subtotal += resp.data.subtotal;
      })
-    .catch(function (resp) {
-      console.log(resp);
-    });
-  },       
+        .catch(function (resp) {
+          console.log(resp);
+      });
+    },       
     dataPiutang() {
         var app = this;
         axios.get(app.url_piutang+'/pilih-penjualan-piutang').then(function (resp) {
@@ -742,7 +739,6 @@ methods: {
     },
     editEntry(id, index, no_faktur_penjualan, pelanggan, jumlah_bayar, potongan, piutang) {
         var app = this;
-
         app.inputEditTbsPembayaranPiutang.piutang = piutang;
         app.inputEditTbsPembayaranPiutang.jumlah_bayar = jumlah_bayar;
         app.inputEditTbsPembayaranPiutang.jumlah_bayar_lama = jumlah_bayar;
@@ -756,8 +752,9 @@ methods: {
     editTbsPembayaranPiutang(jumlah_bayar_lama){
         var app = this;
         var newinputEditTbsPembayaranPiutang = app.inputEditTbsPembayaranPiutang;
+        var hasil_pengoperasian = parseFloat(app.inputEditTbsPembayaranPiutang.piutang) - parseFloat(app.inputEditTbsPembayaranPiutang.potongan)
 
-        if (app.inputEditTbsPembayaranPiutang.jumlah_bayar < 0) {
+        if (hasil_pengoperasian < 0) {
             app.alertTbs("Potongan Anda Melebihi Total Piutang");
             app.loading = false;
             app.inputEditTbsPembayaranPiutang.potongan = 0;
