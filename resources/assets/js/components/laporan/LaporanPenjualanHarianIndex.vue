@@ -49,7 +49,7 @@
 				filter: {
 					dari_tanggal: '',
 					sampai_tanggal: new Date(),
-					jenis_penjualan: '',
+					jenis_penjualan: 0,
 				},
 				placeholder_penjualan: {
 					placeholder: '--JENIS PENJUALAN--'
@@ -81,15 +81,10 @@
 
 				var dari_tanggal = app.dariTanggal(filter);
 				var sampai_tanggal = app.sampaiTanggal(filter);
-
-				if (filter.jenis_penjualan == "") {
-					app.alertGagal('Silakan Pilih Jenis Penjualan Terlebih Dahulu');					
+				if (filter.jenis_penjualan == 0) {
+					app.$router.replace('/laporan-penjualan-harian/view/'+dari_tanggal+'/'+sampai_tanggal);
 				}else{
-					if (filter.jenis_penjualan == 0) {
-						app.$router.replace('/laporan-penjualan-harian/view/'+dari_tanggal+'/'+sampai_tanggal);
-					}else{
-						app.$router.replace('/laporan-penjualan-harian-online/view/'+dari_tanggal+'/'+sampai_tanggal);
-					}
+					app.$router.replace('/laporan-penjualan-harian-online/view/'+dari_tanggal+'/'+sampai_tanggal);
 				}
 			},
 			alertGagal(pesan) {

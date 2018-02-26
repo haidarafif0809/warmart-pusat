@@ -392,9 +392,14 @@ export default {
 				app.pesananData = resp.data.data;
 				app.dataAgent = resp.data.data.agent;
 				app.loading = false;
-				if (resp.data.data.pesanan.kurir == 'cod' ||  resp.data.data.pesanan.kurir == '') {
+				if (resp.data.data.pesanan.kurir == 'cod' || resp.data.data.pesanan.kurir == '') {
 
 					app.servicePengiriman = "Bayar di Tempat"
+					app.waktuPengiriman	= "-"
+
+				}else if(resp.data.data.pesanan.kurir == 'ojek') {
+
+					app.servicePengiriman = resp.data.data.pesanan.metode_pembayaran
 					app.waktuPengiriman	= "-"
 
 				}else{
