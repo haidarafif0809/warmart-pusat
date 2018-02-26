@@ -511,9 +511,6 @@ pencarian: function (newQuestion) {
 'inputTbsPembayaranPiutang.jumlah_bayar':function(){
     this.jumlahBayarPiutang()
 },
-'inputEditTbsPembayaranPiutang.potongan':function(){
-    this.potonganEditTbs()
-},
 'inputEditTbsPembayaranPiutang.jumlah_bayar':function(){
     this.editJumlahBayarPiutang()
 }
@@ -768,8 +765,9 @@ methods: {
     editTbsPembayaranPiutang(jumlah_bayar_lama){
         var app = this;
         var newinputEditTbsPembayaranPiutang = app.inputEditTbsPembayaranPiutang;
-
-        if (app.inputEditTbsPembayaranPiutang.jumlah_bayar < 0) {
+        var hasil_pengoperasian = parseFloat(app.inputEditTbsPembayaranPiutang.piutang) - ( parseFloat(app.inputEditTbsPembayaranPiutang.potongan) + parseFloat(app.inputEditTbsPembayaranPiutang.jumlah_bayar) );
+        console.log(hasil_pengoperasian)
+        if (hasil_pengoperasian < 0) {
             app.alertTbs("Potongan Anda Melebihi Total Piutang");
             app.loading = false;
             app.inputEditTbsPembayaranPiutang.potongan = 0;

@@ -597,8 +597,8 @@ methods: {
         var jenis_tbs = 1;
         axios.get(app.url_piutang+'/subtotal-tbs-pembayaran-piutang/'+jenis_tbs)
         .then(function (resp) {
-         app.pembayaranPiutang.subtotal += resp.data.subtotal;
-     })
+           app.pembayaranPiutang.subtotal += resp.data.subtotal;
+       })
         .catch(function (resp) {
           console.log(resp);
       });
@@ -752,7 +752,7 @@ methods: {
     editTbsPembayaranPiutang(jumlah_bayar_lama){
         var app = this;
         var newinputEditTbsPembayaranPiutang = app.inputEditTbsPembayaranPiutang;
-        var hasil_pengoperasian = parseFloat(app.inputEditTbsPembayaranPiutang.piutang) - parseFloat(app.inputEditTbsPembayaranPiutang.potongan)
+        var hasil_pengoperasian = parseFloat(app.inputEditTbsPembayaranPiutang.piutang) - ( parseFloat(app.inputEditTbsPembayaranPiutang.potongan) + parseFloat(app.inputEditTbsPembayaranPiutang.jumlah_bayar) );
 
         if (hasil_pengoperasian < 0) {
             app.alertTbs("Potongan Anda Melebihi Total Piutang");
