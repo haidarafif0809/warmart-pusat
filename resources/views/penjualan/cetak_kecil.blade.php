@@ -21,9 +21,9 @@
 </head>
 <style type="text/css">
 
-p{
-	margin-top: 1px; margin-bottom: 1px;
-}
+	p{
+		margin-top: 1px; margin-bottom: 1px;
+	}
 
 </style>
 <body>
@@ -66,6 +66,7 @@ p{
 <script>
 	$(document).ready(function(){
 		window.print();
+		window.close();
 	});
 </script>
 @yield('scripts')
