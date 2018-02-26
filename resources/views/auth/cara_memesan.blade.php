@@ -50,6 +50,9 @@ $nama_toko = \App\Warung::select('name')->first()->name;
     h3{
         margin-top: 0px
     }
+    .navbar>.container .navbar-brand, .navbar>.container-fluid .navbar-brand {
+        margin-left: 0px;
+    }
 </style>
 <body class="off-canvas-sidebar">
     <nav class="navbar  navbar-fixed-top " color-on-scroll=" " id="sectionsNav" style="background-color:#2ac326;">
