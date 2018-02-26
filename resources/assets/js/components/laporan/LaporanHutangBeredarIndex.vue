@@ -29,7 +29,7 @@
 							<datepicker :input-class="'form-control'" placeholder="Sampai Tanggal" v-model="filter.sampai_tanggal" name="sampai_tanggal" v-bind:id="'sampai_tanggal'"></datepicker>
 						</div>
 						<div class="form-group col-md-2">
-							<selectize-component v-model="filter.suplier" :settings="placeholder_suplier" id="pilih_suplier"> 
+							<selectize-component v-model="filter.suplier" id="pilih_suplier"> 
 								<option v-for="supliers, index in suplier" v-bind:value="supliers.id" >{{ supliers.nama_suplier }}</option>
 							</selectize-component>
 						</div>
@@ -50,15 +50,24 @@
 									<th>No Transaksi</th>
 									<th>Supplier</th>
 									<th style="text-align:right">Nilai Transaksi</th>
-									<th style="text-align:right" >Potongan</th>
 									<th style="text-align:right">Dibayar</th>
 									<th style="text-align:right">Nilai Hutang</th>
 									<th style="text-align:right">Jatuh Tempo</th>
+									<th style="text-align:right">Umur Hutang</th>
 									<th style="text-align:right">Petugas</th>
 								</tr>
 							</thead>
 							<tbody v-if="hutangBeredar.length > 0 && loading == false"  class="data-ada">
 								<tr v-for="hutangBeredars, index in hutangBeredar" >
+									<td>{{ hutangBeredars.waktu }}</td>
+									<td>{{ hutangBeredars.no_faktur }}</td>
+									<td>{{ hutangBeredars.suplier }}</td>
+									<td align="right">{{ hutangBeredars.nilai_transaksi | pemisahTitik }}</td>
+									<td align="right">{{ hutangBeredars.pembayaran | pemisahTitik }}</td>
+									<td align="right">{{ hutangBeredars.sisa_hutang | pemisahTitik }}</td>
+									<td align="right">{{ hutangBeredars.jatuh_tempo | tanggal }}</td>
+									<td align="right">{{ hutangBeredars.umur_hutang | pemisahTitik }} Hari</td>
+									<td align="right">{{ hutangBeredars.petugas }}</td>
 								</tr>
 
 								<tr style="color:red">
@@ -66,8 +75,8 @@
 									<td></td>
 									<td></td>
 									<td align="right"></td>
-									<td align="right"></td>
-									<td align="right"></td>
+									<td align="right">{{ dataTotalHutangBeredar.pembayaran | pemisahTitik }}</td>
+									<td align="right">{{ dataTotalHutangBeredar.sisa_hutang | pemisahTitik }}</td>
 									<td align="right"></td>
 									<td align="right"></td>
 									<td align="right"></td>
@@ -102,6 +111,7 @@ export default {
 		return {
 			hutangBeredar: [],
 			hutangBeredarData: {},
+			dataTotalHutangBeredar: {},
 			filter: {
 				dari_tanggal: '',
 				sampai_tanggal: new Date(),
@@ -139,15 +149,17 @@ export default {
 			var numberFormat = new Intl.NumberFormat('es-ES');
 			var formatted = angka.map(numberFormat.format);
 			return formatted.join('; ');
-		}
+		},
+      tanggal: function (value) {
+        return moment(String(value)).format('DD-MM-YYYY')
+      }
 	},
 	methods: {
 		submitHutangBeredar(){
 			var app = this;
 			var filter = app.filter;
 			app.prosesLaporan();
-			app.totalHutangBeredar();
-			app.showButton();   		
+			app.totalHutangBeredar();	
 		},
 	prosesLaporan(page) {
 		var app = this;	
@@ -165,7 +177,22 @@ export default {
 		})
 		.catch(function (resp) {
 			// console.log(resp);
-			alert("Tidak Dapat Memuat Laporan Penjualan Pos /pelanggan");
+			alert("Tidak Dapat Memuat Laporan hutang beredar");
+		});
+	},
+	totalHutangBeredar() {
+		var app = this;	
+		var newFilter = app.filter;
+		app.loading = true,
+		axios.post(app.url+'/total-hutang-beredar', newFilter)
+		.then(function (resp) {
+			app.dataTotalHutangBeredar = resp.data;
+			app.loading = false
+			console.log(resp.data);    			
+		})
+		.catch(function (resp) {
+			// console.log(resp);
+			alert("Tidak Dapat Memuat Total hutang beredar");
 		});
 	},
 	getHasilPencarian(page){
@@ -181,25 +208,9 @@ export default {
 		})
 		.catch(function (resp) {
 			// console.log(resp);
-			alert("Tidak Dapat Memuat Laporan Penjualan Pos /pelanggan");
+			alert("Tidak Dapat Memuat Laporan hutang beredar");
 		});
 	},
-	totalHutangBeredar() {
-		var app = this;	
-		var newFilter = app.filter;
-
-		app.loading = true,
-		axios.post(app.url+'/total-penjualan-pos-pelanggan', newFilter)
-		.then(function (resp) {
-			app.totalPenjualanPosPelanggan = resp.data;
-			app.loading = false
-			console.log(resp.data);    			
-		})
-		.catch(function (resp) {
-			// console.log(resp);
-			alert("Tidak Dapat Memuat Subtotal Mutasi Stok");
-		});
-	},	
 	showButton() {
 		var app = this;
 		var filter = app.filter;
