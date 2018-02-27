@@ -354,7 +354,7 @@
       </div>
 
       <div class="col-md-3">          <!--DOWNLOAD EXCEL-->
-          <a href="#" class='btn btn-warning' id="btnExcel" target='blank' v-on:click=="exportExcel()" ><i class="material-icons">file_download</i> Export Excel</a></div>
+          <a href="#" class='btn btn-warning' id="btnExcel" target='blank'><i class="material-icons">file_download</i> Export Excel</a></div>
       <div class="col-md-5"></div>
       <div class="col-md-1 col-xs-1">                
         <button class="btn btn-primary btn-round btn-fab btn-fab-mini" data-toggle="modal" data-target="#modal_setting">
