@@ -348,11 +348,13 @@
             <input class="form-control" type="hidden"  v-model="inputTbsPenjualan.potongan_produk"  name="potongan_produk" id="potongan_produk" v-shortkey="['f6']" @shortkey="openSelectizeKas()">
             <input class="form-control" type="hidden"  v-model="inputTbsPenjualan.id_tbs"  name="id_tbs" id="id_tbs"  v-shortkey="['f4']" @shortkey="openSelectizePelanggan()">
             <input class="form-control" type="hidden"  v-model="penjualan.potongan"  name="potongan" id="potongan" v-shortkey="['f1']" @shortkey="openSelectizeProduk()">
+
           </span>
         </div>
       </div>
 
-      <div class="col-md-3"></div>
+      <div class="col-md-3">          <!--DOWNLOAD EXCEL-->
+          <a href="#" class='btn btn-warning' id="btnExcel" target='blank'><i class="material-icons">file_download</i> Export Excel</a></div>
       <div class="col-md-5"></div>
       <div class="col-md-1 col-xs-1">                
         <button class="btn btn-primary btn-round btn-fab btn-fab-mini" data-toggle="modal" data-target="#modal_setting">
@@ -441,7 +443,7 @@
     </div>
 
     <p style="color: red; font-style: italic;">*Note : Klik Kolom Jumlah, Harga, & Potongan Untuk Mengubah Nilai.</p>      
-
+    <p style="color: red; font-style: italic;">*Note : Klik tombol Export Excel untuk Export Produk Penjualan POS.</p>
 
   </div><!-- / PANEL BODY -->
 
@@ -452,16 +454,17 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex';
-  export default {
-    data: function () {
-      return {
-        errors: [],
-        tbs_penjualan: [],
-        tbsPenjualanData : {},
-        url : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
-        url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
-        url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
+import { mapState } from 'vuex';
+export default {
+  data: function () {
+    return {
+      errors: [],
+      tbs_penjualan: [],
+      tbsPenjualanData : {},
+      url : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
+      urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan/download-excel"),
+      url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
+      url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
 
         inputTbsPenjualan: {
           nama_produk : '',
@@ -498,33 +501,34 @@
           sortField: 'text',
           openOnFocus : true
 
-        },
-        placeholder_kas: {
-          placeholder: '--PILIH KAS--',
-          sortField: 'text',
-          openOnFocus : true
-        },
-        hargaJual: {
-          placeholder: '--HARGA JUAL--'
-        },
-        tambahKas: {
-          kode_kas : '',
-          nama_kas : '',
-          status_kas : 0,
-          default_kas : 0
-        },
-        pencarian: '',
-        loading: true,
-        seen : false,
-        separator: {
-          decimal: ',',
-          thousands: '.',
-          prefix: '',
-          suffix: '',
-          precision: 0,
-          masked: false /* doesn't work with directive */
-        },
-        disabled: {
+      },
+      placeholder_kas: {
+        placeholder: '--PILIH KAS--',
+        sortField: 'text',
+        openOnFocus : true
+      },
+      hargaJual: {
+        placeholder: '--HARGA JUAL--'
+      },
+      tambahKas: {
+        kode_kas : '',
+        nama_kas : '',
+        status_kas : 0,
+        default_kas : 0
+      },
+      session:'',
+      pencarian: '',
+      loading: true,
+      seen : false,
+      separator: {
+        decimal: ',',
+        thousands: '.',
+        prefix: '',
+        suffix: '',
+        precision: 2,
+        masked: false /* doesn't work with directive */
+      },
+      disabled: {
           to: new Date(), // Disable all dates up to specific date
         }
 
@@ -657,11 +661,12 @@
     .then(function (resp) {
       app.tbs_penjualan = resp.data.data;
       app.tbsPenjualanData = resp.data;
+      app.session = resp.data.session_id;
       app.loading = false;
       app.seen = true;      
       app.openSelectizeProduk();
       app.penjualan.kas = app.default_kas
-
+      $("#btnExcel").attr('href', app.urlDownloadExcel+'/'+resp.data.session_id);
       if (app.penjualan.subtotal == 0) { 
        app.getSubtotalTbs();
      }
@@ -849,7 +854,6 @@ submitProdukPenjualan(value){
         app.inputTbsPenjualan.jumlah_produk = ''
         app.inputTbsPenjualan.produk = ''
         $("#modalJumlahProduk").hide();
-
       }
 
     })

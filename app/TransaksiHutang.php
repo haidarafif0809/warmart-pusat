@@ -118,7 +118,7 @@ class TransaksiHutang extends Model
 
             public function queryTotalLaporanHutangBeredar($request)
     {
-          $data_supplier_hutang =  TransaksiHutang::select(['pembelians.total',DB::raw('IFNULL(SUM(transaksi_hutangs.jumlah_masuk),0) - IFNULL(SUM(transaksi_hutangs.jumlah_keluar),0) AS sisa_hutang'),DB::raw('IFNULL(SUM(transaksi_hutangs.jumlah_keluar),0) AS pembayaran')])
+          $data_supplier_hutang =  TransaksiHutang::select(['pembelians.total',DB::raw('SUM(IFNULL(SUM(transaksi_hutangs.jumlah_masuk),0) - IFNULL(SUM(transaksi_hutangs.jumlah_keluar),0)) AS sisa_hutang'),DB::raw('SUM(IFNULL(SUM(transaksi_hutangs.jumlah_keluar),0)) AS pembayaran')])
             ->leftJoin('pembelians', 'transaksi_hutangs.id_transaksi', '=', 'pembelians.id')
             ->leftJoin('supliers','transaksi_hutangs.suplier_id','=','supliers.id');
 

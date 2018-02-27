@@ -19,6 +19,7 @@ use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Session;
+use Excel;
 
 class PenjualanController extends Controller
 {
@@ -59,12 +60,13 @@ class PenjualanController extends Controller
         return response()->json($kas);
     }
 
-    public function paginationData($penjualan, $array, $url)
+    public function paginationData($penjualan, $array, $url,$session_id)
     {
 
         //DATA PAGINATION
         $respons['current_page']   = $penjualan->currentPage();
         $respons['data']           = $array;
+        $respons['session_id']     = $session_id;
         $respons['first_page_url'] = url($url . '?page=' . $penjualan->firstItem());
         $respons['from']           = 1;
         $respons['last_page']      = $penjualan->lastPage();
@@ -382,7 +384,7 @@ class PenjualanController extends Controller
         }
 
         $url     = '/penjualan/view-tbs-penjualan';
-        $respons = $this->paginationData($tbs_penjualan, $array, $url);
+        $respons = $this->paginationData($tbs_penjualan, $array, $url,$session_id);
 
         return response()->json($respons);
     }
@@ -1325,5 +1327,44 @@ public function cekSubtotalTbsPenjualan(){
 
     return response()->json($respons);
 }
+
+    //DOWNLOAD EXCEL - LAPORAN LABA KOTOR /PELANGGAN
+    public function downloadExcel(Request $request,$session_id)
+    {
+     
+     $data_tbs_penjualan_pos = TbsPenjualan::where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
+
+        Excel::create('Data Export Penjualan', function ($excel) use ($request, $data_tbs_penjualan_pos){
+            // Set property
+            $excel->sheet('Data Export Penjualan', function ($sheet) use ($request, $data_tbs_penjualan_pos) {
+
+                $row   = 0;
+                foreach ($data_tbs_penjualan_pos->get() as $data_tbs_penjualan_poss) {
+
+                  $sheet->row(++$row, [
+                    $data_tbs_penjualan_poss->session_id,
+                    $data_tbs_penjualan_poss->satuan_id,
+                    $data_tbs_penjualan_poss->id_produk,
+                    $data_tbs_penjualan_poss->jumlah_produk,
+                    $data_tbs_penjualan_poss->harga_produk,
+                    $data_tbs_penjualan_poss->subtotal,
+                    $data_tbs_penjualan_poss->tax,
+                    $data_tbs_penjualan_poss->potongan,
+                    $data_tbs_penjualan_poss->warung_id,
+                    $data_tbs_penjualan_poss->created_by,
+                    $data_tbs_penjualan_poss->updated_by,
+                    $data_tbs_penjualan_poss->created_at,
+                    $data_tbs_penjualan_poss->updated_at,                    
+                    null,
+                    0,
+
+                ]);
+
+              }
+
+          });
+        })->export('xls');
+    }
+
 
 }

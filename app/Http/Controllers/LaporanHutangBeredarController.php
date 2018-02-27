@@ -54,13 +54,13 @@ class LaporanHutangBeredarController extends Controller
 
         $pembayaran = 0;
         $sisa_hutang = 0;
+        $nilai_transaksi = 0;
         foreach ($total_penjualan as $total_penjualans) {
         	
-        	$respons['pembayaran']  =  $pembayaran;
-        	$respons['sisa_hutang'] =  $sisa_hutang;
+        	$respons['nilai_transaksi']  =  $total_penjualans->nilai_transaksi;
+        	$respons['pembayaran']  =  $total_penjualans->pembayaran;
+        	$respons['sisa_hutang'] =  $total_penjualans->sisa_hutang;
 
-        	$pembayaran = $pembayaran + $total_penjualans->pembayaran;
-        	$sisa_hutang  = $sisa_hutang + $total_penjualans->sisa_hutang;
         }
        
         return response()->json($respons);
