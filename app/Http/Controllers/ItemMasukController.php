@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Barang;
 use App\DetailItemMasuk;
 use App\EditTbsItemMasuk;
 use App\ItemMasuk;
@@ -11,6 +12,7 @@ use Excel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Session;
+use Validator;
 use Yajra\Datatables\Html\Builder;
 
 class ItemMasukController extends Controller
@@ -605,6 +607,9 @@ class ItemMasukController extends Controller
 
     public function importExcel(Request $request)
     {
+
+        $warung_id = Auth::user()->id_warung;
+        $no_faktur = ItemMasuk::no_faktur($warung_id);
         // validasi untuk memastikan file yang diupload adalah excel
         $this->validate($request, ['excel' => 'required|mimes:xls,xlsx']);
         // ambil file yang baru diupload
@@ -615,10 +620,73 @@ class ItemMasukController extends Controller
 
         // rule untuk validasi setiap row pada file excel
         $rowRules = [
-            'judul'   => 'required',
-            'penulis' => 'required',
-            'jumlah'  => 'required',
+            'Nama Produk'   => 'required',
+            'Jumlah Produk' => 'required',
         ];
 
+        // Catat semua id buku baru
+        // ID ini kita butuhkan untuk menghitung total buku yang berhasil diimport
+        $produk_id  = [];
+        $errors     = [];
+        $lineErrors = [];
+        $no         = 1;
+
+        // looping setiap baris, mulai dari baris ke 2 (karena baris ke 1 adalah nama kolom)
+        foreach ($excels as $row) {
+            // Mengubah Nama Produk Menajdi lowerCase (Huruf Kecil Semua)
+            $nama_produk = strtolower($row['nama_produk']);
+            $db_produk   = Barang::select(['id', 'nama_barang'])->where('nama_barang', $nama_produk);
+
+            if ($db_produk->count() === 0) {
+                $errors['nama_produk'][] = [
+                    'line'    => $no,
+                    'message' => title_case($row['nama_produk']) . ' Tidak Terdaftar di Master Data Produk.',
+                ];
+                $lineErrors[] = $no;
+            }
+            $no++;
+        }
+
+        // Perulang kedua, digunakan untuk menambahkan data produk jika tidak terjadi error.
+        foreach ($excels as $row) {
+            // Jika terjadi error, maka perintah dihentikan sehingga tidak ada data yg di insert ke database
+            if (count($errors) > 0) {
+                // Buat variable tipe array, dengan index pesanError.
+                $pesan = ['pesanError' => ''];
+
+                // Memasukan nilai error yg terjadi, kedalam variabel $pesan yg sudah kita buat tadi.
+                foreach ($errors['nama_produk'] as $key => $value) {
+                    if ($value['line'] == end($lineErrors)) {
+                        $pesan['pesanError'] .= $value['line'] . '. ' . $value['message'];
+                    } else {
+                        $pesan['pesanError'] .= $value['line'] . '. ' . $value['message'] . '<br>';
+                    }
+                }
+                return response()->json($pesan);
+            }
+
+            // Membuat validasi untuk row di excel, disini kita ubah baris yang sedang di proses menjadi array.
+            $validator = Validator::make($row->toArray(), $rowRules);
+            $db_produk = Barang::select(['id', 'nama_barang'])->where('nama_barang', $row['nama_produk'])->first();
+
+            // Insert Detail Item Masuk
+            $detail_item_masuk = DetailItemMasuk::create([
+                'id_produk'     => $db_produk->id,
+                'no_faktur'     => $no_faktur,
+                'jumlah_produk' => $row['jumlah_produk'],
+                'warung_id'     => $warung_id,
+            ]);
+        }
+
+        // Insert Item Masuk
+        $itemmasuk = ItemMasuk::create([
+            'no_faktur'  => $no_faktur,
+            'keterangan' => 'Import Excel',
+            'warung_id'  => $warung_id,
+        ]);
+        // Hitung Jumlah Produk Yang Diimport
+        $hitung_produk['jumlahProduk'] = $no - 1;
+
+        return response()->json($hitung_produk);
     }
 }

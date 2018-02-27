@@ -1,40 +1,40 @@
 <style scoped>
-.modal {
-  overflow-y:auto;
-}
-.pencarian {
-  color: red; 
-  float: right;
-}
-.form-penjualan{
-  width: 100%;
-  padding: 12px 20px;
-  margin: 8px 0;
-  display: inline-block;
-  border: 3px solid #555;
-  border-radius: 4px;
-  box-sizing: border-box;
-  font-size: 30px;
-}
-.form-subtotal{
-  width: 100%;
-  margin: 8px 0;
-  display: inline-block;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-.card-produk{
-  background-color:#82B1FF;
-}
+  .modal {
+    overflow-y:auto;
+  }
+  .pencarian {
+    color: red; 
+    float: right;
+  }
+  .form-penjualan{
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 3px solid #555;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 30px;
+  }
+  .form-subtotal{
+    width: 100%;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  .card-produk{
+    background-color:#82B1FF;
+  }
 
-.card-pembayaran{
-  background-color:#82B1FF;
-}
-.btn-icon{
-  border-radius: 1px solid;
-  padding: 10px 10px;
-}
+  .card-pembayaran{
+    background-color:#82B1FF;
+  }
+  .btn-icon{
+    border-radius: 1px solid;
+    padding: 10px 10px;
+  }
 
 </style>
 
@@ -206,9 +206,9 @@
              </div>
 
              <div align="right"  style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-               <button v-if="penjualan.kembalian >= 0 && penjualan.kredit == 0" type="button" class="btn btn-success btn-lg" id="btnSelesai" v-on:click="selesaiPenjualan()" v-shortkey.push="['alt']" @shortkey="selesaiPenjualan()"><font style="font-size:20px;">Tunai(Alt)</font></button>
+               <button v-if="penjualan.kembalian >= 0 && penjualan.kredit == 0" type="button" class="btn btn-success btn-lg" id="btnSelesai" v-on:click="selesaiPenjualan()" v-shortkey.push="['alt', 'x']" @shortkey="selesaiPenjualan()"><font style="font-size:20px;">Tunai(Alt + X)</font></button>
 
-               <button v-if="penjualan.kredit > 0" type="button" class="btn btn-success btn-lg" id="btnSelesai" v-on:click="selesaiPenjualan()" v-shortkey.push="['alt']" @shortkey="selesaiPenjualan()"><font style="font-size:20px;">Piutang(Alt)</font></button>
+               <button v-if="penjualan.kredit > 0" type="button" class="btn btn-success btn-lg" id="btnSelesai" v-on:click="selesaiPenjualan()" v-shortkey.push="['alt', 'x']" @shortkey="selesaiPenjualan()"><font style="font-size:20px;">Piutang(Alt + X)</font></button>
 
                <button type="button" class="btn btn-default btn-lg"  v-on:click="closeModal()" v-shortkey.push="['esc']" @shortkey="closeModal()"> <font style="font-size:20px;">Tutup(Esc)</font></button>
              </div>
@@ -452,79 +452,79 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-export default {
-  data: function () {
-    return {
-      errors: [],
-      tbs_penjualan: [],
-      tbsPenjualanData : {},
-      url : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
-      url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
-      url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
+  import { mapState } from 'vuex';
+  export default {
+    data: function () {
+      return {
+        errors: [],
+        tbs_penjualan: [],
+        tbsPenjualanData : {},
+        url : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
+        url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
+        url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
 
-      inputTbsPenjualan: {
-        nama_produk : '',
-        produk : '',
-        jumlah_produk : '',
-        potongan_produk : '',
-        id_tbs : '',
-      },
-      penjualan : {
-        pelanggan : '0',
-        kas : '',
-        jatuh_tempo : '',
-        subtotal : 0,
-        potongan : 0,
-        potongan_faktur : 0,
-        potongan_persen : 0,
-        total_akhir : 0,
-        pembayaran : 0,
-        kembalian: 0,
-        kredit: 0,
-      }, 
-      setting_penjualan_pos :{
-        jumlah_produk : 1,
-        stok : 0,
-        harga_jual : 1
-      },
-      placeholder_produk: {
-        placeholder: 'Cari Produk (F1) ...',
-        sortField: 'text',
-        openOnFocus : true
-      },
-      placeholder_pelanggan: {
-        placeholder: '--PILIH PELANGGAN (F4)--',
-        sortField: 'text',
-        openOnFocus : true
+        inputTbsPenjualan: {
+          nama_produk : '',
+          produk : '',
+          jumlah_produk : '',
+          potongan_produk : '',
+          id_tbs : '',
+        },
+        penjualan : {
+          pelanggan : '0',
+          kas : '',
+          jatuh_tempo : '',
+          subtotal : 0,
+          potongan : 0,
+          potongan_faktur : 0,
+          potongan_persen : 0,
+          total_akhir : 0,
+          pembayaran : 0,
+          kembalian: 0,
+          kredit: 0,
+        }, 
+        setting_penjualan_pos :{
+          jumlah_produk : 1,
+          stok : 0,
+          harga_jual : 1
+        },
+        placeholder_produk: {
+          placeholder: 'Cari Produk (F1) ...',
+          sortField: 'text',
+          openOnFocus : true
+        },
+        placeholder_pelanggan: {
+          placeholder: '--PILIH PELANGGAN (F4)--',
+          sortField: 'text',
+          openOnFocus : true
 
-      },
-      placeholder_kas: {
-        placeholder: '--PILIH KAS--',
-        sortField: 'text',
-        openOnFocus : true
-      },
-      hargaJual: {
-        placeholder: '--HARGA JUAL--'
-      },
-      tambahKas: {
-        kode_kas : '',
-        nama_kas : '',
-        status_kas : 0,
-        default_kas : 0
-      },
-      pencarian: '',
-      loading: true,
-      seen : false,
-      separator: {
-        decimal: ',',
-        thousands: '.',
-        prefix: '',
-        suffix: '',
-        precision: 2,
-        masked: false /* doesn't work with directive */
-      },
-      disabled: {
+        },
+        placeholder_kas: {
+          placeholder: '--PILIH KAS--',
+          sortField: 'text',
+          openOnFocus : true
+        },
+        hargaJual: {
+          placeholder: '--HARGA JUAL--'
+        },
+        tambahKas: {
+          kode_kas : '',
+          nama_kas : '',
+          status_kas : 0,
+          default_kas : 0
+        },
+        pencarian: '',
+        loading: true,
+        seen : false,
+        separator: {
+          decimal: ',',
+          thousands: '.',
+          prefix: '',
+          suffix: '',
+          precision: 0,
+          masked: false /* doesn't work with directive */
+        },
+        disabled: {
           to: new Date(), // Disable all dates up to specific date
         }
 

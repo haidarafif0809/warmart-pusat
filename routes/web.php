@@ -510,6 +510,7 @@ Route::get('/item-masuk/ambil-faktur-item-masuk/{id}', 'ItemMasukController@ambi
 Route::get('/item-masuk/detail-item-masuk/{id}', 'ItemMasukController@detailItemMasuk')->middleware('auth');
 Route::get('/item-masuk/pencarian-detail-item-masuk/{id}', 'ItemMasukController@pencarianDetailItemMasuk')->middleware('auth');
 Route::get('/item-masuk/template-excel', 'ItemMasukController@downloadTemplate')->middleware('auth');
+Route::post('/item-masuk/import-excel', 'ItemMasukController@importExcel')->middleware('auth');
 
 //KAS KELUAR VUE.JS
 Route::get('/kas-keluar/view', 'KasKeluarController@view')->middleware('auth');
