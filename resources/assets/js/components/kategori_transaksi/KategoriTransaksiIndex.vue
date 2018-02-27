@@ -1,49 +1,71 @@
 <style scoped>
-.pencarian {
-  color: red; 
-  float: right;
-  padding-bottom: 10px;
-}
+    .pencarian {
+        color: red; 
+        float: right;
+        padding-bottom: 10px;
+    }
 </style>
 
 <template>	
-	<div class="row">
-		<div class="col-md-12">
-			<ul class="breadcrumb">
-				<li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li>
-				<li class="active">Kategori Transaksi</li>
-			</ul>
-			
-			<div class="card">
-				<div class="card-header card-header-icon" data-background-color="purple">
-					<i class="material-icons">local_offer</i>
-				</div>
-				<div class="card-content">
-					<h4 class="card-title"> Kategori Transaksi</h4>
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="breadcrumb">
+                <li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li>
+                <li class="active">Kategori Transaksi</li>
+            </ul>
 
-					<div class="toolbar">
-                        <router-link :to="{name: 'createKategoriTransaksi'}" class="btn btn-primary" style="padding-bottom:10px"><i class="material-icons">add</i>  Kategori Transaksi</router-link>
+            <div class="card">
+                <div class="card-header card-header-icon" data-background-color="purple">
+                    <i class="material-icons">local_offer</i>
+                </div>
+                <div class="card-content">
+                    <h4 class="card-title"> Kategori Transaksi</h4>
+
+                    <div class="toolbar">
+                        <router-link :to="{name: 'createKategoriTransaksi'}" class="btn btn-primary" style="padding-bottom:10px">
+                            <i class="material-icons">add</i>  Kategori Transaksi
+                        </router-link>
+
+                        <button id="btnFilter" class="btn btn-info collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" v-shortkey="['f2']" @shortkey="filterPeriode()" @click="filterPeriode()">
+                            <i class="material-icons">date_range</i> Filter Periode (F2)
+                        </button>
 
                         <div class="pencarian">
                             <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
                         </div>
-					</div>
+                    </div>
 
-                    <br>
-					<div class=" table-responsive ">
-						<table class="table table-striped table-hover ">
-							<thead class="text-primary">
-								<tr>
+                    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="form-group col-md-2">
+                                    <datepicker :input-class="'form-control'" placeholder="Dari Tanggal" v-model="filter.dari_tanggal" name="dari_tanggal" v-bind:id="'dari_tanggal'"></datepicker>             
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <datepicker :input-class="'form-control'" placeholder="Sampai Tanggal" v-model="filter.sampai_tanggal" name="sampai_tanggal" v-bind:id="'sampai_tanggal'"></datepicker>
+                                </div>
 
-									<th>Kategori Transaksi</th>
-									<th>Aksi</th>
+                                <div class="col-md-2">
+                                    <button class="btn btn-primary" id="btnSubmit" type="submit" style="margin: 0px 0px;" @click="submitStokOpname()"><i class="material-icons">search</i> Cari</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=" table-responsive ">
+                        <table class="table table-striped table-hover ">
+                            <thead class="text-primary">
+                                <tr>
+
+                                    <th>Kategori Transaksi</th>
+                                    <th>Aksi</th>
 
                                 </tr>
                             </thead>
                             <tbody v-if="kategoriTransaksi.length"  class="data-ada">
                                 <tr v-for="kategoriTransaksi, index in kategoriTransaksi" >
-                                     <td>{{ kategoriTransaksi.nama_kategori_transaksi }}</td>
-                                     <td>
+                                    <td>{{ kategoriTransaksi.nama_kategori_transaksi }}</td>
+                                    <td>
                                         <router-link :to="{name: 'editKategoriTransaksi', params: {id: kategoriTransaksi.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + kategoriTransaksi.id" > Edit
                                         </router-link>
 
@@ -58,11 +80,11 @@
                             <tbody class="data-tidak-ada" v-else>
                                 <tr ><td colspan="2"  class="text-center">Tidak Ada Data</td></tr>
                             </tbody>
-                    </table>	
+                        </table>	
 
-                 <vue-simple-spinner v-if="loading"></vue-simple-spinner>
+                        <vue-simple-spinner v-if="loading"></vue-simple-spinner>
 
-                 <div align="right"><pagination :data="kategoriTransaksiData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
+                        <div align="right"><pagination :data="kategoriTransaksiData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
 
                     </div>
 
@@ -73,103 +95,111 @@
 </template>
 
 <script>
-export default {
-	data: function () {
-		return {
-			kategoriTransaksi: [],
-			kategoriTransaksiData: {},
-			url : window.location.origin+(window.location.pathname).replace("dashboard", "kategori-transaksi"),
-			pencarian: '',
-			loading: true
-		}
-	},
-	mounted() {
-		var app = this;
-		app.getResults();
-	},
-	watch: {
-        // whenever question changes, this function will run
-        pencarian: function (newQuestion) {
-        	this.getHasilPencarian()  
-        }
-    },
+    export default {
+        data: function () {
+            return {
+                kategoriTransaksi: [],
+                kategoriTransaksiData: {},
+                filter: {
+                    dari_tanggal: '',
+                    sampai_tanggal: '',
+                },
+                url : window.location.origin+(window.location.pathname).replace("dashboard", "kategori-transaksi"),
+                pencarian: '',
+                loading: true
+            }
+        },
+        mounted() {
+            var app = this;
+            app.getResults();
+        },
+        watch: {
+// whenever question changes, this function will run
+pencarian: function (newQuestion) {
+    this.getHasilPencarian()  
+}
+},
 
-    methods: {
-    	getResults(page) {
-    		var app = this;	
-    		if (typeof page === 'undefined') {
-    			page = 1;
-    		}
-    		axios.get(app.url+'/view?page='+page)
-    		.then(function (resp) {
-    			app.kategoriTransaksi = resp.data.data;
-    			app.kategoriTransaksiData = resp.data;
-    			app.loading = false;
-    		})
-    		.catch(function (resp) {
-    			console.log(resp);
-    			app.loading = false;
-    			alert("Tidak Dapat Memuat Kategori Transaksi");
-    		});
-    	},
-    	getHasilPencarian(page){
-    		var app = this;
-    		if (typeof page === 'undefined') {
-    			page = 1;
-    		}
-    		axios.get(app.url+'/pencarian?search='+app.pencarian+'&page='+page)
-    		.then(function (resp) {
-    			app.kategoriTransaksi = resp.data.data;
-    			app.kategoriTransaksiData = resp.data;
-    			app.loading = false;
-    		})
-    		.catch(function (resp) {
-    			console.log(resp);
-    			alert("Tidak Dapat Memuat Kategori Transaksi");
-    		});
-    	},
-    	alert(pesan) {
-    		this.$swal({
-    			title: "Berhasil ",
-    			text: pesan,
-    			icon: "success",
-    		});
-    	},
-        deleteEntry(id, index,name) {
-            swal({
-                title: "Konfirmasi Hapus",
-                text : "Anda Yakin Ingin Menghapus "+name+" ?",
-                icon : "warning",
-                buttons: true,
-                dangerMode: true,
-            })
-            .then((willDelete) => {
-                if (willDelete) {
-                  var app = this;
-                  axios.delete(app.url+'/' + id)
-                  .then(function (resp) {
+methods: {
+    filterPeriode(){
+        $("#btnFilter").click();
+        this.getResults();
+    },
+    getResults(page) {
+        var app = this;	
+        if (typeof page === 'undefined') {
+            page = 1;
+        }
+        axios.get(app.url+'/view?page='+page)
+        .then(function (resp) {
+            app.kategoriTransaksi = resp.data.data;
+            app.kategoriTransaksiData = resp.data;
+            app.loading = false;
+        })
+        .catch(function (resp) {
+            console.log(resp);
+            app.loading = false;
+            alert("Tidak Dapat Memuat Kategori Transaksi");
+        });
+    },
+    getHasilPencarian(page){
+        var app = this;
+        if (typeof page === 'undefined') {
+            page = 1;
+        }
+        axios.get(app.url+'/pencarian?search='+app.pencarian+'&page='+page)
+        .then(function (resp) {
+            app.kategoriTransaksi = resp.data.data;
+            app.kategoriTransaksiData = resp.data;
+            app.loading = false;
+        })
+        .catch(function (resp) {
+            console.log(resp);
+            alert("Tidak Dapat Memuat Kategori Transaksi");
+        });
+    },
+    alert(pesan) {
+        this.$swal({
+            title: "Berhasil ",
+            text: pesan,
+            icon: "success",
+        });
+    },
+    deleteEntry(id, index,name) {
+        swal({
+            title: "Konfirmasi Hapus",
+            text : "Anda Yakin Ingin Menghapus "+name+" ?",
+            icon : "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((willDelete) => {
+            if (willDelete) {
+                var app = this;
+                axios.delete(app.url+'/' + id)
+                .then(function (resp) {
                     app.getResults();
                     swal("Kategori Transaksi Berhasil Dihapus!  ", {
-                      icon: "success",
+                        icon: "success",
                     });
-                  })
-                  .catch(function (resp) {
+                })
+                .catch(function (resp) {
                     app.$router.replace('/kategori-transaksi/');
                     swal("Gagal Menghapus Kategori Transaksi!", {
-                      icon: "warning",
+                        icon: "warning",
                     });
-                  });
-               }
-               this.$router.replace('/kategori-transaksi/');
-            });
-        },
-         gagalHapus(id, index,nama_kategori_transaksi) {
-            this.$swal({
-                title: "Gagal ",
-                text: "Kategori Transaksi '"+nama_kategori_transaksi+"' Sudah Terpakai",
-                icon: "warning",
-            });
-        }
+                });
+            }
+            this.$router.replace('/kategori-transaksi/');
+        });
+    },
+    gagalHapus(id, index,nama_kategori_transaksi) {
+        this.$swal({
+            title: "Gagal ",
+            text: "Kategori Transaksi '"+nama_kategori_transaksi+"' Sudah Terpakai",
+            icon: "warning",
+        });
     }
+}
 }
 </script>
