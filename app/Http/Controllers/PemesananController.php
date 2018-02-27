@@ -8,6 +8,8 @@ use App\KeranjangBelanja;
 use App\LokasiPelanggan;
 use App\PesananPelanggan;
 use App\Warung;
+use App\User;
+use App\Role;
 use Auth;
 use DB;
 use GuzzleHttp\Client;
@@ -16,6 +18,7 @@ use Indonesia;
 use Jenssegers\Agent\Agent;
 use OpenGraph;
 use SEOMeta;
+use Session;
 
 class PemesananController extends Controller
 {
@@ -33,8 +36,14 @@ class PemesananController extends Controller
         OpenGraph::addProperty('type', 'articles');
 
         $agent = new Agent();
-
-        $keranjang_belanja = KeranjangBelanja::with(['produk', 'pelanggan'])->where('id_pelanggan', Auth::user()->id);
+        $session_id    = session()->getId();
+        if (Auth::check() == false) {
+            $keranjang_belanja = KeranjangBelanja::with(['produk', 'pelanggan'])->where('session_id', $session_id);
+            $jumlah_produk = KeranjangBelanja::select([DB::raw('IFNULL(SUM(jumlah_produk),0) as total_produk')])->where('session_id', $session_id)->first();
+        }else{
+            $keranjang_belanja = KeranjangBelanja::with(['produk', 'pelanggan'])->where('id_pelanggan', Auth::user()->id);  
+            $jumlah_produk = KeranjangBelanja::select([DB::raw('IFNULL(SUM(jumlah_produk),0) as total_produk')])->where('id_pelanggan', Auth::user()->id)->first();          
+        }
 
         $cek_belanjaan = $keranjang_belanja->count();
         //PERINTAH PAGINATION
@@ -47,7 +56,7 @@ class PemesananController extends Controller
         }
         $pagination = $keranjang_belanjaan->links();
 
-        $jumlah_produk = KeranjangBelanja::select([DB::raw('IFNULL(SUM(jumlah_produk),0) as total_produk')])->where('id_pelanggan', Auth::user()->id)->first();
+        
         //FOTO WARMART
         $logo_warmart = "" . asset('/assets/img/examples/warmart_logo.png') . "";
 
@@ -76,9 +85,12 @@ class PemesananController extends Controller
                 $nama_kabupaten = 0;
             }
         }
-        $alamat_customer = LokasiPelanggan::select(['provinsi', 'kabupaten'])
-            ->where('id_pelanggan', Auth::user()->id);
-        if ($alamat_customer->count() > 0) {
+        if (Auth::check() == false) {
+            $data_pelanggan['provinsi_pelanggan']  = '';
+            $data_pelanggan['kabupaten_pelanggan'] = '';
+        }else{
+           $alamat_customer = LokasiPelanggan::select(['provinsi', 'kabupaten'])->where('id_pelanggan', Auth::user()->id);
+           if ($alamat_customer->count() > 0) {
             $alamat                                = $alamat_customer->first();
             $data_pelanggan['provinsi_pelanggan']  = Indonesia::findProvince($alamat->provinsi)->name;
             $data_pelanggan['kabupaten_pelanggan'] = Indonesia::findCity($alamat->kabupaten)->name;
@@ -86,29 +98,64 @@ class PemesananController extends Controller
             $data_pelanggan['provinsi_pelanggan']  = '';
             $data_pelanggan['kabupaten_pelanggan'] = '';
         }
-
-        return view('layouts.selesaikan_pemesanan', ['pagination' => $pagination, 'keranjang_belanjaan' => $keranjang_belanjaan, 'cek_belanjaan' => $cek_belanjaan, 'agent' => $agent, 'jumlah_produk' => $jumlah_produk, 'logo_warmart' => $logo_warmart, 'subtotal' => $subtotal, 'user' => $user, 'berat_barang' => $berat_barang, 'kabupaten' => $nama_kabupaten, 'data_pelanggan' => $data_pelanggan]);
-
     }
+    
 
-    public function prosesSelesaikanPemesanan(Request $request)
-    {
+    return view('layouts.selesaikan_pemesanan', ['pagination' => $pagination, 'keranjang_belanjaan' => $keranjang_belanjaan, 'cek_belanjaan' => $cek_belanjaan, 'agent' => $agent, 'jumlah_produk' => $jumlah_produk, 'logo_warmart' => $logo_warmart, 'subtotal' => $subtotal, 'user' => $user, 'berat_barang' => $berat_barang, 'kabupaten' => $nama_kabupaten, 'data_pelanggan' => $data_pelanggan]);
+
+}
+
+public function prosesSelesaikanPemesanan(Request $request)
+{
 
         //START TRANSAKSI
-        DB::beginTransaction();
-        if ($request->layanan_kurir != '') {
-            $layanan_kurir = explode("|", $request->layanan_kurir);
-            $layanan_kurir = $layanan_kurir[0] . " | " . $layanan_kurir[2] . " | " . $layanan_kurir[3];
-        } else {
-            $layanan_kurir = $request->layanan_kurir;
-        }
+    DB::beginTransaction();
 
-        // QUERY LENGKAPNYA ADA DI scopeKeranjangBelanjaPelanggan di model Keranjang Belanja
-        $keranjang_belanjaan = KeranjangBelanja::KeranjangBelanjaPelanggan()->get();
 
+    if ($request->layanan_kurir != '') {
+        $layanan_kurir = explode("|", $request->layanan_kurir);
+        $layanan_kurir = $layanan_kurir[0] . " | " . $layanan_kurir[2] . " | " . $layanan_kurir[3];
+    } else {
+        $layanan_kurir = $request->layanan_kurir;
+    }
+
+    if (Auth::check() == false) {
+
+
+        $this->validate($request, [
+            'name'     => 'required',
+            'email'    => 'required|without_spaces|unique:users,email|email',
+            'alamat'   => 'required',
+            'no_telp'  => 'required|numeric|without_spaces|unique:users,no_telp'
+        ]);
+        
+        $kode_verifikasi = rand(1111, 9999);
+        $user = User::create([
+            'name'              => $request->name,
+            'email'             => $request->email,
+            'alamat'            => $request->alamat,
+            'no_telp'           => $request->no_telp,
+            'password'          => bcrypt('123456'),
+            'tipe_user'         => 3,
+            'status_konfirmasi' => 1,
+            'kode_verifikasi'   => $kode_verifikasi,
+        ]);
+
+        $customerRole = Role::where('name', 'customer')->first();
+        $user->attachRole($customerRole);
+
+        $id_user = $user->id;
+        $keranjang_belanjaan = KeranjangBelanja::KeranjangBelanjaSession($request->session_id)->get();
+
+    }else{
+     // QUERY LENGKAPNYA ADA DI scopeKeranjangBelanjaPelanggan di model Keranjang Belanja
         $id_user = Auth::user()->id;
+        $keranjang_belanjaan = KeranjangBelanja::KeranjangBelanjaPelanggan()->get();
+        
+    }
 
         $cek_pesanan = 0; // BUAT VARIABEL CEK PESANAN YANG KITA SET  0
+        $id_pesanan = 0;
         foreach ($keranjang_belanjaan as $key => $keranjang_belanjaans) {
 
             $id_warung = $keranjang_belanjaans['id_warung'];
@@ -118,8 +165,13 @@ class PemesananController extends Controller
             // jika perulangan yg pertama maka proses dibawah akan dijalan kan
             if ($key == 0) {
 
+                if (Auth::check() == false) {
+                // QUERY LENGKAPMNYA ADA DI scopeHitungTotalPesananSession di mmodel Keranjang Belanja
+                    $query_hitung_total = KeranjangBelanja::HitungTotalPesananSession($id_warung,$request->session_id)->first();
+                }else{                    
                 // QUERY LENGKAPMNYA ADA DI scopeHitungTotalPesanan di mmodel Keranjang Belanja
-                $query_hitung_total = KeranjangBelanja::HitungTotalPesanan($id_warung)->first();
+                    $query_hitung_total = KeranjangBelanja::HitungTotalPesanan($id_warung)->first();
+                }
                 $subtotal           = str_replace('.', '', $request->ongkos_kirim) + $query_hitung_total['total_pesanan'];
 
                 // INSERT KE PESANAN PELANGGAN
@@ -143,6 +195,7 @@ class PemesananController extends Controller
 
                 // ID PESANAN PELANGGAN
                 $id_pesanan_pelanggan = $pesanan_pelanggan->id;
+                $id_pesanan = $pesanan_pelanggan->id;
 
                 // SELECT WARUNG
                 $warung = Warung::find($id_warung);
@@ -157,8 +210,13 @@ class PemesananController extends Controller
             // JIKA CEK PESANAN TIDAK SAMA DENGAN NOL DAN CEK PESANAN TIDAK SAMA DENGAN ID WARUNG
             if ($cek_pesanan != 0 and $cek_pesanan != $id_warung) {
 
+                if (Auth::check() == false) {
+                // QUERY LENGKAPMNYA ADA DI scopeHitungTotalPesananSession di mmodel Keranjang Belanja
+                    $query_hitung_total = KeranjangBelanja::HitungTotalPesananSession($id_warung,$request->session_id)->first();
+                }else{                    
                 // QUERY LENGKAPMNYA ADA DI scopeHitungTotalPesanan di mmodel Keranjang Belanja
-                $query_hitung_total = KeranjangBelanja::HitungTotalPesanan($id_warung)->first();
+                    $query_hitung_total = KeranjangBelanja::HitungTotalPesanan($id_warung)->first();
+                }
 
                 // INSERT PESANAN PELANGGAN
                 $pesanan_pelanggan = PesananPelanggan::create([
@@ -169,6 +227,11 @@ class PemesananController extends Controller
                     'jumlah_produk'   => $query_hitung_total['total_produk'],
                     'subtotal'        => $query_hitung_total['total_pesanan'],
                     'id_warung'       => $id_warung,
+                    'kurir'             => $request->kurir,
+                    'layanan_kurir'     => $layanan_kurir,
+                    'metode_pembayaran' => $request->metode_pembayaran,
+                    'biaya_kirim'       => str_replace('.', '', $request->ongkos_kirim),
+                    'bank_transfer'     => "-",
                 ]);
 
                 // UBAH NILAI VARIABEL CEK PESANAN JADI ID WARUNG
@@ -208,7 +271,7 @@ class PemesananController extends Controller
             return redirect()->route('daftar_produk.index');
         } else {
 
-            return redirect()->route('info.pembayaran', ['id' => $id_pesanan_pelanggan]);
+            return redirect()->route('info.pembayaran', ['id' => $id_pesanan,'id_pelanggan' => $id_user]);
         }
 
     }
@@ -222,7 +285,7 @@ class PemesananController extends Controller
             return response()->view('error.404');
         } else {
 
-            $keranjang_belanja = KeranjangBelanja::with(['produk', 'pelanggan'])->where('id_pelanggan', Auth::user()->id);
+            $keranjang_belanja = KeranjangBelanja::with(['produk', 'pelanggan'])->where('id_pelanggan', $request->id_pelanggan);
             $cek_belanjaan     = $keranjang_belanja->count();
 
             $bank = BankWarung::whereWarungId($pesanan_pelanggan->first()->id_warung)->first();
