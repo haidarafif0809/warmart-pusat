@@ -7,6 +7,7 @@ use App\EditTbsItemMasuk;
 use App\ItemMasuk;
 use App\TbsItemMasuk;
 use Auth;
+use Excel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Session;
@@ -579,5 +580,45 @@ class ItemMasukController extends Controller
         $respons = $this->paginationPencarianData($detail_item_masuk, $array, $url, $search);
 
         return response()->json($respons);
+    }
+
+    //DOWNLAOD TEMPLATE
+    public function downloadTemplate()
+    {
+        Excel::create('Tempalate Import Item Masuk', function ($excel) {
+            // Set property
+            $excel->sheet('Tempalate Import Item Masuk', function ($sheet) {
+                $row = 1;
+                $sheet->row($row, [
+                    'Nama Produk',
+                    'Jumlah Produk',
+                ]);
+
+                $sheet->row(++$row, [
+                    'Sample Produk',
+                    '20',
+                ]);
+
+            });
+        })->export('xls');
+    }
+
+    public function importExcel(Request $request)
+    {
+        // validasi untuk memastikan file yang diupload adalah excel
+        $this->validate($request, ['excel' => 'required|mimes:xls,xlsx']);
+        // ambil file yang baru diupload
+        $excel = $request->file('excel');
+        // baca sheet pertama
+        $excels = Excel::selectSheetsByIndex(0)->load($excel, function ($reader) {
+        })->get();
+
+        // rule untuk validasi setiap row pada file excel
+        $rowRules = [
+            'judul'   => 'required',
+            'penulis' => 'required',
+            'jumlah'  => 'required',
+        ];
+
     }
 }

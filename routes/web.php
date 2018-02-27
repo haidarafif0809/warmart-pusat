@@ -509,6 +509,7 @@ Route::get('/item-masuk/pencarian-edit-tbs-item-masuk/{id}', 'ItemMasukControlle
 Route::get('/item-masuk/ambil-faktur-item-masuk/{id}', 'ItemMasukController@ambilFakturItemMasuk')->middleware('auth');
 Route::get('/item-masuk/detail-item-masuk/{id}', 'ItemMasukController@detailItemMasuk')->middleware('auth');
 Route::get('/item-masuk/pencarian-detail-item-masuk/{id}', 'ItemMasukController@pencarianDetailItemMasuk')->middleware('auth');
+Route::get('/item-masuk/template-excel', 'ItemMasukController@downloadTemplate')->middleware('auth');
 
 //KAS KELUAR VUE.JS
 Route::get('/kas-keluar/view', 'KasKeluarController@view')->middleware('auth');
