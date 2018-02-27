@@ -497,6 +497,8 @@ Route::get('/item-masuk/pencarian-edit-tbs-item-masuk/{id}', 'ItemMasukControlle
 Route::get('/item-masuk/ambil-faktur-item-masuk/{id}', 'ItemMasukController@ambilFakturItemMasuk')->middleware('auth');
 Route::get('/item-masuk/detail-item-masuk/{id}', 'ItemMasukController@detailItemMasuk')->middleware('auth');
 Route::get('/item-masuk/pencarian-detail-item-masuk/{id}', 'ItemMasukController@pencarianDetailItemMasuk')->middleware('auth');
+Route::get('/item-masuk/template-excel', 'ItemMasukController@downloadTemplate')->middleware('auth');
+Route::post('/item-masuk/import-excel', 'ItemMasukController@importExcel')->middleware('auth');
 
 //KAS KELUAR VUE.JS
 Route::get('/kas-keluar/view', 'KasKeluarController@view')->middleware('auth');
@@ -659,6 +661,7 @@ Route::get('/penjualan/cetak-kecil-penjualan/{id}', 'PenjualanController@cetakKe
 Route::post('/penjualan/proses-setting-penjualan-pos', 'PenjualanController@settingPenjualanPos')->middleware('auth');
 Route::get('/penjualan/cek-setting-penjualan-pos', 'PenjualanController@cekSettingPenjualanPos')->middleware('auth');
 Route::get('/penjualan/subtotal-tbs-penjualan', 'PenjualanController@cekSubtotalTbsPenjualan')->middleware('auth');
+Route::get('/penjualan/download-excel/{session_id}', 'PenjualanController@downloadExcel')->middleware('auth');
 
 // LABA KOTOR VUE.JS
 Route::post('/laporan-laba-kotor/view', 'LaporanLabaKotorController@prosesLaporanLabaKotor')->middleware('auth');
@@ -745,6 +748,10 @@ Route::get('/grafik-jam-transaksi-penjualan-online/view/{dari_tanggal}/{sampai_t
 Route::get('/laporan-penjualan-terbaik/view/{dari_tanggal}/{sampai_tanggal}/{tampil_terbaik}', 'LaporanPenjualanTerbaikController@prosesPenjualanTerbaik')->middleware('auth');
 Route::get('/laporan-penjualan-terbaik-online/view/{dari_tanggal}/{sampai_tanggal}/{tampil_terbaik}', 'LaporanPenjualanTerbaikController@prosesPenjualanTerbaikOnline')->middleware('auth');
 Route::get('/laporan-penjualan-terbaik/cek-tampil-terbaik/{dari_tanggal}/{sampai_tanggal}/{jenis_penjualan}', 'LaporanPenjualanTerbaikController@cekTampilTerbaik')->middleware('auth');
+
+// LAPORAN PENJUALAN TERBAIK
+Route::post('/laporan-hutang-beredar/view', 'LaporanHutangBeredarController@prosesHutangBeredar')->middleware('auth');
+Route::post('/laporan-hutang-beredar/total-hutang-beredar', 'LaporanHutangBeredarController@totalHutangBeredar')->middleware('auth');
 
 ////PEMBAYARAN Hutang
 Route::get('/pembayaran-hutang/view', 'PembayaranHutangController@view')->middleware('auth');

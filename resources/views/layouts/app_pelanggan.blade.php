@@ -53,12 +53,16 @@
 </link>
 </head>
 <style type="text/css">
-.navbar-nav .open .dropdown-menu{
-  color: grey;
-}
-.navbar .navbar-brand {
+    .navbar-nav .open .dropdown-menu{
+      color: grey;
+  }
+  .navbar .navbar-brand {
     position: relative;
+    @if(Agent::isMobile())
     height: 50px;
+    @else
+    height: 75px;
+    @endif
     line-height: 0px;
     color: inherit;
     padding: 10px 15px;
@@ -99,6 +103,9 @@ body {
 .marginFrom{
     margin-bottom: 1px;
     margin-top: 1px;
+}
+.navbar>.container .navbar-brand, .navbar>.container-fluid .navbar-brand {
+    margin-left: 0px;
 }
 </style>
 <body class="ecommerce-page">
