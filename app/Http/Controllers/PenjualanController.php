@@ -1338,7 +1338,25 @@ public function cekSubtotalTbsPenjualan(){
             // Set property
             $excel->sheet('Data Export Penjualan', function ($sheet) use ($request, $data_tbs_penjualan_pos) {
 
-                $row   = 0;
+                $row = 1;
+                $sheet->row($row, [
+                    'Session Id',
+                    'Satuan Id',
+                    'Id Produk',
+                    'Jumlah Produk',
+                    'Harga Produk',
+                    'Subtotal',
+                    'Tax',
+                    'Potongan',
+                    'Warung Id',
+                    'Created By',
+                    'Updated By',
+                    'Created At',
+                    'Updated At',
+                    'Ppn',
+                    'Tax Include',
+                ]);
+
                 foreach ($data_tbs_penjualan_pos->get() as $data_tbs_penjualan_poss) {
 
                   $sheet->row(++$row, [
@@ -1363,7 +1381,7 @@ public function cekSubtotalTbsPenjualan(){
               }
 
           });
-        })->export('xls');
+        })->download('xls');
     }
 
 
