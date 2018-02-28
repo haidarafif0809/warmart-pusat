@@ -30,6 +30,7 @@ function tanggal($tanggal)
 			<th>No. Transaksi</th>
 			<th>Jenis Transaksi</th>
 			<th>Ke Kas</th>
+			<th>Keterangan</th>
 			<th>Total</th>
 			<th>Waktu</th>
 		</tr><br>
@@ -40,6 +41,7 @@ function tanggal($tanggal)
 			<td>{{ $data_laporan_kass['data_laporan']->no_faktur }}</td>
 			<td>{{ $data_laporan_kass['jenis_transaksi'] }}</td>
 			<td>{{ $data_laporan_kass['data_laporan']->nama_kas }}</td>
+			<td>{{ $data_laporan_kass['keterangan'] }}</td>
 			<td>{{ $data_laporan_kass['data_laporan']->jumlah_masuk }}</td>
 			<td>{{ tanggal($data_laporan_kass['data_laporan']->created_at) }}</td>
 		</tr>
@@ -54,6 +56,7 @@ function tanggal($tanggal)
 			<th>No. Transaksi</th>
 			<th>Jenis Transaksi</th>
 			<th>Ke Kas</th>
+			<th>Keterangan</th>
 			<th>Total</th>
 			<th>Waktu</th>
 		</tr><br>
@@ -64,6 +67,7 @@ function tanggal($tanggal)
 			<td>{{ $data_laporan_kas_keluars['data_laporan']->no_faktur }}</td>
 			<td>{{ $data_laporan_kas_keluars['jenis_transaksi'] }}</td>
 			<td>{{ $data_laporan_kas_keluars['data_laporan']->nama_kas }}</td>
+			<td>{{ $data_laporan_kas_keluars['keterangan'] }}</td>
 			<td>{{ $data_laporan_kas_keluars['data_laporan']->jumlah_keluar }}</td>
 			<td>{{ tanggal($data_laporan_kas_keluars['data_laporan']->created_at) }}</td>
 		</tr>
@@ -78,6 +82,7 @@ function tanggal($tanggal)
 			<th>No. Transaksi</th>
 			<th>Jenis Transaksi</th>
 			<th>Ke Kas</th>
+			<th>Keterangan</th>
 			<th>Total</th>
 			<th>Waktu</th>
 		</tr><br>
@@ -88,6 +93,7 @@ function tanggal($tanggal)
 			<td>{{ $data_laporan_kas_mutasi_masuks['data_laporan']->no_faktur }}</td>
 			<td>{{ $data_laporan_kas_mutasi_masuks['jenis_transaksi'] }}</td>
 			<td>{{ $data_laporan_kas_mutasi_masuks['data_laporan']->nama_kas }}</td>
+			<td>{{ $data_laporan_kas_mutasi_masuks['keterangan'] }}</td>
 			<td>{{ $data_laporan_kas_mutasi_masuks['data_laporan']->jumlah_masuk }}</td>
 			<td>{{ tanggal($data_laporan_kas_mutasi_masuks['data_laporan']->created_at) }}</td>
 		</tr>
@@ -102,6 +108,7 @@ function tanggal($tanggal)
 			<th>No. Transaksi</th>
 			<th>Jenis Transaksi</th>
 			<th>Ke Kas</th>
+			<th>Keterangan</th>
 			<th>Total</th>
 			<th>Waktu</th>
 		</tr><br>
@@ -112,6 +119,7 @@ function tanggal($tanggal)
 			<td>{{ $data_laporan_kas_mutasi_keluars['data_laporan']->no_faktur }}</td>
 			<td>{{ $data_laporan_kas_mutasi_keluars['jenis_transaksi'] }}</td>
 			<td>{{ $data_laporan_kas_mutasi_keluars['data_laporan']->nama_kas }}</td>
+			<td>{{ $data_laporan_kas_mutasi_keluars['keterangan'] }}</td>
 			<td>{{ $data_laporan_kas_mutasi_keluars['data_laporan']->jumlah_keluar }}</td>
 			<td>{{ tanggal($data_laporan_kas_mutasi_keluars['data_laporan']->created_at) }}</td>
 		</tr>

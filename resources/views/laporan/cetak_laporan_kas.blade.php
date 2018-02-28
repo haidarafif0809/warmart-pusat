@@ -104,6 +104,7 @@ function tanggal($tanggal)
 						<th class="table1">No. Transaksi</th>
 						<th class="table1">Jenis Transaksi</th>
 						<th class="table1">Ke Kas</th>
+						<th class="table1">Keterangan</th>
 						<th class="table1" style="text-align:right">Total</th>
 						<th class="table1">Waktu</th>
 					</thead>
@@ -113,6 +114,7 @@ function tanggal($tanggal)
 							<td class="table1">{{ $data_laporan_kass['data_laporan']->no_faktur }}</td>
 							<td class="table1">{{ $data_laporan_kass['jenis_transaksi'] }}</td>
 							<td class="table1">{{ $data_laporan_kass['data_laporan']->nama_kas }}</td>
+							<td class="table1">{{ $data_laporan_kass['keterangan'] }}</td>
 							<td class="table1" align="right">{{ pemisahTitik($data_laporan_kass['data_laporan']->jumlah_masuk) }}</td>
 							<td class="table1">{{ tanggal($data_laporan_kass['data_laporan']->created_at) }}</td>
 						</tr>
@@ -126,6 +128,7 @@ function tanggal($tanggal)
 						<th class="table1">No. Transaksi</th>
 						<th class="table1">Jenis Transaksi</th>
 						<th class="table1">Ke Kas</th>
+						<th class="table1">Keterangan</th>
 						<th class="table1" style="text-align:right">Total</th>
 						<th class="table1">Waktu</th>
 					</thead>
@@ -135,6 +138,7 @@ function tanggal($tanggal)
 							<td class="table1">{{ $data_laporan_kas_keluars['data_laporan']->no_faktur }}</td>
 							<td class="table1">{{ $data_laporan_kas_keluars['jenis_transaksi'] }}</td>
 							<td class="table1">{{ $data_laporan_kas_keluars['data_laporan']->nama_kas }}</td>
+							<td class="table1">{{ $data_laporan_kas_keluars['keterangan'] }}</td>
 							<td class="table1" align="right">{{ pemisahTitik($data_laporan_kas_keluars['data_laporan']->jumlah_keluar) }}</td>
 							<td class="table1">{{ tanggal($data_laporan_kas_keluars['data_laporan']->created_at) }}</td>
 						</tr>
@@ -148,6 +152,7 @@ function tanggal($tanggal)
 						<th class="table1">No. Transaksi</th>
 						<th class="table1">Jenis Transaksi</th>
 						<th class="table1">Ke Kas</th>
+						<th class="table1">Keterangan</th>
 						<th class="table1" style="text-align:right">Total</th>
 						<th class="table1">Waktu</th>
 					</thead>
@@ -157,6 +162,7 @@ function tanggal($tanggal)
 							<td class="table1">{{ $data_laporan_kas_mutasi_masuks['data_laporan']->no_faktur }}</td>
 							<td class="table1">{{ $data_laporan_kas_mutasi_masuks['jenis_transaksi'] }}</td>
 							<td class="table1">{{ $data_laporan_kas_mutasi_masuks['data_laporan']->nama_kas }}</td>
+							<td class="table1">{{ $data_laporan_kas_mutasi_masuks['keterangan'] }}</td>
 							<td class="table1" align="right">{{ pemisahTitik($data_laporan_kas_mutasi_masuks['data_laporan']->jumlah_masuk) }}</td>
 							<td class="table1">{{ tanggal($data_laporan_kas_mutasi_masuks['data_laporan']->created_at) }}</td>
 						</tr>
@@ -170,6 +176,7 @@ function tanggal($tanggal)
 						<th class="table1">No. Transaksi</th>
 						<th class="table1">Jenis Transaksi</th>
 						<th class="table1">Ke Kas</th>
+						<th class="table1">Keterangan</th>
 						<th class="table1" style="text-align:right">Total</th>
 						<th class="table1">Waktu</th>
 					</thead>
@@ -179,6 +186,7 @@ function tanggal($tanggal)
 							<td class="table1">{{ $data_laporan_kas_mutasi_keluars['data_laporan']->no_faktur }}</td>
 							<td class="table1">{{ $data_laporan_kas_mutasi_keluars['jenis_transaksi'] }}</td>
 							<td class="table1">{{ $data_laporan_kas_mutasi_keluars['data_laporan']->nama_kas }}</td>
+							<td class="table1">{{ $data_laporan_kas_mutasi_keluars['keterangan'] }}</td>
 							<td class="table1" align="right">{{ pemisahTitik($data_laporan_kas_mutasi_keluars['data_laporan']->jumlah_keluar) }}</td>
 							<td class="table1">{{ tanggal($data_laporan_kas_mutasi_keluars['data_laporan']->created_at) }}</td>
 						</tr>

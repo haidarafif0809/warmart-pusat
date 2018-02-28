@@ -57,7 +57,7 @@ class TransaksiKas extends Model
     //QUERY PENCARIAN DAN PROSES LAPORAN KAS (REKAP)
     public function queryLaporanKasRekap($request)
     {
-        $query_laporan_kas = TransaksiKas::select([DB::raw('IFNULL(SUM(transaksi_kas.jumlah_masuk),0) as jumlah_masuk'), DB::raw('IFNULL(SUM(transaksi_kas.jumlah_keluar),0) as jumlah_keluar'), 'transaksi_kas.kas', 'transaksi_kas.created_at', 'kas.nama_kas'])
+        $query_laporan_kas = TransaksiKas::select([DB::raw('IFNULL(SUM(transaksi_kas.jumlah_masuk),0) as jumlah_masuk'), DB::raw('IFNULL(SUM(transaksi_kas.jumlah_keluar),0) as jumlah_keluar'), 'transaksi_kas.kas', 'transaksi_kas.jenis_transaksi', 'transaksi_kas.created_at', 'kas.nama_kas'])
             ->leftJoin('kas', 'kas.id', '=', 'transaksi_kas.kas')
             ->where(DB::raw('DATE(transaksi_kas.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
             ->where(DB::raw('DATE(transaksi_kas.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
