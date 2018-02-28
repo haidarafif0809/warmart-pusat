@@ -11,6 +11,7 @@ use Jenssegers\Agent\Agent;
 use OpenGraph;
 use SEOMeta;
 use Illuminate\Http\Request;
+use Session;
 
 class KeranjangBelanjaController extends Controller
 {
@@ -21,11 +22,18 @@ class KeranjangBelanjaController extends Controller
 
         $this->seo();
         $agent = new Agent();
+        $session_id    = session()->getId();
+        if (Auth::check() == false) {
+            $keranjang_belanjaan = KeranjangBelanja::with(['produk'])->where('session_id', $session_id)->orderBy('id_keranjang_belanja','desc')->get();
+            $jumlah_produk = KeranjangBelanja::select([DB::raw('IFNULL(SUM(jumlah_produk),0) as total_produk')])->where('session_id',$session_id)->first();
+        }else{
+            $keranjang_belanjaan = KeranjangBelanja::with(['produk', 'pelanggan'])->where('id_pelanggan', Auth::user()->id)->orderBy('id_keranjang_belanja','desc')->get();  
+            $jumlah_produk = KeranjangBelanja::select([DB::raw('IFNULL(SUM(jumlah_produk),0) as total_produk')])->where('id_pelanggan', Auth::user()->id)->first();          
+        }
 
-        $keranjang_belanjaan = KeranjangBelanja::with(['produk', 'pelanggan'])->where('id_pelanggan', Auth::user()->id)->orderBy('id_keranjang_belanja','desc')->get();
         $cek_belanjaan       = $keranjang_belanjaan->count();
 
-        $jumlah_produk = KeranjangBelanja::select([DB::raw('IFNULL(SUM(jumlah_produk),0) as total_produk')])->where('id_pelanggan', Auth::user()->id)->first();
+        
 
         //MEANMPILKAN PRODUK BELANJAAN DAN SUBTUTALNYA
         $produk_belanjaan_dan_subtotal = $this->tampilanProdukKeranjangBelanja($keranjang_belanjaan);
@@ -45,6 +53,7 @@ class KeranjangBelanjaController extends Controller
 
     public function tambah_jumlah_produk_keranjang_belanjaan(Request $request)
     {
+
 
         $keranjang_belanjaans = KeranjangBelanja::with('produk')->find($request->id); 
 
@@ -84,20 +93,37 @@ class KeranjangBelanjaController extends Controller
 
     public function tambah_produk_keranjang_belanjaan($id)
     {
+        $session_id    = session()->getId();
 
-        $pelanggan = Auth::user()->id;
+        if (Auth::check() == false) {
+            $datakeranjang_belanjaan = KeranjangBelanja::where('session_id', $session_id)->Where('id_produk', $id); 
+            $jumlah_produk           = $datakeranjang_belanjaan->first();
 
-        $datakeranjang_belanjaan = KeranjangBelanja::where('id_pelanggan', $pelanggan)->Where('id_produk', $id);
-        $jumlah_produk           = $datakeranjang_belanjaan->first();
+            if ($datakeranjang_belanjaan->count() > 0) {
 
-        if ($datakeranjang_belanjaan->count() > 0) {
+                $datakeranjang_belanjaan->update(['jumlah_produk' => $jumlah_produk->jumlah_produk + 1]);
 
-            $datakeranjang_belanjaan->update(['jumlah_produk' => $jumlah_produk->jumlah_produk + 1]);
+            } else {
 
-        } else {
+                $produk = KeranjangBelanja::create(['id_produk' => $id, 'session_id' => $session_id, 'jumlah_produk' => '1']);
+            }
 
-            $produk = KeranjangBelanja::create(['id_produk' => $id, 'id_pelanggan' => $pelanggan, 'jumlah_produk' => '1']);
+        }else{
+            $pelanggan = Auth::user()->id;
+            $datakeranjang_belanjaan = KeranjangBelanja::where('id_pelanggan', $pelanggan)->Where('id_produk', $id); 
+            $jumlah_produk           = $datakeranjang_belanjaan->first();
+
+            if ($datakeranjang_belanjaan->count() > 0) {
+
+                $datakeranjang_belanjaan->update(['jumlah_produk' => $jumlah_produk->jumlah_produk + 1]);
+
+            } else {
+
+                $produk = KeranjangBelanja::create(['id_produk' => $id, 'id_pelanggan' => $pelanggan, 'jumlah_produk' => '1']);
+            }
         }
+
+
         return redirect()->back();
 
     }
@@ -123,7 +149,7 @@ class KeranjangBelanjaController extends Controller
         } else {
 
             $tombolKurangiProduk = '<button type="button" class="btn btn-round btn-info btn-xs kurangProduk" style="background-color: #01573e" data-id="'.$keranjang_belanjaans->id_keranjang_belanja.'" id="kurangProduk-'.$keranjang_belanjaans->id_keranjang_belanja.'"><i class="material-icons">remove</i> </button>';
-            
+
         }
 
         return $tombolKurangiProduk;
@@ -136,7 +162,7 @@ class KeranjangBelanjaController extends Controller
         if ($agent->isMobile()) {
 
             $tombolTambahiProduk = '<button type="button" class="btn btn-xs tambahProdukMobile" data-id="'.$keranjang_belanjaans->id_keranjang_belanja.'" id="tambahProduk-'.$keranjang_belanjaans->id_keranjang_belanja.'"><i class="material-icons">add</i> </button>';
-            
+
         } else {
 
             $tombolTambahiProduk = '<button type="button" class="btn btn-round btn-info btn-xs tambahProduk" style="background-color: #01573e" data-id="'.$keranjang_belanjaans->id_keranjang_belanja.'" id="tambahProduk-'.$keranjang_belanjaans->id_keranjang_belanja.'"><i class="material-icons">add</i> </button>';

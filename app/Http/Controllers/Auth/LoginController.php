@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Session;
+use App\KeranjangBelanja;
 
 class LoginController extends Controller
 {
@@ -46,12 +48,18 @@ class LoginController extends Controller
         if ($user->tipe_user == 4) {
             return redirect()->intended('/dashboard');
         } else {
-            return redirect()->intended('/');
-        }
-    }
 
-    public function username()
-    {
-        return 'no_telp';
-    }
+            $keranjang_belanja = KeranjangBelanja::where('session_id',$request->session_id)->update(['id_pelanggan' => $user->id]);
+            if ($request->status_login == 0) {
+                return redirect()->intended('/'); 
+            }else{
+             return redirect()->intended('/selesaikan-pemesanan');
+         }
+     }
+ }
+
+ public function username()
+ {
+    return 'no_telp';
+}
 }

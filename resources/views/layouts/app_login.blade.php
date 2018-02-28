@@ -126,12 +126,12 @@ $judul_warung = \App\SettingFooter::select()->first()->judul_warung;
 
                         <div class="col-md-4 col-sm-6 col-md-offset-4 col-sm-offset-3">
 
-                           @yield('content')
-                       </div>
-                   </div>
-               </div>
-           </div>
-           <footer class="footer">
+                         @yield('content')
+                     </div>
+                 </div>
+             </div>
+         </div>
+         <footer class="footer">
             <div class="container">
                 <p class="copyright pull-right">
                     &copy;
@@ -190,7 +190,8 @@ $judul_warung = \App\SettingFooter::select()->first()->judul_warung;
 <script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
 <script src="{{ asset('js/selectize.min.js') }}"></script> 
 <script src="{{ asset('js/demo.js') }}"></script> 
-
+<!-- Include Dexie -->
+<script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
 <script type="text/javascript">
     $().ready(function() {
         demo.checkFullPageBackgroundImage();
@@ -261,8 +262,22 @@ $judul_warung = \App\SettingFooter::select()->first()->judul_warung;
                 $(this).attr("data_toogle", 0);
             }
         });
-    }); 
+
+        
+        var db = new Dexie("keranjang_belanja");
+
+        db.version(2).stores({
+            session : 'session_id'  
+        });
+        db.session.each(function(data,i){
+           $("#session_id").val(data.session_id);
+       }).then(function(){
+       });
+
+   }); 
 </script>
+
+
 
 @yield('scripts')
 
