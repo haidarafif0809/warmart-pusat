@@ -54,7 +54,6 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
             </span>
             <div class="form-group label-floating ">
                 <input class="form-control" name="password" placeholder="Password" type="password">
-                <input  class="form-control" name="session_id" type="hidden" id="session_id">
                 <input  class="form-control" name="status_login" type="hidden" id="status_login" value="0">
                 @if ($errors->has('password'))
                 <span class="label label-danger">
