@@ -71,8 +71,8 @@ Route::get('/dashboard', [
 
 //PUNYA DAFTAR PRODUK
 Route::get('/daftar-produk', [
-    'as'         => 'daftar_produk.index',
-    'uses'       => 'DaftarProdukController@index',
+    'as'   => 'daftar_produk.index',
+    'uses' => 'DaftarProdukController@index',
 ]);
 
 Route::get('/daftar-produk/{id}', [
@@ -113,46 +113,46 @@ Route::get('/halaman-warung/pencarian/search', [
 
 //PUNYA KERANJANG BELANJAAN
 Route::get('/keranjang-belanja', [
-    'as'         => 'keranjang_belanja.daftar_belanja',
-    'uses'       => 'KeranjangBelanjaController@daftar_belanja',
+    'as'   => 'keranjang_belanja.daftar_belanja',
+    'uses' => 'KeranjangBelanjaController@daftar_belanja',
 ]);
 
 Route::get('/keranjang-belanja/tambah-jumlah-produk-keranjang-belanja/', [
-    'as'         => 'keranjang-belanja.tambah_jumlah_produk_keranjang_belanjaan',
-    'uses'       => 'KeranjangBelanjaController@tambah_jumlah_produk_keranjang_belanjaan',
+    'as'   => 'keranjang-belanja.tambah_jumlah_produk_keranjang_belanjaan',
+    'uses' => 'KeranjangBelanjaController@tambah_jumlah_produk_keranjang_belanjaan',
 ]);
 
 Route::get('/keranjang-belanja/kurang-jumlah-produk-keranjang-belanja/', [
-    'as'         => 'keranjang-belanja.kurang_jumlah_produk_keranjang_belanjaan',
-    'uses'       => 'KeranjangBelanjaController@kurang_jumlah_produk_keranjang_belanjaan',
+    'as'   => 'keranjang-belanja.kurang_jumlah_produk_keranjang_belanjaan',
+    'uses' => 'KeranjangBelanjaController@kurang_jumlah_produk_keranjang_belanjaan',
 ]);
 
 Route::get('/keranjang-belanja/hapus-produk-keranjang-belanja/', [
-    'as'         => 'keranjang-belanja.hapus_produk_keranjang_belanjaan',
-    'uses'       => 'KeranjangBelanjaController@hapus_produk_keranjang_belanjaan',
+    'as'   => 'keranjang-belanja.hapus_produk_keranjang_belanjaan',
+    'uses' => 'KeranjangBelanjaController@hapus_produk_keranjang_belanjaan',
 ]);
 
 Route::get('/keranjang-belanja/tambah-produk-keranjang-belanja/{id}', [
-    'as'         => 'keranjang-belanja.tambah_produk_keranjang_belanjaan',
-    'uses'       => 'KeranjangBelanjaController@tambah_produk_keranjang_belanjaan',
+    'as'   => 'keranjang-belanja.tambah_produk_keranjang_belanjaan',
+    'uses' => 'KeranjangBelanjaController@tambah_produk_keranjang_belanjaan',
 ]);
 
 //PUNYA SELESAI PEMESANAN
 Route::get('/selesaikan-pemesanan', [
-    'as'         => 'selesaikan-pemesanan.index',
-    'uses'       => 'PemesananController@selesaikanPemesanan',
+    'as'   => 'selesaikan-pemesanan.index',
+    'uses' => 'PemesananController@selesaikanPemesanan',
 ]);
 
 //PUNYA PROSES SELESAI PEMESANAN
 Route::put('proses/selesaikan-pemesanan', [
-    'as'         => 'selesaikan-pemesanan.proses',
-    'uses'       => 'PemesananController@prosesSelesaikanPemesanan',
+    'as'   => 'selesaikan-pemesanan.proses',
+    'uses' => 'PemesananController@prosesSelesaikanPemesanan',
 ]);
 
 //PUNYA Info Pembayaran
 Route::get('/info-pembayaran/', [
-    'as'         => 'info.pembayaran',
-    'uses'       => 'PemesananController@halamanInfoPembayaran',
+    'as'   => 'info.pembayaran',
+    'uses' => 'PemesananController@halamanInfoPembayaran',
 ]);
 
 //PUNYA PESANAN PELANGGAN
@@ -170,15 +170,15 @@ Route::get('pesanan-detail', [
 ]);
 
 Route::get('/provinsi-destinasi-pengiriman', [
-    'uses'       => 'PemesananController@dataProvinsi',
+    'uses' => 'PemesananController@dataProvinsi',
 ]);
 
 Route::get('/kota-destinasi-pengiriman', [
-    'uses'       => 'PemesananController@dataKota',
+    'uses' => 'PemesananController@dataKota',
 ]);
 
 Route::get('/hitung-ongkir', [
-    'uses'       => 'PemesananController@hitungOngkir',
+    'uses' => 'PemesananController@hitungOngkir',
 ]);
 
 //BATAL PESANAN PELANGGAN
@@ -466,6 +466,8 @@ Route::get('/daftar-topos/cek-sisa-demo', 'PendaftarToposController@cekSisaDemo'
 //KATEGORI TRANSAKSI VUE.JS
 Route::get('/kategori-transaksi/view', 'KategoriTransaksiController@view')->middleware('auth');
 Route::get('/kategori-transaksi/pencarian', 'KategoriTransaksiController@pencarian')->middleware('auth');
+Route::post('/kategori-transaksi/filter-periode', 'KategoriTransaksiController@filterPeriode')->middleware('auth');
+Route::post('/kategori-transaksi/pencarian-periode', 'KategoriTransaksiController@filterPeriode')->middleware('auth');
 
 //SUPLIER VUE.JS
 Route::get('/suplier/view', 'SuplierController@view')->middleware('auth');
@@ -550,7 +552,6 @@ Route::get('/pembelian/detail-view', 'PembelianController@detailView')->middlewa
 Route::get('/pembelian/cetak-besar-pembelian/{id}', 'PembelianController@cetakBesar')->middleware('auth');
 Route::get('/pembelian/subtotal-tbs-pembelian/{jenis_tbs}', 'PembelianController@cekSubtotalTbsPembelian')->middleware('auth');
 Route::post('/pembelian/import-excel', 'PembelianController@importExcel')->middleware('auth');
-
 
 //Edit Pembelian
 Route::get('/edit-pembelian/proses-tambah-tbs-pembelian', 'EditPembelianController@proses_tambah_tbs_pembelian')->middleware('auth');
