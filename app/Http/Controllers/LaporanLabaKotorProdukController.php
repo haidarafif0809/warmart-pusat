@@ -31,7 +31,7 @@ class LaporanLabaKotorProdukController extends Controller
     {
         $produk = Barang::select(['id', 'nama_barang'])->where('id_warung', Auth::user()->id_warung)
             ->where('hitung_stok', 1)->get();
-        $array_produk = array();
+        $array_produk = array(['id'=> '' , 'nama_produk'=>'SEMUA PRODUK']);
         foreach ($produk as $produks) {
             array_push($array_produk, [
                 'id'          => $produks->id,
@@ -114,6 +114,7 @@ class LaporanLabaKotorProdukController extends Controller
 
     public function prosesLaporanLabaKotorProduk(Request $request)
     {
+
         $laporan_laba_kotor = DetailPenjualanPos::laporanLabaKotorProdukPos($request)->paginate(10);
 
         $array_laba_kotor = array();
@@ -127,6 +128,8 @@ class LaporanLabaKotorProdukController extends Controller
 
             array_push($array_laba_kotor, ['laba_kotor' => $laba_kotor, 'hpp' => $total_hpp, 'total_laba_kotor' => $total_laba_kotor, 'persentase_laba_kotor' => $persentase_laba_kotor, 'persentase_gpm' => $persentase_gpm]);
         }
+
+        
 
         $link_view = 'view';
 

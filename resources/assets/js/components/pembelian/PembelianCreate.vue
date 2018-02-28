@@ -101,6 +101,47 @@
       </div> 
       <!-- / MODAL TOMBOL SELESAI --> 
 
+          <!--MODAL IMPORT DATA-->
+            <div class="modal" id="modal_import" role="dialog" data-backdrop=""> 
+                <div class="modal-dialog">
+                    <!-- Modal content--> 
+                    <div class="modal-content"> 
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"> <i class="material-icons">close</i></button> 
+                            <h4 class="modal-title"> 
+                                <div class="alert-icon" style="font-weight: bold;"> 
+                                    Import Produk Pembelian
+                                </div> 
+                            </h4> 
+                        </div>                         
+                        <form v-on:submit.prevent="importExcel()" class="form-horizontal">
+                            <div class="modal-body">
+                                <div class="form-group form-file-upload">
+                                    <input type="file" id="excel" multiple="">
+                                    <div class="input-group">
+                                        <input type="text" readonly="" class="form-control" placeholder="Browse File...">
+                                        <span class="input-group-btn input-group-s">
+                                            <button type="button" class="btn btn-just-icon btn-round btn-primary">
+                                                <i class="material-icons">attach_file</i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                    <i>*Note file extension menggunakan format (.xlsx)</i>
+                                </div>
+                                <div class="form-group">                                
+                                    <button class="btn btn-primary" id="btnImport" type="submit"><i class="material-icons">file_upload</i> Import</button>
+                                </div>
+                            </div>
+                            <div class="modal-footer">  
+                                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="material-icons">close</i> Batal</button> 
+                            </div> 
+                        </form>
+                    </div>       
+                </div> 
+            </div>
+            <!-- / MODAL IMPORT DATA --> 
+
+
       <div class="modal" id="modal_tambah_suplier" role="dialog" data-backdrop=""> 
         <div class="modal-dialog"> 
           <!-- Modal content--> 
@@ -311,6 +352,11 @@
                 </span>
               </div>
             </div>
+            <div class="col-md-3">
+                 <button id="btnFilter" class="btn btn-info" data-toggle="modal" data-target="#modal_import">
+                   <i class="material-icons">file_upload</i> Import Excel
+               </button>
+            </div>
           </div>
 
           <div class="row">
@@ -459,6 +505,7 @@ export default {
       url_cek_total_kas : window.location.origin+(window.location.pathname).replace("dashboard", ""),
       url_suplier : window.location.origin+(window.location.pathname).replace("dashboard", "suplier"),
       url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
+      urlImport : window.location.origin+(window.location.pathname).replace("dashboard", "pembelian/import-excel"),
       inputTbsPembelian: {
         nama_produk : '',
         produk : '',
@@ -1407,10 +1454,66 @@ prosesTransaksiSelesai(){
     }
   });
 },//akhir prosesTransaksiSelesai
-closeModalJumlahProduk(){  
-  $("#modalJumlahProduk").hide(); 
-  this.openSelectizeProduk();
-},
+  closeModalJumlahProduk(){  
+    $("#modalJumlahProduk").hide(); 
+    this.openSelectizeProduk();
+  },
+  importExcel(){
+        var app = this;
+        let newExcel = new FormData();
+        let file = document.getElementById('excel').files[0];
+
+        if (file != undefined) {
+            newExcel.append('excel', file)
+        }else{
+            app.alertGagal("Silakan Pilih File Dahulu.");
+            return;
+        }
+
+        axios.post(app.urlImport, newExcel).then(function (resp){
+            console.log(resp);
+
+            if (resp.data.pesanError !== undefined) {
+                return swal({
+                    title: 'Gagal!',
+                    type: 'warning',
+                    html: '<div style="text-align: left; font-size: 14px;">'+ resp.data.pesanError +'</div>',
+                });
+            }
+
+            $("#excel").val('');
+            $("#modal_import").hide();
+            app.alertImport(resp.data.jumlahProduk + ' Produk Berhasil Diimport.');
+            app.getResults();
+        }).catch(function (resp){
+            console.log(resp);
+
+            if (resp.response.data.errors != undefined) {
+                app.errors = resp.response.data.errors.excel[0];
+            }
+            else {
+                app.errors = "Ukuran file terlalu besar!";
+            }
+
+            app.alertGagal(app.errors);
+        });
+    },
+    alertImport(pesan) {
+        this.$swal({
+            text: pesan,
+            icon: "success",
+            buttons: false,
+            timer: 1000
+        });
+    },
+    alertGagal(pesan) {
+        this.$swal({
+            text: pesan,
+            icon: "warning",
+            buttons: false,
+            timer: 1000
+        });
+    }
 }
 }
 </script>

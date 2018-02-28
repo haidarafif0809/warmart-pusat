@@ -44,17 +44,17 @@ class KategoriTransaksiController extends Controller
         return $status_transaksi;
     }
 
-    public function dataPagination($data_kategori_transaksi, $array_kategori_transaksi)
+    public function dataPagination($data_kategori_transaksi, $array_kategori_transaksi, $url_view)
     {
 
         $respons['current_page']   = $data_kategori_transaksi->currentPage();
         $respons['data']           = $array_kategori_transaksi;
-        $respons['first_page_url'] = url('/kategori-transaksi/view?page=' . $data_kategori_transaksi->firstItem());
+        $respons['first_page_url'] = url('/kategori-transaksi/' . $url_view . '?page=' . $data_kategori_transaksi->firstItem());
         $respons['from']           = 1;
         $respons['last_page']      = $data_kategori_transaksi->lastPage();
-        $respons['last_page_url']  = url('/kategori-transaksi/view?page=' . $data_kategori_transaksi->lastPage());
+        $respons['last_page_url']  = url('/kategori-transaksi/' . $url_view . '?page=' . $data_kategori_transaksi->lastPage());
         $respons['next_page_url']  = $data_kategori_transaksi->nextPageUrl();
-        $respons['path']           = url('/kategori-transaksi/view');
+        $respons['path']           = url('/kategori-transaksi/' . $url_view);
         $respons['per_page']       = $data_kategori_transaksi->perPage();
         $respons['prev_page_url']  = $data_kategori_transaksi->previousPageUrl();
         $respons['to']             = $data_kategori_transaksi->perPage();
@@ -76,8 +76,9 @@ class KategoriTransaksiController extends Controller
                 'status_transaksi'        => $status_transaksi]);
         }
 
+        $url_view = 'view';
         //DATA PAGINATION
-        $respons = $this->dataPagination($data_kategori_transaksi, $array_kategori_transaksi);
+        $respons = $this->dataPagination($data_kategori_transaksi, $array_kategori_transaksi, $url_view);
         return response()->json($respons);
     }
 
@@ -96,8 +97,9 @@ class KategoriTransaksiController extends Controller
                 'status_transaksi'        => $status_transaksi]);
         }
 
+        $url_view = 'view';
         //DATA PAGINATION
-        $respons = $this->dataPagination($data_kategori_transaksi, $array_kategori_transaksi);
+        $respons = $this->dataPagination($data_kategori_transaksi, $array_kategori_transaksi, $url_view);
         return response()->json($respons);
     }
 
@@ -197,5 +199,29 @@ class KategoriTransaksiController extends Controller
             Auth::logout();
             return response()->view('error.403');
         }
+    }
+
+    public function filterPeriode(Request $request)
+    {
+        if ($request->tipe == 0) {
+            // View Filter
+            $data_kategori_transaksi = KategoriTransaksi::filterKategori($request)->paginate(10);
+        } else {
+            // Pencarian Filter
+            $data_kategori_transaksi = KategoriTransaksi::cariFilterKategori($request)->paginate(10);
+        }
+
+        $array_kategori_transaksi = array();
+        foreach ($data_kategori_transaksi as $kategori_transaksi) {
+            array_push($array_kategori_transaksi, [
+                'id'                      => $kategori_transaksi->id,
+                'nama_kategori_transaksi' => $kategori_transaksi->nama_kategori_transaksi,
+                'transaksi_masuk'         => $kategori_transaksi->transaksi_masuk,
+                'transaksi_keluar'        => $kategori_transaksi->transaksi_keluar]);
+        }
+        $url_view = 'filter-periode';
+        //DATA PAGINATION
+        $respons = $this->dataPagination($data_kategori_transaksi, $array_kategori_transaksi, $url_view);
+        return response()->json($respons);
     }
 }
