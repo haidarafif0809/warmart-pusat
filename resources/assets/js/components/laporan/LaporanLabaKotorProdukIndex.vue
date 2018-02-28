@@ -29,7 +29,7 @@
 							<datepicker :input-class="'form-control'" placeholder="Sampai Tanggal" v-model="filter.sampai_tanggal" name="sampai_tanggal" v-bind:id="'sampai_tanggal'"></datepicker>
 						</div>
 						<div class="form-group col-md-2">
-							<selectize-component v-model="filter.produk" :settings="placeholder_produk" id="pilih_produk"> 
+							<selectize-component v-model="filter.produk" id="pilih_produk"> 
 								<option v-for="produks, index in produk" v-bind:value="produks.id" >{{ produks.nama_produk }}</option>
 							</selectize-component>
 						</div>
@@ -169,10 +169,10 @@
 
 
 <script>
+import { mapState } from 'vuex';
 	export default {
 		data: function () {
 			return {
-				produk: [],
 				labaKotor: [],
 				labaKotorData: {},
 				subtotalLabaKotor: {},
@@ -190,9 +190,6 @@
 				urlCetak : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-laba-kotor-produk/cetak-laporan"),
 				pencarian_pos: '',
 				pencarian_pesanan: '',
-				placeholder_produk: {
-					placeholder: '--PILIH PRODUK--'
-				},
 				loading: false,
 				loadingPesanan: false,
 				loadingAkhir: false,
@@ -202,10 +199,14 @@
 			var app = this;
 			var awal_tanggal = new Date();
 			awal_tanggal.setDate(1);
-
-			app.dataProduk();
+			app.$store.dispatch('LOAD_PRODUK_LAPORAN_LIST');
 			app.filter.dari_tanggal = awal_tanggal;
 		},
+		computed : mapState ({    
+	      produk(){
+	        return this.$store.state.produk_laporan
+	      }
+	    }),
 		watch: {
         // whenever question changes, this function will run
         pencarian_pos: function (newQuestion) {
@@ -303,17 +304,6 @@
     		.catch(function (resp) {
     			console.log(resp);
     			alert("Tidak Dapat Memuat Laporan Laba Kotor Penjualan /Produk");
-    		});
-    	},
-    	dataProduk() {
-    		var app = this;
-    		axios.get(app.url+'/pilih-produk')
-    		.then(function (resp) {
-    			app.produk = resp.data;
-
-    		})
-    		.catch(function (resp) {
-    			alert("Tidak bisa memuat produk ");
     		});
     	},
     	totalLabaKotor() {

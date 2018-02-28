@@ -10,6 +10,7 @@ Vue.use(Vuex)
 const state = {
 	default_kas : '',
 	produk : [],
+	produk_laporan : [],
 	kas : [],
 	pelanggan : [],
 	kasir:[],
@@ -41,6 +42,9 @@ const mutations = {
 	SET_PRODUK_LIST : (state, { list }) => {
 		state.produk = list
 	},
+	SET_PRODUK_LAPORAN_LIST : (state, { list }) => {
+		state.produk_laporan = list
+	},
 	// untuk memuat data pelanggan
 	SET_PELANGGAN_LIST : (state, { list }) => {
 		state.pelanggan = list
@@ -71,6 +75,18 @@ const actions = {
 		axios.get('produk/pilih-produk')
 		.then((resp) => {
 			commit('SET_PRODUK_LIST',
+			{
+				list:resp.data
+			})
+		},
+		(err) => {
+			console.log(err)
+		})
+	},
+	LOAD_PRODUK_LAPORAN_LIST : function({commit}){
+		axios.get('laporan-laba-kotor-produk/pilih-produk')
+		.then((resp) => {
+			commit('SET_PRODUK_LAPORAN_LIST',
 			{
 				list:resp.data
 			})

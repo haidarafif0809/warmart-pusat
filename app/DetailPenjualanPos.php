@@ -81,10 +81,12 @@ class DetailPenjualanPos extends Model
     public function scopeSubtotalLaporanLabaKotor($query_sub_total_penjualan, $request)
     {
         if ($request->pelanggan == "" || $request->pelanggan == null || $request->pelanggan == 0) {
-            $query_sub_total_penjualan = DetailPenjualanPos::select(DB::raw('SUM(subtotal) as subtotal'))
-                ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
-                ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
-                ->where('warung_id', Auth::user()->id_warung);
+            $query_sub_total_penjualan = DetailPenjualanPos::select(DB::raw('SUM(detail_penjualan_pos.subtotal) as subtotal'))
+                ->leftJoin('barangs', 'barangs.id', '=', 'detail_penjualan_pos.id_produk')
+                ->where(DB::raw('DATE(detail_penjualan_pos.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+                ->where(DB::raw('DATE(detail_penjualan_pos.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+                ->where('detail_penjualan_pos.warung_id', Auth::user()->id_warung)
+                ->where('barangs.hitung_stok',1);
         } else {
             $query_sub_total_penjualan = DetailPenjualanPos::select(DB::raw('SUM(detail_penjualan_pos.subtotal) as subtotal'))
                 ->leftJoin('penjualan_pos', 'penjualan_pos.id', '=', 'detail_penjualan_pos.id_penjualan_pos')
@@ -107,6 +109,7 @@ class DetailPenjualanPos extends Model
                 ->where(DB::raw('DATE(detail_penjualan_pos.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
                 ->where(DB::raw('DATE(detail_penjualan_pos.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
                 ->where('penjualan_pos.warung_id', Auth::user()->id_warung)
+                ->where('barangs.hitung_stok',1)
                 ->groupBy('detail_penjualan_pos.id_produk')
                 ->orderBy('detail_penjualan_pos.created_at', 'desc');
         } else {
@@ -135,6 +138,7 @@ class DetailPenjualanPos extends Model
                 ->where(DB::raw('DATE(detail_penjualan_pos.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
                 ->where(DB::raw('DATE(detail_penjualan_pos.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
                 ->where('penjualan_pos.warung_id', Auth::user()->id_warung)
+                ->where('barangs.hitung_stok',1)
                 ->where(function ($query) use ($search) {
                     $query->orwhere('barangs.kode_barang', 'LIKE', '%' . $search . '%')
                         ->orwhere('barangs.nama_barang', 'LIKE', '%' . $search . '%');})
@@ -164,10 +168,12 @@ class DetailPenjualanPos extends Model
     public function scopeSubtotalLaporanLabaKotorProduk($query_sub_total_penjualan, $request)
     {
         if ($request->produk == "" || $request->produk == null || $request->produk == 0) {
-            $query_sub_total_penjualan = DetailPenjualanPos::select(DB::raw('SUM(subtotal) as subtotal'))
-                ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
-                ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
-                ->where('warung_id', Auth::user()->id_warung);
+            $query_sub_total_penjualan = DetailPenjualanPos::select(DB::raw('SUM(detail_penjualan_pos.subtotal) as subtotal'))
+                ->leftJoin('barangs', 'barangs.id', '=', 'detail_penjualan_pos.id_produk')
+                ->where(DB::raw('DATE(detail_penjualan_pos.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+                ->where(DB::raw('DATE(detail_penjualan_pos.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+                ->where('detail_penjualan_pos.warung_id', Auth::user()->id_warung)
+                ->where('barangs.hitung_stok',1);
         } else {
             $query_sub_total_penjualan = DetailPenjualanPos::select(DB::raw('SUM(subtotal) as subtotal'))
                 ->leftJoin('penjualan_pos', 'penjualan_pos.no_faktur', '=', 'detail_penjualan_pos.no_faktur')
