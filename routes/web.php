@@ -478,6 +478,7 @@ Route::get('/daftar-topos/cek-sisa-demo', 'PendaftarToposController@cekSisaDemo'
 //KATEGORI TRANSAKSI VUE.JS
 Route::get('/kategori-transaksi/view', 'KategoriTransaksiController@view')->middleware('auth');
 Route::get('/kategori-transaksi/pencarian', 'KategoriTransaksiController@pencarian')->middleware('auth');
+Route::post('/kategori-transaksi/filter-periode', 'KategoriTransaksiController@filterPeriode')->middleware('auth');
 
 //SUPLIER VUE.JS
 Route::get('/suplier/view', 'SuplierController@view')->middleware('auth');
