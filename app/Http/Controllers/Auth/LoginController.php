@@ -48,18 +48,18 @@ class LoginController extends Controller
         if ($user->tipe_user == 4) {
             return redirect()->intended('/dashboard');
         } else {
-
-            $keranjang_belanja = KeranjangBelanja::where('session_id',$request->session_id)->update(['id_pelanggan' => $user->id]);
+            $session = Session::get('session_id');
+            $keranjang_belanja = KeranjangBelanja::where('session_id',$session)->update(['id_pelanggan' => $user->id]);
             if ($request->status_login == 0) {
                 return redirect()->intended('/'); 
             }else{
-             return redirect()->intended('/selesaikan-pemesanan');
-         }
-     }
- }
+               return redirect()->intended('/selesaikan-pemesanan');
+           }
+       }
+   }
 
- public function username()
- {
+   public function username()
+   {
     return 'no_telp';
 }
 }

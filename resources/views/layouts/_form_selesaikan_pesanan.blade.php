@@ -76,7 +76,6 @@
 <p id="note_pembayaran" style="color: red; font-style: italic;"></p>
 
 <span style="display: none">
-  {!! Form::text('session_id',null , ['class'=>'form-control','id'=>'session_id_pelanggan']) !!}
   {!! Form::text('jumlah_produk',$jumlah_produk->total_produk , ['class'=>'form-control']) !!}
   {!! Form::text('kota_pengirim',null, ['class'=>'form-control','id'=>'kota_pengirim']) !!}
   {!! Form::text('ongkos_kirim', 0, ['class'=>'form-control','id'=>'ongkos_kirim','placeholder'=>'ongkos kirim']) !!}

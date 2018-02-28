@@ -4,6 +4,7 @@
     <!-- PILIH TIPE APLIKASI -->
     <?php
     $session_id    = session()->getId();
+    $session = Session::get('session_id');
     $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->
     first();
 
@@ -562,36 +563,9 @@ body {
 </script>
 <script type="text/javascript">
 
-    var db = new Dexie("keranjang_belanja");
-
-    db.version(2).stores({
-        session : 'session_id'  
-    });
 
     $(document).on('click', '#btnBeliSekarang', function(){
-
-        var sessionId = [];
-        sessionId.push({session_id: "{{$session_id}}"});
-
-        db.session.count(function (count) { 
-
-            var jumlah_data = count;
-            if (jumlah_data == 0) {
-
-                db.session.bulkPut(sessionId).then(function(lastKey) {
-                    alert();
-                }).catch(Dexie.BulkError, function (e) {
-                    console.error ("Some raindrops did not succeed. However, " +
-                       100000-e.failures.length + " raindrops was added successfully");
-                });
-            }else{
-                alert();
-            };
-
-        });
-
-
-
+        alert();
     });
 
     function alert(){

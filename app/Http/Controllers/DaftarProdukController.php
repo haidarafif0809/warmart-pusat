@@ -26,8 +26,12 @@ class DaftarProdukController extends Controller
      */
     public function index()
     {
-     $session_id    = session()->getId();
-     if (Auth::check() == false) {
+     if(!Session::get('session_id')){
+        $session_id    = session()->getId();
+    }else{
+        $session_id = Session::get('session_id');
+    }
+    if (Auth::check() == false) {
         $keranjang_belanjaan = KeranjangBelanja::where('session_id', $session_id);
         if ($keranjang_belanjaan->count() > 0) {
             $warung_yang_dipesan = $keranjang_belanjaan->first()->produk->id_warung;
