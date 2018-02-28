@@ -203,25 +203,13 @@ class KategoriTransaksiController extends Controller
 
     public function filterPeriode(Request $request)
     {
-        $data_kategori_transaksi = KategoriTransaksi::filterKategori($request)->paginate(10);
-
-        $array_kategori_transaksi = array();
-        foreach ($data_kategori_transaksi as $kategori_transaksi) {
-            array_push($array_kategori_transaksi, [
-                'id'                      => $kategori_transaksi->id,
-                'nama_kategori_transaksi' => $kategori_transaksi->nama_kategori_transaksi,
-                'transaksi_masuk'         => $kategori_transaksi->transaksi_masuk,
-                'transaksi_keluar'        => $kategori_transaksi->transaksi_keluar]);
+        if ($request->tipe == 0) {
+            // View Filter
+            $data_kategori_transaksi = KategoriTransaksi::filterKategori($request)->paginate(10);
+        } else {
+            // Pencarian Filter
+            $data_kategori_transaksi = KategoriTransaksi::cariFilterKategori($request)->paginate(10);
         }
-        $url_view = 'filter-periode';
-        //DATA PAGINATION
-        $respons = $this->dataPagination($data_kategori_transaksi, $array_kategori_transaksi, $url_view);
-        return response()->json($respons);
-    }
-
-    public function pencarianFilterPeriode(Request $request)
-    {
-        $data_kategori_transaksi = KategoriTransaksi::cariFilterKategori($request)->paginate(10);
 
         $array_kategori_transaksi = array();
         foreach ($data_kategori_transaksi as $kategori_transaksi) {

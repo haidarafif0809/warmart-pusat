@@ -129,6 +129,7 @@
                     filter: {
                         dari_tanggal: '',
                         sampai_tanggal: new Date(),
+                        tipe: 0
                     },
                     url : window.location.origin+(window.location.pathname).replace("dashboard", "kategori-transaksi"),
                     pencarian: '',
@@ -176,10 +177,12 @@ methods: {
             app.kategoriTransaksi = resp.data.data;
             app.kategoriTransaksiData = resp.data;
             app.loading = false;
+            app.seen = false;
         })
         .catch(function (resp) {
             console.log(resp);
             app.loading = false;
+            app.seen = false;
             alert("Tidak Dapat Memuat Kategori Transaksi");
         });
     },
@@ -267,6 +270,7 @@ methods: {
     },
     pencarianFilterPeriode(page){
         var app = this;
+        app.filter.tipe = 1;
         var newFilter = app.filter;
         if (typeof page === 'undefined') {
             page = 1;

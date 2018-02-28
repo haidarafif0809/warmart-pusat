@@ -22,12 +22,18 @@ class KategoriTransaksi extends Model
         return $date_format;
     }
 
-    public function scopeFilterKategori($query, $request)
+    public function queryFilterPeriodeKategoriTransaksi($query, $request)
     {
-
         $query->select('kategori_transaksis.id', 'kategori_transaksis.nama_kategori_transaksi', DB::raw('IFNULL(SUM(kas_masuks.jumlah), 0) AS transaksi_masuk'), DB::raw('IFNULL(SUM(kas_keluars.jumlah), 0) AS transaksi_keluar'))
             ->leftJoin('kas_masuks', 'kas_masuks.kategori', '=', 'kategori_transaksis.id')
-            ->leftJoin('kas_keluars', 'kas_keluars.kategori', '=', 'kategori_transaksis.id')
+            ->leftJoin('kas_keluars', 'kas_keluars.kategori', '=', 'kategori_transaksis.id');
+
+        return $query;
+    }
+
+    public function scopeFilterKategori($query, $request)
+    {
+        $query = $this->queryFilterPeriodeKategoriTransaksi($query, $request)
             ->orWhere(function ($query_masuk) use ($request) {
                 $query_masuk
                     ->where('kategori_transaksis.id_warung', Auth::user()->id_warung)
@@ -48,9 +54,7 @@ class KategoriTransaksi extends Model
 
     public function scopeCariFilterKategori($query, $request)
     {
-        $query->select('kategori_transaksis.id', 'kategori_transaksis.nama_kategori_transaksi', DB::raw('IFNULL(SUM(kas_masuks.jumlah), 0) AS transaksi_masuk'), DB::raw('IFNULL(SUM(kas_keluars.jumlah), 0) AS transaksi_keluar'))
-            ->leftJoin('kas_masuks', 'kas_masuks.kategori', '=', 'kategori_transaksis.id')
-            ->leftJoin('kas_keluars', 'kas_keluars.kategori', '=', 'kategori_transaksis.id')
+        $query = $this->queryFilterPeriodeKategoriTransaksi($query, $request)
             ->orWhere(function ($query_masuk) use ($request) {
                 $query_masuk
                     ->where('kategori_transaksis.id_warung', Auth::user()->id_warung)
