@@ -36,7 +36,11 @@ class PemesananController extends Controller
         OpenGraph::addProperty('type', 'articles');
 
         $agent = new Agent();
-        $session_id    = session()->getId();
+        if(!Session::get('session_id')){
+            $session_id    = session()->getId();
+        }else{
+            $session_id = Session::get('session_id');
+        }
         if (Auth::check() == false) {
             $keranjang_belanja = KeranjangBelanja::with(['produk', 'pelanggan'])->where('session_id', $session_id);
             $jumlah_produk = KeranjangBelanja::select([DB::raw('IFNULL(SUM(jumlah_produk),0) as total_produk')])->where('session_id', $session_id)->first();
@@ -89,8 +93,8 @@ class PemesananController extends Controller
             $data_pelanggan['provinsi_pelanggan']  = '';
             $data_pelanggan['kabupaten_pelanggan'] = '';
         }else{
-         $alamat_customer = LokasiPelanggan::select(['provinsi', 'kabupaten'])->where('id_pelanggan', Auth::user()->id);
-         if ($alamat_customer->count() > 0) {
+           $alamat_customer = LokasiPelanggan::select(['provinsi', 'kabupaten'])->where('id_pelanggan', Auth::user()->id);
+           if ($alamat_customer->count() > 0) {
             $alamat                                = $alamat_customer->first();
             $data_pelanggan['provinsi_pelanggan']  = Indonesia::findProvince($alamat->provinsi)->name;
             $data_pelanggan['kabupaten_pelanggan'] = Indonesia::findCity($alamat->kabupaten)->name;
@@ -120,7 +124,7 @@ public function prosesSelesaikanPemesanan(Request $request)
     }
 
     if (Auth::check() == false) {
-
+        $session = Session::get('session_id');
 
         $this->validate($request, [
             'name'     => 'required',
@@ -145,7 +149,7 @@ public function prosesSelesaikanPemesanan(Request $request)
         $user->attachRole($customerRole);
 
         $id_user = $user->id;
-        $keranjang_belanjaan = KeranjangBelanja::KeranjangBelanjaSession($request->session_id)->get();
+        $keranjang_belanjaan = KeranjangBelanja::KeranjangBelanjaSession($session)->get();
 
     }else{
      // QUERY LENGKAPNYA ADA DI scopeKeranjangBelanjaPelanggan di model Keranjang Belanja
@@ -167,7 +171,7 @@ public function prosesSelesaikanPemesanan(Request $request)
 
                 if (Auth::check() == false) {
                 // QUERY LENGKAPMNYA ADA DI scopeHitungTotalPesananSession di mmodel Keranjang Belanja
-                    $query_hitung_total = KeranjangBelanja::HitungTotalPesananSession($id_warung,$request->session_id)->first();
+                    $query_hitung_total = KeranjangBelanja::HitungTotalPesananSession($id_warung,$session)->first();
                 }else{                    
                 // QUERY LENGKAPMNYA ADA DI scopeHitungTotalPesanan di mmodel Keranjang Belanja
                     $query_hitung_total = KeranjangBelanja::HitungTotalPesanan($id_warung)->first();
@@ -212,7 +216,7 @@ public function prosesSelesaikanPemesanan(Request $request)
 
                 if (Auth::check() == false) {
                 // QUERY LENGKAPMNYA ADA DI scopeHitungTotalPesananSession di mmodel Keranjang Belanja
-                    $query_hitung_total = KeranjangBelanja::HitungTotalPesananSession($id_warung,$request->session_id)->first();
+                    $query_hitung_total = KeranjangBelanja::HitungTotalPesananSession($id_warung,$session)->first();
                 }else{                    
                 // QUERY LENGKAPMNYA ADA DI scopeHitungTotalPesanan di mmodel Keranjang Belanja
                     $query_hitung_total = KeranjangBelanja::HitungTotalPesanan($id_warung)->first();

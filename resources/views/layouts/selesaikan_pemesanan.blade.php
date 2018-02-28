@@ -858,17 +858,6 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
 
 });
 
-
-var db = new Dexie("keranjang_belanja");
-
-db.version(2).stores({
-  session : 'session_id'  
-});
-db.session.each(function(data,i){
- $("#session_id").val(data.session_id);
- $("#session_id_pelanggan").val(data.session_id);
-}).then(function(){
-});
 </script>
 
 @endsection
