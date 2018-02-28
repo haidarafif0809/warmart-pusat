@@ -3,6 +3,7 @@
 <head>
     <!-- PILIH TIPE APLIKASI -->
     <?php
+    $session_id    = session()->getId();
     $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->
     first();
 
@@ -40,6 +41,7 @@
     <link href="{{ asset('assets/assets-for-demo/vertical-nav.css')}}" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" rel="stylesheet" type="text/css"/>
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet"/>
+
     {!! SEOMeta::generate() !!}
     {!! OpenGraph::generate() !!}
     {!! Twitter::generate() !!}
@@ -51,10 +53,10 @@
 </link>
 </head>
 <style type="text/css">
-    .navbar-nav .open .dropdown-menu{
-      color: grey;
-  }
-  .navbar .navbar-brand {
+.navbar-nav .open .dropdown-menu{
+  color: grey;
+}
+.navbar .navbar-brand {
     position: relative;
     @if(Agent::isMobile())
     height: 50px;
@@ -146,8 +148,15 @@ body {
                     <a class="navbar-brand pull-right" href="{{ url('/login') }}">
                         <i class="material-icons">
                             account_circle
+                        </i> 
+                    </a>
+                    <a class="navbar-brand pull-right" href="{{ url('/keranjang-belanja') }}">
+                        <i class="material-icons">
+                            shopping_cart
                         </i>
-                        Masuk
+                        <b style="font-size: 15px" id="jumlah-keranjang" data-jumlah="{{ $cek_belanjaan }}" data-session="">
+                            | {{ $cek_belanjaan }}
+                        </b>
                     </a>
                     @endif
                     @if(Agent::isMobile() && Auth::check() && Auth::user()->tipe_user == 3)
@@ -155,7 +164,7 @@ body {
                         <i class="material-icons">
                             shopping_cart
                         </i>
-                        <b style="font-size: 15px" id="jumlah-keranjang" data-jumlah="{{ $cek_belanjaan }}">
+                        <b style="font-size: 15px" id="jumlah-keranjang" data-jumlah="{{ $cek_belanjaan }}" data-session="">
                             | {{ $cek_belanjaan }}
                         </b>
                     </a>
@@ -269,22 +278,6 @@ body {
                             </a>
                             @endif
                         </li>
-                        @if(Auth::check() && Auth::user()->tipe_user == 3)
-                        <li class="button-container">
-                            <a class="btn btn-round btn-rose" href="{{ url('/keranjang-belanja') }}">
-                                <i class="material-icons">
-                                    shopping_cart
-                                </i>
-                                Keranjang Belanja
-                                <b style="font-size: 15px" id="jumlah-keranjang">
-                                    | {{ $cek_belanjaan }}
-                                </b>
-                            </a>
-                        </li>
-                        @endif
-
-
-
 
                         @if(!Auth::check())
                         <li class="button-container">
@@ -293,6 +286,31 @@ body {
                                     account_circle
                                 </i>
                                 Masuk
+                            </a>
+                        </li>
+                        @endif
+                        @if (Auth::check() == false) 
+                        <li class="button-container">
+                            <a class="btn btn-round btn-rose" href="{{ url('/keranjang-belanja') }}">
+                                <i class="material-icons">
+                                    shopping_cart
+                                </i>
+                                Keranjang Belanja
+                                <b style="font-size: 15px" id="jumlah-keranjang" data-session="">
+                                    | {{ $cek_belanjaan }}
+                                </b>
+                            </a>
+                        </li>
+                        @elseif(Auth::check() && Auth::user()->tipe_user == 3)
+                        <li class="button-container">
+                            <a class="btn btn-round btn-rose" href="{{ url('/keranjang-belanja') }}">
+                                <i class="material-icons">
+                                    shopping_cart
+                                </i>
+                                Keranjang Belanja
+                                <b style="font-size: 15px" id="jumlah-keranjang" data-session="">
+                                    | {{ $cek_belanjaan }}
+                                </b>
                             </a>
                         </li>
                         @endif
@@ -460,6 +478,9 @@ body {
         <!--End of Tawk.to Script-->
     </nav>
 </body>
+<!-- Include Dexie -->
+<script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
+
 <!--   Core JS Files   -->
 <script src="{{ asset('js/jquery-3.2.1.min.js') }}" type="text/javascript">
 </script>
@@ -540,19 +561,52 @@ body {
     var myLazyLoad = new LazyLoad();
 </script>
 <script type="text/javascript">
+
+    var db = new Dexie("keranjang_belanja");
+
+    db.version(2).stores({
+        session : 'session_id'  
+    });
+
     $(document).on('click', '#btnBeliSekarang', function(){
 
-        swal({
-            text :  "Produk Berhasil Di Tambahkan Ke Keranjang Belanja",
-            showConfirmButton :  false,
-            type: "success",
-            timer: 10000,
-            onOpen: () => {
-              swal.showLoading()
-          }
-      });
+        var sessionId = [];
+        sessionId.push({session_id: "{{$session_id}}"});
+
+        db.session.count(function (count) { 
+
+            var jumlah_data = count;
+            if (jumlah_data == 0) {
+
+                db.session.bulkPut(sessionId).then(function(lastKey) {
+                    alert();
+                }).catch(Dexie.BulkError, function (e) {
+                    console.error ("Some raindrops did not succeed. However, " +
+                       100000-e.failures.length + " raindrops was added successfully");
+                });
+            }else{
+                alert();
+            };
+
+        });
+
+
 
     });
+
+    function alert(){
+     swal({
+        text :  "Produk Berhasil Di Tambahkan Ke Keranjang Belanja",
+        showConfirmButton :  false,
+        type: "success",
+        timer: 10000,
+        onOpen: () => {
+          swal.showLoading()
+      }
+  }); 
+ }
+
+
 </script>
 @yield('scripts')
 </html>

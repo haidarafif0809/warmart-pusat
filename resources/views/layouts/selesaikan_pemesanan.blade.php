@@ -125,7 +125,11 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
 
                   <div class="form-group">
                     <font class="validationAlamat">Alamat Harus di Isi</font>
+                    @if (Auth::check() == false) 
+                    {!! Form::textarea('alamat', null, ['class'=>'form-control field','required','autocomplete'=>'off', 'placeholder' => 'Alamat Lengkap', 'id' => 'alamat', 'rows'=>'3']) !!}
+                    @else
                     {!! Form::textarea('alamat', $user->alamat, ['class'=>'form-control field','required','autocomplete'=>'off', 'placeholder' => 'Alamat Lengkap', 'id' => 'alamat', 'rows'=>'3']) !!}
+                    @endif
                   </div>
 
                 </p>
@@ -158,616 +162,601 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
             </div>
             @else
             <div class="col-md-7">
+
+              @if (Auth::check() == false) 
+
               <div class="card" style="margin-bottom: 5px; margin-top: 5px;">
                 <div class="card-header" style="margin-bottom: 1px; margin-top: 1px;">
-                  <h6 class="card-title" style="color: black; padding-left: 10px ;" > Alamat Pengiriman</h6> <hr>
+                  <h4 class="card-title" style="color: black; padding-left: 10px ;" >Alamat Pengiriman
+                  </h4>
                 </div>
-
-                {!! Form::model($user, ['url' => route('selesaikan-pemesanan.proses'), 'method' => 'put', 'files'=>'true','class'=>'form-horizontal','id'=>'formSelesaikanPesanan','style'=>'margin-left:10px;margin-right:10px;']) !!}
-                <div style="margin-bottom: 1px; margin-top: 1px;" class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                  {!! Form::label('name', 'Nama', ['class'=>'col-md-2 control-label', 'style'=> 'margin-bottom:1px; margin-top:1px;']) !!}
-                  <div class="col-md-6">
-                    {!! Form::text('name', null, ['class'=>'form-control','required','autocomplete'=>'off', 'placeholder' => 'Nama', 'id' => 'nama_pelanggan']) !!}
+                <ul class="nav nav-pills nav-pills-rose" style="padding-left: 10px ;">
+                  <li>
+                    <a href="#login" data-toggle="tab">Login</a>
+                  </li>
+                  <li class="active">
+                    <a href="#beliTanpaDaftar" data-toggle="tab">Beli Tanpa Daftar</a>
+                  </li>
+                </ul>
+                <div class="tab-content">
+                  <div class="tab-pane" id="login">
+                    @include('layouts._form_login_selesaikan_pesanan')
                   </div>
-                </div>
-
-                <div style="margin-bottom: 1px; margin-top: 1px;" class="form-group{{ $errors->has('no_telp') ? ' has-error' : '' }}">
-                  {!! Form::label('no_telp', 'No. Telpon', ['class'=>'col-md-2 control-label', 'style'=> 'margin-bottom:1px; margin-top:1px;']) !!}
-                  <div class="col-md-6">
-                    {!! Form::text('no_telp', null, ['class'=>'form-control','required','autocomplete'=>'off', 'placeholder' => 'No. Telpon', 'id' => 'no_telp']) !!}
+                  <div class="tab-pane active" id="beliTanpaDaftar">
+                    @include('layouts._form_selesaikan_pesanan')
                   </div>
-                </div>
-
-                <div class="col-md-2 alamat_pengiriman"></div>
-                @if (Agent::isMobile())
-                <center><button class="btn alamat_pengiriman" type="button">Masukan Alamat Pengiriman</button></center>
-                @else
-                <button class="btn alamat_pengiriman" type="button">Masukan Alamat Pengiriman</button>
-                @endif
-
-                <div id="formAlamat" style="margin-bottom: 1px; margin-top: 1px;" class="form-group{{ $errors->has('alamat') ? ' has-error' : '' }}">
-                  {!! Form::label('alamat', 'Alamat', ['class'=>'col-md-2 control-label', 'style'=> 'margin-bottom:1px; margin-top:1px;']) !!}
-                  <div class="col-md-6">
-                    {!! Form::textarea('alamat', null, ['class'=>'form-control','required','autocomplete'=>'off', 'placeholder' => 'Alamat', 'id' => 'alamatPelanggan', 'rows'=>'5','readonly']) !!}
-                    <button  style="margin-bottom: 1px; margin-top: 1px;"  class="btn btn-primary btn-simple " type="button" id="ubah_alamat">
-                      Ubah Alamat
-                    </button>
-                  </div>
-                </div>
-
-                <div style="margin-bottom: 1px; margin-top: 1px;" class="form-group{{ $errors->has('kurir') ? ' has-error' : '' }}">
-                  {!! Form::label('kurir', 'Kurir', ['class'=>'col-md-2 control-label', 'style'=> 'margin-bottom:1px; margin-top:1px;']) !!}
-                  <div class="col-md-6">
-                    {!! Form::select('kurir', ['jne'=>'JNE','pos'=>'POS','tiki'=>'TIKI','cod'=>'Bayar di Tempat(COD)','ojek'=>'Ojek'],null, ['required'=> 'true','placeholder' => 'Cari Kurir','id'=>'kurir']) !!}
-                  </div>
-                </div>
-
-                <div style="margin-bottom: 1px; margin-top: 1px;" class="form-group{{ $errors->has('layanan_kurir') ? ' has-error' : '' }}">
-                  {!! Form::label('layanan_kurir', 'Layanan Kurir', ['class'=>'col-md-2 control-label', 'style'=> 'margin-bottom:1px; margin-top:1px;']) !!}
-                  <div class="col-md-6">
-                    {!! Form::select('layanan_kurir', [''=>''],null, ['required'=> 'true','placeholder' => 'Cari Layanan','id'=>'layanan_kurir']) !!}
-                  </div>
-                  <div class="col-md-4">
-                   @if (Agent::isMobile())
-                   <font style="font-size:17px; margin-top:10px;margin-bottom: :10px;" id="ongkir"></font>
-                   @else
-                   <font style="font-size:25px;" id="ongkir"></font>
-                   @endif
-                 </div>
-               </div>
-
-               <div class="col-md-2"></div>
-               <p id="waktu_pengiriman" style="color: red; font-style: italic;"></p>
-
-               <div style="margin-bottom: 1px; margin-top: 1px;" class="form-group{{ $errors->has('metode_pembayaran') ? ' has-error' : '' }}">
-                {!! Form::label('metode_pembayaran', 'Pembayaran', ['class'=>'col-md-2 control-label', 'style'=> 'margin-bottom:1px; margin-top:1px;']) !!}
-                <div class="col-md-6">
-                  {!! Form::select('metode_pembayaran', ['Bayar di Tempat'=>'Bayar di Tempat','TRANSFER'=>'TRANSFER'],null, ['required'=> 'true','placeholder' => 'Pilih Metode Pembayaran','id'=>'metode_pembayaran']) !!}
                 </div>
               </div>
 
-              <div class="col-md-2"></div>
-              <p id="note_pembayaran" style="color: red; font-style: italic;"></p>
-
-              <span style="display: none">
-                {!! Form::text('jumlah_produk',$jumlah_produk->total_produk , ['class'=>'form-control']) !!}
-                {!! Form::text('kota_pengirim',null, ['class'=>'form-control','id'=>'kota_pengirim']) !!}
-                {!! Form::text('ongkos_kirim', 0, ['class'=>'form-control','id'=>'ongkos_kirim','placeholder'=>'ongkos kirim']) !!}
-                {!! Form::text('subtotal', $subtotal, ['class'=>'form-control','id'=>'subtotal','placeholder'=>'subtotal']) !!}
-
-                {{-- Data Pelanggan --}}
-                {!! Form::text('provinsi_pelanggan',$data_pelanggan['provinsi_pelanggan'], ['class'=>'form-control','id'=>'provinsi_pelanggan']) !!}
-                {!! Form::text('kabupaten_pelanggan',$data_pelanggan['kabupaten_pelanggan'], ['class'=>'form-control','id'=>'kabupaten_pelanggan']) !!}
-              </span>
+              @else
+              <div class="card" style="margin-bottom: 5px; margin-top: 5px;"> 
+                <div class="card-header" style="margin-bottom: 1px; margin-top: 1px;"> 
+                  <h6 class="card-title" style="color: black; padding-left: 10px ;" > Alamat Pengiriman</h6> <hr> 
+                </div> 
+                @include('layouts._form_selesaikan_pesanan')
+              </div>
+              @endif
             </div>
 
-          </div>
+            <div class="col-md-5">
+              @if ($agent->isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
+              @foreach($keranjang_belanjaan as $keranjang_belanjaans)
+              <div class="card" style="margin-bottom: 1px; margin-top: 1px;">
+                <div class="row">
+                  <div class="col-md-12">
 
-          <div class="col-md-5">
-            @if ($agent->isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
-            @foreach($keranjang_belanjaan as $keranjang_belanjaans)
-            <div class="card" style="margin-bottom: 1px; margin-top: 1px;">
-              <div class="row">
-                <div class="col-md-12">
-
-                  <div class="row">
-                    <div class="col-xs-4" style="padding-right:0px">
-                      <div class="img-container" style="margin:10px;">
-                       @if($keranjang_belanjaans->produk->foto != NULL)
-                       <img src="foto_produk/{{$keranjang_belanjaans->produk->foto}}">
-                       @else
-                       <img src="image/foto_default.png">
-                       @endif
+                    <div class="row">
+                      <div class="col-xs-4" style="padding-right:0px">
+                        <div class="img-container" style="margin:10px;">
+                         @if($keranjang_belanjaans->produk->foto != NULL)
+                         <img src="foto_produk/{{$keranjang_belanjaans->produk->foto}}">
+                         @else
+                         <img src="image/foto_default.png">
+                         @endif
+                       </div>
                      </div>
-                   </div>
 
-                   <div class="col-xs-8" style="padding-left:0px; padding-right:0px; padding-top:23px">
-                    <p><b><a href="detail-produk/{{$keranjang_belanjaans->id_produk}}" style="font-size: 12px;">{{$keranjang_belanjaans->NamaProdukMobile}}</a></b><br>
-                      <b style="color:red">{{$keranjang_belanjaans->jumlah_produk }} x {{number_format($keranjang_belanjaans->produk->harga_jual,0,',','.') }} : {{number_format($keranjang_belanjaans->produk->harga_jual * $keranjang_belanjaans->jumlah_produk,0,',','.') }}</b></p>
-                      <p style="font-size: 10px; margin-top:10px">{{$keranjang_belanjaans->produk->warung->name}}</p>
+                     <div class="col-xs-8" style="padding-left:0px; padding-right:0px; padding-top:23px">
+                      <p><b><a href="detail-produk/{{$keranjang_belanjaans->id_produk}}" style="font-size: 12px;">{{$keranjang_belanjaans->NamaProdukMobile}}</a></b><br>
+                        <b style="color:red">{{$keranjang_belanjaans->jumlah_produk }} x {{number_format($keranjang_belanjaans->produk->harga_jual,0,',','.') }} : {{number_format($keranjang_belanjaans->produk->harga_jual * $keranjang_belanjaans->jumlah_produk,0,',','.') }}</b></p>
+                        <p style="font-size: 10px; margin-top:10px">{{$keranjang_belanjaans->produk->warung->name}}</p>
+                      </div>
+
                     </div>
-
                   </div>
                 </div>
               </div>
-            </div>
-            @endforeach
-            {{$pagination}}
-            <div class="card" style="margin-bottom: 1px; margin-top: 1px;">
+              @endforeach
+              {{$pagination}}
+              <div class="card" style="margin-bottom: 1px; margin-top: 1px;">
 
-              <table class="table">
-                <tbody>
-                  <tr style="margin-top: 1px; margin-bottom:1px;">
-                   <td style="margin-top: 1px; margin-bottom:1px;">Total Produk</td>
-                   <td class="text-right" style="margin-top: 1px; margin-bottom:1px;" id="total_produk">{{ $jumlah_produk->total_produk }}</td>
-                 </tr>
-                 <tr style="margin-top: 1px; margin-bottom:1px;">
-                   <td style="margin-top: 1px; margin-bottom:1px;">Subtotal</td>
-                   <td class="text-right" style="margin-top: 1px; margin-bottom:1px;" id="subtotal-keranjang" data-subtotal="{{$subtotal}}">Rp. {{ number_format($subtotal,0,',','.') }}</td>
-                 </tr>
-                 <tr style="margin-top: 1px; margin-bottom:1px;">
-                   <td style="margin-top: 1px; margin-bottom:1px;">Biaya Kirim</td>
-                   <td class="text-right" style="margin-top: 1px; margin-bottom:1px;" id="biaya_kirim" data-biayaKirim="0">0</td>
-                 </tr>
-                 <tr style="margin-top: 1px; margin-bottom:1px;">
-                   <td style="margin-top: 1px; margin-bottom:1px;">Total Belanja</td>
-                   <td class="text-right" style="margin-top: 1px; margin-bottom:1px;" id="total_belanja" data-total="{{$subtotal}}">Rp. {{ number_format($subtotal,0,',','.') }}</td>
-                 </tr>
-               </tbody>
-             </table>
+                <table class="table">
+                  <tbody>
+                    <tr style="margin-top: 1px; margin-bottom:1px;">
+                     <td style="margin-top: 1px; margin-bottom:1px;">Total Produk</td>
+                     <td class="text-right" style="margin-top: 1px; margin-bottom:1px;" id="total_produk">{{ $jumlah_produk->total_produk }}</td>
+                   </tr>
+                   <tr style="margin-top: 1px; margin-bottom:1px;">
+                     <td style="margin-top: 1px; margin-bottom:1px;">Subtotal</td>
+                     <td class="text-right" style="margin-top: 1px; margin-bottom:1px;" id="subtotal-keranjang" data-subtotal="{{$subtotal}}">Rp. {{ number_format($subtotal,0,',','.') }}</td>
+                   </tr>
+                   <tr style="margin-top: 1px; margin-bottom:1px;">
+                     <td style="margin-top: 1px; margin-bottom:1px;">Biaya Kirim</td>
+                     <td class="text-right" style="margin-top: 1px; margin-bottom:1px;" id="biaya_kirim" data-biayaKirim="0">0</td>
+                   </tr>
+                   <tr style="margin-top: 1px; margin-bottom:1px;">
+                     <td style="margin-top: 1px; margin-bottom:1px;">Total Belanja</td>
+                     <td class="text-right" style="margin-top: 1px; margin-bottom:1px;" id="total_belanja" data-total="{{$subtotal}}">Rp. {{ number_format($subtotal,0,',','.') }}</td>
+                   </tr>
+                 </tbody>
+               </table>
 
-           </div>
+             </div>
 
-           @if($setting_aplikasi->tipe_aplikasi == 0)
-           <center>{!! Form::button('Selesai Pesanan <i class="material-icons">keyboard_arrow_right</i> ', ['id'=>'SelesaikanPesanan','class'=>'btn btn-round', 'type'=>'submit', 'style'=>'background-color: #01573e']) !!}</center>
-           @else
-           <center>{!! Form::button('Selesai Pesanan <i class="material-icons">keyboard_arrow_right</i> ', ['id'=>'SelesaikanPesanan','class'=>'btn btn-round buttonColor', 'type'=>'submit']) !!}</center>
-           @endif          
+             @if($setting_aplikasi->tipe_aplikasi == 0)
+             <center>{!! Form::button('Selesai Pesanan <i class="material-icons">keyboard_arrow_right</i> ', ['id'=>'SelesaikanPesanan','class'=>'btn btn-round', 'type'=>'submit', 'style'=>'background-color: #01573e']) !!}</center>
+             @else
+             <center>{!! Form::button('Selesai Pesanan <i class="material-icons">keyboard_arrow_right</i> ', ['id'=>'SelesaikanPesanan','class'=>'btn btn-round buttonColor', 'type'=>'submit']) !!}</center>
+             @endif          
 
-           @else
+             @else
 
-           <div class="card" style="margin-bottom: 5px; margin-top: 5px;">
-            <div class="card-header" style="padding-bottom: 1px;">
-              <h6 class="card-title" style="color: black; padding-left: 10px; margin-bottom: 1px;">Rincian Pesanan</h6> <hr>
-            </div>
-
-            <div class="card-content table-responsive" style="padding-top: 1px; padding-bottom: 1px;">
-              <table class="table table-hover">
-                <thead class="text-success">
-
-                  <th>Produk</th>
-                  <th>Jumlah</th>
-                  <th>Harga</th>
-                  <th>Subtotal</th>
-                </thead>
-                <tbody>
-                  @foreach($keranjang_belanjaan as $keranjang_belanjaans)
-                  <tr id="card-produk-{{ $keranjang_belanjaans->id_keranjang_belanja }}">
-                    <td><a class="btn-simple" href="{{ url('detail-produk/'.$keranjang_belanjaans->id_produk.'') }}">{{ $keranjang_belanjaans->NamaProduk }}</a></td>
-                    <td class="text-right" id="jumlah-produk-{{ $keranjang_belanjaans->id_keranjang_belanja }}">{{ $keranjang_belanjaans->jumlah_produk }}</td>
-                    <td class="text-right">{{ number_format($keranjang_belanjaans->produk->harga_jual,0,',','.') }}</td>
-                    <td class="text-right" id="subtotal-produk-{{ $keranjang_belanjaans->id_keranjang_belanja }}" data-subtotal="{{$keranjang_belanjaans->produk->harga_jual * $keranjang_belanjaans->jumlah_produk}}">{{ number_format($keranjang_belanjaans->produk->harga_jual * $keranjang_belanjaans->jumlah_produk,0,',','.') }}</td>
-                  </tr>
-                  @endforeach
-                </tbody>
-              </table>
-              <div class="text-right">{{$pagination}}</div>
-            </div>
-
-            <hr style="margin-top: 1px;">
-            <div class="card-content" style="margin-top: 1px;">
-
-              <div class="row">
-                <div class="col-md-4"><b>Total Produk</b></div>
-                <div class="col-md-3"><b>:</b></div>
-                <div class="col-md-5"><b class="text-right" id="total_produk">{{ $jumlah_produk->total_produk }}</b></div>
+             <div class="card" style="margin-bottom: 5px; margin-top: 5px;">
+              <div class="card-header" style="padding-bottom: 1px;">
+                <h6 class="card-title" style="color: black; padding-left: 10px; margin-bottom: 1px;">Rincian Pesanan</h6> <hr>
               </div>
 
-              <div class="row">
-                <div class="col-md-4"><b>Subtotal</b></div>
-                <div class="col-md-3"><b>:</b></div>
-                <div class="col-md-5"><b class="text-right" id="subtotal-keranjang" data-subtotal="{{$subtotal}}">Rp. {{ number_format($subtotal,0,',','.') }} </b></div>
+              <div class="card-content table-responsive" style="padding-top: 1px; padding-bottom: 1px;">
+                <table class="table table-hover">
+                  <thead class="text-success">
+
+                    <th>Produk</th>
+                    <th>Jumlah</th>
+                    <th>Harga</th>
+                    <th>Subtotal</th>
+                  </thead>
+                  <tbody>
+                    @foreach($keranjang_belanjaan as $keranjang_belanjaans)
+                    <tr id="card-produk-{{ $keranjang_belanjaans->id_keranjang_belanja }}">
+                      <td><a class="btn-simple" href="{{ url('detail-produk/'.$keranjang_belanjaans->id_produk.'') }}">{{ $keranjang_belanjaans->NamaProduk }}</a></td>
+                      <td class="text-right" id="jumlah-produk-{{ $keranjang_belanjaans->id_keranjang_belanja }}">{{ $keranjang_belanjaans->jumlah_produk }}</td>
+                      <td class="text-right">{{ number_format($keranjang_belanjaans->produk->harga_jual,0,',','.') }}</td>
+                      <td class="text-right" id="subtotal-produk-{{ $keranjang_belanjaans->id_keranjang_belanja }}" data-subtotal="{{$keranjang_belanjaans->produk->harga_jual * $keranjang_belanjaans->jumlah_produk}}">{{ number_format($keranjang_belanjaans->produk->harga_jual * $keranjang_belanjaans->jumlah_produk,0,',','.') }}</td>
+                    </tr>
+                    @endforeach
+                  </tbody>
+                </table>
+                <div class="text-right">{{$pagination}}</div>
               </div>
 
-              <div class="row">
-                <div class="col-md-4"><b>Biaya Kirim</b></div>
-                <div class="col-md-3"><b>:</b></div>
-                <div class="col-md-5"><b class="text-right" id="biaya_kirim" data-biayaKirim="0">0</b></div>
-              </div>
+              <hr style="margin-top: 1px;">
+              <div class="card-content" style="margin-top: 1px;">
 
-              <div class="row">
-                <div class="col-md-4"><h5><b>Total Belanja</b></h5></div>
-                <div class="col-md-3"><h5><b>:</h5></div>
-                  <div class="col-md-5"><h5 class="text-danger"><b class="text-right" id="total_belanja" data-total="{{$subtotal}}">Rp. {{ number_format($subtotal,0,',','.') }}</b></h5></div>
+                <div class="row">
+                  <div class="col-md-4"><b>Total Produk</b></div>
+                  <div class="col-md-3"><b>:</b></div>
+                  <div class="col-md-5"><b class="text-right" id="total_produk">{{ $jumlah_produk->total_produk }}</b></div>
                 </div>
+
+                <div class="row">
+                  <div class="col-md-4"><b>Subtotal</b></div>
+                  <div class="col-md-3"><b>:</b></div>
+                  <div class="col-md-5"><b class="text-right" id="subtotal-keranjang" data-subtotal="{{$subtotal}}">Rp. {{ number_format($subtotal,0,',','.') }} </b></div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-4"><b>Biaya Kirim</b></div>
+                  <div class="col-md-3"><b>:</b></div>
+                  <div class="col-md-5"><b class="text-right" id="biaya_kirim" data-biayaKirim="0">0</b></div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-4"><h5><b>Total Belanja</b></h5></div>
+                  <div class="col-md-3"><h5><b>:</h5></div>
+                    <div class="col-md-5"><h5 class="text-danger"><b class="text-right" id="total_belanja" data-total="{{$subtotal}}">Rp. {{ number_format($subtotal,0,',','.') }}</b></h5></div>
+                  </div>
+                </div>
+
               </div>
 
+              @if($setting_aplikasi->tipe_aplikasi == 0)
+              {!! Form::button('Selesai Pesanan <i class="material-icons">keyboard_arrow_right</i> ', ['id'=>'SelesaikanPesanan','class'=>'btn btn-round pull-right', 'type'=>'button', 'style'=>'background-color: #01573e']) !!}
+              @else
+              {!! Form::button('Selesai Pesanan <i class="material-icons">keyboard_arrow_right</i> ', ['id'=>'SelesaikanPesanan','class'=>'btn btn-round pull-right buttonColor', 'type'=>'button']) !!}
+              @endif 
+
+              @endif
+
+              {!! Form::close() !!}
             </div>
-
-            @if($setting_aplikasi->tipe_aplikasi == 0)
-            {!! Form::button('Selesai Pesanan <i class="material-icons">keyboard_arrow_right</i> ', ['id'=>'SelesaikanPesanan','class'=>'btn btn-round pull-right', 'type'=>'button', 'style'=>'background-color: #01573e']) !!}
-            @else
-            {!! Form::button('Selesai Pesanan <i class="material-icons">keyboard_arrow_right</i> ', ['id'=>'SelesaikanPesanan','class'=>'btn btn-round pull-right buttonColor', 'type'=>'button']) !!}
-            @endif 
-
             @endif
-
-            {!! Form::close() !!}
           </div>
-          @endif
         </div>
       </div>
     </div>
-  </div>
-</div> <!-- end-main-raised -->
-@endsection
+  </div> <!-- end-main-raised -->
+  @endsection
 
 
-@section('scripts')
-<script type="text/javascript">
-  $(document).ready(function(){
+  @section('scripts')
+  <script type="text/javascript">
+    $(document).ready(function(){
 
-    var $select = $('#provinsi').selectize({
-     loadingClass: 'selectizeLoading',
-     valueField: 'province_id',
-     labelField: 'province',
-     searchField: 'province',
-     onChange: function (province_id) 
-     {
-      if (!province_id.length) return;
-      selectKota.clearOptions(); 
-      selectKota.settings.placeholder = "Tunggu Sebentar ...";
-      selectKota.updatePlaceholder();
-      selectKota.load(function (callback) { timeOutS = setTimeout(setKotaOptions, 500, callback, province_id); });
-    }
-  });
-
-    var $selectKota = $('#kota').selectize({
-     loadingClass: 'selectizeLoading',
-     valueField: 'city_id',
-     labelField: 'city_name',
-     searchField: 'city_name',
-     create: false
-   });
-
-    var $selectKurir = $('#kurir').selectize({
-      sortField: 'text'
+      var $select = $('#provinsi').selectize({
+       loadingClass: 'selectizeLoading',
+       valueField: 'province_id',
+       labelField: 'province',
+       searchField: 'province',
+       onChange: function (province_id) 
+       {
+        if (!province_id.length) return;
+        selectKota.clearOptions(); 
+        selectKota.settings.placeholder = "Tunggu Sebentar ...";
+        selectKota.updatePlaceholder();
+        selectKota.load(function (callback) {
+         timeOutS = setTimeout(
+          setKotaOptions, 500, callback, province_id
+          ); 
+       });
+      }
     });
 
-    var $selectLayananKurir = $('#layanan_kurir').selectize({
-     loadingClass: 'selectizeLoading',
-     valueField: 'id',
-     labelField: 'service',
-     searchField: 'service',
-     create: false              
+      var $selectKota = $('#kota').selectize({
+       loadingClass: 'selectizeLoading',
+       valueField: 'city_id',
+       labelField: 'city_name',
+       searchField: 'city_name',
+       create: false
+     });
 
-   });
+      var $selectKurir = $('#kurir').selectize({
+        sortField: 'text'
+      });
 
-    $('#metode_pembayaran').selectize({
-     sortField: 'text'        
-   });
+      var $selectLayananKurir = $('#layanan_kurir').selectize({
+       loadingClass: 'selectizeLoading',
+       valueField: 'id',
+       labelField: 'service',
+       searchField: 'service',
+       create: false              
 
-    var selectKota = $('#kota').data('selectize');
-    var selectMetodePembayaran = $('#metode_pembayaran').data('selectize');
-    var selectLayananKurir = $('#layanan_kurir').data('selectize');
-    Number.prototype.format = function(n, x, s, c) {
-      var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\D' : '$') + ')',
-      num = this.toFixed(Math.max(0, ~~n));
+     });
 
-      return (c ? num.replace('.', c) : num).replace(new RegExp(re, 'g'), '$&' + (s || ','));
+      $('#metode_pembayaran').selectize({
+       sortField: 'text'        
+     });
+
+      var selectKota = $('#kota').data('selectize');
+      var selectMetodePembayaran = $('#metode_pembayaran').data('selectize');
+      var selectLayananKurir = $('#layanan_kurir').data('selectize');
+      Number.prototype.format = function(n, x, s, c) {
+        var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\D' : '$') + ')',
+        num = this.toFixed(Math.max(0, ~~n));
+
+        return (c ? num.replace('.', c) : num).replace(new RegExp(re, 'g'), '$&' + (s || ','));
+      };
+
+
+      $.getJSON('{{ Url("provinsi-destinasi-pengiriman") }}',{'_token': $('meta[name=csrf-token]').attr('content')}, function(resp){ 
+
+        $select[0].selectize.addOption(resp.rajaongkir.results);   
+        var kabupaten = "{{$kabupaten}}";
+        var kota_pengirim = $("#kota_pengirim").val();
+        var provinsi_pelanggan = $("#provinsi_pelanggan").val();
+        var kabupaten_pelanggan = $("#kabupaten_pelanggan").val();
+        var auth = "{{Auth::check()}}";
+
+        
+        if (kota_pengirim == '') {
+          $.each(resp.rajaongkir.results, function (i, item) { 
+
+            if (kabupaten == resp.rajaongkir.results[i].type+" "+resp.rajaongkir.results[i].city_name) {
+              var city_id = resp.rajaongkir.results[i].city_id;
+              var provinsi = resp.rajaongkir.results[i].province_id;
+              $("#kota_pengirim").val(city_id);
+              if (auth == true) {
+                document.getElementById('provinsi').selectize.setValue(provinsi);
+              }
+            };
+
+          }); 
+
+        }    
+
+
+
+
+      });
+
+      $selectKurir.on('change', function(){
+
+        var kurir = $(this).val();
+        var kota_pengirim = $("#kota_pengirim").val();
+        var kota_tujuan = $("#kota").val();
+        var provinsi = $("#provinsi").val();
+        var alamat = $("#alamat").val();
+        var berat_barang = "{{$berat_barang}}";
+
+        if (kota_tujuan == '') {
+          alertAlamatBelumLengkap();
+        }else if (provinsi == '') {
+          alertAlamatBelumLengkap();
+        }else if (alamat == '') {
+          alertAlamatBelumLengkap();
+        }
+        else{
+          if (kurir == 'cod' || kurir == 'ojek') {     
+            pengirimanBiasa(kurir); 
+          }else{
+            hitungOngkir(kurir,kota_pengirim,kota_tujuan,berat_barang);
+          }
+        }
+
+      });
+
+      function pengirimanBiasa(kurir){    
+        var subtotal = parseInt($("#total_belanja").attr("data-total"));                
+        $("#subtotal").val(subtotal);
+        var subtotal = subtotal.format(0, 3, '.', ',');
+        $("#ongkos_kirim").val("0");
+        $("#biaya_kirim").text("0");
+        $("#biaya_kirim").attr("data-biayaKirim",0);
+        $("#ongkir").text("");
+        $("#waktu_pengiriman").text("");  
+        selectLayananKurir.setValue("");
+        selectLayananKurir.disable();
+        selectLayananKurir.clearOptions(); 
+        $("#total_belanja").text("Rp. "+subtotal);
+        if (kurir == 'cod') {
+          selectMetodePembayaran.setValue("Bayar di Tempat");
+          selectMetodePembayaran.disable();
+        }else{
+          selectMetodePembayaran.focus();
+          selectMetodePembayaran.enable();
+        }
+      }
+
+      function pengirimanOjek(){   
+      }
+
+      function alertAlamatBelumLengkap(){
+       swal({
+        text: 'Lengkapi alamat terlebih dahulu untuk memilih jasa pengiriman!'
+      });
+       document.getElementById('kurir').selectize.setValue('');
+     }
+
+     function hitungOngkir(kurir,kota_pengirim,kota_tujuan,berat_barang){
+
+      $("#total_belanja").addClass('spinner');
+      $("#total_belanja").text('');
+      $("#ongkir").addClass('spinner');
+      $("#ongkir").text('');
+      $("#biaya_kirim").addClass('spinner');
+      $("#biaya_kirim").text('');
+      $("#waktu_pengiriman").text('');  
+
+      $.getJSON('{{ Url("hitung-ongkir") }}',{'_token': $('meta[name=csrf-token]').attr('content'),kurir:kurir,kota_pengirim:kota_pengirim,kota_tujuan:kota_tujuan,berat_barang:berat_barang}, function(resp){ 
+        $selectLayananKurir[0].selectize.clearOptions();
+        var subtotal = $("#total_belanja").attr("data-total");
+        var options_layanan = [];
+        var status_layanan = 0; 
+
+        $.each(resp.rajaongkir.results[0].costs, function (i, item) { 
+          status_layanan += 1;
+          options_layanan.push({
+            id: resp.rajaongkir.results[0].costs[i].service+"|"+resp.rajaongkir.results[0].costs[i].cost[0].value+"|"+resp.rajaongkir.results[0].costs[i].cost[0].etd+"|"+resp.rajaongkir.results[0].costs[i].description,
+            service: resp.rajaongkir.results[0].costs[i].service+" | "+resp.rajaongkir.results[0].costs[i].description
+          });
+
+        });
+        $selectLayananKurir[0].selectize.addOption(options_layanan);   
+        console.log(options_layanan); 
+
+        if (status_layanan == 0) {
+          swal({
+            text: 'Kurir yang anda pilih tidak tersedia, silakan pilih yang lain!'
+          }).then((result) => {
+            if (result.value) {
+              $selectKurir[0].selectize.focus();
+            }
+          });  
+
+          var ongkir = 0;
+          var waktu_pengiriman = "";
+          var layanan_kurir = "";
+          var total_belanja = parseInt(subtotal);             
+          updateOngkir(ongkir,waktu_pengiriman,layanan_kurir,total_belanja);
+
+        }else{
+
+          if (resp.rajaongkir.results[0].code == "pos") {
+
+            var waktu_pengiriman = "Waktu Pengiriman " +resp.rajaongkir.results[0].costs[0].cost[0].etd;
+          }else{
+
+            var waktu_pengiriman = "Waktu Pengiriman " +resp.rajaongkir.results[0].costs[0].cost[0].etd+ " HARI.";
+          }
+
+          var resp_ongkir = resp.rajaongkir.results[0].costs[0].cost[0].value;
+          var total_belanja = parseInt(subtotal) + parseInt(resp_ongkir);
+          var layanan_kurir = resp.rajaongkir.results[0].costs[0].service+"|"+resp.rajaongkir.results[0].costs[0].cost[0].value+"|"+resp.rajaongkir.results[0].costs[0].cost[0].etd+"|"+resp.rajaongkir.results[0].costs[0].description;
+
+          var ongkir = resp_ongkir.format(0, 3, '.', ',');
+          var total_belanja = total_belanja.format(0, 3, '.', ',');
+          updateOngkir(ongkir,waktu_pengiriman,layanan_kurir,total_belanja);
+
+        }
+
+
+      });
+    } 
+
+    function updateOngkir(ongkir,waktu_pengiriman,layanan_kurir,total_belanja){
+      $("#subtotal").val(total_belanja);
+      $("#ongkos_kirim").val(ongkir);
+      $("#biaya_kirim").text("Rp. "+ongkir);
+      $("#biaya_kirim").attr("data-biayaKirim",ongkir);
+      $("#biaya_kirim").removeClass('spinner');
+      $("#ongkir").text("Rp. "+ongkir);
+      $("#ongkir").removeClass('spinner');
+      $("#waktu_pengiriman").text(waktu_pengiriman);   
+      selectLayananKurir.setValue(layanan_kurir);
+      selectLayananKurir.enable(); 
+      $("#total_belanja").removeClass('spinner'); 
+      $("#total_belanja").text("Rp. "+total_belanja);
+      selectMetodePembayaran.setValue("TRANSFER");
+      selectMetodePembayaran.disable();
+    }
+
+    $selectLayananKurir.on('change', function(){
+
+      var layanan = $(this).val();
+      var kurir = $("#kurir").val();
+      var service = layanan.split("|");         
+      var ongkir = parseInt(service[1]);
+
+      if (layanan != "") {
+
+       if (kurir == "pos") {
+        var waktu_pengiriman = "Waktu Pengiriman " +service[2];
+      }else{
+        var waktu_pengiriman = "Waktu Pengiriman " +service[2]+ " HARI.";
+      }
+
+      var subtotal = $("#total_belanja").attr("data-total");
+      var total_belanja = parseInt(subtotal) + parseInt(ongkir);
+      var ongkir = ongkir.format(0, 3, '.', ',');
+      var total_belanja = total_belanja.format(0, 3, '.', ',');
+      $("#subtotal").val(total_belanja);
+      $("#ongkos_kirim").val(ongkir);
+      $("#biaya_kirim").text("Rp. "+ongkir);
+      $("#biaya_kirim").attr("data-biayaKirim",ongkir);
+      $("#ongkir").text("Rp. "+ongkir);
+      $("#waktu_pengiriman").text(waktu_pengiriman); 
+      $("#total_belanja").text("Rp. "+total_belanja);
+
+    }
+
+  });
+
+    var setKotaOptions = function (callback, id_provinsi)
+    {
+      clearTimeout(timeOutS);
+
+      $.getJSON('{{ Url("kota-destinasi-pengiriman") }}',{'_token': $('meta[name=csrf-token]').attr('content'),id_provinsi:id_provinsi}, function(resp){               
+
+        callback(resp.rajaongkir.results);
+        var kabupaten_pelanggan = $("#kabupaten_pelanggan").val(); 
+        $.each(resp.rajaongkir.results, function (i, item) { 
+
+          if (kabupaten_pelanggan == resp.rajaongkir.results[i].type+" "+resp.rajaongkir.results[i].city_name) {
+            var kota = resp.rajaongkir.results[i].city_id;
+            var alamat = $("#alamatPelanggan").val();
+            var alamat_pengiriman = alamat +", Kota/Kab. "+resp.rajaongkir.results[i].city_name+",  "+resp.rajaongkir.results[i].province;
+
+            selectKota.setValue(kota); 
+            $("#alamatPelanggan").val(alamat_pengiriman);
+            $(".alamat_pengiriman").hide();
+            $("#formAlamat").show();
+            document.getElementById('kurir').selectize.setValue('cod');
+
+          }else{
+            selectKota.settings.placeholder = "Cari Kabupaten atau Kota ...";
+            selectKota.updatePlaceholder();  
+            selectKota.focus();  
+          };
+        }); 
+        console.log(resp.rajaongkir.results);
+      });
     };
 
 
-    $.getJSON('{{ Url("provinsi-destinasi-pengiriman") }}',{'_token': $('meta[name=csrf-token]').attr('content')}, function(resp){ 
-
-      $select[0].selectize.addOption(resp.rajaongkir.results);   
-      var kabupaten = "{{$kabupaten}}";
-      var kota_pengirim = $("#kota_pengirim").val();
-      var provinsi_pelanggan = $("#provinsi_pelanggan").val();
-      var kabupaten_pelanggan = $("#kabupaten_pelanggan").val();
-
-
-      if (kota_pengirim == '') {
-        $.each(resp.rajaongkir.results, function (i, item) { 
-
-          if (provinsi_pelanggan == resp.rajaongkir.results[i].province && kabupaten_pelanggan == resp.rajaongkir.results[i].type+" "+resp.rajaongkir.results[i].city_name) {
-            var provinsi = resp.rajaongkir.results[i].province_id;
-            document.getElementById('provinsi').selectize.setValue(provinsi);
-          };
-
-          if (kabupaten == resp.rajaongkir.results[i].type+" "+resp.rajaongkir.results[i].city_name) {
-            var city_id = resp.rajaongkir.results[i].city_id;
-            $("#kota_pengirim").val(city_id);
-          };
-
-        }); 
-
-      }          
-    });
-
-    $selectKurir.on('change', function(){
-
-      var kurir = $(this).val();
-      var kota_pengirim = $("#kota_pengirim").val();
-      var kota_tujuan = $("#kota").val();
-      var provinsi = $("#provinsi").val();
-      var alamat = $("#alamat").val();
-      var berat_barang = "{{$berat_barang}}";
-
-      if (kota_tujuan == '') {
-        alertAlamatBelumLengkap();
-      }else if (provinsi == '') {
-        alertAlamatBelumLengkap();
-      }else if (alamat == '') {
-        alertAlamatBelumLengkap();
-      }
-      else{
-        if (kurir == 'cod' || kurir == 'ojek') {     
-          pengirimanBiasa(kurir); 
-        }else{
-          hitungOngkir(kurir,kota_pengirim,kota_tujuan,berat_barang);
-        }
-      }
-
-    });
-
-    function pengirimanBiasa(kurir){    
-      var subtotal = parseInt($("#total_belanja").attr("data-total"));                
-      $("#subtotal").val(subtotal);
-      var subtotal = subtotal.format(0, 3, '.', ',');
-      $("#ongkos_kirim").val("0");
-      $("#biaya_kirim").text("0");
-      $("#biaya_kirim").attr("data-biayaKirim",0);
-      $("#ongkir").text("");
-      $("#waktu_pengiriman").text("");  
-      selectLayananKurir.setValue("");
-      selectLayananKurir.disable();
-      selectLayananKurir.clearOptions(); 
-      $("#total_belanja").text("Rp. "+subtotal);
-      if (kurir == 'cod') {
-        selectMetodePembayaran.setValue("Bayar di Tempat");
-        selectMetodePembayaran.disable();
+    selectMetodePembayaran.on('change', function(){
+      var metode_pembayaran = selectMetodePembayaran.getValue();
+      if (metode_pembayaran == "TRANSFER") {
+        $("#note_pembayaran").text("");
       }else{
-        selectMetodePembayaran.focus();
-        selectMetodePembayaran.enable();
+       $("#note_pembayaran").text("Anda dapat melakukan pembayaran saat Anda menerima pesanan.");
+     }
+   }); 
+
+    $(document).on('click', '.alamat_pengiriman', function () {  
+      $("#myModal").show();
+      $select[0].selectize.focus();
+    }); 
+    $(document).on('click', '#ubah_alamat', function () {  
+      $("#myModal").show();
+      $select[0].selectize.focus();
+    });     
+    $(document).on('change', '#kota', function () {   
+      $("#alamat").focus();
+    }); 
+
+    $(document).on('click', '.closeModal', function () {  
+      $("#myModal").hide();
+    });  
+
+    $(document).on('click', '#pembayaran', function () {  
+      $("#modalPembayaran").show();
+    });  
+
+    $(document).on('click', '#selesaiAlamatPengiriman', function () {
+
+      var provinsi = $("#provinsi").text();
+      var kota = $("#kota").text();
+      var alamat = $("#alamat").val();
+
+      var alamat_pengiriman = alamat +" Kota/Kab. "+kota+",  "+provinsi;
+
+      if ($("#provinsi").val() == '') {
+        $(".validationProvinsi").show();
+        $select[0].selectize.focus();
+      }else if ($("#kota").val() == '') {
+        $(".validationKota").show();
+        $selectKota[0].selectize.focus();
+      }else if (alamat == '') {
+        $(".validationAlamat").show();
+        $('#alamat').focus();
+      }else{
+        $("#myModal").hide();
+        $(".alamat_pengiriman").hide();
+        $("#formAlamat").show();
+        $("#alamatPelanggan").val(alamat_pengiriman);
+        document.getElementById('kurir').selectize.setValue('jne');
       }
-    }
 
-    function pengirimanOjek(){   
-    }
-
-    function alertAlamatBelumLengkap(){
-     swal({
-      text: 'Lengkapi alamat terlebih dahulu untuk memilih jasa pengiriman!'
     });
-     document.getElementById('kurir').selectize.setValue('');
-   }
 
-   function hitungOngkir(kurir,kota_pengirim,kota_tujuan,berat_barang){
-
-    $("#total_belanja").addClass('spinner');
-    $("#total_belanja").text('');
-    $("#ongkir").addClass('spinner');
-    $("#ongkir").text('');
-    $("#biaya_kirim").addClass('spinner');
-    $("#biaya_kirim").text('');
-    $("#waktu_pengiriman").text('');  
-
-    $.getJSON('{{ Url("hitung-ongkir") }}',{'_token': $('meta[name=csrf-token]').attr('content'),kurir:kurir,kota_pengirim:kota_pengirim,kota_tujuan:kota_tujuan,berat_barang:berat_barang}, function(resp){ 
-      $selectLayananKurir[0].selectize.clearOptions();
-      var subtotal = $("#total_belanja").attr("data-total");
-      var options_layanan = [];
-      var status_layanan = 0; 
-
-      $.each(resp.rajaongkir.results[0].costs, function (i, item) { 
-        status_layanan += 1;
-        options_layanan.push({
-          id: resp.rajaongkir.results[0].costs[i].service+"|"+resp.rajaongkir.results[0].costs[i].cost[0].value+"|"+resp.rajaongkir.results[0].costs[i].cost[0].etd+"|"+resp.rajaongkir.results[0].costs[i].description,
-          service: resp.rajaongkir.results[0].costs[i].service+" | "+resp.rajaongkir.results[0].costs[i].description
-        });
-
+    $(document).on('click', '#SelesaikanPesanan', function () {
+      $("#formSelesaikanPesanan").submit(function(){
+        return false;
       });
-      $selectLayananKurir[0].selectize.addOption(options_layanan);   
-      console.log(options_layanan); 
+      var setting_aplikasi = "{{$setting_aplikasi->tipe_aplikasi}}";
+      if (setting_aplikasi == 0) {
+        var pesan = "Berhasil Menyelesaikan Pesanan."+"<p>Terima Kasih Telah Berbelanja Di Warmart , Silahkan Tunggu Konfirmasi Dari Warung</p>";
+      }else{
+        var pesan = "Berhasil Menyelesaikan Pesanan."+"<p>Terima Kasih Telah Berbelanja Di Tempat Kami , Silahkan Tunggu Konfirmasi Dari Kami</p>";
+      }
+      var nama_pelanggan = $("#nama_pelanggan").val();
+      var no_telp = $("#no_telp").val();
+      var email = $("#email").val();
+      var alamatPelanggan = $("#alamatPelanggan").val();
+      var kurir = $("#kurir").val();
+      var metode_pembayaran = $("#metode_pembayaran").val();
+      var ongkos_kirim = $("#ongkos_kirim").val();
+      var provinsi = $("#provinsi").val();
+      var kota = $("#kota").val();
 
-      if (status_layanan == 0) {
+      if (nama_pelanggan == '') {
+
         swal({
-          text: 'Kurir yang anda pilih tidak tersedia, silakan pilih yang lain!'
+          text: 'Nama harus di isi!'
         }).then((result) => {
           if (result.value) {
-            $selectKurir[0].selectize.focus();
+            $("#nama_pelanggan").focus();
+          }
+        }); 
+
+
+      }else if(no_telp == ""){
+
+        swal({
+          text: 'No. Telp harus di isi!'
+        }).then((result) => {
+          if (result.value) {
+            $("#no_telp").focus();
           }
         });  
 
-        var ongkir = 0;
-        var waktu_pengiriman = "";
-        var layanan_kurir = "";
-        var total_belanja = parseInt(subtotal);             
-        updateOngkir(ongkir,waktu_pengiriman,layanan_kurir,total_belanja);
+      }else if(email == ""){
 
-      }else{
+        swal({
+          text: 'Email harus di isi!'
+        }).then((result) => {
+          if (result.value) {
+            $("#email").focus();
+          }
+        });  
 
-        if (resp.rajaongkir.results[0].code == "pos") {
+      }else if(kurir == ""){   
 
-          var waktu_pengiriman = "Waktu Pengiriman " +resp.rajaongkir.results[0].costs[0].cost[0].etd;
-        }else{
-
-          var waktu_pengiriman = "Waktu Pengiriman " +resp.rajaongkir.results[0].costs[0].cost[0].etd+ " HARI.";
-        }
-
-        var resp_ongkir = resp.rajaongkir.results[0].costs[0].cost[0].value;
-        var total_belanja = parseInt(subtotal) + parseInt(resp_ongkir);
-        var layanan_kurir = resp.rajaongkir.results[0].costs[0].service+"|"+resp.rajaongkir.results[0].costs[0].cost[0].value+"|"+resp.rajaongkir.results[0].costs[0].cost[0].etd+"|"+resp.rajaongkir.results[0].costs[0].description;
-
-        var ongkir = resp_ongkir.format(0, 3, '.', ',');
-        var total_belanja = total_belanja.format(0, 3, '.', ',');
-        updateOngkir(ongkir,waktu_pengiriman,layanan_kurir,total_belanja);
-
-      }
-
-
-    });
-  } 
-
-  function updateOngkir(ongkir,waktu_pengiriman,layanan_kurir,total_belanja){
-    $("#subtotal").val(total_belanja);
-    $("#ongkos_kirim").val(ongkir);
-    $("#biaya_kirim").text("Rp. "+ongkir);
-    $("#biaya_kirim").attr("data-biayaKirim",ongkir);
-    $("#biaya_kirim").removeClass('spinner');
-    $("#ongkir").text("Rp. "+ongkir);
-    $("#ongkir").removeClass('spinner');
-    $("#waktu_pengiriman").text(waktu_pengiriman);   
-    selectLayananKurir.setValue(layanan_kurir);
-    selectLayananKurir.enable(); 
-    $("#total_belanja").removeClass('spinner'); 
-    $("#total_belanja").text("Rp. "+total_belanja);
-    selectMetodePembayaran.setValue("TRANSFER");
-    selectMetodePembayaran.disable();
-  }
-
-  $selectLayananKurir.on('change', function(){
-
-    var layanan = $(this).val();
-    var kurir = $("#kurir").val();
-    var service = layanan.split("|");         
-    var ongkir = parseInt(service[1]);
-
-    if (layanan != "") {
-
-     if (kurir == "pos") {
-      var waktu_pengiriman = "Waktu Pengiriman " +service[2];
-    }else{
-      var waktu_pengiriman = "Waktu Pengiriman " +service[2]+ " HARI.";
-    }
-
-    var subtotal = $("#total_belanja").attr("data-total");
-    var total_belanja = parseInt(subtotal) + parseInt(ongkir);
-    var ongkir = ongkir.format(0, 3, '.', ',');
-    var total_belanja = total_belanja.format(0, 3, '.', ',');
-    $("#subtotal").val(total_belanja);
-    $("#ongkos_kirim").val(ongkir);
-    $("#biaya_kirim").text("Rp. "+ongkir);
-    $("#biaya_kirim").attr("data-biayaKirim",ongkir);
-    $("#ongkir").text("Rp. "+ongkir);
-    $("#waktu_pengiriman").text(waktu_pengiriman); 
-    $("#total_belanja").text("Rp. "+total_belanja);
-
-  }
-
-});
-
-  var setKotaOptions = function (callback, id_provinsi)
-  {
-    clearTimeout(timeOutS);
-
-    $.getJSON('{{ Url("kota-destinasi-pengiriman") }}',{'_token': $('meta[name=csrf-token]').attr('content'),id_provinsi:id_provinsi}, function(resp){               
-
-      callback(resp.rajaongkir.results);
-      var kabupaten_pelanggan = $("#kabupaten_pelanggan").val(); 
-      $.each(resp.rajaongkir.results, function (i, item) { 
-
-        if (kabupaten_pelanggan == resp.rajaongkir.results[i].type+" "+resp.rajaongkir.results[i].city_name) {
-          var kota = resp.rajaongkir.results[i].city_id;
-          var alamat = $("#alamatPelanggan").val();
-          var alamat_pengiriman = alamat +", Kota/Kab. "+resp.rajaongkir.results[i].city_name+",  "+resp.rajaongkir.results[i].province;
-
-          selectKota.setValue(kota); 
-          $("#alamatPelanggan").val(alamat_pengiriman);
-          $(".alamat_pengiriman").hide();
-          $("#formAlamat").show();
-          document.getElementById('kurir').selectize.setValue('cod');
-
-        }else{
-          selectKota.settings.placeholder = "Cari Kabupaten atau Kota ...";
-          selectKota.updatePlaceholder();  
-          selectKota.focus();  
-        };
-      }); 
-      console.log(resp.rajaongkir.results);
-    });
-  };
-
-
-  selectMetodePembayaran.on('change', function(){
-    var metode_pembayaran = selectMetodePembayaran.getValue();
-    if (metode_pembayaran == "TRANSFER") {
-      $("#note_pembayaran").text("");
-    }else{
-     $("#note_pembayaran").text("Anda dapat melakukan pembayaran saat Anda menerima pesanan.");
-   }
- }); 
-
-  $(document).on('click', '.alamat_pengiriman', function () {  
-    $("#myModal").show();
-  }); 
-  $(document).on('click', '#ubah_alamat', function () {  
-    $("#myModal").show();
-  });     
-  $(document).on('change', '#kota', function () {   
-    $("#alamat").focus();
-  }); 
-
-  $(document).on('click', '.closeModal', function () {  
-    $("#myModal").hide();
-  });  
-
-  $(document).on('click', '#pembayaran', function () {  
-    $("#modalPembayaran").show();
-  });  
-
-  $(document).on('click', '#selesaiAlamatPengiriman', function () {
-
-    var provinsi = $("#provinsi").text();
-    var kota = $("#kota").text();
-    var alamat = $("#alamat").val();
-
-    var alamat_pengiriman = alamat +" Kota/Kab. "+kota+",  "+provinsi;
-
-    if ($("#provinsi").val() == '') {
-      $(".validationProvinsi").show();
-      $select[0].selectize.focus();
-    }else if ($("#kota").val() == '') {
-      $(".validationKota").show();
-      $selectKota[0].selectize.focus();
-    }else if (alamat == '') {
-      $(".validationAlamat").show();
-      $('#alamat').focus();
-    }else{
-      $("#myModal").hide();
-      $(".alamat_pengiriman").hide();
-      $("#formAlamat").show();
-      $("#alamatPelanggan").val(alamat_pengiriman);
-      document.getElementById('kurir').selectize.setValue('jne')
-    }
-
-  });
-
-  $(document).on('click', '#SelesaikanPesanan', function () {
-    $("#formSelesaikanPesanan").submit(function(){
-      return false;
-    });
-    var setting_aplikasi = "{{$setting_aplikasi->tipe_aplikasi}}";
-    if (setting_aplikasi == 0) {
-      var pesan = "Berhasil Menyelesaikan Pesanan."+"<p>Terima Kasih Telah Berbelanja Di Warmart , Silahkan Tunggu Konfirmasi Dari Warung<p>";
-    }else{
-      var pesan = "Berhasil Menyelesaikan Pesanan."+"<p>Terima Kasih Telah Berbelanja Di Tempat Kami , Silahkan Tunggu Konfirmasi Dari Kami<p>";
-    }
-    var nama_pelanggan = $("#nama_pelanggan").val();
-    var no_telp = $("#no_telp").val();
-    var alamatPelanggan = $("#alamatPelanggan").val();
-    var kurir = $("#kurir").val();
-    var metode_pembayaran = $("#metode_pembayaran").val();
-
-
-    if (nama_pelanggan == '') {
-
-      swal({
-        text: 'Nama harus di isi!'
+       swal({
+        text: 'Kurir harus di isi!'
       }).then((result) => {
         if (result.value) {
-          $("#nama_pelanggan").focus();
-        }
-      }); 
+         document.getElementById('kurir').selectize.focus(); 
+       }
+     });
 
-
-    }else if(no_telp == ""){
-
-      swal({
-        text: 'No. Telp harus di isi!'
-      }).then((result) => {
-        if (result.value) {
-          $("#no_telp").focus();
-        }
-      });  
-
-    }else if(kurir == ""){   
+    }else if(provinsi == "" || kota == ""){   
 
      swal({
-      text: 'Kurir harus di isi!'
+      text: 'Mohon Lengkapi Alamat Pengiriman!'
     }).then((result) => {
       if (result.value) {
-       document.getElementById('kurir').selectize.focus(); 
+       $("#myModal").show();
+       document.getElementById('provinsi').selectize.focus(); 
      }
    });
 
@@ -803,70 +792,82 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
 
 });
 
-  function alertValidationSelesaiPesanan(){
-    swal({
-      text: 'Kurir yang anda pilih tidak tersedia, silakan pilih yang lain!'
-    }).then((result) => {
-      if (result.value) {
-        $selectKurir[0].selectize.focus();
-      }
-    }); 
+    function alertValidationSelesaiPesanan(){
+      swal({
+        text: 'Kurir yang anda pilih tidak tersedia, silakan pilih yang lain!'
+      }).then((result) => {
+        if (result.value) {
+          $selectKurir[0].selectize.focus();
+        }
+      }); 
+    }
+
+    $(document).on('click', '#btnHapusProduk', function () {
+      var id = $(this).attr("data-id");
+      var nama = $(this).attr("data-nama");
+      var jumlah_produk = $("#jumlah-produk-"+id).text();
+      var subtotal_produk = $("#subtotal-produk-"+id).attr("data-subtotal");
+      var total_produk = $("#total_produk").text();
+      var subtotal = $("#subtotal-keranjang").attr("data-subtotal");
+      var biaya_kirim = $("#biaya_kirim").attr("data-biayaKirim");
+
+      var totalProduk = parseInt(total_produk) - parseInt(jumlah_produk);
+      var subtotalAkhir = parseInt(subtotal) - parseInt(subtotal_produk);
+      var total_belanja = parseInt(subtotalAkhir) + parseInt(biaya_kirim);
+
+
+      swal({
+        html: "Anda Yakin Ingin Menghapus Produk <b>"+nama+"</b> Dari Keranjang Belanja ?",
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ya',
+        cancelButtonText: 'Batal'
+      }).then((result) => {
+        if (result.value) {
+          $("#card-produk-"+id).remove();
+          $("#total_produk").text(totalProduk);
+          $("#subtotal-keranjang").attr("data-subtotal",subtotalAkhir);
+          $("#subtotal-keranjang").text("Rp. "+subtotalAkhir.format(0, 3, '.', ','));
+          $("#total_belanja").attr("data-total",total_belanja);
+          $("#total_belanja").text("Rp. "+total_belanja.format(0, 3, '.', ','));
+          alertBerhasilHapus(nama);
+          hapusProduk(id);
+
+        }
+      })
+
+    });
+
+    function alertBerhasilHapus(nama){
+     swal({
+      html :  "Produk <b>"+nama+"</b> Berhasil Dihapus Dari Keranjang Belanjaan",
+      showConfirmButton :  false,
+      type: "success",
+      timer: 1000
+    });
+   }
+   function hapusProduk(id){
+    var totalProduk = "{{$cek_belanjaan}}";
+    var totalProduk = parseInt(totalProduk) - 1; 
+    var sisa_jumlah_produk = "| "+totalProduk;
+    $("#jumlah-keranjang").text(sisa_jumlah_produk);
+    $.get('{{ Url("keranjang-belanja/hapus-produk-keranjang-belanja") }}',{'_token': $('meta[name=csrf-token]').attr('content'),id:id}, function(resp){
+    });
   }
 
-  $(document).on('click', '#btnHapusProduk', function () {
-    var id = $(this).attr("data-id");
-    var nama = $(this).attr("data-nama");
-    var jumlah_produk = $("#jumlah-produk-"+id).text();
-    var subtotal_produk = $("#subtotal-produk-"+id).attr("data-subtotal");
-    var total_produk = $("#total_produk").text();
-    var subtotal = $("#subtotal-keranjang").attr("data-subtotal");
-    var biaya_kirim = $("#biaya_kirim").attr("data-biayaKirim");
-
-    var totalProduk = parseInt(total_produk) - parseInt(jumlah_produk);
-    var subtotalAkhir = parseInt(subtotal) - parseInt(subtotal_produk);
-    var total_belanja = parseInt(subtotalAkhir) + parseInt(biaya_kirim);
+});
 
 
-    swal({
-      html: "Anda Yakin Ingin Menghapus Produk <b>"+nama+"</b> Dari Keranjang Belanja ?",
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Ya',
-      cancelButtonText: 'Batal'
-    }).then((result) => {
-      if (result.value) {
-        $("#card-produk-"+id).remove();
-        $("#total_produk").text(totalProduk);
-        $("#subtotal-keranjang").attr("data-subtotal",subtotalAkhir);
-        $("#subtotal-keranjang").text("Rp. "+subtotalAkhir.format(0, 3, '.', ','));
-        $("#total_belanja").attr("data-total",total_belanja);
-        $("#total_belanja").text("Rp. "+total_belanja.format(0, 3, '.', ','));
-        alertBerhasilHapus(nama);
-        hapusProduk(id);
+var db = new Dexie("keranjang_belanja");
 
-      }
-    })
-
-  });
-
-  function alertBerhasilHapus(nama){
-   swal({
-    html :  "Produk <b>"+nama+"</b> Berhasil Dihapus Dari Keranjang Belanjaan",
-    showConfirmButton :  false,
-    type: "success",
-    timer: 1000
-  });
- }
- function hapusProduk(id){
-  var totalProduk = "{{$cek_belanjaan}}";
-  var totalProduk = parseInt(totalProduk) - 1; 
-  var sisa_jumlah_produk = "| "+totalProduk;
-  $("#jumlah-keranjang").text(sisa_jumlah_produk);
-  $.get('{{ Url("keranjang-belanja/hapus-produk-keranjang-belanja") }}',{'_token': $('meta[name=csrf-token]').attr('content'),id:id}, function(resp){
-  });
-}
-
+db.version(2).stores({
+  session : 'session_id'  
+});
+db.session.each(function(data,i){
+ $("#session_id").val(data.session_id);
+ $("#session_id_pelanggan").val(data.session_id);
+}).then(function(){
 });
 </script>
 

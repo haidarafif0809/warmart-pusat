@@ -71,7 +71,6 @@ Route::get('/dashboard', [
 
 //PUNYA DAFTAR PRODUK
 Route::get('/daftar-produk', [
-    'middleware' => ['auth'],
     'as'         => 'daftar_produk.index',
     'uses'       => 'DaftarProdukController@index',
 ]);
@@ -114,52 +113,44 @@ Route::get('/halaman-warung/pencarian/search', [
 
 //PUNYA KERANJANG BELANJAAN
 Route::get('/keranjang-belanja', [
-    'middleware' => ['auth'],
     'as'         => 'keranjang_belanja.daftar_belanja',
     'uses'       => 'KeranjangBelanjaController@daftar_belanja',
 ]);
 
 Route::get('/keranjang-belanja/tambah-jumlah-produk-keranjang-belanja/', [
-    'middleware' => ['auth'],
     'as'         => 'keranjang-belanja.tambah_jumlah_produk_keranjang_belanjaan',
     'uses'       => 'KeranjangBelanjaController@tambah_jumlah_produk_keranjang_belanjaan',
 ]);
 
 Route::get('/keranjang-belanja/kurang-jumlah-produk-keranjang-belanja/', [
-    'middleware' => ['auth'],
     'as'         => 'keranjang-belanja.kurang_jumlah_produk_keranjang_belanjaan',
     'uses'       => 'KeranjangBelanjaController@kurang_jumlah_produk_keranjang_belanjaan',
 ]);
 
 Route::get('/keranjang-belanja/hapus-produk-keranjang-belanja/', [
-    'middleware' => ['auth'],
     'as'         => 'keranjang-belanja.hapus_produk_keranjang_belanjaan',
     'uses'       => 'KeranjangBelanjaController@hapus_produk_keranjang_belanjaan',
 ]);
 
 Route::get('/keranjang-belanja/tambah-produk-keranjang-belanja/{id}', [
-    'middleware' => ['auth'],
     'as'         => 'keranjang-belanja.tambah_produk_keranjang_belanjaan',
     'uses'       => 'KeranjangBelanjaController@tambah_produk_keranjang_belanjaan',
 ]);
 
 //PUNYA SELESAI PEMESANAN
 Route::get('/selesaikan-pemesanan', [
-    'middleware' => ['auth'],
     'as'         => 'selesaikan-pemesanan.index',
     'uses'       => 'PemesananController@selesaikanPemesanan',
 ]);
 
 //PUNYA PROSES SELESAI PEMESANAN
 Route::put('proses/selesaikan-pemesanan', [
-    'middleware' => ['auth'],
     'as'         => 'selesaikan-pemesanan.proses',
     'uses'       => 'PemesananController@prosesSelesaikanPemesanan',
 ]);
 
 //PUNYA Info Pembayaran
 Route::get('/info-pembayaran/', [
-    'middleware' => ['auth'],
     'as'         => 'info.pembayaran',
     'uses'       => 'PemesananController@halamanInfoPembayaran',
 ]);
@@ -179,17 +170,14 @@ Route::get('pesanan-detail', [
 ]);
 
 Route::get('/provinsi-destinasi-pengiriman', [
-    'middleware' => ['auth'],
     'uses'       => 'PemesananController@dataProvinsi',
 ]);
 
 Route::get('/kota-destinasi-pengiriman', [
-    'middleware' => ['auth'],
     'uses'       => 'PemesananController@dataKota',
 ]);
 
 Route::get('/hitung-ongkir', [
-    'middleware' => ['auth'],
     'uses'       => 'PemesananController@hitungOngkir',
 ]);
 

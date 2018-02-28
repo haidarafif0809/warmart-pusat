@@ -226,7 +226,11 @@ h4 {
             selectKelurahan.clearOptions(); 
             selectKota.settings.placeholder = "Tunggu Sebentar ...";
             selectKota.updatePlaceholder();
-            selectKota.load(function (callback) { timeOutS = setTimeout(setKotaOptions, 500, callback, id); });
+            selectKota.load(function (callback) { 
+                timeOutS = setTimeout(
+                    setKotaOptions, 500, callback, id
+                    ); 
+            });
         }
     });
          $('#kabupaten').selectize({
@@ -304,9 +308,9 @@ h4 {
                     selectKecamatan.setValue(kecamatan_pelanggan);
                 }else{
                  selectKecamatan.focus(); 
-               }
-               console.log(kecamatan);
-           });
+             }
+             console.log(kecamatan);
+         });
         };
 
         var setKotaOptions = function (callback, id)
