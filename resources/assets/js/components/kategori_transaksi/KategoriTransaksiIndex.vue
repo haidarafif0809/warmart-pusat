@@ -31,7 +31,8 @@
                             </button>
 
                             <div class="pencarian">
-                                <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
+                                <input v-if="seen" type="text" name="pencarian" v-model="pencarianFilter" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
+                                <input v-else type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
                             </div>
                         </div>
 
@@ -131,6 +132,7 @@
                     },
                     url : window.location.origin+(window.location.pathname).replace("dashboard", "kategori-transaksi"),
                     pencarian: '',
+                    pencarianFilter: '',
                     loading: true,
                     seen: false
                 }
@@ -146,6 +148,9 @@
     // whenever question changes, this function will run
     pencarian: function (newQuestion) {
         this.getHasilPencarian()  
+    },
+    pencarianFilter: function (newQuestion) {
+        this.pencarianFilterPeriode()  
     }
 },
 filters: {
@@ -259,7 +264,26 @@ methods: {
             console.log(resp);
             alert("Tidak Dapat Memuat Kategori Transaksi");
         });
-    }
+    },
+    pencarianFilterPeriode(page){
+        var app = this;
+        var newFilter = app.filter;
+        if (typeof page === 'undefined') {
+            page = 1;
+        }
+        axios.post(app.url+'/pencarian-periode?search='+app.pencarianFilter+'&page='+page, newFilter)
+        .then(function (resp) {
+            console.log(resp);
+            app.filterKategoriTransaksi = resp.data.data;
+            app.filterKategoriTransaksiData = resp.data;
+            app.loading = false;
+            app.seen = true;
+        })
+        .catch(function (resp) {
+            console.log(resp);
+            alert("Tidak Dapat Memuat Kategori Transaksi");
+        });
+    },
 }
 }
 </script>
