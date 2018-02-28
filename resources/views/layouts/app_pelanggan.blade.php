@@ -53,10 +53,10 @@
 </link>
 </head>
 <style type="text/css">
-    .navbar-nav .open .dropdown-menu{
-      color: grey;
-  }
-  .navbar .navbar-brand {
+.navbar-nav .open .dropdown-menu{
+  color: grey;
+}
+.navbar .navbar-brand {
     position: relative;
     @if(Agent::isMobile())
     height: 50px;
@@ -148,8 +148,15 @@ body {
                     <a class="navbar-brand pull-right" href="{{ url('/login') }}">
                         <i class="material-icons">
                             account_circle
+                        </i> 
+                    </a>
+                    <a class="navbar-brand pull-right" href="{{ url('/keranjang-belanja') }}">
+                        <i class="material-icons">
+                            shopping_cart
                         </i>
-                        Masuk
+                        <b style="font-size: 15px" id="jumlah-keranjang" data-jumlah="{{ $cek_belanjaan }}" data-session="">
+                            | {{ $cek_belanjaan }}
+                        </b>
                     </a>
                     @endif
                     @if(Agent::isMobile() && Auth::check() && Auth::user()->tipe_user == 3)
@@ -271,6 +278,17 @@ body {
                             </a>
                             @endif
                         </li>
+
+                        @if(!Auth::check())
+                        <li class="button-container">
+                            <a class="btn btn-rose btn-round" href="{{ url('/login')}}">
+                                <i class="material-icons">
+                                    account_circle
+                                </i>
+                                Masuk
+                            </a>
+                        </li>
+                        @endif
                         @if (Auth::check() == false) 
                         <li class="button-container">
                             <a class="btn btn-round btn-rose" href="{{ url('/keranjang-belanja') }}">
@@ -293,20 +311,6 @@ body {
                                 <b style="font-size: 15px" id="jumlah-keranjang" data-session="">
                                     | {{ $cek_belanjaan }}
                                 </b>
-                            </a>
-                        </li>
-                        @endif
-
-
-
-
-                        @if(!Auth::check())
-                        <li class="button-container">
-                            <a class="btn btn-rose btn-round" href="{{ url('/login')}}">
-                                <i class="material-icons">
-                                    account_circle
-                                </i>
-                                Masuk
                             </a>
                         </li>
                         @endif
@@ -578,7 +582,7 @@ body {
                     alert();
                 }).catch(Dexie.BulkError, function (e) {
                     console.error ("Some raindrops did not succeed. However, " +
-                     100000-e.failures.length + " raindrops was added successfully");
+                       100000-e.failures.length + " raindrops was added successfully");
                 });
             }else{
                 alert();
@@ -591,7 +595,7 @@ body {
     });
 
     function alert(){
-       swal({
+     swal({
         text :  "Produk Berhasil Di Tambahkan Ke Keranjang Belanja",
         showConfirmButton :  false,
         type: "success",
@@ -600,7 +604,7 @@ body {
           swal.showLoading()
       }
   }); 
-   }
+ }
 
 
 </script>

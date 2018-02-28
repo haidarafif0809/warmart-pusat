@@ -35,9 +35,21 @@
 
 
 @if($setting_aplikasi->tipe_aplikasi == 0)
+
+@if (Agent::isMobile())
+<center> <button class="btn btn-round" type="submit" style="background-color: #01573e;">Login</button></center>
+@else
 <center> <button class="btn btn-round" type="submit" style="background-color: #01573e;width: 600px;">Login</button></center>
+@endif
+
+@else
+
+@if (Agent::isMobile())
+<center> <button class="btn btn-round buttonColor" type="submit">Login</button></center>
 @else
 <center> <button class="btn btn-round buttonColor" type="submit" style="width: 600px;">Login</button></center>
+@endif
+
 @endif 
 
 </form>

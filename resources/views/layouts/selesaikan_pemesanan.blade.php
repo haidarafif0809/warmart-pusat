@@ -165,27 +165,25 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
 
               @if (Auth::check() == false) 
 
-              <div class="card">
-                <div class="card-header">
-                  <h4 class="card-title">Alamat Pengiriman
+              <div class="card" style="margin-bottom: 5px; margin-top: 5px;">
+                <div class="card-header" style="margin-bottom: 1px; margin-top: 1px;">
+                  <h4 class="card-title" style="color: black; padding-left: 10px ;" >Alamat Pengiriman
                   </h4>
                 </div>
-                <div class="card-content">
-                  <ul class="nav nav-pills nav-pills-success">
-                    <li>
-                      <a href="#login" data-toggle="tab">Login</a>
-                    </li>
-                    <li class="active">
-                      <a href="#beliTanpaDaftar" data-toggle="tab">Beli Tanpa Daftar</a>
-                    </li>
-                  </ul>
-                  <div class="tab-content">
-                    <div class="tab-pane" id="login">
-                      @include('layouts._form_login_selesaikan_pesanan')
-                    </div>
-                    <div class="tab-pane active" id="beliTanpaDaftar">
-                      @include('layouts._form_selesaikan_pesanan')
-                    </div>
+                <ul class="nav nav-pills nav-pills-rose" style="padding-left: 10px ;">
+                  <li>
+                    <a href="#login" data-toggle="tab">Login</a>
+                  </li>
+                  <li class="active">
+                    <a href="#beliTanpaDaftar" data-toggle="tab">Beli Tanpa Daftar</a>
+                  </li>
+                </ul>
+                <div class="tab-content">
+                  <div class="tab-pane" id="login">
+                    @include('layouts._form_login_selesaikan_pesanan')
+                  </div>
+                  <div class="tab-pane active" id="beliTanpaDaftar">
+                    @include('layouts._form_selesaikan_pesanan')
                   </div>
                 </div>
               </div>
@@ -355,7 +353,11 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
         selectKota.clearOptions(); 
         selectKota.settings.placeholder = "Tunggu Sebentar ...";
         selectKota.updatePlaceholder();
-        selectKota.load(function (callback) { timeOutS = setTimeout(setKotaOptions, 500, callback, province_id); });
+        selectKota.load(function (callback) {
+         timeOutS = setTimeout(
+          setKotaOptions, 500, callback, province_id
+          ); 
+       });
       }
     });
 
@@ -692,9 +694,9 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
       });
       var setting_aplikasi = "{{$setting_aplikasi->tipe_aplikasi}}";
       if (setting_aplikasi == 0) {
-        var pesan = "Berhasil Menyelesaikan Pesanan."+"<p>Terima Kasih Telah Berbelanja Di Warmart , Silahkan Tunggu Konfirmasi Dari Warung<p>";
+        var pesan = "Berhasil Menyelesaikan Pesanan."+"<p>Terima Kasih Telah Berbelanja Di Warmart , Silahkan Tunggu Konfirmasi Dari Warung</p>";
       }else{
-        var pesan = "Berhasil Menyelesaikan Pesanan."+"<p>Terima Kasih Telah Berbelanja Di Tempat Kami , Silahkan Tunggu Konfirmasi Dari Kami<p>";
+        var pesan = "Berhasil Menyelesaikan Pesanan."+"<p>Terima Kasih Telah Berbelanja Di Tempat Kami , Silahkan Tunggu Konfirmasi Dari Kami</p>";
       }
       var nama_pelanggan = $("#nama_pelanggan").val();
       var no_telp = $("#no_telp").val();
@@ -702,7 +704,9 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
       var alamatPelanggan = $("#alamatPelanggan").val();
       var kurir = $("#kurir").val();
       var metode_pembayaran = $("#metode_pembayaran").val();
-
+      var ongkos_kirim = $("#ongkos_kirim").val();
+      var provinsi = $("#provinsi").val();
+      var kota = $("#kota").val();
 
       if (nama_pelanggan == '') {
 
@@ -745,37 +749,48 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
        }
      });
 
-    }else{
+    }else if(provinsi == "" || kota == ""){   
+
+     swal({
+      text: 'Mohon Lengkapi Alamat Pengiriman!'
+    }).then((result) => {
+      if (result.value) {
+       $("#myModal").show();
+       document.getElementById('provinsi').selectize.focus(); 
+     }
+   });
+
+  }else{
 
 
-      swal({
-        html: "Anda Yakin Ingin Menyelesaikan Pesanan Ini ?",
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Ya',
-        cancelButtonText: 'Batal'
-      }).then((result) => {
-        if (result.value) {
+    swal({
+      html: "Anda Yakin Ingin Menyelesaikan Pesanan Ini ?",
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya',
+      cancelButtonText: 'Batal'
+    }).then((result) => {
+      if (result.value) {
 
-          document.getElementById("formSelesaikanPesanan").submit();
+        document.getElementById("formSelesaikanPesanan").submit();
 
-          swal({
-            html : pesan,
-            showConfirmButton :  false,
-            type: "success",
-            timer: 10000,
-            onOpen: () => {
-              swal.showLoading()
-            }
-          });
+        swal({
+          html : pesan,
+          showConfirmButton :  false,
+          type: "success",
+          timer: 10000,
+          onOpen: () => {
+            swal.showLoading()
+          }
+        });
 
-        }
-      });
+      }
+    });
 
-    }
+  }
 
-  });
+});
 
     function alertValidationSelesaiPesanan(){
       swal({

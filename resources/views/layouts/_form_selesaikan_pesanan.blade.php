@@ -3,6 +3,7 @@
   {!! Form::label('name', 'Nama', ['class'=>'col-md-2 control-label', 'style'=> 'margin-bottom:1px; margin-top:1px;']) !!}
   <div class="col-md-6">
     {!! Form::text('name', null, ['class'=>'form-control','required','autocomplete'=>'off', 'placeholder' => 'Nama', 'id' => 'nama_pelanggan']) !!}
+    {!! $errors->first('name', '<p class="help-block" id="name_error">:message</p>') !!}
   </div>
 </div>
 
@@ -10,6 +11,7 @@
   {!! Form::label('no_telp', 'No. Telpon', ['class'=>'col-md-2 control-label', 'style'=> 'margin-bottom:1px; margin-top:1px;']) !!}
   <div class="col-md-6">
     {!! Form::text('no_telp', null, ['class'=>'form-control','required','autocomplete'=>'off', 'placeholder' => 'No. Telpon', 'id' => 'no_telp']) !!}
+    {!! $errors->first('no_telp', '<p class="help-block" id="no_telp_error">:message</p>') !!}
   </div>
 </div>
 
@@ -17,6 +19,7 @@
   {!! Form::label('email', 'Email', ['class'=>'col-md-2 control-label', 'style'=> 'margin-bottom:1px; margin-top:1px;']) !!}
   <div class="col-md-6">
     {!! Form::text('email', null, ['class'=>'form-control','required','autocomplete'=>'off', 'placeholder' => 'Email', 'id' => 'email']) !!}
+    {!! $errors->first('email', '<br><b class="help-block" id="email_error">:message</b>') !!}
   </div>
 </div>
 
@@ -31,6 +34,7 @@
   {!! Form::label('alamat', 'Alamat', ['class'=>'col-md-2 control-label', 'style'=> 'margin-bottom:1px; margin-top:1px;']) !!}
   <div class="col-md-6">
     {!! Form::textarea('alamat', null, ['class'=>'form-control','required','autocomplete'=>'off', 'placeholder' => 'Alamat', 'id' => 'alamatPelanggan', 'rows'=>'5','readonly']) !!}
+    {!! $errors->first('alamat', '<p class="help-block" id="alamat_error">:message</p>') !!}
     <button  style="margin-bottom: 1px; margin-top: 1px;"  class="btn btn-primary btn-simple " type="button" id="ubah_alamat">
       Ubah Alamat
     </button>
