@@ -29,12 +29,12 @@
 							<datepicker :input-class="'form-control'" placeholder="Sampai Tanggal" v-model="filter.sampai_tanggal" name="sampai_tanggal" v-bind:id="'sampai_tanggal'"></datepicker>
 						</div>
 						<div class="form-group col-md-2">
-							<selectize-component v-model="filter.suplier" :settings="placeholder_suplier" id="pilih_suplier"> 
+							<selectize-component v-model="filter.suplier"  id="pilih_suplier"> 
 								<option v-for="supliers, index in suplier" v-bind:value="supliers.id" >{{ supliers.nama_suplier }}</option>
 							</selectize-component>
 						</div>
 						<div class="form-group col-md-2">
-							<selectize-component v-model="filter.produk" :settings="placeholder_produk" id="pilih_produk"> 
+							<selectize-component v-model="filter.produk"  id="pilih_produk"> 
 								<option v-for="produks, index in produk" v-bind:value="produks.id" >{{ produks.nama_produk }}</option>
 							</selectize-component>
 						</div>
@@ -115,11 +115,10 @@
 
 
 <script>
+import { mapState } from 'vuex';
 	export default {
 		data: function () {
 			return {
-				produk: [],
-				suplier: [],
 				pembelianProduk: [],
 				pembelianProdukData: {},
 				subtotalPembelianProduk: {},
@@ -134,38 +133,41 @@
 				urlCetak : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-pembelian-produk/cetak-laporan"),
 				pencarian: '',
 				loading: false,
-				placeholder_produk: {
-					placeholder: '--PILIH PRODUK--'
-				},
-				placeholder_suplier: {
-					placeholder: '--PILIH SUPPLIER--'
-				},
+
 			}
 		},
 		mounted() {
 			var app = this;
 			var awal_tanggal = new Date();
 			awal_tanggal.setDate(1);
-
-			app.dataProduk();
-			app.dataSuplier();
 			app.filter.dari_tanggal = awal_tanggal;
+			app.$store.dispatch('LOAD_SUPLIER_LIST');
+			app.$store.dispatch('LOAD_PRODUK_LAPORAN_LIST');
+
 		},
+		computed : mapState ({    
+	      produk(){
+	        return this.$store.state.produk_laporan
+	      },
+	     suplier(){
+        	return this.$store.state.suplier
+      	 }
+	    }),
 		watch: {
-// whenever question changes, this function will run
-pencarian: function (newQuestion) {
-	this.getHasilPencarian();
-}
-},
-filters: {
-	pemisahTitik: function (value) {
-		var angka = [value];
-		var numberFormat = new Intl.NumberFormat('es-ES');
-		var formatted = angka.map(numberFormat.format);
-		return formatted.join('; ');
-	}
-},
-methods: {
+		// whenever question changes, this function will run
+		pencarian: function (newQuestion) {
+			this.getHasilPencarian();
+		}
+		},
+		filters: {
+			pemisahTitik: function (value) {
+				var angka = [value];
+				var numberFormat = new Intl.NumberFormat('es-ES');
+				var formatted = angka.map(numberFormat.format);
+				return formatted.join('; ');
+			}
+		},
+	methods: {
 	submitPembelianProduk(){
 		var app = this;
 		var filter = app.filter;
@@ -223,29 +225,7 @@ methods: {
 			console.log(resp);
 			alert("Tidak Dapat Memuat Subtotal Mutasi Stok");
 		});
-	},
-	dataProduk() {
-		var app = this;
-		axios.get(app.url+'/pilih-produk')
-		.then(function (resp) {
-			app.produk = resp.data;
-
-		})
-		.catch(function (resp) {
-			alert("Tidak bisa memuat produk ");
-		});
-	},
-	dataSuplier() {
-		var app = this;
-		axios.get(app.url+'/pilih-supplier')
-		.then(function (resp) {
-			app.suplier = resp.data;
-
-		})
-		.catch(function (resp) {
-			alert("Tidak bisa memuat suplier ");
-		});
-	},    	
+	},   	
 	showButton() {
 		var app = this;
 		var filter = app.filter;
