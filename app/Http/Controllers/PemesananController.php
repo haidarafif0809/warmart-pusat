@@ -93,8 +93,8 @@ class PemesananController extends Controller
             $data_pelanggan['provinsi_pelanggan']  = '';
             $data_pelanggan['kabupaten_pelanggan'] = '';
         }else{
-           $alamat_customer = LokasiPelanggan::select(['provinsi', 'kabupaten'])->where('id_pelanggan', Auth::user()->id);
-           if ($alamat_customer->count() > 0) {
+         $alamat_customer = LokasiPelanggan::select(['provinsi', 'kabupaten'])->where('id_pelanggan', Auth::user()->id);
+         if ($alamat_customer->count() > 0) {
             $alamat                                = $alamat_customer->first();
             $data_pelanggan['provinsi_pelanggan']  = Indonesia::findProvince($alamat->provinsi)->name;
             $data_pelanggan['kabupaten_pelanggan'] = Indonesia::findCity($alamat->kabupaten)->name;
@@ -162,6 +162,8 @@ public function prosesSelesaikanPemesanan(Request $request)
         $id_pesanan = 0;
         foreach ($keranjang_belanjaan as $key => $keranjang_belanjaans) {
 
+            $kode_unik_transfer = PesananPelanggan::kodeUnikTransfer();
+
             $id_warung = $keranjang_belanjaans['id_warung'];
 
             // $key adalah urutan perulangan di foreach
@@ -176,7 +178,7 @@ public function prosesSelesaikanPemesanan(Request $request)
                 // QUERY LENGKAPMNYA ADA DI scopeHitungTotalPesanan di mmodel Keranjang Belanja
                     $query_hitung_total = KeranjangBelanja::HitungTotalPesanan($id_warung)->first();
                 }
-                $subtotal           = str_replace('.', '', $request->ongkos_kirim) + $query_hitung_total['total_pesanan'];
+                $subtotal           = (str_replace('.', '', $request->ongkos_kirim) + $query_hitung_total['total_pesanan']) + $kode_unik_transfer;
 
                 // INSERT KE PESANAN PELANGGAN
                 $pesanan_pelanggan = PesananPelanggan::create([
@@ -192,6 +194,7 @@ public function prosesSelesaikanPemesanan(Request $request)
                     'metode_pembayaran' => $request->metode_pembayaran,
                     'biaya_kirim'       => str_replace('.', '', $request->ongkos_kirim),
                     'bank_transfer'     => "-",
+                    'kode_unik_transfer'     => $kode_unik_transfer
                 ]);
 
                 // UBAH NILAI VARIABEL CEK PESANAN JADI ID WARUNG
@@ -221,7 +224,7 @@ public function prosesSelesaikanPemesanan(Request $request)
                 // QUERY LENGKAPMNYA ADA DI scopeHitungTotalPesanan di mmodel Keranjang Belanja
                     $query_hitung_total = KeranjangBelanja::HitungTotalPesanan($id_warung)->first();
                 }
-
+                $subtotal           = (str_replace('.', '', $request->ongkos_kirim) + $query_hitung_total['total_pesanan']) + $kode_unik_transfer;
                 // INSERT PESANAN PELANGGAN
                 $pesanan_pelanggan = PesananPelanggan::create([
                     'id_pelanggan'    => $id_user,
@@ -229,13 +232,14 @@ public function prosesSelesaikanPemesanan(Request $request)
                     'no_telp_pemesan' => $request->no_telp,
                     'alamat_pemesan'  => $request->alamat,
                     'jumlah_produk'   => $query_hitung_total['total_produk'],
-                    'subtotal'        => $query_hitung_total['total_pesanan'],
+                    'subtotal'        => $subtotal,
                     'id_warung'       => $id_warung,
                     'kurir'             => $request->kurir,
                     'layanan_kurir'     => $layanan_kurir,
                     'metode_pembayaran' => $request->metode_pembayaran,
                     'biaya_kirim'       => str_replace('.', '', $request->ongkos_kirim),
                     'bank_transfer'     => "-",
+                    'kode_unik_transfer'     => $kode_unik_transfer
                 ]);
 
                 // UBAH NILAI VARIABEL CEK PESANAN JADI ID WARUNG
