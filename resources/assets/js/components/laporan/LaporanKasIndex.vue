@@ -66,6 +66,7 @@
 										<th>No. Transaksi</th>
 										<th>Jenis Transaksi</th>
 										<th>Ke Kas</th>
+										<th>Keterangan</th>
 										<th style="text-align:right">Total</th>
 										<th style="text-align:center">Waktu</th>
 									</tr>
@@ -76,6 +77,7 @@
 										<td>{{ laporanKasDetails.data_laporan.no_faktur }}</td>
 										<td>{{ laporanKasDetails.jenis_transaksi }}</td>
 										<td>{{ laporanKasDetails.data_laporan.nama_kas }}</td>
+										<td>{{ laporanKasDetails.keterangan }}</td>
 										<td align="right">{{ laporanKasDetails.data_laporan.jumlah_masuk | pemisahTitik }}</td>
 										<td align="center">{{ laporanKasDetails.data_laporan.created_at | tanggal }}</td>
 
@@ -114,6 +116,7 @@
 										<td>{{ laporanKasKeluarDetails.data_laporan.no_faktur }}</td>
 										<td>{{ laporanKasKeluarDetails.jenis_transaksi }}</td>
 										<td>{{ laporanKasKeluarDetails.data_laporan.nama_kas }}</td>
+										<td>{{ laporanKasKeluarDetails.keterangan }}</td>
 										<td align="right">{{ laporanKasKeluarDetails.data_laporan.jumlah_keluar | pemisahTitik }}</td>
 										<td align="center">{{ laporanKasKeluarDetails.data_laporan.created_at | tanggal }}</td>
 
@@ -142,6 +145,7 @@
 										<th>No. Transaksi</th>
 										<th>Jenis Transaksi</th>
 										<th>Ke Kas</th>
+										<th>Keterangan</th>
 										<th style="text-align:right">Total</th>
 										<th style="text-align:center">Waktu</th>
 									</tr>
@@ -152,6 +156,7 @@
 										<td>{{ laporanKasMutasiMasukDetails.data_laporan.no_faktur }}</td>
 										<td>{{ laporanKasMutasiMasukDetails.jenis_transaksi }}</td>
 										<td>{{ laporanKasMutasiMasukDetails.data_laporan.nama_kas }}</td>
+										<td>{{ laporanKasMutasiMasukDetails.keterangan }}</td>
 										<td align="right">{{ laporanKasMutasiMasukDetails.data_laporan.jumlah_masuk | pemisahTitik }}</td>
 										<td align="center">{{ laporanKasMutasiMasukDetails.data_laporan.created_at | tanggal }}</td>
 
@@ -190,6 +195,7 @@
 										<td>{{ laporanKasMutasiKeluarDetails.data_laporan.no_faktur }}</td>
 										<td>{{ laporanKasMutasiKeluarDetails.jenis_transaksi }}</td>
 										<td>{{ laporanKasMutasiKeluarDetails.data_laporan.nama_kas }}</td>
+										<td>{{ laporanKasMutasiKeluarDetails.keterangan }}</td>
 										<td align="right">{{ laporanKasMutasiKeluarDetails.data_laporan.jumlah_keluar | pemisahTitik }}</td>
 										<td align="center">{{ laporanKasMutasiKeluarDetails.data_laporan.created_at | tanggal }}</td>
 

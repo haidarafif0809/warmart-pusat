@@ -3,6 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Kas;
+use App\KasKeluar;
+use App\KasMasuk;
+use App\KasMutasi;
+use App\PembayaranHutang;
+use App\PembayaranPiutang;
 use App\SettingAplikasi;
 use App\TransaksiKas;
 use App\Warung;
@@ -43,26 +48,61 @@ class LaporanKasController extends Controller
         return $respons;
     }
 
-    public function foreachLaporan($laporan_kas)
+    public function foreachLaporan($request, $laporan_kas)
     {
         $data_laporan_kas = array();
         foreach ($laporan_kas as $data_laporan_kass) {
             if ($data_laporan_kass->jenis_transaksi == 'PenjualanPos') {
                 $jenis_transaksi = "Penjualan POS";
+                $keterangan      = '-';
             } elseif ($data_laporan_kass->jenis_transaksi == 'penjualan') {
                 $jenis_transaksi = "Penjualan Online";
+                $keterangan      = '-';
             } elseif ($data_laporan_kass->jenis_transaksi == 'kas_masuk') {
                 $jenis_transaksi = "Kas Masuk";
+                if ($request->jenis_laporan == 0) {
+                    //JIKA JENIS LAPORAN DETAIL, MAKA ADA KETERANGAN
+                    $keterangan = KasMasuk::select('keterangan')->where('no_faktur', $data_laporan_kass->no_faktur)->first()->keterangan;
+                } else {
+                    $keterangan = '';
+                }
             } elseif ($data_laporan_kass->jenis_transaksi == 'kas_mutasi') {
                 $jenis_transaksi = "Kas Mutasi";
+                if ($request->jenis_laporan == 0) {
+                    //JIKA JENIS LAPORAN DETAIL, MAKA ADA KETERANGAN
+                    $keterangan = KasMutasi::select('keterangan')->where('no_faktur', $data_laporan_kass->no_faktur)->first()->keterangan;
+                } else {
+                    $keterangan = '';
+                }
             } elseif ($data_laporan_kass->jenis_transaksi == 'kas_keluar') {
                 $jenis_transaksi = "Kas Keluar";
+                if ($request->jenis_laporan == 0) {
+                    //JIKA JENIS LAPORAN DETAIL, MAKA ADA KETERANGAN
+                    $keterangan = KasKeluar::select('keterangan')->where('no_faktur', $data_laporan_kass->no_faktur)->first()->keterangan;
+                } else {
+                    $keterangan = '';
+                }
             } elseif ($data_laporan_kass->jenis_transaksi == 'pembelian') {
                 $jenis_transaksi = "Pembelian";
-            } else {
-                $jenis_transaksi = $data_laporan_kass->jenis_transaksi;
+                $keterangan      = '-';
+            } elseif ($data_laporan_kass->jenis_transaksi == 'Pembayaran Hutang') {
+                $jenis_transaksi = "Pembayaran Hutang";
+                if ($request->jenis_laporan == 0) {
+                    //JIKA JENIS LAPORAN DETAIL, MAKA ADA KETERANGAN
+                    $keterangan = PembayaranHutang::select('keterangan')->where('no_faktur_pembayaran', $data_laporan_kass->no_faktur)->first()->keterangan;
+                } else {
+                    $keterangan = '';
+                }
+            } elseif ($data_laporan_kass->jenis_transaksi == 'Pembayaran Piutang') {
+                $jenis_transaksi = "Pembayaran Piutang";
+                if ($request->jenis_laporan == 0) {
+                    //JIKA JENIS LAPORAN DETAIL, MAKA ADA KETERANGAN
+                    $keterangan = PembayaranPiutang::select('keterangan')->where('no_faktur_pembayaran', $data_laporan_kass->no_faktur)->first()->keterangan;
+                } else {
+                    $keterangan = '';
+                }
             }
-            array_push($data_laporan_kas, ['data_laporan' => $data_laporan_kass, 'jenis_transaksi' => $jenis_transaksi]);
+            array_push($data_laporan_kas, ['data_laporan' => $data_laporan_kass, 'jenis_transaksi' => $jenis_transaksi, 'keterangan' => $keterangan]);
         }
         return $data_laporan_kas;
     }
@@ -72,22 +112,22 @@ class LaporanKasController extends Controller
 
         //KAS MASUK
         $laporan_kas        = TransaksiKas::dataKasMasuk($request)->get();
-        $data_laporan_kas   = $this->foreachLaporan($laporan_kas);
+        $data_laporan_kas   = $this->foreachLaporan($request, $laporan_kas);
         $subtotal_kas_masuk = $this->subtotalLaporanKasDetailMasuk($request);
 
         //KAS KELUAR
         $laporan_kas_keluar      = TransaksiKas::dataKasKeluar($request)->get();
-        $data_laporan_kas_keluar = $this->foreachLaporan($laporan_kas_keluar);
+        $data_laporan_kas_keluar = $this->foreachLaporan($request, $laporan_kas_keluar);
         $subtotal_kas_keluar     = $this->subtotalLaporanKasDetailKeluar($request);
 
         //KAS MUTASI (MASUK)
         $laporan_kas_mutasi_masuk      = TransaksiKas::dataKasMutasiMasuk($request)->paginate(10);
-        $data_laporan_kas_mutasi_masuk = $this->foreachLaporan($laporan_kas_mutasi_masuk);
+        $data_laporan_kas_mutasi_masuk = $this->foreachLaporan($request, $laporan_kas_mutasi_masuk);
         $subtotal_kas_mutasi_masuk     = $this->subtotalLaporanKasDetailMutasiMasuk($request);
 
         //KAS MUTASI (KELUAR)
         $laporan_kas_mutasi_keluar      = TransaksiKas::dataKasMutasiKeluar($request)->paginate(10);
-        $data_laporan_kas_mutasi_keluar = $this->foreachLaporan($laporan_kas_mutasi_keluar);
+        $data_laporan_kas_mutasi_keluar = $this->foreachLaporan($request, $laporan_kas_mutasi_keluar);
         $subtotal_kas_mutasi_keluar     = $this->subtotalLaporanKasDetailMutasiKeluar($request);
 
         $respon_detail['data_laporan_kas']               = $data_laporan_kas;
@@ -106,22 +146,22 @@ class LaporanKasController extends Controller
     {
         //KAS MASUK
         $laporan_kas        = TransaksiKas::dataKasMasukRekap($request)->paginate(10);
-        $data_laporan_kas   = $this->foreachLaporan($laporan_kas);
+        $data_laporan_kas   = $this->foreachLaporan($request, $laporan_kas);
         $subtotal_kas_masuk = $this->subtotalLaporanKasRekapMasuk($request);
 
         //KAS KELUAR
         $laporan_kas_keluar      = TransaksiKas::dataKasKeluarRekap($request)->get();
-        $data_laporan_kas_keluar = $this->foreachLaporan($laporan_kas_keluar);
+        $data_laporan_kas_keluar = $this->foreachLaporan($request, $laporan_kas_keluar);
         $subtotal_kas_keluar     = $this->subtotalLaporanKasRekapKeluar($request);
 
         //KAS MUTASI (MASUK)
         $laporan_kas_mutasi_masuk      = TransaksiKas::dataKasMutasiMasukRekap($request)->paginate(10);
-        $data_laporan_kas_mutasi_masuk = $this->foreachLaporan($laporan_kas_mutasi_masuk);
+        $data_laporan_kas_mutasi_masuk = $this->foreachLaporan($request, $laporan_kas_mutasi_masuk);
         $subtotal_kas_mutasi_masuk     = $this->subtotalLaporanKasRekapMutasiMasuk($request);
 
         //KAS MUTASI (KELUAR)
         $laporan_kas_mutasi_keluar      = TransaksiKas::dataKasMutasiKeluarRekap($request)->paginate(10);
-        $data_laporan_kas_mutasi_keluar = $this->foreachLaporan($laporan_kas_mutasi_keluar);
+        $data_laporan_kas_mutasi_keluar = $this->foreachLaporan($request, $laporan_kas_mutasi_keluar);
         $subtotal_kas_mutasi_keluar     = $this->subtotalLaporanKasRekapMutasiKeluar($request);
 
         $respon_rekap['data_laporan_kas']               = $data_laporan_kas;
@@ -143,7 +183,7 @@ class LaporanKasController extends Controller
     {
         //KAS MASUK
         $laporan_kas      = TransaksiKas::dataKasMasuk($request)->paginate(10);
-        $data_laporan_kas = $this->foreachLaporan($laporan_kas);
+        $data_laporan_kas = $this->foreachLaporan($request, $laporan_kas);
 
         //DATA PAGINATION
         $link_view = "view";
@@ -155,7 +195,7 @@ class LaporanKasController extends Controller
     {
         //KAS MASUK
         $laporan_kas      = TransaksiKas::cariKasMasuk($request)->paginate(10);
-        $data_laporan_kas = $this->foreachLaporan($laporan_kas);
+        $data_laporan_kas = $this->foreachLaporan($request, $laporan_kas);
 
         //DATA PAGINATION
         $link_view = "view";
@@ -175,7 +215,7 @@ class LaporanKasController extends Controller
     {
         //KAS KELUAR
         $laporan_kas      = TransaksiKas::dataKasKeluar($request)->paginate(10);
-        $data_laporan_kas = $this->foreachLaporan($laporan_kas);
+        $data_laporan_kas = $this->foreachLaporan($request, $laporan_kas);
 
         //DATA PAGINATION
         $link_view = "view-keluar";
@@ -187,7 +227,7 @@ class LaporanKasController extends Controller
     {
         //KAS MASUK
         $laporan_kas      = TransaksiKas::cariKasKeluar($request)->paginate(10);
-        $data_laporan_kas = $this->foreachLaporan($laporan_kas);
+        $data_laporan_kas = $this->foreachLaporan($request, $laporan_kas);
 
         //DATA PAGINATION
         $link_view = "view-keluar";
@@ -207,7 +247,7 @@ class LaporanKasController extends Controller
     {
         //KAS MUTASI (MASUK)
         $laporan_kas      = TransaksiKas::dataKasMutasiMasuk($request)->paginate(10);
-        $data_laporan_kas = $this->foreachLaporan($laporan_kas);
+        $data_laporan_kas = $this->foreachLaporan($request, $laporan_kas);
 
         //DATA PAGINATION
         $link_view = "view-mutasi-masuk";
@@ -219,7 +259,7 @@ class LaporanKasController extends Controller
     {
         //KAS MASUK
         $laporan_kas      = TransaksiKas::cariKasMutasiMasuk($request)->paginate(10);
-        $data_laporan_kas = $this->foreachLaporan($laporan_kas);
+        $data_laporan_kas = $this->foreachLaporan($request, $laporan_kas);
 
         //DATA PAGINATION
         $link_view = "view-mutasi-masuk";
@@ -239,7 +279,7 @@ class LaporanKasController extends Controller
     {
         //KAS MUTASI (KELUAR)
         $laporan_kas      = TransaksiKas::dataKasMutasiKeluar($request)->paginate(10);
-        $data_laporan_kas = $this->foreachLaporan($laporan_kas);
+        $data_laporan_kas = $this->foreachLaporan($request, $laporan_kas);
 
         //DATA PAGINATION
         $link_view = "view-mutasi-keluar";
@@ -251,7 +291,7 @@ class LaporanKasController extends Controller
     {
         //KAS KELUAR
         $laporan_kas      = TransaksiKas::cariKasMutasiKeluar($request)->paginate(10);
-        $data_laporan_kas = $this->foreachLaporan($laporan_kas);
+        $data_laporan_kas = $this->foreachLaporan($request, $laporan_kas);
 
         //DATA PAGINATION
         $link_view = "view-mutasi-keluar";
@@ -287,7 +327,7 @@ class LaporanKasController extends Controller
     {
         //KAS MASUK
         $laporan_kas      = TransaksiKas::dataKasMasukRekap($request)->paginate(10);
-        $data_laporan_kas = $this->foreachLaporan($laporan_kas);
+        $data_laporan_kas = $this->foreachLaporan($request, $laporan_kas);
 
         //DATA PAGINATION
         $link_view = "view-rekap";
@@ -299,7 +339,7 @@ class LaporanKasController extends Controller
     {
         //KAS MASUK
         $laporan_kas      = TransaksiKas::cariKasMasukRekap($request)->paginate(10);
-        $data_laporan_kas = $this->foreachLaporan($laporan_kas);
+        $data_laporan_kas = $this->foreachLaporan($request, $laporan_kas);
 
         //DATA PAGINATION
         $link_view = "view-rekap";
@@ -319,7 +359,7 @@ class LaporanKasController extends Controller
     {
         //KAS KELUAR
         $laporan_kas      = TransaksiKas::dataKasKeluarRekap($request)->paginate(10);
-        $data_laporan_kas = $this->foreachLaporan($laporan_kas);
+        $data_laporan_kas = $this->foreachLaporan($request, $laporan_kas);
 
         //DATA PAGINATION
         $link_view = "view-keluar-rekap";
@@ -331,7 +371,7 @@ class LaporanKasController extends Controller
     {
         //KAS KELUAR
         $laporan_kas      = TransaksiKas::cariKasKeluarRekap($request)->paginate(10);
-        $data_laporan_kas = $this->foreachLaporan($laporan_kas);
+        $data_laporan_kas = $this->foreachLaporan($request, $laporan_kas);
 
         //DATA PAGINATION
         $link_view = "view-keluar-rekap";
@@ -351,7 +391,7 @@ class LaporanKasController extends Controller
     {
         //KAS MUTASI (MASUK)
         $laporan_kas      = TransaksiKas::dataKasMutasiMasukRekap($request)->paginate(10);
-        $data_laporan_kas = $this->foreachLaporan($laporan_kas);
+        $data_laporan_kas = $this->foreachLaporan($request, $laporan_kas);
 
         //DATA PAGINATION
         $link_view = "view-mutasi-masuk-rekap";
@@ -363,7 +403,7 @@ class LaporanKasController extends Controller
     {
         //KAS MUTASI (MASUK)
         $laporan_kas      = TransaksiKas::cariKasMutasiMasukRekap($request)->paginate(10);
-        $data_laporan_kas = $this->foreachLaporan($laporan_kas);
+        $data_laporan_kas = $this->foreachLaporan($request, $laporan_kas);
 
         //DATA PAGINATION
         $link_view = "view-mutasi-masuk-rekap";
@@ -383,7 +423,7 @@ class LaporanKasController extends Controller
     {
         //KAS MUTASI (KELUAR)
         $laporan_kas      = TransaksiKas::dataKasMutasiKeluarRekap($request)->paginate(10);
-        $data_laporan_kas = $this->foreachLaporan($laporan_kas);
+        $data_laporan_kas = $this->foreachLaporan($request, $laporan_kas);
 
         //DATA PAGINATION
         $link_view = "view-mutasi-masuk-rekap";
@@ -395,7 +435,7 @@ class LaporanKasController extends Controller
     {
         //KAS MUTASI (KELUAR)
         $laporan_kas      = TransaksiKas::cariKasMutasiKeluarRekap($request)->paginate(10);
-        $data_laporan_kas = $this->foreachLaporan($laporan_kas);
+        $data_laporan_kas = $this->foreachLaporan($request, $laporan_kas);
 
         //DATA PAGINATION
         $link_view = "view-mutasi-masuk-rekap";

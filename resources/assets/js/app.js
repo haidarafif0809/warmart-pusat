@@ -13,6 +13,8 @@
  import VueFroala from 'vue-froala-wysiwyg'
  import Vue from 'vue'
  import money from 'v-money'
+ import VueTour from 'vue-tour'
+
 // require styles
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
@@ -30,9 +32,11 @@ require('froala-editor/js/froala_editor.pkgd.min')
 require('froala-editor/css/froala_editor.pkgd.min.css')
 require('font-awesome/css/font-awesome.css')
 require('froala-editor/css/froala_style.min.css')
+require('vue-tour/dist/vue-tour.css')
 Vue.use(ToggleButton)
 Vue.use(VueFroala)
 Vue.use(quillEditor)
+Vue.use(VueTour)
 // register directive v-money and component <money>
 Vue.use(money, {
 	precision: 4
