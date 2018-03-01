@@ -48,6 +48,37 @@ class LaporanHutangBeredarController extends Controller
         return response()->json($respons); 
     }
 
+            //VIEW DAN PENCARIAN dataSupplierHutang
+     public function pencarianHutangBeredar(Request $request)
+    {
+        $session_id    = session()->getId();
+        $user_warung   = Auth::user()->id_warung;        
+        if ($request->suplier == "semua") {
+            $request['suplier'] = "";
+        };
+        $data_supplier_hutang = TransaksiHutang::cariDataHutangBeredar($request)->paginate(10);
+
+        $array         = array();
+        foreach ($data_supplier_hutang as $data_supplier_hutangs) {
+            array_push($array, [
+                'id'                    => $data_supplier_hutangs->id,
+                'waktu'                 => $data_supplier_hutangs->Waktu,
+                'no_faktur'             => $data_supplier_hutangs->no_faktur,
+                'suplier'               => $data_supplier_hutangs->nama_suplier,
+                'nilai_transaksi'       => $data_supplier_hutangs->total,
+                'pembayaran'            => $data_supplier_hutangs->pembayaran,
+                'sisa_hutang'           => $data_supplier_hutangs->sisa_hutang,
+                'jatuh_tempo'           => $data_supplier_hutangs->tanggal_jt_tempo,
+                'umur_hutang'           => $data_supplier_hutangs->usia_hutang,
+                'petugas'               => $data_supplier_hutangs->name,
+             ]);
+        }
+
+        $url     = '/laporan-hutang-beredar/view'; 
+        $respons = $this->dataPagination($data_supplier_hutang, $array,$url); 
+        return response()->json($respons); 
+    }
+
         public function totalHutangBeredar(Request $request)
     {
         // TOTAL KESELURUHAN

@@ -86,6 +86,40 @@ class TransaksiHutang extends Model
         return $data_supplier_hutang;
     }
 
+
+          // DATA PEMBELIAN HUTANG
+    public function scopeCariDataHutangBeredar($data_supplier_hutang,$request)
+    {
+        $search = $request->search;
+        if ($request->suplier != "") {
+            $data_supplier_hutang = $this->queryLaporanHutangBeredar($request)
+            ->where('pembelians.status_pembelian', 'Hutang')
+            ->where('pembelians.suplier_id', $request->suplier)
+            ->where(DB::raw('DATE(transaksi_hutangs.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+            ->where(DB::raw('DATE(transaksi_hutangs.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+            ->where('pembelians.warung_id', Auth::user()->id_warung)
+            ->where(function ($query) use ($search) {
+                    $query->orWhere('pembelians.no_faktur', 'LIKE', '%' . $search . '%')
+                        ->orWhere('supliers.nama_suplier', 'LIKE', '%' . $search . '%');
+                })
+            ->groupBy('transaksi_hutangs.id_transaksi')
+            ->havingRaw('SUM(transaksi_hutangs.jumlah_masuk) - SUM(transaksi_hutangs.jumlah_keluar) > 0');
+        }else{
+             $data_supplier_hutang = $this->queryLaporanHutangBeredar($request)
+            ->where('pembelians.status_pembelian', 'Hutang')
+            ->where(DB::raw('DATE(transaksi_hutangs.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+            ->where(DB::raw('DATE(transaksi_hutangs.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+            ->where('pembelians.warung_id', Auth::user()->id_warung)
+            ->where(function ($query) use ($search) {
+                    $query->orWhere('pembelians.no_faktur', 'LIKE', '%' . $search . '%')
+                        ->orWhere('supliers.nama_suplier', 'LIKE', '%' . $search . '%');
+                })
+            ->groupBy('transaksi_hutangs.id_transaksi')
+            ->havingRaw('SUM(transaksi_hutangs.jumlah_masuk) - SUM(transaksi_hutangs.jumlah_keluar) > 0');
+        }  
+        return $data_supplier_hutang;
+    }
+
           // DATA PEMBELIAN HUTANG
     public function scopeTotalHutangBeredar($data_supplier_hutang,$request)
     {
