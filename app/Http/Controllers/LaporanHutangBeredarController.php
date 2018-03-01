@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Session;
 use Yajra\Datatables\Html\Builder;
+use Illuminate\Pagination\Paginator;
 
 class LaporanHutangBeredarController extends Controller
 {
@@ -25,10 +26,9 @@ class LaporanHutangBeredarController extends Controller
             $request['suplier'] = "";
         };
         $data_supplier_hutang = TransaksiHutang::getDataHutangBeredar($request)->paginate(10);
-        $data_supplier_hutang_get = TransaksiHutang::getDataHutangBeredar($request)->having('sisa_hutang', '>', 0)->get();
 
         $array         = array();
-        foreach ($data_supplier_hutang_get as $data_supplier_hutangs) {
+        foreach ($data_supplier_hutang as $data_supplier_hutangs) {
             array_push($array, [
                 'id'             		=> $data_supplier_hutangs->id,
                 'waktu'                 => $data_supplier_hutangs->Waktu,
@@ -42,7 +42,8 @@ class LaporanHutangBeredarController extends Controller
                 'petugas'               => $data_supplier_hutangs->name,
              ]);
         }
-        $url     = '/laporan-hutang-beredar/view';
+
+        $url     = '/laporan-hutang-beredar/view'; 
         $respons = $this->dataPagination($data_supplier_hutang, $array,$url); 
         return response()->json($respons); 
     }
@@ -50,18 +51,22 @@ class LaporanHutangBeredarController extends Controller
         public function totalHutangBeredar(Request $request)
     {
         // TOTAL KESELURUHAN
-        $total_penjualan = TransaksiHutang::totalHutangBeredar($request)->having('sisa_hutang', '>', 0)->get();
+        $total_penjualan = TransaksiHutang::totalHutangBeredar($request);
 
-        $pembayaran = 0;
-        $sisa_hutang = 0;
-        $nilai_transaksi = 0;
-        foreach ($total_penjualan as $total_penjualans) {
-        	
-        	$respons['nilai_transaksi']  =  $total_penjualans->nilai_transaksi;
-        	$respons['pembayaran']  =  $total_penjualans->pembayaran;
-        	$respons['sisa_hutang'] =  $total_penjualans->sisa_hutang;
+                if ($total_penjualan->count() == 0) {
+                        $nilai_transaksi = 0;
+                        $pembayaran      = 0;
+                        $sisa_hutang     = 0;           
+                }else{
+                        $nilai_transaksi = $total_penjualan->first()->nilai_transaksi;
+                        $pembayaran      = $total_penjualan->first()->pembayaran;
+                        $sisa_hutang     = $total_penjualan->first()->sisa_hutang;     
+                }
 
-        }
+            	$respons['nilai_transaksi']  =  $nilai_transaksi;
+            	$respons['pembayaran']       =  $pembayaran;
+            	$respons['sisa_hutang']      =  $sisa_hutang;
+ 
        
         return response()->json($respons);
     }

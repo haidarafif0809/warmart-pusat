@@ -74,7 +74,7 @@
 									<td>TOTAL</td>
 									<td></td>
 									<td></td>
-									<td align="right"></td>
+									<td align="right">{{ dataTotalHutangBeredar.nilai_transaksi | pemisahTitik }}</td>
 									<td align="right">{{ dataTotalHutangBeredar.pembayaran | pemisahTitik }}</td>
 									<td align="right">{{ dataTotalHutangBeredar.sisa_hutang | pemisahTitik }}</td>
 									<td align="right"></td>
