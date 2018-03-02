@@ -11,7 +11,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Session;
 use Yajra\Datatables\Html\Builder;
-use Illuminate\Pagination\Paginator;
+use Excel;
+
 
 class LaporanHutangBeredarController extends Controller
 {
@@ -82,16 +83,29 @@ class LaporanHutangBeredarController extends Controller
         public function totalHutangBeredar(Request $request)
     {
         // TOTAL KESELURUHAN
-        $total_penjualan = TransaksiHutang::totalHutangBeredar($request);
+        if ($request->suplier == "semua") {
+            $request['suplier'] = "";
+        };
+        $total_hutang_beredar = TransaksiHutang::totalHutangBeredar($request);
+        $total_sisa_hutang = TransaksiHutang::totalSisaHutang($request)->get();
 
-                if ($total_penjualan->count() == 0) {
+        $jumlah_masuk = 0;
+        $jumlah_keluar = 0;
+        $array       = array();
+        foreach ($total_sisa_hutang as $total_sisa_hutangs) {
+                $jumlah_keluar = $total_sisa_hutangs->pembayaran++;
+                $jumlah_masuk = $total_sisa_hutangs->nilai_transaksi++;
+
+        }
+
+                if ($total_hutang_beredar->count() == 0) {
                         $nilai_transaksi = 0;
                         $pembayaran      = 0;
                         $sisa_hutang     = 0;           
                 }else{
-                        $nilai_transaksi = $total_penjualan->first()->nilai_transaksi;
-                        $pembayaran      = $total_penjualan->first()->pembayaran;
-                        $sisa_hutang     = $total_penjualan->first()->sisa_hutang;     
+                        $nilai_transaksi = $total_hutang_beredar->first()->nilai_transaksi - $jumlah_masuk;
+                        $pembayaran      = $total_hutang_beredar->first()->pembayaran - $jumlah_keluar;
+                        $sisa_hutang     = $total_hutang_beredar->first()->sisa_hutang;     
                 }
 
             	$respons['nilai_transaksi']  =  $nilai_transaksi;
@@ -120,5 +134,88 @@ class LaporanHutangBeredarController extends Controller
         //DATA PAGINATION
         return $respons; 
     } 
+
+   //DOWNLOAD EXCEL - LAPORAN LABA KOTOR /PELANGGAN
+    public function downloadExcel(Request $request, $dari_tanggal, $sampai_tanggal, $suplier)
+    {
+        $request['dari_tanggal']   = $dari_tanggal;
+        $request['sampai_tanggal'] = $sampai_tanggal;
+        if ($suplier == "semua") {
+            $request['suplier'] = "";
+        };
+
+         $data_supplier_hutang = TransaksiHutang::getDataHutangBeredar($request)->paginate(10);
+
+         $total_penjualan = TransaksiHutang::totalHutangBeredar($request);
+
+        Excel::create('Laporan Hutang Beredar', function ($excel) use ($request, $data_supplier_hutang,$total_penjualan) {
+            // Set property
+            $excel->sheet('Laporan Hutang Beredar', function ($sheet) use ($request, $data_supplier_hutang,$total_penjualan) {
+                $row = 1;
+                $sheet->row($row, [
+                    'LAPORAN HUTANG BEREDAR',
+                ]);
+
+                $row   = 3;
+                $sheet = $this->labelSheet($sheet, $row);
+
+
+                foreach ($data_supplier_hutang as $data_supplier_hutangs) {
+
+                  $sheet->row(++$row, [
+                    $data_supplier_hutangs->Waktu,
+                    $data_supplier_hutangs->no_faktur,
+                    $data_supplier_hutangs->nama_suplier,
+                    $data_supplier_hutangs->total,
+                    $data_supplier_hutangs->pembayaran,
+                    $data_supplier_hutangs->sisa_hutang,
+                    $data_supplier_hutangs->tanggal_jt_tempo,
+                    $data_supplier_hutangs->usia_hutang." Hari",
+                    $data_supplier_hutangs->name,
+                ]);
+
+              }
+//PERHITUNGAN TOTAL HUTANG BEREDAR
+                if ($total_penjualan->count() == 0) {
+                        $nilai_transaksi = 0;
+                        $pembayaran      = 0;
+                        $sisa_hutang     = 0;           
+                }else{
+                        $nilai_transaksi = $total_penjualan->first()->nilai_transaksi;
+                        $pembayaran      = $total_penjualan->first()->pembayaran;
+                        $sisa_hutang     = $total_penjualan->first()->sisa_hutang;     
+                }
+              $row = ++$row;
+                    $sheet->row(++$row, [
+                        'TOTAL',
+                        '',
+                        '',
+                        $nilai_transaksi,
+                        $pembayaran,
+                        $sisa_hutang,
+                        '',
+                        '',
+                        ''
+                    ]);
+
+          });
+        })->export('xls');
+    }
+
+        public function labelSheet($sheet, $row)
+    {
+        $sheet->row($row, [
+            'Waktu',
+            'No Transaksi',
+            'Supplier',
+            'Nilai Transaksi',
+            'Dibayar',
+            'Nilai Hutang',
+            'Jatuh Tempo',
+            'Umur Hutang',
+            'Petugas',
+        ]);
+        return $sheet;
+    }
 
 }

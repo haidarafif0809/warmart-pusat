@@ -126,7 +126,6 @@
                                             </button>
                                         </span>
                                     </div>
-                                    <i>*Note file extension menggunakan format (.xlsx)</i>
                                 </div>
                                 <div class="form-group">                                
                                     <button class="btn btn-primary" id="btnImport" type="submit"><i class="material-icons">file_upload</i> Import</button>
@@ -416,7 +415,8 @@
 
             </div>
 
-            <p style="color: red; font-style: italic;">*Note : Klik Kolom Jumlah, Harga, Potongan & Tax Untuk Mengubah Nilai.</p> 
+            <p style="color: red; font-style: italic;">*Note : Klik Kolom Jumlah, Harga, Potongan & Tax Untuk Mengubah Nilai.</p>
+            <p style="color: red; font-style: italic;">*Note : Klik Tombol Import Excel Untuk Import Data Produk Pembelian.</p>  
           </div><!-- COL SM 8 --> 
 
           <div class="col-md-3"><!-- COL SM 4 --> 
