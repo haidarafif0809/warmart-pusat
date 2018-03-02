@@ -757,7 +757,7 @@ Route::post('/laporan-hutang-beredar/view', 'LaporanHutangBeredarController@pros
 Route::post('/laporan-hutang-beredar/pencarian', 'LaporanHutangBeredarController@pencarianHutangBeredar')->middleware('auth');
 Route::post('/laporan-hutang-beredar/total-hutang-beredar', 'LaporanHutangBeredarController@totalHutangBeredar')->middleware('auth');
 Route::get('/laporan-hutang-beredar/download-excel-hutang-beredar/{dari_tanggal}/{sampai_tanggal}/{suplier}', 'LaporanHutangBeredarController@downloadExcel')->middleware('auth');
-
+Route::get('/laporan-hutang-beredar/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{suplier}', 'LaporanHutangBeredarController@cetakLaporan')->middleware('auth');
 
 ////PEMBAYARAN Hutang
 Route::get('/pembayaran-hutang/view', 'PembayaranHutangController@view')->middleware('auth');

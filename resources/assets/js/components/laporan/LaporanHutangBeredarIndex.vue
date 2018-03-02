@@ -131,7 +131,7 @@ export default {
 		var awal_tanggal = new Date();
 		awal_tanggal.setDate(1);
 		app.$store.dispatch('LOAD_SUPLIER_LIST');
-		app.filter.dari_tanggal = awal_tanggal;
+		
 	},
 	computed : mapState ({    
        suplier(){
