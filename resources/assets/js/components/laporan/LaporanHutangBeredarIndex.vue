@@ -74,7 +74,7 @@
 									<td>TOTAL</td>
 									<td></td>
 									<td></td>
-									<td align="right"></td>
+									<td align="right">{{ dataTotalHutangBeredar.nilai_transaksi | pemisahTitik }}</td>
 									<td align="right">{{ dataTotalHutangBeredar.pembayaran | pemisahTitik }}</td>
 									<td align="right">{{ dataTotalHutangBeredar.sisa_hutang | pemisahTitik }}</td>
 									<td align="right"></td>
@@ -121,7 +121,6 @@ export default {
 			urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-hutang-beredar/download-excel-hutang-beredar"),
 			urlCetak : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-hutang-beredar/cetak-laporan"),
 			pencarian: '',
-			pencarianOnline: '',
 			loading: false,
 		}
 	},
@@ -180,22 +179,7 @@ export default {
 			alert("Tidak Dapat Memuat Laporan hutang beredar");
 		});
 	},
-	totalHutangBeredar() {
-		var app = this;	
-		var newFilter = app.filter;
-		app.loading = true,
-		axios.post(app.url+'/total-hutang-beredar', newFilter)
-		.then(function (resp) {
-			app.dataTotalHutangBeredar = resp.data;
-			app.loading = false
-			console.log(resp.data);    			
-		})
-		.catch(function (resp) {
-			// console.log(resp);
-			alert("Tidak Dapat Memuat Total hutang beredar");
-		});
-	},
-	getHasilPencarian(page){
+		getHasilPencarian(page){
 		var app = this;
 		var newFilter = app.filter;
 		if (typeof page === 'undefined') {
@@ -209,6 +193,21 @@ export default {
 		.catch(function (resp) {
 			// console.log(resp);
 			alert("Tidak Dapat Memuat Laporan hutang beredar");
+		});
+	},
+	totalHutangBeredar() {
+		var app = this;	
+		var newFilter = app.filter;
+		app.loading = true,
+		axios.post(app.url+'/total-hutang-beredar', newFilter)
+		.then(function (resp) {
+			app.dataTotalHutangBeredar = resp.data;
+			app.loading = false
+			console.log(resp.data);    			
+		})
+		.catch(function (resp) {
+			// console.log(resp);
+			alert("Tidak Dapat Memuat Total hutang beredar");
 		});
 	},
 	showButton() {
