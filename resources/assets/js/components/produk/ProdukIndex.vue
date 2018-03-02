@@ -1,7 +1,10 @@
 <style scoped>
-.pencarian {
-  color: red; 
-  float: right;
+    .pencarian {
+      color: red; 
+      float: right;
+  }
+  .v-step__content[data-v-fca314f4] {
+    margin: 0;
 }
 </style>
 
@@ -21,7 +24,7 @@
                     <h4 class="card-title"> Produk</h4>
 
                     <div class="toolbar">
-                        <router-link :to="{name: 'createProduk'}" class="btn btn-primary"><i class="material-icons">add</i>  Produk</router-link>
+                        <router-link :to="urlForm" class="btn btn-primary" id="step-0"><i class="material-icons">add</i>  Produk</router-link>
 
                         <div class="pencarian">
                             <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control" autocomplete="">
@@ -42,7 +45,7 @@
                                     <th>Harga Jual 2</th>
                                     <th>Status</th>
                                     <th>Kategori</th>
-                                    <th>Aksi</th>
+                                    <th id="step-1">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody v-if="produk.length"  class="data-ada">
@@ -83,6 +86,7 @@
 
                 </div>
 
+                <v-tour name="myTour" :steps="steps"></v-tour>
             </div>
         </div>
     </div>
@@ -90,106 +94,122 @@
 </template>
 
 <script>
-export default {
-    data: function () {
-        return {
-            produk: [],
-            produkData: {},
-            url : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
-            urlLihat : window.location.origin+(window.location.pathname).replace("dashboard", "produk/lihat-deskripsi-produk/"),
-            pencarian: '',
-            loading: true
-        }
-    },
-    mounted() {
-        var app = this;
-        app.getResults();
-    },
-    watch: {
-        // whenever question changes, this function will run
-        pencarian: function (newQuestion) {
-            this.getHasilPencarian()  
-        }
-    },
-
-    methods: {
-        getResults(page) {
-            var app = this; 
-            if (typeof page === 'undefined') {
-                page = 1;
+    export default {
+        data: function () {
+            return {
+                produk: [],
+                produkData: {},
+                url : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
+                urlLihat : window.location.origin+(window.location.pathname).replace("dashboard", "produk/lihat-deskripsi-produk/"),
+                urlForm: "create-produk",
+                pencarian: '',
+                loading: true,
+                steps: [
+                {
+                    target: '#step-0',  // We're using document.querySelector() under the hood
+                    content: 'Klik Tombol <strong>Produk</strong>, <br> Anda Bisa Menambahkan Produk Baru Untuk Toko Anda!',
+                    params: {
+                        placement: 'right',
+                    }
+                },
+                {
+                }
+                ]
             }
-            axios.get(app.url+'/view?page='+page)
-            .then(function (resp) {
-                app.produk = resp.data.data;
-                app.produkData = resp.data;
-                app.loading = false;
-            })
-            .catch(function (resp) {
-                console.log(resp);
-                app.loading = false;
-                alert("Tidak Dapat Memuat Produk");
-            });
         },
-        getHasilPencarian(page){
+        mounted() {
             var app = this;
-            if (typeof page === 'undefined') {
-                page = 1;
+            app.getResults();
+            if (app.$route.fullPath == "/produk?tour") {
+                this.$tours['myTour'].start();
+                app.urlForm = 'create-produk?tour';
             }
-            axios.get(app.url+'/pencarian?search='+app.pencarian+'&page='+page)
-            .then(function (resp) {
-                app.produk = resp.data.data;
-                app.produkData = resp.data;
-                app.loading = false;
-            })
-            .catch(function (resp) {
-                console.log(resp);
-                alert("Tidak Dapat Memuat Produk");
-            });
         },
-        alert(pesan) {
-            this.$swal({
-                title: "Berhasil ",
-                text: pesan,
-                icon: "success",
-            });
-        },
-        deleteEntry(id, index,nama_barang) {
-            swal({
-                title: "Konfirmasi Hapus",
-                text : "Anda Yakin Ingin Menghapus "+nama_barang+" ?",
-                icon : "warning",
-                buttons: true,
-                dangerMode: true,
-            })
-            .then((willDelete) => {
-                if (willDelete) {
-                  var app = this;
-                  axios.delete(app.url+'/' + id)
-                  .then(function (resp) {
+        watch: {
+// whenever question changes, this function will run
+pencarian: function (newQuestion) {
+    this.getHasilPencarian()  
+}
+},
+
+methods: {
+    getResults(page) {
+        var app = this; 
+        if (typeof page === 'undefined') {
+            page = 1;
+        }
+        axios.get(app.url+'/view?page='+page)
+        .then(function (resp) {
+            app.produk = resp.data.data;
+            app.produkData = resp.data;
+            app.loading = false;
+        })
+        .catch(function (resp) {
+            console.log(resp);
+            app.loading = false;
+            alert("Tidak Dapat Memuat Produk");
+        });
+    },
+    getHasilPencarian(page){
+        var app = this;
+        if (typeof page === 'undefined') {
+            page = 1;
+        }
+        axios.get(app.url+'/pencarian?search='+app.pencarian+'&page='+page)
+        .then(function (resp) {
+            app.produk = resp.data.data;
+            app.produkData = resp.data;
+            app.loading = false;
+        })
+        .catch(function (resp) {
+            console.log(resp);
+            alert("Tidak Dapat Memuat Produk");
+        });
+    },
+    alert(pesan) {
+        this.$swal({
+            title: "Berhasil ",
+            text: pesan,
+            icon: "success",
+        });
+    },
+    deleteEntry(id, index,nama_barang) {
+        swal({
+            title: "Konfirmasi Hapus",
+            text : "Anda Yakin Ingin Menghapus "+nama_barang+" ?",
+            icon : "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((willDelete) => {
+            if (willDelete) {
+                var app = this;
+                axios.delete(app.url+'/' + id)
+                .then(function (resp) {
                     app.getResults();
                     swal("Produk Berhasil Dihapus!  ", {
-                      icon: "success",
-                  });
+                        icon: "success",
+                    });
                 })
-                  .catch(function (resp) {
+                .catch(function (resp) {
                     app.$router.replace('/produk/');
                     swal("Gagal Menghapus produk!", {
-                      icon: "warning",
-                  });
+                        icon: "warning",
+                    });
                 });
-              }
-              this.$router.replace('/produk/');
-          });
-        },
-        gagalHapus(id, index,nama_barang) {
-            this.$swal({
-                title: "Gagal ",
-                text: ""+nama_barang+" Tidak Bisa Dihapus Karena Sudah Terpakai",
-                icon: "warning",
-            });
-
+            }
             this.$router.replace('/produk/');
-        }
+        });
+    },
+    gagalHapus(id, index,nama_barang) {
+        this.$swal({
+            title: "Gagal ",
+            text: ""+nama_barang+" Tidak Bisa Dihapus Karena Sudah Terpakai",
+            icon: "warning",
+        });
+
+        this.$router.replace('/produk/');
     }
+}
 }
 </script>

@@ -5,10 +5,10 @@
             <img v-bind:src="url+ 'image/warmart_logo.png'"class="img-responsive" width="500" height="160"> 
         </center>
         <center v-else>
-           <img v-if="dashboardData.logo_toko.foto_ktp != null" v-bind:src="url_picture+'/'+dashboardData.logo_toko.foto_ktp"  class="img-responsive" width="500" height="160" /> 
-           <img v-bind:src="url+'img/icon_topos.png?v=1'" class="img-responsive" width="500" height="160" v-else>
-       </center>
-       <div class="col-lg-4 col-md-6 col-sm-6">
+         <img v-if="dashboardData.logo_toko.foto_ktp != null" v-bind:src="url_picture+'/'+dashboardData.logo_toko.foto_ktp"  class="img-responsive" width="500" height="160" /> 
+         <img v-bind:src="url+'img/icon_topos.png?v=1'" class="img-responsive" width="500" height="160" v-else>
+     </center>
+     <div class="col-lg-4 col-md-6 col-sm-6">
         <div class="card card-stats">
             <div class="card-header" data-background-color="rose">
                 <i class="material-icons">person_add</i>
@@ -114,12 +114,12 @@
         <img v-bind:src="url+ 'image/warmart_logo.png'"class="img-responsive" width="500" height="160"> 
     </center>
     <center v-else>
-       <img v-if="dashboardData.logo_toko_2.foto_ktp != null" v-bind:src="url_picture+'/'+dashboardData.logo_toko_2.foto_ktp"  class="img-responsive" /> 
-       <img v-bind:src="url+'img/icon_topos.png?v=1'" class="img-responsive" v-else>
-   </center>
+     <img v-if="dashboardData.logo_toko_2.foto_ktp != null" v-bind:src="url_picture+'/'+dashboardData.logo_toko_2.foto_ktp"  class="img-responsive" /> 
+     <img v-bind:src="url+'img/icon_topos.png?v=1'" class="img-responsive" v-else>
+ </center>
 
-   <center v-if="dashboardData.konfirmasi_admin == 1 && dashboardData.kasir_id == 0">
-       <div id="tab" class="btn-group" data-toggle="buttons-radio">
+ <center v-if="dashboardData.konfirmasi_admin == 1 && dashboardData.kasir_id == 0">
+     <div id="tab" class="btn-group" data-toggle="buttons-radio">
         <router-link :to="{name: 'indexProduk'}"  class="btn btn-large btn-info activemenu-nav">
             <i class="material-icons">
                 store
