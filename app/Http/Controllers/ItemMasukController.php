@@ -602,7 +602,7 @@ class ItemMasukController extends Controller
                 ]);
 
             });
-        })->export('xls');
+        })->download('xlsx');
     }
 
     public function importExcel(Request $request)
