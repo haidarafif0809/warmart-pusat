@@ -32,7 +32,7 @@ class PenjualanController extends Controller
     public function pilihPelanggan()
     {
         $pelanggan = User::where('tipe_user', 3)->get();
-        $array     = array(['id' => '0', 'nama_pelanggan' => 'Umum']);
+        $array     = array(['id' => '0', 'nama_pelanggan' => 'Umum'],['id' => '', 'nama_pelanggan' => 'SEMUA PELANGGAN']);
         foreach ($pelanggan as $pelanggans) {
             array_push($array, [
                 'id'             => $pelanggans->id,
@@ -1330,59 +1330,59 @@ class PenjualanController extends Controller
     }
 
     //DOWNLOAD EXCEL - LAPORAN LABA KOTOR /PELANGGAN
-    public function downloadExcel(Request $request, $session_id)
-    {
+public function downloadExcel(Request $request,$session_id)
+{
 
-        $data_tbs_penjualan_pos = TbsPenjualan::where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
+   $data_tbs_penjualan_pos = TbsPenjualan::where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
 
-        Excel::create('Data Export Penjualan', function ($excel) use ($request, $data_tbs_penjualan_pos) {
+   Excel::create('Data Export Penjualan', function ($excel) use ($request, $data_tbs_penjualan_pos){
             // Set property
-            $excel->sheet('Data Export Penjualan', function ($sheet) use ($request, $data_tbs_penjualan_pos) {
+    $excel->sheet('Data Export Penjualan', function ($sheet) use ($request, $data_tbs_penjualan_pos) {
 
-                $row = 1;
-                $sheet->row($row, [
-                    'Session Id',
-                    'Satuan Id',
-                    'Id Produk',
-                    'Jumlah Produk',
-                    'Harga Produk',
-                    'Subtotal',
-                    'Tax',
-                    'Potongan',
-                    'Warung Id',
-                    'Created By',
-                    'Updated By',
-                    'Created At',
-                    'Updated At',
-                    'Ppn',
-                    'Tax Include',
-                ]);
+        $row = 1;
+        $sheet->row($row, [
+            'Session Id',
+            'Satuan Id',
+            'Id Produk',
+            'Jumlah Produk',
+            'Harga Produk',
+            'Subtotal',
+            'Tax',
+            'Potongan',
+            'Warung Id',
+            'Created By',
+            'Updated By',
+            'Created At',
+            'Updated At',
+            'Ppn',
+            'Tax Include',
+        ]);
 
-                foreach ($data_tbs_penjualan_pos->get() as $data_tbs_penjualan_poss) {
+        foreach ($data_tbs_penjualan_pos->get() as $data_tbs_penjualan_poss) {
 
-                    $sheet->row(++$row, [
-                        $data_tbs_penjualan_poss->session_id,
-                        $data_tbs_penjualan_poss->satuan_id,
-                        $data_tbs_penjualan_poss->id_produk,
-                        $data_tbs_penjualan_poss->jumlah_produk,
-                        $data_tbs_penjualan_poss->harga_produk,
-                        $data_tbs_penjualan_poss->subtotal,
-                        $data_tbs_penjualan_poss->tax,
-                        $data_tbs_penjualan_poss->potongan,
-                        $data_tbs_penjualan_poss->warung_id,
-                        $data_tbs_penjualan_poss->created_by,
-                        $data_tbs_penjualan_poss->updated_by,
-                        $data_tbs_penjualan_poss->created_at,
-                        $data_tbs_penjualan_poss->updated_at,
-                        null,
-                        0,
+          $sheet->row(++$row, [
+            $data_tbs_penjualan_poss->session_id,
+            $data_tbs_penjualan_poss->satuan_id,
+            $data_tbs_penjualan_poss->id_produk,
+            $data_tbs_penjualan_poss->jumlah_produk,
+            $data_tbs_penjualan_poss->harga_produk,
+            $data_tbs_penjualan_poss->subtotal,
+            $data_tbs_penjualan_poss->tax,
+            $data_tbs_penjualan_poss->potongan,
+            $data_tbs_penjualan_poss->warung_id,
+            $data_tbs_penjualan_poss->created_by,
+            $data_tbs_penjualan_poss->updated_by,
+            $data_tbs_penjualan_poss->created_at,
+            $data_tbs_penjualan_poss->updated_at,                    
+            null,
+            0,
 
-                    ]);
+        ]);
 
-                }
+      }
 
-            });
-        })->download('xlsx');
-    }
+  });
+})->download('xls');
+}
 
 }
