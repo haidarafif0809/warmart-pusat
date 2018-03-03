@@ -47,13 +47,44 @@ $judul_warung = \App\SettingFooter::select()->first()->judul_warung;
 </head>
 <style type="text/css">
 
-.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
- padding: 1px;
-}
+    .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+     padding: 1px;
+ }
 
 </style>
 <body>
     <div class="wrapper" id="vue-app">
+
+
+
+        <!--MODAL PINTAS TAMBAH KAS-->
+        <div class="modal" id="modalTour" role="dialog" data-backdrop=""> 
+            <div class="modal-dialog">
+                <!-- Modal content--> 
+                <div class="modal-content"> 
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"> <i class="material-icons">close</i></button> 
+                        <h4 class="modal-title"> 
+                            <div class="alert-icon"> 
+                                Petunjuk Penggunaan
+                            </div> 
+                        </h4> 
+                    </div>                         
+                    <div class="modal-body">
+                        <ol>
+                            <router-link :to="'produk?tour'" class="menu-nav" data-dismiss="modal">
+                                <li>Menambuat Produk Baru</li>
+                            </router-link>
+                        </ol>
+                    </div>
+                    <div class="modal-footer">  
+                        <button type="button" class="btn btn-danger btn-xs" data-dismiss="modal"><i class="material-icons">close</i> Batal</button> 
+                    </div> 
+                </div>       
+            </div> 
+        </div> 
+        <!-- / MODAL PINTAS TAMBAH KAS --> 
+
         <div class="sidebar" data-active-color="rose" data-background-color="black" data-image="">
                 <!--
         Tip 1: You can change the color of active element of the sidebar using: data-active-color="purple | blue | green | orange | red | rose"
@@ -405,6 +436,11 @@ $judul_warung = \App\SettingFooter::select()->first()->judul_warung;
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <a href="{{ url('/halaman-warung/'.Auth::user()->id_warung.'') }}" class="btn btn-round btn-rose">Preview Online Shop</a>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <button id="btnHelp" class="btn btn-round btn-info" data-toggle="modal" data-target="#modalTour">
+                        <i class="material-icons">help</i> Bantuan
+                    </button>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     @if(Auth::user()->tipe_user == 4)
