@@ -179,7 +179,6 @@
                 urlLihat : window.location.origin+(window.location.pathname).replace("dashboard", "produk/lihat-deskripsi-produk/"),
                 urlForm: "create-produk",
                 urlTemplate : window.location.origin+(window.location.pathname).replace("dashboard", "produk/template-excel"),
-                urlImport : window.location.origin+(window.location.pathname).replace("dashboard", "produk/import-excel"),
                 pencarian: '',
                 loading: true,
                 steps: [
@@ -303,7 +302,7 @@ methods: {
             return;
         }
 
-        axios.post(app.urlImport, newExcel).then(function (resp){
+        axios.post(app.url+'/import-excel', newExcel).then(function (resp){
             console.log(resp);
 
             if (resp.data.pesanError !== undefined) {
@@ -319,7 +318,7 @@ methods: {
             app.alertImport(resp.data.jumlahProduk + ' Produk Berhasil Diimport.');
             app.getResults();
         }).catch(function (resp){
-            console.log(resp);
+            console.log(resp.response.data.errors);
 
             if (resp.response.data.errors != undefined) {
                 app.errors = resp.response.data.errors.excel[0];
