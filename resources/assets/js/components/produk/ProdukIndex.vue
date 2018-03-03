@@ -16,6 +16,50 @@
                     <li class="active">Produk</li>
                 </ul>
 
+                <!--MODAL PINTAS TAMBAH KAS-->
+                <div class="modal" id="modal_import" role="dialog" data-backdrop=""> 
+                    <div class="modal-dialog">
+                        <!-- Modal content--> 
+                        <div class="modal-content"> 
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"> <i class="material-icons">close</i></button> 
+                                <h4 class="modal-title"> 
+                                    <div class="alert-icon" style="font-weight: bold;"> 
+                                        Import Produk
+                                    </div> 
+                                </h4> 
+                            </div>                         
+                            <form v-on:submit.prevent="importExcel()" class="form-horizontal">
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <p style="font-weight: bold;">
+                                            Download <a :href="urlTemplate">Template</a> Excel Untuk Import Produk.
+                                        </p>
+                                    </div>
+                                    <div class="form-group form-file-upload">
+                                        <input type="file" id="excel" multiple="">
+                                        <div class="input-group">
+                                            <input type="text" readonly="" class="form-control" placeholder="Browse File...">
+                                            <span class="input-group-btn input-group-s">
+                                                <button type="button" class="btn btn-just-icon btn-round btn-primary">
+                                                    <i class="material-icons">attach_file</i>
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">                                
+                                        <button class="btn btn-primary" id="btnImport" type="submit"><i class="material-icons">file_upload</i> Import</button>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">  
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="material-icons">close</i> Batal</button> 
+                                </div> 
+                            </form>
+                        </div>       
+                    </div> 
+                </div> 
+                <!-- / MODAL IMPORT EXCEL --> 
+
                 <div class="card">
                     <div class="card-header card-header-icon" data-background-color="purple">
                         <i class="material-icons">dns</i>
@@ -24,15 +68,23 @@
                         <h4 class="card-title"> Produk</h4>
 
                         <div class="toolbar">
-                            <router-link :to="urlForm" class="btn btn-primary" id="step-0"><i class="material-icons">add</i>  Produk</router-link>
+                            <div class="row">
+                                <div class="panel panel-default">
+                                    <router-link :to="urlForm" class="btn btn-primary" id="step-0"><i class="material-icons">add</i>  Produk</router-link>
 
-                            <div class="pencarian">
-                                <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control" autocomplete="">
+                                    <button id="btnFilter" class="btn btn-info" data-toggle="modal" data-target="#modal_import">
+                                        <i class="material-icons">file_upload</i> Import Excel
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
                         <br>
                         <div class=" table-responsive ">
+                            <div class="pencarian">
+                                <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control" autocomplete="">
+                            </div>
+
                             <table class="table table-striped table-hover ">
                                 <thead class="text-primary">
                                     <tr>
@@ -124,29 +176,31 @@
                 url : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
                 urlLihat : window.location.origin+(window.location.pathname).replace("dashboard", "produk/lihat-deskripsi-produk/"),
                 urlForm: "create-produk",
+                urlTemplate : window.location.origin+(window.location.pathname).replace("dashboard", "produk/template-excel"),
+                urlImport : window.location.origin+(window.location.pathname).replace("dashboard", "produk/import-excel"),
                 pencarian: '',
                 loading: true,
                 steps: [
                 {
-    target: '#step-0',  // We're using document.querySelector() under the hood
-    content: 'Klik Tombol <strong>Produk</strong>, <br> Anda Bisa Menambahkan Produk Baru Untuk Toko Anda!',
-    params: {
-        placement: 'right',
-    }
-}
-]
-}
-},
-mounted() {
-    var app = this;
-    app.getResults();
-    if (app.$route.fullPath == "/produk?tour") {
-        this.$tours['myTour'].start();
-        app.urlForm = 'create-produk?tour';
-    }
-    console.log(this.$tours['myTour'].currentStep)
-},
-watch: {
+                    target: '#step-0',  // We're using document.querySelector() under the hood
+                    content: 'Klik Tombol <strong>Produk</strong>, <br> Anda Bisa Menambahkan Produk Baru Untuk Toko Anda!',
+                    params: {
+                        placement: 'right',
+                    }
+                }
+                ]
+            }
+        },
+        mounted() {
+            var app = this;
+            app.getResults();
+            if (app.$route.fullPath == "/produk?tour") {
+                this.$tours['myTour'].start();
+                app.urlForm = 'create-produk?tour';
+            }
+            console.log(this.$tours['myTour'].currentStep)
+        },
+        watch: {
     // whenever question changes, this function will run
     pencarian: function (newQuestion) {
         this.getHasilPencarian()  
@@ -234,6 +288,62 @@ methods: {
         });
 
         this.$router.replace('/produk/');
+    },
+    importExcel(){
+        var app = this;
+        let newExcel = new FormData();
+        let file = document.getElementById('excel').files[0];
+
+        if (file != undefined) {
+            newExcel.append('excel', file)
+        }else{
+            app.alertGagal("Silakan Pilih File Dahulu.");
+            return;
+        }
+
+        axios.post(app.urlImport, newExcel).then(function (resp){
+            console.log(resp);
+
+            if (resp.data.pesanError !== undefined) {
+                return swal({
+                    title: 'Gagal!',
+                    type: 'warning',
+                    html: '<div style="text-align: left; font-size: 14px;">'+ resp.data.pesanError +'</div>',
+                });
+            }
+
+            $("#excel").val('');
+            $("#modal_import").hide();
+            app.alertImport(resp.data.jumlahProduk + ' Produk Berhasil Diimport.');
+            app.getResults();
+        }).catch(function (resp){
+            console.log(resp);
+
+            if (resp.response.data.errors != undefined) {
+                app.errors = resp.response.data.errors.excel[0];
+            }
+            else {
+                app.errors = "Ukuran file terlalu besar!";
+            }
+
+            app.alertGagal(app.errors);
+        });
+    },
+    alertImport(pesan) {
+        this.$swal({
+            text: pesan,
+            icon: "success",
+            buttons: false,
+            timer: 1000
+        });
+    },
+    alertGagal(pesan) {
+        this.$swal({
+            text: pesan,
+            icon: "warning",
+            buttons: false,
+            timer: 1000
+        });
     }
 }
 }
