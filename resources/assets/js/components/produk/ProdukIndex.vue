@@ -50,6 +50,8 @@
                                     <div class="form-group">                                
                                         <button class="btn btn-primary" id="btnImport" type="submit"><i class="material-icons">file_upload</i> Import</button>
                                     </div>
+
+                                    <p style="color: red; font-style: italic;">*Note : Kolom Yang Berwarna Wajib Diisi.</p>
                                 </div>
                                 <div class="modal-footer">  
                                     <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="material-icons">close</i> Batal</button> 

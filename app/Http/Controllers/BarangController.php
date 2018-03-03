@@ -9,10 +9,12 @@ use App\Satuan;
 use App\SettingAplikasi;
 use App\User;
 use Auth;
+use Excel;
 use File;
 use Illuminate\Http\Request;
 use Intervention\Image\ImageManagerStatic as Image;
 use Jenssegers\Agent\Agent;
+use PHPExcel_Style_Fill;
 use Yajra\Datatables\Html\Builder;
 
 class BarangController extends Controller
@@ -48,6 +50,32 @@ class BarangController extends Controller
         }
 
         return $status_produk;
+    }
+
+    public function labelSheet($sheet, $row)
+    {
+        $sheet->row($row, [
+            'Kode Barcode',
+            'Kode Produk',
+            'Nama Produk',
+            'Kategori',
+            'Satuan',
+            'Harga Beli',
+            'Harga Jual',
+            'Harga Jual 2',
+            'Perkiraan Berat (Gram)',
+            'Hitung Stok',
+            'Status',
+            'Deskripsi Produk',
+        ]);
+        return $sheet;
+    }
+
+    public function kolomWajib()
+    {
+        return [
+            'B', 'C', 'D', 'E', 'F', 'G', 'J', 'K',
+        ];
     }
 
     public function dataPagination($data_produk, $array_produk)
@@ -415,16 +443,55 @@ class BarangController extends Controller
         $array  = array();
         foreach ($produk as $produks) {
             array_push($array, [
-                'id'          => $produks->id,
-                'nama_produk' => title_case($produks->nama_barang),
-                'kode_produk' => $produks->kode_barang,
-                'barcode'     => $produks->kode_barcode,
-                'hitung_stok' => $produks->hitung_stok,
+                'id'           => $produks->id,
+                'nama_produk'  => title_case($produks->nama_barang),
+                'kode_produk'  => $produks->kode_barang,
+                'barcode'      => $produks->kode_barcode,
+                'hitung_stok'  => $produks->hitung_stok,
                 'status_aktif' => $produks->status_aktif,
-                'produk'      => $produks->id . "|" . title_case($produks->nama_barang) . "|" . $produks->harga_beli . "|" . $produks->harga_jual . "|" . $produks->satuan_id . "|" . $produks->harga_jual2]);
+                'produk'       => $produks->id . "|" . title_case($produks->nama_barang) . "|" . $produks->harga_beli . "|" . $produks->harga_jual . "|" . $produks->satuan_id . "|" . $produks->harga_jual2]);
 
         }
 
         return response()->json($array);
+    }
+
+    //DOWNLAOD TEMPLATE
+    public function downloadTemplate()
+    {
+        Excel::create('Tempalate Import Produk', function ($excel) {
+
+            $excel->sheet('Tempalate Import Produk', function ($sheet) {
+                $koloms = $this->kolomWajib();
+                // BACKGROUND COLOR - Kolom Wajib Disi
+                foreach ($koloms as $kolom) {
+                    $sheet->getStyle($kolom . '1')->applyFromArray(array(
+                        'fill' => array(
+                            'type'  => PHPExcel_Style_Fill::FILL_SOLID,
+                            'color' => array('rgb' => '90CAF9'),
+                        ),
+                    ));
+                }
+
+                $row   = 1;
+                $sheet = $this->labelSheet($sheet, $row);
+
+                $sheet->row(++$row, [
+                    '10021542101421',
+                    'SNTRKRN001',
+                    'Kaos Santri Keren',
+                    'Kaos',
+                    'PCS',
+                    '95000',
+                    '150000',
+                    '0',
+                    '200',
+                    'Pilih Salah Satu, Ya / Tidak',
+                    'Pilih Salah Satu, Aktif / Tidak Aktif',
+                    'Bahan Cotton Combed 24 S',
+                ]);
+
+            });
+        })->download('xlsx');
     }
 }
