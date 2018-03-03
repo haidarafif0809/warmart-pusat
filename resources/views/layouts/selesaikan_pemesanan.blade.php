@@ -469,7 +469,7 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
         $("#total_belanja").text("Rp. "+subtotal);
         if (kurir == 'cod') {
           selectMetodePembayaran.setValue("Bayar di Tempat");
-          selectMetodePembayaran.disable();
+          
         }else{
           selectMetodePembayaran.focus();
           selectMetodePembayaran.enable();
@@ -566,7 +566,7 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
       $("#total_belanja").removeClass('spinner'); 
       $("#total_belanja").text("Rp. "+total_belanja);
       selectMetodePembayaran.setValue("TRANSFER");
-      selectMetodePembayaran.disable();
+      
     }
 
     $selectLayananKurir.on('change', function(){

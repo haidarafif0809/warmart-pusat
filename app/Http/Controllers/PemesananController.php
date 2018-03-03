@@ -19,6 +19,7 @@ use Jenssegers\Agent\Agent;
 use OpenGraph;
 use SEOMeta;
 use Session;
+use Illuminate\Support\Facades\Mail;
 
 class PemesananController extends Controller
 {
@@ -111,7 +112,6 @@ class PemesananController extends Controller
 
 public function prosesSelesaikanPemesanan(Request $request)
 {
-
         //START TRANSAKSI
     DB::beginTransaction();
 
@@ -160,6 +160,7 @@ public function prosesSelesaikanPemesanan(Request $request)
 
         $cek_pesanan = 0; // BUAT VARIABEL CEK PESANAN YANG KITA SET  0
         $id_pesanan = 0;
+        $arrayKeranjangBelanja             = array();
         foreach ($keranjang_belanjaan as $key => $keranjang_belanjaans) {
 
             $kode_unik_transfer = PesananPelanggan::kodeUnikTransfer();
@@ -211,7 +212,8 @@ public function prosesSelesaikanPemesanan(Request $request)
                 $nomor_tujuan = $warung->no_telpon;
 
                 // KIRIM SMS KE WARUNG
-                $this->kirimSmsKeWarung($nomor_tujuan, $id_pesanan_pelanggan);
+                $this->kirimSmsKeWarung($nomor_tujuan, $id_pesanan_pelanggan);               
+
             }
 
             // JIKA CEK PESANAN TIDAK SAMA DENGAN NOL DAN CEK PESANAN TIDAK SAMA DENGAN ID WARUNG
@@ -267,11 +269,15 @@ public function prosesSelesaikanPemesanan(Request $request)
                 'harga_produk'         => $keranjang_belanjaans['harga_jual'],
                 'jumlah_produk'        => $keranjang_belanjaans['jumlah_produk'],
             ]);
+            
 
             // HAPUS KERANJANG BELANJA
             KeranjangBelanja::destroy($keranjang_belanjaans['id_keranjang_belanja']);
 
         }
+
+                        // KIRIM EMAIL KONFIRMASI PESANAN KE PELANGGAN
+        $this->kirimEmailKonfirmasiPesananKePelanggan($request,$id_pesanan);
 
         DB::commit();
 
@@ -279,7 +285,7 @@ public function prosesSelesaikanPemesanan(Request $request)
             return redirect()->route('daftar_produk.index');
         } else {
 
-            return redirect()->route('info.pembayaran', ['id' => $id_pesanan,'id_pelanggan' => $id_user]);
+            return redirect()->route('info.pembayaran', ['id' => $id_pesanan,'pelanggan' => $id_user]);
         }
 
     }
@@ -321,6 +327,17 @@ public function prosesSelesaikanPemesanan(Request $request)
             $result = $client->get('https://reguler.zenziva.net/apps/smsapi.php?userkey=' . $userkey . '&passkey=' . $passkey . '&nohp=' . $nomor_tujuan . '&pesan=' . $isi_pesan . '');
 
         }
+
+    }
+
+    public function kirimEmailKonfirmasiPesananKePelanggan($request, $id_pesanan){
+        $data = $request;
+        $pesanan_pelanggan = PesananPelanggan::with('warung')->find($id_pesanan);
+        $detail_pesanan = DetailPesananPelanggan::with(['produk'])->where('id_pesanan_pelanggan',$id_pesanan)->get();
+        Mail::send('auth.emails.email_konfirmasi_pesanan', compact('data','pesanan_pelanggan','detail_pesanan'), function ($message) use ($data) {
+            $message->to($data->email, $data->name)->subject('Konfirmasi Pesanan');
+
+        });
 
     }
 
@@ -419,5 +436,22 @@ public function prosesSelesaikanPemesanan(Request $request)
             echo $response;
         }
     }
+
+    public function emailKonfirmasiPesanan(){
+       $session_id = Session::get('session_id');
+
+       $keranjang_belanjaan = KeranjangBelanja::select('keranjang_belanjas.id_keranjang_belanja AS id_keranjang_belanja', 'keranjang_belanjas.id_produk AS id_produk', 'keranjang_belanjas.jumlah_produk AS jumlah_produk', 'barangs.harga_jual AS harga_jual', 'barangs.id_warung AS id_warung','barangs.nama_barang AS nama_barang','barangs.foto AS foto')
+       ->leftJoin('barangs', 'keranjang_belanjas.id_produk', '=', 'barangs.id')
+       ->where('session_id', $session_id)->orderBy('barangs.id_warung');
+
+       $arrayKeranjangBelanja             = array();
+       foreach ($keranjang_belanjaan->get() as $key => $keranjang_belanjaans) {
+        array_push($arrayKeranjangBelanja,['keranjang_belanja'=>$keranjang_belanjaans]);
+    }
+//$arrayKeranjangBelanja[0]['keranjang_belanja']->id_produk;
+    foreach ($arrayKeranjangBelanja as $arrayKeranjangBelanjas ) {
+        return  $arrayKeranjangBelanja;
+    }
+}
 
 }

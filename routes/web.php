@@ -24,6 +24,7 @@ Route::get('copy-produk-alfatih', function () {
 });
 
 Route::get('/tentang-warmart', 'HomeController@index');
+Route::get('/coba-email', 'PemesananController@emailKonfirmasiPesanan');
 
 Route::get('/cek-deposit', 'PortaPulsaController@cekDeposit');
 
