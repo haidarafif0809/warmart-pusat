@@ -32,7 +32,7 @@ class PenjualanController extends Controller
     public function pilihPelanggan()
     {
         $pelanggan = User::where('tipe_user', 3)->get();
-        $array     = array(['id' => '0', 'nama_pelanggan' => 'Umum'],['id' => '', 'nama_pelanggan' => 'SEMUA PELANGGAN']);
+        $array     = array(['id'=>'','nama_pelanggan'=>'SEMUA PELANGGAN'],['id'=>'0','nama_pelanggan'=>'Umum']);
         foreach ($pelanggan as $pelanggans) {
             array_push($array, [
                 'id'             => $pelanggans->id,
@@ -44,7 +44,7 @@ class PenjualanController extends Controller
     public function pilihKasir()
     {
         $kasir = User::where('tipe_user', 4)->where('id_warung', Auth::user()->id_warung)->get();
-        $array = array();
+        $array = array(['id'=>'','nama_kasir'=>'SEMUA KASIR']);
         foreach ($kasir as $kasirs) {
             array_push($array, [
                 'id'         => $kasirs->id,
@@ -60,9 +60,9 @@ class PenjualanController extends Controller
         return response()->json($kas);
     }
 
-    public function paginationData($penjualan, $array, $url, $session_id)
-    {
-
+    public function paginationData($penjualan, $array, $url)
+    {   
+        $session_id    = session()->getId();
         //DATA PAGINATION
         $respons['current_page']   = $penjualan->currentPage();
         $respons['data']           = $array;

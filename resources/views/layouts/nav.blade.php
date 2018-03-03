@@ -303,6 +303,16 @@
                 </router-link>
             </li>
             <li>
+                <router-link :to="{name: 'indexLaporanHutangBeredar'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        LHB
+                    </span>
+                    <span class="sidebar-normal">
+                        Laporan Hutang Beredar
+                    </span>
+                </router-link>
+            </li>
+            <li>
                 <router-link :to="{name: 'indexPenjualan'}" class="menu-nav">
                     <span class="sidebar-mini">
                         LP

@@ -29,12 +29,12 @@
 							<datepicker :input-class="'form-control'" placeholder="Sampai Tanggal" v-model="filter.sampai_tanggal" name="sampai_tanggal" v-bind:id="'sampai_tanggal'"></datepicker>
 						</div>
 						<div class="form-group col-md-2">
-							<selectize-component v-model="filter.pelanggan" :settings="placeholder_pelanggan" id="pilih_pelanggan"> 
+							<selectize-component v-model="filter.pelanggan"  id="pilih_pelanggan"> 
 								<option v-for="pelanggans, index in pelanggan" v-bind:value="pelanggans.id" >{{ pelanggans.nama_pelanggan }}</option>
 							</selectize-component>
 						</div>
 						<div class="form-group col-md-2">
-							<selectize-component v-model="filter.kasir" :settings="placeholder_kasir" id="pilih_kasir"> 
+							<selectize-component v-model="filter.kasir"  id="pilih_kasir"> 
 								<option v-for="kasirs, index in kasir" v-bind:value="kasirs.id" >{{ kasirs.nama_kasir }}</option>
 							</selectize-component>
 						</div>
@@ -190,12 +190,7 @@ export default {
 			pencarian: '',
 			pencarianOnline: '',
 			loading: false,
-			placeholder_pelanggan: {
-				placeholder: '--SEMUA PELANGGAN--'
-			},
-			placeholder_kasir: {
-				placeholder: '--SEMUA KASIR--'
-			},
+
 		}
 	},
 	mounted() {
