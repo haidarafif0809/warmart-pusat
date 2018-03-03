@@ -34,6 +34,11 @@ const getters = {
 		return state.suplier.filter(function(suplier){
 			return suplier.id != "";
 		})
+	},
+	pelangganTransaksi(state){
+		return state.pelanggan.filter(function(pelanggan){
+			return pelanggan.id != "";
+		})
 	}
 }
 // Mutation adalah satu-satunya cara untuk merubah state

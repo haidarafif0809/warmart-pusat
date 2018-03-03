@@ -28,7 +28,7 @@ class LaporanPenjualanPelangganController extends Controller
     public function dataPelanggan()
     {
         $pelanggan       = User::select(['id', 'name'])->where('tipe_user', 3)->get();
-        $array_pelanggan = array();
+        $array_pelanggan = array(['id'=>'','nama_pelanggan'=>'SEMUA PELANGGAN'],['id'=>'0','nama_pelanggan'=>'Umum']);
         foreach ($pelanggan as $pelanggans) {
             array_push($array_pelanggan, [
                 'id'             => $pelanggans->id,
