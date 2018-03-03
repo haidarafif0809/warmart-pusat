@@ -285,7 +285,7 @@
 				<template v-if="tour.currentStep === 13">
 					<div slot="actions">
 						<button data-v-fca314f4="" class="v-step__button" @click="tour.previousStep">Kembali</button>
-						<button data-v-fca314f4="" class="v-step__button" @click="simpanProduk()">Selesai</button>
+						<button data-v-fca314f4="" class="v-step__button" @click="tour.stop">Selesai</button>
 					</div>
 				</template>
 				<template v-else-if="tour.currentStep === 0">
@@ -619,9 +619,6 @@
 				app.produk.status_aktif = 'true';
 				app.produk.deskripsi_produk = '';
 				app.errors = '';
-			},
-			simpanProduk(){
-				$("#btnSimpanProduk").click();
 			},
 			nextStepTour(){
 				var app = this;
