@@ -9,10 +9,13 @@ use App\Satuan;
 use App\SettingAplikasi;
 use App\User;
 use Auth;
+use Excel;
 use File;
 use Illuminate\Http\Request;
 use Intervention\Image\ImageManagerStatic as Image;
 use Jenssegers\Agent\Agent;
+use PHPExcel_Style_Fill;
+use Validator;
 use Yajra\Datatables\Html\Builder;
 
 class BarangController extends Controller
@@ -48,6 +51,32 @@ class BarangController extends Controller
         }
 
         return $status_produk;
+    }
+
+    public function labelSheet($sheet, $row)
+    {
+        $sheet->row($row, [
+            'Kode Barcode',
+            'Kode Produk',
+            'Nama Produk',
+            'Kategori',
+            'Satuan',
+            'Harga Beli',
+            'Harga Jual',
+            'Harga Jual 2',
+            'Perkiraan Berat',
+            'Hitung Stok',
+            'Status',
+            'Deskripsi Produk',
+        ]);
+        return $sheet;
+    }
+
+    public function kolomWajib()
+    {
+        return [
+            'B', 'C', 'D', 'E', 'F', 'G', 'J', 'K',
+        ];
     }
 
     public function dataPagination($data_produk, $array_produk)
@@ -269,7 +298,6 @@ class BarangController extends Controller
      */
     public function update(Request $request)
     {
-
         $update_barang = Barang::find($request->id);
         if ($update_barang->id_warung != Auth::user()->id_warung) {
             Auth::logout();
@@ -415,16 +443,184 @@ class BarangController extends Controller
         $array  = array();
         foreach ($produk as $produks) {
             array_push($array, [
-                'id'          => $produks->id,
-                'nama_produk' => title_case($produks->nama_barang),
-                'kode_produk' => $produks->kode_barang,
-                'barcode'     => $produks->kode_barcode,
-                'hitung_stok' => $produks->hitung_stok,
+                'id'           => $produks->id,
+                'nama_produk'  => title_case($produks->nama_barang),
+                'kode_produk'  => $produks->kode_barang,
+                'barcode'      => $produks->kode_barcode,
+                'hitung_stok'  => $produks->hitung_stok,
                 'status_aktif' => $produks->status_aktif,
-                'produk'      => $produks->id . "|" . title_case($produks->nama_barang) . "|" . $produks->harga_beli . "|" . $produks->harga_jual . "|" . $produks->satuan_id . "|" . $produks->harga_jual2]);
+                'produk'       => $produks->id . "|" . title_case($produks->nama_barang) . "|" . $produks->harga_beli . "|" . $produks->harga_jual . "|" . $produks->satuan_id . "|" . $produks->harga_jual2]);
 
         }
 
         return response()->json($array);
+    }
+
+    //DOWNLAOD TEMPLATE
+    public function downloadTemplate()
+    {
+        Excel::create('Tempalate Import Produk', function ($excel) {
+
+            $excel->sheet('Tempalate Import Produk', function ($sheet) {
+                $koloms = $this->kolomWajib();
+                // BACKGROUND COLOR - Kolom Wajib Disi
+                foreach ($koloms as $kolom) {
+                    $sheet->getStyle($kolom . '1')->applyFromArray(array(
+                        'fill' => array(
+                            'type'  => PHPExcel_Style_Fill::FILL_SOLID,
+                            'color' => array('rgb' => '90CAF9'),
+                        ),
+                    ));
+                }
+
+                $row   = 1;
+                $sheet = $this->labelSheet($sheet, $row);
+
+                $sheet->row(++$row, [
+                    '10021542101421',
+                    'SNTRKRN001',
+                    'Kaos Santri Keren',
+                    'Kaos',
+                    'PCS',
+                    '95000',
+                    '150000',
+                    '0',
+                    '200',
+                    'Pilih Salah Satu, Ya / Tidak',
+                    'Pilih Salah Satu, Aktif / Tidak Aktif',
+                    'Bahan Cotton Combed 24 S',
+                ]);
+
+            });
+        })->download('xlsx');
+    }
+
+    public function importExcel(Request $request)
+    {
+
+        $warung_id = Auth::user()->id_warung;
+        // validasi untuk memastikan file yang diupload adalah excel
+        $this->validate($request, ['excel' => 'required|mimes:xls,xlsx']);
+        // ambil file yang baru diupload
+        $excel = $request->file('excel');
+        // baca sheet pertama
+        $excels = Excel::selectSheetsByIndex(0)->load($excel, function ($reader) {
+        })->get();
+
+        // rule untuk validasi setiap row pada file excel
+        $rowRules = [
+            'Kode Produk'     => 'required|unique:barangs,kode_barang,NULL,id,id_warung,' . $warung_id . '|max:50',
+            'Nama Produk'     => 'required|max:300',
+            'Harga Beli'      => 'required|numeric|digits_between:1,11',
+            'Harga Jual'      => 'required|numeric|digits_between:1,11',
+            'Harga Jual 2'    => 'numeric|digits_between:1,11',
+            'Kategori'        => 'required|exists:kategori_barangs,id',
+            'Satuan'          => 'required|exists:satuans,id',
+            'Hitung Stok'     => 'required',
+            'Status'          => 'required',
+            'Perkiraan Berat' => 'numeic',
+        ];
+        // Catat semua id buku baru
+        // ID ini kita butuhkan untuk menghitung total buku yang berhasil diimport
+        $produk_id  = [];
+        $errors     = [];
+        $lineErrors = [];
+        $no         = 1;
+
+        // looping setiap baris, mulai dari baris ke 2 (karena baris ke 1 adalah nama kolom)
+        foreach ($excels as $row) {
+            // Mengubah Hitung Stok Menajdi lowerCase (Huruf Kecil Semua)
+            $hitungStok = trim(strtolower($row['hitung_stok']));
+            if (!empty($row['hitung_stok'])) {
+                if ($hitungStok !== 'ya' && $hitungStok !== 'tidak') {
+                    $errors['hitungStok'][] = [
+                        'line'    => $no,
+                        'message' => 'Nilai Dari Kolom Hitung Stok Hanya Boleh Berisi Ya atau Tidak.',
+                    ];
+                    $lineErrors[] = $no;
+                }
+            } else {
+                $errors['hitungStok'][] = [
+                    'line'    => $no,
+                    'message' => 'Nilai Dari Kolom Hitung Stok Tidak Boleh Kosong',
+                ];
+                $lineErrors[] = $no;
+            }
+            $no++;
+        }
+
+        // Perulang kedua, digunakan untuk menambahkan data produk jika tidak terjadi error.
+        foreach ($excels as $row) {
+            // Jika terjadi error, maka perintah dihentikan sehingga tidak ada data yg di insert ke database
+            if (count($errors) > 0) {
+                // Buat variable tipe array, dengan index pesanError.
+                $pesan = ['pesanError' => ''];
+
+                // Memasukan nilai error yg terjadi, kedalam variabel $pesan yg sudah kita buat tadi.
+                foreach ($errors['hitungStok'] as $key => $value) {
+                    if ($value['line'] == end($lineErrors)) {
+                        $pesan['pesanError'] .= $value['line'] . ' . ' . $value['message'];
+                    } else {
+                        $pesan['pesanError'] .= $value['line'] . ' . ' . $value['message'] . ' < br > ';
+                    }
+                }
+                return response()->json($pesan);
+            }
+
+            // Membuat validasi untuk row di excel, disini kita ubah baris yang sedang di proses menjadi array.
+            $validator   = Validator::make($row->toArray(), $rowRules);
+            $db_satuan   = Satuan::select(['id', 'nama_satuan'])->where('nama_satuan', $row['satuan']);
+            $db_kategori = KategoriBarang::select(['id', 'nama_kategori_barang'])->where('nama_kategori_barang', $row['kategori']);
+            // SATUAN
+            if ($db_satuan->count() > 0) {
+                //Jika Satuan sudah ada maka, tinggal pakai ID nya saja
+                $satuan = $db_satuan->first()->id;
+            } else {
+                //Jika Satuan belum ada maka kita buat dulu satuan baru
+                $data_satuan = Satuan::create([
+                    'nama_satuan' => $row['satuan'],
+                ]);
+                $satuan = $data_satuan->id;
+            }
+            // KATEGORI
+            if ($db_kategori->count() > 0) {
+                //Jika Kategori sudah ada maka, tinggal pakai ID nya saja
+                $kategori = $db_kategori->first()->id;
+            } else {
+                //Jika Kategori belum ada maka kita buat dulu Kategori baru
+                $data_kategori = KategoriBarang::create([
+                    'nama_kategori_barang' => $row['kategori'],
+                ]);
+                $kategori = $data_kategori->id;
+            }
+            //PERKIRAN BERAT
+            $perkiraan_berat = ($row['perkiraan_berat'] == '' or $row['perkiraan_berat'] == 0 ? 1000 : $row['perkiraan_berat']);
+            //HITUNG STOK
+            $hitung_stok = ($row['hitung_stok'] == 'ya' ? 1 : 0);
+            //STATUS
+            $status_aktif = ($row['status'] == 'aktif' ? 1 : 0);
+
+            // Insert Detail Item Masuk
+            $produk = Barang::create([
+                'kode_barang'        => $row['kode_produk'],
+                'kode_barcode'       => $row['kode_barcode'],
+                'nama_barang'        => strtolower($row['nama_produk']),
+                'harga_beli'         => $row['harga_beli'],
+                'harga_jual'         => $row['harga_jual'],
+                'harga_jual2'        => $row['harga_jual_2'],
+                'berat'              => $perkiraan_berat,
+                'satuan_id'          => $satuan,
+                'kategori_barang_id' => $kategori,
+                'deskripsi_produk'   => $row['deskripsi_produk'],
+                'status_aktif'       => $status_aktif,
+                'hitung_stok'        => $hitung_stok,
+                'konfirmasi_admin'   => 1,
+                'id_warung'          => $warung_id,
+            ]);
+        }
+// Hitung Jumlah Produk Yang Diimport
+        $hitung_produk['jumlahProduk'] = $no - 1;
+
+        return response()->json($hitung_produk);
     }
 }

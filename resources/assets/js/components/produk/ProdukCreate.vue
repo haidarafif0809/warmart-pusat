@@ -105,7 +105,7 @@
 									<div class="form-group">
 										<label for="kode_barcode" class="col-md-2 control-label">Kode Barcode</label>
 										<div class="col-md-10">
-											<input class="form-control" autocomplete="off" placeholder="Kode Barcode (Jika Ada)" v-model="produk.kode_barcode" type="text" name="kode_barcode" id="kode_barcode"  autofocus="">
+											<input class="form-control" autocomplete="off" placeholder="Kode Barcode (Jika Ada)" v-model="produk.kode_barcode" type="text" name="kode_barcode" id="kode_barcode" ref="kode_barcode" autofocus="">
 											<span v-if="errors.kode_barcode" id="kode_barcode_error" class="label label-danger">{{ errors.kode_barcode[0] }}</span>
 										</div>
 									</div>
@@ -113,7 +113,7 @@
 									<div class="form-group">
 										<label for="kode_barang" class="col-md-2 control-label">Kode Produk</label>
 										<div class="col-md-10">
-											<input class="form-control" autocomplete="off" placeholder="Kode Produk" v-model="produk.kode_barang" type="text" name="kode_barang" id="kode_barang"  autofocus="">
+											<input class="form-control" autocomplete="off" placeholder="Kode Produk" v-model="produk.kode_barang" type="text" name="kode_barang" id="kode_barang" ref="kode_barang" autofocus="">
 											<span v-if="errors.kode_barang" id="kode_barang_error" class="label label-danger">{{ errors.kode_barang[0] }}</span>
 										</div>
 									</div>
@@ -121,7 +121,7 @@
 									<div class="form-group">
 										<label for="nama_barang" class="col-md-2 control-label">Nama Produk</label>
 										<div class="col-md-10">
-											<input class="form-control" autocomplete="off" placeholder="Nama Produk" v-model="produk.nama_barang" type="text" name="nama_barang" id="nama_barang"  autofocus="">
+											<input class="form-control" autocomplete="off" placeholder="Nama Produk" v-model="produk.nama_barang" type="text" name="nama_barang" id="nama_barang" ref="nama_barang" autofocus="">
 											<span v-if="errors.nama_barang" id="nama_barang_error" class="label label-danger">{{ errors.nama_barang[0] }}</span>
 										</div>
 									</div>
@@ -129,7 +129,7 @@
 									<div class="form-group">
 										<label for="kategori_barang_id" class="col-md-2 control-label">Kategori Produk</label>
 										<div class="col-md-9">
-											<selectize-component v-model="produk.kategori_barang_id" :settings="placeholder_kategori" id="pilih_kategori_barang_id"> 
+											<selectize-component v-model="produk.kategori_barang_id" :settings="placeholder_kategori" id="pilih_kategori_barang_id" ref="kategori_barang"> 
 												<option v-for="kategoris, index in kategori_barang_id" v-bind:value="kategoris.id" >{{ kategoris.nama_kategori_barang }}</option>
 											</selectize-component>
 											<span v-if="errors.kategori_barang_id" id="kategori_barang_id_error" class="label label-danger">{{ errors.kategori_barang_id[0] }}</span>
@@ -144,7 +144,7 @@
 									<div class="form-group">
 										<label for="satuan_id" class="col-md-2 control-label">Satuan Produk</label>
 										<div class="col-md-9">
-											<selectize-component v-model="produk.satuan_id" :settings="placeholder_satuan" id="pilih_satuan_id"> 
+											<selectize-component v-model="produk.satuan_id" :settings="placeholder_satuan" id="pilih_satuan_id" ref="satuan_barang"> 
 												<option v-for="satuans, index in satuan_id" v-bind:value="satuans.id" >{{ satuans.nama_satuan }}</option>
 											</selectize-component>
 											<span v-if="errors.satuan_id" id="satuan_id_error" class="label label-danger">{{ errors.satuan_id[0] }}</span>
@@ -159,7 +159,7 @@
 									<div class="form-group">
 										<label for="harga_beli" class="col-md-2 control-label">Harga Beli</label>
 										<div class="col-md-10">
-											<money class="form-control" autocomplete="off" placeholder="Harga Beli" v-model="produk.harga_beli" type="text" name="harga_beli" id="harga_beli"  autofocus="" v-bind="separator"></money>
+											<money class="form-control" autocomplete="off" placeholder="Harga Beli" v-model="produk.harga_beli" type="text" name="harga_beli" id="harga_beli"  ref="harga_beli" autofocus="" v-bind="separator"></money>
 											<span v-if="errors.harga_beli" id="harga_beli_error" class="label label-danger">{{ errors.harga_beli[0] }}</span>
 										</div>
 									</div>
@@ -167,7 +167,7 @@
 									<div class="form-group">
 										<label for="harga_jual" class="col-md-2 control-label">Harga Jual 1</label>
 										<div class="col-md-10">
-											<money class="form-control" autocomplete="off" placeholder="Harga Jual" v-model="produk.harga_jual" type="text" name="harga_jual" id="harga_jual"  autofocus="" v-bind="separator"></money>
+											<money class="form-control" autocomplete="off" placeholder="Harga Jual" v-model="produk.harga_jual" type="text" name="harga_jual" id="harga_jual"  ref="harga_jual" autofocus="" v-bind="separator"></money>
 											<span v-if="errors.harga_jual" id="harga_jual_error" class="label label-danger">{{ errors.harga_jual[0] }}</span>
 										</div>
 									</div>
@@ -175,7 +175,7 @@
 									<div class="form-group">
 										<label for="harga_jual2" class="col-md-2 control-label">Harga Jual 2</label>
 										<div class="col-md-10">
-											<money class="form-control" autocomplete="off" placeholder="Harga Jual 2(Jika Ada)" v-model="produk.harga_jual2" type="text" name="harga_jual2" id="harga_jual2"  autofocus="" v-bind="separator"></money>
+											<money class="form-control" autocomplete="off" placeholder="Harga Jual 2(Jika Ada)" v-model="produk.harga_jual2" type="text" name="harga_jual2" id="harga_jual2"  ref="harga_jual2" autofocus="" v-bind="separator"></money>
 											<span v-if="errors.harga_jual2" id="harga_jual2_error" class="label label-danger">{{ errors.harga_jual2[0] }}</span>
 										</div>
 									</div>
@@ -183,7 +183,7 @@
 									<div class="form-group">
 										<label for="perkiraan_berat" class="col-md-2 control-label">Perkiraan Berat</label>
 										<div class="col-md-6">
-											<money class="form-control" autocomplete="off" placeholder="Perkiraan Berat(Jika Barang Dijual Online)" v-model="produk.perkiraan_berat" type="text" name="perkiraan_berat" id="perkiraan_berat"  autofocus="" v-bind="separator"></money>
+											<money class="form-control" autocomplete="off" placeholder="Perkiraan Berat(Jika Barang Dijual Online)" v-model="produk.perkiraan_berat" type="text" name="perkiraan_berat" id="perkiraan_berat"  ref="perkiraan_berat" autofocus="" v-bind="separator"></money>
 											<span v-if="errors.perkiraan_berat" id="perkiraan_berat_error" class="label label-danger">{{ errors.perkiraan_berat[0] }}</span>
 										</div>
 										<div class="col-md-4">
@@ -268,7 +268,43 @@
 		</div>
 	</div>
 
-	<v-tour name="myTour" :steps="steps"></v-tour>
+	<v-tour name="myTour" :steps="steps">
+		<template slot-scope="tour">
+			<transition name="fade">
+				<v-step
+				v-if="tour.currentStep === index"
+				v-for="(step, index) of tour.steps"
+				:key="index"
+				:step="step"
+				:previous-step="tour.previousStep"
+				:next-step="tour.nextStep"
+				:stop="tour.stop"
+				:isFirst="tour.isFirst"
+				:isLast="tour.isLast"
+				>
+				<template v-if="tour.currentStep === 13">
+					<div slot="actions">
+						<button data-v-fca314f4="" class="v-step__button" @click="tour.previousStep">Kembali</button>
+						<button data-v-fca314f4="" class="v-step__button" @click="simpanProduk()">Selesai</button>
+					</div>
+				</template>
+				<template v-else-if="tour.currentStep === 0">
+					<div slot="actions">
+						<button data-v-fca314f4="" class="v-step__button" @click="tour.stop">Lewati</button>
+						<button data-v-fca314f4="" class="v-step__button" @click="nextStepTour()">Lanjutkan</button>
+					</div>
+				</template>
+				<template v-else>
+					<div slot="actions">
+						<button data-v-fca314f4="" class="v-step__button" @click="tour.stop">Lewati</button>
+						<button data-v-fca314f4="" class="v-step__button" @click="tour.previousStep">Kembali</button>
+						<button data-v-fca314f4="" class="v-step__button" @click="nextStepTour()">Lanjutkan</button>
+					</div>
+				</template>
+			</v-step>
+		</transition>
+	</template>
+</v-tour>
 </div>
 </template>
 
@@ -583,6 +619,31 @@
 				app.produk.status_aktif = 'true';
 				app.produk.deskripsi_produk = '';
 				app.errors = '';
+			},
+			simpanProduk(){
+				$("#btnSimpanProduk").click();
+			},
+			nextStepTour(){
+				var app = this;
+				var currentStep = app.$tours['myTour'].currentStep;
+				if (currentStep == 0) {
+					app.$refs.kode_barang.focus(); 
+				}else if (currentStep == 1) {
+					app.$refs.nama_barang.focus(); 
+				}else if (currentStep == 2) {
+					app.$refs.kategori_barang.$el.selectize.focus(); 
+				}else if (currentStep == 3) {
+					app.$refs.satuan_barang.$el.selectize.focus(); 
+				}else if (currentStep == 4) {
+					app.$refs.harga_beli.$el.focus(); 
+				}else if (currentStep == 5) {
+					app.$refs.harga_jual.$el.focus(); 
+				}else if (currentStep == 6) {
+					app.$refs.harga_jual2.$el.focus(); 
+				}else if (currentStep == 7) {
+					app.$refs.perkiraan_berat.$el.focus(); 
+				}
+				app.$tours['myTour'].nextStep();
 			}
 		}
 	}

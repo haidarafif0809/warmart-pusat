@@ -24,6 +24,7 @@ Route::get('copy-produk-alfatih', function () {
 });
 
 Route::get('/tentang-warmart', 'HomeController@index');
+Route::get('/coba-email', 'PemesananController@emailKonfirmasiPesanan');
 
 Route::get('/cek-deposit', 'PortaPulsaController@cekDeposit');
 
@@ -479,9 +480,11 @@ Route::get('/produk/view', 'BarangController@view')->middleware('auth');
 Route::get('/produk/pencarian', 'BarangController@pencarian')->middleware('auth');
 Route::get('/produk/pilih-kategori', 'BarangController@pilih_kategori')->middleware('auth');
 Route::get('/produk/pilih-satuan', 'BarangController@pilih_satuan')->middleware('auth');
-Route::post('/produk/{id}', 'BarangController@update')->middleware('auth');
 Route::get('/produk/pilih-produk', 'BarangController@pilihProduk')->middleware('auth');
 Route::get('/produk/pilih-agent', 'BarangController@data_agent')->middleware('auth');
+Route::get('/produk/template-excel', 'BarangController@downloadTemplate')->middleware('auth');
+Route::post('/produk/import-excel/', 'BarangController@importExcel')->middleware('auth');
+Route::post('/produk/{id}', 'BarangController@update')->middleware('auth');
 
 Route::get('/kas/view', 'KasController@view')->middleware('auth');
 Route::get('/kas/pencarian', 'KasController@pencarian')->middleware('auth');
