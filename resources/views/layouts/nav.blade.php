@@ -133,6 +133,9 @@
         </ul>
     </div>
 </li>
+
+@endif
+
 <!--PEMBELIAN-->
 <li>
     <router-link :to="{name: 'indexPembelian'}" class="menu-nav disabled-menu">
@@ -144,10 +147,6 @@
         </p>
     </router-link>
 </li>
-
-@endif
-
-
 <!--PESANAN -->
 <li>
     <router-link :to="{name: 'indexPesananWarung'}" class="menu-nav disabled-menu">
@@ -299,6 +298,16 @@
                     </span>
                     <span class="sidebar-normal">
                         Laporan Pembelian /Produk
+                    </span>
+                </router-link>
+            </li>
+            <li>
+                <router-link :to="{name: 'indexLaporanHutangBeredar'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        LHB
+                    </span>
+                    <span class="sidebar-normal">
+                        Laporan Hutang Beredar
                     </span>
                 </router-link>
             </li>

@@ -542,7 +542,7 @@ export default {
       return this.$store.state.produk
     },
     pelanggan(){
-      return this.$store.state.pelanggan
+      return this.$store.getters.pelangganTransaksi
     },
     kas(){
       return this.$store.state.kas
