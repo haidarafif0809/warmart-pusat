@@ -333,7 +333,11 @@ HEADER, FOOTER, MAIN
                                                                                                                               <tr>
                                                                                                                                     <td>
                                                                                                                                           <div class="img-container"  style="padding-left: 5px; padding-top: 1px; padding-bottom: 1px; padding-right: 1px; width:75px;">
+                                                                                                                                                @if($detail_pesanans->produk->foto != "")
                                                                                                                                                 <img src="{{url('foto_produk/'.$detail_pesanans->produk->foto)}}">
+                                                                                                                                                @else
+                                                                                                                                                <img src="{{url('image/foto_default.png')}}">
+                                                                                                                                                @endif
                                                                                                                                           </div>
                                                                                                                                     </td>
                                                                                                                                     <td> {{title_case($detail_pesanans->produk->nama_barang)}} <br> 
