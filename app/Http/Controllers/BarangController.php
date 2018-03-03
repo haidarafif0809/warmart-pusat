@@ -509,6 +509,7 @@ class BarangController extends Controller
 
         // rule untuk validasi setiap row pada file excel
         $rowRules = [
+            'Kode Barcode'    => 'nullable|unique:barangs,kode_barcode,NULL,id,id_warung,' . $warung_id . '|max:50',
             'Kode Produk'     => 'required|unique:barangs,kode_barang,NULL,id,id_warung,' . $warung_id . '|max:50',
             'Nama Produk'     => 'required|max:300',
             'Harga Beli'      => 'required|numeric|digits_between:1,11',
