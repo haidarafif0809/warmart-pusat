@@ -179,7 +179,12 @@ public function prosesSelesaikanPemesanan(Request $request)
                 // QUERY LENGKAPMNYA ADA DI scopeHitungTotalPesanan di mmodel Keranjang Belanja
                     $query_hitung_total = KeranjangBelanja::HitungTotalPesanan($id_warung)->first();
                 }
-                $subtotal           = (str_replace('.', '', $request->ongkos_kirim) + $query_hitung_total['total_pesanan']) + $kode_unik_transfer;
+
+                if ($request->metode_pembayaran == "TRANSFER") {
+                    $subtotal           = (str_replace('.', '', $request->ongkos_kirim) + $query_hitung_total['total_pesanan']) + $kode_unik_transfer;
+                }else{
+                    $subtotal           = (str_replace('.', '', $request->ongkos_kirim) + $query_hitung_total['total_pesanan']);
+                }
 
                 // INSERT KE PESANAN PELANGGAN
                 $pesanan_pelanggan = PesananPelanggan::create([
@@ -226,7 +231,12 @@ public function prosesSelesaikanPemesanan(Request $request)
                 // QUERY LENGKAPMNYA ADA DI scopeHitungTotalPesanan di mmodel Keranjang Belanja
                     $query_hitung_total = KeranjangBelanja::HitungTotalPesanan($id_warung)->first();
                 }
-                $subtotal           = (str_replace('.', '', $request->ongkos_kirim) + $query_hitung_total['total_pesanan']) + $kode_unik_transfer;
+                if ($request->metode_pembayaran == "TRANSFER") {
+                    $subtotal           = (str_replace('.', '', $request->ongkos_kirim) + $query_hitung_total['total_pesanan']) + $kode_unik_transfer;
+                }else{
+                    $subtotal           = (str_replace('.', '', $request->ongkos_kirim) + $query_hitung_total['total_pesanan']);
+                }
+
                 // INSERT PESANAN PELANGGAN
                 $pesanan_pelanggan = PesananPelanggan::create([
                     'id_pelanggan'    => $id_user,
