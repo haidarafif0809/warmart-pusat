@@ -87,30 +87,18 @@ class LaporanHutangBeredarController extends Controller
         if ($request->suplier == "semua") {
             $request['suplier'] = "";
         };
-        $total_hutang_beredar = TransaksiHutang::totalHutangBeredar($request);
-        $total_sisa_hutang = TransaksiHutang::totalSisaHutang($request)->get();
+        $total_hutang_beredar = TransaksiHutang::getDataHutangBeredar($request)->get();
 
         $jumlah_masuk = 0;
         $jumlah_keluar = 0;
-        $array       = array();
-        foreach ($total_sisa_hutang as $total_sisa_hutangs) {
-                $jumlah_keluar = $total_sisa_hutangs->pembayaran++;
-                $jumlah_masuk = $total_sisa_hutangs->nilai_transaksi++;
-
-        }
-
-                if ($total_hutang_beredar->count() == 0) {
-                        $nilai_transaksi = 0;
-                        $pembayaran      = 0;
-                        $sisa_hutang     = 0;           
-                }else{
-                        $nilai_transaksi = $total_hutang_beredar->first()->nilai_transaksi - $jumlah_masuk;
-                        $pembayaran      = $total_hutang_beredar->first()->pembayaran - $jumlah_keluar;
-                        $sisa_hutang     = $total_hutang_beredar->first()->sisa_hutang;     
-                }
-
-            	$respons['nilai_transaksi']  =  $nilai_transaksi;
-            	$respons['pembayaran']       =  $pembayaran;
+        $sisa_hutang = 0;
+        foreach ($total_hutang_beredar as $total_hutang_beredars) {
+                $jumlah_keluar += $total_hutang_beredars->pembayaran;
+                $jumlah_masuk += $total_hutang_beredars->total;
+                $sisa_hutang += $total_hutang_beredars->sisa_hutang;
+        } 
+            	$respons['nilai_transaksi']  =  $jumlah_masuk;
+            	$respons['pembayaran']       =  $jumlah_keluar;
             	$respons['sisa_hutang']      =  $sisa_hutang;
  
        
@@ -145,24 +133,19 @@ class LaporanHutangBeredarController extends Controller
             $request['suplier'] = "";
         };
 
-         $data_supplier_hutang = TransaksiHutang::getDataHutangBeredar($request)->paginate(10);
-
-         $total_hutang_beredar = TransaksiHutang::totalHutangBeredar($request);
-         $total_sisa_hutang = TransaksiHutang::totalSisaHutang($request)->get();
-
+       $data_supplier_hutang = TransaksiHutang::getDataHutangBeredar($request)->get();
         $jumlah_masuk = 0;
         $jumlah_keluar = 0;
-        $array       = array();
-        foreach ($total_sisa_hutang as $total_sisa_hutangs) {
-                $jumlah_keluar = $total_sisa_hutangs->pembayaran++;
-                $jumlah_masuk = $total_sisa_hutangs->nilai_transaksi++;
-
+        $sisa_hutang = 0;
+        foreach ($data_supplier_hutang as $data_supplier_hutangs) {
+                $jumlah_keluar += $data_supplier_hutangs->pembayaran;
+                $jumlah_masuk += $data_supplier_hutangs->total;
+                $sisa_hutang += $data_supplier_hutangs->sisa_hutang;
         }
 
-
-        Excel::create('Laporan Hutang Beredar', function ($excel) use ($request, $data_supplier_hutang,$total_hutang_beredar,$jumlah_masuk,$jumlah_keluar) {
+        Excel::create('Laporan Hutang Beredar', function ($excel) use ($request, $data_supplier_hutang,$jumlah_masuk,$jumlah_keluar,$sisa_hutang) {
             // Set property
-            $excel->sheet('Laporan Hutang Beredar', function ($sheet) use ($request, $data_supplier_hutang,$total_hutang_beredar,$jumlah_masuk,$jumlah_keluar) {
+            $excel->sheet('Laporan Hutang Beredar', function ($sheet) use ($request, $data_supplier_hutang,$jumlah_masuk,$jumlah_keluar,$sisa_hutang) {
                 $row = 1;
                 $sheet->row($row, [
                     'LAPORAN HUTANG BEREDAR',
@@ -188,22 +171,13 @@ class LaporanHutangBeredarController extends Controller
 
               }
 //PERHITUNGAN TOTAL HUTANG BEREDAR
-                if ($total_hutang_beredar->count() == 0) {
-                        $nilai_transaksi = 0;
-                        $pembayaran      = 0;
-                        $sisa_hutang     = 0;           
-                }else{
-                        $nilai_transaksi = $total_hutang_beredar->first()->nilai_transaksi - $jumlah_masuk;
-                        $pembayaran      = $total_hutang_beredar->first()->pembayaran - $jumlah_keluar;
-                        $sisa_hutang     = $total_hutang_beredar->first()->sisa_hutang;     
-                }
               $row = ++$row;
                     $sheet->row(++$row, [
                         'TOTAL',
                         '',
                         '',
-                        $nilai_transaksi,
-                        $pembayaran,
+                        $jumlah_masuk,
+                        $jumlah_keluar,
                         $sisa_hutang,
                         '',
                         '',
@@ -246,34 +220,22 @@ class LaporanHutangBeredarController extends Controller
 
         // data hutang beredar
          $data_supplier_hutang = TransaksiHutang::getDataHutangBeredar($request)->get();
-         $total_hutang_beredar = TransaksiHutang::totalHutangBeredar($request);
-         $total_sisa_hutang = TransaksiHutang::totalSisaHutang($request)->get();
-          
             $jumlah_masuk = 0;
             $jumlah_keluar = 0;
-            $array       = array();
-            foreach ($total_sisa_hutang as $total_sisa_hutangs) {
-                    $jumlah_keluar = $total_sisa_hutangs->pembayaran++;
-                    $jumlah_masuk = $total_sisa_hutangs->nilai_transaksi++;
-
+            $sisa_hutang = 0;
+            foreach ($data_supplier_hutang as $data_supplier_hutangs) {
+                    $jumlah_keluar += $data_supplier_hutangs->pembayaran;
+                    $jumlah_masuk += $data_supplier_hutangs->total;
+                    $sisa_hutang += $data_supplier_hutangs->sisa_hutang;
             }
-         //PERHITUNGAN TOTAL HUTANG BEREDAR
-         if ($total_hutang_beredar->count() == 0) {
-                        $nilai_transaksi = 0;
-                        $pembayaran      = 0;
-                        $sisa_hutang     = 0;           
-         }else{
-                        $nilai_transaksi = $total_hutang_beredar->first()->nilai_transaksi - $jumlah_masuk;
-                        $pembayaran      = $total_hutang_beredar->first()->pembayaran - $jumlah_keluar;
-                        $sisa_hutang     = $total_hutang_beredar->first()->sisa_hutang;     
-        }
+
         $data_warung              = Warung::where('id', Auth::user()->id_warung)->first();
 
         return view('laporan.cetak_laporan_hutang_beredar',
             [
                 'data_supplier_hutang'      => $data_supplier_hutang,
-                'nilai_transaksi'           => $nilai_transaksi,
-                'pembayaran'                => $pembayaran,
+                'nilai_transaksi'           => $jumlah_masuk,
+                'pembayaran'                => $jumlah_keluar,
                 'sisa_hutang'               => $sisa_hutang,                                
                 'data_warung'               => $data_warung,
                 'dari_tanggal'              => $this->tanggal($dari_tanggal),
