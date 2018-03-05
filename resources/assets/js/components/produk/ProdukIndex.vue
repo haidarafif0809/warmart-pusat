@@ -199,7 +199,6 @@
                 this.$tours['myTour'].start();
                 app.urlForm = 'create-produk?tour';
             }
-            console.log(this.$tours['myTour'].currentStep)
         },
         watch: {
     // whenever question changes, this function will run
@@ -225,7 +224,6 @@ methods: {
             app.loading = false;
         })
         .catch(function (resp) {
-            console.log(resp);
             app.loading = false;
             alert("Tidak Dapat Memuat Produk");
         });
@@ -242,7 +240,6 @@ methods: {
             app.loading = false;
         })
         .catch(function (resp) {
-            console.log(resp);
             alert("Tidak Dapat Memuat Produk");
         });
     },
@@ -303,15 +300,16 @@ methods: {
         }
         app.loadingData();
 
-        axios.post(app.url+'/import-excel', newExcel).then(function (resp){
-
+        axios.post(app.url+'/import-excel', newExcel).then(function (resp){            
+            console.log(resp.data);
             app.$swal.close();
 
-            if (resp.data.pesanError !== undefined) {
+            if (resp.data.pesanError !== undefined || resp.data.pesanErrorStatus !== undefined) {
+                console.log(resp)
                 return swal({
                     title: 'Gagal!',
                     type: 'warning',
-                    html: '<div style="text-align: left; font-size: 14px;">'+ resp.data.pesanError +'</div>',
+                    html: '<div style="text-align: left; font-size: 14px;">'+ resp.data.pesanError +' <br> '+ resp.data.pesanErrorStatus+'</div>',
                 });
             }
             
@@ -328,7 +326,8 @@ methods: {
                 app.errors = "Terjadi Kesalahan Pada Proses Import!";
             }
 
-            app.alertGagal(app.errors);        });
+            app.alertGagal(app.errors);
+        });
     },
     alertImport(pesan) {
         this.$swal({
