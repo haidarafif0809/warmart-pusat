@@ -133,6 +133,9 @@
         </ul>
     </div>
 </li>
+
+@endif
+
 <!--PEMBELIAN-->
 <li>
     <router-link :to="{name: 'indexPembelian'}" class="menu-nav disabled-menu">
@@ -144,10 +147,6 @@
         </p>
     </router-link>
 </li>
-
-@endif
-
-
 <!--PESANAN -->
 <li>
     <router-link :to="{name: 'indexPesananWarung'}" class="menu-nav disabled-menu">

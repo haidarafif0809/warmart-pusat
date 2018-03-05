@@ -272,9 +272,10 @@ methods: {
             app.alertGagal("Silakan Pilih File Dahulu.");
             return;
         }
+        app.loadingData();
 
         axios.post(app.urlImport, newExcel).then(function (resp){
-            console.log(resp);
+            app.$swal.close();
 
             if (resp.data.pesanError !== undefined) {
                 return swal({
@@ -282,6 +283,7 @@ methods: {
                     type: 'warning',
                     html: '<div style="text-align: left; font-size: 14px;">'+ resp.data.pesanError +'</div>',
                 });
+                app.$swal.close();
             }
 
             $("#excel").val('');
@@ -289,13 +291,13 @@ methods: {
             app.alertImport(resp.data.jumlahProduk + ' Produk Berhasil Diimport.');
             app.getResults();
         }).catch(function (resp){
-            console.log(resp);
+            app.$swal.close();
 
             if (resp.response.data.errors != undefined) {
                 app.errors = resp.response.data.errors.excel[0];
             }
             else {
-                app.errors = "Ukuran file terlalu besar!";
+                app.errors = "Terjadi Kesalahan Pada Proses Import!";
             }
 
             app.alertGagal(app.errors);
@@ -315,6 +317,17 @@ methods: {
             icon: "warning",
             buttons: false,
             timer: 1000
+        });
+    },
+    loadingData(){
+        this.$swal({
+            title: "Sedang Memproses Data ...",
+            text: "Harap Tunggu!",
+            icon: "info",
+            buttons:  false,
+            closeOnClickOutside: false,
+            closeOnEsc: false,
+
         });
     }
 }
