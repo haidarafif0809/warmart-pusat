@@ -383,7 +383,10 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
      });
 
       $('#metode_pembayaran').selectize({
-       sortField: 'text'        
+       valueField: 'id',
+       labelField: 'name',
+       searchField: 'name',
+       create: false,
      });
 
       var selectKota = $('#kota').data('selectize');
@@ -445,6 +448,7 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
           alertAlamatBelumLengkap();
         }
         else{
+          selectMetodePembayaran.clearOptions();
           if (kurir == 'cod' || kurir == 'ojek') {     
             pengirimanBiasa(kurir); 
           }else{
@@ -467,17 +471,19 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
         selectLayananKurir.disable();
         selectLayananKurir.clearOptions(); 
         $("#total_belanja").text("Rp. "+subtotal);
+        
         if (kurir == 'cod') {
+          var options = [{"id":"Bayar di Tempat","name":"Bayar di Tempat"}];  
+          selectMetodePembayaran.addOption(options);
           selectMetodePembayaran.setValue("Bayar di Tempat");
           
         }else{
+          var options = [{"id":"Bayar di Tempat","name":"Bayar di Tempat"},{"id":"TRANSFER","name":"TRANSFER"}];  
+          selectMetodePembayaran.addOption(options);
           selectMetodePembayaran.focus();
-          selectMetodePembayaran.enable();
         }
       }
 
-      function pengirimanOjek(){   
-      }
 
       function alertAlamatBelumLengkap(){
        swal({
@@ -565,6 +571,8 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
       selectLayananKurir.enable(); 
       $("#total_belanja").removeClass('spinner'); 
       $("#total_belanja").text("Rp. "+total_belanja);
+      var options = [{"id":"TRANSFER","name":"TRANSFER"}];  
+      selectMetodePembayaran.addOption(options);
       selectMetodePembayaran.setValue("TRANSFER");
       
     }

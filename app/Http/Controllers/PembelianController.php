@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Barang;
+use App\Satuan;
 use App\DetailPembelian;
 use App\EditTbsPembelian;
 use App\Kas;
@@ -1267,7 +1268,7 @@ public function edit_jumlah_tbs_pembelian(Request $request)
        public function importExcel(Request $request)
     {
         // validasi untuk memastikan file yang diupload adalah excel
-        $this->validate($request, ['excel' => 'required|mimes:xlsx,xls']);
+        $this->validate($request, ['excel' => 'required|mimes:xls,xlsx']);
         // ambil file yang baru diupload
         $excel = $request->file('excel');
         // baca sheet pertama
@@ -1303,13 +1304,13 @@ public function edit_jumlah_tbs_pembelian(Request $request)
         // looping setiap baris, mulai dari baris ke 2 (karena baris ke 1 adalah nama kolom)
         foreach ($excels as $row) {
             // Mengubah Nama Produk Menajdi lowerCase (Huruf Kecil Semua)
-            $id_produk = $row['id_produk'];
-            $db_produk   = Barang::select(['id', 'nama_barang'])->where('id', $id_produk);
+            $kode_produk = $row['id_produk'];
+            $db_produk   = Barang::select(['kode_barang','nama_barang'])->where('kode_barang', $kode_produk);
 
             if ($db_produk->count() === 0) {
                 $errors['id_produk'][] = [
                     'line'    => $no,
-                    'message' => $row['id_produk'] . ' Tidak Terdaftar di Master Data Produk.',
+                    'message' => 'Kode Produk : '. $row['id_produk'] . ' Tidak Terdaftar di Master Data Produk.',
                 ];
                 $lineErrors[] = $no;
             }
@@ -1334,14 +1335,17 @@ public function edit_jumlah_tbs_pembelian(Request $request)
                 return response()->json($pesan);
             }
 
+            $db_produk   = Barang::select(['id'])->where('kode_barang', $row['id_produk'])->first();
+            $db_satuan   = Satuan::select(['id'])->where('nama_satuan', $row['satuan_id'])->first();
+
             // Membuat validasi untuk row di excel, disini kita ubah baris yang sedang di proses menjadi array.
             $validator = Validator::make($row->toArray(), $rowRules);
 
             // Insert Detail Item Masuk
             $tbs_pembelian = TbsPembelian::create([
                 'session_id'        => $session_id,
-                'satuan_id'         => $row['satuan_id'],
-                'id_produk'         => $row['id_produk'],
+                'satuan_id'         => $db_satuan->id,
+                'id_produk'         => $db_produk->id,
                 'jumlah_produk'     => $row['jumlah_produk'],
                 'harga_produk'      => $row['harga_produk'],
                 'subtotal'          => $row['subtotal'],
