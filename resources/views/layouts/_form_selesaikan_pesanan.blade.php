@@ -68,7 +68,7 @@
 <div style="margin-bottom: 1px; margin-top: 1px;" class="form-group{{ $errors->has('metode_pembayaran') ? ' has-error' : '' }}">
   {!! Form::label('metode_pembayaran', 'Pembayaran', ['class'=>'col-md-2 control-label', 'style'=> 'margin-bottom:1px; margin-top:1px;']) !!}
   <div class="col-md-6">
-    {!! Form::select('metode_pembayaran', ['Bayar di Tempat'=>'Bayar di Tempat','TRANSFER'=>'TRANSFER'],null, ['required'=> 'true','placeholder' => 'Pilih Metode Pembayaran','id'=>'metode_pembayaran']) !!}
+    {!! Form::select('metode_pembayaran', [''=>''],null, ['required'=> 'true','placeholder' => 'Pilih Metode Pembayaran','id'=>'metode_pembayaran']) !!}
   </div>
 </div>
 
