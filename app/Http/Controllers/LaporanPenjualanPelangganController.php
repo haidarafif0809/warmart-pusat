@@ -28,7 +28,7 @@ class LaporanPenjualanPelangganController extends Controller
     public function dataPelanggan()
     {
         $pelanggan       = User::select(['id', 'name'])->where('tipe_user', 3)->get();
-        $array_pelanggan = array(['id'=>'','nama_pelanggan'=>'SEMUA PELANGGAN'],['id'=>'0','nama_pelanggan'=>'Umum']);
+        $array_pelanggan = array(['id' => '', 'nama_pelanggan' => 'SEMUA PELANGGAN'], ['id' => '0', 'nama_pelanggan' => 'Umum']);
         foreach ($pelanggan as $pelanggans) {
             array_push($array_pelanggan, [
                 'id'             => $pelanggans->id,
@@ -95,6 +95,9 @@ class LaporanPenjualanPelangganController extends Controller
 
     public function totalPenjualanPosPelanggan(Request $request)
     {
+        if ($request->pelanggan == "semua") {
+            $request['pelanggan'] = "";
+        };
         // TOTAL KESELURUHAN
         $total_penjualan = DetailPenjualanPos::totalLaporanPenjualanPosPelanggan($request)->first();
 
@@ -105,6 +108,9 @@ class LaporanPenjualanPelangganController extends Controller
     }
     public function totalPenjualanOnlinePelanggan(Request $request)
     {
+        if ($request->pelanggan == "semua") {
+            $request['pelanggan'] = "";
+        };
         // TOTAL KESELURUHAN
         $total_penjualan = DetailPenjualan::totalLaporanPenjualanOnlinePelanggan($request)->first();
         return response()->json($total_penjualan);
@@ -171,7 +177,7 @@ class LaporanPenjualanPelangganController extends Controller
         return $sheet;
     }
     //DOWNLOAD EXCEL - LAPORAN PENJUALAN /PELANGGAN
-    public function downloadExcel(Request $request, $dari_tanggal, $sampai_tanggal, $pelanggan,$kasir)
+    public function downloadExcel(Request $request, $dari_tanggal, $sampai_tanggal, $pelanggan, $kasir)
     {
         $request['dari_tanggal']   = $dari_tanggal;
         $request['sampai_tanggal'] = $sampai_tanggal;
@@ -210,7 +216,7 @@ class LaporanPenjualanPelangganController extends Controller
                             $pelanggan = 'Umum';
                         } else {
                             $pelanggan = $laporan_penjualans->name;
-                        }   
+                        }
                         $sheet->row(++$row, [
                             $laporan_penjualans->kode_barang,
                             $pelanggan,
@@ -280,12 +286,12 @@ class LaporanPenjualanPelangganController extends Controller
         $data_penjualan = array();
         foreach ($laporan_penjualan as $laporan_penjualans) {
             $sub_total = $laporan_penjualans->subtotal - $laporan_penjualans->potongan + $laporan_penjualans->tax;
-               if ($laporan_penjualans->id_pelanggan == 0) {
-                   $pelanggan = 'Umum';
-                } else {
-                   $pelanggan = $laporan_penjualans->name;
-               }   
-            array_push($data_penjualan, ['laporan_penjualans' => $laporan_penjualans, 'sub_total' => $sub_total,'pelanggan' => $pelanggan]);
+            if ($laporan_penjualans->id_pelanggan == 0) {
+                $pelanggan = 'Umum';
+            } else {
+                $pelanggan = $laporan_penjualans->name;
+            }
+            array_push($data_penjualan, ['laporan_penjualans' => $laporan_penjualans, 'sub_total' => $sub_total, 'pelanggan' => $pelanggan]);
         }
 
         return $data_penjualan;
@@ -300,14 +306,13 @@ class LaporanPenjualanPelangganController extends Controller
         return $data_penjualan_online;
     }
 
-    public function cetakLaporan(Request $request, $dari_tanggal, $sampai_tanggal, $pelanggan,$kasir)
+    public function cetakLaporan(Request $request, $dari_tanggal, $sampai_tanggal, $pelanggan, $kasir)
     {
         //SETTING APLIKASI
         $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
 
         $request['dari_tanggal']   = $dari_tanggal;
         $request['sampai_tanggal'] = $sampai_tanggal;
-
 
         if ($pelanggan == "semua") {
             $request['pelanggan'] = "";
