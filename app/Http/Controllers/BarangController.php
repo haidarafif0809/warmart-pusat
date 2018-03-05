@@ -486,8 +486,8 @@ class BarangController extends Controller
                     '150000',
                     '0',
                     '200',
-                    'Pilih Salah Satu, Ya / Tidak',
-                    'Pilih Salah Satu, Aktif / Tidak Aktif',
+                    'Isi 1 Atau 0, Ket. 1 = Hitung Stok dan 0 = Tidak Hitung Stok',
+                    'Isi 1 Atau 0, Ket. 1 = Aktif dan 0 = Tidak Aktif',
                     'Bahan Cotton Combed 24 S',
                 ]);
 
@@ -524,47 +524,73 @@ class BarangController extends Controller
         // Catat semua id buku baru
         // ID ini kita butuhkan untuk menghitung total buku yang berhasil diimport
         $produk_id  = [];
-        $errors     = [];
+        $errors     = ['hitungStok' => [], 'status' => []];
         $lineErrors = [];
         $no         = 1;
 
         // looping setiap baris, mulai dari baris ke 2 (karena baris ke 1 adalah nama kolom)
         foreach ($excels as $row) {
+            $no++;
             // Mengubah Hitung Stok Menajdi lowerCase (Huruf Kecil Semua)
             $hitungStok = trim(strtolower($row['hitung_stok']));
             if (!empty($row['hitung_stok'])) {
-                if ($hitungStok !== 'ya' && $hitungStok !== 'tidak') {
+                if ($hitungStok !== '1' && $hitungStok !== '0') {
                     $errors['hitungStok'][] = [
                         'line'    => $no,
-                        'message' => 'Nilai Dari Kolom Hitung Stok Hanya Boleh Berisi Ya atau Tidak.',
+                        'message' => 'Nilai Dari Kolom <strong>Hitung Stok</strong> Hanya Boleh Berisi 1 atau 0.',
                     ];
                     $lineErrors[] = $no;
                 }
             } else {
                 $errors['hitungStok'][] = [
                     'line'    => $no,
-                    'message' => 'Nilai Dari Kolom Hitung Stok Tidak Boleh Kosong',
+                    'message' => 'Nilai Dari Kolom <strong>Hitung Stok</strong> Tidak Boleh Kosong',
                 ];
                 $lineErrors[] = $no;
             }
-            $no++;
+            // Mengubah Status Menajdi lowerCase (Huruf Kecil Semua)
+            $status = trim(strtolower($row['status']));
+            if (!empty($row['status'])) {
+                if ($status !== '1' && $status !== '0') {
+                    $errors['status'][] = [
+                        'line_status'    => $no,
+                        'message_status' => 'Nilai Dari Kolom <strong>Status</strong> Hanya Boleh Berisi 1 atau 0.',
+                    ];
+                    $lineErrors[] = $no;
+                }
+            } else {
+                $errors['status'][] = [
+                    'line_status'    => $no,
+                    'message_status' => 'Nilai Dari Kolom <strong>Status</strong> Tidak Boleh Kosong',
+                ];
+                $lineErrors[] = $no;
+            }
         }
 
         // Perulang kedua, digunakan untuk menambahkan data produk jika tidak terjadi error.
         foreach ($excels as $row) {
             // Jika terjadi error, maka perintah dihentikan sehingga tidak ada data yg di insert ke database
-            if (count($errors) > 0) {
+            if (count($errors['hitungStok']) != '' || count($errors['status']) != '') {
                 // Buat variable tipe array, dengan index pesanError.
-                $pesan = ['pesanError' => ''];
+                $pesan = ['pesanError' => '', 'pesanErrorStatus' => ''];
 
                 // Memasukan nilai error yg terjadi, kedalam variabel $pesan yg sudah kita buat tadi.
                 foreach ($errors['hitungStok'] as $key => $value) {
                     if ($value['line'] == end($lineErrors)) {
-                        $pesan['pesanError'] .= $value['line'] . ' . ' . $value['message'];
+                        $pesan['pesanError'] .= 'Baris Ke <strong>' . $value['line'] . '</strong> ' . $value['message'];
                     } else {
-                        $pesan['pesanError'] .= $value['line'] . ' . ' . $value['message'] . ' < br > ';
+                        $pesan['pesanError'] .= 'Baris Ke <strong>' . $value['line'] . '</strong> ' . $value['message'] . ' <br>';
                     }
                 }
+
+                foreach ($errors['status'] as $key => $value) {
+                    if ($value['line_status'] == end($lineErrors)) {
+                        $pesan['pesanErrorStatus'] .= 'Baris Ke <strong>' . $value['line_status'] . '</strong> ' . $value['message_status'];
+                    } else {
+                        $pesan['pesanErrorStatus'] .= 'Baris Ke <strong>' . $value['line_status'] . '</strong> ' . $value['message_status'] . ' <br>';
+                    }
+                }
+
                 return response()->json($pesan);
             }
 
@@ -596,10 +622,6 @@ class BarangController extends Controller
             }
             //PERKIRAN BERAT
             $perkiraan_berat = ($row['perkiraan_berat'] == '' or $row['perkiraan_berat'] == 0 ? 1000 : $row['perkiraan_berat']);
-            //HITUNG STOK
-            $hitung_stok = ($row['hitung_stok'] == 'ya' ? 1 : 0);
-            //STATUS
-            $status_aktif = ($row['status'] == 'aktif' ? 1 : 0);
 
             // Insert Detail Item Masuk
             $produk = Barang::create([
@@ -613,8 +635,8 @@ class BarangController extends Controller
                 'satuan_id'          => $satuan,
                 'kategori_barang_id' => $kategori,
                 'deskripsi_produk'   => $row['deskripsi_produk'],
-                'status_aktif'       => $status_aktif,
-                'hitung_stok'        => $hitung_stok,
+                'status_aktif'       => $row['status'],
+                'hitung_stok'        => $row['hitung_stok'],
                 'konfirmasi_admin'   => 1,
                 'id_warung'          => $warung_id,
             ]);
