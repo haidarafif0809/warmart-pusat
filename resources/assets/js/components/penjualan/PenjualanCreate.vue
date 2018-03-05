@@ -1,40 +1,40 @@
 <style scoped>
-  .modal {
-    overflow-y:auto;
-  }
-  .pencarian {
-    color: red; 
-    float: right;
-  }
-  .form-penjualan{
-    width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    display: inline-block;
-    border: 3px solid #555;
-    border-radius: 4px;
-    box-sizing: border-box;
-    font-size: 30px;
-  }
-  .form-subtotal{
-    width: 100%;
-    margin: 8px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-  }
-  .card-produk{
-    background-color:#82B1FF;
-  }
+.modal {
+  overflow-y:auto;
+}
+.pencarian {
+  color: red; 
+  float: right;
+}
+.form-penjualan{
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 3px solid #555;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 30px;
+}
+.form-subtotal{
+  width: 100%;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+.card-produk{
+  background-color:#82B1FF;
+}
 
-  .card-pembayaran{
-    background-color:#82B1FF;
-  }
-  .btn-icon{
-    border-radius: 1px solid;
-    padding: 10px 10px;
-  }
+.card-pembayaran{
+  background-color:#82B1FF;
+}
+.btn-icon{
+  border-radius: 1px solid;
+  padding: 10px 10px;
+}
 
 </style>
 
@@ -454,81 +454,81 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex';
-  export default {
-    data: function () {
-      return {
-        errors: [],
-        tbs_penjualan: [],
-        tbsPenjualanData : {},
-        url : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
-        urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan/download-excel"),
-        url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
-        url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
+import { mapState } from 'vuex';
+export default {
+  data: function () {
+    return {
+      errors: [],
+      tbs_penjualan: [],
+      tbsPenjualanData : {},
+      url : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
+      urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan/download-excel"),
+      url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
+      url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
 
-        inputTbsPenjualan: {
-          nama_produk : '',
-          produk : '',
-          jumlah_produk : '',
-          potongan_produk : '',
-          id_tbs : '',
-        },
-        penjualan : {
-          pelanggan : '0',
-          kas : '',
-          jatuh_tempo : '',
-          subtotal : 0,
-          potongan : 0,
-          potongan_faktur : 0,
-          potongan_persen : 0,
-          total_akhir : 0,
-          pembayaran : 0,
-          kembalian: 0,
-          kredit: 0,
-        }, 
-        setting_penjualan_pos :{
-          jumlah_produk : 1,
-          stok : 0,
-          harga_jual : 1
-        },
-        placeholder_produk: {
-          placeholder: 'Cari Produk (F1) ...',
-          sortField: 'text',
-          openOnFocus : true
-        },
-        placeholder_pelanggan: {
-          placeholder: '--PILIH PELANGGAN (F4)--',
-          sortField: 'text',
-          openOnFocus : true
+      inputTbsPenjualan: {
+        nama_produk : '',
+        produk : '',
+        jumlah_produk : '',
+        potongan_produk : '',
+        id_tbs : '',
+      },
+      penjualan : {
+        pelanggan : '0',
+        kas : '',
+        jatuh_tempo : '',
+        subtotal : 0,
+        potongan : 0,
+        potongan_faktur : 0,
+        potongan_persen : 0,
+        total_akhir : 0,
+        pembayaran : 0,
+        kembalian: 0,
+        kredit: 0,
+      }, 
+      setting_penjualan_pos :{
+        jumlah_produk : 1,
+        stok : 0,
+        harga_jual : 1
+      },
+      placeholder_produk: {
+        placeholder: 'Cari Produk (F1) ...',
+        sortField: 'text',
+        openOnFocus : true
+      },
+      placeholder_pelanggan: {
+        placeholder: '--PILIH PELANGGAN (F4)--',
+        sortField: 'text',
+        openOnFocus : true
 
-        },
-        placeholder_kas: {
-          placeholder: '--PILIH KAS--',
-          sortField: 'text',
-          openOnFocus : true
-        },
-        hargaJual: {
-          placeholder: '--HARGA JUAL--'
-        },
-        tambahKas: {
-          kode_kas : '',
-          nama_kas : '',
-          status_kas : 0,
-          default_kas : 0
-        },
-        session:'',
-        pencarian: '',
-        loading: true,
-        seen : false,
-        separator: {
-          decimal: ',',
-          thousands: '.',
-          prefix: '',
-          suffix: '',
-          precision: 0,
-          masked: false /* doesn't work with directive */
-        },
-        disabled: {
+      },
+      placeholder_kas: {
+        placeholder: '--PILIH KAS--',
+        sortField: 'text',
+        openOnFocus : true
+      },
+      hargaJual: {
+        placeholder: '--HARGA JUAL--'
+      },
+      tambahKas: {
+        kode_kas : '',
+        nama_kas : '',
+        status_kas : 0,
+        default_kas : 0
+      },
+      session:'',
+      pencarian: '',
+      loading: true,
+      seen : false,
+      separator: {
+        decimal: ',',
+        thousands: '.',
+        prefix: '',
+        suffix: '',
+        precision: 0,
+        masked: false /* doesn't work with directive */
+      },
+      disabled: {
           to: new Date(), // Disable all dates up to specific date
         }
 
@@ -823,34 +823,44 @@ submitProdukPenjualan(value){
 
     app.inputTbsPenjualan.jumlah_produk = value;
     var newinputTbsPenjualan = app.inputTbsPenjualan;
-    app.loading = true;
     axios.post(app.url+'/proses-tambah-tbs-penjualan', newinputTbsPenjualan)
     .then(function (resp) {
 
       if (resp.data.harga_jual == 0 || resp.data.harga_jual == '') {
 
         app.alertTbs("Harga Produk "+nama_produk+" 0!");
-        app.loading = false;
         app.inputTbsPenjualan.jumlah_produk = ''
         app.inputTbsPenjualan.produk = ''
 
       }else if (resp.data == 0) {
 
         app.alertTbs("Produk "+nama_produk+" Sudah Ada, Silakan Pilih Produk Lain!");
-        app.loading = false;
         app.inputTbsPenjualan.jumlah_produk = ''
         app.inputTbsPenjualan.produk = ''
 
       }else{
 
         var subtotal = parseFloat(app.penjualan.subtotal) + parseFloat(resp.data.subtotal)
+        function cekTbs(tbs) { 
+          return tbs.id_tbs_penjualan === resp.data.id_tbs_penjualan;
+        }
+        var index = app.tbs_penjualan.findIndex(cekTbs)        
 
-        app.alert("Menambahkan Produk "+nama_produk)      
-        app.getResults()
+        if (index >= 0) {
+          app.tbs_penjualan[index].jumlah_produk = resp.data.jumlah_produk
+          app.tbs_penjualan[index].subtotal = resp.data.subtotalKeseluruhan
+        }else{
+          app.tbs_penjualan.push(resp.data)
+          app.tbs_penjualan.sort(function (descending) {
+            return descending.id_tbs_penjualan;
+          });
+        }
+
+        app.alert("Menambahkan Produk "+nama_produk)   
+        app.openSelectizeProduk();
         app.penjualan.subtotal = subtotal.toFixed(2)                        
         app.penjualan.total_akhir  = subtotal.toFixed(2) 
         app.potonganPersen()
-        app.loading = false
         app.inputTbsPenjualan.jumlah_produk = ''
         app.inputTbsPenjualan.produk = ''
         $("#modalJumlahProduk").hide();
