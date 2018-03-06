@@ -11,7 +11,7 @@ class DetailPenjualanPos extends Model
 {
     use AuditableTrait;
 
-    protected $fillable   = ['id_penjualan_pos', 'no_faktur', 'satuan_id', 'id_produk', 'jumlah_produk', 'harga_produk', 'subtotal', 'tax', 'potongan', 'warung_id', 'ppn'];
+    protected $fillable   = ['id_penjualan_pos', 'no_faktur', 'satuan_id', 'id_produk', 'jumlah_produk', 'harga_produk', 'subtotal', 'tax', 'potongan', 'warung_id', 'ppn', 'created_at', 'updated_at'];
     protected $primaryKey = 'id_detail_penjualan_pos';
 
     // relasi ke produk
@@ -94,11 +94,9 @@ class DetailPenjualanPos extends Model
     {
         if ($request->pelanggan == "" || $request->pelanggan == null || $request->pelanggan == 0) {
             $query_sub_total_penjualan = DetailPenjualanPos::select(DB::raw('SUM(detail_penjualan_pos.subtotal) as subtotal'))
-                ->leftJoin('barangs', 'barangs.id', '=', 'detail_penjualan_pos.id_produk')
                 ->where(DB::raw('DATE(detail_penjualan_pos.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
                 ->where(DB::raw('DATE(detail_penjualan_pos.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
-                ->where('detail_penjualan_pos.warung_id', Auth::user()->id_warung)
-                ->where('barangs.hitung_stok', 1);
+                ->where('detail_penjualan_pos.warung_id', Auth::user()->id_warung);
         } else {
             $query_sub_total_penjualan = DetailPenjualanPos::select(DB::raw('SUM(detail_penjualan_pos.subtotal) as subtotal'))
                 ->leftJoin('penjualan_pos', 'penjualan_pos.id', '=', 'detail_penjualan_pos.id_penjualan_pos')
@@ -467,6 +465,18 @@ class DetailPenjualanPos extends Model
             ->where(DB::raw('DATE(detail_penjualan_pos.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
             ->leftJoin('barangs', 'barangs.id', '=', 'detail_penjualan_pos.id_produk');
         return $detail_penjualan_pos;
+    }
+
+    // TOTAL PEJUALAN POS BULAN INI
+    public function scopeTotalPenjualan($query_total_penjualan, $dari_tanggal, $sampai_tanggal)
+    {
+        $query_total_penjualan = DetailPenjualanPos::select(DB::raw('SUM(subtotal) as total'))
+            ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($dari_tanggal))
+            ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($sampai_tanggal))
+            ->where('warung_id', Auth::user()->id_warung)
+            ->orderBy('created_at', 'desc');
+
+        return $query_total_penjualan;
     }
 
 }
