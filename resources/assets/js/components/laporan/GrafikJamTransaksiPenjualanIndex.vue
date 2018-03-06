@@ -21,13 +21,13 @@
         <div class="card-content">
           <h4 class="card-title"> Grafik Jam Transaksi Penjualan </h4>
                 <div class="row">
-                  <div class="form-group col-sm-2 col-xs-2">
+                  <div class="form-group col-md-2">
                     <datepicker :input-class="'form-control'" placeholder="dari_tanggal" v-model="filter.dari_tanggal" name="dari_tanggal" v-bind:id="'dari_tanggal'"></datepicker>
                   </div>
-                  <div class="form-group col-sm-2 col-xs-2">
+                  <div class="form-group col-md-2">
                     <datepicker :input-class="'form-control'" placeholder="sampai_tanggal" v-model="filter.sampai_tanggal" name="sampai_tanggal" v-bind:id="'sampai_tanggal'"></datepicker>
                   </div>
-                  <div class="form-group col-md-2 col-xs-2">
+                  <div class="form-group col-md-2">
                   <selectize-component v-model="filter.jenis_penjualan" :settings="placeholder_penjualan" id="jenis_penjualan" ref="jenis_penjualan"> 
                     <option v-bind:value="0" > Penjualan POS </option>
                     <option v-bind:value="1" > Penjualan Online </option>
