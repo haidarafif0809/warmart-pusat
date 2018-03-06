@@ -8,6 +8,7 @@ use App\DetailPenjualanPos;
 use App\Error;
 use App\Hpp;
 use App\KategoriBarang;
+use App\PenjualanPos;
 use App\PesananPelanggan;
 use App\SettingAplikasi;
 use App\TransaksiKas;
@@ -249,16 +250,33 @@ class HomeController extends Controller
         $startDate = new Carbon('first day of this month');
         $endDate   = new Carbon('last day of this month');
 
+        // TOTAL PENJUALAN
         $penjualan_pos   = DetailPenjualanPos::totalPenjualan($startDate, $endDate)->first()->total;
         $penjualan       = DetailPenjualan::totalPenjualan($startDate, $endDate)->first()->total;
         $total_penjualan = $penjualan_pos + $penjualan;
+
+        // LABA KOTOR PENJUALAN
+        $laba_kotor_pos = DetailPenjualanPos::labaKotorPenjualan($startDate, $endDate)->first();
+        $transaksi_pos  = "PenjualanPos";
+        $sub_hpp_pos    = Hpp::hppPenjualan($startDate, $endDate, $transaksi_pos)->first()->total_hpp;
+
+        $laba_kotor = DetailPenjualan::labaKotorPenjualan($startDate, $endDate)->first();
+        $transaksi  = "penjualan";
+        $sub_hpp    = Hpp::hppPenjualan($startDate, $endDate, $transaksi)->first()->total_hpp;
+
+        // POTONGAN
+        $potongan = PenjualanPos::potonganPenjualan($startDate, $endDate)->first()->potongan;
+
+        $total_laba_kotor_pos = $penjualan_pos - $sub_hpp_pos;
+        $total_laba_kotor     = $penjualan - $sub_hpp;
+        $subtotal_laba_kotor  = $total_laba_kotor_pos + $total_laba_kotor - $potongan;
 
         $response['produk_warung']    = $this->tandaPemisahTitik($produk_warung);
         $response['transaksi_kas']    = 'Rp ' . $this->tandaPemisahTitik($transaksi_kas->jumlah_kas);
         $response['kas_masuk']        = 'Rp ' . $this->tandaPemisahTitik($jumlah_kas_masuk->total_kas_masuk);
         $response['kas_keluar']       = 'Rp ' . $this->tandaPemisahTitik($jumlah_kas_keluar->total_kas_keluar);
         $response['stok_masuk']       = 'Rp ' . $this->tandaPemisahTitik($total_penjualan);
-        $response['stok_keluar']      = 'Rp ' . $this->tandaPemisahTitik($penjualan);
+        $response['stok_keluar']      = 'Rp ' . $this->tandaPemisahTitik($subtotal_laba_kotor);
         $response['total_persedian']  = 'Rp ' . $this->tandaPemisahTitik($total_persedian);
         $response['konfirmasi_admin'] = Auth::user()->konfirmasi_admin;
         $response['kasir_id']         = Auth::user()->kasir_id;

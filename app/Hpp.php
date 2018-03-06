@@ -314,4 +314,24 @@ class Hpp extends Model
 
     }
 
+    // Hpp Bulan Ini
+    public function scopeHppPenjualan($query_hpp, $dari_tanggal, $sampai_tanggal, $jenis_transaksi)
+    {
+        if ($jenis_transaksi == "PenjualanPos") {
+            $query_hpp = Hpp::select(DB::raw('SUM(hpps.total_nilai) as total_hpp'))
+                ->where(DB::raw('DATE(hpps.created_at)'), '>=', $this->tanggalSql($dari_tanggal))
+                ->where(DB::raw('DATE(hpps.created_at)'), '<=', $this->tanggalSql($sampai_tanggal))
+                ->where('hpps.jenis_transaksi', 'PenjualanPos')
+                ->where('hpps.warung_id', Auth::user()->id_warung);
+        } else {
+            $query_hpp = Hpp::select(DB::raw('SUM(hpps.total_nilai) as total_hpp'))
+                ->where(DB::raw('DATE(hpps.created_at)'), '>=', $this->tanggalSql($dari_tanggal))
+                ->where(DB::raw('DATE(hpps.created_at)'), '<=', $this->tanggalSql($sampai_tanggal))
+                ->where('hpps.jenis_transaksi', 'penjualan')
+                ->where('hpps.warung_id', Auth::user()->id_warung);
+        }
+
+        return $query_hpp;
+    }
+
 }
