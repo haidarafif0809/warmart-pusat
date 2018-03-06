@@ -32,7 +32,7 @@ class PenjualanController extends Controller
     public function pilihPelanggan()
     {
         $pelanggan = User::where('tipe_user', 3)->get();
-        $array     = array(['id' => '', 'nama_pelanggan' => 'SEMUA PELANGGAN'], ['id' => '0', 'nama_pelanggan' => 'Umum']);
+        $array     = array(['id'=>'','nama_pelanggan'=>'SEMUA PELANGGAN'],['id'=>'0','nama_pelanggan'=>'Umum']);
         foreach ($pelanggan as $pelanggans) {
             array_push($array, [
                 'id'             => $pelanggans->id,
@@ -44,7 +44,7 @@ class PenjualanController extends Controller
     public function pilihKasir()
     {
         $kasir = User::where('tipe_user', 4)->where('id_warung', Auth::user()->id_warung)->get();
-        $array = array(['id' => '', 'nama_kasir' => 'SEMUA KASIR']);
+        $array = array(['id'=>'','nama_kasir'=>'SEMUA KASIR']);
         foreach ($kasir as $kasirs) {
             array_push($array, [
                 'id'         => $kasirs->id,
@@ -61,8 +61,8 @@ class PenjualanController extends Controller
     }
 
     public function paginationData($penjualan, $array, $url)
-    {
-        $session_id = session()->getId();
+    {   
+        $session_id    = session()->getId();
         //DATA PAGINATION
         $respons['current_page']   = $penjualan->currentPage();
         $respons['data']           = $array;
@@ -364,7 +364,7 @@ class PenjualanController extends Controller
     {
         $session_id    = session()->getId();
         $user_warung   = Auth::user()->id_warung;
-        $tbs_penjualan = TbsPenjualan::with(['produk', 'satuan'])->where('warung_id', $user_warung)->where('session_id', $session_id)->orderBy('id_tbs_penjualan', 'desc')->paginate(10);
+        $tbs_penjualan = TbsPenjualan::with(['produk', 'satuan'])->where('warung_id', $user_warung)->where('session_id', $session_id)->orderBy('id_tbs_penjualan', 'desc')->get();
         $array         = array();
 
         foreach ($tbs_penjualan as $tbs_penjualans) {
@@ -383,10 +383,7 @@ class PenjualanController extends Controller
                 'produk'           => $tbs_penjualans->id_produk . "|" . $tbs_penjualans->NamaProduk . "|" . $tbs_penjualans->produk->harga_jual]);
         }
 
-        $url     = '/penjualan/view-tbs-penjualan';
-        $respons = $this->paginationData($tbs_penjualan, $array, $url, $session_id);
-
-        return response()->json($respons);
+        return response()->json($array);
     }
 
     public function pencarianTbsPenjualan(Request $request)
@@ -413,13 +410,7 @@ class PenjualanController extends Controller
                 'produk'           => $tbs_penjualans['id_produk'] . "|" . title_case($tbs_penjualans['nama_barang']) . "|" . $tbs_penjualans['harga_jual'],
             ]);
         }
-
-        $url    = '/penjualan/pencarian-tbs-penjualan';
-        $search = $request->search;
-
-        $respons = $this->paginationPencarianData($tbs_penjualan, $array, $url, $search);
-
-        return response()->json($respons);
+        return response()->json($array);
     }
 
     public function viewEditTbsPenjualan($id)
@@ -559,14 +550,14 @@ class PenjualanController extends Controller
                 $respons['harga_produk'] = $harga_jual;
                 $respons['potongan'] = 0;
                 $respons['subtotal'] = $subtotal;
-                $respons['produk'] = $id_produk . "|" . $nama_produk . "|" . $harga_jual;
+                $respons['produk'] = $id_produk . "|" . $nama_produk . "|" . $harga_jual; 
+
                 return response()->json($respons);
             }
 
         }
 
     }
-
 //PROSE EDIT JUMLAH TBS PENJUALAN
     public function prosesEditJumlahTbsPenjualan(Request $request)
     {
@@ -1340,46 +1331,41 @@ public function cekSubtotalTbsPenjualan()
     return response()->json($respons);
 }
 
-public function cobajSon(){
-    $respons['subtotal'] = 1000;
-    return response()->json($respons);
-}
-
     //DOWNLOAD EXCEL - LAPORAN LABA KOTOR /PELANGGAN
-    public function downloadExcel(Request $request, $session_id)
-    {
+public function downloadExcel(Request $request,$session_id)
+{
 
-   $data_tbs_penjualan_pos = TbsPenjualan::select('tbs_penjualans.session_id','satuans.nama_satuan','barangs.kode_barang','tbs_penjualans.jumlah_produk','tbs_penjualans.harga_produk','tbs_penjualans.subtotal','tbs_penjualans.tax','tbs_penjualans.potongan','tbs_penjualans.warung_id','tbs_penjualans.created_by','tbs_penjualans.updated_by','tbs_penjualans.created_at','tbs_penjualans.updated_at')->leftJoin('barangs','tbs_penjualans.id_produk','=','barangs.id')->leftJoin('satuans','tbs_penjualans.satuan_id','=','satuans.id')->where('tbs_penjualans.session_id', $session_id)->where('tbs_penjualans.warung_id', Auth::user()->id_warung);
+ $data_tbs_penjualan_pos = TbsPenjualan::where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
 
-        Excel::create('Data Export Penjualan', function ($excel) use ($request, $data_tbs_penjualan_pos) {
+ Excel::create('Data Export Penjualan', function ($excel) use ($request, $data_tbs_penjualan_pos){
             // Set property
-            $excel->sheet('Data Export Penjualan', function ($sheet) use ($request, $data_tbs_penjualan_pos) {
+    $excel->sheet('Data Export Penjualan', function ($sheet) use ($request, $data_tbs_penjualan_pos) {
 
-                $row = 1;
-                $sheet->row($row, [
-                    'Session Id',
-                    'Satuan Id',
-                    'Id Produk',
-                    'Jumlah Produk',
-                    'Harga Produk',
-                    'Subtotal',
-                    'Tax',
-                    'Potongan',
-                    'Warung Id',
-                    'Created By',
-                    'Updated By',
-                    'Created At',
-                    'Updated At',
-                    'Ppn',
-                    'Tax Include',
-                ]);
+        $row = 1;
+        $sheet->row($row, [
+            'Session Id',
+            'Satuan Id',
+            'Id Produk',
+            'Jumlah Produk',
+            'Harga Produk',
+            'Subtotal',
+            'Tax',
+            'Potongan',
+            'Warung Id',
+            'Created By',
+            'Updated By',
+            'Created At',
+            'Updated At',
+            'Ppn',
+            'Tax Include',
+        ]);
 
-                foreach ($data_tbs_penjualan_pos->get() as $data_tbs_penjualan_poss) {
+        foreach ($data_tbs_penjualan_pos->get() as $data_tbs_penjualan_poss) {
 
           $sheet->row(++$row, [
             $data_tbs_penjualan_poss->session_id,
-            $data_tbs_penjualan_poss->nama_satuan,
-            $data_tbs_penjualan_poss->kode_barang,
+            $data_tbs_penjualan_poss->satuan_id,
+            $data_tbs_penjualan_poss->id_produk,
             $data_tbs_penjualan_poss->jumlah_produk,
             $data_tbs_penjualan_poss->harga_produk,
             $data_tbs_penjualan_poss->subtotal,
@@ -1393,12 +1379,12 @@ public function cobajSon(){
             null,
             0,
 
-                    ]);
+        ]);
 
-                }
+      }
 
   });
-})->download('xlsx');
+})->download('xls');
 }
 
 }
