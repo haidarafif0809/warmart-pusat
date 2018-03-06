@@ -31,6 +31,18 @@ class DetailPenjualanPos extends Model
         return title_case($this->produk->nama_barang);
     }
 
+    public function scopeHargaProduk($harga, $no_faktur, $id_produk)
+    {
+
+        $harga->select('harga_produk')
+            ->where('id_penjualan_pos', $no_faktur)
+            ->where('id_produk', $id_produk)
+            ->where('warung_id', Auth::user()->id_warung);
+
+        return $harga;
+
+    }
+
     public function stok_produk($id_produk)
     {
 
