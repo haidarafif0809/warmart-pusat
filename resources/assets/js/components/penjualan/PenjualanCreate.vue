@@ -353,99 +353,98 @@
         </div>
       </div>
 
-      <div class="col-md-3">          <!--DOWNLOAD EXCEL-->
-        <a href="#" class='btn btn-warning' id="btnExcel" target='blank'><i class="material-icons">file_download</i> Export Excel</a></div>
-        <div class="col-md-5"></div>
-        <div class="col-md-1 col-xs-1">                
-          <button class="btn btn-primary btn-round btn-fab btn-fab-mini" data-toggle="modal" data-target="#modal_setting">
-            <i class="material-icons">settings</i>
-          </button><b>Setting</b>
-        </div>
-
+      <div class="col-md-3">          
+      </div>
+      <div class="col-md-5"></div>
+      <div class="col-md-1 col-xs-1">                
+        <button class="btn btn-primary btn-round btn-fab btn-fab-mini" data-toggle="modal" data-target="#modal_setting">
+          <i class="material-icons">settings</i>
+        </button><b>Setting</b>
       </div>
 
-
-      <!--TABEL TBS ITEM  MASUK -->
-      <div class="row">
-
-        <div class="col-md-9">
-          <div class=" table-responsive ">
-            <div class="pencarian">
-              <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
-            </div>
-            <table class="table table-striped table-hover" v-if="seen">
-              <thead class="text-primary">
-                <tr>
-
-                  <th>Produk</th>
-                  <th class="text-right">Jumlah</th>
-                  <th class="text-center">Satuan</th>
-                  <th class="text-right">Harga</th>
-                  <th class="text-right">Potongan</th>
-                  <th class="text-right">Subtotal</th>
-                  <th class="text-center">Hapus</th>
-
-                </tr>
-              </thead>
-              <tbody v-if="tbs_penjualan.length"  class="data-ada">
-                <tr v-for="tbs_penjualan, index in tbs_penjualan" >
-
-                  <td>{{ tbs_penjualan.kode_produk }} - {{ tbs_penjualan.nama_produk }}</td>
-
-                  <td align="right" >
-                    <a href="#create-penjualan" v-bind:id="'edit-' + tbs_penjualan.id_tbs_penjualan" v-on:click="editEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">{{ new Intl.NumberFormat().format(tbs_penjualan.jumlah_produk) }}</a>
-                  </td>
+    </div>
 
 
-                  <td align="center">{{ tbs_penjualan.satuan }}</td>
+    <!--TABEL TBS ITEM  MASUK -->
+    <div class="row">
 
-                  <td align="right" >{{ new Intl.NumberFormat().format(tbs_penjualan.harga_produk) }}</td>
-
-                  <td align="right" ><a href="#create-penjualan" v-bind:id="'edit-' + tbs_penjualan.id_tbs_penjualan" v-on:click="potonganEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">{{ tbs_penjualan.potongan }}</a></td>
-
-                  <td align="right" > {{ new Intl.NumberFormat().format(tbs_penjualan.subtotal) }}</td>
-                  <td align="center"><a href="#create-penjualan" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_penjualan.id_tbs_penjualan" v-on:click="deleteEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">Delete</a></td>
-                </tr>
-              </tbody>                    
-              <tbody class="data-tidak-ada" v-else>
-                <tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
-              </tbody>
-            </table>    
-
-            <vue-simple-spinner v-if="loading"></vue-simple-spinner>
-
+      <div class="col-md-9">
+        <div class=" table-responsive ">
+          <div class="pencarian">
+            <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
           </div>
-        </div>
-        <div class="col-md-3">
+          <table class="table table-striped table-hover" v-if="seen">
+            <thead class="text-primary">
+              <tr>
 
-          <div class="card card-stats">
-            <div class="card-header" data-background-color="blue">
-              <i class="material-icons">shopping_cart</i>
-            </div>
-            <div class="card-content">
-              <p class="category"><font style="font-size:20px;">Subtotal</font></p>
-              <h3 class="card-title"><b><font style="font-size:32px;">{{ new Intl.NumberFormat().format(penjualan.subtotal) }}</font></b></h3>
-            </div>
-            <div class="card-footer">
-              <div class="row"> 
-                <div class="col-md-6 col-xs-6"> 
-                  <button type="button" class="btn btn-success btn-lg" id="bayar" v-on:click="bayarPenjualan()" v-shortkey.push="['f2']" @shortkey="bayarPenjualan()"><font style="font-size:20px;">Bayar(F2)</font></button>
-                </div>
-                <div class="col-md-6 col-xs-6">
-                  <button type="submit" class="btn btn-danger btn-lg" id="btnBatal" v-on:click="batalPenjualan()" v-shortkey.push="['f3']" @shortkey="batalPenjualan()"> <font style="font-size:20px;">Batal(F3) </font></button>
-                </div>
+                <th>Produk</th>
+                <th class="text-right">Jumlah</th>
+                <th class="text-center">Satuan</th>
+                <th class="text-right">Harga</th>
+                <th class="text-right">Potongan</th>
+                <th class="text-right">Subtotal</th>
+                <th class="text-center">Hapus</th>
+
+              </tr>
+            </thead>
+            <tbody v-if="tbs_penjualan.length"  class="data-ada">
+              <tr v-for="tbs_penjualan, index in tbs_penjualan" >
+
+                <td>{{ tbs_penjualan.kode_produk }} - {{ tbs_penjualan.nama_produk }}</td>
+
+                <td align="right" >
+                  <a href="#create-penjualan" v-bind:id="'edit-' + tbs_penjualan.id_tbs_penjualan" v-on:click="editEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">{{ new Intl.NumberFormat().format(tbs_penjualan.jumlah_produk) }}</a>
+                </td>
+
+
+                <td align="center">{{ tbs_penjualan.satuan }}</td>
+
+                <td align="right" >{{ new Intl.NumberFormat().format(tbs_penjualan.harga_produk) }}</td>
+
+                <td align="right" ><a href="#create-penjualan" v-bind:id="'edit-' + tbs_penjualan.id_tbs_penjualan" v-on:click="potonganEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">{{ tbs_penjualan.potongan }}</a></td>
+
+                <td align="right" > {{ new Intl.NumberFormat().format(tbs_penjualan.subtotal) }}</td>
+                <td align="center"><a href="#create-penjualan" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_penjualan.id_tbs_penjualan" v-on:click="deleteEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">Delete</a></td>
+              </tr>
+            </tbody>                    
+            <tbody class="data-tidak-ada" v-else>
+              <tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
+            </tbody>
+          </table>    
+
+          <vue-simple-spinner v-if="loading"></vue-simple-spinner>
+
+        </div>
+      </div>
+      <div class="col-md-3">
+
+        <div class="card card-stats">
+          <div class="card-header" data-background-color="blue">
+            <i class="material-icons">shopping_cart</i>
+          </div>
+          <div class="card-content">
+            <p class="category"><font style="font-size:20px;">Subtotal</font></p>
+            <h3 class="card-title"><b><font style="font-size:32px;">{{ new Intl.NumberFormat().format(penjualan.subtotal) }}</font></b></h3>
+          </div>
+          <div class="card-footer">
+            <div class="row"> 
+              <div class="col-md-6 col-xs-6"> 
+                <button type="button" class="btn btn-success btn-lg" id="bayar" v-on:click="bayarPenjualan()" v-shortkey.push="['f2']" @shortkey="bayarPenjualan()"><font style="font-size:20px;">Bayar(F2)</font></button>
+              </div>
+              <div class="col-md-6 col-xs-6">
+                <button type="submit" class="btn btn-danger btn-lg" id="btnBatal" v-on:click="batalPenjualan()" v-shortkey.push="['f3']" @shortkey="batalPenjualan()"> <font style="font-size:20px;">Batal(F3) </font></button>
               </div>
             </div>
           </div>
         </div>
       </div>
+    </div>
 
-      <p style="color: red; font-style: italic;">*Note : Klik Kolom Jumlah, Harga, & Potongan Untuk Mengubah Nilai.</p>      
-      <p style="color: red; font-style: italic;">*Note : Klik tombol Export Excel untuk Export Produk Penjualan POS.</p>
+    <p style="color: red; font-style: italic;">*Note : Klik Kolom Jumlah, Harga, & Potongan Untuk Mengubah Nilai.</p>    
 
-    </div><!-- / PANEL BODY -->
+  </div><!-- / PANEL BODY -->
 
-  </div>
+</div>
 </div>
 </div>
 
@@ -491,6 +490,9 @@ export default {
       placeholder_produk: {
         placeholder: 'Cari Produk (F1) ...',
         sortField: 'text',
+        maxOptions : 2,
+        scrollDuration : 10,
+        loadThrottle : 150,
         openOnFocus : true
       },
       placeholder_pelanggan: {
@@ -852,6 +854,7 @@ submitProdukPenjualan(value){
         });
 
        }
+       app.openSelectizeProduk()
        app.penjualan.subtotal = subtotal.toFixed(2)                        
        app.penjualan.total_akhir  = subtotal.toFixed(2) 
        app.potonganPersen()
