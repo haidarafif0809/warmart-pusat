@@ -51,8 +51,8 @@
 				filter: {
 					dari_tanggal: '',
 					sampai_tanggal: new Date(),
-					kelipatan: '',
-					jenis_penjualan: '',
+					kelipatan: 50000,
+					jenis_penjualan: '0',
 				},
 				separator: {
 					decimal: ',',

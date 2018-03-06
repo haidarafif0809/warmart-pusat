@@ -27,7 +27,7 @@ const getters = {
 	},
 	produk_barang(state){
 		return state.produk.filter(function(produk){
-			return produk.hitung_stok == 1
+			return produk.hitung_stok == 1 && produk.status_aktif == 1
 		})
 	},
 	suplier_pembelian(state){

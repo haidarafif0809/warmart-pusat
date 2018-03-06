@@ -3,9 +3,13 @@
 	color: red; 
 	float: right;
 }
-.dropdown-menu {
+.dropdown-menu-right {
 	top: -50;
-	left: 80%;
+	left: 50%;
+}
+.dropdown-menu-left {
+	top: -80;
+	left: 50%;
 }
 </style>
 
@@ -46,14 +50,13 @@
 	    										<tr>
 
 	    											<th>No Transaksi</th>
+	    											<th >Cetak</th>
+	    											<th >Aksi</th>
 	    											<th style="width:1px;">Waktu</th>
 	    											<th>Pelanggan</th>
 	    											<th>Status</th>
 	    											<th class="text-right">Total</th>
-	    											<th class="text-center">Cetak</th>
-	    											<th>Detail</th>
-	    											<th>Edit</th>
-	    											<th>Hapus</th>
+
 
 	    										</tr>
 	    									</thead>
@@ -64,11 +67,7 @@
 	    												<a href="#penjualan" v-bind:id="'edit-' + penjualan.id" v-on:click="detailTransaksi(penjualan.id,penjualan.total,penjualan.potongan,
 	    												penjualan.tunai,penjualan.kembalian,penjualan.jatuh_tempo,penjualan.waktu_edit,penjualan.user_edit,penjualan.kas,penjualan.piutang,penjualan.user_buat)">{{ penjualan.id }}</a>
 	    											</td>
-	    											<td>{{ penjualan.waktu }}</td>
-	    											<td>{{ penjualan.pelanggan }}</td>
-	    											<td>{{ penjualan.status_penjualan }}</td>
-	    											<td align="right"> {{ penjualan.total }}</td>
-	    											<td align="center">
+	    											<td >
 	    												<div class="dropdown">
 	    													<button href="#pablo" class="dropdown-toggle btn btn-primary btn-xs" data-toggle="dropdown">Cetak <b class="caret"></b></button>
 	    													<ul class="dropdown-menu dropdown-menu-right">
@@ -77,13 +76,32 @@
 	    													</ul>
 	    												</div>
 	    											</td>
-	    											<td>
-	    												<router-link :to="{name: 'detailPenjualan', params: {id: penjualan.id}}" class="btn btn-xs btn-info" v-bind:id="'detail-' + penjualan.id" >
-	    												Detail </router-link> 
+	    											<td >
+	    												<div class="dropdown">
+	    													<button href="#pablo" class="dropdown-toggle btn btn-warning btn-xs" data-toggle="dropdown">Aksi <b class="caret"></b></button>
+	    													<ul class="dropdown-menu dropdown-menu-left">
+	    														<li>
+	    															<router-link :to="{name: 'detailPenjualan', params: {id: penjualan.id}}"  v-bind:id="'detail-' + penjualan.id" >
+	    														Detail </router-link> 
+	    														</li>
+	    														<li>
+	    															<router-link :to="{name: 'prosesEditPenjualan', params: {id: penjualan.id}}"  v-bind:id="'edit-' + penjualan.id" >
+	    															Edit </router-link>
+	    														</li>
+				    											<li>
+				    												<a href="#penjualan"  v-bind:id="'delete-' + penjualan.id" v-on:click="deleteEntry(penjualan.id, index,penjualan.id,penjualan.subtotal)">Delete</a>
+				    											</li>
+				    											<li>
+				    												<a target="blank" v-bind:href="'penjualan/download-excel-penjualan/'+penjualan.id">Download Excel</a>
+				    											</li>				    											
+	    													</ul>
+	    												</div>
 	    											</td>
-	    											<td><router-link :to="{name: 'prosesEditPenjualan', params: {id: penjualan.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + penjualan.id" >
-	    											Edit </router-link> </td> 
-	    											<td><a href="#penjualan" class="btn btn-xs btn-danger" v-bind:id="'delete-' + penjualan.id" v-on:click="deleteEntry(penjualan.id, index,penjualan.id,penjualan.subtotal)">Delete</a></td>
+	    											<td>{{ penjualan.waktu }}</td>
+	    											<td>{{ penjualan.pelanggan }}</td>
+	    											<td>{{ penjualan.status_penjualan }}</td>
+	    											<td align="right"> {{ penjualan.total }}</td>
+	    											
 	    										</tr>
 	    									</tbody>                    
 	    									<tbody class="data-tidak-ada" v-else>

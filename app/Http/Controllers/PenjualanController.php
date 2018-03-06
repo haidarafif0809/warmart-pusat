@@ -1387,4 +1387,59 @@ public function downloadExcel(Request $request,$session_id)
 })->download('xls');
 }
 
+    //DOWNLOAD EXCEL - LAPORAN LABA KOTOR /PELANGGAN
+    public function downloadExcelPenjualan(Request $request, $id_penjualan)
+    {
+
+   $data_tbs_penjualan_pos = DetailPenjualanPos::select('detail_penjualan_pos.no_faktur','satuans.nama_satuan','barangs.kode_barang','detail_penjualan_pos.jumlah_produk','detail_penjualan_pos.harga_produk','detail_penjualan_pos.subtotal','detail_penjualan_pos.tax','detail_penjualan_pos.potongan','detail_penjualan_pos.warung_id','detail_penjualan_pos.created_by','detail_penjualan_pos.updated_by','detail_penjualan_pos.created_at','detail_penjualan_pos.updated_at')->leftJoin('barangs','detail_penjualan_pos.id_produk','=','barangs.id')->leftJoin('satuans','detail_penjualan_pos.satuan_id','=','satuans.id')->where('detail_penjualan_pos.id_penjualan_pos', $id_penjualan)->where('detail_penjualan_pos.warung_id', Auth::user()->id_warung);
+
+        Excel::create('Data Export Penjualan', function ($excel) use ($request, $data_tbs_penjualan_pos) {
+            // Set property
+            $excel->sheet('Data Export Penjualan', function ($sheet) use ($request, $data_tbs_penjualan_pos) {
+
+                $row = 1;
+                $sheet->row($row, [
+                    'Session Id',
+                    'Satuan Id',
+                    'Id Produk',
+                    'Jumlah Produk',
+                    'Harga Produk',
+                    'Subtotal',
+                    'Tax',
+                    'Potongan',
+                    'Warung Id',
+                    'Created By',
+                    'Updated By',
+                    'Created At',
+                    'Updated At',
+                    'Ppn',
+                    'Tax Include',
+                ]);
+
+                foreach ($data_tbs_penjualan_pos->get() as $data_tbs_penjualan_poss) {
+
+          $sheet->row(++$row, [
+            $data_tbs_penjualan_poss->no_faktur,
+            $data_tbs_penjualan_poss->nama_satuan,
+            $data_tbs_penjualan_poss->kode_barang,
+            $data_tbs_penjualan_poss->jumlah_produk,
+            $data_tbs_penjualan_poss->harga_produk,
+            $data_tbs_penjualan_poss->subtotal,
+            $data_tbs_penjualan_poss->tax,
+            $data_tbs_penjualan_poss->potongan,
+            $data_tbs_penjualan_poss->warung_id,
+            $data_tbs_penjualan_poss->created_by,
+            $data_tbs_penjualan_poss->updated_by,
+            $data_tbs_penjualan_poss->created_at,
+            $data_tbs_penjualan_poss->updated_at,                    
+            null,
+            0,
+                    ]);
+
+                }
+
+  });
+})->download('xls');
+}
+
 }

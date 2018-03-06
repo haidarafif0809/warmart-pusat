@@ -120,74 +120,15 @@ class TransaksiHutang extends Model
         return $data_supplier_hutang;
     }
 
-          // DATA PEMBELIAN HUTANG
-    public function scopeTotalHutangBeredar($data_supplier_hutang,$request)
-    {
-
-        if ($request->suplier != "") {
-            $data_supplier_hutang = $this->queryTotalLaporanHutangBeredar($request)
-            ->where('pembelians.status_pembelian', 'Hutang')
-            ->where('pembelians.suplier_id', $request->suplier)
-            ->where(DB::raw('DATE(transaksi_hutangs.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
-            ->where(DB::raw('DATE(transaksi_hutangs.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
-            ->where('pembelians.warung_id', Auth::user()->id_warung)
-            ->havingRaw('IFNULL(SUM(transaksi_hutangs.jumlah_masuk),0) - IFNULL(SUM(transaksi_hutangs.jumlah_keluar),0) > 0');
-        }else{
-             $data_supplier_hutang = $this->queryTotalLaporanHutangBeredar($request)
-            ->where('pembelians.status_pembelian', 'Hutang')
-            ->where(DB::raw('DATE(transaksi_hutangs.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
-            ->where(DB::raw('DATE(transaksi_hutangs.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
-            ->where('pembelians.warung_id', Auth::user()->id_warung)
-            ->havingRaw('IFNULL(SUM(transaksi_hutangs.jumlah_masuk),0) - IFNULL(SUM(transaksi_hutangs.jumlah_keluar),0) > 0');
-        }  
-        return $data_supplier_hutang;
-    }
-
-        public function scopeTotalSisaHutang($data_supplier_hutang,$request)
-    {
-
-        if ($request->suplier != "") {
-            $data_supplier_hutang = $this->queryTotalLaporanHutangBeredar($request)
-            ->where('pembelians.status_pembelian', 'Hutang')
-            ->where('pembelians.suplier_id', $request->suplier)
-            ->where(DB::raw('DATE(transaksi_hutangs.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
-            ->where(DB::raw('DATE(transaksi_hutangs.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
-            ->where('pembelians.warung_id', Auth::user()->id_warung)
-            ->groupBy('transaksi_hutangs.id_transaksi')
-            ->havingRaw('IFNULL(SUM(transaksi_hutangs.jumlah_masuk),0) - IFNULL(SUM(transaksi_hutangs.jumlah_keluar),0) = 0');
-        }else{
-             $data_supplier_hutang = $this->queryTotalLaporanHutangBeredar($request)
-            ->where('pembelians.status_pembelian', 'Hutang')
-            ->where(DB::raw('DATE(transaksi_hutangs.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
-            ->where(DB::raw('DATE(transaksi_hutangs.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
-            ->where('pembelians.warung_id', Auth::user()->id_warung)
-            ->groupBy('transaksi_hutangs.id_transaksi')
-            ->havingRaw('IFNULL(SUM(transaksi_hutangs.jumlah_masuk),0) - IFNULL(SUM(transaksi_hutangs.jumlah_keluar),0) = 0');
-        }  
-        return $data_supplier_hutang;
-    }
-
         public function queryLaporanHutangBeredar($request)
     {
-          $data_supplier_hutang =  TransaksiHutang::select(['supliers.nama_suplier as nama_suplier','users.name as name','transaksi_hutangs.created_at','pembelians.id', 'pembelians.no_faktur','pembelians.created_at', 'pembelians.suplier_id', 'pembelians.total', 'pembelians.tanggal_jt_tempo as tanggal_jt_tempo',DB::raw('IFNULL(SUM(transaksi_hutangs.jumlah_masuk),0) - IFNULL(SUM(transaksi_hutangs.jumlah_keluar),0) AS sisa_hutang'),DB::raw('IFNULL(SUM(transaksi_hutangs.jumlah_keluar),0) AS pembayaran'),DB::raw('DATEDIFF(pembelians.tanggal_jt_tempo,DATE(NOW())) AS usia_hutang')])
+          $data_supplier_hutang =  TransaksiHutang::select(['supliers.nama_suplier as nama_suplier','users.name as name','transaksi_hutangs.created_at','pembelians.id', 'pembelians.no_faktur','pembelians.created_at', 'pembelians.suplier_id',DB::raw('IFNULL(SUM(transaksi_hutangs.jumlah_masuk),0) AS total'), 'pembelians.tanggal_jt_tempo as tanggal_jt_tempo',DB::raw('IFNULL(SUM(transaksi_hutangs.jumlah_masuk),0) - IFNULL(SUM(transaksi_hutangs.jumlah_keluar),0) AS sisa_hutang'),DB::raw('IFNULL(SUM(transaksi_hutangs.jumlah_keluar),0) AS pembayaran'),DB::raw('DATEDIFF(pembelians.tanggal_jt_tempo,DATE(NOW())) AS usia_hutang')])
             ->leftJoin('pembelians', 'transaksi_hutangs.id_transaksi', '=', 'pembelians.id')
             ->leftJoin('users','transaksi_hutangs.created_by','=','users.id')            
             ->leftJoin('supliers','pembelians.suplier_id','=','supliers.id');
 
             return $data_supplier_hutang;
     }
-
-            public function queryTotalLaporanHutangBeredar($request)
-    {
-
-                $data_supplier_hutang =  TransaksiHutang::select([DB::raw('IFNULL(SUM(transaksi_hutangs.jumlah_masuk),0) - IFNULL(SUM(transaksi_hutangs.jumlah_keluar),0) AS sisa_hutang'),DB::raw('IFNULL(SUM(.transaksi_hutangs.jumlah_keluar),0) AS pembayaran'),DB::raw('IFNULL(SUM(transaksi_hutangs.jumlah_masuk),0) AS nilai_transaksi')])
-                   ->leftJoin('pembelians', 'transaksi_hutangs.id_transaksi', '=', 'pembelians.id')
-                   ->leftJoin('supliers','pembelians.suplier_id','=','supliers.id');
-
-            return $data_supplier_hutang;
-    }
-
-
 
             // PENCARIAN TBS PEMBAYARAN hutang
     public function scopeGetDataCariPembelianHutang($query_pembayaran_hutang,$id_suplier,$request)

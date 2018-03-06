@@ -55,7 +55,7 @@
         filter: {
           dari_tanggal: '',
           sampai_tanggal: new Date(),
-          jenis_penjualan: '',
+          jenis_penjualan: '0',
         },
         url : window.location.origin+(window.location.pathname).replace("dashboard", "grafik-jam-transaksi-penjualan"),
         pencarian: '',
