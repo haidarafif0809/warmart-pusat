@@ -170,7 +170,7 @@ class PenjualanPos extends Model
     public function scopeLaporanLabaKotorPos($query_laporan_laba_kotor, $request)
     {
 
-        if ($request->pelanggan == "" ) {
+        if ($request->pelanggan == "") {
             $query_laporan_laba_kotor = PenjualanPos::select(['penjualan_pos.id', 'penjualan_pos.pelanggan_id', 'penjualan_pos.no_faktur', 'penjualan_pos.total', 'penjualan_pos.potongan', 'penjualan_pos.created_at', 'users.name'])
                 ->leftJoin('users', 'users.id', '=', 'penjualan_pos.pelanggan_id')
                 ->where(DB::raw('DATE(penjualan_pos.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
@@ -224,7 +224,7 @@ class PenjualanPos extends Model
     // DISKON LABA KOTOR PENJUALAN POS
     public function scopePotonganLaporanLabaKotor($query_sub_potongan, $request)
     {
-        if ($request->pelanggan == "" ) {
+        if ($request->pelanggan == "") {
             $query_sub_potongan = PenjualanPos::select(DB::raw('SUM(potongan) as potongan'))
                 ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
                 ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
@@ -262,7 +262,7 @@ class PenjualanPos extends Model
         return $query_count_faktur;
     }
 
-    // DATA Jam Penjualan 
+    // DATA Jam Penjualan
     public function scopeGrafikJamTransaksiPenjualan($query_grafik, $request)
     {
         $query_grafik = PenjualanPos::select([DB::raw('COUNT(DATE_FORMAT(created_at, "%H")) as hitung')])
@@ -282,6 +282,17 @@ class PenjualanPos extends Model
             ->groupBy(DB::raw('DATE(created_at)'));
 
         return $query_laporan;
+    }
+
+    // DISKON LABA KOTOR PENJUALAN POS BULAN INI
+    public function scopePotonganPenjualan($query_potongan, $dari_tanggal, $sampai_tanggal)
+    {
+        $query_potongan = PenjualanPos::select(DB::raw('SUM(potongan) as potongan'))
+            ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($dari_tanggal))
+            ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($sampai_tanggal))
+            ->where('warung_id', Auth::user()->id_warung);
+
+        return $query_potongan;
     }
 
 }

@@ -479,4 +479,15 @@ class DetailPenjualanPos extends Model
         return $query_total_penjualan;
     }
 
+    // TOTAL LABA KOTOR PENJUALAN POS BULAN INI
+    public function scopeLabaKotorPenjualan($query_laba_kotor_penjualan, $dari_tanggal, $sampai_tanggal)
+    {
+        $query_laba_kotor_penjualan = DetailPenjualanPos::select(DB::raw('SUM(subtotal) as subtotal'))
+            ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($dari_tanggal))
+            ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($sampai_tanggal))
+            ->where('warung_id', Auth::user()->id_warung);
+
+        return $query_laba_kotor_penjualan;
+    }
+
 }

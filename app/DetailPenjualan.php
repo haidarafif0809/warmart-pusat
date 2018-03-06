@@ -72,11 +72,9 @@ class DetailPenjualan extends Model
         if ($request->pelanggan == "" || $request->pelanggan == null || $request->pelanggan == 0) {
             $query_sub_total_penjualan = DetailPenjualan::select(DB::raw('SUM(detail_penjualans.subtotal) as subtotal'))
                 ->leftJoin('penjualans', 'penjualans.id', '=', 'detail_penjualans.id_penjualan')
-                ->leftJoin('barangs', 'barangs.id', '=', 'detail_penjualans.id_produk')
                 ->where(DB::raw('DATE(detail_penjualans.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
                 ->where(DB::raw('DATE(detail_penjualans.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
-                ->where('penjualans.id_warung', Auth::user()->id_warung)
-                ->where('barangs.hitung_stok', 1);
+                ->where('penjualans.id_warung', Auth::user()->id_warung);
         } else {
             $query_sub_total_penjualan = DetailPenjualan::select(DB::raw('SUM(detail_penjualans.subtotal) as subtotal'))
                 ->leftJoin('penjualans', 'penjualans.id', '=', 'detail_penjualans.id_penjualan')
@@ -491,6 +489,18 @@ class DetailPenjualan extends Model
             ->orderBy('detail_penjualans.created_at', 'desc');
 
         return $query_total_penjualan;
+    }
+
+    // TOTAL LABA KOTOR PENJUALAN POS BULAN INI
+    public function scopeLabaKotorPenjualan($query_laba_kotor_penjualan, $dari_tanggal, $sampai_tanggal)
+    {
+        $query_laba_kotor_penjualan = DetailPenjualan::select(DB::raw('SUM(detail_penjualans.subtotal) as subtotal'))
+            ->leftJoin('penjualans', 'penjualans.id', '=', 'detail_penjualans.id_penjualan')
+            ->where(DB::raw('DATE(detail_penjualans.created_at)'), '>=', $this->tanggalSql($dari_tanggal))
+            ->where(DB::raw('DATE(detail_penjualans.created_at)'), '<=', $this->tanggalSql($sampai_tanggal))
+            ->where('penjualans.id_warung', Auth::user()->id_warung);
+
+        return $query_laba_kotor_penjualan;
     }
 
 }
