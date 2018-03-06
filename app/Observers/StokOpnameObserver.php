@@ -83,9 +83,9 @@ class StokOpnameObserver
     {
 
         if ($StokOpname->selisih_fisik < 0) {
-            $jenis_hpp = 1;
-        } else {
             $jenis_hpp = 2;
+        } else {
+            $jenis_hpp = 1;
         }
 
         $hpp = Hpp::where('no_faktur', $StokOpname->no_faktur)

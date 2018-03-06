@@ -21,30 +21,30 @@
 </head>
 
 <style type="text/css">
-p{
-	margin-top: 1px; margin-bottom: 1px;
-}
-th,td{
-	padding: 1px;
-}
-.table1, .th, .td {
-	font-size: 15px;
-	font: verdana;
-}
-.table>thead>tr>th, .table>tbody>tr>td {
-	padding: 1px;
-	line-height: 1.42857143;
-	vertical-align: top;
-	border: 3px solid #eeeeee;
-}
-.table-bordered {
-	border: 3px solid #eeeeee;
-}
+	p{
+		margin-top: 1px; margin-bottom: 1px;
+	}
+	th,td{
+		padding: 1px;
+	}
+	.table1, .th, .td {
+		font-size: 15px;
+		font: verdana;
+	}
+	.table>thead>tr>th, .table>tbody>tr>td {
+		padding: 1px;
+		line-height: 1.42857143;
+		vertical-align: top;
+		border: 3px solid #eeeeee;
+	}
+	.table-bordered {
+		border: 3px solid #eeeeee;
+	}
 </style>
 <?php
 function pemisahTitik($angka)
 {
-	return number_format($angka, 2, ',', '.');
+	return number_format($angka, 0, ',', '.');
 }
 ?>
 <body>
@@ -129,7 +129,23 @@ function pemisahTitik($angka)
 							Penjualan Online - {{$kartu_stok['data_kartu_stoks']->pelanggan_online}}
 							@endif
 						</td>
-						<td class="table1" align='right'>{{ pemisahTitik($kartu_stok['data_kartu_stoks']->harga_unit) }}</td>
+						<td class="table1" align='right'>
+							@if($kartu_stok['data_kartu_stoks']->jenis_transaksi == 'PenjualanPos')
+							<?php
+							$detail_penjualan_pos = \App\DetailPenjualanPos::hargaProduk($kartu_stok['data_kartu_stoks']->no_faktur, $kartu_stok['data_kartu_stoks']->id_produk)
+							->first();
+							?>
+							{{ pemisahTitik($detail_penjualan_pos->harga_produk) }}
+							@elseif($kartu_stok['data_kartu_stoks']->jenis_transaksi == 'penjualan')
+							<?php
+							$detail_penjualan = \App\DetailPenjualan::hargaProduk($kartu_stok['data_kartu_stoks']->no_faktur, $kartu_stok['data_kartu_stoks']->id_produk)
+							->first();
+							?>
+							{{ pemisahTitik($detail_penjualan->harga) }}
+							@else
+							{{ pemisahTitik($kartu_stok['data_kartu_stoks']->harga_unit) }}
+							@endif 
+						</td>
 						<td class="table1" align="center">{{ date_format($kartu_stok['data_kartu_stoks']->created_at, "d M Y") }}</td>
 						<td class="table1" align='right'>{{ pemisahTitik($kartu_stok['data_kartu_stoks']->jumlah_masuk) }}</td>
 						<td class="table1" align='right'>{{ pemisahTitik($kartu_stok['data_kartu_stoks']->jumlah_keluar) }}</td>

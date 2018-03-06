@@ -31,6 +31,18 @@ class DetailPenjualanPos extends Model
         return title_case($this->produk->nama_barang);
     }
 
+    public function scopeHargaProduk($harga, $no_faktur, $id_produk)
+    {
+
+        $harga->select('harga_produk')
+            ->where('id_penjualan_pos', $no_faktur)
+            ->where('id_produk', $id_produk)
+            ->where('warung_id', Auth::user()->id_warung);
+
+        return $harga;
+
+    }
+
     public function stok_produk($id_produk)
     {
 
@@ -109,7 +121,6 @@ class DetailPenjualanPos extends Model
                 ->where(DB::raw('DATE(detail_penjualan_pos.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
                 ->where(DB::raw('DATE(detail_penjualan_pos.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
                 ->where('penjualan_pos.warung_id', Auth::user()->id_warung)
-                ->where('barangs.hitung_stok', 1)
                 ->groupBy('detail_penjualan_pos.id_produk')
                 ->orderBy('detail_penjualan_pos.created_at', 'desc');
         } else {
@@ -138,7 +149,6 @@ class DetailPenjualanPos extends Model
                 ->where(DB::raw('DATE(detail_penjualan_pos.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
                 ->where(DB::raw('DATE(detail_penjualan_pos.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
                 ->where('penjualan_pos.warung_id', Auth::user()->id_warung)
-                ->where('barangs.hitung_stok', 1)
                 ->where(function ($query) use ($search) {
                     $query->orwhere('barangs.kode_barang', 'LIKE', '%' . $search . '%')
                         ->orwhere('barangs.nama_barang', 'LIKE', '%' . $search . '%');})
@@ -172,8 +182,7 @@ class DetailPenjualanPos extends Model
                 ->leftJoin('barangs', 'barangs.id', '=', 'detail_penjualan_pos.id_produk')
                 ->where(DB::raw('DATE(detail_penjualan_pos.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
                 ->where(DB::raw('DATE(detail_penjualan_pos.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
-                ->where('detail_penjualan_pos.warung_id', Auth::user()->id_warung)
-                ->where('barangs.hitung_stok', 1);
+                ->where('detail_penjualan_pos.warung_id', Auth::user()->id_warung);
         } else {
             $query_sub_total_penjualan = DetailPenjualanPos::select(DB::raw('SUM(subtotal) as subtotal'))
                 ->leftJoin('penjualan_pos', 'penjualan_pos.no_faktur', '=', 'detail_penjualan_pos.no_faktur')

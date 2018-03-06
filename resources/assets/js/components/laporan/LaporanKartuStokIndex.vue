@@ -1,9 +1,9 @@
 <style scoped>
-.pencarian {
-  color: red; 
-  float: right;
-  padding-bottom: 10px;
-}
+  .pencarian {
+    color: red; 
+    float: right;
+    padding-bottom: 10px;
+  }
 </style>
 
 <template>
@@ -82,7 +82,7 @@
                   <td v-else-if="kartuStoks.data_kartu_stoks.jenis_transaksi == 'pembelian'" >Pembelian - {{kartuStoks.suplier}}</td>
                   <td v-else-if="kartuStoks.data_kartu_stoks.jenis_transaksi == 'penjualan'" >Penjualan Online - {{kartuStoks.data_kartu_stoks.pelanggan_online}}</td>
 
-                  <td align="right">{{ kartuStoks.data_kartu_stoks.harga_unit | pemisahTitik }}</td>
+                  <td align="right">{{ kartuStoks.harga | pemisahTitik }}</td>
                   <td align="center">{{ kartuStoks.data_kartu_stoks.created_at | tanggal }}</td>
                   <td align="right">{{ kartuStoks.data_kartu_stoks.jumlah_masuk | pemisahTitik }}</td>
                   <td align="right">{{ kartuStoks.data_kartu_stoks.jumlah_keluar | pemisahTitik }}</td>
@@ -115,30 +115,30 @@
 
 
 <script>
-import { mapState } from 'vuex';
-export default {
-  data: function () {
-   return {
-    saldoAwal : 0,
-    kartuStok: [],
-    kartuStokData: {},
-    filter: {
+  import { mapState } from 'vuex';
+  export default {
+    data: function () {
+     return {
       saldoAwal : 0,
-      produk: '',
-      dari_tanggal: '',
-      sampai_tanggal: new Date(),
-    },
-    url : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-kartu-stok"),
-    urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-kartu-stok/download-excel-kartu-stok"),
-    urlCetak : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-kartu-stok/cetak-laporan"),
-    pencarian: '',
-    loading: false,
-    placeholder_produk: {
-     placeholder: '--PILIH PRODUK (F1)--'
+      kartuStok: [],
+      kartuStokData: {},
+      filter: {
+        saldoAwal : 0,
+        produk: '',
+        dari_tanggal: '',
+        sampai_tanggal: new Date(),
+      },
+      url : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-kartu-stok"),
+      urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-kartu-stok/download-excel-kartu-stok"),
+      urlCetak : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-kartu-stok/cetak-laporan"),
+      pencarian: '',
+      loading: false,
+      placeholder_produk: {
+       placeholder: '--PILIH PRODUK (F1)--'
+     }
    }
- }
-},
-watch: {
+ },
+ watch: {
         // whenever question changes, this function will run
         pencarian: function (newQuestion) {
           this.getHasilPencarian();
@@ -165,7 +165,7 @@ watch: {
     },
     computed : mapState ({    
       produk(){
-        return this.$store.state.produk
+        return this.$store.getters.produk_barang
       }
     }),
     methods: {
