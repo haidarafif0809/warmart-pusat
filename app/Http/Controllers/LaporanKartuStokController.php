@@ -258,10 +258,21 @@ class LaporanKartuStokController extends Controller
                         $jenis_transaksi = $laporan_kartu_stoks->jenis_transaksi;
                     }
 
+                    // Harga
+                    if ($laporan_kartu_stoks->jenis_transaksi == 'PenjualanPos') {
+                        $detail_penjualan_pos = DetailPenjualanPos::hargaProduk($laporan_kartu_stoks->no_faktur, $laporan_kartu_stoks->id_produk)->first();
+                        $harga                = $detail_penjualan_pos->harga_produk;
+                    } elseif ($laporan_kartu_stoks->jenis_transaksi == 'penjualan') {
+                        $detail_penjualan = DetailPenjualan::hargaProduk($laporan_kartu_stoks->no_faktur, $laporan_kartu_stoks->id_produk)->first();
+                        $harga            = $detail_penjualan->harga;
+                    } else {
+                        $harga = $laporan_kartu_stoks->harga_unit;
+                    }
+
                     $sheet->row(++$row, [
                         $laporan_kartu_stoks->no_faktur,
                         $jenis_transaksi,
-                        $laporan_kartu_stoks->harga_unit,
+                        $harga,
                         $laporan_kartu_stoks->created_at,
                         $laporan_kartu_stoks->jumlah_masuk,
                         $laporan_kartu_stoks->jumlah_keluar,
