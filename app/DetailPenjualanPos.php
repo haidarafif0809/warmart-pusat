@@ -11,7 +11,7 @@ class DetailPenjualanPos extends Model
 {
     use AuditableTrait;
 
-    protected $fillable   = ['id_penjualan_pos', 'no_faktur', 'satuan_id', 'id_produk', 'jumlah_produk', 'harga_produk', 'subtotal', 'tax', 'potongan', 'warung_id', 'ppn'];
+    protected $fillable   = ['id_penjualan_pos', 'no_faktur', 'satuan_id', 'id_produk', 'jumlah_produk', 'harga_produk', 'subtotal', 'tax', 'potongan', 'warung_id', 'ppn', 'created_at', 'updated_at'];
     protected $primaryKey = 'id_detail_penjualan_pos';
 
     // relasi ke produk
@@ -94,11 +94,9 @@ class DetailPenjualanPos extends Model
     {
         if ($request->pelanggan == "" || $request->pelanggan == null || $request->pelanggan == 0) {
             $query_sub_total_penjualan = DetailPenjualanPos::select(DB::raw('SUM(detail_penjualan_pos.subtotal) as subtotal'))
-                ->leftJoin('barangs', 'barangs.id', '=', 'detail_penjualan_pos.id_produk')
                 ->where(DB::raw('DATE(detail_penjualan_pos.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
                 ->where(DB::raw('DATE(detail_penjualan_pos.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
-                ->where('detail_penjualan_pos.warung_id', Auth::user()->id_warung)
-                ->where('barangs.hitung_stok', 1);
+                ->where('detail_penjualan_pos.warung_id', Auth::user()->id_warung);
         } else {
             $query_sub_total_penjualan = DetailPenjualanPos::select(DB::raw('SUM(detail_penjualan_pos.subtotal) as subtotal'))
                 ->leftJoin('penjualan_pos', 'penjualan_pos.id', '=', 'detail_penjualan_pos.id_penjualan_pos')
