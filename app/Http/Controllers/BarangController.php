@@ -124,11 +124,11 @@ class BarangController extends Controller
     {
         $data_produk = Barang::with(['satuan', 'kategori_barang'])->where('id_warung', Auth::user()->id_warung)->where(function ($query) use ($request) {
             $query->orwhere('kode_barang', 'LIKE', '%' . $request->search . '%')
-                ->orwhere('kode_barcode', 'LIKE', '%' . $request->search . '%')
-                ->orwhere('nama_barang', 'LIKE', '%' . $request->search . '%')
-                ->orwhere('harga_beli', 'LIKE', '%' . $request->search . '%')
-                ->orwhere('harga_jual', 'LIKE', '%' . $request->search . '%')
-                ->orwhere('harga_jual2', 'LIKE', '%' . $request->search . '%');
+            ->orwhere('kode_barcode', 'LIKE', '%' . $request->search . '%')
+            ->orwhere('nama_barang', 'LIKE', '%' . $request->search . '%')
+            ->orwhere('harga_beli', 'LIKE', '%' . $request->search . '%')
+            ->orwhere('harga_jual', 'LIKE', '%' . $request->search . '%')
+            ->orwhere('harga_jual2', 'LIKE', '%' . $request->search . '%');
         })->orderBy('id', 'desc')->paginate(10);
         $array_produk = array();
         foreach ($data_produk as $produk) {
@@ -439,7 +439,7 @@ class BarangController extends Controller
 
     public function pilihProduk()
     {
-        $produk = Barang::where('id_warung', Auth::user()->id_warung)->get();
+        $produk = Barang::where('id_warung', Auth::user()->id_warung)->inRandomOrder()->get();
         $array  = array();
         foreach ($produk as $produks) {
             array_push($array, [
