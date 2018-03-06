@@ -1268,7 +1268,7 @@ public function edit_jumlah_tbs_pembelian(Request $request)
        public function importExcel(Request $request)
     {
         // validasi untuk memastikan file yang diupload adalah excel
-        $this->validate($request, ['excel' => 'required|mimes:xls,xlsx']);
+        $this->validate($request, ['excel' => 'required']);
         // ambil file yang baru diupload
         $excel = $request->file('excel');
         // baca sheet pertama
