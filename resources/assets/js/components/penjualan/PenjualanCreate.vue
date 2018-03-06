@@ -414,8 +414,6 @@
 
             <vue-simple-spinner v-if="loading"></vue-simple-spinner>
 
-            <div align="right"><pagination :data="tbsPenjualanData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
-
           </div>
         </div>
         <div class="col-md-3">
@@ -460,7 +458,6 @@ export default {
     return {
       errors: [],
       tbs_penjualan: [],
-      tbsPenjualanData : {},
       url : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
       urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan/download-excel"),
       url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
@@ -659,14 +656,11 @@ export default {
     }
     axios.get(app.url+'/view-tbs-penjualan?page='+page)
     .then(function (resp) {
-      app.tbs_penjualan = resp.data.data;
-      app.tbsPenjualanData = resp.data;
-      app.session = resp.data.session_id;
+      app.tbs_penjualan = resp.data
       app.loading = false;
       app.seen = true;      
       app.openSelectizeProduk();
       app.penjualan.kas = app.default_kas
-      $("#btnExcel").attr('href', app.urlDownloadExcel+'/'+resp.data.session_id);
       if (app.penjualan.subtotal == 0) { 
        app.getSubtotalTbs();
      }
@@ -685,8 +679,7 @@ export default {
     }
     axios.get(app.url+'/pencarian-tbs-penjualan?search='+app.pencarian+'&page='+page)
     .then(function (resp) {
-      app.tbs_penjualan = resp.data.data;
-      app.tbsPenjualanData = resp.data;
+      app.tbs_penjualan = resp.data;
       app.loading = false;
       app.seen = true;
     })
@@ -841,32 +834,33 @@ submitProdukPenjualan(value){
       }else{
 
         var subtotal = parseFloat(app.penjualan.subtotal) + parseFloat(resp.data.subtotal)
+
         function cekTbs(tbs) { 
           return tbs.id_tbs_penjualan === resp.data.id_tbs_penjualan;
         }
+
         var index = app.tbs_penjualan.findIndex(cekTbs)        
 
         if (index >= 0) {
           app.tbs_penjualan[index].jumlah_produk = resp.data.jumlah_produk
           app.tbs_penjualan[index].subtotal = resp.data.subtotalKeseluruhan
         }else{
-          app.tbs_penjualan.push(resp.data)
-          app.tbs_penjualan.sort(function (descending) {
-            return descending.id_tbs_penjualan;
-          });
-        }
 
-        app.alert("Menambahkan Produk "+nama_produk)   
-        app.openSelectizeProduk();
-        app.penjualan.subtotal = subtotal.toFixed(2)                        
-        app.penjualan.total_akhir  = subtotal.toFixed(2) 
-        app.potonganPersen()
-        app.inputTbsPenjualan.jumlah_produk = ''
-        app.inputTbsPenjualan.produk = ''
-        $("#modalJumlahProduk").hide();
-      }
+         app.tbs_penjualan.push(resp.data)
+         app.tbs_penjualan.sort(function (descending) {
+          return descending.id_tbs_penjualan;
+        });
 
-    })
+       }
+       app.penjualan.subtotal = subtotal.toFixed(2)                        
+       app.penjualan.total_akhir  = subtotal.toFixed(2) 
+       app.potonganPersen()
+       app.inputTbsPenjualan.jumlah_produk = ''
+       app.inputTbsPenjualan.produk = ''
+       $("#modalJumlahProduk").hide();
+     }
+
+   })
     .catch(function (resp) {
 
       console.log(resp);                  
