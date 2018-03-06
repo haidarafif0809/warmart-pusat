@@ -1354,8 +1354,6 @@ public function edit_jumlah_tbs_pembelian(Request $request)
                 'warung_id'         => $row['warung_id'],
                 'created_by'        => $row['created_by'],
                 'updated_by'         => $row['updated_by'],
-                'created_at'        => $row['created_at'],
-                'updated_at'         => $row['updated_at'],
             ]);
         }
         // Hitung Jumlah Produk Yang Diimport
