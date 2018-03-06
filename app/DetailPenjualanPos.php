@@ -469,4 +469,16 @@ class DetailPenjualanPos extends Model
         return $detail_penjualan_pos;
     }
 
+    // TOTAL PEJUALAN POS BULAN INI
+    public function scopeTotalPenjualan($query_total_penjualan, $dari_tanggal, $sampai_tanggal)
+    {
+        $query_total_penjualan = DetailPenjualanPos::select(DB::raw('SUM(subtotal) as total'))
+            ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($dari_tanggal))
+            ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($sampai_tanggal))
+            ->where('warung_id', Auth::user()->id_warung)
+            ->orderBy('created_at', 'desc');
+
+        return $query_total_penjualan;
+    }
+
 }

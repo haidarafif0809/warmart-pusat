@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Barang;
+use App\DetailPenjualan;
+use App\DetailPenjualanPos;
 use App\Error;
 use App\Hpp;
 use App\KategoriBarang;
@@ -13,6 +15,7 @@ use App\User;
 use App\UserWarung;
 use App\Warung;
 use Auth;
+use Carbon\Carbon;
 use DB;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
@@ -242,12 +245,20 @@ class HomeController extends Controller
         $user                  = Auth::user();
         $logo_toko             = UserWarung::find($user->id);
 
+        // PENJUALAN BULAN INI
+        $startDate = new Carbon('first day of this month');
+        $endDate   = new Carbon('last day of this month');
+
+        $penjualan_pos   = DetailPenjualanPos::totalPenjualan($startDate, $endDate)->first()->total;
+        $penjualan       = DetailPenjualan::totalPenjualan($startDate, $endDate)->first()->total;
+        $total_penjualan = $penjualan_pos + $penjualan;
+
         $response['produk_warung']    = $this->tandaPemisahTitik($produk_warung);
         $response['transaksi_kas']    = 'Rp ' . $this->tandaPemisahTitik($transaksi_kas->jumlah_kas);
         $response['kas_masuk']        = 'Rp ' . $this->tandaPemisahTitik($jumlah_kas_masuk->total_kas_masuk);
         $response['kas_keluar']       = 'Rp ' . $this->tandaPemisahTitik($jumlah_kas_keluar->total_kas_keluar);
-        $response['stok_masuk']       = $this->tandaPemisahTitik($stok_masuk->jumlah_item_masuk);
-        $response['stok_keluar']      = $this->tandaPemisahTitik($stok_keluar->jumlah_item_keluar);
+        $response['stok_masuk']       = 'Rp ' . $this->tandaPemisahTitik($total_penjualan);
+        $response['stok_keluar']      = 'Rp ' . $this->tandaPemisahTitik($penjualan);
         $response['total_persedian']  = 'Rp ' . $this->tandaPemisahTitik($total_persedian);
         $response['konfirmasi_admin'] = Auth::user()->konfirmasi_admin;
         $response['kasir_id']         = Auth::user()->kasir_id;
