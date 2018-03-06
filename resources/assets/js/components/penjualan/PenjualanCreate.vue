@@ -493,7 +493,7 @@ export default {
         maxOptions : 2,
         scrollDuration : 10,
         loadThrottle : 150,
-        openOnFocus : true
+        openOnFocus : false
       },
       placeholder_pelanggan: {
         placeholder: '--PILIH PELANGGAN (F4)--',
@@ -910,26 +910,29 @@ editJumlahProdukPenjualan(value,id,nama_produk,subtotal_lama){
     app.inputTbsPenjualan.id_tbs = id;
     app.inputTbsPenjualan.jumlah_produk = value;
     var newinputTbsPenjualan = app.inputTbsPenjualan;
-    app.loading = true;
     axios.post(app.url+'/edit-jumlah-tbs-penjualan', newinputTbsPenjualan)
     .then(function (resp) {
 
       var subtotal = (parseFloat(app.penjualan.subtotal) - parseFloat(subtotal_lama)) + parseFloat(resp.data.subtotal)
 
-      app.getResults()
+      function cekTbs(tbs) { 
+        return tbs.id_tbs_penjualan === id
+      }
+
+      var index = app.tbs_penjualan.findIndex(cekTbs) 
+      app.alert("Mengubah Jumlah Produk "+nama_produk);   
+      app.tbs_penjualan[index].jumlah_produk = resp.data.jumlah_produk
+      app.tbs_penjualan[index].subtotal = resp.data.subtotal
       app.penjualan.subtotal = subtotal.toFixed(2)
       app.penjualan.total_akhir = subtotal.toFixed(2)
       app.potonganPersen()
-      app.alert("Mengubah Jumlah Produk "+nama_produk)
-      app.loading = false;
       app.inputTbsPenjualan.jumlah_produk = ''
       app.inputTbsPenjualan.id_tbs = ''
 
     })
     .catch(function (resp) { 
 
-      console.log(resp);                  
-      app.loading = false;
+      console.log(resp);    
       alert("Tidak dapat Mengubah Jumlah Produk");
     });
   }
@@ -965,7 +968,6 @@ editPotonganProdukPenjualan(value,id,nama_produk,subtotal_lama){
   app.inputTbsPenjualan.potongan_produk = value;
   var newinputTbsPenjualan = app.inputTbsPenjualan;
 
-  app.loading = true;
   axios.post(app.url+'/edit-potongan-tbs-penjualan', newinputTbsPenjualan)
   .then(function (resp) {
 
@@ -974,25 +976,29 @@ editPotonganProdukPenjualan(value,id,nama_produk,subtotal_lama){
       app.$swal({
         text: "Tidak dapat Mengubah Potongan Produk, Periksa Kembali Inputan Anda!",
       });            
-      app.loading = false;
 
     }else if (resp.data.status == 1) {
 
       app.$swal({
         text: "Potongan Yang Anda Masukan Melebihi Subtotal!",
       });
-      app.loading = false;
 
     }else{
 
       var subtotal = (parseFloat(app.penjualan.subtotal) - parseFloat(subtotal_lama)) + parseFloat(resp.data.subtotal)
 
-      app.getResults()
+      function cekTbs(tbs) { 
+        return tbs.id_tbs_penjualan === id
+      }
+
+      var index = app.tbs_penjualan.findIndex(cekTbs)
+
+      app.alert("Mengubah Potongan Produk "+nama_produk)
+      app.tbs_penjualan[index].potongan = resp.data.potongan
+      app.tbs_penjualan[index].subtotal = resp.data.subtotal
       app.penjualan.subtotal = subtotal.toFixed(2)
       app.penjualan.total_akhir = subtotal.toFixed(2)           
       app.potonganPersen()
-      app.alert("Mengubah Potongan Produk "+nama_produk)
-      app.loading = false
       app.inputTbsPenjualan.potongan_produk = ''
       app.inputTbsPenjualan.id_tbs = ''
 
@@ -1001,9 +1007,8 @@ editPotonganProdukPenjualan(value,id,nama_produk,subtotal_lama){
 
   })
   .catch(function (resp) { 
-
-    console.log(resp);                  
-    app.loading = false;
+    console.log(resp);    
+    alert("Tidak dapat Mengubah Potongan Produk");
   });
 
 },
@@ -1031,23 +1036,26 @@ deleteEntry(id, index,nama_produk,subtotal_lama) {
 prosesDelete(id,nama_produk,subtotal_lama){
 
   var app = this;
-  app.loading = true;
   axios.delete(app.url+'/proses-hapus-tbs-penjualan/'+id)
   .then(function (resp) {
 
     if (resp.data == 0) {
 
       app.alertTbs("Produk "+nama_produk+" Gagal Dihapus!")
-      app.loading = false
 
     }else{
       var subtotal = parseFloat(app.penjualan.subtotal) - parseFloat(subtotal_lama)
-      app.getResults()
+
+      function cekTbs(tbs) { 
+        return tbs.id_tbs_penjualan === id
+      }
+
+      var index = app.tbs_penjualan.findIndex(cekTbs)
+      app.tbs_penjualan.splice(index,1)
       app.penjualan.subtotal = subtotal.toFixed(2)
       app.penjualan.total_akhir = subtotal.toFixed(2)
       app.potonganPersen()
       app.alert("Menghapus Produk "+nama_produk)
-      app.loading = false
       app.inputTbsPenjualan.id_tbs = ''  
       app.inputTbsPenjualan.produk = ''  
     }
@@ -1057,7 +1065,6 @@ prosesDelete(id,nama_produk,subtotal_lama){
   .catch(function (resp) {
 
     console.log(resp);
-    app.loading = false;
     alert("Tidak dapat Menghapus Produk "+nama_produk);
   });
 },
