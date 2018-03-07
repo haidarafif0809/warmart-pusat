@@ -490,7 +490,7 @@ export default {
       placeholder_produk: {
         placeholder: 'Cari Produk (F1) ...',
         sortField: 'text',
-        maxOptions : 2,
+        maxOptions : 8,
         scrollDuration : 10,
         loadThrottle : 150,
         openOnFocus : false
@@ -664,7 +664,11 @@ export default {
       app.openSelectizeProduk();
       app.penjualan.kas = app.default_kas
       if (app.penjualan.subtotal == 0) { 
-       app.getSubtotalTbs();
+       $.each(resp.data, function (i, item) {
+        app.penjualan.subtotal += parseFloat(resp.data[i].subtotal)
+        app.penjualan.total_akhir += parseFloat(resp.data[i].subtotal)
+        app.penjualan.kredit += parseFloat(resp.data[i].subtotal)
+      });
      }
    })
     .catch(function (resp) {
