@@ -412,8 +412,6 @@
 
             <vue-simple-spinner v-if="loading"></vue-simple-spinner>
 
-            <div align="right"><pagination :data="tbsPenjualanData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
-
           </div>
         </div>
         <div class="col-md-3">
@@ -459,7 +457,6 @@ export default {
     return {
       errors: [],
       tbs_penjualan: [],
-      tbsPenjualanData : {},
       url : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
       url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
       url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
@@ -499,56 +496,59 @@ export default {
         default_kas : 0
       },
       placeholder_produk: {
-        placeholder: 'Cari Produk (F1) ...',
-        sortField: 'text',
-        openOnFocus : true
-      },
-      placeholder_pelanggan: {
-        placeholder: '--PILIH PELANGGAN (F4)--',
-        sortField: 'text',
-        openOnFocus : true
-      },
-      placeholder_kas: {
-        placeholder: '--PILIH KAS--',
-        sortField: 'text',
-        openOnFocus : true
-      },
-      pencarian: '',
-      loading: true,
-      seen : false,
-      id_penjualan_pos : 0,
-      separator: {
-        decimal: ',',
-        thousands: '.',
-        prefix: '',
-        suffix: '',
-        precision: 2,
-        masked: false /* doesn't work with directive */
-      }
+       placeholder: 'Cari Produk (F1) ...',
+       sortField: 'text',
+       maxOptions : 8,
+       scrollDuration : 10,
+       loadThrottle : 150,
+       openOnFocus : false
+     },
+     placeholder_pelanggan: {
+      placeholder: '--PILIH PELANGGAN (F4)--',
+      sortField: 'text',
+      openOnFocus : true
+    },
+    placeholder_kas: {
+      placeholder: '--PILIH KAS--',
+      sortField: 'text',
+      openOnFocus : true
+    },
+    pencarian: '',
+    loading: true,
+    seen : false,
+    id_penjualan_pos : 0,
+    separator: {
+      decimal: ',',
+      thousands: '.',
+      prefix: '',
+      suffix: '',
+      precision: 2,
+      masked: false /* doesn't work with directive */
+    }
 
-    }
+  }
+},
+mounted() {   
+  var app = this;
+  app.$store.dispatch('LOAD_PRODUK_LIST')
+  app.$store.dispatch('LOAD_PELANGGAN_LIST')
+  app.$store.dispatch('LOAD_KAS_LIST')
+  app.getResults();
+  app.dataSettingPenjualanPos();
+  app.id_penjualan_pos = app.$route.params.id;
+},
+computed : mapState ({    
+  produk(){
+    return this.$store.state.produk
   },
-  mounted() {   
-    var app = this;
-    app.$store.dispatch('LOAD_PRODUK_LIST')
-    app.$store.dispatch('LOAD_PELANGGAN_LIST')
-    app.$store.dispatch('LOAD_KAS_LIST')
-    app.getResults();
-    app.dataSettingPenjualanPos();
-    app.id_penjualan_pos = app.$route.params.id;
+  pelanggan(){
+    return this.$store.getters.pelangganTransaksi
   },
-  computed : mapState ({    
-    produk(){
-      return this.$store.state.produk
-    },
-    pelanggan(){
-      return this.$store.getters.pelangganTransaksi
-    },
-    kas(){
-      return this.$store.state.kas
-    }
-  }),
-  watch: {
+  kas(){
+    return this.$store.state.kas
+  }
+}),
+watch: {
     // whenever question changes, this function will run
     pencarian: function (newQuestion) {
       this.getHasilPencarian()
@@ -655,8 +655,7 @@ export default {
     }
     axios.get(app.url+'/view-edit-tbs-penjualan/'+id+'?page='+page)
     .then(function (resp) {
-      app.tbs_penjualan = resp.data.data;
-      app.tbsPenjualanData = resp.data;
+      app.tbs_penjualan = resp.data;
       app.loading = false;
       app.seen = true;
       app.openSelectizeProduk();
@@ -832,40 +831,54 @@ submitProdukPenjualan(value){
 
     app.inputTbsPenjualan.jumlah_produk = value;
     var newinputTbsPenjualan = app.inputTbsPenjualan;
-    app.loading = true;
     axios.post(app.url+'/proses-tambah-edit-tbs-penjualan/'+id, newinputTbsPenjualan)
     .then(function (resp) {
 
      if (resp.data.harga_jual == 0 || resp.data.harga_jual == '') {
 
       app.alertTbs("Harga Produk "+nama_produk+" 0!");
-      app.loading = false;
       app.inputTbsPenjualan.jumlah_produk = ''
       app.inputTbsPenjualan.produk = ''
 
     }else if (resp.data == 0) {
 
       app.alertTbs("Produk "+nama_produk+" Sudah Ada, Silakan Pilih Produk Lain!");
-      app.loading = false;
       app.inputTbsPenjualan.jumlah_produk = ''
       app.inputTbsPenjualan.produk = ''
 
     }else{
 
       var subtotal = parseFloat(app.penjualan.subtotal) + parseFloat(resp.data.subtotal)
-      app.getResults();
-      app.penjualan.subtotal = subtotal.toFixed(2)                        
-      app.penjualan.total_akhir  = subtotal.toFixed(2) 
-      app.potonganPersen()
-      app.alert("Menambahkan Produk "+nama_produk)
-      app.loading = false
-      app.inputTbsPenjualan.jumlah_produk = ''
-      app.inputTbsPenjualan.produk = ''
-      $("#modalJumlahProduk").hide(); 
 
-    }
+      function cekTbs(tbs) { 
+        return tbs.id_edit_tbs_penjualans === resp.data.id_edit_tbs_penjualans;
+      }
 
-  })
+      var index = app.tbs_penjualan.findIndex(cekTbs)        
+
+      if (index >= 0) {
+        app.tbs_penjualan[index].jumlah_produk = resp.data.jumlah_produk
+        app.tbs_penjualan[index].subtotal = resp.data.subtotalKeseluruhan
+      }else{
+
+       app.tbs_penjualan.push(resp.data)
+       app.tbs_penjualan.sort(function (descending) {
+        return descending.id_edit_tbs_penjualans;
+      });
+
+     }
+     app.openSelectizeProduk()
+     
+     app.penjualan.subtotal = subtotal.toFixed(2)                        
+     app.penjualan.total_akhir  = subtotal.toFixed(2) 
+     app.potonganPersen()
+     app.inputTbsPenjualan.jumlah_produk = ''
+     app.inputTbsPenjualan.produk = ''
+     $("#modalJumlahProduk").hide(); 
+
+   }
+
+ })
     .catch(function (resp) {
 
       console.log(resp);                  

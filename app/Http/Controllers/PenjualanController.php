@@ -417,7 +417,7 @@ class PenjualanController extends Controller
     {
         $session_id    = session()->getId();
         $user_warung   = Auth::user()->id_warung;
-        $tbs_penjualan = EditTbsPenjualan::with(['produk'])->where('warung_id', $user_warung)->where('id_penjualan_pos', $id)->orderBy('id_edit_tbs_penjualans', 'desc')->paginate(10);
+        $tbs_penjualan = EditTbsPenjualan::with(['produk'])->where('warung_id', $user_warung)->where('id_penjualan_pos', $id)->orderBy('id_edit_tbs_penjualans', 'desc')->get();
         $array         = array();
 
         foreach ($tbs_penjualan as $tbs_penjualans) {
@@ -437,17 +437,15 @@ class PenjualanController extends Controller
                 'produk'                 => $tbs_penjualans->id_produk . "|" . $tbs_penjualans->NamaProduk . "|" . $tbs_penjualans->produk->harga_jual]);
         }
 
-        $url     = '/penjualan/view-edit-tbs-penjualan/' . $id;
-        $respons = $this->paginationData($tbs_penjualan, $array, $url);
 
-        return response()->json($respons);
+        return response()->json($array);
     }
 
     public function pencarianEditTbsPenjualan(Request $request, $id)
     {
         $session_id    = session()->getId();
         $user_warung   = Auth::user()->id_warung;
-        $tbs_penjualan = EditTbsPenjualan::Pencarian($user_warung, $id, $request)->paginate(10);
+        $tbs_penjualan = EditTbsPenjualan::Pencarian($user_warung, $id, $request)->get();
 
         $array = array();
         foreach ($tbs_penjualan as $tbs_penjualans) {
@@ -468,12 +466,7 @@ class PenjualanController extends Controller
             ]);
         }
 
-        $url    = '/penjualan/pencarian-edit-tbs-penjualan/' . $id;
-        $search = $request->search;
-
-        $respons = $this->paginationPencarianData($tbs_penjualan, $array, $url, $search);
-
-        return response()->json($respons);
+        return response()->json($array);
     }
 
     public function cekHargaProduk($produk)
@@ -870,7 +863,6 @@ public function edit($id)
         $detail_penjualan = EditTbsPenjualan::create([
             'session_id'       => $session_id,
             'id_penjualan_pos' => $id,
-            'no_faktur'        => $data_tbs->no_faktur,
             'id_produk'        => $data_tbs->id_produk,
             'satuan_id'        => $data_tbs->satuan_id,
             'jumlah_produk'    => $data_tbs->jumlah_produk,
@@ -1074,6 +1066,7 @@ public function prosesTambahEditTbsPenjualan(Request $request, $id)
 {
     $produk     = explode("|", $request->produk);
     $id_produk  = $produk[0];
+    $nama_produk  = $produk[1];
     $satuan_id  = $produk[4];
     $session_id = session()->getId();
 
@@ -1100,7 +1093,10 @@ public function prosesTambahEditTbsPenjualan(Request $request, $id)
 
             $subtotal = $request->jumlah_produk * $data_tbs->first()->harga_produk;
 
-            $respons['subtotal'] = $subtotal;
+            $respons['id_edit_tbs_penjualans']    = $data_tbs->first()->id_edit_tbs_penjualans;
+            $respons['jumlah_produk']       = $jumlah_produk;
+            $respons['subtotal']            = $subtotal;
+            $respons['subtotalKeseluruhan'] = $subtotal_edit;
             return response()->json($respons);
 
         } else {
@@ -1108,7 +1104,6 @@ public function prosesTambahEditTbsPenjualan(Request $request, $id)
             $subtotal     = $request->jumlah_produk * $harga_jual;
             $tbspenjualan = EditTbsPenjualan::create([
                 'id_penjualan_pos' => $id,
-                'no_faktur'        => $penjualan->no_faktur,
                 'session_id'       => $session_id,
                 'satuan_id'        => $satuan_id,
                 'id_produk'        => $id_produk,
@@ -1118,7 +1113,16 @@ public function prosesTambahEditTbsPenjualan(Request $request, $id)
                 'warung_id'        => Auth::user()->id_warung,
             ]);
 
+            $respons['id_edit_tbs_penjualans'] = $tbspenjualan->id_edit_tbs_penjualans;
+            $respons['id_penjualan_pos'] = $id;
+            $respons['nama_produk'] = $nama_produk;
+            $respons['kode_produk'] = $tbspenjualan->produk->kode_barang;
+            $respons['satuan'] = $tbspenjualan->produk->satuan->nama_satuan;
+            $respons['jumlah_produk'] = $request->jumlah_produk;
+            $respons['harga_produk'] = $harga_jual;
+            $respons['potongan'] = 0;
             $respons['subtotal'] = $subtotal;
+            $respons['produk'] = $id_produk . "|" . $nama_produk . "|" . $harga_jual;
 
             return response()->json($respons);
         }
