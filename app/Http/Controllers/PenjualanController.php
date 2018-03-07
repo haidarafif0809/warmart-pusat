@@ -645,12 +645,8 @@ class PenjualanController extends Controller
 
     public function cekDataTbsPenjualan($id)
     {
-        $user_warung         = Auth::user()->id_warung;
-        $TbsPenjualan        = new EditTbsPenjualan();
-        $subtotal            = $TbsPenjualan->subtotalTbs($user_warung, $id);
-        $respons['subtotal'] = $subtotal;
+      
         return response()->json([
-            "subtotal"  => $subtotal,
             "penjualan" => PenjualanPos::find($id)->toArray(),
         ]);
     }
@@ -1170,6 +1166,8 @@ public function prosesEditPotonganEditTbsPenjualan(Request $request)
 
         $tbs_penjualan->update(['potongan' => $potongan_produk, 'subtotal' => $subtotal]);
 
+        $potongan = $this->tampilPotongan($potongan_produk, $tbs_penjualan->jumlah_produk, $tbs_penjualan->harga_produk);
+        $respons['potongan'] = $potongan;
         $respons['subtotal'] = $subtotal;
 
         return response()->json($respons);
