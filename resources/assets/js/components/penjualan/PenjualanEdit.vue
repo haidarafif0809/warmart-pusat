@@ -412,8 +412,6 @@
 
             <vue-simple-spinner v-if="loading"></vue-simple-spinner>
 
-            <div align="right"><pagination :data="tbsPenjualanData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
-
           </div>
         </div>
         <div class="col-md-3">
@@ -459,7 +457,6 @@ export default {
     return {
       errors: [],
       tbs_penjualan: [],
-      tbsPenjualanData : {},
       url : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
       url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
       url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
@@ -499,56 +496,59 @@ export default {
         default_kas : 0
       },
       placeholder_produk: {
-        placeholder: 'Cari Produk (F1) ...',
-        sortField: 'text',
-        openOnFocus : true
-      },
-      placeholder_pelanggan: {
-        placeholder: '--PILIH PELANGGAN (F4)--',
-        sortField: 'text',
-        openOnFocus : true
-      },
-      placeholder_kas: {
-        placeholder: '--PILIH KAS--',
-        sortField: 'text',
-        openOnFocus : true
-      },
-      pencarian: '',
-      loading: true,
-      seen : false,
-      id_penjualan_pos : 0,
-      separator: {
-        decimal: ',',
-        thousands: '.',
-        prefix: '',
-        suffix: '',
-        precision: 2,
-        masked: false /* doesn't work with directive */
-      }
+       placeholder: 'Cari Produk (F1) ...',
+       sortField: 'text',
+       maxOptions : 8,
+       scrollDuration : 10,
+       loadThrottle : 150,
+       openOnFocus : false
+     },
+     placeholder_pelanggan: {
+      placeholder: '--PILIH PELANGGAN (F4)--',
+      sortField: 'text',
+      openOnFocus : true
+    },
+    placeholder_kas: {
+      placeholder: '--PILIH KAS--',
+      sortField: 'text',
+      openOnFocus : true
+    },
+    pencarian: '',
+    loading: true,
+    seen : false,
+    id_penjualan_pos : 0,
+    separator: {
+      decimal: ',',
+      thousands: '.',
+      prefix: '',
+      suffix: '',
+      precision: 2,
+      masked: false /* doesn't work with directive */
+    }
 
-    }
+  }
+},
+mounted() {   
+  var app = this;
+  app.$store.dispatch('LOAD_PRODUK_LIST')
+  app.$store.dispatch('LOAD_PELANGGAN_LIST')
+  app.$store.dispatch('LOAD_KAS_LIST')
+  app.getResults();
+  app.dataSettingPenjualanPos();
+  app.id_penjualan_pos = app.$route.params.id;
+},
+computed : mapState ({    
+  produk(){
+    return this.$store.state.produk
   },
-  mounted() {   
-    var app = this;
-    app.$store.dispatch('LOAD_PRODUK_LIST')
-    app.$store.dispatch('LOAD_PELANGGAN_LIST')
-    app.$store.dispatch('LOAD_KAS_LIST')
-    app.getResults();
-    app.dataSettingPenjualanPos();
-    app.id_penjualan_pos = app.$route.params.id;
+  pelanggan(){
+    return this.$store.getters.pelangganTransaksi
   },
-  computed : mapState ({    
-    produk(){
-      return this.$store.state.produk
-    },
-    pelanggan(){
-      return this.$store.getters.pelangganTransaksi
-    },
-    kas(){
-      return this.$store.state.kas
-    }
-  }),
-  watch: {
+  kas(){
+    return this.$store.state.kas
+  }
+}),
+watch: {
     // whenever question changes, this function will run
     pencarian: function (newQuestion) {
       this.getHasilPencarian()
@@ -655,13 +655,18 @@ export default {
     }
     axios.get(app.url+'/view-edit-tbs-penjualan/'+id+'?page='+page)
     .then(function (resp) {
-      app.tbs_penjualan = resp.data.data;
-      app.tbsPenjualanData = resp.data;
+      app.tbs_penjualan = resp.data;
       app.loading = false;
       app.seen = true;
       app.openSelectizeProduk();
 
-      if (app.penjualan.subtotal == 0) {     
+      if (app.penjualan.subtotal == 0) {   
+
+       $.each(resp.data, function (i, item) {
+         app.penjualan.subtotal += parseFloat(resp.data[i].subtotal)
+         app.penjualan.total_akhir += parseFloat(resp.data[i].subtotal)
+         app.penjualan.kredit += parseFloat(resp.data[i].subtotal)
+       });
        app.getDataPenjualan();
      }
 
@@ -698,10 +703,6 @@ export default {
     var id = app.$route.params.id;
     axios.get(app.url+'/cek-data-tbs-penjualan/'+id)
     .then(function (resp) {
-
-     app.penjualan.subtotal += parseFloat(resp.data.subtotal)
-     app.penjualan.total_akhir += parseFloat(resp.data.subtotal)
-     app.penjualan.kredit += parseFloat(resp.data.subtotal)
 
      app.penjualan.pelanggan = resp.data.penjualan.pelanggan_id
      app.penjualan.kas = resp.data.penjualan.id_kas
@@ -832,40 +833,54 @@ submitProdukPenjualan(value){
 
     app.inputTbsPenjualan.jumlah_produk = value;
     var newinputTbsPenjualan = app.inputTbsPenjualan;
-    app.loading = true;
     axios.post(app.url+'/proses-tambah-edit-tbs-penjualan/'+id, newinputTbsPenjualan)
     .then(function (resp) {
 
      if (resp.data.harga_jual == 0 || resp.data.harga_jual == '') {
 
       app.alertTbs("Harga Produk "+nama_produk+" 0!");
-      app.loading = false;
       app.inputTbsPenjualan.jumlah_produk = ''
       app.inputTbsPenjualan.produk = ''
 
     }else if (resp.data == 0) {
 
       app.alertTbs("Produk "+nama_produk+" Sudah Ada, Silakan Pilih Produk Lain!");
-      app.loading = false;
       app.inputTbsPenjualan.jumlah_produk = ''
       app.inputTbsPenjualan.produk = ''
 
     }else{
 
       var subtotal = parseFloat(app.penjualan.subtotal) + parseFloat(resp.data.subtotal)
-      app.getResults();
-      app.penjualan.subtotal = subtotal.toFixed(2)                        
-      app.penjualan.total_akhir  = subtotal.toFixed(2) 
-      app.potonganPersen()
-      app.alert("Menambahkan Produk "+nama_produk)
-      app.loading = false
-      app.inputTbsPenjualan.jumlah_produk = ''
-      app.inputTbsPenjualan.produk = ''
-      $("#modalJumlahProduk").hide(); 
 
-    }
+      function cekTbs(tbs) { 
+        return tbs.id_edit_tbs_penjualans === resp.data.id_edit_tbs_penjualans;
+      }
 
-  })
+      var index = app.tbs_penjualan.findIndex(cekTbs)        
+
+      if (index >= 0) {
+        app.tbs_penjualan[index].jumlah_produk = resp.data.jumlah_produk
+        app.tbs_penjualan[index].subtotal = resp.data.subtotalKeseluruhan
+      }else{
+
+       app.tbs_penjualan.push(resp.data)
+       app.tbs_penjualan.sort(function (descending) {
+        return descending.id_edit_tbs_penjualans;
+      });
+
+     }
+     app.openSelectizeProduk()
+
+     app.penjualan.subtotal = subtotal.toFixed(2)                        
+     app.penjualan.total_akhir  = subtotal.toFixed(2) 
+     app.potonganPersen()
+     app.inputTbsPenjualan.jumlah_produk = ''
+     app.inputTbsPenjualan.produk = ''
+     $("#modalJumlahProduk").hide(); 
+
+   }
+
+ })
     .catch(function (resp) {
 
       console.log(resp);                  
@@ -912,26 +927,29 @@ editJumlahProdukPenjualan(value,id,nama_produk,subtotal_lama){
     app.inputTbsPenjualan.id_tbs = id;
     app.inputTbsPenjualan.jumlah_produk = value;
     var newinputTbsPenjualan = app.inputTbsPenjualan;
-    app.loading = true;
     axios.post(app.url+'/edit-jumlah-edit-tbs-penjualan', newinputTbsPenjualan)
     .then(function (resp) {
 
       var subtotal = (parseFloat(app.penjualan.subtotal) - parseFloat(subtotal_lama)) + parseFloat(resp.data.subtotal)
+      function cekTbs(tbs) { 
+        return tbs.id_edit_tbs_penjualans === id
+      }
 
-      app.getResults()
+      var index = app.tbs_penjualan.findIndex(cekTbs) 
+
+      app.tbs_penjualan[index].jumlah_produk = app.inputTbsPenjualan.jumlah_produk
+      app.tbs_penjualan[index].subtotal = resp.data.subtotal      
       app.penjualan.subtotal = subtotal.toFixed(2)
       app.penjualan.total_akhir = subtotal.toFixed(2)
       app.potonganPersen()
       app.alert("Mengubah Jumlah Produk "+nama_produk)
-      app.loading = false;
       app.inputTbsPenjualan.jumlah_produk = ''
       app.inputTbsPenjualan.id_tbs = ''
 
     })
     .catch(function (resp) { 
 
-      console.log(resp);                  
-      app.loading = false;
+      console.log(resp);     
       alert("Tidak dapat Mengubah Jumlah Produk");
     });
   }
@@ -967,7 +985,6 @@ editPotonganProdukPenjualan(value,id,nama_produk,subtotal_lama){
   app.inputTbsPenjualan.potongan_produk = value;
   var newinputTbsPenjualan = app.inputTbsPenjualan;
 
-  app.loading = true;
   axios.post(app.url+'/edit-potongan-edit-tbs-penjualan', newinputTbsPenjualan)
   .then(function (resp) {
 
@@ -976,25 +993,28 @@ editPotonganProdukPenjualan(value,id,nama_produk,subtotal_lama){
       app.$swal({
         text: "Tidak dapat Mengubah Potongan Produk, Periksa Kembali Inputan Anda!",
       });            
-      app.loading = false;
 
     }else if (resp.data.status == 1) {
 
       app.$swal({
         text: "Potongan Yang Anda Masukan Melebihi Subtotal!",
       });
-      app.loading = false;
 
     }else{
 
       var subtotal = (parseFloat(app.penjualan.subtotal) - parseFloat(subtotal_lama)) + parseFloat(resp.data.subtotal)
+      function cekTbs(tbs) { 
+        return tbs.id_edit_tbs_penjualans === id
+      }
 
-      app.getResults()
+      var index = app.tbs_penjualan.findIndex(cekTbs)
+
+      app.tbs_penjualan[index].potongan = resp.data.potongan
+      app.tbs_penjualan[index].subtotal = resp.data.subtotal
       app.penjualan.subtotal = subtotal.toFixed(2)
       app.penjualan.total_akhir = subtotal.toFixed(2)
       app.potonganPersen()
       app.alert("Mengubah Potongan Produk "+nama_produk)
-      app.loading = false
       app.inputTbsPenjualan.potongan_produk = ''
       app.inputTbsPenjualan.id_tbs = ''
 
@@ -1033,23 +1053,26 @@ deleteEntry(id, index,nama_produk,subtotal_lama) {
 prosesDelete(id,nama_produk,subtotal_lama){
 
   var app = this;
-  app.loading = true;
   axios.delete(app.url+'/proses-hapus-edit-tbs-penjualan/'+id)
   .then(function (resp) {
 
     if (resp.data == 0) {
 
       app.alertTbs("Produk "+nama_produk+" Gagal Dihapus!")
-      app.loading = false
+
 
     }else{
       var subtotal = parseFloat(app.penjualan.subtotal) - parseFloat(subtotal_lama)
-      app.getResults()
+      function cekTbs(tbs) { 
+        return tbs.id_edit_tbs_penjualans === id
+      }
+
+      var index = app.tbs_penjualan.findIndex(cekTbs)
+      app.tbs_penjualan.splice(index,1)
       app.penjualan.subtotal = subtotal.toFixed(2)
       app.penjualan.total_akhir = subtotal.toFixed(2)
       app.potonganPersen()
       app.alert("Menghapus Produk "+nama_produk)
-      app.loading = false
       app.inputTbsPenjualan.id_tbs = ''  
     }
 
