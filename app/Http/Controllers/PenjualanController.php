@@ -204,6 +204,54 @@ class PenjualanController extends Controller
         return response()->json($respons);
     }
 
+        public function viewFilter(Request $request)
+    {
+        $user_warung = Auth::user()->id_warung;
+        $penjualan   = PenjualanPos::with(['pelanggan', 'kas', 'user_edit', 'user_buat'])
+        ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+        ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+        ->where('warung_id', $user_warung)->orderBy('id', 'desc')->paginate(10);
+        $array       = array();
+
+        foreach ($penjualan as $penjualans) {
+
+            if ($penjualans->pelanggan_id == '0') {
+                $pelanggan = 'Umum';
+            } else {
+                $pelanggan = $penjualans->pelanggan->name;
+            }
+
+            array_push($array, [
+                'id'               => $penjualans->id,
+                'waktu'            => $penjualans->Waktu,
+                'pelanggan'        => $pelanggan,
+                'status_penjualan' => $penjualans->status_penjualan,
+                'total'            => $penjualans->TotalJual,
+                'kas'              => $penjualans->kas->nama_kas,
+                'potongan'         => $penjualans->PotonganJual,
+                'tunai'            => $penjualans->TunaiJual,
+                'kembalian'        => $penjualans->KembalianJual,
+                'piutang'          => $penjualans->KreditJual,
+                'jatuh_tempo'      => $penjualans->JatuhTempo,
+                'user_buat'        => $penjualans->user_buat->name,
+                'user_edit'        => $penjualans->user_edit->name,
+                'waktu_edit'       => $penjualans->WaktuEdit,
+            ]);
+        }
+
+        $url     = '/penjualan/view-filter';
+        $respons = $this->paginationData($penjualan, $array, $url);
+
+        return response()->json($respons);
+    }
+
+       public function tanggalSql($tangal)
+    {
+        $date        = date_create($tangal);
+        $date_format = date_format($date, "Y-m-d");
+        return $date_format;
+    }
+
     public function pencarian(Request $request)
     {
         $user_warung = Auth::user()->id_warung;

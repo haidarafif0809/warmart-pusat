@@ -27,7 +27,7 @@
 	    							color-classes: "nav-pills-primary", "nav-pills-info", "nav-pills-success", "nav-pills-warning","nav-pills-danger"
 	    						-->
 	    						<li class="active">
-	    							<a href="#penjualan_pos" role="tab" data-toggle="tab" style="margin-left:10px;">
+	    							<a href="#penjualan_pos" role="tab" data-toggle="tab" style="margin-left:10px;" v-on:click="getResults()">
 	    								Penjualan POS
 	    							</a>
 	    						</li>
@@ -43,17 +43,32 @@
 
 	    							<div class="table-responsive" style="margin-right:10px; margin-left:10px;">
 	    							
-	    							<div class="row">
-					                  <div class="form-group col-md-2">
-					                    <datepicker :input-class="'form-control'" placeholder="Dari tanggal" v-model="filter.dari_tanggal" name="dari_tanggal" v-bind:id="'dari_tanggal'"></datepicker>
-					                  </div>
-					                  <div class="form-group col-md-2">
-					                    <datepicker :input-class="'form-control'" placeholder="Sampai tanggal" v-model="filter.sampai_tanggal" name="sampai_tanggal" v-bind:id="'sampai_tanggal'"></datepicker>
-					                  </div>
-					                  <div class="form-group col-md-4">
-					                    <button class="btn btn-primary" id="btnSubmit" type="submit" style="margin: 0px 0px;" ><i class="material-icons">search</i> Cari</button>
-					                  </div>
-					                </div>
+	    					 <div class="col-md-2 col-xs-12">
+		                        <div class="panel panel-default">
+		                            <button id="btnFilter" class="btn btn-info collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" v-shortkey="['f2']" @shortkey="filterPeriode()" @click="filterPeriode()">
+		                                <i class="material-icons">date_range</i> Filter Periode (F2)
+		                            </button>
+		                        </div>
+		                    </div>
+
+                  		  <div class="col-md-12 col-xs-12">
+		                        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+		                            <div class="panel-body">
+		                                <div class="row">
+		                                    <div class="form-group col-md-2">
+		                                        <datepicker :input-class="'form-control'" placeholder="Dari Tanggal" v-model="filter.dari_tanggal" name="dari_tanggal" v-bind:id="'dari_tanggal'"></datepicker>             
+		                                    </div>
+		                                    <div class="form-group col-md-2">
+		                                        <datepicker :input-class="'form-control'" placeholder="Sampai Tanggal" v-model="filter.sampai_tanggal" name="sampai_tanggal" v-bind:id="'sampai_tanggal'"></datepicker>
+		                                    </div>
+
+		                                    <div class="col-md-2">
+		                                        <button class="btn btn-primary" id="btnSubmit" type="submit" style="margin: 0px 0px;" @click="submitLaporanPenjualan()"><i class="material-icons">search</i> Cari</button>
+		                                    </div>
+		                                </div>
+		                            </div>
+		                        </div>
+		                    </div>
 
 	    								<div class="pencarian">
 	    									<input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="" ref="pencarian">
@@ -317,6 +332,31 @@
 			}
 		},
 		methods: {
+			submitLaporanPenjualan(){
+			var app = this;
+			app.prosesLaporan();
+			},
+			prosesLaporan(page) {
+				var app = this;	
+				var newFilter = app.filter;
+				if (typeof page === 'undefined') {
+					page = 1;
+				}
+				app.loading = true
+				axios.post(app.url+'/view-filter?page='+page, newFilter)
+				.then(function (resp) {
+					app.penjualan = resp.data.data;
+					app.penjualanData = resp.data;
+					app.loading = false
+					app.seen = true
+					console.log(resp.data.data);
+				})
+				.catch(function (resp) {
+					// console.log(resp);
+					alert("Tidak Dapat Memuat Laporan hutang beredar");
+				});
+			},
+
 			getResults(page) {
 				var app = this; 
 				if (typeof page === 'undefined') {
@@ -461,6 +501,10 @@
 			closeModal(){
 				$("#modal_detail_transaksi").hide();
 			},
+			filterPeriode(){
+                $("#btnFilter").click();
+                this.getResults();
+            },
 			alert(pesan) {
 				this.$swal({
 					title: "Berhasil ",
