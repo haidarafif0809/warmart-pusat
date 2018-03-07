@@ -39,8 +39,22 @@
 	    					</ul>
 	    					<div class="tab-content tab-space" style="margin-top:5px;margin-bottom:5px;">
 	    						<div class="tab-pane active" id="penjualan_pos"  style="margin-top:5px;margin-bottom:5px;">
+	    						
 
 	    							<div class="table-responsive" style="margin-right:10px; margin-left:10px;">
+	    							
+	    							<div class="row">
+					                  <div class="form-group col-md-2">
+					                    <datepicker :input-class="'form-control'" placeholder="Dari tanggal" v-model="filter.dari_tanggal" name="dari_tanggal" v-bind:id="'dari_tanggal'"></datepicker>
+					                  </div>
+					                  <div class="form-group col-md-2">
+					                    <datepicker :input-class="'form-control'" placeholder="Sampai tanggal" v-model="filter.sampai_tanggal" name="sampai_tanggal" v-bind:id="'sampai_tanggal'"></datepicker>
+					                  </div>
+					                  <div class="form-group col-md-4">
+					                    <button class="btn btn-primary" id="btnSubmit" type="submit" style="margin: 0px 0px;" ><i class="material-icons">search</i> Cari</button>
+					                  </div>
+					                </div>
+
 	    								<div class="pencarian">
 	    									<input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="" ref="pencarian">
 	    								</div>
@@ -261,7 +275,11 @@
 	    			seen : false,  
 	    			pencarianOnline: '',
 	    			loadingOnline: true,
-	    			seenOnline : false,  
+	    			seenOnline : false,
+	    			 filter: {
+				          dari_tanggal: '',
+				          sampai_tanggal: new Date(),
+				        },  
 	    			penjualan_pos :{
 	    				id_penjualan_pos : 0,
 	    				kas : '',
@@ -281,7 +299,10 @@
 	    	},
 	    	mounted() {   
 	    		var app = this;
-	    		app.getResults();		
+	    		app.getResults();
+	    		var awal_tanggal = new Date();
+      			awal_tanggal.setDate(1);
+      			app.filter.dari_tanggal = awal_tanggal;		
 	    	},
 	    	watch: {
 			// whenever question changes, this function will run
