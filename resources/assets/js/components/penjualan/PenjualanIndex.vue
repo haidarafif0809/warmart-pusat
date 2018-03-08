@@ -27,7 +27,7 @@
 	    							color-classes: "nav-pills-primary", "nav-pills-info", "nav-pills-success", "nav-pills-warning","nav-pills-danger"
 	    						-->
 	    						<li class="active">
-	    							<a href="#penjualan_pos" role="tab" data-toggle="tab" style="margin-left:10px;">
+	    							<a href="#penjualan_pos" role="tab" data-toggle="tab" style="margin-left:10px;" v-on:click="getResults()">
 	    								Penjualan POS
 	    							</a>
 	    						</li>
@@ -39,8 +39,37 @@
 	    					</ul>
 	    					<div class="tab-content tab-space" style="margin-top:5px;margin-bottom:5px;">
 	    						<div class="tab-pane active" id="penjualan_pos"  style="margin-top:5px;margin-bottom:5px;">
+	    						
 
 	    							<div class="table-responsive" style="margin-right:10px; margin-left:10px;">
+	    							
+	    					 <div class="col-md-2 col-xs-12">
+		                        <div class="panel panel-default">
+		                            <button id="btnFilter" class="btn btn-info collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" v-shortkey="['f2']" @shortkey="filterPeriode()" @click="filterPeriode()">
+		                                <i class="material-icons">date_range</i> Filter Periode (F2)
+		                            </button>
+		                        </div>
+		                    </div>
+
+                  		  <div class="col-md-12 col-xs-12">
+		                        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+		                            <div class="panel-body">
+		                                <div class="row">
+		                                    <div class="form-group col-md-2">
+		                                        <datepicker :input-class="'form-control'" placeholder="Dari Tanggal" v-model="filter.dari_tanggal" name="dari_tanggal" v-bind:id="'dari_tanggal'"></datepicker>             
+		                                    </div>
+		                                    <div class="form-group col-md-2">
+		                                        <datepicker :input-class="'form-control'" placeholder="Sampai Tanggal" v-model="filter.sampai_tanggal" name="sampai_tanggal" v-bind:id="'sampai_tanggal'"></datepicker>
+		                                    </div>
+
+		                                    <div class="col-md-2">
+		                                        <button class="btn btn-primary" id="btnSubmit" type="submit" style="margin: 0px 0px;" @click="submitLaporanPenjualan()"><i class="material-icons">search</i> Cari</button>
+		                                    </div>
+		                                </div>
+		                            </div>
+		                        </div>
+		                    </div>
+
 	    								<div class="pencarian">
 	    									<input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="" ref="pencarian">
 	    								</div>
@@ -103,6 +132,15 @@
 	    											<td align="right"> {{ penjualan.total }}</td>
 	    											
 	    										</tr>
+	    										<tr style="color:red">
+												<td>TOTAL</td>
+												<td></td>
+												<td></td>
+												<td></td>
+												<td></td>
+												<td></td>
+												<td align="right">{{ dataLaporanPenjualan.total_penjualan }}</td>
+											</tr>
 	    									</tbody>                    
 	    									<tbody class="data-tidak-ada" v-else>
 	    										<tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
@@ -150,6 +188,7 @@
 	    												Detail </router-link> 
 	    											</td>
 	    										</tr>
+
 	    									</tbody>                    
 	    									<tbody class="data-tidak-ada" v-else>
 	    										<tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
@@ -250,6 +289,7 @@
 	    export default {
 	    	data: function () {
 	    		return {
+	    			dataLaporanPenjualan:{},
 	    			errors: [],
 	    			penjualan: [],
 	    			penjualanData : {},
@@ -261,7 +301,11 @@
 	    			seen : false,  
 	    			pencarianOnline: '',
 	    			loadingOnline: true,
-	    			seenOnline : false,  
+	    			seenOnline : false,
+	    			 filter: {
+				          dari_tanggal: '',
+				          sampai_tanggal: new Date(),
+				        },  
 	    			penjualan_pos :{
 	    				id_penjualan_pos : 0,
 	    				kas : '',
@@ -281,8 +325,20 @@
 	    	},
 	    	mounted() {   
 	    		var app = this;
-	    		app.getResults();		
+	    		app.getResults();
+	    		app.totalPenjualan();
+	    		var awal_tanggal = new Date();
+      			awal_tanggal.setDate(1);
+      			app.filter.dari_tanggal = awal_tanggal;		
 	    	},
+	    	filters: {
+				pemisahTitik: function (value) {
+					var angka = [value];
+					var numberFormat = new Intl.NumberFormat('es-ES');
+					var formatted = angka.map(numberFormat.format);
+					return formatted.join('; ');
+				}
+			},
 	    	watch: {
 			// whenever question changes, this function will run
 			pencarian: function (newQuestion) {
@@ -296,6 +352,32 @@
 			}
 		},
 		methods: {
+			submitLaporanPenjualan(){
+			var app = this;
+			app.prosesLaporan();
+			app.totalPenjualanFilter();
+			},
+			prosesLaporan(page) {
+				var app = this;	
+				var newFilter = app.filter;
+				if (typeof page === 'undefined') {
+					page = 1;
+				}
+				app.loading = true
+				axios.post(app.url+'/view-filter?page='+page, newFilter)
+				.then(function (resp) {
+					app.penjualan = resp.data.data;
+					app.penjualanData = resp.data;
+					app.loading = false
+					app.seen = true
+					console.log(resp.data.data);
+				})
+				.catch(function (resp) {
+					// console.log(resp);
+					alert("Tidak Dapat Memuat Laporan penjualan");
+				});
+			},
+
 			getResults(page) {
 				var app = this; 
 				if (typeof page === 'undefined') {
@@ -315,6 +397,36 @@
 					app.seen = true;
 					alert("Tidak Dapat Memuat Penjualan");
 				});
+			},
+			totalPenjualan() {
+					var app = this;	
+					var newFilter = app.filter;
+					app.loading = true,
+					axios.post(app.url+'/total-laporan-penjualan')
+					.then(function (resp) {
+						app.dataLaporanPenjualan = resp.data;
+						app.loading = false
+						console.log(resp.data);    			
+					})
+					.catch(function (resp) {
+						// console.log(resp);
+						alert("Tidak Dapat Memuat Total penjualan");
+					});
+			}, 
+			totalPenjualanFilter() {
+					var app = this;	
+					var newFilter = app.filter;
+					app.loading = true,
+					axios.post(app.url+'/total-laporan-penjualan-filter',newFilter)
+					.then(function (resp) {
+						app.dataLaporanPenjualan = resp.data;
+						app.loading = false
+						console.log(resp.data);    			
+					})
+					.catch(function (resp) {
+						// console.log(resp);
+						alert("Tidak Dapat Memuat Total penjualan");
+					});
 			}, 
 			getHasilPencarian(page){
 				var app = this;
@@ -440,6 +552,11 @@
 			closeModal(){
 				$("#modal_detail_transaksi").hide();
 			},
+			filterPeriode(){
+                $("#btnFilter").click();
+                this.getResults();
+                this.totalPenjualan();
+            },
 			alert(pesan) {
 				this.$swal({
 					title: "Berhasil ",
