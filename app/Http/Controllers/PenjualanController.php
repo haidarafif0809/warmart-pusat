@@ -204,6 +204,40 @@ class PenjualanController extends Controller
         return response()->json($respons);
     }
 
+
+            public function totalLaporanPenjualan()
+    {
+        // TOTAL KESELURUHAN
+        $user_warung = Auth::user()->id_warung;
+        $penjualan   = PenjualanPos::with(['pelanggan', 'kas', 'user_edit', 'user_buat'])
+        ->where('warung_id', $user_warung)->orderBy('id', 'desc')->get();
+
+        $total_penjualan = 0;
+        foreach ($penjualan as $penjualans) {
+                $total_penjualan += $penjualans->total;
+        } 
+        $respons['total_penjualan']  =  number_format($total_penjualan, 2, ',', '.'); 
+
+        return response()->json($respons);
+    }
+
+    public function totalLaporanPenjualanFilter(Request $request){
+        // TOTAL KESELURUHAN
+        $user_warung = Auth::user()->id_warung;
+        $penjualan   = PenjualanPos::with(['pelanggan', 'kas', 'user_edit', 'user_buat'])
+        ->where('warung_id', $user_warung)
+        ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+        ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))->get();
+
+        $total_penjualan = 0;
+        foreach ($penjualan as $penjualans) {
+                $total_penjualan += $penjualans->total;
+        } 
+        $respons['total_penjualan']  =  number_format($total_penjualan, 2, ',', '.'); 
+
+        return response()->json($respons);
+    }
+
         public function viewFilter(Request $request)
     {
         $user_warung = Auth::user()->id_warung;

@@ -132,6 +132,15 @@
 	    											<td align="right"> {{ penjualan.total }}</td>
 	    											
 	    										</tr>
+	    										<tr style="color:red">
+												<td>TOTAL</td>
+												<td></td>
+												<td></td>
+												<td></td>
+												<td></td>
+												<td></td>
+												<td align="right">{{ dataLaporanPenjualan.total_penjualan }}</td>
+											</tr>
 	    									</tbody>                    
 	    									<tbody class="data-tidak-ada" v-else>
 	    										<tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
@@ -179,6 +188,7 @@
 	    												Detail </router-link> 
 	    											</td>
 	    										</tr>
+
 	    									</tbody>                    
 	    									<tbody class="data-tidak-ada" v-else>
 	    										<tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
@@ -279,6 +289,7 @@
 	    export default {
 	    	data: function () {
 	    		return {
+	    			dataLaporanPenjualan:{},
 	    			errors: [],
 	    			penjualan: [],
 	    			penjualanData : {},
@@ -315,10 +326,19 @@
 	    	mounted() {   
 	    		var app = this;
 	    		app.getResults();
+	    		app.totalPenjualan();
 	    		var awal_tanggal = new Date();
       			awal_tanggal.setDate(1);
       			app.filter.dari_tanggal = awal_tanggal;		
 	    	},
+	    	filters: {
+				pemisahTitik: function (value) {
+					var angka = [value];
+					var numberFormat = new Intl.NumberFormat('es-ES');
+					var formatted = angka.map(numberFormat.format);
+					return formatted.join('; ');
+				}
+			},
 	    	watch: {
 			// whenever question changes, this function will run
 			pencarian: function (newQuestion) {
@@ -335,6 +355,7 @@
 			submitLaporanPenjualan(){
 			var app = this;
 			app.prosesLaporan();
+			app.totalPenjualanFilter();
 			},
 			prosesLaporan(page) {
 				var app = this;	
@@ -353,7 +374,7 @@
 				})
 				.catch(function (resp) {
 					// console.log(resp);
-					alert("Tidak Dapat Memuat Laporan hutang beredar");
+					alert("Tidak Dapat Memuat Laporan penjualan");
 				});
 			},
 
@@ -376,6 +397,36 @@
 					app.seen = true;
 					alert("Tidak Dapat Memuat Penjualan");
 				});
+			},
+			totalPenjualan() {
+					var app = this;	
+					var newFilter = app.filter;
+					app.loading = true,
+					axios.post(app.url+'/total-laporan-penjualan')
+					.then(function (resp) {
+						app.dataLaporanPenjualan = resp.data;
+						app.loading = false
+						console.log(resp.data);    			
+					})
+					.catch(function (resp) {
+						// console.log(resp);
+						alert("Tidak Dapat Memuat Total penjualan");
+					});
+			}, 
+			totalPenjualanFilter() {
+					var app = this;	
+					var newFilter = app.filter;
+					app.loading = true,
+					axios.post(app.url+'/total-laporan-penjualan-filter',newFilter)
+					.then(function (resp) {
+						app.dataLaporanPenjualan = resp.data;
+						app.loading = false
+						console.log(resp.data);    			
+					})
+					.catch(function (resp) {
+						// console.log(resp);
+						alert("Tidak Dapat Memuat Total penjualan");
+					});
 			}, 
 			getHasilPencarian(page){
 				var app = this;
@@ -504,6 +555,7 @@
 			filterPeriode(){
                 $("#btnFilter").click();
                 this.getResults();
+                this.totalPenjualan();
             },
 			alert(pesan) {
 				this.$swal({
