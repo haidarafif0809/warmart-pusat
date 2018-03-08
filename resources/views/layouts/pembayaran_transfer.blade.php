@@ -118,6 +118,7 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
             <br><br>
             <br>
             <p class="text-center">Pembayaran dapat dilakukan ke Rekening Bank {{$bank->nama_bank}}({{$bank->no_rek}}) a/n {{$bank->atas_nama}}</p>
+            <center>   <a  href="{{ url('/daftar-produk') }}" type="button" class="btn btn-block buttonColor">Lanjut Belanja<i class="material-icons">keyboard_arrow_right</i></a></center>
 
           </div>
         </div>

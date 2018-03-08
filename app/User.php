@@ -68,8 +68,12 @@ class User extends Authenticatable
             $user                     = $this;
             $token                    = str_random(40);
             $user->verification_token = $token;
+            $nama_toko = Warung::select()->first();
+            $nama      = $nama_toko->name;
+            $no_telpon = $nama_toko->no_telpon;
+            $emails    = $nama_toko->email;
             $user->save();
-            Mail::send('auth.emails.verification', compact('user', 'token'), function ($message) use ($user) {
+            Mail::send('auth.emails.verification', compact('user', 'token','nama', 'no_telpon', 'emails'), function ($message) use ($user) {
                 $message->to($user->email, $user->name)->subject('Verifikasi Akun Topos Anda');
             });
         } else {
