@@ -2,6 +2,11 @@
 
 		.btn-icon{
 			border-radius: 1px solid;
+			padding: 10px 20px;
+		}
+
+		.btn-konversi{
+			border-radius: 1px solid;
 			padding: 10px 10px;
 		}
 
@@ -143,9 +148,9 @@
 
 									<div class="form-group">
 										<label for="satuan_id" class="col-md-2 control-label">Satuan Produk</label>
-										<div class="col-md-9">
+										<div class="col-md-7">
 											<selectize-component v-model="produk.satuan_id" :settings="placeholder_satuan" id="pilih_satuan_id" ref="satuan_barang"> 
-												<option v-for="satuans, index in satuan_id" v-bind:value="satuans.id" >{{ satuans.nama_satuan }}</option>
+												<option v-for="satuans, index in satuan_id" v-bind:value="satuans.satuan" >{{ satuans.nama_satuan }}</option>
 											</selectize-component>
 											<span v-if="errors.satuan_id" id="satuan_id_error" class="label label-danger">{{ errors.satuan_id[0] }}</span>
 										</div> 
@@ -154,6 +159,40 @@
 												<button class="btn btn-primary btn-icon waves-effect waves-light" v-on:click="tambahSatuan()" type="button" id="btnSatuan"> <i class="material-icons" >add</i> </button>
 											</div>
 										</div> 
+										<div class="col-md-2" style="padding-left:0px">
+											<div class="row" style="margin-top:-10px">
+												<button class="btn btn-primary btn-konversi waves-effect waves-light" v-on:click="konversiSatuan()" type="button" id="btnSatuanKonversi" style="display: none"> 
+													Konversi Satuan
+												</button>
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group" style="padding-bottom: 0px;">
+										<ul v-for="(input, index) in inputSatuanKonversi" style="padding-left:0px">
+											<div class="col-md-2"></div>
+
+											<div class="col-md-2">
+												<selectize-component v-model="input.id_satuan" :settings="placeholder_satuan" id="pilih_satuan_id" ref="satuan_barang"> 
+													<option v-for="satuans, index in satuan_id" v-bind:value="satuans.satuan" >{{ satuans.nama_satuan }}</option>
+												</selectize-component>
+											</div>
+
+											<div class="col-md-2">
+												<input class="form-control" autocomplete="off" placeholder="Qty" v-model="input.jumlah_produk" type="text" name="jumlah_konversi" id="jumlah_konversi" ref="jumlah_konversi" autofocus="">
+											</div>	
+
+											<div class="col-md-2">
+												<input class="form-control" autocomplete="off" placeholder="Satuan Dasar" v-model="input.nama_satuan" type="text" name="satuan_dasar" id="satuan_dasar" ref="satuan_dasar" autofocus="" readonly="">
+											</div>
+
+											<div class="col-md-3" style="padding-left:0px">
+												<div class="row" style="margin-top:-10px">
+													<button class="btn btn-primary btn-icon waves-effect waves-light" v-on:click="hapusKonversiSatuan(index)" type="button" id="btnSatuan"> <i class="material-icons" >delete</i> </button>
+												</div>
+											</div>
+
+										</ul>
 									</div>
 
 									<div class="form-group">
@@ -316,6 +355,7 @@
 				errors: [],
 				kategori_barang_id: [],
 				satuan_id: [],
+				inputSatuanKonversi: [],
 				url : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
 				url_picture : window.location.origin+(window.location.pathname).replace("dashboard", "foto_produk"),
 				url_origin : window.location.origin+(window.location.pathname).replace("dashboard", ""),
@@ -328,6 +368,7 @@
 					nama_barang : '',
 					kategori_barang_id : '',
 					satuan_id : '',
+					satuan_nama : '',
 					harga_beli : '',
 					harga_jual : '',
 					harga_jual2 : '',
@@ -458,6 +499,17 @@
 			app.dataAgent();
 			if (app.$route.fullPath == "/create-produk?tour") {
 				this.$tours['myTour'].start();
+			}
+		},
+		watch: {
+			'produk.satuan_id':function(){
+				var app = this;
+				if (app.produk.satuan_id == '') {
+					$("#btnSatuanKonversi").hide();
+					app.inputSatuanKonversi.splice(index)
+				}else{
+					$("#btnSatuanKonversi").show();
+				}
 			}
 		},
 		computed: {
@@ -641,6 +693,25 @@
 					app.$refs.perkiraan_berat.$el.focus(); 
 				}
 				app.$tours['myTour'].nextStep();
+			},
+			konversiSatuan() { 
+				var app = this;
+				console.log(app.inputSatuanKonversi[0]);
+				if (app.inputSatuanKonversi[0] === undefined) {
+					var data_satuan = app.produk.satuan_id.split("|");
+				}else{
+					var length = app.inputSatuanKonversi.length - parseInt(1);
+					var data_satuan = app.inputSatuanKonversi[length].id_satuan.split("|");
+				}
+
+				app.inputSatuanKonversi.push({
+					nama_satuan: data_satuan[1],
+					id_satuan: app.produk.satuan_id,
+					jumlah_produk: ''
+				})
+			},
+			hapusKonversiSatuan(index) {
+				this.inputSatuanKonversi.splice(index,1)
 			}
 		}
 	}
