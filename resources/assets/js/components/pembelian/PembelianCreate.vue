@@ -116,6 +116,12 @@
                         </div>                         
                         <form v-on:submit.prevent="importExcel()" class="form-horizontal">
                             <div class="modal-body">
+                                  <div class="form-group">
+                                    <p style="font-weight: bold;">
+                                        Download <a :href="urlTemplate">Template</a> Excel Untuk Import Item Masuk.
+                                    </p>
+                                </div>
+
                                 <div class="form-group form-file-upload">
                                     <input type="file" id="excel" multiple="">
                                     <div class="input-group">
@@ -506,6 +512,7 @@ export default {
       url_suplier : window.location.origin+(window.location.pathname).replace("dashboard", "suplier"),
       url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
       urlImport : window.location.origin+(window.location.pathname).replace("dashboard", "pembelian/import-excel"),
+      urlTemplate : window.location.origin+(window.location.pathname).replace("dashboard", "pembelian/template-excel"),
       inputTbsPembelian: {
         nama_produk : '',
         produk : '',
@@ -1470,9 +1477,11 @@ prosesTransaksiSelesai(){
             return;
         }
 
+        $("#modal_import").hide();
+        $("#excel").val('');
+        app.loading = true;
         axios.post(app.urlImport, newExcel).then(function (resp){
             console.log(resp);
-
             if (resp.data.pesanError !== undefined) {
                 return swal({
                     title: 'Gagal!',
@@ -1480,11 +1489,8 @@ prosesTransaksiSelesai(){
                     html: '<div style="text-align: left; font-size: 14px;">'+ resp.data.pesanError +'</div>',
                 });
             }
-
-            $("#excel").val('');
-            $("#modal_import").hide();
-            app.alertImport(resp.data.jumlahProduk + ' Produk Berhasil Diimport.');
             app.getResults();
+            app.alertImport(resp.data.jumlahProduk + ' Produk Berhasil Diimport.');
         }).catch(function (resp){
             console.log(resp);
 

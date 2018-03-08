@@ -555,6 +555,8 @@ Route::get('/pembelian/detail-view', 'PembelianController@detailView')->middlewa
 Route::get('/pembelian/cetak-besar-pembelian/{id}', 'PembelianController@cetakBesar')->middleware('auth');
 Route::get('/pembelian/subtotal-tbs-pembelian/{jenis_tbs}', 'PembelianController@cekSubtotalTbsPembelian')->middleware('auth');
 Route::post('/pembelian/import-excel', 'PembelianController@importExcel')->middleware('auth');
+Route::get('/pembelian/template-excel', 'PembelianController@templateExcel')->middleware('auth');
+
 
 //Edit Pembelian
 Route::get('/edit-pembelian/proses-tambah-tbs-pembelian', 'EditPembelianController@proses_tambah_tbs_pembelian')->middleware('auth');
@@ -667,7 +669,6 @@ Route::get('/penjualan/cetak-kecil-penjualan/{id}', 'PenjualanController@cetakKe
 Route::post('/penjualan/proses-setting-penjualan-pos', 'PenjualanController@settingPenjualanPos')->middleware('auth');
 Route::get('/penjualan/cek-setting-penjualan-pos', 'PenjualanController@cekSettingPenjualanPos')->middleware('auth');
 Route::get('/penjualan/subtotal-tbs-penjualan', 'PenjualanController@cekSubtotalTbsPenjualan')->middleware('auth');
-Route::get('/penjualan/download-excel/{session_id}', 'PenjualanController@downloadExcel')->middleware('auth');
 Route::get('/penjualan/download-excel-penjualan/{no_faktur}', 'PenjualanController@downloadExcelPenjualan')->middleware('auth');
 Route::post('/penjualan/view-filter', 'PenjualanController@viewFilter')->middleware('auth');
 Route::post('/penjualan/total-laporan-penjualan', 'PenjualanController@totalLaporanPenjualan')->middleware('auth');

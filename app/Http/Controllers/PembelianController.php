@@ -1279,19 +1279,13 @@ public function edit_jumlah_tbs_pembelian(Request $request)
 
         // rule untuk validasi setiap row pada file excel
         $rowRules = [
-                    'Session Id' => 'required',
-                    'Satuan Id' => 'required',
-                    'Id Produk' => 'required',
+                    'Kode Produk' => 'required',
                     'Jumlah Produk' => 'required',
+                    'Satuan Produk' => 'required',
                     'Harga Produk' => 'required',
                     'Subtotal' => 'required',
                     'Tax' => 'required',
                     'Potongan' => 'required',
-                    'Warung Id' => 'required',
-                    'Created By' => 'required',
-                    'Updated By' => 'required',
-                    'Created At' => 'required',
-                    'Updated At' => 'required'
         ];
 
         // Catat semua id buku baru
@@ -1304,13 +1298,13 @@ public function edit_jumlah_tbs_pembelian(Request $request)
         // looping setiap baris, mulai dari baris ke 2 (karena baris ke 1 adalah nama kolom)
         foreach ($excels as $row) {
             // Mengubah Nama Produk Menajdi lowerCase (Huruf Kecil Semua)
-            $kode_produk = $row['id_produk'];
+            $kode_produk = $row['kode_produk'];
             $db_produk   = Barang::select(['kode_barang','nama_barang'])->where('kode_barang', $kode_produk);
 
             if ($db_produk->count() === 0) {
-                $errors['id_produk'][] = [
+                $errors['kode_produk'][] = [
                     'line'    => $no,
-                    'message' => 'Kode Produk : '. $row['id_produk'] . ' Tidak Terdaftar di Master Data Produk.',
+                    'message' => 'Kode Produk : '. $row['kode_produk'] . ' Tidak Terdaftar di Master Data Produk.',
                 ];
                 $lineErrors[] = $no;
             }
@@ -1325,7 +1319,7 @@ public function edit_jumlah_tbs_pembelian(Request $request)
                 $pesan = ['pesanError' => ''];
 
                 // Memasukan nilai error yg terjadi, kedalam variabel $pesan yg sudah kita buat tadi.
-                foreach ($errors['id_produk'] as $key => $value) {
+                foreach ($errors['kode_produk'] as $key => $value) {
                     if ($value['line'] == end($lineErrors)) {
                         $pesan['pesanError'] .= $value['line'] . '. ' . $value['message'];
                     } else {
@@ -1335,8 +1329,7 @@ public function edit_jumlah_tbs_pembelian(Request $request)
                 return response()->json($pesan);
             }
 
-            $db_produk   = Barang::select(['id'])->where('kode_barang', $row['id_produk'])->first();
-            $db_satuan   = Satuan::select(['id'])->where('nama_satuan', $row['satuan_id'])->first();
+            $db_produk   = Barang::select(['id','satuan_id'])->where('kode_barang', $row['kode_produk'])->first();
 
             // Membuat validasi untuk row di excel, disini kita ubah baris yang sedang di proses menjadi array.
             $validator = Validator::make($row->toArray(), $rowRules);
@@ -1344,22 +1337,49 @@ public function edit_jumlah_tbs_pembelian(Request $request)
             // Insert Detail Item Masuk
             $tbs_pembelian = TbsPembelian::create([
                 'session_id'        => $session_id,
-                'satuan_id'         => $db_satuan->id,
+                'satuan_id'         => $db_produk->satuan_id,
                 'id_produk'         => $db_produk->id,
                 'jumlah_produk'     => $row['jumlah_produk'],
                 'harga_produk'      => $row['harga_produk'],
                 'subtotal'          => $row['subtotal'],
                 'tax'               => $row['tax'],
                 'potongan'          => $row['potongan'],
-                'warung_id'         => $row['warung_id'],
-                'created_by'        => $row['created_by'],
-                'updated_by'         => $row['updated_by'],
+                'warung_id'         => Auth::user()->id_warung,
             ]);
         }
         // Hitung Jumlah Produk Yang Diimport
         $hitung_produk['jumlahProduk'] = $no - 1;
 
         return response()->json($hitung_produk);
+    }
+
+        //DOWNLAOD TEMPLATE
+    public function templateExcel()
+    {
+        Excel::create('Tempalate Import Pembelian', function ($excel) {
+            // Set property
+            $excel->sheet('Tempalate Import Pembelian', function ($sheet) {
+                $row = 1;
+                $sheet->row($row, [
+                    'Kode Produk',
+                    'Jumlah Produk',
+                    'Harga Produk',
+                    'Subtotal',
+                    'Tax',
+                    'Potongan',
+                ]);
+
+                $sheet->row(++$row, [
+                    '001',
+                    '20',
+                    '10000',
+                    '200000',
+                    '0',
+                    '0',
+                ]);
+
+            });
+        })->download('xls');
     }
 
 

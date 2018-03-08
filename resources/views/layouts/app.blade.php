@@ -493,7 +493,7 @@ $judul_warung = \App\SettingFooter::select()->first()->judul_warung;
 </body>
 <!--   Core JS Files   -->
 
-<script src="{{ asset('js/app.js?v=1.93')}}" type="text/javascript">
+<script src="{{ asset('js/app.js?v=1.94')}}" type="text/javascript">
 
 </script>
 <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript">
