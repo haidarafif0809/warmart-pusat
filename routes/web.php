@@ -669,6 +669,9 @@ Route::get('/penjualan/cek-setting-penjualan-pos', 'PenjualanController@cekSetti
 Route::get('/penjualan/subtotal-tbs-penjualan', 'PenjualanController@cekSubtotalTbsPenjualan')->middleware('auth');
 Route::get('/penjualan/download-excel/{session_id}', 'PenjualanController@downloadExcel')->middleware('auth');
 Route::get('/penjualan/download-excel-penjualan/{no_faktur}', 'PenjualanController@downloadExcelPenjualan')->middleware('auth');
+Route::post('/penjualan/view-filter', 'PenjualanController@viewFilter')->middleware('auth');
+Route::post('/penjualan/total-laporan-penjualan', 'PenjualanController@totalLaporanPenjualan')->middleware('auth');
+Route::post('/penjualan/total-laporan-penjualan-filter', 'PenjualanController@totalLaporanPenjualanFilter')->middleware('auth');
 
 // LABA KOTOR VUE.JS
 Route::post('/laporan-laba-kotor/view', 'LaporanLabaKotorController@prosesLaporanLabaKotor')->middleware('auth');

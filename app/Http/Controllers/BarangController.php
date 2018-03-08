@@ -124,11 +124,11 @@ class BarangController extends Controller
     {
         $data_produk = Barang::with(['satuan', 'kategori_barang'])->where('id_warung', Auth::user()->id_warung)->where(function ($query) use ($request) {
             $query->orwhere('kode_barang', 'LIKE', '%' . $request->search . '%')
-            ->orwhere('kode_barcode', 'LIKE', '%' . $request->search . '%')
-            ->orwhere('nama_barang', 'LIKE', '%' . $request->search . '%')
-            ->orwhere('harga_beli', 'LIKE', '%' . $request->search . '%')
-            ->orwhere('harga_jual', 'LIKE', '%' . $request->search . '%')
-            ->orwhere('harga_jual2', 'LIKE', '%' . $request->search . '%');
+                ->orwhere('kode_barcode', 'LIKE', '%' . $request->search . '%')
+                ->orwhere('nama_barang', 'LIKE', '%' . $request->search . '%')
+                ->orwhere('harga_beli', 'LIKE', '%' . $request->search . '%')
+                ->orwhere('harga_jual', 'LIKE', '%' . $request->search . '%')
+                ->orwhere('harga_jual2', 'LIKE', '%' . $request->search . '%');
         })->orderBy('id', 'desc')->paginate(10);
         $array_produk = array();
         foreach ($data_produk as $produk) {
@@ -158,7 +158,16 @@ class BarangController extends Controller
     public function pilih_satuan()
     {
         $satuan = Satuan::all();
-        return response()->json($satuan);
+
+        $array = array();
+        foreach ($satuan as $satuans) {
+            array_push($array, [
+                'satuan'      => $satuans->id . "|" . strtoupper($satuans->nama_satuan),
+                'nama_satuan' => strtoupper($satuans->nama_satuan),
+            ]);
+        }
+
+        return response()->json($array);
     }
 
     public function data_agent()
@@ -220,6 +229,9 @@ class BarangController extends Controller
                 $perkiraan_berat = $request->perkiraan_berat;
             }
 
+            $satuan    = explode("|", $request->satuan_id);
+            $id_satuan = $satuan[0];
+
             $insert_barang = Barang::create([
                 'kode_barang'        => $request->kode_barang,
                 'kode_barcode'       => $request->kode_barcode,
@@ -228,7 +240,7 @@ class BarangController extends Controller
                 'harga_jual'         => $request->harga_jual,
                 'harga_jual2'        => $request->harga_jual2,
                 'berat'              => $perkiraan_berat,
-                'satuan_id'          => $request->satuan_id,
+                'satuan_id'          => $id_satuan,
                 'kategori_barang_id' => $request->kategori_barang_id,
                 'deskripsi_produk'   => $request->deskripsi_produk,
                 'status_aktif'       => $request->status_aktif,
