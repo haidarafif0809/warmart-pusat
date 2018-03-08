@@ -172,7 +172,7 @@
 										<ul v-for="(input, index) in inputSatuanKonversi" style="padding-left:0px">
 											<div class="col-md-2"></div>
 
-											<div class="col-md-2">
+											<div class="col-md-3">
 												<selectize-component v-model="input.id_satuan" :settings="placeholder_satuan" id="pilih_satuan_id" ref="satuan_barang"> 
 													<option v-for="satuans, index in satuan_id" v-bind:value="satuans.satuan" >{{ satuans.nama_satuan }}</option>
 												</selectize-component>
@@ -186,7 +186,12 @@
 												<input class="form-control" autocomplete="off" placeholder="Satuan Dasar" v-model="input.nama_satuan" type="text" name="satuan_dasar" id="satuan_dasar" ref="satuan_dasar" autofocus="" readonly="">
 											</div>
 
-											<div class="col-md-3" style="padding-left:0px">
+											<div class="col-md-2">
+												<money class="form-control" autocomplete="off" placeholder="Harga Jual" v-model="input.harga_jual" type="text" name="harga_jual" id="harga_jual"  ref="harga_jual" autofocus="" v-bind="separator">
+												</money>
+											</div>
+
+											<div class="col-md-1" style="padding-left:0px">
 												<div class="row" style="margin-top:-10px">
 													<button class="btn btn-primary btn-icon waves-effect waves-light" v-on:click="hapusKonversiSatuan(index)" type="button" id="btnSatuan"> <i class="material-icons" >delete</i> </button>
 												</div>
@@ -695,7 +700,7 @@
 			},
 			konversiSatuan() { 
 				var app = this;
-				console.log(app.inputSatuanKonversi[0]);
+
 				if (app.inputSatuanKonversi[0] === undefined) {
 					var data_satuan = app.produk.satuan_id.split("|");
 				}else{
@@ -706,7 +711,8 @@
 				app.inputSatuanKonversi.push({
 					nama_satuan: data_satuan[1],
 					id_satuan: app.produk.satuan_id,
-					jumlah_produk: ''
+					jumlah_produk: '',
+					harga_jual: ''
 				})
 			},
 			hapusKonversiSatuan(index) {
