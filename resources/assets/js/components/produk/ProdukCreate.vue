@@ -506,7 +506,6 @@
 				var app = this;
 				if (app.produk.satuan_id == '') {
 					$("#btnSatuanKonversi").hide();
-					app.inputSatuanKonversi.splice(index)
 				}else{
 					$("#btnSatuanKonversi").show();
 				}
