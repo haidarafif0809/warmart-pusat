@@ -923,8 +923,7 @@ editJumlahProdukPenjualan(value,id,nama_produk,subtotal_lama){
         return tbs.id_tbs_penjualan === id
       }
 
-      var index = app.tbs_penjualan.findIndex(cekTbs) 
-      app.alert("Mengubah Jumlah Produk "+nama_produk);   
+      var index = app.tbs_penjualan.findIndex(cekTbs)    
       app.tbs_penjualan[index].jumlah_produk = resp.data.jumlah_produk
       app.tbs_penjualan[index].subtotal = resp.data.subtotal
       app.penjualan.subtotal = subtotal.toFixed(2)
@@ -997,7 +996,6 @@ editPotonganProdukPenjualan(value,id,nama_produk,subtotal_lama){
 
       var index = app.tbs_penjualan.findIndex(cekTbs)
 
-      app.alert("Mengubah Potongan Produk "+nama_produk)
       app.tbs_penjualan[index].potongan = resp.data.potongan
       app.tbs_penjualan[index].subtotal = resp.data.subtotal
       app.penjualan.subtotal = subtotal.toFixed(2)
