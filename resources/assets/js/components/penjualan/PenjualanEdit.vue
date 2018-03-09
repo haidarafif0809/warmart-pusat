@@ -942,7 +942,6 @@ editJumlahProdukPenjualan(value,id,nama_produk,subtotal_lama){
       app.penjualan.subtotal = subtotal.toFixed(2)
       app.penjualan.total_akhir = subtotal.toFixed(2)
       app.potonganPersen()
-      app.alert("Mengubah Jumlah Produk "+nama_produk)
       app.inputTbsPenjualan.jumlah_produk = ''
       app.inputTbsPenjualan.id_tbs = ''
 
@@ -1014,7 +1013,6 @@ editPotonganProdukPenjualan(value,id,nama_produk,subtotal_lama){
       app.penjualan.subtotal = subtotal.toFixed(2)
       app.penjualan.total_akhir = subtotal.toFixed(2)
       app.potonganPersen()
-      app.alert("Mengubah Potongan Produk "+nama_produk)
       app.inputTbsPenjualan.potongan_produk = ''
       app.inputTbsPenjualan.id_tbs = ''
 

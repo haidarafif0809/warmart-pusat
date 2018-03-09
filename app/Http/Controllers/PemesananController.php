@@ -94,8 +94,8 @@ class PemesananController extends Controller
             $data_pelanggan['provinsi_pelanggan']  = '';
             $data_pelanggan['kabupaten_pelanggan'] = '';
         }else{
-           $alamat_customer = LokasiPelanggan::select(['provinsi', 'kabupaten'])->where('id_pelanggan', Auth::user()->id);
-           if ($alamat_customer->count() > 0) {
+         $alamat_customer = LokasiPelanggan::select(['provinsi', 'kabupaten'])->where('id_pelanggan', Auth::user()->id);
+         if ($alamat_customer->count() > 0) {
             $alamat                                = $alamat_customer->first();
             $data_pelanggan['provinsi_pelanggan']  = Indonesia::findProvince($alamat->provinsi)->name;
             $data_pelanggan['kabupaten_pelanggan'] = Indonesia::findCity($alamat->kabupaten)->name;
@@ -215,12 +215,13 @@ public function prosesSelesaikanPemesanan(Request $request)
 
                 // AMBIL NOMOR TELPON WARUNG
                 $nomor_tujuan = $warung->no_telpon;
+                $nama_warung = $warung->name;
 
                 // KIRIM SMS KE WARUNG
                 $this->kirimSmsKeWarung($nomor_tujuan, $id_pesanan_pelanggan);    
 
 
-                $pesanan_pelanggan->kirimEmailKonfirmasiPesananKePelanggan($request);
+                $pesanan_pelanggan->kirimEmailKonfirmasiPesananKePelanggan($request,$nama_warung,$keranjang_belanjaan);
 
             }
 
@@ -268,11 +269,12 @@ public function prosesSelesaikanPemesanan(Request $request)
 
                 // AMBIL NOMOR TELPON WARUNG
                 $nomor_tujuan = $warung->no_telpon;
+                $$nama_warung = $warung->name;
 
                 // KIRIM SMS KE WARUNG
                 $this->kirimSmsKeWarung($nomor_tujuan, $id_pesanan_pelanggan);
 
-                $pesanan_pelanggan->kirimEmailKonfirmasiPesananKePelanggan($request);
+                $pesanan_pelanggan->kirimEmailKonfirmasiPesananKePelanggan($request,$nama_warung,$keranjang_belanjaan);
             }
 
             // INSERT KE DETAIL PESANAN PELANGGAN
@@ -283,7 +285,7 @@ public function prosesSelesaikanPemesanan(Request $request)
                 'harga_produk'         => $keranjang_belanjaans['harga_jual'],
                 'jumlah_produk'        => $keranjang_belanjaans['jumlah_produk'],
             ]);
-            
+
 
             // HAPUS KERANJANG BELANJA
             KeranjangBelanja::destroy($keranjang_belanjaans['id_keranjang_belanja']);
@@ -439,14 +441,14 @@ public function prosesSelesaikanPemesanan(Request $request)
     }
 
     public function emailKonfirmasiPesanan(){
-     $session_id = Session::get('session_id');
+       $session_id = Session::get('session_id');
 
-     $keranjang_belanjaan = KeranjangBelanja::select('keranjang_belanjas.id_keranjang_belanja AS id_keranjang_belanja', 'keranjang_belanjas.id_produk AS id_produk', 'keranjang_belanjas.jumlah_produk AS jumlah_produk', 'barangs.harga_jual AS harga_jual', 'barangs.id_warung AS id_warung','barangs.nama_barang AS nama_barang','barangs.foto AS foto')
-     ->leftJoin('barangs', 'keranjang_belanjas.id_produk', '=', 'barangs.id')
-     ->where('session_id', $session_id)->orderBy('barangs.id_warung');
+       $keranjang_belanjaan = KeranjangBelanja::select('keranjang_belanjas.id_keranjang_belanja AS id_keranjang_belanja', 'keranjang_belanjas.id_produk AS id_produk', 'keranjang_belanjas.jumlah_produk AS jumlah_produk', 'barangs.harga_jual AS harga_jual', 'barangs.id_warung AS id_warung','barangs.nama_barang AS nama_barang','barangs.foto AS foto')
+       ->leftJoin('barangs', 'keranjang_belanjas.id_produk', '=', 'barangs.id')
+       ->where('session_id', $session_id)->orderBy('barangs.id_warung');
 
-     $arrayKeranjangBelanja             = array();
-     foreach ($keranjang_belanjaan->get() as $key => $keranjang_belanjaans) {
+       $arrayKeranjangBelanja             = array();
+       foreach ($keranjang_belanjaan->get() as $key => $keranjang_belanjaans) {
         array_push($arrayKeranjangBelanja,['keranjang_belanja'=>$keranjang_belanjaans]);
     }
 //$arrayKeranjangBelanja[0]['keranjang_belanja']->id_produk;

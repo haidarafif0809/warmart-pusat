@@ -56,8 +56,8 @@ return [
      */
 
     'from'       => [
-        'address' => env('MAIL_FROM_ADDRESS', 'verifikasi@andaglos.id'),
-        'name'    => env('MAIL_FROM_NAME', 'Verifikasi'),
+        'address' => env('MAIL_FROM_ADDRESS', ''),
+        'name'    => env('MAIL_FROM_NAME', ''),
     ],
 
     /*
