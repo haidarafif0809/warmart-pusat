@@ -198,19 +198,6 @@
 											</div>
 
 										</ul>
-										<div class="col-md-2"></div>
-										<div class="col-md-2">
-											<input type="text" v-model="produk.satuan_konversi" name="satuan_konversi" id="satuan_konversi" placeholder="Satuan Konversi">
-										</div>
-										<div class="col-md-2">
-											<input type="text" v-model="produk.jumlah_konversi" name="jumlah_konversi" id="jumlah_konversi" placeholder="Jumlah Konversi">
-										</div>
-										<div class="col-md-2">
-											<input type="text" v-model="produk.satuan_dasar" name="satuan_dasar" id="satuan_dasar" placeholder="Satuan Dasar">
-										</div>
-										<div class="col-md-2">
-											<input type="text" v-model="produk.harga_jual_konversi" name="harga_jual_konversi" id="harga_jual_konversi" placeholder="harga Jual Konversi">
-										</div>
 									</div>
 
 									<div class="form-group">
@@ -545,7 +532,13 @@
 				.then(function (resp) {
 					app.message = 'Menambah Produk '+ app.produk.nama_barang;
 					app.alert(app.message);
-					axios.post(app.url+'/satuan-konversi', {data:satuanKonversi}).then(function (resp) {})
+					axios.post(app.url+'/satuan-konversi', {data:satuanKonversi}).then(function (resp) {
+						
+					})
+					.catch(function (resp) {
+						alert("Periksa Kembali Satuan Konversi Anda!")
+						app.errors = resp.response.data.errors;
+					});
 					app.kosongkanData();
 					app.$router.replace('/produk/');
 					app.$swal.close();

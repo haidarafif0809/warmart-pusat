@@ -276,11 +276,13 @@ class BarangController extends Controller
     public function satuanKonversi(Request $request)
     {
         foreach ($request->data as $key => $value) {
+            $id_produk     = Barang::select('id')->latest()->first()->id;
             $insert_satuan = SatuanKonversi::create([
                 'id_satuan'           => $value['id_satuan'],
-                'id_produk'           => 1,
+                'id_produk'           => $id_produk,
                 'jumlah_konversi'     => $value['jumlah_produk'],
                 'harga_jual_konversi' => $value['harga_jual'],
+                'satuan_dasar'        => $value['satuan_dasar'],
                 'warung_id'           => Auth::user()->id_warung,
             ]);
         }
