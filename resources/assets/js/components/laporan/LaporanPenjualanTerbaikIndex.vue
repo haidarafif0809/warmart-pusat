@@ -1,3 +1,10 @@
+<style scoped>
+.pencarian {
+  color: red; 
+  float: right;
+  padding-bottom: 10px;
+}
+</style>
 <template>
   <div class="row">
     <div class="col-md-12">
@@ -10,35 +17,128 @@
           <i class="material-icons">insert_chart</i>
         </div>
 
+
+
         <div class="card-content">
           <h4 class="card-title"> Laporan Penjualan Terbaik  Per Item</h4>
-          <div class="row">
-            <div class="form-group col-sm-2">
-              <label>Dari Tanggal</label>
-              <datepicker :input-class="'form-control'" placeholder="Dari Tanggal" v-model="filter.dari_tanggal" name="dari_tanggal" v-bind:id="'dari_tanggal'"></datepicker>
-            </div>
-            <div class="form-group col-sm-2">
-              <label>Sampai Tanggal</label>
-              <datepicker :input-class="'form-control'" placeholder="Sampai Tanggal" v-model="filter.sampai_tanggal" name="sampai_tanggal" v-bind:id="'sampai_tanggal'"></datepicker>
-            </div>
-            <div class="form-group col-md-2">
-              <label>Tampil Terbaik (Item)</label>
-              <input class="form-control" type="number" v-model="filter.tampil_terbaik" v-bind:id="'tampil_terbaik'" ref="tampil_terbaik">
-            </div>
-            <div class="form-group col-md-2">
-              <label>Jenis Penjualan</label>
-              <selectize-component v-model="filter.jenis_penjualan" :settings="placeholder_penjualan" id="jenis_penjualan" ref="jenis_penjualan"> 
-                <option v-bind:value="0" > Penjualan POS </option>
-                <option v-bind:value="1" > Penjualan Online </option>
-              </selectize-component>
-              <input class="form-control" type="hidden"  v-model="filter.jenis_penjualan"  name="jenis_penjualan" id="jenis_penjualan"  v-shortkey="['f1']">
-            </div>
-            <div class="form-group col-sm-3">
-              <br>
-              <button class="btn btn-primary" id="btnSubmit" type="submit" style="margin: 0px 0px;" v-on:click="submitPenjualanTerbaik()"><i class="material-icons">search</i> Cari</button>
-            </div>
 
-          </div>
+              <ul class="nav nav-pills nav-pills-rose" role="tablist" style="margin-top:5px;">
+                  <!--
+                    color-classes: "nav-pills-primary", "nav-pills-info", "nav-pills-success", "nav-pills-warning","nav-pills-danger"
+                  -->
+                  <li class="active">
+                    <a href="#laporan_grafik" role="tab" data-toggle="tab" style="margin-left:10px;">
+                      Laporan Grafik
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#laporan_data" role="tab" data-toggle="tab" style="margin-right:10px; ">
+                      Laporan Data
+                    </a>
+                  </li>
+                </ul>
+
+
+
+               <div class="tab-content tab-space" style="margin-top:5px;margin-bottom:5px;">
+                  <div class="tab-pane active" id="laporan_grafik"  style="margin-top:5px;margin-bottom:5px;">
+
+                      <div class="row">
+                        <div class="form-group col-sm-2">
+                          <label>Dari Tanggal</label>
+                          <datepicker :input-class="'form-control'" placeholder="Dari Tanggal" v-model="filter.dari_tanggal" name="dari_tanggal" v-bind:id="'dari_tanggal'"></datepicker>
+                        </div>
+                        <div class="form-group col-sm-2">
+                          <label>Sampai Tanggal</label>
+                          <datepicker :input-class="'form-control'" placeholder="Sampai Tanggal" v-model="filter.sampai_tanggal" name="sampai_tanggal" v-bind:id="'sampai_tanggal'"></datepicker>
+                        </div>
+                        <div class="form-group col-md-2">
+                          <label>Tampil Terbaik (Item)</label>
+                          <input class="form-control" type="number" v-model="filter.tampil_terbaik" v-bind:id="'tampil_terbaik'" ref="tampil_terbaik">
+                        </div>
+                        <div class="form-group col-md-2">
+                          <label>Jenis Penjualan</label>
+                          <selectize-component v-model="filter.jenis_penjualan" :settings="placeholder_penjualan" id="jenis_penjualan" ref="jenis_penjualan"> 
+                            <option v-bind:value="0" > Penjualan POS </option>
+                            <option v-bind:value="1" > Penjualan Online </option>
+                          </selectize-component>
+                          <input class="form-control" type="hidden"  v-model="filter.jenis_penjualan"  name="jenis_penjualan" id="jenis_penjualan"  v-shortkey="['f1']">
+                        </div>
+                        <div class="form-group col-sm-3">
+                          <br>
+                          <button class="btn btn-primary" id="btnSubmit" type="submit" style="margin: 0px 0px;" v-on:click="submitPenjualanTerbaik()"><i class="material-icons">search</i> Cari</button>
+                        </div>
+                      </div>
+                  </div>
+                  <div class="tab-pane" id="laporan_data"  style="margin-top:5px;margin-bottom:5px;">
+                      <div class="row">
+                        <div class="form-group col-sm-2">
+                          <label>Dari Tanggal</label>
+                          <datepicker :input-class="'form-control'" placeholder="Dari Tanggal" v-model="filter.dari_tanggal" name="dari_tanggal" v-bind:id="'dari_tanggal'"></datepicker>
+                        </div>
+                        <div class="form-group col-sm-2">
+                          <label>Sampai Tanggal</label>
+                          <datepicker :input-class="'form-control'" placeholder="Sampai Tanggal" v-model="filter.sampai_tanggal" name="sampai_tanggal" v-bind:id="'sampai_tanggal'"></datepicker>
+                        </div>
+                        <div class="form-group col-md-2">
+                          <label>Tampil Terbaik (Item)</label>
+                          <input class="form-control" type="number" v-model="filter.tampil_terbaik" v-bind:id="'tampil_terbaik'" ref="tampil_terbaik">
+                        </div>
+                        <div class="form-group col-sm-3">
+                          <br>
+                          <button class="btn btn-primary" id="btnSubmit" type="submit" style="margin: 0px 0px;" v-on:click="submitPenjualanTerbaikData()"><i class="material-icons">search</i> Cari</button>
+                        </div>
+                      </div>
+
+                      <div class="card-content">
+                       <h4 class="card-title"> Laporan Penjualan POS </h4>
+                            <div class=" table-responsive">
+                            <div class="pencarian">
+                              <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control">
+                            </div>
+                            <table class="table table-striped table-hover">
+                              <thead class="text-primary">
+                                <tr>
+                                  <th>Kode Produk</th>
+                                  <th>Nama Produk</th>
+                                  <th style="text-align:right">Jumlah Terjual</th>
+                                </tr>
+                              </thead>
+                            <tbody v-if="laporanPenjualanTerbaik.length > 0 && loading == false"  class="data-ada">
+                               <tr v-for="laporanPenjualanTerbaiks, index in laporanPenjualanTerbaik" >
+                                <td >{{ laporanPenjualanTerbaiks.laporan_penjualan_terbaik.kode_barang  }} </td>
+                                <td >{{ laporanPenjualanTerbaiks.nama_barang  }}</td>
+                                <td align="right">{{ laporanPenjualanTerbaiks.laporan_penjualan_terbaik.jumlah_produk | pemisahTitik }} </td>
+                              </tr>
+                            </tbody>          
+                            <tbody class="data-tidak-ada" v-else-if="laporanPenjualanTerbaikData.length == 0 && loading == false">
+                              <tr ><td colspan="3"  class="text-center">Tidak Ada Data</td></tr>
+                            </tbody>
+                          </table>
+                        </div><!--RESPONSIVE-->
+                      </div>
+                      <div class="card-content">
+                       <h4 class="card-title"> Laporan Penjualan Online </h4>
+
+                            <div class="table-responsive">
+                            <div class="pencarian">
+                              <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control">
+                            </div>
+                            <table class="table table-striped table-hover">
+                              <thead class="text-primary">
+                                <tr>
+                                  <th>Kode Produk</th>
+                                  <th>Nama Produk</th>
+                                  <th>Jumlah Terjual</th>
+                                </tr>
+                              </thead>
+                          </table>
+                        </div><!--RESPONSIVE-->
+                      </div>
+
+                    </div>
+              </div>
+
         </div>
       </div>
     </div>
@@ -50,8 +150,8 @@
   export default {
     data: function () {
       return {
-        penjualanTerbaik: [],
-        penjualanTerbaikData: {},
+        laporanPenjualanTerbaik: [],
+        laporanPenjualanTerbaikData: {},
         filter: {
           dari_tanggal: '',
           sampai_tanggal: new Date(),
@@ -72,6 +172,14 @@
       var awal_tanggal = new Date();
       awal_tanggal.setDate(1);
       app.filter.dari_tanggal = awal_tanggal;
+    },
+    filters: {
+      pemisahTitik: function (value) {
+        var angka = [value];
+        var numberFormat = new Intl.NumberFormat('es-ES');
+        var formatted = angka.map(numberFormat.format);
+        return formatted.join('; ');
+      }
     },
     methods: {
       dariTanggal(filter){
@@ -102,6 +210,25 @@
                 }
                 // window.location.replace(window.location.origin+(window.location.pathname)+'#/laporan-bucket-size/view/'+dari_tanggal+'/'+sampai_tanggal+'/'+app.filter.kelipatan) 
           
+         },
+      submitPenjualanTerbaikData(page){
+              var app = this; 
+              var newFilter = app.filter;
+              if (typeof page === 'undefined') {
+                page = 1;
+              }
+              app.loading = true,
+              axios.post(app.url+'/view-pos-data?page='+page, newFilter)
+              .then(function (resp) {
+                app.laporanPenjualanTerbaik = resp.data.data;
+                app.laporanPenjualanTerbaikData = resp.data;
+                app.loading = false
+                console.log(resp.data.data);
+              })
+              .catch(function (resp) {
+                // console.log(resp);
+                alert("Tidak Dapat Memuat Laporan Terbaik");
+              });
          },
       alertGagal(pesan) {
         this.$swal({
