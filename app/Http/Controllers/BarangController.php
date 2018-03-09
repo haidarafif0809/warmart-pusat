@@ -6,6 +6,7 @@ use App\Barang;
 use App\Hpp;
 use App\KategoriBarang;
 use App\Satuan;
+use App\SatuanKonversi;
 use App\SettingAplikasi;
 use App\User;
 use Auth;
@@ -270,6 +271,19 @@ class BarangController extends Controller
 
         }
 
+    }
+
+    public function satuanKonversi(Request $request)
+    {
+        foreach ($request->data as $key => $value) {
+            $insert_satuan = SatuanKonversi::create([
+                'id_satuan'           => $value['id_satuan'],
+                'id_produk'           => 1,
+                'jumlah_konversi'     => $value['jumlah_produk'],
+                'harga_jual_konversi' => $value['harga_jual'],
+                'warung_id'           => Auth::user()->id_warung,
+            ]);
+        }
     }
 
     /**

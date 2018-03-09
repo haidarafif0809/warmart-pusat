@@ -198,6 +198,19 @@
 											</div>
 
 										</ul>
+										<div class="col-md-2"></div>
+										<div class="col-md-2">
+											<input type="text" v-model="produk.satuan_konversi" name="satuan_konversi" id="satuan_konversi" placeholder="Satuan Konversi">
+										</div>
+										<div class="col-md-2">
+											<input type="text" v-model="produk.jumlah_konversi" name="jumlah_konversi" id="jumlah_konversi" placeholder="Jumlah Konversi">
+										</div>
+										<div class="col-md-2">
+											<input type="text" v-model="produk.satuan_dasar" name="satuan_dasar" id="satuan_dasar" placeholder="Satuan Dasar">
+										</div>
+										<div class="col-md-2">
+											<input type="text" v-model="produk.harga_jual_konversi" name="harga_jual_konversi" id="harga_jual_konversi" placeholder="harga Jual Konversi">
+										</div>
 									</div>
 
 									<div class="form-group">
@@ -526,11 +539,13 @@
 				var app = this; 
 				app.loading();
 				var newProduk = app.inputData();
+				var satuanKonversi = app.inputSatuanKonversi;
 
 				axios.post(app.url, newProduk)
 				.then(function (resp) {
 					app.message = 'Menambah Produk '+ app.produk.nama_barang;
 					app.alert(app.message);
+					axios.post(app.url+'/satuan-konversi', {data:satuanKonversi}).then(function (resp) {})
 					app.kosongkanData();
 					app.$router.replace('/produk/');
 					app.$swal.close();
@@ -710,10 +725,11 @@
 
 				app.inputSatuanKonversi.push({
 					nama_satuan: data_satuan[1],
+					satuan_dasar: data_satuan[0],
 					id_satuan: app.produk.satuan_id,
 					jumlah_produk: '',
-					harga_jual: ''
-				})
+					harga_jual: '',
+				})				
 			},
 			hapusKonversiSatuan(index) {
 				this.inputSatuanKonversi.splice(index,1)

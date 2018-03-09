@@ -484,6 +484,7 @@ Route::get('/produk/pilih-produk', 'BarangController@pilihProduk')->middleware('
 Route::get('/produk/pilih-agent', 'BarangController@data_agent')->middleware('auth');
 Route::get('/produk/template-excel', 'BarangController@downloadTemplate')->middleware('auth');
 Route::post('/produk/import-excel/', 'BarangController@importExcel')->middleware('auth');
+Route::post('/produk/satuan-konversi', 'BarangController@satuanKonversi')->middleware('auth');
 Route::post('/produk/{id}', 'BarangController@update')->middleware('auth');
 
 Route::get('/kas/view', 'KasController@view')->middleware('auth');
