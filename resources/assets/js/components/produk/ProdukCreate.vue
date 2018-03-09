@@ -533,14 +533,14 @@
 					app.message = 'Menambah Produk '+ app.produk.nama_barang;
 					app.alert(app.message);
 					axios.post(app.url+'/satuan-konversi', {data:satuanKonversi}).then(function (resp) {
-						
+
 					})
 					.catch(function (resp) {
 						alert("Periksa Kembali Satuan Konversi Anda!")
 						app.errors = resp.response.data.errors;
 					});
 					app.kosongkanData();
-					app.$router.replace('/produk/');
+					app.$router.replace('/produk');
 					app.$swal.close();
 				})
 				.catch(function (resp) {
