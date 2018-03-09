@@ -38,7 +38,7 @@
 					{
 						labels: resp.data.nama_barang,
 						datasets: [{
-							label: 'LAPORAN PENJUALAN POS TERBAIK PER ITEM '+ app.tanggal(filter.dari_tanggal) +" - "+ app.tanggal(filter.sampai_tanggal),
+							label: 'Item',
 							backgroundColor: resp.data.color,
 							data: resp.data.jumlah_produk,
 						}]
