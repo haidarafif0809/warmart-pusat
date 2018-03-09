@@ -60,9 +60,10 @@ class User extends Authenticatable
             $nama      = $nama_toko->name;
             $no_telpon = $nama_toko->no_telpon;
             $emails    = $nama_toko->email;
-            Mail::send('auth.emails.verification', compact('user', 'token', 'nama', 'no_telpon', 'emails'), function ($message) use ($user) {
-                $message->to($user->email, $user->name)->subject('Verifikasi Akun Pelanggan Anda');
-            });
+            Mail::send('auth.emails.verification', compact('user', 'token', 'nama', 'no_telpon', 'emails'), function ($message) use ($user,$nama) {
+              $message->from('verifikasi@andaglos.id', $nama);
+              $message->to($user->email, $user->name)->subject('Verifikasi Akun');
+          });
 
         } elseif ($setiing_verifikasi->email == 1 && $setiing_verifikasi->no_telp != 1) {
             $user                     = $this;
@@ -73,9 +74,10 @@ class User extends Authenticatable
             $no_telpon = $nama_toko->no_telpon;
             $emails    = $nama_toko->email;
             $user->save();
-            Mail::send('auth.emails.verification', compact('user', 'token','nama', 'no_telpon', 'emails'), function ($message) use ($user) {
-                $message->to($user->email, $user->name)->subject('Verifikasi Akun Topos Anda');
-            });
+            Mail::send('auth.emails.verification', compact('user', 'token','nama', 'no_telpon', 'emails'), function ($message) use ($user,$nama) {
+              $message->from('verifikasi@andaglos.id', $nama);
+              $message->to($user->email, $user->name)->subject('Verifikasi Akun');
+          });
         } else {
             return;
         }
