@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Barang;
 use App\DetailItemKeluar;
 use App\DetailItemMasuk;
 use App\DetailPembelian;
@@ -28,6 +29,7 @@ use App\Observers\PembayaranHutangObserver;
 use App\Observers\PembayaranPiutangObserver;
 use App\Observers\PembelianObserver;
 use App\Observers\PenjualanPosObserver;
+use App\Observers\ProdukObserver;
 use App\Observers\StokOpnameObserver;
 use App\Observers\UserWarungObserver;
 use App\Observers\WarungObserver;
@@ -76,6 +78,7 @@ class AppServiceProvider extends ServiceProvider
         PembayaranPiutang::observe(PembayaranPiutangObserver::class);
         PembayaranHutang::observe(PembayaranHutangObserver::class);
         StokOpname::observe(StokOpnameObserver::class);
+        Barang::observe(ProdukObserver::class);
     }
 
     /**
