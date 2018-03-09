@@ -782,7 +782,8 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
       if (result.value) {
 
         document.getElementById("formSelesaikanPesanan").submit();
-
+        var sisa_jumlah_produk = "| 0";
+        $("#jumlah-keranjang").text(sisa_jumlah_produk);
         swal({
           html : pesan,
           showConfirmButton :  false,

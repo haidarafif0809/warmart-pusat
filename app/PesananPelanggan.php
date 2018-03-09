@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 
 class PesananPelanggan extends Model
@@ -73,6 +74,18 @@ class PesananPelanggan extends Model
         // jka masih bingung, silakan diicoba 
         return $kode_unik = $id_pesanan % 1000;
 
+    }
+
+    public function kirimEmailKonfirmasiPesananKePelanggan($request,$nama_warung,$keranjang_belanjaan){
+        $data = $request;
+        $pesanan_pelanggan = $this;
+        $detail_pesanan = $keranjang_belanjaan;
+        Mail::send('auth.emails.email_konfirmasi_pesanan', compact('data','pesanan_pelanggan','detail_pesanan'), function ($message) use ($data,$nama_warung){
+
+            $message->from('verifikasi@andaglos.id', $nama_warung);
+            $message->to($data->email, $data->name)->subject('Konfirmasi Pesanan');
+
+        });
     }
 
 }

@@ -215,9 +215,13 @@ public function prosesSelesaikanPemesanan(Request $request)
 
                 // AMBIL NOMOR TELPON WARUNG
                 $nomor_tujuan = $warung->no_telpon;
+                $nama_warung = $warung->name;
 
                 // KIRIM SMS KE WARUNG
-                $this->kirimSmsKeWarung($nomor_tujuan, $id_pesanan_pelanggan);               
+                $this->kirimSmsKeWarung($nomor_tujuan, $id_pesanan_pelanggan);    
+
+
+                $pesanan_pelanggan->kirimEmailKonfirmasiPesananKePelanggan($request,$nama_warung,$keranjang_belanjaan);
 
             }
 
@@ -265,10 +269,12 @@ public function prosesSelesaikanPemesanan(Request $request)
 
                 // AMBIL NOMOR TELPON WARUNG
                 $nomor_tujuan = $warung->no_telpon;
+                $$nama_warung = $warung->name;
 
                 // KIRIM SMS KE WARUNG
                 $this->kirimSmsKeWarung($nomor_tujuan, $id_pesanan_pelanggan);
 
+                $pesanan_pelanggan->kirimEmailKonfirmasiPesananKePelanggan($request,$nama_warung,$keranjang_belanjaan);
             }
 
             // INSERT KE DETAIL PESANAN PELANGGAN
@@ -279,15 +285,13 @@ public function prosesSelesaikanPemesanan(Request $request)
                 'harga_produk'         => $keranjang_belanjaans['harga_jual'],
                 'jumlah_produk'        => $keranjang_belanjaans['jumlah_produk'],
             ]);
-            
+
 
             // HAPUS KERANJANG BELANJA
             KeranjangBelanja::destroy($keranjang_belanjaans['id_keranjang_belanja']);
 
         }
 
-                        // KIRIM EMAIL KONFIRMASI PESANAN KE PELANGGAN
-        $this->kirimEmailKonfirmasiPesananKePelanggan($request,$id_pesanan);
 
         DB::commit();
 
@@ -337,17 +341,6 @@ public function prosesSelesaikanPemesanan(Request $request)
             $result = $client->get('https://reguler.zenziva.net/apps/smsapi.php?userkey=' . $userkey . '&passkey=' . $passkey . '&nohp=' . $nomor_tujuan . '&pesan=' . $isi_pesan . '');
 
         }
-
-    }
-
-    public function kirimEmailKonfirmasiPesananKePelanggan($request, $id_pesanan){
-        $data = $request;
-        $pesanan_pelanggan = PesananPelanggan::with('warung')->find($id_pesanan);
-        $detail_pesanan = DetailPesananPelanggan::with(['produk'])->where('id_pesanan_pelanggan',$id_pesanan)->get();
-        Mail::send('auth.emails.email_konfirmasi_pesanan', compact('data','pesanan_pelanggan','detail_pesanan'), function ($message) use ($data) {
-            $message->to($data->email, $data->name)->subject('Konfirmasi Pesanan');
-
-        });
 
     }
 
