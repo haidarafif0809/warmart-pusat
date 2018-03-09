@@ -76,10 +76,10 @@ class PesananPelanggan extends Model
 
     }
 
-    public function kirimEmailKonfirmasiPesananKePelanggan($request,$nama_warung){
+    public function kirimEmailKonfirmasiPesananKePelanggan($request,$nama_warung,$keranjang_belanjaan){
         $data = $request;
         $pesanan_pelanggan = $this;
-        $detail_pesanan = DetailPesananPelanggan::with(['produk'])->where('id_pesanan_pelanggan',$pesanan_pelanggan->id)->get();
+        $detail_pesanan = $keranjang_belanjaan;
         Mail::send('auth.emails.email_konfirmasi_pesanan', compact('data','pesanan_pelanggan','detail_pesanan'), function ($message) use ($data,$nama_warung){
 
             $message->from('verifikasi@andaglos.id', $nama_warung);

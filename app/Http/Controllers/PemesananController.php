@@ -221,7 +221,7 @@ public function prosesSelesaikanPemesanan(Request $request)
                 $this->kirimSmsKeWarung($nomor_tujuan, $id_pesanan_pelanggan);    
 
 
-                $pesanan_pelanggan->kirimEmailKonfirmasiPesananKePelanggan($request,$nama_warung);
+                $pesanan_pelanggan->kirimEmailKonfirmasiPesananKePelanggan($request,$nama_warung,$keranjang_belanjaan);
 
             }
 
@@ -274,7 +274,7 @@ public function prosesSelesaikanPemesanan(Request $request)
                 // KIRIM SMS KE WARUNG
                 $this->kirimSmsKeWarung($nomor_tujuan, $id_pesanan_pelanggan);
 
-                $pesanan_pelanggan->kirimEmailKonfirmasiPesananKePelanggan($request,$nama_warung);
+                $pesanan_pelanggan->kirimEmailKonfirmasiPesananKePelanggan($request,$nama_warung,$keranjang_belanjaan);
             }
 
             // INSERT KE DETAIL PESANAN PELANGGAN
@@ -285,7 +285,7 @@ public function prosesSelesaikanPemesanan(Request $request)
                 'harga_produk'         => $keranjang_belanjaans['harga_jual'],
                 'jumlah_produk'        => $keranjang_belanjaans['jumlah_produk'],
             ]);
-            
+
 
             // HAPUS KERANJANG BELANJA
             KeranjangBelanja::destroy($keranjang_belanjaans['id_keranjang_belanja']);
