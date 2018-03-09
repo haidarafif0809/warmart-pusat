@@ -91,7 +91,8 @@
                       </div>
 
                       <div class="card-content">
-                       <h4 class="card-title"> Laporan Penjualan POS </h4>
+                       <h4 class="card-title"><b> Laporan Penjualan POS </b></h4>
+                       <hr>
                             <div class=" table-responsive">
                             <div class="pencarian">
                               <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control">
@@ -111,28 +112,42 @@
                                 <td align="right">{{ laporanPenjualanTerbaiks.laporan_penjualan_terbaik.jumlah_produk | pemisahTitik }} </td>
                               </tr>
                             </tbody>          
-                            <tbody class="data-tidak-ada" v-else-if="laporanPenjualanTerbaikData.length == 0 && loading == false">
+                            <tbody class="data-tidak-ada" v-else-if="laporanPenjualanTerbaik.length == 0 && loading == false">
                               <tr ><td colspan="3"  class="text-center">Tidak Ada Data</td></tr>
                             </tbody>
                           </table>
+                          <vue-simple-spinner v-if="loading"></vue-simple-spinner>
+                          <div align="right"><pagination :data="laporanPenjualanTerbaikData" v-on:pagination-change-page="prosesTerbaikData" :limit="4"></pagination></div>
                         </div><!--RESPONSIVE-->
                       </div>
                       <div class="card-content">
-                       <h4 class="card-title"> Laporan Penjualan Online </h4>
-
+                       <h4 class="card-title"><b> Laporan Penjualan Online </b></h4>
+                       <hr>
                             <div class="table-responsive">
                             <div class="pencarian">
-                              <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control">
+                              <input type="text" name="pencarian" v-model="pencarianOnline" placeholder="Pencarian" class="form-control">
                             </div>
                             <table class="table table-striped table-hover">
                               <thead class="text-primary">
                                 <tr>
                                   <th>Kode Produk</th>
                                   <th>Nama Produk</th>
-                                  <th>Jumlah Terjual</th>
+                                  <th style="text-align:right">Jumlah Terjual</th>
                                 </tr>
                               </thead>
+                               <tbody v-if="laporanPenjualanTerbaikOnline.length > 0 && loading == false"  class="data-ada">
+                               <tr v-for="laporanPenjualanTerbaikOnlines, index in laporanPenjualanTerbaikOnline" >
+                                <td >{{ laporanPenjualanTerbaikOnlines.laporan_penjualan_terbaik.kode_barang  }} </td>
+                                <td >{{ laporanPenjualanTerbaikOnlines.nama_barang  }}</td>
+                                <td align="right">{{ laporanPenjualanTerbaikOnlines.laporan_penjualan_terbaik.jumlah_produk | pemisahTitik }} </td>
+                              </tr>
+                            </tbody>          
+                            <tbody class="data-tidak-ada" v-else-if="laporanPenjualanTerbaikOnline.length == 0 && loading == false">
+                              <tr ><td colspan="3"  class="text-center">Tidak Ada Data</td></tr>
+                            </tbody>
                           </table>
+                               <vue-simple-spinner v-if="loading"></vue-simple-spinner>
+                          <div align="right"><pagination :data="laporanPenjualanTerbaikOnlineData" v-on:pagination-change-page="prosesTerbaikDataOnline" :limit="4"></pagination></div>
                         </div><!--RESPONSIVE-->
                       </div>
 
@@ -152,6 +167,8 @@
       return {
         laporanPenjualanTerbaik: [],
         laporanPenjualanTerbaikData: {},
+        laporanPenjualanTerbaikOnline: [],
+        laporanPenjualanTerbaikOnlineData: {},
         filter: {
           dari_tanggal: '',
           sampai_tanggal: new Date(),
@@ -160,6 +177,7 @@
         },
         url : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-penjualan-terbaik"),
         pencarian: '',
+        pencarianOnline: '',
         placeholder_penjualan: {
           placeholder: '--JENIS PENJUALAN--'
         },
@@ -181,6 +199,15 @@
         return formatted.join('; ');
       }
     },
+    watch: {
+      // whenever question changes, this function will run
+      pencarian: function (newQuestion) {
+        this.getHasilPencarian();
+      },
+      pencarianOnline: function (newQuestion) {
+        this.getHasilPencarianOnline();
+      }
+      },
     methods: {
       dariTanggal(filter){
         var dari_tanggal = "" + filter.dari_tanggal.getFullYear() +'-'+ ((filter.dari_tanggal.getMonth() + 1) > 9 ? '' : '0') + (filter.dari_tanggal.getMonth() + 1) +'-'+ (filter.dari_tanggal.getDate() > 9 ? '' : '0') + filter.dari_tanggal.getDate();
@@ -211,8 +238,13 @@
                 // window.location.replace(window.location.origin+(window.location.pathname)+'#/laporan-bucket-size/view/'+dari_tanggal+'/'+sampai_tanggal+'/'+app.filter.kelipatan) 
           
          },
-      submitPenjualanTerbaikData(page){
-              var app = this; 
+      submitPenjualanTerbaikData(){
+                var app = this;
+                app.prosesTerbaikData();
+                app.prosesTerbaikDataOnline();
+         },
+         prosesTerbaikData(page){
+           var app = this; 
               var newFilter = app.filter;
               if (typeof page === 'undefined') {
                 page = 1;
@@ -230,13 +262,66 @@
                 alert("Tidak Dapat Memuat Laporan Terbaik");
               });
          },
-      alertGagal(pesan) {
-        this.$swal({
-          title: "Peringatan!",
-          text: pesan,
-          icon: "warning",
-        });
-      },
+         prosesTerbaikDataOnline(page){
+           var app = this; 
+              var newFilter = app.filter;
+              if (typeof page === 'undefined') {
+                page = 1;
+              }
+              app.loading = true,
+              axios.post(app.url+'/view-online-data?page='+page, newFilter)
+              .then(function (resp) {
+                app.laporanPenjualanTerbaikOnline = resp.data.data;
+                app.laporanPenjualanTerbaikOnlineData = resp.data;
+                app.loading = false
+                console.log(resp.data.data);
+              })
+              .catch(function (resp) {
+                // console.log(resp);
+                alert("Tidak Dapat Memuat Laporan Terbaik");
+              });
+         },
+          getHasilPencarian(page){
+            var app = this;
+            var newFilter = app.filter;
+            if (typeof page === 'undefined') {
+              page = 1;
+            }
+            app.loading = true,
+            axios.post(app.url+'/pencarian-pos-data?search='+app.pencarian+'&page='+page, newFilter)
+            .then(function (resp) {
+              app.laporanPenjualanTerbaik = resp.data.data;
+              app.laporanPenjualanTerbaikData = resp.data;
+            })
+            .catch(function (resp) {
+              // console.log(resp);
+              alert("Tidak Dapat Memuat Laporan Penjualan Terbaik");
+            });
+          },
+            getHasilPencarianOnline(page){
+            var app = this;
+            var newFilter = app.filter;
+            if (typeof page === 'undefined') {
+              page = 1;
+            }
+            app.loading = true,
+            axios.post(app.url+'/pencarian-online-data?search='+app.pencarianOnline+'&page='+page, newFilter)
+            .then(function (resp) {
+              app.laporanPenjualanTerbaikOnline = resp.data.data;
+              app.laporanPenjualanTerbaikOnlineData = resp.data;
+            })
+            .catch(function (resp) {
+              // console.log(resp);
+              alert("Tidak Dapat Memuat Laporan Penjualan Terbaik");
+            });
+          },
+        alertGagal(pesan) {
+          this.$swal({
+            title: "Peringatan!",
+            text: pesan,
+            icon: "warning",
+          });
+        },
 
     }
   }
