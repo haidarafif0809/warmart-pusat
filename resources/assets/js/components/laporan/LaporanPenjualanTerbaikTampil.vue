@@ -38,7 +38,7 @@
 					{
 						labels: resp.data.nama_barang,
 						datasets: [{
-							label: '',
+							label: 'Item',
 							backgroundColor: resp.data.color,
 							data: resp.data.jumlah_produk,
 						}]

@@ -762,6 +762,9 @@ Route::get('/laporan-penjualan-terbaik-online/view/{dari_tanggal}/{sampai_tangga
 Route::get('/laporan-penjualan-terbaik/cek-tampil-terbaik/{dari_tanggal}/{sampai_tanggal}/{jenis_penjualan}', 'LaporanPenjualanTerbaikController@cekTampilTerbaik')->middleware('auth');
 
 Route::post('/laporan-penjualan-terbaik/view-pos-data', 'LaporanPenjualanTerbaikController@prosesPenjualanTerbaikData')->middleware('auth');
+Route::post('/laporan-penjualan-terbaik/view-online-data', 'LaporanPenjualanTerbaikController@prosesPenjualanTerbaikOnlineData')->middleware('auth');
+Route::post('/laporan-penjualan-terbaik/pencarian-pos-data', 'LaporanPenjualanTerbaikController@pencarian')->middleware('auth');
+Route::post('/laporan-penjualan-terbaik/pencarian-online-data', 'LaporanPenjualanTerbaikController@pencarianOnline')->middleware('auth');
 
 
 // LAPORAN PENJUALAN TERBAIK

@@ -457,13 +457,28 @@ class DetailPenjualanPos extends Model
         return $query_cari_laporan_pos_pelanggan;
     }
 
-    // TOTAL PEJUALAN POS PER PRODUK
+    // Data penjualan terbaik per item 
     public function scopePenjualanTerbaik($detail_penjualan_pos, $request)
     {
         $detail_penjualan_pos = DetailPenjualanPos::select([DB::raw('SUM(detail_penjualan_pos.jumlah_produk) as jumlah_produk'), 'barangs.nama_barang as nama_barang', 'barangs.kode_barang as kode_barang', 'detail_penjualan_pos.id_produk as id_produk'])
+            ->leftJoin('barangs', 'barangs.id', '=', 'detail_penjualan_pos.id_produk')
+            ->where(DB::raw('DATE(detail_penjualan_pos.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+            ->where(DB::raw('DATE(detail_penjualan_pos.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal));
+        return $detail_penjualan_pos;
+    }
+
+        //Data pencarian penjualan terbaik per item 
+    public function scopeCariPenjualanTerbaik($detail_penjualan_pos, $request)
+    {
+        $search = $request->search;
+        $detail_penjualan_pos = DetailPenjualanPos::select([DB::raw('SUM(detail_penjualan_pos.jumlah_produk) as jumlah_produk'), 'barangs.nama_barang as nama_barang', 'barangs.kode_barang as kode_barang', 'detail_penjualan_pos.id_produk as id_produk'])
+            ->leftJoin('barangs', 'barangs.id', '=', 'detail_penjualan_pos.id_produk')
             ->where(DB::raw('DATE(detail_penjualan_pos.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
             ->where(DB::raw('DATE(detail_penjualan_pos.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
-            ->leftJoin('barangs', 'barangs.id', '=', 'detail_penjualan_pos.id_produk');
+            ->where(function ($query) use ($search) {
+                    $query->orWhere('barangs.nama_barang', 'LIKE', '%' . $search . '%')
+                        ->orWhere('barangs.kode_barang', 'LIKE', '%' . $search . '%');
+                });
         return $detail_penjualan_pos;
     }
 
