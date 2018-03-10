@@ -173,7 +173,7 @@
                                             <div class="col-md-2"></div>
 
                                             <div class="col-md-3">
-                                                <selectize-component v-model="input.id_satuan" :settings="placeholder_satuan" id="satuan-konversi" ref="satuan_barang"> 
+                                                <selectize-component v-model="input.id_satuan" :settings="placeholder_satuan" id="satuan-konversi" ref="satuan_barang" :disabled="input.disable"> 
                                                     <option v-for="satuans, index in satuan_id" v-bind:value="satuans.satuan" >{{ satuans.nama_satuan }}</option>
                                                 </selectize-component>
                                             </div>
@@ -636,10 +636,17 @@
                     id_satuan: app.produk.satuan_id,
                     jumlah_konversi: '',
                     harga_jual_konversi: '',
-                })              
+                    disable: false
+                })
+                app.inputSatuanKonversi[length].disable = true;
             },
             hapusKonversiSatuan(index) {
-                this.inputSatuanKonversi.splice(index,1)
+                var app = this;
+                console.log(index)
+                if (index > 0) {
+                    app.inputSatuanKonversi[index - 1].disable = false;
+                }
+                app.inputSatuanKonversi.splice(index,1)
             }
         }
     }
