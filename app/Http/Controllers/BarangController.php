@@ -165,6 +165,7 @@ class BarangController extends Controller
             array_push($array, [
                 'satuan'      => $satuans->id . "|" . strtoupper($satuans->nama_satuan),
                 'nama_satuan' => strtoupper($satuans->nama_satuan),
+                'id_satuan'   => strtoupper($satuans->id),
             ]);
         }
 
@@ -296,7 +297,8 @@ class BarangController extends Controller
      */
     public function show($id)
     {
-        $produk = Barang::find($id);
+        $produk = Barang::select(['barangs.id', 'barangs.kode_barang', 'barangs.kode_barcode', 'barangs.nama_barang', 'barangs.harga_beli', 'barangs.harga_jual', 'barangs.satuan_id', 'barangs.kategori_barang_id', 'barangs.status_aktif', 'barangs.foto', 'barangs.hitung_stok', 'barangs.id_warung', 'barangs.created_by', 'barangs.updated_by', 'barangs.created_at', 'barangs.updated_at', 'barangs.deskripsi_produk', 'barangs.konfirmasi_admin', 'barangs.harga_jual2', 'barangs.berat', 'satuans.nama_satuan'])
+            ->leftJoin('satuans', 'satuans.id', '=', 'barangs.satuan_id')->where('barangs.id', $id)->first();
         return $produk;
     }
 
