@@ -450,6 +450,7 @@
 
                 axios.post(app.url+'/' + app.produkId, newProduk)
                 .then(function (resp) {
+                    app.updateSatuanKonversi();
                     app.message = 'Berhasil Mengubah Produk '+app.produk.nama_barang;
                     app.alert(app.message);
                     app.kosongkanData();
@@ -457,6 +458,17 @@
                     app.$swal.close();
                 })
                 .catch(function (resp) {
+                    app.errors = resp.response.data.errors;
+                    app.$swal.close();
+                });
+            },
+            updateSatuanKonversi(){
+                var app = this;
+                var satuanKonversi = app.inputSatuanKonversi;
+                axios.post(app.url+'/update-satuan-konversi/'+app.produkId, {data:satuanKonversi}).then(function (resp) {
+                })
+                .catch(function (resp) {
+                    alert("Periksa Kembali Satuan Konversi Anda!")
                     app.errors = resp.response.data.errors;
                     app.$swal.close();
                 });

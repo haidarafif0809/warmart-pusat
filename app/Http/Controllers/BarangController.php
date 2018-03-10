@@ -686,4 +686,27 @@ class BarangController extends Controller
 
         return response()->json($satuan_konversis);
     }
+
+    public function prosesEditSatuanKonversi(Request $request, $id)
+    {
+        //HAPUS SATUAN KONVERSI LAMA
+        $data_satuan_konversis = SatuanKonversi::where('id_produk', $id)->get();
+
+        foreach ($data_satuan_konversis as $data_satuan_konversi) {
+            $hapus_konversi = SatuanKonversi::destroy($data_satuan_konversi->id_satuan_konversi);
+        }
+
+        //INSERT SATUAN KONVERSI BARU
+        foreach ($request->data as $key => $value) {
+            $insert_satuan = SatuanKonversi::create([
+                'id_satuan'           => $value['id_satuan'],
+                'id_produk'           => $id,
+                'jumlah_konversi'     => $value['jumlah_konversi'],
+                'harga_jual_konversi' => $value['harga_jual_konversi'],
+                'satuan_dasar'        => $value['satuan_dasar'],
+                'warung_id'           => Auth::user()->id_warung,
+            ]);
+        }
+    }
+
 }
