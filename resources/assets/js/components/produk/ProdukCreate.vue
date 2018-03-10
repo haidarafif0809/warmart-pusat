@@ -136,7 +136,7 @@
 										<div class="col-md-9">
 											<selectize-component v-model="produk.kategori_barang_id" :settings="placeholder_kategori" id="pilih_kategori_barang_id" ref="kategori_barang"> 
 												<option v-for="kategoris, index in kategori_barang_id" v-bind:value="kategoris.id" >{{ kategoris.nama_kategori_barang }}</option>
-											</selectize-component>
+											</selectize-component>`
 											<span v-if="errors.kategori_barang_id" id="kategori_barang_id_error" class="label label-danger">{{ errors.kategori_barang_id[0] }}</span>
 										</div>
 										<div class="col-md-1" style="padding-left:0px">
@@ -173,7 +173,7 @@
 											<div class="col-md-2"></div>
 
 											<div class="col-md-3">
-												<selectize-component v-model="input.id_satuan" :settings="placeholder_satuan" id="pilih_satuan_id" ref="satuan_barang"> 
+												<selectize-component v-model="input.id_satuan" :settings="placeholder_satuan" id="satuan-konversi" ref="satuan_barang"> 
 													<option v-for="satuans, index in satuan_id" v-bind:value="satuans.satuan" >{{ satuans.nama_satuan }}</option>
 												</selectize-component>
 											</div>
@@ -509,11 +509,22 @@
 		watch: {
 			'produk.satuan_id':function(){
 				var app = this;
+				var satuanKonversi = app.inputSatuanKonversi;
+				var data_satuan = app.produk.satuan_id.split("|");
+
 				if (app.produk.satuan_id == '') {
 					$("#btnSatuanKonversi").hide();
 				}else{
 					$("#btnSatuanKonversi").show();
 				}
+
+				$.each(satuanKonversi, function (i, item) {
+					satuanKonversi[0].nama_satuan = data_satuan[1];
+					satuanKonversi[0].satuan_dasar = data_satuan[0];
+				})
+			},
+			'inputSatuanKonversi':function(){
+				console.log("12345");
 			}
 		},
 		computed: {
@@ -725,6 +736,7 @@
 				})				
 			},
 			hapusKonversiSatuan(index) {
+				console.log(index)
 				this.inputSatuanKonversi.splice(index,1)
 			}
 		}
