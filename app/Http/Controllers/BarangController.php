@@ -676,4 +676,14 @@ class BarangController extends Controller
 
         return response()->json($hitung_produk);
     }
+
+    public function editSatuanKonversi($id)
+    {
+        $satuan_konversis = SatuanKonversi::select(['satuan_konversis.id_satuan', 'satuan_konversis.satuan_dasar', 'satuan_konversis.id_produk', 'satuan_konversis.jumlah_konversi', 'satuan_konversis.harga_jual_konversi', 'konversi.nama_satuan AS nama_konversi', 'dasar.nama_satuan AS nama_dasar'])
+            ->leftJoin('satuans as konversi', 'konversi.id', '=', 'satuan_konversis.id_satuan')
+            ->leftJoin('satuans as dasar', 'dasar.id', '=', 'satuan_konversis.satuan_dasar')
+            ->where('id_produk', $id)->get();
+
+        return response()->json($satuan_konversis);
+    }
 }

@@ -179,7 +179,7 @@
                                             </div>
 
                                             <div class="col-md-2">
-                                                <input class="form-control" autocomplete="off" placeholder="Qty" v-model="input.jumlah_produk" type="text" name="jumlah_konversi" id="jumlah_konversi" ref="jumlah_konversi" autofocus="">
+                                                <input class="form-control" autocomplete="off" placeholder="Qty" v-model="input.jumlah_konversi" type="text" name="jumlah_konversi" id="jumlah_konversi" ref="jumlah_konversi" autofocus="">
                                             </div>  
 
                                             <div class="col-md-2">
@@ -187,7 +187,7 @@
                                             </div>
 
                                             <div class="col-md-2">
-                                                <money class="form-control" autocomplete="off" placeholder="Harga Jual" v-model="input.harga_jual" type="text" name="harga_jual" id="harga_jual"  ref="harga_jual" autofocus="" v-bind="separator">
+                                                <money class="form-control" autocomplete="off" placeholder="Harga Jual" v-model="input.harga_jual_konversi" type="text" name="harga_jual" id="harga_jual"  ref="harga_jual" autofocus="" v-bind="separator">
                                                 </money>
                                             </div>
 
@@ -324,16 +324,8 @@
             let id = app.$route.params.id;
             app.produkId = id;
 
-            axios.get(app.url+'/' + id)
-            .then(function (resp) {
-                app.produk = resp.data;
-                app.produk.satuan_id = resp.data.satuan_id+"|"+resp.data.nama_satuan;
-                app.toogleChange(resp.data.status_aktif,resp.data.hitung_stok);
-
-            })
-            .catch(function () {
-                alert("Tidak Dapat Memuat Produk")
-            });
+            app.getData(app, id);
+            app.getDataSatuanKonversi(app, id);
             app.dataKategori();
             app.dataSatuan();
             app.dataAgent();
@@ -417,7 +409,40 @@
                 return this.$refs.myQuillEditor.quill
             }
         },
-        methods: {        
+        methods: {  
+            getData(app, id){                
+                axios.get(app.url+'/' + id)
+                .then(function (resp) {
+                    app.produk = resp.data;
+                    app.produk.satuan_id = resp.data.satuan_id+"|"+resp.data.nama_satuan;
+                    app.toogleChange(resp.data.status_aktif,resp.data.hitung_stok);
+
+                })
+                .catch(function () {
+                    alert("Tidak Dapat Memuat Produk")
+                });
+            },
+            getDataSatuanKonversi(app, id){
+                var satuanKonversi = app.inputSatuanKonversi;
+
+                axios.get(app.url+'/data-satuan-konversi/' + id)
+                .then(function (resp) {
+                    satuanKonversi = resp.data;
+                    $.each(resp.data, function (i, item) {
+                        app.inputSatuanKonversi.push({
+                            nama_satuan: satuanKonversi[i].nama_dasar.toUpperCase(),
+                            satuan_dasar: satuanKonversi[i].satuan_dasar,
+                            id_satuan: satuanKonversi[i].id_satuan+"|"+satuanKonversi[i].nama_konversi.toUpperCase(),
+                            jumlah_konversi: satuanKonversi[i].jumlah_konversi,
+                            harga_jual_konversi: satuanKonversi[i].harga_jual_konversi,
+                        })
+                    })
+                })
+                .catch(function (resp) {
+                    console.log(resp)
+                    alert("Tidak Dapat Memuat Produk")
+                });
+            },      
             saveForm() {
                 var app = this;
                 var newProduk = app.inputData();
@@ -574,17 +599,13 @@
                 let app = this
                 if (status_aktif == 1) {
                     $('#status_aktif').attr("checked", true);
-                    console.log(status_aktif);
                 }else{
                     $('#status_aktif').attr("checked", false);
-                    console.log(status_aktif);
                 }
                 if (hitung_stok == 1) {
                     $('#hitung_stok').attr("checked", true);
-                    console.log(hitung_stok);
                 }else{
                     $('#hitung_stok').attr("checked", false);
-                    console.log(hitung_stok);
                 }
             },
             konversiSatuan() { 
@@ -601,8 +622,8 @@
                     nama_satuan: data_satuan[1],
                     satuan_dasar: data_satuan[0],
                     id_satuan: app.produk.satuan_id,
-                    jumlah_produk: '',
-                    harga_jual: '',
+                    jumlah_konversi: '',
+                    harga_jual_konversi: '',
                 })              
             },
             hapusKonversiSatuan(index) {
