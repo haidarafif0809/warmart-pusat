@@ -179,7 +179,8 @@
 											</div>
 
 											<div class="col-md-2">
-												<input class="form-control" autocomplete="off" placeholder="Qty" v-model="input.jumlah_produk" type="text" name="jumlah_konversi" id="jumlah_konversi" ref="jumlah_konversi" autofocus="">
+												<money class="form-control" autocomplete="off" placeholder="Jumlah Konversi" v-model="input.jumlah_produk" type="text" name="jumlah_konversi" id="jumlah_konversi"  ref="jumlah_konversi" autofocus="" v-bind="separator">
+												</money>
 											</div>	
 
 											<div class="col-md-2">
@@ -522,9 +523,6 @@
 					satuanKonversi[0].nama_satuan = data_satuan[1];
 					satuanKonversi[0].satuan_dasar = data_satuan[0];
 				})
-			},
-			'inputSatuanKonversi':function(){
-				console.log("12345");
 			}
 		},
 		computed: {
@@ -537,19 +535,12 @@
 				var app = this; 
 				app.loading();
 				var newProduk = app.inputData();
-				var satuanKonversi = app.inputSatuanKonversi;
 
 				axios.post(app.url, newProduk)
 				.then(function (resp) {
+					app.createSatuanKonversi();
 					app.message = 'Menambah Produk '+ app.produk.nama_barang;
 					app.alert(app.message);
-					axios.post(app.url+'/satuan-konversi', {data:satuanKonversi}).then(function (resp) {
-
-					})
-					.catch(function (resp) {
-						alert("Periksa Kembali Satuan Konversi Anda!")
-						app.errors = resp.response.data.errors;
-					});
 					app.kosongkanData();
 					app.$router.replace('/produk');
 					app.$swal.close();
@@ -557,6 +548,17 @@
 				.catch(function (resp) {
 					alert("Periksa Kembali Inputan Anda!")
 					app.success = false;
+					app.errors = resp.response.data.errors;
+					app.$swal.close();
+				});
+			},
+			createSatuanKonversi(){
+				var app = this;
+				var satuanKonversi = app.inputSatuanKonversi;
+				axios.post(app.url+'/satuan-konversi', {data:satuanKonversi}).then(function (resp) {
+				})
+				.catch(function (resp) {
+					alert("Periksa Kembali Satuan Konversi Anda!")
 					app.errors = resp.response.data.errors;
 					app.$swal.close();
 				});
@@ -731,8 +733,8 @@
 					nama_satuan: data_satuan[1],
 					satuan_dasar: data_satuan[0],
 					id_satuan: app.produk.satuan_id,
-					jumlah_produk: '',
-					harga_jual: '',
+					jumlah_produk: 0,
+					harga_jual: 0,
 				})				
 			},
 			hapusKonversiSatuan(index) {

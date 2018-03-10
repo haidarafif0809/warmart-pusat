@@ -606,7 +606,6 @@
                 })              
             },
             hapusKonversiSatuan(index) {
-                console.log(index)
                 this.inputSatuanKonversi.splice(index,1)
             }
         }
