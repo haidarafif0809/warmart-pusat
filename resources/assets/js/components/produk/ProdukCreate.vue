@@ -136,7 +136,7 @@
 										<div class="col-md-9">
 											<selectize-component v-model="produk.kategori_barang_id" :settings="placeholder_kategori" id="pilih_kategori_barang_id" ref="kategori_barang"> 
 												<option v-for="kategoris, index in kategori_barang_id" v-bind:value="kategoris.id" >{{ kategoris.nama_kategori_barang }}</option>
-											</selectize-component>
+											</selectize-component>`
 											<span v-if="errors.kategori_barang_id" id="kategori_barang_id_error" class="label label-danger">{{ errors.kategori_barang_id[0] }}</span>
 										</div>
 										<div class="col-md-1" style="padding-left:0px">
@@ -173,13 +173,14 @@
 											<div class="col-md-2"></div>
 
 											<div class="col-md-3">
-												<selectize-component v-model="input.id_satuan" :settings="placeholder_satuan" id="pilih_satuan_id" ref="satuan_barang"> 
+												<selectize-component v-model="input.id_satuan" :settings="placeholder_satuan" id="satuan-konversi" ref="satuan_barang" :disabled="input.disable"> 
 													<option v-for="satuans, index in satuan_id" v-bind:value="satuans.satuan" >{{ satuans.nama_satuan }}</option>
 												</selectize-component>
 											</div>
 
 											<div class="col-md-2">
-												<input class="form-control" autocomplete="off" placeholder="Qty" v-model="input.jumlah_produk" type="text" name="jumlah_konversi" id="jumlah_konversi" ref="jumlah_konversi" autofocus="">
+												<money class="form-control" autocomplete="off" placeholder="Jumlah Konversi" v-model="input.jumlah_produk" type="text" name="jumlah_konversi" id="jumlah_konversi"  ref="jumlah_konversi" autofocus="" v-bind="separator">
+												</money>
 											</div>	
 
 											<div class="col-md-2">
@@ -509,11 +510,19 @@
 		watch: {
 			'produk.satuan_id':function(){
 				var app = this;
+				var satuanKonversi = app.inputSatuanKonversi;
+				var data_satuan = app.produk.satuan_id.split("|");
+
 				if (app.produk.satuan_id == '') {
 					$("#btnSatuanKonversi").hide();
 				}else{
 					$("#btnSatuanKonversi").show();
 				}
+
+				$.each(satuanKonversi, function (i, item) {
+					satuanKonversi[0].nama_satuan = data_satuan[1];
+					satuanKonversi[0].satuan_dasar = data_satuan[0];
+				})
 			}
 		},
 		computed: {
@@ -529,15 +538,27 @@
 
 				axios.post(app.url, newProduk)
 				.then(function (resp) {
+					app.createSatuanKonversi();
 					app.message = 'Menambah Produk '+ app.produk.nama_barang;
 					app.alert(app.message);
 					app.kosongkanData();
-					app.$router.replace('/produk/');
+					app.$router.replace('/produk');
 					app.$swal.close();
 				})
 				.catch(function (resp) {
 					alert("Periksa Kembali Inputan Anda!")
 					app.success = false;
+					app.errors = resp.response.data.errors;
+					app.$swal.close();
+				});
+			},
+			createSatuanKonversi(){
+				var app = this;
+				var satuanKonversi = app.inputSatuanKonversi;
+				axios.post(app.url+'/satuan-konversi', {data:satuanKonversi}).then(function (resp) {
+				})
+				.catch(function (resp) {
+					alert("Periksa Kembali Satuan Konversi Anda!")
 					app.errors = resp.response.data.errors;
 					app.$swal.close();
 				});
@@ -710,13 +731,21 @@
 
 				app.inputSatuanKonversi.push({
 					nama_satuan: data_satuan[1],
+					satuan_dasar: data_satuan[0],
 					id_satuan: app.produk.satuan_id,
-					jumlah_produk: '',
-					harga_jual: ''
+					jumlah_produk: 0,
+					harga_jual: 0,
+					disable: false
 				})
+				app.inputSatuanKonversi[length].disable = true;
 			},
 			hapusKonversiSatuan(index) {
-				this.inputSatuanKonversi.splice(index,1)
+				var app = this;
+				console.log(index)
+				if (index > 0) {
+					app.inputSatuanKonversi[index - 1].disable = false;
+				}
+				app.inputSatuanKonversi.splice(index,1)
 			}
 		}
 	}

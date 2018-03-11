@@ -6,6 +6,7 @@ use App\Barang;
 use App\Hpp;
 use App\KategoriBarang;
 use App\Satuan;
+use App\SatuanKonversi;
 use App\SettingAplikasi;
 use App\User;
 use Auth;
@@ -164,6 +165,7 @@ class BarangController extends Controller
             array_push($array, [
                 'satuan'      => $satuans->id . "|" . strtoupper($satuans->nama_satuan),
                 'nama_satuan' => strtoupper($satuans->nama_satuan),
+                'id_satuan'   => strtoupper($satuans->id),
             ]);
         }
 
@@ -272,6 +274,21 @@ class BarangController extends Controller
 
     }
 
+    public function satuanKonversi(Request $request)
+    {
+        foreach ($request->data as $key => $value) {
+            $id_produk     = Barang::select('id')->latest()->first()->id;
+            $insert_satuan = SatuanKonversi::create([
+                'id_satuan'           => $value['id_satuan'],
+                'id_produk'           => $id_produk,
+                'jumlah_konversi'     => $value['jumlah_produk'],
+                'harga_jual_konversi' => $value['harga_jual'],
+                'satuan_dasar'        => $value['satuan_dasar'],
+                'warung_id'           => Auth::user()->id_warung,
+            ]);
+        }
+    }
+
     /**
      * Display the specified resource.
      *
@@ -280,7 +297,8 @@ class BarangController extends Controller
      */
     public function show($id)
     {
-        $produk = Barang::find($id);
+        $produk = Barang::select(['barangs.id', 'barangs.kode_barang', 'barangs.kode_barcode', 'barangs.nama_barang', 'barangs.harga_beli', 'barangs.harga_jual', 'barangs.satuan_id', 'barangs.kategori_barang_id', 'barangs.status_aktif', 'barangs.foto', 'barangs.hitung_stok', 'barangs.id_warung', 'barangs.created_by', 'barangs.updated_by', 'barangs.created_at', 'barangs.updated_at', 'barangs.deskripsi_produk', 'barangs.konfirmasi_admin', 'barangs.harga_jual2', 'barangs.berat', 'satuans.nama_satuan'])
+            ->leftJoin('satuans', 'satuans.id', '=', 'barangs.satuan_id')->where('barangs.id', $id)->first();
         return $produk;
     }
 
@@ -658,4 +676,37 @@ class BarangController extends Controller
 
         return response()->json($hitung_produk);
     }
+
+    public function editSatuanKonversi($id)
+    {
+        $satuan_konversis = SatuanKonversi::select(['satuan_konversis.id_satuan', 'satuan_konversis.satuan_dasar', 'satuan_konversis.id_produk', 'satuan_konversis.jumlah_konversi', 'satuan_konversis.harga_jual_konversi', 'konversi.nama_satuan AS nama_konversi', 'dasar.nama_satuan AS nama_dasar'])
+            ->leftJoin('satuans as konversi', 'konversi.id', '=', 'satuan_konversis.id_satuan')
+            ->leftJoin('satuans as dasar', 'dasar.id', '=', 'satuan_konversis.satuan_dasar')
+            ->where('id_produk', $id)->get();
+
+        return response()->json($satuan_konversis);
+    }
+
+    public function prosesEditSatuanKonversi(Request $request, $id)
+    {
+        //HAPUS SATUAN KONVERSI LAMA
+        $data_satuan_konversis = SatuanKonversi::where('id_produk', $id)->get();
+
+        foreach ($data_satuan_konversis as $data_satuan_konversi) {
+            $hapus_konversi = SatuanKonversi::destroy($data_satuan_konversi->id_satuan_konversi);
+        }
+
+        //INSERT SATUAN KONVERSI BARU
+        foreach ($request->data as $key => $value) {
+            $insert_satuan = SatuanKonversi::create([
+                'id_satuan'           => $value['id_satuan'],
+                'id_produk'           => $id,
+                'jumlah_konversi'     => $value['jumlah_konversi'],
+                'harga_jual_konversi' => $value['harga_jual_konversi'],
+                'satuan_dasar'        => $value['satuan_dasar'],
+                'warung_id'           => Auth::user()->id_warung,
+            ]);
+        }
+    }
+
 }
