@@ -908,6 +908,12 @@ Route::post('/stok-opname/filter-periode', 'StokOpnameController@filterPeriode')
 Route::post('/stok-opname/subtotal', 'StokOpnameController@totalStokOpname')->middleware('auth');
 Route::get('/stok-opname/download-excel/{dari_tanggal}/{sampai_tanggal}', 'StokOpnameController@downloadExcelPeriode')->middleware('auth');
 
+// DAFTAR USER WARUNG
+Route::get('/daftar-user-warung/view', 'DaftarUserWarungController@view')->middleware('auth');
+Route::get('/daftar-user-warung/pencarian', 'DaftarUserWarungController@pencarian')->middleware('auth');
+Route::get('/daftar-user-warung/otoritas-user', 'DaftarUserWarungController@otoritas_user')->middleware('auth');
+Route::post('/daftar-user-warung', 'DaftarUserWarungController@store')->middleware('auth');
+
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
     Route::resource('user', 'UserController');

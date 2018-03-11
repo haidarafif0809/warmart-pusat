@@ -3,7 +3,7 @@
 @section('content')
 
 <!-- LOGI USER WARUNG -->
-@if(Auth::user()->tipe_user == 4 AND (Auth::user()->foto_ktp == null || \App\Warung::select('kabupaten')->where('id',Auth::user()->id_warung)->first()->kabupaten == "" ))
+@if(Auth::user()->tipe_user == 4 AND (App\UserWarung::select('foto_ktp')->where('tipe_user',4)->orderBy('id', 'asc')->limit(1)->first()->foto_ktp == null || \App\Warung::select('kabupaten')->where('id',Auth::user()->id_warung)->first()->kabupaten == "" ))
 <router-view name="ubahProfilUserWarung"></router-view>
 <div class="alert alert-info">
 	<div class="alert-icon">
@@ -30,7 +30,7 @@
 </router-view>
 
 
-@elseif(Auth::user()->tipe_user == 4 AND Auth::user()->foto_ktp != null )
+@elseif(Auth::user()->tipe_user == 4 AND App\UserWarung::select('foto_ktp')->where('tipe_user',4)->orderBy('id', 'asc')->limit(1)->first()->foto_ktp != null )
 {{-- dashboard untuk warung --}}
 
 <router-view name="dashboardIndex"></router-view>

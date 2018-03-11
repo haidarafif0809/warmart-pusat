@@ -172,6 +172,9 @@ import UserKasirCreate from './components/user_kasir/UserKasirCreate.vue';
 import UserKasirEdit from './components/user_kasir/UserKasirEdit.vue';
 /**STOK OPNAME*/
 import StokOpnameIndex from './components/stok_opname/StokOpnameIndex.vue';
+// daftar user warung
+import DaftarUserWarungIndex from './components/daftar_user_warung/DaftarUserWarungIndex.vue';
+import DaftarUserWarungCreate from './components/daftar_user_warung/DaftarUserWarungCreate.vue';
 
 const routes = [{
     path: '/',
@@ -735,7 +738,15 @@ const routes = [{
         path: '/laporan-hutang-beredar/',
         component: LaporanHutangBeredarIndex,
         name: 'indexLaporanHutangBeredar'
-    },
+    },{
+        path: '/daftar-user',
+        component: DaftarUserWarungIndex,
+        name: 'indexDaftarUserWarung'
+    },{
+        path: '/create-daftar-user',
+        component: DaftarUserWarungCreate,
+        name: 'createDaftarUserWarung'
+    }
 
     ]
     export default routes;
