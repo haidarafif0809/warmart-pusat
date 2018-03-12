@@ -22,9 +22,9 @@
           <h4 class="card-title"> Laporan Kartu Stok</h4>
 
           <div class="row">
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-3">
               <selectize-component v-model="filter.produk" :settings="placeholder_produk" id="pilih_produk" ref ="pilih_produk"> 
-                <option v-for="produks, index in produk" v-bind:value="produks.id" >{{ produks.nama_produk }}</option>
+                <option v-for="produks, index in produk" v-bind:value="produks.id" >{{ produks.barcode+" || " +produks.kode_produk+" || "+produks.nama_produk }}</option>
               </selectize-component>
               <input class="form-control" type="hidden"  v-model="filter.produk"  name="pilih_produk" id="pilih_produk"  v-shortkey="['f1']" @shortkey="bukaPilihProduk()">
             </div>
