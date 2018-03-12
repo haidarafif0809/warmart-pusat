@@ -151,6 +151,13 @@
                         </div><!--RESPONSIVE-->
                       </div>
 
+
+                   <!--DOWNLOAD EXCEL-->
+                    <a href="#" class='btn btn-warning' id="btnExcel" target='blank' :style="'display: none'"><i class="material-icons">file_download</i> Download Excel</a>
+
+                    <!--CETAK LAPORAN-->
+                    <a href="#" class='btn btn-success' id="btnCetak" target='blank' :style="'display: none'"><i class="material-icons">print</i> Cetak Laporan</a>
+
                     </div>
               </div>
 
@@ -176,6 +183,8 @@
           jenis_penjualan: '',
         },
         url : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-penjualan-terbaik"),
+        urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-penjualan-terbaik/download-excel"),
+        urlCetak : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-penjualan-terbaik/cetak-laporan"),
         pencarian: '',
         pencarianOnline: '',
         placeholder_penjualan: {
@@ -242,6 +251,8 @@
                 var app = this;
                 app.prosesTerbaikData();
                 app.prosesTerbaikDataOnline();
+                app.showButton();
+
          },
          prosesTerbaikData(page){
            var app = this; 
@@ -315,6 +326,19 @@
               alert("Tidak Dapat Memuat Laporan Penjualan Terbaik");
             });
           },
+         showButton() {
+          var app = this;
+          var filter = app.filter;
+
+          var date_dari_tanggal = filter.dari_tanggal;
+          var date_sampai_tanggal = filter.sampai_tanggal;
+          var dari_tanggal = app.dariTanggal(filter);
+          var sampai_tanggal = app.sampaiTanggal(filter);
+
+          $("#btnExcel").show();
+          $("#btnExcel").attr('href', app.urlDownloadExcel+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.tampil_terbaik);
+          $("#btnCetak").attr('href', app.urlCetak+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.tampil_terbaik);
+        },
         alertGagal(pesan) {
           this.$swal({
             title: "Peringatan!",
