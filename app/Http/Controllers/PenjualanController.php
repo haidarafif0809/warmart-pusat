@@ -205,7 +205,7 @@ class PenjualanController extends Controller
     }
 
 
-            public function totalLaporanPenjualan()
+    public function totalLaporanPenjualan()
     {
         // TOTAL KESELURUHAN
         $user_warung = Auth::user()->id_warung;
@@ -214,7 +214,7 @@ class PenjualanController extends Controller
 
         $total_penjualan = 0;
         foreach ($penjualan as $penjualans) {
-                $total_penjualan += $penjualans->total;
+            $total_penjualan += $penjualans->total;
         } 
         $respons['total_penjualan']  =  number_format($total_penjualan, 2, ',', '.'); 
 
@@ -231,14 +231,14 @@ class PenjualanController extends Controller
 
         $total_penjualan = 0;
         foreach ($penjualan as $penjualans) {
-                $total_penjualan += $penjualans->total;
+            $total_penjualan += $penjualans->total;
         } 
         $respons['total_penjualan']  =  number_format($total_penjualan, 2, ',', '.'); 
 
         return response()->json($respons);
     }
 
-        public function viewFilter(Request $request)
+    public function viewFilter(Request $request)
     {
         $user_warung = Auth::user()->id_warung;
         $penjualan   = PenjualanPos::with(['pelanggan', 'kas', 'user_edit', 'user_buat'])
@@ -279,7 +279,7 @@ class PenjualanController extends Controller
         return response()->json($respons);
     }
 
-       public function tanggalSql($tangal)
+    public function tanggalSql($tangal)
     {
         $date        = date_create($tangal);
         $date_format = date_format($date, "Y-m-d");
@@ -727,7 +727,7 @@ class PenjualanController extends Controller
 
     public function cekDataTbsPenjualan($id)
     {
-      
+
         return response()->json([
             "penjualan" => PenjualanPos::find($id)->toArray(),
         ]);
@@ -869,6 +869,7 @@ public function store(Request $request)
                         'subtotal'         => $data_tbs->subtotal,
                         'potongan'         => $data_tbs->potongan,
                         'warung_id'        => Auth::user()->id_warung,
+                        'created_at'        => $penjualan->created_at
                     ]);
 
                 }
@@ -884,6 +885,7 @@ public function store(Request $request)
                     'subtotal'         => $data_tbs->subtotal,
                     'potongan'         => $data_tbs->potongan,
                     'warung_id'        => Auth::user()->id_warung,
+                    'created_at'        => $penjualan->created_at
                 ]);
 
             }
@@ -1435,12 +1437,12 @@ public function downloadExcelPenjualan(Request $request, $id_penjualan)
 
             $row = 1;
             $sheet->row($row, [
-                    'Kode Produk',
-                    'Jumlah Produk',
-                    'Harga Produk',
-                    'Subtotal',
-                    'Tax',
-                    'Potongan',
+                'Kode Produk',
+                'Jumlah Produk',
+                'Harga Produk',
+                'Subtotal',
+                'Tax',
+                'Potongan',
             ]);
 
             foreach ($data_tbs_penjualan_pos->get() as $data_tbs_penjualan_poss) {

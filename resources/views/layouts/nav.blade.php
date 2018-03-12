@@ -238,131 +238,131 @@
                     </span>
                     <span class="sidebar-normal">
                       Jam Transaksi Penjualan
-                    </span>
-                </router-link>
-            </li>
-            <li>
-                <router-link :to="{name: 'indexLaporanLabaKotor'}" class="menu-nav">
-                    <span class="sidebar-mini">
-                        LK
-                    </span>
-                    <span class="sidebar-normal">
-                        Laba Kotor /Pelanggan
-                    </span>
-                </router-link>
-            </li>
-            <li>
-                <router-link :to="{name: 'indexLaporanLabaKotorProduk'}" class="menu-nav">
-                    <span class="sidebar-mini">
-                        LK
-                    </span>
-                    <span class="sidebar-normal">
-                        Laba Kotor /Produk
-                    </span>
-                </router-link>
-            </li>
-            <li>
-                <router-link :to="{name: 'indexLaporanKartuStok'}" class="menu-nav">
-                    <span class="sidebar-mini">
-                        LM
-                    </span>
-                    <span class="sidebar-normal">
-                        Laporan Kartu Stok
-                    </span>
-                </router-link>
-            </li>
-            <li>
-                <router-link :to="{name: 'indexLaporanKas'}" class="menu-nav">
-                    <span class="sidebar-mini">
-                        LK
-                    </span>
-                    <span class="sidebar-normal">
-                        Laporan Kas
-                    </span>
-                </router-link>
-            </li>
-            <li>
-                <router-link :to="{name: 'indexLaporanMutasiStok'}" class="menu-nav">
-                    <span class="sidebar-mini">
-                        LM
-                    </span>
-                    <span class="sidebar-normal">
-                        Laporan Mutasi Stok
-                    </span>
-                </router-link>
-            </li>
-            <li>
-                <router-link :to="{name: 'indexLaporanPembelianProduk'}" class="menu-nav">
-                    <span class="sidebar-mini">
-                        LP
-                    </span>
-                    <span class="sidebar-normal">
-                        Laporan Pembelian /Produk
-                    </span>
-                </router-link>
-            </li>
-            <li>
-                <router-link :to="{name: 'indexLaporanHutangBeredar'}" class="menu-nav">
-                    <span class="sidebar-mini">
-                        LHB
-                    </span>
-                    <span class="sidebar-normal">
-                        Laporan Hutang Beredar
-                    </span>
-                </router-link>
-            </li>
-            <li>
-                <router-link :to="{name: 'indexPenjualan'}" class="menu-nav">
-                    <span class="sidebar-mini">
-                        LP
-                    </span>
-                    <span class="sidebar-normal">
-                        Laporan Penjualan
-                    </span>
-                </router-link>
-            </li>
-            <li>
-                <router-link :to="{name: 'indexLaporanPenjualanHarian'}" class="menu-nav">
-                    <span class="sidebar-mini">
-                        LP
-                    </span>
-                    <span class="sidebar-normal">
-                        Laporan Penjualan Harian
-                    </span>
-                </router-link>
-            </li>
-            <li>
-                <router-link :to="{name: 'indexLaporanPenjualanProduk'}" class="menu-nav">
-                    <span class="sidebar-mini">
-                        LP
-                    </span>
-                    <span class="sidebar-normal">
-                        Laporan Penjualan /Produk
-                    </span>
-                </router-link>
-            </li>
-            <li>
-                <router-link :to="{name: 'indexLaporanPenjualanPelanggan'}" class="menu-nav">
-                    <span class="sidebar-mini">
-                        LP
-                    </span>
-                    <span class="sidebar-normal">
-                        Laporan Penjualan /Pelanggan
-                    </span>
-                </router-link>
-            </li>
-            <li>
-                <router-link :to="{name: 'indexLaporanPenjualanTerbaik'}" class="menu-nav">
-                    <span class="sidebar-mini">
-                        LP
-                    </span>
-                    <span class="sidebar-normal">
-                        Penjualan Terbaik /Produk
-                    </span>
-                </router-link>
-            </li>
-        </ul>
-    </div>
+                  </span>
+              </router-link>
+          </li>
+          <li>
+            <router-link :to="{name: 'indexLaporanLabaKotor'}" class="menu-nav">
+                <span class="sidebar-mini">
+                    LK
+                </span>
+                <span class="sidebar-normal">
+                    Laba Kotor /Pelanggan
+                </span>
+            </router-link>
+        </li>
+        <li>
+            <router-link :to="{name: 'indexLaporanLabaKotorProduk'}" class="menu-nav">
+                <span class="sidebar-mini">
+                    LK
+                </span>
+                <span class="sidebar-normal">
+                    Laba Kotor /Produk
+                </span>
+            </router-link>
+        </li>
+        <li>
+            <router-link :to="{name: 'indexLaporanKartuStok'}" class="menu-nav">
+                <span class="sidebar-mini">
+                    LM
+                </span>
+                <span class="sidebar-normal">
+                    Laporan Kartu Stok
+                </span>
+            </router-link>
+        </li>
+        <li>
+            <router-link :to="{name: 'indexLaporanKas'}" class="menu-nav">
+                <span class="sidebar-mini">
+                    LK
+                </span>
+                <span class="sidebar-normal">
+                    Laporan Kas
+                </span>
+            </router-link>
+        </li>
+        <li>
+            <router-link :to="{name: 'indexLaporanMutasiStok'}" class="menu-nav">
+                <span class="sidebar-mini">
+                    LM
+                </span>
+                <span class="sidebar-normal">
+                    Laporan Mutasi Stok
+                </span>
+            </router-link>
+        </li>
+        <li>
+            <router-link :to="{name: 'indexLaporanPembelianProduk'}" class="menu-nav">
+                <span class="sidebar-mini">
+                    LP
+                </span>
+                <span class="sidebar-normal">
+                    Laporan Pembelian /Produk
+                </span>
+            </router-link>
+        </li>
+        <li>
+            <router-link :to="{name: 'indexLaporanHutangBeredar'}" class="menu-nav">
+                <span class="sidebar-mini">
+                    LHB
+                </span>
+                <span class="sidebar-normal">
+                    Laporan Hutang Beredar
+                </span>
+            </router-link>
+        </li>
+        <li>
+            <router-link :to="{name: 'indexPenjualan'}" class="menu-nav">
+                <span class="sidebar-mini">
+                    LP
+                </span>
+                <span class="sidebar-normal">
+                    Laporan Penjualan
+                </span>
+            </router-link>
+        </li>
+        <li>
+            <router-link :to="{name: 'indexLaporanPenjualanHarian'}" class="menu-nav">
+                <span class="sidebar-mini">
+                    LP
+                </span>
+                <span class="sidebar-normal">
+                    Laporan Penjualan Harian
+                </span>
+            </router-link>
+        </li>
+        <li>
+            <router-link :to="{name: 'indexLaporanPenjualanProduk'}" class="menu-nav">
+                <span class="sidebar-mini">
+                    LP
+                </span>
+                <span class="sidebar-normal">
+                    Laporan Penjualan /Produk
+                </span>
+            </router-link>
+        </li>
+        <li>
+            <router-link :to="{name: 'indexLaporanPenjualanPelanggan'}" class="menu-nav">
+                <span class="sidebar-mini">
+                    LP
+                </span>
+                <span class="sidebar-normal">
+                    Laporan Penjualan /Pelanggan
+                </span>
+            </router-link>
+        </li>
+        <li>
+            <router-link :to="{name: 'indexLaporanPenjualanTerbaik'}" class="menu-nav">
+                <span class="sidebar-mini">
+                    LP
+                </span>
+                <span class="sidebar-normal">
+                    Penjualan Terbaik /Produk
+                </span>
+            </router-link>
+        </li>
+    </ul>
+</div>
 </li>
 
 @endif
@@ -380,6 +380,7 @@
     </a>
     <div class="collapse" id="pagesExamples">
         <ul class="nav">
+
             @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 1)
             <li>
                 <router-link :to="{name: 'indexCustomer'}" class="menu-nav">
@@ -438,6 +439,17 @@
                 </router-link>
             </li>
             @endif
+            <!--
+            <li>
+                <router-link :to="{name: 'indexDaftarUserWarung'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        U
+                    </span>
+                    <span class="sidebar-normal">
+                        User
+                    </span>
+                </router-link>
+            </li>-->
         </ul>
     </div>
 </li>

@@ -80,25 +80,25 @@ class HomeController extends Controller
 
             $daftar_produk .= '
             <div class="col-md-3 col-sm-6 col-xs-6 list-produk">
-              <div class="card cards card-pricing">
-                <a href="' . url("/keranjang-belanja") . '">
-                  <div class="card-image">';
+            <div class="card cards card-pricing">
+            <a href="' . url("/keranjang-belanja") . '">
+            <div class="card-image">';
             if ($produks->foto != null) {
                 $daftar_produk .= '<img src="./foto_produk/' . $produks->foto . '">';
             } else {
                 $daftar_produk .= '<img src="./image/foto_default.png">';
             }
             $daftar_produk .= '
-                </div>
+            </div>
             </a>
             <div class="card-content">
-              <div class="footer">
-                <p class="flexFont">
-                  <a href="' . url("/keranjang-belanja") . '" >
-                    ' . strip_tags(substr($produks->nama, 0, 10)) . '...
-                </a></p>
-                <p style="color:red; font-size:18px"> ' . $produks->rupiah . ' </p>
-                <a class="description"><i class="material-icons">store</i>  ' . strip_tags(substr($warung->name, 0, 10)) . '... </a><br>';
+            <div class="footer">
+            <p class="flexFont">
+            <a href="' . url("/keranjang-belanja") . '" >
+            ' . strip_tags(substr($produks->nama, 0, 10)) . '...
+            </a></p>
+            <p style="color:red; font-size:18px"> ' . $produks->rupiah . ' </p>
+            <a class="description"><i class="material-icons">store</i>  ' . strip_tags(substr($warung->name, 0, 10)) . '... </a><br>';
 
             if ($agent->isMobile()) {
                 $daftar_produk .= '<a href="' . url("/keranjang-belanja") . '" class="btn btn-danger btn-block" id="btnBeliSekarang" style="background-color:#01573e"> Beli Sekarang </a>';
@@ -107,9 +107,9 @@ class HomeController extends Controller
             }
             $daftar_produk .= '
             </div>
-        </div>
-    </div>
-</div>';
+            </div>
+            </div>
+            </div>';
         }
         return $daftar_produk;
     }
@@ -244,7 +244,7 @@ class HomeController extends Controller
         $prose_total_persedian = $nila_masuk->total_masuk - $nila_keluar->total_keluar;
         $total_persedian       = $prose_total_persedian;
         $user                  = Auth::user();
-        $logo_toko             = UserWarung::find($user->id);
+        $logo_toko             = UserWarung::where('tipe_user',4)->orderBy('id', 'asc')->limit(1)->first();
 
         // PENJUALAN BULAN INI
         $startDate = new Carbon('first day of this month');

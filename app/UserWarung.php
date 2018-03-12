@@ -34,4 +34,15 @@ class UserWarung extends Authenticatable
         return $this->hasOne('App\Warung', 'id', 'id_warung');
     }
 
+    public function verifyEmail()
+    {
+        $this->status_konfirmasi  = 1;
+        $this->verification_token = null;
+        $this->save();
+    }
+    public function otoritas()
+    {
+        return $this->hasOne('App\Otoritas', 'user_id', 'id');
+    }
+
 }
