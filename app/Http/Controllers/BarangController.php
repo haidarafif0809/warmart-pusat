@@ -599,6 +599,18 @@ class BarangController extends Controller
 
         // Perulang kedua, digunakan untuk menambahkan data produk jika tidak terjadi error.
         foreach ($excels as $row) {
+            // JIKA PRODUK SUDAH ADA DI DB MAKA TIDAK DIIMPORT
+            $data_produk = Barang::select(['kode_barang', 'kode_barcode', 'nama_barang'])
+                ->where(function ($query) use ($row) {
+                    $query->orwhere('kode_barang', $row['kode_produk'])
+                        ->orwhere('kode_barcode', $row['kode_barcode'])
+                        ->orwhere('nama_barang', $row['nama_produk']);
+                });
+
+            if ($data_produk->count() > 0) {
+                continue;
+            }
+
             // Jika terjadi error, maka perintah dihentikan sehingga tidak ada data yg di insert ke database
             if (count($errors['hitungStok']) != '' || count($errors['status']) != '') {
                 // Buat variable tipe array, dengan index pesanError.
@@ -670,6 +682,7 @@ class BarangController extends Controller
                 'konfirmasi_admin'   => 1,
                 'id_warung'          => $warung_id,
             ]);
+
         }
 // Hitung Jumlah Produk Yang Diimport
         $hitung_produk['jumlahProduk'] = $no - 1;
