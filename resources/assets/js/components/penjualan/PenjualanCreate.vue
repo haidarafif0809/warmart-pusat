@@ -129,7 +129,7 @@
                     <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
                       <font style="color: black">Pelanggan(F4)</font><br>
                       <selectize-component v-model="penjualan.pelanggan" :settings="placeholder_pelanggan" id="pelanggan" ref='pelanggan'> 
-                        <option v-for="pelanggans, index in pelanggan" v-bind:value="pelanggans.id">{{ pelanggans.nama_pelanggan }}</option>
+                        <option v-for="pelanggans, index in pelanggan" v-bind:value="pelanggans.id">{{ pelanggans.pelanggan }}</option>
                       </selectize-component>
                       <br v-if="errors.pelanggan">  <span v-if="errors.pelanggan" id="pelanggan_error" class="label label-danger">{{ errors.pelanggan[0] }}</span>
                     </div>

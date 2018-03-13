@@ -47,9 +47,9 @@ $judul_warung = \App\SettingFooter::select()->first()->judul_warung;
 </head>
 <style type="text/css">
 
-    .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
-       padding: 1px;
-   }
+.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+   padding: 1px;
+}
 
 </style>
 <body>
@@ -125,16 +125,7 @@ $judul_warung = \App\SettingFooter::select()->first()->judul_warung;
             <div class="collapse" id="logout">
                 <ul class="nav">
                     <li>
-                        @if(Auth::user()->tipe_user == 4 AND Auth::user()->kasir_id == 0)
-                        <router-link :to="{name: 'ubahProfilUserWarung'}" class="menu-nav">                            
-                            <span class="sidebar-mini">
-                                UPU
-                            </span>
-                            <span class="sidebar-normal">
-                               Ubah Profil User
-                           </span>
-                       </router-link>
-                       @elseif(Auth::user()->tipe_user == 2 )
+                        @if(Auth::user()->tipe_user == 2 )
                        <a href="{{ url('/ubah-profil-komunitas') }}">
                         <span class="sidebar-mini">
                             UPU
@@ -157,21 +148,12 @@ $judul_warung = \App\SettingFooter::select()->first()->judul_warung;
            @if(Auth::user()->tipe_user == 4 AND Auth::user()->kasir_id == 0)
            <li>
             <router-link :to="{name: 'indexProfilWarung'}" class="menu-nav">
-                @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
                 <span class="sidebar-mini">
-                    UPW
+                    UP
                 </span>
                 <span class="sidebar-normal">
-                    Ubah Profil Warung
+                    Ubah Profil 
                 </span>
-                @else
-                <span class="sidebar-mini">
-                    UPT
-                </span>
-                <span class="sidebar-normal">
-                    Ubah Profil Toko
-                </span>
-                @endif
             </router-link>
         </li>
         @endif
@@ -493,7 +475,7 @@ $judul_warung = \App\SettingFooter::select()->first()->judul_warung;
 </body>
 <!--   Core JS Files   -->
 
-<script src="{{ asset('js/app.js?v=1.105')}}" type="text/javascript">
+<script src="{{ asset('js/app.js?v=1.107')}}" type="text/javascript">
 
 </script>
 <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript">

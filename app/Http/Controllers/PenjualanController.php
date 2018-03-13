@@ -32,11 +32,12 @@ class PenjualanController extends Controller
     public function pilihPelanggan()
     {
         $pelanggan = User::where('tipe_user', 3)->get();
-        $array     = array(['id' => '', 'nama_pelanggan' => 'SEMUA PELANGGAN'], ['id' => '0', 'nama_pelanggan' => 'Umum']);
+        $array     = array(['id' => '', 'nama_pelanggan' => 'SEMUA PELANGGAN', 'pelanggan' => 'SEMUA PELANGGAN'], ['id' => '0', 'nama_pelanggan' => 'Umum', 'pelanggan' => 'Umum']);
         foreach ($pelanggan as $pelanggans) {
             array_push($array, [
                 'id'             => $pelanggans->id,
-                'nama_pelanggan' => $pelanggans->name]);
+                'nama_pelanggan' => $pelanggans->name,
+                'pelanggan' => $pelanggans->name." - ".$pelanggans->no_telp]);
         }
 
         return response()->json($array);
