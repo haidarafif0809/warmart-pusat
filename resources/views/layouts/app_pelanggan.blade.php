@@ -54,10 +54,10 @@
 </link>
 </head>
 <style type="text/css">
-.navbar-nav .open .dropdown-menu{
-  color: grey;
-}
-.navbar .navbar-brand {
+    .navbar-nav .open .dropdown-menu{
+      color: grey;
+  }
+  .navbar .navbar-brand {
     position: relative;
     @if(Agent::isMobile())
     height: 50px;
@@ -107,6 +107,11 @@ body {
 }
 .navbar>.container .navbar-brand, .navbar>.container-fluid .navbar-brand {
     margin-left: 0px;
+}
+.btn.btn-just-icon, .navbar .navbar-nav > li > a.btn.btn-just-icon {
+    font-size: 15px;
+    padding: 6px 5px;
+    line-height: 1em;
 }
 </style>
 <body class="ecommerce-page">
@@ -325,7 +330,7 @@ body {
                 <div class="content">
                     <div class="row">
                         <div class="col-md-4">
-                            <h5>
+                            <h5 style="font-size: 14px; mar">
                                 Tentang Kami
                             </h5>
                             @if($setting_aplikasi->tipe_aplikasi == 0)
@@ -340,7 +345,7 @@ body {
                             @endif
                         </div>
                         <div class="col-md-4">
-                            <h5>
+                            <h5 style="font-size: 14px; mar">
                                 Hubungi Kami
                             </h5>
                             <div class="social-feed">
@@ -353,8 +358,7 @@ body {
                                     </p>
                                 </div>
                                 <div class="feed-line">
-                                    <i class="fa fa-home">
-                                    </i>
+                                    <i class="fa fa-home"> </i>
                                     <p>
                                         <?=$settingFooter->
                                         alamat;?>
@@ -379,80 +383,40 @@ body {
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <h5>
-                                Sosial Media
+                            <h5 style="font-size: 14px; mar">
+                                Ikuti Kami Di
                             </h5>
-                            <div class="social-feed">
-                                <div class="feed-line">
-                                    <i class="fa fa-facebook-square">
-                                    </i>
-                                    <p>
-                                        <a href="<?=$settingFooter->facebook;?>">
-                                            Facebook
-                                        </a>
-                                    </p>
-                                </div>
-                                <div class="feed-line">
-                                    <i class="fa fa-twitter-square">
-                                    </i>
-                                    <p>
-                                        <a href="<?=$settingFooter->twitter;?>">
-                                            Twitter
-                                        </a>
-                                    </p>
-                                </div>
-                                <div class="feed-line">
-                                    <i class="fa fa-instagram">
-                                    </i>
-                                    <p>
-                                        <a href="<?=$settingFooter->instagram;?>">
-                                            Instagram
-                                        </a>
-                                    </p>
-                                </div>
-                                <div class="feed-line">
-                                    <i class="fa fa-google-plus-square">
-                                    </i>
-                                    <p>
-                                        <a href="<?=$settingFooter->google_plus;?>">
-                                            Google +
-                                        </a>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="gallery-feed">
-                            </div>
+                            <button class="btn btn-just-icon btn-xs btn-facebook" style="margin : 0px">
+                                <a href="<?=$settingFooter->facebook;?>">
+                                    <i class="fa fa-facebook"> </i>
+                                </a> 
+                            </button>
+                            <button class="btn btn-just-icon btn-xs btn-twitter" style="margin : 0 0 0 5px">
+                                <a href="<?=$settingFooter->twitter;?>">
+                                    <i class="fa fa-twitter"> </i>
+                                </a> 
+                            </button>
+                            <button class="btn btn-just-icon btn-xs btn-instagram" style="margin : 0 0 0 5px">
+                                <a href="<?=$settingFooter->instagram;?>">
+                                    <i class="fa fa-instagram"> </i>
+                                </a> 
+                            </button>
+                            <button class="btn btn-just-icon btn-xs btn-google" style="margin : 0 0 0 5px">
+                                <a href="<?=$settingFooter->google_plus;?>">
+                                    <i class="fa fa-google-plus"> </i>
+                                </a> 
+                            </button>
+                            <h5 style="font-size: 14px; mar">
+                                Download Apps
+                            </h5>
+                            <a href="<?=$settingFooter->play_store;?>">
+                                <img src="{{asset('image/gplaystore.png')}}" style="max-width: 50%">
+                            </a>                     
                         </div>
                     </div>
                 </div>
                 <hr/>
-                <ul class="pull-left">
-                    <li>
-                        <a href="#pablo">
-                            Blog
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#pablo">
-                            Presentation
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#pablo">
-                            Discover
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#pablo">
-                            Payment
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#pablo">
-                            Contact Us
-                        </a>
-                    </li>
-                </ul>
+                
                 <div class="copyright pull-right">
                     Copyright ©
                     <script>
