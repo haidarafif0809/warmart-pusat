@@ -125,16 +125,7 @@ $judul_warung = \App\SettingFooter::select()->first()->judul_warung;
             <div class="collapse" id="logout">
                 <ul class="nav">
                     <li>
-                        @if(Auth::user()->tipe_user == 4 AND Auth::user()->kasir_id == 0)
-                        <router-link :to="{name: 'ubahProfilUserWarung'}" class="menu-nav">                            
-                            <span class="sidebar-mini">
-                                UPU
-                            </span>
-                            <span class="sidebar-normal">
-                               Ubah Profil User
-                           </span>
-                       </router-link>
-                       @elseif(Auth::user()->tipe_user == 2 )
+                        @if(Auth::user()->tipe_user == 2 )
                        <a href="{{ url('/ubah-profil-komunitas') }}">
                         <span class="sidebar-mini">
                             UPU
@@ -157,21 +148,12 @@ $judul_warung = \App\SettingFooter::select()->first()->judul_warung;
            @if(Auth::user()->tipe_user == 4 AND Auth::user()->kasir_id == 0)
            <li>
             <router-link :to="{name: 'indexProfilWarung'}" class="menu-nav">
-                @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
                 <span class="sidebar-mini">
-                    UPW
+                    UP
                 </span>
                 <span class="sidebar-normal">
-                    Ubah Profil Warung
+                    Ubah Profil 
                 </span>
-                @else
-                <span class="sidebar-mini">
-                    UPT
-                </span>
-                <span class="sidebar-normal">
-                    Ubah Profil Toko
-                </span>
-                @endif
             </router-link>
         </li>
         @endif
