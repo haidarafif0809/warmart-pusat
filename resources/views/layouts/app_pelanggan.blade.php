@@ -113,6 +113,11 @@ body {
     padding: 6px 5px;
     line-height: 1em;
 }
+.footer-big .social-feed i {
+    font-size: 23.5px;
+    display: table-cell;
+    padding-right: 10px;
+}
 </style>
 <body class="ecommerce-page">
     @if(Agent::isMobile())
@@ -350,7 +355,7 @@ body {
                             </h5>
                             <div class="social-feed">
                                 <div class="feed-line">
-                                    <i class="fa fa-phone-square">
+                                    <i class="fa fa-phone-square fa-5x">
                                     </i>
                                     <p>
                                         <?=$settingFooter->
@@ -358,14 +363,14 @@ body {
                                     </p>
                                 </div>
                                 <div class="feed-line">
-                                    <i class="fa fa-home"> </i>
+                                    <i class="fa fa-home fa-5x"> </i>
                                     <p>
                                         <?=$settingFooter->
                                         alamat;?>
                                     </p>
                                 </div>
                                 <div class="feed-line">
-                                    <i class="fa fa-envelope">
+                                    <i class="fa fa-envelope fa-5x">
                                     </i>
                                     <p>
                                         <?=$settingFooter->
@@ -373,7 +378,7 @@ body {
                                     </p>
                                 </div>
                                 <div class="feed-line">
-                                    <i class="fa fa-whatsapp">
+                                    <i class="fa fa-whatsapp fa-5x">
                                     </i>
                                     <p>
                                         <?=$settingFooter->
