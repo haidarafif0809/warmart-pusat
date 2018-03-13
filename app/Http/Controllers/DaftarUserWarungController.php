@@ -128,4 +128,50 @@ class DaftarUserWarungController extends Controller
 
 		DB::commit();
 	}
+	public function dataUser($id){
+		$user = UserWarung::with(['otoritas'])->find($id);
+		$otoritas = Role::where('id', '!=', 3)->where('id', '!=', 4)->where('id', '!=', 5)->get();
+		return response()->json([
+			"user" => $user,
+			"otoritas"     => $otoritas,
+		]);
+
+	}
+
+	public function update ($id,Request $request){
+		        //  proses update user
+	//START TRANSAKSI
+		DB::beginTransaction();
+		$this->validate($request, [
+			'name'      => 'required',
+			'email'     => 'nullable|unique:users,email,' . $id,
+			'alamat'    => 'required',
+			'role_id'   => 'required',
+			'role_lama' => 'required',
+			'no_telp'   => 'required|without_spaces|unique:users,no_telp,' . $id,
+		]);
+		$user_baru = UserWarung::find($id);
+        // update user
+		$user_baru->update([
+			'name'    => $request->name,
+			'email'   => $request->email,
+			'alamat'  => $request->alamat,
+			'no_telp' => $request->no_telp,
+		]);
+
+		$role_lama = Role::where('id', $request->role_lama)->first();
+		$role_baru = Role::where('id', $request->role_id)->first();
+		
+
+        // buang role lama
+		$user_baru->detachRole($role_lama->id);
+        // masukan role baru
+		$user_baru->attachRole($role_baru->id);
+
+		DB::commit();
+	}
+
+	public function destroy($id){
+		return UserWarung::destroy($id);		
+	}
 }
