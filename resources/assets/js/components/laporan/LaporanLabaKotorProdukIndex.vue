@@ -1,9 +1,9 @@
 <style scoped>
-	.pencarian {
-		color: red; 
-		float: right;
-		padding-bottom: 10px;
-	}
+.pencarian {
+	color: red; 
+	float: right;
+	padding-bottom: 10px;
+}
 </style>
 
 <template>
@@ -170,44 +170,44 @@
 
 <script>
 import { mapState } from 'vuex';
-	export default {
-		data: function () {
-			return {
-				labaKotor: [],
-				labaKotorData: {},
-				subtotalLabaKotor: {},
-				labaKotorPesanan: [],
-				labaKotorPesananData: {},
-				subtotalLabaKotorPesanan: {},
-				totalAkhir: {},
-				filter: {
-					dari_tanggal: '',
-					sampai_tanggal: new Date(),
-					produk: '',
-				},
-				url : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-laba-kotor-produk"),
-				urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-laba-kotor-produk/download-excel-laba-kotor"),
-				urlCetak : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-laba-kotor-produk/cetak-laporan"),
-				pencarian_pos: '',
-				pencarian_pesanan: '',
-				loading: false,
-				loadingPesanan: false,
-				loadingAkhir: false,
-			}
-		},
-		mounted() {
-			var app = this;
-			var awal_tanggal = new Date();
-			awal_tanggal.setDate(1);
-			app.$store.dispatch('LOAD_PRODUK_LAPORAN_LIST');
-			app.filter.dari_tanggal = awal_tanggal;
-		},
-		computed : mapState ({    
-	      produk(){
-	        return this.$store.state.produk_laporan
-	      }
-	    }),
-		watch: {
+export default {
+	data: function () {
+		return {
+			labaKotor: [],
+			labaKotorData: {},
+			subtotalLabaKotor: {},
+			labaKotorPesanan: [],
+			labaKotorPesananData: {},
+			subtotalLabaKotorPesanan: {},
+			totalAkhir: {},
+			filter: {
+				dari_tanggal: '',
+				sampai_tanggal: new Date(),
+				produk: '',
+			},
+			url : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-laba-kotor-produk"),
+			urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-laba-kotor-produk/download-excel-laba-kotor"),
+			urlCetak : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-laba-kotor-produk/cetak-laporan"),
+			pencarian_pos: '',
+			pencarian_pesanan: '',
+			loading: false,
+			loadingPesanan: false,
+			loadingAkhir: false,
+		}
+	},
+	mounted() {
+		var app = this;
+		var awal_tanggal = new Date();
+		awal_tanggal.setDate(1);
+		app.$store.dispatch('LOAD_PRODUK_LAPORAN_LIST');
+		app.filter.dari_tanggal = awal_tanggal;
+	},
+	computed : mapState ({    
+		produk(){
+			return this.$store.state.produk_laporan
+		}
+	}),
+	watch: {
         // whenever question changes, this function will run
         pencarian_pos: function (newQuestion) {
         	this.getHasilPencarianPos();
@@ -248,6 +248,9 @@ import { mapState } from 'vuex';
     		.then(function (resp) {
     			app.labaKotor = resp.data.data;
     			app.labaKotorData = resp.data;
+    			app.labaKotor.sort(function (a,b) {
+    				return b.total_laba_kotor - a.total_laba_kotor
+    			});
     			app.loading = false
     			console.log(resp.data.data);
     		})
