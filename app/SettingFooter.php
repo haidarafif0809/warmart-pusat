@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class SettingFooter extends Model
 {
 
-    public $fillable = ['warung_id', 'judul_warung', 'support_link', 'about_link', 'about_us', 'no_telp', 'alamat', 'email', 'whatsapp', 'facebook', 'twitter', 'instagram', 'google_plus'];
+    public $fillable = ['warung_id', 'judul_warung', 'support_link', 'about_link', 'about_us', 'no_telp', 'alamat', 'email', 'whatsapp', 'facebook', 'twitter', 'instagram', 'google_plus', 'play_store'];
 
     public static function defaultData()
     {
@@ -26,6 +26,7 @@ class SettingFooter extends Model
         $object->twitter      = 'https://www.twitter.com/andaglos';
         $object->instagram    = 'https://www.instagram.com/andaglos';
         $object->google_plus  = 'https://plus.google.com/u/0/102529791461131425545';
+        $object->play_store   = 'https://play.google.com/store/apps/details?id=com.topos.haidar.aplikasitopos';
 
         return $object;
 
