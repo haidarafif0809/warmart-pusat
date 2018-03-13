@@ -167,7 +167,11 @@ class DaftarUserWarungController extends Controller
 		$user_baru->detachRole($role_lama->id);
         // masukan role baru
 		$user_baru->attachRole($role_baru->id);
-		
+
 		DB::commit();
+	}
+
+	public function destroy($id){
+		return UserWarung::destroy($id);		
 	}
 }

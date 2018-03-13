@@ -61,7 +61,9 @@
            <router-link :to="{name: 'editDaftarUser', params: {id: users.user.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + users.user.id" >
             Edit 
           </router-link>
-          <a href="#" class="btn btn-xs btn-danger">Delete</a>
+          <a href="#daftar-user" class="btn btn-xs btn-danger" v-bind:id="'delete-' + users.user.id" v-on:click="deleteEntry(users.user.id, index,users.user.name)">
+            Delete
+          </a>
         </td>
 
       </tr>
@@ -155,35 +157,48 @@ export default {
         title: "Berhasil Menghapus User!", 
         text: pesan, 
         icon: "success", 
+        buttons: false,
+        timer: 1000,
       }); 
     }, 
-    deleteEntry(id, index,name) {
-      swal({ 
-        title: "Konfirmasi Hapus", 
-        text : "Anda Yakin Ingin Menghapus User "+name+" ?", 
-        icon : "warning", 
-        buttons: true, 
+    deleteEntry(id, index,nama) {
+
+      var app = this;
+      app.$swal({
+        text: "Anda Yakin Ingin Menghapus User "+nama+ " ?",
+        buttons: true,
         dangerMode: true,
       })
       .then((willDelete) => {
-        if (willDelete) { 
-          var app = this; 
-          axios.delete(app.url+'/' + id) 
-          .then(function (resp) { 
-            app.$router.replace('/customer'); 
-            app.getResults(); 
-            swal("Customer Berhasil Dihapus!  ", { 
-              icon: "success", 
-            }); 
-          }) 
-          .catch(function (resp) { 
-            swal("Gagal Menghapus Customer!  ", { 
-              icon: "warning", 
-            }); 
-          });  
+        if (willDelete) {
+
+          this.prosesDelete(id,nama);
+
+        } else {
+
+          app.$swal.close();
+
         }
       });
-    }
-  }
+
+    },
+    prosesDelete(id,nama){
+     var app = this; 
+     axios.delete(app.url+'/' + id) 
+     .then(function (resp) { 
+
+      function cekIndexUser(user) { 
+        return user.user.id === id
+      }
+      var index = app.user.findIndex(cekIndexUser)
+      app.user.splice(index,1)
+      app.alert("Menghapus User "+nama)
+
+    }) 
+     .catch(function (resp) { 
+      alert("Tidak dapat Menghapus User")
+    });  
+   }
+ }
 }
 </script>
