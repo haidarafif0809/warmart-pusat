@@ -8,6 +8,7 @@ use App\DetailPenjualan;
 use App\Barang;
 use Illuminate\Support\Facades\DB;
 use Auth;
+use Excel;
 
 class LaporanPenjualanTerbaikController extends Controller
 {
@@ -231,6 +232,91 @@ class LaporanPenjualanTerbaikController extends Controller
 
                 return $respons;
             }
+
+            public function labelSheet($sheet, $row)
+            {
+                $sheet->row($row, [
+                    'Kode Produk',
+                    'Nama Produk',
+                    'Jumlah Terjual',
+                ]);
+                return $sheet;
+            }
+
+             //DOWNLOAD EXCEL - LAPORAN PENJUALAN 
+    public function downloadExcel(Request $request, $dari_tanggal, $sampai_tanggal, $tampil_terbaik)
+    {
+                    $request['dari_tanggal']   = $dari_tanggal;
+                    $request['sampai_tanggal'] = $sampai_tanggal;
+                    $request['tampil_terbaik'] = $tampil_terbaik;
+
+                    //cek atau hitung item di detail penjualan POS
+                    $hitung_penjualan_terbaik = DetailPenjualanPos::penjualanTerbaik($request)->count();
+                        if ($hitung_penjualan_terbaik < $tampil_terbaik) {
+                            $item_tampil_terbaik = $hitung_penjualan_terbaik;
+                        }
+                        else{
+                            $item_tampil_terbaik = $tampil_terbaik;
+                        }
+                    //cek atau hitung item di detail penjualan POS
+                       $laporan_penjualan_terbaik = DetailPenjualanPos::cariPenjualanTerbaik($request)->groupBy('id_produk')->orderBy('jumlah_produk', 'desc')->limit($item_tampil_terbaik)->get();
+                  
+
+                    //cek atau hitung item di detail penjualan online
+                    $hitung_penjualan_terbaik = DetailPenjualan::penjualanTerbaik($request)->count();
+                        if ($hitung_penjualan_terbaik < $tampil_terbaik) {
+                            $item_tampil_terbaik = $hitung_penjualan_terbaik;
+                        }
+                        else{
+                            $item_tampil_terbaik = $tampil_terbaik;
+                        }
+                    //cek atau hitung item di detail penjualan online
+                       $laporan_penjualan_terbaik_online = DetailPenjualan::penjualanTerbaik($request)->groupBy('id_produk')->orderBy('jumlah_produk', 'desc')->limit($item_tampil_terbaik)->get();
+
+                    Excel::create('Laporan Penjualan Terbaik', function ($excel) use ($request, $laporan_penjualan_terbaik, $laporan_penjualan_terbaik_online) {
+                        // Set property
+                        $excel->sheet('Laporan Penjualan Terbaik', function ($sheet) use ($request, $laporan_penjualan_terbaik, $laporan_penjualan_terbaik_online) {
+                            $row = 1;
+                            $sheet->row($row, [
+                                'LAPORAN PENJUALAN POS',
+                            ]);
+
+                            $row   = 3;
+                            $sheet = $this->labelSheet($sheet, $row);
+                            if ($laporan_penjualan_terbaik->count() > 0) {
+                                # code...
+                                foreach ($laporan_penjualan_terbaik as $laporan_penjualan_terbaiks) {
+                                    $nama_barang =  title_case($laporan_penjualan_terbaiks->nama_barang);
+                                    $sheet->row(++$row, [
+                                        $laporan_penjualan_terbaiks->kode_barang,
+                                        $nama_barang,
+                                        $laporan_penjualan_terbaiks->jumlah_produk,
+                                    ]);
+                                }
+             
+                            }
+                            $row = ++$row + 3;
+                            $sheet->row($row, [
+                                'LAPORAN PENJUALAN ONLINE',
+                            ]);
+
+                            $row = ++$row + 1;
+
+                            $sheet = $this->labelSheet($sheet, $row);
+                            if ($laporan_penjualan_terbaik_online->count() > 0) {
+                                foreach ($laporan_penjualan_terbaik_online as $laporan_penjualan_terbaik_onlines) {
+                                    $nama_barang =  title_case($laporan_penjualan_terbaiks->nama_barang);
+                                    $sheet->row(++$row, [
+                                        $laporan_penjualan_terbaik_onlines->kode_barang,
+                                        $nama_barang,
+                                        $laporan_penjualan_terbaik_onlines->jumlah_produk,
+                                    ]);
+                                }
+                            }
+                        });
+                    })->export('xls');
+
+    }
 
 
 
