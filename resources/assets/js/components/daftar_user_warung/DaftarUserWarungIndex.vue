@@ -42,8 +42,8 @@
           <tr>
             <th>Nama</th>
             <th>Email</th>
-            <th>Alamat</th>
             <th>No. Telpon</th>
+            <th>Alamat</th>
             <th>Otoritas</th>
             <th>Aksi</th>
           </tr>
@@ -53,31 +53,33 @@
           <tr v-for="users, index in user">
             <td>{{ users.user.name }}</td>
             <td>{{ users.user.email }}</td>
-            <td>{{ users.user.alamat }}</td>
             <td>{{ users.user.no_telp }}</td>
+            <td>{{ users.user.alamat }}</td>
             <td>{{ users.role_user }}</td>
           </td>
           <td> 
-            <a href="#" class="btn btn-xs btn-default"> Edit</a>
-            <a href="#" class="btn btn-xs btn-danger"> Delete</a>
-          </td>
+           <router-link :to="{name: 'editDaftarUser', params: {id: users.user.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + users.user.id" >
+            Edit 
+          </router-link>
+          <a href="#" class="btn btn-xs btn-danger">Delete</a>
+        </td>
 
-        </tr>
-      </tbody>
-      <!--JIKA DATA CUSTOMER KOSONG-->
-      <tbody class="data-tidak-ada" v-else-if="user.length == 0 && loading== false">
-        <tr>
-          <td colspan="4"  class="text-center">Tidak Ada Data</td>
-        </tr>
-      </tbody>
-    </table>
+      </tr>
+    </tbody>
+    <!--JIKA DATA CUSTOMER KOSONG-->
+    <tbody class="data-tidak-ada" v-else-if="user.length == 0 && loading== false">
+      <tr>
+        <td colspan="4"  class="text-center">Tidak Ada Data</td>
+      </tr>
+    </tbody>
+  </table>
 
-    <!--LOADING-->
-    <vue-simple-spinner v-if="loading"></vue-simple-spinner>
-    <!--PAGINATION TABLE-->
-    <div align="right"><pagination :data="userData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
+  <!--LOADING-->
+  <vue-simple-spinner v-if="loading"></vue-simple-spinner>
+  <!--PAGINATION TABLE-->
+  <div align="right"><pagination :data="userData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
 
-  </div><!-- /END RESPONSIVE-->
+</div><!-- /END RESPONSIVE-->
 
 </div>
 </div>
