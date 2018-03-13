@@ -175,6 +175,7 @@ import StokOpnameIndex from './components/stok_opname/StokOpnameIndex.vue';
 // daftar user warung
 import DaftarUserWarungIndex from './components/daftar_user_warung/DaftarUserWarungIndex.vue';
 import DaftarUserWarungCreate from './components/daftar_user_warung/DaftarUserWarungCreate.vue';
+import DaftarUserWarungEdit from './components/daftar_user_warung/DaftarUserWarungEdit.vue';
 
 const routes = [{
     path: '/',
@@ -746,7 +747,11 @@ const routes = [{
         path: '/create-daftar-user',
         component: DaftarUserWarungCreate,
         name: 'createDaftarUserWarung'
-    }
+    }, {
+        path: '/edit-daftar-user/:id',
+        component: DaftarUserWarungEdit,
+        name: 'editDaftarUser'
+    },
 
     ]
     export default routes;
