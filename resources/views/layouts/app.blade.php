@@ -126,73 +126,73 @@ $judul_warung = \App\SettingFooter::select()->first()->judul_warung;
                 <ul class="nav">
                     <li>
                         @if(Auth::user()->tipe_user == 2 )
-                       <a href="{{ url('/ubah-profil-komunitas') }}">
+                        <a href="{{ url('/ubah-profil-komunitas') }}">
+                            <span class="sidebar-mini">
+                                UPU
+                            </span>
+                            <span class="sidebar-normal">
+                               Ubah Profil
+                           </span>
+                       </a>
+                       @elseif(Auth::user()->tipe_user == 1 )
+                       <router-link :to="{name: 'ubahProfilAdmin'}" class="menu-nav">
                         <span class="sidebar-mini">
-                            UPU
+                            UP
                         </span>
                         <span class="sidebar-normal">
                            Ubah Profil
                        </span>
-                   </a>
-                   @elseif(Auth::user()->tipe_user == 1 )
-                   <router-link :to="{name: 'ubahProfilAdmin'}" class="menu-nav">
+                   </router-link>
+                   @endif
+               </li>
+               @if(Auth::user()->tipe_user == 4 AND Auth::user()->kasir_id == 0)
+               <li>
+                <router-link :to="{name: 'indexProfilWarung'}" class="menu-nav">
                     <span class="sidebar-mini">
                         UP
                     </span>
                     <span class="sidebar-normal">
-                       Ubah Profil
-                   </span>
-               </router-link>
-               @endif
-           </li>
-           @if(Auth::user()->tipe_user == 4 AND Auth::user()->kasir_id == 0)
-           <li>
-            <router-link :to="{name: 'indexProfilWarung'}" class="menu-nav">
-                <span class="sidebar-mini">
-                    UP
-                </span>
-                <span class="sidebar-normal">
-                    Ubah Profil 
-                </span>
-            </router-link>
-        </li>
-        @endif
-        <li>
-            @if(Auth::user()->tipe_user == 1 )
+                        Ubah Profil 
+                    </span>
+                </router-link>
+            </li>
+            @endif
+            <li>
+                @if(Auth::user()->tipe_user == 1 )
 
-            <router-link :to="{name: 'ubahPasswordAdmin'}" class="menu-nav">
-                <span class="sidebar-mini">
+                <router-link :to="{name: 'ubahPasswordAdmin'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        UP
+                    </span>
+                    <span class="sidebar-normal">
+                        Ubah Password
+                    </span>
+                </router-link>
+                @else
+                <router-link :to="{name: 'ubahPasswordUserWarung'}" class="menu-nav" v-on:click="closeMenu()">
+                   <span class="sidebar-mini">
                     UP
                 </span>
                 <span class="sidebar-normal">
                     Ubah Password
                 </span>
             </router-link>
-            @else
-            <router-link :to="{name: 'ubahPasswordUserWarung'}" class="menu-nav" v-on:click="closeMenu()">
-               <span class="sidebar-mini">
-                UP
+            @endif
+        </li>
+        <li>
+            <a href="{{ url('/logout') }}" onclick="event.preventDefault();
+            document.getElementById('logout-form').submit();">
+            <span class="sidebar-mini">
+                L
             </span>
             <span class="sidebar-normal">
-                Ubah Password
+                Logout
             </span>
-        </router-link>
-        @endif
+        </a>
+        <form action="{{ url('/logout') }}" id="logout-form" method="POST" style="display: none;">
+            {{ csrf_field() }}
+        </form>
     </li>
-    <li>
-        <a href="{{ url('/logout') }}" onclick="event.preventDefault();
-        document.getElementById('logout-form').submit();">
-        <span class="sidebar-mini">
-            L
-        </span>
-        <span class="sidebar-normal">
-            Logout
-        </span>
-    </a>
-    <form action="{{ url('/logout') }}" id="logout-form" method="POST" style="display: none;">
-        {{ csrf_field() }}
-    </form>
-</li>
 </ul>
 </div>
 </li>
@@ -475,7 +475,7 @@ $judul_warung = \App\SettingFooter::select()->first()->judul_warung;
 </body>
 <!--   Core JS Files   -->
 
-<script src="{{ asset('js/app.js?v=1.107')}}" type="text/javascript">
+<script src="{{ asset('js/app.js?v=1.111')}}" type="text/javascript">
 
 </script>
 <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript">
