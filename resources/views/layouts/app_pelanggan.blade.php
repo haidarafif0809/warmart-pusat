@@ -407,7 +407,7 @@ body {
                                 </a> 
                             </button>
                             <button class="btn btn-just-icon btn-xs btn-google" style="margin : 0 0 0 5px">
-                                <a href="<?=$settingFooter->google_plus;?>">
+                                <a href="<?=$settingFooter->google_plus;?>" style="background-color: #d41700">
                                     <i class="fa fa-google-plus"> </i>
                                 </a> 
                             </button>
@@ -538,7 +538,7 @@ body {
     });
 
     function alert(){
-     swal({
+       swal({
         text :  "Produk Berhasil Di Tambahkan Ke Keranjang Belanja",
         showConfirmButton :  false,
         type: "success",
@@ -547,7 +547,7 @@ body {
           swal.showLoading()
       }
   }); 
- }
+   }
 
 
 </script>

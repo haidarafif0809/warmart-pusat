@@ -177,6 +177,9 @@ import DaftarUserWarungIndex from './components/daftar_user_warung/DaftarUserWar
 import DaftarUserWarungCreate from './components/daftar_user_warung/DaftarUserWarungCreate.vue';
 import DaftarUserWarungEdit from './components/daftar_user_warung/DaftarUserWarungEdit.vue';
 
+// SETTING PENGIRIMAN
+import SettingPengirimanIndex from './components/setting_pengiriman/SettingPengirimanIndex.vue';
+
 const routes = [{
     path: '/',
     components: {
@@ -751,6 +754,12 @@ const routes = [{
         path: '/edit-daftar-user/:id',
         component: DaftarUserWarungEdit,
         name: 'editDaftarUser'
+    },
+    // SETTING PENGIRIMAN
+    {
+        path: '/setting-pengiriman',
+        component: SettingPengirimanIndex,
+        name: 'indexSettingPengiriman'
     },
 
     ]
