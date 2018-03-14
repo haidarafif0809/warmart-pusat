@@ -573,6 +573,10 @@ Route::get('/edit-pembelian/cek-data-tbs-pembelian/{id}', 'EditPembelianControll
 
 // PEMBELIAN
 
+//menampilkan seetting pengiriman
+Route::get('/setting-pengiriman/view', 'SettingPengirimanController@view')->middleware('auth');
+Route::post('/setting-pengiriman/simpan-setting-pengiriman', 'SettingPengirimanController@simpanSetting')->middleware('auth');
+
 // HAPUS TBS PEMBELIAN
 Route::delete('/pembelian/hapus-tbs-pembelian/{id}', [
     'middleware' => ['auth'],
@@ -921,6 +925,9 @@ Route::get('/daftar-user-warung/{id}', 'DaftarUserWarungController@dataUser')->m
 Route::put('/daftar-user-warung/{id}', 'DaftarUserWarungController@update')->middleware('auth');
 Route::delete('/daftar-user-warung/{id}', 'DaftarUserWarungController@destroy')->middleware('auth');
 
+// OTORITAS
+Route::get('/otoritas/view', 'OtoritasController@view')->middleware('auth');
+
 //menampilkan data bank Warung
 Route::get('/bank-warung/view', 'BankWarungController@view')->middleware('auth');
 Route::get('/bank-warung/pencarian', 'BankWarungController@pencarian')->middleware('auth');
@@ -965,6 +972,7 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
     Route::resource('user-kasir', 'UserKasirController');
     Route::resource('laporan-bucket-size', 'LaporanBucketSizeController');
     Route::resource('stok-opname', 'StokOpnameController');
+    Route::resource('setting-pengiriman', 'SettingPengirimanController');
     Route::resource('bank-warung', 'BankWarungController');
 
 
