@@ -176,6 +176,8 @@ import StokOpnameIndex from './components/stok_opname/StokOpnameIndex.vue';
 import DaftarUserWarungIndex from './components/daftar_user_warung/DaftarUserWarungIndex.vue';
 import DaftarUserWarungCreate from './components/daftar_user_warung/DaftarUserWarungCreate.vue';
 import DaftarUserWarungEdit from './components/daftar_user_warung/DaftarUserWarungEdit.vue';
+// otoritas
+import OtoritasIndex from './components/otoritas/OtoritasIndex.vue';
 
 const routes = [{
     path: '/',
@@ -751,7 +753,11 @@ const routes = [{
         path: '/edit-daftar-user/:id',
         component: DaftarUserWarungEdit,
         name: 'editDaftarUser'
-    },
+    },{
+        path: '/otoritas',
+        component: OtoritasIndex,
+        name: 'indexOtoritas'
+    }
 
     ]
     export default routes;

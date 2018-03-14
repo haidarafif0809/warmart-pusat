@@ -383,6 +383,16 @@
 
             @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 1)
             <li>
+                <router-link :to="{name: 'indexDaftarUserWarung'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        U
+                    </span>
+                    <span class="sidebar-normal">
+                        User
+                    </span>
+                </router-link>
+            </li>
+            <li>
                 <router-link :to="{name: 'indexCustomer'}" class="menu-nav">
                     <span class="sidebar-mini">
                         CU
@@ -424,10 +434,6 @@
                     </span>
                 </router-link>
             </li>
-            @endif
-            @endif
-
-            @if(Auth::user()->kasir_id == 0)
             <li>
                 <router-link :to="{name: 'indexSuplier'}" class="menu-nav">
                     <span class="sidebar-mini">
@@ -439,16 +445,8 @@
                 </router-link>
             </li>
             @endif
-            <li>
-                <router-link :to="{name: 'indexDaftarUserWarung'}" class="menu-nav">
-                    <span class="sidebar-mini">
-                        U
-                    </span>
-                    <span class="sidebar-normal">
-                        User
-                    </span>
-                </router-link>
-            </li>
+            @endif
+
         </ul>
     </div>
 </li>
