@@ -770,6 +770,8 @@ Route::post('/laporan-penjualan-terbaik/view-pos-data', 'LaporanPenjualanTerbaik
 Route::post('/laporan-penjualan-terbaik/view-online-data', 'LaporanPenjualanTerbaikController@prosesPenjualanTerbaikOnlineData')->middleware('auth');
 Route::post('/laporan-penjualan-terbaik/pencarian-pos-data', 'LaporanPenjualanTerbaikController@pencarian')->middleware('auth');
 Route::post('/laporan-penjualan-terbaik/pencarian-online-data', 'LaporanPenjualanTerbaikController@pencarianOnline')->middleware('auth');
+Route::get('/laporan-penjualan-terbaik/download-excel/{dari_tanggal}/{sampai_tanggal}/{tampil_terbaik}', 'LaporanPenjualanTerbaikController@downloadExcel')->middleware('auth');
+
 
 // LAPORAN PENJUALAN TERBAIK
 Route::post('/laporan-hutang-beredar/view', 'LaporanHutangBeredarController@prosesHutangBeredar')->middleware('auth');
