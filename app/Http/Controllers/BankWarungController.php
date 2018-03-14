@@ -32,6 +32,12 @@ class BankWarungController extends Controller
         return response()->json($data_bank);
     }
 
+    public function pencarian(Request $request){
+
+        $data_bank = BankWarung::where('nama_bank','LIKE',"%$request->search%")->orWhere('atas_nama','LIKE',"%$request->search%")->orWhere('no_rek','LIKE',"%$request->search%")->paginate(10);
+        return response()->json($data_bank);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -42,16 +48,28 @@ class BankWarungController extends Controller
         //
     }
 
+        public function store(Request $request)
+    {
+        $this->validate($request, [
+            'nama_bank'     => 'required',
+            'atas_nama'     => 'required',
+            'no_rek'        => 'required|unique:bank_warungs,no_rek,'
+        ]);
+        
+        $master_bank = BankWarung::create([
+            'nama_bank' =>$request->nama_bank,              
+            'atas_nama' => $request->atas_nama,
+            'no_rek' =>$request->no_rek,
+            'warung_id'=>Auth::user()->id_warung
+        ]);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        //
-    }
 
     /**
      * Display the specified resource.
@@ -61,8 +79,8 @@ class BankWarungController extends Controller
      */
     public function show($id)
     {
-        //
-    }
+        return BankWarung::find($id);
+   }
 
     /**
      * Show the form for editing the specified resource.
@@ -84,7 +102,17 @@ class BankWarungController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [            
+            'nama_bank'     => 'required',
+            'atas_nama'     => 'required',
+            'no_rek'        => 'required|unique:bank_warungs,no_rek,'. $id,
+        ]);
+
+        BankWarung::where('id', $id)->update([
+            'nama_bank' =>$request->nama_bank,
+            'atas_nama' =>$request->atas_nama,
+            'no_rek'    =>$request->no_rek,
+        ]);    
     }
 
     /**
@@ -95,6 +123,7 @@ class BankWarungController extends Controller
      */
     public function destroy($id)
     {
-        //
-    }
+       $bank =  BankWarung::destroy($id);  
+       return response(200);
+   }
 }

@@ -928,6 +928,11 @@ Route::delete('/daftar-user-warung/{id}', 'DaftarUserWarungController@destroy')-
 // OTORITAS
 Route::get('/otoritas/view', 'OtoritasController@view')->middleware('auth');
 
+//menampilkan data bank Warung
+Route::get('/bank-warung/view', 'BankWarungController@view')->middleware('auth');
+Route::get('/bank-warung/pencarian', 'BankWarungController@pencarian')->middleware('auth');
+
+
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
     Route::resource('user', 'UserController');
@@ -968,11 +973,8 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
     Route::resource('laporan-bucket-size', 'LaporanBucketSizeController');
     Route::resource('stok-opname', 'StokOpnameController');
     Route::resource('setting-pengiriman', 'SettingPengirimanController');
+    Route::resource('bank-warung', 'BankWarungController');
 
-
-//menampilkan data bank Warung
-Route::get('/bank-warung/view', 'BankWarungController@view')->middleware('auth');
-Route::get('/bank-warung/pencarian', 'BankWarungController@pencarian')->middleware('auth');
 
 
 //BARANG

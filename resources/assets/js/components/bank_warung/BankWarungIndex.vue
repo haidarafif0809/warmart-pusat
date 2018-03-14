@@ -1,3 +1,9 @@
+<style scoped>
+.pencarian {
+  color: red; 
+  float: right;
+}
+</style>
 <template>
 
 
@@ -19,17 +25,15 @@
 
        <div class="toolbar">
 
-        <p> <router-link :to="{name: 'createBank'}" class="btn btn-primary">Tambah Bank Warung</router-link></p>
+        <p> <router-link :to="{name: 'createBankWarung'}" class="btn btn-primary">Tambah Bank Warung</router-link></p>
 
       </div>
 
 
       <div class=" table-responsive ">
-        <div  align="right">
-          pencarian
-          <input type="text" name="pencarian" v-model="pencarian" placeholder="Kolom Pencarian" >
-        </div>
-
+        <div class="pencarian">
+         <input type="text" class="form-control pencarian" autocomplete="off" name="pencarian" v-model="pencarian" placeholder="Pencarian" >
+         </div>
         <table class="table table-striped table-hover ">
           <thead class="text-primary">
             <tr>
@@ -48,7 +52,7 @@
               <td>{{ bankWarung.atas_nama }}</td>
               <td>{{ bankWarung.no_rek }}</td>
               <td> 
-               <router-link :to="{name: 'editBank', params: {id: bankWarung.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + bankWarung.id" >
+               <router-link :to="{name: 'editBankWarung', params: {id: bankWarung.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + bankWarung.id" >
                 Edit 
               </router-link> <a href="#"
               class="btn btn-xs btn-danger" v-bind:id="'delete-' + bankWarung.id"
@@ -131,6 +135,31 @@ export default {
             alert("Could not load banks");
           });
         },
+        deleteEntry(id, index,nama_bank) {
+            this.$swal({
+                title: "Konfirmasi Hapus",
+                text : "Anda Yakin Ingin Menghapus "+nama_bank+" ?",
+                icon : "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                    if (willDelete) {
+                       var app = this;
+                axios.delete(app.url+'/' + id)
+                .then(function (resp) {
+                  app.getResults();
+                  app.alert("Berhasil Menghapus Bank");            
+                })
+                .catch(function (resp) {
+                   swal("Gagal Menghapus Bank!", {
+                          icon: "warning",
+                   });
+                });
+            }
+               this.$router.replace('/bank-warung/');
+            });
+        },
         alert(pesan) {
           this.$swal({
             title: "Berhasil Menghapus Bank!",
@@ -138,19 +167,7 @@ export default {
             icon: "success",
           });
         },
-        deleteEntry(id, index,nama_bank) {
-          if (confirm("Yakin Ingin Menghapus Bank "+nama_bank+" ?")) {
-            var app = this;
-            axios.delete(app.url+'/' + id)
-            .then(function (resp) {
-              app.getResults();
-              app.alert("Berhasil Menghapus Bank "+nama_bank)
-            })
-            .catch(function (resp) {
-              alert("Could not delete company");
-            });
-          }
-        }
+
       }
     }
     </script>

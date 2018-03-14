@@ -59,22 +59,7 @@ class BankController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        $this->validate($request, [
-            'nama_bank'     => 'required',
-            'atas_nama'     => 'required',
-            'no_rek'        => 'required|unique:banks,no_rek,',
-            'tampil_customer'     => 'required',
-        ]);
-        
-        $master_bank = Bank::create([
-            'nama_bank' =>$request->nama_bank,              
-            'atas_nama' => $request->atas_nama,
-            'no_rek' =>$request->no_rek,
-            'tampil_customer' =>$request->tampil_customer,
-        ]);
-    }
+
 
     /**
      * Display the specified resource.
