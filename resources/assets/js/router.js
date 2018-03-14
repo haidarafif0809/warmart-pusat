@@ -176,6 +176,10 @@ import StokOpnameIndex from './components/stok_opname/StokOpnameIndex.vue';
 import DaftarUserWarungIndex from './components/daftar_user_warung/DaftarUserWarungIndex.vue';
 import DaftarUserWarungCreate from './components/daftar_user_warung/DaftarUserWarungCreate.vue';
 import DaftarUserWarungEdit from './components/daftar_user_warung/DaftarUserWarungEdit.vue';
+/**BANK WARUNG*/
+import BankWarungIndex from './components/bank_warung/BankWarungIndex.vue';
+// SETTING PENGIRIMAN
+import SettingPengirimanIndex from './components/setting_pengiriman/SettingPengirimanIndex.vue';
 // otoritas
 import OtoritasIndex from './components/otoritas/OtoritasIndex.vue';
 
@@ -753,6 +757,15 @@ const routes = [{
         path: '/edit-daftar-user/:id',
         component: DaftarUserWarungEdit,
         name: 'editDaftarUser'
+    },{
+        path: '/setting-pengiriman',
+        component: SettingPengirimanIndex,
+        name: 'indexSettingPengiriman'
+    },{
+        path: '/bank-warung',
+        component: BankWarungIndex,
+        name: 'indexBankWarung'
+    }
     },{
         path: '/otoritas',
         component: OtoritasIndex,
