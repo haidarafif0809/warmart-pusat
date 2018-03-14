@@ -439,7 +439,6 @@
                 </router-link>
             </li>
             @endif
-            <!--
             <li>
                 <router-link :to="{name: 'indexDaftarUserWarung'}" class="menu-nav">
                     <span class="sidebar-mini">
@@ -449,7 +448,7 @@
                         User
                     </span>
                 </router-link>
-            </li>-->
+            </li>
         </ul>
     </div>
 </li>
