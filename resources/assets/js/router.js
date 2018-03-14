@@ -765,7 +765,6 @@ const routes = [{
         path: '/bank-warung',
         component: BankWarungIndex,
         name: 'indexBankWarung'
-    }
     },{
         path: '/otoritas',
         component: OtoritasIndex,
