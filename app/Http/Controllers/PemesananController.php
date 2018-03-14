@@ -7,9 +7,10 @@ use App\DetailPesananPelanggan;
 use App\KeranjangBelanja;
 use App\LokasiPelanggan;
 use App\PesananPelanggan;
-use App\Warung;
-use App\User;
 use App\Role;
+use App\SettingJasaPengiriman;
+use App\User;
+use App\Warung;
 use Auth;
 use DB;
 use GuzzleHttp\Client;
@@ -19,7 +20,6 @@ use Jenssegers\Agent\Agent;
 use OpenGraph;
 use SEOMeta;
 use Session;
-use Illuminate\Support\Facades\Mail;
 
 class PemesananController extends Controller
 {
@@ -37,17 +37,17 @@ class PemesananController extends Controller
         OpenGraph::addProperty('type', 'articles');
 
         $agent = new Agent();
-        if(!Session::get('session_id')){
-            $session_id    = session()->getId();
-        }else{
+        if (!Session::get('session_id')) {
+            $session_id = session()->getId();
+        } else {
             $session_id = Session::get('session_id');
         }
         if (Auth::check() == false) {
             $keranjang_belanja = KeranjangBelanja::with(['produk', 'pelanggan'])->where('session_id', $session_id);
-            $jumlah_produk = KeranjangBelanja::select([DB::raw('IFNULL(SUM(jumlah_produk),0) as total_produk')])->where('session_id', $session_id)->first();
-        }else{
-            $keranjang_belanja = KeranjangBelanja::with(['produk', 'pelanggan'])->where('id_pelanggan', Auth::user()->id);  
-            $jumlah_produk = KeranjangBelanja::select([DB::raw('IFNULL(SUM(jumlah_produk),0) as total_produk')])->where('id_pelanggan', Auth::user()->id)->first();          
+            $jumlah_produk     = KeranjangBelanja::select([DB::raw('IFNULL(SUM(jumlah_produk),0) as total_produk')])->where('session_id', $session_id)->first();
+        } else {
+            $keranjang_belanja = KeranjangBelanja::with(['produk', 'pelanggan'])->where('id_pelanggan', Auth::user()->id);
+            $jumlah_produk     = KeranjangBelanja::select([DB::raw('IFNULL(SUM(jumlah_produk),0) as total_produk')])->where('id_pelanggan', Auth::user()->id)->first();
         }
 
         $cek_belanjaan = $keranjang_belanja->count();
@@ -61,7 +61,6 @@ class PemesananController extends Controller
         }
         $pagination = $keranjang_belanjaan->links();
 
-        
         //FOTO WARMART
         $logo_warmart = "" . asset('/assets/img/examples/warmart_logo.png') . "";
 
@@ -93,74 +92,73 @@ class PemesananController extends Controller
         if (Auth::check() == false) {
             $data_pelanggan['provinsi_pelanggan']  = '';
             $data_pelanggan['kabupaten_pelanggan'] = '';
-        }else{
-         $alamat_customer = LokasiPelanggan::select(['provinsi', 'kabupaten'])->where('id_pelanggan', Auth::user()->id);
-         if ($alamat_customer->count() > 0) {
-            $alamat                                = $alamat_customer->first();
-            $data_pelanggan['provinsi_pelanggan']  = Indonesia::findProvince($alamat->provinsi)->name;
-            $data_pelanggan['kabupaten_pelanggan'] = Indonesia::findCity($alamat->kabupaten)->name;
         } else {
-            $data_pelanggan['provinsi_pelanggan']  = '';
-            $data_pelanggan['kabupaten_pelanggan'] = '';
+            $alamat_customer = LokasiPelanggan::select(['provinsi', 'kabupaten'])->where('id_pelanggan', Auth::user()->id);
+            if ($alamat_customer->count() > 0) {
+                $alamat                                = $alamat_customer->first();
+                $data_pelanggan['provinsi_pelanggan']  = Indonesia::findProvince($alamat->provinsi)->name;
+                $data_pelanggan['kabupaten_pelanggan'] = Indonesia::findCity($alamat->kabupaten)->name;
+            } else {
+                $data_pelanggan['provinsi_pelanggan']  = '';
+                $data_pelanggan['kabupaten_pelanggan'] = '';
+            }
         }
+        $jasa_pengirim = SettingJasaPengiriman::where('tampil_jasa_pengiriman', 1)->pluck('jasa_pengiriman', 'jasa_pengiriman');
+
+        return view('layouts.selesaikan_pemesanan', ['pagination' => $pagination, 'keranjang_belanjaan' => $keranjang_belanjaan, 'cek_belanjaan' => $cek_belanjaan, 'agent' => $agent, 'jumlah_produk' => $jumlah_produk, 'logo_warmart' => $logo_warmart, 'subtotal' => $subtotal, 'user' => $user, 'berat_barang' => $berat_barang, 'kabupaten' => $nama_kabupaten, 'data_pelanggan' => $data_pelanggan, 'kurir' => $jasa_pengirim]);
+
     }
-    
 
-    return view('layouts.selesaikan_pemesanan', ['pagination' => $pagination, 'keranjang_belanjaan' => $keranjang_belanjaan, 'cek_belanjaan' => $cek_belanjaan, 'agent' => $agent, 'jumlah_produk' => $jumlah_produk, 'logo_warmart' => $logo_warmart, 'subtotal' => $subtotal, 'user' => $user, 'berat_barang' => $berat_barang, 'kabupaten' => $nama_kabupaten, 'data_pelanggan' => $data_pelanggan]);
-
-}
-
-public function prosesSelesaikanPemesanan(Request $request)
-{
+    public function prosesSelesaikanPemesanan(Request $request)
+    {
         //START TRANSAKSI
-    DB::beginTransaction();
+        DB::beginTransaction();
 
+        if ($request->layanan_kurir != '') {
+            $layanan_kurir = explode("|", $request->layanan_kurir);
+            $layanan_kurir = $layanan_kurir[0] . " | " . $layanan_kurir[2] . " | " . $layanan_kurir[3];
+        } else {
+            $layanan_kurir = $request->layanan_kurir;
+        }
 
-    if ($request->layanan_kurir != '') {
-        $layanan_kurir = explode("|", $request->layanan_kurir);
-        $layanan_kurir = $layanan_kurir[0] . " | " . $layanan_kurir[2] . " | " . $layanan_kurir[3];
-    } else {
-        $layanan_kurir = $request->layanan_kurir;
-    }
+        if (Auth::check() == false) {
+            $session = Session::get('session_id');
 
-    if (Auth::check() == false) {
-        $session = Session::get('session_id');
+            $this->validate($request, [
+                'name'    => 'required',
+                'email'   => 'required|without_spaces|unique:users,email|email',
+                'alamat'  => 'required',
+                'no_telp' => 'required|numeric|without_spaces|unique:users,no_telp',
+            ]);
 
-        $this->validate($request, [
-            'name'     => 'required',
-            'email'    => 'required|without_spaces|unique:users,email|email',
-            'alamat'   => 'required',
-            'no_telp'  => 'required|numeric|without_spaces|unique:users,no_telp'
-        ]);
-        
-        $kode_verifikasi = rand(1111, 9999);
-        $user = User::create([
-            'name'              => $request->name,
-            'email'             => $request->email,
-            'alamat'            => $request->alamat,
-            'no_telp'           => $request->no_telp,
-            'password'          => bcrypt('123456'),
-            'tipe_user'         => 3,
-            'status_konfirmasi' => 1,
-            'kode_verifikasi'   => $kode_verifikasi,
-        ]);
+            $kode_verifikasi = rand(1111, 9999);
+            $user            = User::create([
+                'name'              => $request->name,
+                'email'             => $request->email,
+                'alamat'            => $request->alamat,
+                'no_telp'           => $request->no_telp,
+                'password'          => bcrypt('123456'),
+                'tipe_user'         => 3,
+                'status_konfirmasi' => 1,
+                'kode_verifikasi'   => $kode_verifikasi,
+            ]);
 
-        $customerRole = Role::where('name', 'customer')->first();
-        $user->attachRole($customerRole);
+            $customerRole = Role::where('name', 'customer')->first();
+            $user->attachRole($customerRole);
 
-        $id_user = $user->id;
-        $keranjang_belanjaan = KeranjangBelanja::KeranjangBelanjaSession($session)->get();
+            $id_user             = $user->id;
+            $keranjang_belanjaan = KeranjangBelanja::KeranjangBelanjaSession($session)->get();
 
-    }else{
-     // QUERY LENGKAPNYA ADA DI scopeKeranjangBelanjaPelanggan di model Keranjang Belanja
-        $id_user = Auth::user()->id;
-        $keranjang_belanjaan = KeranjangBelanja::KeranjangBelanjaPelanggan()->get();
-        
-    }
+        } else {
+            // QUERY LENGKAPNYA ADA DI scopeKeranjangBelanjaPelanggan di model Keranjang Belanja
+            $id_user             = Auth::user()->id;
+            $keranjang_belanjaan = KeranjangBelanja::KeranjangBelanjaPelanggan()->get();
 
-        $cek_pesanan = 0; // BUAT VARIABEL CEK PESANAN YANG KITA SET  0
-        $id_pesanan = 0;
-        $arrayKeranjangBelanja             = array();
+        }
+
+        $cek_pesanan           = 0; // BUAT VARIABEL CEK PESANAN YANG KITA SET  0
+        $id_pesanan            = 0;
+        $arrayKeranjangBelanja = array();
         foreach ($keranjang_belanjaan as $key => $keranjang_belanjaans) {
 
             $kode_unik_transfer = PesananPelanggan::kodeUnikTransfer();
@@ -173,34 +171,34 @@ public function prosesSelesaikanPemesanan(Request $request)
             if ($key == 0) {
 
                 if (Auth::check() == false) {
-                // QUERY LENGKAPMNYA ADA DI scopeHitungTotalPesananSession di mmodel Keranjang Belanja
-                    $query_hitung_total = KeranjangBelanja::HitungTotalPesananSession($id_warung,$session)->first();
-                }else{                    
-                // QUERY LENGKAPMNYA ADA DI scopeHitungTotalPesanan di mmodel Keranjang Belanja
+                    // QUERY LENGKAPMNYA ADA DI scopeHitungTotalPesananSession di mmodel Keranjang Belanja
+                    $query_hitung_total = KeranjangBelanja::HitungTotalPesananSession($id_warung, $session)->first();
+                } else {
+                    // QUERY LENGKAPMNYA ADA DI scopeHitungTotalPesanan di mmodel Keranjang Belanja
                     $query_hitung_total = KeranjangBelanja::HitungTotalPesanan($id_warung)->first();
                 }
 
                 if ($request->metode_pembayaran == "TRANSFER") {
-                    $subtotal           = (str_replace('.', '', $request->ongkos_kirim) + $query_hitung_total['total_pesanan']) + $kode_unik_transfer;
-                }else{
-                    $subtotal           = (str_replace('.', '', $request->ongkos_kirim) + $query_hitung_total['total_pesanan']);
+                    $subtotal = (str_replace('.', '', $request->ongkos_kirim) + $query_hitung_total['total_pesanan']) + $kode_unik_transfer;
+                } else {
+                    $subtotal = (str_replace('.', '', $request->ongkos_kirim) + $query_hitung_total['total_pesanan']);
                 }
 
                 // INSERT KE PESANAN PELANGGAN
                 $pesanan_pelanggan = PesananPelanggan::create([
-                    'id_pelanggan'      => $id_user,
-                    'nama_pemesan'      => $request->name,
-                    'no_telp_pemesan'   => $request->no_telp,
-                    'alamat_pemesan'    => $request->alamat,
-                    'jumlah_produk'     => $query_hitung_total['total_produk'],
-                    'subtotal'          => $subtotal,
-                    'id_warung'         => $id_warung,
-                    'kurir'             => $request->kurir,
-                    'layanan_kurir'     => $layanan_kurir,
-                    'metode_pembayaran' => $request->metode_pembayaran,
-                    'biaya_kirim'       => str_replace('.', '', $request->ongkos_kirim),
-                    'bank_transfer'     => "-",
-                    'kode_unik_transfer'     => $kode_unik_transfer
+                    'id_pelanggan'       => $id_user,
+                    'nama_pemesan'       => $request->name,
+                    'no_telp_pemesan'    => $request->no_telp,
+                    'alamat_pemesan'     => $request->alamat,
+                    'jumlah_produk'      => $query_hitung_total['total_produk'],
+                    'subtotal'           => $subtotal,
+                    'id_warung'          => $id_warung,
+                    'kurir'              => $request->kurir,
+                    'layanan_kurir'      => $layanan_kurir,
+                    'metode_pembayaran'  => $request->metode_pembayaran,
+                    'biaya_kirim'        => str_replace('.', '', $request->ongkos_kirim),
+                    'bank_transfer'      => "-",
+                    'kode_unik_transfer' => $kode_unik_transfer,
                 ]);
 
                 // UBAH NILAI VARIABEL CEK PESANAN JADI ID WARUNG
@@ -208,20 +206,19 @@ public function prosesSelesaikanPemesanan(Request $request)
 
                 // ID PESANAN PELANGGAN
                 $id_pesanan_pelanggan = $pesanan_pelanggan->id;
-                $id_pesanan = $pesanan_pelanggan->id;
+                $id_pesanan           = $pesanan_pelanggan->id;
 
                 // SELECT WARUNG
                 $warung = Warung::find($id_warung);
 
                 // AMBIL NOMOR TELPON WARUNG
                 $nomor_tujuan = $warung->no_telpon;
-                $nama_warung = $warung->name;
+                $nama_warung  = $warung->name;
 
                 // KIRIM SMS KE WARUNG
-                $this->kirimSmsKeWarung($nomor_tujuan, $id_pesanan_pelanggan);    
+                $this->kirimSmsKeWarung($nomor_tujuan, $id_pesanan_pelanggan);
 
-
-                $pesanan_pelanggan->kirimEmailKonfirmasiPesananKePelanggan($request,$nama_warung,$keranjang_belanjaan);
+                $pesanan_pelanggan->kirimEmailKonfirmasiPesananKePelanggan($request, $nama_warung, $keranjang_belanjaan);
 
             }
 
@@ -229,33 +226,33 @@ public function prosesSelesaikanPemesanan(Request $request)
             if ($cek_pesanan != 0 and $cek_pesanan != $id_warung) {
 
                 if (Auth::check() == false) {
-                // QUERY LENGKAPMNYA ADA DI scopeHitungTotalPesananSession di mmodel Keranjang Belanja
-                    $query_hitung_total = KeranjangBelanja::HitungTotalPesananSession($id_warung,$session)->first();
-                }else{                    
-                // QUERY LENGKAPMNYA ADA DI scopeHitungTotalPesanan di mmodel Keranjang Belanja
+                    // QUERY LENGKAPMNYA ADA DI scopeHitungTotalPesananSession di mmodel Keranjang Belanja
+                    $query_hitung_total = KeranjangBelanja::HitungTotalPesananSession($id_warung, $session)->first();
+                } else {
+                    // QUERY LENGKAPMNYA ADA DI scopeHitungTotalPesanan di mmodel Keranjang Belanja
                     $query_hitung_total = KeranjangBelanja::HitungTotalPesanan($id_warung)->first();
                 }
                 if ($request->metode_pembayaran == "TRANSFER") {
-                    $subtotal           = (str_replace('.', '', $request->ongkos_kirim) + $query_hitung_total['total_pesanan']) + $kode_unik_transfer;
-                }else{
-                    $subtotal           = (str_replace('.', '', $request->ongkos_kirim) + $query_hitung_total['total_pesanan']);
+                    $subtotal = (str_replace('.', '', $request->ongkos_kirim) + $query_hitung_total['total_pesanan']) + $kode_unik_transfer;
+                } else {
+                    $subtotal = (str_replace('.', '', $request->ongkos_kirim) + $query_hitung_total['total_pesanan']);
                 }
 
                 // INSERT PESANAN PELANGGAN
                 $pesanan_pelanggan = PesananPelanggan::create([
-                    'id_pelanggan'    => $id_user,
-                    'nama_pemesan'    => $request->name,
-                    'no_telp_pemesan' => $request->no_telp,
-                    'alamat_pemesan'  => $request->alamat,
-                    'jumlah_produk'   => $query_hitung_total['total_produk'],
-                    'subtotal'        => $subtotal,
-                    'id_warung'       => $id_warung,
-                    'kurir'             => $request->kurir,
-                    'layanan_kurir'     => $layanan_kurir,
-                    'metode_pembayaran' => $request->metode_pembayaran,
-                    'biaya_kirim'       => str_replace('.', '', $request->ongkos_kirim),
-                    'bank_transfer'     => "-",
-                    'kode_unik_transfer'     => $kode_unik_transfer
+                    'id_pelanggan'       => $id_user,
+                    'nama_pemesan'       => $request->name,
+                    'no_telp_pemesan'    => $request->no_telp,
+                    'alamat_pemesan'     => $request->alamat,
+                    'jumlah_produk'      => $query_hitung_total['total_produk'],
+                    'subtotal'           => $subtotal,
+                    'id_warung'          => $id_warung,
+                    'kurir'              => $request->kurir,
+                    'layanan_kurir'      => $layanan_kurir,
+                    'metode_pembayaran'  => $request->metode_pembayaran,
+                    'biaya_kirim'        => str_replace('.', '', $request->ongkos_kirim),
+                    'bank_transfer'      => "-",
+                    'kode_unik_transfer' => $kode_unik_transfer,
                 ]);
 
                 // UBAH NILAI VARIABEL CEK PESANAN JADI ID WARUNG
@@ -274,7 +271,7 @@ public function prosesSelesaikanPemesanan(Request $request)
                 // KIRIM SMS KE WARUNG
                 $this->kirimSmsKeWarung($nomor_tujuan, $id_pesanan_pelanggan);
 
-                $pesanan_pelanggan->kirimEmailKonfirmasiPesananKePelanggan($request,$nama_warung,$keranjang_belanjaan);
+                $pesanan_pelanggan->kirimEmailKonfirmasiPesananKePelanggan($request, $nama_warung, $keranjang_belanjaan);
             }
 
             // INSERT KE DETAIL PESANAN PELANGGAN
@@ -286,12 +283,10 @@ public function prosesSelesaikanPemesanan(Request $request)
                 'jumlah_produk'        => $keranjang_belanjaans['jumlah_produk'],
             ]);
 
-
             // HAPUS KERANJANG BELANJA
             KeranjangBelanja::destroy($keranjang_belanjaans['id_keranjang_belanja']);
 
         }
-
 
         DB::commit();
 
@@ -299,7 +294,7 @@ public function prosesSelesaikanPemesanan(Request $request)
             return redirect()->route('daftar_produk.index');
         } else {
 
-            return redirect()->route('info.pembayaran', ['id' => $id_pesanan,'pelanggan' => $id_user]);
+            return redirect()->route('info.pembayaran', ['id' => $id_pesanan, 'pelanggan' => $id_user]);
         }
 
     }
@@ -376,7 +371,8 @@ public function prosesSelesaikanPemesanan(Request $request)
 
     public function dataKota(Request $request)
     {
-        $curl = curl_init();
+        $curl          = curl_init();
+        $jasa_pengirim = SettingJasaPengiriman::where('default_jasa_pengiriman', 1)->first()->jasa_pengiriman;
 
         curl_setopt_array($curl, array(
             CURLOPT_URL            => "https://api.rajaongkir.com/starter/city?province=" . $request->id_provinsi,
@@ -391,15 +387,16 @@ public function prosesSelesaikanPemesanan(Request $request)
             ),
         ));
 
-        $response = curl_exec($curl);
-        $err      = curl_error($curl);
+        $response['data']  = curl_exec($curl);
+        $response['kurir'] = $jasa_pengirim;
+        $err               = curl_error($curl);
 
         curl_close($curl);
 
         if ($err) {
             echo "cURL Error #:" . $err;
         } else {
-            echo $response;
+            return response()->json($response);
         }
     }
 
@@ -440,21 +437,22 @@ public function prosesSelesaikanPemesanan(Request $request)
         }
     }
 
-    public function emailKonfirmasiPesanan(){
-       $session_id = Session::get('session_id');
+    public function emailKonfirmasiPesanan()
+    {
+        $session_id = Session::get('session_id');
 
-       $keranjang_belanjaan = KeranjangBelanja::select('keranjang_belanjas.id_keranjang_belanja AS id_keranjang_belanja', 'keranjang_belanjas.id_produk AS id_produk', 'keranjang_belanjas.jumlah_produk AS jumlah_produk', 'barangs.harga_jual AS harga_jual', 'barangs.id_warung AS id_warung','barangs.nama_barang AS nama_barang','barangs.foto AS foto')
-       ->leftJoin('barangs', 'keranjang_belanjas.id_produk', '=', 'barangs.id')
-       ->where('session_id', $session_id)->orderBy('barangs.id_warung');
+        $keranjang_belanjaan = KeranjangBelanja::select('keranjang_belanjas.id_keranjang_belanja AS id_keranjang_belanja', 'keranjang_belanjas.id_produk AS id_produk', 'keranjang_belanjas.jumlah_produk AS jumlah_produk', 'barangs.harga_jual AS harga_jual', 'barangs.id_warung AS id_warung', 'barangs.nama_barang AS nama_barang', 'barangs.foto AS foto')
+            ->leftJoin('barangs', 'keranjang_belanjas.id_produk', '=', 'barangs.id')
+            ->where('session_id', $session_id)->orderBy('barangs.id_warung');
 
-       $arrayKeranjangBelanja             = array();
-       foreach ($keranjang_belanjaan->get() as $key => $keranjang_belanjaans) {
-        array_push($arrayKeranjangBelanja,['keranjang_belanja'=>$keranjang_belanjaans]);
-    }
+        $arrayKeranjangBelanja = array();
+        foreach ($keranjang_belanjaan->get() as $key => $keranjang_belanjaans) {
+            array_push($arrayKeranjangBelanja, ['keranjang_belanja' => $keranjang_belanjaans]);
+        }
 //$arrayKeranjangBelanja[0]['keranjang_belanja']->id_produk;
-    foreach ($arrayKeranjangBelanja as $arrayKeranjangBelanjas ) {
-        return  $arrayKeranjangBelanja;
+        foreach ($arrayKeranjangBelanja as $arrayKeranjangBelanjas) {
+            return $arrayKeranjangBelanja;
+        }
     }
-}
 
 }
