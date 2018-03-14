@@ -12,6 +12,7 @@ use Auth;
 use App\Permission;
 use Session;
 use App\PermissionRole;
+use App\SettingAplikasi;
 use Laratrust;
 
 class OtoritasController extends Controller
@@ -23,8 +24,11 @@ class OtoritasController extends Controller
      */
 
     public function __construct()
-    {
-        $this->middleware('user-must-admin');
+    {    
+        $settings_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
+        if ($settings_aplikasi->tipe_aplikasi == 0) {            
+            $this->middleware('user-must-admin');
+        }
     }
 
     public function index(Request $request, Builder $htmlBuilder)
@@ -73,26 +77,21 @@ class OtoritasController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        $this->validate($request, [
-            'name' => 'required|unique:roles,name,',
-            'display_name' => 'required|unique:roles,display_name',
-            'description' => ' '
-        ]);
-    
+
+        $cek_otoritas = Role::where('name',$request->otoritas)->orWhere('display_name',$request->otoritas)->count();
+        if ($cek_otoritas > 0) {
+         $respons['status'] = $cek_otoritas;
+     }else{
         $otoritas = Role::create([
-            'name' => $request->name,
-            'display_name' => $request->display_name,
-            'description' => $request->description
+            'name' => $request->otoritas,
+            'display_name' => $request->otoritas
         ]);
-
-        Session::flash("flash_notification", [
-            "level"     => "success",
-            "message"   => "Berhasil Menambah Otoritas $otoritas->display_name"
-        ]);
-
-        return redirect()->route('otoritas.index');
+        $respons['status'] = $cek_otoritas;
+        return response()->json($respons);
     }
+
+
+}
 
     /**
      * Display the specified resource.
@@ -127,25 +126,25 @@ class OtoritasController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
-         $this->validate($request, [
-            'name'   => 'required|unique:roles,name,' .$id,
-            'display_name'     => 'required|unique:roles,display_name,' .$id,
-            'description'    => ' ',
-            ]);
+        $cek_otoritas = Role::where(function($query) use ($request){
+            $query->where('name',$request->otoritas)->orWhere('display_name',$request->otoritas);
+        })->where('id','!=',$id)->count();
+        if ($cek_otoritas > 0) {
 
-        Role::where('id', $id) ->update([ 
-            'name' =>$request->name,
-            'display_name'=>$request->display_name,
-            'description'=>$request->description]);
+         $respons['status'] = $cek_otoritas;
 
-        Session::flash("flash_notification", [
-            "level"=>"success",
-            "message"=>"Berhasil Mengubah Otoritas $request->display_name"
-            ]);
+     }else{
 
-        return redirect()->route('otoritas.index');
-    }
+         Role::where('id', $id)->update([ 
+            'name' =>$request->otoritas,
+            'display_name'=>$request->otoritas]);
+
+         $respons['status'] = $cek_otoritas;
+         return response()->json($respons);
+     }
+
+
+ }
 
     /**
      * Remove the specified resource from storage.
@@ -157,27 +156,16 @@ class OtoritasController extends Controller
     { 
         //menghapus data dengan pengecekan alert /peringatan
         $user = Otoritas::where('role_id',$id); 
- 
-    if ($user->count() > 0) {
+
+        if ($user->count() > 0) {
         // menyiapkan pesan error
-        $html = 'Otoritas tidak bisa dihapus karena masih memiliki User'; 
-        
-        Session::flash("flash_notification", [
-          "level"=>"danger",
-          "message"=>$html
-        ]); 
-
-        return redirect()->route('otoritas.index');      
+            $respons['status'] = $user->count();
+            return response()->json($respons);
         }
-    else{
-
-        Role::destroy($id);
-
-        Session:: flash("flash_notification", [
-            "level"=>"danger",
-            "message"=>"Otoritas Berhasil Di Hapus"
-            ]);
-        return redirect()->route('otoritas.index');
+        else{
+            Role::destroy($id);
+            $respons['status'] = $user->count();
+            return response()->json($respons);
         }
     }
 
@@ -206,34 +194,78 @@ class OtoritasController extends Controller
 
 
     public function proses_setting_permission(Request $request,$id){
-         $permission = Permission::all();
-         $role = Role::find($id);
+       $permission = Permission::all();
+       $role = Role::find($id);
 
-         foreach ($permission as $permissions ) {
+       foreach ($permission as $permissions ) {
 
-            $permission_name = $permissions->name;
+        $permission_name = $permissions->name;
             //jika checkbox nya di centang
-             if (isset($request->$permission_name)) {
+        if (isset($request->$permission_name)) {
                 //jika permission role nya belum ada maka di kaitkan role dengen pemissionya
-                if(PermissionRole::where('role_id',$id)->where('permission_id',$permissions->id)->count() == 0) {
-                     $role->attachPermission($permissions);
-                } 
-              
-             }
+            if(PermissionRole::where('role_id',$id)->where('permission_id',$permissions->id)->count() == 0) {
+               $role->attachPermission($permissions);
+           } 
+
+       }
              //jika checkbox nya tidak di centang
-             else {
+       else {
                 //jika permission role nya ada maka di hilangkan permissionnya 
-                if(PermissionRole::where('role_id',$id)->where('permission_id',$permissions->id)->count() == 1) {
-                     $role->detachPermission($permissions);
-                } 
-             }
-         }
+        if(PermissionRole::where('role_id',$id)->where('permission_id',$permissions->id)->count() == 1) {
+           $role->detachPermission($permissions);
+       } 
+   }
+}
 
-          Session:: flash("flash_notification", [
-            "level"=>"success",
-            "message"=>"Setting Permission $role->display_name Berhasil Dirubah"
-            ]);
-        return redirect()->route('otoritas.index');
+Session:: flash("flash_notification", [
+    "level"=>"success",
+    "message"=>"Setting Permission $role->display_name Berhasil Dirubah"
+]);
+return redirect()->route('otoritas.index');
 
-    }
+}
+
+
+
+public function paginationData($user, $user_array,  $url)
+{
+        //DATA PAGINATION
+    $respons['current_page']   = $user->currentPage();
+    $respons['data']           = $user_array;
+    $respons['first_page_url'] = url($url . '?page=' . $user->firstItem());
+    $respons['from']           = 1;
+    $respons['last_page']      = $user->lastPage();
+    $respons['last_page_url']  = url($url . '?page=' . $user->lastPage());
+    $respons['next_page_url']  = $user->nextPageUrl();
+    $respons['path']           = url($url);
+    $respons['per_page']       = $user->perPage();
+    $respons['prev_page_url']  = $user->previousPageUrl();
+    $respons['to']             = $user->perPage();
+    $respons['total']          = $user->total();
+        //DATA PAGINATION
+
+    return $respons;
+}
+public function paginationPencarianData($user, $url, $search)
+{
+        //DATA PAGINATION
+    $respons['current_page']   = $user->currentPage();
+    $respons['data']           = $user;
+    $respons['first_page_url'] = url($url . '?page=' . $user->firstItem() . '&search=' . $search);
+    $respons['from']           = 1;
+    $respons['last_page']      = $user->lastPage();
+    $respons['last_page_url']  = url($url . '?page=' . $user->lastPage() . '&search=' . $search);
+    $respons['next_page_url']  = $user->nextPageUrl();
+    $respons['path']           = url($url);
+    $respons['per_page']       = $user->perPage();
+    $respons['prev_page_url']  = $user->previousPageUrl();
+    $respons['to']             = $user->perPage();
+    $respons['total']          = $user->total();
+        //DATA PAGINATION
+
+    return $respons;
+}
+public function view(){
+    return Role::whereNotIn('id',[3,4,5])->paginate(10);
+}
 }

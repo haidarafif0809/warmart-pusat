@@ -925,6 +925,9 @@ Route::get('/daftar-user-warung/{id}', 'DaftarUserWarungController@dataUser')->m
 Route::put('/daftar-user-warung/{id}', 'DaftarUserWarungController@update')->middleware('auth');
 Route::delete('/daftar-user-warung/{id}', 'DaftarUserWarungController@destroy')->middleware('auth');
 
+// OTORITAS
+Route::get('/otoritas/view', 'OtoritasController@view')->middleware('auth');
+
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
     Route::resource('user', 'UserController');

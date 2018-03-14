@@ -180,6 +180,8 @@ import DaftarUserWarungEdit from './components/daftar_user_warung/DaftarUserWaru
 import BankWarungIndex from './components/bank_warung/BankWarungIndex.vue';
 // SETTING PENGIRIMAN
 import SettingPengirimanIndex from './components/setting_pengiriman/SettingPengirimanIndex.vue';
+// otoritas
+import OtoritasIndex from './components/otoritas/OtoritasIndex.vue';
 
 const routes = [{
     path: '/',
@@ -763,6 +765,11 @@ const routes = [{
         path: '/bank-warung',
         component: BankWarungIndex,
         name: 'indexBankWarung'
+    }
+    },{
+        path: '/otoritas',
+        component: OtoritasIndex,
+        name: 'indexOtoritas'
     }
 
     ]

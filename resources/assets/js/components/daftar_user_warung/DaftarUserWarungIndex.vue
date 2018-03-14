@@ -11,6 +11,7 @@
 
       <ul class="breadcrumb">
        <li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li>
+       <li style="color: purple">Master Data</li>
        <li class="active">User</li>
      </ul>
 
@@ -154,7 +155,7 @@ export default {
     }, 
     alert(pesan) { 
       this.$swal({ 
-        title: "Berhasil Menghapus User!", 
+        title: "Berhasil!", 
         text: pesan, 
         icon: "success", 
         buttons: false,
