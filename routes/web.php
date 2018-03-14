@@ -921,6 +921,11 @@ Route::get('/daftar-user-warung/{id}', 'DaftarUserWarungController@dataUser')->m
 Route::put('/daftar-user-warung/{id}', 'DaftarUserWarungController@update')->middleware('auth');
 Route::delete('/daftar-user-warung/{id}', 'DaftarUserWarungController@destroy')->middleware('auth');
 
+//menampilkan data bank Warung
+Route::get('/bank-warung/view', 'BankWarungController@view')->middleware('auth');
+Route::get('/bank-warung/pencarian', 'BankWarungController@pencarian')->middleware('auth');
+
+
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
     Route::resource('user', 'UserController');
@@ -960,11 +965,8 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
     Route::resource('user-kasir', 'UserKasirController');
     Route::resource('laporan-bucket-size', 'LaporanBucketSizeController');
     Route::resource('stok-opname', 'StokOpnameController');
+    Route::resource('bank-warung', 'BankWarungController');
 
-
-//menampilkan data bank Warung
-Route::get('/bank-warung/view', 'BankWarungController@view')->middleware('auth');
-Route::get('/bank-warung/pencarian', 'BankWarungController@pencarian')->middleware('auth');
 
 
 //BARANG
