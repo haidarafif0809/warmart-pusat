@@ -961,6 +961,12 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
     Route::resource('laporan-bucket-size', 'LaporanBucketSizeController');
     Route::resource('stok-opname', 'StokOpnameController');
 
+
+//menampilkan data bank Warung
+Route::get('/bank-warung/view', 'BankWarungController@view')->middleware('auth');
+Route::get('/bank-warung/pencarian', 'BankWarungController@pencarian')->middleware('auth');
+
+
 //BARANG
     //HALAMAN DESKRIPSI
     Route::get('/produk/detail-produk/{id}', [
