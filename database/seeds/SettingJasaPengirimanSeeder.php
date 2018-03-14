@@ -13,7 +13,7 @@ class SettingJasaPengirimanSeeder extends Seeder
     public function run()
     {
         $setting                          = new SettingJasaPengiriman();
-        $setting->jasa_pengiriman         = "JNE";
+        $setting->jasa_pengiriman         = "jne";
         $setting->tampil_jasa_pengiriman  = 1;
         $setting->default_jasa_pengiriman = 1;
         $setting->warung_id               = 1;
@@ -21,7 +21,7 @@ class SettingJasaPengirimanSeeder extends Seeder
         $setting->save();
 
         $setting                          = new SettingJasaPengiriman();
-        $setting->jasa_pengiriman         = "TIKI";
+        $setting->jasa_pengiriman         = "tiki";
         $setting->tampil_jasa_pengiriman  = 1;
         $setting->default_jasa_pengiriman = 0;
         $setting->warung_id               = 1;
@@ -29,7 +29,7 @@ class SettingJasaPengirimanSeeder extends Seeder
         $setting->save();
 
         $setting                          = new SettingJasaPengiriman();
-        $setting->jasa_pengiriman         = "POS";
+        $setting->jasa_pengiriman         = "pos";
         $setting->tampil_jasa_pengiriman  = 1;
         $setting->default_jasa_pengiriman = 0;
         $setting->warung_id               = 1;
@@ -37,7 +37,7 @@ class SettingJasaPengirimanSeeder extends Seeder
         $setting->save();
 
         $setting                          = new SettingJasaPengiriman();
-        $setting->jasa_pengiriman         = "COD";
+        $setting->jasa_pengiriman         = "cod";
         $setting->tampil_jasa_pengiriman  = 1;
         $setting->default_jasa_pengiriman = 0;
         $setting->warung_id               = 1;
@@ -45,7 +45,7 @@ class SettingJasaPengirimanSeeder extends Seeder
         $setting->save();
 
         $setting                          = new SettingJasaPengiriman();
-        $setting->jasa_pengiriman         = "OJEK";
+        $setting->jasa_pengiriman         = "ojek";
         $setting->tampil_jasa_pengiriman  = 1;
         $setting->default_jasa_pengiriman = 0;
         $setting->warung_id               = 1;

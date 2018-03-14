@@ -47,7 +47,7 @@
                             </thead>
                             <tbody>
                                 <tr v-for="settingPengirimans, index in settingPengiriman">
-                                    <td width="10%" align="center">{{settingPengirimans.setting.jasa_pengiriman}}</td>
+                                    <td width="10%" align="center">{{settingPengirimans.setting.jasa_pengiriman.toUpperCase()}}</td>
                                     <td align="center">
                                         <div class="img-container">
                                             <img :src="url_picture+'/'+settingPengirimans.setting.logo_jasa" style="width: 100%" v-if="settingPengirimans.agent == 0"/> 
@@ -97,6 +97,11 @@
                 },
                 url : window.location.origin+(window.location.pathname).replace("dashboard", "setting-pengiriman"),
                 url_picture : window.location.origin+(window.location.pathname).replace("dashboard", "jasa_pengiriman"),
+            }
+        },
+        filters: {
+            hurufKapital(e) {
+                e.target.value = e.target.value.toUpperCase()
             }
         },
         methods: {
