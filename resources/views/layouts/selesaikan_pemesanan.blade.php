@@ -344,7 +344,7 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
 @section('scripts')
 <script type="text/javascript">
   $(document).ready(function(){
-
+    alert();
     var $select = $('#provinsi').selectize({
      loadingClass: 'selectizeLoading',
      valueField: 'province_id',
@@ -558,6 +558,7 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
 
 
     });
+    swal.close();
   } 
 
   function updateOngkir(ongkir,waktu_pengiriman,layanan_kurir,total_belanja){
@@ -870,6 +871,19 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
 }
 
 });
+
+function alert(){
+ swal({
+  text :  "Memuat Data...",
+  showConfirmButton :  false,
+  type: "info",
+  closeOnClickOutside: false,
+  closeOnEsc: false,
+  onOpen: () => {
+    swal.showLoading()
+  }
+}); 
+}
 
 </script>
 

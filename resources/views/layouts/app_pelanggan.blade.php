@@ -5,12 +5,12 @@
     <?php
     $session_id    = session()->getId();
     $session = Session::get('session_id');
-    $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->
-    first();
+    $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
 
     $foto_logo = \App\UserWarung::select()->where('tipe_user',4)->orderBy('id', 'asc')->limit(1)->first();
 
     $settingFooter = \App\SettingFooter::select()->first();
+    $jasa_pengirimans = \App\SettingJasaPengiriman::select('logo_jasa')->get();
     ?>
     
     @if($setting_aplikasi->tipe_aplikasi == 0)
@@ -117,6 +117,9 @@ body {
     font-size: 23.5px;
     display: table-cell;
     padding-right: 10px;
+}
+.img-jasa{
+    padding: 0px 2px 2px;
 }
 </style>
 <body class="ecommerce-page">
@@ -420,7 +423,22 @@ body {
                         </div>
                     </div>
                 </div>
-                <hr/>
+                <hr style="margin: 5px" />
+                <div class="row">
+                    <div class="col-md-6 col-xs-6">
+                        <div class="row" style="padding-left: 15px">
+                            @foreach($jasa_pengirimans as $jasa_pengiriman)
+                            @if(Agent::isMobile())
+                            <img src="{{asset('jasa_pengiriman/'.$jasa_pengiriman->logo_jasa)}}" style="max-width: 50px" class="pull-left img-jasa">
+                            @else
+                            <img src="{{asset('jasa_pengiriman/'.$jasa_pengiriman->logo_jasa)}}" class="pull-left img-jasa">
+                            @endif
+                            @endforeach
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-xs-6">                        
+                    </div>
+                </div>
                 
                 <div class="copyright pull-right">
                     Copyright ©
