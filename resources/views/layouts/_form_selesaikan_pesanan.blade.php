@@ -43,8 +43,8 @@
 
 <div style="margin-bottom: 1px; margin-top: 1px;" class="form-group{{ $errors->has('kurir') ? ' has-error' : '' }}">
   {!! Form::label('kurir', 'Kurir', ['class'=>'col-md-2 control-label', 'style'=> 'margin-bottom:1px; margin-top:1px;']) !!}
-  <div class="col-md-6">
-    {!! Form::select('kurir', ['jne'=>'JNE','pos'=>'POS','tiki'=>'TIKI','cod'=>'Bayar di Tempat(COD)','ojek'=>'Ojek'],null, ['required'=> 'true','placeholder' => 'Cari Kurir','id'=>'kurir']) !!}
+  <div class="col-md-6 hurufBesar">
+    {!! Form::select('kurir', $kurir, null,['required'=> 'true','placeholder' => 'Cari Kurir','id'=>'kurir']) !!}
   </div>
 </div>
 
