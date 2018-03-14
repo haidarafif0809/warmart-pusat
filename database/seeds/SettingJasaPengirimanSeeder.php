@@ -43,5 +43,13 @@ class SettingJasaPengirimanSeeder extends Seeder
         $setting->warung_id               = 1;
         $setting->logo_jasa               = "COD.png";
         $setting->save();
+
+        $setting                          = new SettingJasaPengiriman();
+        $setting->jasa_pengiriman         = "OJEK";
+        $setting->tampil_jasa_pengiriman  = 1;
+        $setting->default_jasa_pengiriman = 0;
+        $setting->warung_id               = 1;
+        $setting->logo_jasa               = "COD.png";
+        $setting->save();
     }
 }

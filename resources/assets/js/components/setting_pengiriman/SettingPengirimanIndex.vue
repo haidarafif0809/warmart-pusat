@@ -12,6 +12,11 @@
         color: #DFDFDF;
         font-size: 12px;
     }
+    .table>thead>tr>th {
+        border-bottom-width: 1px;
+        font-size: 1em;
+        font-weight: 300;
+    }
 </style>
 <template>
     <div class="row">
@@ -62,7 +67,6 @@
                                             <label>
                                                 <input type="radio" name="optionsRadios" v-model="settingPengirimans.setting.default_jasa_pengiriman" 
                                                 @click="defaultPengiriman(index)" v-bind:value="1">
-                                                {{settingPengirimans.setting.default_jasa_pengiriman}}
                                             </label>
                                         </div>
                                     </td>
