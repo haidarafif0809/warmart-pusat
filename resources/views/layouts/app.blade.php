@@ -47,9 +47,9 @@ $judul_warung = \App\SettingFooter::select()->first()->judul_warung;
 </head>
 <style type="text/css">
 
-.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
-   padding: 1px;
-}
+    .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+     padding: 1px;
+ }
 
 </style>
 <body>
@@ -93,8 +93,8 @@ $judul_warung = \App\SettingFooter::select()->first()->judul_warung;
     -->
 
     <div class="logo">
-     @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
-     <a class="simple-text logo-mini" href="https://war-mart.id">
+       @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
+       <a class="simple-text logo-mini" href="https://war-mart.id">
         WM
     </a>
     <a class="simple-text logo-normal" href="https://war-mart.id">
@@ -131,22 +131,22 @@ $judul_warung = \App\SettingFooter::select()->first()->judul_warung;
                                 UPU
                             </span>
                             <span class="sidebar-normal">
-                               Ubah Profil
-                           </span>
-                       </a>
-                       @elseif(Auth::user()->tipe_user == 1 )
-                       <router-link :to="{name: 'ubahProfilAdmin'}" class="menu-nav">
+                             Ubah Profil
+                         </span>
+                     </a>
+                     @elseif(Auth::user()->tipe_user == 1 )
+                     <router-link :to="{name: 'ubahProfilAdmin'}" class="menu-nav">
                         <span class="sidebar-mini">
                             UP
                         </span>
                         <span class="sidebar-normal">
-                           Ubah Profil
-                       </span>
-                   </router-link>
-                   @endif
-               </li>
-               @if(Auth::user()->tipe_user == 4 AND Auth::user()->kasir_id == 0)
-               <li>
+                         Ubah Profil
+                     </span>
+                 </router-link>
+                 @endif
+             </li>
+             @if(Auth::user()->tipe_user == 4 AND Auth::user()->kasir_id == 0)
+             <li>
                 <router-link :to="{name: 'indexProfilWarung'}" class="menu-nav">
                     <span class="sidebar-mini">
                         UP
@@ -170,7 +170,7 @@ $judul_warung = \App\SettingFooter::select()->first()->judul_warung;
                 </router-link>
                 @else
                 <router-link :to="{name: 'ubahPasswordUserWarung'}" class="menu-nav" v-on:click="closeMenu()">
-                   <span class="sidebar-mini">
+                 <span class="sidebar-mini">
                     UP
                 </span>
                 <span class="sidebar-normal">
@@ -475,7 +475,7 @@ $judul_warung = \App\SettingFooter::select()->first()->judul_warung;
 </body>
 <!--   Core JS Files   -->
 
-<script src="{{ asset('js/app.js?v=1.111')}}" type="text/javascript">
+<script src="{{ asset('js/app.js?v=1.112')}}" type="text/javascript">
 
 </script>
 <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript">
@@ -615,8 +615,8 @@ $judul_warung = \App\SettingFooter::select()->first()->judul_warung;
         $("#minimizeSidebar").click();  
 
         $(document).on('click', '.menu-nav', function(){
-           $('.navbar-toggle ').click();
-       });
+         $('.navbar-toggle ').click();
+     });
 
     });
 </script>
