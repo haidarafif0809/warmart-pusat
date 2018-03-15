@@ -39,6 +39,12 @@
 
           <!-- otoritas -->
           <div class="col-sm-2"> 
+            <b>Master Data</b>
+            <div class="checkbox" v-for="permissions_master_data, index in permission_master_data">
+              <label>
+                <input type="checkbox" name="setting_otoritas" v-bind:value="permissions_master_data.id" v-model="setting_otoritas.master_data"> {{permissions_master_data.display_name}}
+              </label>
+            </div>
             <b>Otoritas</b>
             <div class="checkbox" v-for="permissions_otoritas, index in permission_otoritas">
               <label>
@@ -91,6 +97,7 @@ export default {
      permission_master_data: [],
      permission_bank: [],
      permission_customer: [],
+     permission_master_data: [],
      setting_otoritas : {
       user : [],
       otoritas : [],
@@ -124,11 +131,13 @@ methods: {
       app.permission_master_data = resp.data.permission_master_data
       app.permission_bank = resp.data.permission_bank
       app.permission_customer = resp.data.permission_customer
+      app.permission_master_data = resp.data.permission_master_data
       app.nama_otoritas = resp.data.otoritas.display_name
       app.setting_otoritas.user = resp.data.data_permission_user
       app.setting_otoritas.otoritas = resp.data.data_permission_otoritas
       app.setting_otoritas.bank = resp.data.data_permission_bank
       app.setting_otoritas.customer = resp.data.data_permission_customer
+      app.setting_otoritas.master_data = resp.data.data_permission_master_data
       
       app.loading = false;
     })
