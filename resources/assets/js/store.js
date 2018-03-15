@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-
 import axios from 'axios'
 
 Vue.use(Vuex)
@@ -14,7 +13,8 @@ const state = {
 	kas : [],
 	pelanggan : [],
 	kasir:[],
-	suplier : []
+	suplier : [],
+	bank : []
 }
 //Getter berfungsi untuk mengakses state
 // Dengan menggunakan Getter kita bisa mengolah terlebih dahulu state yang akan kita ambil seperti fungsi computed yang ada di VueJS. Jadi kita bisa memfilter data state sebelum di panggil. 
@@ -69,7 +69,11 @@ const mutations = {
 	// untuk mengetahui default kas
 	SET_DEFAULT_KAS (state,default_kas) {
 		state.default_kas = default_kas
-	}
+	},
+	// untuk memuat daftar bank
+	SET_BANK_LIST : (state, { list }) => {
+		state.bank = list
+	},
 
 }
 // Action mirip dengan mutation
@@ -141,6 +145,18 @@ const actions = {
 		axios.get('suplier/pilih-suplier')
 		.then((resp) => {
 			commit('SET_SUPLIER_LIST',
+			{
+				list:resp.data
+			})
+		},
+		(err) => {
+			console.log(err)
+		})
+	},
+	LOAD_BANK_LIST : function({commit}){
+		axios.get('bank-warung/bank')
+		.then((resp) => {
+			commit('SET_BANK_LIST',
 			{
 				list:resp.data
 			})

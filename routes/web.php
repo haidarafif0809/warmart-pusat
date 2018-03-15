@@ -906,6 +906,10 @@ Route::get('/user-kasir/pencarian', 'UserKasirController@pencarian')->middleware
 // LAPORAN BUCKET SIZE VUE.JS
 Route::get('/laporan-bucket-size/view/{dari_tanggal}/{sampai_tanggal}/{kelipatan}', 'LaporanBucketSizeController@prosesLaporanBucketSize')->middleware('auth');
 Route::get('/laporan-bucket-size-online/view/{dari_tanggal}/{sampai_tanggal}/{kelipatan}', 'LaporanBucketSizeController@prosesLaporanBucketSizeOnline')->middleware('auth');
+Route::post('/laporan-bucket-size/view-pos-data', 'LaporanBucketSizeController@prosesLaporanBucketSizeData')->middleware('auth');
+Route::post('/laporan-bucket-size/view-online-data', 'LaporanBucketSizeController@prosesLaporanBucketSizeOnlineData')->middleware('auth');
+
+
 
 // LAPORAN PENJUALAN HARIAN VUE.JS
 Route::get('/laporan-penjualan-harian/view/{dari_tanggal}/{sampai_tanggal}', 'LaporanPenjualanHarianController@prosesLaporanPenjualanHarian')->middleware('auth');
@@ -934,6 +938,7 @@ Route::get('/otoritas/view', 'OtoritasController@view')->middleware('auth');
 //menampilkan data bank Warung
 Route::get('/bank-warung/view', 'BankWarungController@view')->middleware('auth');
 Route::get('/bank-warung/pencarian', 'BankWarungController@pencarian')->middleware('auth');
+Route::get('/bank-warung/bank', 'BankWarungController@dataBank')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
