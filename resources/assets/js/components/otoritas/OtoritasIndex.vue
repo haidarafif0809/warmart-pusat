@@ -49,10 +49,10 @@
         <tbody v-if="otoritas.length > 0 && loading== false" class="data-ada">
           <tr v-for="otoritass, index in otoritas">
             <td>{{ otoritass.display_name }}</td>
-            <td>      
-              <a href="#daftar-user" class="btn btn-xs btn-warning">
-                Setting Otoritas
-              </a>
+            <td>
+              <router-link :to="{name: 'settingOtoritas', params: {id: otoritass.id}}" class="btn btn-xs btn-warning">
+                Setting Otoritas 
+              </router-link>
               |
               <a href="#otoritas" class="btn btn-xs btn-default" v-on:click="editOtoritas(otoritass.id, index,otoritass.display_name)">
                 Edit

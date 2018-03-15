@@ -180,8 +180,9 @@ import DaftarUserWarungEdit from './components/daftar_user_warung/DaftarUserWaru
 import BankWarungIndex from './components/bank_warung/BankWarungIndex.vue';
 // SETTING PENGIRIMAN
 import SettingPengirimanIndex from './components/setting_pengiriman/SettingPengirimanIndex.vue';
-// otoritas
+// otoritas 
 import OtoritasIndex from './components/otoritas/OtoritasIndex.vue';
+import OtoritasSetting from './components/otoritas/OtoritasSetting.vue';
 
 const routes = [{
     path: '/',
@@ -769,6 +770,10 @@ const routes = [{
         path: '/otoritas',
         component: OtoritasIndex,
         name: 'indexOtoritas'
+    },{
+        path: '/setting-otoritas/:id',
+        component: OtoritasSetting,
+        name: 'settingOtoritas'
     }
 
     ]
