@@ -934,6 +934,7 @@ Route::get('/otoritas/view', 'OtoritasController@view')->middleware('auth');
 //menampilkan data bank Warung
 Route::get('/bank-warung/view', 'BankWarungController@view')->middleware('auth');
 Route::get('/bank-warung/pencarian', 'BankWarungController@pencarian')->middleware('auth');
+Route::get('/bank-warung/bank', 'BankWarungController@dataBank')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
