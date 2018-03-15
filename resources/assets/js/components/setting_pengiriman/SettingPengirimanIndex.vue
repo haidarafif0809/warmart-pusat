@@ -134,7 +134,7 @@
                                                 <td align="center">
                                                     <div class="radio">
                                                         <label>
-                                                            <input type="radio" name="optionsRadios" v-model="settingBanks.setting.default_bank" 
+                                                            <input type="radio" name="optionsRadiosBank" v-model="settingBanks.setting.default_bank" 
                                                             @click="defaultBank(index)" v-bind:value="1">
                                                         </label>
                                                     </div>
