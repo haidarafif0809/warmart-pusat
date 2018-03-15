@@ -15,21 +15,28 @@ class BankWarungController extends Controller
         $this->middleware('user-must-warung');
     }
 
-    public function index()
+    public function queryBank()
     {
-        //
+        $data_bank = BankWarung::select(['bank_warungs.atas_nama', 'bank_warungs.no_rek', 'bank_warungs.id', 'setting_transfer_banks.nama_bank'])
+            ->leftJoin('setting_transfer_banks', 'setting_transfer_banks.id', '=', 'bank_warungs.nama_bank')
+            ->where('bank_warungs.warung_id', Auth::user()->id_warung);
+        return $data_bank;
     }
 
     public function view()
     {
-        $data_bank = BankWarung::where('warung_id', Auth::user()->id_warung)->paginate(10);
+        $data_bank = $this->queryBank()->paginate(10);
         return response()->json($data_bank);
     }
 
     public function pencarian(Request $request)
     {
-
-        $data_bank = BankWarung::where('nama_bank', 'LIKE', "%$request->search%")->orWhere('atas_nama', 'LIKE', "%$request->search%")->orWhere('no_rek', 'LIKE', "%$request->search%")->paginate(10);
+        $data_bank = $this->queryBank()
+            ->where(function ($query) use ($request) {
+                $query->orwhere('bank_warungs.atas_nama', 'LIKE', '%' . $request->search . '%')
+                    ->orwhere('bank_warungs.no_rek', 'LIKE', '%' . $request->search . '%')
+                    ->orwhere('setting_transfer_banks.nama_bank', 'LIKE', '%' . $request->search . '%');
+            })->paginate(10);
         return response()->json($data_bank);
     }
 
