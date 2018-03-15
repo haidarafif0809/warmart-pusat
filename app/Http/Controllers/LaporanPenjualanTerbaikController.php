@@ -91,15 +91,15 @@ class LaporanPenjualanTerbaikController extends Controller
                             $item_tampil_terbaik = $request->tampil_terbaik;
                         }
                     //cek atau hitung item di detail penjualan 
-                       $laporan_penjualan_terbaik = DetailPenjualanPos::penjualanTerbaik($request)->groupBy('id_produk')->orderBy('jumlah_produk', 'desc')->limit($item_tampil_terbaik)->paginate(10);
+                       $laporan_penjualan_terbaik = DetailPenjualanPos::penjualanTerbaik($request)->groupBy('id_produk')->orderBy('jumlah_produk', 'desc')->limit($item_tampil_terbaik);
                        $array = array();
-                       foreach ($laporan_penjualan_terbaik as $laporan_penjualan_terbaiks) {
+                       foreach ($laporan_penjualan_terbaik->get() as $laporan_penjualan_terbaiks) {
                             $nama_barang =  title_case($laporan_penjualan_terbaiks->nama_barang);
                             array_push($array, ['laporan_penjualan_terbaik' => $laporan_penjualan_terbaiks,'nama_barang'=>$nama_barang]);
                         }
                         $url     = 'laporan-penjualan-terbaik/view-pos-data';
                         //DATA PAGINATION
-                        $respons = $this->dataPagination($laporan_penjualan_terbaik, $array,$url);
+                        $respons = $this->dataPagination($laporan_penjualan_terbaik->paginate(10), $array,$url);
                         return response()->json($respons);
             }
 
@@ -115,16 +115,16 @@ class LaporanPenjualanTerbaikController extends Controller
                             $item_tampil_terbaik = $request->tampil_terbaik;
                         }
                     //cek atau hitung item di detail penjualan 
-                       $laporan_penjualan_terbaik = DetailPenjualan::penjualanTerbaik($request)->groupBy('id_produk')->orderBy('jumlah_produk', 'desc')->limit($item_tampil_terbaik)->paginate(10);
+                       $laporan_penjualan_terbaik = DetailPenjualan::penjualanTerbaik($request)->groupBy('id_produk')->orderBy('jumlah_produk', 'desc')->limit($item_tampil_terbaik);
                        $array = array();
-                       foreach ($laporan_penjualan_terbaik as $laporan_penjualan_terbaiks) {
+                       foreach ($laporan_penjualan_terbaik->get() as $laporan_penjualan_terbaiks) {
                             $nama_barang =  title_case($laporan_penjualan_terbaiks->nama_barang);
 
                             array_push($array, ['laporan_penjualan_terbaik' => $laporan_penjualan_terbaiks,'nama_barang'=>$nama_barang]);
                         }
                         $url     = 'laporan-penjualan-terbaik/view-online-data';
                         //DATA PAGINATION
-                        $respons = $this->dataPagination($laporan_penjualan_terbaik, $array,$url);
+                        $respons = $this->dataPagination($laporan_penjualan_terbaik->paginate(10), $array,$url);
                         return response()->json($respons);
             }
 
@@ -140,9 +140,9 @@ class LaporanPenjualanTerbaikController extends Controller
                             $item_tampil_terbaik = $request->tampil_terbaik;
                         }
                     //cek atau hitung item di detail penjualan 
-                       $laporan_penjualan_terbaik = DetailPenjualanPos::cariPenjualanTerbaik($request)->groupBy('id_produk')->orderBy('jumlah_produk', 'desc')->limit($item_tampil_terbaik)->paginate(10);
+                       $laporan_penjualan_terbaik = DetailPenjualanPos::cariPenjualanTerbaik($request)->groupBy('id_produk')->orderBy('jumlah_produk', 'desc')->limit($item_tampil_terbaik);
                        $array = array();
-                       foreach ($laporan_penjualan_terbaik as $laporan_penjualan_terbaiks) {
+                       foreach ($laporan_penjualan_terbaik->get() as $laporan_penjualan_terbaiks) {
                             $nama_barang =  title_case($laporan_penjualan_terbaiks->nama_barang);
                             array_push($array, ['laporan_penjualan_terbaik' => $laporan_penjualan_terbaiks,'nama_barang'=>$nama_barang]);
                         }
@@ -150,7 +150,7 @@ class LaporanPenjualanTerbaikController extends Controller
                         $search = $request->search;
                         $url     = 'laporan-penjualan-terbaik/pencarian-pos-data';
                         //DATA PAGINATION
-                        $respons = $this->paginationPencarianData($laporan_penjualan_terbaik, $array,$url,$search);
+                        $respons = $this->paginationPencarianData($laporan_penjualan_terbaik->paginate(10), $array,$url,$search);
                         return response()->json($respons);
             }
 
@@ -167,9 +167,9 @@ class LaporanPenjualanTerbaikController extends Controller
                             $item_tampil_terbaik = $request->tampil_terbaik;
                         }
                     //cek atau hitung item di detail penjualan 
-                       $laporan_penjualan_terbaik = DetailPenjualan::cariPenjualanTerbaik($request)->groupBy('id_produk')->orderBy('jumlah_produk', 'desc')->limit($item_tampil_terbaik)->paginate(10);
+                       $laporan_penjualan_terbaik = DetailPenjualan::cariPenjualanTerbaik($request)->groupBy('id_produk')->orderBy('jumlah_produk', 'desc')->limit($item_tampil_terbaik);
                        $array = array();
-                       foreach ($laporan_penjualan_terbaik as $laporan_penjualan_terbaiks) {
+                       foreach ($laporan_penjualan_terbaik->get() as $laporan_penjualan_terbaiks) {
                             $nama_barang =  title_case($laporan_penjualan_terbaiks->nama_barang);
                             array_push($array, ['laporan_penjualan_terbaik' => $laporan_penjualan_terbaiks,'nama_barang'=>$nama_barang]);
                         }
@@ -177,7 +177,7 @@ class LaporanPenjualanTerbaikController extends Controller
                         $search = $request->search;
                         $url     = 'laporan-penjualan-terbaik/pencarian-online-data';
                         //DATA PAGINATION
-                        $respons = $this->paginationPencarianData($laporan_penjualan_terbaik, $array,$url,$search);
+                        $respons = $this->paginationPencarianData($laporan_penjualan_terbaik->paginate(10), $array,$url,$search);
                         return response()->json($respons);
             }
 

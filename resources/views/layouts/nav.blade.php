@@ -405,6 +405,16 @@
 
             @if(Auth::user()->kasir_id == 0)
             <li>
+                <router-link :to="{name: 'indexBankWarung'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        BW
+                    </span>
+                    <span class="sidebar-normal">
+                        Bank 
+                    </span>
+                </router-link>
+            </li>
+            <li>
                 <router-link :to="{name: 'indexUserKasir'}" class="menu-nav">
                     <span class="sidebar-mini">
                         KA
@@ -474,6 +484,16 @@
                     </span>
                     <span class="sidebar-normal">
                         Setting Footer
+                    </span>
+                </router-link>
+            </li>
+            <li>
+                <router-link :to="{name: 'indexSettingPengiriman'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        SP
+                    </span>
+                    <span class="sidebar-normal">
+                        Setting Pengiriman
                     </span>
                 </router-link>
             </li>

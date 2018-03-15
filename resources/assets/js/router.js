@@ -178,6 +178,9 @@ import DaftarUserWarungCreate from './components/daftar_user_warung/DaftarUserWa
 import DaftarUserWarungEdit from './components/daftar_user_warung/DaftarUserWarungEdit.vue';
 /**BANK WARUNG*/
 import BankWarungIndex from './components/bank_warung/BankWarungIndex.vue';
+import BankWarungCreate from './components/bank_warung/BankWarungCreate.vue';
+import BankWarungEdit from './components/bank_warung/BankWarungEdit.vue';
+
 // SETTING PENGIRIMAN
 import SettingPengirimanIndex from './components/setting_pengiriman/SettingPengirimanIndex.vue';
 // otoritas 
@@ -770,11 +773,20 @@ const routes = [{
         path: '/otoritas',
         component: OtoritasIndex,
         name: 'indexOtoritas'
+        },{ 
+        path: '/create-bank-warung', 
+        component: BankWarungCreate, 
+        name: 'createBankWarung' 
+    }, { 
+        path: '/edit-bank-warung/:id', 
+        component: BankWarungEdit, 
+        name: 'editBankWarung'
     },{
         path: '/setting-otoritas/:id',
         component: OtoritasSetting,
         name: 'settingOtoritas'
     }
+
 
     ]
     export default routes;
