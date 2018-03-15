@@ -118,12 +118,14 @@ class OtoritasController extends Controller
         $permission_master_data = Permission::where('grup','master_data')->get(); 
         $permission_bank = Permission::where('grup','bank')->get(); 
         $permission_customer = Permission::where('grup','customer')->get(); 
+        $permission_master_data = Permission::where('grup','master_data')->get(); 
         $otoritas = Role::where('id',$id)->first();
 
         $arrayPermissionUser = array();
         $arrayPermissionOtoritas = array();
         $arrayPermissionBank = array();
         $arrayPermissionCustomer = array();
+        $arrayPermissionMasterData = array();
         $permission_role = PermissionRole::with('permissions')->where('role_id',$id)->get();
         foreach ($permission_role as $permission_roles) {
             if ($permission_roles->permissions->grup == "user") {
@@ -138,6 +140,9 @@ class OtoritasController extends Controller
            if ($permission_roles->permissions->grup == "customer") {
                array_push($arrayPermissionCustomer, $permission_roles->permission_id);
            }
+           if ($permission_roles->permissions->grup == "master_data") {
+               array_push($arrayPermissionMasterData, $permission_roles->permission_id);
+           }
        }
 
        return response()->json([
@@ -151,6 +156,7 @@ class OtoritasController extends Controller
         "data_permission_otoritas"     => $arrayPermissionOtoritas,
         "data_permission_bank"     => $arrayPermissionBank,
         "data_permission_customer"     => $arrayPermissionCustomer,
+        "data_permission_master_data"     => $arrayPermissionMasterData,
     ]);
    }
 
@@ -206,30 +212,6 @@ class OtoritasController extends Controller
         }
     }
 
-
-    public function setting_permission($id){
-
-        $otoritas = Role::find($id); 
-        $permission_user = Permission::where('grup','user')->get();
-        $permission_otoritas = Permission::where('grup','otoritas')->get(); 
-        $permission_master_data = Permission::where('grup','master_data')->get(); 
-        $permission_bank = Permission::where('grup','bank')->get(); 
-        $permission_customer = Permission::where('grup','customer')->get(); 
-        $permission_komunitas = Permission::where('grup','komunitas')->get(); 
-        $permission_warung = Permission::where('grup','warung')->get(); 
-
-        return view('otoritas.permission',
-            ['otoritas' => $otoritas, 
-            'permission_user' => $permission_user,
-            'permission_otoritas' => $permission_otoritas, 
-            'permission_master_data' => $permission_master_data, 
-            'permission_bank' => $permission_bank,
-            'permission_customer' => $permission_customer,
-            'permission_komunitas' => $permission_komunitas,
-            'permission_warung' => $permission_warung,]);
-    }
-
-
     public function proses_setting_permission(Request $request,$id){
        $permission = Permission::all();
        $role = Role::find($id);
@@ -253,6 +235,10 @@ foreach ($request->bank as $setting_bank) {
 foreach ($request->customer as $setting_customer) {
     $permission_customer = Permission::whereId($setting_customer)->first();
     $role->attachPermission($permission_customer);
+}
+foreach ($request->master_data as $setting_master_data) {
+    $permission_master_data = Permission::whereId($setting_master_data)->first();
+    $role->attachPermission($permission_master_data);
 }
 
 }
