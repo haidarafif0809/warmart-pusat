@@ -1,8 +1,11 @@
 <style scoped>
-.pencarian {
-  color: red; 
-  float: right;
-}
+  .pencarian {
+    color: red; 
+    float: right;
+  }
+  .hurufBesar{
+    text-transform: uppercase;
+  }
 </style>
 <template>
 
@@ -33,69 +36,69 @@
       <div class=" table-responsive ">
         <div class="pencarian">
          <input type="text" class="form-control pencarian" autocomplete="off" name="pencarian" v-model="pencarian" placeholder="Pencarian" >
-         </div>
-        <table class="table table-striped table-hover ">
-          <thead class="text-primary">
-            <tr>
+       </div>
+       <table class="table table-striped table-hover ">
+        <thead class="text-primary">
+          <tr>
 
-              <th>Nama Bank</th>
-              <th>A.N Bank</th>
-              <th>No Rekening</th>
-              <th>Aksi</th>
-
-            </tr>
-          </thead>
-          <tbody v-if="bankWarungs.length" class="data-ada">
-            <tr v-for="bankWarung, index in bankWarungs" >
-
-              <td>{{ bankWarung.nama_bank }}</td>
-              <td>{{ bankWarung.atas_nama }}</td>
-              <td>{{ bankWarung.no_rek }}</td>
-              <td> 
-               <router-link :to="{name: 'editBankWarung', params: {id: bankWarung.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + bankWarung.id" >
-                Edit 
-              </router-link> <a href="#"
-              class="btn btn-xs btn-danger" v-bind:id="'delete-' + bankWarung.id"
-              v-on:click="deleteEntry(bankWarung.id, index,bankWarung.nama_bank)">
-              Delete
-            </a></td>
-
+            <th>Nama Bank</th>
+            <th>A.N Bank</th>
+            <th>No Rekening</th>
+            <th>Aksi</th>
 
           </tr>
-        </tbody>
-        <tbody class="data-tidak-ada" v-else>
-          <tr ><td colspan="4"  class="text-center">Tidak Ada Data</td></tr>
-        </tbody>
-      </table>
+        </thead>
+        <tbody v-if="bankWarungs.length" class="data-ada">
+          <tr v-for="bankWarung, index in bankWarungs" >
 
-      <vue-simple-spinner v-if="loading"></vue-simple-spinner>
+            <td class="hurufBesar">{{ bankWarung.nama_bank }}</td>
+            <td>{{ bankWarung.atas_nama }}</td>
+            <td>{{ bankWarung.no_rek }}</td>
+            <td> 
+             <router-link :to="{name: 'editBankWarung', params: {id: bankWarung.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + bankWarung.id" >
+              Edit 
+            </router-link> <a href="#"
+            class="btn btn-xs btn-danger" v-bind:id="'delete-' + bankWarung.id"
+            v-on:click="deleteEntry(bankWarung.id, index,bankWarung.nama_bank)">
+            Delete
+          </a></td>
 
-      <div align="right"><pagination :data="bankWarungsData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
-    </div>
 
+        </tr>
+      </tbody>
+      <tbody class="data-tidak-ada" v-else>
+        <tr ><td colspan="4"  class="text-center">Tidak Ada Data</td></tr>
+      </tbody>
+    </table>
+
+    <vue-simple-spinner v-if="loading"></vue-simple-spinner>
+
+    <div align="right"><pagination :data="bankWarungsData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
   </div>
+
+</div>
 </div>
 </div>
 </div>
 </template>
 
 <script>
-export default {
-  data: function () {
-    return {
-      bankWarungs: [],
-      bankWarungsData: {},
-      url : window.location.origin+(window.location.pathname).replace("dashboard", "bank-warung"),
-      pencarian: '',
-      contoh : '',
-      loading: true
-    }
-  },
-  mounted() {
-    var app = this;
-    app.getResults();
-  },
-  watch: {
+  export default {
+    data: function () {
+      return {
+        bankWarungs: [],
+        bankWarungsData: {},
+        url : window.location.origin+(window.location.pathname).replace("dashboard", "bank-warung"),
+        pencarian: '',
+        contoh : '',
+        loading: true
+      }
+    },
+    mounted() {
+      var app = this;
+      app.getResults();
+    },
+    watch: {
         // whenever question changes, this function will run
         pencarian: function (newQuestion) {
           this.getHasilPencarian()  
@@ -136,29 +139,29 @@ export default {
           });
         },
         deleteEntry(id, index,nama_bank) {
-            this.$swal({
-                title: "Konfirmasi Hapus",
-                text : "Anda Yakin Ingin Menghapus "+nama_bank+" ?",
-                icon : "warning",
-                buttons: true,
-                dangerMode: true,
+          this.$swal({
+            title: "Konfirmasi Hapus",
+            text : "Anda Yakin Ingin Menghapus "+nama_bank+" ?",
+            icon : "warning",
+            buttons: true,
+            dangerMode: true,
+          })
+          .then((willDelete) => {
+            if (willDelete) {
+             var app = this;
+             axios.delete(app.url+'/' + id)
+             .then(function (resp) {
+              app.getResults();
+              app.alert("Berhasil Menghapus Bank");            
             })
-            .then((willDelete) => {
-                    if (willDelete) {
-                       var app = this;
-                axios.delete(app.url+'/' + id)
-                .then(function (resp) {
-                  app.getResults();
-                  app.alert("Berhasil Menghapus Bank");            
-                })
-                .catch(function (resp) {
-                   swal("Gagal Menghapus Bank!", {
-                          icon: "warning",
-                   });
-                });
-            }
-               this.$router.replace('/bank-warung/');
-            });
+             .catch(function (resp) {
+               swal("Gagal Menghapus Bank!", {
+                icon: "warning",
+              });
+             });
+           }
+           this.$router.replace('/bank-warung/');
+         });
         },
         alert(pesan) {
           this.$swal({
@@ -170,4 +173,4 @@ export default {
 
       }
     }
-    </script>
+  </script>

@@ -488,6 +488,16 @@
                 </router-link>
             </li>
             <li>
+                <router-link :to="{name: 'indexSettingPengiriman'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        SP
+                    </span>
+                    <span class="sidebar-normal">
+                        Setting Pengiriman
+                    </span>
+                </router-link>
+            </li>
+            <li>
                 <router-link :to="{name: 'indexSettingVerifikasi'}" class="menu-nav">
                     <span class="sidebar-mini">
                         SV

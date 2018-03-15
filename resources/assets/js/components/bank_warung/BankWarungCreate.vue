@@ -1,4 +1,8 @@
-
+<style scoped>
+    .hurufBesar{
+        text-transform: uppercase;
+    }
+</style>
 <template>
     <div class="row" >
         <div class="col-md-12">
@@ -14,31 +18,35 @@
              <div class="card-content">
                <h4 class="card-title"> Bank Warung </h4>
                <div>
-                <form v-on:submit.prevent="saveForm()" class="form-horizontal"> 
+                   <form v-on:submit.prevent="saveForm()" class="form-horizontal"> 
                     <div class="form-group">
-                        <label for="name" class="col-md-2 control-label">Nama Bank</label>
-                        <div class="col-md-4">
-                            <input class="form-control" required autocomplete="off" placeholder="Nama Bank" type="text" v-model="bankWarung.nama_bank" name="nama_bank"  autofocus="">
-                            <span v-if="errors.nama_bank" class="label label-danger">{{ errors.nama_bank[0] }}</span>
-                            
-                        </div>
+                        <label for="nama_bank" class="col-md-2 control-label">Nama Bank</label>
+                        <div class="col-md-4 hurufBesar">
+                            <selectize-component v-model="bankWarung.nama_bank" :settings="placeholder_bank" id="nama_bank" ref='nama_bank'>
+                              <option v-for="banks, index in bank" v-bind:value="banks.id">
+                                  {{ banks.nama_bank }}
+                              </option>
+                          </selectize-component>
+                          <br v-if="errors.nama_bank">
+                          <span v-if="errors.nama_bank" id="nama_bank_error" class="label label-danger">
+                              {{ errors.nama_bank[0] }}
+                          </span>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="no_telp" class="col-md-2 control-label">A.N Bank</label>
+                    <div class="col-md-4">
+                        <input class="form-control" required autocomplete="off" placeholder="A.N Bank" type="text" v-model="bankWarung.atas_nama" name="atas_nama" >
+                        <span v-if="errors.atas_nama" class="label label-danger">{{ errors.atas_nama[0] }}</span>
                     </div>
-
-
-                    <div class="form-group">
-                        <label for="no_telp" class="col-md-2 control-label">A.N Bank</label>
-                        <div class="col-md-4">
-                            <input class="form-control" required autocomplete="off" placeholder="A.N Bank" type="text" v-model="bankWarung.atas_nama" name="atas_nama" >
-                            <span v-if="errors.atas_nama" class="label label-danger">{{ errors.atas_nama[0] }}</span>
-                        </div>
-                    </div>   
-                    <div class="form-group">
-                        <label for="no_rek" class="col-md-2 control-label">No Rek</label>
-                        <div class="col-md-4">
-                            <input class="form-control" required autocomplete="off" placeholder="No Rekening" type="text" v-model="bankWarung.no_rek" name="no_rek" >
-                            <span v-if="errors.no_rek" class="label label-danger">{{ errors.no_rek[0] }}</span>
-                        </div>
+                </div>   
+                <div class="form-group">
+                    <label for="no_rek" class="col-md-2 control-label">No Rek</label>
+                    <div class="col-md-4">
+                        <input class="form-control" required autocomplete="off" placeholder="No Rekening" type="text" v-model="bankWarung.no_rek" name="no_rek" >
+                        <span v-if="errors.no_rek" class="label label-danger">{{ errors.no_rek[0] }}</span>
                     </div>
+                </div>
                 <div class="form-group">
                     <div class="col-md-4 col-md-offset-2">
                         <button class="btn btn-primary" id="btnSimpanBank" type="submit"><i class="material-icons">send</i> Submit</button>
@@ -54,20 +62,37 @@
 </template>
 
 <script>
-export default {
-    data: function () {
-        return {
-            errors: [],
-            url : window.location.origin + (window.location.pathname).replace("dashboard", "bank-warung"),
-            bankWarung: {
-                nama_bank: '',
-                atas_nama: '',
-                no_rek: '',
-            },
-            message : ''
-        }
-    },
-    methods: {
+    import { mapState } from 'vuex';
+    export default {
+        data: function () {
+            return {
+                errors: [],
+                url : window.location.origin + (window.location.pathname).replace("dashboard", "bank-warung"),
+                bankWarung: {
+                    nama_bank: '',
+                    atas_nama: '',
+                    no_rek: '',
+                },
+                message : '',
+                placeholder_bank: {
+                    placeholder: '--PILIH BANK--',
+                },
+            }
+        },
+        mounted() {   
+          var app = this;
+          app.$store.dispatch('LOAD_BANK_LIST');
+          app.openSelectizeBank();
+      },
+      computed : mapState ({
+        bank(){
+            return this.$store.state.bank;
+        },
+    }),
+      methods: {
+        openSelectizeBank(){
+            this.$refs.nama_bank.$el.selectize.focus();
+        },
         saveForm() {
             var app = this;
             var newbank = app.bankWarung;
@@ -75,7 +100,7 @@ export default {
             .then(function (resp) {
                 app.message = 'Sukses : Berhasil Menambah Bank '+ app.bankWarung.nama_bank;
                 app.alert(app.message);
-                app.bankWarung.nama_bank = ''
+
                 app.bankWarung.atas_nama = ''
                 app.bankWarung.no_rek = ''
                 app.errors = '';

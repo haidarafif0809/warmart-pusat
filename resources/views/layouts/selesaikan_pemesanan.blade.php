@@ -1,6 +1,7 @@
 <?php
-$settingFooter = \App\SettingFooter::select()->
-first();
+$settingFooter = \App\SettingFooter::select()->first();
+$default_bank = \App\SettingTransferBank::select('id')->where('default_bank', 1)->first()->id;
+$default_kurir = \App\SettingJasaPengiriman::select('jasa_pengiriman')->where('default_jasa_pengiriman', 1)->first()->jasa_pengiriman;
 ?>
 @extends('layouts.app_pelanggan')
 @section('content')
@@ -344,7 +345,7 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
 @section('scripts')
 <script type="text/javascript">
   $(document).ready(function(){
-
+    alert();
     var $select = $('#provinsi').selectize({
      loadingClass: 'selectizeLoading',
      valueField: 'province_id',
@@ -374,6 +375,11 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
 
     var $selectKurir = $('#kurir').selectize({
       sortField: 'text'
+    });
+
+    var $selectBank = $('#bank').selectize({
+      sortField: 'text',
+      valueField: 'id'
     });
 
     var $selectLayananKurir = $('#layanan_kurir').selectize({
@@ -485,6 +491,7 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
         selectMetodePembayaran.addOption(options);
         selectMetodePembayaran.focus();
       }
+      swal.close();
     }
 
 
@@ -558,6 +565,7 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
 
 
     });
+    swal.close();
   } 
 
   function updateOngkir(ongkir,waktu_pengiriman,layanan_kurir,total_belanja){
@@ -646,10 +654,15 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
 
   selectMetodePembayaran.on('change', function(){
     var metode_pembayaran = selectMetodePembayaran.getValue();
+
     if (metode_pembayaran == "TRANSFER") {
       $("#note_pembayaran").text("");
+      $("#bankForm").show();
+      console.log("<?= $default_bank; ?>");
+      document.getElementById('bank').selectize.setValue("<?= $default_bank; ?>");
     }else{
      $("#note_pembayaran").text("Anda dapat melakukan pembayaran saat Anda menerima pesanan.");
+     $("#bankForm").hide();
    }
  }); 
 
@@ -695,7 +708,7 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
       $(".alamat_pengiriman").hide();
       $("#formAlamat").show();
       $("#alamatPelanggan").val(alamat_pengiriman);
-      document.getElementById('kurir').selectize.setValue('jne');
+      document.getElementById('kurir').selectize.setValue("<?= $default_kurir; ?>");
     }
 
   });
@@ -870,6 +883,19 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
 }
 
 });
+
+function alert(){
+ swal({
+  text :  "Memuat Data...",
+  showConfirmButton :  false,
+  type: "info",
+  closeOnClickOutside: false,
+  closeOnEsc: false,
+  onOpen: () => {
+    swal.showLoading()
+  }
+}); 
+}
 
 </script>
 

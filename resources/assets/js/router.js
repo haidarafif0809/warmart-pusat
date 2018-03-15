@@ -183,8 +183,9 @@ import BankWarungEdit from './components/bank_warung/BankWarungEdit.vue';
 
 // SETTING PENGIRIMAN
 import SettingPengirimanIndex from './components/setting_pengiriman/SettingPengirimanIndex.vue';
-// otoritas
+// otoritas 
 import OtoritasIndex from './components/otoritas/OtoritasIndex.vue';
+import OtoritasSetting from './components/otoritas/OtoritasSetting.vue';
 
 const routes = [{
     path: '/',
@@ -780,6 +781,10 @@ const routes = [{
         path: '/edit-bank-warung/:id', 
         component: BankWarungEdit, 
         name: 'editBankWarung'
+    },{
+        path: '/setting-otoritas/:id',
+        component: OtoritasSetting,
+        name: 'settingOtoritas'
     }
 
 
