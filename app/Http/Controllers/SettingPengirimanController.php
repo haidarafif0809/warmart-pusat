@@ -64,4 +64,16 @@ class SettingPengirimanController extends Controller
             ]);
         }
     }
+
+    public function simpanSettingBank(Request $request)
+    {
+        $warung_id = Auth::user()->id_warung;
+        foreach ($request->data as $key => $value) {
+            $update_setting_bank = SettingTransferBank::find($value['setting']['id']);
+            $update_setting_bank->update([
+                'tampil_bank'  => $value['setting']['tampil_bank'],
+                'default_bank' => $value['setting']['default_bank'],
+            ]);
+        }
+    }
 }

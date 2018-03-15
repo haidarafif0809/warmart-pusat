@@ -577,6 +577,7 @@ Route::get('/edit-pembelian/cek-data-tbs-pembelian/{id}', 'EditPembelianControll
 Route::get('/setting-pengiriman/view', 'SettingPengirimanController@view')->middleware('auth');
 Route::get('/setting-pengiriman/view-bank', 'SettingPengirimanController@viewBank')->middleware('auth');
 Route::post('/setting-pengiriman/simpan-setting-pengiriman', 'SettingPengirimanController@simpanSetting')->middleware('auth');
+Route::post('/setting-pengiriman/simpan-setting-bank', 'SettingPengirimanController@simpanSettingBank')->middleware('auth');
 
 // HAPUS TBS PEMBELIAN
 Route::delete('/pembelian/hapus-tbs-pembelian/{id}', [

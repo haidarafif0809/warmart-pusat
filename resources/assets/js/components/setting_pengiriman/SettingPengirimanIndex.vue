@@ -103,7 +103,7 @@
                             <div class="tab-pane" id="bank_transfer">
 
                                 <div class="table-responsive">
-                                    <button class="btn btn-primary" id="btnSubmit" @click="simpanSetting()" style=""> <i class="material-icons">save</i> Simpan
+                                    <button class="btn btn-primary" id="btnSubmitBank" @click="simpanSettingBank()" style=""> <i class="material-icons">save</i> Simpan
                                     </button>
                                     <table class="table table-striped">
                                         <thead>
@@ -135,7 +135,7 @@
                                                     <div class="radio">
                                                         <label>
                                                             <input type="radio" name="optionsRadios" v-model="settingBanks.setting.default_bank" 
-                                                            @click="defaultPengiriman(index)" v-bind:value="1">
+                                                            @click="defaultBank(index)" v-bind:value="1">
                                                         </label>
                                                     </div>
                                                 </td>
@@ -178,11 +178,6 @@
                     url_picture : window.location.origin+(window.location.pathname).replace("dashboard", "jasa_pengiriman"),
                 }
             },
-            filters: {
-                hurufKapital(e) {
-                    e.target.value = e.target.value.toUpperCase()
-                }
-            },
             methods: {
                 simpanSetting() {
                     var app = this; 
@@ -222,6 +217,21 @@
                         }
                     });
                 },
+                simpanSettingBank() {
+                    var app = this; 
+                    var newSetting = app.settingBank;
+
+                    axios.post(app.url+'/simpan-setting-bank', {data:newSetting})
+                    .then(function (resp) {
+                        app.message = 'Berhasil Mengubah Setting Transfer Bank';
+                        app.alert(app.message);                    
+                        app.getDataSettingBank();
+                    })
+                    .catch(function (resp) {
+                        console.log(resp);
+                        alert("Tidak Dapat Menyimpan Setting Transfer Bank");
+                    });
+                },
                 getDataSettingBank() {
                     let app = this;
 
@@ -234,6 +244,16 @@
                         console.log(resp);
                         alert('Tidak dapat memuat data setting bank transfer');
                     })
+                },
+                defaultBank(index){
+                    var app = this;
+                    $.each(app.settingBank, function (i, item){
+                        if (index == i) {
+                            app.settingBank[i].setting.default_bank = 1;
+                        }else{
+                            app.settingBank[i].setting.default_bank = 0;                        
+                        }
+                    });
                 },
                 alert(pesan) {
                     this.$swal({
