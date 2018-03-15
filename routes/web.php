@@ -575,6 +575,7 @@ Route::get('/edit-pembelian/cek-data-tbs-pembelian/{id}', 'EditPembelianControll
 
 //menampilkan seetting pengiriman
 Route::get('/setting-pengiriman/view', 'SettingPengirimanController@view')->middleware('auth');
+Route::get('/setting-pengiriman/view-bank', 'SettingPengirimanController@viewBank')->middleware('auth');
 Route::post('/setting-pengiriman/simpan-setting-pengiriman', 'SettingPengirimanController@simpanSetting')->middleware('auth');
 
 // HAPUS TBS PEMBELIAN
@@ -772,7 +773,6 @@ Route::post('/laporan-penjualan-terbaik/pencarian-pos-data', 'LaporanPenjualanTe
 Route::post('/laporan-penjualan-terbaik/pencarian-online-data', 'LaporanPenjualanTerbaikController@pencarianOnline')->middleware('auth');
 Route::get('/laporan-penjualan-terbaik/download-excel/{dari_tanggal}/{sampai_tanggal}/{tampil_terbaik}', 'LaporanPenjualanTerbaikController@downloadExcel')->middleware('auth');
 
-
 // LAPORAN PENJUALAN TERBAIK
 Route::post('/laporan-hutang-beredar/view', 'LaporanHutangBeredarController@prosesHutangBeredar')->middleware('auth');
 Route::post('/laporan-hutang-beredar/pencarian', 'LaporanHutangBeredarController@pencarianHutangBeredar')->middleware('auth');
@@ -934,7 +934,6 @@ Route::get('/otoritas/view', 'OtoritasController@view')->middleware('auth');
 Route::get('/bank-warung/view', 'BankWarungController@view')->middleware('auth');
 Route::get('/bank-warung/pencarian', 'BankWarungController@pencarian')->middleware('auth');
 
-
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
     Route::resource('user', 'UserController');
@@ -976,8 +975,6 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
     Route::resource('stok-opname', 'StokOpnameController');
     Route::resource('setting-pengiriman', 'SettingPengirimanController');
     Route::resource('bank-warung', 'BankWarungController');
-
-
 
 //BARANG
     //HALAMAN DESKRIPSI
