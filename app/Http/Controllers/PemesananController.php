@@ -164,8 +164,7 @@ class PemesananController extends Controller
         foreach ($keranjang_belanjaan as $key => $keranjang_belanjaans) {
 
             $kode_unik_transfer = PesananPelanggan::kodeUnikTransfer();
-
-            $id_warung = $keranjang_belanjaans['id_warung'];
+            $id_warung          = $keranjang_belanjaans['id_warung'];
 
             // $key adalah urutan perulangan di foreach
 
@@ -295,8 +294,7 @@ class PemesananController extends Controller
         if ($request->metode_pembayaran == "Bayar di Tempat") {
             return redirect()->route('daftar_produk.index');
         } else {
-
-            return redirect()->route('info.pembayaran', ['id' => $id_pesanan, 'pelanggan' => $id_user]);
+            return redirect()->route('info.pembayaran', ['id' => $id_pesanan, 'pelanggan' => $id_user, 'pelanggan' => $id_user, 'bank' => $request->bank]);
         }
 
     }
@@ -313,7 +311,8 @@ class PemesananController extends Controller
             $keranjang_belanja = KeranjangBelanja::with(['produk', 'pelanggan'])->where('id_pelanggan', $request->id_pelanggan);
             $cek_belanjaan     = $keranjang_belanja->count();
 
-            $bank = BankWarung::whereWarungId($pesanan_pelanggan->first()->id_warung)->first();
+            $bank = BankWarung::select(['bank_warungs.atas_nama', 'bank_warungs.no_rek', 'setting_transfer_banks.nama_bank'])->leftJoin('setting_transfer_banks', 'setting_transfer_banks.id', '=', 'bank_warungs.nama_bank')
+                ->where('bank_warungs.nama_bank', $request->bank)->first();
 
             $waktu_daftar = date($pesanan_pelanggan->first()->created_at);
             $date         = date_create($waktu_daftar);
