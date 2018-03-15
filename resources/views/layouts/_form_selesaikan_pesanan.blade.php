@@ -72,6 +72,13 @@
   </div>
 </div>
 
+<div style="margin-bottom: 1px; margin-top: 1px; display: none" class="form-group{{ $errors->has('bank') ? ' has-error' : '' }}" id="bankForm">
+  {!! Form::label('bank', 'Bank Transfer', ['class'=>'col-md-2 control-label', 'style'=> 'margin-bottom:1px; margin-top:1px;']) !!}
+  <div class="col-md-6 hurufBesar">
+    {!! Form::select('bank', $bank, null,['required'=> 'true','placeholder' => 'Cari Bank','id'=>'bank']) !!}
+  </div>
+</div>
+
 <div class="col-md-2"></div>
 <p id="note_pembayaran" style="color: red; font-style: italic;"></p>
 
