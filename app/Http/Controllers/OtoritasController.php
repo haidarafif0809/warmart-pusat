@@ -80,8 +80,8 @@ class OtoritasController extends Controller
 
         $cek_otoritas = Role::where('name',$request->otoritas)->orWhere('display_name',$request->otoritas)->count();
         if ($cek_otoritas > 0) {
-         $respons['status'] = $cek_otoritas;
-     }else{
+           $respons['status'] = $cek_otoritas;
+       }else{
         $otoritas = Role::create([
             'name' => $request->otoritas,
             'display_name' => $request->otoritas
@@ -112,10 +112,47 @@ class OtoritasController extends Controller
      */
     public function edit($id)
     {
-        //
-        $otoritas = Role::find($id);
-        return view('otoritas.edit')->with(compact('otoritas'));
-    }
+
+        $permission_user = Permission::where('grup','user')->get();
+        $permission_otoritas = Permission::where('grup','otoritas')->get(); 
+        $permission_master_data = Permission::where('grup','master_data')->get(); 
+        $permission_bank = Permission::where('grup','bank')->get(); 
+        $permission_customer = Permission::where('grup','customer')->get(); 
+        $otoritas = Role::where('id',$id)->first();
+
+        $arrayPermissionUser = array();
+        $arrayPermissionOtoritas = array();
+        $arrayPermissionBank = array();
+        $arrayPermissionCustomer = array();
+        $permission_role = PermissionRole::with('permissions')->where('role_id',$id)->get();
+        foreach ($permission_role as $permission_roles) {
+            if ($permission_roles->permissions->grup == "user") {
+               array_push($arrayPermissionUser, $permission_roles->permission_id);
+           }
+           if ($permission_roles->permissions->grup == "otoritas") {
+               array_push($arrayPermissionOtoritas, $permission_roles->permission_id);
+           }
+           if ($permission_roles->permissions->grup == "bank") {
+               array_push($arrayPermissionBank, $permission_roles->permission_id);
+           }
+           if ($permission_roles->permissions->grup == "customer") {
+               array_push($arrayPermissionCustomer, $permission_roles->permission_id);
+           }
+       }
+
+       return response()->json([
+        "permission_user" => $permission_user,
+        "permission_otoritas"     => $permission_otoritas,
+        "permission_master_data" => $permission_master_data,
+        "permission_bank"     => $permission_bank,
+        "permission_customer" => $permission_customer,
+        "otoritas"     => $otoritas,
+        "data_permission_user"     => $arrayPermissionUser,
+        "data_permission_otoritas"     => $arrayPermissionOtoritas,
+        "data_permission_bank"     => $arrayPermissionBank,
+        "data_permission_customer"     => $arrayPermissionCustomer,
+    ]);
+   }
 
     /**
      * Update the specified resource in storage.
@@ -131,20 +168,20 @@ class OtoritasController extends Controller
         })->where('id','!=',$id)->count();
         if ($cek_otoritas > 0) {
 
-         $respons['status'] = $cek_otoritas;
+           $respons['status'] = $cek_otoritas;
 
-     }else{
+       }else{
 
-         Role::where('id', $id)->update([ 
+           Role::where('id', $id)->update([ 
             'name' =>$request->otoritas,
             'display_name'=>$request->otoritas]);
 
-         $respons['status'] = $cek_otoritas;
-         return response()->json($respons);
-     }
+           $respons['status'] = $cek_otoritas;
+           return response()->json($respons);
+       }
 
 
- }
+   }
 
     /**
      * Remove the specified resource from storage.
@@ -197,31 +234,26 @@ class OtoritasController extends Controller
        $permission = Permission::all();
        $role = Role::find($id);
 
-       foreach ($permission as $permissions ) {
+       foreach ($permission as $permissions ) {        
+         $role->detachPermission($permissions);
+     }
 
-        $permission_name = $permissions->name;
-            //jika checkbox nya di centang
-        if (isset($request->$permission_name)) {
-                //jika permission role nya belum ada maka di kaitkan role dengen pemissionya
-            if(PermissionRole::where('role_id',$id)->where('permission_id',$permissions->id)->count() == 0) {
-               $role->attachPermission($permissions);
-           } 
-
-       }
-             //jika checkbox nya tidak di centang
-       else {
-                //jika permission role nya ada maka di hilangkan permissionnya 
-        if(PermissionRole::where('role_id',$id)->where('permission_id',$permissions->id)->count() == 1) {
-           $role->detachPermission($permissions);
-       } 
-   }
+     foreach ($request->user as $setting_user) {
+      $permission_user = Permission::whereId($setting_user)->first();
+      $role->attachPermission($permission_user);
+  }
+  foreach ($request->otoritas as $setting_otoritas) {
+    $permission_otoritas = Permission::whereId($setting_otoritas)->first();
+    $role->attachPermission($permission_otoritas);
 }
-
-Session:: flash("flash_notification", [
-    "level"=>"success",
-    "message"=>"Setting Permission $role->display_name Berhasil Dirubah"
-]);
-return redirect()->route('otoritas.index');
+foreach ($request->bank as $setting_bank) {
+    $permission_bank = Permission::whereId($setting_bank)->first();
+    $role->attachPermission($permission_bank);
+}
+foreach ($request->customer as $setting_customer) {
+    $permission_customer = Permission::whereId($setting_customer)->first();
+    $role->attachPermission($permission_customer);
+}
 
 }
 
