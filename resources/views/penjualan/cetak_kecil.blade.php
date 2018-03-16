@@ -21,9 +21,9 @@
 </head>
 <style type="text/css">
 
-p{
-	margin-top: 1px; margin-bottom: 1px;
-}
+	p{
+		margin-top: 1px; margin-bottom: 1px;
+	}
 
 </style>
 <body>
@@ -54,7 +54,7 @@ p{
 	<p>-------------------------------------------------------------</p>
 	<p>{{$penjualan->waktu_jual}}</p>
 
-	<p>Terima Kasih </p>
+	<p>{{$footer_struk}}</p>
 	<p>No. Telp : {{$penjualan->no_telp_warung}}</p>	
 	<p><i>Support by andaglos.id</i></p><br><br>
 
