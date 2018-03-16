@@ -27,23 +27,6 @@
 
         <div class="row" v-if="seen">
           <div class="col-sm-2">
-
-            <!-- OTORITAS USER -->
-            <b>User</b>
-            <div class="checkbox" v-for="permission_users, index in permission_user">
-              <label>
-                <input type="checkbox" name="setting_user" v-bind:value="permission_users.id" v-model="setting_otoritas.user"> {{permission_users.display_name}}
-              </label>
-            </div>            
-            <!--END OTORITAS USER -->
-            <!-- OTORITAS KAS -->
-            <b>Kas</b>
-            <div class="checkbox" v-for="permission_kass, index in permission_kas">
-              <label>
-                <input type="checkbox" name="setting_user" v-bind:value="permission_kass.id" v-model="setting_otoritas.user"> {{permission_kass.display_name}}
-              </label>
-            </div>            
-            <!--END OTORITAS KAS -->
             <!-- OTORITAS laporan -->
             <b>Laporan</b>
             <div class="checkbox" v-for="permission_laporans, index in permission_laporan">
@@ -55,22 +38,6 @@
           </div>
 
           <div class="col-sm-2"> 
-            <!-- Master Data -->
-            <b>Master Data</b>
-            <div class="checkbox" v-for="permissions_master_data, index in permission_master_data">
-              <label>
-                <input type="checkbox" name="setting_otoritas" v-bind:value="permissions_master_data.id" v-model="setting_otoritas.master_data"> {{permissions_master_data.display_name}}
-              </label>
-            </div>
-            <!-- Master Data -->
-            <!-- otoritas -->
-            <b>Otoritas</b>
-            <div class="checkbox" v-for="permissions_otoritas, index in permission_otoritas">
-              <label>
-                <input type="checkbox" name="setting_otoritas" v-bind:value="permissions_otoritas.id" v-model="setting_otoritas.otoritas"> {{permissions_otoritas.display_name}}
-              </label>
-            </div>
-            <!--end otoritas -->
             <!-- kas_masuk -->
             <b>Kas Masuk</b>
             <div class="checkbox" v-for="permissions_kas_masuk, index in permission_kas_masuk">
@@ -79,14 +46,6 @@
               </label>
             </div>
             <!--end kas_masuk -->
-            <!-- laporan_persediaan -->
-            <b>Laporan Persediaan</b>
-            <div class="checkbox" v-for="permissions_laporan_persediaan, index in permission_laporan_persediaan">
-              <label>
-                <input type="checkbox" name="setting_laporan_persediaan" v-bind:value="permissions_laporan_persediaan.id" v-model="setting_otoritas.laporan_persediaan"> {{permissions_laporan_persediaan.display_name}}
-              </label>
-            </div>
-            <!--end laporan persediaan -->
             <!-- pesanan -->
             <b>Pesanan</b>
             <div class="checkbox" v-for="permissions_pesanan, index in permission_pesanan">
@@ -95,14 +54,15 @@
               </label>
             </div>
             <!--end Pesanan -->
-            <!-- supplier -->
-            <b>Supplier</b>
-            <div class="checkbox" v-for="permissions_supplier, index in permission_supplier">
+
+            <!-- Kelompok Produk  -->
+            <b>Kelompok Produk</b>
+            <div class="checkbox" v-for="permission_kelompok_produk, index in permission_kelompok_produk">
               <label>
-                <input type="checkbox" name="setting_supplier" v-bind:value="permissions_supplier.id" v-model="setting_otoritas.supplier"> {{permissions_supplier.display_name}}
+                <input type="checkbox" name="setting_kelompok_produk" v-bind:value="permission_kelompok_produk.id" v-model="setting_otoritas.kelompok_produk"> {{permission_kelompok_produk.display_name}}
               </label>
             </div>
-            <!--end supplier -->
+            <!-- Kelompok Produk  -->
           </div>          
 
           <div class="col-sm-2"> 
@@ -130,14 +90,6 @@
               </label>
             </div>
             <!-- pembayaran_piutang  -->
-            <!-- produk  -->
-            <b>Produk</b>
-            <div class="checkbox" v-for="permission_produk, index in permission_produk">
-              <label>
-                <input type="checkbox" name="setting_produk" v-bind:value="permission_produk.id" v-model="setting_otoritas.produk"> {{permission_produk.display_name}}
-              </label>
-            </div>
-            <!-- produk  -->
           </div>
 
           <div class="col-sm-2"> 
@@ -165,14 +117,6 @@
               </label>
             </div>
             <!-- pembayaran_hutang  -->
-            <!-- satuan  -->
-            <b>Satuan</b>
-            <div class="checkbox" v-for="permission_satuan, index in permission_satuan">
-              <label>
-                <input type="checkbox" name="setting_satuan" v-bind:value="permission_satuan.id" v-model="setting_otoritas.satuan"> {{permission_satuan.display_name}}
-              </label>
-            </div>
-            <!-- satuan  -->
           </div>
 
           <div class="col-sm-2"> 
@@ -184,14 +128,15 @@
               </label>
             </div>
             <!-- Item Masuk  -->
-            <!-- Kategori Kas  -->
-            <b>Kategori Kas</b>
-            <div class="checkbox" v-for="permission_kategori_kas, index in permission_kategori_kas">
+            <!-- supplier -->
+            <b>Supplier</b>
+            <div class="checkbox" v-for="permissions_supplier, index in permission_supplier">
               <label>
-                <input type="checkbox" name="setting_kategori_kas" v-bind:value="permission_kategori_kas.id" v-model="setting_otoritas.kategori_kas"> {{permission_kategori_kas.display_name}}
+                <input type="checkbox" name="setting_supplier" v-bind:value="permissions_supplier.id" v-model="setting_otoritas.supplier"> {{permissions_supplier.display_name}}
               </label>
             </div>
-            <!-- Kategori Kas  -->
+            <!--end supplier -->
+
             <!-- pembelian  -->
             <b>Pembelian</b>
             <div class="checkbox" v-for="permission_pembelian, index in permission_pembelian">
@@ -200,14 +145,15 @@
               </label>
             </div>
             <!-- Pembelian  -->
-            <!-- setting  -->
-            <b>Setting</b>
-            <div class="checkbox" v-for="permission_setting, index in permission_setting">
+            <!-- Master Data -->
+            <b>Master Data</b>
+            <div class="checkbox" v-for="permissions_master_data, index in permission_master_data">
               <label>
-                <input type="checkbox" name="setting_setting" v-bind:value="permission_setting.id" v-model="setting_otoritas.setting"> {{permission_setting.display_name}}
+                <input type="checkbox" name="setting_otoritas" v-bind:value="permissions_master_data.id" v-model="setting_otoritas.master_data"> {{permissions_master_data.display_name}}
               </label>
             </div>
-            <!-- setting  -->
+            <!-- Master Data -->
+
           </div>
 
           <div class="col-sm-2"> 
@@ -219,14 +165,6 @@
               </label>
             </div>
             <!-- Item Keluar  -->
-            <!-- Kelompok Produk  -->
-            <b>Kelompok Produk</b>
-            <div class="checkbox" v-for="permission_kelompok_produk, index in permission_kelompok_produk">
-              <label>
-                <input type="checkbox" name="setting_kelompok_produk" v-bind:value="permission_kelompok_produk.id" v-model="setting_otoritas.kelompok_produk"> {{permission_kelompok_produk.display_name}}
-              </label>
-            </div>
-            <!-- Kelompok Produk  -->
             <!-- Penjualan  -->
             <b>Penjualan</b>
             <div class="checkbox" v-for="permission_penjualan, index in permission_penjualan">
@@ -235,6 +173,80 @@
               </label>
             </div>
             <!-- Penjualan  -->
+            <!-- Kategori Kas  -->
+            <b>Kategori Kas</b>
+            <div class="checkbox" v-for="permission_kategori_kas, index in permission_kategori_kas">
+              <label>
+                <input type="checkbox" name="setting_kategori_kas" v-bind:value="permission_kategori_kas.id" v-model="setting_otoritas.kategori_kas"> {{permission_kategori_kas.display_name}}
+              </label>
+            </div>
+            <!-- Kategori Kas  -->
+            <!-- laporan_persediaan -->
+            <b>Laporan Persediaan</b>
+            <div class="checkbox" v-for="permissions_laporan_persediaan, index in permission_laporan_persediaan">
+              <label>
+                <input type="checkbox" name="setting_laporan_persediaan" v-bind:value="permissions_laporan_persediaan.id" v-model="setting_otoritas.laporan_persediaan"> {{permissions_laporan_persediaan.display_name}}
+              </label>
+            </div>
+            <!--end laporan persediaan -->
+          </div>
+
+        </div>
+
+        <div class="row" v-if="seen">
+          <div class="col-sm-2">
+            <!-- produk  -->
+            <b>Produk</b>
+            <div class="checkbox" v-for="permission_produk, index in permission_produk">
+              <label>
+                <input type="checkbox" name="setting_produk" v-bind:value="permission_produk.id" v-model="setting_otoritas.produk"> {{permission_produk.display_name}}
+              </label>
+            </div>
+            <!-- produk  -->
+            
+            <!-- setting  -->
+            <b>Setting</b>
+            <div class="checkbox" v-for="permission_setting, index in permission_setting">
+              <label>
+                <input type="checkbox" name="setting_setting" v-bind:value="permission_setting.id" v-model="setting_otoritas.setting"> {{permission_setting.display_name}}
+              </label>
+            </div>
+            <!-- setting  -->
+          </div>
+          <div class="col-sm-2">            
+            <!-- satuan  -->
+            <b>Satuan</b>
+            <div class="checkbox" v-for="permission_satuan, index in permission_satuan">
+              <label>
+                <input type="checkbox" name="setting_satuan" v-bind:value="permission_satuan.id" v-model="setting_otoritas.satuan"> {{permission_satuan.display_name}}
+              </label>
+            </div>
+            <!-- satuan  -->
+          </div>
+          <div class="col-sm-2">     
+
+            <!-- OTORITAS KAS -->
+            <b>Kas</b>
+            <div class="checkbox" v-for="permission_kass, index in permission_kas">
+              <label>
+                <input type="checkbox" name="setting_user" v-bind:value="permission_kass.id" v-model="setting_otoritas.user"> {{permission_kass.display_name}}
+              </label>
+            </div>            
+            <!--END OTORITAS KAS -->
+          </div>    
+
+          <div class="col-sm-2">            
+            <!-- otoritas -->
+            <b>Otoritas</b>
+            <div class="checkbox" v-for="permissions_otoritas, index in permission_otoritas">
+              <label>
+                <input type="checkbox" name="setting_otoritas" v-bind:value="permissions_otoritas.id" v-model="setting_otoritas.otoritas"> {{permissions_otoritas.display_name}}
+              </label>
+            </div>
+            <!--end otoritas -->
+          </div>
+
+          <div class="col-sm-2">
             <!-- Stok Opname  -->
             <b>Stok Opname</b>
             <div class="checkbox" v-for="permission_stok_opname, index in permission_stok_opname">
@@ -243,9 +255,22 @@
               </label>
             </div>
             <!-- Stok Opname  -->
+
           </div>
 
+          <div class="col-sm-2">
+            <!-- OTORITAS USER -->
+            <b>User</b>
+            <div class="checkbox" v-for="permission_users, index in permission_user">
+              <label>
+                <input type="checkbox" name="setting_user" v-bind:value="permission_users.id" v-model="setting_otoritas.user"> {{permission_users.display_name}}
+              </label>
+            </div>            
+            <!--END OTORITAS USER -->
+          </div>
         </div>
+
+
         <center>     <vue-simple-spinner v-if="loading"></vue-simple-spinner></center>
         <button class="btn btn-primary" id="btnSimpanOtoritas" type="submit" v-on:click="submitOtoritas()"><i class="material-icons">send</i> Simpan</button>
 
