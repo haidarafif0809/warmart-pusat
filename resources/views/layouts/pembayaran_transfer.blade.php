@@ -5,46 +5,46 @@ first();
 @extends('layouts.app_pelanggan')
 @section('content')
 <style type="text/css">
-.page-header.header-small {
-  height: 35vh;
-  min-height: 35vh;
-}
-.ecommerce-page .page-header .container {
-  padding-top: 10vh;
-}
-h4 {
-  @if(Agent::isMobile())
-  font-size: 1.2em;
-  line-height: 1.4em;
-  margin: 20px 0 10px;
-  @endif
-}
-.panel .panel-heading {
-  background-color: transparent;
-  border-bottom: 2px solid #ddd;
-  padding: 5px 0px 5px 0px;
-}
-.buttonColor{
-  background-color: #2ac326  
-}
-.validationProvinsi{
-  display: none;
-  color: red;
-}
-.validationKota{
-  display: none;
-  color: red;
-}
-.validationAlamat{
-  display: none;
-  color: red;
-}
-#formAlamat{
-  display: none;
-}
-.modal {
-  overflow-y:auto;
-}
+  .page-header.header-small {
+    height: 35vh;
+    min-height: 35vh;
+  }
+  .ecommerce-page .page-header .container {
+    padding-top: 10vh;
+  }
+  h4 {
+    @if(Agent::isMobile())
+    font-size: 1.2em;
+    line-height: 1.4em;
+    margin: 20px 0 10px;
+    @endif
+  }
+  .panel .panel-heading {
+    background-color: transparent;
+    border-bottom: 2px solid #ddd;
+    padding: 5px 0px 5px 0px;
+  }
+  .buttonColor{
+    background-color: #2ac326  
+  }
+  .validationProvinsi{
+    display: none;
+    color: red;
+  }
+  .validationKota{
+    display: none;
+    color: red;
+  }
+  .validationAlamat{
+    display: none;
+    color: red;
+  }
+  #formAlamat{
+    display: none;
+  }
+  .modal {
+    overflow-y:auto;
+  }
 </style>
 
 <?php
@@ -117,7 +117,7 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
             <h4 class="text-center" ><b rel="tooltip" data-placement="bottom" title="Transfer tepat hingga 3 digit terakhir" id="jumlah_tagihan">Rp. {{number_format($pesanan_pelanggan->subtotal,0,',','.')}}</b></h4>
             <br><br>
             <br>
-            <p class="text-center">Pembayaran dapat dilakukan ke Rekening Bank {{$bank->nama_bank}}({{$bank->no_rek}}) a/n {{$bank->atas_nama}}</p>
+            <p class="text-center" style="font-weight: bold">Pembayaran dapat dilakukan ke Rekening Bank {{strtoupper($bank->nama_bank)}} ({{$bank->no_rek}}) a/n {{$bank->atas_nama}}</p>
             <center>   <a  href="{{ url('/daftar-produk') }}" type="button" class="btn btn-block buttonColor">Lanjut Belanja<i class="material-icons">keyboard_arrow_right</i></a></center>
 
           </div>
