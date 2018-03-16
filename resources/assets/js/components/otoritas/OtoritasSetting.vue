@@ -25,58 +25,252 @@
         <h4 class="card-title">Setting Otoritas <b>{{nama_otoritas}}</b>
         </h4>
 
-        <div class="row">
-          <!-- OTORITAS USER -->
+        <div class="row" v-if="seen">
           <div class="col-sm-2">
-            <b>User</b>
-            <div class="checkbox" v-for="permissions_users, index in permission_user">
+            <!-- OTORITAS laporan -->
+            <b>Laporan</b>
+            <div class="checkbox" v-for="permission_laporans, index in permission_laporan">
               <label>
-                <input type="checkbox" name="setting_user" v-bind:value="permissions_users.id" v-model="setting_otoritas.user"> {{permissions_users.display_name}}
+                <input type="checkbox" name="setting_user" v-bind:value="permission_laporans.id" v-model="setting_otoritas.user"> {{permission_laporans.display_name}}
               </label>
-            </div>
+            </div>            
+            <!--END OTORITAS laporan -->
           </div>
-          <!--END OTORITAS USER -->
 
-          <!-- otoritas -->
           <div class="col-sm-2"> 
-            <b>Master Data</b>
-            <div class="checkbox" v-for="permissions_master_data, index in permission_master_data">
+            <!-- kas_masuk -->
+            <b>Kas Masuk</b>
+            <div class="checkbox" v-for="permissions_kas_masuk, index in permission_kas_masuk">
               <label>
-                <input type="checkbox" name="setting_otoritas" v-bind:value="permissions_master_data.id" v-model="setting_otoritas.master_data"> {{permissions_master_data.display_name}}
+                <input type="checkbox" name="setting_kas_masuk" v-bind:value="permissions_kas_masuk.id" v-model="setting_otoritas.kas_masuk"> {{permissions_kas_masuk.display_name}}
               </label>
             </div>
-            <b>Otoritas</b>
-            <div class="checkbox" v-for="permissions_otoritas, index in permission_otoritas">
+            <!--end kas_masuk -->
+            <!-- pesanan -->
+            <b>Pesanan</b>
+            <div class="checkbox" v-for="permissions_pesanan, index in permission_pesanan">
               <label>
-                <input type="checkbox" name="setting_otoritas" v-bind:value="permissions_otoritas.id" v-model="setting_otoritas.otoritas"> {{permissions_otoritas.display_name}}
+                <input type="checkbox" name="setting_pesanan" v-bind:value="permissions_pesanan.id" v-model="setting_otoritas.pesanan"> {{permissions_pesanan.display_name}}
               </label>
             </div>
+            <!--end Pesanan -->
+
+            <!-- Kelompok Produk  -->
+            <b>Kelompok Produk</b>
+            <div class="checkbox" v-for="permission_kelompok_produk, index in permission_kelompok_produk">
+              <label>
+                <input type="checkbox" name="setting_kelompok_produk" v-bind:value="permission_kelompok_produk.id" v-model="setting_otoritas.kelompok_produk"> {{permission_kelompok_produk.display_name}}
+              </label>
+            </div>
+            <!-- Kelompok Produk  -->
           </div>          
-          <!--end otoritas -->
 
-          <!-- Bank  -->
           <div class="col-sm-2"> 
+            <!-- Bank  -->
             <b>Bank</b>
             <div class="checkbox" v-for="permission_bank, index in permission_bank">
               <label>
                 <input type="checkbox" name="setting_bank" v-bind:value="permission_bank.id" v-model="setting_otoritas.bank"> {{permission_bank.display_name}}
               </label>
             </div>
+            <!-- Bank  -->
+            <!-- kas_keluar  -->
+            <b>Kas Keluar</b>
+            <div class="checkbox" v-for="permission_kas_keluar, index in permission_kas_keluar">
+              <label>
+                <input type="checkbox" name="setting_kas_keluar" v-bind:value="permission_kas_keluar.id" v-model="setting_otoritas.kas_keluar"> {{permission_kas_keluar.display_name}}
+              </label>
+            </div>
+            <!-- kas_keluar  -->
+            <!-- pembayaran_piutang  -->
+            <b>Pembayaran Piutang</b>
+            <div class="checkbox" v-for="permission_pembayaran_piutang, index in permission_pembayaran_piutang">
+              <label>
+                <input type="checkbox" name="setting_pembayaran_piutang" v-bind:value="permission_pembayaran_piutang.id" v-model="setting_otoritas.pembayaran_piutang"> {{permission_pembayaran_piutang.display_name}}
+              </label>
+            </div>
+            <!-- pembayaran_piutang  -->
           </div>
-          <!-- Bank  -->
 
-          <!-- Customer  -->
           <div class="col-sm-2"> 
+            <!-- Customer  -->
             <b>Customer</b>
             <div class="checkbox" v-for="permission_customer, index in permission_customer">
               <label>
                 <input type="checkbox" name="setting_customer" v-bind:value="permission_customer.id" v-model="setting_otoritas.customer"> {{permission_customer.display_name}}
               </label>
             </div>
+            <!-- Customer  -->
+            <!-- kas_mutasi  -->
+            <b>Kas Mutasi</b>
+            <div class="checkbox" v-for="permission_kas_mutasi, index in permission_kas_mutasi">
+              <label>
+                <input type="checkbox" name="setting_kas_mutasi" v-bind:value="permission_kas_mutasi.id" v-model="setting_otoritas.kas_mutasi"> {{permission_kas_mutasi.display_name}}
+              </label>
+            </div>
+            <!-- kas_mutasi  -->
+            <!-- pembayaran_hutang  -->
+            <b>Pembayaran Hutang</b>
+            <div class="checkbox" v-for="permission_pembayaran_hutang, index in permission_pembayaran_hutang">
+              <label>
+                <input type="checkbox" name="setting_pembayaran_hutang" v-bind:value="permission_pembayaran_hutang.id" v-model="setting_otoritas.pembayaran_hutang"> {{permission_pembayaran_hutang.display_name}}
+              </label>
+            </div>
+            <!-- pembayaran_hutang  -->
           </div>
-          <!-- Customer  -->
+
+          <div class="col-sm-2"> 
+            <!-- Item Masuk  -->
+            <b>Item Masuk</b>
+            <div class="checkbox" v-for="permission_item_masuk, index in permission_item_masuk">
+              <label>
+                <input type="checkbox" name="setting_item_masuk" v-bind:value="permission_item_masuk.id" v-model="setting_otoritas.item_masuk"> {{permission_item_masuk.display_name}}
+              </label>
+            </div>
+            <!-- Item Masuk  -->
+            <!-- supplier -->
+            <b>Supplier</b>
+            <div class="checkbox" v-for="permissions_supplier, index in permission_supplier">
+              <label>
+                <input type="checkbox" name="setting_supplier" v-bind:value="permissions_supplier.id" v-model="setting_otoritas.supplier"> {{permissions_supplier.display_name}}
+              </label>
+            </div>
+            <!--end supplier -->
+
+            <!-- pembelian  -->
+            <b>Pembelian</b>
+            <div class="checkbox" v-for="permission_pembelian, index in permission_pembelian">
+              <label>
+                <input type="checkbox" name="setting_pembelian" v-bind:value="permission_pembelian.id" v-model="setting_otoritas.pembelian"> {{permission_pembelian.display_name}}
+              </label>
+            </div>
+            <!-- Pembelian  -->
+            <!-- Master Data -->
+            <b>Master Data</b>
+            <div class="checkbox" v-for="permissions_master_data, index in permission_master_data">
+              <label>
+                <input type="checkbox" name="setting_otoritas" v-bind:value="permissions_master_data.id" v-model="setting_otoritas.master_data"> {{permissions_master_data.display_name}}
+              </label>
+            </div>
+            <!-- Master Data -->
+
+          </div>
+
+          <div class="col-sm-2"> 
+            <!-- Item Keluar  -->
+            <b>Item Keluar</b>
+            <div class="checkbox" v-for="permission_item_keluar, index in permission_item_keluar">
+              <label>
+                <input type="checkbox" name="setting_item_keluar" v-bind:value="permission_item_keluar.id" v-model="setting_otoritas.item_keluar"> {{permission_item_keluar.display_name}}
+              </label>
+            </div>
+            <!-- Item Keluar  -->
+            <!-- Penjualan  -->
+            <b>Penjualan</b>
+            <div class="checkbox" v-for="permission_penjualan, index in permission_penjualan">
+              <label>
+                <input type="checkbox" name="setting_penjualan" v-bind:value="permission_penjualan.id" v-model="setting_otoritas.penjualan"> {{permission_penjualan.display_name}}
+              </label>
+            </div>
+            <!-- Penjualan  -->
+            <!-- Kategori Kas  -->
+            <b>Kategori Kas</b>
+            <div class="checkbox" v-for="permission_kategori_kas, index in permission_kategori_kas">
+              <label>
+                <input type="checkbox" name="setting_kategori_kas" v-bind:value="permission_kategori_kas.id" v-model="setting_otoritas.kategori_kas"> {{permission_kategori_kas.display_name}}
+              </label>
+            </div>
+            <!-- Kategori Kas  -->
+            <!-- laporan_persediaan -->
+            <b>Laporan Persediaan</b>
+            <div class="checkbox" v-for="permissions_laporan_persediaan, index in permission_laporan_persediaan">
+              <label>
+                <input type="checkbox" name="setting_laporan_persediaan" v-bind:value="permissions_laporan_persediaan.id" v-model="setting_otoritas.laporan_persediaan"> {{permissions_laporan_persediaan.display_name}}
+              </label>
+            </div>
+            <!--end laporan persediaan -->
+          </div>
 
         </div>
+
+        <div class="row" v-if="seen">
+          <div class="col-sm-2">
+            <!-- produk  -->
+            <b>Produk</b>
+            <div class="checkbox" v-for="permission_produk, index in permission_produk">
+              <label>
+                <input type="checkbox" name="setting_produk" v-bind:value="permission_produk.id" v-model="setting_otoritas.produk"> {{permission_produk.display_name}}
+              </label>
+            </div>
+            <!-- produk  -->
+            
+            <!-- setting  -->
+            <b>Setting</b>
+            <div class="checkbox" v-for="permission_setting, index in permission_setting">
+              <label>
+                <input type="checkbox" name="setting_setting" v-bind:value="permission_setting.id" v-model="setting_otoritas.setting"> {{permission_setting.display_name}}
+              </label>
+            </div>
+            <!-- setting  -->
+          </div>
+          <div class="col-sm-2">            
+            <!-- satuan  -->
+            <b>Satuan</b>
+            <div class="checkbox" v-for="permission_satuan, index in permission_satuan">
+              <label>
+                <input type="checkbox" name="setting_satuan" v-bind:value="permission_satuan.id" v-model="setting_otoritas.satuan"> {{permission_satuan.display_name}}
+              </label>
+            </div>
+            <!-- satuan  -->
+          </div>
+          <div class="col-sm-2">     
+
+            <!-- OTORITAS KAS -->
+            <b>Kas</b>
+            <div class="checkbox" v-for="permission_kass, index in permission_kas">
+              <label>
+                <input type="checkbox" name="setting_user" v-bind:value="permission_kass.id" v-model="setting_otoritas.user"> {{permission_kass.display_name}}
+              </label>
+            </div>            
+            <!--END OTORITAS KAS -->
+          </div>    
+
+          <div class="col-sm-2">            
+            <!-- otoritas -->
+            <b>Otoritas</b>
+            <div class="checkbox" v-for="permissions_otoritas, index in permission_otoritas">
+              <label>
+                <input type="checkbox" name="setting_otoritas" v-bind:value="permissions_otoritas.id" v-model="setting_otoritas.otoritas"> {{permissions_otoritas.display_name}}
+              </label>
+            </div>
+            <!--end otoritas -->
+          </div>
+
+          <div class="col-sm-2">
+            <!-- Stok Opname  -->
+            <b>Stok Opname</b>
+            <div class="checkbox" v-for="permission_stok_opname, index in permission_stok_opname">
+              <label>
+                <input type="checkbox" name="setting_stok_opname" v-bind:value="permission_stok_opname.id" v-model="setting_otoritas.stok_opname"> {{permission_stok_opname.display_name}}
+              </label>
+            </div>
+            <!-- Stok Opname  -->
+
+          </div>
+
+          <div class="col-sm-2">
+            <!-- OTORITAS USER -->
+            <b>User</b>
+            <div class="checkbox" v-for="permission_users, index in permission_user">
+              <label>
+                <input type="checkbox" name="setting_user" v-bind:value="permission_users.id" v-model="setting_otoritas.user"> {{permission_users.display_name}}
+              </label>
+            </div>            
+            <!--END OTORITAS USER -->
+          </div>
+        </div>
+
+
         <center>     <vue-simple-spinner v-if="loading"></vue-simple-spinner></center>
         <button class="btn btn-primary" id="btnSimpanOtoritas" type="submit" v-on:click="submitOtoritas()"><i class="material-icons">send</i> Simpan</button>
 
@@ -98,16 +292,58 @@ export default {
      permission_bank: [],
      permission_customer: [],
      permission_master_data: [],
+     permission_item_masuk: [],
+     permission_item_keluar: [],
+     permission_kas: [],
+     permission_kas_masuk: [],
+     permission_kas_keluar: [],
+     permission_kas_mutasi: [],
+     permission_kategori_kas: [],
+     permission_kelompok_produk: [],
+     permission_laporan: [],
+     permission_laporan_persediaan: [],
+     permission_pembayaran_piutang: [],
+     permission_pembayaran_hutang: [],
+     permission_pembelian: [],
+     permission_penjualan: [],
+     permission_pesanan: [],
+     permission_produk: [],
+     permission_satuan: [],
+     permission_setting: [],
+     permission_stok_opname: [],
+     permission_supplier: [],
      setting_otoritas : {
       user : [],
       otoritas : [],
       bank : [],
       customer : [],
+      master_data : [],
+      item_masuk : [],
+      item_keluar : [],
+      kas : [],
+      kas_masuk : [],
+      kas_keluar : [],
+      kas_mutasi : [],
+      kategori_kas : [],
+      kelompok_produk : [],
+      laporan : [],
+      laporan_persediaan : [],
+      pembayaran_piutang : [],
+      pembayaran_hutang : [],
+      pembelian : [],
+      penjualan : [],
+      pesanan : [],
+      produk : [],
+      satuan : [],
+      setting : [],
+      stok_opname : [],
+      supplier : [],
     },
     nama_otoritas : '',
     url : window.location.origin+(window.location.pathname).replace("dashboard", "otoritas"),
     pencarian: '',
-    loading: true
+    loading: true,
+    seen: false
   }
 },
 mounted() {
@@ -132,18 +368,64 @@ methods: {
       app.permission_bank = resp.data.permission_bank
       app.permission_customer = resp.data.permission_customer
       app.permission_master_data = resp.data.permission_master_data
+      app.permission_item_masuk = resp.data.permission_item_masuk
+      app.permission_item_keluar = resp.data.permission_item_keluar
+      app.permission_kas = resp.data.permission_kas
+      app.permission_kas_masuk = resp.data.permission_kas_masuk
+      app.permission_kas_keluar = resp.data.permission_kas_keluar
+      app.permission_kas_mutasi = resp.data.permission_kas_mutasi
+      app.permission_kategori_kas = resp.data.permission_kategori_kas
+      app.permission_kelompok_produk = resp.data.permission_kelompok_produk
+      app.permission_laporan = resp.data.permission_laporan
+      app.permission_laporan_persediaan = resp.data.permission_laporan_persediaan
+      app.permission_pembayaran_piutang = resp.data.permission_pembayaran_piutang
+      app.permission_pembayaran_hutang = resp.data.permission_pembayaran_hutang
+      app.permission_pembelian = resp.data.permission_pembelian
+      app.permission_penjualan = resp.data.permission_penjualan
+      app.permission_pesanan = resp.data.permission_pesanan
+      app.permission_produk = resp.data.permission_produk
+      app.permission_satuan = resp.data.permission_satuan
+      app.permission_setting = resp.data.permission_setting
+      app.permission_stok_opname = resp.data.permission_stok_opname
+      app.permission_supplier = resp.data.permission_supplier
+
+
       app.nama_otoritas = resp.data.otoritas.display_name
+
       app.setting_otoritas.user = resp.data.data_permission_user
       app.setting_otoritas.otoritas = resp.data.data_permission_otoritas
       app.setting_otoritas.bank = resp.data.data_permission_bank
       app.setting_otoritas.customer = resp.data.data_permission_customer
       app.setting_otoritas.master_data = resp.data.data_permission_master_data
+      app.setting_otoritas_item_masuk = resp.data.data_permission_item_masuk
+      app.setting_otoritas_item_keluar = resp.data.data_permission_item_keluar
+      app.setting_otoritas_kas = resp.data.data_permission_kas
+      app.setting_otoritas_kas_masuk = resp.data.data_permission_kas_masuk
+      app.setting_otoritas_kas_keluar = resp.data.data_permission_kas_keluar
+      app.setting_otoritas_kas_mutasi = resp.data.data_permission_kas_mutasi
+      app.setting_otoritas_kategori_kas = resp.data.data_permission_kategori_kas
+      app.setting_otoritas_kelompok_produk = resp.data.data_permission_kelompok_produk
+      app.setting_otoritas_laporan = resp.data.data_permission_laporan
+      app.setting_otoritas_laporan_persediaan = resp.data.data_permission_laporan_persediaan
+      app.setting_otoritas_pembayaran_piutang = resp.data.data_permission_pembayaran_piutang
+      app.setting_otoritas_pembayaran_hutang = resp.data.data_permission_pembayaran_hutang
+      app.setting_otoritas_pembelian = resp.data.data_permission_pembelian
+      app.setting_otoritas_penjualan = resp.data.data_permission_penjualan
+      app.setting_otoritas_pesanan = resp.data.data_permission_pesanan
+      app.setting_otoritas_produk = resp.data.data_permission_produk
+      app.setting_otoritas_satuan = resp.data.data_permission_satuan
+      app.setting_otoritas_setting = resp.data.data_permission_setting
+      app.setting_otoritas_stok_opname = resp.data.data_permission_stok_opname
+      app.setting_otoritas_supplier = resp.data.data_permission_supplier
       
+      console.log(app.setting_otoritas)
       app.loading = false;
+      app.seen = true;
     })
     .catch(function (resp) {
       console.log(resp);
       app.loading = false;
+      app.seen = true;
       alert("Tidak Bisa Memuat Otoritas");
     });
   },
