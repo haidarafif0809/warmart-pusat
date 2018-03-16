@@ -9,7 +9,7 @@
       <ul class="breadcrumb" v-else>
         <li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li>
         <li><router-link :to="{name: 'indexProfilWarung'}">Profil Toko</router-link></li>
-        <li class="active" >Edit Profil Toko</li>
+        <li class="active" >Edit Profil Tokoo</li>
       </ul>
       <div class="card">
        <div class="card-header card-header-icon" data-background-color="purple">
@@ -43,7 +43,7 @@
                 <span v-if="errors.email" id="email_error" class="label label-danger">{{ errors.email[0] }}</span>
 
               </div>
-            </div>
+            </div><!-- 
             <div class="form-group">
               <label for="nama_bank" class="col-md-2 control-label">Nama Bank</label>
               <div class="col-md-4">
@@ -67,7 +67,7 @@
                 <span v-if="errors.no_rek" id="no_rek_error" class="label label-danger">{{ errors.no_rek[0] }}</span>
 
               </div>
-            </div>
+            </div> -->
             <div class="form-group">
               <label for="alamat" class="col-md-2 control-label">Alamat</label>
               <div class="col-md-4">
@@ -119,9 +119,18 @@
               </div> 
               <vue-simple-spinner v-if="loadingKelurahan"></vue-simple-spinner>
             </div>
+
+            <div class="form-group">
+              <label for="footer_struk" class="col-md-2 control-label">Footer Struk</label>
+              <div class="col-md-4">
+                <textarea v-model="profilWarung.footer_struk" class="form-control" placeholder="Footer Struk.." id="footer_struk" name="footer_struk" ref="footer_struk"></textarea>
+              </div> 
+            </div>
             <div class="form-group">
               <div class="col-md-4 col-md-offset-2">
-                <button class="btn btn-primary" id="btnSimpan" type="submit"><i class="material-icons">send</i> Submit</button>
+                <button class="btn btn-primary" id="btnSimpan" type="submit">
+                  <i class="material-icons">send</i> Submit
+                </button>
               </div>
             </div>
           </form>
@@ -133,159 +142,157 @@
 </template>
 
 <script>
-export default {
-  mounted() {
-    let app = this;
-    let id = app.$route.params.id;
-    
-    app.profilWarungId = id;
-    app.dataProvinsi();
+  export default {
+    mounted() {
+      let app = this;
+      let id = app.$route.params.id;
 
-    axios.get(app.url+'/' + id)
-    .then(function (resp) {
-      app.profilWarung = resp.data;
-      app.loading = false;
-      app.loadingKecamatan = false;
-      app.loadingKelurahan = false;
-    })
-    .catch(function () {
-      alert("Tidak bisa memuat warung")
-    });
-  },
-  data: function () {
-    return {
-      provinsi: [],
-      kabupaten: [],
-      kecamatan: [],
-      kelurahan: [],
-      profilWarungId: null,
-      profilWarung: {
-        name  : '',
-        no_telpon : '',
-        email : '',
-        nama_bank : '',
-        atas_nama : '',
-        no_rek : '',
-        alamat : '',
-        provinsi : '',
-        kabupaten : '',
-        kecamatan : '',
-        kelurahan : '',
-      },
-      message : '',
-      placeholder_provinsi: {
-        placeholder: '--PILIH PROVINSI--'
-      },
-      placeholder_kabupaten: {
-        placeholder: '--PILIH KABUPATEN--'
-      },
-      placeholder_kecamatan: {
-        placeholder: '--PILIH KECAMATAN--'
-      }, 
-      placeholder_kelurahan: {
-        placeholder: '--PILIH KELURAHAN--'
-      }, 
-      url : window.location.origin+(window.location.pathname).replace("dashboard", "profil-warung"),
-      errors: [],
-      loading: true,
-      loadingKecamatan: true,
-      loadingKelurahan: true
-    }
-  },
-  methods: {
-    saveForm() {
-      var app = this;
-      var newWarung = app.profilWarung;
-      axios.patch(app.url+'/' + app.profilWarungId, newWarung)
-      .then(function (resp) {
-        app.message = 'Sukses : Berhasil Mengubah Warung';
-        app.alert(app.message);
-        window.location.replace(window.location.origin+(window.location.pathname))
-      })
-      .catch(function (resp) {
-        console.log(resp);
-        app.errors = resp.response.data.errors;
-        alert("Periksa kembali data yang anda masukan");
-      });
-    },
-    dataProvinsi() {
-      var app = this;
-      axios.get(app.url+'/pilih-provinsi')
-      .then(function (resp) {
-        app.provinsi = resp.data;
+      app.profilWarungId = id;
+      app.dataProvinsi();
 
-      })
-      .catch(function (resp) {
-        alert("Tidak bisa memuat provinsi ");
-      });
-    },
-    dataKabupaten(provinsi_id) {
-      var app = this;
-      var type = "kabupaten";
-      app.loading = true;
-
-      axios.get(app.url+'/pilih-wilayah/'+provinsi_id+'/'+type)
+      axios.get(app.url+'/' + id)
       .then(function (resp) {
-        app.kabupaten = resp.data;            
+        app.profilWarung = resp.data;
         app.loading = false;
-        
-      })
-      .catch(function (resp) {
-        alert("Tidak bisa memuat kabupaten ");
-      });
-    },
-    dataKecamatan(kabupaten_id) {
-      var app = this;
-      var type = "kecamatan";
-      app.loadingKecamatan = true;
-
-      axios.get(app.url+'/pilih-wilayah/'+kabupaten_id+'/'+type)
-      .then(function (resp) {
-        app.kecamatan = resp.data;
-        app.loadingKecamatan = false;            
-      })
-      .catch(function (resp) {
-        alert("Tidak bisa memuat kecamatan ");
-      });
-    },
-    dataKelurahan(kecamatan_id) {
-      var app = this;
-      var type = "kelurahan";
-      app.loadingKelurahan = true;
-
-      axios.get(app.url+'/pilih-wilayah/'+kecamatan_id+'/'+type)
-      .then(function (resp) {
-        app.kelurahan = resp.data;
+        app.loadingKecamatan = false;
         app.loadingKelurahan = false;
-        
       })
-      .catch(function (resp) {
-        alert("Tidak bisa memuat kelurahan ");
+      .catch(function () {
+        alert("Tidak bisa memuat warung")
       });
-    }
-    ,alert(pesan) {
-      this.$swal({
-        title: "Berhasil !",
-        text: pesan,
-        icon: "success",
-      });
-    }
-  },
-  watch:{
-   'profilWarung.provinsi': function (newVal, oldVal){
+    },
+    data: function () {
+      return {
+        provinsi: [],
+        kabupaten: [],
+        kecamatan: [],
+        kelurahan: [],
+        profilWarungId: null,
+        profilWarung: {
+          name  : '',
+          no_telpon : '',
+          email : '',
+          alamat : '',
+          provinsi : '',
+          kabupaten : '',
+          kecamatan : '',
+          kelurahan : '',
+          footer_struk : '',
+        },
+        message : '',
+        placeholder_provinsi: {
+          placeholder: '--PILIH PROVINSI--'
+        },
+        placeholder_kabupaten: {
+          placeholder: '--PILIH KABUPATEN--'
+        },
+        placeholder_kecamatan: {
+          placeholder: '--PILIH KECAMATAN--'
+        }, 
+        placeholder_kelurahan: {
+          placeholder: '--PILIH KELURAHAN--'
+        }, 
+        url : window.location.origin+(window.location.pathname).replace("dashboard", "profil-warung"),
+        errors: [],
+        loading: true,
+        loadingKecamatan: true,
+        loadingKelurahan: true
+      }
+    },
+    methods: {
+      saveForm() {
+        var app = this;
+        var newWarung = app.profilWarung;
+        axios.patch(app.url+'/' + app.profilWarungId, newWarung)
+        .then(function (resp) {
+          app.message = 'Sukses : Berhasil Mengubah Warung';
+          app.alert(app.message);
+          window.location.replace(window.location.origin+(window.location.pathname))
+        })
+        .catch(function (resp) {
+          console.log(resp);
+          app.errors = resp.response.data.errors;
+          alert("Periksa kembali data yang anda masukan");
+        });
+      },
+      dataProvinsi() {
+        var app = this;
+        axios.get(app.url+'/pilih-provinsi')
+        .then(function (resp) {
+          app.provinsi = resp.data;
+
+        })
+        .catch(function (resp) {
+          alert("Tidak bisa memuat provinsi ");
+        });
+      },
+      dataKabupaten(provinsi_id) {
+        var app = this;
+        var type = "kabupaten";
+        app.loading = true;
+
+        axios.get(app.url+'/pilih-wilayah/'+provinsi_id+'/'+type)
+        .then(function (resp) {
+          app.kabupaten = resp.data;            
+          app.loading = false;
+
+        })
+        .catch(function (resp) {
+          alert("Tidak bisa memuat kabupaten ");
+        });
+      },
+      dataKecamatan(kabupaten_id) {
+        var app = this;
+        var type = "kecamatan";
+        app.loadingKecamatan = true;
+
+        axios.get(app.url+'/pilih-wilayah/'+kabupaten_id+'/'+type)
+        .then(function (resp) {
+          app.kecamatan = resp.data;
+          app.loadingKecamatan = false;            
+        })
+        .catch(function (resp) {
+          alert("Tidak bisa memuat kecamatan ");
+        });
+      },
+      dataKelurahan(kecamatan_id) {
+        var app = this;
+        var type = "kelurahan";
+        app.loadingKelurahan = true;
+
+        axios.get(app.url+'/pilih-wilayah/'+kecamatan_id+'/'+type)
+        .then(function (resp) {
+          app.kelurahan = resp.data;
+          app.loadingKelurahan = false;
+
+        })
+        .catch(function (resp) {
+          alert("Tidak bisa memuat kelurahan ");
+        });
+      }
+      ,alert(pesan) {
+        this.$swal({
+          title: "Berhasil !",
+          text: pesan,
+          icon: "success",
+        });
+      }
+    },
+    watch:{
+     'profilWarung.provinsi': function (newVal, oldVal){
+       if (newVal != "") {
+        this.dataKabupaten(newVal);
+      }
+    },
+    'profilWarung.kabupaten': function (newVal, oldVal){
      if (newVal != "") {
-      this.dataKabupaten(newVal);
+      this.dataKecamatan(newVal);
     }
   },
-  'profilWarung.kabupaten': function (newVal, oldVal){
+  'profilWarung.kecamatan': function (newVal, oldVal){
    if (newVal != "") {
-    this.dataKecamatan(newVal);
+    this.dataKelurahan(newVal);
   }
-},
-'profilWarung.kecamatan': function (newVal, oldVal){
- if (newVal != "") {
-  this.dataKelurahan(newVal);
-}
 }
 }
 }
