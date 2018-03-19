@@ -1,10 +1,4 @@
-<style scoped>
-.pencarian {
-  color: red; 
-  float: right;
-  padding-bottom: 10px;
-}
-</style>
+
 <template>
 	<div class="row">
 		<div class="col-md-12">
@@ -92,9 +86,7 @@
                        <b><h4 class="card-title">{{judul}}</h4></b>
                        <hr>
                             <div class=" table-responsive">
-                            <div class="pencarian">
-                              <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control">
-                            </div>
+
                             <table class="table table-striped table-hover">
                               <thead class="text-primary">
                                 <tr>
@@ -123,6 +115,8 @@
                         </div><!--RESPONSIVE-->
                       </div>
                       
+                     <a href="#" class='btn btn-warning' id="btnExcel" target='blank' :style="'display: none'"><i class="material-icons">file_download</i> Download Excel</a> 
+
 
 				 </div>
 				</div><!--class="tab-content tab-space"-->
@@ -160,6 +154,8 @@
 					placeholder: '--JENIS PENJUALAN--'
 				},
 				url: window.location.origin + (window.location.pathname).replace("dashboard", "laporan-bucket-size"),
+				urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-bucket-size/download-excel-pos"), 
+         		 urlDownloadExcelOnline : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-bucket-size/download-excel-online"), 
 				pencarian: '',
 				loading: false,
 				judul : '',
@@ -212,9 +208,11 @@
 	                var app = this;
 	                if (app.filter.jenis_penjualan == '0') {
 	                	app.prosesLaporanBucketSizeData();
+	                	app.showButton();
 	                }
 	                else{
 	                	app.prosesLaporanBucketSizeOnlineData();
+	                	app.showButton();
 	                }   
 	         },
 	         prosesLaporanBucketSizeData(){
@@ -256,6 +254,22 @@
 					icon: "warning",
 				});
 			},
+			showButton() { 
+            var app = this; 
+            var filter = app.filter; 
+ 
+            var date_dari_tanggal = filter.dari_tanggal; 
+            var date_sampai_tanggal = filter.sampai_tanggal; 
+            var dari_tanggal = app.dariTanggal(filter); 
+            var sampai_tanggal = app.sampaiTanggal(filter); 
+ 
+            $("#btnExcel").show(); 
+            if (app.filter.jenis_penjualan == '0') { 
+             $("#btnExcel").attr('href', app.urlDownloadExcel+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.kelipatan); 
+            }else{ 
+              $("#btnExcel").attr('href', app.urlDownloadExcelOnline+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.kelipatan); 
+            } 
+          }, 
 		}
 	}
 </script>
