@@ -393,6 +393,16 @@
                 </router-link>
             </li>
             <li>
+                <router-link :to="{name: 'indexOtoritas'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        O
+                    </span>
+                    <span class="sidebar-normal">
+                        Otoritas
+                    </span>
+                </router-link>
+            </li>
+            <li>
                 <router-link :to="{name: 'indexCustomer'}" class="menu-nav">
                     <span class="sidebar-mini">
                         CU

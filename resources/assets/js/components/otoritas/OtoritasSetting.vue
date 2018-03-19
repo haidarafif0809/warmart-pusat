@@ -153,15 +153,7 @@
                 <input type="checkbox" name="setting_pembelian" v-bind:value="permission_pembelian.id" v-model="setting_otoritas.pembelian"> {{permission_pembelian.display_name}}
               </label>
             </div>
-            <!-- Pembelian  -->
-            <!-- Master Data -->
-            <b>Master Data</b>
-            <div class="checkbox" v-for="permissions_master_data, index in permission_master_data">
-              <label>
-                <input type="checkbox" name="setting_otoritas" v-bind:value="permissions_master_data.id" v-model="setting_otoritas.master_data"> {{permissions_master_data.display_name}}
-              </label>
-            </div>
-            <!-- Master Data -->
+            <!-- Pembelian  -->           
 
           </div>
 
@@ -190,14 +182,6 @@
               </label>
             </div>
             <!-- Kategori Kas  -->
-            <!-- laporan_persediaan -->
-            <b>Laporan Persediaan</b>
-            <div class="checkbox" v-for="permissions_laporan_persediaan, index in permission_laporan_persediaan">
-              <label>
-                <input type="checkbox" name="setting_laporan_persediaan" v-bind:value="permissions_laporan_persediaan.id" v-model="setting_otoritas.laporan_persediaan"> {{permissions_laporan_persediaan.display_name}}
-              </label>
-            </div>
-            <!--end laporan persediaan -->
           </div>
 
         </div>
@@ -231,6 +215,23 @@
               </label>
             </div>
             <!-- satuan  -->
+            <!-- Master Data -->
+            <b>Master Data</b>
+            <div class="checkbox" v-for="permissions_master_data, index in permission_master_data">
+              <label>
+                <input type="checkbox" name="setting_otoritas" v-bind:value="permissions_master_data.id" v-model="setting_otoritas.master_data"> {{permissions_master_data.display_name}}
+              </label>
+            </div>
+            <!-- Master Data -->
+            
+            <!-- laporan_persediaan -->
+            <b>Laporan Persediaan</b>
+            <div class="checkbox" v-for="permissions_laporan_persediaan, index in permission_laporan_persediaan">
+              <label>
+                <input type="checkbox" name="setting_laporan_persediaan" v-bind:value="permissions_laporan_persediaan.id" v-model="setting_otoritas.laporan_persediaan"> {{permissions_laporan_persediaan.display_name}}
+              </label>
+            </div>
+            <!--end laporan persediaan -->
           </div>
           <div class="col-sm-2">     
 
