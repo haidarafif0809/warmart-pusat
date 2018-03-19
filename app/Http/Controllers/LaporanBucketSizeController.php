@@ -84,7 +84,7 @@ class LaporanBucketSizeController extends Controller
 
         $array = array();
         while ($kelipatan <= $total_penjualan_terbesar) {
-            $total_faktur_kelipatan = Penjualan::countFaktur($request)->whereBetween('total', array($satu, $kelipatan))->first()->no_faktur;
+            $total_faktur_kelipatan = Penjualan::countFaktur($request)->whereBetween('total', array($satu, $kelipatan))->first()->id_pesanan;
 
             $respons['kelipatan']    = $satu . " - " . $kelipatan;
             $respons['total_faktur'] = $total_faktur_kelipatan;
@@ -102,9 +102,9 @@ class LaporanBucketSizeController extends Controller
     public function prosesLaporanBucketSizeOnline(Request $request, $dari_tanggal, $sampai_tanggal, $kelipatan)
     {
         $satu      = 1;
-        $kelipatan = $request->kelipatan;
+        $kelipatan = intval($request->kelipatan);
 
-        $data_penjualan_pos       = Penjualan::select([DB::raw('MAX(total) as total')])->first();
+        $data_penjualan_pos       = Penjualan::select([DB::raw('MAX(total) as total')])->where('id_warung', Auth::user()->id_warung)->first();
         $total_penjualan_terbesar = $satu + $data_penjualan_pos->total;
 
         while ($kelipatan <= $total_penjualan_terbesar) {

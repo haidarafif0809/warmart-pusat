@@ -145,7 +145,8 @@ class Penjualan extends Model
     {
         $query_count_faktur = Penjualan::select([DB::raw('COUNT(id_pesanan) as id_pesanan')])
             ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
-            ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal));
+            ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+            ->where('id_warung', Auth::user()->id_warung);
 
         return $query_count_faktur;
     }
