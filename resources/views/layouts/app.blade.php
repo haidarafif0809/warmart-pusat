@@ -47,9 +47,9 @@ $judul_warung = \App\SettingFooter::select()->first()->judul_warung;
 </head>
 <style type="text/css">
 
-.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
-   padding: 1px;
-}
+    .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+       padding: 1px;
+   }
 
 </style>
 <body>
