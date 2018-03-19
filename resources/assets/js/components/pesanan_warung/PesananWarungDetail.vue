@@ -100,7 +100,7 @@
 							</p>
 
 							<p v-else-if="pesananData.pesanan.konfirmasi_pesanan == 1">
-								<button class="btn btn-info btn-sm" :data-id="pesananData.pesanan.id" id="selesaikan_pesanan">  <font style="font-size: 12px;" @click="selesaikanPesanan(pesananData.pesanan.id)">Selesai</font></button>
+								<button class="btn btn-info btn-sm" :data-id="pesananData.pesanan.id" id="selesaikan_pesanan" @click="selesaikanPesanan(pesananData.pesanan.id)">  <font style="font-size: 12px;" >Selesai</font></button>
 								<button id="batalkan-konfirmasi-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-sm btn-danger" @click="batalKonfirmasiPesanan(pesananData.pesanan.id)"><font style="font-size: 12px;">Batal</font></button>
 								<!--PEMESAN-->
 								<button type="button" class="btn btn-sm btn-primary" id="btnDetail" data-toggle="modal" data-target="#data_pemesan"><font style="font-size: 12px;">Pemesan</font></button>
@@ -262,7 +262,7 @@
 					</div>
 
 					<div class="btn-group" v-else-if="pesananData.pesanan.konfirmasi_pesanan == 1">
-						<button class="btn btn-info btn-xs" :data-id="pesananData.pesanan.id" id="selesaikan_pesanan" style="padding: 5px 50px;">  <font style="font-size: 12px;" @click="selesaikanPesanan(pesananData.pesanan.id)">Selesai</font>
+						<button class="btn btn-info btn-xs" :data-id="pesananData.pesanan.id" id="selesaikan_pesanan" style="padding: 5px 50px;" @click="selesaikanPesanan(pesananData.pesanan.id)">  <font style="font-size: 12px;" >Selesai</font>
 						</button>
 						<button id="batalkan-konfirmasi-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-xs btn-danger" @click="batalKonfirmasiPesanan(pesananData.pesanan.id)" style="padding: 5px 50px;"><font style="font-size: 12px;">Batal</font>
 						</button>
@@ -574,6 +574,7 @@ export default {
 		},
 		selesaikanPesanan(id){
 			var app = this;
+			var app = this;
 			axios.get(app.urlOrigin+'kas/cek-kas-warung')
 			.then(function (resp) {            	
 				var data = resp.data;
@@ -624,6 +625,7 @@ export default {
 					}
 				});
 			});
+
 		},
 		submitSelesaiPesanan(id, id_kas){
 			var app = this;
