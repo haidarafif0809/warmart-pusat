@@ -338,7 +338,7 @@ body {
             <div class="container">
                 <div class="content">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <h5 style="font-size: 14px; mar">
                                 Tentang Kami
                             </h5>
@@ -353,7 +353,7 @@ body {
                             </p>
                             @endif
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <h5 style="font-size: 14px; mar">
                                 Hubungi Kami
                             </h5>
@@ -391,7 +391,7 @@ body {
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             @if(Agent::isMobile())
                             <div class="row">
                                 <div class="col-xs-6">
@@ -463,16 +463,7 @@ body {
                             </a>  
                             @endif                                               
                         </div>
-                    </div>
-                </div>
-                
-                <div class="row">
-
-                    @if(Agent::isMobile())
-                    <div class="col-md-6 col-xs-6">
-                        @else
-                        <div class="col-md-4 col-xs-4">
-                            @endif
+                        <div class="col-md-3">
                             <div class="row" style="padding-left: 15px">
                                 <div class="col-md-12 col-xs-12" style="padding-left: 0px">
                                     <h5 style="font-size: 14px;" class="pull-left">
@@ -486,159 +477,155 @@ body {
                                 <img src="{{asset('jasa_pengiriman/'.$jasa_pengiriman->logo_jasa)}}" style="max-width: 65px" class="pull-left img-jasa">
                                 @endif
                                 @endforeach
-                            </div>
-                        </div>
 
-                        @if(Agent::isMobile())
-                        <div class="col-md-6 col-xs-6">
-                            @else
-                            <div class="col-md-8 col-xs-8">
-                                @endif
-                                <div class="row" style="padding-left: 15px">
-                                    <div class="col-md-12 col-xs-12" style="padding-left: 0px">
-                                        <h5 style="font-size: 14px;" class="pull-left">
-                                            Metode Pembayaran
-                                        </h5>
-                                    </div>
-                                    @foreach($bank_transfers as $bank_transfer)
-                                    @if(Agent::isMobile())
-                                    <img src="{{asset('jasa_pengiriman/'.$bank_transfer->logo_bank)}}" style="max-width: 50px" class="pull-left img-jasa">
-                                    @else
-                                    <img src="{{asset('jasa_pengiriman/'.$bank_transfer->logo_bank)}}" style="max-width: 65px" class="pull-left img-jasa">
-                                    @endif
-                                    @endforeach
+                                <div class="col-md-12 col-xs-12" style="padding-left: 0px">
+                                    <h5 style="font-size: 14px;" class="pull-left">
+                                        Metode Pembayaran
+                                    </h5>
                                 </div>
+                                @foreach($bank_transfers as $bank_transfer)
+                                @if(Agent::isMobile())
+                                <img src="{{asset('jasa_pengiriman/'.$bank_transfer->logo_bank)}}" style="max-width: 50px" class="pull-left img-jasa">
+                                @else
+                                <img src="{{asset('jasa_pengiriman/'.$bank_transfer->logo_bank)}}" style="max-width: 65px" class="pull-left img-jasa">
+                                @endif
+                                @endforeach
                             </div>
-                        </div>
-                        <hr style="margin: 5px" />
-                        <div class="copyright pull-right">
-                            Copyright ©
-                            <script>
-                                document.write(new Date().getFullYear())
-                            </script>
-                            <a href="https://andaglos.id/">
-                                PT. Andaglos Global Teknologi.
-                            </a>
                         </div>
                     </div>
-                </footer>
-                <!--Start of Tawk.to Script-->
-                <script type="text/javascript">
-                    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-                    (function(){
-                        var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-                        s1.async=true;
-                        s1.src='https://embed.tawk.to/5a051374bb0c3f433d4c84cd/default';
-                        s1.charset='UTF-8';
-                        s1.setAttribute('crossorigin','*');
-                        s0.parentNode.insertBefore(s1,s0);
-                    })();
-                </script>
-                <!--End of Tawk.to Script-->
-            </nav>
-        </body>
-        <!-- Include Dexie -->
-        <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
+                </div>
+                
+                <div class="row">
+                    <hr style="margin: 5px" />
 
-        <!--   Core JS Files   -->
-        <script src="{{ asset('js/jquery-3.2.1.min.js') }}" type="text/javascript">
-        </script>
-        <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript">
-        </script>
-        <script src="{{ asset('js/material.min.js') }}" type="text/javascript">
-        </script>
-        <script src="{{ asset('js/bootstrap-datepicker.min.js') }}">
-        </script>
-        <script src="{{ asset('js/perfect-scrollbar.jquery.min.js') }}" type="text/javascript">
-        </script>
-        <!-- Library for adding dinamically elements -->
-        <script src="{{ asset('js/arrive.min.js') }}" type="text/javascript">
-        </script>
-        <!-- Forms Validations Plugin -->
-        <script src="{{ asset('js/jquery.validate.min.js') }}">
-        </script>
-        <!-- Promise Library for SweetAlert2 working on IE -->
-        <script src="{{ asset('js/es6-promise-auto.min.js') }}">
-        </script>
-        <!--  Plugin for Date Time Picker and Full Calendar Plugin-->
-        <script src="{{ asset('js/moment.min.js') }}">
-        </script>
-        <!--  Charts Plugin, full documentation here: https://gionkunz.github.io/chartist-js/ -->
-        <script src="{{ asset('js/chartist.min.js') }}">
-        </script>
-        <!--  Plugin for the Wizard, full documentation here: https://github.com/VinceG/twitter-bootstrap-wizard -->
-        <script src="{{ asset('js/jquery.bootstrap-wizard.js') }}">
-        </script>
-        <!--  Notifications Plugin, full documentation here: http://bootstrap-notify.remabledesigns.com/    -->
-        <script src="{{ asset('js/bootstrap-notify.js') }}">
-        </script>
-        <!--  Plugin for the DateTimePicker, full documentation here: https://eonasdan.github.io/bootstrap-datetimepicker/ -->
-        <script src="{{ asset('js/bootstrap-datetimepicker.js') }}">
-        </script>
-        <!--    Plugin for Select, full documentation here: http://silviomoreto.github.io/bootstrap-select   -->
-        <!-- Vector Map plugin, full documentation here: http://jvectormap.com/documentation/ -->
-        <script src="{{ asset('js/jquery-jvectormap.js') }}">
-        </script>
-        <!-- Sliders Plugin, full documentation here: https://refreshless.com/nouislider/ -->
-        <script src="{{ asset('js/nouislider.min.js') }}">
-        </script>
-        <!--  Plugin for Select, full documentation here: http://silviomoreto.github.io/bootstrap-select -->
-        <script src="{{ asset('js/jquery.select-bootstrap.js') }}">
-        </script>
-        <!--  DataTables.net Plugin, full documentation here: https://datatables.net/    -->
-        <script src="{{ asset('js/jquery.dataTables.js') }}">
-        </script>
-        <!-- Sweet Alert 2 plugin, full documentation here: https://limonte.github.io/sweetalert2/ -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.0.5/sweetalert2.all.min.js" type="text/javascript">
-        </script>
-        <!-- Sertakan polibill untuk Prompt ES6 (opsional) untuk browser IE11 dan Android -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.js">
-        </script>
-        <!-- Plugin for Fileupload, full documentation here: http://www.jasny.net/bootstrap/javascript/#fileinput -->
-        <script src="{{ asset('js/jasny-bootstrap.min.js') }}">
-        </script>
-        <!--  Full Calendar Plugin, full documentation here: https://github.com/fullcalendar/fullcalendar    -->
-        <script src="{{ asset('js/fullcalendar.min.js') }}">
-        </script>
-        <!-- Plugin for Tags, full documentation here: https://github.com/bootstrap-tagsinput/bootstrap-tagsinputs  -->
-        <script src="{{ asset('js/jquery.tagsinput.js') }}">
-        </script>
-        <script src="{{ asset('js/material-dashboard.js?v=1.2.0') }}">
-        </script>
-        <script src="{{ asset('js/demo.js') }}">
-        </script>
-        <script src="{{ asset('js/selectize.min.js') }}">
-        </script>
-        <script src="{{ asset('js/custom.js') }}">
-        </script>
-        <script src="{{ asset('js/material-kit.js?v=1.2.0')}}" type="text/javascript">
-        </script>
-        {{-- lazy load image --}}
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-lazyload/10.3.5/lazyload.min.js">
-        </script>
-        <script type="text/javascript">
-            var myLazyLoad = new LazyLoad();
-        </script>
-        <script type="text/javascript">
+                    <div class="copyright pull-right">
+                        Copyright ©
+                        <script>
+                            document.write(new Date().getFullYear())
+                        </script>
+                        <a href="https://andaglos.id/">
+                            PT. Andaglos Global Teknologi.
+                        </a>
+                    </div>
+                </div>
+            </footer>
+            <!--Start of Tawk.to Script-->
+            <script type="text/javascript">
+                var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+                (function(){
+                    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+                    s1.async=true;
+                    s1.src='https://embed.tawk.to/5a051374bb0c3f433d4c84cd/default';
+                    s1.charset='UTF-8';
+                    s1.setAttribute('crossorigin','*');
+                    s0.parentNode.insertBefore(s1,s0);
+                })();
+            </script>
+            <!--End of Tawk.to Script-->
+        </nav>
+    </body>
+    <!-- Include Dexie -->
+    <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
 
-
-            $(document).on('click', '#btnBeliSekarang', function(){
-                alert();
-            });
-
-            function alert(){
-               swal({
-                text :  "Produk Berhasil Di Tambahkan Ke Keranjang Belanja",
-                showConfirmButton :  false,
-                type: "success",
-                timer: 10000,
-                onOpen: () => {
-                  swal.showLoading()
-              }
-          }); 
-           }
+    <!--   Core JS Files   -->
+    <script src="{{ asset('js/jquery-3.2.1.min.js') }}" type="text/javascript">
+    </script>
+    <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript">
+    </script>
+    <script src="{{ asset('js/material.min.js') }}" type="text/javascript">
+    </script>
+    <script src="{{ asset('js/bootstrap-datepicker.min.js') }}">
+    </script>
+    <script src="{{ asset('js/perfect-scrollbar.jquery.min.js') }}" type="text/javascript">
+    </script>
+    <!-- Library for adding dinamically elements -->
+    <script src="{{ asset('js/arrive.min.js') }}" type="text/javascript">
+    </script>
+    <!-- Forms Validations Plugin -->
+    <script src="{{ asset('js/jquery.validate.min.js') }}">
+    </script>
+    <!-- Promise Library for SweetAlert2 working on IE -->
+    <script src="{{ asset('js/es6-promise-auto.min.js') }}">
+    </script>
+    <!--  Plugin for Date Time Picker and Full Calendar Plugin-->
+    <script src="{{ asset('js/moment.min.js') }}">
+    </script>
+    <!--  Charts Plugin, full documentation here: https://gionkunz.github.io/chartist-js/ -->
+    <script src="{{ asset('js/chartist.min.js') }}">
+    </script>
+    <!--  Plugin for the Wizard, full documentation here: https://github.com/VinceG/twitter-bootstrap-wizard -->
+    <script src="{{ asset('js/jquery.bootstrap-wizard.js') }}">
+    </script>
+    <!--  Notifications Plugin, full documentation here: http://bootstrap-notify.remabledesigns.com/    -->
+    <script src="{{ asset('js/bootstrap-notify.js') }}">
+    </script>
+    <!--  Plugin for the DateTimePicker, full documentation here: https://eonasdan.github.io/bootstrap-datetimepicker/ -->
+    <script src="{{ asset('js/bootstrap-datetimepicker.js') }}">
+    </script>
+    <!--    Plugin for Select, full documentation here: http://silviomoreto.github.io/bootstrap-select   -->
+    <!-- Vector Map plugin, full documentation here: http://jvectormap.com/documentation/ -->
+    <script src="{{ asset('js/jquery-jvectormap.js') }}">
+    </script>
+    <!-- Sliders Plugin, full documentation here: https://refreshless.com/nouislider/ -->
+    <script src="{{ asset('js/nouislider.min.js') }}">
+    </script>
+    <!--  Plugin for Select, full documentation here: http://silviomoreto.github.io/bootstrap-select -->
+    <script src="{{ asset('js/jquery.select-bootstrap.js') }}">
+    </script>
+    <!--  DataTables.net Plugin, full documentation here: https://datatables.net/    -->
+    <script src="{{ asset('js/jquery.dataTables.js') }}">
+    </script>
+    <!-- Sweet Alert 2 plugin, full documentation here: https://limonte.github.io/sweetalert2/ -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.0.5/sweetalert2.all.min.js" type="text/javascript">
+    </script>
+    <!-- Sertakan polibill untuk Prompt ES6 (opsional) untuk browser IE11 dan Android -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.js">
+    </script>
+    <!-- Plugin for Fileupload, full documentation here: http://www.jasny.net/bootstrap/javascript/#fileinput -->
+    <script src="{{ asset('js/jasny-bootstrap.min.js') }}">
+    </script>
+    <!--  Full Calendar Plugin, full documentation here: https://github.com/fullcalendar/fullcalendar    -->
+    <script src="{{ asset('js/fullcalendar.min.js') }}">
+    </script>
+    <!-- Plugin for Tags, full documentation here: https://github.com/bootstrap-tagsinput/bootstrap-tagsinputs  -->
+    <script src="{{ asset('js/jquery.tagsinput.js') }}">
+    </script>
+    <script src="{{ asset('js/material-dashboard.js?v=1.2.0') }}">
+    </script>
+    <script src="{{ asset('js/demo.js') }}">
+    </script>
+    <script src="{{ asset('js/selectize.min.js') }}">
+    </script>
+    <script src="{{ asset('js/custom.js') }}">
+    </script>
+    <script src="{{ asset('js/material-kit.js?v=1.2.0')}}" type="text/javascript">
+    </script>
+    {{-- lazy load image --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-lazyload/10.3.5/lazyload.min.js">
+    </script>
+    <script type="text/javascript">
+        var myLazyLoad = new LazyLoad();
+    </script>
+    <script type="text/javascript">
 
 
-       </script>
-       @yield('scripts')
-       </html>
+        $(document).on('click', '#btnBeliSekarang', function(){
+            alert();
+        });
+
+        function alert(){
+         swal({
+            text :  "Produk Berhasil Di Tambahkan Ke Keranjang Belanja",
+            showConfirmButton :  false,
+            type: "success",
+            timer: 10000,
+            onOpen: () => {
+              swal.showLoading()
+          }
+      }); 
+     }
+
+
+ </script>
+ @yield('scripts')
+ </html>
