@@ -24,14 +24,14 @@
       <div class="card-content">
         <h4 class="card-title">Setting Otoritas <b>{{nama_otoritas}}</b>
         </h4>
-
+        
         <div class="row" v-if="seen">
           <div class="col-sm-2">
             <!-- OTORITAS laporan -->
             <b>Laporan</b>
             <div class="checkbox" v-for="permission_laporans, index in permission_laporan">
               <label>
-                <input type="checkbox" name="setting_user" v-bind:value="permission_laporans.id" v-model="setting_otoritas.user"> {{permission_laporans.display_name}}
+                <input type="checkbox" name="setting_user" v-bind:value="permission_laporans.id" v-model="setting_otoritas.laporan"> {{permission_laporans.display_name}}
               </label>
             </div>            
             <!--END OTORITAS laporan -->
@@ -203,7 +203,7 @@
               </label>
             </div>
             <!-- produk  -->
-            
+
             <!-- setting  -->
             <b>Setting</b>
             <div class="checkbox" v-for="permission_setting, index in permission_setting">
@@ -229,7 +229,7 @@
             <b>Kas</b>
             <div class="checkbox" v-for="permission_kass, index in permission_kas">
               <label>
-                <input type="checkbox" name="setting_user" v-bind:value="permission_kass.id" v-model="setting_otoritas.user"> {{permission_kass.display_name}}
+                <input type="checkbox" name="setting_kas" v-bind:value="permission_kass.id" v-model="setting_otoritas.kas"> {{permission_kass.display_name}}
               </label>
             </div>            
             <!--END OTORITAS KAS -->
@@ -397,28 +397,27 @@ methods: {
       app.setting_otoritas.bank = resp.data.data_permission_bank
       app.setting_otoritas.customer = resp.data.data_permission_customer
       app.setting_otoritas.master_data = resp.data.data_permission_master_data
-      app.setting_otoritas_item_masuk = resp.data.data_permission_item_masuk
-      app.setting_otoritas_item_keluar = resp.data.data_permission_item_keluar
-      app.setting_otoritas_kas = resp.data.data_permission_kas
-      app.setting_otoritas_kas_masuk = resp.data.data_permission_kas_masuk
-      app.setting_otoritas_kas_keluar = resp.data.data_permission_kas_keluar
-      app.setting_otoritas_kas_mutasi = resp.data.data_permission_kas_mutasi
-      app.setting_otoritas_kategori_kas = resp.data.data_permission_kategori_kas
-      app.setting_otoritas_kelompok_produk = resp.data.data_permission_kelompok_produk
-      app.setting_otoritas_laporan = resp.data.data_permission_laporan
-      app.setting_otoritas_laporan_persediaan = resp.data.data_permission_laporan_persediaan
-      app.setting_otoritas_pembayaran_piutang = resp.data.data_permission_pembayaran_piutang
-      app.setting_otoritas_pembayaran_hutang = resp.data.data_permission_pembayaran_hutang
-      app.setting_otoritas_pembelian = resp.data.data_permission_pembelian
-      app.setting_otoritas_penjualan = resp.data.data_permission_penjualan
-      app.setting_otoritas_pesanan = resp.data.data_permission_pesanan
-      app.setting_otoritas_produk = resp.data.data_permission_produk
-      app.setting_otoritas_satuan = resp.data.data_permission_satuan
-      app.setting_otoritas_setting = resp.data.data_permission_setting
-      app.setting_otoritas_stok_opname = resp.data.data_permission_stok_opname
-      app.setting_otoritas_supplier = resp.data.data_permission_supplier
-      
-      console.log(app.setting_otoritas)
+      app.setting_otoritas.item_masuk = resp.data.data_permission_item_masuk
+      app.setting_otoritas.item_keluar = resp.data.data_permission_item_keluar
+      app.setting_otoritas.kas = resp.data.data_permission_kas
+      app.setting_otoritas.kas_masuk = resp.data.data_permission_kas_masuk
+      app.setting_otoritas.kas_keluar = resp.data.data_permission_kas_keluar
+      app.setting_otoritas.kas_mutasi = resp.data.data_permission_kas_mutasi
+      app.setting_otoritas.kategori_kas = resp.data.data_permission_kategori_kas
+      app.setting_otoritas.kelompok_produk = resp.data.data_permission_kelompok_produk
+      app.setting_otoritas.laporan = resp.data.data_permission_laporan
+      app.setting_otoritas.laporan_persediaan = resp.data.data_permission_laporan_persediaan
+      app.setting_otoritas.pembayaran_piutang = resp.data.data_permission_pembayaran_piutang
+      app.setting_otoritas.pembayaran_hutang = resp.data.data_permission_pembayaran_hutang
+      app.setting_otoritas.pembelian = resp.data.data_permission_pembelian
+      app.setting_otoritas.penjualan = resp.data.data_permission_penjualan
+      app.setting_otoritas.pesanan = resp.data.data_permission_pesanan
+      app.setting_otoritas.produk = resp.data.data_permission_produk
+      app.setting_otoritas.satuan = resp.data.data_permission_satuan
+      app.setting_otoritas.setting = resp.data.data_permission_setting
+      app.setting_otoritas.stok_opname = resp.data.data_permission_stok_opname
+      app.setting_otoritas.supplier = resp.data.data_permission_supplier
+
       app.loading = false;
       app.seen = true;
     })

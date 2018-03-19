@@ -113,141 +113,141 @@ class OtoritasController extends Controller
     public function edit($id)
     {
 
-        $permission_user = Permission::where('grup','user')->get();
-        $permission_otoritas = Permission::where('grup','otoritas')->get(); 
-        $permission_master_data = Permission::where('grup','master_data')->get(); 
-        $permission_bank = Permission::where('grup','bank')->get(); 
-        $permission_customer = Permission::where('grup','customer')->get(); 
-        $permission_master_data = Permission::where('grup','master_data')->get(); 
-        $permission_item_masuk = Permission::where('grup','item_masuk')->get();
-        $permission_item_keluar = Permission::where('grup','item_keluar')->get(); 
-        $permission_kas = Permission::where('grup','kas')->get(); 
-        $permission_kas_masuk = Permission::where('grup','kas_masuk')->get(); 
-        $permission_kas_keluar = Permission::where('grup','kas_keluar')->get(); 
-        $permission_kas_mutasi = Permission::where('grup','kas_mutasi')->get(); 
-        $permission_kategori_kas = Permission::where('grup','kategori_kas')->get();
-        $permission_kelompok_produk = Permission::where('grup','kelompok_produk')->get(); 
-        $permission_laporan = Permission::where('grup','laporan')->get(); 
-        $permission_laporan_persediaan = Permission::where('grup','laporan_persediaan')->get(); 
-        $permission_pembayaran_piutang = Permission::where('grup','pembayaran_piutang')->get(); 
-        $permission_pembayaran_hutang = Permission::where('grup','pembayaran_hutang')->get(); 
-        $permission_pembelian = Permission::where('grup','pembelian')->get(); 
-        $permission_penjualan = Permission::where('grup','penjualan')->get(); 
-        $permission_pesanan = Permission::where('grup','pesanan')->get(); 
-        $permission_produk = Permission::where('grup','produk')->get(); 
-        $permission_satuan = Permission::where('grup','satuan')->get(); 
-        $permission_setting = Permission::where('grup','setting')->get(); 
-        $permission_stok_opname = Permission::where('grup','stok_opname')->get(); 
-        $permission_supplier = Permission::where('grup','supplier')->get(); 
-        $otoritas = Role::where('id',$id)->first();
+       $permission_user = Permission::where('grup','user')->get();
+       $permission_otoritas = Permission::where('grup','otoritas')->get(); 
+       $permission_master_data = Permission::where('grup','master_data')->get(); 
+       $permission_bank = Permission::where('grup','bank')->get(); 
+       $permission_customer = Permission::where('grup','customer')->get(); 
+       $permission_master_data = Permission::where('grup','master_data')->get(); 
+       $permission_item_masuk = Permission::where('grup','item_masuk')->get();
+       $permission_item_keluar = Permission::where('grup','item_keluar')->get(); 
+       $permission_kas = Permission::where('grup','kas')->get(); 
+       $permission_kas_masuk = Permission::where('grup','kas_masuk')->get(); 
+       $permission_kas_keluar = Permission::where('grup','kas_keluar')->get(); 
+       $permission_kas_mutasi = Permission::where('grup','kas_mutasi')->get(); 
+       $permission_kategori_kas = Permission::where('grup','kategori_kas')->get();
+       $permission_kelompok_produk = Permission::where('grup','kelompok_produk')->get(); 
+       $permission_laporan = Permission::where('grup','laporan')->get(); 
+       $permission_laporan_persediaan = Permission::where('grup','laporan_persediaan')->get(); 
+       $permission_pembayaran_piutang = Permission::where('grup','pembayaran_piutang')->get(); 
+       $permission_pembayaran_hutang = Permission::where('grup','pembayaran_hutang')->get(); 
+       $permission_pembelian = Permission::where('grup','pembelian')->get(); 
+       $permission_penjualan = Permission::where('grup','penjualan')->get(); 
+       $permission_pesanan = Permission::where('grup','pesanan')->get(); 
+       $permission_produk = Permission::where('grup','produk')->get(); 
+       $permission_satuan = Permission::where('grup','satuan')->get(); 
+       $permission_setting = Permission::where('grup','setting')->get(); 
+       $permission_stok_opname = Permission::where('grup','stok_opname')->get(); 
+       $permission_supplier = Permission::where('grup','supplier')->get(); 
+       $otoritas = Role::where('id',$id)->first();
 
-        $arrayPermissionUser = array();
-        $arrayPermissionOtoritas = array();
-        $arrayPermissionBank = array();
-        $arrayPermissionCustomer = array();
-        $arrayPermissionMasterData = array();
+       $arrayPermissionUser = array();
+       $arrayPermissionOtoritas = array();
+       $arrayPermissionBank = array();
+       $arrayPermissionCustomer = array();
+       $arrayPermissionMasterData = array();
 
-        $arrayPermissionItemMasuk = array();
-        $arrayPermissionItemKeluar = array();
-        $arrayPermissionKas = array();
-        $arrayPermissionKasMasuk = array();
-        $arrayPermissionKasKeluar = array();
-        $arrayPermissionKasMutasi = array();
-        $arrayPermissionKategoriKas = array();
-        $arrayPermissionKelompokProduk = array();
-        $arrayPermissionLaporan = array();
-        $arrayPermissionLaporanPersediaan = array();
-        $arrayPermissionPembayaranPiutang = array();
-        $arrayPermissionPembelian = array();
-        $arrayPermissionPembayaranHutang = array();
-        $arrayPermissionPenjualan = array();
-        $arrayPermissionPesanan = array();
-        $arrayPermissionProduk = array();
-        $arrayPermissionSatuan = array();
-        $arrayPermissionSetting = array();
-        $arrayPermissionStokOpname = array();
-        $arrayPermissionSupplier = array();
+       $arrayPermissionItemMasuk = array();
+       $arrayPermissionItemKeluar = array();
+       $arrayPermissionKas = array();
+       $arrayPermissionKasMasuk = array();
+       $arrayPermissionKasKeluar = array();
+       $arrayPermissionKasMutasi = array();
+       $arrayPermissionKategoriKas = array();
+       $arrayPermissionKelompokProduk = array();
+       $arrayPermissionLaporan = array();
+       $arrayPermissionLaporanPersediaan = array();
+       $arrayPermissionPembayaranPiutang = array();
+       $arrayPermissionPembelian = array();
+       $arrayPermissionPembayaranHutang = array();
+       $arrayPermissionPenjualan = array();
+       $arrayPermissionPesanan = array();
+       $arrayPermissionProduk = array();
+       $arrayPermissionSatuan = array();
+       $arrayPermissionSetting = array();
+       $arrayPermissionStokOpname = array();
+       $arrayPermissionSupplier = array();
 
-        $permission_role = PermissionRole::with('permissions')->where('role_id',$id)->get();
-        foreach ($permission_role as $permission_roles) {
-            if ($permission_roles->permissions->grup == "user") {
-               array_push($arrayPermissionUser, $permission_roles->permission_id);
-           }
-           if ($permission_roles->permissions->grup == "otoritas") {
-             array_push($arrayPermissionOtoritas, $permission_roles->permission_id);
-         }
-         if ($permission_roles->permissions->grup == "bank") {
-             array_push($arrayPermissionBank, $permission_roles->permission_id);
-         }
-         if ($permission_roles->permissions->grup == "customer") {
-             array_push($arrayPermissionCustomer, $permission_roles->permission_id);
-         }
-         if ($permission_roles->permissions->grup == "master_data") {
-             array_push($arrayPermissionMasterData, $permission_roles->permission_id);
-         }
-         if ($permission_roles->permissions->grup == "item_masuk"){
-           array_push($arrayPermissionItemMasuk, $permission_roles->permission_id);
+       $permission_role = PermissionRole::with('permissions')->where('role_id',$id)->get();
+       foreach ($permission_role as $permission_roles) {
+        if ($permission_roles->permissions->grup == "user") {
+           array_push($arrayPermissionUser, $permission_roles->permission_id);
        }
-       if ($permission_roles->permissions->grup == "item_keluar"){
-           array_push($arrayPermissionItemKeluar, $permission_roles->permission_id);
-       }
-       if ($permission_roles->permissions->grup == "kas"){
-           array_push($arrayPermissionKas, $permission_roles->permission_id);
-       }
-       if ($permission_roles->permissions->grup == "kas_masuk"){
-           array_push($arrayPermissionKasMasuk, $permission_roles->permission_id);
-       }
-       if ($permission_roles->permissions->grup == "kas_keluar"){
-           array_push($arrayPermissionKasKeluar, $permission_roles->permission_id);
-       }
-       if ($permission_roles->permissions->grup == "kas_mutasi"){
-           array_push($arrayPermissionKasMutasi, $permission_roles->permission_id);
-       }
-       if ($permission_roles->permissions->grup == "kategori_kas"){
-           array_push($arrayPermissionKategoriKas, $permission_roles->permission_id);
-       }
-       if ($permission_roles->permissions->grup == "kelompok_produk"){
-           array_push($arrayPermissionKelompokProduk, $permission_roles->permission_id);
-       }
-       if ($permission_roles->permissions->grup == "laporan"){
-           array_push($arrayPermissionLaporan, $permission_roles->permission_id);
-       }
-       if ($permission_roles->permissions->grup == "laporan_persediaan"){
-           array_push($arrayPermissionLaporanPersediaan, $permission_roles->permission_id);
-       }
-       if ($permission_roles->permissions->grup == "pembayaran_piutang"){
-           array_push($arrayPermissionPembayaranPiutang, $permission_roles->permission_id);
-       }
-       if ($permission_roles->permissions->grup == "pembayaran_hutang"){
-           array_push($arrayPermissionPembelian, $permission_roles->permission_id);
-       }
-       if ($permission_roles->permissions->grup == "pembelian"){
-           array_push($arrayPermissionPembayaranHutang, $permission_roles->permission_id);
-       }
-       if ($permission_roles->permissions->grup == "penjualan"){
-           array_push($arrayPermissionPenjualan, $permission_roles->permission_id);
-       }
-       if ($permission_roles->permissions->grup == "pesanan"){
-           array_push($arrayPermissionPesanan, $permission_roles->permission_id);
-       }
-       if ($permission_roles->permissions->grup == "produk"){
-           array_push($arrayPermissionProduk, $permission_roles->permission_id);
-       }
-       if ($permission_roles->permissions->grup == "satuan"){
-           array_push($arrayPermissionSatuan, $permission_roles->permission_id);
-       }
-       if ($permission_roles->permissions->grup == "setting"){
-           array_push($arrayPermissionSetting, $permission_roles->permission_id);
-       }
-       if ($permission_roles->permissions->grup == "stok_opname"){
-           array_push($arrayPermissionStokOpname, $permission_roles->permission_id);
-       }
-       if ($permission_roles->permissions->grup == "supplier"){
-           array_push($arrayPermissionSupplier, $permission_roles->permission_id);
-       }
+       if ($permission_roles->permissions->grup == "otoritas") {
+         array_push($arrayPermissionOtoritas, $permission_roles->permission_id);
+     }
+     if ($permission_roles->permissions->grup == "bank") {
+         array_push($arrayPermissionBank, $permission_roles->permission_id);
+     }
+     if ($permission_roles->permissions->grup == "customer") {
+         array_push($arrayPermissionCustomer, $permission_roles->permission_id);
+     }
+     if ($permission_roles->permissions->grup == "master_data") {
+         array_push($arrayPermissionMasterData, $permission_roles->permission_id);
+     }
+     if ($permission_roles->permissions->grup == "item_masuk"){
+       array_push($arrayPermissionItemMasuk, $permission_roles->permission_id);
    }
+   if ($permission_roles->permissions->grup == "item_keluar"){
+       array_push($arrayPermissionItemKeluar, $permission_roles->permission_id);
+   }
+   if ($permission_roles->permissions->grup == "kas"){
+       array_push($arrayPermissionKas, $permission_roles->permission_id);
+   }
+   if ($permission_roles->permissions->grup == "kas_masuk"){
+       array_push($arrayPermissionKasMasuk, $permission_roles->permission_id);
+   }
+   if ($permission_roles->permissions->grup == "kas_keluar"){
+       array_push($arrayPermissionKasKeluar, $permission_roles->permission_id);
+   }
+   if ($permission_roles->permissions->grup == "kas_mutasi"){
+       array_push($arrayPermissionKasMutasi, $permission_roles->permission_id);
+   }
+   if ($permission_roles->permissions->grup == "kategori_kas"){
+       array_push($arrayPermissionKategoriKas, $permission_roles->permission_id);
+   }
+   if ($permission_roles->permissions->grup == "kelompok_produk"){
+       array_push($arrayPermissionKelompokProduk, $permission_roles->permission_id);
+   }
+   if ($permission_roles->permissions->grup == "laporan"){
+       array_push($arrayPermissionLaporan, $permission_roles->permission_id);
+   }
+   if ($permission_roles->permissions->grup == "laporan_persediaan"){
+       array_push($arrayPermissionLaporanPersediaan, $permission_roles->permission_id);
+   }
+   if ($permission_roles->permissions->grup == "pembayaran_piutang"){
+       array_push($arrayPermissionPembayaranPiutang, $permission_roles->permission_id);
+   }
+   if ($permission_roles->permissions->grup == "pembelian"){
+       array_push($arrayPermissionPembelian, $permission_roles->permission_id);
+   }
+   if ($permission_roles->permissions->grup == "pembayaran_hutang"){
+       array_push($arrayPermissionPembayaranHutang, $permission_roles->permission_id);
+   }
+   if ($permission_roles->permissions->grup == "penjualan"){
+       array_push($arrayPermissionPenjualan, $permission_roles->permission_id);
+   }
+   if ($permission_roles->permissions->grup == "pesanan"){
+       array_push($arrayPermissionPesanan, $permission_roles->permission_id);
+   }
+   if ($permission_roles->permissions->grup == "produk"){
+       array_push($arrayPermissionProduk, $permission_roles->permission_id);
+   }
+   if ($permission_roles->permissions->grup == "satuan"){
+       array_push($arrayPermissionSatuan, $permission_roles->permission_id);
+   }
+   if ($permission_roles->permissions->grup == "setting"){
+       array_push($arrayPermissionSetting, $permission_roles->permission_id);
+   }
+   if ($permission_roles->permissions->grup == "stok_opname"){
+       array_push($arrayPermissionStokOpname, $permission_roles->permission_id);
+   }
+   if ($permission_roles->permissions->grup == "supplier"){
+       array_push($arrayPermissionSupplier, $permission_roles->permission_id);
+   }
+}
 
-   return response()->json([
+return response()->json([
     "permission_user" => $permission_user,
     "permission_otoritas"     => $permission_otoritas,
     "permission_master_data" => $permission_master_data,
@@ -275,7 +275,7 @@ class OtoritasController extends Controller
     "permission_supplier" => $permission_supplier,
 
     "otoritas"     => $otoritas,
-    
+
     "data_permission_user"     => $arrayPermissionUser,
     "data_permission_otoritas"     => $arrayPermissionOtoritas,
     "data_permission_bank"     => $arrayPermissionBank,
@@ -383,6 +383,106 @@ foreach ($request->customer as $setting_customer) {
 foreach ($request->master_data as $setting_master_data) {
     $permission_master_data = Permission::whereId($setting_master_data)->first();
     $role->attachPermission($permission_master_data);
+}
+
+
+foreach ($request->item_masuk as $setting_item_masuk) {
+    $permission_item_masuk = Permission::whereId($setting_item_masuk)->first();
+    $role->attachPermission($permission_item_masuk);
+}
+foreach ($request->item_keluar as $setting_item_keluar) {
+    $permission_item_keluar = Permission::whereId($setting_item_keluar)->first();
+    $role->attachPermission($permission_item_keluar);
+}
+
+foreach ($request->kas as $setting_kas) {
+    $permission_kas = Permission::whereId($setting_kas)->first();
+    $role->attachPermission($permission_kas);
+}
+
+foreach ($request->kas_masuk as $setting_kas_masuk) {
+    $permission_kas_masuk = Permission::whereId($setting_kas_masuk)->first();
+    $role->attachPermission($permission_kas_masuk);
+}
+
+foreach ($request->kas_keluar as $setting_kas_keluar) {
+    $permission_kas_keluar = Permission::whereId($setting_kas_keluar)->first();
+    $role->attachPermission($permission_kas_keluar);
+}
+
+
+foreach ($request->kas_mutasi as $setting_kas_mutasi) {
+    $permission_kas_mutasi = Permission::whereId($setting_kas_mutasi)->first();
+    $role->attachPermission($permission_kas_mutasi);
+}
+
+foreach ($request->kategori_kas as $setting_kategori_kas) {
+    $permission_kategori_kas = Permission::whereId($setting_kategori_kas)->first();
+    $role->attachPermission($permission_kategori_kas);
+}
+
+foreach ($request->kelompok_produk as $setting_kelompok_produk) {
+    $permission_kelompok_produk = Permission::whereId($setting_kelompok_produk)->first();
+    $role->attachPermission($permission_kelompok_produk);
+}
+foreach ($request->produk as $setting_produk) {
+    $permission_produk = Permission::whereId($setting_produk)->first();
+    $role->attachPermission($permission_produk);
+}
+
+foreach ($request->laporan as $setting_laporan) {
+    $permission_laporan = Permission::whereId($setting_laporan)->first();
+    $role->attachPermission($permission_laporan);
+}
+
+foreach ($request->laporan_persediaan as $setting_laporan_persediaan) {
+    $permission_laporan_persediaan = Permission::whereId($setting_laporan_persediaan)->first();
+    $role->attachPermission($permission_laporan_persediaan);
+}
+
+foreach ($request->pembayaran_piutang as $setting_pembayaran_piutang) {
+    $permission_pembayaran_piutang = Permission::whereId($setting_pembayaran_piutang)->first();
+    $role->attachPermission($permission_pembayaran_piutang);
+}
+
+foreach ($request->pembayaran_hutang as $setting_pembayaran_hutang) {
+    $permission_pembayaran_hutang = Permission::whereId($setting_pembayaran_hutang)->first();
+    $role->attachPermission($permission_pembayaran_hutang);
+}
+
+foreach ($request->pembelian as $setting_pembelian) {
+    $permission_pembelian = Permission::whereId($setting_pembelian)->first();
+    $role->attachPermission($permission_pembelian);
+}
+
+foreach ($request->penjualan as $setting_penjualan) {
+    $permission_penjualan = Permission::whereId($setting_penjualan)->first();
+    $role->attachPermission($permission_penjualan);
+}
+
+foreach ($request->pesanan as $setting_pesanan) {
+    $permission_pesanan = Permission::whereId($setting_pesanan)->first();
+    $role->attachPermission($permission_pesanan);
+}
+
+foreach ($request->satuan as $setting_satuan) {
+    $permission_satuan = Permission::whereId($setting_satuan)->first();
+    $role->attachPermission($permission_satuan);
+}
+
+foreach ($request->setting as $setting_setting) {
+    $permission_setting = Permission::whereId($setting_setting)->first();
+    $role->attachPermission($permission_setting);
+}
+
+foreach ($request->stok_opname as $setting_stok_opname) {
+    $permission_stok_opname = Permission::whereId($setting_stok_opname)->first();
+    $role->attachPermission($permission_stok_opname);
+}
+
+foreach ($request->supplier as $setting_supplier) {
+    $permission_supplier = Permission::whereId($setting_supplier)->first();
+    $role->attachPermission($permission_supplier);
 }
 
 }

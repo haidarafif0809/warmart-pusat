@@ -28,5 +28,6 @@ class DatabaseSeeder extends Seeder
         $this->call(SettingVerifikasiSeeder::class);
         $this->call(SettingJasaPengirimanSeeder::class);
         $this->call(SettingTransferBankSeeder::class);
+        $this->call(TambahPermissionSeeder::class);
     }
 }
