@@ -1,4 +1,8 @@
-
+<style scoped>
+    .hurufBesar{
+        text-transform: uppercase;
+    }
+</style>
 <template>
     <div class="row" >
         <div class="col-md-12">
@@ -18,9 +22,16 @@
                 <form v-on:submit.prevent="saveForm()" class="form-horizontal"> 
                     <div class="form-group">
                         <label for="name" class="col-md-2 control-label">Nama Bank</label>
-                        <div class="col-md-4">
-                            <input class="form-control" required autocomplete="off" placeholder="Nama Bank" type="text" v-model="bankWarung.nama_bank"  autofocus="" name="nama_bank">
-                            <span v-if="errors.nama_bank" class="label label-danger">{{ errors.nama_bank[0] }}</span>
+                        <div class="col-md-4 hurufBesar">
+                         <selectize-component v-model="bankWarung.nama_bank" :settings="placeholder_bank" id="nama_bank" ref='nama_bank'>
+                              <option v-for="banks, index in bank" v-bind:value="banks.id">
+                                  {{ banks.nama_bank }}
+                              </option>
+                          </selectize-component>
+                          <br v-if="errors.nama_bank">
+                          <span v-if="errors.nama_bank" id="nama_bank_error" class="label label-danger">
+                              {{ errors.nama_bank[0] }}
+                          </span>
                             
                         </div>
                     </div>
@@ -55,12 +66,12 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 export default {
     mounted() {
         let app = this;
         let id = app.$route.params.id;
         app.bankWarungId = id;
-
         axios.get(app.url+'/' + id)
         .then(function (resp) {
             app.bankWarung = resp.data;
@@ -68,6 +79,8 @@ export default {
         .catch(function () {
             alert("Could not load your bank")
         });
+        app.$store.dispatch('LOAD_BANK_LIST');
+        app.openSelectizeBank();
     },
     data: function () {
         return {
@@ -81,7 +94,15 @@ export default {
             errors: []
         }
     },
+    computed : mapState ({
+        bank(){
+            return this.$store.state.bank;
+        },
+    }),
     methods: {
+         openSelectizeBank(){
+            this.$refs.nama_bank.$el.selectize.focus();
+        },
         saveForm() {
             var app = this;
             var newBank = app.bankWarung;
