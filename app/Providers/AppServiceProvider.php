@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\BankWarung;
 use App\Barang;
 use App\DetailItemKeluar;
 use App\DetailItemMasuk;
@@ -14,6 +15,7 @@ use App\Kas;
 use App\KasKeluar;
 use App\KasMutasi;
 use App\KategoriTransaksi;
+use App\Observers\BankWarungObserver;
 use App\Observers\DetailItemKeluarObserver;
 use App\Observers\DetailItemMasukObserver;
 use App\Observers\DetailPembelianObserver;
@@ -79,6 +81,7 @@ class AppServiceProvider extends ServiceProvider
         PembayaranHutang::observe(PembayaranHutangObserver::class);
         StokOpname::observe(StokOpnameObserver::class);
         Barang::observe(ProdukObserver::class);
+        BankWarung::observe(BankWarungObserver::class);
     }
 
     /**

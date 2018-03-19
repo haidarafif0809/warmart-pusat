@@ -24,6 +24,15 @@
       <div class="card-content">
         <h4 class="card-title">Setting Otoritas <b>{{nama_otoritas}}</b>
         </h4>
+
+        <!-- OTORITAS laporan -->
+        <b v-if="seen">Pilih Semua </b>
+        <div class="checkbox" v-if="seen">
+          <label>
+            <input type="checkbox" name="setting_user" v-model="pilih_semua" v-bind:value="1" v-on:change="pilihSemua"> Pilih Semua
+          </label>
+        </div>            
+        <!--END OTORITAS laporan -->
         
         <div class="row" v-if="seen">
           <div class="col-sm-2">
@@ -144,15 +153,7 @@
                 <input type="checkbox" name="setting_pembelian" v-bind:value="permission_pembelian.id" v-model="setting_otoritas.pembelian"> {{permission_pembelian.display_name}}
               </label>
             </div>
-            <!-- Pembelian  -->
-            <!-- Master Data -->
-            <b>Master Data</b>
-            <div class="checkbox" v-for="permissions_master_data, index in permission_master_data">
-              <label>
-                <input type="checkbox" name="setting_otoritas" v-bind:value="permissions_master_data.id" v-model="setting_otoritas.master_data"> {{permissions_master_data.display_name}}
-              </label>
-            </div>
-            <!-- Master Data -->
+            <!-- Pembelian  -->           
 
           </div>
 
@@ -181,14 +182,6 @@
               </label>
             </div>
             <!-- Kategori Kas  -->
-            <!-- laporan_persediaan -->
-            <b>Laporan Persediaan</b>
-            <div class="checkbox" v-for="permissions_laporan_persediaan, index in permission_laporan_persediaan">
-              <label>
-                <input type="checkbox" name="setting_laporan_persediaan" v-bind:value="permissions_laporan_persediaan.id" v-model="setting_otoritas.laporan_persediaan"> {{permissions_laporan_persediaan.display_name}}
-              </label>
-            </div>
-            <!--end laporan persediaan -->
           </div>
 
         </div>
@@ -222,6 +215,23 @@
               </label>
             </div>
             <!-- satuan  -->
+            <!-- Master Data -->
+            <b>Master Data</b>
+            <div class="checkbox" v-for="permissions_master_data, index in permission_master_data">
+              <label>
+                <input type="checkbox" name="setting_otoritas" v-bind:value="permissions_master_data.id" v-model="setting_otoritas.master_data"> {{permissions_master_data.display_name}}
+              </label>
+            </div>
+            <!-- Master Data -->
+            
+            <!-- laporan_persediaan -->
+            <b>Laporan Persediaan</b>
+            <div class="checkbox" v-for="permissions_laporan_persediaan, index in permission_laporan_persediaan">
+              <label>
+                <input type="checkbox" name="setting_laporan_persediaan" v-bind:value="permissions_laporan_persediaan.id" v-model="setting_otoritas.laporan_persediaan"> {{permissions_laporan_persediaan.display_name}}
+              </label>
+            </div>
+            <!--end laporan persediaan -->
           </div>
           <div class="col-sm-2">     
 
@@ -272,7 +282,7 @@
 
 
         <center>     <vue-simple-spinner v-if="loading"></vue-simple-spinner></center>
-        <button class="btn btn-primary" id="btnSimpanOtoritas" type="submit" v-on:click="submitOtoritas()"><i class="material-icons">send</i> Simpan</button>
+        <button v-if="seen" class="btn btn-primary" id="btnSimpanOtoritas" type="submit" v-on:click="submitOtoritas()"><i class="material-icons">send</i> Simpan</button>
 
       </div>
     </div>
@@ -340,6 +350,7 @@ export default {
       supplier : [],
     },
     nama_otoritas : '',
+    pilih_semua : false,
     url : window.location.origin+(window.location.pathname).replace("dashboard", "otoritas"),
     pencarian: '',
     loading: true,
@@ -460,15 +471,185 @@ methods: {
       alert("Tidak Bisa Menyimpan Otoritas");
     });
   },
-  alert(pesan) { 
-    this.$swal({ 
-      title: "Berhasil!", 
-      text: pesan, 
-      icon: "success", 
-      buttons: false,
-      timer: 1000,
-    }); 
-  }, 
-}
-}
-</script>
+  pilihSemua(){
+
+    var app = this
+    var pilih_semua = app.pilih_semua
+    app.removeValue()
+    if (pilih_semua == true) {
+
+        // OTORITAS LAPORAN
+        $.each(app.permission_laporan, function (i, item) { 
+          app.setting_otoritas.laporan.push(app.permission_laporan[i].id)     
+        });
+
+        // OTORITAS USER
+        $.each(app.permission_user, function (i, item) {
+          app.setting_otoritas.user.push(app.permission_user[i].id)
+        });
+
+        // OTORITAS OTORITAS
+        $.each(app.permission_otoritas, function (i, item) {
+          app.setting_otoritas.otoritas.push(app.permission_otoritas[i].id)
+        });
+
+        // OTORITAS BANK
+        $.each(app.permission_bank, function (i, item) { 
+          app.setting_otoritas.bank.push(app.permission_bank[i].id)     
+        });
+
+        // OTORITAS CUSTOMER
+        $.each(app.permission_customer, function (i, item) { 
+          app.setting_otoritas.customer.push(app.permission_customer[i].id)     
+        });
+
+        // OTORITAS MASTER DATA
+        $.each(app.permission_master_data, function (i, item) { 
+          app.setting_otoritas.master_data.push(app.permission_master_data[i].id)     
+        });
+
+        // OTORITAS ITEM MASUK
+        $.each(app.permission_item_masuk, function (i, item) { 
+          app.setting_otoritas.item_masuk.push(app.permission_item_masuk[i].id)     
+        });
+
+        // OTORITAS ITEM KELUAR
+        $.each(app.permission_item_keluar, function (i, item) { 
+          app.setting_otoritas.item_keluar.push(app.permission_item_keluar[i].id)     
+        });
+
+        // OTORITAS KAS
+        $.each(app.permission_kas, function (i, item) { 
+          app.setting_otoritas.kas.push(app.permission_kas[i].id)     
+        });
+
+        // OTORITAS KAS MASUK
+        $.each(app.permission_kas_masuk, function (i, item) { 
+          app.setting_otoritas.kas_masuk.push(app.permission_kas_masuk[i].id)     
+        });
+
+        // OTORITAS KAS KELUAR
+        $.each(app.permission_kas_keluar, function (i, item) { 
+          app.setting_otoritas.kas_keluar.push(app.permission_kas_keluar[i].id)     
+        });
+
+        // OTORITAS KAS MUTASI
+        $.each(app.permission_kas_mutasi, function (i, item) { 
+          app.setting_otoritas.kas_mutasi.push(app.permission_kas_mutasi[i].id)     
+        });
+
+        // OTORITAS KATEGORI KAS
+        $.each(app.permission_kategori_kas, function (i, item) { 
+          app.setting_otoritas.kategori_kas.push(app.permission_kategori_kas[i].id)     
+        });
+
+        // OTORITAS KELOMPOK PRODUK
+        $.each(app.permission_kelompok_produk, function (i, item) { 
+          app.setting_otoritas.kelompok_produk.push(app.permission_kelompok_produk[i].id)     
+        });
+
+        // OTORITAS LAPORAN PERSEDIAAN
+        $.each(app.permission_laporan_persediaan, function (i, item) { 
+          app.setting_otoritas.laporan_persediaan.push(app.permission_laporan_persediaan[i].id)     
+        });
+
+        // OTORITAS PEMBAYARAN PIUTANG
+        $.each(app.permission_pembayaran_piutang, function (i, item) { 
+          app.setting_otoritas.pembayaran_piutang.push(app.permission_pembayaran_piutang[i].id)     
+        });
+
+        // OTORITAS PEMBAYARAN HUTANG
+        $.each(app.permission_pembayaran_hutang, function (i, item) { 
+          app.setting_otoritas.pembayaran_hutang.push(app.permission_pembayaran_hutang[i].id)     
+        });
+
+        // OTORITAS PEMBELIAN
+        $.each(app.permission_pembelian, function (i, item) { 
+          app.setting_otoritas.pembelian.push(app.permission_pembelian[i].id)     
+        });
+
+        // OTORITAS PENJUALAN
+        $.each(app.permission_penjualan, function (i, item) { 
+          app.setting_otoritas.penjualan.push(app.permission_penjualan[i].id)     
+        });
+
+        // OTORITAS PESANAN
+        $.each(app.permission_pesanan, function (i, item) { 
+          app.setting_otoritas.pesanan.push(app.permission_pesanan[i].id)     
+        });
+
+        // OTORITAS PRODUK
+        $.each(app.permission_produk, function (i, item) { 
+          app.setting_otoritas.produk.push(app.permission_produk[i].id)     
+        });
+
+        // OTORITAS SATUAN
+        $.each(app.permission_satuan, function (i, item) { 
+          app.setting_otoritas.satuan.push(app.permission_satuan[i].id)     
+        });
+
+        // OTORITAS SETTING
+        $.each(app.permission_setting, function (i, item) { 
+          app.setting_otoritas.setting.push(app.permission_setting[i].id)
+        });
+
+        // OTORITAS STOK OPNAME
+        $.each(app.permission_stok_opname, function (i, item) { 
+          app.setting_otoritas.stok_opname.push(app.permission_stok_opname[i].id)
+        });
+
+        // OTORITAS SUPPLIER
+        $.each(app.permission_supplier, function (i, item) { 
+          app.setting_otoritas.supplier.push(app.permission_supplier[i].id)
+        });
+
+
+      }else{
+        // REMOVE VALUE ARRAY SETTING OTORITAS
+        app.removeValue()
+      }
+      console.log(app.setting_otoritas)
+
+
+    },
+    removeValue(){
+      var app = this
+        // REMOVE VALUE ARRAY SETTING OTORITAS
+        app.setting_otoritas.laporan.splice(0)
+        app.setting_otoritas.user.splice(0)
+        app.setting_otoritas.otoritas.splice(0)
+        app.setting_otoritas.bank.splice(0)
+        app.setting_otoritas.customer.splice(0)
+        app.setting_otoritas.master_data.splice(0)
+        app.setting_otoritas.item_masuk.splice(0)
+        app.setting_otoritas.item_keluar.splice(0)
+        app.setting_otoritas.kas.splice(0)
+        app.setting_otoritas.kas_masuk.splice(0)
+        app.setting_otoritas.kas_keluar.splice(0)
+        app.setting_otoritas.kas_mutasi.splice(0)
+        app.setting_otoritas.kategori_kas.splice(0)
+        app.setting_otoritas.kelompok_produk.splice(0)
+        app.setting_otoritas.laporan_persediaan.splice(0)
+        app.setting_otoritas.pembayaran_piutang.splice(0)
+        app.setting_otoritas.pembayaran_hutang.splice(0)
+        app.setting_otoritas.pembelian.splice(0)
+        app.setting_otoritas.penjualan.splice(0)
+        app.setting_otoritas.pesanan.splice(0)
+        app.setting_otoritas.produk.splice(0)
+        app.setting_otoritas.satuan.splice(0)
+        app.setting_otoritas.setting.splice(0)
+        app.setting_otoritas.stok_opname.splice(0)
+        app.setting_otoritas.supplier.splice(0)
+      },
+      alert(pesan) { 
+        this.$swal({ 
+          title: "Berhasil!", 
+          text: pesan, 
+          icon: "success", 
+          buttons: false,
+          timer: 1000,
+        }); 
+      }, 
+    }
+  }
+  </script>
