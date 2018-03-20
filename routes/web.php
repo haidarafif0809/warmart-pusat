@@ -238,7 +238,6 @@ Route::post('/edit-jumlah-pesanan-warung}', [
 ]);
 
 Route::get('/pesanan-warung/cetak-kecil-penjualan/{id}', 'PesananWarungController@cetakKecil')->middleware('auth');
-Route::get('/pesanan-warung/cetak-kecil-pesanan/{id}', 'PesananWarungController@cetakKecilPesanan')->middleware('auth');
 
 //PUNYA
 
