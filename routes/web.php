@@ -237,7 +237,6 @@ Route::post('/edit-jumlah-pesanan-warung}', [
 ]);
 
 Route::get('/pesanan-warung/cetak-kecil-penjualan/{id}', 'PesananWarungController@cetakKecil')->middleware('auth');
-Route::get('/pesanan-warung/cetak-kecil-pesanan/{id}', 'PesananWarungController@cetakKecilPesanan')->middleware('auth');
 
 //PUNYA
 
@@ -559,6 +558,7 @@ Route::get('/pembelian/cetak-besar-pembelian/{id}', 'PembelianController@cetakBe
 Route::get('/pembelian/subtotal-tbs-pembelian/{jenis_tbs}', 'PembelianController@cekSubtotalTbsPembelian')->middleware('auth');
 Route::post('/pembelian/import-excel', 'PembelianController@importExcel')->middleware('auth');
 Route::get('/pembelian/template-excel', 'PembelianController@templateExcel')->middleware('auth');
+Route::get('/pembelian/satuan-konversi/{id_produk}', 'PembelianController@dataSatuanProduk')->middleware('auth');
 
 //Edit Pembelian
 Route::get('/edit-pembelian/proses-tambah-tbs-pembelian', 'EditPembelianController@proses_tambah_tbs_pembelian')->middleware('auth');

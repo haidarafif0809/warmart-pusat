@@ -232,7 +232,7 @@
         <button type="button" class="close" data-dismiss="modal"> <i class="material-icons">close</i></button> 
         <h4 class="modal-title"> 
           <div class="alert-icon"> 
-            <b>Setting Penjualan POS</b> 
+            <b>Setting Penjualan POS</b>
           </div> 
         </h4> 
       </div> 
@@ -249,9 +249,9 @@
                   <td class="text-primary">
                     <div class="togglebutton">
                       <label>
-                        <input type="checkbox" v-model="setting_penjualan_pos.jumlah_produk">
-                        <b v-if="setting_penjualan_pos.jumlah_produk == 1">Ya</b>
-                        <b v-if="setting_penjualan_pos.jumlah_produk == 0">Tidak</b>
+                        <input type="checkbox" v-model="setting_penjualan_pos.jumlah_produk" v-bind:value="1">
+                        <b v-if="setting_penjualan_pos.jumlah_produk == true">Ya</b>
+                        <b v-if="setting_penjualan_pos.jumlah_produk == false">Tidak</b>
                       </label>
                     </div> 
                   </td>
@@ -263,9 +263,9 @@
                   <td class="text-primary">
                     <div class="togglebutton">
                       <label>
-                        <input type="checkbox" v-model="setting_penjualan_pos.stok">
-                        <b v-if="setting_penjualan_pos.stok == 1">Ya</b>
-                        <b v-if="setting_penjualan_pos.stok == 0">Tidak</b>
+                        <input type="checkbox" v-model="setting_penjualan_pos.stok" v-bind:value="1">
+                        <b v-if="setting_penjualan_pos.stok == true">Ya</b>
+                        <b v-if="setting_penjualan_pos.stok == false">Tidak</b>
                       </label>
                     </div>  
                   </td>
@@ -483,8 +483,8 @@ export default {
         kredit: 0,
       }, 
       setting_penjualan_pos :{
-        jumlah_produk : 1,
-        stok : 0,
+        jumlah_produk : true,
+        stok : true,
         harga_jual : 1
       },
       placeholder_produk: {
@@ -714,9 +714,11 @@ export default {
       var app = this;
       var produk = app.inputTbsPenjualan.produk.split("|");
       var nama_produk = produk[1];
+      var jumlah_produk = 1;
 
-      if (this.setting_penjualan_pos.jumlah_produk == 1) {
-        this.submitProdukPenjualan(this.setting_penjualan_pos.jumlah_produk);
+      if (this.setting_penjualan_pos.jumlah_produk == 1 || this.setting_penjualan_pos.jumlah_produk == true) {
+
+        this.submitProdukPenjualan(jumlah_produk);
       }else{
         //this.isiJumlahProduk(nama_produk);//
         this.inputJumlahProduk(nama_produk);
@@ -800,7 +802,7 @@ isiJumlahProduk(nama_produk){
 
   }).then((value) => {
     if (value == ''){
-      value = app.setting_penjualan_pos.jumlah_produk
+      value = 1
     }
     this.submitProdukPenjualan(value);
   });
@@ -1133,58 +1135,60 @@ prosesSelesaiPenjualan(value){
   app.loading = true;
 
   if (app.penjualan.kas == '') { 
-    swal({
-      text: 'Cara Bayar Belum Dipilih!!'
-      }).then((result) => {
+
+    app.loading = false;    
+    app.$swal("Cara Bayar Belum Dipilih!!")
+    .then((value) => {
       app.openSelectizeKas();
     });
+    
   }else{
-  axios.post(app.url,newPenjualan)
-  .then(function (resp) {
+    axios.post(app.url,newPenjualan)
+    .then(function (resp) {
 
-    if (resp.data == 0) {
+      if (resp.data == 0) {
 
-      app.alertTbs("Anda Belum Memasukan Produk");
+        app.alertTbs("Anda Belum Memasukan Produk");
+        app.loading = false;
+
+      }
+      else if(resp.data.respons == 1){
+
+        app.alertTbs("Gagal : Stok " + resp.data.nama_produk + " Tidak Mencukupi Untuk di Jual, Sisa Produk = "+resp.data.stok_produk);
+        app.loading = false;
+
+      }else if(resp.data.respons == 2){
+
+        app.alertTbs("Gagal : Terjadi Kesalahan , Silakan Coba Lagi!");
+        app.loading = false;
+
+      }else{
+
+        app.getResults();
+        app.alert("Menyelesaikan Transaksi Penjualan");
+        app.penjualan.pelanggan = 0
+        app.penjualan.subtotal = 0
+        app.penjualan.jatuh_tempo = ''
+        app.penjualan.potongan_persen = 0
+        app.penjualan.potongan_faktur = 0
+        app.penjualan.total_akhir = 0
+        app.penjualan.pembayaran = 0
+        app.inputTbsPenjualan.produk = ''   
+        app.hitungKembalian(app.penjualan.pembayaran)
+        $("#modal_selesai").hide();
+        window.open('penjualan/cetak-kecil-penjualan/'+resp.data.respons_penjualan,'_blank');
+        app.loading = false;
+
+      }
+
+    })
+    .catch(function (resp) {  
+
+      console.log(resp);              
       app.loading = false;
-
-    }
-   else if(resp.data.respons == 1){
-
-      app.alertTbs("Gagal : Stok " + resp.data.nama_produk + " Tidak Mencukupi Untuk di Jual, Sisa Produk = "+resp.data.stok_produk);
-      app.loading = false;
-
-    }else if(resp.data.respons == 2){
-
-      app.alertTbs("Gagal : Terjadi Kesalahan , Silakan Coba Lagi!");
-      app.loading = false;
-
-    }else{
-
-      app.getResults();
-      app.alert("Menyelesaikan Transaksi Penjualan");
-      app.penjualan.pelanggan = 0
-      app.penjualan.subtotal = 0
-      app.penjualan.jatuh_tempo = ''
-      app.penjualan.potongan_persen = 0
-      app.penjualan.potongan_faktur = 0
-      app.penjualan.total_akhir = 0
-      app.penjualan.pembayaran = 0
-      app.inputTbsPenjualan.produk = ''   
-      app.hitungKembalian(app.penjualan.pembayaran)
-      $("#modal_selesai").hide();
-      window.open('penjualan/cetak-kecil-penjualan/'+resp.data.respons_penjualan,'_blank');
-      app.loading = false;
-
-    }
-
-  })
-  .catch(function (resp) {  
-
-    console.log(resp);              
-    app.loading = false;
-    alert("Tidak dapat Menyelesaikan Transaksi Penjualan");        
-    app.errors = resp.response.data.errors;
-  });
+      alert("Tidak dapat Menyelesaikan Transaksi Penjualan");        
+      app.errors = resp.response.data.errors;
+    });
   }
 
 },
