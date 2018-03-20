@@ -77,7 +77,6 @@ Route::get('/daftar-produk', [
 ]);
 
 Route::get('/daftar-produk/{id}', [
-    'middleware' => ['auth'],
     'as'         => 'daftar_produk.filter_kategori',
     'uses'       => 'DaftarProdukController@filter_kategori',
 ]);

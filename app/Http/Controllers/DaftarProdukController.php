@@ -120,11 +120,27 @@ public static function produkKategori($kategori)
 
 public static function filter_kategori($id)
 {
-    $keranjang_belanjaan = KeranjangBelanja::with(['produk', 'pelanggan'])->where('id_pelanggan', Auth::user()->id);
-    $cek_belanjaan       = $keranjang_belanjaan->count();
-    if ($cek_belanjaan > 0) {
-        $warung_yang_dipesan = $keranjang_belanjaan->first()->produk->id_warung;
+
+    if(!Session::get('session_id')){
+        $session_id    = session()->getId();
+    }else{
+        $session_id = Session::get('session_id');
     }
+
+    if (Auth::check() == false) {
+        $keranjang_belanjaan = KeranjangBelanja::where('session_id', $session_id);
+        if ($keranjang_belanjaan->count() > 0) {
+            $warung_yang_dipesan = $keranjang_belanjaan->first()->produk->id_warung;
+        }
+        $cek_belanjaan = $keranjang_belanjaan->count();
+    } else {
+        $keranjang_belanjaan = KeranjangBelanja::where('id_pelanggan', Auth::user()->id);
+        if ($keranjang_belanjaan->count() > 0) {
+            $warung_yang_dipesan = $keranjang_belanjaan->first()->produk->id_warung;
+        }
+        $cek_belanjaan = $keranjang_belanjaan->count();
+    }
+
 
     if (isset($warung_yang_dipesan)) {
         $data_produk = Barang::select(['id', 'kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung', 'konfirmasi_admin', 'satuan_id', 'hitung_stok', 'status_aktif'])
