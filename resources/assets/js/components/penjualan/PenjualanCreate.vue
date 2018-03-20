@@ -539,7 +539,7 @@ export default {
       app.$store.dispatch('LOAD_PELANGGAN_LIST')
       app.$store.dispatch('LOAD_KAS_LIST')  
       app.dataSettingPenjualanPos()
-      app.getResults()   
+      app.getResults()  
     },
     computed : mapState ({    
       produk(){
@@ -660,9 +660,9 @@ export default {
     .then(function (resp) {
       app.tbs_penjualan = resp.data
       app.loading = false;
-      app.seen = true;      
+      app.seen = true;
+      app.penjualan.kas = app.default_kas    
       app.openSelectizeProduk();
-      app.penjualan.kas = app.default_kas
       if (app.penjualan.subtotal == 0) { 
        $.each(resp.data, function (i, item) {
         app.penjualan.subtotal += parseFloat(resp.data[i].subtotal)
