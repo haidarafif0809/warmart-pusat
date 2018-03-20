@@ -77,8 +77,8 @@ Route::get('/daftar-produk', [
 ]);
 
 Route::get('/daftar-produk/{id}', [
-    'as'         => 'daftar_produk.filter_kategori',
-    'uses'       => 'DaftarProdukController@filter_kategori',
+    'as'   => 'daftar_produk.filter_kategori',
+    'uses' => 'DaftarProdukController@filter_kategori',
 ]);
 
 Route::get('/daftar-produk/pencarian/search', [
@@ -483,6 +483,7 @@ Route::get('/produk/pilih-produk', 'BarangController@pilihProduk')->middleware('
 Route::get('/produk/pilih-agent', 'BarangController@data_agent')->middleware('auth');
 Route::get('/produk/template-excel', 'BarangController@downloadTemplate')->middleware('auth');
 Route::post('/produk/import-excel/', 'BarangController@importExcel')->middleware('auth');
+Route::get('/produk/export-excel', 'BarangController@downloadExcel')->middleware('auth');
 Route::post('/produk/satuan-konversi', 'BarangController@satuanKonversi')->middleware('auth');
 Route::get('/produk/data-satuan-konversi/{id}', 'BarangController@editSatuanKonversi')->middleware('auth');
 Route::post('/produk/update-satuan-konversi/{id}', 'BarangController@prosesEditSatuanKonversi')->middleware('auth');
@@ -755,7 +756,7 @@ Route::post('/laporan-kartu-stok/pencarian', 'LaporanKartuStokController@pencari
 Route::get('/laporan-kartu-stok/pilih-produk', 'LaporanKartuStokController@dataProduk')->middleware('auth');
 Route::post('/laporan-kartu-stok/total-saldo-awal', 'LaporanKartuStokController@totalSaldoAwal')->middleware('auth');
 Route::post('/laporan-kartu-stok/total-saldo-akhir', 'LaporanKartuStokController@totalSaldoAkhir')->middleware('auth');
-Route::get('/laporan-kartu-stok/download-excel-kartu-stok/{dari_tanggal}/{sampai_tanggal}/{produk}', 'LaporanKartuStokController@downloadExcel')->middleware('auth');
+Route::get('/laporan-kartu-stok/download-excel-kastokrtu-/{dari_tanggal}/{sampai_tanggal}/{produk}', 'LaporanKartuStokController@downloadExcel')->middleware('auth');
 Route::get('/laporan-kartu-stok/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{produk}', 'LaporanKartuStokController@cetakLaporan')->middleware('auth');
 
 // GRAFIK JAM TRANSAKSI PENJUALAN
@@ -904,12 +905,11 @@ Route::get('/user-kasir/pencarian', 'UserKasirController@pencarian')->middleware
 
 // LAPORAN BUCKET SIZE VUE.JS
 Route::get('/laporan-bucket-size/view/{dari_tanggal}/{sampai_tanggal}/{kelipatan}', 'LaporanBucketSizeController@prosesLaporanBucketSize')->middleware('auth');
-Route::get('/laporan-bucket-size-online/view/{dari_tanggal}/{sampai_tanggal}/{kelipatan}','LaporanBucketSizeController@prosesLaporanBucketSizeOnline')->middleware('auth');
+Route::get('/laporan-bucket-size-online/view/{dari_tanggal}/{sampai_tanggal}/{kelipatan}', 'LaporanBucketSizeController@prosesLaporanBucketSizeOnline')->middleware('auth');
 Route::post('/laporan-bucket-size/view-pos-data', 'LaporanBucketSizeController@prosesLaporanBucketSizeData')->middleware('auth');
 Route::post('/laporan-bucket-size/view-online-data', 'LaporanBucketSizeController@prosesLaporanBucketSizeOnlineData')->middleware('auth');
-Route::get('/laporan-bucket-size/download-excel-pos/{dari_tanggal}/{sampai_tanggal}/{kelipatan}', 'LaporanBucketSizeController@downloadLaporanPos')->middleware('auth'); 
-Route::get('/laporan-bucket-size/download-excel-online/{dari_tanggal}/{sampai_tanggal}/{kelipatan}', 'LaporanBucketSizeController@downloadLaporanOnline')->middleware('auth'); 
-
+Route::get('/laporan-bucket-size/download-excel-pos/{dari_tanggal}/{sampai_tanggal}/{kelipatan}', 'LaporanBucketSizeController@downloadLaporanPos')->middleware('auth');
+Route::get('/laporan-bucket-size/download-excel-online/{dari_tanggal}/{sampai_tanggal}/{kelipatan}', 'LaporanBucketSizeController@downloadLaporanOnline')->middleware('auth');
 
 // LAPORAN PENJUALAN HARIAN VUE.JS
 Route::get('/laporan-penjualan-harian/view/{dari_tanggal}/{sampai_tanggal}', 'LaporanPenjualanHarianController@prosesLaporanPenjualanHarian')->middleware('auth');
