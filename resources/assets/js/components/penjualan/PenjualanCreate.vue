@@ -1132,6 +1132,13 @@ prosesSelesaiPenjualan(value){
   var newPenjualan = app.penjualan;
   app.loading = true;
 
+  if (app.penjualan.kas == '') { 
+    swal({
+      text: 'Cara Bayar Belum Dipilih!!'
+      }).then((result) => {
+      app.openSelectizeKas();
+    });
+  }else{
   axios.post(app.url,newPenjualan)
   .then(function (resp) {
 
@@ -1140,7 +1147,8 @@ prosesSelesaiPenjualan(value){
       app.alertTbs("Anda Belum Memasukan Produk");
       app.loading = false;
 
-    }else if(resp.data.respons == 1){
+    }
+   else if(resp.data.respons == 1){
 
       app.alertTbs("Gagal : Stok " + resp.data.nama_produk + " Tidak Mencukupi Untuk di Jual, Sisa Produk = "+resp.data.stok_produk);
       app.loading = false;
@@ -1177,6 +1185,7 @@ prosesSelesaiPenjualan(value){
     alert("Tidak dapat Menyelesaikan Transaksi Penjualan");        
     app.errors = resp.response.data.errors;
   });
+  }
 
 },
 simpanSetting(){
