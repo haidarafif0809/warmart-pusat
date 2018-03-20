@@ -48,6 +48,26 @@ first();
   src: url("//applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-thin-webfont.woff2");
 }
 
+     /*style untuk kategori*/ 
+      .nav .open>a, .nav .open>a:hover, .nav .open>a:focus{
+        background-color: #2ac326;
+      }
+      .card .card-content {
+        padding: 0px 30px;
+      }
+      .card-form-horizontal .card-content {
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-top: 10px;
+    }
+    .nav-tabs {
+        background: #2ac326;
+        border: 0;
+        border-radius: 3px;
+        padding: 9 15px;
+    }
+    /*style untuk kategori*/
+
 .flexFont {
     @if(Agent::isMobile())
     height:3em;
@@ -123,6 +143,13 @@ h4 {
     <div class="container">
         <h3 class="title text-center">{!! $nama_kategori !!}</h3>
         {!! $list_warung !!}
+        <div class="row">
+                <div class="col-sm-3">
+                    <ul class="nav nav-tabs buttonColor" data-tabs="tabs">
+                            {!! $kategori_produk !!}
+                    </ul>
+                </div>
+        <div class="col-sm-9">
         <div class="card card-raised card-form-horizontal">
             <div class="card-content">
                 {!! Form::open(['url' => route('halaman_warung.pencarian'),'method' => 'get', 'class'=>'form-horizontal']) !!}
@@ -138,12 +165,13 @@ h4 {
                     </div>
                     <div class="col-sm-2">
                         <button type="submit" class="btn btn-block buttonColor">Cari</button>
+                       </div>
+                        </div>
+                     </div>
                     </div>
+                    {!! Form::close() !!}
                 </div>
-                {!! Form::close() !!}
             </div>
-        </div>
-
         <div class="row">
           <div class="col-md-12">
             <!--Menampilkan Warung Secara Acak-->
@@ -152,31 +180,6 @@ h4 {
     </div>
 
     <div class="row">
-        <div class="col-md-12">
-            <div class="panel panel-default">
-                <div class="panel-heading" role="tab" id="headingTwo">
-                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                        <h4 class="title">
-                            KATEGORI
-                            <i class="material-icons">keyboard_arrow_down</i>
-                        </h4>
-                    </a>
-                </div>
-                <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-                    <div class="panel-body">
-
-                        <ul class="nav" class="buttonColor">
-                            <li><a style="color:white" href="{{route('halaman-warung.halaman_warung',$id)}}"><i class="material-icons">format_align_justify</i> SEMUA KATEGORI</a></li>
-                        </ul>
-
-                        <ul class="nav buttonColor">
-                            {!! $kategori_produk !!}
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div class="col-md-12"><br>
             <div class="row ">
                 <!-- Menampilkan Produk -->
@@ -219,6 +222,13 @@ h4 {
         <div class="container">
             <h3 class="title text-center">{!! $nama_kategori !!}</h3>
             {!! $list_warung !!}
+            <div class="row">
+                <div class="col-sm-3">
+                    <ul class="nav nav-tabs buttonColor" data-tabs="tabs">
+                            {!! $kategori_produk !!}
+                    </ul>
+                </div>
+            <div class="col-sm-9">
             <div class="card card-raised card-form-horizontal">
                 <div class="card-content">
                     {!! Form::open(['url' => route('halaman_warung.pencarian'),'method' => 'get', 'class'=>'form-horizontal']) !!}
@@ -235,32 +245,19 @@ h4 {
                         </div>
                         <div class="col-sm-2">
                             <button type="submit" class="btn btn-block buttonColor">Cari</button>
+                           </div>
                         </div>
+                     </div>
                     </div>
                     {!! Form::close() !!}
                 </div>
             </div>
-
             <div class="row">
 
                 <!--Menampilkan NAMA Warung -->
                 <div class="col-md-12">
                     <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px"> Produk </h5>
                 </div>
-
-                <div class="col-md-3">
-                    <ul class="nav nav-tabs buttonColor" data-tabs="tabs">
-                        <li><a href="{{route('halaman-warung.halaman_warung',$id)}}"><i class="material-icons">format_align_justify</i> Semua Kategori</a></li>
-                    </ul>
-                </div>
-
-
-                <div class="col-md-9">
-                    <ul class="nav nav-tabs buttonColor" data-tabs="tabs">
-                        {!! $kategori_produk !!}
-                    </ul>
-                </div>
-
                 <div class="col-md-12"><br>
                     <div class="row">
                         <!-- Menampilkan Produk -->

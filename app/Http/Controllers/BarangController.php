@@ -722,4 +722,51 @@ class BarangController extends Controller
         }
     }
 
+    // DOWNLOAD EXCEL DAFTAR PRODUK
+    public function downloadExcel()
+    {
+
+        $produks = Barang::select()->get();
+        Excel::create('Daftar Produk', function ($excel) use ($produks) {
+
+            $excel->sheet("Produk", function ($sheet) use ($produks) {
+
+                $row = 1;
+                $sheet->row($row, [
+                    'Barcode',
+                    'Nama',
+                    'Satuan',
+                    'Harga Beli',
+                    'Harga Jual 1',
+                    'Harga Jual 2',
+                    'Status',
+                    'Kategori',
+                ]);
+
+                foreach ($produks as $produk) {
+
+                    $satuan          = Satuan::where('id', $produk->satuan_id)->first();
+                    $harga_beli      = (is_null($produk->harga_beli) ? 0 : $produk->harga_beli);
+                    $harga_jual      = (is_null($produk->harga_jual) ? 0 : $produk->harga_jual);
+                    $harga_jual      = (is_null($produk->harga_jual) ? 0 : $produk->harga_jual);
+                    $harga_jual2     = (is_null($produk->harga_jual2) ? 0 : $produk->harga_jual2);
+                    $status_aktif    = ($produk->status_aktif == 1 ? 'Aktif' : 'Tidak Aktif');
+                    $kategori_produk = KategoriBarang::where('id', $produk->kategori_barang_id)->first();
+
+                    $sheet->row(++$row, [
+
+                        // convert to integer
+                        (int) $produk->kode_barcode,
+                        $produk->nama_barang,
+                        $satuan->nama_satuan,
+                        $harga_beli,
+                        $harga_jual,
+                        $harga_jual2,
+                        $status_aktif,
+                        $kategori_produk->nama_kategori_barang,
+                    ]);
+                }
+            });
+        })->export('xls');
+    }
 }

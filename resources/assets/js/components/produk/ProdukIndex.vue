@@ -1,11 +1,11 @@
     <style scoped>
-        .pencarian {
-            color: red; 
-            float: right;
-        }
-        .v-step__content[data-v-fca314f4] {
-            margin: 0;
-        }
+    .pencarian {
+        color: red; 
+        float: right;
+    }
+    .v-step__content[data-v-fca314f4] {
+        margin: 0;
+    }
     </style>
 
     <template>  
@@ -74,102 +74,105 @@
                                 <div class="panel panel-default">
                                     <router-link :to="urlForm" class="btn btn-primary" id="step-0"><i class="material-icons">add</i>  Produk</router-link>
 
+                                    <!-- IMPORT EXCEL -->
                                     <button id="btnFilter" class="btn btn-info" data-toggle="modal" data-target="#modal_import">
                                         <i class="material-icons">file_upload</i> Import Excel
                                     </button>
+
+                                    <!--DOWNLOAD EXCEL-->
+                                    <a href="#" class='btn btn-warning' id="btnExcel" target='blank'><i class="material-icons">file_download</i> Download Excel</a>                                </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <br>
-                        <div class=" table-responsive ">
-                            <div class="pencarian">
-                                <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control" autocomplete="">
+                            <br>
+                            <div class=" table-responsive ">
+                                <div class="pencarian">
+                                    <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control" autocomplete="">
+                                </div>
+
+                                <table class="table table-striped table-hover ">
+                                    <thead class="text-primary">
+                                        <tr>
+                                            <th>Barcode</th>
+                                            <th>Kode</th>
+                                            <th>Nama</th>
+                                            <th>Satuan</th>
+                                            <th>Harga Beli</th>
+                                            <th>Harga Jual 1</th>
+                                            <th>Harga Jual 2</th>
+                                            <th>Status</th>
+                                            <th>Kategori</th>
+                                            <th id="step-1">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody v-if="produk.length"  class="data-ada">
+                                        <tr v-for="produk, index in produk" >
+                                            <td>{{ produk.produk.kode_barcode }}</td>
+                                            <td>{{ produk.produk.kode_barang }}</td>
+                                            <td>{{ produk.nama_produk }}</td>
+                                            <td>{{ produk.produk.satuan.nama_satuan}}</td>
+                                            <td>{{ produk.harga_beli }}</td>
+                                            <td>{{ produk.harga_jual }}</td>
+                                            <td>{{ produk.harga_jual2 }}</td>
+                                            <td v-if="produk.produk.status_aktif == 1">Aktif</td>
+                                            <td v-else>Tidak Aktif</td>
+                                            <td>{{ produk.produk.kategori_barang.nama_kategori_barang }}</td>
+                                            <td>
+
+                                                <a :href="urlLihat+produk.produk.id" class="btn btn-xs btn-info" id="lihatDeskripsi" type="button"> Deskripsi</a>
+
+                                                <router-link :to="{name: 'editProduk', params: {id: produk.produk.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + produk.produk.id" > Edit
+                                                </router-link>
+
+                                                <a v-if="produk.status_produk == 0" href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + produk.produk.id" v-on:click="deleteEntry(produk.produk.id, index, produk.nama_produk)">Delete
+                                                </a>
+
+                                                <a v-else href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + produk.produk.id" v-on:click="gagalHapus(produk.produk.id, index, produk.prosnama_produk)">Delete
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </tbody>                    
+                                    <tbody class="data-tidak-ada" v-else>
+                                        <tr ><td colspan="9"  class="text-center">Tidak Ada Data</td></tr>
+                                    </tbody>
+                                </table>    
+
+                                <vue-simple-spinner v-if="loading"></vue-simple-spinner>
+
+                                <div align="right"><pagination :data="produkData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
+
                             </div>
 
-                            <table class="table table-striped table-hover ">
-                                <thead class="text-primary">
-                                    <tr>
-                                        <th>Barcode</th>
-                                        <th>Kode</th>
-                                        <th>Nama</th>
-                                        <th>Satuan</th>
-                                        <th>Harga Beli</th>
-                                        <th>Harga Jual 1</th>
-                                        <th>Harga Jual 2</th>
-                                        <th>Status</th>
-                                        <th>Kategori</th>
-                                        <th id="step-1">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody v-if="produk.length"  class="data-ada">
-                                    <tr v-for="produk, index in produk" >
-                                        <td>{{ produk.produk.kode_barcode }}</td>
-                                        <td>{{ produk.produk.kode_barang }}</td>
-                                        <td>{{ produk.nama_produk }}</td>
-                                        <td>{{ produk.produk.satuan.nama_satuan}}</td>
-                                        <td>{{ produk.harga_beli }}</td>
-                                        <td>{{ produk.harga_jual }}</td>
-                                        <td>{{ produk.harga_jual2 }}</td>
-                                        <td v-if="produk.produk.status_aktif == 1">Aktif</td>
-                                        <td v-else>Tidak Aktif</td>
-                                        <td>{{ produk.produk.kategori_barang.nama_kategori_barang }}</td>
-                                        <td>
-
-                                            <a :href="urlLihat+produk.produk.id" class="btn btn-xs btn-info" id="lihatDeskripsi" type="button"> Deskripsi</a>
-
-                                            <router-link :to="{name: 'editProduk', params: {id: produk.produk.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + produk.produk.id" > Edit
-                                            </router-link>
-
-                                            <a v-if="produk.status_produk == 0" href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + produk.produk.id" v-on:click="deleteEntry(produk.produk.id, index, produk.nama_produk)">Delete
-                                            </a>
-
-                                            <a v-else href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + produk.produk.id" v-on:click="gagalHapus(produk.produk.id, index, produk.prosnama_produk)">Delete
-                                            </a>
-                                        </td>
-                                    </tr>
-                                </tbody>                    
-                                <tbody class="data-tidak-ada" v-else>
-                                    <tr ><td colspan="9"  class="text-center">Tidak Ada Data</td></tr>
-                                </tbody>
-                            </table>    
-
-                            <vue-simple-spinner v-if="loading"></vue-simple-spinner>
-
-                            <div align="right"><pagination :data="produkData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
-
-                        </div>
-
-                        <v-tour name="myTour" :steps="steps">
-                            <template slot-scope="tour">
-                                <transition name="fade">
-                                    <v-step
-                                    v-if="tour.currentStep === index"
-                                    v-for="(step, index) of tour.steps"
-                                    :key="index"
-                                    :step="step"
-                                    :previous-step="tour.previousStep"
-                                    :next-step="tour.nextStep"
-                                    :stop="tour.stop"
-                                    :isFirst="tour.isFirst"
-                                    :isLast="tour.isLast"
-                                    >
-                                    <template v-if="tour.currentStep === 0">
-                                        <div slot="actions">
-                                            <router-link :to="urlForm" data-v-fca314f4="" class="v-step__button" @click="tambahProduk()">Lanjutkan</router-link>
-                                        </div>
-                                    </template>
-                                </v-step>
-                            </transition>
-                        </template>
-                    </v-tour>
+                            <v-tour name="myTour" :steps="steps">
+                                <template slot-scope="tour">
+                                    <transition name="fade">
+                                        <v-step
+                                        v-if="tour.currentStep === index"
+                                        v-for="(step, index) of tour.steps"
+                                        :key="index"
+                                        :step="step"
+                                        :previous-step="tour.previousStep"
+                                        :next-step="tour.nextStep"
+                                        :stop="tour.stop"
+                                        :isFirst="tour.isFirst"
+                                        :isLast="tour.isLast"
+                                        >
+                                        <template v-if="tour.currentStep === 0">
+                                            <div slot="actions">
+                                                <router-link :to="urlForm" data-v-fca314f4="" class="v-step__button" @click="tambahProduk()">Lanjutkan</router-link>
+                                            </div>
+                                        </template>
+                                    </v-step>
+                                </transition>
+                            </template>
+                        </v-tour>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</template>
+    </template>
 
-<script>
+    <script>
     export default {
         data: function () {
             return {
@@ -179,6 +182,7 @@
                 urlLihat : window.location.origin+(window.location.pathname).replace("dashboard", "produk/lihat-deskripsi-produk/"),
                 urlForm: "create-produk",
                 urlTemplate : window.location.origin+(window.location.pathname).replace("dashboard", "produk/template-excel"),
+                urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "produk/export-excel"),
                 pencarian: '',
                 loading: true,
                 steps: [
@@ -199,6 +203,8 @@
                 this.$tours['myTour'].start();
                 app.urlForm = 'create-produk?tour';
             }
+
+            $("#btnExcel").attr("href", app.urlDownloadExcel);
         },
         watch: {
     // whenever question changes, this function will run
