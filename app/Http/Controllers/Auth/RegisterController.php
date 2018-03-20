@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\BankWarung;
 use App\Http\Controllers\Controller;
 use App\Kas;
 use App\KomunitasCustomer;
@@ -187,12 +186,12 @@ class RegisterController extends Controller
             ]);
 
             //INSERT BANK WARUNG
-            $bank_warung = BankWarung::create([
-                'nama_bank' => "-",
-                'atas_nama' => "-",
-                'no_rek'    => "-",
-                'warung_id' => $warung->id,
-            ]);
+            // $bank_warung = BankWarung::create([
+            //     'nama_bank' => "-",
+            //     'atas_nama' => "-",
+            //     'no_rek'    => "-",
+            //     'warung_id' => $warung->id,
+            // ]);
 
             //SETTING APLIKASI
             $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
