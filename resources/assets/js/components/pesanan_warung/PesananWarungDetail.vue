@@ -36,10 +36,10 @@
 							<div class="modal-body">
 								<h3 class="text-center"><b>Pilih Kas</b> </h3>
 
+								<span v-if="kas_error == 1" class="label label-danger">Silakan pilih Kas terlebih dahulu</span>
 								<selectize-component v-model="selesaiPesanan.id_kas" :settings="placeholder_kas" id="kas" ref='kas'>  
 									<option v-for="kass, index in kas" v-bind:value="kass.id">{{ kass.nama_kas }}</option>
 								</selectize-component>
-								<br v-if="errors.kas">   <span v-if="errors.kas" id="kas_error" class="label label-danger">{{ errors.kas[0] }}</span>
 								<p style="color: red; font-style: italic;">*Jika Anda Menyelesaikan Pesanan Ini, Maka "Kas" Anda Akan Bertambah & "Stok Produk(Jika Produk Bukan Jasa)" Akan Berkurang.</p>    
 								<div class="modal-footer">
 									<button type="button" class="btn btn-simple" v-on:click="closeModalSelesaiPesanan()">Close</button>
@@ -391,6 +391,7 @@ export default {
 			waktuPengiriman : '',
 			detailPesananId: null,
 			loading: true,
+			kas_error : 0,
 			url: window.location.origin + (window.location.pathname).replace("dashboard", "pesanan-warung"),
 			urlTambahProduk: window.location.origin + (window.location.pathname).replace("dashboard", "tambah-produk-pesanan-warung"),
 			urlKurangProduk: window.location.origin + (window.location.pathname).replace("dashboard", "kurang-produk-pesanan-warung"),
@@ -619,20 +620,26 @@ export default {
 		},
 		submitSelesaiPesanan(id, id_kas){
 			var app = this
-			app.$swal({
-				text: "Anda Yakin Ingin Menyelesaikan Transaksi Ini ?",
-				buttons: {
-					cancel: true,
-					confirm: "OK"                   
-				},
 
-			}).then((value) => {
+			if (id_kas == '') {
+				app.kas_error = 1
+			}else{
 
-				if (!value) throw null;
+				app.$swal({
+					text: "Anda Yakin Ingin Menyelesaikan Transaksi Ini ?",
+					buttons: {
+						cancel: true,
+						confirm: "OK"                   
+					},
 
-				app.prosesSelesaiPesanan(id, id_kas)
+				}).then((value) => {
 
-			});
+					if (!value) throw null;
+
+					app.prosesSelesaiPesanan(id, id_kas)
+
+				});
+			}
 		},
 		prosesSelesaiPesanan(id, id_kas){
 			var app = this;
