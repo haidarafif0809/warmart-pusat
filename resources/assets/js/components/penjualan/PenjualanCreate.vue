@@ -249,7 +249,7 @@
                   <td class="text-primary">
                     <div class="togglebutton">
                       <label>
-                        <input type="checkbox" v-model="setting_penjualan_pos.jumlah_produk" value="1">
+                        <input type="checkbox" v-model="setting_penjualan_pos.jumlah_produk" v-bind:value="1">
                         <b v-if="setting_penjualan_pos.jumlah_produk == true">Ya</b>
                         <b v-if="setting_penjualan_pos.jumlah_produk == false">Tidak</b>
                       </label>
@@ -263,7 +263,7 @@
                   <td class="text-primary">
                     <div class="togglebutton">
                       <label>
-                        <input type="checkbox" v-model="setting_penjualan_pos.stok" value="1">
+                        <input type="checkbox" v-model="setting_penjualan_pos.stok" v-bind:value="1">
                         <b v-if="setting_penjualan_pos.stok == true">Ya</b>
                         <b v-if="setting_penjualan_pos.stok == false">Tidak</b>
                       </label>
