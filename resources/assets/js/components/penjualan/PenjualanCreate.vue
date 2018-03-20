@@ -1133,58 +1133,60 @@ prosesSelesaiPenjualan(value){
   app.loading = true;
 
   if (app.penjualan.kas == '') { 
-    swal({
-      text: 'Cara Bayar Belum Dipilih!!'
-      }).then((result) => {
+
+    app.loading = false;    
+    app.$swal("Cara Bayar Belum Dipilih!!")
+    .then((value) => {
       app.openSelectizeKas();
     });
+    
   }else{
-  axios.post(app.url,newPenjualan)
-  .then(function (resp) {
+    axios.post(app.url,newPenjualan)
+    .then(function (resp) {
 
-    if (resp.data == 0) {
+      if (resp.data == 0) {
 
-      app.alertTbs("Anda Belum Memasukan Produk");
+        app.alertTbs("Anda Belum Memasukan Produk");
+        app.loading = false;
+
+      }
+      else if(resp.data.respons == 1){
+
+        app.alertTbs("Gagal : Stok " + resp.data.nama_produk + " Tidak Mencukupi Untuk di Jual, Sisa Produk = "+resp.data.stok_produk);
+        app.loading = false;
+
+      }else if(resp.data.respons == 2){
+
+        app.alertTbs("Gagal : Terjadi Kesalahan , Silakan Coba Lagi!");
+        app.loading = false;
+
+      }else{
+
+        app.getResults();
+        app.alert("Menyelesaikan Transaksi Penjualan");
+        app.penjualan.pelanggan = 0
+        app.penjualan.subtotal = 0
+        app.penjualan.jatuh_tempo = ''
+        app.penjualan.potongan_persen = 0
+        app.penjualan.potongan_faktur = 0
+        app.penjualan.total_akhir = 0
+        app.penjualan.pembayaran = 0
+        app.inputTbsPenjualan.produk = ''   
+        app.hitungKembalian(app.penjualan.pembayaran)
+        $("#modal_selesai").hide();
+        window.open('penjualan/cetak-kecil-penjualan/'+resp.data.respons_penjualan,'_blank');
+        app.loading = false;
+
+      }
+
+    })
+    .catch(function (resp) {  
+
+      console.log(resp);              
       app.loading = false;
-
-    }
-   else if(resp.data.respons == 1){
-
-      app.alertTbs("Gagal : Stok " + resp.data.nama_produk + " Tidak Mencukupi Untuk di Jual, Sisa Produk = "+resp.data.stok_produk);
-      app.loading = false;
-
-    }else if(resp.data.respons == 2){
-
-      app.alertTbs("Gagal : Terjadi Kesalahan , Silakan Coba Lagi!");
-      app.loading = false;
-
-    }else{
-
-      app.getResults();
-      app.alert("Menyelesaikan Transaksi Penjualan");
-      app.penjualan.pelanggan = 0
-      app.penjualan.subtotal = 0
-      app.penjualan.jatuh_tempo = ''
-      app.penjualan.potongan_persen = 0
-      app.penjualan.potongan_faktur = 0
-      app.penjualan.total_akhir = 0
-      app.penjualan.pembayaran = 0
-      app.inputTbsPenjualan.produk = ''   
-      app.hitungKembalian(app.penjualan.pembayaran)
-      $("#modal_selesai").hide();
-      window.open('penjualan/cetak-kecil-penjualan/'+resp.data.respons_penjualan,'_blank');
-      app.loading = false;
-
-    }
-
-  })
-  .catch(function (resp) {  
-
-    console.log(resp);              
-    app.loading = false;
-    alert("Tidak dapat Menyelesaikan Transaksi Penjualan");        
-    app.errors = resp.response.data.errors;
-  });
+      alert("Tidak dapat Menyelesaikan Transaksi Penjualan");        
+      app.errors = resp.response.data.errors;
+    });
   }
 
 },
