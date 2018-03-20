@@ -46,6 +46,25 @@ first();
       font-weight: 200;
       src: url("//applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-thin-webfont.woff2");
   }
+     /*style untuk kategori*/ 
+      .nav .open>a, .nav .open>a:hover, .nav .open>a:focus{
+        background-color: #2ac326;
+      }
+      .card .card-content {
+        padding: 0px 30px;
+      }
+      .card-form-horizontal .card-content {
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-top: 10px;
+    }
+    .nav-tabs {
+        background: #2ac326;
+        border: 0;
+        border-radius: 3px;
+        padding: 9 15px;
+    }
+    /*style untuk kategori*/
 
   .flexFont {
     @if(Agent::isMobile())
@@ -124,8 +143,15 @@ h4 {
             <h4 class="title text-center">
                 {!! $nama_kategori !!}
             </h4>
-            <div class="card card-raised card-form-horizontal">
-                <div class="card-content">
+                  <div class="row">
+                <div class="col-sm-3">
+                    <ul class="nav nav-tabs buttonColor" data-tabs="tabs">
+                            {!! $kategori_produk !!}
+                    </ul>
+                </div>
+                <div class="col-sm-9">
+                <div class="card card-raised card-form-horizontal">
+                <div class="card-content">  
                     {!! Form::open(['url' => route('daftar_produk.pencarian'),'method' => 'get', 'class'=>'form-horizontal']) !!}
                     <div class="row">
                         <div class="col-sm-10">
@@ -147,42 +173,13 @@ h4 {
                                 Cari
                             </button>
                         </div>
+                        </div>
+                     </div>
                     </div>
                     {!! Form::close() !!}
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-12">
-                    <div class="panel panel-default">
-                        <div class="panel-heading" id="headingTwo" role="tab">
-                            <a aria-controls="collapseTwo" aria-expanded="false" class="collapsed" data-parent="#accordion" data-toggle="collapse" href="#collapseTwo" role="button">
-                                <h4 class="title" style="margin: 0px">
-                                    KATEGORI PRODUK
-                                    <i class="material-icons">
-                                        keyboard_arrow_down
-                                    </i>
-                                </h4>
-                            </a>
-                        </div>
-                        <div aria-labelledby="headingTwo" class="panel-collapse collapse" id="collapseTwo" role="tabpanel">
-                            <div class="panel-body">
-                                <ul class="nav buttonColor">
-                                    <li>
-                                        <a href="{{route('daftar_produk.index')}}" style="color:white">
-                                            <i class="material-icons">
-                                                format_align_justify
-                                            </i>
-                                            SEMUA KATEGORI
-                                        </a>
-                                    </li>
-                                </ul>
-                                <ul class="nav buttonColor">
-                                    {!! $kategori_produk !!}
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <div class="col-md-12">
                     <br>
                         <div class="row ">
@@ -260,51 +257,43 @@ h4 {
                 <h3 class="title text-center">
                     {!! $nama_kategori !!}
                 </h3>
+                <div class="row">
+                <div class="col-sm-3">
+                    <ul class="nav nav-tabs buttonColor" data-tabs="tabs">
+                            {!! $kategori_produk !!}
+                    </ul>
+                </div>
+                <div class="col-sm-9">
                 <div class="card card-raised card-form-horizontal">
-                    <div class="card-content">
-                        {!! Form::open(['url' => route('daftar_produk.pencarian'),'method' => 'get', 'class'=>'form-horizontal']) !!}
-                        <div class="row">
-                            <div class="col-sm-10">
-                                <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <i class="material-icons">
-                                            search
-                                        </i>
-                                    </span>
-                                    @if($setting_aplikasi->tipe_aplikasi == 0)
-                                    <input class="form-control" id="cari_produk" name="search" placeholder="Cari Produk Atau Warung.." type="text" value=""/>
-                                    @else
-                                    <input class="form-control" id="cari_produk" name="search" placeholder="Cari Produk.." type="text" value=""/>
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="col-sm-2">
-                                <button class="btn btn-block buttonColor" type="submit">
-                                    Cari
-                                </button>
+                <div class="card-content">  
+                    {!! Form::open(['url' => route('daftar_produk.pencarian'),'method' => 'get', 'class'=>'form-horizontal']) !!}
+                    <div class="row">
+                        <div class="col-sm-10">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">
+                                        search
+                                    </i>
+                                </span>
+                                @if($setting_aplikasi->tipe_aplikasi == 0)
+                                <input class="form-control" id="cari_produk" name="search" placeholder="Cari Produk Atau Warung.." type="text" value=""/>
+                                @else
+                                <input class="form-control" id="cari_produk" name="search" placeholder="Cari Produk.." type="text" value=""/>
+                                @endif
                             </div>
                         </div>
-                        {!! Form::close() !!}
+                        <div class="col-sm-2">
+                            <button class="btn btn-block buttonColor" type="submit">
+                                Cari
+                            </button>
+                        </div>
+                        </div>
+                     </div>
                     </div>
+                    {!! Form::close() !!}
                 </div>
+            </div>
                 <div class="row">
-                    <div class="col-md-3">
-                        <ul class="nav nav-tabs buttonColor" data-tabs="tabs">
-                            <li>
-                                <a href="{{route('daftar_produk.index')}}">
-                                    <i class="material-icons">
-                                        format_align_justify
-                                    </i>
-                                    Semua Kategori
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="col-md-9">
-                        <ul class="nav nav-tabs buttonColor" data-tabs="tabs">
-                            {!! $kategori_produk !!}
-                        </ul>
-                    </div>
                     <div class="col-md-12">
                         <br>
                             <div class="row">

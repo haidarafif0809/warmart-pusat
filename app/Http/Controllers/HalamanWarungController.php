@@ -70,8 +70,9 @@ class HalamanWarungController extends Controller
         //PAGINATION DAFTAR PRODUK
         $produk_pagination = $data_produk->links();
         //PILIH KATEGORI
-        $kategori        = KategoriBarang::select(['id', 'nama_kategori_barang', 'kategori_icon'])->where('id', $id);
-        $kategori_produk = HalamanWarungController::produkKategori($kategori, $id_warung);
+        $kategori        = KategoriBarang::select(['id', 'nama_kategori_barang', 'kategori_icon'])->where('id',$id);
+        $kategori_semua  = KategoriBarang::select(['id', 'nama_kategori_barang', 'kategori_icon'])->where('id','!=',$id);
+        $kategori_produk = HalamanWarungController::produkKategori($kategori_semua, $id_warung);
         $data_kategori   = $kategori->first();
         $nama_kategori   = "KATEGORI : " . $data_kategori->nama_kategori_barang . "";
 
@@ -97,17 +98,14 @@ class HalamanWarungController extends Controller
         $array_warung = HalamanWarungController::dataWarungTervalidasi($id);
         //MEANMPILKAN KATEGORI PRODUK
         $kategori_produk = '';
-        foreach ($kategori->paginate(4) as $kategori) {
-            $jumlah_produk = Barang::where('kategori_barang_id', $kategori->id)->whereIn('id_warung', $array_warung)->count();
-            $kategori_produk .= '
-            <li>
-              <a href="' . url('halaman-warung/filter/' . $kategori->id . '/' . $id) . '" style="color:white"><i class="material-icons">' . $kategori->kategori_icon . '</i>' . $kategori->nama_kategori_barang . ' - ' . $jumlah_produk . '</a>
-          </li>';
-        }
         $kategori_produk .= '
-      <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color:white"><i class="material-icons">list</i> Lain - Lain <b class="caret"></b></a>
-        <ul class="dropdown-menu dropdown-with-icons">';
+    <li class="dropdown">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color:white"><i class="material-icons">list</i> PILIH KATEGORI <b class="caret"></b></a>
+    <ul class="dropdown-menu dropdown-with-icons">
+    <li>
+    <a href="'.route('daftar_produk.index').'">
+         SEMUA KATEGORI </a>
+    </li>';
         foreach ($kategori->get() as $kategori) {
             $jumlah_produk = Barang::where('kategori_barang_id', $kategori->id)->whereIn('id_warung', $array_warung)->count();
             $kategori_produk .= '

@@ -93,21 +93,19 @@ public static function produkKategori($kategori)
 
         //MEANMPILKAN KATEGORI PRODUK
     $kategori_produk = '';
-    foreach ($kategori->paginate(4) as $kategori) {
-        $jumlah_produk = Barang::where('kategori_barang_id', $kategori->id)->whereIn('id_warung', $array_warung)->count();
-        $kategori_produk .= '
-        <li>
-        <a href="' . route('daftar_produk.filter_kategori', $kategori->id) . '" style="color:white"><i class="material-icons">' . $kategori->kategori_icon . '</i>' . $kategori->nama_kategori_barang . ' - ' . $jumlah_produk . '</a>
-        </li>';
-    }
     $kategori_produk .= '
     <li class="dropdown">
-    <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color:white"><i class="material-icons">list</i> Lain - Lain <b class="caret"></b></a>
-    <ul class="dropdown-menu dropdown-with-icons">';
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color:white"><i class="material-icons">list</i> PILIH KATEGORI <b class="caret"></b></a>
+    <ul class="dropdown-menu dropdown-with-icons">
+    <li>
+    <a href="'.route('daftar_produk.index').'">
+         SEMUA KATEGORI </a>
+    </li>';
     foreach ($kategori->get() as $kategori) {
         $jumlah_produk = Barang::where('kategori_barang_id', $kategori->id)->whereIn('id_warung', $array_warung)->count();
         $kategori_produk .= '
         <li>
+
         <a href="' . route('daftar_produk.filter_kategori', $kategori->id) . '"><i class="material-icons">' . $kategori->kategori_icon . '</i>' . $kategori->nama_kategori_barang . ' - ' . $jumlah_produk . '</a>
         </li>';
     }
@@ -169,8 +167,9 @@ public static function filter_kategori($id)
         //PAGINATION DAFTAR PRODUK
     $produk_pagination = $data_produk->links();
         //PILIH KATEGORI
-    $kategori        = KategoriBarang::select(['id', 'nama_kategori_barang', 'kategori_icon'])->where('id', $id);
-    $kategori_produk = DaftarProdukController::produkKategori($kategori);
+    $kategori        = KategoriBarang::select(['id', 'nama_kategori_barang', 'kategori_icon'])->where('id',$id);
+    $kategori_semua  = KategoriBarang::select(['id', 'nama_kategori_barang', 'kategori_icon'])->where('id','!=',$id);
+    $kategori_produk = DaftarProdukController::produkKategori($kategori_semua);
     $daftar_warung   = DaftarProdukController::daftarWarung($warung_data);
     $data_kategori   = $kategori->first();
     $nama_kategori   = "KATEGORI : " . $data_kategori->nama_kategori_barang . "";
