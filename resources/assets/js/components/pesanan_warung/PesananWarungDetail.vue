@@ -25,6 +25,33 @@
 				<li class="active">Detail Pesanan</li>
 			</ul>
 
+			<!-- small modal -->
+			<div class="modal" id="modalSelesaiPesanan" role="dialog" tabindex="-1"  aria-labelledby="myModalLabel" aria-hidden="true" >
+				<div class="modal-dialog modal-medium">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" v-on:click="closeModalSelesaiPesanan()"> &times;</button> 
+						</div>
+						<form class="form-horizontal" v-on:submit.prevent="submitSelesaiPesanan(pesananData.pesanan.id, selesaiPesanan.id_kas)"> 
+							<div class="modal-body">
+								<h3 class="text-center"><b>Pilih Kas</b> </h3>
+
+								<selectize-component v-model="selesaiPesanan.id_kas" :settings="placeholder_kas" id="kas" ref='kas'>  
+									<option v-for="kass, index in kas" v-bind:value="kass.id">{{ kass.nama_kas }}</option>
+								</selectize-component>
+								<br v-if="errors.kas">   <span v-if="errors.kas" id="kas_error" class="label label-danger">{{ errors.kas[0] }}</span>
+								<p style="color: red; font-style: italic;">*Jika Anda Menyelesaikan Pesanan Ini, Maka "Kas" Anda Akan Bertambah & "Stok Produk(Jika Produk Bukan Jasa)" Akan Berkurang.</p>    
+								<div class="modal-footer">
+									<button type="button" class="btn btn-simple" v-on:click="closeModalSelesaiPesanan()">Close</button>
+									<button type="button" class="btn btn-info btn-lg" v-on:click="submitSelesaiPesanan(pesananData.pesanan.id, selesaiPesanan.id_kas)">Selesai</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			<!--    end small modal -->
+
 			<!-- DATA PESANAN -->
 			<div class="card" style="margin-top: 5px; margin-bottom: 1px;">
 				<div class="card-content">
@@ -338,9 +365,11 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 export default {
 	data: function () {
 		return {
+			errors: [],
 			detailPesanan: [],
 			detailPesananData: {},
 			pesananData: {},
@@ -351,7 +380,12 @@ export default {
 			selesaiPesanan: {
 				id_pesanan : '',
 				id_kas : '',
-			}, 			
+			}, 	
+			placeholder_kas: {
+				placeholder: '--PILIH KAS--',
+				sortField: 'text',
+				openOnFocus : true
+			},	
 			dataAgent: '',
 			servicePengiriman : '',
 			waktuPengiriman : '',
@@ -371,9 +405,16 @@ export default {
 	mounted() {
 		var app = this;
 		let id = app.$route.params.id;
-		app.detailPesananId = id;
+		app.detailPesananId = id;		
+		app.$store.dispatch('LOAD_KAS_LIST')  
 		app.getResults();
 	},
+	computed : mapState ({    
+		kas(){
+			return this.$store.state.kas
+		},
+		default_kas : state => state.default_kas
+	}),
 	filters: {
 		pemisahTitik: function (value) {
 			return new Intl.NumberFormat().format(value)
@@ -392,6 +433,7 @@ export default {
 				app.pesananData = resp.data.data;
 				app.dataAgent = resp.data.data.agent;
 				app.loading = false;
+				app.selesaiPesanan.id_kas = app.default_kas
 				if (resp.data.data.pesanan.kurir == 'cod' || resp.data.data.pesanan.kurir == '') {
 
 					app.servicePengiriman = "Bayar di Tempat"
@@ -573,66 +615,33 @@ export default {
 			});
 		},
 		selesaikanPesanan(id){
-			var app = this;
-			var app = this;
-			axios.get(app.urlOrigin+'kas/cek-kas-warung')
-			.then(function (resp) {            	
-				var data = resp.data;
-				var urlKas = app.urlTambahKas;
-
-				if (data.cek_kas == 0) {
-					var kas_warung = '<input type="hidden" id="kas" value="0">Anda Belum Punya Kas, Silahkan Buat Kas <a target="blank" href="'+urlKas+'">Disini</a>';
-				}else{
-					var kas_warung = '<select id="kas" name="kas" class="swal2-input js-selectize-reguler">';
-					$.each(data.kas, function (i, item) {
-						if (data.kas[i].status_kas == 1) {
-							if (data.kas[i].default_kas == 1) {
-								kas_warung += '<option value="'+data.kas[i].id+'" selected>'+data.kas[i].nama_kas+'</option>';
-							}else{
-								kas_warung += '<option value="'+data.kas[i].id+'">'+data.kas[i].nama_kas+'</option>';
-							}
-						}
-					});
-
-					kas_warung += '</select>';
-				}
-
-				swal({
-					title: "Pilih Kas",
-					html: kas_warung+'<p style="color: red; font-style: italic; font-size:15px; text-align:left">*Jika Anda Menyelesaikan Pesanan Ini, Maka "Kas" Anda Akan Bertambah & "Stok Produk(Jika Produk Bukan Jasa)" Akan Berkurang',
-					showCancelButton: true,
-					confirmButtonColor: '#3085d6',
-					cancelButtonColor: '#d33',
-					confirmButtonText: 'Simpan',
-					cancelButtonText: 'Batal',
-					confirmButtonClass: 'btn btn-success',
-					cancelButtonClass: 'btn btn-danger',
-					buttonsStyling: false,
-					preConfirm: function () {
-						return new Promise(function (resolve) {
-							resolve([
-								$('#kas').val()
-								])
-						})
-					}
-				}).then(function (result) {
-					if (result[0] == '' || result[0] == 0) {
-						swal('Oops...', result[0], 'error');
-						return false;
-					}else{
-						var id_kas = result[0];
-						app.submitSelesaiPesanan(id, id_kas);
-					}
-				});
-			});
-
+			$("#modalSelesaiPesanan").show()
 		},
 		submitSelesaiPesanan(id, id_kas){
+			var app = this
+			app.$swal({
+				text: "Anda Yakin Ingin Menyelesaikan Transaksi Ini ?",
+				buttons: {
+					cancel: true,
+					confirm: "OK"                   
+				},
+
+			}).then((value) => {
+
+				if (!value) throw null;
+
+				app.prosesSelesaiPesanan(id, id_kas)
+
+			});
+		},
+		prosesSelesaiPesanan(id, id_kas){
 			var app = this;
 			app.selesaiPesanan.id_pesanan = id;
 			app.selesaiPesanan.id_kas = id_kas;
 			var newSelesaiPesanan = app.selesaiPesanan;	  
 
+			app.closeModalSelesaiPesanan()
+			app.loading = true;
 			axios.post(app.urlOrigin+'selesai-konfirmasi-pesanan-warung', newSelesaiPesanan)
 			.then(function (resp) {
 
@@ -644,9 +653,7 @@ export default {
 				}else{
 					app.getResults();
 					app.loading = false;
-					app.selesaiPesanan.id_kas = ''
-					app.selesaiPesanan.id_pesanan = ''
-					app.$router.replace('/pesanan-warung');    
+					app.selesaiPesanan.id_pesanan = ''    
 					app.alert("Pesanan order #"+id+" Berhasil Di Selesaikan");  
 					window.open('pesanan-warung/cetak-kecil-penjualan/'+resp.data.respons_penjualan,'_blank');   
 				}
@@ -656,6 +663,9 @@ export default {
 			.catch(function (resp) {
 				alert("Tidak Dapat Menyelesaikan Pesanan");
 			});
+		},
+		closeModalSelesaiPesanan(){
+			$("#modalSelesaiPesanan").hide()
 		},
 		alertTbs(pesan) {
 			this.$swal({
