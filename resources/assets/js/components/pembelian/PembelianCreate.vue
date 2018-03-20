@@ -1,36 +1,36 @@
 <style scoped>
-.modal {
-  overflow-y:auto;
-}
-.pencarian {
-  color: red; 
-  float: right;
-}
-.form-pembelian{
-  width: 100%;
-  padding: 12px 20px;
-  margin: 8px 0;
-  display: inline-block;
-  border: 3px solid #555;
-  border-radius: 4px;
-  box-sizing: border-box;
-  font-size: 30px;
-}
-.form-subtotal{
-  width: 100%;
-  margin: 8px 0;
-  display: inline-block;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-.card-produk{
-  background-color:#82B1FF;
-}
-.btn-icon{
-  border-radius: 1px solid;
-  padding: 10px 10px;
-}
+  .modal {
+    overflow-y:auto;
+  }
+  .pencarian {
+    color: red; 
+    float: right;
+  }
+  .form-pembelian{
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 3px solid #555;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 30px;
+  }
+  .form-subtotal{
+    width: 100%;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  .card-produk{
+    background-color:#82B1FF;
+  }
+  .btn-icon{
+    border-radius: 1px solid;
+    padding: 10px 10px;
+  }
 
 </style>
 <template>
@@ -101,50 +101,50 @@
       </div> 
       <!-- / MODAL TOMBOL SELESAI --> 
 
-          <!--MODAL IMPORT DATA-->
-            <div class="modal" id="modal_import" role="dialog" data-backdrop=""> 
-                <div class="modal-dialog">
-                    <!-- Modal content--> 
-                    <div class="modal-content"> 
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal"> <i class="material-icons">close</i></button> 
-                            <h4 class="modal-title"> 
-                                <div class="alert-icon" style="font-weight: bold;"> 
-                                    Import Produk Pembelian
-                                </div> 
-                            </h4> 
-                        </div>                         
-                        <form v-on:submit.prevent="importExcel()" class="form-horizontal">
-                            <div class="modal-body">
-                                  <div class="form-group">
-                                    <p style="font-weight: bold;">
-                                        Download <a :href="urlTemplate">Template</a> Excel Untuk Import Item Masuk.
-                                    </p>
-                                </div>
-
-                                <div class="form-group form-file-upload">
-                                    <input type="file" id="excel" multiple="">
-                                    <div class="input-group">
-                                        <input type="text" readonly="" class="form-control" placeholder="Browse File...">
-                                        <span class="input-group-btn input-group-s">
-                                            <button type="button" class="btn btn-just-icon btn-round btn-primary">
-                                                <i class="material-icons">attach_file</i>
-                                            </button>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="form-group">                                
-                                    <button class="btn btn-primary" id="btnImport" type="submit"><i class="material-icons">file_upload</i> Import</button>
-                                </div>
-                            </div>
-                            <div class="modal-footer">  
-                                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="material-icons">close</i> Batal</button> 
-                            </div> 
-                        </form>
-                    </div>       
+      <!--MODAL IMPORT DATA-->
+      <div class="modal" id="modal_import" role="dialog" data-backdrop=""> 
+        <div class="modal-dialog">
+          <!-- Modal content--> 
+          <div class="modal-content"> 
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal"> <i class="material-icons">close</i></button> 
+              <h4 class="modal-title"> 
+                <div class="alert-icon" style="font-weight: bold;"> 
+                  Import Produk Pembelian
                 </div> 
-            </div>
-            <!-- / MODAL IMPORT DATA --> 
+              </h4> 
+            </div>                         
+            <form v-on:submit.prevent="importExcel()" class="form-horizontal">
+              <div class="modal-body">
+                <div class="form-group">
+                  <p style="font-weight: bold;">
+                    Download <a :href="urlTemplate">Template</a> Excel Untuk Import Item Masuk.
+                  </p>
+                </div>
+
+                <div class="form-group form-file-upload">
+                  <input type="file" id="excel" multiple="">
+                  <div class="input-group">
+                    <input type="text" readonly="" class="form-control" placeholder="Browse File...">
+                    <span class="input-group-btn input-group-s">
+                      <button type="button" class="btn btn-just-icon btn-round btn-primary">
+                        <i class="material-icons">attach_file</i>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+                <div class="form-group">                                
+                  <button class="btn btn-primary" id="btnImport" type="submit"><i class="material-icons">file_upload</i> Import</button>
+                </div>
+              </div>
+              <div class="modal-footer">  
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="material-icons">close</i> Batal</button> 
+              </div> 
+            </form>
+          </div>       
+        </div> 
+      </div>
+      <!-- / MODAL IMPORT DATA --> 
 
 
       <div class="modal" id="modal_tambah_suplier" role="dialog" data-backdrop=""> 
@@ -311,14 +311,19 @@
             </div>
 
             <form class="form-horizontal" v-on:submit.prevent="submitJumlahProduk(inputTbsPembelian.id_produk,inputTbsPembelian.jumlah_produk,inputTbsPembelian.harga_produk,inputTbsPembelian.nama_produk)"> 
-              <div class="modal-body text-center">
-                <h3><b>{{inputTbsPembelian.nama_produk}}</b></h3>
+              <div class="modal-body">
+                <h3 class="text-center"><b>{{inputTbsPembelian.nama_produk}}</b></h3>
 
                 <div class="form-group">
-                  <div class="col-md-6">
+                  <div class="col-md-4">
                     <input class="form-control" type="number" v-model="inputTbsPembelian.jumlah_produk" placeholder="Isi Jumlah Produk" name="jumlah_produk" id="jumlah_produk" ref="jumlah_produk" autocomplete="off" step="0.01">
                   </div>
-                  <div class="col-md-6">
+                  <div class="col-md-4">
+                    <selectize-component v-model="inputTbsPembelian.satuan_produk" :settings="placeholder_satuan" id="satuan" name="satuan" ref='satuan'> 
+                      <option v-for="satuans, index in satuan" v-bind:value="satuans.id" class="pull-left">{{ satuans.nama_satuan }}</option>
+                    </selectize-component>
+                  </div>
+                  <div class="col-md-4">
                     <money class="form-control" v-model="inputTbsPembelian.harga_produk" v-bind="pemisahTitik" placeholder="Isi Harga Produk" name="harga_produk" id="harga_produk" ref="harga_produk" autocomplete="off"></money>
                   </div>
                 </div>
@@ -358,230 +363,238 @@
               </div>
             </div>
             <div class="col-md-3">
-                 <button id="btnFilter" class="btn btn-info" data-toggle="modal" data-target="#modal_import">
-                   <i class="material-icons">file_upload</i> Import Excel
-               </button>
-            </div>
-          </div>
+             <button id="btnFilter" class="btn btn-info" data-toggle="modal" data-target="#modal_import">
+               <i class="material-icons">file_upload</i> Import Excel
+             </button>
+           </div>
+         </div>
 
-          <div class="row">
-            <div class="col-md-9">
-              <div class=" table-responsive ">
-                <div class="pencarian">
-                  <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
-                </div>
+         <div class="row">
+          <div class="col-md-9">
+            <div class=" table-responsive ">
+              <div class="pencarian">
+                <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
+              </div>
 
-                <table class="table table-striped table-hover" v-if="seen">
-                  <thead class="text-primary">
-                    <tr>
-                      <th  >Produk</th>
-                      <th  style="text-align:right;">Jumlah</th>
-                      <th  style="text-align:right;">Harga</th>
-                      <th  style="text-align:right;">Potongan</th>
-                      <th  style="text-align:right;">Pajak</th>
-                      <th  style="text-align:right;">Subtotal</th>
-                      <th  style="text-align:right;">Hapus</th>
-                    </tr>
-                  </thead>
-                  <tbody v-if="tbs_pembelians.length > 0 && loading == false"  class="data-ada">
-                    <tr v-for="tbs_pembelian, index in tbs_pembelians" >
+              <table class="table table-striped table-hover" v-if="seen">
+                <thead class="text-primary">
+                  <tr>
+                    <th  >Produk</th>
+                    <th  style="text-align:right;">Jumlah</th>
+                    <th  style="text-align:right;">Harga</th>
+                    <th  style="text-align:right;">Potongan</th>
+                    <th  style="text-align:right;">Pajak</th>
+                    <th  style="text-align:right;">Subtotal</th>
+                    <th  style="text-align:right;">Hapus</th>
+                  </tr>
+                </thead>
+                <tbody v-if="tbs_pembelians.length > 0 && loading == false"  class="data-ada">
+                  <tr v-for="tbs_pembelian, index in tbs_pembelians" >
 
-                      <td>{{ tbs_pembelian.kode_produk }} - {{ tbs_pembelian.nama_produk }}</td>
-                      <td>
-                        <a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-on:click="editEntryJumlah(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk,tbs_pembelian.subtotal)"><p align='right'>{{ tbs_pembelian.jumlah_produk_pemisah }}</p>
-                        </a>
-                      </td>
-                      <td>
-                        <a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-on:click="editEntryHarga(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk,tbs_pembelian.subtotal)" v-bind:class="'harga-' + tbs_pembelian.id_produk" v-bind:data-harga="''+tbs_pembelian.harga_produk"><p align='right'>{{ tbs_pembelian.harga_pemisah }}</p>
-                        </a>
-                      </td>
-                      <td>
-                        <a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-on:click="editEntryPotongan(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk,tbs_pembelian.jumlah_produk,tbs_pembelian.harga_produk,tbs_pembelian.subtotal)"
-                        ><p align='right'>{{ tbs_pembelian.potongan }} | {{ Math.round(tbs_pembelian.potongan_persen,2) }} %</p>
+                    <td>{{ tbs_pembelian.kode_produk }} - {{ tbs_pembelian.nama_produk }}</td>
+                    <td>
+                      <a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-on:click="editEntryJumlah(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk,tbs_pembelian.subtotal)"><p align='right'>{{ tbs_pembelian.jumlah_produk_pemisah }}</p>
                       </a>
                     </td>
                     <td>
-                      <a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-on:click="editEntryTax(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk,tbs_pembelian.jumlah_produk,tbs_pembelian.harga_produk,tbs_pembelian.potongan,tbs_pembelian.ppn_produk,tbs_pembelian.subtotal)" ><p align='right'>{{ tbs_pembelian.tax}} | {{ Math.round(tbs_pembelian.tax_persen, 2) }} %</p>
+                      <a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-on:click="editEntryHarga(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk,tbs_pembelian.subtotal)" v-bind:class="'harga-' + tbs_pembelian.id_produk" v-bind:data-harga="''+tbs_pembelian.harga_produk"><p align='right'>{{ tbs_pembelian.harga_pemisah }}</p>
                       </a>
                     </td>
-                    <td><p id="table-subtotal" align="right">{{ tbs_pembelian.subtotal_tbs }}</p></td>
-                    <td style="text-align:right;"> 
-                      <a href="#create-pembelian" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_pembelian.id_tbs_pembelian" v-on:click="deleteEntry(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk,tbs_pembelian.subtotal_tbs)">Delete</a>
-                    </td>
-                  </tr>
-                </tbody>          
-                <tbody class="data-tidak-ada"  v-else-if="tbs_pembelians.length == 0 && loading == false" >
-                  <tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
-                </tbody>
-              </table>  
+                    <td>
+                      <a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-on:click="editEntryPotongan(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk,tbs_pembelian.jumlah_produk,tbs_pembelian.harga_produk,tbs_pembelian.subtotal)"
+                      ><p align='right'>{{ tbs_pembelian.potongan }} | {{ Math.round(tbs_pembelian.potongan_persen,2) }} %</p>
+                    </a>
+                  </td>
+                  <td>
+                    <a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-on:click="editEntryTax(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk,tbs_pembelian.jumlah_produk,tbs_pembelian.harga_produk,tbs_pembelian.potongan,tbs_pembelian.ppn_produk,tbs_pembelian.subtotal)" ><p align='right'>{{ tbs_pembelian.tax}} | {{ Math.round(tbs_pembelian.tax_persen, 2) }} %</p>
+                    </a>
+                  </td>
+                  <td><p id="table-subtotal" align="right">{{ tbs_pembelian.subtotal_tbs }}</p></td>
+                  <td style="text-align:right;"> 
+                    <a href="#create-pembelian" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_pembelian.id_tbs_pembelian" v-on:click="deleteEntry(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk,tbs_pembelian.subtotal_tbs)">Delete</a>
+                  </td>
+                </tr>
+              </tbody>          
+              <tbody class="data-tidak-ada"  v-else-if="tbs_pembelians.length == 0 && loading == false" >
+                <tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
+              </tbody>
+            </table>  
 
-              <vue-simple-spinner v-if="loading"></vue-simple-spinner>
+            <vue-simple-spinner v-if="loading"></vue-simple-spinner>
 
-              <div align="right"><pagination :data="tbsPembelianData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
+            <div align="right"><pagination :data="tbsPembelianData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
 
+          </div>
+
+          <p style="color: red; font-style: italic;">*Note : Klik Kolom Jumlah, Harga, Potongan & Tax Untuk Mengubah Nilai.</p>
+          <p style="color: red; font-style: italic;">*Note : Klik Tombol Import Excel Untuk Import Data Produk Pembelian.</p>  
+        </div><!-- COL SM 8 --> 
+
+        <div class="col-md-3"><!-- COL SM 4 --> 
+          <div class="card card-stats"><!-- CARD --> 
+            <div class="card-header" data-background-color="blue">
+              <i class="material-icons">shopping_cart</i>
             </div>
-
-            <p style="color: red; font-style: italic;">*Note : Klik Kolom Jumlah, Harga, Potongan & Tax Untuk Mengubah Nilai.</p>
-            <p style="color: red; font-style: italic;">*Note : Klik Tombol Import Excel Untuk Import Data Produk Pembelian.</p>  
-          </div><!-- COL SM 8 --> 
-
-          <div class="col-md-3"><!-- COL SM 4 --> 
-            <div class="card card-stats"><!-- CARD --> 
-              <div class="card-header" data-background-color="blue">
-                <i class="material-icons">shopping_cart</i>
-              </div>
-              <div class="card-content"> 
-                <p class="category"><h4>Subtotal</h4></p>
-                <h3 class="card-title"><b><money class="form-subtotal" style="text-align:right;" v-model="inputPembayaranPembelian.subtotal" readonly v-bind="separator" ></money></b></h3>
-                <div class="row"> 
-                  <div class="col-md-10 col-xs-10"> 
-                    <h4>Suplier </h4> 
-                    <selectize-component v-model="inputPembayaranPembelian.suplier" :settings="placeholder_suplier" id="suplier" name="suplier" ref='suplier'> 
-                      <option v-for="supliers, index in suplier" v-bind:value="supliers.id">{{ supliers.nama_suplier }}</option>
-                    </selectize-component>
-                  </div> 
-                  <div class="col-md-1 col-xs-1" style="padding-left:0px;padding-top:43;">
-                    <div class="row" style="margin-top:-10px">
-                      <button class="btn btn-primary btn-icon waves-effect waves-light" v-on:click="tambahSupplier()" type="button"> <i class="material-icons" >add</i> </button>
-                    </div>
-                  </div>
-                </div><!-- end row-->
-                <div class="row">
-                  <div class="col-md-10 col-xs-10" > 
-                    <h4>Kas </h4> 
-                    <div v-if="tbsPembelianData.kas_default == 0">
-                      <selectize-component style="text-align:left;" v-model="inputPembayaranPembelian.cara_bayar" :settings="placeholder_cara_bayar"  id="cara_bayar" name="cara_bayar" ref='cara_bayar'> 
-                        <option v-for="cara_bayars, index in cara_bayar" v-bind:value="cara_bayars.id" >{{ cara_bayars.nama_kas }}</option>
-                      </selectize-component>
-                      <br>
-                      <span class="label label-danger"><router-link :to="{name: 'indexKas'}" class="menu-nav">Tambah Kas Disini</router-link></span> 
-                    </div>
-                    <div v-else>
-                      <selectize-component style="text-align:left;" v-model="inputPembayaranPembelian.cara_bayar" :settings="placeholder_cara_bayar" id="cara_bayar" name="cara_bayar" ref='cara_bayar'> 
-                        <option v-for="cara_bayars, index in cara_bayar" v-bind:value="cara_bayars.id">{{ cara_bayars.nama_kas }}</option>
-                      </selectize-component>
-                    </div>
-                  </div> 
-                  <div class="col-md-1 col-xs-1" style="padding-left:0px;padding-top:43;">
-                    <div class="row" style="margin-top:-10px">
-                      <button class="btn btn-primary btn-icon waves-effect waves-light" v-on:click="tambahModalKas()" type="button"> <i class="material-icons" >add</i> </button>
-                    </div>
-                  </div>
+            <div class="card-content"> 
+              <p class="category"><h4>Subtotal</h4></p>
+              <h3 class="card-title"><b><money class="form-subtotal" style="text-align:right;" v-model="inputPembayaranPembelian.subtotal" readonly v-bind="separator" ></money></b></h3>
+              <div class="row"> 
+                <div class="col-md-10 col-xs-10"> 
+                  <h4>Suplier </h4> 
+                  <selectize-component v-model="inputPembayaranPembelian.suplier" :settings="placeholder_suplier" id="suplier" name="suplier" ref='suplier'> 
+                    <option v-for="supliers, index in suplier" v-bind:value="supliers.id">{{ supliers.nama_suplier }}</option>
+                  </selectize-component>
                 </div> 
-
-              </div> 
-
-              <div class="card-footer">
-                <div class="row"> 
-                  <div class="col-md-6 col-xs-6"> 
-                    <button type="button btn-lg"  class="btn btn-success" id="bayar" v-on:click="selesaiPembelian()" v-shortkey.push="['f2']" @shortkey="selesaiPembelian()" ><font style="font-size:20px;">Bayar(F2)</font></button>
-                  </div>
-                  <div class="col-md-6 col-xs-6"> 
-                    <button type="submit btn-lg"  class="btn btn-danger" id="btnBatal" v-on:click="batalPembelian()" v-shortkey.push="['f3']" @shortkey="batalPembelian()" ><font style="font-size:20px;">Batal(F3)</font>  </button>
+                <div class="col-md-1 col-xs-1" style="padding-left:0px;padding-top:43;">
+                  <div class="row" style="margin-top:-10px">
+                    <button class="btn btn-primary btn-icon waves-effect waves-light" v-on:click="tambahSupplier()" type="button"> <i class="material-icons" >add</i> </button>
                   </div>
                 </div>
-              </div>
-            </div>             
-          </div><!-- COL SM 4 --> 
-        </div><!-- ROW --> 
-      </div>
-    </div>
+              </div><!-- end row-->
+              <div class="row">
+                <div class="col-md-10 col-xs-10" > 
+                  <h4>Kas </h4> 
+                  <div v-if="tbsPembelianData.kas_default == 0">
+                    <selectize-component style="text-align:left;" v-model="inputPembayaranPembelian.cara_bayar" :settings="placeholder_cara_bayar"  id="cara_bayar" name="cara_bayar" ref='cara_bayar'> 
+                      <option v-for="cara_bayars, index in cara_bayar" v-bind:value="cara_bayars.id" >{{ cara_bayars.nama_kas }}</option>
+                    </selectize-component>
+                    <br>
+                    <span class="label label-danger"><router-link :to="{name: 'indexKas'}" class="menu-nav">Tambah Kas Disini</router-link></span> 
+                  </div>
+                  <div v-else>
+                    <selectize-component style="text-align:left;" v-model="inputPembayaranPembelian.cara_bayar" :settings="placeholder_cara_bayar" id="cara_bayar" name="cara_bayar" ref='cara_bayar'> 
+                      <option v-for="cara_bayars, index in cara_bayar" v-bind:value="cara_bayars.id">{{ cara_bayars.nama_kas }}</option>
+                    </selectize-component>
+                  </div>
+                </div> 
+                <div class="col-md-1 col-xs-1" style="padding-left:0px;padding-top:43;">
+                  <div class="row" style="margin-top:-10px">
+                    <button class="btn btn-primary btn-icon waves-effect waves-light" v-on:click="tambahModalKas()" type="button"> <i class="material-icons" >add</i> </button>
+                  </div>
+                </div>
+              </div> 
 
-  </div> 
+            </div> 
+
+            <div class="card-footer">
+              <div class="row"> 
+                <div class="col-md-6 col-xs-6"> 
+                  <button type="button btn-lg"  class="btn btn-success" id="bayar" v-on:click="selesaiPembelian()" v-shortkey.push="['f2']" @shortkey="selesaiPembelian()" ><font style="font-size:20px;">Bayar(F2)</font></button>
+                </div>
+                <div class="col-md-6 col-xs-6"> 
+                  <button type="submit btn-lg"  class="btn btn-danger" id="btnBatal" v-on:click="batalPembelian()" v-shortkey.push="['f3']" @shortkey="batalPembelian()" ><font style="font-size:20px;">Batal(F3)</font>  </button>
+                </div>
+              </div>
+            </div>
+          </div>             
+        </div><!-- COL SM 4 --> 
+      </div><!-- ROW --> 
+    </div>
+  </div>
+
+</div> 
 </div> 
 </template>
 <style type="text/css">
-.card-pembayaran{
-  background-color:#82B1FF;
-}
+  .card-pembayaran{
+    background-color:#82B1FF;
+  }
 </style>
 
 <script>
-import { mapState } from 'vuex';
-export default {
-  data: function () {
-    return {
-      errors: [],
-      suplier: [],
-      tbs_pembelians: [],
-      tbsPembelianData : {},
-      url : window.location.origin+(window.location.pathname).replace("dashboard", "pembelian"),
-      url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
-      url_kas : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
-      url_cek_total_kas : window.location.origin+(window.location.pathname).replace("dashboard", ""),
-      url_suplier : window.location.origin+(window.location.pathname).replace("dashboard", "suplier"),
-      url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
-      urlImport : window.location.origin+(window.location.pathname).replace("dashboard", "pembelian/import-excel"),
-      urlTemplate : window.location.origin+(window.location.pathname).replace("dashboard", "pembelian/template-excel"),
-      inputTbsPembelian: {
-        nama_produk : '',
-        produk : '',
-        id_produk : '',
-        jumlah_produk : '',
-        harga_produk : '',
-        id_tbs : '',
-      },
-      inputPembayaranPembelian:{
-        potongan_persen: 0,
-        potongan_faktur: 0,
-        subtotal: 0,
-        pembayaran: 0,
-        total_akhir: 0,
-        kembalian: 0,
-        kredit: 0,
-        jatuh_tempo: '',
-        keterangan: '',
-        subtotal_number_format:0, 
-        suplier: '',
-        cara_bayar: '',
-        status_pembelian: '',
-        ppn: '',
-        potongan: 0,
-      },
-      tambahSuplier: {
-        nama_suplier : '',
-        alamat : '',
-        no_telp : '',
-        contact_person : '',
-      },
-      tambahKas: {
-        kode_kas : '',
-        nama_kas : '',
-        status_kas : 0,
-        default_kas : 0
-      },
-      placeholder_produk: {
-        placeholder: '--PILIH PRODUK (F1)--',
-        sortField: 'text',
-        openOnFocus : true
-      },
-      placeholder_suplier: {
-        placeholder: '--PILIH SUPPLIER (F4)--',
-        sortField: 'text',
-        openOnFocus : true
-      },
-      placeholder_cara_bayar: {
-        placeholder: '--PILIH CARA BAYAR (F6)--',
-        sortField: 'text',
-        openOnFocus : true
-      },
-      separator: {
-        decimal: ',',
-        thousands: '.',
-        prefix: '',
-        suffix: '',
-        precision: 2,
-        masked: false /* doesn't work with directive */
-      },
-      pemisahTitik: {
-        decimal: ',',
-        thousands: '.',
-        prefix: '',
-        suffix: '',
-        precision: 0,
-        masked: false /* doesn't work with directive */
-      },      
-      disabled: {
+  import { mapState } from 'vuex';
+  export default {
+    data: function () {
+      return {
+        errors: [],
+        suplier: [],
+        satuan: [],
+        tbs_pembelians: [],
+        tbsPembelianData : {},
+        url : window.location.origin+(window.location.pathname).replace("dashboard", "pembelian"),
+        url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
+        url_kas : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
+        url_cek_total_kas : window.location.origin+(window.location.pathname).replace("dashboard", ""),
+        url_suplier : window.location.origin+(window.location.pathname).replace("dashboard", "suplier"),
+        url_satuan : window.location.origin+(window.location.pathname).replace("dashboard", "pembelian/satuan-konversi"),
+        url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
+        urlImport : window.location.origin+(window.location.pathname).replace("dashboard", "pembelian/import-excel"),
+        urlTemplate : window.location.origin+(window.location.pathname).replace("dashboard", "pembelian/template-excel"),
+        inputTbsPembelian: {
+          nama_produk : '',
+          produk : '',
+          id_produk : '',
+          jumlah_produk : '',
+          harga_produk : '',
+          id_tbs : '',
+          satuan_produk: ''
+        },
+        inputPembayaranPembelian:{
+          potongan_persen: 0,
+          potongan_faktur: 0,
+          subtotal: 0,
+          pembayaran: 0,
+          total_akhir: 0,
+          kembalian: 0,
+          kredit: 0,
+          jatuh_tempo: '',
+          keterangan: '',
+          subtotal_number_format:0, 
+          suplier: '',
+          cara_bayar: '',
+          status_pembelian: '',
+          ppn: '',
+          potongan: 0,
+        },
+        tambahSuplier: {
+          nama_suplier : '',
+          alamat : '',
+          no_telp : '',
+          contact_person : '',
+        },
+        tambahKas: {
+          kode_kas : '',
+          nama_kas : '',
+          status_kas : 0,
+          default_kas : 0
+        },
+        placeholder_produk: {
+          placeholder: '--PILIH PRODUK (F1)--',
+          sortField: 'text',
+          openOnFocus : true
+        },
+        placeholder_satuan: {
+          placeholder: '--PILIH SATUAN--',
+          sortField: 'text',
+          openOnFocus : true
+        },
+        placeholder_suplier: {
+          placeholder: '--PILIH SUPPLIER (F4)--',
+          sortField: 'text',
+          openOnFocus : true
+        },
+        placeholder_cara_bayar: {
+          placeholder: '--PILIH CARA BAYAR (F6)--',
+          sortField: 'text',
+          openOnFocus : true
+        },
+        separator: {
+          decimal: ',',
+          thousands: '.',
+          prefix: '',
+          suffix: '',
+          precision: 2,
+          masked: false /* doesn't work with directive */
+        },
+        pemisahTitik: {
+          decimal: ',',
+          thousands: '.',
+          prefix: '',
+          suffix: '',
+          precision: 0,
+          masked: false /* doesn't work with directive */
+        },      
+        disabled: {
           to: new Date(), // Disable all dates up to specific date
         },
         pencarian: '',
@@ -674,6 +687,23 @@ getSubtotalTbs(){
  })
   .catch(function (resp) {
     console.log(resp);
+  });
+}, 
+getSatuan(id_produk){
+  var app = this;
+  axios.get(app.url_satuan+'/'+id_produk)
+  .then(function (resp) {
+    app.satuan = resp.data;
+
+    $.each(resp.data, function (i, item) {
+      if (resp.data[i].id === resp.data[i].satuan_dasar) {
+        app.inputTbsPembelian.satuan_produk = resp.data[i].id
+      }
+    });
+  })
+  .catch(function (resp) {
+    console.log(resp);
+    alert("Tidak Dapat Memuat Satuan Produk");
   });
 },    
 getHasilPencarian(page){
@@ -845,6 +875,7 @@ pilihProduk() {
     var harga_produk = produk[2]; 
 
     this.inputJumlahProduk(id_produk,nama_produk,harga_produk);
+    this.getSatuan(id_produk);
   }
 },//END FUNGSI pilihProduk
 inputJumlahProduk(id_produk,nama_produk,harga_produk){
@@ -1461,65 +1492,65 @@ prosesTransaksiSelesai(){
     }
   });
 },//akhir prosesTransaksiSelesai
-  closeModalJumlahProduk(){  
-    $("#modalJumlahProduk").hide(); 
-    this.openSelectizeProduk();
-  },
-  importExcel(){
-        var app = this;
-        let newExcel = new FormData();
-        let file = document.getElementById('excel').files[0];
+closeModalJumlahProduk(){  
+  $("#modalJumlahProduk").hide(); 
+  this.openSelectizeProduk();
+},
+importExcel(){
+  var app = this;
+  let newExcel = new FormData();
+  let file = document.getElementById('excel').files[0];
 
-        if (file != undefined) {
-            newExcel.append('excel', file)
-        }else{
-            app.alertGagal("Silakan Pilih File Dahulu.");
-            return;
-        }
+  if (file != undefined) {
+    newExcel.append('excel', file)
+  }else{
+    app.alertGagal("Silakan Pilih File Dahulu.");
+    return;
+  }
 
-        $("#modal_import").hide();
-        $("#excel").val('');
-        app.loading = true;
-        axios.post(app.urlImport, newExcel).then(function (resp){
-            console.log(resp);
-            if (resp.data.pesanError !== undefined) {
-                return swal({
-                    title: 'Gagal!',
-                    type: 'warning',
-                    html: '<div style="text-align: left; font-size: 14px;">'+ resp.data.pesanError +'</div>',
-                });
-            }
-            app.getResults();
-            app.alertImport(resp.data.jumlahProduk + ' Produk Berhasil Diimport.');
-        }).catch(function (resp){
-            console.log(resp);
-
-            if (resp.response.data.errors != undefined) {
-                app.errors = resp.response.data.errors.excel[0];
-            }
-            else {
-                app.errors = "Ukuran file terlalu besar!";
-            }
-
-            app.alertGagal(app.errors);
-        });
-    },
-    alertImport(pesan) {
-        this.$swal({
-            text: pesan,
-            icon: "success",
-            buttons: false,
-            timer: 1000
-        });
-    },
-    alertGagal(pesan) {
-        this.$swal({
-            text: pesan,
-            icon: "warning",
-            buttons: false,
-            timer: 1000
-        });
+  $("#modal_import").hide();
+  $("#excel").val('');
+  app.loading = true;
+  axios.post(app.urlImport, newExcel).then(function (resp){
+    console.log(resp);
+    if (resp.data.pesanError !== undefined) {
+      return swal({
+        title: 'Gagal!',
+        type: 'warning',
+        html: '<div style="text-align: left; font-size: 14px;">'+ resp.data.pesanError +'</div>',
+      });
     }
+    app.getResults();
+    app.alertImport(resp.data.jumlahProduk + ' Produk Berhasil Diimport.');
+  }).catch(function (resp){
+    console.log(resp);
+
+    if (resp.response.data.errors != undefined) {
+      app.errors = resp.response.data.errors.excel[0];
+    }
+    else {
+      app.errors = "Ukuran file terlalu besar!";
+    }
+
+    app.alertGagal(app.errors);
+  });
+},
+alertImport(pesan) {
+  this.$swal({
+    text: pesan,
+    icon: "success",
+    buttons: false,
+    timer: 1000
+  });
+},
+alertGagal(pesan) {
+  this.$swal({
+    text: pesan,
+    icon: "warning",
+    buttons: false,
+    timer: 1000
+  });
+}
 }
 }
 </script>
