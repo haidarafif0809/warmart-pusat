@@ -307,7 +307,7 @@ class PembelianController extends Controller
         $kas_default = Kas::where('warung_id', Auth::user()->id_warung)->where('default_kas', 1)->count();
         $kas_pilih   = Kas::where('warung_id', Auth::user()->id_warung)->where('default_kas', 1)->first();
 
-        $tbs_pembelian = EditTbsPembelian::select('edit_tbs_pembelians.id_edit_tbs_pembelians AS id_edit_tbs_pembelian', 'edit_tbs_pembelians.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'edit_tbs_pembelians.id_produk AS id_produk', 'edit_tbs_pembelians.harga_produk AS harga_produk', 'edit_tbs_pembelians.potongan AS potongan', 'edit_tbs_pembelians.tax AS tax', 'edit_tbs_pembelians.subtotal AS subtotal', 'edit_tbs_pembelians.ppn AS ppn', 'edit_tbs_pembelians.no_faktur AS no_faktur', 'satuans.nama_satuan')
+        $tbs_pembelian = EditTbsPembelian::select('edit_tbs_pembelians.id_edit_tbs_pembelians AS id_edit_tbs_pembelian', 'edit_tbs_pembelians.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'edit_tbs_pembelians.id_produk AS id_produk', 'edit_tbs_pembelians.harga_produk AS harga_produk', 'edit_tbs_pembelians.potongan AS potongan', 'edit_tbs_pembelians.tax AS tax', 'edit_tbs_pembelians.subtotal AS subtotal', 'edit_tbs_pembelians.ppn AS ppn', 'edit_tbs_pembelians.no_faktur AS no_faktur', 'edit_tbs_pembelians.satuan_id AS satuan_id', 'satuans.nama_satuan')
             ->leftJoin('barangs', 'barangs.id', '=', 'edit_tbs_pembelians.id_produk')
             ->leftJoin('satuans', 'satuans.id', '=', 'edit_tbs_pembelians.satuan_id')
             ->where('edit_tbs_pembelians.no_faktur', $pembelian->no_faktur)->where('edit_tbs_pembelians.warung_id', Auth::user()->id_warung)->orderBy('edit_tbs_pembelians.id_edit_tbs_pembelians', 'desc')->paginate(10);
@@ -345,9 +345,11 @@ class PembelianController extends Controller
             }
 
             array_push($array, [
+                'id_produk'              => $tbs_pembelians->id_produk,
                 'id_tbs_pembelian'       => $tbs_pembelians->id_edit_tbs_pembelian,
                 'nama_produk'            => $nama_produk_title_case,
                 'kode_produk'            => $tbs_pembelians->produk->kode_barang,
+                'satuan_id'              => $tbs_pembelians->satuan_id,
                 'nama_satuan'            => strtoupper($tbs_pembelians->nama_satuan),
                 'harga_produk'           => $tbs_pembelians->harga_produk,
                 'harga_pemisah'          => $tbs_pembelians->PemisahHarga,
