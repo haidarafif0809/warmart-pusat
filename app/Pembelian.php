@@ -8,7 +8,7 @@ use Yajra\Auditable\AuditableTrait;
 class Pembelian extends Model
 {
     use AuditableTrait;
-    protected $fillable = ['no_faktur', 'total', 'suplier_id', 'status_pembelian', 'potongan', 'tax', 'tunai', 'kembalian', 'kredit', 'nilai_kredit', 'cara_bayar', 'status_beli_awal', 'tanggal_jt_tempo', 'keterangan', 'ppn', 'warung_id'];
+    protected $fillable = ['no_faktur', 'total', 'suplier_id', 'status_pembelian', 'potongan', 'tax', 'tunai', 'kembalian', 'kredit', 'nilai_kredit', 'cara_bayar', 'status_beli_awal', 'tanggal_jt_tempo', 'keterangan', 'ppn', 'warung_id', 'satuan_dasar'];
 
     // relasi ke suppier
     public function suplier()
@@ -54,26 +54,27 @@ class Pembelian extends Model
         return $total;
     }
 
-        public function getJatuhTempoAttribute()
+    public function getJatuhTempoAttribute()
     {
-       $jatuh_tempo = $this->tanggal_jt_tempo;
-       if ($jatuh_tempo == '') {
-           return "-";
-       }else{
-        $tanggal       = date($this->tanggal_jt_tempo);
-        $date          = date_create($tanggal);
-        $date_terbalik = date_format($date, "d/m/Y");
-        return $date_terbalik;
+        $jatuh_tempo = $this->tanggal_jt_tempo;
+        if ($jatuh_tempo == '') {
+            return "-";
+        } else {
+            $tanggal       = date($this->tanggal_jt_tempo);
+            $date          = date_create($tanggal);
+            $date_terbalik = date_format($date, "d/m/Y");
+            return $date_terbalik;
+        }
     }
-}
 
-    public function scopeQueryCetak($query,$id){
-        $query->select('w.name AS nama_warung','w.alamat AS alamat_warung','s.nama_suplier AS suplier','u.name AS kasir','pembelians.potongan AS potongan','pembelians.total AS total','pembelians.tunai AS tunai','pembelians.kembalian AS kembalian',DB::raw('DATE_FORMAT(pembelians.created_at, "%d/%m/%Y %H:%i:%s") as waktu_beli'),'w.no_telpon AS no_telp_warung','pembelians.id AS id','s.alamat AS alamat_suplier','pembelians.status_pembelian AS status_pembelian','kas.nama_kas AS nama_kas','pembelians.suplier_id AS suplier_id','pembelians.no_faktur AS no_faktur')
-        ->leftJoin('warungs AS w','pembelians.warung_id','=','w.id')
-        ->leftJoin('users AS u','u.id','=','pembelians.created_by')
-        ->leftJoin('supliers AS s', 's.id', '=', 'pembelians.suplier_id')
-        ->leftJoin('kas', 'kas.id', '=', 'pembelians.cara_bayar')
-        ->where('pembelians.id',$id);
+    public function scopeQueryCetak($query, $id)
+    {
+        $query->select('w.name AS nama_warung', 'w.alamat AS alamat_warung', 's.nama_suplier AS suplier', 'u.name AS kasir', 'pembelians.potongan AS potongan', 'pembelians.total AS total', 'pembelians.tunai AS tunai', 'pembelians.kembalian AS kembalian', DB::raw('DATE_FORMAT(pembelians.created_at, "%d/%m/%Y %H:%i:%s") as waktu_beli'), 'w.no_telpon AS no_telp_warung', 'pembelians.id AS id', 's.alamat AS alamat_suplier', 'pembelians.status_pembelian AS status_pembelian', 'kas.nama_kas AS nama_kas', 'pembelians.suplier_id AS suplier_id', 'pembelians.no_faktur AS no_faktur')
+            ->leftJoin('warungs AS w', 'pembelians.warung_id', '=', 'w.id')
+            ->leftJoin('users AS u', 'u.id', '=', 'pembelians.created_by')
+            ->leftJoin('supliers AS s', 's.id', '=', 'pembelians.suplier_id')
+            ->leftJoin('kas', 'kas.id', '=', 'pembelians.cara_bayar')
+            ->where('pembelians.id', $id);
         return $query;
     }
 

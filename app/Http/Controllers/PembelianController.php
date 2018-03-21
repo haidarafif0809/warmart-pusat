@@ -1078,12 +1078,15 @@ class PembelianController extends Controller
             // INSERT DETAIL PEMBELIAN
             foreach ($data_produk_pembelian->get() as $data_tbs_pembelian) {
                 $barang = Barang::select('harga_beli')->where('id', $data_tbs_pembelian->id_produk)->where('id_warung', Auth::user()->id_warung);
-                if ($barang->first()->harga_beli != $data_tbs_pembelian->harga_produk) {
-                    $barang->update(['harga_beli' => $data_tbs_pembelian->harga_produk]);
+                if ($data_tbs_pembelian->satuan_id == $data_tbs_pembelian->satuan_dasar) {
+                    if ($barang->first()->harga_beli != $data_tbs_pembelian->harga_produk) {
+                        $barang->update(['harga_beli' => $data_tbs_pembelian->harga_produk]);
+                    }
                 }
                 $detail_pembelian = DetailPembelian::create([
                     'no_faktur'     => $no_faktur,
                     'satuan_id'     => $data_tbs_pembelian->satuan_id,
+                    'satuan_dasar'  => $data_tbs_pembelian->satuan_dasar,
                     'id_produk'     => $data_tbs_pembelian->id_produk,
                     'jumlah_produk' => $data_tbs_pembelian->jumlah_produk,
                     'harga_produk'  => $data_tbs_pembelian->harga_produk,
@@ -1094,7 +1097,6 @@ class PembelianController extends Controller
                     'ppn'           => $data_tbs_pembelian->ppn,
                     'warung_id'     => Auth::user()->id_warung,
                 ]);
-
             }
 
             //INSERT PEMBELIAN
