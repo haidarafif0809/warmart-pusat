@@ -310,7 +310,7 @@
               <button type="button" class="close"  v-on:click="closeModalJumlahProduk()" v-shortkey.push="['f9']" @shortkey="closeModalJumlahProduk()"> &times;</button> 
             </div>
 
-            <form class="form-horizontal" v-on:submit.prevent="submitJumlahProduk(inputTbsPembelian.id_produk,inputTbsPembelian.jumlah_produk,inputTbsPembelian.harga_produk,inputTbsPembelian.nama_produk)"> 
+            <form class="form-horizontal" v-on:submit.prevent="submitJumlahProduk(inputTbsPembelian.id_produk,inputTbsPembelian.jumlah_produk,inputTbsPembelian.harga_produk,inputTbsPembelian.nama_produk,inputTbsPembelian.satuan_produk)"> 
               <div class="modal-body">
                 <h3 class="text-center"><b>{{inputTbsPembelian.nama_produk}}</b></h3>
 
@@ -320,11 +320,11 @@
                   </div>
                   <div class="col-md-4">
                     <selectize-component v-model="inputTbsPembelian.satuan_produk" :settings="placeholder_satuan" id="satuan" name="satuan" ref='satuan'> 
-                      <option v-for="satuans, index in satuan" v-bind:value="satuans.id" class="pull-left">{{ satuans.nama_satuan }}</option>
+                      <option v-for="satuans, index in satuan" v-bind:value="satuans.satuan" class="pull-left">{{ satuans.nama_satuan }}</option>
                     </selectize-component>
                   </div>
                   <div class="col-md-4">
-                    <money class="form-control" v-model="inputTbsPembelian.harga_produk" v-bind="pemisahTitik" placeholder="Isi Harga Produk" name="harga_produk" id="harga_produk" ref="harga_produk" autocomplete="off"></money>
+                    <money class="form-control" v-model="inputTbsPembelian.harga_produk" v-bind="pemisahTitik" placeholder="Isi Harga Produk" name="harga_produk" id="harga_produk" ref="harga_produk" autocomplete="off" ></money>
                   </div>
                 </div>
 
@@ -381,6 +381,7 @@
                   <tr>
                     <th  >Produk</th>
                     <th  style="text-align:right;">Jumlah</th>
+                    <th  style="text-align:right;">Satuan</th>
                     <th  style="text-align:right;">Harga</th>
                     <th  style="text-align:right;">Potongan</th>
                     <th  style="text-align:right;">Pajak</th>
@@ -396,6 +397,7 @@
                       <a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-on:click="editEntryJumlah(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk,tbs_pembelian.subtotal)"><p align='right'>{{ tbs_pembelian.jumlah_produk_pemisah }}</p>
                       </a>
                     </td>
+                    <td align="right" v-bind:class="'satuan-' + tbs_pembelian.id_produk" v-bind:data-satuan="''+tbs_pembelian.satuan_id">{{ tbs_pembelian.nama_satuan }}</td>
                     <td>
                       <a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-on:click="editEntryHarga(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk,tbs_pembelian.subtotal)" v-bind:class="'harga-' + tbs_pembelian.id_produk" v-bind:data-harga="''+tbs_pembelian.harga_produk"><p align='right'>{{ tbs_pembelian.harga_pemisah }}</p>
                       </a>
@@ -566,7 +568,7 @@
         placeholder_satuan: {
           placeholder: '--PILIH SATUAN--',
           sortField: 'text',
-          openOnFocus : true
+          openOnFocus : true,
         },
         placeholder_suplier: {
           placeholder: '--PILIH SUPPLIER (F4)--',
@@ -637,6 +639,9 @@ pencarian: function (newQuestion) {
 },
 'inputPembayaranPembelian.potongan_faktur':function(){
   this.hitungPotonganFaktur()
+},
+'inputTbsPembelian.satuan_produk':function(){
+  this.hitungHargaKonversi()
 }
 
 },
@@ -691,15 +696,31 @@ getSubtotalTbs(){
 }, 
 getSatuan(id_produk){
   var app = this;
+  var satuan_tbs = $(".satuan-"+id_produk).attr("data-satuan");
+
   axios.get(app.url_satuan+'/'+id_produk)
   .then(function (resp) {
-    app.satuan = resp.data;
 
-    $.each(resp.data, function (i, item) {
-      if (resp.data[i].id === resp.data[i].satuan_dasar) {
-        app.inputTbsPembelian.satuan_produk = resp.data[i].id
-      }
-    });
+    app.satuan = resp.data;
+    if (typeof satuan_tbs == "undefined") {
+
+      $.each(resp.data, function (i, item) {
+        if (resp.data[i].id === resp.data[i].satuan_dasar) {
+          app.inputTbsPembelian.satuan_produk = resp.data[i].satuan;
+          $('#satuan')[0].selectize.unlock();
+        }
+      });
+
+    }else{
+
+      $.each(resp.data, function (i, item) {
+        if (resp.data[i].id === parseInt(satuan_tbs)) {
+          app.inputTbsPembelian.satuan_produk = resp.data[i].satuan;
+          $('#satuan')[0].selectize.lock();
+        }
+      });
+
+    }
   })
   .catch(function (resp) {
     console.log(resp);
@@ -882,7 +903,7 @@ inputJumlahProduk(id_produk,nama_produk,harga_produk){
   var app = this
   app.inputTbsPembelian.id_produk = id_produk
   app.inputTbsPembelian.nama_produk = nama_produk  
-  var harga_tbs = $(".harga-"+id_produk).attr("data-harga")
+  var harga_tbs = $(".harga-"+id_produk).attr("data-harga");
 
   if (typeof harga_tbs === 'undefined'){
     app.inputTbsPembelian.harga_produk = harga_produk;
@@ -890,9 +911,9 @@ inputJumlahProduk(id_produk,nama_produk,harga_produk){
     app.inputTbsPembelian.harga_produk = harga_tbs;
   }
   $("#modalJumlahProduk").show();
-  app.$refs.jumlah_produk.focus(); 
+  app.$refs.jumlah_produk.focus();
 },
-submitJumlahProduk(id_produk,jumlah_produk,harga_produk,nama_produk){
+submitJumlahProduk(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk){
   var app = this
   var produk = app.inputTbsPembelian.produk.split("|");
   var harga_tbs = $(".harga-"+produk[0]).attr("data-harga")
@@ -919,13 +940,13 @@ submitJumlahProduk(id_produk,jumlah_produk,harga_produk,nama_produk){
     })
 
   }else if (harga != harga_produk) {
-    app.konfirmasiPerubahanHarga(id_produk,jumlah_produk,harga_produk,nama_produk)
+    app.konfirmasiPerubahanHarga(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk)
   }else{
-    app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk)
+    app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk)
   }
 
 },//END PROSES TAMBAH PRODUK TBS
-konfirmasiPerubahanHarga(id_produk,jumlah_produk,harga_produk,nama_produk){
+konfirmasiPerubahanHarga(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk){
   let app = this
   app.$swal({
     text: "Anda Yakin Ingin Merubah Harga Beli Produk "+titleCase(nama_produk)+ " ?",
@@ -939,15 +960,16 @@ konfirmasiPerubahanHarga(id_produk,jumlah_produk,harga_produk,nama_produk){
 
     if (!value) throw null;
 
-    app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk);
+    app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk);
 
   });
 },
-prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk){
+prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk){
 
   var app = this;
+  var satuan = satuan_produk.split("|");
   app.loading = true;
-  axios.get(app.url+'/proses-tambah-tbs-pembelian?id_produk_tbs='+id_produk+'&jumlah_produk='+jumlah_produk+'&harga_produk='+harga_produk)
+  axios.get(app.url+'/proses-tambah-tbs-pembelian?id_produk_tbs='+id_produk+'&jumlah_produk='+jumlah_produk+'&harga_produk='+harga_produk+'&satuan='+satuan[0]+'&satuan_dasar='+satuan[2])
   .then(function (resp) {
     $("#modalJumlahProduk").hide();
     app.alert("Menambahkan Produk "+titleCase(nama_produk));
@@ -1385,6 +1407,12 @@ hitungPotonganPersen(){
 
 
   }
+},
+hitungHargaKonversi(){
+  var satuan = this.inputTbsPembelian.satuan_produk.split("|");
+  var produk = this.inputTbsPembelian.produk.split("|");
+  this.inputTbsPembelian.harga_produk = parseFloat(produk[2]) * ( parseFloat(satuan[3]) * parseFloat(satuan[4]) );
+
 },
 hitungPotonganFaktur(){
 

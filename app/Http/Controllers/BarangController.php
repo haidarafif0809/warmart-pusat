@@ -767,6 +767,6 @@ class BarangController extends Controller
                     ]);
                 }
             });
-        })->export('xls');
+        })->download('xls');
     }
 }
