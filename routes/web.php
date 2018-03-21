@@ -77,8 +77,8 @@ Route::get('/daftar-produk', [
 ]);
 
 Route::get('/daftar-produk/{id}', [
-    'as'         => 'daftar_produk.filter_kategori',
-    'uses'       => 'DaftarProdukController@filter_kategori',
+    'as'   => 'daftar_produk.filter_kategori',
+    'uses' => 'DaftarProdukController@filter_kategori',
 ]);
 
 Route::get('/daftar-produk/pencarian/search', [
@@ -94,19 +94,16 @@ Route::get('/detail-produk/{id}', [
 
 //PUNYA HALAMAN WARUNG
 Route::get('/halaman-warung/{id}', [
-    'middleware' => ['auth'],
     'as'         => 'halaman-warung.halaman_warung',
     'uses'       => 'HalamanWarungController@index',
 ]);
 
 Route::get('/halaman-warung/filter/{id}/{id_warung}/', [
-    'middleware' => ['auth'],
     'as'         => 'halaman_warung.filter_kategori',
     'uses'       => 'HalamanWarungController@filter_kategori',
 ]);
 
 Route::get('/halaman-warung/pencarian/search', [
-    'middleware' => ['auth'],
     'as'         => 'halaman_warung.pencarian',
     'uses'       => 'HalamanWarungController@pencarian',
 ]);
@@ -237,7 +234,6 @@ Route::post('/edit-jumlah-pesanan-warung}', [
 ]);
 
 Route::get('/pesanan-warung/cetak-kecil-penjualan/{id}', 'PesananWarungController@cetakKecil')->middleware('auth');
-Route::get('/pesanan-warung/cetak-kecil-pesanan/{id}', 'PesananWarungController@cetakKecilPesanan')->middleware('auth');
 
 //PUNYA
 
@@ -483,6 +479,7 @@ Route::get('/produk/pilih-produk', 'BarangController@pilihProduk')->middleware('
 Route::get('/produk/pilih-agent', 'BarangController@data_agent')->middleware('auth');
 Route::get('/produk/template-excel', 'BarangController@downloadTemplate')->middleware('auth');
 Route::post('/produk/import-excel/', 'BarangController@importExcel')->middleware('auth');
+Route::get('/produk/export-excel', 'BarangController@downloadExcel')->middleware('auth');
 Route::post('/produk/satuan-konversi', 'BarangController@satuanKonversi')->middleware('auth');
 Route::get('/produk/data-satuan-konversi/{id}', 'BarangController@editSatuanKonversi')->middleware('auth');
 Route::post('/produk/update-satuan-konversi/{id}', 'BarangController@prosesEditSatuanKonversi')->middleware('auth');
@@ -756,7 +753,7 @@ Route::post('/laporan-kartu-stok/pencarian', 'LaporanKartuStokController@pencari
 Route::get('/laporan-kartu-stok/pilih-produk', 'LaporanKartuStokController@dataProduk')->middleware('auth');
 Route::post('/laporan-kartu-stok/total-saldo-awal', 'LaporanKartuStokController@totalSaldoAwal')->middleware('auth');
 Route::post('/laporan-kartu-stok/total-saldo-akhir', 'LaporanKartuStokController@totalSaldoAkhir')->middleware('auth');
-Route::get('/laporan-kartu-stok/download-excel-kartu-stok/{dari_tanggal}/{sampai_tanggal}/{produk}', 'LaporanKartuStokController@downloadExcel')->middleware('auth');
+Route::get('/laporan-kartu-stok/download-excel-kastokrtu-/{dari_tanggal}/{sampai_tanggal}/{produk}', 'LaporanKartuStokController@downloadExcel')->middleware('auth');
 Route::get('/laporan-kartu-stok/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{produk}', 'LaporanKartuStokController@cetakLaporan')->middleware('auth');
 
 // GRAFIK JAM TRANSAKSI PENJUALAN

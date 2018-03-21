@@ -21,35 +21,68 @@
 </head>
 <style type="text/css">
 
-	p{
-		margin-top: 1px; margin-bottom: 1px;
-	}
+p{
+	margin-top: 1px; margin-bottom: 1px;
+}
+
+.marginProduk{
+	margin-top: 1px; margin-bottom: 1px;
+	padding-left: 3px; padding-right: 3px;
+}
 
 </style>
 <body>
 
-	<p><b>{{$penjualan->nama_warung}}</b></p>
-	<p><b>{{$penjualan->alamat_warung}}</b></p>
-	<p>======================================</p>
-	<p>Pelanggan : {{$nama_pelanggan}}</p>
-	<p>-------------------------------------------------------------</p>
-	<p>No. Transaksi : #{{$penjualan->id}}</p>
-	<p>-------------------------------------------------------------</p>	
+	<div class="row">
+		<div class="col-md-12">
+			<center><h4 style="margin-top: 1px; margin-bottom: 1px;"><b>{{$penjualan->nama_warung}}</b></h4></center>
+			<center><p><b>{{$penjualan->alamat_warung}}</b></p></center>	
+			<p>-------------------------------------------------------------</p>
+			<p>Pelanggan : {{$nama_pelanggan}}</p>
+			<p>No. Transaksi : #{{$penjualan->id}}</p>
+
+			<p>-------------------------------------------------------------</p>
+		</div>
+	</div>
 
 
 	<table>
 		<tbody>
 
 			@foreach ($detail_penjualan as $detail_penjualans)			
-			<tr><td style="padding: 3px;"> {{title_case($detail_penjualans->produk->nama_barang)}} </td><td style="padding:3px" align="right"> {{number_format($detail_penjualans->harga, 2, ',', '.')}}</td><td  align="right" style="padding:3px">{{number_format($detail_penjualans->jumlah, 2, ',', '.')}}</td><td  align="right" style="padding:3px">{{number_format($detail_penjualans->harga * $detail_penjualans->jumlah, 2, ',', '.')}}</td></tr>
+			<tr>
+				<td class="marginProduk"> {{title_case($detail_penjualans->produk->nama_barang)}} </td>
+				<td class="marginProduk" align="right"> {{number_format($detail_penjualans->harga, 0, ',', '.')}}</td>
+				<td class="marginProduk" align="right">{{$detail_penjualans->jumlah}}</td>
+				<td class="marginProduk" align="right">{{number_format($detail_penjualans->harga * $detail_penjualans->jumlah, 0, ',', '.')}}</td>
+			</tr>
 			@endforeach
-			<tr><td style="padding: 3px;"> Subtotal </td><td style="padding:3px" align="right">:</td><td  align="right" style="padding:3px"></td><td  align="right" style="padding:3px">{{number_format($subtotal, 2, ',', '.')}}</td></tr>
-			<tr><td style="padding: 3px;"> Diskon </td><td style="padding:3px" align="right">:</td><td  align="right" style="padding:3px"></td><td  align="right" style="padding:3px">{{number_format($potongan, 2, ',', '.')}}</td></tr>
-			<tr><td style="padding: 3px;"> Total </td><td style="padding:3px" align="right">:</td><td  align="right" style="padding:3px"></td><td  align="right" style="padding:3px">{{number_format($penjualan->total, 2, ',', '.')}}</td></tr>
+
+			<tr>
+				<td class="marginProduk"> Subtotal </td>
+				<td class="marginProduk">:</td>
+				<td class="marginProduk"></td>
+				<td class="marginProduk" align="right">{{number_format($subtotal, 0, ',', '.')}}</td>
+			</tr>
+
+			<tr>
+				<td class="marginProduk"> Diskon </td>
+				<td class="marginProduk">:</td>
+				<td class="marginProduk"></td>
+				<td class="marginProduk" align="right">{{number_format($potongan, 0, ',', '.')}}</td>
+			</tr>
+
+			<tr>
+				<td class="marginProduk"> Total </td>
+				<td class="marginProduk">:</td>
+				<td class="marginProduk"></td>
+				<td class="marginProduk" align="right">{{number_format($subtotal - $potongan, 0, ',', '.')}}</td>
+			</tr>
+
 		</tbody>
 	</table>
 	
-	<p>======================================</p>
+	<p>-------------------------------------------------------------</p>
 	<p>{{$penjualan->waktu_jual}}</p>
 
 	<p>Terima Kasih </p>

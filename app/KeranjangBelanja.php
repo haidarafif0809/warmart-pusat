@@ -5,6 +5,7 @@ namespace App;
 use Auth;
 use DB;
 use Illuminate\Database\Eloquent\Model;
+use Session;
 
 class KeranjangBelanja extends Model
 {
@@ -24,7 +25,17 @@ class KeranjangBelanja extends Model
 
     public function scopeJumlahBelanja($query)
     {
-        return $query->where('id_pelanggan', Auth::user()->id)->count();
+            if(!Session::get('session_id')){
+                $session_id    = session()->getId();
+            }else{
+                $session_id = Session::get('session_id');
+            }
+
+            if (Auth::check() == false) {
+                return $query->where('session_id', $session_id)->count();
+            }else{
+                return $query->where('id_pelanggan', Auth::user()->id)->count();
+            }
     }
 
     public function getNamaProdukAttribute()
