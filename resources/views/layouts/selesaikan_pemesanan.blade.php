@@ -731,6 +731,7 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
     var ongkos_kirim = $("#ongkos_kirim").val();
     var provinsi = $("#provinsi").val();
     var kota = $("#kota").val();
+    var bank = $("#bank").val();
 
     if (nama_pelanggan == '') {
 
@@ -784,7 +785,19 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
    }
  });
 
-}else{
+}
+else if(metode_pembayaran == "TRANSFER" && bank == ""){   
+
+   swal({
+    text: 'Mohon Bank Transfer harus diisi !'
+  }).then((result) => {
+    if (result.value) {
+     document.getElementById('bank').selectize.focus(); 
+   }
+ });
+
+}
+else{
 
 
   swal({
