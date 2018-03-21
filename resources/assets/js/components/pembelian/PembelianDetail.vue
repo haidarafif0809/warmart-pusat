@@ -1,8 +1,8 @@
 <style scoped>
-.pencarian {
-	color: red; 
-	float: right;
-}
+	.pencarian {
+		color: red; 
+		float: right;
+	}
 </style>
 
 <template>
@@ -37,6 +37,7 @@
 
 											<th>Produk</th>
 											<th style="text-align:right;">Jumlah</th>
+											<th>Satuan</th>
 											<th style="text-align:right;">Harga</th>
 											<th style="text-align:right;">Potongan</th>
 											<th style="text-align:right;">Tax</th>
@@ -49,6 +50,7 @@
 
 											<td>{{ detailPembelian.kode_produk }} - {{ detailPembelian.nama_produk }}</td>
 											<td style="text-align:right;"> {{ detailPembelian.jumlah_produk_pemisah }}</td>
+											<td>{{ detailPembelian.nama_satuan }}</td>
 											<td style="text-align:right;"> {{ detailPembelian.harga_pemisah }}</td>
 											<td style="text-align:right;">{{ detailPembelian.potongan }} | {{ Math.round(detailPembelian.potongan_persen,2) }} %</td>
 											<td style="text-align:right;"> {{ detailPembelian.tax }} | {{ Math.round(detailPembelian.tax_persen, 2) }} %</td>
@@ -73,7 +75,7 @@
 								</div>
 								<div class="card-content">
 									<h3>Total Keseluruhan</h3>
-             						 <h3 class="card-title"><money v-bind="separator" name="subtotal"  id="subtotal" autocomplete="off"  style="text-align:right;" readonly="" v-model="subtotal"></money></h3>
+									<h3 class="card-title"><money v-bind="separator" name="subtotal"  id="subtotal" autocomplete="off"  style="text-align:right;" readonly="" v-model="subtotal"></money></h3>
 								</div>
 								<div class="card-footer">
 
@@ -92,33 +94,33 @@
 
 
 <script>
-export default {
-	data: function () {
-		return {
-			errors: [],
-			detailPembelian: [],
-			detailPembelianData : {},
-			url : window.location.origin+(window.location.pathname).replace("dashboard", "pembelian"),
-			      separator: {
-              decimal: ',',
-              thousands: '.',
-              prefix: '',
-              suffix: '',
-              precision: 2,
-              masked: false /* doesn't work with directive */
-          },
-			pencarian: '',
-			loading: true,
-			seen : false,    
-			subtotal : 0,
-			no_faktur:'',         
-		}
-	},
-	mounted() {   
-		var app = this;
-		app.getResults();
-	},
-	watch: {
+	export default {
+		data: function () {
+			return {
+				errors: [],
+				detailPembelian: [],
+				detailPembelianData : {},
+				url : window.location.origin+(window.location.pathname).replace("dashboard", "pembelian"),
+				separator: {
+					decimal: ',',
+					thousands: '.',
+					prefix: '',
+					suffix: '',
+					precision: 2,
+					masked: false /* doesn't work with directive */
+				},
+				pencarian: '',
+				loading: true,
+				seen : false,    
+				subtotal : 0,
+				no_faktur:'',         
+			}
+		},
+		mounted() {   
+			var app = this;
+			app.getResults();
+		},
+		watch: {
     // whenever question changes, this function will run
     pencarian: function (newQuestion) {
     	this.getHasilPencarian()

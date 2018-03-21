@@ -461,7 +461,10 @@ class PembelianController extends Controller
         $sum_subtotal = DetailPembelian::select(DB::raw('SUM(subtotal) as subtotal'))->where('no_faktur', $no_faktur)->where('warung_id', Auth::user()->id_warung)->first();
         $subtotal     = $sum_subtotal->subtotal;
 
-        $detail_pembelian = DetailPembelian::select('detail_pembelians.id_detail_pembelian AS id_detail_pembelian', 'detail_pembelians.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'detail_pembelians.id_produk AS id_produk', 'detail_pembelians.harga_produk AS harga_produk', 'detail_pembelians.potongan AS potongan', 'detail_pembelians.tax AS tax', 'detail_pembelians.subtotal AS subtotal', 'detail_pembelians.ppn AS ppn', 'detail_pembelians.no_faktur AS no_faktur')->leftJoin('barangs', 'barangs.id', '=', 'detail_pembelians.id_produk')->where('detail_pembelians.no_faktur', $pembelian->no_faktur)->where('detail_pembelians.warung_id', Auth::user()->id_warung)->orderBy('detail_pembelians.id_detail_pembelian', 'desc')->paginate(10);
+        $detail_pembelian = DetailPembelian::select('detail_pembelians.id_detail_pembelian AS id_detail_pembelian', 'detail_pembelians.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'detail_pembelians.id_produk AS id_produk', 'detail_pembelians.harga_produk AS harga_produk', 'detail_pembelians.potongan AS potongan', 'detail_pembelians.tax AS tax', 'detail_pembelians.subtotal AS subtotal', 'detail_pembelians.ppn AS ppn', 'detail_pembelians.no_faktur AS no_faktur', 'satuans.nama_satuan')
+            ->leftJoin('barangs', 'barangs.id', '=', 'detail_pembelians.id_produk')
+            ->leftJoin('satuans', 'satuans.id', '=', 'detail_pembelians.satuan_id')
+            ->where('detail_pembelians.no_faktur', $pembelian->no_faktur)->where('detail_pembelians.warung_id', Auth::user()->id_warung)->orderBy('detail_pembelians.id_detail_pembelian', 'desc')->paginate(10);
 
         $array       = array();
         $kas_default = Kas::where('warung_id', Auth::user()->id_warung)->where('default_kas', 1)->count();
@@ -504,6 +507,7 @@ class PembelianController extends Controller
                 'id_detail_pembelian'   => $detail_pembelians->id_detail_pembelian,
                 'nama_produk'           => $nama_produk_title_case,
                 'kode_produk'           => $detail_pembelians->produk->kode_barang,
+                'nama_satuan'           => strtoupper($detail_pembelians->nama_satuan),
                 'harga_produk'          => $detail_pembelians->harga_produk,
                 'harga_pemisah'         => $detail_pembelians->PemisahHarga,
                 'jumlah_produk'         => $detail_pembelians->jumlah_produk,
