@@ -1,6 +1,16 @@
+<style scoped>
+.modal {
+  overflow-y:auto;
+}
+.pencarian {
+  color: red; 
+  float: right;
+}
+.card-produk{
+  background-color:#82B1FF;
+}
+</style>
 <template>
-
-
 
 	<div class="row">
 		<div class="col-md-12">
@@ -28,12 +38,11 @@
           </div>
 
           <div class=" table-responsive ">
-            <div  align="right">
-             pencarian
-             <input type="text" name="pencarian" v-model="pencarian" placeholder="Kolom Pencarian" >
-           </div>
+            <div class="pencarian">
+              <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
+            </div>
 
-           <table class="table table-striped table-hover" v-if="seen">
+            <table class="table table-striped table-hover" v-if="seen">
              <thead class="text-primary">
               <tr>
 
@@ -96,8 +105,8 @@ export default {
     app.getFakturItemMasuk();
     app.getResults();
 
-    },
-    watch: {
+  },
+  watch: {
         // whenever question changes, this function will run
         pencarian: function (newQuestion) {
         	this.getHasilPencarian();
@@ -105,17 +114,17 @@ export default {
         },
 
       },
-    filters: {
-    pemisahTitik: function (value) {      
-        var angka = [value];
-        var numberFormat = new Intl.NumberFormat('es-ES');
-        var formatted = angka.map(numberFormat.format);
-        return formatted.join('; ');
-    },
-    tanggal: function (value) {
-            return moment(String(value)).format('DD/MM/YYYY')
+      filters: {
+        pemisahTitik: function (value) {      
+          var angka = [value];
+          var numberFormat = new Intl.NumberFormat('es-ES');
+          var formatted = angka.map(numberFormat.format);
+          return formatted.join('; ');
+        },
+        tanggal: function (value) {
+          return moment(String(value)).format('DD/MM/YYYY')
         }
-    },   
+      },   
       methods: {
        getResults(page) {
         var app = this;	

@@ -6,14 +6,6 @@
   color: red; 
   float: right;
 }
-.form-subtotal{
-  width: 100%;
-  margin: 8px 0;
-  display: inline-block;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
 .card-produk{
   background-color:#82B1FF;
 }
@@ -421,6 +413,7 @@ submitProdukItemMasuk(value){
 })
      .catch(function (resp) {    				
         app.loading = false;
+        app.closeModalJumlahProduk()
         alert("Tidak dapat Menambahkan Produk");
     });
  }
