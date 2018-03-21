@@ -52,7 +52,7 @@ p{
 			<tr>
 				<td class="marginProduk"> {{title_case($detail_penjualans->produk->nama_barang)}} </td>
 				<td class="marginProduk" align="right"> {{number_format($detail_penjualans->harga_produk, 0, ',', '.')}}</td>
-				<td class="marginProduk" align="right">{{$detail_penjualans->jumlah_produk}}</td>
+				<td class="marginProduk" align="right">{{number_format($detail_penjualans->jumlah_produk, 0, ',', '.')}}</td>
 				<td class="marginProduk" align="right">{{number_format($detail_penjualans->harga_produk * $detail_penjualans->jumlah_produk, 0, ',', '.')}}</td>
 			</tr>
 			@endforeach

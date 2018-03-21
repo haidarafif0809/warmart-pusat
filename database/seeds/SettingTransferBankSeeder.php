@@ -34,7 +34,7 @@ class SettingTransferBankSeeder extends Seeder
         $setting->tampil_bank  = 1;
         $setting->default_bank = 0;
         $setting->warung_id    = 1;
-        $setting->logo_bank    = "bri-indo.png";
+        $setting->logo_bank    = "bri.png";
         $setting->save();
 
         $setting               = new SettingTransferBank();
