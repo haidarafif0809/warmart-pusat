@@ -734,6 +734,7 @@ class BarangController extends Controller
                 $row = 1;
                 $sheet->row($row, [
                     'Barcode',
+                    'Kode',
                     'Nama',
                     'Satuan',
                     'Harga Beli',
@@ -757,6 +758,7 @@ class BarangController extends Controller
 
                         // convert to integer
                         (int) $produk->kode_barcode,
+                        $produk->kode_barang,
                         $produk->nama_barang,
                         $satuan->nama_satuan,
                         $harga_beli,
