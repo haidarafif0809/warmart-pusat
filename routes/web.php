@@ -94,18 +94,18 @@ Route::get('/detail-produk/{id}', [
 
 //PUNYA HALAMAN WARUNG
 Route::get('/halaman-warung/{id}', [
-    'as'         => 'halaman-warung.halaman_warung',
-    'uses'       => 'HalamanWarungController@index',
+    'as'   => 'halaman-warung.halaman_warung',
+    'uses' => 'HalamanWarungController@index',
 ]);
 
 Route::get('/halaman-warung/filter/{id}/{id_warung}/', [
-    'as'         => 'halaman_warung.filter_kategori',
-    'uses'       => 'HalamanWarungController@filter_kategori',
+    'as'   => 'halaman_warung.filter_kategori',
+    'uses' => 'HalamanWarungController@filter_kategori',
 ]);
 
 Route::get('/halaman-warung/pencarian/search', [
-    'as'         => 'halaman_warung.pencarian',
-    'uses'       => 'HalamanWarungController@pencarian',
+    'as'   => 'halaman_warung.pencarian',
+    'uses' => 'HalamanWarungController@pencarian',
 ]);
 
 //PUNYA KERANJANG BELANJAAN
@@ -556,6 +556,7 @@ Route::get('/pembelian/subtotal-tbs-pembelian/{jenis_tbs}', 'PembelianController
 Route::post('/pembelian/import-excel', 'PembelianController@importExcel')->middleware('auth');
 Route::get('/pembelian/template-excel', 'PembelianController@templateExcel')->middleware('auth');
 Route::get('/pembelian/satuan-konversi/{id_produk}', 'PembelianController@dataSatuanProduk')->middleware('auth');
+Route::get('/pembelian/satuan-konversi-edit/{id_produk}', 'PembelianController@dataSatuanProdukEdit')->middleware('auth');
 
 //Edit Pembelian
 Route::get('/edit-pembelian/proses-tambah-tbs-pembelian', 'EditPembelianController@proses_tambah_tbs_pembelian')->middleware('auth');

@@ -1,8 +1,8 @@
 <style scoped>
-    .pencarian {
-        color: red; 
-        float: right;
-    }
+.pencarian {
+    color: red; 
+    float: right;
+}
 </style>
 <template>
 
@@ -106,55 +106,55 @@
                                     <td>{{ item_masuk.waktu_edit }}</td>
                                     <td>
                                         <router-link :to="{name: 'detailItemMasuk', params: {id: item_masuk.id}}" class="btn btn-xs btn-info" v-bind:id="'detail-' + item_masuk.id" >
-                                            Detail </router-link> </td>
-                                        </td>
-                                        <td><router-link :to="{name: 'editItemMasukProses', params: {id: item_masuk.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + item_masuk.id" >
-                                            Edit </router-link> </td>
+                                        Detail </router-link> </td>
+                                    </td>
+                                    <td><router-link :to="{name: 'editItemMasukProses', params: {id: item_masuk.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + item_masuk.id" >
+                                    Edit </router-link> </td>
 
-                                            <td> 
-                                                <a href="#item-masuk" class="btn btn-xs btn-danger" v-bind:id="'delete-' + item_masuk.id" v-on:click="deleteEntry(item_masuk.id, index,item_masuk.no_faktur)">Delete</a>
-                                            </td>
-                                        </tr>
-                                    </tbody>					
-                                    <tbody class="data-tidak-ada" v-else>
-                                        <tr ><td colspan="8"  class="text-center">Tidak Ada Data</td></tr>
-                                    </tbody>
-                                </table>	
+                                    <td> 
+                                        <a href="#item-masuk" class="btn btn-xs btn-danger" v-bind:id="'delete-' + item_masuk.id" v-on:click="deleteEntry(item_masuk.id, index,item_masuk.no_faktur)">Delete</a>
+                                    </td>
+                                </tr>
+                            </tbody>					
+                            <tbody class="data-tidak-ada" v-else>
+                                <tr ><td colspan="8"  class="text-center">Tidak Ada Data</td></tr>
+                            </tbody>
+                        </table>	
 
-                                <vue-simple-spinner v-if="loading"></vue-simple-spinner>
+                        <vue-simple-spinner v-if="loading"></vue-simple-spinner>
 
-                                <div align="right"><pagination :data="itemMasukData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
+                        <div align="right"><pagination :data="itemMasukData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
 
-                            </div>
-
-                        </div>
                     </div>
 
                 </div>
             </div>
 
-        </template>
+        </div>
+    </div>
+
+</template>
 
 
-        <script>
-            export default {
-                data: function () {
-                    return {
-                        item_masuk: [],
-                        itemMasukData: {},
-                        url : window.location.origin+(window.location.pathname).replace("dashboard", "item-masuk"),
-                        urlTemplate : window.location.origin+(window.location.pathname).replace("dashboard", "item-masuk/template-excel"),
-                        urlImport : window.location.origin+(window.location.pathname).replace("dashboard", "item-masuk/import-excel"),
-                        pencarian: '',
-                        loading: true,
-                        seen : false
-                    }
-                },
-                mounted() {
-                    var app = this;
-                    app.getResults();
-                },
-                watch: {
+<script>
+export default {
+    data: function () {
+        return {
+            item_masuk: [],
+            itemMasukData: {},
+            url : window.location.origin+(window.location.pathname).replace("dashboard", "item-masuk"),
+            urlTemplate : window.location.origin+(window.location.pathname).replace("dashboard", "item-masuk/template-excel"),
+            urlImport : window.location.origin+(window.location.pathname).replace("dashboard", "item-masuk/import-excel"),
+            pencarian: '',
+            loading: true,
+            seen : false
+        }
+    },
+    mounted() {
+        var app = this;
+        app.getResults();
+    },
+    watch: {
 // whenever question changes, this function will run
 pencarian: function (newQuestion) {
     this.getHasilPencarian();
