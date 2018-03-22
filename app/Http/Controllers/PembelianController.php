@@ -307,8 +307,11 @@ class PembelianController extends Controller
         $kas_default = Kas::where('warung_id', Auth::user()->id_warung)->where('default_kas', 1)->count();
         $kas_pilih   = Kas::where('warung_id', Auth::user()->id_warung)->where('default_kas', 1)->first();
 
-        $tbs_pembelian = EditTbsPembelian::select('edit_tbs_pembelians.id_edit_tbs_pembelians AS id_edit_tbs_pembelian', 'edit_tbs_pembelians.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'edit_tbs_pembelians.id_produk AS id_produk', 'edit_tbs_pembelians.harga_produk AS harga_produk', 'edit_tbs_pembelians.potongan AS potongan', 'edit_tbs_pembelians.tax AS tax', 'edit_tbs_pembelians.subtotal AS subtotal', 'edit_tbs_pembelians.ppn AS ppn', 'edit_tbs_pembelians.no_faktur AS no_faktur')->leftJoin('barangs', 'barangs.id', '=', 'edit_tbs_pembelians.id_produk')->where('edit_tbs_pembelians.no_faktur', $pembelian->no_faktur)->where('edit_tbs_pembelians.warung_id', Auth::user()->id_warung)->orderBy('edit_tbs_pembelians.id_edit_tbs_pembelians', 'desc')->paginate(10);
-        $array         = array();
+        $tbs_pembelian = EditTbsPembelian::select('edit_tbs_pembelians.id_edit_tbs_pembelians AS id_edit_tbs_pembelian', 'edit_tbs_pembelians.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'edit_tbs_pembelians.id_produk AS id_produk', 'edit_tbs_pembelians.harga_produk AS harga_produk', 'edit_tbs_pembelians.potongan AS potongan', 'edit_tbs_pembelians.tax AS tax', 'edit_tbs_pembelians.subtotal AS subtotal', 'edit_tbs_pembelians.ppn AS ppn', 'edit_tbs_pembelians.no_faktur AS no_faktur', 'edit_tbs_pembelians.satuan_id AS satuan_id', 'satuans.nama_satuan')
+            ->leftJoin('barangs', 'barangs.id', '=', 'edit_tbs_pembelians.id_produk')
+            ->leftJoin('satuans', 'satuans.id', '=', 'edit_tbs_pembelians.satuan_id')
+            ->where('edit_tbs_pembelians.no_faktur', $pembelian->no_faktur)->where('edit_tbs_pembelians.warung_id', Auth::user()->id_warung)->orderBy('edit_tbs_pembelians.id_edit_tbs_pembelians', 'desc')->paginate(10);
+        $array = array();
 
         foreach ($tbs_pembelian as $tbs_pembelians) {
 
@@ -342,9 +345,12 @@ class PembelianController extends Controller
             }
 
             array_push($array, [
+                'id_produk'              => $tbs_pembelians->id_produk,
                 'id_tbs_pembelian'       => $tbs_pembelians->id_edit_tbs_pembelian,
                 'nama_produk'            => $nama_produk_title_case,
                 'kode_produk'            => $tbs_pembelians->produk->kode_barang,
+                'satuan_id'              => $tbs_pembelians->satuan_id,
+                'nama_satuan'            => strtoupper($tbs_pembelians->nama_satuan),
                 'harga_produk'           => $tbs_pembelians->harga_produk,
                 'harga_pemisah'          => $tbs_pembelians->PemisahHarga,
                 'jumlah_produk'          => $tbs_pembelians->jumlah_produk,
@@ -461,7 +467,10 @@ class PembelianController extends Controller
         $sum_subtotal = DetailPembelian::select(DB::raw('SUM(subtotal) as subtotal'))->where('no_faktur', $no_faktur)->where('warung_id', Auth::user()->id_warung)->first();
         $subtotal     = $sum_subtotal->subtotal;
 
-        $detail_pembelian = DetailPembelian::select('detail_pembelians.id_detail_pembelian AS id_detail_pembelian', 'detail_pembelians.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'detail_pembelians.id_produk AS id_produk', 'detail_pembelians.harga_produk AS harga_produk', 'detail_pembelians.potongan AS potongan', 'detail_pembelians.tax AS tax', 'detail_pembelians.subtotal AS subtotal', 'detail_pembelians.ppn AS ppn', 'detail_pembelians.no_faktur AS no_faktur')->leftJoin('barangs', 'barangs.id', '=', 'detail_pembelians.id_produk')->where('detail_pembelians.no_faktur', $pembelian->no_faktur)->where('detail_pembelians.warung_id', Auth::user()->id_warung)->orderBy('detail_pembelians.id_detail_pembelian', 'desc')->paginate(10);
+        $detail_pembelian = DetailPembelian::select('detail_pembelians.id_detail_pembelian AS id_detail_pembelian', 'detail_pembelians.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'detail_pembelians.id_produk AS id_produk', 'detail_pembelians.harga_produk AS harga_produk', 'detail_pembelians.potongan AS potongan', 'detail_pembelians.tax AS tax', 'detail_pembelians.subtotal AS subtotal', 'detail_pembelians.ppn AS ppn', 'detail_pembelians.no_faktur AS no_faktur', 'satuans.nama_satuan')
+            ->leftJoin('barangs', 'barangs.id', '=', 'detail_pembelians.id_produk')
+            ->leftJoin('satuans', 'satuans.id', '=', 'detail_pembelians.satuan_id')
+            ->where('detail_pembelians.no_faktur', $pembelian->no_faktur)->where('detail_pembelians.warung_id', Auth::user()->id_warung)->orderBy('detail_pembelians.id_detail_pembelian', 'desc')->paginate(10);
 
         $array       = array();
         $kas_default = Kas::where('warung_id', Auth::user()->id_warung)->where('default_kas', 1)->count();
@@ -504,6 +513,7 @@ class PembelianController extends Controller
                 'id_detail_pembelian'   => $detail_pembelians->id_detail_pembelian,
                 'nama_produk'           => $nama_produk_title_case,
                 'kode_produk'           => $detail_pembelians->produk->kode_barang,
+                'nama_satuan'           => strtoupper($detail_pembelians->nama_satuan),
                 'harga_produk'          => $detail_pembelians->harga_produk,
                 'harga_pemisah'         => $detail_pembelians->PemisahHarga,
                 'jumlah_produk'         => $detail_pembelians->jumlah_produk,
@@ -1078,12 +1088,15 @@ class PembelianController extends Controller
             // INSERT DETAIL PEMBELIAN
             foreach ($data_produk_pembelian->get() as $data_tbs_pembelian) {
                 $barang = Barang::select('harga_beli')->where('id', $data_tbs_pembelian->id_produk)->where('id_warung', Auth::user()->id_warung);
-                if ($barang->first()->harga_beli != $data_tbs_pembelian->harga_produk) {
-                    $barang->update(['harga_beli' => $data_tbs_pembelian->harga_produk]);
+                if ($data_tbs_pembelian->satuan_id == $data_tbs_pembelian->satuan_dasar) {
+                    if ($barang->first()->harga_beli != $data_tbs_pembelian->harga_produk) {
+                        $barang->update(['harga_beli' => $data_tbs_pembelian->harga_produk]);
+                    }
                 }
                 $detail_pembelian = DetailPembelian::create([
                     'no_faktur'     => $no_faktur,
                     'satuan_id'     => $data_tbs_pembelian->satuan_id,
+                    'satuan_dasar'  => $data_tbs_pembelian->satuan_dasar,
                     'id_produk'     => $data_tbs_pembelian->id_produk,
                     'jumlah_produk' => $data_tbs_pembelian->jumlah_produk,
                     'harga_produk'  => $data_tbs_pembelian->harga_produk,
@@ -1094,7 +1107,6 @@ class PembelianController extends Controller
                     'ppn'           => $data_tbs_pembelian->ppn,
                     'warung_id'     => Auth::user()->id_warung,
                 ]);
-
             }
 
             //INSERT PEMBELIAN
