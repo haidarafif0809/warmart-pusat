@@ -9,8 +9,8 @@ use Yajra\Auditable\AuditableTrait;
 class SettingPromo extends Model
 {
 	use Notifiable;
-	use AuditableTrait;
-	protected $fillable = ['id_produk', 'baner_promo', 'harga_coret'];
+	protected $fillable = ['id_produk', 'baner_promo', 'harga_coret','id_warung'];
+	protected $primaryKey = 'id_setting_promo';
 
 	public function barang()
 	{

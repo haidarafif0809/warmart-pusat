@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\SettingPromo;
 use Auth;
 use Illuminate\Http\Request;
-
+use Intervention\Image\ImageManagerStatic as Image;
 
 class SettingPromoController extends Controller
 {
@@ -57,6 +57,9 @@ class SettingPromoController extends Controller
     }
 
 
+
+
+
     /**
      * Show the form for creating a new resource.
      *
@@ -76,6 +79,43 @@ class SettingPromoController extends Controller
     public function store(Request $request)
     {
         //
+        if (Auth::user()->id_warung == '') {
+            Auth::logout();
+            return response()->view('error.403');
+        } else {
+            $this->validate($request, [
+                'id_produk'       => 'nullable|unique:setting_promo,id_produk,NULL,id_setting_promo,id_warung,' . Auth::user()->id_warung,
+            ]);
+
+            $produk    = explode("|", $request->produk);
+            $id_produk = $produk[0];
+
+            $insert_setting = SettingPromo::create([
+                'harga_coret'        => $request->harga_coret,
+                'id_produk'          => $id_produk,
+                'id_warung'          => Auth::user()->id_warung]);
+
+            if ($request->hasFile('baner_promo')) {
+                $baner_promo = $request->file('baner_promo');
+
+                if (is_array($baner_promo) || is_object($baner_promo)) {
+                    // Mengambil file yang diupload
+                    $uploaded_baner_promo = $baner_promo;
+                    // mengambil extension file
+                    $extension = $uploaded_baner_promo->getClientOriginalExtension();
+                    // membuat nama file random berikut extension
+                    $filename     = str_random(40) . '.' . $extension;
+                    $image_resize = Image::make($baner_promo->getRealPath());
+                    $image_resize->fit(300);
+                    $image_resize->save(public_path('baner_setting_promo/' . $filename));
+                    $insert_setting->baner_promo = $filename;
+                    // menyimpan field foto_kamar di database kamar dengan filename yang baru dibuat
+                    $insert_setting->save();
+                }
+
+            }
+
+        }
     }
 
     /**

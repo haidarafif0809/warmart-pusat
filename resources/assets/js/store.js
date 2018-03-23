@@ -30,6 +30,11 @@ const getters = {
 			return produk.hitung_stok == 1 && produk.status_aktif == 1
 		})
 	},
+	produk_setting(state){
+		return state.produk_laporan.filter(function(produk_laporan){
+			return produk_laporan.id != ""
+		})
+	},
 	suplier_pembelian(state){
 		return state.suplier.filter(function(suplier){
 			return suplier.id != "";

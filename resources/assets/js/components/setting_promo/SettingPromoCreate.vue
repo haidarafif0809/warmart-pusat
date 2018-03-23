@@ -31,7 +31,7 @@
 										<label for="harga_produk" class="col-md-2 control-label">Harga Produk</label>
 										<div class="col-md-5">
 											<input class="form-control" autocomplete="off" readonly="" placeholder="Harga Produk" v-model="setting.harga_produk" type="text" name="harga_produk" id="harga_produk" ref="harga_produk">
-											<span v-if="errors.harga_produk" v-shortkey="['f1']" @shortkey="openSelectizeProduk()" id="harga_coret_error" class="label label-danger">{{ errors.harga_produk[0] }}</span>
+											<span v-if="errors.harga_produk" v-shortkey="['f1']" @shortkey="openSelectizeProduk()" id="harga_produk_error" class="label label-danger">{{ errors.harga_produk[0] }}</span>
 										</div>
 									</div>
 
@@ -63,7 +63,7 @@
 												<a href="#pablo" class="btn btn-danger btn-round fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i> Batal</a>
 											</div>
 											<span v-if="errors.baner_promo" id="baner_promo_error" class="label label-danger">{{ errors.baner_promo[0] }}</span>
-											<a style="color: red;">Size Baner (Ukuran Max : 3MB)</a>
+											<a style="color: red;">Size Baner (Ukuran Max : 3MB , Ukuran Dimensi : 1450 × 750 )</a>
 										</div>
 									</div>
 								</div> 

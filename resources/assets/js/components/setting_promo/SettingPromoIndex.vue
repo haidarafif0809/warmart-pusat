@@ -14,8 +14,7 @@
 			</ul>
 			<div class="card">
 				<div class="card-header card-header-icon" data-background-color="purple">
-					<i class="material-icons">account_circle</i>
-					<i class="material-icons">store</i>
+ 					<i class="material-icons">settings_applications</i>
 				</div>
 				<div class="card-content">
 					<h4 class="card-title"> Setting Promo</h4>
@@ -36,6 +35,7 @@
 									<th>Nama Produk</th>
 									<th>Harga Coret</th>
 									<th>Baner Promo</th>
+									<th>Aksi</th>
 								</tr>
 							</thead>
 							<tbody v-if="settingPromo.length"  class="data-ada">
@@ -43,12 +43,19 @@
 
 									<td>{{ settingPromos.settingpromo.barang.kode_barang }} || {{ settingPromos.settingpromo.barang.nama_barang }}</td>
 									<td> {{ settingPromos.settingpromo.harga_coret }}</td>
-									<td align="right"> {{ settingPromos.settingpromo.baner_promo }}</td>
-
+									<td> {{ settingPromos.settingpromo.baner_promo }}</td>
+									<td> 
+									<router-link :to="{name: 'editBank', params: {id: settingPromos.settingpromo.id_setting_promo }}" class="btn btn-xs btn-default" v-bind:id="'edit-' + settingPromos.settingpromo.id_setting_promo" >
+									Edit 
+									</router-link> <a href="#"
+									class="btn btn-xs btn-danger" v-bind:id="'delete-' + settingPromos.settingpromo.id_setting_promo"
+									v-on:click="deleteEntry(settingPromos.settingpromo.id_setting_promo, index,settingPromos.settingpromo.barang.nama_barang)">
+									Delete
+									</a></td>
 								</tr>
 							</tbody>                    
 							<tbody class="data-tidak-ada" v-else>
-								<tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
+								<tr ><td colspan="5"  class="text-center">Tidak Ada Data</td></tr>
 							</tbody>
 						</table>    
 

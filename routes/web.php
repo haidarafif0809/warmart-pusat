@@ -982,6 +982,7 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
     Route::resource('stok-opname', 'StokOpnameController');
     Route::resource('setting-pengiriman', 'SettingPengirimanController');
     Route::resource('bank-warung', 'BankWarungController');
+    Route::resource('setting-promo', 'SettingPromoController');
 
 //BARANG
     //HALAMAN DESKRIPSI

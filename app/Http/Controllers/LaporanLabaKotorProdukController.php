@@ -36,12 +36,13 @@ class LaporanLabaKotorProdukController extends Controller
 
     public function pilihProduk()
     {
-        $produk       = Barang::select(['id', 'nama_barang'])->where('id_warung', Auth::user()->id_warung)->get();
-        $array_produk = array(['id' => '', 'nama_produk' => 'SEMUA PRODUK']);
+        $produk       = Barang::select(['id', 'nama_barang','harga_jual'])->where('id_warung', Auth::user()->id_warung)->get();
+        $array_produk = array(['id' => '', 'nama_produk' => 'SEMUA PRODUK','harga_jual'=>'']);
         foreach ($produk as $produks) {
             array_push($array_produk, [
                 'id'          => $produks->id,
                 'nama_produk' => title_case($produks->nama_barang),
+                'harga_jual'  => $produks->harga_jual,
             ]);
         }
         return response()->json($array_produk);
