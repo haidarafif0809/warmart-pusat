@@ -29,5 +29,6 @@ class DatabaseSeeder extends Seeder
         $this->call(SettingTransferBankSeeder::class);
         $this->call(SettingJasaPengirimanSeeder::class);
         $this->call(TambahPermissionSeeder::class);
+        $this->call(TambahSeederPermissionKategoriTransaksi::class);
     }
 }

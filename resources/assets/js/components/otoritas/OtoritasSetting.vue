@@ -174,14 +174,14 @@
               </label>
             </div>
             <!-- Penjualan  -->
-            <!-- Kategori Kas  -->
-            <b>Kategori Kas</b>
-            <div class="checkbox" v-for="permission_kategori_kas, index in permission_kategori_kas">
+            <!-- Kategori Transaksi  -->
+            <b>Kategori Transaksi</b>
+            <div class="checkbox" v-for="permission_kategori_transaksi, index in permission_kategori_transaksi">
               <label>
-                <input type="checkbox" name="setting_kategori_kas" v-bind:value="permission_kategori_kas.id" v-model="setting_otoritas.kategori_kas"> {{permission_kategori_kas.display_name}}
+                <input type="checkbox" name="setting_kategori_transaksi" v-bind:value="permission_kategori_transaksi.id" v-model="setting_otoritas.kategori_transaksi"> {{permission_kategori_transaksi.display_name}}
               </label>
             </div>
-            <!-- Kategori Kas  -->
+            <!-- Kategori Transaksi  -->
           </div>
 
         </div>
@@ -308,7 +308,7 @@ export default {
      permission_kas_masuk: [],
      permission_kas_keluar: [],
      permission_kas_mutasi: [],
-     permission_kategori_kas: [],
+     permission_kategori_transaksi: [],
      permission_kelompok_produk: [],
      permission_laporan: [],
      permission_laporan_persediaan: [],
@@ -334,7 +334,7 @@ export default {
       kas_masuk : [],
       kas_keluar : [],
       kas_mutasi : [],
-      kategori_kas : [],
+      kategori_transaksi : [],
       kelompok_produk : [],
       laporan : [],
       laporan_persediaan : [],
@@ -385,7 +385,7 @@ methods: {
       app.permission_kas_masuk = resp.data.permission_kas_masuk
       app.permission_kas_keluar = resp.data.permission_kas_keluar
       app.permission_kas_mutasi = resp.data.permission_kas_mutasi
-      app.permission_kategori_kas = resp.data.permission_kategori_kas
+      app.permission_kategori_transaksi = resp.data.permission_kategori_transaksi
       app.permission_kelompok_produk = resp.data.permission_kelompok_produk
       app.permission_laporan = resp.data.permission_laporan
       app.permission_laporan_persediaan = resp.data.permission_laporan_persediaan
@@ -414,7 +414,7 @@ methods: {
       app.setting_otoritas.kas_masuk = resp.data.data_permission_kas_masuk
       app.setting_otoritas.kas_keluar = resp.data.data_permission_kas_keluar
       app.setting_otoritas.kas_mutasi = resp.data.data_permission_kas_mutasi
-      app.setting_otoritas.kategori_kas = resp.data.data_permission_kategori_kas
+      app.setting_otoritas.kategori_transaksi = resp.data.data_permission_kategori_transaksi
       app.setting_otoritas.kelompok_produk = resp.data.data_permission_kelompok_produk
       app.setting_otoritas.laporan = resp.data.data_permission_laporan
       app.setting_otoritas.laporan_persediaan = resp.data.data_permission_laporan_persediaan
@@ -539,8 +539,8 @@ methods: {
         });
 
         // OTORITAS KATEGORI KAS
-        $.each(app.permission_kategori_kas, function (i, item) { 
-          app.setting_otoritas.kategori_kas.push(app.permission_kategori_kas[i].id)     
+        $.each(app.permission_kategori_transaksi, function (i, item) { 
+          app.setting_otoritas.kategori_transaksi.push(app.permission_kategori_transaksi[i].id)     
         });
 
         // OTORITAS KELOMPOK PRODUK
@@ -627,7 +627,7 @@ methods: {
         app.setting_otoritas.kas_masuk.splice(0)
         app.setting_otoritas.kas_keluar.splice(0)
         app.setting_otoritas.kas_mutasi.splice(0)
-        app.setting_otoritas.kategori_kas.splice(0)
+        app.setting_otoritas.kategori_transaksi.splice(0)
         app.setting_otoritas.kelompok_produk.splice(0)
         app.setting_otoritas.laporan_persediaan.splice(0)
         app.setting_otoritas.pembayaran_piutang.splice(0)
