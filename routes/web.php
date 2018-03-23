@@ -938,6 +938,9 @@ Route::get('/bank-warung/view', 'BankWarungController@view')->middleware('auth')
 Route::get('/bank-warung/pencarian', 'BankWarungController@pencarian')->middleware('auth');
 Route::get('/bank-warung/bank', 'BankWarungController@dataBank')->middleware('auth');
 
+//menampilkan data bank Warung
+Route::get('/setting-promo/view', 'SettingPromoController@view')->middleware('auth');
+
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
     Route::resource('user', 'UserController');
@@ -979,6 +982,7 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
     Route::resource('stok-opname', 'StokOpnameController');
     Route::resource('setting-pengiriman', 'SettingPengirimanController');
     Route::resource('bank-warung', 'BankWarungController');
+    Route::resource('setting-promo', 'SettingPromoController');
 
 //BARANG
     //HALAMAN DESKRIPSI
