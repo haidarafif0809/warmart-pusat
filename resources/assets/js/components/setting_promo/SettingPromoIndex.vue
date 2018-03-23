@@ -33,23 +33,25 @@
 								<tr>
 
 									<th>Nama Produk</th>
-									<th>Harga Coret</th>
-									<th>Baner Promo</th>
-									<th>Aksi</th>
+									<th style="text-align:right"> Harga Coret </th>
+									<th style="text-align:right">Baner Promo</th>
+									<th style="text-align:right">Aksi</th>
 								</tr>
 							</thead>
 							<tbody v-if="settingPromo.length"  class="data-ada">
 								<tr v-for="settingPromos, index in settingPromo" >
 
-									<td>{{ settingPromos.settingpromo.barang.kode_barang }} || {{ settingPromos.settingpromo.barang.nama_barang }}</td>
-									<td> {{ settingPromos.settingpromo.harga_coret }}</td>
-									<td> {{ settingPromos.settingpromo.baner_promo }}</td>
-									<td> 
-									<router-link :to="{name: 'editBank', params: {id: settingPromos.settingpromo.id_setting_promo }}" class="btn btn-xs btn-default" v-bind:id="'edit-' + settingPromos.settingpromo.id_setting_promo" >
+									<td>{{ settingPromos.settingpromo.kode_barang }} || {{ settingPromos.settingpromo.nama_barang }}</td>
+									<td align="right"> {{ settingPromos.settingpromo.harga_coret | pemisahTitik}}</td>
+									<td align="right"><a v-if="settingPromos.settingpromo.baner_promo != undefined" v-bind:href="url_baner_promo+ '/'+settingPromos.settingpromo.baner_promo" target="blank">Lihat Baner</a>
+					                    <p v-else >Tidak Ada Baner</p>
+					                 </td>
+									<td align="right"> 
+									<router-link :to="{name: 'editSettingPromo', params: {id: settingPromos.settingpromo.id_setting_promo }}" class="btn btn-xs btn-default" v-bind:id="'edit-' + settingPromos.settingpromo.id_setting_promo" >
 									Edit 
 									</router-link> <a href="#"
 									class="btn btn-xs btn-danger" v-bind:id="'delete-' + settingPromos.settingpromo.id_setting_promo"
-									v-on:click="deleteEntry(settingPromos.settingpromo.id_setting_promo, index,settingPromos.settingpromo.barang.nama_barang)">
+									v-on:click="deleteEntry(settingPromos.settingpromo.id_setting_promo, index,settingPromos.settingpromo.nama_barang)">
 									Delete
 									</a></td>
 								</tr>
@@ -82,6 +84,7 @@ export default {
 			settingPromo: [],
 			settingPromoData : {},
 			url : window.location.origin+(window.location.pathname).replace("dashboard", "setting-promo"),
+			url_baner_promo : window.location.origin+(window.location.pathname).replace("dashboard", "baner_setting_promo"),
 			pencarian: '',
 			loading: true,
 			seen : false        
@@ -96,12 +99,22 @@ export default {
     pencarian: function (newQuestion) {
     	this.getHasilPencarian()
     	this.loading = true
-    }
-},
+   		 }
+	},
+ 	filters: {
+       pemisahTitik: function (value) {
+        var angka = [value];
+        var numberFormat = new Intl.NumberFormat('es-ES');
+        var formatted = angka.map(numberFormat.format);
+        return formatted.join('; ');
+      },
+      tanggal: function (value) {
+        return moment(String(value)).format('DD/MM/YYYY hh:mm')
+      }
+    },
 methods: {
 	getResults(page) {
 		var app = this; 
-		var id = app.$route.params.id;
 		if (typeof page === 'undefined') {
 			page = 1;
 		}
@@ -121,11 +134,10 @@ methods: {
 	}, 
 	getHasilPencarian(page){
 		var app = this;
-		var id = app.$route.params.id;
 		if (typeof page === 'undefined') {
 			page = 1;
 		}
-		axios.get(app.url+'/pencarian-detail-user-topos/'+id+'?search='+app.pencarian+'&page='+page)
+		axios.get(app.url+'/pencarian?search='+app.pencarian+'&page='+page)
 		.then(function (resp) {
 			app.settingPromo = resp.data.data;
 			app.settingPromoData = resp.data;
@@ -134,9 +146,43 @@ methods: {
 		})
 		.catch(function (resp) {
 			console.log(resp);
-			alert("Tidak Dapat Memuat Detail User Topos");
+			alert("Tidak Dapat Memuat Data Promo");
 		});
-	}
+	},
+	alert(pesan) {
+          this.$swal({
+            title: "Berhasil Menghapus Promo!",
+            text: pesan,
+            icon: "success",
+          });
+        },
+	deleteEntry(id, index,nama_barang) {
+          this.$swal({
+            title: "Konfirmasi Hapus",
+            text : "Yakin Ingin Menghapus Promo "+nama_barang+" ?",
+            icon : "warning",
+            buttons: true,
+            dangerMode: true,
+          })
+          .then((willDelete) => {
+            if (willDelete) {
+             var app = this;
+             axios.delete(app.url+'/' + id)
+             .then(function (resp) {
+              app.getResults();
+              app.alert();            
+            })
+             .catch(function (resp) {
+               swal("Gagal Menghapus Promo", {
+                icon: "warning",
+              });
+             });
+           }
+           this.$router.replace('/setting-promo/');
+         });
+
+        }
+
 }
 }
 </script>
