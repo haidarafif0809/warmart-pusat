@@ -932,6 +932,7 @@ Route::delete('/daftar-user-warung/{id}', 'DaftarUserWarungController@destroy')-
 
 // OTORITAS
 Route::get('/otoritas/view', 'OtoritasController@view')->middleware('auth');
+Route::get('/otoritas/pencarian', 'OtoritasController@pencarian')->middleware('auth');
 
 //menampilkan data bank Warung
 Route::get('/bank-warung/view', 'BankWarungController@view')->middleware('auth');

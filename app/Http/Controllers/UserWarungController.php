@@ -8,6 +8,7 @@ use App\UserWarung;
 use App\Warung;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Html\Builder;
+use Laratrust;
 
 class UserWarungController extends Controller
 {
@@ -53,6 +54,7 @@ class UserWarungController extends Controller
         //DATA PAGINATION
         $respons['current_page']   = $user_warung->currentPage();
         $respons['data']           = $user_warung_array;
+        $respons['otoritas']      = $this->otoritasUserWarung();
         $respons['first_page_url'] = url('/user-warung/view?page=' . $user_warung->firstItem());
         $respons['from']           = 1;
         $respons['last_page']      = $user_warung->lastPage();
@@ -75,13 +77,13 @@ class UserWarungController extends Controller
 
         if ($search != "") {
             $user_warung = UserWarung::with(['warung', 'kelurahan'])->where('tipe_user', 4)
-                ->where(function ($query) use ($search) {
+            ->where(function ($query) use ($search) {
 // search
-                    $query->orwhere('email', 'LIKE', '%' . $search . '%')
-                        ->orWhere('no_telp', 'LIKE', '%' . $search . '%')
-                        ->orWhere('name', 'LIKE', '%' . $search . '%')
-                        ->orWhere('alamat', 'LIKE', '%' . $search . '%');
-                })->paginate(10);
+                $query->orwhere('email', 'LIKE', '%' . $search . '%')
+                ->orWhere('no_telp', 'LIKE', '%' . $search . '%')
+                ->orWhere('name', 'LIKE', '%' . $search . '%')
+                ->orWhere('alamat', 'LIKE', '%' . $search . '%');
+            })->paginate(10);
         } else {
             $user_warung = UserWarung::with(['warung', 'kelurahan'])->where('tipe_user', 4)->orderBy('id', 'desc')->paginate(10);
         }
@@ -101,6 +103,7 @@ class UserWarungController extends Controller
         //DATA PAGINATION
         $respons['current_page']   = $user_warung->currentPage();
         $respons['data']           = $user_warung_array;
+        $respons['otoritas']      = $this->otoritasUserWarung();
         $respons['first_page_url'] = url('/user-warung/view?page=' . $user_warung->firstItem());
         $respons['from']           = 1;
         $respons['last_page']      = $user_warung->lastPage();
@@ -259,5 +262,29 @@ class UserWarungController extends Controller
     {
         $warung = Warung::all();
         return response()->json($warung);
+    }
+
+    public function otoritasUserWarung(){
+
+        if (Laratrust::can('tambah_user')) {
+            $tambah_user = 1;
+        }else{
+            $tambah_user = 0;            
+        }
+        if (Laratrust::can('edit_user')) {
+            $edit_user = 1;
+        }else{
+            $edit_user = 0;            
+        }
+        if (Laratrust::can('hapus_user')) {
+            $hapus_user = 1;
+        }else{
+            $hapus_user = 0;            
+        }
+        $respons['tambah_user'] = $tambah_user;
+        $respons['edit_user'] = $edit_user;
+        $respons['hapus_user'] = $hapus_user;
+
+        return response()->json($respons);
     }
 }

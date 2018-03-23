@@ -29,7 +29,7 @@
         <b v-if="seen">Pilih Semua </b>
         <div class="checkbox" v-if="seen">
           <label>
-            <input type="checkbox" name="setting_user" v-model="pilih_semua" v-bind:value="1" v-on:change="pilihSemua"> Pilih Semua
+            <input type="checkbox" name="pilih_semua" v-model="pilih_semua" v-bind:value="1" v-on:change="pilihSemua"> Pilih Semua
           </label>
         </div>            
         <!--END OTORITAS laporan -->
@@ -272,7 +272,7 @@
             <!-- OTORITAS USER -->
             <b>User</b>
             <div class="checkbox" v-for="permission_users, index in permission_user">
-              <label>
+              <label v-if="permission_users.name != 'konfirmasi_user' && permission_users.name != 'reset_password_user' ">
                 <input type="checkbox" name="setting_user" v-bind:value="permission_users.id" v-model="setting_otoritas.user"> {{permission_users.display_name}}
               </label>
             </div>            

@@ -26,7 +26,7 @@
         <div class="row">
           <div class="col-md-6">
            <div class="toolbar">
-            <p> <router-link :to="{name: 'createDaftarUserWarung'}" class="btn btn-primary"><i class="material-icons">add</i> Tambah User</router-link></p>
+            <router-link :to="{name: 'createDaftarUserWarung'}" class="btn btn-primary" v-if="otoritas.tambah_user == 1"><i class="material-icons">add</i> Tambah User</router-link>
           </div>
         </div>
         <div class="col-md-6">
@@ -46,7 +46,7 @@
             <th>No. Telpon</th>
             <th>Alamat</th>
             <th>Otoritas</th>
-            <th>Aksi</th>
+            <th v-if="otoritas.hapus_user == 1 || otoritas.edit_user == 1">Aksi</th>
           </tr>
         </thead>
 
@@ -59,30 +59,30 @@
             <td>{{ users.role_user }}</td>
           </td>
           <td> 
-           <router-link :to="{name: 'editDaftarUser', params: {id: users.user.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + users.user.id" >
-            Edit 
-          </router-link>
-          <a href="#daftar-user" class="btn btn-xs btn-danger" v-bind:id="'delete-' + users.user.id" v-on:click="deleteEntry(users.user.id, index,users.user.name)">
-            Delete
-          </a>
-        </td>
+            <router-link :to="{name: 'editDaftarUser', params: {id: users.user.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + users.user.id" v-if="otoritas.edit_user == 1">
+              Edit 
+            </router-link>
+            <a href="#daftar-user" class="btn btn-xs btn-danger" v-bind:id="'delete-' + users.user.id" v-on:click="deleteEntry(users.user.id, index,users.user.name)" v-if="otoritas.hapus_user == 1">
+              Delete
+            </a>
+          </td>
 
-      </tr>
-    </tbody>
-    <!--JIKA DATA CUSTOMER KOSONG-->
-    <tbody class="data-tidak-ada" v-else-if="user.length == 0 && loading== false">
-      <tr>
-        <td colspan="4"  class="text-center">Tidak Ada Data</td>
-      </tr>
-    </tbody>
-  </table>
+        </tr>
+      </tbody>
+      <!--JIKA DATA CUSTOMER KOSONG-->
+      <tbody class="data-tidak-ada" v-else-if="user.length == 0 && loading== false">
+        <tr>
+          <td colspan="4"  class="text-center">Tidak Ada Data</td>
+        </tr>
+      </tbody>
+    </table>
 
-  <!--LOADING-->
-  <vue-simple-spinner v-if="loading"></vue-simple-spinner>
-  <!--PAGINATION TABLE-->
-  <div align="right"><pagination :data="userData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
+    <!--LOADING-->
+    <vue-simple-spinner v-if="loading"></vue-simple-spinner>
+    <!--PAGINATION TABLE-->
+    <div align="right"><pagination :data="userData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
 
-</div><!-- /END RESPONSIVE-->
+  </div><!-- /END RESPONSIVE-->
 
 </div>
 </div>
@@ -98,6 +98,7 @@ export default {
     return {
       user: [],
       userData: {},
+      otoritas: {},
       url : window.location.origin+(window.location.pathname).replace("dashboard", "daftar-user-warung"),
       pencarian: '',
       loading: true
@@ -127,6 +128,7 @@ export default {
       .then(function (resp) {
         app.user = resp.data.data;
         app.userData = resp.data;
+        app.otoritas = resp.data.otoritas.original;
         app.loading = false;
       })
       .catch(function (resp) {
@@ -145,6 +147,7 @@ export default {
       .then(function (resp) {
         app.user = resp.data.data;
         app.userData = resp.data;
+        app.otoritas = resp.data.otoritas.original;
         app.loading = false
       })
       .catch(function (resp) {
