@@ -1225,6 +1225,7 @@ class PembelianController extends Controller
                 'no_faktur'     => $data_tbs->no_faktur,
                 'id_produk'     => $data_tbs->id_produk,
                 'satuan_id'     => $data_tbs->satuan_id,
+                'satuan_dasar'  => $data_tbs->satuan_dasar,
                 'jumlah_produk' => $data_tbs->jumlah_produk,
                 'harga_produk'  => $data_tbs->harga_produk,
                 'subtotal'      => $data_tbs->subtotal,
