@@ -72,7 +72,7 @@
                         <div class="toolbar">
                             <div class="row">
                                 <div class="panel panel-default">
-                                    <router-link :to="urlForm" class="btn btn-primary" id="step-0"><i class="material-icons">add</i>  Produk</router-link>
+                                    <router-link :to="urlForm" class="btn btn-primary" id="step-0" v-if="otoritas.tambah_produk == 1"><i class="material-icons">add</i>  Produk</router-link>
 
                                     <!-- IMPORT EXCEL -->
                                     <button id="btnFilter" class="btn btn-info" data-toggle="modal" data-target="#modal_import">
@@ -121,13 +121,13 @@
 
                                                 <a :href="urlLihat+produk.produk.id" class="btn btn-xs btn-info" id="lihatDeskripsi" type="button"> Deskripsi</a>
 
-                                                <router-link :to="{name: 'editProduk', params: {id: produk.produk.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + produk.produk.id" > Edit
+                                                <router-link :to="{name: 'editProduk', params: {id: produk.produk.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + produk.produk.id" v-if="otoritas.edit_produk == 1"> Edit
                                                 </router-link>
 
-                                                <a v-if="produk.status_produk == 0" href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + produk.produk.id" v-on:click="deleteEntry(produk.produk.id, index, produk.nama_produk)">Delete
+                                                <a v-if="produk.status_produk == 0 && otoritas.hapus_produk == 1" href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + produk.produk.id" v-on:click="deleteEntry(produk.produk.id, index, produk.nama_produk)">Delete
                                                 </a>
 
-                                                <a v-else href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + produk.produk.id" v-on:click="gagalHapus(produk.produk.id, index, produk.prosnama_produk)">Delete
+                                                <a v-else-if="otoritas.hapus_produk == 1 && produk.status_produk == 1" href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + produk.produk.id" v-on:click="gagalHapus(produk.produk.id, index, produk.prosnama_produk)">Delete
                                                 </a>
                                             </td>
                                         </tr>
@@ -178,6 +178,7 @@
             return {
                 produk: [],
                 produkData: {},
+                otoritas: {},
                 url : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
                 urlLihat : window.location.origin+(window.location.pathname).replace("dashboard", "produk/lihat-deskripsi-produk/"),
                 urlForm: "create-produk",
@@ -227,6 +228,7 @@ methods: {
         .then(function (resp) {
             app.produk = resp.data.data;
             app.produkData = resp.data;
+            app.otoritas = resp.data.otoritas.original;
             app.loading = false;
         })
         .catch(function (resp) {
@@ -243,6 +245,7 @@ methods: {
         .then(function (resp) {
             app.produk = resp.data.data;
             app.produkData = resp.data;
+            app.otoritas = resp.data.otoritas.original;
             app.loading = false;
         })
         .catch(function (resp) {

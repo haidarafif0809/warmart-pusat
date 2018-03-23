@@ -18,6 +18,8 @@ use Jenssegers\Agent\Agent;
 use PHPExcel_Style_Fill;
 use Validator;
 use Yajra\Datatables\Html\Builder;
+use Laratrust;
+
 
 class BarangController extends Controller
 {
@@ -85,6 +87,7 @@ class BarangController extends Controller
 
         $respons['current_page']   = $data_produk->currentPage();
         $respons['data']           = $array_produk;
+        $respons['otoritas']           = $this->otoritasProduk();
         $respons['first_page_url'] = url('/produk/view?page=' . $data_produk->firstItem());
         $respons['from']           = 1;
         $respons['last_page']      = $data_produk->lastPage();
@@ -125,11 +128,11 @@ class BarangController extends Controller
     {
         $data_produk = Barang::with(['satuan', 'kategori_barang'])->where('id_warung', Auth::user()->id_warung)->where(function ($query) use ($request) {
             $query->orwhere('kode_barang', 'LIKE', '%' . $request->search . '%')
-                ->orwhere('kode_barcode', 'LIKE', '%' . $request->search . '%')
-                ->orwhere('nama_barang', 'LIKE', '%' . $request->search . '%')
-                ->orwhere('harga_beli', 'LIKE', '%' . $request->search . '%')
-                ->orwhere('harga_jual', 'LIKE', '%' . $request->search . '%')
-                ->orwhere('harga_jual2', 'LIKE', '%' . $request->search . '%');
+            ->orwhere('kode_barcode', 'LIKE', '%' . $request->search . '%')
+            ->orwhere('nama_barang', 'LIKE', '%' . $request->search . '%')
+            ->orwhere('harga_beli', 'LIKE', '%' . $request->search . '%')
+            ->orwhere('harga_jual', 'LIKE', '%' . $request->search . '%')
+            ->orwhere('harga_jual2', 'LIKE', '%' . $request->search . '%');
         })->orderBy('id', 'desc')->paginate(10);
         $array_produk = array();
         foreach ($data_produk as $produk) {
@@ -298,7 +301,7 @@ class BarangController extends Controller
     public function show($id)
     {
         $produk = Barang::select(['barangs.id', 'barangs.kode_barang', 'barangs.kode_barcode', 'barangs.nama_barang', 'barangs.harga_beli', 'barangs.harga_jual', 'barangs.satuan_id', 'barangs.kategori_barang_id', 'barangs.status_aktif', 'barangs.foto', 'barangs.hitung_stok', 'barangs.id_warung', 'barangs.created_by', 'barangs.updated_by', 'barangs.created_at', 'barangs.updated_at', 'barangs.deskripsi_produk', 'barangs.konfirmasi_admin', 'barangs.harga_jual2', 'barangs.berat', 'satuans.nama_satuan'])
-            ->leftJoin('satuans', 'satuans.id', '=', 'barangs.satuan_id')->where('barangs.id', $id)->first();
+        ->leftJoin('satuans', 'satuans.id', '=', 'barangs.satuan_id')->where('barangs.id', $id)->first();
         return $produk;
     }
 
@@ -601,11 +604,11 @@ class BarangController extends Controller
         foreach ($excels as $row) {
             // JIKA PRODUK SUDAH ADA DI DB MAKA TIDAK DIIMPORT
             $data_produk = Barang::select(['kode_barang', 'kode_barcode', 'nama_barang'])
-                ->where(function ($query) use ($row) {
-                    $query->orwhere('kode_barang', $row['kode_produk'])
-                        ->orwhere('kode_barcode', $row['kode_barcode'])
-                        ->orwhere('nama_barang', $row['nama_produk']);
-                });
+            ->where(function ($query) use ($row) {
+                $query->orwhere('kode_barang', $row['kode_produk'])
+                ->orwhere('kode_barcode', $row['kode_barcode'])
+                ->orwhere('nama_barang', $row['nama_produk']);
+            });
 
             if ($data_produk->count() > 0) {
                 continue;
@@ -693,9 +696,9 @@ class BarangController extends Controller
     public function editSatuanKonversi($id)
     {
         $satuan_konversis = SatuanKonversi::select(['satuan_konversis.id_satuan', 'satuan_konversis.satuan_dasar', 'satuan_konversis.id_produk', 'satuan_konversis.jumlah_konversi', 'satuan_konversis.harga_jual_konversi', 'konversi.nama_satuan AS nama_konversi', 'dasar.nama_satuan AS nama_dasar'])
-            ->leftJoin('satuans as konversi', 'konversi.id', '=', 'satuan_konversis.id_satuan')
-            ->leftJoin('satuans as dasar', 'dasar.id', '=', 'satuan_konversis.satuan_dasar')
-            ->where('id_produk', $id)->get();
+        ->leftJoin('satuans as konversi', 'konversi.id', '=', 'satuan_konversis.id_satuan')
+        ->leftJoin('satuans as dasar', 'dasar.id', '=', 'satuan_konversis.satuan_dasar')
+        ->where('id_produk', $id)->get();
 
         return response()->json($satuan_konversis);
     }
@@ -770,5 +773,29 @@ class BarangController extends Controller
                 }
             });
         })->download('xls');
+    }
+
+    public function otoritasProduk(){
+
+        if (Laratrust::can('tambah_produk')) {
+            $tambah_produk = 1;
+        }else{
+            $tambah_produk = 0;            
+        }
+        if (Laratrust::can('edit_produk')) {
+            $edit_produk = 1;
+        }else{
+            $edit_produk = 0;            
+        }
+        if (Laratrust::can('hapus_produk')) {
+            $hapus_produk = 1;
+        }else{
+            $hapus_produk = 0;            
+        }
+        $respons['tambah_produk'] = $tambah_produk;
+        $respons['edit_produk'] = $edit_produk;
+        $respons['hapus_produk'] = $hapus_produk;
+
+        return response()->json($respons);
     }
 }

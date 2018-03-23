@@ -22,7 +22,7 @@
           <h4 class="card-title"> Kas Mutasi</h4>
 
           <div class="toolbar">
-            <router-link :to="{name: 'createKasMutasi'}" class="btn btn-primary" style="padding-bottom:10px"><i class="material-icons">add</i>  Kas Mutasi</router-link>
+            <router-link :to="{name: 'createKasMutasi'}" class="btn btn-primary" style="padding-bottom:10px" v-if="otoritas.tambah_kas_mutasi == 1"><i class="material-icons">add</i>  Kas Mutasi</router-link>
             <div class="pencarian">
               <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
             </div>
@@ -38,7 +38,7 @@
                   <th>Ke Kas</th>
                   <th>Jumlah</th>
                   <th>Keterangan</th>
-                  <th>Aksi</th>
+                  <th v-if="otoritas.edit_kas_mutasi == 1 || otoritas.hapus_kas_mutasi">Aksi</th>
                 </tr>
               </thead>
               <tbody v-if="kasMutasi.length > 0 && loading == false"  class="data-ada">
@@ -49,14 +49,14 @@
                   <td>{{ dataKas.jumlah }}</td>
                   <td>{{ dataKas.kas_mutasi.keterangan }}</td>
                   <td>
-                    <router-link :to="{name: 'editKasMutasi', params: {id: dataKas.kas_mutasi.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + dataKas.kas_mutasi.id" >
+                    <router-link :to="{name: 'editKasMutasi', params: {id: dataKas.kas_mutasi.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + dataKas.kas_mutasi.id" v-if="otoritas.edit_kas_mutasi == 1">
                       Edit
                     </router-link>
-                      <a href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + dataKas.kas_mutasi.id" v-on:click="deleteEntry(dataKas.kas_mutasi.id, index,dataKas.kas_mutasi.no_faktur)">
-                        Delete
-                      </a>
-                    </td>
-                  </tr>
+                    <a v-if="otoritas.hapus_kas_mutasi == 1" href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + dataKas.kas_mutasi.id" v-on:click="deleteEntry(dataKas.kas_mutasi.id, index,dataKas.kas_mutasi.no_faktur)">
+                      Delete
+                    </a>
+                  </td>
+                </tr>
               </tbody>
               <tbody class="data-tidak-ada" v-else-if="kasMutasi.length == 0 && loading == false">
                 <tr><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
@@ -80,6 +80,7 @@ export default {
     return {
       kasMutasi: [],
       kasMutasiData: {},
+      otoritas: {},
       url : window.location.origin+(window.location.pathname).replace("dashboard", "kas-mutasi"),
       pencarian: '',
       loading: true
@@ -94,91 +95,92 @@ export default {
         pencarian: function (newQuestion) {
           this.getHasilPencarian()  
         }
-    },
+      },
 
-    methods: {
-      getResults(page) {
-        var app = this; 
-        if (typeof page === 'undefined') {
-          page = 1;
-        }
-        axios.get(app.url+'/view?page='+page)
-        .then(function (resp) {
-          app.kasMutasi = resp.data.data;
-          app.kasMutasiData = resp.data;
-          app.loading = false;
-          console.log(resp.data)
-        })
-        .catch(function (resp) {
-          console.log(resp);
-          app.loading = false;
-          alert("Tidak Dapat Memuat Kas Mutasi");
-        });
-      },
-      getHasilPencarian(page){
-        var app = this;
-        if (typeof page === 'undefined') {
-          page = 1;
-        }
-        axios.get(app.url+'/pencarian?search='+app.pencarian+'&page='+page)
-        .then(function (resp) {
-          app.kasMutasi = resp.data.data;
-          app.kasMutasiData = resp.data;
-          app.loading = false;
-        })
-        .catch(function (resp) {
-          console.log(resp);
-          alert("Tidak Dapat Memuat Kas Mutasi");
-        });
-      },
-      alert(pesan) {
-        this.$swal({
-          title: "Berhasil ",
-          text: pesan,
-          icon: "success",
-        });
-      },
-      deleteEntry(id, index,faktur) {
-        var app = this;
-        app.$swal({
-          text: "Anda Yakin Ingin Menghapus Transaksi "+faktur+ " ?",
-          buttons: true,
-          dangerMode: true,
-        })
-        .then((willDelete) => {
-          if (willDelete) {
-            this.hapusTransaksi(id,faktur);
-          } else {
-            app.$swal.close();
-            app.$router.replace('/kas-mutasi/');
+      methods: {
+        getResults(page) {
+          var app = this; 
+          if (typeof page === 'undefined') {
+            page = 1;
           }
-        });
-      },
-      hapusTransaksi(id,faktur){
-        var app = this;
-        app.loading = true;
-        axios.delete(app.url+'/' + id)
-        .then(function (resp) {
-          if (resp.data == 0) {
-            app.alertGagal("Mohon Maaf, Kas Mutasi " +faktur+ " Tidak bisa Di Hapus, Jika Dihapus Kas Akan Minus");
+          axios.get(app.url+'/view?page='+page)
+          .then(function (resp) {
+            app.kasMutasi = resp.data.data;
+            app.kasMutasiData = resp.data;
+            app.otoritas = resp.data.otoritas.original;
             app.loading = false;
-          }else{
-            app.getResults();
-            app.alert("Menghapus Kas Mutasi "+faktur);
-            app.loading = false;  
+            console.log(resp.data)
+          })
+          .catch(function (resp) {
+            console.log(resp);
+            app.loading = false;
+            alert("Tidak Dapat Memuat Kas Mutasi");
+          });
+        },
+        getHasilPencarian(page){
+          var app = this;
+          if (typeof page === 'undefined') {
+            page = 1;
           }
-          app.$router.replace('/kas-mutasi/');
-        })
-        .catch(function (resp) {
-          alert("Tidak dapat Menghapus Item Masuk");
-        });
-      },
-      alertGagal(pesan) {
-        this.$swal({
+          axios.get(app.url+'/pencarian?search='+app.pencarian+'&page='+page)
+          .then(function (resp) {
+            app.kasMutasi = resp.data.data;
+            app.kasMutasiData = resp.data;
+            app.loading = false;
+          })
+          .catch(function (resp) {
+            console.log(resp);
+            alert("Tidak Dapat Memuat Kas Mutasi");
+          });
+        },
+        alert(pesan) {
+          this.$swal({
+            title: "Berhasil ",
+            text: pesan,
+            icon: "success",
+          });
+        },
+        deleteEntry(id, index,faktur) {
+          var app = this;
+          app.$swal({
+            text: "Anda Yakin Ingin Menghapus Transaksi "+faktur+ " ?",
+            buttons: true,
+            dangerMode: true,
+          })
+          .then((willDelete) => {
+            if (willDelete) {
+              this.hapusTransaksi(id,faktur);
+            } else {
+              app.$swal.close();
+              app.$router.replace('/kas-mutasi/');
+            }
+          });
+        },
+        hapusTransaksi(id,faktur){
+          var app = this;
+          app.loading = true;
+          axios.delete(app.url+'/' + id)
+          .then(function (resp) {
+            if (resp.data == 0) {
+              app.alertGagal("Mohon Maaf, Kas Mutasi " +faktur+ " Tidak bisa Di Hapus, Jika Dihapus Kas Akan Minus");
+              app.loading = false;
+            }else{
+              app.getResults();
+              app.alert("Menghapus Kas Mutasi "+faktur);
+              app.loading = false;  
+            }
+            app.$router.replace('/kas-mutasi/');
+          })
+          .catch(function (resp) {
+            alert("Tidak dapat Menghapus Item Masuk");
+          });
+        },
+        alertGagal(pesan) {
+          this.$swal({
             text: pesan,
             icon: "warning",
-        });
+          });
+        }
       }
     }
-}
-</script>
+    </script>

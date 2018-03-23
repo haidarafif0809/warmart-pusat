@@ -38,7 +38,7 @@
                                     <th>Kategori</th>
                                     <th>Jumlah</th>
                                     <th>Keterangan</th>
-                                    <th>Aksi</th>
+                                    <th v-if="otoritas.edit_kas_masuk == 1 || otoritas.hapus_kas_masuk == 1">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody v-if="kasmasuks.length > 0 && loading == false"  class="data-ada">

@@ -39,7 +39,7 @@
                   <th>Jumlah</th>
                   <th>Keterangan</th>
                   <th>Waktu</th>
-                  <th>Aksi</th>
+                  <th v-if="otoritas.edit_kas_keluar == 1 || otoritas.hapus_kas_keluar == 1">Aksi</th>
                 </tr>
               </thead>
               <tbody v-if="kasKeluar.length > 0 && loading == false"  class="data-ada">
