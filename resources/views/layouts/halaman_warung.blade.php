@@ -111,6 +111,14 @@ h4 {
     border-bottom: 2px solid #ddd;
     padding: 5px 0px 5px 0px;
 }
+.scrollable-menu {
+    height: auto;
+    max-height: 250px;
+    overflow-x: hidden;
+}
+.nav-tabs > li > a{
+    font-size: 20px;
+}
 
 </style>
 
@@ -145,7 +153,7 @@ h4 {
         {!! $list_warung !!}
         <div class="row">
                 <div class="col-sm-3">
-                    <ul class="nav nav-tabs buttonColor" data-tabs="tabs">
+                    <ul class="nav nav-tabs buttonColor card-raised" data-tabs="tabs">
                             {!! $kategori_produk !!}
                     </ul>
                 </div>
@@ -224,7 +232,7 @@ h4 {
             {!! $list_warung !!}
             <div class="row">
                 <div class="col-sm-3">
-                    <ul class="nav nav-tabs buttonColor" data-tabs="tabs">
+                    <ul class="nav nav-tabs buttonColor card-raised" data-tabs="tabs">
                             {!! $kategori_produk !!}
                     </ul>
                 </div>

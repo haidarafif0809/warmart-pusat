@@ -187,6 +187,9 @@ import SettingPengirimanIndex from './components/setting_pengiriman/SettingPengi
 import OtoritasIndex from './components/otoritas/OtoritasIndex.vue';
 import OtoritasSetting from './components/otoritas/OtoritasSetting.vue';
 
+import SettingPromoIndex from './components/setting_promo/SettingPromoIndex.vue'; 
+import SettingPromoCreate from './components/setting_promo/SettingPromoCreate.vue'; 
+
 const routes = [{
     path: '/',
     components: {
@@ -785,7 +788,15 @@ const routes = [{
         path: '/setting-otoritas/:id',
         component: OtoritasSetting,
         name: 'settingOtoritas'
-    }
+    } ,{ 
+        path: '/setting-promo', 
+        component: SettingPromoIndex, 
+        name: 'indexSettingPromo' 
+    }  ,{ 
+        path: '/create-setting-promo/', 
+        component: SettingPromoCreate, 
+        name: 'createSettingPromo' 
+    } 
 
 
     ]

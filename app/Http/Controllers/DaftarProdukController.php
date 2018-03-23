@@ -94,9 +94,9 @@ public static function produkKategori($kategori)
         //MEANMPILKAN KATEGORI PRODUK
     $kategori_produk = '';
     $kategori_produk .= '
-    <li class="dropdown">
+    <li class="dropdown ">
     <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color:white"><i class="material-icons">list</i> PILIH KATEGORI <b class="caret"></b></a>
-    <ul class="dropdown-menu dropdown-with-icons">
+    <ul class="dropdown-menu dropdown-with-icons scrollable-menu">
     <li>
     <a href="'.route('daftar_produk.index').'">
          SEMUA KATEGORI </a>
