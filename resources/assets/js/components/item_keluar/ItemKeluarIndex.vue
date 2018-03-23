@@ -22,65 +22,65 @@
 					<h4 class="card-title"> Item Keluar </h4>
 					
 					<div class="toolbar">
-						<p> <router-link :to="{name: 'createItemKeluar'}" class="btn btn-primary">Tambah Item Keluar</router-link></p>
-					</div>
+                      <router-link :to="{name: 'createItemKeluar'}" class="btn btn-primary" v-if="otoritas.tambah_item_keluar == 1">Tambah Item Keluar</router-link>
+                  </div>
 
-					<div class=" table-responsive ">
-                         <div  class="pencarian">
-                             <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control" autocomplete="">
-                           </div>
-						<table class="table table-striped table-hover" v-if="seen">
-							<thead class="text-primary">
-								<tr>
+                  <div class=" table-responsive ">
+                      <div class="pencarian">
+                       <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control" autocomplete="">
+                   </div>
+                   <table class="table table-striped table-hover" v-if="seen">
+                     <thead class="text-primary">
+                        <tr>
 
-									<th>No. Transaksi</th>
-									<th>Total</th>
-									<th>Keterangan</th>
-									<th>Waktu</th>
-									<th>Waktu Edit</th>
-									<th>Detail</th>
-									<th>Edit</th>
-									<th>Hapus</th>
+                           <th>No. Transaksi</th>
+                           <th>Total</th>
+                           <th>Keterangan</th>
+                           <th>Waktu</th>
+                           <th>Waktu Edit</th>
+                           <th>Detail</th>
+                           <th v-if="otoritas.edit_item_keluar == 1">Edit</th>
+                           <th v-if="otoritas.hapus_item_keluar == 1">Hapus</th>
 
-								</tr>
-							</thead>
-							<tbody v-if="item_keluar.length"  class="data-ada">
-								<tr v-for="item_keluar, index in item_keluar" >
+                       </tr>
+                   </thead>
+                   <tbody v-if="item_keluar.length"  class="data-ada">
+                    <tr v-for="item_keluar, index in item_keluar" >
 
-									<td>{{ item_keluar.no_faktur }}</td>
-									<td>{{ item_keluar.total }}</td>
-									<td>{{ item_keluar.keterangan }}</td>
-									<td>{{ item_keluar.waktu }}</td>
-									<td>{{ item_keluar.waktu_edit }}</td>
-									<td>
-										<router-link :to="{name: 'detailItemKeluar', params: {id: item_keluar.id}}" class="btn btn-xs btn-info" v-bind:id="'detail-' + item_keluar.id" >
-										Detail </router-link> </td>
-									</td>
-									<td><router-link :to="{name: 'editItemKeluarProses', params: {id: item_keluar.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + item_keluar.id" >
-									Edit </router-link> </td>
+                       <td>{{ item_keluar.no_faktur }}</td>
+                       <td>{{ item_keluar.total }}</td>
+                       <td>{{ item_keluar.keterangan }}</td>
+                       <td>{{ item_keluar.waktu }}</td>
+                       <td>{{ item_keluar.waktu_edit }}</td>
+                       <td>
+                          <router-link :to="{name: 'detailItemKeluar', params: {id: item_keluar.id}}" class="btn btn-xs btn-info" v-bind:id="'detail-' + item_keluar.id" >
+                          Detail </router-link> </td>
+                      </td>
+                      <td v-if="otoritas.edit_item_keluar == 1"><router-link :to="{name: 'editItemKeluarProses', params: {id: item_keluar.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + item_keluar.id">
+                      Edit </router-link> </td>
 
-									<td> 
-										<a href="#item-keluar" class="btn btn-xs btn-danger" v-bind:id="'delete-' + item_keluar.id" v-on:click="deleteEntry(item_keluar.id, index,item_keluar.no_faktur)">Delete</a>
-									</td>
-								</tr>
-							</tbody>					
-							<tbody class="data-tidak-ada" v-else>
-								<tr ><td colspan="8"  class="text-center">Tidak Ada Data</td></tr>
-							</tbody>
-						</table>	
-
-
-						<vue-simple-spinner v-if="loading"></vue-simple-spinner>
-
-						<div align="right"><pagination :data="itemKeluarData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
-
-					</div>
+                      <td v-if="otoritas.hapus_item_keluar == 1"> 
+                          <a href="#item-keluar" class="btn btn-xs btn-danger" v-bind:id="'delete-' + item_keluar.id" v-on:click="deleteEntry(item_keluar.id, index,item_keluar.no_faktur)">Delete</a>
+                      </td>
+                  </tr>
+              </tbody>					
+              <tbody class="data-tidak-ada" v-else>
+                <tr ><td colspan="8"  class="text-center">Tidak Ada Data</td></tr>
+            </tbody>
+        </table>	
 
 
-				</div>
-			</div>
-		</div>
-	</div>
+        <vue-simple-spinner v-if="loading"></vue-simple-spinner>
+
+        <div align="right"><pagination :data="itemKeluarData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
+
+    </div>
+
+
+</div>
+</div>
+</div>
+</div>
 
 
 </template>
@@ -90,18 +90,19 @@ export default {
 	data: function () {
 		return {
 			item_keluar: [],
-			itemKeluarData: {},
-			url : window.location.origin+(window.location.pathname).replace("dashboard", "item-keluar"),
-			pencarian: '',
-			loading: true,
-			seen : false
-		}
-	},
-	mounted() {
-		var app = this;
-		app.getResults();
-	},
-	watch: {
+            itemKeluarData: {},
+            otoritas: {},
+            url : window.location.origin+(window.location.pathname).replace("dashboard", "item-keluar"),
+            pencarian: '',
+            loading: true,
+            seen : false
+        }
+    },
+    mounted() {
+      var app = this;
+      app.getResults();
+  },
+  watch: {
         // whenever question changes, this function will run
         pencarian: function (newQuestion) {
         	this.getHasilPencarian();
@@ -118,10 +119,11 @@ export default {
     		axios.get(app.url+'/view?page='+page)
     		.then(function (resp) {
     			app.item_keluar = resp.data.data;
-    			app.itemKeluarData = resp.data;
-    			app.loading = false;
-    			app.seen = true;
-    		})
+                app.itemKeluarData = resp.data;
+                app.otoritas = resp.data.otoritas.original;
+                app.loading = false;
+                app.seen = true;
+            })
     		.catch(function (resp) {
     			console.log(resp);
     			app.loading = false;
@@ -138,9 +140,10 @@ export default {
     		.then(function (resp) {
     			app.item_keluar = resp.data.data;
     			app.itemKeluarData = resp.data;
-    			app.loading = false;
-    			app.seen = true;
-    		})
+                app.otoritas = resp.data.otoritas.original;
+                app.loading = false;
+                app.seen = true;
+            })
     		.catch(function (resp) {
     			console.log(resp);
     			alert("Tidak Dapat Memuat Item Keluar");

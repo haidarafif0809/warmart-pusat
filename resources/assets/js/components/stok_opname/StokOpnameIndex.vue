@@ -1,28 +1,28 @@
 <style scoped>
-    .pencarian {
-        color: red; 
-        float: right;
-        padding-bottom: 10px;
-    }    
-    .card-produk{
-        background-color:#82B1FF;
-    }
-    .text-kanan{
-        text-align:right;
-    }
-    .table>thead>tr>th {
-        border-bottom-width: 1px;
-        font-size: 1em;
-        font-weight: 300;
-    }
-    .panel .panel-heading {
-        background-color: transparent;
-        border-bottom: 0px solid #ddd;
-        padding: 0px;
-    }
-    .btn {
-        margin: 6px 1px;
-    }
+.pencarian {
+    color: red; 
+    float: right;
+    padding-bottom: 10px;
+}    
+.card-produk{
+    background-color:#82B1FF;
+}
+.text-kanan{
+    text-align:right;
+}
+.table>thead>tr>th {
+    border-bottom-width: 1px;
+    font-size: 1em;
+    font-weight: 300;
+}
+.panel .panel-heading {
+    background-color: transparent;
+    border-bottom: 0px solid #ddd;
+    padding: 0px;
+}
+.btn {
+    margin: 6px 1px;
+}
 </style>
 
 <template>  
@@ -64,7 +64,7 @@
                 <div class="card-content">
                     <h4 class="card-title"> Stok Opname</h4>
 
-                    <div class="col-md-4 col-xs-12">
+                    <div class="col-md-4 col-xs-12" v-if="otoritas.tambah_stok_opname">
                         <div class="card card-produk" style="margin-bottom: 1px; margin-top: 1px;">
 
                             <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
@@ -130,10 +130,14 @@
                                         <td>{{ stokOpname.stok_opname.no_faktur }}</td>
                                         <td>{{ stokOpname.nama_produk }}</td>
                                         <td align="right">{{ stokOpname.stok_opname.stok_sekarang | pemisahTitik}}</td>
-                                        <td align="right">
+
+                                        <td align="right" v-if="otoritas.edit_stok_opname == 1">
                                             <a href="#stok-opname" v-bind:id="'edit-' + stokOpname.stok_opname.id" v-on:click="editEntry(stokOpname.stok_opname.id, index,stokOpname.stok_opname.no_faktur, stokOpname.nama_produk)">
                                                 {{ stokOpname.stok_opname.jumlah_fisik | pemisahTitik}}
                                             </a>
+                                        </td>     
+                                        <td align="right" v-else-if="otoritas.edit_stok_opname == 0">
+                                            {{ stokOpname.stok_opname.jumlah_fisik | pemisahTitik}}
                                         </td>
                                         
                                         <td align="right" v-if="stokOpname.stok_opname.selisih_fisik < 0">
@@ -156,7 +160,7 @@
                                         <td>
                                             <a :href="url+'/download-excel-faktur/'+stokOpname.stok_opname.id" class="btn btn-xs btn-success" v-bind:id="'excel-' + stokOpname.stok_opname.id" target="_blank"> Excel
                                             </a>
-                                            <a href="#/stok-opname" class="btn btn-xs btn-danger" v-bind:id="'delete-' + stokOpname.stok_opname.id" v-on:click="deleteEntry(stokOpname.stok_opname.id, index,stokOpname.stok_opname.no_faktur)">Delete
+                                            <a href="#/stok-opname" class="btn btn-xs btn-danger" v-bind:id="'delete-' + stokOpname.stok_opname.id" v-on:click="deleteEntry(stokOpname.stok_opname.id, index,stokOpname.stok_opname.no_faktur)" v-if="otoritas.hapus_stok_opname == 1">Delete
                                             </a>
                                         </td>
                                     </tr>
@@ -210,332 +214,337 @@
 </template>
 
 <script>
-    import { mapState } from 'vuex';
-    export default {
-        data: function () {
-            return {
-                stokOpname: [],
-                stokOpnameData: {},
-                totalStokOpname: {},
-                inputStokOpname: {
-                    produk: '',
-                    nama_produk: '',
-                    jumlah_produk: '',
-                    harga_produk: '',
-                },
-                editStokOpname: {
-                    id_stok_opname: '',
-                    no_faktur: '',
-                    jumlah_produk: '',
-                },
-                filter: {
-                    dari_tanggal: '',
-                    sampai_tanggal: new Date(),
-                },
-                placeholder_produk:{
-                    placeholder: 'Cari Produk (F1) ...'
-                },
-                url : window.location.origin+(window.location.pathname).replace("dashboard", "stok-opname"),
-                pencarian: '',
-                loading: true,
-                seen: false,
-            }
-        },
-        mounted() {
-            var app = this;
-            var awal_tanggal = new Date();
-            awal_tanggal.setDate(1);
-            app.filter.dari_tanggal = awal_tanggal;
-            app.$store.dispatch('LOAD_PRODUK_LIST')
-            app.getResults();
-        },
-        filters: {
-            pemisahTitik: function (value) {
-                var angka = [value];
-                var numberFormat = new Intl.NumberFormat('es-ES');
-                var formatted = angka.map(numberFormat.format);
-                return formatted.join('; ');
+import { mapState } from 'vuex';
+export default {
+    data: function () {
+        return {
+            stokOpname: [],
+            stokOpnameData: {},
+            totalStokOpname: {},
+            otoritas: {},
+            inputStokOpname: {
+                produk: '',
+                nama_produk: '',
+                jumlah_produk: '',
+                harga_produk: '',
             },
-            tanggal: function (value) {
-                return moment(String(value)).format('DD/MM/YYYY')
-            }
-        },
-        watch: {
-            pencarian: function (newQuestion) {
-                this.getHasilPencarian()  
+            editStokOpname: {
+                id_stok_opname: '',
+                no_faktur: '',
+                jumlah_produk: '',
             },
-            'inputStokOpname.produk': function(){
-                this.pilihProduk()
-            }
-        },
-        computed : mapState ({
-            produk(){
-                return this.$store.getters.produk_barang
-            }
-        }),
-        methods: {
-            openSelectizeProduk(){
-                this.$refs.produk.$el.selectize.focus();
+            filter: {
+                dari_tanggal: '',
+                sampai_tanggal: new Date(),
             },
-            getResults(page) {
-                var app = this; 
-                if (typeof page === 'undefined') {
-                    page = 1;
-                }
-                axios.get(app.url+'/view?page='+page)
-                .then(function (resp) {
-                    app.stokOpname = resp.data.data;
-                    app.stokOpnameData = resp.data;
-                    app.loading = false;
-                    app.seen = false;
-                    $("#btnExcel").hide();
+            placeholder_produk:{
+                placeholder: 'Cari Produk (F1) ...'
+            },
+            url : window.location.origin+(window.location.pathname).replace("dashboard", "stok-opname"),
+            pencarian: '',
+            loading: true,
+            seen: false,
+        }
+    },
+    mounted() {
+        var app = this;
+        var awal_tanggal = new Date();
+        awal_tanggal.setDate(1);
+        app.filter.dari_tanggal = awal_tanggal;
+        app.$store.dispatch('LOAD_PRODUK_LIST')
+        app.getResults();
+    },
+    filters: {
+        pemisahTitik: function (value) {
+            var angka = [value];
+            var numberFormat = new Intl.NumberFormat('es-ES');
+            var formatted = angka.map(numberFormat.format);
+            return formatted.join('; ');
+        },
+        tanggal: function (value) {
+            return moment(String(value)).format('DD/MM/YYYY')
+        }
+    },
+    watch: {
+        pencarian: function (newQuestion) {
+            this.getHasilPencarian()  
+        },
+        'inputStokOpname.produk': function(){
+            this.pilihProduk()
+        }
+    },
+    computed : mapState ({
+        produk(){
+            return this.$store.getters.produk_barang
+        }
+    }),
+    methods: {
+        openSelectizeProduk(){
+            this.$refs.produk.$el.selectize.focus();
+        },
+        getResults(page) {
+            var app = this; 
+            if (typeof page === 'undefined') {
+                page = 1;
+            }
+            axios.get(app.url+'/view?page='+page)
+            .then(function (resp) {
+                app.stokOpname = resp.data.data;
+                app.stokOpnameData = resp.data;
+                app.otoritas = resp.data.otoritas.original;
+                app.loading = false;
+                app.seen = false;
+                $("#btnExcel").hide();
+                if (app.otoritas.tambah_stok_opname == 1) {                    
                     app.openSelectizeProduk();
+                }
+            })
+            .catch(function (resp) {
+                console.log(resp);
+                app.loading = false;
+                alert("Tidak Dapat Memuat Stok Opname");
+            });
+        },
+        getHasilPencarian(page){
+            var app = this;
+            if (typeof page === 'undefined') {
+                page = 1;
+            }
+            axios.get(app.url+'/pencarian?search='+app.pencarian+'&page='+page)
+            .then(function (resp) {
+                console.log(resp.data.data)
+                app.stokOpname = resp.data.data;
+                app.stokOpnameData = resp.data;
+                app.otoritas = resp.data.otoritas.original;
+                app.loading = false;
+                app.seen = false;
+                $("#btnExcel").hide();
+            })
+            .catch(function (resp) {
+                console.log(resp);
+                alert("Tidak Dapat Memuat Stok Opname");
+            });
+        },
+        pilihProduk() {
+            if (this.inputStokOpname.produk != '') {
+                var app = this;
+                var produk = app.inputStokOpname.produk.split("|");
+                var nama_produk = produk[1];
+
+                this.inputJumlahProduk(nama_produk);
+            }
+        },
+        inputJumlahProduk(nama_produk){
+            var app = this
+            app.inputStokOpname.nama_produk = nama_produk;
+            $("#modalJumlahProduk").show();
+            app.$refs.jumlah_produk.focus(); 
+        },
+        submitProduk(value){
+
+            if (value == '') {
+                this.$swal("Jumlah Produk Tidak Boleh Kosong!").then((value) => {
+                    this.$refs.jumlah_produk.focus(); 
+                });
+            }else{
+                var app = this;
+                var data_produk = app.inputStokOpname.produk.split("|");
+                var nama_produk = data_produk[1];
+                app.inputStokOpname.produk = data_produk[0];
+                app.inputStokOpname.harga_produk = data_produk[2];
+                var newInputStokOpname = app.inputStokOpname;
+                app.loading = true;
+                axios.post(app.url, newInputStokOpname)
+                .then(function (resp) {
+
+                    app.alert("Menambahkan Produk "+nama_produk)      
+                    app.getResults()
+                    app.loading = false
+                    app.seen = false;
+                    $("#btnExcel").hide();
+                    app.inputStokOpname.jumlah_produk = ''
+                    app.inputStokOpname.nama_produk = ''
+                    app.inputStokOpname.produk = ''
+                    $("#modalJumlahProduk").hide();
                 })
                 .catch(function (resp) {
-                    console.log(resp);
-                    app.loading = false;
-                    alert("Tidak Dapat Memuat Stok Opname");
+                  console.log(resp);                  
+                  app.loading = false;
+                  app.inputStokOpname.jumlah_produk = ''
+                  app.inputStokOpname.nama_produk = ''
+                  app.inputStokOpname.produk = ''
+                  $("#modalJumlahProduk").hide();
+                  alert("Tidak Dapat Menambahkan Produk "+nama_produk);
+              });
+            }
+        },
+        editEntry(id, index,no_faktur,nama_produk) {
+            var app = this;
+            app.$swal({
+                title: nama_produk,
+                content: {
+                    element: "input",
+                    attributes: {
+                        placeholder: "Edit Jumlah Produk",
+                        type: "number",
+                    },
+                },
+                buttons: {
+                    cancel: true,
+                    confirm: "OK"                   
+                },
+            }).then((value) => {
+                if (!value) throw null;
+                this.prosesEditStokOpname(value,id,no_faktur,nama_produk);
+            });
+        },
+        prosesEditStokOpname(value,id,no_faktur,nama_produk){
+            if (value == 0) {
+                this.$swal({
+                    text: "Jumlah Produk Tidak Boleh Nol!",
                 });
-            },
-            getHasilPencarian(page){
+            }else{
                 var app = this;
-                if (typeof page === 'undefined') {
-                    page = 1;
-                }
-                axios.get(app.url+'/pencarian?search='+app.pencarian+'&page='+page)
+                var id = id;
+                app.editStokOpname.id_stok_opname = id;
+                app.editStokOpname.no_faktur = no_faktur;
+                app.editStokOpname.jumlah_produk = value;
+                var newEditStokOpname = app.editStokOpname;
+                app.loading = true;
+                axios.patch(app.url+'/'+id, newEditStokOpname)
                 .then(function (resp) {
-                    console.log(resp.data.data)
-                    app.stokOpname = resp.data.data;
-                    app.stokOpnameData = resp.data;
+                    app.getResults()
+                    app.alert("Mengubah Stok Opname Produk "+nama_produk)
                     app.loading = false;
                     app.seen = false;
                     $("#btnExcel").hide();
+                    app.editStokOpname.jumlah_produk = ''
+                    app.editStokOpname.no_faktur = ''
+                    app.editStokOpname.id_stok_opname = ''
                 })
                 .catch(function (resp) {
-                    console.log(resp);
-                    alert("Tidak Dapat Memuat Stok Opname");
-                });
-            },
-            pilihProduk() {
-                if (this.inputStokOpname.produk != '') {
-                    var app = this;
-                    var produk = app.inputStokOpname.produk.split("|");
-                    var nama_produk = produk[1];
-
-                    this.inputJumlahProduk(nama_produk);
-                }
-            },
-            inputJumlahProduk(nama_produk){
-                var app = this
-                app.inputStokOpname.nama_produk = nama_produk;
-                $("#modalJumlahProduk").show();
-                app.$refs.jumlah_produk.focus(); 
-            },
-            submitProduk(value){
-
-                if (value == '') {
-                    this.$swal("Jumlah Produk Tidak Boleh Kosong!").then((value) => {
-                        this.$refs.jumlah_produk.focus(); 
-                    });
-                }else{
-                    var app = this;
-                    var data_produk = app.inputStokOpname.produk.split("|");
-                    var nama_produk = data_produk[1];
-                    app.inputStokOpname.produk = data_produk[0];
-                    app.inputStokOpname.harga_produk = data_produk[2];
-                    var newInputStokOpname = app.inputStokOpname;
-                    app.loading = true;
-                    axios.post(app.url, newInputStokOpname)
-                    .then(function (resp) {
-
-                        app.alert("Menambahkan Produk "+nama_produk)      
-                        app.getResults()
-                        app.loading = false
-                        app.seen = false;
-                        $("#btnExcel").hide();
-                        app.inputStokOpname.jumlah_produk = ''
-                        app.inputStokOpname.nama_produk = ''
-                        app.inputStokOpname.produk = ''
-                        $("#modalJumlahProduk").hide();
-                    })
-                    .catch(function (resp) {
-                      console.log(resp);                  
-                      app.loading = false;
-                      app.inputStokOpname.jumlah_produk = ''
-                      app.inputStokOpname.nama_produk = ''
-                      app.inputStokOpname.produk = ''
-                      $("#modalJumlahProduk").hide();
-                      alert("Tidak Dapat Menambahkan Produk "+nama_produk);
-                  });
-                }
-            },
-            editEntry(id, index,no_faktur,nama_produk) {
-                var app = this;
-                app.$swal({
-                    title: nama_produk,
-                    content: {
-                        element: "input",
-                        attributes: {
-                            placeholder: "Edit Jumlah Produk",
-                            type: "number",
-                        },
-                    },
-                    buttons: {
-                        cancel: true,
-                        confirm: "OK"                   
-                    },
-                }).then((value) => {
-                    if (!value) throw null;
-                    this.prosesEditStokOpname(value,id,no_faktur,nama_produk);
-                });
-            },
-            prosesEditStokOpname(value,id,no_faktur,nama_produk){
-                if (value == 0) {
-                    this.$swal({
-                        text: "Jumlah Produk Tidak Boleh Nol!",
-                    });
-                }else{
-                    var app = this;
-                    var id = id;
-                    app.editStokOpname.id_stok_opname = id;
-                    app.editStokOpname.no_faktur = no_faktur;
-                    app.editStokOpname.jumlah_produk = value;
-                    var newEditStokOpname = app.editStokOpname;
-                    app.loading = true;
-                    axios.patch(app.url+'/'+id, newEditStokOpname)
-                    .then(function (resp) {
-                        app.getResults()
-                        app.alert("Mengubah Stok Opname Produk "+nama_produk)
-                        app.loading = false;
-                        app.seen = false;
-                        $("#btnExcel").hide();
-                        app.editStokOpname.jumlah_produk = ''
-                        app.editStokOpname.no_faktur = ''
-                        app.editStokOpname.id_stok_opname = ''
-                    })
-                    .catch(function (resp) {
-                      console.log(resp);                  
-                      app.loading = false;
-                      app.alertGagal("Tidak Dapat Mengubah Stok Opname Produk "+nama_produk);
-                  });
-                }
-            },
-            deleteEntry(id, index,no_faktur) {
-                var app = this;
-                app.$swal({
-                    text: "Anda Yakin Ingin Menghapus Transaksi "+no_faktur+ " ?",
-                    buttons: true,
-                    dangerMode: true,
-                })
-                .then((willDelete) => {
-                    if (willDelete) {
-                        this.prosesHapus(id,no_faktur);
-                    } else {
-                        app.$swal.close();
-                    }
-                });
-            },
-            prosesHapus(id,no_faktur){
-                var app = this;
-                app.loading = true;
-
-                axios.delete(app.url+'/' + id).then(function (resp) {
-                    if (resp.data == 0) {
-                        app.alertGagal("Stok Opname Tidak Dapat Dihapus, Karena Sudah Terpakai");
-                        app.loading = false;
-                        app.seen = false;
-                        $("#btnExcel").hide();
-                    }else{
-                        app.getResults();
-                        app.alert("Menghapus Stok Opname "+no_faktur);
-                        app.loading = false;  
-                    }
-                })
-                .catch(function (resp) {
-                    alert("Tidak Dapat Menghapus Stok Opname");
-                });
-            },
-            filterPeriode(){
-                $("#btnFilter").click();
-                this.getResults();
-            },
-            submitStokOpname(){
-                var app = this;
-                app.showButton();
-                app.prosesFilterPeriode();
-                app.subtotalStokOpname();
-            },
-            prosesFilterPeriode(page) {
-                var app = this; 
-                var newFilter = app.filter;
-                if (typeof page === 'undefined') {
-                    page = 1;
-                }
-                app.loading = true,
-                axios.post(app.url+'/filter-periode?page='+page, newFilter)
-                .then(function (resp) {
-                    app.stokOpname = resp.data.data;
-                    app.stokOpnameData = resp.data;
-                    app.loading = false
-                    console.log(resp.data.data);
-                })
-                .catch(function (resp) {
-                    console.log(resp);
-                    alert("Tidak Dapat Memuat Stok Opname");
-                });
-            },
-            subtotalStokOpname() {
-                var app = this; 
-                var newFilter = app.filter;
-
-                app.loading = true,
-                axios.post(app.url+'/subtotal', newFilter)
-                .then(function (resp) {
-                    app.totalStokOpname = resp.data;
-                    app.loading = false
-                    app.seen = true
-                    console.log(resp.data);             
-                })
-                .catch(function (resp) {
-                    alert("Tidak Dapat Memuat Subtotal Stok Opname");
-                });
-            },
-            showButton() {
-                var app = this;
-                var filter = app.filter;
-
-                var date_dari_tanggal = filter.dari_tanggal;
-                var date_sampai_tanggal = filter.sampai_tanggal;
-                var dari_tanggal = "" + date_dari_tanggal.getFullYear() +'-'+ ((date_dari_tanggal.getMonth() + 1) > 9 ? '' : '0') + (date_dari_tanggal.getMonth() + 1) +'-'+ (date_dari_tanggal.getDate() > 9 ? '' : '0') + date_dari_tanggal.getDate();
-                var sampai_tanggal = "" + date_sampai_tanggal.getFullYear() +'-'+ ((date_sampai_tanggal.getMonth() + 1) > 9 ? '' : '0') + (date_sampai_tanggal.getMonth() + 1) +'-'+ (date_sampai_tanggal.getDate() > 9 ? '' : '0') + date_sampai_tanggal.getDate();
-                $("#btnExcel").show();
-                $("#btnExcel").attr('href', app.url+'/download-excel/'+dari_tanggal+'/'+sampai_tanggal);
-            },
-            closeModalJumlahProduk(){  
-                $("#modalJumlahProduk").hide();
-                this.inputStokOpname.produk = '';
-                this.openSelectizeProduk();
-            },
-            alert(pesan) {
-                this.$swal({
-                    title: "Berhasil ",
-                    text: pesan,
-                    icon: "success",
-                    buttons: false,
-                    timer: 2000,
-
-                });
-            },
-            alertGagal(pesan) {
-                this.$swal({
-                    title: "Gagal ",
-                    text: pesan,
-                    icon: "warning",
-                    buttons: false,
-                    timer: 2000,
-
-                });
+                  console.log(resp);                  
+                  app.loading = false;
+                  app.alertGagal("Tidak Dapat Mengubah Stok Opname Produk "+nama_produk);
+              });
             }
+        },
+        deleteEntry(id, index,no_faktur) {
+            var app = this;
+            app.$swal({
+                text: "Anda Yakin Ingin Menghapus Transaksi "+no_faktur+ " ?",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    this.prosesHapus(id,no_faktur);
+                } else {
+                    app.$swal.close();
+                }
+            });
+        },
+        prosesHapus(id,no_faktur){
+            var app = this;
+            app.loading = true;
+
+            axios.delete(app.url+'/' + id).then(function (resp) {
+                if (resp.data == 0) {
+                    app.alertGagal("Stok Opname Tidak Dapat Dihapus, Karena Sudah Terpakai");
+                    app.loading = false;
+                    app.seen = false;
+                    $("#btnExcel").hide();
+                }else{
+                    app.getResults();
+                    app.alert("Menghapus Stok Opname "+no_faktur);
+                    app.loading = false;  
+                }
+            })
+            .catch(function (resp) {
+                alert("Tidak Dapat Menghapus Stok Opname");
+            });
+        },
+        filterPeriode(){
+            $("#btnFilter").click();
+            this.getResults();
+        },
+        submitStokOpname(){
+            var app = this;
+            app.showButton();
+            app.prosesFilterPeriode();
+            app.subtotalStokOpname();
+        },
+        prosesFilterPeriode(page) {
+            var app = this; 
+            var newFilter = app.filter;
+            if (typeof page === 'undefined') {
+                page = 1;
+            }
+            app.loading = true,
+            axios.post(app.url+'/filter-periode?page='+page, newFilter)
+            .then(function (resp) {
+                app.stokOpname = resp.data.data;
+                app.stokOpnameData = resp.data;
+                app.loading = false
+                console.log(resp.data.data);
+            })
+            .catch(function (resp) {
+                console.log(resp);
+                alert("Tidak Dapat Memuat Stok Opname");
+            });
+        },
+        subtotalStokOpname() {
+            var app = this; 
+            var newFilter = app.filter;
+
+            app.loading = true,
+            axios.post(app.url+'/subtotal', newFilter)
+            .then(function (resp) {
+                app.totalStokOpname = resp.data;
+                app.loading = false
+                app.seen = true
+                console.log(resp.data);             
+            })
+            .catch(function (resp) {
+                alert("Tidak Dapat Memuat Subtotal Stok Opname");
+            });
+        },
+        showButton() {
+            var app = this;
+            var filter = app.filter;
+
+            var date_dari_tanggal = filter.dari_tanggal;
+            var date_sampai_tanggal = filter.sampai_tanggal;
+            var dari_tanggal = "" + date_dari_tanggal.getFullYear() +'-'+ ((date_dari_tanggal.getMonth() + 1) > 9 ? '' : '0') + (date_dari_tanggal.getMonth() + 1) +'-'+ (date_dari_tanggal.getDate() > 9 ? '' : '0') + date_dari_tanggal.getDate();
+            var sampai_tanggal = "" + date_sampai_tanggal.getFullYear() +'-'+ ((date_sampai_tanggal.getMonth() + 1) > 9 ? '' : '0') + (date_sampai_tanggal.getMonth() + 1) +'-'+ (date_sampai_tanggal.getDate() > 9 ? '' : '0') + date_sampai_tanggal.getDate();
+            $("#btnExcel").show();
+            $("#btnExcel").attr('href', app.url+'/download-excel/'+dari_tanggal+'/'+sampai_tanggal);
+        },
+        closeModalJumlahProduk(){  
+            $("#modalJumlahProduk").hide();
+            this.inputStokOpname.produk = '';
+            this.openSelectizeProduk();
+        },
+        alert(pesan) {
+            this.$swal({
+                title: "Berhasil ",
+                text: pesan,
+                icon: "success",
+                buttons: false,
+                timer: 2000,
+
+            });
+        },
+        alertGagal(pesan) {
+            this.$swal({
+                title: "Gagal ",
+                text: pesan,
+                icon: "warning",
+                buttons: false,
+                timer: 2000,
+
+            });
         }
     }
+}
 </script>

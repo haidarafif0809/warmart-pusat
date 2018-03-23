@@ -16,6 +16,7 @@ use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\Datatables\Html\Builder;
+use Laratrust;
 
 class PembayaranPiutangController extends Controller
 {
@@ -76,6 +77,7 @@ class PembayaranPiutangController extends Controller
 
         $respons['current_page']   = $pembayaran_piutang->currentPage();
         $respons['data']           = $array_pembayaran_piutang;
+        $respons['otoritas']       = $this->otoritasPembayaranPiutang();
         $respons['first_page_url'] = url('/pembayaran-piutang/' . $link_view . '?page=' . $pembayaran_piutang->firstItem());
         $respons['from']           = 1;
         $respons['last_page']      = $pembayaran_piutang->lastPage();
@@ -178,8 +180,8 @@ class PembayaranPiutangController extends Controller
     public function fakturPembayaran($id)
     {
         $pembayaran_piutang = PembayaranPiutang::select('no_faktur_pembayaran')
-            ->where('id_pembayaran_piutang', $id)
-            ->where('warung_id', Auth::user()->id_warung)->first();
+        ->where('id_pembayaran_piutang', $id)
+        ->where('warung_id', Auth::user()->id_warung)->first();
         $no_faktur = $pembayaran_piutang->no_faktur_pembayaran;
 
         return $no_faktur;
@@ -221,7 +223,7 @@ class PembayaranPiutangController extends Controller
     {
         $session_id = session()->getId();
         $data_tbs   = TbsPembayaranPiutang::where('no_faktur_penjualan', $request->no_faktur_penjualan)
-            ->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->count();
+        ->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->count();
 
         //JIKA FAKTUR YG DIPILIH SUDAH ADA DI TBS
         if ($data_tbs > 0) {
@@ -434,11 +436,11 @@ class PembayaranPiutangController extends Controller
 
         //PILIH DATA DETAIL PEMBAYARAN PIUTANG
         $detail_pembayaran_piutang = DetailPembayaranPiutang::where('no_faktur_pembayaran', $no_faktur)
-            ->where('warung_id', Auth::user()->id_warung);
+        ->where('warung_id', Auth::user()->id_warung);
 
         //HAPUS DATA DI EDIT TBS
         $hapus_semua_edit_tbs_pembayaran_piutang = EditTbsPembayaranPiutang::where('no_faktur_pembayaran', $no_faktur)
-            ->where('warung_id', Auth::user()->id_warung)->delete();
+        ->where('warung_id', Auth::user()->id_warung)->delete();
 
         foreach ($detail_pembayaran_piutang->get() as $data_tbs) {
             $subtotal_piutang = $data_tbs->piutang - $data_tbs->potongan;
@@ -500,9 +502,9 @@ class PembayaranPiutangController extends Controller
         $no_faktur = $this->fakturPembayaran($id);
 
         $data_tbs = EditTbsPembayaranPiutang::where('no_faktur_penjualan', $request->no_faktur_penjualan)
-            ->where('session_id', $session_id)
-            ->where('no_faktur_pembayaran', $no_faktur)
-            ->where('warung_id', Auth::user()->id_warung)->count();
+        ->where('session_id', $session_id)
+        ->where('no_faktur_pembayaran', $no_faktur)
+        ->where('warung_id', Auth::user()->id_warung)->count();
 
         //JIKA FAKTUR YG DIPILIH SUDAH ADA DI TBS
         if ($data_tbs > 0) {
@@ -575,7 +577,7 @@ class PembayaranPiutangController extends Controller
 
 //HAPUS DETAIL PEMBAYARAN PIUTANG
         $detail_pembayaran_piutang = DetailPembayaranPiutang::where('no_faktur_pembayaran', $pembayaran_piutang->no_faktur_pembayaran)
-            ->where('warung_id', Auth::user()->id_warung)->get();
+        ->where('warung_id', Auth::user()->id_warung)->get();
         foreach ($detail_pembayaran_piutang as $data_detail) {
 
             if (!$hapus_detail = DetailPembayaranPiutang::destroy($data_detail->id_detail_pembayaran_piutang)) {
@@ -645,7 +647,7 @@ class PembayaranPiutangController extends Controller
             }
 
             $tbs_pembayaran_piutang = EditTbsPembayaranPiutang::where('no_faktur_pembayaran', $pembayaran_piutang->no_faktur_pembayaran)
-                ->where('warung_id', Auth::user()->id_warung)->delete();
+            ->where('warung_id', Auth::user()->id_warung)->delete();
 
             DB::commit();
 
@@ -655,15 +657,15 @@ class PembayaranPiutangController extends Controller
 
     }
 
-        public function cekSubtotalTbsPembayaranPiutang($jenis_tbs){
-    $session_id    = session()->getId();
-    $user_warung   = Auth::user()->id_warung;
+    public function cekSubtotalTbsPembayaranPiutang($jenis_tbs){
+        $session_id    = session()->getId();
+        $user_warung   = Auth::user()->id_warung;
 
-            $TbsPembayaranPiutang = new TbsPembayaranPiutang();
-            $subtotal      = $TbsPembayaranPiutang->subtotalTbs($user_warung,$session_id);
-            $respons['subtotal'] = $subtotal;
+        $TbsPembayaranPiutang = new TbsPembayaranPiutang();
+        $subtotal      = $TbsPembayaranPiutang->subtotalTbs($user_warung,$session_id);
+        $respons['subtotal'] = $subtotal;
 
-    return response()->json($respons);
+        return response()->json($respons);
     }
 
     public function cetakUlang($id)
@@ -691,5 +693,29 @@ class PembayaranPiutangController extends Controller
                 'setting_aplikasi'          => $setting_aplikasi,
                 'subtotal'                  => $subtotal,
             ])->with(compact('html'));
+    }
+
+    public function otoritasPembayaranPiutang(){
+
+        if (Laratrust::can('tambah_pembayaran_piutang')) {
+            $tambah_pembayaran_piutang = 1;
+        }else{
+            $tambah_pembayaran_piutang = 0;            
+        }
+        if (Laratrust::can('edit_pembayaran_piutang')) {
+            $edit_pembayaran_piutang = 1;
+        }else{
+            $edit_pembayaran_piutang = 0;            
+        }
+        if (Laratrust::can('hapus_pembayaran_piutang')) {
+            $hapus_pembayaran_piutang = 1;
+        }else{
+            $hapus_pembayaran_piutang = 0;            
+        }
+        $respons['tambah_pembayaran_piutang'] = $tambah_pembayaran_piutang;
+        $respons['edit_pembayaran_piutang'] = $edit_pembayaran_piutang;
+        $respons['hapus_pembayaran_piutang'] = $hapus_pembayaran_piutang;
+
+        return response()->json($respons);
     }
 }

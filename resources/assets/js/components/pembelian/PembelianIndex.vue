@@ -8,50 +8,50 @@
 	<div class="row">
 		<div class="col-md-12">
 
-		<!-- MODAL PILIH PRODUK --> 	
+			<!-- MODAL PILIH PRODUK --> 	
 			<div class="modal" id="data_detail" role="dialog" data-backdrop="">
-		  <div class="modal-dialog modal-lg"> 
-		    <!-- Modal content --> 
-		    <div class="modal-content"> 
-		      <div class="modal-header"> 
-		        <button type="button" class="close" data-dismiss="modal">&times;</button> 
-		        <h4 class="modal-title">Detail Pembelian</h4> 
-		      </div> 
-		      <div class="modal-body">  
-		        <div class="responsive"> 
-		         <table class="table table-bordered" >  
-		          <thead> 
-			            <tr> 
-			              <th>No. Transaksi</th> 
-			              <th>Produk</th> 
-			              <th>Jumlah</th> 
-			              <th>Harga</th> 
-			              <th>Potongan</th> 
-			              <th>Pajak</th> 
-			              <th>Subtotal</th> 
-			            </tr> 
-		          </thead>
-		          <tbody>
-			          	<tr v-for="detailPembelian, index in detailPembelians" >
-			          		<td>{{detailPembelian.no_faktur}}</td>
-			          		<td>{{detailPembelian.nama_produk}}</td>
-			          		<td>{{detailPembelian.jumlah_produk}}</td>
-			          		<td>{{detailPembelian.harga_produk}}</td>
-			          		<td>{{detailPembelian.potongan_produk}}</td>
-			          		<td>{{detailPembelian.pajak_produk}}</td>
-			          		<td>{{detailPembelian.subtotal}}</td>
-			          	</tr>
-		          </tbody> 
-		        </table> 
-		      </div>  
-		      <div class="modal-footer">  
-		      <button type="button" class="btn btn-default" data-dismiss="modal" id="btnCloseModal"><i class="material-icons">close</i> Close</button>  
-		  </div>
-		    </div>   
-		  </div> 
-		</div> 
-		</div> 
-		<!-- MODAL PILIH PRODUK --> 
+				<div class="modal-dialog modal-lg"> 
+					<!-- Modal content --> 
+					<div class="modal-content"> 
+						<div class="modal-header"> 
+							<button type="button" class="close" data-dismiss="modal">&times;</button> 
+							<h4 class="modal-title">Detail Pembelian</h4> 
+						</div> 
+						<div class="modal-body">  
+							<div class="responsive"> 
+								<table class="table table-bordered" >  
+									<thead> 
+										<tr> 
+											<th>No. Transaksi</th> 
+											<th>Produk</th> 
+											<th>Jumlah</th> 
+											<th>Harga</th> 
+											<th>Potongan</th> 
+											<th>Pajak</th> 
+											<th>Subtotal</th> 
+										</tr> 
+									</thead>
+									<tbody>
+										<tr v-for="detailPembelian, index in detailPembelians" >
+											<td>{{detailPembelian.no_faktur}}</td>
+											<td>{{detailPembelian.nama_produk}}</td>
+											<td>{{detailPembelian.jumlah_produk}}</td>
+											<td>{{detailPembelian.harga_produk}}</td>
+											<td>{{detailPembelian.potongan_produk}}</td>
+											<td>{{detailPembelian.pajak_produk}}</td>
+											<td>{{detailPembelian.subtotal}}</td>
+										</tr>
+									</tbody> 
+								</table> 
+							</div>  
+							<div class="modal-footer">  
+								<button type="button" class="btn btn-default" data-dismiss="modal" id="btnCloseModal"><i class="material-icons">close</i> Close</button>  
+							</div>
+						</div>   
+					</div> 
+				</div> 
+			</div> 
+			<!-- MODAL PILIH PRODUK --> 
 
 			<ul class="breadcrumb">
 				<li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li>
@@ -68,7 +68,7 @@
 					<h4 class="card-title"> Pembelian </h4>
 					
 					<div class="toolbar">
-						<p> <router-link :to="{name: 'createPembelian'}" class="btn btn-primary">Tambah Pembelian</router-link></p>
+						<p> <router-link :to="{name: 'createPembelian'}" class="btn btn-primary" v-if="otoritas.tambah_pembelian == 1">Tambah Pembelian</router-link></p>
 					</div>
 
 					<div class="modal" id="modal_detail_transaksi" role="dialog" data-backdrop=""> 
@@ -87,39 +87,39 @@
 									<div class="modal-body"> 
 										<div class="card" style="margin-bottom:1px; margin-top:1px;">
 											<div class="table-responsive">
-											<table class="table" style="margin-bottom:10px; margin-top:10px; margin-right:10px; margin-left:10px;">
+												<table class="table" style="margin-bottom:10px; margin-top:10px; margin-right:10px; margin-left:10px;">
 
-												<tbody style="margin-bottom:10px; margin-top:10px; margin-right:10px; margin-left:10px;">
-													<tr>
-														<td class="text-primary"><b># Kas </b> </td>
-														<td class="text-primary"><b>: {{kas}} </b> </td>
-													</tr>
-													<tr>
-														<td class="text-primary"><b># Total </b> </td>
-														<td class="text-primary"><b style="text-align:right;">: {{ total }} </b> </td>
-													</tr>
-													<tr>
-														<td class="text-primary"><b># Potongan </b> </td>
-														<td class="text-primary"><b style="text-align:right;">: {{ potongan }} </b> </td>
-													</tr>
-													<tr>
-														<td class="text-primary"><b># Tunai </b> </td>
-														<td class="text-primary"><b style="text-align:right;">: {{ tunai }} </b> </td>
-													</tr>
-													<tr>
-														<td class="text-primary"><b># Kembalian </b> </td>
-														<td class="text-primary"><b style="text-align:right;">: {{ kembalian }} </b> </td>
-													</tr>
-													<tr>
-														<td class="text-primary"><b># Jatuh Tempo </b> </td>
-														<td class="text-primary"><b>: {{jatuh_tempo}} </b> </td>
-													</tr>
-													<tr>
-														<td class="text-primary"><b># User Buat </b> </td>
-														<td class="text-primary"><b>: {{user_buat}} </b> </td>
-													</tr>
-												</tbody>
-											</table>  
+													<tbody style="margin-bottom:10px; margin-top:10px; margin-right:10px; margin-left:10px;">
+														<tr>
+															<td class="text-primary"><b># Kas </b> </td>
+															<td class="text-primary"><b>: {{kas}} </b> </td>
+														</tr>
+														<tr>
+															<td class="text-primary"><b># Total </b> </td>
+															<td class="text-primary"><b style="text-align:right;">: {{ total }} </b> </td>
+														</tr>
+														<tr>
+															<td class="text-primary"><b># Potongan </b> </td>
+															<td class="text-primary"><b style="text-align:right;">: {{ potongan }} </b> </td>
+														</tr>
+														<tr>
+															<td class="text-primary"><b># Tunai </b> </td>
+															<td class="text-primary"><b style="text-align:right;">: {{ tunai }} </b> </td>
+														</tr>
+														<tr>
+															<td class="text-primary"><b># Kembalian </b> </td>
+															<td class="text-primary"><b style="text-align:right;">: {{ kembalian }} </b> </td>
+														</tr>
+														<tr>
+															<td class="text-primary"><b># Jatuh Tempo </b> </td>
+															<td class="text-primary"><b>: {{jatuh_tempo}} </b> </td>
+														</tr>
+														<tr>
+															<td class="text-primary"><b># User Buat </b> </td>
+															<td class="text-primary"><b>: {{user_buat}} </b> </td>
+														</tr>
+													</tbody>
+												</table>  
 											</div>
 										</div> 
 									</div>
@@ -146,10 +146,10 @@
 									<th>Suplier</th>
 									<th>Status</th>
 									<th style="text-align:right;">Total</th>
-									<th style="text-align:right;">Edit</th>
+									<th style="text-align:right;" v-if="otoritas.edit_pembelian == 1">Edit</th>
 									<th style="text-align:right;">Detail</th>
 									<th style="text-align:right;">Cetak</th>									
-									<th style="text-align:right;">Delete</th>
+									<th style="text-align:right;" v-if="otoritas.hapus_pembelian == 1">Delete</th>
 								</tr>
 							</thead>
 							<tbody v-if="pembelian.length > 0 && loading == false"  class="data-ada">
@@ -163,7 +163,7 @@
 									<td>{{ pembelians.suplier }}</td>
 									<td>{{ pembelians.status_pembelian }}</td>
 									<td style="text-align:right;" >Rp. {{ pembelians.total }}</td>
-									<td style="text-align:right;"><router-link :to="{name: 'editPembelianProses', params: {id: pembelians.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + pembelians.id" >
+									<td style="text-align:right;" v-if="otoritas.edit_pembelian == 1"><router-link :to="{name: 'editPembelianProses', params: {id: pembelians.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + pembelians.id" >
 									Edit </router-link> </td>
 									<td style="text-align:right;">
 										<router-link :to="{name: 'detailPembelian', params: {id: pembelians.id}}" class="btn btn-xs btn-info" v-bind:id="'detail-' + pembelians.no_faktur" >
@@ -172,7 +172,7 @@
 									<td style="text-align:right;">
 										<a target="blank" class="btn btn-primary btn-xs" v-bind:href="'pembelian/cetak-besar-pembelian/'+pembelians.id">Cetak Ulang</a>
 									</td>
-									<td style="text-align:right;"> 
+									<td style="text-align:right;" v-if="otoritas.hapus_pembelian == 1"> 
 										<a  href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + pembelians.id" v-on:click="deleteEntry(pembelians.id, index,pembelians.no_faktur)">Delete</a>
 									</td>
 								</tr>
@@ -187,7 +187,7 @@
 						<div align="right"><pagination :data="pembelianData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
 
 					</div>
-					 <p style="color: red; font-style: italic;">*Note : Klik Kolom No Transaksi, Untuk Melihat Detail Transaksi Pembelian .</p> 
+					<p style="color: red; font-style: italic;">*Note : Klik Kolom No Transaksi, Untuk Melihat Detail Transaksi Pembelian .</p> 
 				</div>
 			</div>
 
@@ -203,6 +203,7 @@ export default {
 		return {
 			pembelian: [],
 			pembelianData: {},
+			otoritas: {},
 			detailPembelians: [],
 			url : window.location.origin+(window.location.pathname).replace("dashboard", "pembelian"),
 			pencarian: '',
@@ -239,6 +240,7 @@ export default {
     		.then(function (resp) {
     			app.pembelian = resp.data.data;
     			app.pembelianData = resp.data;
+    			app.otoritas = resp.data.otoritas.original;
     			app.loading = false;
     		})
     		.catch(function (resp) {
@@ -256,6 +258,7 @@ export default {
     		.then(function (resp) {
     			app.pembelian = resp.data.data;
     			app.pembelianData = resp.data;
+    			app.otoritas = resp.data.otoritas.original;
     			app.loading = false;
     		})
     		.catch(function (resp) {
@@ -271,67 +274,67 @@ export default {
     		});
     	},
     	deleteEntry(id, index,no_faktur) {
-            this.$swal({
-                title: "Konfirmasi Hapus",
-                text : "Anda Yakin Ingin Menghapus "+no_faktur+" ?",
-                icon : "warning",
-                buttons: true,
-                dangerMode: true,
-            })
-            .then((willDelete) => {
-                if (willDelete) {
-                  var app = this;
-                  app.loading = true;
-                  axios.delete(app.url+'/' + id)
-                  .then(function (resp) {
-			                if (resp.data == 0) {
-			                    app.$swal('Oops...','Pembelian Tidak Dapat Dihapus, Karena Sudah Terpakai','error');
-			                    app.loading = false;
+    		this.$swal({
+    			title: "Konfirmasi Hapus",
+    			text : "Anda Yakin Ingin Menghapus "+no_faktur+" ?",
+    			icon : "warning",
+    			buttons: true,
+    			dangerMode: true,
+    		})
+    		.then((willDelete) => {
+    			if (willDelete) {
+    				var app = this;
+    				app.loading = true;
+    				axios.delete(app.url+'/' + id)
+    				.then(function (resp) {
+    					if (resp.data == 0) {
+    						app.$swal('Oops...','Pembelian Tidak Dapat Dihapus, Karena Sudah Terpakai','error');
+    						app.loading = false;
 
-			                }else{
-			                    app.getResults();
-			                    app.alert("Menghapus Pembelian "+no_faktur);
-			                    app.loading = false;  
-			                }
-                  })
-                  .catch(function (resp) {
-                      alert("Tidak dapat Menghapus Pembelian");
-                  });
-               }else {
+    					}else{
+    						app.getResults();
+    						app.alert("Menghapus Pembelian "+no_faktur);
+    						app.loading = false;  
+    					}
+    				})
+    				.catch(function (resp) {
+    					alert("Tidak dapat Menghapus Pembelian");
+    				});
+    			}else {
     				app.$swal.close();
     			}
-            });
+    		});
     	},
     	detailModalPembelian(id,index,no_faktur){
-            var app = this;
-            axios.get(app.url+'/detail-view?id='+id+'&no_faktur='+no_faktur)
-            .then(function (resp) {
-                app.detailPembelians = resp.data.data;
-            })
-            .catch(function (resp) {
-                app.loading = false;
-                alert("Tidak Dapat Memuat Detail Pembelian");
-            });
-        },
-        detailTransaksi(no_faktur,total,potongan,tunai,kembalian,jatuh_tempo,kas,user_buat,status_pembelian){
-		this.no_faktur = no_faktur
-		this.kas = kas
-		this.total = total		
-		this.potongan = potongan
-		this.tunai = tunai
-		this.kembalian = kembalian
-      	 if (status_pembelian == 'Tunai') {
-           this.jatuh_tempo = "-";
-       	}else{
-		this.jatuh_tempo = jatuh_tempo
-   		 }
-		this.user_buat = user_buat
-		$("#modal_detail_transaksi").show()
+    		var app = this;
+    		axios.get(app.url+'/detail-view?id='+id+'&no_faktur='+no_faktur)
+    		.then(function (resp) {
+    			app.detailPembelians = resp.data.data;
+    		})
+    		.catch(function (resp) {
+    			app.loading = false;
+    			alert("Tidak Dapat Memuat Detail Pembelian");
+    		});
+    	},
+    	detailTransaksi(no_faktur,total,potongan,tunai,kembalian,jatuh_tempo,kas,user_buat,status_pembelian){
+    		this.no_faktur = no_faktur
+    		this.kas = kas
+    		this.total = total		
+    		this.potongan = potongan
+    		this.tunai = tunai
+    		this.kembalian = kembalian
+    		if (status_pembelian == 'Tunai') {
+    			this.jatuh_tempo = "-";
+    		}else{
+    			this.jatuh_tempo = jatuh_tempo
+    		}
+    		this.user_buat = user_buat
+    		$("#modal_detail_transaksi").show()
 
-	},
-		closeModal(){
-		$("#modal_detail_transaksi").hide();
-	},
+    	},
+    	closeModal(){
+    		$("#modal_detail_transaksi").hide();
+    	},
     }
 }
 </script>

@@ -9,6 +9,7 @@ use Auth;
 use Excel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Laratrust;
 
 class StokOpnameController extends Controller
 {
@@ -17,6 +18,7 @@ class StokOpnameController extends Controller
 
         $respons['current_page']   = $data_stok_opname->currentPage();
         $respons['data']           = $array_stok_opname;
+        $respons['otoritas']      = $this->otoritasStokOpname();
         $respons['first_page_url'] = url('/stok-  opname/view?page=' . $data_stok_opname->firstItem());
         $respons['from']           = 1;
         $respons['last_page']      = $data_stok_opname->lastPage();
@@ -237,5 +239,30 @@ class StokOpnameController extends Controller
 
             });
         })->export('xls');
+    }
+
+
+    public function otoritasStokOpname(){
+
+        if (Laratrust::can('tambah_stok_opname')) {
+            $tambah_stok_opname = 1;
+        }else{
+            $tambah_stok_opname = 0;            
+        }
+        if (Laratrust::can('edit_stok_opname')) {
+            $edit_stok_opname = 1;
+        }else{
+            $edit_stok_opname = 0;            
+        }
+        if (Laratrust::can('hapus_stok_opname')) {
+            $hapus_stok_opname = 1;
+        }else{
+            $hapus_stok_opname = 0;            
+        }
+        $respons['tambah_stok_opname'] = $tambah_stok_opname;
+        $respons['edit_stok_opname'] = $edit_stok_opname;
+        $respons['hapus_stok_opname'] = $hapus_stok_opname;
+
+        return response()->json($respons);
     }
 }
