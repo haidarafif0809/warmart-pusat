@@ -477,26 +477,28 @@ class EditPembelianController extends Controller
                 'ppn'              => $request->ppn,
             ]);
 
-            $kas = intval($update_pembelian->tunai) - intval($update_pembelian->kembalian);
+            $data_pembelian = Pembelian::find($request->id_pembelian);
+
+            $kas = intval($data_pembelian->tunai) - intval($data_pembelian->kembalian);
             if ($kas > 0) {
 
-                TransaksiKas::where('no_faktur', $update_pembelian->no_faktur)->where('warung_id', Auth::user()->id_warung)->delete();
+                TransaksiKas::where('no_faktur', $data_pembelian->no_faktur)->where('warung_id', Auth::user()->id_warung)->delete();
                 TransaksiKas::create([
-                    'no_faktur'       => $update_pembelian->no_faktur,
+                    'no_faktur'       => $data_pembelian->no_faktur,
                     'jenis_transaksi' => 'pembelian',
                     'jumlah_keluar'   => $kas,
-                    'kas'             => $update_pembelian->cara_bayar,
-                    'warung_id'       => $update_pembelian->warung_id]);
+                    'kas'             => $data_pembelian->cara_bayar,
+                    'warung_id'       => $data_pembelian->warung_id]);
             }
-            if ($update_pembelian->kredit > 0) {
-                TransaksiHutang::where('no_faktur', $update_pembelian->no_faktur)->where('warung_id', Auth::user()->id_warung)->delete();
+            if ($data_pembelian->kredit > 0) {
+                TransaksiHutang::where('no_faktur', $data_pembelian->no_faktur)->where('warung_id', Auth::user()->id_warung)->delete();
                 TransaksiHutang::create([
-                    'no_faktur'       => $update_pembelian->no_faktur,
+                    'no_faktur'       => $data_pembelian->no_faktur,
                     'jenis_transaksi' => 'pembelian',
-                    'id_transaksi'    => $update_pembelian->id,
-                    'jumlah_masuk'    => $update_pembelian->kredit,
-                    'suplier_id'      => $update_pembelian->suplier_id,
-                    'warung_id'       => $update_pembelian->warung_id]);
+                    'id_transaksi'    => $data_pembelian->id,
+                    'jumlah_masuk'    => $data_pembelian->kredit,
+                    'suplier_id'      => $data_pembelian->suplier_id,
+                    'warung_id'       => $data_pembelian->warung_id]);
             }
 
             //HAPUS TBS PEMBELIAN
