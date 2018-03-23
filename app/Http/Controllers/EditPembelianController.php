@@ -386,18 +386,23 @@ class EditPembelianController extends Controller
 
             foreach ($data_produk_pembelian->get() as $data_produk_tbs) {
 
-                $detail_pembelian = DetailPembelian::select('harga_produk')->where('no_faktur', $data_produk_tbs->no_faktur)->where('id_produk', $data_produk_tbs->id_produk)->where('warung_id', Auth::user()->id_warung);
+                if ($data_produk_tbs->satuan_id == $data_produk_tbs->satuan_dasar) {
 
-                if ($detail_pembelian->count() > 0) {
-                    if ($detail_pembelian->first()->harga_produk != $data_produk_tbs->harga_produk) {
-                        Barang::find($data_detail->id_produk)->update(['harga_beli' => $harga_tbs->harga_produk]);
+                    $detail_pembelian = DetailPembelian::select('harga_produk')->where('no_faktur', $data_produk_tbs->no_faktur)->where('id_produk', $data_produk_tbs->id_produk)->where('warung_id', Auth::user()->id_warung);
+
+                    if ($detail_pembelian->count() > 0) {
+                        if ($detail_pembelian->first()->harga_produk != $data_produk_tbs->harga_produk) {
+                            Barang::find($data_detail->id_produk)->update(['harga_beli' => $harga_tbs->harga_produk]);
+                        }
+                    } else {
+                        $barang = Barang::select('harga_beli')->where('id', $data_produk_tbs->id_produk)->where('id_warung', Auth::user()->id_warung);
+                        if ($barang->first()->harga_beli != $data_produk_tbs->harga_produk) {
+                            $barang->update(['harga_beli' => $data_produk_tbs->harga_produk]);
+                        }
                     }
-                } else {
-                    $barang = Barang::select('harga_beli')->where('id', $data_produk_tbs->id_produk)->where('id_warung', Auth::user()->id_warung);
-                    if ($barang->first()->harga_beli != $data_produk_tbs->harga_produk) {
-                        $barang->update(['harga_beli' => $data_produk_tbs->harga_produk]);
-                    }
+
                 }
+
             }
 
             foreach ($data_detail_pembelian as $data_detail) {
@@ -419,6 +424,7 @@ class EditPembelianController extends Controller
                 $detail_pembelian = DetailPembelian::create([
                     'no_faktur'     => $no_faktur,
                     'satuan_id'     => $data_tbs->satuan_id,
+                    'satuan_dasar'  => $data_tbs->satuan_dasar,
                     'id_produk'     => $data_tbs->id_produk,
                     'jumlah_produk' => $data_tbs->jumlah_produk,
                     'harga_produk'  => $data_tbs->harga_produk,
