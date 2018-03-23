@@ -1,6 +1,6 @@
 @if(Auth::user()->kasir_id == 0)
 
-@if(Laratrust::can('lihat_kas') || Laratrust::can('lihat_kategori_kas') || Laratrust::can('lihat_kas_masuk') || Laratrust::can('lihat_kas_keluar') || Laratrust::can('lihat_kas_mutasi')) 
+@if(Laratrust::can('lihat_kas') || Laratrust::can('lihat_kategori_transaksi') || Laratrust::can('lihat_kas_masuk') || Laratrust::can('lihat_kas_keluar') || Laratrust::can('lihat_kas_mutasi')) 
 <li>
     <a class="disabled-menu" data-toggle="collapse" href="#transaksiKas">
         <i class="material-icons">
@@ -27,7 +27,7 @@
             </li>
             @endif
 
-            @if(Laratrust::can('lihat_kategori_kas')) 
+            @if(Laratrust::can('lihat_kategori_transaksi')) 
             <li>
                 <router-link :to="{name: 'indexKategoriTransaksi'}" class="menu-nav">
                     <span class="sidebar-mini">

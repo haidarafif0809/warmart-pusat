@@ -22,7 +22,7 @@
           <h4 class="card-title"> Kas Keluar</h4>
 
           <div class="toolbar">
-            <router-link :to="{name: 'createKasKeluar'}" class="btn btn-primary" style="padding-bottom:10px"><i class="material-icons">add</i>  Kas Keluar</router-link>
+            <router-link :to="{name: 'createKasKeluar'}" class="btn btn-primary" style="padding-bottom:10px" v-if="otoritas.tambah_kas_keluar == 1"><i class="material-icons">add</i>  Kas Keluar</router-link>
             <div class="pencarian">
               <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
             </div>
@@ -39,7 +39,7 @@
                   <th>Jumlah</th>
                   <th>Keterangan</th>
                   <th>Waktu</th>
-                  <th>Aksi</th>
+                  <th v-if="otoritas.edit_kas_keluar == 1 || otoritas.hapus_kas_keluar == 1">Aksi</th>
                 </tr>
               </thead>
               <tbody v-if="kasKeluar.length > 0 && loading == false"  class="data-ada">
@@ -51,10 +51,10 @@
                   <td>{{ dataKas.kas_keluar.keterangan }}</td>
                   <td>{{ dataKas.kas_keluar.created_at }}</td>
                   <td>
-                    <router-link :to="{name: 'editKasKeluar', params: {id: dataKas.kas_keluar.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + dataKas.kas_keluar.id" >
+                    <router-link :to="{name: 'editKasKeluar', params: {id: dataKas.kas_keluar.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + dataKas.kas_keluar.id" v-if="otoritas.edit_kas_keluar == 1">
                       Edit
                     </router-link>
-                    <a href="#kas-keluar" class="btn btn-xs btn-danger" v-bind:id="'delete-' + dataKas.kas_keluar.id" v-on:click="deleteEntry(dataKas.kas_keluar.id, index,dataKas.kas_keluar.nama_kas)">
+                    <a href="#kas-keluar" class="btn btn-xs btn-danger" v-bind:id="'delete-' + dataKas.kas_keluar.id" v-on:click="deleteEntry(dataKas.kas_keluar.id, index,dataKas.kas_keluar.nama_kas)" v-if="otoritas.hapus_kas_keluar == 1">
                       Delete
                     </a>
                   </td>
@@ -82,6 +82,7 @@ export default {
     return {
       kasKeluar: [],
       kasKeluarData: {},
+      otoritas: {},
       url : window.location.origin+(window.location.pathname).replace("dashboard", "kas-keluar"),
       pencarian: '',
       loading: true
@@ -108,6 +109,7 @@ export default {
           .then(function (resp) {
             app.kasKeluar = resp.data.data;
             app.kasKeluarData = resp.data;
+            app.otoritas = resp.data.otoritas.original;
             app.loading = false;
             console.log(resp.data)
           })
@@ -126,6 +128,7 @@ export default {
           .then(function (resp) {
             app.kasKeluar = resp.data.data;
             app.kasKeluarData = resp.data;
+            app.otoritas = resp.data.otoritas.original;
             app.loading = false;
           })
           .catch(function (resp) {

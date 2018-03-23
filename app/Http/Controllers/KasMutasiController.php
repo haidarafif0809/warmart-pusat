@@ -8,6 +8,7 @@ use App\TransaksiKas;
 use Auth;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Html\Builder;
+use Laratrust;
 
 class KasMutasiController extends Controller
 {
@@ -36,6 +37,7 @@ class KasMutasiController extends Controller
 
         $respons['current_page']   = $data_kas_mutasi->currentPage();
         $respons['data']           = $array_kas_mutasi;
+        $respons['otoritas']           = $this->otoritasKasMutasi();
         $respons['first_page_url'] = url('/kas-mutasi/view?page=' . $data_kas_mutasi->firstItem());
         $respons['from']           = 1;
         $respons['last_page']      = $data_kas_mutasi->lastPage();
@@ -53,9 +55,9 @@ class KasMutasiController extends Controller
     public function view()
     {
         $data_kas_mutasi = KasMutasi::select(['kas_mutasis.id', 'kas_mutasis.no_faktur', 'kas_mutasis.jumlah', 'kas_mutasis.keterangan', 'kas_mutasis.id_warung', 'kas_pengirim.nama_kas as nama_dari_kas', 'kas_penerima.nama_kas as nama_ke_kas'])
-            ->leftJoin('kas as kas_pengirim', 'kas_mutasis.dari_kas', '=', 'kas_pengirim.id')
-            ->leftJoin('kas as kas_penerima', 'kas_mutasis.ke_kas', '=', 'kas_penerima.id')
-            ->where('kas_mutasis.id_warung', Auth::user()->id_warung)->orderBy('kas_mutasis.id', 'desc')->paginate(10);
+        ->leftJoin('kas as kas_pengirim', 'kas_mutasis.dari_kas', '=', 'kas_pengirim.id')
+        ->leftJoin('kas as kas_penerima', 'kas_mutasis.ke_kas', '=', 'kas_penerima.id')
+        ->where('kas_mutasis.id_warung', Auth::user()->id_warung)->orderBy('kas_mutasis.id', 'desc')->paginate(10);
 
         $array_kas_mutasi = array();
         foreach ($data_kas_mutasi as $kas_mutasi) {
@@ -72,15 +74,15 @@ class KasMutasiController extends Controller
         $search = $request->search;
 
         $data_kas_mutasi = KasMutasi::select(['kas_mutasis.id', 'kas_mutasis.no_faktur', 'kas_mutasis.jumlah', 'kas_mutasis.keterangan', 'kas_mutasis.id_warung', 'kas_pengirim.nama_kas as nama_dari_kas', 'kas_penerima.nama_kas as nama_ke_kas', 'kas_pengirim.nama_kas', 'kas_penerima.nama_kas'])
-            ->leftJoin('kas as kas_pengirim', 'kas_mutasis.dari_kas', '=', 'kas_pengirim.id')
-            ->leftJoin('kas as kas_penerima', 'kas_mutasis.ke_kas', '=', 'kas_penerima.id')
-            ->where('kas_mutasis.id_warung', Auth::user()->id_warung)
-            ->where(function ($query) use ($search) {
-                $query->orwhere('kas_pengirim.nama_kas', 'LIKE', '%' . $search . '%')
-                    ->orwhere('kas_penerima.nama_kas', 'LIKE', '%' . $search . '%')
-                    ->orwhere('kas_mutasis.no_faktur', 'LIKE', '%' . $search . '%')
-                    ->orwhere('kas_mutasis.keterangan', 'LIKE', '%' . $search . '%');
-            })->orderBy('kas_mutasis.id', 'desc')->paginate(10);
+        ->leftJoin('kas as kas_pengirim', 'kas_mutasis.dari_kas', '=', 'kas_pengirim.id')
+        ->leftJoin('kas as kas_penerima', 'kas_mutasis.ke_kas', '=', 'kas_penerima.id')
+        ->where('kas_mutasis.id_warung', Auth::user()->id_warung)
+        ->where(function ($query) use ($search) {
+            $query->orwhere('kas_pengirim.nama_kas', 'LIKE', '%' . $search . '%')
+            ->orwhere('kas_penerima.nama_kas', 'LIKE', '%' . $search . '%')
+            ->orwhere('kas_mutasis.no_faktur', 'LIKE', '%' . $search . '%')
+            ->orwhere('kas_mutasis.keterangan', 'LIKE', '%' . $search . '%');
+        })->orderBy('kas_mutasis.id', 'desc')->paginate(10);
 
         $array_kas_mutasi = array();
         foreach ($data_kas_mutasi as $kas_mutasi) {
@@ -265,6 +267,29 @@ class KasMutasiController extends Controller
             }
 
         }
+    }
+    public function otoritasKasMutasi(){
+
+        if (Laratrust::can('tambah_kas_mutasi')) {
+            $tambah_kas_mutasi = 1;
+        }else{
+            $tambah_kas_mutasi = 0;            
+        }
+        if (Laratrust::can('edit_kas_mutasi')) {
+            $edit_kas_mutasi = 1;
+        }else{
+            $edit_kas_mutasi = 0;            
+        }
+        if (Laratrust::can('hapus_kas_mutasi')) {
+            $hapus_kas_mutasi = 1;
+        }else{
+            $hapus_kas_mutasi = 0;            
+        }
+        $respons['tambah_kas_mutasi'] = $tambah_kas_mutasi;
+        $respons['edit_kas_mutasi'] = $edit_kas_mutasi;
+        $respons['hapus_kas_mutasi'] = $hapus_kas_mutasi;
+
+        return response()->json($respons);
     }
 
 }

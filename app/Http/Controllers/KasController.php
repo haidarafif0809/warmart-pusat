@@ -7,6 +7,7 @@ use App\TransaksiKas;
 use Auth;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Html\Builder;
+use Laratrust;
 
 class KasController extends Controller
 {
@@ -32,6 +33,7 @@ class KasController extends Controller
         //DATA PAGINATION
         $respons['current_page']   = $kas->currentPage();
         $respons['data']           = $kas_array;
+        $respons['otoritas_kas']   = $this->otoritasKas();
         $respons['first_page_url'] = url('/kas/view?page=' . $kas->firstItem());
         $respons['from']           = 1;
         $respons['last_page']      = $kas->lastPage();
@@ -66,6 +68,7 @@ class KasController extends Controller
         //DATA PAGINATION
         $respons['current_page']   = $kas->currentPage();
         $respons['data']           = $kas_array;
+        $respons['otoritas_kas']   = $this->otoritasKas();
         $respons['first_page_url'] = url('/kas/view?page=' . $kas->firstItem());
         $respons['from']           = 1;
         $respons['last_page']      = $kas->lastPage();
@@ -312,4 +315,28 @@ class KasController extends Controller
         $response['kas'] = $kas->get();
         return response()->json($response);
     }
+
+    public function otoritasKas(){
+
+        if (Laratrust::can('tambah_kas')) {
+            $tambah_kas = 1;
+        }else{
+           $tambah_kas = 0;            
+       }
+       if (Laratrust::can('edit_kas')) {
+           $edit_kas = 1;
+       }else{
+           $edit_kas = 0;            
+       }
+       if (Laratrust::can('hapus_kas')) {
+         $hapus_kas = 1;
+     }else{
+         $hapus_kas = 0;            
+     }
+     $respons['tambah_kas'] = $tambah_kas;
+     $respons['edit_kas'] = $edit_kas;
+     $respons['hapus_kas'] = $hapus_kas;
+
+     return response()->json($respons);
+ }
 }

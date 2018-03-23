@@ -10,6 +10,7 @@ use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\Datatables\Html\Builder;
+use Laratrust;
 
 class KasMasukController extends Controller
 {
@@ -29,6 +30,7 @@ class KasMasukController extends Controller
 
         $respons['current_page']   = $kas_masuk->currentPage();
         $respons['data']           = $kas_masuk_array;
+        $respons['otoritas']       = $this->otoritasKasMasuk();
         $respons['first_page_url'] = url('/kas/view?page=' . $kas_masuk->firstItem());
         $respons['from']           = 1;
         $respons['last_page']      = $kas_masuk->lastPage();
@@ -46,15 +48,15 @@ class KasMasukController extends Controller
     public function view()
     {
         $kas_masuk = KasMasuk::select('kas_masuks.id as id', 'kas_masuks.no_faktur as no_faktur', 'kas.nama_kas as nama_kas', 'kategori_transaksis.nama_kategori_transaksi as nama_kategori_transaksi', 'kas_masuks.jumlah as jumlah', 'kas_masuks.keterangan as keterangan', 'kas_masuks.kas as kas')->leftJoin('kas', 'kas_masuks.kas', '=', 'kas.id')
-            ->leftJoin('kategori_transaksis', 'kas_masuks.kategori', '=', 'kategori_transaksis.id')->orwhere('kas_masuks.id_warung', Auth::user()->id_warung)->orderBy('kas_masuks.id', 'desc')->paginate(10);
+        ->leftJoin('kategori_transaksis', 'kas_masuks.kategori', '=', 'kategori_transaksis.id')->orwhere('kas_masuks.id_warung', Auth::user()->id_warung)->orderBy('kas_masuks.id', 'desc')->paginate(10);
         $kas_masuk_array = array();
         foreach ($kas_masuk as $kas_masuks) {
 
             $sisa_kas = TransaksiKas::select(DB::raw('SUM(jumlah_masuk - jumlah_keluar) as total_kas'))
-                ->where('kas', $kas_masuks->kas)
-                ->where('warung_id', Auth::user()->id_warung)
-                ->where('no_faktur', '!=', $kas_masuks->no_faktur)
-                ->first();
+            ->where('kas', $kas_masuks->kas)
+            ->where('warung_id', Auth::user()->id_warung)
+            ->where('no_faktur', '!=', $kas_masuks->no_faktur)
+            ->first();
 
             if ($sisa_kas->total_kas < 0) {
                 $status_transaksi = 1;
@@ -73,16 +75,16 @@ class KasMasukController extends Controller
         $search = $request->search;
         //query pencarian
         $kas_masuk = KasMasuk::select('kas_masuks.id as id', 'kas_masuks.no_faktur as no_faktur', 'kas.nama_kas as nama_kas', 'kategori_transaksis.nama_kategori_transaksi as nama_kategori_transaksi', 'kas_masuks.jumlah as jumlah', 'kas_masuks.keterangan as keterangan')->leftJoin('kas', 'kas_masuks.kas', '=', 'kas.id')
-            ->leftJoin('kategori_transaksis', 'kas_masuks.kategori', '=', 'kategori_transaksis.id')
-            ->where('kas_masuks.id_warung', Auth::user()->id_warung)
-            ->where(function ($query) use ($search) {
+        ->leftJoin('kategori_transaksis', 'kas_masuks.kategori', '=', 'kategori_transaksis.id')
+        ->where('kas_masuks.id_warung', Auth::user()->id_warung)
+        ->where(function ($query) use ($search) {
 // search
-                $query->where('kas.nama_kas', 'LIKE', '%' . $search . '%')
-                    ->orWhere('kategori_transaksis.nama_kategori_transaksi', 'LIKE', '%' . $search . '%')
-                    ->orWhere('kas_masuks.jumlah', 'LIKE', '%' . $search . '%')
-                    ->orWhere('kas_masuks.keterangan', 'LIKE', '%' . $search . '%')
-                    ->orWhere('kas_masuks.no_faktur', 'LIKE', '%' . $search . '%');
-            })->paginate(10);
+            $query->where('kas.nama_kas', 'LIKE', '%' . $search . '%')
+            ->orWhere('kategori_transaksis.nama_kategori_transaksi', 'LIKE', '%' . $search . '%')
+            ->orWhere('kas_masuks.jumlah', 'LIKE', '%' . $search . '%')
+            ->orWhere('kas_masuks.keterangan', 'LIKE', '%' . $search . '%')
+            ->orWhere('kas_masuks.no_faktur', 'LIKE', '%' . $search . '%');
+        })->paginate(10);
 
         $kas_masuk_array = array();
         foreach ($kas_masuk as $kas_masuks) {
@@ -98,13 +100,13 @@ class KasMasukController extends Controller
     {
         //MENAMPILKAN KAS
         $data_kas = DB::table('kas')
-            ->where('warung_id', Auth::user()->id_warung)
-            ->pluck('nama_kas', 'id');
+        ->where('warung_id', Auth::user()->id_warung)
+        ->pluck('nama_kas', 'id');
 
         //MENAMPILKAN KATEGORI TRANSAKSI
         $data_kategori_transaksi = DB::table('kategori_transaksis')
-            ->where('id_warung', Auth::user()->id_warung)
-            ->pluck('nama_kategori_transaksi', 'id');
+        ->where('id_warung', Auth::user()->id_warung)
+        ->pluck('nama_kategori_transaksi', 'id');
 
         return view('kas_masuk.create', ['data_kategori_transaksi' => $data_kategori_transaksi, 'data_kas' => $data_kas]);
     }
@@ -157,13 +159,13 @@ class KasMasukController extends Controller
         $kas_masuk = KasMasuk::find($id);
         //MENAMPILKAN KAS
         $data_kas = DB::table('kas')
-            ->where('warung_id', Auth::user()->id_warung)
-            ->pluck('nama_kas', 'id');
+        ->where('warung_id', Auth::user()->id_warung)
+        ->pluck('nama_kas', 'id');
 
         //MENAMPILKAN KATEGORI TRANSAKSI
         $data_kategori_transaksi = DB::table('kategori_transaksis')
-            ->where('id_warung', Auth::user()->id_warung)
-            ->pluck('nama_kategori_transaksi', 'id');
+        ->where('id_warung', Auth::user()->id_warung)
+        ->pluck('nama_kategori_transaksi', 'id');
 
         if ($id_warung == $kas_masuk->id_warung) {
             return view('kas_masuk.edit', ['data_kategori_transaksi' => $data_kategori_transaksi, 'data_kas' => $data_kas])->with(compact('kas_masuk'));
@@ -232,12 +234,35 @@ class KasMasukController extends Controller
         $kas_masuk = KasMasuk::find($id);
         // hitung kas
         $sisa_kas = TransaksiKas::select(DB::raw('SUM(jumlah_masuk - jumlah_keluar) as total_kas'))
-            ->where('kas', $kas_masuk->kas)
-            ->where('warung_id', Auth::user()->id_warung)
-            ->where('no_faktur', '!=', $kas_masuk->no_faktur)
-            ->first();
+        ->where('kas', $kas_masuk->kas)
+        ->where('warung_id', Auth::user()->id_warung)
+        ->where('no_faktur', '!=', $kas_masuk->no_faktur)
+        ->first();
         $jumlah_kas = $sisa_kas->total_kas;
         return $jumlah_kas;
 
+    }
+    public function otoritasKasMasuk(){
+
+        if (Laratrust::can('tambah_kas_masuk')) {
+            $tambah_kas_masuk = 1;
+        }else{
+            $tambah_kas_masuk = 0;            
+        }
+        if (Laratrust::can('edit_kas_masuk')) {
+            $edit_kas_masuk = 1;
+        }else{
+            $edit_kas_masuk = 0;            
+        }
+        if (Laratrust::can('hapus_kas_masuk')) {
+            $hapus_kas_masuk = 1;
+        }else{
+            $hapus_kas_masuk = 0;            
+        }
+        $respons['tambah_kas_masuk'] = $tambah_kas_masuk;
+        $respons['edit_kas_masuk'] = $edit_kas_masuk;
+        $respons['hapus_kas_masuk'] = $hapus_kas_masuk;
+
+        return response()->json($respons);
     }
 }

@@ -10,6 +10,7 @@ use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\Datatables\Html\Builder;
+use Laratrust;
 
 class KasKeluarController extends Controller
 {
@@ -25,32 +26,32 @@ class KasKeluarController extends Controller
             $kas_keluar = KasKeluar::with(['kas', 'kategori'])->where('warung_id', Auth::user()->id_warung);
             return Datatables::of($kas_keluar)
 
-                ->addColumn('action', function ($master_kas_keluar) {
-                    return view('kas_keluar._action', [
-                        'model'           => $master_kas_keluar,
-                        'form_url'        => route('kas_keluar.destroy', $master_kas_keluar->id),
-                        'edit_url'        => route('kas_keluar.edit', $master_kas_keluar->id),
-                        'confirm_message' => 'Yakin Mau Menghapus kas keluar ' . $master_kas_keluar->no_faktur . '?',
-                    ]);
-                })
-                ->addColumn('jumlah_keluar', function ($jumlah_keluar) {
-                    $data_keluar = number_format($jumlah_keluar->jumlah, 0, ',', '.');
+            ->addColumn('action', function ($master_kas_keluar) {
+                return view('kas_keluar._action', [
+                    'model'           => $master_kas_keluar,
+                    'form_url'        => route('kas_keluar.destroy', $master_kas_keluar->id),
+                    'edit_url'        => route('kas_keluar.edit', $master_kas_keluar->id),
+                    'confirm_message' => 'Yakin Mau Menghapus kas keluar ' . $master_kas_keluar->no_faktur . '?',
+                ]);
+            })
+            ->addColumn('jumlah_keluar', function ($jumlah_keluar) {
+                $data_keluar = number_format($jumlah_keluar->jumlah, 0, ',', '.');
 
-                    return $data_keluar;
-                })
-                ->addColumn('waktu', function ($waktu) {
-                    $waktu = $waktu->created_at;
+                return $data_keluar;
+            })
+            ->addColumn('waktu', function ($waktu) {
+                $waktu = $waktu->created_at;
 
-                    return $waktu;
-                })->make(true);
+                return $waktu;
+            })->make(true);
             $html = $htmlBuilder
-                ->addColumn(['data' => 'no_faktur', 'name' => 'no_faktur', 'title' => 'No Faktur'])
-                ->addColumn(['data' => 'kas.nama_kas', 'name' => 'kas.nama_kas', 'title' => 'Kas'])
-                ->addColumn(['data' => 'kategori.nama_kategori_transaksi', 'name' => 'kategori.nama_kategori_transaksi', 'title' => 'Kategori'])
-                ->addColumn(['data' => 'jumlah_keluar', 'name' => 'jumlah_keluar', 'title' => 'Jumlah'])
-                ->addColumn(['data' => 'keterangan', 'name' => 'keterangan', 'title' => 'Keterangan'])
-                ->addColumn(['data' => 'waktu', 'name' => 'waktu', 'title' => 'Waktu'])
-                ->addColumn(['data' => 'action', 'name' => 'action', 'title' => 'Aksi', 'orderable' => false, 'searchable' => false]);
+            ->addColumn(['data' => 'no_faktur', 'name' => 'no_faktur', 'title' => 'No Faktur'])
+            ->addColumn(['data' => 'kas.nama_kas', 'name' => 'kas.nama_kas', 'title' => 'Kas'])
+            ->addColumn(['data' => 'kategori.nama_kategori_transaksi', 'name' => 'kategori.nama_kategori_transaksi', 'title' => 'Kategori'])
+            ->addColumn(['data' => 'jumlah_keluar', 'name' => 'jumlah_keluar', 'title' => 'Jumlah'])
+            ->addColumn(['data' => 'keterangan', 'name' => 'keterangan', 'title' => 'Keterangan'])
+            ->addColumn(['data' => 'waktu', 'name' => 'waktu', 'title' => 'Waktu'])
+            ->addColumn(['data' => 'action', 'name' => 'action', 'title' => 'Aksi', 'orderable' => false, 'searchable' => false]);
             return view('kas_keluar.index')->with(compact('html'));
         }
     }
@@ -65,6 +66,7 @@ class KasKeluarController extends Controller
 
         $respons['current_page']   = $data_kas_keluar->currentPage();
         $respons['data']           = $array_kas_keluar;
+        $respons['otoritas']       = $this->otoritasKasKeluar();
         $respons['first_page_url'] = url('/kas-keluar/view?page=' . $data_kas_keluar->firstItem());
         $respons['from']           = 1;
         $respons['last_page']      = $data_kas_keluar->lastPage();
@@ -82,8 +84,8 @@ class KasKeluarController extends Controller
     public function view()
     {
         $data_kas_keluar = KasKeluar::select(['kas_keluars.id', 'kas_keluars.no_faktur', 'kas_keluars.jumlah', 'kas_keluars.keterangan', 'kas_keluars.created_at', 'kas_keluars.warung_id', 'kas.nama_kas', 'kategori_transaksis.nama_kategori_transaksi'])->leftJoin('kas', 'kas_keluars.kas', '=', 'kas.id')
-            ->leftJoin('kategori_transaksis', 'kas_keluars.kategori', '=', 'kategori_transaksis.id')
-            ->where('kas_keluars.warung_id', Auth::user()->id_warung)->orderBy('kas_keluars.id', 'desc')->paginate(10);
+        ->leftJoin('kategori_transaksis', 'kas_keluars.kategori', '=', 'kategori_transaksis.id')
+        ->where('kas_keluars.warung_id', Auth::user()->id_warung)->orderBy('kas_keluars.id', 'desc')->paginate(10);
 
         $array_kas_keluar = array();
         foreach ($data_kas_keluar as $kas_keluar) {
@@ -99,13 +101,13 @@ class KasKeluarController extends Controller
     {
         $search          = $request->search;
         $data_kas_keluar = KasKeluar::select(['kas_keluars.id', 'kas_keluars.no_faktur', 'kas_keluars.jumlah', 'kas_keluars.keterangan', 'kas_keluars.created_at', 'kas_keluars.warung_id', 'kas.nama_kas', 'kategori_transaksis.nama_kategori_transaksi'])->leftJoin('kas', 'kas_keluars.kas', '=', 'kas.id')
-            ->leftJoin('kategori_transaksis', 'kas_keluars.kategori', '=', 'kategori_transaksis.id')
-            ->where('kas_keluars.warung_id', Auth::user()->id_warung)
-            ->where(function ($query) use ($search) {
-                $query->orwhere('kas.nama_kas', 'LIKE', $search . '%')
-                    ->orwhere('kas_keluars.no_faktur', 'LIKE', $search . '%')
-                    ->orWhere('kategori_transaksis.nama_kategori_transaksi', 'LIKE', $search . '%');
-            })->orderBy('kas_keluars.id', 'desc')->paginate(10);
+        ->leftJoin('kategori_transaksis', 'kas_keluars.kategori', '=', 'kategori_transaksis.id')
+        ->where('kas_keluars.warung_id', Auth::user()->id_warung)
+        ->where(function ($query) use ($search) {
+            $query->orwhere('kas.nama_kas', 'LIKE', $search . '%')
+            ->orwhere('kas_keluars.no_faktur', 'LIKE', $search . '%')
+            ->orWhere('kategori_transaksis.nama_kategori_transaksi', 'LIKE', $search . '%');
+        })->orderBy('kas_keluars.id', 'desc')->paginate(10);
 
         $array_kas_keluar = array();
         foreach ($data_kas_keluar as $kas_keluar) {
@@ -139,13 +141,13 @@ class KasKeluarController extends Controller
 
         //MENAMPILKAN KAS
         $data_kas = DB::table('kas')
-            ->where('warung_id', Auth::user()->id_warung)
-            ->pluck('nama_kas', 'id');
+        ->where('warung_id', Auth::user()->id_warung)
+        ->pluck('nama_kas', 'id');
 
         //MENAMPILKAN KATEGORI TRANSAKSI
         $data_kategori_transaksi = DB::table('kategori_transaksis')
-            ->where('id_warung', Auth::user()->id_warung)
-            ->pluck('nama_kategori_transaksi', 'id');
+        ->where('id_warung', Auth::user()->id_warung)
+        ->pluck('nama_kategori_transaksi', 'id');
 
         return view('kas_keluar.create', ['data_kategori_transaksi' => $data_kategori_transaksi, 'data_kas' => $data_kas]);
     }
@@ -220,13 +222,13 @@ class KasKeluarController extends Controller
         $kas_keluar = KasKeluar::find($id);
         //MENAMPILKAN KAS
         $data_kas = DB::table('kas')
-            ->where('warung_id', Auth::user()->id_warung)
-            ->pluck('nama_kas', 'id');
+        ->where('warung_id', Auth::user()->id_warung)
+        ->pluck('nama_kas', 'id');
 
         //MENAMPILKAN KATEGORI TRANSAKSI
         $data_kategori_transaksi = DB::table('kategori_transaksis')
-            ->where('id_warung', Auth::user()->id_warung)
-            ->pluck('nama_kategori_transaksi', 'id');
+        ->where('id_warung', Auth::user()->id_warung)
+        ->pluck('nama_kategori_transaksi', 'id');
 
         if ($id_warung == $kas_keluar->warung_id) {
             return view('kas_keluar.edit', ['data_kategori_transaksi' => $data_kategori_transaksi, 'data_kas' => $data_kas])->with(compact('kas_keluar'));
@@ -297,6 +299,30 @@ class KasKeluarController extends Controller
         } else {
             return response()->view('error.403');
         }
+    }  
+
+    public function otoritasKasKeluar(){
+
+        if (Laratrust::can('tambah_kas_keluar')) {
+            $tambah_kas_keluar = 1;
+        }else{
+            $tambah_kas_keluar = 0;            
+        }
+        if (Laratrust::can('edit_kas_keluar')) {
+            $edit_kas_keluar = 1;
+        }else{
+            $edit_kas_keluar = 0;            
+        }
+        if (Laratrust::can('hapus_kas_keluar')) {
+            $hapus_kas_keluar = 1;
+        }else{
+            $hapus_kas_keluar = 0;            
+        }
+        $respons['tambah_kas_keluar'] = $tambah_kas_keluar;
+        $respons['edit_kas_keluar'] = $edit_kas_keluar;
+        $respons['hapus_kas_keluar'] = $hapus_kas_keluar;
+
+        return response()->json($respons);
     }
 
 }
