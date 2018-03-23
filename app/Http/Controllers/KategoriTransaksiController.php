@@ -85,8 +85,8 @@ class KategoriTransaksiController extends Controller
     public function pencarian(Request $request)
     {
         $data_kategori_transaksi = KategoriTransaksi::where('id_warung', Auth::user()->id_warung)
-            ->where('nama_kategori_transaksi', 'LIKE', "%$request->search%")
-            ->orderBy('id', 'desc')->paginate(10);
+        ->where('nama_kategori_transaksi', 'LIKE', "%$request->search%")
+        ->orderBy('id', 'desc')->paginate(10);
         $array_kategori_transaksi = array();
         foreach ($data_kategori_transaksi as $kategori_transaksi) {
             $status_transaksi = $this->statusTransaksi($kategori_transaksi);
@@ -224,4 +224,28 @@ class KategoriTransaksiController extends Controller
         $respons = $this->dataPagination($data_kategori_transaksi, $array_kategori_transaksi, $url_view);
         return response()->json($respons);
     }
+
+    public function otoritasKategoriTransaksi(){
+
+        if (Laratrust::can('tambah_kategori_transaksi')) {
+            $tambah_kategori_transaksi = 1;
+        }else{
+         $tambah_kategori_transaksi = 0;            
+     }
+     if (Laratrust::can('edit_kategori_transaksi')) {
+       $edit_kategori_transaksi = 1;
+     }else{
+       $edit_kategori_transaksi = 0;            
+     }
+     if (Laratrust::can('hapus_kategori_transaksi')) {
+         $hapus_kategori_transaksi = 1;
+   }else{
+     $hapus_kategori_transaksi = 0;            
+   }
+   $respons['tambah_kategori_transaksi'] = $tambah_kategori_transaksi;
+   $respons['edit_kategori_transaksi'] = $edit_kategori_transaksi;
+   $respons['hapus_kategori_transaksi'] = $hapus_kategori_transaksi;
+
+   return response()->json($respons);
+}
 }
