@@ -267,7 +267,7 @@
         <button type="button" class="close" v-on:click="closeModalJumlahProduk()" v-shortkey.push="['f9']" @shortkey="closeModalJumlahProduk()"> &times;</button> 
       </div>
 
-      <form class="form-horizontal" v-on:submit.prevent="submitJumlahProduk(inputTbsPembelian.id_produk,inputTbsPembelian.jumlah_produk,inputTbsPembelian.harga_produk,inputTbsPembelian.nama_produk,inputTbsPembelian.no_faktur)"> 
+      <form class="form-horizontal" v-on:submit.prevent="submitJumlahProduk(inputTbsPembelian.id_produk,inputTbsPembelian.jumlah_produk,inputTbsPembelian.harga_produk,inputTbsPembelian.nama_produk,inputTbsPembelian.no_faktur, inputTbsPembelian.satuan_produk)"> 
         <div class="modal-body">
           <h3 class="text-center"><b>{{inputTbsPembelian.nama_produk}}</b></h3>
 
@@ -584,6 +584,9 @@
       },
       'inputPembayaranPembelian.potongan_faktur':function(){
         this.hitungPotonganFaktur()
+      },
+      'inputTbsPembelian.satuan_produk':function(){
+        this.hitungHargaKonversi()
       }
     },
     methods: { 
@@ -865,7 +868,7 @@ deleteEntry(id, index,nama_produk) {
         $("#modalJumlahProduk").show();
         app.$refs.jumlah_produk.focus(); 
       },
-      submitJumlahProduk(id_produk,jumlah_produk,harga_produk,nama_produk,no_faktur){
+      submitJumlahProduk(id_produk,jumlah_produk,harga_produk,nama_produk,no_faktur,satuan_produk){
        var app = this
        var produk = app.inputTbsPembelian.produk.split("|");
        var harga_tbs = $(".harga-"+produk[0]).attr("data-harga")
@@ -891,12 +894,12 @@ deleteEntry(id, index,nama_produk) {
           })
 
         }else if (harga != harga_produk) {
-          app.konfirmasiPerubahanHarga(id_produk,jumlah_produk,harga_produk,nama_produk,no_faktur)
+          app.konfirmasiPerubahanHarga(id_produk,jumlah_produk,harga_produk,nama_produk,no_faktur,satuan_produk)
         }else{
-          app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,no_faktur)
+          app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,no_faktur,satuan_produk)
         }
     },//END PROSES TAMBAH PRODUK TBS
-    konfirmasiPerubahanHarga(id_produk,jumlah_produk,harga_produk,nama_produk,no_faktur){
+    konfirmasiPerubahanHarga(id_produk,jumlah_produk,harga_produk,nama_produk,no_faktur,satuan_produk){
       let app = this
       app.$swal({
         text: "Anda Yakin Ingin Merubah Harga Beli Produk "+titleCase(nama_produk)+ " ?",
@@ -910,15 +913,16 @@ deleteEntry(id, index,nama_produk) {
 
         if (!value) throw null;
 
-        app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,no_faktur);
+        app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,no_faktur,satuan_produk);
 
       });
     },
-    prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,no_faktur){
+    prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,no_faktur,satuan_produk){
      var app = this;
      var id_pembelian = app.id_pembelian;
+     var satuan = satuan_produk.split("|");
      app.loading = true;
-     axios.get(app.url_edit+'/proses-tambah-tbs-pembelian?id_produk_tbs='+id_produk+'&jumlah_produk='+jumlah_produk+'&harga_produk='+harga_produk+'&no_faktur='+no_faktur)
+     axios.get(app.url_edit+'/proses-tambah-tbs-pembelian?id_produk_tbs='+id_produk+'&jumlah_produk='+jumlah_produk+'&harga_produk='+harga_produk+'&no_faktur='+no_faktur+'&satuan='+satuan[0]+'&satuan_dasar='+satuan[2])
      .then(function (resp) {
 
       $("#modalJumlahProduk").hide();
@@ -1363,6 +1367,11 @@ deleteEntry(id, index,nama_produk) {
           this.hitungKembalian(this.inputPembayaranPembelian.pembayaran);
         }
 
+      },
+      hitungHargaKonversi(){
+        var satuan = this.inputTbsPembelian.satuan_produk.split("|");
+        var produk = this.inputTbsPembelian.produk.split("|");
+        this.inputTbsPembelian.harga_produk = parseFloat(produk[2]) * ( parseFloat(satuan[3]) * parseFloat(satuan[4]) );
       },
       hitungKembalian(val){
         var kembalian = parseFloat(val) - parseFloat(this.inputPembayaranPembelian.total_akhir);   
