@@ -21,7 +21,7 @@
                     <h4 class="card-title"> Kas Masuk</h4>
 
                     <div class="toolbar">
-                        <router-link :to="{name: 'createKasMasuk'}" class="btn btn-primary"><i class="material-icons">add</i>  Kas Masuk</router-link>
+                        <router-link :to="{name: 'createKasMasuk'}" class="btn btn-primary" v-if="otoritas.tambah_kas_masuk == 1"><i class="material-icons">add</i>  Kas Masuk</router-link>
 
                         <div class="pencarian">
                             <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control" autocomplete="">
@@ -49,12 +49,12 @@
                                     <td>{{ kas_masuk.kas_masuk.jumlah | pemisahTitik }}</td>
                                     <td>{{ kas_masuk.kas_masuk.keterangan }}</td>
                                     <td>
-                                        <router-link :to="{name: 'editKasMasuk', params: {id: kas_masuk.kas_masuk.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + kas_masuk.kas_masuk.id" > Edit
+                                        <router-link :to="{name: 'editKasMasuk', params: {id: kas_masuk.kas_masuk.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + kas_masuk.kas_masuk.id" v-if="otoritas.edit_kas_masuk == 1"> Edit
                                         </router-link>
 
-                                        <a v-if="kas_masuk.status_transaksi == 0" href="#kas-masuk" class="btn btn-xs btn-danger" v-bind:id="'delete-' + kas_masuk.kas_masuk.id" v-on:click="deleteEntry(kas_masuk.kas_masuk.id, index,kas_masuk.kas_masuk.nama_kas)">Delete
+                                        <a v-if="kas_masuk.status_transaksi == 0 && otoritas.hapus_kas_masuk == 1" href="#kas-masuk" class="btn btn-xs btn-danger" v-bind:id="'delete-' + kas_masuk.kas_masuk.id" v-on:click="deleteEntry(kas_masuk.kas_masuk.id, index,kas_masuk.kas_masuk.nama_kas)">Delete
                                         </a>
-                                        <a v-if="kas_masuk.status_transaksi == 1" href="#kas-masuk" class="btn btn-xs btn-danger" v-bind:id="'delete-' + kas_masuk.kas_masuk.id" v-on:click="gagalHapus(kas_masuk.kas_masuk.id, index,kas_masuk.kas_masuk.nama_kas)">Delete
+                                        <a v-if="kas_masuk.status_transaksi == 1 && otoritas.hapus_kas_masuk == 1" href="#kas-masuk" class="btn btn-xs btn-danger" v-bind:id="'delete-' + kas_masuk.kas_masuk.id" v-on:click="gagalHapus(kas_masuk.kas_masuk.id, index,kas_masuk.kas_masuk.nama_kas)">Delete
                                         </a>
                                     </td>
                                 </tr>
@@ -82,6 +82,7 @@ export default {
         return {
             kasmasuks: [],
             kasmasuksData: {},
+            otoritas: {},
             url : window.location.origin+(window.location.pathname).replace("dashboard", "kas-masuk"),
             url_delete : window.location.origin+(window.location.pathname).replace("dashboard", "kas_masuk"),
             pencarian: '',
@@ -113,6 +114,7 @@ export default {
             .then(function (resp) {
                 app.kasmasuks = resp.data.data;
                 app.kasmasuksData = resp.data;
+                app.otoritas = resp.data.otoritas.original;
                 app.loading = false;
             })
             .catch(function (resp) {
@@ -130,6 +132,7 @@ export default {
             .then(function (resp) {
                 app.kasmasuks = resp.data.data;
                 app.kasmasuksData = resp.data;
+                app.otoritas = resp.data.otoritas.original;
                 app.loading = false;
             })
             .catch(function (resp) {

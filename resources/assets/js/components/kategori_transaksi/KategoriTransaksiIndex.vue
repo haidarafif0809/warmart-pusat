@@ -1,9 +1,9 @@
     <style scoped>
-        .pencarian {
-            color: red; 
-            float: right;
-            padding-bottom: 10px;
-        }
+    .pencarian {
+        color: red; 
+        float: right;
+        padding-bottom: 10px;
+    }
     </style>
 
     <template>	
@@ -22,7 +22,7 @@
                         <h4 class="card-title"> Kategori Transaksi</h4>
 
                         <div class="toolbar">
-                            <router-link :to="{name: 'createKategoriTransaksi'}" class="btn btn-primary" style="padding-bottom:10px">
+                            <router-link :to="{name: 'createKategoriTransaksi'}" class="btn btn-primary" style="padding-bottom:10px" v-if="otoritas.tambah_kategori_transaksi == 1">
                                 <i class="material-icons">add</i>  Kategori Transaksi
                             </router-link>
 
@@ -81,7 +81,7 @@
                                     <tr>
 
                                         <th>Kategori Transaksi</th>
-                                        <th>Aksi</th>
+                                        <th v-if="otoritas.hapus_kategori_transaksi == 1 || otoritas.edit_kategori_transaksi == 1">Aksi</th>
 
                                     </tr>
                                 </thead>
@@ -89,14 +89,14 @@
                                     <tr v-for="kategoriTransaksi, index in kategoriTransaksi" >
                                         <td>{{ kategoriTransaksi.nama_kategori_transaksi }}</td>
                                         <td>
-                                            <router-link :to="{name: 'editKategoriTransaksi', params: {id: kategoriTransaksi.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + kategoriTransaksi.id" > Edit
+                                            <router-link :to="{name: 'editKategoriTransaksi', params: {id: kategoriTransaksi.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + kategoriTransaksi.id" v-if="otoritas.edit_kategori_transaksi == 1"> Edit
                                             </router-link>
-
-                                            <a v-if="kategoriTransaksi.status_transaksi == 0" href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + kategoriTransaksi.id" v-on:click="deleteEntry(kategoriTransaksi.id, index,kategoriTransaksi.nama_kategori_transaksi)">Delete
+                                            <a v-if="kategoriTransaksi.status_transaksi == 0 && otoritas.hapus_kategori_transaksi == 1" href="#kategori-transaksi" class="btn btn-xs btn-danger" v-bind:id="'delete-' + kategoriTransaksi.id" v-on:click="deleteEntry(kategoriTransaksi.id, index,kategoriTransaksi.nama_kategori_transaksi)">Delete
                                             </a>
 
-                                            <a v-else href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + kategoriTransaksi.id" v-on:click="gagalHapus(kategoriTransaksi.id, index,kategoriTransaksi.nama_kategori_transaksi)">Delete
+                                            <a v-else-if="otoritas.hapus_kategori_transaksi == 1" href="#kategori-transaksi" class="btn btn-xs btn-danger" v-bind:id="'delete-' + kategoriTransaksi.id" v-on:click="gagalHapus(kategoriTransaksi.id, index,kategoriTransaksi.nama_kategori_transaksi)">Delete
                                             </a>
+                                            
                                         </td>
                                     </tr>
                                 </tbody>					
@@ -119,33 +119,34 @@
     </template>
 
     <script>
-        export default {
-            data: function () {
-                return {
-                    kategoriTransaksi: [],
-                    kategoriTransaksiData: {},
-                    filterKategoriTransaksi: [],
-                    filterKategoriTransaksiData: {},
-                    filter: {
-                        dari_tanggal: '',
-                        sampai_tanggal: new Date(),
-                        tipe: 0
-                    },
-                    url : window.location.origin+(window.location.pathname).replace("dashboard", "kategori-transaksi"),
-                    pencarian: '',
-                    pencarianFilter: '',
-                    loading: true,
-                    seen: false
-                }
-            },
-            mounted() {
-                var app = this;
-                var awal_tanggal = new Date();
-                awal_tanggal.setDate(1);
-                app.filter.dari_tanggal = awal_tanggal;
-                app.getResults();
-            },
-            watch: {
+    export default {
+        data: function () {
+            return {
+                kategoriTransaksi: [],
+                kategoriTransaksiData: {},
+                otoritas: {},
+                filterKategoriTransaksi: [],
+                filterKategoriTransaksiData: {},
+                filter: {
+                    dari_tanggal: '',
+                    sampai_tanggal: new Date(),
+                    tipe: 0
+                },
+                url : window.location.origin+(window.location.pathname).replace("dashboard", "kategori-transaksi"),
+                pencarian: '',
+                pencarianFilter: '',
+                loading: true,
+                seen: false
+            }
+        },
+        mounted() {
+            var app = this;
+            var awal_tanggal = new Date();
+            awal_tanggal.setDate(1);
+            app.filter.dari_tanggal = awal_tanggal;
+            app.getResults();
+        },
+        watch: {
     // whenever question changes, this function will run
     pencarian: function (newQuestion) {
         this.getHasilPencarian()  
@@ -176,6 +177,7 @@ methods: {
         .then(function (resp) {
             app.kategoriTransaksi = resp.data.data;
             app.kategoriTransaksiData = resp.data;
+            app.otoritas = resp.data.otoritas.original;
             app.loading = false;
             app.seen = false;
         })
@@ -195,6 +197,7 @@ methods: {
         .then(function (resp) {
             app.kategoriTransaksi = resp.data.data;
             app.kategoriTransaksiData = resp.data;
+            app.otoritas = resp.data.otoritas.original;
             app.loading = false;
         })
         .catch(function (resp) {

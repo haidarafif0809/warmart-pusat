@@ -8,6 +8,7 @@ use App\KategoriTransaksi;
 use Auth;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Html\Builder;
+use Laratrust;
 
 class KategoriTransaksiController extends Controller
 {
@@ -49,6 +50,7 @@ class KategoriTransaksiController extends Controller
 
         $respons['current_page']   = $data_kategori_transaksi->currentPage();
         $respons['data']           = $array_kategori_transaksi;
+        $respons['otoritas']        = $this->otoritasKategoriTransaksi();
         $respons['first_page_url'] = url('/kategori-transaksi/' . $url_view . '?page=' . $data_kategori_transaksi->firstItem());
         $respons['from']           = 1;
         $respons['last_page']      = $data_kategori_transaksi->lastPage();
@@ -227,25 +229,25 @@ class KategoriTransaksiController extends Controller
 
     public function otoritasKategoriTransaksi(){
 
-        if (Laratrust::can('tambah_kategori_transaksi')) {
-            $tambah_kategori_transaksi = 1;
-        }else{
-         $tambah_kategori_transaksi = 0;            
-     }
-     if (Laratrust::can('edit_kategori_transaksi')) {
-       $edit_kategori_transaksi = 1;
-     }else{
-       $edit_kategori_transaksi = 0;            
-     }
-     if (Laratrust::can('hapus_kategori_transaksi')) {
-         $hapus_kategori_transaksi = 1;
-   }else{
-     $hapus_kategori_transaksi = 0;            
-   }
-   $respons['tambah_kategori_transaksi'] = $tambah_kategori_transaksi;
-   $respons['edit_kategori_transaksi'] = $edit_kategori_transaksi;
-   $respons['hapus_kategori_transaksi'] = $hapus_kategori_transaksi;
+     if (Laratrust::can('tambah_kategori_transaksi')) {
+        $tambah_kategori_transaksi = 1;
+    }else{
+     $tambah_kategori_transaksi = 0;            
+ }
+ if (Laratrust::can('edit_kategori_transaksi')) {
+   $edit_kategori_transaksi = 1;
+}else{
+   $edit_kategori_transaksi = 0;            
+}
+if (Laratrust::can('hapus_kategori_transaksi')) {
+ $hapus_kategori_transaksi = 1;
+}else{
+ $hapus_kategori_transaksi = 0;            
+}
+$respons['tambah_kategori_transaksi'] = $tambah_kategori_transaksi;
+$respons['edit_kategori_transaksi'] = $edit_kategori_transaksi;
+$respons['hapus_kategori_transaksi'] = $hapus_kategori_transaksi;
 
-   return response()->json($respons);
+return response()->json($respons);
 }
 }
