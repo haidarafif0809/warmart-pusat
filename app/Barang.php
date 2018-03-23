@@ -41,16 +41,16 @@ class Barang extends Model
 
         $hpp_masuk = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk), 0) as total_produk_masuk'), DB::raw('IFNULL(SUM(total_nilai), 0) as total_nilai_masuk')])
         ->where('id_produk', $this->id)
-        ->where('warung_id', $this->id_warung)->where('jenis_hpp', 1)->first();
+        ->where('warung_id',Auth::user()->id_warung)->where('jenis_hpp', 1)->first();
 
         $total_nilai_masuk  = $hpp_masuk->total_nilai_masuk;
         $total_produk_masuk = $hpp_masuk->total_produk_masuk;
 
         if ($total_nilai_masuk == 0 and $total_produk_masuk == 0) {
-            $hpp_produk = 0;
+            $hpp_produk = $this->harga_beli;
             return $hpp_produk;
         } else if ($total_nilai_masuk > 0 and $total_produk_masuk == 0) {
-            $hpp_produk = 0;
+            $hpp_produk = $this->harga_beli;
             return $hpp_produk;
         } else {
 
