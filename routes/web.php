@@ -940,6 +940,8 @@ Route::get('/bank-warung/bank', 'BankWarungController@dataBank')->middleware('au
 
 //menampilkan data bank Warung
 Route::get('/setting-promo/view', 'SettingPromoController@view')->middleware('auth');
+Route::get('/setting-promo/pencarian', 'SettingPromoController@pencarian')->middleware('auth');
+
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 

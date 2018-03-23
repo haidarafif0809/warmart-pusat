@@ -21,19 +21,37 @@ class SettingPromoController extends Controller
 
         public function view()
     {
-        $settingpromo = SettingPromo::with('barang')->orderBy('id_setting_promo', 'desc')->paginate(10);
+        $settingpromo = SettingPromo::select(['barangs.nama_barang','barangs.kode_barang','setting_promos.baner_promo','setting_promos.harga_coret','setting_promos.id_setting_promo'])->leftJoin('barangs', 'barangs.id', '=', 'setting_promos.id_produk')->where('setting_promos.id_warung', Auth::user()->id_warung)->orderBy('setting_promos.id_setting_promo', 'desc')->paginate(10);
         $array             = array();
 
         foreach ($settingpromo as $settingpromos) {
             array_push($array, ['settingpromo' => $settingpromos]);
         }
 
-        $url     = '/daftar-topos/view';
+        $url     = '/setting-promo/view';
         $respons = $this->paginationData($settingpromo, $array, $url);
 
         return response()->json($respons);
     }
 
+
+        public function pencarian(Request $request)
+    {
+        $settingpromo = SettingPromo::select(['barangs.nama_barang','barangs.kode_barang','setting_promos.baner_promo','setting_promos.harga_coret','setting_promos.id_setting_promo'])->leftJoin('barangs', 'barangs.id', '=', 'setting_promos.id_produk')->where('setting_promos.id_warung', Auth::user()->id_warung)->where(function ($settingpromo) use ($request) {
+            $settingpromo->orwhere('barangs.nama_barang', 'LIKE', '%' . $request->search . '%');
+        })->orderBy('setting_promos.id_setting_promo', 'desc')->paginate(10);
+       
+        $array = array();
+        foreach ($settingpromo as $settingpromos) {
+            array_push($array, ['settingpromo' => $settingpromos]);
+        }
+
+        $url     = '/setting-promo/pencarian';
+        //DATA PAGINATION
+        $respons = $this->paginationData($settingpromo, $array,$url);
+
+        return response()->json($respons);
+    }
 
         public function paginationData($settingpromo, $array, $url)
     {
@@ -106,7 +124,7 @@ class SettingPromoController extends Controller
                     // membuat nama file random berikut extension
                     $filename     = str_random(40) . '.' . $extension;
                     $image_resize = Image::make($baner_promo->getRealPath());
-                    $image_resize->fit(300);
+                    $image_resize->fit(1450, 750);
                     $image_resize->save(public_path('baner_setting_promo/' . $filename));
                     $insert_setting->baner_promo = $filename;
                     // menyimpan field foto_kamar di database kamar dengan filename yang baru dibuat
@@ -160,6 +178,15 @@ class SettingPromoController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // hapus
+        $barang = SettingPromo::find($id);
+
+        if ($barang->id_warung != Auth::user()->id_warung) {
+            Auth::logout();
+            return response()->view('error.403');
+        } else {
+            SettingPromo::destroy($id);
+        }
     }
+
 }
