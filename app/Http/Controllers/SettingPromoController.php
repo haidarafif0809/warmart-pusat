@@ -102,7 +102,7 @@ class SettingPromoController extends Controller
             return response()->view('error.403');
         } else {
             $this->validate($request, [
-                'id_produk'       => 'nullable|unique:setting_promo,id_produk,NULL,id_setting_promo,id_warung,' . Auth::user()->id_warung,
+                'id_produk'       => 'nullable|unique:setting_promos,id_produk,NULL,id_setting_promo,id_warung,' . Auth::user()->id_warung,
             ]);
 
             $produk    = explode("|", $request->produk);
@@ -144,7 +144,9 @@ class SettingPromoController extends Controller
      */
     public function show($id)
     {
-        //
+        $settingpromo = SettingPromo::select(['barangs.nama_barang','barangs.kode_barang','setting_promos.baner_promo','setting_promos.harga_coret','setting_promos.id_setting_promo','barangs.harga_jual as harga_produk','setting_promos.id_produk as produk'])->leftJoin('barangs', 'barangs.id', '=', 'setting_promos.id_produk')->where('setting_promos.id_warung', Auth::user()->id_warung)->where('setting_promos.id_setting_promo', $id)->first();
+
+        return $settingpromo;
     }
 
     /**

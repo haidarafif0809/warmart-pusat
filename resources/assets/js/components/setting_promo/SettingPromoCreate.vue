@@ -9,7 +9,7 @@
 				<div class="card">
 
 					<div class="card-header card-header-icon" data-background-color="purple">
-						<i class="material-icons">dns</i>
+						<i class="material-icons">settings_applications</i>
 					</div>
 
 					<div class="card-content">
@@ -67,6 +67,19 @@
 										</div>
 									</div>
 								</div> 
+
+								<div class="form-group">
+									<label for="foto" class="col-md-2 control-label">Hari</label>
+										<div class="col-md-10">
+							            <div class="checkbox" v-for="permission_users, index in permission_user">
+							              <label>
+							                <input type="checkbox" name="setting_user" v-bind:value="permission_users.id" v-model="setting_otoritas.user"> {{permission_users.display_name}}
+							              </label>
+							            </div> 
+									</div>
+								</div> 
+							         
+
 							</div>
 					</div>
 
