@@ -47,8 +47,8 @@
                        Edit </router-link> </td>
 
                        <td> 
-                        <a v-if="kelompok_produk.status_kelompok_produk == 0 && otoritas.hapus_kelompok_produk == 1" href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + kelompok_produk.id" v-on:click="deleteEntry(kelompok_produk.id, index,kelompok_produk.nama_kategori_barang)">Delete</a>
-                        <a  v-else-if="otoritas.hapus_kelompok_produk == 1 && kelompok_produk.status_kelompok_produk == 1" href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + kelompok_produk.id" v-on:click="KelompokProdukTerpakai(kelompok_produk.id, index,kelompok_produk.nama_kategori_barang)">Delete</a>
+                        <a v-if="kelompok_produk.status_kelompok_produk == 0 && otoritas.hapus_kelompok_produk == 1" href="#kelompok-produk" class="btn btn-xs btn-danger" v-bind:id="'delete-' + kelompok_produk.id" v-on:click="deleteEntry(kelompok_produk.id, index,kelompok_produk.nama_kategori_barang)">Delete</a>
+                        <a  v-else-if="otoritas.hapus_kelompok_produk == 1 && kelompok_produk.status_kelompok_produk == 1" href="#kelompok-produk" class="btn btn-xs btn-danger" v-bind:id="'delete-' + kelompok_produk.id" v-on:click="KelompokProdukTerpakai(kelompok_produk.id, index,kelompok_produk.nama_kategori_barang)">Delete</a>
                     </td>
                 </tr>
             </tbody>					

@@ -43,11 +43,16 @@
         <tbody v-if="satuans.length" class="data-ada">
           <tr v-for="satuan, index in satuans" >
 
-            <td>{{ satuan.nama_satuan }}</td>
+            <td>{{ satuan.satuan.nama_satuan }}</td>
             <td> 
-             <router-link :to="{name: 'editSatuan', params: {id: satuan.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + satuan.id"  v-if="otoritas.edit_satuan == 1">
-              Edit 
-            </router-link> <a href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + satuan.id" v-on:click="deleteEntry(satuan.id, index,satuan.nama_satuan)" v-if="otoritas.hapus_satuan == 1"> Delete </a></td>
+              <router-link :to="{name: 'editSatuan', params: {id: satuan.satuan.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + satuan.satuan.id"  v-if="otoritas.edit_satuan == 1">
+                Edit 
+              </router-link>
+              <a href="#satuan" class="btn btn-xs btn-danger" v-bind:id="'delete-' + satuan.satuan.id" v-on:click="deleteEntry(satuan.satuan.id, index,satuan.satuan.nama_satuan)" v-if="otoritas.hapus_satuan == 1 && satuan.status_satuan == 0"> Delete 
+              </a>
+              <a href="#satuan" class="btn btn-xs btn-danger" v-bind:id="'delete-' + satuan.satuan.id" v-on:click="satuanTerpakai(satuan.satuan.id, index,satuan.satuan.nama_satuan)" v-if="otoritas.hapus_satuan == 1 && satuan.status_satuan > 0"> Delete 
+              </a>
+            </td>
           </tr>
         </tbody>
         <tbody class="data-tidak-ada" v-else>
@@ -102,8 +107,8 @@ export default {
           }
           axios.get(app.url+'/view?page='+page)
           .then(function (resp) {
-            app.satuans = resp.data.satuan.data;
-            app.satuansData = resp.data.satuan;
+            app.satuans = resp.data.data;
+            app.satuansData = resp.data;
             app.otoritas = resp.data.otoritas.original;
             app.loading = false;
           })
@@ -120,8 +125,8 @@ export default {
           }
           axios.get(app.url+'/pencarian?search='+app.pencarian+'&page='+page)
           .then(function (resp) {
-            app.satuans = resp.data.satuan.data;
-            app.satuansData = resp.data.satuan;
+            app.satuans = resp.data.data;
+            app.satuansData = resp.data;
             app.otoritas = resp.data.otoritas.original;
           })
           .catch(function (resp) {
@@ -148,6 +153,18 @@ export default {
               alert("Could not delete company");
             });
           }
+        },
+        satuanTerpakai(id, index,nama_satuan) {
+          var app = this;                  
+          app.alertTidakBisaHapus("Satuan "+nama_satuan+" Sudah Terpakai")
+
+        },
+        alertTidakBisaHapus(pesan) {
+          this.$swal({
+            title: "Perhatian!! ",
+            text: pesan,
+            icon: "warning",
+          });
         }
       }
     }

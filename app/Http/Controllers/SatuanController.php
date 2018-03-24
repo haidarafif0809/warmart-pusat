@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Satuan;
 use App\SettingAplikasi;
+use App\Barang;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Html\Builder;
 use Laratrust;
@@ -36,22 +37,62 @@ class SatuanController extends Controller
     public function view()
     {
         $satuan = Satuan::orderBy('id', 'DESC')->paginate(10);
-        $otoritas = $this->otoritasSatuan();
-        return response()->json([
-            "satuan" => $satuan,
-            "otoritas"     => $otoritas,
-        ]);
+
+        $satuan_array = array();
+        foreach ($satuan as $satuans) {
+
+            $cek_satuans = Barang::where('satuan_id', $satuans->id)->count();
+
+            array_push($satuan_array, ['status_satuan' => $cek_satuans, 'satuan' => $satuans]);
+        }
+        //DATA PAGINATION
+        $respons['current_page']   = $satuan->currentPage();
+        $respons['data']           = $satuan_array;
+        $respons['otoritas']        = $this->otoritasSatuan();
+        $respons['first_page_url'] = url('/satuan/view?page=' . $satuan->firstItem());
+        $respons['from']           = 1;
+        $respons['last_page']      = $satuan->lastPage();
+        $respons['last_page_url']  = url('/satuan/view?page=' . $satuan->lastPage());
+        $respons['next_page_url']  = $satuan->nextPageUrl();
+        $respons['path']           = url('/satuan/view');
+        $respons['per_page']       = $satuan->perPage();
+        $respons['prev_page_url']  = $satuan->previousPageUrl();
+        $respons['to']             = $satuan->perPage();
+        $respons['total']          = $satuan->total();
+        //DATA PAGINATION
+
+        return response()->json($respons);
     }
 
     public function pencarian(Request $request)
     {
 
         $satuan = Satuan::where('nama_satuan', 'LIKE', "%$request->search%")->paginate(10);
-        $otoritas = $this->otoritasSatuan();
-        return response()->json([
-            "satuan" => $satuan,
-            "otoritas"     => $otoritas,
-        ]);
+
+        $satuan_array = array();
+        foreach ($satuan as $satuans) {
+
+            $cek_satuans = Barang::where('satuan_id', $satuans->id)->count();
+
+            array_push($satuan_array, ['status_satuan' => $cek_satuans, 'satuan' => $satuans]);
+        }
+        //DATA PAGINATION
+        $respons['current_page']   = $satuan->currentPage();
+        $respons['data']           = $satuan_array;
+        $respons['otoritas']        = $this->otoritasSatuan();
+        $respons['first_page_url'] = url('/satuan/view?page=' . $satuan->firstItem());
+        $respons['from']           = 1;
+        $respons['last_page']      = $satuan->lastPage();
+        $respons['last_page_url']  = url('/satuan/view?page=' . $satuan->lastPage());
+        $respons['next_page_url']  = $satuan->nextPageUrl();
+        $respons['path']           = url('/satuan/view');
+        $respons['per_page']       = $satuan->perPage();
+        $respons['prev_page_url']  = $satuan->previousPageUrl();
+        $respons['to']             = $satuan->perPage();
+        $respons['total']          = $satuan->total();
+        //DATA PAGINATION
+
+        return response()->json($respons);
     }
     /**
      * Show the form for creating a new resource.
