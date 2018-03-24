@@ -6,6 +6,7 @@ use App\BankWarung;
 use App\SettingTransferBank;
 use Auth;
 use Illuminate\Http\Request;
+use Laratrust;
 
 class BankWarungController extends Controller
 {
@@ -18,26 +19,34 @@ class BankWarungController extends Controller
     public function queryBank()
     {
         $data_bank = BankWarung::select(['bank_warungs.atas_nama', 'bank_warungs.no_rek', 'bank_warungs.id', 'setting_transfer_banks.nama_bank'])
-            ->leftJoin('setting_transfer_banks', 'setting_transfer_banks.id', '=', 'bank_warungs.nama_bank')
-            ->where('bank_warungs.warung_id', Auth::user()->id_warung);
+        ->leftJoin('setting_transfer_banks', 'setting_transfer_banks.id', '=', 'bank_warungs.nama_bank')
+        ->where('bank_warungs.warung_id', Auth::user()->id_warung);
         return $data_bank;
     }
 
     public function view()
     {
         $data_bank = $this->queryBank()->paginate(10);
-        return response()->json($data_bank);
+        $otoritas = $this->otoritasBank();
+        return response()->json([
+            "bank" => $data_bank,
+            "otoritas"     => $otoritas,
+        ]);
     }
 
     public function pencarian(Request $request)
     {
         $data_bank = $this->queryBank()
-            ->where(function ($query) use ($request) {
-                $query->orwhere('bank_warungs.atas_nama', 'LIKE', '%' . $request->search . '%')
-                    ->orwhere('bank_warungs.no_rek', 'LIKE', '%' . $request->search . '%')
-                    ->orwhere('setting_transfer_banks.nama_bank', 'LIKE', '%' . $request->search . '%');
-            })->paginate(10);
-        return response()->json($data_bank);
+        ->where(function ($query) use ($request) {
+            $query->orwhere('bank_warungs.atas_nama', 'LIKE', '%' . $request->search . '%')
+            ->orwhere('bank_warungs.no_rek', 'LIKE', '%' . $request->search . '%')
+            ->orwhere('setting_transfer_banks.nama_bank', 'LIKE', '%' . $request->search . '%');
+        })->paginate(10);
+        $otoritas = $this->otoritasBank();
+        return response()->json([
+            "bank" => $data_bank,
+            "otoritas"     => $otoritas,
+        ]);
     }
 
     public function dataBank()
@@ -133,5 +142,31 @@ class BankWarungController extends Controller
     {
         $bank = BankWarung::destroy($id);
         return response(200);
+    }
+
+
+
+    public function otoritasBank(){
+
+        if (Laratrust::can('tambah_bank')) {
+            $tambah_bank = 1;
+        }else{
+            $tambah_bank = 0;            
+        }
+        if (Laratrust::can('edit_bank')) {
+            $edit_bank = 1;
+        }else{
+            $edit_bank = 0;            
+        }
+        if (Laratrust::can('hapus_bank')) {
+            $hapus_bank = 1;
+        }else{
+            $hapus_bank = 0;            
+        }
+        $respons['tambah_bank'] = $tambah_bank;
+        $respons['edit_bank'] = $edit_bank;
+        $respons['hapus_bank'] = $hapus_bank;
+
+        return response()->json($respons);
     }
 }

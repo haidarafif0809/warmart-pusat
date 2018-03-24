@@ -6,6 +6,7 @@ use App\Satuan;
 use App\SettingAplikasi;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Html\Builder;
+use Laratrust;
 
 class SatuanController extends Controller
 {
@@ -20,7 +21,7 @@ class SatuanController extends Controller
                 //SETTING APLIKASI 
         $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first(); 
         if ($setting_aplikasi->tipe_aplikasi == 0) { 
-        $this->middleware('user-must-admin'); 
+            $this->middleware('user-must-admin'); 
         } else { 
             $this->middleware('user-must-topos'); 
         } 
@@ -35,14 +36,22 @@ class SatuanController extends Controller
     public function view()
     {
         $satuan = Satuan::orderBy('id', 'DESC')->paginate(10);
-        return response()->json($satuan);
+        $otoritas = $this->otoritasSatuan();
+        return response()->json([
+            "satuan" => $satuan,
+            "otoritas"     => $otoritas,
+        ]);
     }
 
     public function pencarian(Request $request)
     {
 
         $satuan = Satuan::where('nama_satuan', 'LIKE', "%$request->search%")->paginate(10);
-        return response()->json($satuan);
+        $otoritas = $this->otoritasSatuan();
+        return response()->json([
+            "satuan" => $satuan,
+            "otoritas"     => $otoritas,
+        ]);
     }
     /**
      * Show the form for creating a new resource.
@@ -129,5 +138,29 @@ class SatuanController extends Controller
         //
         $satuan = Satuan::destroy($id);
         return response(200);
+    }
+
+    public function otoritasSatuan(){
+
+        if (Laratrust::can('tambah_satuan')) {
+            $tambah_satuan = 1;
+        }else{
+            $tambah_satuan = 0;            
+        }
+        if (Laratrust::can('edit_satuan')) {
+            $edit_satuan = 1;
+        }else{
+            $edit_satuan = 0;            
+        }
+        if (Laratrust::can('hapus_satuan')) {
+            $hapus_satuan = 1;
+        }else{
+            $hapus_satuan = 0;            
+        }
+        $respons['tambah_satuan'] = $tambah_satuan;
+        $respons['edit_satuan'] = $edit_satuan;
+        $respons['hapus_satuan'] = $hapus_satuan;
+
+        return response()->json($respons);
     }
 }

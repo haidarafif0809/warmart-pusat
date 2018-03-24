@@ -6,6 +6,7 @@ use App\Barang;
 use App\KategoriBarang;
 use App\SettingAplikasi;
 use Illuminate\Http\Request;
+use Laratrust;
 
 class KelompokProdukController extends Controller
 {
@@ -20,9 +21,9 @@ class KelompokProdukController extends Controller
         //SETTING APLIKASI 
         $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first(); 
         if ($setting_aplikasi->tipe_aplikasi == 0) { 
-        $this->middleware('user-must-admin'); 
+            $this->middleware('user-must-admin'); 
         } else { 
-                $this->middleware('user-must-topos'); 
+            $this->middleware('user-must-topos'); 
         } 
     }
     public function index()
@@ -52,6 +53,7 @@ class KelompokProdukController extends Controller
         //DATA PAGINATION
         $respons['current_page']   = $kelompok_produk->currentPage();
         $respons['data']           = $array;
+        $respons['otoritas']       = $this->otoritasKelompokProduk();
         $respons['first_page_url'] = url('/kelompok-produk/view?page=' . $kelompok_produk->firstItem());
         $respons['from']           = 1;
         $respons['last_page']      = $kelompok_produk->lastPage();
@@ -88,6 +90,7 @@ class KelompokProdukController extends Controller
         //DATA PAGINATION
         $respons['current_page']   = $kelompok_produk->currentPage();
         $respons['data']           = $array;
+        $respons['otoritas']       = $this->otoritasKelompokProduk();
         $respons['first_page_url'] = url('/kelompok-produk/pencarian?page=' . $kelompok_produk->firstItem() . '&search=' . $request->search);
         $respons['from']           = 1;
         $respons['last_page']      = $kelompok_produk->lastPage();
@@ -186,5 +189,29 @@ class KelompokProdukController extends Controller
         KategoriBarang::destroy($id);
 
         return response(200);
+    }
+
+    public function otoritasKelompokProduk(){
+
+        if (Laratrust::can('tambah_kelompok_produk')) {
+            $tambah_kelompok_produk = 1;
+        }else{
+            $tambah_kelompok_produk = 0;            
+        }
+        if (Laratrust::can('edit_kelompok_produk')) {
+            $edit_kelompok_produk = 1;
+        }else{
+            $edit_kelompok_produk = 0;            
+        }
+        if (Laratrust::can('hapus_kelompok_produk')) {
+            $hapus_kelompok_produk = 1;
+        }else{
+            $hapus_kelompok_produk = 0;            
+        }
+        $respons['tambah_kelompok_produk'] = $tambah_kelompok_produk;
+        $respons['edit_kelompok_produk'] = $edit_kelompok_produk;
+        $respons['hapus_kelompok_produk'] = $hapus_kelompok_produk;
+
+        return response()->json($respons);
     }
 }

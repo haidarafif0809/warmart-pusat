@@ -1,11 +1,11 @@
 <style scoped>
-  .pencarian {
-    color: red; 
-    float: right;
-  }
-  .hurufBesar{
-    text-transform: uppercase;
-  }
+.pencarian {
+  color: red; 
+  float: right;
+}
+.hurufBesar{
+  text-transform: uppercase;
+}
 </style>
 <template>
 
@@ -28,7 +28,7 @@
 
        <div class="toolbar">
 
-        <p> <router-link :to="{name: 'createBankWarung'}" class="btn btn-primary">Tambah Bank Warung</router-link></p>
+        <p> <router-link :to="{name: 'createBankWarung'}" class="btn btn-primary" v-if="otoritas.tambah_bank == 1">Tambah Bank Warung</router-link></p>
 
       </div>
 
@@ -44,7 +44,7 @@
             <th>Nama Bank</th>
             <th>A.N Bank</th>
             <th>No Rekening</th>
-            <th>Aksi</th>
+            <th v-if="otoritas.edit_bank == 1 || otoritas.hapus_bank == 1">Aksi</th>
 
           </tr>
         </thead>
@@ -55,13 +55,13 @@
             <td>{{ bankWarung.atas_nama }}</td>
             <td>{{ bankWarung.no_rek }}</td>
             <td> 
-             <router-link :to="{name: 'editBankWarung', params: {id: bankWarung.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + bankWarung.id" >
+             <router-link :to="{name: 'editBankWarung', params: {id: bankWarung.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + bankWarung.id" v-if="otoritas.edit_bank == 1">
               Edit 
-            </router-link> <a href="#"
-            class="btn btn-xs btn-danger" v-bind:id="'delete-' + bankWarung.id"
-            v-on:click="deleteEntry(bankWarung.id, index,bankWarung.nama_bank)">
-            Delete
-          </a></td>
+            </router-link> 
+            <a href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + bankWarung.id" v-on:click="deleteEntry(bankWarung.id, index,bankWarung.nama_bank)" v-if="otoritas.hapus_bank == 1">
+              Delete
+            </a>
+          </td>
 
 
         </tr>
@@ -83,22 +83,23 @@
 </template>
 
 <script>
-  export default {
-    data: function () {
-      return {
-        bankWarungs: [],
-        bankWarungsData: {},
-        url : window.location.origin+(window.location.pathname).replace("dashboard", "bank-warung"),
-        pencarian: '',
-        contoh : '',
-        loading: true
-      }
-    },
-    mounted() {
-      var app = this;
-      app.getResults();
-    },
-    watch: {
+export default {
+  data: function () {
+    return {
+      bankWarungs: [],
+      bankWarungsData: {},
+      otoritas: {},
+      url : window.location.origin+(window.location.pathname).replace("dashboard", "bank-warung"),
+      pencarian: '',
+      contoh : '',
+      loading: true
+    }
+  },
+  mounted() {
+    var app = this;
+    app.getResults();
+  },
+  watch: {
         // whenever question changes, this function will run
         pencarian: function (newQuestion) {
           this.getHasilPencarian()  
@@ -113,8 +114,9 @@
           }
           axios.get(app.url+'/view?page='+page)
           .then(function (resp) {
-            app.bankWarungs = resp.data.data;
-            app.bankWarungsData = resp.data;
+            app.bankWarungs = resp.data.bank.data;
+            app.bankWarungsData = resp.data.bank;
+            app.otoritas = resp.data.otoritas.original;
             app.loading = false;
           })
           .catch(function (resp) {
@@ -130,8 +132,9 @@
           }
           axios.get(app.url+'/pencarian?search='+app.pencarian+'&page='+page)
           .then(function (resp) {
-            app.bankWarungs = resp.data.data;
-            app.bankWarungsData = resp.data;
+            app.bankWarungs = resp.data.bank.data;
+            app.bankWarungsData = resp.data.bank;
+            app.otoritas = resp.data.otoritas.original;
           })
           .catch(function (resp) {
             console.log(resp);
@@ -173,4 +176,4 @@
 
       }
     }
-  </script>
+    </script>
