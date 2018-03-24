@@ -49,6 +49,8 @@
                 <td>{{ customer.alamat }}</td>
                 <td>{{ customer.created_at | tanggal }}</td>
                 <td> 
+                  <a v-bind:href="'customer/cetak-customer/'+customer.no_telp" class="btn btn-xs btn-warning" target="blank"> Cetak
+                  </a>
                   <router-link :to="{name: 'detailCustomer', params: {id: customer.id}}" class="btn btn-xs btn-info" v-bind:id="'detail-' + customer.id" >
                     Detail 
                   </router-link>

@@ -401,6 +401,7 @@ Route::get('/customer/view-detail/{id}', 'CustomerController@view_detail')->midd
 Route::get('/customer/pencarian', 'CustomerController@pencarian')->middleware('auth');
 Route::get('/customer/pilih-komunitas', 'CustomerController@pilih_komunitas')->middleware('auth');
 Route::get('/customer/setting-aplikasi', 'CustomerController@settingAplikasi')->middleware('auth');
+Route::get('/customer/cetak-customer/{id}', 'CustomerController@cetakCustomer')->middleware('auth');
 
 //menampilkan data user
 Route::get('/user/view', 'UserController@view')->middleware('auth');

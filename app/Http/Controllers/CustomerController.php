@@ -267,4 +267,8 @@ class CustomerController extends Controller
 
         return response()->json($respons);
     }
+
+    public function cetakCustomer($no_telp){
+        return view('customer.cetak',['no_telp'=>$no_telp]);
+    }
 }
