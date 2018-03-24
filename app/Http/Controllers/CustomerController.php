@@ -8,6 +8,7 @@ use App\KomunitasCustomer;
 use App\SettingAplikasi;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Html\Builder;
+use Laratrust;
 
 class CustomerController extends Controller
 {
@@ -36,20 +37,28 @@ class CustomerController extends Controller
     public function view()
     {
         $customer = Customer::where('tipe_user', 3)->orderBy('created_at', 'DESC')->paginate(10);
-        return response()->json($customer);
+        $otoritas = $this->otoritasCustomer();
+        return response()->json([
+            "customer" => $customer,
+            "otoritas"     => $otoritas,
+        ]);
     }
 
     public function pencarian(Request $request)
     {
         $customer = Customer::where('tipe_user', 3)->where(function ($query) use ($request) {
             $query->orwhere('name', 'LIKE', "%$request->search%")
-                ->orWhere('alamat', 'LIKE', "%$request->search%")
-                ->orWhere('wilayah', 'LIKE', "%$request->search%")
-                ->orWhere('no_telp', 'LIKE', "%$request->search%")
-                ->orWhere('tgl_lahir', 'LIKE', "%$request->search%");
+            ->orWhere('alamat', 'LIKE', "%$request->search%")
+            ->orWhere('wilayah', 'LIKE', "%$request->search%")
+            ->orWhere('no_telp', 'LIKE', "%$request->search%")
+            ->orWhere('tgl_lahir', 'LIKE', "%$request->search%");
         })
-            ->paginate(10);
-        return response()->json($customer);
+        ->paginate(10);
+        $otoritas = $this->otoritasCustomer();
+        return response()->json([
+            "customer" => $customer,
+            "otoritas"     => $otoritas,
+        ]);
     }
 
     /**
@@ -233,5 +242,29 @@ class CustomerController extends Controller
         $customer['komunitas'] = $komunitas;
 
         return response()->json($customer);
+    }
+
+    public function otoritasCustomer(){
+
+        if (Laratrust::can('tambah_customer')) {
+            $tambah_customer = 1;
+        }else{
+            $tambah_customer = 0;            
+        }
+        if (Laratrust::can('edit_customer')) {
+            $edit_customer = 1;
+        }else{
+            $edit_customer = 0;            
+        }
+        if (Laratrust::can('hapus_customer')) {
+            $hapus_customer = 1;
+        }else{
+            $hapus_customer = 0;            
+        }
+        $respons['tambah_customer'] = $tambah_customer;
+        $respons['edit_customer'] = $edit_customer;
+        $respons['hapus_customer'] = $hapus_customer;
+
+        return response()->json($respons);
     }
 }
