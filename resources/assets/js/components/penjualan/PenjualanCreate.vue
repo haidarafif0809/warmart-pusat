@@ -248,7 +248,7 @@
                   <td class="text-primary"><b>:</b> </td>
                   <td class="text-primary">
                     <div class="checkbox">
-                      <label v-if="setting_penjualan_pos.jumlah_produk == true">
+                      <label>
                         <input type="checkbox" v-model="setting_penjualan_pos.jumlah_produk" v-bind:value="1">
                         <b v-if="setting_penjualan_pos.jumlah_produk == true">Ya</b> 
                         <b v-if="setting_penjualan_pos.jumlah_produk == false">Tidak</b>
