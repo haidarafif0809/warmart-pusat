@@ -23,8 +23,8 @@ class DetailPembelianObserver
         } else {
 
             $jumlah_konversi = SatuanKonversi::select('jumlah_konversi')->where('warung_id', Auth::user()->id_warung)
-                ->where('id_produk', $DetailPembelian->id_produk)
-                ->where('id_satuan', $DetailPembelian->satuan_id)->first()->jumlah_konversi;
+            ->where('id_produk', $DetailPembelian->id_produk)
+            ->where('id_satuan', $DetailPembelian->satuan_id)->first()->jumlah_konversi;
 
             $jumlah_dasar = SatuanKonversi::select('jumlah_konversi')->where('id_satuan', $DetailPembelian->satuan_dasar);
             if ($jumlah_dasar->count() > 0) {
@@ -62,7 +62,7 @@ class DetailPembelianObserver
 
         // AMBIL STOK SAAT INI DAN STOK DARI FAKTUR INI JANGAN DIHITUNG
         $stok = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk),0) - IFNULL(SUM(jumlah_keluar),0) as stok_produk')])->where('no_faktur', '!=', $DetailPembelian->no_faktur)->where('id_produk', $DetailPembelian->id_produk)
-            ->where('warung_id', $DetailPembelian->warung_id)->first();
+        ->where('warung_id', $DetailPembelian->warung_id)->first();
 
         // STOK PRODUK
         $data = $edit_tbs_pembelian->first()->total_produk + $stok->stok_produk;
@@ -76,11 +76,11 @@ class DetailPembelianObserver
                 $barang      = Barang::where('id', $DetailPembelian->id_produk)->where('id_warung', $DetailPembelian->warung_id)->first();
                 $pesan_alert =
                 '<div class="container-fluid">
-           <div class="alert-icon">
-            <i class="material-icons">error</i>
-         </div>
-         <b>Gagal : Stok "' . $barang->nama_barang . '" Tidak Mencukupi Jika Anda Hapus</b>
-      </div>';
+                <div class="alert-icon">
+                <i class="material-icons">error</i>
+                </div>
+                <b>Gagal : Stok "' . $barang->nama_barang . '" Tidak Mencukupi Jika Anda Hapus</b>
+                </div>';
 
                 Session::flash("flash_notification", [
                     "level"   => "danger",
@@ -92,7 +92,7 @@ class DetailPembelianObserver
                 // JIKA TIDAK
                 // SELECT HPP UNTUK FAKTUR INI, PRODUK INI, JENIS HPP == 1 DAN WARUNG INI
                 $hpp = Hpp::where('no_faktur', $DetailPembelian->no_faktur)->where('id_produk', $DetailPembelian->id_produk)->where('jenis_hpp', 1)
-                    ->where('warung_id', $DetailPembelian->warung_id);
+                ->where('warung_id', $DetailPembelian->warung_id);
 
                 // DELETE HPP
                 if (!$hpp->delete()) {
@@ -105,35 +105,18 @@ class DetailPembelianObserver
             // JIKA TOTAL TBS EDIT PEMBELIAN LEBIH DARI NOL
         } elseif ($edit_tbs_pembelian->count() > 0) {
             // JIKA STOK PRODUK KURANG DARI NOL
-            if ($data < 0) {
-                // MUNCUL ALERT
-                $barang      = Barang::where('id', $DetailPembelian->id_produk)->where('id_warung', $DetailPembelian->warung_id)->first();
-                $pesan_alert =
-                '<div class="container-fluid">
-     <div class="alert-icon">
-      <i class="material-icons">error</i>
-   </div>
-   <b>Gagal : Stok "' . $barang->nama_barang . '" Tidak Mencukupi </b>
-</div>';
 
-                Session::flash("flash_notification", [
-                    "level"   => "danger",
-                    "message" => $pesan_alert,
-                ]);
-
-                return false;
-            } else {
                 // JIKA TIDAK
                 // SELECT HPP UNTUK FAKTUR INI, PRODUK INI, JENIS HPP == 1 DAN WARUNG INI
-                $hpp = Hpp::where('no_faktur', $DetailPembelian->no_faktur)->where('id_produk', $DetailPembelian->id_produk)->where('jenis_hpp', 1)
-                    ->where('warung_id', $DetailPembelian->warung_id);
+            $hpp = Hpp::where('no_faktur', $DetailPembelian->no_faktur)->where('id_produk', $DetailPembelian->id_produk)->where('jenis_hpp', 1)
+            ->where('warung_id', $DetailPembelian->warung_id);
                 // HAPUS HPP
-                if (!$hpp->delete()) {
-                    return false;
-                } else {
-                    return true;
-                }
+            if (!$hpp->delete()) {
+                return false;
+            } else {
+                return true;
             }
+            
 
         } // Elseif ($edit_tbs_pembelian->count() > 0)
 
