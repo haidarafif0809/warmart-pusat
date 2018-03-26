@@ -26,7 +26,7 @@ class DaftarProdukController extends Controller
      */
     public function index()
     {
-     if(!Session::get('session_id')){
+       if(!Session::get('session_id')){
         $session_id    = session()->getId();
     }else{
         $session_id = Session::get('session_id');
@@ -99,7 +99,7 @@ public static function produkKategori($kategori)
     <ul class="dropdown-menu dropdown-with-icons scrollable-menu">
     <li>
     <a href="'.route('daftar_produk.index').'">
-         SEMUA KATEGORI </a>
+    SEMUA KATEGORI </a>
     </li>';
     foreach ($kategori->get() as $kategori) {
         $jumlah_produk = Barang::where('kategori_barang_id', $kategori->id)->whereIn('id_warung', $array_warung)->count();
@@ -274,7 +274,8 @@ public static function tombolBeli($cek_produk, $produks)
             $tombol_beli = '<a href="' . url('/keranjang-belanja/tambah-produk-keranjang-belanja/' . $produks->id . '') . '" id="btnBeliSekarang" class="btn btn-block tombolBeli buttonColor" > Beli Sekarang </a>';
         }
     } elseif (Auth::check() && Auth::user()->tipe_user != $pelanggan) {
-        $tombol_beli = '<a  disabled="true" class="btn btn-block tombolBeli buttonColor" rel="tooltip" title="Masuk Sebagai Pelanggan Untuk Beli" > Beli Sekarang </a>';
+       // $tombol_beli = '<a  disabled="true" class="btn btn-block tombolBeli buttonColor" rel="tooltip" title="Masuk Sebagai Pelanggan Untuk Beli" > Beli Sekarang </a>';
+        $tombol_beli = '';
     } else {
         if ($cek_produk < 1) {
             $tombol_beli = '<a disabled="true" class="btn btn-block tombolBeli buttonColor" rel="tooltip" title="Stok Tidak Ada" > Beli Sekarang </a>';
