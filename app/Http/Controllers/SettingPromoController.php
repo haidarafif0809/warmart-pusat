@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\SettingPromo;
+use App\FilterSettingPromo;
+use App\WaktuSettingPromo;
+use App\FilterSettingPromoRole;
 use Auth;
 use Illuminate\Http\Request;
 use Intervention\Image\ImageManagerStatic as Image;
@@ -74,6 +77,20 @@ class SettingPromoController extends Controller
         return $respons;
     }
 
+        public function dataFilter()
+    {
+             $filter_hari = FilterSettingPromo::where('grup','hari')->get();
+             $filter_jam = FilterSettingPromo::where('grup','jam')->get(); 
+
+
+                return response()->json([
+                      "filter_hari"         => $filter_hari,
+                      "filter_jam"     => $filter_jam,
+                ]);
+
+    }
+
+
 
 
 
@@ -108,10 +125,16 @@ class SettingPromoController extends Controller
             $produk    = explode("|", $request->produk);
             $id_produk = $produk[0];
 
+
+
             $insert_setting = SettingPromo::create([
                 'harga_coret'        => $request->harga_coret,
                 'id_produk'          => $id_produk,
-                'id_warung'          => Auth::user()->id_warung]);
+                'id_warung'          => Auth::user()->id_warung,
+                'dari_tanggal'       => $this->tanggalSql($request->dari_tanggal),
+                'sampai_tanggal'     => $this->tanggalSql($request->sampai_tanggal),
+                'jenis_promo'        => $request->jenis_promo,
+                'status'             => $request->status_aktif]);
 
             if ($request->hasFile('baner_promo')) {
                 $baner_promo = $request->file('baner_promo');
@@ -133,7 +156,34 @@ class SettingPromoController extends Controller
 
             }
 
+            return $insert_setting->id_setting_promo;
+
         }
+    }
+
+        public function tanggalSql($tangal)
+    {
+        $date        = date_create($tangal);
+        $date_format = date_format($date, "Y-m-d");
+        return $date_format;
+    }
+
+        public function tambahWaktu(Request $request,$id)
+    {
+            //Insert data waktu setting promo
+             foreach ($request->hari as $setting_hari) {
+                $insert_setting = WaktuSettingPromo::create([
+                'id_setting_promo'   => $id,
+                'waktu_promo'        => $setting_hari,
+                'id_warung'          => Auth::user()->id_warung]);
+           }
+             foreach ($request->jam as $setting_jam) {
+                $insert_setting = WaktuSettingPromo::create([
+                'id_setting_promo'   => $id,
+                'waktu_promo'        => $setting_jam,
+                'id_warung'          => Auth::user()->id_warung]);
+           }
+           //Insert data waktu setting promo
     }
 
     /**
@@ -188,6 +238,7 @@ class SettingPromoController extends Controller
             return response()->view('error.403');
         } else {
             SettingPromo::destroy($id);
+            WaktuSettingPromo::where('id_setting_promo',$id)->delete();
         }
     }
 

@@ -28,9 +28,9 @@
 									</div>
 
 									<div class="form-group">
-										<label for="harga_produk" class="col-md-2 control-label">Harga Produk</label>
+										<label for="harga_produk" class="col-md-2 control-label">Harga Coret</label>
 										<div class="col-md-5">
-											<input class="form-control" autocomplete="off" readonly="" placeholder="Harga Produk" v-model="setting.harga_produk" type="text" name="harga_produk" id="harga_produk" ref="harga_produk">
+											<input class="form-control" autocomplete="off" readonly="" placeholder="Harga Coret" v-model="setting.harga_produk" type="text" name="harga_produk" id="harga_produk" ref="harga_produk">
 											<span v-if="errors.harga_produk" v-shortkey="['f1']" @shortkey="openSelectizeProduk()" id="harga_produk_error" class="label label-danger">{{ errors.harga_produk[0] }}</span>
 										</div>
 									</div>
@@ -39,7 +39,7 @@
 									<div class="form-group">
 										<label for="harga_coret" class="col-md-2 control-label">Harga Promo</label>
 										<div class="col-md-5">
-											<input class="form-control" autocomplete="off" placeholder="Harga Coret" v-model="setting.harga_coret" type="text" name="harga_coret" id="harga_coret" ref="harga_coret" autofocus="">
+											<input class="form-control" autocomplete="off" placeholder="Harga Promo" v-model="setting.harga_coret" type="text" name="harga_coret" id="harga_coret" ref="harga_coret" autofocus="">
 											<span v-if="errors.harga_coret" id="harga_coret_error" class="label label-danger">{{ errors.harga_coret[0] }}</span>
 										</div>
 									</div>
@@ -68,15 +68,77 @@
 									</div>
 								</div> 
 
+
 								<div class="form-group">
-									<label for="foto" class="col-md-2 control-label">Hari</label>
+									<label for="foto" class="col-md-2 control-label">Periode Promo</label>
 										<div class="col-md-10">
-							            <div class="checkbox" v-for="permission_users, index in permission_user">
+												<div class="form-group col-md-5">
+													<datepicker :input-class="'form-control'" placeholder="Dari Tanggal" v-model="setting.dari_tanggal" name="dari_tanggal" v-bind:id="'dari_tanggal'"></datepicker>				
+												</div>
+												<div class="form-group col-md-5">
+													<datepicker :input-class="'form-control'" placeholder="Sampai Tanggal" v-model="setting.sampai_tanggal" name="sampai_tanggal" v-bind:id="'sampai_tanggal'"></datepicker>
+												</div>
+										</div>
+								</div> 
+
+								<div class="form-group">
+									<div class="row">
+									<label for="foto" class="col-md-2 col-xs-2 control-label">Hari</label>
+										<div class="col-md-10 col-xs-10">
+										<div class="checkbox col-md-3"  v-if="seen">
+								          <label>
+								            <input type="checkbox" name="setting_hari" v-model="pilih_semua_hari" v-bind:value="1" v-on:change="pilihSemuaHari"> <b>Pilih Semua</b>
+								            </label>
+								        </div>
+										<div v-for="filter_haris, index in filter_hari" class="col-md-3 col-xs-3"  >
+							            <div class="checkbox" >
 							              <label>
-							                <input type="checkbox" name="setting_user" v-bind:value="permission_users.id" v-model="setting_otoritas.user"> {{permission_users.display_name}}
+							                <input type="checkbox" name="setting_hari" v-bind:value="filter_haris.id" v-model="filter_setting.hari"> {{filter_haris.display_name}} 
 							              </label>
 							            </div> 
+										</div>
 									</div>
+								</div>
+							</div>
+
+								<div class="form-group">
+									<div class="row">
+										<label for="foto" class="col-md-2 col-xs-2 control-label">Jam</label>
+										<div class="col-md-10 col-xs-10">
+										<div class="checkbox col-md-3"  v-if="seen">
+								          <label>
+								            <input type="checkbox" name="setting_jam" v-model="pilih_semua_jam" v-bind:value="1" v-on:change="pilihSemuaJam"> <b>Pilih Semua</b>
+								            </label>
+								        </div>	
+										<div v-for="filter_jams, index in filter_jam" class="col-md-3 col-xs-3"  >
+							            <div class="checkbox" >
+							              <label>
+							                <input type="checkbox" name="setting_jam" v-bind:value="filter_jams.id" v-model="filter_setting.jam"> {{filter_jams.display_name}} 
+							              </label>
+							            </div> 
+										</div>
+									</div>
+										
+									</div>
+								</div> 
+
+								<div class="form-group">
+										<label for="harga_coret" class="col-md-2 control-label">Jenis Promo</label>
+										<div class="col-md-5">
+											<input class="form-control" autocomplete="off" placeholder="Jenis Promo" v-model="setting.jenis_promo" type="text" name="jenis_promo" id="jenis_promo" ref="jenis_promo" autofocus="">
+											<span v-if="errors.jenis_promo" id="jenis_promo_error" class="label label-danger">{{ errors.jenis_promo[0] }}</span>
+										</div>
+									</div>
+
+								<div class="form-group">
+										<label for="status_aktif" class="col-md-2 control-label">Status</label>
+										<div class="togglebutton col-md-10">
+											<label>
+												<input type="checkbox" v-model="setting.status_aktif" name="status_aktif" id="status_aktif" value="1">
+												<font v-if="setting.status_aktif == 1" class="status_aktif">Ya</font>
+												<font v-else class="status_aktif">Tidak</font>
+											</label>
+										</div>
 								</div> 
 							         
 
@@ -103,6 +165,8 @@ import { mapState } from 'vuex';
 	export default {
 		data: function () {
 			return {
+				filter_hari: [],
+				filter_jam: [],
 				errors: [],
 				url : window.location.origin+(window.location.pathname).replace("dashboard", "setting-promo"),
 				url_picture : window.location.origin+(window.location.pathname).replace("dashboard", "baner_setting_promo"),
@@ -111,8 +175,20 @@ import { mapState } from 'vuex';
 					baner_promo : '',
 					harga_coret : '',
 					produk : '',
-					harga_produk : ''
+					harga_produk : '',
+					dari_tanggal:'',
+					sampai_tanggal:'',
+					jenis_promo: '',
+					status_aktif:1,
+
 				},
+				filter_setting:{
+					hari:[],
+					jam:[]
+				},
+				seen: false,
+				pilih_semua_hari : false,
+				pilih_semua_jam : false,
 				message : '',
 				separator: {
 					decimal: ',',
@@ -136,6 +212,7 @@ import { mapState } from 'vuex';
 		mounted() {
 		var app = this;
 		app.$store.dispatch('LOAD_PRODUK_LAPORAN_LIST');
+		app.getResults();
 		},
 		computed : mapState ({    
 		produk(){
@@ -148,6 +225,52 @@ import { mapState } from 'vuex';
 	    }
 		},
 		methods: {
+
+		 getResults() {
+			    var app = this;
+			    axios.get(app.url+'/data-filter')
+			    .then(function (resp) {
+
+			      app.filter_hari = resp.data.filter_hari
+			      app.filter_jam = resp.data.filter_jam
+			      app.seen = true;
+			    })
+			    .catch(function (resp) {
+			      alert("Tidak Bisa Memuat Filter Hari Tanggal");
+			    });
+			  },
+			pilihSemuaHari(){
+		    var app = this
+		    var pilih_semua_hari = app.pilih_semua_hari
+		    if (pilih_semua_hari == true) {
+
+		        // Filter Hari
+		        $.each(app.filter_hari, function (i, item) { 
+		          app.filter_setting.hari.push(app.filter_hari[i].id)     
+		        });
+
+		      }else{
+		        // REMOVE VALUE ARRAY 
+		        app.filter_setting.hari.splice(0)
+		      }
+		      console.log(app.setting)
+		},
+		 pilihSemuaJam(){
+		    var app = this
+		    var pilih_semua_jam = app.pilih_semua_jam
+		    if (pilih_semua_jam == true) {
+
+		        // Filter jam
+		        $.each(app.filter_jam, function (i, item) { 
+		          app.filter_setting.jam.push(app.filter_jam[i].id)     
+		        });
+
+		      }else{
+		        // REMOVE VALUE ARRAY 
+		        app.filter_setting.jam.splice(0)
+		      }
+		      console.log(app.setting)
+		},
 			openSelectizeProduk(){      
 			      this.$refs.produk.$el.selectize.focus();
 			},
@@ -162,7 +285,9 @@ import { mapState } from 'vuex';
 			saveForm() {
 				var app = this; 
 				app.loading();
+
 				var newSettingPromo = app.inputData();
+				var newWaktuSettingPromo = app.filter_setting;
 				axios.post(app.url, newSettingPromo)
 				.then(function (resp) {
 					app.message = 'Menambah Setting Promo ';
@@ -170,6 +295,15 @@ import { mapState } from 'vuex';
 					app.kosongkanData();
 					app.$router.replace('/setting-promo');
 					app.$swal.close();
+
+					    axios.put(app.url+"/tambah-waktu/"+resp.data,newWaktuSettingPromo)
+					    .then(function (resp) {
+					    })
+					    .catch(function (resp) {
+					      app.loading = false
+					      alert("Tidak Bisa Menyimpan Promo");
+					    });
+
 				})
 				.catch(function (resp) {
 					alert("Periksa Kembali Inputan Anda!")
@@ -177,6 +311,7 @@ import { mapState } from 'vuex';
 					app.errors = resp.response.data.errors;
 					app.$swal.close();
 				});
+
 			},
 			alert(pesan) {
 				this.$swal({
@@ -207,6 +342,10 @@ import { mapState } from 'vuex';
 				}
 				newSettingPromo.append('produk', app.setting.produk);
 				newSettingPromo.append('harga_coret', app.setting.harga_coret);
+				newSettingPromo.append('dari_tanggal', app.setting.dari_tanggal);
+				newSettingPromo.append('sampai_tanggal', app.setting.sampai_tanggal);
+				newSettingPromo.append('jenis_promo', app.setting.jenis_promo);
+				newSettingPromo.append('status_aktif', app.setting.status_aktif);
 
 				return newSettingPromo;
 			},
