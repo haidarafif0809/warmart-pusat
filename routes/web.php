@@ -681,6 +681,8 @@ Route::post('/penjualan/view-filter', 'PenjualanController@viewFilter')->middlew
 Route::post('/penjualan/total-laporan-penjualan', 'PenjualanController@totalLaporanPenjualan')->middleware('auth');
 Route::post('/penjualan/total-laporan-penjualan-filter', 'PenjualanController@totalLaporanPenjualanFilter')->middleware('auth');
 
+Route::get('/penjualan/satuan-konversi/{id_produk}', 'PenjualanController@dataSatuanProduk')->middleware('auth');
+
 // LABA KOTOR VUE.JS
 Route::post('/laporan-laba-kotor/view', 'LaporanLabaKotorController@prosesLaporanLabaKotor')->middleware('auth');
 Route::post('/laporan-laba-kotor/pencarian', 'LaporanLabaKotorController@pencarian')->middleware('auth');

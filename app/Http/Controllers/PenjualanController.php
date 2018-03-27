@@ -13,6 +13,7 @@ use App\SettingAplikasi;
 use App\SettingPenjualanPos;
 use App\TbsPenjualan;
 use App\TransaksiKas;
+use App\SatuanKonversi;
 use App\TransaksiPiutang;
 use App\User;
 use App\Warung;
@@ -130,7 +131,7 @@ class PenjualanController extends Controller
                 'kas'        => $penjualans->kas->nama_kas,
                 'total'      => $penjualans->TotalJual,
                 'waktu_edit' => $penjualans->WaktuEdit,
-            ]);
+                ]);
         }
 
         $url     = '/penjualan/view-online';
@@ -160,7 +161,7 @@ class PenjualanController extends Controller
                 'total'      => number_format($penjualans['total'], 2, ',', '.'),
                 'kas'        => $penjualans['nama_kas'],
                 'waktu_edit' => $penjualans['WaktuEdit'],
-            ]);
+                ]);
         }
 
         $url    = '/penjualan/pencarian-online';
@@ -170,6 +171,46 @@ class PenjualanController extends Controller
 
         return response()->json($respons);
     }
+
+
+    public function dataSatuanProduk($id_produk)
+    {
+        $satuan_dasar = Barang::select('barangs.satuan_id', 'satuans.nama_satuan')
+        ->leftJoin('satuans', 'satuans.id', '=', 'barangs.satuan_id')->where('barangs.id_warung', Auth::user()->id_warung)
+        ->where('barangs.id', $id_produk)->first();
+        $data_satuans = SatuanKonversi::select('satuan_konversis.id_satuan', 'satuan_konversis.jumlah_konversi', 'satuan_konversis.satuan_dasar', 'satuans.nama_satuan')
+        ->leftJoin('satuans', 'satuans.id', '=', 'satuan_konversis.id_satuan')
+        ->where('warung_id', Auth::user()->id_warung)
+        ->where('satuan_konversis.id_produk', $id_produk)->get();
+
+        $array = array([
+            'id'              => $satuan_dasar->satuan_id,
+            'nama_satuan'     => $satuan_dasar->nama_satuan,
+            'satuan_dasar'    => $satuan_dasar->satuan_id,
+            'jumlah_konversi' => 1,
+            'satuan'          => $satuan_dasar->satuan_id . "|" . strtoupper($satuan_dasar->nama_satuan) . "|" . $satuan_dasar->satuan_id . "|1|1",
+            ]);
+
+        foreach ($data_satuans as $data_satuan) {
+            // Jika satuan dasar == satuan terkecil maka jumlah konversi dasar = 1
+            $jumlah_dasar = SatuanKonversi::select('jumlah_konversi')->where('id_satuan', $data_satuan->satuan_dasar);
+            if ($jumlah_dasar->count() > 0) {
+                $jumlah_konversi_dasar = $jumlah_dasar->first()->jumlah_konversi;
+            } else {
+                $jumlah_konversi_dasar = 1;
+            }
+            array_push($array, [
+                'id'              => $data_satuan->id_satuan,
+                'nama_satuan'     => $data_satuan->nama_satuan,
+                'satuan_dasar'    => $data_satuan->satuan_dasar,
+                'jumlah_konversi' => $data_satuan->jumlah_konversi,
+                'satuan'          => $data_satuan->id_satuan . "|" . strtoupper($data_satuan->nama_satuan) . "|" . $data_satuan->satuan_dasar . "|" . $data_satuan->jumlah_konversi . "|" . $jumlah_konversi_dasar,
+                ]);
+        }
+
+        return response()->json($array);
+    }
+
 
     public function view()
     {
@@ -200,7 +241,7 @@ class PenjualanController extends Controller
                 'user_buat'        => $penjualans->user_buat->name,
                 'user_edit'        => $penjualans->user_edit->name,
                 'waktu_edit'       => $penjualans->WaktuEdit,
-            ]);
+                ]);
         }
 
         $url     = '/penjualan/view';
@@ -275,7 +316,7 @@ class PenjualanController extends Controller
                 'user_buat'        => $penjualans->user_buat->name,
                 'user_edit'        => $penjualans->user_edit->name,
                 'waktu_edit'       => $penjualans->WaktuEdit,
-            ]);
+                ]);
         }
 
         $url     = '/penjualan/view-filter';
@@ -324,7 +365,7 @@ class PenjualanController extends Controller
                 'user_buat'        => $penjualans['user_buat'],
                 'user_edit'        => $penjualans['user_edit'],
                 'waktu_edit'       => $penjualans['waktu_edit'],
-            ]);
+                ]);
         }
 
         $url    = '/penjualan/pencarian';
@@ -495,7 +536,7 @@ class PenjualanController extends Controller
                 'harga_produk'     => $tbs_penjualans['harga_produk'],
                 'subtotal'         => $tbs_penjualans['subtotal'],
                 'produk'           => $tbs_penjualans['id_produk'] . "|" . title_case($tbs_penjualans['nama_barang']) . "|" . $tbs_penjualans['harga_jual'],
-            ]);
+                ]);
         }
         return response()->json($array);
     }
@@ -549,7 +590,7 @@ class PenjualanController extends Controller
                 'harga_produk'           => $tbs_penjualans['harga_produk'],
                 'subtotal'               => $tbs_penjualans['subtotal'],
                 'produk'                 => $tbs_penjualans['id_produk'] . "|" . title_case($tbs_penjualans['nama_barang']) . "|" . $tbs_penjualans['harga_jual'],
-            ]);
+                ]);
         }
 
         return response()->json($array);
@@ -619,7 +660,7 @@ class PenjualanController extends Controller
                     'harga_produk'  => $harga_jual,
                     'subtotal'      => $subtotal,
                     'warung_id'     => Auth::user()->id_warung,
-                ]);
+                    ]);
 
                 $respons['id_tbs_penjualan'] = $tbspenjualan->id_tbs_penjualan;
                 $respons['nama_produk']      = $nama_produk;
@@ -734,7 +775,7 @@ class PenjualanController extends Controller
 
         return response()->json([
             "penjualan" => PenjualanPos::find($id)->toArray(),
-        ]);
+            ]);
     }
 
     public function queryProduk($id_produk)
@@ -820,7 +861,7 @@ public function store(Request $request)
             'status_jual_awal' => $status_penjualan,
             'tanggal_jt_tempo' => $request->jatuh_tempo,
             'warung_id'        => Auth::user()->id_warung,
-        ]);
+            ]);
 
             // INSERT KAS DAN PIUTANG TIDAK DIBUAT DI OBSERVER KARENA DI OBSERVER ID PENJUALAN DI ANGGAP NULL
         $kas = intval($penjualan->tunai) - intval($penjualan->kembalian);
@@ -841,7 +882,7 @@ public function store(Request $request)
                 'jumlah_masuk'    => $penjualan->kredit,
                 'pelanggan_id'    => $penjualan->pelanggan_id,
                 'warung_id'       => $penjualan->warung_id,
-            ]);
+                ]);
         }
 
         foreach ($data_produk_penjualan->get() as $data_tbs) {
@@ -874,7 +915,7 @@ public function store(Request $request)
                         'potongan'         => $data_tbs->potongan,
                         'warung_id'        => Auth::user()->id_warung,
                         'created_at'       => $penjualan->created_at,
-                    ]);
+                        ]);
 
                 }
             } else {
@@ -890,7 +931,7 @@ public function store(Request $request)
                     'potongan'         => $data_tbs->potongan,
                     'warung_id'        => Auth::user()->id_warung,
                     'created_at'       => $penjualan->created_at,
-                ]);
+                    ]);
 
             }
         }
@@ -955,7 +996,7 @@ public function edit($id)
             'tax'              => $data_tbs->tax,
             'potongan'         => $data_tbs->potongan,
             'warung_id'        => Auth::user()->id_warung,
-        ]);
+            ]);
     }
 
     return response(200);
@@ -1033,7 +1074,7 @@ public function update(Request $request, $id)
             'id_kas'           => $request->kas,
             'status_jual_awal' => $status_penjualan,
             'tanggal_jt_tempo' => $request->jatuh_tempo,
-        ]);
+            ]);
 
         $kas = intval($data_penjualan_pos->tunai) - intval($data_penjualan_pos->kembalian);
 
@@ -1092,7 +1133,7 @@ public function update(Request $request, $id)
                         'warung_id'        => Auth::user()->id_warung,
                         'created_at'       => $data_penjualan_pos->created_at,
                         'updated_at'       => $data_penjualan_pos->updated_at,
-                    ]);
+                        ]);
 
                 }
             } else {
@@ -1109,7 +1150,7 @@ public function update(Request $request, $id)
                     'warung_id'        => Auth::user()->id_warung,
                     'created_at'       => $data_penjualan_pos->created_at,
                     'updated_at'       => $data_penjualan_pos->updated_at,
-                ]);
+                    ]);
 
             }
         }
@@ -1195,7 +1236,7 @@ public function prosesTambahEditTbsPenjualan(Request $request, $id)
                 'harga_produk'     => $harga_jual,
                 'subtotal'         => $subtotal,
                 'warung_id'        => Auth::user()->id_warung,
-            ]);
+                ]);
 
             $respons['id_edit_tbs_penjualans'] = $tbspenjualan->id_edit_tbs_penjualans;
             $respons['id_penjualan_pos']       = $id;
@@ -1447,7 +1488,7 @@ public function downloadExcelPenjualan(Request $request, $id_penjualan)
                 'Subtotal',
                 'Tax',
                 'Potongan',
-            ]);
+                ]);
 
             foreach ($data_tbs_penjualan_pos->get() as $data_tbs_penjualan_poss) {
                 $sheet->row(++$row, [
@@ -1457,7 +1498,7 @@ public function downloadExcelPenjualan(Request $request, $id_penjualan)
                     $data_tbs_penjualan_poss->subtotal,
                     $data_tbs_penjualan_poss->tax,
                     $data_tbs_penjualan_poss->potongan,
-                ]);
+                    ]);
 
             }
 
