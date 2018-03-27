@@ -755,9 +755,15 @@
 
     axios.get(app.url_satuan+'/'+id_produk)
     .then(function (resp) {
-      console.log(satuan_tbs)
       app.satuan = resp.data;
-      app.inputTbsPenjualan.satuan_produk = resp.data[i].satuan;
+
+      $.each(resp.data, function (i, item) { 
+        if (resp.data[i].id === resp.data[i].satuan_dasar) { 
+          app.inputTbsPenjualan.satuan_produk = resp.data[i].satuan; 
+        } 
+      }); 
+
+
     })
     .catch(function (resp) {
       console.log(resp);

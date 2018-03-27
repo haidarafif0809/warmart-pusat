@@ -911,6 +911,23 @@ public function store(Request $request)
                 $stok_produk      = $detail_penjualan->stok_produk($data_tbs->id_produk);
                 $sisa             = $stok_produk - $data_tbs->jumlah_produk;
 
+                if ($data_tbs->satuan_id != $data_tbs->satuan_dasar) {
+
+                    $jumlah_konversi = SatuanKonversi::select('jumlah_konversi')->where('warung_id', Auth::user()->id_warung)
+                    ->where('id_produk', $data_tbs->id_produk)
+                    ->where('id_satuan', $data_tbs->satuan_id)->first()->jumlah_konversi;
+
+                    $jumlah_dasar = SatuanKonversi::select('jumlah_konversi')->where('id_satuan', $data_tbs->satuan_dasar);
+                    if ($jumlah_dasar->count() > 0) {
+                        $jumlah_konversi_dasar = intval($data_tbs->jumlah_produk) * (intval($jumlah_dasar->first()->jumlah_konversi) * intval($jumlah_konversi));
+                    } else {
+                        $jumlah_konversi_dasar = intval($data_tbs->jumlah_produk) * intval($jumlah_konversi);
+                    }
+
+                    $sisa = $stok_produk - $jumlah_konversi_dasar;
+
+                }
+
                 if ($sisa < 0) {
 //DI BATALKAN PROSES NYA
 
@@ -926,6 +943,7 @@ public function store(Request $request)
                         'id_penjualan_pos' => $penjualan->id,
                         'no_faktur'        => $no_faktur,
                         'satuan_id'        => $data_tbs->satuan_id,
+                        'satuan_dasar'     => $data_tbs->satuan_dasar,
                         'id_produk'        => $data_tbs->id_produk,
                         'jumlah_produk'    => $data_tbs->jumlah_produk,
                         'harga_produk'     => $data_tbs->harga_produk,
@@ -942,6 +960,7 @@ public function store(Request $request)
                     'id_penjualan_pos' => $penjualan->id,
                     'no_faktur'        => $no_faktur,
                     'satuan_id'        => $data_tbs->satuan_id,
+                    'satuan_dasar'     => $data_tbs->satuan_dasar,
                     'id_produk'        => $data_tbs->id_produk,
                     'jumlah_produk'    => $data_tbs->jumlah_produk,
                     'harga_produk'     => $data_tbs->harga_produk,
