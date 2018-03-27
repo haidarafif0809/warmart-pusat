@@ -26,797 +26,815 @@ use Laratrust;
 
 class PenjualanController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+/**
+* Display a listing of the resource.
+*
+* @return \Illuminate\Http\Response
+*/
 
-    public function pilihPelanggan()
-    {
-        $pelanggan = User::where('tipe_user', 3)->get();
-        $array     = array(['id' => '', 'nama_pelanggan' => 'SEMUA PELANGGAN', 'pelanggan' => 'SEMUA PELANGGAN'], ['id' => '0', 'nama_pelanggan' => 'Umum', 'pelanggan' => 'Umum']);
-        foreach ($pelanggan as $pelanggans) {
-            array_push($array, [
-                'id'             => $pelanggans->id,
-                'nama_pelanggan' => $pelanggans->name,
-                'pelanggan'      => $pelanggans->name . " - " . $pelanggans->no_telp]);
+public function pilihPelanggan()
+{
+    $pelanggan = User::where('tipe_user', 3)->get();
+    $array     = array(['id' => '', 'nama_pelanggan' => 'SEMUA PELANGGAN', 'pelanggan' => 'SEMUA PELANGGAN'], ['id' => '0', 'nama_pelanggan' => 'Umum', 'pelanggan' => 'Umum']);
+    foreach ($pelanggan as $pelanggans) {
+        array_push($array, [
+            'id'             => $pelanggans->id,
+            'nama_pelanggan' => $pelanggans->name,
+            'pelanggan'      => $pelanggans->name . " - " . $pelanggans->no_telp]);
+    }
+
+    return response()->json($array);
+}
+public function pilihKasir()
+{
+    $kasir = User::where('tipe_user', 4)->where('id_warung', Auth::user()->id_warung)->get();
+    $array = array(['id' => '', 'nama_kasir' => 'SEMUA KASIR']);
+    foreach ($kasir as $kasirs) {
+        array_push($array, [
+            'id'         => $kasirs->id,
+            'nama_kasir' => $kasirs->name]);
+    }
+
+    return response()->json($array);
+}
+
+public function pilih_kas()
+{
+    $kas = Kas::select('id', 'nama_kas', 'default_kas')->where('warung_id', Auth::user()->id_warung)->where('status_kas', 1)->get();
+    return response()->json($kas);
+}
+
+public function paginationData($penjualan, $array, $url)
+{
+    $session_id = session()->getId();
+//DATA PAGINATION
+    $respons['current_page']   = $penjualan->currentPage();
+    $respons['data']           = $array;
+    $respons['otoritas']      = $this->otoritasPenjualan();
+    $respons['session_id']     = $session_id;
+    $respons['first_page_url'] = url($url . '?page=' . $penjualan->firstItem());
+    $respons['from']           = 1;
+    $respons['last_page']      = $penjualan->lastPage();
+    $respons['last_page_url']  = url($url . '?page=' . $penjualan->lastPage());
+    $respons['next_page_url']  = $penjualan->nextPageUrl();
+    $respons['path']           = url($url);
+    $respons['per_page']       = $penjualan->perPage();
+    $respons['prev_page_url']  = $penjualan->previousPageUrl();
+    $respons['to']             = $penjualan->perPage();
+    $respons['total']          = $penjualan->total();
+//DATA PAGINATION
+
+    return $respons;
+}
+public function paginationPencarianData($penjualan, $array, $url, $search)
+{
+//DATA PAGINATION
+    $respons['current_page']   = $penjualan->currentPage();
+    $respons['data']           = $array;
+    $respons['otoritas']      = $this->otoritasPenjualan();
+    $respons['first_page_url'] = url($url . '?page=' . $penjualan->firstItem() . '&search=' . $search);
+    $respons['from']           = 1;
+    $respons['last_page']      = $penjualan->lastPage();
+    $respons['last_page_url']  = url($url . '?page=' . $penjualan->lastPage() . '&search=' . $search);
+    $respons['next_page_url']  = $penjualan->nextPageUrl();
+    $respons['path']           = url($url);
+    $respons['per_page']       = $penjualan->perPage();
+    $respons['prev_page_url']  = $penjualan->previousPageUrl();
+    $respons['to']             = $penjualan->perPage();
+    $respons['total']          = $penjualan->total();
+//DATA PAGINATION
+
+    return $respons;
+}
+
+public function viewOnline()
+{
+    $user_warung = Auth::user()->id_warung;
+    $penjualan   = Penjualan::with(['pelanggan', 'kas'])->where('id_warung', $user_warung)->orderBy('id', 'desc')->paginate(10);
+    $array       = array();
+
+    foreach ($penjualan as $penjualans) {
+
+        if ($penjualans->pelanggan_id == '0') {
+            $pelanggan = 'Umum';
+        } else {
+            $pelanggan = $penjualans->pelanggan->name;
         }
 
-        return response()->json($array);
-    }
-    public function pilihKasir()
-    {
-        $kasir = User::where('tipe_user', 4)->where('id_warung', Auth::user()->id_warung)->get();
-        $array = array(['id' => '', 'nama_kasir' => 'SEMUA KASIR']);
-        foreach ($kasir as $kasirs) {
-            array_push($array, [
-                'id'         => $kasirs->id,
-                'nama_kasir' => $kasirs->name]);
-        }
-
-        return response()->json($array);
-    }
-
-    public function pilih_kas()
-    {
-        $kas = Kas::select('id', 'nama_kas', 'default_kas')->where('warung_id', Auth::user()->id_warung)->where('status_kas', 1)->get();
-        return response()->json($kas);
-    }
-
-    public function paginationData($penjualan, $array, $url)
-    {
-        $session_id = session()->getId();
-        //DATA PAGINATION
-        $respons['current_page']   = $penjualan->currentPage();
-        $respons['data']           = $array;
-        $respons['otoritas']      = $this->otoritasPenjualan();
-        $respons['session_id']     = $session_id;
-        $respons['first_page_url'] = url($url . '?page=' . $penjualan->firstItem());
-        $respons['from']           = 1;
-        $respons['last_page']      = $penjualan->lastPage();
-        $respons['last_page_url']  = url($url . '?page=' . $penjualan->lastPage());
-        $respons['next_page_url']  = $penjualan->nextPageUrl();
-        $respons['path']           = url($url);
-        $respons['per_page']       = $penjualan->perPage();
-        $respons['prev_page_url']  = $penjualan->previousPageUrl();
-        $respons['to']             = $penjualan->perPage();
-        $respons['total']          = $penjualan->total();
-        //DATA PAGINATION
-
-        return $respons;
-    }
-    public function paginationPencarianData($penjualan, $array, $url, $search)
-    {
-        //DATA PAGINATION
-        $respons['current_page']   = $penjualan->currentPage();
-        $respons['data']           = $array;
-        $respons['otoritas']      = $this->otoritasPenjualan();
-        $respons['first_page_url'] = url($url . '?page=' . $penjualan->firstItem() . '&search=' . $search);
-        $respons['from']           = 1;
-        $respons['last_page']      = $penjualan->lastPage();
-        $respons['last_page_url']  = url($url . '?page=' . $penjualan->lastPage() . '&search=' . $search);
-        $respons['next_page_url']  = $penjualan->nextPageUrl();
-        $respons['path']           = url($url);
-        $respons['per_page']       = $penjualan->perPage();
-        $respons['prev_page_url']  = $penjualan->previousPageUrl();
-        $respons['to']             = $penjualan->perPage();
-        $respons['total']          = $penjualan->total();
-        //DATA PAGINATION
-
-        return $respons;
-    }
-
-    public function viewOnline()
-    {
-        $user_warung = Auth::user()->id_warung;
-        $penjualan   = Penjualan::with(['pelanggan', 'kas'])->where('id_warung', $user_warung)->orderBy('id', 'desc')->paginate(10);
-        $array       = array();
-
-        foreach ($penjualan as $penjualans) {
-
-            if ($penjualans->pelanggan_id == '0') {
-                $pelanggan = 'Umum';
-            } else {
-                $pelanggan = $penjualans->pelanggan->name;
-            }
-
-            array_push($array, [
-                'id'         => $penjualans->id,
-                'id_pesanan' => $penjualans->id_pesanan,
-                'waktu'      => $penjualans->Waktu,
-                'pelanggan'  => $pelanggan,
-                'kas'        => $penjualans->kas->nama_kas,
-                'id_pesanan' => $penjualans->id_pesanan,
-                'kas'        => $penjualans->kas->nama_kas,
-                'total'      => $penjualans->TotalJual,
-                'waktu_edit' => $penjualans->WaktuEdit,
-                ]);
-        }
-
-        $url     = '/penjualan/view-online';
-        $respons = $this->paginationData($penjualan, $array, $url);
-
-        return response()->json($respons);
-    }
-
-    public function pencarianOnline(Request $request)
-    {
-        $user_warung = Auth::user()->id_warung;
-        $penjualan   = Penjualan::Pencarian($user_warung, $request)->paginate(10);
-        $array       = array();
-        foreach ($penjualan as $penjualans) {
-
-            if ($penjualans['pelanggan_id'] == '0') {
-                $nama_pelanggan = 'Umum';
-            } else {
-                $nama_pelanggan = $penjualans['nama_pelanggan'];
-            }
-
-            array_push($array, [
-                'id'         => $penjualans['id'],
-                'id_pesanan' => $penjualans['id_pesanan'],
-                'waktu'      => $penjualans['Waktu'],
-                'pelanggan'  => $nama_pelanggan,
-                'total'      => number_format($penjualans['total'], 2, ',', '.'),
-                'kas'        => $penjualans['nama_kas'],
-                'waktu_edit' => $penjualans['WaktuEdit'],
-                ]);
-        }
-
-        $url    = '/penjualan/pencarian-online';
-        $search = $request->search;
-
-        $respons = $this->paginationPencarianData($penjualan, $array, $url, $search);
-
-        return response()->json($respons);
-    }
-
-
-    public function dataSatuanProduk($id_produk)
-    {
-        $satuan_dasar = Barang::select('barangs.satuan_id', 'satuans.nama_satuan')
-        ->leftJoin('satuans', 'satuans.id', '=', 'barangs.satuan_id')->where('barangs.id_warung', Auth::user()->id_warung)
-        ->where('barangs.id', $id_produk)->first();
-        $data_satuans = SatuanKonversi::select('satuan_konversis.id_satuan', 'satuan_konversis.jumlah_konversi', 'satuan_konversis.satuan_dasar', 'satuans.nama_satuan')
-        ->leftJoin('satuans', 'satuans.id', '=', 'satuan_konversis.id_satuan')
-        ->where('warung_id', Auth::user()->id_warung)
-        ->where('satuan_konversis.id_produk', $id_produk)->get();
-
-        $array = array([
-            'id'              => $satuan_dasar->satuan_id,
-            'nama_satuan'     => $satuan_dasar->nama_satuan,
-            'satuan_dasar'    => $satuan_dasar->satuan_id,
-            'jumlah_konversi' => 1,
-            'satuan'          => $satuan_dasar->satuan_id . "|" . strtoupper($satuan_dasar->nama_satuan) . "|" . $satuan_dasar->satuan_id . "|1|1",
+        array_push($array, [
+            'id'         => $penjualans->id,
+            'id_pesanan' => $penjualans->id_pesanan,
+            'waktu'      => $penjualans->Waktu,
+            'pelanggan'  => $pelanggan,
+            'kas'        => $penjualans->kas->nama_kas,
+            'id_pesanan' => $penjualans->id_pesanan,
+            'kas'        => $penjualans->kas->nama_kas,
+            'total'      => $penjualans->TotalJual,
+            'waktu_edit' => $penjualans->WaktuEdit,
             ]);
+    }
 
-        foreach ($data_satuans as $data_satuan) {
-            // Jika satuan dasar == satuan terkecil maka jumlah konversi dasar = 1
-            $jumlah_dasar = SatuanKonversi::select('jumlah_konversi')->where('id_satuan', $data_satuan->satuan_dasar);
-            if ($jumlah_dasar->count() > 0) {
-                $jumlah_konversi_dasar = $jumlah_dasar->first()->jumlah_konversi;
-            } else {
-                $jumlah_konversi_dasar = 1;
-            }
-            array_push($array, [
-                'id'              => $data_satuan->id_satuan,
-                'nama_satuan'     => $data_satuan->nama_satuan,
-                'satuan_dasar'    => $data_satuan->satuan_dasar,
-                'jumlah_konversi' => $data_satuan->jumlah_konversi,
-                'satuan'          => $data_satuan->id_satuan . "|" . strtoupper($data_satuan->nama_satuan) . "|" . $data_satuan->satuan_dasar . "|" . $data_satuan->jumlah_konversi . "|" . $jumlah_konversi_dasar,
+    $url     = '/penjualan/view-online';
+    $respons = $this->paginationData($penjualan, $array, $url);
+
+    return response()->json($respons);
+}
+
+public function pencarianOnline(Request $request)
+{
+    $user_warung = Auth::user()->id_warung;
+    $penjualan   = Penjualan::Pencarian($user_warung, $request)->paginate(10);
+    $array       = array();
+    foreach ($penjualan as $penjualans) {
+
+        if ($penjualans['pelanggan_id'] == '0') {
+            $nama_pelanggan = 'Umum';
+        } else {
+            $nama_pelanggan = $penjualans['nama_pelanggan'];
+        }
+
+        array_push($array, [
+            'id'         => $penjualans['id'],
+            'id_pesanan' => $penjualans['id_pesanan'],
+            'waktu'      => $penjualans['Waktu'],
+            'pelanggan'  => $nama_pelanggan,
+            'total'      => number_format($penjualans['total'], 2, ',', '.'),
+            'kas'        => $penjualans['nama_kas'],
+            'waktu_edit' => $penjualans['WaktuEdit'],
+            ]);
+    }
+
+    $url    = '/penjualan/pencarian-online';
+    $search = $request->search;
+
+    $respons = $this->paginationPencarianData($penjualan, $array, $url, $search);
+
+    return response()->json($respons);
+}
+
+
+public function dataSatuanProduk($id_produk)
+{
+    $satuan_dasar = Barang::select('barangs.satuan_id', 'satuans.nama_satuan')
+    ->leftJoin('satuans', 'satuans.id', '=', 'barangs.satuan_id')->where('barangs.id_warung', Auth::user()->id_warung)
+    ->where('barangs.id', $id_produk)->first();
+    $data_satuans = SatuanKonversi::select('satuan_konversis.id_satuan', 'satuan_konversis.jumlah_konversi', 'satuan_konversis.satuan_dasar', 'satuans.nama_satuan')
+    ->leftJoin('satuans', 'satuans.id', '=', 'satuan_konversis.id_satuan')
+    ->where('warung_id', Auth::user()->id_warung)
+    ->where('satuan_konversis.id_produk', $id_produk)->get();
+
+    $array = array([
+        'id'              => $satuan_dasar->satuan_id,
+        'nama_satuan'     => $satuan_dasar->nama_satuan,
+        'satuan_dasar'    => $satuan_dasar->satuan_id,
+        'jumlah_konversi' => 1,
+        'satuan'          => $satuan_dasar->satuan_id . "|" . strtoupper($satuan_dasar->nama_satuan) . "|" . $satuan_dasar->satuan_id . "|1|1",
+        ]);
+
+    foreach ($data_satuans as $data_satuan) {
+// Jika satuan dasar == satuan terkecil maka jumlah konversi dasar = 1
+        $jumlah_dasar = SatuanKonversi::select('jumlah_konversi')->where('id_satuan', $data_satuan->satuan_dasar);
+        if ($jumlah_dasar->count() > 0) {
+            $jumlah_konversi_dasar = $jumlah_dasar->first()->jumlah_konversi;
+        } else {
+            $jumlah_konversi_dasar = 1;
+        }
+        array_push($array, [
+            'id'              => $data_satuan->id_satuan,
+            'nama_satuan'     => $data_satuan->nama_satuan,
+            'satuan_dasar'    => $data_satuan->satuan_dasar,
+            'jumlah_konversi' => $data_satuan->jumlah_konversi,
+            'satuan'          => $data_satuan->id_satuan . "|" . strtoupper($data_satuan->nama_satuan) . "|" . $data_satuan->satuan_dasar . "|" . $data_satuan->jumlah_konversi . "|" . $jumlah_konversi_dasar,
+            ]);
+    }
+
+    return response()->json($array);
+}
+
+
+public function view()
+{
+    $user_warung = Auth::user()->id_warung;
+    $penjualan   = PenjualanPos::with(['pelanggan', 'kas', 'user_edit', 'user_buat'])->where('warung_id', $user_warung)->orderBy('id', 'desc')->paginate(10);
+    $array       = array();
+
+    foreach ($penjualan as $penjualans) {
+
+        if ($penjualans->pelanggan_id == '0') {
+            $pelanggan = 'Umum';
+        } else {
+            $pelanggan = $penjualans->pelanggan->name;
+        }
+
+        array_push($array, [
+            'id'               => $penjualans->id,
+            'waktu'            => $penjualans->Waktu,
+            'pelanggan'        => $pelanggan,
+            'status_penjualan' => $penjualans->status_penjualan,
+            'total'            => $penjualans->TotalJual,
+            'kas'              => $penjualans->kas->nama_kas,
+            'potongan'         => $penjualans->PotonganJual,
+            'tunai'            => $penjualans->TunaiJual,
+            'kembalian'        => $penjualans->KembalianJual,
+            'piutang'          => $penjualans->KreditJual,
+            'jatuh_tempo'      => $penjualans->JatuhTempo,
+            'user_buat'        => $penjualans->user_buat->name,
+            'user_edit'        => $penjualans->user_edit->name,
+            'waktu_edit'       => $penjualans->WaktuEdit,
+            ]);
+    }
+
+    $url     = '/penjualan/view';
+    $respons = $this->paginationData($penjualan, $array, $url);
+
+    return response()->json($respons);
+}
+
+public function totalLaporanPenjualan()
+{
+// TOTAL KESELURUHAN
+    $user_warung = Auth::user()->id_warung;
+    $penjualan   = PenjualanPos::with(['pelanggan', 'kas', 'user_edit', 'user_buat'])
+    ->where('warung_id', $user_warung)->orderBy('id', 'desc')->get();
+
+    $total_penjualan = 0;
+    foreach ($penjualan as $penjualans) {
+        $total_penjualan += $penjualans->total;
+    }
+    $respons['total_penjualan'] = number_format($total_penjualan, 2, ',', '.');
+
+    return response()->json($respons);
+}
+
+public function totalLaporanPenjualanFilter(Request $request)
+{
+// TOTAL KESELURUHAN
+    $user_warung = Auth::user()->id_warung;
+    $penjualan   = PenjualanPos::with(['pelanggan', 'kas', 'user_edit', 'user_buat'])
+    ->where('warung_id', $user_warung)
+    ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+    ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))->get();
+
+    $total_penjualan = 0;
+    foreach ($penjualan as $penjualans) {
+        $total_penjualan += $penjualans->total;
+    }
+    $respons['total_penjualan'] = number_format($total_penjualan, 2, ',', '.');
+
+    return response()->json($respons);
+}
+
+public function viewFilter(Request $request)
+{
+    $user_warung = Auth::user()->id_warung;
+    $penjualan   = PenjualanPos::with(['pelanggan', 'kas', 'user_edit', 'user_buat'])
+    ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+    ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+    ->where('warung_id', $user_warung)->orderBy('id', 'desc')->paginate(10);
+    $array = array();
+
+    foreach ($penjualan as $penjualans) {
+
+        if ($penjualans->pelanggan_id == '0') {
+            $pelanggan = 'Umum';
+        } else {
+            $pelanggan = $penjualans->pelanggan->name;
+        }
+
+        array_push($array, [
+            'id'               => $penjualans->id,
+            'waktu'            => $penjualans->Waktu,
+            'pelanggan'        => $pelanggan,
+            'status_penjualan' => $penjualans->status_penjualan,
+            'total'            => $penjualans->TotalJual,
+            'kas'              => $penjualans->kas->nama_kas,
+            'potongan'         => $penjualans->PotonganJual,
+            'tunai'            => $penjualans->TunaiJual,
+            'kembalian'        => $penjualans->KembalianJual,
+            'piutang'          => $penjualans->KreditJual,
+            'jatuh_tempo'      => $penjualans->JatuhTempo,
+            'user_buat'        => $penjualans->user_buat->name,
+            'user_edit'        => $penjualans->user_edit->name,
+            'waktu_edit'       => $penjualans->WaktuEdit,
+            ]);
+    }
+
+    $url     = '/penjualan/view-filter';
+    $respons = $this->paginationData($penjualan, $array, $url);
+
+    return response()->json($respons);
+}
+
+public function tanggalSql($tangal)
+{
+    $date        = date_create($tangal);
+    $date_format = date_format($date, "Y-m-d");
+    return $date_format;
+}
+
+public function pencarian(Request $request)
+{
+    $user_warung = Auth::user()->id_warung;
+    $penjualan   = PenjualanPos::Pencarian($user_warung, $request)->paginate(10);
+    $array       = array();
+    foreach ($penjualan as $penjualans) {
+
+        $jatuh_tempo = $penjualans['jatuh_tempoo'];
+        if ($jatuh_tempo == '' or $jatuh_tempo == null) {
+            $jatuh_tempo = "-";
+        }
+
+        if ($penjualans['pelanggan_id'] == '0') {
+            $nama_pelanggan = 'Umum';
+        } else {
+            $nama_pelanggan = $penjualans['nama_pelanggan'];
+        }
+
+        array_push($array, [
+            'id'               => $penjualans['id'],
+            'waktu'            => $penjualans['waktu_jual'],
+            'pelanggan'        => $nama_pelanggan,
+            'status_penjualan' => $penjualans['status_penjualan'],
+            'total'            => $penjualans['TotalJual'],
+            'kas'              => $penjualans['nama_kas'],
+            'potongan'         => $penjualans['potongan'],
+            'tunai'            => $penjualans['TunaiJual'],
+            'kembalian'        => $penjualans['KembalianJual'],
+            'piutang'          => $penjualans['KreditJual'],
+            'jatuh_tempo'      => $jatuh_tempo,
+            'user_buat'        => $penjualans['user_buat'],
+            'user_edit'        => $penjualans['user_edit'],
+            'waktu_edit'       => $penjualans['waktu_edit'],
+            ]);
+    }
+
+    $url    = '/penjualan/pencarian';
+    $search = $request->search;
+
+    $respons = $this->paginationPencarianData($penjualan, $array, $url, $search);
+
+    return response()->json($respons);
+}
+
+public function viewDetailPenjualanOnline($id)
+{
+    $detail_penjualan = DetailPenjualan::with(['produk'])->where('id_penjualan', $id)->orderBy('id', 'desc')->paginate(10);
+    $array            = array();
+
+    foreach ($detail_penjualan as $detail_penjualans) {
+
+        array_push($array, [
+            'id'           => $detail_penjualans->id,
+            'id_penjualan' => $id,
+            'nama_produk'  => $detail_penjualans->NamaProduk,
+            'kode_produk'  => $detail_penjualans->produk->kode_barang,
+            'jumlah'       => $detail_penjualans->jumlah,
+            'harga'        => $detail_penjualans->harga,
+            'subtotal'     => $detail_penjualans->subtotal,
+            'produk'       => $detail_penjualans->id_produk . "|" . $detail_penjualans->NamaProduk . "|" . $detail_penjualans->harga]);
+    }
+
+    $url     = '/penjualan/view-detail-penjualan-online/' . $id;
+    $respons = $this->paginationData($detail_penjualan, $array, $url);
+
+    return response()->json($respons);
+}
+
+public function pencarianDetailPenjualanOnline(Request $request, $id)
+{
+    $detail_penjualan = DetailPenjualan::Pencarian($id, $request)->paginate(10);
+
+    $array = array();
+    foreach ($detail_penjualan as $detail_penjualans) {
+
+        array_push($array, [
+            'id'           => $detail_penjualans['id'],
+            'id_penjualan' => $id,
+            'nama_produk'  => title_case($detail_penjualans['nama_barang']),
+            'kode_produk'  => $detail_penjualans['kode_barang'],
+            'jumlah'       => $detail_penjualans['jumlah'],
+            'harga'        => $detail_penjualans['harga'],
+            'subtotal'     => $detail_penjualans['subtotal'],
+            'produk'       => $detail_penjualans['id_produk'] . "|" . title_case($detail_penjualans['nama_barang']) . "|" . $detail_penjualans->harga]);
+    }
+
+    $url    = '/penjualan/pencarian-detail-penjualan-online/' . $id;
+    $search = $request->search;
+
+    $respons = $this->paginationPencarianData($detail_penjualan, $array, $url, $search);
+
+    return response()->json($respons);
+}
+public function viewDetailPenjualan($id)
+{
+    $user_warung      = Auth::user()->id_warung;
+    $detail_penjualan = DetailPenjualanPos::with(['produk', 'satuan'])->where('warung_id', $user_warung)->where('id_penjualan_pos', $id)->orderBy('id_detail_penjualan_pos', 'desc')->paginate(10);
+    $array            = array();
+
+    $DetailPenjualanPos = new DetailPenjualanPos();
+    $subtotal           = $DetailPenjualanPos->subtotalTbs($user_warung, $id);
+
+    foreach ($detail_penjualan as $detail_penjualans) {
+
+        $potongan = $this->tampilPotongan($detail_penjualans->potongan, $detail_penjualans->jumlah_produk, $detail_penjualans->harga_produk);
+
+        array_push($array, [
+            'id_detail_penjualan_pos' => $detail_penjualans->id_detail_penjualan_pos,
+            'id_penjualan_pos'        => $id,
+            'nama_produk'             => $detail_penjualans->NamaProduk,
+            'kode_produk'             => $detail_penjualans->produk->kode_barang,
+            'satuan'                  => $detail_penjualans->satuan->nama_satuan,
+            'jumlah_produk'           => $detail_penjualans->jumlah_produk,
+            'harga_produk'            => $detail_penjualans->harga_produk,
+            'potongan'                => $potongan,
+            'subtotal'                => $detail_penjualans->subtotal,
+            'produk'                  => $detail_penjualans->id_produk . "|" . $detail_penjualans->NamaProduk . "|" . $detail_penjualans->harga_produk]);
+    }
+
+    $url                 = '/penjualan/view-detail-penjualan/' . $id;
+    $respons             = $this->paginationData($detail_penjualan, $array, $url);
+    $respons['subtotal'] = $subtotal;
+
+    return response()->json($respons);
+}
+
+public function pencarianDetailPenjualan(Request $request, $id)
+{
+    $user_warung      = Auth::user()->id_warung;
+    $detail_penjualan = DetailPenjualanPos::Pencarian($user_warung, $id, $request)->paginate(10);
+
+    $array = array();
+    foreach ($detail_penjualan as $detail_penjualans) {
+
+        $potongan = $this->tampilPotongan($detail_penjualans['potongan'], $detail_penjualans['jumlah_produk'], $detail_penjualans['harga_produk']);
+
+        array_push($array, [
+            'id_detail_penjualan_pos' => $detail_penjualans['id_detail_penjualan_pos'],
+            'id_penjualan_pos'        => $id,
+            'nama_produk'             => title_case($detail_penjualans['nama_barang']),
+            'kode_produk'             => $detail_penjualans['kode_barang'],
+            'jumlah_produk'           => $detail_penjualans['jumlah_produk'],
+            'satuan'                  => $detail_penjualans['satuan'],
+            'potongan'                => $potongan,
+            'harga_produk'            => $detail_penjualans['harga_produk'],
+            'subtotal'                => $detail_penjualans['subtotal'],
+            'produk'                  => $detail_penjualans['id_produk'] . "|" . title_case($detail_penjualans['nama_barang']) . "|" . $detail_penjualans->harga_jual]);
+    }
+
+    $url    = '/penjualan/pencarian-detail-penjualan/' . $id;
+    $search = $request->search;
+
+    $respons = $this->paginationPencarianData($detail_penjualan, $array, $url, $search);
+
+    return response()->json($respons);
+}
+public function viewTbsPenjualan()
+{
+    $session_id    = session()->getId();
+    $user_warung   = Auth::user()->id_warung;
+    $tbs_penjualan = TbsPenjualan::with(['produk', 'satuan'])->where('warung_id', $user_warung)->where('session_id', $session_id)->orderBy('id_tbs_penjualan', 'desc')->get();
+    $array         = array();
+
+    foreach ($tbs_penjualan as $tbs_penjualans) {
+
+        $potongan = $this->tampilPotongan($tbs_penjualans->potongan, $tbs_penjualans->jumlah_produk, $tbs_penjualans->harga_produk);
+
+        array_push($array, [
+            'id_tbs_penjualan' => $tbs_penjualans->id_tbs_penjualan,
+            'nama_produk'      => $tbs_penjualans->NamaProduk,
+            'kode_produk'      => $tbs_penjualans->produk->kode_barang,
+            'jumlah_produk'    => $tbs_penjualans->jumlah_produk,
+            'satuan'           => $tbs_penjualans->satuan->nama_satuan,
+            'satuan_id'           => $tbs_penjualans->satuan_id,
+            'harga_produk'     => $tbs_penjualans->harga_produk,
+            'potongan'         => $potongan,
+            'subtotal'         => $tbs_penjualans->subtotal,
+            'id_produk'           => $tbs_penjualans->id_produk,
+            'produk'           => $tbs_penjualans->id_produk . "|" . $tbs_penjualans->NamaProduk . "|" . $tbs_penjualans->produk->harga_jual]);
+    }
+
+    return response()->json($array);
+}
+
+public function pencarianTbsPenjualan(Request $request)
+{
+    $session_id  = session()->getId();
+    $user_warung = Auth::user()->id_warung;
+
+    $tbs_penjualan = TbsPenjualan::Pencarian($user_warung, $session_id, $request)->paginate(10);
+
+    $array = array();
+    foreach ($tbs_penjualan as $tbs_penjualans) {
+
+        $potongan = $this->tampilPotongan($tbs_penjualans['potongan'], $tbs_penjualans['jumlah_produk'], $tbs_penjualans['harga_produk']);
+
+        array_push($array, [
+            'id_tbs_penjualan' => $tbs_penjualans['id_tbs_penjualan'],
+            'nama_produk'      => title_case($tbs_penjualans['nama_barang']),
+            'kode_produk'      => $tbs_penjualans['kode_barang'],
+            'jumlah_produk'    => $tbs_penjualans['jumlah_produk'],
+            'satuan'           => $tbs_penjualans['satuan'],
+            'potongan'         => $potongan,
+            'harga_produk'     => $tbs_penjualans['harga_produk'],
+            'subtotal'         => $tbs_penjualans['subtotal'],
+            'produk'           => $tbs_penjualans['id_produk'] . "|" . title_case($tbs_penjualans['nama_barang']) . "|" . $tbs_penjualans['harga_jual'],
+            ]);
+    }
+    return response()->json($array);
+}
+
+public function viewEditTbsPenjualan($id)
+{
+    $session_id    = session()->getId();
+    $user_warung   = Auth::user()->id_warung;
+    $tbs_penjualan = EditTbsPenjualan::with(['produk'])->where('warung_id', $user_warung)->where('id_penjualan_pos', $id)->orderBy('id_edit_tbs_penjualans', 'desc')->get();
+    $array         = array();
+
+    foreach ($tbs_penjualan as $tbs_penjualans) {
+
+        $potongan = $this->tampilPotongan($tbs_penjualans->potongan, $tbs_penjualans->jumlah_produk, $tbs_penjualans->harga_produk);
+
+        array_push($array, [
+            'id_edit_tbs_penjualans' => $tbs_penjualans->id_edit_tbs_penjualans,
+            'id_penjualan_pos'       => $tbs_penjualans->id_penjualan_pos,
+            'nama_produk'            => $tbs_penjualans->NamaProduk,
+            'kode_produk'            => $tbs_penjualans->produk->kode_barang,
+            'satuan'                 => $tbs_penjualans->produk->satuan->nama_satuan,
+            'jumlah_produk'          => $tbs_penjualans->jumlah_produk,
+            'harga_produk'           => $tbs_penjualans->harga_produk,
+            'potongan'               => $potongan,
+            'subtotal'               => $tbs_penjualans->subtotal,
+            'produk'                 => $tbs_penjualans->id_produk . "|" . $tbs_penjualans->NamaProduk . "|" . $tbs_penjualans->produk->harga_jual]);
+    }
+
+    return response()->json($array);
+}
+
+public function pencarianEditTbsPenjualan(Request $request, $id)
+{
+    $session_id    = session()->getId();
+    $user_warung   = Auth::user()->id_warung;
+    $tbs_penjualan = EditTbsPenjualan::Pencarian($user_warung, $id, $request)->get();
+
+    $array = array();
+    foreach ($tbs_penjualan as $tbs_penjualans) {
+
+        $potongan = $this->tampilPotongan($tbs_penjualans['potongan'], $tbs_penjualans['jumlah_produk'], $tbs_penjualans['harga_produk']);
+
+        array_push($array, [
+            'id_edit_tbs_penjualans' => $tbs_penjualans['id_edit_tbs_penjualans'],
+            'id_penjualan_pos'       => $id,
+            'nama_produk'            => title_case($tbs_penjualans['nama_barang']),
+            'kode_produk'            => $tbs_penjualans['kode_barang'],
+            'jumlah_produk'          => $tbs_penjualans['jumlah_produk'],
+            'satuan'                 => $tbs_penjualans['satuan'],
+            'potongan'               => $potongan,
+            'harga_produk'           => $tbs_penjualans['harga_produk'],
+            'subtotal'               => $tbs_penjualans['subtotal'],
+            'produk'                 => $tbs_penjualans['id_produk'] . "|" . title_case($tbs_penjualans['nama_barang']) . "|" . $tbs_penjualans['harga_jual'],
+            ]);
+    }
+
+    return response()->json($array);
+}
+
+public function cekHargaProduk($produk)
+{
+
+    $settings = SettingPenjualanPos::where('id_warung', Auth::user()->id_warung);
+    if ($settings->count() == 0) {
+$harga_jual = $produk[3]; // harga jual 1
+} else {
+    if ($settings->first()->harga_jual == 1) {
+$harga_jual = $produk[3]; // harga jual 1
+} else if ($settings->first()->harga_jual == 2) {
+$harga_jual = $produk[5]; // harga jual 2
+}
+}
+return $harga_jual;
+}
+
+public function prosesTambahTbsPenjualan(Request $request)
+{
+    $satuan_produk = explode("|", $request->satuan_produk);
+    $produk      = explode("|", $request->produk);
+    $id_produk   = $produk[0];
+    $nama_produk = $produk[1];
+    $satuan_id   = $produk[4];
+    $session_id  = session()->getId();
+
+    if ($satuan_produk[0] === $satuan_produk[2]) { //$satuan_produk[0] == Satuan Konversi & $satuan_produk[2] == Satuan Dasar
+        $harga_jual = $this->cekHargaProduk($produk);        
+    }else{
+        $harga_jual_konversi = SatuanKonversi::select('harga_jual_konversi')->where('id_produk', $id_produk)->where('id_satuan', $satuan_produk[0])->first()->harga_jual_konversi;
+        $harga_jual = $harga_jual_konversi;        
+    }
+
+    if ($harga_jual == '' || $harga_jual == 0) {
+
+        $respons['harga_jual'] = $harga_jual;
+        return response()->json($respons);
+
+    } else {
+
+        $data_tbs = TbsPenjualan::where('id_produk', $id_produk)->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
+
+//JIKA PRODUK YG DIPILIH SUDAH ADA DI TBS
+        if ($data_tbs->count() > 0) {
+
+            $jumlah_produk = $data_tbs->first()->jumlah_produk + $request->jumlah_produk;
+
+            $subtotal_edit = ($jumlah_produk * $harga_jual) - $data_tbs->first()->potongan;
+
+            $data_tbs->update([
+                'jumlah_produk' => $jumlah_produk,
+                'satuan_id' => $satuan_produk[0],
+                'satuan_dasar' => $satuan_produk[2],
+                'harga_produk' => $harga_jual,
+                'subtotal' => $subtotal_edit,
                 ]);
-        }
 
-        return response()->json($array);
-    }
+            $subtotal = $request->jumlah_produk * $data_tbs->first()->harga_produk;
 
+            $respons['id_tbs_penjualan']    = $data_tbs->first()->id_tbs_penjualan;
+            $respons['jumlah_produk']       = $jumlah_produk;
+            $respons['subtotal']            = $subtotal;
+            $respons['subtotalKeseluruhan'] = $subtotal_edit;
+            $respons['satuan_produk'] = $satuan_produk[0];
+            $respons['nama_satuan'] = $satuan_produk[1];
+            $respons['harga_produk'] = $harga_jual;
+            return response()->json($respons);
 
-    public function view()
-    {
-        $user_warung = Auth::user()->id_warung;
-        $penjualan   = PenjualanPos::with(['pelanggan', 'kas', 'user_edit', 'user_buat'])->where('warung_id', $user_warung)->orderBy('id', 'desc')->paginate(10);
-        $array       = array();
+        } else {
 
-        foreach ($penjualan as $penjualans) {
+            $subtotal = $request->jumlah_produk * $harga_jual;
 
-            if ($penjualans->pelanggan_id == '0') {
-                $pelanggan = 'Umum';
-            } else {
-                $pelanggan = $penjualans->pelanggan->name;
-            }
-
-            array_push($array, [
-                'id'               => $penjualans->id,
-                'waktu'            => $penjualans->Waktu,
-                'pelanggan'        => $pelanggan,
-                'status_penjualan' => $penjualans->status_penjualan,
-                'total'            => $penjualans->TotalJual,
-                'kas'              => $penjualans->kas->nama_kas,
-                'potongan'         => $penjualans->PotonganJual,
-                'tunai'            => $penjualans->TunaiJual,
-                'kembalian'        => $penjualans->KembalianJual,
-                'piutang'          => $penjualans->KreditJual,
-                'jatuh_tempo'      => $penjualans->JatuhTempo,
-                'user_buat'        => $penjualans->user_buat->name,
-                'user_edit'        => $penjualans->user_edit->name,
-                'waktu_edit'       => $penjualans->WaktuEdit,
+            $tbspenjualan = TbsPenjualan::create([
+                'session_id'    => $session_id,
+                'satuan_id'     => $satuan_produk[0],
+                'satuan_dasar'  => $satuan_produk[2],
+                'id_produk'     => $id_produk,
+                'jumlah_produk' => $request->jumlah_produk,
+                'harga_produk'  => $harga_jual,
+                'subtotal'      => $subtotal,
+                'warung_id'     => Auth::user()->id_warung,
                 ]);
+
+            $respons['id_tbs_penjualan'] = $tbspenjualan->id_tbs_penjualan;
+            $respons['nama_produk']      = $nama_produk;
+            $respons['kode_produk']      = $tbspenjualan->produk->kode_barang;
+            $respons['jumlah_produk']    = $request->jumlah_produk;
+            $respons['satuan']           = $tbspenjualan->satuan->nama_satuan;
+            $respons['harga_produk']     = $harga_jual;
+            $respons['potongan']         = 0;
+            $respons['subtotal']         = $subtotal;
+            $respons['produk']           = $id_produk . "|" . $nama_produk . "|" . $harga_jual;
+
+            return response()->json($respons);
         }
 
-        $url     = '/penjualan/view';
-        $respons = $this->paginationData($penjualan, $array, $url);
+    }
+
+}
+//PROSE EDIT JUMLAH TBS PENJUALAN
+public function prosesEditJumlahTbsPenjualan(Request $request)
+{
+
+    $tbs_penjualan = TbsPenjualan::find($request->id_tbs);
+
+    $subtotal = ($tbs_penjualan->harga_produk * $request->jumlah_produk) - $tbs_penjualan->potongan;
+
+    $tbs_penjualan->update(['jumlah_produk' => $request->jumlah_produk, 'subtotal' => $subtotal]);
+
+    $respons['jumlah_produk'] = $request->jumlah_produk;
+    $respons['subtotal']      = $subtotal;
+
+    return response()->json($respons);
+}
+
+public function prosesEditPotonganTbsPenjualan(Request $request)
+{
+    $tbs_penjualan = TbsPenjualan::find($request->id_tbs);
+
+    $total = $tbs_penjualan->jumlah_produk * $tbs_penjualan->harga_produk;
+
+    $potongan_produk = $this->cekPotongan($request->potongan_produk, $tbs_penjualan->harga_produk, $tbs_penjualan->jumlah_produk);
+
+    if ($potongan_produk == '') {
+
+        $respons['status'] = 0;
 
         return response()->json($respons);
-    }
 
-    public function totalLaporanPenjualan()
-    {
-        // TOTAL KESELURUHAN
-        $user_warung = Auth::user()->id_warung;
-        $penjualan   = PenjualanPos::with(['pelanggan', 'kas', 'user_edit', 'user_buat'])
-        ->where('warung_id', $user_warung)->orderBy('id', 'desc')->get();
+    } else if ($potongan_produk > $total) {
 
-        $total_penjualan = 0;
-        foreach ($penjualan as $penjualans) {
-            $total_penjualan += $penjualans->total;
-        }
-        $respons['total_penjualan'] = number_format($total_penjualan, 2, ',', '.');
+        $respons['status'] = 1;
 
         return response()->json($respons);
-    }
 
-    public function totalLaporanPenjualanFilter(Request $request)
-    {
-        // TOTAL KESELURUHAN
-        $user_warung = Auth::user()->id_warung;
-        $penjualan   = PenjualanPos::with(['pelanggan', 'kas', 'user_edit', 'user_buat'])
-        ->where('warung_id', $user_warung)
-        ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
-        ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))->get();
+    } else {
+        $subtotal = ($tbs_penjualan->jumlah_produk * $tbs_penjualan->harga_produk) - $potongan_produk;
 
-        $total_penjualan = 0;
-        foreach ($penjualan as $penjualans) {
-            $total_penjualan += $penjualans->total;
-        }
-        $respons['total_penjualan'] = number_format($total_penjualan, 2, ',', '.');
+        $tbs_penjualan->update(['potongan' => $potongan_produk, 'subtotal' => $subtotal]);
 
-        return response()->json($respons);
-    }
-
-    public function viewFilter(Request $request)
-    {
-        $user_warung = Auth::user()->id_warung;
-        $penjualan   = PenjualanPos::with(['pelanggan', 'kas', 'user_edit', 'user_buat'])
-        ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
-        ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
-        ->where('warung_id', $user_warung)->orderBy('id', 'desc')->paginate(10);
-        $array = array();
-
-        foreach ($penjualan as $penjualans) {
-
-            if ($penjualans->pelanggan_id == '0') {
-                $pelanggan = 'Umum';
-            } else {
-                $pelanggan = $penjualans->pelanggan->name;
-            }
-
-            array_push($array, [
-                'id'               => $penjualans->id,
-                'waktu'            => $penjualans->Waktu,
-                'pelanggan'        => $pelanggan,
-                'status_penjualan' => $penjualans->status_penjualan,
-                'total'            => $penjualans->TotalJual,
-                'kas'              => $penjualans->kas->nama_kas,
-                'potongan'         => $penjualans->PotonganJual,
-                'tunai'            => $penjualans->TunaiJual,
-                'kembalian'        => $penjualans->KembalianJual,
-                'piutang'          => $penjualans->KreditJual,
-                'jatuh_tempo'      => $penjualans->JatuhTempo,
-                'user_buat'        => $penjualans->user_buat->name,
-                'user_edit'        => $penjualans->user_edit->name,
-                'waktu_edit'       => $penjualans->WaktuEdit,
-                ]);
-        }
-
-        $url     = '/penjualan/view-filter';
-        $respons = $this->paginationData($penjualan, $array, $url);
-
-        return response()->json($respons);
-    }
-
-    public function tanggalSql($tangal)
-    {
-        $date        = date_create($tangal);
-        $date_format = date_format($date, "Y-m-d");
-        return $date_format;
-    }
-
-    public function pencarian(Request $request)
-    {
-        $user_warung = Auth::user()->id_warung;
-        $penjualan   = PenjualanPos::Pencarian($user_warung, $request)->paginate(10);
-        $array       = array();
-        foreach ($penjualan as $penjualans) {
-
-            $jatuh_tempo = $penjualans['jatuh_tempoo'];
-            if ($jatuh_tempo == '' or $jatuh_tempo == null) {
-                $jatuh_tempo = "-";
-            }
-
-            if ($penjualans['pelanggan_id'] == '0') {
-                $nama_pelanggan = 'Umum';
-            } else {
-                $nama_pelanggan = $penjualans['nama_pelanggan'];
-            }
-
-            array_push($array, [
-                'id'               => $penjualans['id'],
-                'waktu'            => $penjualans['waktu_jual'],
-                'pelanggan'        => $nama_pelanggan,
-                'status_penjualan' => $penjualans['status_penjualan'],
-                'total'            => $penjualans['TotalJual'],
-                'kas'              => $penjualans['nama_kas'],
-                'potongan'         => $penjualans['potongan'],
-                'tunai'            => $penjualans['TunaiJual'],
-                'kembalian'        => $penjualans['KembalianJual'],
-                'piutang'          => $penjualans['KreditJual'],
-                'jatuh_tempo'      => $jatuh_tempo,
-                'user_buat'        => $penjualans['user_buat'],
-                'user_edit'        => $penjualans['user_edit'],
-                'waktu_edit'       => $penjualans['waktu_edit'],
-                ]);
-        }
-
-        $url    = '/penjualan/pencarian';
-        $search = $request->search;
-
-        $respons = $this->paginationPencarianData($penjualan, $array, $url, $search);
-
-        return response()->json($respons);
-    }
-
-    public function viewDetailPenjualanOnline($id)
-    {
-        $detail_penjualan = DetailPenjualan::with(['produk'])->where('id_penjualan', $id)->orderBy('id', 'desc')->paginate(10);
-        $array            = array();
-
-        foreach ($detail_penjualan as $detail_penjualans) {
-
-            array_push($array, [
-                'id'           => $detail_penjualans->id,
-                'id_penjualan' => $id,
-                'nama_produk'  => $detail_penjualans->NamaProduk,
-                'kode_produk'  => $detail_penjualans->produk->kode_barang,
-                'jumlah'       => $detail_penjualans->jumlah,
-                'harga'        => $detail_penjualans->harga,
-                'subtotal'     => $detail_penjualans->subtotal,
-                'produk'       => $detail_penjualans->id_produk . "|" . $detail_penjualans->NamaProduk . "|" . $detail_penjualans->harga]);
-        }
-
-        $url     = '/penjualan/view-detail-penjualan-online/' . $id;
-        $respons = $this->paginationData($detail_penjualan, $array, $url);
-
-        return response()->json($respons);
-    }
-
-    public function pencarianDetailPenjualanOnline(Request $request, $id)
-    {
-        $detail_penjualan = DetailPenjualan::Pencarian($id, $request)->paginate(10);
-
-        $array = array();
-        foreach ($detail_penjualan as $detail_penjualans) {
-
-            array_push($array, [
-                'id'           => $detail_penjualans['id'],
-                'id_penjualan' => $id,
-                'nama_produk'  => title_case($detail_penjualans['nama_barang']),
-                'kode_produk'  => $detail_penjualans['kode_barang'],
-                'jumlah'       => $detail_penjualans['jumlah'],
-                'harga'        => $detail_penjualans['harga'],
-                'subtotal'     => $detail_penjualans['subtotal'],
-                'produk'       => $detail_penjualans['id_produk'] . "|" . title_case($detail_penjualans['nama_barang']) . "|" . $detail_penjualans->harga]);
-        }
-
-        $url    = '/penjualan/pencarian-detail-penjualan-online/' . $id;
-        $search = $request->search;
-
-        $respons = $this->paginationPencarianData($detail_penjualan, $array, $url, $search);
-
-        return response()->json($respons);
-    }
-    public function viewDetailPenjualan($id)
-    {
-        $user_warung      = Auth::user()->id_warung;
-        $detail_penjualan = DetailPenjualanPos::with(['produk', 'satuan'])->where('warung_id', $user_warung)->where('id_penjualan_pos', $id)->orderBy('id_detail_penjualan_pos', 'desc')->paginate(10);
-        $array            = array();
-
-        $DetailPenjualanPos = new DetailPenjualanPos();
-        $subtotal           = $DetailPenjualanPos->subtotalTbs($user_warung, $id);
-
-        foreach ($detail_penjualan as $detail_penjualans) {
-
-            $potongan = $this->tampilPotongan($detail_penjualans->potongan, $detail_penjualans->jumlah_produk, $detail_penjualans->harga_produk);
-
-            array_push($array, [
-                'id_detail_penjualan_pos' => $detail_penjualans->id_detail_penjualan_pos,
-                'id_penjualan_pos'        => $id,
-                'nama_produk'             => $detail_penjualans->NamaProduk,
-                'kode_produk'             => $detail_penjualans->produk->kode_barang,
-                'satuan'                  => $detail_penjualans->satuan->nama_satuan,
-                'jumlah_produk'           => $detail_penjualans->jumlah_produk,
-                'harga_produk'            => $detail_penjualans->harga_produk,
-                'potongan'                => $potongan,
-                'subtotal'                => $detail_penjualans->subtotal,
-                'produk'                  => $detail_penjualans->id_produk . "|" . $detail_penjualans->NamaProduk . "|" . $detail_penjualans->harga_produk]);
-        }
-
-        $url                 = '/penjualan/view-detail-penjualan/' . $id;
-        $respons             = $this->paginationData($detail_penjualan, $array, $url);
+        $potongan            = $this->tampilPotongan($potongan_produk, $tbs_penjualan->jumlah_produk, $tbs_penjualan->harga_produk);
+        $respons['potongan'] = $potongan;
         $respons['subtotal'] = $subtotal;
 
         return response()->json($respons);
     }
 
-    public function pencarianDetailPenjualan(Request $request, $id)
-    {
-        $user_warung      = Auth::user()->id_warung;
-        $detail_penjualan = DetailPenjualanPos::Pencarian($user_warung, $id, $request)->paginate(10);
+}
 
-        $array = array();
-        foreach ($detail_penjualan as $detail_penjualans) {
+public function prosesHapusTbsPenjualan($id)
+{
 
-            $potongan = $this->tampilPotongan($detail_penjualans['potongan'], $detail_penjualans['jumlah_produk'], $detail_penjualans['harga_produk']);
-
-            array_push($array, [
-                'id_detail_penjualan_pos' => $detail_penjualans['id_detail_penjualan_pos'],
-                'id_penjualan_pos'        => $id,
-                'nama_produk'             => title_case($detail_penjualans['nama_barang']),
-                'kode_produk'             => $detail_penjualans['kode_barang'],
-                'jumlah_produk'           => $detail_penjualans['jumlah_produk'],
-                'satuan'                  => $detail_penjualans['satuan'],
-                'potongan'                => $potongan,
-                'harga_produk'            => $detail_penjualans['harga_produk'],
-                'subtotal'                => $detail_penjualans['subtotal'],
-                'produk'                  => $detail_penjualans['id_produk'] . "|" . title_case($detail_penjualans['nama_barang']) . "|" . $detail_penjualans->harga_jual]);
-        }
-
-        $url    = '/penjualan/pencarian-detail-penjualan/' . $id;
-        $search = $request->search;
-
-        $respons = $this->paginationPencarianData($detail_penjualan, $array, $url, $search);
-
-        return response()->json($respons);
-    }
-    public function viewTbsPenjualan()
-    {
-        $session_id    = session()->getId();
-        $user_warung   = Auth::user()->id_warung;
-        $tbs_penjualan = TbsPenjualan::with(['produk', 'satuan'])->where('warung_id', $user_warung)->where('session_id', $session_id)->orderBy('id_tbs_penjualan', 'desc')->get();
-        $array         = array();
-
-        foreach ($tbs_penjualan as $tbs_penjualans) {
-
-            $potongan = $this->tampilPotongan($tbs_penjualans->potongan, $tbs_penjualans->jumlah_produk, $tbs_penjualans->harga_produk);
-
-            array_push($array, [
-                'id_tbs_penjualan' => $tbs_penjualans->id_tbs_penjualan,
-                'nama_produk'      => $tbs_penjualans->NamaProduk,
-                'kode_produk'      => $tbs_penjualans->produk->kode_barang,
-                'jumlah_produk'    => $tbs_penjualans->jumlah_produk,
-                'satuan'           => $tbs_penjualans->satuan->nama_satuan,
-                'harga_produk'     => $tbs_penjualans->harga_produk,
-                'potongan'         => $potongan,
-                'subtotal'         => $tbs_penjualans->subtotal,
-                'produk'           => $tbs_penjualans->id_produk . "|" . $tbs_penjualans->NamaProduk . "|" . $tbs_penjualans->produk->harga_jual]);
-        }
-
-        return response()->json($array);
-    }
-
-    public function pencarianTbsPenjualan(Request $request)
-    {
-        $session_id  = session()->getId();
-        $user_warung = Auth::user()->id_warung;
-
-        $tbs_penjualan = TbsPenjualan::Pencarian($user_warung, $session_id, $request)->paginate(10);
-
-        $array = array();
-        foreach ($tbs_penjualan as $tbs_penjualans) {
-
-            $potongan = $this->tampilPotongan($tbs_penjualans['potongan'], $tbs_penjualans['jumlah_produk'], $tbs_penjualans['harga_produk']);
-
-            array_push($array, [
-                'id_tbs_penjualan' => $tbs_penjualans['id_tbs_penjualan'],
-                'nama_produk'      => title_case($tbs_penjualans['nama_barang']),
-                'kode_produk'      => $tbs_penjualans['kode_barang'],
-                'jumlah_produk'    => $tbs_penjualans['jumlah_produk'],
-                'satuan'           => $tbs_penjualans['satuan'],
-                'potongan'         => $potongan,
-                'harga_produk'     => $tbs_penjualans['harga_produk'],
-                'subtotal'         => $tbs_penjualans['subtotal'],
-                'produk'           => $tbs_penjualans['id_produk'] . "|" . title_case($tbs_penjualans['nama_barang']) . "|" . $tbs_penjualans['harga_jual'],
-                ]);
-        }
-        return response()->json($array);
-    }
-
-    public function viewEditTbsPenjualan($id)
-    {
-        $session_id    = session()->getId();
-        $user_warung   = Auth::user()->id_warung;
-        $tbs_penjualan = EditTbsPenjualan::with(['produk'])->where('warung_id', $user_warung)->where('id_penjualan_pos', $id)->orderBy('id_edit_tbs_penjualans', 'desc')->get();
-        $array         = array();
-
-        foreach ($tbs_penjualan as $tbs_penjualans) {
-
-            $potongan = $this->tampilPotongan($tbs_penjualans->potongan, $tbs_penjualans->jumlah_produk, $tbs_penjualans->harga_produk);
-
-            array_push($array, [
-                'id_edit_tbs_penjualans' => $tbs_penjualans->id_edit_tbs_penjualans,
-                'id_penjualan_pos'       => $tbs_penjualans->id_penjualan_pos,
-                'nama_produk'            => $tbs_penjualans->NamaProduk,
-                'kode_produk'            => $tbs_penjualans->produk->kode_barang,
-                'satuan'                 => $tbs_penjualans->produk->satuan->nama_satuan,
-                'jumlah_produk'          => $tbs_penjualans->jumlah_produk,
-                'harga_produk'           => $tbs_penjualans->harga_produk,
-                'potongan'               => $potongan,
-                'subtotal'               => $tbs_penjualans->subtotal,
-                'produk'                 => $tbs_penjualans->id_produk . "|" . $tbs_penjualans->NamaProduk . "|" . $tbs_penjualans->produk->harga_jual]);
-        }
-
-        return response()->json($array);
-    }
-
-    public function pencarianEditTbsPenjualan(Request $request, $id)
-    {
-        $session_id    = session()->getId();
-        $user_warung   = Auth::user()->id_warung;
-        $tbs_penjualan = EditTbsPenjualan::Pencarian($user_warung, $id, $request)->get();
-
-        $array = array();
-        foreach ($tbs_penjualan as $tbs_penjualans) {
-
-            $potongan = $this->tampilPotongan($tbs_penjualans['potongan'], $tbs_penjualans['jumlah_produk'], $tbs_penjualans['harga_produk']);
-
-            array_push($array, [
-                'id_edit_tbs_penjualans' => $tbs_penjualans['id_edit_tbs_penjualans'],
-                'id_penjualan_pos'       => $id,
-                'nama_produk'            => title_case($tbs_penjualans['nama_barang']),
-                'kode_produk'            => $tbs_penjualans['kode_barang'],
-                'jumlah_produk'          => $tbs_penjualans['jumlah_produk'],
-                'satuan'                 => $tbs_penjualans['satuan'],
-                'potongan'               => $potongan,
-                'harga_produk'           => $tbs_penjualans['harga_produk'],
-                'subtotal'               => $tbs_penjualans['subtotal'],
-                'produk'                 => $tbs_penjualans['id_produk'] . "|" . title_case($tbs_penjualans['nama_barang']) . "|" . $tbs_penjualans['harga_jual'],
-                ]);
-        }
-
-        return response()->json($array);
-    }
-
-    public function cekHargaProduk($produk)
-    {
-
-        $settings = SettingPenjualanPos::where('id_warung', Auth::user()->id_warung);
-        if ($settings->count() == 0) {
-            $harga_jual = $produk[3]; // harga jual 1
-        } else {
-            if ($settings->first()->harga_jual == 1) {
-                $harga_jual = $produk[3]; // harga jual 1
-            } else if ($settings->first()->harga_jual == 2) {
-                $harga_jual = $produk[5]; // harga jual 2
-            }
-        }
-        return $harga_jual;
-    }
-
-    public function prosesTambahTbsPenjualan(Request $request)
-    {
-        $produk      = explode("|", $request->produk);
-        $id_produk   = $produk[0];
-        $nama_produk = $produk[1];
-        $satuan_id   = $produk[4];
-        $session_id  = session()->getId();
-
-        $harga_jual = $this->cekHargaProduk($produk);
-
-        if ($harga_jual == '' || $harga_jual == 0) {
-
-            $respons['harga_jual'] = $harga_jual;
-            return response()->json($respons);
-
-        } else {
-
-            $data_tbs = TbsPenjualan::where('id_produk', $id_produk)->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
-
-//JIKA PRODUK YG DIPILIH SUDAH ADA DI TBS
-            if ($data_tbs->count() > 0) {
-
-                $jumlah_produk = $data_tbs->first()->jumlah_produk + $request->jumlah_produk;
-
-                $subtotal_edit = ($jumlah_produk * $data_tbs->first()->harga_produk) - $data_tbs->first()->potongan;
-
-                $data_tbs->update(['jumlah_produk' => $jumlah_produk, 'subtotal' => $subtotal_edit]);
-
-                $subtotal = $request->jumlah_produk * $data_tbs->first()->harga_produk;
-
-                $respons['id_tbs_penjualan']    = $data_tbs->first()->id_tbs_penjualan;
-                $respons['jumlah_produk']       = $jumlah_produk;
-                $respons['subtotal']            = $subtotal;
-                $respons['subtotalKeseluruhan'] = $subtotal_edit;
-                return response()->json($respons);
-
-            } else {
-
-                $subtotal = $request->jumlah_produk * $harga_jual;
-
-                $tbspenjualan = TbsPenjualan::create([
-                    'session_id'    => $session_id,
-                    'satuan_id'     => $satuan_id,
-                    'id_produk'     => $id_produk,
-                    'jumlah_produk' => $request->jumlah_produk,
-                    'harga_produk'  => $harga_jual,
-                    'subtotal'      => $subtotal,
-                    'warung_id'     => Auth::user()->id_warung,
-                    ]);
-
-                $respons['id_tbs_penjualan'] = $tbspenjualan->id_tbs_penjualan;
-                $respons['nama_produk']      = $nama_produk;
-                $respons['kode_produk']      = $tbspenjualan->produk->kode_barang;
-                $respons['jumlah_produk']    = $request->jumlah_produk;
-                $respons['satuan']           = $tbspenjualan->satuan->nama_satuan;
-                $respons['harga_produk']     = $harga_jual;
-                $respons['potongan']         = 0;
-                $respons['subtotal']         = $subtotal;
-                $respons['produk']           = $id_produk . "|" . $nama_produk . "|" . $harga_jual;
-
-                return response()->json($respons);
-            }
-
-        }
-
-    }
-//PROSE EDIT JUMLAH TBS PENJUALAN
-    public function prosesEditJumlahTbsPenjualan(Request $request)
-    {
-
-        $tbs_penjualan = TbsPenjualan::find($request->id_tbs);
-
-        $subtotal = ($tbs_penjualan->harga_produk * $request->jumlah_produk) - $tbs_penjualan->potongan;
-
-        $tbs_penjualan->update(['jumlah_produk' => $request->jumlah_produk, 'subtotal' => $subtotal]);
-
-        $respons['jumlah_produk'] = $request->jumlah_produk;
-        $respons['subtotal']      = $subtotal;
-
-        return response()->json($respons);
-    }
-
-    public function prosesEditPotonganTbsPenjualan(Request $request)
-    {
-        $tbs_penjualan = TbsPenjualan::find($request->id_tbs);
-
-        $total = $tbs_penjualan->jumlah_produk * $tbs_penjualan->harga_produk;
-
-        $potongan_produk = $this->cekPotongan($request->potongan_produk, $tbs_penjualan->harga_produk, $tbs_penjualan->jumlah_produk);
-
-        if ($potongan_produk == '') {
-
-            $respons['status'] = 0;
-
-            return response()->json($respons);
-
-        } else if ($potongan_produk > $total) {
-
-            $respons['status'] = 1;
-
-            return response()->json($respons);
-
-        } else {
-            $subtotal = ($tbs_penjualan->jumlah_produk * $tbs_penjualan->harga_produk) - $potongan_produk;
-
-            $tbs_penjualan->update(['potongan' => $potongan_produk, 'subtotal' => $subtotal]);
-
-            $potongan            = $this->tampilPotongan($potongan_produk, $tbs_penjualan->jumlah_produk, $tbs_penjualan->harga_produk);
-            $respons['potongan'] = $potongan;
-            $respons['subtotal'] = $subtotal;
-
-            return response()->json($respons);
-        }
-
-    }
-
-    public function prosesHapusTbsPenjualan($id)
-    {
-
-        if (!TbsPenjualan::destroy($id)) {
-            return 0;
-        } else {
-            return response(200);
-        }
-
-    }
-
-    public function proses_batal_penjualan()
-    {
-
-        $session_id         = session()->getId();
-        $data_tbs_penjualan = TbsPenjualan::where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->delete();
-
+    if (!TbsPenjualan::destroy($id)) {
+        return 0;
+    } else {
         return response(200);
     }
 
-    public function cekPotongan($potongan, $harga_produk, $jumlah_produk)
-    {
-        $cek_potongan = substr_count($potongan, '%'); // UNTUK CEK APAKAH ADA STRING "%" atau maksudnya untuk cek apakah pot. dalam bentuk persen atau tidak
+}
 
-        // JIKA POTONGAN TIDAK DALAM BENTUK PERSEN
-        if ($cek_potongan == 0) {
-
-            // FILTER POTONGAN, SEMUA BENTUK STRING AKAN DI DIFILTER KECUALI FLOAT/KOMA
-            $potongan_produk = filter_var($potongan, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
-
-        } else {
-            // JIKA POTONGAN DALAM BENTUK PERSEN
-            // FILTER POTONGAN, SEMUA BENTUK STRING AKAN DI DIFILTER KECUALI FLOAT/KOMA
-            $potongan_persen = filter_var($potongan, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
-
-            // UBAH NILAI POTONGAN KE BENTUK DESIMAL
-            $potongan_produk = ($harga_produk * $jumlah_produk) * $potongan_persen / 100;
-        }
-
-        return $potongan_produk;
-    }
-
-    public function cekDataTbsPenjualan($id)
-    {
-
-        return response()->json([
-            "penjualan" => PenjualanPos::find($id)->toArray(),
-            ]);
-    }
-
-    public function queryProduk($id_produk)
-    {
-
-        $barang = Barang::find($id_produk);
-
-        return $barang;
-
-    }
-
-    public function index()
-    {
-        //
-    }
-
-/**
- * Show the form for creating a new resource.
- *
- * @return \Illuminate\Http\Response
- */
-public function create()
+public function proses_batal_penjualan()
 {
-        //
+
+    $session_id         = session()->getId();
+    $data_tbs_penjualan = TbsPenjualan::where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->delete();
+
+    return response(200);
+}
+
+public function cekPotongan($potongan, $harga_produk, $jumlah_produk)
+{
+$cek_potongan = substr_count($potongan, '%'); // UNTUK CEK APAKAH ADA STRING "%" atau maksudnya untuk cek apakah pot. dalam bentuk persen atau tidak
+
+// JIKA POTONGAN TIDAK DALAM BENTUK PERSEN
+if ($cek_potongan == 0) {
+
+// FILTER POTONGAN, SEMUA BENTUK STRING AKAN DI DIFILTER KECUALI FLOAT/KOMA
+    $potongan_produk = filter_var($potongan, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+
+} else {
+// JIKA POTONGAN DALAM BENTUK PERSEN
+// FILTER POTONGAN, SEMUA BENTUK STRING AKAN DI DIFILTER KECUALI FLOAT/KOMA
+    $potongan_persen = filter_var($potongan, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+
+// UBAH NILAI POTONGAN KE BENTUK DESIMAL
+    $potongan_produk = ($harga_produk * $jumlah_produk) * $potongan_persen / 100;
+}
+
+return $potongan_produk;
+}
+
+public function cekDataTbsPenjualan($id)
+{
+
+    return response()->json([
+        "penjualan" => PenjualanPos::find($id)->toArray(),
+        ]);
+}
+
+public function queryProduk($id_produk)
+{
+
+    $barang = Barang::find($id_produk);
+
+    return $barang;
+
+}
+
+public function index()
+{
+//
 }
 
 /**
- * Store a newly created resource in storage.
- *
- * @param  \Illuminate\Http\Request  $request
- * @return \Illuminate\Http\Response
- */
+* Show the form for creating a new resource.
+*
+* @return \Illuminate\Http\Response
+*/
+public function create()
+{
+//
+}
+
+/**
+* Store a newly created resource in storage.
+*
+* @param  \Illuminate\Http\Request  $request
+* @return \Illuminate\Http\Response
+*/
 public function store(Request $request)
 {
-        //START TRANSAKSI
+//START TRANSAKSI
     DB::beginTransaction();
     $warung_id  = Auth::user()->id_warung;
     $session_id = session()->getId();
     $user       = Auth::user()->id;
     $no_faktur  = PenjualanPos::no_faktur($warung_id);
-        //INSERT DETAIL PENJUALAN
+//INSERT DETAIL PENJUALAN
 
     $cek_status = intval($request->pembayaran) - intval($request->total_akhir);
 
@@ -845,7 +863,7 @@ public function store(Request $request)
 
     } else {
 
-            //INSERT PENJUALAN
+//INSERT PENJUALAN
 
         $penjualan = PenjualanPos::create([
             'no_faktur'        => $no_faktur,
@@ -863,7 +881,7 @@ public function store(Request $request)
             'warung_id'        => Auth::user()->id_warung,
             ]);
 
-            // INSERT KAS DAN PIUTANG TIDAK DIBUAT DI OBSERVER KARENA DI OBSERVER ID PENJUALAN DI ANGGAP NULL
+// INSERT KAS DAN PIUTANG TIDAK DIBUAT DI OBSERVER KARENA DI OBSERVER ID PENJUALAN DI ANGGAP NULL
         $kas = intval($penjualan->tunai) - intval($penjualan->kembalian);
         if ($kas > 0) {
             TransaksiKas::create([
@@ -894,7 +912,7 @@ public function store(Request $request)
                 $sisa             = $stok_produk - $data_tbs->jumlah_produk;
 
                 if ($sisa < 0) {
-                        //DI BATALKAN PROSES NYA
+//DI BATALKAN PROSES NYA
 
                     $respons['respons']     = 1;
                     $respons['nama_produk'] = title_case($data_tbs->produk->nama_barang);
@@ -936,7 +954,7 @@ public function store(Request $request)
             }
         }
 
-            //HAPUS TBS PENJUALAN
+//HAPUS TBS PENJUALAN
         $data_produk_penjualan->delete();
         DB::commit();
 
@@ -961,25 +979,25 @@ public function cekSettingStok()
 }
 
 /**
- * Display the specified resource.
- *
- * @param  int  $id
- * @return \Illuminate\Http\Response
- */
+* Display the specified resource.
+*
+* @param  int  $id
+* @return \Illuminate\Http\Response
+*/
 public function show($id)
 {
-        //
+//
 }
 
 /**
- * Show the form for editing the specified resource.
- *
- * @param  int  $id
- * @return \Illuminate\Http\Response
- */
+* Show the form for editing the specified resource.
+*
+* @param  int  $id
+* @return \Illuminate\Http\Response
+*/
 public function edit($id)
 {
-        //
+//
     $session_id            = session()->getId();
     $data_produk_penjualan = DetailPenjualanPos::where('id_penjualan_pos', $id)->where('warung_id', Auth::user()->id_warung);
 
@@ -1003,15 +1021,15 @@ public function edit($id)
 }
 
 /**
- * Update the specified resource in storage.
- *
- * @param  \Illuminate\Http\Request  $request
- * @param  int  $id
- * @return \Illuminate\Http\Response
- */
+* Update the specified resource in storage.
+*
+* @param  \Illuminate\Http\Request  $request
+* @param  int  $id
+* @return \Illuminate\Http\Response
+*/
 public function update(Request $request, $id)
 {
-        //START TRANSAKSI
+//START TRANSAKSI
     DB::beginTransaction();
     $data_penjualan_pos = PenjualanPos::find($id);
     $user               = Auth::user()->id;
@@ -1041,7 +1059,7 @@ public function update(Request $request, $id)
     foreach ($data_detail_penjualan_pos as $data_detail) {
 
         if (!$hapus_detail = DetailPenjualanPos::destroy($data_detail->id_detail_penjualan_pos)) {
-                //DI BATALKAN PROSES NYA
+//DI BATALKAN PROSES NYA
 
             $respons['respons'] = 2;
             $respons['info']    = "Gagal Hapus Hpp Penjualan";
@@ -1060,7 +1078,7 @@ public function update(Request $request, $id)
 
     } else {
 
-            //UPDATE PENJUALAN
+//UPDATE PENJUALAN
 
         $data_penjualan_pos->update([
             'total'            => $request->total_akhir,
@@ -1101,7 +1119,7 @@ public function update(Request $request, $id)
 
         }
 
-            // inset detail penjualan
+// inset detail penjualan
         foreach ($data_produk_penjualan_pos->get() as $data_tbs) {
 
             if ($data_tbs->produk->hitung_stok == 1 and $this->cekSettingStok() == 0) {
@@ -1111,7 +1129,7 @@ public function update(Request $request, $id)
                 $sisa             = $stok_produk - $data_tbs->jumlah_produk;
 
                 if ($sisa < 0) {
-                        //DI BATALKAN PROSES NYA
+//DI BATALKAN PROSES NYA
 
                     $respons['respons']     = 1;
                     $respons['nama_produk'] = title_case($data_tbs->produk->nama_barang);
@@ -1165,14 +1183,14 @@ public function update(Request $request, $id)
 }
 
 /**
- * Remove the specified resource from storage.
- *
- * @param  int  $id
- * @return \Illuminate\Http\Response
- */
+* Remove the specified resource from storage.
+*
+* @param  int  $id
+* @return \Illuminate\Http\Response
+*/
 public function destroy($id)
 {
-        //START TRANSAKSI
+//START TRANSAKSI
     DB::beginTransaction();
 
     if (!PenjualanPos::destroy($id)) {
@@ -1340,7 +1358,7 @@ public function tampilPotongan($potongan_produk, $jumlah_produk, $harga_produk)
 
 public function cetakBesar($id)
 {
-        //SETTING APLIKASI
+//SETTING APLIKASI
     $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
 
     $penjualan = PenjualanPos::QueryCetak($id)->first();
@@ -1366,7 +1384,7 @@ public function cetakBesar($id)
 
 public function cetakKecil($id)
 {
-        //SETTING APLIKASI
+//SETTING APLIKASI
     $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
 
     $penjualan = PenjualanPos::QueryCetak($id)->first();
@@ -1470,14 +1488,14 @@ public function cekSubtotalTbsPenjualan()
     return response()->json($respons);
 }
 
-    //DOWNLOAD EXCEL - LAPORAN LABA KOTOR /PELANGGAN
+//DOWNLOAD EXCEL - LAPORAN LABA KOTOR /PELANGGAN
 public function downloadExcelPenjualan(Request $request, $id_penjualan)
 {
 
     $data_tbs_penjualan_pos = DetailPenjualanPos::select('detail_penjualan_pos.no_faktur', 'barangs.kode_barang', 'detail_penjualan_pos.jumlah_produk', 'detail_penjualan_pos.harga_produk', 'detail_penjualan_pos.subtotal', 'detail_penjualan_pos.tax', 'detail_penjualan_pos.potongan', 'detail_penjualan_pos.warung_id', 'detail_penjualan_pos.created_by', 'detail_penjualan_pos.updated_by', 'detail_penjualan_pos.created_at', 'detail_penjualan_pos.updated_at')->leftJoin('barangs', 'detail_penjualan_pos.id_produk', '=', 'barangs.id')->where('detail_penjualan_pos.id_penjualan_pos', $id_penjualan)->where('detail_penjualan_pos.warung_id', Auth::user()->id_warung);
 
     Excel::create('Data Export Penjualan', function ($excel) use ($request, $data_tbs_penjualan_pos) {
-            // Set property
+// Set property
         $excel->sheet('Data Export Penjualan', function ($sheet) use ($request, $data_tbs_penjualan_pos) {
 
             $row = 1;

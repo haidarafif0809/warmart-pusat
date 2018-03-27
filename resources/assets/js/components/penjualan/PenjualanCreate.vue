@@ -409,9 +409,8 @@
                   <a href="#create-penjualan" v-bind:id="'edit-' + tbs_penjualan.id_tbs_penjualan" v-on:click="editEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">{{ new Intl.NumberFormat().format(tbs_penjualan.jumlah_produk) }}</a>
                 </td>
 
-                <td align="right" v-bind:class="'satuan-' + tbs_penjualan.id_produk" v-bind:data-satuan="''+tbs_penjualan.satuan_id">{{ tbs_penjualan.satuan_id }}</td>
+                <td align="center" v-bind:class="'satuan-' + tbs_penjualan.id_produk" v-bind:data-satuan="''+tbs_penjualan.satuan_id">{{ tbs_penjualan.satuan }}</td>
 
-                <td align="center">{{ tbs_penjualan.satuan }}</td>
 
                 <td align="right" >{{ new Intl.NumberFormat().format(tbs_penjualan.harga_produk) }}</td>
 
@@ -756,27 +755,9 @@
 
     axios.get(app.url_satuan+'/'+id_produk)
     .then(function (resp) {
-
+      console.log(satuan_tbs)
       app.satuan = resp.data;
-      if (typeof satuan_tbs == "undefined") {
-
-        $.each(resp.data, function (i, item) {
-          if (resp.data[i].id === resp.data[i].satuan_dasar) {
-            app.inputTbsPenjualan.satuan_produk = resp.data[i].satuan;
-            $('#satuan')[0].selectize.unlock();
-          }
-        });
-
-      }else{
-
-        $.each(resp.data, function (i, item) {
-          if (resp.data[i].id === parseInt(satuan_tbs)) {
-            app.inputTbsPenjualan.satuan_produk = resp.data[i].satuan;
-            $('#satuan')[0].selectize.lock();
-          }
-        });
-
-      }
+      app.inputTbsPenjualan.satuan_produk = resp.data[i].satuan;
     })
     .catch(function (resp) {
       console.log(resp);
@@ -908,6 +889,9 @@ submitProdukPenjualan(value){
 
         if (index >= 0) {
           app.tbs_penjualan[index].jumlah_produk = resp.data.jumlah_produk
+          app.tbs_penjualan[index].satuan_produk = resp.data.satuan_produk
+          app.tbs_penjualan[index].satuan = resp.data.nama_satuan
+          app.tbs_penjualan[index].harga_produk = resp.data.harga_produk
           app.tbs_penjualan[index].subtotal = resp.data.subtotalKeseluruhan
         }else{
 
