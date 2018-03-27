@@ -1,36 +1,36 @@
 <style scoped>
-  .modal {
-    overflow-y:auto;
-  }
-  .pencarian {
-    color: red; 
-    float: right;
-  }
-  .form-pembelian{
-    width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    display: inline-block;
-    border: 3px solid #555;
-    border-radius: 4px;
-    box-sizing: border-box;
-    font-size: 30px;
-  }
-  .form-subtotal{
-    width: 100%;
-    margin: 8px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-  }
-  .card-produk{
-    background-color:#82B1FF;
-  }
-  .btn-icon{
-    border-radius: 1px solid;
-    padding: 10px 10px;
-  }
+.modal {
+  overflow-y:auto;
+}
+.pencarian {
+  color: red; 
+  float: right;
+}
+.form-pembelian{
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 3px solid #555;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 30px;
+}
+.form-subtotal{
+  width: 100%;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+.card-produk{
+  background-color:#82B1FF;
+}
+.btn-icon{
+  border-radius: 1px solid;
+  padding: 10px 10px;
+}
 
 </style>
 
@@ -449,304 +449,304 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex';
-  export default {
-    data: function () {
-      return {
-        errors: [],
-        tbs_pembelians: [],
-        tbsPembelianData : {},
-        url : window.location.origin+(window.location.pathname).replace("dashboard", "pembelian"),
-        url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
-        url_kas : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
-        url_cek_total_kas : window.location.origin+(window.location.pathname).replace("dashboard", ""),
-        url_edit : window.location.origin+(window.location.pathname).replace("dashboard", "edit-pembelian"),
-        url_suplier : window.location.origin+(window.location.pathname).replace("dashboard", "suplier"),
-        url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
-        url_satuan : window.location.origin+(window.location.pathname).replace("dashboard", "pembelian/satuan-konversi"),
-        inputTbsPembelian: {
-          nama_produk : '',
-          produk : '',
-          jumlah_produk : '',
-          harga_produk : '',
-          id_tbs : '',
-          no_faktur : '',
-          satuan_produk: ''
-        },
-        inputPembayaranPembelian:{
-          potongan_persen: 0.00,
-          potongan_faktur: 0.00,
-          subtotal: 0.00,
-          pembayaran: 0.00,
-          total_akhir: 0.00,
-          kembalian: 0.00,
-          kredit: 0.00,
-          jatuh_tempo: '',
-          keterangan: '',
-          subtotal_number_format:0.00,  
-          suplier: '',
-          cara_bayar: '',
-          status_pembelian: '',
-          ppn: '',
-          potongan: 0.00,
-          no_faktur_edit: '',
-          id_pembelian:'',
-
-        },
-        tambahSuplier: {
-          nama_suplier : '',
-          alamat : '',
-          no_telp : '',
-          contact_person : '',
-        },
-        tambahKas: {
-          kode_kas : '',
-          nama_kas : '',
-          status_kas : 0,
-          default_kas : 0
-        },
-        placeholder_produk: {
-          placeholder: '--PILIH PRODUK--',
-          sortField: 'text',
-          openOnFocus : true
-        },
-        placeholder_satuan: {
-          placeholder: '--PILIH SATUAN--',
-          sortField: 'text',
-          openOnFocus : true,
-        },
-        placeholder_suplier: {
-          placeholder: '--PILIH SUPPLIER--',
-          sortField: 'text',
-          openOnFocus : true
-
-        },
-        placeholder_cara_bayar: {
-          placeholder: '--PILIH CARA BAYAR--',
-          sortField: 'text',
-          openOnFocus : true
-        },
-        separator: {
-          decimal: ',',
-          thousands: '.',
-          prefix: '',
-          suffix: '',
-          precision: 2,
-          masked: false /* doesn't work with directive */
-        },
-        pemisahTitik: {
-          decimal: ',',
-          thousands: '.',
-          prefix: '',
-          suffix: '',
-          precision: 0,
-          masked: false /* doesn't work with directive */
-        },   
-        pencarian: '',
-        id_pembelian : 0,
-        loading: true,
-        seen : false,
-      }
-    },
-    mounted() {
-      var app = this;
-      app.$store.dispatch('LOAD_PRODUK_LIST')
-      app.$store.dispatch('LOAD_KAS_LIST')
-      app.$store.dispatch('LOAD_SUPLIER_LIST')
-      app.getResults();
-      app.id_pembelian = app.$route.params.id;
-
-    },
-    computed : mapState ({    
-      produk(){
-        return this.$store.getters.produkStok
+import { mapState } from 'vuex';
+export default {
+  data: function () {
+    return {
+      errors: [],
+      tbs_pembelians: [],
+      tbsPembelianData : {},
+      url : window.location.origin+(window.location.pathname).replace("dashboard", "pembelian"),
+      url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
+      url_kas : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
+      url_cek_total_kas : window.location.origin+(window.location.pathname).replace("dashboard", ""),
+      url_edit : window.location.origin+(window.location.pathname).replace("dashboard", "edit-pembelian"),
+      url_suplier : window.location.origin+(window.location.pathname).replace("dashboard", "suplier"),
+      url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
+      url_satuan : window.location.origin+(window.location.pathname).replace("dashboard", "pembelian/satuan-konversi"),
+      inputTbsPembelian: {
+        nama_produk : '',
+        produk : '',
+        jumlah_produk : '',
+        harga_produk : '',
+        id_tbs : '',
+        no_faktur : '',
+        satuan_produk: ''
       },
-      cara_bayar(){
-        return this.$store.state.kas
-      },
-      suplier(){
-        return this.$store.getters.suplier_pembelian
-      }
-    }),
-    watch: {
-      pencarian: function (newQuestion) {
-        this.getHasilPencarian();
-        this.loading = true;  
-      },
-      'inputTbsPembelian.produk': function () {
-        this.pilihProduk()
-      },
-      'inputPembayaranPembelian.pembayaran':function (val){
-        if (val == '') {
-          val = 0
-        }
-        this.hitungKembalian(val)
-      },
-      'inputPembayaranPembelian.potongan_faktur':function(){
-        this.hitungPotonganFaktur()
-      },
-      'inputTbsPembelian.satuan_produk':function(){
-        this.hitungHargaKonversi()
-      }
-    },
-    methods: { 
-      openSelectizeProduk(){      
-        this.$refs.produk.$el.selectize.focus();
-      },
-      openSelectizeSuplier(){      
-        this.$refs.suplier.$el.selectize.focus();
-      },
-      openSelectizeKas(){      
-        this.$refs.cara_bayar.$el.selectize.focus();
-      },
-      getSatuan(id_produk){
-        var app = this;
-        var satuan_tbs = $(".satuan-"+id_produk).attr("data-satuan");
+      inputPembayaranPembelian:{
+        potongan_persen: 0.00,
+        potongan_faktur: 0.00,
+        subtotal: 0.00,
+        pembayaran: 0.00,
+        total_akhir: 0.00,
+        kembalian: 0.00,
+        kredit: 0.00,
+        jatuh_tempo: '',
+        keterangan: '',
+        subtotal_number_format:0.00,  
+        suplier: '',
+        cara_bayar: '',
+        status_pembelian: '',
+        ppn: '',
+        potongan: 0.00,
+        no_faktur_edit: '',
+        id_pembelian:'',
 
-        axios.get(app.url_satuan+'/'+id_produk)
-        .then(function (resp) {
+      },
+      tambahSuplier: {
+        nama_suplier : '',
+        alamat : '',
+        no_telp : '',
+        contact_person : '',
+      },
+      tambahKas: {
+        kode_kas : '',
+        nama_kas : '',
+        status_kas : 0,
+        default_kas : 0
+      },
+      placeholder_produk: {
+        placeholder: '--PILIH PRODUK--',
+        sortField: 'text',
+        openOnFocus : true
+      },
+      placeholder_satuan: {
+        placeholder: '--PILIH SATUAN--',
+        sortField: 'text',
+        openOnFocus : true,
+      },
+      placeholder_suplier: {
+        placeholder: '--PILIH SUPPLIER--',
+        sortField: 'text',
+        openOnFocus : true
 
-          app.satuan = resp.data;
-          if (typeof satuan_tbs == "undefined") {
-
-            $.each(resp.data, function (i, item) {
-              if (resp.data[i].id === resp.data[i].satuan_dasar) {
-                app.inputTbsPembelian.satuan_produk = resp.data[i].satuan;
-                $('#satuan')[0].selectize.unlock();
-              }
-            });
-
-          }else{
-
-            $.each(resp.data, function (i, item) {
-              if (resp.data[i].id === parseInt(satuan_tbs)) {
-                app.inputTbsPembelian.satuan_produk = resp.data[i].satuan;
-                $('#satuan')[0].selectize.lock();
-              }
-            });
-
-          }
-        })
-        .catch(function (resp) {
-          console.log(resp);
-          alert("Tidak Dapat Memuat Satuan Produk");
-        });
+      },
+      placeholder_cara_bayar: {
+        placeholder: '--PILIH CARA BAYAR--',
+        sortField: 'text',
+        openOnFocus : true
+      },
+      separator: {
+        decimal: ',',
+        thousands: '.',
+        prefix: '',
+        suffix: '',
+        precision: 2,
+        masked: false /* doesn't work with directive */
+      },
+      pemisahTitik: {
+        decimal: ',',
+        thousands: '.',
+        prefix: '',
+        suffix: '',
+        precision: 0,
+        masked: false /* doesn't work with directive */
       },   
-      getDataPembelian(){
-        var app = this
-        var id = app.$route.params.id;
-        axios.get(app.url_edit+'/cek-data-tbs-pembelian/'+id)
-        .then(function (resp) {
+      pencarian: '',
+      id_pembelian : 0,
+      loading: true,
+      seen : false,
+    }
+  },
+  mounted() {
+    var app = this;
+    app.$store.dispatch('LOAD_PRODUK_LIST')
+    app.$store.dispatch('LOAD_KAS_LIST')
+    app.$store.dispatch('LOAD_SUPLIER_LIST')
+    app.getResults();
+    app.id_pembelian = app.$route.params.id;
 
-          app.inputPembayaranPembelian.suplier = resp.data.suplier_id
-          app.inputPembayaranPembelian.cara_bayar = resp.data.cara_bayar
-
-          app.inputPembayaranPembelian.pembayaran = resp.data.tunai
-          app.inputPembayaranPembelian.keterangan = resp.data.keterangan
-          if (app.inputPembayaranPembelian.subtotal > 0) {
-            app.inputPembayaranPembelian.potongan = resp.data.potongan
-            app.inputPembayaranPembelian.potongan_faktur = resp.data.potongan                
-          }
-          if (app.inputPembayaranPembelian.status_pembelian == 'Hutang'){
-            app.inputPembayaranPembelian.jatuh_tempo = resp.data.tanggal_jt_tempo;
-          }
-
-
-
-        })
-        .catch(function (resp) {
-
-          console.log(resp);
-          alert("Tidak Dapat Memuat Penjualan");
-
-        });
-      },
-      getResults(page) {
-        var app = this; 
-        var id = app.$route.params.id;
-        if (typeof page === 'undefined') {
-         page = 1;
-       }
-       axios.get(app.url+'/view-edit-tbs-pembelian/'+id+'?page='+page)
-       .then(function (resp) {
-         app.tbs_pembelians = resp.data.data;
-         app.tbsPembelianData = resp.data;
-         app.inputTbsPembelian.no_faktur = resp.data.no_faktur;
-         app.inputPembayaranPembelian.no_faktur_edit = resp.data.no_faktur;
-         app.inputPembayaranPembelian.id_pembelian = app.id_pembelian;
-         app.getDataPembelian(); 
-         app.inputPembayaranPembelian.subtotal = resp.data.subtotal;
-         var total_akhir = parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(app.inputPembayaranPembelian.potongan_faktur);
-         app.inputPembayaranPembelian.total_akhir = total_akhir;
-         app.hitungKembalian(app.inputPembayaranPembelian.pembayaran); 
-
-         app.loading = false;
-         app.seen = true;
-         app.openSelectizeProduk();
-
-       })
-       .catch(function (resp) {
-         console.log(resp);
-         app.loading = false;
-         app.seen = true;
-         alert("Tidak Dapat Memuat Pembelian");
-
-       });
-     },
-     getHasilPencarian(page){
+  },
+  computed : mapState ({    
+    produk(){
+      return this.$store.getters.produkStok
+    },
+    cara_bayar(){
+      return this.$store.state.kas
+    },
+    suplier(){
+      return this.$store.getters.suplier_pembelian
+    }
+  }),
+  watch: {
+    pencarian: function (newQuestion) {
+      this.getHasilPencarian();
+      this.loading = true;  
+    },
+    'inputTbsPembelian.produk': function () {
+      this.pilihProduk()
+    },
+    'inputPembayaranPembelian.pembayaran':function (val){
+      if (val == '') {
+        val = 0
+      }
+      this.hitungKembalian(val)
+    },
+    'inputPembayaranPembelian.potongan_faktur':function(){
+      this.hitungPotonganFaktur()
+    },
+    'inputTbsPembelian.satuan_produk':function(){
+      this.hitungHargaKonversi()
+    }
+  },
+  methods: { 
+    openSelectizeProduk(){      
+      this.$refs.produk.$el.selectize.focus();
+    },
+    openSelectizeSuplier(){      
+      this.$refs.suplier.$el.selectize.focus();
+    },
+    openSelectizeKas(){      
+      this.$refs.cara_bayar.$el.selectize.focus();
+    },
+    getSatuan(id_produk){
       var app = this;
+      var satuan_tbs = $(".satuan-"+id_produk).attr("data-satuan");
+
+      axios.get(app.url_satuan+'/'+id_produk)
+      .then(function (resp) {
+
+        app.satuan = resp.data;
+        if (typeof satuan_tbs == "undefined") {
+
+          $.each(resp.data, function (i, item) {
+            if (resp.data[i].id === resp.data[i].satuan_dasar) {
+              app.inputTbsPembelian.satuan_produk = resp.data[i].satuan;
+              $('#satuan')[0].selectize.unlock();
+            }
+          });
+
+        }else{
+
+          $.each(resp.data, function (i, item) {
+            if (resp.data[i].id === parseInt(satuan_tbs)) {
+              app.inputTbsPembelian.satuan_produk = resp.data[i].satuan;
+              $('#satuan')[0].selectize.lock();
+            }
+          });
+
+        }
+      })
+      .catch(function (resp) {
+        console.log(resp);
+        alert("Tidak Dapat Memuat Satuan Produk");
+      });
+    },   
+    getDataPembelian(){
+      var app = this
+      var id = app.$route.params.id;
+      axios.get(app.url_edit+'/cek-data-tbs-pembelian/'+id)
+      .then(function (resp) {
+
+        app.inputPembayaranPembelian.suplier = resp.data.suplier_id
+        app.inputPembayaranPembelian.cara_bayar = resp.data.cara_bayar
+
+        app.inputPembayaranPembelian.pembayaran = resp.data.tunai
+        app.inputPembayaranPembelian.keterangan = resp.data.keterangan
+        if (app.inputPembayaranPembelian.subtotal > 0) {
+          app.inputPembayaranPembelian.potongan = resp.data.potongan
+          app.inputPembayaranPembelian.potongan_faktur = resp.data.potongan                
+        }
+        if (app.inputPembayaranPembelian.status_pembelian == 'Hutang'){
+          app.inputPembayaranPembelian.jatuh_tempo = resp.data.tanggal_jt_tempo;
+        }
+
+
+
+      })
+      .catch(function (resp) {
+
+        console.log(resp);
+        alert("Tidak Dapat Memuat Penjualan");
+
+      });
+    },
+    getResults(page) {
+      var app = this; 
       var id = app.$route.params.id;
       if (typeof page === 'undefined') {
        page = 1;
      }
-     axios.get(app.url+'/pencarian-edit-tbs-pembelian/'+id+'?search='+app.pencarian+'&page='+page)
+     axios.get(app.url+'/view-edit-tbs-pembelian/'+id+'?page='+page)
      .then(function (resp) {
        app.tbs_pembelians = resp.data.data;
        app.tbsPembelianData = resp.data;
+       app.inputTbsPembelian.no_faktur = resp.data.no_faktur;
+       app.inputPembayaranPembelian.no_faktur_edit = resp.data.no_faktur;
+       app.inputPembayaranPembelian.id_pembelian = app.id_pembelian;
+       app.getDataPembelian(); 
+       app.inputPembayaranPembelian.subtotal = resp.data.subtotal;
+       var total_akhir = parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(app.inputPembayaranPembelian.potongan_faktur);
+       app.inputPembayaranPembelian.total_akhir = total_akhir;
+       app.hitungKembalian(app.inputPembayaranPembelian.pembayaran); 
+
        app.loading = false;
        app.seen = true;
+       app.openSelectizeProduk();
+
      })
      .catch(function (resp) {
        console.log(resp);
+       app.loading = false;
+       app.seen = true;
        alert("Tidak Dapat Memuat Pembelian");
-     });
 
-   }, 
-   getFakturPembelian(){
+     });
+   },
+   getHasilPencarian(page){
     var app = this;
     var id = app.$route.params.id;
-    axios.get(app.url+'/ambil-faktur-pembelian/'+id).then(function (resp) {
-
-      app.inputTbsPembelian.no_faktur = resp.data.no_faktur; 
-      app.inputPembayaranPembelian.keterangan = resp.data.keterangan;        
-
-    })
-    .catch(function (resp) {
-
+    if (typeof page === 'undefined') {
+     page = 1;
+   }
+   axios.get(app.url+'/pencarian-edit-tbs-pembelian/'+id+'?search='+app.pencarian+'&page='+page)
+   .then(function (resp) {
+     app.tbs_pembelians = resp.data.data;
+     app.tbsPembelianData = resp.data;
      app.loading = false;
      app.seen = true;
-     alert("Tidak Bisa Memuat Pembelian");
-
+   })
+   .catch(function (resp) {
+     console.log(resp);
+     alert("Tidak Dapat Memuat Pembelian");
    });
 
-  },
-  btnCloseModal(){
-    $("#modal_selesai").hide(); 
-  },
-  closeModalX(){
-    $("#modal_selesai").hide();
-    $("#modal_tambah_suplier").hide(); 
-    $("#modal_tambah_kas").hide();   
-  }, 
-  tambahSupplier(){
-   $("#modal_tambah_suplier").show();
-   this.$refs.nama_suplier.focus();
- },
- tambahModalKas(){
-   $("#modal_tambah_kas").show();
-   this.$refs.kode_kas.focus(); 
- },
- saveFormSupplier() {
+ }, 
+ getFakturPembelian(){
+  var app = this;
+  var id = app.$route.params.id;
+  axios.get(app.url+'/ambil-faktur-pembelian/'+id).then(function (resp) {
+
+    app.inputTbsPembelian.no_faktur = resp.data.no_faktur; 
+    app.inputPembayaranPembelian.keterangan = resp.data.keterangan;        
+
+  })
+  .catch(function (resp) {
+
+   app.loading = false;
+   app.seen = true;
+   alert("Tidak Bisa Memuat Pembelian");
+
+ });
+
+},
+btnCloseModal(){
+  $("#modal_selesai").hide(); 
+},
+closeModalX(){
+  $("#modal_selesai").hide();
+  $("#modal_tambah_suplier").hide(); 
+  $("#modal_tambah_kas").hide();   
+}, 
+tambahSupplier(){
+ $("#modal_tambah_suplier").show();
+ this.$refs.nama_suplier.focus();
+},
+tambahModalKas(){
+ $("#modal_tambah_kas").show();
+ this.$refs.kode_kas.focus(); 
+},
+saveFormSupplier() {
   var app = this;
   var newsuplier = app.tambahSuplier;
   axios.post(app.url_suplier, newsuplier)
@@ -1391,62 +1391,78 @@ deleteEntry(id, index,nama_produk) {
         }        
       },
       saveForm(){
+
+       var app = this;
+       var status_pembelian = app.inputPembayaranPembelian.status_pembelian;
+       var jatuh_tempo = app.inputPembayaranPembelian.jatuh_tempo;
+       if ((status_pembelian == 'Hutang' || status_pembelian == '') && jatuh_tempo == '') {
+        swal("Oops...","Jatuh Tempo Belum Diisi!","error");
+        this.$refs.jatuh_tempo.$el.focus();
+
+      }else{
+
+        app.$swal({
+          text: "Anda Yakin Ingin Menyelesaikan Transaksi Ini ?",
+          buttons: {
+            cancel: true,
+            confirm: "Submit"                   
+          },
+
+        }).then((value) => {
+
+          if (!value) throw null;
+          app.prosesTransaksiSelesai();
+          $("#modal_selesai").hide()
+
+        });
+
+      }     
+
+      },//akhir btn bayar tunai
+      prosesTransaksiSelesai(){
         var app = this;
-        var status_pembelian = app.inputPembayaranPembelian.status_pembelian;
-        var jatuh_tempo = app.inputPembayaranPembelian.jatuh_tempo;
-        if ((status_pembelian == 'Hutang' || status_pembelian == '') && jatuh_tempo == '') {
-          swal("Oops...","Jatuh Tempo Belum Diisi!","error");
-          this.$refs.jatuh_tempo.$el.focus();
-
-        }else{
-         app.prosesTransaksiSelesai();
-       }
-       
-    },//akhir btn bayar tunai
-    prosesTransaksiSelesai(){
-      var app = this;
-      var kas = app.inputPembayaranPembelian.cara_bayar;
-      var pembayaran = app.inputPembayaranPembelian.pembayaran;
-      var no_faktur = app.inputPembayaranPembelian.no_faktur_edit;
-      var id = app.id_pembelian;
-      if (pembayaran == '') {
-        pembayaran = 0;
-      }
-      axios.get(app.url_edit+'/cek-total-kas-pembelian?kas='+kas+'&no_faktur='+no_faktur)
-      .then(function (resp) {
-        if (resp.data.total_kas == '' || resp.data.total_kas == null) {
-          var total_kas = 0;
-        }else{
-          var total_kas = resp.data.total_kas;
+        var kas = app.inputPembayaranPembelian.cara_bayar;
+        var pembayaran = app.inputPembayaranPembelian.pembayaran;
+        var no_faktur = app.inputPembayaranPembelian.no_faktur_edit;
+        var id = app.id_pembelian;
+        if (pembayaran == '') {
+          pembayaran = 0;
         }
-        var data_produk_pembelian = resp.data.data_produk_pembelian;
-        var jumlah_kas_lama = resp.data.jumlah_kas_lama;
-
-        var hitung_sisa_kas = (parseFloat(total_kas) + parseFloat(jumlah_kas_lama)) - parseFloat(pembayaran); 
-        if (hitung_sisa_kas >= 0) {
-          if (data_produk_pembelian == 0){
-            swal('Oops...','Belum Ada Produk Yang Diinputkan','error'); 
+        axios.get(app.url_edit+'/cek-total-kas-pembelian?kas='+kas+'&no_faktur='+no_faktur)
+        .then(function (resp) {
+          if (resp.data.total_kas == '' || resp.data.total_kas == null) {
+            var total_kas = 0;
+          }else{
+            var total_kas = resp.data.total_kas;
           }
-          else{
+          var data_produk_pembelian = resp.data.data_produk_pembelian;
+          var jumlah_kas_lama = resp.data.jumlah_kas_lama;
 
-            var newPembelian = app.inputPembayaranPembelian;
-            axios.post(app.url_edit+'/proses-edit-pembelian', newPembelian)
-            .then(function (resp) {
-              app.message = 'Berhasil Mengubah Pembelian';
-              app.alert(app.message);
-              app.$router.replace('/pembelian');
-              window.open('pembelian/cetak-besar-pembelian/'+id,'_blank');
+          var hitung_sisa_kas = (parseFloat(total_kas) + parseFloat(jumlah_kas_lama)) - parseFloat(pembayaran); 
+          if (hitung_sisa_kas >= 0) {
+            if (data_produk_pembelian == 0){
+              swal('Oops...','Belum Ada Produk Yang Diinputkan','error'); 
+            }
+            else{
+
+              var newPembelian = app.inputPembayaranPembelian;
+              axios.post(app.url_edit+'/proses-edit-pembelian', newPembelian)
+              .then(function (resp) {
+                app.message = 'Berhasil Mengubah Pembelian';
+                app.alert(app.message);
+                app.$router.replace('/pembelian');
+                window.open('pembelian/cetak-besar-pembelian/'+id,'_blank');
 
 
-            })
-            .catch(function (resp) {
-              app.success = false;
-            });
+              })
+              .catch(function (resp) {
+                app.success = false;
+              });
+            }
+          }else{
+            swal('Oops...','Kas Anda Tidak Cukup Untuk Melakukan Pembayaran','error');
           }
-        }else{
-          swal('Oops...','Kas Anda Tidak Cukup Untuk Melakukan Pembayaran','error');
-        }
-      });
+        });
     },//akhir prosesTransaksiSelesai
     alert(pesan) {
       this.$swal({
@@ -1464,4 +1480,4 @@ deleteEntry(id, index,nama_produk) {
     }
 
   }
-</script>
+  </script>
