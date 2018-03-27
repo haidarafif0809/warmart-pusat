@@ -10,6 +10,7 @@ use Auth;
 use Excel;
 use Illuminate\Support\Facades\DB;
 use Session;
+use Laratrust;
 
 class DaftarUserWarungController extends Controller
 {
@@ -19,6 +20,7 @@ class DaftarUserWarungController extends Controller
         //DATA PAGINATION
 		$respons['current_page']   = $user->currentPage();
 		$respons['data']           = $user_array;
+		$respons['otoritas']      = $this->otoritasUserWarung();
 		$respons['first_page_url'] = url($url . '?page=' . $user->firstItem());
 		$respons['from']           = 1;
 		$respons['last_page']      = $user->lastPage();
@@ -38,6 +40,7 @@ class DaftarUserWarungController extends Controller
         //DATA PAGINATION
 		$respons['current_page']   = $user->currentPage();
 		$respons['data']           = $user;
+		$respons['otoritas']      = $this->otoritasUserWarung();
 		$respons['first_page_url'] = url($url . '?page=' . $user->firstItem() . '&search=' . $search);
 		$respons['from']           = 1;
 		$respons['last_page']      = $user->lastPage();
@@ -173,5 +176,29 @@ class DaftarUserWarungController extends Controller
 
 	public function destroy($id){
 		return UserWarung::destroy($id);		
+	}
+
+	public function otoritasUserWarung(){
+
+		if (Laratrust::can('tambah_user')) {
+			$tambah_user = 1;
+		}else{
+			$tambah_user = 0;            
+		}
+		if (Laratrust::can('edit_user')) {
+			$edit_user = 1;
+		}else{
+			$edit_user = 0;            
+		}
+		if (Laratrust::can('hapus_user')) {
+			$hapus_user = 1;
+		}else{
+			$hapus_user = 0;            
+		}
+		$respons['tambah_user'] = $tambah_user;
+		$respons['edit_user'] = $edit_user;
+		$respons['hapus_user'] = $hapus_user;
+
+		return response()->json($respons);
 	}
 }

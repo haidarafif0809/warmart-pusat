@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Session;
 use Yajra\Datatables\Html\Builder;
+use Laratrust;
 
 class PembayaranHutangController extends Controller
 {
@@ -119,14 +120,14 @@ class PembayaranHutangController extends Controller
         $session_id = session()->getId();
         //AMBIL NO FAKTUR
         $no_faktur          = $this->fakturPembayaran($id);
-        $pembayaran_piutang = EditTbsPembayaranHutang::dataEditTbsPembayaranHutang($session_id, $no_faktur)->paginate(10);
+        $pembayaran_hutang = EditTbsPembayaranHutang::dataEditTbsPembayaranHutang($session_id, $no_faktur)->paginate(10);
         $jenis_tbs          = 2;
 
-        $array_pembayaran_piutang = $this->foreachTbs($pembayaran_piutang, $jenis_tbs);
+        $array_pembayaran_hutang = $this->foreachTbs($pembayaran_hutang, $jenis_tbs);
         $link_view                = '/pembayaran-hutang/view-edit-tbs-pembayaran-hutang';
 
         //DATA PAGINATION
-        $respons = $this->dataPagination($pembayaran_piutang, $array_pembayaran_piutang, $link_view);
+        $respons = $this->dataPagination($pembayaran_hutang, $array_pembayaran_hutang, $link_view);
         return response()->json($respons);
     }
 
@@ -136,14 +137,14 @@ class PembayaranHutangController extends Controller
         $search     = $request->search;
         //AMBIL NO FAKTUR
         $no_faktur          = $this->fakturPembayaran($id);
-        $pembayaran_piutang = EditTbsPembayaranHutang::dataCariEditTbsPembayaranHutang($request, $session_id, $no_faktur)->paginate(10);
+        $pembayaran_hutang = EditTbsPembayaranHutang::dataCariEditTbsPembayaranHutang($request, $session_id, $no_faktur)->paginate(10);
         $jenis_tbs          = 2;
 
-        $array_pembayaran_piutang = $this->foreachTbs($pembayaran_piutang, $jenis_tbs);
+        $array_pembayaran_hutang = $this->foreachTbs($pembayaran_hutang, $jenis_tbs);
         $link_view                = '/pembayaran-hutang/view-edit-tbs-pembayaran-hutang';
 
         //DATA PAGINATION
-        $respons = $this->dataPaginationPencarianData($pembayaran_piutang, $array_pembayaran_piutang, $link_view, $search);
+        $respons = $this->dataPaginationPencarianData($pembayaran_hutang, $array_pembayaran_hutang, $link_view, $search);
         return response()->json($respons);
     }
 
@@ -285,6 +286,7 @@ class PembayaranHutangController extends Controller
         //DATA PAGINATION
         $respons['current_page']   = $pembayaranhutang->currentPage();
         $respons['data']           = $array;
+        $respons['otoritas']       = $this->otoritasPembayaranHutang();
         $respons['first_page_url'] = url($url . '?page=' . $pembayaranhutang->firstItem());
         $respons['from']           = 1;
         $respons['last_page']      = $pembayaranhutang->lastPage();
@@ -303,6 +305,7 @@ class PembayaranHutangController extends Controller
         //DATA PAGINATION
         $respons['current_page']   = $pembelian->currentPage();
         $respons['data']           = $array;
+        $respons['otoritas']       = $this->otoritasPembayaranHutang();
         $respons['first_page_url'] = url($url . '?page=' . $pembelian->firstItem() . '&search=' . $search);
         $respons['from']           = 1;
         $respons['last_page']      = $pembelian->lastPage();
@@ -336,16 +339,16 @@ class PembayaranHutangController extends Controller
         $session_id = session()->getId();
         $pembelian  = Pembelian::find($request->id_pembelian);
         $data_tbs   = TbsPembayaranHutang::where('no_faktur_pembelian', $request->no_faktur)
-            ->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
+        ->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
         $data_suplier_tbs = TbsPembayaranHutang::select('suplier_id')
-            ->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->get();
+        ->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->get();
 
         $subtotal_hutang = $request->nilai_kredit - $request->potongan;
         //JIKA FAKTUR YG DIPILIH SUDAH ADA DI TBS
         if ($data_tbs->count() > 0) {
             return 0;
         } else {
-            $tbs_pembayaran_piutang = TbsPembayaranHutang::create([
+            $tbs_pembayaran_hutang = TbsPembayaranHutang::create([
                 'session_id'          => $session_id,
                 'no_faktur_pembelian' => $request->no_faktur,
                 'jatuh_tempo'         => $pembelian->tanggal_jt_tempo,
@@ -366,16 +369,16 @@ class PembayaranHutangController extends Controller
         $session_id = session()->getId();
         $pembelian  = Pembelian::find($request->id_pembelian);
         $data_tbs   = EditTbsPembayaranHutang::where('no_faktur_pembelian', $request->no_faktur)
-            ->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
+        ->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
         $data_suplier_tbs = EditTbsPembayaranHutang::select('suplier_id')->where('no_faktur_pembelian', $request->no_faktur)
-            ->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->get();
+        ->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->get();
 
         $subtotal_hutang = $request->nilai_kredit - $request->potongan;
         //JIKA FAKTUR YG DIPILIH SUDAH ADA DI TBS
         if ($data_tbs->count() > 0) {
             return 0;
         } else {
-            $tbs_pembayaran_piutang = EditTbsPembayaranHutang::create([
+            $tbs_pembayaran_hutang = EditTbsPembayaranHutang::create([
                 'session_id'           => $session_id,
                 'no_faktur_pembelian'  => $request->no_faktur,
                 'no_faktur_pembayaran' => $request->no_faktur_pembayaran,
@@ -575,14 +578,14 @@ class PembayaranHutangController extends Controller
         $no_faktur  = $this->fakturPembayaran($id);
 
         //PILIH DATA DETAIL PEMBAYARAN HUTANG
-        $detail_pembayaran_piutang = DetailPembayaranHutang::where('no_faktur_pembayaran', $no_faktur)
-            ->where('warung_id', Auth::user()->id_warung);
+        $detail_pembayaran_hutang = DetailPembayaranHutang::where('no_faktur_pembayaran', $no_faktur)
+        ->where('warung_id', Auth::user()->id_warung);
 
         //HAPUS DATA DI EDIT TBS
-        $hapus_semua_edit_tbs_pembayaran_piutang = EditTbsPembayaranHutang::where('no_faktur_pembayaran', $no_faktur)
-            ->where('warung_id', Auth::user()->id_warung)->delete();
+        $hapus_semua_edit_tbs_pembayaran_hutang = EditTbsPembayaranHutang::where('no_faktur_pembayaran', $no_faktur)
+        ->where('warung_id', Auth::user()->id_warung)->delete();
 
-        foreach ($detail_pembayaran_piutang->get() as $data_tbs) {
+        foreach ($detail_pembayaran_hutang->get() as $data_tbs) {
             $subtotal_hutang = $data_tbs->hutang - $data_tbs->potongan;
 
             $detail_pembelian = EditTbsPembayaranHutang::create([
@@ -605,8 +608,8 @@ class PembayaranHutangController extends Controller
     public function fakturPembayaran($id)
     {
         $pembayaran_hutang = PembayaranHutang::select('no_faktur_pembayaran')
-            ->where('id_pembayaran_hutang', $id)
-            ->where('warung_id', Auth::user()->id_warung)->first();
+        ->where('id_pembayaran_hutang', $id)
+        ->where('warung_id', Auth::user()->id_warung)->first();
         $no_faktur = $pembayaran_hutang->no_faktur_pembayaran;
 
         return $no_faktur;
@@ -629,7 +632,7 @@ class PembayaranHutangController extends Controller
 
 //HAPUS DETAIL PEMBAYARAN PIUTANG
         $detail_pembayaran_hutang = DetailPembayaranHutang::where('no_faktur_pembayaran', $pembayaran_hutang->no_faktur_pembayaran)
-            ->where('warung_id', Auth::user()->id_warung)->get();
+        ->where('warung_id', Auth::user()->id_warung)->get();
         foreach ($detail_pembayaran_hutang as $data_detail) {
             if (!$hapus_detail = DetailPembayaranHutang::destroy($data_detail->id_detail_pembayaran_hutang)) {
                 //DI BATALKAN PROSES NYA
@@ -697,7 +700,7 @@ class PembayaranHutangController extends Controller
             }
 
             $tbs_pembayaran_hutang = EditTbsPembayaranHutang::where('no_faktur_pembayaran', $pembayaran_hutang->no_faktur_pembayaran)
-                ->where('warung_id', Auth::user()->id_warung)->delete();
+            ->where('warung_id', Auth::user()->id_warung)->delete();
 
             DB::commit();
 
@@ -851,5 +854,30 @@ class PembayaranHutangController extends Controller
             $temp = $this->kekata($x / 1000000000000) . " trilyun" . $this->kekata(fmod($x, 1000000000000));
         }
         return $temp;
+    }
+
+
+    public function otoritasPembayaranHutang(){
+
+        if (Laratrust::can('tambah_pembayaran_hutang')) {
+            $tambah_pembayaran_hutang = 1;
+        }else{
+            $tambah_pembayaran_hutang = 0;            
+        }
+        if (Laratrust::can('edit_pembayaran_hutang')) {
+            $edit_pembayaran_hutang = 1;
+        }else{
+            $edit_pembayaran_hutang = 0;            
+        }
+        if (Laratrust::can('hapus_pembayaran_hutang')) {
+            $hapus_pembayaran_hutang = 1;
+        }else{
+            $hapus_pembayaran_hutang = 0;            
+        }
+        $respons['tambah_pembayaran_hutang'] = $tambah_pembayaran_hutang;
+        $respons['edit_pembayaran_hutang'] = $edit_pembayaran_hutang;
+        $respons['hapus_pembayaran_hutang'] = $hapus_pembayaran_hutang;
+
+        return response()->json($respons);
     }
 }

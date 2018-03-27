@@ -22,7 +22,7 @@
 					<h4 class="card-title"> Pembayaran Hutang </h4>
 					
 					<div class="toolbar">
-						<p> <router-link :to="{name: 'createPembayaranHutang'}" class="btn btn-primary">Tambah Pembayaran Hutang</router-link></p>
+						<p> <router-link :to="{name: 'createPembayaranHutang'}" class="btn btn-primary" v-if="otoritas.tambah_pembayaran_hutang == 1">Tambah Pembayaran Hutang</router-link></p>
 					</div>
 
 					<div class=" table-responsive ">
@@ -39,8 +39,8 @@
 									<th>Keterangan</th>
 									<th style="text-align:right;">Total</th>
 									<th style="text-align:right;">Cetak</th>									
-									<th style="text-align:right;">Edit</th>								
-									<th style="text-align:right;">Delete</th>
+									<th v-if="otoritas.edit_pembayaran_hutang == 1" style="text-align:right;">Edit</th>								
+									<th v-if="otoritas.hapus_pembayaran_hutang == 1" style="text-align:right;">Delete</th>
 								</tr>
 							</thead>
 							<tbody v-if="pembayaranhutang.length > 0 && loading == false"  class="data-ada">
@@ -58,12 +58,12 @@
 									<td style="text-align:right;">
 										<a target="blank" class="btn btn-primary btn-xs" v-bind:href="'pembayaran-hutang/cetak-besar-pembayaran-hutang/'+pembayaranhutangs.id">Cetak Ulang</a>
 									</td>
-									<td style="text-align:right;">
+									<td  v-if="otoritas.edit_pembayaran_hutang == 1" style="text-align:right;">
 										<router-link :to="{name: 'prosesEditPembayaranHutang', params: {id: pembayaranhutangs.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + pembayaranhutangs.id" >
 											Edit
 										</router-link>
-									 </td>
-									<td style="text-align:right;"> 
+									</td>
+									<td v-if="otoritas.hapus_pembayaran_hutang == 1" style="text-align:right;"> 
 										<a  href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + pembayaranhutangs.id" v-on:click="deleteEntry(pembayaranhutangs.id, index,pembayaranhutangs.no_faktur)">Delete</a>
 									</td>
 								</tr>
@@ -78,7 +78,7 @@
 						<div align="right"><pagination :data="pembayaranhutangData" v-on:pagination-change-page="getResults" :limit="7"></pagination></div>
 
 					</div>
-					 <p style="color: red; font-style: italic;">*Note : Klik Kolom No Transaksi, Untuk Melihat Detail Transaksi Pembayaranan Hutang .</p> 
+					<p style="color: red; font-style: italic;">*Note : Klik Kolom No Transaksi, Untuk Melihat Detail Transaksi Pembayaranan Hutang .</p> 
 				</div>
 			</div>
 
@@ -94,6 +94,7 @@ export default {
 		return {
 			pembayaranhutang: [],
 			pembayaranhutangData: {},
+			otoritas: {},
 			url : window.location.origin+(window.location.pathname).replace("dashboard", "pembayaran-hutang"),
 			pencarian: '',
 			loading: true,
@@ -121,6 +122,7 @@ export default {
     		.then(function (resp) {
     			app.pembayaranhutang = resp.data.data;
     			app.pembayaranhutangData = resp.data;
+    			app.otoritas = resp.data.otoritas.original;
     			app.loading = false;
     		})
     		.catch(function (resp) {
@@ -138,6 +140,7 @@ export default {
     		.then(function (resp) {
     			app.pembayaranhutang = resp.data.data;
     			app.pembayaranhutangData = resp.data;
+    			app.otoritas = resp.data.otoritas.original;
     			app.loading = false;
     		})
     		.catch(function (resp) {
@@ -153,36 +156,36 @@ export default {
     		});
     	},
     	deleteEntry(id, index,no_faktur) {
-            this.$swal({
-                title: "Konfirmasi Hapus",
-                text : "Anda Yakin Ingin Menghapus "+no_faktur+" ?",
-                icon : "warning",
-                buttons: true,
-                dangerMode: true,
-            })
-            .then((willDelete) => {
-                if (willDelete) {
-                  var app = this;
-                  app.loading = true;
-                  axios.delete(app.url+'/' + id)
-                  .then(function (resp) {
-			                if (resp.data == 0) {
-			                    app.$swal('Oops...','Pembayaran Hutang Tidak Dapat Dihapus, Karena Sudah Terpakai','error');
-			                    app.loading = false;
+    		this.$swal({
+    			title: "Konfirmasi Hapus",
+    			text : "Anda Yakin Ingin Menghapus "+no_faktur+" ?",
+    			icon : "warning",
+    			buttons: true,
+    			dangerMode: true,
+    		})
+    		.then((willDelete) => {
+    			if (willDelete) {
+    				var app = this;
+    				app.loading = true;
+    				axios.delete(app.url+'/' + id)
+    				.then(function (resp) {
+    					if (resp.data == 0) {
+    						app.$swal('Oops...','Pembayaran Hutang Tidak Dapat Dihapus, Karena Sudah Terpakai','error');
+    						app.loading = false;
 
-			                }else{
-			                    app.getResults();
-			                    app.alert("Menghapus Pembelian "+no_faktur);
-			                    app.loading = false;  
-			                }
-                  })
-                  .catch(function (resp) {
-                      alert("Tidak dapat Menghapus Pembelian");
-                  });
-               }else {
+    					}else{
+    						app.getResults();
+    						app.alert("Menghapus Pembelian "+no_faktur);
+    						app.loading = false;  
+    					}
+    				})
+    				.catch(function (resp) {
+    					alert("Tidak dapat Menghapus Pembelian");
+    				});
+    			}else {
     				app.$swal.close();
     			}
-            });
+    		});
     	}
     }
 }

@@ -66,21 +66,18 @@
                     <h4 class="card-title"> Item Masuk </h4>
 
                     <div class="toolbar">
-                        <div class="row">
-                            <div class="panel panel-default">
-                                <router-link :to="{name: 'createItemMasuk'}" class="btn btn-primary"><i class="material-icons">add</i>  Tambah Item Masuk</router-link>
+                        <router-link :to="{name: 'createItemMasuk'}" class="btn btn-primary" v-if="otoritas.tambah_item_masuk == 1"><i class="material-icons">add</i>  Tambah Item Masuk</router-link>
 
-                                <button id="btnFilter" class="btn btn-info" data-toggle="modal" data-target="#modal_import">
-                                    <i class="material-icons">file_upload</i> Import Excel
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class=" table-responsive ">
+                        <button id="btnFilter" class="btn btn-info" data-toggle="modal" data-target="#modal_import">
+                            <i class="material-icons">file_upload</i> Import Excel
+                        </button>
                         <div  class="pencarian">
                             <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control" autocomplete="">
                         </div>
+
+                    </div>
+
+                    <div class=" table-responsive ">
                         <table class="table table-striped table-hover" v-if="seen">
                             <thead class="text-primary">
                                 <tr>
@@ -91,8 +88,8 @@
                                     <th>Waktu</th>
                                     <th>Waktu Edit</th>
                                     <th>Detail</th>
-                                    <th>Edit</th>
-                                    <th>Aksi</th>
+                                    <th v-if="otoritas.edit_item_masuk == 1">Edit</th>
+                                    <th v-if="otoritas.hapus_item_masuk == 1">Hapus</th>
 
                                 </tr>
                             </thead>
@@ -105,13 +102,13 @@
                                     <td>{{ item_masuk.waktu }}</td>
                                     <td>{{ item_masuk.waktu_edit }}</td>
                                     <td>
-                                        <router-link :to="{name: 'detailItemMasuk', params: {id: item_masuk.id}}" class="btn btn-xs btn-info" v-bind:id="'detail-' + item_masuk.id" >
+                                        <router-link :to="{name: 'detailItemMasuk', params: {id: item_masuk.id}}" class="btn btn-xs btn-info" v-bind:id="'detail-' + item_masuk.id">
                                         Detail </router-link> </td>
                                     </td>
-                                    <td><router-link :to="{name: 'editItemMasukProses', params: {id: item_masuk.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + item_masuk.id" >
+                                    <td v-if="otoritas.edit_item_masuk == 1"><router-link :to="{name: 'editItemMasukProses', params: {id: item_masuk.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + item_masuk.id">
                                     Edit </router-link> </td>
 
-                                    <td> 
+                                    <td v-if="otoritas.hapus_item_masuk == 1"> 
                                         <a href="#item-masuk" class="btn btn-xs btn-danger" v-bind:id="'delete-' + item_masuk.id" v-on:click="deleteEntry(item_masuk.id, index,item_masuk.no_faktur)">Delete</a>
                                     </td>
                                 </tr>
@@ -142,6 +139,7 @@ export default {
         return {
             item_masuk: [],
             itemMasukData: {},
+            otoritas: {},
             url : window.location.origin+(window.location.pathname).replace("dashboard", "item-masuk"),
             urlTemplate : window.location.origin+(window.location.pathname).replace("dashboard", "item-masuk/template-excel"),
             urlImport : window.location.origin+(window.location.pathname).replace("dashboard", "item-masuk/import-excel"),
@@ -182,6 +180,7 @@ methods: {
         .then(function (resp) {
             app.item_masuk = resp.data.data;
             app.itemMasukData = resp.data;
+            app.otoritas = resp.data.otoritas.original;
             app.loading = false;
             app.seen = true;
         })
@@ -201,6 +200,7 @@ methods: {
         .then(function (resp) {
             app.item_masuk = resp.data.data;
             app.itemMasukData = resp.data;
+            app.otoritas = resp.data.otoritas.original;
             app.loading = false;
             app.seen = true;
         })

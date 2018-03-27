@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Session;
 use Validator;
 use Yajra\Datatables\Html\Builder;
+use Laratrust;
 
 class ItemMasukController extends Controller
 {
@@ -39,6 +40,7 @@ class ItemMasukController extends Controller
         //DATA PAGINATION
         $respons['current_page']   = $item_masuk->currentPage();
         $respons['data']           = $array;
+        $respons['otoritas']      = $this->otoritasItemMasuk();
         $respons['first_page_url'] = url($url . '?page=' . $item_masuk->firstItem());
         $respons['from']           = 1;
         $respons['last_page']      = $item_masuk->lastPage();
@@ -58,6 +60,7 @@ class ItemMasukController extends Controller
         //DATA PAGINATION
         $respons['current_page']   = $item_masuk->currentPage();
         $respons['data']           = $array;
+        $respons['otoritas']      = $this->otoritasItemMasuk();
         $respons['first_page_url'] = url($url . '?page=' . $item_masuk->firstItem() . '&search=' . $search);
         $respons['from']           = 1;
         $respons['last_page']      = $item_masuk->lastPage();
@@ -98,9 +101,9 @@ class ItemMasukController extends Controller
         $item_masuk = ItemMasuk::where('warung_id', Auth::user()->id_warung)->where(function ($query) use ($request) {
 
             $query->orWhere('no_faktur', 'LIKE', $request->search . '%')
-                ->orWhere('keterangan', 'LIKE', $request->search . '%')
-                ->orWhere('created_at', 'LIKE', $request->search . '%')
-                ->orWhere('updated_at', 'LIKE', $request->search . '%');
+            ->orWhere('keterangan', 'LIKE', $request->search . '%')
+            ->orWhere('created_at', 'LIKE', $request->search . '%')
+            ->orWhere('updated_at', 'LIKE', $request->search . '%');
 
         })->orderBy('id', 'desc')->paginate(10);
         $array = array();
@@ -149,12 +152,12 @@ class ItemMasukController extends Controller
         $session_id     = session()->getId();
         $user_warung    = Auth::user()->id_warung;
         $tbs_item_masuk = TbsItemMasuk::select('tbs_item_masuks.id_tbs_item_masuk AS id_tbs_item_masuk', 'tbs_item_masuks.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'tbs_item_masuks.id_produk AS id_produk')->leftJoin('barangs', 'barangs.id', '=', 'tbs_item_masuks.id_produk')->where('warung_id', $user_warung)->where('session_id', $session_id)
-            ->where(function ($query) use ($request) {
+        ->where(function ($query) use ($request) {
 
-                $query->orWhere('barangs.kode_barang', 'LIKE', $request->search . '%')
-                    ->orWhere('barangs.nama_barang', 'LIKE', $request->search . '%');
+            $query->orWhere('barangs.kode_barang', 'LIKE', $request->search . '%')
+            ->orWhere('barangs.nama_barang', 'LIKE', $request->search . '%');
 
-            })->orderBy('tbs_item_masuks.id_tbs_item_masuk', 'desc')->paginate(10);
+        })->orderBy('tbs_item_masuks.id_tbs_item_masuk', 'desc')->paginate(10);
 
         $array = array();
         foreach ($tbs_item_masuk as $tbs_item_masuks) {
@@ -199,13 +202,13 @@ class ItemMasukController extends Controller
         $item_masuk     = ItemMasuk::find($id);
         $user_warung    = Auth::user()->id_warung;
         $tbs_item_masuk = EditTbsItemMasuk::select('edit_tbs_item_masuks.id_edit_tbs_item_masuk AS id_edit_tbs_item_masuk', 'edit_tbs_item_masuks.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'edit_tbs_item_masuks.id_produk AS id_produk')->leftJoin('barangs', 'barangs.id', '=', 'edit_tbs_item_masuks.id_produk')
-            ->where('warung_id', $user_warung)->where('no_faktur', $item_masuk->no_faktur)
-            ->where(function ($query) use ($request) {
+        ->where('warung_id', $user_warung)->where('no_faktur', $item_masuk->no_faktur)
+        ->where(function ($query) use ($request) {
 
-                $query->orWhere('barangs.nama_barang', 'LIKE', $request->search . '%')
-                    ->orWhere('barangs.kode_barang', 'LIKE', $request->search . '%');
+            $query->orWhere('barangs.nama_barang', 'LIKE', $request->search . '%')
+            ->orWhere('barangs.kode_barang', 'LIKE', $request->search . '%');
 
-            })->orderBy('edit_tbs_item_masuks.id_edit_tbs_item_masuk', 'desc')->paginate(10);
+        })->orderBy('edit_tbs_item_masuks.id_edit_tbs_item_masuk', 'desc')->paginate(10);
 
         $array = array();
         foreach ($tbs_item_masuk as $tbs_item_masuks) {
@@ -464,11 +467,11 @@ class ItemMasukController extends Controller
         $session_id = session()->getId();
 
         $data_tbs = EditTbsItemMasuk::select('id_produk')
-            ->where('id_produk', $id_produk)
-            ->where('no_faktur', $request->no_faktur)
-            ->where('session_id', $session_id)
-            ->where('warung_id', Auth::user()->id_warung)
-            ->count();
+        ->where('id_produk', $id_produk)
+        ->where('no_faktur', $request->no_faktur)
+        ->where('session_id', $session_id)
+        ->where('warung_id', Auth::user()->id_warung)
+        ->count();
 
         //JIKA PRODUK YG DIPILIH SUDAH ADA DI TBS
         if ($data_tbs > 0) {
@@ -557,13 +560,13 @@ class ItemMasukController extends Controller
         $item_masuk        = ItemMasuk::find($id);
         $user_warung       = Auth::user()->id_warung;
         $detail_item_masuk = DetailItemMasuk::select('detail_item_masuks.id_detail_item_masuk AS id_detail_item_masuk', 'detail_item_masuks.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'detail_item_masuks.id_produk AS id_produk', 'detail_item_masuks.no_faktur AS no_faktur')->leftJoin('barangs', 'barangs.id', '=', 'detail_item_masuks.id_produk')
-            ->where('detail_item_masuks.warung_id', $user_warung)->where('detail_item_masuks.no_faktur', $item_masuk->no_faktur)
-            ->where(function ($query) use ($request) {
+        ->where('detail_item_masuks.warung_id', $user_warung)->where('detail_item_masuks.no_faktur', $item_masuk->no_faktur)
+        ->where(function ($query) use ($request) {
 
-                $query->orWhere('barangs.nama_barang', 'LIKE', $request->search . '%')
-                    ->orWhere('barangs.kode_barang', 'LIKE', $request->search . '%');
+            $query->orWhere('barangs.nama_barang', 'LIKE', $request->search . '%')
+            ->orWhere('barangs.kode_barang', 'LIKE', $request->search . '%');
 
-            })->orderBy('detail_item_masuks.id_detail_item_masuk', 'desc')->paginate(10);
+        })->orderBy('detail_item_masuks.id_detail_item_masuk', 'desc')->paginate(10);
 
         $array = array();
         foreach ($detail_item_masuk as $detail_item_masuks) {
@@ -688,5 +691,29 @@ class ItemMasukController extends Controller
         $hitung_produk['jumlahProduk'] = $no - 1;
 
         return response()->json($hitung_produk);
+    }    
+
+    public function otoritasItemMasuk(){
+
+        if (Laratrust::can('tambah_item_masuk')) {
+            $tambah_item_masuk = 1;
+        }else{
+            $tambah_item_masuk = 0;            
+        }
+        if (Laratrust::can('edit_item_masuk')) {
+            $edit_item_masuk = 1;
+        }else{
+            $edit_item_masuk = 0;            
+        }
+        if (Laratrust::can('hapus_item_masuk')) {
+            $hapus_item_masuk = 1;
+        }else{
+            $hapus_item_masuk = 0;            
+        }
+        $respons['tambah_item_masuk'] = $tambah_item_masuk;
+        $respons['edit_item_masuk'] = $edit_item_masuk;
+        $respons['hapus_item_masuk'] = $hapus_item_masuk;
+
+        return response()->json($respons);
     }
 }

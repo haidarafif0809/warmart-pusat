@@ -494,6 +494,7 @@ class OtoritasController extends Controller
         //DATA PAGINATION
     $respons['current_page']   = $user->currentPage();
     $respons['data']           = $user_array;
+    $respons['otoritas']      = $this->otoritas();
     $respons['first_page_url'] = url($url . '?page=' . $user->firstItem());
     $respons['from']           = 1;
     $respons['last_page']      = $user->lastPage();
@@ -508,11 +509,12 @@ class OtoritasController extends Controller
 
     return $respons;
   }
-  public function paginationPencarianData($user, $url, $search)
+  public function paginationPencarianData($user,$array, $url, $search)
   {
         //DATA PAGINATION
     $respons['current_page']   = $user->currentPage();
-    $respons['data']           = $user;
+    $respons['data']           = $array;
+    $respons['otoritas']      = $this->otoritas();
     $respons['first_page_url'] = url($url . '?page=' . $user->firstItem() . '&search=' . $search);
     $respons['from']           = 1;
     $respons['last_page']      = $user->lastPage();
@@ -528,6 +530,74 @@ class OtoritasController extends Controller
     return $respons;
   }
   public function view(){
-    return Role::whereNotIn('id',[3,4,5])->paginate(10);
+    $role = Role::whereNotIn('id',[3,4,5])->paginate(10);
+    $array       = array();
+
+    foreach ($role as $roles) {
+      array_push($array, [
+        'id'               => $roles->id,
+        'name'            => $roles->name,
+        'display_name'        => $roles->display_name,
+        'description' => $roles->description
+      ]);
+    }
+
+    $url     = '/otoritas/view';
+    $respons = $this->paginationData($role, $array, $url);
+
+    return response()->json($respons);
+  }
+
+  public function pencarian(Request $request){
+    $role = Role::whereNotIn('id',[3,4,5])->where(function ($query) use ($request) {
+      $query->orWhere('name', 'LIKE', $request->search . '%')
+      ->orWhere('display_name', 'LIKE', $request->search . '%')
+      ->orWhere('description', 'LIKE', $request->search . '%');
+    })->paginate(10);
+    $array       = array();
+
+    foreach ($role as $roles) {
+      array_push($array, [
+        'id'               => $roles->id,
+        'name'            => $roles->name,
+        'display_name'        => $roles->display_name,
+        'description' => $roles->description
+      ]);
+    }
+
+    $url     = '/otoritas/pencarian';
+    $respons = $this->paginationPencarianData($role, $array, $url,$request->search);
+
+    return response()->json($respons);
+  }
+
+  public function otoritas(){
+
+    if (Laratrust::can('tambah_otoritas')) {
+      $tambah_otoritas = 1;
+    }else{
+      $tambah_otoritas = 0;            
+    }
+    if (Laratrust::can('edit_otoritas')) {
+      $edit_otoritas = 1;
+    }else{
+      $edit_otoritas = 0;            
+    }
+    if (Laratrust::can('hapus_otoritas')) {
+      $hapus_otoritas = 1;
+    }else{
+      $hapus_otoritas = 0;            
+    }
+    if (Laratrust::can('permission_otoritas')) {
+      $permission_otoritas = 1;
+    }else{
+      $permission_otoritas = 0;            
+    }
+    $respons['tambah_otoritas'] = $tambah_otoritas;
+    $respons['edit_otoritas'] = $edit_otoritas;
+    $respons['hapus_otoritas'] = $hapus_otoritas;
+    $respons['permission_otoritas'] = $permission_otoritas;
+
+    return response()->json($respons);
   }
 }

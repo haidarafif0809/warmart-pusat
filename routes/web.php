@@ -401,6 +401,7 @@ Route::get('/customer/view-detail/{id}', 'CustomerController@view_detail')->midd
 Route::get('/customer/pencarian', 'CustomerController@pencarian')->middleware('auth');
 Route::get('/customer/pilih-komunitas', 'CustomerController@pilih_komunitas')->middleware('auth');
 Route::get('/customer/setting-aplikasi', 'CustomerController@settingAplikasi')->middleware('auth');
+Route::get('/customer/cetak-customer/{id}', 'CustomerController@cetakCustomer')->middleware('auth');
 
 //menampilkan data user
 Route::get('/user/view', 'UserController@view')->middleware('auth');
@@ -680,6 +681,8 @@ Route::post('/penjualan/view-filter', 'PenjualanController@viewFilter')->middlew
 Route::post('/penjualan/total-laporan-penjualan', 'PenjualanController@totalLaporanPenjualan')->middleware('auth');
 Route::post('/penjualan/total-laporan-penjualan-filter', 'PenjualanController@totalLaporanPenjualanFilter')->middleware('auth');
 
+Route::get('/penjualan/satuan-konversi/{id_produk}', 'PenjualanController@dataSatuanProduk')->middleware('auth');
+
 // LABA KOTOR VUE.JS
 Route::post('/laporan-laba-kotor/view', 'LaporanLabaKotorController@prosesLaporanLabaKotor')->middleware('auth');
 Route::post('/laporan-laba-kotor/pencarian', 'LaporanLabaKotorController@pencarian')->middleware('auth');
@@ -932,6 +935,7 @@ Route::delete('/daftar-user-warung/{id}', 'DaftarUserWarungController@destroy')-
 
 // OTORITAS
 Route::get('/otoritas/view', 'OtoritasController@view')->middleware('auth');
+Route::get('/otoritas/pencarian', 'OtoritasController@pencarian')->middleware('auth');
 
 //menampilkan data bank Warung
 Route::get('/bank-warung/view', 'BankWarungController@view')->middleware('auth');

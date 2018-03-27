@@ -26,7 +26,7 @@
         <div class="row">
           <div class="col-md-6">
            <div class="toolbar">
-            <p> <a href="#otoritas" class="btn btn-primary" v-on:click="tambahOtoritas()"><i class="material-icons">add</i> Tambah Otoritas</a></p>
+            <a href="#otoritas" class="btn btn-primary" v-on:click="tambahOtoritas()" v-if="otoritasPermission.tambah_otoritas == 1"><i class="material-icons">add</i> Tambah Otoritas</a>
           </div>
         </div>
         <div class="col-md-6">
@@ -42,7 +42,7 @@
         <thead class="text-primary">
           <tr>
             <th>Otoritas</th>
-            <th>Aksi</th>
+            <th v-if="otoritasPermission.edit_otoritas == 1 || otoritasPermission.hapus_otoritas == 1 || otoritasPermission.permission_otoritas == 1">Aksi</th>
           </tr>
         </thead>
 
@@ -50,15 +50,15 @@
           <tr v-for="otoritass, index in otoritas">
             <td>{{ otoritass.display_name }}</td>
             <td>
-              <router-link :to="{name: 'settingOtoritas', params: {id: otoritass.id}}" class="btn btn-xs btn-warning">
+              <router-link :to="{name: 'settingOtoritas', params: {id: otoritass.id}}" class="btn btn-xs btn-warning" v-if="otoritasPermission.permission_otoritas == 1">
                 Setting Otoritas 
               </router-link>
-              |
-              <a href="#otoritas" class="btn btn-xs btn-default" v-on:click="editOtoritas(otoritass.id, index,otoritass.display_name)">
+              
+              <a href="#otoritas" class="btn btn-xs btn-default" v-on:click="editOtoritas(otoritass.id, index,otoritass.display_name)" v-if="otoritasPermission.edit_otoritas == 1">
                 Edit
               </a>
-              |
-              <a href="#otoritas" class="btn btn-xs btn-danger" v-on:click="deleteEntry(otoritass.id, index,otoritass.name)"> 
+              
+              <a href="#otoritas" class="btn btn-xs btn-danger" v-on:click="deleteEntry(otoritass.id, index,otoritass.name)" v-if="otoritasPermission.hapus_otoritas == 1"> 
                 Hapus
               </a>
             </td>
@@ -93,6 +93,7 @@ export default {
     return {
       otoritas: [],
       otoritasData: {},
+      otoritasPermission: {},
       newOtoritas : {
        otoritas : ''
      },  
@@ -120,6 +121,7 @@ methods: {
     .then(function (resp) {
       app.otoritas = resp.data.data;
       app.otoritasData = resp.data;
+      app.otoritasPermission = resp.data.otoritas.original;
       app.loading = false;
     })
     .catch(function (resp) {
@@ -138,6 +140,7 @@ methods: {
     .then(function (resp) {
       app.otoritas = resp.data.data;
       app.otoritasData = resp.data;
+      app.otoritasPermission = resp.data.otoritas.original;
       app.loading = false
     })
     .catch(function (resp) {

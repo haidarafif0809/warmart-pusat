@@ -1,8 +1,8 @@
 <style scoped>
-	.pencarian {
-		color: red; 
-		float: right;
-	}
+.pencarian {
+	color: red; 
+	float: right;
+}
 </style>
 <template>
 	<div class="row">
@@ -22,7 +22,7 @@
 					<h4 class="card-title"> Pembayaran Piutang </h4>
 
 					<div class="toolbar">
-						<p> <router-link :to="{name: 'createPembayaranPiutang'}" class="btn btn-primary">Tambah Pembayaran Piutang</router-link></p>
+						<p> <router-link :to="{name: 'createPembayaranPiutang'}" class="btn btn-primary" v-if="otoritas.tambah_pembayaran_piutang == 1">Tambah Pembayaran Piutang</router-link></p>
 					</div>
 
 					<div class=" table-responsive ">
@@ -39,8 +39,8 @@
 									<th>Waktu</th>
 									<th>Keterangan</th>
 									<th style="text-align:right;">Cetak</th>
-									<th style="text-align:right;">Edit</th>	
-									<th style="text-align:right;">Delete</th>
+									<th v-if="otoritas.edit_pembayaran_piutang == 1" style="text-align:right;">Edit</th>	
+									<th v-if="otoritas.hapus_pembayaran_piutang == 1" style="text-align:right;">Delete</th>
 								</tr>
 							</thead>
 							<tbody v-if="pembayaranPiutang.length > 0 && loading == false"  class="data-ada">
@@ -61,14 +61,14 @@
 										<a target="blank" class="btn btn-primary btn-xs" v-bind:href="'pembayaran-piutang/cetak-pembayaran-piutang/'+pembayaranPiutangs.id">Cetak Ulang</a>
 									</td>
 
-									<td style="text-align:right;">
+									<td v-if="otoritas.edit_pembayaran_piutang == 1" style="text-align:right;">
 										<router-link :to="{name: 'prosesEditPembayaranPiutang', params: {id: pembayaranPiutangs.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + pembayaranPiutangs.id" >
 											Edit
 										</router-link>
 									</td>
 
 									<td style="text-align:right;"> 
-										<a  href="#pembayaran-piutang" class="btn btn-xs btn-danger" v-bind:id="'delete-' + pembayaranPiutangs.id" v-on:click="deleteEntry(pembayaranPiutangs.id, index,pembayaranPiutangs.no_faktur)">Delete</a>
+										<a v-if="otoritas.hapus_pembayaran_piutang == 1" href="#pembayaran-piutang" class="btn btn-xs btn-danger" v-bind:id="'delete-' + pembayaranPiutangs.id" v-on:click="deleteEntry(pembayaranPiutangs.id, index,pembayaranPiutangs.no_faktur)">Delete</a>
 									</td>
 								</tr>
 							</tbody>					
@@ -93,21 +93,22 @@
 
 
 <script>
-	export default {
-		data: function () {
-			return {
-				pembayaranPiutang: [],
-				pembayaranPiutangData: {},
-				url : window.location.origin+(window.location.pathname).replace("dashboard", "pembayaran-piutang"),
-				pencarian: '',
-				loading: true,
-			}
-		},
-		mounted() {
-			var app = this;
-			app.getResults();
-		},
-		watch: {
+export default {
+	data: function () {
+		return {
+			pembayaranPiutang: [],
+			pembayaranPiutangData: {},
+			otoritas: {},
+			url : window.location.origin+(window.location.pathname).replace("dashboard", "pembayaran-piutang"),
+			pencarian: '',
+			loading: true,
+		}
+	},
+	mounted() {
+		var app = this;
+		app.getResults();
+	},
+	watch: {
 // whenever question changes, this function will run
 pencarian: function (newQuestion) {
 	this.getHasilPencarian();
@@ -125,6 +126,7 @@ methods: {
 		.then(function (resp) {
 			app.pembayaranPiutang = resp.data.data;
 			app.pembayaranPiutangData = resp.data;
+			app.otoritas = resp.data.otoritas.original;
 			app.loading = false;
 		})
 		.catch(function (resp) {
@@ -142,6 +144,7 @@ methods: {
 		.then(function (resp) {
 			app.pembayaranPiutang = resp.data.data;
 			app.pembayaranPiutangData = resp.data;
+			app.otoritas = resp.data.otoritas.original;
 			app.loading = false;
 		})
 		.catch(function (resp) {

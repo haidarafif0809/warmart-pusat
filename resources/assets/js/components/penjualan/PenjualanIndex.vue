@@ -39,36 +39,36 @@
 	    					</ul>
 	    					<div class="tab-content tab-space" style="margin-top:5px;margin-bottom:5px;">
 	    						<div class="tab-pane active" id="penjualan_pos"  style="margin-top:5px;margin-bottom:5px;">
-	    						
+
 
 	    							<div class="table-responsive" style="margin-right:10px; margin-left:10px;">
-	    							
-	    					 <div class="col-md-2 col-xs-12">
-		                        <div class="panel panel-default">
-		                            <button id="btnFilter" class="btn btn-info collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" v-shortkey="['f2']" @shortkey="filterPeriode()" @click="filterPeriode()">
-		                                <i class="material-icons">date_range</i> Filter Periode (F2)
-		                            </button>
-		                        </div>
-		                    </div>
 
-                  		  <div class="col-md-12 col-xs-12">
-		                        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-		                            <div class="panel-body">
-		                                <div class="row">
-		                                    <div class="form-group col-md-2">
-		                                        <datepicker :input-class="'form-control'" placeholder="Dari Tanggal" v-model="filter.dari_tanggal" name="dari_tanggal" v-bind:id="'dari_tanggal'"></datepicker>             
-		                                    </div>
-		                                    <div class="form-group col-md-2">
-		                                        <datepicker :input-class="'form-control'" placeholder="Sampai Tanggal" v-model="filter.sampai_tanggal" name="sampai_tanggal" v-bind:id="'sampai_tanggal'"></datepicker>
-		                                    </div>
+	    								<div class="col-md-2 col-xs-12">
+	    									<div class="panel panel-default">
+	    										<button id="btnFilter" class="btn btn-info collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" v-shortkey="['f2']" @shortkey="filterPeriode()" @click="filterPeriode()">
+	    											<i class="material-icons">date_range</i> Filter Periode (F2)
+	    										</button>
+	    									</div>
+	    								</div>
 
-		                                    <div class="col-md-2">
-		                                        <button class="btn btn-primary" id="btnSubmit" type="submit" style="margin: 0px 0px;" @click="submitLaporanPenjualan()"><i class="material-icons">search</i> Cari</button>
-		                                    </div>
-		                                </div>
-		                            </div>
-		                        </div>
-		                    </div>
+	    								<div class="col-md-12 col-xs-12">
+	    									<div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+	    										<div class="panel-body">
+	    											<div class="row">
+	    												<div class="form-group col-md-2">
+	    													<datepicker :input-class="'form-control'" placeholder="Dari Tanggal" v-model="filter.dari_tanggal" name="dari_tanggal" v-bind:id="'dari_tanggal'"></datepicker>             
+	    												</div>
+	    												<div class="form-group col-md-2">
+	    													<datepicker :input-class="'form-control'" placeholder="Sampai Tanggal" v-model="filter.sampai_tanggal" name="sampai_tanggal" v-bind:id="'sampai_tanggal'"></datepicker>
+	    												</div>
+
+	    												<div class="col-md-2">
+	    													<button class="btn btn-primary" id="btnSubmit" type="submit" style="margin: 0px 0px;" @click="submitLaporanPenjualan()"><i class="material-icons">search</i> Cari</button>
+	    												</div>
+	    											</div>
+	    										</div>
+	    									</div>
+	    								</div>
 
 	    								<div class="pencarian">
 	    									<input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="" ref="pencarian">
@@ -111,18 +111,18 @@
 	    													<ul class="dropdown-menu dropdown-menu-left">
 	    														<li>
 	    															<router-link :to="{name: 'detailPenjualan', params: {id: penjualan.id}}"  v-bind:id="'detail-' + penjualan.id" >
-	    														Detail </router-link> 
+	    															Detail </router-link> 
 	    														</li>
 	    														<li>
-	    															<router-link :to="{name: 'prosesEditPenjualan', params: {id: penjualan.id}}"  v-bind:id="'edit-' + penjualan.id" >
+	    															<router-link :to="{name: 'prosesEditPenjualan', params: {id: penjualan.id}}"  v-bind:id="'edit-' + penjualan.id" v-if="otoritas.edit_penjualan == 1">
 	    															Edit </router-link>
 	    														</li>
-				    											<li>
-				    												<a href="#penjualan"  v-bind:id="'delete-' + penjualan.id" v-on:click="deleteEntry(penjualan.id, index,penjualan.id,penjualan.subtotal)">Delete</a>
-				    											</li>
-				    											<li>
-				    												<a target="blank" v-bind:href="'penjualan/download-excel-penjualan/'+penjualan.id">Download Excel</a>
-				    											</li>				    											
+	    														<li>
+	    															<a href="#penjualan"  v-bind:id="'delete-' + penjualan.id" v-on:click="deleteEntry(penjualan.id, index,penjualan.id,penjualan.subtotal)" v-if="otoritas.hapus_penjualan == 1">Delete</a>
+	    														</li>
+	    														<li>
+	    															<a target="blank" v-bind:href="'penjualan/download-excel-penjualan/'+penjualan.id">Download Excel</a>
+	    														</li>				    											
 	    													</ul>
 	    												</div>
 	    											</td>
@@ -133,14 +133,14 @@
 	    											
 	    										</tr>
 	    										<tr style="color:red">
-												<td>TOTAL</td>
-												<td></td>
-												<td></td>
-												<td></td>
-												<td></td>
-												<td></td>
-												<td align="right">{{ dataLaporanPenjualan.total_penjualan }}</td>
-											</tr>
+	    											<td>TOTAL</td>
+	    											<td></td>
+	    											<td></td>
+	    											<td></td>
+	    											<td></td>
+	    											<td></td>
+	    											<td align="right">{{ dataLaporanPenjualan.total_penjualan }}</td>
+	    										</tr>
 	    									</tbody>                    
 	    									<tbody class="data-tidak-ada" v-else>
 	    										<tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
@@ -293,6 +293,7 @@
 	    			errors: [],
 	    			penjualan: [],
 	    			penjualanData : {},
+	    			otoritas : {},
 	    			penjualanOnline: [],
 	    			penjualanOnlineData : {},
 	    			url : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
@@ -302,10 +303,10 @@
 	    			pencarianOnline: '',
 	    			loadingOnline: true,
 	    			seenOnline : false,
-	    			 filter: {
-				          dari_tanggal: '',
-				          sampai_tanggal: new Date(),
-				        },  
+	    			filter: {
+	    				dari_tanggal: '',
+	    				sampai_tanggal: new Date(),
+	    			},  
 	    			penjualan_pos :{
 	    				id_penjualan_pos : 0,
 	    				kas : '',
@@ -328,17 +329,17 @@
 	    		app.getResults();
 	    		app.totalPenjualan();
 	    		var awal_tanggal = new Date();
-      			awal_tanggal.setDate(1);
-      			app.filter.dari_tanggal = awal_tanggal;		
+	    		awal_tanggal.setDate(1);
+	    		app.filter.dari_tanggal = awal_tanggal;		
 	    	},
 	    	filters: {
-				pemisahTitik: function (value) {
-					var angka = [value];
-					var numberFormat = new Intl.NumberFormat('es-ES');
-					var formatted = angka.map(numberFormat.format);
-					return formatted.join('; ');
-				}
-			},
+	    		pemisahTitik: function (value) {
+	    			var angka = [value];
+	    			var numberFormat = new Intl.NumberFormat('es-ES');
+	    			var formatted = angka.map(numberFormat.format);
+	    			return formatted.join('; ');
+	    		}
+	    	},
 	    	watch: {
 			// whenever question changes, this function will run
 			pencarian: function (newQuestion) {
@@ -353,9 +354,9 @@
 		},
 		methods: {
 			submitLaporanPenjualan(){
-			var app = this;
-			app.prosesLaporan();
-			app.totalPenjualanFilter();
+				var app = this;
+				app.prosesLaporan();
+				app.totalPenjualanFilter();
 			},
 			prosesLaporan(page) {
 				var app = this;	
@@ -368,6 +369,7 @@
 				.then(function (resp) {
 					app.penjualan = resp.data.data;
 					app.penjualanData = resp.data;
+					app.otoritas = resp.data.otoritas.original;
 					app.loading = false
 					app.seen = true
 					console.log(resp.data.data);
@@ -387,6 +389,7 @@
 				.then(function (resp) {
 					app.penjualan = resp.data.data;
 					app.penjualanData = resp.data;
+					app.otoritas = resp.data.otoritas.original;
 					app.loading = false;
 					app.seen = true;			
 					app.$refs.pencarian.focus()
@@ -399,31 +402,31 @@
 				});
 			},
 			totalPenjualan() {
-					var app = this;	
-					var newFilter = app.filter;
-					app.loading = true,
-					axios.post(app.url+'/total-laporan-penjualan')
-					.then(function (resp) {
-						app.dataLaporanPenjualan = resp.data;
-						app.loading = false
-						console.log(resp.data);    			
-					})
-					.catch(function (resp) {
+				var app = this;	
+				var newFilter = app.filter;
+				app.loading = true,
+				axios.post(app.url+'/total-laporan-penjualan')
+				.then(function (resp) {
+					app.dataLaporanPenjualan = resp.data;
+					app.loading = false
+					console.log(resp.data);    			
+				})
+				.catch(function (resp) {
 						// console.log(resp);
 						alert("Tidak Dapat Memuat Total penjualan");
 					});
 			}, 
 			totalPenjualanFilter() {
-					var app = this;	
-					var newFilter = app.filter;
-					app.loading = true,
-					axios.post(app.url+'/total-laporan-penjualan-filter',newFilter)
-					.then(function (resp) {
-						app.dataLaporanPenjualan = resp.data;
-						app.loading = false
-						console.log(resp.data);    			
-					})
-					.catch(function (resp) {
+				var app = this;	
+				var newFilter = app.filter;
+				app.loading = true,
+				axios.post(app.url+'/total-laporan-penjualan-filter',newFilter)
+				.then(function (resp) {
+					app.dataLaporanPenjualan = resp.data;
+					app.loading = false
+					console.log(resp.data);    			
+				})
+				.catch(function (resp) {
 						// console.log(resp);
 						alert("Tidak Dapat Memuat Total penjualan");
 					});
@@ -437,6 +440,7 @@
 				.then(function (resp) {
 					app.penjualan = resp.data.data;
 					app.penjualanData = resp.data;
+					app.otoritas = resp.data.otoritas.original;
 					app.loading = false;
 					app.seen = true;
 				})
@@ -456,6 +460,7 @@
 				.then(function (resp) {
 					app.penjualanOnline = resp.data.data;
 					app.penjualanOnlineData = resp.data;
+					app.otoritas = resp.data.otoritas.original;
 					app.loadingOnline = false;
 					app.seenOnline = true;			
 					app.$refs.pencarian_online.focus()
@@ -476,6 +481,7 @@
 				.then(function (resp) {
 					app.penjualanOnline = resp.data.data;
 					app.penjualanOnlineData = resp.data;
+					app.otoritas = resp.data.otoritas.original;
 					app.loadingOnline = false;
 					app.seenOnline = true;
 				})
@@ -553,10 +559,10 @@
 				$("#modal_detail_transaksi").hide();
 			},
 			filterPeriode(){
-                $("#btnFilter").click();
-                this.getResults();
-                this.totalPenjualan();
-            },
+				$("#btnFilter").click();
+				this.getResults();
+				this.totalPenjualan();
+			},
 			alert(pesan) {
 				this.$swal({
 					title: "Berhasil ",
