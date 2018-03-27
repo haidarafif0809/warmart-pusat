@@ -274,17 +274,16 @@ public static function tombolBeli($cek_produk, $produks)
             $tombol_beli = '<a href="' . url('/keranjang-belanja/tambah-produk-keranjang-belanja/' . $produks->id . '') . '" id="btnBeliSekarang" class="btn btn-block tombolBeli buttonColor" > Beli Sekarang </a>';
         }
     } elseif (Auth::check() && Auth::user()->tipe_user != $pelanggan) {
-       // $tombol_beli = '<a  disabled="true" class="btn btn-block tombolBeli buttonColor" rel="tooltip" title="Masuk Sebagai Pelanggan Untuk Beli" > Beli Sekarang </a>';
-        $tombol_beli = '';
+       $tombol_beli = '<a  disabled="true" class="btn btn-block tombolBeli buttonColor" rel="tooltip" title="Masuk Sebagai Pelanggan Untuk Beli" > Beli Sekarang </a>';
+   } else {
+    if ($cek_produk < 1) {
+        $tombol_beli = '<a disabled="true" class="btn btn-block tombolBeli buttonColor" rel="tooltip" title="Stok Tidak Ada" > Beli Sekarang </a>';
     } else {
-        if ($cek_produk < 1) {
-            $tombol_beli = '<a disabled="true" class="btn btn-block tombolBeli buttonColor" rel="tooltip" title="Stok Tidak Ada" > Beli Sekarang </a>';
-        } else {
-            $tombol_beli = '<a href="' . url('/keranjang-belanja/tambah-produk-keranjang-belanja/' . $produks->id . '') . '" id="btnBeliSekarang" class="btn btn-block tombolBeli buttonColor" > Beli Sekarang </a>';
-        }
+        $tombol_beli = '<a href="' . url('/keranjang-belanja/tambah-produk-keranjang-belanja/' . $produks->id . '') . '" id="btnBeliSekarang" class="btn btn-block tombolBeli buttonColor" > Beli Sekarang </a>';
     }
+}
 
-    return $tombol_beli;
+return $tombol_beli;
 }
 
 public function tomboBeliDisable($tool_tip)
