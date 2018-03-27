@@ -247,7 +247,7 @@
                   <td class="text-primary"><b># Jumlah Otomatis Satu ? </b> </td>
                   <td class="text-primary"><b>:</b> </td>
                   <td class="text-primary">
-                    <div class="checkbox">
+                    <div class="togglebutton">
                       <label>
                         <input type="checkbox" v-model="setting_penjualan_pos.jumlah_produk" v-bind:value="1">
                         <b v-if="setting_penjualan_pos.jumlah_produk == true">Ya</b> 
@@ -261,7 +261,7 @@
                   <td class="text-primary"><b># Stok Boleh Minus ? </b> </td>
                   <td class="text-primary"><b>:</b> </td>
                   <td class="text-primary">
-                    <div class="checkbox">
+                    <div class="togglebutton">
                       <label>
                         <input type="checkbox" v-model="setting_penjualan_pos.stok" v-bind:value="1">
                         <b v-if="setting_penjualan_pos.stok == true">Ya</b>
