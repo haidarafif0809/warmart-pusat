@@ -6,11 +6,21 @@
 	<style>
 	body {
 		font-family: 'Libre Barcode 39 Text', cursive;
-		font-size: 48px;
+		font-size: 44px;
 	}
 </style>
 </head>
 <body>
 	<div>{{$no_telp}}</div>
 </body>
+
+<!--   Core JS Files   -->
+<script src="{{ asset('js/app.js?v=1.51')}}" type="text/javascript"></script>
+
+<script>
+	$(document).ready(function(){
+		window.print();
+	});
+</script>
+@yield('scripts')
 </html>

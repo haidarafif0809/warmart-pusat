@@ -257,7 +257,7 @@
         <button type="button" class="close" data-dismiss="modal"> <i class="material-icons">close</i></button> 
         <h4 class="modal-title"> 
           <div class="alert-icon"> 
-            <b>Setting Penjualan POS</b> {{setting_penjualan_pos.jumlah_produk}}
+            <b>Setting Penjualan POS</b>
           </div> 
         </h4> 
       </div> 
