@@ -525,6 +525,7 @@ Route::get('/pesanan-warung/pencarian', 'PesananWarungController@pencarian')->mi
 Route::get('/pesanan-warung/detail/{id}', 'PesananWarungController@detailPesanan')->middleware('auth');
 Route::post('/edit-jumlah-produk-warung', 'PesananWarungController@editJumlahPesanan')->middleware('auth');
 Route::get('/konfirmasi-pesanan-warung/{id}', 'PesananWarungController@konfirmasiPesananWarung')->middleware('auth');
+Route::get('/pesanan-dikonfirmasi/{id_pesanan}', 'PesananWarungController@pesananDikonfirmasi')->middleware('auth');
 Route::get('/batalkan-konfirmasi-pesanan-warung/{id}', 'PesananWarungController@batalkanKonfirmasiPesananWarung')->middleware('auth');
 Route::get('/batalkan-pesanan-warung/{id}', 'PesananWarungController@batalkanPesananWarung')->middleware('auth');
 Route::post('/selesai-konfirmasi-pesanan-warung', 'PesananWarungController@selesaiKonfirmasiPesananWarung')->middleware('auth');
@@ -950,7 +951,6 @@ Route::get('/setting-promo/data-filter-edit/{id}', 'SettingPromoController@dataF
 Route::put('/setting-promo/tambah-waktu/{id}', 'SettingPromoController@tambahWaktu')->middleware('auth');
 Route::put('/setting-promo/tambah-waktu-edit/{id}', 'SettingPromoController@tambahWaktuEdit')->middleware('auth');
 Route::post('/setting-promo/{id}', 'SettingPromoController@update')->middleware('auth');
-
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
