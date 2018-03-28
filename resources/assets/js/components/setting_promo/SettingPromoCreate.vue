@@ -355,6 +355,11 @@ import { mapState } from 'vuex';
 				app.setting.baner_promo = '';
 				app.setting.produk = '';
 				app.setting.harga_coret = '';
+				app.setting.dari_tanggal = '';
+				app.setting.sampai_tanggal = '';
+				app.setting.jenis_promo = '';
+				app.setting.status_aktif = false;
+
 				app.errors = '';
 			}
 		}

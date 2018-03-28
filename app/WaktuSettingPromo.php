@@ -16,4 +16,9 @@ class WaktuSettingPromo extends Model
 	{
 		return $this->hasOne('App\SettingPromo', 'id_setting_promo', 'id_setting_promo');
 	}
+
+		public function filter_setting_promo()
+	{
+		return $this->hasOne('App\FilterSettingPromo','id','waktu_promo');
+	}
 }

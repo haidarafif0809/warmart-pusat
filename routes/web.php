@@ -946,7 +946,10 @@ Route::get('/bank-warung/bank', 'BankWarungController@dataBank')->middleware('au
 Route::get('/setting-promo/view', 'SettingPromoController@view')->middleware('auth');
 Route::get('/setting-promo/pencarian', 'SettingPromoController@pencarian')->middleware('auth');
 Route::get('/setting-promo/data-filter', 'SettingPromoController@dataFilter')->middleware('auth');
+Route::get('/setting-promo/data-filter-edit/{id}', 'SettingPromoController@dataFilterEdit')->middleware('auth');
 Route::put('/setting-promo/tambah-waktu/{id}', 'SettingPromoController@tambahWaktu')->middleware('auth');
+Route::put('/setting-promo/tambah-waktu-edit/{id}', 'SettingPromoController@tambahWaktuEdit')->middleware('auth');
+Route::post('/setting-promo/{id}', 'SettingPromoController@update')->middleware('auth');
 
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
