@@ -1409,7 +1409,7 @@ public function index()
             $alamat_pelanggan = $penjualan['alamat_pelanggan'];
         }
 
-        $detail_penjualan = DetailPenjualanPos::with('produk')->where('id_penjualan_pos', $penjualan['id'])->get();
+        $detail_penjualan = DetailPenjualanPos::with(['produk','satuan'])->where('id_penjualan_pos', $penjualan['id'])->get();
         $terbilang        = $this->kekata($penjualan->total);
         $subtotal         = 0;
         foreach ($detail_penjualan as $detail_penjualans) {
