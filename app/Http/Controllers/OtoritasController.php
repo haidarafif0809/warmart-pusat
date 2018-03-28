@@ -139,6 +139,7 @@ class OtoritasController extends Controller
      $permission_setting = Permission::where('grup','setting')->get(); 
      $permission_stok_opname = Permission::where('grup','stok_opname')->get(); 
      $permission_supplier = Permission::where('grup','supplier')->get(); 
+     $permission_setting_promo = Permission::where('grup','setting_promo')->get(); 
      $otoritas = Role::where('id',$id)->first();
 
      $arrayPermissionUser = array();
@@ -167,6 +168,7 @@ class OtoritasController extends Controller
      $arrayPermissionSetting = array();
      $arrayPermissionStokOpname = array();
      $arrayPermissionSupplier = array();
+     $arrayPermissionSettingPromo = array();
 
      $permission_role = PermissionRole::with('permissions')->where('role_id',$id)->get();
      foreach ($permission_role as $permission_roles) {
@@ -245,6 +247,9 @@ class OtoritasController extends Controller
    if ($permission_roles->permissions->grup == "supplier"){
      array_push($arrayPermissionSupplier, $permission_roles->permission_id);
    }
+   if ($permission_roles->permissions->grup == "setting_promo"){
+     array_push($arrayPermissionSettingPromo, $permission_roles->permission_id);
+   }
  }
 
  return response()->json([
@@ -273,6 +278,7 @@ class OtoritasController extends Controller
   "permission_setting" => $permission_setting,
   "permission_stok_opname" => $permission_stok_opname,
   "permission_supplier" => $permission_supplier,
+  "permission_setting_promo" => $permission_setting_promo,
 
   "otoritas"     => $otoritas,
 
@@ -301,6 +307,7 @@ class OtoritasController extends Controller
   "data_permission_setting" => $arrayPermissionSetting,
   "data_permission_stok_opname" => $arrayPermissionStokOpname,
   "data_permission_supplier" => $arrayPermissionSupplier,
+  "data_permission_setting_promo" => $arrayPermissionSettingPromo
 ]);
 }
 
@@ -483,6 +490,10 @@ class OtoritasController extends Controller
     foreach ($request->supplier as $setting_supplier) {
       $permission_supplier = Permission::whereId($setting_supplier)->first();
       $role->attachPermission($permission_supplier);
+    }
+    foreach ($request->setting_promo as $setting_setting_promo) {
+      $permission_setting_promo = Permission::whereId($setting_setting_promo)->first();
+      $role->attachPermission($permission_setting_promo);
     }
 
   }
