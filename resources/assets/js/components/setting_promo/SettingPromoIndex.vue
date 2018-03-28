@@ -33,8 +33,10 @@
 								<tr>
 
 									<th>Nama Produk</th>
-									<th style="text-align:right"> Harga Coret </th>
+									<th style="text-align:right"> Harga Promo </th>
+									<th style="text-align:right">Periode Promo</th>
 									<th style="text-align:right">Baner Promo</th>
+									<th style="text-align:right">Status</th>
 									<th style="text-align:right">Aksi</th>
 								</tr>
 							</thead>
@@ -43,9 +45,12 @@
 
 									<td>{{ settingPromos.settingpromo.kode_barang }} || {{ settingPromos.settingpromo.nama_barang }}</td>
 									<td align="right"> {{ settingPromos.settingpromo.harga_coret | pemisahTitik}}</td>
+									<td align="right"> {{ settingPromos.settingpromo.dari_tanggal | tanggal }} sd {{ settingPromos.settingpromo.sampai_tanggal | tanggal }}</td>
 									<td align="right"><a v-if="settingPromos.settingpromo.baner_promo != undefined" v-bind:href="url_baner_promo+ '/'+settingPromos.settingpromo.baner_promo" target="blank">Lihat Baner</a>
 					                    <p v-else >Tidak Ada Baner</p>
 					                 </td>
+					                 <td align="right" v-if="settingPromos.settingpromo.status == 1"> Aktif </td>
+					                 <td align="right" v-else> Tidak Aktif </td>
 									<td align="right"> 
 									<router-link :to="{name: 'editSettingPromo', params: {id: settingPromos.settingpromo.id_setting_promo }}" class="btn btn-xs btn-default" v-bind:id="'edit-' + settingPromos.settingpromo.id_setting_promo" >
 									Edit 
@@ -109,7 +114,7 @@ export default {
         return formatted.join('; ');
       },
       tanggal: function (value) {
-        return moment(String(value)).format('DD/MM/YYYY hh:mm')
+        return moment(String(value)).format('DD/MM/YYYY')
       }
     },
 methods: {

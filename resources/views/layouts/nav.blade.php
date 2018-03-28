@@ -650,6 +650,17 @@
             </li>
             @endif
 
+            <li>
+                <router-link :to="{name: 'indexSettingPromo'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        SP
+                    </span>
+                    <span class="sidebar-normal">
+                        Setting Promo
+                    </span>
+                </router-link>
+            </li>
+
         </ul>
     </div>
 </li>

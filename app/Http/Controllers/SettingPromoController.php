@@ -24,7 +24,7 @@ class SettingPromoController extends Controller
 
         public function view()
     {
-        $settingpromo = SettingPromo::select(['barangs.nama_barang','barangs.kode_barang','setting_promos.baner_promo','setting_promos.harga_coret','setting_promos.id_setting_promo'])->leftJoin('barangs', 'barangs.id', '=', 'setting_promos.id_produk')->where('setting_promos.id_warung', Auth::user()->id_warung)->orderBy('setting_promos.id_setting_promo', 'desc')->paginate(10);
+        $settingpromo = SettingPromo::select(['barangs.nama_barang','barangs.kode_barang','setting_promos.baner_promo','setting_promos.harga_coret','setting_promos.id_setting_promo','setting_promos.jenis_promo','setting_promos.status','setting_promos.dari_tanggal','setting_promos.sampai_tanggal'])->leftJoin('barangs', 'barangs.id', '=', 'setting_promos.id_produk')->where('setting_promos.id_warung', Auth::user()->id_warung)->orderBy('setting_promos.id_setting_promo', 'desc')->paginate(10);
         $array             = array();
 
         foreach ($settingpromo as $settingpromos) {
