@@ -525,6 +525,7 @@ Route::get('/pesanan-warung/pencarian', 'PesananWarungController@pencarian')->mi
 Route::get('/pesanan-warung/detail/{id}', 'PesananWarungController@detailPesanan')->middleware('auth');
 Route::post('/edit-jumlah-produk-warung', 'PesananWarungController@editJumlahPesanan')->middleware('auth');
 Route::get('/konfirmasi-pesanan-warung/{id}', 'PesananWarungController@konfirmasiPesananWarung')->middleware('auth');
+Route::get('/pesanan-dikonfirmasi/{id_pesanan}', 'PesananWarungController@pesananDikonfirmasi')->middleware('auth');
 Route::get('/batalkan-konfirmasi-pesanan-warung/{id}', 'PesananWarungController@batalkanKonfirmasiPesananWarung')->middleware('auth');
 Route::get('/batalkan-pesanan-warung/{id}', 'PesananWarungController@batalkanPesananWarung')->middleware('auth');
 Route::post('/selesai-konfirmasi-pesanan-warung', 'PesananWarungController@selesaiKonfirmasiPesananWarung')->middleware('auth');
@@ -945,7 +946,6 @@ Route::get('/bank-warung/bank', 'BankWarungController@dataBank')->middleware('au
 //menampilkan data bank Warung
 Route::get('/setting-promo/view', 'SettingPromoController@view')->middleware('auth');
 Route::get('/setting-promo/pencarian', 'SettingPromoController@pencarian')->middleware('auth');
-
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
