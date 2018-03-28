@@ -117,10 +117,10 @@
 
 						<div class="col-md-4" v-if="pesananData.pesanan.konfirmasi_pesanan != 4">
 							<p v-if="pesananData.pesanan.konfirmasi_pesanan == 1">Selesai ? :</p>
-							<p v-else>Lanjut ? :</p>
+							<p v-else>Konfirmasi ? :</p>
 
 							<p v-if="pesananData.pesanan.konfirmasi_pesanan == 0">
-								<button id="konfirmasi-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-sm btn-info" @click="konfirmasiPesanan(pesananData.pesanan.id)"><font style="font-size: 12px;">Lanjut</font></button>
+								<button id="konfirmasi-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-sm btn-info" @click="konfirmasiPesanan(pesananData.pesanan.id)"><font style="font-size: 12px;">Konfirmasi</font></button>
 								<button id="batalkan-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-sm btn-danger" @click="batalPesanan(pesananData.pesanan.id)"><font style="font-size: 12px;">Batal</font></button>
 								<!--PEMESAN-->
 								<button type="button" class="btn btn-sm btn-primary" id="btnDetail" data-toggle="modal" data-target="#data_pemesan"><font style="font-size: 12px;">Pemesan</font></button>
@@ -396,6 +396,7 @@ export default {
 			urlTambahProduk: window.location.origin + (window.location.pathname).replace("dashboard", "tambah-produk-pesanan-warung"),
 			urlKurangProduk: window.location.origin + (window.location.pathname).replace("dashboard", "kurang-produk-pesanan-warung"),
 			urlKonfirmasiPesanan: window.location.origin + (window.location.pathname).replace("dashboard", "konfirmasi-pesanan-warung"),
+			urlPesananDikonfirmasi: window.location.origin + (window.location.pathname).replace("dashboard", "pesanan-dikonfirmasi"),
 			urlBatalKonfirmasiPesanan: window.location.origin + (window.location.pathname).replace("dashboard", "batalkan-konfirmasi-pesanan-warung"),
 			urlBatalPesanan: window.location.origin + (window.location.pathname).replace("dashboard", "batalkan-pesanan-warung"),
 			urlOrigin: window.location.origin + (window.location.pathname).replace("dashboard", ""),
@@ -551,15 +552,25 @@ export default {
 				buttonsStyling: false
 			}).then(function () {
 				app.submitKonfirmasiPesanan(id)
-				console.log(id)
 			})
 		},
 		submitKonfirmasiPesanan(id){      		
 			var app = this;
 			axios.get(app.urlKonfirmasiPesanan+'/'+ id)
 			.then(function (resp) {
-				app.getResults();
-				app.$router.replace('/detail-pesanan-warung/'+id);
+
+				axios.get(app.urlPesananDikonfirmasi + '/' + id)
+				.then(resp => {
+					
+					app.getResults();
+					app.$router.replace('/detail-pesanan-warung/'+id);
+				})
+				.catch(resp => {
+					alert('Sesuatu yang salah terjadi.');
+				});
+			})
+			.catch(resp => {
+				alert('Sesuatu yang salah terjadi.');
 			});
 		},
 		batalKonfirmasiPesanan(id){
