@@ -146,50 +146,58 @@ class SettingPromoController extends Controller
             Auth::logout();
             return response()->view('error.403');
         } else {
-            $this->validate($request, [
-                'id_produk'       => 'nullable|unique:setting_promos,id_produk,NULL,id_setting_promo,id_warung,' . Auth::user()->id_warung,
-            ]);
 
             $produk    = explode("|", $request->produk);
             $id_produk = $produk[0];
 
-            if ($request->status_aktif == "true") {
-                $status_aktif = 1;
-            }else if ($request->status_aktif == "false") {
+
+           if ($request->status_aktif == "true" || $request->status_aktif == 1) {
+               $status_aktif = 1;
+           }else if($request->status_aktif == "false" || $request->status_aktif == 0) {
                $status_aktif = 0;
+           }
+
+            $data_promo = SettingPromo::leftJoin('barangs', 'barangs.id', '=', 'setting_promos.id_produk')->where('setting_promos.id_produk', $id_produk)->where('setting_promos.id_warung', Auth::user()->id_warung);
+
+            if ($data_promo->count() > 0) {
+                  $respons['data_promo'] = 1;
+                  $respons['nama_barang'] = $data_promo->first()->nama_barang;
+                  return response()->json($respons);
             }
+            else{
 
-            $insert_setting = SettingPromo::create([
-                'harga_coret'        => $request->harga_coret,
-                'id_produk'          => $id_produk,
-                'id_warung'          => Auth::user()->id_warung,
-                'dari_tanggal'       => $this->tanggalSql($request->dari_tanggal),
-                'sampai_tanggal'     => $this->tanggalSql($request->sampai_tanggal),
-                'jenis_promo'        => $request->jenis_promo,
-                'status'             => $status_aktif]);
 
-            if ($request->hasFile('baner_promo')) {
-                $baner_promo = $request->file('baner_promo');
+                    $insert_setting = SettingPromo::create([
+                        'harga_coret'        => $request->harga_coret,
+                        'id_produk'          => $id_produk,
+                        'id_warung'          => Auth::user()->id_warung,
+                        'dari_tanggal'       => $this->tanggalSql($request->dari_tanggal),
+                        'sampai_tanggal'     => $this->tanggalSql($request->sampai_tanggal),
+                        'jenis_promo'        => $request->jenis_promo,
+                        'status'             => $status_aktif]);
 
-                if (is_array($baner_promo) || is_object($baner_promo)) {
-                    // Mengambil file yang diupload
-                    $uploaded_baner_promo = $baner_promo;
-                    // mengambil extension file
-                    $extension = $uploaded_baner_promo->getClientOriginalExtension();
-                    // membuat nama file random berikut extension
-                    $filename     = str_random(40) . '.' . $extension;
-                    $image_resize = Image::make($baner_promo->getRealPath());
-                    $image_resize->fit(1450, 750);
-                    $image_resize->save(public_path('baner_setting_promo/' . $filename));
-                    $insert_setting->baner_promo = $filename;
-                    // menyimpan field foto_kamar di database kamar dengan filename yang baru dibuat
-                    $insert_setting->save();
-                }
+                    if ($request->hasFile('baner_promo')) {
+                        $baner_promo = $request->file('baner_promo');
 
-            }
+                        if (is_array($baner_promo) || is_object($baner_promo)) {
+                            // Mengambil file yang diupload
+                            $uploaded_baner_promo = $baner_promo;
+                            // mengambil extension file
+                            $extension = $uploaded_baner_promo->getClientOriginalExtension();
+                            // membuat nama file random berikut extension
+                            $filename     = str_random(40) . '.' . $extension;
+                            $image_resize = Image::make($baner_promo->getRealPath());
+                            $image_resize->fit(1450, 750);
+                            $image_resize->save(public_path('baner_setting_promo/' . $filename));
+                            $insert_setting->baner_promo = $filename;
+                            // menyimpan field foto_kamar di database kamar dengan filename yang baru dibuat
+                            $insert_setting->save();
+                        }
 
-            return $insert_setting->id_setting_promo;
+                    }
 
+                    return $insert_setting->id_setting_promo;
+           }
         }
     }
 
@@ -257,58 +265,52 @@ class SettingPromoController extends Controller
             return response()->view('error.403');
         } else {
 
-            $this->validate($request, [
-                'id_produk'       => 'nullable|unique:setting_promos,id_produk,NULL,id_setting_promo,id_warung,' . Auth::user()->id_warung,
-            ]);
-            
             $produk    = explode("|", $request->produk);
             $id_produk = $produk[0];
 
-            if ($request->status_aktif == "true") {
-                $status_aktif = 1;
-            }else if ($request->status_aktif == "false") {
+           if ($request->status_aktif == "true" || $request->status_aktif == 1) {
+               $status_aktif = 1;
+           }else if($request->status_aktif == "false" || $request->status_aktif == 0) {
                $status_aktif = 0;
+           }
+
+                    $update_setting->update([
+                        'harga_coret'        => $request->harga_coret,
+                        'id_produk'          => $id_produk,
+                        'id_warung'          => Auth::user()->id_warung,
+                        'dari_tanggal'       => $this->tanggalSql($request->dari_tanggal),
+                        'sampai_tanggal'     => $this->tanggalSql($request->sampai_tanggal),
+                        'jenis_promo'        => $request->jenis_promo,
+                        'status'             => $status_aktif
+                    ]);
+
+
+                    if ($request->hasFile('baner_promo')) {
+                        // Mengambil file yang diupload
+                        $baner_promo          = $request->file('baner_promo');
+                        $uploaded_baner_promo = $baner_promo;
+                        // mengambil extension file
+                        $extension = $uploaded_baner_promo->getClientOriginalExtension();
+                        // membuat nama file random berikut extension
+                        $filename     = str_random(40) . '.' . $extension;
+                        $image_resize = Image::make($baner_promo->getRealPath());
+                        $image_resize->fit(300);
+                        $image_resize->save(public_path('baner_setting_promo/' . $filename));
+                        // hapus baner_promo_home lama, jika ada
+                        if ($update_setting->baner_promo) {
+                            $old_baner_promo = $update_setting->baner_promo;
+                            $filepath = public_path() . DIRECTORY_SEPARATOR . 'baner_setting_promo'
+                            . DIRECTORY_SEPARATOR . $update_setting->baner_promo;
+                            try {
+                                File::delete($filepath);
+                            } catch (FileNotFoundException $e) {
+                                // File sudah dihapus/tidak ada
+                            }
+                        }
+                        $update_setting->foto = $filename;
+                        $update_setting->save();
+                        }
             }
-
-            $update_setting->update([
-                'harga_coret'        => $request->harga_coret,
-                'id_produk'          => $id_produk,
-                'id_warung'          => Auth::user()->id_warung,
-                'dari_tanggal'       => $this->tanggalSql($request->dari_tanggal),
-                'sampai_tanggal'     => $this->tanggalSql($request->sampai_tanggal),
-                'jenis_promo'        => $request->jenis_promo,
-                'status'             => $status_aktif
-            ]);
-
-
-            if ($request->hasFile('baner_promo')) {
-                // Mengambil file yang diupload
-                $baner_promo          = $request->file('baner_promo');
-                $uploaded_baner_promo = $baner_promo;
-                // mengambil extension file
-                $extension = $uploaded_baner_promo->getClientOriginalExtension();
-                // membuat nama file random berikut extension
-                $filename     = str_random(40) . '.' . $extension;
-                $image_resize = Image::make($baner_promo->getRealPath());
-                $image_resize->fit(300);
-                $image_resize->save(public_path('baner_setting_promo/' . $filename));
-                // hapus baner_promo_home lama, jika ada
-                if ($update_setting->baner_promo) {
-                    $old_baner_promo = $update_setting->baner_promo;
-                    $filepath = public_path() . DIRECTORY_SEPARATOR . 'baner_setting_promo'
-                    . DIRECTORY_SEPARATOR . $update_setting->baner_promo;
-                    try {
-                        File::delete($filepath);
-                    } catch (FileNotFoundException $e) {
-                        // File sudah dihapus/tidak ada
-                    }
-                }
-                $update_setting->foto = $filename;
-                $update_setting->save();
-            }
-
-        }
-
     }
 
             public function tambahWaktuEdit(Request $request,$id)
