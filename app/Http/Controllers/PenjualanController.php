@@ -1530,7 +1530,10 @@ public function index()
     public function downloadExcelPenjualan(Request $request, $id_penjualan)
     {
 
-        $data_tbs_penjualan_pos = DetailPenjualanPos::select('detail_penjualan_pos.no_faktur', 'barangs.kode_barang', 'detail_penjualan_pos.jumlah_produk', 'detail_penjualan_pos.harga_produk', 'detail_penjualan_pos.subtotal', 'detail_penjualan_pos.tax', 'detail_penjualan_pos.potongan', 'detail_penjualan_pos.warung_id', 'detail_penjualan_pos.created_by', 'detail_penjualan_pos.updated_by', 'detail_penjualan_pos.created_at', 'detail_penjualan_pos.updated_at')->leftJoin('barangs', 'detail_penjualan_pos.id_produk', '=', 'barangs.id')->where('detail_penjualan_pos.id_penjualan_pos', $id_penjualan)->where('detail_penjualan_pos.warung_id', Auth::user()->id_warung);
+        $data_tbs_penjualan_pos = DetailPenjualanPos::select('detail_penjualan_pos.no_faktur', 'barangs.kode_barang', 'detail_penjualan_pos.jumlah_produk', 'detail_penjualan_pos.harga_produk', 'detail_penjualan_pos.subtotal', 'detail_penjualan_pos.tax', 'detail_penjualan_pos.potongan', 'detail_penjualan_pos.warung_id', 'detail_penjualan_pos.created_by', 'detail_penjualan_pos.updated_by', 'detail_penjualan_pos.created_at', 'detail_penjualan_pos.updated_at', 'satuans.nama_satuan')
+        ->leftJoin('barangs', 'detail_penjualan_pos.id_produk', '=', 'barangs.id')
+        ->leftJoin('satuans', 'detail_penjualan_pos.satuan_id', '=', 'satuans.id')
+        ->where('detail_penjualan_pos.id_penjualan_pos', $id_penjualan)->where('detail_penjualan_pos.warung_id', Auth::user()->id_warung);
 
         Excel::create('Data Export Penjualan', function ($excel) use ($request, $data_tbs_penjualan_pos) {
     // Set property
@@ -1540,6 +1543,7 @@ public function index()
                 $sheet->row($row, [
                     'Kode Produk',
                     'Jumlah Produk',
+                    'Satuan Produk',
                     'Harga Produk',
                     'Subtotal',
                     'Tax',
@@ -1550,6 +1554,7 @@ public function index()
                     $sheet->row(++$row, [
                         $data_tbs_penjualan_poss->kode_barang,
                         $data_tbs_penjualan_poss->jumlah_produk,
+                        $data_tbs_penjualan_poss->nama_satuan,
                         $data_tbs_penjualan_poss->harga_produk,
                         $data_tbs_penjualan_poss->subtotal,
                         $data_tbs_penjualan_poss->tax,
