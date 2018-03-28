@@ -17,6 +17,7 @@ use App\SatuanKonversi;
 use App\TransaksiPiutang;
 use App\User;
 use App\Warung;
+use App\Satuan;
 use Auth;
 use Excel;
 use Illuminate\Http\Request;
@@ -615,19 +616,33 @@ return $harga_jual;
 }
 
 public function prosesTambahTbsPenjualan(Request $request)
-{
-    $satuan_produk = explode("|", $request->satuan_produk);
+{   
+    $settings = SettingPenjualanPos::where('id_warung', Auth::user()->id_warung);
     $produk      = explode("|", $request->produk);
     $id_produk   = $produk[0];
     $nama_produk = $produk[1];
     $satuan_id   = $produk[4];
     $session_id  = session()->getId();
 
-    if ($satuan_produk[0] === $satuan_produk[2]) { //$satuan_produk[0] == Satuan Konversi & $satuan_produk[2] == Satuan Dasar
-        $harga_jual = $this->cekHargaProduk($produk);        
+    if ($settings->first()->jumlah_produk == 0) {
+        $satuan_produk = explode("|", $request->satuan_produk);
+
+        $satuan_id = $satuan_produk[0];
+        $satuan_dasar = $satuan_produk[2];
+        $nama_satuan = $satuan_produk[1];
+
+        if ($satuan_produk[0] === $satuan_produk[2]) { //$satuan_produk[0] == Satuan Konversi & $satuan_produk[2] == Satuan Dasar
+            $harga_jual = $this->cekHargaProduk($produk);        
+        }else{
+            $harga_jual_konversi = SatuanKonversi::select('harga_jual_konversi')->where('id_produk', $id_produk)->where('id_satuan', $satuan_produk[0])->first()->harga_jual_konversi;
+            $harga_jual = $harga_jual_konversi;        
+        }
     }else{
-        $harga_jual_konversi = SatuanKonversi::select('harga_jual_konversi')->where('id_produk', $id_produk)->where('id_satuan', $satuan_produk[0])->first()->harga_jual_konversi;
-        $harga_jual = $harga_jual_konversi;        
+
+        $satuan_id = $produk[4];
+        $satuan_dasar = $produk[4];
+        $nama_satuan = Satuan::select('nama_satuan')->where('id', $satuan_id)->first()->nama_satuan;
+        $harga_jual = $harga_jual = $this->cekHargaProduk($produk);
     }
 
     if ($harga_jual == '' || $harga_jual == 0) {
@@ -648,8 +663,8 @@ public function prosesTambahTbsPenjualan(Request $request)
 
             $data_tbs->update([
                 'jumlah_produk' => $jumlah_produk,
-                'satuan_id' => $satuan_produk[0],
-                'satuan_dasar' => $satuan_produk[2],
+                'satuan_id' => $satuan_id,
+                'satuan_dasar' => $satuan_dasar,
                 'harga_produk' => $harga_jual,
                 'subtotal' => $subtotal_edit,
                 ]);
@@ -660,8 +675,8 @@ public function prosesTambahTbsPenjualan(Request $request)
             $respons['jumlah_produk']       = $jumlah_produk;
             $respons['subtotal']            = $subtotal;
             $respons['subtotalKeseluruhan'] = $subtotal_edit;
-            $respons['satuan_produk'] = $satuan_produk[0];
-            $respons['nama_satuan'] = $satuan_produk[1];
+            $respons['satuan_produk'] = $satuan_id;
+            $respons['nama_satuan'] = $nama_satuan;
             $respons['harga_produk'] = $harga_jual;
             return response()->json($respons);
 
@@ -671,8 +686,8 @@ public function prosesTambahTbsPenjualan(Request $request)
 
             $tbspenjualan = TbsPenjualan::create([
                 'session_id'    => $session_id,
-                'satuan_id'     => $satuan_produk[0],
-                'satuan_dasar'  => $satuan_produk[2],
+                'satuan_id'     => $satuan_id,
+                'satuan_dasar'  => $satuan_dasar,
                 'id_produk'     => $id_produk,
                 'jumlah_produk' => $request->jumlah_produk,
                 'harga_produk'  => $harga_jual,
