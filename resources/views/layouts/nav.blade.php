@@ -525,7 +525,7 @@
             <li>
                 <router-link :to="{name: 'indexBankWarung'}" class="menu-nav">
                     <span class="sidebar-mini">
-                        BW
+                        B
                     </span>
                     <span class="sidebar-normal">
                         Bank 
