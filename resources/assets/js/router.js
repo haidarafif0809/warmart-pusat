@@ -189,6 +189,7 @@ import OtoritasSetting from './components/otoritas/OtoritasSetting.vue';
 
 import SettingPromoIndex from './components/setting_promo/SettingPromoIndex.vue'; 
 import SettingPromoCreate from './components/setting_promo/SettingPromoCreate.vue'; 
+import SettingPromoEdit from './components/setting_promo/SettingPromoEdit.vue'; 
 
 const routes = [{
     path: '/',
@@ -796,6 +797,10 @@ const routes = [{
         path: '/create-setting-promo/', 
         component: SettingPromoCreate, 
         name: 'createSettingPromo' 
+    }, { 
+        path: '/edit-setting-promo/:id', 
+        component: SettingPromoEdit, 
+        name: 'editSettingPromo'
     } 
 
 

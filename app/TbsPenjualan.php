@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 class TbsPenjualan extends Model
 {
     use AuditableTrait;
-    protected $fillable   = ['session_id', 'satuan_id', 'id_produk', 'jumlah_produk', 'harga_produk', 'subtotal', 'potongan', 'tax', 'warung_id', 'ppn'];
+    protected $fillable   = ['session_id', 'satuan_id', 'id_produk', 'jumlah_produk', 'harga_produk', 'subtotal', 'potongan', 'tax', 'warung_id', 'ppn', 'satuan_dasar'];
     protected $primaryKey = 'id_tbs_penjualan';
 
     public function produk()
