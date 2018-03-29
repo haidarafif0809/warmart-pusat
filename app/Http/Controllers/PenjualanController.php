@@ -1591,10 +1591,7 @@ public function index()
     public function downloadExcelPenjualan(Request $request, $id_penjualan)
     {
 
-        $data_tbs_penjualan_pos = DetailPenjualanPos::select('detail_penjualan_pos.no_faktur', 'barangs.kode_barang', 'detail_penjualan_pos.jumlah_produk', 'detail_penjualan_pos.harga_produk', 'detail_penjualan_pos.subtotal', 'detail_penjualan_pos.tax', 'detail_penjualan_pos.potongan', 'detail_penjualan_pos.warung_id', 'detail_penjualan_pos.created_by', 'detail_penjualan_pos.updated_by', 'detail_penjualan_pos.created_at', 'detail_penjualan_pos.updated_at', 'satuans.nama_satuan')
-        ->leftJoin('barangs', 'detail_penjualan_pos.id_produk', '=', 'barangs.id')
-        ->leftJoin('satuans', 'detail_penjualan_pos.satuan_id', '=', 'satuans.id')
-        ->where('detail_penjualan_pos.id_penjualan_pos', $id_penjualan)->where('detail_penjualan_pos.warung_id', Auth::user()->id_warung);
+        $data_tbs_penjualan_pos = DetailPenjualanPos::downloadPenjualan($id_penjualan);
 
         Excel::create('Data Export Penjualan', function ($excel) use ($request, $data_tbs_penjualan_pos) {
     // Set property
@@ -1646,27 +1643,10 @@ public function index()
         return response()->json($respons);
     }
 
-    public function editSatuanTbsPenjualan(Request $request){
+    public function editSatuan($request, $db){
 
         $satuan_konversi = explode("|", $request->satuan_produk);
-        $tbs_penjualan = TbsPenjualan::find($request->id_tbs);
-
-        $subtotal = ($tbs_penjualan->jumlah_produk * $satuan_konversi[5]) - $tbs_penjualan->potongan;
-
-        $tbs_penjualan->update(['satuan_id' => $satuan_konversi[0], 'harga_produk' => $satuan_konversi[5], 'subtotal' => $subtotal]);
-
-        $respons['harga_produk'] = $satuan_konversi[5];
-        $respons['nama_satuan']     = $satuan_konversi[1];
-        $respons['satuan_id']     = $satuan_konversi[0];
-        $respons['subtotal']     = $subtotal;
-
-        return response()->json($respons);
-    }
-
-    public function editSatuanEditTbsPenjualan(Request $request){
-
-        $satuan_konversi = explode("|", $request->satuan_produk);
-        $edit_tbs_penjualan = EditTbsPenjualan::find($request->id_tbs);
+        $edit_tbs_penjualan = $db::find($request->id_tbs);
 
         $subtotal = ($edit_tbs_penjualan->jumlah_produk * $satuan_konversi[5]) - $edit_tbs_penjualan->potongan;
 
@@ -1676,6 +1656,22 @@ public function index()
         $respons['nama_satuan']     = $satuan_konversi[1];
         $respons['satuan_id']     = $satuan_konversi[0];
         $respons['subtotal']     = $subtotal;
+
+        return $respons;
+    }
+
+    public function editSatuanTbsPenjualan(Request $request){
+
+        $db = 'App\TbsPenjualan';
+        $respons = $this->editSatuan($request, $db);
+
+        return response()->json($respons);
+    }
+
+    public function editSatuanEditTbsPenjualan(Request $request){
+
+        $db = 'App\EditTbsPenjualan';
+        $respons = $this->editSatuan($request, $db);
 
         return response()->json($respons);
     }
