@@ -36,10 +36,10 @@
 
 
                                     <div class="form-group">
-                                        <label for="harga_coret" class="col-md-2 control-label">Harga Promo</label>
+                                        <label for="harga_promo" class="col-md-2 control-label">Harga Promo</label>
                                         <div class="col-md-5">
-                                            <input class="form-control" autocomplete="off" placeholder="Harga Promo" v-model="setting.harga_coret" type="text" name="harga_coret" id="harga_coret" ref="harga_coret" autofocus="">
-                                            <span v-if="errors.harga_coret" id="harga_coret_error" class="label label-danger">{{ errors.harga_coret[0] }}</span>
+                                            <input class="form-control" autocomplete="off" placeholder="Harga Promo" v-model="setting.harga_promo" type="text" name="harga_promo" id="harga_promo" ref="harga_promo" autofocus="">
+                                            <span v-if="errors.harga_promo" id="harga_promo_error" class="label label-danger">{{ errors.harga_promo[0] }}</span>
                                         </div>
                                     </div>
 
@@ -71,10 +71,12 @@
                                     <label for="foto" class="col-md-2 control-label">Periode Promo</label>
                                         <div class="col-md-10">
                                                 <div class="form-group col-md-5">
-                                                    <datepicker :input-class="'form-control'" placeholder="Dari Tanggal" v-model="setting.dari_tanggal" name="dari_tanggal" v-bind:id="'dari_tanggal'"></datepicker>                
+                                                    <datepicker :input-class="'form-control'" placeholder="Dari Tanggal" v-model="setting.dari_tanggal" name="dari_tanggal" v-bind:id="'dari_tanggal'"></datepicker> 
+                                                    <span v-if="errors.dari_tanggal" id="dari_tanggal_error" class="label label-danger">{{ errors.dari_tanggal[0] }}</span>                   
                                                 </div>
                                                 <div class="form-group col-md-5">
                                                     <datepicker :input-class="'form-control'" placeholder="Sampai Tanggal" v-model="setting.sampai_tanggal" name="sampai_tanggal" v-bind:id="'sampai_tanggal'"></datepicker>
+                                                    <span v-if="errors.sampai_tanggal" id="sampai_tanggal_error" class="label label-danger">{{ errors.sampai_tanggal[0] }}</span>
                                                 </div>
                                         </div>
                                 </div> 
@@ -122,7 +124,7 @@
                                 </div> 
 
                                 <div class="form-group">
-                                        <label for="harga_coret" class="col-md-2 control-label">Jenis Promo</label>
+                                        <label for="harga_promo" class="col-md-2 control-label">Jenis Promo</label>
                                         <div class="col-md-5">
                                             <input class="form-control" autocomplete="off" placeholder="Jenis Promo" v-model="setting.jenis_promo" type="text" name="jenis_promo" id="jenis_promo" ref="jenis_promo" autofocus="">
                                             <span v-if="errors.jenis_promo" id="jenis_promo_error" class="label label-danger">{{ errors.jenis_promo[0] }}</span>
@@ -194,7 +196,7 @@ import { mapState } from 'vuex';
                 url_origin : window.location.origin+(window.location.pathname).replace("dashboard", ""),
                 setting: {
                     baner_promo : '',
-                    harga_coret : '',
+                    harga_promo : '',
                     produk : '',
                     harga_produk : '',
                     dari_tanggal:'',
@@ -307,20 +309,28 @@ import { mapState } from 'vuex';
                 var app = this;
                 var newSettingPromo = app.inputData();
                 app.loading();
-
-                axios.post(app.url+'/' + app.settingPromoId, newSettingPromo)
-                .then(function (resp) {
-                    app.updateWaktuSettingPromo();
-                    app.message = 'Berhasil Mengubah Setting Promo';
-                    app.alert(app.message);
-                    app.kosongkanData();
-                    app.$router.replace('/setting-promo');
-                    app.$swal.close();
-                })
-                .catch(function (resp) {
-                    app.errors = resp.response.data.errors;
-                    app.$swal.close();
-                });
+                var produk = app.setting.produk.split("|");
+                var id_produk = produk[0];
+                if (id_produk == "") {
+                        app.message = 'Produk Tidak boleh kosong';
+                        app.alertWarning(app.message);
+               }else{
+                    axios.post(app.url+'/' + app.settingPromoId, newSettingPromo)
+                    .then(function (resp) {
+                        app.updateWaktuSettingPromo();
+                        app.message = 'Berhasil Mengubah Setting Promo';
+                        app.alert(app.message);
+                        app.kosongkanData();
+                        app.$router.replace('/setting-promo');
+                        app.$swal.close();
+                    })
+                    .catch(function (resp) {
+                        alert("Periksa Kembali Inputan Anda!")
+                        app.success = false;
+                        app.errors = resp.response.data.errors;
+                        app.$swal.close();
+                    });
+                }
             },
             updateWaktuSettingPromo(){
                 var app = this;
@@ -361,7 +371,7 @@ import { mapState } from 'vuex';
                     newSettingPromo.append('baner_promo', document.getElementById('baner_promo').files[0]);
                 }
                 newSettingPromo.append('produk', app.setting.produk);
-                newSettingPromo.append('harga_coret', app.setting.harga_coret);
+                newSettingPromo.append('harga_promo', app.setting.harga_promo);
                 newSettingPromo.append('dari_tanggal', app.setting.dari_tanggal);
                 newSettingPromo.append('sampai_tanggal', app.setting.sampai_tanggal);
                 newSettingPromo.append('jenis_promo', app.setting.jenis_promo);
@@ -374,7 +384,7 @@ import { mapState } from 'vuex';
 
                 app.setting.baner_promo = '';
                 app.setting.produk = '';
-                app.setting.harga_coret = '';
+                app.setting.harga_promo = '';
                 app.setting.dari_tanggal = '';
                 app.setting.sampai_tanggal = '';
                 app.setting.jenis_promo = '';
