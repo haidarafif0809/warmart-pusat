@@ -84,7 +84,7 @@
 								<div class="form-group">
 									<div class="row">
 									<label for="foto" class="col-md-2 col-xs-2 control-label">Hari</label>
-										<div class="col-md-10 col-xs-10">
+										<div class="col-md-10 col-xs-10" v-if="loadingHari == false">
 										<div class="checkbox col-md-3"  v-if="seen">
 								          <label>
 								            <input type="checkbox" name="setting_hari" v-model="pilih_semua_hari" v-bind:value="1" v-on:change="pilihSemuaHari"> <b>Pilih Semua</b>
@@ -98,13 +98,14 @@
 							            </div> 
 										</div>
 									</div>
+									<vue-simple-spinner v-if="loadingHari"></vue-simple-spinner>
 								</div>
 							</div>
 
 								<div class="form-group">
 									<div class="row">
 										<label for="foto" class="col-md-2 col-xs-2 control-label">Jam</label>
-										<div class="col-md-10 col-xs-10">
+										<div class="col-md-10 col-xs-10" v-if="loadingJam == false">
 										<div class="checkbox col-md-3"  v-if="seen">
 								          <label>
 								            <input type="checkbox" name="setting_jam" v-model="pilih_semua_jam" v-bind:value="1" v-on:change="pilihSemuaJam"> <b>Pilih Semua</b>
@@ -118,7 +119,7 @@
 							            </div> 
 										</div>
 									</div>
-										
+										<vue-simple-spinner v-if="loadingJam"></vue-simple-spinner>
 									</div>
 								</div> 
 
@@ -198,6 +199,8 @@ import { mapState } from 'vuex';
 					precision: 0,
 					masked: false /* doesn't work with directive */
 				},
+				loadingHari: true,
+				loadingJam: true,
 				placeholder_produk: {
 		        placeholder: '--PILIH PRODUK--',
 		        sortField: 'text',
@@ -233,6 +236,8 @@ import { mapState } from 'vuex';
 
 			      app.filter_hari = resp.data.filter_hari
 			      app.filter_jam = resp.data.filter_jam
+			      app.loadingHari = false;
+			      app.loadingJam = false;
 			      app.seen = true;
 			    })
 			    .catch(function (resp) {
@@ -290,20 +295,23 @@ import { mapState } from 'vuex';
 				var newWaktuSettingPromo = app.filter_setting;
 				axios.post(app.url, newSettingPromo)
 				.then(function (resp) {
-					app.message = 'Menambah Setting Promo ';
-					app.alert(app.message);
-					app.kosongkanData();
-					app.$router.replace('/setting-promo');
-					app.$swal.close();
+					if (resp.data.data_promo == 1) {
+						app.alertWarning("Produk "+resp.data.nama_barang+" Sudah Ada, Silakan Pilih Produk Lain!");
+					}
+					else{
+						app.message = 'Menambah Setting Promo';
+						app.alert(app.message);
+						app.kosongkanData();
+						app.$router.replace('/setting-promo');
+						app.$swal.close();
 
-					    axios.put(app.url+"/tambah-waktu/"+resp.data,newWaktuSettingPromo)
-					    .then(function (resp) {
-					    })
-					    .catch(function (resp) {
-					      app.loading = false
-					      alert("Tidak Bisa Menyimpan Promo");
-					    });
-
+						    axios.put(app.url+"/tambah-waktu/"+resp.data,newWaktuSettingPromo)
+						    .then(function (resp) {
+						    })
+						    .catch(function (resp) {
+						      alert("Tidak Bisa Menyimpan Promo");
+						    });
+					}
 				})
 				.catch(function (resp) {
 					alert("Periksa Kembali Inputan Anda!")
@@ -321,6 +329,12 @@ import { mapState } from 'vuex';
 					buttons: false,
 					timer: 1000,
 				});
+			},
+			alertWarning(pesan) {
+			  this.$swal({
+			    text: pesan,
+			    icon: "warning",
+			  });
 			},
 			loading(){
 				this.$swal({

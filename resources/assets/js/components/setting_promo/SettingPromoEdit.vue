@@ -82,7 +82,7 @@
                                 <div class="form-group">
                                     <div class="row">
                                     <label for="foto" class="col-md-2 col-xs-2 control-label">Hari</label>
-                                        <div class="col-md-10 col-xs-10">
+                                        <div class="col-md-10 col-xs-10" v-if="loadingHari == false">
                                         <div class="checkbox col-md-3"  v-if="seen">
                                           <label>
                                             <input type="checkbox" name="setting_hari" v-model="pilih_semua_hari" v-bind:value="1" v-on:change="pilihSemuaHari"> <b>Pilih Semua</b>
@@ -96,13 +96,14 @@
                                         </div> 
                                         </div>
                                     </div>
+                                    <vue-simple-spinner v-if="loadingHari"></vue-simple-spinner>
                                 </div>
                             </div>
 
                                 <div class="form-group">
                                     <div class="row">
                                         <label for="foto" class="col-md-2 col-xs-2 control-label">Jam</label>
-                                        <div class="col-md-10 col-xs-10">
+                                        <div class="col-md-10 col-xs-10" v-if="loadingJam == false">
                                         <div class="checkbox col-md-3"  v-if="seen">
                                           <label>
                                             <input type="checkbox" name="setting_jam" v-model="pilih_semua_jam" v-bind:value="1" v-on:change="pilihSemuaJam"> <b>Pilih Semua</b>
@@ -116,7 +117,7 @@
                                         </div> 
                                         </div>
                                     </div>
-                                        
+                                        <vue-simple-spinner v-if="loadingJam"></vue-simple-spinner>    
                                     </div>
                                 </div> 
 
@@ -209,6 +210,8 @@ import { mapState } from 'vuex';
                 pilih_semua_hari : false,
                 pilih_semua_jam : false,
                 message : '',
+                loadingHari: true,
+                loadingJam: true,
                 placeholder_produk: {
                 placeholder: '--PILIH PRODUK--',
                 sortField: 'text',
@@ -246,10 +249,10 @@ import { mapState } from 'vuex';
 
                   app.filter_hari = resp.data.filter_hari
                   app.filter_jam = resp.data.filter_jam
-
-                 app.filter_setting.hari = resp.data.data_filter_hari
-                 app.filter_setting.jam = resp.data.data_filter_jam
-
+                  app.filter_setting.hari = resp.data.data_filter_hari
+                  app.filter_setting.jam = resp.data.data_filter_jam
+                  app.loadingHari = false;
+                  app.loadingJam = false;
 
                   app.seen = true;
                 })

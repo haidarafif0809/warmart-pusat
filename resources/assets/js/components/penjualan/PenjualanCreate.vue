@@ -35,6 +35,9 @@
     border-radius: 1px solid;
     padding: 10px 10px;
   }
+  .hurufBesar{
+    text-transform: uppercase;
+  }
 
 </style>
 
@@ -305,6 +308,7 @@
 </div> 
 <!-- / MODAL TOMBOL SELESAI --> 
 
+
 <!-- small modal -->
 <div class="modal" id="modalJumlahProduk" role="dialog" tabindex="-1"  aria-labelledby="myModalLabel" aria-hidden="true" >
   <div class="modal-dialog modal-medium">
@@ -322,7 +326,39 @@
               <input class="form-control" type="number" v-model="inputTbsPenjualan.jumlah_produk" placeholder="Isi Jumlah Produk" name="jumlah_produk" id="jumlah_produk" ref="jumlah_produk" autocomplete="off" step="0.01">
             </div>
 
-            <div class="col-md-5 col-xs-5">
+            <div class="col-md-5 col-xs-5 hurufBesar">
+              <selectize-component v-model="inputTbsPenjualan.satuan_produk" :settings="placeholder_satuan" id="satuan" name="satuan" ref='satuan'> 
+                <option v-for="satuans, index in satuan" v-bind:value="satuans.satuan" class="pull-left">{{ satuans.nama_satuan }}</option>
+              </selectize-component>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-simple" v-on:click="closeModalJumlahProduk()" v-shortkey.push="['f9']" @shortkey="closeModalJumlahProduk()">Close(F9)</button>
+          <button type="submit" class="btn btn-info">Tambah</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!--    end small modal -->
+
+<!-- small modal -->
+<div class="modal" id="modalEditSatuan" role="dialog" tabindex="-1"  aria-labelledby="myModalLabel" aria-hidden="true" >
+  <div class="modal-dialog modal-medium">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close"  v-on:click="closeModalJumlahProduk()" v-shortkey.push="['f9']" @shortkey="closeModalJumlahProduk()"> &times;</button> 
+      </div>
+
+      <form class="form-horizontal" v-on:submit.prevent="subtmitEditSatuan(inputTbsPenjualan.id_produk, inputTbsPenjualan.id_tbs, inputTbsPenjualan.subtotal)"> 
+        <div class="modal-body">
+          <h3 class="text-center"><b>{{inputTbsPenjualan.nama_produk}}</b></h3>
+
+          <div class="form-group">
+
+            <div class="col-md-12 col-xs-12 hurufBesar">
               <selectize-component v-model="inputTbsPenjualan.satuan_produk" :settings="placeholder_satuan" id="satuan" name="satuan" ref='satuan'> 
                 <option v-for="satuans, index in satuan" v-bind:value="satuans.satuan" class="pull-left">{{ satuans.nama_satuan }}</option>
               </selectize-component>
@@ -409,8 +445,9 @@
                   <a href="#create-penjualan" v-bind:id="'edit-' + tbs_penjualan.id_tbs_penjualan" v-on:click="editEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">{{ new Intl.NumberFormat().format(tbs_penjualan.jumlah_produk) }}</a>
                 </td>
 
-                <td align="center" v-bind:class="'satuan-' + tbs_penjualan.id_produk" v-bind:data-satuan="''+tbs_penjualan.satuan_id">{{ tbs_penjualan.satuan }}</td>
-
+                <td align="center">
+                  <a href="#create-penjualan" v-bind:id="'edit-' + tbs_penjualan.id_tbs_penjualan" v-bind:class="'hurufBesar satuan-' + tbs_penjualan.id_produk" v-bind:data-satuan="''+tbs_penjualan.satuan_id" v-on:click="editSatuanEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal, tbs_penjualan.id_produk)">{{ tbs_penjualan.satuan }}</a>
+                </td>
 
                 <td align="right" >{{ new Intl.NumberFormat().format(tbs_penjualan.harga_produk) }}</td>
 
@@ -453,7 +490,7 @@
       </div>
     </div>
 
-    <p style="color: red; font-style: italic;">*Note : Klik Kolom Jumlah, Harga, & Potongan Untuk Mengubah Nilai.</p>    
+    <p style="color: red; font-style: italic;">*Note : Klik Kolom Jumlah, Satuan, & Potongan Untuk Mengubah Nilai.</p>    
 
   </div><!-- / PANEL BODY -->
 
@@ -757,11 +794,23 @@
     .then(function (resp) {
       app.satuan = resp.data;
 
-      $.each(resp.data, function (i, item) { 
-        if (resp.data[i].id === resp.data[i].satuan_dasar) { 
-          app.inputTbsPenjualan.satuan_produk = resp.data[i].satuan; 
-        } 
-      }); 
+      if (typeof satuan_tbs == "undefined") {
+
+        $.each(resp.data, function (i, item) {
+          if (resp.data[i].id === resp.data[i].satuan_dasar) {
+            app.inputTbsPenjualan.satuan_produk = resp.data[i].satuan;
+          }
+        });
+
+      }else{
+
+        $.each(resp.data, function (i, item) {
+          if (resp.data[i].id === parseInt(satuan_tbs)) {
+            app.inputTbsPenjualan.satuan_produk = resp.data[i].satuan;
+          }
+        });
+
+      } 
 
 
     })
@@ -894,10 +943,12 @@ submitProdukPenjualan(value){
         var index = app.tbs_penjualan.findIndex(cekTbs)        
 
         if (index >= 0) {
+          console.log(app.tbs_penjualan[index])
           app.tbs_penjualan[index].jumlah_produk = resp.data.jumlah_produk
           app.tbs_penjualan[index].satuan_produk = resp.data.satuan_produk
           app.tbs_penjualan[index].satuan = resp.data.nama_satuan
           app.tbs_penjualan[index].harga_produk = resp.data.harga_produk
+          app.tbs_penjualan[index].satuan_id = resp.data.satuan_id
           app.tbs_penjualan[index].subtotal = resp.data.subtotalKeseluruhan
         }else{
 
@@ -986,6 +1037,55 @@ editJumlahProdukPenjualan(value,id,nama_produk,subtotal_lama){
 
       console.log(resp);    
       alert("Tidak dapat Mengubah Jumlah Produk");
+    });
+  }
+},
+editSatuanEntry(id, index,nama_produk,subtotal_lama, id_produk) {
+  var app = this;
+  app.inputTbsPenjualan.nama_produk = nama_produk;
+  app.inputTbsPenjualan.id_tbs = id;
+  app.inputTbsPenjualan.subtotal = subtotal_lama;
+  app.getSatuan(id_produk);
+  $("#modalEditSatuan").show();
+},
+subtmitEditSatuan(id_produk, id_tbs, subtotal_lama){
+
+  var app = this;
+  app.inputTbsPenjualan.produk = id_produk;
+  var newSatuan = app.inputTbsPenjualan;
+  var satuan_produk = app.inputTbsPenjualan.satuan_produk.split("|");
+  var satuan_tbs = $(".satuan-"+id_produk).attr("data-satuan");
+
+  if (satuan_tbs == satuan_produk[0]) {
+    $("#modalEditSatuan").show();
+  }else{
+
+    axios.post(app.url+'/edit-satuan-tbs-penjualan', newSatuan)
+    .then(function (resp) {
+
+      var subtotal = (parseFloat(app.penjualan.subtotal) - parseFloat(subtotal_lama)) + parseFloat(resp.data.subtotal)
+
+      function cekTbs(tbs) { 
+        return tbs.id_tbs_penjualan === id_tbs
+      }
+
+      var index = app.tbs_penjualan.findIndex(cekTbs)    
+      app.tbs_penjualan[index].harga_produk = resp.data.harga_produk
+      app.tbs_penjualan[index].satuan = resp.data.nama_satuan
+      app.tbs_penjualan[index].satuan_id = resp.data.satuan_id
+      app.tbs_penjualan[index].subtotal = resp.data.subtotal
+      app.penjualan.subtotal = subtotal.toFixed(2)
+      app.penjualan.total_akhir = subtotal.toFixed(2)
+      app.potonganPersen()
+      app.inputTbsPenjualan.id_tbs = ''
+      app.openSelectizeProduk() 
+      $("#modalEditSatuan").hide();
+
+    })
+    .catch(function (resp) {
+      console.log(resp);                  
+      app.loading = false;
+      alert("Tidak Dapat Mengubah Satuan");
     });
   }
 },
@@ -1284,7 +1384,8 @@ closeModal(){
   $("#modal_selesai").hide(); 
 },
 closeModalJumlahProduk(){  
-  $("#modalJumlahProduk").hide(); 
+  $("#modalJumlahProduk").hide();
+  $("#modalEditSatuan").hide(); 
   this.openSelectizeProduk();
 },
 closeModalX(){
