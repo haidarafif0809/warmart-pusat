@@ -196,15 +196,14 @@
               </label>
             </div>
             <!-- produk  -->
-
-            <!-- setting  -->
-            <b>Setting</b>
-            <div class="checkbox" v-for="permission_setting, index in permission_setting">
+            <!-- setting_promo  -->
+            <b>Setting Promo</b>
+            <div class="checkbox" v-for="permission_setting_promo, index in permission_setting_promo">
               <label>
-                <input type="checkbox" name="setting_setting" v-bind:value="permission_setting.id" v-model="setting_otoritas.setting"> {{permission_setting.display_name}}
+                <input type="checkbox" name="setting_setting_promo" v-bind:value="permission_setting_promo.id" v-model="setting_otoritas.setting_promo"> {{permission_setting_promo.display_name}}
               </label>
             </div>
-            <!-- setting  -->
+            <!-- setting_promo  -->
           </div>
           <div class="col-sm-2">            
             <!-- satuan  -->
@@ -214,7 +213,28 @@
                 <input type="checkbox" name="setting_satuan" v-bind:value="permission_satuan.id" v-model="setting_otoritas.satuan"> {{permission_satuan.display_name}}
               </label>
             </div>
-            <!-- satuan  -->
+            <!-- satuan  --> 
+
+            <!-- setting  -->
+            <b>Setting</b>
+            <div class="checkbox" v-for="permission_setting, index in permission_setting">
+              <label>
+                <input type="checkbox" name="setting_setting" v-bind:value="permission_setting.id" v-model="setting_otoritas.setting"> {{permission_setting.display_name}}
+              </label>
+            </div>
+            <!-- setting  -->
+
+          </div>
+          <div class="col-sm-2">     
+
+            <!-- OTORITAS KAS -->
+            <b>Kas</b>
+            <div class="checkbox" v-for="permission_kass, index in permission_kas">
+              <label>
+                <input type="checkbox" name="setting_kas" v-bind:value="permission_kass.id" v-model="setting_otoritas.kas"> {{permission_kass.display_name}}
+              </label>
+            </div>            
+            <!--END OTORITAS KAS -->
             <!-- Master Data -->
             <b>Master Data</b>
             <div class="checkbox" v-for="permissions_master_data, index in permission_master_data">
@@ -232,17 +252,6 @@
               </label>
             </div>
             <!--end laporan persediaan -->
-          </div>
-          <div class="col-sm-2">     
-
-            <!-- OTORITAS KAS -->
-            <b>Kas</b>
-            <div class="checkbox" v-for="permission_kass, index in permission_kas">
-              <label>
-                <input type="checkbox" name="setting_kas" v-bind:value="permission_kass.id" v-model="setting_otoritas.kas"> {{permission_kass.display_name}}
-              </label>
-            </div>            
-            <!--END OTORITAS KAS -->
           </div>    
 
           <div class="col-sm-2">            
@@ -322,6 +331,7 @@ export default {
      permission_setting: [],
      permission_stok_opname: [],
      permission_supplier: [],
+     permission_setting_promo: [],
      setting_otoritas : {
       user : [],
       otoritas : [],
@@ -348,6 +358,7 @@ export default {
       setting : [],
       stok_opname : [],
       supplier : [],
+      setting_promo : [],
     },
     nama_otoritas : '',
     pilih_semua : false,
@@ -399,6 +410,7 @@ methods: {
       app.permission_setting = resp.data.permission_setting
       app.permission_stok_opname = resp.data.permission_stok_opname
       app.permission_supplier = resp.data.permission_supplier
+      app.permission_setting_promo = resp.data.permission_setting_promo
 
 
       app.nama_otoritas = resp.data.otoritas.display_name
@@ -428,9 +440,11 @@ methods: {
       app.setting_otoritas.setting = resp.data.data_permission_setting
       app.setting_otoritas.stok_opname = resp.data.data_permission_stok_opname
       app.setting_otoritas.supplier = resp.data.data_permission_supplier
+      app.setting_otoritas.setting_promo = resp.data.data_permission_setting_promo
 
       app.loading = false;
       app.seen = true;
+      console.log(app.setting_otoritas)
     })
     .catch(function (resp) {
       console.log(resp);
@@ -602,6 +616,10 @@ methods: {
         $.each(app.permission_supplier, function (i, item) { 
           app.setting_otoritas.supplier.push(app.permission_supplier[i].id)
         });
+        // OTORITAS SETTING PROMO
+        $.each(app.permission_setting_promo, function (i, item) { 
+          app.setting_otoritas.setting_promo.push(app.permission_setting_promo[i].id)
+        });
 
 
       }else{
@@ -640,6 +658,7 @@ methods: {
         app.setting_otoritas.setting.splice(0)
         app.setting_otoritas.stok_opname.splice(0)
         app.setting_otoritas.supplier.splice(0)
+        app.setting_otoritas.setting_promo.splice(0)
       },
       alert(pesan) { 
         this.$swal({ 
