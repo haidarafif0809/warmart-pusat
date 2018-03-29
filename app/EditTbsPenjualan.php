@@ -11,7 +11,7 @@ use Auth;
 class EditTbsPenjualan extends Model
 {
 	use AuditableTrait;
-	protected $fillable = ['session_id','id_penjualan_pos','no_faktur','satuan_id','id_produk','jumlah_produk','harga_produk','subtotal','potongan','tax','warung_id','ppn'];
+	protected $fillable = ['session_id','id_penjualan_pos','no_faktur','satuan_id','id_produk','jumlah_produk','harga_produk','subtotal','potongan','tax','warung_id','ppn', 'satuan_dasar'];
 	protected $primaryKey = 'id_edit_tbs_penjualans';
 
 	// pencarian edit tbs penjualan
@@ -44,6 +44,10 @@ class EditTbsPenjualan extends Model
 	public function produk()
 	{
 		return $this->hasOne('App\Barang','id','id_produk');
+	}
+	public function satuan()
+	{
+		return $this->hasOne('App\Satuan', 'id', 'satuan_id');
 	}
 	public function getNamaProdukAttribute()
 	{

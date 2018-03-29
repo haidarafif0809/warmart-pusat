@@ -4,7 +4,7 @@
         <meta content="width=device-width" name="viewport"/>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
         <title>
-            Boardicle Email
+            Email Notifikasi
         </title>
         <style>
             /* -------------------------------------
@@ -34,7 +34,7 @@
 			}
 			table td {
 				font-family: sans-serif;
-				verifikasitical-align: top;
+				vertical-align: top;
 			}
 			
 			/* -------------------------------------
@@ -48,7 +48,7 @@
 			/* Set a max-width, and make it display as block so it will automatically stretch to that width, but will also shrink down on a phone or something */
 			.container {
 				display: block;
-				Margin: 0 auto !important;
+				margin: 0 auto !important;
 				/* makes it centered */
 				max-width: 580px;
 				padding: 10px;
@@ -59,7 +59,7 @@
 			.content {
 				box-sizing: border-box;
 				display: block;
-				Margin: 0 auto;
+				margin: 0 auto;
 				max-width: 580px;
 				padding: 10px; 
 			}
@@ -82,7 +82,7 @@
 			}
 			.footer {
 				clear: both;
-				Margin-top: 10px;
+				margin-top: 10px;
 				text-align: center;
 				width: 100%;
 			}
@@ -102,7 +102,7 @@
 				font-weight: 400;
 				line-height: 1.4;
 				margin: 0;
-				Margin-bottom: 30px; 
+				margin-bottom: 30px; 
 			}
 			h1 {
 				font-size: 35px;
@@ -115,7 +115,7 @@
 				font-size: 14px;
 				font-weight: normal;
 				margin: 0;
-				Margin-bottom: 15px; 
+				margin-bottom: 15px; 
 			}
 			p li, ul li, ol li {
 				list-style-position: inside;
@@ -213,7 +213,7 @@
 			hr {
 				border: 0;
 				border-bottom: 1px solid #f6f6f6;
-				Margin: 20px 0; 
+				margin: 20px 0; 
 			}
 
 			/* -------------------------------------
@@ -465,7 +465,7 @@
                                                     </p>
                                                     <ul>
                                                         <li>
-                                                            Dimohon untuk menyiapkan uang pas saat anda menerima pesanan anda.
+                                                            Dimohon untuk menyiapkan uang pas saat Anda menerima pesanan Anda.
                                                         </li>
                                                     </ul>
                                                     <hr>
@@ -532,7 +532,7 @@
         <tr>
             <td class="content-block">
                 <span class="apple-link">
-                    © 2018 PT Andaglos Global Teknologi - All Rights Reserved
+                    © <?php date_default_timezone_set("Asia/Jakarta"); echo date("Y");?> PT Andaglos Global Teknologi - All Rights Reserved
                 </span>
                 </br>
             </td>

@@ -1,41 +1,42 @@
 <style scoped>
-.modal {
-  overflow-y:auto;
-}
-.pencarian {
-  color: red; 
-  float: right;
-}
-.form-penjualan{
-  width: 100%;
-  padding: 12px 20px;
-  margin: 8px 0;
-  display: inline-block;
-  border: 3px solid #555;
-  border-radius: 4px;
-  box-sizing: border-box;
-  font-size: 30px;
-}
-.form-subtotal{
-  width: 100%;
-  margin: 8px 0;
-  display: inline-block;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-.card-produk{
-  background-color:#82B1FF;
-}
-.card-pembayaran{
-  background-color:#82B1FF;
-}
-.btn-icon{
-  border-radius: 1px solid;
-  padding: 10px 10px;
-}
-
-
+  .modal {
+    overflow-y:auto;
+  }
+  .pencarian {
+    color: red; 
+    float: right;
+  }
+  .form-penjualan{
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 3px solid #555;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 30px;
+  }
+  .form-subtotal{
+    width: 100%;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  .card-produk{
+    background-color:#82B1FF;
+  }
+  .card-pembayaran{
+    background-color:#82B1FF;
+  }
+  .btn-icon{
+    border-radius: 1px solid;
+    padding: 10px 10px;
+  }
+  .hurufBesar{
+    text-transform: uppercase;
+  }
 </style>
 
 <template>
@@ -232,11 +233,27 @@
       <div class="modal-header"> 
         <button type="button" class="close"  v-on:click="closeModalJumlahProduk()" v-shortkey.push="['f9']" @shortkey="closeModalJumlahProduk()"> &times;</button>  
       </div> 
-      <form class="form-horizontal" v-on:submit.prevent="submitProdukPenjualan(inputTbsPenjualan.jumlah_produk)">  
-        <div class="modal-body text-center"> 
-          <h3><b>{{inputTbsPenjualan.nama_produk}}</b> </h3> 
-          <input class="form-control" type="number" v-model="inputTbsPenjualan.jumlah_produk" placeholder="Isi Jumlah Produk" name="jumlah_produk" id="jumlah_produk" ref="jumlah_produk" autocomplete="off" step="0.01"> 
+      <form class="form-horizontal" v-on:submit.prevent="submitProdukPenjualan(inputTbsPenjualan.jumlah_produk)">
+
+        <div class="modal-body"> 
+          <h3 class="text-center"><b>{{inputTbsPenjualan.nama_produk}}</b> </h3> 
+
+
+          <div class="form-group">
+
+            <div class="col-md-7 col-xs-7">
+              <input class="form-control" type="number" v-model="inputTbsPenjualan.jumlah_produk" placeholder="Isi Jumlah Produk" name="jumlah_produk" id="jumlah_produk" ref="jumlah_produk" autocomplete="off" step="0.01"> 
+            </div>
+
+            <div class="col-md-5 col-xs-5 hurufBesar">
+              <selectize-component v-model="inputTbsPenjualan.satuan_produk" :settings="placeholder_satuan" id="satuan" name="satuan" ref='satuan'> 
+                <option v-for="satuans, index in satuan" v-bind:value="satuans.satuan" class="pull-left">{{ satuans.nama_satuan }}</option>
+              </selectize-component>
+            </div>
+
+          </div>          
         </div> 
+
         <div class="modal-footer"> 
           <button type="button" class="btn btn-simple"   v-on:click="closeModalJumlahProduk()" v-shortkey.push="['f9']" @shortkey="closeModalJumlahProduk()">Close(F9)</button> 
           <button type="button" class="btn btn-info btn-lg"   v-on:click="submitProdukPenjualan(inputTbsPenjualan.jumlah_produk)">Tambah</button> 
@@ -394,7 +411,9 @@
                     <a v-bind:href="'#edit-penjualan/'+tbs_penjualan.id_penjualan_pos"  v-bind:id="'edit-' + tbs_penjualan.id_edit_tbs_penjualans" v-on:click="editEntry(tbs_penjualan.id_edit_tbs_penjualans, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">{{ new Intl.NumberFormat().format(tbs_penjualan.jumlah_produk) }}</a>
                   </td>
 
-                  <td align="center">{{ tbs_penjualan.satuan }}</td>
+                  <td align="center">
+                    <a href="#edit-penjualan" v-bind:id="'edit-' + tbs_penjualan.id_edit_tbs_penjualans" v-bind:class="'hurufBesar satuan-' + tbs_penjualan.id_produk" v-bind:data-satuan="''+tbs_penjualan.satuan_id" v-on:click="editSatuanEntry(tbs_penjualan.id_edit_tbs_penjualans, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal, tbs_penjualan.id_produk)">{{ tbs_penjualan.satuan }}</a>
+                  </td>
 
                   <td align="right">{{ new Intl.NumberFormat().format(tbs_penjualan.harga_produk) }}</td>
 
@@ -451,104 +470,112 @@
 
 <script>
 
-import { mapState } from 'vuex';
-export default {
-  data: function () {
-    return {
-      errors: [],
-      tbs_penjualan: [],
-      url : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
-      url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
-      url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
+  import { mapState } from 'vuex';
+  export default {
+    data: function () {
+      return {
+        errors: [],
+        satuan: [],
+        tbs_penjualan: [],
+        url : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
+        url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
+        url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
+        url_satuan : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan/satuan-konversi"),
 
-      inputTbsPenjualan: {
-        nama_produk : '', 
-        produk : '',
-        jumlah_produk : '',
-        potongan_produk : '',
-        id_tbs : '',
+        inputTbsPenjualan: {
+          nama_produk : '', 
+          produk : '',
+          jumlah_produk : '',
+          potongan_produk : '',
+          satuan_produk: '',
+          id_tbs : '',
+        },
+        penjualan : {
+          pelanggan : 0,
+          kas : '',
+          jatuh_tempo : '',
+          subtotal : 0,
+          potongan : 0,
+          potongan_faktur : 0,
+          potongan_persen : 0,
+          total_akhir : 0,
+          pembayaran : 0,
+          kembalian: 0,
+          kredit: 0,
+        }, 
+        setting_penjualan_pos :{
+          jumlah_produk : true,
+          stok : true,
+          harga_jual : 1
+        },
+        hargaJual: {
+          placeholder: '--HARGA JUAL--'
+        },
+        tambahKas: {
+          kode_kas : '',
+          nama_kas : '',
+          status_kas : 0,
+          default_kas : 0
+        },
+        placeholder_produk: {
+         placeholder: 'Cari Produk (F1) ...',
+         sortField: 'text',
+         maxOptions : 8,
+         scrollDuration : 10,
+         loadThrottle : 150,
+         openOnFocus : false
+       },
+       placeholder_satuan: {
+        placeholder: '--PILIH SATUAN--',
+        sortField: 'text',
+        openOnFocus : true,
       },
-      penjualan : {
-        pelanggan : 0,
-        kas : '',
-        jatuh_tempo : '',
-        subtotal : 0,
-        potongan : 0,
-        potongan_faktur : 0,
-        potongan_persen : 0,
-        total_akhir : 0,
-        pembayaran : 0,
-        kembalian: 0,
-        kredit: 0,
-      }, 
-      setting_penjualan_pos :{
-        jumlah_produk : true,
-        stok : true,
-        harga_jual : 1
+      placeholder_pelanggan: {
+        placeholder: '--PILIH PELANGGAN (F4)--',
+        sortField: 'text',
+        openOnFocus : true
       },
-      hargaJual: {
-        placeholder: '--HARGA JUAL--'
+      placeholder_kas: {
+        placeholder: '--PILIH KAS--',
+        sortField: 'text',
+        openOnFocus : true
       },
-      tambahKas: {
-        kode_kas : '',
-        nama_kas : '',
-        status_kas : 0,
-        default_kas : 0
-      },
-      placeholder_produk: {
-       placeholder: 'Cari Produk (F1) ...',
-       sortField: 'text',
-       maxOptions : 8,
-       scrollDuration : 10,
-       loadThrottle : 150,
-       openOnFocus : false
-     },
-     placeholder_pelanggan: {
-      placeholder: '--PILIH PELANGGAN (F4)--',
-      sortField: 'text',
-      openOnFocus : true
-    },
-    placeholder_kas: {
-      placeholder: '--PILIH KAS--',
-      sortField: 'text',
-      openOnFocus : true
-    },
-    pencarian: '',
-    loading: true,
-    seen : false,
-    id_penjualan_pos : 0,
-    separator: {
-      decimal: ',',
-      thousands: '.',
-      prefix: '',
-      suffix: '',
-      precision: 2,
-      masked: false /* doesn't work with directive */
+      pencarian: '',
+      loading: true,
+      seen : false,
+      id_penjualan_pos : 0,
+      separator: {
+        decimal: ',',
+        thousands: '.',
+        prefix: '',
+        suffix: '',
+        precision: 2,
+        masked: false /* doesn't work with directive */
+      }
+
     }
-
-  }
-},
-mounted() {   
-  var app = this;
-  app.$store.dispatch('LOAD_PRODUK_LIST')
-  app.$store.dispatch('LOAD_PELANGGAN_LIST')
-  app.$store.dispatch('LOAD_KAS_LIST')
-  app.getResults();
-  app.dataSettingPenjualanPos();
-  app.id_penjualan_pos = app.$route.params.id;
-},
-computed : mapState ({    
-  produk(){
-    return this.$store.state.produk
   },
-  pelanggan(){
-    return this.$store.getters.pelangganTransaksi
+  mounted() {   
+    var app = this;
+    app.$store.dispatch('LOAD_PRODUK_LIST')
+    app.$store.dispatch('LOAD_PELANGGAN_LIST')
+    app.$store.dispatch('LOAD_KAS_LIST')
+    app.getResults();
+    app.dataSettingPenjualanPos();
+    app.id_penjualan_pos = app.$route.params.id;
   },
-  kas(){
-    return this.$store.state.kas
-  }
-}),
-watch: {
+  computed : mapState ({    
+    produk(){
+      return this.$store.state.produk
+    },
+    pelanggan(){
+      return this.$store.getters.pelangganTransaksi
+    },
+    kas(){
+      return this.$store.state.kas
+    }
+  }),
+  watch: {
     // whenever question changes, this function will run
     pencarian: function (newQuestion) {
       this.getHasilPencarian()
@@ -728,6 +755,7 @@ watch: {
       var app = this;
       var produk = app.inputTbsPenjualan.produk.split("|");
       var nama_produk = produk[1];
+      var id_produk = produk[0];
       var jumlah_produk = 1;
 
       if (this.setting_penjualan_pos.jumlah_produk == 1 || this.setting_penjualan_pos.jumlah_produk == true) {
@@ -735,6 +763,7 @@ watch: {
       }else{
         //this.isiJumlahProduk(nama_produk);//
         this.inputJumlahProduk(nama_produk);
+        this.getSatuan(id_produk);
       }    
     }
   },
@@ -748,8 +777,41 @@ watch: {
    $("#modal_tambah_kas").show();
    $("#modal_selesai").hide();
    this.$refs.kode_kas.focus(); 
- },
- saveFormKas() {
+ }, 
+ getSatuan(id_produk){
+  var app = this;
+  var satuan_tbs = $(".satuan-"+id_produk).attr("data-satuan");
+
+  axios.get(app.url_satuan+'/'+id_produk)
+  .then(function (resp) {
+    app.satuan = resp.data;
+
+    if (typeof satuan_tbs == "undefined") {
+
+      $.each(resp.data, function (i, item) {
+        if (resp.data[i].id === resp.data[i].satuan_dasar) {
+          app.inputTbsPenjualan.satuan_produk = resp.data[i].satuan;
+        }
+      });
+
+    }else{
+
+      $.each(resp.data, function (i, item) {
+        if (resp.data[i].id === parseInt(satuan_tbs)) {
+          app.inputTbsPenjualan.satuan_produk = resp.data[i].satuan;
+        }
+      });
+
+    } 
+
+
+  })
+  .catch(function (resp) {
+    console.log(resp);
+    alert("Tidak Dapat Memuat Satuan Produk");
+  });
+},
+saveFormKas() {
   var app = this;
   var newkas = app.tambahKas;
   axios.post(app.url_tambah_kas, newkas)
@@ -861,28 +923,30 @@ submitProdukPenjualan(value){
       var index = app.tbs_penjualan.findIndex(cekTbs)        
 
       if (index >= 0) {
+        console.log(app.tbs_penjualan[index])
         app.tbs_penjualan[index].jumlah_produk = resp.data.jumlah_produk
+        app.tbs_penjualan[index].satuan = resp.data.satuan
+        app.tbs_penjualan[index].harga_produk = resp.data.harga_produk
+        app.tbs_penjualan[index].satuan_id = resp.data.satuan_id
         app.tbs_penjualan[index].subtotal = resp.data.subtotalKeseluruhan
       }else{
+        app.tbs_penjualan.push(resp.data)
+        app.tbs_penjualan.sort(function (descending) {
+          return descending.id_edit_tbs_penjualans;
+        });
+      }
+      app.openSelectizeProduk()
 
-       app.tbs_penjualan.push(resp.data)
-       app.tbs_penjualan.sort(function (descending) {
-        return descending.id_edit_tbs_penjualans;
-      });
+      app.penjualan.subtotal = subtotal.toFixed(2)                        
+      app.penjualan.total_akhir  = subtotal.toFixed(2) 
+      app.potonganPersen()
+      app.inputTbsPenjualan.jumlah_produk = ''
+      app.inputTbsPenjualan.produk = ''
+      $("#modalJumlahProduk").hide(); 
 
-     }
-     app.openSelectizeProduk()
+    }
 
-     app.penjualan.subtotal = subtotal.toFixed(2)                        
-     app.penjualan.total_akhir  = subtotal.toFixed(2) 
-     app.potonganPersen()
-     app.inputTbsPenjualan.jumlah_produk = ''
-     app.inputTbsPenjualan.produk = ''
-     $("#modalJumlahProduk").hide(); 
-
-   }
-
- })
+  })
     .catch(function (resp) {
 
       console.log(resp);                  

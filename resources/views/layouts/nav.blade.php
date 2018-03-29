@@ -525,7 +525,7 @@
             <li>
                 <router-link :to="{name: 'indexBankWarung'}" class="menu-nav">
                     <span class="sidebar-mini">
-                        BW
+                        B
                     </span>
                     <span class="sidebar-normal">
                         Bank 
@@ -596,7 +596,7 @@
 
 
 @if(Auth::user()->kasir_id == 0)
-@if(Laratrust::can('setting_footer') || Laratrust::can('setting_pengiriman') || Laratrust::can('seetting_verifikasi')) 
+@if(Laratrust::can('setting_footer') || Laratrust::can('setting_pengiriman') || Laratrust::can('seetting_verifikasi')|| Laratrust::can('lihat_setting_verifikasi')) 
 <li>
     <a class="disabled-menu" data-toggle="collapse" href="#settingWarung">
         <i class="material-icons">
@@ -650,6 +650,7 @@
             </li>
             @endif
 
+            @if(Laratrust::can('lihat_setting_promo')) 
             <li>
                 <router-link :to="{name: 'indexSettingPromo'}" class="menu-nav">
                     <span class="sidebar-mini">
@@ -660,6 +661,7 @@
                     </span>
                 </router-link>
             </li>
+            @endif
 
         </ul>
     </div>

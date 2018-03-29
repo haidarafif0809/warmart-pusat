@@ -140,7 +140,7 @@
 							</p>
 
 							<p v-else-if="pesananData.pesanan.konfirmasi_pesanan == 3">
-								<button id="konfirmasi-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-sm btn-info" @click="konfirmasiPesanan(pesananData.pesanan.id)"><font style="font-size: 12px;">Lanjut</font></button>	
+								<button id="konfirmasi-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-sm btn-info" @click="konfirmasiPesanan(pesananData.pesanan.id)"><font style="font-size: 12px;">Konfirmasi</font></button>	
 								<!--PEMESAN-->
 								<button type="button" class="btn btn-sm btn-primary" id="btnDetail" data-toggle="modal" data-target="#data_pemesan"><font style="font-size: 12px;">Pemesan</font></button>
 							</p>
@@ -282,7 +282,7 @@
 					<b class="card-title" style="margin-top: 1px; margin-bottom: 1px;" v-if="pesananData.pesanan.konfirmasi_pesanan != 4">Konfirmasi/Batal</b><br>
 
 					<div class="btn-group" v-if="pesananData.pesanan.konfirmasi_pesanan == 0">
-						<button id="konfirmasi-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-xs btn-info" @click="konfirmasiPesanan(pesananData.pesanan.id)" style="padding: 5px 50px;"><font style="font-size: 12px;">Lanjut</font>
+						<button id="konfirmasi-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-xs btn-info" @click="konfirmasiPesanan(pesananData.pesanan.id)" style="padding: 5px 50px;"><font style="font-size: 12px;">Konfirmasi</font>
 						</button>
 						<button id="batalkan-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-xs btn-danger" @click="batalPesanan(pesananData.pesanan.id)" style="padding: 5px 50px;"><font style="font-size: 12px;">Batal</font>
 						</button>
@@ -301,7 +301,7 @@
 					</div>
 
 					<div class="btn-group" v-else-if="pesananData.pesanan.konfirmasi_pesanan == 3">  	
-						<button id="konfirmasi-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-xs btn-info" @click="konfirmasiPesanan(pesananData.pesanan.id)" style="padding: 5px 50px;"><font style="font-size: 12px;">Lanjut</font>
+						<button id="konfirmasi-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-xs btn-info" @click="konfirmasiPesanan(pesananData.pesanan.id)" style="padding: 5px 50px;"><font style="font-size: 12px;">Konfirmasi</font>
 						</button>	
 					</div>
 
@@ -406,75 +406,80 @@ export default {
 	},
 	mounted() {
 		var app = this;
-		let id = app.$route.params.id;
+		var id = app.$route.params.id;
+
 		app.detailPesananId = id;		
-		app.$store.dispatch('LOAD_KAS_LIST')  
+		app.$store.dispatch('LOAD_KAS_LIST');
 		app.getResults();
 	},
 	computed : mapState ({    
-		kas(){
-			return this.$store.state.kas
+		kas() {
+			return this.$store.state.kas;
 		},
-		default_kas : state => state.default_kas
+		default_kas : (state) => state.default_kas
 	}),
 	filters: {
-		pemisahTitik: function (value) {
-			return new Intl.NumberFormat().format(value)
+		pemisahTitik: (value) => {
+			return new Intl.NumberFormat().format(value);
 		}
 	},
 	methods: {
 		getResults(page) {
-			var app = this;	
+			var app = this;
+
 			if (typeof page === 'undefined') {
 				page = 1;
 			}
-			axios.get(app.url+'/detail/'+app.detailPesananId+'?page='+page)
-			.then(function (resp) {
+			axios.get(app.url + '/detail/' + app.detailPesananId + '?page=' + page)
+			.then((resp) => {
+
 				app.detailPesanan = resp.data.data.detail_pesanan.data;
 				app.detailPesananData = resp.data.data.detail_pesanan;
 				app.pesananData = resp.data.data;
 				app.dataAgent = resp.data.data.agent;
 				app.loading = false;
-				app.selesaiPesanan.id_kas = app.default_kas
+				app.selesaiPesanan.id_kas = app.default_kas;
+
 				if (resp.data.data.pesanan.kurir == 'cod' || resp.data.data.pesanan.kurir == '') {
+					app.servicePengiriman = "Bayar di Tempat";
+					app.waktuPengiriman	= "-";
 
-					app.servicePengiriman = "Bayar di Tempat"
-					app.waktuPengiriman	= "-"
+				} else if(resp.data.data.pesanan.kurir == 'ojek') {
+					app.servicePengiriman = resp.data.data.pesanan.metode_pembayaran;
+					app.waktuPengiriman	= "-";
 
-				}else if(resp.data.data.pesanan.kurir == 'ojek') {
+				} else {
 
-					app.servicePengiriman = resp.data.data.pesanan.metode_pembayaran
-					app.waktuPengiriman	= "-"
-
-				}else{
 					let layanan_kurir = resp.data.data.pesanan.layanan_kurir.split(" | ");
-					app.servicePengiriman = layanan_kurir[0]+" | "+layanan_kurir[2]
-					app.waktuPengiriman	= layanan_kurir[1]+" Hari" 
+					app.servicePengiriman = layanan_kurir[0] + " | " + layanan_kurir[2];
+					app.waktuPengiriman	= layanan_kurir[1] + " Hari";
 				}
-
 			})
 			.catch(function (resp) {
 				app.loading = false;
 				alert("Tidak Dapat Memuat Pesanan");
 			});
 		},
-		tambahProduk(id){
+		tambahProduk(id) {
 			var app = this;
-			axios.get(app.urlTambahProduk+'/'+ id)
-			.then(function (resp) {
+			axios.get(app.urlTambahProduk + '/' + id)
+			.then((resp) => {
+
+				app.getResults();
+				app.$router.replace('/detail-pesanan-warung/' + app.detailPesananId);
+			});
+		},
+		kurangProduk(id) {
+			var app = this;
+			
+			axios.get(app.urlKurangProduk + '/' + id)
+			.then((resp) => {
+
 				app.getResults();
 				app.$router.replace('/detail-pesanan-warung/'+app.detailPesananId);
 			});
 		},
-		kurangProduk(id){
-			var app = this;
-			axios.get(app.urlKurangProduk+'/'+ id)
-			.then(function (resp) {
-				app.getResults();
-				app.$router.replace('/detail-pesanan-warung/'+app.detailPesananId);
-			});
-		},
-		editProduk(id, index, nama_produk){
+		editProduk(id, index, nama_produk) {
 			var app = this;
 
 			swal({
@@ -497,6 +502,7 @@ export default {
 					'data-nama': nama_produk,
 				}
 			}).then((jumlah_produk) => {
+
 				if (!jumlah_produk) throw null;
 				app.submitProduk(jumlah_produk, id, nama_produk);
 			});
@@ -508,35 +514,39 @@ export default {
 				icon: "success",
 			});
 		},
-		submitProduk(jumlah_produk, id, nama_produk){
+		submitProduk(jumlah_produk, id, nama_produk) {
 
 			if (jumlah_produk == 0 || jumlah_produk == "") {
 				this.$swal({
 					text: "Jumlah Produk Tidak Boleh Nol!",
 				});
-			}else{
+
+			} else {
 				var app = this;
+				var newJumlahProduk = app.editJumlahProduk;	        	
+				
 				app.editJumlahProduk.id = id;
 				app.editJumlahProduk.jumlah_produk = jumlah_produk;
-				var newJumlahProduk = app.editJumlahProduk;	        	
 				app.loading = true;
 
 				axios.post(app.urlOrigin+'edit-jumlah-produk-warung', newJumlahProduk)
-				.then(function (resp) {
+				.then((resp) => {
+
 					app.getResults();
-					app.alert("Mengubah Jumlah Produk "+nama_produk);
+					app.alert("Mengubah Jumlah Produk " + nama_produk);
 					app.loading = false;
-					app.editJumlahProduk.jumlah_produk = ''
-					app.editJumlahProduk.id = ''
-					app.$router.replace('/detail-pesanan-warung/'+app.detailPesananId);
+					app.editJumlahProduk.jumlah_produk = '';
+					app.editJumlahProduk.id = '';
+					app.$router.replace('/detail-pesanan-warung/' + app.detailPesananId);
 				})
-				.catch(function (resp) {
+				.catch((resp) => {
 					alert("Tidak Dapat Mengubah Jumlah Produk");
-					console.log(resp)
+					console.log(resp);
+
 				});
 			}
 		},
-		konfirmasiPesanan(id){
+		konfirmasiPesanan(id) {
 			var app = this;
 
 			swal({
@@ -550,30 +560,35 @@ export default {
 				confirmButtonClass: 'btn btn-success',
 				cancelButtonClass: 'btn btn-danger',
 				buttonsStyling: false
-			}).then(function () {
-				app.submitKonfirmasiPesanan(id)
 			})
+			.then(function () {
+
+				app.submitKonfirmasiPesanan(id);
+			});
 		},
-		submitKonfirmasiPesanan(id){      		
+		submitKonfirmasiPesanan(id) {
 			var app = this;
-			axios.get(app.urlKonfirmasiPesanan+'/'+ id)
-			.then(function (resp) {
+
+			axios.get(app.urlKonfirmasiPesanan + '/' + id)
+			.then((resp) => {
 
 				axios.get(app.urlPesananDikonfirmasi + '/' + id)
-				.then(resp => {
-					
+				.then((resp) => {
+
 					app.getResults();
-					app.$router.replace('/detail-pesanan-warung/'+id);
+					app.$router.replace('/detail-pesanan-warung/' + id);
 				})
-				.catch(resp => {
+				.catch((resp) => {
+
 					alert('Sesuatu yang salah terjadi.');
 				});
 			})
 			.catch(resp => {
+
 				alert('Sesuatu yang salah terjadi.');
 			});
 		},
-		batalKonfirmasiPesanan(id){
+		batalKonfirmasiPesanan(id) {
 			var app = this;
 
 			swal({
@@ -587,21 +602,26 @@ export default {
 				confirmButtonClass: 'btn btn-success',
 				cancelButtonClass: 'btn btn-danger',
 				buttonsStyling: false
-			}).then(function () {
-				app.submitBatalKonfirmasiPesanan(id)
-				console.log(id)
+			})
+			.then(() => {
+
+				app.submitBatalKonfirmasiPesanan(id);
+				console.log(id);
 			})
 		},
-		submitBatalKonfirmasiPesanan(id){      		
+		submitBatalKonfirmasiPesanan(id) {
 			var app = this;
-			axios.get(app.urlBatalKonfirmasiPesanan+'/'+ id)
-			.then(function (resp) {
+
+			axios.get(app.urlBatalKonfirmasiPesanan + '/' + id)
+			.then((resp) => {
+
 				app.getResults();
-				app.$router.replace('/detail-pesanan-warung/'+id);
+				app.$router.replace('/detail-pesanan-warung/' + id);
 			});
 		},
-		batalPesanan(id){
+		batalPesanan(id) {
 			var app = this;
+
 			swal({
 				text: "Anda Yakin Ingin Membatalkan Pesanan Ini??",
 				type: 'warning',
@@ -613,28 +633,33 @@ export default {
 				confirmButtonClass: 'btn btn-success',
 				cancelButtonClass: 'btn btn-danger',
 				buttonsStyling: false
-			}).then(function () {
-				app.submitBatalPesanan(id)
-				console.log(id)
+			})
+			.then(() => {
+
+				app.submitBatalPesanan(id);
+				console.log(id);
 			})
 		},
-		submitBatalPesanan(id){
+		submitBatalPesanan(id) {
 			var app = this;
-			axios.get(app.urlBatalPesanan+'/'+ id)
-			.then(function (resp) {
+
+			axios.get(app.urlBatalPesanan + '/' + id)
+			.then((resp) => {
+
 				app.getResults();
-				app.$router.replace('/detail-pesanan-warung/'+id);
+				app.$router.replace('/detail-pesanan-warung/' + id);
 			});
 		},
-		selesaikanPesanan(id){
-			$("#modalSelesaiPesanan").show()
+		selesaikanPesanan(id) {
+			$("#modalSelesaiPesanan").show();
 		},
-		submitSelesaiPesanan(id, id_kas){
-			var app = this
+		submitSelesaiPesanan(id, id_kas) {
+			var app = this;
 
 			if (id_kas == '') {
-				app.kas_error = 1
-			}else{
+				app.kas_error = 1;
+
+			} else {
 
 				app.$swal({
 					text: "Anda Yakin Ingin Menyelesaikan Transaksi Ini ?",
@@ -642,63 +667,61 @@ export default {
 						cancel: true,
 						confirm: "OK"                   
 					},
-
-				}).then((value) => {
+				})
+				.then((value) => {
 
 					if (!value) throw null;
-
 					app.prosesSelesaiPesanan(id, id_kas)
-
 				});
 			}
 		},
-		prosesSelesaiPesanan(id, id_kas){
+		prosesSelesaiPesanan(id, id_kas) {
 			var app = this;
-			app.selesaiPesanan.id_pesanan = id;
-			app.selesaiPesanan.id_kas = id_kas;
 			var newSelesaiPesanan = app.selesaiPesanan;	  
 
+			app.selesaiPesanan.id_pesanan = id;
+			app.selesaiPesanan.id_kas = id_kas;
 			app.closeModalSelesaiPesanan()
 			app.loading = true;
+
 			axios.post(app.urlOrigin+'selesai-konfirmasi-pesanan-warung', newSelesaiPesanan)
-			.then(function (resp) {
+			.then((resp) => {
 
-				if(resp.data.respons == 1){
+				if(resp.data.respons == 1) {
 
-					app.alertTbs("Gagal : Stok " + resp.data.nama_produk + " Tidak Mencukupi Untuk di Jual, Sisa Produk = "+resp.data.stok_produk);
+					app.alertTbs("Gagal : Stok " + resp.data.nama_produk + " Tidak Mencukupi Untuk di Jual, Sisa Produk = " + resp.data.stok_produk);
 					app.loading = false;
 
-				}else{
+				} else {
 					app.getResults();
 					app.loading = false;
-					app.selesaiPesanan.id_pesanan = ''    
-					app.alert("Pesanan order #"+id+" Berhasil Di Selesaikan");  
-					window.open('pesanan-warung/cetak-kecil-penjualan/'+resp.data.respons_penjualan,'_blank');   
+					app.selesaiPesanan.id_pesanan = '';
+					app.alert("Pesanan order #" + id + " Berhasil Di Selesaikan");  
+					window.open('pesanan-warung/cetak-kecil-penjualan/' + resp.data.respons_penjualan,'_blank');   
 				}
-
-
 			})
-			.catch(function (resp) {
+			.catch((resp) => {
 				alert("Tidak Dapat Menyelesaikan Pesanan");
 			});
 		},
-		closeModalSelesaiPesanan(){
-			$("#modalSelesaiPesanan").hide()
+		closeModalSelesaiPesanan() {
+			$("#modalSelesaiPesanan").hide();
 		},
 		alertTbs(pesan) {
+
 			this.$swal({
 				text: pesan,
 				icon: "warning",
 			});
 		},
 		alert(pesan) {
+			
 			this.$swal({
 				title: "Berhasil ",
 				text: pesan,
 				icon: "success",
 				buttons: false,
 				timer: 1000,
-
 			});
 		}
 	}
