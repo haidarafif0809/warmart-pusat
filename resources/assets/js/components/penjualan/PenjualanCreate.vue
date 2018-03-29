@@ -946,7 +946,7 @@ submitProdukPenjualan(value){
           console.log(app.tbs_penjualan[index])
           app.tbs_penjualan[index].jumlah_produk = resp.data.jumlah_produk
           app.tbs_penjualan[index].satuan_produk = resp.data.satuan_produk
-          app.tbs_penjualan[index].satuan = resp.data.nama_satuan
+          app.tbs_penjualan[index].satuan = resp.data.satuan
           app.tbs_penjualan[index].harga_produk = resp.data.harga_produk
           app.tbs_penjualan[index].satuan_id = resp.data.satuan_id
           app.tbs_penjualan[index].subtotal = resp.data.subtotalKeseluruhan
