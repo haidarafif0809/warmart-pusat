@@ -45,13 +45,30 @@ class PembelianController extends Controller
         }
     }
 
-    public function view()
+    public function dataPagination($data_pembelian, $array_pembelian)
     {
-        $pembelian = Pembelian::select('pembelians.id as id', 'pembelians.no_faktur as no_faktur', 'supliers.nama_suplier as nama_suplier', 'pembelians.created_at as created_at', 'pembelians.status_pembelian as status_pembelian', 'pembelians.total as total', 'kas.nama_kas as nama_kas', 'pembelians.potongan as potongan', 'pembelians.tunai as tunai', 'pembelians.kembalian as kembalian', 'pembelians.tanggal_jt_tempo as tanggal_jt_tempo', 'users.name as name')->leftJoin('supliers', 'pembelians.suplier_id', '=', 'supliers.id')->leftJoin('kas', 'pembelians.cara_bayar', '=', 'kas.id')->leftJoin('users', 'pembelians.created_by', '=', 'users.id')
-        ->where('pembelians.warung_id', Auth::user()->id_warung)->orderBy('pembelians.id', 'desc')->paginate(10);
-        $array = array();
-        foreach ($pembelian as $pembelians) {
-            array_push($array, [
+        $respons['current_page']   = $data_pembelian->currentPage();
+        $respons['data']           = $array_pembelian;
+        $respons['otoritas']      = $this->otoritasPembelian();
+        $respons['first_page_url'] = url('/pembelian/view?page=' . $data_pembelian->firstItem());
+        $respons['from']           = 1;
+        $respons['last_page']      = $data_pembelian->lastPage();
+        $respons['last_page_url']  = url('/pembelian/view?page=' . $data_pembelian->lastPage());
+        $respons['next_page_url']  = $data_pembelian->nextPageUrl();
+        $respons['path']           = url('/pembelian/view');
+        $respons['per_page']       = $data_pembelian->perPage();
+        $respons['prev_page_url']  = $data_pembelian->previousPageUrl();
+        $respons['to']             = $data_pembelian->perPage();
+        $respons['total']          = $data_pembelian->total();
+
+        return $respons;
+    }
+
+    public function foreachPembelian($data_pembelian)
+    {
+        $array_pembelian = array();
+        foreach ($data_pembelian as $pembelians) {
+            array_push($array_pembelian, [
                 'id'               => $pembelians->id,
                 'no_faktur'        => $pembelians->no_faktur,
                 'waktu'            => $pembelians->Waktu,
@@ -64,74 +81,37 @@ class PembelianController extends Controller
                 'kembalian'        => $pembelians->PemisahKredit,
                 'jatuh_tempo'      => $pembelians->JatuhTempo,
                 'user_buat'        => $pembelians->name,
-            ]);
+                ]);
         }
+        return $array_pembelian;
+    }
 
+    public function view()
+    {
+        //SELECT SEMUA TRASNSAKSI PEMBELIAN
+        $data_pembelian = Pembelian::dataTransaksiPembelian()->paginate(10);
+        //PERULANGAN
+        $array_pembelian = $this->foreachPembelian($data_pembelian);
         //DATA PAGINATION
-        $respons['current_page']   = $pembelian->currentPage();
-        $respons['data']           = $array;
-        $respons['otoritas']      = $this->otoritasPembelian();
-        $respons['first_page_url'] = url('/pembelian/view?page=' . $pembelian->firstItem());
-        $respons['from']           = 1;
-        $respons['last_page']      = $pembelian->lastPage();
-        $respons['last_page_url']  = url('/pembelian/view?page=' . $pembelian->lastPage());
-        $respons['next_page_url']  = $pembelian->nextPageUrl();
-        $respons['path']           = url('/pembelian/view');
-        $respons['per_page']       = $pembelian->perPage();
-        $respons['prev_page_url']  = $pembelian->previousPageUrl();
-        $respons['to']             = $pembelian->perPage();
-        $respons['total']          = $pembelian->total();
-        //DATA PAGINATION
+        $respons = $this->dataPagination($data_pembelian, $array_pembelian);
+
         return response()->json($respons);
     }
 
     public function pencarian(Request $request)
     {
-
-        $search = $request->search;
-
-        $pembelian = Pembelian::select('pembelians.id as id', 'pembelians.no_faktur as no_faktur', 'supliers.nama_suplier as nama_suplier', 'pembelians.created_at as created_at', 'pembelians.status_pembelian as status_pembelian', 'pembelians.total as total', 'kas.nama_kas as nama_kas', 'pembelians.potongan as potongan', 'pembelians.tunai as tunai', 'pembelians.kembalian as kembalian', 'pembelians.tanggal_jt_tempo as tanggal_jt_tempo', 'users.name as name')->leftJoin('supliers', 'pembelians.suplier_id', '=', 'supliers.id')->leftJoin('kas', 'pembelians.cara_bayar', '=', 'kas.id')->leftJoin('users', 'pembelians.created_by', '=', 'users.id')
-        ->where('pembelians.warung_id', Auth::user()->id_warung)->orderBy('pembelians.id')
-        ->where(function ($query) use ($search) {
-                // search
-            $query->where('pembelians.status_pembelian', 'LIKE', $search . '%')
-            ->orWhere('pembelians.no_faktur', 'LIKE', $search . '%')
-            ->orWhere('pembelians.total', 'LIKE', $search . '%');
+        //PENCARIAN TRASNSAKSI PEMBELIAN
+        $search         = $request->search;
+        $data_pembelian = Pembelian::dataTransaksiPembelian()->where(function ($query) use ($search) {
+            $query->where('pembelians.status_pembelian', 'LIKE', '%' . $search . '%')
+            ->orWhere('pembelians.no_faktur', 'LIKE', '%' . $search . '%')
+            ->orWhere('pembelians.total', 'LIKE', '%' . $search . '%');
         })->paginate(10);
-
-        $array = array();
-        foreach ($pembelian as $pembelians) {
-            array_push($array, [
-                'id'               => $pembelians->id,
-                'no_faktur'        => $pembelians->no_faktur,
-                'waktu'            => $pembelians->Waktu,
-                'suplier'          => $pembelians->nama_suplier,
-                'status_pembelian' => $pembelians->status_pembelian,
-                'total'            => $pembelians->getTotalSeparator(),
-                'kas'              => $pembelians->nama_kas,
-                'potongan'         => $pembelians->PemisahPotongan,
-                'tunai'            => $pembelians->PemisahTunai,
-                'kembalian'        => $pembelians->PemisahKredit,
-                'jatuh_tempo'      => $pembelians->JatuhTempo,
-                'user_buat'        => $pembelians->name,
-            ]);
-        }
-
+        //PERULANGAN
+        $array_pembelian = $this->foreachPembelian($data_pembelian);
         //DATA PAGINATION
-        $respons['current_page']   = $pembelian->currentPage();
-        $respons['data']           = $array;
-        $respons['otoritas']      = $this->otoritasPembelian();
-        $respons['first_page_url'] = url('/pembelian/view?page=' . $pembelian->firstItem());
-        $respons['from']           = 1;
-        $respons['last_page']      = $pembelian->lastPage();
-        $respons['last_page_url']  = url('/pembelian/view?page=' . $pembelian->lastPage());
-        $respons['next_page_url']  = $pembelian->nextPageUrl();
-        $respons['path']           = url('/pembelian/view');
-        $respons['per_page']       = $pembelian->perPage();
-        $respons['prev_page_url']  = $pembelian->previousPageUrl();
-        $respons['to']             = $pembelian->perPage();
-        $respons['total']          = $pembelian->total();
-        //DATA PAGINATION
+        $respons = $this->dataPagination($data_pembelian, $array_pembelian);
+
         return response()->json($respons);
     }
 
@@ -148,11 +128,8 @@ class PembelianController extends Controller
         $kas_default = Kas::where('warung_id', Auth::user()->id_warung)->where('default_kas', 1)->count();
         $kas_pilih   = Kas::where('warung_id', Auth::user()->id_warung)->where('default_kas', 1)->first();
 
-        $tbs_pembelian = TbsPembelian::select('tbs_pembelians.id_tbs_pembelian AS id_tbs_pembelian', 'tbs_pembelians.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'tbs_pembelians.id_produk AS id_produk', 'tbs_pembelians.harga_produk AS harga_produk', 'tbs_pembelians.potongan AS potongan', 'tbs_pembelians.tax AS tax', 'tbs_pembelians.subtotal AS subtotal', 'tbs_pembelians.ppn AS ppn', 'tbs_pembelians.satuan_id AS satuan_id', 'satuans.nama_satuan')
-        ->leftJoin('barangs', 'barangs.id', '=', 'tbs_pembelians.id_produk')
-        ->leftJoin('satuans', 'satuans.id', '=', 'tbs_pembelians.satuan_id')
-        ->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)
-        ->orderBy('id_tbs_pembelian', 'desc')->paginate(10);
+        $tbs_pembelian = TbsPembelian::dataTransaksiTbsPembelian($session_id, $user_warung)
+        ->orderBy('tbs_pembelians.id_tbs_pembelian', 'desc')->paginate(10);
         $array = array();
 
         foreach ($tbs_pembelian as $tbs_pembelians) {
@@ -207,7 +184,7 @@ class PembelianController extends Controller
                 'subtotal'               => $tbs_pembelians->subtotal,
                 'subtotal_tbs'           => $subtotal_tbs,
                 'subtotal_number_format' => $subtotal,
-            ]);
+                ]);
         }
 
         $url     = '/pembelian/view-tbs-pembelian';
@@ -228,7 +205,7 @@ class PembelianController extends Controller
         $kas_default = Kas::where('warung_id', Auth::user()->id_warung)->where('default_kas', 1)->count();
         $kas_pilih   = Kas::where('warung_id', Auth::user()->id_warung)->where('default_kas', 1)->first();
 
-        $tbs_pembelian = TbsPembelian::select('tbs_pembelians.id_tbs_pembelian AS id_tbs_pembelian', 'tbs_pembelians.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'tbs_pembelians.id_produk AS id_produk', 'tbs_pembelians.harga_produk AS harga_produk', 'tbs_pembelians.potongan AS potongan', 'tbs_pembelians.tax AS tax', 'tbs_pembelians.subtotal AS subtotal', 'tbs_pembelians.ppn AS ppn')->leftJoin('barangs', 'barangs.id', '=', 'tbs_pembelians.id_produk')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)
+        $tbs_pembelian = TbsPembelian::dataTransaksiTbsPembelian($session_id, $user_warung)
         ->where(function ($query) use ($request) {
 
             $query->orWhere('barangs.nama_barang', 'LIKE', $request->search . '%')
@@ -287,7 +264,7 @@ class PembelianController extends Controller
                 'subtotal'               => $tbs_pembelians->subtotal,
                 'subtotal_tbs'           => $subtotal_tbs,
                 'subtotal_number_format' => $subtotal,
-            ]);
+                ]);
         }
 
         $url     = '/pembelian/pencarian-tbs-pembelian';
@@ -368,7 +345,7 @@ class PembelianController extends Controller
                 'subtotal'               => $tbs_pembelians->subtotal,
                 'subtotal_tbs'           => $subtotal_tbs,
                 'subtotal_number_format' => $subtotal,
-            ]);
+                ]);
         }
 
         $url     = '/pembelian/view-edit-tbs-pembelian/' . $id;
@@ -449,7 +426,7 @@ class PembelianController extends Controller
                 'subtotal'               => $tbs_pembelians->subtotal,
                 'subtotal_tbs'           => $subtotal_tbs,
                 'subtotal_number_format' => $subtotal,
-            ]);
+                ]);
         }
 
         $url     = '/pembelian/pencarian-edit-tbs-pembelian/' . $id;
@@ -528,7 +505,7 @@ class PembelianController extends Controller
                 'tax_persen'            => $tax_persen,
                 'subtotal'              => $detail_pembelians->subtotal,
                 'subtotal_tbs'          => $subtotal_tbs,
-            ]);
+                ]);
         }
 
         $url                 = '/pembelian/view-detail-pembelian/' . $id;
@@ -602,7 +579,7 @@ class PembelianController extends Controller
                 'tax_persen'            => $tax_persen,
                 'subtotal'              => $detail_pembelians->subtotal,
                 'subtotal_tbs'          => $subtotal_tbs,
-            ]);
+                ]);
         }
 
         $url     = '/pembelian/pencarian-detail-pembelian/' . $id;
@@ -679,7 +656,7 @@ class PembelianController extends Controller
             'satuan_dasar'    => $satuan_dasar->satuan_id,
             'jumlah_konversi' => 1,
             'satuan'          => $satuan_dasar->satuan_id . "|" . strtoupper($satuan_dasar->nama_satuan) . "|" . $satuan_dasar->satuan_id . "|1|1",
-        ]);
+            ]);
 
         foreach ($data_satuans as $data_satuan) {
             // Jika satuan dasar == satuan terkecil maka jumlah konversi dasar = 1
@@ -695,7 +672,7 @@ class PembelianController extends Controller
                 'satuan_dasar'    => $data_satuan->satuan_dasar,
                 'jumlah_konversi' => $data_satuan->jumlah_konversi,
                 'satuan'          => $data_satuan->id_satuan . "|" . strtoupper($data_satuan->nama_satuan) . "|" . $data_satuan->satuan_dasar . "|" . $data_satuan->jumlah_konversi . "|" . $jumlah_konversi_dasar,
-            ]);
+                ]);
         }
 
         return response()->json($array);
@@ -761,7 +738,7 @@ class PembelianController extends Controller
                     'satuan_id'     => $request->satuan,
                     'satuan_dasar'  => $request->satuan_dasar,
                     'warung_id'     => Auth::user()->id_warung,
-                ]);
+                    ]);
 
                 $respons['status']   = 0;
                 $respons['subtotal'] = $subtotal;
@@ -1109,7 +1086,7 @@ class PembelianController extends Controller
                     'potongan'      => $data_tbs_pembelian->potongan,
                     'ppn'           => $data_tbs_pembelian->ppn,
                     'warung_id'     => Auth::user()->id_warung,
-                ]);
+                    ]);
             }
 
             //INSERT PEMBELIAN
@@ -1152,7 +1129,7 @@ class PembelianController extends Controller
                 'keterangan'       => $request->keterangan,
                 'ppn'              => $request->ppn,
                 'warung_id'        => Auth::user()->id_warung,
-            ]);
+                ]);
 
             //Transaksi Hutang & kas
             $kas = intval($pembelian->tunai) - intval($pembelian->kembalian);
@@ -1236,7 +1213,7 @@ class PembelianController extends Controller
                 'potongan'      => $data_tbs->potongan,
                 'ppn'           => $data_tbs->ppn,
                 'warung_id'     => Auth::user()->id_warung,
-            ]);
+                ]);
         }
         return response(200);
     }
@@ -1333,13 +1310,13 @@ class PembelianController extends Controller
 
         // rule untuk validasi setiap row pada file excel
         $rowRules = [
-            'Kode Produk'   => 'required',
-            'Jumlah Produk' => 'required',
-            'Satuan Produk' => 'required',
-            'Harga Produk'  => 'required',
-            'Subtotal'      => 'required',
-            'Tax'           => 'required',
-            'Potongan'      => 'required',
+        'Kode Produk'   => 'required',
+        'Jumlah Produk' => 'required',
+        'Satuan Produk' => 'required',
+        'Harga Produk'  => 'required',
+        'Subtotal'      => 'required',
+        'Tax'           => 'required',
+        'Potongan'      => 'required',
         ];
 
         // Catat semua id buku baru
@@ -1357,8 +1334,8 @@ class PembelianController extends Controller
 
             if ($db_produk->count() === 0) {
                 $errors['kode_produk'][] = [
-                    'line'    => $no,
-                    'message' => 'Kode Produk : ' . $row['kode_produk'] . ' Tidak Terdaftar di Master Data Produk.',
+                'line'    => $no,
+                'message' => 'Kode Produk : ' . $row['kode_produk'] . ' Tidak Terdaftar di Master Data Produk.',
                 ];
                 $lineErrors[] = $no;
             }
@@ -1399,7 +1376,7 @@ class PembelianController extends Controller
                 'tax'           => $row['tax'],
                 'potongan'      => $row['potongan'],
                 'warung_id'     => Auth::user()->id_warung,
-            ]);
+                ]);
         }
         // Hitung Jumlah Produk Yang Diimport
         $hitung_produk['jumlahProduk'] = $no - 1;
@@ -1421,7 +1398,7 @@ class PembelianController extends Controller
                     'Subtotal',
                     'Tax',
                     'Potongan',
-                ]);
+                    ]);
 
                 $sheet->row(++$row, [
                     '001',
@@ -1430,7 +1407,7 @@ class PembelianController extends Controller
                     '200000',
                     '0',
                     '0',
-                ]);
+                    ]);
 
             });
         })->download('xls');

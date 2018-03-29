@@ -52,4 +52,14 @@ class TbsPembelian extends Model
             return $tbs_pembelian->subtotal;
         }
     }
+
+    // Transaksi Tbs Pembelian
+    public function scopeDataTransaksiTbsPembelian($query, $session_id, $user_warung)
+    {
+        $query->select('tbs_pembelians.id_tbs_pembelian AS id_tbs_pembelian', 'tbs_pembelians.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'tbs_pembelians.id_produk AS id_produk', 'tbs_pembelians.harga_produk AS harga_produk', 'tbs_pembelians.potongan AS potongan', 'tbs_pembelians.tax AS tax', 'tbs_pembelians.subtotal AS subtotal', 'tbs_pembelians.ppn AS ppn', 'tbs_pembelians.satuan_id AS satuan_id', 'satuans.nama_satuan')
+        ->leftJoin('barangs', 'barangs.id', '=', 'tbs_pembelians.id_produk')
+        ->leftJoin('satuans', 'satuans.id', '=', 'tbs_pembelians.satuan_id')
+        ->where('tbs_pembelians.session_id', $session_id)->where('tbs_pembelians.warung_id', $user_warung);
+        return $query;
+    }
 }
