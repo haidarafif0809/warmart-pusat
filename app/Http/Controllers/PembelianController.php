@@ -714,7 +714,7 @@ class PembelianController extends Controller
 
                 $subtotal_edit = ($jumlah_produk * $request->harga_produk) - $data_tbs->first()->potongan;
 
-                $data_tbs->update(['jumlah_produk' => $jumlah_produk, 'subtotal' => $subtotal_edit, 'harga_produk' => $request->harga_produk]);
+                $data_tbs->update(['jumlah_produk' => $jumlah_produk, 'subtotal' => $subtotal_edit, 'harga_produk' => $request->harga_produk, 'satuan_id' => $request->satuan, 'satuan_dasar' => $request->satuan_dasar]);
 
                 $subtotal = $jumlah_produk * $request->harga_produk;
 

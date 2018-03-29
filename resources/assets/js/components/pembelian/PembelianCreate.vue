@@ -707,7 +707,6 @@ getSatuan(id_produk){
       $.each(resp.data, function (i, item) {
         if (resp.data[i].id === resp.data[i].satuan_dasar) {
           app.inputTbsPembelian.satuan_produk = resp.data[i].satuan;
-          $('#satuan')[0].selectize.unlock();
         }
       });
 
@@ -716,7 +715,6 @@ getSatuan(id_produk){
       $.each(resp.data, function (i, item) {
         if (resp.data[i].id === parseInt(satuan_tbs)) {
           app.inputTbsPembelian.satuan_produk = resp.data[i].satuan;
-          $('#satuan')[0].selectize.lock();
         }
       });
 
