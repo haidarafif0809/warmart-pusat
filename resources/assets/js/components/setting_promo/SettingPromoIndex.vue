@@ -46,11 +46,12 @@
 									<td>{{ settingPromos.settingpromo.kode_barang }} || {{ settingPromos.settingpromo.nama_barang }}</td>
 									<td align="right"> {{ settingPromos.settingpromo.harga_coret | pemisahTitik}}</td>
 									<td align="right"> {{ settingPromos.settingpromo.dari_tanggal | tanggal }} sd {{ settingPromos.settingpromo.sampai_tanggal | tanggal }}</td>
-									<td align="right"><a v-if="settingPromos.settingpromo.baner_promo != undefined" v-bind:href="url_baner_promo+ '/'+settingPromos.settingpromo.baner_promo" target="blank">Lihat Baner</a>
-										<p v-else >Tidak Ada Baner</p>
-									</td>
-									<td align="right" v-if="settingPromos.settingpromo.status == 1"> Aktif </td>
-									<td align="right" v-else> Tidak Aktif </td>
+									<td align="right">
+										<a v-if="settingPromos.settingpromo.baner_promo != '' " v-bind:href="url_baner_promo+ '/'+settingPromos.settingpromo.baner_promo" target="blank">Lihat Baner</a>
+					                    <p v-else>Tidak Ada Baner</p>
+					                 </td>
+					                 <td align="right" v-if="settingPromos.settingpromo.status == 1"> Aktif </td>
+					                 <td align="right" v-else> Tidak Aktif </td>
 									<td align="right"> 
 										<router-link :to="{name: 'editSettingPromo', params: {id: settingPromos.settingpromo.id_setting_promo }}" class="btn btn-xs btn-default" v-bind:id="'edit-' + settingPromos.settingpromo.id_setting_promo" v-if="otoritas.edit_setting_promo == 1">
 											Edit 

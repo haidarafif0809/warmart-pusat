@@ -168,15 +168,22 @@ return response()->json([
           }
           else{
 
+                $this->validate($request, [
+                'harga_promo'         => 'required|numeric|digits_between:1,11',
+                'baner_promo'         => 'image|max:3072',
+                'dari_tanggal'        => 'required',
+                'sampai_tanggal'      => 'required',
+                'jenis_promo'         => 'required'
+                ]);
 
-            $insert_setting = SettingPromo::create([
-                'harga_coret'        => $request->harga_coret,
-                'id_produk'          => $id_produk,
-                'id_warung'          => Auth::user()->id_warung,
-                'dari_tanggal'       => $this->tanggalSql($request->dari_tanggal),
-                'sampai_tanggal'     => $this->tanggalSql($request->sampai_tanggal),
-                'jenis_promo'        => $request->jenis_promo,
-                'status'             => $status_aktif]);
+                    $insert_setting = SettingPromo::create([
+                        'harga_coret'        => $request->harga_promo,
+                        'id_produk'          => $id_produk,
+                        'id_warung'          => Auth::user()->id_warung,
+                        'dari_tanggal'       => $this->tanggalSql($request->dari_tanggal),
+                        'sampai_tanggal'     => $this->tanggalSql($request->sampai_tanggal),
+                        'jenis_promo'        => $request->jenis_promo,
+                        'status'             => $status_aktif]);
 
             if ($request->hasFile('baner_promo')) {
                 $baner_promo = $request->file('baner_promo');
@@ -236,7 +243,7 @@ foreach ($request->jam as $setting_jam) {
      */
     public function show($id)
     {
-        $settingpromo = SettingPromo::select(['barangs.nama_barang','barangs.kode_barang','setting_promos.baner_promo','setting_promos.harga_coret','setting_promos.id_setting_promo','barangs.harga_jual as harga_produk','setting_promos.id_produk as produk','setting_promos.dari_tanggal','setting_promos.sampai_tanggal','setting_promos.jenis_promo','setting_promos.status as status_aktif'])->leftJoin('barangs', 'barangs.id', '=', 'setting_promos.id_produk')->where('setting_promos.id_warung', Auth::user()->id_warung)->where('setting_promos.id_setting_promo', $id)->first();
+        $settingpromo = SettingPromo::select(['barangs.nama_barang','barangs.kode_barang','setting_promos.baner_promo','setting_promos.harga_coret as harga_promo','setting_promos.id_setting_promo','barangs.harga_jual as harga_produk','setting_promos.id_produk as produk','setting_promos.dari_tanggal','setting_promos.sampai_tanggal','setting_promos.jenis_promo','setting_promos.status as status_aktif'])->leftJoin('barangs', 'barangs.id', '=', 'setting_promos.id_produk')->where('setting_promos.id_warung', Auth::user()->id_warung)->where('setting_promos.id_setting_promo', $id)->first();
 
         return $settingpromo;
     }
@@ -276,15 +283,23 @@ foreach ($request->jam as $setting_jam) {
                $status_aktif = 0;
            }
 
-           $update_setting->update([
-            'harga_coret'        => $request->harga_coret,
-            'id_produk'          => $id_produk,
-            'id_warung'          => Auth::user()->id_warung,
-            'dari_tanggal'       => $this->tanggalSql($request->dari_tanggal),
-            'sampai_tanggal'     => $this->tanggalSql($request->sampai_tanggal),
-            'jenis_promo'        => $request->jenis_promo,
-            'status'             => $status_aktif
-        ]);
+                  $this->validate($request, [
+                        'harga_promo'         => 'required|numeric|digits_between:1,11',
+                        'baner_promo'         => 'image|max:3072',
+                        'dari_tanggal'        => 'required',
+                        'sampai_tanggal'      => 'required',
+                        'jenis_promo'         => 'required'
+                  ]);
+
+                    $update_setting->update([
+                        'harga_coret'        => $request->harga_promo,
+                        'id_produk'          => $id_produk,
+                        'id_warung'          => Auth::user()->id_warung,
+                        'dari_tanggal'       => $this->tanggalSql($request->dari_tanggal),
+                        'sampai_tanggal'     => $this->tanggalSql($request->sampai_tanggal),
+                        'jenis_promo'        => $request->jenis_promo,
+                        'status'             => $status_aktif
+                    ]);
 
 
            if ($request->hasFile('baner_promo')) {
