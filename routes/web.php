@@ -1181,6 +1181,11 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
         'as'         => 'penjualan.edit_satuan_tbs_penjualan',
         'uses'       => 'PenjualanController@editSatuanTbsPenjualan',
         ]);
+    Route::post('/penjualan/edit-satuan-edit-tbs-penjualan', [
+        'middleware' => ['auth'],
+        'as'         => 'penjualan.edit_satuan_edit_tbs_penjualan',
+        'uses'       => 'PenjualanController@editSatuanEditTbsPenjualan',
+        ]);
 
     Route::post('/penjualan/edit-jumlah-tbs-penjualan', [
         'middleware' => ['auth'],

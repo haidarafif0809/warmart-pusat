@@ -565,6 +565,8 @@ class PenjualanController extends Controller
                 'harga_produk'           => $tbs_penjualans->harga_produk,
                 'potongan'               => $potongan,
                 'subtotal'               => $tbs_penjualans->subtotal,
+                'id_produk'              => $tbs_penjualans->id_produk,
+                'satuan_id'              => $tbs_penjualans->satuan_id,
                 'produk'                 => $tbs_penjualans->id_produk . "|" . $tbs_penjualans->NamaProduk . "|" . $tbs_penjualans->produk->harga_jual]);
         }
 
@@ -674,12 +676,13 @@ if ($harga_jual == '' || $harga_jual == 0) {
         $respons['id_tbs_penjualan']    = $data_tbs->first()->id_tbs_penjualan;
         $respons['jumlah_produk']       = $jumlah_produk;
         $respons['subtotal']            = $subtotal;
-        $respons['subtotalKeseluruhan'] = $subtotal_edit;
-        $respons['satuan_produk'] = $satuan_id;
         $respons['satuan'] = $nama_satuan;
         $respons['harga_produk'] = $harga_jual;
         $respons['id_produk']         = $id_produk;
         $respons['satuan_id']         = $satuan_id;
+
+        $respons['subtotalKeseluruhan'] = $subtotal_edit;
+
         return response()->json($respons);
 
     } else {
@@ -698,16 +701,17 @@ if ($harga_jual == '' || $harga_jual == 0) {
             ]);
 
         $respons['id_tbs_penjualan'] = $tbspenjualan->id_tbs_penjualan;
-        $respons['nama_produk']      = $nama_produk;
-        $respons['kode_produk']      = $tbspenjualan->produk->kode_barang;
         $respons['jumlah_produk']    = $request->jumlah_produk;
+        $respons['subtotal']         = $subtotal;
         $respons['satuan']      = $tbspenjualan->satuan->nama_satuan;
         $respons['harga_produk']     = $harga_jual;
-        $respons['potongan']         = 0;
-        $respons['subtotal']         = $subtotal;
         $respons['id_produk']        = $id_produk;
         $respons['satuan_id']        = $satuan_id;
+
+        $respons['potongan']         = 0;
         $respons['produk']           = $id_produk . "|" . $nama_produk . "|" . $harga_jual;
+        $respons['nama_produk']      = $nama_produk;
+        $respons['kode_produk']      = $tbspenjualan->produk->kode_barang;
 
         return response()->json($respons);
     }
@@ -1324,11 +1328,12 @@ public function index()
                 $respons['id_edit_tbs_penjualans'] = $data_tbs->first()->id_edit_tbs_penjualans;
                 $respons['jumlah_produk']          = $jumlah_produk;
                 $respons['subtotal']               = $subtotal;
-                $respons['subtotalKeseluruhan']    = $subtotal_edit;
                 $respons['satuan']                 = $nama_satuan;
                 $respons['harga_produk']           = $harga_jual;
                 $respons['id_produk']              = $id_produk;
                 $respons['satuan_id']              = $satuan_id;
+
+                $respons['subtotalKeseluruhan']    = $subtotal_edit;
 
                 return response()->json($respons);
 
@@ -1348,14 +1353,17 @@ public function index()
                     ]);
 
                 $respons['id_edit_tbs_penjualans'] = $tbspenjualan->id_edit_tbs_penjualans;
+                $respons['jumlah_produk']          = $request->jumlah_produk;
+                $respons['subtotal']               = $subtotal;
+                $respons['satuan']                 = $tbspenjualan->satuan->nama_satuan;
+                $respons['harga_produk']           = $harga_jual;
+                $respons['id_produk']              = $id_produk;
+                $respons['satuan_id']              = $satuan_id;
+
                 $respons['id_penjualan_pos']       = $id;
                 $respons['nama_produk']            = $nama_produk;
                 $respons['kode_produk']            = $tbspenjualan->produk->kode_barang;
-                $respons['satuan']            = $tbspenjualan->satuan->nama_satuan;
-                $respons['jumlah_produk']          = $request->jumlah_produk;
-                $respons['harga_produk']           = $harga_jual;
                 $respons['potongan']               = 0;
-                $respons['subtotal']               = $subtotal;
                 $respons['produk']                 = $id_produk . "|" . $nama_produk . "|" . $harga_jual;
 
                 return response()->json($respons);
@@ -1646,6 +1654,23 @@ public function index()
         $subtotal = ($tbs_penjualan->jumlah_produk * $satuan_konversi[5]) - $tbs_penjualan->potongan;
 
         $tbs_penjualan->update(['satuan_id' => $satuan_konversi[0], 'harga_produk' => $satuan_konversi[5], 'subtotal' => $subtotal]);
+
+        $respons['harga_produk'] = $satuan_konversi[5];
+        $respons['nama_satuan']     = $satuan_konversi[1];
+        $respons['satuan_id']     = $satuan_konversi[0];
+        $respons['subtotal']     = $subtotal;
+
+        return response()->json($respons);
+    }
+
+    public function editSatuanEditTbsPenjualan(Request $request){
+
+        $satuan_konversi = explode("|", $request->satuan_produk);
+        $edit_tbs_penjualan = EditTbsPenjualan::find($request->id_tbs);
+
+        $subtotal = ($edit_tbs_penjualan->jumlah_produk * $satuan_konversi[5]) - $edit_tbs_penjualan->potongan;
+
+        $edit_tbs_penjualan->update(['satuan_id' => $satuan_konversi[0], 'harga_produk' => $satuan_konversi[5], 'subtotal' => $subtotal]);
 
         $respons['harga_produk'] = $satuan_konversi[5];
         $respons['nama_satuan']     = $satuan_konversi[1];
