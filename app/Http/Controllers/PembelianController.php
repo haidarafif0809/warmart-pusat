@@ -1493,4 +1493,13 @@ class PembelianController extends Controller
 
         return response()->json($respons);
     }
+
+
+    public function editSatuanEditTbsPembelian(Request $request){
+
+        $db = 'App\EditTbsPembelian';
+        $respons = $this->editSatuan($request, $db);
+
+        return response()->json($respons);
+    }
 }
