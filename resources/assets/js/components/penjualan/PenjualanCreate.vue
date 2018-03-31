@@ -1064,7 +1064,7 @@ subtmitEditSatuan(id_produk, id_tbs, subtotal_lama){
   var satuan_tbs = $(".satuan-"+id_produk).attr("data-satuan");
 
   if (satuan_tbs == satuan_produk[0]) {
-    $("#modalEditSatuan").show();
+    $("#modalEditSatuan").hide();
   }else{
 
     axios.post(app.url+'/edit-satuan-tbs-penjualan', newSatuan)

@@ -642,10 +642,10 @@ class PembelianController extends Controller
 
     public function dataSatuanProduk($id_produk)
     {
-        $satuan_dasar = Barang::select('barangs.satuan_id', 'satuans.nama_satuan')
+        $satuan_dasar = Barang::select('barangs.satuan_id', 'satuans.nama_satuan','barangs.harga_jual')
         ->leftJoin('satuans', 'satuans.id', '=', 'barangs.satuan_id')->where('barangs.id_warung', Auth::user()->id_warung)
         ->where('barangs.id', $id_produk)->first();
-        $data_satuans = SatuanKonversi::select('satuan_konversis.id_satuan', 'satuan_konversis.jumlah_konversi', 'satuan_konversis.satuan_dasar', 'satuans.nama_satuan')
+        $data_satuans = SatuanKonversi::select('satuan_konversis.id_satuan', 'satuan_konversis.jumlah_konversi', 'satuan_konversis.satuan_dasar', 'satuan_konversis.harga_jual_konversi', 'satuans.nama_satuan')
         ->leftJoin('satuans', 'satuans.id', '=', 'satuan_konversis.id_satuan')
         ->where('warung_id', Auth::user()->id_warung)
         ->where('satuan_konversis.id_produk', $id_produk)->get();
@@ -655,7 +655,7 @@ class PembelianController extends Controller
             'nama_satuan'     => $satuan_dasar->nama_satuan,
             'satuan_dasar'    => $satuan_dasar->satuan_id,
             'jumlah_konversi' => 1,
-            'satuan'          => $satuan_dasar->satuan_id . "|" . strtoupper($satuan_dasar->nama_satuan) . "|" . $satuan_dasar->satuan_id . "|1|1",
+            'satuan'          => $satuan_dasar->satuan_id . "|" . strtoupper($satuan_dasar->nama_satuan) . "|" . $satuan_dasar->satuan_id . "|1|1|". $satuan_dasar->harga_jual."|".$id_produk,
             ]);
 
         foreach ($data_satuans as $data_satuan) {
@@ -671,7 +671,7 @@ class PembelianController extends Controller
                 'nama_satuan'     => $data_satuan->nama_satuan,
                 'satuan_dasar'    => $data_satuan->satuan_dasar,
                 'jumlah_konversi' => $data_satuan->jumlah_konversi,
-                'satuan'          => $data_satuan->id_satuan . "|" . strtoupper($data_satuan->nama_satuan) . "|" . $data_satuan->satuan_dasar . "|" . $data_satuan->jumlah_konversi . "|" . $jumlah_konversi_dasar,
+                'satuan'          => $data_satuan->id_satuan . "|" . strtoupper($data_satuan->nama_satuan) . "|" . $data_satuan->satuan_dasar . "|" . $data_satuan->jumlah_konversi . "|" . $jumlah_konversi_dasar . "|" . $data_satuan->harga_jual_konversi . "|" . $id_produk,
                 ]);
         }
 
@@ -1464,6 +1464,32 @@ class PembelianController extends Controller
         $respons['tambah_pembelian'] = $tambah_pembelian;
         $respons['edit_pembelian'] = $edit_pembelian;
         $respons['hapus_pembelian'] = $hapus_pembelian;
+
+        return response()->json($respons);
+    }
+
+    public function editSatuan($request, $db){
+
+        $satuan_konversi = explode("|", $request->satuan_produk);
+        $edit_tbs_penjualan = $db::find($request->id_tbs);
+
+        $subtotal = ($edit_tbs_penjualan->jumlah_produk * $satuan_konversi[5]) - $edit_tbs_penjualan->potongan;
+
+        $edit_tbs_penjualan->update(['satuan_id' => $satuan_konversi[0], 'harga_produk' => $satuan_konversi[5], 'subtotal' => $subtotal]);
+
+        $respons['harga_produk'] = $satuan_konversi[5];
+        $respons['nama_satuan']     = $satuan_konversi[1];
+        $respons['satuan_id']     = $satuan_konversi[0];
+        $respons['subtotal']     = $subtotal;
+
+        return $respons;
+    }
+
+
+    public function editSatuanTbsPembelian(Request $request){
+
+        $db = 'App\TbsPembelian';
+        $respons = $this->editSatuan($request, $db);
 
         return response()->json($respons);
     }
