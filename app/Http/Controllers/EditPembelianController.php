@@ -33,7 +33,7 @@ class EditPembelianController extends Controller
 
             // CEK EDIT TBS PEMBELIAN
             $data_tbs = EditTbsPembelian::where('id_produk', $request->id_produk_tbs)
-                ->where('no_faktur', $no_faktur)->where('warung_id', Auth::user()->id_warung);
+            ->where('no_faktur', $no_faktur)->where('warung_id', Auth::user()->id_warung);
 
 //JIKA PRODUK YG DIPILIH SUDAH ADA DI TBS
             if ($data_tbs->count() > 0) {
@@ -42,7 +42,7 @@ class EditPembelianController extends Controller
 
                 $subtotal_edit = ($jumlah_produk * $request->harga_produk) - $data_tbs->first()->potongan;
 
-                $data_tbs->update(['jumlah_produk' => $jumlah_produk, 'subtotal' => $subtotal_edit, 'harga_produk' => $request->harga_produk]);
+                $data_tbs->update(['jumlah_produk' => $jumlah_produk, 'subtotal' => $subtotal_edit, 'harga_produk' => $request->harga_produk, 'satuan_id' => $request->satuan, 'satuan_dasar' => $request->satuan_dasar]);
 
                 return response(200);
             } else {
@@ -62,7 +62,7 @@ class EditPembelianController extends Controller
                     'satuan_id'     => $request->satuan,
                     'satuan_dasar'  => $request->satuan_dasar,
                     'warung_id'     => Auth::user()->id_warung,
-                ]);
+                    ]);
                 return response(200);
             }
         }
@@ -392,7 +392,7 @@ class EditPembelianController extends Controller
 
                     if ($detail_pembelian->count() > 0) {
                         if ($detail_pembelian->first()->harga_produk != $data_produk_tbs->harga_produk) {
-                            Barang::find($data_detail->id_produk)->update(['harga_beli' => $harga_tbs->harga_produk]);
+                            Barang::find($data_produk_tbs->id_produk)->update(['harga_beli' => $data_produk_tbs->harga_produk]);
                         }
                     } else {
                         $barang = Barang::select('harga_beli')->where('id', $data_produk_tbs->id_produk)->where('id_warung', Auth::user()->id_warung);
@@ -408,9 +408,6 @@ class EditPembelianController extends Controller
             foreach ($data_detail_pembelian as $data_detail) {
 
                 $harga_tbs = EditTbsPembelian::select('harga_produk')->where('no_faktur', $data_detail->no_faktur)->where('id_produk', $data_detail->id_produk)->where('warung_id', Auth::user()->id_warung);
-                if ($harga_tbs->count() > 0 and $harga_tbs->first()->harga_produk != $data_detail->harga_produk) {
-                    Barang::find($data_detail->id_produk)->update(['harga_beli' => $harga_tbs->harga_produk]);
-                }
 
                 if (!$hapus_detail = DetailPembelian::destroy($data_detail->id_detail_pembelian)) {
                     //DI BATALKAN PROSES NYA
@@ -434,7 +431,7 @@ class EditPembelianController extends Controller
                     'potongan'      => $data_tbs->potongan,
                     'ppn'           => $data_tbs->ppn,
                     'warung_id'     => Auth::user()->id_warung,
-                ]);
+                    ]);
             }
 
             //INSERT PEMBELIAN
@@ -475,7 +472,7 @@ class EditPembelianController extends Controller
                 'tanggal_jt_tempo' => $request->jatuh_tempo,
                 'keterangan'       => $request->keterangan,
                 'ppn'              => $request->ppn,
-            ]);
+                ]);
 
             $data_pembelian = Pembelian::find($request->id_pembelian);
 

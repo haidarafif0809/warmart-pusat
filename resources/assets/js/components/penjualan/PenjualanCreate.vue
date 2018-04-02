@@ -442,18 +442,18 @@
                 <td>{{ tbs_penjualan.kode_produk }} - {{ tbs_penjualan.nama_produk }}</td>
 
                 <td align="right" >
-                  <a href="#create-penjualan" v-bind:id="'edit-' + tbs_penjualan.id_tbs_penjualan" v-on:click="editEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">{{ new Intl.NumberFormat().format(tbs_penjualan.jumlah_produk) }}</a>
+                  <a href="#create-penjualan" v-bind:id="'edit-' + tbs_penjualan.id_tbs_penjualan" v-on:click="editEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">{{ tbs_penjualan.jumlah_produk | pemisahTitik }}</a>
                 </td>
 
                 <td align="center">
                   <a href="#create-penjualan" v-bind:id="'edit-' + tbs_penjualan.id_tbs_penjualan" v-bind:class="'hurufBesar satuan-' + tbs_penjualan.id_produk" v-bind:data-satuan="''+tbs_penjualan.satuan_id" v-on:click="editSatuanEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal, tbs_penjualan.id_produk)">{{ tbs_penjualan.satuan }}</a>
                 </td>
 
-                <td align="right" >{{ new Intl.NumberFormat().format(tbs_penjualan.harga_produk) }}</td>
+                <td align="right" >{{ tbs_penjualan.harga_produk | pemisahTitik }}</td>
 
                 <td align="right" ><a href="#create-penjualan" v-bind:id="'edit-' + tbs_penjualan.id_tbs_penjualan" v-on:click="potonganEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">{{ tbs_penjualan.potongan }}</a></td>
 
-                <td align="right" > {{ new Intl.NumberFormat().format(tbs_penjualan.subtotal) }}</td>
+                <td align="right" > {{ tbs_penjualan.subtotal | pemisahTitik }}</td>
                 <td align="center"><a href="#create-penjualan" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_penjualan.id_tbs_penjualan" v-on:click="deleteEntry(tbs_penjualan.id_tbs_penjualan, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">Delete</a></td>
               </tr>
             </tbody>                    
@@ -474,7 +474,7 @@
           </div>
           <div class="card-content">
             <p class="category"><font style="font-size:20px;">Subtotal</font></p>
-            <h3 class="card-title"><b><font style="font-size:32px;">{{ new Intl.NumberFormat().format(penjualan.subtotal) }}</font></b></h3>
+            <h3 class="card-title"><b><font style="font-size:32px;">{{ penjualan.subtotal | pemisahTitik }}</font></b></h3>
           </div>
           <div class="card-footer">
             <div class="row"> 
@@ -598,6 +598,14 @@
       app.$store.dispatch('LOAD_KAS_LIST')  
       app.dataSettingPenjualanPos()
       app.getResults()  
+    },
+    filters: {
+      pemisahTitik: function (value) {
+        var angka = [value];
+        var numberFormat = new Intl.NumberFormat('es-ES');
+        var formatted = angka.map(numberFormat.format);
+        return formatted.join('; ');
+      }
     },
     computed : mapState ({    
       produk(){
@@ -945,8 +953,7 @@ submitProdukPenjualan(value){
         if (index >= 0) {
           console.log(app.tbs_penjualan[index])
           app.tbs_penjualan[index].jumlah_produk = resp.data.jumlah_produk
-          app.tbs_penjualan[index].satuan_produk = resp.data.satuan_produk
-          app.tbs_penjualan[index].satuan = resp.data.nama_satuan
+          app.tbs_penjualan[index].satuan = resp.data.satuan
           app.tbs_penjualan[index].harga_produk = resp.data.harga_produk
           app.tbs_penjualan[index].satuan_id = resp.data.satuan_id
           app.tbs_penjualan[index].subtotal = resp.data.subtotalKeseluruhan
@@ -1057,7 +1064,7 @@ subtmitEditSatuan(id_produk, id_tbs, subtotal_lama){
   var satuan_tbs = $(".satuan-"+id_produk).attr("data-satuan");
 
   if (satuan_tbs == satuan_produk[0]) {
-    $("#modalEditSatuan").show();
+    $("#modalEditSatuan").hide();
   }else{
 
     axios.post(app.url+'/edit-satuan-tbs-penjualan', newSatuan)

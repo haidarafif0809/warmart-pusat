@@ -86,7 +86,7 @@
 						@foreach ($detail_penjualan as $detail_penjualans)	
 						<tr>
 							<td class='table1'>{{title_case($detail_penjualans->produk->nama_barang)}} </td>
-							<td class='table1' align='right'>{{$detail_penjualans->produk->satuan->nama_satuan}} </td>
+							<td class='table1' align='right'>{{$detail_penjualans->satuan->nama_satuan}} </td>
 							<td class='table1' align='right'>{{number_format($detail_penjualans->jumlah_produk, 2, ',', '.')}} </td>
 							<td class='table1' align='right'>{{number_format($detail_penjualans->harga_produk, 2, ',', '.')}}</td>
 							<td class='table1' align='right'>{{number_format($detail_penjualans->potongan, 2, ',', '.')}}</td>

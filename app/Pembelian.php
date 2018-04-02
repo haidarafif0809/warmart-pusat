@@ -4,6 +4,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Yajra\Auditable\AuditableTrait;
+use Auth;
 
 class Pembelian extends Model
 {
@@ -70,11 +71,11 @@ class Pembelian extends Model
     public function scopeQueryCetak($query, $id)
     {
         $query->select('w.name AS nama_warung', 'w.alamat AS alamat_warung', 's.nama_suplier AS suplier', 'u.name AS kasir', 'pembelians.potongan AS potongan', 'pembelians.total AS total', 'pembelians.tunai AS tunai', 'pembelians.kembalian AS kembalian', DB::raw('DATE_FORMAT(pembelians.created_at, "%d/%m/%Y %H:%i:%s") as waktu_beli'), 'w.no_telpon AS no_telp_warung', 'pembelians.id AS id', 's.alamat AS alamat_suplier', 'pembelians.status_pembelian AS status_pembelian', 'kas.nama_kas AS nama_kas', 'pembelians.suplier_id AS suplier_id', 'pembelians.no_faktur AS no_faktur')
-            ->leftJoin('warungs AS w', 'pembelians.warung_id', '=', 'w.id')
-            ->leftJoin('users AS u', 'u.id', '=', 'pembelians.created_by')
-            ->leftJoin('supliers AS s', 's.id', '=', 'pembelians.suplier_id')
-            ->leftJoin('kas', 'kas.id', '=', 'pembelians.cara_bayar')
-            ->where('pembelians.id', $id);
+        ->leftJoin('warungs AS w', 'pembelians.warung_id', '=', 'w.id')
+        ->leftJoin('users AS u', 'u.id', '=', 'pembelians.created_by')
+        ->leftJoin('supliers AS s', 's.id', '=', 'pembelians.suplier_id')
+        ->leftJoin('kas', 'kas.id', '=', 'pembelians.cara_bayar')
+        ->where('pembelians.id', $id);
         return $query;
     }
 
@@ -119,5 +120,16 @@ class Pembelian extends Model
 
         return $no_faktur;
         //PROSES MEMBUAT NO. FAKTUR ITEM KELUAR
+    }
+
+    // Transaksi Pembelian
+    public function scopeDataTransaksiPembelian($query)
+    {
+        $query->select('pembelians.id as id', 'pembelians.no_faktur as no_faktur', 'supliers.nama_suplier as nama_suplier', 'pembelians.created_at as created_at', 'pembelians.status_pembelian as status_pembelian', 'pembelians.total as total', 'kas.nama_kas as nama_kas', 'pembelians.potongan as potongan', 'pembelians.tunai as tunai', 'pembelians.kembalian as kembalian', 'pembelians.tanggal_jt_tempo as tanggal_jt_tempo', 'users.name as name')
+        ->leftJoin('supliers', 'pembelians.suplier_id', '=', 'supliers.id')
+        ->leftJoin('kas', 'pembelians.cara_bayar', '=', 'kas.id')
+        ->leftJoin('users', 'pembelians.created_by', '=', 'users.id')
+        ->where('pembelians.warung_id', Auth::user()->id_warung)->orderBy('pembelians.id', 'desc');
+        return $query;
     }
 }

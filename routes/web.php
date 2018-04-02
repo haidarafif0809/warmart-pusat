@@ -559,6 +559,8 @@ Route::post('/pembelian/import-excel', 'PembelianController@importExcel')->middl
 Route::get('/pembelian/template-excel', 'PembelianController@templateExcel')->middleware('auth');
 Route::get('/pembelian/satuan-konversi/{id_produk}', 'PembelianController@dataSatuanProduk')->middleware('auth');
 Route::get('/pembelian/satuan-konversi-edit/{id_produk}', 'PembelianController@dataSatuanProdukEdit')->middleware('auth');
+Route::post('/pembelian/edit-satuan-tbs-pembelian', 'PembelianController@editSatuanTbsPembelian')->middleware('auth');
+
 
 //Edit Pembelian
 Route::get('/edit-pembelian/proses-tambah-tbs-pembelian', 'EditPembelianController@proses_tambah_tbs_pembelian')->middleware('auth');
@@ -570,6 +572,7 @@ Route::get('/edit-pembelian/cek-persen-tax-pembelian', 'EditPembelianController@
 Route::get('/edit-pembelian/proses-edit-tax-tbs-pembelian', 'EditPembelianController@editTaxTbsPembelian')->middleware('auth');
 Route::get('/edit-pembelian/cek-total-kas-pembelian', 'EditPembelianController@total_kas')->middleware('auth');
 Route::get('/edit-pembelian/cek-data-tbs-pembelian/{id}', 'EditPembelianController@cekDataPembelian')->middleware('auth');
+Route::post('/pembelian/edit-satuan-edit-tbs-pembelian', 'PembelianController@editSatuanEditTbsPembelian')->middleware('auth');
 
 // PEMBELIAN
 
@@ -1181,7 +1184,12 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
         'middleware' => ['auth'],
         'as'         => 'penjualan.edit_satuan_tbs_penjualan',
         'uses'       => 'PenjualanController@editSatuanTbsPenjualan',
-    ]);
+        ]);
+    Route::post('/penjualan/edit-satuan-edit-tbs-penjualan', [
+        'middleware' => ['auth'],
+        'as'         => 'penjualan.edit_satuan_edit_tbs_penjualan',
+        'uses'       => 'PenjualanController@editSatuanEditTbsPenjualan',
+        ]);
 
     Route::post('/penjualan/edit-jumlah-tbs-penjualan', [
         'middleware' => ['auth'],
