@@ -471,8 +471,9 @@ class DetailPenjualan extends Model
     //Data pencarian penjualan terbaik per item
     public function scopePenjualanTerbaik($detail_penjualan, $request)
     {
-        $detail_penjualan = DetailPenjualan::select([DB::raw('SUM(detail_penjualans.jumlah) as jumlah_produk'), 'barangs.nama_barang as nama_barang', 'barangs.kode_barang as kode_barang', 'detail_penjualans.id_produk as id_produk'])
+        $detail_penjualan = DetailPenjualan::select([DB::raw('SUM(detail_penjualans.jumlah) as jumlah_produk'), 'barangs.nama_barang as nama_barang', 'barangs.kode_barang as kode_barang','barangs.kode_barcode as kode_barcode','satuans.nama_satuan as satuan', 'detail_penjualans.id_produk as id_produk'])
             ->leftJoin('barangs', 'barangs.id', '=', 'detail_penjualans.id_produk')
+            ->leftJoin('satuans', 'satuans.id', '=', 'barangs.satuan_id')
             ->where(DB::raw('DATE(detail_penjualans.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
             ->where(DB::raw('DATE(detail_penjualans.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal));
         return $detail_penjualan;
@@ -482,13 +483,15 @@ class DetailPenjualan extends Model
     public function scopeCariPenjualanTerbaik($detail_penjualans, $request)
     {
         $search            = $request->search;
-        $detail_penjualans = DetailPenjualan::select([DB::raw('SUM(detail_penjualans.jumlah) as jumlah_produk'), 'barangs.nama_barang as nama_barang', 'barangs.kode_barang as kode_barang', 'detail_penjualans.id_produk as id_produk'])
+        $detail_penjualans = DetailPenjualan::select([DB::raw('SUM(detail_penjualans.jumlah) as jumlah_produk'), 'barangs.nama_barang as nama_barang', 'barangs.kode_barang as kode_barang','barangs.kode_barcode as kode_barcode','satuans.nama_satuan as satuan', 'detail_penjualans.id_produk as id_produk'])
             ->leftJoin('barangs', 'barangs.id', '=', 'detail_penjualans.id_produk')
+            ->leftJoin('satuans', 'satuans.id', '=', 'barangs.satuan_id')
             ->where(DB::raw('DATE(detail_penjualans.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
             ->where(DB::raw('DATE(detail_penjualans.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
             ->where(function ($query) use ($search) {
                 $query->orWhere('barangs.nama_barang', 'LIKE', '%' . $search . '%')
-                    ->orWhere('barangs.kode_barang', 'LIKE', '%' . $search . '%');
+                    ->orWhere('barangs.kode_barang', 'LIKE', '%' . $search . '%')
+                    ->orWhere('barangs.kode_barcode', 'LIKE', '%' . $search . '%');
             });
         return $detail_penjualans;
     }
