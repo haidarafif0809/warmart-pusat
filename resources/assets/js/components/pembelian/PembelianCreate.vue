@@ -340,6 +340,39 @@
       </div>
       <!--    end small modal -->
 
+      <!-- small modal -->
+      <div class="modal" id="modalEditSatuan" role="dialog" tabindex="-1"  aria-labelledby="myModalLabel" aria-hidden="true" >
+        <div class="modal-dialog modal-medium">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close"  v-on:click="closeModalJumlahProduk()" v-shortkey.push="['f9']" @shortkey="closeModalJumlahProduk()"> &times;</button> 
+            </div>
+
+            <form class="form-horizontal" v-on:submit.prevent="subtmitEditSatuan(inputTbsPembelian.id_produk, inputTbsPembelian.id_tbs, inputTbsPembelian.subtotal)"> 
+              <div class="modal-body">
+                <h3 class="text-center"><b>{{inputTbsPembelian.nama_produk}}</b></h3>
+
+                <div class="form-group">
+
+                  <div class="col-md-12 col-xs-12 hurufBesar">
+                    <selectize-component v-model="inputTbsPembelian.satuan_produk" :settings="placeholder_satuan" id="satuan" name="satuan" ref='satuan'> 
+                      <option v-for="satuans, index in satuan" v-bind:value="satuans.satuan" class="pull-left">{{ satuans.nama_satuan }}</option>
+                    </selectize-component>
+                  </div>
+                </div>
+              </div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-simple" v-on:click="closeModalJumlahProduk()" v-shortkey.push="['f9']" @shortkey="closeModalJumlahProduk()">Close(F9)</button>
+                <button type="submit" class="btn btn-info">Tambah</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <!--    end small modal -->
+
+
       <div class="card" style="margin-bottom: 1px; margin-top: 1px;" ><!-- CARD --> 
         <div class="card-content"> 
           <h4 class="card-title" style="margin-bottom: 1px; margin-top: 1px;"> Pembelian </h4> 
@@ -381,7 +414,7 @@
                   <tr>
                     <th  >Produk</th>
                     <th  style="text-align:right;">Jumlah</th>
-                    <th  style="text-align:right;">Satuan</th>
+                    <th  style="text-align:center;">Satuan</th>
                     <th  style="text-align:right;">Harga</th>
                     <th  style="text-align:right;">Potongan</th>
                     <th  style="text-align:right;">Pajak</th>
@@ -397,7 +430,11 @@
                       <a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-on:click="editEntryJumlah(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk,tbs_pembelian.subtotal)"><p align='right'>{{ tbs_pembelian.jumlah_produk_pemisah }}</p>
                       </a>
                     </td>
-                    <td align="right" v-bind:class="'satuan-' + tbs_pembelian.id_produk" v-bind:data-satuan="''+tbs_pembelian.satuan_id">{{ tbs_pembelian.nama_satuan }}</td>
+
+                    <td align="center">
+                      <a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-bind:class="'hurufBesar satuan-' + tbs_pembelian.id_produk" v-bind:data-satuan="''+tbs_pembelian.satuan_id" v-on:click="editSatuanEntry(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk,tbs_pembelian.subtotal, tbs_pembelian.id_produk)">{{ tbs_pembelian.nama_satuan }}</a>
+                    </td>
+                    
                     <td>
                       <a href="#create-pembelian" v-bind:id="'edit-' + tbs_pembelian.id_tbs_pembelian" v-on:click="editEntryHarga(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk,tbs_pembelian.subtotal)" v-bind:class="'harga-' + tbs_pembelian.id_produk" v-bind:data-harga="''+tbs_pembelian.harga_produk"><p align='right'>{{ tbs_pembelian.harga_pemisah }}</p>
                       </a>
@@ -707,7 +744,6 @@ getSatuan(id_produk){
       $.each(resp.data, function (i, item) {
         if (resp.data[i].id === resp.data[i].satuan_dasar) {
           app.inputTbsPembelian.satuan_produk = resp.data[i].satuan;
-          $('#satuan')[0].selectize.unlock();
         }
       });
 
@@ -716,7 +752,6 @@ getSatuan(id_produk){
       $.each(resp.data, function (i, item) {
         if (resp.data[i].id === parseInt(satuan_tbs)) {
           app.inputTbsPembelian.satuan_produk = resp.data[i].satuan;
-          $('#satuan')[0].selectize.lock();
         }
       });
 
@@ -1052,6 +1087,53 @@ editEntryJumlah(id, index,nama_produk,subtotal_lama) {
   }); 
 
 },//END editEntryJumlah
+editSatuanEntry(id, index,nama_produk,subtotal_lama, id_produk) {
+  var app = this;
+  app.inputTbsPembelian.nama_produk = nama_produk;
+  app.inputTbsPembelian.id_tbs = id;
+  app.inputTbsPembelian.subtotal = subtotal_lama;
+  app.getSatuan(id_produk);
+  $("#modalEditSatuan").show();
+},
+subtmitEditSatuan(id_produk, id_tbs, subtotal_lama){
+
+  var app = this;
+  app.inputTbsPembelian.produk = id_produk;
+  var newSatuan = app.inputTbsPembelian;
+  var satuan_produk = app.inputTbsPembelian.satuan_produk.split("|");
+  var satuan_tbs = $(".satuan-"+id_produk).attr("data-satuan");
+
+  if (satuan_tbs == satuan_produk[0]) {
+    $("#modalEditSatuan").hide();
+  }else{
+
+    axios.post(app.url+'/edit-satuan-tbs-pembelian', newSatuan)
+    .then(function (resp) {
+
+      var subtotal = (parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(subtotal_lama) + parseInt(resp.data.subtotal))
+
+      function cekTbs(tbs) { 
+        return tbs.id_tbs_pembelian === id_tbs
+      }
+
+
+      app.getResults();
+      
+      app.inputPembayaranPembelian.subtotal = subtotal.toFixed(2)
+      app.inputPembayaranPembelian.total_akhir = subtotal.toFixed(2)
+      app.hitungPotonganPersen()
+      app.inputTbsPembelian.id_tbs = ''
+      app.openSelectizeProduk() 
+      $("#modalEditSatuan").hide();
+
+    })
+    .catch(function (resp) {
+      console.log(resp);                  
+      app.loading = false;
+      alert("Tidak Dapat Mengubah Satuan");
+    });
+  }
+},
 editEntryHarga(id, index,nama_produk,subtotal_lama) {    
   var app = this;   
   swal({ 
@@ -1522,6 +1604,7 @@ prosesTransaksiSelesai(){
 },//akhir prosesTransaksiSelesai
 closeModalJumlahProduk(){  
   $("#modalJumlahProduk").hide(); 
+  $("#modalEditSatuan").hide(); 
   this.openSelectizeProduk();
 },
 importExcel(){

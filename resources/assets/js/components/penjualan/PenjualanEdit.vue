@@ -264,6 +264,38 @@
 </div> 
 <!--    end small modal --> 
 
+<!-- small modal -->
+<div class="modal" id="modalEditSatuan" role="dialog" tabindex="-1"  aria-labelledby="myModalLabel" aria-hidden="true" >
+  <div class="modal-dialog modal-medium">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close"  v-on:click="closeModalJumlahProduk()" v-shortkey.push="['f9']" @shortkey="closeModalJumlahProduk()"> &times;</button> 
+      </div>
+
+      <form class="form-horizontal" v-on:submit.prevent="subtmitEditSatuan(inputTbsPenjualan.id_produk, inputTbsPenjualan.id_tbs, inputTbsPenjualan.subtotal)"> 
+        <div class="modal-body">
+          <h3 class="text-center"><b>{{inputTbsPenjualan.nama_produk}}</b></h3>
+
+          <div class="form-group">
+
+            <div class="col-md-12 col-xs-12 hurufBesar">
+              <selectize-component v-model="inputTbsPenjualan.satuan_produk" :settings="placeholder_satuan" id="satuan" name="satuan" ref='satuan'> 
+                <option v-for="satuans, index in satuan" v-bind:value="satuans.satuan" class="pull-left">{{ satuans.nama_satuan }}</option>
+              </selectize-component>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-simple" v-on:click="closeModalJumlahProduk()" v-shortkey.push="['f9']" @shortkey="closeModalJumlahProduk()">Close(F9)</button>
+          <button type="submit" class="btn btn-info">Tambah</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!--    end small modal -->
+
 
 
 <div class="modal" id="modal_setting" role="dialog" data-backdrop=""> 
@@ -408,18 +440,18 @@
                   <td>{{ tbs_penjualan.kode_produk }} - {{ tbs_penjualan.nama_produk }}</td>
 
                   <td align="right">
-                    <a v-bind:href="'#edit-penjualan/'+tbs_penjualan.id_penjualan_pos"  v-bind:id="'edit-' + tbs_penjualan.id_edit_tbs_penjualans" v-on:click="editEntry(tbs_penjualan.id_edit_tbs_penjualans, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">{{ new Intl.NumberFormat().format(tbs_penjualan.jumlah_produk) }}</a>
+                    <a v-bind:href="'#edit-penjualan/'+tbs_penjualan.id_penjualan_pos"  v-bind:id="'edit-' + tbs_penjualan.id_edit_tbs_penjualans" v-on:click="editEntry(tbs_penjualan.id_edit_tbs_penjualans, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">{{ tbs_penjualan.jumlah_produk | pemisahTitik }}</a>
                   </td>
 
                   <td align="center">
-                    <a href="#edit-penjualan" v-bind:id="'edit-' + tbs_penjualan.id_edit_tbs_penjualans" v-bind:class="'hurufBesar satuan-' + tbs_penjualan.id_produk" v-bind:data-satuan="''+tbs_penjualan.satuan_id" v-on:click="editSatuanEntry(tbs_penjualan.id_edit_tbs_penjualans, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal, tbs_penjualan.id_produk)">{{ tbs_penjualan.satuan }}</a>
+                    <a v-bind:href="'#edit-penjualan/'+tbs_penjualan.id_penjualan_pos" v-bind:id="'edit-' + tbs_penjualan.id_edit_tbs_penjualans" v-bind:class="'hurufBesar satuan-' + tbs_penjualan.id_produk" v-bind:data-satuan="''+tbs_penjualan.satuan_id" v-on:click="editSatuanEntry(tbs_penjualan.id_edit_tbs_penjualans, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal, tbs_penjualan.id_produk)">{{ tbs_penjualan.satuan }}</a>
                   </td>
 
-                  <td align="right">{{ new Intl.NumberFormat().format(tbs_penjualan.harga_produk) }}</td>
+                  <td align="right">{{ tbs_penjualan.harga_produk | pemisahTitik }}</td>
 
                   <td align="right"><a v-bind:href="'#edit-penjualan/'+tbs_penjualan.id_penjualan_pos"  v-bind:id="'edit-' + tbs_penjualan.id_edit_tbs_penjualans" v-on:click="potonganEntry(tbs_penjualan.id_edit_tbs_penjualans, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">{{ tbs_penjualan.potongan }}</a></td>
 
-                  <td align="right"> {{ new Intl.NumberFormat().format(tbs_penjualan.subtotal) }}</td>
+                  <td align="right"> {{ tbs_penjualan.subtotal | pemisahTitik }}</td>
 
                   <td align="center"><a v-bind:href="'#edit-penjualan/'+tbs_penjualan.id_penjualan_pos"  class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_penjualan.id_edit_tbs_penjualans" v-on:click="deleteEntry(tbs_penjualan.id_edit_tbs_penjualans, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">Delete</a></td>
                 </tr>
@@ -441,7 +473,7 @@
             </div>
             <div class="card-content">
               <p class="category">Subtotal</p>
-              <h3 class="card-title"><b><font style="font-size:32px;">{{ new Intl.NumberFormat().format(penjualan.subtotal) }}</font></b></h3>
+              <h3 class="card-title"><b><font style="font-size:32px;">{{ penjualan.subtotal | pemisahTitik }}</font></b></h3>
             </div>
             <div class="card-footer">
               <div class="row"> 
@@ -457,7 +489,7 @@
         </div>
       </div>
 
-      <p style="color: red; font-style: italic;">*Note : Klik Kolom Jumlah, Harga, & Potongan Untuk Mengubah Nilai.</p>      
+      <p style="color: red; font-style: italic;">*Note : Klik Kolom Jumlah, Satuan, & Potongan Untuk Mengubah Nilai.</p>      
 
 
     </div><!-- / PANEL BODY -->
@@ -563,6 +595,14 @@
     app.getResults();
     app.dataSettingPenjualanPos();
     app.id_penjualan_pos = app.$route.params.id;
+  },
+  filters: {
+    pemisahTitik: function (value) {
+      var angka = [value];
+      var numberFormat = new Intl.NumberFormat('es-ES');
+      var formatted = angka.map(numberFormat.format);
+      return formatted.join('; ');
+    }
   },
   computed : mapState ({    
     produk(){
@@ -1019,6 +1059,54 @@ editJumlahProdukPenjualan(value,id,nama_produk,subtotal_lama){
     });
   }
 },
+editSatuanEntry(id, index,nama_produk,subtotal_lama, id_produk) {
+  var app = this;
+  app.inputTbsPenjualan.nama_produk = nama_produk;
+  app.inputTbsPenjualan.id_tbs = id;
+  app.inputTbsPenjualan.subtotal = subtotal_lama;
+  app.getSatuan(id_produk);
+  $("#modalEditSatuan").show();
+},
+subtmitEditSatuan(id_produk, id_tbs, subtotal_lama){
+
+  var app = this;
+  var newSatuan = app.inputTbsPenjualan;
+  var satuan_produk = app.inputTbsPenjualan.satuan_produk.split("|");
+  console.log(app.inputTbsPenjualan.satuan_produk)
+  var satuan_tbs = $(".satuan-"+id_produk).attr("data-satuan");
+
+  if (satuan_tbs == satuan_produk[0]) {
+    $("#modalEditSatuan").show();
+  }else{
+
+    axios.post(app.url+'/edit-satuan-edit-tbs-penjualan', newSatuan)
+    .then(function (resp) {
+
+      var subtotal = (parseFloat(app.penjualan.subtotal) - parseFloat(subtotal_lama)) + parseFloat(resp.data.subtotal)
+
+      function cekTbs(tbs) { 
+        return tbs.id_edit_tbs_penjualans === id_tbs
+      }
+      var index = app.tbs_penjualan.findIndex(cekTbs)  
+      app.tbs_penjualan[index].harga_produk = resp.data.harga_produk
+      app.tbs_penjualan[index].satuan = resp.data.nama_satuan
+      app.tbs_penjualan[index].satuan_id = resp.data.satuan_id  
+      app.tbs_penjualan[index].subtotal = resp.data.subtotal
+      app.penjualan.subtotal = subtotal.toFixed(2)
+      app.penjualan.total_akhir = subtotal.toFixed(2)
+      app.potonganPersen()
+      app.inputTbsPenjualan.id_tbs = ''
+      app.openSelectizeProduk() 
+      $("#modalEditSatuan").hide();
+
+    })
+    .catch(function (resp) {
+      console.log(resp);                  
+      app.loading = false;
+      alert("Tidak Dapat Mengubah Satuan");
+    });
+  }
+},
 potonganEntry(id, index,nama_produk,subtotal_lama) {    
   var app = this;     
   app.$swal({
@@ -1291,6 +1379,7 @@ closeModalX(){
 },
 closeModalJumlahProduk(){   
   $("#modalJumlahProduk").hide();  
+  $("#modalEditSatuan").hide();  
   this.openSelectizeProduk(); 
 },
 alertTbs(pesan) {
