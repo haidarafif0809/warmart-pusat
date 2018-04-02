@@ -59,9 +59,9 @@ class SettingPengirimanController extends Controller
     {   
         $defaultAlamatPelanggan = SettingDefaultAlamatPelanggan::select('provinsi','kabupaten','status_aktif')->first();
         $provinsi = Indonesia::allProvinces();
-	$kabupaten = Indonesia::allCities()->where('province_id',$defaultAlamatPelanggan->provinsi);
+        $kabupaten = Indonesia::allCities()->where('province_id',$defaultAlamatPelanggan->provinsi);
         $response['provinsi'] = $provinsi;
-	$response['kabupaten'] = $kabupaten;
+        $response['kabupaten'] = $kabupaten;
         $response['defaultAlamatPelanggan'] = $defaultAlamatPelanggan;
         return response()->json($response);
     }
@@ -88,5 +88,9 @@ class SettingPengirimanController extends Controller
                 'default_bank' => $value['setting']['default_bank'],
             ]);
         }
+    }
+
+    public function simpanSettingDefaultAlamatPengiriman(Request $request){
+        $setting = SettingDefaultAlamatPelanggan::first()->update(['provinsi' => $request->provinsi, 'kabupaten' => $request->kabupaten ,'status_aktif' => $request->status_aktif]);
     }
 }

@@ -62,12 +62,12 @@
                         </li>
                         <li>
                             <a href="#default_alamat_pelanggan" role="tab" data-toggle="tab" style="margin-left:10px;" v-on:click="loadDefaultAlamatPelanggan">
-                               Default Alamat Pelanggan
-                           </a>
-                       </li>
-                   </ul>
+                             Default Alamat Pelanggan
+                         </a>
+                     </li>
+                 </ul>
 
-                   <div class="tab-content">
+                 <div class="tab-content">
                     <div class="tab-pane active" id="jasa_pengiriman">
 
                         <div class="table-responsive">
@@ -160,7 +160,7 @@
 
                     </div>
                     <div class="tab-pane" id="default_alamat_pelanggan">                                
-                        <form v-on:submit.prevent="saveForm()" class="form-horizontal">                            
+                        <form v-on:submit.prevent="saveSettingDefaultAlamatPelanggan()" class="form-horizontal">                            
 
                             <div class="form-group">
                               <label for="provinsi" class="col-md-2 control-label">Provinsi</label>
@@ -187,7 +187,7 @@
                           <div class="col-md-4">
                               <div class="checkbox">
                                   <label>
-                                    <input type="checkbox" name="status_aktif" v-bind:value="1" v-model="settingDefaultAlamatPelanggan.status_aktif">
+                                    <input type="checkbox" name="status_aktif" true-value="1" false-value="0" v-model="settingDefaultAlamatPelanggan.status_aktif">
                                     <b v-if="settingDefaultAlamatPelanggan.status_aktif == 1">Ya</b>
                                     <b v-if="settingDefaultAlamatPelanggan.status_aktif == 0">Tidak</b>
                                 </label>
@@ -223,7 +223,6 @@ export default {
     },
     data: function () {
         return {
-            loadingKabupaten : false,
             errors : [],
             provinsi : [],
             kabupaten : [],
@@ -250,8 +249,10 @@ export default {
         }
     },
     watch : {
-     'settingDefaultAlamatPelanggan.provinsi':function(){
-        this.loadKabupaten()
+       'settingDefaultAlamatPelanggan.provinsi':function(){
+        if (this.settingDefaultAlamatPelanggan.provinsi != '') {            
+            this.loadKabupaten()
+        }
     }
 },
 methods: {
@@ -331,6 +332,20 @@ methods: {
             }
         });
     },
+    saveSettingDefaultAlamatPelanggan(){
+        var app = this; 
+        var newSettingDefaultAlamatPelanggan = app.settingDefaultAlamatPelanggan;
+
+        axios.post(app.url+'/simpan-setting-default-alamat-pengiriman', newSettingDefaultAlamatPelanggan) 
+        .then(function (resp) {
+            app.message = 'Berhasil Menyimpan Setting Default Alamat Pelanggan';
+            app.alert(app.message);          
+        })
+        .catch(function (resp) {
+            console.log(resp);
+            alert("Tidak Dapat Menyimpan Setting Default Alamat Pelanggan");
+        });
+    },
     loadDefaultAlamatPelanggan(){
         var app = this; 
 
@@ -350,17 +365,17 @@ methods: {
         var app = this;
         var provinsi_id = app.settingDefaultAlamatPelanggan.provinsi
         var type = "kabupaten";
-        app.loadingKabupaten = true;
-        
+
         app.$refs.kabupaten.$el.selectize.settings.placeholder = "Tunggu Sebentar ...";
         app.$refs.kabupaten.$el.selectize.updatePlaceholder();
         axios.get(app.url_wilayah+'/pilih-wilayah/'+provinsi_id+'/'+type)
         .then(function (resp) {
+
             app.$refs.kabupaten.$el.selectize.clearOptions();            
             app.$refs.kabupaten.$el.selectize.settings.placeholder = "Pilih Kabupaten";
             app.$refs.kabupaten.$el.selectize.updatePlaceholder();
-            app.kabupaten = resp.data;            
-            app.loadingKabupaten = false;
+            app.kabupaten = resp.data;    
+            app.$refs.kabupaten.$el.selectize.focus();
 
         })
         .catch(function (resp) {

@@ -582,6 +582,7 @@ Route::get('/setting-pengiriman/view-bank', 'SettingPengirimanController@viewBan
 Route::get('/setting-pengiriman/view-default-alamat-pengiriman', 'SettingPengirimanController@viewDefaultAlamatPengriman')->middleware('auth');
 Route::post('/setting-pengiriman/simpan-setting-pengiriman', 'SettingPengirimanController@simpanSetting')->middleware('auth');
 Route::post('/setting-pengiriman/simpan-setting-bank', 'SettingPengirimanController@simpanSettingBank')->middleware('auth');
+Route::post('/setting-pengiriman/simpan-setting-default-alamat-pengiriman', 'SettingPengirimanController@simpanSettingDefaultAlamatPengiriman')->middleware('auth');
 
 // HAPUS TBS PEMBELIAN
 Route::delete('/pembelian/hapus-tbs-pembelian/{id}', [
@@ -1184,12 +1185,12 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
         'middleware' => ['auth'],
         'as'         => 'penjualan.edit_satuan_tbs_penjualan',
         'uses'       => 'PenjualanController@editSatuanTbsPenjualan',
-        ]);
+    ]);
     Route::post('/penjualan/edit-satuan-edit-tbs-penjualan', [
         'middleware' => ['auth'],
         'as'         => 'penjualan.edit_satuan_edit_tbs_penjualan',
         'uses'       => 'PenjualanController@editSatuanEditTbsPenjualan',
-        ]);
+    ]);
 
     Route::post('/penjualan/edit-jumlah-tbs-penjualan', [
         'middleware' => ['auth'],
