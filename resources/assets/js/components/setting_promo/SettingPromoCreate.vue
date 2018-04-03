@@ -63,7 +63,7 @@
 												<a href="#pablo" class="btn btn-danger btn-round fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i> Batal</a>
 											</div>
 											<span v-if="errors.baner_promo" id="baner_promo_error" class="label label-danger">{{ errors.baner_promo[0] }}</span>
-											<a style="color: red;">Size Baner (Ukuran Max : 3MB , Ukuran Dimensi : 1450 × 750 )</a>
+										<a style="color: red;">Size Baner (Ukuran Max : 3MB , Ukuran Dimensi : 945 × 294 )</a>
 										</div>
 									</div>
 								</div> 
@@ -126,22 +126,22 @@
 								</div> 
 
 								<div class="form-group">
-										<label for="jenis_promo" class="col-md-2 control-label">Jenis Promo</label>
+										<label for="jenis_promo" class="col-md-2 control-label">Judul Promo</label>
 										<div class="col-md-5">
-											<input class="form-control" autocomplete="off" placeholder="Jenis Promo" v-model="setting.jenis_promo" type="text" name="jenis_promo" id="jenis_promo" ref="jenis_promo" autofocus="">
-											<span v-if="errors.jenis_promo" id="jenis_promo_error" class="label label-danger">{{ errors.jenis_promo[0] }}</span>
+											<input class="form-control" autocomplete="off" placeholder="Judul Promo" v-model="setting.jenis_promo" type="text" name="jenis_promo" id="jenis_promo" ref="jenis_promo" autofocus=""> <span v-if="errors.jenis_promo" id="jenis_promo_error" class="label label-danger">{{ errors.jenis_promo[0] }}</span>
 										</div>
 									</div>
 
 								<div class="form-group">
-										<label for="status_aktif" class="col-md-2 control-label">Status</label>
-										<div class="togglebutton col-md-10">
-											<label>
-												<input type="checkbox" v-model="setting.status_aktif" name="status_aktif" id="status_aktif" value="1">
-												<font v-if="setting.status_aktif == 1" class="status_aktif">Ya</font>
-												<font v-else class="status_aktif">Tidak</font>
-											</label>
-										</div>
+										<label for="status_aktif" class="col-md-2 control-label">Status Aktif</label>
+										<div class="checkbox col-md-10">
+			                                  <label>
+			                                    <input type="checkbox" name="status_aktif" true-value="1" false-value="0" v-model="setting.status_aktif">
+			                                    <b v-if="setting.status_aktif == 1">Ya</b>
+			                                    <b v-if="setting.status_aktif == 0">Tidak</b>
+			                                </label>
+			                            </div> 
+										</label>
 								</div> 
 							         
 

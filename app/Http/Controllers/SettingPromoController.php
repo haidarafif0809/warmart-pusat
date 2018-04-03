@@ -196,7 +196,7 @@ return response()->json([
                             // membuat nama file random berikut extension
                     $filename     = str_random(40) . '.' . $extension;
                     $image_resize = Image::make($baner_promo->getRealPath());
-                    $image_resize->fit(1450, 750);
+                    $image_resize->fit(945, 294);
                     $image_resize->save(public_path('baner_setting_promo/' . $filename));
                     $insert_setting->baner_promo = $filename;
                             // menyimpan field foto_kamar di database kamar dengan filename yang baru dibuat
