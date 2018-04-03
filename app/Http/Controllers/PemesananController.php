@@ -208,9 +208,11 @@ class PemesananController extends Controller
                 }
 
                 if ($request->metode_pembayaran == "TRANSFER") {
-                    $subtotal = (str_replace('.', '', $request->ongkos_kirim) + $query_hitung_total['total_pesanan']) + $kode_unik_transfer;
+                    $subtotal = (str_replace('.', '', $request->ongkos_kirim) + $query_hitung_total['total_pesanan']) + $kode_unik_transfer;  
+                    $bank_transfer = $request->bank;
                 } else {
                     $subtotal = (str_replace('.', '', $request->ongkos_kirim) + $query_hitung_total['total_pesanan']);
+                    $bank_transfer =  "-";
                 }
 
                 // INSERT KE PESANAN PELANGGAN
@@ -226,7 +228,7 @@ class PemesananController extends Controller
                     'layanan_kurir'      => $layanan_kurir,
                     'metode_pembayaran'  => $request->metode_pembayaran,
                     'biaya_kirim'        => str_replace('.', '', $request->ongkos_kirim),
-                    'bank_transfer'      => "-",
+                    'bank_transfer'      => $bank_transfer,
                     'kode_unik_transfer' => $kode_unik_transfer,
                 ]);
 
@@ -263,8 +265,10 @@ class PemesananController extends Controller
                 }
                 if ($request->metode_pembayaran == "TRANSFER") {
                     $subtotal = (str_replace('.', '', $request->ongkos_kirim) + $query_hitung_total['total_pesanan']) + $kode_unik_transfer;
+                    $bank_transfer = $request->bank;
                 } else {
                     $subtotal = (str_replace('.', '', $request->ongkos_kirim) + $query_hitung_total['total_pesanan']);
+                    $bank_transfer =  "-";
                 }
 
                 // INSERT PESANAN PELANGGAN
@@ -280,7 +284,7 @@ class PemesananController extends Controller
                     'layanan_kurir'      => $layanan_kurir,
                     'metode_pembayaran'  => $request->metode_pembayaran,
                     'biaya_kirim'        => str_replace('.', '', $request->ongkos_kirim),
-                    'bank_transfer'      => "-",
+                    'bank_transfer'      => $bank_transfer,
                     'kode_unik_transfer' => $kode_unik_transfer,
                 ]);
 
