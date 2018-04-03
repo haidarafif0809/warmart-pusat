@@ -20,6 +20,7 @@ use Jenssegers\Agent\Agent;
 use OpenGraph;
 use SEOMeta;
 use Session;
+use App\SettingDefaultAlamatPelanggan;
 
 class PemesananController extends Controller
 {
@@ -72,6 +73,7 @@ class PemesananController extends Controller
             $berat_barang = $berat_barang += $keranjang_belanjaans->produk->berat;
         }
 
+        // CEK LOKASI WARUNG
         $user = Auth::user();
         if ($cek_belanjaan == 0) {
             $id_warung      = 0;
@@ -88,29 +90,53 @@ class PemesananController extends Controller
                 $kabupaten      = 0;
                 $nama_kabupaten = 0;
             }
-        }
+        } // END CEK LOKASI WARUNG
+
+ // CEK LOKASI PELANGGAN
+        $data_pelanggan = $this->cekLokasiPelanggan();
+         // END CEK LOKASI WARUNG
+
+        $jasa_pengirim = SettingJasaPengiriman::where('tampil_jasa_pengiriman', 1)->pluck('jasa_pengiriman', 'jasa_pengiriman');
+
+        $bank_transfer = BankWarung::select(['setting_transfer_banks.nama_bank', 'setting_transfer_banks.id'])
+        ->leftJoin('setting_transfer_banks', 'setting_transfer_banks.id', '=', 'bank_warungs.nama_bank')
+        ->pluck('setting_transfer_banks.nama_bank', 'setting_transfer_banks.id');
+
+        return view('layouts.selesaikan_pemesanan', ['pagination' => $pagination, 'keranjang_belanjaan' => $keranjang_belanjaan, 'cek_belanjaan' => $cek_belanjaan, 'agent' => $agent, 'jumlah_produk' => $jumlah_produk, 'logo_warmart' => $logo_warmart, 'subtotal' => $subtotal, 'user' => $user, 'berat_barang' => $berat_barang, 'kabupaten' => $nama_kabupaten, 'data_pelanggan' => $data_pelanggan, 'kurir' => $jasa_pengirim, 'bank' => $bank_transfer]);
+
+    }
+
+    public function cekLokasiPelanggan(){
+         // CEK LOKASI PELANGGAN
         if (Auth::check() == false) {
-            $data_pelanggan['provinsi_pelanggan']  = '';
-            $data_pelanggan['kabupaten_pelanggan'] = '';
+            $data_pelanggan = $this->cekDefaultAlamatPelanggan();
         } else {
             $alamat_customer = LokasiPelanggan::select(['provinsi', 'kabupaten'])->where('id_pelanggan', Auth::user()->id);
             if ($alamat_customer->count() > 0) {
                 $alamat                                = $alamat_customer->first();
                 $data_pelanggan['provinsi_pelanggan']  = Indonesia::findProvince($alamat->provinsi)->name;
                 $data_pelanggan['kabupaten_pelanggan'] = Indonesia::findCity($alamat->kabupaten)->name;
-            } else {
-                $data_pelanggan['provinsi_pelanggan']  = '';
-                $data_pelanggan['kabupaten_pelanggan'] = '';
+            } else {                
+                $data_pelanggan = $this->cekDefaultAlamatPelanggan();
             }
         }
-        $jasa_pengirim = SettingJasaPengiriman::where('tampil_jasa_pengiriman', 1)->pluck('jasa_pengiriman', 'jasa_pengiriman');
+         // END CEK LOKASI WARUNG
 
-        $bank_transfer = BankWarung::select(['setting_transfer_banks.nama_bank', 'setting_transfer_banks.id'])
-            ->leftJoin('setting_transfer_banks', 'setting_transfer_banks.id', '=', 'bank_warungs.nama_bank')
-            ->pluck('setting_transfer_banks.nama_bank', 'setting_transfer_banks.id');
+        return $data_pelanggan;
 
-        return view('layouts.selesaikan_pemesanan', ['pagination' => $pagination, 'keranjang_belanjaan' => $keranjang_belanjaan, 'cek_belanjaan' => $cek_belanjaan, 'agent' => $agent, 'jumlah_produk' => $jumlah_produk, 'logo_warmart' => $logo_warmart, 'subtotal' => $subtotal, 'user' => $user, 'berat_barang' => $berat_barang, 'kabupaten' => $nama_kabupaten, 'data_pelanggan' => $data_pelanggan, 'kurir' => $jasa_pengirim, 'bank' => $bank_transfer]);
+    }
 
+    public function cekDefaultAlamatPelanggan(){        
+        $defaultAlamatPelanggan = SettingDefaultAlamatPelanggan::select('provinsi','kabupaten','status_aktif')->first();
+        if ($defaultAlamatPelanggan->status_aktif == 1) {
+            $data_pelanggan['provinsi_pelanggan']  = $defaultAlamatPelanggan->provinsi;
+            $data_pelanggan['kabupaten_pelanggan'] = $defaultAlamatPelanggan->kabupaten;
+        }else{
+            $data_pelanggan['provinsi_pelanggan']  = Indonesia::findProvince($defaultAlamatPelanggan->provinsi)->name;
+            $data_pelanggan['kabupaten_pelanggan'] = Indonesia::findCity($defaultAlamatPelanggan->kabupaten)->name;
+        }
+
+        return $data_pelanggan;
     }
 
     public function prosesSelesaikanPemesanan(Request $request)
@@ -133,6 +159,7 @@ class PemesananController extends Controller
                 'email'   => 'required|without_spaces|unique:users,email|email',
                 'alamat'  => 'required',
                 'no_telp' => 'required|numeric|without_spaces|unique:users,no_telp',
+                'password' => 'required|string|min:6',
             ]);
 
             $kode_verifikasi = rand(1111, 9999);
@@ -141,7 +168,7 @@ class PemesananController extends Controller
                 'email'             => $request->email,
                 'alamat'            => $request->alamat,
                 'no_telp'           => $request->no_telp,
-                'password'          => bcrypt('123456'),
+                'password'          => bcrypt($request->password),
                 'tipe_user'         => 3,
                 'status_konfirmasi' => 1,
                 'kode_verifikasi'   => $kode_verifikasi,
@@ -182,9 +209,11 @@ class PemesananController extends Controller
                 }
 
                 if ($request->metode_pembayaran == "TRANSFER") {
-                    $subtotal = (str_replace('.', '', $request->ongkos_kirim) + $query_hitung_total['total_pesanan']) + $kode_unik_transfer;
+                    $subtotal = (str_replace('.', '', $request->ongkos_kirim) + $query_hitung_total['total_pesanan']) + $kode_unik_transfer;  
+                    $bank_transfer = $request->bank;
                 } else {
                     $subtotal = (str_replace('.', '', $request->ongkos_kirim) + $query_hitung_total['total_pesanan']);
+                    $bank_transfer =  "-";
                 }
 
                 // INSERT KE PESANAN PELANGGAN
@@ -200,7 +229,7 @@ class PemesananController extends Controller
                     'layanan_kurir'      => $layanan_kurir,
                     'metode_pembayaran'  => $request->metode_pembayaran,
                     'biaya_kirim'        => str_replace('.', '', $request->ongkos_kirim),
-                    'bank_transfer'      => "-",
+                    'bank_transfer'      => $bank_transfer,
                     'kode_unik_transfer' => $kode_unik_transfer,
                 ]);
 
@@ -237,8 +266,10 @@ class PemesananController extends Controller
                 }
                 if ($request->metode_pembayaran == "TRANSFER") {
                     $subtotal = (str_replace('.', '', $request->ongkos_kirim) + $query_hitung_total['total_pesanan']) + $kode_unik_transfer;
+                    $bank_transfer = $request->bank;
                 } else {
                     $subtotal = (str_replace('.', '', $request->ongkos_kirim) + $query_hitung_total['total_pesanan']);
+                    $bank_transfer =  "-";
                 }
 
                 // INSERT PESANAN PELANGGAN
@@ -254,7 +285,7 @@ class PemesananController extends Controller
                     'layanan_kurir'      => $layanan_kurir,
                     'metode_pembayaran'  => $request->metode_pembayaran,
                     'biaya_kirim'        => str_replace('.', '', $request->ongkos_kirim),
-                    'bank_transfer'      => "-",
+                    'bank_transfer'      => $bank_transfer,
                     'kode_unik_transfer' => $kode_unik_transfer,
                 ]);
 
@@ -314,7 +345,7 @@ class PemesananController extends Controller
             $cek_belanjaan     = $keranjang_belanja->count();
 
             $bank = BankWarung::select(['bank_warungs.atas_nama', 'bank_warungs.no_rek', 'setting_transfer_banks.nama_bank'])->leftJoin('setting_transfer_banks', 'setting_transfer_banks.id', '=', 'bank_warungs.nama_bank')
-                ->where('bank_warungs.nama_bank', $request->bank)->first();
+            ->where('bank_warungs.nama_bank', $request->bank)->first();
 
             $waktu_daftar = date($pesanan_pelanggan->first()->created_at);
             $date         = date_create($waktu_daftar);
@@ -445,8 +476,8 @@ class PemesananController extends Controller
         $session_id = Session::get('session_id');
 
         $keranjang_belanjaan = KeranjangBelanja::select('keranjang_belanjas.id_keranjang_belanja AS id_keranjang_belanja', 'keranjang_belanjas.id_produk AS id_produk', 'keranjang_belanjas.jumlah_produk AS jumlah_produk', 'barangs.harga_jual AS harga_jual', 'barangs.id_warung AS id_warung', 'barangs.nama_barang AS nama_barang', 'barangs.foto AS foto')
-            ->leftJoin('barangs', 'keranjang_belanjas.id_produk', '=', 'barangs.id')
-            ->where('session_id', $session_id)->orderBy('barangs.id_warung');
+        ->leftJoin('barangs', 'keranjang_belanjas.id_produk', '=', 'barangs.id')
+        ->where('session_id', $session_id)->orderBy('barangs.id_warung');
 
         $arrayKeranjangBelanja = array();
         foreach ($keranjang_belanjaan->get() as $key => $keranjang_belanjaans) {

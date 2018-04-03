@@ -460,8 +460,9 @@ class DetailPenjualanPos extends Model
     // Data penjualan terbaik per item 
     public function scopePenjualanTerbaik($detail_penjualan_pos, $request)
     {
-        $detail_penjualan_pos = DetailPenjualanPos::select([DB::raw('SUM(detail_penjualan_pos.jumlah_produk) as jumlah_produk'), 'barangs.nama_barang as nama_barang', 'barangs.kode_barang as kode_barang', 'detail_penjualan_pos.id_produk as id_produk'])
+        $detail_penjualan_pos = DetailPenjualanPos::select([DB::raw('SUM(detail_penjualan_pos.jumlah_produk) as jumlah_produk'), 'barangs.nama_barang as nama_barang', 'barangs.kode_barang as kode_barang','barangs.kode_barcode as kode_barcode','satuans.nama_satuan as satuan', 'detail_penjualan_pos.id_produk as id_produk'])
         ->leftJoin('barangs', 'barangs.id', '=', 'detail_penjualan_pos.id_produk')
+        ->leftJoin('satuans', 'satuans.id', '=', 'detail_penjualan_pos.satuan_id')
         ->where(DB::raw('DATE(detail_penjualan_pos.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
         ->where(DB::raw('DATE(detail_penjualan_pos.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal));
         return $detail_penjualan_pos;
@@ -473,11 +474,13 @@ class DetailPenjualanPos extends Model
         $search = $request->search;
         $detail_penjualan_pos = DetailPenjualanPos::select([DB::raw('SUM(detail_penjualan_pos.jumlah_produk) as jumlah_produk'), 'barangs.nama_barang as nama_barang', 'barangs.kode_barang as kode_barang', 'detail_penjualan_pos.id_produk as id_produk'])
         ->leftJoin('barangs', 'barangs.id', '=', 'detail_penjualan_pos.id_produk')
+        ->leftJoin('satuans', 'satuans.id', '=', 'detail_penjualan_pos.satuan_id')
         ->where(DB::raw('DATE(detail_penjualan_pos.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
         ->where(DB::raw('DATE(detail_penjualan_pos.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
         ->where(function ($query) use ($search) {
             $query->orWhere('barangs.nama_barang', 'LIKE', '%' . $search . '%')
-            ->orWhere('barangs.kode_barang', 'LIKE', '%' . $search . '%');
+            ->orWhere('barangs.kode_barang', 'LIKE', '%' . $search . '%')
+            ->orWhere('barangs.kode_barcode', 'LIKE', '%' . $search . '%');
         });
         return $detail_penjualan_pos;
     }

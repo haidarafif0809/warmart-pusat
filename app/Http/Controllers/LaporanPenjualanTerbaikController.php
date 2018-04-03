@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\DetailPenjualanPos;
 use App\DetailPenjualan;
+use App\SettingAplikasi;
+use App\Warung;
 use App\Barang;
 use Illuminate\Support\Facades\DB;
 use Auth;
@@ -237,8 +239,10 @@ class LaporanPenjualanTerbaikController extends Controller
             {
                 $sheet->row($row, [
                     'Kode Produk',
+                    'Kode Barcode',
                     'Nama Produk',
                     'Jumlah Terjual',
+                    'Satuan',
                 ]);
                 return $sheet;
             }
@@ -259,7 +263,7 @@ class LaporanPenjualanTerbaikController extends Controller
                             $item_tampil_terbaik = $tampil_terbaik;
                         }
                     //cek atau hitung item di detail penjualan POS
-                       $laporan_penjualan_terbaik = DetailPenjualanPos::cariPenjualanTerbaik($request)->groupBy('id_produk')->orderBy('jumlah_produk', 'desc')->limit($item_tampil_terbaik)->get();
+                       $laporan_penjualan_terbaik = DetailPenjualanPos::PenjualanTerbaik($request)->groupBy('id_produk')->orderBy('jumlah_produk', 'desc')->limit($item_tampil_terbaik)->get();
                   
 
                     //cek atau hitung item di detail penjualan online
@@ -289,8 +293,11 @@ class LaporanPenjualanTerbaikController extends Controller
                                     $nama_barang =  title_case($laporan_penjualan_terbaiks->nama_barang);
                                     $sheet->row(++$row, [
                                         $laporan_penjualan_terbaiks->kode_barang,
+                                        $laporan_penjualan_terbaiks->kode_barcode,
                                         $nama_barang,
                                         $laporan_penjualan_terbaiks->jumlah_produk,
+                                        $laporan_penjualan_terbaiks->satuan,
+
                                     ]);
                                 }
              
@@ -308,13 +315,61 @@ class LaporanPenjualanTerbaikController extends Controller
                                     $nama_barang =  title_case($laporan_penjualan_terbaiks->nama_barang);
                                     $sheet->row(++$row, [
                                         $laporan_penjualan_terbaik_onlines->kode_barang,
+                                        $laporan_penjualan_terbaik_onlines->kode_barcode,
                                         $nama_barang,
                                         $laporan_penjualan_terbaik_onlines->jumlah_produk,
+                                        $laporan_penjualan_terbaik_onlines->satuan,
                                     ]);
                                 }
                             }
                         });
                     })->export('xls');
+
+    }
+
+    public function cetakLaporan(Request $request, $dari_tanggal, $sampai_tanggal, $tampil_terbaik){
+        //SETTING APLIKASI
+        $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
+
+        $request['dari_tanggal']   = $dari_tanggal;
+        $request['sampai_tanggal'] = $sampai_tanggal;
+        $request['tampil_terbaik'] = $tampil_terbaik;
+
+
+           //cek atau hitung item di detail penjualan POS
+           $hitung_penjualan_terbaik = DetailPenjualanPos::penjualanTerbaik($request)->count();
+               if ($hitung_penjualan_terbaik < $tampil_terbaik) {
+                   $item_tampil_terbaik = $hitung_penjualan_terbaik;
+               }
+               else{
+                    $item_tampil_terbaik = $tampil_terbaik;
+               }
+           //cek atau hitung item di detail penjualan POS
+           $laporan_penjualan_terbaik = DetailPenjualanPos::PenjualanTerbaik($request)->groupBy('id_produk')->orderBy('jumlah_produk', 'desc')->limit($item_tampil_terbaik)->get();
+
+
+            //cek atau hitung item di detail penjualan online
+           $hitung_penjualan_terbaik_online = DetailPenjualan::penjualanTerbaik($request)->count();
+                        if ($hitung_penjualan_terbaik_online < $tampil_terbaik) {
+                            $item_tampil_terbaik_online = $hitung_penjualan_terbaik;
+                        }
+                        else{
+                            $item_tampil_terbaik_online = $tampil_terbaik;
+                        }
+           //cek atau hitung item di detail penjualan online
+            $laporan_penjualan_terbaik_online = DetailPenjualan::penjualanTerbaik($request)->groupBy('id_produk')->orderBy('jumlah_produk', 'desc')->limit($item_tampil_terbaik_online)->get();
+
+        $data_warung        = Warung::where('id', Auth::user()->id_warung)->first();
+
+        return view('laporan.cetak_laporan_penjualan_terbaik',
+            [
+                'laporan_penjualan_terbaik_online'  => $laporan_penjualan_terbaik_online,
+                'laporan_penjualan_terbaik'  => $laporan_penjualan_terbaik,
+                'data_warung'        => $data_warung,
+                'dari_tanggal'       => $dari_tanggal,
+                'sampai_tanggal'     => $sampai_tanggal,
+                'setting_aplikasi'   => $setting_aplikasi,
+            ])->with(compact('html'));
 
     }
 

@@ -15,6 +15,16 @@
   </div>
 </div>
 
+@if (Auth::check() == false)
+<div style="margin-bottom: 1px; margin-top: 1px;" class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
+  {!! Form::label('password', 'Password', ['class'=>'col-md-2 control-label', 'style'=> 'margin-bottom:1px; margin-top:1px;']) !!}
+  <div class="col-md-6">
+    <input class="form-control" name="password" placeholder="Password" type="password" required="" id="password">
+    {!! $errors->first('password', '<p class="help-block" id="password_error">:message</p>') !!}
+  </div>
+</div>
+@endif
+
 <div style="margin-bottom: 1px; margin-top: 1px;" class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
   {!! Form::label('email', 'Email', ['class'=>'col-md-2 control-label', 'style'=> 'margin-bottom:1px; margin-top:1px;']) !!}
   <div class="col-md-6">

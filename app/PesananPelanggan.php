@@ -78,9 +78,10 @@ class PesananPelanggan extends Model
 
     public function kirimEmailKonfirmasiPesananKePelanggan($request,$nama_warung,$keranjang_belanjaan){
         $data = $request;
-        $pesanan_pelanggan = $this;
+        $pesanan_pelanggan = $this;        
+        $bank = BankWarung::select(['bank_warungs.atas_nama', 'bank_warungs.no_rek', 'setting_transfer_banks.nama_bank'])->leftJoin('setting_transfer_banks', 'setting_transfer_banks.id', '=', 'bank_warungs.nama_bank')->where('bank_warungs.nama_bank', $request->bank)->first();
         $detail_pesanan = $keranjang_belanjaan;
-        Mail::send('auth.emails.email_konfirmasi_pesanan', compact('data','pesanan_pelanggan','detail_pesanan'), function ($message) use ($data,$nama_warung){
+        Mail::send('auth.emails.email_konfirmasi_pesanan', compact('data','pesanan_pelanggan','detail_pesanan','bank'), function ($message) use ($data,$nama_warung){
 
             $message->from('verifikasi@andaglos.id', $nama_warung);
             $message->to($data->email, $data->name)->subject('Konfirmasi Pesanan');
