@@ -91,6 +91,12 @@ class SettingPengirimanController extends Controller
     }
 
     public function simpanSettingDefaultAlamatPengiriman(Request $request){
+                //VALIDASI WARUNG
+        $this->validate($request, [
+            'provinsi'      => 'required',
+            'kabupaten'    => 'required',
+            'status_aktif'  => 'required'
+        ]);
         $setting = SettingDefaultAlamatPelanggan::first()->update(['provinsi' => $request->provinsi, 'kabupaten' => $request->kabupaten ,'status_aktif' => $request->status_aktif]);
     }
 }

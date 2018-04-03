@@ -168,6 +168,7 @@
                                 <selectize-component v-model="settingDefaultAlamatPelanggan.provinsi" :settings="placeholder_provinsi" id="pilih_provinsi" ref='provinsi'> 
                                   <option v-for="provinsis, index in provinsi" v-bind:value="provinsis.id" >{{ provinsis.name }}</option>
                               </selectize-component>
+                              <br v-if="errors.provinsi">
                               <span v-if="errors.provinsi" id="provinsi_error" class="label label-danger">{{ errors.provinsi[0] }}</span>
                           </div>
                       </div>
@@ -178,6 +179,7 @@
                               <selectize-component v-model="settingDefaultAlamatPelanggan.kabupaten" :settings="placeholder_kabupaten" id="pilih_kabupaten" ref='kabupaten'> 
                                   <option v-for="kabupatens, index in kabupaten" v-bind:value="kabupatens.id" >{{ kabupatens.name }}</option>
                               </selectize-component>
+                              <br v-if="errors.kabupaten">
                               <span v-if="errors.kabupaten" id="kabupaten_error" class="label label-danger">{{ errors.kabupaten[0] }}</span>                      
                           </div>
                       </div>
@@ -191,7 +193,8 @@
                                     <b v-if="settingDefaultAlamatPelanggan.status_aktif == 1">Ya</b>
                                     <b v-if="settingDefaultAlamatPelanggan.status_aktif == 0">Tidak</b>
                                 </label>
-                            </div>            
+                            </div>       
+                            <br v-if="errors.status_aktif">      
                             <span v-if="errors.status_aktif" id="status_aktif_error" class="label label-danger">{{ errors.status_aktif[0] }}</span>                      
                         </div>
 
@@ -343,6 +346,7 @@ methods: {
         })
         .catch(function (resp) {
             console.log(resp);
+            app.errors = resp.response.data.errors;
             alert("Tidak Dapat Menyimpan Setting Default Alamat Pelanggan");
         });
     },
