@@ -159,6 +159,7 @@ class PemesananController extends Controller
                 'email'   => 'required|without_spaces|unique:users,email|email',
                 'alamat'  => 'required',
                 'no_telp' => 'required|numeric|without_spaces|unique:users,no_telp',
+                'password' => 'required|string|min:6',
             ]);
 
             $kode_verifikasi = rand(1111, 9999);
@@ -167,7 +168,7 @@ class PemesananController extends Controller
                 'email'             => $request->email,
                 'alamat'            => $request->alamat,
                 'no_telp'           => $request->no_telp,
-                'password'          => bcrypt('123456'),
+                'password'          => bcrypt($request->password),
                 'tipe_user'         => 3,
                 'status_konfirmasi' => 1,
                 'kode_verifikasi'   => $kode_verifikasi,
