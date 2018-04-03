@@ -13,5 +13,5 @@ class SettingDefaultAlamatPelanggan extends Model
 
 	protected $table = 'setting_default_alamat_pelanggans';
 
-	protected $fillable = ['id','provinsi','kabupaten','status'];
+	protected $fillable = ['id','provinsi','kabupaten','status_aktif'];
 }
