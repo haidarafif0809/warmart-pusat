@@ -47,7 +47,8 @@ class DaftarProdukController extends Controller
 
         //TAMPILAN MOBILE
     $agent = new Agent();
-
+    $array_warung = DaftarProdukController::dataWarungTervalidasi();
+    
     if (isset($warung_yang_dipesan)) {
 
         $data_produk = Barang::select(['id', 'kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung', 'konfirmasi_admin', 'satuan_id', 'hitung_stok', 'status_aktif'])
@@ -55,7 +56,7 @@ class DaftarProdukController extends Controller
         ->where('id_warung', $warung_yang_dipesan)->where('status_aktif', 1)->paginate(20);
     } else {
             //Pilih warung yang sudah dikonfirmasi admin
-        $array_warung = DaftarProdukController::dataWarungTervalidasi();
+        
         $data_produk  = Barang::select(['id', 'kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung', 'konfirmasi_admin', 'satuan_id', 'hitung_stok', 'status_aktif'])
         ->inRandomOrder()
         ->whereIn('id_warung', $array_warung)->where('status_aktif', 1)->paginate(20);
@@ -150,13 +151,13 @@ public static function filter_kategori($id)
         $cek_belanjaan = $keranjang_belanjaan->count();
     }
 
+        $array_warung = DaftarProdukController::dataWarungTervalidasi();
 
     if (isset($warung_yang_dipesan)) {
         $data_produk = Barang::select(['id', 'kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung', 'konfirmasi_admin', 'satuan_id', 'hitung_stok', 'status_aktif'])
         ->where('kategori_barang_id', $id)->where('id_warung', $warung_yang_dipesan)->where('status_aktif', 1)->inRandomOrder()->paginate(20);
     } else {
             //Pilih warung yang sudah dikonfirmasi admin
-        $array_warung = DaftarProdukController::dataWarungTervalidasi();
 
             //PILIH PRODUK
         $data_produk = Barang::select(['id', 'kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung', 'konfirmasi_admin', 'satuan_id', 'hitung_stok', 'status_aktif'])
@@ -242,7 +243,7 @@ public static function pencarian(Request $request)
         $daftar_produk = DaftarProdukController::daftarProduk($data_produk);
     }
 
-        $array_warung = DaftarProdukController::dataWarungTervalidasi();
+    $array_warung = DaftarProdukController::dataWarungTervalidasi();
 
    $cek_baner = SettingPromo::where('status',1)->where('id_warung',$array_warung);
     if ($cek_baner->count() > 0) {
