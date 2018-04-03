@@ -173,7 +173,7 @@ h4 {
 
 @if($cek_baner->count() > 0)
                 <div class="row">
-                    <div class="col-md-10 col-md-offset-1">
+                    <div class="col-md-12 col-md-offset-0">
 
                         <!-- Carousel Card -->
                         <div class="card card-raised card-carousel">
@@ -314,7 +314,7 @@ h4 {
 
 @if($cek_baner->count() > 0)
                 <div class="row">
-                    <div class="col-md-10 col-md-offset-1">
+                    <div class="col-md-12 col-md-offset-0">
 
                         <!-- Carousel Card -->
                         <div class="card card-raised card-carousel">
