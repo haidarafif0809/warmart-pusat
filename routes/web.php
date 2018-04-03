@@ -129,7 +129,7 @@ Route::get('/keranjang-belanja/hapus-produk-keranjang-belanja/', [
     'uses' => 'KeranjangBelanjaController@hapus_produk_keranjang_belanjaan',
 ]);
 
-Route::get('/keranjang-belanja/tambah-produk-keranjang-belanja/{id}', [
+Route::get('/keranjang-belanja/tambah-produk-keranjang-belanja/', [
     'as'   => 'keranjang-belanja.tambah_produk_keranjang_belanjaan',
     'uses' => 'KeranjangBelanjaController@tambah_produk_keranjang_belanjaan',
 ]);
