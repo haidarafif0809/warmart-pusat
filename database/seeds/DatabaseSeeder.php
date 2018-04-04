@@ -30,5 +30,7 @@ class DatabaseSeeder extends Seeder
         $this->call(SettingJasaPengirimanSeeder::class);
         $this->call(TambahPermissionSeeder::class);
         $this->call(TambahSeederPermissionKategoriTransaksi::class);
+        $this->call(SettingDefaultAlamatPelangganSeeder::class);
+        
     }
 }

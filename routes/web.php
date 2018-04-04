@@ -1199,6 +1199,12 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
         'uses'       => 'PenjualanController@prosesEditJumlahTbsPenjualan',
     ]);
 
+    Route::post('/penjualan/edit-harga-tbs-penjualan', [
+        'middleware' => ['auth'],
+        'as'         => 'penjualan.edit_harga_tbs_penjualan',
+        'uses'       => 'PenjualanController@prosesEditHargaTbsPenjualan',
+    ]);
+
     Route::post('/penjualan/edit-potongan-tbs-penjualan', [
         'middleware' => ['auth'],
         'as'         => 'penjualan.edit_potongan_tbs_penjualan',
