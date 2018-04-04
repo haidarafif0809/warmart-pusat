@@ -89,8 +89,13 @@ first();
     width: 10em;
 }
 .page-header.header-small {
+    @if(Agent::isMobile())
+    height: 0vh;
+    min-height: 25vh;
+    @else
     height: 0vh;
     min-height: 18vh;
+    @endif
 }
 .ecommerce-page .page-header .container {
     @if(Agent::isMobile())
@@ -118,6 +123,21 @@ h4 {
 }
 .nav-tabs > li > a{
     font-size: 20px;
+}
+
+.nav-pills > li > a {
+    line-height: 1px;
+    text-transform: uppercase;
+     @if(Agent::isMobile())
+    font-size: 7px;
+    @else
+    font-size: 10px;
+    @endif
+    font-weight: 400;
+    min-width: 5px;
+    text-align: center;
+    color: #555555;
+    transition: all .3s;
 }
 
 </style>
@@ -176,13 +196,6 @@ h4 {
                             <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
                                 <div class="carousel slide" data-ride="carousel">
 
-                                    <!-- Indicators -->
-                                    <ol class="carousel-indicators">
-                                        <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
-                                        @foreach($baner_promo->get() as $baner_promos)
-                                        <li data-target="#carousel-example-generic" data-slide-to="{!!$baner_promos->id_setting_promo !!}"></li>
-                                        @endforeach
-                                    </ol>
 
                                     <!-- Wrapper for slides -->
                                     <div class="carousel-inner">
