@@ -113,7 +113,7 @@ class KasController extends Controller
         $this->validate($request, [
             'kode_kas' => 'required|unique:kas,kode_kas,NULL,id,warung_id,' . Auth::user()->id_warung . '',
             'nama_kas' => 'required',
-        ]);
+            ]);
 
         if ($request->status_kas == '') {
             $status_kas = 0;
@@ -134,7 +134,7 @@ class KasController extends Controller
                 $kas_default = Kas::where('default_kas', $request->default_kas)
                 ->where('warung_id', Auth::user()->id_warung)->update([
                     'default_kas' => 0,
-                ]);
+                    ]);
 
                 //INSERT MASTER DATA KAS WARUNG, JADI DEFAULT KAS
                 $kas = Kas::create([
@@ -143,7 +143,7 @@ class KasController extends Controller
                     'status_kas'  => $status_kas,
                     'default_kas' => $default_kas,
                     'warung_id'   => Auth::user()->id_warung,
-                ]);
+                    ]);
             } else {
                 //INSERT MASTER DATA KAS WARUNG
                 $kas = Kas::create([
@@ -152,7 +152,7 @@ class KasController extends Controller
                     'status_kas'  => $status_kas,
                     'default_kas' => $default_kas,
                     'warung_id'   => Auth::user()->id_warung,
-                ]);
+                    ]);
             }
         } else {
             Auth::logout();
@@ -211,7 +211,7 @@ class KasController extends Controller
         $this->validate($request, [
             'kode_kas' => 'required|unique:kas,kode_kas,' . $id . ',id,warung_id,' . Auth::user()->id_warung,
             'nama_kas' => 'required',
-        ]);
+            ]);
 
         $id_warung = Auth::user()->id_warung;
         $kas       = Kas::find($id);
@@ -235,14 +235,14 @@ class KasController extends Controller
                 $kas_default = Kas::where('default_kas', $request->default_kas)
                 ->where('warung_id', Auth::user()->id_warung)->update([
                     'default_kas' => 0,
-                ]);
+                    ]);
                 //UPDATE MASTER DATA KAS WARUNG
                 Kas::where('id', $id)->update([
                     'kode_kas'    => $request->kode_kas,
                     'nama_kas'    => $request->nama_kas,
                     'status_kas'  => $status_kas,
                     'default_kas' => $default_kas,
-                ]);
+                    ]);
             } else {
                 Kas::where('id', $id)
                 ->where('warung_id', Auth::user()->id_warung)
@@ -251,7 +251,7 @@ class KasController extends Controller
                     'nama_kas'    => $request->nama_kas,
                     'status_kas'  => $status_kas,
                     'default_kas' => $default_kas,
-                ]);
+                    ]);
             }
 
         } else {
@@ -298,7 +298,7 @@ class KasController extends Controller
         return response()->json([
             "cek_kas" => $kas->count(),
             "kas"     => $kas->get()->toArray(),
-        ]);
+            ]);
 
     }
 
@@ -321,22 +321,22 @@ class KasController extends Controller
         if (Laratrust::can('tambah_kas')) {
             $tambah_kas = 1;
         }else{
-           $tambah_kas = 0;            
-       }
-       if (Laratrust::can('edit_kas')) {
-           $edit_kas = 1;
-       }else{
-           $edit_kas = 0;            
-       }
-       if (Laratrust::can('hapus_kas')) {
-         $hapus_kas = 1;
-     }else{
-         $hapus_kas = 0;            
+         $tambah_kas = 0;            
      }
-     $respons['tambah_kas'] = $tambah_kas;
-     $respons['edit_kas'] = $edit_kas;
-     $respons['hapus_kas'] = $hapus_kas;
+     if (Laratrust::can('edit_kas')) {
+         $edit_kas = 1;
+     }else{
+         $edit_kas = 0;            
+     }
+     if (Laratrust::can('hapus_kas')) {
+       $hapus_kas = 1;
+   }else{
+       $hapus_kas = 0;            
+   }
+   $respons['tambah_kas'] = $tambah_kas;
+   $respons['edit_kas'] = $edit_kas;
+   $respons['hapus_kas'] = $hapus_kas;
 
-     return response()->json($respons);
- }
+   return response()->json($respons);
+}
 }

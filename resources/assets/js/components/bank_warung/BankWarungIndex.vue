@@ -15,7 +15,7 @@
     <div class="col-md-12">
      <ul class="breadcrumb">
       <li><a href="#">Home</a></li>
-      <li class="active">Bank Warung</li>
+      <li class="active">Bank</li>
     </ul>
 
 
@@ -24,11 +24,11 @@
        <i class="material-icons">payment</i>
      </div>
      <div class="card-content">
-       <h4 class="card-title"> Bank Warung</h4>
+       <h4 class="card-title"> Bank</h4>
 
        <div class="toolbar">
 
-        <p> <router-link :to="{name: 'createBankWarung'}" class="btn btn-primary" v-if="otoritas.tambah_bank == 1">Tambah Bank Warung</router-link></p>
+        <p> <router-link :to="{name: 'createBankWarung'}" class="btn btn-primary" v-if="otoritas.tambah_bank == 1">Tambah Bank</router-link></p>
 
       </div>
 

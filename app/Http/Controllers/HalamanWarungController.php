@@ -204,32 +204,38 @@ class HalamanWarungController extends Controller
         if ($agent->isMobile()) {
             $card_warung = '';
             $card_warung .= '
-        <div class="card card-raised card-form-horizontal">
-         <div class="card-content">
-             <div class="col-md-2 col-sm-6 col-xs-6 nav-pills-icons">
-                 <p class="text-center"><i  class="material-icons">store</i>  </p>
-                 <p class="text-center">';
+        <div class="profile-tabs">
+            <div class="nav-align-center">
+                <ul class="nav nav-pills nav-pills-icons" role="tablist">
+                    <li >
+                        <a role="tab" >
+                            <i class="material-icons">store</i>';
             $card_warung .= DaftarProdukController::warungNama($warung);
-            $card_warung .= '</p>
-                </div>
-                <div class="col-md-2 col-sm-6 col-xs-6">
-                 <p class="text-center"><i  class="material-icons">place</i> </p>
-                 <p class="text-center">';
+            $card_warung .= '
+                        </a>
+                    </li>
+                    <li>
+                        <a role="tab" >
+                            <i class="material-icons">place</i>';
             $card_warung .= DaftarProdukController::alamatWarung($warung);
-            $card_warung .= '</p>
-                </div>
-                <div class="col-md-2 col-sm-6 col-xs-6">
-                 <p class="text-center"> <i  class="material-icons">call</i>  </p>
-                 <p class="text-center">';
+            $card_warung .= '
+                        </a>
+                    </li>
+                    <li>
+                        <a role="tab" >
+                            <i class="material-icons">call</i>';
             $card_warung .= HalamanWarungController::telponWarung($warung);
-            $card_warung .= '</p>
-                </div>
-                <div class="col-md-2 col-sm-6 col-xs-6">
-                 <p class="text-center"><i  class="material-icons">offline_pin</i> </p>
-                 <p class="text-center">';
+            $card_warung .= '
+                        </a>
+                    </li>
+                    <li>
+                        <a role="tab" >
+                            <i class="material-icons">offline_pin</i>';
             $card_warung .= HalamanWarungController::produkWarung($jumlah_produk_warung);
-            $card_warung .= '</p>
-                </div>
+            $card_warung .= '
+                        </a>
+                    </li>
+                </ul>
             </div>
         </div>';
         } else {
