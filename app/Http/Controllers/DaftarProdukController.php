@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
 use Intervention\Image\ImageManagerStatic as Image;
 use Jenssegers\Agent\Agent;
 use Session;
-
+use App\SettingPromo;
 class DaftarProdukController extends Controller
 {
     /**
@@ -47,19 +47,31 @@ class DaftarProdukController extends Controller
 
         //TAMPILAN MOBILE
     $agent = new Agent();
-
+            //Pilih warung yang sudah dikonfirmasi admin
+    $array_warung = DaftarProdukController::dataWarungTervalidasi();
+    
     if (isset($warung_yang_dipesan)) {
 
         $data_produk = Barang::select(['id', 'kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung', 'konfirmasi_admin', 'satuan_id', 'hitung_stok', 'status_aktif'])
         ->inRandomOrder()
         ->where('id_warung', $warung_yang_dipesan)->where('status_aktif', 1)->paginate(20);
     } else {
-            //Pilih warung yang sudah dikonfirmasi admin
-        $array_warung = DaftarProdukController::dataWarungTervalidasi();
+
         $data_produk  = Barang::select(['id', 'kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung', 'konfirmasi_admin', 'satuan_id', 'hitung_stok', 'status_aktif'])
         ->inRandomOrder()
         ->whereIn('id_warung', $array_warung)->where('status_aktif', 1)->paginate(20);
     }
+
+    $cek_baner = SettingPromo::where('status',1)->where('id_warung',$array_warung);
+    if ($cek_baner->count() > 0) {
+        $baner_promo_active = $cek_baner->first();
+        $baner_promo = SettingPromo::where('status',1)->where('baner_promo','!=',$baner_promo_active->baner_promo);
+    }
+    else{
+        $baner_promo_active = 0;
+        $baner_promo = 0;
+    }
+
 
         //PILIH DATA WARUNG
     $warung_data = Warung::select(['id', 'name', 'alamat', 'wilayah', 'no_telpon'])
@@ -83,7 +95,7 @@ class DaftarProdukController extends Controller
     $kategori_produk = DaftarProdukController::produkKategori($kategori);
     $nama_kategori   = "";
 
-    return view('layouts.daftar_produk', ['kategori_produk' => $kategori_produk, 'daftar_produk' => $daftar_produk, 'daftar_warung' => $daftar_warung, 'produk_pagination' => $produk_pagination, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'agent' => $agent, 'cek_belanjaan' => $cek_belanjaan, 'logo_warmart' => $logo_warmart, 'setting_aplikasi' => $setting_aplikasi]);
+    return view('layouts.daftar_produk', ['kategori_produk' => $kategori_produk, 'daftar_produk' => $daftar_produk, 'daftar_warung' => $daftar_warung, 'produk_pagination' => $produk_pagination, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'agent' => $agent, 'cek_belanjaan' => $cek_belanjaan, 'logo_warmart' => $logo_warmart, 'setting_aplikasi' => $setting_aplikasi,'baner_promo'=>$baner_promo,'baner_promo_active'=>$baner_promo_active,'cek_baner'=>$cek_baner]);
 }
 
 public static function produkKategori($kategori)
@@ -153,6 +165,16 @@ public static function filter_kategori($id)
 
     }
 
+    $cek_baner = SettingPromo::where('status',1)->where('id_warung',$array_warung);
+    if ($cek_baner->count() > 0) {
+        $baner_promo_active = $cek_baner->first();
+        $baner_promo = SettingPromo::where('status',1)->where('baner_promo','!=',$baner_promo_active->baner_promo);
+    }
+    else{
+        $baner_promo_active = 0;
+        $baner_promo = 0;
+    }
+
         //PILIH DATA WARUNG
     $warung_data = Warung::select(['id', 'name', 'alamat', 'wilayah', 'no_telpon'])
     ->inRandomOrder()->get();
@@ -180,7 +202,7 @@ public static function filter_kategori($id)
     $daftar_produk = DaftarProdukController::daftarProduk($data_produk);
     $daftar_warung = DaftarProdukController::daftarWarung($warung_data);
 
-    return view('layouts.daftar_produk', ['kategori_produk' => $kategori_produk, 'daftar_warung' => $daftar_warung, 'daftar_produk' => $daftar_produk, 'produk_pagination' => $produk_pagination, 'id' => $id, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'agent' => $agent, 'cek_belanjaan' => $cek_belanjaan, 'logo_warmart' => $logo_warmart, 'setting_aplikasi' => $setting_aplikasi]);
+    return view('layouts.daftar_produk', ['kategori_produk' => $kategori_produk, 'daftar_warung' => $daftar_warung, 'daftar_produk' => $daftar_produk, 'produk_pagination' => $produk_pagination, 'id' => $id, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'agent' => $agent, 'cek_belanjaan' => $cek_belanjaan, 'logo_warmart' => $logo_warmart, 'setting_aplikasi' => $setting_aplikasi,'baner_promo'=>$baner_promo,'baner_promo_active'=>$baner_promo_active,'cek_baner'=>$cek_baner]);
 }
 
 public static function pencarian(Request $request)
@@ -221,11 +243,24 @@ public static function pencarian(Request $request)
         $daftar_produk = DaftarProdukController::daftarProduk($data_produk);
     }
 
+    $array_warung = DaftarProdukController::dataWarungTervalidasi();
+
+    $cek_baner = SettingPromo::where('status',1)->where('id_warung',$array_warung);
+    if ($cek_baner->count() > 0) {
+        $baner_promo_active = $cek_baner->first();
+        $baner_promo = SettingPromo::where('status',1)->where('baner_promo','!=',$baner_promo_active->baner_promo);
+    }
+    else{
+        $baner_promo_active = 0;
+        $baner_promo = 0;
+    }
+
+
     $daftar_warung = DaftarProdukController::daftarWarung($warung_data);
         //SETTING APLIKASI
     $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
 
-    return view('layouts.daftar_produk', ['kategori_produk' => $kategori_produk, 'daftar_warung' => $daftar_warung, 'daftar_produk' => $daftar_produk, 'produk_pagination' => $produk_pagination, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'agent' => $agent, 'cek_belanjaan' => $cek_belanjaan, 'logo_warmart' => $logo_warmart, 'setting_aplikasi' => $setting_aplikasi]);
+    return view('layouts.daftar_produk', ['kategori_produk' => $kategori_produk, 'daftar_warung' => $daftar_warung, 'daftar_produk' => $daftar_produk, 'produk_pagination' => $produk_pagination, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'agent' => $agent, 'cek_belanjaan' => $cek_belanjaan, 'logo_warmart' => $logo_warmart, 'setting_aplikasi' => $setting_aplikasi,'baner_promo'=>$baner_promo,'baner_promo_active'=>$baner_promo_active,'cek_baner'=>$cek_baner]);
 }
 
 public static function cekStokProduk($produks)
@@ -271,7 +306,8 @@ public static function tombolBeli($cek_produk, $produks)
         if ($cek_produk < 1) {
             $tombol_beli = '<a disabled="true" class="btn btn-block tombolBeli buttonColor" rel="tooltip" title="Stok Tidak Ada"> Beli Sekarang </a>';
         } else {
-            $tombol_beli = '<a href="' . url('/keranjang-belanja/tambah-produk-keranjang-belanja/' . $produks->id . '') . '" id="btnBeliSekarang" class="btn btn-block tombolBeli buttonColor" > Beli Sekarang </a>';
+            // $tombol_beli = '<a href="' . url('/keranjang-belanja/tambah-produk-keranjang-belanja/' . $produks->id . '') . '" id="btnBeliSekarang" class="btn btn-block tombolBeli buttonColor" > Beli Sekarang </a>';
+            $tombol_beli = '<button id="btnBeliSekarang" class="btn btn-block tombolBeli buttonColor" data-id-produk='.$produks->id.' data-nama-produk="'.$produks->NamaProduk.'"> Beli Sekarang </button>';
         }
     } elseif (Auth::check() && Auth::user()->tipe_user != $pelanggan) {
        $tombol_beli = '<a  disabled="true" class="btn btn-block tombolBeli buttonColor" rel="tooltip" title="Masuk Sebagai Pelanggan Untuk Beli" > Beli Sekarang </a>';
@@ -279,8 +315,9 @@ public static function tombolBeli($cek_produk, $produks)
     if ($cek_produk < 1) {
         $tombol_beli = '<a disabled="true" class="btn btn-block tombolBeli buttonColor" rel="tooltip" title="Stok Tidak Ada" > Beli Sekarang </a>';
     } else {
-        $tombol_beli = '<a href="' . url('/keranjang-belanja/tambah-produk-keranjang-belanja/' . $produks->id . '') . '" id="btnBeliSekarang" class="btn btn-block tombolBeli buttonColor" > Beli Sekarang </a>';
-    }
+     $tombol_beli = '<button id="btnBeliSekarang" class="btn btn-block tombolBeli buttonColor" data-id-produk='.$produks->id.' data-nama-produk="'.$produks->NamaProduk.'"> Beli Sekarang </button>';
+        // $tombol_beli = '<a href="' . url('/keranjang-belanja/tambah-produk-keranjang-belanja/' . $produks->id . '') . '" id="btnBeliSekarang" class="btn btn-block tombolBeli buttonColor" > Beli Sekarang </a>';
+ }
 }
 
 return $tombol_beli;

@@ -308,7 +308,7 @@ HEADER, FOOTER, MAIN
                             <td>
 
                               <h4><p><b>Hai {{$data->name}},</b></p></h4>
-                              <p>Terima kasih atas kepercayaanmu telah berbelanja di <b>{{$pesanan_pelanggan->warung->name}}</b>. <br> Pesanan Anda dengan nomor <b>Order # {{$pesanan_pelanggan->id}}</b> sudah berhasil dilakukan pada tanggal <b>{{$pesanan_pelanggan->WaktuPesan}}</b> dengan metode pembayaran <b>{{$pesanan_pelanggan->metode_pembayaran}}</b>.</p>
+                              <p>Terima kasih atas kepercayaan anda telah berbelanja di <b>{{$pesanan_pelanggan->warung->name}}</b>. <br> Pesanan anda dengan nomor <b>Order # {{$pesanan_pelanggan->id}}</b> sudah berhasil dilakukan pada tanggal <b>{{$pesanan_pelanggan->WaktuPesan}}</b> dengan metode pembayaran <b>{{$pesanan_pelanggan->metode_pembayaran}}</b>.</p>
 
                               <table border="0" cellpadding="0" cellspacing="0">
                                 <tbody>
@@ -343,7 +343,7 @@ HEADER, FOOTER, MAIN
                                                     <td> {{title_case($detail_pesanans->nama_barang)}} <br> 
                                                       Quantity : {{ number_format($detail_pesanans->jumlah_produk, 0, ',', '.')}}<br>
                                                       Harga : {{number_format($detail_pesanans->harga_jual, 0, ',', '.')}}<br>
-                                                      <small><i>Topos</i></small> 
+                                                      <small><i>{{$pesanan_pelanggan->warung->name}}</i></small> 
                                                     </td>
                                                     <td align="right"><b align="right">Rp. {{ number_format($detail_pesanans->harga_jual * $detail_pesanans->jumlah_produk ,0, ',', '.')}}</b></td>
                                                   </tr>
@@ -360,8 +360,20 @@ HEADER, FOOTER, MAIN
                                                     <td style="padding: 3px;"></td>
                                                     <td style="padding: 3px;"></td>
                                                     <td  align="right" style="padding:3px">Subtotal :</td>
-                                                    <td  align="right" style="padding:3px"><b>Rp. {{ number_format(($pesanan_pelanggan->subtotal - $pesanan_pelanggan->biaya_kirim) - $pesanan_pelanggan->kode_unik_transfer ,0, ',', '.')}}</b></td>
+                                                    @if($pesanan_pelanggan->metode_pembayaran == 'Bayar di Tempat')
+                                                    <td align="right" style="padding:3px"><b>Rp. {{ number_format($pesanan_pelanggan->subtotal ,0, ',', '.')}}</b></td>
+                                                    @else
+                                                    <td align="right" style="padding:3px"><b>Rp. {{ number_format(($pesanan_pelanggan->subtotal - $pesanan_pelanggan->biaya_kirim) - $pesanan_pelanggan->kode_unik_transfer ,0, ',', '.')}}</b></td>
+                                                    @endif
                                                   </tr>
+                                                  @if($pesanan_pelanggan->metode_pembayaran == 'TRANSFER')
+                                                  <tr>
+                                                    <td style="padding: 3px;"></td>
+                                                    <td  align="right" style="padding:3px"></td>
+                                                    <td  align="right" style="padding:3px">Kode Unik :</td>
+                                                    <td  align="right" style="padding:3px"><b>Rp. {{number_format($pesanan_pelanggan->kode_unik_transfer ,0, ',', '.')}}</b></td>
+                                                  </tr>
+                                                  @endif
                                                   <tr>
                                                     <td style="padding: 3px;"></td>
                                                     <td  align="right" style="padding:3px"></td>
@@ -372,7 +384,7 @@ HEADER, FOOTER, MAIN
                                                     <td style="padding: 3px;"></td>
                                                     <td  align="right" style="padding:3px"></td>
                                                     <td  align="right" style="padding:3px"><b>Total :</b></td>
-                                                    <td  align="right" style="padding:3px"><b>Rp. {{number_format($pesanan_pelanggan->subtotal - $pesanan_pelanggan->kode_unik_transfer ,0, ',', '.')}}</b></td>
+                                                    <td align="right" style="padding:3px"><b>Rp. {{number_format($pesanan_pelanggan->subtotal,0, ',', '.')}}</b></td>
                                                   </tr>
                                                 </tbody>
                                               </table>
@@ -381,13 +393,16 @@ HEADER, FOOTER, MAIN
                                               @if($pesanan_pelanggan->metode_pembayaran == 'Bayar di Tempat')
                                               <p><b>Informasi mengenai Pembayaran</b></p>
                                               <ul>
-                                                <li>Dimohon untuk menyiapkan uang pas saat anda menerima pesanan anda.</li>
+                                                <li>Dimohon untuk menyiapkan uang pas saat anda menerima pesanan.</li>
                                               </ul>
                                               <hr>
                                               @endif
 
                                               @if($pesanan_pelanggan->layanan_kurir != "")
                                               <p>Waktu Pengiriman: <b>{{$pesanan_pelanggan->WaktuBarangSampai}}</b> </p><br>
+                                              @endif
+                                              @if($pesanan_pelanggan->metode_pembayaran == 'TRANSFER')
+                                              <p>Pembayaran dapat dilakukan ke Rekening Bank <b>{{strtoupper($bank->nama_bank)}} ({{$bank->no_rek}})</b> a/n <b>{{$bank->atas_nama}}</b></p>
                                               @endif
                                               <p>Pesanan Anda akan dikirimkan ke: <b>{{$data->name}}</b> </p>
                                               <p><b>{{$data->alamat}}

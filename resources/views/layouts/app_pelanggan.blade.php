@@ -55,10 +55,10 @@
 </link>
 </head>
 <style type="text/css">
-    .navbar-nav .open .dropdown-menu{
-      color: grey;
-  }
-  .navbar .navbar-brand {
+.navbar-nav .open .dropdown-menu{
+  color: grey;
+}
+.navbar .navbar-brand {
     position: relative;
     @if(Agent::isMobile())
     height: 50px;
@@ -311,7 +311,7 @@ body {
                                     shopping_cart
                                 </i>
                                 Keranjang Belanja
-                                <b style="font-size: 15px" id="jumlah-keranjang" data-session="">
+                                <b style="font-size: 15px" id="jumlah-keranjang" data-session="" data-jumlah="{{ $cek_belanjaan }}">
                                     | {{ $cek_belanjaan }}
                                 </b>
                             </a>
@@ -323,7 +323,7 @@ body {
                                     shopping_cart
                                 </i>
                                 Keranjang Belanja
-                                <b style="font-size: 15px" id="jumlah-keranjang" data-session="">
+                                <b style="font-size: 15px" id="jumlah-keranjang" data-session="" data-jumlah="{{ $cek_belanjaan }}">
                                     | {{ $cek_belanjaan }}
                                 </b>
                             </a>
@@ -610,22 +610,61 @@ body {
 
 
         $(document).on('click', '#btnBeliSekarang', function(){
-            alert();
+            let nama_produk = $(this).attr("data-nama-produk");
+            let id_produk = $(this).attr("data-id-produk");
+            alert(nama_produk,id_produk);
         });
 
-        function alert(){
+        function alert(nama_produk,id_produk){
+            swal({
+              title: nama_produk,
+              text: 'Masukan Jumlah Produk',
+              input: 'number',
+              showCancelButton: true,
+              confirmButtonText: 'OK',
+              showLoaderOnConfirm: true,
+              preConfirm: (jumlah_produk) => {
+                return new Promise((resolve) => {
+                  setTimeout(() => {
+                    if (jumlah_produk === '') {
+                      swal.showValidationError(
+                        'Anda Belum memasukan Jumlah Produk'
+                        )
+                  }
+                  resolve()
+              }, 500)
+              })
+            },
+            allowOutsideClick: () => !swal.isLoading()
+        }).then((result) => {
+          if (result.value) {
+            prosesTambahProduk(result.value,id_produk,nama_produk)            
+        }
+    })
+    }
+
+    function prosesTambahProduk(jumlah_produk,id_produk,nama_produk){
+
+        $.get('{{ Url('/keranjang-belanja/tambah-produk-keranjang-belanja/') }}',{'_token': $('meta[name=csrf-token]').attr('content'),jumlah_produk:jumlah_produk,id_produk:id_produk}, function(data){
+
+         var totalProduk = $("#jumlah-keranjang").attr("data-jumlah");
+         var totalProduk = parseInt(totalProduk) + parseInt(data); 
+         var sisa_jumlah_produk = "| "+totalProduk;
+         $("#jumlah-keranjang").attr("data-jumlah",totalProduk);
+         $("#jumlah-keranjang").text(sisa_jumlah_produk);
          swal({
-            text :  "Produk Berhasil Di Tambahkan Ke Keranjang Belanja",
-            showConfirmButton :  false,
-            type: "success",
-            timer: 10000,
-            onOpen: () => {
-              swal.showLoading()
-          }
-      }); 
-     }
+          position: 'center',
+          type: 'success',
+          text: nama_produk+' Berhasil dimasukan ke Keranjang Belanja',
+          showConfirmButton: false,
+          timer: 2000
+      })
+
+     });
+
+    }
 
 
- </script>
- @yield('scripts')
- </html>
+</script>
+@yield('scripts')
+</html>

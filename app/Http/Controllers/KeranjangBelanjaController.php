@@ -95,7 +95,7 @@ class KeranjangBelanjaController extends Controller
 
     }
 
-    public function tambah_produk_keranjang_belanjaan($id)
+    public function tambah_produk_keranjang_belanjaan(Request $request)
     {
      if(!Session::get('session_id')){
         $session_id    = session()->getId();
@@ -104,7 +104,7 @@ class KeranjangBelanjaController extends Controller
     }
 
     if (Auth::check() == false) {
-        $datakeranjang_belanjaan = KeranjangBelanja::where('session_id', $session_id)->Where('id_produk', $id); 
+        $datakeranjang_belanjaan = KeranjangBelanja::where('session_id', $session_id)->Where('id_produk', $request->id_produk); 
         $jumlah_produk           = $datakeranjang_belanjaan->first();
 
         if ($datakeranjang_belanjaan->count() == 0) {            
@@ -112,17 +112,17 @@ class KeranjangBelanjaController extends Controller
         }
 
         if ($datakeranjang_belanjaan->count() > 0) {
-
-            $datakeranjang_belanjaan->update(['jumlah_produk' => $jumlah_produk->jumlah_produk + 1]);
+            $total_tambah_produk = 0;
+            $datakeranjang_belanjaan->update(['jumlah_produk' => $jumlah_produk->jumlah_produk + $request->jumlah_produk]);
 
         } else {
-
-            $produk = KeranjangBelanja::create(['id_produk' => $id, 'session_id' => $session_id, 'jumlah_produk' => '1']);
+            $total_tambah_produk = 1;
+            $produk = KeranjangBelanja::create(['id_produk' => $request->id_produk, 'session_id' => $session_id, 'jumlah_produk' => $request->jumlah_produk]);
         }
 
     }else{
         $pelanggan = Auth::user()->id;
-        $datakeranjang_belanjaan = KeranjangBelanja::where('id_pelanggan', $pelanggan)->Where('id_produk', $id); 
+        $datakeranjang_belanjaan = KeranjangBelanja::where('id_pelanggan', $pelanggan)->Where('id_produk', $request->id_produk); 
         $jumlah_produk           = $datakeranjang_belanjaan->first();
 
         if ($datakeranjang_belanjaan->count() == 0) {            
@@ -130,16 +130,16 @@ class KeranjangBelanjaController extends Controller
         }
 
         if ($datakeranjang_belanjaan->count() > 0) {
+           $total_tambah_produk = 0;
+           $datakeranjang_belanjaan->update(['jumlah_produk' => $jumlah_produk->jumlah_produk + $request->jumlah_produk]);
 
-            $datakeranjang_belanjaan->update(['jumlah_produk' => $jumlah_produk->jumlah_produk + 1]);
+       } else {
+           $total_tambah_produk = 1;
+           $produk = KeranjangBelanja::create(['id_produk' => $request->id_produk, 'id_pelanggan' => $pelanggan, 'jumlah_produk' => $request->jumlah_produk]);
+       }
+   }
 
-        } else {
-
-            $produk = KeranjangBelanja::create(['id_produk' => $id, 'id_pelanggan' => $pelanggan, 'jumlah_produk' => '1']);
-        }
-    }
-
-    return redirect()->back();
+   return  $total_tambah_produk;
 
 }
 

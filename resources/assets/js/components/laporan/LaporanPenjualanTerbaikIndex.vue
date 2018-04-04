@@ -101,15 +101,19 @@
                               <thead class="text-primary">
                                 <tr>
                                   <th>Kode Produk</th>
+                                  <th>Kode Barcode</th>
                                   <th>Nama Produk</th>
                                   <th style="text-align:right">Jumlah Terjual</th>
+                                  <th>Satuan</th>
                                 </tr>
                               </thead>
                             <tbody v-if="laporanPenjualanTerbaik.length > 0 && loading == false"  class="data-ada">
                                <tr v-for="laporanPenjualanTerbaiks, index in laporanPenjualanTerbaik" >
                                 <td >{{ laporanPenjualanTerbaiks.laporan_penjualan_terbaik.kode_barang  }} </td>
+                                <td >{{ laporanPenjualanTerbaiks.laporan_penjualan_terbaik.kode_barcode  }} </td>
                                 <td >{{ laporanPenjualanTerbaiks.nama_barang  }}</td>
                                 <td align="right">{{ laporanPenjualanTerbaiks.laporan_penjualan_terbaik.jumlah_produk | pemisahTitik }} </td>
+                                <td >{{ laporanPenjualanTerbaiks.laporan_penjualan_terbaik.satuan  }}</td>
                               </tr>
                             </tbody>          
                             <tbody class="data-tidak-ada" v-else-if="laporanPenjualanTerbaik.length == 0 && loading == false">
@@ -131,15 +135,19 @@
                               <thead class="text-primary">
                                 <tr>
                                   <th>Kode Produk</th>
+                                  <th>Kode Barcode</th>
                                   <th>Nama Produk</th>
                                   <th style="text-align:right">Jumlah Terjual</th>
+                                  <th>Satuan</th>
                                 </tr>
                               </thead>
                                <tbody v-if="laporanPenjualanTerbaikOnline.length > 0 && loading == false"  class="data-ada">
                                <tr v-for="laporanPenjualanTerbaikOnlines, index in laporanPenjualanTerbaikOnline" >
                                 <td >{{ laporanPenjualanTerbaikOnlines.laporan_penjualan_terbaik.kode_barang  }} </td>
+                                <td >{{ laporanPenjualanTerbaikOnlines.laporan_penjualan_terbaik.kode_barcode  }} </td>
                                 <td >{{ laporanPenjualanTerbaikOnlines.nama_barang  }}</td>
                                 <td align="right">{{ laporanPenjualanTerbaikOnlines.laporan_penjualan_terbaik.jumlah_produk | pemisahTitik }} </td>
+                                <td >{{ laporanPenjualanTerbaikOnlines.laporan_penjualan_terbaik.satuan  }}</td>
                               </tr>
                             </tbody>          
                             <tbody class="data-tidak-ada" v-else-if="laporanPenjualanTerbaikOnline.length == 0 && loading == false">
@@ -336,6 +344,7 @@
           var sampai_tanggal = app.sampaiTanggal(filter);
 
           $("#btnExcel").show();
+          $("#btnCetak").show();
           $("#btnExcel").attr('href', app.urlDownloadExcel+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.tampil_terbaik);
           $("#btnCetak").attr('href', app.urlCetak+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.tampil_terbaik);
         },

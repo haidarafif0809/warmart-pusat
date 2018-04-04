@@ -89,8 +89,8 @@ first();
     width: 10em;
 }
 .page-header.header-small {
-    height: 35vh;
-    min-height: 35vh;
+    height: 0vh;
+    min-height: 18vh;
 }
 .ecommerce-page .page-header .container {
     @if(Agent::isMobile())
@@ -130,20 +130,6 @@ h4 {
     <div class="page-header header-small" data-parallax="true"" style="background-color: #2ac326">
         @endif
         <a href="{{ url('/home') }}"><img  class="img img-raised" src="{!! $logo_warmart !!}" style="width: 10%"/></a>
-
-        <div class="container">
-            <div class="row">
-                <div class="col-md-8 col-md-offset-2">
-                    <div class="brand">
-                       @if($setting_aplikasi->tipe_aplikasi == 0)
-                       <h3 class="title">PASAR MUSLIM INDONESIA</h3>
-                       @else
-                       <h3 class="title"><?=$settingFooter->judul_warung;?></h3>
-                       @endif
-                   </div>
-               </div>
-           </div>
-       </div>
    </div>
 
    <div class="main main-raised" >
@@ -180,7 +166,55 @@ h4 {
                     {!! Form::close() !!}
                 </div>
             </div>
-        <div class="row">
+
+        @if($cek_baner->count() > 0)
+                <div class="row">
+                    <div class="col-md-12 col-md-offset-0">
+
+                        <!-- Carousel Card -->
+                        <div class="card card-raised card-carousel">
+                            <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                                <div class="carousel slide" data-ride="carousel">
+
+                                    <!-- Indicators -->
+                                    <ol class="carousel-indicators">
+                                        <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                                        @foreach($baner_promo->get() as $baner_promos)
+                                        <li data-target="#carousel-example-generic" data-slide-to="{!!$baner_promos->id_setting_promo !!}"></li>
+                                        @endforeach
+                                    </ol>
+
+                                    <!-- Wrapper for slides -->
+                                    <div class="carousel-inner">
+                                         <div class="item active"><a href="{{ url('/detail-produk/'.$baner_promo_active->id_produk.'') }}">
+                                            <img src="{{ url('/baner_setting_promo/'.$baner_promo_active->baner_promo.'') }}" alt="Awesome Image">
+                                        </a>
+                                        </div>
+                                        @foreach($baner_promo->get() as $baner_promos)
+                                        <div class="item"><a href="{{ url('/detail-produk/'.$baner_promos->id_produk.'') }}">
+                                            <img src="{{ url('/baner_setting_promo/'.$baner_promos->baner_promo.'') }}" alt="Awesome Image">
+                                            </a>
+                                        </div>
+                                        @endforeach
+                                    </div>
+
+                                    <!-- Controls -->
+                                    <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+                                        <i class="material-icons">keyboard_arrow_left</i>
+                                    </a>
+                                    <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+                                        <i class="material-icons">keyboard_arrow_right</i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Carousel Card -->
+                    </div>
+                </div>
+@endif
+
+
+    <div class="row">
           <div class="col-md-12">
             <!--Menampilkan Warung Secara Acak-->
             <h4 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px"> Produk</h4>
@@ -209,20 +243,6 @@ h4 {
     @else
     <div class="page-header header-small" data-parallax="true"" style="background-color: #2ac326">
         @endif
-        <div class="container">
-            <div class="row">
-                <div class="col-md-8 col-md-offset-2">
-                    <div class="brand">
-                        @if($setting_aplikasi->tipe_aplikasi == 0)
-                        <h1 class="title">PASAR MUSLIM INDONESIA</h1>
-                        <h3 class="title"> Segala Kemudahan Untuk Umat Muslim Berbelanja.</h3>
-                        @else
-                        <h1 class="title"><?=$settingFooter->judul_warung;?></h1>
-                        @endif
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <div class="main main-raised" >
@@ -262,10 +282,58 @@ h4 {
             </div>
             <div class="row">
 
-                <!--Menampilkan NAMA Warung -->
-                <div class="col-md-12">
-                    <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px"> Produk </h5>
+        @if($cek_baner->count() > 0)
+                <div class="row">
+                    <div class="col-md-12 col-md-offset-0">
+
+                        <!-- Carousel Card -->
+                        <div class="card card-raised card-carousel">
+                            <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                                <div class="carousel slide" data-ride="carousel">
+
+                                    <!-- Indicators -->
+                                    <ol class="carousel-indicators">
+                                        <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                                        @foreach($baner_promo->get() as $baner_promos)
+                                        <li data-target="#carousel-example-generic" data-slide-to="{!!$baner_promos->id_setting_promo !!}"></li>
+                                        @endforeach
+                                    </ol>
+
+                                    <!-- Wrapper for slides -->
+                                    <div class="carousel-inner">
+                                         <div class="item active"><a href="{{ url('/detail-produk/'.$baner_promo_active->id_produk.'') }}">
+                                            <img src="{{ url('/baner_setting_promo/'.$baner_promo_active->baner_promo.'') }}" alt="Awesome Image">
+                                        </a>
+                                        </div>
+                                        @foreach($baner_promo->get() as $baner_promos)
+                                        <div class="item"><a href="{{ url('/detail-produk/'.$baner_promos->id_produk.'') }}">
+                                            <img src="{{ url('/baner_setting_promo/'.$baner_promos->baner_promo.'') }}" alt="Awesome Image">
+                                            </a>
+                                        </div>
+                                        @endforeach
+                                    </div>
+
+                                    <!-- Controls -->
+                                    <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+                                        <i class="material-icons">keyboard_arrow_left</i>
+                                    </a>
+                                    <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+                                        <i class="material-icons">keyboard_arrow_right</i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Carousel Card -->
+                    </div>
                 </div>
+            @endif
+
+
+        <!--Menampilkan NAMA Warung -->
+        <div class="col-md-12">
+            <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px"> Produk </h5>
+        </div>
+
                 <div class="col-md-12"><br>
                     <div class="row">
                         <!-- Menampilkan Produk -->

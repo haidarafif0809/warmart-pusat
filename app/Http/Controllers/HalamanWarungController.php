@@ -9,6 +9,8 @@ use App\KategoriBarang;
 use App\KeranjangBelanja;
 use App\User;
 use App\Warung;
+use App\SettingPromo;
+use App\SettingAplikasi;
 use Illuminate\Http\Request;
 use Jenssegers\Agent\Agent;
 
@@ -47,11 +49,21 @@ class HalamanWarungController extends Controller
             $daftar_produk = HalamanWarungController::tidakAdaProdukWarung();
         }
 
+        $cek_baner = SettingPromo::where('status',1)->where('id_warung',$array_warung);
+            if ($cek_baner->count() > 0) {
+                    $baner_promo_active = $cek_baner->first();
+                    $baner_promo = SettingPromo::where('status',1)->where('baner_promo','!=',$baner_promo_active->baner_promo);
+            }
+            else{
+                $baner_promo_active = 0;
+                $baner_promo = 0;
+            }
+
         //TAMPIL KATEGORI
         $kategori_produk = HalamanWarungController::produkKategori($kategori, $id);
         $nama_kategori   = "Toko : " . $warungs_data->name;
 
-        return view('layouts.halaman_warung', ['kategori_produk' => $kategori_produk, 'daftar_produk' => $daftar_produk, 'produk_pagination' => $produk_pagination, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'cek_belanjaan' => $cek_belanjaan, 'logo_warmart' => $logo_warmart, 'list_warung' => $list_warung, 'id' => $id, 'nama_warung' => $nama_warung]);
+        return view('layouts.halaman_warung', ['kategori_produk' => $kategori_produk, 'daftar_produk' => $daftar_produk, 'produk_pagination' => $produk_pagination, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'cek_belanjaan' => $cek_belanjaan, 'logo_warmart' => $logo_warmart, 'list_warung' => $list_warung, 'id' => $id, 'nama_warung' => $nama_warung,'baner_promo'=>$baner_promo,'baner_promo_active'=>$baner_promo_active,'cek_baner'=>$cek_baner]);
     }
 
     public static function filter_kategori($id, $id_warung)
@@ -89,7 +101,17 @@ class HalamanWarungController extends Controller
             $daftar_produk = HalamanWarungController::tidakAdaProdukKategori();
         }
 
-        return view('layouts.halaman_warung', ['kategori_produk' => $kategori_produk, 'daftar_produk' => $daftar_produk, 'produk_pagination' => $produk_pagination, 'id' => $id, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'agent' => $agent, 'cek_belanjaan' => $cek_belanjaan, 'logo_warmart' => $logo_warmart, 'list_warung' => $list_warung, 'id' => $id_warung, 'nama_warung' => $nama_warung]);
+        $cek_baner = SettingPromo::where('status',1)->where('id_warung',$array_warung);
+            if ($cek_baner->count() > 0) {
+                    $baner_promo_active = $cek_baner->first();
+                    $baner_promo = SettingPromo::where('status',1)->where('baner_promo','!=',$baner_promo_active->baner_promo);
+            }
+            else{
+                $baner_promo_active = 0;
+                $baner_promo = 0;
+            }
+
+        return view('layouts.halaman_warung', ['kategori_produk' => $kategori_produk, 'daftar_produk' => $daftar_produk, 'produk_pagination' => $produk_pagination, 'id' => $id, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'agent' => $agent, 'cek_belanjaan' => $cek_belanjaan, 'logo_warmart' => $logo_warmart, 'list_warung' => $list_warung, 'id' => $id_warung, 'nama_warung' => $nama_warung,'baner_promo'=>$baner_promo,'baner_promo_active'=>$baner_promo_active,'cek_baner'=>$cek_baner]);
     }
 
     public static function produkKategori($kategori, $id)
@@ -149,7 +171,17 @@ class HalamanWarungController extends Controller
 
         $daftar_produk = DaftarProdukController::daftarProduk($data_produk, $request->id_warung);
 
-        return view('layouts.halaman_warung', ['kategori_produk' => $kategori_produk, 'daftar_produk' => $daftar_produk, 'produk_pagination' => $produk_pagination, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'cek_belanjaan' => $cek_belanjaan, 'logo_warmart' => $logo_warmart, 'list_warung' => $list_warung, 'id' => $request->id_warung]);
+        $cek_baner = SettingPromo::where('status',1)->where('id_warung',$request->id_warung);
+            if ($cek_baner->count() > 0) {
+                    $baner_promo_active = $cek_baner->first();
+                    $baner_promo = SettingPromo::where('status',1)->where('baner_promo','!=',$baner_promo_active->baner_promo);
+            }
+            else{
+                $baner_promo_active = 0;
+                $baner_promo = 0;
+            }
+
+        return view('layouts.halaman_warung', ['kategori_produk' => $kategori_produk, 'daftar_produk' => $daftar_produk, 'produk_pagination' => $produk_pagination, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'cek_belanjaan' => $cek_belanjaan, 'logo_warmart' => $logo_warmart, 'list_warung' => $list_warung, 'id' => $request->id_warung,'baner_promo'=>$baner_promo,'baner_promo_active'=>$baner_promo_active,'cek_baner'=>$cek_baner]);
     }
 
     public static function dataWarungTervalidasi($id)

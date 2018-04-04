@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\SettingJasaPengiriman;
 use App\SettingTransferBank;
+use App\SettingDefaultAlamatPelanggan;
 use Auth;
 use Illuminate\Http\Request;
 use Jenssegers\Agent\Agent;
+use Indonesia;
 
 class SettingPengirimanController extends Controller
 {
@@ -53,6 +55,17 @@ class SettingPengirimanController extends Controller
         return response()->json($array);
     }
 
+    public function viewDefaultAlamatPengriman()
+    {   
+        $defaultAlamatPelanggan = SettingDefaultAlamatPelanggan::select('provinsi','kabupaten','status_aktif')->first();
+        $provinsi = Indonesia::allProvinces();
+        $kabupaten = Indonesia::allCities()->where('province_id',$defaultAlamatPelanggan->provinsi);
+        $response['provinsi'] = $provinsi;
+        $response['kabupaten'] = $kabupaten;
+        $response['defaultAlamatPelanggan'] = $defaultAlamatPelanggan;
+        return response()->json($response);
+    }
+
     public function simpanSetting(Request $request)
     {
         $warung_id = Auth::user()->id_warung;
@@ -75,5 +88,15 @@ class SettingPengirimanController extends Controller
                 'default_bank' => $value['setting']['default_bank'],
             ]);
         }
+    }
+
+    public function simpanSettingDefaultAlamatPengiriman(Request $request){
+                //VALIDASI WARUNG
+        $this->validate($request, [
+            'provinsi'      => 'required',
+            'kabupaten'    => 'required',
+            'status_aktif'  => 'required'
+        ]);
+        $setting = SettingDefaultAlamatPelanggan::first()->update(['provinsi' => $request->provinsi, 'kabupaten' => $request->kabupaten ,'status_aktif' => $request->status_aktif]);
     }
 }

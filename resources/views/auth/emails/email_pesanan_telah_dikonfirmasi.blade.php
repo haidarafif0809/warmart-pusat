@@ -1,4 +1,4 @@
-<!DOCTYPE doctype html>
+<!DOCTYPE html>
 <html>
 	<head>
         <meta content="width=device-width" name="viewport"/>
@@ -294,199 +294,165 @@
 			}
         </style>
     </head>
-    <body class="">
-        <table border="0" cellpadding="0" cellspacing="0" class="body">
-            <tr>
-                <td>
-                </td>
-                <td class="container">
-                    <div class="content">
-                        <!-- START CENTERED WHITE CONTAINER -->
-                        <span class="preheader">
-                            Email Untuk Kamu !.
-                        </span>
-                        <table class="main">
-                            <!-- START MAIN CONTENT AREA -->
-                            <tr>
-                                <td class="wrapper">
-                                    <table border="0" cellpadding="0" cellspacing="0">
-                                        <tr>
-                                            <td>
-                                                <h4>
-                                                    <p>
-                                                        <b>
-                                                            Hai {{ $pesanan_pelanggan->nama_pemesan }},
-                                                        </b>
-                                                    </p>
-                                                </h4>
-                                                <p>
-                                                    Pesanan Anda dengan nomor Order #{{ $pesanan_pelanggan->id }} yang Anda pesan di 
-                                                    <b>
-                                                        {{ $data_warung->name }}
-                                                    </b>
-                                                    telah
-                                                    <b>
-                                                        dikonfirmasi
-                                                    </b>
-                                                    pada tanggal {{ $waktu_update }}
-                                                    dengan metode pembayaran
-                                                    <b>
-                                                        {{ $pesanan_pelanggan->metode_pembayaran }}
-                                                    </b>
-                                                    .
-                                                </p>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </td>
-            </tr>
-        </table>
-    </body>
-</html>
-<table border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-        <tr>
-            <td align="left">
-                <table border="0" cellpadding="0" cellspacing="0">
-                    <tbody>
-                        <tr>
-                            <td>
-                                <div class="container">
-                                    <hr>
-                                        <p>
-                                            <b>
-                                                Detail Pesanan :
-                                            </b>
-                                        </p>
-                                        <table>
-                                            <thead>
-                                            </thead>
-                                            <tbody>
-                                                @foreach($produk_pesanan as $detail)
-                                                <tr>
-                                                    <td>
-                                                        <div class="img-container" style="padding-left: 5px; padding-top: 1px; padding-bottom: 1px; padding-right: 1px; width:75px;">
-                                                            @if($detail->produk->foto != "")
-                                                            <img src="{{ url('foto_produk/'. $detail->produk->foto) }}">
-                                                                @else
-                                                                <img src="{{ url('image/foto_default.png') }}">
-                                                                    @endif
-                                                                </img>
-                                                            </img>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        {{ $detail->nama_barang }}
-                                                        <br>
-                                                            Quantity : {{ number_format($detail->jumlah_produk, 0, ',', '.') }}
-                                                            <br>
-                                                                Harga : {{ number_format($detail->produk->harga_jual, 0, ',', '.') }}
-                                                                <br>
-                                                                    <small>
-                                                                        <i>
-                                                                            Topos
-                                                                        </i>
-                                                                    </small>
-                                                                </br>
-                                                            </br>
-                                                        </br>
-                                                    </td>
-                                                    <td align="right">
-                                                        <b align="right">
-                                                            Rp. {{ number_format($detail->produk->harga_jual * $detail->jumlah_produk ,0, ',', '.') }}
-                                                        </b>
-                                                    </td>
-                                                </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                        <hr>
-                                            <hr>
-                                                <table>
-                                                    <thead>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td style="padding: 3px;">
-                                                            </td>
-                                                            <td style="padding: 3px;">
-                                                            </td>
-                                                            <td align="right" style="padding:3px">
-                                                                Subtotal :
-                                                            </td>
-                                                            <td align="right" style="padding:3px">
-                                                                <b>
-                                                                    Rp. {{ number_format(($pesanan_pelanggan->subtotal + $pesanan_pelanggan->biaya_kirim),0, ',', '.') }}
-                                                                </b>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td style="padding: 3px;">
-                                                            </td>
-                                                            <td align="right" style="padding:3px">
-                                                            </td>
-                                                            <td align="right" style="padding:3px">
-                                                                Ongkos Kirim :
-                                                            </td>
-                                                            <td align="right" style="padding:3px">
-                                                                <b>
-                                                                    Rp. {{ number_format($pesanan_pelanggan->biaya_kirim ,0, ',', '.') }}
-                                                                </b>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td style="padding: 3px;">
-                                                            </td>
-                                                            <td align="right" style="padding:3px">
-                                                            </td>
-                                                            <td align="right" style="padding:3px">
-                                                                <b>
-                                                                    Total :
-                                                                </b>
-                                                            </td>
-                                                            <td align="right" style="padding:3px">
-                                                                <b>
-                                                                    Rp. {{ number_format($pesanan_pelanggan->subtotal + $pesanan_pelanggan->biaya_kirim ,0, ',', '.') }}
-                                                                </b>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                                <hr>
-                                                    @if($pesanan_pelanggan->metode_pembayaran == 'Bayar di Tempat')
-                                                    <p>
-                                                        <b>
-                                                            Informasi mengenai Pembayaran
-                                                        </b>
-                                                    </p>
-                                                    <ul>
-                                                        <li>
-                                                            Dimohon untuk menyiapkan uang pas saat Anda menerima pesanan Anda.
-                                                        </li>
-                                                    </ul>
-                                                    <hr>
-                                                        @endif
+    <body>
+    	<div class="body">
+	    	<div class="container">
+		    	<div class="content">
+			    	<div class="main">
+				    	<div class="wrapper">	
+					        <table border="0" cellpadding="0" cellspacing="0">
+					            <tr>
+					                <td>
+					                </td>
+					                <td>
+				                        <!-- START CENTERED WHITE CONTAINER -->
+				                        <span class="preheader"> Email Untuk Kamu !. </span>
+				                        <table>
+				                            <!-- START MAIN CONTENT AREA -->
+				                            <tr>
+				                                <td>
+				                                    <table border="0" cellpadding="0" cellspacing="0">
+				                                        <tr>
+				                                            <td>
+				                                                <h4>
+																<p>
+			                                                        <b> Hai {{ $pesanan_pelanggan->nama_pemesan }}, </b>
+				                                                </p>
+				                                            	</h4>
+				                                                <p>
+				                                                    Pesanan Anda dengan nomor Order #{{ $pesanan_pelanggan->id }} yang Anda pesan di 
+				                                                    <b> {{ $data_warung->name }} </b>
+				                                                    telah
+				                                                    <b> dikonfirmasi </b>
+				                                                    pada tanggal {{ $waktu_update }}
+				                                                    dengan metode pembayaran
+				                                                    <b> {{ $pesanan_pelanggan->metode_pembayaran }} </b>.
+				                                                </p>
+				                                            </td>
+				                                        </tr>
+				                                    </table>
+				                                </td>
+				                            </tr>
+				                        </table>
+					                </td>
+					            </tr>
+					        </table>
+							<table border="0" cellpadding="0" cellspacing="0">
+							    <tbody>
+							        <tr>
+							            <td align="left">
+							                <table border="0" cellpadding="0" cellspacing="0">
+							                    <tbody>
+							                        <tr>
+							                            <td>
+						                                    <hr>
+					                                        <p>
+					                                            <b> Detail Pesanan : </b>
+					                                        </p>
+					                                        <table>
+					                                            <thead>
+					                                            </thead>
+					                                            <tbody>
+					                                                @foreach($produk_pesanan as $detail)
+					                                                <tr>
+					                                                    <td>
+					                                                        <div style="padding-left: 5px; padding-top: 1px; padding-bottom: 1px; padding-right: 1px; width:75px;">
+					                                                            @if($detail->produk->foto != "")
+					                                                            <img src="{{ url('foto_produk/'. $detail->produk->foto) }}" />
+					                                                                @else
+				                                                                <img src="{{ url('image/foto_default.png') }}" />
+			                                                                    @endif
+					                                                        </div>
+					                                                    </td>
+					                                                    <td>
+					                                                    	{{ $detail->nama_barang }}
+					                                                    	<br>
+					                                                        Quantity : {{ number_format($detail->jumlah_produk, 0, ',', '.') }}
+					                                                        <br>
+					                                                        Harga : {{ number_format($detail->produk->harga_jual, 0, ',', '.') }}
+					                                                        <br>
+					                                                        <small>
+					                                                        	<i> Topos </i>
+					                                                        </small>
+					                                                        </br>
+					                                                        </br>
+					                                                        </br>
+					                                                    </td>
+					                                                    <td align="right">
+					                                                        <b align="right">
+					                                                            Rp. {{ number_format($detail->produk->harga_jual * $detail->jumlah_produk ,0, ',', '.') }}
+					                                                        </b>
+					                                                    </td>
+					                                                </tr>
+					                                                @endforeach
+					                                            </tbody>
+					                                        </table>
+					                                        <hr>
+					                                        <hr>
+			                                                <table>
+			                                                    <thead>
+			                                                    </thead>
+			                                                    <tbody>
+			                                                        <tr>
+			                                                            <td style="padding: 3px;"></td>
+			                                                            <td style="padding: 3px;"></td>
+			                                                            <td align="right" style="padding:3px">
+			                                                                Subtotal :
+			                                                            </td>
+			                                                            <td align="right" style="padding:3px">
+			                                                                <b> Rp. {{ number_format(($pesanan_pelanggan->subtotal + $pesanan_pelanggan->biaya_kirim),0, ',', '.') }} </b>
+			                                                            </td>
+			                                                        </tr>
+			                                                        <tr>
+			                                                            <td style="padding: 3px;">
+			                                                            </td>
+			                                                            <td align="right" style="padding:3px">
+			                                                            </td>
+			                                                            <td align="right" style="padding:3px">
+			                                                                Ongkos Kirim :
+			                                                            </td>
+			                                                            <td align="right" style="padding:3px">
+			                                                                <b> Rp. {{ number_format($pesanan_pelanggan->biaya_kirim ,0, ',', '.') }} </b>
+			                                                            </td>
+			                                                        </tr>
+			                                                        <tr>
+			                                                            <td style="padding: 3px;">
+			                                                            </td>
+			                                                            <td align="right" style="padding:3px">
+			                                                            </td>
+			                                                            <td align="right" style="padding:3px">
+			                                                                <b> Total : </b>
+			                                                            </td>
+			                                                            <td align="right" style="padding:3px">
+			                                                                <b> Rp. {{ number_format($pesanan_pelanggan->subtotal + $pesanan_pelanggan->biaya_kirim ,0, ',', '.') }} </b>
+			                                                            </td>
+			                                                        </tr>
+			                                                    </tbody>
+			                                                </table>
+			                                                <hr>
+			                                                @if($pesanan_pelanggan->metode_pembayaran == 'Bayar di Tempat')
+			                                                <p>
+			                                                	<b> Informasi mengenai Pembayaran </b>
+		                                                    </p>
+		                                                    <ul>
+		                                                        <li>
+		                                                            Dimohon untuk menyiapkan uang pas saat Anda menerima pesanan Anda.
+		                                                        </li>
+		                                                    </ul>
+		                                                    <hr>
+	                                                        @endif
 
-                                                        @if($pesanan_pelanggan->layanan_kurir != "")
-			                                              <p>Waktu Pengiriman: <b>{{$pesanan_pelanggan->WaktuBarangSampai}}</b> </p><br>
-			                                            @endif
-                                                        <p>
-                                                            Pesanan Anda akan dikirimkan ke:
-                                                            <b>
-                                                                {{ $pesanan_pelanggan->nama_pemesan }}
-                                                            </b>
-                                                        </p>
-                                                        <p>
-                                                            <b>
-                                                                {{ $pesanan_pelanggan->alamat_pemesan }}
-					                                                Phone: {{ $pesanan_pelanggan->no_telp_pemesan }}
-                                                            </b>
-                                                        </p>
-                                                        <br>
+	                                                        @if($pesanan_pelanggan->layanan_kurir != "")
+				                                              <p>Waktu Pengiriman: <b>{{$pesanan_pelanggan->WaktuBarangSampai}}</b> </p><br>
+				                                            @endif
+	                                                        <p>
+	                                                            Pesanan Anda akan dikirimkan ke:
+	                                                            <b> {{ $pesanan_pelanggan->nama_pemesan }} </b>
+	                                                        </p>
+	                                                        <p>
+	                                                            <b> {{ $pesanan_pelanggan->alamat_pemesan }} Phone: {{ $pesanan_pelanggan->no_telp_pemesan }} </b>
+	                                                        </p>
+	                                                        <br>
                                                             <center>
                                                                 <p>
                                                                     Jika Anda membutuhkan bantuan, silahkan hubungi kami di
@@ -502,54 +468,47 @@
                                                             <p>
                                                                 Salam,
                                                                 <br>
-                                                                    <p>
-                                                                        <b>
-                                                                            {{$data_warung->name}}
-                                                                        </b>
-                                                                    </p>
+                                                                <p>
+                                                                    <b>{{ $data_warung->name  }}</b>
+                                                                </p>
                                                                 </br>
                                                             </p>
-                                                        </br>
-                                                    </hr>
-                                                </hr>
-                                            </hr>
-                                        </hr>
-                                    </hr>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </td>
-        </tr>
-    </tbody>
-</table>
-<!-- END MAIN CONTENT AREA -->
-
-<!-- START FOOTER -->
-<div class="footer">
-    <table border="0" cellpadding="0" cellspacing="0">
-        <tr>
-            <td class="content-block">
-                <span class="apple-link">
-                    © <?php date_default_timezone_set("Asia/Jakarta"); echo date("Y");?> PT Andaglos Global Teknologi - All Rights Reserved
-                </span>
-                </br>
-            </td>
-        </tr>
-        <tr>
-            <td class="content-block powered-by">
-                Powered by
-                <a font-color="blue" href="http://andaglos.id">
-                    PT Andaglos Global Teknologi
-                </a>
-                .
-            </td>
-        </tr>
-    </table>
-</div>
-<!-- END FOOTER -->
-
-<!-- END CENTERED WHITE CONTAINER -->
-<td>
-</td>
+	                                                        </br>
+		                                                    </hr>
+			                                                </hr>
+				                                            </hr>
+					                                        </hr>
+						                                    </hr>
+							                            </td>
+							                        </tr>
+							                    </tbody>
+							                </table>
+							            </td>
+							        </tr>
+							    </tbody>
+							</table>
+							<div class="footer">
+							    <table border="0" cellpadding="0" cellspacing="0">
+							        <tr>
+							            <td class="content-block">
+							                <span class="apple-link"> © <?php date_default_timezone_set("Asia/Jakarta"); echo date("Y");?> PT Andaglos Global Teknologi - All Rights Reserved </span>
+							                </br>
+							            </td>
+							        </tr>
+							        <tr>
+							            <td class="content-block powered-by">
+							                Powered by <a font-color="blue" href="http://andaglos.id">
+							                    PT Andaglos Global Teknologi </a>.
+							            </td>
+							        </tr>
+							    </table>
+							</div>
+				    	</div>
+			    	</div>
+		    	</div>
+	    	</div>
+    	</div>
+		<td>
+		</td>
+    </body>
+</html>
