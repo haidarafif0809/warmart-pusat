@@ -172,22 +172,22 @@
 										<ul v-for="(input, index) in inputSatuanKonversi" style="padding-left:0px">
 											<div class="col-md-2"></div>
 
-											<div class="col-md-3">
+											<div class="col-md-2 col-xs-4">
 												<selectize-component v-model="input.id_satuan" :settings="placeholder_satuan" id="satuan-konversi" ref="satuan_barang" :disabled="input.disable"> 
 													<option v-for="satuans, index in satuan_id" v-bind:value="satuans.satuan" >{{ satuans.nama_satuan }}</option>
 												</selectize-component>
 											</div>
 
-											<div class="col-md-2">
+											<div class="col-md-2 col-xs-2">
 												<money class="form-control" autocomplete="off" placeholder="Jumlah Konversi" v-model="input.jumlah_produk" type="text" name="jumlah_konversi" id="jumlah_konversi"  ref="jumlah_konversi" autofocus="" v-bind="separator">
 												</money>
 											</div>	
 
-											<div class="col-md-2">
+											<div class="col-md-2 col-xs-3">
 												<input class="form-control" autocomplete="off" placeholder="Satuan Dasar" v-model="input.nama_satuan" type="text" name="satuan_dasar" id="satuan_dasar" ref="satuan_dasar" autofocus="" readonly="">
 											</div>
 
-											<div class="col-md-2">
+											<div class="col-md-2 col-xs-3">
 												<money class="form-control" autocomplete="off" placeholder="Harga Jual" v-model="input.harga_jual" type="text" name="harga_jual" id="harga_jual"  ref="harga_jual" autofocus="" v-bind="separator">
 												</money>
 											</div>
@@ -195,6 +195,12 @@
 											<div class="col-md-1" style="padding-left:0px">
 												<div class="row" style="margin-top:-10px">
 													<button class="btn btn-primary btn-icon waves-effect waves-light" v-on:click="hapusKonversiSatuan(index)" type="button" id="btnSatuan"> <i class="material-icons" >delete</i> </button>
+												</div>
+											</div>
+
+											<div class="col-md-1" style="padding-left:0px">
+												<div :class="'row btn-'+index" style="margin-top:-10px">
+													<button :class="'btn btn-primary btn-icon waves-effect waves-light'" v-on:click="konversiSatuan()" type="button" id="btnSatuan"> <i class="material-icons" >add</i> </button>
 												</div>
 											</div>
 
@@ -727,6 +733,7 @@
 				}else{
 					var length = app.inputSatuanKonversi.length - parseInt(1);
 					var data_satuan = app.inputSatuanKonversi[length].id_satuan.split("|");
+					$(".btn-"+length).hide();
 				}
 
 				app.inputSatuanKonversi.push({
@@ -741,11 +748,13 @@
 			},
 			hapusKonversiSatuan(index) {
 				var app = this;
-				console.log(index)
+				var length = app.inputSatuanKonversi.length - 2;
+
 				if (index > 0) {
 					app.inputSatuanKonversi[index - 1].disable = false;
 				}
 				app.inputSatuanKonversi.splice(index,1)
+				$(".btn-"+length).show();
 			}
 		}
 	}
