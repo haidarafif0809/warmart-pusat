@@ -1,8 +1,8 @@
 <style scoped>
-.pencarian {
-  color: red; 
-  float: right;
-}
+  .pencarian {
+    color: red; 
+    float: right;
+  }
 </style>
 <template>
   <div class="row">
@@ -18,7 +18,11 @@
      <div class="card-content">
        <h4 class="card-title"> Kas</h4>
        <div class="toolbar" v-if="otoritas.tambah_kas == 1">
-         <p> <router-link :to="{name: 'createKas'}" class="btn btn-primary">Tambah Kas</router-link></p>
+         <p> 
+           <router-link :to="{name: 'createKas'}" class="btn btn-primary">Tambah Kas</router-link>
+
+           <router-link :to="{name: 'createBankWarung'}" class="btn btn-primary">Tambah Bank</router-link>
+         </p>
        </div>
        <br>
        <div class="table-responsive">
@@ -36,7 +40,6 @@
               <th>Total Kas</th>
               <th  v-if="otoritas.edit_kas == 1">Edit</th>
               <th  v-if="otoritas.hapus_kas == 1">Hapus</th>
-              <th></th>
             </tr>
           </thead>
           <tbody v-if="kass.length > 0 && loading == false" class="data-ada">
@@ -61,54 +64,56 @@
                <router-link :to="{name: 'editKas', params: {id: kas.kas.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + kas.kas.id" v-if="otoritas.edit_kas == 1">
                 Edit 
               </router-link> 
+            </td>
+            <td>
 
               <a v-if="kas.status_transaksi == 0 && otoritas.hapus_kas == 1" href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + kas.kas.id"  v-on:click="deleteEntry(kas.kas.id, index,kas.kas.nama_kas)" >
-              Delete </a>
-              <a v-if="kas.status_transaksi == 1  && otoritas.hapus_kas == 1" href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + kas.kas.id"
-              v-on:click="gagalHapus(kas.kas.id, index,kas.kas.nama_kas)">  Delete </a>
-            </td>
-            <td></td>
+                Delete </a>
+                <a v-if="kas.status_transaksi == 1  && otoritas.hapus_kas == 1" href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + kas.kas.id"
+                v-on:click="gagalHapus(kas.kas.id, index,kas.kas.nama_kas)">  Delete </a>
 
-          </tr>
-        </tbody>
-        <tbody class="data-tidak-ada" v-else-if="kass.length == 0 && loading == false">
-          <tr ><td colspan="8"  class="text-center">Tidak Ada Data</td></tr>
-        </tbody>
-      </table>
+              </td>
 
-      <vue-simple-spinner v-if="loading"></vue-simple-spinner>
+            </tr>
+          </tbody>
+          <tbody class="data-tidak-ada" v-else-if="kass.length == 0 && loading == false">
+            <tr ><td colspan="8"  class="text-center">Tidak Ada Data</td></tr>
+          </tbody>
+        </table>
 
-      <div align="right"><pagination :data="kassData" v-on:pagination-change-page="getResults"></pagination></div>
+        <vue-simple-spinner v-if="loading"></vue-simple-spinner>
+
+        <div align="right"><pagination :data="kassData" v-on:pagination-change-page="getResults"></pagination></div>
+
+      </div>
+
 
     </div>
-
-
   </div>
-</div>
 </div>
 </div>
 </template>
 
 <script>
-export default {
-  data: function () {
-    return {
-      kass: [],
-      kassData: {},
-      otoritas: {},
-      url : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
-      pencarian: '',
-      contoh : '',
-      loading: true
-    }
-  },
-  mounted() {
-    var app = this;
+  export default {
+    data: function () {
+      return {
+        kass: [],
+        kassData: {},
+        otoritas: {},
+        url : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
+        pencarian: '',
+        contoh : '',
+        loading: true
+      }
+    },
+    mounted() {
+      var app = this;
 
-    app.getResults();
+      app.getResults();
 
-  },
-  watch: {
+    },
+    watch: {
         // whenever question changes, this function will run
         pencarian: function (newQuestion) {
           this.getHasilPencarian()  
@@ -196,4 +201,4 @@ export default {
 
       }
     }
-    </script>
+  </script>
