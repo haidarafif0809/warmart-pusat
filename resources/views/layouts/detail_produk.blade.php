@@ -51,116 +51,114 @@ $bank_transfers = \App\SettingTransferBank::select('logo_bank')->where('tampil_b
 </head>
 <style type="text/css">
 
-  .navbar .navbar-brand {
-    position: relative;
-    @if(Agent::isMobile())
-    height: 50px;
-    @else
-    height: 75px;
-    @endif
-    line-height: 0px;
-    color: inherit;
-    padding: 10px 15px;
-  }
+.navbar .navbar-brand {
+  position: relative;
+  @if(Agent::isMobile())
+  height: 50px;
+  @else
+  height: 75px;
+  @endif
+  line-height: 0px;
+  color: inherit;
+  padding: 10px 15px;
+}
 
-  .list-produk {
-    padding-left: 4px;
-    padding-right: 4px;
-  }
-  .product-page .page-header .container {
-    padding-top: 10vh;
-  }
-  .product-page .main-raised {
-    padding-top: 0%;
-  }
-  .product-page .related-products .title {
-    margin-bottom: 1px;
-  }
-  .product-page h2.title {
-    margin-bottom: 0px;
-    margin-top: 0px;
-  }
+.list-produk {
+  padding-left: 4px;
+  padding-right: 4px;
+}
+.product-page .page-header .container {
+  padding-top: 10vh;
+}
+.product-page .main-raised {
+  padding-top: 0%;
+}
+.product-page .related-products .title {
+  margin-bottom: 1px;
+}
+.product-page h2.title {
+  margin-bottom: 0px;
+  margin-top: 0px;
+}
 
-  .card .card-image{
-    height: auto; /*this makes sure to maintain the aspect ratio*/
-    margin-top: 5px;
-  }
-  .img-produk{
-    border-radius: 15px;
-    margin-top: 10px;
-  }
-  p {
-    margin: 0 0 0px;
-  }
-  .card-pricing {
-    margin-bottom: 0px;
-  }
-  .tombolBeli {
-    padding: 10px 0px;
-    margin:0px;
-  }
-  .card-pricing .card-content {
-    padding: 5px !important;
-  }
-  .card .footer {
-    margin-top: 0px;
-    font-family: Helvetica,Arial,sans-serif;
-    font-weight: 400;
-    line-height:1.2em;
-    text-decoration: none;
-    font-size:15px;
-  }
+.card .card-image{
+  height: auto; /*this makes sure to maintain the aspect ratio*/
+  margin-top: 5px;
+}
+.img-produk{
+  border-radius: 15px;
+  margin-top: 10px;
+}
+p {
+  margin: 0 0 0px;
+}
+.card-pricing {
+  margin-bottom: 0px;
+}
+.tombolBeli {
+  padding: 10px 0px;
+  margin:0px;
+}
+.card-pricing .card-content {
+  padding: 5px !important;
+}
+.card .footer {
+  margin-top: 0px;
+  font-family: Helvetica,Arial,sans-serif;
+  font-weight: 400;
+  line-height:1.2em;
+  text-decoration: none;
+  font-size:15px;
+}
 
-  @font-face {
-    font-family: "San Francisco";
-    font-weight: 200;
-    src: url("//applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-thin-webfont.woff2");
-  }
+@font-face {
+  font-family: "San Francisco";
+  font-weight: 200;
+  src: url("//applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-thin-webfont.woff2");
+}
 
-  .flexFont {
-    @if(Agent::isMobile())
-    height:4em;
-    @else
-    height:3em;
-    @endif
-    padding:1%;
-    margin: 5px;
 
-  }
-  .btnWarung {
-    padding:1%;
-    margin: 0px;
-  }
+.flexFont {
+  @if(Agent::isMobile())
+  height:4em;
+  @else
+  height:3em;
+  @endif
+  padding:1%;
+  margin: 5px;
 
-  .smaller {
-    font-size: 0.7em;
-    background-color:red;
-    width: 10em;
-  }
-  .buttonColor{
-    @if($setting_aplikasi->tipe_aplikasi == "1") /*tipe-aplikasi == 1, aplikasi topos*/
-    background-color: #2ac326;
-    @else
-    background-color: #01573e;
-    @endif
-  }
-  .btn.btn-just-icon, .navbar .navbar-nav > li > a.btn.btn-just-icon {
-    font-size: 15px;
-    padding: 6px 5px;
-    line-height: 1em;
-  }
+}
+.btnWarung {
+  padding:1%;
+  margin: 0px;
+}
 
-  .footer-big .social-feed i {
-    font-size: 23.5px;
-    display: table-cell;
-    padding-right: 10px;
-  }
-  .img-jasa{
-    padding: 0px 2px 2px;
-  }
-  .navbar>.container .navbar-brand, .navbar>.container-fluid .navbar-brand {
-    margin-left: 0px;
-  }
+.smaller {
+  font-size: 0.7em;
+  background-color:red;
+  width: 10em;
+}
+.buttonColor{
+  @if($setting_aplikasi->tipe_aplikasi == "1") /*tipe-aplikasi == 1, aplikasi topos*/
+  background-color: #2ac326;
+  @else
+  background-color: #01573e;
+  @endif
+}
+.btn.btn-just-icon, .navbar .navbar-nav > li > a.btn.btn-just-icon {
+  font-size: 15px;
+  padding: 6px 5px;
+  line-height: 1em;
+}
+
+.footer-big .social-feed i {
+  font-size: 23.5px;
+  display: table-cell;
+  padding-right: 10px;
+}
+.img-jasa{
+  padding: 0px 2px 2px;
+}
 
 </style>
 <body class="product-page">
@@ -351,7 +349,7 @@ $bank_transfers = \App\SettingTransferBank::select('logo_bank')->where('tampil_b
                   shopping_cart
                 </i>
                 Keranjang Belanja
-                <b style="font-size: 15px" id="jumlah-keranjang" data-session="">
+                <b style="font-size: 15px" id="jumlah-keranjang" data-session="" data-jumlah="{{ $cek_belanjaan }}">
                   | {{ $cek_belanjaan }}
                 </b>
               </a>
@@ -363,7 +361,7 @@ $bank_transfers = \App\SettingTransferBank::select('logo_bank')->where('tampil_b
                   shopping_cart
                 </i>
                 Keranjang Belanja
-                <b style="font-size: 15px" id="jumlah-keranjang" data-session="">
+                <b style="font-size: 15px" id="jumlah-keranjang" data-session="" data-jumlah="{{ $cek_belanjaan }}">
                   | {{ $cek_belanjaan }}
                 </b>
               </a>
@@ -451,37 +449,38 @@ $bank_transfers = \App\SettingTransferBank::select('logo_bank')->where('tampil_b
             <!--JIKA DAKSES VIA HP/TAB-->
             <div class="row text-center">
               @if ($cek_produk == 0)
-              <a class="btn btn-round buttonColor" disabled="" rel="tooltip" title="Stok Tidak Ada">
+              <a class="btn btn-round buttonColor" disabled="" rel="tooltip" title="Stok Tidak Ada" data-id-produk='{{$barang->id}}' data-nama-produk="{{ $barang->nama }}">
                 Beli Sekarang
                 <i class="material-icons">
                   shopping_cart
                 </i>
               </a>
               @else
-              <a class="btn btn-round buttonColor" href="{{ url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$barang->id.'') }}" id="btnBeliSekarang" rel="tooltip" title="Tambah Ke Keranjang Belanja">
+              <button class="btn btn-round buttonColor" id="btnBeliSekarang" rel="tooltip" title="Tambah Ke Keranjang Belanja" data-id-produk='{{$barang->id}}' data-nama-produk="{{ $barang->nama }}">
                 Beli Sekarang
                 <i class="material-icons">
                   shopping_cart
                 </i>
-              </a>
+              </button>
               @endif
             </div>
             @else
             <div class="row text-right">
               @if ($cek_produk == 0)
-              <a class="btn btn-round buttonColor" disabled="" rel="tooltip" title="Stok Tidak Ada">
+              <a class="btn btn-round buttonColor" disabled="" rel="tooltip" title="Stok Tidak Ada" data-id-produk='{{$barang->id}}' data-nama-produk="{{ $barang->nama }}">
                 Beli Sekarang
                 <i class="material-icons">
                   shopping_cart
                 </i>
               </a>
               @else
-              <a class="btn btn-round buttonColor" href="{{ url('/keranjang-belanja/tambah-produk-keranjang-belanja/'.$barang->id.'') }}" id="btnBeliSekarang" rel="tooltip" title="Tambah Ke Keranjang Belanja">
+              <button class="btn btn-round buttonColor" id="btnBeliSekarang" rel="tooltip" title="Tambah Ke Keranjang Belanja" data-id-produk='{{$barang->id}}' data-nama-produk="{{ $barang->nama }}">
+
                 Beli Sekarang
                 <i class="material-icons">
                   shopping_cart
                 </i>
-              </a>
+              </button>
               @endif
             </div>
             @endif
@@ -821,17 +820,64 @@ $bank_transfers = \App\SettingTransferBank::select('logo_bank')->where('tampil_b
   var myLazyLoad = new LazyLoad();
 </script>
 <script type="text/javascript">
+
+
   $(document).on('click', '#btnBeliSekarang', function(){
-    swal({
-      text :  "Produk Berhasil Di Tambahkan Ke Keranjang Belanja",
-      showConfirmButton :  false,
-      type: "success",
-      timer: 10000,
-      onOpen: () => {
-        swal.showLoading()
-      }
-    });
+    let nama_produk = $(this).attr("data-nama-produk");
+    let id_produk = $(this).attr("data-id-produk");
+    alert(nama_produk,id_produk);
   });
+
+  function alert(nama_produk,id_produk){
+    swal({
+      title: nama_produk,
+      text: 'Masukan Jumlah Produk',
+      input: 'number',
+      inputValue: 2,
+      showCancelButton: true,
+      confirmButtonText: 'OK',
+      showLoaderOnConfirm: true,
+      preConfirm: (jumlah_produk) => {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            if (jumlah_produk === '') {
+              swal.showValidationError(
+                'Anda Belum memasukan Jumlah Produk'
+                )
+            }
+            resolve()
+          }, 500)
+        })
+      },
+      allowOutsideClick: () => !swal.isLoading()
+    }).then((result) => {
+      if (result.value) {
+        prosesTambahProduk(result.value,id_produk,nama_produk)            
+      }
+    })
+  }
+
+  function prosesTambahProduk(jumlah_produk,id_produk,nama_produk){
+
+    $.get('{{ Url('/keranjang-belanja/tambah-produk-keranjang-belanja/') }}',{'_token': $('meta[name=csrf-token]').attr('content'),jumlah_produk:jumlah_produk,id_produk:id_produk}, function(data){
+
+     var totalProduk = $("#jumlah-keranjang").attr("data-jumlah");
+     var totalProduk = parseInt(totalProduk) + parseInt(data); 
+     var sisa_jumlah_produk = "| "+totalProduk;
+     $("#jumlah-keranjang").attr("data-jumlah",totalProduk);
+     $("#jumlah-keranjang").text(sisa_jumlah_produk);
+     swal({
+      position: 'center',
+      type: 'success',
+      text: nama_produk+' Berhasil dimasukan ke Keranjang Belanja',
+      showConfirmButton: false,
+      timer: 2000
+    })
+
+   });
+
+  }
+
 </script>
 <script type="text/javascript">
   flexFont = function () {
