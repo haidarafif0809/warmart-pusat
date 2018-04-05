@@ -21,6 +21,7 @@
   "dependencies": {
     "chart.js": "^2.7.1",
     "laravel-vue-pagination": "^1.2.0",
+    "npm": "^5.8.0",
     "numeral": "^2.0.6",
     "v-money": "^0.8.1",
     "vue-chartjs": "^3.2.1",
