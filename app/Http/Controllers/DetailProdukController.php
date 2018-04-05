@@ -12,6 +12,7 @@ use OpenGraph;
 use SEOMeta;
 use Session;
 
+
 class DetailProdukController extends Controller
 {
     //
@@ -42,6 +43,7 @@ class DetailProdukController extends Controller
             }
             $cek_belanjaan = $keranjang_belanjaan->count();
         }
+
         $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
 
         $sisa_stok_keluar = DaftarProdukController::cekStokProduk($barang);
