@@ -34,6 +34,7 @@
            <table class="table table-striped table-hover">
             <thead class="text-primary">
               <tr>
+                <th>ID Customer</th>
                 <th>No. Telpon</th>
                 <th>Nama</th>
                 <th>Alamat</th>
@@ -44,6 +45,7 @@
 
             <tbody v-if="customers.length > 0 && loading== false" class="data-ada">
               <tr v-for="customer, index in customers">
+                <td>{{ customer.id }}</td>
                 <td>{{ customer.no_telp }}</td>
                 <td>{{ customer.name }}</td>
                 <td>{{ customer.alamat }}</td>
