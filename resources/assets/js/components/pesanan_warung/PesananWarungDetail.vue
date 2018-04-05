@@ -397,6 +397,7 @@ export default {
 			urlKurangProduk: window.location.origin + (window.location.pathname).replace("dashboard", "kurang-produk-pesanan-warung"),
 			urlKonfirmasiPesanan: window.location.origin + (window.location.pathname).replace("dashboard", "konfirmasi-pesanan-warung"),
 			urlPesananDikonfirmasi: window.location.origin + (window.location.pathname).replace("dashboard", "pesanan-dikonfirmasi"),
+			urlPesananDiselesaikan: window.location.origin + (window.location.pathname).replace("dashboard", "pesanan-diselesaikan"),
 			urlBatalKonfirmasiPesanan: window.location.origin + (window.location.pathname).replace("dashboard", "batalkan-konfirmasi-pesanan-warung"),
 			urlBatalPesanan: window.location.origin + (window.location.pathname).replace("dashboard", "batalkan-pesanan-warung"),
 			urlOrigin: window.location.origin + (window.location.pathname).replace("dashboard", ""),
@@ -561,8 +562,8 @@ export default {
 				cancelButtonClass: 'btn btn-danger',
 				buttonsStyling: false
 			})
-			.then(function () {
-
+			.then((resp) => {
+				if (resp)
 				app.submitKonfirmasiPesanan(id);
 			});
 		},
@@ -651,7 +652,15 @@ export default {
 			});
 		},
 		selesaikanPesanan(id) {
-			$("#modalSelesaiPesanan").show();
+			let app = this;
+
+				$("#modalSelesaiPesanan").show();
+			if (app.servicePengiriman == 'Bayar di Tempat') {
+			}
+			else {
+				console.log('Pembayaran anda bukan COD');
+				
+			}
 		},
 		submitSelesaiPesanan(id, id_kas) {
 			var app = this;
@@ -696,8 +705,16 @@ export default {
 					app.getResults();
 					app.loading = false;
 					app.selesaiPesanan.id_pesanan = '';
-					app.alert("Pesanan order #" + id + " Berhasil Di Selesaikan");  
-					window.open('pesanan-warung/cetak-kecil-penjualan/' + resp.data.respons_penjualan,'_blank');   
+
+					axios.get(app.urlPesananDiselesaikan + '/' + id)
+					.then((resp) => {
+
+						app.alert("Pesanan order #" + id + " Berhasil Di Selesaikan");  
+						window.open('pesanan-warung/cetak-kecil-penjualan/' + resp.data.respons_penjualan,'_blank');   
+					})
+					.catch((resp) => {
+						alert('Sesuatu yang salah terjadi.')
+					});
 				}
 			})
 			.catch((resp) => {
