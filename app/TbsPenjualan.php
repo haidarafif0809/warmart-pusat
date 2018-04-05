@@ -28,7 +28,7 @@ class TbsPenjualan extends Model
     // SCOPE PENCARIAN TBS PENJUALAN
     public function scopePencarian($query,$user_warung,$session_id,$request){
 
-        $query->select('tbs_penjualans.id_tbs_penjualan AS id_tbs_penjualan', 'tbs_penjualans.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'tbs_penjualans.id_produk AS id_produk', 'tbs_penjualans.potongan AS potongan', 'tbs_penjualans.subtotal AS subtotal', 'tbs_penjualans.harga_produk AS harga_produk','barangs.harga_jual AS harga_jual','satuans.nama_satuan AS satuan')
+        $query->select('tbs_penjualans.id_tbs_penjualan AS id_tbs_penjualan', 'tbs_penjualans.jumlah_produk AS jumlah_produk', 'barangs.nama_barang AS nama_barang', 'barangs.kode_barang AS kode_barang', 'tbs_penjualans.id_produk AS id_produk', 'tbs_penjualans.potongan AS potongan', 'tbs_penjualans.subtotal AS subtotal', 'tbs_penjualans.harga_produk AS harga_produk', 'tbs_penjualans.satuan_id AS satuan_id','barangs.harga_jual AS harga_jual','satuans.nama_satuan AS satuan')
         ->leftJoin('barangs', 'barangs.id', '=', 'tbs_penjualans.id_produk')
         ->leftJoin('satuans', 'satuans.id', '=', 'tbs_penjualans.satuan_id')
         ->where('warung_id', $user_warung)
