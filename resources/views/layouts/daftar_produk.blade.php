@@ -87,8 +87,13 @@ first();
     width: 10em;
 }
 .page-header.header-small {
+    @if(Agent::isMobile())
+    height: 0vh;
+    min-height: 25vh;
+    @else
     height: 0vh;
     min-height: 18vh;
+    @endif
 }
 .ecommerce-page .page-header .container {
     @if(Agent::isMobile())
@@ -179,14 +184,6 @@ h4 {
                         <div class="card card-raised card-carousel">
                             <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
                                 <div class="carousel slide" data-ride="carousel">
-
-                                    <!-- Indicators -->
-                                    <ol class="carousel-indicators">
-                                        <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
-                                        @foreach($baner_promo->get() as $baner_promos)
-                                        <li data-target="#carousel-example-generic" data-slide-to="{!!$baner_promos->id_setting_promo !!}"></li>
-                                        @endforeach
-                                    </ol>
 
                                     <!-- Wrapper for slides -->
                                     <div class="carousel-inner">

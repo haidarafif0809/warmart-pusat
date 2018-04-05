@@ -129,7 +129,7 @@ Route::get('/keranjang-belanja/hapus-produk-keranjang-belanja/', [
     'uses' => 'KeranjangBelanjaController@hapus_produk_keranjang_belanjaan',
 ]);
 
-Route::get('/keranjang-belanja/tambah-produk-keranjang-belanja/{id}', [
+Route::get('/keranjang-belanja/tambah-produk-keranjang-belanja/', [
     'as'   => 'keranjang-belanja.tambah_produk_keranjang_belanjaan',
     'uses' => 'KeranjangBelanjaController@tambah_produk_keranjang_belanjaan',
 ]);
@@ -1199,6 +1199,12 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
         'uses'       => 'PenjualanController@prosesEditJumlahTbsPenjualan',
     ]);
 
+    Route::post('/penjualan/edit-harga-tbs-penjualan', [
+        'middleware' => ['auth'],
+        'as'         => 'penjualan.edit_harga_tbs_penjualan',
+        'uses'       => 'PenjualanController@prosesEditHargaTbsPenjualan',
+    ]);
+
     Route::post('/penjualan/edit-potongan-tbs-penjualan', [
         'middleware' => ['auth'],
         'as'         => 'penjualan.edit_potongan_tbs_penjualan',
@@ -1234,6 +1240,12 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
         'middleware' => ['auth'],
         'as'         => 'penjualan.edit_potongan_edit_tbs_penjualan',
         'uses'       => 'PenjualanController@prosesEditPotonganEditTbsPenjualan',
+    ]);
+
+    Route::post('/penjualan/edit-harga-edit-tbs-penjualan', [
+        'middleware' => ['auth'],
+        'as'         => 'penjualan.edit_harga_edit_tbs_penjualan',
+        'uses'       => 'PenjualanController@prosesEditHargaEditTbsPenjualan',
     ]);
 
     Route::delete('/penjualan/proses-hapus-edit-tbs-penjualan/{id}', [
