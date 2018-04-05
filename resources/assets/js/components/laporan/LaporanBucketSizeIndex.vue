@@ -117,6 +117,8 @@
                       
                      <a href="#" class='btn btn-warning' id="btnExcel" target='blank' :style="'display: none'"><i class="material-icons">file_download</i> Download Excel</a> 
 
+                    <!--CETAK LAPORAN-->
+                    <a href="#" class='btn btn-success' id="btnCetak" target='blank' :style="'display: none'"><i class="material-icons">print</i> Cetak Laporan</a>
 
 				 </div>
 				</div><!--class="tab-content tab-space"-->
@@ -156,6 +158,8 @@
 				url: window.location.origin + (window.location.pathname).replace("dashboard", "laporan-bucket-size"),
 				urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-bucket-size/download-excel-pos"), 
          		 urlDownloadExcelOnline : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-bucket-size/download-excel-online"), 
+         		urlCetakPos : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-bucket-size/cetak-pos"), 
+         		urlCetakOnline : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-bucket-size/cetak-online"), 
 				pencarian: '',
 				loading: false,
 				judul : '',
@@ -263,11 +267,15 @@
             var dari_tanggal = app.dariTanggal(filter); 
             var sampai_tanggal = app.sampaiTanggal(filter); 
  
-            $("#btnExcel").show(); 
+            $("#btnExcel").show();
+            $("#btnCetak").show(); 
+
             if (app.filter.jenis_penjualan == '0') { 
              $("#btnExcel").attr('href', app.urlDownloadExcel+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.kelipatan); 
+             $("#btnCetak").attr('href', app.urlCetakPos+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.kelipatan); 
             }else{ 
               $("#btnExcel").attr('href', app.urlDownloadExcelOnline+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.kelipatan); 
+              $("#btnCetak").attr('href', app.urlCetakOnline+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.kelipatan); 
             } 
           }, 
 		}
