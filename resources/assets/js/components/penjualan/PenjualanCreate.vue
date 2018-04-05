@@ -386,7 +386,7 @@
 
       <form class="form-horizontal" v-on:submit.prevent="subtmitEditHarga(inputTbsPenjualan.id_produk, inputTbsPenjualan.id_tbs, inputTbsPenjualan.subtotal)"> 
         <div class="modal-body">
-          <h3 class="text-center"><b>{{inputTbsPenjualan.nama_produk}}{{inputTbsPenjualan.level_harga_produk}}</b></h3>
+          <h3 class="text-center"><b>{{inputTbsPenjualan.nama_produk}}</b></h3>
 
           <div class="form-group">
 

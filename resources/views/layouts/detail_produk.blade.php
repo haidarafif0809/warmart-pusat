@@ -61,7 +61,7 @@ $bank_transfers = \App\SettingTransferBank::select('logo_bank')->where('tampil_b
     line-height: 0px;
     color: inherit;
     padding: 10px 15px;
-}
+  }
 
   .list-produk {
     padding-left: 4px;
@@ -117,7 +117,6 @@ $bank_transfers = \App\SettingTransferBank::select('logo_bank')->where('tampil_b
     src: url("//applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-thin-webfont.woff2");
   }
 
-
   .flexFont {
     @if(Agent::isMobile())
     height:4em;
@@ -145,232 +144,235 @@ $bank_transfers = \App\SettingTransferBank::select('logo_bank')->where('tampil_b
     background-color: #01573e;
     @endif
   }
-.btn.btn-just-icon, .navbar .navbar-nav > li > a.btn.btn-just-icon {
+  .btn.btn-just-icon, .navbar .navbar-nav > li > a.btn.btn-just-icon {
     font-size: 15px;
     padding: 6px 5px;
     line-height: 1em;
-}
+  }
 
   .footer-big .social-feed i {
     font-size: 23.5px;
     display: table-cell;
     padding-right: 10px;
-}
-.img-jasa{
+  }
+  .img-jasa{
     padding: 0px 2px 2px;
-}
+  }
+  .navbar>.container .navbar-brand, .navbar>.container-fluid .navbar-brand {
+    margin-left: 0px;
+  }
 
 </style>
 <body class="product-page">
-@if(Agent::isMobile())
-    <nav class="navbar navbar-default navbar-fixed-top " id="sectionsNav">
-        @else
-        <nav class="navbar navbar-default navbar-transparent navbar-fixed-top navbar-color-on-scroll" color-on-scroll=" " id="sectionsNav">
+  @if(Agent::isMobile())
+  <nav class="navbar navbar-default navbar-fixed-top " id="sectionsNav">
+    @else
+    <nav class="navbar navbar-default navbar-transparent navbar-fixed-top navbar-color-on-scroll" color-on-scroll=" " id="sectionsNav">
+      @endif
+      <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button class="navbar-toggle" data-toggle="collapse" type="button">
+            <span class="sr-only">
+              Toggle navigation
+            </span>
+            <span class="icon-bar">
+            </span>
+            <span class="icon-bar">
+            </span>
+            <span class="icon-bar">
+            </span>
+          </button>
+          @if($setting_aplikasi->tipe_aplikasi == 0)
+          <a href="{{ url('/') }}">
+            <img class="navbar-brand" src="{{asset('/assets/img/examples/warmart_logo.png')}}"/>
+          </a>
+          @else
+          @if( $foto_logo->foto_ktp != null)
+          <a href="{{ url('/') }}">
+            <img class="navbar-brand" src="{{asset('/foto_ktp_user/'.$foto_logo->foto_ktp.'').'?v=1'}}"/>
+          </a>
+          @else
+          <a href="{{ url('/') }}">
+            <img class="navbar-brand" src="{{asset('/assets/img/examples/topos_logo.png'.'?v=3')}}"/>
+          </a>
+          @endif
+          @endif
+
+          @if(Agent::isMobile() && !Auth::check())
+          <a class="navbar-brand pull-right" href="{{ url('/login') }}">
+            <i class="material-icons">
+              account_circle
+            </i> 
+          </a>
+          <a class="navbar-brand pull-right" href="{{ url('/keranjang-belanja') }}">
+            <i class="material-icons">
+              shopping_cart
+            </i>
+            <b style="font-size: 15px" id="jumlah-keranjang" data-jumlah="{{ $cek_belanjaan }}" data-session="">
+              | {{ $cek_belanjaan }}
+            </b>
+          </a>
+          @endif
+          @if(Agent::isMobile() && Auth::check() && Auth::user()->tipe_user == 3)
+          <a class="navbar-brand pull-right" href="{{ url('/keranjang-belanja') }}">
+            <i class="material-icons">
+              shopping_cart
+            </i>
+            <b style="font-size: 15px" id="jumlah-keranjang" data-jumlah="{{ $cek_belanjaan }}" data-session="">
+              | {{ $cek_belanjaan }}
+            </b>
+          </a>
+          @endif
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav navbar-right">
+            @if(Auth::check())
+            <li class="dropdown button-container ">
+              <a class="dropdown-toggle btn btn-rose btn-round" data-toggle="dropdown" href="#">
+                <i class="material-icons">
+                  account_circle
+                </i>
+                {{ Auth::user()->name}}
+                <b class="caret">
+                </b>
+              </a>
+              <ul class="dropdown-menu dropdown-with-icons">
+                @if(Auth::user()->tipe_user == 3)
+                <li style="color:black">
+                  <a href="{{ url('/ubah-profil-pelanggan') }}">
+                    <i class="material-icons">
+                      settings
+                    </i>
+                    Ubah Profil
+                  </a>
+                </li>
+                <li style="color:black">
+                  <a href="{{ url('/ubah-password-pelanggan') }}">
+                    <i class="material-icons">
+                      lock_outline
+                    </i>
+                    Ubah Password
+                  </a>
+                </li>
+                @endif
+                <li>
+                  <a href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <i class="material-icons">
+                      reply_all
+                    </i>
+                    Logout
+                  </a>
+                  <form action="{{ url('/logout') }}" id="logout-form" method="POST" style="display: none;">
+                    {{ csrf_field() }}
+                  </form>
+                </li>
+              </ul>
+            </li>
+            @if(Auth::user()->tipe_user == 3)
+            <li class="button-container">
+              <a href="{{ url('/pesanan') }}">
+                <i class="material-icons">
+                  archive
+                </i>
+                Pesanan
+              </a>
+            </li>
             @endif
-            <div class="container">
-                <!-- Brand and toggle get grouped for better mobile display -->
-                <div class="navbar-header">
-                    <button class="navbar-toggle" data-toggle="collapse" type="button">
-                        <span class="sr-only">
-                            Toggle navigation
-                        </span>
-                        <span class="icon-bar">
-                        </span>
-                        <span class="icon-bar">
-                        </span>
-                        <span class="icon-bar">
-                        </span>
-                    </button>
-                    @if($setting_aplikasi->tipe_aplikasi == 0)
-                    <a href="{{ url('/') }}">
-                        <img class="navbar-brand" src="{{asset('/assets/img/examples/warmart_logo.png')}}"/>
-                    </a>
-                    @else
-                    @if( $foto_logo->foto_ktp != null)
-                    <a href="{{ url('/') }}">
-                        <img class="navbar-brand" src="{{asset('/foto_ktp_user/'.$foto_logo->foto_ktp.'').'?v=1'}}"/>
-                    </a>
-                    @else
-                    <a href="{{ url('/') }}">
-                        <img class="navbar-brand" src="{{asset('/assets/img/examples/topos_logo.png'.'?v=3')}}"/>
-                    </a>
-                    @endif
-                    @endif
+            @endif
+            @if(Auth::check() && (Auth::user()->tipe_user == 4 OR Auth::user()->tipe_user == 1 ))
+            <li>
+              <a href="{{ url('/dashboard')}}">
+                <i class="material-icons">
+                  dashboard
+                </i>
+                dashboard
+              </a>
+            </li>
+            @endif
+            <li>
+              @if($setting_aplikasi->tipe_aplikasi == 0)
+              <a href="https://info.war-mart.id">
+                <i class="material-icons">
+                  info
+                </i>
+                SUPPORT Warmart
+              </a>
+              @else
+              @if(Auth::check())                            
+              <a href="{{ url('/cara-memesan')}}" target='blank'>
+                <i class="material-icons">
+                  info
+                </i>
+                CARA MEMESAN
+              </a>
+              @else
+              <a href="{{ url('/cara-pemesanan')}}" target='blank'>
+                <i class="material-icons">
+                  info
+                </i>
+                CARA MEMESAN
+              </a>
+              @endif
+              @endif
+            </li>
+            <li>
+              @if($setting_aplikasi->tipe_aplikasi == 0)
+              <a href="{{ url('/tentang-warmart')}}">
+                <i class="material-icons">
+                  info
+                </i>
+                Tentang Warmart
+              </a>
+              @else
+              <a href="<?=$settingFooter->about_link;?>">
+                <i class="material-icons">
+                  info
+                </i>
+                Tentang TOPOS
+              </a>
+              @endif
+            </li>
 
-                    @if(Agent::isMobile() && !Auth::check())
-                    <a class="navbar-brand pull-right" href="{{ url('/login') }}">
-                        <i class="material-icons">
-                            account_circle
-                        </i> 
-                    </a>
-                    <a class="navbar-brand pull-right" href="{{ url('/keranjang-belanja') }}">
-                        <i class="material-icons">
-                            shopping_cart
-                        </i>
-                        <b style="font-size: 15px" id="jumlah-keranjang" data-jumlah="{{ $cek_belanjaan }}" data-session="">
-                            | {{ $cek_belanjaan }}
-                        </b>
-                    </a>
-                    @endif
-                    @if(Agent::isMobile() && Auth::check() && Auth::user()->tipe_user == 3)
-                    <a class="navbar-brand pull-right" href="{{ url('/keranjang-belanja') }}">
-                        <i class="material-icons">
-                            shopping_cart
-                        </i>
-                        <b style="font-size: 15px" id="jumlah-keranjang" data-jumlah="{{ $cek_belanjaan }}" data-session="">
-                            | {{ $cek_belanjaan }}
-                        </b>
-                    </a>
-                    @endif
-                </div>
-                <div class="collapse navbar-collapse">
-                    <ul class="nav navbar-nav navbar-right">
-                        @if(Auth::check())
-                        <li class="dropdown button-container ">
-                            <a class="dropdown-toggle btn btn-rose btn-round" data-toggle="dropdown" href="#">
-                                <i class="material-icons">
-                                    account_circle
-                                </i>
-                                {{ Auth::user()->name}}
-                                <b class="caret">
-                                </b>
-                            </a>
-                            <ul class="dropdown-menu dropdown-with-icons">
-                                @if(Auth::user()->tipe_user == 3)
-                                <li style="color:black">
-                                    <a href="{{ url('/ubah-profil-pelanggan') }}">
-                                        <i class="material-icons">
-                                            settings
-                                        </i>
-                                        Ubah Profil
-                                    </a>
-                                </li>
-                                <li style="color:black">
-                                    <a href="{{ url('/ubah-password-pelanggan') }}">
-                                        <i class="material-icons">
-                                            lock_outline
-                                        </i>
-                                        Ubah Password
-                                    </a>
-                                </li>
-                                @endif
-                                <li>
-                                    <a href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                        <i class="material-icons">
-                                            reply_all
-                                        </i>
-                                        Logout
-                                    </a>
-                                    <form action="{{ url('/logout') }}" id="logout-form" method="POST" style="display: none;">
-                                        {{ csrf_field() }}
-                                    </form>
-                                </li>
-                            </ul>
-                        </li>
-                        @if(Auth::user()->tipe_user == 3)
-                        <li class="button-container">
-                            <a href="{{ url('/pesanan') }}">
-                                <i class="material-icons">
-                                    archive
-                                </i>
-                                Pesanan
-                            </a>
-                        </li>
-                        @endif
-                        @endif
-                        @if(Auth::check() && (Auth::user()->tipe_user == 4 OR Auth::user()->tipe_user == 1 ))
-                        <li>
-                            <a href="{{ url('/dashboard')}}">
-                                <i class="material-icons">
-                                    dashboard
-                                </i>
-                                dashboard
-                            </a>
-                        </li>
-                        @endif
-                        <li>
-                            @if($setting_aplikasi->tipe_aplikasi == 0)
-                            <a href="https://info.war-mart.id">
-                                <i class="material-icons">
-                                    info
-                                </i>
-                                SUPPORT Warmart
-                            </a>
-                            @else
-                            @if(Auth::check())                            
-                            <a href="{{ url('/cara-memesan')}}" target='blank'>
-                                <i class="material-icons">
-                                    info
-                                </i>
-                                CARA MEMESAN
-                            </a>
-                            @else
-                            <a href="{{ url('/cara-pemesanan')}}" target='blank'>
-                                <i class="material-icons">
-                                    info
-                                </i>
-                                CARA MEMESAN
-                            </a>
-                            @endif
-                            @endif
-                        </li>
-                        <li>
-                            @if($setting_aplikasi->tipe_aplikasi == 0)
-                            <a href="{{ url('/tentang-warmart')}}">
-                                <i class="material-icons">
-                                    info
-                                </i>
-                                Tentang Warmart
-                            </a>
-                            @else
-                            <a href="<?=$settingFooter->about_link;?>">
-                                <i class="material-icons">
-                                    info
-                                </i>
-                                Tentang TOPOS
-                            </a>
-                            @endif
-                        </li>
-
-                        @if(!Auth::check())
-                        <li class="button-container">
-                            <a class="btn btn-rose btn-round" href="{{ url('/login')}}">
-                                <i class="material-icons">
-                                    account_circle
-                                </i>
-                                Masuk
-                            </a>
-                        </li>
-                        @endif
-                        @if (Auth::check() == false) 
-                        <li class="button-container">
-                            <a class="btn btn-round btn-rose" href="{{ url('/keranjang-belanja') }}">
-                                <i class="material-icons">
-                                    shopping_cart
-                                </i>
-                                Keranjang Belanja
-                                <b style="font-size: 15px" id="jumlah-keranjang" data-session="">
-                                    | {{ $cek_belanjaan }}
-                                </b>
-                            </a>
-                        </li>
-                        @elseif(Auth::check() && Auth::user()->tipe_user == 3)
-                        <li class="button-container">
-                            <a class="btn btn-round btn-rose" href="{{ url('/keranjang-belanja') }}">
-                                <i class="material-icons">
-                                    shopping_cart
-                                </i>
-                                Keranjang Belanja
-                                <b style="font-size: 15px" id="jumlah-keranjang" data-session="">
-                                    | {{ $cek_belanjaan }}
-                                </b>
-                            </a>
-                        </li>
-                        @endif
-                    </ul>
-                </div>
-            </div>
-        </nav>
+            @if(!Auth::check())
+            <li class="button-container">
+              <a class="btn btn-rose btn-round" href="{{ url('/login')}}">
+                <i class="material-icons">
+                  account_circle
+                </i>
+                Masuk
+              </a>
+            </li>
+            @endif
+            @if (Auth::check() == false) 
+            <li class="button-container">
+              <a class="btn btn-round btn-rose" href="{{ url('/keranjang-belanja') }}">
+                <i class="material-icons">
+                  shopping_cart
+                </i>
+                Keranjang Belanja
+                <b style="font-size: 15px" id="jumlah-keranjang" data-session="">
+                  | {{ $cek_belanjaan }}
+                </b>
+              </a>
+            </li>
+            @elseif(Auth::check() && Auth::user()->tipe_user == 3)
+            <li class="button-container">
+              <a class="btn btn-round btn-rose" href="{{ url('/keranjang-belanja') }}">
+                <i class="material-icons">
+                  shopping_cart
+                </i>
+                Keranjang Belanja
+                <b style="font-size: 15px" id="jumlah-keranjang" data-session="">
+                  | {{ $cek_belanjaan }}
+                </b>
+              </a>
+            </li>
+            @endif
+          </ul>
+        </div>
+      </div>
+    </nav>
 
 
     @if($setting_aplikasi->tipe_aplikasi == 0)
@@ -557,193 +559,193 @@ $bank_transfers = \App\SettingTransferBank::select('logo_bank')->where('tampil_b
 
 
 <footer class="footer footer-black footer-big" style="bottom: 0;">
-            <div class="container">
-                <div class="content">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <h5 style="font-size: 14px; mar">
-                                Tentang Kami
-                            </h5>
-                            @if($setting_aplikasi->tipe_aplikasi == 0)
-                            <p>
-                                Warmart adalah marketplace warung muslim pertama di Indonesia. Kami menghubungkan usaha-usaha muslim dengan pelanggan seluruh Umat Islam di Indonesia. Jenis usaha yang dapat bergabung dengan Warmart diantaranya: Warung, Toko, Minimarket, Pedagang Kaki Lima, Bengkel, Rumah Makan, Klinik, Home Industri, Peternakan, Pertanian, Perikanan, Kerajinan, Fashion dan usaha lainya.
-                            </p>
-                            @else
-                            <p>
-                                <?=$settingFooter->
-                                about_us;?>
-                            </p>
-                            @endif
-                        </div>
-                        <div class="col-md-3">
-                            <h5 style="font-size: 14px; mar">
-                                Hubungi Kami
-                            </h5>
-                            <div class="social-feed">
-                                <div class="feed-line">
-                                    <i class="fa fa-phone-square fa-5x">
-                                    </i>
-                                    <p>
-                                        <?=$settingFooter->
-                                        no_telp;?>
-                                    </p>
-                                </div>
-                                <div class="feed-line">
-                                    <i class="fa fa-home fa-5x"> </i>
-                                    <p>
-                                        <?=$settingFooter->
-                                        alamat;?>
-                                    </p>
-                                </div>
-                                <div class="feed-line">
-                                    <i class="fa fa-envelope fa-5x">
-                                    </i>
-                                    <p>
-                                        <?=$settingFooter->
-                                        email;?>
-                                    </p>
-                                </div>
-                                <div class="feed-line">
-                                    <i class="fa fa-whatsapp fa-5x">
-                                    </i>
-                                    <p>
-                                        <?=$settingFooter->
-                                        whatsapp;?>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            @if(Agent::isMobile())
-                            <div class="row">
-                                <div class="col-xs-6">
-                                    <h5 style="font-size: 14px; mar">
-                                        Ikuti Kami Di
-                                    </h5>
-                                    <button class="btn btn-just-icon btn-xs btn-facebook" style="margin : 0px">
-                                        <a href="<?=$settingFooter->facebook;?>">
-                                            <i class="fa fa-facebook"> </i>
-                                        </a> 
-                                    </button>
-                                    <button class="btn btn-just-icon btn-xs btn-twitter" style="margin : 0 0 0 5px">
-                                        <a href="<?=$settingFooter->twitter;?>">
-                                            <i class="fa fa-twitter"> </i>
-                                        </a> 
-                                    </button>
-                                    <button class="btn btn-just-icon btn-xs btn-instagram" style="margin : 0 0 0 5px">
-                                        <a href="<?=$settingFooter->instagram;?>">
-                                            <i class="fa fa-instagram"> </i>
-                                        </a> 
-                                    </button>
-                                    <button class="btn btn-just-icon btn-xs btn-google" style="margin : 0 0 0 5px">
-                                        <a href="<?=$settingFooter->google_plus;?>" style="background-color: #d41700">
-                                            <i class="fa fa-google-plus"> </i>
-                                        </a> 
-                                    </button>
-                                </div>
+  <div class="container">
+    <div class="content">
+      <div class="row">
+        <div class="col-md-3">
+          <h5 style="font-size: 14px; mar">
+            Tentang Kami
+          </h5>
+          @if($setting_aplikasi->tipe_aplikasi == 0)
+          <p>
+            Warmart adalah marketplace warung muslim pertama di Indonesia. Kami menghubungkan usaha-usaha muslim dengan pelanggan seluruh Umat Islam di Indonesia. Jenis usaha yang dapat bergabung dengan Warmart diantaranya: Warung, Toko, Minimarket, Pedagang Kaki Lima, Bengkel, Rumah Makan, Klinik, Home Industri, Peternakan, Pertanian, Perikanan, Kerajinan, Fashion dan usaha lainya.
+          </p>
+          @else
+          <p>
+            <?=$settingFooter->
+            about_us;?>
+          </p>
+          @endif
+        </div>
+        <div class="col-md-3">
+          <h5 style="font-size: 14px; mar">
+            Hubungi Kami
+          </h5>
+          <div class="social-feed">
+            <div class="feed-line">
+              <i class="fa fa-phone-square fa-5x">
+              </i>
+              <p>
+                <?=$settingFooter->
+                no_telp;?>
+              </p>
+            </div>
+            <div class="feed-line">
+              <i class="fa fa-home fa-5x"> </i>
+              <p>
+                <?=$settingFooter->
+                alamat;?>
+              </p>
+            </div>
+            <div class="feed-line">
+              <i class="fa fa-envelope fa-5x">
+              </i>
+              <p>
+                <?=$settingFooter->
+                email;?>
+              </p>
+            </div>
+            <div class="feed-line">
+              <i class="fa fa-whatsapp fa-5x">
+              </i>
+              <p>
+                <?=$settingFooter->
+                whatsapp;?>
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          @if(Agent::isMobile())
+          <div class="row">
+            <div class="col-xs-6">
+              <h5 style="font-size: 14px; mar">
+                Ikuti Kami Di
+              </h5>
+              <button class="btn btn-just-icon btn-xs btn-facebook" style="margin : 0px">
+                <a href="<?=$settingFooter->facebook;?>">
+                  <i class="fa fa-facebook"> </i>
+                </a> 
+              </button>
+              <button class="btn btn-just-icon btn-xs btn-twitter" style="margin : 0 0 0 5px">
+                <a href="<?=$settingFooter->twitter;?>">
+                  <i class="fa fa-twitter"> </i>
+                </a> 
+              </button>
+              <button class="btn btn-just-icon btn-xs btn-instagram" style="margin : 0 0 0 5px">
+                <a href="<?=$settingFooter->instagram;?>">
+                  <i class="fa fa-instagram"> </i>
+                </a> 
+              </button>
+              <button class="btn btn-just-icon btn-xs btn-google" style="margin : 0 0 0 5px">
+                <a href="<?=$settingFooter->google_plus;?>" style="background-color: #d41700">
+                  <i class="fa fa-google-plus"> </i>
+                </a> 
+              </button>
+            </div>
 
-                                <div class="col-xs-6">
-                                    <h5 style="font-size: 14px; mar">
-                                        Download Apps
-                                    </h5>
-                                    <a href="<?=$settingFooter->play_store;?>">
-                                        <img src="{{asset('image/gplaystore.png')}}">
-                                    </a>  
-                                </div>
-                            </div>
+            <div class="col-xs-6">
+              <h5 style="font-size: 14px; mar">
+                Download Apps
+              </h5>
+              <a href="<?=$settingFooter->play_store;?>">
+                <img src="{{asset('image/gplaystore.png')}}">
+              </a>  
+            </div>
+          </div>
 
-                            @else
+          @else
 
-                            <h5 style="font-size: 14px; mar">
-                                Ikuti Kami Di
-                            </h5>
-                            <button class="btn btn-just-icon btn-xs btn-facebook" style="margin : 0px">
-                                <a href="<?=$settingFooter->facebook;?>">
-                                    <i class="fa fa-facebook"> </i>
-                                </a> 
-                            </button>
-                            <button class="btn btn-just-icon btn-xs btn-twitter" style="margin : 0 0 0 5px">
-                                <a href="<?=$settingFooter->twitter;?>">
-                                    <i class="fa fa-twitter"> </i>
-                                </a> 
-                            </button>
-                            <button class="btn btn-just-icon btn-xs btn-instagram" style="margin : 0 0 0 5px">
-                                <a href="<?=$settingFooter->instagram;?>">
-                                    <i class="fa fa-instagram"> </i>
-                                </a> 
-                            </button>
-                            <button class="btn btn-just-icon btn-xs btn-google" style="margin : 0 0 0 5px">
-                                <a href="<?=$settingFooter->google_plus;?>" style="background-color: #d41700">
-                                    <i class="fa fa-google-plus"> </i>
-                                </a> 
-                            </button>
-                            <h5 style="font-size: 14px; mar">
-                                Download Apps
-                            </h5>
-                            <a href="<?=$settingFooter->play_store;?>">
-                                <img src="{{asset('image/gplaystore.png')}}" style="max-width: 50%">
-                            </a>  
-                            @endif                                               
-                        </div>
-                        <div class="col-md-3">
-                            <div class="row" style="padding-left: 15px">
-                                <div class="col-md-12 col-xs-12" style="padding-left: 0px">
-                                    <h5 style="font-size: 14px;" class="pull-left">
-                                        Jasa Pengiriman
-                                    </h5>
-                                </div>
-                                @foreach($jasa_pengirimans as $jasa_pengiriman)
-                                @if(Agent::isMobile())
-                                <img src="{{asset('jasa_pengiriman/'.$jasa_pengiriman->logo_jasa)}}" style="max-width: 50px" class="pull-left img-jasa">
-                                @else
-                                <img src="{{asset('jasa_pengiriman/'.$jasa_pengiriman->logo_jasa)}}" style="max-width: 65px" class="pull-left img-jasa">
-                                @endif
-                                @endforeach
+          <h5 style="font-size: 14px; mar">
+            Ikuti Kami Di
+          </h5>
+          <button class="btn btn-just-icon btn-xs btn-facebook" style="margin : 0px">
+            <a href="<?=$settingFooter->facebook;?>">
+              <i class="fa fa-facebook"> </i>
+            </a> 
+          </button>
+          <button class="btn btn-just-icon btn-xs btn-twitter" style="margin : 0 0 0 5px">
+            <a href="<?=$settingFooter->twitter;?>">
+              <i class="fa fa-twitter"> </i>
+            </a> 
+          </button>
+          <button class="btn btn-just-icon btn-xs btn-instagram" style="margin : 0 0 0 5px">
+            <a href="<?=$settingFooter->instagram;?>">
+              <i class="fa fa-instagram"> </i>
+            </a> 
+          </button>
+          <button class="btn btn-just-icon btn-xs btn-google" style="margin : 0 0 0 5px">
+            <a href="<?=$settingFooter->google_plus;?>" style="background-color: #d41700">
+              <i class="fa fa-google-plus"> </i>
+            </a> 
+          </button>
+          <h5 style="font-size: 14px; mar">
+            Download Apps
+          </h5>
+          <a href="<?=$settingFooter->play_store;?>">
+            <img src="{{asset('image/gplaystore.png')}}" style="max-width: 50%">
+          </a>  
+          @endif                                               
+        </div>
+        <div class="col-md-3">
+          <div class="row" style="padding-left: 15px">
+            <div class="col-md-12 col-xs-12" style="padding-left: 0px">
+              <h5 style="font-size: 14px;" class="pull-left">
+                Jasa Pengiriman
+              </h5>
+            </div>
+            @foreach($jasa_pengirimans as $jasa_pengiriman)
+            @if(Agent::isMobile())
+            <img src="{{asset('jasa_pengiriman/'.$jasa_pengiriman->logo_jasa)}}" style="max-width: 50px" class="pull-left img-jasa">
+            @else
+            <img src="{{asset('jasa_pengiriman/'.$jasa_pengiriman->logo_jasa)}}" style="max-width: 65px" class="pull-left img-jasa">
+            @endif
+            @endforeach
 
-                                <div class="col-md-12 col-xs-12" style="padding-left: 0px">
-                                    <h5 style="font-size: 14px;" class="pull-left">
-                                        Metode Pembayaran
-                                    </h5>
-                                </div>
-                                @foreach($bank_transfers as $bank_transfer)
-                                @if(Agent::isMobile())
-                                <img src="{{asset('jasa_pengiriman/'.$bank_transfer->logo_bank)}}" style="max-width: 50px" class="pull-left img-jasa">
-                                @else
-                                <img src="{{asset('jasa_pengiriman/'.$bank_transfer->logo_bank)}}" style="max-width: 65px" class="pull-left img-jasa">
-                                @endif
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="row">
-                    <hr style="margin: 5px" />
+            <div class="col-md-12 col-xs-12" style="padding-left: 0px">
+              <h5 style="font-size: 14px;" class="pull-left">
+                Metode Pembayaran
+              </h5>
+            </div>
+            @foreach($bank_transfers as $bank_transfer)
+            @if(Agent::isMobile())
+            <img src="{{asset('jasa_pengiriman/'.$bank_transfer->logo_bank)}}" style="max-width: 50px" class="pull-left img-jasa">
+            @else
+            <img src="{{asset('jasa_pengiriman/'.$bank_transfer->logo_bank)}}" style="max-width: 65px" class="pull-left img-jasa">
+            @endif
+            @endforeach
+          </div>
+        </div>
+      </div>
+    </div>
 
-                    <div class="copyright pull-right">
-                        Copyright ©
-                        <script>
-                            document.write(new Date().getFullYear())
-                        </script>
-                        <a href="https://andaglos.id/">
-                            PT. Andaglos Global Teknologi.
-                        </a>
-                    </div>
-                </div>
-            </footer>
-<!--Start of Tawk.to Script-->
-<script type="text/javascript">
-  var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-  (function(){
-    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-    s1.async=true;
-    s1.src='https://embed.tawk.to/5a051374bb0c3f433d4c84cd/default';
-    s1.charset='UTF-8';
-    s1.setAttribute('crossorigin','*');
-    s0.parentNode.insertBefore(s1,s0);
-  })();
-</script>
-<!--End of Tawk.to Script-->
+    <div class="row">
+      <hr style="margin: 5px" />
+
+      <div class="copyright pull-right">
+        Copyright ©
+        <script>
+          document.write(new Date().getFullYear())
+        </script>
+        <a href="https://andaglos.id/">
+          PT. Andaglos Global Teknologi.
+        </a>
+      </div>
+    </div>
+  </footer>
+  <!--Start of Tawk.to Script-->
+  <script type="text/javascript">
+    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    (function(){
+      var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+      s1.async=true;
+      s1.src='https://embed.tawk.to/5a051374bb0c3f433d4c84cd/default';
+      s1.charset='UTF-8';
+      s1.setAttribute('crossorigin','*');
+      s0.parentNode.insertBefore(s1,s0);
+    })();
+  </script>
+  <!--End of Tawk.to Script-->
 </nav>
 </body>
 <!--   Core JS Files   -->

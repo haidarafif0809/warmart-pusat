@@ -1,42 +1,42 @@
 <style scoped>
-  .modal {
-    overflow-y:auto;
-  }
-  .pencarian {
-    color: red; 
-    float: right;
-  }
-  .form-penjualan{
-    width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    display: inline-block;
-    border: 3px solid #555;
-    border-radius: 4px;
-    box-sizing: border-box;
-    font-size: 30px;
-  }
-  .form-subtotal{
-    width: 100%;
-    margin: 8px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-  }
-  .card-produk{
-    background-color:#82B1FF;
-  }
-  .card-pembayaran{
-    background-color:#82B1FF;
-  }
-  .btn-icon{
-    border-radius: 1px solid;
-    padding: 10px 10px;
-  }
-  .hurufBesar{
-    text-transform: uppercase;
-  }
+.modal {
+  overflow-y:auto;
+}
+.pencarian {
+  color: red; 
+  float: right;
+}
+.form-penjualan{
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 3px solid #555;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 30px;
+}
+.form-subtotal{
+  width: 100%;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+.card-produk{
+  background-color:#82B1FF;
+}
+.card-pembayaran{
+  background-color:#82B1FF;
+}
+.btn-icon{
+  border-radius: 1px solid;
+  padding: 10px 10px;
+}
+.hurufBesar{
+  text-transform: uppercase;
+}
 </style>
 
 <template>
@@ -108,6 +108,40 @@
       </div> 
     </div> 
     <!-- / MODAL TOMBOL SELESAI --> 
+
+
+    <!-- small modal -->
+    <div class="modal" id="modalEditHarga" role="dialog" tabindex="-1"  aria-labelledby="myModalLabel" aria-hidden="true" >
+      <div class="modal-dialog modal-medium">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close"  v-on:click="closeModalJumlahProduk()" v-shortkey.push="['f9']" @shortkey="closeModalJumlahProduk()"> &times;</button> 
+          </div>
+
+          <form class="form-horizontal" v-on:submit.prevent="subtmitEditHarga(inputTbsPenjualan.id_produk, inputTbsPenjualan.id_tbs, inputTbsPenjualan.subtotal)"> 
+            <div class="modal-body">
+              <h3 class="text-center"><b>{{inputTbsPenjualan.nama_produk}}</b></h3>
+
+              <div class="form-group">
+
+                <div class="col-md-12 col-xs-12 hurufBesar">
+                  <selectize-component :settings="hargaJual" v-model="inputTbsPenjualan.level_harga_produk" id="setting_harga_jual" ref='setting_harga_jual'> 
+                    <option v-bind:value="1">Harga Jual 1</option>
+                    <option v-bind:value="2">Harga Jual 2</option>
+                  </selectize-component>
+                </div>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-simple" v-on:click="closeModalJumlahProduk()" v-shortkey.push="['f9']" @shortkey="closeModalJumlahProduk()">Close(F9)</button>
+              <button type="submit" class="btn btn-info">OK</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <!--    end small modal -->
 
 
     <div class="modal" id="modal_selesai" role="dialog" data-backdrop=""> 
@@ -447,7 +481,7 @@
                     <a v-bind:href="'#edit-penjualan/'+tbs_penjualan.id_penjualan_pos" v-bind:id="'edit-' + tbs_penjualan.id_edit_tbs_penjualans" v-bind:class="'hurufBesar satuan-' + tbs_penjualan.id_produk" v-bind:data-satuan="''+tbs_penjualan.satuan_id" v-on:click="editSatuanEntry(tbs_penjualan.id_edit_tbs_penjualans, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal, tbs_penjualan.id_produk)">{{ tbs_penjualan.satuan }}</a>
                   </td>
 
-                  <td align="right">{{ tbs_penjualan.harga_produk | pemisahTitik }}</td>
+                  <td align="right" ><a v-bind:href="'#edit-penjualan/'+tbs_penjualan.id_penjualan_pos" v-bind:id="'edit-' + tbs_penjualan.id_edit_tbs_penjualans" v-on:click="hargaEntry(tbs_penjualan.id_edit_tbs_penjualans, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal,tbs_penjualan.level_harga)">{{ tbs_penjualan.harga_produk | pemisahTitik }}</a></td>
 
                   <td align="right"><a v-bind:href="'#edit-penjualan/'+tbs_penjualan.id_penjualan_pos"  v-bind:id="'edit-' + tbs_penjualan.id_edit_tbs_penjualans" v-on:click="potonganEntry(tbs_penjualan.id_edit_tbs_penjualans, index,tbs_penjualan.nama_produk,tbs_penjualan.subtotal)">{{ tbs_penjualan.potongan }}</a></td>
 
@@ -502,120 +536,123 @@
 
 <script>
 
-  import { mapState } from 'vuex';
-  export default {
-    data: function () {
-      return {
-        errors: [],
-        satuan: [],
-        tbs_penjualan: [],
-        url : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
-        url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
-        url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
-        url_satuan : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan/satuan-konversi"),
+import { mapState } from 'vuex';
+export default {
+  data: function () {
+    return {
+      errors: [],
+      satuan: [],
+      tbs_penjualan: [],
+      url : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
+      url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
+      url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
+      url_satuan : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan/satuan-konversi"),
 
-        inputTbsPenjualan: {
-          nama_produk : '', 
-          produk : '',
-          jumlah_produk : '',
-          potongan_produk : '',
-          satuan_produk: '',
-          id_tbs : '',
-        },
-        penjualan : {
-          pelanggan : 0,
-          kas : '',
-          jatuh_tempo : '',
-          subtotal : 0,
-          potongan : 0,
-          potongan_faktur : 0,
-          potongan_persen : 0,
-          total_akhir : 0,
-          pembayaran : 0,
-          kembalian: 0,
-          kredit: 0,
-        }, 
-        setting_penjualan_pos :{
-          jumlah_produk : true,
-          stok : true,
-          harga_jual : 1
-        },
-        hargaJual: {
-          placeholder: '--HARGA JUAL--'
-        },
-        tambahKas: {
-          kode_kas : '',
-          nama_kas : '',
-          status_kas : 0,
-          default_kas : 0
-        },
-        placeholder_produk: {
-         placeholder: 'Cari Produk (F1) ...',
-         sortField: 'text',
-         maxOptions : 8,
-         scrollDuration : 10,
-         loadThrottle : 150,
-         openOnFocus : false
-       },
-       placeholder_satuan: {
-        placeholder: '--PILIH SATUAN--',
-        sortField: 'text',
-        openOnFocus : true,
+      inputTbsPenjualan: {
+        nama_produk : '', 
+        produk : '',
+        jumlah_produk : '',
+        potongan_produk : '',
+        satuan_produk: '',
+        id_tbs : '',
+        level_harga_produk: '',
+        level_harga_lama: '',
+        subtotal: ''
       },
-      placeholder_pelanggan: {
-        placeholder: '--PILIH PELANGGAN (F4)--',
-        sortField: 'text',
-        openOnFocus : true
+      penjualan : {
+        pelanggan : 0,
+        kas : '',
+        jatuh_tempo : '',
+        subtotal : 0,
+        potongan : 0,
+        potongan_faktur : 0,
+        potongan_persen : 0,
+        total_akhir : 0,
+        pembayaran : 0,
+        kembalian: 0,
+        kredit: 0,
+      }, 
+      setting_penjualan_pos :{
+        jumlah_produk : true,
+        stok : true,
+        harga_jual : 1
       },
-      placeholder_kas: {
-        placeholder: '--PILIH KAS--',
-        sortField: 'text',
-        openOnFocus : true
+      hargaJual: {
+        placeholder: '--HARGA JUAL--'
       },
-      pencarian: '',
-      loading: true,
-      seen : false,
-      id_penjualan_pos : 0,
-      separator: {
-        decimal: ',',
-        thousands: '.',
-        prefix: '',
-        suffix: '',
-        precision: 2,
-        masked: false /* doesn't work with directive */
-      }
+      tambahKas: {
+        kode_kas : '',
+        nama_kas : '',
+        status_kas : 0,
+        default_kas : 0
+      },
+      placeholder_produk: {
+       placeholder: 'Cari Produk (F1) ...',
+       sortField: 'text',
+       maxOptions : 8,
+       scrollDuration : 10,
+       loadThrottle : 150,
+       openOnFocus : false
+     },
+     placeholder_satuan: {
+      placeholder: '--PILIH SATUAN--',
+      sortField: 'text',
+      openOnFocus : true,
+    },
+    placeholder_pelanggan: {
+      placeholder: '--PILIH PELANGGAN (F4)--',
+      sortField: 'text',
+      openOnFocus : true
+    },
+    placeholder_kas: {
+      placeholder: '--PILIH KAS--',
+      sortField: 'text',
+      openOnFocus : true
+    },
+    pencarian: '',
+    loading: true,
+    seen : false,
+    id_penjualan_pos : 0,
+    separator: {
+      decimal: ',',
+      thousands: '.',
+      prefix: '',
+      suffix: '',
+      precision: 2,
+      masked: false /* doesn't work with directive */
+    }
 
-    }
+  }
+},
+mounted() {   
+  var app = this;
+  app.$store.dispatch('LOAD_PRODUK_LIST')
+  app.$store.dispatch('LOAD_PELANGGAN_LIST')
+  app.$store.dispatch('LOAD_KAS_LIST')
+  app.getResults();
+  app.dataSettingPenjualanPos();
+  app.id_penjualan_pos = app.$route.params.id;
+},
+filters: {
+  pemisahTitik: function (value) {
+    var angka = [value];
+    var numberFormat = new Intl.NumberFormat('es-ES');
+    var formatted = angka.map(numberFormat.format);
+    return formatted.join('; ');
+  }
+},
+computed : mapState ({    
+  produk(){
+    return this.$store.state.produk
   },
-  mounted() {   
-    var app = this;
-    app.$store.dispatch('LOAD_PRODUK_LIST')
-    app.$store.dispatch('LOAD_PELANGGAN_LIST')
-    app.$store.dispatch('LOAD_KAS_LIST')
-    app.getResults();
-    app.dataSettingPenjualanPos();
-    app.id_penjualan_pos = app.$route.params.id;
+  pelanggan(){
+    return this.$store.getters.pelangganTransaksi
   },
-  filters: {
-    pemisahTitik: function (value) {
-      var angka = [value];
-      var numberFormat = new Intl.NumberFormat('es-ES');
-      var formatted = angka.map(numberFormat.format);
-      return formatted.join('; ');
-    }
-  },
-  computed : mapState ({    
-    produk(){
-      return this.$store.state.produk
-    },
-    pelanggan(){
-      return this.$store.getters.pelangganTransaksi
-    },
-    kas(){
-      return this.$store.state.kas
-    }
-  }),
-  watch: {
+  kas(){
+    return this.$store.state.kas
+  }
+}),
+watch: {
     // whenever question changes, this function will run
     pencarian: function (newQuestion) {
       this.getHasilPencarian()
@@ -1107,6 +1144,55 @@ subtmitEditSatuan(id_produk, id_tbs, subtotal_lama){
     });
   }
 },
+hargaEntry(id, index,nama_produk,subtotal_lama,level_harga) { 
+  var app = this;
+
+  app.inputTbsPenjualan.id_tbs = id;
+  app.inputTbsPenjualan.nama_produk = nama_produk;
+  app.inputTbsPenjualan.level_harga_produk = level_harga;
+  app.inputTbsPenjualan.subtotal = subtotal_lama;
+  app.inputTbsPenjualan.level_harga_lama = level_harga;
+  $("#modalEditHarga").show()
+},
+subtmitEditHarga(id_produk, id, subtotal_lama){
+ let app = this
+ if (app.inputTbsPenjualan.level_harga_lama == app.inputTbsPenjualan.level_harga_produk) {
+  $("#modalEditHarga").hide()
+}else{
+
+  app.inputTbsPenjualan.id_tbs = id;
+  var newinputTbsPenjualan = app.inputTbsPenjualan;
+  axios.post(app.url+'/edit-harga-edit-tbs-penjualan', newinputTbsPenjualan)
+  .then(function (resp) {
+
+    var subtotal = (parseFloat(app.penjualan.subtotal) - parseFloat(subtotal_lama)) + parseFloat(resp.data.subtotal)
+    function cekTbs(tbs) { 
+      return tbs.id_edit_tbs_penjualans === id
+    }
+
+    var index = app.tbs_penjualan.findIndex(cekTbs)
+
+    app.tbs_penjualan[index].subtotal = resp.data.subtotal
+    app.tbs_penjualan[index].harga_produk = resp.data.harga_produk
+    app.tbs_penjualan[index].potongan = resp.data.potongan
+    app.tbs_penjualan[index].level_harga = app.inputTbsPenjualan.level_harga_produk
+    app.penjualan.subtotal = subtotal.toFixed(2)
+    app.penjualan.total_akhir = subtotal.toFixed(2)
+    app.potonganPersen()
+    app.inputTbsPenjualan.level_harga_produk = ''
+    app.inputTbsPenjualan.level_harga_lama = ''
+    app.inputTbsPenjualan.jumlah_produk = ''
+    app.inputTbsPenjualan.id_tbs = ''
+    $("#modalEditHarga").hide()
+
+  })
+  .catch(function (resp) { 
+
+    console.log(resp);    
+    alert("Tidak dapat Mengubah Harga Produk");
+  });
+}
+},
 potonganEntry(id, index,nama_produk,subtotal_lama) {    
   var app = this;     
   app.$swal({
@@ -1380,6 +1466,7 @@ closeModalX(){
 closeModalJumlahProduk(){   
   $("#modalJumlahProduk").hide();  
   $("#modalEditSatuan").hide();  
+  $("#modalEditHarga").hide();  
   this.openSelectizeProduk(); 
 },
 alertTbs(pesan) {

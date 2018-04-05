@@ -1244,6 +1244,12 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
         'uses'       => 'PenjualanController@prosesEditPotonganEditTbsPenjualan',
     ]);
 
+    Route::post('/penjualan/edit-harga-edit-tbs-penjualan', [
+        'middleware' => ['auth'],
+        'as'         => 'penjualan.edit_harga_edit_tbs_penjualan',
+        'uses'       => 'PenjualanController@prosesEditHargaEditTbsPenjualan',
+    ]);
+
     Route::delete('/penjualan/proses-hapus-edit-tbs-penjualan/{id}', [
         'middleware' => ['auth'],
         'as'         => 'penjualan.proses_hapus_edit_tbs_penjualan',
