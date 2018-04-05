@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Penjualan;
 use App\PenjualanPos;
+use App\SettingAplikasi;
+use App\Warung;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -216,6 +218,71 @@ class LaporanBucketSizeController extends Controller
                         }); 
                     })->export('xls'); 
  
+    }
+
+        public function cetakLaporan(Request $request, $dari_tanggal, $sampai_tanggal, $kelipatan){
+        //SETTING APLIKASI
+        $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
+
+        $request['dari_tanggal']   = $dari_tanggal; 
+        $request['sampai_tanggal'] = $sampai_tanggal; 
+        $request['kelipatan'] = $kelipatan; 
+
+
+        $satu      = 1;
+        $kelipatan = intval($request->kelipatan);
+
+        $data_penjualan_pos       = PenjualanPos::select([DB::raw('MAX(total) as total')])->where('warung_id', Auth::user()->id_warung)->first();
+        $total_penjualan_terbesar = $kelipatan + $data_penjualan_pos->total;
+
+        $data_warung        = Warung::where('id', Auth::user()->id_warung)->first();
+
+        return view('laporan.cetak_laporan_bucket_size_pos',
+            [
+                'request'                   => $request,
+                'satu'                      => $satu,
+                'kelipatan'                 => $kelipatan,
+                'data_penjualan_pos'        => $data_penjualan_pos,
+                'total_penjualan_terbesar'  => $total_penjualan_terbesar,
+                'data_warung'               => $data_warung,
+                'dari_tanggal'              => $dari_tanggal,
+                'sampai_tanggal'            => $sampai_tanggal,
+                'setting_aplikasi'          => $setting_aplikasi,
+            ])->with(compact('html'));
+
+    } 
+
+
+        public function cetakLaporanOnline(Request $request, $dari_tanggal, $sampai_tanggal, $kelipatan){
+        //SETTING APLIKASI
+        $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
+
+        $request['dari_tanggal']   = $dari_tanggal; 
+        $request['sampai_tanggal'] = $sampai_tanggal; 
+        $request['kelipatan'] = $kelipatan; 
+
+
+        $satu      = 1;
+        $kelipatan = intval($request->kelipatan);
+
+        $data_penjualan_pos       = Penjualan::select([DB::raw('MAX(total) as total')])->where('id_warung', Auth::user()->id_warung)->first();
+        $total_penjualan_terbesar = $kelipatan + $data_penjualan_pos->total;
+
+        $data_warung        = Warung::where('id', Auth::user()->id_warung)->first();
+
+        return view('laporan.cetak_laporan_bucket_size_online',
+            [
+                'request'                   => $request,
+                'satu'                      => $satu,
+                'kelipatan'                 => $kelipatan,
+                'data_penjualan_pos'        => $data_penjualan_pos,
+                'total_penjualan_terbesar'  => $total_penjualan_terbesar,
+                'data_warung'               => $data_warung,
+                'dari_tanggal'              => $dari_tanggal,
+                'sampai_tanggal'            => $sampai_tanggal,
+                'setting_aplikasi'          => $setting_aplikasi,
+            ])->with(compact('html'));
+
     } 
 
 }

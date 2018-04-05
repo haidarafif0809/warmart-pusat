@@ -9,7 +9,8 @@ use App\SettingAplikasi;
 use App\User;
 use Auth;
 use OpenGraph;
-use SEOMeta;use Session;
+use SEOMeta;
+use Session;
 
 
 class DetailProdukController extends Controller
@@ -23,7 +24,6 @@ class DetailProdukController extends Controller
         $array_warung         = DaftarProdukController::dataWarungTervalidasi();
         $daftar_produk_sama   = $this->produkSekategori($barang, $array_warung);
         $daftar_produk_warung = $this->produkSewarung($barang, $array_warung);
-        
 
         if(!Session::get('session_id')){
             $session_id    = session()->getId();
@@ -32,9 +32,15 @@ class DetailProdukController extends Controller
         }
         if (Auth::check() == false) {
             $keranjang_belanjaan = KeranjangBelanja::where('session_id', $session_id);
+            if ($keranjang_belanjaan->count() > 0) {
+                $warung_yang_dipesan = $keranjang_belanjaan->first()->produk->id_warung;
+            }
             $cek_belanjaan = $keranjang_belanjaan->count();
         } else {
             $keranjang_belanjaan = KeranjangBelanja::where('id_pelanggan', Auth::user()->id);
+            if ($keranjang_belanjaan->count() > 0) {
+                $warung_yang_dipesan = $keranjang_belanjaan->first()->produk->id_warung;
+            }
             $cek_belanjaan = $keranjang_belanjaan->count();
         }
 

@@ -280,7 +280,28 @@ class PesananWarungController extends Controller
         Mail::send('auth.emails.email_pesanan_telah_dikonfirmasi', compact('pesanan_pelanggan', 'data_warung', 'produk_pesanan', 'waktu_update'), function ($message) use ($data_warung, $user, $pesanan_pelanggan) {
 
             $message->from('verifikasi@andaglos.id', $data_warung->name);
-            $message->to($user->email, $pesanan_pelanggan->nama_pemesan)->subject('Pesanan telah dikonfirmasi');
+            $message->to($user->email, $pesanan_pelanggan->nama_pemesan)->subject('Pesanan telah Dikonfirmasi');
+
+        });
+    }
+
+    public function pesananDiselesaikan($id)
+    {
+
+        $pesanan_pelanggan = PesananPelanggan::select('id', 'id_pelanggan', 'updated_at', 'id_warung', 'nama_pemesan', 'no_telp_pemesan', 'alamat_pemesan', 'jumlah_produk', 'subtotal', 'metode_pembayaran', 'biaya_kirim', 'kode_unik_transfer')->whereId($id)->first();
+
+        $data_warung = Warung::select('name', 'alamat', 'no_telpon', 'email')->whereId($pesanan_pelanggan->id_warung)->first();
+
+        $user = User::select('email')->whereId($pesanan_pelanggan->id_pelanggan)->first();
+
+        $produk_pesanan = DetailPesananPelanggan::with('produk')->where('id_pesanan_pelanggan', $id)->get();
+
+        $waktu_update = date("d/m/Y h:i:s", strtotime($pesanan_pelanggan->updated_at));
+
+        Mail::send('auth.emails.email_pesanan_telah_diselesaikan', compact('pesanan_pelanggan', 'data_warung', 'produk_pesanan', 'waktu_update'), function ($message) use ($data_warung, $user, $pesanan_pelanggan) {
+
+            $message->from('verifikasi@andaglos.id', $data_warung->name);
+            $message->to($user->email, $pesanan_pelanggan->nama_pemesan)->subject('Pesanan telah Diselesaikan');
 
         });
     }
