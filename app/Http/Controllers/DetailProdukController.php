@@ -9,7 +9,8 @@ use App\SettingAplikasi;
 use App\User;
 use Auth;
 use OpenGraph;
-use SEOMeta;
+use SEOMeta;use Session;
+
 
 class DetailProdukController extends Controller
 {
@@ -22,11 +23,21 @@ class DetailProdukController extends Controller
         $array_warung         = DaftarProdukController::dataWarungTervalidasi();
         $daftar_produk_sama   = $this->produkSekategori($barang, $array_warung);
         $daftar_produk_warung = $this->produkSewarung($barang, $array_warung);
-        if (Auth::check()) {
-            $cek_belanjaan = KeranjangBelanja::jumlahBelanja();
-        } else {
-            $cek_belanjaan = 0;
+        
+
+        if(!Session::get('session_id')){
+            $session_id    = session()->getId();
+        }else{
+            $session_id = Session::get('session_id');
         }
+        if (Auth::check() == false) {
+            $keranjang_belanjaan = KeranjangBelanja::where('session_id', $session_id);
+            $cek_belanjaan = $keranjang_belanjaan->count();
+        } else {
+            $keranjang_belanjaan = KeranjangBelanja::where('id_pelanggan', Auth::user()->id);
+            $cek_belanjaan = $keranjang_belanjaan->count();
+        }
+
         $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
 
         $sisa_stok_keluar = DaftarProdukController::cekStokProduk($barang);
