@@ -917,7 +917,9 @@ Route::get('/laporan-bucket-size-online/view/{dari_tanggal}/{sampai_tanggal}/{ke
 Route::post('/laporan-bucket-size/view-pos-data', 'LaporanBucketSizeController@prosesLaporanBucketSizeData')->middleware('auth');
 Route::post('/laporan-bucket-size/view-online-data', 'LaporanBucketSizeController@prosesLaporanBucketSizeOnlineData')->middleware('auth');
 Route::get('/laporan-bucket-size/download-excel-pos/{dari_tanggal}/{sampai_tanggal}/{kelipatan}', 'LaporanBucketSizeController@downloadLaporanPos')->middleware('auth');
-Route::get('/laporan-bucket-size/download-excel-online/{dari_tanggal}/{sampai_tanggal}/{kelipatan}', 'LaporanBucketSizeController@downloadLaporanOnline')->middleware('auth');
+Route::get('/laporan-bucket-size/download-excel-online/{dari_tanggal}/{sampai_tanggal}/{kelipatan}', 'LaporanBucketSizeController@downloadLaporanOnline')->middleware('auth'); 
+Route::get('/laporan-bucket-size/cetak-pos/{dari_tanggal}/{sampai_tanggal}/{kelipatan}', 'LaporanBucketSizeController@cetakLaporan')->middleware('auth');
+Route::get('/laporan-bucket-size/cetak-online/{dari_tanggal}/{sampai_tanggal}/{kelipatan}', 'LaporanBucketSizeController@cetakLaporanOnline')->middleware('auth');
 
 // LAPORAN PENJUALAN HARIAN VUE.JS
 Route::get('/laporan-penjualan-harian/view/{dari_tanggal}/{sampai_tanggal}', 'LaporanPenjualanHarianController@prosesLaporanPenjualanHarian')->middleware('auth');
