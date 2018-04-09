@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Kas;
 use App\TransaksiKas;
+use App\BankWarung;
 use Auth;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Html\Builder;
@@ -252,6 +253,15 @@ class KasController extends Controller
                     ]);
             }
 
+            if ($request->id_bank > 0) {
+                BankWarung::where('id', $request->id_bank)->where('warung_id', Auth::user()->id_warung)
+                ->update([
+                    'atas_nama' => $request->atas_nama,
+                    'no_rek' => $request->no_rek,
+                    'nama_tampil' => $request->nama_kas,
+                    ]);
+            }
+
         } else {
             Auth::logout();
             return response()->view('error.403');
@@ -319,22 +329,22 @@ class KasController extends Controller
         if (Laratrust::can('tambah_kas')) {
             $tambah_kas = 1;
         }else{
-         $tambah_kas = 0;            
-     }
-     if (Laratrust::can('edit_kas')) {
-         $edit_kas = 1;
+           $tambah_kas = 0;            
+       }
+       if (Laratrust::can('edit_kas')) {
+           $edit_kas = 1;
+       }else{
+           $edit_kas = 0;            
+       }
+       if (Laratrust::can('hapus_kas')) {
+         $hapus_kas = 1;
      }else{
-         $edit_kas = 0;            
+         $hapus_kas = 0;            
      }
-     if (Laratrust::can('hapus_kas')) {
-       $hapus_kas = 1;
-   }else{
-       $hapus_kas = 0;            
-   }
-   $respons['tambah_kas'] = $tambah_kas;
-   $respons['edit_kas'] = $edit_kas;
-   $respons['hapus_kas'] = $hapus_kas;
+     $respons['tambah_kas'] = $tambah_kas;
+     $respons['edit_kas'] = $edit_kas;
+     $respons['hapus_kas'] = $hapus_kas;
 
-   return response()->json($respons);
-}
+     return response()->json($respons);
+ }
 }
