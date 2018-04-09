@@ -12,6 +12,7 @@ use App\SettingVerifikasi;
 use App\User;
 use App\UserWarung;
 use App\Warung;
+use App\BankWarung;
 use GuzzleHttp\Client;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
@@ -185,14 +186,14 @@ class RegisterController extends Controller
                 'wilayah'   => "-",
                 ]);
 
-            //INSERT BANK WARUNG
-            $bank_warung = BankWarung::create([
-                'nama_bank' => 1,
-                'nama_tampil' => "BCA",
-                'atas_nama' => "Andaglos",
-                'no_rek'    => "1234567890",
-                'warung_id' => $warung->id,
-                ]);
+            // //INSERT BANK WARUNG
+            // $bank_warung = BankWarung::create([
+            //     'nama_bank' => 1,
+            //     'nama_tampil' => "BCA",
+            //     'atas_nama' => "Andaglos",
+            //     'no_rek'    => "1234567890",
+            //     'warung_id' => $warung->id,
+            //     ]);
 
             //SETTING APLIKASI
             $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
