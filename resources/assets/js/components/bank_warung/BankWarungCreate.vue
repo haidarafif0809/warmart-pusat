@@ -115,7 +115,7 @@
           app.bankWarung.nama_tampil = ''
           app.bankWarung.no_rek = ''
           app.errors = '';
-          app.$router.replace('/bank-warung/');
+          app.$router.replace('/kas');
 
         })
         .catch(function (resp) {
