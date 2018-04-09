@@ -21,16 +21,8 @@ class KasController extends Controller
         return view('kas.index')->with(compact('html'));
     }
 
-    public function view()
-    {
-        $kas       = Kas::where('warung_id', Auth::user()->id_warung)->orderBy('id', 'desc')->paginate(10);
-        $kas_array = array();
-        foreach ($kas as $kass) {
-            $status_transaksi = $this->cekKasTerpakai($kass->id, Auth::user()->id_warung);
-            $total_kas        = $kass->totalKas;
-            array_push($kas_array, ['total_kas' => $total_kas, 'kas' => $kass, 'status_transaksi' => $status_transaksi]);
-        }
-        //DATA PAGINATION
+    public function dataPagination($kas, $kas_array){
+
         $respons['current_page']   = $kas->currentPage();
         $respons['data']           = $kas_array;
         $respons['otoritas_kas']   = $this->otoritasKas();
@@ -44,7 +36,23 @@ class KasController extends Controller
         $respons['prev_page_url']  = $kas->previousPageUrl();
         $respons['to']             = $kas->perPage();
         $respons['total']          = $kas->total();
+
+        return $respons;
+    }
+
+    public function view()
+    {
+        $kas       = Kas::dataKas()
+        ->orderBy('kas.id', 'desc')->paginate(10);
+
+        $kas_array = array();
+        foreach ($kas as $kass) {
+            $status_transaksi = $this->cekKasTerpakai($kass->id, Auth::user()->id_warung);
+            $total_kas        = $kass->totalKas;
+            array_push($kas_array, ['total_kas' => $total_kas, 'kas' => $kass, 'status_transaksi' => $status_transaksi]);
+        }
         //DATA PAGINATION
+        $respons = $this->dataPagination($kas, $kas_array);
 
         return response()->json($respons);
     }
@@ -53,33 +61,23 @@ class KasController extends Controller
     {
         $search = $request->search; // REQUEST SEARCH
         //query pencarian
-        $kas = Kas::where('warung_id', Auth::user()->id_warung)
+        $kas       = Kas::dataKas()
         ->where(function ($query) use ($search) {
-// search
-            $query->orwhere('nama_kas', 'LIKE', $search . '%')
-            ->orWhere('kode_kas', 'LIKE', $search . '%');
-        })->paginate(10);
+            $query->orwhere('kas.nama_kas', 'LIKE', '%'.$search . '%')
+            ->orWhere('kas.kode_kas', 'LIKE', '%'.$search . '%')
+            ->orWhere('bank_warungs.atas_nama', 'LIKE', '%'.$search . '%')
+            ->orWhere('bank_warungs.no_rek', 'LIKE', '%'.$search . '%');
+        })
+        ->orderBy('kas.id', 'desc')->paginate(10);
 
         $kas_array = array();
         foreach ($kas as $kass) {
             $total_kas = $kass->totalKas;
             array_push($kas_array, ['total_kas' => $total_kas, 'kas' => $kass]);
         }
+
         //DATA PAGINATION
-        $respons['current_page']   = $kas->currentPage();
-        $respons['data']           = $kas_array;
-        $respons['otoritas_kas']   = $this->otoritasKas();
-        $respons['first_page_url'] = url('/kas/view?page=' . $kas->firstItem());
-        $respons['from']           = 1;
-        $respons['last_page']      = $kas->lastPage();
-        $respons['last_page_url']  = url('/kas/view?page=' . $kas->lastPage());
-        $respons['next_page_url']  = $kas->nextPageUrl();
-        $respons['path']           = url('/kas/view');
-        $respons['per_page']       = $kas->perPage();
-        $respons['prev_page_url']  = $kas->previousPageUrl();
-        $respons['to']             = $kas->perPage();
-        $respons['total']          = $kas->total();
-        //DATA PAGINATION
+        $respons = $this->dataPagination($kas, $kas_array);
 
         return response()->json($respons);
     }
