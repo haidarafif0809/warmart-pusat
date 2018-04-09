@@ -19,8 +19,9 @@
          <h4 class="card-title"> Bank </h4>
          <div>
            <form v-on:submit.prevent="saveForm()" class="form-horizontal"> 
+
             <div class="form-group">
-              <label for="nama_bank" class="col-md-2 control-label">Nama Bank</label>
+              <label for="nama_bank" class="col-md-2 control-label">Pilih Bank</label>
               <div class="col-md-4 hurufBesar">
                 <selectize-component v-model="bankWarung.nama_bank" :settings="placeholder_bank" id="nama_bank" ref='nama_bank'>
                   <option v-for="banks, index in bank" v-bind:value="banks.id">
@@ -31,6 +32,14 @@
                 <span v-if="errors.nama_bank" id="nama_bank_error" class="label label-danger">
                   {{ errors.nama_bank[0] }}
                 </span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="nama_tampil" class="col-md-2 control-label">Nama Bank</label>
+              <div class="col-md-4 hurufBesar">
+                <input class="form-control" required autocomplete="off" placeholder="Nama Bank" type="text" v-model="bankWarung.nama_tampil" name="nama_tampil" >
+                <span v-if="errors.nama_tampil" class="label label-danger">{{ errors.nama_tampil[0] }}</span>
               </div>
             </div>
             <div class="form-group">
@@ -70,6 +79,7 @@
         url : window.location.origin + (window.location.pathname).replace("dashboard", "bank-warung"),
         bankWarung: {
           nama_bank: '',
+          nama_tampil: '',
           atas_nama: '',
           no_rek: '',
         },
@@ -102,6 +112,7 @@
           app.alert(app.message);
 
           app.bankWarung.atas_nama = ''
+          app.bankWarung.nama_tampil = ''
           app.bankWarung.no_rek = ''
           app.errors = '';
           app.$router.replace('/bank-warung/');

@@ -18,7 +18,7 @@ class BankWarungController extends Controller
 
     public function queryBank()
     {
-        $data_bank = BankWarung::select(['bank_warungs.atas_nama', 'bank_warungs.no_rek', 'bank_warungs.id', 'setting_transfer_banks.nama_bank'])
+        $data_bank = BankWarung::select(['bank_warungs.atas_nama', 'bank_warungs.nama_tampil', 'bank_warungs.no_rek', 'bank_warungs.id', 'setting_transfer_banks.nama_bank'])
         ->leftJoin('setting_transfer_banks', 'setting_transfer_banks.id', '=', 'bank_warungs.nama_bank')
         ->where('bank_warungs.warung_id', Auth::user()->id_warung);
         return $data_bank;
@@ -31,7 +31,7 @@ class BankWarungController extends Controller
         return response()->json([
             "bank" => $data_bank,
             "otoritas"     => $otoritas,
-        ]);
+            ]);
     }
 
     public function pencarian(Request $request)
@@ -40,13 +40,14 @@ class BankWarungController extends Controller
         ->where(function ($query) use ($request) {
             $query->orwhere('bank_warungs.atas_nama', 'LIKE', '%' . $request->search . '%')
             ->orwhere('bank_warungs.no_rek', 'LIKE', '%' . $request->search . '%')
+            ->orwhere('bank_warungs.nama_tampil', 'LIKE', '%' . $request->search . '%')
             ->orwhere('setting_transfer_banks.nama_bank', 'LIKE', '%' . $request->search . '%');
         })->paginate(10);
         $otoritas = $this->otoritasBank();
         return response()->json([
             "bank" => $data_bank,
             "otoritas"     => $otoritas,
-        ]);
+            ]);
     }
 
     public function dataBank()
@@ -69,16 +70,18 @@ class BankWarungController extends Controller
     {
         $this->validate($request, [
             'nama_bank' => 'required',
+            'nama_tampil' => 'required',
             'atas_nama' => 'required',
             'no_rek'    => 'required|unique:bank_warungs,no_rek,',
-        ]);
+            ]);
 
         $master_bank = BankWarung::create([
             'nama_bank' => $request->nama_bank,
+            'nama_tampil' => $request->nama_tampil,
             'atas_nama' => $request->atas_nama,
             'no_rek'    => $request->no_rek,
             'warung_id' => Auth::user()->id_warung,
-        ]);
+            ]);
     }
 
     /**
@@ -121,15 +124,17 @@ class BankWarungController extends Controller
     {
         $this->validate($request, [
             'nama_bank' => 'required',
+            'nama_tampil' => 'required',
             'atas_nama' => 'required',
             'no_rek'    => 'required|unique:bank_warungs,no_rek,' . $id,
-        ]);
+            ]);
 
         BankWarung::where('id', $id)->update([
             'nama_bank' => $request->nama_bank,
+            'nama_tampil' => $request->nama_tampil,
             'atas_nama' => $request->atas_nama,
             'no_rek'    => $request->no_rek,
-        ]);
+            ]);
     }
 
     /**
