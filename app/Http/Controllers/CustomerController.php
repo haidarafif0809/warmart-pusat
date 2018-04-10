@@ -225,17 +225,17 @@ public function pencarian(Request $request)
     public function show($id)
     {
         //EDIT CUSTOMER
-        $customer      = Customer::find($id);
-        $cek_komunitas = KomunitasCustomer::where('user_id', $id)->count();
-        if ($cek_komunitas > 0) {
-            $komunitas                = KomunitasCustomer::where('user_id', $id)->first();
-            $customer['komunitas_id'] = $komunitas->komunitas_id;
-        } else {
-            $customer['komunitas_id'] = '';
-        }
-
-        return $customer;
+      $customer = Customer::select('name','no_telp','email','alamat','tgl_lahir','kode_pelanggan as kode_customer')->where('id',$id)->first();
+      $cek_komunitas = KomunitasCustomer::where('user_id', $id)->count();
+      if ($cek_komunitas > 0) {
+        $komunitas                = KomunitasCustomer::where('user_id', $id)->first();
+        $customer['komunitas_id'] = $komunitas->komunitas_id;
+    } else {
+        $customer['komunitas_id'] = '';
     }
+    $customer['setting_aplikasi'] = $this->settingAplikasi();
+    return $customer;
+}
 
     /**
      * Show the form for editing the specified resource.
@@ -267,6 +267,7 @@ public function pencarian(Request $request)
         $this->validate($request, [
             'name'      => 'required',
             'email'     => 'nullable|without_spaces|unique:users,email,' . $id,
+            'kode_customer'    => 'nullable|unique:users,kode_pelanggan,' . $id.'|max:50',
             'alamat'    => 'required',
             'no_telp'   => 'required|without_spaces|numeric|unique:users,no_telp,' . $id,
             'tgl_lahir' => 'required|date',
@@ -276,6 +277,7 @@ public function pencarian(Request $request)
         Customer::find($id)->update([
             'name'      => $request->name,
             'email'     => $request->email,
+            'kode_pelanggan'    => $request->kode_customer,
             'alamat'    => $request->alamat,
             'no_telp'   => $request->no_telp,
             'tgl_lahir' => $request->tgl_lahir,
@@ -322,7 +324,7 @@ public function pencarian(Request $request)
         $customer['no_telp']   = $data_customer->no_telp;
         $customer['tgl_lahir'] = $data_customer->tgl_lahir;
         $customer['komunitas'] = $komunitas;
-        
+
         return response()->json([ 
             "customer" => $customer, 
             "setting_aplikasi"     => $this->settingAplikasi()->tipe_aplikasi
