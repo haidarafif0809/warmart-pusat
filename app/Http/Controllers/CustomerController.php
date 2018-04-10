@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Penjualan;
+use App\PenjualanPos;
+use App\PesananPelanggan;
 use App\Customer;
 use App\Komunitas;
 use App\KomunitasCustomer;
@@ -30,6 +33,47 @@ class CustomerController extends Controller
         }
     }
 
+    public function paginationData($customer, $array, $url)
+    {
+    //DATA PAGINATION
+        $respons['current_page']   = $customer->currentPage();
+        $respons['data']           = $array;
+        $respons['otoritas']      = $this->otoritasCustomer();
+        $respons['first_page_url'] = url($url . '?page=' . $customer->firstItem());
+        $respons['from']           = 1;
+        $respons['last_page']      = $customer->lastPage();
+        $respons['last_page_url']  = url($url . '?page=' . $customer->lastPage());
+        $respons['next_page_url']  = $customer->nextPageUrl();
+        $respons['path']           = url($url);
+        $respons['per_page']       = $customer->perPage();
+        $respons['prev_page_url']  = $customer->previousPageUrl();
+        $respons['to']             = $customer->perPage();
+        $respons['total']          = $customer->total();
+    //DATA PAGINATION
+
+        return $respons;
+    }
+    public function paginationPencarianData($customer, $array, $url, $search)
+    {
+    //DATA PAGINATION
+        $respons['current_page']   = $customer->currentPage();
+        $respons['data']           = $array;
+        $respons['otoritas']      = $this->otoritasCustomer();
+        $respons['first_page_url'] = url($url . '?page=' . $customer->firstItem() . '&search=' . $search);
+        $respons['from']           = 1;
+        $respons['last_page']      = $customer->lastPage();
+        $respons['last_page_url']  = url($url . '?page=' . $customer->lastPage() . '&search=' . $search);
+        $respons['next_page_url']  = $customer->nextPageUrl();
+        $respons['path']           = url($url);
+        $respons['per_page']       = $customer->perPage();
+        $respons['prev_page_url']  = $customer->previousPageUrl();
+        $respons['to']             = $customer->perPage();
+        $respons['total']          = $customer->total();
+    //DATA PAGINATION
+
+        return $respons;
+    }
+
     public function index(Request $request, Builder $htmlBuilder)
     {
         return view('customer.index')->with(compact('html'));
@@ -37,31 +81,65 @@ class CustomerController extends Controller
 
     public function view()
     {
-        $customer = Customer::where('tipe_user', 3)->orderBy('created_at', 'DESC')->paginate(10);
-        $otoritas = $this->otoritasCustomer();
-        return response()->json([
-            "customer" => $customer,
-            "otoritas"     => $otoritas,
-        ]);
-    }
 
-    public function pencarian(Request $request)
-    {
-        $customer = Customer::where('tipe_user', 3)->where(function ($query) use ($request) {
-            $query->orwhere('name', 'LIKE', "%$request->search%")
-            ->orWhere('alamat', 'LIKE', "%$request->search%")
-            ->orWhere('kode_pelanggan', 'LIKE', "%$request->search%")
-            ->orWhere('wilayah', 'LIKE', "%$request->search%")
-            ->orWhere('no_telp', 'LIKE', "%$request->search%")
-            ->orWhere('tgl_lahir', 'LIKE', "%$request->search%");
-        })
-        ->paginate(10);
-        $otoritas = $this->otoritasCustomer();
-        return response()->json([
-            "customer" => $customer,
-            "otoritas"     => $otoritas,
+        $customer = Customer::where('tipe_user', 3)->orderBy('created_at', 'DESC')->paginate(10);
+        $array_customer = array();
+
+        foreach ($customer as $customers) {
+         array_push($array_customer, [            
+            'customer'   => $customers,
+            'status_pelanggan' => $this->cekStatusPelanggan($customers->id)
         ]);
+     }
+
+
+     $url     = '/customer/view';
+     $respons = $this->paginationData($customer, $array_customer, $url);
+
+     return response()->json($respons);
+
+ }
+
+ public function cekStatusPelanggan($pelanggan){  
+
+    if (PenjualanPos::where('pelanggan_id',$pelanggan)->count() > 0) {
+        return 1;
+    }elseif (PesananPelanggan::where('id_pelanggan',$pelanggan)->count() > 0) {
+        return 1;
+    }elseif (Penjualan::where('id_pelanggan',$pelanggan)->count() > 0) {
+        return 1;
+    }else{
+        return 0;
     }
+}
+
+public function pencarian(Request $request)
+{
+    $customer = Customer::where('tipe_user', 3)->where(function ($query) use ($request) {
+        $query->orwhere('name', 'LIKE', "%$request->search%")
+        ->orWhere('alamat', 'LIKE', "%$request->search%")
+        ->orWhere('kode_pelanggan', 'LIKE', "%$request->search%")
+        ->orWhere('wilayah', 'LIKE', "%$request->search%")
+        ->orWhere('no_telp', 'LIKE', "%$request->search%")
+        ->orWhere('tgl_lahir', 'LIKE', "%$request->search%");
+    })
+    ->paginate(10);
+
+    $array_customer = array();
+
+    foreach ($customer as $customers) {
+     array_push($array_customer, [            
+        'customer'   => $customers,
+        'status_pelanggan' => $this->cekStatusPelanggan($customers->id)
+    ]);
+ }
+ 
+
+ $url     = '/customer/pencarian';
+ $respons = $this->paginationData($customer, $array_customer, $url);
+
+ return response()->json($respons);
+}
 
     /**
      * Show the form for creating a new resource.
