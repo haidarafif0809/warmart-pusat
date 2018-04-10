@@ -931,7 +931,8 @@ deleteEntry(id, index,nama_produk) {
         }else if (harga != harga_produk) {
           app.konfirmasiPerubahanHarga(id_produk,jumlah_produk,harga_produk,nama_produk,no_faktur,satuan_produk)
         }else{
-          app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,no_faktur,satuan_produk)
+          var status_harga = 0; // jika master produk, tidak diubah
+          app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,no_faktur,satuan_produk,status_harga)
         }
     },//END PROSES TAMBAH PRODUK TBS
     konfirmasiPerubahanHarga(id_produk,jumlah_produk,harga_produk,nama_produk,no_faktur,satuan_produk){
@@ -946,18 +947,22 @@ deleteEntry(id, index,nama_produk) {
 
       }).then((value) => {
 
-        if (!value) throw null;
-
-        app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,no_faktur,satuan_produk);
+        if (value) {
+          var status_harga = 1; // jika master produk, juga diubah
+          app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,no_faktur,satuan_produk,status_harga);
+        } else {
+          var status_harga = 0; // jika master produk, tidak diubah
+          app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,no_faktur,satuan_produk,status_harga);
+        }
 
       });
     },
-    prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,no_faktur,satuan_produk){
+    prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,no_faktur,satuan_produk,status_harga){
      var app = this;
      var id_pembelian = app.id_pembelian;
      var satuan = satuan_produk.split("|");
      app.loading = true;
-     axios.get(app.url_edit+'/proses-tambah-tbs-pembelian?id_produk_tbs='+id_produk+'&jumlah_produk='+jumlah_produk+'&harga_produk='+harga_produk+'&no_faktur='+no_faktur+'&satuan='+satuan[0]+'&satuan_dasar='+satuan[2])
+     axios.get(app.url_edit+'/proses-tambah-tbs-pembelian?id_produk_tbs='+id_produk+'&jumlah_produk='+jumlah_produk+'&harga_produk='+harga_produk+'&no_faktur='+no_faktur+'&satuan='+satuan[0]+'&satuan_dasar='+satuan[2]+'&status_harga='+status_harga)
      .then(function (resp) {
 
       $("#modalJumlahProduk").hide();

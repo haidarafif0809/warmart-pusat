@@ -9,6 +9,7 @@ use App\SettingAplikasi;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Html\Builder;
 use Laratrust;
+use Auth;
 
 class CustomerController extends Controller
 {
@@ -49,6 +50,7 @@ class CustomerController extends Controller
         $customer = Customer::where('tipe_user', 3)->where(function ($query) use ($request) {
             $query->orwhere('name', 'LIKE', "%$request->search%")
             ->orWhere('alamat', 'LIKE', "%$request->search%")
+            ->orWhere('kode_pelanggan', 'LIKE', "%$request->search%")
             ->orWhere('wilayah', 'LIKE', "%$request->search%")
             ->orWhere('no_telp', 'LIKE', "%$request->search%")
             ->orWhere('tgl_lahir', 'LIKE', "%$request->search%");
@@ -100,12 +102,13 @@ class CustomerController extends Controller
     {
 
         $this->validate($request, [
-            'name'      => 'required',
-            'email'     => 'nullable|unique:users,email',
-            'alamat'    => 'required',
-            'no_telp'   => 'without_spaces|unique:users,no_telp|numeric',
-            'tgl_lahir' => 'date',
-            'komunitas' => '',
+            'name'              => 'required',
+            'email'             => 'nullable|unique:users,email',
+            'kode_customer'    => 'nullable|unique:users,kode_pelanggan|max:50',
+            'alamat'            => 'required',
+            'no_telp'           => 'without_spaces|unique:users,no_telp|numeric',
+            'tgl_lahir'         => 'required|date',
+            'komunitas'         => 'nullable'
         ]);
 
         if ($setting_aplikasi = $this->settingAplikasi()->tipe_aplikasi == 0) {
@@ -117,6 +120,7 @@ class CustomerController extends Controller
         $customer_baru = Customer::create([
             'name'              => $request->name,
             'email'             => $request->email,
+            'kode_pelanggan'    => $request->kode_customer,
             'alamat'            => $request->alamat,
             'no_telp'           => $request->no_telp,
             'tgl_lahir'         => $request->tgl_lahir,

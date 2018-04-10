@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Kas;
 use App\TransaksiKas;
+use App\BankWarung;
 use Auth;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Html\Builder;
@@ -21,16 +22,8 @@ class KasController extends Controller
         return view('kas.index')->with(compact('html'));
     }
 
-    public function view()
-    {
-        $kas       = Kas::where('warung_id', Auth::user()->id_warung)->orderBy('id', 'desc')->paginate(10);
-        $kas_array = array();
-        foreach ($kas as $kass) {
-            $status_transaksi = $this->cekKasTerpakai($kass->id, Auth::user()->id_warung);
-            $total_kas        = $kass->totalKas;
-            array_push($kas_array, ['total_kas' => $total_kas, 'kas' => $kass, 'status_transaksi' => $status_transaksi]);
-        }
-        //DATA PAGINATION
+    public function dataPagination($kas, $kas_array){
+
         $respons['current_page']   = $kas->currentPage();
         $respons['data']           = $kas_array;
         $respons['otoritas_kas']   = $this->otoritasKas();
@@ -44,7 +37,23 @@ class KasController extends Controller
         $respons['prev_page_url']  = $kas->previousPageUrl();
         $respons['to']             = $kas->perPage();
         $respons['total']          = $kas->total();
+
+        return $respons;
+    }
+
+    public function view()
+    {
+        $kas       = Kas::dataKas()
+        ->orderBy('kas.id', 'desc')->paginate(10);
+
+        $kas_array = array();
+        foreach ($kas as $kass) {
+            $status_transaksi = $this->cekKasTerpakai($kass->id, Auth::user()->id_warung);
+            $total_kas        = $kass->totalKas;
+            array_push($kas_array, ['total_kas' => $total_kas, 'kas' => $kass, 'status_transaksi' => $status_transaksi]);
+        }
         //DATA PAGINATION
+        $respons = $this->dataPagination($kas, $kas_array);
 
         return response()->json($respons);
     }
@@ -53,33 +62,23 @@ class KasController extends Controller
     {
         $search = $request->search; // REQUEST SEARCH
         //query pencarian
-        $kas = Kas::where('warung_id', Auth::user()->id_warung)
+        $kas       = Kas::dataKas()
         ->where(function ($query) use ($search) {
-// search
-            $query->orwhere('nama_kas', 'LIKE', $search . '%')
-            ->orWhere('kode_kas', 'LIKE', $search . '%');
-        })->paginate(10);
+            $query->orwhere('kas.nama_kas', 'LIKE', '%'.$search . '%')
+            ->orWhere('kas.kode_kas', 'LIKE', '%'.$search . '%')
+            ->orWhere('bank_warungs.atas_nama', 'LIKE', '%'.$search . '%')
+            ->orWhere('bank_warungs.no_rek', 'LIKE', '%'.$search . '%');
+        })
+        ->orderBy('kas.id', 'desc')->paginate(10);
 
         $kas_array = array();
         foreach ($kas as $kass) {
             $total_kas = $kass->totalKas;
             array_push($kas_array, ['total_kas' => $total_kas, 'kas' => $kass]);
         }
+
         //DATA PAGINATION
-        $respons['current_page']   = $kas->currentPage();
-        $respons['data']           = $kas_array;
-        $respons['otoritas_kas']   = $this->otoritasKas();
-        $respons['first_page_url'] = url('/kas/view?page=' . $kas->firstItem());
-        $respons['from']           = 1;
-        $respons['last_page']      = $kas->lastPage();
-        $respons['last_page_url']  = url('/kas/view?page=' . $kas->lastPage());
-        $respons['next_page_url']  = $kas->nextPageUrl();
-        $respons['path']           = url('/kas/view');
-        $respons['per_page']       = $kas->perPage();
-        $respons['prev_page_url']  = $kas->previousPageUrl();
-        $respons['to']             = $kas->perPage();
-        $respons['total']          = $kas->total();
-        //DATA PAGINATION
+        $respons = $this->dataPagination($kas, $kas_array);
 
         return response()->json($respons);
     }
@@ -254,6 +253,15 @@ class KasController extends Controller
                     ]);
             }
 
+            if ($request->id_bank > 0) {
+                BankWarung::where('id', $request->id_bank)->where('warung_id', Auth::user()->id_warung)
+                ->update([
+                    'atas_nama' => $request->atas_nama,
+                    'no_rek' => $request->no_rek,
+                    'nama_tampil' => $request->nama_kas,
+                    ]);
+            }
+
         } else {
             Auth::logout();
             return response()->view('error.403');
@@ -321,22 +329,22 @@ class KasController extends Controller
         if (Laratrust::can('tambah_kas')) {
             $tambah_kas = 1;
         }else{
-         $tambah_kas = 0;            
-     }
-     if (Laratrust::can('edit_kas')) {
-         $edit_kas = 1;
+           $tambah_kas = 0;            
+       }
+       if (Laratrust::can('edit_kas')) {
+           $edit_kas = 1;
+       }else{
+           $edit_kas = 0;            
+       }
+       if (Laratrust::can('hapus_kas')) {
+         $hapus_kas = 1;
      }else{
-         $edit_kas = 0;            
+         $hapus_kas = 0;            
      }
-     if (Laratrust::can('hapus_kas')) {
-       $hapus_kas = 1;
-   }else{
-       $hapus_kas = 0;            
-   }
-   $respons['tambah_kas'] = $tambah_kas;
-   $respons['edit_kas'] = $edit_kas;
-   $respons['hapus_kas'] = $hapus_kas;
+     $respons['tambah_kas'] = $tambah_kas;
+     $respons['edit_kas'] = $edit_kas;
+     $respons['hapus_kas'] = $hapus_kas;
 
-   return response()->json($respons);
-}
+     return response()->json($respons);
+ }
 }

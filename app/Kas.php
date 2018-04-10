@@ -13,7 +13,7 @@ class Kas extends Model
 	use AuditableTrait;
 	use LogsActivity;
 
-	protected $fillable = ['kode_kas','nama_kas','status_kas', 'default_kas', 'warung_id'];
+	protected $fillable = ['kode_kas','nama_kas','status_kas', 'default_kas', 'id_bank', 'warung_id'];
 
 	public function getTotalKasAttribute(){
 
@@ -21,6 +21,16 @@ class Kas extends Model
 		->where('warung_id', Auth::user()->id_warung)->first();
 
 		return 'Rp '. number_format($sum_kas->total_kas,0,',','.');
+	}
+
+	//QUERY DATAA KAS
+	public function scopeDataKas($query_kas)
+	{
+		$query_kas = KaS::select(['kas.kode_kas', 'kas.nama_kas', 'kas.status_kas', 'kas.default_kas', 'kas.id', 'bank_warungs.atas_nama', 'bank_warungs.no_rek'])
+		->leftJoin('bank_warungs', 'bank_warungs.id' , '=', 'kas.id_bank')
+		->where('kas.warung_id', Auth::user()->id_warung);
+
+		return $query_kas;
 	}
 
 }
