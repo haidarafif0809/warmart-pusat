@@ -61,7 +61,7 @@
                   <router-link :to="{name: 'editCustomer', params: {id: customer.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + customer.id" v-if="otoritas.edit_customer == 1">
                     Edit 
                   </router-link>
-                  <a href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + customer.id" v-on:click="deleteEntry(customer.id, index,customer.name)" v-if="otoritas.hapus_customer == 1"> Delete
+                  <a href="#/customer" class="btn btn-xs btn-danger" v-bind:id="'delete-' + customer.id" v-on:click="deleteEntry(customer.id, index,customer.name)" v-if="otoritas.hapus_customer == 1"> Delete
                   </a>
                 </td>
               </tr>
@@ -153,37 +153,50 @@ export default {
     }, 
     alert(pesan) { 
       this.$swal({ 
-        title: "Berhasil Menghapus Customer!", 
         text: pesan, 
-        icon: "success", 
+        icon: "success",
+        buttons: false,
+        timer: 1500, 
       }); 
     }, 
     deleteEntry(id, index,name) {
-      swal({ 
-        title: "Konfirmasi Hapus", 
-        text : "Anda Yakin Ingin Menghapus Customer "+name+" ?", 
-        icon : "warning", 
-        buttons: true, 
+
+      var app = this;
+      app.$swal({
+        text: "Anda Yakin Ingin Menghapus Customer "+name+ " ?",
+        buttons: true,
         dangerMode: true,
       })
       .then((willDelete) => {
-        if (willDelete) { 
-          var app = this; 
-          axios.delete(app.url+'/' + id) 
-          .then(function (resp) { 
-            app.$router.replace('/customer'); 
-            app.getResults(); 
-            swal("Customer Berhasil Dihapus!  ", { 
-              icon: "success", 
-            }); 
-          }) 
-          .catch(function (resp) { 
-            swal("Gagal Menghapus Customer!  ", { 
-              icon: "warning", 
-            }); 
-          });  
+        if (willDelete) {
+
+          this.prosesDelete(id, index,name);
+
+        } else {
+
+          app.$swal.close();
+
         }
       });
+
+    },
+    prosesDelete(id, index,name) {
+
+      var app = this; 
+      axios.delete(app.url+'/' + id) 
+      .then(function (resp) { 
+
+        app.customers.splice(index,1)
+        app.alert(`Berhasil menghapus Customer ${name}`);
+
+      }) 
+      .catch(function (resp) { 
+
+        alert(`Tidak dapat menghapus Customer!`)
+        console.log(resp)
+
+      });
+
     }
   }
 }
