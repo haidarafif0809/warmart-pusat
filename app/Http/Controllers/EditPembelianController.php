@@ -42,7 +42,7 @@ class EditPembelianController extends Controller
 
                 $subtotal_edit = ($jumlah_produk * $request->harga_produk) - $data_tbs->first()->potongan;
 
-                $data_tbs->update(['jumlah_produk' => $jumlah_produk, 'subtotal' => $subtotal_edit, 'harga_produk' => $request->harga_produk, 'satuan_id' => $request->satuan, 'satuan_dasar' => $request->satuan_dasar]);
+                $data_tbs->update(['jumlah_produk' => $jumlah_produk, 'subtotal' => $subtotal_edit, 'harga_produk' => $request->harga_produk, 'satuan_id' => $request->satuan, 'satuan_dasar' => $request->satuan_dasar, 'status_harga' => $request->status_harga]);
 
                 return response(200);
             } else {
@@ -61,6 +61,7 @@ class EditPembelianController extends Controller
                     'subtotal'      => $subtotal,
                     'satuan_id'     => $request->satuan,
                     'satuan_dasar'  => $request->satuan_dasar,
+                    'status_harga'  => $request->status_harga,
                     'warung_id'     => Auth::user()->id_warung,
                     ]);
                 return response(200);
@@ -386,19 +387,23 @@ class EditPembelianController extends Controller
 
             foreach ($data_produk_pembelian->get() as $data_produk_tbs) {
 
-                if ($data_produk_tbs->satuan_id == $data_produk_tbs->satuan_dasar) {
+                if ($data_produk_tbs->status_harga == 1) {
 
-                    $detail_pembelian = DetailPembelian::select('harga_produk')->where('no_faktur', $data_produk_tbs->no_faktur)->where('id_produk', $data_produk_tbs->id_produk)->where('warung_id', Auth::user()->id_warung);
+                    if ($data_produk_tbs->satuan_id == $data_produk_tbs->satuan_dasar) {
 
-                    if ($detail_pembelian->count() > 0) {
-                        if ($detail_pembelian->first()->harga_produk != $data_produk_tbs->harga_produk) {
-                            Barang::find($data_produk_tbs->id_produk)->update(['harga_beli' => $data_produk_tbs->harga_produk]);
+                        $detail_pembelian = DetailPembelian::select('harga_produk')->where('no_faktur', $data_produk_tbs->no_faktur)->where('id_produk', $data_produk_tbs->id_produk)->where('warung_id', Auth::user()->id_warung);
+
+                        if ($detail_pembelian->count() > 0) {
+                            if ($detail_pembelian->first()->harga_produk != $data_produk_tbs->harga_produk) {
+                                Barang::find($data_produk_tbs->id_produk)->update(['harga_beli' => $data_produk_tbs->harga_produk]);
+                            }
+                        } else {
+                            $barang = Barang::select('harga_beli')->where('id', $data_produk_tbs->id_produk)->where('id_warung', Auth::user()->id_warung);
+                            if ($barang->first()->harga_beli != $data_produk_tbs->harga_produk) {
+                                $barang->update(['harga_beli' => $data_produk_tbs->harga_produk]);
+                            }
                         }
-                    } else {
-                        $barang = Barang::select('harga_beli')->where('id', $data_produk_tbs->id_produk)->where('id_warung', Auth::user()->id_warung);
-                        if ($barang->first()->harga_beli != $data_produk_tbs->harga_produk) {
-                            $barang->update(['harga_beli' => $data_produk_tbs->harga_produk]);
-                        }
+
                     }
 
                 }

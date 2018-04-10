@@ -1,11 +1,11 @@
 <style scoped>
-.pencarian {
-  color: red; 
-  float: right;
-}
-.hurufBesar{
-  text-transform: uppercase;
-}
+  .pencarian {
+    color: red; 
+    float: right;
+  }
+  .hurufBesar{
+    text-transform: uppercase;
+  }
 </style>
 <template>
 
@@ -41,6 +41,7 @@
         <thead class="text-primary">
           <tr>
 
+            <th>Bank</th>
             <th>Nama Bank</th>
             <th>A.N Bank</th>
             <th>No Rekening</th>
@@ -52,6 +53,7 @@
           <tr v-for="bankWarung, index in bankWarungs" >
 
             <td class="hurufBesar">{{ bankWarung.nama_bank }}</td>
+            <td class="hurufBesar">{{ bankWarung.nama_tampil }}</td>
             <td>{{ bankWarung.atas_nama }}</td>
             <td>{{ bankWarung.no_rek }}</td>
             <td> 
@@ -83,23 +85,23 @@
 </template>
 
 <script>
-export default {
-  data: function () {
-    return {
-      bankWarungs: [],
-      bankWarungsData: {},
-      otoritas: {},
-      url : window.location.origin+(window.location.pathname).replace("dashboard", "bank-warung"),
-      pencarian: '',
-      contoh : '',
-      loading: true
-    }
-  },
-  mounted() {
-    var app = this;
-    app.getResults();
-  },
-  watch: {
+  export default {
+    data: function () {
+      return {
+        bankWarungs: [],
+        bankWarungsData: {},
+        otoritas: {},
+        url : window.location.origin+(window.location.pathname).replace("dashboard", "bank-warung"),
+        pencarian: '',
+        contoh : '',
+        loading: true
+      }
+    },
+    mounted() {
+      var app = this;
+      app.getResults();
+    },
+    watch: {
         // whenever question changes, this function will run
         pencarian: function (newQuestion) {
           this.getHasilPencarian()  
@@ -176,4 +178,4 @@ export default {
 
       }
     }
-    </script>
+  </script>

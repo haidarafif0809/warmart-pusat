@@ -35,6 +35,8 @@
 
               <th>Kode Kas</th>
               <th>Nama Kas</th>
+              <th>No Rekening</th>
+              <th>Atas Nama</th>
               <th>Tampil Transaksi</th>
               <th>Default Kas</th>
               <th>Total Kas</th>
@@ -47,6 +49,13 @@
 
               <td>{{ kas.kas.kode_kas }}</td>
               <td>{{ kas.kas.nama_kas }}</td>
+
+              <td v-if="kas.kas.no_rek != null">{{ kas.kas.no_rek }}</td>
+              <td v-else> - </td>
+
+              <td v-if="kas.kas.atas_nama != null">{{ kas.kas.atas_nama }}</td>
+              <td v-else> - </td>
+
               <td v-if="kas.kas.status_kas == 1">
                 Aktif
               </td>

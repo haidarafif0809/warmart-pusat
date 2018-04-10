@@ -8,8 +8,8 @@ use Yajra\Auditable\AuditableTrait;
 
 class BankWarung extends Model
 {
-    use AuditableTrait;
+	use AuditableTrait;
 	use LogsActivity;
 
-    protected $fillable = ['nama_bank','atas_nama','no_rek', 'warung_id'];
+	protected $fillable = ['nama_bank','atas_nama','no_rek','nama_tampil','warung_id'];
 }

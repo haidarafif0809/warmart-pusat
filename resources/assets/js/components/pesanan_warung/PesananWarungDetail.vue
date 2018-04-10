@@ -441,6 +441,7 @@ export default {
 				app.loading = false;
 				app.selesaiPesanan.id_kas = app.default_kas;
 
+
 				if (resp.data.data.pesanan.kurir == 'cod' || resp.data.data.pesanan.kurir == '') {
 					app.servicePengiriman = "Bayar di Tempat";
 					app.waktuPengiriman	= "-";
@@ -653,13 +654,15 @@ export default {
 		},
 		selesaikanPesanan(id) {
 			let app = this;
-
-				$("#modalSelesaiPesanan").show();
+			console.log(app.detailPesanan)
 			if (app.servicePengiriman == 'Bayar di Tempat') {
+				$("#modalSelesaiPesanan").show();
 			}
 			else {
-				console.log('Pembayaran anda bukan COD');
-				
+				let id = app.detailPesanan[0].pesanan_pelanggan.id;
+				let id_kas = app.detailPesanan[0].pesanan_pelanggan.bank_transfer;
+				console.log(id_kas);
+				app.prosesSelesaiPesanan(id, id_kas)
 			}
 		},
 		submitSelesaiPesanan(id, id_kas) {
@@ -685,6 +688,7 @@ export default {
 			}
 		},
 		prosesSelesaiPesanan(id, id_kas) {
+
 			var app = this;
 			var newSelesaiPesanan = app.selesaiPesanan;	  
 
