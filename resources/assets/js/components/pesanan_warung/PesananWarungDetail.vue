@@ -392,17 +392,17 @@ export default {
 			detailPesananId: null,
 			loading: true,
 			kas_error : 0,
-			url: window.location.origin + (window.location.pathname).replace("dashboard", "pesanan-warung"),
-			urlTambahProduk: window.location.origin + (window.location.pathname).replace("dashboard", "tambah-produk-pesanan-warung"),
-			urlKurangProduk: window.location.origin + (window.location.pathname).replace("dashboard", "kurang-produk-pesanan-warung"),
-			urlKonfirmasiPesanan: window.location.origin + (window.location.pathname).replace("dashboard", "konfirmasi-pesanan-warung"),
-			urlPesananDikonfirmasi: window.location.origin + (window.location.pathname).replace("dashboard", "pesanan-dikonfirmasi"),
-			urlPesananDiselesaikan: window.location.origin + (window.location.pathname).replace("dashboard", "pesanan-diselesaikan"),
-			urlBatalKonfirmasiPesanan: window.location.origin + (window.location.pathname).replace("dashboard", "batalkan-konfirmasi-pesanan-warung"),
-			urlBatalPesanan: window.location.origin + (window.location.pathname).replace("dashboard", "batalkan-pesanan-warung"),
-			urlOrigin: window.location.origin + (window.location.pathname).replace("dashboard", ""),
-			urlTambahKas: window.location.origin + (window.location.pathname).replace("dashboard", "dashboard#/kas"),
-			urlPicture : window.location.origin+(window.location.pathname).replace("dashboard", "foto_produk"),
+			url: window.location.origin + (window.location.pathname).replace('dashboard', 'pesanan-warung'),
+			urlTambahProduk: window.location.origin + (window.location.pathname).replace('dashboard', 'tambah-produk-pesanan-warung'),
+			urlKurangProduk: window.location.origin + (window.location.pathname).replace('dashboard', 'kurang-produk-pesanan-warung'),
+			urlKonfirmasiPesanan: window.location.origin + (window.location.pathname).replace('dashboard', 'konfirmasi-pesanan-warung'),
+			urlPesananDikonfirmasi: window.location.origin + (window.location.pathname).replace('dashboard', 'pesanan-dikonfirmasi'),
+			urlPesananDiselesaikan: window.location.origin + (window.location.pathname).replace('dashboard', 'pesanan-diselesaikan'),
+			urlBatalKonfirmasiPesanan: window.location.origin + (window.location.pathname).replace('dashboard', 'batalkan-konfirmasi-pesanan-warung'),
+			urlBatalPesanan: window.location.origin + (window.location.pathname).replace('dashboard', 'batalkan-pesanan-warung'),
+			urlOrigin: window.location.origin + (window.location.pathname).replace('dashboard', ''),
+			urlTambahKas: window.location.origin + (window.location.pathname).replace('dashboard', 'dashboard#/kas'),
+			urlPicture : window.location.origin+(window.location.pathname).replace('dashboard', 'foto_produk'),
 		}
 	},
 	mounted() {
@@ -443,23 +443,23 @@ export default {
 
 
 				if (resp.data.data.pesanan.kurir == 'cod' || resp.data.data.pesanan.kurir == '') {
-					app.servicePengiriman = "Bayar di Tempat";
-					app.waktuPengiriman	= "-";
+					app.servicePengiriman = 'Bayar di Tempat';
+					app.waktuPengiriman	= '-';
 
 				} else if(resp.data.data.pesanan.kurir == 'ojek') {
 					app.servicePengiriman = resp.data.data.pesanan.metode_pembayaran;
-					app.waktuPengiriman	= "-";
+					app.waktuPengiriman	= '-';
 
 				} else {
 
-					let layanan_kurir = resp.data.data.pesanan.layanan_kurir.split(" | ");
-					app.servicePengiriman = layanan_kurir[0] + " | " + layanan_kurir[2];
-					app.waktuPengiriman	= layanan_kurir[1] + " Hari";
+					let layanan_kurir = resp.data.data.pesanan.layanan_kurir.split(' | ');
+					app.servicePengiriman = layanan_kurir[0] + ' | ' + layanan_kurir[2];
+					app.waktuPengiriman	= layanan_kurir[1] + ' Hari';
 				}
 			})
 			.catch(function (resp) {
 				app.loading = false;
-				alert("Tidak Dapat Memuat Pesanan");
+				alert('Tidak Dapat Memuat Pesanan');
 			});
 		},
 		tambahProduk(id) {
@@ -518,9 +518,9 @@ export default {
 		},
 		submitProduk(jumlah_produk, id, nama_produk) {
 
-			if (jumlah_produk == 0 || jumlah_produk == "") {
+			if (jumlah_produk == 0 || jumlah_produk == '') {
 				this.$swal({
-					text: "Jumlah Produk Tidak Boleh Nol!",
+					text: 'Jumlah Produk Tidak Boleh Nol!',
 				});
 
 			} else {
@@ -535,14 +535,14 @@ export default {
 				.then((resp) => {
 
 					app.getResults();
-					app.alert("Mengubah Jumlah Produk " + nama_produk);
+					app.alert('Mengubah Jumlah Produk ' + nama_produk);
 					app.loading = false;
 					app.editJumlahProduk.jumlah_produk = '';
 					app.editJumlahProduk.id = '';
 					app.$router.replace('/detail-pesanan-warung/' + app.detailPesananId);
 				})
 				.catch((resp) => {
-					alert("Tidak Dapat Mengubah Jumlah Produk");
+					alert('Tidak Dapat Mengubah Jumlah Produk');
 					console.log(resp);
 
 				});
@@ -552,7 +552,7 @@ export default {
 			var app = this;
 
 			swal({
-				text: "Anda Yakin Ingin Melanjutkan Pesanan Ini??",
+				text: 'Anda Yakin Ingin Melanjutkan Pesanan Ini??',
 				type: 'question',
 				showCancelButton: true,
 				confirmButtonColor: '#3085d6',
@@ -594,7 +594,7 @@ export default {
 			var app = this;
 
 			swal({
-				text: "Anda Yakin Ingin Membatalkan Konfirmasi Pesanan Ini ?",
+				text: 'Anda Yakin Ingin Membatalkan Konfirmasi Pesanan Ini ?',
 				type: 'warning',
 				showCancelButton: true,
 				confirmButtonColor: '#3085d6',
@@ -625,7 +625,7 @@ export default {
 			var app = this;
 
 			swal({
-				text: "Anda Yakin Ingin Membatalkan Pesanan Ini??",
+				text: 'Anda Yakin Ingin Membatalkan Pesanan Ini??',
 				type: 'warning',
 				showCancelButton: true,
 				confirmButtonColor: '#3085d6',
@@ -639,7 +639,6 @@ export default {
 			.then(() => {
 
 				app.submitBatalPesanan(id);
-				console.log(id);
 			})
 		},
 		submitBatalPesanan(id) {
@@ -654,14 +653,11 @@ export default {
 		},
 		selesaikanPesanan(id) {
 			let app = this;
-			console.log(app.detailPesanan)
 			if (app.servicePengiriman == 'Bayar di Tempat') {
-				$("#modalSelesaiPesanan").show();
+				$('#modalSelesaiPesanan').show();
 			}
 			else {
-				let id = app.detailPesanan[0].pesanan_pelanggan.id;
 				let id_kas = app.detailPesanan[0].pesanan_pelanggan.bank_transfer;
-				console.log(id_kas);
 				app.prosesSelesaiPesanan(id, id_kas)
 			}
 		},
@@ -674,10 +670,10 @@ export default {
 			} else {
 
 				app.$swal({
-					text: "Anda Yakin Ingin Menyelesaikan Transaksi Ini ?",
+					text: 'Anda Yakin Ingin Menyelesaikan Transaksi Ini ?',
 					buttons: {
 						cancel: true,
-						confirm: "OK"                   
+						confirm: 'OK'                   
 					},
 				})
 				.then((value) => {
@@ -697,12 +693,12 @@ export default {
 			app.closeModalSelesaiPesanan()
 			app.loading = true;
 
-			axios.post(app.urlOrigin+'selesai-konfirmasi-pesanan-warung', newSelesaiPesanan)
+			axios.post(app.urlOrigin + 'selesai-konfirmasi-pesanan-warung', newSelesaiPesanan)
 			.then((resp) => {
 
 				if(resp.data.respons == 1) {
 
-					app.alertTbs("Gagal : Stok " + resp.data.nama_produk + " Tidak Mencukupi Untuk di Jual, Sisa Produk = " + resp.data.stok_produk);
+					app.alertTbs('Gagal : Stok ' + resp.data.nama_produk + ' Tidak Mencukupi Untuk di Jual, Sisa Produk = ' + resp.data.stok_produk);
 					app.loading = false;
 
 				} else {
@@ -710,11 +706,14 @@ export default {
 					app.loading = false;
 					app.selesaiPesanan.id_pesanan = '';
 
+
+					app.alert("Pesanan order #" + id + " Berhasil Di Selesaikan")
+					setTimeout(() => {	
+						window.open('pesanan-warung/cetak-kecil-penjualan/' + resp.data.respons_penjualan,'_blank');   
+					}, 1500);
+
 					axios.get(app.urlPesananDiselesaikan + '/' + id)
 					.then((resp) => {
-
-						app.alert("Pesanan order #" + id + " Berhasil Di Selesaikan");  
-						window.open('pesanan-warung/cetak-kecil-penjualan/' + resp.data.respons_penjualan,'_blank');   
 					})
 					.catch((resp) => {
 						alert('Sesuatu yang salah terjadi.')
@@ -722,25 +721,25 @@ export default {
 				}
 			})
 			.catch((resp) => {
-				alert("Tidak Dapat Menyelesaikan Pesanan");
+				alert('Tidak Dapat Menyelesaikan Pesanan');
 			});
 		},
 		closeModalSelesaiPesanan() {
-			$("#modalSelesaiPesanan").hide();
+			$('#modalSelesaiPesanan').hide();
 		},
 		alertTbs(pesan) {
 
 			this.$swal({
 				text: pesan,
-				icon: "warning",
+				icon: 'warning',
 			});
 		},
 		alert(pesan) {
 			
 			this.$swal({
-				title: "Berhasil ",
+				title: 'Berhasil ',
 				text: pesan,
-				icon: "success",
+				icon: 'success',
 				buttons: false,
 				timer: 1000,
 			});

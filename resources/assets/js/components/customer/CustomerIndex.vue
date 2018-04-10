@@ -36,6 +36,7 @@
               <tr>
                 <th>ID Customer</th>
                 <th>No. Telpon</th>
+                <th>Kode</th>
                 <th>Nama</th>
                 <th>Alamat</th>
                 <th>Waktu</th>
@@ -45,22 +46,25 @@
 
             <tbody v-if="customers.length > 0 && loading== false" class="data-ada">
               <tr v-for="customer, index in customers">
-                <td>{{ customer.id }}</td>
-                <td>{{ customer.no_telp }}</td>
-                <td>{{ customer.name }}</td>
-                <td>{{ customer.alamat }}</td>
-                <td>{{ customer.created_at | tanggal }}</td>
+                <td>{{ customer.customer.id }}</td>
+                <td>{{ customer.customer.no_telp }}</td>
+                <td>{{ customer.customer.kode_pelanggan }}</td>
+                <td>{{ customer.customer.name }}</td>
+                <td>{{ customer.customer.alamat }}</td>
+                <td>{{ customer.customer.created_at | tanggal }}</td>
                 <td> 
-                  <a v-bind:href="'customer/cetak-customer/'+customer.no_telp" class="btn btn-xs btn-warning" target="blank"> Cetak
+                  <a v-bind:href="'customer/cetak-customer/'+customer.customer.no_telp" class="btn btn-xs btn-warning" target="blank"> Cetak
                   </a>
-                  <router-link :to="{name: 'detailCustomer', params: {id: customer.id}}" class="btn btn-xs btn-info" v-bind:id="'detail-' + customer.id" >
+                  <router-link :to="{name: 'detailCustomer', params: {id: customer.customer.id}}" class="btn btn-xs btn-info" v-bind:id="'detail-' + customer.customer.id" >
                     Detail 
                   </router-link>
-                  <router-link :to="{name: 'editCustomer', params: {id: customer.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + customer.id" v-if="otoritas.edit_customer == 1">
+                  <router-link :to="{name: 'editCustomer', params: {id: customer.customer.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + customer.customer.id" v-if="otoritas.edit_customer == 1">
                     Edit 
                   </router-link>
-                  <a href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + customer.id" v-on:click="deleteEntry(customer.id, index,customer.name)" v-if="otoritas.hapus_customer == 1"> Delete
+                  <a href="#/customer" class="btn btn-xs btn-danger" v-bind:id="'delete-' + customer.customer.id" v-on:click="deleteEntry(customer.customer.id, index,customer.customer.name)" v-if="otoritas.hapus_customer == 1 && customer.status_pelanggan == 0"> Delete
                   </a>
+                  <button class="btn btn-xs btn-danger" v-bind:id="'delete-' + customer.customer.id" v-on:click="deletePelangganTerpakai(customer.customer.id, index,customer.customer.name)" v-else-if="otoritas.hapus_customer == 1 && customer.status_pelanggan == 1"> Delete
+                  </button>
                 </td>
               </tr>
             </tbody>
@@ -122,8 +126,8 @@ export default {
       }
       axios.get(app.url+'/view?page='+page)
       .then(function (resp) {
-        app.customers = resp.data.customer.data;
-        app.customersData = resp.data.customer;
+        app.customers = resp.data.data;
+        app.customersData = resp.data;
         app.otoritas = resp.data.otoritas.original;
         app.loading = false;
       })
@@ -138,51 +142,76 @@ export default {
       if (typeof page === 'undefined') {
         page = 1;
       }
+      app.loading = true;
       axios.get(app.url+'/pencarian?search='+app.pencarian+'&page='+page)
       .then(function (resp) {
-        app.customers = resp.data.customer.data;
-        app.customersData = resp.data.customer;
+        app.customers = resp.data.data;
+        app.customersData = resp.data;
         app.otoritas = resp.data.otoritas.original;
+        app.loading = false;
       })
       .catch(function (resp) {
         console.log(resp);
+        app.loading = false;
         alert("Tidak Bisa Memuat Customer");
       });
     }, 
     alert(pesan) { 
       this.$swal({ 
-        title: "Berhasil Menghapus Customer!", 
         text: pesan, 
-        icon: "success", 
+        icon: "success",
+        buttons: false,
+        timer: 1500, 
       }); 
     }, 
     deleteEntry(id, index,name) {
-      swal({ 
-        title: "Konfirmasi Hapus", 
-        text : "Anda Yakin Ingin Menghapus Customer "+name+" ?", 
-        icon : "warning", 
-        buttons: true, 
+
+      var app = this;
+      app.$swal({
+        text: "Anda Yakin Ingin Menghapus Customer "+name+ " ?",
+        buttons: true,
         dangerMode: true,
       })
       .then((willDelete) => {
-        if (willDelete) { 
-          var app = this; 
-          axios.delete(app.url+'/' + id) 
-          .then(function (resp) { 
-            app.$router.replace('/customer'); 
-            app.getResults(); 
-            swal("Customer Berhasil Dihapus!  ", { 
-              icon: "success", 
-            }); 
-          }) 
-          .catch(function (resp) { 
-            swal("Gagal Menghapus Customer!  ", { 
-              icon: "warning", 
-            }); 
-          });  
+        if (willDelete) {
+
+          this.prosesDelete(id, index,name);
+
+        } else {
+
+          app.$swal.close();
+
         }
       });
-    }
+
+    },
+    prosesDelete(id, index,name) {
+
+      var app = this; 
+      axios.delete(app.url+'/' + id) 
+      .then(function (resp) { 
+
+        app.customers.splice(index,1)
+        app.alert(`Berhasil menghapus Customer ${name}`);
+
+      }) 
+      .catch(function (resp) { 
+
+        alert(`Tidak dapat menghapus Customer!`)
+        console.log(resp)
+
+      });
+
+    },
+    deletePelangganTerpakai(id, index,name){
+      this.alertTbs(`Customer "${name}" tidak bisa dihapus, silakan hapus terlebih dahulu data yang berkaitan dengan customer ini`);
+    },
+    alertTbs(pesan) {
+      this.$swal({
+        text: pesan,
+        icon: "warning",
+      });
+    },
   }
 }
 </script>

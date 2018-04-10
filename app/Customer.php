@@ -17,10 +17,10 @@ class Customer extends Model
 
   protected $table = 'users';
 
-  protected $fillable = ['id','email','password','name', 'alamat', 'wilayah', 'no_telp','tgl_lahir','tipe_user', 'status_konfirmasi'];
+  protected $fillable = ['id','email','password','name', 'alamat', 'wilayah', 'no_telp','tgl_lahir','tipe_user', 'status_konfirmasi', 'kode_pelanggan'];
 
   protected $hidden = [
-  'password', 'remember_token',
+    'password', 'remember_token',
   ];
 
 
@@ -46,7 +46,7 @@ class Customer extends Model
     
   }
   
-    public function lokasiPelanggan(){
+  public function lokasiPelanggan(){
     return $this->hasOne('App\LokasiPelanggan','id_pelanggan','id');
   }
 

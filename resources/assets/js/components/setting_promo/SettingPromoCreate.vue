@@ -103,8 +103,7 @@
 									<vue-simple-spinner v-if="loadingHari"></vue-simple-spinner>
 								</div>
 							</div>
-
-								<div class="form-group">
+<!--								<div class="form-group">
 									<div class="row">
 										<label for="foto" class="col-md-2 col-xs-2 control-label">Jam</label>
 										<div class="col-md-10 col-xs-10" v-if="loadingJam == false">
@@ -123,7 +122,7 @@
 									</div>
 										<vue-simple-spinner v-if="loadingJam"></vue-simple-spinner>
 									</div>
-								</div> 
+								</div> -->
 
 								<div class="form-group">
 										<label for="jenis_promo" class="col-md-2 control-label">Judul Promo</label>
@@ -169,7 +168,6 @@ import { mapState } from 'vuex';
 		data: function () {
 			return {
 				filter_hari: [],
-				filter_jam: [],
 				errors: [],
 				url : window.location.origin+(window.location.pathname).replace("dashboard", "setting-promo"),
 				url_picture : window.location.origin+(window.location.pathname).replace("dashboard", "baner_setting_promo"),
@@ -187,11 +185,9 @@ import { mapState } from 'vuex';
 				},
 				filter_setting:{
 					hari:[],
-					jam:[]
 				},
 				seen: false,
 				pilih_semua_hari : false,
-				pilih_semua_jam : false,
 				message : '',
 				separator: {
 					decimal: ',',
@@ -202,7 +198,6 @@ import { mapState } from 'vuex';
 					masked: false /* doesn't work with directive */
 				},
 				loadingHari: true,
-				loadingJam: true,
 				placeholder_produk: {
 		        placeholder: '--PILIH PRODUK--',
 		        sortField: 'text',
@@ -237,9 +232,7 @@ import { mapState } from 'vuex';
 			    .then(function (resp) {
 
 			      app.filter_hari = resp.data.filter_hari
-			      app.filter_jam = resp.data.filter_jam
 			      app.loadingHari = false;
-			      app.loadingJam = false;
 			      app.seen = true;
 			    })
 			    .catch(function (resp) {
@@ -262,7 +255,7 @@ import { mapState } from 'vuex';
 		      }
 		      console.log(app.setting)
 		},
-		 pilihSemuaJam(){
+/*		 pilihSemuaJam(){
 		    var app = this
 		    var pilih_semua_jam = app.pilih_semua_jam
 		    if (pilih_semua_jam == true) {
@@ -277,7 +270,7 @@ import { mapState } from 'vuex';
 		        app.filter_setting.jam.splice(0)
 		      }
 		      console.log(app.setting)
-		},
+		},*/
 			openSelectizeProduk(){      
 			      this.$refs.produk.$el.selectize.focus();
 			},
