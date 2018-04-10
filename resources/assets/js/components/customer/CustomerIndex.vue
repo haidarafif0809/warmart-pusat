@@ -36,6 +36,7 @@
               <tr>
                 <th>ID Customer</th>
                 <th>No. Telpon</th>
+                <th>Kode</th>
                 <th>Nama</th>
                 <th>Alamat</th>
                 <th>Waktu</th>
@@ -47,6 +48,7 @@
               <tr v-for="customer, index in customers">
                 <td>{{ customer.id }}</td>
                 <td>{{ customer.no_telp }}</td>
+                <td>{{ customer.kode_pelanggan }}</td>
                 <td>{{ customer.name }}</td>
                 <td>{{ customer.alamat }}</td>
                 <td>{{ customer.created_at | tanggal }}</td>
