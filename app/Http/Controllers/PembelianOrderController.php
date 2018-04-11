@@ -159,6 +159,65 @@ class PembelianOrderController extends Controller
 
 
 
+    public function pencarianTbsPembelian(Request $request)
+    {
+        $session_id  = session()->getId();
+        $no_faktur   = '';
+        $user_warung = Auth::user()->id_warung;
+
+        $tbs_pembelian_orders = TbsPembelianOrder::dataTransaksiTbsPembelianOrder($session_id, $user_warung)
+        ->where(function ($query) use ($request) {
+
+            $query->orWhere('barangs.nama_barang', 'LIKE', '%'. $request->search . '%')
+            ->orWhere('barangs.kode_barang', 'LIKE', '%'. $request->search . '%');
+
+        })->orderBy('id_tbs_pembelian_order', 'desc')->paginate(10);
+        $array = array();
+
+        foreach ($tbs_pembelian_orders as $tbs_pembelian_order) {
+
+            $potongan_persen        = ($tbs_pembelian_order->potongan / ($tbs_pembelian_order->jumlah_produk * $tbs_pembelian_order->harga_produk)) * 100;
+
+            $ppn = TbsPembelianOrder::select('ppn')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->where('ppn', '!=', '')->limit(1);
+
+            if ($ppn->count() > 0) {
+
+                $ppn_produk = $ppn->first()->ppn;
+                if ($tbs_pembelian_order->tax == 0) {
+                    $tax_persen = 0;
+                } else {
+                    if ($tbs_pembelian_order->ppn == "Include") {
+                        $tax_kembali = $tbs_pembelian_order->subtotal - $tbs_pembelian_order->tax;
+                        //tax untuk mendapatkan 1,1
+                        $tax_format = $tbs_pembelian_order->subtotal / $tax_kembali - 1;
+                        $tax_persen = $tax_format * 100;
+
+                    } else if ($tbs_pembelian_order->ppn == "Exclude") {
+                        $tax_persen = ($tbs_pembelian_order->tax * 100) / ($tbs_pembelian_order->jumlah_produk * $tbs_pembelian_order->harga_produk - $tbs_pembelian_order->potongan);
+                    }
+                }
+            } else {
+                $ppn_produk = "";
+                $tax_persen = 0;
+            }
+
+            array_push($array, [
+                'data_tbs'            => $tbs_pembelian_order,
+                'nama_satuan'            => strtoupper($tbs_pembelian_order->nama_satuan),
+                'potongan_persen'        => $potongan_persen,
+                'ppn_produk'             => $ppn_produk,
+                'tax_persen'             => $tax_persen,
+                ]);
+        }
+
+        $url     = '/pembelian-order/view-tbs-pembelian';
+        $respons = $this->dataPagination($tbs_pembelian_orders, $array, $no_faktur, $url);
+
+        return response()->json($respons);
+    }
+
+
+
     //PROSES TAMBAH TBS PEMBELIAN ORDER
     public function proses_tambah_tbs_pembelian(Request $request)
     {

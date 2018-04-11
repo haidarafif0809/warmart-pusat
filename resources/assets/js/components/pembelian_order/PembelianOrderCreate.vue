@@ -311,7 +311,7 @@
                 <div class="card-footer">
                   <div class="row"> 
                     <div class="col-md-6 col-xs-6"> 
-                      <button type="button" class="btn btn-success btn-lg" id="bayar" v-on:click="selesaiPembelian()" v-shortkey.push="['f2']" @shortkey="selesaiPembelian()"><font style="font-size:20px;">Bayar(F2)</font></button>
+                      <button type="button" class="btn btn-success btn-lg" id="bayar" v-on:click="selesaiPembelianOrder()" v-shortkey.push="['f2']" @shortkey="selesaiPembelianOrder()"><font style="font-size:20px;">Bayar(F2)</font></button>
                     </div>
                     <div class="col-md-6 col-xs-6">
                       <button type="submit" class="btn btn-danger btn-lg" id="btnBatal" v-on:click="batalPembelian()" v-shortkey.push="['f3']" @shortkey="batalPembelian()"> <font style="font-size:20px;">Batal(F3) </font></button>
@@ -1102,6 +1102,46 @@ methods: {
       alert("Pajak Produk tidak bisa diedit");
     });
   },//END METHOD EDIT TAX TBS
+  selesaiPembelianOrder(){
+    var app = this;
+    if (app.inputPembayaranPembelianOrder.suplier === '') {
+      app.alertGagal("Silakan Pilih Suplier Terlebih Dahulu.");
+      app.openSelectizeSuplier();
+    }else{
+
+      axios.get(app.url+'/cek-total-kas-pembelian?kas='+kas)
+      .then(function (resp) {
+        if (resp.data.total_kas == '' || resp.data.total_kas == null) {
+          var total_kas = 0;
+        }else{
+          var total_kas = resp.data.total_kas;
+        }
+        var data_produk_pembelian = resp.data.data_produk_pembelian;
+        var hitung_sisa_kas = parseFloat(total_kas) - parseFloat(pembayaran);
+        if (hitung_sisa_kas >= 0) {
+          if (data_produk_pembelian == 0){
+            swal('Oops...','Belum Ada Produk Yang Diinputkan','error'); 
+          }
+          else{
+            var newPembelian = app.inputPembayaranPembelian;
+            axios.post(app.url, newPembelian)
+            .then(function (resp) {
+              app.message = 'Berhasil Menambah Pembelian';
+              app.alert(app.message);
+              app.$router.replace('/pembelian');
+              window.open('pembelian/cetak-besar-pembelian/'+resp.data.respons_pembelian,'_blank');
+            })
+            .catch(function (resp) {
+              app.success = false;
+            });
+          }
+        }else{
+          swal('Oops...','Kas Anda Tidak Cukup Untuk Melakukan Pembayaran','error');
+        }
+      });
+
+    }
+  },
   batalPembelian(){
     var app = this;
     app.$swal({
@@ -1224,68 +1264,6 @@ methods: {
       $("#btn-hutang-pembelian").show();
     }        
   },
-  selesaiTransaksi(){
-    this.$swal({
-      text: "Anda Yakin Ingin Menyelesaikan Transaksi Ini ?",
-      buttons: {
-        cancel: true,
-        confirm: "OK"                   
-      },
-    }).then((value) => {
-      if (!value) throw null;
-      this.saveForm(value);
-    });
-  },
-  saveForm(){
-    var app = this;
-    var status_pembelian = app.inputPembayaranPembelianOrder.status_pembelian;
-    var jatuh_tempo = app.inputPembayaranPembelianOrder.jatuh_tempo;
-    if ((status_pembelian == 'Hutang' || status_pembelian == '') && jatuh_tempo == '') {
-      swal("Oops...","Jatuh Tempo Belum Diisi!","error");
-      this.$refs.jatuh_tempo.$el.focus();
-    }else{
-      app.$router.replace('/create-pembelian');
-      app.prosesTransaksiSelesai();
-    }
-  },//akhir btn bayar tunai
-  prosesTransaksiSelesai(){
-    var app = this;
-    var kas = app.inputPembayaranPembelianOrder.cara_bayar;
-    var pembayaran = app.inputPembayaranPembelianOrder.pembayaran;
-    if (pembayaran == '') {
-      pembayaran = 0;
-    }
-    axios.get(app.url+'/cek-total-kas-pembelian?kas='+kas)
-    .then(function (resp) {
-      if (resp.data.total_kas == '' || resp.data.total_kas == null) {
-        var total_kas = 0;
-      }else{
-        var total_kas = resp.data.total_kas;
-      }
-      var data_produk_pembelian = resp.data.data_produk_pembelian;
-      var hitung_sisa_kas = parseFloat(total_kas) - parseFloat(pembayaran);
-      if (hitung_sisa_kas >= 0) {
-        if (data_produk_pembelian == 0){
-          swal('Oops...','Belum Ada Produk Yang Diinputkan','error'); 
-        }
-        else{
-          var newPembelian = app.inputPembayaranPembelianOrder;
-          axios.post(app.url, newPembelian)
-          .then(function (resp) {
-            app.message = 'Berhasil Menambah Pembelian';
-            app.alert(app.message);
-            app.$router.replace('/pembelian');
-            window.open('pembelian/cetak-besar-pembelian/'+resp.data.respons_pembelian,'_blank');
-          })
-          .catch(function (resp) {
-            app.success = false;
-          });
-        }
-      }else{
-        swal('Oops...','Kas Anda Tidak Cukup Untuk Melakukan Pembayaran','error');
-      }
-    });
-  },//akhir prosesTransaksiSelesai
   closeModalJumlahProduk(){
     $("#modalJumlahProduk").hide(); 
     $("#modalEditSatuan").hide(); 
@@ -1293,10 +1271,12 @@ methods: {
   },
   alertGagal(pesan) {
     this.$swal({
+      title: "Gagal ",
       text: pesan,
       icon: "warning",
       buttons: false,
-      timer: 1000
+      timer: 2000,
+
     });
   }
 }
