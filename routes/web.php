@@ -656,6 +656,13 @@ Route::post('/edit-pembelian/proses-edit-pembelian', [
     ]);
 // EDIT PEMBELIAN
 
+// HAPUS TBS PEMBELIAN ORDER
+Route::delete('/pembelian-order/hapus-tbs-pembelian/{id}', [
+    'middleware' => ['auth'],
+    'as'         => 'pembelianOrder.hapus_tbs_pembelian',
+    'uses'       => 'PembelianOrderController@hapus_tbs_pembelian',
+    ]);
+
 // ITEM MASUK
 Route::get('/item-keluar/view', 'ItemKeluarController@view')->middleware('auth');
 Route::get('/item-keluar/pencarian', 'ItemKeluarController@pencarian')->middleware('auth');

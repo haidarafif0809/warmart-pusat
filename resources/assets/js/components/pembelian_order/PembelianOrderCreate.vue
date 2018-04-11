@@ -355,12 +355,6 @@
           no_telp : '',
           contact_person : '',
         },
-        tambahKas: {
-          kode_kas : '',
-          nama_kas : '',
-          status_kas : 0,
-          default_kas : 0
-        },
         placeholder_produk: {
           placeholder: '--PILIH PRODUK (F1)--',
           sortField: 'text',
@@ -375,19 +369,6 @@
           placeholder: '--PILIH SUPPLIER (F4)--',
           sortField: 'text',
           openOnFocus : true
-        },
-        placeholder_cara_bayar: {
-          placeholder: '--PILIH CARA BAYAR (F6)--',
-          sortField: 'text',
-          openOnFocus : true
-        },
-        separator: {
-          decimal: ',',
-          thousands: '.',
-          prefix: '',
-          suffix: '',
-          precision: 2,
-          masked: false /* doesn't work with directive */
         },
         pemisahTitik: {
           decimal: ',',
@@ -593,7 +574,7 @@ methods: {
 
     var app = this;
     app.$swal({
-      text: "Anda Yakin Ingin Menghapus Produk "+nama_produk+ " ?",
+      text: "Anda Yakin Ingin Menghapus Produk "+titleCase(nama_produk)+ " ?",
       buttons: true,
       dangerMode: true,
     })

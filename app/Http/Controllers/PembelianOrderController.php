@@ -461,6 +461,24 @@ class PembelianOrderController extends Controller
         }
     }
 
+    //PROSES HAPUS TBS PEMBELIAN ORDER
+    public function hapus_tbs_pembelian($id)
+    {
+        if (Auth::user()->id_warung == '') {
+            Auth::logout();
+            return response()->view('error.403');
+        } else {
+            $tbs_pembelian = TbsPembelianOrder::find($id);
+
+            $respons['subtotal'] = $tbs_pembelian->subtotal;
+
+            $tbs_pembelian->delete();
+
+            return response()->json($respons);
+
+        }
+    }
+
 
 
     /**
