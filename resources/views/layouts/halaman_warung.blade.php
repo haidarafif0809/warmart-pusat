@@ -89,13 +89,8 @@ first();
     width: 10em;
 }
 .page-header.header-small {
-    @if(Agent::isMobile())
     height: 0vh;
     min-height: 25vh;
-    @else
-    height: 0vh;
-    min-height: 18vh;
-    @endif
 }
 .ecommerce-page .page-header .container {
     @if(Agent::isMobile())
@@ -139,7 +134,10 @@ h4 {
     color: #555555;
     transition: all .3s;
 }
-
+.class_coret {
+    text-decoration: line-through;
+    color:#a6a6a6;
+}
 </style>
 
 @if (Agent::isMobile()) <!--JIKA DAKSES VIA HP/TAB-->
@@ -395,6 +393,15 @@ h4 {
 
             @endif
         };
+
+          $(document).ready(function() {
+                        var data_strike = $("#id_promo").html();
+                        if (data_strike == "") {
+                            $("#coret").attr('class','kosong');
+                        }else{
+                           $("#coret").attr('class','class_coret'); 
+                        }  
+          });
 
         window.onload = function(event) {
             flexFont();

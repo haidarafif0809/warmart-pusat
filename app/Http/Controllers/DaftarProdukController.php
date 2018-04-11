@@ -463,9 +463,9 @@ public static function cardProduk($produks)
                         if ($data_harga_coret->count() > 0 ) {
                             $card_produk .=  
                             '<p style="color:#d21f30;" class="flexFont" >
-                            <span id="coret" class="coret_class" >
-                            ' . $produks->rupiah . ' / ' . $produks->satuan->nama_satuan.'</span><br>
-                                <span style="color:#d21f30;" id="id_promo">';
+                            <span id="coret" class="class_coret" >
+                            ' . $produks->rupiah . ' / ' . $produks->satuan->nama_satuan.'</span>
+                                <br><span style="color:#d21f30;" id="id_promo">';
                                     foreach ($data_harga_coret->get() as $data) {
                                         if ($hari == $data->name) {
                                                 $card_produk .= 'Rp ' . number_format($data->harga_coret, 0, ',', '.') . ' / ' . $produks->satuan->nama_satuan;
@@ -478,7 +478,6 @@ public static function cardProduk($produks)
                         }else{
                             $card_produk .=  
                             '<p style="color:#d21f30;" class="flexFont"> 
-                            <br>
                             ' . $produks->rupiah . ' / ' . $produks->satuan->nama_satuan . '</p>';
                         }
             //Menampilkan filter promo 
