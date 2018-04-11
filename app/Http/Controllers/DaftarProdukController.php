@@ -10,13 +10,15 @@ use App\KeranjangBelanja;
 use App\SettingAplikasi;
 use App\User;
 use App\Warung;
+use App\SettingPromo;
 use Auth;
 use DB;
 use Illuminate\Http\Request;
 use Intervention\Image\ImageManagerStatic as Image;
 use Jenssegers\Agent\Agent;
 use Session;
-use App\SettingPromo;
+
+
 class DaftarProdukController extends Controller
 {
     /**
@@ -399,8 +401,47 @@ public static function cardProduk($produks)
     if ($produks->konfirmasi_admin != 0) {
         if ($produks->status_aktif != 0) {
 
-            $warung     = Warung::select(['name', 'id'])->where('id', $produks->id_warung)->first();
+            $warung     = Warung::select(['name', 'id',DB::raw('CURDATE() as tanggal_sekarang'),DB::raw('DATE_FORMAT(NOW(), "%H") as jam_sekarang')])->where('id', $produks->id_warung)->first();
             $cek_produk = DaftarProdukController::cekStokProduk($produks);
+           
+            $data_tanggal_promo = SettingPromo::settingPromoTanggal($produks);
+            if ($data_tanggal_promo->count() > 0) {
+                $dari_tanggal = $data_tanggal_promo->first()->dari_tanggal;
+                $sampai_tanggal = $data_tanggal_promo->first()->sampai_tanggal;
+
+                $data_harga_coret = SettingPromo::settingPromoData($produks,$dari_tanggal,$sampai_tanggal);
+            }
+            else{
+                $dari_tanggal = '0000-00-00';
+                $sampai_tanggal = '0000-00-00';
+
+                $data_harga_coret = SettingPromo::settingPromoData($produks,$dari_tanggal,$sampai_tanggal);
+            }
+                //Mencari hari sekarang
+                $tgl= substr($warung->tanggal_sekarang,8,2);
+                $bln= substr($warung->tanggal_sekarang,5,2);
+                $thn= substr($warung->tanggal_sekarang,0,4);
+
+                $info= date('w', mktime(0,0,0,$bln,$tgl,$thn));
+                if ($info == 0) {
+                    $hari = "minggu";
+                }elseif($info == 1){
+                    $hari = "senin";
+                }elseif($info == 2){
+                    $hari = "selasa";
+                }elseif($info == 3){
+                    $hari = "rabu";
+                }elseif($info == 4){
+                    $hari = "kamis";
+                }elseif($info == 5){
+                    $hari = "jumat";
+                }elseif($info == 6){
+                    $hari = "sabtu";
+                }
+                //Mencari hari sekarang
+
+                $jam = $warung->jam_sekarang.":00";
+
             $card_produk .= '
             <div class="col-md-3 col-sm-6 col-xs-6 list-produk " style=" margin-bottom:10px;">
             <div class="card cards card-pricing">
@@ -416,8 +457,33 @@ public static function cardProduk($produks)
 
             $card_produk .= '<a href="' . url("/detail-produk/" . $produks->id . "") . '" >';
             $card_produk .= DaftarProdukController::namaProduk($produks);
-            $card_produk .= '</a></p>
-            <p style="color:#d21f30;" class="flexFont"> ' . $produks->rupiah . ' / ' . $produks->satuan->nama_satuan . ' </p>';
+            $card_produk .= '</a></p>';
+
+            //Menampilkan filter promo 
+                        if ($data_harga_coret->count() > 0 ) {
+                            $card_produk .=  
+                            '<p style="color:#d21f30;" class="flexFont" >
+                            <span id="coret" class="coret_class" >
+                            ' . $produks->rupiah . ' / ' . $produks->satuan->nama_satuan.'</span><br>
+                                <span style="color:#d21f30;" id="id_promo">';
+                                    foreach ($data_harga_coret->get() as $data) {
+                                        if ($hari == $data->name) {
+                                                $card_produk .= 'Rp ' . number_format($data->harga_coret, 0, ',', '.') . ' / ' . $produks->satuan->nama_satuan;
+                                         }
+                                         else{
+                                                $card_produk .= '';
+                                         }
+                                    }
+                                    $card_produk .= '</span></p>';          
+                        }else{
+                            $card_produk .=  
+                            '<p style="color:#d21f30;" class="flexFont"> 
+                            <br>
+                            ' . $produks->rupiah . ' / ' . $produks->satuan->nama_satuan . '</p>';
+                        }
+            //Menampilkan filter promo 
+            
+
             $card_produk .= '<p class="flexFont">' . DaftarProdukController::namaWarung($warung) . '</p>';
                 //tombol beli
             $card_produk .= DaftarProdukController::tombolBeli($cek_produk, $produks);
@@ -436,9 +502,9 @@ public static function daftarProduk($data_produk, $warung_yang_dipesan = "")
     if ($data_produk->count() > 0) {
         $daftar_produk = "";
         foreach ($data_produk as $produks) {
-            if ($warung_yang_dipesan == "" or $warung_yang_dipesan == $produks->id_warung) {
-                $daftar_produk .= DaftarProdukController::cardProduk($produks);
-            }
+           if ($warung_yang_dipesan == "" or $warung_yang_dipesan == $produks->id_warung) {
+             $daftar_produk .= DaftarProdukController::cardProduk($produks);
+          }
         }
         if ($daftar_produk == "") {
             $daftar_produk = DaftarProdukController::tidakAdaProduk();
