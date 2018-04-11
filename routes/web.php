@@ -523,6 +523,7 @@ Route::get('/pesanan-warung/view', 'PesananWarungController@view')->middleware('
 Route::get('/pesanan-warung/detail-view/{id}', 'PesananWarungController@detailView')->middleware('auth');
 Route::get('/pesanan-warung/pencarian', 'PesananWarungController@pencarian')->middleware('auth');
 Route::get('/pesanan-warung/detail/{id}', 'PesananWarungController@detailPesanan')->middleware('auth');
+Route::post('/pesanan-warung/tambah-no-resi', 'PesananWarungController@tambahNoResi')->middleware('auth');
 Route::post('/edit-jumlah-produk-warung', 'PesananWarungController@editJumlahPesanan')->middleware('auth');
 Route::get('/konfirmasi-pesanan-warung/{id}', 'PesananWarungController@konfirmasiPesananWarung')->middleware('auth');
 Route::get('/pesanan-dikonfirmasi/{id_pesanan}', 'PesananWarungController@pesananDikonfirmasi')->middleware('auth');
@@ -917,7 +918,7 @@ Route::get('/laporan-bucket-size-online/view/{dari_tanggal}/{sampai_tanggal}/{ke
 Route::post('/laporan-bucket-size/view-pos-data', 'LaporanBucketSizeController@prosesLaporanBucketSizeData')->middleware('auth');
 Route::post('/laporan-bucket-size/view-online-data', 'LaporanBucketSizeController@prosesLaporanBucketSizeOnlineData')->middleware('auth');
 Route::get('/laporan-bucket-size/download-excel-pos/{dari_tanggal}/{sampai_tanggal}/{kelipatan}', 'LaporanBucketSizeController@downloadLaporanPos')->middleware('auth');
-Route::get('/laporan-bucket-size/download-excel-online/{dari_tanggal}/{sampai_tanggal}/{kelipatan}', 'LaporanBucketSizeController@downloadLaporanOnline')->middleware('auth'); 
+Route::get('/laporan-bucket-size/download-excel-online/{dari_tanggal}/{sampai_tanggal}/{kelipatan}', 'LaporanBucketSizeController@downloadLaporanOnline')->middleware('auth');
 Route::get('/laporan-bucket-size/cetak-pos/{dari_tanggal}/{sampai_tanggal}/{kelipatan}', 'LaporanBucketSizeController@cetakLaporan')->middleware('auth');
 Route::get('/laporan-bucket-size/cetak-online/{dari_tanggal}/{sampai_tanggal}/{kelipatan}', 'LaporanBucketSizeController@cetakLaporanOnline')->middleware('auth');
 
