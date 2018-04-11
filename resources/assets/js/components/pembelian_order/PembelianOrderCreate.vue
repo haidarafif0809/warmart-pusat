@@ -282,8 +282,31 @@
                   <i class="material-icons">shopping_cart</i>
                 </div>
                 <div class="card-content">
+
                   <p class="category"><font style="font-size:20px;">Subtotal</font></p>
-                  <h3 class="card-title"><b><font style="font-size:32px;">{{ inputPembayaranPembelianOrder.subtotal | pemisahTitik }}</font></b></h3>
+                  <h3 class="card-title">
+                    <b>
+                      <font style="font-size:32px;">{{ inputPembayaranPembelianOrder.subtotal | pemisahTitik }}</font>
+                    </b>
+                  </h3>
+                  
+                  <div class="col-md-12 col-xs-12" style="padding-left:0px;padding-top:25px;padding-right: 0px">
+                    <p class="category"><font style="font-size:20px;">Supplier</font></p>
+                  </div>
+                  <div class="col-md-11 col-xs-11" style="padding-left:0px;padding-top:15px;">
+                    <b>                      
+                      <selectize-component v-model="inputPembayaranPembelianOrder.suplier" :settings="placeholder_suplier" id="suplier" name="suplier" ref='suplier'> 
+                        <option v-for="supliers, index in suplier" v-bind:value="supliers.id">{{ supliers.nama_suplier }}</option>
+                      </selectize-component>
+                    </b>
+                  </div>
+
+                  <div class="col-md-1 col-xs-1" style="padding-left:0px;padding-top:15px;">
+                    <div class="row" style="margin-top:-10px">
+                      <button class="btn btn-primary btn-icon waves-effect waves-light" v-on:click="tambahSupplier()" type="button"> <i class="material-icons" >add</i> </button>
+                    </div>
+                  </div>
+
                 </div>
                 <div class="card-footer">
                   <div class="row"> 
@@ -453,6 +476,7 @@ methods: {
       app.loading = false;
       app.seen = true;
       app.openSelectizeProduk();
+      app.dataSuplier();
 
       if (app.inputPembayaranPembelianOrder.subtotal == 0) { 
 

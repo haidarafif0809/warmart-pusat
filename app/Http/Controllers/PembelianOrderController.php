@@ -479,6 +479,21 @@ class PembelianOrderController extends Controller
         }
     }
 
+    //PROSES BATAL TBS PEMBELIAN ORDER
+    public function proses_batal_transaksi_pembelian()
+    {
+
+        if (Auth::user()->id_warung == '') {
+            Auth::logout();
+            return response()->view('error.403');
+        } else {
+            $session_id         = session()->getId();
+            $data_tbs_pembelian = TbsPembelianOrder::where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->delete();
+
+            return response(200);
+        }
+    }
+
 
 
     /**
