@@ -20,6 +20,27 @@ class PembelianOrderController extends Controller
         return response()->json($suplier);
     }
 
+    public function editSatuan($request, $db){
+
+        $satuan_konversi = explode("|", $request->satuan_produk);
+        $harga_produk = Barang::select('harga_beli')->find($satuan_konversi[6])->harga_beli;
+
+        $harga_beli = $harga_produk * ($satuan_konversi[3] * $satuan_konversi[4]);
+
+        $edit_tbs_penjualan = $db::find($request->id_tbs);
+
+        $subtotal = ($edit_tbs_penjualan->jumlah_produk * $harga_beli) - $edit_tbs_penjualan->potongan;
+
+        $edit_tbs_penjualan->update(['satuan_id' => $satuan_konversi[0], 'harga_produk' => $harga_beli, 'subtotal' => $subtotal]);
+
+        $respons['harga_produk'] = $harga_beli;
+        $respons['nama_satuan']     = $satuan_konversi[1];
+        $respons['satuan_id']     = $satuan_konversi[0];
+        $respons['subtotal']     = $subtotal;
+
+        return $harga_produk;
+    }
+
     // SATUAN KONVERSI
     public function dataSatuanProduk($id_produk)
     {
@@ -234,6 +255,14 @@ class PembelianOrderController extends Controller
             return response()->json($respons);
 
         }
+    }
+
+    public function editSatuanTbsPembelian(Request $request){
+
+        $db = 'App\TbsPembelianOrder';
+        $respons = $this->editSatuan($request, $db);
+
+        return response()->json($respons);
     }
 
 

@@ -155,7 +155,7 @@
 
               <form class="form-horizontal" v-on:submit.prevent="subtmitEditSatuan(inputTbsPembelianOrder.id_produk, inputTbsPembelianOrder.id_tbs, inputTbsPembelianOrder.subtotal)"> 
                 <div class="modal-body">
-                  <h3 class="text-center"><b>{{inputTbsPembelianOrder.nama_produk}}</b></h3>
+                <h3 class="text-center"><b>{{inputTbsPembelianOrder.nama_produk | capitalize}}</b></h3>
 
                   <div class="form-group">
 
