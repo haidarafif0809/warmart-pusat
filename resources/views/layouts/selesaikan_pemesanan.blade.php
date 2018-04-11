@@ -288,11 +288,21 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
                   </thead>
                   <tbody>
                     @foreach($keranjang_belanjaan as $keranjang_belanjaans)
+                    <?php            
+                    $data_harga_promo = App\Http\Controllers\PemesananController::cekHargaProdukPromo($keranjang_belanjaans);
+                      if ($data_harga_promo == "") {
+                          $harga_produk = $keranjang_belanjaans->produk->harga_jual;
+                          $subtotal_produk     = $harga_produk * $keranjang_belanjaans->jumlah_produk;
+                      }else{
+                          $harga_produk =  $data_harga_promo;
+                          $subtotal_produk     = $harga_produk * $keranjang_belanjaans->jumlah_produk;
+                      }
+                      ?>
                     <tr id="card-produk-{{ $keranjang_belanjaans->id_keranjang_belanja }}">
                       <td><a class="btn-simple" href="{{ url('detail-produk/'.$keranjang_belanjaans->id_produk.'') }}">{{ $keranjang_belanjaans->NamaProduk }}</a></td>
-                      <td class="text-right" id="jumlah-produk-{{ $keranjang_belanjaans->id_keranjang_belanja }}">{{ $keranjang_belanjaans->jumlah_produk }}</td>
-                      <td class="text-right">{{ number_format($keranjang_belanjaans->produk->harga_jual,0,',','.') }}</td>
-                      <td class="text-right" id="subtotal-produk-{{ $keranjang_belanjaans->id_keranjang_belanja }}" data-subtotal="{{$keranjang_belanjaans->produk->harga_jual * $keranjang_belanjaans->jumlah_produk}}">{{ number_format($keranjang_belanjaans->produk->harga_jual * $keranjang_belanjaans->jumlah_produk,0,',','.') }}</td>
+                      <td class="text-right" id="jumlah-produk-{{ $keranjang_belanjaans->id_keranjang_belanja }}">{{$keranjang_belanjaans->jumlah_produk}}</td>
+                      <td class="text-right">{{ number_format($harga_produk,0,',','.') }}</td>
+                      <td class="text-right" id="subtotal-produk-{{ $keranjang_belanjaans->id_keranjang_belanja }}" data-subtotal="{{$subtotal_produk}}">{{ number_format($subtotal_produk,0,',','.') }}</td>
                     </tr>
                     @endforeach
                   </tbody>
