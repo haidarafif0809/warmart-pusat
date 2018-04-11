@@ -441,7 +441,11 @@ class PesananWarungController extends Controller
     {
         //START TRANSAKSI
         DB::beginTransaction();
-        PesananPelanggan::where('id', $id)->update(['konfirmasi_pesanan' => '3']);
+        PesananPelanggan::where('id', $id)->update([
+            'konfirmasi_pesanan' => '3',
+            'no_resi'            => null,
+        ]);
+
         $penjualan = Penjualan::where('id_pesanan', $id);
         if ($penjualan->count() != 0) {
             # code...
@@ -495,6 +499,11 @@ class PesananWarungController extends Controller
 
         // return redirect()->back();
 
+    }
+
+    public function tambahNoResi(Request $request)
+    {
+        PesananPelanggan::find($request->id_pesanan)->update(['no_resi' => $request->no_resi]);
     }
 
 }
