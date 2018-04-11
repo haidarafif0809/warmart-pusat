@@ -234,7 +234,7 @@
 
                         <td>{{ tbs_pembelian.data_tbs.kode_barang }} - {{ tbs_pembelian.data_tbs.nama_barang | capitalize }}</td>
                         <td>
-                          <a href="#create-order-pembelian" v-bind:id="'edit-' + tbs_pembelian.data_tbs.id_tbs_pembelian_order" v-on:click="editEntryJumlah(tbs_pembelian.data_tbs.id_tbs_pembelian_order, index,tbs_pembelian.data_tbs.nama_produk,tbs_pembelian.data_tbs.subtotal)"><p align='right'>{{ tbs_pembelian.data_tbs.jumlah_produk | pemisahTitik }}</p>
+                          <a href="#create-order-pembelian" v-bind:id="'edit-' + tbs_pembelian.data_tbs.id_tbs_pembelian_order" v-on:click="editEntryJumlah(tbs_pembelian.data_tbs.id_tbs_pembelian_order, index,tbs_pembelian.data_tbs.nama_barang,tbs_pembelian.data_tbs.subtotal)"><p align='right'>{{ tbs_pembelian.data_tbs.jumlah_produk | pemisahTitik }}</p>
                           </a>
                         </td>
 
@@ -744,7 +744,8 @@ methods: {
     });
 
   },
-  editEntryJumlah(id, index,nama_produk,subtotal_lama) {    
+  editEntryJumlah(id, index,nama_produk,subtotal_lama) {
+
     var app = this;   
     swal({ 
       title: titleCase(nama_produk), 
