@@ -155,7 +155,7 @@
 
               <form class="form-horizontal" v-on:submit.prevent="subtmitEditSatuan(inputTbsPembelianOrder.id_produk, inputTbsPembelianOrder.id_tbs, inputTbsPembelianOrder.subtotal)"> 
                 <div class="modal-body">
-                <h3 class="text-center"><b>{{inputTbsPembelianOrder.nama_produk | capitalize}}</b></h3>
+                  <h3 class="text-center"><b>{{inputTbsPembelianOrder.nama_produk | capitalize}}</b></h3>
 
                   <div class="form-group">
 
@@ -252,7 +252,7 @@
                         </a>
                       </td>
                       <td>
-                        <a href="#create-order-pembelian" v-bind:id="'edit-' + tbs_pembelian.data_tbs.id_tbs_pembelian_order" v-on:click="editEntryTax(tbs_pembelian.data_tbs.id_tbs_pembelian_order, index,tbs_pembelian.data_tbs.nama_barang,tbs_pembelian.data_tbs.jumlah_produk,tbs_pembelian.data_tbs.harga_produk,tbs_pembelian.data_tbs.potongan,tbs_pembelian.data_tbs.ppn_produk,tbs_pembelian.data_tbs.subtotal)" ><p align='right'>{{ tbs_pembelian.data_tbs.tax | pemisahTitik}} | {{ Math.round(tbs_pembelian.tax_persen, 2) }} %</p>
+                        <a href="#create-order-pembelian" v-bind:id="'edit-' + tbs_pembelian.data_tbs.id_tbs_pembelian_order" v-on:click="editEntryTax(tbs_pembelian.data_tbs.id_tbs_pembelian_order, index,tbs_pembelian.data_tbs.nama_barang,tbs_pembelian.data_tbs.jumlah_produk,tbs_pembelian.data_tbs.harga_produk,tbs_pembelian.data_tbs.potongan,tbs_pembelian.ppn_produk,tbs_pembelian.data_tbs.subtotal)" ><p align='right'>{{ tbs_pembelian.data_tbs.tax | pemisahTitik}} | {{ Math.round(tbs_pembelian.tax_persen, 2) }} %</p>
                         </a>
                       </td>
                       <td><p id="table-subtotal" align="right">{{ tbs_pembelian.data_tbs.subtotal | pemisahTitik }}</p></td>
@@ -466,6 +466,7 @@ methods: {
     }
     axios.get(app.url+'/view-tbs-pembelian?page='+page)
     .then(function (resp) {
+      console.log(resp.data.data)
       app.tbs_pembelian_orders = resp.data.data;
       app.tbsPembelianData = resp.data;       
       app.loading = false;
@@ -1046,27 +1047,18 @@ methods: {
         var pos = pajak.search("%"); 
 
         if (pos > 0) { 
+
           pajak = pajak.replace("%",""); 
           if (pajak > 100) { 
 
             swal('Oops...', 'Pajak Tidak Boleh Lebih Dari 100%!', 'error'); 
             return false; 
           }else{ 
-            axios.get(app.url+'/cek-persen-tax-pembelian?tax_edit_produk='+result[0]+'&id_tax='+id+'&ppn_produk='+result[1])
-            .then(function (resp) {
-              if (resp.data == 1) {
-                swal({
-                  title: "Peringatan",
-                  text:"Pajak Tidak Boleh Lebih Dari 100%!",
-                });
-              }
-              else{
-                var pajak = result[0];
-                var ppn_edit = result[1];
-                app.submitEditTax(pajak,id,nama_produk,ppn_edit,subtotal_lama);
-              }
-            });
+            var pajak = result[0];
+            var ppn_edit = result[1];
+            app.submitEditTax(pajak,id,nama_produk,ppn_edit,subtotal_lama);
           } 
+
         }else{ 
 
           if (subtotal < result[0]) { 
@@ -1077,6 +1069,7 @@ methods: {
             var pajak = result[0];
             var ppn_edit = result[1];
             app.submitEditTax(pajak,id,nama_produk,ppn_edit,subtotal_lama);
+
           } 
 
         } 
