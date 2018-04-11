@@ -631,9 +631,13 @@ body {
                       swal.showValidationError(
                         'Anda Belum memasukan Jumlah Produk'
                         )
-                  }
-                  resolve()
-              }, 500)
+                  }else if (jumlah_produk <= 0) {
+                     swal.showValidationError(
+                        'Masukan jumlah produk yang Valid'
+                        )
+                 }
+                 resolve()
+             }, 500)
               })
             },
             allowOutsideClick: () => !swal.isLoading()

@@ -323,7 +323,7 @@
 				                                                    Pesanan Anda dengan nomor Order #{{ $pesanan_pelanggan->id }} yang Anda pesan di 
 				                                                    <b> {{ $data_warung->name }} </b>
 				                                                    telah
-				                                                    <b> dikonfirmasi </b>
+				                                                    <b> diselesaikan </b>
 				                                                    pada tanggal {{ $waktu_update }}
 				                                                    dengan metode pembayaran
 				                                                    <b> {{ $pesanan_pelanggan->metode_pembayaran }} </b>.
@@ -429,47 +429,22 @@
 			                                                        </tr>
 			                                                    </tbody>
 			                                                </table>
-			                                                <hr>
-			                                                <p>
-			                                                	<b> Informasi mengenai Pembayaran </b>
-		                                                    </p>
-			                                                @if($pesanan_pelanggan->metode_pembayaran == 'Bayar di Tempat')
-		                                                    <ul>
-		                                                        <li>
-		                                                            Dimohon untuk menyiapkan uang pas saat Anda menerima pesanan Anda.
-		                                                        </li>
-		                                                    </ul>
-		                                                    @else
-		                                                    <ul>
-		                                                        <li>
-		                                                            Silahkan transfer sesuai nominal diatas termasuk 3 digit terakhir untuk memudahkan pengecekan.
-		                                                        </li>
-		                                                    </ul>         
-	                                                        @endif
 		                                                    <hr>
-
-	                                                        @if($pesanan_pelanggan->layanan_kurir != "")
-				                                              <p>Waktu Pengiriman: <b>{{$pesanan_pelanggan->WaktuBarangSampai}}</b> </p><br>
-				                                            @endif
-	                                                        <p>
-	                                                            Pesanan Anda akan dikirimkan ke:
-	                                                            <b> {{ $pesanan_pelanggan->nama_pemesan }} </b>
-	                                                        </p>
-	                                                        <p>
-	                                                            <b> {{ $pesanan_pelanggan->alamat_pemesan }} Phone: {{ $pesanan_pelanggan->no_telp_pemesan }} </b>
-	                                                        </p>
-	                                                        <br>
                                                             <center>
                                                                 <p>
+                                                                	Terima Kasih telah berbelanja di <b>{{ $data_warung->name  }}</b>.
+                                                                	<br>
                                                                     Jika Anda membutuhkan bantuan, silahkan hubungi kami di
                                                                     <b>
                                                                         {{ $data_warung->no_telpon }}
                                                                     </b>                               @if(!is_null($data_warung->email))
-                                                                    atau email ke
+                                                                     atau email ke
                                                                     <b>
                                                                         {{ $data_warung->email }}
                                                                     </b>
                                                                     @endif
+                                                                    <br>
+                                                                    Kami nantikan kunjungan Anda berikutnya.
                                                                 </p>
                                                             </center>
                                                             <p>

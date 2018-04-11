@@ -526,6 +526,7 @@ Route::get('/pesanan-warung/detail/{id}', 'PesananWarungController@detailPesanan
 Route::post('/edit-jumlah-produk-warung', 'PesananWarungController@editJumlahPesanan')->middleware('auth');
 Route::get('/konfirmasi-pesanan-warung/{id}', 'PesananWarungController@konfirmasiPesananWarung')->middleware('auth');
 Route::get('/pesanan-dikonfirmasi/{id_pesanan}', 'PesananWarungController@pesananDikonfirmasi')->middleware('auth');
+Route::get('/pesanan-diselesaikan/{id_pesanan}', 'PesananWarungController@pesananDiselesaikan')->middleware('auth');
 Route::get('/batalkan-konfirmasi-pesanan-warung/{id}', 'PesananWarungController@batalkanKonfirmasiPesananWarung')->middleware('auth');
 Route::get('/batalkan-pesanan-warung/{id}', 'PesananWarungController@batalkanPesananWarung')->middleware('auth');
 Route::post('/selesai-konfirmasi-pesanan-warung', 'PesananWarungController@selesaiKonfirmasiPesananWarung')->middleware('auth');
@@ -560,7 +561,6 @@ Route::get('/pembelian/template-excel', 'PembelianController@templateExcel')->mi
 Route::get('/pembelian/satuan-konversi/{id_produk}', 'PembelianController@dataSatuanProduk')->middleware('auth');
 Route::get('/pembelian/satuan-konversi-edit/{id_produk}', 'PembelianController@dataSatuanProdukEdit')->middleware('auth');
 Route::post('/pembelian/edit-satuan-tbs-pembelian', 'PembelianController@editSatuanTbsPembelian')->middleware('auth');
-
 
 //Edit Pembelian
 Route::get('/edit-pembelian/proses-tambah-tbs-pembelian', 'EditPembelianController@proses_tambah_tbs_pembelian')->middleware('auth');

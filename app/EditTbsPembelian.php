@@ -9,7 +9,7 @@ use Yajra\Auditable\AuditableTrait;
 class EditTbsPembelian extends Model
 {
     use AuditableTrait;
-    protected $fillable   = ['session_id', 'no_faktur', 'satuan_id', 'id_produk', 'jumlah_produk', 'harga_produk', 'subtotal', 'potongan', 'tax', 'warung_id', 'ppn', 'tax_include', 'satuan_dasar'];
+    protected $fillable   = ['session_id', 'no_faktur', 'satuan_id', 'id_produk', 'jumlah_produk', 'harga_produk', 'subtotal', 'potongan', 'tax', 'warung_id', 'ppn', 'tax_include', 'satuan_dasar', 'status_harga'];
     protected $primaryKey = 'id_edit_tbs_pembelians';
 
     public function produk()

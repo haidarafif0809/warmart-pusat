@@ -13,7 +13,7 @@
           <i class="material-icons">person_add</i>
         </div>
 
-         <div class="card-content">
+        <div class="card-content">
           <h4 class="card-title"> Detail Customer </h4>
 
           <div class="toolbar">
@@ -30,7 +30,7 @@
                   <th>Alamat</th>
                   <th>No. Telpon</th>
                   <th>Tanggal Lahir</th>
-                  <th>Komunitas</th>
+                  <th  v-if="setting_aplikasi == 0">Komunitas</th>
                 </tr>
               </thead>
 
@@ -41,7 +41,7 @@
                   <td>{{ customers.alamat }}</td>
                   <td>{{ customers.no_telp }}</td>
                   <td>{{ customers.tgl_lahir }}</td>
-                  <td>{{ customers.komunitas }}</td>
+                  <td v-if="setting_aplikasi == 0">{{ customers.komunitas }}</td>
                 </tr>
               </tbody>
             </table>
@@ -66,6 +66,7 @@ export default {
       customers: {},
       url : window.location.origin+(window.location.pathname).replace("dashboard", "customer"),
       contoh : '',
+      setting_aplikasi: 1,
       loading: true
     }
   },
@@ -76,20 +77,21 @@ export default {
     app.getResults(id);
   },
   methods: {
-        getResults(id) {
-          var app = this;
+    getResults(id) {
+      var app = this;
 
-          axios.get(app.url+'/view-detail/'+ id)
-          .then(function (resp) {
-            app.customers = resp.data;
-            app.loading = false;
-          })
-          .catch(function (resp) {
-            console.log(resp);
-            app.loading = false;
-            alert("Tidak Bisa Memuat Customer");
-          });
-        }
-      }
+      axios.get(app.url+'/view-detail/'+ id)
+      .then(function (resp) {
+        app.customers = resp.data.customer;
+        app.setting_aplikasi = resp.data.setting_aplikasi;
+        app.loading = false;
+      })
+      .catch(function (resp) {
+        console.log(resp);
+        app.loading = false;
+        alert("Tidak Bisa Memuat Customer");
+      });
     }
+  }
+}
 </script>

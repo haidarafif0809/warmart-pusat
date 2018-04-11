@@ -15,11 +15,12 @@ class BankWarungObserver
 
         $kas = Kas::create([
             'kode_kas'    => strtoupper($bank_transfer->nama_bank) . "" . $BankWarung->id,
-            'nama_kas'    => strtoupper($bank_transfer->nama_bank),
+            'nama_kas'    => strtoupper($BankWarung->nama_tampil),
             'status_kas'  => 1,
             'default_kas' => 0,
+            'id_bank' => $BankWarung->id,
             'warung_id'   => Auth::user()->id_warung,
-        ]);
+            ]);
 
         return true;
 

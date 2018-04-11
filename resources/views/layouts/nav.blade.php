@@ -522,7 +522,7 @@
 
             @if(Auth::user()->kasir_id == 0)
             @if(Laratrust::can('lihat_bank'))
-            <li>
+            {{-- <li>
                 <router-link :to="{name: 'indexBankWarung'}" class="menu-nav">
                     <span class="sidebar-mini">
                         B
@@ -531,7 +531,7 @@
                         Bank 
                     </span>
                 </router-link>
-            </li>
+            </li> --}}
             @endif
 
             {{-- user kasir 
