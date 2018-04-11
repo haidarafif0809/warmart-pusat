@@ -13,6 +13,10 @@ use Illuminate\Http\Request;
 use Yajra\Datatables\Html\Builder;
 use Laratrust;
 use Auth;
+use Excel;
+use File;
+use PHPExcel_Style_Fill;
+use Validator;
 
 class CustomerController extends Controller
 {
@@ -357,5 +361,154 @@ public function pencarian(Request $request)
 
     public function cetakCustomer($no_telp){
         return view('customer.cetak',['no_telp'=>$no_telp]);
+    }
+
+     //DOWNLAOD TEMPLATE
+    public function downloadTemplate()
+    {
+        Excel::create('Template Import Pelanggan', function ($excel) {
+
+            $excel->sheet('Template Import Pelanggan', function ($sheet) {
+                $koloms = $this->kolomWajib();
+                // BACKGROUND COLOR - Kolom Wajib Disi
+                foreach ($koloms as $kolom) {
+                    $sheet->getStyle($kolom . '1')->applyFromArray(array(
+                        'fill' => array(
+                            'type'  => PHPExcel_Style_Fill::FILL_SOLID,
+                            'color' => array('rgb' => '90CAF9'),
+                        ),
+                    ));
+                }
+
+                $row   = 1;
+                $sheet = $this->labelSheet($sheet, $row);
+
+                $sheet->row(++$row, [
+                    'Samsul Bahri',
+                    '085658689010',
+                    '001',
+                    'contoh@gmail.com',
+                    'Jl. Teuku Cik Ditro, Beringin Raya, Kemiling, Kota Bandar Lampung, Lampung 35158',
+                    '1996-10-10'
+                ]);
+
+            });
+        })->download('xlsx');
+    }
+
+    public function labelSheet($sheet, $row)
+    {
+        $sheet->row($row, [
+            'Nama Customer',
+            'Nomor Telpon',
+            'Kode Customer',
+            'Email',
+            'Alamat',
+            'Tanggal Lahir'
+        ]);
+        return $sheet;
+    }
+    public function kolomWajib()
+    {
+        return [
+            'A', 'B', 'D', 'E','F'
+        ];
+    }
+
+
+    public function importExcel(Request $request)
+    {
+
+        $warung_id = Auth::user()->id_warung;
+        // validasi untuk memastikan file yang diupload adalah excel
+        $this->validate($request, ['excel' => 'required|mimes:xls,xlsx']);
+        // ambil file yang baru diupload
+        $excel = $request->file('excel');
+        // baca sheet pertama
+        $excels = Excel::selectSheetsByIndex(0)->load($excel, function ($reader) {
+        })->get();
+
+        // rule untuk validasi setiap row pada file excel
+        $rowRules = [
+            'Nama Customer'     => 'required',
+            'Email'             => 'nullable|unique:users,email',
+            'Kode Customer'    => 'nullable|unique:users,kode_pelanggan|max:50',
+            'Alamat'            => 'required',
+            'Nomor Telpon'           => 'without_spaces|unique:users,no_telp|numeric',
+            'Tanggal Lahir'         => 'required|date'
+        ];
+        // Catat semua id pelanggan baru
+        // ID ini kita butuhkan untuk menghitung total buku yang berhasil diimport
+        
+        $errors     = [];
+        $lineErrors = [];
+        $no         = 1;         
+
+
+
+        // Perulang kedua, digunakan untuk menambahkan data pelanggan jika tidak terjadi error.
+        foreach ($excels as $row) {
+            // JIKA PELANGGAN SUDAH ADA DI DB MAKA TIDAK DIIMPORT
+
+            $no++;
+
+            $data_pelanggan = Customer::select(['kode_pelanggan', 'no_telp', 'email'])
+            ->where(function ($query) use ($row) {
+                $query->orwhere('kode_pelanggan', $row['kode_customer'])
+                ->orwhere('no_telp', $row['nomor_telpon'])
+                ->orwhere('email', $row['email']);
+            });
+
+            if ($data_pelanggan->count() > 0) {
+                continue;
+            }
+
+                    // Jika terjadi error, maka perintah dihentikan sehingga tidak ada data yg di insert ke database
+            if (count($errors) > 0) {
+                // Buat variable tipe array, dengan index pesanError.
+                $pesan = ['pesanError' => ''];
+
+                // Memasukan nilai error yg terjadi, kedalam variabel $pesan yg sudah kita buat tadi.
+                foreach ($errors['nama_customer'] as $key => $value) {
+                    if ($value['line'] == end($lineErrors)) {
+                        $pesan['pesanError'] .= $value['line'] . '. ' . $value['message'];
+                    } else {
+                        $pesan['pesanError'] .= $value['line'] . '. ' . $value['message'] . '<br>';
+                    }
+                }
+                return response()->json($pesan);
+            }
+
+
+            // Membuat validasi untuk row di excel, disini kita ubah baris yang sedang di proses menjadi array.
+            $validator   = Validator::make($row->toArray(), $rowRules);        
+
+
+            if ($setting_aplikasi = $this->settingAplikasi()->tipe_aplikasi == 0) {
+                $status_konfirmasi = 0;
+            } else {
+                $status_konfirmasi = 1;
+            }
+        //INSERT CUSTOMER
+            $customer_baru = Customer::create([
+                'name'              => $row['nama_customer'],
+                'email'             => $row['email'],
+                'kode_pelanggan'    => $row['kode_customer'],
+                'alamat'            => $row['alamat'],
+                'no_telp'           => $row['nomor_telpon'],
+                'tgl_lahir'         => $row['tanggal_lahir'],
+                'tipe_user'         => 3,
+                'status_konfirmasi' => $status_konfirmasi,
+                'password'          => bcrypt('123456'),
+            ]);
+
+        //INSERT OTORITAS CUSTOMER
+            $customer_baru->attachRole(3);
+
+        }
+// Hitung Jumlah Produk Yang Diimport
+        $hitung_pelanggan['jumlahPelanggan'] = $no - 1;
+
+        return response()->json($hitung_pelanggan);
     }
 }
