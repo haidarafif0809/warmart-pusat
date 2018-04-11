@@ -84,7 +84,12 @@
                                      <td>{{ pesananWarung.pesanan_warung.created_at }}</td>
                                      <td>
                                         <span v-if="pesananWarung.pesanan_warung.konfirmasi_pesanan == 2">
-                                            <button type="button" class="btn btn-sm btn-primary"  @click="insertNoResi(pesananWarung.pesanan_warung.id)">Masukkan</button>                                         
+                                            <span v-if="pesananWarung.pesanan_warung.no_resi == null">
+                                                <button type="button" class="btn btn-sm btn-primary"  @click="insertNoResi(pesananWarung.pesanan_warung.id, pesananWarung.pesanan_warung.no_resi)">Masukkan</button>
+                                            </span>
+                                            <span v-else>
+                                                <a :href="url2" @click="insertNoResi(pesananWarung.pesanan_warung.id, pesananWarung.pesanan_warung.no_resi)">{{ pesananWarung.pesanan_warung.no_resi }}</a>
+                                            </span>
                                         </span>
                                         <span v-else>
                                             <button type="button" class="btn btn-sm btn-primary disabled">Masukkan</button>                                         
@@ -180,16 +185,18 @@ export default {
             detailPesananWarung: {},
             pesananWarungData: {},
             noResiPesanan: {},
-			url : window.location.origin+(window.location.pathname).replace("dashboard", "pesanan-warung"),
-			pencarian: '',
+			url: window.location.origin+(window.location.pathname).replace("dashboard", "pesanan-warung"),
+            url2: window.location.href,
+            pencarian: '',
             dataAgent: '',
-			loading: true,
+            loading: true,
             urlTambahNoResi: window.location.origin + (window.location.pathname).replace('dashboard', '/pesanan-warung/tambah-no-resi')
 		}
 	},
 	mounted() {
 		var app = this;
 		app.getResults();
+        console.log(window.location)
 	},
 	watch: {
         // whenever question changes, this function will run
@@ -248,7 +255,7 @@ export default {
                 alert("Tidak Dapat Memuat Detail Pesanan");
             });
         },
-        insertNoResi(id_pesanan) {
+        insertNoResi(idPesanan, noResi) {
             let app = this;
 
             swal({
@@ -285,7 +292,7 @@ export default {
                     return;
                 }
 
-                app.noResiPesanan.id_pesanan = id_pesanan;
+                app.noResiPesanan.id_pesanan = idPesanan;
                 app.noResiPesanan.no_resi = no_resi;
                 console.log(app.noResiPesanan);
 
@@ -296,8 +303,9 @@ export default {
                         text: 'Berhasil menambahkan "'+ no_resi +'" sebagai Nomor Resi.',
                         type: 'success',
                         showConfirmButton: false,
-                        timer: 1800,
+                        timer: 2000,
                     });
+                    app.getResults();
                 })
                 .catch(function (resp) {
                     console.log(resp)
@@ -309,6 +317,10 @@ export default {
             });
 
             let no_resi = $('#no_resi');
+            
+            if (noResi != null) {   
+                no_resi.val(noResi);
+            }
             no_resi.focus();
 
             var button = $(".swal2-confirm");
