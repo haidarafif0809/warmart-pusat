@@ -191,6 +191,9 @@ import SettingPromoIndex from './components/setting_promo/SettingPromoIndex.vue'
 import SettingPromoCreate from './components/setting_promo/SettingPromoCreate.vue'; 
 import SettingPromoEdit from './components/setting_promo/SettingPromoEdit.vue'; 
 
+// PEMBELIAN ORDER 
+import PembelianOrderCreate from './components/pembelian_order/PembelianOrderCreate.vue';
+
 const routes = [{
     path: '/',
     components: {
@@ -761,7 +764,7 @@ const routes = [{
         path: '/create-daftar-user',
         component: DaftarUserWarungCreate,
         name: 'createDaftarUserWarung'
-    }, {
+    },{
         path: '/edit-daftar-user/:id',
         component: DaftarUserWarungEdit,
         name: 'editDaftarUser'
@@ -777,11 +780,11 @@ const routes = [{
         path: '/otoritas',
         component: OtoritasIndex,
         name: 'indexOtoritas'
-        },{ 
+    },{ 
         path: '/create-bank-warung', 
         component: BankWarungCreate, 
         name: 'createBankWarung' 
-    }, { 
+    },{ 
         path: '/edit-bank-warung/:id', 
         component: BankWarungEdit, 
         name: 'editBankWarung'
@@ -789,19 +792,23 @@ const routes = [{
         path: '/setting-otoritas/:id',
         component: OtoritasSetting,
         name: 'settingOtoritas'
-    } ,{ 
+    },{ 
         path: '/setting-promo', 
         component: SettingPromoIndex, 
         name: 'indexSettingPromo' 
-    }  ,{ 
+    },{ 
         path: '/create-setting-promo/', 
         component: SettingPromoCreate, 
         name: 'createSettingPromo' 
-    }, { 
+    },{ 
         path: '/edit-setting-promo/:id', 
         component: SettingPromoEdit, 
         name: 'editSettingPromo'
-    } 
+    },{ 
+        path: '/create-order-pembelian', 
+        component: PembelianOrderCreate, 
+        name: 'createPembelianOrder'
+    }
 
 
     ]

@@ -678,6 +678,7 @@ watch: {
       this.$refs.produk.$el.selectize.focus();
     },
     openSelectizePelanggan(){      
+      this.$refs.pelanggan.$el.selectize.setValue("");
       this.$refs.pelanggan.$el.selectize.focus();
     },
     openSelectizeKas(){      
