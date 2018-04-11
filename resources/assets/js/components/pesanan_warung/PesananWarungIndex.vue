@@ -270,12 +270,12 @@ export default {
 
                         setTimeout(() => {
 
-                            if (!no_resi.val()) {
-                                swal.showValidationError('Nomor Resi tidak boleh kosong.');
-                                no_resi.focus();
-                                reject();
-                            }
-                            else if (!no_resi.val().match(/^[a-zA-Z0-9_-\s]*$/)) {
+                            // if (!no_resi.val()) {
+                            //     swal.showValidationError('Nomor Resi tidak boleh kosong.');
+                            //     no_resi.focus();
+                            //     reject();
+                            // }
+                            if (!no_resi.val().match(/^[a-zA-Z0-9_-\s]*$/)) {
                                 swal.showValidationError('Nomor Resi hanya boleh berisi huruf dan angka');
                                 no_resi.focus();
                                 reject();
@@ -287,9 +287,15 @@ export default {
             })
             .then(data => {
                 let no_resi = data[0].value;
+                let pesan;
 
                 if (!no_resi) {
-                    return;
+                    no_resi = null;
+                    pesan = 'Berhasil menghapus Nomor Resi dari Pesanan.';
+                }
+                else {
+                    no_resi = no_resi.toUpperCase();
+                    pesan = 'Berhasil menambahkan "'+ no_resi +'" sebagai Nomor Resi.'
                 }
 
                 app.noResiPesanan.id_pesanan = idPesanan;
@@ -300,7 +306,7 @@ export default {
                 .then(function (resp) {
                     swal({
                         title: "Berhasil!",
-                        text: 'Berhasil menambahkan "'+ no_resi +'" sebagai Nomor Resi.',
+                        text: pesan,
                         type: 'success',
                         showConfirmButton: false,
                         timer: 2000,
@@ -312,8 +318,10 @@ export default {
                     swal("Ada sesuatu yang salah terjadi", "", "warning");
                 });
             })
-            .catch(function () {
-                swal("Ups.. Ada yang tidak beres.", "Penambahan Nomor Resi gagal!", "error");
+            .catch(function (resp) {
+                if (resp != 'esc' && resp != 'overlay') {   
+                    swal("Ups.. Ada yang tidak beres.", "Penambahan Nomor Resi gagal!", "error");
+                }
             });
 
             let no_resi = $('#no_resi');
