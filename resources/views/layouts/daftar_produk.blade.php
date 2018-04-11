@@ -87,13 +87,8 @@ first();
     width: 10em;
 }
 .page-header.header-small {
-    @if(Agent::isMobile())
     height: 0vh;
     min-height: 25vh;
-    @else
-    height: 0vh;
-    min-height: 18vh;
-    @endif
 }
 .ecommerce-page .page-header .container {
     @if(Agent::isMobile())
@@ -120,7 +115,11 @@ h4 {
     overflow-x: hidden;
 }
 .nav-tabs > li > a{
-    font-size: 20px;
+    font-size: 14px;
+}
+.class_coret {
+    text-decoration: line-through;
+    color:#a6a6a6;
 }
 </style>
 @if (Agent::isMobile())
@@ -141,7 +140,7 @@ h4 {
             </h4>
                   <div class="row">
                 <div class="col-sm-3">
-                    <ul class="nav nav-tabs buttonColor card-raised" data-tabs="tabs">
+                    <ul class="nav nav-tabs buttonColor card card-raised" data-tabs="tabs">
                             {!! $kategori_produk !!}
                     </ul>
                 </div>
@@ -274,7 +273,7 @@ h4 {
                 </h3>
                 <div class="row">
                 <div class="col-sm-3">
-                    <ul class="nav nav-tabs buttonColor card-raised" data-tabs="tabs">
+                    <ul class="nav nav-tabs buttonColor card card-raised" data-tabs="tabs">
                             {!! $kategori_produk !!}
                     </ul>
                 </div>
@@ -434,6 +433,16 @@ h4 {
 
                 @endif
             };
+
+                $(document).ready(function() {
+                        var data_strike = $("#id_promo").html();
+                        if (data_strike == "") {
+                            $("#coret").attr('class','kosong');
+                        }else{
+                           $("#coret").attr('class','class_coret'); 
+                        }  
+                 });
+
 
             window.onload = function(event) {
                 flexFont();

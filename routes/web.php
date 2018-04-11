@@ -402,6 +402,8 @@ Route::get('/customer/pencarian', 'CustomerController@pencarian')->middleware('a
 Route::get('/customer/pilih-komunitas', 'CustomerController@pilih_komunitas')->middleware('auth');
 Route::get('/customer/setting-aplikasi', 'CustomerController@settingAplikasi')->middleware('auth');
 Route::get('/customer/cetak-customer/{id}', 'CustomerController@cetakCustomer')->middleware('auth');
+Route::get('/customer/template-excel', 'CustomerController@downloadTemplate')->middleware('auth');
+Route::post('/customer/import-excel/', 'CustomerController@importExcel')->middleware('auth');
 
 //menampilkan data user
 Route::get('/user/view', 'UserController@view')->middleware('auth');

@@ -226,12 +226,7 @@ public function tambahWaktu(Request $request,$id)
         'waktu_promo'        => $setting_hari,
         'id_warung'          => Auth::user()->id_warung]);
 }
-foreach ($request->jam as $setting_jam) {
-    $insert_setting = WaktuSettingPromo::create([
-        'id_setting_promo'   => $id,
-        'waktu_promo'        => $setting_jam,
-        'id_warung'          => Auth::user()->id_warung]);
-}
+
            //Insert data waktu setting promo
 }
 
@@ -341,12 +336,7 @@ public function tambahWaktuEdit(Request $request,$id)
             'waktu_promo'        => $setting_hari,
             'id_warung'          => Auth::user()->id_warung]);
     }
-    foreach ($request->jam as $setting_jam) {
-        $insert_setting = WaktuSettingPromo::create([
-            'id_setting_promo'   => $id,
-            'waktu_promo'        => $setting_jam,
-            'id_warung'          => Auth::user()->id_warung]);
-    }
+
            //Insert data waktu setting promo
 }
 

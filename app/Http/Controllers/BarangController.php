@@ -492,9 +492,9 @@ class BarangController extends Controller
     //DOWNLAOD TEMPLATE
     public function downloadTemplate()
     {
-        Excel::create('Tempalate Import Produk', function ($excel) {
+        Excel::create('Template Import Produk', function ($excel) {
 
-            $excel->sheet('Tempalate Import Produk', function ($sheet) {
+            $excel->sheet('Template Import Produk', function ($sheet) {
                 $koloms = $this->kolomWajib();
                 // BACKGROUND COLOR - Kolom Wajib Disi
                 foreach ($koloms as $kolom) {
