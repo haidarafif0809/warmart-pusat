@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class PesananPelanggan extends Model
 {
-    protected $fillable = ['id_pelanggan', 'nama_pemesan', 'no_telp_pemesan', 'alamat_pemesan', 'jumlah_produk', 'subtotal', 'konfirmasi_pesanan', 'id_warung','kurir','layanan_kurir','metode_pembayaran','biaya_kirim','bank_transfer','kode_unik_transfer'];
+    protected $fillable = ['id_pelanggan', 'nama_pemesan', 'no_telp_pemesan', 'alamat_pemesan', 'jumlah_produk', 'subtotal', 'konfirmasi_pesanan', 'id_warung','kurir','layanan_kurir','metode_pembayaran','biaya_kirim','bank_transfer','kode_unik_transfer', 'no_resi'];
 
     // relasi ke pelanggan
     public function pelanggan()

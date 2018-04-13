@@ -41,7 +41,7 @@ class PenjualanController extends Controller
             array_push($array, [
                 'id'             => $pelanggans->id,
                 'nama_pelanggan' => $pelanggans->name,
-                'pelanggan'      => $pelanggans->name . " - " . $pelanggans->no_telp]);
+                'pelanggan'      => $pelanggans->name . " - " . $pelanggans->kode_pelanggan ." - " . $pelanggans->no_telp]);
         }
 
         return response()->json($array);
@@ -747,20 +747,20 @@ public function prosesEditHargaTbsPenjualan(Request $request)
 
     $tbs_penjualan = TbsPenjualan::find($request->id_tbs);
     if ($request->level_harga_produk == 1) {
-       $harga_produk = $tbs_penjualan->produk->harga_jual;
-   }else{
-       $harga_produk = $tbs_penjualan->produk->harga_jual2;
-   }
+     $harga_produk = $tbs_penjualan->produk->harga_jual;
+ }else{
+     $harga_produk = $tbs_penjualan->produk->harga_jual2;
+ }
 
-   $subtotal = ($harga_produk * $tbs_penjualan->jumlah_produk) - $tbs_penjualan->potongan;
+ $subtotal = ($harga_produk * $tbs_penjualan->jumlah_produk) - $tbs_penjualan->potongan;
 
-   $tbs_penjualan->update(['harga_produk' => $harga_produk, 'subtotal' => $subtotal]);
+ $tbs_penjualan->update(['harga_produk' => $harga_produk, 'subtotal' => $subtotal]);
 
-   $respons['subtotal']      = $subtotal;
-   $respons['harga_produk']      = $harga_produk;
-   $respons['potongan']      = $this->tampilPotongan($tbs_penjualan->potongan, $tbs_penjualan->jumlah_produk, $harga_produk);
+ $respons['subtotal']      = $subtotal;
+ $respons['harga_produk']      = $harga_produk;
+ $respons['potongan']      = $this->tampilPotongan($tbs_penjualan->potongan, $tbs_penjualan->jumlah_produk, $harga_produk);
 
-   return response()->json($respons);
+ return response()->json($respons);
 }
 
 public function prosesEditPotonganTbsPenjualan(Request $request)
@@ -1453,24 +1453,24 @@ public function index()
         
         $tbs_penjualan = EditTbsPenjualan::find($request->id_tbs);
         if ($request->level_harga_produk == 1) {
-           $harga_produk = $tbs_penjualan->produk->harga_jual;
-       }else{
-           $harga_produk = $tbs_penjualan->produk->harga_jual2;
-       }
+         $harga_produk = $tbs_penjualan->produk->harga_jual;
+     }else{
+         $harga_produk = $tbs_penjualan->produk->harga_jual2;
+     }
 
-       $subtotal = ($harga_produk * $tbs_penjualan->jumlah_produk) - $tbs_penjualan->potongan;
+     $subtotal = ($harga_produk * $tbs_penjualan->jumlah_produk) - $tbs_penjualan->potongan;
 
-       $tbs_penjualan->update(['harga_produk' => $harga_produk, 'subtotal' => $subtotal]);
+     $tbs_penjualan->update(['harga_produk' => $harga_produk, 'subtotal' => $subtotal]);
 
-       $respons['subtotal']      = $subtotal;
-       $respons['harga_produk']      = $harga_produk;
-       $respons['potongan']      = $this->tampilPotongan($tbs_penjualan->potongan, $tbs_penjualan->jumlah_produk, $harga_produk);
+     $respons['subtotal']      = $subtotal;
+     $respons['harga_produk']      = $harga_produk;
+     $respons['potongan']      = $this->tampilPotongan($tbs_penjualan->potongan, $tbs_penjualan->jumlah_produk, $harga_produk);
 
-       return response()->json($respons);
-   }
+     return response()->json($respons);
+ }
 
-   public function prosesHapusEditTbsPenjualan($id)
-   {
+ public function prosesHapusEditTbsPenjualan($id)
+ {
 
     if (!EditTbsPenjualan::destroy($id)) {
         return 0;

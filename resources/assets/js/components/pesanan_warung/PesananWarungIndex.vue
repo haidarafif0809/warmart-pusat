@@ -65,6 +65,7 @@
                                     <th>Pemesan</th>
                                     <th>Status</th>
                                     <th>Waktu</th>
+                                    <th>No. Resi</th>
                                     <th>Detail</th>
 
                                 </tr>
@@ -81,6 +82,19 @@
                                         <b style="color:orange" v-else>Batal Pelanggan</b>
                                      </td>
                                      <td>{{ pesananWarung.pesanan_warung.created_at }}</td>
+                                     <td>
+                                        <span v-if="pesananWarung.pesanan_warung.konfirmasi_pesanan == 2">
+                                            <span v-if="pesananWarung.pesanan_warung.no_resi == null">
+                                                <button type="button" class="btn btn-sm btn-primary"  @click="insertNoResi(pesananWarung.pesanan_warung.id, pesananWarung.pesanan_warung.no_resi)">Masukkan</button>
+                                            </span>
+                                            <span v-else>
+                                                <a :href="url2" @click="insertNoResi(pesananWarung.pesanan_warung.id, pesananWarung.pesanan_warung.no_resi)">{{ pesananWarung.pesanan_warung.no_resi }}</a>
+                                            </span>
+                                        </span>
+                                        <span v-else>
+                                            <button type="button" class="btn btn-sm btn-primary disabled">Masukkan</button>                                         
+                                        </span>
+                                     </td>
                                      <td>
                                         <router-link :to="{name: 'detailPesananWarung', params: {id: pesananWarung.pesanan_warung.id}}" class="btn btn-sm btn-default" v-bind:id="'detail-' + pesananWarung.pesanan_warung.id" > Detail Pesanan
                                         </router-link>
@@ -170,15 +184,19 @@ export default {
 			pesananWarung: [],
             detailPesananWarung: {},
             pesananWarungData: {},
-			url : window.location.origin+(window.location.pathname).replace("dashboard", "pesanan-warung"),
-			pencarian: '',
+            noResiPesanan: {},
+			url: window.location.origin+(window.location.pathname).replace("dashboard", "pesanan-warung"),
+            url2: window.location.href,
+            pencarian: '',
             dataAgent: '',
-			loading: true
+            loading: true,
+            urlTambahNoResi: window.location.origin + (window.location.pathname).replace('dashboard', '/pesanan-warung/tambah-no-resi')
 		}
 	},
 	mounted() {
 		var app = this;
 		app.getResults();
+        console.log(window.location)
 	},
 	watch: {
         // whenever question changes, this function will run
@@ -195,6 +213,8 @@ export default {
     		}
     		axios.get(app.url+'/view?page='+page)
     		.then(function (resp) {
+                console.log(app.url)
+                console.log(resp.data.data)
     			app.pesananWarung = resp.data.data;
                 app.pesananWarungData = resp.data;
                 app.dataAgent = resp.data.agent;
@@ -233,6 +253,98 @@ export default {
             .catch(function (resp) {
                 app.loading = false;
                 alert("Tidak Dapat Memuat Detail Pesanan");
+            });
+        },
+        insertNoResi(idPesanan, noResi) {
+            let app = this;
+
+            swal({
+                title: 'Masukkan Nomor Resi',
+                html:
+                '<input id="no_resi" placeholder="Nama kategori produk" class="swal2-input">',
+                focusConfirm: false,
+                showLoaderOnConfirm: true,
+                preConfirm: () => {
+                    return new Promise((resolve, reject) => {
+                        let no_resi = $('#no_resi');
+
+                        setTimeout(() => {
+
+                            // if (!no_resi.val()) {
+                            //     swal.showValidationError('Nomor Resi tidak boleh kosong.');
+                            //     no_resi.focus();
+                            //     reject();
+                            // }
+                            if (!no_resi.val().match(/^[a-zA-Z0-9_-\s]*$/)) {
+                                swal.showValidationError('Nomor Resi hanya boleh berisi huruf dan angka');
+                                no_resi.focus();
+                                reject();
+                            }
+                            resolve(no_resi);
+                        }, 250);
+                    });
+                }
+            })
+            .then(data => {
+                let no_resi = data[0].value;
+                let pesan;
+
+                if (!no_resi) {
+                    no_resi = null;
+                    pesan = 'Berhasil menghapus Nomor Resi dari Pesanan.';
+                }
+                else {
+                    no_resi = no_resi.toUpperCase();
+                    pesan = 'Berhasil menambahkan "'+ no_resi +'" sebagai Nomor Resi.'
+                }
+
+                app.noResiPesanan.id_pesanan = idPesanan;
+                app.noResiPesanan.no_resi = no_resi;
+                console.log(app.noResiPesanan);
+
+                axios.post(app.urlTambahNoResi, app.noResiPesanan)
+                .then(function (resp) {
+                    swal({
+                        title: "Berhasil!",
+                        text: pesan,
+                        type: 'success',
+                        showConfirmButton: false,
+                        timer: 2000,
+                    });
+                    app.getResults();
+                })
+                .catch(function (resp) {
+                    console.log(resp)
+                    swal("Ada sesuatu yang salah terjadi", "", "warning");
+                });
+            })
+            .catch(function (resp) {
+                if (resp != 'esc' && resp != 'overlay') {   
+                    swal("Ups.. Ada yang tidak beres.", "Penambahan Nomor Resi gagal!", "error");
+                }
+            });
+
+            let no_resi = $('#no_resi');
+            
+            if (noResi != null) {   
+                no_resi.val(noResi);
+            }
+            no_resi.focus();
+
+            var button = $(".swal2-confirm");
+            $('.swal2-container').keydown(function (event) {
+
+                /*
+                | ----------------------------------------------------------------------------
+                | Untuk mendeteksi apakah tombol enter ditekan atau tidak, jika ditekan
+                | maka trigger event klik untuk tombol konfirmasi pada swal yang muncul
+                | karena untuk swal tambah nomor resi kita tidak bisa menekan tombol enter
+                | untuk submit form secara bawaan, jadi harus dibuat manual :3
+                | ----------------------------------------------------------------------------
+                */
+                if (event.which == 13) {
+                    button.click();
+                }
             });
         }
     }
