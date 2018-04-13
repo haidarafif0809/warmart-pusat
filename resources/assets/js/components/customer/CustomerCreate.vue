@@ -33,6 +33,16 @@
 								</div>
 							</div>
 
+
+							<div class="form-group">
+								<label for="email" class="col-md-2 control-label">Password</label>
+								<div class="col-md-4">
+									<input class="form-control" required autocomplete="off" placeholder="Password" type="password" v-model="customer.password" name="password"  autofocus="">
+									<span v-if="errors.password" id="password_error" class="label label-danger">{{ errors.password[0] }}</span>
+
+								</div>
+							</div>
+
 							<div class="form-group">
 								<label for="kode_customer" class="col-md-2 control-label">Kode Customer</label>
 								<div class="col-md-4">
@@ -101,6 +111,7 @@ export default {
 				name: '',
 				no_telp: '',
 				kode_customer : '',
+				password : '',
 				email: '',
 				alamat: '',
 				tgl_lahir: '',
