@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Suplier;
 use App\TbsPembelianOrder;
+use App\DetailPembelianOrder;
+use App\PembelianOrder;
 use App\Barang;
 use App\SatuanKonversi;
+use Illuminate\Support\Facades\DB;
 use Auth;
 
 class PembelianOrderController extends Controller
@@ -595,103 +598,37 @@ class PembelianOrderController extends Controller
             $no_faktur  = PembelianOrder::no_faktur($warung_id);
 
             //INSERT DETAIL PEMBELIAN
-            $data_produk_pembelian = TbsPembelianOrder::where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
+            $data_produk_pembelian_order = TbsPembelianOrder::where('session_id', $session_id)->where('warung_id', $warung_id);
 
             // INSERT DETAIL PEMBELIAN
-            foreach ($data_produk_pembelian->get() as $data_tbs_pembelian) {
-                $barang = Barang::select('harga_beli')->where('id', $data_tbs_pembelian->id_produk)->where('id_warung', Auth::user()->id_warung);
-
-                // UPDATE HARGA BELI - MASTER PRODUK
-                if ($barang->first()->harga_beli != $data_tbs_pembelian->harga_produk) {
-                    if ($data_tbs_pembelian->status_harga == 1) {
-
-                        if ($data_tbs_pembelian->satuan_id == $data_tbs_pembelian->satuan_dasar) {
-                            $barang->update(['harga_beli' => $data_tbs_pembelian->harga_produk]);
-                        }
-                    }                        
-                }
+            foreach ($data_produk_pembelian_order->get() as $data_tbs_pembelian_order) {
 
                 $detail_pembelian = DetailPembelianOrder::create([
-                    'no_faktur'     => $no_faktur,
-                    'satuan_id'     => $data_tbs_pembelian->satuan_id,
-                    'satuan_dasar'  => $data_tbs_pembelian->satuan_dasar,
-                    'id_produk'     => $data_tbs_pembelian->id_produk,
-                    'jumlah_produk' => $data_tbs_pembelian->jumlah_produk,
-                    'harga_produk'  => $data_tbs_pembelian->harga_produk,
-                    'subtotal'      => $data_tbs_pembelian->subtotal,
-                    'tax'           => $data_tbs_pembelian->tax,
-                    'tax_include'   => $data_tbs_pembelian->tax_include,
-                    'potongan'      => $data_tbs_pembelian->potongan,
-                    'ppn'           => $data_tbs_pembelian->ppn,
-                    'warung_id'     => Auth::user()->id_warung,
+                    'no_faktur_order'  => $no_faktur,
+                    'id_produk'        => $data_tbs_pembelian_order->id_produk,
+                    'jumlah_produk'    => $data_tbs_pembelian_order->jumlah_produk,
+                    'satuan_id'        => $data_tbs_pembelian_order->satuan_id,
+                    'satuan_dasar'     => $data_tbs_pembelian_order->satuan_dasar,
+                    'harga_produk'     => $data_tbs_pembelian_order->harga_produk,
+                    'subtotal'         => $data_tbs_pembelian_order->subtotal,
+                    'tax'              => $data_tbs_pembelian_order->tax,
+                    'potongan'         => $data_tbs_pembelian_order->potongan,
+                    'warung_id'        => $warung_id,
                     ]);
             }
 
-            //INSERT PEMBELIAN
-            if ($request->keterangan == "") {
-                $keterangan = "-";
-            } else {
-                $keterangan = $request->keterangan;
-            }
-
-            if ($request->pembayaran == '') {
-                $pembayaran = 0;
-            } else {
-                $pembayaran = $request->pembayaran;
-            }
-            if ($request->kembalian == '') {
-                $kembalian = 0;
-            } else {
-                $kembalian = $request->kembalian;
-            }
-            if ($pembayaran < $request->total_akhir) {
-                # code...
-                $status_pembelian = 'Hutang';
-            } else {
-                $status_pembelian = 'Tunai';
-            }
-
-            $pembelian = Pembelian::create([
-                'no_faktur'        => $no_faktur,
-                'total'            => $request->total_akhir,
-                'suplier_id'       => $request->suplier,
-                'status_pembelian' => $status_pembelian,
-                'potongan'         => $request->potongan,
-                'tunai'            => $pembayaran,
-                'kembalian'        => $kembalian,
-                'kredit'           => $request->kredit,
-                'nilai_kredit'     => $request->kredit,
-                'cara_bayar'       => $request->cara_bayar,
-                'status_beli_awal' => $status_pembelian,
-                'tanggal_jt_tempo' => $request->jatuh_tempo,
-                'keterangan'       => $request->keterangan,
-                'ppn'              => $request->ppn,
-                'warung_id'        => Auth::user()->id_warung,
+            $pembelian = PembelianOrder::create([
+                'no_faktur_order'   => $no_faktur,
+                'suplier_id'        => $request->suplier,
+                'total'             => $request->subtotal,
+                'keterangan'        => $request->keterangan,
+                'status_order'      => 1, // Diorder
+                'warung_id'         => $warung_id,
                 ]);
 
-            //Transaksi Hutang & kas
-            $kas = intval($pembelian->tunai) - intval($pembelian->kembalian);
-            if ($kas > 0) {
-                TransaksiKas::create([
-                    'no_faktur'       => $pembelian->no_faktur,
-                    'jenis_transaksi' => 'pembelian',
-                    'jumlah_keluar'   => $kas,
-                    'kas'             => $pembelian->cara_bayar,
-                    'warung_id'       => $pembelian->warung_id]);
-            }
-            if ($pembelian->kredit > 0) {
-                TransaksiHutang::create([
-                    'no_faktur'       => $pembelian->no_faktur,
-                    'jenis_transaksi' => 'pembelian',
-                    'id_transaksi'    => $pembelian->id,
-                    'jumlah_masuk'    => $pembelian->kredit,
-                    'suplier_id'      => $pembelian->suplier_id,
-                    'warung_id'       => $pembelian->warung_id]);
-            }
-            //Transaksi Hutang & kas
 
-            //HAPUS TBS PEMBELIAN
-            $data_produk_pembelian->delete();
+            //HAPUS TBS PEMBELIAN ORDER
+            $data_produk_pembelian_order->delete();
             DB::commit();
 
             $respons['respons_pembelian'] = $pembelian->id;

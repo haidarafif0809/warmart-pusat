@@ -8,7 +8,7 @@ use Yajra\Auditable\AuditableTrait;
 class TbsPembelianOrder extends Model
 {
 	use AuditableTrait;
-	protected $fillable   = ['session_id', 'id_produk', 'jumlah_produk', 'satuan_id', 'satuan_dasar', 'satuan_dasar', 'harga_produk', 'subtotal', 'tax', 'potongan', 'status_harga', 'warung_id', 'ppn', 'tax_include'];
+	protected $fillable   = ['session_id', 'id_produk', 'jumlah_produk', 'satuan_id', 'satuan_dasar', 'harga_produk', 'subtotal', 'tax', 'potongan', 'status_harga', 'warung_id', 'ppn', 'tax_include'];
 	protected $primaryKey = 'id_tbs_pembelian_order';
 
 	// Transaksi Tbs Pembelian

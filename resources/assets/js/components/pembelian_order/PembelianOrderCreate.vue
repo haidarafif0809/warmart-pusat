@@ -307,6 +307,10 @@
                     </div>
                   </div>
 
+                  <p class="category"><font style="font-size:20px; padding-left:0px;padding-top:25px;padding-right: 0px">Keterangan</font></p>
+                  <textarea class="form-control" v-model="inputPembayaranPembelianOrder.keterangan"  name="keterangan" id="keterangan" placeholder="Keterangan .." rows="1">                    
+                  </textarea>
+
                 </div>
                 <div class="card-footer">
                   <div class="row"> 
@@ -356,21 +360,9 @@
           satuan_produk: ''
         },
         inputPembayaranPembelianOrder:{
-          potongan_persen: 0,
-          potongan_faktur: 0,
           subtotal: 0,
-          pembayaran: 0,
-          total_akhir: 0,
-          kembalian: 0,
-          kredit: 0,
-          jatuh_tempo: '',
-          keterangan: '',
-          subtotal_number_format:0, 
           suplier: '',
-          cara_bayar: '',
-          status_pembelian: '',
-          ppn: '',
-          potongan: 0,
+          keterangan: ''
         },
         tambahSuplier: {
           nama_suplier : '',
@@ -441,15 +433,6 @@ watch: {
   },
   'inputTbsPembelianOrder.produk': function (newQuestion) {
     this.pilihProduk();  
-  },
-  'inputPembayaranPembelianOrder.pembayaran':function (val){
-    if (val == '') {
-      val = 0
-    }
-    this.hitungKembalian(val)
-  },
-  'inputPembayaranPembelianOrder.potongan_faktur':function(){
-    this.hitungPotonganFaktur()
   },
   'inputTbsPembelianOrder.satuan_produk':function(){
     this.hitungHargaKonversi()
@@ -579,12 +562,6 @@ methods: {
       app.errors = resp.response.data.errors;
     });
   },
-  alertTbs(pesan) {
-    this.$swal({
-      text: pesan,
-      icon: "warning",
-    });
-  },
   alert(pesan) {
     this.$swal({
       title: "Berhasil ",
@@ -625,8 +602,7 @@ methods: {
 
       var subtotal = parseFloat(app.inputPembayaranPembelianOrder.subtotal) - parseFloat(resp.data.subtotal)
       app.inputPembayaranPembelianOrder.subtotal = subtotal                       
-      app.inputPembayaranPembelianOrder.total_akhir  = subtotal
-      app.hitungPotonganPersen()
+      
       app.alert("Menghapus Produk "+nama_produk);
       app.loading = false;
       app.inputTbsPembelianOrder.id_tbs = ''
@@ -735,8 +711,7 @@ methods: {
       }
 
       app.inputPembayaranPembelianOrder.subtotal = subtotal                       
-      app.inputPembayaranPembelianOrder.total_akhir  = subtotal
-      app.hitungPotonganPersen();
+      ;
       app.inputTbsPembelianOrder.id_produk = ''
       app.inputTbsPembelianOrder.nama_produk = ''
       app.inputTbsPembelianOrder.harga_produk = ''
@@ -790,8 +765,7 @@ methods: {
           app.getResults();      
           var subtotal = (parseInt(app.inputPembayaranPembelianOrder.subtotal) - parseInt(subtotal_lama))  + parseInt(resp.data.subtotal)
           app.inputPembayaranPembelianOrder.subtotal = subtotal                       
-          app.inputPembayaranPembelianOrder.total_akhir  = subtotal
-          app.hitungPotonganPersen();
+          ;
         })
         .catch(function (resp) {
           app.loading = false;
@@ -838,8 +812,7 @@ methods: {
         app.getResults();
 
         app.inputPembayaranPembelianOrder.subtotal = subtotal.toFixed(2)
-        app.inputPembayaranPembelianOrder.total_akhir = subtotal.toFixed(2)
-        app.hitungPotonganPersen()
+        
         app.inputTbsPembelianOrder.id_tbs = ''
         app.openSelectizeProduk() 
         $("#modalEditSatuan").hide();
@@ -891,8 +864,7 @@ methods: {
           app.getResults();
           var subtotal = (parseInt(app.inputPembayaranPembelianOrder.subtotal) - parseInt(subtotal_lama)) + parseInt(resp.data.subtotal);
           app.inputPembayaranPembelianOrder.subtotal = subtotal                       
-          app.inputPembayaranPembelianOrder.total_akhir  = subtotal 
-          app.hitungPotonganPersen();
+          ;
 
         })
         .catch(function (resp) {
@@ -988,8 +960,7 @@ methods: {
       app.getResults();
       var subtotal = (parseInt(app.inputPembayaranPembelianOrder.subtotal) - parseInt(subtotal_lama)) + parseInt(resp.data.subtotal);
       app.inputPembayaranPembelianOrder.subtotal = subtotal                       
-      app.inputPembayaranPembelianOrder.total_akhir  = subtotal 
-      app.hitungPotonganPersen()
+      
 
     })
     .catch(function (resp) {
@@ -1092,8 +1063,7 @@ methods: {
 
       var subtotal = (parseInt(app.inputPembayaranPembelianOrder.subtotal) - parseInt(subtotal_lama)) + parseInt(resp.data.subtotal);
       app.inputPembayaranPembelianOrder.subtotal = subtotal                       
-      app.inputPembayaranPembelianOrder.total_akhir  = subtotal 
-      app.hitungPotonganPersen()
+      
 
 
     })
@@ -1109,35 +1079,15 @@ methods: {
       app.openSelectizeSuplier();
     }else{
 
-      axios.get(app.url+'/cek-total-kas-pembelian?kas='+kas)
+      var newPembelianOrder = app.inputPembayaranPembelianOrder;
+      axios.post(app.url, newPembelianOrder)
       .then(function (resp) {
-        if (resp.data.total_kas == '' || resp.data.total_kas == null) {
-          var total_kas = 0;
-        }else{
-          var total_kas = resp.data.total_kas;
-        }
-        var data_produk_pembelian = resp.data.data_produk_pembelian;
-        var hitung_sisa_kas = parseFloat(total_kas) - parseFloat(pembayaran);
-        if (hitung_sisa_kas >= 0) {
-          if (data_produk_pembelian == 0){
-            swal('Oops...','Belum Ada Produk Yang Diinputkan','error'); 
-          }
-          else{
-            var newPembelian = app.inputPembayaranPembelian;
-            axios.post(app.url, newPembelian)
-            .then(function (resp) {
-              app.message = 'Berhasil Menambah Pembelian';
-              app.alert(app.message);
-              app.$router.replace('/pembelian');
-              window.open('pembelian/cetak-besar-pembelian/'+resp.data.respons_pembelian,'_blank');
-            })
-            .catch(function (resp) {
-              app.success = false;
-            });
-          }
-        }else{
-          swal('Oops...','Kas Anda Tidak Cukup Untuk Melakukan Pembayaran','error');
-        }
+        app.message = 'Berhasil Menambah Order Pembelian';
+        app.alert(app.message);
+        window.open('pembelian-order/cetak-besar-order-pembelian/'+resp.data.respons_pembelian,'_blank');
+      })
+      .catch(function (resp) {
+        app.success = false;
       });
 
     }
@@ -1161,12 +1111,6 @@ methods: {
           app.alert("Membatalkan Transaksi Pembelian");
           app.inputPembayaranPembelianOrder.suplier = ''
           app.inputPembayaranPembelianOrder.subtotal = 0
-          app.inputPembayaranPembelianOrder.jatuh_tempo = ''
-          app.inputPembayaranPembelianOrder.potongan_persen = 0
-          app.inputPembayaranPembelianOrder.potongan_faktur = 0
-          app.inputPembayaranPembelianOrder.total_akhir = 0
-          app.inputPembayaranPembelianOrder.pembayaran = 0
-          app.hitungKembalian(app.inputPembayaranPembelianOrder.pembayaran)
         })
         .catch(function (resp) {
 
@@ -1184,85 +1128,11 @@ methods: {
   closeModalX(){
     $("#modal_tambah_suplier").hide(); 
   },
-  hitungPotonganPersen(){
-
-    var potonganPersen = this.inputPembayaranPembelianOrder.potongan_persen
-
-    if (potonganPersen > 100) {
-
-      swal('Oops...','Potongan Tidak Bisa Lebih Dari 100%','error'); 
-      this.inputPembayaranPembelianOrder.total_akhir = this.inputPembayaranPembelianOrder.subtotal;
-      this.inputPembayaranPembelianOrder.potongan_faktur = 0
-      this.inputPembayaranPembelianOrder.potongan_persen = 0
-      this.inputPembayaranPembelianOrder.potongan = 0
-      this.hitungKembalian(this.inputPembayaranPembelianOrder.pembayaran)
-
-    }else{
-
-      if (potonganPersen == '') {
-        potonganPersen = 0
-      }
-
-      var potongan_nominal = parseFloat(this.inputPembayaranPembelianOrder.subtotal) * (parseFloat(potonganPersen)) / 100; 
-      var total_akhir = parseFloat(this.inputPembayaranPembelianOrder.subtotal,10) - parseFloat(potongan_nominal,10);
-
-      this.inputPembayaranPembelianOrder.potongan_faktur = potongan_nominal.toFixed(2)
-      this.inputPembayaranPembelianOrder.total_akhir = total_akhir.toFixed(2)
-      this.inputPembayaranPembelianOrder.potongan = potongan_nominal
-      this.hitungKembalian(this.inputPembayaranPembelianOrder.pembayaran)
-
-
-    }
-  },
   hitungHargaKonversi(){
     var satuan = this.inputTbsPembelianOrder.satuan_produk.split("|");
     var produk = this.inputTbsPembelianOrder.produk.split("|");
     this.inputTbsPembelianOrder.harga_produk = parseFloat(produk[2]) * ( parseFloat(satuan[3]) * parseFloat(satuan[4]) );
 
-  },
-  hitungPotonganFaktur(){
-
-    var potonganFaktur = this.inputPembayaranPembelianOrder.potongan_faktur;
-
-    if (potonganFaktur == '') {
-      potonganFaktur = 0
-    }
-    var potongan_persen = (parseFloat(potonganFaktur)) / parseFloat(this.inputPembayaranPembelianOrder.subtotal) * 100;
-    var total_akhir = parseFloat(this.inputPembayaranPembelianOrder.subtotal) - parseFloat(potonganFaktur);
-
-    if (potongan_persen > 100) {
-      swal('Oops...','Potongan Tidak Bisa Lebih Dari 100%','error'); 
-      this.inputPembayaranPembelianOrder.total_akhir = this.inputPembayaranPembelianOrder.subtotal;
-      this.inputPembayaranPembelianOrder.potongan_faktur = 0
-      this.inputPembayaranPembelianOrder.potongan_persen = 0
-      this.inputPembayaranPembelianOrder.potongan = 0
-      this.hitungKembalian(this.inputPembayaranPembelianOrder.pembayaran)
-
-    }else{
-      this.inputPembayaranPembelianOrder.potongan_persen = potongan_persen.toFixed(2)
-      this.inputPembayaranPembelianOrder.total_akhir = total_akhir.toFixed(2)
-      this.inputPembayaranPembelianOrder.kredit = total_akhir.toFixed(2)
-      this.inputPembayaranPembelianOrder.potongan = potonganFaktur
-      this.hitungKembalian(this.inputPembayaranPembelianOrder.pembayaran);
-    }
-
-  },
-  hitungKembalian(val){
-    var kembalian = parseFloat(val) - parseFloat(this.inputPembayaranPembelianOrder.total_akhir);   
-    if (kembalian >= 0) {
-
-      this.inputPembayaranPembelianOrder.kembalian = kembalian 
-      this.inputPembayaranPembelianOrder.kredit = 0
-      this.inputPembayaranPembelianOrder.status_pembelian = "Tunai";
-      $("#btn-tunai-pembelian").show();
-      $("#btn-hutang-pembelian").hide();
-    }else{
-      this.inputPembayaranPembelianOrder.kembalian = 0  
-      this.inputPembayaranPembelianOrder.kredit = parseFloat(this.inputPembayaranPembelianOrder.total_akhir) - parseFloat(val);
-      this.inputPembayaranPembelianOrder.status_pembelian = "Hutang";
-      $("#btn-tunai-pembelian").hide();
-      $("#btn-hutang-pembelian").show();
-    }        
   },
   closeModalJumlahProduk(){
     $("#modalJumlahProduk").hide(); 
