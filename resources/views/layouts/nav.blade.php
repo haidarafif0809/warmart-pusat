@@ -662,6 +662,16 @@
                 </router-link>
             </li>
             @endif
+            <li>
+                <router-link :to="{name: 'settingFixelIndex'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        SP
+                    </span>
+                    <span class="sidebar-normal">
+                        Setting Fixel
+                    </span>
+                </router-link>
+            </li>
 
         </ul>
     </div>
