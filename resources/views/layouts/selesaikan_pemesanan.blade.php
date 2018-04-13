@@ -20,6 +20,10 @@ h4 {
   margin: 20px 0 10px;
   @endif
 }
+.nav-pills > li > a {
+    color: #e91e63;
+}
+
 .panel .panel-heading {
   background-color: transparent;
   border-bottom: 2px solid #ddd;
@@ -55,6 +59,14 @@ h4 {
 .nav-pills:not(.nav-pills-icons)>li>a {
   border-radius: 3px;
   padding-left: 15px
+}
+.button_login{
+  background-color:#eeeeee;
+  color:#ffffff;
+}
+.button_login:hover{
+  background-color:#eeeeee;
+  color:black;
 }
 </style>
 
@@ -183,10 +195,10 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
                 </div>
                 <ul class="nav nav-pills nav-pills-rose" style="padding-left: 10px ;">
                   <li>
-                    <a href="#login" data-toggle="tab">Login</a>
+                    <a class="button_login" href="#login" data-toggle="tab">Login</a>
                   </li>
                   <li class="active">
-                    <a href="#beliTanpaDaftar" data-toggle="tab">Beli & Daftar</a>
+                    <a class="button_login" href="#beliTanpaDaftar" data-toggle="tab">Beli & Daftar</a>
                   </li>
                 </ul>
                 <div class="tab-content">
