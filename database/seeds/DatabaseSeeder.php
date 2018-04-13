@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder
         $this->call(TambahSeederPermissionKategoriTransaksi::class);
         $this->call(FilterSettingPromoSeeder::class);
         $this->call(SettingDefaultAlamatPelangganSeeder::class);
+        $this->call(PermissionSettingPromoSeeder::class);
         
     }
 }
