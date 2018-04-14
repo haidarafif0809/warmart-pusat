@@ -90,21 +90,21 @@ class CustomerController extends Controller
         $array_customer = array();
 
         foreach ($customer as $customers) {
-           array_push($array_customer, [            
+         array_push($array_customer, [            
             'customer'   => $customers,
             'status_pelanggan' => $this->cekStatusPelanggan($customers->id)
         ]);
-       }
+     }
 
 
-       $url     = '/customer/view';
-       $respons = $this->paginationData($customer, $array_customer, $url);
+     $url     = '/customer/view';
+     $respons = $this->paginationData($customer, $array_customer, $url);
 
-       return response()->json($respons);
+     return response()->json($respons);
 
-   }
+ }
 
-   public function cekStatusPelanggan($pelanggan){  
+ public function cekStatusPelanggan($pelanggan){  
 
     if (PenjualanPos::where('pelanggan_id',$pelanggan)->count() > 0) {
         return 1;
@@ -132,17 +132,17 @@ public function pencarian(Request $request)
     $array_customer = array();
 
     foreach ($customer as $customers) {
-       array_push($array_customer, [            
+     array_push($array_customer, [            
         'customer'   => $customers,
         'status_pelanggan' => $this->cekStatusPelanggan($customers->id)
     ]);
-   }
+ }
 
 
-   $url     = '/customer/pencarian';
-   $respons = $this->paginationData($customer, $array_customer, $url);
+ $url     = '/customer/pencarian';
+ $respons = $this->paginationData($customer, $array_customer, $url);
 
-   return response()->json($respons);
+ return response()->json($respons);
 }
 
     /**
@@ -208,7 +208,7 @@ public function pencarian(Request $request)
             'tgl_lahir'         => $request->tgl_lahir,
             'tipe_user'         => 3,
             'status_konfirmasi' => $status_konfirmasi,
-            'password'          => bcrypt('123456'),
+            'password'          => bcrypt($request->password),
         ]);
 
         //INSERT OTORITAS CUSTOMER

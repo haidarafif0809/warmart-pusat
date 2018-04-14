@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Yajra\Auditable\AuditableTrait;
 
 class PembelianOrder extends Model
@@ -29,10 +30,10 @@ class PembelianOrder extends Model
 		}
 
         //ambil bulan dan no_faktur dari tanggal pembelian terakhir
-		$pembelian = PembelianOrder::select([DB::raw('MONTH(created_at) bulan'), 'no_faktur'])->where('warung_id', $warung_id)->orderBy('id', 'DESC')->first();
+		$pembelian = PembelianOrder::select([DB::raw('MONTH(created_at) bulan'), 'no_faktur_order'])->where('warung_id', $warung_id)->orderBy('id', 'DESC')->first();
 
 		if ($pembelian != null) {
-			$pisah_nomor = explode("/", $pembelian->no_faktur);
+			$pisah_nomor = explode("/", $pembelian->no_faktur_order);
 			$ambil_nomor = $pisah_nomor[0];
 			$bulan_akhir = $pembelian->bulan;
 		} else {

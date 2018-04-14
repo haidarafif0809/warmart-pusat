@@ -590,6 +590,10 @@ Route::get('/pembelian-order/proses-tambah-tbs-pembelian', 'PembelianOrderContro
 Route::get('/pembelian-order/satuan-konversi/{id_produk}', 'PembelianOrderController@dataSatuanProduk')->middleware('auth');
 Route::get('/pembelian-order/proses-edit-jumlah-tbs-pembelian', 'PembelianOrderController@edit_jumlah_tbs_pembelian')->middleware('auth');
 Route::post('/pembelian-order/edit-satuan-tbs-pembelian', 'PembelianOrderController@editSatuanTbsPembelian')->middleware('auth');
+Route::get('/pembelian-order/proses-edit-harga-tbs-pembelian', 'PembelianOrderController@edit_harga_tbs_pembelian')->middleware('auth');
+Route::get('/pembelian-order/proses-edit-potongan-tbs-pembelian', 'PembelianOrderController@edit_potongan_tbs_pembelian')->middleware('auth');
+Route::get('/pembelian-order/cek-persen-potongan-pembelian', 'PembelianOrderController@cek_persen_potongan_pembelian')->middleware('auth');
+Route::get('/pembelian-order/proses-edit-tax-tbs-pembelian', 'PembelianOrderController@editTaxTbsPembelian')->middleware('auth');
 
 // PEMBELIAN ORDER
 
@@ -653,6 +657,21 @@ Route::post('/edit-pembelian/proses-edit-pembelian', [
     'uses'       => 'EditPembelianController@prosesEditPembelian',
 ]);
 // EDIT PEMBELIAN
+
+// HAPUS TBS PEMBELIAN ORDER
+Route::delete('/pembelian-order/hapus-tbs-pembelian/{id}', [
+    'middleware' => ['auth'],
+    'as'         => 'pembelianOrder.hapus_tbs_pembelian',
+    'uses'       => 'PembelianOrderController@hapus_tbs_pembelian',
+]);
+
+// BATAL PEMBELIAN ORDER
+Route::post('/pembelian-order/batal-transaksi-pembelian/', [
+    'middleware' => ['auth'],
+    'as'         => 'pembelianOrder.batal_transaksi_pembelian',
+    'uses'       => 'PembelianOrderController@proses_batal_transaksi_pembelian',
+]);
+
 
 // ITEM MASUK
 Route::get('/item-keluar/view', 'ItemKeluarController@view')->middleware('auth');
@@ -976,6 +995,10 @@ Route::get('/setting-promo/data-filter-edit/{id}', 'SettingPromoController@dataF
 Route::put('/setting-promo/tambah-waktu/{id}', 'SettingPromoController@tambahWaktu')->middleware('auth');
 Route::put('/setting-promo/tambah-waktu-edit/{id}', 'SettingPromoController@tambahWaktuEdit')->middleware('auth');
 Route::post('/setting-promo/{id}', 'SettingPromoController@update')->middleware('auth');
+
+// Setting Ficel
+Route::get('/setting-fixel/view', 'SettingFixelController@view')->middleware('auth');
+Route::post('/setting-fixel/simpan-fixel', 'SettingFixelController@simpanSetting')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 

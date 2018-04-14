@@ -34,7 +34,8 @@ class SettingPromo extends Model
         $query_setting = SettingPromo::select(['setting_promos.dari_tanggal','setting_promos.sampai_tanggal'])
             ->leftJoin('waktu_setting_promos', 'waktu_setting_promos.id_setting_promo', '=', 'setting_promos.id_setting_promo')
             ->leftJoin('filter_setting_promos', 'filter_setting_promos.id', '=', 'waktu_setting_promos.waktu_promo')
-            ->where('setting_promos.id_produk', '=', $produks->id);
+            ->where('setting_promos.id_produk', '=', $produks->id)
+            ->where('setting_promos.status',1);
 
         return $query_setting;
     }
@@ -48,7 +49,8 @@ class SettingPromo extends Model
             ->leftJoin('filter_setting_promos', 'filter_setting_promos.id', '=', 'waktu_setting_promos.waktu_promo')
             ->where('setting_promos.id_produk', '=', $produks->id)
             ->where(DB::raw('CURDATE()'), '>=',$dari_tanggal)
-            ->where(DB::raw('CURDATE()'), '<=',$sampai_tanggal);
+            ->where(DB::raw('CURDATE()'), '<=',$sampai_tanggal)
+            ->where('setting_promos.status',1);
 
         return $query_setting;
     }

@@ -194,6 +194,10 @@ import SettingPromoEdit from './components/setting_promo/SettingPromoEdit.vue';
 // PEMBELIAN ORDER 
 import PembelianOrderCreate from './components/pembelian_order/PembelianOrderCreate.vue';
 
+// SETTING FIXEL
+import SettingFixel from './components/setting_pixel/SettingFixel.vue';
+
+
 const routes = [{
     path: '/',
     components: {
@@ -808,6 +812,10 @@ const routes = [{
         path: '/create-order-pembelian', 
         component: PembelianOrderCreate, 
         name: 'createPembelianOrder'
+    },{ 
+        path: '/setting-fixel', 
+        component: SettingFixel, 
+        name: 'settingFixelIndex'
     }
 
 
