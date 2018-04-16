@@ -29,9 +29,6 @@ class WarungProfilController extends Controller
 
         $warung_array = array();
         foreach ($warung as $warungs) {
-            $no_rek    = $warungs->bank_warung->no_rek;
-            $nama_bank = $warungs->bank_warung->nama_bank;
-            $atas_nama = $warungs->bank_warung->atas_nama;
             if ($warungs->provinsi == null) {
                 $provinsi  = "";
                 $kabupaten = "";
@@ -44,7 +41,7 @@ class WarungProfilController extends Controller
                 $kelurahan = Indonesia::findVillage($warungs->wilayah);
             }
 
-            array_push($warung_array, ['warung' => $warungs, 'no_rek' => $no_rek, 'nama_bank' => $nama_bank, 'atas_nama' => $atas_nama, 'provinsi' => $provinsi, 'kabupaten' => $kabupaten, 'kecamatan' => $kecamatan, 'kelurahan' => $kelurahan, 'setting_aplikasi' => $setting_aplikasi]);
+            array_push($warung_array, ['warung' => $warungs, 'provinsi' => $provinsi, 'kabupaten' => $kabupaten, 'kecamatan' => $kecamatan, 'kelurahan' => $kelurahan, 'setting_aplikasi' => $setting_aplikasi]);
         }
 
         //DATA PAGINATION
@@ -81,17 +78,17 @@ class WarungProfilController extends Controller
         # Buat pilihan "Switch Case" berdasarkan variabel "type" dari dari data yg dikirim
         switch ($type_wilayah):
     # untuk kasus "kabupaten"
-    case 'kabupaten':
+        case 'kabupaten':
         $kabupaten = Indonesia::allCities()->where('province_id', $id);
         return response()->json($kabupaten);
         break;
     # untuk kasus "kecamatan"
-    case 'kecamatan':
+        case 'kecamatan':
         $kecamatan = Indonesia::allDistricts()->where('city_id', $id);
         return response()->json($kecamatan);
         break;
     # untuk kasus "kelurahan"
-    case 'kelurahan':
+        case 'kelurahan':
         $kelurahan = Indonesia::allVillages()->where('district_id', $id);
         return response()->json($kelurahan);
         break;
