@@ -30,7 +30,7 @@ class DaftarProdukController extends Controller
      */
     public function index()
     {
-     if(!Session::get('session_id')){
+       if(!Session::get('session_id')){
         $session_id    = session()->getId();
     }else{
         $session_id = Session::get('session_id');
@@ -82,7 +82,13 @@ class DaftarProdukController extends Controller
         }
     }
 
-    $cek_baner = SettingPromo::where('status',1)->where('id_warung',$array_warung);
+    if ($address_app->app_address == $address_current) {
+        $cek_baner = SettingPromo::where('status',1)->where('id_warung', $address_app->warung_id);
+    }
+    else{
+        $cek_baner = SettingPromo::where('status',1)->whereIn('id_warung',$array_warung);
+    }
+
     if ($cek_baner->count() > 0) {
         $baner_promo_active = $cek_baner->first();
         $baner_promo = SettingPromo::where('status',1)->where('baner_promo','!=',$baner_promo_active->baner_promo);
@@ -330,17 +336,17 @@ public static function produkKategori($kategori)
                 $tombol_beli = '<button id="btnBeliSekarang" class="btn btn-block tombolBeli buttonColor" data-id-produk='.$produks->id.' data-nama-produk="'.$produks->NamaProduk.'"> Beli Sekarang </button>';
             }
         } elseif (Auth::check() && Auth::user()->tipe_user != $pelanggan) {
-         $tombol_beli = '<a  disabled="true" class="btn btn-block tombolBeli buttonColor" rel="tooltip" title="Masuk Sebagai Pelanggan Untuk Beli" > Beli Sekarang </a>';
-     } else {
+           $tombol_beli = '<a  disabled="true" class="btn btn-block tombolBeli buttonColor" rel="tooltip" title="Masuk Sebagai Pelanggan Untuk Beli" > Beli Sekarang </a>';
+       } else {
         if ($cek_produk < 1) {
             $tombol_beli = '<a disabled="true" class="btn btn-block tombolBeli buttonColor" rel="tooltip" title="Stok Tidak Ada" > Beli Sekarang </a>';
         } else {
-           $tombol_beli = '<button id="btnBeliSekarang" class="btn btn-block tombolBeli buttonColor" data-id-produk='.$produks->id.' data-nama-produk="'.$produks->NamaProduk.'"> Beli Sekarang </button>';
+         $tombol_beli = '<button id="btnBeliSekarang" class="btn btn-block tombolBeli buttonColor" data-id-produk='.$produks->id.' data-nama-produk="'.$produks->NamaProduk.'"> Beli Sekarang </button>';
         // $tombol_beli = '<a href="' . url('/keranjang-belanja/tambah-produk-keranjang-belanja/' . $produks->id . '') . '" id="btnBeliSekarang" class="btn btn-block tombolBeli buttonColor" > Beli Sekarang </a>';
-       }
-   }
+     }
+ }
 
-   return $tombol_beli;
+ return $tombol_beli;
 }
 
 public function tomboBeliDisable($tool_tip)
@@ -519,169 +525,169 @@ public static function tidakAdaProduk()
                 if ($data_produk->count() > 0) {
                     $daftar_produk = "";
                     foreach ($data_produk as $produks) {
-                     if ($warung_yang_dipesan == "" or $warung_yang_dipesan == $produks->id_warung) {
-                       $daftar_produk .= DaftarProdukController::cardProduk($produks);
-                   }
-               }
-               if ($daftar_produk == "") {
+                       if ($warung_yang_dipesan == "" or $warung_yang_dipesan == $produks->id_warung) {
+                         $daftar_produk .= DaftarProdukController::cardProduk($produks);
+                     }
+                 }
+                 if ($daftar_produk == "") {
+                    $daftar_produk = DaftarProdukController::tidakAdaProduk();
+                }
+            } else {
                 $daftar_produk = DaftarProdukController::tidakAdaProduk();
             }
-        } else {
-            $daftar_produk = DaftarProdukController::tidakAdaProduk();
+
+            return $daftar_produk;
         }
 
-        return $daftar_produk;
-    }
+        public static function dataWarungTervalidasi()
+        {
+            $data_warung  = User::select(['id_warung'])->where('id_warung', '!=', 'NULL')->where('konfirmasi_admin', 1)->groupBy('id_warung')->get();
+            $array_warung = array();
+            foreach ($data_warung as $data_warungs) {
+                array_push($array_warung, $data_warungs->id_warung);
+            }
 
-    public static function dataWarungTervalidasi()
-    {
-        $data_warung  = User::select(['id_warung'])->where('id_warung', '!=', 'NULL')->where('konfirmasi_admin', 1)->groupBy('id_warung')->get();
-        $array_warung = array();
-        foreach ($data_warung as $data_warungs) {
-            array_push($array_warung, $data_warungs->id_warung);
+            return $array_warung;
+
         }
 
-        return $array_warung;
-
-    }
-
-    public static function resizeProduk($produks)
-    {
-        $foto_produk = Image::make(asset('foto_produk/' . $produks->foto));
-        $height_foto = $foto_produk->height();
-        $width_foto  = $foto_produk->width();
-        if ($height_foto != 300 || $width_foto != 300) {
-            $foto_produk->fit(300);
-            $foto_produk->save(public_path('foto_produk/' . $filename));
+        public static function resizeProduk($produks)
+        {
+            $foto_produk = Image::make(asset('foto_produk/' . $produks->foto));
+            $height_foto = $foto_produk->height();
+            $width_foto  = $foto_produk->width();
+            if ($height_foto != 300 || $width_foto != 300) {
+                $foto_produk->fit(300);
+                $foto_produk->save(public_path('foto_produk/' . $filename));
+            }
         }
-    }
 
 //WARUNG//WARUNG//WARUNG//WARUNG
 
-    public static function daftarWarung($warung_data)
-    {
-        if ($warung_data->count() > 0) {
-            $daftar_warung = "";
-            $perulangan    = 0;
-            foreach ($warung_data as $warungs) {
-                $daftar_warung .= DaftarProdukController::cardWarung($warungs);
+        public static function daftarWarung($warung_data)
+        {
+            if ($warung_data->count() > 0) {
+                $daftar_warung = "";
+                $perulangan    = 0;
+                foreach ($warung_data as $warungs) {
+                    $daftar_warung .= DaftarProdukController::cardWarung($warungs);
 
-                $perulangan++;
-                if ($perulangan == 4) {
-                    break;
+                    $perulangan++;
+                    if ($perulangan == 4) {
+                        break;
+                    }
+
+                }
+            } else {
+                $daftar_warung = DaftarProdukController::tidakAdaWarung();
+            }
+            return $daftar_warung;
+        }
+
+        public static function cardWarung($warungs)
+        {
+            $card_warung = "";
+            $card_warung .= '
+            <div class="col-md-3 col-sm-6 col-xs-6 list-produk " style=" margin-bottom:10px;">
+                <div class="card cards card-pricing" style="text-align: left;">
+                    <div class="card-content">
+                        <div class="footer">
+                            <div class="row">
+                                <div class="col-md-1 col-sm-1 col-xs-1">
+                                    <p class="">
+                                        <i class="material-icons">store</i>
+                                    </p>
+                                    <p class="">
+                                        <i class="material-icons">place</i>
+                                    </p>
+                                </div>
+                                <div class="col-md-9 col-sm-9 col-xs-9">
+                                    <p class="">
+                                        <a href="halaman-warung/' . $warungs->id . '" >';
+                                            $card_warung .= DaftarProdukController::warungNama($warungs);
+                                            $card_warung .= '
+                                        </a>
+                                    </p>
+                                    <p class="">
+                                        <a href="halaman-warung/' . $warungs->id . '">';
+                                            $card_warung .= DaftarProdukController::alamatWarung($warungs);
+                                            $card_warung .= '
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                            <p class="btnWarung">';
+        //tombol kunjungi
+                                $card_warung .= DaftarProdukController::tombolKunjungi($warungs);
+                                $card_warung .= '
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>';
+            return $card_warung;
+        }
+
+        public static function alamatWarung($warungs)
+        {
+            if (strlen(strip_tags($warungs->alamat)) <= 33) {
+                $nama_produk = '' . strip_tags($warungs->alamat);
+            } else {
+                $agent = new Agent();
+                if ($agent->isMobile()) {
+                    $nama_produk = '' . strip_tags(substr($warungs->alamat, 0, 35)) . '...';
+                } else {
+                    $nama_produk = '' . strip_tags(substr($warungs->alamat, 0, 60)) . '...';
                 }
 
             }
-        } else {
-            $daftar_warung = DaftarProdukController::tidakAdaWarung();
+            return $nama_produk;
         }
-        return $daftar_warung;
-    }
 
-    public static function cardWarung($warungs)
-    {
-        $card_warung = "";
-        $card_warung .= '
-        <div class="col-md-3 col-sm-6 col-xs-6 list-produk " style=" margin-bottom:10px;">
-            <div class="card cards card-pricing" style="text-align: left;">
-                <div class="card-content">
-                    <div class="footer">
-                        <div class="row">
-                            <div class="col-md-1 col-sm-1 col-xs-1">
-                                <p class="">
-                                    <i class="material-icons">store</i>
-                                </p>
-                                <p class="">
-                                    <i class="material-icons">place</i>
-                                </p>
-                            </div>
-                            <div class="col-md-9 col-sm-9 col-xs-9">
-                                <p class="">
-                                    <a href="halaman-warung/' . $warungs->id . '" >';
-                                        $card_warung .= DaftarProdukController::warungNama($warungs);
-                                        $card_warung .= '
-                                    </a>
-                                </p>
-                                <p class="">
-                                    <a href="halaman-warung/' . $warungs->id . '">';
-                                        $card_warung .= DaftarProdukController::alamatWarung($warungs);
-                                        $card_warung .= '
-                                    </a>
-                                </p>
-                            </div>
-                        </div>
-                        <p class="btnWarung">';
-        //tombol kunjungi
-                            $card_warung .= DaftarProdukController::tombolKunjungi($warungs);
-                            $card_warung .= '
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>';
-        return $card_warung;
-    }
-
-    public static function alamatWarung($warungs)
-    {
-        if (strlen(strip_tags($warungs->alamat)) <= 33) {
-            $nama_produk = '' . strip_tags($warungs->alamat);
-        } else {
+        public static function tombolKunjungi($warungs)
+        {
             $agent = new Agent();
             if ($agent->isMobile()) {
-                $nama_produk = '' . strip_tags(substr($warungs->alamat, 0, 35)) . '...';
+                $tombol_kunjungi = '<a href="' . asset("halaman-warung/" . $warungs->id . "") . '" style="background-color:#01573e; position: relative" class="btn btn-block tombolBeli buttonColor" id="btnKunjungi"> Kunjungi Warung </a>';
             } else {
-                $nama_produk = '' . strip_tags(substr($warungs->alamat, 0, 60)) . '...';
+                $tombol_kunjungi = '<a href="' . asset("halaman-warung/" . $warungs->id . "") . '" id="btnKunjungi" style="background-color:#01573e; position: relative" class="btn btn-block tombolBeli buttonColor"> Kunjungi Warung </a>';
+            }
+            return $tombol_kunjungi;
+        }
+
+//NAMA WARUNG UNTUK DAFTAR WARUNG
+        public static function warungNama($warung)
+        {
+
+            if (strlen($warung->name) > 25) {
+                $namaWarung = '' . strip_tags(substr($warung->name, 0, 25)) . '...';
+            } else {
+                $namaWarung = '' . strip_tags($warung->name) . '';
+            }
+            return $namaWarung;
+
+        }
+
+        public static function tidakAdaWarung()
+        {
+            $warung_kosong = "";
+            $warung_kosong .= '
+            <div class="col-md-12 col-s,-12 col-xs-12">
+                <div class="card" data-colored-shadow="false" style="background-color:#f7f7f7">
+                    <div class="card-content">';
+                        $agent = new Agent();
+                        if ($agent->isMobile()) {
+                            $warung_kosong .= '<h6 class="text-center" style="margin:0px">Oops... "Warung" Tidak Dapat Ditemukan.</h6>
+                            <p class="text-center">Silakan menggunakan kata kunci lain.</p>';
+                        } else {
+                            $warung_kosong .= '<h3 class="title text-center" style="margin:0px">Oops... Hasil Pencarian "Warung" Tidak Dapat Ditemukan.</h3>
+                            <h5 class="text-center" style="margin:0px">Silakan melakukan pencarian kembali dengan menggunakan kata kunci lain.</h5>';
+                        }
+                        $warung_kosong .= '</div>
+                    </div>
+                </div>';
+
+                return $warung_kosong;
             }
 
         }
-        return $nama_produk;
-    }
-
-    public static function tombolKunjungi($warungs)
-    {
-        $agent = new Agent();
-        if ($agent->isMobile()) {
-            $tombol_kunjungi = '<a href="' . asset("halaman-warung/" . $warungs->id . "") . '" style="background-color:#01573e; position: relative" class="btn btn-block tombolBeli buttonColor" id="btnKunjungi"> Kunjungi Warung </a>';
-        } else {
-            $tombol_kunjungi = '<a href="' . asset("halaman-warung/" . $warungs->id . "") . '" id="btnKunjungi" style="background-color:#01573e; position: relative" class="btn btn-block tombolBeli buttonColor"> Kunjungi Warung </a>';
-        }
-        return $tombol_kunjungi;
-    }
-
-//NAMA WARUNG UNTUK DAFTAR WARUNG
-    public static function warungNama($warung)
-    {
-
-        if (strlen($warung->name) > 25) {
-            $namaWarung = '' . strip_tags(substr($warung->name, 0, 25)) . '...';
-        } else {
-            $namaWarung = '' . strip_tags($warung->name) . '';
-        }
-        return $namaWarung;
-
-    }
-
-    public static function tidakAdaWarung()
-    {
-        $warung_kosong = "";
-        $warung_kosong .= '
-        <div class="col-md-12 col-s,-12 col-xs-12">
-            <div class="card" data-colored-shadow="false" style="background-color:#f7f7f7">
-                <div class="card-content">';
-                    $agent = new Agent();
-                    if ($agent->isMobile()) {
-                        $warung_kosong .= '<h6 class="text-center" style="margin:0px">Oops... "Warung" Tidak Dapat Ditemukan.</h6>
-                        <p class="text-center">Silakan menggunakan kata kunci lain.</p>';
-                    } else {
-                        $warung_kosong .= '<h3 class="title text-center" style="margin:0px">Oops... Hasil Pencarian "Warung" Tidak Dapat Ditemukan.</h3>
-                        <h5 class="text-center" style="margin:0px">Silakan melakukan pencarian kembali dengan menggunakan kata kunci lain.</h5>';
-                    }
-                    $warung_kosong .= '</div>
-                </div>
-            </div>';
-
-            return $warung_kosong;
-        }
-
-    }
