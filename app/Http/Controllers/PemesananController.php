@@ -190,6 +190,7 @@ class PemesananController extends Controller
                 foreach ($data_harga_coret->get() as $data) {
                     if ($hari == $data->name) {
                         $harga_produk    = $data->harga_coret;
+                        break;
                     }else{
                         $harga_produk    = "";
                     }
