@@ -6,6 +6,7 @@ use App\Barang;
 use App\Http\Controllers\DaftarProdukController;
 use App\KeranjangBelanja;
 use App\SettingAplikasi;
+use App\SettingPembedaAplikasi;
 use App\User;
 use Auth;
 use OpenGraph;
@@ -72,7 +73,18 @@ class DetailProdukController extends Controller
 
     public function produkSekategori($barang, $array_warung)
     {
-        $data_produk        = Barang::where('foto', '!=', 'NULL')->where('kategori_barang_id', $barang->kategori_barang_id)->whereIn('id_warung', $array_warung)->inRandomOrder()->paginate(4);
+
+        //Cek Address Aplikasi yg di Jalankan
+        $address_current = $_SERVER['APP_URL'];
+
+        $address_app = SettingPembedaAplikasi::select(['warung_id', 'app_address'])->where('app_address', $address_current)->first();
+
+        if ($address_current == $address_app->app_address) {
+            $data_produk        = Barang::where('foto', '!=', 'NULL')->where('kategori_barang_id', $barang->kategori_barang_id)->where('id_warung', $address_app->warung_id)->inRandomOrder()->paginate(4);
+        }else{
+            $data_produk        = Barang::where('foto', '!=', 'NULL')->where('kategori_barang_id', $barang->kategori_barang_id)->whereIn('id_warung', $array_warung)->inRandomOrder()->paginate(4);    
+        }
+        
         $daftar_produk_sama = DaftarProdukController::daftarProduk($data_produk);
         return $daftar_produk_sama;
     }
