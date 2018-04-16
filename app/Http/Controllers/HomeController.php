@@ -239,8 +239,9 @@ class HomeController extends Controller
 
         $stok_masuk            = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk),0) as jumlah_item_masuk')])->where('warung_id', $data_warung)->first();
         $stok_keluar           = Hpp::select([DB::raw('IFNULL(SUM(jumlah_keluar),0) as jumlah_item_keluar')])->where('warung_id', $data_warung)->first();
-        $nila_masuk            = Hpp::select([DB::raw('IFNULL(SUM(total_nilai),0) as total_masuk')])->where('jenis_hpp', 1)->where('warung_id', $data_warung)->first();
-        $nila_keluar           = Hpp::select([DB::raw('IFNULL(SUM(total_nilai),0) as total_keluar')])->where('jenis_hpp', 2)->where('warung_id', $data_warung)->first();
+        $nila_masuk            = Hpp::select([DB::raw('IFNULL(SUM(total_nilai),0) as total_masuk')])->leftJoin('barangs', 'barangs.id', '=', 'hpps.id_produk')->where('barangs.hitung_stok', 1)->where('hpps.jenis_hpp', 1)->where('hpps.warung_id', Auth::user()->id_warung)->first();
+        
+        $nila_keluar           = Hpp::select([DB::raw('IFNULL(SUM(total_nilai),0) as total_keluar')])->leftJoin('barangs', 'barangs.id', '=', 'hpps.id_produk')->where('barangs.hitung_stok', 1)->where('hpps.jenis_hpp', 2)->where('hpps.warung_id', Auth::user()->id_warung)->first();
         $prose_total_persedian = $nila_masuk->total_masuk - $nila_keluar->total_keluar;
         $total_persedian       = $prose_total_persedian;
         $user                  = Auth::user();
