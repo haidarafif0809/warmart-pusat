@@ -3,6 +3,7 @@
 <head>
     <!-- PILIH TIPE APLIKASI -->
     <?php
+    use Request as RequestUrl;
     $session_id    = session()->getId();
     $session = Session::get('session_id');
     $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
@@ -12,6 +13,23 @@
     $settingFooter = \App\SettingFooter::select()->first();
     $jasa_pengirimans = \App\SettingJasaPengiriman::select('logo_jasa')->where('tampil_jasa_pengiriman', 1)->get();
     $bank_transfers = \App\SettingTransferBank::select('logo_bank')->where('tampil_bank', 1)->get();
+    //Cek Address Aplikasi yg di Jalankan
+    $address_current = RequestUrl::url();
+
+    $address_app = \App\SettingPembedaAplikasi::select(['warung_id', 'app_address'])->where('app_address', $address_current)->first();
+    $google = \App\SettingFixel::select('id_pixel')->where('fixel','Google')->where('warung_id',$address_app->warung_id);
+    $facebook = \App\SettingFixel::select('id_pixel')->where('fixel','Facebook')->where('warung_id',$address_app->warung_id);
+    if ($google->count() > 0) {
+        $fixelGoogle = $google->first()->id_pixel;
+    }else{
+        $fixelGoogle = "#";
+    }
+
+    if ($facebook->count() > 0) {
+        $fixelFacebook = $facebook->first()->id_pixel;
+    }else{
+        $fixelFacebook = 0;
+    }
     ?>
     
     @if($setting_aplikasi->tipe_aplikasi == 0)
@@ -54,7 +72,7 @@
           t.src=v;s=b.getElementsByTagName(e)[0];
           s.parentNode.insertBefore(t,s)}(window, document,'script',
               'https://connect.facebook.net/en_US/fbevents.js');
-          fbq('init', '#');
+          fbq('init', {{$fixelGoogle}});
           fbq('track', 'PageView');
       </script>
       <noscript>
@@ -70,7 +88,7 @@
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
 
-          gtag('config', '#');
+          gtag('config', {{$fixelGoogle}});
     </script>
 
     {!! SEOMeta::generate() !!}
