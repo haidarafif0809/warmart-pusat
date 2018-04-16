@@ -3,18 +3,15 @@
 <head>
     <!-- PILIH TIPE APLIKASI -->
     <?php
-    use Request as RequestUrl;
     $session_id    = session()->getId();
     $session = Session::get('session_id');
     $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
-
-    $foto_logo = \App\UserWarung::select()->where('tipe_user',4)->orderBy('id', 'asc')->limit(1)->first();
 
     $settingFooter = \App\SettingFooter::select()->first();
     $jasa_pengirimans = \App\SettingJasaPengiriman::select('logo_jasa')->where('tampil_jasa_pengiriman', 1)->get();
     $bank_transfers = \App\SettingTransferBank::select('logo_bank')->where('tampil_bank', 1)->get();
     //Cek Address Aplikasi yg di Jalankan
-    $address_current = $_SERVER['APP_URL'];
+    $address_current = url('/');
 
     $address_app = \App\SettingPembedaAplikasi::select(['warung_id', 'app_address'])->where('app_address', $address_current)->first();
     $google = \App\SettingFixel::select('id_pixel')->where('fixel','Google')->where('warung_id',$address_app->warung_id);
@@ -29,6 +26,12 @@
         $fixelFacebook = $facebook->first()->id_pixel;
     }else{
         $fixelFacebook = 0;
+    }
+
+    if ($address_current == $address_app->app_address) {
+        $foto_logo = \App\UserWarung::select()->where('tipe_user',4)->where('id_warung', $address_app->warung_id)->orderBy('id', 'asc')->limit(1)->first();
+    }else{
+        $foto_logo = \App\UserWarung::select()->where('tipe_user',4)->orderBy('id', 'asc')->limit(1)->first();
     }
     ?>
     
@@ -102,10 +105,10 @@
 </link>
 </head>
 <style type="text/css">
-.navbar-nav .open .dropdown-menu{
-  color: grey;
-}
-.navbar .navbar-brand {
+    .navbar-nav .open .dropdown-menu{
+      color: grey;
+  }
+  .navbar .navbar-brand {
     position: relative;
     @if(Agent::isMobile())
     height: 50px;

@@ -1,10 +1,19 @@
 <?php
 $settingFooter = \App\SettingFooter::select()->first();
-$foto_logo = \App\UserWarung::select()->where('tipe_user',4)->orderBy('id', 'asc')->limit(1)->first();
-
 
 $jasa_pengirimans = \App\SettingJasaPengiriman::select('logo_jasa')->where('tampil_jasa_pengiriman', 1)->get();
 $bank_transfers = \App\SettingTransferBank::select('logo_bank')->where('tampil_bank', 1)->get();
+
+//Cek Address Aplikasi yg di Jalankan
+$address_current = url('/');
+$address_app = \App\SettingPembedaAplikasi::select(['warung_id', 'app_address'])->where('app_address', $address_current)->first();
+
+if ($address_current == $address_app->app_address) {
+  $foto_logo = \App\UserWarung::select()->where('tipe_user',4)->where('id_warung', $address_app->warung_id)->orderBy('id', 'asc')->limit(1)->first();
+}else{
+  $foto_logo = \App\UserWarung::select()->where('tipe_user',4)->orderBy('id', 'asc')->limit(1)->first();
+}
+
 ?>
 <!DOCTYPE doctype html>
 <html lang="en">
@@ -51,114 +60,114 @@ $bank_transfers = \App\SettingTransferBank::select('logo_bank')->where('tampil_b
 </head>
 <style type="text/css">
 
-.navbar .navbar-brand {
-  position: relative;
-  @if(Agent::isMobile())
-  height: 50px;
-  @else
-  height: 75px;
-  @endif
-  line-height: 0px;
-  color: inherit;
-  padding: 10px 15px;
-}
+  .navbar .navbar-brand {
+    position: relative;
+    @if(Agent::isMobile())
+    height: 50px;
+    @else
+    height: 75px;
+    @endif
+    line-height: 0px;
+    color: inherit;
+    padding: 10px 15px;
+  }
 
-.list-produk {
-  padding-left: 4px;
-  padding-right: 4px;
-}
-.product-page .page-header .container {
-  padding-top: 10vh;
-}
-.product-page .main-raised {
-  padding-top: 0%;
-}
-.product-page .related-products .title {
-  margin-bottom: 1px;
-}
-.product-page h2.title {
-  margin-bottom: 0px;
-  margin-top: 0px;
-}
+  .list-produk {
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+  .product-page .page-header .container {
+    padding-top: 10vh;
+  }
+  .product-page .main-raised {
+    padding-top: 0%;
+  }
+  .product-page .related-products .title {
+    margin-bottom: 1px;
+  }
+  .product-page h2.title {
+    margin-bottom: 0px;
+    margin-top: 0px;
+  }
 
-.card .card-image{
-  height: auto; /*this makes sure to maintain the aspect ratio*/
-  margin-top: 5px;
-}
-.img-produk{
-  border-radius: 15px;
-  margin-top: 10px;
-}
-p {
-  margin: 0 0 0px;
-}
-.card-pricing {
-  margin-bottom: 0px;
-}
-.tombolBeli {
-  padding: 10px 0px;
-  margin:0px;
-}
-.card-pricing .card-content {
-  padding: 5px !important;
-}
-.card .footer {
-  margin-top: 0px;
-  font-family: Helvetica,Arial,sans-serif;
-  font-weight: 400;
-  line-height:1.2em;
-  text-decoration: none;
-  font-size:15px;
-}
+  .card .card-image{
+    height: auto; /*this makes sure to maintain the aspect ratio*/
+    margin-top: 5px;
+  }
+  .img-produk{
+    border-radius: 15px;
+    margin-top: 10px;
+  }
+  p {
+    margin: 0 0 0px;
+  }
+  .card-pricing {
+    margin-bottom: 0px;
+  }
+  .tombolBeli {
+    padding: 10px 0px;
+    margin:0px;
+  }
+  .card-pricing .card-content {
+    padding: 5px !important;
+  }
+  .card .footer {
+    margin-top: 0px;
+    font-family: Helvetica,Arial,sans-serif;
+    font-weight: 400;
+    line-height:1.2em;
+    text-decoration: none;
+    font-size:15px;
+  }
 
-@font-face {
-  font-family: "San Francisco";
-  font-weight: 200;
-  src: url("//applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-thin-webfont.woff2");
-}
+  @font-face {
+    font-family: "San Francisco";
+    font-weight: 200;
+    src: url("//applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-thin-webfont.woff2");
+  }
 
 
-.flexFont {
-  @if(Agent::isMobile())
-  height:4em;
-  @else
-  height:3em;
-  @endif
-  padding:1%;
-  margin: 5px;
+  .flexFont {
+    @if(Agent::isMobile())
+    height:4em;
+    @else
+    height:3em;
+    @endif
+    padding:1%;
+    margin: 5px;
 
-}
-.btnWarung {
-  padding:1%;
-  margin: 0px;
-}
+  }
+  .btnWarung {
+    padding:1%;
+    margin: 0px;
+  }
 
-.smaller {
-  font-size: 0.7em;
-  background-color:red;
-  width: 10em;
-}
-.buttonColor{
-  @if($setting_aplikasi->tipe_aplikasi == "1") /*tipe-aplikasi == 1, aplikasi topos*/
-  background-color: #2ac326;
-  @else
-  background-color: #01573e;
-  @endif
-}
-.btn.btn-just-icon, .navbar .navbar-nav > li > a.btn.btn-just-icon {
-  font-size: 15px;
-  padding: 6px 5px;
-  line-height: 1em;
-}
+  .smaller {
+    font-size: 0.7em;
+    background-color:red;
+    width: 10em;
+  }
+  .buttonColor{
+    @if($setting_aplikasi->tipe_aplikasi == "1") /*tipe-aplikasi == 1, aplikasi topos*/
+    background-color: #2ac326;
+    @else
+    background-color: #01573e;
+    @endif
+  }
+  .btn.btn-just-icon, .navbar .navbar-nav > li > a.btn.btn-just-icon {
+    font-size: 15px;
+    padding: 6px 5px;
+    line-height: 1em;
+  }
 
-.footer-big .social-feed i {
-  font-size: 23.5px;
-  display: table-cell;
-  padding-right: 10px;
-}
-.img-jasa{
-  padding: 0px 2px 2px;
-}
+  .footer-big .social-feed i {
+    font-size: 23.5px;
+    display: table-cell;
+    padding-right: 10px;
+  }
+  .img-jasa{
+    padding: 0px 2px 2px;
+  }
 
 </style>
 <body class="product-page">

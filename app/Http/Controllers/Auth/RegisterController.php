@@ -70,7 +70,7 @@ class RegisterController extends Controller
                 'alamat'   => 'required',
                 'no_telp'  => 'required|numeric|without_spaces|unique:users,no_telp',
                 'password' => 'required|string|min:6|confirmed',
-                ]);
+            ]);
         } elseif ($data['id_register'] == 2) {
             //Komunitas
             return Validator::make($data, [
@@ -79,7 +79,7 @@ class RegisterController extends Controller
                 'password' => 'required|string|min:6|confirmed',
                 'no_telp'  => 'required|numeric|without_spaces|unique:users,no_telp',
                 'alamat'   => 'required',
-                ]);
+            ]);
         } elseif ($data['id_register'] == 3) {
             //USER WARUNG
             return Validator::make($data, [
@@ -89,7 +89,7 @@ class RegisterController extends Controller
                 'password'    => 'required|string|min:6|confirmed',
                 'no_telp'     => 'required|numeric|without_spaces|unique:users,no_telp',
                 'alamat'      => 'required',
-                ]);
+            ]);
         }
     }
 
@@ -113,7 +113,7 @@ class RegisterController extends Controller
                 'tipe_user'         => 3,
                 'status_konfirmasi' => 0,
                 'kode_verifikasi'   => $kode_verifikasi,
-                ]);
+            ]);
 
             $customerRole = Role::where('name', 'customer')->first();
             $user->attachRole($customerRole);
@@ -159,7 +159,7 @@ class RegisterController extends Controller
                 'tipe_user'         => 2,
                 'status_konfirmasi' => 0,
                 'kode_verifikasi'   => $kode_verifikasi,
-                ]);
+            ]);
 
             $warungRole = Role::where('name', 'komunitas')->first();
             $user->attachRole($warungRole);
@@ -184,7 +184,7 @@ class RegisterController extends Controller
                 'alamat'    => $data['alamat'],
                 'no_telpon' => $data['no_telp'],
                 'wilayah'   => "-",
-                ]);
+            ]);
 
             // //INSERT BANK WARUNG
             // $bank_warung = BankWarung::create([
@@ -218,13 +218,13 @@ class RegisterController extends Controller
                 'status_konfirmasi' => 0,
                 'kode_verifikasi'   => $kode_verifikasi,
                 'konfirmasi_admin'  => $konfirmasi_admin,
-                ]);
+            ]);
 
             // KAS WARUNG
 
             Kas::create(['kode_kas' => 'K01', 'nama_kas' => 'Kas Warung', 'status_kas' => 1, 'default_kas' => 1, 'warung_id' => $warung->id]);
 
-            $userWarungRole = Role::where('name', 'warung')->first();
+            $userWarungRole = Role::where('name', 'admin')->first();
             $user->attachRole($userWarungRole);
 
             Notification::send(User::first(), new PendaftarWarung($user));
@@ -353,7 +353,7 @@ class RegisterController extends Controller
                 "icon"    => 'done',
                 "judul"   => 'INFO',
                 "message" => 'Silahkan periksa ponsel anda, kami mengirim sms nomor verifikasi ke : ' . $nomor_tujuan . '',
-                ]);
+            ]);
 
         }
         return redirect('/kirim-kode-verifikasi?nomor=' . $nomor_tujuan . '&status=1');
@@ -382,7 +382,7 @@ class RegisterController extends Controller
                 Session::flash("flash_notification", [
                     "level"   => "success",
                     "message" => "Berhasil melakukan verifikasi.",
-                    ]);
+                ]);
                 Auth::login($user);
             }
             return redirect('/');
