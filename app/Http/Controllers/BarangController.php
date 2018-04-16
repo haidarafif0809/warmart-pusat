@@ -71,14 +71,14 @@ class BarangController extends Controller
             'Hitung Stok',
             'Status',
             'Deskripsi Produk',
-        ]);
+            ]);
         return $sheet;
     }
 
     public function kolomWajib()
     {
         return [
-            'B', 'C', 'D', 'E', 'F', 'G', 'J', 'K',
+        'B', 'C', 'D', 'E', 'F', 'G', 'J', 'K',
         ];
     }
 
@@ -116,7 +116,7 @@ class BarangController extends Controller
                 'harga_beli'    => $this->tandaPemisahTitik($produk->harga_beli),
                 'nama_produk'   => $produk->NamaProduk,
                 'status_produk' => $status_produk,
-            ]);
+                ]);
         }
 
         //DATA PAGINATION
@@ -145,7 +145,7 @@ class BarangController extends Controller
                 'harga_beli'    => $this->tandaPemisahTitik($produk->harga_beli),
                 'nama_produk'   => $produk->NamaProduk,
                 'status_produk' => $status_produk,
-            ]);
+                ]);
         }
 
         //DATA PAGINATION
@@ -169,7 +169,7 @@ class BarangController extends Controller
                 'satuan'      => $satuans->id . "|" . strtoupper($satuans->nama_satuan),
                 'nama_satuan' => strtoupper($satuans->nama_satuan),
                 'id_satuan'   => strtoupper($satuans->id),
-            ]);
+                ]);
         }
 
         return response()->json($array);
@@ -226,7 +226,7 @@ class BarangController extends Controller
                 'kategori_barang_id' => 'required|exists:kategori_barangs,id',
                 'satuan_id'          => 'required|exists:satuans,id',
                 'foto'               => 'image|max:3072',
-            ]);
+                ]);
 
             if ($request->perkiraan_berat == "" or $request->perkiraan_berat == 0) {
                 $perkiraan_berat = 1000;
@@ -288,7 +288,7 @@ class BarangController extends Controller
                 'harga_jual_konversi' => $value['harga_jual'],
                 'satuan_dasar'        => $value['satuan_dasar'],
                 'warung_id'           => Auth::user()->id_warung,
-            ]);
+                ]);
         }
     }
 
@@ -350,7 +350,7 @@ class BarangController extends Controller
                 'satuan_id'          => 'required|exists:satuans,id',
                 'foto'               => 'image|max:3072',
 
-            ]);
+                ]);
 
             if ($request->status_aktif == "1" || $request->status_aktif == "true") {
                 $status_aktif = 1;
@@ -383,7 +383,7 @@ class BarangController extends Controller
                 'hitung_stok'        => $hitung_stok,
                 'konfirmasi_admin'   => 1,
                 'id_warung'          => Auth::user()->id_warung,
-            ]);
+                ]);
 
             if ($request->hasFile('foto')) {
                 // Mengambil file yang diupload
@@ -450,7 +450,7 @@ class BarangController extends Controller
     {
         $update_deskripsi_produk = Barang::where('id', $request->id)->update([
             'deskripsi_produk' => $request->deskripsi_produk,
-        ]);
+            ]);
     }
 
     //LIHAT DESKRIPSI PRODUK
@@ -502,8 +502,8 @@ class BarangController extends Controller
                         'fill' => array(
                             'type'  => PHPExcel_Style_Fill::FILL_SOLID,
                             'color' => array('rgb' => '90CAF9'),
-                        ),
-                    ));
+                            ),
+                        ));
                 }
 
                 $row   = 1;
@@ -522,7 +522,7 @@ class BarangController extends Controller
                     'Isi 1 Atau 0, Ket. 1 = Hitung Stok dan 0 = Tidak Hitung Stok',
                     'Isi 1 Atau 0, Ket. 1 = Aktif dan 0 = Tidak Aktif',
                     'Bahan Cotton Combed 24 S',
-                ]);
+                    ]);
 
             });
         })->download('xlsx');
@@ -542,17 +542,17 @@ class BarangController extends Controller
 
         // rule untuk validasi setiap row pada file excel
         $rowRules = [
-            'Kode Barcode'    => 'nullable|unique:barangs,kode_barcode,NULL,id,id_warung,' . $warung_id . '|max:50',
-            'Kode Produk'     => 'required|unique:barangs,kode_barang,NULL,id,id_warung,' . $warung_id . '|max:50',
-            'Nama Produk'     => 'required|max:300',
-            'Harga Beli'      => 'required|numeric|digits_between:1,11',
-            'Harga Jual'      => 'required|numeric|digits_between:1,11',
-            'Harga Jual 2'    => 'numeric|digits_between:1,11',
-            'Kategori'        => 'required|exists:kategori_barangs,id',
-            'Satuan'          => 'required|exists:satuans,id',
-            'Hitung Stok'     => 'required',
-            'Status'          => 'required',
-            'Perkiraan Berat' => 'numeic',
+        'Kode Barcode'    => 'nullable|unique:barangs,kode_barcode,NULL,id,id_warung,' . $warung_id . '|max:50',
+        'Kode Produk'     => 'required|unique:barangs,kode_barang,NULL,id,id_warung,' . $warung_id . '|max:50',
+        'Nama Produk'     => 'required|max:300',
+        'Harga Beli'      => 'required|numeric|digits_between:1,11',
+        'Harga Jual'      => 'required|numeric|digits_between:1,11',
+        'Harga Jual 2'    => 'numeric|digits_between:1,11',
+        'Kategori'        => 'required|exists:kategori_barangs,id',
+        'Satuan'          => 'required|exists:satuans,id',
+        'Hitung Stok'     => 'required',
+        'Status'          => 'required',
+        'Perkiraan Berat' => 'numeic',
         ];
         // Catat semua id buku baru
         // ID ini kita butuhkan untuk menghitung total buku yang berhasil diimport
@@ -569,15 +569,15 @@ class BarangController extends Controller
             if (!empty($row['hitung_stok'])) {
                 if ($hitungStok !== '1' && $hitungStok !== '0') {
                     $errors['hitungStok'][] = [
-                        'line'    => $no,
-                        'message' => 'Nilai Dari Kolom <strong>Hitung Stok</strong> Hanya Boleh Berisi 1 atau 0.',
+                    'line'    => $no,
+                    'message' => 'Nilai Dari Kolom <strong>Hitung Stok</strong> Hanya Boleh Berisi 1 atau 0.',
                     ];
                     $lineErrors[] = $no;
                 }
             } else {
                 $errors['hitungStok'][] = [
-                    'line'    => $no,
-                    'message' => 'Nilai Dari Kolom <strong>Hitung Stok</strong> Tidak Boleh Kosong',
+                'line'    => $no,
+                'message' => 'Nilai Dari Kolom <strong>Hitung Stok</strong> Tidak Boleh Kosong',
                 ];
                 $lineErrors[] = $no;
             }
@@ -586,15 +586,15 @@ class BarangController extends Controller
             if (!empty($row['status'])) {
                 if ($status !== '1' && $status !== '0') {
                     $errors['status'][] = [
-                        'line_status'    => $no,
-                        'message_status' => 'Nilai Dari Kolom <strong>Status</strong> Hanya Boleh Berisi 1 atau 0.',
+                    'line_status'    => $no,
+                    'message_status' => 'Nilai Dari Kolom <strong>Status</strong> Hanya Boleh Berisi 1 atau 0.',
                     ];
                     $lineErrors[] = $no;
                 }
             } else {
                 $errors['status'][] = [
-                    'line_status'    => $no,
-                    'message_status' => 'Nilai Dari Kolom <strong>Status</strong> Tidak Boleh Kosong',
+                'line_status'    => $no,
+                'message_status' => 'Nilai Dari Kolom <strong>Status</strong> Tidak Boleh Kosong',
                 ];
                 $lineErrors[] = $no;
             }
@@ -603,16 +603,16 @@ class BarangController extends Controller
         // Perulang kedua, digunakan untuk menambahkan data produk jika tidak terjadi error.
         foreach ($excels as $row) {
             // JIKA PRODUK SUDAH ADA DI DB MAKA TIDAK DIIMPORT
-            $data_produk = Barang::select(['kode_barang', 'kode_barcode', 'nama_barang'])
-            ->where(function ($query) use ($row) {
-                $query->orwhere('kode_barang', $row['kode_produk'])
-                ->orwhere('kode_barcode', $row['kode_barcode'])
-                ->orwhere('nama_barang', $row['nama_produk']);
-            });
+            // $data_produk = Barang::select(['kode_barang', 'kode_barcode', 'nama_barang'])
+            // ->where(function ($query) use ($row) {
+            //     $query->orwhere('kode_barang', $row['kode_produk'])
+            //     ->orwhere('kode_barcode', $row['kode_barcode'])
+            //     ->orwhere('nama_barang', $row['nama_produk']);
+            // });
 
-            if ($data_produk->count() > 0) {
-                continue;
-            }
+            // if ($data_produk->count() > 0) {
+            //     continue;
+            // }
 
             // Jika terjadi error, maka perintah dihentikan sehingga tidak ada data yg di insert ke database
             if (count($errors['hitungStok']) != '' || count($errors['status']) != '') {
@@ -651,7 +651,7 @@ class BarangController extends Controller
                 //Jika Satuan belum ada maka kita buat dulu satuan baru
                 $data_satuan = Satuan::create([
                     'nama_satuan' => $row['satuan'],
-                ]);
+                    ]);
                 $satuan = $data_satuan->id;
             }
             // KATEGORI
@@ -662,7 +662,7 @@ class BarangController extends Controller
                 //Jika Kategori belum ada maka kita buat dulu Kategori baru
                 $data_kategori = KategoriBarang::create([
                     'nama_kategori_barang' => $row['kategori'],
-                ]);
+                    ]);
                 $kategori = $data_kategori->id;
             }
             //PERKIRAN BERAT
@@ -684,7 +684,7 @@ class BarangController extends Controller
                 'hitung_stok'        => $row['hitung_stok'],
                 'konfirmasi_admin'   => 1,
                 'id_warung'          => $warung_id,
-            ]);
+                ]);
 
         }
 // Hitung Jumlah Produk Yang Diimport
@@ -721,7 +721,7 @@ class BarangController extends Controller
                 'harga_jual_konversi' => $value['harga_jual_konversi'],
                 'satuan_dasar'        => $value['satuan_dasar'],
                 'warung_id'           => Auth::user()->id_warung,
-            ]);
+                ]);
         }
     }
 
@@ -745,7 +745,7 @@ class BarangController extends Controller
                     'Harga Jual 2',
                     'Status',
                     'Kategori',
-                ]);
+                    ]);
 
                 foreach ($produks as $produk) {
 
@@ -769,7 +769,7 @@ class BarangController extends Controller
                         $harga_jual2,
                         $status_aktif,
                         $kategori_produk->nama_kategori_barang,
-                    ]);
+                        ]);
                 }
             });
         })->download('xls');
