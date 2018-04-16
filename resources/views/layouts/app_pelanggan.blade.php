@@ -14,7 +14,7 @@
     $jasa_pengirimans = \App\SettingJasaPengiriman::select('logo_jasa')->where('tampil_jasa_pengiriman', 1)->get();
     $bank_transfers = \App\SettingTransferBank::select('logo_bank')->where('tampil_bank', 1)->get();
     //Cek Address Aplikasi yg di Jalankan
-    $address_current = RequestUrl::url();
+    $address_current = $_SERVER['APP_URL'];
 
     $address_app = \App\SettingPembedaAplikasi::select(['warung_id', 'app_address'])->where('app_address', $address_current)->first();
     $google = \App\SettingFixel::select('id_pixel')->where('fixel','Google')->where('warung_id',$address_app->warung_id);
