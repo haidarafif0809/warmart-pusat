@@ -75,7 +75,7 @@ class DetailProdukController extends Controller
     {
 
         //Cek Address Aplikasi yg di Jalankan
-        $address_current = $_SERVER['APP_URL'];
+        $address_current = url('/');
 
         $address_app = SettingPembedaAplikasi::select(['warung_id', 'app_address'])->where('app_address', $address_current)->first();
 
