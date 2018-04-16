@@ -126,11 +126,8 @@ class WarungProfilController extends Controller
      */
     public function show($id)
     {
-        $warung                     = Warung::with(['bank_warung'])->find($id);
+        $warung                     = Warung::find($id);
         $warung['provinsi']         = $warung->provinsi;
-        $warung['nama_bank']        = $warung->bank_warung->nama_bank;
-        $warung['atas_nama']        = $warung->bank_warung->atas_nama;
-        $warung['no_rek']           = $warung->bank_warung->no_rek;
         $warung['setting_aplikasi'] = $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
 
         return $warung;
