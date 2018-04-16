@@ -1,7 +1,7 @@
 <style scoped>
 .pencarian {
-  color: red; 
-  float: right;
+    color: red; 
+    float: right;
 }
 </style>
 
@@ -17,11 +17,61 @@
                 <div class="card-header card-header-icon" data-background-color="purple">
                     <i class="material-icons">assignment_return</i>
                 </div>
+
+                <!--MODAL IMPORT-->
+        <div class="modal" id="modal_import" role="dialog" data-backdrop=""> 
+          <div class="modal-dialog">
+            <!-- Modal content--> 
+            <div class="modal-content"> 
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"> <i class="material-icons">close</i></button> 
+                <h4 class="modal-title"> 
+                  <div class="alert-icon" style="font-weight: bold;"> 
+                    Import Supplier
+                  </div> 
+                </h4> 
+              </div>                         
+              <form v-on:submit.prevent="importExcel()" class="form-horizontal">
+                <div class="modal-body">
+                  <div class="form-group">
+                    <p style="font-weight: bold;">
+                      Download <a :href="urlTemplate">Template</a> Excel Untuk Import Supplier.
+                    </p>
+                  </div>
+                  <div class="form-group form-file-upload">
+                    <input type="file" id="excel" multiple="">
+                    <div class="input-group">
+                      <input type="text" readonly="" class="form-control" placeholder="Browse File...">
+                      <span class="input-group-btn input-group-s">
+                        <button type="button" class="btn btn-just-icon btn-round btn-primary">
+                          <i class="material-icons">attach_file</i>
+                        </button>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="form-group">                                
+                    <button class="btn btn-primary" id="btnImport" type="submit"><i class="material-icons">file_upload</i> Import</button>
+                  </div>
+
+                  <p style="color: red; font-style: italic;">*Note : Kolom Yang Berwarna Wajib Diisi.</p>
+                </div>
+                <div class="modal-footer">  
+                  <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="material-icons">close</i> Batal</button> 
+                </div> 
+              </form>
+            </div>       
+          </div> 
+        </div> 
+        <!-- / MODAL IMPORT EXCEL --> 
+
                 <div class="card-content">
                     <h4 class="card-title"> Supplier</h4>
 
                     <div class="toolbar">
                         <router-link :to="{name: 'createSuplier'}" class="btn btn-primary"><i class="material-icons">add</i>  Supplier</router-link>
+                        <button id="btnImport" class="btn btn-info" data-toggle="modal" data-target="#modal_import">
+                        <i class="material-icons">file_upload</i> Import Excel
+                        </button></p>
                     </div>
                     <div class=" table-responsive ">
                                <div class="pencarian">
@@ -79,6 +129,7 @@ export default {
             suplier: [],
             suplierData: {},
             url : window.location.origin+(window.location.pathname).replace("dashboard", "suplier"),
+            urlTemplate : window.location.origin+(window.location.pathname).replace("dashboard", "suplier/template-excel"),
             pencarian: '',
             loading: true
         }
@@ -169,7 +220,64 @@ export default {
                 text: "Suplier '"+nama_suplier+"' Sudah Terpakai",
                 icon: "warning",
             });
-        }
+        },
+        importExcel(){
+            var app = this;
+            let newExcel = new FormData();
+            let file = document.getElementById('excel').files[0];
+
+            if (file != undefined) {
+                newExcel.append('excel', file)
+            } else {
+                swal("Silakan Pilih File Dahulu.");
+                return;
+            }
+
+            // ambil ekstensinya
+            let ext = file.name.split('.');
+            ext = ext.pop();
+
+            if (ext != 'xlsx' && ext != 'xls') {
+                swal({
+                    title: 'Gagal!',
+                    type: 'warning',
+                    text: 'File harus berekstensi .xlsx atau .xls',
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+            } else {
+                axios.post(app.url+'/import-excel', newExcel)
+                .then((resp) => {
+                    if (resp.data.error.length == 0) {
+                        swal({
+                            title: 'Berhasil!',
+                            type: 'success',
+                            text: 'Berhasil mengimport ' + resp.data.jumlah_data + ' data dari excel',
+                            showConfirmButton: false,
+                            timer: 2000
+                        });                        
+                    } else {
+                        swal({
+                            title: 'Gagal!',
+                            type: 'warning',
+                            html: resp.data.error,
+                        });                        
+                    }
+                    // $("#excel").val('');
+                    $("#modal_import").hide();
+                    app.getResults();
+                })
+                .catch((resp) => {
+                    if (resp.response.data.errors != undefined) {
+                        app.errors = resp.response.data.errors.excel[0];
+                    } else {
+                        app.errors = "Terjadi Kesalahan Pada Proses Import!";
+                    }
+
+                    swal(app.errors);
+                });
+            }
+        },
     }
 }
 </script>

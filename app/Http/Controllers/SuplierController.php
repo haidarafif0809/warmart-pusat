@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Pembelian;
 use App\Suplier;
+use Excel;
 use Auth;
+use PHPExcel_Style_Fill;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Html\Builder;
 
@@ -229,6 +231,127 @@ class SuplierController extends Controller
 
         return response()->json($array);
 
+    }
+
+     //DOWNLAOD TEMPLATE
+    public function downloadTemplate()
+    {
+        Excel::create('Template Import Supplier', function ($excel) {
+            // Set the properties
+            $excel->setTitle('Template Import Supplier');
+            $excel->sheet('Template Import Supplier', function ($sheet) {
+
+                $kolomWajib = ['A', 'B', 'C'];
+                foreach($kolomWajib as $kolom) {
+                    $sheet->getStyle($kolom . '1')->applyFromArray(array(
+                        'fill' => array(
+                            'type'  => PHPExcel_Style_Fill::FILL_SOLID,
+                            'color' => array('rgb' => '90CAF9'),
+                        ),
+                    ));
+                }
+
+                $row = 1;
+                $sheet->row($row, [
+                    'Nama',
+                    'No Telpon',
+                    'Alamat',
+                    'Contact Person',
+                ]);
+                $sheet->row(++$row, [
+                    'Samsul Bahri',
+                    '081281937835',
+                    'Jl. Teuku Cik Ditro, Beringin Raya, Kemiling, Kota Bandar Lampung, Lampung 35158',
+                ]);
+            });
+        })->export('xlsx');
+    }
+
+    public function importExcel(Request $request) {
+        // ambil file yang baru diupload
+        $excel = $request->file('excel');
+
+        // baca sheet pertama
+        $excels = Excel::selectSheetsByIndex(0)->load($excel, function ($reader) {
+        })->get();
+
+        // ambil data nama supplier yang sudah ada
+        $nama_suplier = Suplier::select('nama_suplier')->where('warung_id', Auth::user()->id_warung)->get();
+
+        // variable untuk menampung data nama supplier dalam bentuk lowercase
+        $namaSuplier = [];
+        // mengubah data nama supplier menjadi lowercase
+        foreach($nama_suplier as $nama) {
+            $namaSuplier[] = strtolower($nama->nama_suplier);
+        }
+
+        // variable penampung error
+        $message = [];
+        $message['error'] = [];
+        // variable untuk menyimpan lokasi (baris) yang akan di masukkan dalam pesan error
+        $baris = 1;
+        // variable array yg nantinya hanya akan diisi string spasi. karena gunanya hanya untuk menentukan penginsertan koma yang akan memisahkan kolom2 yang kosong dengan menghitung isi arraynya, jadi string spasi saja udh cukup yang penting bisa diitung (biar hemat)
+        $arr = [];
+        // variable untuk menampung kolom2 yang kosong
+        $kolom = '';
+
+        foreach($excels as $row) {
+
+            // mengecek apakah nama supplier dari excel ada pada database
+            if (in_array(strtolower($row['nama']), $namaSuplier))
+                $message['error'][] = 'Baris ke ' . $baris . ': Nama Supplier sudah ada.';
+
+            // validasi kolom jika ada yang kosong
+            if (empty($row['nama']) || empty($row['no_telpon']) || empty($row['alamat'])) {
+                if (empty($row['nama'])) {
+                    $kolom .= 'Nama Supplier';
+                    $arr[] = ' ';
+                }
+                if (empty($row['no_telpon'])) {
+                    if (count($arr) == 0)
+                        $kolom .= 'Nomor Telepon';
+                    else
+                        $kolom .= ', Nomor Telepon';
+
+                    $arr[] = ' ';
+                }
+                if (empty($row['alamat'])) {
+                    if (count($arr) == 0)
+                        $kolom .= 'Alamat';
+                    else
+                        $kolom .= ', Alamat';
+
+                    $arr[] = ' ';
+                }
+
+                $message['error'][] = 'Baris ke ' . $baris . ': ' . $kolom . ' tidak boleh kosong.';
+            }
+
+            $baris++;
+        }
+
+        if (count($message['error']) > 0) {
+
+            // pisahkan masing2 pesan dengan baris baru agar nantinya terlihat rapih di swal
+            $message['error'] = implode('<br>', $message['error']);
+
+            return response()->json($message);
+        }
+
+        $jumlahData = 0;
+        foreach($excels as $row) {
+            Suplier::create([
+                'nama_suplier' => $row['nama'],
+                'no_telp' => $row['no_telpon'],
+                'alamat' => $row['alamat'],
+                'warung_id' => $warung_id = Auth::user()->id_warung,
+                'contact_person' => ($row['contact_person'] == '' ? null : $row['contact_person'])
+            ]);
+            $jumlahData++;
+        }
+        $message['jumlah_data'] = $jumlahData;
+
+        return response()->json($message);
     }
 
 }

@@ -472,6 +472,8 @@ Route::post('/kategori-transaksi/pencarian-periode', 'KategoriTransaksiControlle
 Route::get('/suplier/view', 'SuplierController@view')->middleware('auth');
 Route::get('/suplier/pencarian', 'SuplierController@pencarian')->middleware('auth');
 Route::get('/suplier/pilih-suplier', 'SuplierController@dataSuplier')->middleware('auth');
+Route::get('/suplier/template-excel', 'SuplierController@downloadTemplate')->middleware('auth');
+Route::post('/suplier/import-excel', 'SuplierController@importExcel')->middleware('auth');
 
 //PRODUK VUE.JS
 Route::get('/produk/view', 'BarangController@view')->middleware('auth');
@@ -1041,7 +1043,6 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
     Route::resource('bank-warung', 'BankWarungController');
     Route::resource('setting-promo', 'SettingPromoController');
     Route::resource('pembelian-order', 'PembelianOrderController');
-
 
 //BARANG
     //HALAMAN DESKRIPSI
