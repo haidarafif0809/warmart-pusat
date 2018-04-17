@@ -11,6 +11,7 @@ use App\LokasiPelanggan;
 use App\PesananPelanggan;
 use App\Role;
 use App\SettingJasaPengiriman;
+use App\SettingPembedaAplikasi;
 use App\User;
 use App\Warung;
 use Auth;
@@ -108,9 +109,22 @@ class PemesananController extends Controller
 
         $jasa_pengirim = SettingJasaPengiriman::where('tampil_jasa_pengiriman', 1)->pluck('jasa_pengiriman', 'jasa_pengiriman');
 
-        $bank_transfer = BankWarung::select(['setting_transfer_banks.nama_bank', 'setting_transfer_banks.id'])
-        ->leftJoin('setting_transfer_banks', 'setting_transfer_banks.id', '=', 'bank_warungs.nama_bank')
-        ->pluck('setting_transfer_banks.nama_bank', 'setting_transfer_banks.id');
+        //Cek Address Aplikasi yg di Jalankan
+        $address_current = url('/');
+        $address_app = SettingPembedaAplikasi::select(['warung_id', 'app_address'])->where('app_address', $address_current)->first();
+        // return url('/');
+
+        if ($address_app->app_address == $address_current) {
+                $bank_transfer = BankWarung::select(['setting_transfer_banks.nama_bank', 'setting_transfer_banks.id'])
+                ->leftJoin('setting_transfer_banks', 'setting_transfer_banks.id', '=', 'bank_warungs.nama_bank')
+                ->where('bank_warungs.warung_id',$address_app->warung_id)
+                ->pluck('setting_transfer_banks.nama_bank', 'setting_transfer_banks.id');
+        }else{
+                $bank_transfer = BankWarung::select(['setting_transfer_banks.nama_bank', 'setting_transfer_banks.id'])
+                ->leftJoin('setting_transfer_banks', 'setting_transfer_banks.id', '=', 'bank_warungs.nama_bank')
+                ->pluck('setting_transfer_banks.nama_bank', 'setting_transfer_banks.id');
+        }
+
 
         return view('layouts.selesaikan_pemesanan', ['pagination' => $pagination, 'keranjang_belanjaan' => $keranjang_belanjaan, 'cek_belanjaan' => $cek_belanjaan, 'agent' => $agent, 'jumlah_produk' => $jumlah_produk, 'logo_warmart' => $logo_warmart, 'subtotal' => $subtotal, 'user' => $user, 'berat_barang' => $berat_barang, 'kabupaten' => $nama_kabupaten, 'data_pelanggan' => $data_pelanggan, 'kurir' => $jasa_pengirim, 'bank' => $bank_transfer]);
 
