@@ -1378,7 +1378,7 @@ prosesSelesaiPenjualan(value){
   var id = app.$route.params.id;
   var newPenjualan = app.penjualan;
   app.loading = true;
-
+  app.closeModal();
   axios.patch(app.url+'/'+id,newPenjualan)
   .then(function (resp) {
 
