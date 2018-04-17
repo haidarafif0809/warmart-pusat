@@ -10,7 +10,7 @@ use Session;
 class KeranjangBelanja extends Model
 {
     //
-    protected $fillable   = ['id_produk', 'id_pelanggan', 'jumlah_produk', 'session_id', 'warung_id'];
+    protected $fillable   = ['id_produk', 'id_pelanggan', 'jumlah_produk', 'session_id', 'warung_id','harga_produk'];
     protected $primaryKey = 'id_keranjang_belanja';
     // relasi ke produk
     public function produk()
@@ -60,7 +60,7 @@ class KeranjangBelanja extends Model
     public function scopeKeranjangBelanjaPelanggan($query,$warung_id)
     {
 
-        $query->select('keranjang_belanjas.id_keranjang_belanja AS id_keranjang_belanja', 'keranjang_belanjas.id_produk AS id_produk', 'keranjang_belanjas.jumlah_produk AS jumlah_produk', 'barangs.harga_jual AS harga_jual', 'barangs.id_warung AS id_warung','barangs.nama_barang AS nama_barang','barangs.foto AS foto')
+        $query->select('keranjang_belanjas.id_keranjang_belanja AS id_keranjang_belanja', 'keranjang_belanjas.id_produk AS id_produk', 'keranjang_belanjas.jumlah_produk AS jumlah_produk', 'keranjang_belanjas.harga_produk AS harga_jual', 'barangs.id_warung AS id_warung','barangs.nama_barang AS nama_barang','barangs.foto AS foto')
         ->leftJoin('barangs', 'keranjang_belanjas.id_produk', '=', 'barangs.id')
         ->where('id_pelanggan', Auth::user()->id)->where('warung_id',$warung_id)->orderBy('barangs.id_warung');
 
@@ -71,7 +71,7 @@ class KeranjangBelanja extends Model
     public function scopeKeranjangBelanjaSession($query,$session_id,$warung_id)
     {
 
-        $query->select('keranjang_belanjas.id_keranjang_belanja AS id_keranjang_belanja', 'keranjang_belanjas.id_produk AS id_produk', 'keranjang_belanjas.jumlah_produk AS jumlah_produk', 'barangs.harga_jual AS harga_jual', 'barangs.id_warung AS id_warung','barangs.nama_barang AS nama_barang','barangs.foto AS foto')
+        $query->select('keranjang_belanjas.id_keranjang_belanja AS id_keranjang_belanja', 'keranjang_belanjas.id_produk AS id_produk', 'keranjang_belanjas.jumlah_produk AS jumlah_produk', 'keranjang_belanjas.harga_produk AS harga_jual', 'barangs.id_warung AS id_warung','barangs.nama_barang AS nama_barang','barangs.foto AS foto')
         ->leftJoin('barangs', 'keranjang_belanjas.id_produk', '=', 'barangs.id')
         ->where('session_id', $session_id)->where('warung_id',$warung_id)->orderBy('barangs.id_warung');
 
@@ -82,7 +82,7 @@ class KeranjangBelanja extends Model
     public function scopeHitungTotalPesanan($query, $id_warung)
     {
 
-        $query->select(DB::raw('SUM(keranjang_belanjas.jumlah_produk) as total_produk'), DB::raw('SUM(keranjang_belanjas.jumlah_produk * barangs.harga_jual) as total_pesanan'))
+        $query->select(DB::raw('SUM(keranjang_belanjas.jumlah_produk) as total_produk'), DB::raw('SUM(keranjang_belanjas.jumlah_produk * keranjang_belanjas.harga_produk) as total_pesanan'))
         ->leftJoin('barangs', 'keranjang_belanjas.id_produk', '=', 'barangs.id')
         ->where('id_pelanggan', Auth::user()->id)
         ->where('barangs.id_warung', $id_warung);
@@ -94,7 +94,7 @@ class KeranjangBelanja extends Model
     public function scopeHitungTotalPesananSession($query, $id_warung,$session_id)
     {
 
-        $query->select(DB::raw('SUM(keranjang_belanjas.jumlah_produk) as total_produk'), DB::raw('SUM(keranjang_belanjas.jumlah_produk * barangs.harga_jual) as total_pesanan'))
+        $query->select(DB::raw('SUM(keranjang_belanjas.jumlah_produk) as total_produk'), DB::raw('SUM(keranjang_belanjas.jumlah_produk * keranjang_belanjas.harga_produk) as total_pesanan'))
         ->leftJoin('barangs', 'keranjang_belanjas.id_produk', '=', 'barangs.id')
         ->where('session_id', $session_id)
         ->where('barangs.id_warung', $id_warung);

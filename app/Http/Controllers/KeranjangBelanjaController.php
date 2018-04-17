@@ -107,6 +107,7 @@ class KeranjangBelanjaController extends Controller
             $session_id = Session::get('session_id');
         }
 
+        $harga_produk = $this->cekHargaProdukPromo($request);
         if (Auth::check() == false) {
             $datakeranjang_belanjaan = KeranjangBelanja::where('session_id', $session_id)->Where('warung_id',$warung_id)->Where('id_produk', $request->id_produk); 
             $jumlah_produk           = $datakeranjang_belanjaan->first();
@@ -121,7 +122,7 @@ class KeranjangBelanjaController extends Controller
 
             } else {
                 $total_tambah_produk = 1;
-                $produk = KeranjangBelanja::create(['id_produk' => $request->id_produk, 'session_id' => $session_id, 'jumlah_produk' => $request->jumlah_produk, 'warung_id' => $warung_id]);
+                $produk = KeranjangBelanja::create(['id_produk' => $request->id_produk, 'session_id' => $session_id, 'jumlah_produk' => $request->jumlah_produk, 'warung_id' => $warung_id,'harga_produk'=>$harga_produk]);
             }
 
         }else{
@@ -139,7 +140,7 @@ class KeranjangBelanjaController extends Controller
 
          } else {
              $total_tambah_produk = 1;
-             $produk = KeranjangBelanja::create(['id_produk' => $request->id_produk, 'id_pelanggan' => $pelanggan, 'jumlah_produk' => $request->jumlah_produk, 'warung_id' => $warung_id]);
+             $produk = KeranjangBelanja::create(['id_produk' => $request->id_produk, 'id_pelanggan' => $pelanggan, 'jumlah_produk' => $request->jumlah_produk, 'warung_id' => $warung_id,'harga_produk'=>$harga_produk]);
          }
      }
 
@@ -305,7 +306,7 @@ public function tampilanProdukKeranjangBelanja($keranjang_belanjaan)
     $produk_belanjaan = "";
     foreach ($keranjang_belanjaan as $keranjang_belanjaans) {
 
-        $barang = Barang::select(['id',DB::raw('CURDATE() as tanggal_sekarang')])->where('id', $keranjang_belanjaans->id_produk);
+        $barang = Barang::select(['id'])->where('id', $keranjang_belanjaans->id_produk);
             //jika barang yang di keranjang ternyata sudah dihapus warung
         if ($barang->count() == 0) {
             KeranjangBelanja::where('id_produk', $keranjang_belanjaans->id_produk)->delete();
@@ -313,57 +314,9 @@ public function tampilanProdukKeranjangBelanja($keranjang_belanjaan)
 
             $sisa_stok       = $barang->first()->stok - $keranjang_belanjaans->jumlah_produk;
 
-            $data_tanggal_promo = SettingPromo::settingPromoTanggal($barang->first());
-            if ($data_tanggal_promo->count() > 0) {
-                $dari_tanggal = $data_tanggal_promo->first()->dari_tanggal;
-                $sampai_tanggal = $data_tanggal_promo->first()->sampai_tanggal;
-
-                $data_harga_coret = SettingPromo::settingPromoData($barang->first(),$dari_tanggal,$sampai_tanggal);
-            }
-            else{
-                $dari_tanggal = '0000-00-00';
-                $sampai_tanggal = '0000-00-00';
-
-                $data_harga_coret = SettingPromo::settingPromoData($barang->first(),$dari_tanggal,$sampai_tanggal);
-            }
-                //Mencari hari sekarang
-            $tgl= substr($barang->first()->tanggal_sekarang,8,2);
-            $bln= substr($barang->first()->tanggal_sekarang,5,2);
-            $thn= substr($barang->first()->tanggal_sekarang,0,4);
-
-            $info= date('w', mktime(0,0,0,$bln,$tgl,$thn));
-            if ($info == 0) {
-                $hari = "minggu";
-            }elseif($info == 1){
-                $hari = "senin";
-            }elseif($info == 2){
-                $hari = "selasa";
-            }elseif($info == 3){
-                $hari = "rabu";
-            }elseif($info == 4){
-                $hari = "kamis";
-            }elseif($info == 5){
-                $hari = "jumat";
-            }elseif($info == 6){
-                $hari = "sabtu";
-            }
-                //Mencari hari sekarang
-            if ($data_harga_coret->count() > 0 ) {
-                foreach ($data_harga_coret->get() as $data) {
-                    if ($hari == $data->name) {
-                        $harga_produk    = $data->harga_coret;
-                        break;
-                    }else{
-                        $harga_produk    = $keranjang_belanjaans->produk->harga_jual;
-                    }
-                }
-            }else{
-                $harga_produk    = $keranjang_belanjaans->produk->harga_jual;
-            }
-
-            $subtotal_produk = $harga_produk * $keranjang_belanjaans->jumlah_produk;
+            $subtotal_produk = $keranjang_belanjaans->harga_produk * $keranjang_belanjaans->jumlah_produk;
                 //card produk belanjaan
-            $produk_belanjaan .= $this->cardProdukBelanjaan($harga_produk, $sisa_stok, $keranjang_belanjaans, $subtotal_produk);
+            $produk_belanjaan .= $this->cardProdukBelanjaan($keranjang_belanjaans->harga_produk, $sisa_stok, $keranjang_belanjaans, $subtotal_produk);
             $subtotal += $subtotal_produk;
         }
     }
@@ -420,4 +373,56 @@ public function getIdWarung(){
 
     return $address_app->warung_id;
 }
+
+    public  function cekHargaProdukPromo($produk){
+        $barang = Barang::select(['id','harga_jual',DB::raw('CURDATE() as tanggal_sekarang')])->where('id', $produk->id_produk);
+        $data_tanggal_promo = SettingPromo::settingPromoTanggal($barang->first());
+        if ($data_tanggal_promo->count() > 0) {
+            $dari_tanggal = $data_tanggal_promo->first()->dari_tanggal;
+            $sampai_tanggal = $data_tanggal_promo->first()->sampai_tanggal;
+
+            $data_harga_coret = SettingPromo::settingPromoData($barang->first(),$dari_tanggal,$sampai_tanggal);
+        }
+        else{
+            $dari_tanggal = '0000-00-00';
+            $sampai_tanggal = '0000-00-00';
+
+            $data_harga_coret = SettingPromo::settingPromoData($barang->first(),$dari_tanggal,$sampai_tanggal);
+        }
+                //Mencari hari sekarang
+        $tgl= substr($barang->first()->tanggal_sekarang,8,2);
+        $bln= substr($barang->first()->tanggal_sekarang,5,2);
+        $thn= substr($barang->first()->tanggal_sekarang,0,4);
+
+        $info= date('w', mktime(0,0,0,$bln,$tgl,$thn));
+        if ($info == 0) {
+            $hari = "minggu";
+        }elseif($info == 1){
+            $hari = "senin";
+        }elseif($info == 2){
+            $hari = "selasa";
+        }elseif($info == 3){
+            $hari = "rabu";
+        }elseif($info == 4){
+            $hari = "kamis";
+        }elseif($info == 5){
+            $hari = "jumat";
+        }elseif($info == 6){
+            $hari = "sabtu";
+        }
+                //Mencari hari sekarang
+        if ($data_harga_coret->count() > 0 ) {
+            foreach ($data_harga_coret->get() as $data) {
+                if ($hari == $data->name) {
+                    $harga_produk    = $data->harga_coret;
+                    break;
+                }else{
+                    $harga_produk    = $barang->first()->harga_jual;
+                }
+            }
+        }else{
+            $harga_produk    = $barang->first()->harga_jual;
+        }
+        return $harga_produk;
+    }
 }
