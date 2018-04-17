@@ -76,17 +76,9 @@ class PemesananController extends Controller
         $subtotal     = 0;
         $berat_barang = 0;
         foreach ($keranjang_belanja->get() as $keranjang_belanjaans) {
-
-            $data_harga_promo = $this->cekHargaProdukPromo($keranjang_belanjaans);
-            if ($data_harga_promo == "") {
-                $harga_produk = $keranjang_belanjaans->produk->harga_jual * $keranjang_belanjaans->jumlah_produk;
-                $subtotal     = $subtotal += $harga_produk;
-            }else{
-                $harga_produk =  $data_harga_promo * $keranjang_belanjaans->jumlah_produk;
-                $subtotal     = $subtotal += $harga_produk;
-            }
-            
-            $berat_barang = $berat_barang += $keranjang_belanjaans->produk->berat;
+                $harga_produk = $keranjang_belanjaans->harga_produk * $keranjang_belanjaans->jumlah_produk;
+                $subtotal += $harga_produk;
+                $berat_barang = $berat_barang += $keranjang_belanjaans->produk->berat;
         }
 
         // CEK LOKASI WARUNG
