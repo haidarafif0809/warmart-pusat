@@ -349,6 +349,7 @@ public function tampilanProdukKeranjangBelanja($keranjang_belanjaan)
                 foreach ($data_harga_coret->get() as $data) {
                     if ($hari == $data->name) {
                         $harga_produk    = $data->harga_coret;
+                        break;
                     }else{
                         $harga_produk    = $keranjang_belanjaans->produk->harga_jual;
                     }
