@@ -186,14 +186,15 @@ class PemesananController extends Controller
             $hari = "sabtu";
         }
                 //Mencari hari sekarang
-        if ($data_harga_coret->count() > 0 ) {
-            foreach ($data_harga_coret->get() as $data) {
-                if ($hari == $data->name) {
-                    $harga_produk    = $data->harga_coret;
-                }else{
-                    $harga_produk    = "";
+            if ($data_harga_coret->count() > 0 ) {
+                foreach ($data_harga_coret->get() as $data) {
+                    if ($hari == $data->name) {
+                        $harga_produk    = $data->harga_coret;
+                        break;
+                    }else{
+                        $harga_produk    = "";
+                    }
                 }
-            }
         }else{
             $harga_produk    = "";
         }
