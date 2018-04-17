@@ -228,6 +228,11 @@ class PemesananController extends Controller
             $layanan_kurir = $request->layanan_kurir;
         }
 
+                //Cek Address Aplikasi yg di Jalankan
+        $address_current = url('/');
+        $address_app = SettingPembedaAplikasi::select(['warung_id', 'app_address'])->where('app_address', $address_current)->first();
+        // return url('/');
+        $warung_id = $address_app->warung_id;
         if (Auth::check() == false) {
             $session = Session::get('session_id');
 
@@ -255,12 +260,12 @@ class PemesananController extends Controller
             $user->attachRole($customerRole);
 
             $id_user             = $user->id;
-            $keranjang_belanjaan = KeranjangBelanja::KeranjangBelanjaSession($session)->get();
+            $keranjang_belanjaan = KeranjangBelanja::KeranjangBelanjaSession($session,$warung_id)->get();
 
         } else {
             // QUERY LENGKAPNYA ADA DI scopeKeranjangBelanjaPelanggan di model Keranjang Belanja
             $id_user             = Auth::user()->id;
-            $keranjang_belanjaan = KeranjangBelanja::KeranjangBelanjaPelanggan()->get();
+            $keranjang_belanjaan = KeranjangBelanja::KeranjangBelanjaPelanggan($warung_id)->get();
 
         }
 

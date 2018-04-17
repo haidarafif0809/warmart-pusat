@@ -57,23 +57,23 @@ class KeranjangBelanja extends Model
         return $nama_produk;
     }
 
-    public function scopeKeranjangBelanjaPelanggan($query)
+    public function scopeKeranjangBelanjaPelanggan($query,$warung_id)
     {
 
         $query->select('keranjang_belanjas.id_keranjang_belanja AS id_keranjang_belanja', 'keranjang_belanjas.id_produk AS id_produk', 'keranjang_belanjas.jumlah_produk AS jumlah_produk', 'barangs.harga_jual AS harga_jual', 'barangs.id_warung AS id_warung','barangs.nama_barang AS nama_barang','barangs.foto AS foto')
         ->leftJoin('barangs', 'keranjang_belanjas.id_produk', '=', 'barangs.id')
-        ->where('id_pelanggan', Auth::user()->id)->orderBy('barangs.id_warung');
+        ->where('id_pelanggan', Auth::user()->id)->where('warung_id',$warung_id)->orderBy('barangs.id_warung');
 
         return $query;
 
     }
 
-    public function scopeKeranjangBelanjaSession($query,$session_id)
+    public function scopeKeranjangBelanjaSession($query,$session_id,$warung_id)
     {
 
         $query->select('keranjang_belanjas.id_keranjang_belanja AS id_keranjang_belanja', 'keranjang_belanjas.id_produk AS id_produk', 'keranjang_belanjas.jumlah_produk AS jumlah_produk', 'barangs.harga_jual AS harga_jual', 'barangs.id_warung AS id_warung','barangs.nama_barang AS nama_barang','barangs.foto AS foto')
         ->leftJoin('barangs', 'keranjang_belanjas.id_produk', '=', 'barangs.id')
-        ->where('session_id', $session_id)->orderBy('barangs.id_warung');
+        ->where('session_id', $session_id)->where('warung_id',$warung_id)->orderBy('barangs.id_warung');
 
         return $query;
 
