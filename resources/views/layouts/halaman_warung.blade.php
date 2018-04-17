@@ -2,7 +2,7 @@
 @section('content')
 <?php
 $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
-$settingFooter = \App\SettingFooter::select()->
+$settingFooter = \App\SettingFooter::where('warung_id', \App\SettingPembedaAplikasi::where('app_address', url('/'))->first()->warung_id)->
 first();
 ?>
 <style type="text/css">

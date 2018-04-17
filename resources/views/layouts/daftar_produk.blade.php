@@ -1,7 +1,7 @@
 @extends('layouts.app_pelanggan')
 @section('content')
 <?php
-$settingFooter = \App\SettingFooter::select()->
+$settingFooter = \App\SettingFooter::where('warung_id', \App\SettingPembedaAplikasi::where('app_address', url('/'))->first()->warung_id)->
 first();
 ?>
 <style type="text/css">

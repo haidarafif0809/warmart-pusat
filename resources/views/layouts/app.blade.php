@@ -4,7 +4,7 @@
 <?php
 use Jenssegers\Agent\Agent;
 $agent = new Agent();
-$judul_warung = \App\SettingFooter::select()->first()->judul_warung;
+$judul_warung = \App\SettingFooter::where('warung_id', \App\SettingPembedaAplikasi::where('app_address', url('/'))->first()->warung_id)->first()->judul_warung;
 ?>
 <head>
     <meta charset="utf-8"/>
