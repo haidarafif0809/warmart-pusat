@@ -1,5 +1,5 @@
 <?php
-$settingFooter = \App\SettingFooter::select()->
+$settingFooter = \App\SettingFooter::where('warung_id', \App\SettingPembedaAplikasi::where('app_address', url('/'))->first()->warung_id)->
 first();
 ?>
 @extends('layouts.app_pelanggan')
