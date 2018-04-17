@@ -2,6 +2,17 @@
 $settingFooter = \App\SettingFooter::where('warung_id', \App\SettingPembedaAplikasi::where('app_address', url('/'))->first()->warung_id)->first();
 $default_bank = \App\SettingTransferBank::select('id')->where('default_bank', 1)->first()->id;
 $default_kurir = \App\SettingJasaPengiriman::select('jasa_pengiriman')->where('default_jasa_pengiriman', 1)->first()->jasa_pengiriman;
+
+//Cek Address Aplikasi yg di Jalankan
+$address_current = url('/');
+$address_app = \App\SettingPembedaAplikasi::select(['warung_id', 'app_address'])->where('app_address', $address_current)->first();
+// return url('/');
+
+  if ($address_app->app_address == $address_current) {
+     $default_bank = \App\SettingTransferBank::select('id')->where('default_bank', 1)->where('warung_id',$address_app->warung_id)->first()->id;
+  }else{
+      $default_bank = \App\SettingTransferBank::select('id')->where('default_bank', 1)->first()->id;
+  }
 ?>
 @extends('layouts.app_pelanggan')
 @section('content')
