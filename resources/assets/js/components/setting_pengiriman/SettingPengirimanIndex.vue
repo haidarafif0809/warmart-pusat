@@ -62,12 +62,12 @@
                         </li>
                         <li>
                             <a href="#default_alamat_pelanggan" role="tab" data-toggle="tab" style="margin-left:10px;" v-on:click="loadDefaultAlamatPelanggan">
-                             Default Alamat Pelanggan
-                         </a>
-                     </li>
-                 </ul>
+                               Default Alamat Pelanggan
+                           </a>
+                       </li>
+                   </ul>
 
-                 <div class="tab-content">
+                   <div class="tab-content">
                     <div class="tab-pane active" id="jasa_pengiriman">
 
                         <div class="table-responsive">
@@ -252,7 +252,7 @@ export default {
         }
     },
     watch : {
-       'settingDefaultAlamatPelanggan.provinsi':function(){
+     'settingDefaultAlamatPelanggan.provinsi':function(){
         if (this.settingDefaultAlamatPelanggan.provinsi != '') {            
             this.loadKabupaten()
         }

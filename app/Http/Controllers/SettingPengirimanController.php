@@ -57,46 +57,54 @@ class SettingPengirimanController extends Controller
 
     public function viewDefaultAlamatPengriman()
     {   
-        $defaultAlamatPelanggan = SettingDefaultAlamatPelanggan::select('provinsi','kabupaten','status_aktif')->first();
+        $defaultAlamatPelanggan = SettingDefaultAlamatPelanggan::select('provinsi','kabupaten','status_aktif')->where('warung_id', Auth::user()->id_warung);
         $provinsi = Indonesia::allProvinces();
-        $kabupaten = Indonesia::allCities()->where('province_id',$defaultAlamatPelanggan->provinsi);
-        $response['provinsi'] = $provinsi;
-        $response['kabupaten'] = $kabupaten;
-        $response['defaultAlamatPelanggan'] = $defaultAlamatPelanggan;
-        return response()->json($response);
+
+        if ($defaultAlamatPelanggan->count() > 0) {
+           $kabupaten = Indonesia::allCities()->where('province_id',$defaultAlamatPelanggan->first()->provinsi);
+
+       }else{
+        $kabupaten = "{}";
     }
 
-    public function simpanSetting(Request $request)
-    {
-        $warung_id = Auth::user()->id_warung;
-        foreach ($request->data as $key => $value) {
-            $update_setting = SettingJasaPengiriman::find($value['setting']['id']);
-            $update_setting->update([
-                'tampil_jasa_pengiriman'  => $value['setting']['tampil_jasa_pengiriman'],
-                'default_jasa_pengiriman' => $value['setting']['default_jasa_pengiriman'],
-            ]);
-        }
-    }
+    $response['provinsi'] = $provinsi;
+    $response['kabupaten'] = $kabupaten;
+    $response['defaultAlamatPelanggan'] = $defaultAlamatPelanggan;
+    return response()->json($response);
+}
 
-    public function simpanSettingBank(Request $request)
-    {
-        $warung_id = Auth::user()->id_warung;
-        foreach ($request->data as $key => $value) {
-            $update_setting_bank = SettingTransferBank::find($value['setting']['id']);
-            $update_setting_bank->update([
-                'tampil_bank'  => $value['setting']['tampil_bank'],
-                'default_bank' => $value['setting']['default_bank'],
-            ]);
-        }
-    }
-
-    public function simpanSettingDefaultAlamatPengiriman(Request $request){
-                //VALIDASI WARUNG
-        $this->validate($request, [
-            'provinsi'      => 'required',
-            'kabupaten'    => 'required',
-            'status_aktif'  => 'required'
+public function simpanSetting(Request $request)
+{
+    $warung_id = Auth::user()->id_warung;
+    foreach ($request->data as $key => $value) {
+        $update_setting = SettingJasaPengiriman::find($value['setting']['id']);
+        $update_setting->update([
+            'tampil_jasa_pengiriman'  => $value['setting']['tampil_jasa_pengiriman'],
+            'default_jasa_pengiriman' => $value['setting']['default_jasa_pengiriman'],
         ]);
-        $setting = SettingDefaultAlamatPelanggan::first()->update(['provinsi' => $request->provinsi, 'kabupaten' => $request->kabupaten ,'status_aktif' => $request->status_aktif]);
     }
+}
+
+public function simpanSettingBank(Request $request)
+{
+    $warung_id = Auth::user()->id_warung;
+    foreach ($request->data as $key => $value) {
+        $update_setting_bank = SettingTransferBank::find($value['setting']['id']);
+        $update_setting_bank->update([
+            'tampil_bank'  => $value['setting']['tampil_bank'],
+            'default_bank' => $value['setting']['default_bank'],
+        ]);
+    }
+}
+
+public function simpanSettingDefaultAlamatPengiriman(Request $request){
+                //VALIDASI WARUNG
+    $this->validate($request, [
+        'provinsi'      => 'required',
+        'kabupaten'    => 'required',
+        'status_aktif'  => 'required'
+    ]);
+    SettingDefaultAlamatPelanggan::where('warung_id', Auth::user()->id_warung)->delete();
+    SettingDefaultAlamatPelanggan::create(['provinsi' => $request->provinsi, 'kabupaten' => $request->kabupaten ,'status_aktif' => $request->status_aktif,'warung_id' => Auth::user()->id_warung]);
+}
 }
