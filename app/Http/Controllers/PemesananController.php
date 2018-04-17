@@ -195,7 +195,6 @@ class PemesananController extends Controller
                         $harga_produk    = "";
                     }
                 }
-            }
         }else{
             $harga_produk    = "";
         }
