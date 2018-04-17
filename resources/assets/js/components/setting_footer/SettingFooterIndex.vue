@@ -166,7 +166,8 @@
             saveForm() {
                 let app = this;
 
-                axios.patch(app.url + '/' + app.setting_footer.id, app.setting_footer)
+     
+                axios.patch(app.url + '/' + app.setting_footer.warung_id, app.setting_footer)
                 .then(function (resp) {
                     console.log(resp);
                     swal({
@@ -188,7 +189,7 @@
                 axios.get(app.url + '/default-data-setting-footer')
                 .then(function (resp) {
                     let data = resp.data;
-                    console.log(data.no_telp);
+                    console.log(data);
 
                     app.placeholders.judul_warung           = data.judul_warung;
                     app.placeholders.support_link           = data.support_link;
