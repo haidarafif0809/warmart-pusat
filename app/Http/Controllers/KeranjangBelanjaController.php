@@ -6,6 +6,7 @@ use App\Barang;
 use App\KeranjangBelanja;
 use App\SettingAplikasi;
 use App\SettingPromo;
+use App\SettingPembedaAplikasi;
 use Auth;
 use DB;
 use Jenssegers\Agent\Agent;
@@ -22,6 +23,7 @@ class KeranjangBelanjaController extends Controller
     {
 
         $this->seo();
+        $warung_id = $this->getIdWarung();
         $agent = new Agent();
         if(!Session::get('session_id')){
             $session_id    = session()->getId();
@@ -29,11 +31,11 @@ class KeranjangBelanjaController extends Controller
             $session_id = Session::get('session_id');
         }
         if (Auth::check() == false) {
-            $keranjang_belanjaan = KeranjangBelanja::with(['produk'])->where('session_id', $session_id)->orderBy('id_keranjang_belanja','desc')->get();
-            $jumlah_produk = KeranjangBelanja::select([DB::raw('IFNULL(SUM(jumlah_produk),0) as total_produk')])->where('session_id',$session_id)->first();
+            $keranjang_belanjaan = KeranjangBelanja::with(['produk'])->where('session_id', $session_id)->Where('warung_id',$warung_id)->orderBy('id_keranjang_belanja','desc')->get();
+            $jumlah_produk = KeranjangBelanja::select([DB::raw('IFNULL(SUM(jumlah_produk),0) as total_produk')])->where('session_id',$session_id)->Where('warung_id',$warung_id)->first();
         }else{
-            $keranjang_belanjaan = KeranjangBelanja::with(['produk', 'pelanggan'])->where('id_pelanggan', Auth::user()->id)->orderBy('id_keranjang_belanja','desc')->get();  
-            $jumlah_produk = KeranjangBelanja::select([DB::raw('IFNULL(SUM(jumlah_produk),0) as total_produk')])->where('id_pelanggan', Auth::user()->id)->first();          
+            $keranjang_belanjaan = KeranjangBelanja::with(['produk', 'pelanggan'])->where('id_pelanggan', Auth::user()->id)->Where('warung_id',$warung_id)->orderBy('id_keranjang_belanja','desc')->get();  
+            $jumlah_produk = KeranjangBelanja::select([DB::raw('IFNULL(SUM(jumlah_produk),0) as total_produk')])->where('id_pelanggan', Auth::user()->id)->Where('warung_id',$warung_id)->first();          
         }
 
         $cek_belanjaan       = $keranjang_belanjaan->count();
@@ -98,54 +100,55 @@ class KeranjangBelanjaController extends Controller
 
     public function tambah_produk_keranjang_belanjaan(Request $request)
     {
-     if(!Session::get('session_id')){
-        $session_id    = session()->getId();
-    }else{
-        $session_id = Session::get('session_id');
-    }
-
-    if (Auth::check() == false) {
-        $datakeranjang_belanjaan = KeranjangBelanja::where('session_id', $session_id)->Where('id_produk', $request->id_produk); 
-        $jumlah_produk           = $datakeranjang_belanjaan->first();
-
-        if ($datakeranjang_belanjaan->count() == 0) {            
-            Session::put('session_id',$session_id);
+        $warung_id = $this->getIdWarung();
+        if(!Session::get('session_id')){
+            $session_id    = session()->getId();
+        }else{
+            $session_id = Session::get('session_id');
         }
 
-        if ($datakeranjang_belanjaan->count() > 0) {
-            $total_tambah_produk = 0;
-            $datakeranjang_belanjaan->update(['jumlah_produk' => $jumlah_produk->jumlah_produk + $request->jumlah_produk]);
+        if (Auth::check() == false) {
+            $datakeranjang_belanjaan = KeranjangBelanja::where('session_id', $session_id)->Where('warung_id',$warung_id)->Where('id_produk', $request->id_produk); 
+            $jumlah_produk           = $datakeranjang_belanjaan->first();
 
-        } else {
-            $total_tambah_produk = 1;
-            $produk = KeranjangBelanja::create(['id_produk' => $request->id_produk, 'session_id' => $session_id, 'jumlah_produk' => $request->jumlah_produk]);
-        }
+            if ($datakeranjang_belanjaan->count() == 0) {            
+                Session::put('session_id',$session_id);
+            }
 
-    }else{
-        $pelanggan = Auth::user()->id;
-        $datakeranjang_belanjaan = KeranjangBelanja::where('id_pelanggan', $pelanggan)->Where('id_produk', $request->id_produk); 
-        $jumlah_produk           = $datakeranjang_belanjaan->first();
+            if ($datakeranjang_belanjaan->count() > 0) {
+                $total_tambah_produk = 0;
+                $datakeranjang_belanjaan->update(['jumlah_produk' => $jumlah_produk->jumlah_produk + $request->jumlah_produk]);
 
-        if ($datakeranjang_belanjaan->count() == 0) {            
-            Session::put('session_id',$session_id);
-        }
+            } else {
+                $total_tambah_produk = 1;
+                $produk = KeranjangBelanja::create(['id_produk' => $request->id_produk, 'session_id' => $session_id, 'jumlah_produk' => $request->jumlah_produk, 'warung_id' => $warung_id]);
+            }
 
-        if ($datakeranjang_belanjaan->count() > 0) {
-           $total_tambah_produk = 0;
-           $datakeranjang_belanjaan->update(['jumlah_produk' => $jumlah_produk->jumlah_produk + $request->jumlah_produk]);
+        }else{
+            $pelanggan = Auth::user()->id;
+            $datakeranjang_belanjaan = KeranjangBelanja::where('id_pelanggan', $pelanggan)->Where('warung_id',$warung_id)->Where('id_produk', $request->id_produk); 
+            $jumlah_produk           = $datakeranjang_belanjaan->first();
 
-       } else {
-           $total_tambah_produk = 1;
-           $produk = KeranjangBelanja::create(['id_produk' => $request->id_produk, 'id_pelanggan' => $pelanggan, 'jumlah_produk' => $request->jumlah_produk]);
-       }
-   }
+            if ($datakeranjang_belanjaan->count() == 0) {            
+                Session::put('session_id',$session_id);
+            }
 
-   return  $total_tambah_produk;
+            if ($datakeranjang_belanjaan->count() > 0) {
+             $total_tambah_produk = 0;
+             $datakeranjang_belanjaan->update(['jumlah_produk' => $jumlah_produk->jumlah_produk + $request->jumlah_produk]);
 
-}
+         } else {
+             $total_tambah_produk = 1;
+             $produk = KeranjangBelanja::create(['id_produk' => $request->id_produk, 'id_pelanggan' => $pelanggan, 'jumlah_produk' => $request->jumlah_produk, 'warung_id' => $warung_id]);
+         }
+     }
 
-public function fotoProduk($keranjang_belanjaans)
-{
+     return  $total_tambah_produk;
+
+ }
+
+ public function fotoProduk($keranjang_belanjaans)
+ {
     if ($keranjang_belanjaans->produk->foto != null) {
         $foto_produk = '<img src="foto_produk/' . $keranjang_belanjaans->produk->foto . '">';
     } else {
@@ -307,7 +310,7 @@ public function tampilanProdukKeranjangBelanja($keranjang_belanjaan)
         if ($barang->count() == 0) {
             KeranjangBelanja::where('id_produk', $keranjang_belanjaans->id_produk)->delete();
         } else {
-            
+
             $sisa_stok       = $barang->first()->stok - $keranjang_belanjaans->jumlah_produk;
 
             $data_tanggal_promo = SettingPromo::settingPromoTanggal($barang->first());
@@ -324,26 +327,26 @@ public function tampilanProdukKeranjangBelanja($keranjang_belanjaan)
                 $data_harga_coret = SettingPromo::settingPromoData($barang->first(),$dari_tanggal,$sampai_tanggal);
             }
                 //Mencari hari sekarang
-                $tgl= substr($barang->first()->tanggal_sekarang,8,2);
-                $bln= substr($barang->first()->tanggal_sekarang,5,2);
-                $thn= substr($barang->first()->tanggal_sekarang,0,4);
+            $tgl= substr($barang->first()->tanggal_sekarang,8,2);
+            $bln= substr($barang->first()->tanggal_sekarang,5,2);
+            $thn= substr($barang->first()->tanggal_sekarang,0,4);
 
-                $info= date('w', mktime(0,0,0,$bln,$tgl,$thn));
-                if ($info == 0) {
-                    $hari = "minggu";
-                }elseif($info == 1){
-                    $hari = "senin";
-                }elseif($info == 2){
-                    $hari = "selasa";
-                }elseif($info == 3){
-                    $hari = "rabu";
-                }elseif($info == 4){
-                    $hari = "kamis";
-                }elseif($info == 5){
-                    $hari = "jumat";
-                }elseif($info == 6){
-                    $hari = "sabtu";
-                }
+            $info= date('w', mktime(0,0,0,$bln,$tgl,$thn));
+            if ($info == 0) {
+                $hari = "minggu";
+            }elseif($info == 1){
+                $hari = "senin";
+            }elseif($info == 2){
+                $hari = "selasa";
+            }elseif($info == 3){
+                $hari = "rabu";
+            }elseif($info == 4){
+                $hari = "kamis";
+            }elseif($info == 5){
+                $hari = "jumat";
+            }elseif($info == 6){
+                $hari = "sabtu";
+            }
                 //Mencari hari sekarang
             if ($data_harga_coret->count() > 0 ) {
                 foreach ($data_harga_coret->get() as $data) {
@@ -407,5 +410,14 @@ public function namaProduk($nama)
     }
 
     return $nama_produk;
+}
+
+public function getIdWarung(){
+        //Cek Address Aplikasi yg di Jalankan
+    $address_current = url('/');
+
+    $address_app = SettingPembedaAplikasi::select(['warung_id', 'app_address'])->where('app_address', $address_current)->first();
+
+    return $address_app->warung_id;
 }
 }

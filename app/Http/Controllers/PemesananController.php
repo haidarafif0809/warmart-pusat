@@ -40,6 +40,11 @@ class PemesananController extends Controller
         OpenGraph::setUrl('https://war-mart.id');
         OpenGraph::addProperty('type', 'articles');
 
+        //Cek Address Aplikasi yg di Jalankan
+        $address_current = url('/');
+        $address_app = SettingPembedaAplikasi::select(['warung_id', 'app_address'])->where('app_address', $address_current)->first();
+        // return url('/');
+        $warung_id = $address_app->warung_id;
         $agent = new Agent();
         if (!Session::get('session_id')) {
             $session_id = session()->getId();
@@ -47,11 +52,11 @@ class PemesananController extends Controller
             $session_id = Session::get('session_id');
         }
         if (Auth::check() == false) {
-            $keranjang_belanja = KeranjangBelanja::with(['produk', 'pelanggan'])->where('session_id', $session_id);
-            $jumlah_produk     = KeranjangBelanja::select([DB::raw('IFNULL(SUM(jumlah_produk),0) as total_produk')])->where('session_id', $session_id)->first();
+            $keranjang_belanja = KeranjangBelanja::with(['produk', 'pelanggan'])->where('session_id', $session_id)->Where('warung_id',$warung_id);;
+            $jumlah_produk     = KeranjangBelanja::select([DB::raw('IFNULL(SUM(jumlah_produk),0) as total_produk')])->where('session_id', $session_id)->Where('warung_id',$warung_id)->first();
         } else {
-            $keranjang_belanja = KeranjangBelanja::with(['produk', 'pelanggan'])->where('id_pelanggan', Auth::user()->id);
-            $jumlah_produk     = KeranjangBelanja::select([DB::raw('IFNULL(SUM(jumlah_produk),0) as total_produk')])->where('id_pelanggan', Auth::user()->id)->first();
+            $keranjang_belanja = KeranjangBelanja::with(['produk', 'pelanggan'])->where('id_pelanggan', Auth::user()->id)->Where('warung_id',$warung_id);
+            $jumlah_produk     = KeranjangBelanja::select([DB::raw('IFNULL(SUM(jumlah_produk),0) as total_produk')])->where('id_pelanggan', Auth::user()->id)->Where('warung_id',$warung_id)->first();
         }
 
         $cek_belanjaan = $keranjang_belanja->count();
@@ -71,7 +76,7 @@ class PemesananController extends Controller
         $subtotal     = 0;
         $berat_barang = 0;
         foreach ($keranjang_belanja->get() as $keranjang_belanjaans) {
-            
+
             $data_harga_promo = $this->cekHargaProdukPromo($keranjang_belanjaans);
             if ($data_harga_promo == "") {
                 $harga_produk = $keranjang_belanjaans->produk->harga_jual * $keranjang_belanjaans->jumlah_produk;
@@ -109,20 +114,16 @@ class PemesananController extends Controller
 
         $jasa_pengirim = SettingJasaPengiriman::where('tampil_jasa_pengiriman', 1)->pluck('jasa_pengiriman', 'jasa_pengiriman');
 
-        //Cek Address Aplikasi yg di Jalankan
-        $address_current = url('/');
-        $address_app = SettingPembedaAplikasi::select(['warung_id', 'app_address'])->where('app_address', $address_current)->first();
-        // return url('/');
 
         if ($address_app->app_address == $address_current) {
-                $bank_transfer = BankWarung::select(['setting_transfer_banks.nama_bank', 'setting_transfer_banks.id'])
-                ->leftJoin('setting_transfer_banks', 'setting_transfer_banks.id', '=', 'bank_warungs.nama_bank')
-                ->where('bank_warungs.warung_id',$address_app->warung_id)
-                ->pluck('setting_transfer_banks.nama_bank', 'setting_transfer_banks.id');
+            $bank_transfer = BankWarung::select(['setting_transfer_banks.nama_bank', 'setting_transfer_banks.id'])
+            ->leftJoin('setting_transfer_banks', 'setting_transfer_banks.id', '=', 'bank_warungs.nama_bank')
+            ->where('bank_warungs.warung_id',$address_app->warung_id)
+            ->pluck('setting_transfer_banks.nama_bank', 'setting_transfer_banks.id');
         }else{
-                $bank_transfer = BankWarung::select(['setting_transfer_banks.nama_bank', 'setting_transfer_banks.id'])
-                ->leftJoin('setting_transfer_banks', 'setting_transfer_banks.id', '=', 'bank_warungs.nama_bank')
-                ->pluck('setting_transfer_banks.nama_bank', 'setting_transfer_banks.id');
+            $bank_transfer = BankWarung::select(['setting_transfer_banks.nama_bank', 'setting_transfer_banks.id'])
+            ->leftJoin('setting_transfer_banks', 'setting_transfer_banks.id', '=', 'bank_warungs.nama_bank')
+            ->pluck('setting_transfer_banks.nama_bank', 'setting_transfer_banks.id');
         }
 
 
@@ -200,15 +201,15 @@ class PemesananController extends Controller
             $hari = "sabtu";
         }
                 //Mencari hari sekarang
-            if ($data_harga_coret->count() > 0 ) {
-                foreach ($data_harga_coret->get() as $data) {
-                    if ($hari == $data->name) {
-                        $harga_produk    = $data->harga_coret;
-                        break;
-                    }else{
-                        $harga_produk    = "";
-                    }
+        if ($data_harga_coret->count() > 0 ) {
+            foreach ($data_harga_coret->get() as $data) {
+                if ($hari == $data->name) {
+                    $harga_produk    = $data->harga_coret;
+                    break;
+                }else{
+                    $harga_produk    = "";
                 }
+            }
         }else{
             $harga_produk    = "";
         }
