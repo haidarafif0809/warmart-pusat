@@ -5,6 +5,15 @@
 $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
 $foto_logo = \App\UserWarung::select()->where('tipe_user',4)->orderBy('id', 'asc')->limit(1)->first();
 $judul_warung = \App\SettingFooter::select()->first()->judul_warung;
+    //Cek Address Aplikasi yg di Jalankan
+$address_current = url('/');
+
+$address_app = \App\SettingPembedaAplikasi::select(['warung_id', 'app_address'])->where('app_address', $address_current)->first();
+if ($address_current == $address_app->app_address) {
+    $foto_logo = \App\UserWarung::select()->where('tipe_user',4)->where('id_warung', $address_app->warung_id)->orderBy('id', 'asc')->limit(1)->first();
+}else{
+    $foto_logo = \App\UserWarung::select()->where('tipe_user',4)->orderBy('id', 'asc')->limit(1)->first();
+}
 ?>
 <head>
     <meta charset="utf-8" />
@@ -126,12 +135,12 @@ $judul_warung = \App\SettingFooter::select()->first()->judul_warung;
 
                         <div class="col-md-4 col-sm-6 col-md-offset-4 col-sm-offset-3">
 
-                         @yield('content')
-                     </div>
-                 </div>
-             </div>
-         </div>
-         <footer class="footer">
+                           @yield('content')
+                       </div>
+                   </div>
+               </div>
+           </div>
+           <footer class="footer">
             <div class="container">
                 <p class="copyright pull-right">
                     &copy;
