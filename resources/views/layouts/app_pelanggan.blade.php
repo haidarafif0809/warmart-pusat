@@ -7,7 +7,7 @@
     $session = Session::get('session_id');
     $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
 
-    $settingFooter = \App\SettingFooter::select()->first();
+    $settingFooter = \App\SettingFooter::where('warung_id', \App\SettingPembedaAplikasi::where('app_address', url('/'))->first()->warung_id)->first();
     $jasa_pengirimans = \App\SettingJasaPengiriman::select('logo_jasa')->where('tampil_jasa_pengiriman', 1)->get();
     $bank_transfers = \App\SettingTransferBank::select('logo_bank')->where('tampil_bank', 1)->get();
     //Cek Address Aplikasi yg di Jalankan

@@ -4,7 +4,7 @@
 <?php
 $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
 $foto_logo = \App\UserWarung::select()->where('tipe_user',4)->orderBy('id', 'asc')->limit(1)->first();
-$judul_warung = \App\SettingFooter::select()->first()->judul_warung;
+$judul_warung = \App\SettingFooter::where('warung_id', \App\SettingPembedaAplikasi::where('app_address', url('/'))->first()->warung_id)->first()->judul_warung;
 ?>
 <head>
     <meta charset="utf-8" />

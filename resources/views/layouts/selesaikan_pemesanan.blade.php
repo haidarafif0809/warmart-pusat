@@ -1,5 +1,5 @@
 <?php
-$settingFooter = \App\SettingFooter::select()->first();
+$settingFooter = \App\SettingFooter::where('warung_id', \App\SettingPembedaAplikasi::where('app_address', url('/'))->first()->warung_id)->first();
 $default_bank = \App\SettingTransferBank::select('id')->where('default_bank', 1)->first()->id;
 $default_kurir = \App\SettingJasaPengiriman::select('jasa_pengiriman')->where('default_jasa_pengiriman', 1)->first()->jasa_pengiriman;
 ?>
