@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\SettingFooter;
 use Illuminate\Http\Request;
+use Auth;
 
 class SettingFooterController extends Controller
 {
@@ -14,7 +15,7 @@ class SettingFooterController extends Controller
      */
     public function index()
     {
-        $setting_footer = SettingFooter::select()->first();
+        $setting_footer = SettingFooter::where('warung_id', Auth::user()->id_warung)->first();
         return response()->json($setting_footer);
     }
 
@@ -77,7 +78,7 @@ class SettingFooterController extends Controller
      */
     public function update(Request $request, $id_warung)
     {
-        SettingFooter::find($id_warung)->update($request->all());
+        return SettingFooter::where('warung_id', $id_warung)->update($request->all());
     }
 
     /**

@@ -8,6 +8,7 @@ use App\KomunitasCustomer;
 use App\Notifications\PendaftarWarung;
 use App\Role;
 use App\SettingAplikasi;
+use App\SettingFooter;
 use App\SettingVerifikasi;
 use App\User;
 use App\UserWarung;
@@ -186,6 +187,7 @@ class RegisterController extends Controller
                 'wilayah'   => "-",
             ]);
 
+
             // //INSERT BANK WARUNG
             // $bank_warung = BankWarung::create([
             //     'nama_bank' => 1,
@@ -194,6 +196,26 @@ class RegisterController extends Controller
             //     'no_rek'    => "1234567890",
             //     'warung_id' => $warung->id,
             //     ]);
+
+
+            // SETTING FOOTER
+            $sfDef = SettingFooter::defaultData();
+            SettingFooter::create([
+                'warung_id'    => $warung->id,
+                'judul_warung' => $sfDef->judul_warung,
+                'support_link' => $sfDef->support_link,
+                'about_link'   => $sfDef->about_link,
+                'about_us'     => $sfDef->about_us,
+                'no_telp'      => $sfDef->no_telp,
+                'alamat'       => $sfDef->alamat,
+                'email'        => $sfDef->email,
+                'whatsapp'     => $sfDef->whatsapp,
+                'facebook'     => $sfDef->facebook,
+                'twitter'      => $sfDef->twitter,
+                'instagram'    => $sfDef->instagram,
+                'google_plus'  => $sfDef->google_plus,
+                'play_store'   => $sfDef->play_store,
+            ]);
 
             //SETTING APLIKASI
             $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
@@ -227,7 +249,7 @@ class RegisterController extends Controller
             $userWarungRole = Role::where('name', 'admin')->first();
             $user->attachRole($userWarungRole);
 
-            Notification::send(User::first(), new PendaftarWarung($user));
+            // Notification::send(User::first(), new PendaftarWarung($user));
 
             $userkey      = env('USERKEY');
             $passkey      = env('PASSKEY');
@@ -236,7 +258,7 @@ class RegisterController extends Controller
 
             if (env('STATUS_SMS') == 1) {
                 $client = new Client(); //GuzzleHttp\Client
-                $result = $client->get('https://reguler.zenziva.net/apps/smsapi.php?userkey=' . $userkey . '&passkey=' . $passkey . '&nohp=' . $nomor_tujuan . '&pesan=' . $isi_pesan . '');
+                // $result = $client->get('https://reguler.zenziva.net/apps/smsapi.php?userkey=' . $userkey . '&passkey=' . $passkey . '&nohp=' . $nomor_tujuan . '&pesan=' . $isi_pesan . '');
 
             }
 
