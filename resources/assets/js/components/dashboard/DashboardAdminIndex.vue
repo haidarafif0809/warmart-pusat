@@ -220,48 +220,48 @@
 </template>
 
 <script>
-    export default {
-        data: function () {
-            return {
-                url: window.location.origin + (window.location.pathname).replace("dashboard", ""),
-                url_picture : window.location.origin+(window.location.pathname).replace("dashboard", "foto_ktp_user"),
-                dashboardData: [],
-                tipeUser : document.head.querySelector('meta[name="tipe-user"]')
-            }
-        },
-        mounted() {
-            var app = this;
-            if (app.tipeUser.content == 1) {
-                app.getDashboardData();
-            }
-            else if(app.tipeUser.content == 4){
-                app.getDashboardWarung();
-            }
-        },
-        methods: {
-            getDashboardData(){
-                var app = this
-                axios.get(app.url+'/dashboard-admin')
-                .then(function (resp) {
-                    app.dashboardData = resp.data;
-                })
-                .catch(function (resp) {
-                    console.log(resp);
-                    alert("Tidak Bisa Memuat Data");
-                });
-            },
-            getDashboardWarung(){
-                var app = this
-                axios.get(app.url+'/dashboard-warung')
-                .then(function (resp) {
-                    app.dashboardData = resp.data;
-                })
-                .catch(function (resp) {
-                    alert("Tidak Bisa Memuat Data");
-                });
-            }
-            
+export default {
+    data: function () {
+        return {
+            url: window.location.origin + (window.location.pathname).replace("dashboard", ""),
+            url_picture : window.location.origin+(window.location.pathname).replace("dashboard", "foto_ktp_user"),
+            dashboardData: [],
+            tipeUser : document.head.querySelector('meta[name="tipe-user"]')
         }
+    },
+    mounted() {
+        var app = this;
+        if (app.tipeUser.content == 1) {
+            app.getDashboardData();
+        }
+        else if(app.tipeUser.content == 4){
+            app.getDashboardWarung();
+        }
+    },
+    methods: {
+        getDashboardData(){
+            var app = this
+            axios.get(app.url+'/dashboard-admin')
+            .then(function (resp) {
+                app.dashboardData = resp.data;
+            })
+            .catch(function (resp) {
+                console.log(resp);
+                alert("Tidak Bisa Memuat Data");
+            });
+        },
+        getDashboardWarung(){
+            var app = this
+            axios.get(app.url+'/dashboard-warung')
+            .then(function (resp) {
+                app.dashboardData = resp.data;
+            })
+            .catch(function (resp) {
+                alert("Tidak Bisa Memuat Data");
+            });
+        }
+        
     }
+}
 </script>
 
