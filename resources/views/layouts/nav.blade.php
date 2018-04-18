@@ -665,7 +665,7 @@
             <li>
                 <router-link :to="{name: 'settingFixelIndex'}" class="menu-nav">
                     <span class="sidebar-mini">
-                        SP
+                        SF
                     </span>
                     <span class="sidebar-normal">
                         Setting Fixel

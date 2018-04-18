@@ -13,7 +13,7 @@ class SettingFixelSeeder extends Seeder
     public function run()
     {
                 // SettingFixelSeeder
-    	SettingFixel::create(['fixel'=> 'Google','id_pixel' => '#','warung_id'=>'kategori_transaksi']);
-    	SettingFixel::create(['fixel'=> 'Facebook','id_pixel' => '#','warung_id'=>'kategori_transaksi']);
+    	SettingFixel::create(['fixel'=> 'Google','id_pixel' => '#','warung_id'=>'1']);
+    	SettingFixel::create(['fixel'=> 'Facebook','id_pixel' => '#','warung_id'=>'1']);
     }
 }
