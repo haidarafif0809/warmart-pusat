@@ -1383,6 +1383,8 @@ prosesSelesaiPenjualan(value){
     });
     
   }else{
+
+    app.closeModal();
     axios.post(app.url,newPenjualan)
     .then(function (resp) {
 
