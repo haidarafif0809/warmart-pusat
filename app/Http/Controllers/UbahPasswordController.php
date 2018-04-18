@@ -30,7 +30,7 @@ class UbahPasswordController extends Controller
         $update_user->password = bcrypt($request->password);
         $update_user->save();
 
-        return redirect()->intended('/dashboard');
+        /*return redirect()->intended('/dashboard');*/
 
     }
 
