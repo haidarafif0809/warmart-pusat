@@ -12,6 +12,7 @@ use App\PenjualanPos;
 use App\PesananPelanggan;
 use App\SettingAplikasi;
 use App\TransaksiKas;
+use App\SettingPembedaAplikasi;
 use App\User;
 use App\UserWarung;
 use App\Warung;
@@ -245,7 +246,16 @@ class HomeController extends Controller
         $prose_total_persedian = $nila_masuk->total_masuk - $nila_keluar->total_keluar;
         $total_persedian       = $prose_total_persedian;
         $user                  = Auth::user();
-        $logo_toko             = UserWarung::where('tipe_user',4)->orderBy('id', 'asc')->limit(1)->first();
+
+        $address_current = url('/');
+
+        $address_app = SettingPembedaAplikasi::select(['warung_id', 'app_address'])->where('app_address', $address_current)->first();
+        if ($address_current == $address_app->app_address) {
+            $logo_toko = UserWarung::where('tipe_user',4)->where('id_warung', $address_app->warung_id)->orderBy('id', 'asc')->limit(1)->first();
+        }else{
+            $logo_toko = UserWarung::where('tipe_user',4)->orderBy('id', 'asc')->limit(1)->first();
+        }
+        
 
         // PENJUALAN BULAN INI
         $startDate = new Carbon('first day of this month');
