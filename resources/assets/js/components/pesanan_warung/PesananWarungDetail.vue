@@ -121,7 +121,7 @@
 							<p v-else>Konfirmasi ? :</p>
 
 							<p v-if="pesananData.pesanan.konfirmasi_pesanan == 0">
-								<button id="konfirmasi-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-sm btn-info" @click="konfirmasiPesanan(pesananData.pesanan.id)"><font style="font-size: 12px;">Konfirmasi</font></button>
+								<button id="konfirmasi-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-sm btn-info" @click="konfirmasiPesanan(pesananData.pesanan.id)"><font style="font-size: 12px;">Konfirmasi Pembayaran</font></button>
 								<button id="batalkan-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-sm btn-danger" @click="batalPesanan(pesananData.pesanan.id)"><font style="font-size: 12px;">Batal</font></button>
 								<!--PEMESAN-->
 								<button type="button" class="btn btn-sm btn-primary" id="btnDetail" data-toggle="modal" data-target="#data_pemesan"><font style="font-size: 12px;">Pemesan</font></button>
@@ -141,7 +141,7 @@
 							</p>
 
 							<p v-else-if="pesananData.pesanan.konfirmasi_pesanan == 3">
-								<button id="konfirmasi-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-sm btn-info" @click="konfirmasiPesanan(pesananData.pesanan.id)"><font style="font-size: 12px;">Konfirmasi</font></button>	
+								<button id="konfirmasi-pesanan-warung" :id-pesanan="pesananData.pesanan.id" class="btn btn-sm btn-info" @click="konfirmasiPesanan(pesananData.pesanan.id)"><font style="font-size: 12px;">Konfirmasi Pembayaran</font></button>	
 								<!--PEMESAN-->
 								<button type="button" class="btn btn-sm btn-primary" id="btnDetail" data-toggle="modal" data-target="#data_pemesan"><font style="font-size: 12px;">Pemesan</font></button>
 							</p>
@@ -189,8 +189,8 @@
 									</td>
 									<td>Rp. {{ detailPesanans.harga_produk * detailPesanans.jumlah_produk | pemisahTitik }}</td>		          			
 									<td v-if="detailPesanans.jumlah_produk > 0">
-										<b style="color:red" v-if="detailPesanans.pesanan_pelanggan.konfirmasi_pesanan == 0">Belum Di Konfirmasi</b>
-										<b style="color:orange" v-else-if="detailPesanans.pesanan_pelanggan.konfirmasi_pesanan == 1" >Sudah Di Konfirmasi</b>
+										<b style="color:red" v-if="detailPesanans.pesanan_pelanggan.konfirmasi_pesanan == 0">Pembayaran Belum Di Konfirmasi</b>
+										<b style="color:orange" v-else-if="detailPesanans.pesanan_pelanggan.konfirmasi_pesanan == 1" >Pembayaran Sudah Di Konfirmasi</b>
 										<b style="color:#01573e" v-else-if="detailPesanans.pesanan_pelanggan.konfirmasi_pesanan == 2" >Selesai</b>
 										<b style="color:red" v-else-if="detailPesanans.pesanan_pelanggan.konfirmasi_pesanan == 3" >Batal</b>
 										<b style="color:orange" v-else > Batal Pelanggan</b>
@@ -255,8 +255,8 @@
 								<div class="col-xs-12" style="padding-left:10px; padding-right:10px">
 									<p> <b class="card-title" style="margin-top: 1px; margin-bottom: 1px;">Status Pesanan</b></p>
 
-									<b style="color:red" v-if="pesananData.pesanan.konfirmasi_pesanan == 0" >Belum Di Konfirmasi</b>
-									<b style="color:orange" v-else-if="pesananData.pesanan.konfirmasi_pesanan == 1" >Sudah Di Konfirmasi</b>
+									<b style="color:red" v-if="pesananData.pesanan.konfirmasi_pesanan == 0" >Pembayaran Belum Di Konfirmasi</b>
+									<b style="color:orange" v-else-if="pesananData.pesanan.konfirmasi_pesanan == 1" >Pembayaran Sudah Di Konfirmasi</b>
 									<b style="color:#01573e" v-else-if="pesananData.pesanan.konfirmasi_pesanan == 2" >Selesai</b>
 									<b style="color:red" v-else-if="pesananData.pesanan.konfirmasi_pesanan == 3" >Batal</b>
 									<b style="color:orange" v-else > Batal Pelanggan</b>
@@ -455,9 +455,14 @@ export default {
 
 				} else {
 
-					let layanan_kurir = resp.data.data.pesanan.layanan_kurir.split(' | ');
-					app.servicePengiriman = layanan_kurir[0] + ' | ' + layanan_kurir[2];
-					app.waktuPengiriman	= layanan_kurir[1] + ' Hari';
+					if (resp.data.data.pesanan.layanan_kurir != null) {	
+						let layanan_kurir = resp.data.data.pesanan.layanan_kurir.split(' | ');
+						app.servicePengiriman = layanan_kurir[0] + ' | ' + layanan_kurir[2];
+						app.waktuPengiriman	= layanan_kurir[1] + ' Hari';
+					} else {
+						app.servicePengiriman = '-';
+						app.waktuPengiriman	= '-';
+					}
 				}
 			})
 			.catch(function (resp) {
