@@ -75,24 +75,19 @@
                                      <td>{{ pesananWarung.pesanan_warung.id }}</td>
                                      <td>{{ pesananWarung.pemesan }}</td>
                                      <td>
-                                        <b style="color:red" v-if="pesananWarung.pesanan_warung.konfirmasi_pesanan == 0">Belum Di Konfirmasi</b>
-                                        <b style="color:orange" v-else-if="pesananWarung.pesanan_warung.konfirmasi_pesanan == 1">Sudah Konfirmasi</b>
+                                        <b style="color:red" v-if="pesananWarung.pesanan_warung.konfirmasi_pesanan == 0">Pembayaran Belum Di Konfirmasi</b>
+                                        <b style="color:orange" v-else-if="pesananWarung.pesanan_warung.konfirmasi_pesanan == 1">Pembayaran Sudah Konfirmasi</b>
                                         <b style="color:#01573e" v-else-if="pesananWarung.pesanan_warung.konfirmasi_pesanan == 2">Selesai</b>
                                         <b style="color:#01573e" v-else-if="pesananWarung.pesanan_warung.konfirmasi_pesanan == 3">Batal</b>
                                         <b style="color:orange" v-else>Batal Pelanggan</b>
                                      </td>
                                      <td>{{ pesananWarung.pesanan_warung.created_at }}</td>
                                      <td>
-                                        <span v-if="pesananWarung.pesanan_warung.konfirmasi_pesanan == 2">
-                                            <span v-if="pesananWarung.pesanan_warung.no_resi == null">
-                                                <button type="button" class="btn btn-sm btn-primary"  @click="insertNoResi(pesananWarung.pesanan_warung.id, pesananWarung.pesanan_warung.no_resi)">Masukkan</button>
-                                            </span>
-                                            <span v-else>
-                                                <a :href="url2" @click="insertNoResi(pesananWarung.pesanan_warung.id, pesananWarung.pesanan_warung.no_resi)">{{ pesananWarung.pesanan_warung.no_resi }}</a>
-                                            </span>
+                                        <span v-if="pesananWarung.pesanan_warung.no_resi == null">
+                                            <button type="button" class="btn btn-sm btn-primary"  @click="insertNoResi(pesananWarung.pesanan_warung.id, pesananWarung.pesanan_warung.no_resi)">Masukkan</button>
                                         </span>
                                         <span v-else>
-                                            <button type="button" class="btn btn-sm btn-primary disabled">Masukkan</button>                                         
+                                            <a :href="url2" @click="insertNoResi(pesananWarung.pesanan_warung.id, pesananWarung.pesanan_warung.no_resi)">{{ pesananWarung.pesanan_warung.no_resi }}</a>
                                         </span>
                                      </td>
                                      <td>
@@ -153,8 +148,8 @@
                                         <tr><td width="25%"> No. Telp</td> <td> : </td> <td>  {{pesananWarung.pesanan_warung.no_telp_pemesan}} </td></tr>
                                         <tr><td width="25%"> Status</td> <td> : </td>
                                             <td>
-                                                <b style="color:red" v-if="pesananWarung.pesanan_warung.konfirmasi_pesanan == 0">Belum Di Konfirmasi</b>
-                                                <b style="color:orange" v-else-if="pesananWarung.pesanan_warung.konfirmasi_pesanan == 1">Sudah Konfirmasi</b>
+                                                <b style="color:red" v-if="pesananWarung.pesanan_warung.konfirmasi_pesanan == 0">Pembayaran Belum Di Konfirmasi</b>
+                                                <b style="color:orange" v-else-if="pesananWarung.pesanan_warung.konfirmasi_pesanan == 1">Pembayaran Sudah Konfirmasi</b>
                                                 <b style="color:#01573e" v-else-if="pesananWarung.pesanan_warung.konfirmasi_pesanan == 2">Selesai</b>
                                                 <b style="color:#01573e" v-else-if="pesananWarung.pesanan_warung.konfirmasi_pesanan == 3">Batal</b>
                                                 <b style="color:orange" v-else>Batal Pelanggan</b>
@@ -196,7 +191,6 @@ export default {
 	mounted() {
 		var app = this;
 		app.getResults();
-        console.log(window.location)
 	},
 	watch: {
         // whenever question changes, this function will run
@@ -213,7 +207,6 @@ export default {
     		}
     		axios.get(app.url+'/view?page='+page)
     		.then(function (resp) {
-                console.log(app.url)
                 console.log(resp.data.data)
     			app.pesananWarung = resp.data.data;
                 app.pesananWarungData = resp.data;
@@ -270,11 +263,6 @@ export default {
 
                         setTimeout(() => {
 
-                            // if (!no_resi.val()) {
-                            //     swal.showValidationError('Nomor Resi tidak boleh kosong.');
-                            //     no_resi.focus();
-                            //     reject();
-                            // }
                             if (!no_resi.val().match(/^[a-zA-Z0-9_-\s]*$/)) {
                                 swal.showValidationError('Nomor Resi hanya boleh berisi huruf dan angka');
                                 no_resi.focus();
@@ -300,7 +288,6 @@ export default {
 
                 app.noResiPesanan.id_pesanan = idPesanan;
                 app.noResiPesanan.no_resi = no_resi;
-                console.log(app.noResiPesanan);
 
                 axios.post(app.urlTambahNoResi, app.noResiPesanan)
                 .then(function (resp) {
