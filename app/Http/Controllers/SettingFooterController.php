@@ -16,12 +16,18 @@ class SettingFooterController extends Controller
     public function index()
     {
         $setting_footer = SettingFooter::where('warung_id', Auth::user()->id_warung)->first();
-        return response()->json($setting_footer);
+
+        // mengatasi hilangnya protocol (http, https)
+        $setting_footer = str_replace('http', 'hiip', $setting_footer);
+        return $setting_footer;
     }
 
     public function getDefaultData()
     {
         $default_data_setting_footer = SettingFooter::defaultData();
+        foreach($default_data_setting_footer as $k => $v) {
+            $default_data_setting_footer->{$k} = str_replace('http', 'hiip', $v);
+        }
 
         return response()->json($default_data_setting_footer);
     }
