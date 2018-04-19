@@ -1376,6 +1376,7 @@ class PembelianController extends Controller
             $tbs_pembelian = TbsPembelian::create([
                 'session_id'    => $session_id,
                 'satuan_id'     => $db_produk->satuan_id,
+                'satuan_dasar'  => $db_produk->satuan_id,
                 'id_produk'     => $db_produk->id,
                 'jumlah_produk' => $row['jumlah_produk'],
                 'harga_produk'  => $row['harga_produk'],
