@@ -156,57 +156,6 @@ class PemesananController extends Controller
         return $data_pelanggan;
     }
 
-    public static function cekHargaProdukPromo($produk){
-        $barang = Barang::select(['id',DB::raw('CURDATE() as tanggal_sekarang')])->where('id', $produk->id_produk);
-        $data_tanggal_promo = SettingPromo::settingPromoTanggal($barang->first());
-        if ($data_tanggal_promo->count() > 0) {
-            $dari_tanggal = $data_tanggal_promo->first()->dari_tanggal;
-            $sampai_tanggal = $data_tanggal_promo->first()->sampai_tanggal;
-
-            $data_harga_coret = SettingPromo::settingPromoData($barang->first(),$dari_tanggal,$sampai_tanggal);
-        }
-        else{
-            $dari_tanggal = '0000-00-00';
-            $sampai_tanggal = '0000-00-00';
-
-            $data_harga_coret = SettingPromo::settingPromoData($barang->first(),$dari_tanggal,$sampai_tanggal);
-        }
-                //Mencari hari sekarang
-        $tgl= substr($barang->first()->tanggal_sekarang,8,2);
-        $bln= substr($barang->first()->tanggal_sekarang,5,2);
-        $thn= substr($barang->first()->tanggal_sekarang,0,4);
-
-        $info= date('w', mktime(0,0,0,$bln,$tgl,$thn));
-        if ($info == 0) {
-            $hari = "minggu";
-        }elseif($info == 1){
-            $hari = "senin";
-        }elseif($info == 2){
-            $hari = "selasa";
-        }elseif($info == 3){
-            $hari = "rabu";
-        }elseif($info == 4){
-            $hari = "kamis";
-        }elseif($info == 5){
-            $hari = "jumat";
-        }elseif($info == 6){
-            $hari = "sabtu";
-        }
-                //Mencari hari sekarang
-        if ($data_harga_coret->count() > 0 ) {
-            foreach ($data_harga_coret->get() as $data) {
-                if ($hari == $data->name) {
-                    $harga_produk    = $data->harga_coret;
-                    break;
-                }else{
-                    $harga_produk    = "";
-                }
-            }
-        }else{
-            $harga_produk    = "";
-        }
-        return $harga_produk;
-    }
 
     public function prosesSelesaikanPemesanan(Request $request)
     {

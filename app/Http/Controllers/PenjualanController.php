@@ -11,6 +11,7 @@ use App\Penjualan;
 use App\PenjualanPos;
 use App\SettingAplikasi;
 use App\SettingPenjualanPos;
+use App\SettingPromo;
 use App\TbsPenjualan;
 use App\TransaksiKas;
 use App\SatuanKonversi;
@@ -613,15 +614,67 @@ class PenjualanController extends Controller
         $settings = SettingPenjualanPos::where('id_warung', Auth::user()->id_warung);
         if ($settings->count() == 0) {
     $harga_jual = $produk[3]; // harga jual 1
-} else {
-    if ($settings->first()->harga_jual == 1) {
-    $harga_jual = $produk[3]; // harga jual 1
-} else if ($settings->first()->harga_jual == 2) {
-    $harga_jual = $produk[5]; // harga jual 2
-}
+    } else {
+        if ($settings->first()->harga_jual == 1) {
+        $harga_jual = $produk[3]; // harga jual 1
+    } else if ($settings->first()->harga_jual == 2) {
+        $harga_jual = $produk[5]; // harga jual 2
+    }
 }
 return $harga_jual;
 }
+
+     public  function cekHargaProdukPromo($produk){
+        $barang = Barang::select(['id','harga_jual',DB::raw('CURDATE() as tanggal_sekarang')])->where('id', $produk);
+        $data_tanggal_promo = SettingPromo::settingPromoTanggal($barang->first());
+        if ($data_tanggal_promo->count() > 0) {
+            $dari_tanggal = $data_tanggal_promo->first()->dari_tanggal;
+            $sampai_tanggal = $data_tanggal_promo->first()->sampai_tanggal;
+
+            $data_harga_coret = SettingPromo::settingPromoData($barang->first(),$dari_tanggal,$sampai_tanggal);
+        }
+        else{
+            $dari_tanggal = '0000-00-00';
+            $sampai_tanggal = '0000-00-00';
+
+            $data_harga_coret = SettingPromo::settingPromoData($barang->first(),$dari_tanggal,$sampai_tanggal);
+        }
+                //Mencari hari sekarang
+        $tgl= substr($barang->first()->tanggal_sekarang,8,2);
+        $bln= substr($barang->first()->tanggal_sekarang,5,2);
+        $thn= substr($barang->first()->tanggal_sekarang,0,4);
+
+        $info= date('w', mktime(0,0,0,$bln,$tgl,$thn));
+        if ($info == 0) {
+            $hari = "minggu";
+        }elseif($info == 1){
+            $hari = "senin";
+        }elseif($info == 2){
+            $hari = "selasa";
+        }elseif($info == 3){
+            $hari = "rabu";
+        }elseif($info == 4){
+            $hari = "kamis";
+        }elseif($info == 5){
+            $hari = "jumat";
+        }elseif($info == 6){
+            $hari = "sabtu";
+        }
+                //Mencari hari sekarang
+        if ($data_harga_coret->count() > 0 ) {
+            foreach ($data_harga_coret->get() as $data) {
+                if ($hari == $data->name) {
+                    $harga_produk    = $data->harga_coret;
+                    break;
+                }else{
+                    $harga_produk    = "";
+                }
+            }
+        }else{
+            $harga_produk    = "";
+        }
+        return $harga_produk;
+    }
 
 public function prosesTambahTbsPenjualan(Request $request)
 {   
@@ -640,7 +693,13 @@ public function prosesTambahTbsPenjualan(Request $request)
         $nama_satuan = $satuan_produk[1];
 
     if ($satuan_produk[0] === $satuan_produk[2]) { //$satuan_produk[0] == Satuan Konversi & $satuan_produk[2] == Satuan Dasar
-        $harga_jual = $this->cekHargaProduk($produk);        
+        $cek_harga = $this->cekHargaProdukPromo($id_produk);
+        if ($cek_harga == ""){
+            $harga_jual = $this->cekHargaProduk($produk);
+        }else{
+            $harga_jual = $cek_harga;
+        }
+               
     }else{
         $harga_jual_konversi = SatuanKonversi::select('harga_jual_konversi')->where('id_produk', $id_produk)->where('id_satuan', $satuan_produk[0])->first()->harga_jual_konversi;
         $harga_jual = $harga_jual_konversi;        
@@ -650,7 +709,12 @@ public function prosesTambahTbsPenjualan(Request $request)
     $satuan_id = $produk[4];
     $satuan_dasar = $produk[4];
     $nama_satuan = Satuan::select('nama_satuan')->where('id', $satuan_id)->first()->nama_satuan;
-    $harga_jual = $harga_jual = $this->cekHargaProduk($produk);
+    $cek_harga = $this->cekHargaProdukPromo($id_produk);
+     if ($cek_harga == ""){
+            $harga_jual = $this->cekHargaProduk($produk);
+        }else{
+            $harga_jual = $cek_harga;
+        }
 }
 
 if ($harga_jual == '' || $harga_jual == 0) {
@@ -1312,7 +1376,12 @@ public function index()
             $nama_satuan = $satuan_produk[1];
 
             if ($satuan_produk[0] === $satuan_produk[2]) { //$satuan_produk[0] == Satuan Konversi & $satuan_produk[2] == Satuan Dasar
-                $harga_jual = $this->cekHargaProduk($produk);        
+                $cek_harga = $this->cekHargaProdukPromo($id_produk);
+                 if ($cek_harga == ""){
+                        $harga_jual = $this->cekHargaProduk($produk);
+                    }else{
+                        $harga_jual = $cek_harga;
+                    }
             }else{
                 $harga_jual_konversi = SatuanKonversi::select('harga_jual_konversi')->where('id_produk', $id_produk)->where('id_satuan', $satuan_produk[0])->first()->harga_jual_konversi;
                 $harga_jual = $harga_jual_konversi;        
@@ -1322,7 +1391,12 @@ public function index()
             $satuan_id = $produk[4];
             $satuan_dasar = $produk[4];
             $nama_satuan = Satuan::select('nama_satuan')->where('id', $satuan_id)->first()->nama_satuan;
-            $harga_jual = $harga_jual = $this->cekHargaProduk($produk);
+            $cek_harga = $this->cekHargaProdukPromo($id_produk);
+                 if ($cek_harga == ""){
+                        $harga_jual = $this->cekHargaProduk($produk);
+                    }else{
+                        $harga_jual = $cek_harga;
+                    }
         }
 
 
