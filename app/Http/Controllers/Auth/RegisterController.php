@@ -14,6 +14,8 @@ use App\User;
 use App\UserWarung;
 use App\Warung;
 use App\BankWarung;
+use App\SettingJasaPengiriman;
+use App\SettingTransferBank;
 use GuzzleHttp\Client;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
@@ -216,7 +218,8 @@ class RegisterController extends Controller
                 'google_plus'  => $sfDef->google_plus,
                 'play_store'   => $sfDef->play_store,
             ]);
-
+            $setting_pengiriman  = SettingJasaPengiriman::daftar($warung->id);
+            $setting_bank_transfer  = SettingTransferBank::daftar($warung->id);
             //SETTING APLIKASI
             $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
 

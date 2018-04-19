@@ -101,10 +101,10 @@ $judul_warung = \App\SettingFooter::where('warung_id', \App\SettingPembedaAplika
         WAR-MART.ID    
     </a>
     @else
-    <a class="simple-text logo-mini" href="http://andaglos.id/topos">
+    <a class="simple-text logo-mini" href="<?= url('/'); ?>">
         TP
     </a>
-    <a class="simple-text logo-normal" href="http://andaglos.id/topos">
+    <a class="simple-text logo-normal" href="<?= url('/'); ?>">
         {{strtoupper($judul_warung)}}    
     </a>
     @endif
@@ -475,7 +475,7 @@ $judul_warung = \App\SettingFooter::where('warung_id', \App\SettingPembedaAplika
 </body>
 <!--   Core JS Files   -->
 
-<script src="{{ asset('js/app.js?v=1.192')}}" type="text/javascript">
+<script src="{{ asset('js/app.js?v=1.193')}}" type="text/javascript">
 
 </script>
 <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript">

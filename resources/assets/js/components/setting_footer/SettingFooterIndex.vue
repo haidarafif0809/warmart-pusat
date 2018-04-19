@@ -168,7 +168,7 @@
 
      
                 axios.patch(app.url + '/' + app.setting_footer.warung_id, app.setting_footer)
-                .then(function (resp) {
+                .then((resp) => {
                     console.log(resp);
                     swal({
                         title: 'Berhasil!',
@@ -178,56 +178,55 @@
                         showConfirmButton: false
                     });
                 })
-                .catch(function (resp) {
+                .catch((resp) => {
                     console.log(resp);
                     alert('Tidak dapat menyimpan perubahan.');
-                })
+                });
             },
             getDefaultData() {
                 let app = this;
 
                 axios.get(app.url + '/default-data-setting-footer')
-                .then(function (resp) {
+                .then((resp) => {
                     let data = resp.data;
                     console.log(data);
 
-                    app.placeholders.judul_warung           = data.judul_warung;
-                    app.placeholders.support_link           = data.support_link;
-                    app.placeholders.about_link             = data.about_link;
-                    app.placeholders.about_us               = data.about_us;
-                    app.placeholders.contact_us.no_telp     = data.no_telp;
-                    app.placeholders.contact_us.alamat      = data.alamat;
-                    app.placeholders.contact_us.email       = data.email;
-                    app.placeholders.contact_us.whatsapp    = data.whatsapp;
-                    app.placeholders.sosmed.facebook        = data.facebook;
-                    app.placeholders.sosmed.twitter         = data.twitter;
-                    app.placeholders.sosmed.instagram       = data.instagram;
-                    app.placeholders.sosmed.google_plus     = data.google_plus;
-                    app.placeholders.sosmed.play_store     = data.play_store;
+                    app.placeholders.judul_warung        = data.judul_warung;
+                    app.placeholders.support_link        = data.support_link.replace('hiip', 'http');
+                    app.placeholders.about_link          = data.about_link.replace('hiip', 'http');
+                    app.placeholders.about_us            = data.about_us;
+                    app.placeholders.contact_us.no_telp  = data.no_telp;
+                    app.placeholders.contact_us.alamat   = data.alamat;
+                    app.placeholders.contact_us.email    = data.email;
+                    app.placeholders.contact_us.whatsapp = data.whatsapp;
+                    app.placeholders.sosmed.facebook     = data.facebook.replace('hiip', 'http');
+                    app.placeholders.sosmed.twitter      = data.twitter.replace('hiip', 'http');
+                    app.placeholders.sosmed.instagram    = data.instagram.replace('hiip', 'http');
+                    app.placeholders.sosmed.google_plus  = data.google_plus.replace('hiip', 'http');
+                    app.placeholders.sosmed.play_store   = data.play_store.replace('hiip', 'http');
                 })
-                .catch(function (resp) {
+                .catch((resp) => {
                     console.log(resp);
-                })
+                });
             },
             getDataSettingFooter() {
                 let app = this;
-
                 axios.get(app.url)
-                .then(function (resp) {
-                    console.log(resp);
+                .then((resp) => {
+                    console.log(resp.data);
                     app.setting_footer = resp.data;
-                    app.setting_footer.support_link = 'https:' + resp.data.support_link;
-                    app.setting_footer.about_link   = 'https:' + resp.data.about_link;
-                    app.setting_footer.facebook     = 'https:' + resp.data.facebook;
-                    app.setting_footer.twitter      = 'https:' + resp.data.twitter;
-                    app.setting_footer.instagram    = 'https:' + resp.data.instagram;
-                    app.setting_footer.google_plus  = 'https:' + resp.data.google_plus;
-                    app.setting_footer.play_store  = 'https:' + resp.data.play_store;
+                    app.setting_footer.support_link = resp.data.support_link.replace('hiip', 'http');
+                    app.setting_footer.about_link   = resp.data.about_link.replace('hiip', 'http');
+                    app.setting_footer.facebook     = resp.data.facebook.replace('hiip', 'http');
+                    app.setting_footer.twitter      = resp.data.twitter.replace('hiip', 'http');
+                    app.setting_footer.instagram    = resp.data.instagram.replace('hiip', 'http');
+                    app.setting_footer.google_plus  = resp.data.google_plus.replace('hiip', 'http');
+                    app.setting_footer.play_store   = resp.data.play_store.replace('hiip', 'http');
                 })
-                .catch(function (resp) {
+                .catch((resp) => {
                     console.log(resp);
                     alert('Tidak dapat memuat data setting footer');
-                })
+                });
             },
         }
     }

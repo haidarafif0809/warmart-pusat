@@ -706,14 +706,9 @@ methods: {
       app.openSelectizeProduk();
       app.inputPembayaranPembelian.cara_bayar = app.default_kas
 
-      if (app.inputPembayaranPembelian.subtotal == 0) { 
-        console.log(resp.data.data);
-        $.each(resp.data.data, function (i, item) {
-
-          app.inputPembayaranPembelian.subtotal += parseFloat(resp.data.data[i].subtotal)
-        });
-
-      }
+      if (app.inputPembayaranPembelian.subtotal == 0) {          
+        app.getSubtotalTbs(); 
+      } 
 
     })
     .catch(function (resp) {

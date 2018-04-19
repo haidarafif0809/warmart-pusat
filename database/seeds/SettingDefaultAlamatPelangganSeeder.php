@@ -16,7 +16,8 @@ class SettingDefaultAlamatPelangganSeeder extends Seeder
     	SettingDefaultAlamatPelanggan::create([
     		"provinsi" => 18,
     		"kabupaten" => 1801,
-    		"status_aktif"   => 0
-    	]);
+            "status_aktif"   => 0,
+            "warung_id"   => 1
+        ]);
     }
 }
