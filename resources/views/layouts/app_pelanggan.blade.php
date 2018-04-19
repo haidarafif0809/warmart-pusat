@@ -75,7 +75,7 @@
           t.src=v;s=b.getElementsByTagName(e)[0];
           s.parentNode.insertBefore(t,s)}(window, document,'script',
               'https://connect.facebook.net/en_US/fbevents.js');
-          fbq('init', {{$fixelGoogle}});
+          fbq('init', {{$fixelFacebook}});
           fbq('track', 'PageView');
       </script>
       <noscript>
@@ -105,10 +105,10 @@
 </link>
 </head>
 <style type="text/css">
-    .navbar-nav .open .dropdown-menu{
-      color: grey;
-  }
-  .navbar .navbar-brand {
+.navbar-nav .open .dropdown-menu{
+  color: grey;
+}
+.navbar .navbar-brand {
     position: relative;
     @if(Agent::isMobile())
     height: 50px;
@@ -682,12 +682,12 @@ body {
                         'Anda Belum memasukan Jumlah Produk'
                         )
                   }else if (jumlah_produk <= 0) {
-                   swal.showValidationError(
-                    'Masukan jumlah produk yang Valid'
-                    )
-               }
-               resolve()
-           }, 500)
+                     swal.showValidationError(
+                        'Masukan jumlah produk yang Valid'
+                        )
+                 }
+                 resolve()
+             }, 500)
               })
             },
             allowOutsideClick: () => !swal.isLoading()
@@ -702,20 +702,20 @@ body {
 
         $.get('{{ Url('/keranjang-belanja/tambah-produk-keranjang-belanja/') }}',{'_token': $('meta[name=csrf-token]').attr('content'),jumlah_produk:jumlah_produk,id_produk:id_produk}, function(data){
 
-         var totalProduk = $("#jumlah-keranjang").attr("data-jumlah");
-         var totalProduk = parseInt(totalProduk) + parseInt(data); 
-         var sisa_jumlah_produk = "| "+totalProduk;
-         $("#jumlah-keranjang").attr("data-jumlah",totalProduk);
-         $("#jumlah-keranjang").text(sisa_jumlah_produk);
-         swal({
-          position: 'center',
-          type: 'success',
-          text: nama_produk+' Berhasil dimasukan ke Keranjang Belanja',
-          showConfirmButton: false,
-          timer: 2000
-      })
+           var totalProduk = $("#jumlah-keranjang").attr("data-jumlah");
+           var totalProduk = parseInt(totalProduk) + parseInt(data); 
+           var sisa_jumlah_produk = "| "+totalProduk;
+           $("#jumlah-keranjang").attr("data-jumlah",totalProduk);
+           $("#jumlah-keranjang").text(sisa_jumlah_produk);
+           swal({
+              position: 'center',
+              type: 'success',
+              text: nama_produk+' Berhasil dimasukan ke Keranjang Belanja',
+              showConfirmButton: false,
+              timer: 2000
+          })
 
-     });
+       });
 
     }
 
