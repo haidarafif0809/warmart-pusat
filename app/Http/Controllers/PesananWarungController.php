@@ -503,7 +503,27 @@ class PesananWarungController extends Controller
 
     public function tambahNoResi(Request $request)
     {
-        PesananPelanggan::find($request->id_pesanan)->update(['no_resi' => $request->no_resi]);
+        if ($request->email) {
+            // return response()->json(1);
+            $pesanan_pelanggan = PesananPelanggan::select('id', 'id_pelanggan', 'updated_at', 'id_warung', 'nama_pemesan', 'no_telp_pemesan', 'alamat_pemesan', 'jumlah_produk', 'subtotal', 'metode_pembayaran', 'biaya_kirim', 'kode_unik_transfer')->whereId($request->id_pesanan)->first();
+
+            $data_warung = Warung::select('name', 'alamat', 'no_telpon', 'email')->whereId($pesanan_pelanggan->id_warung)->first();
+
+            $user = User::select('email')->whereId($pesanan_pelanggan->id_pelanggan)->first();
+
+            $produk_pesanan = DetailPesananPelanggan::with('produk')->where('id_pesanan_pelanggan', $request->id_pesanan)->get();
+
+            $waktu_update = date("d/m/Y h:i:s", strtotime($pesanan_pelanggan->updated_at));
+
+            Mail::send('auth.emails.email_nomor_resi', compact('pesanan_pelanggan', 'data_warung', 'produk_pesanan', 'waktu_update'), function ($message) use ($data_warung, $user, $pesanan_pelanggan) {
+
+            $message->from('verifikasi@andaglos.id', $data_warung->name);
+            $message->to($user->email, $pesanan_pelanggan->nama_pemesan)->subject('Pesanan telah Dikirim');
+
+            });
+        } else {
+            PesananPelanggan::find($request->id_pesanan)->update(['no_resi' => $request->no_resi]);
+        }
     }
 
 }
