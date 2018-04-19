@@ -261,7 +261,7 @@ export default {
                 html:
                 '<input id="no_resi" placeholder="Nama kategori produk" class="swal2-input">',
                 focusConfirm: false,
-                showLoaderOnConfirm: true,
+                showLoaderOnConfirm: false,
                 preConfirm: () => {
                     return new Promise((resolve, reject) => {
                         let no_resi = $('#no_resi');
@@ -274,7 +274,7 @@ export default {
                                 reject();
                             }
                             resolve(no_resi);
-                        }, 250);
+                        }, 5);
                     });
                 }
             })
@@ -306,10 +306,13 @@ export default {
                     });
                 }
                 else {
-                    // no_resi = no_resi.toUpperCase();
-                    // pesan = 'Berhasil menambahkan "'+ no_resi +'" sebagai Nomor Resi.'
                     app.noResiPesanan.email = false;
 
+                    swal({
+                        title: 'Update data..',
+                        showConfirmButton: false,
+                    })
+                    swal.showLoading();
                     axios.post(app.urlTambahNoResi, app.noResiPesanan)
                     .then(function (resp) {
                         swal({
@@ -324,29 +327,25 @@ export default {
                                 title: 'Mengirim email..',
                                 showConfirmButton: false,
                             })
-                            // .then((resp) => {
-                                axios.post(app.urlTambahNoResi, app.noResiPesanan)
-                                .then((resp) => {
-                                    console.log('then:', resp);
-                                    swal.close();
-                                    setTimeout(() => {
-                                        swal({
-                                            title: 'Berhasil!',
-                                            text: 'Berhasil Email berhasil dikirim.',
-                                            type: 'success',
-                                            timer: 1800,
-                                            showConfirmButton: false
-                                        });
-                                    }, 5);
-                                })
-                                .catch((resp) => {
-                                    console.log('catch:', resp);
-                                    alert('gagal kirim email');
-                                });                                
-                            // })
-                            // .catch((resp) => {
+                            axios.post(app.urlTambahNoResi, app.noResiPesanan)
+                            .then((resp) => {
+                                console.log('then:', resp);
+                                swal.close();
+                                setTimeout(() => {
+                                    swal({
+                                        title: 'Berhasil!',
+                                        text: 'Berhasil Email berhasil dikirim.',
+                                        type: 'success',
+                                        timer: 1800,
+                                        showConfirmButton: false
+                                    });
+                                }, 5);
+                            })
+                            .catch((resp) => {
+                                console.log('catch:', resp);
+                                alert('gagal kirim email');
+                            });                                
 
-                            // });
                             setTimeout(() => {
                                 swal.showLoading();
                             }, 5);
