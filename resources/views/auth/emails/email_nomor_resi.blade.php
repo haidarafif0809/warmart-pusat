@@ -322,7 +322,7 @@
 				                                                <p>
 				                                                    Produk yang Anda pesan dengan nomor Order #{{ $pesanan_pelanggan->id }} di 
 				                                                    <b> {{ $data_warung->name }} </b>
-				                                                    telah telah kami kirim melalui <b>{{ $pesanan_pelanggan->kurir }}</b> dengan nomor resi <b>{{ $pesanan_pelanggan->no_resi }}</b>
+				                                                    telah telah kami kirim melalui <b style="text-transform: uppercase;">{{ $pesanan_pelanggan->kurir }}</b> dengan nomor resi <b>{{ $pesanan_pelanggan->no_resi }}</b>
 				                                                </p>
 				                                            </td>
 				                                        </tr>
