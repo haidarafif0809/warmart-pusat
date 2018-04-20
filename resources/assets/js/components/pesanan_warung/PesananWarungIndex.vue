@@ -273,6 +273,11 @@ export default {
                                 no_resi.focus();
                                 reject();
                             }
+                            if (no_resi.val() == noResi) {
+                                swal.showValidationError('Nomor Resi sama dengan yang sudah ada.');
+                                no_resi.focus();
+                                reject();
+                            }
                             resolve(no_resi);
                         }, 5);
                     });
@@ -302,7 +307,7 @@ export default {
                     })
                     .catch(function (resp) {
                         console.log(resp)
-                        swal("Ada sesuatu yang salah terjadi", "", "warning");
+                        swal("Terjadi kesalahan", "", "warning");
                     });
                 }
                 else {
@@ -311,6 +316,8 @@ export default {
                     swal({
                         title: 'Update data..',
                         showConfirmButton: false,
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
                     })
                     swal.showLoading();
                     axios.post(app.urlTambahNoResi, app.noResiPesanan)
@@ -326,6 +333,8 @@ export default {
                             swal({
                                 title: 'Mengirim email..',
                                 showConfirmButton: false,
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
                             })
                             axios.post(app.urlTambahNoResi, app.noResiPesanan)
                             .then((resp) => {
@@ -360,7 +369,7 @@ export default {
                     })
                     .catch(function (resp) {
                         console.log(resp)
-                        swal("Ada sesuatu yang salah terjadi", "", "warning");
+                        swal("Terjadi kesalahan", "", "warning");
                     });
                 }
 
