@@ -8,11 +8,11 @@ $address_current = url('/');
 $address_app = \App\SettingPembedaAplikasi::select(['warung_id', 'app_address'])->where('app_address', $address_current)->first();
 // return url('/');
 
-  if ($address_app->app_address == $address_current) {
-     $default_bank = \App\SettingTransferBank::select('id')->where('default_bank', 1)->where('warung_id',$address_app->warung_id)->first()->id;
-  }else{
-      $default_bank = \App\SettingTransferBank::select('id')->where('default_bank', 1)->first()->id;
-  }
+if ($address_app->app_address == $address_current) {
+ $default_bank = \App\SettingTransferBank::select('id')->where('default_bank', 1)->where('warung_id',$address_app->warung_id)->first()->id;
+}else{
+  $default_bank = \App\SettingTransferBank::select('id')->where('default_bank', 1)->first()->id;
+}
 ?>
 @extends('layouts.app_pelanggan')
 @section('content')
@@ -314,7 +314,7 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
                     <tr id="card-produk-{{ $keranjang_belanjaans->id_keranjang_belanja }}">
                       <td><a class="btn-simple" href="{{ url('detail-produk/'.$keranjang_belanjaans->id_produk.'') }}">{{ $keranjang_belanjaans->NamaProduk }}</a></td>
                       <td class="text-right" id="jumlah-produk-{{ $keranjang_belanjaans->id_keranjang_belanja }}">{{$keranjang_belanjaans->jumlah_produk}}</td>
-                     <td class="text-right">{{ number_format($keranjang_belanjaans->harga_produk,0,',','.') }}</td> 
+                      <td class="text-right">{{ number_format($keranjang_belanjaans->harga_produk,0,',','.') }}</td> 
                       <td class="text-right" id="subtotal-produk-{{ $keranjang_belanjaans->id_keranjang_belanja }}" data-subtotal="{{$keranjang_belanjaans->harga_produk * $keranjang_belanjaans->jumlah_produk}}">{{ number_format($keranjang_belanjaans->harga_produk * $keranjang_belanjaans->jumlah_produk,0,',','.') }}</td> 
                     </tr>
                     @endforeach
@@ -456,9 +456,9 @@ $setting_aplikasi = \App\SettingAplikasi::select('tipe_aplikasi')->first();
               var city_id = resp.rajaongkir.results[i].city_id;
               var provinsi = resp.rajaongkir.results[i].province_id;
               $("#kota_pengirim").val(city_id);
-              if (auth == true) {
-                document.getElementById('provinsi').selectize.setValue(provinsi);
-              }
+              
+              document.getElementById('provinsi').selectize.setValue(provinsi);
+              
             };
 
           }); 

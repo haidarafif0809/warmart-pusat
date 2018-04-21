@@ -475,7 +475,7 @@ $judul_warung = \App\SettingFooter::where('warung_id', \App\SettingPembedaAplika
 </body>
 <!--   Core JS Files   -->
 
-<script src="{{ asset('js/app.js?v=1.194')}}" type="text/javascript">
+<script src="{{ asset('js/app.js?v=1.196')}}" type="text/javascript">
 
 </script>
 <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript">
