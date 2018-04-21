@@ -16,6 +16,8 @@ use App\Warung;
 use App\BankWarung;
 use App\SettingJasaPengiriman;
 use App\SettingTransferBank;
+use App\SettingPembedaAplikasi;
+
 use GuzzleHttp\Client;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
@@ -104,6 +106,7 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        $warung_id = $this->getIdWarung();
         $kode_verifikasi = rand(1111, 9999);
         if ($data['id_register'] == 1) {
             //Customer
@@ -116,6 +119,7 @@ class RegisterController extends Controller
                 'tipe_user'         => 3,
                 'status_konfirmasi' => 0,
                 'kode_verifikasi'   => $kode_verifikasi,
+                'id_warung'         => $warung_id
             ]);
 
             $customerRole = Role::where('name', 'customer')->first();
@@ -268,6 +272,16 @@ class RegisterController extends Controller
             return $user;
 
         }
+    }
+
+
+    public function getIdWarung(){
+        //Cek Address Aplikasi yg di Jalankan
+    $address_current = url('/');
+
+    $address_app = SettingPembedaAplikasi::select(['warung_id', 'app_address'])->where('app_address', $address_current)->first();
+
+    return $address_app->warung_id;
     }
 
     protected function kirim_kode_verifikasi(Request $request)

@@ -86,7 +86,7 @@ class CustomerController extends Controller
     public function view()
     {
 
-        $customer = Customer::where('tipe_user', 3)->orderBy('created_at', 'DESC')->paginate(10);
+        $customer = Customer::where('tipe_user', 3)->where('id_warung', Auth::user()->id_warung)->orderBy('created_at', 'DESC')->paginate(10);
         $array_customer = array();
 
         foreach ($customer as $customers) {
@@ -209,6 +209,7 @@ public function pencarian(Request $request)
             'tipe_user'         => 3,
             'status_konfirmasi' => $status_konfirmasi,
             'password'          => bcrypt($request->password),
+            'id_warung'         => Auth::user()->id_warung
         ]);
 
         //INSERT OTORITAS CUSTOMER

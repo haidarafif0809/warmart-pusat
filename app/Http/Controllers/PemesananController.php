@@ -195,6 +195,7 @@ class PemesananController extends Controller
                 'tipe_user'         => 3,
                 'status_konfirmasi' => 1,
                 'kode_verifikasi'   => $kode_verifikasi,
+                'id_warung'         => $warung_id
             ]);
 
             $customerRole = Role::where('name', 'customer')->first();
