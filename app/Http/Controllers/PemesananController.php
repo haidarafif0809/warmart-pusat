@@ -76,9 +76,9 @@ class PemesananController extends Controller
         $subtotal     = 0;
         $berat_barang = 0;
         foreach ($keranjang_belanja->get() as $keranjang_belanjaans) {
-                $harga_produk = $keranjang_belanjaans->harga_produk * $keranjang_belanjaans->jumlah_produk;
-                $subtotal += $harga_produk;
-                $berat_barang = $berat_barang += $keranjang_belanjaans->produk->berat;
+            $harga_produk = $keranjang_belanjaans->harga_produk * $keranjang_belanjaans->jumlah_produk;
+            $subtotal += $harga_produk;
+            $berat_barang = $berat_barang += $keranjang_belanjaans->produk->berat;
         }
 
         // CEK LOKASI WARUNG
@@ -143,72 +143,83 @@ class PemesananController extends Controller
 
     }
 
-    public function cekDefaultAlamatPelanggan(){        
-        $defaultAlamatPelanggan = SettingDefaultAlamatPelanggan::select('provinsi','kabupaten','status_aktif')->first();
-        if ($defaultAlamatPelanggan->status_aktif == 1) {
-            $data_pelanggan['provinsi_pelanggan']  = $defaultAlamatPelanggan->provinsi;
-            $data_pelanggan['kabupaten_pelanggan'] = $defaultAlamatPelanggan->kabupaten;
-        }else{
-            $data_pelanggan['provinsi_pelanggan']  = Indonesia::findProvince($defaultAlamatPelanggan->provinsi)->name;
-            $data_pelanggan['kabupaten_pelanggan'] = Indonesia::findCity($defaultAlamatPelanggan->kabupaten)->name;
-        }
-
-        return $data_pelanggan;
-    }
-
-
-    public function prosesSelesaikanPemesanan(Request $request)
-    {
-        //START TRANSAKSI
-        DB::beginTransaction();
-
-        if ($request->layanan_kurir != '') {
-            $layanan_kurir = explode("|", $request->layanan_kurir);
-            $layanan_kurir = $layanan_kurir[0] . " | " . $layanan_kurir[2] . " | " . $layanan_kurir[3];
-        } else {
-            $layanan_kurir = $request->layanan_kurir;
-        }
-
-                //Cek Address Aplikasi yg di Jalankan
+    public function cekDefaultAlamatPelanggan(){    
         $address_current = url('/');
         $address_app = SettingPembedaAplikasi::select(['warung_id', 'app_address'])->where('app_address', $address_current)->first();
         // return url('/');
-        $warung_id = $address_app->warung_id;
-        if (Auth::check() == false) {
-            $session = Session::get('session_id');
+        $warung_id = $address_app->warung_id;    
+        $defaultAlamatPelanggan = SettingDefaultAlamatPelanggan::select('provinsi','kabupaten','status_aktif')->where('warung_id',$warung_id);
 
-            $this->validate($request, [
-                'name'    => 'required',
-                'email'   => 'required|without_spaces|unique:users,email|email',
-                'alamat'  => 'required',
-                'no_telp' => 'required|numeric|without_spaces|unique:users,no_telp',
-                'password' => 'required|string|min:6',
-            ]);
-
-            $kode_verifikasi = rand(1111, 9999);
-            $user            = User::create([
-                'name'              => $request->name,
-                'email'             => $request->email,
-                'alamat'            => $request->alamat,
-                'no_telp'           => $request->no_telp,
-                'password'          => bcrypt($request->password),
-                'tipe_user'         => 3,
-                'status_konfirmasi' => 1,
-                'kode_verifikasi'   => $kode_verifikasi,
-            ]);
-
-            $customerRole = Role::where('name', 'customer')->first();
-            $user->attachRole($customerRole);
-
-            $id_user             = $user->id;
-            $keranjang_belanjaan = KeranjangBelanja::KeranjangBelanjaSession($session,$warung_id)->get();
-
-        } else {
-            // QUERY LENGKAPNYA ADA DI scopeKeranjangBelanjaPelanggan di model Keranjang Belanja
-            $id_user             = Auth::user()->id;
-            $keranjang_belanjaan = KeranjangBelanja::KeranjangBelanjaPelanggan($warung_id)->get();
-
+        if ($defaultAlamatPelanggan->count() > 0) {
+           if ($defaultAlamatPelanggan->first()->status_aktif == 1) {
+            $data_pelanggan['provinsi_pelanggan']  = Indonesia::findProvince($defaultAlamatPelanggan->first()->provinsi)->name;
+            $data_pelanggan['kabupaten_pelanggan'] = Indonesia::findCity($defaultAlamatPelanggan->first()->kabupaten)->name;
+        }else{
+            $data_pelanggan['provinsi_pelanggan']  = "";
+            $data_pelanggan['kabupaten_pelanggan'] = "";
         }
+    }else{
+       $data_pelanggan['provinsi_pelanggan']  = "";
+       $data_pelanggan['kabupaten_pelanggan'] = "";
+   }
+
+
+   return $data_pelanggan;
+}
+
+
+public function prosesSelesaikanPemesanan(Request $request)
+{
+        //START TRANSAKSI
+    DB::beginTransaction();
+
+    if ($request->layanan_kurir != '') {
+        $layanan_kurir = explode("|", $request->layanan_kurir);
+        $layanan_kurir = $layanan_kurir[0] . " | " . $layanan_kurir[2] . " | " . $layanan_kurir[3];
+    } else {
+        $layanan_kurir = $request->layanan_kurir;
+    }
+
+                //Cek Address Aplikasi yg di Jalankan
+    $address_current = url('/');
+    $address_app = SettingPembedaAplikasi::select(['warung_id', 'app_address'])->where('app_address', $address_current)->first();
+        // return url('/');
+    $warung_id = $address_app->warung_id;
+    if (Auth::check() == false) {
+        $session = Session::get('session_id');
+
+        $this->validate($request, [
+            'name'    => 'required',
+            'email'   => 'required|without_spaces|unique:users,email|email',
+            'alamat'  => 'required',
+            'no_telp' => 'required|numeric|without_spaces|unique:users,no_telp',
+            'password' => 'required|string|min:6',
+        ]);
+
+        $kode_verifikasi = rand(1111, 9999);
+        $user            = User::create([
+            'name'              => $request->name,
+            'email'             => $request->email,
+            'alamat'            => $request->alamat,
+            'no_telp'           => $request->no_telp,
+            'password'          => bcrypt($request->password),
+            'tipe_user'         => 3,
+            'status_konfirmasi' => 1,
+            'kode_verifikasi'   => $kode_verifikasi,
+        ]);
+
+        $customerRole = Role::where('name', 'customer')->first();
+        $user->attachRole($customerRole);
+
+        $id_user             = $user->id;
+        $keranjang_belanjaan = KeranjangBelanja::KeranjangBelanjaSession($session,$warung_id)->get();
+
+    } else {
+            // QUERY LENGKAPNYA ADA DI scopeKeranjangBelanjaPelanggan di model Keranjang Belanja
+        $id_user             = Auth::user()->id;
+        $keranjang_belanjaan = KeranjangBelanja::KeranjangBelanjaPelanggan($warung_id)->get();
+
+    }
 
         $cek_pesanan           = 0; // BUAT VARIABEL CEK PESANAN YANG KITA SET  0
         $id_pesanan            = 0;
