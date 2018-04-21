@@ -211,7 +211,7 @@ export default {
     			page = 1;
     		}
     		axios.get(app.url+'/view?page='+page)
-    		.then(function (resp) {
+    		.then((resp) => {
                 console.log(resp.data.data)
     			app.pesananWarung = resp.data.data;
                 app.pesananWarungData = resp.data;
@@ -219,7 +219,7 @@ export default {
     			app.loading = false;
                 console.log(resp.data.agent)
     		})
-    		.catch(function (resp) {
+    		.catch((resp) => {
     			console.log(resp);
     			app.loading = false;
     			alert("Tidak Dapat Memuat Pesanan");
@@ -231,12 +231,12 @@ export default {
                 page = 1;
             }
             axios.get(app.url+'/pencarian?search='+app.pencarian+'&page='+page)
-            .then(function (resp) {
+            .then((resp) => {
                 app.pesananWarung = resp.data.data;
                 app.pesananWarungData = resp.data;
                 app.loading = false;
             })
-            .catch(function (resp) {
+            .catch((resp) => {
                 console.log(resp);
                 alert("Tidak Dapat Memuat Pesanan");
             });
@@ -245,10 +245,10 @@ export default {
             var app = this; 
 
             axios.get(app.url+'/detail-view/'+id)
-            .then(function (resp) {
+            .then((resp) => {
                 app.detailPesananWarung = resp.data;
             })
-            .catch(function (resp) {
+            .catch((resp) => {
                 app.loading = false;
                 alert("Tidak Dapat Memuat Detail Pesanan");
             });
@@ -283,19 +283,25 @@ export default {
                     });
                 }
             })
-            .then(data => {
+            .then((data) => {
                 let no_resi = data[0].value;
-                let pesan;
                 app.noResiPesanan.id_pesanan = idPesanan;
-                app.noResiPesanan.no_resi = no_resi.toUpperCase();
+
+                swal({
+                    title: 'Update data..',
+                    showConfirmButton: false,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                })
+
+                swal.showLoading();
 
                 if (!no_resi) {
                     no_resi = null;
-                    // pesan = 'Berhasil menghapus Nomor Resi dari Pesanan.';
                     app.noResiPesanan.email = false;
 
                     axios.post(app.urlTambahNoResi, app.noResiPesanan)
-                    .then(function (resp) {
+                    .then((resp) => {
                         swal({
                             title: 'Berhasil!',
                             text: 'Berhasil menghapus Nomor Resi dari Pesanan.',
@@ -305,23 +311,17 @@ export default {
                         });
                         app.getResults();
                     })
-                    .catch(function (resp) {
+                    .catch((resp) => {
                         console.log(resp)
                         swal("Terjadi kesalahan", "", "warning");
                     });
                 }
                 else {
+                    app.noResiPesanan.no_resi = no_resi.toUpperCase();
                     app.noResiPesanan.email = false;
 
-                    swal({
-                        title: 'Update data..',
-                        showConfirmButton: false,
-                        allowOutsideClick: false,
-                        allowEscapeKey: false,
-                    })
-                    swal.showLoading();
                     axios.post(app.urlTambahNoResi, app.noResiPesanan)
-                    .then(function (resp) {
+                    .then((resp) => {
                         swal({
                             title: 'Berhasil!',
                             text: 'Berhasil menambahkan "'+ app.noResiPesanan.no_resi +'" sebagai Nomor Resi.',
@@ -339,7 +339,6 @@ export default {
                             axios.post(app.urlTambahNoResi, app.noResiPesanan)
                             .then((resp) => {
                                 console.log('then:', resp);
-                                swal.close();
                                 setTimeout(() => {
                                     swal({
                                         title: 'Berhasil!',
@@ -362,19 +361,19 @@ export default {
                         .catch((resp) => {
 
                         });
+
                         setTimeout(() => {
                             swal.clickConfirm();
                         }, 800);
                         app.getResults();                        
                     })
-                    .catch(function (resp) {
+                    .catch((resp) => {
                         console.log(resp)
                         swal("Terjadi kesalahan", "", "warning");
                     });
                 }
-
             })
-            .catch(function (resp) {
+            .catch((resp) => {
                 if (resp != 'esc' && resp != 'overlay') {   
                     swal("Ups.. Ada yang tidak beres.", "Penambahan Nomor Resi gagal!", "error");
                 }
@@ -388,7 +387,7 @@ export default {
             no_resi.focus();
 
             var button = $(".swal2-confirm");
-            $('.swal2-container').keydown(function (event) {
+            $('.swal2-container').keydown((event) => {
 
                 /*
                 | ----------------------------------------------------------------------------
