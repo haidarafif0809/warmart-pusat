@@ -64,8 +64,8 @@ class SettingPengirimanController extends Controller
            $dataDefault = $defaultAlamatPelanggan->first();
            $kabupaten = Indonesia::allCities()->where('province_id',$defaultAlamatPelanggan->first()->provinsi);
        }else{
-        $dataDefault = "";
-        $kabupaten = "";
+        $dataDefault = [];
+        $kabupaten = [];
     }
 
     $response['provinsi'] = $provinsi;
