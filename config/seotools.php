@@ -6,7 +6,7 @@ return [
          * The default configurations to be used by the meta generator.
          */
         'defaults'       => [
-            'description'  => 'For those who helped create the Genki Dama', // set false to total remove
+            'description'  => 'Toko Online', // set false to total remove
             'separator'    => ' - ',
             'keywords'     => [],
             'canonical'    => false, // Set null for using Url::current(), set false to total remove
@@ -28,7 +28,7 @@ return [
          * The default configurations to be used by the opengraph generator.
          */
         'defaults' => [
-            'description' => 'For those who helped create the Genki Dama', // set false to total remove
+            'description' => 'Toko Online', // set false to total remove
             'url'         => false, // Set null for using Url::current(), set false to total remove
             'type'        => false,
             'site_name'   => false,
