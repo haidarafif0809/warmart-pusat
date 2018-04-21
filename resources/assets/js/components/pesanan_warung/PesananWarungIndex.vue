@@ -83,11 +83,16 @@
                                      </td>
                                      <td>{{ pesananWarung.pesanan_warung.created_at }}</td>
                                      <td>
-                                        <span v-if="pesananWarung.pesanan_warung.no_resi == null">
-                                            <button type="button" class="btn btn-sm btn-primary"  @click="insertNoResi(pesananWarung.pesanan_warung.id, pesananWarung.pesanan_warung.no_resi)">Masukkan</button>
+                                        <span v-if="pesananWarung.pesanan_warung.kurir != 'cod'">
+                                            <span v-if="pesananWarung.pesanan_warung.no_resi == null">
+                                                <button type="button" class="btn btn-sm btn-primary"  @click="insertNoResi(pesananWarung.pesanan_warung.id, pesananWarung.pesanan_warung.no_resi)">Masukkan</button>
+                                            </span>
+                                            <span v-else>
+                                                <a :href="url2" @click="insertNoResi(pesananWarung.pesanan_warung.id, pesananWarung.pesanan_warung.no_resi)">{{ pesananWarung.pesanan_warung.no_resi }}</a>
+                                            </span>
                                         </span>
                                         <span v-else>
-                                            <a :href="url2" @click="insertNoResi(pesananWarung.pesanan_warung.id, pesananWarung.pesanan_warung.no_resi)">{{ pesananWarung.pesanan_warung.no_resi }}</a>
+                                            <button class="btn btn-sm btn-default disabled">Tidak Tersedia</button>
                                         </span>
                                      </td>
                                      <td>
@@ -206,7 +211,7 @@ export default {
     			page = 1;
     		}
     		axios.get(app.url+'/view?page='+page)
-    		.then(function (resp) {
+    		.then((resp) => {
                 console.log(resp.data.data)
     			app.pesananWarung = resp.data.data;
                 app.pesananWarungData = resp.data;
@@ -214,7 +219,7 @@ export default {
     			app.loading = false;
                 console.log(resp.data.agent)
     		})
-    		.catch(function (resp) {
+    		.catch((resp) => {
     			console.log(resp);
     			app.loading = false;
     			alert("Tidak Dapat Memuat Pesanan");
@@ -226,12 +231,12 @@ export default {
                 page = 1;
             }
             axios.get(app.url+'/pencarian?search='+app.pencarian+'&page='+page)
-            .then(function (resp) {
+            .then((resp) => {
                 app.pesananWarung = resp.data.data;
                 app.pesananWarungData = resp.data;
                 app.loading = false;
             })
-            .catch(function (resp) {
+            .catch((resp) => {
                 console.log(resp);
                 alert("Tidak Dapat Memuat Pesanan");
             });
@@ -240,10 +245,10 @@ export default {
             var app = this; 
 
             axios.get(app.url+'/detail-view/'+id)
-            .then(function (resp) {
+            .then((resp) => {
                 app.detailPesananWarung = resp.data;
             })
-            .catch(function (resp) {
+            .catch((resp) => {
                 app.loading = false;
                 alert("Tidak Dapat Memuat Detail Pesanan");
             });
@@ -256,7 +261,7 @@ export default {
                 html:
                 '<input id="no_resi" placeholder="Nama kategori produk" class="swal2-input">',
                 focusConfirm: false,
-                showLoaderOnConfirm: true,
+                showLoaderOnConfirm: false,
                 preConfirm: () => {
                     return new Promise((resolve, reject) => {
                         let no_resi = $('#no_resi');
@@ -268,44 +273,107 @@ export default {
                                 no_resi.focus();
                                 reject();
                             }
+                            if (no_resi.val() == noResi) {
+                                swal.showValidationError('Nomor Resi sama dengan yang sudah ada.');
+                                no_resi.focus();
+                                reject();
+                            }
                             resolve(no_resi);
-                        }, 250);
+                        }, 5);
                     });
                 }
             })
-            .then(data => {
+            .then((data) => {
                 let no_resi = data[0].value;
-                let pesan;
+                app.noResiPesanan.id_pesanan = idPesanan;
+
+                swal({
+                    title: 'Update data..',
+                    showConfirmButton: false,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                })
+
+                swal.showLoading();
 
                 if (!no_resi) {
                     no_resi = null;
-                    pesan = 'Berhasil menghapus Nomor Resi dari Pesanan.';
+                    app.noResiPesanan.email = false;
+
+                    axios.post(app.urlTambahNoResi, app.noResiPesanan)
+                    .then((resp) => {
+                        swal({
+                            title: 'Berhasil!',
+                            text: 'Berhasil menghapus Nomor Resi dari Pesanan.',
+                            type: 'success',
+                            showConfirmButton: false,
+                            timer: 2000,
+                        });
+                        app.getResults();
+                    })
+                    .catch((resp) => {
+                        console.log(resp)
+                        swal("Terjadi kesalahan", "", "warning");
+                    });
                 }
                 else {
-                    no_resi = no_resi.toUpperCase();
-                    pesan = 'Berhasil menambahkan "'+ no_resi +'" sebagai Nomor Resi.'
-                }
+                    app.noResiPesanan.no_resi = no_resi.toUpperCase();
+                    app.noResiPesanan.email = false;
 
-                app.noResiPesanan.id_pesanan = idPesanan;
-                app.noResiPesanan.no_resi = no_resi;
+                    axios.post(app.urlTambahNoResi, app.noResiPesanan)
+                    .then((resp) => {
+                        swal({
+                            title: 'Berhasil!',
+                            text: 'Berhasil menambahkan "'+ app.noResiPesanan.no_resi +'" sebagai Nomor Resi.',
+                            type: 'success',
+                            showConfirmButton: false,
+                        })
+                        .then((resp) => {
+                            app.noResiPesanan.email = true;
+                            swal({
+                                title: 'Mengirim email..',
+                                showConfirmButton: false,
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                            })
+                            axios.post(app.urlTambahNoResi, app.noResiPesanan)
+                            .then((resp) => {
+                                console.log('then:', resp);
+                                setTimeout(() => {
+                                    swal({
+                                        title: 'Berhasil!',
+                                        text: 'Berhasil Email berhasil dikirim.',
+                                        type: 'success',
+                                        timer: 1800,
+                                        showConfirmButton: false
+                                    });
+                                }, 5);
+                            })
+                            .catch((resp) => {
+                                console.log('catch:', resp);
+                                alert('gagal kirim email');
+                            });                                
 
-                axios.post(app.urlTambahNoResi, app.noResiPesanan)
-                .then(function (resp) {
-                    swal({
-                        title: "Berhasil!",
-                        text: pesan,
-                        type: 'success',
-                        showConfirmButton: false,
-                        timer: 2000,
+                            setTimeout(() => {
+                                swal.showLoading();
+                            }, 5);
+                        })
+                        .catch((resp) => {
+
+                        });
+
+                        setTimeout(() => {
+                            swal.clickConfirm();
+                        }, 800);
+                        app.getResults();                        
+                    })
+                    .catch((resp) => {
+                        console.log(resp)
+                        swal("Terjadi kesalahan", "", "warning");
                     });
-                    app.getResults();
-                })
-                .catch(function (resp) {
-                    console.log(resp)
-                    swal("Ada sesuatu yang salah terjadi", "", "warning");
-                });
+                }
             })
-            .catch(function (resp) {
+            .catch((resp) => {
                 if (resp != 'esc' && resp != 'overlay') {   
                     swal("Ups.. Ada yang tidak beres.", "Penambahan Nomor Resi gagal!", "error");
                 }
@@ -319,7 +387,7 @@ export default {
             no_resi.focus();
 
             var button = $(".swal2-confirm");
-            $('.swal2-container').keydown(function (event) {
+            $('.swal2-container').keydown((event) => {
 
                 /*
                 | ----------------------------------------------------------------------------
