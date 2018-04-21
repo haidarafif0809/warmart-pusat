@@ -505,7 +505,7 @@ class PesananWarungController extends Controller
     {
         if ($request->email) {
             // return response()->json(1);
-            $pesanan_pelanggan = PesananPelanggan::select('id', 'id_pelanggan', 'updated_at', 'id_warung', 'nama_pemesan', 'no_telp_pemesan', 'alamat_pemesan', 'jumlah_produk', 'subtotal', 'metode_pembayaran', 'biaya_kirim', 'kode_unik_transfer')->whereId($request->id_pesanan)->first();
+            $pesanan_pelanggan = PesananPelanggan::select('id', 'id_pelanggan', 'updated_at', 'id_warung', 'nama_pemesan', 'no_telp_pemesan', 'alamat_pemesan', 'jumlah_produk', 'subtotal', 'kurir', 'metode_pembayaran', 'biaya_kirim', 'kode_unik_transfer', 'no_resi')->whereId($request->id_pesanan)->first();
 
             $data_warung = Warung::select('name', 'alamat', 'no_telpon', 'email')->whereId($pesanan_pelanggan->id_warung)->first();
 
