@@ -158,4 +158,20 @@ class PenerimaanProdukController extends Controller
 		}
 
 	}
+
+
+    //PROSES BATAL TBS PENERIMAAN PRODUK
+	public function batalPenerimaanProduk()
+	{
+
+		if (Auth::user()->id_warung == '') {
+			Auth::logout();
+			return response()->view('error.403');
+		} else {
+			$session_id         = session()->getId();
+			$data_tbs_pembelian = TbsPenerimaanProduk::where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->delete();
+
+			return response(200);
+		}
+	}
 }

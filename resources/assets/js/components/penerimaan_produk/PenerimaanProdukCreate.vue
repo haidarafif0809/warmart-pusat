@@ -189,7 +189,7 @@
                           <button type="button" class="btn btn-success btn-footer" id="bayar" v-on:click="selesaiPembelianOrder()" v-shortkey.push="['f2']" @shortkey="selesaiPembelianOrder()"><font style="font-size:15px;">Bayar(F2)</font></button>
                         </div>
                         <div class="col-md-5 col-xs-5">
-                          <button type="submit" class="btn btn-danger btn-footer" id="btnBatal" v-on:click="batalPembelian()" v-shortkey.push="['f3']" @shortkey="batalPembelian()"> <font style="font-size:15px;">Batal(F3) </font></button>
+                          <button type="submit" class="btn btn-danger btn-footer" id="btnBatal" v-on:click="batalPenerimaanProdu(inputPembayaranPenerimaanProduk.suplier)" v-shortkey.push="['f3']" @shortkey="batalPenerimaanProdu(inputPembayaranPenerimaanProduk.suplier)"> <font style="font-size:15px;">Batal(F3) </font></button>
                         </div>
                       </div>
                     </div>
@@ -487,10 +487,10 @@
             });
 
           },
-          batalPembelian(){
+          batalPenerimaanProdu(supplier){
             var app = this;
             app.$swal({
-              text: "Anda Yakin Ingin Membatalkan Transaksi Pembelian Ini ?",
+              text: `Anda Yakin Ingin Membatalkan Penerimaan Produk Supplier ${supplier} ?`,
               buttons: true,
               dangerMode: true,
             })
@@ -498,7 +498,7 @@
               if (willDelete) {
 
                 app.loading = true;
-                axios.post(app.url+'/batal-transaksi-pembelian')
+                axios.post(app.url+'/batal-penerimaan-produk')
                 .then(function (resp) {
 
                   var subtotal = parseInt(app.inputPembayaranPenerimaanProduk.subtotal) - parseInt(resp.data.subtotal)
@@ -506,11 +506,13 @@
                   app.alert("Membatalkan Transaksi Pembelian");
                   app.inputPembayaranPenerimaanProduk.suplier = ''
                   app.inputPembayaranPenerimaanProduk.subtotal = 0
+                  
                 })
                 .catch(function (resp) {
 
                   app.loading = false;
-                  alert("Tidak dapat Membatalkan Transaksi Pembelian");
+                  alert("Tidak dapat Membatalkan Transaksi Penerimaan Produk");
+
                 });
 
               } else {

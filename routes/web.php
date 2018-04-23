@@ -603,6 +603,7 @@ Route::get('/penerimaan-produk/suplier-order', 'PenerimaanProdukController@supli
 Route::get('/penerimaan-produk/view-tbs-penerimaan-produk', 'PenerimaanProdukController@viewTbsPenerimaanProduk')->middleware('auth');
 Route::get('/penerimaan-produk/pencarian-tbs-penerimaan-produk', 'PenerimaanProdukController@pencarianTbsPenerimaanProduk')->middleware('auth');
 Route::get('/penerimaan-produk/proses-tbs-penerimaan-produk', 'PenerimaanProdukController@prosesTbsPenerimaanProduk')->middleware('auth');
+Route::post('/penerimaan-produk/batal-penerimaan-produk', 'PenerimaanProdukController@batalPenerimaanProduk')->middleware('auth');
 
 // PENERIMAAN PRODUK
 
