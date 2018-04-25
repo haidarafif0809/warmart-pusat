@@ -33,6 +33,7 @@ class DatabaseSeeder extends Seeder
         $this->call(FilterSettingPromoSeeder::class);
         $this->call(SettingDefaultAlamatPelangganSeeder::class);
         $this->call(PermissionSettingPromoSeeder::class);
+        $this->call(SettingSeoSeeder::class);
         
     }
 }

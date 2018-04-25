@@ -597,6 +597,16 @@ Route::get('/pembelian-order/proses-edit-tax-tbs-pembelian', 'PembelianOrderCont
 
 // PEMBELIAN ORDER
 
+// PENERIMAAN PRODUK
+
+Route::get('/penerimaan-produk/suplier-order', 'PenerimaanProdukController@suplierOrder')->middleware('auth');
+Route::get('/penerimaan-produk/view-tbs-penerimaan-produk', 'PenerimaanProdukController@viewTbsPenerimaanProduk')->middleware('auth');
+Route::get('/penerimaan-produk/pencarian-tbs-penerimaan-produk', 'PenerimaanProdukController@pencarianTbsPenerimaanProduk')->middleware('auth');
+Route::get('/penerimaan-produk/proses-tbs-penerimaan-produk', 'PenerimaanProdukController@prosesTbsPenerimaanProduk')->middleware('auth');
+Route::post('/penerimaan-produk/batal-penerimaan-produk', 'PenerimaanProdukController@batalPenerimaanProduk')->middleware('auth');
+
+// PENERIMAAN PRODUK
+
 //menampilkan seetting pengiriman
 Route::get('/setting-pengiriman/view', 'SettingPengirimanController@view')->middleware('auth');
 Route::get('/setting-pengiriman/view-bank', 'SettingPengirimanController@viewBank')->middleware('auth');
@@ -1000,6 +1010,10 @@ Route::post('/setting-promo/{id}', 'SettingPromoController@update')->middleware(
 Route::get('/setting-fixel/view', 'SettingFixelController@view')->middleware('auth');
 Route::post('/setting-fixel/simpan-fixel', 'SettingFixelController@simpanSetting')->middleware('auth');
 
+// Setting SEO
+Route::get('/optimasi-seo/view', 'SettingSeoController@view')->middleware('auth');
+Route::post('/optimasi-seo/simpan-seo', 'SettingSeoController@simpanSetting')->middleware('auth');
+
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
     Route::resource('user', 'UserController');
@@ -1043,6 +1057,7 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
     Route::resource('bank-warung', 'BankWarungController');
     Route::resource('setting-promo', 'SettingPromoController');
     Route::resource('pembelian-order', 'PembelianOrderController');
+    Route::resource('penerimaan-produk', 'PenerimaanProdukController');
 
 //BARANG
     //HALAMAN DESKRIPSI

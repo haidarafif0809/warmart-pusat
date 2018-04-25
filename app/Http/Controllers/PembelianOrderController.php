@@ -613,6 +613,7 @@ class PembelianOrderController extends Controller
                     'subtotal'         => $data_tbs_pembelian_order->subtotal,
                     'tax'              => $data_tbs_pembelian_order->tax,
                     'potongan'         => $data_tbs_pembelian_order->potongan,
+                    'status_harga'         => $data_tbs_pembelian_order->status_harga,
                     'warung_id'        => $warung_id,
                     ]);
             }
