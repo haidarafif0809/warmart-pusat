@@ -142,7 +142,7 @@ $judul_warung = \App\SettingFooter::select()->first()->judul_warung;
      </div>
      <div class="col-md-6 col-sm-6">
       <h2 class="title"> {{ $nama_produk }} </h2>
-      <h3 class="main-price">Rp. {{ number_format($lihat_deskripsi_produk->harga_jual,0,',','.') }}</h3>
+      <h3 class="main-price">Rp. {{ number_format($harga_produk,0,',','.') }}</h3>
       {!! substr($lihat_deskripsi_produk->deskripsi_produk, 0, 300) !!}...
       <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
        <h4 class="panel-title">

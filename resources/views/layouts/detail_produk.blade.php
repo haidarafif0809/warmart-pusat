@@ -433,7 +433,7 @@ if ($address_current == $address_app->app_address) {
                 {{ $barang->nama }}
               </h2>
               <h3 class="main-price h3">
-                Rp. {{ number_format($barang->harga_jual,0,',','.') }}
+                Rp. {{ number_format($harga_produk,0,',','.') }}
               </h3>
               <a class="description" style="font-size: 20px;">
                 <i class="material-icons" style="font-size: 30px;">

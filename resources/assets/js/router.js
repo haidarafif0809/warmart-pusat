@@ -194,6 +194,9 @@ import SettingPromoEdit from './components/setting_promo/SettingPromoEdit.vue';
 // PEMBELIAN ORDER 
 import PembelianOrderCreate from './components/pembelian_order/PembelianOrderCreate.vue';
 
+// PENERIMAAN PRODUK
+import PenerimaanProdukCreate from './components/penerimaan_produk/PenerimaanProdukCreate.vue';
+
 // SETTING FIXEL
 import SettingFixel from './components/setting_pixel/SettingFixel.vue';
 
@@ -816,6 +819,10 @@ const routes = [{
         path: '/setting-fixel', 
         component: SettingFixel, 
         name: 'settingFixelIndex'
+    },{ 
+        path: '/create-penerimaan-produk', 
+        component: PenerimaanProdukCreate, 
+        name: 'createPenerimaanProduk'
     }
 
 

@@ -17,7 +17,7 @@ class Customer extends Model
 
   protected $table = 'users';
 
-  protected $fillable = ['id','email','password','name', 'alamat', 'wilayah', 'no_telp','tgl_lahir','tipe_user', 'status_konfirmasi', 'kode_pelanggan'];
+  protected $fillable = ['id','email','password','name', 'alamat', 'wilayah', 'no_telp','tgl_lahir','tipe_user', 'status_konfirmasi', 'kode_pelanggan','id_warung'];
 
   protected $hidden = [
     'password', 'remember_token',

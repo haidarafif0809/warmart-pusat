@@ -196,17 +196,18 @@ public function prosesSelesaikanPemesanan(Request $request)
             'password' => 'required|string|min:6',
         ]);
 
-        $kode_verifikasi = rand(1111, 9999);
-        $user            = User::create([
-            'name'              => $request->name,
-            'email'             => $request->email,
-            'alamat'            => $request->alamat,
-            'no_telp'           => $request->no_telp,
-            'password'          => bcrypt($request->password),
-            'tipe_user'         => 3,
-            'status_konfirmasi' => 1,
-            'kode_verifikasi'   => $kode_verifikasi,
-        ]);
+            $kode_verifikasi = rand(1111, 9999);
+            $user            = User::create([
+                'name'              => $request->name,
+                'email'             => $request->email,
+                'alamat'            => $request->alamat,
+                'no_telp'           => $request->no_telp,
+                'password'          => bcrypt($request->password),
+                'tipe_user'         => 3,
+                'status_konfirmasi' => 1,
+                'kode_verifikasi'   => $kode_verifikasi,
+                'id_warung'         => $warung_id
+            ]);
 
         $customerRole = Role::where('name', 'customer')->first();
         $user->attachRole($customerRole);
