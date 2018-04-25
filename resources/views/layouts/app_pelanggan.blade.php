@@ -34,6 +34,9 @@
     }else{
         $foto_logo = \App\UserWarung::select()->where('tipe_user',4)->orderBy('id', 'asc')->limit(1)->first();
     }
+
+
+    $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description'])->where('warung_id',$address_app->warung_id)->first();
     ?>
     
     @if($setting_aplikasi->tipe_aplikasi == 0)
@@ -56,6 +59,11 @@
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
     <meta content="width=device-width" name="viewport"/>
+    
+    {{-- Optimasi SEO --}}
+    <meta name="keywords" content="<?=$optimasSeo->content_keyword; ?>">
+    <meta name="description" content="<?=$optimasSeo->content_description; ?>">
+
     <!-- Bootstrap core CSS     -->
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet"/>
     <link href="{{ asset('css/selectize.bootstrap3.css') }}" rel="stylesheet">
@@ -106,10 +114,10 @@
 </link>
 </head>
 <style type="text/css">
-.navbar-nav .open .dropdown-menu{
-  color: grey;
-}
-.navbar .navbar-brand {
+    .navbar-nav .open .dropdown-menu{
+      color: grey;
+  }
+  .navbar .navbar-brand {
     position: relative;
     @if(Agent::isMobile())
     height: 50px;

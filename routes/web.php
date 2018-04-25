@@ -1010,6 +1010,10 @@ Route::post('/setting-promo/{id}', 'SettingPromoController@update')->middleware(
 Route::get('/setting-fixel/view', 'SettingFixelController@view')->middleware('auth');
 Route::post('/setting-fixel/simpan-fixel', 'SettingFixelController@simpanSetting')->middleware('auth');
 
+// Setting SEO
+Route::get('/optimasi-seo/view', 'SettingSeoController@view')->middleware('auth');
+Route::post('/optimasi-seo/simpan-seo', 'SettingSeoController@simpanSetting')->middleware('auth');
+
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
     Route::resource('user', 'UserController');
