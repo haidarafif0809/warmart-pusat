@@ -359,10 +359,18 @@ import { mapState } from 'vuex';
                 if (document.getElementById('baner_promo').files[0] != undefined) {
                     newSettingPromo.append('baner_promo', document.getElementById('baner_promo').files[0]);
                 }
+
+                var date_dari_tanggal = app.setting.dari_tanggal;
+                var date_sampai_tanggal = app.setting.sampai_tanggal;
+
+                var dari_tanggal = "" + date_dari_tanggal.getFullYear() +'-'+ ((date_dari_tanggal.getMonth() + 1) > 9 ? '' : '0') + (date_dari_tanggal.getMonth() + 1) +'-'+ (date_dari_tanggal.getDate() > 9 ? '' : '0') + date_dari_tanggal.getDate();
+                var sampai_tanggal = "" + date_sampai_tanggal.getFullYear() +'-'+ ((date_sampai_tanggal.getMonth() + 1) > 9 ? '' : '0') + (date_sampai_tanggal.getMonth() + 1) +'-'+ (date_sampai_tanggal.getDate() > 9 ? '' : '0') + date_sampai_tanggal.getDate();
+
+
                 newSettingPromo.append('produk', app.setting.produk);
                 newSettingPromo.append('harga_promo', app.setting.harga_promo);
-                newSettingPromo.append('dari_tanggal', app.setting.dari_tanggal);
-                newSettingPromo.append('sampai_tanggal', app.setting.sampai_tanggal);
+                newSettingPromo.append('dari_tanggal', dari_tanggal);
+                newSettingPromo.append('sampai_tanggal', sampai_tanggal);
                 newSettingPromo.append('jenis_promo', app.setting.jenis_promo);
                 newSettingPromo.append('status_aktif', app.setting.status_aktif);
 

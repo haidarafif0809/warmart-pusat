@@ -180,8 +180,8 @@ return response()->json([
                         'harga_coret'        => $request->harga_promo,
                         'id_produk'          => $id_produk,
                         'id_warung'          => Auth::user()->id_warung,
-                        'dari_tanggal'       => $this->tanggalSql($request->dari_tanggal),
-                        'sampai_tanggal'     => $this->tanggalSql($request->sampai_tanggal),
+                        'dari_tanggal'       => $request->dari_tanggal,
+                        'sampai_tanggal'     => $request->sampai_tanggal,
                         'jenis_promo'        => $request->jenis_promo,
                         'status'             => $status_aktif]);
 
@@ -210,12 +210,7 @@ return response()->json([
     }
 }
 
-public function tanggalSql($tangal)
-{
-    $date        = date_create($tangal);
-    $date_format = date_format($date, "Y-m-d");
-    return $date_format;
-}
+
 
 public function tambahWaktu(Request $request,$id)
 {
@@ -290,8 +285,8 @@ public function tambahWaktu(Request $request,$id)
                         'harga_coret'        => $request->harga_promo,
                         'id_produk'          => $id_produk,
                         'id_warung'          => Auth::user()->id_warung,
-                        'dari_tanggal'       => $this->tanggalSql($request->dari_tanggal),
-                        'sampai_tanggal'     => $this->tanggalSql($request->sampai_tanggal),
+                        'dari_tanggal'       => $request->dari_tanggal,
+                        'sampai_tanggal'     => $request->sampai_tanggal,
                         'jenis_promo'        => $request->jenis_promo,
                         'status'             => $status_aktif
                     ]);
