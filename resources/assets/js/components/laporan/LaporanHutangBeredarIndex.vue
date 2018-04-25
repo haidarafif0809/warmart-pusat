@@ -19,7 +19,7 @@
 				</div>
 
 				<div class="card-content">
-					<h4 class="card-title"> Laporan Hutang Beredar </h4>
+					<h4 class="card-title"> Laporan Hutang</h4>
 
 					<div class="row">
 						<div class="form-group col-md-2">
@@ -29,8 +29,14 @@
 							<datepicker :input-class="'form-control'" placeholder="Sampai Tanggal" v-model="filter.sampai_tanggal" name="sampai_tanggal" v-bind:id="'sampai_tanggal'"></datepicker>
 						</div>
 						<div class="form-group col-md-2">
-							<selectize-component v-model="filter.suplier" id="pilih_suplier"> 
+							<selectize-component v-model="filter.suplier" id="pilih_suplier" :settings="placeholder_supplier"> 
 								<option v-for="supliers, index in suplier" v-bind:value="supliers.id" >{{ supliers.nama_suplier }}</option>
+							</selectize-component>
+						</div>
+						<div class="form-group col-md-2">
+							<selectize-component v-model="filter.pilih_laporan" id="pilih_laporan" ref='pilih_laporan'> 
+								<option v-bind:value="1">Beredar</option>
+								<option v-bind:value="2">Terbayar</option>
 							</selectize-component>
 						</div>
 						<div class="form-group col-md-2">
@@ -86,6 +92,7 @@
 								<tr ><td colspan="9"  class="text-center">Tidak Ada Data</td></tr>
 							</tbody>
 						</table>
+
 					</div><!--RESPONSIVE-->
 
 					<!--DOWNLOAD EXCEL-->
@@ -98,13 +105,13 @@
 					<div align="right"><pagination :data="hutangBeredarData" v-on:pagination-change-page="prosesLaporan" :limit="4"></pagination></div>
 				</div>
 
-					<hr>
+				<hr>
 
 
-				</div>
 			</div>
 		</div>
 	</div>
+</div>
 </template>
 <script type="text/javascript">
 import { mapState } from 'vuex';
@@ -118,10 +125,14 @@ export default {
 				dari_tanggal: '',
 				sampai_tanggal: new Date(),
 				suplier: '',
+				pilih_laporan : 1,
 			},
-			url : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-hutang-beredar"),
-			urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-hutang-beredar/download-excel-hutang-beredar"),
-			urlCetak : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-hutang-beredar/cetak-laporan"),
+			placeholder_supplier: {
+				selected: ''
+			},
+			url : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-hutang-beredar"), 
+			urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-hutang-beredar/download-excel-hutang-beredar"), 
+			urlCetak : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-hutang-beredar/cetak-laporan"), 
 			pencarian: '',
 			loading: false,
 		}
@@ -134,10 +145,10 @@ export default {
 		app.filter.dari_tanggal = awal_tanggal;
 	},
 	computed : mapState ({    
-       suplier(){
-        return this.$store.state.suplier
-      }
-    }),
+		suplier(){
+			return this.$store.state.suplier
+		}
+	}),
 	watch: {
 		// whenever question changes, this function will run
 		pencarian: function (newQuestion) {
@@ -151,86 +162,91 @@ export default {
 			var formatted = angka.map(numberFormat.format);
 			return formatted.join('; ');
 		},
-      tanggal: function (value) {
-        return moment(String(value)).format('DD-MM-YYYY')
-      }
+		tanggal: function (value) {
+			return moment(String(value)).format('DD-MM-YYYY')
+		}
 	},
 	methods: {
 		submitHutangBeredar(){
 			var app = this;
 			var filter = app.filter;
+			
 			app.prosesLaporan();
 			app.totalHutangBeredar();
 			app.showButton();
+			
 		},
-	prosesLaporan(page) {
-		var app = this;	
-		var newFilter = app.filter;
-		if (typeof page === 'undefined') {
-			page = 1;
-		}
-		app.loading = true,
-		axios.post(app.url+'/view?page='+page, newFilter)
-		.then(function (resp) {
-			app.hutangBeredar = resp.data.data;
-			app.hutangBeredarData = resp.data;
-			app.loading = false
-			console.log(resp.data.data);
-		})
-		.catch(function (resp) {
+		prosesLaporan(page) {
+			var app = this;	
+			var newFilter = app.filter;
+
+			if (typeof page === 'undefined') {
+				page = 1;
+			}
+
+			app.loading = true,
+			axios.post(app.url+'/view?page='+page, newFilter)
+			.then(function (resp) {
+				app.hutangBeredar = resp.data.data;
+				app.hutangBeredarData = resp.data;
+				app.loading = false
+				console.log(resp.data.data);
+			})
+			.catch(function (resp) {
 			// console.log(resp);
-			alert("Tidak Dapat Memuat Laporan hutang beredar");
+			alert("Tidak Dapat Memuat Laporan hutang");
 		});
-	},
+		},
 		getHasilPencarian(page){
-		var app = this;
-		var newFilter = app.filter;
-		if (typeof page === 'undefined') {
-			page = 1;
+			var app = this;
+			var newFilter = app.filter;
+			if (typeof page === 'undefined') {
+				page = 1;
+			}
+			axios.post(app.url+'/pencarian?search='+app.pencarian+'&page='+page, newFilter)
+			.then(function (resp) {
+				app.hutangBeredar = resp.data.data;
+				app.hutangBeredarData = resp.data;
+			})
+			.catch(function (resp) {
+			// console.log(resp);
+			alert("Tidak Dapat Memuat Laporan hutang");
+		});
+		},
+		totalHutangBeredar() {
+			var app = this;	
+			var newFilter = app.filter;
+			app.loading = true,
+			axios.post(app.url+'/total-hutang-beredar', newFilter)
+			.then(function (resp) {
+				app.dataTotalHutangBeredar = resp.data;
+				app.loading = false
+				console.log(resp.data);    			
+			})
+			.catch(function (resp) {
+			// console.log(resp);
+			alert("Tidak Dapat Memuat Total hutang ");
+		});
+		},
+		showButton() {
+			var app = this;
+			var filter = app.filter;
+
+			if (filter.suplier == "") { 
+				var suplier = "semua"; 
+			}else{
+				var suplier = filter.suplier; 
+			}; 
+			var date_dari_tanggal = filter.dari_tanggal;
+			var date_sampai_tanggal = filter.sampai_tanggal;
+			var dari_tanggal = "" + date_dari_tanggal.getFullYear() +'-'+ ((date_dari_tanggal.getMonth() + 1) > 9 ? '' : '0') + (date_dari_tanggal.getMonth() + 1) +'-'+ (date_dari_tanggal.getDate() > 9 ? '' : '0') + date_dari_tanggal.getDate();
+			var sampai_tanggal = "" + date_sampai_tanggal.getFullYear() +'-'+ ((date_sampai_tanggal.getMonth() + 1) > 9 ? '' : '0') + (date_sampai_tanggal.getMonth() + 1) +'-'+ (date_sampai_tanggal.getDate() > 9 ? '' : '0') + date_sampai_tanggal.getDate();
+
+			$("#btnExcel").show();
+			$("#btnCetak").show();
+			$("#btnExcel").attr('href', app.urlDownloadExcel+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+suplier+'/'+filter.pilih_laporan);
+			$("#btnCetak").attr('href', app.urlCetak+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+suplier+'/'+filter.pilih_laporan);
 		}
-		axios.post(app.url+'/pencarian?search='+app.pencarian+'&page='+page, newFilter)
-		.then(function (resp) {
-			app.hutangBeredar = resp.data.data;
-			app.hutangBeredarData = resp.data;
-		})
-		.catch(function (resp) {
-			// console.log(resp);
-			alert("Tidak Dapat Memuat Laporan hutang beredar");
-		});
-	},
-	totalHutangBeredar() {
-		var app = this;	
-		var newFilter = app.filter;
-		app.loading = true,
-		axios.post(app.url+'/total-hutang-beredar', newFilter)
-		.then(function (resp) {
-			app.dataTotalHutangBeredar = resp.data;
-			app.loading = false
-			console.log(resp.data);    			
-		})
-		.catch(function (resp) {
-			// console.log(resp);
-			alert("Tidak Dapat Memuat Total hutang beredar");
-		});
-	},
-	showButton() {
-		var app = this;
-		var filter = app.filter;
-
-		if (filter.suplier == "") {
-			filter.suplier = "semua";
-		};
-
-		var date_dari_tanggal = filter.dari_tanggal;
-		var date_sampai_tanggal = filter.sampai_tanggal;
-		var dari_tanggal = "" + date_dari_tanggal.getFullYear() +'-'+ ((date_dari_tanggal.getMonth() + 1) > 9 ? '' : '0') + (date_dari_tanggal.getMonth() + 1) +'-'+ (date_dari_tanggal.getDate() > 9 ? '' : '0') + date_dari_tanggal.getDate();
-		var sampai_tanggal = "" + date_sampai_tanggal.getFullYear() +'-'+ ((date_sampai_tanggal.getMonth() + 1) > 9 ? '' : '0') + (date_sampai_tanggal.getMonth() + 1) +'-'+ (date_sampai_tanggal.getDate() > 9 ? '' : '0') + date_sampai_tanggal.getDate();
-
-		$("#btnExcel").show();
-		$("#btnCetak").show();
-		$("#btnExcel").attr('href', app.urlDownloadExcel+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.suplier);
-		$("#btnCetak").attr('href', app.urlCetak+'/'+dari_tanggal+'/'+sampai_tanggal+'/'+filter.suplier);
 	}
-}
 }
 </script>

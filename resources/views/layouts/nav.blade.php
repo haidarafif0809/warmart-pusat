@@ -387,7 +387,7 @@
                     LHB
                 </span>
                 <span class="sidebar-normal">
-                    Laporan Hutang Beredar
+                    Laporan Hutang
                 </span>
             </router-link>
         </li>
