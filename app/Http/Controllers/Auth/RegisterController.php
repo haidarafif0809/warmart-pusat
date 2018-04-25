@@ -249,7 +249,7 @@ class RegisterController extends Controller
 
             Kas::create(['kode_kas' => 'K01', 'nama_kas' => 'Kas Warung', 'status_kas' => 1, 'default_kas' => 1, 'warung_id' => $warung->id]);
 
-            $userWarungRole = Role::where('name', 'admin')->first();
+            $userWarungRole = Role::where('name', 'warung')->first();
             $user->attachRole($userWarungRole);
 
             // Notification::send(User::first(), new PendaftarWarung($user));
