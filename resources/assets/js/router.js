@@ -200,6 +200,9 @@ import PenerimaanProdukCreate from './components/penerimaan_produk/PenerimaanPro
 // SETTING FIXEL
 import SettingFixel from './components/setting_pixel/SettingFixel.vue';
 
+// SETTING SEO
+import OptimasiSeo from './components/optimasi_seo/OptimasiSeo.vue';
+
 
 const routes = [{
     path: '/',
@@ -823,6 +826,10 @@ const routes = [{
         path: '/create-penerimaan-produk', 
         component: PenerimaanProdukCreate, 
         name: 'createPenerimaanProduk'
+    },{ 
+        path: '/optimasi-seo', 
+        component: OptimasiSeo, 
+        name: 'optimasiSeoIndex'
     }
 
 
