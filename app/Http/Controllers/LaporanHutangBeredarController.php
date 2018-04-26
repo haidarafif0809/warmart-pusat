@@ -32,7 +32,7 @@ class LaporanHutangBeredarController extends Controller
     if ($request->pilih_laporan == 1) {
         $data_supplier_hutang = TransaksiHutang::getDataHutangBeredar($request)->havingRaw('IFNULL(SUM(transaksi_hutangs.jumlah_masuk),0) - IFNULL(SUM(transaksi_hutangs.jumlah_keluar),0) > 0')->paginate(10);
     }else{
-        $data_supplier_hutang = TransaksiHutang::getDataHutangBeredar($request)->havingRaw('IFNULL(SUM(transaksi_hutangs.jumlah_masuk),0) - IFNULL(SUM(transaksi_hutangs.jumlah_keluar),0) = 0')->paginate(10);
+        $data_supplier_hutang = TransaksiHutang::getDataHutangBeredar($request)->havingRaw('IFNULL(SUM(transaksi_hutangs.jumlah_keluar),0) > 0')->paginate(10);
     }
 
     $array         = array();
@@ -67,7 +67,7 @@ public function pencarianHutangBeredar(Request $request)
     if ($request->pilih_laporan == 1) {
         $data_supplier_hutang = TransaksiHutang::cariDataHutangBeredar($request)->havingRaw('IFNULL(SUM(transaksi_hutangs.jumlah_masuk),0) - IFNULL(SUM(transaksi_hutangs.jumlah_keluar),0) > 0')->paginate(10);
     }else{
-        $data_supplier_hutang = TransaksiHutang::cariDataHutangBeredar($request)->havingRaw('IFNULL(SUM(transaksi_hutangs.jumlah_masuk),0) - IFNULL(SUM(transaksi_hutangs.jumlah_keluar),0) = 0')->paginate(10);
+        $data_supplier_hutang = TransaksiHutang::cariDataHutangBeredar($request)->havingRaw('IFNULL(SUM(transaksi_hutangs.jumlah_keluar),0) > 0')->paginate(10);
     }
 
     $array         = array();
@@ -101,7 +101,7 @@ public function totalHutangBeredar(Request $request)
     if ($request->pilih_laporan == 1) {
         $total_hutang_beredar = TransaksiHutang::getDataHutangBeredar($request)->havingRaw('IFNULL(SUM(transaksi_hutangs.jumlah_masuk),0) - IFNULL(SUM(transaksi_hutangs.jumlah_keluar),0) > 0')->get();
     }else{
-        $total_hutang_beredar = TransaksiHutang::getDataHutangBeredar($request)->havingRaw('IFNULL(SUM(transaksi_hutangs.jumlah_masuk),0) - IFNULL(SUM(transaksi_hutangs.jumlah_keluar),0) = 0')->get();
+        $total_hutang_beredar = TransaksiHutang::getDataHutangBeredar($request)->havingRaw('IFNULL(SUM(transaksi_hutangs.jumlah_keluar),0) > 0')->get();
     }
 
     $jumlah_masuk = 0;
@@ -151,7 +151,7 @@ public function downloadExcel(Request $request, $dari_tanggal, $sampai_tanggal, 
     if ($laporan == 1) {
         $data_supplier_hutang = TransaksiHutang::getDataHutangBeredar($request)->havingRaw('IFNULL(SUM(transaksi_hutangs.jumlah_masuk),0) - IFNULL(SUM(transaksi_hutangs.jumlah_keluar),0) > 0')->get();
     }else{
-        $data_supplier_hutang = TransaksiHutang::getDataHutangBeredar($request)->havingRaw('IFNULL(SUM(transaksi_hutangs.jumlah_masuk),0) - IFNULL(SUM(transaksi_hutangs.jumlah_keluar),0) = 0')->get();
+        $data_supplier_hutang = TransaksiHutang::getDataHutangBeredar($request)->havingRaw('IFNULL(SUM(transaksi_hutangs.jumlah_keluar),0) > 0')->get();
     }
 
     $jumlah_masuk = 0;
@@ -247,7 +247,7 @@ public function cetakLaporan(Request $request, $dari_tanggal, $sampai_tanggal, $
     if ($laporan == 1) {
         $data_supplier_hutang = TransaksiHutang::getDataHutangBeredar($request)->havingRaw('IFNULL(SUM(transaksi_hutangs.jumlah_masuk),0) - IFNULL(SUM(transaksi_hutangs.jumlah_keluar),0) > 0')->get();
     }else{
-        $data_supplier_hutang = TransaksiHutang::getDataHutangBeredar($request)->havingRaw('IFNULL(SUM(transaksi_hutangs.jumlah_masuk),0) - IFNULL(SUM(transaksi_hutangs.jumlah_keluar),0) = 0')->get();
+        $data_supplier_hutang = TransaksiHutang::getDataHutangBeredar($request)->havingRaw('IFNULL(SUM(transaksi_hutangs.jumlah_keluar),0) > 0')->get();
     }
 
     $jumlah_masuk = 0;

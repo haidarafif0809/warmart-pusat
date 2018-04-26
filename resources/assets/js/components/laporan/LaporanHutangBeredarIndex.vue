@@ -11,7 +11,7 @@
 		<div class="col-md-12">
 			<ul class="breadcrumb">
 				<li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li>
-				<li class="active">Laporan Hutang Beredar</li>
+				<li class="active">Laporan Hutang</li>
 			</ul>
 			<div class="card">
 				<div class="card-header card-header-icon" data-background-color="purple">
