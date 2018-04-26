@@ -728,6 +728,17 @@ class PembelianOrderController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if (Auth::user()->id_warung == '') {
+            Auth::logout();
+            return response()->view('error.403');
+        } else {
+            $pembelian_order = PembelianOrder::where('status_order', 3)->where('id', $id)->count();
+            if ($pembelian_order > 0) {
+                return 0;
+            } else {
+                PembelianOrder::destroy($id);
+                return response(200);
+            }
+        }
     }
 }

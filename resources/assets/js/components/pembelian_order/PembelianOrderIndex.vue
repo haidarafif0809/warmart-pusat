@@ -129,7 +129,7 @@
 										<a target="blank" class="btn btn-primary btn-xs" v-bind:href="'pembelian-order/cetak-besar-pembelian-order/'+pembelianOrders.data.id">Cetak Ulang</a>
 									</td>
 									<td style="text-align:right;"> 
-										<a  href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + pembelianOrders.data.id" v-on:click="deleteEntry(pembelianOrders.data.id, index,pembelianOrders.data.no_faktur)">Delete</a>
+										<a  href="#order-pembelian" class="btn btn-xs btn-danger" v-bind:id="'delete-' + pembelianOrders.data.id" v-on:click="deleteEntry(pembelianOrders.data.id, index,pembelianOrders.data.no_faktur_order)">Delete</a>
 									</td>
 								</tr>
 							</tbody>					
@@ -240,7 +240,7 @@
 			deleteEntry(id, index,no_faktur) {
 				this.$swal({
 					title: "Konfirmasi Hapus",
-					text : "Anda Yakin Ingin Menghapus "+no_faktur+" ?",
+					text : "Anda Yakin Ingin Menghapus Faktur "+no_faktur+" ?",
 					icon : "warning",
 					buttons: true,
 					dangerMode: true,
@@ -257,7 +257,7 @@
 
 							}else{
 								app.getResults();
-								app.alert("Menghapus Order Pembelian "+no_faktur);
+								app.alert("Menghapus Order Pembelian Faktur "+no_faktur);
 								app.loading = false;  
 							}
 						})
