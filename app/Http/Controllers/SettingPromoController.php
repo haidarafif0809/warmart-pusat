@@ -10,6 +10,7 @@ use Auth;
 use Illuminate\Http\Request;
 use Intervention\Image\ImageManagerStatic as Image;
 use Laratrust;
+use File;
 
 class SettingPromoController extends Controller
 {
@@ -199,7 +200,7 @@ return response()->json([
                     $image_resize->fit(1491, 355);
                     $image_resize->save(public_path('baner_setting_promo/' . $filename));
                     $insert_setting->baner_promo = $filename;
-                            // menyimpan field foto_kamar di database kamar dengan filename yang baru dibuat
+                            // menyimpan field baner_promo di database setting_promo dengan filename yang baru dibuat
                     $insert_setting->save();
                 }
 
@@ -301,7 +302,7 @@ public function tambahWaktu(Request $request,$id)
                         // membuat nama file random berikut extension
             $filename     = str_random(40) . '.' . $extension;
             $image_resize = Image::make($baner_promo->getRealPath());
-            $image_resize->fit(300);
+            $image_resize->fit(1491, 355);
             $image_resize->save(public_path('baner_setting_promo/' . $filename));
                         // hapus baner_promo_home lama, jika ada
             if ($update_setting->baner_promo) {
@@ -314,7 +315,7 @@ public function tambahWaktu(Request $request,$id)
                                 // File sudah dihapus/tidak ada
                 }
             }
-            $update_setting->foto = $filename;
+            $update_setting->baner_promo = $filename;
             $update_setting->save();
         }
     }
