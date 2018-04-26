@@ -152,9 +152,7 @@ class PenerimaanProdukController extends Controller
 
 				$subtotal = $subtotal + $data_order->subtotal;
 			}
-			// // UPDATE STATUS ORDER -> Diproses
-			// $pembelian_order = PembelianOrder::where('no_faktur_order', $request->faktur_order)->where('suplier_id', $request->suplier_id);
-			// $pembelian_order->update(['status_order', 2]);
+
 
 			$respons['status']   = 0;
 			$respons['subtotal'] = $subtotal;
@@ -209,7 +207,7 @@ class PenerimaanProdukController extends Controller
                 ]);
 
 			// UPDATE STATUS PEMBELIAN ORDER -> Diterima
-			// $pembelian_order = PembelianOrder::update(['status_order', 3])->where('no_faktur_order', $request->no_faktur)->where('suplier_id', $request->suplier);
+			$pembelian_order = PembelianOrder::where('no_faktur_order', $request->no_faktur)->where('suplier_id', $request->suplier_id)->update(['status_order' => 3]);
 
             //HAPUS TBS PEMBELIAN ORDER
 			$data_penerimaan_produk->delete();
@@ -232,8 +230,6 @@ class PenerimaanProdukController extends Controller
 		} else {
 			$session_id         = session()->getId();
 			$data_tbs_pembelian = TbsPenerimaanProduk::where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->delete();
-			// UPDATE STATUS ORDER -> Diorder
-			// $pembelian_order = PembelianOrder::update(['status_order', 1])->where('no_faktur_order', $request->no_faktur);
 
 			return response(200);
 		}

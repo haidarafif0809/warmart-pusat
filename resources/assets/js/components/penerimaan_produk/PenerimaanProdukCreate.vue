@@ -495,13 +495,14 @@
 
               axios.post(app.url, newPenerimaanProduk)
               .then(function (resp) {
-                app.message = 'Berhasil Menerima Produk Supplier '+newPenerimaanProduk.suplier;
-                app.alert(app.message);
-                app.getResults();   
+                app.getResults();
                 app.inputPembayaranPenerimaanProduk.suplier = ''
                 app.inputPembayaranPenerimaanProduk.no_faktur = ''
                 app.inputPembayaranPenerimaanProduk.keterangan = ''
                 app.inputPembayaranPenerimaanProduk.subtotal = 0
+                app.message = 'Berhasil Menerima Produk Supplier '+newPenerimaanProduk.suplier;
+                app.alert(app.message);
+                app.$store.dispatch('LOAD_SUPLIER_ORDER_LIST');
                 // window.open('pembelian-order/cetak-besar-order-pembelian/'+resp.data.respons_pembelian,'_blank');
               })
               .catch(function (resp) {
