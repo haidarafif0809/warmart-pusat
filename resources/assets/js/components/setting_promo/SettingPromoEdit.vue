@@ -172,6 +172,7 @@ import { mapState } from 'vuex';
                .then(function (resp) {
                     app.setting = resp.data;
                     app.setting.produk = resp.data.produk+"|"+resp.data.harga_produk;
+                    app.setting.harga_promo = resp.data.harga_promo | pemisahTitik
                     console.log(app.setting);
                 })
                 .catch(function () {
