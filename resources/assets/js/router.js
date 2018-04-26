@@ -192,7 +192,9 @@ import SettingPromoCreate from './components/setting_promo/SettingPromoCreate.vu
 import SettingPromoEdit from './components/setting_promo/SettingPromoEdit.vue'; 
 
 // PEMBELIAN ORDER 
+import PembelianOrderIndex from './components/pembelian_order/PembelianOrderIndex.vue';
 import PembelianOrderCreate from './components/pembelian_order/PembelianOrderCreate.vue';
+import PembelianOrderDetail from './components/pembelian_order/PembelianOrderDetail.vue';
 
 // PENERIMAAN PRODUK
 import PenerimaanProdukCreate from './components/penerimaan_produk/PenerimaanProdukCreate.vue';
@@ -818,6 +820,14 @@ const routes = [{
         path: '/create-order-pembelian', 
         component: PembelianOrderCreate, 
         name: 'createPembelianOrder'
+    },{ 
+        path: '/detail-order-pembelian', 
+        component: PembelianOrderDetail, 
+        name: 'detailPembelianOrder'
+    },{ 
+        path: '/order-pembelian', 
+        component: PembelianOrderIndex, 
+        name: 'indexPembelianOrder'
     },{ 
         path: '/setting-fixel', 
         component: SettingFixel, 

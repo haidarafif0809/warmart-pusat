@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Yajra\Auditable\AuditableTrait;
+use Auth;
 
 class PembelianOrder extends Model
 {
@@ -53,5 +54,27 @@ class PembelianOrder extends Model
 
         return $no_faktur;
         //PROSES MEMBUAT NO. FAKTUR ITEM KELUAR
+    }
+
+    public function getStatusAttribute(){
+    	if ($this->status_order == 1) {
+    		$status_order = "Order";
+    	}elseif($this->status_order == 2){
+    		$status_order = "Proses Order";
+    	}else{
+    		$status_order = "Selesai Order";
+    	}
+
+    	return $status_order;
+    }
+
+    // Transaksi Pembelian Order
+    public function scopeDataTransaksiPembelianOrder($query)
+    {
+    	$query->select('pembelian_orders.id', 'pembelian_orders.no_faktur_order', 'supliers.nama_suplier', 'pembelian_orders.total', 'pembelian_orders.keterangan', 'pembelian_orders.status_order', 'pembelian_orders.created_by', 'pembelian_orders.created_at', 'users.name')
+    	->leftJoin('supliers', 'pembelian_orders.suplier_id', '=', 'supliers.id')
+    	->leftJoin('users', 'pembelian_orders.created_by', '=', 'users.id')
+    	->where('pembelian_orders.warung_id', Auth::user()->id_warung)->orderBy('pembelian_orders.id', 'desc');
+    	return $query;
     }
 }

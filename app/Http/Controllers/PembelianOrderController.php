@@ -84,23 +84,23 @@ class PembelianOrderController extends Controller
     }
 
     // DATA PAGINTION
-    public function dataPagination($tbs_pembelian_orders, $array, $no_faktur, $url)
+    public function dataPagination($pembelian_orders, $array, $no_faktur, $url)
     {
 
         //DATA PAGINATION
-        $respons['current_page']   = $tbs_pembelian_orders->currentPage();
+        $respons['current_page']   = $pembelian_orders->currentPage();
         $respons['data']           = $array;
         $respons['no_faktur']      = $no_faktur;
-        $respons['first_page_url'] = url($url . '?page=' . $tbs_pembelian_orders->firstItem());
+        $respons['first_page_url'] = url($url . '?page=' . $pembelian_orders->firstItem());
         $respons['from']           = 1;
-        $respons['last_page']      = $tbs_pembelian_orders->lastPage();
-        $respons['last_page_url']  = url($url . '?page=' . $tbs_pembelian_orders->lastPage());
-        $respons['next_page_url']  = $tbs_pembelian_orders->nextPageUrl();
+        $respons['last_page']      = $pembelian_orders->lastPage();
+        $respons['last_page_url']  = url($url . '?page=' . $pembelian_orders->lastPage());
+        $respons['next_page_url']  = $pembelian_orders->nextPageUrl();
         $respons['path']           = url($url);
-        $respons['per_page']       = $tbs_pembelian_orders->perPage();
-        $respons['prev_page_url']  = $tbs_pembelian_orders->previousPageUrl();
-        $respons['to']             = $tbs_pembelian_orders->perPage();
-        $respons['total']          = $tbs_pembelian_orders->total();
+        $respons['per_page']       = $pembelian_orders->perPage();
+        $respons['prev_page_url']  = $pembelian_orders->previousPageUrl();
+        $respons['to']             = $pembelian_orders->perPage();
+        $respons['total']          = $pembelian_orders->total();
         //DATA PAGINATION
 
         return $respons;
@@ -155,7 +155,7 @@ class PembelianOrderController extends Controller
         }
 
         $url     = '/pembelian-order/view-tbs-pembelian';
-        $respons = $this->dataPagination($tbs_pembelian_orders, $array, $no_faktur, $url);
+        $respons = $this->dataPagination($tbs_pembelian_orders, $array, $url, $no_faktur);
 
         return response()->json($respons);
     }
@@ -636,6 +636,29 @@ class PembelianOrderController extends Controller
             return response()->json($respons);
 
         }
+    }
+
+
+
+    public function view()
+    {
+        //SELECT SEMUA TRASNSAKSI PEMBELIAN ORDER
+        $no_faktur = '';
+        $data_pembelian_order = PembelianOrder::dataTransaksiPembelianOrder()->paginate(10);
+        //PERULANGAN
+        $array_pembelian = array();
+        foreach ($data_pembelian_order as $pembelian_order) {
+            array_push($array_pembelian, [
+                'data'          => $pembelian_order,
+                'status_order'  => $pembelian_order->Status
+                ]);
+        }
+
+        $url     = '/pembelian-order/view';
+        //DATA PAGINATION
+        $respons = $this->dataPagination($data_pembelian_order, $array_pembelian, $url, $no_faktur);
+
+        return response()->json($respons);
     }
 
     /**
