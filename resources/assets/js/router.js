@@ -821,7 +821,7 @@ const routes = [{
         component: PembelianOrderCreate, 
         name: 'createPembelianOrder'
     },{ 
-        path: '/detail-order-pembelian', 
+        path: '/detail-order-pembelian/:id', 
         component: PembelianOrderDetail, 
         name: 'detailPembelianOrder'
     },{ 

@@ -155,7 +155,7 @@ class PembelianOrderController extends Controller
         }
 
         $url     = '/pembelian-order/view-tbs-pembelian';
-        $respons = $this->dataPagination($tbs_pembelian_orders, $array, $url, $no_faktur);
+        $respons = $this->dataPagination($tbs_pembelian_orders, $array, $no_faktur, $url);
 
         return response()->json($respons);
     }
@@ -613,7 +613,7 @@ class PembelianOrderController extends Controller
                     'subtotal'         => $data_tbs_pembelian_order->subtotal,
                     'tax'              => $data_tbs_pembelian_order->tax,
                     'potongan'         => $data_tbs_pembelian_order->potongan,
-                    'status_harga'         => $data_tbs_pembelian_order->status_harga,
+                    'status_harga'     => $data_tbs_pembelian_order->status_harga,
                     'warung_id'        => $warung_id,
                     ]);
             }
@@ -656,7 +656,32 @@ class PembelianOrderController extends Controller
 
         $url     = '/pembelian-order/view';
         //DATA PAGINATION
-        $respons = $this->dataPagination($data_pembelian_order, $array_pembelian, $url, $no_faktur);
+        $respons = $this->dataPagination($data_pembelian_order, $array_pembelian, $no_faktur, $url);
+
+        return response()->json($respons);
+    }
+
+
+//VIEW DETAIL PEMBELIAN ORDER & PENCARIAN
+    public function viewDetailPembelianOrder($id)
+    {
+        $warung_id = Auth::user()->id_warung;
+        $pembelian = PembelianOrder::find($id);
+
+        $data_detailOrder = DetailPembelianOrder::detailPembelianOrder($warung_id, $pembelian->no_faktur_order)->paginate(10);
+
+        $array_order = [];
+        foreach ($data_detailOrder as $detail_order) {
+            array_push($array_order, [
+                'detail_order'=> $detail_order,
+                'nama_produk'=> $detail_order->NamaProduk,
+                ]);
+        }
+
+        $url     = '/pembelian-order/view-detail-pembelian-order';
+        //DATA PAGINATION
+        $respons = $this->dataPagination($data_detailOrder, $array_order, $pembelian->no_faktur_order, $url);
+
 
         return response()->json($respons);
     }
