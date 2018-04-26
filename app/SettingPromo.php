@@ -19,14 +19,6 @@ class SettingPromo extends Model
 		return $this->hasOne('App\Barang', 'id', 'id_produk');
 	}
 
-    public function tanggalSql($tangal)
-    {
-        $date        = date_create($tangal);
-        $date_format = date_format($date, "Y-m-d");
-        return $date_format;
-    }
-
-
 	    // DATA PENJUALAN PIUTANG
     public static function settingPromoTanggal($produks)
     {
@@ -39,6 +31,7 @@ class SettingPromo extends Model
 
         return $query_setting;
     }
+
 
     // DATA PENJUALAN PIUTANG
     public static function settingPromoData($produks,$dari_tanggal,$sampai_tanggal)
