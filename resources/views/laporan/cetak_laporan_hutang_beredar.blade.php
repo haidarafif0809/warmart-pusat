@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
 	@if($setting_aplikasi->tipe_aplikasi == 0)
-    <link rel="apple-touch-icon"  href="img/favicon.png" />
-    <link rel="icon" type="image/png" href="img/favicon.png" />
-    @else
-    <link rel="apple-touch-icon"  href="img/icon_topos.png?v=1" />
-    <link rel="icon" type="image/png" href="img/icon_topos.png?v=1" />
-    @endif
+	<link rel="apple-touch-icon"  href="img/favicon.png" />
+	<link rel="icon" type="image/png" href="img/favicon.png" />
+	@else
+	<link rel="apple-touch-icon"  href="img/icon_topos.png?v=1" />
+	<link rel="icon" type="image/png" href="img/icon_topos.png?v=1" />
+	@endif
 	<title>
 		@if($setting_aplikasi->tipe_aplikasi == 0)
 		War-Mart.id
@@ -21,25 +21,25 @@
 </head>
 
 <style type="text/css">
-	p{
-		margin-top: 1px; margin-bottom: 1px;
-	}
-	th,td{
-		padding: 1px;
-	}
-	.table1, .th, .td {
-		font-size: 15px;
-		font: verdana;
-	}
-	.table>thead>tr>th, .table>tbody>tr>td {
-		padding: 1px;
-		line-height: 1.42857143;
-		vertical-align: top;
-		border: 3px solid #eeeeee;
-	}
-	.table-bordered {
-		border: 3px solid #eeeeee;
-	}
+p{
+	margin-top: 1px; margin-bottom: 1px;
+}
+th,td{
+	padding: 1px;
+}
+.table1, .th, .td {
+	font-size: 15px;
+	font: verdana;
+}
+.table>thead>tr>th, .table>tbody>tr>td {
+	padding: 1px;
+	line-height: 1.42857143;
+	vertical-align: top;
+	border: 3px solid #eeeeee;
+}
+.table-bordered {
+	border: 3px solid #eeeeee;
+}
 </style>
 <?php
 function pemisahTitik($angka)
@@ -57,8 +57,11 @@ function pemisahTitik($angka)
 				<h4>
 					<b>
 						<center> 
+							@if($laporan == 1)
 							LAPORAN HUTANG BEREDAR 
-
+							@else
+							LAPORAN HUTANG TERBAYAR 
+							@endif
 							<table style="text-align: center">
 								<tbody>
 									<tr><td><b> {{ strtoupper($data_warung->name) }} </b></td></tr>
@@ -77,15 +80,15 @@ function pemisahTitik($angka)
 		<div class="row">
 			<div class="col-md-12">
 				<table class="table table-bordered">
-						<th>Waktu</th>
-						<th>No Transaksi</th>
-						<th>Supplier</th>
-						<th style="text-align:right">Nilai Transaksi</th>
-						<th style="text-align:right">Dibayar</th>
-						<th style="text-align:right">Nilai Hutang</th>
-						<th style="text-align:right">Jatuh Tempo</th>
-						<th style="text-align:right">Umur Hutang</th>
-						<th style="text-align:right">Petugas</th>
+					<th>Waktu</th>
+					<th>No Transaksi</th>
+					<th>Supplier</th>
+					<th style="text-align:right">Nilai Transaksi</th>
+					<th style="text-align:right">Dibayar</th>
+					<th style="text-align:right">Nilai Hutang</th>
+					<th style="text-align:right">Jatuh Tempo</th>
+					<th style="text-align:right">Umur Hutang</th>
+					<th style="text-align:right">Petugas</th>
 				</thead>
 				<tbody>
 					@foreach ($data_supplier_hutang as $data_supplier_hutangs)
