@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\PembelianOrder;
 use App\DetailPembelianOrder;
 use App\TbsPenerimaanProduk;
+use App\DetailPenerimaanProduk;
+use App\PenerimaanProduk;
 use Illuminate\Support\Facades\DB;
 use Auth;
 
@@ -150,6 +152,9 @@ class PenerimaanProdukController extends Controller
 
 				$subtotal = $subtotal + $data_order->subtotal;
 			}
+			// // UPDATE STATUS ORDER -> Diproses
+			// $pembelian_order = PembelianOrder::where('no_faktur_order', $request->faktur_order)->where('suplier_id', $request->suplier_id);
+			// $pembelian_order->update(['status_order', 2]);
 
 			$respons['status']   = 0;
 			$respons['subtotal'] = $subtotal;
@@ -160,8 +165,65 @@ class PenerimaanProdukController extends Controller
 	}
 
 
+	public function store(Request $request)
+	{
+		if (Auth::user()->id_warung == '') {
+			Auth::logout();
+			return response()->view('error.403');
+		} else {
+            //START TRANSAKSI
+			DB::beginTransaction();
+			$warung_id  = Auth::user()->id_warung;
+			$session_id = session()->getId();
+			$user       = Auth::user()->id;
+			$no_faktur  = PenerimaanProduk::no_faktur($warung_id);
+
+            //INSERT DETAIL PEMBELIAN
+			$data_penerimaan_produk = TbsPenerimaanProduk::where('session_id', $session_id)->where('warung_id', $warung_id);
+
+            // INSERT DETAIL PEMBELIAN
+			foreach ($data_penerimaan_produk->get() as $data_tbs_penerimaan_produk) {
+
+				$detail_penerimaan = DetailPenerimaanProduk::create([
+					'no_faktur_penerimaan' => $no_faktur,
+					'id_produk'        => $data_tbs_penerimaan_produk->id_produk,
+					'jumlah_produk'    => $data_tbs_penerimaan_produk->jumlah_produk,
+					'satuan_id'        => $data_tbs_penerimaan_produk->satuan_id,
+					'satuan_dasar'     => $data_tbs_penerimaan_produk->satuan_dasar,
+					'harga_produk'     => $data_tbs_penerimaan_produk->harga_produk,
+					'subtotal'         => $data_tbs_penerimaan_produk->subtotal,
+					'tax'              => $data_tbs_penerimaan_produk->tax,
+					'potongan'         => $data_tbs_penerimaan_produk->potongan,
+					'status_harga'     => $data_tbs_penerimaan_produk->status_harga,
+					'warung_id'        => $warung_id,
+					]);
+			}
+
+			$penerimaan = PenerimaanProduk::create([
+				'no_faktur_penerimaan' => $no_faktur,
+				'suplier_id'        => $request->suplier_id,
+				'total'             => $request->subtotal,
+				'keterangan'        => $request->keterangan,
+                'status_penerimaan' => 1, // Diterima
+                'warung_id'         => $warung_id,
+                ]);
+
+			// UPDATE STATUS PEMBELIAN ORDER -> Diterima
+			// $pembelian_order = PembelianOrder::update(['status_order', 3])->where('no_faktur_order', $request->no_faktur)->where('suplier_id', $request->suplier);
+
+            //HAPUS TBS PEMBELIAN ORDER
+			$data_penerimaan_produk->delete();
+			DB::commit();
+
+			$respons['respons_pembelian'] = $penerimaan->id;
+			return response()->json($respons);
+
+		}
+	}
+
+
     //PROSES BATAL TBS PENERIMAAN PRODUK
-	public function batalPenerimaanProduk()
+	public function batalPenerimaanProduk(Request $request)
 	{
 
 		if (Auth::user()->id_warung == '') {
@@ -170,6 +232,8 @@ class PenerimaanProdukController extends Controller
 		} else {
 			$session_id         = session()->getId();
 			$data_tbs_pembelian = TbsPenerimaanProduk::where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->delete();
+			// UPDATE STATUS ORDER -> Diorder
+			// $pembelian_order = PembelianOrder::update(['status_order', 1])->where('no_faktur_order', $request->no_faktur);
 
 			return response(200);
 		}
