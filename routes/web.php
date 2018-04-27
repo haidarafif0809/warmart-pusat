@@ -535,6 +535,7 @@ Route::get('/pesanan-diselesaikan/{id_pesanan}', 'PesananWarungController@pesana
 Route::get('/batalkan-konfirmasi-pesanan-warung/{id}', 'PesananWarungController@batalkanKonfirmasiPesananWarung')->middleware('auth');
 Route::get('/batalkan-pesanan-warung/{id}', 'PesananWarungController@batalkanPesananWarung')->middleware('auth');
 Route::post('/selesai-konfirmasi-pesanan-warung', 'PesananWarungController@selesaiKonfirmasiPesananWarung')->middleware('auth');
+Route::get('/cek-batas-waktu-transfer', 'PesananWarungController@cekBatasWaktuTransfer');
 
 //PEMBELIAN  VUE JS
 Route::get('/pembelian/view', 'PembelianController@view')->middleware('auth');

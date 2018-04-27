@@ -142,8 +142,8 @@
                                         </div> 
                                 </div> 
 
-                                 <input type="hidden" placeholder="Dari Tanggal" v-model="setting.dari_tanggal" name="dari_tanggal_lama" v-bind:id="'dari_tanggal_lama'">
-                                  <input type="hidden" placeholder="Sampai Tanggal" v-model="setting.sampai_tanggal" name="sampai_tanggal_lama" v-bind:id="'sampai_tanggal_lama'">
+                                 <input type="hidden" placeholder="Dari Tanggal" v-model="setting.dari_tanggal_lama" name="dari_tanggal_lama">
+                                  <input type="hidden" placeholder="Sampai Tanggal" v-model="setting.sampai_tanggal_lama" name="sampai_tanggal_lama">
 
 
                             </div>
@@ -172,7 +172,7 @@ import { mapState } from 'vuex';
                .then(function (resp) {
                     app.setting = resp.data;
                     app.setting.produk = resp.data.produk+"|"+resp.data.harga_produk;
-                    app.setting.harga_promo = resp.data.harga_promo | pemisahTitik
+                    app.setting.harga_promo = resp.data.harga_promo
                     console.log(app.setting);
                 })
                 .catch(function () {
@@ -373,20 +373,31 @@ import { mapState } from 'vuex';
                     newSettingPromo.append('baner_promo', document.getElementById('baner_promo').files[0]);
                 }
 
-                const dari_tanggal_lama = $('#dari_tanggal_lama').val();
-                const sampai_tanggal_lama = $('#sampai_tanggal_lama').val();
-
                 //perubahan tanggal "Y-m-d"
-                if (app.setting.dari_tanggal == dari_tanggal_lama || app.setting.sampai_tanggal == sampai_tanggal_lama){
+                if (app.setting.dari_tanggal == app.setting.dari_tanggal_lama && app.setting.sampai_tanggal == app.setting.sampai_tanggal_lama){
                     var dari_tanggal = app.setting.dari_tanggal;
                     var sampai_tanggal = app.setting.sampai_tanggal;
+                    console.log(1);
+                }else if(app.setting.dari_tanggal == app.setting.dari_tanggal_lama && app.setting.sampai_tanggal != app.setting.sampai_tanggal_lama){
+                    var dari_tanggal = app.setting.dari_tanggal;
+                     
+                     var date_sampai_tanggal = app.setting.sampai_tanggal;
+                     var sampai_tanggal = "" + date_sampai_tanggal.getFullYear() +'-'+ ((date_sampai_tanggal.getMonth() + 1) > 9 ? '' : '0') + (date_sampai_tanggal.getMonth() + 1) +'-'+ (date_sampai_tanggal.getDate() > 9 ? '' : '0') + date_sampai_tanggal.getDate();
+                     console.log(2);
+
+                }else if(app.setting.dari_tanggal != app.setting.dari_tanggal_lama && app.setting.sampai_tanggal == app.setting.sampai_tanggal_lama){
+                    var date_dari_tanggal = app.setting.dari_tanggal;
+                    var dari_tanggal = "" + date_dari_tanggal.getFullYear() +'-'+ ((date_dari_tanggal.getMonth() + 1) > 9 ? '' : '0') + (date_dari_tanggal.getMonth() + 1) +'-'+ (date_dari_tanggal.getDate() > 9 ? '' : '0') + date_dari_tanggal.getDate();
+
+                    var sampai_tanggal = app.setting.sampai_tanggal;
+                    console.log(3);
                 }else{
                     var date_dari_tanggal = app.setting.dari_tanggal;
-                    
                     var date_sampai_tanggal = app.setting.sampai_tanggal;
 
-                var dari_tanggal = "" + date_dari_tanggal.getFullYear() +'-'+ ((date_dari_tanggal.getMonth() + 1) > 9 ? '' : '0') + (date_dari_tanggal.getMonth() + 1) +'-'+ (date_dari_tanggal.getDate() > 9 ? '' : '0') + date_dari_tanggal.getDate();
-                var sampai_tanggal = "" + date_sampai_tanggal.getFullYear() +'-'+ ((date_sampai_tanggal.getMonth() + 1) > 9 ? '' : '0') + (date_sampai_tanggal.getMonth() + 1) +'-'+ (date_sampai_tanggal.getDate() > 9 ? '' : '0') + date_sampai_tanggal.getDate();
+                    var dari_tanggal = "" + date_dari_tanggal.getFullYear() +'-'+ ((date_dari_tanggal.getMonth() + 1) > 9 ? '' : '0') + (date_dari_tanggal.getMonth() + 1) +'-'+ (date_dari_tanggal.getDate() > 9 ? '' : '0') + date_dari_tanggal.getDate();
+                    var sampai_tanggal = "" + date_sampai_tanggal.getFullYear() +'-'+ ((date_sampai_tanggal.getMonth() + 1) > 9 ? '' : '0') + (date_sampai_tanggal.getMonth() + 1) +'-'+ (date_sampai_tanggal.getDate() > 9 ? '' : '0') + date_sampai_tanggal.getDate();
+                    console.log(4);
                 }
                 //perubahan tanggal "Y-m-d"
 
