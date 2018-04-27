@@ -829,55 +829,118 @@ class PembelianOrderController extends Controller
 
     public function viewEditTbsPembelian($id)
     {
-       $pembelian_order   = PembelianOrder::find($id);
-       $session_id  = session()->getId();
-       $no_faktur   = $pembelian_order->no_faktur_order;
-       $user_warung = Auth::user()->id_warung;
+        $pembelian_order   = PembelianOrder::find($id);
+        $session_id  = session()->getId();
+        $no_faktur   = $pembelian_order->no_faktur_order;
+        $user_warung = Auth::user()->id_warung;
 
-       $edit_tbs_pembelian_orders = EditTbsPembelianOrder::dataTransaksiEditTbsPembelianOrder($no_faktur, $user_warung)
-       ->orderBy('edit_tbs_pembelian_orders.id_edit_tbs_pembelian_order', 'desc')->paginate(10);
-       $array = array();
+        $edit_tbs_pembelian_orders = EditTbsPembelianOrder::dataTransaksiEditTbsPembelianOrder($no_faktur, $user_warung)
+        ->orderBy('edit_tbs_pembelian_orders.id_edit_tbs_pembelian_order', 'desc')->paginate(10);
+        $array = array();
 
-       foreach ($edit_tbs_pembelian_orders as $data_tbs) {
+        foreach ($edit_tbs_pembelian_orders as $data_tbs) {
 
-        $potongan_persen        = ($data_tbs->potongan / ($data_tbs->jumlah_produk * $data_tbs->harga_produk)) * 100;
+            $potongan_persen        = ($data_tbs->potongan / ($data_tbs->jumlah_produk * $data_tbs->harga_produk)) * 100;
 
-        $ppn = EditTbsPembelianOrder::select('ppn')->where('no_faktur_order', $no_faktur)->where('warung_id', $user_warung)->where('ppn', '!=', '')->limit(1);
+            $ppn = EditTbsPembelianOrder::select('ppn')->where('no_faktur_order', $no_faktur)->where('warung_id', $user_warung)->where('ppn', '!=', '')->limit(1);
 
-        if ($ppn->count() > 0) {
+            if ($ppn->count() > 0) {
 
-            $ppn_produk = $ppn->first()->ppn;
-            if ($data_tbs->tax == 0) {
-                $tax_persen = 0;
-            } else {
-                if ($data_tbs->ppn == "Include") {
-                    $tax_kembali = $data_tbs->subtotal - $data_tbs->tax;
-                        //tax untuk mendapatkan 1,1
-                    $tax_format = $data_tbs->subtotal / $tax_kembali - 1;
-                    $tax_persen = $tax_format * 100;
+                $ppn_produk = $ppn->first()->ppn;
+                if ($data_tbs->tax == 0) {
+                    $tax_persen = 0;
+                } else {
+                    if ($data_tbs->ppn == "Include") {
+                        $tax_kembali = $data_tbs->subtotal - $data_tbs->tax;
+                        $tax_format = $data_tbs->subtotal / $tax_kembali - 1;
+                        $tax_persen = $tax_format * 100;
 
-                } else if ($data_tbs->ppn == "Exclude") {
-                    $tax_persen = ($data_tbs->tax * 100) / ($data_tbs->jumlah_produk * $data_tbs->harga_produk - $data_tbs->potongan);
+                    } else if ($data_tbs->ppn == "Exclude") {
+                        $tax_persen = ($data_tbs->tax * 100) / ($data_tbs->jumlah_produk * $data_tbs->harga_produk - $data_tbs->potongan);
+                    }
                 }
+            } else {
+                $ppn_produk = "";
+                $tax_persen = 0;
             }
-        } else {
-            $ppn_produk = "";
-            $tax_persen = 0;
+
+            array_push($array, [
+                'data_tbs'            => $data_tbs,
+                'nama_satuan'            => strtoupper($data_tbs->nama_satuan),
+                'potongan_persen'        => $potongan_persen,
+                'ppn_produk'             => $ppn_produk,
+                'tax_persen'             => $tax_persen,
+                ]);
         }
 
-        array_push($array, [
-            'data_tbs'            => $data_tbs,
-            'nama_satuan'            => strtoupper($data_tbs->nama_satuan),
-            'potongan_persen'        => $potongan_persen,
-            'ppn_produk'             => $ppn_produk,
-            'tax_persen'             => $tax_persen,
-            ]);
+        $url     = '/pembelian-order/view-edit-tbs-pembelian';
+        $respons = $this->dataPagination($edit_tbs_pembelian_orders, $array, $no_faktur, $url);
+
+        return response()->json($respons);
+
     }
 
-    $url     = '/pembelian-order/view-edit-tbs-pembelian';
-    $respons = $this->dataPagination($edit_tbs_pembelian_orders, $array, $no_faktur, $url);
+    public function pencarianEditTbsPembelian(Request $request, $id)
+    {
+        $pembelian_order   = PembelianOrder::find($id);
+        $session_id  = session()->getId();
+        $no_faktur   = $pembelian_order->no_faktur_order;
+        $user_warung = Auth::user()->id_warung;
 
-    return response()->json($respons);
-    
-}
+        $edit_tbs_pembelian_orders = EditTbsPembelianOrder::dataTransaksiEditTbsPembelianOrder($no_faktur, $user_warung)
+        ->orderBy('edit_tbs_pembelian_orders.id_edit_tbs_pembelian_order', 'desc')
+        ->where(function ($query) use ($request) {
+
+            $query->orWhere('barangs.nama_barang', 'LIKE', '%'. $request->search . '%')
+            ->orWhere('barangs.kode_barang', 'LIKE', '%'. $request->search . '%');
+
+        })->orderBy('id_edit_tbs_pembelian_order', 'desc')->paginate(10);
+
+        $array = array();
+
+        foreach ($edit_tbs_pembelian_orders as $data_tbs) {
+
+            $potongan_persen        = ($data_tbs->potongan / ($data_tbs->jumlah_produk * $data_tbs->harga_produk)) * 100;
+
+            $ppn = TbsPembelianOrder::select('ppn')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->where('ppn', '!=', '')->limit(1);
+
+            if ($ppn->count() > 0) {
+
+                $ppn_produk = $ppn->first()->ppn;
+                if ($data_tbs->tax == 0) {
+                    $tax_persen = 0;
+                } else {
+                    if ($data_tbs->ppn == "Include") {
+                        $tax_kembali = $data_tbs->subtotal - $data_tbs->tax;
+                        //tax untuk mendapatkan 1,1
+                        $tax_format = $data_tbs->subtotal / $tax_kembali - 1;
+                        $tax_persen = $tax_format * 100;
+
+                    } else if ($data_tbs->ppn == "Exclude") {
+                        $tax_persen = ($data_tbs->tax * 100) / ($data_tbs->jumlah_produk * $data_tbs->harga_produk - $data_tbs->potongan);
+                    }
+                }
+            } else {
+                $ppn_produk = "";
+                $tax_persen = 0;
+            }
+
+            array_push($array, [
+                'data_tbs'            => $data_tbs,
+                'nama_satuan'            => strtoupper($data_tbs->nama_satuan),
+                'potongan_persen'        => $potongan_persen,
+                'ppn_produk'             => $ppn_produk,
+                'tax_persen'             => $tax_persen,
+                ]);
+        }
+
+        $url     = '/pembelian-order/view-tbs-pembelian';
+        $respons = $this->dataPagination($edit_tbs_pembelian_orders, $array, $no_faktur, $url);
+
+        return response()->json($respons);
+    }
+
+    public function dataPembelianOrder($id){
+        return $pembelian_order = PembelianOrder::find($id);
+    }
 }

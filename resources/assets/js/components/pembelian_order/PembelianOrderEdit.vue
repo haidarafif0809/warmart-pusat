@@ -238,30 +238,30 @@
 
                         <td>{{ tbs_pembelian.data_tbs.kode_barang }} - {{ tbs_pembelian.data_tbs.nama_barang | capitalize }}</td>
                         <td>
-                          <a href="#create-order-pembelian" v-bind:id="'edit-' + tbs_pembelian.data_tbs.id_tbs_pembelian_order" v-on:click="editEntryJumlah(tbs_pembelian.data_tbs.id_tbs_pembelian_order, index,tbs_pembelian.data_tbs.nama_barang,tbs_pembelian.data_tbs.subtotal)"><p align='right'>{{ tbs_pembelian.data_tbs.jumlah_produk | pemisahTitik }}</p>
+                          <a href="#edit-order-pembelian" v-bind:id="'edit-' + tbs_pembelian.data_tbs.id_tbs_pembelian_order" v-on:click="editEntryJumlah(tbs_pembelian.data_tbs.id_tbs_pembelian_order, index,tbs_pembelian.data_tbs.nama_barang,tbs_pembelian.data_tbs.subtotal)"><p align='right'>{{ tbs_pembelian.data_tbs.jumlah_produk | pemisahTitik }}</p>
                           </a>
                         </td>
 
                         <td align="center">
-                          <a href="#create-order-pembelian" v-bind:id="'edit-' + tbs_pembelian.data_tbs.id_tbs_pembelian_order" v-bind:class="'hurufBesar satuan-' + tbs_pembelian.data_tbs.id_produk" v-bind:data-satuan="''+tbs_pembelian.data_tbs.satuan_id" v-on:click="editSatuanEntry(tbs_pembelian.data_tbs.id_tbs_pembelian_order, index,tbs_pembelian.data_tbs.nama_barang,tbs_pembelian.data_tbs.subtotal, tbs_pembelian.data_tbs.id_produk)">{{ tbs_pembelian.data_tbs.nama_satuan }}</a>
+                          <a href="#edit-order-pembelian" v-bind:id="'edit-' + tbs_pembelian.data_tbs.id_tbs_pembelian_order" v-bind:class="'hurufBesar satuan-' + tbs_pembelian.data_tbs.id_produk" v-bind:data-satuan="''+tbs_pembelian.data_tbs.satuan_id" v-on:click="editSatuanEntry(tbs_pembelian.data_tbs.id_tbs_pembelian_order, index,tbs_pembelian.data_tbs.nama_barang,tbs_pembelian.data_tbs.subtotal, tbs_pembelian.data_tbs.id_produk)">{{ tbs_pembelian.data_tbs.nama_satuan }}</a>
                         </td>
 
                         <td>
-                          <a href="#create-order-pembelian" v-bind:id="'edit-' + tbs_pembelian.data_tbs.id_tbs_pembelian_order" v-on:click="editEntryHarga(tbs_pembelian.data_tbs.id_tbs_pembelian_order, index,tbs_pembelian.data_tbs.nama_barang,tbs_pembelian.data_tbs.subtotal)" v-bind:class="'harga-' + tbs_pembelian.data_tbs.id_produk" v-bind:data-harga="''+tbs_pembelian.data_tbs.harga_produk"><p align='right'>{{ tbs_pembelian.data_tbs.harga_produk | pemisahTitik }}</p>
+                          <a href="#edit-order-pembelian" v-bind:id="'edit-' + tbs_pembelian.data_tbs.id_tbs_pembelian_order" v-on:click="editEntryHarga(tbs_pembelian.data_tbs.id_tbs_pembelian_order, index,tbs_pembelian.data_tbs.nama_barang,tbs_pembelian.data_tbs.subtotal)" v-bind:class="'harga-' + tbs_pembelian.data_tbs.id_produk" v-bind:data-harga="''+tbs_pembelian.data_tbs.harga_produk"><p align='right'>{{ tbs_pembelian.data_tbs.harga_produk | pemisahTitik }}</p>
                           </a>
                         </td>
                         <td>
-                          <a href="#create-order-pembelian" v-bind:id="'edit-' + tbs_pembelian.data_tbs.id_tbs_pembelian_order" v-on:click="editEntryPotongan(tbs_pembelian.data_tbs.id_tbs_pembelian_order, index,tbs_pembelian.data_tbs.nama_barang,tbs_pembelian.data_tbs.jumlah_produk,tbs_pembelian.data_tbs.harga_produk,tbs_pembelian.data_tbs.subtotal)"
+                          <a href="#edit-order-pembelian" v-bind:id="'edit-' + tbs_pembelian.data_tbs.id_tbs_pembelian_order" v-on:click="editEntryPotongan(tbs_pembelian.data_tbs.id_tbs_pembelian_order, index,tbs_pembelian.data_tbs.nama_barang,tbs_pembelian.data_tbs.jumlah_produk,tbs_pembelian.data_tbs.harga_produk,tbs_pembelian.data_tbs.subtotal)"
                           ><p align='right'>{{ tbs_pembelian.data_tbs.potongan | pemisahTitik }} | {{ Math.round(tbs_pembelian.potongan_persen,2) }} %</p>
                         </a>
                       </td>
                       <td>
-                        <a href="#create-order-pembelian" v-bind:id="'edit-' + tbs_pembelian.data_tbs.id_tbs_pembelian_order" v-on:click="editEntryTax(tbs_pembelian.data_tbs.id_tbs_pembelian_order, index,tbs_pembelian.data_tbs.nama_barang,tbs_pembelian.data_tbs.jumlah_produk,tbs_pembelian.data_tbs.harga_produk,tbs_pembelian.data_tbs.potongan,tbs_pembelian.ppn_produk,tbs_pembelian.data_tbs.subtotal)" ><p align='right'>{{ tbs_pembelian.data_tbs.tax | pemisahTitik}} | {{ Math.round(tbs_pembelian.tax_persen, 2) }} %</p>
+                        <a href="#edit-order-pembelian" v-bind:id="'edit-' + tbs_pembelian.data_tbs.id_tbs_pembelian_order" v-on:click="editEntryTax(tbs_pembelian.data_tbs.id_tbs_pembelian_order, index,tbs_pembelian.data_tbs.nama_barang,tbs_pembelian.data_tbs.jumlah_produk,tbs_pembelian.data_tbs.harga_produk,tbs_pembelian.data_tbs.potongan,tbs_pembelian.ppn_produk,tbs_pembelian.data_tbs.subtotal)" ><p align='right'>{{ tbs_pembelian.data_tbs.tax | pemisahTitik}} | {{ Math.round(tbs_pembelian.tax_persen, 2) }} %</p>
                         </a>
                       </td>
                       <td><p id="table-subtotal" align="right">{{ tbs_pembelian.data_tbs.subtotal | pemisahTitik }}</p></td>
                       <td style="text-align:right;"> 
-                        <a href="#create-order-pembelian" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_pembelian.data_tbs.id_tbs_pembelian_order" v-on:click="deleteEntry(tbs_pembelian.data_tbs.id_tbs_pembelian_order, index,tbs_pembelian.data_tbs.nama_barang,tbs_pembelian.data_tbs.subtotal)">Delete</a>
+                        <a href="#edit-order-pembelian" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_pembelian.data_tbs.id_tbs_pembelian_order" v-on:click="deleteEntry(tbs_pembelian.data_tbs.id_tbs_pembelian_order, index,tbs_pembelian.data_tbs.nama_barang,tbs_pembelian.data_tbs.subtotal)">Delete</a>
                       </td>
                     </tr>
                   </tbody>          
@@ -467,6 +467,7 @@ methods: {
       app.seen = true;
       app.openSelectizeProduk();
       app.dataSuplier();
+      app.getPembelianOrder(app.id_order);
 
       if (app.inputPembayaranPembelianOrder.subtotal == 0) { 
 
@@ -483,6 +484,21 @@ methods: {
       alert("Tidak Dapat Memuat Pembelian");
     });
   },//END FUNGSI UNTUK PAGINATION TAMPILAN AWAL / DOCUMENT READY 
+  getPembelianOrder(id){
+    var app = this
+
+    axios.get(app.url+'/data-pembelian-order/'+id)
+    .then(function (resp) {
+      app.inputPembayaranPembelianOrder.subtotal = resp.data.total
+      app.inputPembayaranPembelianOrder.suplier = resp.data.suplier_id
+      app.inputPembayaranPembelianOrder.keterangan = resp.data.keterangan
+    })
+    .catch(function (resp) {
+      console.log(resp);
+      alert("Tidak Dapat Memuat Pembelian Order");
+    });
+
+  },
   getSatuan(id_produk){
     var app = this;
     var satuan_tbs = $(".satuan-"+id_produk).attr("data-satuan");
@@ -519,7 +535,7 @@ methods: {
     if (typeof page === 'undefined') {
       page = 1;
     }
-    axios.get(app.url+'/pencarian-tbs-pembelian?search='+app.pencarian+'&page='+page)
+    axios.get(app.url+'/pencarian-edit-tbs-pembelian/'+app.id_order+'?search='+app.pencarian+'&page='+page)
     .then(function (resp) {
       app.tbs_pembelian_orders = resp.data.data;
       app.tbsPembelianData = resp.data;
