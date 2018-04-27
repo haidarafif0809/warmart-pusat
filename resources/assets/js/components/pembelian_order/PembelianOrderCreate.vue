@@ -47,7 +47,8 @@
 
         <ul class="breadcrumb"> 
           <li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li> 
-          <li class="active">Order Pembelian</li> 
+          <li><router-link :to="{name: 'indexPembelianOrder'}">Order Pembelian</router-link></li> 
+          <li class="active">Form Order Pembelian</li> 
         </ul> 
 
 

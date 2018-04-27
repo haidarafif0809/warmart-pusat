@@ -8,6 +8,7 @@ use App\TbsPembelianOrder;
 use App\DetailPembelianOrder;
 use App\PembelianOrder;
 use App\Barang;
+use App\SettingAplikasi;
 use App\SatuanKonversi;
 use Illuminate\Support\Facades\DB;
 use Auth;
@@ -21,6 +22,37 @@ class PembelianOrderController extends Controller
         $suplier = Suplier::select('id', 'nama_suplier')
         ->where('warung_id', Auth::user()->id_warung)->get();
         return response()->json($suplier);
+    }
+
+
+    public function kekata($x)
+    {
+        $x     = abs($x);
+        $angka = array("", "satu", "dua", "tiga", "empat", "lima",
+            "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas");
+        $temp = "";
+        if ($x < 12) {
+            $temp = " " . $angka[$x];
+        } else if ($x < 20) {
+            $temp = $this->kekata($x - 10) . " belas";
+        } else if ($x < 100) {
+            $temp = $this->kekata($x / 10) . " puluh" . $this->kekata($x % 10);
+        } else if ($x < 200) {
+            $temp = " seratus" . $this->kekata($x - 100);
+        } else if ($x < 1000) {
+            $temp = $this->kekata($x / 100) . " ratus" . $this->kekata($x % 100);
+        } else if ($x < 2000) {
+            $temp = " seribu" . $this->kekata($x - 1000);
+        } else if ($x < 1000000) {
+            $temp = $this->kekata($x / 1000) . " ribu" . $this->kekata($x % 1000);
+        } else if ($x < 1000000000) {
+            $temp = $this->kekata($x / 1000000) . " juta" . $this->kekata($x % 1000000);
+        } else if ($x < 1000000000000) {
+            $temp = $this->kekata($x / 1000000000) . " milyar" . $this->kekata(fmod($x, 1000000000));
+        } else if ($x < 1000000000000000) {
+            $temp = $this->kekata($x / 1000000000000) . " trilyun" . $this->kekata(fmod($x, 1000000000000));
+        }
+        return $temp;
     }
 
     public function editSatuan($request, $db){
@@ -684,6 +716,29 @@ class PembelianOrderController extends Controller
 
 
         return response()->json($respons);
+    }
+
+
+    public function cetakBesar($id)
+    {   
+        $warung_id = Auth::user()->id_warung;
+        //SETTING APLIKASI
+        $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
+
+        $data_order = PembelianOrder::cetakPembelianOrder($warung_id, $id)->first();
+
+        $status_order = $data_order->Status;
+
+        $data_cetak = DetailPembelianOrder::cetakDetailPembelianOrder($warung_id, $data_order->no_faktur_order)->get();
+
+        $terbilang  = $this->kekata($data_order->total);
+        $subtotal   = 0;
+        foreach ($data_cetak as $data_cetaks) {
+            $subtotal += $data_cetaks->subtotal;
+        }
+
+        // return $subtotal;
+        return view('pembelian_order.cetak_besar', ['setting_aplikasi' => $setting_aplikasi, 'detail_orders' => $data_cetak, 'data_order' => $data_order, 'status_order' => $status_order, 'subtotal' => $subtotal, 'terbilang' => $terbilang])->with(compact('html'));
     }
 
     /**

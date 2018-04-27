@@ -77,4 +77,15 @@ class PembelianOrder extends Model
     	->where('pembelian_orders.warung_id', Auth::user()->id_warung)->orderBy('pembelian_orders.id', 'desc');
     	return $query;
     }
+
+    public function scopeCetakPembelianOrder($query, $warung_id, $id)
+    {
+        $query->select(['pembelian_orders.no_faktur_order', 'pembelian_orders.created_at', 'pembelian_orders.status_order', 'pembelian_orders.total', 'supliers.nama_suplier', 'supliers.alamat', 'warungs.name', 'warungs.alamat', 'warungs.no_telpon'])
+        ->leftJoin('supliers', 'supliers.id', '=', 'pembelian_orders.suplier_id')
+        ->leftJoin('warungs', 'warungs.id', '=', 'pembelian_orders.warung_id')
+        ->where('pembelian_orders.warung_id', $warung_id)
+        ->where('pembelian_orders.id', $id);
+
+        return $query;
+    }
 }

@@ -29,4 +29,14 @@ class DetailPembelianOrder extends Model
 
 		return $query_order;
 	}
+
+	public function scopeCetakDetailPembelianOrder($query_order, $warung_id, $no_faktur_order){
+		$query_order->select(['detail_pembelian_orders.no_faktur_order', 'detail_pembelian_orders.id_produk', 'detail_pembelian_orders.jumlah_produk', 'detail_pembelian_orders.satuan_id', 'detail_pembelian_orders.harga_produk', 'detail_pembelian_orders.subtotal', 'detail_pembelian_orders.tax', 'detail_pembelian_orders.potongan', 'detail_pembelian_orders.warung_id', 'detail_pembelian_orders.status_harga', 'satuans.nama_satuan', 'barangs.nama_barang', 'barangs.kode_barang'])
+		->leftJoin('satuans', 'satuans.id', '=', 'detail_pembelian_orders.satuan_id')
+		->leftJoin('barangs', 'barangs.id', '=', 'detail_pembelian_orders.id_produk')
+		->where('detail_pembelian_orders.warung_id', $warung_id)
+		->where('detail_pembelian_orders.no_faktur_order', $no_faktur_order);
+
+		return $query_order;
+	}
 }
