@@ -116,7 +116,7 @@
 									<td style="text-align:right;" >Rp. {{ pembelianOrders.data.total | pemisahTitik }}</td>
 
 									<td style="text-align:right;">
-										<router-link :to="{name: 'editPembelianProses', params: {id: pembelianOrders.data.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + pembelianOrders.data.id" >
+										<router-link :to="{name: 'editPembelianOrder', params: {id: pembelianOrders.data.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + pembelianOrders.data.id" >
 											Edit 
 										</router-link>
 									</td>

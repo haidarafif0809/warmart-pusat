@@ -1089,6 +1089,10 @@ methods: {
       .then(function (resp) {
         app.message = 'Berhasil Menambah Order Pembelian';
         app.alert(app.message);
+        app.inputPembayaranPembelianOrder.suplier = ''
+        app.inputPembayaranPembelianOrder.keterangan = ''
+        app.inputPembayaranPembelianOrder.subtotal = 0
+        app.getResults();
         window.open('pembelian-order/cetak-besar-pembelian-order/'+resp.data.respons_pembelian,'_blank');
       })
       .catch(function (resp) {
