@@ -234,7 +234,7 @@ public function tambahWaktu(Request $request,$id)
      */
     public function show($id)
     {
-        $settingpromo = SettingPromo::select(['barangs.nama_barang','barangs.kode_barang','setting_promos.baner_promo','setting_promos.harga_coret as harga_promo','setting_promos.id_setting_promo','barangs.harga_jual as harga_produk','setting_promos.id_produk as produk','setting_promos.dari_tanggal','setting_promos.sampai_tanggal','setting_promos.jenis_promo','setting_promos.status as status_aktif'])->leftJoin('barangs', 'barangs.id', '=', 'setting_promos.id_produk')->where('setting_promos.id_warung', Auth::user()->id_warung)->where('setting_promos.id_setting_promo', $id)->first();
+        $settingpromo = SettingPromo::select(['barangs.nama_barang','barangs.kode_barang','setting_promos.baner_promo','setting_promos.harga_coret as harga_promo','setting_promos.id_setting_promo','barangs.harga_jual as harga_produk','setting_promos.id_produk as produk','setting_promos.dari_tanggal','setting_promos.sampai_tanggal','setting_promos.jenis_promo','setting_promos.status as status_aktif','setting_promos.dari_tanggal as dari_tanggal_lama','setting_promos.sampai_tanggal as sampai_tanggal_lama'])->leftJoin('barangs', 'barangs.id', '=', 'setting_promos.id_produk')->where('setting_promos.id_warung', Auth::user()->id_warung)->where('setting_promos.id_setting_promo', $id)->first();
 
         return $settingpromo;
     }
