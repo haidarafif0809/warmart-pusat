@@ -182,14 +182,17 @@
                       <textarea class="form-control" v-model="inputPembayaranPenerimaanProduk.keterangan" name="keterangan" id="keterangan" placeholder="Keterangan .." rows="1">                    
                       </textarea>
 
+
+                      <input class="form-control" type="text"  v-model="inputPembayaranPenerimaanProduk.no_faktur"  name="no_faktur" id="no_faktur">
+
                     </div>
                     <div class="card-footer">
                       <div class="row">
                         <div class="col-md-5 col-xs-5"> 
-                          <button type="button" class="btn btn-success btn-footer" id="bayar" v-on:click="selesaiPembelianOrder()" v-shortkey.push="['f2']" @shortkey="selesaiPembelianOrder()"><font style="font-size:15px;">Bayar(F2)</font></button>
+                          <button type="button" class="btn btn-success btn-footer" id="bayar" v-on:click="selesaiPenerimaanProduk()" v-shortkey.push="['f2']" @shortkey="selesaiPenerimaanProduk()"><font style="font-size:15px;">Bayar(F2)</font></button>
                         </div>
                         <div class="col-md-5 col-xs-5">
-                          <button type="submit" class="btn btn-danger btn-footer" id="btnBatal" v-on:click="batalPenerimaanProdu(inputPembayaranPenerimaanProduk.suplier)" v-shortkey.push="['f3']" @shortkey="batalPenerimaanProdu(inputPembayaranPenerimaanProduk.suplier)"> <font style="font-size:15px;">Batal(F3) </font></button>
+                          <button type="submit" class="btn btn-danger btn-footer" id="btnBatal" v-on:click="batalPenerimaanProduk(inputPembayaranPenerimaanProduk.suplier, inputPembayaranPenerimaanProduk.no_faktur)" v-shortkey.push="['f3']" @shortkey="batalPenerimaanProduk(inputPembayaranPenerimaanProduk.suplier, inputPembayaranPenerimaanProduk.no_faktur)"> <font style="font-size:15px;">Batal(F3) </font></button>
                         </div>
                       </div>
                     </div>
@@ -226,7 +229,8 @@
             inputPembayaranPenerimaanProduk:{
               subtotal: 0,
               suplier: '',
-              keterangan: ''
+              keterangan: '',
+              no_faktur: ''
             },
             placeholder_suplier: {
               placeholder: '--PILIH SUPLIER (F1)--',
@@ -349,7 +353,9 @@
               var keterangan_order = dataOrder[4]; 
 
               app.inputPembayaranPenerimaanProduk.suplier = suplier_order;
+              app.inputPembayaranPenerimaanProduk.suplier_id = suplier_id;
               app.inputPembayaranPenerimaanProduk.keterangan = keterangan_order;
+              app.inputPembayaranPenerimaanProduk.no_faktur = faktur_order;
               this.getPembelianOrder(id_order,suplier_id,faktur_order,suplier_order);
             }
           },
@@ -472,22 +478,41 @@
               });
             }
           },
-          selesaiPembelianOrder(){
+          selesaiPenerimaanProduk(){
             var app = this;
 
-            var newPembelianOrder = app.inputPembayaranPenerimaanProduk;
-            axios.post(app.url, newPembelianOrder)
-            .then(function (resp) {
-              app.message = 'Berhasil Menambah Order Pembelian';
-              app.alert(app.message);
-              window.open('pembelian-order/cetak-besar-order-pembelian/'+resp.data.respons_pembelian,'_blank');
-            })
-            .catch(function (resp) {
-              app.success = false;
-            });
+            var newPenerimaanProduk = app.inputPembayaranPenerimaanProduk;
+
+            if (newPenerimaanProduk.subtotal == 0) {
+
+              app.message = 'Maaf Anda Belum Melakukan Penerimaan Produk.';
+              app.alertGagal(app.message);
+
+            }else if(newPenerimaanProduk.suplier == ''){
+              app.message = 'Supplier Tidak Boleh Kosong, Silakan Pilih Supplier Dahulu..';
+              app.alertGagal(app.message);
+            }else{
+
+              axios.post(app.url, newPenerimaanProduk)
+              .then(function (resp) {
+                app.getResults();
+                app.inputPembayaranPenerimaanProduk.suplier = ''
+                app.inputPembayaranPenerimaanProduk.no_faktur = ''
+                app.inputPembayaranPenerimaanProduk.keterangan = ''
+                app.inputPembayaranPenerimaanProduk.subtotal = 0
+                app.message = 'Berhasil Menerima Produk Supplier '+newPenerimaanProduk.suplier;
+                app.alert(app.message);
+                app.$store.dispatch('LOAD_SUPLIER_ORDER_LIST');
+                // window.open('pembelian-order/cetak-besar-order-pembelian/'+resp.data.respons_pembelian,'_blank');
+              })
+              .catch(function (resp) {
+                app.success = false;
+              });
+
+            }
 
           },
-          batalPenerimaanProdu(supplier){
+          batalPenerimaanProduk(supplier, no_faktur){
             var app = this;
             app.$swal({
               text: `Anda Yakin Ingin Membatalkan Penerimaan Produk Supplier ${supplier} ?`,
@@ -498,13 +523,15 @@
               if (willDelete) {
 
                 app.loading = true;
-                axios.post(app.url+'/batal-penerimaan-produk')
+                axios.get(app.url+'/batal-penerimaan-produk?no_faktur='+no_faktur)
                 .then(function (resp) {
 
                   var subtotal = parseInt(app.inputPembayaranPenerimaanProduk.subtotal) - parseInt(resp.data.subtotal)
                   app.getResults();
                   app.alert("Membatalkan Transaksi Pembelian");
                   app.inputPembayaranPenerimaanProduk.suplier = ''
+                  app.inputPembayaranPenerimaanProduk.no_faktur = ''
+                  app.inputPembayaranPenerimaanProduk.keterangan = ''
                   app.inputPembayaranPenerimaanProduk.subtotal = 0
                   
                 })

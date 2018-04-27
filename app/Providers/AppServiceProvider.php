@@ -7,6 +7,7 @@ use App\Barang;
 use App\DetailItemKeluar;
 use App\DetailItemMasuk;
 use App\DetailPembelian;
+use App\PembelianOrder;
 use App\DetailPenjualan;
 use App\DetailPenjualanPos;
 use App\ItemKeluar;
@@ -19,6 +20,7 @@ use App\Observers\BankWarungObserver;
 use App\Observers\DetailItemKeluarObserver;
 use App\Observers\DetailItemMasukObserver;
 use App\Observers\DetailPembelianObserver;
+use App\Observers\PembelianOrderObserver;
 use App\Observers\DetailPenjualanObserver;
 use App\Observers\DetailPenjualanPosObserver;
 use App\Observers\ItemKeluarObserver;
@@ -82,6 +84,7 @@ class AppServiceProvider extends ServiceProvider
         StokOpname::observe(StokOpnameObserver::class);
         Barang::observe(ProdukObserver::class);
         BankWarung::observe(BankWarungObserver::class);
+        PembelianOrder::observe(PembelianOrderObserver::class);
     }
 
     /**
