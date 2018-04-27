@@ -1089,7 +1089,7 @@ methods: {
       .then(function (resp) {
         app.message = 'Berhasil Menambah Order Pembelian';
         app.alert(app.message);
-        window.open('pembelian-order/cetak-besar-order-pembelian/'+resp.data.respons_pembelian,'_blank');
+        window.open('pembelian-order/cetak-besar-pembelian-order/'+resp.data.respons_pembelian,'_blank');
       })
       .catch(function (resp) {
         app.success = false;
