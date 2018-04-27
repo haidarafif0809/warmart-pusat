@@ -4,7 +4,9 @@
 <?php
 use Jenssegers\Agent\Agent;
 $agent = new Agent();
-$judul_warung = \App\SettingFooter::where('warung_id', \App\SettingPembedaAplikasi::where('app_address', url('/'))->first()->warung_id)->first()->judul_warung;
+$warung_id = \App\SettingPembedaAplikasi::where('app_address', url('/'))->first()->warung_id;
+$judul_warung = \App\SettingFooter::where('warung_id', $warung_id)->first()->judul_warung;
+$optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description'])->where('warung_id',$warung_id)->first();
 ?>
 <head>
     <meta charset="utf-8"/>
@@ -18,6 +20,9 @@ $judul_warung = \App\SettingFooter::where('warung_id', \App\SettingPembedaAplika
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
     <meta content="width=device-width" name="viewport"/>
+    {{-- Optimasi SEO --}}
+    <meta name="keywords" content="<?=$optimasSeo->content_keyword; ?>">
+    <meta name="description" content="<?=$optimasSeo->content_description; ?>">
     @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
     <title>War-Mart.id</title>
     @else
@@ -47,9 +52,9 @@ $judul_warung = \App\SettingFooter::where('warung_id', \App\SettingPembedaAplika
 </head>
 <style type="text/css">
 
-.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
-   padding: 1px;
-}
+    .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+       padding: 1px;
+   }
 
 </style>
 <body>
@@ -475,7 +480,7 @@ $judul_warung = \App\SettingFooter::where('warung_id', \App\SettingPembedaAplika
 </body>
 <!--   Core JS Files   -->
 
-<script src="{{ asset('js/app.js?v=1.196')}}" type="text/javascript">
+<script src="{{ asset('js/app.js?v=1.202')}}" type="text/javascript">
 
 </script>
 <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript">

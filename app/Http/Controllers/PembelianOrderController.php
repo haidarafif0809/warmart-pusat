@@ -8,6 +8,7 @@ use App\TbsPembelianOrder;
 use App\DetailPembelianOrder;
 use App\PembelianOrder;
 use App\Barang;
+use App\SettingAplikasi;
 use App\SatuanKonversi;
 use Illuminate\Support\Facades\DB;
 use Auth;
@@ -21,6 +22,37 @@ class PembelianOrderController extends Controller
         $suplier = Suplier::select('id', 'nama_suplier')
         ->where('warung_id', Auth::user()->id_warung)->get();
         return response()->json($suplier);
+    }
+
+
+    public function kekata($x)
+    {
+        $x     = abs($x);
+        $angka = array("", "satu", "dua", "tiga", "empat", "lima",
+            "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas");
+        $temp = "";
+        if ($x < 12) {
+            $temp = " " . $angka[$x];
+        } else if ($x < 20) {
+            $temp = $this->kekata($x - 10) . " belas";
+        } else if ($x < 100) {
+            $temp = $this->kekata($x / 10) . " puluh" . $this->kekata($x % 10);
+        } else if ($x < 200) {
+            $temp = " seratus" . $this->kekata($x - 100);
+        } else if ($x < 1000) {
+            $temp = $this->kekata($x / 100) . " ratus" . $this->kekata($x % 100);
+        } else if ($x < 2000) {
+            $temp = " seribu" . $this->kekata($x - 1000);
+        } else if ($x < 1000000) {
+            $temp = $this->kekata($x / 1000) . " ribu" . $this->kekata($x % 1000);
+        } else if ($x < 1000000000) {
+            $temp = $this->kekata($x / 1000000) . " juta" . $this->kekata($x % 1000000);
+        } else if ($x < 1000000000000) {
+            $temp = $this->kekata($x / 1000000000) . " milyar" . $this->kekata(fmod($x, 1000000000));
+        } else if ($x < 1000000000000000) {
+            $temp = $this->kekata($x / 1000000000000) . " trilyun" . $this->kekata(fmod($x, 1000000000000));
+        }
+        return $temp;
     }
 
     public function editSatuan($request, $db){
@@ -84,23 +116,23 @@ class PembelianOrderController extends Controller
     }
 
     // DATA PAGINTION
-    public function dataPagination($tbs_pembelian_orders, $array, $no_faktur, $url)
+    public function dataPagination($pembelian_orders, $array, $no_faktur, $url)
     {
 
         //DATA PAGINATION
-        $respons['current_page']   = $tbs_pembelian_orders->currentPage();
+        $respons['current_page']   = $pembelian_orders->currentPage();
         $respons['data']           = $array;
         $respons['no_faktur']      = $no_faktur;
-        $respons['first_page_url'] = url($url . '?page=' . $tbs_pembelian_orders->firstItem());
+        $respons['first_page_url'] = url($url . '?page=' . $pembelian_orders->firstItem());
         $respons['from']           = 1;
-        $respons['last_page']      = $tbs_pembelian_orders->lastPage();
-        $respons['last_page_url']  = url($url . '?page=' . $tbs_pembelian_orders->lastPage());
-        $respons['next_page_url']  = $tbs_pembelian_orders->nextPageUrl();
+        $respons['last_page']      = $pembelian_orders->lastPage();
+        $respons['last_page_url']  = url($url . '?page=' . $pembelian_orders->lastPage());
+        $respons['next_page_url']  = $pembelian_orders->nextPageUrl();
         $respons['path']           = url($url);
-        $respons['per_page']       = $tbs_pembelian_orders->perPage();
-        $respons['prev_page_url']  = $tbs_pembelian_orders->previousPageUrl();
-        $respons['to']             = $tbs_pembelian_orders->perPage();
-        $respons['total']          = $tbs_pembelian_orders->total();
+        $respons['per_page']       = $pembelian_orders->perPage();
+        $respons['prev_page_url']  = $pembelian_orders->previousPageUrl();
+        $respons['to']             = $pembelian_orders->perPage();
+        $respons['total']          = $pembelian_orders->total();
         //DATA PAGINATION
 
         return $respons;
@@ -613,7 +645,7 @@ class PembelianOrderController extends Controller
                     'subtotal'         => $data_tbs_pembelian_order->subtotal,
                     'tax'              => $data_tbs_pembelian_order->tax,
                     'potongan'         => $data_tbs_pembelian_order->potongan,
-                    'status_harga'         => $data_tbs_pembelian_order->status_harga,
+                    'status_harga'     => $data_tbs_pembelian_order->status_harga,
                     'warung_id'        => $warung_id,
                     ]);
             }
@@ -636,6 +668,77 @@ class PembelianOrderController extends Controller
             return response()->json($respons);
 
         }
+    }
+
+
+
+    public function view()
+    {
+        //SELECT SEMUA TRASNSAKSI PEMBELIAN ORDER
+        $no_faktur = '';
+        $data_pembelian_order = PembelianOrder::dataTransaksiPembelianOrder()->paginate(10);
+        //PERULANGAN
+        $array_pembelian = array();
+        foreach ($data_pembelian_order as $pembelian_order) {
+            array_push($array_pembelian, [
+                'data'          => $pembelian_order,
+                'status_order'  => $pembelian_order->Status
+                ]);
+        }
+
+        $url     = '/pembelian-order/view';
+        //DATA PAGINATION
+        $respons = $this->dataPagination($data_pembelian_order, $array_pembelian, $no_faktur, $url);
+
+        return response()->json($respons);
+    }
+
+
+//VIEW DETAIL PEMBELIAN ORDER & PENCARIAN
+    public function viewDetailPembelianOrder($id)
+    {
+        $warung_id = Auth::user()->id_warung;
+        $pembelian = PembelianOrder::find($id);
+
+        $data_detailOrder = DetailPembelianOrder::detailPembelianOrder($warung_id, $pembelian->no_faktur_order)->paginate(10);
+
+        $array_order = [];
+        foreach ($data_detailOrder as $detail_order) {
+            array_push($array_order, [
+                'detail_order'=> $detail_order,
+                'nama_produk'=> $detail_order->NamaProduk,
+                ]);
+        }
+
+        $url     = '/pembelian-order/view-detail-pembelian-order';
+        //DATA PAGINATION
+        $respons = $this->dataPagination($data_detailOrder, $array_order, $pembelian->no_faktur_order, $url);
+
+
+        return response()->json($respons);
+    }
+
+
+    public function cetakBesar($id)
+    {   
+        $warung_id = Auth::user()->id_warung;
+        //SETTING APLIKASI
+        $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
+
+        $data_order = PembelianOrder::cetakPembelianOrder($warung_id, $id)->first();
+
+        $status_order = $data_order->Status;
+
+        $data_cetak = DetailPembelianOrder::cetakDetailPembelianOrder($warung_id, $data_order->no_faktur_order)->get();
+
+        $terbilang  = $this->kekata($data_order->total);
+        $subtotal   = 0;
+        foreach ($data_cetak as $data_cetaks) {
+            $subtotal += $data_cetaks->subtotal;
+        }
+
+        // return $subtotal;
+        return view('pembelian_order.cetak_besar', ['setting_aplikasi' => $setting_aplikasi, 'detail_orders' => $data_cetak, 'data_order' => $data_order, 'status_order' => $status_order, 'subtotal' => $subtotal, 'terbilang' => $terbilang])->with(compact('html'));
     }
 
     /**
@@ -680,6 +783,15 @@ class PembelianOrderController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if (Auth::user()->id_warung == '') {
+            Auth::logout();
+            return response()->view('error.403');
+        } else {
+            if (!PembelianOrder::destroy($id)) {
+                return 0;
+            } else {
+                return response(200);
+            }
+        }
     }
 }

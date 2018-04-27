@@ -387,7 +387,7 @@
                     LHB
                 </span>
                 <span class="sidebar-normal">
-                    Laporan Hutang Beredar
+                    Laporan Hutang
                 </span>
             </router-link>
         </li>
@@ -610,6 +610,16 @@
     </a>
     <div class="collapse" id="settingWarung">
         <ul class="nav">
+            <li>
+                <router-link :to="{name: 'optimasiSeoIndex'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        OS
+                    </span>
+                    <span class="sidebar-normal">
+                        Optimasi SEO
+                    </span>
+                </router-link>
+            </li>
 
             @if(Laratrust::can('setting_footer')) 
             <li>

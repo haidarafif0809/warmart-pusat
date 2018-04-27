@@ -595,6 +595,10 @@ Route::get('/pembelian-order/proses-edit-harga-tbs-pembelian', 'PembelianOrderCo
 Route::get('/pembelian-order/proses-edit-potongan-tbs-pembelian', 'PembelianOrderController@edit_potongan_tbs_pembelian')->middleware('auth');
 Route::get('/pembelian-order/cek-persen-potongan-pembelian', 'PembelianOrderController@cek_persen_potongan_pembelian')->middleware('auth');
 Route::get('/pembelian-order/proses-edit-tax-tbs-pembelian', 'PembelianOrderController@editTaxTbsPembelian')->middleware('auth');
+Route::get('/pembelian-order/view', 'PembelianOrderController@view')->middleware('auth');
+Route::get('/pembelian-order/view-detail-order-pembelian/{id}', 'PembelianOrderController@viewDetailPembelianOrder')->middleware('auth');
+Route::get('/pembelian-order/cetak-besar-pembelian-order/{id}', 'PembelianOrderController@cetakBesar')->middleware('auth');
+
 
 // PEMBELIAN ORDER
 
@@ -604,6 +608,7 @@ Route::get('/penerimaan-produk/suplier-order', 'PenerimaanProdukController@supli
 Route::get('/penerimaan-produk/view-tbs-penerimaan-produk', 'PenerimaanProdukController@viewTbsPenerimaanProduk')->middleware('auth');
 Route::get('/penerimaan-produk/pencarian-tbs-penerimaan-produk', 'PenerimaanProdukController@pencarianTbsPenerimaanProduk')->middleware('auth');
 Route::get('/penerimaan-produk/proses-tbs-penerimaan-produk', 'PenerimaanProdukController@prosesTbsPenerimaanProduk')->middleware('auth');
+Route::get('/penerimaan-produk/batal-penerimaan-produk', 'PenerimaanProdukController@batalPenerimaanProduk')->middleware('auth');
 
 // PENERIMAAN PRODUK
 
@@ -828,12 +833,12 @@ Route::post('/laporan-penjualan-terbaik/pencarian-online-data', 'LaporanPenjuala
 Route::get('/laporan-penjualan-terbaik/download-excel/{dari_tanggal}/{sampai_tanggal}/{tampil_terbaik}', 'LaporanPenjualanTerbaikController@downloadExcel')->middleware('auth');
 Route::get('/laporan-penjualan-terbaik/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{tampil_terbaik}', 'LaporanPenjualanTerbaikController@cetakLaporan')->middleware('auth');
 
-// LAPORAN PENJUALAN TERBAIK
-Route::post('/laporan-hutang-beredar/view', 'LaporanHutangBeredarController@prosesHutangBeredar')->middleware('auth');
-Route::post('/laporan-hutang-beredar/pencarian', 'LaporanHutangBeredarController@pencarianHutangBeredar')->middleware('auth');
-Route::post('/laporan-hutang-beredar/total-hutang-beredar', 'LaporanHutangBeredarController@totalHutangBeredar')->middleware('auth');
-Route::get('/laporan-hutang-beredar/download-excel-hutang-beredar/{dari_tanggal}/{sampai_tanggal}/{suplier}', 'LaporanHutangBeredarController@downloadExcel')->middleware('auth');
-Route::get('/laporan-hutang-beredar/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{suplier}', 'LaporanHutangBeredarController@cetakLaporan')->middleware('auth');
+// LAPORAN PEMBAYARAN HUTANG BEREDAR
+Route::post('/laporan-hutang-beredar/view', 'LaporanHutangBeredarController@prosesHutangBeredar')->middleware('auth'); 
+Route::post('/laporan-hutang-beredar/pencarian', 'LaporanHutangBeredarController@pencarianHutangBeredar')->middleware('auth'); 
+Route::post('/laporan-hutang-beredar/total-hutang-beredar', 'LaporanHutangBeredarController@totalHutangBeredar')->middleware('auth'); 
+Route::get('/laporan-hutang-beredar/download-excel-hutang-beredar/{dari_tanggal}/{sampai_tanggal}/{suplier}/{laporan}', 'LaporanHutangBeredarController@downloadExcel')->middleware('auth'); 
+Route::get('/laporan-hutang-beredar/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{suplier}/{laporan}', 'LaporanHutangBeredarController@cetakLaporan')->middleware('auth'); 
 
 ////PEMBAYARAN Hutang
 Route::get('/pembayaran-hutang/view', 'PembayaranHutangController@view')->middleware('auth');
@@ -1009,6 +1014,10 @@ Route::post('/setting-promo/{id}', 'SettingPromoController@update')->middleware(
 // Setting Ficel
 Route::get('/setting-fixel/view', 'SettingFixelController@view')->middleware('auth');
 Route::post('/setting-fixel/simpan-fixel', 'SettingFixelController@simpanSetting')->middleware('auth');
+
+// Setting SEO
+Route::get('/optimasi-seo/view', 'SettingSeoController@view')->middleware('auth');
+Route::post('/optimasi-seo/simpan-seo', 'SettingSeoController@simpanSetting')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
