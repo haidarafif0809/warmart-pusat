@@ -732,11 +732,9 @@ class PembelianOrderController extends Controller
             Auth::logout();
             return response()->view('error.403');
         } else {
-            $pembelian_order = PembelianOrder::where('status_order', 3)->where('id', $id)->count();
-            if ($pembelian_order > 0) {
+            if (!PembelianOrder::destroy($id)) {
                 return 0;
             } else {
-                PembelianOrder::destroy($id);
                 return response(200);
             }
         }

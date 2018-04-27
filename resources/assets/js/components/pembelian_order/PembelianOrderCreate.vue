@@ -34,6 +34,9 @@
     .card-pembayaran{
       background-color:#82B1FF;
     }
+    .btn-footer{
+      padding: 11px 10px;
+    }
   </style>
 
   <template>
@@ -312,13 +315,14 @@
                   </textarea>
 
                 </div>
+
                 <div class="card-footer">
-                  <div class="row"> 
-                    <div class="col-md-6 col-xs-6"> 
-                      <button type="button" class="btn btn-success btn-lg" id="bayar" v-on:click="selesaiPembelianOrder()" v-shortkey.push="['f2']" @shortkey="selesaiPembelianOrder()"><font style="font-size:20px;">Bayar(F2)</font></button>
+                  <div class="row">
+                    <div class="col-md-5 col-xs-5"> 
+                      <button type="button" class="btn btn-success btn-footer" id="bayar" v-on:click="selesaiPembelianOrder()" v-shortkey.push="['f2']" @shortkey="selesaiPembelianOrder()"><font style="font-size:15px;">Bayar(F2)</font></button>
                     </div>
-                    <div class="col-md-6 col-xs-6">
-                      <button type="submit" class="btn btn-danger btn-lg" id="btnBatal" v-on:click="batalPembelian()" v-shortkey.push="['f3']" @shortkey="batalPembelian()"> <font style="font-size:20px;">Batal(F3) </font></button>
+                    <div class="col-md-5 col-xs-5">
+                      <button type="submit" class="btn btn-danger btn-footer" id="btnBatal" v-on:click="batalPembelian()" v-shortkey.push="['f3']" @shortkey="batalPembelian()"> <font style="font-size:15px;">Batal(F3) </font></button>
                     </div>
                   </div>
                 </div>
