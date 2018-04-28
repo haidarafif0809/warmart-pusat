@@ -610,6 +610,7 @@ Route::get('/pembelian-order/proses-edit-harga-edit-tbs-pembelian', 'PembelianOr
 Route::post('/pembelian-order/edit-satuan-edit-tbs-pembelian', 'PembelianOrderController@editSatuanEditTbsPembelian')->middleware('auth');
 Route::get('/pembelian-order/cek-potongan-persen', 'PembelianOrderController@potonganPersen')->middleware('auth');
 Route::get('/pembelian-order/proses-edit-potongan-edit-tbs-pembelian', 'PembelianOrderController@editPotonganEditTbsPembelianOrder')->middleware('auth');
+Route::delete('/pembelian-order/hapus-edit-tbs-pembelian/{id}', 'PembelianOrderController@hapusEditTbsPembelian')->middleware('auth');
 
 // PEMBELIAN ORDER
 

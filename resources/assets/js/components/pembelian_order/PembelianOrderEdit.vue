@@ -618,7 +618,7 @@ methods: {
 
     var app = this;
     app.loading = true;
-    axios.delete(app.url+'/hapus-tbs-pembelian/'+id)
+    axios.delete(app.url+'/hapus-edit-tbs-pembelian/'+id)
     .then(function (resp) {
       app.getResults();
 
