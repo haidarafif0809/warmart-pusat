@@ -323,7 +323,7 @@
                       <button type="button" class="btn btn-success btn-footer" id="bayar" v-on:click="selesaiPembelianOrder()" v-shortkey.push="['f2']" @shortkey="selesaiPembelianOrder()"><font style="font-size:15px;">Bayar(F2)</font></button>
                     </div>
                     <div class="col-md-5 col-xs-5">
-                      <button type="submit" class="btn btn-danger btn-footer" id="btnBatal" v-on:click="batalPembelian()" v-shortkey.push="['f3']" @shortkey="batalPembelian()"> <font style="font-size:15px;">Batal(F3) </font></button>
+                      <button type="submit" class="btn btn-danger btn-footer" id="btnBatal" v-on:click="batalEditPembelianOrder()" v-shortkey.push="['f3']" @shortkey="batalEditPembelianOrder()"> <font style="font-size:15px;">Batal(F3) </font></button>
                     </div>
                   </div>
                 </div>
@@ -1117,7 +1117,7 @@ methods: {
 
     }
   },
-  batalPembelian(){
+  batalEditPembelianOrder(){
     var app = this;
     app.$swal({
       text: "Anda Yakin Ingin Membatalkan Transaksi Pembelian Ini ?",
@@ -1128,7 +1128,7 @@ methods: {
       if (willDelete) {
 
         app.loading = true;
-        axios.post(app.url+'/batal-transaksi-pembelian')
+        axios.get(app.url+'/batal-transaksi-edit-pembelian-order?no_faktur_order='+app.inputTbsPembelianOrder.no_faktur)
         .then(function (resp) {
 
           var subtotal = parseInt(app.inputPembayaranPembelianOrder.subtotal) - parseInt(resp.data.subtotal)

@@ -1171,4 +1171,18 @@ class PembelianOrderController extends Controller
         }
     }
 
+    //PROSES BATAL EDIT TBS PEMBELIAN ORDER
+    public function batalEditPembelianOrder(Request $request)
+    {
+
+        if (Auth::user()->id_warung == '') {
+            Auth::logout();
+            return response()->view('error.403');
+        } else {
+            $data_tbs_pembelian = EditTbsPembelianOrder::where('no_faktur_order', $request->no_faktur_order)->where('warung_id', Auth::user()->id_warung)->delete();
+
+            return response(200);
+        }
+    }
+
 }
