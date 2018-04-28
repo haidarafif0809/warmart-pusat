@@ -292,18 +292,17 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="foto" class="col-md-2 control-label">Foto Produk</label>
-                                    <div class="col-md-10">
-                                        <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+                                    <div class="col-md-4">
+                                        <div class="fileinput fileinput-new text-center" data-provides="fileinput" id="div-foto">
                                             <div class="fileinput-new thumbnail">
-                                                <img :src="url_origin+'/assets/img/image_placeholder.jpg'" alt="Foto Akan Tampil Disini" v-if="produk.foto == '' || produk.foto == null">
-                                                <img v-else :src="url_picture+'/'+produk.foto" /> 
+                                                <img v-if="produk.foto != null" :src="url_picture+'/'+produk.foto" /> 
+                                                <img :src="url_origin+'/assets/img/image_placeholder.jpg'" alt="Foto Akan Tampil Disini" v-else>
                                             </div>
                                             <div class="fileinput-preview fileinput-exists thumbnail"></div>
                                             <div>
                                                 <span class="btn btn-rose btn-round btn-file">
-                                                    <span class="fileinput-new">Ambil Foto</span>
-                                                    <span class="fileinput-exists">Ubah</span>
+                                                    <span class="fileinput-new">Ambil Foto 1</span>
+                                                    <span class="fileinput-exists">Ubah Foto 1</span>
                                                     <input class="form-control" type="file" name="foto" id="foto">
                                                 </span>
                                                 <a href="#pablo" class="btn btn-danger btn-round fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i> Batal</a>
@@ -312,7 +311,47 @@
                                             <a style="color: red;">Size Foto (Ukuran Max : 3MB)</a>
                                         </div>
                                     </div>
-                                </div>
+
+                                    <div class="col-md-4">
+                                        <div class="fileinput fileinput-new text-center" data-provides="fileinput" id="div-foto">
+                                            <div class="fileinput-new thumbnail">
+                                                <img v-if="produk.foto_2 != null" :src="url_picture+'/'+produk.foto_2" /> 
+                                                <img :src="url_origin+'/assets/img/image_placeholder.jpg'" alt="Foto Akan Tampil Disini" v-else>
+                                            </div>
+                                            <div class="fileinput-preview fileinput-exists thumbnail"></div>
+                                            <div>
+                                                <span class="btn btn-rose btn-round btn-file">
+                                                    <span class="fileinput-new">Ambil Foto 2</span>
+                                                    <span class="fileinput-exists">Ubah Foto 2</span>
+                                                    <input class="form-control" type="file" name="foto_2" id="foto_2">
+                                                </span>
+                                                <a href="#pablo" class="btn btn-danger btn-round fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i> Batal</a>
+                                            </div>
+                                            <span v-if="errors.foto_2" id="foto_2_error" class="label label-danger">{{ errors.foto_2[0] }}</span>
+                                            <a style="color: red;">Size Foto (Ukuran Max : 3MB)</a>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="fileinput fileinput-new text-center" data-provides="fileinput" id="div-foto">
+                                            <div class="fileinput-new thumbnail">
+                                                <img v-if="produk.foto_3 != null" :src="url_picture+'/'+produk.foto_3" /> 
+                                                <img :src="url_origin+'/assets/img/image_placeholder.jpg'" alt="Foto Akan Tampil Disini" v-else>
+                                            </div>
+                                            <div class="fileinput-preview fileinput-exists thumbnail"></div>
+                                            <div>
+                                                <span class="btn btn-rose btn-round btn-file">
+                                                    <span class="fileinput-new">Ambil Foto 3</span>
+                                                    <span class="fileinput-exists">Ubah Foto 3</span>
+                                                    <input class="form-control" type="file" name="foto_3" id="foto_3">
+                                                </span>
+                                                <a href="#pablo" class="btn btn-danger btn-round fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i> Batal</a>
+                                            </div>
+                                            <span v-if="errors.foto_3" id="foto_3_error" class="label label-danger">{{ errors.foto_3[0] }}</span>
+                                            <a style="color: red;">Size Foto (Ukuran Max : 3MB)</a>
+                                        </div>
+                                    </div>
+                                </div> 
                             </div>
                             <div class="col-md-6" style="height: 10%;" v-if="data_agent == 1">
                                 <quill-editor v-model="produk.deskripsi_produk"
@@ -367,6 +406,8 @@
                 produk: {
                     id: '',
                     foto : '',
+                    foto_2 : '',
+                    foto_3 : '',
                     kode_barcode : '',
                     kode_barang : '',
                     nama_barang : '',
