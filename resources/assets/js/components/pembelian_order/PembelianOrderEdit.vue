@@ -879,7 +879,7 @@ methods: {
     }).then(function (harga_produk) { 
       if (harga_produk != "0") { 
         app.loading = true;
-        axios.get(app.url+'/proses-edit-harga-tbs-pembelian?harga_edit_produk='+harga_produk+'&id_harga='+id)
+        axios.get(app.url+'/proses-edit-harga-edit-tbs-pembelian?harga_edit_produk='+harga_produk+'&id_harga='+id)
         .then(function (resp) {
           app.alert("Mengubah Harga Produk "+titleCase(nama_produk));
           app.loading = false;

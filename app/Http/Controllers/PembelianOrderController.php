@@ -376,7 +376,7 @@ class PembelianOrderController extends Controller
 
             // UPDATE HARGA, SUBTOTAL, POTONGAN, TAX
             $tbs_pembelian->update(['harga_produk' => $request->harga_edit_produk, 'subtotal' => $subtotal, 'potongan' => $potongan_produk, 'tax' => $tax_produk]);
-            $nama_barang = $tbs_pembelian->TitleCaseBarang; // TITLE CASH
+            
 
             $respons['subtotal'] = $subtotal;
 
@@ -457,7 +457,7 @@ class PembelianOrderController extends Controller
 
                 // UPDATE POTONGAN, SUBTOTAL, TAX
                 $tbs_pembelian->update(['potongan' => $potongan_produk, 'subtotal' => $subtotal, 'tax' => $tax_produk]);
-                $nama_barang = $tbs_pembelian->TitleCaseBarang; // TITLE CASH
+                
 
                 $respons['subtotal'] = $subtotal;
 
@@ -884,6 +884,57 @@ class PembelianOrderController extends Controller
 
             return response()->json($respons);
 
+        }
+    }
+
+    //PROSES EDIT HARGA EDIT TBS PEMBELIAN
+    public function editHargaEditTbsPembelianOrder(Request $request)
+    {
+
+        if (Auth::user()->id_warung == '') {
+            Auth::logout();
+            return response()->view('error.403');
+        } else {
+            // SELECT  TBS PEMBELIAN
+            $tbs_pembelian = EditTbsPembelianOrder::find($request->id_harga);
+
+            // JIKA POTONGAN == 0
+            if ($tbs_pembelian->potongan == 0) {
+                $potongan_produk = 0;
+            } else {
+                // POTONGA PERSEN = POTONGAN / (JUMLAH * HARGA) * 100
+                $potongan_persen = ($tbs_pembelian->potongan / ($tbs_pembelian->jumlah_produk * $request->harga_edit_produk)) * 100;
+                // POTONGAN PRODUK = HARGA * JUMLAH * POTONGAN PERSEN /100
+                $potongan_produk = ($request->harga_edit_produk * $tbs_pembelian->jumlah_produk) * $potongan_persen / 100;
+            }
+
+            // JIKA PAJAK == 0
+            if ($tbs_pembelian->tax == 0) {
+                $tax_produk = 0;
+            } else {
+                // TAX PERSEN =  (TAX * 100) / (JUMLAH * HARGA - POTONGAN )
+                $tax = ($tbs_pembelian->tax * 100) / ($tbs_pembelian->jumlah_produk * $request->harga_edit_produk - $potongan_produk);
+                // TAX PRODUK = ((HARGA * JUMLAH) - POTONGAN) * TAX PERSEN / 100
+                $tax_produk = (($request->harga_edit_produk * $tbs_pembelian->jumlah_produk) - $potongan_produk) * $tax / 100;
+            }
+
+            if ($tbs_pembelian->ppn == 'Include') {
+                // JIKA PPN INCLUDE MAKA PAJAK TIDAK MEMPENGARUHI SUBTOTAL
+                $subtotal = ($request->harga_edit_produk * $tbs_pembelian->jumlah_produk) - $potongan_produk;
+            } elseif ($tbs_pembelian->ppn == 'Exclude') {
+                // JIKA PPN EXCLUDE MAKA PAJAK MEMPENGARUHI SUBTOTAL
+                $subtotal = (($request->harga_edit_produk * $tbs_pembelian->jumlah_produk) - $potongan_produk) + $tax_produk;
+            } else {
+                $subtotal = ($request->harga_edit_produk * $tbs_pembelian->jumlah_produk) - $potongan_produk;
+            }
+
+            // UPDATE HARGA, SUBTOTAL, POTONGAN, TAX
+            $tbs_pembelian->update(['harga_produk' => $request->harga_edit_produk, 'subtotal' => $subtotal, 'potongan' => $potongan_produk, 'tax' => $tax_produk]);
+            
+
+            $respons['subtotal'] = $subtotal;
+
+            return response()->json($respons);
         }
     }
 }
