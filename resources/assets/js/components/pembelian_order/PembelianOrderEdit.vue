@@ -821,7 +821,7 @@ methods: {
       $("#modalEditSatuan").hide();
     }else{
 
-      axios.post(app.url+'/edit-satuan-tbs-pembelian', newSatuan)
+      axios.post(app.url+'/edit-satuan-edit-tbs-pembelian', newSatuan)
       .then(function (resp) {
 
         var subtotal = (parseInt(app.inputPembayaranPembelianOrder.subtotal) - parseInt(subtotal_lama) + parseInt(resp.data.subtotal))

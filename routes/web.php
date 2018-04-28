@@ -607,6 +607,7 @@ Route::get('/pembelian-order/pencarian-edit-tbs-pembelian/{id}', 'PembelianOrder
 Route::get('/pembelian-order/data-pembelian-order/{id}', 'PembelianOrderController@dataPembelianOrder')->middleware('auth');
 Route::get('/pembelian-order/proses-edit-jumlah-edit-tbs-pembelian', 'PembelianOrderController@editJumlahEditTbsPembelianOrder')->middleware('auth');
 Route::get('/pembelian-order/proses-edit-harga-edit-tbs-pembelian', 'PembelianOrderController@editHargaEditTbsPembelianOrder')->middleware('auth');
+Route::post('/pembelian-order/edit-satuan-edit-tbs-pembelian', 'PembelianOrderController@editSatuanEditTbsPembelian')->middleware('auth');
 
 // PEMBELIAN ORDER
 

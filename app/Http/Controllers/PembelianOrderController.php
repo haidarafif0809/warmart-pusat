@@ -74,7 +74,7 @@ class PembelianOrderController extends Controller
         $respons['satuan_id']     = $satuan_konversi[0];
         $respons['subtotal']     = $subtotal;
 
-        return $harga_produk;
+        return $respons;
     }
 
     // SATUAN KONVERSI
@@ -936,5 +936,13 @@ class PembelianOrderController extends Controller
 
             return response()->json($respons);
         }
+    }
+
+    public function editSatuanEditTbsPembelian(Request $request){
+
+        $db = 'App\EditTbsPembelianOrder';
+        $respons = $this->editSatuan($request, $db);
+
+        return response()->json($respons);
     }
 }
