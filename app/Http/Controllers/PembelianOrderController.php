@@ -846,4 +846,44 @@ class PembelianOrderController extends Controller
     public function dataPembelianOrder($id){
         return $pembelian_order = PembelianOrder::find($id);
     }
+
+
+    //PROSES EDIT JUMLAH EDIT TBS PEMBELIAN
+    public function editJumlahEditTbsPembelianOrder(Request $request)
+    {
+
+        if (Auth::user()->id_warung == '') {
+            Auth::logout();
+            return response()->view('error.403');
+        } else {
+            // SELECT  TBS PEMBELIAN
+            $tbs_pembelian_order = EditTbsPembelianOrder::find($request->id_tbs_pembelian);
+            // JIKA TAX/ PAJAKK EDIT TBS PEMBELIAN == 0
+            if ($tbs_pembelian_order->tax == 0) {
+                $tax_produk = 0;
+            } else {
+                // TAX PERSEN = (TAX TBS PEMBELIAN * 100) / (JUMLAH PRODUK * HARGA - POTONGAN)
+                $tax = ($tbs_pembelian_order->tax * 100) / ($request->jumlah_edit_produk * $tbs_pembelian_order->harga_produk - $tbs_pembelian_order->potongan); // TAX DALAM BENTUK PERSEN
+                // TAX PRODUK = (HARGA * JUMLAH - POTONGAN) * TAX /100
+                $tax_produk = (($tbs_pembelian_order->harga_produk * $request->jumlah_edit_produk) - $tbs_pembelian_order->potongan) * $tax / 100;
+            }
+
+            if ($tbs_pembelian_order->ppn == 'Include') {
+                // JIKA PPN INCLUDE MAKA PAJAK TIDAK MEMPENGARUHI SUBTOTAL
+                $subtotal = ($tbs_pembelian_order->harga_produk * $request->jumlah_edit_produk) - $tbs_pembelian_order->potongan;
+            } elseif ($tbs_pembelian_order->ppn == 'Exclude') {
+                // JIKA PPN EXCLUDE MAKA PAJAK MEMPENGARUHI SUBTOT
+                $subtotal = (($tbs_pembelian_order->harga_produk * $request->jumlah_edit_produk) - $tbs_pembelian_order->potongan) + $tax_produk;
+            } else {
+                $subtotal = ($tbs_pembelian_order->harga_produk * $request->jumlah_edit_produk) - $tbs_pembelian_order->potongan;
+            }
+            // UPDATE JUMLAH PRODUK, SUBTOTAL, DAN TAX
+            $tbs_pembelian_order->update(['jumlah_produk' => $request->jumlah_edit_produk, 'subtotal' => $subtotal, 'tax' => $tax_produk]);
+
+            $respons['subtotal'] = $subtotal;
+
+            return response()->json($respons);
+
+        }
+    }
 }
