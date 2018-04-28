@@ -119,7 +119,7 @@
                 <button type="button" class="close"  v-on:click="closeModalJumlahProduk()" v-shortkey.push="['f9']" @shortkey="closeModalJumlahProduk()"> &times;</button> 
               </div>
 
-              <form class="form-horizontal" v-on:submit.prevent="submitJumlahProduk(inputTbsPembelianOrder.id_produk,inputTbsPembelianOrder.jumlah_produk,inputTbsPembelianOrder.harga_produk,inputTbsPembelianOrder.nama_produk,inputTbsPembelianOrder.satuan_produk)"> 
+              <form class="form-horizontal" v-on:submit.prevent="submitJumlahProduk(inputTbsPembelianOrder.id_produk,inputTbsPembelianOrder.jumlah_produk,inputTbsPembelianOrder.harga_produk,inputTbsPembelianOrder.nama_produk,inputTbsPembelianOrder.satuan_produk, inputTbsPembelianOrder.no_faktur)"> 
                 <div class="modal-body">
                   <h3 class="text-center"><b>{{inputTbsPembelianOrder.nama_produk}}</b></h3>
 
@@ -266,7 +266,7 @@
                     </tr>
                   </tbody>          
                   <tbody class="data-tidak-ada"  v-else-if="tbs_pembelian_orders.length == 0 && loading == false" >
-                    <tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
+                    <tr ><td colspan="8"  class="text-center">Tidak Ada Data</td></tr>
                   </tbody>
                 </table>  
 
@@ -362,7 +362,8 @@
           jumlah_produk : '',
           harga_produk : '',
           id_tbs : '',
-          satuan_produk: ''
+          satuan_produk: '',
+          no_faktur: ''
         },
         inputPembayaranPembelianOrder:{
           subtotal: 0,
@@ -460,7 +461,7 @@ methods: {
     }
     axios.get(app.url+'/view-edit-tbs-pembelian/'+app.id_order+'?page='+page)
     .then(function (resp) {
-      console.log(resp.data.data)
+      app.tbs_pembelian_orders = resp.data.data;
       app.tbs_pembelian_orders = resp.data.data;
       app.tbsPembelianData = resp.data;       
       app.loading = false;
@@ -478,7 +479,6 @@ methods: {
 
     })
     .catch(function (resp) {
-      console.log(resp);
       app.loading = false;
       app.seen = true;
       alert("Tidak Dapat Memuat Pembelian");
@@ -489,11 +489,12 @@ methods: {
 
     axios.get(app.url+'/data-pembelian-order/'+id)
     .then(function (resp) {
+      console.log(resp.data)
       app.inputPembayaranPembelianOrder.suplier = resp.data.suplier_id
       app.inputPembayaranPembelianOrder.keterangan = resp.data.keterangan
+      app.inputTbsPembelianOrder.no_faktur = resp.data.no_faktur_order
     })
     .catch(function (resp) {
-      console.log(resp);
       alert("Tidak Dapat Memuat Pembelian Order");
     });
 
@@ -525,7 +526,6 @@ methods: {
       }
     })
     .catch(function (resp) {
-      console.log(resp);
       alert("Tidak Dapat Memuat Satuan Produk");
     });
   },    
@@ -542,7 +542,6 @@ methods: {
       app.seen = true;
     })
     .catch(function (resp) {
-      console.log(resp);
       alert("Tidak Dapat Memuat Pembelian");
     });
   }, //END FUNGSI UNTUK PAGINATION SEARCH     
@@ -661,7 +660,7 @@ methods: {
     $("#modalJumlahProduk").show();
     app.$refs.jumlah_produk.focus();
   },
-  submitJumlahProduk(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk){
+  submitJumlahProduk(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk, no_faktur_order){
     var app = this
     var produk = app.inputTbsPembelianOrder.produk.split("|");
     var harga_tbs = $(".harga-"+produk[0]).attr("data-harga")
@@ -688,14 +687,14 @@ methods: {
       })
 
     }else if (harga != harga_produk) {
-      app.konfirmasiPerubahanHarga(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk)
+      app.konfirmasiPerubahanHarga(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk, no_faktur_order)
     }else{
       var status_harga = 0;
-      app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk,status_harga)
+      app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk,status_harga, no_faktur_order)
     }
 
   },//END PROSES TAMBAH PRODUK TBS
-  konfirmasiPerubahanHarga(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk){
+  konfirmasiPerubahanHarga(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk, no_faktur_order){
     let app = this
     app.$swal({
       text: "Anda Yakin Ingin Merubah Harga Beli Produk "+titleCase(nama_produk)+ " ?",
@@ -707,19 +706,19 @@ methods: {
     }).then((value) => {
       if (value) {
   var status_harga = 1; // jika master produk, juga diubah
-  app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk,status_harga);
+  app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk,status_harga, no_faktur_order);
 } else {
   var status_harga = 0; // jika master produk, tidak diubah
-  app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk,status_harga);
+  app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk,status_harga, no_faktur_order);
 }
 });
   },
-  prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk,status_harga){
+  prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk,status_harga, no_faktur_order){
 
     var app = this;
     var satuan = satuan_produk.split("|");
     app.loading = true;
-    axios.get(app.url+'/proses-tambah-tbs-pembelian?id_produk_tbs='+id_produk+'&jumlah_produk='+jumlah_produk+'&harga_produk='+harga_produk+'&satuan='+satuan[0]+'&satuan_dasar='+satuan[2]+'&status_harga='+status_harga)
+    axios.get(app.url+'/proses-tambah-edit-tbs-pembelian?id_produk_tbs='+id_produk+'&jumlah_produk='+jumlah_produk+'&harga_produk='+harga_produk+'&satuan='+satuan[0]+'&satuan_dasar='+satuan[2]+'&status_harga='+status_harga+'&no_faktur_order='+no_faktur_order)
     .then(function (resp) {
       $("#modalJumlahProduk").hide();
       app.alert("Menambahkan Produk "+titleCase(nama_produk));
@@ -739,6 +738,7 @@ methods: {
       app.inputTbsPembelianOrder.harga_produk = ''
       app.inputTbsPembelianOrder.jumlah_produk = ''
       app.inputTbsPembelianOrder.produk = ''
+      app.inputTbsPembelianOrder.no_faktur = ''
 
     })
     .catch(function (resp) {
@@ -841,7 +841,6 @@ methods: {
 
       })
       .catch(function (resp) {
-        console.log(resp);                  
         app.loading = false;
         alert("Tidak Dapat Mengubah Satuan");
       });

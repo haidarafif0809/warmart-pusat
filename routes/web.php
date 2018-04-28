@@ -611,6 +611,7 @@ Route::post('/pembelian-order/edit-satuan-edit-tbs-pembelian', 'PembelianOrderCo
 Route::get('/pembelian-order/cek-potongan-persen', 'PembelianOrderController@potonganPersen')->middleware('auth');
 Route::get('/pembelian-order/proses-edit-potongan-edit-tbs-pembelian', 'PembelianOrderController@editPotonganEditTbsPembelianOrder')->middleware('auth');
 Route::delete('/pembelian-order/hapus-edit-tbs-pembelian/{id}', 'PembelianOrderController@hapusEditTbsPembelian')->middleware('auth');
+Route::get('/pembelian-order/proses-tambah-edit-tbs-pembelian', 'PembelianOrderController@prosesTambahEditTbsPembelianOrder')->middleware('auth');
 
 // PEMBELIAN ORDER
 

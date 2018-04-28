@@ -1112,4 +1112,63 @@ class PembelianOrderController extends Controller
         }
     }
 
+    //PROSES TAMBAH TBS PEMBELIAN ORDER
+    public function prosesTambahEditTbsPembelianOrder(Request $request)
+    {
+
+        if (Auth::user()->id_warung == '') {
+            Auth::logout();
+            return response()->view('error.403');
+        } else {
+
+            $session_id = session()->getId();
+            $data_tbs   = EditTbsPembelianOrder::where('id_produk', $request->id_produk_tbs)
+            ->where('session_id', $session_id)->where('no_faktur_order', $request->no_faktur_order)->where('warung_id', Auth::user()->id_warung);
+
+            if ($data_tbs->count() > 0) {
+
+                $subtotal_lama = $data_tbs->first()->subtotal;
+
+                $jumlah_produk = $data_tbs->first()->jumlah_produk + $request->jumlah_produk;
+
+                $subtotal_edit = ($jumlah_produk * $request->harga_produk) - $data_tbs->first()->potongan;
+
+                $data_tbs->update(['jumlah_produk' => $jumlah_produk, 'subtotal' => $subtotal_edit, 'harga_produk' => $request->harga_produk, 'satuan_id' => $request->satuan, 'satuan_dasar' => $request->satuan_dasar]);
+
+                $subtotal = $jumlah_produk * $request->harga_produk;
+
+                $respons['status']        = 1;
+                $respons['subtotal_lama'] = $subtotal_lama;
+                $respons['subtotal']      = $subtotal;
+                return response()->json($respons);
+
+            } else {
+
+                $barang = Barang::select('nama_barang', 'satuan_id')->where('id', $request->id_produk_tbs)->where('id_warung', Auth::user()->id_warung)->first();
+                // SUBTOTAL = JUMLAH * HARGA
+                $subtotal = $request->jumlah_produk * $request->harga_produk;
+                // INSERT TBS PEMBELIAN
+                $Insert_tbspembelian = EditTbsPembelianOrder::create([
+                    'id_produk'     => $request->id_produk_tbs,
+                    'no_faktur_order' => $request->no_faktur_order,
+                    'session_id'    => $session_id,
+                    'jumlah_produk' => $request->jumlah_produk,
+                    'harga_produk'  => $request->harga_produk,
+                    'subtotal'      => $subtotal,
+                    'satuan_id'     => $request->satuan,
+                    'satuan_dasar'  => $request->satuan_dasar,
+                    'status_harga'  => $request->status_harga,
+                    'warung_id'     => Auth::user()->id_warung,
+                    ]);
+
+                $respons['status']   = 0;
+                $respons['subtotal'] = $subtotal;
+
+                return response()->json($respons);
+
+            }
+
+        }
+    }
+
 }
