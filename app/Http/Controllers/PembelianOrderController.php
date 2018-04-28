@@ -139,7 +139,7 @@ class PembelianOrderController extends Controller
         return $respons;
     }
 
-    public function foreachTbs($data_tbss, $session_id){
+    public function foreachTbs($data_tbss, $session_id, $db){
 
         $array = array();
 
@@ -147,7 +147,7 @@ class PembelianOrderController extends Controller
 
             $potongan_persen        = ($data_tbs->potongan / ($data_tbs->jumlah_produk * $data_tbs->harga_produk)) * 100;
 
-            $ppn = TbsPembelianOrder::select('ppn')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->where('ppn', '!=', '')->limit(1);
+            $ppn = $db::select('ppn')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->where('ppn', '!=', '')->limit(1);
 
             if ($ppn->count() > 0) {
 
@@ -193,7 +193,8 @@ class PembelianOrderController extends Controller
         $tbs_pembelian_orders = TbsPembelianOrder::dataTransaksiTbsPembelianOrder($session_id, $user_warung)
         ->orderBy('tbs_pembelian_orders.id_tbs_pembelian_order', 'desc')->paginate(10);
         
-        $array = $this->foreachTbs($tbs_pembelian_orders, $session_id);
+        $db = "App\TbsPembelianOrder";
+        $array = $this->foreachTbs($tbs_pembelian_orders, $session_id, $db);
 
         $url     = '/pembelian-order/view-tbs-pembelian';
         $respons = $this->dataPagination($tbs_pembelian_orders, $array, $no_faktur, $url);
@@ -217,7 +218,8 @@ class PembelianOrderController extends Controller
 
         })->orderBy('id_tbs_pembelian_order', 'desc')->paginate(10);
         
-        $array = $this->foreachTbs($tbs_pembelian_orders, $session_id);
+        $db = "App\TbsPembelianOrder";
+        $array = $this->foreachTbs($tbs_pembelian_orders, $session_id, $db);
 
         $url     = '/pembelian-order/view-tbs-pembelian';
         $respons = $this->dataPagination($tbs_pembelian_orders, $array, $no_faktur, $url);
@@ -810,7 +812,8 @@ class PembelianOrderController extends Controller
         $edit_tbs_pembelian_orders = EditTbsPembelianOrder::dataTransaksiEditTbsPembelianOrder($no_faktur, $user_warung)
         ->orderBy('edit_tbs_pembelian_orders.id_edit_tbs_pembelian_order', 'desc')->paginate(10);
 
-        $array = $this->foreachTbs($edit_tbs_pembelian_orders, $session_id);
+        $db = "App\EditTbsPembelianOrder";
+        $array = $this->foreachTbs($edit_tbs_pembelian_orders, $session_id, $db);
 
         $url     = '/pembelian-order/view-edit-tbs-pembelian';
         $respons = $this->dataPagination($edit_tbs_pembelian_orders, $array, $no_faktur, $url);
@@ -835,7 +838,8 @@ class PembelianOrderController extends Controller
 
         })->orderBy('id_edit_tbs_pembelian_order', 'desc')->paginate(10);
 
-        $array = $this->foreachTbs($edit_tbs_pembelian_orders, $session_id);
+        $db = "App\EditTbsPembelianOrder";
+        $array = $this->foreachTbs($edit_tbs_pembelian_orders, $session_id, $db);
 
         $url     = '/pembelian-order/view-tbs-pembelian';
         $respons = $this->dataPagination($edit_tbs_pembelian_orders, $array, $no_faktur, $url);
@@ -944,5 +948,149 @@ class PembelianOrderController extends Controller
         $respons = $this->editSatuan($request, $db);
 
         return response()->json($respons);
+    }
+
+    public function potonganPersen(Request $request)
+    {
+        // SELECT EDIT TBS PEMBELIAN
+        $tbs_pembelian = EditTbsPembelianOrder::find($request->id_potongan);
+        $potongan      = substr_count($request->potongan_edit_produk, '%'); // UNTUK CEK APAKAH ADA STRING "%"
+        // JIKA TIDAK ADA
+        if ($potongan == 0) {
+            $potongan_persen = 0;
+        } else {
+            $potongan_persen = filter_var($request->potongan_edit_produk, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION); //  PISAH STRING BERDASRAKAN TANDA "%"
+        }
+
+        if ($potongan_persen > 100) {
+            return $persen_alert = 1;
+        } else {
+            return $persen_alert = 0;
+        }
+
+    }
+
+    // PROSES EDIT POTONGAN TBS ORDER PEMBELIAN
+    public function editPotonganEditTbsPembelianOrder(Request $request)
+    {
+
+        if (Auth::user()->id_warung == '') {
+            Auth::logout();
+            return response()->view('error.403');
+        } else {
+            // SELECT EDIT TBS PEMBELIAN
+            $tbs_pembelian = EditTbsPembelianOrder::find($request->id_potongan);
+            $potongan      = substr_count($request->potongan_edit_produk, '%'); // UNTUK CEK APAKAH ADA STRING "%"
+            // JIKA TIDAK ADA
+            if ($potongan == 0) {
+                // FILTER ANGKA DESIMAL
+                $potongan_produk = filter_var($request->potongan_edit_produk, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION); // POTONGAN TIDAK DALAM BENTUK NOMINAL
+                $potongan_persen = 0;
+            } else {
+                // JIKA ADA
+                // FILTER ANGKA DESIMAL
+                $potongan_persen = filter_var($request->potongan_edit_produk, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION); //  PISAH STRING BERDASRAKAN TANDA "%"
+                // POTONGA PRODUK =  (HARGA * JUMLAH ) * POTONGAN PERSEN / 100;
+                $potongan_produk = ($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) * $potongan_persen / 100;
+            }
+
+            if ($potongan_produk == '') {
+                $potongan_produk = 0;
+            }
+
+            if ($potongan_persen <= 100){
+
+                // JIKA TIDAK ADA PAJAK
+                if ($tbs_pembelian->tax == 0) {
+                    $tax_produk = 0;
+                } else {
+                    // TAX PERSEN =  (TAX * 100) / (JUMLAH * HARGA - POTONGAN )
+                    $tax = ($tbs_pembelian->tax * 100) / ($tbs_pembelian->jumlah_produk * $tbs_pembelian->harga_produk - $potongan_produk);
+                    // TAX PRODUK = ((HARGA * JUMLAH) - POTONGAN) * TAX PERSEN / 100
+                    $tax_produk = (($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $potongan_produk) * $tax / 100;
+                }
+
+                if ($tbs_pembelian->ppn == 'Include') {
+                    // JIKA PPN INCLUDE MAKA PAJAK TIDAK MEMPENGARUHI SUBTOTAL
+                    $subtotal = ($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $potongan_produk;
+                } elseif ($tbs_pembelian->ppn == 'Exclude') {
+                    // JIKA PPN EXCLUDE MAKA PAJAK MEMPENGARUHI SUBTOTAL
+                    $subtotal = (($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $potongan_produk) + $tax_produk;
+                } else {
+                    $subtotal = ($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $potongan_produk;
+                }
+
+                // UPDATE POTONGAN, SUBTOTAL, TAX
+                $tbs_pembelian->update(['potongan' => $potongan_produk, 'subtotal' => $subtotal, 'tax' => $tax_produk]);
+                
+
+                $respons['subtotal'] = $subtotal;
+
+                return response()->json($respons);
+
+            }
+
+        }
+    }
+
+
+    public function editTaxEditTbsPembelianOrder(Request $request)
+    {
+
+        if (Auth::user()->id_warung == '') {
+            Auth::logout();
+            return response()->view('error.403');
+        } else {
+            // SELECT TBS PEMBELIAN ORDER
+            $tbs_pembelian = EditTbsPembelianOrder::find($request->id_tax);
+            $tax           = substr_count($request->tax_edit_produk, '%'); // UNTUK CEK APAKAH ADA STRING "%"
+            // JIKA TIDAK ADA
+            if ($tax == 0) {
+                if ($request->ppn_produk == 'Exclude') {
+                    $tax_produk  = filter_var($request->tax_edit_produk, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION); // TAX DALAM BENTUK NOMINAL
+                    $tax_include = 0;
+                } else {
+                    $tax_produk  = 0;
+                    $tax_include = filter_var($request->tax_edit_produk, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION); // TAX DALAM BENTUK NOMINAL;
+                }
+                $tax_persen = 0;
+            } else {
+                // JIKA ADA
+                $tax_persen = filter_var($request->tax_edit_produk, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION); //  PISAH STRING BERDASRAKAN TANDA "%"
+                // TAX PRODUK = ((HARGA * JUMLAH) - POTONGAN) * TAX PERSEN / 100
+                if ($request->ppn_produk == 'Include') {
+                    //perhitungan tax include
+                    $default_tax              = 1;
+                    $subtotal_kurang_potongan = (($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $tbs_pembelian->potongan);
+                    $hasil_tax                = $default_tax + ($tax_persen / 100);
+                    $hasil_tax2               = $subtotal_kurang_potongan / $hasil_tax;
+                    $tax_include              = $subtotal_kurang_potongan - $hasil_tax2;
+                    //perhitungan tax include
+                    $tax_produk = 0;
+                } elseif ($request->ppn_produk == 'Exclude') {
+                    $tax_produk  = (($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $tbs_pembelian->potongan) * $tax_persen / 100;
+                    $tax_include = 0;
+                }
+            }
+
+            if ($tax_produk == '') {
+                $tax_produk = 0;
+            }
+
+            if ($request->ppn_produk == 'Include') {
+                // JIKA PPN INCLUDE MAKA PAJAK TIDAK MEMPENGARUHI SUBTOTAL
+                $subtotal = ($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $tbs_pembelian->potongan;
+            } elseif ($request->ppn_produk == 'Exclude') {
+                // JIKA PPN EXCLUDE MAKA PAJAK MEMPENGARUHI SUBTOTAL
+                $subtotal = (($tbs_pembelian->harga_produk * $tbs_pembelian->jumlah_produk) - $tbs_pembelian->potongan) + $tax_produk;
+            }
+            // UPDATE SUBTOTAL, TAX, PPN
+            $tbs_pembelian->update(['subtotal' => $subtotal, 'tax' => $tax_produk, 'tax_include' => $tax_include, 'ppn' => $request->ppn_produk]);
+
+            $respons['subtotal'] = $subtotal;
+
+            return response()->json($tbs_pembelian);
+
+        }
     }
 }

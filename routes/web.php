@@ -608,6 +608,8 @@ Route::get('/pembelian-order/data-pembelian-order/{id}', 'PembelianOrderControll
 Route::get('/pembelian-order/proses-edit-jumlah-edit-tbs-pembelian', 'PembelianOrderController@editJumlahEditTbsPembelianOrder')->middleware('auth');
 Route::get('/pembelian-order/proses-edit-harga-edit-tbs-pembelian', 'PembelianOrderController@editHargaEditTbsPembelianOrder')->middleware('auth');
 Route::post('/pembelian-order/edit-satuan-edit-tbs-pembelian', 'PembelianOrderController@editSatuanEditTbsPembelian')->middleware('auth');
+Route::get('/pembelian-order/cek-potongan-persen', 'PembelianOrderController@potonganPersen')->middleware('auth');
+Route::get('/pembelian-order/proses-edit-potongan-edit-tbs-pembelian', 'PembelianOrderController@editPotonganEditTbsPembelianOrder')->middleware('auth');
 
 // PEMBELIAN ORDER
 
@@ -618,6 +620,7 @@ Route::get('/penerimaan-produk/view-tbs-penerimaan-produk', 'PenerimaanProdukCon
 Route::get('/penerimaan-produk/pencarian-tbs-penerimaan-produk', 'PenerimaanProdukController@pencarianTbsPenerimaanProduk')->middleware('auth');
 Route::get('/penerimaan-produk/proses-tbs-penerimaan-produk', 'PenerimaanProdukController@prosesTbsPenerimaanProduk')->middleware('auth');
 Route::get('/penerimaan-produk/batal-penerimaan-produk', 'PenerimaanProdukController@batalPenerimaanProduk')->middleware('auth');
+Route::get('/pembelian-order/proses-edit-tax-edit-tbs-pembelian', 'PembelianOrderController@editTaxEditTbsPembelianOrder')->middleware('auth');
 
 // PENERIMAAN PRODUK
 

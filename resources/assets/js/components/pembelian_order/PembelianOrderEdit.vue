@@ -941,7 +941,7 @@ methods: {
           swal('Oops...', 'Potongan Tidak Boleh Lebih Dari 100%!', 'error'); 
         } 
         else if (potongan != "0") { 
-          axios.get(app.url+'/cek-persen-potongan-pembelian?potongan_edit_produk='+potongan+'&id_potongan='+id)
+          axios.get(app.url+'/cek-potongan-persen?potongan_edit_produk='+potongan+'&id_potongan='+id)
           .then(function (resp) {
             if (resp.data == 1) {
               swal({
@@ -975,7 +975,7 @@ methods: {
   submitEditPotongan(potongan,id,nama_produk,subtotal_lama){
     var app = this;
     app.loading = true;
-    axios.get(app.url+'/proses-edit-potongan-tbs-pembelian?potongan_edit_produk='+potongan+'&id_potongan='+id)
+    axios.get(app.url+'/proses-edit-potongan-edit-tbs-pembelian?potongan_edit_produk='+potongan+'&id_potongan='+id)
     .then(function (resp) {
       app.alert("Mengubah Potongan Produk "+titleCase(nama_produk));
       app.loading = false;
@@ -1077,7 +1077,7 @@ methods: {
   submitEditTax(pajak,id,nama_produk,ppn_edit,subtotal_lama){
     var app = this;
     app.loading = true;
-    axios.get(app.url+'/proses-edit-tax-tbs-pembelian?tax_edit_produk='+pajak+'&id_tax='+id+'&ppn_produk='+ppn_edit)
+    axios.get(app.url+'/proses-edit-tax-edit-tbs-pembelian?tax_edit_produk='+pajak+'&id_tax='+id+'&ppn_produk='+ppn_edit)
     .then(function (resp) {
       app.alert("Mengubah Pajak Produk "+titleCase(nama_produk));
       app.loading = false;
