@@ -427,11 +427,58 @@ $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description']
           <div class="row page-1">
 
             <div class="col-md-6 col-sm-6">
-              @if($barang->foto != NULL)
-              <img class="img-produk" src="{{ asset('foto_produk')}}/{{$barang->foto}}"/>
-              @else
-              <img class="img-produk" src="{{ asset('image')}}/foto_default.png"/>
-              @endif
+              <div class="tab-content">
+                            <div class="tab-pane active" id="product-page1">
+                                  @if(isset($barang->foto))
+                                 {!! Html::image(asset('foto_produk/'.$barang->foto)) !!}
+                                 @else
+                                 {!! Html::image(asset('image/foto_default.png')) !!}
+                                 @endif
+                              </div>
+                              <div class="tab-pane" id="product-page2">
+                                  @if(isset($barang->foto_2))
+                                 {!! Html::image(asset('foto_produk/'.$barang->foto_2)) !!}
+                                 @else
+                                 {!! Html::image(asset('image/foto_default.png')) !!}
+                                 @endif
+                             </div>
+                              <div class="tab-pane" id="product-page3">
+                                 @if(isset($barang->foto_3))
+                                 {!! Html::image(asset('foto_produk/'.$barang->foto_3)) !!}
+                                 @else
+                                 {!! Html::image(asset('image/foto_default.png')) !!}
+                                 @endif
+                              </div>
+                        </div>
+                        <ul class="nav flexi-nav" role="tablist" id="flexiselDemo1">
+                                <li class="active">
+                                  <a href="#product-page1" role="tab" data-toggle="tab" aria-expanded="false">
+                                     @if(isset($barang->foto))
+                                     {!! Html::image(asset('foto_produk/'.$barang->foto)) !!}
+                                     @else
+                                     {!! Html::image(asset('image/foto_default.png')) !!}
+                                     @endif
+                                  </a>
+                                </li>
+                                <li >
+                                  <a href="#product-page2" role="tab" data-toggle="tab" aria-expanded="false">
+                                     @if(isset($barang->foto_2))
+                                     {!! Html::image(asset('foto_produk/'.$barang->foto_2)) !!}
+                                     @else
+                                     {!! Html::image(asset('image/foto_default.png')) !!}
+                                     @endif
+                                  </a>
+                                </li>
+                                <li>
+                                  <a href="#product-page3" role="tab" data-toggle="tab" aria-expanded="true">
+                                     @if(isset($barang->foto_3))
+                                     {!! Html::image(asset('foto_produk/'.$barang->foto_3)) !!}
+                                     @else
+                                     {!! Html::image(asset('image/foto_default.png')) !!}
+                                     @endif
+                                  </a>
+                                </li>
+                        </ul>
             </div>
             <div class="col-md-6 col-sm-6">
               <h2 class="title">
@@ -801,7 +848,7 @@ $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description']
 <script src="{{ asset('js/jquery-jvectormap.js') }}">
 </script>
 <!-- Sliders Plugin, full documentation here: https://refreshless.com/nouislider/ -->
-<script src="{{ asset('js/nouislider.min.js') }}">
+<script src="{{ asset('assets/js/nouislider.min.js') }}">
 </script>
 <!--  Plugin for Select, full documentation here: http://silviomoreto.github.io/bootstrap-select -->
 <script src="{{ asset('js/jquery.select-bootstrap.js') }}">
@@ -813,8 +860,8 @@ $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description']
 <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.0.5/sweetalert2.all.min.js" type="text/javascript">
 </script>
 <!-- Plugin for Fileupload, full documentation here: http://www.jasny.net/bootstrap/javascript/#fileinput -->
-<script src="{{ asset('js/jasny-bootstrap.min.js') }}">
-</script>
+<script src="{{ asset('assets/js/jasny-bootstrap.min.js') }}"></script>
+<script src="{{ asset('assets/js/jquery.flexisel.js') }}"></script>
 <!--  Full Calendar Plugin, full documentation here: https://github.com/fullcalendar/fullcalendar    -->
 <script src="{{ asset('js/fullcalendar.min.js') }}">
 </script>
@@ -833,6 +880,31 @@ $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description']
 <script type="text/javascript">
   var myLazyLoad = new LazyLoad();
 </script>
+   <script type="text/javascript">
+
+    $(document).ready(function() {
+    $("#flexiselDemo1").flexisel({
+      visibleItems: 3,
+        itemsToScroll: 1,
+        animationSpeed: 400,
+            enableResponsiveBreakpoints: true,
+            responsiveBreakpoints: {
+                portrait: {
+                    changePoint:480,
+                    visibleItems: 2
+                },
+                landscape: {
+                    changePoint:640,
+                    visibleItems: 2
+                },
+                tablet: {
+                    changePoint:768,
+                    visibleItems: 2
+                }
+            }
+        });
+    });
+   </script>
 <script type="text/javascript">
 
 
