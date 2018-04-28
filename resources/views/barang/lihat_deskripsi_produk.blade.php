@@ -144,14 +144,14 @@ $judul_warung = \App\SettingFooter::select()->first()->judul_warung;
                                  @endif
                               </div>
                               <div class="tab-pane" id="product-page2">
-                                  @if(isset($lihat_deskripsi_produk->foto))
+                                  @if(isset($lihat_deskripsi_produk->foto_2))
                                  {!! Html::image(asset('foto_produk/'.$lihat_deskripsi_produk->foto_2)) !!}
                                  @else
                                  {!! Html::image(asset('image/foto_default.png')) !!}
                                  @endif
                              </div>
                               <div class="tab-pane" id="product-page3">
-                                 @if(isset($lihat_deskripsi_produk->foto))
+                                 @if(isset($lihat_deskripsi_produk->foto_3))
                                  {!! Html::image(asset('foto_produk/'.$lihat_deskripsi_produk->foto_3)) !!}
                                  @else
                                  {!! Html::image(asset('image/foto_default.png')) !!}
@@ -170,7 +170,7 @@ $judul_warung = \App\SettingFooter::select()->first()->judul_warung;
                                 </li>
                                 <li >
                                   <a href="#product-page2" role="tab" data-toggle="tab" aria-expanded="false">
-                                     @if(isset($lihat_deskripsi_produk->foto))
+                                     @if(isset($lihat_deskripsi_produk->foto_2))
                                      {!! Html::image(asset('foto_produk/'.$lihat_deskripsi_produk->foto_2)) !!}
                                      @else
                                      {!! Html::image(asset('image/foto_default.png')) !!}
@@ -179,7 +179,7 @@ $judul_warung = \App\SettingFooter::select()->first()->judul_warung;
                                 </li>
                                 <li>
                                   <a href="#product-page3" role="tab" data-toggle="tab" aria-expanded="true">
-                                     @if(isset($lihat_deskripsi_produk->foto))
+                                     @if(isset($lihat_deskripsi_produk->foto_3))
                                      {!! Html::image(asset('foto_produk/'.$lihat_deskripsi_produk->foto_3)) !!}
                                      @else
                                      {!! Html::image(asset('image/foto_default.png')) !!}
@@ -293,8 +293,6 @@ $judul_warung = \App\SettingFooter::select()->first()->judul_warung;
 <script type="text/javascript">
   $().ready(function() {
     demo.checkFullPageBackgroundImage();
-
-
   });
 </script>
 </html>
