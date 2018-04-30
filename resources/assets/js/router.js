@@ -195,6 +195,7 @@ import SettingPromoEdit from './components/setting_promo/SettingPromoEdit.vue';
 import PembelianOrderIndex from './components/pembelian_order/PembelianOrderIndex.vue';
 import PembelianOrderCreate from './components/pembelian_order/PembelianOrderCreate.vue';
 import PembelianOrderEdit from './components/pembelian_order/PembelianOrderEdit.vue';
+import PembelianOrderProsesEdit from './components/pembelian_order/PembelianOrderProsesEdit.vue';
 import PembelianOrderDetail from './components/pembelian_order/PembelianOrderDetail.vue';
 
 // PENERIMAAN PRODUK
@@ -821,6 +822,10 @@ const routes = [{
         path: '/create-order-pembelian', 
         component: PembelianOrderCreate, 
         name: 'createPembelianOrder'
+    },{ 
+        path: '/proses-edit-order-pembelian/:id', 
+        component: PembelianOrderProsesEdit, 
+        name: 'prosesEditPembelianOrder'
     },{ 
         path: '/edit-order-pembelian/:id', 
         component: PembelianOrderEdit, 

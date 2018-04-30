@@ -131,48 +131,93 @@ $judul_warung = \App\SettingFooter::select()->first()->judul_warung;
 
 <div class="section section-gray">
  <div class="container">
-  <div class="main main-raised main-product">
-    <div class="row">
-      <div class="col-md-6 col-sm-6">
-       @if(isset($lihat_deskripsi_produk->foto))
-       {!! Html::image(asset('foto_produk/'.$lihat_deskripsi_produk->foto)) !!}
-       @else
-       {!! Html::image(asset('image/foto_default.png')) !!}
-       @endif
-     </div>
-     <div class="col-md-6 col-sm-6">
-      <h2 class="title"> {{ $nama_produk }} </h2>
-      <h3 class="main-price">Rp. {{ number_format($harga_produk,0,',','.') }}</h3>
-      {!! substr($lihat_deskripsi_produk->deskripsi_produk, 0, 300) !!}...
-      <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-       <h4 class="panel-title">
-         <b> Baca Selengkapnya... </b><i class="material-icons">keyboard_arrow_down</i>
-       </h4>
-     </a>
-   </div>
-   <div class="col-sm-12 col-md-12">
-    <div id="acordeon">
-      <div class="panel-group" id="accordion">
-       <div class="panel panel-border panel-default">
-         <div id="collapseOne" class="panel-collapse collapse">
-           <div class="panel-body"><hr style="border-width: 1px; border-color: black">
-            <h3>Detail Produk Dari {{$nama_produk}}</h3>
-            {!!$lihat_deskripsi_produk->deskripsi_produk!!}
-          </div>
-        </div>
+        <div class="main main-raised main-product">
+                <div class="row">
+                    <div class="col-md-6 col-sm-6">
+
+                       <div class="tab-content">
+                            <div class="tab-pane active" id="product-page1">
+                                  @if(isset($lihat_deskripsi_produk->foto))
+                                 {!! Html::image(asset('foto_produk/'.$lihat_deskripsi_produk->foto)) !!}
+                                 @else
+                                 {!! Html::image(asset('image/foto_default.png')) !!}
+                                 @endif
+                              </div>
+                              <div class="tab-pane" id="product-page2">
+                                  @if(isset($lihat_deskripsi_produk->foto_2))
+                                 {!! Html::image(asset('foto_produk/'.$lihat_deskripsi_produk->foto_2)) !!}
+                                 @else
+                                 {!! Html::image(asset('image/foto_default.png')) !!}
+                                 @endif
+                             </div>
+                              <div class="tab-pane" id="product-page3">
+                                 @if(isset($lihat_deskripsi_produk->foto_3))
+                                 {!! Html::image(asset('foto_produk/'.$lihat_deskripsi_produk->foto_3)) !!}
+                                 @else
+                                 {!! Html::image(asset('image/foto_default.png')) !!}
+                                 @endif
+                              </div>
+                        </div>
+                        <ul class="nav flexi-nav" role="tablist" id="flexiselDemo1">
+                                <li class="active">
+                                  <a href="#product-page1" role="tab" data-toggle="tab" aria-expanded="false">
+                                     @if(isset($lihat_deskripsi_produk->foto))
+                                     {!! Html::image(asset('foto_produk/'.$lihat_deskripsi_produk->foto)) !!}
+                                     @else
+                                     {!! Html::image(asset('image/foto_default.png')) !!}
+                                     @endif
+                                  </a>
+                                </li>
+                                <li >
+                                  <a href="#product-page2" role="tab" data-toggle="tab" aria-expanded="false">
+                                     @if(isset($lihat_deskripsi_produk->foto_2))
+                                     {!! Html::image(asset('foto_produk/'.$lihat_deskripsi_produk->foto_2)) !!}
+                                     @else
+                                     {!! Html::image(asset('image/foto_default.png')) !!}
+                                     @endif
+                                  </a>
+                                </li>
+                                <li>
+                                  <a href="#product-page3" role="tab" data-toggle="tab" aria-expanded="true">
+                                     @if(isset($lihat_deskripsi_produk->foto_3))
+                                     {!! Html::image(asset('foto_produk/'.$lihat_deskripsi_produk->foto_3)) !!}
+                                     @else
+                                     {!! Html::image(asset('image/foto_default.png')) !!}
+                                     @endif
+                                  </a>
+                                </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6 col-sm-6">
+                            <h2 class="title"> {{ $nama_produk }} </h2>
+                            <h3 class="main-price">Rp. {{ number_format($harga_produk,0,',','.') }}</h3>
+                            <div id="acordeon">
+                            <div class="panel-group" id="accordion">
+                          <div class="panel panel-border panel-default">
+                            <div class="panel-heading" role="tab" id="headingOne">
+                                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    <h4 class="panel-title">
+                                    Description
+                                    <i class="material-icons">keyboard_arrow_down</i>
+                                    </h4>
+                                </a>
+                            </div>
+                            <div id="collapseOne" class="panel-collapse collapse in">
+                              <div class="panel-body">
+                                {!!$lihat_deskripsi_produk->deskripsi_produk!!} 
+                              </div>
+                            </div>
+                          </div>
+
+                        </div>
+                        </div><!--  end acordeon -->
+                        <div class="row text-right">
+                            <a href="{{url('/dashboard#/produk')}}" class="btn btn-rose btn-round">Kembali &nbsp;<i class="material-icons">reply</i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
       </div>
-
-    </div>
-  </div><!--  end acordeon -->
-
-  <div class="row text-right">
-    <a href="{{url('/dashboard#/produk')}}" class="btn btn-rose btn-round">Kembali &nbsp;<i class="material-icons">reply</i></a>
-  </div>
-
-</div>
-</div>
-</div>
-</div>
 </div>
 </body>
 
@@ -200,7 +245,7 @@ $judul_warung = \App\SettingFooter::select()->first()->judul_warung;
 <!-- Vector Map plugin, full documentation here: http://jvectormap.com/documentation/ -->
 <script src="{{ asset('js/jquery-jvectormap.js') }}"></script>
 <!-- Sliders Plugin, full documentation here: https://refreshless.com/nouislider/ -->
-<script src="{{ asset('js/nouislider.min.js') }}"></script>
+<script src="{{ asset('assets/js/nouislider.min.js') }}"></script>
 <!--  Google Maps Plugin    -->
 <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
 <!--  Plugin for Select, full documentation here: http://silviomoreto.github.io/bootstrap-select -->
@@ -210,7 +255,8 @@ $judul_warung = \App\SettingFooter::select()->first()->judul_warung;
 <!-- Sweet Alert 2 plugin, full documentation here: https://limonte.github.io/sweetalert2/ -->
 <script src="{{ asset('js/sweetalert2.js') }}"></script>
 <!-- Plugin for Fileupload, full documentation here: http://www.jasny.net/bootstrap/javascript/#fileinput -->
-<script src="{{ asset('js/jasny-bootstrap.min.js') }}"></script>
+<script src="{{ asset('assets/js/jasny-bootstrap.min.js') }}"></script>
+<script src="{{ asset('assets/js/jquery.flexisel.js') }}"></script>
 <!--  Full Calendar Plugin, full documentation here: https://github.com/fullcalendar/fullcalendar    -->
 <script src="{{ asset('js/fullcalendar.min.js') }}"></script>
 <!-- Plugin for Tags, full documentation here: https://github.com/bootstrap-tagsinput/bootstrap-tagsinputs  -->
@@ -219,11 +265,34 @@ $judul_warung = \App\SettingFooter::select()->first()->judul_warung;
 <script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
 <script src="{{ asset('js/demo.js') }}"></script>
 <script src="{{ asset('js/material-kit.js?v=1.2.0')}}" type="text/javascript"></script>
+   <script type="text/javascript">
+
+    $(document).ready(function() {
+    $("#flexiselDemo1").flexisel({
+      visibleItems: 3,
+        itemsToScroll: 1,
+        animationSpeed: 400,
+            enableResponsiveBreakpoints: true,
+            responsiveBreakpoints: {
+                portrait: {
+                    changePoint:480,
+                    visibleItems: 2
+                },
+                landscape: {
+                    changePoint:640,
+                    visibleItems: 2
+                },
+                tablet: {
+                    changePoint:768,
+                    visibleItems: 2
+                }
+            }
+        });
+    });
+   </script>
 <script type="text/javascript">
   $().ready(function() {
     demo.checkFullPageBackgroundImage();
-
-
   });
 </script>
 </html>

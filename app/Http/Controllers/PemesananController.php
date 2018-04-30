@@ -376,11 +376,18 @@ public function prosesSelesaikanPemesanan(Request $request)
             return response()->view('error.404');
         } else {
 
+            //tampilkan detail bank transfer
+            $address_current = url('/');
+            $address_app = SettingPembedaAplikasi::select(['warung_id', 'app_address'])->where('app_address', $address_current)->first();
+                // return url('/');
+            $warung_id = $address_app->warung_id;
+            //tampilkan detail bank transfer
+
             $keranjang_belanja = KeranjangBelanja::with(['produk', 'pelanggan'])->where('id_pelanggan', $request->id_pelanggan);
             $cek_belanjaan     = $keranjang_belanja->count();
 
             $bank = BankWarung::select(['bank_warungs.atas_nama', 'bank_warungs.no_rek', 'setting_transfer_banks.nama_bank'])->leftJoin('setting_transfer_banks', 'setting_transfer_banks.id', '=', 'bank_warungs.nama_bank')
-            ->where('bank_warungs.nama_bank', $request->bank)->first();
+            ->where('bank_warungs.nama_bank', $request->bank)->where('bank_warungs.warung_id',$warung_id)->first();
 
             $waktu_daftar = date($pesanan_pelanggan->first()->created_at);
             $date         = date_create($waktu_daftar);
