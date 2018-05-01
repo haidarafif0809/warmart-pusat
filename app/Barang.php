@@ -16,7 +16,7 @@ class Barang extends Model
     use LogsActivity;
     use Searchable;
 
-    protected $fillable = ['kode_barang', 'kode_barcode', 'nama_barang', 'harga_beli', 'harga_jual', 'satuan_id', 'kategori_barang_id', 'status_aktif', 'hitung_stok', 'id_warung', 'deskripsi_produk', 'konfirmasi_admin', 'foto', 'harga_jual2', 'berat'];
+    protected $fillable = ['kode_barang', 'kode_barcode', 'nama_barang', 'harga_beli', 'harga_jual', 'satuan_id', 'kategori_barang_id', 'status_aktif', 'hitung_stok', 'id_warung', 'deskripsi_produk', 'konfirmasi_admin', 'foto', 'harga_jual2', 'berat','foto_1','foto_2'];
 
     public function satuan()
     {

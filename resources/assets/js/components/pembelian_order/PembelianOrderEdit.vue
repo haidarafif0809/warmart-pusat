@@ -48,7 +48,7 @@
         <ul class="breadcrumb"> 
           <li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li> 
           <li><router-link :to="{name: 'indexPembelianOrder'}">Order Pembelian</router-link></li> 
-          <li class="active">Form Order Pembelian</li> 
+          <li class="active">Form Edit Order Pembelian</li> 
         </ul> 
 
 
@@ -119,7 +119,7 @@
                 <button type="button" class="close"  v-on:click="closeModalJumlahProduk()" v-shortkey.push="['f9']" @shortkey="closeModalJumlahProduk()"> &times;</button> 
               </div>
 
-              <form class="form-horizontal" v-on:submit.prevent="submitJumlahProduk(inputTbsPembelianOrder.id_produk,inputTbsPembelianOrder.jumlah_produk,inputTbsPembelianOrder.harga_produk,inputTbsPembelianOrder.nama_produk,inputTbsPembelianOrder.satuan_produk)"> 
+              <form class="form-horizontal" v-on:submit.prevent="submitJumlahProduk(inputTbsPembelianOrder.id_produk,inputTbsPembelianOrder.jumlah_produk,inputTbsPembelianOrder.harga_produk,inputTbsPembelianOrder.nama_produk,inputTbsPembelianOrder.satuan_produk, inputTbsPembelianOrder.no_faktur)"> 
                 <div class="modal-body">
                   <h3 class="text-center"><b>{{inputTbsPembelianOrder.nama_produk}}</b></h3>
 
@@ -186,7 +186,7 @@
 
           <div class="card-content"> 
 
-            <h4 class="card-title" style="margin-bottom: 1px; margin-top: 1px;"> Order Pembelian </h4> 
+            <h4 class="card-title" style="margin-bottom: 1px; margin-top: 1px;"> Edit Order Pembelian </h4> 
             <div class="row" style="margin-bottom: 1px; margin-top: 1px;"> 
 
               <div class="col-md-3">
@@ -238,35 +238,35 @@
 
                         <td>{{ tbs_pembelian.data_tbs.kode_barang }} - {{ tbs_pembelian.data_tbs.nama_barang | capitalize }}</td>
                         <td>
-                          <a href="#create-order-pembelian" v-bind:id="'edit-' + tbs_pembelian.data_tbs.id_tbs_pembelian_order" v-on:click="editEntryJumlah(tbs_pembelian.data_tbs.id_tbs_pembelian_order, index,tbs_pembelian.data_tbs.nama_barang,tbs_pembelian.data_tbs.subtotal)"><p align='right'>{{ tbs_pembelian.data_tbs.jumlah_produk | pemisahTitik }}</p>
+                          <a v-bind:href="'#edit-order-pembelian/'+id_order" v-bind:id="'edit-' + tbs_pembelian.data_tbs.id_edit_tbs_pembelian_order" v-on:click="editEntryJumlah(tbs_pembelian.data_tbs.id_edit_tbs_pembelian_order, index,tbs_pembelian.data_tbs.nama_barang,tbs_pembelian.data_tbs.subtotal)"><p align='right'>{{ tbs_pembelian.data_tbs.jumlah_produk | pemisahTitik }}</p>
                           </a>
                         </td>
 
                         <td align="center">
-                          <a href="#create-order-pembelian" v-bind:id="'edit-' + tbs_pembelian.data_tbs.id_tbs_pembelian_order" v-bind:class="'hurufBesar satuan-' + tbs_pembelian.data_tbs.id_produk" v-bind:data-satuan="''+tbs_pembelian.data_tbs.satuan_id" v-on:click="editSatuanEntry(tbs_pembelian.data_tbs.id_tbs_pembelian_order, index,tbs_pembelian.data_tbs.nama_barang,tbs_pembelian.data_tbs.subtotal, tbs_pembelian.data_tbs.id_produk)">{{ tbs_pembelian.data_tbs.nama_satuan }}</a>
+                          <a v-bind:href="'#edit-order-pembelian/'+id_order" v-bind:id="'edit-' + tbs_pembelian.data_tbs.id_edit_tbs_pembelian_order" v-bind:class="'hurufBesar satuan-' + tbs_pembelian.data_tbs.id_produk" v-bind:data-satuan="''+tbs_pembelian.data_tbs.satuan_id" v-on:click="editSatuanEntry(tbs_pembelian.data_tbs.id_edit_tbs_pembelian_order, index,tbs_pembelian.data_tbs.nama_barang,tbs_pembelian.data_tbs.subtotal, tbs_pembelian.data_tbs.id_produk)">{{ tbs_pembelian.data_tbs.nama_satuan }}</a>
                         </td>
 
                         <td>
-                          <a href="#create-order-pembelian" v-bind:id="'edit-' + tbs_pembelian.data_tbs.id_tbs_pembelian_order" v-on:click="editEntryHarga(tbs_pembelian.data_tbs.id_tbs_pembelian_order, index,tbs_pembelian.data_tbs.nama_barang,tbs_pembelian.data_tbs.subtotal)" v-bind:class="'harga-' + tbs_pembelian.data_tbs.id_produk" v-bind:data-harga="''+tbs_pembelian.data_tbs.harga_produk"><p align='right'>{{ tbs_pembelian.data_tbs.harga_produk | pemisahTitik }}</p>
+                          <a v-bind:href="'#edit-order-pembelian/'+id_order" v-bind:id="'edit-' + tbs_pembelian.data_tbs.id_edit_tbs_pembelian_order" v-on:click="editEntryHarga(tbs_pembelian.data_tbs.id_edit_tbs_pembelian_order, index,tbs_pembelian.data_tbs.nama_barang,tbs_pembelian.data_tbs.subtotal)" v-bind:class="'harga-' + tbs_pembelian.data_tbs.id_produk" v-bind:data-harga="''+tbs_pembelian.data_tbs.harga_produk"><p align='right'>{{ tbs_pembelian.data_tbs.harga_produk | pemisahTitik }}</p>
                           </a>
                         </td>
                         <td>
-                          <a href="#create-order-pembelian" v-bind:id="'edit-' + tbs_pembelian.data_tbs.id_tbs_pembelian_order" v-on:click="editEntryPotongan(tbs_pembelian.data_tbs.id_tbs_pembelian_order, index,tbs_pembelian.data_tbs.nama_barang,tbs_pembelian.data_tbs.jumlah_produk,tbs_pembelian.data_tbs.harga_produk,tbs_pembelian.data_tbs.subtotal)"
+                          <a v-bind:href="'#edit-order-pembelian/'+id_order" v-bind:id="'edit-' + tbs_pembelian.data_tbs.id_edit_tbs_pembelian_order" v-on:click="editEntryPotongan(tbs_pembelian.data_tbs.id_edit_tbs_pembelian_order, index,tbs_pembelian.data_tbs.nama_barang,tbs_pembelian.data_tbs.jumlah_produk,tbs_pembelian.data_tbs.harga_produk,tbs_pembelian.data_tbs.subtotal)"
                           ><p align='right'>{{ tbs_pembelian.data_tbs.potongan | pemisahTitik }} | {{ Math.round(tbs_pembelian.potongan_persen,2) }} %</p>
                         </a>
                       </td>
                       <td>
-                        <a href="#create-order-pembelian" v-bind:id="'edit-' + tbs_pembelian.data_tbs.id_tbs_pembelian_order" v-on:click="editEntryTax(tbs_pembelian.data_tbs.id_tbs_pembelian_order, index,tbs_pembelian.data_tbs.nama_barang,tbs_pembelian.data_tbs.jumlah_produk,tbs_pembelian.data_tbs.harga_produk,tbs_pembelian.data_tbs.potongan,tbs_pembelian.ppn_produk,tbs_pembelian.data_tbs.subtotal)" ><p align='right'>{{ tbs_pembelian.data_tbs.tax | pemisahTitik}} | {{ Math.round(tbs_pembelian.tax_persen, 2) }} %</p>
+                        <a v-bind:href="'#edit-order-pembelian/'+id_order" v-bind:id="'edit-' + tbs_pembelian.data_tbs.id_edit_tbs_pembelian_order" v-on:click="editEntryTax(tbs_pembelian.data_tbs.id_edit_tbs_pembelian_order, index,tbs_pembelian.data_tbs.nama_barang,tbs_pembelian.data_tbs.jumlah_produk,tbs_pembelian.data_tbs.harga_produk,tbs_pembelian.data_tbs.potongan,tbs_pembelian.ppn_produk,tbs_pembelian.data_tbs.subtotal)" ><p align='right'>{{ tbs_pembelian.data_tbs.tax | pemisahTitik}} | {{ Math.round(tbs_pembelian.tax_persen, 2) }} %</p>
                         </a>
                       </td>
                       <td><p id="table-subtotal" align="right">{{ tbs_pembelian.data_tbs.subtotal | pemisahTitik }}</p></td>
                       <td style="text-align:right;"> 
-                        <a href="#create-order-pembelian" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_pembelian.data_tbs.id_tbs_pembelian_order" v-on:click="deleteEntry(tbs_pembelian.data_tbs.id_tbs_pembelian_order, index,tbs_pembelian.data_tbs.nama_barang,tbs_pembelian.data_tbs.subtotal)">Delete</a>
+                        <a v-bind:href="'#edit-order-pembelian/'+id_order" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_pembelian.data_tbs.id_edit_tbs_pembelian_order" v-on:click="deleteEntry(tbs_pembelian.data_tbs.id_edit_tbs_pembelian_order, index,tbs_pembelian.data_tbs.nama_barang,tbs_pembelian.data_tbs.subtotal)">Delete</a>
                       </td>
                     </tr>
                   </tbody>          
                   <tbody class="data-tidak-ada"  v-else-if="tbs_pembelian_orders.length == 0 && loading == false" >
-                    <tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
+                    <tr ><td colspan="8"  class="text-center">Tidak Ada Data</td></tr>
                   </tbody>
                 </table>  
 
@@ -323,7 +323,7 @@
                       <button type="button" class="btn btn-success btn-footer" id="bayar" v-on:click="selesaiPembelianOrder()" v-shortkey.push="['f2']" @shortkey="selesaiPembelianOrder()"><font style="font-size:15px;">Bayar(F2)</font></button>
                     </div>
                     <div class="col-md-5 col-xs-5">
-                      <button type="submit" class="btn btn-danger btn-footer" id="btnBatal" v-on:click="batalPembelian()" v-shortkey.push="['f3']" @shortkey="batalPembelian()"> <font style="font-size:15px;">Batal(F3) </font></button>
+                      <button type="submit" class="btn btn-danger btn-footer" id="btnBatal" v-on:click="batalEditPembelianOrder()" v-shortkey.push="['f3']" @shortkey="batalEditPembelianOrder()"> <font style="font-size:15px;">Batal(F3) </font></button>
                     </div>
                   </div>
                 </div>
@@ -362,12 +362,15 @@
           jumlah_produk : '',
           harga_produk : '',
           id_tbs : '',
-          satuan_produk: ''
+          satuan_produk: '',
+          no_faktur: ''
         },
         inputPembayaranPembelianOrder:{
           subtotal: 0,
           suplier: '',
-          keterangan: ''
+          keterangan: '',
+          no_faktur_order: '',
+          id_order: ''
         },
         tambahSuplier: {
           nama_suplier : '',
@@ -396,41 +399,43 @@
           prefix: '',
           suffix: '',
           precision: 0,
-          masked: false /* doesn't work with directive */
+          masked: false
         },      
         disabled: {
-  to: new Date(), // Disable all dates up to specific date
-},
-pencarian: '',
-loading: true,
-seen : false,
+          to: new Date(),
+        },
+        pencarian: '',
+        loading: true,
+        seen : false,
+        id_order: 0
 
-}
+      }
 
-},
-mounted() {
-  var app = this;
-  app.$store.dispatch('LOAD_PRODUK_LIST')
-  app.dataSuplier();
-  app.getResults();
-},
-filters: {
-  capitalize: function (value) {
-    return value.replace(/(^|\s)\S/g, l => l.toUpperCase())
-  },
-  pemisahTitik: function (value) {
-    var angka = [value];
-    var numberFormat = new Intl.NumberFormat('es-ES');
-    var formatted = angka.map(numberFormat.format);
-    return formatted.join('; ');
-  }
-},
-computed : mapState ({    
-  produk(){
-    return this.$store.getters.produkStok
-  }
-}),
-watch: {
+    },
+    mounted() {
+      var app = this;
+      app.id_order = app.$route.params.id;
+      app.$store.dispatch('LOAD_PRODUK_LIST')
+      app.dataSuplier();
+      app.getResults();
+    },
+    filters: {
+      capitalize: function (value) {
+        return value.replace(/(^|\s)\S/g, l => l.toUpperCase())
+      },
+      pemisahTitik: function (value) {
+        var angka = [value];
+        var numberFormat = new Intl.NumberFormat('es-ES');
+        var formatted = angka.map(numberFormat.format);
+        return formatted.join('; ');
+      }
+    },
+    computed : mapState ({    
+      produk(){
+        return this.$store.getters.produkStok
+      }
+    }),
+    watch: {
   // whenever question changes, this function will run
   pencarian: function (newQuestion) {
     this.getHasilPencarian();
@@ -456,15 +461,16 @@ methods: {
     if (typeof page === 'undefined') {
       page = 1;
     }
-    axios.get(app.url+'/view-tbs-pembelian?page='+page)
+    axios.get(app.url+'/view-edit-tbs-pembelian/'+app.id_order+'?page='+page)
     .then(function (resp) {
-      console.log(resp.data.data)
+      app.tbs_pembelian_orders = resp.data.data;
       app.tbs_pembelian_orders = resp.data.data;
       app.tbsPembelianData = resp.data;       
       app.loading = false;
       app.seen = true;
       app.openSelectizeProduk();
       app.dataSuplier();
+      app.getPembelianOrder(app.id_order);
 
       if (app.inputPembayaranPembelianOrder.subtotal == 0) { 
 
@@ -475,12 +481,28 @@ methods: {
 
     })
     .catch(function (resp) {
-      console.log(resp);
       app.loading = false;
       app.seen = true;
       alert("Tidak Dapat Memuat Pembelian");
     });
   },//END FUNGSI UNTUK PAGINATION TAMPILAN AWAL / DOCUMENT READY 
+  getPembelianOrder(id){
+    var app = this
+
+    axios.get(app.url+'/data-pembelian-order/'+id)
+    .then(function (resp) {
+      console.log(resp.data)
+      app.inputPembayaranPembelianOrder.suplier = resp.data.suplier_id
+      app.inputPembayaranPembelianOrder.keterangan = resp.data.keterangan
+      app.inputPembayaranPembelianOrder.no_faktur_order = resp.data.no_faktur_order
+      app.inputPembayaranPembelianOrder.id_order = resp.data.id
+      app.inputTbsPembelianOrder.no_faktur = resp.data.no_faktur_order
+    })
+    .catch(function (resp) {
+      alert("Tidak Dapat Memuat Pembelian Order");
+    });
+
+  },
   getSatuan(id_produk){
     var app = this;
     var satuan_tbs = $(".satuan-"+id_produk).attr("data-satuan");
@@ -508,7 +530,6 @@ methods: {
       }
     })
     .catch(function (resp) {
-      console.log(resp);
       alert("Tidak Dapat Memuat Satuan Produk");
     });
   },    
@@ -517,7 +538,7 @@ methods: {
     if (typeof page === 'undefined') {
       page = 1;
     }
-    axios.get(app.url+'/pencarian-tbs-pembelian?search='+app.pencarian+'&page='+page)
+    axios.get(app.url+'/pencarian-edit-tbs-pembelian/'+app.id_order+'?search='+app.pencarian+'&page='+page)
     .then(function (resp) {
       app.tbs_pembelian_orders = resp.data.data;
       app.tbsPembelianData = resp.data;
@@ -525,7 +546,6 @@ methods: {
       app.seen = true;
     })
     .catch(function (resp) {
-      console.log(resp);
       alert("Tidak Dapat Memuat Pembelian");
     });
   }, //END FUNGSI UNTUK PAGINATION SEARCH     
@@ -601,7 +621,7 @@ methods: {
 
     var app = this;
     app.loading = true;
-    axios.delete(app.url+'/hapus-tbs-pembelian/'+id)
+    axios.delete(app.url+'/hapus-edit-tbs-pembelian/'+id)
     .then(function (resp) {
       app.getResults();
 
@@ -644,7 +664,7 @@ methods: {
     $("#modalJumlahProduk").show();
     app.$refs.jumlah_produk.focus();
   },
-  submitJumlahProduk(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk){
+  submitJumlahProduk(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk, no_faktur_order){
     var app = this
     var produk = app.inputTbsPembelianOrder.produk.split("|");
     var harga_tbs = $(".harga-"+produk[0]).attr("data-harga")
@@ -671,14 +691,14 @@ methods: {
       })
 
     }else if (harga != harga_produk) {
-      app.konfirmasiPerubahanHarga(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk)
+      app.konfirmasiPerubahanHarga(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk, no_faktur_order)
     }else{
       var status_harga = 0;
-      app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk,status_harga)
+      app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk,status_harga, no_faktur_order)
     }
 
   },//END PROSES TAMBAH PRODUK TBS
-  konfirmasiPerubahanHarga(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk){
+  konfirmasiPerubahanHarga(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk, no_faktur_order){
     let app = this
     app.$swal({
       text: "Anda Yakin Ingin Merubah Harga Beli Produk "+titleCase(nama_produk)+ " ?",
@@ -690,19 +710,19 @@ methods: {
     }).then((value) => {
       if (value) {
   var status_harga = 1; // jika master produk, juga diubah
-  app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk,status_harga);
+  app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk,status_harga, no_faktur_order);
 } else {
   var status_harga = 0; // jika master produk, tidak diubah
-  app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk,status_harga);
+  app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk,status_harga, no_faktur_order);
 }
 });
   },
-  prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk,status_harga){
+  prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk,status_harga, no_faktur_order){
 
     var app = this;
     var satuan = satuan_produk.split("|");
     app.loading = true;
-    axios.get(app.url+'/proses-tambah-tbs-pembelian?id_produk_tbs='+id_produk+'&jumlah_produk='+jumlah_produk+'&harga_produk='+harga_produk+'&satuan='+satuan[0]+'&satuan_dasar='+satuan[2]+'&status_harga='+status_harga)
+    axios.get(app.url+'/proses-tambah-edit-tbs-pembelian?id_produk_tbs='+id_produk+'&jumlah_produk='+jumlah_produk+'&harga_produk='+harga_produk+'&satuan='+satuan[0]+'&satuan_dasar='+satuan[2]+'&status_harga='+status_harga+'&no_faktur_order='+no_faktur_order)
     .then(function (resp) {
       $("#modalJumlahProduk").hide();
       app.alert("Menambahkan Produk "+titleCase(nama_produk));
@@ -722,6 +742,7 @@ methods: {
       app.inputTbsPembelianOrder.harga_produk = ''
       app.inputTbsPembelianOrder.jumlah_produk = ''
       app.inputTbsPembelianOrder.produk = ''
+      app.inputTbsPembelianOrder.no_faktur = ''
 
     })
     .catch(function (resp) {
@@ -763,7 +784,7 @@ methods: {
     }).then(function (jumlah_produk) { 
       if (jumlah_produk != "0") { 
         app.loading = true;
-        axios.get(app.url+'/proses-edit-jumlah-tbs-pembelian?jumlah_edit_produk='+jumlah_produk+'&id_tbs_pembelian='+id)
+        axios.get(app.url+'/proses-edit-jumlah-edit-tbs-pembelian?jumlah_edit_produk='+jumlah_produk+'&id_tbs_pembelian='+id)
         .then(function (resp) {
           app.alert("Mengubah Jumlah Produk "+titleCase(nama_produk));
           app.loading = false;
@@ -804,7 +825,7 @@ methods: {
       $("#modalEditSatuan").hide();
     }else{
 
-      axios.post(app.url+'/edit-satuan-tbs-pembelian', newSatuan)
+      axios.post(app.url+'/edit-satuan-edit-tbs-pembelian', newSatuan)
       .then(function (resp) {
 
         var subtotal = (parseInt(app.inputPembayaranPembelianOrder.subtotal) - parseInt(subtotal_lama) + parseInt(resp.data.subtotal))
@@ -824,7 +845,6 @@ methods: {
 
       })
       .catch(function (resp) {
-        console.log(resp);                  
         app.loading = false;
         alert("Tidak Dapat Mengubah Satuan");
       });
@@ -862,7 +882,7 @@ methods: {
     }).then(function (harga_produk) { 
       if (harga_produk != "0") { 
         app.loading = true;
-        axios.get(app.url+'/proses-edit-harga-tbs-pembelian?harga_edit_produk='+harga_produk+'&id_harga='+id)
+        axios.get(app.url+'/proses-edit-harga-edit-tbs-pembelian?harga_edit_produk='+harga_produk+'&id_harga='+id)
         .then(function (resp) {
           app.alert("Mengubah Harga Produk "+titleCase(nama_produk));
           app.loading = false;
@@ -924,7 +944,7 @@ methods: {
           swal('Oops...', 'Potongan Tidak Boleh Lebih Dari 100%!', 'error'); 
         } 
         else if (potongan != "0") { 
-          axios.get(app.url+'/cek-persen-potongan-pembelian?potongan_edit_produk='+potongan+'&id_potongan='+id)
+          axios.get(app.url+'/cek-potongan-persen?potongan_edit_produk='+potongan+'&id_potongan='+id)
           .then(function (resp) {
             if (resp.data == 1) {
               swal({
@@ -958,7 +978,7 @@ methods: {
   submitEditPotongan(potongan,id,nama_produk,subtotal_lama){
     var app = this;
     app.loading = true;
-    axios.get(app.url+'/proses-edit-potongan-tbs-pembelian?potongan_edit_produk='+potongan+'&id_potongan='+id)
+    axios.get(app.url+'/proses-edit-potongan-edit-tbs-pembelian?potongan_edit_produk='+potongan+'&id_potongan='+id)
     .then(function (resp) {
       app.alert("Mengubah Potongan Produk "+titleCase(nama_produk));
       app.loading = false;
@@ -1060,7 +1080,7 @@ methods: {
   submitEditTax(pajak,id,nama_produk,ppn_edit,subtotal_lama){
     var app = this;
     app.loading = true;
-    axios.get(app.url+'/proses-edit-tax-tbs-pembelian?tax_edit_produk='+pajak+'&id_tax='+id+'&ppn_produk='+ppn_edit)
+    axios.get(app.url+'/proses-edit-tax-edit-tbs-pembelian?tax_edit_produk='+pajak+'&id_tax='+id+'&ppn_produk='+ppn_edit)
     .then(function (resp) {
       app.alert("Mengubah Pajak Produk "+titleCase(nama_produk));
       app.loading = false;
@@ -1085,7 +1105,7 @@ methods: {
     }else{
 
       var newPembelianOrder = app.inputPembayaranPembelianOrder;
-      axios.post(app.url, newPembelianOrder)
+      axios.post(app.url+'/update-order-pembelian', newPembelianOrder)
       .then(function (resp) {
         app.message = 'Berhasil Menambah Order Pembelian';
         app.alert(app.message);
@@ -1094,6 +1114,7 @@ methods: {
         app.inputPembayaranPembelianOrder.subtotal = 0
         app.getResults();
         window.open('pembelian-order/cetak-besar-pembelian-order/'+resp.data.respons_pembelian,'_blank');
+        app.$router.replace('/order-pembelian');
       })
       .catch(function (resp) {
         app.success = false;
@@ -1101,7 +1122,7 @@ methods: {
 
     }
   },
-  batalPembelian(){
+  batalEditPembelianOrder(){
     var app = this;
     app.$swal({
       text: "Anda Yakin Ingin Membatalkan Transaksi Pembelian Ini ?",
@@ -1112,7 +1133,7 @@ methods: {
       if (willDelete) {
 
         app.loading = true;
-        axios.post(app.url+'/batal-transaksi-pembelian')
+        axios.get(app.url+'/batal-transaksi-edit-pembelian-order?no_faktur_order='+app.inputTbsPembelianOrder.no_faktur)
         .then(function (resp) {
 
           var subtotal = parseInt(app.inputPembayaranPembelianOrder.subtotal) - parseInt(resp.data.subtotal)

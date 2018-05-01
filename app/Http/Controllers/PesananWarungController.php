@@ -12,6 +12,7 @@ use App\SettingAplikasi;
 use App\TransaksiKas;
 use App\User;
 use App\Warung;
+use App\SettingPembedaAplikasi;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -488,23 +489,17 @@ class PesananWarungController extends Controller
 
         $detail_pesanan->jumlah_produk -= 1;
         $detail_pesanan->save();
-
-        // return redirect()->back();
     }
 
     public function editJumlahPesanan(Request $request)
     {
 
         DetailPesananPelanggan::find($request->id)->update(['jumlah_produk' => $request->jumlah_produk]);
-
-        // return redirect()->back();
-
     }
 
     public function tambahNoResi(Request $request)
     {
         if ($request->email) {
-            // return response()->json(1);
             $pesanan_pelanggan = PesananPelanggan::select('id', 'id_pelanggan', 'updated_at', 'id_warung', 'nama_pemesan', 'no_telp_pemesan', 'alamat_pemesan', 'jumlah_produk', 'subtotal', 'kurir', 'metode_pembayaran', 'biaya_kirim', 'kode_unik_transfer', 'no_resi')->whereId($request->id_pesanan)->first();
 
             $data_warung = Warung::select('name', 'alamat', 'no_telpon', 'email')->whereId($pesanan_pelanggan->id_warung)->first();
@@ -525,5 +520,4 @@ class PesananWarungController extends Controller
             PesananPelanggan::find($request->id_pesanan)->update(['no_resi' => $request->no_resi]);
         }
     }
-
 }

@@ -6,7 +6,11 @@ use App\DetailPesananPelanggan;
 use App\KeranjangBelanja;
 use App\PesananPelanggan;
 use App\SettingAplikasi;
+use App\SettingPembedaAplikasi;
+use App\Warung;
+use App\User;
 use Auth;
+use Mail;
 use Indonesia;
 use Jenssegers\Agent\Agent;
 use OpenGraph;
@@ -164,6 +168,68 @@ class PesananPelangganController extends Controller
     {
         PesananPelanggan::where('id', $id)->update(['konfirmasi_pesanan' => '0']);
         return redirect()->back();
+    }
+
+    public function cekBatasWaktuTransfer() {
+        $address_app = SettingPembedaAplikasi::select('warung_id')->where('app_address', url('/'))->first();
+
+        $waktu_dibuat = PesananPelanggan::where([
+            ['konfirmasi_pesanan', '=', 0],
+            ['id_warung', '=', $address_app->warung_id]
+        ])->get();
+
+        $res['telat 11 jam'] = 0;
+        $res['telat 11 jam 30 menit'] = 0;
+
+        foreach($waktu_dibuat as $wd) {
+
+            $pesanan_pelanggan = PesananPelanggan::select('id', 'id_pelanggan', 'updated_at', 'id_warung', 'nama_pemesan', 'no_telp_pemesan', 'alamat_pemesan', 'jumlah_produk', 'subtotal', 'metode_pembayaran', 'biaya_kirim', 'kode_unik_transfer')->whereId($wd->id)->first();
+
+            $data_warung = Warung::select('name', 'alamat', 'no_telpon', 'email')->whereId($wd->id_warung)->first();
+
+            $user = User::select('email')->whereId($wd->id_pelanggan)->first();
+
+            $produk_pesanan = DetailPesananPelanggan::with('produk')->where('id_pesanan_pelanggan', $wd->id)->get();
+
+            $waktu = time() - strtotime($wd->created_at);
+
+            // mendapatkan angka jam dan menit [jam, menit]
+            $waktu = [(ceil(($waktu / 3600) - 1)), ((($waktu / 60) % 60))];
+            // return $waktu;
+
+            if ($waktu[0] == 11 && $waktu[1] < 30 && $wd->email_peringatan_transfer == 0) {
+
+                PesananPelanggan::whereId($wd->id)
+                    ->update([
+                        'email_peringatan_transfer' => 1
+                    ]);
+
+                $msg = 'Tersisa waktu sekitar 1 jam lagi untuk mentransfer pembayaran Anda. mohon untuk segera mentrasfer agar barang segera dikirimkan.';
+                $res['telat 11 jam']++;
+
+            } else if ($waktu[0] == 11 && $waktu[1] >= 30 && $wd->email_peringatan_transfer == 1) {
+
+                PesananPelanggan::whereId($wd->id)
+                    ->update([
+                        'email_peringatan_transfer' => 2
+                    ]);
+
+                $msg = 'Tersisa waktu sekitar 30 menit lagi untuk mentransfer pembayaran Anda. mohon untuk segera mentrasfer agar barang segera dikirimkan.';
+                $res['telat 11 jam 30 menit']++;
+            }
+
+            if (isset($msg)) {
+                Mail::send('auth.emails.batas-waktu-transfer', compact('pesanan_pelanggan', 'data_warung', 'produk_pesanan', 'msg'), function ($message) use ($data_warung, $user, $pesanan_pelanggan) {
+
+                    $message->from('verifikasi@andaglos.id', $data_warung->name);
+                    $message->to($user->email, $pesanan_pelanggan->nama_pemesan)->subject('Batas Waktu Transfer Hampir Habis!');
+
+                });
+            }
+        }
+
+        $res['hasil'] = 'selesai dieksekusi';
+        return $res;
     }
 
 }

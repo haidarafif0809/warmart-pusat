@@ -295,8 +295,7 @@
 								</div>
 
 								<div class="form-group">
-									<label for="foto" class="col-md-2 control-label">Foto Produk</label>
-									<div class="col-md-10">
+									<div class="col-md-4">
 										<div class="fileinput fileinput-new text-center" data-provides="fileinput" id="div-foto">
 											<div class="fileinput-new thumbnail">
 												<img v-if="produk.foto != ''" :src="url_picture+'/'+produk.foto" /> 
@@ -305,13 +304,53 @@
 											<div class="fileinput-preview fileinput-exists thumbnail"></div>
 											<div>
 												<span class="btn btn-rose btn-round btn-file">
-													<span class="fileinput-new">Ambil Foto</span>
-													<span class="fileinput-exists">Ubah</span>
+													<span class="fileinput-new">Ambil Foto 1</span>
+													<span class="fileinput-exists">Ubah Foto 1</span>
 													<input class="form-control" type="file" name="foto" id="foto">
 												</span>
 												<a href="#pablo" class="btn btn-danger btn-round fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i> Batal</a>
 											</div>
 											<span v-if="errors.foto" id="foto_error" class="label label-danger">{{ errors.foto[0] }}</span>
+											<a style="color: red;">Size Foto (Ukuran Max : 3MB)</a>
+										</div>
+									</div>
+
+									<div class="col-md-4">
+										<div class="fileinput fileinput-new text-center" data-provides="fileinput" id="div-foto">
+											<div class="fileinput-new thumbnail">
+												<img v-if="produk.foto_2 != ''" :src="url_picture+'/'+produk.foto_2" /> 
+												<img :src="url_origin+'/assets/img/image_placeholder.jpg'" alt="Foto Akan Tampil Disini" v-else>
+											</div>
+											<div class="fileinput-preview fileinput-exists thumbnail"></div>
+											<div>
+												<span class="btn btn-rose btn-round btn-file">
+													<span class="fileinput-new">Ambil Foto 2</span>
+													<span class="fileinput-exists">Ubah Foto 2</span>
+													<input class="form-control" type="file" name="foto_2" id="foto_2">
+												</span>
+												<a href="#pablo" class="btn btn-danger btn-round fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i> Batal</a>
+											</div>
+											<span v-if="errors.foto_2" id="foto_2_error" class="label label-danger">{{ errors.foto_2[0] }}</span>
+											<a style="color: red;">Size Foto (Ukuran Max : 3MB)</a>
+										</div>
+									</div>
+
+									<div class="col-md-4">
+										<div class="fileinput fileinput-new text-center" data-provides="fileinput" id="div-foto">
+											<div class="fileinput-new thumbnail">
+												<img v-if="produk.foto_3 != ''" :src="url_picture+'/'+produk.foto_3" /> 
+												<img :src="url_origin+'/assets/img/image_placeholder.jpg'" alt="Foto Akan Tampil Disini" v-else>
+											</div>
+											<div class="fileinput-preview fileinput-exists thumbnail"></div>
+											<div>
+												<span class="btn btn-rose btn-round btn-file">
+													<span class="fileinput-new">Ambil Foto 3</span>
+													<span class="fileinput-exists">Ubah Foto 3</span>
+													<input class="form-control" type="file" name="foto_3" id="foto_3">
+												</span>
+												<a href="#pablo" class="btn btn-danger btn-round fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i> Batal</a>
+											</div>
+											<span v-if="errors.foto_3" id="foto_3_error" class="label label-danger">{{ errors.foto_3[0] }}</span>
 											<a style="color: red;">Size Foto (Ukuran Max : 3MB)</a>
 										</div>
 									</div>
@@ -392,6 +431,8 @@
 				url_satuan : window.location.origin+(window.location.pathname).replace("dashboard", "satuan"),
 				produk: {
 					foto : '',
+					foto_2 : '',
+					foto_3 : '',
 					kode_barcode : '',
 					kode_barang : '',
 					nama_barang : '',
@@ -640,6 +681,12 @@
 				if (document.getElementById('foto').files[0] != undefined) {
 					newProduk.append('foto', document.getElementById('foto').files[0]);
 				}
+				if (document.getElementById('foto_2').files[0] != undefined) {
+					newProduk.append('foto_2', document.getElementById('foto_2').files[0]);
+				}
+				if (document.getElementById('foto_3').files[0] != undefined) {
+					newProduk.append('foto_3', document.getElementById('foto_3').files[0]);
+				}
 				newProduk.append('kode_barcode', app.produk.kode_barcode);
 				newProduk.append('kode_barang', app.produk.kode_barang);
 				newProduk.append('nama_barang', app.produk.nama_barang);
@@ -706,6 +753,8 @@
 				var app = this;
 
 				app.produk.foto = '';
+				app.produk.foto_2 = '';
+				app.produk.foto_3 = '';
 				app.produk.kode_barcode = '';
 				app.produk.kode_barang = '';
 				app.produk.nama_barang = '';

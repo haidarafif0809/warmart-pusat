@@ -228,6 +228,8 @@ class BarangController extends Controller
                 'kategori_barang_id' => 'required|exists:kategori_barangs,id',
                 'satuan_id'          => 'required|exists:satuans,id',
                 'foto'               => 'image|max:3072',
+                'foto_2'             => 'image|max:3072',
+                'foto_3'             => 'image|max:3072',
                 ]);
 
             if ($request->perkiraan_berat == "" or $request->perkiraan_berat == 0) {
@@ -269,7 +271,45 @@ class BarangController extends Controller
                     $image_resize->fit(300);
                     $image_resize->save(public_path('foto_produk/' . $filename));
                     $insert_barang->foto = $filename;
-                    // menyimpan field foto_kamar di database kamar dengan filename yang baru dibuat
+                    // menyimpan field foto di table barangs  dengan filename yang baru dibuat
+                    $insert_barang->save();
+                }
+
+            }
+            if ($request->hasFile('foto_2')) {
+                $foto_2 = $request->file('foto_2');
+
+                if (is_array($foto_2) || is_object($foto_2)) {
+                    // Mengambil file yang diupload
+                    $uploaded_foto_2 = $foto_2;
+                    // mengambil extension file
+                    $extension = $uploaded_foto_2->getClientOriginalExtension();
+                    // membuat nama file random berikut extension
+                    $filename     = str_random(40) . '.' . $extension;
+                    $image_resize = Image::make($foto_2->getRealPath());
+                    $image_resize->fit(300);
+                    $image_resize->save(public_path('foto_produk/' . $filename));
+                    $insert_barang->foto_2 = $filename;
+                    // menyimpan field foto_2 di table barangs  dengan filename yang baru dibuat
+                    $insert_barang->save();
+                }
+
+            }
+            if ($request->hasFile('foto_3')) {
+                $foto_3 = $request->file('foto_3');
+
+                if (is_array($foto_3) || is_object($foto_3)) {
+                    // Mengambil file yang diupload
+                    $uploaded_foto_3 = $foto_3;
+                    // mengambil extension file
+                    $extension = $uploaded_foto_3->getClientOriginalExtension();
+                    // membuat nama file random berikut extension
+                    $filename     = str_random(40) . '.' . $extension;
+                    $image_resize = Image::make($foto_3->getRealPath());
+                    $image_resize->fit(300);
+                    $image_resize->save(public_path('foto_produk/' . $filename));
+                    $insert_barang->foto_3 = $filename;
+                   // menyimpan field foto_3 di table barangs  dengan filename yang baru dibuat
                     $insert_barang->save();
                 }
 
@@ -302,7 +342,7 @@ class BarangController extends Controller
      */
     public function show($id)
     {
-        $produk = Barang::select(['barangs.id', 'barangs.kode_barang', 'barangs.kode_barcode', 'barangs.nama_barang', 'barangs.harga_beli', 'barangs.harga_jual', 'barangs.satuan_id', 'barangs.kategori_barang_id', 'barangs.status_aktif', 'barangs.foto', 'barangs.hitung_stok', 'barangs.id_warung', 'barangs.created_by', 'barangs.updated_by', 'barangs.created_at', 'barangs.updated_at', 'barangs.deskripsi_produk', 'barangs.konfirmasi_admin', 'barangs.harga_jual2', 'barangs.berat', 'satuans.nama_satuan'])
+        $produk = Barang::select(['barangs.id', 'barangs.kode_barang', 'barangs.kode_barcode', 'barangs.nama_barang', 'barangs.harga_beli', 'barangs.harga_jual', 'barangs.satuan_id', 'barangs.kategori_barang_id', 'barangs.status_aktif', 'barangs.foto','barangs.foto_2','barangs.foto_3','barangs.hitung_stok', 'barangs.id_warung', 'barangs.created_by', 'barangs.updated_by', 'barangs.created_at', 'barangs.updated_at', 'barangs.deskripsi_produk', 'barangs.konfirmasi_admin', 'barangs.harga_jual2', 'barangs.berat', 'satuans.nama_satuan'])
         ->leftJoin('satuans', 'satuans.id', '=', 'barangs.satuan_id')->where('barangs.id', $id)->first();
         return $produk;
     }
@@ -351,6 +391,8 @@ class BarangController extends Controller
                 'kategori_barang_id' => 'required|exists:kategori_barangs,id',
                 'satuan_id'          => 'required|exists:satuans,id',
                 'foto'               => 'image|max:3072',
+                'foto_2'             => 'image|max:3072',
+                'foto_3'             => 'image|max:3072',
 
                 ]);
 
@@ -410,6 +452,56 @@ class BarangController extends Controller
                     }
                 }
                 $update_barang->foto = $filename;
+                $update_barang->save();
+            }
+            if ($request->hasFile('foto_2')) {
+                // Mengambil file yang diupload
+                $foto_2          = $request->file('foto_2');
+                $uploaded_foto_2 = $foto_2;
+                // mengambil extension file
+                $extension = $uploaded_foto_2->getClientOriginalExtension();
+                // membuat nama file random berikut extension
+                $filename     = str_random(40) . '.' . $extension;
+                $image_resize = Image::make($foto_2->getRealPath());
+                $image_resize->fit(300);
+                $image_resize->save(public_path('foto_produk/' . $filename));
+                // hapus foto_2_home lama, jika ada
+                if ($update_barang->foto_2) {
+                    $old_foto_2 = $update_barang->foto_2;
+                    $filepath = public_path() . DIRECTORY_SEPARATOR . 'foto_produk'
+                    . DIRECTORY_SEPARATOR . $update_barang->foto_2;
+                    try {
+                        File::delete($filepath);
+                    } catch (FileNotFoundException $e) {
+                        // File sudah dihapus/tidak ada
+                    }
+                }
+                $update_barang->foto_2 = $filename;
+                $update_barang->save();
+            }
+            if ($request->hasFile('foto_3')) {
+                // Mengambil file yang diupload
+                $foto_3          = $request->file('foto_3');
+                $uploaded_foto_3 = $foto_3;
+                // mengambil extension file
+                $extension = $uploaded_foto_3->getClientOriginalExtension();
+                // membuat nama file random berikut extension
+                $filename     = str_random(40) . '.' . $extension;
+                $image_resize = Image::make($foto_3->getRealPath());
+                $image_resize->fit(300);
+                $image_resize->save(public_path('foto_produk/' . $filename));
+                // hapus foto_3_home lama, jika ada
+                if ($update_barang->foto_3) {
+                    $old_foto_3 = $update_barang->foto_3;
+                    $filepath = public_path() . DIRECTORY_SEPARATOR . 'foto_produk'
+                    . DIRECTORY_SEPARATOR . $update_barang->foto_3;
+                    try {
+                        File::delete($filepath);
+                    } catch (FileNotFoundException $e) {
+                        // File sudah dihapus/tidak ada
+                    }
+                }
+                $update_barang->foto_3 = $filename;
                 $update_barang->save();
             }
 
