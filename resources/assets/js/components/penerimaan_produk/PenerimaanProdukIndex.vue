@@ -71,7 +71,7 @@
 										</router-link> 
 									</td>
 									<td style="text-align:right;">
-										<a target="blank" class="btn btn-primary btn-xs" v-bind:href="'pembelian-order/cetak-besar-pembelian-order/'+penerimaanProduks.data.id">Cetak Ulang</a>
+										<a target="blank" class="btn btn-primary btn-xs" v-bind:href="'penerimaan-produk/cetak-besar-penerimaan-produk/'+penerimaanProduks.data.id">Cetak Ulang</a>
 									</td>
 									<td style="text-align:right;"> 
 										<a  href="#order-pembelian" class="btn btn-xs btn-danger" v-bind:id="'delete-' + penerimaanProduks.data.id" v-on:click="deleteEntry(penerimaanProduks.data.id, index,penerimaanProduks.data.no_faktur_penerimaan)" v-if="penerimaanProduks.data.status_penerimaan < 3">Delete</a>

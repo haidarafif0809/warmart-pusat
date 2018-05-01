@@ -81,7 +81,7 @@ class PenerimaanProduk extends Model
 
     public function scopeCetakPenerimaanProduk($query, $warung_id, $id)
     {
-    	$query->select(['penerimaan_produks.no_faktur_order', 'penerimaan_produks.created_at', 'penerimaan_produks.status_order', 'penerimaan_produks.total', 'supliers.nama_suplier', 'supliers.alamat', 'warungs.name', 'warungs.alamat', 'warungs.no_telpon',])
+    	$query->select(['penerimaan_produks.no_faktur_penerimaan', 'penerimaan_produks.faktur_order', 'penerimaan_produks.created_at', 'penerimaan_produks.status_penerimaan', 'penerimaan_produks.total', 'supliers.nama_suplier', 'supliers.alamat as alamat_supplier', 'warungs.name', 'warungs.alamat', 'warungs.no_telpon',])
     	->leftJoin('supliers', 'supliers.id', '=', 'penerimaan_produks.suplier_id')
     	->leftJoin('warungs', 'warungs.id', '=', 'penerimaan_produks.warung_id')
     	->where('penerimaan_produks.warung_id', $warung_id)

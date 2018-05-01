@@ -7,6 +7,7 @@ use App\PembelianOrder;
 use App\DetailPembelianOrder;
 use App\TbsPenerimaanProduk;
 use App\DetailPenerimaanProduk;
+use App\SettingAplikasi;
 use App\PenerimaanProduk;
 use Illuminate\Support\Facades\DB;
 use Auth;
@@ -233,6 +234,28 @@ class PenerimaanProdukController extends Controller
 
 			return response(200);
 		}
+	}
+
+
+	public function cetakBesar($id)
+	{   
+		$warung_id = Auth::user()->id_warung;
+        //SETTING APLIKASI
+		$setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
+
+		$data_penerimaan = PenerimaanProduk::cetakPenerimaanProduk($warung_id, $id)->first();
+
+		$status_penerimaan = $data_penerimaan->Status;
+
+		$data_cetak = DetailPenerimaanProduk::cetakDetailPenerimaanProduk($warung_id, $data_penerimaan->no_faktur_penerimaan)->get();
+
+		$subtotal   = 0;
+		foreach ($data_cetak as $data_cetaks) {
+			$subtotal += $data_cetaks->subtotal;
+		}
+
+        // return $subtotal;
+		return view('penerimaan_produk.cetak_besar', ['setting_aplikasi' => $setting_aplikasi, 'detail_orders' => $data_cetak, 'data_penerimaan' => $data_penerimaan, 'status_penerimaan' => $status_penerimaan, 'subtotal' => $subtotal])->with(compact('html'));
 	}
 
 
