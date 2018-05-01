@@ -368,7 +368,9 @@
         inputPembayaranPembelianOrder:{
           subtotal: 0,
           suplier: '',
-          keterangan: ''
+          keterangan: '',
+          no_faktur_order: '',
+          id_order: ''
         },
         tambahSuplier: {
           nama_suplier : '',
@@ -492,6 +494,8 @@ methods: {
       console.log(resp.data)
       app.inputPembayaranPembelianOrder.suplier = resp.data.suplier_id
       app.inputPembayaranPembelianOrder.keterangan = resp.data.keterangan
+      app.inputPembayaranPembelianOrder.no_faktur_order = resp.data.no_faktur_order
+      app.inputPembayaranPembelianOrder.id_order = resp.data.id
       app.inputTbsPembelianOrder.no_faktur = resp.data.no_faktur_order
     })
     .catch(function (resp) {
@@ -1101,7 +1105,7 @@ methods: {
     }else{
 
       var newPembelianOrder = app.inputPembayaranPembelianOrder;
-      axios.post(app.url, newPembelianOrder)
+      axios.post(app.url+'/update-order-pembelian', newPembelianOrder)
       .then(function (resp) {
         app.message = 'Berhasil Menambah Order Pembelian';
         app.alert(app.message);
@@ -1110,6 +1114,7 @@ methods: {
         app.inputPembayaranPembelianOrder.subtotal = 0
         app.getResults();
         window.open('pembelian-order/cetak-besar-pembelian-order/'+resp.data.respons_pembelian,'_blank');
+        app.$router.replace('/order-pembelian');
       })
       .catch(function (resp) {
         app.success = false;

@@ -116,10 +116,14 @@
 									<td style="text-align:right;" >Rp. {{ pembelianOrders.data.total | pemisahTitik }}</td>
 
 									<td style="text-align:right;">
-										<router-link :to="{name: 'prosesEditPembelianOrder', params: {id: pembelianOrders.data.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + pembelianOrders.data.id" >
+										<router-link :to="{name: 'prosesEditPembelianOrder', params: {id: pembelianOrders.data.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + pembelianOrders.data.id" v-if="pembelianOrders.data.status_order < 3">
 											Edit 
 										</router-link>
+
+										<a href="#order-pembelian" class="btn btn-xs btn-default" v-bind:id="'edit-' + pembelianOrders.data.id" v-on:click="orderTerpakai(pembelianOrders.data.id, index,pembelianOrders.data.no_faktur_order, 'Diedit')" v-else> Edit 
+										</a>
 									</td>
+
 									<td style="text-align:right;">
 										<router-link :to="{name: 'detailPembelianOrder', params: {id: pembelianOrders.data.id}}" class="btn btn-xs btn-info" v-bind:id="'detail-' + pembelianOrders.data.no_faktur_order" >
 											Detail
@@ -129,7 +133,10 @@
 										<a target="blank" class="btn btn-primary btn-xs" v-bind:href="'pembelian-order/cetak-besar-pembelian-order/'+pembelianOrders.data.id">Cetak Ulang</a>
 									</td>
 									<td style="text-align:right;"> 
-										<a  href="#order-pembelian" class="btn btn-xs btn-danger" v-bind:id="'delete-' + pembelianOrders.data.id" v-on:click="deleteEntry(pembelianOrders.data.id, index,pembelianOrders.data.no_faktur_order)">Delete</a>
+										<a  href="#order-pembelian" class="btn btn-xs btn-danger" v-bind:id="'delete-' + pembelianOrders.data.id" v-on:click="deleteEntry(pembelianOrders.data.id, index,pembelianOrders.data.no_faktur_order)" v-if="pembelianOrders.data.status_order < 3">Delete</a>
+
+										<a href="#order-pembelian" class="btn btn-xs btn-danger" v-bind:id="'delete-' + pembelianOrders.data.id" v-on:click="orderTerpakai(pembelianOrders.data.id, index,pembelianOrders.data.no_faktur_order, 'Dihapus')" v-else> Delete 
+										</a>
 									</td>
 								</tr>
 							</tbody>					
@@ -230,13 +237,6 @@
 					alert("Tidak Dapat Memuat Order Pembelian");
 				});
 			},
-			alert(pesan) {
-				this.$swal({
-					title: "Berhasil ",
-					text: pesan,
-					icon: "success",
-				});
-			},
 			deleteEntry(id, index,no_faktur) {
 				this.$swal({
 					title: "Konfirmasi Hapus",
@@ -282,6 +282,26 @@
 			},
 			closeModal(){
 				$("#modal_detail_transaksi").hide();
+			},
+			orderTerpakai(id, index,no_faktur_order, aksi) {
+				var app = this;                  
+				app.alertGagal(`Faktur ${no_faktur_order} Tidak Bisa ${aksi} Karena Sudah Terpakai`)
+			},
+			alert(pesan) {
+				this.$swal({
+					title: "Berhasil ",
+					text: pesan,
+					icon: "success",
+					timer: 1000,
+				});
+			},
+			alertGagal(pesan) {
+				this.$swal({
+					title: "Perhatian !",
+					text: pesan,
+					icon: "warning",
+					timer: 2000,
+				});
 			},
 		}
 	}

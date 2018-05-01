@@ -1185,4 +1185,68 @@ class PembelianOrderController extends Controller
         }
     }
 
+
+    public function updatePembelianOrder(Request $request)
+    {
+        if (Auth::user()->id_warung == '') {
+            Auth::logout();
+            return response()->view('error.403');
+        } else {
+            //START TRANSAKSI
+            DB::beginTransaction();
+            $warung_id  = Auth::user()->id_warung;
+            $session_id = session()->getId();
+            $user       = Auth::user()->id;
+            $no_faktur  = $request->no_faktur_order;
+
+            $data_detail_pembelian = DetailPembelianOrder::where('no_faktur_order', $no_faktur)->where('warung_id', Auth::user()->id_warung)->get();
+
+            //HAPUS DETAIL PEMBELIAN ORDER
+            foreach ($data_detail_pembelian as $data_detail) {
+
+                if (!$hapus_detail = DetailPembelianOrder::destroy($data_detail->id_detail_pembelian_order)) {
+                    //DI BATALKAN PROSES NYA
+                    DB::rollBack();
+                }
+            }
+
+
+            //INSERT DETAIL PEMBELIAN
+            $data_produk_pembelian_order = EditTbsPembelianOrder::where('no_faktur_order', $no_faktur)->where('warung_id', $warung_id);
+
+            // INSERT DETAIL PEMBELIAN
+            foreach ($data_produk_pembelian_order->get() as $data_tbs_pembelian_order) {
+
+                $detail_pembelian = DetailPembelianOrder::create([
+                    'no_faktur_order'  => $no_faktur,
+                    'id_produk'        => $data_tbs_pembelian_order->id_produk,
+                    'jumlah_produk'    => $data_tbs_pembelian_order->jumlah_produk,
+                    'satuan_id'        => $data_tbs_pembelian_order->satuan_id,
+                    'satuan_dasar'     => $data_tbs_pembelian_order->satuan_dasar,
+                    'harga_produk'     => $data_tbs_pembelian_order->harga_produk,
+                    'subtotal'         => $data_tbs_pembelian_order->subtotal,
+                    'tax'              => $data_tbs_pembelian_order->tax,
+                    'potongan'         => $data_tbs_pembelian_order->potongan,
+                    'status_harga'     => $data_tbs_pembelian_order->status_harga,
+                    'warung_id'        => $warung_id,
+                    ]);
+            }
+
+            $update_pembelian = PembelianOrder::find($request->id_order)->update([
+                'suplier_id'        => $request->suplier,
+                'total'             => $request->subtotal,
+                'keterangan'        => $request->keterangan,
+                ]);
+
+
+            //HAPUS TBS PEMBELIAN ORDER
+            $data_produk_pembelian_order->delete();
+            DB::commit();
+
+            $respons['respons_pembelian'] = $request->id_order;
+            return response()->json($respons);
+
+        }
+    }
+
 }

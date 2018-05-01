@@ -624,6 +624,7 @@ Route::get('/penerimaan-produk/proses-tbs-penerimaan-produk', 'PenerimaanProdukC
 Route::get('/penerimaan-produk/batal-penerimaan-produk', 'PenerimaanProdukController@batalPenerimaanProduk')->middleware('auth');
 Route::get('/pembelian-order/proses-edit-tax-edit-tbs-pembelian', 'PembelianOrderController@editTaxEditTbsPembelianOrder')->middleware('auth');
 Route::get('/pembelian-order/batal-transaksi-edit-pembelian-order', 'PembelianOrderController@batalEditPembelianOrder')->middleware('auth');
+Route::post('/pembelian-order/update-order-pembelian', 'PembelianOrderController@updatePembelianOrder')->middleware('auth');
 
 // PENERIMAAN PRODUK
 
