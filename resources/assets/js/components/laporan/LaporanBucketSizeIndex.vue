@@ -30,7 +30,7 @@
                 	</a>
                 </li>
                 <li>
-                	<a href="#laporan_data" role="tab" data-toggle="tab" style="margin-right:10px; ">
+                	<a href="#laporan_data" role="tab" data-toggle="tab" style="margin-right:10px; " v-on:click="bucketSizeHide()">
                 		Laporan Data
                 	</a>
                 </li>
@@ -254,6 +254,9 @@ export default {
 			var sampai_tanggal = "" + filter.sampai_tanggal.getFullYear() +'-'+ ((filter.sampai_tanggal.getMonth() + 1) > 9 ? '' : '0') + (filter.sampai_tanggal.getMonth() + 1) +'-'+ (filter.sampai_tanggal.getDate() > 9 ? '' : '0') + filter.sampai_tanggal.getDate();
 
 			return sampai_tanggal;
+		},
+		bucketSizeHide(){
+			this.bucketSize = false;
 		},
 		submitLaporan(){
 			var app = this;
