@@ -614,6 +614,10 @@ Route::get('/pembelian-order/cek-potongan-persen', 'PembelianOrderController@pot
 Route::get('/pembelian-order/proses-edit-potongan-edit-tbs-pembelian', 'PembelianOrderController@editPotonganEditTbsPembelianOrder')->middleware('auth');
 Route::delete('/pembelian-order/hapus-edit-tbs-pembelian/{id}', 'PembelianOrderController@hapusEditTbsPembelian')->middleware('auth');
 Route::get('/pembelian-order/proses-tambah-edit-tbs-pembelian', 'PembelianOrderController@prosesTambahEditTbsPembelianOrder')->middleware('auth');
+Route::get('/pembelian-order/proses-edit-tax-edit-tbs-pembelian', 'PembelianOrderController@editTaxEditTbsPembelianOrder')->middleware('auth');
+Route::get('/pembelian-order/batal-transaksi-edit-pembelian-order', 'PembelianOrderController@batalEditPembelianOrder')->middleware('auth');
+Route::post('/pembelian-order/update-order-pembelian', 'PembelianOrderController@updatePembelianOrder')->middleware('auth');
+
 
 // PEMBELIAN ORDER
 
@@ -624,10 +628,9 @@ Route::get('/penerimaan-produk/view-tbs-penerimaan-produk', 'PenerimaanProdukCon
 Route::get('/penerimaan-produk/pencarian-tbs-penerimaan-produk', 'PenerimaanProdukController@pencarianTbsPenerimaanProduk')->middleware('auth');
 Route::get('/penerimaan-produk/proses-tbs-penerimaan-produk', 'PenerimaanProdukController@prosesTbsPenerimaanProduk')->middleware('auth');
 Route::get('/penerimaan-produk/batal-penerimaan-produk', 'PenerimaanProdukController@batalPenerimaanProduk')->middleware('auth');
-Route::get('/pembelian-order/proses-edit-tax-edit-tbs-pembelian', 'PembelianOrderController@editTaxEditTbsPembelianOrder')->middleware('auth');
-Route::get('/pembelian-order/batal-transaksi-edit-pembelian-order', 'PembelianOrderController@batalEditPembelianOrder')->middleware('auth');
-Route::post('/pembelian-order/update-order-pembelian', 'PembelianOrderController@updatePembelianOrder')->middleware('auth');
 
+Route::get('/penerimaan-produk/view', 'PenerimaanProdukController@view')->middleware('auth');
+Route::get('/penerimaan-produk/pencarian', 'PenerimaanProdukController@pencarian')->middleware('auth');
 // PENERIMAAN PRODUK
 
 //menampilkan seetting pengiriman

@@ -199,6 +199,7 @@ import PembelianOrderProsesEdit from './components/pembelian_order/PembelianOrde
 import PembelianOrderDetail from './components/pembelian_order/PembelianOrderDetail.vue';
 
 // PENERIMAAN PRODUK
+import PenerimaanProdukIndex from './components/penerimaan_produk/PenerimaanProdukIndex.vue';
 import PenerimaanProdukCreate from './components/penerimaan_produk/PenerimaanProdukCreate.vue';
 
 // SETTING FIXEL
@@ -842,6 +843,10 @@ const routes = [{
         path: '/setting-fixel', 
         component: SettingFixel, 
         name: 'settingFixelIndex'
+    },{ 
+        path: '/penerimaan-produk', 
+        component: PenerimaanProdukIndex, 
+        name: 'indexPenerimaanProduk'
     },{ 
         path: '/create-penerimaan-produk', 
         component: PenerimaanProdukCreate, 
