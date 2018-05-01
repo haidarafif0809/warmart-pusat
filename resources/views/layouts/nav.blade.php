@@ -384,7 +384,7 @@
         <li>
             <router-link :to="{name: 'indexLaporanHutangBeredar'}" class="menu-nav">
                 <span class="sidebar-mini">
-                    LHB
+                    LH
                 </span>
                 <span class="sidebar-normal">
                     Laporan Hutang
