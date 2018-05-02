@@ -30,7 +30,7 @@
             <div class="col-md-12">
                 <ul class="breadcrumb">
                     <li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li>
-                    <li class="active">Setting Fixel</li>
+                    <li class="active">Setting Pixel & Analytics</li>
                 </ul>
                 <div class="card">
 
@@ -39,26 +39,20 @@
                     </div>
 
                     <div class="card-content">
-                        <h4 class="card-title">Setting Fixel</h4>
+                        <h4 class="card-title">Setting Pixel & Analytics</h4>
 
                         <div class="table-responsive">
                             <table class="table table-striped">
-                                <thead>
-                                    <th>Fixel</th>
-                                    <th></th>
-                                    <th>ID Pixel</th>
-                                </thead>
+
                                 <tbody>
                                     <tr>
-                                        <td width="10%">Google</td>
-                                        <td width="10%"><img src="image/google.png" style="width: 15%"> </td>
+                                        <td width="10%"><img src="image/google_analytics.png" style="width: 30%"> </td>
                                         <td width="10%">
                                             <a href="#setting-fixel" v-on:click="settingFixel('Google')">{{fixel.google}}</a>
                                         </td> 
                                     </tr>
                                     <tr>
-                                        <td width="10%">Facebook</td>
-                                        <td width="10%"><img src="image/facebook.jpg" style="width: 15%"> </td>
+                                        <td width="10%"><img src="image/pixelfacebook.png" style="width: 30%"> </td>
                                         <td width="10%">
                                             <a href="#setting-fixel" v-on:click="settingFixel('Facebook')">{{fixel.facebook}}</a>
                                         </td> 
@@ -66,7 +60,6 @@
                                 </tbody>                                
                             </table>
                         </div>
-                        <p style="color: red; font-style: italic;">*Note : Klik Kolom ID Pixel Untuk Mengubah ID Pixel.</p>    
                     </div>
                 </div>
             </div>
