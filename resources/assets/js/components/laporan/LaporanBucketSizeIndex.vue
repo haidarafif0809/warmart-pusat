@@ -408,8 +408,9 @@ export default {
 			app.bucketSizePelanggan = labels;
 			app.loadMoreLength = dataPelanggan.length;
 			app.dataPelanggan = dataPelanggan.slice(0, 10);
-			console.log(app.loadMoreLength);
-			console.log(app.dataPelanggan);
+			console.log(dataPelanggan);
+			// console.log(app.loadMoreLength);
+			// console.log(app.dataPelanggan);
 		},
 		closeModalPelanggan(){
 			$("#modalPelanggan").hide(); 
