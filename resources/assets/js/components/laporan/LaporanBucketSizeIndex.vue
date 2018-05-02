@@ -175,35 +175,19 @@
 
     <div class="row" v-if="bucketSize">
     	<div class="col-md-6">
-    		<div class="card card-chart">
-    			<div class="card-header" data-background-color="blue" data-header-animation="true">
 
+    		<div class="card card-chart">
+    			<div class="card-header" data-background-color="blue">
     				<chartist v-if="agent" ratio="ct-double-octave" type="Bar" :data="chartData" :options="chartOptions" :responsiveOptions="responsiveOptions"></chartist>
     				<chartist v-else ratio="ct-square" type="Bar" :data="chartData" :options="chartOptions" :responsiveOptions="responsiveOptions"></chartist>
-
     			</div>
     			<div class="card-content">
-    				<div class="card-actions">
-    					<button type="button" class="btn btn-danger btn-simple fix-broken-card">
-    						<i class="material-icons">build</i> Fix Header!
-    					</button>
-    					<button type="button" class="btn btn-info btn-info">
-    						Detail
-    					</button><!-- 
-    					<button type="button" class="btn btn-default btn-simple">
-    						<i class="material-icons">edit</i>
-    					</button> -->
-    				</div>
     				<h4 class="card-title" v-if="filter.jenis_penjualan == 0">Bucket Size Penjualan POS</h4>
     				<h4 class="card-title" v-else>Bucket Size Penjualan Online</h4>
-    				<!-- <p class="category">Last Campaign Performance</p> -->
-    			</div>
-    			<div class="card-footer">
-    				<div class="stats">
-    					<p><i class="material-icons">access_time</i> <b> Periode {{dariTanggal(filter)}} - {{sampaiTanggal(filter)}}</b></p>
-    				</div>
+    				<p class="category"><b> Periode {{dariTanggal(filter)}} - {{sampaiTanggal(filter)}} </b></p>
     			</div>
     		</div>
+
     	</div>
 
     	<div class="col-lg-6 col-md-12">
