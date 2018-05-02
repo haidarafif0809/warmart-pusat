@@ -61,7 +61,7 @@
 											Edit 
 										</router-link>
 
-										<a href="#order-pembelian" class="btn btn-xs btn-default" v-bind:id="'edit-' + penerimaanProduks.data.id" v-on:click="orderTerpakai(penerimaanProduks.data.id, index,penerimaanProduks.data.no_faktur_penerimaan, 'Diedit')" v-else> Edit 
+										<a href="#penerimaan-produk" class="btn btn-xs btn-default" v-bind:id="'edit-' + penerimaanProduks.data.id" v-on:click="orderTerpakai(penerimaanProduks.data.id, index,penerimaanProduks.data.no_faktur_penerimaan, 'Diedit')" v-else> Edit 
 										</a>
 									</td>
 
@@ -74,9 +74,9 @@
 										<a target="blank" class="btn btn-primary btn-xs" v-bind:href="'penerimaan-produk/cetak-besar-penerimaan-produk/'+penerimaanProduks.data.id">Cetak Ulang</a>
 									</td>
 									<td style="text-align:right;"> 
-										<a  href="#order-pembelian" class="btn btn-xs btn-danger" v-bind:id="'delete-' + penerimaanProduks.data.id" v-on:click="deleteEntry(penerimaanProduks.data.id, index,penerimaanProduks.data.no_faktur_penerimaan)" v-if="penerimaanProduks.data.status_penerimaan < 3">Delete</a>
+										<a  href="#penerimaan-produk" class="btn btn-xs btn-danger" v-bind:id="'delete-' + penerimaanProduks.data.id" v-on:click="deleteEntry(penerimaanProduks.data.id, index,penerimaanProduks.data.no_faktur_penerimaan)" v-if="penerimaanProduks.data.status_penerimaan < 3">Delete</a>
 
-										<a href="#order-pembelian" class="btn btn-xs btn-danger" v-bind:id="'delete-' + penerimaanProduks.data.id" v-on:click="orderTerpakai(penerimaanProduks.data.id, index,penerimaanProduks.data.no_faktur_penerimaan, 'Dihapus')" v-else> Delete 
+										<a href="#penerimaan-produk" class="btn btn-xs btn-danger" v-bind:id="'delete-' + penerimaanProduks.data.id" v-on:click="orderTerpakai(penerimaanProduks.data.id, index,penerimaanProduks.data.no_faktur_penerimaan, 'Dihapus')" v-else> Delete 
 										</a>
 									</td>
 								</tr>
@@ -200,7 +200,7 @@
 								app.getResults();
 								app.alert("Menghapus Penerimaan Produk Faktur "+no_faktur);
 								app.loading = false;  
-							}
+							}  
 						})
 						.catch(function (resp) {
 							alert("Tidak dapat Menghapus Penerimaan Produk");

@@ -47,7 +47,8 @@
 
         <ul class="breadcrumb"> 
           <li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li> 
-          <li class="active">Penerimaan Produk</li> 
+          <li><router-link :to="{name: 'indexPenerimaanProduk'}">Penerimaan Produk</router-link></li> 
+          <li class="active">Form Penerimaan Produk</li> 
         </ul>
 
         <!-- small modal -->

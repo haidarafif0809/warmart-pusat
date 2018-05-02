@@ -368,4 +368,19 @@ class PenerimaanProdukController extends Controller
 
 		return response()->json($respons);
 	}
+
+
+	public function destroy($id)
+	{
+		if (Auth::user()->id_warung == '') {
+			Auth::logout();
+			return response()->view('error.403');
+		} else {
+			if (!PenerimaanProduk::destroy($id)) {
+				return 0;
+			} else {
+				return response(200);
+			}
+		}
+	}
 }
