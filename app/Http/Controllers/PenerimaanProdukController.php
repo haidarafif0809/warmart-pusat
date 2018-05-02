@@ -16,12 +16,13 @@ class PenerimaanProdukController extends Controller
 {
 
     // DATA PAGINTION
-	public function dataPagination($data_penerimaan_produks, $array, $url)
+	public function dataPagination($data_penerimaan_produks, $array, $url, $no_faktur_penerimaan)
 	{
 
         //DATA PAGINATION
 		$respons['current_page']   = $data_penerimaan_produks->currentPage();
 		$respons['data']           = $array;
+		$respons['no_faktur']      = $no_faktur_penerimaan;
 		$respons['first_page_url'] = url($url . '?page=' . $data_penerimaan_produks->firstItem());
 		$respons['from']           = 1;
 		$respons['last_page']      = $data_penerimaan_produks->lastPage();
@@ -81,7 +82,8 @@ class PenerimaanProdukController extends Controller
 		}
 
 		$url     = '/penerimaan-produk/view-tbs-penerimaan-produk';
-		$respons = $this->dataPagination($tbs_penerimaan_produks, $array, $url);
+		$no_faktur_penerimaan = '';
+		$respons = $this->dataPagination($tbs_penerimaan_produks, $array, $url, $no_faktur_penerimaan);
 
 		return response()->json($respons);
 	}
@@ -111,7 +113,8 @@ class PenerimaanProdukController extends Controller
 		}
 
 		$url     = '/penerimaan-produk/view-tbs-penerimaan-produk';
-		$respons = $this->dataPagination($tbs_penerimaan_produks, $array, $url);
+		$no_faktur_penerimaan = '';
+		$respons = $this->dataPagination($tbs_penerimaan_produks, $array, $url, $no_faktur_penerimaan);
 
 		return response()->json($respons);
 	}
@@ -274,8 +277,9 @@ class PenerimaanProdukController extends Controller
 		}
 
 		$url     = '/pembelian-order/view';
+		$no_faktur_penerimaan = '';
         //DATA PAGINATION
-		$respons = $this->dataPagination($data_penerimaan_produk, $array_penerimaan, $url);
+		$respons = $this->dataPagination($data_penerimaan_produk, $array_penerimaan, $url, $no_faktur_penerimaan);
 
 		return response()->json($respons);
 	}
@@ -303,8 +307,64 @@ class PenerimaanProdukController extends Controller
 		}
 
 		$url     = '/pembelian-order/view';
+		$no_faktur_penerimaan = '';
         //DATA PAGINATION
-		$respons = $this->dataPagination($data_penerimaan_produk, $array_penerimaan, $url);
+		$respons = $this->dataPagination($data_penerimaan_produk, $array_penerimaan, $url, $no_faktur_penerimaan);
+
+		return response()->json($respons);
+	}
+
+
+//VIEW DETAIL PENERIMAAN PRODUK & PENCARIAN
+	public function viewDetailPenerimaanProduk($id)
+	{
+		$warung_id = Auth::user()->id_warung;
+		$penerimaan = PenerimaanProduk::find($id);
+
+		$data_detailPenerimaan = DetailPenerimaanProduk::detailPenerimaanProduk($warung_id, $penerimaan->no_faktur_penerimaan)->paginate(10);
+
+		$array_penerimaan = [];
+		foreach ($data_detailPenerimaan as $detail_penerimaan) {
+			array_push($array_penerimaan, [
+				'detail_penerimaan'=> $detail_penerimaan,
+				'nama_produk'=> $detail_penerimaan->NamaProduk,
+				]);
+		}
+
+		$url     = '/penerimaan-produk/view-detail-penerimaan-produk';
+        //DATA PAGINATION
+		$respons = $this->dataPagination($data_detailPenerimaan, $array_penerimaan, $url, $penerimaan->no_faktur_penerimaan);
+
+
+		return response()->json($respons);
+	}
+
+//PENCARIAN DETAIL PENERIMAAN PRODUK & PENCARIAN
+	public function pencarianDetailPenerimaanProduk(Request $request, $id)
+	{
+		$warung_id = Auth::user()->id_warung;
+		$penerimaan = PenerimaanProduk::find($id);
+
+		$data_detailPenerimaan = DetailPenerimaanProduk::detailPenerimaanProduk($warung_id, $penerimaan->no_faktur_penerimaan)
+		->where(function ($query) use ($request) {
+
+			$query->orWhere('barangs.nama_barang', 'LIKE', '%'. $request->search . '%')
+			->orWhere('barangs.kode_barang', 'LIKE', '%'. $request->search . '%');
+
+		})->orderBy('detail_penerimaan_produks.id_detail_penerimaan', 'desc')->paginate(10);
+
+		$array_penerimaan = [];
+		foreach ($data_detailPenerimaan as $detail_penerimaan) {
+			array_push($array_penerimaan, [
+				'detail_penerimaan'=> $detail_penerimaan,
+				'nama_produk'=> $detail_penerimaan->NamaProduk,
+				]);
+		}
+
+		$url     = '/penerimaan-produk/view-detail-penerimaan-produk';
+        //DATA PAGINATION
+		$respons = $this->dataPagination($data_detailPenerimaan, $array_penerimaan, $url, $penerimaan->no_faktur_penerimaan);
+
 
 		return response()->json($respons);
 	}

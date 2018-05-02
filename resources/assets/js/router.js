@@ -201,6 +201,7 @@ import PembelianOrderDetail from './components/pembelian_order/PembelianOrderDet
 // PENERIMAAN PRODUK
 import PenerimaanProdukIndex from './components/penerimaan_produk/PenerimaanProdukIndex.vue';
 import PenerimaanProdukCreate from './components/penerimaan_produk/PenerimaanProdukCreate.vue';
+import PenerimaanProdukDetail from './components/penerimaan_produk/PenerimaanProdukDetail.vue';
 
 // SETTING FIXEL
 import SettingFixel from './components/setting_pixel/SettingFixel.vue';
@@ -851,6 +852,10 @@ const routes = [{
         path: '/create-penerimaan-produk', 
         component: PenerimaanProdukCreate, 
         name: 'createPenerimaanProduk'
+    },{ 
+        path: '/detail-penerimaan-produk/:id', 
+        component: PenerimaanProdukDetail, 
+        name: 'detailPenerimaanProduk'
     },{ 
         path: '/optimasi-seo', 
         component: OptimasiSeo, 
