@@ -1098,12 +1098,30 @@ methods: {
     });
   },//END METHOD EDIT TAX TBS
   selesaiPembelianOrder(){
+    this.$swal({
+      text: "Anda Yakin Ingin Menyelesaikan Transaksi Ini ?",
+      buttons: {
+        cancel: true,
+        confirm: "OK"                   
+      },
+
+    }).then((value) => {
+
+      if (!value) throw null;
+
+      this.prosesSelesaiPembelianOrder(value);
+
+    });
+  },
+  prosesSelesaiPembelianOrder(){
     var app = this;
     if (app.inputPembayaranPembelianOrder.suplier === '') {
       app.alertGagal("Silakan Pilih Suplier Terlebih Dahulu.");
       app.openSelectizeSuplier();
+    }else if (app.inputPembayaranPembelianOrder.subtotal == 0) {
+      app.alertGagal("Silakan Pilih Produk Yang Ingin Diorder Terlebih Dahulu.");
+      app.openSelectizeProduk();
     }else{
-
       var newPembelianOrder = app.inputPembayaranPembelianOrder;
       axios.post(app.url+'/update-order-pembelian', newPembelianOrder)
       .then(function (resp) {

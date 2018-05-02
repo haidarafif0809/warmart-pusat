@@ -7,6 +7,7 @@ use App\PembelianOrder;
 use App\DetailPembelianOrder;
 use App\TbsPenerimaanProduk;
 use App\DetailPenerimaanProduk;
+use App\SettingAplikasi;
 use App\PenerimaanProduk;
 use Illuminate\Support\Facades\DB;
 use Auth;
@@ -15,22 +16,22 @@ class PenerimaanProdukController extends Controller
 {
 
     // DATA PAGINTION
-	public function dataPagination($tbs_penerimaan_produks, $array, $url)
+	public function dataPagination($data_penerimaan_produks, $array, $url)
 	{
 
         //DATA PAGINATION
-		$respons['current_page']   = $tbs_penerimaan_produks->currentPage();
+		$respons['current_page']   = $data_penerimaan_produks->currentPage();
 		$respons['data']           = $array;
-		$respons['first_page_url'] = url($url . '?page=' . $tbs_penerimaan_produks->firstItem());
+		$respons['first_page_url'] = url($url . '?page=' . $data_penerimaan_produks->firstItem());
 		$respons['from']           = 1;
-		$respons['last_page']      = $tbs_penerimaan_produks->lastPage();
-		$respons['last_page_url']  = url($url . '?page=' . $tbs_penerimaan_produks->lastPage());
-		$respons['next_page_url']  = $tbs_penerimaan_produks->nextPageUrl();
+		$respons['last_page']      = $data_penerimaan_produks->lastPage();
+		$respons['last_page_url']  = url($url . '?page=' . $data_penerimaan_produks->lastPage());
+		$respons['next_page_url']  = $data_penerimaan_produks->nextPageUrl();
 		$respons['path']           = url($url);
-		$respons['per_page']       = $tbs_penerimaan_produks->perPage();
-		$respons['prev_page_url']  = $tbs_penerimaan_produks->previousPageUrl();
-		$respons['to']             = $tbs_penerimaan_produks->perPage();
-		$respons['total']          = $tbs_penerimaan_produks->total();
+		$respons['per_page']       = $data_penerimaan_produks->perPage();
+		$respons['prev_page_url']  = $data_penerimaan_produks->previousPageUrl();
+		$respons['to']             = $data_penerimaan_produks->perPage();
+		$respons['total']          = $data_penerimaan_produks->total();
         //DATA PAGINATION
 
 		return $respons;
@@ -199,6 +200,7 @@ class PenerimaanProdukController extends Controller
 
 			$penerimaan = PenerimaanProduk::create([
 				'no_faktur_penerimaan' => $no_faktur,
+				'faktur_order'		=> $request->no_faktur,
 				'suplier_id'        => $request->suplier_id,
 				'total'             => $request->subtotal,
 				'keterangan'        => $request->keterangan,
@@ -219,7 +221,6 @@ class PenerimaanProdukController extends Controller
 		}
 	}
 
-
     //PROSES BATAL TBS PENERIMAAN PRODUK
 	public function batalPenerimaanProduk(Request $request)
 	{
@@ -233,5 +234,78 @@ class PenerimaanProdukController extends Controller
 
 			return response(200);
 		}
+	}
+
+
+	public function cetakBesar($id)
+	{   
+		$warung_id = Auth::user()->id_warung;
+        //SETTING APLIKASI
+		$setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
+
+		$data_penerimaan = PenerimaanProduk::cetakPenerimaanProduk($warung_id, $id)->first();
+
+		$status_penerimaan = $data_penerimaan->Status;
+
+		$data_cetak = DetailPenerimaanProduk::cetakDetailPenerimaanProduk($warung_id, $data_penerimaan->no_faktur_penerimaan)->get();
+
+		$subtotal   = 0;
+		foreach ($data_cetak as $data_cetaks) {
+			$subtotal += $data_cetaks->subtotal;
+		}
+
+        // return $subtotal;
+		return view('penerimaan_produk.cetak_besar', ['setting_aplikasi' => $setting_aplikasi, 'detail_orders' => $data_cetak, 'data_penerimaan' => $data_penerimaan, 'status_penerimaan' => $status_penerimaan, 'subtotal' => $subtotal])->with(compact('html'));
+	}
+
+
+	public function view()
+	{
+        //SELECT SEMUA TRASNSAKSI PENERIMAAN PRODUK
+		$no_faktur = '';
+		$data_penerimaan_produk = PenerimaanProduk::dataTransaksiPenerimaanProduk()->paginate(10);
+        //PERULANGAN
+		$array_penerimaan = array();
+		foreach ($data_penerimaan_produk as $penerimaan_produk) {
+			array_push($array_penerimaan, [
+				'data'          => $penerimaan_produk,
+				'status_penerimaan'  => $penerimaan_produk->Status
+				]);
+		}
+
+		$url     = '/pembelian-order/view';
+        //DATA PAGINATION
+		$respons = $this->dataPagination($data_penerimaan_produk, $array_penerimaan, $url);
+
+		return response()->json($respons);
+	}
+
+
+    // PENCARIAN TBS PENERIMAAN PRODUK
+	public function pencarian(Request $request)
+	{
+		//SELECT SEMUA TRASNSAKSI PENERIMAAN PRODUK
+		$data_penerimaan_produk = PenerimaanProduk::dataTransaksiPenerimaanProduk()
+		->where(function ($query) use ($request) {
+
+			$query->orWhere('penerimaan_produks.no_faktur_penerimaan', 'LIKE', '%'. $request->search . '%')
+			->orWhere('penerimaan_produks.faktur_order', 'LIKE', '%'. $request->search . '%')
+			->orWhere('supliers.nama_suplier', 'LIKE', '%'. $request->search . '%');
+
+		})->orderBy('penerimaan_produks.id', 'desc')->paginate(10);
+        //PERULANGAN
+		$array_penerimaan = array();
+		foreach ($data_penerimaan_produk as $penerimaan_produk) {
+			array_push($array_penerimaan, [
+				'data'          => $penerimaan_produk,
+				'status_penerimaan'  => $penerimaan_produk->Status
+				]);
+		}
+
+		$url     = '/pembelian-order/view';
+        //DATA PAGINATION
+		$respons = $this->dataPagination($data_penerimaan_produk, $array_penerimaan, $url);
+
+		return response()->json($respons);
 	}
 }
