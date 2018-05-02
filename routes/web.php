@@ -632,6 +632,8 @@ Route::get('/penerimaan-produk/batal-penerimaan-produk', 'PenerimaanProdukContro
 Route::get('/penerimaan-produk/view', 'PenerimaanProdukController@view')->middleware('auth');
 Route::get('/penerimaan-produk/pencarian', 'PenerimaanProdukController@pencarian')->middleware('auth');
 Route::get('/penerimaan-produk/cetak-besar-penerimaan-produk/{id}', 'PenerimaanProdukController@cetakBesar')->middleware('auth');
+Route::get('/penerimaan-produk/view-detail-penerimaan-produk/{id}', 'PenerimaanProdukController@viewDetailPenerimaanProduk')->middleware('auth');
+Route::get('/penerimaan-produk/pencarian-detail-penerimaan/{id}', 'PenerimaanProdukController@pencarianDetailPenerimaanProduk')->middleware('auth');
 // PENERIMAAN PRODUK
 
 //menampilkan seetting pengiriman
