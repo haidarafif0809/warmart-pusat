@@ -52,7 +52,7 @@
                                         </td> 
                                     </tr>
                                     <tr>
-                                        <td width="10%"><img src="image/pixelfacebook.png" style="width: 30%"> </td>
+                                        <td width="10%"><img src="image/facebook_pixel.png" style="width: 30%"> </td>
                                         <td width="10%">
                                             <a href="#setting-fixel" v-on:click="settingFixel('Facebook')">{{fixel.facebook}}</a>
                                         </td> 
