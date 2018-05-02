@@ -119,7 +119,7 @@
                 <button type="button" class="close"  v-on:click="closeModalJumlahProduk()" v-shortkey.push="['f9']" @shortkey="closeModalJumlahProduk()"> &times;</button> 
               </div>
 
-              <form class="form-horizontal" v-on:submit.prevent="submitJumlahProduk(inputTbsPembelianOrder.id_produk,inputTbsPembelianOrder.jumlah_produk,inputTbsPembelianOrder.harga_produk,inputTbsPembelianOrder.nama_produk,inputTbsPembelianOrder.satuan_produk)"> 
+              <form class="form-horizontal" v-on:submit.prevent="submitJumlahProduk(inputTbsPembelianOrder.id_produk,inputTbsPembelianOrder.jumlah_produk,inputTbsPembelianOrder.harga_produk,inputTbsPembelianOrder.nama_produk,inputTbsPembelianOrder.satuan_produk, inputTbsPembelianOrder.no_faktur)"> 
                 <div class="modal-body">
                   <h3 class="text-center"><b>{{inputTbsPembelianOrder.nama_produk}}</b></h3>
 
@@ -266,7 +266,7 @@
                     </tr>
                   </tbody>          
                   <tbody class="data-tidak-ada"  v-else-if="tbs_pembelian_orders.length == 0 && loading == false" >
-                    <tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
+                    <tr ><td colspan="8"  class="text-center">Tidak Ada Data</td></tr>
                   </tbody>
                 </table>  
 
@@ -323,7 +323,7 @@
                       <button type="button" class="btn btn-success btn-footer" id="bayar" v-on:click="selesaiPembelianOrder()" v-shortkey.push="['f2']" @shortkey="selesaiPembelianOrder()"><font style="font-size:15px;">Bayar(F2)</font></button>
                     </div>
                     <div class="col-md-5 col-xs-5">
-                      <button type="submit" class="btn btn-danger btn-footer" id="btnBatal" v-on:click="batalPembelian()" v-shortkey.push="['f3']" @shortkey="batalPembelian()"> <font style="font-size:15px;">Batal(F3) </font></button>
+                      <button type="submit" class="btn btn-danger btn-footer" id="btnBatal" v-on:click="batalEditPembelianOrder()" v-shortkey.push="['f3']" @shortkey="batalEditPembelianOrder()"> <font style="font-size:15px;">Batal(F3) </font></button>
                     </div>
                   </div>
                 </div>
@@ -362,12 +362,15 @@
           jumlah_produk : '',
           harga_produk : '',
           id_tbs : '',
-          satuan_produk: ''
+          satuan_produk: '',
+          no_faktur: ''
         },
         inputPembayaranPembelianOrder:{
           subtotal: 0,
           suplier: '',
-          keterangan: ''
+          keterangan: '',
+          no_faktur_order: '',
+          id_order: ''
         },
         tambahSuplier: {
           nama_suplier : '',
@@ -460,7 +463,7 @@ methods: {
     }
     axios.get(app.url+'/view-edit-tbs-pembelian/'+app.id_order+'?page='+page)
     .then(function (resp) {
-      console.log(resp.data.data)
+      app.tbs_pembelian_orders = resp.data.data;
       app.tbs_pembelian_orders = resp.data.data;
       app.tbsPembelianData = resp.data;       
       app.loading = false;
@@ -478,7 +481,6 @@ methods: {
 
     })
     .catch(function (resp) {
-      console.log(resp);
       app.loading = false;
       app.seen = true;
       alert("Tidak Dapat Memuat Pembelian");
@@ -489,11 +491,14 @@ methods: {
 
     axios.get(app.url+'/data-pembelian-order/'+id)
     .then(function (resp) {
+      console.log(resp.data)
       app.inputPembayaranPembelianOrder.suplier = resp.data.suplier_id
       app.inputPembayaranPembelianOrder.keterangan = resp.data.keterangan
+      app.inputPembayaranPembelianOrder.no_faktur_order = resp.data.no_faktur_order
+      app.inputPembayaranPembelianOrder.id_order = resp.data.id
+      app.inputTbsPembelianOrder.no_faktur = resp.data.no_faktur_order
     })
     .catch(function (resp) {
-      console.log(resp);
       alert("Tidak Dapat Memuat Pembelian Order");
     });
 
@@ -525,7 +530,6 @@ methods: {
       }
     })
     .catch(function (resp) {
-      console.log(resp);
       alert("Tidak Dapat Memuat Satuan Produk");
     });
   },    
@@ -542,7 +546,6 @@ methods: {
       app.seen = true;
     })
     .catch(function (resp) {
-      console.log(resp);
       alert("Tidak Dapat Memuat Pembelian");
     });
   }, //END FUNGSI UNTUK PAGINATION SEARCH     
@@ -661,7 +664,7 @@ methods: {
     $("#modalJumlahProduk").show();
     app.$refs.jumlah_produk.focus();
   },
-  submitJumlahProduk(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk){
+  submitJumlahProduk(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk, no_faktur_order){
     var app = this
     var produk = app.inputTbsPembelianOrder.produk.split("|");
     var harga_tbs = $(".harga-"+produk[0]).attr("data-harga")
@@ -688,14 +691,14 @@ methods: {
       })
 
     }else if (harga != harga_produk) {
-      app.konfirmasiPerubahanHarga(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk)
+      app.konfirmasiPerubahanHarga(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk, no_faktur_order)
     }else{
       var status_harga = 0;
-      app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk,status_harga)
+      app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk,status_harga, no_faktur_order)
     }
 
   },//END PROSES TAMBAH PRODUK TBS
-  konfirmasiPerubahanHarga(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk){
+  konfirmasiPerubahanHarga(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk, no_faktur_order){
     let app = this
     app.$swal({
       text: "Anda Yakin Ingin Merubah Harga Beli Produk "+titleCase(nama_produk)+ " ?",
@@ -707,19 +710,19 @@ methods: {
     }).then((value) => {
       if (value) {
   var status_harga = 1; // jika master produk, juga diubah
-  app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk,status_harga);
+  app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk,status_harga, no_faktur_order);
 } else {
   var status_harga = 0; // jika master produk, tidak diubah
-  app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk,status_harga);
+  app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk,status_harga, no_faktur_order);
 }
 });
   },
-  prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk,status_harga){
+  prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk,status_harga, no_faktur_order){
 
     var app = this;
     var satuan = satuan_produk.split("|");
     app.loading = true;
-    axios.get(app.url+'/proses-tambah-tbs-pembelian?id_produk_tbs='+id_produk+'&jumlah_produk='+jumlah_produk+'&harga_produk='+harga_produk+'&satuan='+satuan[0]+'&satuan_dasar='+satuan[2]+'&status_harga='+status_harga)
+    axios.get(app.url+'/proses-tambah-edit-tbs-pembelian?id_produk_tbs='+id_produk+'&jumlah_produk='+jumlah_produk+'&harga_produk='+harga_produk+'&satuan='+satuan[0]+'&satuan_dasar='+satuan[2]+'&status_harga='+status_harga+'&no_faktur_order='+no_faktur_order)
     .then(function (resp) {
       $("#modalJumlahProduk").hide();
       app.alert("Menambahkan Produk "+titleCase(nama_produk));
@@ -739,6 +742,7 @@ methods: {
       app.inputTbsPembelianOrder.harga_produk = ''
       app.inputTbsPembelianOrder.jumlah_produk = ''
       app.inputTbsPembelianOrder.produk = ''
+      app.inputTbsPembelianOrder.no_faktur = ''
 
     })
     .catch(function (resp) {
@@ -841,7 +845,6 @@ methods: {
 
       })
       .catch(function (resp) {
-        console.log(resp);                  
         app.loading = false;
         alert("Tidak Dapat Mengubah Satuan");
       });
@@ -1095,14 +1098,32 @@ methods: {
     });
   },//END METHOD EDIT TAX TBS
   selesaiPembelianOrder(){
+    this.$swal({
+      text: "Anda Yakin Ingin Menyelesaikan Transaksi Ini ?",
+      buttons: {
+        cancel: true,
+        confirm: "OK"                   
+      },
+
+    }).then((value) => {
+
+      if (!value) throw null;
+
+      this.prosesSelesaiPembelianOrder(value);
+
+    });
+  },
+  prosesSelesaiPembelianOrder(){
     var app = this;
     if (app.inputPembayaranPembelianOrder.suplier === '') {
       app.alertGagal("Silakan Pilih Suplier Terlebih Dahulu.");
       app.openSelectizeSuplier();
+    }else if (app.inputPembayaranPembelianOrder.subtotal == 0) {
+      app.alertGagal("Silakan Pilih Produk Yang Ingin Diorder Terlebih Dahulu.");
+      app.openSelectizeProduk();
     }else{
-
       var newPembelianOrder = app.inputPembayaranPembelianOrder;
-      axios.post(app.url, newPembelianOrder)
+      axios.post(app.url+'/update-order-pembelian', newPembelianOrder)
       .then(function (resp) {
         app.message = 'Berhasil Menambah Order Pembelian';
         app.alert(app.message);
@@ -1111,6 +1132,7 @@ methods: {
         app.inputPembayaranPembelianOrder.subtotal = 0
         app.getResults();
         window.open('pembelian-order/cetak-besar-pembelian-order/'+resp.data.respons_pembelian,'_blank');
+        app.$router.replace('/order-pembelian');
       })
       .catch(function (resp) {
         app.success = false;
@@ -1118,7 +1140,7 @@ methods: {
 
     }
   },
-  batalPembelian(){
+  batalEditPembelianOrder(){
     var app = this;
     app.$swal({
       text: "Anda Yakin Ingin Membatalkan Transaksi Pembelian Ini ?",
@@ -1129,7 +1151,7 @@ methods: {
       if (willDelete) {
 
         app.loading = true;
-        axios.post(app.url+'/batal-transaksi-pembelian')
+        axios.get(app.url+'/batal-transaksi-edit-pembelian-order?no_faktur_order='+app.inputTbsPembelianOrder.no_faktur)
         .then(function (resp) {
 
           var subtotal = parseInt(app.inputPembayaranPembelianOrder.subtotal) - parseInt(resp.data.subtotal)

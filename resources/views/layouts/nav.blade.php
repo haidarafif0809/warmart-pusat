@@ -384,7 +384,7 @@
         <li>
             <router-link :to="{name: 'indexLaporanHutangBeredar'}" class="menu-nav">
                 <span class="sidebar-mini">
-                    LHB
+                    LH
                 </span>
                 <span class="sidebar-normal">
                     Laporan Hutang
@@ -675,10 +675,10 @@
             <li>
                 <router-link :to="{name: 'settingFixelIndex'}" class="menu-nav">
                     <span class="sidebar-mini">
-                        SF
+                        SP
                     </span>
                     <span class="sidebar-normal">
-                        Setting Fixel
+                        Setting Pixel & Analytics
                     </span>
                 </router-link>
             </li>

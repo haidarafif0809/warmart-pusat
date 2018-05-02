@@ -47,7 +47,8 @@
 
         <ul class="breadcrumb"> 
           <li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li> 
-          <li class="active">Penerimaan Produk</li> 
+          <li><router-link :to="{name: 'indexPenerimaanProduk'}">Penerimaan Produk</router-link></li> 
+          <li class="active">Form Penerimaan Produk</li> 
         </ul>
 
         <!-- small modal -->
@@ -479,6 +480,22 @@
             }
           },
           selesaiPenerimaanProduk(){
+            this.$swal({
+              text: "Anda Yakin Ingin Menyelesaikan Transaksi Ini ?",
+              buttons: {
+                cancel: true,
+                confirm: "OK"                   
+              },
+
+            }).then((value) => {
+
+              if (!value) throw null;
+
+              this.prosesSelesaiPenerimaanProduk(value);
+
+            });
+          },
+          prosesSelesaiPenerimaanProduk(){
             var app = this;
 
             var newPenerimaanProduk = app.inputPembayaranPenerimaanProduk;
@@ -503,7 +520,7 @@
                 app.message = 'Berhasil Menerima Produk Supplier '+newPenerimaanProduk.suplier;
                 app.alert(app.message);
                 app.$store.dispatch('LOAD_SUPLIER_ORDER_LIST');
-                // window.open('pembelian-order/cetak-besar-order-pembelian/'+resp.data.respons_pembelian,'_blank');
+                window.open('penerimaan-produk/cetak-besar-penerimaan-produk/'+resp.data.respons_pembelian,'_blank');
               })
               .catch(function (resp) {
                 app.success = false;

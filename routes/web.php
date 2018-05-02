@@ -181,6 +181,9 @@ Route::get('/hitung-ongkir', [
 //BATAL PESANAN PELANGGAN
 Route::get('batal-pesanan-pelanggan/{id}', 'PesananPelangganController@batalPesananPelanggan')->middleware('auth');
 
+// CEK BATAS WAKTU TRANSFER
+Route::get('/cek-batas-waktu-transfer', 'PesananPelangganController@cekBatasWaktuTransfer');
+
 //LANJUTKAN PESANAN PELANGGAN
 Route::get('lanjut-pesanan-pelanggan/{id}', 'PesananPelangganController@lanjutPesananPelanggan')->middleware('auth');
 
@@ -535,7 +538,6 @@ Route::get('/pesanan-diselesaikan/{id_pesanan}', 'PesananWarungController@pesana
 Route::get('/batalkan-konfirmasi-pesanan-warung/{id}', 'PesananWarungController@batalkanKonfirmasiPesananWarung')->middleware('auth');
 Route::get('/batalkan-pesanan-warung/{id}', 'PesananWarungController@batalkanPesananWarung')->middleware('auth');
 Route::post('/selesai-konfirmasi-pesanan-warung', 'PesananWarungController@selesaiKonfirmasiPesananWarung')->middleware('auth');
-Route::get('/cek-batas-waktu-transfer', 'PesananWarungController@cekBatasWaktuTransfer');
 
 //PEMBELIAN  VUE JS
 Route::get('/pembelian/view', 'PembelianController@view')->middleware('auth');
@@ -611,6 +613,11 @@ Route::post('/pembelian-order/edit-satuan-edit-tbs-pembelian', 'PembelianOrderCo
 Route::get('/pembelian-order/cek-potongan-persen', 'PembelianOrderController@potonganPersen')->middleware('auth');
 Route::get('/pembelian-order/proses-edit-potongan-edit-tbs-pembelian', 'PembelianOrderController@editPotonganEditTbsPembelianOrder')->middleware('auth');
 Route::delete('/pembelian-order/hapus-edit-tbs-pembelian/{id}', 'PembelianOrderController@hapusEditTbsPembelian')->middleware('auth');
+Route::get('/pembelian-order/proses-tambah-edit-tbs-pembelian', 'PembelianOrderController@prosesTambahEditTbsPembelianOrder')->middleware('auth');
+Route::get('/pembelian-order/proses-edit-tax-edit-tbs-pembelian', 'PembelianOrderController@editTaxEditTbsPembelianOrder')->middleware('auth');
+Route::get('/pembelian-order/batal-transaksi-edit-pembelian-order', 'PembelianOrderController@batalEditPembelianOrder')->middleware('auth');
+Route::post('/pembelian-order/update-order-pembelian', 'PembelianOrderController@updatePembelianOrder')->middleware('auth');
+
 
 // PEMBELIAN ORDER
 
@@ -621,7 +628,13 @@ Route::get('/penerimaan-produk/view-tbs-penerimaan-produk', 'PenerimaanProdukCon
 Route::get('/penerimaan-produk/pencarian-tbs-penerimaan-produk', 'PenerimaanProdukController@pencarianTbsPenerimaanProduk')->middleware('auth');
 Route::get('/penerimaan-produk/proses-tbs-penerimaan-produk', 'PenerimaanProdukController@prosesTbsPenerimaanProduk')->middleware('auth');
 Route::get('/penerimaan-produk/batal-penerimaan-produk', 'PenerimaanProdukController@batalPenerimaanProduk')->middleware('auth');
-Route::get('/pembelian-order/proses-edit-tax-edit-tbs-pembelian', 'PembelianOrderController@editTaxEditTbsPembelianOrder')->middleware('auth');
+
+Route::get('/penerimaan-produk/view', 'PenerimaanProdukController@view')->middleware('auth');
+Route::get('/penerimaan-produk/pencarian', 'PenerimaanProdukController@pencarian')->middleware('auth');
+Route::get('/penerimaan-produk/cetak-besar-penerimaan-produk/{id}', 'PenerimaanProdukController@cetakBesar')->middleware('auth');
+Route::get('/penerimaan-produk/view-detail-penerimaan-produk/{id}', 'PenerimaanProdukController@viewDetailPenerimaanProduk')->middleware('auth');
+Route::get('/penerimaan-produk/pencarian-detail-penerimaan/{id}', 'PenerimaanProdukController@pencarianDetailPenerimaanProduk')->middleware('auth');
+Route::get('/penerimaan-produk/proses-edit-penerimaan-produk/{id}', 'PenerimaanProdukController@prosesEditPenerimaanProduk')->middleware('auth');
 
 // PENERIMAAN PRODUK
 
@@ -977,6 +990,8 @@ Route::get('/user-kasir/pencarian', 'UserKasirController@pencarian')->middleware
 
 // LAPORAN BUCKET SIZE VUE.JS
 Route::get('/laporan-bucket-size/view/{dari_tanggal}/{sampai_tanggal}/{kelipatan}', 'LaporanBucketSizeController@prosesLaporanBucketSize')->middleware('auth');
+Route::get('/laporan-bucket-size/view-new-bucket-size/{dari_tanggal}/{sampai_tanggal}/{kelipatan}', 'LaporanBucketSizeController@newBucketSize')->middleware('auth');
+Route::get('/laporan-bucket-size/view-new-bucket-size-online/{dari_tanggal}/{sampai_tanggal}/{kelipatan}', 'LaporanBucketSizeController@newBucketSizeOnline')->middleware('auth');
 Route::get('/laporan-bucket-size-online/view/{dari_tanggal}/{sampai_tanggal}/{kelipatan}', 'LaporanBucketSizeController@prosesLaporanBucketSizeOnline')->middleware('auth');
 Route::post('/laporan-bucket-size/view-pos-data', 'LaporanBucketSizeController@prosesLaporanBucketSizeData')->middleware('auth');
 Route::post('/laporan-bucket-size/view-online-data', 'LaporanBucketSizeController@prosesLaporanBucketSizeOnlineData')->middleware('auth');

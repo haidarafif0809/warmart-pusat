@@ -1112,4 +1112,141 @@ class PembelianOrderController extends Controller
         }
     }
 
+    //PROSES TAMBAH TBS PEMBELIAN ORDER
+    public function prosesTambahEditTbsPembelianOrder(Request $request)
+    {
+
+        if (Auth::user()->id_warung == '') {
+            Auth::logout();
+            return response()->view('error.403');
+        } else {
+
+            $session_id = session()->getId();
+            $data_tbs   = EditTbsPembelianOrder::where('id_produk', $request->id_produk_tbs)
+            ->where('session_id', $session_id)->where('no_faktur_order', $request->no_faktur_order)->where('warung_id', Auth::user()->id_warung);
+
+            if ($data_tbs->count() > 0) {
+
+                $subtotal_lama = $data_tbs->first()->subtotal;
+
+                $jumlah_produk = $data_tbs->first()->jumlah_produk + $request->jumlah_produk;
+
+                $subtotal_edit = ($jumlah_produk * $request->harga_produk) - $data_tbs->first()->potongan;
+
+                $data_tbs->update(['jumlah_produk' => $jumlah_produk, 'subtotal' => $subtotal_edit, 'harga_produk' => $request->harga_produk, 'satuan_id' => $request->satuan, 'satuan_dasar' => $request->satuan_dasar]);
+
+                $subtotal = $jumlah_produk * $request->harga_produk;
+
+                $respons['status']        = 1;
+                $respons['subtotal_lama'] = $subtotal_lama;
+                $respons['subtotal']      = $subtotal;
+                return response()->json($respons);
+
+            } else {
+
+                $barang = Barang::select('nama_barang', 'satuan_id')->where('id', $request->id_produk_tbs)->where('id_warung', Auth::user()->id_warung)->first();
+                // SUBTOTAL = JUMLAH * HARGA
+                $subtotal = $request->jumlah_produk * $request->harga_produk;
+                // INSERT TBS PEMBELIAN
+                $Insert_tbspembelian = EditTbsPembelianOrder::create([
+                    'id_produk'     => $request->id_produk_tbs,
+                    'no_faktur_order' => $request->no_faktur_order,
+                    'session_id'    => $session_id,
+                    'jumlah_produk' => $request->jumlah_produk,
+                    'harga_produk'  => $request->harga_produk,
+                    'subtotal'      => $subtotal,
+                    'satuan_id'     => $request->satuan,
+                    'satuan_dasar'  => $request->satuan_dasar,
+                    'status_harga'  => $request->status_harga,
+                    'warung_id'     => Auth::user()->id_warung,
+                    ]);
+
+                $respons['status']   = 0;
+                $respons['subtotal'] = $subtotal;
+
+                return response()->json($respons);
+
+            }
+
+        }
+    }
+
+    //PROSES BATAL EDIT TBS PEMBELIAN ORDER
+    public function batalEditPembelianOrder(Request $request)
+    {
+
+        if (Auth::user()->id_warung == '') {
+            Auth::logout();
+            return response()->view('error.403');
+        } else {
+            $data_tbs_pembelian = EditTbsPembelianOrder::where('no_faktur_order', $request->no_faktur_order)->where('warung_id', Auth::user()->id_warung)->delete();
+
+            return response(200);
+        }
+    }
+
+
+    public function updatePembelianOrder(Request $request)
+    {
+        if (Auth::user()->id_warung == '') {
+            Auth::logout();
+            return response()->view('error.403');
+        } else {
+            //START TRANSAKSI
+            DB::beginTransaction();
+            $warung_id  = Auth::user()->id_warung;
+            $session_id = session()->getId();
+            $user       = Auth::user()->id;
+            $no_faktur  = $request->no_faktur_order;
+
+            $data_detail_pembelian = DetailPembelianOrder::where('no_faktur_order', $no_faktur)->where('warung_id', Auth::user()->id_warung)->get();
+
+            //HAPUS DETAIL PEMBELIAN ORDER
+            foreach ($data_detail_pembelian as $data_detail) {
+
+                if (!$hapus_detail = DetailPembelianOrder::destroy($data_detail->id_detail_pembelian_order)) {
+                    //DI BATALKAN PROSES NYA
+                    DB::rollBack();
+                }
+            }
+
+
+            //INSERT DETAIL PEMBELIAN
+            $data_produk_pembelian_order = EditTbsPembelianOrder::where('no_faktur_order', $no_faktur)->where('warung_id', $warung_id);
+
+            // INSERT DETAIL PEMBELIAN
+            foreach ($data_produk_pembelian_order->get() as $data_tbs_pembelian_order) {
+
+                $detail_pembelian = DetailPembelianOrder::create([
+                    'no_faktur_order'  => $no_faktur,
+                    'id_produk'        => $data_tbs_pembelian_order->id_produk,
+                    'jumlah_produk'    => $data_tbs_pembelian_order->jumlah_produk,
+                    'satuan_id'        => $data_tbs_pembelian_order->satuan_id,
+                    'satuan_dasar'     => $data_tbs_pembelian_order->satuan_dasar,
+                    'harga_produk'     => $data_tbs_pembelian_order->harga_produk,
+                    'subtotal'         => $data_tbs_pembelian_order->subtotal,
+                    'tax'              => $data_tbs_pembelian_order->tax,
+                    'potongan'         => $data_tbs_pembelian_order->potongan,
+                    'status_harga'     => $data_tbs_pembelian_order->status_harga,
+                    'warung_id'        => $warung_id,
+                    ]);
+            }
+
+            $update_pembelian = PembelianOrder::find($request->id_order)->update([
+                'suplier_id'        => $request->suplier,
+                'total'             => $request->subtotal,
+                'keterangan'        => $request->keterangan,
+                ]);
+
+
+            //HAPUS TBS PEMBELIAN ORDER
+            $data_produk_pembelian_order->delete();
+            DB::commit();
+
+            $respons['respons_pembelian'] = $request->id_order;
+            return response()->json($respons);
+
+        }
+    }
+
 }
