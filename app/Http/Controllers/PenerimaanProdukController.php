@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\PembelianOrder;
 use App\DetailPembelianOrder;
 use App\TbsPenerimaanProduk;
+use App\EditTbsPenerimaanProduk;
 use App\DetailPenerimaanProduk;
 use App\SettingAplikasi;
 use App\PenerimaanProduk;
@@ -367,5 +368,49 @@ class PenerimaanProdukController extends Controller
 
 
 		return response()->json($respons);
+	}
+
+
+	public function destroy($id)
+	{
+		if (Auth::user()->id_warung == '') {
+			Auth::logout();
+			return response()->view('error.403');
+		} else {
+			if (!PenerimaanProduk::destroy($id)) {
+				return 0;
+			} else {
+				return response(200);
+			}
+		}
+	}
+
+
+	public function prosesEditPenerimaanProduk($id)
+	{
+		$session_id            = session()->getId();
+		$penerimaan_produk       = PenerimaanProduk::find($id);
+		$detail_pembelian_orders = DetailPenerimaanProduk::where('no_faktur_penerimaan', $penerimaan_produk->no_faktur_penerimaan)->where('warung_id', Auth::user()->id_warung);
+
+		$hapus_semua_edit_tbs_pembelian = EditTbsPenerimaanProduk::where('no_faktur_penerimaan', $penerimaan_produk->no_faktur_penerimaan)->where('warung_id', Auth::user()->id_warung)
+		->delete();
+
+		foreach ($detail_pembelian_orders->get() as $data_tbs) {
+			EditTbsPenerimaanProduk::create([
+				'session_id'        => $session_id,
+				'no_faktur_penerimaan'	=> $data_tbs->no_faktur_penerimaan,
+				'id_produk'         => $data_tbs->id_produk,
+				'jumlah_produk'     => $data_tbs->jumlah_produk,
+				'satuan_id'         => $data_tbs->satuan_id,
+				'satuan_dasar'      => $data_tbs->satuan_dasar,
+				'harga_produk'      => $data_tbs->harga_produk,
+				'subtotal'          => $data_tbs->subtotal,
+				'tax'               => $data_tbs->tax,
+				'potongan'          => $data_tbs->potongan,
+				'status_harga'      => $data_tbs->status_harga,
+				'warung_id'         => $data_tbs->warung_id,
+				]);
+		}
+		return response(200);
 	}
 }
