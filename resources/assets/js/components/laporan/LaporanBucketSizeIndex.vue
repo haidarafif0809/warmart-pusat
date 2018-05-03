@@ -15,6 +15,56 @@
 				<li class="active">Laporan Bucket Size</li>
 			</ul>
 
+
+			<!-- MODAL DETAIL PELANGGAN -->
+
+			<div class="modal" id="modal_detail_pelanggan" role="dialog" data-backdrop=""> 
+				<div class="modal-dialog"> 
+					<!-- Modal content--> 
+					<div class="modal-content"> 
+						<div class="modal-header"> 
+							<button type="button" class="close" v-on:click="closeModal()"> <i class="material-icons">close</i></button> 
+							<h4 class="modal-title"> 
+								<div class="alert-icon"> 
+									<b>{{detailPelanggan.name}}</b> 
+								</div> 
+							</h4> 
+						</div> 
+						<form class="form-horizontal" > 
+							<div class="modal-body"> 
+								<div class="table-responsive">
+									<table class="table table-striped table-hover" style="margin-bottom:10px; margin-top:10px; margin-right:10px; margin-left:10px;">
+
+										<tbody style="margin-bottom:10px; margin-top:10px; margin-right:10px; margin-left:10px;">
+											<tr>
+												<td class="text-primary"><b># No. Telpon </b> </td>
+												<td class="text-primary"><b>: {{detailPelanggan.no_telp}} </b> </td>
+											</tr>
+											<tr>
+												<td class="text-primary"><b># Email </b> </td>
+												<td class="text-primary"><b>: {{detailPelanggan.email}} </b> </td>
+											</tr>
+											<tr>
+												<td class="text-primary"><b># Tanggal Lahir </b> </td>
+												<td class="text-primary"><b>: {{detailPelanggan.tgl_lahir}} </b> </td>
+											</tr>
+											<tr>
+												<td class="text-primary"><b># Alamat </b> </td>
+												<td class="text-primary"><b>: {{detailPelanggan.alamat}} </b> </td>
+											</tr>
+										</tbody>
+									</table>  
+								</div>
+							</div>
+							<div class="modal-footer">  
+								<button type="button" class="btn btn-default btn-sm"  v-on:click="closeModal()">Tutup</button>
+							</div> 
+						</form>
+					</div>       
+				</div> 
+			</div> 
+			<!-- / MODAL DETAIL PELANGGAN --> 
+
 			<!-- small modal -->
 			<div class="modal" id="modalPelanggan" role="dialog" tabindex="-1"  aria-labelledby="myModalLabel" aria-hidden="true" >
 				<div class="modal-dialog modal-medium">
@@ -29,25 +79,35 @@
 						</div>
 						<div class="modal-body"> 
 
-							<div class=" table-responsive">
+							<div class="table-responsive">
 								<table class="table table-striped table-hover">
-									<thead class="text-primary">
+									<thead class="text-info">
 										<tr>
 											<th>Nama Pelanggan</th>
 											<th class="text-right">Total Belanja</th>
+											<th class="text-center">Produk</th>
 										</tr>
 									</thead>
 									<tbody>
 										<tr v-for="pelanggan, index in dataPelanggan">
 											<td v-if="pelanggan.pelanggan_id == 0">Umum</td>
-											<td v-else>{{ pelanggan.pelanggan.name  }}</td>
+											<td v-else>
+												<a href="#laporan-bucket-size" v-on:click="cekDetailPelanggan(pelanggan.pelanggan)">{{ pelanggan.pelanggan.name  }} </a>
+											</td>
 											<td align="right">{{ pelanggan.total | pemisahTitik }}</td>
+											<td align="center">
+												<router-link :to="{name: 'detailPenjualan', params: {id: pelanggan.id}}" class="btn btn-xs btn-info" target="_blank"> 
+												Lihat </router-link>
+											</td>
 										</tr>
 									</tbody>    
 								</table>
 							</div><!--RESPONSIVE-->
 							<center><button type="button" class="btn btn-xs btn-info" v-on:click="loadMore(dataPelanggan.length)" v-if="loadMoreLength > dataPelanggan.length">Load More... <i class="material-icons">keyboard_arrow_down</i></button></center>
 						</div>
+						<div class="modal-footer">  
+							<button type="button" class="btn btn-default btn-sm"  v-on:click="closeModalPelanggan()">Tutup</button>
+						</div> 
 
 					</div>
 				</div>
@@ -236,6 +296,7 @@ export default {
 			laporanBucketSize: [],
 			laporanBucketSizeOnline: [],
 			dataPelanggan : [],
+			detailPelanggan : {},
 			filter: {
 				dari_tanggal: '',
 				sampai_tanggal: new Date(),
@@ -425,6 +486,17 @@ export default {
 			}
 			console.log(app.dataPelanggan.length);
 			console.log(length,limit);
+		},
+		cekDetailPelanggan(data){
+			let app = this;
+			app.detailPelanggan = data;
+			console.log(app.detailPelanggan);
+			$("#modalPelanggan").hide(); 
+			$("#modal_detail_pelanggan").show(); 
+		},
+		closeModal(){
+			$("#modal_detail_pelanggan").hide(); 
+			$("#modalPelanggan").show(); 
 		},
 		showButton() { 
 			var app = this; 
