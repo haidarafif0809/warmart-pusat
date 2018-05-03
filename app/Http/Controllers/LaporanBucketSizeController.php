@@ -41,13 +41,16 @@ class LaporanBucketSizeController extends Controller
 
         $total_faktur = [];
         $nested_array = [];
+        $data = [];
         for ($i=1; $i <= $jumlahKelipatan; $i++) { 
 
             $data_kelipatan = ($i * $kelipatan);
-            $total_faktur_kelipatan = PenjualanPos::countFaktur($request)->whereBetween('total', array($satu, $data_kelipatan))->first()->no_faktur;
-            if ($total_faktur_kelipatan != 0) {
+            $faktur_penjualan = PenjualanPos::with('pelanggan')->countFaktur($request)->whereBetween('total', array($satu, $data_kelipatan));
+            if ($faktur_penjualan->count() != 0) {
+
                 $respons['labels'][]    = $data_kelipatan / 1000 . " k";
-                array_push($nested_array, $total_faktur_kelipatan);
+                array_push($data,$faktur_penjualan->get());
+                array_push($nested_array, $faktur_penjualan->count());
             }
 
             $satu += $request->kelipatan;
@@ -55,6 +58,7 @@ class LaporanBucketSizeController extends Controller
 
         array_push($total_faktur,$nested_array);
         $respons['series'] = $total_faktur;
+        $respons['data'] = $data;
 
         if ($agent->isMobile()) {
             $respons['agent'] = false;
@@ -76,19 +80,22 @@ class LaporanBucketSizeController extends Controller
 
         $total_faktur = [];
         $nested_array = [];
+        $data = [];
         for ($i=1; $i <= $jumlahKelipatan; $i++) { 
 
             $data_kelipatan = ($i * $kelipatan);
-            $total_faktur_kelipatan = Penjualan::countFaktur($request)->whereBetween('total', array($satu, $kelipatan))->first()->id_pesanan;
-            if ($total_faktur_kelipatan != 0) {
+            $faktur_penjualan = Penjualan::with('pelanggan')->countFaktur($request)->whereBetween('total', array($satu, $kelipatan));
+            if ($faktur_penjualan->count() != 0) {
                 $respons['labels'][]    = $data_kelipatan / 1000 . " k";
-                array_push($nested_array, $total_faktur_kelipatan);
+                array_push($data,$faktur_penjualan->get());
+                array_push($nested_array, $faktur_penjualan->count());
             }
 
             $satu += $request->kelipatan;
         } 
 
         array_push($total_faktur,$nested_array);
+        $respons['data'] = $data;
         $respons['series'] = $total_faktur;
 
         if ($agent->isMobile()) {

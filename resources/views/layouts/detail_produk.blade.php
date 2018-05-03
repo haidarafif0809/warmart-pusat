@@ -173,7 +173,11 @@ $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description']
   .img-jasa{
     padding: 0px 2px 2px;
   }
-
+.zoom:hover {
+    -ms-transform: scale(1.5); /* IE 9 */
+    -webkit-transform: scale(1.5); /* Safari 3-8 */
+    transform: scale(1.5); 
+}
 </style>
 <body class="product-page">
   @if(Agent::isMobile())
@@ -430,51 +434,51 @@ $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description']
               <div class="tab-content">
                             <div class="tab-pane active" id="product-page1">
                                   @if(isset($barang->foto))
-                                 {!! Html::image(asset('foto_produk/'.$barang->foto)) !!}
+                                <img  class="zoom" src="{{asset('foto_produk/'.$barang->foto.'')}}" /></a>
                                  @else
-                                 {!! Html::image(asset('image/foto_default.png')) !!}
+                                <img src="{{asset('image/foto_default.png')}}" /></a>
                                  @endif
                               </div>
-                              <div class="tab-pane" id="product-page2">
+                              <div class="tab-pane " id="product-page2">
                                   @if(isset($barang->foto_2))
-                                 {!! Html::image(asset('foto_produk/'.$barang->foto_2)) !!}
+                                 <img  class="zoom" src="{{asset('/foto_produk/'.$barang->foto_2.'')}}" /></a>
                                  @else
-                                 {!! Html::image(asset('image/foto_default.png')) !!}
+                                 <img src="{{asset('image/foto_default.png')}}" /></a>
                                  @endif
                              </div>
-                              <div class="tab-pane" id="product-page3">
+                              <div class="tab-pane " id="product-page3">
                                  @if(isset($barang->foto_3))
-                                 {!! Html::image(asset('foto_produk/'.$barang->foto_3)) !!}
+                                 <img  class="zoom" src="{{asset('/foto_produk/'.$barang->foto_3.'')}}" /></a>
                                  @else
-                                 {!! Html::image(asset('image/foto_default.png')) !!}
+                                 <img src="{{asset('image/foto_default.png')}}" /></a>
                                  @endif
                               </div>
                         </div>
                         <ul class="nav flexi-nav" role="tablist" id="flexiselDemo1">
-                                <li class="active">
+                              <li class="active">
                                   <a href="#product-page1" role="tab" data-toggle="tab" aria-expanded="false">
                                      @if(isset($barang->foto))
-                                     {!! Html::image(asset('foto_produk/'.$barang->foto)) !!}
+                                    <img src="{{asset('/foto_produk/'.$barang->foto.'')}}" /></a>
                                      @else
-                                     {!! Html::image(asset('image/foto_default.png')) !!}
+                                    <img src="{{asset('image/foto_default.png')}}" /></a>
                                      @endif
                                   </a>
                                 </li>
                                 <li >
                                   <a href="#product-page2" role="tab" data-toggle="tab" aria-expanded="false">
                                      @if(isset($barang->foto_2))
-                                     {!! Html::image(asset('foto_produk/'.$barang->foto_2)) !!}
+                                     <img src="{{asset('/foto_produk/'.$barang->foto_2.'')}}"  /></a>
                                      @else
-                                     {!! Html::image(asset('image/foto_default.png')) !!}
+                                     <img src="{{asset('image/foto_default.png')}}" /></a>
                                      @endif
                                   </a>
                                 </li>
                                 <li>
                                   <a href="#product-page3" role="tab" data-toggle="tab" aria-expanded="true">
                                      @if(isset($barang->foto_3))
-                                     {!! Html::image(asset('foto_produk/'.$barang->foto_3)) !!}
+                                     <img src="{{asset('/foto_produk/'.$barang->foto_3.'')}}" /></a>
                                      @else
-                                     {!! Html::image(asset('image/foto_default.png')) !!}
+                                     <img src="{{asset('image/foto_default.png')}}" /></a>
                                      @endif
                                   </a>
                                 </li>

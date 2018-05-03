@@ -52,9 +52,9 @@ $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description']
 </head>
 <style type="text/css">
 
-    .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
-     padding: 1px;
- }
+.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+   padding: 1px;
+}
 
 </style>
 <body>
@@ -480,7 +480,7 @@ $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description']
 </body>
 <!--   Core JS Files   -->
 
-<script src="{{ asset('js/app.js?v=1.215')}}" type="text/javascript">
+<script src="{{ asset('js/app.js?v=1.217')}}" type="text/javascript">
 
 </script>
 <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript">

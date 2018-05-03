@@ -3,7 +3,9 @@
 	padding: 200px;
 	height: 10px;
 }
-
+.modal {
+	overflow-y:auto;
+}
 </style>
 <template>
 	<div class="row">
@@ -12,6 +14,46 @@
 				<li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li>
 				<li class="active">Laporan Bucket Size</li>
 			</ul>
+
+			<!-- small modal -->
+			<div class="modal" id="modalPelanggan" role="dialog" tabindex="-1"  aria-labelledby="myModalLabel" aria-hidden="true" >
+				<div class="modal-dialog modal-medium">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close"  v-on:click="closeModalPelanggan()" v-shortkey.push="['f9']" @shortkey="closeModalPelanggan()"> &times;</button> 
+							<h4 class="modal-title"> 
+								<div class="alert-icon"> 
+									<b>Bucket Size {{bucketSizePelanggan}}</b>
+								</div> 
+							</h4> 
+						</div>
+						<div class="modal-body"> 
+
+							<div class=" table-responsive">
+								<table class="table table-striped table-hover">
+									<thead class="text-primary">
+										<tr>
+											<th>Nama Pelanggan</th>
+											<th class="text-right">Total Belanja</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr v-for="pelanggan, index in dataPelanggan">
+											<td v-if="pelanggan.pelanggan_id == 0">Umum</td>
+											<td v-else>{{ pelanggan.pelanggan.name  }}</td>
+											<td align="right">{{ pelanggan.total | pemisahTitik }}</td>
+										</tr>
+									</tbody>    
+								</table>
+							</div><!--RESPONSIVE-->
+							<center><button type="button" class="btn btn-xs btn-info" v-on:click="loadMore(dataPelanggan.length)" v-if="loadMoreLength > dataPelanggan.length">Load More... <i class="material-icons">keyboard_arrow_down</i></button></center>
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<!--    end small modal -->
+
 			<div class="card">
 				<div class="card-header card-header-icon" data-background-color="purple">
 					<i class="material-icons">insert_chart</i>
@@ -133,36 +175,44 @@
 
     <div class="row" v-if="bucketSize">
     	<div class="col-md-6">
+
     		<div class="card card-chart">
-    			<div class="card-header" data-background-color="blue" data-header-animation="true">
-
-    				<chartist v-if="agent === true" ratio="ct-double-octave" type="Bar" :data="chartData" :options="chartOptions" :responsiveOptions="responsiveOptions"></chartist>
+    			<div class="card-header" data-background-color="blue">
+    				<chartist v-if="agent" ratio="ct-double-octave" type="Bar" :data="chartData" :options="chartOptions" :responsiveOptions="responsiveOptions"></chartist>
     				<chartist v-else ratio="ct-square" type="Bar" :data="chartData" :options="chartOptions" :responsiveOptions="responsiveOptions"></chartist>
-
     			</div>
     			<div class="card-content">
-    				<div class="card-actions">
-    					<button type="button" class="btn btn-danger btn-simple fix-broken-card">
-    						<i class="material-icons">build</i> Fix Header!
-    					</button>
-    					<button type="button" class="btn btn-info btn-simple" rel="tooltip" data-placement="bottom" title="Refresh">
-    						<i class="material-icons">refresh</i>
-    					</button>
-    					<button type="button" class="btn btn-default btn-simple" rel="tooltip" data-placement="bottom" title="Change Date">
-    						<i class="material-icons">edit</i>
-    					</button>
-    				</div>
     				<h4 class="card-title" v-if="filter.jenis_penjualan == 0">Bucket Size Penjualan POS</h4>
     				<h4 class="card-title" v-else>Bucket Size Penjualan Online</h4>
-    				<!-- <p class="category">Last Campaign Performance</p> -->
+    				<p class="category"><b> Periode {{dariTanggal(filter)}} - {{sampaiTanggal(filter)}} </b></p>
     			</div>
-    			<div class="card-footer">
-    				<div class="stats">
-    					<p><i class="material-icons">access_time</i> <b> {{dariTanggal(filter)}} - {{sampaiTanggal(filter)}}</b></p>
-    				</div>
+    		</div>
+
+    	</div>
+
+    	<div class="col-lg-6 col-md-12">
+    		<div class="card">
+    			<div class="card-content table-responsive">
+    				<table class="table table-striped table-hover">
+    					<thead class="text-info">
+    						<th>Bucket Size</th>
+    						<th>Pelanggan</th>
+    						<th class="text-right">Total Faktur</th>
+    					</thead>
+    					<tbody>
+    						<tr v-for="dataPenjualan, index in chartData.data">
+    							<td>{{chartData.labels[index]}}</td>
+    							<td><button type="button" class="btn btn-xs btn-info" v-on:click="lihatPelanggan(dataPenjualan,chartData.labels[index],index)">
+    								Lihat
+    							</button></td>
+    							<td align="right">{{chartData.series[0][index]}}</td>
+    						</tr>
+    					</tbody>
+    				</table>
     			</div>
     		</div>
     	</div>
+
     </div>
 
 </div>
@@ -178,10 +228,14 @@
 export default {
 	data: function () {
 		return {
+			bucketSizePelanggan : '',
+			indexbucketSizePelanggan : 0,
+			loadMoreLength : 0,
 			agent: true,
 			bucketSize: false,
 			laporanBucketSize: [],
 			laporanBucketSizeOnline: [],
+			dataPelanggan : [],
 			filter: {
 				dari_tanggal: '',
 				sampai_tanggal: new Date(),
@@ -200,6 +254,7 @@ export default {
 				placeholder: '--JENIS PENJUALAN--'
 			},
 			chartData: {
+				data: [],
 				labels: [],
 				series:[]
 			},
@@ -285,8 +340,10 @@ export default {
 				app.agent = resp.data.agent;
 				app.chartData.labels = resp.data.labels;
 				app.chartData.series = resp.data.series;
+				app.chartData.data = resp.data.data;
 				app.bucketSize = true;
 				app.loading = false;
+				console.log(app.chartData.data);
 			})
 			.catch(function (resp) {
 				alert("Tidak Dapat Memuat Laporan Bucket Size");
@@ -343,6 +400,31 @@ export default {
 				text: pesan,
 				icon: "warning",
 			});
+		},
+		lihatPelanggan(dataPelanggan,labels,index){
+			$("#modalPelanggan").show(); 
+			let app = this;
+			app.indexbucketSizePelanggan = index;
+			app.bucketSizePelanggan = labels;
+			app.loadMoreLength = dataPelanggan.length;
+			app.dataPelanggan = dataPelanggan.slice(0, 10);
+			console.log(dataPelanggan);
+			// console.log(app.loadMoreLength);
+			// console.log(app.dataPelanggan);
+		},
+		closeModalPelanggan(){
+			$("#modalPelanggan").hide(); 
+		},
+		loadMore(length){
+			let app = this;
+			let limit = length + 10;
+			let newData = app.chartData.data[app.indexbucketSizePelanggan].slice(length,limit);
+
+			for (var i = 0 ; i < newData.length; i++) {
+				app.dataPelanggan.push(newData[i]);
+			}
+			console.log(app.dataPelanggan.length);
+			console.log(length,limit);
 		},
 		showButton() { 
 			var app = this; 
