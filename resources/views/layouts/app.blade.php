@@ -53,7 +53,7 @@ $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description']
 <style type="text/css">
 
 .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
- padding: 1px;
+   padding: 1px;
 }
 
 </style>
@@ -98,8 +98,8 @@ $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description']
     -->
 
     <div class="logo">
-       @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
-       <a class="simple-text logo-mini" href="https://war-mart.id">
+     @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 0)
+     <a class="simple-text logo-mini" href="https://war-mart.id">
         WM
     </a>
     <a class="simple-text logo-normal" href="https://war-mart.id">
@@ -136,22 +136,22 @@ $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description']
                                 UPU
                             </span>
                             <span class="sidebar-normal">
-                             Ubah Profil
-                         </span>
-                     </a>
-                     @elseif(Auth::user()->tipe_user == 1 )
-                     <router-link :to="{name: 'ubahProfilAdmin'}" class="menu-nav">
+                               Ubah Profil
+                           </span>
+                       </a>
+                       @elseif(Auth::user()->tipe_user == 1 )
+                       <router-link :to="{name: 'ubahProfilAdmin'}" class="menu-nav">
                         <span class="sidebar-mini">
                             UP
                         </span>
                         <span class="sidebar-normal">
-                         Ubah Profil
-                     </span>
-                 </router-link>
-                 @endif
-             </li>
-             @if(Auth::user()->tipe_user == 4 AND Auth::user()->kasir_id == 0)
-             <li>
+                           Ubah Profil
+                       </span>
+                   </router-link>
+                   @endif
+               </li>
+               @if(Auth::user()->tipe_user == 4 AND Auth::user()->kasir_id == 0)
+               <li>
                 <router-link :to="{name: 'indexProfilWarung'}" class="menu-nav">
                     <span class="sidebar-mini">
                         UP
@@ -175,7 +175,7 @@ $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description']
                 </router-link>
                 @else
                 <router-link :to="{name: 'ubahPasswordUserWarung'}" class="menu-nav" v-on:click="closeMenu()">
-                 <span class="sidebar-mini">
+                   <span class="sidebar-mini">
                     UP
                 </span>
                 <span class="sidebar-normal">
@@ -480,7 +480,7 @@ $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description']
 </body>
 <!--   Core JS Files   -->
 
-<script src="{{ asset('js/app.js?v=1.215')}}" type="text/javascript">
+<script src="{{ asset('js/app.js?v=1.217')}}" type="text/javascript">
 
 </script>
 <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript">
@@ -620,8 +620,8 @@ $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description']
         $("#minimizeSidebar").click();  
 
         $(document).on('click', '.menu-nav', function(){
-         $('.navbar-toggle ').click();
-     });
+           $('.navbar-toggle ').click();
+       });
 
     });
 </script>
