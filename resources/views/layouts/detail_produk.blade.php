@@ -1,12 +1,12 @@
 <?php
 $settingFooter = \App\SettingFooter::where('warung_id', \App\SettingPembedaAplikasi::where('app_address', url('/'))->first()->warung_id)->first();
 
-$jasa_pengirimans = \App\SettingJasaPengiriman::select('logo_jasa')->where('tampil_jasa_pengiriman', 1)->get();
-$bank_transfers = \App\SettingTransferBank::select('logo_bank')->where('tampil_bank', 1)->get();
-
 //Cek Address Aplikasi yg di Jalankan
 $address_current = url('/');
 $address_app = \App\SettingPembedaAplikasi::select(['warung_id', 'app_address'])->where('app_address', $address_current)->first();
+
+$jasa_pengirimans = \App\SettingJasaPengiriman::select('logo_jasa')->where('tampil_jasa_pengiriman', 1)->where('warung_id', $address_app->warung_id)->get();
+$bank_transfers = \App\SettingTransferBank::select('logo_bank')->where('tampil_bank', 1)->where('warung_id', $address_app->warung_id)->get();
 
 if ($address_current == $address_app->app_address) {
   $foto_logo = \App\UserWarung::select()->where('tipe_user',4)->where('id_warung', $address_app->warung_id)->orderBy('id', 'asc')->limit(1)->first();
