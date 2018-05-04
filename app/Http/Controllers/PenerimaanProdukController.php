@@ -146,6 +146,8 @@ class PenerimaanProdukController extends Controller
 					'no_faktur_order'	=> $data_order->no_faktur_order,
 					'id_produk'   		=> $data_order->id_produk,
 					'jumlah_produk'		=> $data_order->jumlah_produk,
+					'jumlah_fisik'		=> 0,
+					'selisih_fisik'		=> $data_order->jumlah_produk,
 					'satuan_id' 		=> $data_order->satuan_id,
 					'satuan_dasar'     	=> $data_order->satuan_dasar,
 					'harga_produk'    	=> $data_order->harga_produk,
@@ -166,6 +168,28 @@ class PenerimaanProdukController extends Controller
 			return response()->json($respons);
 		}
 
+	}
+
+	public function editJumlahFisik(Request $request){
+		if (Auth::user()->id_warung == '') {
+			Auth::logout();
+			return response()->view('error.403');
+		} else {
+			$tbs_penerimaan = TbsPenerimaanProduk::find($request->id_tbs_pembelian);
+
+			$subtotal = ($tbs_penerimaan->harga_produk * $request->jumlah_edit_produk);
+
+			$tbs_penerimaan->update([
+				'jumlah_fisik' => $request->jumlah_edit_produk,
+				'selisih_fisik' => $tbs_penerimaan->jumlah_produk - $request->jumlah_edit_produk,
+				'subtotal' => $subtotal,
+				]);
+
+			$respons['subtotal'] = $subtotal;
+
+			return response()->json($respons);
+
+		}
 	}
 
 
@@ -484,7 +508,7 @@ class PenerimaanProdukController extends Controller
 			$hapus_tbs = EditTbsPenerimaanProduk::where('no_faktur_penerimaan', $data_penerimaan->no_faktur_penerimaan)->where('warung_id', Auth::user()->id_warung)->delete();
 
 			foreach ($data_orders as $data_order) {
-				
+
 				$insert_tbs = EditTbsPenerimaanProduk::create([
 					'session_id'     	=> $session_id,
 					'no_faktur_penerimaan'	=> $data_penerimaan->no_faktur_penerimaan,
