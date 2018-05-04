@@ -234,7 +234,7 @@
 	    												</tr>
 	    												<tr>
 	    													<td class="text-primary"><b># Potongan </b> </td>
-	    													<td class="text-primary"><b>: {{ penjualan_pos.potongan }} </b> </td>
+	    													<td class="text-primary"><b>: {{ penjualan_pos.potongan | pemisahTitik}} </b> </td>
 	    												</tr>
 	    												<tr>
 	    													<td class="text-primary"><b># Tunai </b> </td>
