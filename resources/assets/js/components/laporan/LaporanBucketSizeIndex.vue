@@ -67,7 +67,7 @@
 
 			<!-- small modal -->
 			<div class="modal" id="modalPelanggan" role="dialog" tabindex="-1"  aria-labelledby="myModalLabel" aria-hidden="true" >
-				<div class="modal-dialog modal-medium">
+				<div class="modal-dialog modal-lg">
 					<div class="modal-content">
 						<div class="modal-header">
 							<button type="button" class="close"  v-on:click="closeModalPelanggan()" v-shortkey.push="['f9']" @shortkey="closeModalPelanggan()"> &times;</button> 
