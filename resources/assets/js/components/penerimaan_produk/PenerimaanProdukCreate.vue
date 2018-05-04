@@ -125,7 +125,9 @@
                       <thead class="text-primary">
                         <tr>
                           <th>Produk</th>
-                          <th style="text-align:right;">Jumlah</th>
+                          <th style="text-align:right;">Jumlah Order</th>
+                          <th style="text-align:right;">Jumlah Fisik</th>
+                          <th style="text-align:right;">Selisih Fisik</th>
                           <th style="text-align:center;">Satuan</th>
                         </tr>
                       </thead>
@@ -133,7 +135,15 @@
                         <tr v-for="tbs_pembelian, index in tbs_penerimaan_produks" >
 
                           <td>{{ tbs_pembelian.data_tbs.kode_barang }} - {{ tbs_pembelian.data_tbs.nama_barang | capitalize }}</td>
+
                           <td align="right"> {{ tbs_pembelian.data_tbs.jumlah_produk | pemisahTitik }} </td>
+
+                          <td>
+                            <a href="#create-penerimaan-produk" v-bind:id="'edit-' + tbs_pembelian.data_tbs.id_tbs_penerimaan_produk" v-on:click="editEntryJumlah(tbs_pembelian.data_tbs.id_tbs_penerimaan_produk, index,tbs_pembelian.data_tbs.nama_barang,tbs_pembelian.data_tbs.subtotal)"><p align='right'>{{ tbs_pembelian.data_tbs.jumlah_fisik | pemisahTitik }}</p>
+                            </a>
+                          </td>
+
+                          <td align="right"> {{ tbs_pembelian.data_tbs.selisih_fisik | pemisahTitik }} </td>
 
                           <td align="center"> {{ tbs_pembelian.data_tbs.nama_satuan }} </td>
 
@@ -381,8 +391,8 @@
             swal({ 
               title: titleCase(nama_produk), 
               input: 'number', 
-              inputPlaceholder : 'Jumlah Produk',         
-              html:'Berapa Jumlah Produk Yang Akan Dimasukkan ?', 
+              inputPlaceholder : 'Jumlah Fisik',         
+              html:'Berapa Jumlah Fisik Yang Akan Dimasukkan ?', 
               animation: false, 
               showCloseButton: true, 
               showCancelButton: true, 
@@ -408,7 +418,7 @@
             }).then(function (jumlah_produk) { 
               if (jumlah_produk != "0") { 
                 app.loading = true;
-                axios.get(app.url+'/proses-edit-jumlah-tbs-pembelian?jumlah_edit_produk='+jumlah_produk+'&id_tbs_pembelian='+id)
+                axios.get(app.url+'/proses-edit-jumlah-fisik-tbs-penerimaan?jumlah_edit_produk='+jumlah_produk+'&id_tbs_pembelian='+id)
                 .then(function (resp) {
                   app.alert("Mengubah Jumlah Produk "+titleCase(nama_produk));
                   app.loading = false;
