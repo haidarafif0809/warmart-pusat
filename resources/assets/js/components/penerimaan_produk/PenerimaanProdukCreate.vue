@@ -133,14 +133,9 @@
                         <tr v-for="tbs_pembelian, index in tbs_penerimaan_produks" >
 
                           <td>{{ tbs_pembelian.data_tbs.kode_barang }} - {{ tbs_pembelian.data_tbs.nama_barang | capitalize }}</td>
-                          <td>
-                            <a href="#create-order-pembelian" v-bind:id="'edit-' + tbs_pembelian.data_tbs.id_tbs_pembelian_order" v-on:click="editEntryJumlah(tbs_pembelian.data_tbs.id_tbs_pembelian_order, index,tbs_pembelian.data_tbs.nama_barang,tbs_pembelian.data_tbs.subtotal)"><p align='right'>{{ tbs_pembelian.data_tbs.jumlah_produk | pemisahTitik }}</p>
-                            </a>
-                          </td>
+                          <td align="right"> {{ tbs_pembelian.data_tbs.jumlah_produk | pemisahTitik }} </td>
 
-                          <td align="center">
-                            <a href="#create-order-pembelian" v-bind:id="'edit-' + tbs_pembelian.data_tbs.id_tbs_pembelian_order" v-bind:class="'hurufBesar satuan-' + tbs_pembelian.data_tbs.id_produk" v-bind:data-satuan="''+tbs_pembelian.data_tbs.satuan_id" v-on:click="editSatuanEntry(tbs_pembelian.data_tbs.id_tbs_pembelian_order, index,tbs_pembelian.data_tbs.nama_barang,tbs_pembelian.data_tbs.subtotal, tbs_pembelian.data_tbs.id_produk)">{{ tbs_pembelian.data_tbs.nama_satuan }}</a>
-                          </td>
+                          <td align="center"> {{ tbs_pembelian.data_tbs.nama_satuan }} </td>
 
                         </tr>
                       </tbody>          
@@ -184,7 +179,7 @@
                       </textarea>
 
 
-                      <input class="form-control" type="text"  v-model="inputPembayaranPenerimaanProduk.no_faktur"  name="no_faktur" id="no_faktur">
+                      <input class="form-control" type="hidden"  v-model="inputPembayaranPenerimaanProduk.no_faktur"  name="no_faktur" id="no_faktur">
 
                     </div>
                     <div class="card-footer">
