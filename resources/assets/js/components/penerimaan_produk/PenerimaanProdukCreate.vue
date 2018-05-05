@@ -150,13 +150,17 @@
                         </tr>
                       </tbody>          
                       <tbody class="data-tidak-ada"  v-else-if="tbs_penerimaan_produks.length == 0 && loading == false" >
-                        <tr ><td colspan="3"  class="text-center">Tidak Ada Data</td></tr>
+                        <tr ><td colspan="5"  class="text-center">Tidak Ada Data</td></tr>
                       </tbody>
                     </table>  
 
                     <vue-simple-spinner v-if="loading"></vue-simple-spinner>
 
                     <div align="right"><pagination :data="tbsPenerimaanProdukData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
+
+                    <p style="color: red; font-style: italic;">
+                      *Note : Klik Kolom Jumlah Fisik, Untuk Merubah Nilai Jumlah Fisik
+                    </p> 
 
                   </div>
                 </div><!-- COL SM 8 --> 
@@ -177,12 +181,13 @@
                         </b>
                       </h3>
 
-                      <p class="category"><font style="font-size:20px; padding-left:0px;padding-top:25px;padding-right: 0px">Keterangan</font></p>
+                      <p class="category">
+                        <font style="font-size:20px; padding-left:0px;padding-top:25px;padding-right: 0px">
+                          Keterangan
+                        </font>
+                      </p>
                       <textarea class="form-control" v-model="inputPembayaranPenerimaanProduk.keterangan" name="keterangan" id="keterangan" placeholder="Keterangan .." rows="1">                    
                       </textarea>
-
-
-                      <input class="form-control" type="hidden"  v-model="inputPembayaranPenerimaanProduk.no_faktur"  name="no_faktur" id="no_faktur">
 
                     </div>
                     <div class="card-footer">
@@ -498,12 +503,7 @@
 
             var newPenerimaanProduk = app.inputPembayaranPenerimaanProduk;
 
-            if (newPenerimaanProduk.subtotal == 0) {
-
-              app.message = 'Maaf Anda Belum Melakukan Penerimaan Produk.';
-              app.alertGagal(app.message);
-
-            }else if(newPenerimaanProduk.suplier == ''){
+            if(newPenerimaanProduk.suplier == ''){
               app.message = 'Supplier Tidak Boleh Kosong, Silakan Pilih Supplier Dahulu..';
               app.alertGagal(app.message);
             }else{
