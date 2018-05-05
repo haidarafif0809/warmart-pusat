@@ -124,16 +124,31 @@
                     <table class="table table-striped table-hover" v-if="seen">
                       <thead class="text-primary">
                         <tr>
+                          <th>Faktur Order</th>
                           <th>Produk</th>
-                          <th style="text-align:right;">Jumlah</th>
+                          <th style="text-align:right;">Jumlah Order</th>
+                          <th style="text-align:right;">Jumlah Fisik</th>
+                          <th style="text-align:right;">Selisih Fisik</th>
                           <th style="text-align:center;">Satuan</th>
                         </tr>
                       </thead>
                       <tbody v-if="tbs_penerimaan_produks.length > 0 && loading == false"  class="data-ada">
                         <tr v-for="tbs_pembelian, index in tbs_penerimaan_produks" >
 
+                          <td>{{ tbs_pembelian.data_tbs.no_faktur_order }}</td>
+
                           <td>{{ tbs_pembelian.data_tbs.kode_barang }} - {{ tbs_pembelian.data_tbs.nama_barang | capitalize }}</td>
-                          <td style="text-align:right">{{ tbs_pembelian.data_tbs.jumlah_produk | pemisahTitik }}</td>
+
+                          <td style="text-align:right">
+                            {{ tbs_pembelian.data_tbs.jumlah_produk | pemisahTitik }}
+                          </td>
+
+                          <td>
+                            <a v-bind:href="'#edit-penerimaan-produk/'+id_penerimaan" v-bind:id="'edit-' + tbs_pembelian.data_tbs.id_tbs_penerimaan_produk" v-on:click="editEntryJumlah(tbs_pembelian.data_tbs.id_tbs_penerimaan_produk, index,tbs_pembelian.data_tbs.nama_barang,tbs_pembelian.data_tbs.subtotal)"><p align='right'>{{ tbs_pembelian.data_tbs.jumlah_fisik | pemisahTitik }}</p>
+                            </a>
+                          </td>
+
+                          <td align="right"> {{ tbs_pembelian.data_tbs.selisih_fisik | pemisahTitik }} </td>
 
                           <td align="center">{{ tbs_pembelian.data_tbs.nama_satuan }}</td>
 
@@ -146,7 +161,7 @@
 
                     <vue-simple-spinner v-if="loading"></vue-simple-spinner>
 
-                    <div align="right"><pagination :data="tbsPenerimaanProdukData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
+                    <div align="right"><pagination :data="tbsPenerimaanProdukData" v-on:pagination-change-page="getResults" :limit="3"></pagination></div>
 
                   </div>
                 </div><!-- COL SM 8 --> 
@@ -393,8 +408,8 @@
             swal({ 
               title: titleCase(nama_produk), 
               input: 'number', 
-              inputPlaceholder : 'Jumlah Produk',         
-              html:'Berapa Jumlah Produk Yang Akan Dimasukkan ?', 
+              inputPlaceholder : 'Jumlah Fisik',         
+              html:'Berapa Jumlah Fisik Yang Akan Dimasukkan ?', 
               animation: false, 
               showCloseButton: true, 
               showCancelButton: true, 

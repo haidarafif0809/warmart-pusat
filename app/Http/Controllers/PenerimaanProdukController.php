@@ -434,6 +434,7 @@ class PenerimaanProdukController extends Controller
 			EditTbsPenerimaanProduk::create([
 				'session_id'        => $session_id,
 				'no_faktur_penerimaan'	=> $data_tbs->no_faktur_penerimaan,
+				'no_faktur_order'	=> $data_tbs->no_faktur_order,
 				'id_produk'         => $data_tbs->id_produk,
 				'jumlah_produk'     => $data_tbs->jumlah_produk,
 				'satuan_id'         => $data_tbs->satuan_id,
