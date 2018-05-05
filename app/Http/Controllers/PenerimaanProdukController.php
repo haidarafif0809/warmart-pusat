@@ -151,19 +151,17 @@ class PenerimaanProdukController extends Controller
 					'satuan_id' 		=> $data_order->satuan_id,
 					'satuan_dasar'     	=> $data_order->satuan_dasar,
 					'harga_produk'    	=> $data_order->harga_produk,
-					'subtotal' 			=> $data_order->subtotal,
+					'subtotal' 			=> 0, // harga produk * jumlah fisik
 					'tax' 				=> $data_order->tax,
 					'potongan'    		=> $data_order->potongan,
 					'status_harga'		=> $data_order->status_harga,
 					'warung_id'			=> $data_order->warung_id
 					]);
-
-				$subtotal = $subtotal + $data_order->subtotal;
 			}
 
 
 			$respons['status']   = 0;
-			$respons['subtotal'] = $subtotal;
+			$respons['subtotal'] = 0;
 
 			return response()->json($respons);
 		}
@@ -213,17 +211,20 @@ class PenerimaanProdukController extends Controller
 			foreach ($data_penerimaan_produk->get() as $data_tbs_penerimaan_produk) {
 
 				$detail_penerimaan = DetailPenerimaanProduk::create([
-					'no_faktur_penerimaan' => $no_faktur,
-					'id_produk'        => $data_tbs_penerimaan_produk->id_produk,
-					'jumlah_produk'    => $data_tbs_penerimaan_produk->jumlah_produk,
-					'satuan_id'        => $data_tbs_penerimaan_produk->satuan_id,
-					'satuan_dasar'     => $data_tbs_penerimaan_produk->satuan_dasar,
-					'harga_produk'     => $data_tbs_penerimaan_produk->harga_produk,
-					'subtotal'         => $data_tbs_penerimaan_produk->subtotal,
-					'tax'              => $data_tbs_penerimaan_produk->tax,
-					'potongan'         => $data_tbs_penerimaan_produk->potongan,
-					'status_harga'     => $data_tbs_penerimaan_produk->status_harga,
-					'warung_id'        => $warung_id,
+					'no_faktur_penerimaan' 	=> $no_faktur,
+					'no_faktur_order'		=> $data_tbs_penerimaan_produk->no_faktur_order,
+					'id_produk'      		=> $data_tbs_penerimaan_produk->id_produk,
+					'jumlah_produk'  		=> $data_tbs_penerimaan_produk->jumlah_produk,
+					'jumlah_fisik'  		=> $data_tbs_penerimaan_produk->jumlah_fisik,
+					'selisih_fisik'   		=> $data_tbs_penerimaan_produk->selisih_fisik,
+					'satuan_id'       		=> $data_tbs_penerimaan_produk->satuan_id,
+					'satuan_dasar'   		=> $data_tbs_penerimaan_produk->satuan_dasar,
+					'harga_produk'   		=> $data_tbs_penerimaan_produk->harga_produk,
+					'subtotal'       		=> $data_tbs_penerimaan_produk->subtotal,
+					'tax'            		=> $data_tbs_penerimaan_produk->tax,
+					'potongan'       		=> $data_tbs_penerimaan_produk->potongan,
+					'status_harga'   		=> $data_tbs_penerimaan_produk->status_harga,
+					'warung_id'      		=> $warung_id,
 					]);
 			}
 

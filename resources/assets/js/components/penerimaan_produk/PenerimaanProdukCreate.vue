@@ -169,13 +169,6 @@
                     </div>
                     <div class="card-content">
 
-                      <p class="category"><font style="font-size:20px;">Subtotal</font></p>
-                      <h3 class="card-title">
-                        <b>
-                          <font style="font-size:32px;">{{ inputPembayaranPenerimaanProduk.subtotal | pemisahTitik }}</font>
-                        </b>
-                      </h3>
-
                       <p class="category"><font style="font-size:20px;">Supplier</font></p>
                       <h3 class="card-title">
                         <b>
