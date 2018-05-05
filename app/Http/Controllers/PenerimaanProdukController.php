@@ -366,6 +366,15 @@ class PenerimaanProdukController extends Controller
 		return response()->json($respons);
 	}
 
+	public function dataPenerimaan($id){
+		$data = PenerimaanProduk::select(['penerimaan_produks.faktur_order', 'supliers.nama_suplier'])
+		->leftJoin('supliers', 'supliers.id', '=', 'penerimaan_produks.suplier_id')
+		->where('penerimaan_produks.id', $id)->first();
+
+		$dataOrder = $data->faktur_order." | ".$data->nama_suplier;
+		return $dataOrder;
+	}
+
 //PENCARIAN DETAIL PENERIMAAN PRODUK & PENCARIAN
 	public function pencarianDetailPenerimaanProduk(Request $request, $id)
 	{

@@ -643,6 +643,7 @@ Route::get('/penerimaan-produk/data-penerimaan-produk/{id}', 'PenerimaanProdukCo
 Route::get('/penerimaan-produk/proses-edit-tbs-penerimaan-produk/{id}', 'PenerimaanProdukController@prosesEditTbsPenerimaanProduk')->middleware('auth');
 Route::post('/penerimaan-produk/update-penerimaan-produk', 'PenerimaanProdukController@updatePenerimaanProduk')->middleware('auth');
 Route::get('/penerimaan-produk/proses-edit-jumlah-fisik-tbs-penerimaan', 'PenerimaanProdukController@editJumlahFisik')->middleware('auth');
+Route::get('/penerimaan-produk/data-penerimaan/{id}', 'PenerimaanProdukController@dataPenerimaan')->middleware('auth');
 
 // PENERIMAAN PRODUK
 
