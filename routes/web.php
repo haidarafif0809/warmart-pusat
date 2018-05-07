@@ -134,6 +134,10 @@ Route::get('/keranjang-belanja/tambah-produk-keranjang-belanja/', [
     'uses' => 'KeranjangBelanjaController@tambah_produk_keranjang_belanjaan',
     ]);
 
+Route::get('/keranjang-belanja/collapse-keranjang-belanja', [
+    'uses' => 'KeranjangBelanjaController@daftar_belanja_collapse',
+    ]);
+
 //PUNYA SELESAI PEMESANAN
 Route::get('/selesaikan-pemesanan', [
     'as'   => 'selesaikan-pemesanan.index',

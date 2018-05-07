@@ -53,6 +53,39 @@ class KeranjangBelanjaController extends Controller
 
     }
 
+    public function daftar_belanja_collapse() {
+        $warung_id = $this->getIdWarung();
+        $agent = new Agent();
+
+        if(!Session::get('session_id')){
+            $session_id    = session()->getId();
+        }else{
+            $session_id = Session::get('session_id');
+        }
+        if (Auth::check() == false) {
+            $keranjang_belanjaan = KeranjangBelanja::with(['produk'])->where('session_id', $session_id)->Where('warung_id',$warung_id)->orderBy('id_keranjang_belanja','desc')->get();
+            $jumlah_produk = KeranjangBelanja::select([DB::raw('IFNULL(SUM(jumlah_produk),0) as total_produk')])->where('session_id',$session_id)->Where('warung_id',$warung_id)->first();
+        }else{
+            $keranjang_belanjaan = KeranjangBelanja::with(['produk', 'pelanggan'])->where('id_pelanggan', Auth::user()->id)->Where('warung_id',$warung_id)->orderBy('id_keranjang_belanja','desc')->get();  
+            $jumlah_produk = KeranjangBelanja::select([DB::raw('IFNULL(SUM(jumlah_produk),0) as total_produk')])->where('id_pelanggan', Auth::user()->id)->Where('warung_id',$warung_id)->first();          
+        }
+        // return $keranjang_belanjaan;
+        // return '<div class="alert alert-success"> Tes collapse </div>';
+        $cek_belanjaan       = $keranjang_belanjaan->count();
+
+
+
+        //MEANMPILKAN PRODUK BELANJAAN DAN SUBTUTALNYA
+        $produk_belanjaan_dan_subtotal = $this->tampilanProdukKeranjangBelanjaCollapse($keranjang_belanjaan);
+        // $subtotal                      = number_format($produk_belanjaan_dan_subtotal['subtotal'], 0, ',', '.');
+        // $produk_belanjaan              = $produk_belanjaan_dan_subtotal['produk_belanjaan'];
+        //SETTING APLIKASI
+        $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
+
+        return $produk_belanjaan_dan_subtotal;
+        return ['keranjang_belanjaan' => $keranjang_belanjaan, 'cek_belanjaan' => $cek_belanjaan, 'agent' => $agent, 'produk_belanjaan' => $produk_belanjaan, 'jumlah_produk' => $jumlah_produk, 'subtotal' => $subtotal, 'setting_aplikasi' => $setting_aplikasi];
+    }
+
     public function hapus_produk_keranjang_belanjaan(Request $request)
     {
         KeranjangBelanja::destroy($request->id);
@@ -192,6 +225,42 @@ public function tombolTambahiProduk($sisa_stok, $keranjang_belanjaans)
     return $tombolTambahiProduk;
 }
 
+public function cardProdukBelanjaanCollapse($keranjang_belanjaans) {
+    $subtotal_produk = $keranjang_belanjaans->harga_produk * $keranjang_belanjaans->jumlah_produk;
+    $res = '';
+    $agent = new Agent();
+    if ($agent->isMobile()) {
+        $res = '
+        <tr>
+        <td class="produkNameMobile">
+        <small> <b> '. ucwords($keranjang_belanjaans->produk->nama_barang) .' </b> </small> 
+        <br> 
+        <div class="warungNameMobile">
+        <small> '. $keranjang_belanjaans->produk->warung->name .' </small>
+        </div>
+        <small class="productCountMobile"> '. $keranjang_belanjaans->jumlah_produk .' x Rp.'. number_format($keranjang_belanjaans->harga_produk, 0, ',', '.') .' </small>
+        </td>
+        <td class="subtotalProdukMobile"> <small> Rp.'. number_format($subtotal_produk, 0, ',', '.') .' </small> </td>
+        </tr>
+        ';        
+    } else {
+        $res = '
+        <tr>
+        <td class="produkName">
+        <small> <b> '. ucwords($keranjang_belanjaans->produk->nama_barang) .' </b> </small> 
+        <br> 
+        <div class="warungName">
+        <small> '. $keranjang_belanjaans->produk->warung->name .' </small>
+        </div>
+        <small class="productCount"> '. $keranjang_belanjaans->jumlah_produk .' x Rp.'. number_format($keranjang_belanjaans->harga_produk, 0, ',', '.') .' </small>
+        </td>
+        <td class="subtotalProduk"> <small> Rp.'. number_format($subtotal_produk, 0, ',', '.') .' </small> </td>
+        </tr>
+        ';
+    }
+    return $res;
+}
+
 public function cardProdukBelanjaan($harga_produk, $sisa_stok, $keranjang_belanjaans, $subtotal_produk)
 {
 
@@ -322,6 +391,66 @@ public function tampilanProdukKeranjangBelanja($keranjang_belanjaan)
     }
 
     return array('produk_belanjaan' => $produk_belanjaan, 'subtotal' => $subtotal);
+}
+
+public function tampilanProdukKeranjangBelanjaCollapse($keranjang_belanjaan)
+{
+    $subtotal         = 0;
+    $produk_belanjaan = '';
+
+    if (count($keranjang_belanjaan) == 0) {
+        $produk_belanjaan = '
+        <div class="produkKosong">
+        Anda belum memesan produk apapun.
+        </div>
+        ';
+    } else {
+        $produk_belanjaan .= '
+        <table class="table table-striped table-keranjang">
+        <thead>
+        <th> Nama </th>
+        <th> Subtotal </th>
+        </thead>
+        <tbody>
+        ';
+
+
+        foreach ($keranjang_belanjaan as $keranjang_belanjaans) {
+            $barang = Barang::select(['id'])->where('id', $keranjang_belanjaans->id_produk);
+                //jika barang yang di keranjang ternyata sudah dihapus warung
+            if ($barang->count() == 0) {
+                KeranjangBelanja::where('id_produk', $keranjang_belanjaans->id_produk)->delete();
+            } else {
+
+                $sisa_stok       = $barang->first()->stok - $keranjang_belanjaans->jumlah_produk;
+
+                $subtotal += $keranjang_belanjaans->harga_produk * $keranjang_belanjaans->jumlah_produk;
+                    //card produk belanjaan
+                $produk_belanjaan .= $this->cardProdukBelanjaanCollapse($keranjang_belanjaans);
+            }
+        }
+
+        $produk_belanjaan .= '
+        </tbody>
+        </table>
+        <table class="table table-striped">
+        <tr>
+        <hr>
+        <td align="left" style="margin-top: 100px;"> Subtotal : </td>
+        <td align="right"> Rp.'. number_format($subtotal, 0, ',', '.') .' </td>
+        </tr>
+        <tr>
+        <td align="left">
+        <a class="btn btn-info btn-sm" href="/keranjang-belanja"> Lihat Detail </a>
+        </td>
+        <td align="right">
+        <a class="btn btn-info btn-sm" href="/selesaikan-pemesanan"> Pembayaran </a>
+        </td>
+        </tr>
+        </table>    
+        ';
+    }
+    return $produk_belanjaan;
 }
 
 public function seo()
