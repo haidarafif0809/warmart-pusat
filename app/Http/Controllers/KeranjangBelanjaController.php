@@ -441,10 +441,10 @@ public function tampilanProdukKeranjangBelanjaCollapse($keranjang_belanjaan)
         </tr>
         <tr>
         <td align="left">
-        <a class="btn btn-info btn-sm" href="/keranjang-belanja"> Lihat Detail </a>
+        <a class="btn btn-info btn-sm" href="'. url("keranjang-belanja") .'"> Lihat Detail </a>
         </td>
         <td align="right">
-        <a class="btn btn-info btn-sm" href="/selesaikan-pemesanan"> Pembayaran </a>
+        <a class="btn btn-info btn-sm" href="'. url("selesaikan-pemesanan") .'"> Pembayaran </a>
         </td>
         </tr>
         </table>    
