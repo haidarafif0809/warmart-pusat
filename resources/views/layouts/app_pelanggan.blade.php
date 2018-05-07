@@ -71,8 +71,8 @@
     <!--     Fonts and icons     -->
     <link href="{{ asset('css/material-kit.css?v=1.2.0')}}" rel="stylesheet"/>
     <link href="{{ asset('assets/assets-for-demo/vertical-nav.css')}}" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" rel="stylesheet" type="text/css"/>
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet"/>
+    <link href="{{ asset('css/fonts-googleapis-roboto.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet"/>
 
     <!-- Facebook Pixel Code -->
     <script>
