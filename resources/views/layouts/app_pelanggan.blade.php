@@ -584,7 +584,7 @@ body {
         </nav>
     </body>
     <!-- Include Dexie -->
-    <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
+    <script src="{{ asset('js/dexie.js') }}"></script>
 
     <!--   Core JS Files   -->
     <script src="{{ asset('js/jquery-3.2.1.min.js') }}" type="text/javascript">
@@ -635,10 +635,10 @@ body {
     <script src="{{ asset('js/jquery.dataTables.js') }}">
     </script>
     <!-- Sweet Alert 2 plugin, full documentation here: https://limonte.github.io/sweetalert2/ -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.0.5/sweetalert2.all.min.js" type="text/javascript">
+    <script src="{{ asset('js/sweetalert2.all.min.js') }}" type="text/javascript">
     </script>
     <!-- Sertakan polibill untuk Prompt ES6 (opsional) untuk browser IE11 dan Android -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.js">
+    <script src="{{ asset('js/core.js') }}">
     </script>
     <!-- Plugin for Fileupload, full documentation here: http://www.jasny.net/bootstrap/javascript/#fileinput -->
     <script src="{{ asset('js/jasny-bootstrap.min.js') }}">
@@ -660,7 +660,7 @@ body {
     <script src="{{ asset('js/material-kit.js?v=1.2.0')}}" type="text/javascript">
     </script>
     {{-- lazy load image --}}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-lazyload/10.3.5/lazyload.min.js">
+    <script src="{{ asset('js/lazyload.min.js')}}">
     </script>
     <script type="text/javascript">
         var myLazyLoad = new LazyLoad();

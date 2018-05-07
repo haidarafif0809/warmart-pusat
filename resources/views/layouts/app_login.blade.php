@@ -41,9 +41,9 @@ if ($address_current == $address_app->app_address) {
     
     <link href="{{ asset('css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
     <!--     Fonts and icons     -->
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons" />
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/fonts-googleapis-roboto.css') }}" />
+    <link href="{{ asset('css/fonts-googleapis-icon.css') }}" rel="stylesheet">
     <link href="{{ asset('css/selectize.bootstrap3.css') }}" rel="stylesheet">
 </head>
 <style type="text/css">
@@ -200,7 +200,7 @@ if ($address_current == $address_app->app_address) {
 <script src="{{ asset('js/selectize.min.js') }}"></script> 
 <script src="{{ asset('js/demo.js') }}"></script> 
 <!-- Include Dexie -->
-<script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
+<script src="{{ asset('js/dexie.js') }}"></script>
 <script type="text/javascript">
     $().ready(function() {
         demo.checkFullPageBackgroundImage();
