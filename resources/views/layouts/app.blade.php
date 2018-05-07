@@ -41,9 +41,8 @@ $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description']
     <link href="{{ asset('css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
     <!--     Fonts and icons     -->
     <link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/MaterialIconsRoboto.css') }}" rel="stylesheet" type="text/css"/>
-    {{-- <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> --}}
-    {{-- <link href="{{ asset('css/MaterialIcons.css') }}" rel="stylesheet"> --}}
+    <link href="{{ asset('css/fonts-googleapis-roboto.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset('css/fonts-googleapis-icon.css') }}" rel="stylesheet">
 </link>
 </link>
 </link>
@@ -54,8 +53,8 @@ $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description']
 <style type="text/css">
 
     .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
-       padding: 1px;
-   }
+     padding: 1px;
+ }
 
 </style>
 <body>
@@ -481,7 +480,7 @@ $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description']
 </body>
 <!--   Core JS Files   -->
 
-<script src="{{ asset('js/app.js?v=1.203')}}" type="text/javascript">
+<script src="{{ asset('js/app.js?v=1.223')}}" type="text/javascript">
 
 </script>
 <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript">
@@ -555,7 +554,7 @@ $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description']
 <!-- SHORTCUT JS -->
 <script src="{{ asset('js/shortcut.js') }}">
 </script>
-<script src="https://cdn.rawgit.com/chrisvfritz/5f0a639590d6e648933416f90ba7ae4e/raw/974aa47f8f9c5361c5233bd56be37db8ed765a09/currency-validator.js"></script>
+<script src="{{ asset('js/currency-validator.js') }}"></script>
 
 
 <!--MENU YG SEDANG DI MIGRASI KE VUEJS TIDAK BISA DIAKSES SEMENTARA-->

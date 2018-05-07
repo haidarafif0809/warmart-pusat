@@ -47,8 +47,8 @@
 
         <ul class="breadcrumb"> 
           <li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li> 
-          <li><router-link :to="{name: 'indexPenerimaanProduk'}">Penerimaan Produk</router-link></li> 
-          <li class="active">Form Penerimaan Produk</li> 
+          <li><router-link :to="{name: 'indexPenerimaanProduk'}" v-bind:id="'homePenerimaan'">Penerimaan Produk</router-link></li> 
+          <li class="active">Form Edit Penerimaan Produk</li> 
         </ul>
 
         <!-- small modal -->
@@ -124,6 +124,7 @@
                     <table class="table table-striped table-hover" v-if="seen">
                       <thead class="text-primary">
                         <tr>
+                          <th>Faktur Order</th>
                           <th>Produk</th>
                           <th style="text-align:right;">Jumlah Order</th>
                           <th style="text-align:right;">Jumlah Fisik</th>
@@ -134,33 +135,33 @@
                       <tbody v-if="tbs_penerimaan_produks.length > 0 && loading == false"  class="data-ada">
                         <tr v-for="tbs_pembelian, index in tbs_penerimaan_produks" >
 
+                          <td>{{ tbs_pembelian.data_tbs.no_faktur_order }}</td>
+
                           <td>{{ tbs_pembelian.data_tbs.kode_barang }} - {{ tbs_pembelian.data_tbs.nama_barang | capitalize }}</td>
 
-                          <td align="right"> {{ tbs_pembelian.data_tbs.jumlah_produk | pemisahTitik }} </td>
+                          <td style="text-align:right">
+                            {{ tbs_pembelian.data_tbs.jumlah_produk | pemisahTitik }}
+                          </td>
 
                           <td>
-                            <a href="#create-penerimaan-produk" v-bind:id="'edit-' + tbs_pembelian.data_tbs.id_tbs_penerimaan_produk" v-on:click="editEntryJumlah(tbs_pembelian.data_tbs.id_tbs_penerimaan_produk, index,tbs_pembelian.data_tbs.nama_barang,tbs_pembelian.data_tbs.subtotal)"><p align='right'>{{ tbs_pembelian.data_tbs.jumlah_fisik | pemisahTitik }}</p>
+                            <a v-bind:href="'#edit-penerimaan-produk/'+id_penerimaan" v-bind:id="'edit-' + tbs_pembelian.data_tbs.id_edit_tbs_penerimaan_produk" v-on:click="editEntryJumlah(tbs_pembelian.data_tbs.id_edit_tbs_penerimaan_produk, index,tbs_pembelian.data_tbs.nama_barang,tbs_pembelian.data_tbs.subtotal)"><p align='right'>{{ tbs_pembelian.data_tbs.jumlah_fisik | pemisahTitik }}</p>
                             </a>
                           </td>
 
                           <td align="right"> {{ tbs_pembelian.data_tbs.selisih_fisik | pemisahTitik }} </td>
 
-                          <td align="center"> {{ tbs_pembelian.data_tbs.nama_satuan }} </td>
+                          <td align="center">{{ tbs_pembelian.data_tbs.nama_satuan }}</td>
 
                         </tr>
                       </tbody>          
                       <tbody class="data-tidak-ada"  v-else-if="tbs_penerimaan_produks.length == 0 && loading == false" >
-                        <tr ><td colspan="5"  class="text-center">Tidak Ada Data</td></tr>
+                        <tr ><td colspan="3"  class="text-center">Tidak Ada Data</td></tr>
                       </tbody>
                     </table>  
 
                     <vue-simple-spinner v-if="loading"></vue-simple-spinner>
 
-                    <div align="right"><pagination :data="tbsPenerimaanProdukData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
-
-                    <p style="color: red; font-style: italic;">
-                      *Note : Klik Kolom Jumlah Fisik, Untuk Merubah Nilai Jumlah Fisik
-                    </p> 
+                    <div align="right"><pagination :data="tbsPenerimaanProdukData" v-on:pagination-change-page="getResults" :limit="3"></pagination></div>
 
                   </div>
                 </div><!-- COL SM 8 --> 
@@ -181,13 +182,10 @@
                         </b>
                       </h3>
 
-                      <p class="category">
-                        <font style="font-size:20px; padding-left:0px;padding-top:25px;padding-right: 0px">
-                          Keterangan
-                        </font>
-                      </p>
+                      <p class="category"><font style="font-size:20px; padding-left:0px;padding-top:25px;padding-right: 0px">Keterangan</font></p>
                       <textarea class="form-control" v-model="inputPembayaranPenerimaanProduk.keterangan" name="keterangan" id="keterangan" placeholder="Keterangan .." rows="1">                    
                       </textarea>
+
 
                     </div>
                     <div class="card-footer">
@@ -196,7 +194,7 @@
                           <button type="button" class="btn btn-success btn-footer" id="bayar" v-on:click="selesaiPenerimaanProduk()" v-shortkey.push="['f2']" @shortkey="selesaiPenerimaanProduk()"><font style="font-size:15px;">Bayar(F2)</font></button>
                         </div>
                         <div class="col-md-5 col-xs-5">
-                          <button type="submit" class="btn btn-danger btn-footer" id="btnBatal" v-on:click="batalPenerimaanProduk(inputPembayaranPenerimaanProduk.suplier, inputPembayaranPenerimaanProduk.no_faktur)" v-shortkey.push="['f3']" @shortkey="batalPenerimaanProduk(inputPembayaranPenerimaanProduk.suplier, inputPembayaranPenerimaanProduk.no_faktur)"> <font style="font-size:15px;">Batal(F3) </font></button>
+                          <button type="submit" class="btn btn-danger btn-footer" id="btnBatal" v-on:click="batalPenerimaanProduk(inputPembayaranPenerimaanProduk.suplier, inputPembayaranPenerimaanProduk.no_faktur_penerimaan)" v-shortkey.push="['f3']" @shortkey="batalPenerimaanProduk(inputPembayaranPenerimaanProduk.suplier, inputPembayaranPenerimaanProduk.no_faktur_penerimaan)"> <font style="font-size:15px;">Batal(F3) </font></button>
                         </div>
                       </div>
                     </div>
@@ -233,8 +231,12 @@
             inputPembayaranPenerimaanProduk:{
               subtotal: 0,
               suplier: '',
+              suplier_id: '',
               keterangan: '',
-              no_faktur: ''
+              no_faktur_penerimaan: '',
+              faktur_order: '',
+              faktur_order_baru: '',
+              id_penerimaan: ''
             },
             placeholder_suplier: {
               placeholder: '--PILIH SUPLIER (F1)--',
@@ -245,29 +247,22 @@
               placeholder: '--PILIH SATUAN--',
               sortField: 'text',
               openOnFocus : true,
-            },
-            pemisahTitik: {
-              decimal: ',',
-              thousands: '.',
-              prefix: '',
-              suffix: '',
-              precision: 0,
-              masked: false /* doesn't work with directive */
-            },      
-            disabled: {
-              to: new Date(),
-            },
+            },   
             pencarian: '',
             loading: true,
             seen : false,
+            id_penerimaan: 0,
 
           }
 
         },
         mounted() {
           var app = this;
+          app.id_penerimaan = app.$route.params.id;
+          app.inputPembayaranPenerimaanProduk.id_penerimaan = app.$route.params.id;
           app.$store.dispatch('LOAD_SUPLIER_ORDER_LIST');
           app.getResults();
+          app.getPenerimaanProduk(app.id_penerimaan);
         },
         filters: {
           capitalize: function (value) {
@@ -305,7 +300,7 @@
             if (typeof page === 'undefined') {
               page = 1;
             }
-            axios.get(app.url+'/view-tbs-penerimaan-produk?page='+page)
+            axios.get(app.url+'/view-edit-tbs-penerimaan-produk/'+app.id_penerimaan+'?page='+page)
             .then(function (resp) {
               console.log(resp.data.data)
               app.tbs_penerimaan_produks = resp.data.data;
@@ -329,12 +324,29 @@
               alert("Tidak Dapat Memuat Pembelian");
             });
           },
+          getPenerimaanProduk(id){
+            var app = this
+
+            axios.get(app.url+'/data-penerimaan-produk/'+id)
+            .then(function (resp) {
+              app.inputPembayaranPenerimaanProduk.suplier_id = resp.data.suplier_id
+              app.inputPembayaranPenerimaanProduk.suplier = resp.data.nama_suplier
+              app.inputPembayaranPenerimaanProduk.keterangan = resp.data.keterangan
+              app.inputPembayaranPenerimaanProduk.no_faktur_penerimaan = resp.data.no_faktur_penerimaan
+              app.inputPembayaranPenerimaanProduk.faktur_order = resp.data.faktur_order
+              app.inputPembayaranPenerimaanProduk.id_penerimaan = resp.data.id
+            })
+            .catch(function (resp) {
+              alert("Tidak Dapat Memuat Pembelian Order");
+            });
+
+          },
           getHasilPencarian(page){
             var app = this;
             if (typeof page === 'undefined') {
               page = 1;
             }
-            axios.get(app.url+'/pencarian-tbs-penerimaan-produk?search='+app.pencarian+'&page='+page)
+            axios.get(app.url+'/pencarian-edit-tbs-penerimaan-produk/'+app.id_penerimaan+'?search='+app.pencarian+'&page='+page)
             .then(function (resp) {
               app.tbs_penerimaan_produks = resp.data.data;
               app.tbsPenerimaanProdukData = resp.data;
@@ -359,7 +371,7 @@
               app.inputPembayaranPenerimaanProduk.suplier = suplier_order;
               app.inputPembayaranPenerimaanProduk.suplier_id = suplier_id;
               app.inputPembayaranPenerimaanProduk.keterangan = keterangan_order;
-              app.inputPembayaranPenerimaanProduk.no_faktur = faktur_order;
+              app.inputPembayaranPenerimaanProduk.faktur_order_baru = faktur_order;
               this.getPembelianOrder(id_order,suplier_id,faktur_order,suplier_order);
             }
           },
@@ -368,7 +380,7 @@
             var app = this;
             app.loading = true;
 
-            axios.get(app.url+'/proses-tbs-penerimaan-produk?id_order='+id_order+'&suplier_id='+suplier_id+'&faktur_order='+faktur_order)
+            axios.get(app.url+'/proses-edit-tbs-penerimaan-produk/'+app.id_penerimaan+'?id_order='+id_order+'&suplier_id='+suplier_id+'&faktur_order='+faktur_order)
             .then(function (resp) {
               app.alert("Menerima Order Dari Supplier "+titleCase(suplier_order));
               app.loading = false;
@@ -416,9 +428,9 @@
             }).then(function (jumlah_produk) { 
               if (jumlah_produk != "0") { 
                 app.loading = true;
-                axios.get(app.url+'/proses-edit-jumlah-fisik-tbs-penerimaan?jumlah_edit_produk='+jumlah_produk+'&id_tbs_pembelian='+id)
+                axios.get(app.url+'/proses-edit-jumlah-fisik-edit-tbs-penerimaan?jumlah_edit_produk='+jumlah_produk+'&id_tbs_pembelian='+id)
                 .then(function (resp) {
-                  app.alert("Mengubah Jumlah Produk "+titleCase(nama_produk));
+                  app.alert("Mengubah Jumlah Fisik "+titleCase(nama_produk));
                   app.loading = false;
                   app.getResults();      
                   var subtotal = (parseInt(app.inputPembayaranPenerimaanProduk.subtotal) - parseInt(subtotal_lama))  + parseInt(resp.data.subtotal)
@@ -427,7 +439,7 @@
                 })
                 .catch(function (resp) {
                   app.loading = false;
-                  alert("Jumlah Produk tidak bisa diedit");
+                  alert("Jumlah Fisik tidak bisa diedit");
                 });
               } 
               else { 
@@ -503,14 +515,18 @@
 
             var newPenerimaanProduk = app.inputPembayaranPenerimaanProduk;
 
-            if(newPenerimaanProduk.suplier == ''){
+            if (newPenerimaanProduk.subtotal == 0) {
+
+              app.message = 'Maaf Anda Belum Melakukan Penerimaan Produk.';
+              app.alertGagal(app.message);
+
+            }else if(newPenerimaanProduk.suplier == ''){
               app.message = 'Supplier Tidak Boleh Kosong, Silakan Pilih Supplier Dahulu..';
               app.alertGagal(app.message);
             }else{
 
-              axios.post(app.url, newPenerimaanProduk)
+              axios.post(app.url+'/update-penerimaan-produk', newPenerimaanProduk)
               .then(function (resp) {
-                app.getResults();
                 app.inputPembayaranPenerimaanProduk.suplier = ''
                 app.inputPembayaranPenerimaanProduk.no_faktur = ''
                 app.inputPembayaranPenerimaanProduk.keterangan = ''
@@ -519,6 +535,7 @@
                 app.alert(app.message);
                 app.$store.dispatch('LOAD_SUPLIER_ORDER_LIST');
                 window.open('penerimaan-produk/cetak-besar-penerimaan-produk/'+resp.data.respons_pembelian,'_blank');
+                app.$router.replace('/penerimaan-produk');
               })
               .catch(function (resp) {
                 app.success = false;
@@ -538,17 +555,16 @@
               if (willDelete) {
 
                 app.loading = true;
-                axios.get(app.url+'/batal-penerimaan-produk?no_faktur='+no_faktur)
+                axios.get(app.url+'/batal-edit-penerimaan-produk?no_faktur='+no_faktur)
                 .then(function (resp) {
 
-                  var subtotal = parseInt(app.inputPembayaranPenerimaanProduk.subtotal) - parseInt(resp.data.subtotal)
-                  app.getResults();
-                  app.alert("Membatalkan Transaksi Pembelian");
+                  app.alert("Membatalkan Transaksi Penerimaan Produk");
                   app.inputPembayaranPenerimaanProduk.suplier = ''
                   app.inputPembayaranPenerimaanProduk.no_faktur = ''
                   app.inputPembayaranPenerimaanProduk.keterangan = ''
                   app.inputPembayaranPenerimaanProduk.subtotal = 0
-                  
+                  app.$router.replace('/penerimaan-produk');
+
                 })
                 .catch(function (resp) {
 

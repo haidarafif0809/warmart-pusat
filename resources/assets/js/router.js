@@ -199,7 +199,11 @@ import PembelianOrderProsesEdit from './components/pembelian_order/PembelianOrde
 import PembelianOrderDetail from './components/pembelian_order/PembelianOrderDetail.vue';
 
 // PENERIMAAN PRODUK
+import PenerimaanProdukIndex from './components/penerimaan_produk/PenerimaanProdukIndex.vue';
 import PenerimaanProdukCreate from './components/penerimaan_produk/PenerimaanProdukCreate.vue';
+import PenerimaanProdukDetail from './components/penerimaan_produk/PenerimaanProdukDetail.vue';
+import PenerimaanProdukProsesEdit from './components/penerimaan_produk/PenerimaanProdukProsesEdit.vue';
+import PenerimaanProdukEdit from './components/penerimaan_produk/PenerimaanProdukEdit.vue';
 
 // SETTING FIXEL
 import SettingFixel from './components/setting_pixel/SettingFixel.vue';
@@ -843,9 +847,25 @@ const routes = [{
         component: SettingFixel, 
         name: 'settingFixelIndex'
     },{ 
+        path: '/penerimaan-produk', 
+        component: PenerimaanProdukIndex, 
+        name: 'indexPenerimaanProduk'
+    },{ 
         path: '/create-penerimaan-produk', 
         component: PenerimaanProdukCreate, 
         name: 'createPenerimaanProduk'
+    },{ 
+        path: '/detail-penerimaan-produk/:id', 
+        component: PenerimaanProdukDetail, 
+        name: 'detailPenerimaanProduk'
+    },{ 
+        path: '/proses-edit-penerimaan-produk/:id', 
+        component: PenerimaanProdukProsesEdit, 
+        name: 'prosesEditPenerimaanProduk'
+    },{ 
+        path: '/edit-penerimaan-produk/:id', 
+        component: PenerimaanProdukEdit, 
+        name: 'editPenerimaanProduk'
     },{ 
         path: '/optimasi-seo', 
         component: OptimasiSeo, 

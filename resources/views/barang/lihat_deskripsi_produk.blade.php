@@ -67,6 +67,14 @@ $judul_warung = \App\SettingFooter::select()->first()->judul_warung;
     margin: 20px 0 10px;
     @endif
   }
+
+
+
+.zoom:hover {
+    -ms-transform: scale(1.5); /* IE 9 */
+    -webkit-transform: scale(1.5); /* Safari 3-8 */
+    transform: scale(1.5); 
+}
 </style>
 <body class="product-page">
 
@@ -138,23 +146,23 @@ $judul_warung = \App\SettingFooter::select()->first()->judul_warung;
                        <div class="tab-content">
                             <div class="tab-pane active" id="product-page1">
                                   @if(isset($lihat_deskripsi_produk->foto))
-                                 {!! Html::image(asset('foto_produk/'.$lihat_deskripsi_produk->foto)) !!}
+                                <img  class="zoom" src="{{asset('foto_produk/'.$lihat_deskripsi_produk->foto.'')}}" /></a>
                                  @else
-                                 {!! Html::image(asset('image/foto_default.png')) !!}
+                                <img src="{{asset('image/foto_default.png')}}" /></a>
                                  @endif
                               </div>
-                              <div class="tab-pane" id="product-page2">
+                              <div class="tab-pane " id="product-page2">
                                   @if(isset($lihat_deskripsi_produk->foto_2))
-                                 {!! Html::image(asset('foto_produk/'.$lihat_deskripsi_produk->foto_2)) !!}
+                                 <img  class="zoom" src="{{asset('/foto_produk/'.$lihat_deskripsi_produk->foto_2.'')}}" /></a>
                                  @else
-                                 {!! Html::image(asset('image/foto_default.png')) !!}
+                                 <img src="{{asset('image/foto_default.png')}}" /></a>
                                  @endif
                              </div>
-                              <div class="tab-pane" id="product-page3">
+                              <div class="tab-pane " id="product-page3">
                                  @if(isset($lihat_deskripsi_produk->foto_3))
-                                 {!! Html::image(asset('foto_produk/'.$lihat_deskripsi_produk->foto_3)) !!}
+                                 <img  class="zoom" src="{{asset('/foto_produk/'.$lihat_deskripsi_produk->foto_3.'')}}" /></a>
                                  @else
-                                 {!! Html::image(asset('image/foto_default.png')) !!}
+                                 <img src="{{asset('image/foto_default.png')}}" /></a>
                                  @endif
                               </div>
                         </div>
@@ -162,27 +170,27 @@ $judul_warung = \App\SettingFooter::select()->first()->judul_warung;
                                 <li class="active">
                                   <a href="#product-page1" role="tab" data-toggle="tab" aria-expanded="false">
                                      @if(isset($lihat_deskripsi_produk->foto))
-                                     {!! Html::image(asset('foto_produk/'.$lihat_deskripsi_produk->foto)) !!}
+                                    <img src="{{asset('/foto_produk/'.$lihat_deskripsi_produk->foto.'')}}" /></a>
                                      @else
-                                     {!! Html::image(asset('image/foto_default.png')) !!}
+                                    <img src="{{asset('image/foto_default.png')}}" /></a>
                                      @endif
                                   </a>
                                 </li>
                                 <li >
                                   <a href="#product-page2" role="tab" data-toggle="tab" aria-expanded="false">
                                      @if(isset($lihat_deskripsi_produk->foto_2))
-                                     {!! Html::image(asset('foto_produk/'.$lihat_deskripsi_produk->foto_2)) !!}
+                                     <img src="{{asset('/foto_produk/'.$lihat_deskripsi_produk->foto_2.'')}}"  /></a>
                                      @else
-                                     {!! Html::image(asset('image/foto_default.png')) !!}
+                                     <img src="{{asset('image/foto_default.png')}}" /></a>
                                      @endif
                                   </a>
                                 </li>
                                 <li>
                                   <a href="#product-page3" role="tab" data-toggle="tab" aria-expanded="true">
                                      @if(isset($lihat_deskripsi_produk->foto_3))
-                                     {!! Html::image(asset('foto_produk/'.$lihat_deskripsi_produk->foto_3)) !!}
+                                     <img src="{{asset('/foto_produk/'.$lihat_deskripsi_produk->foto_3.'')}}" /></a>
                                      @else
-                                     {!! Html::image(asset('image/foto_default.png')) !!}
+                                     <img src="{{asset('image/foto_default.png')}}" /></a>
                                      @endif
                                   </a>
                                 </li>
@@ -265,6 +273,7 @@ $judul_warung = \App\SettingFooter::select()->first()->judul_warung;
 <script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
 <script src="{{ asset('js/demo.js') }}"></script>
 <script src="{{ asset('js/material-kit.js?v=1.2.0')}}" type="text/javascript"></script>
+
    <script type="text/javascript">
 
     $(document).ready(function() {
@@ -288,11 +297,17 @@ $judul_warung = \App\SettingFooter::select()->first()->judul_warung;
                 }
             }
         });
+    
     });
    </script>
+
 <script type="text/javascript">
   $().ready(function() {
     demo.checkFullPageBackgroundImage();
+       
+
   });
+
+
 </script>
 </html>

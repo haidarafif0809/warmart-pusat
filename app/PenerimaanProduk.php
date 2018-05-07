@@ -5,11 +5,12 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Yajra\Auditable\AuditableTrait;
+use Auth;
 
 class PenerimaanProduk extends Model
 {
 	use AuditableTrait;
-	protected $fillable   = ['no_faktur_penerimaan', 'suplier_id', 'total', 'keterangan', 'status_penerimaan', 'warung_id', 'created_by', 'updated_by'];
+	protected $fillable   = ['no_faktur_penerimaan', 'faktur_order', 'suplier_id', 'total', 'keterangan', 'status_penerimaan', 'warung_id', 'created_by', 'updated_by'];
 
 
     // MEMBUAT NO. FAKTUR   
@@ -54,5 +55,38 @@ class PenerimaanProduk extends Model
 
         return $no_faktur;
         //PROSES MEMBUAT NO. FAKTUR ITEM KELUAR
+    }
+
+    public function getStatusAttribute(){
+    	if ($this->status_penerimaan == 1) {
+    		$status_penerimaan = "Diterima";
+    	}elseif($this->status_penerimaan == 2){
+    		$status_penerimaan = "Proses";
+    	}else{
+    		$status_penerimaan = "Selesai";
+    	}
+
+    	return $status_penerimaan;
+    }
+
+    // Transaksi Pembelian Order
+    public function scopeDataTransaksiPenerimaanProduk($query)
+    {
+    	$query->select('penerimaan_produks.no_faktur_penerimaan', 'penerimaan_produks.faktur_order' ,'penerimaan_produks.id', 'supliers.nama_suplier', 'penerimaan_produks.total', 'penerimaan_produks.keterangan', 'penerimaan_produks.status_penerimaan', 'penerimaan_produks.warung_id', 'penerimaan_produks.created_at', 'users.name')
+    	->leftJoin('supliers', 'penerimaan_produks.suplier_id', '=', 'supliers.id')
+    	->leftJoin('users', 'penerimaan_produks.created_by', '=', 'users.id')
+    	->where('penerimaan_produks.warung_id', Auth::user()->id_warung)->orderBy('penerimaan_produks.id', 'desc');
+    	return $query;
+    }
+
+    public function scopeCetakPenerimaanProduk($query, $warung_id, $id)
+    {
+    	$query->select(['penerimaan_produks.no_faktur_penerimaan', 'penerimaan_produks.faktur_order', 'penerimaan_produks.created_at', 'penerimaan_produks.status_penerimaan', 'penerimaan_produks.total', 'supliers.nama_suplier', 'supliers.alamat as alamat_supplier', 'warungs.name', 'warungs.alamat', 'warungs.no_telpon',])
+    	->leftJoin('supliers', 'supliers.id', '=', 'penerimaan_produks.suplier_id')
+    	->leftJoin('warungs', 'warungs.id', '=', 'penerimaan_produks.warung_id')
+    	->where('penerimaan_produks.warung_id', $warung_id)
+    	->where('penerimaan_produks.id', $id);
+
+    	return $query;
     }
 }

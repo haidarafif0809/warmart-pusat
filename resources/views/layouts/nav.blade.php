@@ -171,6 +171,30 @@
 @endif  {{-- end if kasir_id  --}}
 
 @if(Laratrust::can('lihat_pembelian')) 
+<!--PEMBELIAN ORDER-->
+<li>
+    <router-link :to="{name: 'indexPembelianOrder'}" class="menu-nav disabled-menu">
+        <i class="material-icons">
+            add_shopping_cart
+        </i>
+        <p>
+            Order Pembelian
+        </p>
+    </router-link>
+</li>
+
+<!--PENERIMAAN PRODUK-->
+<li>
+    <router-link :to="{name: 'indexPenerimaanProduk'}" class="menu-nav disabled-menu">
+        <i class="material-icons">
+            add_shopping_cart
+        </i>
+        <p>
+            Penerimaan Produk
+        </p>
+    </router-link>
+</li>
+
 <!--PEMBELIAN-->
 <li>
     <router-link :to="{name: 'indexPembelian'}" class="menu-nav disabled-menu">
@@ -384,7 +408,7 @@
         <li>
             <router-link :to="{name: 'indexLaporanHutangBeredar'}" class="menu-nav">
                 <span class="sidebar-mini">
-                    LHB
+                    LH
                 </span>
                 <span class="sidebar-normal">
                     Laporan Hutang
@@ -675,10 +699,10 @@
             <li>
                 <router-link :to="{name: 'settingFixelIndex'}" class="menu-nav">
                     <span class="sidebar-mini">
-                        SF
+                        SP
                     </span>
                     <span class="sidebar-normal">
-                        Setting Fixel
+                        Setting Pixel & Analytics
                     </span>
                 </router-link>
             </li>

@@ -283,7 +283,7 @@
 
               <div class="card card-stats">
                 <div class="card-header" data-background-color="blue">
-                  <i class="material-icons">shopping_cart</i>
+                  <i class="material-icons">add_shopping_cart</i>
                 </div>
                 <div class="card-content">
 
@@ -1076,13 +1076,33 @@ methods: {
       app.loading = false;
       alert("Pajak Produk tidak bisa diedit");
     });
-  },//END METHOD EDIT TAX TBS
+  },//END METHOD EDIT TAX TBS  
   selesaiPembelianOrder(){
+    this.$swal({
+      text: "Anda Yakin Ingin Menyelesaikan Transaksi Ini ?",
+      buttons: {
+        cancel: true,
+        confirm: "OK"                   
+      },
+
+    }).then((value) => {
+
+      if (!value) throw null;
+
+      this.prosesSelesaiPembelianOrder(value);
+
+    });
+  },
+  prosesSelesaiPembelianOrder(value){
     var app = this;
     if (app.inputPembayaranPembelianOrder.suplier === '') {
       app.alertGagal("Silakan Pilih Suplier Terlebih Dahulu.");
       app.openSelectizeSuplier();
-    }else{
+    }else if (app.inputPembayaranPembelianOrder.subtotal == 0) {
+      app.alertGagal("Silakan Pilih Produk Yang Ingin Diorder Terlebih Dahulu.");
+      app.openSelectizeProduk();
+    }
+    else{
 
       var newPembelianOrder = app.inputPembayaranPembelianOrder;
       axios.post(app.url, newPembelianOrder)

@@ -1,12 +1,12 @@
 <?php
 $settingFooter = \App\SettingFooter::where('warung_id', \App\SettingPembedaAplikasi::where('app_address', url('/'))->first()->warung_id)->first();
 
-$jasa_pengirimans = \App\SettingJasaPengiriman::select('logo_jasa')->where('tampil_jasa_pengiriman', 1)->get();
-$bank_transfers = \App\SettingTransferBank::select('logo_bank')->where('tampil_bank', 1)->get();
-
 //Cek Address Aplikasi yg di Jalankan
 $address_current = url('/');
 $address_app = \App\SettingPembedaAplikasi::select(['warung_id', 'app_address'])->where('app_address', $address_current)->first();
+
+$jasa_pengirimans = \App\SettingJasaPengiriman::select('logo_jasa')->where('tampil_jasa_pengiriman', 1)->where('warung_id', $address_app->warung_id)->get();
+$bank_transfers = \App\SettingTransferBank::select('logo_bank')->where('tampil_bank', 1)->where('warung_id', $address_app->warung_id)->get();
 
 if ($address_current == $address_app->app_address) {
   $foto_logo = \App\UserWarung::select()->where('tipe_user',4)->where('id_warung', $address_app->warung_id)->orderBy('id', 'asc')->limit(1)->first();
@@ -52,8 +52,8 @@ $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description']
   <!--     Fonts and icons     -->
   <link href="{{ asset('css/material-kit.css?v=1.2.0')}}" rel="stylesheet"/>
   <link href="{{ asset('assets/assets-for-demo/vertical-nav.css')}}" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" rel="stylesheet" type="text/css"/>
-  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet"/>
+  <link href="{{ asset('css/fonts-googleapis-roboto.css') }}" rel="stylesheet" type="text/css"/>
+  <link href="{{ asset('css/font-awesome.min.css')}}" rel="stylesheet"/>
   {!! SEOMeta::generate() !!}
   {!! OpenGraph::generate() !!}
   {!! Twitter::generate() !!}
@@ -173,7 +173,11 @@ $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description']
   .img-jasa{
     padding: 0px 2px 2px;
   }
-
+.zoom:hover {
+    -ms-transform: scale(1.5); /* IE 9 */
+    -webkit-transform: scale(1.5); /* Safari 3-8 */
+    transform: scale(1.5); 
+}
 </style>
 <body class="product-page">
   @if(Agent::isMobile())
@@ -430,51 +434,51 @@ $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description']
               <div class="tab-content">
                             <div class="tab-pane active" id="product-page1">
                                   @if(isset($barang->foto))
-                                 {!! Html::image(asset('foto_produk/'.$barang->foto)) !!}
+                                <img  class="zoom" src="{{asset('foto_produk/'.$barang->foto.'')}}" /></a>
                                  @else
-                                 {!! Html::image(asset('image/foto_default.png')) !!}
+                                <img src="{{asset('image/foto_default.png')}}" /></a>
                                  @endif
                               </div>
-                              <div class="tab-pane" id="product-page2">
+                              <div class="tab-pane " id="product-page2">
                                   @if(isset($barang->foto_2))
-                                 {!! Html::image(asset('foto_produk/'.$barang->foto_2)) !!}
+                                 <img  class="zoom" src="{{asset('/foto_produk/'.$barang->foto_2.'')}}" /></a>
                                  @else
-                                 {!! Html::image(asset('image/foto_default.png')) !!}
+                                 <img src="{{asset('image/foto_default.png')}}" /></a>
                                  @endif
                              </div>
-                              <div class="tab-pane" id="product-page3">
+                              <div class="tab-pane " id="product-page3">
                                  @if(isset($barang->foto_3))
-                                 {!! Html::image(asset('foto_produk/'.$barang->foto_3)) !!}
+                                 <img  class="zoom" src="{{asset('/foto_produk/'.$barang->foto_3.'')}}" /></a>
                                  @else
-                                 {!! Html::image(asset('image/foto_default.png')) !!}
+                                 <img src="{{asset('image/foto_default.png')}}" /></a>
                                  @endif
                               </div>
                         </div>
                         <ul class="nav flexi-nav" role="tablist" id="flexiselDemo1">
-                                <li class="active">
+                              <li class="active">
                                   <a href="#product-page1" role="tab" data-toggle="tab" aria-expanded="false">
                                      @if(isset($barang->foto))
-                                     {!! Html::image(asset('foto_produk/'.$barang->foto)) !!}
+                                    <img src="{{asset('/foto_produk/'.$barang->foto.'')}}" /></a>
                                      @else
-                                     {!! Html::image(asset('image/foto_default.png')) !!}
+                                    <img src="{{asset('image/foto_default.png')}}" /></a>
                                      @endif
                                   </a>
                                 </li>
                                 <li >
                                   <a href="#product-page2" role="tab" data-toggle="tab" aria-expanded="false">
                                      @if(isset($barang->foto_2))
-                                     {!! Html::image(asset('foto_produk/'.$barang->foto_2)) !!}
+                                     <img src="{{asset('/foto_produk/'.$barang->foto_2.'')}}"  /></a>
                                      @else
-                                     {!! Html::image(asset('image/foto_default.png')) !!}
+                                     <img src="{{asset('image/foto_default.png')}}" /></a>
                                      @endif
                                   </a>
                                 </li>
                                 <li>
                                   <a href="#product-page3" role="tab" data-toggle="tab" aria-expanded="true">
                                      @if(isset($barang->foto_3))
-                                     {!! Html::image(asset('foto_produk/'.$barang->foto_3)) !!}
+                                     <img src="{{asset('/foto_produk/'.$barang->foto_3.'')}}" /></a>
                                      @else
-                                     {!! Html::image(asset('image/foto_default.png')) !!}
+                                     <img src="{{asset('image/foto_default.png')}}" /></a>
                                      @endif
                                   </a>
                                 </li>
@@ -857,7 +861,7 @@ $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description']
 <script src="{{ asset('js/jquery.dataTables.js') }}">
 </script>
 <!-- Sweet Alert 2 plugin, full documentation here: https://limonte.github.io/sweetalert2/ -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.0.5/sweetalert2.all.min.js" type="text/javascript">
+<script src="{{ asset('js/sweetalert2.all.min.js') }}" type="text/javascript">
 </script>
 <!-- Plugin for Fileupload, full documentation here: http://www.jasny.net/bootstrap/javascript/#fileinput -->
 <script src="{{ asset('assets/js/jasny-bootstrap.min.js') }}"></script>
@@ -875,7 +879,7 @@ $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description']
 <script src="{{ asset('js/material-kit.js?v=1.2.0')}}" type="text/javascript">
 </script>
 {{-- lazy load image --}}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-lazyload/10.3.5/lazyload.min.js">
+<script src="{{ asset('js/lazyload.min.js')}}">
 </script>
 <script type="text/javascript">
   var myLazyLoad = new LazyLoad();
