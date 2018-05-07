@@ -1408,6 +1408,7 @@ prosesSelesaiPenjualan(value){
   })
   .catch(function (resp) {  
 
+    $("#modal_selesai").show();
     app.loading = false;
     console.log(resp);  
     alert("Tidak dapat Menyelesaikan Transaksi Penjualan");        

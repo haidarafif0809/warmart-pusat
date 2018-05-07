@@ -283,7 +283,7 @@
 
               <div class="card card-stats">
                 <div class="card-header" data-background-color="blue">
-                  <i class="material-icons">shopping_cart</i>
+                  <i class="material-icons">add_shopping_cart</i>
                 </div>
                 <div class="card-content">
 

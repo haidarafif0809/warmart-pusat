@@ -125,7 +125,9 @@
                       <thead class="text-primary">
                         <tr>
                           <th>Produk</th>
-                          <th style="text-align:right;">Jumlah</th>
+                          <th style="text-align:right;">Jumlah Order</th>
+                          <th style="text-align:right;">Jumlah Fisik</th>
+                          <th style="text-align:right;">Selisih Fisik</th>
                           <th style="text-align:center;">Satuan</th>
                         </tr>
                       </thead>
@@ -133,25 +135,32 @@
                         <tr v-for="tbs_pembelian, index in tbs_penerimaan_produks" >
 
                           <td>{{ tbs_pembelian.data_tbs.kode_barang }} - {{ tbs_pembelian.data_tbs.nama_barang | capitalize }}</td>
+
+                          <td align="right"> {{ tbs_pembelian.data_tbs.jumlah_produk | pemisahTitik }} </td>
+
                           <td>
-                            <a href="#create-order-pembelian" v-bind:id="'edit-' + tbs_pembelian.data_tbs.id_tbs_pembelian_order" v-on:click="editEntryJumlah(tbs_pembelian.data_tbs.id_tbs_pembelian_order, index,tbs_pembelian.data_tbs.nama_barang,tbs_pembelian.data_tbs.subtotal)"><p align='right'>{{ tbs_pembelian.data_tbs.jumlah_produk | pemisahTitik }}</p>
+                            <a href="#create-penerimaan-produk" v-bind:id="'edit-' + tbs_pembelian.data_tbs.id_tbs_penerimaan_produk" v-on:click="editEntryJumlah(tbs_pembelian.data_tbs.id_tbs_penerimaan_produk, index,tbs_pembelian.data_tbs.nama_barang,tbs_pembelian.data_tbs.subtotal)"><p align='right'>{{ tbs_pembelian.data_tbs.jumlah_fisik | pemisahTitik }}</p>
                             </a>
                           </td>
 
-                          <td align="center">
-                            <a href="#create-order-pembelian" v-bind:id="'edit-' + tbs_pembelian.data_tbs.id_tbs_pembelian_order" v-bind:class="'hurufBesar satuan-' + tbs_pembelian.data_tbs.id_produk" v-bind:data-satuan="''+tbs_pembelian.data_tbs.satuan_id" v-on:click="editSatuanEntry(tbs_pembelian.data_tbs.id_tbs_pembelian_order, index,tbs_pembelian.data_tbs.nama_barang,tbs_pembelian.data_tbs.subtotal, tbs_pembelian.data_tbs.id_produk)">{{ tbs_pembelian.data_tbs.nama_satuan }}</a>
-                          </td>
+                          <td align="right"> {{ tbs_pembelian.data_tbs.selisih_fisik | pemisahTitik }} </td>
+
+                          <td align="center"> {{ tbs_pembelian.data_tbs.nama_satuan }} </td>
 
                         </tr>
                       </tbody>          
                       <tbody class="data-tidak-ada"  v-else-if="tbs_penerimaan_produks.length == 0 && loading == false" >
-                        <tr ><td colspan="3"  class="text-center">Tidak Ada Data</td></tr>
+                        <tr ><td colspan="5"  class="text-center">Tidak Ada Data</td></tr>
                       </tbody>
                     </table>  
 
                     <vue-simple-spinner v-if="loading"></vue-simple-spinner>
 
                     <div align="right"><pagination :data="tbsPenerimaanProdukData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
+
+                    <p style="color: red; font-style: italic;">
+                      *Note : Klik Kolom Jumlah Fisik, Untuk Merubah Nilai Jumlah Fisik
+                    </p> 
 
                   </div>
                 </div><!-- COL SM 8 --> 
@@ -164,13 +173,6 @@
                     </div>
                     <div class="card-content">
 
-                      <p class="category"><font style="font-size:20px;">Subtotal</font></p>
-                      <h3 class="card-title">
-                        <b>
-                          <font style="font-size:32px;">{{ inputPembayaranPenerimaanProduk.subtotal | pemisahTitik }}</font>
-                        </b>
-                      </h3>
-
                       <p class="category"><font style="font-size:20px;">Supplier</font></p>
                       <h3 class="card-title">
                         <b>
@@ -179,12 +181,13 @@
                         </b>
                       </h3>
 
-                      <p class="category"><font style="font-size:20px; padding-left:0px;padding-top:25px;padding-right: 0px">Keterangan</font></p>
+                      <p class="category">
+                        <font style="font-size:20px; padding-left:0px;padding-top:25px;padding-right: 0px">
+                          Keterangan
+                        </font>
+                      </p>
                       <textarea class="form-control" v-model="inputPembayaranPenerimaanProduk.keterangan" name="keterangan" id="keterangan" placeholder="Keterangan .." rows="1">                    
                       </textarea>
-
-
-                      <input class="form-control" type="text"  v-model="inputPembayaranPenerimaanProduk.no_faktur"  name="no_faktur" id="no_faktur">
 
                     </div>
                     <div class="card-footer">
@@ -386,8 +389,8 @@
             swal({ 
               title: titleCase(nama_produk), 
               input: 'number', 
-              inputPlaceholder : 'Jumlah Produk',         
-              html:'Berapa Jumlah Produk Yang Akan Dimasukkan ?', 
+              inputPlaceholder : 'Jumlah Fisik',         
+              html:'Berapa Jumlah Fisik Yang Akan Dimasukkan ?', 
               animation: false, 
               showCloseButton: true, 
               showCancelButton: true, 
@@ -413,7 +416,7 @@
             }).then(function (jumlah_produk) { 
               if (jumlah_produk != "0") { 
                 app.loading = true;
-                axios.get(app.url+'/proses-edit-jumlah-tbs-pembelian?jumlah_edit_produk='+jumlah_produk+'&id_tbs_pembelian='+id)
+                axios.get(app.url+'/proses-edit-jumlah-fisik-tbs-penerimaan?jumlah_edit_produk='+jumlah_produk+'&id_tbs_pembelian='+id)
                 .then(function (resp) {
                   app.alert("Mengubah Jumlah Produk "+titleCase(nama_produk));
                   app.loading = false;
@@ -500,12 +503,7 @@
 
             var newPenerimaanProduk = app.inputPembayaranPenerimaanProduk;
 
-            if (newPenerimaanProduk.subtotal == 0) {
-
-              app.message = 'Maaf Anda Belum Melakukan Penerimaan Produk.';
-              app.alertGagal(app.message);
-
-            }else if(newPenerimaanProduk.suplier == ''){
+            if(newPenerimaanProduk.suplier == ''){
               app.message = 'Supplier Tidak Boleh Kosong, Silakan Pilih Supplier Dahulu..';
               app.alertGagal(app.message);
             }else{

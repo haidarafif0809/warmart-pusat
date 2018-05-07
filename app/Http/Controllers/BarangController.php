@@ -675,8 +675,8 @@ class BarangController extends Controller
                     '150000',
                     '0',
                     '200',
-                    'Isi 1 Atau 0, Ket. 1 = Hitung Stok dan 0 = Tidak Hitung Stok',
-                    'Isi 1 Atau 0, Ket. 1 = Aktif dan 0 = Tidak Aktif',
+                    'Isi 1 Atau 2, Ket. 1 = Hitung Stok dan 2 = Tidak Hitung Stok',
+                    'Isi 1 Atau 2, Ket. 1 = Aktif dan 2 = Tidak Aktif',
                     'Bahan Cotton Combed 24 S',
                     ]);
 
@@ -689,7 +689,7 @@ class BarangController extends Controller
 
         $warung_id = Auth::user()->id_warung;
         // validasi untuk memastikan file yang diupload adalah excel
-        $this->validate($request, ['excel' => 'required|mimes:xls,xlsx']);
+        // $this->validate($request, ['excel' => 'required|mimes:xls,xlsx']);
         // ambil file yang baru diupload
         $excel = $request->file('excel');
         // baca sheet pertama
@@ -723,10 +723,10 @@ class BarangController extends Controller
             // Mengubah Hitung Stok Menajdi lowerCase (Huruf Kecil Semua)
             $hitungStok = trim(strtolower($row['hitung_stok']));
             if (!empty($row['hitung_stok'])) {
-                if ($hitungStok !== '1' && $hitungStok !== '0') {
+                if ($hitungStok !== '1' && $hitungStok !== '2') {
                     $errors['hitungStok'][] = [
                     'line'    => $no,
-                    'message' => 'Nilai Dari Kolom <strong>Hitung Stok</strong> Hanya Boleh Berisi 1 atau 0.',
+                    'message' => 'Nilai Dari Kolom <strong>Hitung Stok</strong> Hanya Boleh Berisi 1 atau 2.',
                     ];
                     $lineErrors[] = $no;
                 }
@@ -740,10 +740,10 @@ class BarangController extends Controller
             // Mengubah Status Menajdi lowerCase (Huruf Kecil Semua)
             $status = trim(strtolower($row['status']));
             if (!empty($row['status'])) {
-                if ($status !== '1' && $status !== '0') {
+                if ($status !== '1' && $status !== '2') {
                     $errors['status'][] = [
                     'line_status'    => $no,
-                    'message_status' => 'Nilai Dari Kolom <strong>Status</strong> Hanya Boleh Berisi 1 atau 0.',
+                    'message_status' => 'Nilai Dari Kolom <strong>Status</strong> Hanya Boleh Berisi 1 atau 2.',
                     ];
                     $lineErrors[] = $no;
                 }
@@ -836,8 +836,8 @@ class BarangController extends Controller
                 'satuan_id'          => $satuan,
                 'kategori_barang_id' => $kategori,
                 'deskripsi_produk'   => $row['deskripsi_produk'],
-                'status_aktif'       => $row['status'],
-                'hitung_stok'        => $row['hitung_stok'],
+                'status_aktif'       => $row['status'] != 1 ? 0 : 1 ,
+                'hitung_stok'        => $row['hitung_stok'] != 1 ? 0 : 1,
                 'konfirmasi_admin'   => 1,
                 'id_warung'          => $warung_id,
                 ]);

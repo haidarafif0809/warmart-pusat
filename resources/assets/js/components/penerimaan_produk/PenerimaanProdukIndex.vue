@@ -16,7 +16,7 @@
 
 			<div class="card">
 				<div class="card-header card-header-icon" data-background-color="purple">
-					<i class="material-icons">add_shopping_cart</i>
+					<i class="material-icons">shopping_cart</i>
 				</div>
 				<div class="card-content">
 					<h4 class="card-title"> Penerimaan Produk </h4>
@@ -39,7 +39,6 @@
 									<th>Faktur Order</th>
 									<th>Supplier</th>
 									<th>Status</th>
-									<th style="text-align:right;">Total</th>
 									<th style="text-align:right;">Edit</th>
 									<th style="text-align:right;">Detail</th>
 									<th style="text-align:right;">Cetak</th>									
@@ -54,7 +53,6 @@
 									<td>{{ penerimaanProduks.data.faktur_order }}</td>
 									<td>{{ penerimaanProduks.data.nama_suplier }}</td>
 									<td>{{ penerimaanProduks.status_penerimaan }}</td>
-									<td style="text-align:right;" >Rp. {{ penerimaanProduks.data.total | pemisahTitik }}</td>
 
 									<td style="text-align:right;">
 										<router-link :to="{name: 'prosesEditPenerimaanProduk', params: {id: penerimaanProduks.data.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + penerimaanProduks.data.id" v-if="penerimaanProduks.data.status_penerimaan < 3">
@@ -91,7 +89,6 @@
 						<div align="right"><pagination :data="penerimaanProdukData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
 
 					</div>
-					<p style="color: red; font-style: italic;">*Note : Klik Kolom No Transaksi, Untuk Melihat Detail Transaksi Pembelian .</p> 
 				</div>
 			</div>
 

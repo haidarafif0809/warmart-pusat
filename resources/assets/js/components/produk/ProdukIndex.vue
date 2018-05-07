@@ -1,11 +1,11 @@
     <style scoped>
-    .pencarian {
-        color: red; 
-        float: right;
-    }
-    .v-step__content[data-v-fca314f4] {
-        margin: 0;
-    }
+        .pencarian {
+            color: red; 
+            float: right;
+        }
+        .v-step__content[data-v-fca314f4] {
+            margin: 0;
+        }
     </style>
 
     <template>  
@@ -173,21 +173,21 @@
     </template>
 
     <script>
-    export default {
-        data: function () {
-            return {
-                produk: [],
-                produkData: {},
-                otoritas: {},
-                url : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
-                urlLihat : window.location.origin+(window.location.pathname).replace("dashboard", "produk/lihat-deskripsi-produk/"),
-                urlForm: "create-produk",
-                urlTemplate : window.location.origin+(window.location.pathname).replace("dashboard", "produk/template-excel"),
-                urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "produk/export-excel"),
-                pencarian: '',
-                loading: true,
-                steps: [
-                {
+        export default {
+            data: function () {
+                return {
+                    produk: [],
+                    produkData: {},
+                    otoritas: {},
+                    url : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
+                    urlLihat : window.location.origin+(window.location.pathname).replace("dashboard", "produk/lihat-deskripsi-produk/"),
+                    urlForm: "create-produk",
+                    urlTemplate : window.location.origin+(window.location.pathname).replace("dashboard", "produk/template-excel"),
+                    urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "produk/export-excel"),
+                    pencarian: '',
+                    loading: true,
+                    steps: [
+                    {
                     target: '#step-0',  // We're using document.querySelector() under the hood
                     content: 'Klik Tombol <strong>Produk</strong>, <br> Anda Bisa Menambahkan Produk Baru Untuk Toko Anda!',
                     params: {
@@ -307,36 +307,51 @@ methods: {
             app.alertGagal("Silakan Pilih File Dahulu.");
             return;
         }
-        app.loadingData();
 
-        axios.post(app.url+'/import-excel', newExcel).then(function (resp){            
-            console.log(resp.data);
-            app.$swal.close();
+        // ambil ekstensinya
+        let ext = file.name.split('.');
+        ext = ext.pop();
+        console.log(ext)
+        if (ext != 'xlsx' && ext != 'xls') {
+            swal({
+                title: 'Gagal!',
+                type: 'warning',
+                text: 'File harus berekstensi .xlsx atau .xls',
+                showConfirmButton: false,
+                timer: 2000
+            });
+        } else {
+            app.loadingData();
 
-            if (resp.data.pesanError !== undefined || resp.data.pesanErrorStatus !== undefined) {
-                console.log(resp)
-                return swal({
-                    title: 'Gagal!',
-                    type: 'warning',
-                    html: '<div style="text-align: left; font-size: 14px;">'+ resp.data.pesanError +' <br> '+ resp.data.pesanErrorStatus+'</div>',
-                });
-            }
-            
-            $("#excel").val('');
-            $("#modal_import").hide();
-            app.alertImport(resp.data.jumlahProduk + ' Produk Berhasil Diimport.');
-            app.getResults();
-        }).catch(function (resp){
-            app.$swal.close();
-            if (resp.response.data.errors != undefined) {
-                app.errors = resp.response.data.errors.excel[0];
-            }
-            else {
-                app.errors = "Terjadi Kesalahan Pada Proses Import!";
-            }
+            axios.post(app.url+'/import-excel', newExcel).then(function (resp){            
+                console.log(resp.data);
+                app.$swal.close();
 
-            app.alertGagal(app.errors);
-        });
+                if (resp.data.pesanError !== undefined || resp.data.pesanErrorStatus !== undefined) {
+                    console.log(resp)
+                    return swal({
+                        title: 'Gagal!',
+                        type: 'warning',
+                        html: '<div style="text-align: left; font-size: 14px;">'+ resp.data.pesanError +' <br> '+ resp.data.pesanErrorStatus+'</div>',
+                    });
+                }
+
+                $("#excel").val('');
+                $("#modal_import").hide();
+                app.alertImport(resp.data.jumlahProduk + ' Produk Berhasil Diimport.');
+                app.getResults();
+            }).catch(function (resp){
+                app.$swal.close();
+                if (resp.response.data.errors != undefined) {
+                    app.errors = resp.response.data.errors.excel[0];
+                }
+                else {
+                    app.errors = "Terjadi Kesalahan Pada Proses Import!";
+                }
+
+                app.alertGagal(app.errors);
+            });
+        }
     },
     alertImport(pesan) {
         this.$swal({

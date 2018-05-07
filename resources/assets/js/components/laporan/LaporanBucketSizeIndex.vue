@@ -6,6 +6,10 @@
 .modal {
 	overflow-y:auto;
 }
+.pencarian {
+	color: red; 
+	float: right;
+}
 </style>
 <template>
 	<div class="row">
@@ -15,12 +19,62 @@
 				<li class="active">Laporan Bucket Size</li>
 			</ul>
 
+
+			<!-- MODAL DETAIL PELANGGAN -->
+
+			<div class="modal" id="modal_detail_pelanggan" role="dialog" data-backdrop=""> 
+				<div class="modal-dialog"> 
+					<!-- Modal content--> 
+					<div class="modal-content"> 
+						<div class="modal-header"> 
+							<button type="button" class="close" v-on:click="closeModal()"> <i class="material-icons">close</i></button> 
+							<h4 class="modal-title"> 
+								<div class="alert-icon"> 
+									<b>{{detailPelanggan.name}}</b> 
+								</div> 
+							</h4> 
+						</div> 
+						<form class="form-horizontal" > 
+							<div class="modal-body"> 
+								<div class="table-responsive">
+									<table class="table table-striped table-hover" style="margin-bottom:10px; margin-top:10px; margin-right:10px; margin-left:10px;">
+
+										<tbody style="margin-bottom:10px; margin-top:10px; margin-right:10px; margin-left:10px;">
+											<tr>
+												<td class="text-primary"><b># No. Telpon </b> </td>
+												<td class="text-primary"><b>: {{detailPelanggan.no_telp}} </b> </td>
+											</tr>
+											<tr>
+												<td class="text-primary"><b># Email </b> </td>
+												<td class="text-primary"><b>: {{detailPelanggan.email}} </b> </td>
+											</tr>
+											<tr>
+												<td class="text-primary"><b># Tanggal Lahir </b> </td>
+												<td class="text-primary"><b>: {{detailPelanggan.tgl_lahir}} </b> </td>
+											</tr>
+											<tr>
+												<td class="text-primary"><b># Alamat </b> </td>
+												<td class="text-primary"><b>: {{detailPelanggan.alamat}} </b> </td>
+											</tr>
+										</tbody>
+									</table>  
+								</div>
+							</div>
+							<div class="modal-footer">  
+								<button type="button" class="btn btn-default btn-sm"  v-on:click="closeModal()">Tutup</button>
+							</div> 
+						</form>
+					</div>       
+				</div> 
+			</div> 
+			<!-- / MODAL DETAIL PELANGGAN --> 
+
 			<!-- small modal -->
 			<div class="modal" id="modalPelanggan" role="dialog" tabindex="-1"  aria-labelledby="myModalLabel" aria-hidden="true" >
-				<div class="modal-dialog modal-medium">
+				<div class="modal-dialog modal-lg">
 					<div class="modal-content">
 						<div class="modal-header">
-							<button type="button" class="close"  v-on:click="closeModalPelanggan()" v-shortkey.push="['f9']" @shortkey="closeModalPelanggan()"> &times;</button> 
+							<button type="button" class="close"  v-on:click="closeModalPelanggan()" @shortkey="closeModalPelanggan()"> &times;</button> 
 							<h4 class="modal-title"> 
 								<div class="alert-icon"> 
 									<b>Bucket Size {{bucketSizePelanggan}}</b>
@@ -29,40 +83,130 @@
 						</div>
 						<div class="modal-body"> 
 
-							<div class=" table-responsive">
+							<div class="table-responsive">
 								<table class="table table-striped table-hover">
-									<thead class="text-primary">
+									<thead class="text-info">
 										<tr>
-											<th>Nama Pelanggan</th>
+											<th>Pelanggan</th>
 											<th class="text-right">Total Belanja</th>
+											<th class="text-center">Produk</th>
 										</tr>
 									</thead>
 									<tbody>
 										<tr v-for="pelanggan, index in dataPelanggan">
 											<td v-if="pelanggan.pelanggan_id == 0">Umum</td>
-											<td v-else>{{ pelanggan.pelanggan.name  }}</td>
-											<td align="right">{{ pelanggan.total | pemisahTitik }}</td>
-										</tr>
-									</tbody>    
-								</table>
-							</div><!--RESPONSIVE-->
-							<center><button type="button" class="btn btn-xs btn-info" v-on:click="loadMore(dataPelanggan.length)" v-if="loadMoreLength > dataPelanggan.length">Load More... <i class="material-icons">keyboard_arrow_down</i></button></center>
-						</div>
-
+											<td v-else>
+												<a href="#laporan-bucket-size" v-on:click="cekDetailPelanggan(pelanggan.pelanggan)">{{ pelanggan.pelanggan.name  }} </a>
+												<!--<p>Nama : {{ pelanggan.pelanggan.name  }}</p>
+													<p>No. Telp : {{ pelanggan.pelanggan.no_telp  }}</p> -->
+												</td>
+												<td align="right">{{ pelanggan.total | pemisahTitik }}</td>
+												<td align="center">
+											<!-- 		<router-link :to="{name: 'detailPenjualan', params: {id: pelanggan.id}}" class="btn btn-xs btn-info" target="_blank"> 
+											Lihat </router-link> -->
+											<a href="#laporan-bucket-size" v-on:click="getResults(1,pelanggan.id)" class="btn btn-xs btn-info">Lihat</a>
+										</td>
+									</tr>
+								</tbody>    
+							</table>
+						</div><!--RESPONSIVE-->
+						<center><button type="button" class="btn btn-xs btn-info" v-on:click="loadMore(dataPelanggan.length)" v-if="loadMoreLength > dataPelanggan.length">Load More... <i class="material-icons">keyboard_arrow_down</i></button></center>
 					</div>
+					<div class="modal-footer">  
+						<button type="button" class="btn btn-default btn-sm"  v-on:click="closeModalPelanggan()">Tutup</button>
+					</div> 
+
 				</div>
 			</div>
-			<!--    end small modal -->
+		</div>
+		<!--    end small modal -->
 
-			<div class="card">
-				<div class="card-header card-header-icon" data-background-color="purple">
-					<i class="material-icons">insert_chart</i>
+
+
+		<!-- small modal -->
+		<div class="modal" id="modalDetailPenjualan" role="dialog" tabindex="-1"  aria-labelledby="myModalLabel" aria-hidden="true" >
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close"  v-on:click="closeModalDetailPenjualan()"  @shortkey="closeModalDetailPenjualan()"> &times;</button> 
+						<h4 class="modal-title"> 
+							<div class="alert-icon"> 
+								<b>Detail Penjualan</b>
+							</div> 
+						</h4> 
+					</div>
+					<div class="modal-body"> 
+						<div class=" table-responsive ">
+
+							<div class="pencarian">
+								<input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
+							</div>
+
+							<table class="table table-striped table-hover">
+								<thead class="text-primary">
+									<tr>
+
+										<th>No Transaksi</th>
+										<th>Produk</th>
+										<th class="text-right">Jumlah</th>
+										<th class="text-center">Satuan</th>
+										<th class="text-right">Harga</th>
+										<th class="text-right">Potongan</th>
+										<th class="text-right">Subtotal</th>
+
+									</tr>
+								</thead>
+								<tbody v-if="detailPenjualan.length"  class="data-ada">
+									<tr v-for="detailPenjualan, index in detailPenjualan" >
+
+										<td>{{ detailPenjualan.id_penjualan_pos }}</td>
+										<td>{{ detailPenjualan.nama_produk }}</td>
+										<td align="right"> {{ detailPenjualan.jumlah_produk | pemisahTitik }}</td>
+										<td align="center">{{ detailPenjualan.satuan }}</td>
+										<td align="right"> {{ detailPenjualan.harga_produk | pemisahTitik }}</td>
+										<td align="right"> {{ detailPenjualan.potongan }}</td>
+										<td align="right"> {{ detailPenjualan.subtotal | pemisahTitik }}</td>
+
+									</tr>
+									<tr>
+										<td colspan="5"></td>
+										<td class="td-total">
+											Total
+										</td>
+										<td class="td-price">
+											<small>Rp.</small>{{subtotal}}
+										</td>
+									</tr>
+								</tbody>                    
+								<tbody class="data-tidak-ada" v-else>
+									<tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
+								</tbody>
+
+							</table>    
+
+							<vue-simple-spinner v-if="loading"></vue-simple-spinner>
+
+							<div align="right"><pagination :data="detailPenjualanData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
+						</div>
+					</div>
+					<div class="modal-footer">  
+						<button type="button" class="btn btn-default btn-sm"  v-on:click="closeModalDetailPenjualan()">Tutup</button>
+					</div> 
+
 				</div>
+			</div>
+		</div>
+		<!--    end small modal -->
 
-				<div class="card-content">
-					<h4 class="card-title"> Laporan Bucket Size </h4>
+		<div class="card">
+			<div class="card-header card-header-icon" data-background-color="purple">
+				<i class="material-icons">insert_chart</i>
+			</div>
 
-					<ul class="nav nav-pills nav-pills-rose" role="tablist" style="margin-top:5px;">
+			<div class="card-content">
+				<h4 class="card-title"> Laporan Bucket Size </h4>
+
+				<ul class="nav nav-pills nav-pills-rose" role="tablist" style="margin-top:5px;">
                   <!--
                     color-classes: "nav-pills-primary", "nav-pills-info", "nav-pills-success", "nav-pills-warning","nav-pills-danger"
                 -->
@@ -156,6 +300,7 @@
             					<tbody class="data-tidak-ada" v-else-if="laporanBucketSize.length == 0 && loading == false">
             						<tr ><td colspan="3"  class="text-center">Tidak Ada Data</td></tr>
             					</tbody>
+
             				</table>
             				
 
@@ -228,6 +373,10 @@
 export default {
 	data: function () {
 		return {
+			subtotal : null,
+			id_penjualan_pos : null,
+			detailPenjualan: [],
+			detailPenjualanData : {},
 			bucketSizePelanggan : '',
 			indexbucketSizePelanggan : 0,
 			loadMoreLength : 0,
@@ -236,6 +385,7 @@ export default {
 			laporanBucketSize: [],
 			laporanBucketSizeOnline: [],
 			dataPelanggan : [],
+			detailPelanggan : {},
 			filter: {
 				dari_tanggal: '',
 				sampai_tanggal: new Date(),
@@ -274,6 +424,7 @@ export default {
 					scaleMinSpace: 15
 				}
 			}],
+			urlPenjualan : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
 			url: window.location.origin + (window.location.pathname).replace("dashboard", "laporan-bucket-size"),
 			urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-bucket-size/download-excel-pos"), 
 			urlDownloadExcelOnline : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-bucket-size/download-excel-online"), 
@@ -425,6 +576,48 @@ export default {
 			}
 			console.log(app.dataPelanggan.length);
 			console.log(length,limit);
+		},
+		cekDetailPelanggan(data){
+			let app = this;
+			app.detailPelanggan = data;
+			console.log(app.detailPelanggan);
+			$("#modalPelanggan").hide(); 
+			$("#modal_detail_pelanggan").show(); 
+		},
+		closeModal(){
+			$("#modal_detail_pelanggan").hide(); 
+			$("#modalPelanggan").show(); 
+		},
+		closeModalDetailPenjualan(){
+			$("#modalDetailPenjualan").hide();
+			$("#modalPelanggan").show(); 
+		},
+		getResults(page,id_penjualan) {
+			$("#modalPelanggan").hide(); 
+			$("#modalDetailPenjualan").show();
+
+			let app = this; 
+
+			app.id_penjualan_pos = id_penjualan;
+
+			if (typeof page === 'undefined') {
+				page = 1;
+			}
+			axios.get(app.urlPenjualan+'/view-detail-penjualan/'+app.id_penjualan_pos+'?page='+page)
+			.then(function (resp) {
+				app.detailPenjualan = resp.data.data;
+				app.detailPenjualanData = resp.data;
+				var subtotal = 0;
+				$.each(resp.data.data, function (i, item) {
+					subtotal += parseFloat(resp.data.data[i].subtotal)
+				});
+				app.subtotal = subtotal
+
+			})
+			.catch(function (resp) {
+				console.log(resp);
+				alert("Tidak Dapat Memuat Detail Penjualan");
+			});
 		},
 		showButton() { 
 			var app = this; 

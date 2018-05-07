@@ -74,12 +74,10 @@
 		<table class="table table-bordered">
 			<thead>
 				<th class="table1" style="width: 35%"> Nama Produk  </th>
+				<th class="table1" style="width: 5%; text-align: right;"> Jumlah Order  </th>
+				<th class="table1" style="width: 5%; text-align: right;"> Jumlah Fisik  </th>
+				<th class="table1" style="width: 5%; text-align: right;"> Selisih Fisik  </th>
 				<th class="table1" style="width: 5%"> <center> Satuan </center> </th>
-				<th class="table1" style="width: 5%; text-align: right;"> Qty  </th>
-				<th class="table1" style="width: 15%; text-align: right;"> Harga </th>
-				<th class="table1" style="width: 5%; text-align: right;"> Disc.  </th>
-				<th class="table1" style="width: 5%; text-align: right;"> Tax.  </th>
-				<th class="table1" style="width: 12%; text-align: right;"> Subtotal  </th>
 
 			</thead>
 			<tbody>
@@ -87,24 +85,18 @@
 				@foreach ($detail_orders as $detail_order)	
 				<tr>
 					<td class='table1'>{{title_case($detail_order->nama_barang)}} </td>
+					<td class='table1' align='right'>
+						{{number_format($detail_order->jumlah_produk, 0, ',', '.')}}
+					</td>
+					<td class='table1' align='right'>
+						{{number_format($detail_order->jumlah_fisik, 0, ',', '.')}}
+					</td>
+					<td class='table1' align='right'>
+						{{number_format($detail_order->selisih_fisik, 0, ',', '.')}}
+					</td>
 					<td class='table1' align='right'>{{$detail_order->nama_satuan}} </td>
-					<td class='table1' align='right'>{{number_format($detail_order->jumlah_produk, 0, ',', '.')}} </td>
-					<td class='table1' align='right'>{{number_format($detail_order->harga_produk, 0, ',', '.')}}</td>
-					<td class='table1' align='right'>{{number_format($detail_order->potongan, 0, ',', '.')}}</td>
-					<td class='table1' align='right'>{{number_format($detail_order->tax, 0, ',', '.')}}</td>
-					<td class='table1' align='right'>{{number_format($detail_order->subtotal, 0, ',', '.')}}</td>
 				</tr>
 				@endforeach
-				<tr style="color: red">
-					<td class='table1'>TOTAL AKHIR</td>
-					<td> </td>
-					<td> </td>
-					<td> </td>
-					<td> </td>
-					<td> </td>
-					<td class='table1' align='right'>{{number_format($subtotal, 0, ',', '.')}}</td>
-				</tr>
-
 			</tbody>
 
 		</table>
