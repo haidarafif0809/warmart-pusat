@@ -16,13 +16,15 @@ first();
 
     height: auto; /*this makes sure to maintain the aspect ratio*/
     margin-top: 0px;
+    border-radius: 0px;
 }
 .card-pricing {
     margin-bottom: 0px;
 }
 .tombolBeli {
-    padding: 10px 0px;
-    margin:0px;
+    padding: 6px 0px;
+     margin:0px;
+     border-radius: 0px;
 }
 .card-pricing .card-content {
     padding: 5px !important;
@@ -59,12 +61,13 @@ first();
         padding-left: 15px;
         padding-right: 15px;
         padding-top: 10px;
+        border-radius: 0px;
     }
     .nav-tabs {
-        background: #2ac326;
-        border: 0;
-        border-radius: 3px;
-        padding: 9 15px;
+    background: #2ac326;
+    border: 0;
+    border-radius: 0px;
+    padding: 9 15px;
     }
     /*style untuk kategori*/
 
@@ -74,7 +77,7 @@ first();
     @else
     height:3em;
     @endif
-    padding:1%;
+    padding:3%;
     margin: 5px;
 
 }
@@ -117,7 +120,7 @@ h4 {
     overflow-x: hidden;
 }
 .nav-tabs > li > a{
-    font-size: 20px;
+    font-size: 14px;
 }
 
 .nav-pills > li > a {
@@ -150,19 +153,19 @@ h4 {
         <a href="{{ url('/home') }}"><img  class="img img-raised" src="{!! $logo_warmart !!}" style="width: 10%"/></a>
    </div>
 
-   <div class="main main-raised" >
+   <div class="main" >
 
     <div class="container">
         <h3 class="title text-center">{!! $nama_kategori !!}</h3>
         {!! $list_warung !!}
         <div class="row">
                 <div class="col-sm-3">
-                    <ul class="nav nav-tabs buttonColor card-raised" data-tabs="tabs">
+                    <ul class="nav nav-tabs buttonColor card" data-tabs="tabs">
                             {!! $kategori_produk !!}
                     </ul>
                 </div>
         <div class="col-sm-9">
-        <div class="card card-raised card-form-horizontal">
+        <div class="card card-form-horizontal">
             <div class="card-content">
                 {!! Form::open(['url' => route('halaman_warung.pencarian'),'method' => 'get', 'class'=>'form-horizontal']) !!}
                 <div class="row">
@@ -190,7 +193,7 @@ h4 {
                     <div class="col-md-12 col-md-offset-0">
 
                         <!-- Carousel Card -->
-                        <div class="card card-raised card-carousel">
+                        <div class="card card-carousel">
                             <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
                                 <div class="carousel slide" data-ride="carousel">
 
@@ -256,19 +259,21 @@ h4 {
         @endif
     </div>
 
-    <div class="main main-raised" >
-
+    <div class="main" >
         <div class="container">
-            <h3 class="title text-center">{!! $nama_kategori !!}</h3>
+           <h3 class="title text-center">{!! $nama_kategori !!}</h3>
             {!! $list_warung !!}
+        </div>
+
             <div class="row">
+                <div class="col-sm-1"></div>
                 <div class="col-sm-3">
-                    <ul class="nav nav-tabs buttonColor card-raised" data-tabs="tabs">
+                    <ul class="nav nav-tabs buttonColor" data-tabs="tabs">
                             {!! $kategori_produk !!}
                     </ul>
                 </div>
-            <div class="col-sm-9">
-            <div class="card card-raised card-form-horizontal">
+            <div class="col-sm-7">
+            <div class="card card-form-horizontal">
                 <div class="card-content">
                     {!! Form::open(['url' => route('halaman_warung.pencarian'),'method' => 'get', 'class'=>'form-horizontal']) !!}
                     <div class="row">
@@ -290,15 +295,16 @@ h4 {
                     </div>
                     {!! Form::close() !!}
                 </div>
+                <div class="col-sm-1"></div>
             </div>
-            <div class="row">
 
         @if($cek_baner->count() > 0)
                 <div class="row">
-                    <div class="col-md-12 col-md-offset-0">
+                    <div class="col-md-1 col-md-offset-0"></div>
+                    <div class="col-md-10 col-md-offset-0">
 
                         <!-- Carousel Card -->
-                        <div class="card card-raised card-carousel">
+                        <div class="card card-carousel">
                             <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
                                 <div class="carousel slide" data-ride="carousel">
 
@@ -336,25 +342,36 @@ h4 {
                         </div>
                         <!-- End Carousel Card -->
                     </div>
+                    <div class="col-md-1 col-md-offset-0"></div>
                 </div>
             @endif
 
-
+        <div class="row">
         <!--Menampilkan NAMA Warung -->
-        <div class="col-md-12">
-            <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px"> Produk </h5>
-        </div>
-
-                <div class="col-md-12"><br>
-                    <div class="row">
-                        <!-- Menampilkan Produk -->
-                        <span id="span-produk">{!! $daftar_produk !!}</span>
-                        <div class="col-md-12">
-                            {{$produk_pagination}}
-                        </div>
-                    </div>
+                <div class="col-md-1"></div>
+                <div class="col-md-10">
+                    <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px"> Produk </h5>
                 </div>
-            </div>
+                <div class="col-md-1"></div>
+        </div>
+        <div class="row">
+                <div class="col-md-1"></div>
+                <div class="col-md-10">
+                        <br>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <!-- Menampilkan Produk -->
+                                <span id="span-produk">
+                                    {!! $daftar_produk !!}
+                                </span>
+                            </div>
+                            <div class="col-md-12">
+                                {{$produk_pagination}}
+                            </div>
+                        </div>
+                    </br>
+              </div>
+            <div class="col-md-1"></div>
         </div>
 
     </div> <!-- end-main-raised -->
@@ -373,7 +390,7 @@ h4 {
             @else
             var divs = document.getElementsByClassName("flexFont");
             for(var i = 0; i < divs.length; i++) {
-                var relFontsize = divs[i].offsetWidth*0.06;
+                var relFontsize = divs[i].offsetWidth*0.08;
                 divs[i].style.fontSize = relFontsize+'px';
             }
 
@@ -381,13 +398,13 @@ h4 {
             @if(Agent::isMobile())
             var divs = document.getElementsByClassName("flexFontWarung");
             for(var i = 0; i < divs.length; i++) {
-                var relFontsize = divs[i].offsetWidth*0.14;
+                var relFontsize = divs[i].offsetWidth*0.15;
                 divs[i].style.fontSize = relFontsize+'px';
             }
             @else
             var divs = document.getElementsByClassName("flexFontWarung");
             for(var i = 0; i < divs.length; i++) {
-                var relFontsize = divs[i].offsetWidth*0.16;
+                var relFontsize = divs[i].offsetWidth*0.1;
                 divs[i].style.fontSize = relFontsize+'px';
             }
 

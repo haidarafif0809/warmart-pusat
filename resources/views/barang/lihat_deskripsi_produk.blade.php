@@ -37,8 +37,8 @@ $judul_warung = \App\SettingFooter::select()->first()->judul_warung;
   <link href="{{ asset('css/material-kit.css?v=1.2.0')}}" rel="stylesheet"/>
   <link href="{{ asset('assets/assets-for-demo/vertical-nav.css')}}" rel="stylesheet" />
 
-  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
+  <link rel="stylesheet" type="text/css" href="{{ asset('css/fonts-googleapis-roboto.css') }}" />
+  <link rel="stylesheet" href="{{ asset('css/font-awesome.min.css') }}" />
 
   {!! SEOMeta::generate() !!}
   {!! OpenGraph::generate() !!}

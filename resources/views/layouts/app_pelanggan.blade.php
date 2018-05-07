@@ -182,27 +182,30 @@
 <style type="text/css">
     .navbar-nav .open .dropdown-menu{
       color: grey;
-    }
-    .navbar .navbar-brand {
-        position: relative;
-        @if(Agent::isMobile())
-        height: 50px;
-        @else
-        height: 75px;
-        @endif
-        line-height: 0px;
-        color: inherit;
-        padding: 10px 15px;
-    }
-    body {
-        @if($setting_aplikasi->tipe_aplikasi == 1)
-        background-color: #2ac326;
-        color: #3C4858;
-        @endif
-    }
-    @keyframes spinner { 
-      to {transform: rotate(360deg);} 
-    } 
+  }
+  .navbar .navbar-brand {
+    position: relative;
+    @if(Agent::isMobile())
+    height: 50px;
+    @else
+    height: 75px;
+    @endif
+    line-height: 0px;
+    color: inherit;
+    padding: 10px 15px;
+}
+.btn.btn-round, .navbar .navbar-nav > li > a.btn.btn-round {
+    border-radius: 0px;
+}
+body {
+    @if($setting_aplikasi->tipe_aplikasi == 1)
+    background-color: #2ac326;
+    color: #3C4858;
+    @endif
+}
+@keyframes spinner { 
+  to {transform: rotate(360deg);} 
+} 
 .spinner:before { 
   content: ''; 
   box-sizing: border-box; 
@@ -246,6 +249,11 @@
 }
 .img-jasa{
     padding: 0px 2px 2px;
+}
+.navbar, .navbar.navbar-default {
+    background-color: #2ac326;
+    color: #fbf8f8;
+    
 }
 </style>
 <body class="ecommerce-page">
@@ -432,7 +440,7 @@
                         @endif
                         @if (Auth::check() == false) 
                         <li class="button-container">
-                            <button id="btnKeranjang" class="btn btn-round btn-rose">
+                            <a id="btnKeranjang" class="btn btn-round btn-rose">
                                 <i class="material-icons">
                                     shopping_cart
                                 </i>
@@ -440,14 +448,14 @@
                                 <b style="font-size: 15px" id="jumlah-keranjang" data-session="" data-jumlah="{{ $cek_belanjaan }}">
                                     | {{ $cek_belanjaan }}
                                 </b>
-                            </button>
+                            </a>
                             <div id="taroSini">
                                 <div></div>
                             </div>
                         </li>
                         @elseif(Auth::check() && Auth::user()->tipe_user == 3)
                         <li class="button-container">
-                            <button id="btnKeranjang" class="btn btn-round btn-rose">
+                            <a id="btnKeranjang" class="btn btn-round btn-rose">
                                 <i class="material-icons">
                                     shopping_cart
                                 </i>
@@ -455,7 +463,7 @@
                                 <b style="font-size: 15px" id="jumlah-keranjang" data-session="" data-jumlah="{{ $cek_belanjaan }}">
                                     | {{ $cek_belanjaan }}
                                 </b>
-                            </button>
+                            </a>
                             <div id="taroSini">
                                 <div></div>
                             </div>
@@ -471,7 +479,7 @@
                 <div class="content">
                     <div class="row">
                         <div class="col-md-3">
-                            <h5 style="font-size: 14px; mar">
+                            <h5 style="font-size: 14px;">
                                 Tentang Kami
                             </h5>
                             @if($setting_aplikasi->tipe_aplikasi == 0)
@@ -486,7 +494,7 @@
                             @endif
                         </div>
                         <div class="col-md-3">
-                            <h5 style="font-size: 14px; mar">
+                            <h5 style="font-size: 14px;">
                                 Hubungi Kami
                             </h5>
                             <div class="social-feed">
@@ -527,7 +535,7 @@
                             @if(Agent::isMobile())
                             <div class="row">
                                 <div class="col-xs-6">
-                                    <h5 style="font-size: 14px; mar">
+                                    <h5 style="font-size: 14px;">
                                         Ikuti Kami Di
                                     </h5>
                                     <button class="btn btn-just-icon btn-xs btn-facebook" style="margin : 0px">
@@ -553,7 +561,7 @@
                                 </div>
 
                                 <div class="col-xs-6">
-                                    <h5 style="font-size: 14px; mar">
+                                    <h5 style="font-size: 14px;">
                                         Download Apps
                                     </h5>
                                     <a href="<?=$settingFooter->play_store;?>">
@@ -564,7 +572,7 @@
 
                             @else
 
-                            <h5 style="font-size: 14px; mar">
+                            <h5 style="font-size: 14px;">
                                 Ikuti Kami Di
                             </h5>
                             <button class="btn btn-just-icon btn-xs btn-facebook" style="margin : 0px">
@@ -587,7 +595,7 @@
                                     <i class="fa fa-google-plus"> </i>
                                 </a> 
                             </button>
-                            <h5 style="font-size: 14px; mar">
+                            <h5 style="font-size: 14px;">
                                 Download Apps
                             </h5>
                             <a href="<?=$settingFooter->play_store;?>">

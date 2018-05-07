@@ -62,7 +62,7 @@
                                                 <a href="#pablo" class="btn btn-danger btn-round fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i> Batal</a>
                                             </div>
                                             <span v-if="errors.baner_promo" id="baner_promo_error" class="label label-danger">{{ errors.baner_promo[0] }}</span>
-                                            <a style="color: red;">Size Baner (Ukuran Max : 3MB , Ukuran Dimensi : 1491 × 355 )</a>
+                                            <a style="color: red;">Size Baner (Ukuran Max : 3MB , Ukuran Dimensi : 2100 × 370 )</a>
                                         </div>
                                     </div>
                                 </div> 
