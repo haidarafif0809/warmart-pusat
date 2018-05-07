@@ -151,31 +151,30 @@ class PenerimaanProdukController extends Controller
 					'satuan_id' 		=> $data_order->satuan_id,
 					'satuan_dasar'     	=> $data_order->satuan_dasar,
 					'harga_produk'    	=> $data_order->harga_produk,
-					'subtotal' 			=> $data_order->subtotal,
+					'subtotal' 			=> 0, // harga produk * jumlah fisik
 					'tax' 				=> $data_order->tax,
 					'potongan'    		=> $data_order->potongan,
 					'status_harga'		=> $data_order->status_harga,
 					'warung_id'			=> $data_order->warung_id
 					]);
-
-				$subtotal = $subtotal + $data_order->subtotal;
 			}
 
 
 			$respons['status']   = 0;
-			$respons['subtotal'] = $subtotal;
+			$respons['subtotal'] = 0;
 
 			return response()->json($respons);
 		}
 
 	}
 
-	public function editJumlahFisik(Request $request){
+	public function editJumlahFisik($db, $request	){
+
 		if (Auth::user()->id_warung == '') {
 			Auth::logout();
 			return response()->view('error.403');
 		} else {
-			$tbs_penerimaan = TbsPenerimaanProduk::find($request->id_tbs_pembelian);
+			$tbs_penerimaan = $db::find($request->id_tbs_pembelian);
 
 			$subtotal = ($tbs_penerimaan->harga_produk * $request->jumlah_edit_produk);
 
@@ -190,6 +189,17 @@ class PenerimaanProdukController extends Controller
 			return response()->json($respons);
 
 		}
+
+	}
+
+	public function editJumlahTbs(Request $request){
+		$db = 'App\TbsPenerimaanProduk';
+		return $respons = $this->editJumlahFisik($db, $request);
+	}
+
+	public function editJumlahEditTbs(Request $request){
+		$db = 'App\EditTbsPenerimaanProduk';
+		return $respons = $this->editJumlahFisik($db, $request);
 	}
 
 
@@ -213,17 +223,20 @@ class PenerimaanProdukController extends Controller
 			foreach ($data_penerimaan_produk->get() as $data_tbs_penerimaan_produk) {
 
 				$detail_penerimaan = DetailPenerimaanProduk::create([
-					'no_faktur_penerimaan' => $no_faktur,
-					'id_produk'        => $data_tbs_penerimaan_produk->id_produk,
-					'jumlah_produk'    => $data_tbs_penerimaan_produk->jumlah_produk,
-					'satuan_id'        => $data_tbs_penerimaan_produk->satuan_id,
-					'satuan_dasar'     => $data_tbs_penerimaan_produk->satuan_dasar,
-					'harga_produk'     => $data_tbs_penerimaan_produk->harga_produk,
-					'subtotal'         => $data_tbs_penerimaan_produk->subtotal,
-					'tax'              => $data_tbs_penerimaan_produk->tax,
-					'potongan'         => $data_tbs_penerimaan_produk->potongan,
-					'status_harga'     => $data_tbs_penerimaan_produk->status_harga,
-					'warung_id'        => $warung_id,
+					'no_faktur_penerimaan' 	=> $no_faktur,
+					'no_faktur_order'		=> $data_tbs_penerimaan_produk->no_faktur_order,
+					'id_produk'      		=> $data_tbs_penerimaan_produk->id_produk,
+					'jumlah_produk'  		=> $data_tbs_penerimaan_produk->jumlah_produk,
+					'jumlah_fisik'  		=> $data_tbs_penerimaan_produk->jumlah_fisik,
+					'selisih_fisik'   		=> $data_tbs_penerimaan_produk->selisih_fisik,
+					'satuan_id'       		=> $data_tbs_penerimaan_produk->satuan_id,
+					'satuan_dasar'   		=> $data_tbs_penerimaan_produk->satuan_dasar,
+					'harga_produk'   		=> $data_tbs_penerimaan_produk->harga_produk,
+					'subtotal'       		=> $data_tbs_penerimaan_produk->subtotal,
+					'tax'            		=> $data_tbs_penerimaan_produk->tax,
+					'potongan'       		=> $data_tbs_penerimaan_produk->potongan,
+					'status_harga'   		=> $data_tbs_penerimaan_produk->status_harga,
+					'warung_id'      		=> $warung_id,
 					]);
 			}
 
@@ -260,6 +273,20 @@ class PenerimaanProdukController extends Controller
 		} else {
 			$session_id         = session()->getId();
 			$data_tbs_pembelian = TbsPenerimaanProduk::where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->delete();
+
+			return response(200);
+		}
+	}
+
+    //PROSES BATAL TBS PENERIMAAN PRODUK
+	public function batalEditPenerimaanProduk(Request $request)
+	{
+
+		if (Auth::user()->id_warung == '') {
+			Auth::logout();
+			return response()->view('error.403');
+		} else {
+			$data_tbs_pembelian = EditTbsPenerimaanProduk::where('no_faktur_penerimaan', $request->no_faktur)->where('warung_id', Auth::user()->id_warung)->delete();
 
 			return response(200);
 		}
@@ -365,6 +392,15 @@ class PenerimaanProdukController extends Controller
 		return response()->json($respons);
 	}
 
+	public function dataPenerimaan($id){
+		$data = PenerimaanProduk::select(['penerimaan_produks.faktur_order', 'supliers.nama_suplier'])
+		->leftJoin('supliers', 'supliers.id', '=', 'penerimaan_produks.suplier_id')
+		->where('penerimaan_produks.id', $id)->first();
+
+		$dataOrder = $data->faktur_order." | ".$data->nama_suplier;
+		return $dataOrder;
+	}
+
 //PENCARIAN DETAIL PENERIMAAN PRODUK & PENCARIAN
 	public function pencarianDetailPenerimaanProduk(Request $request, $id)
 	{
@@ -424,8 +460,11 @@ class PenerimaanProdukController extends Controller
 			EditTbsPenerimaanProduk::create([
 				'session_id'        => $session_id,
 				'no_faktur_penerimaan'	=> $data_tbs->no_faktur_penerimaan,
+				'no_faktur_order'	=> $data_tbs->no_faktur_order,
 				'id_produk'         => $data_tbs->id_produk,
 				'jumlah_produk'     => $data_tbs->jumlah_produk,
+				'jumlah_fisik'      => $data_tbs->jumlah_fisik,
+				'selisih_fisik'     => $data_tbs->selisih_fisik,
 				'satuan_id'         => $data_tbs->satuan_id,
 				'satuan_dasar'      => $data_tbs->satuan_dasar,
 				'harga_produk'      => $data_tbs->harga_produk,
@@ -483,6 +522,9 @@ class PenerimaanProdukController extends Controller
 	}
 
 	public function dataPenerimaanProduk($id){
+		// $data_penerimaan = PenerimaanProduk::select('no_faktur_penerimaan')->find($id);
+		// $data_editTbs = EditTbsPenerimaanProduk::select('no_faktur_order')->where('no_faktur_penerimaan', $data_penerimaan->no_faktur_penerimaan)->first();
+
 		return $data_penerimaan = PenerimaanProduk::select('penerimaan_produks.id', 'penerimaan_produks.suplier_id', 'penerimaan_produks.no_faktur_penerimaan', 'penerimaan_produks.faktur_order', 'penerimaan_produks.keterangan', 'supliers.nama_suplier')
 		->leftJoin('supliers', 'supliers.id', '=', 'penerimaan_produks.suplier_id')->find($id);
 	}
@@ -510,18 +552,21 @@ class PenerimaanProdukController extends Controller
 			foreach ($data_orders as $data_order) {
 
 				$insert_tbs = EditTbsPenerimaanProduk::create([
-					'session_id'     	=> $session_id,
+					'session_id'     		=> $session_id,
 					'no_faktur_penerimaan'	=> $data_penerimaan->no_faktur_penerimaan,
-					'id_produk'   		=> $data_order->id_produk,
-					'jumlah_produk'		=> $data_order->jumlah_produk,
-					'satuan_id' 		=> $data_order->satuan_id,
-					'satuan_dasar'     	=> $data_order->satuan_dasar,
-					'harga_produk'    	=> $data_order->harga_produk,
-					'subtotal' 			=> $data_order->subtotal,
-					'tax' 				=> $data_order->tax,
-					'potongan'    		=> $data_order->potongan,
-					'status_harga'		=> $data_order->status_harga,
-					'warung_id'			=> $data_order->warung_id
+					'no_faktur_order'		=> $data_order->no_faktur_order,
+					'id_produk'   			=> $data_order->id_produk,
+					'jumlah_produk'			=> $data_order->jumlah_produk,
+					'jumlah_fisik'			=> 0,
+					'jumlah_produk'			=> $data_order->jumlah_produk,
+					'satuan_id' 			=> $data_order->satuan_id,
+					'satuan_dasar'     		=> $data_order->satuan_dasar,
+					'harga_produk'    		=> $data_order->harga_produk,
+					'subtotal' 				=> 0, //harga prduk * jumlah fisik
+					'tax' 					=> $data_order->tax,
+					'potongan'    			=> $data_order->potongan,
+					'status_harga'			=> $data_order->status_harga,
+					'warung_id'				=> $data_order->warung_id
 					]);
 
 				$subtotal = $subtotal + $data_order->subtotal;
@@ -529,7 +574,7 @@ class PenerimaanProdukController extends Controller
 
 
 			$respons['status']   = 0;
-			$respons['subtotal'] = $subtotal;
+			$respons['subtotal'] = 0;
 
 			return response()->json($respons);
 		}
@@ -566,30 +611,37 @@ class PenerimaanProdukController extends Controller
 			foreach ($data_penerimaan_produk->get() as $data_tbs_penerimaan_produk) {
 
 				$detail_penerimaan = DetailPenerimaanProduk::create([
-					'no_faktur_penerimaan' => $no_faktur,
-					'id_produk'        => $data_tbs_penerimaan_produk->id_produk,
-					'jumlah_produk'    => $data_tbs_penerimaan_produk->jumlah_produk,
-					'satuan_id'        => $data_tbs_penerimaan_produk->satuan_id,
-					'satuan_dasar'     => $data_tbs_penerimaan_produk->satuan_dasar,
-					'harga_produk'     => $data_tbs_penerimaan_produk->harga_produk,
-					'subtotal'         => $data_tbs_penerimaan_produk->subtotal,
-					'tax'              => $data_tbs_penerimaan_produk->tax,
-					'potongan'         => $data_tbs_penerimaan_produk->potongan,
-					'status_harga'     => $data_tbs_penerimaan_produk->status_harga,
-					'warung_id'        => $warung_id,
+					'no_faktur_penerimaan' 	=> $no_faktur,
+					'no_faktur_order'      	=> $data_tbs_penerimaan_produk->no_faktur_order,
+					'id_produk'    			=> $data_tbs_penerimaan_produk->id_produk,
+					'jumlah_produk'			=> $data_tbs_penerimaan_produk->jumlah_produk,
+					'jumlah_fisik'			=> $data_tbs_penerimaan_produk->jumlah_fisik,
+					'selisih_fisik'			=> $data_tbs_penerimaan_produk->selisih_fisik,
+					'satuan_id'    			=> $data_tbs_penerimaan_produk->satuan_id,
+					'satuan_dasar' 			=> $data_tbs_penerimaan_produk->satuan_dasar,
+					'harga_produk' 			=> $data_tbs_penerimaan_produk->harga_produk,
+					'subtotal'     			=> $data_tbs_penerimaan_produk->subtotal,
+					'tax'          			=> $data_tbs_penerimaan_produk->tax,
+					'potongan'     			=> $data_tbs_penerimaan_produk->potongan,
+					'status_harga' 			=> $data_tbs_penerimaan_produk->status_harga,
+					'warung_id'    			=> $warung_id,
 					]);
 			}
+
+			$data_editTbs = EditTbsPenerimaanProduk::select('no_faktur_order')->where('no_faktur_penerimaan', $no_faktur)->first();
 
 			$update_penerimaan = PenerimaanProduk::find($request->id_penerimaan)->update([
 				'suplier_id'        => $request->suplier_id,
 				'total'             => $request->subtotal,
 				'keterangan'        => $request->keterangan,
+				'faktur_order'      => $data_editTbs->no_faktur_order,
 				]);
 
 			// UPDATE STATUS PEMBELIAN ORDER -> Diterima
-			if ($request->faktur_order_baru != "") {
-				$pembelian_order_baru = PembelianOrder::where('no_faktur_order', $request->faktur_order_baru)->where('suplier_id', $request->suplier_id)->update(['status_order' => 3]);
-				$pembelian_order_lama = PembelianOrder::where('no_faktur_order', $request->faktur_order)->where('suplier_id', $request->suplier_id)->update(['status_order' => 1]);
+			if ($request->faktur_order != $data_editTbs->no_faktur_order) {
+				$pembelian_order_baru = PembelianOrder::where('no_faktur_order', $data_editTbs->no_faktur_order)->update(['status_order' => 3]);
+
+				$pembelian_order_lama = PembelianOrder::where('no_faktur_order', $request->faktur_order)->update(['status_order' => 1]);
 			}
 
             //HAPUS TBS PEMBELIAN ORDER

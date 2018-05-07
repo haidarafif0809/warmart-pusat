@@ -134,6 +134,10 @@ Route::get('/keranjang-belanja/tambah-produk-keranjang-belanja/', [
     'uses' => 'KeranjangBelanjaController@tambah_produk_keranjang_belanjaan',
     ]);
 
+Route::get('/keranjang-belanja/collapse-keranjang-belanja', [
+    'uses' => 'KeranjangBelanjaController@daftar_belanja_collapse',
+    ]);
+
 //PUNYA SELESAI PEMESANAN
 Route::get('/selesaikan-pemesanan', [
     'as'   => 'selesaikan-pemesanan.index',
@@ -642,7 +646,10 @@ Route::get('/penerimaan-produk/pencarian-edit-tbs-penerimaan-produk/{id}', 'Pene
 Route::get('/penerimaan-produk/data-penerimaan-produk/{id}', 'PenerimaanProdukController@dataPenerimaanProduk')->middleware('auth');
 Route::get('/penerimaan-produk/proses-edit-tbs-penerimaan-produk/{id}', 'PenerimaanProdukController@prosesEditTbsPenerimaanProduk')->middleware('auth');
 Route::post('/penerimaan-produk/update-penerimaan-produk', 'PenerimaanProdukController@updatePenerimaanProduk')->middleware('auth');
-Route::get('/penerimaan-produk/proses-edit-jumlah-fisik-tbs-penerimaan', 'PenerimaanProdukController@editJumlahFisik')->middleware('auth');
+Route::get('/penerimaan-produk/proses-edit-jumlah-fisik-tbs-penerimaan', 'PenerimaanProdukController@editJumlahTbs')->middleware('auth');
+Route::get('/penerimaan-produk/data-penerimaan/{id}', 'PenerimaanProdukController@dataPenerimaan')->middleware('auth');
+Route::get('/penerimaan-produk/proses-edit-jumlah-fisik-edit-tbs-penerimaan', 'PenerimaanProdukController@editJumlahEditTbs')->middleware('auth');
+Route::get('/penerimaan-produk/batal-edit-penerimaan-produk', 'PenerimaanProdukController@batalEditPenerimaanProduk')->middleware('auth');
 
 // PENERIMAAN PRODUK
 

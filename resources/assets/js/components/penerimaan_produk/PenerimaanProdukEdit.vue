@@ -124,16 +124,31 @@
                     <table class="table table-striped table-hover" v-if="seen">
                       <thead class="text-primary">
                         <tr>
+                          <th>Faktur Order</th>
                           <th>Produk</th>
-                          <th style="text-align:right;">Jumlah</th>
+                          <th style="text-align:right;">Jumlah Order</th>
+                          <th style="text-align:right;">Jumlah Fisik</th>
+                          <th style="text-align:right;">Selisih Fisik</th>
                           <th style="text-align:center;">Satuan</th>
                         </tr>
                       </thead>
                       <tbody v-if="tbs_penerimaan_produks.length > 0 && loading == false"  class="data-ada">
                         <tr v-for="tbs_pembelian, index in tbs_penerimaan_produks" >
 
+                          <td>{{ tbs_pembelian.data_tbs.no_faktur_order }}</td>
+
                           <td>{{ tbs_pembelian.data_tbs.kode_barang }} - {{ tbs_pembelian.data_tbs.nama_barang | capitalize }}</td>
-                          <td style="text-align:right">{{ tbs_pembelian.data_tbs.jumlah_produk | pemisahTitik }}</td>
+
+                          <td style="text-align:right">
+                            {{ tbs_pembelian.data_tbs.jumlah_produk | pemisahTitik }}
+                          </td>
+
+                          <td>
+                            <a v-bind:href="'#edit-penerimaan-produk/'+id_penerimaan" v-bind:id="'edit-' + tbs_pembelian.data_tbs.id_edit_tbs_penerimaan_produk" v-on:click="editEntryJumlah(tbs_pembelian.data_tbs.id_edit_tbs_penerimaan_produk, index,tbs_pembelian.data_tbs.nama_barang,tbs_pembelian.data_tbs.subtotal)"><p align='right'>{{ tbs_pembelian.data_tbs.jumlah_fisik | pemisahTitik }}</p>
+                            </a>
+                          </td>
+
+                          <td align="right"> {{ tbs_pembelian.data_tbs.selisih_fisik | pemisahTitik }} </td>
 
                           <td align="center">{{ tbs_pembelian.data_tbs.nama_satuan }}</td>
 
@@ -146,7 +161,7 @@
 
                     <vue-simple-spinner v-if="loading"></vue-simple-spinner>
 
-                    <div align="right"><pagination :data="tbsPenerimaanProdukData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
+                    <div align="right"><pagination :data="tbsPenerimaanProdukData" v-on:pagination-change-page="getResults" :limit="3"></pagination></div>
 
                   </div>
                 </div><!-- COL SM 8 --> 
@@ -158,13 +173,6 @@
                       <i class="material-icons">shopping_cart</i>
                     </div>
                     <div class="card-content">
-
-                      <p class="category"><font style="font-size:20px;">Subtotal</font></p>
-                      <h3 class="card-title">
-                        <b>
-                          <font style="font-size:32px;">{{ inputPembayaranPenerimaanProduk.subtotal | pemisahTitik }}</font>
-                        </b>
-                      </h3>
 
                       <p class="category"><font style="font-size:20px;">Supplier</font></p>
                       <h3 class="card-title">
@@ -186,7 +194,7 @@
                           <button type="button" class="btn btn-success btn-footer" id="bayar" v-on:click="selesaiPenerimaanProduk()" v-shortkey.push="['f2']" @shortkey="selesaiPenerimaanProduk()"><font style="font-size:15px;">Bayar(F2)</font></button>
                         </div>
                         <div class="col-md-5 col-xs-5">
-                          <button type="submit" class="btn btn-danger btn-footer" id="btnBatal" v-on:click="batalPenerimaanProduk(inputPembayaranPenerimaanProduk.suplier, inputPembayaranPenerimaanProduk.no_faktur)" v-shortkey.push="['f3']" @shortkey="batalPenerimaanProduk(inputPembayaranPenerimaanProduk.suplier, inputPembayaranPenerimaanProduk.no_faktur)"> <font style="font-size:15px;">Batal(F3) </font></button>
+                          <button type="submit" class="btn btn-danger btn-footer" id="btnBatal" v-on:click="batalPenerimaanProduk(inputPembayaranPenerimaanProduk.suplier, inputPembayaranPenerimaanProduk.no_faktur_penerimaan)" v-shortkey.push="['f3']" @shortkey="batalPenerimaanProduk(inputPembayaranPenerimaanProduk.suplier, inputPembayaranPenerimaanProduk.no_faktur_penerimaan)"> <font style="font-size:15px;">Batal(F3) </font></button>
                         </div>
                       </div>
                     </div>
@@ -393,8 +401,8 @@
             swal({ 
               title: titleCase(nama_produk), 
               input: 'number', 
-              inputPlaceholder : 'Jumlah Produk',         
-              html:'Berapa Jumlah Produk Yang Akan Dimasukkan ?', 
+              inputPlaceholder : 'Jumlah Fisik',         
+              html:'Berapa Jumlah Fisik Yang Akan Dimasukkan ?', 
               animation: false, 
               showCloseButton: true, 
               showCancelButton: true, 
@@ -420,9 +428,9 @@
             }).then(function (jumlah_produk) { 
               if (jumlah_produk != "0") { 
                 app.loading = true;
-                axios.get(app.url+'/proses-edit-jumlah-tbs-pembelian?jumlah_edit_produk='+jumlah_produk+'&id_tbs_pembelian='+id)
+                axios.get(app.url+'/proses-edit-jumlah-fisik-edit-tbs-penerimaan?jumlah_edit_produk='+jumlah_produk+'&id_tbs_pembelian='+id)
                 .then(function (resp) {
-                  app.alert("Mengubah Jumlah Produk "+titleCase(nama_produk));
+                  app.alert("Mengubah Jumlah Fisik "+titleCase(nama_produk));
                   app.loading = false;
                   app.getResults();      
                   var subtotal = (parseInt(app.inputPembayaranPenerimaanProduk.subtotal) - parseInt(subtotal_lama))  + parseInt(resp.data.subtotal)
@@ -431,7 +439,7 @@
                 })
                 .catch(function (resp) {
                   app.loading = false;
-                  alert("Jumlah Produk tidak bisa diedit");
+                  alert("Jumlah Fisik tidak bisa diedit");
                 });
               } 
               else { 
@@ -547,16 +555,15 @@
               if (willDelete) {
 
                 app.loading = true;
-                axios.get(app.url+'/batal-penerimaan-produk?no_faktur='+no_faktur)
+                axios.get(app.url+'/batal-edit-penerimaan-produk?no_faktur='+no_faktur)
                 .then(function (resp) {
 
-                  var subtotal = parseInt(app.inputPembayaranPenerimaanProduk.subtotal) - parseInt(resp.data.subtotal)
-                  app.getResults();
-                  app.alert("Membatalkan Transaksi Pembelian");
+                  app.alert("Membatalkan Transaksi Penerimaan Produk");
                   app.inputPembayaranPenerimaanProduk.suplier = ''
                   app.inputPembayaranPenerimaanProduk.no_faktur = ''
                   app.inputPembayaranPenerimaanProduk.keterangan = ''
                   app.inputPembayaranPenerimaanProduk.subtotal = 0
+                  app.$router.replace('/penerimaan-produk');
 
                 })
                 .catch(function (resp) {

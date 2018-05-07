@@ -369,7 +369,7 @@ class DaftarProdukController extends Controller
                 $tombol_beli = '<a disabled="true" class="btn btn-block tombolBeli buttonColor" rel="tooltip" title="Stok Tidak Ada"> Beli Sekarang </a>';
             } else {
             // $tombol_beli = '<a href="' . url('/keranjang-belanja/tambah-produk-keranjang-belanja/' . $produks->id . '') . '" id="btnBeliSekarang" class="btn btn-block tombolBeli buttonColor" > Beli Sekarang </a>';
-                $tombol_beli = '<button id="btnBeliSekarang" class="btn btn-block tombolBeli buttonColor" data-id-produk='.$produks->id.' data-nama-produk="'.$produks->NamaProduk.'"> Beli Sekarang </button>';
+                $tombol_beli = '<button id="" class="btn btn-block tombolBeli buttonColor" data-id-produk='.$produks->id.' data-nama-produk="'.$produks->NamaProduk.'"> Beli Sekarang </button>';
             }
         } elseif (Auth::check() && Auth::user()->tipe_user != $pelanggan) {
            $tombol_beli = '<a  disabled="true" class="btn btn-block tombolBeli buttonColor" rel="tooltip" title="Masuk Sebagai Pelanggan Untuk Beli" > Beli Sekarang </a>';
@@ -377,7 +377,7 @@ class DaftarProdukController extends Controller
         if ($cek_produk < 1) {
             $tombol_beli = '<a disabled="true" class="btn btn-block tombolBeli buttonColor" rel="tooltip" title="Stok Tidak Ada" > Beli Sekarang </a>';
         } else {
-         $tombol_beli = '<button id="btnBeliSekarang" class="btn btn-block tombolBeli buttonColor" data-id-produk='.$produks->id.' data-nama-produk="'.$produks->NamaProduk.'"> Beli Sekarang </button>';
+         $tombol_beli = '<button id="" class="btn btn-block tombolBeli buttonColor" data-id-produk='.$produks->id.' data-nama-produk="'.$produks->NamaProduk.'"> Beli Sekarang </button>';
         // $tombol_beli = '<a href="' . url('/keranjang-belanja/tambah-produk-keranjang-belanja/' . $produks->id . '') . '" id="btnBeliSekarang" class="btn btn-block tombolBeli buttonColor" > Beli Sekarang </a>';
      }
  }
@@ -448,7 +448,7 @@ public static function fotoProduk($produks)
 
         DaftarProdukController::resizeProduk($produks);
 
-        $foto_produk = '<img alt="' . $produks->nama . '" data-src="' . asset('foto_produk/' . $produks->foto . '') . '">';
+        $foto_produk = '<img id="foto' . $produks->id . '" alt="' . $produks->nama . '" data-src="' . asset('foto_produk/' . $produks->foto . '') . '">';
     } else {
         $foto_produk = '<img src="' . asset('image/foto_default.png') . '">';
     }

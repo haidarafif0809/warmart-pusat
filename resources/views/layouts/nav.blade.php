@@ -171,6 +171,30 @@
 @endif  {{-- end if kasir_id  --}}
 
 @if(Laratrust::can('lihat_pembelian')) 
+<!--PEMBELIAN ORDER-->
+<li>
+    <router-link :to="{name: 'indexPembelianOrder'}" class="menu-nav disabled-menu">
+        <i class="material-icons">
+            add_shopping_cart
+        </i>
+        <p>
+            Order Pembelian
+        </p>
+    </router-link>
+</li>
+
+<!--PENERIMAAN PRODUK-->
+<li>
+    <router-link :to="{name: 'indexPenerimaanProduk'}" class="menu-nav disabled-menu">
+        <i class="material-icons">
+            add_shopping_cart
+        </i>
+        <p>
+            Penerimaan Produk
+        </p>
+    </router-link>
+</li>
+
 <!--PEMBELIAN-->
 <li>
     <router-link :to="{name: 'indexPembelian'}" class="menu-nav disabled-menu">

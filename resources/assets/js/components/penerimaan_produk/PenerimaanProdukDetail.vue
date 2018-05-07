@@ -36,13 +36,10 @@
 										<tr>
 
 											<th>Produk</th>
-											<th style="text-align:right;">Jumlah</th>
-											<th>Satuan</th>
-											<th style="text-align:right;">Harga</th>
-											<th style="text-align:right;">Potongan</th>
-											<th style="text-align:right;">Tax</th>
-											<th style="text-align:right;">Subtotal</th>
-
+											<th style="text-align:right;">Jumlah Order</th>
+											<th style="text-align:right;">Jumlah Fisik</th>
+											<th style="text-align:right;">Selisih Fisik</th>
+											<th><center>Satuan</center></th>
 										</tr>
 									</thead>
 									<tbody v-if="detailPenerimaanProduk.length"  class="data-ada">
@@ -50,11 +47,9 @@
 
 											<td>{{ detailPenerimaanProduk.detail_penerimaan.produk.kode_barang }} - {{ detailPenerimaanProduk.nama_produk }}</td>
 											<td style="text-align:right;"> {{ detailPenerimaanProduk.detail_penerimaan.jumlah_produk | pemisahTitik }}</td>
-											<td>{{ detailPenerimaanProduk.detail_penerimaan.nama_satuan }}</td>
-											<td style="text-align:right;"> {{ detailPenerimaanProduk.detail_penerimaan.harga_produk | pemisahTitik }}</td>
-											<td style="text-align:right;">{{ detailPenerimaanProduk.detail_penerimaan.potongan | pemisahTitik }}</td>
-											<td style="text-align:right;"> {{ detailPenerimaanProduk.detail_penerimaan.tax }}</td>
-											<td style="text-align:right;"> {{ detailPenerimaanProduk.detail_penerimaan.subtotal | pemisahTitik }} </td>
+											<td style="text-align:right;"> {{ detailPenerimaanProduk.detail_penerimaan.jumlah_fisik | pemisahTitik }}</td>
+											<td style="text-align:right;"> {{ detailPenerimaanProduk.detail_penerimaan.selisih_fisik | pemisahTitik }}</td>
+											<td align="center">{{ detailPenerimaanProduk.detail_penerimaan.nama_satuan }}</td>
 										</tr>
 									</tbody>                    
 									<tbody class="data-tidak-ada" v-else>
@@ -74,10 +69,10 @@
 									<i class="material-icons">shopping_cart</i>
 								</div>
 								<div class="card-content">
-									<p class="category"><font style="font-size:20px;">Subtotal</font></p>
+									<p class="category"><font style="font-size:20px;">Order Pembelian</font></p>
 									<h3 class="card-title">
 										<b>
-											<font style="font-size:32px;">{{ subtotal | pemisahTitik }}</font>
+											<font style="font-size:15px;">{{ pembelianOrder }}</font>
 										</b>
 									</h3>
 								</div>
@@ -108,26 +103,21 @@
 				pencarian: '',
 				loading: true,
 				seen : false,    
-				subtotal : 0,
-				no_faktur:'',         
+				no_faktur:'',
+				id_penerimaan: '',
+				pembelianOrder: ''     
 			}
 		},
 		mounted() {   
 			var app = this;
+			app.id_penerimaan = app.$route.params.id;
 			app.getResults();
+			app.getPenerimaan(app.id_penerimaan);
 		},
 		watch: {
 			pencarian: function (newQuestion) {
 				this.getHasilPencarian()
 				this.loading = true
-			}
-		},
-		filters: {	
-			pemisahTitik: function (value) {
-				var angka = [value];
-				var numberFormat = new Intl.NumberFormat('es-ES');
-				var formatted = angka.map(numberFormat.format);
-				return formatted.join('; ');
 			}
 		},
 		methods: {
@@ -145,11 +135,6 @@
 					app.no_faktur = resp.data.no_faktur;
 					app.loading = false;
 					app.seen = true;
-					if (app.subtotal == 0) {
-						$.each(resp.data.data, function (i, item) {
-							app.subtotal += parseFloat(resp.data.data[i].detail_penerimaan.subtotal)
-						});
-					}
 				})
 				.catch(function (resp) {
 					console.log(resp);
@@ -170,6 +155,18 @@
 					app.detailPenerimaanProdukData = resp.data;
 					app.loading = false;
 					app.seen = true;
+				})
+				.catch(function (resp) {
+					console.log(resp);
+					alert("Tidak Dapat Memuat Detail Penerimaan Produk");
+				});
+			},
+			getPenerimaan(id_penerimaan){
+				var app = this;
+
+				axios.get(app.url+'/data-penerimaan/'+id_penerimaan)
+				.then(function (resp) {
+					app.pembelianOrder = resp.data
 				})
 				.catch(function (resp) {
 					console.log(resp);

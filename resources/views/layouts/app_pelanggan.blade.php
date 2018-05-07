@@ -38,6 +38,71 @@
 
     $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description'])->where('warung_id',$address_app->warung_id)->first();
     ?>
+
+    <style type="text/css">
+        #taroSini {
+            margin:0;
+            padding:0;
+            position:relative;
+        }
+        #taroSini > div {
+            position:absolute;
+            top:1.3em;
+            margin:0;
+            padding:0;
+            list-style-type:none;
+            list-style-position:outside;
+            line-height:1.5em;
+            background: #ffffff;
+            padding: 5px;
+            border: 1px solid #eeeeee;
+            right: 0%;
+            width: 350px;
+            border-radius: 2px;
+            display: none;
+            box-shadow: 1px 5px 12px #353535;
+        }
+        #taroSini div td.produkName {
+            width: 90%;
+        }
+        #taroSini div td.subtotalProduk {
+            width: 10%;
+            text-align: right;
+        }
+        #taroSini div th {
+            font-size: medium;
+            font-weight: bold;
+        }
+        #taroSini div small.productCount {
+            color: red;
+        }
+        #taroSini div div.warungName {
+            display: block;
+            margin-bottom: 5px;
+        }
+        #taroSini div.produkKosong {
+            color: black;
+        }
+        #collapseProdukMobile {
+            display: none;
+        }
+        #collapseProdukMobile td.produkNameMobile {
+
+            display: none;
+        }
+        #collapseProdukMobile td.warungNameMobile {
+
+            display: none;
+        }
+        #collapseProdukMobile td.produkCountMobile {
+
+            display: none;
+        }
+        #collapseProdukMobile td.subtotalProdukMobile {
+
+            display: none;
+        }
+    </style>
     
     @if($setting_aplikasi->tipe_aplikasi == 0)
     <title>
@@ -71,8 +136,9 @@
     <!--     Fonts and icons     -->
     <link href="{{ asset('css/material-kit.css?v=1.2.0')}}" rel="stylesheet"/>
     <link href="{{ asset('assets/assets-for-demo/vertical-nav.css')}}" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" rel="stylesheet" type="text/css"/>
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet"/>
+    <link href="{{ asset('css/fonts-googleapis-roboto.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet"/>
+
 
     <!-- Facebook Pixel Code -->
     <script>
@@ -116,27 +182,27 @@
 <style type="text/css">
     .navbar-nav .open .dropdown-menu{
       color: grey;
-  }
-  .navbar .navbar-brand {
-    position: relative;
-    @if(Agent::isMobile())
-    height: 50px;
-    @else
-    height: 75px;
-    @endif
-    line-height: 0px;
-    color: inherit;
-    padding: 10px 15px;
-}
-body {
-    @if($setting_aplikasi->tipe_aplikasi == 1)
-    background-color: #2ac326;
-    color: #3C4858;
-    @endif
-}
-@keyframes spinner { 
-  to {transform: rotate(360deg);} 
-} 
+    }
+    .navbar .navbar-brand {
+        position: relative;
+        @if(Agent::isMobile())
+        height: 50px;
+        @else
+        height: 75px;
+        @endif
+        line-height: 0px;
+        color: inherit;
+        padding: 10px 15px;
+    }
+    body {
+        @if($setting_aplikasi->tipe_aplikasi == 1)
+        background-color: #2ac326;
+        color: #3C4858;
+        @endif
+    }
+    @keyframes spinner { 
+      to {transform: rotate(360deg);} 
+    } 
 .spinner:before { 
   content: ''; 
   box-sizing: border-box; 
@@ -234,14 +300,15 @@ body {
                     </a>
                     @endif
                     @if(Agent::isMobile() && Auth::check() && Auth::user()->tipe_user == 3)
-                    <a class="navbar-brand pull-right" href="{{ url('/keranjang-belanja') }}">
+                    <span id="keranjangCollapseMobile" class="navbar-brand pull-right">
                         <i class="material-icons">
                             shopping_cart
                         </i>
                         <b style="font-size: 15px" id="jumlah-keranjang" data-jumlah="{{ $cek_belanjaan }}" data-session="">
                             | {{ $cek_belanjaan }}
                         </b>
-                    </a>
+                    </span>
+                    <div id="collapseProdukMobile"></div>
                     @endif
                 </div>
                 <div class="collapse navbar-collapse">
@@ -365,7 +432,7 @@ body {
                         @endif
                         @if (Auth::check() == false) 
                         <li class="button-container">
-                            <a class="btn btn-round btn-rose" href="{{ url('/keranjang-belanja') }}">
+                            <button id="btnKeranjang" class="btn btn-round btn-rose">
                                 <i class="material-icons">
                                     shopping_cart
                                 </i>
@@ -373,11 +440,14 @@ body {
                                 <b style="font-size: 15px" id="jumlah-keranjang" data-session="" data-jumlah="{{ $cek_belanjaan }}">
                                     | {{ $cek_belanjaan }}
                                 </b>
-                            </a>
+                            </button>
+                            <div id="taroSini">
+                                <div></div>
+                            </div>
                         </li>
                         @elseif(Auth::check() && Auth::user()->tipe_user == 3)
                         <li class="button-container">
-                            <a class="btn btn-round btn-rose" href="{{ url('/keranjang-belanja') }}">
+                            <button id="btnKeranjang" class="btn btn-round btn-rose">
                                 <i class="material-icons">
                                     shopping_cart
                                 </i>
@@ -385,7 +455,10 @@ body {
                                 <b style="font-size: 15px" id="jumlah-keranjang" data-session="" data-jumlah="{{ $cek_belanjaan }}">
                                     | {{ $cek_belanjaan }}
                                 </b>
-                            </a>
+                            </button>
+                            <div id="taroSini">
+                                <div></div>
+                            </div>
                         </li>
                         @endif
                     </ul>
@@ -584,7 +657,7 @@ body {
         </nav>
     </body>
     <!-- Include Dexie -->
-    <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
+    <script src="{{ asset('js/dexie.js') }}"></script>
 
     <!--   Core JS Files   -->
     <script src="{{ asset('js/jquery-3.2.1.min.js') }}" type="text/javascript">
@@ -635,10 +708,10 @@ body {
     <script src="{{ asset('js/jquery.dataTables.js') }}">
     </script>
     <!-- Sweet Alert 2 plugin, full documentation here: https://limonte.github.io/sweetalert2/ -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.0.5/sweetalert2.all.min.js" type="text/javascript">
+    <script src="{{ asset('js/sweetalert2.all.min.js') }}" type="text/javascript">
     </script>
     <!-- Sertakan polibill untuk Prompt ES6 (opsional) untuk browser IE11 dan Android -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.js">
+    <script src="{{ asset('js/core.js') }}">
     </script>
     <!-- Plugin for Fileupload, full documentation here: http://www.jasny.net/bootstrap/javascript/#fileinput -->
     <script src="{{ asset('js/jasny-bootstrap.min.js') }}">
@@ -660,75 +733,93 @@ body {
     <script src="{{ asset('js/material-kit.js?v=1.2.0')}}" type="text/javascript">
     </script>
     {{-- lazy load image --}}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-lazyload/10.3.5/lazyload.min.js">
+    <script src="{{ asset('js/lazyload.min.js')}}">
     </script>
     <script type="text/javascript">
         var myLazyLoad = new LazyLoad();
-    </script>
-    <script type="text/javascript">
 
-
-        $(document).on('click', '#btnBeliSekarang', function(){
-            let nama_produk = $(this).attr("data-nama-produk");
+        $('.tombolBeli').click(function(){
             let id_produk = $(this).attr("data-id-produk");
-            alert(nama_produk,id_produk);
+            let nama_produk = $(this).attr("data-nama-produk");
+            $(this).attr('id', 'produk' + $(this).attr("data-id-produk"));
+            _alert(nama_produk,id_produk);
         });
 
-        function alert(nama_produk,id_produk){
+        function _alert(nama_produk,id_produk){
             swal({
-              title: nama_produk,
-              text: 'Masukan Jumlah Produk',
-              input: 'number',
-              inputValue: 2,
-              showCancelButton: true,
-              confirmButtonText: 'OK',
-              showLoaderOnConfirm: true,
-              preConfirm: (jumlah_produk) => {
+                title: nama_produk,
+                text: 'Masukan Jumlah Produk',
+                input: 'number',
+                inputValue: 2,
+                showCancelButton: true,
+                confirmButtonText: 'OK',
+                showLoaderOnConfirm: true,
+                preConfirm: (jumlah_produk) => {
                 return new Promise((resolve) => {
-                  setTimeout(() => {
-                    if (jumlah_produk === '') {
-                      swal.showValidationError(
-                        'Anda Belum memasukan Jumlah Produk'
-                        )
-                  }else if (jumlah_produk <= 0) {
-                     swal.showValidationError(
-                        'Masukan jumlah produk yang Valid'
-                        )
-                 }
-                 resolve()
-             }, 500)
-              })
-            },
-            allowOutsideClick: () => !swal.isLoading()
-        }).then((result) => {
-          if (result.value) {
-            prosesTambahProduk(result.value,id_produk,nama_produk)            
+                    setTimeout(() => {
+                        if (jumlah_produk === '') {
+                            swal.showValidationError('Anda Belum memasukan Jumlah Produk')
+                        } else if (jumlah_produk <= 0) {
+                                swal.showValidationError('Masukan jumlah produk yang Valid')
+                        }
+                        resolve()
+                        }, 500)
+                    })
+                },
+                allowOutsideClick: () => !swal.isLoading()
+            }).then((result) => {
+                if (result.value) {
+                    prosesTambahProduk(result.value,id_produk,nama_produk);
+                }
+            });
         }
-    })
-    }
 
-    function prosesTambahProduk(jumlah_produk,id_produk,nama_produk){
+        function prosesTambahProduk(jumlah_produk,id_produk,nama_produk){
+            $.get('{{ Url('/keranjang-belanja/tambah-produk-keranjang-belanja/') }}',{'_token': $('meta[name=csrf-token]').attr('content'),jumlah_produk:jumlah_produk,id_produk:id_produk}, function(data){
 
-        $.get('{{ Url('/keranjang-belanja/tambah-produk-keranjang-belanja/') }}',{'_token': $('meta[name=csrf-token]').attr('content'),jumlah_produk:jumlah_produk,id_produk:id_produk}, function(data){
+                var totalProduk = $("#jumlah-keranjang").attr("data-jumlah");
+                var totalProduk = parseInt(totalProduk) + parseInt(data); 
+                var sisa_jumlah_produk = "| "+totalProduk;
+                $("#jumlah-keranjang").attr("data-jumlah",totalProduk);
+                $("#jumlah-keranjang").text(sisa_jumlah_produk);
+            });
+        }
 
-           var totalProduk = $("#jumlah-keranjang").attr("data-jumlah");
-           var totalProduk = parseInt(totalProduk) + parseInt(data); 
-           var sisa_jumlah_produk = "| "+totalProduk;
-           $("#jumlah-keranjang").attr("data-jumlah",totalProduk);
-           $("#jumlah-keranjang").text(sisa_jumlah_produk);
-           swal({
-              position: 'center',
-              type: 'success',
-              text: nama_produk+' Berhasil dimasukan ke Keranjang Belanja',
-              showConfirmButton: false,
-              timer: 2000
-          })
+        $('#btnKeranjang').mouseenter(() => {
+            $.get('{{ url('/keranjang-belanja/collapse-keranjang-belanja') }}', function (data) {
+                $('#taroSini div').html(data);
+                $('#taroSini div').slideDown('fast');
+                setTimeout(() => {
+                    if ($('#taroSini div').attr('data-status') != 'mouseentered') {
+                        $('#taroSini div').slideUp('fast', () => { 
+                            $('#taroSini div').html('');
+                        });                   
+                    }
+                }, 1500);
+            });
+        });
+        $('#taroSini div').hover(() => {
+            $('#taroSini div').attr('data-status', 'mouseentered');
+        }, () => {
+            $('#taroSini div').removeAttr('data-status');
+            $('#taroSini div').slideUp('fast', () => { 
+                $('#taroSini div').html('');
+            });                   
+        });
 
-       });
+        $('#keranjangCollapseMobile').click(() => {
+            if ($('#collapseProdukMobile').html() == '') {
+                $.get('{{ url('/keranjang-belanja/collapse-keranjang-belanja') }}', function (data) {
+                    $('#collapseProdukMobile').html(data);
+                    $('#collapseProdukMobile').slideDown('fast');
+                });            
+            } else {
+                $('#collapseProdukMobile').slideUp('fast', () => { 
+                    $('#collapseProdukMobile').html('');
+                });
+            }
+        });
 
-    }
-
-
-</script>
+    </script>
 @yield('scripts')
 </html>
