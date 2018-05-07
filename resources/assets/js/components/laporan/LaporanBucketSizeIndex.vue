@@ -10,6 +10,15 @@
 	color: red; 
 	float: right;
 }
+.table-pelanggan, .th-pelanggan, .td-pelanggan {
+	border: 1px solid black;
+	border-collapse: collapse;
+}
+.th-pelanggan, .td-pelanggan {
+	padding: 5px;
+	text-align: left;    
+}
+
 </style>
 <template>
 	<div class="row">
@@ -69,7 +78,7 @@
 			</div> 
 			<!-- / MODAL DETAIL PELANGGAN --> 
 
-			<!-- small modal -->
+			<!-- small modal -->																																				
 			<div class="modal" id="modalPelanggan" role="dialog" tabindex="-1"  aria-labelledby="myModalLabel" aria-hidden="true" >
 				<div class="modal-dialog modal-lg">
 					<div class="modal-content">
@@ -84,7 +93,7 @@
 						<div class="modal-body"> 
 
 							<div class="table-responsive">
-								<table class="table table-striped table-hover">
+								<table class="table table-striped table-hover table-responsive">
 									<thead class="text-info">
 										<tr>
 											<th>Pelanggan</th>
@@ -174,7 +183,7 @@
 											Total
 										</td>
 										<td class="td-price">
-											<small>Rp.</small>{{subtotal}}
+											<small>Rp.</small>{{subtotal | pemisahTitik}}
 										</td>
 									</tr>
 								</tbody>                    
