@@ -84,7 +84,7 @@ class LaporanBucketSizeController extends Controller
         for ($i=1; $i <= $jumlahKelipatan; $i++) { 
 
             $data_kelipatan = ($i * $kelipatan);
-            $faktur_penjualan = Penjualan::with('pelanggan')->countFaktur($request)->whereBetween('total', array($satu, $kelipatan))->orderBy('id_pelanggan','desc');
+            $faktur_penjualan = Penjualan::with(['pelanggan','pesanan_pelanggan'])->countFaktur($request)->whereBetween('total', array($satu, $kelipatan))->orderBy('id_pelanggan','desc');
             if ($faktur_penjualan->count() != 0) {
                 $respons['labels'][]    = $data_kelipatan / 1000 . " K";
                 array_push($data,$faktur_penjualan->get());
@@ -240,9 +240,9 @@ class LaporanBucketSizeController extends Controller
                     $total_faktur_kelipatan = PenjualanPos::countFaktur($request)->whereBetween('total', array($satu, $kelipatan))->first()->no_faktur; 
 
                     $sheet->row(++$row, [ 
-                       $satu . " - " . $kelipatan, 
-                       $total_faktur_kelipatan, 
-                   ]); 
+                     $satu . " - " . $kelipatan, 
+                     $total_faktur_kelipatan, 
+                 ]); 
 
                     $data_kelipatan = $request->kelipatan; 
                     $kelipatan += $data_kelipatan; 
@@ -283,9 +283,9 @@ class LaporanBucketSizeController extends Controller
                     $total_faktur_kelipatan = Penjualan::countFaktur($request)->whereBetween('total', array($satu, $kelipatan))->first()->id_pesanan; 
 
                     $sheet->row(++$row, [ 
-                       $satu . " - " . $kelipatan, 
-                       $total_faktur_kelipatan, 
-                   ]); 
+                     $satu . " - " . $kelipatan, 
+                     $total_faktur_kelipatan, 
+                 ]); 
 
                     $data_kelipatan = $request->kelipatan; 
                     $kelipatan += $data_kelipatan; 
