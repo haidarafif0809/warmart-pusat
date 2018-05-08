@@ -36,7 +36,7 @@ class PenjualanController extends Controller
 
     public function pilihPelanggan()
     {
-        $pelanggan = User::where('tipe_user', 3)->get();
+        $pelanggan = User::where('tipe_user', 3)->where('id_warung', Auth::user()->id_warung)->get();
         $array     = array(['id' => '', 'nama_pelanggan' => 'SEMUA PELANGGAN', 'pelanggan' => 'SEMUA PELANGGAN'], ['id' => '0', 'nama_pelanggan' => 'Umum', 'pelanggan' => 'Umum']);
         foreach ($pelanggan as $pelanggans) {
             array_push($array, [
