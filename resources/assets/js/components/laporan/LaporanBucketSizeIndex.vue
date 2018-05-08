@@ -151,7 +151,7 @@
 								<input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
 							</div>
 
-							<table class="table table-striped table-hover">
+							<table class="table table-striped table-hover" v-if="filter.jenis_penjualan == 0">
 								<thead class="text-primary">
 									<tr>
 
@@ -190,7 +190,47 @@
 								<tbody class="data-tidak-ada" v-else>
 									<tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
 								</tbody>
+							</table>  
 
+							<table class="table table-striped table-hover" v-else>
+								<thead class="text-primary">
+									<tr>
+
+										<th>No Transaksi</th>
+										<th>Produk</th>
+										<th class="text-right">Jumlah</th>
+										<th class="text-center">Satuan</th>
+										<th class="text-right">Harga</th>
+										<th class="text-right">Potongan</th>
+										<th class="text-right">Subtotal</th>
+
+									</tr>
+								</thead>
+								<tbody v-if="detailPenjualan.length"  class="data-ada">
+									<tr v-for="detailPenjualan, index in detailPenjualan" >
+
+										<td>{{ detailPenjualan.id_penjualan }}</td>
+										<td>{{ detailPenjualan.nama_produk }}</td>
+										<td align="right"> {{ detailPenjualan.jumlah | pemisahTitik }}</td>
+										<td align="center">{{ detailPenjualan.satuan }}</td>
+										<td align="right"> {{ detailPenjualan.harga | pemisahTitik }}</td>
+										<td align="right"> {{ detailPenjualan.potongan }}</td>
+										<td align="right"> {{ detailPenjualan.subtotal | pemisahTitik }}</td>
+
+									</tr>
+									<tr>
+										<td colspan="5"></td>
+										<td class="td-total">
+											Total
+										</td>
+										<td class="td-price">
+											<small>Rp.</small>{{subtotal | pemisahTitik}}
+										</td>
+									</tr>
+								</tbody>                    
+								<tbody class="data-tidak-ada" v-else>
+									<tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
+								</tbody>
 							</table>    
 
 							<vue-simple-spinner v-if="loading"></vue-simple-spinner>
@@ -383,7 +423,7 @@ export default {
 	data: function () {
 		return {
 			subtotal : null,
-			id_penjualan_pos : null,
+			id_penjualan : null,
 			detailPenjualan: [],
 			detailPenjualanData : {},
 			bucketSizePelanggan : '',
@@ -601,24 +641,30 @@ export default {
 			$("#modalDetailPenjualan").hide();
 			$("#modalPelanggan").show(); 
 		},
-		getResults(page,id_penjualan) {
+		getResults(page,id) {
 			$("#modalPelanggan").hide(); 
 			$("#modalDetailPenjualan").show();
 
 			let app = this; 
 
-			app.id_penjualan_pos = id_penjualan;
+			app.id_penjualan = id;
 
 			if (typeof page === 'undefined') {
 				page = 1;
 			}
-			axios.get(app.urlPenjualan+'/view-detail-penjualan/'+app.id_penjualan_pos+'?page='+page)
+
+			let url = app.filter.jenis_penjualan == 0 ? app.urlPenjualan+'/view-detail-penjualan/'+app.id_penjualan : app.urlPenjualan+'/view-detail-penjualan-online/'+app.id_penjualan;
+
+			axios.get(url+'?page='+page)
 			.then(function (resp) {
-				app.detailPenjualan = resp.data.data;
-				app.detailPenjualanData = resp.data;
+				
+				app.detailPenjualan = resp.data.data
+				app.detailPenjualanData = resp.data
+				console.log(app.detailPenjualanData)
+
 				var subtotal = 0;
-				$.each(resp.data.data, function (i, item) {
-					subtotal += parseFloat(resp.data.data[i].subtotal)
+				$.each(app.detailPenjualan, function (i, item) {
+					subtotal += parseFloat(app.detailPenjualan[i].subtotal)
 				});
 				app.subtotal = subtotal
 
