@@ -197,7 +197,7 @@ return response()->json([
                             // membuat nama file random berikut extension
                     $filename     = str_random(40) . '.' . $extension;
                     $image_resize = Image::make($baner_promo->getRealPath());
-                    $image_resize->fit(1491, 355);
+                    $image_resize->fit(2100, 370);
                     $image_resize->save(public_path('baner_setting_promo/' . $filename));
                     $insert_setting->baner_promo = $filename;
                             // menyimpan field baner_promo di database setting_promo dengan filename yang baru dibuat
@@ -302,7 +302,7 @@ public function tambahWaktu(Request $request,$id)
                         // membuat nama file random berikut extension
             $filename     = str_random(40) . '.' . $extension;
             $image_resize = Image::make($baner_promo->getRealPath());
-            $image_resize->fit(1491, 355);
+            $image_resize->fit(2100, 370);
             $image_resize->save(public_path('baner_setting_promo/' . $filename));
                         // hapus baner_promo_home lama, jika ada
             if ($update_setting->baner_promo) {

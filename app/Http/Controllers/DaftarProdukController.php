@@ -503,7 +503,7 @@ public static function cardProduk($produks)
             $jam = $warung->jam_sekarang.":00";
 
             $card_produk .= '
-            <div class="col-md-3 col-sm-6 col-xs-6 list-produk " style=" margin-bottom:10px;">
+            <div class="col-md-2 col-sm-6 col-xs-6 list-produk " style=" margin-bottom:10px;">
             <div class="card cards card-pricing">
             <a href="' . url("/detail-produk/" . $produks->id . "") . '">
             <div class="card-image">';
