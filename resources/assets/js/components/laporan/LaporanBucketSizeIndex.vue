@@ -113,7 +113,7 @@
 												<td align="center">
 											<!-- 		<router-link :to="{name: 'detailPenjualan', params: {id: pelanggan.id}}" class="btn btn-xs btn-info" target="_blank"> 
 											Lihat </router-link> -->
-											<a href="#laporan-bucket-size" v-on:click="getResults(1,pelanggan.id)" class="btn btn-xs btn-info">Lihat</a>
+											<a href="#laporan-bucket-size" v-on:click="getResults(1,pelanggan.id,pelanggan.potongan)" class="btn btn-xs btn-info">Lihat</a>
 										</td>
 									</tr>
 								</tbody>    
@@ -180,10 +180,28 @@
 									<tr>
 										<td colspan="5"></td>
 										<td class="td-total">
+											Subtotal
+										</td>
+										<td align="right">
+											<h5>{{subtotal | pemisahTitik}}</h5>
+										</td>
+									</tr>
+									<tr>
+										<td colspan="5"></td>
+										<td class="td-total">
+											Disc. Faktur
+										</td>
+										<td align="right">
+											<h5>{{potongan | pemisahTitik}}</h5>
+										</td>
+									</tr>
+									<tr>
+										<td colspan="5"></td>
+										<td class="td-total">
 											Total
 										</td>
-										<td class="td-price">
-											<small>Rp.</small>{{subtotal | pemisahTitik}}
+										<td align="right">
+											<h5>{{parseFloat(subtotal) - parseFloat(potongan) | pemisahTitik}}</h5>
 										</td>
 									</tr>
 								</tbody>                    
@@ -422,8 +440,9 @@
 export default {
 	data: function () {
 		return {
-			subtotal : null,
-			id_penjualan : null,
+			potongan : 0,
+			subtotal : 0,
+			id_penjualan : 0,
 			detailPenjualan: [],
 			detailPenjualanData : {},
 			bucketSizePelanggan : '',
@@ -641,12 +660,14 @@ export default {
 			$("#modalDetailPenjualan").hide();
 			$("#modalPelanggan").show(); 
 		},
-		getResults(page,id) {
+		getResults(page,id,potongan) {
 			$("#modalPelanggan").hide(); 
 			$("#modalDetailPenjualan").show();
 
 			let app = this; 
 
+			app.potongan = potongan
+			
 			app.id_penjualan = id;
 
 			if (typeof page === 'undefined') {
