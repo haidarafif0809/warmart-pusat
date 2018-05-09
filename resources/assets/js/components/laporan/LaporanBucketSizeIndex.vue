@@ -65,6 +65,18 @@
 												<td class="text-primary"><b># Alamat </b> </td>
 												<td class="text-primary"><b>: {{detailPelanggan.alamat}} </b> </td>
 											</tr>
+											<tr>
+												<td class="text-primary"><b># Rata-rata Belanja  </b> </td>
+												<td class="text-primary"><b>: 10.0000 </b> </td>
+											</tr>
+											<tr>
+												<td class="text-primary"><b># Transaksi Terakhir  </b> </td>
+												<td class="text-primary"><b>: 2 Bulan yang lalu </b> </td>
+											</tr>
+											<tr>
+												<td class="text-primary"><b># Rata-rata Kedatangan  </b> </td>
+												<td class="text-primary"><b>: 1 Kali Kunjungan </b> </td>
+											</tr>
 										</tbody>
 									</table>  
 								</div>
@@ -116,6 +128,15 @@
 											<a href="#laporan-bucket-size" v-on:click="getProdukPos(1, pelanggan.id, pelanggan.potongan)" class="btn btn-xs btn-info" v-if="filter.jenis_penjualan == 0">Lihat</a>
 											<a href="#laporan-bucket-size" v-on:click="getProdukOnline(1, pelanggan.id, pelanggan.pesanan_pelanggan.kode_unik_transfer, pelanggan.pesanan_pelanggan.biaya_kirim)" class="btn btn-xs btn-info" v-else>Lihat</a>
 										</td>
+									</tr>
+									<tr>
+										<td>
+											<font style="font-size:20px;">Total</font>
+										</td>
+										<td align="right">
+											<font style="font-size:20px;">{{dataPelanggan.total | pemisahTitik}}</font>
+										</td>
+										<td></td>
 									</tr>
 								</tbody>    
 							</table>
@@ -660,9 +681,12 @@ export default {
 			app.bucketSizePelanggan = labels;
 			app.loadMoreLength = dataPelanggan.length;
 			app.dataPelanggan = dataPelanggan.slice(0, 10);
-			console.log(dataPelanggan);
-			// console.log(app.loadMoreLength);
-			// console.log(app.dataPelanggan);
+
+			let total = 0
+			for (var i = 0 ; i < app.dataPelanggan.length; i++) {
+				total += parseFloat(app.dataPelanggan[i].total)
+			}
+			app.dataPelanggan.total = total
 		},
 		closeModalPelanggan(){
 			$("#modalPelanggan").hide(); 
@@ -674,9 +698,8 @@ export default {
 
 			for (var i = 0 ; i < newData.length; i++) {
 				app.dataPelanggan.push(newData[i]);
+				app.dataPelanggan.total += parseFloat(newData[i].total)
 			}
-			console.log(app.dataPelanggan.length);
-			console.log(length,limit);
 		},
 		cekDetailPelanggan(data){
 			let app = this;
