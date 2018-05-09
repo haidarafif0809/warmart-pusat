@@ -1063,39 +1063,6 @@ class PembelianController extends Controller
             $user       = Auth::user()->id;
             $no_faktur  = Pembelian::no_faktur($warung_id);
 
-            //INSERT DETAIL PEMBELIAN
-            $data_produk_pembelian = TbsPembelian::where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
-
-            // INSERT DETAIL PEMBELIAN
-            foreach ($data_produk_pembelian->get() as $data_tbs_pembelian) {
-                $barang = Barang::select('harga_beli')->where('id', $data_tbs_pembelian->id_produk)->where('id_warung', Auth::user()->id_warung);
-
-                // UPDATE HARGA BELI - MASTER PRODUK
-                if ($barang->first()->harga_beli != $data_tbs_pembelian->harga_produk) {
-                    if ($data_tbs_pembelian->status_harga == 1) {
-
-                        if ($data_tbs_pembelian->satuan_id == $data_tbs_pembelian->satuan_dasar) {
-                            $barang->update(['harga_beli' => $data_tbs_pembelian->harga_produk]);
-                        }
-                    }                        
-                }
-
-                $detail_pembelian = DetailPembelian::create([
-                    'no_faktur'     => $no_faktur,
-                    'satuan_id'     => $data_tbs_pembelian->satuan_id,
-                    'satuan_dasar'  => $data_tbs_pembelian->satuan_dasar,
-                    'id_produk'     => $data_tbs_pembelian->id_produk,
-                    'jumlah_produk' => $data_tbs_pembelian->jumlah_produk,
-                    'harga_produk'  => $data_tbs_pembelian->harga_produk,
-                    'subtotal'      => $data_tbs_pembelian->subtotal,
-                    'tax'           => $data_tbs_pembelian->tax,
-                    'tax_include'   => $data_tbs_pembelian->tax_include,
-                    'potongan'      => $data_tbs_pembelian->potongan,
-                    'ppn'           => $data_tbs_pembelian->ppn,
-                    'warung_id'     => Auth::user()->id_warung,
-                    ]);
-            }
-
             //INSERT PEMBELIAN
             if ($request->keterangan == "") {
                 $keterangan = "-";
@@ -1137,6 +1104,40 @@ class PembelianController extends Controller
                 'ppn'              => $request->ppn,
                 'warung_id'        => Auth::user()->id_warung,
                 ]);
+
+            //INSERT DETAIL PEMBELIAN
+            $data_produk_pembelian = TbsPembelian::where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
+
+            // INSERT DETAIL PEMBELIAN
+            foreach ($data_produk_pembelian->get() as $data_tbs_pembelian) {
+                $barang = Barang::select('harga_beli')->where('id', $data_tbs_pembelian->id_produk)->where('id_warung', Auth::user()->id_warung);
+
+                // UPDATE HARGA BELI - MASTER PRODUK
+                if ($barang->first()->harga_beli != $data_tbs_pembelian->harga_produk) {
+                    if ($data_tbs_pembelian->status_harga == 1) {
+
+                        if ($data_tbs_pembelian->satuan_id == $data_tbs_pembelian->satuan_dasar) {
+                            $barang->update(['harga_beli' => $data_tbs_pembelian->harga_produk]);
+                        }
+                    }                        
+                }
+
+                $detail_pembelian = DetailPembelian::create([
+                    'no_faktur'     => $no_faktur,
+                    'satuan_id'     => $data_tbs_pembelian->satuan_id,
+                    'satuan_dasar'  => $data_tbs_pembelian->satuan_dasar,
+                    'id_produk'     => $data_tbs_pembelian->id_produk,
+                    'jumlah_produk' => $data_tbs_pembelian->jumlah_produk,
+                    'harga_produk'  => $data_tbs_pembelian->harga_produk,
+                    'subtotal'      => $data_tbs_pembelian->subtotal,
+                    'tax'           => $data_tbs_pembelian->tax,
+                    'tax_include'   => $data_tbs_pembelian->tax_include,
+                    'potongan'      => $data_tbs_pembelian->potongan,
+                    'ppn'           => $data_tbs_pembelian->ppn,
+                    'warung_id'     => Auth::user()->id_warung,
+                    'created_at'    => $pembelian->created_at,
+                    ]);
+            }
 
             //Transaksi Hutang & kas
             $kas = intval($pembelian->tunai) - intval($pembelian->kembalian);

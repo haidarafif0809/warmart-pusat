@@ -376,6 +376,7 @@ class EditPembelianController extends Controller
         } else {
             //START TRANSAKSI
             DB::beginTransaction();
+            $update_pembelian = Pembelian::find($request->id_pembelian);
             $no_faktur  = $request->no_faktur_edit;
             $session_id = session()->getId();
             $user       = Auth::user()->id;
@@ -421,24 +422,6 @@ class EditPembelianController extends Controller
                 }
             }
 
-            foreach ($data_produk_pembelian->get() as $data_tbs) {
-                //INSERT DETAIL PEMBELIAN
-                $detail_pembelian = DetailPembelian::create([
-                    'no_faktur'     => $no_faktur,
-                    'satuan_id'     => $data_tbs->satuan_id,
-                    'satuan_dasar'  => $data_tbs->satuan_dasar,
-                    'id_produk'     => $data_tbs->id_produk,
-                    'jumlah_produk' => $data_tbs->jumlah_produk,
-                    'harga_produk'  => $data_tbs->harga_produk,
-                    'subtotal'      => $data_tbs->subtotal,
-                    'tax'           => $data_tbs->tax,
-                    'tax_include'   => $data_tbs->tax_include,
-                    'potongan'      => $data_tbs->potongan,
-                    'ppn'           => $data_tbs->ppn,
-                    'warung_id'     => Auth::user()->id_warung,
-                    ]);
-            }
-
             //INSERT PEMBELIAN
             if ($request->keterangan == "") {
                 $keterangan = "-";
@@ -463,7 +446,7 @@ class EditPembelianController extends Controller
                 $status_pembelian = 'Tunai';
             }
 
-            $update_pembelian = Pembelian::find($request->id_pembelian)->update([
+            $update_pembelian->update([
                 'total'            => $request->total_akhir,
                 'suplier_id'       => $request->suplier,
                 'status_pembelian' => $status_pembelian,
@@ -478,6 +461,27 @@ class EditPembelianController extends Controller
                 'keterangan'       => $request->keterangan,
                 'ppn'              => $request->ppn,
                 ]);
+
+
+
+            foreach ($data_produk_pembelian->get() as $data_tbs) {
+                //INSERT DETAIL PEMBELIAN
+                $detail_pembelian = DetailPembelian::create([
+                    'no_faktur'     => $no_faktur,
+                    'satuan_id'     => $data_tbs->satuan_id,
+                    'satuan_dasar'  => $data_tbs->satuan_dasar,
+                    'id_produk'     => $data_tbs->id_produk,
+                    'jumlah_produk' => $data_tbs->jumlah_produk,
+                    'harga_produk'  => $data_tbs->harga_produk,
+                    'subtotal'      => $data_tbs->subtotal,
+                    'tax'           => $data_tbs->tax,
+                    'tax_include'   => $data_tbs->tax_include,
+                    'potongan'      => $data_tbs->potongan,
+                    'ppn'           => $data_tbs->ppn,
+                    'warung_id'     => Auth::user()->id_warung,
+                    'created_at'    => $update_pembelian->created_at,
+                    ]);
+            }
 
             $data_pembelian = Pembelian::find($request->id_pembelian);
 

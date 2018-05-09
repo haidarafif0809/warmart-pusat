@@ -65,18 +65,6 @@
 												<td class="text-primary"><b># Alamat </b> </td>
 												<td class="text-primary"><b>: {{detailPelanggan.alamat}} </b> </td>
 											</tr>
-											<tr>
-												<td class="text-primary"><b># Rata-rata Belanja  </b> </td>
-												<td class="text-primary"><b>: 10.0000 </b> </td>
-											</tr>
-											<tr>
-												<td class="text-primary"><b># Transaksi Terakhir  </b> </td>
-												<td class="text-primary"><b>: 2 Bulan yang lalu </b> </td>
-											</tr>
-											<tr>
-												<td class="text-primary"><b># Rata-rata Kedatangan  </b> </td>
-												<td class="text-primary"><b>: 1 Kali Kunjungan </b> </td>
-											</tr>
 										</tbody>
 									</table>  
 								</div>

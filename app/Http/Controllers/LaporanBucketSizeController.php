@@ -50,7 +50,8 @@ class LaporanBucketSizeController extends Controller
 
                 $respons['labels'][]    = $data_kelipatan / 1000 . " K";
                 array_push($data,$faktur_penjualan->get());
-                array_push($nested_array, $faktur_penjualan->count());
+                array_push($nested_array, $faktur_penjualan->count());       
+
             }
 
             $satu += $request->kelipatan;
@@ -115,10 +116,10 @@ class LaporanBucketSizeController extends Controller
         $total_penjualan_terbesar = $kelipatan + $data_penjualan_pos->total;
 
         while ($kelipatan <= $total_penjualan_terbesar) {
-            $total_faktur_kelipatan = PenjualanPos::countFaktur($request)->whereBetween('total', array($satu, $kelipatan))->first()->no_faktur;
+            $total_faktur_kelipatan = PenjualanPos::countFaktur($request)->whereBetween('total', array($satu, $kelipatan));
 
             $respons['kelipatan'][]    = $satu . " - " . $kelipatan;
-            $respons['total_faktur'][] = $total_faktur_kelipatan;
+            $respons['total_faktur'][] = $total_faktur_kelipatan->count();
             $respons['color'][]        = $this->random_color();
 
             $data_kelipatan = $request->kelipatan;
@@ -139,10 +140,10 @@ class LaporanBucketSizeController extends Controller
 
         $array = array();
         while ($kelipatan <= $total_penjualan_terbesar) {
-            $total_faktur_kelipatan = PenjualanPos::countFaktur($request)->whereBetween('total', array($satu, $kelipatan))->first()->no_faktur;
+            $total_faktur_kelipatan = PenjualanPos::countFaktur($request)->whereBetween('total', array($satu, $kelipatan));
 
             $respons['kelipatan']    = $satu . " - " . $kelipatan;
-            $respons['total_faktur'] = $total_faktur_kelipatan;
+            $respons['total_faktur'] = $total_faktur_kelipatan->count();
             $respons['color']        = $this->random_color();
 
             array_push($array,$respons);
@@ -240,9 +241,9 @@ class LaporanBucketSizeController extends Controller
                     $total_faktur_kelipatan = PenjualanPos::countFaktur($request)->whereBetween('total', array($satu, $kelipatan))->first()->no_faktur; 
 
                     $sheet->row(++$row, [ 
-                     $satu . " - " . $kelipatan, 
-                     $total_faktur_kelipatan, 
-                 ]); 
+                       $satu . " - " . $kelipatan, 
+                       $total_faktur_kelipatan, 
+                   ]); 
 
                     $data_kelipatan = $request->kelipatan; 
                     $kelipatan += $data_kelipatan; 
@@ -283,9 +284,9 @@ class LaporanBucketSizeController extends Controller
                     $total_faktur_kelipatan = Penjualan::countFaktur($request)->whereBetween('total', array($satu, $kelipatan))->first()->id_pesanan; 
 
                     $sheet->row(++$row, [ 
-                     $satu . " - " . $kelipatan, 
-                     $total_faktur_kelipatan, 
-                 ]); 
+                       $satu . " - " . $kelipatan, 
+                       $total_faktur_kelipatan, 
+                   ]); 
 
                     $data_kelipatan = $request->kelipatan; 
                     $kelipatan += $data_kelipatan; 
