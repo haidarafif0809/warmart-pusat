@@ -102,6 +102,18 @@
 
             display: none;
         }
+        .bgAnimation {
+            -webkit-animation: color 3s ease-in  0s 1 alternate running;
+            -moz-animation: color 3s ease-in  0s 1 alternate running;
+            animation: color 3s ease-in  0s 1 alternate running;
+        }
+        @keyframes color {
+            0% { background-color: #f1c40f; }
+            32% { background-color: #e74c3c; }
+            55% { background-color: #9b59b6; }
+            76% { background-color: #16a085; }
+            100% { background-color: #2ac326; }
+        }
     </style>
     
     @if($setting_aplikasi->tipe_aplikasi == 0)
@@ -181,80 +193,78 @@
 </head>
 <style type="text/css">
     .navbar-nav .open .dropdown-menu{
-      color: grey;
-  }
-  .navbar .navbar-brand {
-    position: relative;
-    @if(Agent::isMobile())
-    height: 50px;
-    @else
-    height: 75px;
-    @endif
-    line-height: 0px;
-    color: inherit;
-    padding: 10px 15px;
-}
-.btn.btn-round, .navbar .navbar-nav > li > a.btn.btn-round {
-    border-radius: 0px;
-}
-body {
-    @if($setting_aplikasi->tipe_aplikasi == 1)
-    background-color: #2ac326;
-    color: #3C4858;
-    @endif
-}
-@keyframes spinner { 
-  to {transform: rotate(360deg);} 
-} 
-.spinner:before { 
-  content: ''; 
-  box-sizing: border-box; 
-  position: absolute; 
-  top: 50%; 
-  left: 50%; 
-  width: 20px; 
-  height: 20px; 
-  margin-top: -10px; 
-  margin-left: -10px; 
-  border-radius: 50%; 
-  border: 2px solid #ccc; 
-  border-top-color: #333; 
-  animation: spinner .6s linear infinite; 
-} 
-.selectizeLoading > .selectize-input, .selectizeLoading > .selectize-input > input
-{
-  cursor: wait !important;
-  font-style: italic;
-  background:
-  url('http://www.hsi.com.hk/HSI-Net/pages/images/en/share/ajax-loader.gif')
-  no-repeat
-  center center;
-}
-.marginFrom{
-    margin-bottom: 1px;
-    margin-top: 1px;
-}
-.navbar>.container .navbar-brand, .navbar>.container-fluid .navbar-brand {
-    margin-left: 0px;
-}
-.btn.btn-just-icon, .navbar .navbar-nav > li > a.btn.btn-just-icon {
-    font-size: 15px;
-    padding: 6px 5px;
-    line-height: 1em;
-}
-.footer-big .social-feed i {
-    font-size: 23.5px;
-    display: table-cell;
-    padding-right: 10px;
-}
-.img-jasa{
-    padding: 0px 2px 2px;
-}
-.navbar, .navbar.navbar-default {
-    background-color: #2ac326;
-    color: #fbf8f8;
-    
-}
+        color: grey;
+    }
+    .navbar .navbar-brand {
+        position: relative;
+        @if(Agent::isMobile())
+            height: 50px;
+        @else
+            height: 75px;
+        @endif
+        line-height: 0px;
+        color: inherit;
+        padding: 10px 15px;
+    }
+    .btn.btn-round, .navbar .navbar-nav > li > a.btn.btn-round {
+        border-radius: 0px;
+    }
+    body {
+        @if($setting_aplikasi->tipe_aplikasi == 1)
+            background-color: #2ac326;
+            color: #3C4858;
+        @endif
+    }
+    @keyframes spinner { 
+        to {transform: rotate(360deg);} 
+    } 
+    .spinner:before { 
+        content: ''; 
+        box-sizing: border-box; 
+        position: absolute; 
+        top: 50%; 
+        left: 50%; 
+        width: 20px; 
+        height: 20px; 
+        margin-top: -10px; 
+        margin-left: -10px; 
+        border-radius: 50%; 
+        border: 2px solid #ccc; 
+        border-top-color: #333; 
+        animation: spinner .6s linear infinite; 
+    } 
+    .selectizeLoading > .selectize-input, .selectizeLoading > .selectize-input > input {
+        cursor: wait !important;
+        font-style: italic;
+        background:
+        url('http://www.hsi.com.hk/HSI-Net/pages/images/en/share/ajax-loader.gif')
+        no-repeat
+        center center;
+    }
+    .marginFrom{
+        margin-bottom: 1px;
+        margin-top: 1px;
+    }
+    .navbar>.container .navbar-brand, .navbar>.container-fluid .navbar-brand {
+        margin-left: 0px;
+    }
+    .btn.btn-just-icon, .navbar .navbar-nav > li > a.btn.btn-just-icon {
+        font-size: 15px;
+        padding: 6px 5px;
+        line-height: 1em;
+    }
+    .footer-big .social-feed i {
+        font-size: 23.5px;
+        display: table-cell;
+        padding-right: 10px;
+    }
+    .img-jasa{
+        padding: 0px 2px 2px;
+    }
+    .navbar, .navbar.navbar-default {
+        background-color: #2ac326;
+        color: #fbf8f8;    
+    }
 </style>
 <body class="ecommerce-page">
     @if(Agent::isMobile())
@@ -298,14 +308,14 @@ body {
                             account_circle
                         </i> 
                     </a>
-                    <a class="navbar-brand pull-right" href="{{ url('/keranjang-belanja') }}">
+                    <span id="spanMobile" class="navbar-brand pull-right">
                         <i class="material-icons">
                             shopping_cart
                         </i>
                         <b style="font-size: 15px" id="jumlah-keranjang" data-jumlah="{{ $cek_belanjaan }}" data-session="">
                             | {{ $cek_belanjaan }}
                         </b>
-                    </a>
+                    </span>
                     @endif
                     @if(Agent::isMobile() && Auth::check() && Auth::user()->tipe_user == 3)
                     <span id="keranjangCollapseMobile" class="navbar-brand pull-right">
@@ -781,7 +791,6 @@ body {
                 }
             });
         }
-
         function prosesTambahProduk(jumlah_produk,id_produk,nama_produk){
             $.get('{{ Url('/keranjang-belanja/tambah-produk-keranjang-belanja/') }}',{'_token': $('meta[name=csrf-token]').attr('content'),jumlah_produk:jumlah_produk,id_produk:id_produk}, function(data){
 
@@ -790,43 +799,55 @@ body {
                 var sisa_jumlah_produk = "| "+totalProduk;
                 $("#jumlah-keranjang").attr("data-jumlah",totalProduk);
                 $("#jumlah-keranjang").text(sisa_jumlah_produk);
+
+                if ($('#spanMobile').attr('class').match(/bgAnimation/) != null) {
+                    $('#spanMobile').removeClass('bgAnimation');
+                }
+                setTimeout(() => {
+                    $('#spanMobile').addClass('bgAnimation');
+                }, 300);
+                getRemoveDataCollapse('get');
             });
         }
 
-        $('#btnKeranjang').mouseenter(() => {
-            $.get('{{ url('/keranjang-belanja/collapse-keranjang-belanja') }}', function (data) {
-                $('#taroSini div').html(data);
-                $('#taroSini div').slideDown('fast');
-                setTimeout(() => {
-                    if ($('#taroSini div').attr('data-status') != 'mouseentered') {
-                        $('#taroSini div').slideUp('fast', () => { 
-                            $('#taroSini div').html('');
-                        });                   
-                    }
-                }, 1500);
-            });
-        });
-        $('#taroSini div').hover(() => {
-            $('#taroSini div').attr('data-status', 'mouseentered');
-        }, () => {
-            $('#taroSini div').removeAttr('data-status');
-            $('#taroSini div').slideUp('fast', () => { 
-                $('#taroSini div').html('');
-            });                   
-        });
-
-        $('#keranjangCollapseMobile').click(() => {
-            if ($('#collapseProdukMobile').html() == '') {
+        let taroSiniDiv = $('#taroSini div');
+        let getRemoveDataCollapse = (arg) => {
+            if (arg == 'get') {
                 $.get('{{ url('/keranjang-belanja/collapse-keranjang-belanja') }}', function (data) {
-                    $('#collapseProdukMobile').html(data);
-                    $('#collapseProdukMobile').slideDown('fast');
-                });            
-            } else {
-                $('#collapseProdukMobile').slideUp('fast', () => { 
-                    $('#collapseProdukMobile').html('');
+                    $('#taroSini div').html(data);
+                    $('#taroSini div').slideDown('fast');
+                }); 
+            } else if (arg == 'remove') {
+                taroSiniDiv.fadeOut('fast', () => { 
+                    taroSiniDiv.html('');
                 });
             }
+        };
+
+        $(document).click((event) => {
+            if (taroSiniDiv.attr('data-status') != 'mouseentered') {
+                getRemoveDataCollapse('remove');
+            }
         });
+
+        taroSiniDiv.hover(() => {
+            taroSiniDiv.attr('data-status', 'mouseentered');
+        }, () => {
+            taroSiniDiv.removeAttr('data-status');
+        });
+
+        $('#btnKeranjang').click(() => {
+            if (taroSiniDiv.attr('style') != 'display: block;') {
+                getRemoveDataCollapse('get');
+            } else {
+                getRemoveDataCollapse('remove');
+            }
+        });
+
+        $('#spanMobile').click(() => {
+            console.log('aaa')
+        });
+
 
     </script>
 @yield('scripts')

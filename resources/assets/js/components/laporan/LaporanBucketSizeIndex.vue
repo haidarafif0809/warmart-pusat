@@ -113,7 +113,8 @@
 												<td align="center">
 											<!-- 		<router-link :to="{name: 'detailPenjualan', params: {id: pelanggan.id}}" class="btn btn-xs btn-info" target="_blank"> 
 											Lihat </router-link> -->
-											<a href="#laporan-bucket-size" v-on:click="getResults(1,pelanggan.id)" class="btn btn-xs btn-info">Lihat</a>
+											<a href="#laporan-bucket-size" v-on:click="getProdukPos(1, pelanggan.id, pelanggan.potongan)" class="btn btn-xs btn-info" v-if="filter.jenis_penjualan == 0">Lihat</a>
+											<a href="#laporan-bucket-size" v-on:click="getProdukOnline(1, pelanggan.id, pelanggan.pesanan_pelanggan.kode_unik_transfer, pelanggan.pesanan_pelanggan.biaya_kirim)" class="btn btn-xs btn-info" v-else>Lihat</a>
 										</td>
 									</tr>
 								</tbody>    
@@ -151,7 +152,7 @@
 								<input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
 							</div>
 
-							<table class="table table-striped table-hover">
+							<table class="table table-striped table-hover" v-if="filter.jenis_penjualan == 0">
 								<thead class="text-primary">
 									<tr>
 
@@ -179,23 +180,111 @@
 									</tr>
 									<tr>
 										<td colspan="5"></td>
-										<td class="td-total">
-											Total
+										<td>
+											<font style="font-size:20px;">Subtotal</font>
 										</td>
-										<td class="td-price">
-											<small>Rp.</small>{{subtotal | pemisahTitik}}
+										<td align="right">
+											<font style="font-size:20px;">{{subtotal | pemisahTitik}}</font>
+										</td>
+									</tr>
+									<tr>
+										<td colspan="5"></td>
+										<td>
+											<font style="font-size:20px;">Disc. Faktur</font>
+										</td>
+										<td align="right">
+											<font style="font-size:20px;">{{potongan | pemisahTitik}}</font>
+										</td>
+									</tr>
+									<tr>
+										<td colspan="5"></td>
+										<td>
+											<font style="font-size:20px;">Total</font>
+										</td>
+										<td align="right">
+											<font style="font-size:20px;">{{parseFloat(subtotal) - parseFloat(potongan) | pemisahTitik}}</font>
 										</td>
 									</tr>
 								</tbody>                    
 								<tbody class="data-tidak-ada" v-else>
 									<tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
 								</tbody>
+							</table>  
 
+							<table class="table table-striped table-hover" v-else>
+								<thead class="text-primary">
+									<tr>
+
+										<th>No Transaksi</th>
+										<th>Produk</th>
+										<th class="text-right">Jumlah</th>
+										<th class="text-center">Satuan</th>
+										<th class="text-right">Harga</th>
+										<th class="text-right">Potongan</th>
+										<th class="text-right">Subtotal</th>
+
+									</tr>
+								</thead>
+								<tbody v-if="detailPenjualan.length"  class="data-ada">
+									<tr v-for="detailPenjualan, index in detailPenjualan" >
+
+										<td>{{ detailPenjualan.id_penjualan }}</td>
+										<td>{{ detailPenjualan.nama_produk }}</td>
+										<td align="right"> {{ detailPenjualan.jumlah | pemisahTitik }}</td>
+										<td align="center">{{ detailPenjualan.satuan }}</td>
+										<td align="right"> {{ detailPenjualan.harga | pemisahTitik }}</td>
+										<td align="right"> {{ detailPenjualan.potongan }}</td>
+										<td align="right"> {{ detailPenjualan.subtotal | pemisahTitik }}</td>
+
+									</tr>
+									
+									<tr>
+										<td colspan="5"></td>
+										<td>
+											<font style="font-size:20px;">Subtotal</font>
+										</td>
+										<td align="right">
+											<font style="font-size:20px;">{{subtotal | pemisahTitik}}</font>
+										</td>
+									</tr>
+									<tr>
+										<td colspan="5"></td>
+										<td>
+											<font style="font-size:20px;">Ongkos Kirim</font>
+										</td>
+										<td align="right">
+											<font style="font-size:20px;">{{ongkir | pemisahTitik}}</font>
+										</td>
+									</tr>
+									<tr>
+										<td colspan="5"></td>
+										<td>
+											<font style="font-size:20px;">Kode Unik</font>
+										</td>
+										<td align="right">
+											<font style="font-size:20px;">{{kode_unik}}</font>
+										</td>
+									</tr>
+									<tr>
+										<td colspan="5"></td>
+										<td>
+											<font style="font-size:20px;">Total</font>
+										</td>
+										<td align="right">
+											<font style="font-size:20px;">{{(parseFloat(kode_unik) + parseFloat(ongkir)) + parseFloat(subtotal) | pemisahTitik}}</font>
+										</td>
+									</tr>
+
+								</tbody>                    
+								<tbody class="data-tidak-ada" v-else>
+									<tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
+								</tbody>
 							</table>    
 
 							<vue-simple-spinner v-if="loading"></vue-simple-spinner>
 
-							<div align="right"><pagination :data="detailPenjualanData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
+							<div align="right" v-if="filter.jenis_penjualan == 1"><pagination :data="detailPenjualanData" v-on:pagination-change-page="getProdukPos" :limit="4" ></pagination></div>
+							<div align="right" v-else><pagination :data="detailPenjualanData" v-on:pagination-change-page="getProdukOnline" :limit="4"></pagination></div>
 						</div>
 					</div>
 					<div class="modal-footer">  
@@ -382,8 +471,11 @@
 export default {
 	data: function () {
 		return {
-			subtotal : null,
-			id_penjualan_pos : null,
+			kode_unik : 0,
+			ongkir : 0,
+			potongan : 0,
+			subtotal : 0,
+			id_penjualan : 0,
 			detailPenjualan: [],
 			detailPenjualanData : {},
 			bucketSizePelanggan : '',
@@ -601,32 +693,57 @@ export default {
 			$("#modalDetailPenjualan").hide();
 			$("#modalPelanggan").show(); 
 		},
-		getResults(page,id_penjualan) {
+		getProdukOnline(page,id,kode_unik,ongkir){
 			$("#modalPelanggan").hide(); 
 			$("#modalDetailPenjualan").show();
-
 			let app = this; 
-
-			app.id_penjualan_pos = id_penjualan;
+			app.id_penjualan = id;
+			app.kode_unik = kode_unik
+			app.ongkir = ongkir
 
 			if (typeof page === 'undefined') {
 				page = 1;
 			}
-			axios.get(app.urlPenjualan+'/view-detail-penjualan/'+app.id_penjualan_pos+'?page='+page)
+			axios.get(app.urlPenjualan+'/view-detail-penjualan-online/'+app.id_penjualan+'?page='+page)
 			.then(function (resp) {
-				app.detailPenjualan = resp.data.data;
-				app.detailPenjualanData = resp.data;
-				var subtotal = 0;
-				$.each(resp.data.data, function (i, item) {
-					subtotal += parseFloat(resp.data.data[i].subtotal)
-				});
-				app.subtotal = subtotal
-
+				app.responData(resp)
 			})
 			.catch(function (resp) {
 				console.log(resp);
 				alert("Tidak Dapat Memuat Detail Penjualan");
 			});
+		},
+		getProdukPos(page,id,potongan) {
+			$("#modalPelanggan").hide(); 
+			$("#modalDetailPenjualan").show();
+
+			let app = this; 
+			app.id_penjualan = id;
+			app.potongan = potongan
+
+			if (typeof page === 'undefined') {
+				page = 1;
+			}
+			axios.get(app.urlPenjualan+'/view-detail-penjualan/'+app.id_penjualan+'?page='+page)
+			.then(function (resp) {
+				app.responData(resp)
+			})
+			.catch(function (resp) {
+				console.log(resp);
+				alert("Tidak Dapat Memuat Detail Penjualan");
+			});
+		},
+		responData(resp){
+			let app = this
+			app.detailPenjualan = resp.data.data
+			app.detailPenjualanData = resp.data
+			console.log(app.detailPenjualanData)
+
+			var subtotal = 0;
+			$.each(app.detailPenjualan, function (i, item) {
+				subtotal += parseFloat(app.detailPenjualan[i].subtotal)
+			});
+			app.subtotal = subtotal
 		},
 		showButton() { 
 			var app = this; 
