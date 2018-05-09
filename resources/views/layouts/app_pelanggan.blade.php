@@ -470,7 +470,7 @@
                                 </b>
                             </a>
                             <div id="taroSini">
-                                <div></div>
+                                <div id="containerTable"></div>
                             </div>
                         </li>
                         @elseif(Auth::check() && Auth::user()->tipe_user == 3)
@@ -485,7 +485,7 @@
                                 </b>
                             </a>
                             <div id="taroSini">
-                                <div></div>
+                                <div id="containerTable"></div>
                             </div>
                         </li>
                         @endif
@@ -841,28 +841,28 @@
 
                     $.get('{{ url('/keranjang-belanja/collapse-keranjang-belanja') }}', function (data) {
                         collapseDataProduk = data;
-                    });
-                    setTimeout(() => {
+                    })
+                    .always(() => {
                         getRemoveDataCollapse(['get', 'desktop']);
-                    }, 300);
+                    });
                 }
             });
         }
 
-        let taroSiniDiv = $('#taroSini div');
+        let containerTable = $('#containerTable');
         let getRemoveDataCollapse = (arg) => {
             if (arg[0] == 'get') {
                 if (arg[1] == 'desktop') {
-                    $('#taroSini div').html(collapseDataProduk);
-                    $('#taroSini div').slideDown('fast');
+                    containerTable.html(collapseDataProduk);
+                    containerTable.slideDown('fast');
                 } else if (arg[1] == 'mobile') {
                     $('#collapseProdukMobile').html(collapseDataProdukMobile);
                     $('#collapseProdukMobile').slideDown('fast');
                 }
             } else if (arg[0] == 'remove') {
                 if (arg[1] == 'desktop') {
-                    taroSiniDiv.fadeOut('fast', () => {
-                        taroSiniDiv.html('');
+                    containerTable.fadeOut('fast', () => {
+                        containerTable.html('');
                     });
                 } else if (arg[1] == 'mobile') {                    
                     $('#collapseProdukMobile').fadeOut('fast', () => {
@@ -873,10 +873,10 @@
         };
 
         $(document).click((event) => {
-            if (taroSiniDiv.attr('data-status') != 'mouseentered') {
+            if (containerTable.attr('data-status') != 'mouseentered' && $('#btnKeranjang').attr('data-status') != 'mouseentered') {
                 getRemoveDataCollapse(['remove', 'desktop']);
             }
-            /* cek apakah id keranjangCollapseMobile ada */
+             /* cek apakah id keranjangCollapseMobile ada */ 
             if ($('#keranjangCollapseMobile').attr('class') != undefined) {
                 if ($('#collapseProdukMobile').attr('data-status') != 'mouseentered') {   
                     getRemoveDataCollapse(['remove', 'mobile']);
@@ -884,10 +884,16 @@
             }
         });
 
-        taroSiniDiv.hover(() => {
-            taroSiniDiv.attr('data-status', 'mouseentered');
+        containerTable.hover(() => {
+            containerTable.attr('data-status', 'mouseentered');
         }, () => {
-            taroSiniDiv.removeAttr('data-status');
+            containerTable.removeAttr('data-status');
+        });
+
+        $('#btnKeranjang').hover(() => {
+            $('#btnKeranjang').attr('data-status', 'mouseentered');
+        }, () => {
+            $('#btnKeranjang').removeAttr('data-status');
         });
 
         $('#collapseProdukMobile').hover(() => {
@@ -897,19 +903,18 @@
 
         $('#btnKeranjang').click(() => {
 
-            /* fix collapse langsung hilang setelah klik tombol keranjang belanja */
-            setTimeout(() => {
-                if (taroSiniDiv.attr('style') != 'display: block;') {
-                    getRemoveDataCollapse(['get', 'desktop']);
-                } else {
-                    getRemoveDataCollapse(['remove', 'desktop']);
-                }
-            }, 300);
+            console.log(containerTable.attr('style'));
+            if (containerTable.attr('style') == undefined || containerTable.attr('style') == 'display: none;') {
+                getRemoveDataCollapse(['get', 'desktop']);
+            } else {
+                getRemoveDataCollapse(['remove', 'desktop']);
+            }
 
         });
 
         $('#keranjangCollapseMobile').click(() => {
             $('#collapseProdukMobile').attr('data-status', 'mouseentered');
+            console.log($('#collapseProdukMobile').attr('style'));
             if ($('#collapseProdukMobile').attr('style') != 'display: block;') {
                 getRemoveDataCollapse(['get', 'mobile']);
             } else {
