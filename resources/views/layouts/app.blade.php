@@ -480,7 +480,7 @@ $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description']
 </body>
 <!--   Core JS Files   -->
 
-<script src="{{ asset('js/app.js?v=1.224')}}" type="text/javascript">
+<script src="{{ asset('js/app.js?v=1.227')}}" type="text/javascript">
 
 </script>
 <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript">
