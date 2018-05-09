@@ -35,27 +35,27 @@ class Barang extends Model
 
     public function getHppAttribute()
     {
+        $hpp_penjulan_terakhir = Hpp::select('harga_unit')->where('id_produk', $this->id)->where('warung_id', Auth::user()->id_warung)
+        ->where('jenis_hpp', 2)->orderBy('id', 'DESC')->first()->harga_unit;
 
-// jika sama2 nol
-        // jika a = 1 dan b 0
+        // HITUNG HPP
+        $hpp_terakhir = Hpp::select(['jenis_hpp'])->where('id_produk', $this->id)->where('warung_id', Auth::user()->id_warung)
+        ->orderBy('created_at', 'DESC')->first();
 
-        $hpp_masuk = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk), 0) as total_produk_masuk'), DB::raw('IFNULL(SUM(total_nilai), 0) as total_nilai_masuk')])
-        ->where('id_produk', $this->id)
-        ->where('warung_id',Auth::user()->id_warung)->where('jenis_hpp', 1)->first();
+        if ($hpp_terakhir->jenis_hpp == 1) {
 
-        $total_nilai_masuk  = $hpp_masuk->total_nilai_masuk;
-        $total_produk_masuk = $hpp_masuk->total_produk_masuk;
+            $hpp_masuk = Hpp::select(['harga_unit', 'jumlah_masuk'])->where('id_produk', $this->id)->where('warung_id', Auth::user()->id_warung)
+            ->where('jenis_hpp', 1)->orderBy('id', 'DESC')->first();
 
-        if ($total_nilai_masuk == 0 and $total_produk_masuk == 0) {
-            $hpp_produk = $this->harga_beli;
-            return $hpp_produk;
-        } else if ($total_nilai_masuk > 0 and $total_produk_masuk == 0) {
-            $hpp_produk = $this->harga_beli;
-            return $hpp_produk;
-        } else {
+            $stok_sekarang = $this->stok;
+            $stok_produk = $stok_sekarang - $hpp_masuk->jumlah_masuk;
 
-            $hpp_produk = $hpp_masuk->total_nilai_masuk / $hpp_masuk->total_produk_masuk;
-            return $hpp_produk;
+            //HPP
+            return $hpp_produk = ( ($hpp_penjulan_terakhir * $stok_produk) + ($hpp_masuk->harga_unit * $hpp_masuk->jumlah_masuk) ) / ($stok_produk + $hpp_masuk->jumlah_masuk);
+
+        }else{
+            //HPP
+            return $hpp_produk = $hpp_penjulan_terakhir;
         }
 
     }
