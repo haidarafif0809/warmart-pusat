@@ -450,7 +450,7 @@
 
                         @if(!Auth::check())
                         <li class="button-container">
-                            <a class="btn btn-rose btn-round" href="{{ url('/login')}}">
+                            <a class="btn btn-round btn-rose" href="{{ url('/login')}}">
                                 <i class="material-icons">
                                     account_circle
                                 </i>
@@ -460,7 +460,7 @@
                         @endif
                         @if (Auth::check() == false) 
                         <li class="button-container">
-                            <a id="btnKeranjang" class="btn btn-round btn-rose">
+                            <a id="btnKeranjang" class="btn btn-round btn-rose" href="#">
                                 <i class="material-icons">
                                     shopping_cart
                                 </i>
