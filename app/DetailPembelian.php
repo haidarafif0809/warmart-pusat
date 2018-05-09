@@ -10,7 +10,7 @@ use Yajra\Auditable\AuditableTrait;
 class DetailPembelian extends Model
 {
     use AuditableTrait;
-    protected $fillable   = ['no_faktur', 'satuan_id', 'id_produk', 'jumlah_produk', 'harga_produk', 'subtotal', 'tax', 'potongan', 'warung_id', 'ppn', 'tax_include', 'satuan_dasar'];
+    protected $fillable   = ['no_faktur', 'satuan_id', 'id_produk', 'jumlah_produk', 'harga_produk', 'subtotal', 'tax', 'potongan', 'warung_id', 'ppn', 'tax_include', 'satuan_dasar', 'created_at'];
     protected $primaryKey = 'id_detail_pembelian';
 
 // relasi ke produk
