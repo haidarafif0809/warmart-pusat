@@ -284,7 +284,7 @@
 </li>
 @endif
 
-@if(Laratrust::can('lihat_bucket_size') || Laratrust::can('jam_transaksi_penjualan') || Laratrust::can('laba_kotor_perpelanggan') || Laratrust::can('laba_kotor_perproduk') || Laratrust::can('kartu_stok') || Laratrust::can('kas') || Laratrust::can('mutasi_stok') || Laratrust::can('pembelian_perproduk') || Laratrust::can('hutang_beredar') || Laratrust::can('penjualan') || Laratrust::can('penjualan_harian') || Laratrust::can('penjualan_perproduk') || Laratrust::can('penjualan_perpelanggan') || Laratrust::can('penjualan_terbaik_perproduk')) 
+@if(Laratrust::can('lihat_bucket_size') || Laratrust::can('jam_transaksi_penjualan') || Laratrust::can('laba_kotor_perpelanggan') || Laratrust::can('laba_kotor_perproduk') || Laratrust::can('kartu_stok') || Laratrust::can('kas') || Laratrust::can('mutasi_stok') || Laratrust::can('pembelian_perproduk') || Laratrust::can('hutang_beredar') || Laratrust::can('penjualan') || Laratrust::can('penjualan_harian') || Laratrust::can('penjualan_perproduk') || Laratrust::can('penjualan_perpelanggan') || Laratrust::can('penjualan_terbaik_perproduk') || Laratrust::can('piutang_beredar')) 
 <li>
     <a class="disabled-menu" data-toggle="collapse" href="#laporan">
         <i class="material-icons">
@@ -412,6 +412,19 @@
                 </span>
                 <span class="sidebar-normal">
                     Laporan Hutang
+                </span>
+            </router-link>
+        </li>
+        @endif
+
+        @if(Laratrust::can('piutang_beredar')) 
+        <li>
+            <router-link :to="{name: 'indexLaporanPiutangBeredar'}" class="menu-nav">
+                <span class="sidebar-mini">
+                    LP
+                </span>
+                <span class="sidebar-normal">
+                    Laporan Piutang
                 </span>
             </router-link>
         </li>

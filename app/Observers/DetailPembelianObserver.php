@@ -47,7 +47,8 @@ class DetailPembelianObserver
             'total_nilai'     => $total_nilai,
             'jenis_hpp'       => '1',
             'warung_id'       => $DetailPembelian->warung_id,
-        ]);
+            'created_at'      => $DetailPembelian->created_at,
+            ]);
 
         return true;
 
@@ -77,46 +78,46 @@ class DetailPembelianObserver
                 $pesan_alert =
                 '<div class="container-fluid">
                 <div class="alert-icon">
-                <i class="material-icons">error</i>
+                    <i class="material-icons">error</i>
                 </div>
                 <b>Gagal : Stok "' . $barang->nama_barang . '" Tidak Mencukupi Jika Anda Hapus</b>
-                </div>';
+            </div>';
 
-                Session::flash("flash_notification", [
-                    "level"   => "danger",
-                    "message" => $pesan_alert,
+            Session::flash("flash_notification", [
+                "level"   => "danger",
+                "message" => $pesan_alert,
                 ]);
 
-                return false;
-            } else {
-                // JIKA TIDAK
-                // SELECT HPP UNTUK FAKTUR INI, PRODUK INI, JENIS HPP == 1 DAN WARUNG INI
-                $hpp = Hpp::where('no_faktur', $DetailPembelian->no_faktur)->where('id_produk', $DetailPembelian->id_produk)->where('jenis_hpp', 1)
-                ->where('warung_id', $DetailPembelian->warung_id);
-
-                // DELETE HPP
-                if (!$hpp->delete()) {
-                    return false;
-                } else {
-                    return true;
-                }
-            }
-
-            // JIKA TOTAL TBS EDIT PEMBELIAN LEBIH DARI NOL
-        } elseif ($edit_tbs_pembelian->count() > 0) {
-            // JIKA STOK PRODUK KURANG DARI NOL
-
+            return false;
+        } else {
                 // JIKA TIDAK
                 // SELECT HPP UNTUK FAKTUR INI, PRODUK INI, JENIS HPP == 1 DAN WARUNG INI
             $hpp = Hpp::where('no_faktur', $DetailPembelian->no_faktur)->where('id_produk', $DetailPembelian->id_produk)->where('jenis_hpp', 1)
             ->where('warung_id', $DetailPembelian->warung_id);
-                // HAPUS HPP
+
+                // DELETE HPP
             if (!$hpp->delete()) {
                 return false;
             } else {
                 return true;
             }
-            
+        }
+
+            // JIKA TOTAL TBS EDIT PEMBELIAN LEBIH DARI NOL
+    } elseif ($edit_tbs_pembelian->count() > 0) {
+            // JIKA STOK PRODUK KURANG DARI NOL
+
+                // JIKA TIDAK
+                // SELECT HPP UNTUK FAKTUR INI, PRODUK INI, JENIS HPP == 1 DAN WARUNG INI
+        $hpp = Hpp::where('no_faktur', $DetailPembelian->no_faktur)->where('id_produk', $DetailPembelian->id_produk)->where('jenis_hpp', 1)
+        ->where('warung_id', $DetailPembelian->warung_id);
+                // HAPUS HPP
+        if (!$hpp->delete()) {
+            return false;
+        } else {
+            return true;
+        }
+        
 
         } // Elseif ($edit_tbs_pembelian->count() > 0)
 

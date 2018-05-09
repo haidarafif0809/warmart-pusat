@@ -138,6 +138,10 @@ Route::get('/keranjang-belanja/collapse-keranjang-belanja', [
     'uses' => 'KeranjangBelanjaController@daftar_belanja_collapse',
     ]);
 
+Route::get('/keranjang-belanja/collapse-keranjang-belanja-mobile', [
+    'uses' => 'KeranjangBelanjaController@daftar_belanja_collapse_mobile',
+    ]);
+
 //PUNYA SELESAI PEMESANAN
 Route::get('/selesaikan-pemesanan', [
     'as'   => 'selesaikan-pemesanan.index',
