@@ -138,6 +138,10 @@ Route::get('/keranjang-belanja/collapse-keranjang-belanja', [
     'uses' => 'KeranjangBelanjaController@daftar_belanja_collapse',
     ]);
 
+Route::get('/keranjang-belanja/collapse-keranjang-belanja-mobile', [
+    'uses' => 'KeranjangBelanjaController@daftar_belanja_collapse_mobile',
+    ]);
+
 //PUNYA SELESAI PEMESANAN
 Route::get('/selesaikan-pemesanan', [
     'as'   => 'selesaikan-pemesanan.index',
@@ -880,6 +884,15 @@ Route::post('/laporan-hutang-beredar/pencarian', 'LaporanHutangBeredarController
 Route::post('/laporan-hutang-beredar/total-hutang-beredar', 'LaporanHutangBeredarController@totalHutangBeredar')->middleware('auth'); 
 Route::get('/laporan-hutang-beredar/download-excel-hutang-beredar/{dari_tanggal}/{sampai_tanggal}/{suplier}/{laporan}', 'LaporanHutangBeredarController@downloadExcel')->middleware('auth'); 
 Route::get('/laporan-hutang-beredar/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{suplier}/{laporan}', 'LaporanHutangBeredarController@cetakLaporan')->middleware('auth'); 
+
+// LAPORAN PEMBAYARAN PIUTANG BEREDAR
+Route::post('/laporan-piutang-beredar/view', 'LaporanPiutangBeredarController@prosesPiutangBeredar')->middleware('auth'); 
+Route::post('/laporan-piutang-beredar/total-piutang-beredar', 'LaporanPiutangBeredarController@totalPiutangBeredar')->middleware('auth'); 
+Route::post('/laporan-piutang-beredar/pencarian', 'LaporanPiutangBeredarController@pencarianPiutangBeredar')->middleware('auth'); 
+Route::get('/laporan-piutang-beredar/download-excel-piutang-beredar/{dari_tanggal}/{sampai_tanggal}/{pelanggan}/{laporan}', 'LaporanPiutangBeredarController@downloadExcel')->middleware('auth'); 
+Route::get('/laporan-piutang-beredar/cetak-laporan/{dari_tanggal}/{sampai_tanggal}/{pelanggan}/{laporan}', 'LaporanPiutangBeredarController@cetakLaporan')->middleware('auth'); 
+
+
 
 ////PEMBAYARAN Hutang
 Route::get('/pembayaran-hutang/view', 'PembayaranHutangController@view')->middleware('auth');

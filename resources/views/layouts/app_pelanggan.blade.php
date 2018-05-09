@@ -83,35 +83,44 @@
         #taroSini div.produkKosong {
             color: black;
         }
+        #taroSini div.tableList {
+            height: 150px;
+            overflow: scroll;
+        }
         #collapseProdukMobile {
             display: none;
+            position:absolute;
+            top:5em;
+            width: 100%;
+        }
+        #collapseProdukMobile div.tableTable {
+            border-radius: 2px;
+            width: 95%;
+            border: 1px solid #eeeeee;
+            background: #ffffff;
+            margin: 0 auto;
+            box-shadow: 1px 5px 12px #353535;
         }
         #collapseProdukMobile td.produkNameMobile {
 
-            display: none;
         }
         #collapseProdukMobile td.warungNameMobile {
 
-            display: none;
         }
         #collapseProdukMobile td.produkCountMobile {
 
-            display: none;
         }
         #collapseProdukMobile td.subtotalProdukMobile {
 
-            display: none;
         }
         .bgAnimation {
-            -webkit-animation: color 3s ease-in  0s 1 alternate running;
-            -moz-animation: color 3s ease-in  0s 1 alternate running;
-            animation: color 3s ease-in  0s 1 alternate running;
+            -webkit-animation: color 2s ease-in  0s 1 alternate running;
+            -moz-animation: color 2s ease-in  0s 1 alternate running;
+            animation: color 2s ease-in  0s 1 alternate running;
         }
         @keyframes color {
-            0% { background-color: #f1c40f; }
-            32% { background-color: #e74c3c; }
-            55% { background-color: #9b59b6; }
-            76% { background-color: #16a085; }
+            0% { background-color: #e91e63; }
+            50% { background-color: #aae91e; }
             100% { background-color: #2ac326; }
         }
     </style>
@@ -308,7 +317,7 @@
                             account_circle
                         </i> 
                     </a>
-                    <span id="spanMobile" class="navbar-brand pull-right">
+                    <span id="keranjangCollapseMobile" class="navbar-brand pull-right">
                         <i class="material-icons">
                             shopping_cart
                         </i>
@@ -316,6 +325,7 @@
                             | {{ $cek_belanjaan }}
                         </b>
                     </span>
+                    <div id="collapseProdukMobile"></div>
                     @endif
                     @if(Agent::isMobile() && Auth::check() && Auth::user()->tipe_user == 3)
                     <span id="keranjangCollapseMobile" class="navbar-brand pull-right">
@@ -794,39 +804,63 @@
         function prosesTambahProduk(jumlah_produk,id_produk,nama_produk){
             $.get('{{ Url('/keranjang-belanja/tambah-produk-keranjang-belanja/') }}',{'_token': $('meta[name=csrf-token]').attr('content'),jumlah_produk:jumlah_produk,id_produk:id_produk}, function(data){
 
-                var totalProduk = $("#jumlah-keranjang").attr("data-jumlah");
-                var totalProduk = parseInt(totalProduk) + parseInt(data); 
-                var sisa_jumlah_produk = "| "+totalProduk;
+                let totalProduk = $("#jumlah-keranjang").attr("data-jumlah");
+                totalProduk = parseInt(totalProduk) + parseInt(data); 
+                let sisa_jumlah_produk = "| "+totalProduk;
                 $("#jumlah-keranjang").attr("data-jumlah",totalProduk);
                 $("#jumlah-keranjang").text(sisa_jumlah_produk);
 
-                if ($('#spanMobile').attr('class').match(/bgAnimation/) != null) {
-                    $('#spanMobile').removeClass('bgAnimation');
+                getRemoveDataCollapse(['get', 'desktop']);
+
+                /* cek apakah id keranjangCollapseMobile ada */
+                if ($('#keranjangCollapseMobile').attr('class') != undefined) {
+                    console.log($('#keranjangCollapseMobile').attr('class'));
+                    if ($('#keranjangCollapseMobile').attr('class').match(/bgAnimation/) != null) {
+                        $('#keranjangCollapseMobile').removeClass('bgAnimation');
+                    }
+                    setTimeout(() => {
+                        $('#keranjangCollapseMobile').addClass('bgAnimation');
+                    }, 300);
                 }
-                setTimeout(() => {
-                    $('#spanMobile').addClass('bgAnimation');
-                }, 300);
-                getRemoveDataCollapse('get');
             });
         }
 
         let taroSiniDiv = $('#taroSini div');
         let getRemoveDataCollapse = (arg) => {
-            if (arg == 'get') {
-                $.get('{{ url('/keranjang-belanja/collapse-keranjang-belanja') }}', function (data) {
-                    $('#taroSini div').html(data);
-                    $('#taroSini div').slideDown('fast');
-                }); 
-            } else if (arg == 'remove') {
-                taroSiniDiv.fadeOut('fast', () => { 
-                    taroSiniDiv.html('');
-                });
+            if (arg[0] == 'get') {
+                if (arg[1] == 'desktop') {
+                    $.get('{{ url('/keranjang-belanja/collapse-keranjang-belanja') }}', function (data) {
+                        $('#taroSini div').html(data);
+                        $('#taroSini div').slideDown('fast');
+                    }); 
+                } else if (arg[1] == 'mobile') {
+                    $.get('{{ url('/keranjang-belanja/collapse-keranjang-belanja-mobile') }}', function (data) {
+                        $('#collapseProdukMobile').html(data);
+                        $('#collapseProdukMobile').slideDown('fast');
+                    }); 
+                }
+            } else if (arg[0] == 'remove') {
+                if (arg[1] == 'desktop') {
+                    taroSiniDiv.fadeOut('fast', () => {
+                        taroSiniDiv.html('');
+                    });
+                } else if (arg[1] == 'mobile') {                    
+                    $('#collapseProdukMobile').fadeOut('fast', () => {
+                        $('#collapseProdukMobile').html('');
+                    });
+                }
             }
         };
 
         $(document).click((event) => {
             if (taroSiniDiv.attr('data-status') != 'mouseentered') {
-                getRemoveDataCollapse('remove');
+                getRemoveDataCollapse(['remove', 'desktop']);
+            }
+            /* cek apakah id keranjangCollapseMobile ada */
+            if ($('#keranjangCollapseMobile').attr('class') != undefined) {
+                if ($('#collapseProdukMobile').attr('data-status') != 'mouseentered') {   
+                    getRemoveDataCollapse(['remove', 'mobile']);
+                }
             }
         });
 
@@ -836,17 +870,28 @@
             taroSiniDiv.removeAttr('data-status');
         });
 
+        $('#collapseProdukMobile').hover(() => {
+        }, () => {
+            $('#collapseProdukMobile').removeAttr('data-status');
+        });
+
         $('#btnKeranjang').click(() => {
             if (taroSiniDiv.attr('style') != 'display: block;') {
-                getRemoveDataCollapse('get');
+                getRemoveDataCollapse(['get', 'desktop']);
             } else {
-                getRemoveDataCollapse('remove');
+                getRemoveDataCollapse(['remove', 'desktop']);
             }
         });
 
-        $('#spanMobile').click(() => {
-            console.log('aaa')
+        $('#keranjangCollapseMobile').click(() => {
+            $('#collapseProdukMobile').attr('data-status', 'mouseentered');
+            if ($('#collapseProdukMobile').attr('style') != 'display: block;') {
+                getRemoveDataCollapse(['get', 'mobile']);
+            } else {
+                getRemoveDataCollapse(['remove', 'mobile']);
+            }
         });
+
 
 
     </script>
