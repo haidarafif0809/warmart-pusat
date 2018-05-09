@@ -254,7 +254,7 @@ class PenjualanPos extends Model
     // DATA PENJUALAN PIUTANG
     public function scopeCountFaktur($query_count_faktur, $request)
     {
-        $query_count_faktur->select('id','total','pelanggan_id')->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+        $query_count_faktur->select('id','total','pelanggan_id','potongan')->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
         ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
         ->where('warung_id', Auth::user()->id_warung);
 

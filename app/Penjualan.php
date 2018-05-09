@@ -28,6 +28,11 @@ class Penjualan extends Model
     {
         return $this->hasOne('App\User', 'id', 'id_pelanggan');
     }
+    // relasi ke pelanggan
+    public function pesanan_pelanggan()
+    {
+        return $this->hasOne('App\PesananPelanggan', 'id', 'id_pesanan');
+    }
 
     public function tanggalSql($tangal)
     {
@@ -143,7 +148,7 @@ class Penjualan extends Model
     // DATA PENJUALAN
     public function scopeCountFaktur($query_count_faktur, $request)
     {
-        $query_count_faktur->select('id','total','id_pelanggan')
+        $query_count_faktur->select('id','total','id_pelanggan','id_pesanan')
         ->where(DB::raw('DATE(created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
         ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
         ->where('id_warung', Auth::user()->id_warung);

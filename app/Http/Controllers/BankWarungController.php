@@ -52,7 +52,7 @@ class BankWarungController extends Controller
 
     public function dataBank()
     {
-        $bank_transfer = SettingTransferBank::select(['id', 'nama_bank'])->where('tampil_bank', 1)->get();
+        $bank_transfer = SettingTransferBank::select(['id', 'nama_bank'])->where('tampil_bank', 1)->('warung_id',Auth::user()->id_warung)->get();
         return response()->json($bank_transfer);
     }
 

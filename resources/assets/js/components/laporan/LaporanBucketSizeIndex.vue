@@ -65,6 +65,18 @@
 												<td class="text-primary"><b># Alamat </b> </td>
 												<td class="text-primary"><b>: {{detailPelanggan.alamat}} </b> </td>
 											</tr>
+											<tr>
+												<td class="text-primary"><b># Rata-rata Belanja  </b> </td>
+												<td class="text-primary"><b>: 10.0000 </b> </td>
+											</tr>
+											<tr>
+												<td class="text-primary"><b># Transaksi Terakhir  </b> </td>
+												<td class="text-primary"><b>: 2 Bulan yang lalu </b> </td>
+											</tr>
+											<tr>
+												<td class="text-primary"><b># Rata-rata Kedatangan  </b> </td>
+												<td class="text-primary"><b>: 1 Kali Kunjungan </b> </td>
+											</tr>
 										</tbody>
 									</table>  
 								</div>
@@ -113,8 +125,18 @@
 												<td align="center">
 											<!-- 		<router-link :to="{name: 'detailPenjualan', params: {id: pelanggan.id}}" class="btn btn-xs btn-info" target="_blank"> 
 											Lihat </router-link> -->
-											<a href="#laporan-bucket-size" v-on:click="getResults(1,pelanggan.id)" class="btn btn-xs btn-info">Lihat</a>
+											<a href="#laporan-bucket-size" v-on:click="getProdukPos(1, pelanggan.id, pelanggan.potongan)" class="btn btn-xs btn-info" v-if="filter.jenis_penjualan == 0">Lihat</a>
+											<a href="#laporan-bucket-size" v-on:click="getProdukOnline(1, pelanggan.id, pelanggan.pesanan_pelanggan.kode_unik_transfer, pelanggan.pesanan_pelanggan.biaya_kirim)" class="btn btn-xs btn-info" v-else>Lihat</a>
 										</td>
+									</tr>
+									<tr>
+										<td>
+											<font style="font-size:20px;">Total</font>
+										</td>
+										<td align="right">
+											<font style="font-size:20px;">{{dataPelanggan.total | pemisahTitik}}</font>
+										</td>
+										<td></td>
 									</tr>
 								</tbody>    
 							</table>
@@ -179,11 +201,29 @@
 									</tr>
 									<tr>
 										<td colspan="5"></td>
-										<td class="td-total">
-											Total
+										<td>
+											<font style="font-size:20px;">Subtotal</font>
 										</td>
-										<td class="td-price">
-											<small>Rp.</small>{{subtotal | pemisahTitik}}
+										<td align="right">
+											<font style="font-size:20px;">{{subtotal | pemisahTitik}}</font>
+										</td>
+									</tr>
+									<tr>
+										<td colspan="5"></td>
+										<td>
+											<font style="font-size:20px;">Disc. Faktur</font>
+										</td>
+										<td align="right">
+											<font style="font-size:20px;">{{potongan | pemisahTitik}}</font>
+										</td>
+									</tr>
+									<tr>
+										<td colspan="5"></td>
+										<td>
+											<font style="font-size:20px;">Total</font>
+										</td>
+										<td align="right">
+											<font style="font-size:20px;">{{parseFloat(subtotal) - parseFloat(potongan) | pemisahTitik}}</font>
 										</td>
 									</tr>
 								</tbody>                    
@@ -218,15 +258,44 @@
 										<td align="right"> {{ detailPenjualan.subtotal | pemisahTitik }}</td>
 
 									</tr>
+									
 									<tr>
 										<td colspan="5"></td>
-										<td class="td-total">
-											Total
+										<td>
+											<font style="font-size:20px;">Subtotal</font>
 										</td>
-										<td class="td-price">
-											<small>Rp.</small>{{subtotal | pemisahTitik}}
+										<td align="right">
+											<font style="font-size:20px;">{{subtotal | pemisahTitik}}</font>
 										</td>
 									</tr>
+									<tr>
+										<td colspan="5"></td>
+										<td>
+											<font style="font-size:20px;">Ongkos Kirim</font>
+										</td>
+										<td align="right">
+											<font style="font-size:20px;">{{ongkir | pemisahTitik}}</font>
+										</td>
+									</tr>
+									<tr>
+										<td colspan="5"></td>
+										<td>
+											<font style="font-size:20px;">Kode Unik</font>
+										</td>
+										<td align="right">
+											<font style="font-size:20px;">{{kode_unik}}</font>
+										</td>
+									</tr>
+									<tr>
+										<td colspan="5"></td>
+										<td>
+											<font style="font-size:20px;">Total</font>
+										</td>
+										<td align="right">
+											<font style="font-size:20px;">{{(parseFloat(kode_unik) + parseFloat(ongkir)) + parseFloat(subtotal) | pemisahTitik}}</font>
+										</td>
+									</tr>
+
 								</tbody>                    
 								<tbody class="data-tidak-ada" v-else>
 									<tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
@@ -235,7 +304,8 @@
 
 							<vue-simple-spinner v-if="loading"></vue-simple-spinner>
 
-							<div align="right"><pagination :data="detailPenjualanData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
+							<div align="right" v-if="filter.jenis_penjualan == 1"><pagination :data="detailPenjualanData" v-on:pagination-change-page="getProdukPos" :limit="4" ></pagination></div>
+							<div align="right" v-else><pagination :data="detailPenjualanData" v-on:pagination-change-page="getProdukOnline" :limit="4"></pagination></div>
 						</div>
 					</div>
 					<div class="modal-footer">  
@@ -422,8 +492,11 @@
 export default {
 	data: function () {
 		return {
-			subtotal : null,
-			id_penjualan : null,
+			kode_unik : 0,
+			ongkir : 0,
+			potongan : 0,
+			subtotal : 0,
+			id_penjualan : 0,
 			detailPenjualan: [],
 			detailPenjualanData : {},
 			bucketSizePelanggan : '',
@@ -608,9 +681,12 @@ export default {
 			app.bucketSizePelanggan = labels;
 			app.loadMoreLength = dataPelanggan.length;
 			app.dataPelanggan = dataPelanggan.slice(0, 10);
-			console.log(dataPelanggan);
-			// console.log(app.loadMoreLength);
-			// console.log(app.dataPelanggan);
+
+			let total = 0
+			for (var i = 0 ; i < app.dataPelanggan.length; i++) {
+				total += parseFloat(app.dataPelanggan[i].total)
+			}
+			app.dataPelanggan.total = total
 		},
 		closeModalPelanggan(){
 			$("#modalPelanggan").hide(); 
@@ -622,9 +698,8 @@ export default {
 
 			for (var i = 0 ; i < newData.length; i++) {
 				app.dataPelanggan.push(newData[i]);
+				app.dataPelanggan.total += parseFloat(newData[i].total)
 			}
-			console.log(app.dataPelanggan.length);
-			console.log(length,limit);
 		},
 		cekDetailPelanggan(data){
 			let app = this;
@@ -641,38 +716,57 @@ export default {
 			$("#modalDetailPenjualan").hide();
 			$("#modalPelanggan").show(); 
 		},
-		getResults(page,id) {
+		getProdukOnline(page,id,kode_unik,ongkir){
 			$("#modalPelanggan").hide(); 
 			$("#modalDetailPenjualan").show();
-
 			let app = this; 
-
 			app.id_penjualan = id;
+			app.kode_unik = kode_unik
+			app.ongkir = ongkir
 
 			if (typeof page === 'undefined') {
 				page = 1;
 			}
-
-			let url = app.filter.jenis_penjualan == 0 ? app.urlPenjualan+'/view-detail-penjualan/'+app.id_penjualan : app.urlPenjualan+'/view-detail-penjualan-online/'+app.id_penjualan;
-
-			axios.get(url+'?page='+page)
+			axios.get(app.urlPenjualan+'/view-detail-penjualan-online/'+app.id_penjualan+'?page='+page)
 			.then(function (resp) {
-				
-				app.detailPenjualan = resp.data.data
-				app.detailPenjualanData = resp.data
-				console.log(app.detailPenjualanData)
-
-				var subtotal = 0;
-				$.each(app.detailPenjualan, function (i, item) {
-					subtotal += parseFloat(app.detailPenjualan[i].subtotal)
-				});
-				app.subtotal = subtotal
-
+				app.responData(resp)
 			})
 			.catch(function (resp) {
 				console.log(resp);
 				alert("Tidak Dapat Memuat Detail Penjualan");
 			});
+		},
+		getProdukPos(page,id,potongan) {
+			$("#modalPelanggan").hide(); 
+			$("#modalDetailPenjualan").show();
+
+			let app = this; 
+			app.id_penjualan = id;
+			app.potongan = potongan
+
+			if (typeof page === 'undefined') {
+				page = 1;
+			}
+			axios.get(app.urlPenjualan+'/view-detail-penjualan/'+app.id_penjualan+'?page='+page)
+			.then(function (resp) {
+				app.responData(resp)
+			})
+			.catch(function (resp) {
+				console.log(resp);
+				alert("Tidak Dapat Memuat Detail Penjualan");
+			});
+		},
+		responData(resp){
+			let app = this
+			app.detailPenjualan = resp.data.data
+			app.detailPenjualanData = resp.data
+			console.log(app.detailPenjualanData)
+
+			var subtotal = 0;
+			$.each(app.detailPenjualan, function (i, item) {
+				subtotal += parseFloat(app.detailPenjualan[i].subtotal)
+			});
+			app.subtotal = subtotal
 		},
 		showButton() { 
 			var app = this; 
