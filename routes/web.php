@@ -1076,7 +1076,7 @@ Route::get('/optimasi-seo/view', 'SettingSeoController@view')->middleware('auth'
 Route::post('/optimasi-seo/simpan-seo', 'SettingSeoController@simpanSetting')->middleware('auth');
 
 // Setting Tema
-Route::get('/color-theme/view', 'SettingTemaController@view')->middleware('auth');
+Route::get('/tema/view', 'SettingTemaController@view')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
@@ -1122,7 +1122,7 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
     Route::resource('setting-promo', 'SettingPromoController');
     Route::resource('pembelian-order', 'PembelianOrderController');
     Route::resource('penerimaan-produk', 'PenerimaanProdukController');
-    Route::resource('color-theme', 'SettingTemaController');
+    Route::resource('tema', 'SettingTemaController');
 
 //BARANG
     //HALAMAN DESKRIPSI

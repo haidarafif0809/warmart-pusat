@@ -216,6 +216,7 @@ import OptimasiSeo from './components/optimasi_seo/OptimasiSeo.vue';
 
 // COLOR THEME
 import ColorTheme from './components/color_theme/ColorTheme.vue';
+import ColorThemeCreate from './components/color_theme/ColorThemeCreate.vue';
 
 
 const routes = [{
@@ -881,9 +882,13 @@ const routes = [{
         component: OptimasiSeo, 
         name: 'optimasiSeoIndex'
     },{ 
-        path: '/color-theme', 
+        path: '/tema', 
         component: ColorTheme, 
-        name: 'ColorTheme'
+        name: 'colorTheme'
+    },{ 
+        path: '/create-tema', 
+        component: ColorThemeCreate, 
+        name: 'createColorTheme'
     }
 
 
