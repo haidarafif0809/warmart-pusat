@@ -37,6 +37,8 @@
 
 
     $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description'])->where('warung_id',$address_app->warung_id)->first();
+
+    $settingCollapseDiWarung = \App\Warung::select('collapse_keranjang_belanja')->where('id', $address_app->warung_id)->first();
     ?>
 
     <style type="text/css">
@@ -312,31 +314,53 @@
                     @endif
 
                     @if(Agent::isMobile() && !Auth::check())
-                    <a class="navbar-brand pull-right" href="{{ url('/login') }}">
-                        <i class="material-icons">
-                            account_circle
-                        </i> 
-                    </a>
-                    <span id="keranjangCollapseMobile" class="navbar-brand pull-right">
-                        <i class="material-icons">
-                            shopping_cart
-                        </i>
-                        <b style="font-size: 15px" id="jumlah-keranjang" data-jumlah="{{ $cek_belanjaan }}" data-session="">
-                            | {{ $cek_belanjaan }}
-                        </b>
-                    </span>
-                    <div id="collapseProdukMobile"></div>
+                        <a class="navbar-brand pull-right" href="{{ url('/login') }}">
+                            <i class="material-icons">
+                                account_circle
+                            </i> 
+                        </a>
+                        @if ($settingCollapseDiWarung->collapse_keranjang_belanja == 1)
+                            <span id="keranjangCollapseMobile" class="navbar-brand pull-right">
+                                <i class="material-icons">
+                                    shopping_cart
+                                </i>
+                                <b style="font-size: 15px" id="jumlah-keranjang" data-jumlah="{{ $cek_belanjaan }}" data-session="">
+                                    | {{ $cek_belanjaan }}
+                                </b>
+                            </span>
+                            <div id="collapseProdukMobile"></div>
+                        @else
+                            <a class="navbar-brand pull-right" href="{{ url('/keranjang-belanja') }}">
+                                <i class="material-icons">
+                                    shopping_cart
+                                </i>
+                                <b style="font-size: 15px" id="jumlah-keranjang" data-jumlah="{{ $cek_belanjaan }}" data-session="">
+                                    | {{ $cek_belanjaan }}
+                                </b>
+                            </a>
+                        @endif
                     @endif
                     @if(Agent::isMobile() && Auth::check() && Auth::user()->tipe_user == 3)
-                    <span id="keranjangCollapseMobile" class="navbar-brand pull-right">
-                        <i class="material-icons">
-                            shopping_cart
-                        </i>
-                        <b style="font-size: 15px" id="jumlah-keranjang" data-jumlah="{{ $cek_belanjaan }}" data-session="">
-                            | {{ $cek_belanjaan }}
-                        </b>
-                    </span>
-                    <div id="collapseProdukMobile"></div>
+                        @if ($settingCollapseDiWarung->collapse_keranjang_belanja == 1)
+                            <span id="keranjangCollapseMobile" class="navbar-brand pull-right">
+                                <i class="material-icons">
+                                    shopping_cart
+                                </i>
+                                <b style="font-size: 15px" id="jumlah-keranjang" data-jumlah="{{ $cek_belanjaan }}" data-session="">
+                                    | {{ $cek_belanjaan }}
+                                </b>
+                            </span>
+                            <div id="collapseProdukMobile"></div>
+                        @else
+                            <a class="navbar-brand pull-right" href="{{ url('/keranjang-belanja') }}">
+                                <i class="material-icons">
+                                    shopping_cart
+                                </i>
+                                <b style="font-size: 15px" id="jumlah-keranjang" data-jumlah="{{ $cek_belanjaan }}" data-session="">
+                                    | {{ $cek_belanjaan }}
+                                </b>
+                            </a>
+                        @endif
                     @endif
                 </div>
                 <div class="collapse navbar-collapse">
@@ -460,33 +484,57 @@
                         @endif
                         @if (Auth::check() == false) 
                         <li class="button-container">
-                            <a id="btnKeranjang" class="btn btn-round btn-rose">
-                                <i class="material-icons">
-                                    shopping_cart
-                                </i>
-                                Keranjang Belanja
-                                <b style="font-size: 15px" id="jumlah-keranjang" data-session="" data-jumlah="{{ $cek_belanjaan }}">
-                                    | {{ $cek_belanjaan }}
-                                </b>
-                            </a>
-                            <div id="taroSini">
-                                <div id="containerTable"></div>
-                            </div>
+                            @if ($settingCollapseDiWarung->collapse_keranjang_belanja == 1)
+                                <a id="btnKeranjang" class="btn btn-round btn-rose">
+                                    <i class="material-icons">
+                                        shopping_cart
+                                    </i>
+                                    Keranjang Belanja
+                                    <b style="font-size: 15px" id="jumlah-keranjang" data-session="" data-jumlah="{{ $cek_belanjaan }}">
+                                        | {{ $cek_belanjaan }}
+                                    </b>
+                                </a>
+                                <div id="taroSini">
+                                    <div id="containerTable"></div>
+                                </div>
+                            @else
+                                <a class="btn btn-round btn-rose" href="{{ url('/keranjang-belanja') }}">
+                                    <i class="material-icons">
+                                        shopping_cart
+                                    </i>
+                                    Keranjang Belanja
+                                    <b style="font-size: 15px" id="jumlah-keranjang" data-session="" data-jumlah="{{ $cek_belanjaan }}">
+                                        | {{ $cek_belanjaan }}
+                                    </b>
+                                </a>
+                            @endif
                         </li>
                         @elseif(Auth::check() && Auth::user()->tipe_user == 3)
                         <li class="button-container">
-                            <a id="btnKeranjang" class="btn btn-round btn-rose">
-                                <i class="material-icons">
-                                    shopping_cart
-                                </i>
-                                Keranjang Belanja
-                                <b style="font-size: 15px" id="jumlah-keranjang" data-session="" data-jumlah="{{ $cek_belanjaan }}">
-                                    | {{ $cek_belanjaan }}
-                                </b>
-                            </a>
-                            <div id="taroSini">
-                                <div id="containerTable"></div>
-                            </div>
+                            @if ($settingCollapseDiWarung->collapse_keranjang_belanja == 1)
+                                <a id="btnKeranjang" class="btn btn-round btn-rose">
+                                    <i class="material-icons">
+                                        shopping_cart
+                                    </i>
+                                    Keranjang Belanja
+                                    <b style="font-size: 15px" id="jumlah-keranjang" data-session="" data-jumlah="{{ $cek_belanjaan }}">
+                                        | {{ $cek_belanjaan }}
+                                    </b>
+                                </a>
+                                <div id="taroSini">
+                                    <div id="containerTable"></div>
+                                </div>
+                            @else
+                                <a class="btn btn-round btn-rose" href="{{ url('/keranjang-belanja') }}">
+                                    <i class="material-icons">
+                                        shopping_cart
+                                    </i>
+                                    Keranjang Belanja
+                                    <b style="font-size: 15px" id="jumlah-keranjang" data-session="" data-jumlah="{{ $cek_belanjaan }}">
+                                        | {{ $cek_belanjaan }}
+                                    </b>
+                                </a>
+                            @endif
                         </li>
                         @endif
                     </ul>
