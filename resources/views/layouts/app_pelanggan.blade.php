@@ -64,6 +64,10 @@
             display: none;
             box-shadow: 1px 5px 12px #353535;
         }
+        #taroSini div td.produkName, #taroSini div td.subtotalProduk {
+            padding: 6px;
+            border-top: 1px solid #e1e1e1;
+        }
         #taroSini div td.produkName {
             width: 90%;
         }
@@ -75,6 +79,13 @@
             font-size: medium;
             font-weight: bold;
         }
+        #taroSini div th.thNamaProduk {
+            text-align: left;
+        }
+        #taroSini div th.thSubtotal {
+            text-align: right;
+            padding-right: 30px;
+        }
         #taroSini div small.productCount {
             color: red;
         }
@@ -85,9 +96,24 @@
         #taroSini div.produkKosong {
             color: black;
         }
-        #taroSini div.tableList {
-            height: 150px;
-            overflow: scroll;
+        #taroSini div table.produkTable:nth-child(odd) {
+            background: #fafafa;
+        }
+        #taroSini div table.produkTable:nth-child(even) {
+            background: #eeeeee;
+        }
+        #taroSini div div.tableList {
+            height: 180px;
+            overflow-y: scroll;            
+        }
+        #taroSini div div.tableList::-webkit-scrollbar {
+            width: 5px;
+        }
+        #taroSini div div.tableList::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+        }
+        #taroSini div div.tableList::-webkit-scrollbar-thumb {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
         }
         #collapseProdukMobile {
             display: none;
@@ -97,11 +123,24 @@
         }
         #collapseProdukMobile div.tableTable {
             border-radius: 2px;
-            width: 95%;
+            width: 92.5%;
             border: 1px solid #eeeeee;
             background: #ffffff;
             margin: 0 auto;
             box-shadow: 1px 5px 12px #353535;
+        }
+        #collapseProdukMobile div.tableListMobile {
+            height: 140px;
+            overflow-y: scroll;
+        }
+        #collapseProdukMobile div.tableListMobile::-webkit-scrollbar {
+            width: 8px;
+        }
+        #collapseProdukMobile div.tableListMobile::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+        }
+        #collapseProdukMobile div.tableListMobile::-webkit-scrollbar-thumb {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
         }
         #collapseProdukMobile td.produkNameMobile {
 
@@ -112,8 +151,26 @@
         #collapseProdukMobile td.produkCountMobile {
 
         }
-        #collapseProdukMobile td.subtotalProdukMobile {
-
+        #collapseProdukMobile table.produkTableMobile:nth-child(odd) {
+            background: #fafafa;
+        }
+        #collapseProdukMobile table.produkTableMobile:nth-child(even) {
+            background: #eeeeee;
+        }
+        #collapseProdukMobile table td.subtotalProdukMobile {
+            text-align: right;
+        }
+        #collapseProdukMobile table th.thNamaProdukMobile {
+            text-align: left;
+        }
+        #collapseProdukMobile table th.thSubtotalMobile {
+            text-align: right;
+            padding-right: 30px;
+        }
+        #collapseProdukMobile table td.produkNameMobile, #collapseProdukMobile table td.subtotalProdukMobile {
+            padding: 6px;
+            border-top: 1px solid #e1e1e1;
+            width: 100%;
         }
         .bgAnimation {
             -webkit-animation: color 2s ease-in  0s 1 alternate running;
@@ -482,7 +539,7 @@
                             </a>
                         </li>
                         @endif
-                        @if (Auth::check() == false) 
+                        @if (Auth::check() == false && !Agent::isMobile()) 
                         <li class="button-container">
                             @if ($settingCollapseDiWarung->collapse_keranjang_belanja == 1)
                                 <a id="btnKeranjang" class="btn btn-round btn-rose">
@@ -509,7 +566,7 @@
                                 </a>
                             @endif
                         </li>
-                        @elseif(Auth::check() && Auth::user()->tipe_user == 3)
+                        @elseif(Auth::check() && Auth::user()->tipe_user == 3 && !Agent::isMobile())
                         <li class="button-container">
                             @if ($settingCollapseDiWarung->collapse_keranjang_belanja == 1)
                                 <a id="btnKeranjang" class="btn btn-round btn-rose">
