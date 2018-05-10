@@ -129,6 +129,19 @@
             margin: 0 auto;
             box-shadow: 1px 5px 12px #353535;
         }
+        #collapseProdukMobile div.tableListMobile {
+            height: 140px;
+            overflow-y: scroll;
+        }
+        #collapseProdukMobile div.tableListMobile::-webkit-scrollbar {
+            width: 8px;
+        }
+        #collapseProdukMobile div.tableListMobile::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+        }
+        #collapseProdukMobile div.tableListMobile::-webkit-scrollbar-thumb {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+        }
         #collapseProdukMobile td.produkNameMobile {
 
         }
@@ -138,8 +151,26 @@
         #collapseProdukMobile td.produkCountMobile {
 
         }
+        #collapseProdukMobile table.produkTableMobile:nth-child(odd) {
+            background: #fafafa;
+        }
+        #collapseProdukMobile table.produkTableMobile:nth-child(even) {
+            background: #eeeeee;
+        }
         #collapseProdukMobile table td.subtotalProdukMobile {
             text-align: right;
+        }
+        #collapseProdukMobile table th.thNamaProdukMobile {
+            text-align: left;
+        }
+        #collapseProdukMobile table th.thSubtotalMobile {
+            text-align: right;
+            padding-right: 30px;
+        }
+        #collapseProdukMobile table td.produkNameMobile, #collapseProdukMobile table td.subtotalProdukMobile {
+            padding: 6px;
+            border-top: 1px solid #e1e1e1;
+            width: 100%;
         }
         .bgAnimation {
             -webkit-animation: color 2s ease-in  0s 1 alternate running;
