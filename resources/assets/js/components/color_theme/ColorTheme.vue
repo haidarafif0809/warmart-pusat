@@ -113,6 +113,22 @@
                     alert("Tidak Bisa Memuat Tema");
                 });
             },
+            getHasilPencarian(page){
+                var app = this;
+                if (typeof page === 'undefined') {
+                    page = 1;
+                }
+                axios.get(app.url+'/pencarian?search='+app.pencarian+'&page='+page)
+                .then(function (resp) {
+                    app.settingTemas = resp.data.data;
+                    app.settingTemasData = resp.data;
+                    app.loading = false;
+                })
+                .catch(function (resp) {
+                    console.log(resp);
+                    alert("Tidak Bisa Memuat Tema");
+                });
+            },
         }
     }
 </script>

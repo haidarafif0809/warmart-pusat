@@ -35,18 +35,26 @@ class SettingTemaController extends Controller
 
 	public function view()
 	{
-		$data_settings = TemaWarna::where('warung_id', Auth::user()->id_warung)->orderBy('id', 'asc')->paginate(5);
-
-		$data_agent = new Agent();
-		if ($data_agent->isMobile()) {
-			$agent = 0;
-		} else {
-			$agent = 1;
-		}
+		$data_settings = TemaWarna::where('warung_id', Auth::user()->id_warung)->orderBy('id', 'asc')->paginate(10);
 
 		$array = [];
 		foreach ($data_settings as $data_setting) {
-			array_push($array, ['tema' => $data_setting, 'agent' => $agent]);
+			array_push($array, ['tema' => $data_setting]);
+		}
+        //DATA PAGINATION
+		$respons = $this->dataPagination($data_settings, $array);
+
+		return $respons;
+	}
+
+	public function pencarian(Request $request)
+	{
+		$data_settings = TemaWarna::where('warung_id', Auth::user()->id_warung)
+		->where('nama_tema', 'LIKE', "%$request->search%")->orderBy('id', 'asc')->paginate(10);
+
+		$array = [];
+		foreach ($data_settings as $data_setting) {
+			array_push($array, ['tema' => $data_setting]);
 		}
         //DATA PAGINATION
 		$respons = $this->dataPagination($data_settings, $array);
@@ -59,13 +67,30 @@ class SettingTemaController extends Controller
 			'nama_tema' => 'required',
 			]);
 
-		TemaWarna::create([
-			'nama_tema'		=> $request->nama_tema,
-			'kode_tema'		=> $request->kode_tema,
-			'header_tema'	=> $request->header_tema,
-			'default_tema'	=> $request->default_tema,
-			'warung_id'		=> Auth::user()->id_warung
-			]);
+		if ($request->default_tema == 1) {
 
+			$tema_terpakai = TemaWarna::where('default_tema', $request->default_tema)
+			->where('warung_id', Auth::user()->id_warung)->update([
+				'default_tema' => 0,
+				]);
+
+			TemaWarna::create([
+				'nama_tema'		=> $request->nama_tema,
+				'kode_tema'		=> $request->kode_tema,
+				'header_tema'	=> $request->header_tema,
+				'default_tema'	=> $request->default_tema,
+				'warung_id'		=> Auth::user()->id_warung
+				]);
+
+		} else {
+
+			TemaWarna::create([
+				'nama_tema'		=> $request->nama_tema,
+				'kode_tema'		=> $request->kode_tema,
+				'header_tema'	=> $request->header_tema,
+				'default_tema'	=> $request->default_tema,
+				'warung_id'		=> Auth::user()->id_warung
+				]);
+		}
 	}
 }

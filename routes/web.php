@@ -1077,6 +1077,7 @@ Route::post('/optimasi-seo/simpan-seo', 'SettingSeoController@simpanSetting')->m
 
 // Setting Tema
 Route::get('/tema/view', 'SettingTemaController@view')->middleware('auth');
+Route::get('/tema/pencarian', 'SettingTemaController@pencarian')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
