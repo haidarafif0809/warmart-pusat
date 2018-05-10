@@ -268,6 +268,7 @@ public function cardProdukBelanjaanCollapse($keranjang_belanjaans) {
         ';        
     } else {
         $res = '
+        <table class="produkTable">
         <tr>
         <td class="produkName">
         <small> <b> '. ucwords($keranjang_belanjaans->produk->nama_barang) .' </b> </small> 
@@ -279,6 +280,7 @@ public function cardProdukBelanjaanCollapse($keranjang_belanjaans) {
         </td>
         <td class="subtotalProduk"> <small> Rp.'. number_format($subtotal_produk, 0, ',', '.') .' </small> </td>
         </tr>
+        </table>
         ';
     }
     return $res;
@@ -465,12 +467,13 @@ public function tampilanProdukKeranjangBelanjaCollapse($keranjang_belanjaan)
         ';
     } else {
         $produk_belanjaan .= '
-        <table class="table table-striped table-keranjang">
+        <table class="table table-striped">
         <thead>
-        <th> Nama </th>
-        <th> Subtotal </th>
+        <th class="thNamaProduk"> Nama </th>
+        <th class="thSubtotal"> Subtotal </th>
         </thead>
-        <tbody>
+        </table>
+        <div class="tableList">
         ';
 
 
@@ -490,8 +493,7 @@ public function tampilanProdukKeranjangBelanjaCollapse($keranjang_belanjaan)
         }
 
         $produk_belanjaan .= '
-        </tbody>
-        </table>
+        </div>
         <table class="table table-striped">
         <tr>
         <hr>
