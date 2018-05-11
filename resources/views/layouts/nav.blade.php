@@ -648,6 +648,16 @@
     <div class="collapse" id="settingWarung">
         <ul class="nav">
             <li>
+                <router-link :to="{name: 'colorTheme'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        TA
+                    </span>
+                    <span class="sidebar-normal">
+                        Tema
+                    </span>
+                </router-link>
+            </li>
+            <li>
                 <router-link :to="{name: 'optimasiSeoIndex'}" class="menu-nav">
                     <span class="sidebar-mini">
                         OS
