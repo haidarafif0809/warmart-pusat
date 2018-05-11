@@ -38,7 +38,7 @@ first();
     }
     .buttonColor{
         @if($setting_aplikasi->tipe_aplikasi == "1") /*tipe-aplikasi == 1, aplikasi topos*/
-        background-color: #2ac326;
+        background-color: {{$tema->kode_tema}};
         @else
         background-color: #01573e;
         @endif
@@ -50,7 +50,7 @@ first();
   }
   /*style untuk kategori*/ 
   .nav .open>a, .nav .open>a:hover, .nav .open>a:focus{
-    background-color: #2ac326;
+    background-color: {{$tema->kode_tema}};
 }
 .card .card-content {
     padding: 0px 30px;
@@ -63,7 +63,7 @@ first();
     border-radius: 0px;
 }
 .nav-tabs {
-    background: #2ac326;
+    background: {{$tema->kode_tema}};
     border: 0;
     border-radius: 0px;
     padding: 9 15px;
@@ -131,6 +131,7 @@ h4 {
     color:#a6a6a6;
 }
 </style>
+
 @if (Agent::isMobile())
 <!--JIKA DAKSES VIA HP/TAB-->
 @if($setting_aplikasi->tipe_aplikasi == 0)
@@ -195,7 +196,7 @@ h4 {
 
                                 <!-- Wrapper for slides -->
                                 <div class="carousel-inner">
-                                   <div class="item active"><a href="{{ url('/detail-produk/'.$baner_promo_active->id_produk.'') }}">
+                                 <div class="item active"><a href="{{ url('/detail-produk/'.$baner_promo_active->id_produk.'') }}">
                                     <img src="{{ url('/baner_setting_promo/'.$baner_promo_active->baner_promo.'') }}" alt="Awesome Image">
                                 </a>
                             </div>
@@ -280,138 +281,138 @@ h4 {
             <h3 class="title text-center">
                 {!! $nama_kategori !!}
             </h3>
-</div>
-
-            <div class="row">
-                 <div class="col-sm-1"></div>
-                <div class="col-sm-3">
-                    <ul class="nav nav-tabs buttonColor card " data-tabs="tabs">
-                        {!! $kategori_produk !!}
-                    </ul>
-                </div>
-                <div class="col-sm-7">
-                    <div class="card  card-form-horizontal">
-                        <div class="card-content">  
-                            {!! Form::open(['url' => route('daftar_produk.pencarian'),'method' => 'get', 'class'=>'form-horizontal']) !!}
-                            <div class="row">
-                                <div class="col-sm-10">
-                                    <div class="input-group">
-                                        <span class="input-group-addon">
-                                            <i class="material-icons">
-                                                search
-                                            </i>
-                                        </span>
-                                        @if($setting_aplikasi->tipe_aplikasi == 0)
-                                        <input class="form-control" id="cari_produk" name="search" placeholder="Cari Produk Atau Warung.." type="text" value=""/>
-                                        @else
-                                        <input class="form-control" id="cari_produk" name="search" placeholder="Cari Produk.." type="text" value=""/>
-                                        @endif
-                                    </div>
-                                </div>
-                                <div class="col-sm-2">
-                                    <button class="btn btn-block buttonColor" type="submit">
-                                        Cari
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {!! Form::close() !!}
-                </div>
-                <div class="col-sm-1"></div>
-            </div>
-
-            @if($cek_baner->count() > 0)
-                    <div class="row">
-                        <div class="col-md-1 col-md-offset-0"></div>
-                        <div class="col-md-10 col-md-offset-0">
-
-                            <!-- Carousel Card -->
-                            <div class="card  card-carousel">
-                                <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-                                    <div class="carousel slide" data-ride="carousel">
-
-                                        <!-- Indicators -->
-                                        <ol class="carousel-indicators">
-                                            <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
-                                            @foreach($baner_promo->get() as $baner_promos)
-                                            <li data-target="#carousel-example-generic" data-slide-to="{!!$baner_promos->id_setting_promo !!}"></li>
-                                            @endforeach
-                                        </ol>
-
-                                        <!-- Wrapper for slides -->
-                                        <div class="carousel-inner">
-                                           <div class="item active"><a href="{{ url('/detail-produk/'.$baner_promo_active->id_produk.'') }}">
-                                            <img src="{{ url('/baner_setting_promo/'.$baner_promo_active->baner_promo.'') }}" alt="Awesome Image">
-                                        </a>
-                                    </div>
-                                    @foreach($baner_promo->get() as $baner_promos)
-                                    <div class="item"><a href="{{ url('/detail-produk/'.$baner_promos->id_produk.'') }}">
-                                        <img src="{{ url('/baner_setting_promo/'.$baner_promos->baner_promo.'') }}" alt="Awesome Image">
-                                    </a>
-                                </div>
-                                @endforeach
-                            </div>
-
-                            <!-- Controls -->
-                            <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
-                                <i class="material-icons">keyboard_arrow_left</i>
-                            </a>
-                            <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
-                                <i class="material-icons">keyboard_arrow_right</i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <!-- End Carousel Card -->
-            </div>
-            <div class="col-md-1 col-md-offset-0"></div>
         </div>
-        @endif
 
         <div class="row">
-                    <div class="col-md-1"></div>
-                <div class="col-md-10">
-                        <br>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <!-- Menampilkan Produk -->
-                                <span id="span-produk">
-                                    {!! $daftar_produk !!}
+           <div class="col-sm-1"></div>
+           <div class="col-sm-3">
+            <ul class="nav nav-tabs buttonColor card " data-tabs="tabs">
+                {!! $kategori_produk !!}
+            </ul>
+        </div>
+        <div class="col-sm-7">
+            <div class="card  card-form-horizontal">
+                <div class="card-content">  
+                    {!! Form::open(['url' => route('daftar_produk.pencarian'),'method' => 'get', 'class'=>'form-horizontal']) !!}
+                    <div class="row">
+                        <div class="col-sm-10">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">
+                                        search
+                                    </i>
                                 </span>
-                            </div>
-                            <div class="col-md-12">
-                                {{$produk_pagination}}
+                                @if($setting_aplikasi->tipe_aplikasi == 0)
+                                <input class="form-control" id="cari_produk" name="search" placeholder="Cari Produk Atau Warung.." type="text" value=""/>
+                                @else
+                                <input class="form-control" id="cari_produk" name="search" placeholder="Cari Produk.." type="text" value=""/>
+                                @endif
                             </div>
                         </div>
-                    </br>
-              </div>
-            <div class="col-md-1"></div>
-                @if($setting_aplikasi->tipe_aplikasi == 0)
-                @if(Auth::check())
-                @if(App\KeranjangBelanja::where('id_pelanggan',Auth::user()->id)->count() == 0)
-                <!--Menampilkan Warung Secara Acak-->
-            <div class="col-md-12">
-                    <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:15px">
-                        Warung
-                    </h5>
-                    <span id="span-warung">
-                        {!! $daftar_warung !!}
-                    </span>
-             </div>
-                @endif
-                @else
-            <div class="col-md-12">
-                    <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px">
-                        Warung
-                    </h5>
-                    <span id="span-warung">
-                        {!! $daftar_warung !!}
-                    </span>
+                        <div class="col-sm-2">
+                            <button class="btn btn-block buttonColor" type="submit">
+                                Cari
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
-                @endif
-                @endif
+            {!! Form::close() !!}
         </div>
+        <div class="col-sm-1"></div>
+    </div>
+
+    @if($cek_baner->count() > 0)
+    <div class="row">
+        <div class="col-md-1 col-md-offset-0"></div>
+        <div class="col-md-10 col-md-offset-0">
+
+            <!-- Carousel Card -->
+            <div class="card  card-carousel">
+                <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                    <div class="carousel slide" data-ride="carousel">
+
+                        <!-- Indicators -->
+                        <ol class="carousel-indicators">
+                            <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                            @foreach($baner_promo->get() as $baner_promos)
+                            <li data-target="#carousel-example-generic" data-slide-to="{!!$baner_promos->id_setting_promo !!}"></li>
+                            @endforeach
+                        </ol>
+
+                        <!-- Wrapper for slides -->
+                        <div class="carousel-inner">
+                         <div class="item active"><a href="{{ url('/detail-produk/'.$baner_promo_active->id_produk.'') }}">
+                            <img src="{{ url('/baner_setting_promo/'.$baner_promo_active->baner_promo.'') }}" alt="Awesome Image">
+                        </a>
+                    </div>
+                    @foreach($baner_promo->get() as $baner_promos)
+                    <div class="item"><a href="{{ url('/detail-produk/'.$baner_promos->id_produk.'') }}">
+                        <img src="{{ url('/baner_setting_promo/'.$baner_promos->baner_promo.'') }}" alt="Awesome Image">
+                    </a>
+                </div>
+                @endforeach
+            </div>
+
+            <!-- Controls -->
+            <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+                <i class="material-icons">keyboard_arrow_left</i>
+            </a>
+            <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+                <i class="material-icons">keyboard_arrow_right</i>
+            </a>
+        </div>
+    </div>
+</div>
+<!-- End Carousel Card -->
+</div>
+<div class="col-md-1 col-md-offset-0"></div>
+</div>
+@endif
+
+<div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+        <br>
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Menampilkan Produk -->
+                <span id="span-produk">
+                    {!! $daftar_produk !!}
+                </span>
+            </div>
+            <div class="col-md-12">
+                {{$produk_pagination}}
+            </div>
+        </div>
+    </br>
+</div>
+<div class="col-md-1"></div>
+@if($setting_aplikasi->tipe_aplikasi == 0)
+@if(Auth::check())
+@if(App\KeranjangBelanja::where('id_pelanggan',Auth::user()->id)->count() == 0)
+<!--Menampilkan Warung Secara Acak-->
+<div class="col-md-12">
+    <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:15px">
+        Warung
+    </h5>
+    <span id="span-warung">
+        {!! $daftar_warung !!}
+    </span>
+</div>
+@endif
+@else
+<div class="col-md-12">
+    <h5 class="title" style="color:#01573e; margin-bottom: 1px; margin-top:0px">
+        Warung
+    </h5>
+    <span id="span-warung">
+        {!! $daftar_warung !!}
+    </span>
+</div>
+@endif
+@endif
+</div>
 </div>
 <!-- end-main-raised -->
 @endif
@@ -455,9 +456,9 @@ h4 {
         if (data_strike == "") {
             $("#coret").attr('class','kosong');
         }else{
-         $("#coret").attr('class','class_coret'); 
-     }  
- });
+           $("#coret").attr('class','class_coret'); 
+       }  
+   });
 
 
     window.onload = function(event) {
