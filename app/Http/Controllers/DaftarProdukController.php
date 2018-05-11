@@ -69,19 +69,19 @@ class DaftarProdukController extends Controller
 
             $data_produk = Barang::select(['id', 'kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung', 'konfirmasi_admin', 'satuan_id', 'hitung_stok', 'status_aktif'])
             ->inRandomOrder()
-            ->where('id_warung', $warung_yang_dipesan)->where('status_aktif', 1)->paginate(20);
+            ->where('id_warung', $warung_yang_dipesan)->where('status_aktif', 1)->paginate(24);
         } else {
             if ($address_app->app_address == $address_current) {
 
                 $data_produk  = Barang::select(['id', 'kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung', 'konfirmasi_admin', 'satuan_id', 'hitung_stok', 'status_aktif'])
                 ->inRandomOrder()
-                ->where('id_warung', $address_app->warung_id)->where('status_aktif', 1)->paginate(20);
+                ->where('id_warung', $address_app->warung_id)->where('status_aktif', 1)->paginate(24);
 
             }else{
 
                 $data_produk  = Barang::select(['id', 'kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung', 'konfirmasi_admin', 'satuan_id', 'hitung_stok', 'status_aktif'])
                 ->inRandomOrder()
-                ->whereIn('id_warung', $array_warung)->where('status_aktif', 1)->paginate(20);
+                ->whereIn('id_warung', $array_warung)->where('status_aktif', 1)->paginate(24);
 
             }
         }
@@ -203,7 +203,7 @@ class DaftarProdukController extends Controller
 
             if (isset($warung_yang_dipesan)) {
                 $data_produk = Barang::select(['id', 'kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung', 'konfirmasi_admin', 'satuan_id', 'hitung_stok', 'status_aktif'])
-                ->where('kategori_barang_id', $id)->where('id_warung', $warung_yang_dipesan)->where('status_aktif', 1)->inRandomOrder()->paginate(20);
+                ->where('kategori_barang_id', $id)->where('id_warung', $warung_yang_dipesan)->where('status_aktif', 1)->inRandomOrder()->paginate(24);
             } else {
             //Pilih warung yang sudah dikonfirmasi admin
                 $array_warung = DaftarProdukController::dataWarungTervalidasi();
@@ -212,13 +212,13 @@ class DaftarProdukController extends Controller
 
             //PILIH PRODUK
                     $data_produk = Barang::select(['id', 'kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung', 'konfirmasi_admin', 'satuan_id', 'hitung_stok', 'status_aktif'])
-                    ->where('kategori_barang_id', $id)->where('id_warung', $address_app->warung_id)->where('status_aktif', 1)->inRandomOrder()->paginate(20);
+                    ->where('kategori_barang_id', $id)->where('id_warung', $address_app->warung_id)->where('status_aktif', 1)->inRandomOrder()->paginate(24);
 
                 }else{
 
             //PILIH PRODUK
                     $data_produk = Barang::select(['id', 'kode_barang', 'kode_barcode', 'nama_barang', 'harga_jual', 'foto', 'deskripsi_produk', 'kategori_barang_id', 'id_warung', 'konfirmasi_admin', 'satuan_id', 'hitung_stok', 'status_aktif'])
-                    ->where('kategori_barang_id', $id)->whereIn('id_warung', $array_warung)->where('status_aktif', 1)->inRandomOrder()->paginate(20);
+                    ->where('kategori_barang_id', $id)->whereIn('id_warung', $array_warung)->where('status_aktif', 1)->inRandomOrder()->paginate(24);
 
                 }
 
@@ -294,7 +294,7 @@ class DaftarProdukController extends Controller
             $address_app = SettingPembedaAplikasi::select(['warung_id', 'app_address'])->where('app_address', $address_current)->first();
 
         //PILIH PRODUK
-            $data_produk = Barang::search($request->search)->paginate(20);
+            $data_produk = Barang::search($request->search)->paginate(24);
         //PILIH DATA WARUNG
             $warung_data = Warung::search($request->search)->get();
         //PILIH KATEGORI

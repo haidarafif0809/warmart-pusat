@@ -15,6 +15,7 @@ if ($address_current == $address_app->app_address) {
 }
 
 $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description'])->where('warung_id',$address_app->warung_id)->first();
+$tema = \App\TemaWarna::where('default_tema', 1)->where('warung_id',$address_app->warung_id)->first();
 ?>
 <!DOCTYPE doctype html>
 <html lang="en">
@@ -130,8 +131,6 @@ $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description']
     font-weight: 200;
     src: url("//applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-thin-webfont.woff2");
   }
-
-
   .flexFont {
     @if(Agent::isMobile())
     height:4em;
@@ -154,7 +153,7 @@ $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description']
   }
   .buttonColor{
     @if($setting_aplikasi->tipe_aplikasi == "1") /*tipe-aplikasi == 1, aplikasi topos*/
-    background-color: #2ac326;
+    background-color: {{$tema->kode_tema}};
     @else
     background-color: #01573e;
     @endif
@@ -173,11 +172,18 @@ $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description']
   .img-jasa{
     padding: 0px 2px 2px;
   }
-.zoom:hover {
-    -ms-transform: scale(1.5); /* IE 9 */
-    -webkit-transform: scale(1.5); /* Safari 3-8 */
+  .zoom:hover {
+    -ms-transform: scale(1.5);
+    -webkit-transform: scale(1.5);
     transform: scale(1.5); 
-}
+  }  
+  .btn.btn-round, .navbar .navbar-nav > li > a.btn.btn-round {
+    border-radius: 0px;
+  }
+  .btn.btn-rose, .btn.btn-rose:hover, .btn.btn-rose:focus, .btn.btn-rose:active, .btn.btn-rose.active, .btn.btn-rose:active:focus, .btn.btn-rose:active:hover, .btn.btn-rose.active:focus, .btn.btn-rose.active:hover, .open > .btn.btn-rose.dropdown-toggle, .open > .btn.btn-rose.dropdown-toggle:focus, .open > .btn.btn-rose.dropdown-toggle:hover, .navbar .navbar-nav > li > a.btn.btn-rose, .navbar .navbar-nav > li > a.btn.btn-rose:hover, .navbar .navbar-nav > li > a.btn.btn-rose:focus, .navbar .navbar-nav > li > a.btn.btn-rose:active, .navbar .navbar-nav > li > a.btn.btn-rose.active, .navbar .navbar-nav > li > a.btn.btn-rose:active:focus, .navbar .navbar-nav > li > a.btn.btn-rose:active:hover, .navbar .navbar-nav > li > a.btn.btn-rose.active:focus, .navbar .navbar-nav > li > a.btn.btn-rose.active:hover, .open > .navbar .navbar-nav > li > a.btn.btn-rose.dropdown-toggle, .open > .navbar .navbar-nav > li > a.btn.btn-rose.dropdown-toggle:focus, .open > .navbar .navbar-nav > li > a.btn.btn-rose.dropdown-toggle:hover {
+   background-color: {{$tema->header_tema}};
+   color: {{$tema->kode_tema}};
+ }
 </style>
 <body class="product-page">
   @if(Agent::isMobile())
@@ -394,7 +400,7 @@ $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description']
     @if($setting_aplikasi->tipe_aplikasi == 0)
     <div class="page-header header-filter header-small" data-parallax="false" style="background-image: url('../image/background2.jpg');">
       @else
-      <div class="page-header header-small" data-parallax="true"" style="background-color: #2ac326">
+      <div class="page-header header-small" data-parallax="true"" style="background-color: {{$tema->kode_tema}}">
         @endif
         <div class="container">
           <div class="row">
@@ -432,193 +438,193 @@ $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description']
 
             <div class="col-md-6 col-sm-6">
               <div class="tab-content">
-                            <div class="tab-pane active" id="product-page1">
-                                  @if(isset($barang->foto))
-                                <img  class="zoom" src="{{asset('foto_produk/'.$barang->foto.'')}}" /></a>
-                                 @else
-                                <img src="{{asset('image/foto_default.png')}}" /></a>
-                                 @endif
-                              </div>
-                              <div class="tab-pane " id="product-page2">
-                                  @if(isset($barang->foto_2))
-                                 <img  class="zoom" src="{{asset('/foto_produk/'.$barang->foto_2.'')}}" /></a>
-                                 @else
-                                 <img src="{{asset('image/foto_default.png')}}" /></a>
-                                 @endif
-                             </div>
-                              <div class="tab-pane " id="product-page3">
-                                 @if(isset($barang->foto_3))
-                                 <img  class="zoom" src="{{asset('/foto_produk/'.$barang->foto_3.'')}}" /></a>
-                                 @else
-                                 <img src="{{asset('image/foto_default.png')}}" /></a>
-                                 @endif
-                              </div>
-                        </div>
-                        <ul class="nav flexi-nav" role="tablist" id="flexiselDemo1">
-                              <li class="active">
-                                  <a href="#product-page1" role="tab" data-toggle="tab" aria-expanded="false">
-                                     @if(isset($barang->foto))
-                                    <img src="{{asset('/foto_produk/'.$barang->foto.'')}}" /></a>
-                                     @else
-                                    <img src="{{asset('image/foto_default.png')}}" /></a>
-                                     @endif
-                                  </a>
-                                </li>
-                                <li >
-                                  <a href="#product-page2" role="tab" data-toggle="tab" aria-expanded="false">
-                                     @if(isset($barang->foto_2))
-                                     <img src="{{asset('/foto_produk/'.$barang->foto_2.'')}}"  /></a>
-                                     @else
-                                     <img src="{{asset('image/foto_default.png')}}" /></a>
-                                     @endif
-                                  </a>
-                                </li>
-                                <li>
-                                  <a href="#product-page3" role="tab" data-toggle="tab" aria-expanded="true">
-                                     @if(isset($barang->foto_3))
-                                     <img src="{{asset('/foto_produk/'.$barang->foto_3.'')}}" /></a>
-                                     @else
-                                     <img src="{{asset('image/foto_default.png')}}" /></a>
-                                     @endif
-                                  </a>
-                                </li>
-                        </ul>
-            </div>
-            <div class="col-md-6 col-sm-6">
-              <h2 class="title">
-                {{ $barang->nama }}
-              </h2>
-              <h3 class="main-price h3">
-                Rp. {{ number_format($harga_produk,0,',','.') }}
-              </h3>
-              <a class="description" style="font-size: 20px;">
-                <i class="material-icons" style="font-size: 30px;">
-                  store
-                </i>
-                {{ $barang->warung->name }}
-              </a>
-              {!! substr($barang->deskripsi_produk, 0, 300) !!}
-              <a aria-controls="collapseOne" aria-expanded="true" data-parent="#accordion" data-toggle="collapse" href="#collapseOne" role="button">
-                <h4 class="panel-title">
-                  <b>
-                    Baca Selengkapnya...
-                  </b>
-                  <i class="material-icons">
-                    keyboard_arrow_down
-                  </i>
-                </h4>
-              </a>
-            </div>
-            @if(Auth::check() == false || Auth::check() && Auth::user()->tipe_user == 3)
-            @if (Agent::isMobile())
-            <!--JIKA DAKSES VIA HP/TAB-->
-            <div class="row text-center">
-              @if ($cek_produk == 0)
-              <a class="btn btn-round buttonColor" disabled="" rel="tooltip" title="Stok Tidak Ada" data-id-produk='{{$barang->id}}' data-nama-produk="{{ $barang->nama }}">
-                Beli Sekarang
-                <i class="material-icons">
-                  shopping_cart
-                </i>
-              </a>
-              @else
-              <button class="btn btn-round buttonColor" id="btnBeliSekarang" rel="tooltip" title="Tambah Ke Keranjang Belanja" data-id-produk='{{$barang->id}}' data-nama-produk="{{ $barang->nama }}">
-                Beli Sekarang
-                <i class="material-icons">
-                  shopping_cart
-                </i>
-              </button>
-              @endif
-            </div>
-            @else
-            <div class="row text-right">
-              @if ($cek_produk == 0)
-              <a class="btn btn-round buttonColor" disabled="" rel="tooltip" title="Stok Tidak Ada" data-id-produk='{{$barang->id}}' data-nama-produk="{{ $barang->nama }}">
-                Beli Sekarang
-                <i class="material-icons">
-                  shopping_cart
-                </i>
-              </a>
-              @else
-              <button class="btn btn-round buttonColor" id="btnBeliSekarang" rel="tooltip" title="Tambah Ke Keranjang Belanja" data-id-produk='{{$barang->id}}' data-nama-produk="{{ $barang->nama }}">
-
-                Beli Sekarang
-                <i class="material-icons">
-                  shopping_cart
-                </i>
-              </button>
-              @endif
-            </div>
-            @endif
-            @endif
-
-            <div class="col-sm-12 col-md-12">
-              <div id="acordeon">
-                <div class="panel-group" id="accordion">
-                  <div class="panel panel-border panel-default">
-                    <div class="panel-collapse collapse" id="collapseOne">
-                      <div class="panel-body">
-                        <div class="panel-body">
-                          <hr style="border-width: 1px; border-color: black">
-                          <h3 class="h3">
-                            Detail Produk Dari {{$barang->nama}}
-                          </h3>
-                          <br>
-                          {!!$barang->deskripsi_produk!!}
-                        </br>
-                      </hr>
-                    </div>
-                  </div>
+                <div class="tab-pane active" id="product-page1">
+                  @if(isset($barang->foto))
+                  <img  class="zoom" src="{{asset('foto_produk/'.$barang->foto.'')}}" /></a>
+                  @else
+                  <img src="{{asset('image/foto_default.png')}}" /></a>
+                  @endif
                 </div>
-              </div>
-            </div>
-          </div>
-          <!--  end acordeon -->
-        </div>
-
-      </div>
-
-      <div class="related-products">
-        <h3 class="text-center">
-          Produk {{ title_case($barang->warung->name) }}
-        </h3>
-        <div class="row">
-
-          <div class="col-md-12"><br>
-            <div class="row">
-              <div class="col-md-12">
-                <!-- Menampilkan Produk -->
-                <span id="span-produk"> {!! $daftar_produk_warung !!}</span>
-              </div>
-
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-    </hr>
-    <div class="related-products">
-      <h3 class="text-center ">
-        Produk Serupa 
+                <div class="tab-pane " id="product-page2">
+                  @if(isset($barang->foto_2))
+                  <img  class="zoom" src="{{asset('/foto_produk/'.$barang->foto_2.'')}}" /></a>
+                  @else
+                  <img src="{{asset('image/foto_default.png')}}" /></a>
+                  @endif
+                </div>
+                <div class="tab-pane " id="product-page3">
+                 @if(isset($barang->foto_3))
+                 <img  class="zoom" src="{{asset('/foto_produk/'.$barang->foto_3.'')}}" /></a>
+                 @else
+                 <img src="{{asset('image/foto_default.png')}}" /></a>
+                 @endif
+               </div>
+             </div>
+             <ul class="nav flexi-nav" role="tablist" id="flexiselDemo1">
+              <li class="active">
+                <a href="#product-page1" role="tab" data-toggle="tab" aria-expanded="false">
+                 @if(isset($barang->foto))
+                 <img src="{{asset('/foto_produk/'.$barang->foto.'')}}" /></a>
+                 @else
+                 <img src="{{asset('image/foto_default.png')}}" /></a>
+                 @endif
+               </a>
+             </li>
+             <li >
+              <a href="#product-page2" role="tab" data-toggle="tab" aria-expanded="false">
+               @if(isset($barang->foto_2))
+               <img src="{{asset('/foto_produk/'.$barang->foto_2.'')}}"  /></a>
+               @else
+               <img src="{{asset('image/foto_default.png')}}" /></a>
+               @endif
+             </a>
+           </li>
+           <li>
+            <a href="#product-page3" role="tab" data-toggle="tab" aria-expanded="true">
+             @if(isset($barang->foto_3))
+             <img src="{{asset('/foto_produk/'.$barang->foto_3.'')}}" /></a>
+             @else
+             <img src="{{asset('image/foto_default.png')}}" /></a>
+             @endif
+           </a>
+         </li>
+       </ul>
+     </div>
+     <div class="col-md-6 col-sm-6">
+      <h2 class="title">
+        {{ $barang->nama }}
+      </h2>
+      <h3 class="main-price h3">
+        Rp. {{ number_format($harga_produk,0,',','.') }}
       </h3>
-      <div class="row">
+      <a class="description" style="font-size: 20px;">
+        <i class="material-icons" style="font-size: 30px;">
+          store
+        </i>
+        {{ $barang->warung->name }}
+      </a>
+      {!! substr($barang->deskripsi_produk, 0, 300) !!}
+      <a aria-controls="collapseOne" aria-expanded="true" data-parent="#accordion" data-toggle="collapse" href="#collapseOne" role="button">
+        <h4 class="panel-title">
+          <b>
+            Baca Selengkapnya...
+          </b>
+          <i class="material-icons">
+            keyboard_arrow_down
+          </i>
+        </h4>
+      </a>
+    </div>
+    @if(Auth::check() == false || Auth::check() && Auth::user()->tipe_user == 3)
+    @if (Agent::isMobile())
+    <!--JIKA DAKSES VIA HP/TAB-->
+    <div class="row text-center">
+      @if ($cek_produk == 0)
+      <a class="btn btn-round buttonColor" disabled="" rel="tooltip" title="Stok Tidak Ada" data-id-produk='{{$barang->id}}' data-nama-produk="{{ $barang->nama }}">
+        Beli Sekarang
+        <i class="material-icons">
+          shopping_cart
+        </i>
+      </a>
+      @else
+      <button class="btn btn-round buttonColor" id="btnBeliSekarang" rel="tooltip" title="Tambah Ke Keranjang Belanja" data-id-produk='{{$barang->id}}' data-nama-produk="{{ $barang->nama }}">
+        Beli Sekarang
+        <i class="material-icons">
+          shopping_cart
+        </i>
+      </button>
+      @endif
+    </div>
+    @else
+    <div class="row text-right">
+      @if ($cek_produk == 0)
+      <a class="btn btn-round buttonColor" disabled="" rel="tooltip" title="Stok Tidak Ada" data-id-produk='{{$barang->id}}' data-nama-produk="{{ $barang->nama }}">
+        Beli Sekarang
+        <i class="material-icons">
+          shopping_cart
+        </i>
+      </a>
+      @else
+      <button class="btn btn-round buttonColor" id="btnBeliSekarang" rel="tooltip" title="Tambah Ke Keranjang Belanja" data-id-produk='{{$barang->id}}' data-nama-produk="{{ $barang->nama }}">
 
-        <div class="col-md-12"><br>
-          <div class="row">
-            <div class="col-md-12">
-              <!-- Menampilkan Produk -->
-              <span id="span-produk">  {!! $daftar_produk_sama !!}</span>
+        Beli Sekarang
+        <i class="material-icons">
+          shopping_cart
+        </i>
+      </button>
+      @endif
+    </div>
+    @endif
+    @endif
+
+    <div class="col-sm-12 col-md-12">
+      <div id="acordeon">
+        <div class="panel-group" id="accordion">
+          <div class="panel panel-border panel-default">
+            <div class="panel-collapse collapse" id="collapseOne">
+              <div class="panel-body">
+                <div class="panel-body">
+                  <hr style="border-width: 1px; border-color: black">
+                  <h3 class="h3">
+                    Detail Produk Dari {{$barang->nama}}
+                  </h3>
+                  <br>
+                  {!!$barang->deskripsi_produk!!}
+                </br>
+              </hr>
             </div>
-
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--  end acordeon -->
+</div>
+
+</div>
+
+<div class="related-products">
+  <h3 class="text-center">
+    Produk {{ title_case($barang->warung->name) }}
+  </h3>
+  <div class="row">
+
+    <div class="col-md-12"><br>
+      <div class="row">
+        <div class="col-md-12">
+          <!-- Menampilkan Produk -->
+          <span id="span-produk"> {!! $daftar_produk_warung !!}</span>
         </div>
 
       </div>
     </div>
 
-    <hr>
+  </div>
+</div>
+
+</hr>
+<div class="related-products">
+  <h3 class="text-center ">
+    Produk Serupa 
+  </h3>
+  <div class="row">
+
+    <div class="col-md-12"><br>
+      <div class="row">
+        <div class="col-md-12">
+          <!-- Menampilkan Produk -->
+          <span id="span-produk">  {!! $daftar_produk_sama !!}</span>
+        </div>
+
+      </div>
+    </div>
 
   </div>
+</div>
+
+<hr>
+
+</div>
 </div>
 
 
@@ -884,31 +890,31 @@ $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description']
 <script type="text/javascript">
   var myLazyLoad = new LazyLoad();
 </script>
-   <script type="text/javascript">
+<script type="text/javascript">
 
-    $(document).ready(function() {
+  $(document).ready(function() {
     $("#flexiselDemo1").flexisel({
       visibleItems: 3,
-        itemsToScroll: 1,
-        animationSpeed: 400,
-            enableResponsiveBreakpoints: true,
-            responsiveBreakpoints: {
-                portrait: {
-                    changePoint:480,
-                    visibleItems: 2
-                },
-                landscape: {
-                    changePoint:640,
-                    visibleItems: 2
-                },
-                tablet: {
-                    changePoint:768,
-                    visibleItems: 2
-                }
-            }
-        });
+      itemsToScroll: 1,
+      animationSpeed: 400,
+      enableResponsiveBreakpoints: true,
+      responsiveBreakpoints: {
+        portrait: {
+          changePoint:480,
+          visibleItems: 2
+        },
+        landscape: {
+          changePoint:640,
+          visibleItems: 2
+        },
+        tablet: {
+          changePoint:768,
+          visibleItems: 2
+        }
+      }
     });
-   </script>
+  });
+</script>
 <script type="text/javascript">
 
 
