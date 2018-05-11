@@ -531,7 +531,7 @@
 
                         @if(!Auth::check())
                         <li class="button-container">
-                            <a class="btn btn-rose btn-round" href="{{ url('/login')}}">
+                            <a class="btn btn-round btn-rose" href="{{ url('/login')}}">
                                 <i class="material-icons">
                                     account_circle
                                 </i>

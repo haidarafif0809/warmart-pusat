@@ -92,7 +92,12 @@ first();
 }
 .page-header.header-small {
     height: 0vh;
-    min-height: 25vh;
+    @if(Agent::isMobile())
+    min-height: 12vh;
+    @else
+    min-height: 18vh;
+    @endif
+    
 }
 .ecommerce-page .page-header .container {
     @if(Agent::isMobile())
@@ -131,7 +136,7 @@ h4 {
 @if($setting_aplikasi->tipe_aplikasi == 0)
 <div "="" class="page-header header-filter header-small" data-parallax="true" style="{!! $foto_latar_belakang !!}">
     @else
-    <div "="" class="page-header header-small" data-parallax="true" style="background-color: #2ac326">
+    <div "="" class="page-header header-small" data-parallax="true" style="background-color: #ffffff">
         @endif
         <a href="{{ url('/home') }}">
             <img class="img img-raised" src="{!! $logo_warmart !!}" style="width: 10%"/>
@@ -267,7 +272,7 @@ h4 {
 @if($setting_aplikasi->tipe_aplikasi == 0)
 <div "="" class="page-header header-filter header-small" data-parallax="true" style="{!! $foto_latar_belakang !!}">
     @else
-    <div "="" class="page-header header-small" data-parallax="true" style="background-color: #2ac326">
+    <div "="" class="page-header header-small" data-parallax="true" style="background-color: #ffffff">
         @endif
     </div>
     <div class="main">
