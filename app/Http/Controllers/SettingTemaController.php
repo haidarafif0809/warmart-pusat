@@ -93,4 +93,29 @@ class SettingTemaController extends Controller
 				]);
 		}
 	}
+
+	public function ubahTema($id, $default_tema)
+	{
+		if ($default_tema == 1){
+			$tema = TemaWarna::where('id', $id)->update([
+				'default_tema' => 0,
+				]);
+		}
+		else{
+			$tema = TemaWarna::where('default_tema', 1)->update([
+				'default_tema' => 0,
+				]);
+			$tema = TemaWarna::where('id', $id)->update([
+				'default_tema' => 1,
+				]);
+		}
+
+		return response($default_tema);
+	}
+
+	public function destroy($id)
+	{
+		$tema = TemaWarna::destroy($id);
+		return response(200);
+	}
 }
