@@ -37,6 +37,8 @@
 
 
     $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description'])->where('warung_id',$address_app->warung_id)->first();
+
+    $settingCollapseDiWarung = \App\Warung::select('collapse_keranjang_belanja')->where('id', $address_app->warung_id)->first();
     ?>
 
     <style type="text/css">
@@ -62,6 +64,10 @@
             display: none;
             box-shadow: 1px 5px 12px #353535;
         }
+        #taroSini div td.produkName, #taroSini div td.subtotalProduk {
+            padding: 6px;
+            border-top: 1px solid #e1e1e1;
+        }
         #taroSini div td.produkName {
             width: 90%;
         }
@@ -73,6 +79,13 @@
             font-size: medium;
             font-weight: bold;
         }
+        #taroSini div th.thNamaProduk {
+            text-align: left;
+        }
+        #taroSini div th.thSubtotal {
+            text-align: right;
+            padding-right: 30px;
+        }
         #taroSini div small.productCount {
             color: red;
         }
@@ -83,9 +96,24 @@
         #taroSini div.produkKosong {
             color: black;
         }
-        #taroSini div.tableList {
-            height: 150px;
-            overflow: scroll;
+        #taroSini div table.produkTable:nth-child(odd) {
+            background: #fafafa;
+        }
+        #taroSini div table.produkTable:nth-child(even) {
+            background: #eeeeee;
+        }
+        #taroSini div div.tableList {
+            height: 180px;
+            overflow-y: scroll;            
+        }
+        #taroSini div div.tableList::-webkit-scrollbar {
+            width: 5px;
+        }
+        #taroSini div div.tableList::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+        }
+        #taroSini div div.tableList::-webkit-scrollbar-thumb {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
         }
         #collapseProdukMobile {
             display: none;
@@ -95,11 +123,24 @@
         }
         #collapseProdukMobile div.tableTable {
             border-radius: 2px;
-            width: 95%;
+            width: 92.5%;
             border: 1px solid #eeeeee;
             background: #ffffff;
             margin: 0 auto;
             box-shadow: 1px 5px 12px #353535;
+        }
+        #collapseProdukMobile div.tableListMobile {
+            height: 140px;
+            overflow-y: scroll;
+        }
+        #collapseProdukMobile div.tableListMobile::-webkit-scrollbar {
+            width: 8px;
+        }
+        #collapseProdukMobile div.tableListMobile::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+        }
+        #collapseProdukMobile div.tableListMobile::-webkit-scrollbar-thumb {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
         }
         #collapseProdukMobile td.produkNameMobile {
 
@@ -110,8 +151,26 @@
         #collapseProdukMobile td.produkCountMobile {
 
         }
-        #collapseProdukMobile td.subtotalProdukMobile {
-
+        #collapseProdukMobile table.produkTableMobile:nth-child(odd) {
+            background: #fafafa;
+        }
+        #collapseProdukMobile table.produkTableMobile:nth-child(even) {
+            background: #eeeeee;
+        }
+        #collapseProdukMobile table td.subtotalProdukMobile {
+            text-align: right;
+        }
+        #collapseProdukMobile table th.thNamaProdukMobile {
+            text-align: left;
+        }
+        #collapseProdukMobile table th.thSubtotalMobile {
+            text-align: right;
+            padding-right: 30px;
+        }
+        #collapseProdukMobile table td.produkNameMobile, #collapseProdukMobile table td.subtotalProdukMobile {
+            padding: 6px;
+            border-top: 1px solid #e1e1e1;
+            width: 100%;
         }
         .bgAnimation {
             -webkit-animation: color 2s ease-in  0s 1 alternate running;
@@ -312,31 +371,53 @@
                     @endif
 
                     @if(Agent::isMobile() && !Auth::check())
-                    <a class="navbar-brand pull-right" href="{{ url('/login') }}">
-                        <i class="material-icons">
-                            account_circle
-                        </i> 
-                    </a>
-                    <span id="keranjangCollapseMobile" class="navbar-brand pull-right">
-                        <i class="material-icons">
-                            shopping_cart
-                        </i>
-                        <b style="font-size: 15px" id="jumlah-keranjang" data-jumlah="{{ $cek_belanjaan }}" data-session="">
-                            | {{ $cek_belanjaan }}
-                        </b>
-                    </span>
-                    <div id="collapseProdukMobile"></div>
+                        <a class="navbar-brand pull-right" href="{{ url('/login') }}">
+                            <i class="material-icons">
+                                account_circle
+                            </i> 
+                        </a>
+                        @if ($settingCollapseDiWarung->collapse_keranjang_belanja == 1)
+                            <span id="keranjangCollapseMobile" class="navbar-brand pull-right">
+                                <i class="material-icons">
+                                    shopping_cart
+                                </i>
+                                <b style="font-size: 15px" id="jumlah-keranjang" data-jumlah="{{ $cek_belanjaan }}" data-session="">
+                                    | {{ $cek_belanjaan }}
+                                </b>
+                            </span>
+                            <div id="collapseProdukMobile"></div>
+                        @else
+                            <a class="navbar-brand pull-right" href="{{ url('/keranjang-belanja') }}">
+                                <i class="material-icons">
+                                    shopping_cart
+                                </i>
+                                <b style="font-size: 15px" id="jumlah-keranjang" data-jumlah="{{ $cek_belanjaan }}" data-session="">
+                                    | {{ $cek_belanjaan }}
+                                </b>
+                            </a>
+                        @endif
                     @endif
                     @if(Agent::isMobile() && Auth::check() && Auth::user()->tipe_user == 3)
-                    <span id="keranjangCollapseMobile" class="navbar-brand pull-right">
-                        <i class="material-icons">
-                            shopping_cart
-                        </i>
-                        <b style="font-size: 15px" id="jumlah-keranjang" data-jumlah="{{ $cek_belanjaan }}" data-session="">
-                            | {{ $cek_belanjaan }}
-                        </b>
-                    </span>
-                    <div id="collapseProdukMobile"></div>
+                        @if ($settingCollapseDiWarung->collapse_keranjang_belanja == 1)
+                            <span id="keranjangCollapseMobile" class="navbar-brand pull-right">
+                                <i class="material-icons">
+                                    shopping_cart
+                                </i>
+                                <b style="font-size: 15px" id="jumlah-keranjang" data-jumlah="{{ $cek_belanjaan }}" data-session="">
+                                    | {{ $cek_belanjaan }}
+                                </b>
+                            </span>
+                            <div id="collapseProdukMobile"></div>
+                        @else
+                            <a class="navbar-brand pull-right" href="{{ url('/keranjang-belanja') }}">
+                                <i class="material-icons">
+                                    shopping_cart
+                                </i>
+                                <b style="font-size: 15px" id="jumlah-keranjang" data-jumlah="{{ $cek_belanjaan }}" data-session="">
+                                    | {{ $cek_belanjaan }}
+                                </b>
+                            </a>
+                        @endif
                     @endif
                 </div>
                 <div class="collapse navbar-collapse">
@@ -458,35 +539,59 @@
                             </a>
                         </li>
                         @endif
-                        @if (Auth::check() == false) 
+                        @if (Auth::check() == false && !Agent::isMobile()) 
                         <li class="button-container">
-                            <a id="btnKeranjang" class="btn btn-round btn-rose" href="#">
-                                <i class="material-icons">
-                                    shopping_cart
-                                </i>
-                                Keranjang Belanja
-                                <b style="font-size: 15px" id="jumlah-keranjang" data-session="" data-jumlah="{{ $cek_belanjaan }}">
-                                    | {{ $cek_belanjaan }}
-                                </b>
-                            </a>
-                            <div id="taroSini">
-                                <div></div>
-                            </div>
+                            @if ($settingCollapseDiWarung->collapse_keranjang_belanja == 1)
+                                <a id="btnKeranjang" class="btn btn-round btn-rose">
+                                    <i class="material-icons">
+                                        shopping_cart
+                                    </i>
+                                    Keranjang Belanja
+                                    <b style="font-size: 15px" id="jumlah-keranjang" data-session="" data-jumlah="{{ $cek_belanjaan }}">
+                                        | {{ $cek_belanjaan }}
+                                    </b>
+                                </a>
+                                <div id="taroSini">
+                                    <div id="containerTable"></div>
+                                </div>
+                            @else
+                                <a class="btn btn-round btn-rose" href="{{ url('/keranjang-belanja') }}">
+                                    <i class="material-icons">
+                                        shopping_cart
+                                    </i>
+                                    Keranjang Belanja
+                                    <b style="font-size: 15px" id="jumlah-keranjang" data-session="" data-jumlah="{{ $cek_belanjaan }}">
+                                        | {{ $cek_belanjaan }}
+                                    </b>
+                                </a>
+                            @endif
                         </li>
-                        @elseif(Auth::check() && Auth::user()->tipe_user == 3)
+                        @elseif(Auth::check() && Auth::user()->tipe_user == 3 && !Agent::isMobile())
                         <li class="button-container">
-                            <a id="btnKeranjang" class="btn btn-round btn-rose">
-                                <i class="material-icons">
-                                    shopping_cart
-                                </i>
-                                Keranjang Belanja
-                                <b style="font-size: 15px" id="jumlah-keranjang" data-session="" data-jumlah="{{ $cek_belanjaan }}">
-                                    | {{ $cek_belanjaan }}
-                                </b>
-                            </a>
-                            <div id="taroSini">
-                                <div></div>
-                            </div>
+                            @if ($settingCollapseDiWarung->collapse_keranjang_belanja == 1)
+                                <a id="btnKeranjang" class="btn btn-round btn-rose">
+                                    <i class="material-icons">
+                                        shopping_cart
+                                    </i>
+                                    Keranjang Belanja
+                                    <b style="font-size: 15px" id="jumlah-keranjang" data-session="" data-jumlah="{{ $cek_belanjaan }}">
+                                        | {{ $cek_belanjaan }}
+                                    </b>
+                                </a>
+                                <div id="taroSini">
+                                    <div id="containerTable"></div>
+                                </div>
+                            @else
+                                <a class="btn btn-round btn-rose" href="{{ url('/keranjang-belanja') }}">
+                                    <i class="material-icons">
+                                        shopping_cart
+                                    </i>
+                                    Keranjang Belanja
+                                    <b style="font-size: 15px" id="jumlah-keranjang" data-session="" data-jumlah="{{ $cek_belanjaan }}">
+                                        | {{ $cek_belanjaan }}
+                                    </b>
+                                </a>
+                            @endif
                         </li>
                         @endif
                     </ul>
@@ -765,6 +870,19 @@
     </script>
     <script type="text/javascript">
         var myLazyLoad = new LazyLoad();
+        var collapseDataProduk = '';
+        var collapseDataProdukMobile = '';
+
+        /* cek apakah id keranjangCollapseMobile ada */
+        if ($('#keranjangCollapseMobile').attr('class') != undefined) {
+            $.get('{{ url('/keranjang-belanja/collapse-keranjang-belanja-mobile') }}', function (data) {
+                collapseDataProdukMobile = data;
+            });
+        } else {
+            $.get('{{ url('/keranjang-belanja/collapse-keranjang-belanja') }}', function (data) {
+                collapseDataProduk = data;
+            });
+        }
 
         $('.tombolBeli').click(function(){
             let id_produk = $(this).attr("data-id-produk");
@@ -810,39 +928,46 @@
                 $("#jumlah-keranjang").attr("data-jumlah",totalProduk);
                 $("#jumlah-keranjang").text(sisa_jumlah_produk);
 
-                getRemoveDataCollapse(['get', 'desktop']);
-
                 /* cek apakah id keranjangCollapseMobile ada */
                 if ($('#keranjangCollapseMobile').attr('class') != undefined) {
-                    console.log($('#keranjangCollapseMobile').attr('class'));
                     if ($('#keranjangCollapseMobile').attr('class').match(/bgAnimation/) != null) {
                         $('#keranjangCollapseMobile').removeClass('bgAnimation');
                     }
                     setTimeout(() => {
                         $('#keranjangCollapseMobile').addClass('bgAnimation');
                     }, 300);
+
+                    $.get('{{ url('/keranjang-belanja/collapse-keranjang-belanja-mobile') }}', function (data) {
+                        collapseDataProdukMobile = data;
+                    });
+
+
+                } else {
+
+                    $.get('{{ url('/keranjang-belanja/collapse-keranjang-belanja') }}', function (data) {
+                        collapseDataProduk = data;
+                    })
+                    .always(() => {
+                        getRemoveDataCollapse(['get', 'desktop']);
+                    });
                 }
             });
         }
 
-        let taroSiniDiv = $('#taroSini div');
+        let containerTable = $('#containerTable');
         let getRemoveDataCollapse = (arg) => {
             if (arg[0] == 'get') {
                 if (arg[1] == 'desktop') {
-                    $.get('{{ url('/keranjang-belanja/collapse-keranjang-belanja') }}', function (data) {
-                        $('#taroSini div').html(data);
-                        $('#taroSini div').slideDown('fast');
-                    }); 
+                    containerTable.html(collapseDataProduk);
+                    containerTable.slideDown('fast');
                 } else if (arg[1] == 'mobile') {
-                    $.get('{{ url('/keranjang-belanja/collapse-keranjang-belanja-mobile') }}', function (data) {
-                        $('#collapseProdukMobile').html(data);
-                        $('#collapseProdukMobile').slideDown('fast');
-                    }); 
+                    $('#collapseProdukMobile').html(collapseDataProdukMobile);
+                    $('#collapseProdukMobile').slideDown('fast');
                 }
             } else if (arg[0] == 'remove') {
                 if (arg[1] == 'desktop') {
-                    taroSiniDiv.fadeOut('fast', () => {
-                        taroSiniDiv.html('');
+                    containerTable.fadeOut('fast', () => {
+                        containerTable.html('');
                     });
                 } else if (arg[1] == 'mobile') {                    
                     $('#collapseProdukMobile').fadeOut('fast', () => {
@@ -853,10 +978,10 @@
         };
 
         $(document).click((event) => {
-            if (taroSiniDiv.attr('data-status') != 'mouseentered') {
+            if (containerTable.attr('data-status') != 'mouseentered' && $('#btnKeranjang').attr('data-status') != 'mouseentered') {
                 getRemoveDataCollapse(['remove', 'desktop']);
             }
-            /* cek apakah id keranjangCollapseMobile ada */
+             /* cek apakah id keranjangCollapseMobile ada */ 
             if ($('#keranjangCollapseMobile').attr('class') != undefined) {
                 if ($('#collapseProdukMobile').attr('data-status') != 'mouseentered') {   
                     getRemoveDataCollapse(['remove', 'mobile']);
@@ -864,10 +989,16 @@
             }
         });
 
-        taroSiniDiv.hover(() => {
-            taroSiniDiv.attr('data-status', 'mouseentered');
+        containerTable.hover(() => {
+            containerTable.attr('data-status', 'mouseentered');
         }, () => {
-            taroSiniDiv.removeAttr('data-status');
+            containerTable.removeAttr('data-status');
+        });
+
+        $('#btnKeranjang').hover(() => {
+            $('#btnKeranjang').attr('data-status', 'mouseentered');
+        }, () => {
+            $('#btnKeranjang').removeAttr('data-status');
         });
 
         $('#collapseProdukMobile').hover(() => {
@@ -876,15 +1007,19 @@
         });
 
         $('#btnKeranjang').click(() => {
-            if (taroSiniDiv.attr('style') != 'display: block;') {
+
+            console.log(containerTable.attr('style'));
+            if (containerTable.attr('style') == undefined || containerTable.attr('style') == 'display: none;') {
                 getRemoveDataCollapse(['get', 'desktop']);
             } else {
                 getRemoveDataCollapse(['remove', 'desktop']);
             }
+
         });
 
         $('#keranjangCollapseMobile').click(() => {
             $('#collapseProdukMobile').attr('data-status', 'mouseentered');
+            console.log($('#collapseProdukMobile').attr('style'));
             if ($('#collapseProdukMobile').attr('style') != 'display: block;') {
                 getRemoveDataCollapse(['get', 'mobile']);
             } else {

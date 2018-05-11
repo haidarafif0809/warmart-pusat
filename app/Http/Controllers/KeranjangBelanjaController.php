@@ -251,72 +251,43 @@ public function tombolTambahiProduk($sisa_stok, $keranjang_belanjaans)
 public function cardProdukBelanjaanCollapse($keranjang_belanjaans) {
     $subtotal_produk = $keranjang_belanjaans->harga_produk * $keranjang_belanjaans->jumlah_produk;
     $res = '';
-    $agent = new Agent();
-    if ($agent->isMobile()) {
-        $res = '
-        <tr>
-        <td class="produkNameMobile">
-        <small> <b> '. ucwords($keranjang_belanjaans->produk->nama_barang) .' </b> </small> 
-        <br> 
-        <div class="warungNameMobile">
-        <small> '. $keranjang_belanjaans->produk->warung->name .' </small>
-        </div>
-        <small class="productCountMobile"> '. $keranjang_belanjaans->jumlah_produk .' x Rp.'. number_format($keranjang_belanjaans->harga_produk, 0, ',', '.') .' </small>
-        </td>
-        <td class="subtotalProdukMobile"> <small> Rp.'. number_format($subtotal_produk, 0, ',', '.') .' </small> </td>
-        </tr>
-        ';        
-    } else {
-        $res = '
-        <tr>
-        <td class="produkName">
-        <small> <b> '. ucwords($keranjang_belanjaans->produk->nama_barang) .' </b> </small> 
-        <br> 
-        <div class="warungName">
-        <small> '. $keranjang_belanjaans->produk->warung->name .' </small>
-        </div>
-        <small class="productCount"> '. $keranjang_belanjaans->jumlah_produk .' x Rp.'. number_format($keranjang_belanjaans->harga_produk, 0, ',', '.') .' </small>
-        </td>
-        <td class="subtotalProduk"> <small> Rp.'. number_format($subtotal_produk, 0, ',', '.') .' </small> </td>
-        </tr>
-        ';
-    }
+    $res = '
+    <table class="produkTable">
+    <tr>
+    <td class="produkName">
+    <small> <b> '. ucwords($keranjang_belanjaans->produk->nama_barang) .' </b> </small> 
+    <br> 
+    <div class="warungName">
+    <small> '. $keranjang_belanjaans->produk->warung->name .' </small>
+    </div>
+    <small class="productCount"> '. $keranjang_belanjaans->jumlah_produk .' x Rp.'. number_format($keranjang_belanjaans->harga_produk, 0, ',', '.') .' </small>
+    </td>
+    <td class="subtotalProduk"> <small> Rp.'. number_format($subtotal_produk, 0, ',', '.') .' </small> </td>
+    </tr>
+    </table>
+    ';
     return $res;
 }
 
 public function cardProdukBelanjaanCollapseMobile($keranjang_belanjaans) {
     $subtotal_produk = $keranjang_belanjaans->harga_produk * $keranjang_belanjaans->jumlah_produk;
     $res = '';
-    $agent = new Agent();
-    if ($agent->isMobile()) {
-        $res = '
-        <tr>
-        <td class="produkNameMobile">
-        <small> <b> '. ucwords($keranjang_belanjaans->produk->nama_barang) .' </b> </small> 
-        <br> 
-        <div class="warungNameMobile">
-        <small> '. $keranjang_belanjaans->produk->warung->name .' </small>
-        </div>
-        <small class="productCountMobile"> '. $keranjang_belanjaans->jumlah_produk .' x Rp.'. number_format($keranjang_belanjaans->harga_produk, 0, ',', '.') .' </small>
-        </td>
-        <td class="subtotalProdukMobile"> <small> Rp.'. number_format($subtotal_produk, 0, ',', '.') .' </small> </td>
-        </tr>
-        ';        
-    } else {
-        $res = '
-        <tr>
-        <td class="produkName">
-        <small> <b> '. ucwords($keranjang_belanjaans->produk->nama_barang) .' </b> </small> 
-        <br> 
-        <div class="warungName">
-        <small> '. $keranjang_belanjaans->produk->warung->name .' </small>
-        </div>
-        <small class="productCount"> '. $keranjang_belanjaans->jumlah_produk .' x Rp.'. number_format($keranjang_belanjaans->harga_produk, 0, ',', '.') .' </small>
-        </td>
-        <td class="subtotalProduk"> <small> Rp.'. number_format($subtotal_produk, 0, ',', '.') .' </small> </td>
-        </tr>
-        ';
-    }
+    $res = '
+    <table class="produkTableMobile">
+    <tr>
+    <td class="produkNameMobile">
+    <small> <b> '. ucwords($keranjang_belanjaans->produk->nama_barang) .' </b> </small> 
+    <br> 
+    <div class="warungNameMobile">
+    <small> '. $keranjang_belanjaans->produk->warung->name .' </small>
+    </div>
+    <small class="productCountMobile"> '. $keranjang_belanjaans->jumlah_produk .' x Rp.'. number_format($keranjang_belanjaans->harga_produk, 0, ',', '.') .' </small>
+    </td>
+    <td class="subtotalProdukMobile"> <small> Rp.'. number_format($subtotal_produk, 0, ',', '.') .' </small> </td>
+    </tr>
+    </table>
+    ';        
+
     return $res;
 }
 
@@ -465,12 +436,13 @@ public function tampilanProdukKeranjangBelanjaCollapse($keranjang_belanjaan)
         ';
     } else {
         $produk_belanjaan .= '
-        <table class="table table-striped table-keranjang">
+        <table class="table">
         <thead>
-        <th> Nama </th>
-        <th> Subtotal </th>
+        <th class="thNamaProduk"> Nama </th>
+        <th class="thSubtotal"> Subtotal </th>
         </thead>
-        <tbody>
+        </table>
+        <div class="tableList">
         ';
 
 
@@ -490,9 +462,8 @@ public function tampilanProdukKeranjangBelanjaCollapse($keranjang_belanjaan)
         }
 
         $produk_belanjaan .= '
-        </tbody>
-        </table>
-        <table class="table table-striped">
+        </div>
+        <table class="table">
         <tr>
         <hr>
         <td align="left" style="margin-top: 100px;"> Subtotal : </td>
@@ -526,12 +497,13 @@ public function tampilanProdukKeranjangBelanjaCollapseMobile($keranjang_belanjaa
     } else {
         $produk_belanjaan .= '
         <div class="tableTable">
-        <table class="table table-striped table-keranjang">
+        <table class="table">
         <thead>
-        <th> Nama </th>
-        <th> Subtotal </th>
+        <th class="thNamaProdukMobile"> Nama </th>
+        <th class="thSubtotalMobile"> Subtotal </th>
         </thead>
-        <tbody>
+        </table>
+        <div class="tableListMobile">
         ';
 
 
@@ -551,8 +523,7 @@ public function tampilanProdukKeranjangBelanjaCollapseMobile($keranjang_belanjaa
         }
 
         $produk_belanjaan .= '
-        </tbody>
-        </table>
+        </div>
         <table class="table table-striped">
         <tr>
         <hr>
