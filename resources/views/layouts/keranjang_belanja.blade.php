@@ -2,6 +2,7 @@
 @section('content')
 <?php
 $settingFooter = \App\SettingFooter::where('warung_id', \App\SettingPembedaAplikasi::where('app_address', url('/'))->first()->warung_id)->first();
+$tema = \App\TemaWarna::where('default_tema', 1)->where('warung_id', \App\SettingPembedaAplikasi::where('app_address', url('/'))->first()->warung_id)->first();
 ?>
 <style type="text/css">
 .flexFont {
@@ -29,7 +30,7 @@ h6 {
   font-weight: 500;
 }
 .backgroundColor {
-  background-color: #2ac326
+  background-color: {{$tema->kode_tema}}
 }
 .page-header.header-small {
   height: 35vh;
@@ -57,7 +58,7 @@ h4 {
 
 .buttonColor{
   @if($setting_aplikasi->tipe_aplikasi == "1") /*tipe-aplikasi == 1, aplikasi topos*/
-  background-color: #2ac326;
+  background-color: {{$tema->kode_tema}};
   @else
   background-color: #01573e;
   @endif
