@@ -29,6 +29,94 @@
 			</ul>
 
 
+			<!-- MODAL ACTION-->
+
+			<div class="modal" id="modal_action" role="dialog" data-backdrop=""> 
+				<div class="modal-dialog modal-lg"> 
+					<!-- Modal content--> 
+					<div class="modal-content"> 
+						<div class="modal-header"> 
+							<button type="button" class="close" v-on:click="closeModalAction()"> <i class="material-icons">close</i></button> 
+							<h4 class="modal-title"> 
+								<div class="alert-icon"> 
+									<b></b> 
+								</div> 
+							</h4> 
+						</div> 
+						<form v-on:submit.prevent="saveForm()" class="form-horizontal"> 
+							<div class="modal-body">         
+
+								<div class="row">
+									<div class="col-md-3">
+										<b>Pelanggan</b>
+
+										<div class="checkbox">
+											<label>
+												<input type="checkbox" name="pilih_semua" v-model="pilih_semua" v-bind:value="1" v-on:change="pilihSemua"> Pilih Semua
+											</label>
+										</div>  
+										<div class="checkbox" v-for="pelanggans, index in pelangganAction">
+											<label>
+												<input type="checkbox" v-bind:value="pelanggans.id" v-model="actionBucketSize.pelanggan"> {{pelanggans.name}}
+											</label>
+										</div> 
+									</div>
+									<div class="col-md-9">
+										<div class="form-group">
+											<label>Produk</label>
+											<selectize-component :settings="placeholder_produk" ref='setting_harga_jual' v-model="actionBucketSize.produk"> 
+												<option v-for="produks, index in produk" v-bind:value="produks.produk">{{produks.barcode}} || {{produks.kode_produk}} || {{ produks.nama_produk }}</option>
+											</selectize-component>
+										</div>
+
+										<div class="form-group">
+											<label>Kirim Lewat</label>
+											<selectize-component :settings="kirim_pesan_via" ref="kirim_pesan_via" v-model="actionBucketSize.kirim_pesan_via">
+												<option v-bind:value="1">SMS</option>
+												<option v-bind:value="2">E-MAIL</option>
+											</selectize-component>
+										</div>
+
+										<div class="form-group">
+											<label>Pesan Promo</label>
+											<textarea class="form-control" placeholder="Silakan Isi Pesan Promo Untuk Pelanggan disini ..." rows="4" v-model="actionBucketSize.pesan"></textarea>
+										</div>
+
+
+										<ul class="timeline timeline-simple">
+											<li class="timeline-inverted">
+												<div class="timeline-badge info">
+													<i class="material-icons">chat</i>
+												</div>
+												<div class="timeline-panel">
+													<div class="timeline-heading">
+														<span class="label label-info">Pesan</span>
+													</div>
+													<div class="timeline-body">
+														<p>Hai [nama pelanggan	]..</p>
+														<p>{{actionBucketSize.pesan}}</p>
+													</div>
+													<h6>
+														<i class="ti-time"></i> Warung Mep
+													</h6>
+												</div>
+											</li>
+										</ul>
+										<button type="submit" class="btn btn-info">Kirim</button>
+									</div>
+
+								</div>
+
+							</div>
+							<div class="modal-footer">  
+								<button type="button" class="btn btn-default btn-sm"  v-on:click="closeModalAction()">Tutup</button>
+							</div> 
+						</form>
+					</div>       
+				</div> 
+			</div> 
+			<!-- / MODAL ACTION --> 
+
 			<!-- MODAL DETAIL PELANGGAN -->
 
 			<div class="modal" id="modal_detail_pelanggan" role="dialog" data-backdrop=""> 
@@ -132,7 +220,8 @@
 						<center><button type="button" class="btn btn-xs btn-info" v-on:click="loadMore(dataPelanggan.length)" v-if="loadMoreLength > dataPelanggan.length">Load More... <i class="material-icons">keyboard_arrow_down</i></button></center>
 					</div>
 					<div class="modal-footer">  
-						<button type="button" class="btn btn-default btn-sm"  v-on:click="closeModalPelanggan()">Tutup</button>
+						<button type="button" class="btn btn-primary" v-on:click="action()">Kirim Pesan</button>
+						<button type="button" class="btn btn-default btn-sm" v-on:click="closeModalPelanggan()">Tutup</button>
 					</div> 
 
 				</div>
@@ -304,6 +393,7 @@
 			</div>
 		</div>
 		<!--    end small modal -->
+
 
 		<div class="card">
 			<div class="card-header card-header-icon" data-background-color="purple">
@@ -477,6 +567,7 @@
 
 
 <script>
+import { mapState } from 'vuex';
 export default {
 	data: function () {
 		return {
@@ -496,6 +587,13 @@ export default {
 			laporanBucketSizeOnline: [],
 			dataPelanggan : [],
 			detailPelanggan : {},
+			pelangganAction : [],
+			actionBucketSize : {
+				pelanggan : [],
+				kirim_pesan_via : [],
+				produk : '',
+				pesan : ''
+			},
 			filter: {
 				dari_tanggal: '',
 				sampai_tanggal: new Date(),
@@ -512,6 +610,13 @@ export default {
 			},
 			placeholder_penjualan: {
 				placeholder: '--JENIS PENJUALAN--'
+			},
+			placeholder_produk: {
+				placeholder: '--PILIH PRODUK--'
+			},
+			kirim_pesan_via:{
+				placeholder : '--SILAKAN PILIH--',
+				maxItems: 2,
 			},
 			chartData: {
 				data: [],
@@ -543,15 +648,22 @@ export default {
 			pencarian: '',
 			loading: false,
 			judul : '',
+			pilih_semua : false
 		}
 	},
 	mounted () {
 		var app = this;		
 		var awal_tanggal = new Date();
+		app.$store.dispatch('LOAD_PRODUK_LIST')
 		awal_tanggal.setDate(1);
 		app.filter.dari_tanggal = awal_tanggal;
 
 	},
+	computed : mapState ({    
+		produk(){
+			return this.$store.state.produk
+		}
+	}),
 	filters: {
 		pemisahTitik: function (value) {
 			var angka = [value];
@@ -671,10 +783,31 @@ export default {
 			app.dataPelanggan = dataPelanggan.slice(0, 10);
 
 			let total = 0
-			for (var i = 0 ; i < app.dataPelanggan.length; i++) {
-				total += parseFloat(app.dataPelanggan[i].total)
+			let pelanggan_id = 0
+
+			app.pelangganAction.splice(0)
+			for (var j = 0 ; j < dataPelanggan.length; j++) {
+
+				total += parseFloat(dataPelanggan[j].total)
+
+				if (dataPelanggan[j].pelanggan_id > 0 || dataPelanggan[j].id_pelanggan > 0) {		
+
+					if (pelanggan_id != dataPelanggan[j].pelanggan.id) {
+
+						pelanggan_id = dataPelanggan[j].pelanggan.id
+
+						app.pelangganAction.push({
+							id: dataPelanggan[j].pelanggan.id,
+							name: dataPelanggan[j].pelanggan.name
+						});
+
+					}		
+
+				}
+
 			}
 			app.dataPelanggan.total = total
+
 		},
 		closeModalPelanggan(){
 			$("#modalPelanggan").hide(); 
@@ -686,7 +819,6 @@ export default {
 
 			for (var i = 0 ; i < newData.length; i++) {
 				app.dataPelanggan.push(newData[i]);
-				app.dataPelanggan.total += parseFloat(newData[i].total)
 			}
 		},
 		cekDetailPelanggan(data){
@@ -698,6 +830,10 @@ export default {
 		},
 		closeModal(){
 			$("#modal_detail_pelanggan").hide(); 
+			$("#modalPelanggan").show(); 
+		},
+		closeModalAction(){
+			$("#modal_action").hide(); 
 			$("#modalPelanggan").show(); 
 		},
 		closeModalDetailPenjualan(){
@@ -755,6 +891,44 @@ export default {
 				subtotal += parseFloat(app.detailPenjualan[i].subtotal)
 			});
 			app.subtotal = subtotal
+		},
+		action(){
+			$("#modalPelanggan").hide(); 
+			$("#modal_action").show();
+		},
+		pilihSemua(){
+			let app = this
+			let pilih_semua = app.pilih_semua
+			app.removeValue()
+			
+			if (pilih_semua == true) {
+
+				$.each(app.pelangganAction, function (i, item) { 
+					app.actionBucketSize.pelanggan.push(app.pelangganAction[i].id)
+				});
+
+			}else{
+				app.removeValue()
+			}
+			console.log(app.actionBucketSize.pelanggan)
+		},
+		removeValue(){
+			let app = this
+			app.actionBucketSize.pelanggan.splice(0)
+		},
+		saveForm(){
+			console.log(this.actionBucketSize)
+			let app = this
+			let newActionBucketSize = app.actionBucketSize
+
+			axios.post(app.url+'/kirim-pesan',newActionBucketSize)
+			.then(resp => {
+				console.log(resp)
+			})
+			.catch(err => {
+				console.log(err)
+			})
+
 		},
 		showButton() { 
 			var app = this; 
