@@ -17,6 +17,7 @@
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "^5.2.0",
         "laravolt/indonesia": "^0.7.0",
+        "lucasvdh/laravelwhatsapp": "dev-master",
         "maatwebsite/excel": "~2.1.0",
         "pragmarx/tracker": "^3.2",
         "renatomarinho/laravel-page-speed": "^1.8",
@@ -25,6 +26,7 @@
         "spatie/laravel-image-optimizer": "^1.1",
         "stevebauman/location": "2.0.*",
         "symfony/psr-http-message-bridge": "^1.0",
+        "xaamin/whatsapi": "^1.1",
         "yajra/laravel-auditable": "^1.1",
         "yajra/laravel-datatables-oracle": "~6.0",
         "zendframework/zend-diactoros": "^1.6"
