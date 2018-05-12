@@ -13,6 +13,7 @@
 
 Route::get('/', 'DaftarProdukController@index')->middleware('optimizeImages');
 Route::get('/sms', 'HomeController@sms');
+Route::get('/pembenahan-hpp/{id}', 'pemenahanHppController@updateHpp');
 
 Route::get('copy-produk-alfatih', function () {
     //
@@ -782,8 +783,8 @@ Route::get('/penjualan/download-excel-penjualan/{no_faktur}', 'PenjualanControll
 Route::post('/penjualan/view-filter', 'PenjualanController@viewFilter')->middleware('auth');
 Route::post('/penjualan/total-laporan-penjualan', 'PenjualanController@totalLaporanPenjualan')->middleware('auth');
 Route::post('/penjualan/total-laporan-penjualan-filter', 'PenjualanController@totalLaporanPenjualanFilter')->middleware('auth');
-
 Route::get('/penjualan/satuan-konversi/{id_produk}', 'PenjualanController@dataSatuanProduk')->middleware('auth');
+Route::get('/penjualan/cetak-laporan-periode/{dari_tanggal}/{sampai_tanggal}', 'PenjualanController@cetakPeriode')->middleware('auth');
 
 // LABA KOTOR VUE.JS
 Route::post('/laporan-laba-kotor/view', 'LaporanLabaKotorController@prosesLaporanLabaKotor')->middleware('auth');
