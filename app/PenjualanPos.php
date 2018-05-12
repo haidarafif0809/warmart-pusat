@@ -155,6 +155,15 @@ class PenjualanPos extends Model
         return $query;
     }
 
+    public function scopeQueryCetakPeriode($query, $dari_tanggal, $sampai_tanggal)
+    {
+        $query->select('p.name AS pelanggan', 'penjualan_pos.potongan AS potongan', 'penjualan_pos.total AS total', 'penjualan_pos.tunai AS tunai', 'penjualan_pos.kembalian AS kembalian', DB::raw('DATE_FORMAT(penjualan_pos.created_at, "%d/%m/%Y %H:%i:%s") as waktu_jual'), 'penjualan_pos.id AS id', 'p.alamat AS alamat_pelanggan', 'penjualan_pos.status_penjualan AS status_penjualan', 'penjualan_pos.pelanggan_id AS pelanggan_id')
+        ->leftJoin('users AS p', 'p.id', '=', 'penjualan_pos.pelanggan_id')
+        ->where('penjualan_pos.created_at', '>=', $dari_tanggal)
+        ->where('penjualan_pos.created_at', '<=', $sampai_tanggal);
+        return $query;
+    }
+
     public function scopeQueryCetak($query, $id)
     {
         $query->select('w.name AS nama_warung', 'w.alamat AS alamat_warung', 'p.name AS pelanggan', 'u.name AS kasir', 'penjualan_pos.potongan AS potongan', 'penjualan_pos.total AS total', 'penjualan_pos.tunai AS tunai', 'penjualan_pos.kembalian AS kembalian', DB::raw('DATE_FORMAT(penjualan_pos.created_at, "%d/%m/%Y %H:%i:%s") as waktu_jual'), 'w.no_telpon AS no_telp_warung', 'penjualan_pos.id AS id', 'p.alamat AS alamat_pelanggan', 'penjualan_pos.status_penjualan AS status_penjualan', 'kas.nama_kas AS nama_kas', 'penjualan_pos.pelanggan_id AS pelanggan_id')
