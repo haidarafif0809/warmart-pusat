@@ -19,6 +19,101 @@ class Hpp extends Model
         return $this->hasOne('App\Barang', 'id', 'id_produk');
     }
 
+    public function stok_produk_tanggal($id_produk, $tanggal)
+    {
+
+        $stok_produk = Hpp::select([DB::raw('IFNULL(SUM(jumlah_masuk),0) - IFNULL(SUM(jumlah_keluar),0) as jumlah_produk')])
+        ->where('id_produk', $id_produk)
+        ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($tanggal))
+        ->where('warung_id', Auth::user()->id_warung)->first();
+
+        return $sisa_stok_keluar = $stok_produk->jumlah_produk;
+
+    }
+
+    public function nilai_tanggal($id_produk, $tanggal)
+    {
+
+        $nilai_masuk = Hpp::select([DB::raw('IFNULL(SUM(total_nilai),0) as total_masuk')])
+        ->where('id_produk', $id_produk)
+        ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($tanggal))->where('jenis_hpp', 1)
+        ->where('warung_id', Auth::user()->id_warung)->first();
+
+        $nilai_keluar = Hpp::select([DB::raw('IFNULL(SUM(total_nilai),0) as total_keluar')])
+        ->where('id_produk', $id_produk)
+        ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($tanggal))
+        ->where('jenis_hpp', 2)->where('warung_id', Auth::user()->id_warung)->first();
+
+        $prose_total_persedian = $nilai_masuk->total_masuk - $nilai_keluar->total_keluar;
+
+        $total_persedian = number_format($prose_total_persedian, 2, ',', '.');
+
+        return $total_persedian;
+
+    }
+
+    public function hpp_tanggal($id_produk, $tanggal)
+    {
+
+        $hpp = Hpp::select('harga_unit')
+        ->where('id_produk', $id_produk)
+        ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($tanggal))
+        ->where('warung_id', Auth::user()->id_warung);
+
+        // CEK PRODUK SUDAH PUNYA HPP BELUM
+        if ($hpp->count() > 0) {
+
+            $hpp_keluar = Hpp::select('harga_unit')
+            ->where('id_produk', $id_produk)
+            ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($tanggal))
+            ->where('warung_id', Auth::user()->id_warung)
+            ->where('jenis_hpp', 2)->orderBy('id', 'DESC');
+
+            // CEK PRODUK SUDAH PUNYA HPP KELUAR BELUM
+            if ($hpp_keluar->count() > 0) {
+
+                $hpp_terakhir = Hpp::select(['jenis_hpp'])
+                ->where('id_produk', $id_produk)
+                ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($tanggal))
+                ->where('warung_id', Auth::user()->id_warung)
+                ->orderBy('created_at', 'DESC')->first();
+
+                // CEK HPP TERAKHIR PRODUK == HPP MASUK ATAU HPP KELUAR
+                if ($hpp_terakhir->jenis_hpp == 1) {
+
+                    $hpp_masuk = Hpp::select(['harga_unit', 'jumlah_masuk'])
+                    ->where('id_produk', $id_produk)
+                    ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($tanggal))
+                    ->where('warung_id', Auth::user()->id_warung)
+                    ->where('jenis_hpp', 1)->orderBy('id', 'DESC')->first();
+
+                    $stok_sekarang = $this->stok_produk_tanggal($id_produk, $this->tanggalSql($tanggal));
+                    $stok_produk = $stok_sekarang - $hpp_masuk->jumlah_masuk;
+
+                    $hpp_produk = ( ($hpp_keluar->first()->harga_unit * $stok_produk) + ($hpp_masuk->harga_unit * $hpp_masuk->jumlah_masuk) ) / ($stok_produk + $hpp_masuk->jumlah_masuk);
+
+                }else{
+                    $hpp_produk = $hpp_keluar->first()->harga_unit;
+                }
+
+            }else{                
+
+                $hpp_masuk = Hpp::select('harga_unit')
+                ->where('id_produk', $id_produk)
+                ->where(DB::raw('DATE(created_at)'), '<=', $this->tanggalSql($tanggal))
+                ->where('warung_id', Auth::user()->id_warung)
+                ->where('jenis_hpp', 1)->orderBy('id', 'DESC')->first()->harga_unit;
+
+                return $hpp_produk = $hpp_masuk;
+            }
+
+        }else{
+            $hpp_produk = 0;
+        }
+        return number_format($hpp_produk, 2, ',', '.');
+
+    }
+
     public static function stok_produk($id_produk)
     {
 
@@ -68,9 +163,25 @@ class Hpp extends Model
 
     }
 
-    public function tanggalSql($tangal)
+    public function totalnilai_tanggal($tanggal)
     {
-        $date        = date_create($tangal);
+        $nilai_masuk = Hpp::select([DB::raw('IFNULL(SUM(total_nilai),0) as total_masuk')])->leftJoin('barangs', 'barangs.id', '=', 'hpps.id_produk')->where('barangs.hitung_stok', 1)->where('hpps.jenis_hpp', 1)->where('hpps.warung_id', Auth::user()->id_warung)
+        ->where(DB::raw('DATE(hpps.created_at)'), '<=', $this->tanggalSql($tanggal))->first();
+
+        $nilai_keluar = Hpp::select([DB::raw('IFNULL(SUM(total_nilai),0) as total_keluar')])->leftJoin('barangs', 'barangs.id', '=', 'hpps.id_produk')->where('barangs.hitung_stok', 1)->where('hpps.jenis_hpp', 2)->where('hpps.warung_id', Auth::user()->id_warung)
+        ->where(DB::raw('DATE(hpps.created_at)'), '<=', $this->tanggalSql($tanggal))->first();
+
+        $prose_total_persedian = $nilai_masuk->total_masuk - $nilai_keluar->total_keluar;
+
+        $total_persedian = number_format($prose_total_persedian, 2, ',', '.');
+
+        return $total_persedian;
+
+    }
+
+    public function tanggalSql($tanggal)
+    {
+        $date        = date_create($tanggal);
         $date_format = date_format($date, "Y-m-d");
         return $date_format;
     }
@@ -78,15 +189,68 @@ class Hpp extends Model
     public function hpp($id_produk)
     {
 
-        $total_nilai = Hpp::select([DB::raw('IFNULL(SUM(total_nilai),0) as total_masuk'), DB::raw('IFNULL(SUM(jumlah_masuk),0) as jumlah_masuk')])->where('id_produk', $id_produk)->where('jenis_hpp', 1)->where('warung_id', Auth::user()->id_warung)->first();
+        // $total_nilai = Hpp::select([DB::raw('IFNULL(SUM(total_nilai),0) as total_masuk'), DB::raw('IFNULL(SUM(jumlah_masuk),0) as jumlah_masuk')])->where('id_produk', $id_produk)->where('jenis_hpp', 1)->where('warung_id', Auth::user()->id_warung)->first();
 
-        if ($total_nilai->total_masuk == 0 || $total_nilai->jumlah_masuk == 0) {
-            $hpp = 0;
-        } else {
-            $proses_hpp = $total_nilai->total_masuk / $total_nilai->jumlah_masuk;
-            $hpp        = $proses_hpp;
+        // if ($total_nilai->total_masuk == 0 || $total_nilai->jumlah_masuk == 0) {
+        //     $hpp = 0;
+        // } else {
+        //     $proses_hpp = $total_nilai->total_masuk / $total_nilai->jumlah_masuk;
+        //     $hpp        = $proses_hpp;
+        // }
+        // return number_format($hpp, 2, ',', '.');
+
+
+        $hpp = Hpp::select('harga_unit')
+        ->where('id_produk', $id_produk)
+        ->where('warung_id', Auth::user()->id_warung);
+
+        // CEK PRODUK SUDAH PUNYA HPP BELUM
+        if ($hpp->count() > 0) {
+
+            $hpp_keluar = Hpp::select('harga_unit')
+            ->where('id_produk', $id_produk)
+            ->where('warung_id', Auth::user()->id_warung)
+            ->where('jenis_hpp', 2)->orderBy('id', 'DESC');
+
+            // CEK PRODUK SUDAH PUNYA HPP KELUAR BELUM
+            if ($hpp_keluar->count() > 0) {
+
+                $hpp_terakhir = Hpp::select(['jenis_hpp'])
+                ->where('id_produk', $id_produk)
+                ->where('warung_id', Auth::user()->id_warung)
+                ->orderBy('created_at', 'DESC')->first();
+
+                // CEK HPP TERAKHIR PRODUK == HPP MASUK ATAU HPP KELUAR
+                if ($hpp_terakhir->jenis_hpp == 1) {
+
+                    $hpp_masuk = Hpp::select(['harga_unit', 'jumlah_masuk'])
+                    ->where('id_produk', $id_produk)
+                    ->where('warung_id', Auth::user()->id_warung)
+                    ->where('jenis_hpp', 1)->orderBy('id', 'DESC')->first();
+
+                    $stok_sekarang = $this->stok_produk_tanggal($id_produk, $this->tanggalSql($tanggal));
+                    $stok_produk = $stok_sekarang - $hpp_masuk->jumlah_masuk;
+
+                    $hpp_produk = ( ($hpp_keluar->first()->harga_unit * $stok_produk) + ($hpp_masuk->harga_unit * $hpp_masuk->jumlah_masuk) ) / ($stok_produk + $hpp_masuk->jumlah_masuk);
+
+                }else{
+                    $hpp_produk = $hpp_keluar->first()->harga_unit;
+                }
+
+            }else{                
+
+                $hpp_masuk = Hpp::select('harga_unit')
+                ->where('id_produk', $id_produk)
+                ->where('warung_id', Auth::user()->id_warung)
+                ->where('jenis_hpp', 1)->orderBy('id', 'DESC')->first()->harga_unit;
+
+                return $hpp_produk = $hpp_masuk;
+            }
+
+        }else{
+            $hpp_produk = 0;
         }
-        return number_format($hpp, 2, ',', '.');
+        return number_format($hpp_produk, 2, ',', '.');
 
     }
 
