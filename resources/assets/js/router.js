@@ -214,6 +214,10 @@ import SettingFixel from './components/setting_pixel/SettingFixel.vue';
 // SETTING SEO
 import OptimasiSeo from './components/optimasi_seo/OptimasiSeo.vue';
 
+// COLOR THEME
+import ColorTheme from './components/color_theme/ColorTheme.vue';
+import ColorThemeCreate from './components/color_theme/ColorThemeCreate.vue';
+
 
 const routes = [{
     path: '/',
@@ -877,6 +881,14 @@ const routes = [{
         path: '/optimasi-seo', 
         component: OptimasiSeo, 
         name: 'optimasiSeoIndex'
+    },{ 
+        path: '/tema', 
+        component: ColorTheme, 
+        name: 'colorTheme'
+    },{ 
+        path: '/create-tema', 
+        component: ColorThemeCreate, 
+        name: 'createColorTheme'
     }
 
 

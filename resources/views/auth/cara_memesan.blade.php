@@ -3,6 +3,7 @@
 <?php 
 $foto_logo = \App\UserWarung::select()->where('tipe_user',4)->orderBy('id', 'asc')->limit(1)->first();
 $nama_toko = \App\Warung::select('name')->first()->name;
+$tema = \App\TemaWarna::where('default_tema', 1)->where('warung_id', \App\SettingPembedaAplikasi::where('app_address', url('/'))->first()->warung_id)->first();
 ?>
 <head>
 
@@ -55,7 +56,7 @@ $nama_toko = \App\Warung::select('name')->first()->name;
     }
 </style>
 <body class="off-canvas-sidebar">
-    <nav class="navbar  navbar-fixed-top " color-on-scroll=" " id="sectionsNav" style="background-color:#2ac326;">
+    <nav class="navbar  navbar-fixed-top " color-on-scroll=" " id="sectionsNav" style="background-color:{{$tema->kode_tema}};">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation-example-2">
