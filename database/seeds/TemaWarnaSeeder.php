@@ -17,7 +17,7 @@ class TemaWarnaSeeder extends Seeder
         $tema->kode_tema    = "#2AC326";
         $tema->header_tema  = "#E91E63";
         $tema->default_tema = 1;
-        $tema->warung_id    = $warung_id;
+        $tema->warung_id    = 1;
         $tema->save();
         
         $tema               = new TemaWarna();
@@ -25,7 +25,7 @@ class TemaWarnaSeeder extends Seeder
         $tema->kode_tema    = "#003e53";
         $tema->header_tema  = "#718a93";
         $tema->default_tema = 0;
-        $tema->warung_id    = $warung_id;
+        $tema->warung_id    = 1;
         $tema->save();
         
         $tema               = new TemaWarna();
@@ -33,7 +33,7 @@ class TemaWarnaSeeder extends Seeder
         $tema->kode_tema    = "#d71149";
         $tema->header_tema  = "#ffffff";
         $tema->default_tema = 0;
-        $tema->warung_id    = $warung_id;
+        $tema->warung_id    = 1;
         $tema->save();
         
         $tema               = new TemaWarna();
@@ -41,7 +41,7 @@ class TemaWarnaSeeder extends Seeder
         $tema->kode_tema    = "#00A591";
         $tema->header_tema  = "#ffffff";
         $tema->default_tema = 0;
-        $tema->warung_id    = $warung_id;
+        $tema->warung_id    = 1;
         $tema->save();
         
         $tema               = new TemaWarna();
@@ -49,7 +49,7 @@ class TemaWarnaSeeder extends Seeder
         $tema->kode_tema    = "#f74d18";
         $tema->header_tema  = "#ffffff";
         $tema->default_tema = 0;
-        $tema->warung_id    = $warung_id;
+        $tema->warung_id    = 1;
         $tema->save();
     }
 }
