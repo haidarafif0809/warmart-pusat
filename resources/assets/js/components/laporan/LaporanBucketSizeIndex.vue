@@ -807,7 +807,9 @@ export default {
 
 			}
 			app.dataPelanggan.total = total
-
+			console.log(dataPelanggan)
+			console.log(app.dataPelanggan)
+			console.log(app.pelangganAction)
 		},
 		closeModalPelanggan(){
 			$("#modalPelanggan").hide(); 
