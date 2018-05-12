@@ -10,7 +10,7 @@ use Yajra\Auditable\AuditableTrait;
 class PenjualanPos extends Model
 {
     use AuditableTrait;
-    protected $fillable = ['no_faktur', 'total', 'pelanggan_id', 'status_penjualan', 'potongan', 'tax', 'tunai', 'kembalian', 'kredit', 'nilai_kredit', 'id_kas', 'status_jual_awal', 'tanggal_jt_tempo', 'keterangan', 'ppn', 'warung_id'];
+    protected $fillable = ['no_faktur', 'total', 'pelanggan_id', 'status_penjualan', 'potongan', 'tax', 'tunai', 'kembalian', 'kredit', 'nilai_kredit', 'id_kas', 'status_jual_awal', 'tanggal_jt_tempo', 'keterangan', 'ppn', 'warung_id','updated_by'];
 
     // relasi ke suppier
     public function pelanggan()

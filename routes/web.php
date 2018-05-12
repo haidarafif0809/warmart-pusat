@@ -13,7 +13,6 @@
 
 Route::get('/', 'DaftarProdukController@index')->middleware('optimizeImages');
 Route::get('/sms', 'HomeController@sms');
-Route::get('/pembenahan-hpp/{id}', 'pemenahanHppController@updateHpp');
 
 Route::get('copy-produk-alfatih', function () {
     //
@@ -665,6 +664,7 @@ Route::get('/setting-pengiriman/view-default-alamat-pengiriman', 'SettingPengiri
 Route::post('/setting-pengiriman/simpan-setting-pengiriman', 'SettingPengirimanController@simpanSetting')->middleware('auth');
 Route::post('/setting-pengiriman/simpan-setting-bank', 'SettingPengirimanController@simpanSettingBank')->middleware('auth');
 Route::post('/setting-pengiriman/simpan-setting-default-alamat-pengiriman', 'SettingPengirimanController@simpanSettingDefaultAlamatPengiriman')->middleware('auth');
+Route::post('/setting-pengiriman/tambah-bank-transfer', 'SettingPengirimanController@tambahBankTransfer')->middleware('auth');
 
 // HAPUS TBS PEMBELIAN
 Route::delete('/pembelian/hapus-tbs-pembelian/{id}', [
@@ -784,8 +784,8 @@ Route::get('/penjualan/download-excel-penjualan/{no_faktur}', 'PenjualanControll
 Route::post('/penjualan/view-filter', 'PenjualanController@viewFilter')->middleware('auth');
 Route::post('/penjualan/total-laporan-penjualan', 'PenjualanController@totalLaporanPenjualan')->middleware('auth');
 Route::post('/penjualan/total-laporan-penjualan-filter', 'PenjualanController@totalLaporanPenjualanFilter')->middleware('auth');
+
 Route::get('/penjualan/satuan-konversi/{id_produk}', 'PenjualanController@dataSatuanProduk')->middleware('auth');
-Route::get('/penjualan/cetak-laporan-periode/{dari_tanggal}/{sampai_tanggal}', 'PenjualanController@cetakPeriode')->middleware('auth');
 
 // LABA KOTOR VUE.JS
 Route::post('/laporan-laba-kotor/view', 'LaporanLabaKotorController@prosesLaporanLabaKotor')->middleware('auth');
@@ -1029,8 +1029,6 @@ Route::get('/laporan-bucket-size/download-excel-pos/{dari_tanggal}/{sampai_tangg
 Route::get('/laporan-bucket-size/download-excel-online/{dari_tanggal}/{sampai_tanggal}/{kelipatan}', 'LaporanBucketSizeController@downloadLaporanOnline')->middleware('auth');
 Route::get('/laporan-bucket-size/cetak-pos/{dari_tanggal}/{sampai_tanggal}/{kelipatan}', 'LaporanBucketSizeController@cetakLaporan')->middleware('auth');
 Route::get('/laporan-bucket-size/cetak-online/{dari_tanggal}/{sampai_tanggal}/{kelipatan}', 'LaporanBucketSizeController@cetakLaporanOnline')->middleware('auth');
-Route::post('/laporan-bucket-size/kirim-pesan','LaporanBucketSizeController@kirimPesan')->middleware('auth');
-
 
 // LAPORAN PENJUALAN HARIAN VUE.JS
 Route::get('/laporan-penjualan-harian/view/{dari_tanggal}/{sampai_tanggal}', 'LaporanPenjualanHarianController@prosesLaporanPenjualanHarian')->middleware('auth');
@@ -1082,7 +1080,6 @@ Route::post('/optimasi-seo/simpan-seo', 'SettingSeoController@simpanSetting')->m
 // Setting Tema
 Route::get('/tema/view', 'SettingTemaController@view')->middleware('auth');
 Route::get('/tema/pencarian', 'SettingTemaController@pencarian')->middleware('auth');
-Route::get('/tema/ubah-tema/{id}/{default_tema}/', 'SettingTemaController@ubahTema')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 

@@ -15,6 +15,9 @@ use Excel;
 use Jenssegers\Agent\Agent;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Mail;
+use App\Events\EventSendWhatsapp;
+use Whatsapi;
+use WhatsapiTool;
 
 class LaporanBucketSizeController extends Controller
 {
@@ -411,5 +414,15 @@ class LaporanBucketSizeController extends Controller
 
     });
    }
+
+   public function testWA(){
+
+    $number = '+6285768233603'; # Number with country code
+    $type = 'sms'; # This can be either sms or voice
+
+    $response = WhatsapiTool::requestCode($number, $type);
+
+    return $response;
+}
 
 }

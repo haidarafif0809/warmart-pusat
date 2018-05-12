@@ -186,6 +186,8 @@ import BankWarungEdit from './components/bank_warung/BankWarungEdit.vue';
 
 // SETTING PENGIRIMAN
 import SettingPengirimanIndex from './components/setting_pengiriman/SettingPengirimanIndex.vue';
+import SettingPengirimanTambahBank from './components/setting_pengiriman/SettingPengirimanTambahBank.vue';
+
 // otoritas 
 import OtoritasIndex from './components/otoritas/OtoritasIndex.vue';
 import OtoritasSetting from './components/otoritas/OtoritasSetting.vue';
@@ -801,6 +803,10 @@ const routes = [{
         path: '/setting-pengiriman',
         component: SettingPengirimanIndex,
         name: 'indexSettingPengiriman'
+    },{
+        path: '/setting-pengiriman-tambah-bank',
+        component: SettingPengirimanTambahBank,
+        name: 'settingPengirimanTambahBank'
     },{
         path: '/bank-warung',
         component: BankWarungIndex,
