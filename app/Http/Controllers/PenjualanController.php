@@ -1229,6 +1229,8 @@ public function index()
                 'id_kas'           => $request->kas,
                 'status_jual_awal' => $status_penjualan,
                 'tanggal_jt_tempo' => $request->jatuh_tempo,
+                'updated_at'       => DB::raw('NOW()'),
+                'updated_by'       => $user,
             ]);
 
             $kas = intval($data_penjualan_pos->tunai) - intval($data_penjualan_pos->kembalian);
@@ -1306,6 +1308,8 @@ public function index()
                             'warung_id'        => Auth::user()->id_warung,
                             'created_at'       => $data_penjualan_pos->created_at,
                             'updated_at'       => $data_penjualan_pos->updated_at,
+                            'created_by'       => $data_penjualan_pos->created_by,
+                            'updated_by'       => $data_penjualan_pos->updated_by,
                         ]);
 
                     }
@@ -1324,6 +1328,8 @@ public function index()
                         'warung_id'        => Auth::user()->id_warung,
                         'created_at'       => $data_penjualan_pos->created_at,
                         'updated_at'       => $data_penjualan_pos->updated_at,
+                        'created_by'       => $data_penjualan_pos->created_by,
+                        'updated_by'       => $data_penjualan_pos->updated_by,
                     ]);
 
                 }
