@@ -24,7 +24,7 @@ class HalamanWarungController extends Controller
         //Pilih warung yang sudah dikonfirmasi admin
         $array_warung = HalamanWarungController::dataWarungTervalidasi($id);
         $data_produk  = Barang::where('id_warung', $id)->inRandomOrder()
-            ->whereIn('id_warung', $array_warung)->paginate(20);
+        ->whereIn('id_warung', $array_warung)->paginate(24);
 
         //PILIH DATA KATEGORI PRODUK
         $kategori = KategoriBarang::select(['id', 'nama_kategori_barang', 'kategori_icon']);
@@ -71,7 +71,7 @@ class HalamanWarungController extends Controller
         $cek_belanjaan = KeranjangBelanja::jumlahBelanja();
         $array_warung  = HalamanWarungController::dataWarungTervalidasi($id_warung);
         //PILIH PRODUK
-        $data_produk = Barang::where('kategori_barang_id', $id)->whereIn('id_warung', $array_warung)->inRandomOrder()->paginate(20);
+        $data_produk = Barang::where('kategori_barang_id', $id)->whereIn('id_warung', $array_warung)->inRandomOrder()->paginate(24);
 
         //TAMPIL LIST WARUNG
         $list_warung = HalamanWarungController::cardWarung($id_warung);
@@ -147,7 +147,7 @@ class HalamanWarungController extends Controller
 
         $cek_belanjaan = KeranjangBelanja::jumlahBelanja();
         //PILIH PRODUK
-        $data_produk = Barang::search($request->search)->paginate(20);
+        $data_produk = Barang::search($request->search)->paginate(24);
 
         //TAMPIL LIST WARUNG
         $list_warung = HalamanWarungController::cardWarung($request->id_warung);

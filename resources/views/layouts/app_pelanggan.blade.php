@@ -17,6 +17,8 @@
 
     $google = \App\SettingFixel::select('id_pixel')->where('fixel','Google')->where('warung_id',$address_app->warung_id);
     $facebook = \App\SettingFixel::select('id_pixel')->where('fixel','Facebook')->where('warung_id',$address_app->warung_id);
+    $tema = \App\TemaWarna::where('default_tema', 1)->where('warung_id',$address_app->warung_id)->first();
+
     if ($google->count() > 0) {
         $fixelGoogle = $google->first()->id_pixel;
     }else{
@@ -125,9 +127,9 @@
     .navbar .navbar-brand {
         position: relative;
         @if(Agent::isMobile())
-            height: 50px;
+        height: 50px;
         @else
-            height: 75px;
+        height: 75px;
         @endif
         line-height: 0px;
         color: inherit;
@@ -138,8 +140,8 @@
     }
     body {
         @if($setting_aplikasi->tipe_aplikasi == 1)
-            background-color: #2ac326;
-            color: #3C4858;
+        background-color: {{$tema->kode_tema}};
+        color: #3C4858;
         @endif
     }
     @keyframes spinner { 
@@ -189,9 +191,13 @@
         padding: 0px 2px 2px;
     }
     .navbar, .navbar.navbar-default {
-        background-color: #2ac326;
+        background-color: {{$tema->kode_tema}};
         color: #fbf8f8;    
     }
+    .btn.btn-rose, .btn.btn-rose:hover, .btn.btn-rose:focus, .btn.btn-rose:active, .btn.btn-rose.active, .btn.btn-rose:active:focus, .btn.btn-rose:active:hover, .btn.btn-rose.active:focus, .btn.btn-rose.active:hover, .open > .btn.btn-rose.dropdown-toggle, .open > .btn.btn-rose.dropdown-toggle:focus, .open > .btn.btn-rose.dropdown-toggle:hover, .navbar .navbar-nav > li > a.btn.btn-rose, .navbar .navbar-nav > li > a.btn.btn-rose:hover, .navbar .navbar-nav > li > a.btn.btn-rose:focus, .navbar .navbar-nav > li > a.btn.btn-rose:active, .navbar .navbar-nav > li > a.btn.btn-rose.active, .navbar .navbar-nav > li > a.btn.btn-rose:active:focus, .navbar .navbar-nav > li > a.btn.btn-rose:active:hover, .navbar .navbar-nav > li > a.btn.btn-rose.active:focus, .navbar .navbar-nav > li > a.btn.btn-rose.active:hover, .open > .navbar .navbar-nav > li > a.btn.btn-rose.dropdown-toggle, .open > .navbar .navbar-nav > li > a.btn.btn-rose.dropdown-toggle:focus, .open > .navbar .navbar-nav > li > a.btn.btn-rose.dropdown-toggle:hover {
+     background-color: {{$tema->header_tema}};
+     color: {{$tema->kode_tema}};
+ }
 </style>
 <body class="ecommerce-page">
     @if(Agent::isMobile())
@@ -230,53 +236,53 @@
                     @endif
 
                     @if(Agent::isMobile() && !Auth::check())
-                        <a class="navbar-brand pull-right" href="{{ url('/login') }}">
-                            <i class="material-icons">
-                                account_circle
-                            </i> 
-                        </a>
-                        @if ($settingCollapseDiWarung->collapse_keranjang_belanja == 1)
-                            <span id="keranjangCollapseMobile" class="navbar-brand pull-right">
-                                <i class="material-icons">
-                                    shopping_cart
-                                </i>
-                                <b style="font-size: 15px" id="jumlah-keranjang" data-jumlah="{{ $cek_belanjaan }}" data-session="">
-                                    | {{ $cek_belanjaan }}
-                                </b>
-                            </span>
-                            <div id="collapseProdukMobile"></div>
-                        @else
-                            <a class="navbar-brand pull-right" href="{{ url('/keranjang-belanja') }}">
-                                <i class="material-icons">
-                                    shopping_cart
-                                </i>
-                                <b style="font-size: 15px" id="jumlah-keranjang" data-jumlah="{{ $cek_belanjaan }}" data-session="">
-                                    | {{ $cek_belanjaan }}
-                                </b>
-                            </a>
-                        @endif
+                    <a class="navbar-brand pull-right" href="{{ url('/login') }}">
+                        <i class="material-icons">
+                            account_circle
+                        </i> 
+                    </a>
+                    @if ($settingCollapseDiWarung->collapse_keranjang_belanja == 1)
+                    <span id="keranjangCollapseMobile" class="navbar-brand pull-right">
+                        <i class="material-icons">
+                            shopping_cart
+                        </i>
+                        <b style="font-size: 15px" id="jumlah-keranjang" data-jumlah="{{ $cek_belanjaan }}" data-session="">
+                            | {{ $cek_belanjaan }}
+                        </b>
+                    </span>
+                    <div id="collapseProdukMobile"></div>
+                    @else
+                    <a class="navbar-brand pull-right" href="{{ url('/keranjang-belanja') }}">
+                        <i class="material-icons">
+                            shopping_cart
+                        </i>
+                        <b style="font-size: 15px" id="jumlah-keranjang" data-jumlah="{{ $cek_belanjaan }}" data-session="">
+                            | {{ $cek_belanjaan }}
+                        </b>
+                    </a>
+                    @endif
                     @endif
                     @if(Agent::isMobile() && Auth::check() && Auth::user()->tipe_user == 3)
-                        @if ($settingCollapseDiWarung->collapse_keranjang_belanja == 1)
-                            <span id="keranjangCollapseMobile" class="navbar-brand pull-right">
-                                <i class="material-icons">
-                                    shopping_cart
-                                </i>
-                                <b style="font-size: 15px" id="jumlah-keranjang" data-jumlah="{{ $cek_belanjaan }}" data-session="">
-                                    | {{ $cek_belanjaan }}
-                                </b>
-                            </span>
-                            <div id="collapseProdukMobile"></div>
-                        @else
-                            <a class="navbar-brand pull-right" href="{{ url('/keranjang-belanja') }}">
-                                <i class="material-icons">
-                                    shopping_cart
-                                </i>
-                                <b style="font-size: 15px" id="jumlah-keranjang" data-jumlah="{{ $cek_belanjaan }}" data-session="">
-                                    | {{ $cek_belanjaan }}
-                                </b>
-                            </a>
-                        @endif
+                    @if ($settingCollapseDiWarung->collapse_keranjang_belanja == 1)
+                    <span id="keranjangCollapseMobile" class="navbar-brand pull-right">
+                        <i class="material-icons">
+                            shopping_cart
+                        </i>
+                        <b style="font-size: 15px" id="jumlah-keranjang" data-jumlah="{{ $cek_belanjaan }}" data-session="">
+                            | {{ $cek_belanjaan }}
+                        </b>
+                    </span>
+                    <div id="collapseProdukMobile"></div>
+                    @else
+                    <a class="navbar-brand pull-right" href="{{ url('/keranjang-belanja') }}">
+                        <i class="material-icons">
+                            shopping_cart
+                        </i>
+                        <b style="font-size: 15px" id="jumlah-keranjang" data-jumlah="{{ $cek_belanjaan }}" data-session="">
+                            | {{ $cek_belanjaan }}
+                        </b>
+                    </a>
+                    @endif
                     @endif
                 </div>
                 <div class="collapse navbar-collapse">
@@ -390,7 +396,7 @@
 
                         @if(!Auth::check())
                         <li class="button-container">
-                            <a class="btn btn-rose btn-round" href="{{ url('/login')}}">
+                            <a class="btn btn-round btn-rose" href="{{ url('/login')}}">
                                 <i class="material-icons">
                                     account_circle
                                 </i>
@@ -414,15 +420,15 @@
                                     <div id="containerTable"></div>
                                 </div>
                             @else
-                                <a class="btn btn-round btn-rose" href="{{ url('/keranjang-belanja') }}">
-                                    <i class="material-icons">
-                                        shopping_cart
-                                    </i>
-                                    Keranjang Belanja
-                                    <b style="font-size: 15px" id="jumlah-keranjang" data-session="" data-jumlah="{{ $cek_belanjaan }}">
-                                        | {{ $cek_belanjaan }}
-                                    </b>
-                                </a>
+                            <a class="btn btn-round btn-rose" href="{{ url('/keranjang-belanja') }}">
+                                <i class="material-icons">
+                                    shopping_cart
+                                </i>
+                                Keranjang Belanja
+                                <b style="font-size: 15px" id="jumlah-keranjang" data-session="" data-jumlah="{{ $cek_belanjaan }}">
+                                    | {{ $cek_belanjaan }}
+                                </b>
+                            </a>
                             @endif
                         </li>
                         @elseif(Auth::check() && Auth::user()->tipe_user == 3 && !Agent::isMobile())
@@ -441,15 +447,15 @@
                                     <div id="containerTable"></div>
                                 </div>
                             @else
-                                <a class="btn btn-round btn-rose" href="{{ url('/keranjang-belanja') }}">
-                                    <i class="material-icons">
-                                        shopping_cart
-                                    </i>
-                                    Keranjang Belanja
-                                    <b style="font-size: 15px" id="jumlah-keranjang" data-session="" data-jumlah="{{ $cek_belanjaan }}">
-                                        | {{ $cek_belanjaan }}
-                                    </b>
-                                </a>
+                            <a class="btn btn-round btn-rose" href="{{ url('/keranjang-belanja') }}">
+                                <i class="material-icons">
+                                    shopping_cart
+                                </i>
+                                Keranjang Belanja
+                                <b style="font-size: 15px" id="jumlah-keranjang" data-session="" data-jumlah="{{ $cek_belanjaan }}">
+                                    | {{ $cek_belanjaan }}
+                                </b>
+                            </a>
                             @endif
                         </li>
                         @endif
@@ -760,14 +766,14 @@
                 confirmButtonText: 'OK',
                 showLoaderOnConfirm: true,
                 preConfirm: (jumlah_produk) => {
-                return new Promise((resolve) => {
-                    setTimeout(() => {
-                        if (jumlah_produk === '') {
-                            swal.showValidationError('Anda Belum memasukan Jumlah Produk')
-                        } else if (jumlah_produk <= 0) {
+                    return new Promise((resolve) => {
+                        setTimeout(() => {
+                            if (jumlah_produk === '') {
+                                swal.showValidationError('Anda Belum memasukan Jumlah Produk')
+                            } else if (jumlah_produk <= 0) {
                                 swal.showValidationError('Masukan jumlah produk yang Valid')
-                        }
-                        resolve()
+                            }
+                            resolve()
                         }, 500)
                     })
                 },
@@ -840,7 +846,7 @@
             if (containerTable.attr('data-status') != 'mouseentered' && $('#btnKeranjang').attr('data-status') != 'mouseentered') {
                 getRemoveDataCollapse(['remove', 'desktop']);
             }
-             /* cek apakah id keranjangCollapseMobile ada */ 
+            /* cek apakah id keranjangCollapseMobile ada */ 
             if ($('#keranjangCollapseMobile').attr('class') != undefined) {
                 if ($('#collapseProdukMobile').attr('data-status') != 'mouseentered') {   
                     getRemoveDataCollapse(['remove', 'mobile']);
@@ -889,5 +895,5 @@
 
 
     </script>
-@yield('scripts')
-</html>
+    @yield('scripts')
+    </html>
