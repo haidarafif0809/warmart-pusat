@@ -6,11 +6,15 @@ use App\Penjualan;
 use App\PenjualanPos;
 use App\SettingAplikasi;
 use App\Warung;
+use App\User;
+use App\Customer;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Excel;
 use Jenssegers\Agent\Agent;
+use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Mail;
 
 class LaporanBucketSizeController extends Controller
 {
@@ -241,9 +245,9 @@ class LaporanBucketSizeController extends Controller
                     $total_faktur_kelipatan = PenjualanPos::countFaktur($request)->whereBetween('total', array($satu, $kelipatan))->first()->no_faktur; 
 
                     $sheet->row(++$row, [ 
-                       $satu . " - " . $kelipatan, 
-                       $total_faktur_kelipatan, 
-                   ]); 
+                     $satu . " - " . $kelipatan, 
+                     $total_faktur_kelipatan, 
+                 ]); 
 
                     $data_kelipatan = $request->kelipatan; 
                     $kelipatan += $data_kelipatan; 
@@ -284,9 +288,9 @@ class LaporanBucketSizeController extends Controller
                     $total_faktur_kelipatan = Penjualan::countFaktur($request)->whereBetween('total', array($satu, $kelipatan))->first()->id_pesanan; 
 
                     $sheet->row(++$row, [ 
-                       $satu . " - " . $kelipatan, 
-                       $total_faktur_kelipatan, 
-                   ]); 
+                     $satu . " - " . $kelipatan, 
+                     $total_faktur_kelipatan, 
+                 ]); 
 
                     $data_kelipatan = $request->kelipatan; 
                     $kelipatan += $data_kelipatan; 
@@ -363,5 +367,49 @@ class LaporanBucketSizeController extends Controller
             ])->with(compact('html'));
 
     } 
+
+    public function kirimPesan(Request $request){
+        $no = 0;
+        foreach ($request->pelanggan as $pelanggan) {
+
+            foreach ($request->kirim_pesan_via as $kirim_pesan_via) {
+                $no += 1;
+                // return $kirim_pesan_via == 1 ?  $this->kirimSMS($pelanggan,$request->produk,$request->pesan) : $this->kirimEmail($pelanggan,$request->produk,$request->pesan);
+                if ($kirim_pesan_via == 1) {
+                    $this->kirimSMS($pelanggan,$request->produk,$request->pesan);
+                }else{
+                    $this->kirimEmail($pelanggan,$request->produk,$request->pesan);
+                }   
+
+            }
+        }
+
+    }
+
+    public function kirimSMS($pelanggan,$produk,$pesan){
+
+       $nomor_tujuan = User::select('no_telp')->where('id',$pelanggan)->first()->no_telp; 
+       $userkey    = env('USERKEY');
+       $passkey    = env('PASSKEY');
+
+       if (env('STATUS_SMS') == 1) {
+            $client = new Client(); //GuzzleHttp\Client
+            $result = $client->get('https://reguler.zenziva.net/apps/smsapi.php?userkey=' . $userkey . '&passkey=' . $passkey . '&nohp=' . $nomor_tujuan . '&pesan=' . $pesan . '');
+            echo $nomor_tujuan;
+        }
+
+    }
+
+    public function kirimEmail($pelanggan,$produk,$pesan){
+
+       $pelanggan = Customer::with('warung')->find($pelanggan);
+
+       Mail::send('auth.emails.email_promo', compact('pelanggan','produk','pesan'), function ($message){
+
+        $message->from('verifikasi@andaglos.id', 'Warung Mep');
+        $message->to('pernandoriko3@gmail.com', 'Warung Mep')->subject('Konfirmasi Pesanan');
+
+    });
+   }
 
 }

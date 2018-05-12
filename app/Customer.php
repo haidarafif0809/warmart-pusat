@@ -55,6 +55,12 @@ class Customer extends Model
     return $this->hasOne('App\Kelurahan','id','wilayah');
   }
 
+   //relasi dengan model warung
+  public function warung()
+  {
+    return $this->hasOne('App\Warung', 'id', 'id_warung');
+  }
+
   public function getKomunitasAttribute() {
 
     $komunitas = KomunitasCustomer::where('user_id',$this->id); 
