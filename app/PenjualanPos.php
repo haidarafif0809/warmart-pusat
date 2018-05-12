@@ -10,7 +10,7 @@ use Yajra\Auditable\AuditableTrait;
 class PenjualanPos extends Model
 {
     use AuditableTrait;
-    protected $fillable = ['no_faktur', 'total', 'pelanggan_id', 'status_penjualan', 'potongan', 'tax', 'tunai', 'kembalian', 'kredit', 'nilai_kredit', 'id_kas', 'status_jual_awal', 'tanggal_jt_tempo', 'keterangan', 'ppn', 'warung_id'];
+    protected $fillable = ['no_faktur', 'total', 'pelanggan_id', 'status_penjualan', 'potongan', 'tax', 'tunai', 'kembalian', 'kredit', 'nilai_kredit', 'id_kas', 'status_jual_awal', 'tanggal_jt_tempo', 'keterangan', 'ppn', 'warung_id','updated_by'];
 
     // relasi ke suppier
     public function pelanggan()
@@ -152,6 +152,15 @@ class PenjualanPos extends Model
             ->orWhere('users.name', 'LIKE', $request->search . '%');
 
         })->orderBy('penjualan_pos.id', 'desc');
+        return $query;
+    }
+
+    public function scopeQueryCetakPeriode($query, $dari_tanggal, $sampai_tanggal)
+    {
+        $query->select('p.name AS pelanggan', 'penjualan_pos.potongan AS potongan', 'penjualan_pos.total AS total', 'penjualan_pos.tunai AS tunai', 'penjualan_pos.kembalian AS kembalian', DB::raw('DATE_FORMAT(penjualan_pos.created_at, "%d/%m/%Y %H:%i:%s") as waktu_jual'), 'penjualan_pos.id AS id', 'p.alamat AS alamat_pelanggan', 'penjualan_pos.status_penjualan AS status_penjualan', 'penjualan_pos.pelanggan_id AS pelanggan_id')
+        ->leftJoin('users AS p', 'p.id', '=', 'penjualan_pos.pelanggan_id')
+        ->where('penjualan_pos.created_at', '>=', $dari_tanggal)
+        ->where('penjualan_pos.created_at', '<=', $sampai_tanggal);
         return $query;
     }
 
