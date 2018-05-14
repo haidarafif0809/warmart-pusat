@@ -11,7 +11,7 @@ class DetailPenjualanPos extends Model
 {
     use AuditableTrait;
 
-    protected $fillable   = ['id_penjualan_pos', 'no_faktur', 'satuan_id', 'id_produk', 'jumlah_produk', 'harga_produk', 'subtotal', 'tax', 'potongan', 'warung_id', 'ppn', 'created_at', 'updated_at', 'satuan_dasar'];
+    protected $fillable   = ['id_penjualan_pos', 'no_faktur', 'satuan_id', 'id_produk', 'jumlah_produk', 'harga_produk', 'subtotal', 'tax', 'potongan', 'warung_id', 'ppn', 'created_at', 'updated_at', 'satuan_dasar','created_by'];
     protected $primaryKey = 'id_detail_penjualan_pos';
 
     // relasi ke produk
