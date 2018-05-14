@@ -751,7 +751,9 @@ Route::post('/laporan-persediaan/view-pertanggal', 'LaporanPersediaanController@
 Route::get('/laporan-persediaan/pencarian', 'LaporanPersediaanController@pencarian')->middleware('auth');
 Route::post('/laporan-persediaan/pencarian-pertanggal', 'LaporanPersediaanController@pencarianPerTanggal')->middleware('auth');
 Route::get('/laporan-persediaan/download-excel-persediaan', 'LaporanPersediaanController@downloadExcel')->middleware('auth');
+Route::get('/laporan-persediaan/download-excel-persediaan-tanggal/{tanggal}', 'LaporanPersediaanController@downloadExcelTanggal')->middleware('auth');
 Route::get('/laporan-persediaan/cetak-laporan', 'LaporanPersediaanController@cetakLaporan')->middleware('auth');
+Route::get('/laporan-persediaan/cetak-laporan-tanggal/{tanggal}', 'LaporanPersediaanController@cetakLaporanTanggal')->middleware('auth');
 
 //KAS MUTASI VUE.JS
 Route::get('/kas-mutasi/view', 'KasMutasiController@view')->middleware('auth');

@@ -159,6 +159,11 @@
 			},
 
 			methods: {
+				tanggal(filter){
+					var tanggal = "" + filter.tanggal.getFullYear() +'-'+ ((filter.tanggal.getMonth() + 1) > 9 ? '' : '0') + (filter.tanggal.getMonth() + 1) +'-'+ (filter.tanggal.getDate() > 9 ? '' : '0') + filter.tanggal.getDate();
+
+					return tanggal;
+				},
 				getResults(page) {
 					var app = this;	
 					if (typeof page === 'undefined') {
@@ -211,6 +216,7 @@
 				filterPeriode(page){
 					var app = this;
 					var newFilter = app.filter;
+					var tanggal = app.tanggal(newFilter);
 					if (typeof page === 'undefined') {
 						page = 1;
 					}
@@ -222,6 +228,8 @@
 						app.loading = false;
 						app.seen = true;
 						app.seenFilter = true;
+						$("#btnExcel").attr('href', app.urlDownloadExcel+'-tanggal/'+tanggal);
+						$("#btnCetak").attr('href', app.urlCetak+'-tanggal/'+tanggal);
 					})
 					.catch(function (resp) {
 						console.log(resp);
