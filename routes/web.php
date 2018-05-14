@@ -749,6 +749,7 @@ Route::get('/item-keluar/pencarian-edit-tbs-item-keluar/{id}', 'ItemKeluarContro
 Route::get('/laporan-persediaan/view', 'LaporanPersediaanController@view')->middleware('auth');
 Route::post('/laporan-persediaan/view-pertanggal', 'LaporanPersediaanController@viewPerTanggal')->middleware('auth');
 Route::get('/laporan-persediaan/pencarian', 'LaporanPersediaanController@pencarian')->middleware('auth');
+Route::post('/laporan-persediaan/pencarian-pertanggal', 'LaporanPersediaanController@pencarianPerTanggal')->middleware('auth');
 Route::get('/laporan-persediaan/download-excel-persediaan', 'LaporanPersediaanController@downloadExcel')->middleware('auth');
 Route::get('/laporan-persediaan/cetak-laporan', 'LaporanPersediaanController@cetakLaporan')->middleware('auth');
 

@@ -49,7 +49,8 @@
 							</div>
 
 							<div class="pencarian">
-								<input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
+								<input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="" v-if="seenFilter == false">
+								<input type="text" name="pencarian" v-model="pencarianFilter" placeholder="Pencarian" class="form-control pencarian" autocomplete="" v-else>
 							</div>
 
 							
@@ -121,6 +122,7 @@
 					urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-persediaan/download-excel-persediaan"),
 					urlCetak : window.location.origin+(window.location.pathname).replace("dashboard", "laporan-persediaan/cetak-laporan"),
 					pencarian: '',
+					pencarianFilter: '',
 					loading: true,
 					seen : false,
 					seenFilter : false,
@@ -146,86 +148,112 @@
 				app.showButton();
 			},
 			watch: {
-        // whenever question changes, this function will run
-        pencarian: function (newQuestion) {
-        	this.getHasilPencarian();
-        	this.loading = true;  
-        }
-    },
+				pencarian: function (newQuestion) {
+					this.getHasilPencarian();
+					this.loading = true;  
+				},
+				pencarianFilter: function (newQuestion) {
+					this.pencarianFilterPeriode();
+					this.loading = true;  
+				}
+			},
 
-    methods: {
-    	getResults(page) {
-    		var app = this;	
-    		if (typeof page === 'undefined') {
-    			page = 1;
-    		}
-    		axios.get(app.url+'/view?page='+page)
-    		.then(function (resp) {
-    			app.lap_persediaan = resp.data.data;
-    			app.lapPersediaanData = resp.data;
-    			app.totalNilai = resp.data.totalnilai;
-    			app.loading = false;
-    			app.seen = true;
-    			app.seenFilter = false;
-    		})
-    		.catch(function (resp) {
-    			console.log(resp);
-    			app.loading = false;
-    			app.seen = true;
-    			app.seenFilter = false;
-    			alert("Tidak Dapat Memuat Laporan Persediaan");
-    		});
-    	},
-    	getHasilPencarian(page){
-    		var app = this;
-    		app.loading = true;
-    		app.seen = false;
-    		if (typeof page === 'undefined') {
-    			page = 1;
-    		}
-    		axios.get(app.url+'/pencarian?search='+app.pencarian+'&page='+page)
-    		.then(function (resp) {
-    			app.lap_persediaan = resp.data.data;
-    			app.lapPersediaanData = resp.data;
-    			app.loading = false;
-    			app.seen = true;
-    			app.seenFilter = false;
-    		})
-    		.catch(function (resp) {
-    			console.log(resp);
-    			alert("Tidak Dapat Memuat Laporan Persediaan");
-    		});
-    	},
-    	showButton() {
-    		var app = this;
-    		$("#btnExcel").show();
-    		$("#btnCetak").show();
-    		$("#btnExcel").attr('href', app.urlDownloadExcel);
-    		$("#btnCetak").attr('href', app.urlCetak);
-    	},
-    	filterPeriode(page){
-    		var app = this;
-    		var newFilter = app.filter;
-    		if (typeof page === 'undefined') {
-    			page = 1;
-    		}
-    		axios.post(app.url+'/view-pertanggal?page='+page, newFilter)
-    		.then(function (resp) {
-    			app.lap_persediaan = resp.data.data;
-    			app.lapPersediaanData = resp.data;
-    			app.totalNilai = resp.data.totalnilai;
-    			app.loading = false;
-    			app.seen = true;
-    			app.seenFilter = true;
-    		})
-    		.catch(function (resp) {
-    			console.log(resp);
-    			app.loading = false;
-    			app.seen = true;
-    			app.seenFilter = true;
-    			alert("Tidak Dapat Memuat Laporan Persediaan");
-    		});
-    	},
-    }
-}
-</script>
+			methods: {
+				getResults(page) {
+					var app = this;	
+					if (typeof page === 'undefined') {
+						page = 1;
+					}
+					axios.get(app.url+'/view?page='+page)
+					.then(function (resp) {
+						app.lap_persediaan = resp.data.data;
+						app.lapPersediaanData = resp.data;
+						app.totalNilai = resp.data.totalnilai;
+						app.loading = false;
+						app.seen = true;
+						app.seenFilter = false;
+					})
+					.catch(function (resp) {
+						console.log(resp);
+						app.loading = false;
+						app.seen = true;
+						app.seenFilter = false;
+						alert("Tidak Dapat Memuat Laporan Persediaan");
+					});
+				},
+				getHasilPencarian(page){
+					var app = this;
+					app.loading = true;
+					app.seen = false;
+					if (typeof page === 'undefined') {
+						page = 1;
+					}
+					axios.get(app.url+'/pencarian?search='+app.pencarian+'&page='+page)
+					.then(function (resp) {
+						app.lap_persediaan = resp.data.data;
+						app.lapPersediaanData = resp.data;
+						app.loading = false;
+						app.seen = true;
+						app.seenFilter = false;
+					})
+					.catch(function (resp) {
+						console.log(resp);
+						alert("Tidak Dapat Memuat Laporan Persediaan");
+					});
+				},
+				showButton() {
+					var app = this;
+					$("#btnExcel").show();
+					$("#btnCetak").show();
+					$("#btnExcel").attr('href', app.urlDownloadExcel);
+					$("#btnCetak").attr('href', app.urlCetak);
+				},
+				filterPeriode(page){
+					var app = this;
+					var newFilter = app.filter;
+					if (typeof page === 'undefined') {
+						page = 1;
+					}
+					axios.post(app.url+'/view-pertanggal?page='+page, newFilter)
+					.then(function (resp) {
+						app.lap_persediaan = resp.data.data;
+						app.lapPersediaanData = resp.data;
+						app.totalNilai = resp.data.totalnilai;
+						app.loading = false;
+						app.seen = true;
+						app.seenFilter = true;
+					})
+					.catch(function (resp) {
+						console.log(resp);
+						app.loading = false;
+						app.seen = true;
+						app.seenFilter = true;
+						alert("Tidak Dapat Memuat Laporan Persediaan");
+					});
+				},
+				pencarianFilterPeriode(page){
+					var app = this;
+					var newFilter = app.filter;
+					if (typeof page === 'undefined') {
+						page = 1;
+					}
+					axios.post(app.url+'/pencarian-pertanggal?search='+app.pencarianFilter+'&page='+page, newFilter)
+					.then(function (resp) {
+						app.lap_persediaan = resp.data.data;
+						app.lapPersediaanData = resp.data;
+						app.totalNilai = resp.data.totalnilai;
+						app.loading = false;
+						app.seen = true;
+						app.seenFilter = true;
+					})
+					.catch(function (resp) {
+						console.log(resp);
+						app.loading = false;
+						app.seen = true;
+						app.seenFilter = true;
+						alert("Tidak Dapat Memuat Laporan Persediaan");
+					});
+				},
+			}
+		}
+	</script>

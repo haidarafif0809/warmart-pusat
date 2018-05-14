@@ -86,12 +86,12 @@ class LaporanPersediaanController extends Controller
     public function downloadExcel(Request $request)
     {
 
-     $laporan_persediaan = Barang::with('satuan')->where('id_warung', Auth::user()->id_warung)->where('hitung_stok', 1)->orderBy('id', 'desc')->get();
-     $array              = array();
-     $hpp                = new Hpp();
-     $total_nilai        = $hpp->totalnilai();
+       $laporan_persediaan = Barang::with('satuan')->where('id_warung', Auth::user()->id_warung)->where('hitung_stok', 1)->orderBy('id', 'desc')->get();
+       $array              = array();
+       $hpp                = new Hpp();
+       $total_nilai        = $hpp->totalnilai();
 
-     Excel::create('Laporan Persediaan', function ($excel) use ($request, $laporan_persediaan, $total_nilai,$hpp) {
+       Excel::create('Laporan Persediaan', function ($excel) use ($request, $laporan_persediaan, $total_nilai,$hpp) {
             // Set property
         $excel->sheet('Laporan Persediaan', function ($sheet) use ($request, $laporan_persediaan, $total_nilai,$hpp) {
             $row = 1;
@@ -129,10 +129,10 @@ class LaporanPersediaanController extends Controller
 
         });
     })->export('xls');
- }
+   }
 
- public function labelSheet($sheet, $row)
- {
+   public function labelSheet($sheet, $row)
+   {
     $sheet->row($row, [
         'Kode Produk',
         'Nama Produk',
@@ -185,8 +185,8 @@ public function pencarian(Request $request)
 {
 
     $laporan_persediaan = Barang::with('satuan')->where('id_warung', Auth::user()->id_warung)->where('hitung_stok', 1)->where(function ($query) use ($request) {
-        $query->orWhere('kode_barang', 'LIKE', $request->search . '%')
-        ->orWhere('nama_barang', 'LIKE', $request->search . '%');
+        $query->orWhere('kode_barang', 'LIKE', '%'. $request->search . '%')
+        ->orWhere('nama_barang', 'LIKE', '%'. $request->search . '%');
     })->orderBy('id', 'desc')->paginate(10);
     $array       = array();
     $hpp         = new Hpp();
@@ -197,6 +197,41 @@ public function pencarian(Request $request)
         $stok_produk = $hpp->stok_produk($laporan_persediaans->id);
         $nilai       = $hpp->nilai($laporan_persediaans->id);
         $hpp_produk  = $hpp->hpp($laporan_persediaans->id);
+
+        array_push($array, [
+            'kode_produk' => $laporan_persediaans->kode_barang,
+            'nama_produk' => $laporan_persediaans->Nama,
+            'satuan'      => $laporan_persediaans->satuan->nama_satuan,
+            'stok'        => $stok_produk,
+            'nilai'       => $nilai,
+            'hpp'         => $hpp_produk]);
+    }
+
+    $url    = '/laporan-persediaan/pencarian';
+    $search = $request->search;
+
+    $respons = $this->paginationPencarianData($laporan_persediaan, $array, $total_nilai, $url, $search);
+
+    return response()->json($respons);
+}
+
+public function pencarianPerTanggal(Request $request)
+{
+
+    $laporan_persediaan = Barang::with('satuan')->where('id_warung', Auth::user()->id_warung)->where('hitung_stok', 1)->where(function ($query) use ($request) {
+        $query->orWhere('kode_barang', 'LIKE', '%'.$request->search . '%')
+        ->orWhere('nama_barang', 'LIKE', '%'.$request->search . '%');
+    })->orderBy('id', 'desc')->paginate(10);
+    $array       = array();
+    $hpp         = new Hpp();
+    $tanggal            = $request->tanggal;
+    $total_nilai        = $hpp->totalnilai_tanggal($tanggal);
+
+    foreach ($laporan_persediaan as $laporan_persediaans) {
+
+        $stok_produk = $hpp->stok_produk_tanggal($laporan_persediaans->id, $tanggal);
+        $nilai       = $hpp->nilai_tanggal($laporan_persediaans->id, $tanggal);
+        $hpp_produk  = $hpp->hpp_tanggal($laporan_persediaans->id, $tanggal);
 
         array_push($array, [
             'kode_produk' => $laporan_persediaans->kode_barang,
