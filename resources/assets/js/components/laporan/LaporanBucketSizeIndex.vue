@@ -97,7 +97,7 @@
 														<p>{{actionBucketSize.pesan}}</p>
 													</div>
 													<h6>
-														<i class="ti-time"></i> Warung Mep
+														<i class="ti-time"></i>{{chartData.warung}}
 													</h6>
 												</div>
 											</li>
@@ -714,6 +714,7 @@ export default {
 				app.chartData.labels = resp.data.labels;
 				app.chartData.series = resp.data.series;
 				app.chartData.data = resp.data.data;
+				app.chartData.warung = resp.data.warung;
 				app.bucketSize = true;
 				app.loading = false;
 				console.log(app.chartData.data);
@@ -919,18 +920,36 @@ export default {
 			app.actionBucketSize.pelanggan.splice(0)
 		},
 		saveForm(){
-			console.log(this.actionBucketSize)
+			
 			let app = this
 			let newActionBucketSize = app.actionBucketSize
 
+			swal({
+				text: 'Harap Tunggu, Pesan sedang dikirim ...',
+				timer: 16000,
+				onOpen: () => {
+					swal.showLoading()
+				}
+			})
 			axios.post(app.url+'/kirim-pesan',newActionBucketSize)
 			.then(resp => {
-				console.log(resp)
+				app.closeModalAction()
+				app.alert("Berhasil Mengirimkan Pesan")
 			})
 			.catch(err => {
 				console.log(err)
 			})
+			
+		},
+		alert(pesan) {
+			this.$swal({
+				title: "Berhasil ",
+				text: pesan,
+				icon: "success",
+				buttons: false,
+				timer: 1000,
 
+			});
 		},
 		showButton() { 
 			var app = this; 
