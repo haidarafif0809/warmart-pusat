@@ -117,6 +117,7 @@
                     <div class="tab-pane" id="bank_transfer">
 
                         <div class="table-responsive">
+                            <router-link class="btn btn-primary" :to="{ name: 'settingPengirimanTambahBank' }"> <i class="material-icons">add</i> Bank Transfer </router-link>
                             <button class="btn btn-primary" id="btnSubmitBank" @click="simpanSettingBank()" style=""> <i class="material-icons">save</i> Simpan
                             </button>
                             <table class="table table-striped">
@@ -124,7 +125,7 @@
                                     <tr>
                                         <th>Nama Bank</th>
                                         <th class="text-center"></th>
-                                        <th class="text-center">Pilih</th>
+                                        <th class="text-center">Tampilkan Bank</th>
                                         <th class="text-center">Default</th>
                                     </tr>
                                 </thead>
