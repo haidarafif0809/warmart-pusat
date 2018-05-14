@@ -48,12 +48,16 @@
 
 								<div class="row">
 									<div class="col-md-3">
-										<b>Pelanggan</b>
+										<b>Pelanggan</b><br>
 										<span v-if="errors.pelanggan" id="pelanggan_error" class="label label-danger">{{ errors.pelanggan[0] }}</span>
-										<div class="checkbox">
+										<div class="checkbox" v-if="pelangganAction.length > 0">
 											<label>
 												<input type="checkbox" name="pilih_semua" v-model="pilih_semua" v-bind:value="1" v-on:change="pilihSemua"> Pilih Semua
 											</label>
+										</div>
+										<div v-else>
+											<br>
+											<span id="pelanggan_error" class="label label-danger">Tidak ada pelanggan</span>
 										</div>  
 										<div class="checkbox" v-for="pelanggans, index in pelangganAction">
 											<label>
