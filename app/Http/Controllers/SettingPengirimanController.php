@@ -39,7 +39,7 @@ class SettingPengirimanController extends Controller
 
     public function viewBank()
     {
-        $data_settings = SettingTransferBank::where('warung_id', Auth::user()->id_warung)->orderBy('id', 'asc')->paginate(10);
+        $data_settings = SettingTransferBank::where('warung_id', Auth::user()->id_warung)->orderBy('id', 'asc')->paginate(20);
 
         $data_agent = new Agent();
         if ($data_agent->isMobile()) {
@@ -114,7 +114,7 @@ class SettingPengirimanController extends Controller
     public function tambahBankTransfer(Request $request) {
         $tambahBankTransfer = SettingTransferBank::create([
             'nama_bank' => $request->nama_bank,
-            'tampil_bank' => 1,
+            'tampil_bank' => $request->tampilkan_bank,
             'warung_id' => Auth::user()->id_warung
         ]);
 
@@ -137,5 +137,6 @@ class SettingPengirimanController extends Controller
                 $tambahBankTransfer->save();
             }
         }    
+        return response()->json('berhasil!');
     }
 }
