@@ -28,10 +28,11 @@ class EventListenerSendWhatsapp extends WhatsappListener
      */
     public function handle(EventSendWhatsapp $event)
     {
-        $phone_number = '+6285658780793'; // Your phone number including country code
-        $type = "sms";
-
-        $result = Whatsapp::CodeRequest($phone_number, $type);
+        
+        $phone_number = '31612345678' // Your phone number including country code
+        $type = 'sms';
+        
+        $result = Whatsapp::requestCode($phone_number, $type);
 
     }
 }
