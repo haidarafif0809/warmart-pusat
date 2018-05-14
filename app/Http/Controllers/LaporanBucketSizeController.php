@@ -409,9 +409,11 @@ class LaporanBucketSizeController extends Controller
      Mail::send('auth.emails.email_promo', compact('pelanggan','produk','pesan'), function ($message) use($pelanggan) {
 
         $message->from('verifikasi@andaglos.id', $pelanggan->warung->name);
-        $message->to('pernandoriko3@gmail.com', $pelanggan->warung->name)->subject('Promo');
+        $message->to($pelanggan->email, $pelanggan->warung->name)->subject('Promo');
 
     });
+
+     return $pelanggan->email;
  }
 
  public function testWA(){
