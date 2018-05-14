@@ -49,7 +49,7 @@
 								<div class="row">
 									<div class="col-md-3">
 										<b>Pelanggan</b>
-
+										<span v-if="errors.pelanggan" id="pelanggan_error" class="label label-danger">{{ errors.pelanggan[0] }}</span>
 										<div class="checkbox">
 											<label>
 												<input type="checkbox" name="pilih_semua" v-model="pilih_semua" v-bind:value="1" v-on:change="pilihSemua"> Pilih Semua
@@ -63,7 +63,8 @@
 									</div>
 									<div class="col-md-9">
 										<div class="form-group">
-											<label>Produk</label>
+											<label>Produk</label> 
+											<span v-if="errors.produk" id="produk_error" class="label label-danger">{{ errors.produk[0] }}</span>
 											<selectize-component :settings="placeholder_produk" ref='setting_harga_jual' v-model="actionBucketSize.produk"> 
 												<option v-for="produks, index in produk" v-bind:value="produks.produk">{{produks.barcode}} || {{produks.kode_produk}} || {{ produks.nama_produk }}</option>
 											</selectize-component>
@@ -71,6 +72,7 @@
 
 										<div class="form-group">
 											<label>Kirim Lewat</label>
+											<span v-if="errors.kirim_pesan_via" id="kirim_pesan_via_error" class="label label-danger">{{ errors.kirim_pesan_via[0] }}</span>
 											<selectize-component :settings="kirim_pesan_via" ref="kirim_pesan_via" v-model="actionBucketSize.kirim_pesan_via">
 												<option v-bind:value="1">SMS</option>
 												<option v-bind:value="2">E-MAIL</option>
@@ -79,6 +81,7 @@
 
 										<div class="form-group">
 											<label>Pesan Promo</label>
+											<span v-if="errors.pesan" id="pesan_error" class="label label-danger">{{ errors.pesan[0] }}</span>
 											<textarea class="form-control" placeholder="Silakan Isi Pesan Promo Untuk Pelanggan disini ..." rows="4" v-model="actionBucketSize.pesan"></textarea>
 										</div>
 
@@ -102,7 +105,7 @@
 												</div>
 											</li>
 										</ul>
-										<button type="submit" class="btn btn-info">Kirim</button>
+										<button id="kirimPesan" type="submit" class="btn btn-info">Kirim </button>
 									</div>
 
 								</div>
@@ -571,6 +574,7 @@ import { mapState } from 'vuex';
 export default {
 	data: function () {
 		return {
+			errors: [],
 			kode_unik : 0,
 			ongkir : 0,
 			potongan : 0,
@@ -924,20 +928,21 @@ export default {
 			let app = this
 			let newActionBucketSize = app.actionBucketSize
 
-			swal({
-				text: 'Harap Tunggu, Pesan sedang dikirim ...',
-				timer: 16000,
-				onOpen: () => {
-					swal.showLoading()
-				}
-			})
+			app.loading = true
+			$("#kirimPesan").html('Mohon Tunggu, Pesan Sedang dikirim ... <i v-if="loading" class="fa fa-spinner fa-spin"></i>')
 			axios.post(app.url+'/kirim-pesan',newActionBucketSize)
 			.then(resp => {
+				app.loading = false
 				app.closeModalAction()
 				app.alert("Berhasil Mengirimkan Pesan")
+				$("#kirimPesan").html('Kirim')
 			})
 			.catch(err => {
 				console.log(err)
+				app.loading = false
+				app.errors = err.response.data.errors;
+				alert("Maaf, Silakan cek kembali form input anda!")
+				$("#kirimPesan").html('Kirim')
 			})
 			
 		},

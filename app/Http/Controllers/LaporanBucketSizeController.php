@@ -373,6 +373,15 @@ class LaporanBucketSizeController extends Controller
     } 
 
     public function kirimPesan(Request $request){
+
+              // // proses tambah user
+        $this->validate($request, [
+            'pelanggan'    => 'required',
+            'kirim_pesan_via'   => 'required',
+            'produk'  => 'required',
+            'pesan' => 'required',
+        ]);
+
         foreach ($request->pelanggan as $pelanggan) {
 
             foreach ($request->kirim_pesan_via as $kirim_pesan_via) {
