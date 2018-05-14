@@ -35,30 +35,43 @@ class Barang extends Model
 
     public function getHppAttribute()
     {
-        $hpp_penjulan_terakhir = Hpp::select('harga_unit')->where('id_produk', $this->id)->where('warung_id', Auth::user()->id_warung)
-        ->where('jenis_hpp', 2)->orderBy('id', 'DESC')->first()->harga_unit;
 
-        // HITUNG HPP
-        $hpp_terakhir = Hpp::select(['jenis_hpp'])->where('id_produk', $this->id)->where('warung_id', Auth::user()->id_warung)
-        ->orderBy('created_at', 'DESC')->first();
+        $hpp_penjulan = Hpp::select('harga_unit')->where('id_produk', $this->id)->where('warung_id', Auth::user()->id_warung)
+        ->where('jenis_hpp', 2)->orderBy('id', 'DESC');
 
-        if ($hpp_terakhir->jenis_hpp == 1) {
-
-            $hpp_masuk = Hpp::select(['harga_unit', 'jumlah_masuk'])->where('id_produk', $this->id)->where('warung_id', Auth::user()->id_warung)
-            ->where('jenis_hpp', 1)->orderBy('id', 'DESC')->first();
-
-            $stok_sekarang = $this->stok;
-            $stok_produk = $stok_sekarang - $hpp_masuk->jumlah_masuk;
-
-            //HPP
-            return $hpp_produk = ( ($hpp_penjulan_terakhir * $stok_produk) + ($hpp_masuk->harga_unit * $hpp_masuk->jumlah_masuk) ) / ($stok_produk + $hpp_masuk->jumlah_masuk);
-
+        if ($hpp_penjulan->count() > 0) {
+                $hpp_penjulan_terakhir =  $hpp_penjulan->first()->harga_unit;
         }else{
-            //HPP
-            return $hpp_produk = $hpp_penjulan_terakhir;
+                $hpp_penjulan_terakhir = $this->harga_beli;
         }
 
+           $hpp_terakhir = Hpp::select(['jenis_hpp'])->where('id_produk', $this->id)->where('warung_id', Auth::user()->id_warung)
+                ->orderBy('created_at', 'DESC');
+
+                if ($hpp_terakhir->count() > 0){
+                        // HITUNG HPP
+                        if ($hpp_terakhir->jenis_hpp->first() == 1) {
+
+                            $hpp_masuk = Hpp::select(['harga_unit', 'jumlah_masuk'])->where('id_produk', $this->id)->where('warung_id', Auth::user()->id_warung)
+                            ->where('jenis_hpp', 1)->orderBy('id', 'DESC')->first();
+
+                            $stok_sekarang = $this->stok;
+                            $stok_produk = $stok_sekarang - $hpp_masuk->jumlah_masuk;
+
+                            //HPP
+                            return $hpp_produk = ( ($hpp_penjulan_terakhir * $stok_produk) + ($hpp_masuk->harga_unit * $hpp_masuk->jumlah_masuk) ) / ($stok_produk + $hpp_masuk->jumlah_masuk);
+
+                        }else{
+                            //HPP
+                            return $hpp_produk = $hpp_penjulan_terakhir;
+                        }
+                        // HITUNG HPP
+            }else{
+                return $hpp_produk = $hpp_penjulan_terakhir;
+            }
+
     }
+
 
     public function getNamaAttribute()
     {
