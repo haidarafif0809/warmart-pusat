@@ -50,7 +50,7 @@ class Barang extends Model
 
                 if ($hpp_terakhir->count() > 0){
                         // HITUNG HPP
-                        if ($hpp_terakhir->jenis_hpp->first() == 1) {
+                        if ($hpp_terakhir->first()->jenis_hpp == 1) {
 
                             $hpp_masuk = Hpp::select(['harga_unit', 'jumlah_masuk'])->where('id_produk', $this->id)->where('warung_id', Auth::user()->id_warung)
                             ->where('jenis_hpp', 1)->orderBy('id', 'DESC')->first();
