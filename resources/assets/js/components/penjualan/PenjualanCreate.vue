@@ -512,10 +512,10 @@
           <div class="card-footer">
             <div class="row"> 
               <div class="col-md-6 col-xs-6"> 
-                <button type="button" class="btn btn-success btn-lg" id="bayar" v-on:click="bayarPenjualan()" v-shortkey.push="['f2']" @shortkey="bayarPenjualan()"><font style="font-size:20px;">Bayar(F2)</font></button>
+                <button type="button" class="btn btn-success" id="bayar" v-on:click="bayarPenjualan()" v-shortkey.push="['f2']" @shortkey="bayarPenjualan()"><font style="font-size:13px;">Bayar(F2)</font></button>
               </div>
               <div class="col-md-6 col-xs-6">
-                <button type="submit" class="btn btn-danger btn-lg" id="btnBatal" v-on:click="batalPenjualan()" v-shortkey.push="['f3']" @shortkey="batalPenjualan()"> <font style="font-size:20px;">Batal(F3) </font></button>
+                <button type="submit" class="btn btn-danger" id="btnBatal" v-on:click="batalPenjualan()" v-shortkey.push="['f3']" @shortkey="batalPenjualan()"> <font style="font-size:13px;">Batal(F3) </font></button>
               </div>
             </div>
           </div>
@@ -524,6 +524,7 @@
     </div>
 
     <p style="color: red; font-style: italic;">*Note : Klik Kolom Jumlah, Satuan, & Potongan Untuk Mengubah Nilai.</p>    
+
 
   </div><!-- / PANEL BODY -->
 
@@ -546,7 +547,6 @@ export default {
       url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
       url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
       url_satuan : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan/satuan-konversi"),
-
       inputTbsPenjualan: {
         nama_produk : '',
         produk : '',

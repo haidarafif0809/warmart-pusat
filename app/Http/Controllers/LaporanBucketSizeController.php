@@ -249,9 +249,9 @@ class LaporanBucketSizeController extends Controller
                     $total_faktur_kelipatan = PenjualanPos::countFaktur($request)->whereBetween('total', array($satu, $kelipatan))->first()->no_faktur; 
 
                     $sheet->row(++$row, [ 
-                       $satu . " - " . $kelipatan, 
-                       $total_faktur_kelipatan, 
-                   ]); 
+                     $satu . " - " . $kelipatan, 
+                     $total_faktur_kelipatan, 
+                 ]); 
 
                     $data_kelipatan = $request->kelipatan; 
                     $kelipatan += $data_kelipatan; 
@@ -292,9 +292,9 @@ class LaporanBucketSizeController extends Controller
                     $total_faktur_kelipatan = Penjualan::countFaktur($request)->whereBetween('total', array($satu, $kelipatan))->first()->id_pesanan; 
 
                     $sheet->row(++$row, [ 
-                       $satu . " - " . $kelipatan, 
-                       $total_faktur_kelipatan, 
-                   ]); 
+                     $satu . " - " . $kelipatan, 
+                     $total_faktur_kelipatan, 
+                 ]); 
 
                     $data_kelipatan = $request->kelipatan; 
                     $kelipatan += $data_kelipatan; 
@@ -379,7 +379,7 @@ class LaporanBucketSizeController extends Controller
             'pelanggan'    => 'required',
             'kirim_pesan_via'   => 'required',
             'produk'  => 'required',
-            'pesan' => 'required',
+            'pesan' => 'required',  
         ]);
 
         foreach ($request->pelanggan as $pelanggan) {
@@ -397,35 +397,34 @@ class LaporanBucketSizeController extends Controller
 
     }
 
-    public function kirimSMS($pelanggan,$produk,$pesan){
+    public function kirimSMS($id_pelanggan,$produk,$pesan){
 
-     $nomor_tujuan = User::select('no_telp')->where('id',$pelanggan)->first()->no_telp; 
-     $userkey    = env('USERKEY');
-     $passkey    = env('PASSKEY');
+       $pelanggan = User::find($id_pelanggan); 
+       $userkey    = env('USERKEY');
+       $passkey    = env('PASSKEY');
 
-     if (env('STATUS_SMS') == 1) {
+       if (env('STATUS_SMS') == 1) {
             $client = new Client(); //GuzzleHttp\Client
-            $result = $client->get('https://reguler.zenziva.net/apps/smsapi.php?userkey=' . $userkey . '&passkey=' . $passkey . '&nohp=' . $nomor_tujuan . '&pesan=' . $pesan . '');
-            echo $nomor_tujuan;
+            $result = $client->get('https://reguler.zenziva.net/apps/smsapi.php?userkey=' . $userkey . '&passkey=' . $passkey . '&nohp=' . $pelanggan->no_telp . '&pesan= Hai ' . $pelanggan->name . ' '. $pesan);
         }
 
     }
 
     public function kirimEmail($pelanggan,$produk,$pesan){
 
-     $pelanggan = Customer::with('warung')->find($pelanggan);
+       $pelanggan = Customer::with('warung')->find($pelanggan);
 
-     Mail::send('auth.emails.email_promo', compact('pelanggan','produk','pesan'), function ($message) use($pelanggan) {
+       Mail::send('auth.emails.email_promo', compact('pelanggan','produk','pesan'), function ($message) use($pelanggan) {
 
         $message->from('verifikasi@andaglos.id', $pelanggan->warung->name);
         $message->to($pelanggan->email, $pelanggan->warung->name)->subject('Promo');
 
     });
 
-     return $pelanggan->email;
- }
+       return $pelanggan->email;
+   }
 
- public function testWA(){
+   public function testWA(){
    $phone_number = '+6285658780793'; // Your phone number including country code
    $type = "sms";
    $response = WhatsapiTool::requestCode($phone_number, $type);
