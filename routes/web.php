@@ -13,6 +13,8 @@
 
 Route::get('/', 'DaftarProdukController@index')->middleware('optimizeImages');
 Route::get('/sms', 'HomeController@sms');
+Route::get('/wa', 'LaporanBucketSizeController@testWA');
+
 
 Route::get('copy-produk-alfatih', function () {
     //
@@ -752,8 +754,11 @@ Route::get('/item-keluar/pencarian-edit-tbs-item-keluar/{id}', 'ItemKeluarContro
 Route::get('/laporan-persediaan/view', 'LaporanPersediaanController@view')->middleware('auth');
 Route::post('/laporan-persediaan/view-pertanggal', 'LaporanPersediaanController@viewPerTanggal')->middleware('auth');
 Route::get('/laporan-persediaan/pencarian', 'LaporanPersediaanController@pencarian')->middleware('auth');
+Route::post('/laporan-persediaan/pencarian-pertanggal', 'LaporanPersediaanController@pencarianPerTanggal')->middleware('auth');
 Route::get('/laporan-persediaan/download-excel-persediaan', 'LaporanPersediaanController@downloadExcel')->middleware('auth');
+Route::get('/laporan-persediaan/download-excel-persediaan-tanggal/{tanggal}', 'LaporanPersediaanController@downloadExcelTanggal')->middleware('auth');
 Route::get('/laporan-persediaan/cetak-laporan', 'LaporanPersediaanController@cetakLaporan')->middleware('auth');
+Route::get('/laporan-persediaan/cetak-laporan-tanggal/{tanggal}', 'LaporanPersediaanController@cetakLaporanTanggal')->middleware('auth');
 
 //KAS MUTASI VUE.JS
 Route::get('/kas-mutasi/view', 'KasMutasiController@view')->middleware('auth');
@@ -1032,6 +1037,7 @@ Route::get('/laporan-bucket-size/download-excel-pos/{dari_tanggal}/{sampai_tangg
 Route::get('/laporan-bucket-size/download-excel-online/{dari_tanggal}/{sampai_tanggal}/{kelipatan}', 'LaporanBucketSizeController@downloadLaporanOnline')->middleware('auth');
 Route::get('/laporan-bucket-size/cetak-pos/{dari_tanggal}/{sampai_tanggal}/{kelipatan}', 'LaporanBucketSizeController@cetakLaporan')->middleware('auth');
 Route::get('/laporan-bucket-size/cetak-online/{dari_tanggal}/{sampai_tanggal}/{kelipatan}', 'LaporanBucketSizeController@cetakLaporanOnline')->middleware('auth');
+Route::post('/laporan-bucket-size/kirim-pesan', 'LaporanBucketSizeController@kirimPesan')->middleware('auth');
 
 // LAPORAN PENJUALAN HARIAN VUE.JS
 Route::get('/laporan-penjualan-harian/view/{dari_tanggal}/{sampai_tanggal}', 'LaporanPenjualanHarianController@prosesLaporanPenjualanHarian')->middleware('auth');
@@ -1083,6 +1089,7 @@ Route::post('/optimasi-seo/simpan-seo', 'SettingSeoController@simpanSetting')->m
 // Setting Tema
 Route::get('/tema/view', 'SettingTemaController@view')->middleware('auth');
 Route::get('/tema/pencarian', 'SettingTemaController@pencarian')->middleware('auth');
+Route::get('/tema/ubah-tema/{id}/{default_tema}/', 'SettingTemaController@ubahTema')->middleware('auth'); 
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 

@@ -67,6 +67,7 @@ class LaporanBucketSizeController extends Controller
         array_push($total_faktur,$nested_array);
         $respons['series'] = $total_faktur;
         $respons['data'] = $data;
+        $respons['warung'] = Warung::select('name')->where('id',Auth::user()->id_warung)->first()->name;
 
         if ($agent->isMobile()) {
             $respons['agent'] = false;
@@ -105,7 +106,7 @@ class LaporanBucketSizeController extends Controller
         array_push($total_faktur,$nested_array);
         $respons['data'] = $data;
         $respons['series'] = $total_faktur;
-
+        $respons['warung'] = Warung::select('name')->where('id',Auth::user()->id_warung)->first()->name;
         if ($agent->isMobile()) {
             $respons['agent'] = false;
         } else {
@@ -372,11 +373,18 @@ class LaporanBucketSizeController extends Controller
     } 
 
     public function kirimPesan(Request $request){
-        $no = 0;
+
+              // // proses tambah user
+        $this->validate($request, [
+            'pelanggan'    => 'required',
+            'kirim_pesan_via'   => 'required',
+            'produk'  => 'required',
+            'pesan' => 'required',  
+        ]);
+
         foreach ($request->pelanggan as $pelanggan) {
 
             foreach ($request->kirim_pesan_via as $kirim_pesan_via) {
-                $no += 1;
                 // return $kirim_pesan_via == 1 ?  $this->kirimSMS($pelanggan,$request->produk,$request->pesan) : $this->kirimEmail($pelanggan,$request->produk,$request->pesan);
                 if ($kirim_pesan_via == 1) {
                     $this->kirimSMS($pelanggan,$request->produk,$request->pesan);
@@ -389,16 +397,15 @@ class LaporanBucketSizeController extends Controller
 
     }
 
-    public function kirimSMS($pelanggan,$produk,$pesan){
+    public function kirimSMS($id_pelanggan,$produk,$pesan){
 
-       $nomor_tujuan = User::select('no_telp')->where('id',$pelanggan)->first()->no_telp; 
+       $pelanggan = User::find($id_pelanggan); 
        $userkey    = env('USERKEY');
        $passkey    = env('PASSKEY');
 
        if (env('STATUS_SMS') == 1) {
             $client = new Client(); //GuzzleHttp\Client
-            $result = $client->get('https://reguler.zenziva.net/apps/smsapi.php?userkey=' . $userkey . '&passkey=' . $passkey . '&nohp=' . $nomor_tujuan . '&pesan=' . $pesan . '');
-            echo $nomor_tujuan;
+            $result = $client->get('https://reguler.zenziva.net/apps/smsapi.php?userkey=' . $userkey . '&passkey=' . $passkey . '&nohp=' . $pelanggan->no_telp . '&pesan= Hai ' . $pelanggan->name . ' '. $pesan);
         }
 
     }
@@ -407,22 +414,23 @@ class LaporanBucketSizeController extends Controller
 
        $pelanggan = Customer::with('warung')->find($pelanggan);
 
-       Mail::send('auth.emails.email_promo', compact('pelanggan','produk','pesan'), function ($message){
+       Mail::send('auth.emails.email_promo', compact('pelanggan','produk','pesan'), function ($message) use($pelanggan) {
 
-        $message->from('verifikasi@andaglos.id', 'Warung Mep');
-        $message->to('pernandoriko3@gmail.com', 'Warung Mep')->subject('Konfirmasi Pesanan');
+        $message->from('verifikasi@andaglos.id', $pelanggan->warung->name);
+        $message->to($pelanggan->email, $pelanggan->warung->name)->subject('Promo');
 
     });
+
+       return $pelanggan->email;
    }
 
    public function testWA(){
+   $phone_number = '+6285658780793'; // Your phone number including country code
+   $type = "sms";
+   $response = WhatsapiTool::requestCode($phone_number, $type);
 
-    $number = '+6285768233603'; # Number with country code
-    $type = 'sms'; # This can be either sms or voice
+   event(new EventSendWhatsapp());
 
-    $response = WhatsapiTool::requestCode($number, $type);
-
-    return $response;
 }
 
 }
