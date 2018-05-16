@@ -19,6 +19,7 @@ use App\TransaksiPiutang;
 use App\User;
 use App\Warung;
 use App\Satuan;
+use App\Antrian;
 use Auth;
 use Excel;
 use Illuminate\Http\Request;
@@ -813,20 +814,20 @@ public function prosesEditHargaTbsPenjualan(Request $request)
 
     $tbs_penjualan = TbsPenjualan::find($request->id_tbs);
     if ($request->level_harga_produk == 1) {
-     $harga_produk = $tbs_penjualan->produk->harga_jual;
- }else{
-     $harga_produk = $tbs_penjualan->produk->harga_jual2;
- }
+       $harga_produk = $tbs_penjualan->produk->harga_jual;
+   }else{
+       $harga_produk = $tbs_penjualan->produk->harga_jual2;
+   }
 
- $subtotal = ($harga_produk * $tbs_penjualan->jumlah_produk) - $tbs_penjualan->potongan;
+   $subtotal = ($harga_produk * $tbs_penjualan->jumlah_produk) - $tbs_penjualan->potongan;
 
- $tbs_penjualan->update(['harga_produk' => $harga_produk, 'subtotal' => $subtotal]);
+   $tbs_penjualan->update(['harga_produk' => $harga_produk, 'subtotal' => $subtotal]);
 
- $respons['subtotal']      = $subtotal;
- $respons['harga_produk']      = $harga_produk;
- $respons['potongan']      = $this->tampilPotongan($tbs_penjualan->potongan, $tbs_penjualan->jumlah_produk, $harga_produk);
+   $respons['subtotal']      = $subtotal;
+   $respons['harga_produk']      = $harga_produk;
+   $respons['potongan']      = $this->tampilPotongan($tbs_penjualan->potongan, $tbs_penjualan->jumlah_produk, $harga_produk);
 
- return response()->json($respons);
+   return response()->json($respons);
 }
 
 public function prosesEditPotonganTbsPenjualan(Request $request)
@@ -1535,24 +1536,24 @@ public function index()
 
         $tbs_penjualan = EditTbsPenjualan::find($request->id_tbs);
         if ($request->level_harga_produk == 1) {
-         $harga_produk = $tbs_penjualan->produk->harga_jual;
-     }else{
-         $harga_produk = $tbs_penjualan->produk->harga_jual2;
-     }
+           $harga_produk = $tbs_penjualan->produk->harga_jual;
+       }else{
+           $harga_produk = $tbs_penjualan->produk->harga_jual2;
+       }
 
-     $subtotal = ($harga_produk * $tbs_penjualan->jumlah_produk) - $tbs_penjualan->potongan;
+       $subtotal = ($harga_produk * $tbs_penjualan->jumlah_produk) - $tbs_penjualan->potongan;
 
-     $tbs_penjualan->update(['harga_produk' => $harga_produk, 'subtotal' => $subtotal]);
+       $tbs_penjualan->update(['harga_produk' => $harga_produk, 'subtotal' => $subtotal]);
 
-     $respons['subtotal']      = $subtotal;
-     $respons['harga_produk']      = $harga_produk;
-     $respons['potongan']      = $this->tampilPotongan($tbs_penjualan->potongan, $tbs_penjualan->jumlah_produk, $harga_produk);
+       $respons['subtotal']      = $subtotal;
+       $respons['harga_produk']      = $harga_produk;
+       $respons['potongan']      = $this->tampilPotongan($tbs_penjualan->potongan, $tbs_penjualan->jumlah_produk, $harga_produk);
 
-     return response()->json($respons);
- }
+       return response()->json($respons);
+   }
 
- public function prosesHapusEditTbsPenjualan($id)
- {
+   public function prosesHapusEditTbsPenjualan($id)
+   {
 
     if (!EditTbsPenjualan::destroy($id)) {
         return 0;
@@ -1833,10 +1834,21 @@ public function editSatuanEditTbsPenjualan(Request $request){
 }
 
 public function simpanTbsPenjualan(Request $request){
-  $session_id    = session()->getId();
-  $user_warung   = Auth::user()->id_warung;
-  $tbs_penjualan = TbsPenjualan::where('warung_id', $user_warung)->where('session_id', $session_id)->whereNull('no_antrian');
-  $tbs_penjualan->update(['no_antrian' => 1]);
+
+    $session_id    = session()->getId();
+    $user_warung   = Auth::user()->id_warung;
+
+    $antrian = Antrian::select('no_antrian')->where('warung_id', $user_warung)->orderBy('id', 'DESC');
+    if ($antrian->count() > 0) {
+        $no_antrian = $antrian->first()->no_antrian + 1;
+    }else{
+        $no_antrian = 1;
+    }
+
+    Antrian::create(['no_antrian' => $no_antrian, 'warung_id' => $user_warung, 'pelanggan_id' => $request->pelanggan]);
+
+    $tbs_penjualan = TbsPenjualan::where('warung_id', $user_warung)->where('session_id', $session_id)->whereNull('no_antrian');
+    $tbs_penjualan->update(['no_antrian' => $no_antrian]);
 }
 
 }

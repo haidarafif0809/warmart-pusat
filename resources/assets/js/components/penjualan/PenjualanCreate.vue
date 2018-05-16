@@ -365,6 +365,75 @@
           <button type="submit" class="btn btn-info">Tambah</button>
         </div>
       </form>
+
+    </div>
+  </div>
+</div>
+<!--    end small modal -->
+
+<!-- small modal -->
+<div class="modal" id="modalJumlahProduk" role="dialog" tabindex="-1"  aria-labelledby="myModalLabel" aria-hidden="true" >
+  <div class="modal-dialog modal-medium">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close"  v-on:click="closeModalJumlahProduk()" v-shortkey.push="['f9']" @shortkey="closeModalJumlahProduk()"> &times;</button> 
+      </div>
+
+      <form class="form-horizontal" v-on:submit.prevent="submitProdukPenjualan(inputTbsPenjualan.jumlah_produk)"> 
+        <div class="modal-body">
+          <h3 class="text-center"><b>{{inputTbsPenjualan.nama_produk}}</b></h3>
+
+          <div class="form-group">
+            <div class="col-md-7 col-xs-7">
+              <input class="form-control" type="number" v-model="inputTbsPenjualan.jumlah_produk" placeholder="Isi Jumlah Produk" name="jumlah_produk" id="jumlah_produk" ref="jumlah_produk" autocomplete="off" step="0.01">
+            </div>
+
+            <div class="col-md-5 col-xs-5 hurufBesar">
+              <selectize-component v-model="inputTbsPenjualan.satuan_produk" :settings="placeholder_satuan" id="satuan" name="satuan" ref='satuan'> 
+                <option v-for="satuans, index in satuan" v-bind:value="satuans.satuan" class="pull-left">{{ satuans.nama_satuan }}</option>
+              </selectize-component>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-simple" v-on:click="closeModalJumlahProduk()" v-shortkey.push="['f9']" @shortkey="closeModalJumlahProduk()">Close(F9)</button>
+          <button type="submit" class="btn btn-info">Tambah</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+<!--    end small modal -->
+
+<!-- small modal -->
+<div class="modal" id="modalSimpanPenjualan" role="dialog" tabindex="-1"  aria-labelledby="myModalLabel" aria-hidden="true" >
+  <div class="modal-dialog modal-medium">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" v-on:click="closeModalJumlahProduk()" v-shortkey.push="['f9']" @shortkey="closeModalJumlahProduk()"> &times;</button> 
+      </div>
+
+      <form class="form-horizontal" v-on:submit.prevent="submitSimpanPenjualan()"> 
+        <div class="modal-body">
+          <h3 class="text-center"><b>Simpan Penjualan</b></h3>
+
+          <div class="form-group">
+            <div class="col-md-12 col-xs-12 hurufBesar">
+              <selectize-component v-model="penjualan.pelanggan" :settings="placeholder_pelanggan" id="pelanggan" ref='pelanggan'> 
+                <option v-for="pelanggans, index in pelanggan" v-bind:value="pelanggans.id">{{ pelanggans.pelanggan }}</option>
+              </selectize-component>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-simple" v-on:click="closeModalJumlahProduk()" v-shortkey.push="['f9']" @shortkey="closeModalJumlahProduk()">Close(F9)</button>
+          <button type="submit" class="btn btn-info">Simpan</button>
+        </div>
+      </form>
+
     </div>
   </div>
 </div>
@@ -1505,18 +1574,37 @@ dataSettingPenjualanPos() {
   });
 },
 simpanPenjualan(){
+  let app = this
+  app.tbs_penjualan.length > 0 ? $("#modalSimpanPenjualan").show() : app.alertTbs("Produk masih kosong")
+  
+}, 
+submitSimpanPenjualan(){
 
   let app = this
+  let newSimpanPenjualan = {
+    pelanggan : app.penjualan.pelanggan
+  }
   app.tbs_penjualan.splice(0)
-  axios.post(app.url+'/simpan-tbs-penjualan')
-  .then(resp => {
 
+  axios.post(app.url+'/simpan-tbs-penjualan', newSimpanPenjualan)
+  .then(resp => {
+    app.alert("Menyimpan Penjualan")
+    app.penjualan.pelanggan = 0
+    app.penjualan.subtotal = 0
+    app.penjualan.jatuh_tempo = ''
+    app.penjualan.potongan_persen = 0
+    app.penjualan.potongan_faktur = 0
+    app.penjualan.total_akhir = 0
+    app.penjualan.pembayaran = 0
+    app.hitungKembalian(app.penjualan.pembayaran)
+    app.closeModalJumlahProduk()
   })
   .catch(err => {
-   alert("Terjadi Kesalahan!, tidak dapat menyimpan produk")
- })
+    alert("Terjadi Kesalahan!, tidak dapat menyimpan produk")
+    app.closeModalJumlahProduk()
+  })
 
-}, 
+},
 showAntrian(){
   $("#modal_antri").show()
 },
@@ -1531,7 +1619,8 @@ closeModal(){
 closeModalJumlahProduk(){  
   $("#modalJumlahProduk").hide();
   $("#modalEditSatuan").hide(); 
-  $("#modalEditHarga").hide(); 
+  $("#modalEditHarga").hide();  
+  $("#modalSimpanPenjualan").hide(); 
   this.openSelectizeProduk();
 },
 closeModalX(){
