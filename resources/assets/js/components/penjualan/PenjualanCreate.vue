@@ -322,15 +322,38 @@
       </div>
       <div class="modal-body"> 
 
-        <antrian></antrian>
-        <center><button type="button" class="btn btn-xs btn-info">Load More... <i class="material-icons">keyboard_arrow_down</i></button></center>
-      </div>
-      <div class="modal-footer">  
-        <button type="button" class="btn btn-default btn-sm" v-on:click="closeModal()">Tutup</button>
-      </div> 
+        <div class="table-responsive">
+          <div style="color: red; float: right;">
+            <input type="text" name="pencarian" placeholder="Pencarian" class="form-control" autocomplete="" style="color: red; float: right;">
+          </div>
+          <table class="table table-striped table-hover table-responsive">
+            <thead class="text-info">
+              <tr>
+                <th>No. Antrian</th>
+                <th class="text-center">Pelanggan</th>
+                <th class="text-center">Total Belanja</th>
+              </tr>
+            </thead>
+            <tbody>
 
+              <antrian 
+              v-for="list, index in antrian" 
+              :list="list" 
+              :key="list.id" >
+            </antrian>  
+
+          </tbody>    
+        </table>
+      </div>        
+
+      <center><button type="button" class="btn btn-xs btn-info">Load More... <i class="material-icons">keyboard_arrow_down</i></button></center>
     </div>
+    <div class="modal-footer">  
+      <button type="button" class="btn btn-default btn-sm" v-on:click="closeModal()">Tutup</button>
+    </div> 
+
   </div>
+</div>
 </div>
 <!--    end small modal -->
 
@@ -644,6 +667,7 @@
         errors: [],
         tbs_penjualan: [],
         satuan: [],
+        antrian: [],
         url : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
         urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan/download-excel"),
         url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
@@ -1584,10 +1608,19 @@ submitSimpanPenjualan(){
   let newSimpanPenjualan = {
     pelanggan : app.penjualan.pelanggan
   }
-  app.tbs_penjualan.splice(0)
 
+  app.tbs_penjualan.splice(0)
   axios.post(app.url+'/simpan-tbs-penjualan', newSimpanPenjualan)
   .then(resp => {
+
+    let newAntrian = {
+      id : resp.data.id,
+      no_antrian : resp.data.no_antrian,
+      pelanggan : resp.data.pelanggan,
+      total_belanja : new Intl.NumberFormat('es-ES').format(app.penjualan.subtotal)
+    } 
+    app.antrian.push(newAntrian)
+    console.log(app.antrian)
     app.alert("Menyimpan Penjualan")
     app.penjualan.pelanggan = 0
     app.penjualan.subtotal = 0
@@ -1598,6 +1631,7 @@ submitSimpanPenjualan(){
     app.penjualan.pembayaran = 0
     app.hitungKembalian(app.penjualan.pembayaran)
     app.closeModalJumlahProduk()
+
   })
   .catch(err => {
     alert("Terjadi Kesalahan!, tidak dapat menyimpan produk")
@@ -1606,7 +1640,22 @@ submitSimpanPenjualan(){
 
 },
 showAntrian(){
+
   $("#modal_antri").show()
+  let app = this
+
+  if (app.antrian.length == 0) {
+    axios.get(app.url+'/get-antrian-penjualan')
+    .then(resp => {
+      app.antrian = resp.data
+      console.log(resp.data)
+    })
+    .catch(err => {
+      alert("Terjadi Kesalahan!, tidak dapat memuat antrian")
+      console.log(err)
+    })
+  }
+
 },
 bayarPenjualan(){
   $("#modal_selesai").show(); 

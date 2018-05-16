@@ -1845,10 +1845,38 @@ public function simpanTbsPenjualan(Request $request){
         $no_antrian = 1;
     }
 
-    Antrian::create(['no_antrian' => $no_antrian, 'warung_id' => $user_warung, 'pelanggan_id' => $request->pelanggan]);
+    $newAntrian = Antrian::create(['no_antrian' => $no_antrian, 'warung_id' => $user_warung, 'pelanggan_id' => $request->pelanggan]);
 
     $tbs_penjualan = TbsPenjualan::where('warung_id', $user_warung)->where('session_id', $session_id)->whereNull('no_antrian');
+
     $tbs_penjualan->update(['no_antrian' => $no_antrian]);
+
+    $respons['id'] = $newAntrian->id;
+    $respons['no_antrian'] = $no_antrian;
+    $respons['pelanggan'] = $newAntrian->pelanggan->name;
+
+    return $respons;
+}
+
+public function getAntrian(){
+
+    $session_id    = session()->getId();
+    $user_warung   = Auth::user()->id_warung;
+    $antrian = Antrian::with('pelanggan')->get();
+    $array = [];
+
+    foreach ($antrian as $antrians) {
+
+        $total_belanja = TbsPenjualan::select([DB::raw('SUM(subtotal) as subtotal')])->where('warung_id', $user_warung)->where('session_id', $session_id)->where('no_antrian',$antrians->no_antrian)->first()->subtotal;
+
+        array_push($array, [
+            'id'            => $antrians->id,
+            'no_antrian'    => $antrians->no_antrian,
+            'pelanggan'     => $antrians->pelanggan->name,
+            'total_belanja' => number_format($total_belanja, 0, ',', '.')
+        ]);
+    }
+    return response()->json($array);
 }
 
 }
