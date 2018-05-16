@@ -309,6 +309,32 @@
 <!-- / MODAL TOMBOL SELESAI --> 
 
 
+<div class="modal" id="modal_antri" role="dialog" tabindex="-1"  aria-labelledby="myModalLabel" aria-hidden="true" >
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close"  v-on:click="closeModal()" @shortkey="closeModal()"> &times;</button> 
+        <h4 class="modal-title"> 
+          <div class="alert-icon"> 
+            <b>Antrian</b>
+          </div> 
+        </h4> 
+      </div>
+      <div class="modal-body"> 
+
+        <antrian></antrian>
+        <center><button type="button" class="btn btn-xs btn-info">Load More... <i class="material-icons">keyboard_arrow_down</i></button></center>
+      </div>
+      <div class="modal-footer">  
+        <button type="button" class="btn btn-default btn-sm" v-on:click="closeModal()">Tutup</button>
+      </div> 
+
+    </div>
+  </div>
+</div>
+<!--    end small modal -->
+
+
 <!-- small modal -->
 <div class="modal" id="modalJumlahProduk" role="dialog" tabindex="-1"  aria-labelledby="myModalLabel" aria-hidden="true" >
   <div class="modal-dialog modal-medium">
@@ -416,7 +442,7 @@
 
     <div class="row" style="margin-bottom: 1px; margin-top: 1px;">
 
-      <div class="col-md-3 col-xs-9">
+      <div class="col-md-4 col-xs-12">
         <div class="card card-produk" style="margin-bottom: 1px; margin-top: 1px;">
 
           <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
@@ -435,23 +461,27 @@
         </div>
       </div>
 
-      <div class="col-md-3">          
-      </div>
-      <div class="col-md-5"></div>
-      <div class="col-md-1 col-xs-1">                
-        <button class="btn btn-primary btn-round btn-fab btn-fab-mini" data-toggle="modal" data-target="#modal_setting">
-          <i class="material-icons">settings</i>
-        </button><b>Setting</b>
+      <div class="col-md-5">               
+
       </div>
 
+      <div class="col-md-3 col-xs-12" align="right">                
+
+        <button class="btn btn-xs btn-primary" v-on:click="showAntrian()">
+          Antrian
+        </button>
+        <button class="btn btn-xs btn-primary" data-toggle="modal" data-target="#modal_setting">
+          Setting
+        </button>
+      </div>
     </div>
 
 
     <!--TABEL TBS ITEM  MASUK -->
     <div class="row">
 
-      <div class="col-md-9">
-        <div class=" table-responsive ">
+      <div class="col-md-8">
+        <div class="table-responsive">
           <div class="pencarian">
             <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
           </div>
@@ -499,7 +529,7 @@
 
         </div>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-4">
 
         <div class="card card-stats">
           <div class="card-header" data-background-color="blue">
@@ -511,11 +541,14 @@
           </div>
           <div class="card-footer">
             <div class="row"> 
-              <div class="col-md-6 col-xs-6"> 
-                <button type="button" class="btn btn-success" id="bayar" v-on:click="bayarPenjualan()" v-shortkey.push="['f2']" @shortkey="bayarPenjualan()"><font style="font-size:13px;">Bayar(F2)</font></button>
+              <div class="col-md-4 col-xs-4"> 
+                <button type="button"   class="btn btn-success" id="bayar" v-on:click="bayarPenjualan()" v-shortkey.push="['f2']" @shortkey="bayarPenjualan() "><i class="material-icons">payment</i><b>(F2)</b> </button>
               </div>
-              <div class="col-md-6 col-xs-6">
-                <button type="submit" class="btn btn-danger" id="btnBatal" v-on:click="batalPenjualan()" v-shortkey.push="['f3']" @shortkey="batalPenjualan()"> <font style="font-size:13px;">Batal(F3) </font></button>
+              <div class="col-md-4 col-xs-4">
+                <button type="submit" class="btn btn-info" id="btnSimpan" v-on:click="simpanPenjualan()"> <i class="material-icons">save</i><b>(F2) </b></button>
+              </div>
+              <div class="col-md-4 col-xs-4">
+                <button type="submit" class="btn btn-danger" id="btnBatal" v-on:click="batalPenjualan()" v-shortkey.push="['f3']" @shortkey="batalPenjualan()" > <i class="material-icons">clear</i><b>(F4)</b> </button>
               </div>
             </div>
           </div>
@@ -535,93 +568,93 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-export default {
-  data: function () {
-    return {
-      errors: [],
-      tbs_penjualan: [],
-      satuan: [],
-      url : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
-      urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan/download-excel"),
-      url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
-      url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
-      url_satuan : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan/satuan-konversi"),
-      inputTbsPenjualan: {
-        nama_produk : '',
-        produk : '',
-        jumlah_produk : '',
-        potongan_produk : '',
-        id_tbs : '',
-        satuan_produk: '',
-        level_harga_produk: '',
-        level_harga_lama: '',
-        subtotal: ''
-      },
-      penjualan : {
-        pelanggan : '0',
-        kas : '',
-        jatuh_tempo : '',
-        subtotal : 0,
-        potongan : 0,
-        potongan_faktur : 0,
-        potongan_persen : 0,
-        total_akhir : 0,
-        pembayaran : 0,
-        kembalian: 0,
-        kredit: 0,
-      }, 
-      setting_penjualan_pos :{
-        jumlah_produk : true,
-        stok : true,
-        harga_jual : 1
-      },
-      placeholder_produk: {
-        placeholder: 'Cari Produk (F1) ...',
-        sortField: 'text',
-        maxOptions : 8,
-        scrollDuration : 10,
-        loadThrottle : 150,
-        openOnFocus : false
-      },
-      placeholder_satuan: {
-        placeholder: '--PILIH SATUAN--',
-        sortField: 'text',
-        openOnFocus : true,
-      },
-      placeholder_pelanggan: {
-        placeholder: '--PILIH PELANGGAN (F4)--',
-        sortField: 'text',
-        openOnFocus : true
+  import { mapState } from 'vuex';
+  export default {
+    data: function () {
+      return {
+        errors: [],
+        tbs_penjualan: [],
+        satuan: [],
+        url : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
+        urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan/download-excel"),
+        url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
+        url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
+        url_satuan : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan/satuan-konversi"),
+        inputTbsPenjualan: {
+          nama_produk : '',
+          produk : '',
+          jumlah_produk : '',
+          potongan_produk : '',
+          id_tbs : '',
+          satuan_produk: '',
+          level_harga_produk: '',
+          level_harga_lama: '',
+          subtotal: ''
+        },
+        penjualan : {
+          pelanggan : '0',
+          kas : '',
+          jatuh_tempo : '',
+          subtotal : 0,
+          potongan : 0,
+          potongan_faktur : 0,
+          potongan_persen : 0,
+          total_akhir : 0,
+          pembayaran : 0,
+          kembalian: 0,
+          kredit: 0,
+        }, 
+        setting_penjualan_pos :{
+          jumlah_produk : true,
+          stok : true,
+          harga_jual : 1
+        },
+        placeholder_produk: {
+          placeholder: 'Cari Produk (F1) ...',
+          sortField: 'text',
+          maxOptions : 8,
+          scrollDuration : 10,
+          loadThrottle : 150,
+          openOnFocus : false
+        },
+        placeholder_satuan: {
+          placeholder: '--PILIH SATUAN--',
+          sortField: 'text',
+          openOnFocus : true,
+        },
+        placeholder_pelanggan: {
+          placeholder: '--PILIH PELANGGAN (F4)--',
+          sortField: 'text',
+          openOnFocus : true
 
-      },
-      placeholder_kas: {
-        placeholder: '--PILIH KAS--',
-        sortField: 'text',
-        openOnFocus : true
-      },
-      hargaJual: {
-        placeholder: '--HARGA JUAL--'
-      },
-      tambahKas: {
-        kode_kas : '',
-        nama_kas : '',
-        status_kas : 0,
-        default_kas : 0
-      },
-      session:'',
-      pencarian: '',
-      loading: true,
-      seen : false,
-      separator: {
-        decimal: ',',
-        thousands: '.',
-        prefix: '',
-        suffix: '',
-        precision: 0,
-        masked: false /* doesn't work with directive */
-      },
-      disabled: {
+        },
+        placeholder_kas: {
+          placeholder: '--PILIH KAS--',
+          sortField: 'text',
+          openOnFocus : true
+        },
+        hargaJual: {
+          placeholder: '--HARGA JUAL--'
+        },
+        tambahKas: {
+          kode_kas : '',
+          nama_kas : '',
+          status_kas : 0,
+          default_kas : 0
+        },
+        session:'',
+        pencarian: '',
+        loading: true,
+        seen : false,
+        separator: {
+          decimal: ',',
+          thousands: '.',
+          prefix: '',
+          suffix: '',
+          precision: 0,
+          masked: false /* doesn't work with directive */
+        },
+        disabled: {
           to: new Date(), // Disable all dates up to specific date
         }
 
@@ -1470,14 +1503,30 @@ dataSettingPenjualanPos() {
     console.log(resp);
     alert("Tidak Dapat Memuat Penjualan");
   });
+},
+simpanPenjualan(){
+
+  let app = this
+  app.tbs_penjualan.splice(0)
+  axios.post(app.url+'/simpan-tbs-penjualan')
+  .then(resp => {
+
+  })
+  .catch(err => {
+   alert("Terjadi Kesalahan!, tidak dapat menyimpan produk")
+ })
+
 }, 
+showAntrian(){
+  $("#modal_antri").show()
+},
 bayarPenjualan(){
   $("#modal_selesai").show(); 
   this.$refs.pembayaran.$el.focus()
 },
 closeModal(){
-
   $("#modal_selesai").hide(); 
+  $("#modal_antri").hide(); 
 },
 closeModalJumlahProduk(){  
   $("#modalJumlahProduk").hide();
