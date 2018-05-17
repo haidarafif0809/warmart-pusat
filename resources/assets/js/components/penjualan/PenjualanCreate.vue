@@ -332,29 +332,26 @@
                 <th>No. Antrian</th>
                 <th class="text-center">Pelanggan</th>
                 <th class="text-center">Total Belanja</th>
+                <th class="text-center">Hapus</th>
               </tr>
             </thead>
             <tbody>
 
-              <antrian 
-              v-for="list, index in antrian.data" 
-              :list="list" 
-              :key="list.id" >
-            </antrian>  
+              <antrian v-for="list, index in antrian.data" :list="list" :key="list.id" v-on:deleteAntrian="deleteAntrian"></antrian>  
 
-          </tbody>    
-        </table>
-        <div align="right"><pagination :data="antrian" v-on:pagination-change-page="getAntrian" :limit="4"></pagination></div>
+            </tbody>    
+          </table>
+          <div align="right"><pagination :data="antrian" v-on:pagination-change-page="getAntrian" :limit="4"></pagination></div>
 
-      </div>        
+        </div>        
+
+      </div>
+      <div class="modal-footer">  
+        <button type="button" class="btn btn-default btn-sm" v-on:click="closeModal()">Tutup</button>
+      </div> 
 
     </div>
-    <div class="modal-footer">  
-      <button type="button" class="btn btn-default btn-sm" v-on:click="closeModal()">Tutup</button>
-    </div> 
-
   </div>
-</div>
 </div>
 <!--    end small modal -->
 
@@ -1563,6 +1560,23 @@ prosesSelesaiPenjualan(value){
   }
 
 },
+deleteAntrian(antrian){
+
+  let app = this
+  let index = app.antrian.data.indexOf(antrian)
+  let id = app.antrian.data[index].id
+  app.antrian.data.splice(index,1)
+  
+  axios.delete(app.url+'/delete-antrian-penjualan/'+id)
+  .then(resp => {
+   app.alert("Menghapus antrian")
+ })
+  .catch(err => {
+   console.log(err)
+   alert("Antrian tidak dapat dihapus")
+ })
+
+},
 simpanSetting(){
 
   var app = this
@@ -1613,7 +1627,7 @@ submitSimpanPenjualan(){
 
   app.tbs_penjualan.splice(0)
   axios.post(app.url+'/simpan-tbs-penjualan', newSimpanPenjualan)
-  .then(resp => {
+  .then((resp) => {
 
     let newAntrian = {
       id : resp.data.id,
@@ -1621,8 +1635,8 @@ submitSimpanPenjualan(){
       pelanggan : resp.data.pelanggan,
       total_belanja : new Intl.NumberFormat('es-ES').format(app.penjualan.subtotal)
     } 
-    app.antrian.push(newAntrian)
-    console.log(app.antrian)
+    app.antrian.data.push(newAntrian)
+    console.log(app.antrian.data)
     app.alert("Menyimpan Penjualan")
     app.penjualan.pelanggan = 0
     app.penjualan.subtotal = 0
@@ -1635,9 +1649,9 @@ submitSimpanPenjualan(){
     app.closeModalJumlahProduk()
 
   })
-  .catch(err => {
+  .catch((err) => {
+    console.log(err)
     alert("Terjadi Kesalahan!, tidak dapat menyimpan produk")
-    app.closeModalJumlahProduk()
   })
 
 },

@@ -1864,7 +1864,7 @@ public function getAntrian(Request $request){
 
     $session_id    = session()->getId();
     $user_warung   = Auth::user()->id_warung;
-    $antrian = Antrian::with('pelanggan')->where('warung_id', $user_warung)->where('session_id',$session_id)->paginate(1);
+    $antrian = Antrian::with('pelanggan')->where('warung_id', $user_warung)->where('session_id',$session_id)->paginate(10);
     $array = [];
 
     foreach ($antrian as $antrians) {
@@ -1884,6 +1884,16 @@ public function getAntrian(Request $request){
     $respons             = $this->paginationData($antrian, $array, $url);
 
     return response()->json($respons);
+}
+
+public function deleteAntrian($id){
+
+    if (!Antrian::destroy($id)) {
+        return 0;
+    } else {
+     return response(200);
+ }
+ 
 }
 
 }

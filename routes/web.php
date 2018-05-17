@@ -791,6 +791,7 @@ Route::post('/penjualan/total-laporan-penjualan', 'PenjualanController@totalLapo
 Route::post('/penjualan/total-laporan-penjualan-filter', 'PenjualanController@totalLaporanPenjualanFilter')->middleware('auth');
 Route::post('/penjualan/simpan-tbs-penjualan', 'PenjualanController@simpanTbsPenjualan')->middleware('auth');
 Route::get('/penjualan/get-antrian-penjualan', 'PenjualanController@getAntrian')->middleware('auth');
+Route::delete('/penjualan/delete-antrian-penjualan/{id}', 'PenjualanController@deleteAntrian')->middleware('auth');
 
 Route::get('/penjualan/satuan-konversi/{id_produk}', 'PenjualanController@dataSatuanProduk')->middleware('auth');
 
