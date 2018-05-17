@@ -1600,7 +1600,7 @@ dataSettingPenjualanPos() {
 },
 simpanPenjualan(){
   let app = this
-  app.tbs_penjualan.length > 0 ? $("#modalSimpanPenjualan").show() : app.alertTbs("Produk masih kosong")
+  app.tbs_penjualan.length > 0 ? ($("#modalSimpanPenjualan").show() , this.openSelectizePelanggan() ) : app.alertTbs("Produk masih kosong")
   
 }, 
 submitSimpanPenjualan(){

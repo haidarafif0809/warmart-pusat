@@ -1838,14 +1838,14 @@ public function simpanTbsPenjualan(Request $request){
     $session_id    = session()->getId();
     $user_warung   = Auth::user()->id_warung;
 
-    $antrian = Antrian::select('no_antrian')->where('warung_id', $user_warung)->orderBy('id', 'DESC');
+    $antrian = Antrian::select('no_antrian')->where('warung_id', $user_warung)->where('session_id', $session_id)->orderBy('id', 'DESC');
     if ($antrian->count() > 0) {
         $no_antrian = $antrian->first()->no_antrian + 1;
     }else{
         $no_antrian = 1;
     }
 
-    $newAntrian = Antrian::create(['no_antrian' => $no_antrian, 'warung_id' => $user_warung, 'pelanggan_id' => $request->pelanggan]);
+    $newAntrian = Antrian::create(['no_antrian' => $no_antrian, 'warung_id' => $user_warung, 'pelanggan_id' => $request->pelanggan, 'session_id' => $session_id]);
 
     $tbs_penjualan = TbsPenjualan::where('warung_id', $user_warung)->where('session_id', $session_id)->whereNull('no_antrian');
 
@@ -1860,11 +1860,11 @@ public function simpanTbsPenjualan(Request $request){
     return $respons;
 }
 
-public function getAntrian(){
+public function getAntrian(Request $request){
 
     $session_id    = session()->getId();
     $user_warung   = Auth::user()->id_warung;
-    $antrian = Antrian::with('pelanggan')->get();
+    $antrian = Antrian::with('pelanggan')->where('warung_id', $user_warung)->where('session_id',$session_id)->offset(0)->limit(10)->get();
     $array = [];
 
     foreach ($antrian as $antrians) {
