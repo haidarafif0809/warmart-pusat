@@ -1088,6 +1088,11 @@ Route::get('/tema/view', 'SettingTemaController@view')->middleware('auth');
 Route::get('/tema/pencarian', 'SettingTemaController@pencarian')->middleware('auth');
 Route::get('/tema/ubah-tema/{id}/{default_tema}/', 'SettingTemaController@ubahTema')->middleware('auth'); 
 
+// Retur Pembelian
+Route::get('/retur-pembelian/view-tbs', 'ReturPembelianController@viewTbs')->middleware('auth');
+Route::get('/retur-pembelian/pencarian', 'ReturPembelianController@pencarian')->middleware('auth');
+Route::get('/retur-pembelian/supplier', 'ReturPembelianController@supplier')->middleware('auth'); 
+
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
     Route::resource('user', 'UserController');
@@ -1133,6 +1138,7 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
     Route::resource('pembelian-order', 'PembelianOrderController');
     Route::resource('penerimaan-produk', 'PenerimaanProdukController');
     Route::resource('tema', 'SettingTemaController');
+    Route::resource('retur-pembelian', 'ReturPembelianController');
 
 //BARANG
     //HALAMAN DESKRIPSI
