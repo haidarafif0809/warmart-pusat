@@ -44,6 +44,12 @@
         font-size: 1em;
         font-weight: 300;
     }
+    .table>tbody>tr>td {
+        border-bottom-width: 1px;
+        font-size: 0.9em;
+        font-weight: 300;
+        color: black;
+    }
 </style>
 
 <template>
@@ -56,6 +62,68 @@
             <li class="active">Tambah Retur Pembelian</li> 
         </ul> 
 
+
+        <div class="modal" id="modal_pembelian" role="dialog" data-backdrop=""> 
+            <div class="modal-dialog"> 
+                <!-- Modal content--> 
+                <div class="modal-content"> 
+                    <div class="modal-header"> 
+                        <button type="button" class="close"  v-on:click="closeModal()" v-shortkey.push="['esc']" @shortkey="closeModal()"> &times;</button> 
+                        <h4 class="modal-title"> 
+                            <div class="alert-icon"> 
+                                <b>Pembelian</b> 
+                            </div> 
+                        </h4> 
+                    </div> 
+                    <form class="form-horizontal" > 
+                        <div class="modal-body"> 
+                            <div class=" table-responsive ">
+                                <div class="pencarian">
+                                    <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
+                                </div>
+
+                                <table class="table table-striped table-hover" v-if="seen">
+                                    <thead class="text-primary">
+                                        <tr>
+                                            <th >No. Faktur</th>
+                                            <th >Produk</th>
+                                            <th style="text-align:right;">Jumlah</th>
+                                            <th style="text-align:center;">Satuan</th>
+                                            <th style="text-align:right;">Harga</th>
+                                            <th style="text-align:right;">Subtotal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody v-if="pembelians.length > 0 && loading == false"  class="data-ada">
+                                        <tr v-for="data, index in pembelians" >
+                                            <td>{{ data.pembelian.no_faktur }}</td>
+                                            <td>{{ data.pembelian.nama_barang | capitalize }}</td>
+                                            <td align="center">{{ data.pembelian.jumlah_produk | pemisahTitik }}</td>
+                                            <td>{{ data.pembelian.nama_satuan | hurufBesar }}</td>
+                                            <td align="center">{{ data.pembelian.harga_produk | pemisahTitik }}</td>
+                                            <td align="center">{{ data.pembelian.subtotal | pemisahTitik }}</td>
+                                        </tr>
+                                    </tbody>          
+                                    <tbody class="data-tidak-ada"  v-else-if="pembelians.length == 0 && loading == false">
+                                        <tr ><td colspan="6"  class="text-center">Tidak Ada Data</td></tr>
+                                    </tbody>
+                                </table>
+
+                                <vue-simple-spinner v-if="loading"></vue-simple-spinner>
+
+                                <div align="right">
+                                    <pagination :data="pembelianDatas" v-on:pagination-change-page="getDataPembelian" :limit="4">
+                                    </pagination>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default btn-sm"  v-on:click="closeModal()" v-shortkey.push="['esc']" @shortkey="closeModal()"> <font style="font-size:15px;">Tutup(Esc)</font></button>
+                        </div> 
+                    </form>
+                </div>       
+            </div> 
+        </div> 
+        <!-- / MODAL TOMBOL SELESAI -->
 
 
         <div class="modal" id="modal_selesai" role="dialog" data-backdrop=""> 
@@ -103,7 +171,7 @@
                                     <div class="col-md-3 col-xs-6">
                                         <div class="form-group" style="margin-right: 10px; margin-left: 1px; margin-bottom: 1px; margin-top: 1px;">
                                             <font style="color: black">(%)(F8)</font>    
-                                            <money style="text-align:right" class="form-subtotal" v-model="returPembelian.potongan_faktur" v-bind="separator" v-shortkey.focus="['f7']"></money>
+                                            <money style="text-align:right" class="form-subtotal" v-model="returPembelian.potongan_faktur" v-bind="separator" v-shortkey.focus="['f8']"></money>
                                         </div>
                                     </div>
                                 </div>
@@ -155,7 +223,7 @@
                     <div class="col-md-3">
                         <div class="card card-produk" style="margin-bottom: 1px; margin-top: 1px;">
                             <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
-                                <selectize-component v-model="inputTbsRetur.supplier" :settings="placeholder_supplier" id="produk" ref='produk'>
+                                <selectize-component v-model="inputTbsRetur.supplier" :settings="placeholder_supplier" id="supplier" ref='supplier'>
                                     <option v-for="suplier, index in supliers" v-bind:value="suplier.id">
                                         {{suplier.nama_suplier}}
                                     </option>
@@ -249,6 +317,14 @@
 
                     </div>
                 </div>
+
+                <span style="display: none;">
+
+                    <input class="form-control" type="hidden"  v-model="returPembelian.supplier"  name="supplier" id="supplier" v-shortkey="['f1']" @shortkey="openSelectizeSupplier()">
+                    <input class="form-control" type="hidden"  v-model="returPembelian.kas"  name="kas" id="kas" v-shortkey="['f6']" @shortkey="openSelectizeKas()">
+
+
+                </span>
             </div>
         </div>
 
@@ -264,6 +340,8 @@
                 errors: [],
                 tbsReturPembelians: [],
                 tbsReturPembelianDatas : {},
+                pembelians: [],
+                pembelianDatas : {},
                 url : window.location.origin+(window.location.pathname).replace("dashboard", "retur-pembelian"),        
                 pencarian: '',
                 loading: true,
@@ -277,7 +355,12 @@
                     masked: false
                 },
                 placeholder_supplier:{
-                    placeholder: '--PILIH SUPPLIER--',
+                    placeholder: 'Cari Supplier (F1) ...',
+                    sortField: 'text',
+                    openOnFocus : true,
+                },
+                placeholder_kas:{
+                    placeholder: '--PILIH KAS--',
                     sortField: 'text',
                     openOnFocus : true,
                 },
@@ -303,11 +386,16 @@
         computed : mapState ({    
             supliers(){
                 return this.$store.state.supplier
-            }
+            },
+            kas(){
+                return this.$store.state.kas
+            },
+            default_kas: state => state.default_kas
         }),
         mounted() {
             var app = this;
             app.$store.dispatch('LOAD_SUPPLIER_LIST');
+            app.$store.dispatch('LOAD_KAS_LIST')
             app.getTbs();
         },
         filters: {
@@ -316,9 +404,53 @@
                 var numberFormat = new Intl.NumberFormat('es-ES');
                 var formatted = angka.map(numberFormat.format);
                 return formatted.join('; ');
-            }
+            },
+            capitalize: function (value) {
+                return value.replace(/(^|\s)\S/g, l => l.toUpperCase())
+            },
+            hurufBesar: function (value) {
+                return value.toUpperCase()
+            },
+        },
+        watch: {
+            pencarian: function (newQuestion) {
+                this.getPencarianTbs()
+                this.loading = true
+            },
+            'inputTbsRetur.supplier': function () {
+                this.getDataPembelian()
+            },
         },
         methods: {
+            openSelectizeSupplier(){      
+                this.$refs.supplier.$el.selectize.focus();
+            },
+            openSelectizeKas(){      
+                this.$refs.kas.$el.selectize.focus();
+            },
+            getDataPembelian(page) {
+                var app = this;
+                var supplier = app.inputTbsRetur.supplier;
+                if (typeof page === 'undefined') {
+                    page = 1;
+                }
+
+                axios.get(app.url+'/data-pembelian?supplier='+supplier+'&page='+page)
+                .then( (resp) => {
+                    console.log(resp.data)
+                    app.pembelians = resp.data.data
+                    app.pembelianDatas = resp.data
+                    app.loading = false
+                    app.seen = true
+                    $("#modal_pembelian").show();
+                })
+                .catch( (err) => {
+                    console.log(err);
+                    app.loading = false;
+                    app.seen = true;
+                    alert("Tidak Dapat Memuat Data Pembelian");
+                })
+            },
             getTbs(page) {
                 var app = this; 
                 if (typeof page === 'undefined') {
@@ -332,6 +464,31 @@
                     app.tbsReturPembelianDatas = resp.data
                     app.loading = false
                     app.seen = true
+                    app.returPembelian.kas = app.default_kas
+                    app.openSelectizeSupplier();
+                })
+                .catch( (err) => {
+                    console.log(err);
+                    app.loading = false;
+                    app.seen = true;
+                    alert("Tidak Dapat Memuat Retur Pembelian");
+                })
+            },
+            getPencarianTbs(page) {
+                var app = this; 
+                if (typeof page === 'undefined') {
+                    page = 1;
+                }
+
+                axios.get(app.url+'/pencarian-tbs?search='+app.pencarian+'&page='+page)
+                .then( (resp) => {
+                    console.log(resp.data)
+                    app.tbsReturPembelians = resp.data.data
+                    app.tbsReturPembelianDatas = resp.data
+                    app.loading = false
+                    app.seen = true
+                    app.returPembelian.kas = app.default_kas
+                    app.openSelectizeSupplier();
                 })
                 .catch( (err) => {
                     console.log(err);
@@ -343,6 +500,10 @@
             bayarPenjualan(){
                 $("#modal_selesai").show(); 
                 this.$refs.pembayaran.$el.focus()
+            },
+            closeModal(){
+                $("#modal_selesai").hide(); 
+                $("#modal_pembelian").hide(); 
             },
         }
     }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Suplier;
+use App\Pembelian;
 use App\TbsReturPembelian;
 use Auth;
 
@@ -104,6 +105,26 @@ class ReturPembelianController extends Controller
 
         $url     = '/retur-pembelian/view-tbs';
         $respons = $this->dataPagination($tbs_retur, $array, $no_faktur, $url);
+
+        return response()->json($respons);
+    }
+
+    // VIEW TBS
+    public function dataPembelian(Request $request)
+    {
+        $no_faktur   = '';
+        $warung_id = Auth::user()->id_warung;
+
+        $pembelians = Pembelian::dataPembelian($request->supplier, $warung_id)->paginate(10);
+        $array = [];
+        foreach ($pembelians as $pembelian) {
+            array_push($array, [
+                'pembelian' => $pembelian,
+                ]);
+        }
+
+        $url     = '/retur-pembelian/data-pembelian';
+        $respons = $this->dataPagination($pembelians, $array, $no_faktur, $url);
 
         return response()->json($respons);
     }
