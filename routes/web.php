@@ -1088,6 +1088,12 @@ Route::get('/tema/view', 'SettingTemaController@view')->middleware('auth');
 Route::get('/tema/pencarian', 'SettingTemaController@pencarian')->middleware('auth');
 Route::get('/tema/ubah-tema/{id}/{default_tema}/', 'SettingTemaController@ubahTema')->middleware('auth'); 
 
+//Retur Penjualan Vue .js
+Route::get('/retur-penjualan/view', 'ReturPenjualanController@view')->middleware('auth');
+Route::get('/retur-penjualan/view-tbs-retur-penjualan', 'ReturPenjualanController@viewTbsReturPenjualan')->middleware('auth');
+Route::get('/retur-penjualan/pencarian-tbs-retur-penjualan', 'ReturPenjualanController@viewTbsReturPenjualan')->middleware('auth');
+
+
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
     Route::resource('user', 'UserController');
