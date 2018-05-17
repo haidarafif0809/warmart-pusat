@@ -1851,9 +1851,11 @@ public function simpanTbsPenjualan(Request $request){
 
     $tbs_penjualan->update(['no_antrian' => $no_antrian]);
 
+    $pelanggan = $newAntrian->pelanggan_id == 0 ? 'Umum' : $newAntrian->pelanggan->name;
+
     $respons['id'] = $newAntrian->id;
     $respons['no_antrian'] = $no_antrian;
-    $respons['pelanggan'] = $newAntrian->pelanggan->name;
+    $respons['pelanggan'] = $pelanggan;
 
     return $respons;
 }
@@ -1869,10 +1871,12 @@ public function getAntrian(){
 
         $total_belanja = TbsPenjualan::select([DB::raw('SUM(subtotal) as subtotal')])->where('warung_id', $user_warung)->where('session_id', $session_id)->where('no_antrian',$antrians->no_antrian)->first()->subtotal;
 
+        $pelanggan = $antrians->pelanggan_id == 0 ? 'Umum' : $antrians->pelanggan->name;
+
         array_push($array, [
             'id'            => $antrians->id,
             'no_antrian'    => $antrians->no_antrian,
-            'pelanggan'     => $antrians->pelanggan->name,
+            'pelanggan'     => $pelanggan,
             'total_belanja' => number_format($total_belanja, 0, ',', '.')
         ]);
     }

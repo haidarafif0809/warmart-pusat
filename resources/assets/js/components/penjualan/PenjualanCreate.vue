@@ -760,6 +760,7 @@
       app.$store.dispatch('LOAD_KAS_LIST')  
       app.dataSettingPenjualanPos()
       app.getResults()  
+      app.getAntrian()
     },
     filters: {
       pemisahTitik: function (value) {
@@ -1639,23 +1640,21 @@ submitSimpanPenjualan(){
   })
 
 },
-showAntrian(){
-
-  $("#modal_antri").show()
+getAntrian(){
   let app = this
-
-  if (app.antrian.length == 0) {
-    axios.get(app.url+'/get-antrian-penjualan')
-    .then(resp => {
-      app.antrian = resp.data
-      console.log(resp.data)
-    })
-    .catch(err => {
-      alert("Terjadi Kesalahan!, tidak dapat memuat antrian")
-      console.log(err)
-    })
-  }
-
+  
+  axios.get(app.url+'/get-antrian-penjualan')
+  .then(resp => {
+    app.antrian = resp.data
+    console.log(resp.data)
+  })
+  .catch(err => {
+    alert("Terjadi Kesalahan!, tidak dapat memuat antrian")
+    console.log(err)
+  })
+},
+showAntrian(){
+  $("#modal_antri").show()
 },
 bayarPenjualan(){
   $("#modal_selesai").show(); 
