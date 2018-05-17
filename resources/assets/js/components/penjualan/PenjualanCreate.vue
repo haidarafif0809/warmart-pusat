@@ -337,16 +337,17 @@
             <tbody>
 
               <antrian 
-              v-for="list, index in antrian" 
+              v-for="list, index in antrian.data" 
               :list="list" 
               :key="list.id" >
             </antrian>  
 
           </tbody>    
         </table>
+        <div align="right"><pagination :data="antrian" v-on:pagination-change-page="getAntrian" :limit="4"></pagination></div>
+
       </div>        
 
-      <center><button type="button" class="btn btn-xs btn-info">Load More... <i class="material-icons">keyboard_arrow_down</i></button></center>
     </div>
     <div class="modal-footer">  
       <button type="button" class="btn btn-default btn-sm" v-on:click="closeModal()">Tutup</button>
@@ -667,7 +668,7 @@
         errors: [],
         tbs_penjualan: [],
         satuan: [],
-        antrian: [],
+        antrian: {},
         url : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
         urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan/download-excel"),
         url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
@@ -1601,7 +1602,7 @@ dataSettingPenjualanPos() {
 simpanPenjualan(){
   let app = this
   app.tbs_penjualan.length > 0 ? ($("#modalSimpanPenjualan").show() , this.openSelectizePelanggan() ) : app.alertTbs("Produk masih kosong")
-  
+
 }, 
 submitSimpanPenjualan(){
 
@@ -1640,10 +1641,12 @@ submitSimpanPenjualan(){
   })
 
 },
-getAntrian(){
+getAntrian(page){
   let app = this
-  
-  axios.get(app.url+'/get-antrian-penjualan')
+  if (typeof page === 'undefined') {
+    page = 1;
+  }
+  axios.get(app.url+'/get-antrian-penjualan?page='+page)
   .then(resp => {
     app.antrian = resp.data
     console.log(resp.data)
