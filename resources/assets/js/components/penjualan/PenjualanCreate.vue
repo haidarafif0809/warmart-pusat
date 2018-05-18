@@ -632,10 +632,10 @@
                 <button type="button"   class="btn btn-success" id="bayar" v-on:click="bayarPenjualan()" v-shortkey.push="['f2']" @shortkey="bayarPenjualan() "><i class="material-icons">payment</i><b>(F2)</b> </button>
               </div>
               <div class="col-md-4 col-xs-4">
-                <button type="submit" class="btn btn-info" id="btnSimpan" v-on:click="simpanPenjualan()"> <i class="material-icons">save</i><b>(F2) </b></button>
+                <button type="submit" class="btn btn-info" id="btnSimpan" v-on:click="simpanPenjualan()" v-shortkey.push="['shift']" @shortkey="simpanPenjualan() "> <i class="material-icons">save</i><b>(Shift)</b></button>
               </div>
               <div class="col-md-4 col-xs-4">
-                <button type="submit" class="btn btn-danger" id="btnBatal" v-on:click="batalPenjualan()" v-shortkey.push="['f3']" @shortkey="batalPenjualan()" > <i class="material-icons">clear</i><b>(F4)</b> </button>
+                <button type="submit" class="btn btn-danger" id="btnBatal" v-on:click="batalPenjualan()" v-shortkey.push="['f3']" @shortkey="batalPenjualan()" > <i class="material-icons">clear</i><b>(F3)</b> </button>
               </div>
             </div>
           </div>
@@ -1577,7 +1577,13 @@ changeAntrian(antrian){
 
   let app = this
   let index = app.antrian.data.indexOf(antrian)
-  
+
+  app.tbs_penjualan.length == 0 ? app.submitAntrian(antrian,index) : app.alertTbs("Selesaikan dulu produk yang masih ada")
+
+},
+submitAntrian(antrian,index){
+
+  let app = this
   axios.post(app.url+'/pilih-antrian-penjualan',antrian)
   .then(resp => {
    console.log(resp.data)

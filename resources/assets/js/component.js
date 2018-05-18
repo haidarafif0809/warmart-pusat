@@ -6,7 +6,7 @@ Vue.component('antrian', {
 	template: '\
 	<tr>\
 	<td>\
-	<a href="#create-penjualan" class="btn btn-xs btn-info" v-on:click="changeAntrian">{{ list.no_antrian }}</a>\
+	<a href="#create-penjualan" v-on:click="changeAntrian">{{ list.no_antrian }}</a>\
 	</td>\
 	<td align="center">{{ list.pelanggan }}</td>\
 	<td align="right">{{ list.total_belanja }}</td>\
