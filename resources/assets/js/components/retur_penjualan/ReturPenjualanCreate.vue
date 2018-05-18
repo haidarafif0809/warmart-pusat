@@ -41,6 +41,61 @@
 				<li class="active">Tambah Retur Penjualan</li>
 			</ul>
 
+          <div class="modal" id="modal_pilih_retur" role="dialog" data-backdrop=""> 
+                  <div class="modal-dialog modal-lg"> 
+                         <!-- Modal content--> 
+                            <div class="modal-content"> 
+                                <div class="modal-header"> 
+                                    <button type="button" class="close"  v-on:click="closeModalX()" v-shortkey.push="['esc']" @shortkey="closeModalX()"> &times;</button> 
+                                    <h4 class="modal-title"> 
+                                        <div class="alert-icon"> 
+                                            <b>Silahkan Pilih Faktur Penjualan !</b> 
+                                        </div> 
+                                    </h4> 
+                                </div> 
+                                  <div class="modal-body">
+                                                <div class=" table-responsive ">
+                                                   <div class="pencarian">
+                                                    <input type="text" name="pencarian" v-model="pencarianretur" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
+                                                </div>
+
+                                                <table class="table table-striped table-hover" v-if="seen">
+                                                  <thead class="text-primary">
+                                                    <tr>
+                                                      <th >No Transaksi</th>
+                                                      <th >Produk</th>
+                                                      <th style="text-align:right;">Jumlah Produk</th>
+                                                      <th>Satuan</th>
+                                                      <th style="text-align:right;">Harga Produk</th>
+                                                      <th style="text-align:right;">Subtotal</th>
+                                                    </tr>
+                                                  </thead>
+                                                  <tbody v-if="dataPelangganRetur.length > 0 && loading == false"  class="data-ada" >
+                                                    <tr v-for="dataPelangganReturs, index in dataPelangganRetur">
+                                                      <td>{{ dataPelangganReturs.id_penjualan }}</td>
+                                                       <td>{{  dataPelangganReturs.kode_barang }} - {{ dataPelangganReturs.nama_barang  }}</td>
+                                                        <td style="text-align:right;">{{ dataPelangganReturs.jumlah_produk | pemisahTitik }}</td>
+                                                        <td>{{ dataPelangganReturs.satuan }}</td>
+                                                        <td style="text-align:right;">{{ dataPelangganReturs.harga_produk }}</td>
+                                                         <th style="text-align:right;">{{ dataPelangganReturs.subtotal }}</th>
+                                                    </tr>
+                                                  </tbody>          
+                                                  <tbody class="data-tidak-ada"  v-else-if="dataPelangganRetur.length == 0 && loading == false" >
+                                                    <tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
+                                                  </tbody>
+                                                </table>  
+
+                                                <vue-simple-spinner v-if="loading"></vue-simple-spinner>
+                                                <div align="right"><pagination :data="dataPelangganReturData" v-on:pagination-change-page="pilihPelangganRetur" :limit="6"></pagination></div>
+                                              </div>
+                                  </div>
+                            <div class="modal-footer">  
+                           </div> 
+                   </div>       
+               </div> 
+           </div> 
+           <!-- / MODAL TOMBOL SELESAI --> 
+
             <!-- / MODAL SELESAI --> 
             <div class="modal" id="modal_selesai" role="dialog" data-backdrop="">
                 <div class="modal-dialog"> 
@@ -113,103 +168,102 @@
             </div> 
             <!-- / MODAL TOMBOL SELESAI --> 
 
-    <div class="card" style="margin-bottom: 1px; margin-top: 1px;" ><!-- CARD --> 
-          <div class="card-content"> 
-            <h4 class="card-title" style="margin-bottom: 1px; margin-top: 1px;"> Retur Penjualan </h4> 
-            <div class="row" style="margin-bottom: 1px; margin-top: 1px;"> 
+          <div class="card" style="margin-bottom: 1px; margin-top: 1px;" ><!-- CARD --> 
+                <div class="card-content"> 
+                  <h4 class="card-title" style="margin-bottom: 1px; margin-top: 1px;"> Retur Penjualan </h4> 
+                  <div class="row" style="margin-bottom: 1px; margin-top: 1px;"> 
 
-              <div class="col-md-3">
-                <div class="card card-produk" style="margin-bottom: 1px; margin-top: 1px;">
-                  <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
-                   
-                     <selectize-component v-model="inputTbsReturPenjualan.pelanggan" :settings="placeholder_pelanggan"  id="pelanggan" name="pelanggan" ref='pelanggan'> 
-                      <option v-for="pelanggans, index in pelanggan" v-bind:value="pelanggans.id">{{ pelanggans.nama_pelanggan }}</option>
-                     </selectize-component>
-                    <input class="form-control" type="hidden"  v-model="inputTbsReturPenjualan.id_pelanggan"  name="id_tbs" id="id_tbs"  v-shortkey="['f1']" @shortkey="openSelectizePelanggan()">
-                      </div><!--/COL MD  3 --> 
-                      <span v-if="errors.pelanggan" id="produk_error" class="label label-danger">{{ errors.pelanggan[0] }}</span>
-              </div>
+                    <div class="col-md-3">
+                      <div class="card card-produk" style="margin-bottom: 1px; margin-top: 1px;">
+                        <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
+                         
+                           <selectize-component v-model="inputTbsReturPenjualan.pelanggan" :settings="placeholder_pelanggan"  id="pelanggan" name="pelanggan" ref='pelanggan'> 
+                            <option v-for="pelanggans, index in pelanggan" v-bind:value="pelanggans.id">{{ pelanggans.nama_pelanggan }}</option>
+                           </selectize-component>
+                          <input class="form-control" type="hidden"  v-model="inputTbsReturPenjualan.id_pelanggan"  name="id_tbs" id="id_tbs"  v-shortkey="['f1']" @shortkey="openSelectizePelanggan()">
+                            </div><!--/COL MD  3 --> 
+                            <span v-if="errors.pelanggan" id="produk_error" class="label label-danger">{{ errors.pelanggan[0] }}</span>
+                    </div>
+                  </div>
+                </div>
+
+          <div class="row">
+              <div class="col-md-9">
+                <div class=" table-responsive ">
+                     <div class="pencarian">
+                      <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
+                  </div>
+
+                  <table class="table table-striped table-hover" v-if="seen">
+                    <thead class="text-primary">
+                      <tr>
+                      <th>Transaksi Penjualan</th>
+                      <th>Produk</th>
+                      <th class="text-right">Jumlah Retur</th>
+                      <th class="text-center">Satuan</th>
+                      <th class="text-right">Harga</th>
+                      <th class="text-right">Potongan</th>
+                      <th class="text-right">Subtotal</th>
+                      <th class="text-center">Hapus</th>
+                      </tr>
+                    </thead>
+                    <tbody v-if="tbs_retur_penjualan.length > 0 && loading == false"  class="data-ada">
+                      <tr v-for="tbs_retur_penjualans, index in tbs_retur_penjualan" >
+
+                        <td>{{ tbs_retur_penjualans.no_faktur_penjualan }}</td>
+                         <td>{{ tbs_penjualan.kode_barang }} - {{ tbs_penjualan.nama_barang }}</td>
+                          <td style="text-align:right;">{{ tbs_retur_penjualans.jumlah_retur | pemisahTitik }}</td>
+                          <td style="text-align:center;">{{ tbs_retur_penjualans.satuan }}</td>
+                          <td style="text-align:right;">{{ tbs_retur_penjualans.harga_produk | pemisahTitik }}</td>
+
+                          <td style="text-align:right;">{{ tbs_retur_penjualans.potongan | pemisahTitik }}</td>
+                          <td style="text-align:right;">{{ tbs_retur_penjualans.subtotal | pemisahTitik }}</td>
+                          <td> 
+                         <a href="#create-retur-penjualan" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_retur_penjualans.id" v-on:click="deleteEntry(tbs_retur_penjualans.id, index,tbs_retur_penjualans.jumlah_retur,tbs_retur_penjualans.no_faktur_penjualan)">Delete</a>
+                        </td>
+                      </tr>
+                    </tbody>          
+                    <tbody class="data-tidak-ada"  v-else-if="tbs_retur_penjualan.length == 0 && loading == false" >
+                      <tr ><td colspan="8"  class="text-center">Tidak Ada Data</td></tr>
+                    </tbody>
+                  </table>  
+
+                  <vue-simple-spinner v-if="loading"></vue-simple-spinner>
+
+                  <div align="right"><pagination :data="tbsReturPenjualanData" v-on:pagination-change-page="getResults" :limit="8"></pagination></div>
+
+                </div>
+
+                <p style="color: red; font-style: italic;">*Note : Klik Kolom  Potongan , Retur Untuk Mengubah Nilai.</p> 
+            </div><!-- COL SM 8 --> 
+
+                    <div class="col-md-3">
+                                  <div class="card card-stats">
+                                      <div class="card-header" data-background-color="blue">
+                                          <i class="material-icons">local_atm</i>
+                                      </div>
+                                      <div class="card-content">
+                                          <p class="category"><font style="font-size:20px;">Subtotal</font></p>
+                                          <h3 class="card-title"><b><font style="font-size:32px;">{{ inputReturPenjualan.subtotal | pemisahTitik }}</font></b></h3>
+                                      </div>
+                                      <div class="card-footer">
+                                          <div class="row"> 
+                                              <div class="col-md-6 col-xs-6"> 
+                                                  <button type="button" class="btn btn-success btn-lg" id="bayar" v-on:click="bayarReturPenjualan()" v-shortkey.push="['f2']" @shortkey="bayarReturPenjualan()"><font style="font-size:20px;">Bayar(F2)</font></button>
+                                              </div>
+                                              <div class="col-md-6 col-xs-6">
+                                                  <button type="submit" class="btn btn-danger btn-lg" id="btnBatal" v-on:click="batalReturPenjualan()" v-shortkey.push="['f3']" @shortkey="batalReturPenjualan()"> <font style="font-size:20px;">Batal(F3) </font></button>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+              </div><!-- ROW --> 
             </div>
-          </div>
-
-    <div class="row">
-        <div class="col-md-9">
-          <div class=" table-responsive ">
-               <div class="pencarian">
-                <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
-            </div>
-
-            <table class="table table-striped table-hover" v-if="seen">
-              <thead class="text-primary">
-                <tr>
-                <th>Faktur Penjualan</th>
-                <th>Produk</th>
-                <th class="text-right">Jumlah Retur</th>
-                <th class="text-center">Satuan</th>
-                <th class="text-right">Harga</th>
-                <th class="text-right">Potongan</th>
-                <th class="text-right">Subtotal</th>
-                <th class="text-center">Hapus</th>
-                </tr>
-              </thead>
-              <tbody v-if="tbs_retur_penjualan.length > 0 && loading == false"  class="data-ada">
-                <tr v-for="tbs_retur_penjualans, index in tbs_retur_penjualan" >
-
-                  <td>{{ tbs_retur_penjualans.no_faktur_penjualan }}</td>
-                   <td>{{ tbs_penjualan.kode_barang }} - {{ tbs_penjualan.nama_barang }}</td>
-                    <td style="text-align:right;">{{ tbs_retur_penjualans.jumlah_retur | pemisahTitik }}</td>
-                    <td style="text-align:center;">{{ tbs_retur_penjualans.satuan }}</td>
-                    <td style="text-align:right;">{{ tbs_retur_penjualans.harga_produk | pemisahTitik }}</td>
-
-                    <td style="text-align:right;">{{ tbs_retur_penjualans.potongan | pemisahTitik }}</td>
-                    <td style="text-align:right;">{{ tbs_retur_penjualans.subtotal | pemisahTitik }}</td>
-                    <td> 
-                   <a href="#create-retur-penjualan" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_retur_penjualans.id" v-on:click="deleteEntry(tbs_retur_penjualans.id, index,tbs_retur_penjualans.jumlah_retur,tbs_retur_penjualans.no_faktur_penjualan)">Delete</a>
-                  </td>
-                </tr>
-              </tbody>          
-              <tbody class="data-tidak-ada"  v-else-if="tbs_retur_penjualan.length == 0 && loading == false" >
-                <tr ><td colspan="8"  class="text-center">Tidak Ada Data</td></tr>
-              </tbody>
-            </table>  
-
-            <vue-simple-spinner v-if="loading"></vue-simple-spinner>
-
-            <div align="right"><pagination :data="tbsReturPenjualanData" v-on:pagination-change-page="getResults" :limit="8"></pagination></div>
-
-          </div>
-
-          <p style="color: red; font-style: italic;">*Note : Klik Kolom  Potongan , Retur Untuk Mengubah Nilai.</p> 
-      </div><!-- COL SM 8 --> 
-
-              <div class="col-md-3">
-                            <div class="card card-stats">
-                                <div class="card-header" data-background-color="blue">
-                                    <i class="material-icons">local_atm</i>
-                                </div>
-                                <div class="card-content">
-                                    <p class="category"><font style="font-size:20px;">Subtotal</font></p>
-                                    <h3 class="card-title"><b><font style="font-size:32px;">{{ inputReturPenjualan.subtotal | pemisahTitik }}</font></b></h3>
-                                </div>
-                                <div class="card-footer">
-                                    <div class="row"> 
-                                        <div class="col-md-6 col-xs-6"> 
-                                            <button type="button" class="btn btn-success btn-lg" id="bayar" v-on:click="bayarReturPenjualan()" v-shortkey.push="['f2']" @shortkey="bayarReturPenjualan()"><font style="font-size:20px;">Bayar(F2)</font></button>
-                                        </div>
-                                        <div class="col-md-6 col-xs-6">
-                                            <button type="submit" class="btn btn-danger btn-lg" id="btnBatal" v-on:click="batalReturPenjualan()" v-shortkey.push="['f3']" @shortkey="batalReturPenjualan()"> <font style="font-size:20px;">Batal(F3) </font></button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-      
-    </div><!-- ROW --> 
-  </div>
-</div>
+      </div>
 
     </div> 
-</div> 
+  </div> 
 </template>
 
 
@@ -224,7 +278,9 @@ export default {
 			      url : window.location.origin+(window.location.pathname).replace("dashboard", "retur-penjualan"),
             url_kas : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
             url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
-		      	placeholder_suplier: {
+            dataPelangganRetur : [],
+            dataPelangganReturData: {},
+		      	placeholder_pelanggan: {
 				    placeholder: '--PILIH PELANGGAN (F1)--',
             sortField: 'text',
             openOnFocus : true
@@ -260,6 +316,7 @@ export default {
           },
       validated:'',
 			pencarian: '',
+      pencarianretur: '',
 			loading: true,
 			seen : false
 		}
@@ -286,7 +343,8 @@ export default {
         	this.loading = true;  
         },
         pencarianretur: function (newQuestion) {
-
+          this.pencarianPelangganRetur();
+          this.loading = true;
         },
         'inputTbsReturPenjualan.pelanggan': function (newQuestion) {
         	this.pilihPelanggan();  
@@ -350,6 +408,61 @@ export default {
             alert("Tidak Dapat Memuat Retur Penjualan");
         });
     	},
+       pilihPelanggan() {
+          var app = this;
+          var pelanggan = app.inputTbsReturPenjualan.pelanggan;
+                if (pelanggan == '') {
+                        app.$swal({
+                        text: "Silakan Pilih Pelanggan Telebih dahulu!",
+                        });
+              }else{
+                      app.pilihPelangganRetur();
+                      $("#modal_pilih_retur").show();
+                 }
+      },
+      pilihPelangganRetur(page){
+            var app = this;
+            var pelanggan = app.inputTbsReturPenjualan.pelanggan.split("|");
+            var id = pelanggan[0];
+            if (typeof page === 'undefined') {
+                page = 1;
+            }
+          axios.get(app.url+'/data-pelanggan-retur/'+id+'?page='+page)
+                .then(function (resp) {
+                app.dataPelangganRetur = resp.data.data;
+                app.dataPelangganReturData = resp.data;
+                app.loading = false;
+                app.seen = true;
+            })
+            .catch(function (resp) {
+                console.log(resp);
+                app.loading = false;
+                app.seen = true;
+                alert("Tidak Dapat Memuat Data Retur");
+            });
+      },
+      pencarianPelangganRetur(page){
+            var app = this;
+            var pelanggan = app.inputTbsReturPenjualan.pelanggan.split("|");
+            var id = pelanggan[0];
+            if (typeof page === 'undefined') {
+                page = 1;
+            }
+            axios.get(app.url+'/pencarian-pelanggan-retur/'+id+'?search='+app.pencarianretur+'&page='+page)
+            .then(function (resp) {
+                app.dataPelangganRetur = resp.data.data;
+                app.dataPelangganReturData = resp.data;
+                app.loading = false;
+                app.seen = true;
+            })
+            .catch(function (resp) {
+                console.log(resp);
+                alert("Tidak Dapat Memuat Data Retur");
+            });
+        },
+       closeModalX(){
+        $("#modal_pilih_retur").hide(); 
+      },
     	alert(pesan) {
     		this.$swal({
     			title: "Berhasil ",

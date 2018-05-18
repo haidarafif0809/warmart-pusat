@@ -1092,6 +1092,8 @@ Route::get('/tema/ubah-tema/{id}/{default_tema}/', 'SettingTemaController@ubahTe
 Route::get('/retur-penjualan/view', 'ReturPenjualanController@view')->middleware('auth');
 Route::get('/retur-penjualan/view-tbs-retur-penjualan', 'ReturPenjualanController@viewTbsReturPenjualan')->middleware('auth');
 Route::get('/retur-penjualan/pencarian-tbs-retur-penjualan', 'ReturPenjualanController@viewTbsReturPenjualan')->middleware('auth');
+Route::get('/retur-penjualan/data-pelanggan-retur/{id}', 'ReturPenjualanController@dataPelangganRetur')->middleware('auth');
+Route::get('/retur-penjualan/pencarian-pelanggan-retur/{id}', 'ReturPenjualanController@pencarianPelangganRetur')->middleware('auth');
 
 
 Route::middleware('optimizeImages', 'auth')->group(function () {

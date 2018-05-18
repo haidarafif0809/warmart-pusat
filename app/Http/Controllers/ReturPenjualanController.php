@@ -58,17 +58,17 @@ class ReturPenjualanController extends Controller
         return $respons;
     }
 
-        public function dataPaginationPencarianData($retur_penjualan, $array, $url, $search)
+        public function dataPaginationPencarianData($retur_penjualan, $array, $link_view, $search)
     {
         //DATA PAGINATION
         $respons['current_page']   = $retur_penjualan->currentPage();
         $respons['data']           = $array;
-        $respons['first_page_url'] = url($url . '?page=' . $retur_penjualan->firstItem() . '&search=' . $search);
+        $respons['first_page_url'] = url('/retur-penjualan/' . $link_view . '?page=' . $retur_penjualan->firstItem() . '&search=' . $search);
         $respons['from']           = 1;
         $respons['last_page']      = $retur_penjualan->lastPage();
-        $respons['last_page_url']  = url($url . '?page=' . $retur_penjualan->lastPage() . '&search=' . $search);
+        $respons['last_page_url']  = url('/retur-penjualan/' . $link_view . '?page=' . $retur_penjualan->lastPage() . '&search=' . $search);
         $respons['next_page_url']  = $retur_penjualan->nextPageUrl();
-        $respons['path']           = url($url);
+        $respons['path']           = url('/retur-penjualan/'. $link_view);
         $respons['per_page']       = $retur_penjualan->perPage();
         $respons['prev_page_url']  = $retur_penjualan->previousPageUrl();
         $respons['to']             = $retur_penjualan->perPage();
@@ -151,7 +151,7 @@ class ReturPenjualanController extends Controller
 
         $array = $this->foreachTbs($tbs_retur_penjualan, $jenis_tbs);
 
-        $url     = '/retur-penjualan/view-tbs-retur-penjualan';
+        $url     = 'view-tbs-retur-penjualan';
         $respons = $this->dataPagination($tbs_retur_penjualan, $array, $url);
         return response()->json($respons);
     }
@@ -166,8 +166,60 @@ class ReturPenjualanController extends Controller
 
         $array = $this->foreachTbs($tbs_retur_penjualan, $jenis_tbs);
 
-        $url     = '/retur-penjualan/view-tbs-pembayaran-hutang';
+        $url     = 'view-tbs-retur-penjualan';
         $respons = $this->dataPaginationPencarianData($tbs_retur_penjualan, $array, $url, $search);
+        return response()->json($respons);
+    }
+
+    //VIEW DAN PENCARIAN dataSupplierHutang
+    public function dataPelangganRetur($id)
+    {
+        $session_id  = session()->getId();
+        $user_warung = Auth::user()->id_warung;
+        $id_pelanggan  = $id;
+
+        $data_retur_penjualan     = PenjualanPos::getDataPenjualanRetur($id_pelanggan)->paginate(10);
+
+        $array = array();
+        foreach ($data_retur_penjualan as $data_retur_penjualans) {
+            array_push($array, [
+                'id_penjualan'        => $data_retur_penjualans->id_penjualan,
+                'kode_barang'         => $data_retur_penjualans->kode_barang,
+                'nama_barang'         => $data_retur_penjualans->nama_barang,
+                'jumlah_produk'       => $data_retur_penjualans->jumlah_produk,
+                'satuan'              => $data_retur_penjualans->nama_satuan,
+                'harga_produk'        => $data_retur_penjualans->harga_produk,
+                'subtotal'            => $data_retur_penjualans->subtotal,
+                'waktu'               => $data_retur_penjualans->Waktu,
+            ]);
+        }
+        $url     = 'data-pelanggan-retur/'.$id_pelanggan;
+        $respons = $this->dataPagination($data_retur_penjualan, $array, $url);
+        return response()->json($respons);
+    }
+        public function pencarianPelangganRetur(Request $request, $id)
+    {
+        $session_id  = session()->getId();
+        $user_warung = Auth::user()->id_warung;
+        $id_pelanggan  = $id;
+        $search = $request->search;
+        $data_retur_penjualan     = PenjualanPos::getDataCariPenjualanRetur($id_pelanggan,$request)->paginate(10);
+
+        $array = array();
+        foreach ($data_retur_penjualan as $data_retur_penjualans) {
+            array_push($array, [
+                'id_penjualan'        => $data_retur_penjualans->id_penjualan,
+                'kode_barang'         => $data_retur_penjualans->kode_barang,
+                'nama_barang'         => $data_retur_penjualans->nama_barang,
+                'jumlah_produk'       => $data_retur_penjualans->jumlah_produk,
+                'satuan'              => $data_retur_penjualans->nama_satuan,
+                'harga_produk'        => $data_retur_penjualans->harga_produk,
+                'subtotal'            => $data_retur_penjualans->subtotal,
+                'waktu'               => $data_retur_penjualans->Waktu,
+            ]);
+        }
+        $url     = 'data-pelanggan-retur/'.$id_pelanggan;
+        $respons = $this->dataPaginationPencarianData($data_retur_penjualan, $array, $url, $search);
         return response()->json($respons);
     }
 
