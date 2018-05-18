@@ -89,16 +89,15 @@
                                             <th style="text-align:right;">Sisa</th>
                                             <th style="text-align:center;">Satuan</th>
                                             <th style="text-align:right;">Harga</th>
-                                            <th style="text-align:right;">Subtotal</th>
                                         </tr>
                                     </thead>
                                     <tbody v-if="pembelians.length > 0 && loading == false"  class="data-ada">
-                                        <tr v-for="data, index in pembelians" @click="insertTbs(data.pembelian.id_produk, data.pembelian.nama_barang, data.stok_produk, data.pembelian.satuan_id, data.pembelian.harga_produk, data.pembelian.subtotal)">
+                                        <tr v-for="data, index in pembelians" @click="insertTbs(data.pembelian.id_produk, data.pembelian.nama_barang, data.stok_produk, data.pembelian.satuan_id, data.pembelian.harga_beli, data.pembelian.subtotal)">
+
                                             <td>{{ data.pembelian.nama_barang | capitalize }}</td>
                                             <td align="right">{{ data.stok_produk | pemisahTitik }}</td>
                                             <td align="center">{{ data.pembelian.nama_satuan | hurufBesar }}</td>
-                                            <td align="right">{{ data.pembelian.harga_produk | pemisahTitik }}</td>
-                                            <td align="right">{{ data.pembelian.subtotal | pemisahTitik }}</td>
+                                            <td align="right">{{ data.pembelian.harga_beli | pemisahTitik }}</td>
                                         </tr>
                                     </tbody>          
                                     <tbody class="data-tidak-ada"  v-else-if="pembelians.length == 0 && loading == false">
@@ -416,6 +415,7 @@
                     id_produk : '',
                     jumlah_retur : '',
                     harga_produk : '',
+                    harga_beli : '',
                     satuan_produk: '',
                     stok_produk: 0,
                 },
@@ -478,6 +478,9 @@
                     this.getDataPembelian()
                 }
             },
+            'inputTbsRetur.satuan_produk':function(){
+                this.hitungHargaKonversi(this.inputTbsRetur.harga_beli)
+            }
         },
         methods: {
             openSelectizeSupplier(){      
@@ -532,7 +535,6 @@
                 })
             },
             insertTbs(id_produk, nama_barang, stok_produk, satuan_id, harga_produk, subtotal) {
-                console.log(`${id_produk} - ${nama_barang} - ${stok_produk} - ${satuan_id} - ${harga_produk} - ${subtotal}`)
                 var app = this;
 
                 if (stok_produk > 0) {
@@ -547,6 +549,7 @@
                 app.inputTbsRetur.nama_produk = titleCase(nama_barang)
                 app.inputTbsRetur.id_produk = id_produk
                 app.inputTbsRetur.harga_produk = harga_produk
+                app.inputTbsRetur.harga_beli = harga_produk
                 app.inputTbsRetur.satuan_produk = satuan_id
                 app.inputTbsRetur.stok_produk = stok_produk
 
@@ -630,6 +633,12 @@
                     console.log(resp);
                     alert("Tidak Dapat Memuat Satuan Produk");
                 });
+            },
+            hitungHargaKonversi(harga_beli){
+
+                var satuan = this.inputTbsRetur.satuan_produk.split("|");
+
+                this.inputTbsRetur.harga_produk = parseFloat(harga_beli) * ( parseFloat(satuan[3]) * parseFloat(satuan[4]) );
             },
             bayarPenjualan(){
                 $("#modal_selesai").show(); 
