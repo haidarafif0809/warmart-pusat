@@ -1561,10 +1561,9 @@ deleteAntrian(antrian){
 
   let app = this
   let index = app.antrian.data.indexOf(antrian)
-  let id = app.antrian.data[index].id
   app.antrian.data.splice(index,1)
   
-  axios.delete(app.url+'/delete-antrian-penjualan/'+id)
+  axios.delete(app.url+'/delete-antrian-penjualan/'+antrian.id)
   .then(resp => {
    app.alert("Menghapus antrian")
  })
@@ -1581,15 +1580,16 @@ changeAntrian(antrian){
   
   axios.post(app.url+'/pilih-antrian-penjualan',antrian)
   .then(resp => {
-    console.log(resp.data)
-    app.antrian.data.splice(index,1)
-    app.getResults()
-    app.closeModalJumlahProduk()
-    console.log("test lagi")
-  })
+   console.log(resp.data)
+   app.penjualan.pelanggan = antrian.pelanggan_id
+   app.antrian.data.splice(index,1)
+   app.getResults()
+   $("#modal_antri").hide()
+   app.openSelectizeProduk()
+ })
   .catch(err => {
-    console.log(err)
-  })
+   console.log(err)
+ })
 
 },
 simpanSetting(){

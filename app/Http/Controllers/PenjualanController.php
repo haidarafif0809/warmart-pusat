@@ -1876,6 +1876,7 @@ public function getAntrian(Request $request){
         array_push($array, [
             'id'            => $antrians->id,
             'no_antrian'    => $antrians->no_antrian,
+            'pelanggan_id'  => $antrians->pelanggan_id,
             'pelanggan'     => $pelanggan,
             'total_belanja' => number_format($total_belanja, 0, ',', '.')
         ]);
