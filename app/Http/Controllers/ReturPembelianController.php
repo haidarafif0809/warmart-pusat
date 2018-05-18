@@ -110,6 +110,25 @@ class ReturPembelianController extends Controller
         return response()->json($respons);
     }
 
+    // PENCARIAN TBS
+    public function pencarianTbs()
+    {
+        $session_id  = session()->getId();
+        $no_faktur   = '';
+        $user_warung = Auth::user()->id_warung;
+
+        $tbs_retur = TbsReturPembelian::dataTransaksiTbsReturPembelian($session_id, $user_warung)
+        ->orderBy('tbs_retur_pembelians.id_tbs_retur_pembelian', 'desc')->paginate(10);
+        
+        $db = "App\TbsReturPembelian";
+        $array = $this->foreachTbs($tbs_retur, $session_id, $db);
+
+        $url     = '/retur-pembelian/view-tbs';
+        $respons = $this->dataPagination($tbs_retur, $array, $no_faktur, $url);
+
+        return response()->json($respons);
+    }
+
     // VIEW DATA PEMBELIAAN
     public function dataPembelian(Request $request)
     {

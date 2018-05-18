@@ -62,7 +62,7 @@
             <li class="active">Tambah Retur Pembelian</li> 
         </ul> 
 
-
+        <!-- MODEL DATA PEMBELIAN -->
         <div class="modal" id="modal_pembelian" role="dialog" data-backdrop=""> 
             <div class="modal-dialog"> 
                 <!-- Modal content--> 
@@ -93,7 +93,7 @@
                                         </tr>
                                     </thead>
                                     <tbody v-if="pembelians.length > 0 && loading == false"  class="data-ada">
-                                        <tr v-for="data, index in pembelians" >
+                                        <tr v-for="data, index in pembelians" @click="insertTbs(data.pembelian.id_produk, data.pembelian.nama_barang, data.stok_produk, data.pembelian.satuan_id, data.pembelian.harga_produk, data.pembelian.subtotal)">
                                             <td>{{ data.pembelian.nama_barang | capitalize }}</td>
                                             <td align="right">{{ data.stok_produk | pemisahTitik }}</td>
                                             <td align="center">{{ data.pembelian.nama_satuan | hurufBesar }}</td>
@@ -121,9 +121,49 @@
                 </div>       
             </div> 
         </div> 
-        <!-- / MODAL TOMBOL SELESAI -->
+        <!-- / MODAL DATA PEMBELIAN -->
+
+        
+
+        <!-- MODAL INSERT TBS -->
+        <div class="modal" id="modalInsertTbs" role="dialog" tabindex="-1"  aria-labelledby="myModalLabel" aria-hidden="true" >
+            <div class="modal-dialog modal-medium">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close"  v-on:click="closeModalInsertTbs()" v-shortkey.push="['f9']" @shortkey="closeModalInsertTbs()"> &times;</button> 
+                    </div>
+
+                    <form class="form-horizontal" v-on:submit.prevent="submitInsertTbs(inputTbsRetur.id_produk,inputTbsRetur.jumlah_retur,inputTbsRetur.harga_produk,inputTbsRetur.nama_produk,inputTbsRetur.satuan_produk)"> 
+                        <div class="modal-body">
+                            <h3 class="text-center"><b>{{inputTbsRetur.nama_produk}}</b></h3>
+
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <input class="form-control" type="number" v-model="inputTbsRetur.jumlah_retur" placeholder="Isi Jumlah Retur" name="jumlah_retur" id="jumlah_retur" ref="jumlah_retur" autocomplete="off" step="0.01">
+                                </div>
+                                <div class="col-md-4">
+                                    <selectize-component v-model="inputTbsRetur.satuan_produk" :settings="placeholder_satuan" id="satuan" name="satuan" ref='satuan'> 
+                                        <option v-for="satuans, index in satuan" v-bind:value="satuans.satuan" class="pull-left">{{ satuans.nama_satuan }}</option>
+                                    </selectize-component>
+                                </div>
+                                <div class="col-md-4">
+                                    <money class="form-control" v-model="inputTbsRetur.harga_produk" v-bind="separator" placeholder="Isi Harga Produk" name="harga_produk" id="harga_produk" ref="harga_produk" autocomplete="off" ></money>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-simple" v-on:click="closeModalInsertTbs()" v-shortkey.push="['f9']" @shortkey="closeModalInsertTbs()">Close(F9)</button>
+                            <button type="submit" class="btn btn-info btn-lg">Tambah</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- MODAL INSERT TBS -->
 
 
+        <!-- MODAL SELESAI -->
         <div class="modal" id="modal_selesai" role="dialog" data-backdrop=""> 
             <div class="modal-dialog"> 
                 <!-- Modal content--> 
@@ -336,11 +376,13 @@
         data: function () {
             return {
                 errors: [],
+                satuan: [],
                 tbsReturPembelians: [],
                 tbsReturPembelianDatas : {},
                 pembelians: [],
                 pembelianDatas : {},
-                url : window.location.origin+(window.location.pathname).replace("dashboard", "retur-pembelian"),        
+                url : window.location.origin+(window.location.pathname).replace("dashboard", "retur-pembelian"),
+                url_satuan : window.location.origin+(window.location.pathname).replace("dashboard", "pembelian/satuan-konversi"),        
                 pencarian: '',
                 pencarianPembelian: '',
                 loading: true,
@@ -363,9 +405,19 @@
                     sortField: 'text',
                     openOnFocus : true,
                 },
+                placeholder_satuan: {
+                    placeholder: '--PILIH SATUAN--',
+                    sortField: 'text',
+                    openOnFocus : true,
+                },
                 inputTbsRetur: {
                     supplier: '',
-                    nama_supplier: ''
+                    nama_produk : '',
+                    id_produk : '',
+                    jumlah_retur : '',
+                    harga_produk : '',
+                    satuan_produk: '',
+                    stok_produk: 0,
                 },
                 inputPembayaranRetur: {
                     keterangan: ''
@@ -422,7 +474,9 @@
                 this.loading = true
             },
             'inputTbsRetur.supplier': function () {
-                this.getDataPembelian()
+                if (this.inputTbsRetur.supplier != '') {
+                    this.getDataPembelian()
+                }
             },
         },
         methods: {
@@ -477,6 +531,29 @@
                     alert("Tidak Dapat Memuat Data Pembelian");
                 })
             },
+            insertTbs(id_produk, nama_barang, stok_produk, satuan_id, harga_produk, subtotal) {
+                console.log(`${id_produk} - ${nama_barang} - ${stok_produk} - ${satuan_id} - ${harga_produk} - ${subtotal}`)
+                var app = this;
+
+                if (stok_produk > 0) {
+                    app.prosesInsertTbs(id_produk,nama_barang,stok_produk,satuan_id,harga_produk,subtotal);                    
+                    app.getSatuan(id_produk);
+                }else{
+                    app.alertGagal("Stok "+titleCase(nama_barang)+" Tidak Mencukupi.")
+                }
+            },
+            prosesInsertTbs(id_produk,nama_barang,stok_produk,satuan_id,harga_produk,subtotal) {
+                var app = this
+                app.inputTbsRetur.nama_produk = titleCase(nama_barang)
+                app.inputTbsRetur.id_produk = id_produk
+                app.inputTbsRetur.harga_produk = harga_produk
+                app.inputTbsRetur.satuan_produk = satuan_id
+                app.inputTbsRetur.stok_produk = stok_produk
+
+                app.closeModal();
+                $("#modalInsertTbs").show();
+                app.$refs.jumlah_retur.focus();
+            },
             getTbs(page) {
                 var app = this; 
                 if (typeof page === 'undefined') {
@@ -523,14 +600,58 @@
                     alert("Tidak Dapat Memuat Retur Pembelian");
                 })
             },
+            getSatuan(id_produk){
+                var app = this;
+                var satuan_tbs = $(".satuan-"+id_produk).attr("data-satuan");
+
+                axios.get(app.url_satuan+'/'+id_produk)
+                .then(function (resp) {
+
+                    app.satuan = resp.data;
+                    if (typeof satuan_tbs == "undefined") {
+
+                        $.each(resp.data, function (i, item) {
+                            if (resp.data[i].id === resp.data[i].satuan_dasar) {
+                                app.inputTbsRetur.satuan_produk = resp.data[i].satuan;
+                            }
+                        });
+
+                    }else{
+
+                        $.each(resp.data, function (i, item) {
+                            if (resp.data[i].id === parseInt(satuan_tbs)) {
+                                app.inputTbsRetur.satuan_produk = resp.data[i].satuan;
+                            }
+                        });
+
+                    }
+                })
+                .catch(function (resp) {
+                    console.log(resp);
+                    alert("Tidak Dapat Memuat Satuan Produk");
+                });
+            },
             bayarPenjualan(){
                 $("#modal_selesai").show(); 
                 this.$refs.pembayaran.$el.focus()
             },
             closeModal(){
+                this.inputTbsRetur.supplier = '',
                 $("#modal_selesai").hide(); 
                 $("#modal_pembelian").hide(); 
             },
+            closeModalInsertTbs(){
+                $("#modalInsertTbs").hide();
+                $("#modal_pembelian").show(); 
+            },
+            alertGagal(pesan) {
+                this.$swal({
+                    text: pesan,
+                    icon: "warning",
+                    buttons: false,
+                    timer: 1500
+                })
+            }
         }
     }
 </script>
