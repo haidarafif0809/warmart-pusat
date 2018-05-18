@@ -136,11 +136,10 @@ class Pembelian extends Model
     public function scopeDataPembelian($query, $supplier, $warung_id) {
         $query->select('pembelians.id', 'pembelians.no_faktur', 'detail_pembelians.id_produk', 'detail_pembelians.jumlah_produk', 'detail_pembelians.satuan_id', 'detail_pembelians.harga_produk', 'detail_pembelians.subtotal', 'barangs.nama_barang', 'satuans.nama_satuan')  
         ->leftJoin('detail_pembelians', 'pembelians.no_faktur', '=', 'detail_pembelians.no_faktur')
-        ->leftJoin('satuans', 'detail_pembelians.satuan_id', '=', 'satuans.id')
         ->leftJoin('barangs', 'detail_pembelians.id_produk', '=', 'barangs.id')
+        ->leftJoin('satuans', 'barangs.satuan_id', '=', 'satuans.id')
         ->where('pembelians.suplier_id', $supplier)
-        ->where('pembelians.warung_id', $warung_id)
-        ->orderBy('pembelians.created_at', 'asc');
+        ->where('detail_pembelians.warung_id', $warung_id);
         return $query;
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Hpp;
 use App\Suplier;
 use App\Pembelian;
 use App\TbsReturPembelian;
@@ -109,17 +110,52 @@ class ReturPembelianController extends Controller
         return response()->json($respons);
     }
 
-    // VIEW TBS
+    // VIEW DATA PEMBELIAAN
     public function dataPembelian(Request $request)
     {
         $no_faktur   = '';
         $warung_id = Auth::user()->id_warung;
 
-        $pembelians = Pembelian::dataPembelian($request->supplier, $warung_id)->paginate(10);
+        $pembelians = Pembelian::dataPembelian($request->supplier, $warung_id)        
+        ->groupBy('detail_pembelians.id_produk')
+        ->orderBy('pembelians.created_at', 'asc')
+        ->paginate(10);
         $array = [];
         foreach ($pembelians as $pembelian) {
+            $stok_produk = Hpp::stok_produk($pembelian->id_produk);
+
             array_push($array, [
-                'pembelian' => $pembelian,
+                'pembelian'     => $pembelian,
+                'stok_produk'   => $stok_produk
+                ]);
+        }
+
+        $url     = '/retur-pembelian/data-pembelian';
+        $respons = $this->dataPagination($pembelians, $array, $no_faktur, $url);
+
+        return response()->json($respons);
+    }
+
+    // PENCARIAN DATA PEMBELIAN
+    public function pencarianDataPembelian(Request $request)
+    {
+        $no_faktur   = '';
+        $warung_id = Auth::user()->id_warung;        
+        $search = $request->search;
+
+        $pembelians = Pembelian::dataPembelian($request->supplier, $warung_id)
+        ->where(function ($query) use ($search) {
+            $query->orwhere('barangs.nama_barang', 'LIKE', '%' . $search . '%')
+            ->orwhere('satuans.nama_satuan', 'LIKE', '%' . $search . '%');
+        })->groupBy('detail_pembelians.id_produk')->orderBy('pembelians.created_at', 'asc')->paginate(10);
+
+        $array = [];
+        foreach ($pembelians as $pembelian) {
+            $stok_produk = Hpp::stok_produk($pembelian->id_produk);
+
+            array_push($array, [
+                'pembelian'     => $pembelian,
+                'stok_produk'   => $stok_produk
                 ]);
         }
 

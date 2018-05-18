@@ -71,7 +71,7 @@
                         <button type="button" class="close"  v-on:click="closeModal()" v-shortkey.push="['esc']" @shortkey="closeModal()"> &times;</button> 
                         <h4 class="modal-title"> 
                             <div class="alert-icon"> 
-                                <b>Pembelian</b> 
+                                <b>Pembelian Supplier {{inputTbsRetur.supplier}}</b> 
                             </div> 
                         </h4> 
                     </div> 
@@ -79,15 +79,14 @@
                         <div class="modal-body"> 
                             <div class=" table-responsive ">
                                 <div class="pencarian">
-                                    <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
+                                    <input type="text" name="pencarian" v-model="pencarianPembelian" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
                                 </div>
 
                                 <table class="table table-striped table-hover" v-if="seen">
                                     <thead class="text-primary">
                                         <tr>
-                                            <th >No. Faktur</th>
                                             <th >Produk</th>
-                                            <th style="text-align:right;">Jumlah</th>
+                                            <th style="text-align:right;">Sisa</th>
                                             <th style="text-align:center;">Satuan</th>
                                             <th style="text-align:right;">Harga</th>
                                             <th style="text-align:right;">Subtotal</th>
@@ -95,12 +94,11 @@
                                     </thead>
                                     <tbody v-if="pembelians.length > 0 && loading == false"  class="data-ada">
                                         <tr v-for="data, index in pembelians" >
-                                            <td>{{ data.pembelian.no_faktur }}</td>
                                             <td>{{ data.pembelian.nama_barang | capitalize }}</td>
-                                            <td align="center">{{ data.pembelian.jumlah_produk | pemisahTitik }}</td>
-                                            <td>{{ data.pembelian.nama_satuan | hurufBesar }}</td>
-                                            <td align="center">{{ data.pembelian.harga_produk | pemisahTitik }}</td>
-                                            <td align="center">{{ data.pembelian.subtotal | pemisahTitik }}</td>
+                                            <td align="right">{{ data.stok_produk | pemisahTitik }}</td>
+                                            <td align="center">{{ data.pembelian.nama_satuan | hurufBesar }}</td>
+                                            <td align="right">{{ data.pembelian.harga_produk | pemisahTitik }}</td>
+                                            <td align="right">{{ data.pembelian.subtotal | pemisahTitik }}</td>
                                         </tr>
                                     </tbody>          
                                     <tbody class="data-tidak-ada"  v-else-if="pembelians.length == 0 && loading == false">
@@ -344,6 +342,7 @@
                 pembelianDatas : {},
                 url : window.location.origin+(window.location.pathname).replace("dashboard", "retur-pembelian"),        
                 pencarian: '',
+                pencarianPembelian: '',
                 loading: true,
                 seen : false,
                 separator: {
@@ -365,7 +364,8 @@
                     openOnFocus : true,
                 },
                 inputTbsRetur: {
-                    supplier: ''
+                    supplier: '',
+                    nama_supplier: ''
                 },
                 inputPembayaranRetur: {
                     keterangan: ''
@@ -417,6 +417,10 @@
                 this.getPencarianTbs()
                 this.loading = true
             },
+            pencarianPembelian: function (newQuestion) {
+                this.getPencarianPembelian()
+                this.loading = true
+            },
             'inputTbsRetur.supplier': function () {
                 this.getDataPembelian()
             },
@@ -443,6 +447,28 @@
                     app.loading = false
                     app.seen = true
                     $("#modal_pembelian").show();
+                })
+                .catch( (err) => {
+                    console.log(err);
+                    app.loading = false;
+                    app.seen = true;
+                    alert("Tidak Dapat Memuat Data Pembelian");
+                })
+            },
+            getPencarianPembelian(page) {
+                var app = this;
+                var supplier = app.inputTbsRetur.supplier;
+                if (typeof page === 'undefined') {
+                    page = 1;
+                }
+
+                axios.get(app.url+'/pencarian-data-pembelian?search='+app.pencarianPembelian+'&supplier='+supplier+'&page='+page)
+                .then( (resp) => {
+                    console.log(resp.data)
+                    app.pembelians = resp.data.data
+                    app.pembelianDatas = resp.data
+                    app.loading = false
+                    app.seen = true
                 })
                 .catch( (err) => {
                     console.log(err);
