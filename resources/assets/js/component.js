@@ -5,7 +5,9 @@ Vue.component('antrian', {
 	props: ['list'],
 	template: '\
 	<tr>\
-	<td>{{ list.no_antrian }}</td>\
+	<td>\
+	<a href="#create-penjualan" class="btn btn-xs btn-info" v-on:click="changeAntrian">{{ list.no_antrian }}</a>\
+	</td>\
 	<td align="center">{{ list.pelanggan }}</td>\
 	<td align="right">{{ list.total_belanja }}</td>\
 	<td align="right">\
@@ -15,6 +17,9 @@ Vue.component('antrian', {
 	methods: {
 		deleteAntrian(){
 			this.$emit('deleteAntrian',this.list)
+		},
+		changeAntrian(){
+			this.$emit('changeAntrian',this.list)
 		}
 	}
 })

@@ -814,20 +814,20 @@ public function prosesEditHargaTbsPenjualan(Request $request)
 
     $tbs_penjualan = TbsPenjualan::find($request->id_tbs);
     if ($request->level_harga_produk == 1) {
-     $harga_produk = $tbs_penjualan->produk->harga_jual;
- }else{
-     $harga_produk = $tbs_penjualan->produk->harga_jual2;
- }
+       $harga_produk = $tbs_penjualan->produk->harga_jual;
+   }else{
+       $harga_produk = $tbs_penjualan->produk->harga_jual2;
+   }
 
- $subtotal = ($harga_produk * $tbs_penjualan->jumlah_produk) - $tbs_penjualan->potongan;
+   $subtotal = ($harga_produk * $tbs_penjualan->jumlah_produk) - $tbs_penjualan->potongan;
 
- $tbs_penjualan->update(['harga_produk' => $harga_produk, 'subtotal' => $subtotal]);
+   $tbs_penjualan->update(['harga_produk' => $harga_produk, 'subtotal' => $subtotal]);
 
- $respons['subtotal']      = $subtotal;
- $respons['harga_produk']      = $harga_produk;
- $respons['potongan']      = $this->tampilPotongan($tbs_penjualan->potongan, $tbs_penjualan->jumlah_produk, $harga_produk);
+   $respons['subtotal']      = $subtotal;
+   $respons['harga_produk']      = $harga_produk;
+   $respons['potongan']      = $this->tampilPotongan($tbs_penjualan->potongan, $tbs_penjualan->jumlah_produk, $harga_produk);
 
- return response()->json($respons);
+   return response()->json($respons);
 }
 
 public function prosesEditPotonganTbsPenjualan(Request $request)
@@ -1536,24 +1536,24 @@ public function index()
 
         $tbs_penjualan = EditTbsPenjualan::find($request->id_tbs);
         if ($request->level_harga_produk == 1) {
-         $harga_produk = $tbs_penjualan->produk->harga_jual;
-     }else{
-         $harga_produk = $tbs_penjualan->produk->harga_jual2;
-     }
+           $harga_produk = $tbs_penjualan->produk->harga_jual;
+       }else{
+           $harga_produk = $tbs_penjualan->produk->harga_jual2;
+       }
 
-     $subtotal = ($harga_produk * $tbs_penjualan->jumlah_produk) - $tbs_penjualan->potongan;
+       $subtotal = ($harga_produk * $tbs_penjualan->jumlah_produk) - $tbs_penjualan->potongan;
 
-     $tbs_penjualan->update(['harga_produk' => $harga_produk, 'subtotal' => $subtotal]);
+       $tbs_penjualan->update(['harga_produk' => $harga_produk, 'subtotal' => $subtotal]);
 
-     $respons['subtotal']      = $subtotal;
-     $respons['harga_produk']      = $harga_produk;
-     $respons['potongan']      = $this->tampilPotongan($tbs_penjualan->potongan, $tbs_penjualan->jumlah_produk, $harga_produk);
+       $respons['subtotal']      = $subtotal;
+       $respons['harga_produk']      = $harga_produk;
+       $respons['potongan']      = $this->tampilPotongan($tbs_penjualan->potongan, $tbs_penjualan->jumlah_produk, $harga_produk);
 
-     return response()->json($respons);
- }
+       return response()->json($respons);
+   }
 
- public function prosesHapusEditTbsPenjualan($id)
- {
+   public function prosesHapusEditTbsPenjualan($id)
+   {
 
     if (!EditTbsPenjualan::destroy($id)) {
         return 0;
@@ -1886,14 +1886,22 @@ public function getAntrian(Request $request){
     return response()->json($respons);
 }
 
+public function pilihAntrian(Request $request){
+
+    $session_id = session()->getId();
+    $warung_id = Auth::user()->id_warung;
+    $tbs_penjualan = TbsPenjualan::where('session_id',$session_id)->where('warung_id',$warung_id)->where('no_antrian',$request->no_antrian);
+    $tbs_penjualan->update(['no_antrian' => null]);
+    $delete_antrian = Antrian::where('session_id',$session_id)->where('warung_id',$warung_id)->where('no_antrian',$request->no_antrian)->delete();
+
+}
+
 public function deleteAntrian($id){
 
-    if (!Antrian::destroy($id)) {
-        return 0;
-    } else {
-     return response(200);
- }
- 
+    $antrian = Antrian::where('id',$id);
+    $tbs_penjualan = TbsPenjualan::where('session_id',$antrian->first()->session_id)->where('warung_id',$antrian->first()->warung_id)->where('no_antrian',$antrian->first()->no_antrian)->delete();
+    $antrian->delete();
+
 }
 
 }

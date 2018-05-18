@@ -323,9 +323,6 @@
       <div class="modal-body"> 
 
         <div class="table-responsive">
-          <div style="color: red; float: right;">
-            <input type="text" name="pencarian" placeholder="Pencarian" class="form-control" autocomplete="" style="color: red; float: right;">
-          </div>
           <table class="table table-striped table-hover table-responsive">
             <thead class="text-info">
               <tr>
@@ -337,7 +334,7 @@
             </thead>
             <tbody>
 
-              <antrian v-for="list, index in antrian.data" :list="list" :key="list.id" v-on:deleteAntrian="deleteAntrian"></antrian>  
+              <antrian v-for="list, index in antrian.data" :list="list" :key="list.id" v-on:deleteAntrian="deleteAntrian" v-on:changeAntrian="changeAntrian"></antrian>  
 
             </tbody>    
           </table>
@@ -1577,6 +1574,24 @@ deleteAntrian(antrian){
  })
 
 },
+changeAntrian(antrian){
+
+  let app = this
+  let index = app.antrian.data.indexOf(antrian)
+  
+  axios.post(app.url+'/pilih-antrian-penjualan',antrian)
+  .then(resp => {
+    console.log(resp.data)
+    app.antrian.data.splice(index,1)
+    app.getResults()
+    app.closeModalJumlahProduk()
+    console.log("test lagi")
+  })
+  .catch(err => {
+    console.log(err)
+  })
+
+},
 simpanSetting(){
 
   var app = this
@@ -1591,7 +1606,6 @@ simpanSetting(){
     console.log(resp);
     alert("Tidak dapat Menyimpan Setting Penjualan POS");
   });
-
 
 },
 dataSettingPenjualanPos() {
@@ -1624,11 +1638,10 @@ submitSimpanPenjualan(){
   let newSimpanPenjualan = {
     pelanggan : app.penjualan.pelanggan
   }
-
-  app.tbs_penjualan.splice(0)
+  
   axios.post(app.url+'/simpan-tbs-penjualan', newSimpanPenjualan)
   .then((resp) => {
-
+    app.tbs_penjualan.splice(0)
     let newAntrian = {
       id : resp.data.id,
       no_antrian : resp.data.no_antrian,
