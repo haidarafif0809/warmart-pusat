@@ -1099,6 +1099,7 @@ Route::get('/retur-pembelian/subtotal-tbs', 'ReturPembelianController@getSubtota
 Route::delete('/retur-pembelian/hapus-tbs/{id}', 'ReturPembelianController@hapusTbs')->middleware('auth');
 Route::get('/retur-pembelian/proses-edit-jumlah-retur', 'ReturPembelianController@editJumlahReturTbs')->middleware('auth');
 Route::post('/retur-pembelian/edit-satuan-tbs', 'ReturPembelianController@editSatuanTbs')->middleware('auth');
+Route::post('/retur-pembelian/proses-potongan-tbs', 'ReturPembelianController@editPotongan')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 

@@ -313,7 +313,7 @@
                                         <td align="right">{{ tbs_retur_pembelian.data_tbs.harga_produk | pemisahTitik }}</td>
 
                                         <td align="right">
-                                            <a href="#create-retur-pembelian" v-bind:id="'edit-' + tbs_retur_pembelian.data_tbs.id_tbs_retur_pembelian" v-on:click="editPotongan(tbs_retur_pembelian.data_tbs.id_tbs_retur_pembelian, index,tbs_retur_pembelian.data_tbs.nama_barang,tbs_retur_pembelian.data_tbs.jumlah_retur,tbs_retur_pembelian.data_tbs.harga_produk,tbs_retur_pembelian.data_tbs.subtotal)">
+                                            <a href="#create-retur-pembelian" v-bind:id="'edit-' + tbs_retur_pembelian.data_tbs.id_tbs_retur_pembelian" v-on:click="editPotongan(tbs_retur_pembelian.data_tbs.id_tbs_retur_pembelian, index,tbs_retur_pembelian.data_tbs.nama_barang,tbs_retur_pembelian.data_tbs.subtotal)">
                                                 {{ tbs_retur_pembelian.data_tbs.potongan | pemisahTitik }} | {{ Math.round(tbs_retur_pembelian.potongan_persen,2) }} %
                                             </a>
                                         </td>
@@ -857,10 +857,6 @@
 
                         var subtotal = (parseInt(app.returPembelian.subtotal) - parseInt(subtotal_lama) + parseInt(resp.data.subtotal))
 
-                        function cekTbs(tbs) { 
-                            return tbs.id_tbs_pembelian === id_tbs
-                        }
-
                         app.alert("Mengubah Satuan "+titleCase(nama_produk));
                         app.getTbs();
 
@@ -876,8 +872,61 @@
                   });
                 }
             },
-            hitungHargaKonversi(harga_beli){
+            editPotongan(id, index,nama_produk,subtotal_lama) {
+                var app = this;     
+                app.$swal({
+                    title: titleCase(nama_produk),
+                    text : 'Format : 10 (nominal) || 10% (persen)',
+                    content: {
+                        element: "input",
+                        attributes: {
+                            placeholder: "Edit Potongan Produk",
+                            type: "text",
+                        },
+                    },
+                    buttons: {
+                        cancel: true,
+                        confirm: "OK"                   
+                    },
 
+                }).then((potongan) => {
+                    if (!potongan) throw null;
+                    this.submitEditPotongan(potongan,id,nama_produk,subtotal_lama);
+                });
+            },
+            submitEditPotongan(potongan,id,nama_produk,subtotal_lama){
+                var app = this;
+
+                app.inputTbsRetur.id_tbs = id;
+                app.inputTbsRetur.potongan_produk = potongan;
+                var newinputTbsRetur = app.inputTbsRetur;
+
+                axios.post(app.url+'/proses-potongan-tbs', newinputTbsRetur)
+                .then(function (resp) {
+                    if (resp.data.status == 0) {
+                        app.$swal({
+                            text: "Tidak Dapat Mengubah Potongan Produk, Periksa Kembali Inputan Anda!",
+                        });
+                    }else if (resp.data.status == 1) {
+                        app.$swal({
+                            text: "Potongan Yang Anda Masukan Melebihi Subtotal!",
+                        });
+                    }else{
+                        var subtotal = (parseFloat(app.returPembelian.subtotal) - parseFloat(subtotal_lama)) + parseFloat(resp.data.subtotal)
+
+                        app.returPembelian.subtotal = subtotal.toFixed(2)
+                        app.returPembelian.total_akhir = subtotal.toFixed(2)           
+                        app.inputTbsRetur.potongan_produk = ''
+                        app.inputTbsRetur.id_tbs = ''
+                        app.getTbs();
+                    }
+                })
+                .catch(function (resp) { 
+                    console.log(resp);    
+                    alert("Tidak dapat Mengubah Potongan Produk");
+                });
+            },
+            hitungHargaKonversi(harga_beli){
                 var satuan = this.inputTbsRetur.satuan_produk.split("|");
 
                 this.inputTbsRetur.harga_produk = parseFloat(harga_beli) * ( parseFloat(satuan[3]) * parseFloat(satuan[4]) );

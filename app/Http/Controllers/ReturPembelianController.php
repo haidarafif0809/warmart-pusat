@@ -92,6 +92,46 @@ class ReturPembelianController extends Controller
         return $array;
     }
 
+
+    public function cekPotongan($potongan, $harga_produk, $jumlah_produk)
+    {
+        $cek_potongan = substr_count($potongan, '%'); 
+        // UNTUK CEK APAKAH ADA STRING "%" atau maksudnya untuk cek apakah pot. dalam bentuk persen atau tidak
+
+        // JIKA POTONGAN TIDAK DALAM BENTUK PERSEN
+        if ($cek_potongan == 0) {
+
+        // FILTER POTONGAN, SEMUA BENTUK STRING AKAN DI DIFILTER KECUALI FLOAT/KOMA
+            $potongan_produk = filter_var($potongan, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+
+        } else {
+        // JIKA POTONGAN DALAM BENTUK PERSEN
+        // FILTER POTONGAN, SEMUA BENTUK STRING AKAN DI DIFILTER KECUALI FLOAT/KOMA
+            $potongan_persen = filter_var($potongan, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+
+        // UBAH NILAI POTONGAN KE BENTUK DESIMAL
+            $potongan_produk = ($harga_produk * $jumlah_produk) * $potongan_persen / 100;
+        }
+
+        return $potongan_produk;
+    }
+
+    
+    public function tampilPotongan($potongan_produk, $jumlah_produk, $harga_produk)
+    {
+
+        $potongan_persen = ($potongan_produk / ($jumlah_produk * $harga_produk)) * 100;
+
+        if ($potongan_produk > 0) {
+            $potongan = number_format($potongan_produk, 2, ',', '.') . " (" . round($potongan_persen, 2) . "%)";
+        } else {
+            $potongan = number_format($potongan_produk, 0, ',', '.');
+        }
+
+        return $potongan;
+
+    }
+
     // VIEW TBS
     public function viewTbs()
     {
@@ -338,6 +378,40 @@ class ReturPembelianController extends Controller
         $respons = $this->editSatuan($request, $db);
 
         return response()->json($respons);
+    }
+
+
+    public function editPotongan(Request $request)
+    {
+        $tbs_retur_pembelian = TbsReturPembelian::find($request->id_tbs);
+
+        $total = $tbs_retur_pembelian->jumlah_retur * $tbs_retur_pembelian->harga_produk;
+
+        $potongan_produk = $this->cekPotongan($request->potongan_produk, $tbs_retur_pembelian->harga_produk, $tbs_retur_pembelian->jumlah_retur);
+
+        if ($potongan_produk == '') {
+
+            $respons['status'] = 0;
+
+            return response()->json($respons);
+
+        } else if ($potongan_produk > $total) {
+
+            $respons['status'] = 1;
+
+            return response()->json($respons);
+
+        } else {
+            $subtotal = ($tbs_retur_pembelian->jumlah_retur * $tbs_retur_pembelian->harga_produk) - $potongan_produk;
+
+            $tbs_retur_pembelian->update(['potongan' => $potongan_produk, 'subtotal' => $subtotal]);
+
+            $potongan            = $this->tampilPotongan($potongan_produk, $tbs_retur_pembelian->jumlah_retur, $tbs_retur_pembelian->harga_produk);
+            $respons['potongan'] = $potongan;
+            $respons['subtotal'] = $subtotal;
+
+            return response()->json($respons);
+        }
     }
 
     /**
