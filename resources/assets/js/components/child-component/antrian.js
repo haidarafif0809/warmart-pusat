@@ -8,8 +8,12 @@ Vue.component('antrian', {
 	<td>\
 	<a href="#create-penjualan" v-on:click="changeAntrian">{{ list.no_antrian }}</a>\
 	</td>\
-	<td align="center">{{ list.pelanggan }}</td>\
-	<td align="right">{{ list.total_belanja }}</td>\
+	<td align="center">\
+	<a href="#create-penjualan" v-on:click="changeAntrian">{{ list.pelanggan }}</a>\
+	</td>\
+	<td align="right">\
+	<a href="#create-penjualan" v-on:click="changeAntrian">{{ list.total_belanja }}</a>\
+	</td>\
 	<td align="right">\
 	<a href="#create-penjualan" class="btn btn-xs btn-danger" v-on:click="deleteAntrian">Delete</a>\
 	</td>\

@@ -629,10 +629,10 @@
           <div class="card-footer">
             <div class="row"> 
               <div class="col-md-4 col-xs-4"> 
-                <button type="button"   class="btn btn-success" id="bayar" v-on:click="bayarPenjualan()" v-shortkey.push="['f2']" @shortkey="bayarPenjualan() "><i class="material-icons">payment</i><b>(F2)</b> </button>
+                <button type="button"   class="btn btn-success" id="bayar" v-on:click="bayarPenjualan()" v-shortkey.push="['f2']" @shortkey="bayarPenjualan() "><b>Bayar(F2)</b> </button>
               </div>
               <div class="col-md-4 col-xs-4">
-                <button type="submit" class="btn btn-info" id="btnSimpan" v-on:click="simpanPenjualan()" v-shortkey.push="['shift']" @shortkey="simpanPenjualan() "> <i class="material-icons">save</i><b>(Shift)</b></button>
+                <button type="submit" class="btn btn-info" id="btnSimpan" v-on:click="simpanPenjualan()" v-shortkey.push="['shift']" @shortkey="simpanPenjualan() "><b>Simpan</b></button>
               </div>
               <div class="col-md-4 col-xs-4">
                 <button type="submit" class="btn btn-danger" id="btnBatal" v-on:click="batalPenjualan()" v-shortkey.push="['f3']" @shortkey="batalPenjualan()" > <i class="material-icons">clear</i><b>(F3)</b> </button>
