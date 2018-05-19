@@ -384,6 +384,38 @@
             </div>
         </div>
 
+        <!-- MODAL EDIT SATUAN-->
+        <div class="modal" id="modalEditSatuan" role="dialog" tabindex="-1"  aria-labelledby="myModalLabel" aria-hidden="true" >
+            <div class="modal-dialog modal-medium">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close"  v-on:click="closeModalEditSatuan()" v-shortkey.push="['f9']" @shortkey="closeModalEditSatuan()"> &times;
+                        </button> 
+                    </div>
+
+                    <form class="form-horizontal" v-on:submit.prevent="prosesEditSatuan(inputTbsRetur.id_produk, inputTbsRetur.id_tbs, inputTbsRetur.subtotal, inputTbsRetur.nama_produk)"> 
+                        <div class="modal-body">
+                            <h3 class="text-center"><b>{{inputTbsRetur.nama_produk}}</b></h3>
+
+                            <div class="form-group">
+                                <div class="col-md-12 col-xs-12 hurufBesar">
+                                    <selectize-component v-model="inputTbsRetur.satuan_produk" :settings="placeholder_satuan" id="satuan" name="satuan" ref='satuan'> 
+                                        <option v-for="satuans, index in satuan" v-bind:value="satuans.satuan" class="pull-left">{{ satuans.nama_satuan }}</option>
+                                    </selectize-component>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-simple" v-on:click="closeModalEditSatuan()" v-shortkey.push="['f9']" @shortkey="closeModalEditSatuan()">Close(F9)</button>
+                            <button type="submit" class="btn btn-info">Tambah</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- END MODAL EDIT SATUAN-->
+
     </div>
 </div>
 </template>
@@ -437,6 +469,7 @@
                     harga_beli : '',
                     satuan_produk: '',
                     stok_produk: 0,
+                    id_tbs: ''
                 },
                 inputPembayaranRetur: {
                     keterangan: ''
@@ -618,7 +651,7 @@
 
                 })
                 .catch(function (resp) {
-                    console.log(resp)
+
                     app.loading = false;
                     alert("Gagal Menambahkan Retur Pembelian");
                 });
@@ -659,7 +692,7 @@
                     app.returPembelian.total_akhir += resp.data.subtotal;
                 })
                 .catch(function (resp) {
-                    console.log(resp);
+                    ;
                 });
             }, 
             getPencarianTbs(page) {
@@ -711,7 +744,7 @@
                     }
                 })
                 .catch(function (resp) {
-                    console.log(resp);
+                    ;
                     alert("Tidak Dapat Memuat Satuan Produk");
                 });
             },
@@ -744,7 +777,7 @@
                     app.loading = false;
                 })
                 .catch(function (resp) {
-                    console.log(resp)
+
                     app.loading = false;
                     alert("Tidak Dapat Menghapus Produk "+titleCase(nama_produk));
                 });
@@ -801,6 +834,48 @@
                     } 
                 }); 
             },
+            editSatuan(id, index,nama_produk,subtotal_lama, id_produk) {
+                var app = this;
+                app.inputTbsRetur.nama_produk = titleCase(nama_produk);
+                app.inputTbsRetur.id_tbs = id;
+                app.inputTbsRetur.subtotal = subtotal_lama;
+                app.inputTbsRetur.id_produk = id_produk;
+                app.getSatuan(id_produk);
+                $("#modalEditSatuan").show();
+            },
+            prosesEditSatuan(id_produk, id_tbs, subtotal_lama, nama_produk){
+                var app = this;
+                var newSatuan = app.inputTbsRetur;
+                var satuan_produk = app.inputTbsRetur.satuan_produk.split("|");
+                var satuan_tbs = $(".satuan-"+id_produk).attr("data-satuan");
+
+                if (satuan_tbs == satuan_produk[0]) {
+                    $("#modalEditSatuan").hide();
+                }else{
+                    axios.post(app.url+'/edit-satuan-tbs', newSatuan)
+                    .then(function (resp) {
+
+                        var subtotal = (parseInt(app.returPembelian.subtotal) - parseInt(subtotal_lama) + parseInt(resp.data.subtotal))
+
+                        function cekTbs(tbs) { 
+                            return tbs.id_tbs_pembelian === id_tbs
+                        }
+
+                        app.alert("Mengubah Satuan "+titleCase(nama_produk));
+                        app.getTbs();
+
+                        app.returPembelian.subtotal = subtotal.toFixed(2)
+                        app.returPembelian.total_akhir = subtotal.toFixed(2)
+                        app.openSelectizeSupplier() 
+                        $("#modalEditSatuan").hide();
+                    })
+                    .catch(function (resp) {
+                      ;                  
+                      app.loading = false;
+                      alert("Tidak Dapat Mengubah Satuan");
+                  });
+                }
+            },
             hitungHargaKonversi(harga_beli){
 
                 var satuan = this.inputTbsRetur.satuan_produk.split("|");
@@ -818,6 +893,9 @@
             closeModalInsertTbs(){
                 $("#modalInsertTbs").hide();
                 $("#modal_pembelian").show(); 
+            },
+            closeModalEditSatuan(){
+                $("#modalEditSatuan").hide();
             },
             alert(pesan) {
                 this.$swal({
