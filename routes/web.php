@@ -1094,7 +1094,7 @@ Route::get('/retur-penjualan/view-tbs-retur-penjualan', 'ReturPenjualanControlle
 Route::get('/retur-penjualan/pencarian-tbs-retur-penjualan', 'ReturPenjualanController@viewTbsReturPenjualan')->middleware('auth');
 Route::get('/retur-penjualan/data-pelanggan-retur/{id}', 'ReturPenjualanController@dataPelangganRetur')->middleware('auth');
 Route::get('/retur-penjualan/pencarian-pelanggan-retur/{id}', 'ReturPenjualanController@pencarianPelangganRetur')->middleware('auth');
-
+Route::post('/retur-penjualan/proses-tambah-tbs-retur-penjualan', 'ReturPenjualanController@prosesTbsReturPenjualan')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 

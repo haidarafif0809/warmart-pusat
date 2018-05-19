@@ -71,7 +71,7 @@
                                                     </tr>
                                                   </thead>
                                                   <tbody v-if="dataPelangganRetur.length > 0 && loading == false"  class="data-ada" >
-                                                    <tr v-for="dataPelangganReturs, index in dataPelangganRetur" v-bind:id="'retur-' + dataPelangganReturs.id_penjualan" v-on:click="returJualEntry(dataPelangganReturs.id_penjualan, index,dataPelangganReturs.id_produk,dataPelangganReturs.kode_barang,dataPelangganReturs.nama_barang,dataPelangganReturs.jumlah_produk,dataPelangganReturs.satuan)">
+                                                    <tr v-for="dataPelangganReturs, index in dataPelangganRetur" v-bind:id="'retur-' + dataPelangganReturs.id_penjualan" v-on:click="returJualEntry(dataPelangganReturs.id_penjualan, index,dataPelangganReturs.id_produk,dataPelangganReturs.kode_barang,dataPelangganReturs.nama_barang,dataPelangganReturs.jumlah_produk,dataPelangganReturs.satuan,dataPelangganReturs.harga_produk,dataPelangganReturs.jumlah_jual)">
                                                       <td>{{ dataPelangganReturs.id_penjualan }}</td>
                                                        <td>{{  dataPelangganReturs.kode_barang }} - {{ dataPelangganReturs.nama_barang  }}</td>
                                                         <td style="text-align:right;">{{ dataPelangganReturs.jumlah_produk | pemisahTitik }}</td>
@@ -104,7 +104,7 @@
                         <button type="button" class="close"  v-on:click="closeModalInsertTbs()" v-shortkey.push="['f9']" @shortkey="closeModalInsertTbs()"> &times;</button>  
                     </div> 
  
-                    <form class="form-horizontal">  
+                    <form class="form-horizontal"  v-on:submit.prevent="saveFormReturJual()">  
                         <div class="modal-body"> 
                             <h3 class="text-center"><b>{{formReturJualTbs.nama_produk}}</b></h3> 
  
@@ -113,7 +113,7 @@
                                     <input class="form-control" type="number" v-model="formReturJualTbs.jumlah_retur" placeholder="Isi Jumlah Retur" name="jumlah_retur" id="jumlah_retur" ref="jumlah_retur" autocomplete="off" step="0.01"> 
                                 </div> 
                                 <div class="col-md-6"> 
-                                    <selectize-component v-model="formReturJualTbs.satuan_produk" :settings="placeholder_satuan" id="satuan" name="satuan" ref='satuan'>  
+                                    <selectize-component v-model="formReturJualTbs.satuan" :settings="placeholder_satuan" id="satuan" name="satuan" ref='satuan'>  
                                         <option v-for="satuans, index in satuan" v-bind:value="satuans.satuan" class="pull-left">{{ satuans.nama_satuan }}</option> 
                                     </selectize-component> 
                                 </div> 
@@ -245,7 +245,7 @@
                       <tr v-for="tbs_retur_penjualans, index in tbs_retur_penjualan" >
 
                         <td>{{ tbs_retur_penjualans.no_faktur_penjualan }}</td>
-                         <td>{{ tbs_penjualan.kode_barang }} - {{ tbs_penjualan.nama_barang }}</td>
+                         <td>{{ tbs_retur_penjualans.kode_barang }} - {{ tbs_retur_penjualans.nama_barang }}</td>
                           <td style="text-align:right;">{{ tbs_retur_penjualans.jumlah_retur | pemisahTitik }}</td>
                           <td style="text-align:center;">{{ tbs_retur_penjualans.satuan }}</td>
                           <td style="text-align:right;">{{ tbs_retur_penjualans.harga_produk | pemisahTitik }}</td>
@@ -343,11 +343,13 @@ export default {
             },
             formReturJualTbs:{
                 jumlah_retur : '',
+                jumlah_jual : '',
                 nama_produk : '', 
                 id_produk : '', 
                 id_penjualan: '',
                 satuan : '', 
-                stok_produk: 0, 
+                stok_produk: 0,
+                harga_produk:'' 
             },
             tambahKas: {
               kode_kas : '',
@@ -396,7 +398,9 @@ export default {
           this.loading = true;
         },
         'inputTbsReturPenjualan.pelanggan': function (newQuestion) {
-        	this.pilihPelanggan();  
+          if (this.inputTbsReturPenjualan.pelanggan != '') {
+              this.pilihPelanggan();  
+          }
         }
 
     },
@@ -509,15 +513,17 @@ export default {
                 alert("Tidak Dapat Memuat Data Retur");
             });
         },
-        returJualEntry(id_penjualan,index,id_produk,kode_barang,nama_barang,jumlah_produk,satuan){
+        returJualEntry(id_penjualan,index,id_produk,kode_barang,nama_barang,jumlah_produk,satuan,harga_produk,jumlah_jual){
              var app = this;
                $("#modalInsertTbs").show();
                $("#modal_pilih_retur").hide();            
                 app.formReturJualTbs.nama_produk = titleCase(nama_barang);
                 app.formReturJualTbs.jumlah_retur = jumlah_produk;
+                app.formReturJualTbs.jumlah_jual = jumlah_jual;
                 app.formReturJualTbs.id_penjualan = id_penjualan;
                 app.formReturJualTbs.id_produk = id_produk;
-                app.formReturJualTbs.satuan_produk = satuan;
+                app.formReturJualTbs.satuan = satuan;
+                app.formReturJualTbs.harga_produk = harga_produk;
                 app.getSatuan(id_produk);
         },
         getSatuan(id_produk){ 
@@ -532,7 +538,7 @@ export default {
  
                         $.each(resp.data, function (i, item) { 
                             if (resp.data[i].id === resp.data[i].satuan_dasar) { 
-                                app.formReturJualTbs.satuan_produk = resp.data[i].satuan; 
+                                app.formReturJualTbs.satuan = resp.data[i].satuan; 
                             } 
                         }); 
  
@@ -540,7 +546,7 @@ export default {
  
                         $.each(resp.data, function (i, item) { 
                             if (resp.data[i].id === parseInt(satuan_tbs)) { 
-                                app.formReturJualTbs.satuan_produk = resp.data[i].satuan; 
+                                app.formReturJualTbs.satuan = resp.data[i].satuan; 
                             } 
                         }); 
  
@@ -551,6 +557,35 @@ export default {
                     alert("Tidak Dapat Memuat Satuan Produk"); 
                 }); 
             },
+        saveFormReturJual() {
+                var app = this;
+                var newreturjual = app.formReturJualTbs;
+
+                 axios.post(app.url+'/proses-tambah-tbs-retur-penjualan',newreturjual)
+                  .then(function (resp) {
+                     console.log(resp.data)
+                    if (resp.data == 0) {
+                        app.loading = false;
+                        app.getResults();
+                        $("#modalInsertTbs").hide();
+                         $("#modal_pilih_retur").hide(); 
+                        app.alertTbs("Produk "+app.formReturJualTbs.nama_produk+" Sudah Ada, Silakan Pilih Produk dari Faktur Lain! ");
+                    }else{
+                        var subtotal = parseFloat(app.inputReturPenjualan.subtotal) + parseFloat(resp.data.subtotal)
+                        app.getResults();
+                        app.inputReturPenjualan.subtotal = subtotal.toFixed(2)
+                        app.alert("Berhasil Menambahkan Tbs Retur Penjualan"+ app.formReturJualTbs.nama_produk);
+                        app.formBayarHutangTbs.jumlah_retur = 0
+                        $("#modalInsertTbs").hide();
+                         $("#modal_pilih_retur").hide(); 
+                        app.loading = false;
+                    }
+                  })
+                  .catch(function (resp) {
+                    app.success = false;
+                    app.errors = resp.response.data.errors;
+                  });
+        },
        closeModalX(){
         this.inputTbsReturPenjualan.pelanggan = '', 
         $("#modal_pilih_retur").hide(); 

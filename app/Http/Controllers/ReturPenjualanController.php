@@ -130,11 +130,11 @@ class ReturPenjualanController extends Controller
                 'kode_barang'         => $tbs_retur_penjualans->kode_barang,
                 'nama_barang'         => $tbs_retur_penjualans->nama_barang,
                 'jumlah_jual'         => $tbs_retur_penjualans->jumlah_jual,
-                'jumlah_retur'     => $tbs_retur_penjualans->jumlah_retur,
+                'jumlah_retur'        => $tbs_retur_penjualans->jumlah_retur,
                 'satuan'              => $tbs_retur_penjualans->satuan,
-                'harga_produk'            => $tbs_retur_penjualans->harga_produk,
-                'potongan'        => $tbs_retur_penjualans->potongan,
-                'subtotal'         => $tbs_retur_penjualans->$subtotal,
+                'harga_produk'        => $tbs_retur_penjualans->harga_produk,
+                'potongan'            => $tbs_retur_penjualans->potongan,
+                'subtotal'            => $tbs_retur_penjualans->subtotal,
             ]);
         }
 
@@ -184,9 +184,10 @@ class ReturPenjualanController extends Controller
         foreach ($data_retur_penjualan as $data_retur_penjualans) {
             array_push($array, [
                 'id_penjualan'        => $data_retur_penjualans->id_penjualan,
-                'id_produk'           => $data_retur_penjualans->id_produk,
+                'id_produk'           => $data_retur_penjualans->id_produk, 
                 'kode_barang'         => $data_retur_penjualans->kode_barang,
                 'nama_barang'         => $data_retur_penjualans->nama_barang,
+                'jumlah_jual'         => $data_retur_penjualans->jumlah_jual,
                 'jumlah_produk'       => $data_retur_penjualans->jumlah_produk,
                 'satuan'              => $data_retur_penjualans->nama_satuan,
                 'harga_produk'        => $data_retur_penjualans->harga_produk,
@@ -212,6 +213,7 @@ class ReturPenjualanController extends Controller
                 'id_penjualan'        => $data_retur_penjualans->id_penjualan,
                 'kode_barang'         => $data_retur_penjualans->kode_barang,
                 'nama_barang'         => $data_retur_penjualans->nama_barang,
+                'jumlah_jual'         => $data_retur_penjualans->jumlah_jual,
                 'jumlah_produk'       => $data_retur_penjualans->jumlah_produk,
                 'satuan'              => $data_retur_penjualans->nama_satuan,
                 'harga_produk'        => $data_retur_penjualans->harga_produk,
@@ -222,6 +224,36 @@ class ReturPenjualanController extends Controller
         $url     = 'data-pelanggan-retur/'.$id_pelanggan;
         $respons = $this->dataPaginationPencarianData($data_retur_penjualan, $array, $url, $search);
         return response()->json($respons);
+    }
+        //INSERT TBS
+    public function prosesTbsReturPenjualan(Request $request)
+    {
+        $session_id = session()->getId();
+        $data_satuan = explode("|", $request->satuan); 
+        $data_tbs   = TbsReturPenjualan::where('no_faktur_penjualan', $request->id_penjualan)->where('id_produk', $request->id_produk)
+        ->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
+
+
+        $subtotal = $request->jumlah_retur * $request->harga_produk;
+        //JIKA FAKTUR YG DIPILIH SUDAH ADA DI TBS
+        if ($data_tbs->count() > 0) {
+            return 0;
+        } else {
+            $tbs_pembayaran_hutang = TbsReturPenjualan::create([
+                'session_id'          => $session_id,
+                'no_faktur_penjualan' => $request->id_penjualan,
+                'id_produk'           => $request->id_produk,
+                'harga_produk'        => $request->harga_produk,
+                'jumlah_retur'        => $request->jumlah_retur,
+                'jumlah_jual'         => $request->jumlah_jual,
+                'subtotal'            => $subtotal,
+                'id_satuan_jual'           => $data_satuan[0], 
+                'id_satuan'        => $data_satuan[2],
+                'warung_id'           => Auth::user()->id_warung,
+            ]);
+            $respons['subtotal'] = $subtotal;
+            return response()->json($respons);
+        }
     }
 
     /**
