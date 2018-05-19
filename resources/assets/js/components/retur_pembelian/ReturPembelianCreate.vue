@@ -298,11 +298,32 @@
                                         <td>
                                             {{ tbs_retur_pembelian.data_tbs.kode_barang }} - {{ tbs_retur_pembelian.data_tbs.nama_barang | capitalize }}
                                         </td>
-                                        <td align="right">{{ tbs_retur_pembelian.data_tbs.jumlah_retur | pemisahTitik }}</td>
-                                        <td align="center">{{ tbs_retur_pembelian.data_tbs.nama_satuan }}</td>
+                                        <td align="right">
+                                            <a href="#create-retur-pembelian" v-bind:id="'edit-' + tbs_retur_pembelian.data_tbs.id_tbs_retur_pembelian" v-on:click="editJumlah(tbs_retur_pembelian.data_tbs.id_tbs_retur_pembelian, index,tbs_retur_pembelian.data_tbs.nama_barang,tbs_retur_pembelian.data_tbs.subtotal)">
+                                                {{ tbs_retur_pembelian.data_tbs.jumlah_retur | pemisahTitik }}
+                                            </a>
+                                        </td>
+
+                                        <td align="center">
+                                            <a href="#create-retur-pembelian" v-bind:id="'edit-' + tbs_retur_pembelian.data_tbs.id_tbs_retur_pembelian" v-bind:class="'hurufBesar satuan-' + tbs_retur_pembelian.data_tbs.id_produk" v-bind:data-satuan="''+tbs_retur_pembelian.data_tbs.satuan_id" v-on:click="editSatuan(tbs_retur_pembelian.data_tbs.id_tbs_retur_pembelian, index,tbs_retur_pembelian.data_tbs.nama_barang,tbs_retur_pembelian.data_tbs.subtotal, tbs_retur_pembelian.data_tbs.id_produk)">
+                                                {{ tbs_retur_pembelian.data_tbs.nama_satuan }}
+                                            </a>
+                                        </td>
+
                                         <td align="right">{{ tbs_retur_pembelian.data_tbs.harga_produk | pemisahTitik }}</td>
-                                        <td align="right">{{ tbs_retur_pembelian.data_tbs.potongan | pemisahTitik }} | {{ Math.round(tbs_retur_pembelian.potongan_persen,2) }} %</td>
-                                        <td align="right">{{ tbs_retur_pembelian.data_tbs.tax | pemisahTitik }} | {{ Math.round(tbs_retur_pembelian.tax_persen,2) }} %</td>
+
+                                        <td align="right">
+                                            <a href="#create-retur-pembelian" v-bind:id="'edit-' + tbs_retur_pembelian.data_tbs.id_tbs_retur_pembelian" v-on:click="editPotongan(tbs_retur_pembelian.data_tbs.id_tbs_retur_pembelian, index,tbs_retur_pembelian.data_tbs.nama_barang,tbs_retur_pembelian.data_tbs.jumlah_retur,tbs_retur_pembelian.data_tbs.harga_produk,tbs_retur_pembelian.data_tbs.subtotal)">
+                                                {{ tbs_retur_pembelian.data_tbs.potongan | pemisahTitik }} | {{ Math.round(tbs_retur_pembelian.potongan_persen,2) }} %
+                                            </a>
+                                        </td>
+
+                                        <td align="right">
+                                            <a href="#create-retur-pembelian" v-bind:id="'edit-' + tbs_retur_pembelian.data_tbs.id_tbs_retur_pembelian" v-on:click="editTax(tbs_retur_pembelian.data_tbs.id_tbs_retur_pembelian, index,tbs_retur_pembelian.data_tbs.nama_barang,tbs_retur_pembelian.data_tbs.jumlah_retur,tbs_retur_pembelian.data_tbs.harga_produk,tbs_retur_pembelian.data_tbs.potongan,tbs_retur_pembelian.data_tbs.ppn_produk,tbs_retur_pembelian.data_tbs.subtotal)" >
+                                                {{ tbs_retur_pembelian.data_tbs.tax | pemisahTitik }} | {{ Math.round(tbs_retur_pembelian.tax_persen,2) }} %
+                                            </a>
+                                        </td>
+
                                         <td align="right">{{ tbs_retur_pembelian.data_tbs.subtotal | pemisahTitik }}</td>
                                         <td style="text-align:right;">
                                             <a href="#create-retur-pembelian" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_retur_pembelian.data_tbs.id_tbs_retur_pembelian" v-on:click="deleteEntry(tbs_retur_pembelian.data_tbs.id_tbs_retur_pembelian, index,tbs_retur_pembelian.data_tbs.nama_barang,tbs_retur_pembelian.data_tbs.subtotal)">
@@ -727,6 +748,58 @@
                     app.loading = false;
                     alert("Tidak Dapat Menghapus Produk "+titleCase(nama_produk));
                 });
+            },
+            editJumlah(id, index,nama_produk,subtotal_lama) {
+                var app = this;   
+                swal({ 
+                    title: titleCase(nama_produk), 
+                    input: 'number', 
+                    inputPlaceholder : 'Jumlah Retur',         
+                    html:'Berapa Jumlah Retur Yang Akan Dimasukkan ?', 
+                    animation: false, 
+                    showCloseButton: true, 
+                    showCancelButton: true, 
+                    focusConfirm: true, 
+                    confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> OK', 
+                    confirmButtonAriaLabel: 'Thumbs up, great!', 
+                    cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal', 
+                    closeOnConfirm: true, 
+                    cancelButtonAriaLabel: 'Thumbs down', 
+                    inputAttributes: { 
+                        'name': 'edit_qty_produk', 
+                    }, 
+                    inputValidator : function (value) { 
+                        return new Promise(function (resolve, reject) { 
+                            if (value) { 
+                                resolve(); 
+                            }  
+                            else { 
+                                reject('Jumlah Retur Harus Di Isi!'); 
+                            } 
+                        }) 
+                    } 
+                }).then(function (jumlah_retur) {
+                    if (jumlah_retur != "0") { 
+                        app.loading = true;
+                        axios.get(app.url+'/proses-edit-jumlah-retur?jumlah_retur='+jumlah_retur+'&id_tbs='+id)
+                        .then(function (resp) {
+                            app.alert("Mengubah Jumlah Retur "+titleCase(nama_produk));
+                            app.loading = false;
+                            app.getTbs();      
+                            var subtotal = (parseInt(app.returPembelian.subtotal) - parseInt(subtotal_lama))  + parseInt(resp.data.subtotal)
+                            app.returPembelian.subtotal = subtotal                       
+                            app.returPembelian.total_akhir  = subtotal
+                        })
+                        .catch(function (resp) {
+                            app.loading = false;
+                            alert("Jumlah Retur Tidak Bisa Diedit");
+                        });
+                    } 
+                    else { 
+                        swal('Oops...', 'Jumlah Tidak Boleh 0 !', 'error'); 
+                        return false; 
+                    } 
+                }); 
             },
             hitungHargaKonversi(harga_beli){
 

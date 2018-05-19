@@ -274,6 +274,42 @@ class ReturPembelianController extends Controller
         }
     }
 
+    public function editJumlahReturTbs(Request $request) {
+
+        if (Auth::user()->id_warung == '') {
+            Auth::logout();
+            return response()->view('error.403');
+        } else {
+            $tbs_retur_pembelian = TbsReturPembelian::find($request->id_tbs);
+
+            if ($tbs_retur_pembelian->tax == 0) {
+                $tax_produk = 0;
+            } else {
+                // TAX PRODUK = (HARGA * JUMLAH RETUR - POTONGAN) * TAX /100
+                $tax_produk = (($tbs_retur_pembelian->harga_produk * $request->jumlah_retur) - $tbs_retur_pembelian->potongan) * $tax / 100;
+
+                // TAX PERSEN = (TAX TBS PEMBELIAN * 100) / (HARGA * JUMLAH RETUR - POTONGAN)
+                $tax = ($tbs_retur_pembelian->tax * 100) / $tax_produk;
+            }
+
+            if ($tbs_retur_pembelian->ppn == 'Include') {
+                // JIKA PPN INCLUDE MAKA PAJAK TIDAK MEMPENGARUHI SUBTOTAL
+                $subtotal = ($tbs_retur_pembelian->harga_produk * $request->jumlah_retur) - $tbs_retur_pembelian->potongan;
+            } elseif ($tbs_retur_pembelian->ppn == 'Exclude') {
+                // JIKA PPN EXCLUDE MAKA PAJAK MEMPENGARUHI SUBTOTOTAL
+                $subtotal = (($tbs_retur_pembelian->harga_produk * $request->jumlah_retur) - $tbs_retur_pembelian->potongan) + $tax_produk;
+            } else {
+                $subtotal = ($tbs_retur_pembelian->harga_produk * $request->jumlah_retur) - $tbs_retur_pembelian->potongan;
+            }
+
+            // UPDATE JUMLAH RETUR, SUBTOTAL, DAN TAX
+            $tbs_retur_pembelian->update(['jumlah_retur' => $request->jumlah_retur, 'subtotal' => $subtotal, 'tax' => $tax_produk]);
+            $respons['subtotal'] = $subtotal;
+
+            return response()->json($respons);
+        }
+    }
+
     /**
      * Display a listing of the resource.
      *
