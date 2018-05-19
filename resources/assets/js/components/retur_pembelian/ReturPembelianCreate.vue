@@ -132,7 +132,7 @@
                         <button type="button" class="close"  v-on:click="closeModalInsertTbs()" v-shortkey.push="['f9']" @shortkey="closeModalInsertTbs()"> &times;</button> 
                     </div>
 
-                    <form class="form-horizontal" v-on:submit.prevent="submitInsertTbs(inputTbsRetur.jumlah_retur)"> 
+                    <form class="form-horizontal" v-on:submit.prevent="submitInsertTbs(inputTbsRetur.jumlah_retur, inputTbsRetur.nama_produk)"> 
                         <div class="modal-body">
                             <h3 class="text-center"><b>{{inputTbsRetur.nama_produk}}</b></h3>
 
@@ -554,7 +554,7 @@
                 $("#modalInsertTbs").show();
                 app.$refs.jumlah_retur.focus();
             },
-            submitInsertTbs(jumlah_retur){
+            submitInsertTbs(jumlah_retur, nama_produk){
                 var app = this
 
                 if (jumlah_retur == "" || jumlah_retur == 0) {
@@ -565,11 +565,11 @@
                     })
 
                 }else{
-                    app.prosesInsertTbs(jumlah_retur)
+                    app.prosesInsertTbs(jumlah_retur, nama_produk)
                 }
 
             },
-            prosesInsertTbs(jumlah_retur) {
+            prosesInsertTbs(jumlah_retur, nama_produk) {
                 var app = this;
                 var newTbs = app.inputTbsRetur;
 
@@ -577,7 +577,7 @@
                 axios.post(app.url+'/proses-tambah-tbs-retur-pembelian', newTbs)
                 .then(function (resp) {
                     $("#modalInsertTbs").hide();
-                    app.alert("Menambahkan Produk "+titleCase(nama_barang));
+                    app.alert("Menambahkan Produk "+titleCase(nama_produk));
                     app.loading = false;
                     app.getTbs();
 
@@ -597,6 +597,7 @@
 
                 })
                 .catch(function (resp) {
+                    console.log(resp)
                     app.loading = false;
                     alert("Gagal Menambahkan Retur Pembelian");
                 });
