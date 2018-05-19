@@ -4,6 +4,7 @@ namespace App;
 
 use Auth;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Yajra\Auditable\AuditableTrait;
 
 class TbsReturPembelian extends Model
@@ -20,5 +21,15 @@ class TbsReturPembelian extends Model
 		->leftJoin('satuans', 'satuans.id', '=', 'tbs_retur_pembelians.satuan_id')
 		->where('tbs_retur_pembelians.session_id', $session_id)->where('tbs_retur_pembelians.warung_id', $warung_id);
 		return $query;
+	}
+
+	public function scopeSubtotalTbs($query, $user_warung, $session_id)
+	{
+		$tbs_retur_pembelian = TbsReturPembelian::select(DB::raw('SUM(subtotal) as subtotal'))->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->first();
+		if ($tbs_retur_pembelian->subtotal == null || $tbs_retur_pembelian->subtotal == '') {
+			return $query = 0;
+		} else {
+			return $query = $tbs_retur_pembelian->subtotal;
+		}
 	}
 }

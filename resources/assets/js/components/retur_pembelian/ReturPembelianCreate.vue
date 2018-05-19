@@ -132,7 +132,7 @@
                         <button type="button" class="close"  v-on:click="closeModalInsertTbs()" v-shortkey.push="['f9']" @shortkey="closeModalInsertTbs()"> &times;</button> 
                     </div>
 
-                    <form class="form-horizontal" v-on:submit.prevent="submitInsertTbs(inputTbsRetur.id_produk,inputTbsRetur.jumlah_retur,inputTbsRetur.harga_produk,inputTbsRetur.nama_produk,inputTbsRetur.satuan_produk)"> 
+                    <form class="form-horizontal" v-on:submit.prevent="submitInsertTbs(inputTbsRetur.jumlah_retur)"> 
                         <div class="modal-body">
                             <h3 class="text-center"><b>{{inputTbsRetur.nama_produk}}</b></h3>
 
@@ -146,7 +146,7 @@
                                     </selectize-component>
                                 </div>
                                 <div class="col-md-4">
-                                    <money class="form-control" v-model="inputTbsRetur.harga_produk" v-bind="separator" placeholder="Isi Harga Produk" name="harga_produk" id="harga_produk" ref="harga_produk" autocomplete="off" ></money>
+                                    <money class="form-control" v-model="inputTbsRetur.harga_produk" v-bind="separator" placeholder="Isi Harga Produk" readonly name="harga_produk" id="harga_produk" ref="harga_produk" autocomplete="off" ></money>
                                 </div>
                             </div>
                         </div>
@@ -283,9 +283,7 @@
                             <table class="table table-striped table-hover" v-if="seen">
                                 <thead class="text-primary">
                                     <tr>
-                                        <th >Faktur Pembelian</th>
                                         <th >Produk</th>
-                                        <th style="text-align:right;">Jumlah Produk</th>
                                         <th style="text-align:right;">Jumlah Retur</th>
                                         <th style="text-align:center;">Satuan</th>
                                         <th style="text-align:right;">Harga</th>
@@ -297,24 +295,24 @@
                                 </thead>
                                 <tbody v-if="tbsReturPembelians.length > 0 && loading == false"  class="data-ada">
                                     <tr v-for="tbs_retur_pembelian, index in tbsReturPembelians" >
-                                        <td>{{ tbs_retur_pembelian.kode_produk }} - {{ tbs_retur_pembelian.nama_produk }}</td>
-                                        <td>{{ tbs_retur_pembelian.kode_produk }} - {{ tbs_retur_pembelian.nama_produk }}</td>
-                                        <td>{{ tbs_retur_pembelian.kode_produk }} - {{ tbs_retur_pembelian.nama_produk }}</td>
-                                        <td>{{ tbs_retur_pembelian.kode_produk }} - {{ tbs_retur_pembelian.nama_produk }}</td>
-                                        <td>{{ tbs_retur_pembelian.kode_produk }} - {{ tbs_retur_pembelian.nama_produk }}</td>
-                                        <td>{{ tbs_retur_pembelian.kode_produk }} - {{ tbs_retur_pembelian.nama_produk }}</td>
-                                        <td>{{ tbs_retur_pembelian.kode_produk }} - {{ tbs_retur_pembelian.nama_produk }}</td>
-                                        <td>{{ tbs_retur_pembelian.kode_produk }} - {{ tbs_retur_pembelian.nama_produk }}</td>
-                                        <td>{{ tbs_retur_pembelian.kode_produk }} - {{ tbs_retur_pembelian.nama_produk }}</td>
+                                        <td>
+                                            {{ tbs_retur_pembelian.data_tbs.kode_barang }} - {{ tbs_retur_pembelian.data_tbs.nama_barang | capitalize }}
+                                        </td>
+                                        <td align="right">{{ tbs_retur_pembelian.data_tbs.jumlah_retur | pemisahTitik }}</td>
+                                        <td align="center">{{ tbs_retur_pembelian.data_tbs.nama_satuan }}</td>
+                                        <td align="right">{{ tbs_retur_pembelian.data_tbs.harga_produk | pemisahTitik }}</td>
+                                        <td align="right">{{ tbs_retur_pembelian.data_tbs.potongan | pemisahTitik }} | {{ Math.round(tbs_retur_pembelian.potongan_persen,2) }} %</td>
+                                        <td align="right">{{ tbs_retur_pembelian.data_tbs.tax | pemisahTitik }} | {{ Math.round(tbs_retur_pembelian.tax_persen,2) }} %</td>
+                                        <td align="right">{{ tbs_retur_pembelian.data_tbs.subtotal | pemisahTitik }}</td>
                                         <td style="text-align:right;">
-                                            <a href="#create-pembelian" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_retur_pembelian.id_tbs_retur_pembelian" v-on:click="deleteEntry(tbs_retur_pembelian.id_tbs_retur_pembelian, index,tbs_retur_pembelian.nama_produk,tbs_retur_pembelian.subtotal_tbs)">
+                                            <a href="#create-retur-pembelian" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_retur_pembelian.data_tbs.id_tbs_retur_pembelian" v-on:click="deleteEntry(tbs_retur_pembelian.data_tbs.id_tbs_retur_pembelian, index,tbs_retur_pembelian.data_tbs.nama_barang,tbs_retur_pembelian.data_tbs.subtotal)">
                                                 Delete
                                             </a>
                                         </td>
                                     </tr>
                                 </tbody>          
                                 <tbody class="data-tidak-ada"  v-else-if="tbsReturPembelians.length == 0 && loading == false">
-                                    <tr ><td colspan="10"  class="text-center">Tidak Ada Data</td></tr>
+                                    <tr ><td colspan="8"  class="text-center">Tidak Ada Data</td></tr>
                                 </tbody>
                             </table>
 
@@ -538,24 +536,69 @@
                 var app = this;
 
                 if (stok_produk > 0) {
-                    app.prosesInsertTbs(id_produk,nama_barang,stok_produk,satuan_id,harga_produk,subtotal);                    
+                    app.getInsertTbs(id_produk,nama_barang,stok_produk,satuan_id,harga_produk,subtotal);                    
                     app.getSatuan(id_produk);
                 }else{
                     app.alertGagal("Stok "+titleCase(nama_barang)+" Tidak Mencukupi.")
                 }
             },
-            prosesInsertTbs(id_produk,nama_barang,stok_produk,satuan_id,harga_produk,subtotal) {
+            getInsertTbs(id_produk,nama_barang,stok_produk,satuan_id,harga_produk,subtotal) {
                 var app = this
                 app.inputTbsRetur.nama_produk = titleCase(nama_barang)
                 app.inputTbsRetur.id_produk = id_produk
                 app.inputTbsRetur.harga_produk = harga_produk
                 app.inputTbsRetur.harga_beli = harga_produk
                 app.inputTbsRetur.satuan_produk = satuan_id
-                app.inputTbsRetur.stok_produk = stok_produk
 
                 app.closeModal();
                 $("#modalInsertTbs").show();
                 app.$refs.jumlah_retur.focus();
+            },
+            submitInsertTbs(jumlah_retur){
+                var app = this
+
+                if (jumlah_retur == "" || jumlah_retur == 0) {
+
+                    app.$swal("Jumlah Retur Tidak Boleh Nol atau kosong!")
+                    .then((value) => {
+                        app.$refs.jumlah_retur.focus() 
+                    })
+
+                }else{
+                    app.prosesInsertTbs(jumlah_retur)
+                }
+
+            },
+            prosesInsertTbs(jumlah_retur) {
+                var app = this;
+                var newTbs = app.inputTbsRetur;
+
+                app.loading = true;
+                axios.post(app.url+'/proses-tambah-tbs-retur-pembelian', newTbs)
+                .then(function (resp) {
+                    $("#modalInsertTbs").hide();
+                    app.alert("Menambahkan Produk "+titleCase(nama_barang));
+                    app.loading = false;
+                    app.getTbs();
+
+                    if (resp.data.status == 1) {
+                        var subtotal = (parseInt(app.returPembelian.subtotal) - parseInt(resp.data.subtotal_lama) + parseInt(resp.data.subtotal))
+                    }else{      
+                        var subtotal = parseInt(app.returPembelian.subtotal) + parseInt(resp.data.subtotal)
+                    }
+
+                    app.returPembelian.subtotal = subtotal                       
+                    app.returPembelian.total_akhir  = subtotal
+                    app.inputTbsRetur.id_produk = ''
+                    app.inputTbsRetur.nama_produk = ''
+                    app.inputTbsRetur.harga_produk = ''
+                    app.inputTbsRetur.jumlah_retur = ''
+
+                })
+                .catch(function (resp) {
+                    app.loading = false;
+                    alert("Gagal Menambahkan Retur Pembelian");
+                });
             },
             getTbs(page) {
                 var app = this; 
@@ -572,6 +615,10 @@
                     app.seen = true
                     app.returPembelian.kas = app.default_kas
                     app.openSelectizeSupplier();
+
+                    if (app.returPembelian.subtotal == 0) {          
+                        app.getSubtotal(); 
+                    }
                 })
                 .catch( (err) => {
                     console.log(err);
@@ -580,6 +627,18 @@
                     alert("Tidak Dapat Memuat Retur Pembelian");
                 })
             },
+            getSubtotal(){
+                var app =  this;
+                var jenis_tbs = 1;
+                axios.get(app.url+'/subtotal-tbs')
+                .then(function (resp) {
+                    app.returPembelian.subtotal += resp.data.subtotal;
+                    app.returPembelian.total_akhir += resp.data.subtotal;
+                })
+                .catch(function (resp) {
+                    console.log(resp);
+                });
+            }, 
             getPencarianTbs(page) {
                 var app = this; 
                 if (typeof page === 'undefined') {
@@ -594,7 +653,6 @@
                     app.loading = false
                     app.seen = true
                     app.returPembelian.kas = app.default_kas
-                    app.openSelectizeSupplier();
                 })
                 .catch( (err) => {
                     console.log(err);
@@ -645,7 +703,6 @@
                 this.$refs.pembayaran.$el.focus()
             },
             closeModal(){
-                this.inputTbsRetur.supplier = '',
                 $("#modal_selesai").hide(); 
                 $("#modal_pembelian").hide(); 
             },

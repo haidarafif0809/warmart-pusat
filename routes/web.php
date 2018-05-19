@@ -1094,6 +1094,8 @@ Route::get('/retur-pembelian/pencarian-tbs', 'ReturPembelianController@pencarian
 Route::get('/retur-pembelian/supplier', 'ReturPembelianController@supplier')->middleware('auth'); 
 Route::get('/retur-pembelian/data-pembelian', 'ReturPembelianController@dataPembelian')->middleware('auth');
 Route::get('/retur-pembelian/pencarian-data-pembelian', 'ReturPembelianController@pencarianDataPembelian')->middleware('auth');
+Route::post('/retur-pembelian/proses-tambah-tbs-retur-pembelian', 'ReturPembelianController@prosesTbs')->middleware('auth');
+Route::get('/retur-pembelian/subtotal-tbs', 'ReturPembelianController@getSubtotal')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 

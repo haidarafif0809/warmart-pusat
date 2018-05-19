@@ -111,20 +111,37 @@ class ReturPembelianController extends Controller
     }
 
     // PENCARIAN TBS
-    public function pencarianTbs()
+    public function pencarianTbs(Request $request)
     {
         $session_id  = session()->getId();
         $no_faktur   = '';
         $user_warung = Auth::user()->id_warung;
+        $search = $request->search;
 
         $tbs_retur = TbsReturPembelian::dataTransaksiTbsReturPembelian($session_id, $user_warung)
-        ->orderBy('tbs_retur_pembelians.id_tbs_retur_pembelian', 'desc')->paginate(10);
+        ->where(function ($query) use ($search) {
+            $query->orwhere('barangs.nama_barang', 'LIKE', '%' . $search . '%')
+            ->orwhere('barangs.kode_barang', 'LIKE', '%' . $search . '%')
+            ->orwhere('satuans.nama_satuan', 'LIKE', '%' . $search . '%');
+        })->orderBy('tbs_retur_pembelians.id_tbs_retur_pembelian', 'desc')->paginate(10);
         
         $db = "App\TbsReturPembelian";
         $array = $this->foreachTbs($tbs_retur, $session_id, $db);
 
         $url     = '/retur-pembelian/view-tbs';
         $respons = $this->dataPagination($tbs_retur, $array, $no_faktur, $url);
+
+        return response()->json($respons);
+    }
+
+
+    public function getSubtotal()
+    {
+        $session_id  = session()->getId();
+        $user_warung = Auth::user()->id_warung;
+
+        $subtotal            = TbsReturPembelian::subtotalTbs($user_warung, $session_id);
+        $respons['subtotal'] = $subtotal;
 
         return response()->json($respons);
     }
@@ -182,6 +199,64 @@ class ReturPembelianController extends Controller
         $respons = $this->dataPagination($pembelians, $array, $no_faktur, $url);
 
         return response()->json($respons);
+    }
+
+
+    //PROSES TAMBAH TBS RETUR PEMBELIAN
+    public function prosesTbs(Request $request)
+    {
+
+        if (Auth::user()->id_warung == '') {
+            Auth::logout();
+            return response()->view('error.403');
+        } else {
+
+            $session_id = session()->getId();
+            $data_satuan = explode("|", $request->satuan_produk);
+            $data_tbs   = TbsReturPembelian::where('id_produk', $request->id_produk)
+            ->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
+
+            if ($data_tbs->count() > 0) {
+
+                $subtotal_lama = $data_tbs->first()->subtotal;
+
+                $jumlah_produk = $data_tbs->first()->jumlah_retur + $request->jumlah_retur;
+
+                $subtotal_edit = ($jumlah_produk * $request->harga_produk) - $data_tbs->first()->potongan;
+
+                $data_tbs->update(['jumlah_retur' => $jumlah_produk, 'subtotal' => $subtotal_edit, 'harga_produk' => $request->harga_produk, 'satuan_id' => $data_satuan[0], 'satuan_dasar' => $data_satuan[2]]);
+
+                $subtotal = $jumlah_produk * $request->harga_produk;
+
+                $respons['status']        = 1;
+                $respons['subtotal_lama'] = $subtotal_lama;
+                $respons['subtotal']      = $subtotal;
+                return response()->json($respons);
+
+            } else {
+
+                // SUBTOTAL = JUMLAH * HARGA
+                $subtotal = $request->jumlah_retur * $request->harga_produk;
+                // INSERT TBS PEMBELIAN
+                $insertTbs = TbsReturPembelian::create([
+                    'id_produk'     => $request->id_produk,
+                    'session_id'    => $session_id,
+                    'jumlah_retur'  => $request->jumlah_retur,
+                    'harga_produk'  => $request->harga_produk,
+                    'subtotal'      => $subtotal,
+                    'satuan_id'     => $data_satuan[0],
+                    'satuan_dasar'  => $data_satuan[2],
+                    'warung_id'     => Auth::user()->id_warung,
+                    ]);
+
+                $respons['status']   = 0;
+                $respons['subtotal'] = $subtotal;
+
+                return response()->json($respons);
+
+            }
+
+        }
     }
 
     /**
