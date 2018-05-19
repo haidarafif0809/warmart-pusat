@@ -252,8 +252,8 @@
 
                           <td style="text-align:right;">{{ tbs_retur_penjualans.potongan | pemisahTitik }}</td>
                           <td style="text-align:right;">{{ tbs_retur_penjualans.subtotal | pemisahTitik }}</td>
-                          <td> 
-                         <a href="#create-retur-penjualan" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_retur_penjualans.id" v-on:click="deleteEntry(tbs_retur_penjualans.id, index,tbs_retur_penjualans.jumlah_retur,tbs_retur_penjualans.no_faktur_penjualan)">Delete</a>
+                          <td style="text-align:right;"> 
+                         <a  href="#create-retur-penjualan" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_retur_penjualans.id" v-on:click="deleteEntry(tbs_retur_penjualans.id, index,tbs_retur_penjualans.jumlah_retur,tbs_retur_penjualans.nama_barang,tbs_retur_penjualans.no_faktur_penjualan)">Delete</a>
                         </td>
                       </tr>
                     </tbody>          
@@ -416,14 +416,14 @@ export default {
         }
     },
     methods: {
-          openSelectizePelanggan(){      
+       openSelectizePelanggan(){      
             this.$refs.pelanggan.$el.selectize.setValue("");
             this.$refs.pelanggan.$el.selectize.focus();
           },
-          openSelectizeKas(){      
+       openSelectizeKas(){      
             this.$refs.kas.$el.selectize.focus();
           },
-    	   getResults(page) {
+    	 getResults(page) {
         		var app = this;	
         		if (typeof page === 'undefined') {
         			page = 1;
@@ -432,6 +432,9 @@ export default {
         		.then(function (resp) {
         			app.tbs_retur_penjualan = resp.data.data;
         			app.tbsReturPenjualanData = resp.data;
+              if (app.inputReturPenjualan.subtotal == 0) {
+                app.getSubtotalTbs();
+              }
               app.openSelectizePelanggan();
         			app.loading = false;
         			app.seen = true;
@@ -568,16 +571,15 @@ export default {
                         app.loading = false;
                         app.getResults();
                         $("#modalInsertTbs").hide();
-                         $("#modal_pilih_retur").hide(); 
+                        $("#modal_pilih_retur").hide(); 
                         app.alertTbs("Produk "+app.formReturJualTbs.nama_produk+" Sudah Ada, Silakan Pilih Produk dari Faktur Lain! ");
                     }else{
                         var subtotal = parseFloat(app.inputReturPenjualan.subtotal) + parseFloat(resp.data.subtotal)
                         app.getResults();
                         app.inputReturPenjualan.subtotal = subtotal.toFixed(2)
                         app.alert("Berhasil Menambahkan Tbs Retur Penjualan"+ app.formReturJualTbs.nama_produk);
-                        app.formBayarHutangTbs.jumlah_retur = 0
                         $("#modalInsertTbs").hide();
-                         $("#modal_pilih_retur").hide(); 
+                        $("#modal_pilih_retur").hide(); 
                         app.loading = false;
                     }
                   })
@@ -586,7 +588,18 @@ export default {
                     app.errors = resp.response.data.errors;
                   });
         },
-       closeModalX(){
+        getSubtotalTbs(){
+        var app =  this;
+        var jenis_tbs = 1;
+        axios.get(app.url+'/subtotal-tbs-retur-penjualan/'+jenis_tbs)
+        .then(function (resp) {
+         app.inputReturPenjualan.subtotal += resp.data.subtotal;
+         })
+        .catch(function (resp) {
+          console.log(resp);
+        });
+      }, 
+      closeModalX(){
         this.inputTbsReturPenjualan.pelanggan = '', 
         $("#modal_pilih_retur").hide(); 
         $("#modalInsertTbs").hide(); 
@@ -604,7 +617,45 @@ export default {
           timer: 1000,
     		});
     	},
-       alertGagal(pesan) { 
+      deleteEntry(id, index,jumlah_retur,nama_produk,no_faktur_penjualan) {
+        var app = this;
+        app.$swal({
+            text: "Anda Yakin Ingin Menghapus Retur Produk "+titleCase(nama_produk)+ " Faktur "+no_faktur_penjualan+ " ?",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((willDelete) => {
+            if (willDelete) {
+                this.prosesDelete(id,no_faktur_penjualan,jumlah_retur,nama_produk);
+            } else {
+                app.$swal.close();
+            }
+        });
+
+    },
+    prosesDelete(id,no_faktur_penjualan,jumlah_retur,nama_produk){
+        var app = this;
+        app.loading = true;
+        axios.delete(app.url+'/proses-hapus-tbs-pembayaran-hutang/'+id)
+        .then(function (resp) {
+            if (resp.data == 0) {
+                app.alertGagal("Faktur "+no_faktur_penjualan+" Produk "+titleCase(nama_produk)+" Gagal Dihapus!")
+                app.loading = false
+            }else{
+                var subtotal = parseFloat(app.inputPembayaranHutang.subtotal) - parseFloat(jumlah_retur)
+                app.inputReturPenjualan.subtotal = subtotal.toFixed(2)
+                app.alert("Menghapus Faktur "+no_faktur_pembelian)
+                app.getResults();
+                app.loading = false
+            }
+        })
+        .catch(function (resp) {
+            console.log(resp);
+            app.loading = false;
+            alert("Tidak dapat Menghapus tbs Pembayaran Hutang");
+        });
+    },
+    alertGagal(pesan) { 
                 this.$swal({ 
                     text: pesan, 
                     icon: "warning", 
@@ -612,7 +663,7 @@ export default {
                     timer: 1500 
                 }) 
             } ,
-    	   alertTbs(pesan) {
+     alertTbs(pesan) {
     		  this.$swal({
     			text: pesan,
     			icon: "warning",
@@ -620,6 +671,7 @@ export default {
           timer: 1000,
     		});
     	}
+
     }
 }
 </script>

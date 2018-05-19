@@ -255,6 +255,20 @@ class ReturPenjualanController extends Controller
             return response()->json($respons);
         }
     }
+        public function cekSubtotalTbsReturPenjualan($jenis_tbs)
+    {
+        $session_id  = session()->getId();
+        $user_warung = Auth::user()->id_warung;
+        if ($jenis_tbs == 1) {
+            $TbsReturPenjualan = new TbsReturPenjualan();
+            $subtotal            = $TbsReturPenjualan->subtotalTbs($user_warung, $session_id);
+            $respons['subtotal'] = $subtotal;
+        } else if ($jenis_tbs == 2) {
+            
+        }
+
+        return response()->json($respons);
+    }
 
     /**
      * Store a newly created resource in storage.
