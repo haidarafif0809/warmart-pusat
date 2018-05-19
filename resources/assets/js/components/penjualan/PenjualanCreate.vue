@@ -1588,6 +1588,7 @@ submitAntrian(antrian,index){
   .then(resp => {
    console.log(resp.data)
    app.penjualan.pelanggan = antrian.pelanggan_id
+   console.log(antrian.pelanggan_id)
    app.antrian.data.splice(index,1)
    app.getResults()
    $("#modal_antri").hide()
@@ -1648,9 +1649,12 @@ submitSimpanPenjualan(){
     app.alertTbs("Pelanggan harus diisi")
   }else{
 
+    app.closeModalJumlahProduk()
+    app.alert("Menyimpan Penjualan")
+    app.tbs_penjualan.splice(0)
+    
     axios.post(app.url+'/simpan-tbs-penjualan', newSimpanPenjualan)
     .then((resp) => {
-      app.tbs_penjualan.splice(0)
       let newAntrian = {
         id : resp.data.id,
         no_antrian : resp.data.no_antrian,
@@ -1659,7 +1663,6 @@ submitSimpanPenjualan(){
       } 
       app.antrian.data.push(newAntrian)
       console.log(app.antrian.data)
-      app.alert("Menyimpan Penjualan")
       app.penjualan.pelanggan = 0
       app.penjualan.subtotal = 0
       app.penjualan.jatuh_tempo = ''
@@ -1668,7 +1671,6 @@ submitSimpanPenjualan(){
       app.penjualan.total_akhir = 0
       app.penjualan.pembayaran = 0
       app.hitungKembalian(app.penjualan.pembayaran)
-      app.closeModalJumlahProduk()
 
     })
     .catch((err) => {
