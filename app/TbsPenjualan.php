@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 class TbsPenjualan extends Model
 {
     use AuditableTrait;
-    protected $fillable   = ['session_id', 'satuan_id', 'id_produk', 'jumlah_produk', 'harga_produk', 'subtotal', 'potongan', 'tax', 'warung_id', 'ppn', 'satuan_dasar'];
+    protected $fillable   = ['session_id', 'satuan_id', 'id_produk', 'jumlah_produk', 'harga_produk', 'subtotal', 'potongan', 'tax', 'warung_id', 'ppn', 'satuan_dasar', 'no_antrian'];
     protected $primaryKey = 'id_tbs_penjualan';
 
     public function produk()
@@ -33,6 +33,7 @@ class TbsPenjualan extends Model
         ->leftJoin('satuans', 'satuans.id', '=', 'tbs_penjualans.satuan_id')
         ->where('warung_id', $user_warung)
         ->where('session_id', $session_id)
+        ->whereNull('no_antrian')
         ->where(function ($query) use ($request) {
 
             $query->orWhere('barangs.kode_barang', 'LIKE', $request->search . '%')
@@ -46,7 +47,7 @@ class TbsPenjualan extends Model
 
     public function subtotalTbs($user_warung,$session_id)
     {
-        $tbs_penjualan = TbsPenjualan::select([DB::raw('SUM(subtotal) as subtotal')])->where('warung_id', $user_warung)->where('session_id', $session_id)->first();
+        $tbs_penjualan = TbsPenjualan::select([DB::raw('SUM(subtotal) as subtotal')])->where('warung_id', $user_warung)->where('session_id', $session_id)->whereNull('no_antrian')->first();
         if ($tbs_penjualan->subtotal == null || $tbs_penjualan->subtotal == '') {
           return 0;
       }
