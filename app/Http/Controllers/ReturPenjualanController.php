@@ -184,6 +184,7 @@ class ReturPenjualanController extends Controller
         foreach ($data_retur_penjualan as $data_retur_penjualans) {
             array_push($array, [
                 'id_penjualan'        => $data_retur_penjualans->id_penjualan,
+                'id_produk'           => $data_retur_penjualans->id_produk,
                 'kode_barang'         => $data_retur_penjualans->kode_barang,
                 'nama_barang'         => $data_retur_penjualans->nama_barang,
                 'jumlah_produk'       => $data_retur_penjualans->jumlah_produk,

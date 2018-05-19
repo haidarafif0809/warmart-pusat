@@ -64,14 +64,14 @@
                                                     <tr>
                                                       <th >No Transaksi</th>
                                                       <th >Produk</th>
-                                                      <th style="text-align:right;">Jumlah Produk</th>
+                                                      <th style="text-align:right;">Sisa</th>
                                                       <th>Satuan</th>
                                                       <th style="text-align:right;">Harga Produk</th>
                                                       <th style="text-align:right;">Subtotal</th>
                                                     </tr>
                                                   </thead>
                                                   <tbody v-if="dataPelangganRetur.length > 0 && loading == false"  class="data-ada" >
-                                                    <tr v-for="dataPelangganReturs, index in dataPelangganRetur">
+                                                    <tr v-for="dataPelangganReturs, index in dataPelangganRetur" v-bind:id="'retur-' + dataPelangganReturs.id_penjualan" v-on:click="returJualEntry(dataPelangganReturs.id_penjualan, index,dataPelangganReturs.id_produk,dataPelangganReturs.kode_barang,dataPelangganReturs.nama_barang,dataPelangganReturs.jumlah_produk,dataPelangganReturs.satuan)">
                                                       <td>{{ dataPelangganReturs.id_penjualan }}</td>
                                                        <td>{{  dataPelangganReturs.kode_barang }} - {{ dataPelangganReturs.nama_barang  }}</td>
                                                         <td style="text-align:right;">{{ dataPelangganReturs.jumlah_produk | pemisahTitik }}</td>
@@ -95,6 +95,40 @@
                </div> 
            </div> 
            <!-- / MODAL TOMBOL SELESAI --> 
+
+        <!-- MODAL INSERT TBS --> 
+        <div class="modal" id="modalInsertTbs" role="dialog" tabindex="-1"  aria-labelledby="myModalLabel" aria-hidden="true" > 
+            <div class="modal-dialog modal-medium"> 
+                <div class="modal-content"> 
+                    <div class="modal-header"> 
+                        <button type="button" class="close"  v-on:click="closeModalInsertTbs()" v-shortkey.push="['f9']" @shortkey="closeModalInsertTbs()"> &times;</button>  
+                    </div> 
+ 
+                    <form class="form-horizontal">  
+                        <div class="modal-body"> 
+                            <h3 class="text-center"><b>{{formReturJualTbs.nama_produk}}</b></h3> 
+ 
+                            <div class="form-group"> 
+                                <div class="col-md-6"> 
+                                    <input class="form-control" type="number" v-model="formReturJualTbs.jumlah_retur" placeholder="Isi Jumlah Retur" name="jumlah_retur" id="jumlah_retur" ref="jumlah_retur" autocomplete="off" step="0.01"> 
+                                </div> 
+                                <div class="col-md-6"> 
+                                    <selectize-component v-model="formReturJualTbs.satuan_produk" :settings="placeholder_satuan" id="satuan" name="satuan" ref='satuan'>  
+                                        <option v-for="satuans, index in satuan" v-bind:value="satuans.satuan" class="pull-left">{{ satuans.nama_satuan }}</option> 
+                                    </selectize-component> 
+                                </div> 
+                            </div> 
+                        </div> 
+ 
+                        <div class="modal-footer"> 
+                            <button type="button" class="btn btn-simple" v-on:click="closeModalInsertTbs()" v-shortkey.push="['f9']" @shortkey="closeModalInsertTbs()">Close(F9)</button> 
+                            <button type="submit" class="btn btn-info btn-lg">Tambah</button> 
+                        </div> 
+                    </form> 
+                </div> 
+            </div> 
+        </div> 
+        <!-- MODAL INSERT TBS --> 
 
             <!-- / MODAL SELESAI --> 
             <div class="modal" id="modal_selesai" role="dialog" data-backdrop="">
@@ -273,11 +307,13 @@ export default {
 	data: function () {
 		return {
 			      errors: [],
+            satuan : [],
 		      	tbs_retur_penjualan: [],
 			      tbsReturPenjualanData : {},
 			      url : window.location.origin+(window.location.pathname).replace("dashboard", "retur-penjualan"),
             url_kas : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
             url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
+            url_satuan : window.location.origin+(window.location.pathname).replace("dashboard", "pembelian/satuan-konversi"),         
             dataPelangganRetur : [],
             dataPelangganReturData: {},
 		      	placeholder_pelanggan: {
@@ -290,6 +326,11 @@ export default {
                     sortField: 'text',
                     openOnFocus : true
            },
+           placeholder_satuan: { 
+                    placeholder: '--PILIH SATUAN--', 
+                    sortField: 'text', 
+                    openOnFocus : true, 
+           }, 
             inputTbsReturPenjualan:{
               pelanggan : '',
               id_pelanggan: '',
@@ -299,6 +340,14 @@ export default {
                 kas: '',
                 tanggal: new Date,
                 keterangan: '',
+            },
+            formReturJualTbs:{
+                jumlah_retur : '',
+                nama_produk : '', 
+                id_produk : '', 
+                id_penjualan: '',
+                satuan : '', 
+                stok_produk: 0, 
             },
             tambahKas: {
               kode_kas : '',
@@ -460,8 +509,56 @@ export default {
                 alert("Tidak Dapat Memuat Data Retur");
             });
         },
+        returJualEntry(id_penjualan,index,id_produk,kode_barang,nama_barang,jumlah_produk,satuan){
+             var app = this;
+               $("#modalInsertTbs").show();
+               $("#modal_pilih_retur").hide();            
+                app.formReturJualTbs.nama_produk = titleCase(nama_barang);
+                app.formReturJualTbs.jumlah_retur = jumlah_produk;
+                app.formReturJualTbs.id_penjualan = id_penjualan;
+                app.formReturJualTbs.id_produk = id_produk;
+                app.formReturJualTbs.satuan_produk = satuan;
+                app.getSatuan(id_produk);
+        },
+        getSatuan(id_produk){ 
+                var app = this; 
+                var satuan_tbs = $(".satuan-"+id_produk).attr("data-satuan"); 
+ 
+                axios.get(app.url_satuan+'/'+id_produk) 
+                .then(function (resp) { 
+ 
+                    app.satuan = resp.data; 
+                    if (typeof satuan_tbs == "undefined") { 
+ 
+                        $.each(resp.data, function (i, item) { 
+                            if (resp.data[i].id === resp.data[i].satuan_dasar) { 
+                                app.formReturJualTbs.satuan_produk = resp.data[i].satuan; 
+                            } 
+                        }); 
+ 
+                    }else{ 
+ 
+                        $.each(resp.data, function (i, item) { 
+                            if (resp.data[i].id === parseInt(satuan_tbs)) { 
+                                app.formReturJualTbs.satuan_produk = resp.data[i].satuan; 
+                            } 
+                        }); 
+ 
+                    } 
+                }) 
+                .catch(function (resp) { 
+                    console.log(resp); 
+                    alert("Tidak Dapat Memuat Satuan Produk"); 
+                }); 
+            },
        closeModalX(){
+        this.inputTbsReturPenjualan.pelanggan = '', 
         $("#modal_pilih_retur").hide(); 
+        $("#modalInsertTbs").hide(); 
+      },
+      closeModalInsertTbs(){
+        $("#modalInsertTbs").hide(); 
+        $("#modal_pilih_retur").show(); 
       },
     	alert(pesan) {
     		this.$swal({
@@ -472,6 +569,14 @@ export default {
           timer: 1000,
     		});
     	},
+       alertGagal(pesan) { 
+                this.$swal({ 
+                    text: pesan, 
+                    icon: "warning", 
+                    buttons: false, 
+                    timer: 1500 
+                }) 
+            } ,
     	   alertTbs(pesan) {
     		  this.$swal({
     			text: pesan,
