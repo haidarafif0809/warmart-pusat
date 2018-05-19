@@ -259,6 +259,21 @@ class ReturPembelianController extends Controller
         }
     }
 
+
+    public function hapusTbs($id)
+    {
+        if (Auth::user()->id_warung == '') {
+            Auth::logout();
+            return response()->view('error.403');
+        } else {
+            $tbs_retur_pembelian = TbsReturPembelian::find($id);
+            $respons['subtotal'] = $tbs_retur_pembelian->subtotal;
+            $tbs_retur_pembelian->delete();
+
+            return response()->json($respons);
+        }
+    }
+
     /**
      * Display a listing of the resource.
      *

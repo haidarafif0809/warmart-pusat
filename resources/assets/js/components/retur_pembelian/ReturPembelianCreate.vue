@@ -593,6 +593,7 @@
                     app.inputTbsRetur.nama_produk = ''
                     app.inputTbsRetur.harga_produk = ''
                     app.inputTbsRetur.jumlah_retur = ''
+                    app.inputTbsRetur.supplier = ''
 
                 })
                 .catch(function (resp) {
@@ -692,6 +693,40 @@
                     alert("Tidak Dapat Memuat Satuan Produk");
                 });
             },
+            deleteEntry(id, index,nama_produk,subtotal_lama) {
+                var app = this;
+                app.$swal({
+                    text: `Anda Yakin Ingin Menghapus Produk ${titleCase(nama_produk)} ?`,
+                    buttons: true,
+                    dangerMode: true,
+                })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        this.prosesDelete(id,nama_produk,subtotal_lama);
+                    } else {
+                        app.$swal.close();
+                    }
+                });
+            },
+            prosesDelete(id,nama_produk,subtotal_lama){
+                var app = this;
+                app.loading = true;
+                axios.delete(app.url+'/hapus-tbs/'+id)
+                .then(function (resp) {
+                    app.getTbs();
+
+                    var subtotal = parseFloat(app.returPembelian.subtotal) - parseFloat(resp.data.subtotal)
+                    app.returPembelian.subtotal = subtotal                       
+                    app.returPembelian.total_akhir  = subtotal
+                    app.alert("Menghapus Produk "+titleCase(nama_produk));
+                    app.loading = false;
+                })
+                .catch(function (resp) {
+                    console.log(resp)
+                    app.loading = false;
+                    alert("Tidak Dapat Menghapus Produk "+titleCase(nama_produk));
+                });
+            },
             hitungHargaKonversi(harga_beli){
 
                 var satuan = this.inputTbsRetur.satuan_produk.split("|");
@@ -709,6 +744,14 @@
             closeModalInsertTbs(){
                 $("#modalInsertTbs").hide();
                 $("#modal_pembelian").show(); 
+            },
+            alert(pesan) {
+                this.$swal({
+                    text: pesan,
+                    icon: "success",
+                    buttons: false,
+                    timer: 1500
+                })
             },
             alertGagal(pesan) {
                 this.$swal({
