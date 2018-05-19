@@ -655,94 +655,94 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex';
-  export default {
-    data: function () {
-      return {
-        errors: [],
-        tbs_penjualan: [],
-        satuan: [],
-        antrian: {},
-        url : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
-        urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan/download-excel"),
-        url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
-        url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
-        url_satuan : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan/satuan-konversi"),
-        inputTbsPenjualan: {
-          nama_produk : '',
-          produk : '',
-          jumlah_produk : '',
-          potongan_produk : '',
-          id_tbs : '',
-          satuan_produk: '',
-          level_harga_produk: '',
-          level_harga_lama: '',
-          subtotal: ''
-        },
-        penjualan : {
-          pelanggan : '0',
-          kas : '',
-          jatuh_tempo : '',
-          subtotal : 0,
-          potongan : 0,
-          potongan_faktur : 0,
-          potongan_persen : 0,
-          total_akhir : 0,
-          pembayaran : 0,
-          kembalian: 0,
-          kredit: 0,
-        }, 
-        setting_penjualan_pos :{
-          jumlah_produk : true,
-          stok : true,
-          harga_jual : 1
-        },
-        placeholder_produk: {
-          placeholder: 'Cari Produk (F1) ...',
-          sortField: 'text',
-          maxOptions : 8,
-          scrollDuration : 10,
-          loadThrottle : 150,
-          openOnFocus : false
-        },
-        placeholder_satuan: {
-          placeholder: '--PILIH SATUAN--',
-          sortField: 'text',
-          openOnFocus : true,
-        },
-        placeholder_pelanggan: {
-          placeholder: '--PILIH PELANGGAN (F4)--',
-          sortField: 'text',
-          openOnFocus : true
+import { mapState } from 'vuex';
+export default {
+  data: function () {
+    return {
+      errors: [],
+      tbs_penjualan: [],
+      satuan: [],
+      antrian: {},
+      url : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
+      urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan/download-excel"),
+      url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
+      url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
+      url_satuan : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan/satuan-konversi"),
+      inputTbsPenjualan: {
+        nama_produk : '',
+        produk : '',
+        jumlah_produk : '',
+        potongan_produk : '',
+        id_tbs : '',
+        satuan_produk: '',
+        level_harga_produk: '',
+        level_harga_lama: '',
+        subtotal: ''
+      },
+      penjualan : {
+        pelanggan : '0',
+        kas : '',
+        jatuh_tempo : '',
+        subtotal : 0,
+        potongan : 0,
+        potongan_faktur : 0,
+        potongan_persen : 0,
+        total_akhir : 0,
+        pembayaran : 0,
+        kembalian: 0,
+        kredit: 0,
+      }, 
+      setting_penjualan_pos :{
+        jumlah_produk : true,
+        stok : true,
+        harga_jual : 1
+      },
+      placeholder_produk: {
+        placeholder: 'Cari Produk (F1) ...',
+        sortField: 'text',
+        maxOptions : 8,
+        scrollDuration : 10,
+        loadThrottle : 150,
+        openOnFocus : false
+      },
+      placeholder_satuan: {
+        placeholder: '--PILIH SATUAN--',
+        sortField: 'text',
+        openOnFocus : true,
+      },
+      placeholder_pelanggan: {
+        placeholder: '--PILIH PELANGGAN (F4)--',
+        sortField: 'text',
+        openOnFocus : true
 
-        },
-        placeholder_kas: {
-          placeholder: '--PILIH KAS--',
-          sortField: 'text',
-          openOnFocus : true
-        },
-        hargaJual: {
-          placeholder: '--HARGA JUAL--'
-        },
-        tambahKas: {
-          kode_kas : '',
-          nama_kas : '',
-          status_kas : 0,
-          default_kas : 0
-        },
-        session:'',
-        pencarian: '',
-        loading: true,
-        seen : false,
-        separator: {
-          decimal: ',',
-          thousands: '.',
-          prefix: '',
-          suffix: '',
-          precision: 0,
-          masked: false /* doesn't work with directive */
-        },
-        disabled: {
+      },
+      placeholder_kas: {
+        placeholder: '--PILIH KAS--',
+        sortField: 'text',
+        openOnFocus : true
+      },
+      hargaJual: {
+        placeholder: '--HARGA JUAL--'
+      },
+      tambahKas: {
+        kode_kas : '',
+        nama_kas : '',
+        status_kas : 0,
+        default_kas : 0
+      },
+      session:'',
+      pencarian: '',
+      loading: true,
+      seen : false,
+      separator: {
+        decimal: ',',
+        thousands: '.',
+        prefix: '',
+        suffix: '',
+        precision: 0,
+        masked: false /* doesn't work with directive */
+      },
+      disabled: {
           to: new Date(), // Disable all dates up to specific date
         }
 
@@ -1644,35 +1644,40 @@ submitSimpanPenjualan(){
   let newSimpanPenjualan = {
     pelanggan : app.penjualan.pelanggan
   }
+  if (newSimpanPenjualan.pelanggan == '') {
+    app.alertTbs("Pelanggan harus diisi")
+  }else{
+
+    axios.post(app.url+'/simpan-tbs-penjualan', newSimpanPenjualan)
+    .then((resp) => {
+      app.tbs_penjualan.splice(0)
+      let newAntrian = {
+        id : resp.data.id,
+        no_antrian : resp.data.no_antrian,
+        pelanggan : resp.data.pelanggan,
+        total_belanja : new Intl.NumberFormat('es-ES').format(app.penjualan.subtotal)
+      } 
+      app.antrian.data.push(newAntrian)
+      console.log(app.antrian.data)
+      app.alert("Menyimpan Penjualan")
+      app.penjualan.pelanggan = 0
+      app.penjualan.subtotal = 0
+      app.penjualan.jatuh_tempo = ''
+      app.penjualan.potongan_persen = 0
+      app.penjualan.potongan_faktur = 0
+      app.penjualan.total_akhir = 0
+      app.penjualan.pembayaran = 0
+      app.hitungKembalian(app.penjualan.pembayaran)
+      app.closeModalJumlahProduk()
+
+    })
+    .catch((err) => {
+      console.log(err)
+      alert("Terjadi Kesalahan!, tidak dapat menyimpan produk")
+    })
+
+  }
   
-  axios.post(app.url+'/simpan-tbs-penjualan', newSimpanPenjualan)
-  .then((resp) => {
-    app.tbs_penjualan.splice(0)
-    let newAntrian = {
-      id : resp.data.id,
-      no_antrian : resp.data.no_antrian,
-      pelanggan : resp.data.pelanggan,
-      total_belanja : new Intl.NumberFormat('es-ES').format(app.penjualan.subtotal)
-    } 
-    app.antrian.data.push(newAntrian)
-    console.log(app.antrian.data)
-    app.alert("Menyimpan Penjualan")
-    app.penjualan.pelanggan = 0
-    app.penjualan.subtotal = 0
-    app.penjualan.jatuh_tempo = ''
-    app.penjualan.potongan_persen = 0
-    app.penjualan.potongan_faktur = 0
-    app.penjualan.total_akhir = 0
-    app.penjualan.pembayaran = 0
-    app.hitungKembalian(app.penjualan.pembayaran)
-    app.closeModalJumlahProduk()
-
-  })
-  .catch((err) => {
-    console.log(err)
-    alert("Terjadi Kesalahan!, tidak dapat menyimpan produk")
-  })
-
 },
 getAntrian(page){
   let app = this
