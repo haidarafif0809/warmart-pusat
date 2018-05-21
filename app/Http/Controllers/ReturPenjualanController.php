@@ -128,7 +128,7 @@ class ReturPenjualanController extends Controller
                 'id'                  => $id_tbs,
                 'no_faktur_penjualan' => $tbs_retur_penjualans->no_faktur_penjualan,
                 'kode_barang'         => $tbs_retur_penjualans->kode_barang,
-                'nama_barang'         => $tbs_retur_penjualans->nama_barang,
+                'nama_barang'         => title_case($tbs_retur_penjualans->nama_barang),
                 'jumlah_jual'         => $tbs_retur_penjualans->jumlah_jual,
                 'jumlah_retur'        => $tbs_retur_penjualans->jumlah_retur,
                 'satuan'              => $tbs_retur_penjualans->satuan,
@@ -187,7 +187,7 @@ class ReturPenjualanController extends Controller
                 'id_penjualan'        => $data_retur_penjualans->id_penjualan,
                 'id_produk'           => $data_retur_penjualans->id_produk, 
                 'kode_barang'         => $data_retur_penjualans->kode_barang,
-                'nama_barang'         => $data_retur_penjualans->nama_barang,
+                'nama_barang'         => title_case($data_retur_penjualans->nama_barang),
                 'jumlah_jual'         => $data_retur_penjualans->jumlah_jual,
                 'jumlah_produk'       => $data_retur_penjualans->jumlah_produk,
                 'satuan'              => $data_retur_penjualans->nama_satuan,
@@ -213,7 +213,7 @@ class ReturPenjualanController extends Controller
             array_push($array, [
                 'id_penjualan'        => $data_retur_penjualans->id_penjualan,
                 'kode_barang'         => $data_retur_penjualans->kode_barang,
-                'nama_barang'         => $data_retur_penjualans->nama_barang,
+                'nama_barang'         => title_case($data_retur_penjualans->nama_barang),
                 'jumlah_jual'         => $data_retur_penjualans->jumlah_jual,
                 'jumlah_produk'       => $data_retur_penjualans->jumlah_produk,
                 'satuan'              => $data_retur_penjualans->nama_satuan,
@@ -270,7 +270,18 @@ class ReturPenjualanController extends Controller
 
         return response()->json($respons);
     }
-        //hapus tbs pembayaran hutang
+
+        public function cekPelangganDouble()
+    {
+        $session_id       = session()->getId();
+        $data_pelanggan_tbs = TbsReturPenjualan::cekPelangganReturPenjualan($session_id);
+        return response()->json([
+            "data_pelanggan" => $data_pelanggan_tbs->first(),
+            "data_tbs"      => $data_pelanggan_tbs->count(),
+        ]);
+    }
+
+        //hapus tbs tbs retur penjualan
     public function prosesHapusTbsReturPenjualan($id)
     {
         if (!TbsReturPenjualan::destroy($id)) {

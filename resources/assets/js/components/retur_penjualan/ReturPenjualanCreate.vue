@@ -253,7 +253,7 @@
                           <td style="text-align:right;">{{ tbs_retur_penjualans.potongan | pemisahTitik }}</td>
                           <td style="text-align:right;">{{ tbs_retur_penjualans.subtotal | pemisahTitik }}</td>
                           <td style="text-align:right;"> 
-                         <a  href="#create-retur-penjualan" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_retur_penjualans.id" v-on:click="deleteEntry(tbs_retur_penjualans.id, index,tbs_retur_penjualans.harga_produk,tbs_retur_penjualans.nama_barang,tbs_retur_penjualans.no_faktur_penjualan)">Delete</a>
+                         <a  href="#create-retur-penjualan" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_retur_penjualans.id" v-on:click="deleteEntry(tbs_retur_penjualans.id, index,tbs_retur_penjualans.subtotal,tbs_retur_penjualans.nama_barang,tbs_retur_penjualans.no_faktur_penjualan)">Delete</a>
                         </td>
                       </tr>
                     </tbody>          
@@ -472,9 +472,27 @@ export default {
                         text: "Silakan Pilih Pelanggan Telebih dahulu!",
                         });
               }else{
-                      app.pilihPelangganRetur();
-                      $("#modal_pilih_retur").show();
-                 }
+                axios.get(app.url+'/cek-pelanggan-double').then(function (resp) {
+                    if(resp.data.data_tbs > 0){
+                            if(resp.data.data_pelanggan.pelanggan_id != pelanggan){
+                                  app.$swal({
+                                    text: "Transaksi tidak boleh dari satu Pelanggan !!",
+                                  }); 
+                            }else{
+                                app.pilihPelangganRetur();
+                                $("#modal_pilih_retur").show();
+                            }
+                      }
+                      else{
+                            app.pilihPelangganRetur();
+                            $("#modal_pilih_retur").show();
+                      }
+               })
+              .catch(function (resp) {
+                  app.loading = false;
+                  alert(resp);
+              });
+        }
       },
       pilihPelangganRetur(page){
             var app = this;
@@ -483,19 +501,20 @@ export default {
             if (typeof page === 'undefined') {
                 page = 1;
             }
-          axios.get(app.url+'/data-pelanggan-retur/'+id+'?page='+page)
-                .then(function (resp) {
-                app.dataPelangganRetur = resp.data.data;
-                app.dataPelangganReturData = resp.data;
-                app.loading = false;
-                app.seen = true;
-            })
-            .catch(function (resp) {
-                console.log(resp);
-                app.loading = false;
-                app.seen = true;
-                alert("Tidak Dapat Memuat Data Retur");
-            });
+            app.loading = true;
+            axios.get(app.url+'/data-pelanggan-retur/'+id+'?page='+page)
+                  .then(function (resp) {
+                  app.dataPelangganRetur = resp.data.data;
+                  app.dataPelangganReturData = resp.data;
+                  app.loading = false;
+                  app.seen = true;
+              })
+              .catch(function (resp) {
+                  console.log(resp);
+                  app.loading = false;
+                  app.seen = true;
+                  alert("Tidak Dapat Memuat Data Retur");
+              });
       },
       pencarianPelangganRetur(page){
             var app = this;
@@ -563,30 +582,37 @@ export default {
         saveFormReturJual() {
                 var app = this;
                 var newreturjual = app.formReturJualTbs;
-
-                 axios.post(app.url+'/proses-tambah-tbs-retur-penjualan',newreturjual)
-                  .then(function (resp) {
-                     console.log(resp.data)
-                    if (resp.data == 0) {
+                  if (app.formReturJualTbs.jumlah_retur > app.formReturJualTbs.jumlah_jual){
                         app.loading = false;
                         app.getResults();
                         $("#modalInsertTbs").hide();
                         $("#modal_pilih_retur").hide(); 
-                        app.alertTbs("Produk "+app.formReturJualTbs.nama_produk+" Sudah Ada, Silakan Pilih Produk dari Faktur Lain! ");
-                    }else{
-                        var subtotal = parseFloat(app.inputReturPenjualan.subtotal) + parseFloat(resp.data.subtotal)
-                        app.getResults();
-                        app.inputReturPenjualan.subtotal = subtotal.toFixed(2)
-                        app.alert("Berhasil Menambahkan Tbs Retur Penjualan"+ app.formReturJualTbs.nama_produk);
-                        $("#modalInsertTbs").hide();
-                        $("#modal_pilih_retur").hide(); 
-                        app.loading = false;
-                    }
-                  })
-                  .catch(function (resp) {
-                    app.success = false;
-                    app.errors = resp.response.data.errors;
-                  });
+                        app.alertTbs("Jumlah Retur yang Anda masukan melebihi Jumlah Jual !");
+                  }else{
+                      axios.post(app.url+'/proses-tambah-tbs-retur-penjualan',newreturjual)
+                      .then(function (resp) {
+                         console.log(resp.data)
+                        if (resp.data == 0) {
+                            app.loading = false;
+                            app.getResults();
+                            $("#modalInsertTbs").hide();
+                            $("#modal_pilih_retur").hide(); 
+                            app.alertTbs("Produk "+app.formReturJualTbs.nama_produk+" Sudah Ada, Silakan Pilih Produk dari Faktur Lain! ");
+                        }else{
+                            var subtotal = parseFloat(app.inputReturPenjualan.subtotal) + parseFloat(resp.data.subtotal)
+                            app.getResults();
+                            app.inputReturPenjualan.subtotal = subtotal.toFixed(2)
+                            app.alert("Berhasil Menambahkan Tbs Retur Penjualan"+ app.formReturJualTbs.nama_produk);
+                            $("#modalInsertTbs").hide();
+                            $("#modal_pilih_retur").hide(); 
+                            app.loading = false;
+                        }
+                      })
+                      .catch(function (resp) {
+                        app.success = false;
+                        app.errors = resp.response.data.errors;
+                      });
+                  }
         },
         getSubtotalTbs(){
         var app =  this;
@@ -617,23 +643,23 @@ export default {
           timer: 1000,
     		});
     	},
-      deleteEntry(id,index,harga_produk,nama_produk,no_faktur_penjualan) {
+      deleteEntry(id,index,subtotals,nama_produk,no_faktur_penjualan) {
         var app = this;
         app.$swal({
-            text: "Anda Yakin Ingin Menghapus Retur Produk "+titleCase(nama_produk)+ " Faktur "+no_faktur_penjualan+ " ?",
+            text: "Anda Yakin Ingin Menghapus Produk "+titleCase(nama_produk)+ " Faktur "+no_faktur_penjualan+ " ?",
             buttons: true,
             dangerMode: true,
         })
         .then((willDelete) => {
             if (willDelete) {
-                this.prosesDelete(id,no_faktur_penjualan,harga_produk,nama_produk);
+                this.prosesDelete(id,no_faktur_penjualan,subtotals,nama_produk);
             } else {
                 app.$swal.close();
             }
         });
 
     },
-    prosesDelete(id,no_faktur_penjualan,harga_produk,nama_produk){
+    prosesDelete(id,no_faktur_penjualan,subtotals,nama_produk){
         var app = this;
         app.loading = true;
         axios.delete(app.url+'/proses-hapus-tbs-retur-penjualan/'+id)
@@ -642,7 +668,7 @@ export default {
                 app.alertGagal("Faktur "+no_faktur_penjualan+" Produk "+titleCase(nama_produk)+" Gagal Dihapus!")
                 app.loading = false
             }else{
-                var subtotal = parseFloat(app.inputReturPenjualan.subtotal) - parseFloat(harga_produk)
+                var subtotal = parseFloat(app.inputReturPenjualan.subtotal) - parseFloat(subtotals)
                 app.inputReturPenjualan.subtotal = subtotal.toFixed(2)
                 app.alert("Menghapus Faktur "+no_faktur_penjualan+" Produk "+titleCase(nama_produk))
                 app.getResults();

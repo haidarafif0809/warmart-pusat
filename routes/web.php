@@ -1101,6 +1101,7 @@ Route::delete('/retur-penjualan/proses-hapus-tbs-retur-penjualan/{id}', [
     'as'         => 'retur-penjualan.proses_hapus_tbs_retur_penjualan',
     'uses'       => 'ReturPenjualanController@prosesHapusTbsReturPenjualan',
     ]);
+Route::get('/retur-penjualan/cek-pelanggan-double', 'ReturPenjualanController@cekPelangganDouble')->middleware('auth');
 
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
