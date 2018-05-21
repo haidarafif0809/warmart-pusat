@@ -252,6 +252,64 @@
         </div> 
         <!-- / MODAL TOMBOL SELESAI --> 
 
+        <!-- MODAL KAS -->
+        <div class="modal" id="modal_tambah_kas" role="dialog" data-backdrop=""> 
+            <div class="modal-dialog"> 
+                <!-- Modal content--> 
+                <div class="modal-content"> 
+                    <div class="modal-header"> 
+                        <button type="button" class="close"  v-on:click="closeModalKas()" v-shortkey.push="['esc']" @shortkey="closeModalKas()"> &times;</button> 
+                        <h4 class="modal-title"> 
+                            <div class="alert-icon"> 
+                                <b>Silahkan Isi Kas!</b> 
+                            </div> 
+                        </h4> 
+                    </div> 
+                    <div class="modal-body">
+                        <form v-on:submit.prevent="saveFormKas()" class="form-horizontal"> 
+                            <div class="form-group">
+                                <label for="kode_kas" class="col-md-3 control-label">Kode Kas</label>
+                                <div class="col-md-9">
+                                    <input class="form-control" autocomplete="off" placeholder="Kode Kas" v-model="tambahKas.kode_kas" type="text" name="kode_kas" id="kode_kas"  autofocus="" ref="kode_kas">
+                                    <span v-if="errors.kode_kas" id="kode_kas_error" class="label label-danger">{{ errors.kode_kas[0] }}</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="nama_kas" class="col-md-3 control-label">Nama Kas</label>
+                                <div class="col-md-9">
+                                    <input class="form-control" autocomplete="off" placeholder="Nama Kas" v-model="tambahKas.nama_kas" type="text" name="nama_kas" id="nama_kas"  ref="nama_kas">
+                                    <span v-if="errors.nama_kas" id="nama_kas_error" class="label label-danger">{{ errors.nama_kas[0] }}</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="nama_kas" class="col-md-3 control-label">Tampil Transaksi</label>
+                                <div class="togglebutton col-md-9">
+                                    <label>
+                                        <b>No</b>  <input type="checkbox" v-model="tambahKas.status_kas" value="1" name="status_kas" id="status_kas" ref="status_kas"><b>Yes</b>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="nama_kas" class="col-md-3 control-label">Default Kas</label>
+                                <div class="togglebutton col-md-9">
+                                    <label>
+                                        <b>No</b>  <input type="checkbox" v-on:change="defaultKas()" v-model="tambahKas.default_kas" value="1" name="default_kas" id="default_kas" ref="default_kas"><b>Yes</b>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-9 col-md-offset-3">
+                                    <p style="color: red; font-style: italic;">*Note : Hanya 1 Kas yang dijadikan default.</p>
+                                    <button class="btn btn-primary" id="btnSimpanKas" type="submit"><i class="material-icons">send</i> Submit</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>       
+            </div> 
+        </div> 
+        <!-- END MODAL KAS -->
+
         <div class="card" style="margin-bottom: 1px; margin-top: 1px;" >
             <div class="card-content">
                 <h4 class="card-title" style="margin-bottom: 1px; margin-top: 1px;"> Retur Pembelian </h4>
@@ -432,7 +490,8 @@
                 pembelians: [],
                 pembelianDatas : {},
                 url : window.location.origin+(window.location.pathname).replace("dashboard", "retur-pembelian"),
-                url_satuan : window.location.origin+(window.location.pathname).replace("dashboard", "pembelian/satuan-konversi"),        
+                url_satuan : window.location.origin+(window.location.pathname).replace("dashboard", "pembelian/satuan-konversi"),
+                urlKas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
                 pencarian: '',
                 pencarianPembelian: '',
                 loading: true,
@@ -486,7 +545,13 @@
                     potong_hutang : 0,
                     pembayaran : 0,
                     keterangan: '',                    
-                }
+                },
+                tambahKas: {
+                    kode_kas : '',
+                    nama_kas : '',
+                    status_kas : 0,
+                    default_kas : 0
+                },
             }
         },
         computed : mapState ({    
@@ -1103,6 +1168,32 @@
                 }
 
             },
+            saveFormKas() {
+                var app = this;
+                var newKas = app.tambahKas;
+                axios.post(app.urlKas, newKas)
+                .then(function (resp) {
+                    app.message = 'Menambah Kas '+ app.tambahKas.nama_kas;
+                    app.alert(app.message);
+                    app.tambahKas.kode_kas = ''
+                    app.tambahKas.nama_kas = ''
+                    app.tambahKas.status_kas = 0
+                    app.tambahKas.default_kas = 0
+                    app.errors = '';
+                    app.$store.dispatch('LOAD_KAS_LIST')
+                    $("#modal_tambah_kas").hide();
+                    $("#modal_selesai").show();
+                })
+                .catch(function (resp) {
+                    app.success = false;
+                    app.errors = resp.response.data.errors;
+                });
+            },
+            tambahModalKas(){
+                $("#modal_tambah_kas").show();
+                $("#modal_selesai").hide();
+                this.$refs.kode_kas.focus(); 
+            },
             hitungHargaKonversi(harga_beli){
                 var satuan = this.inputTbsRetur.satuan_produk.split("|");
 
@@ -1122,6 +1213,10 @@
             },
             closeModalEditSatuan(){
                 $("#modalEditSatuan").hide();
+            },
+            closeModalKas(){
+                $("#modal_tambah_kas").hide(); 
+                $("#modal_selesai").show(); 
             },
             alert(pesan) {
                 this.$swal({
