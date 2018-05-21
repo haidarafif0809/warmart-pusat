@@ -207,8 +207,8 @@
                                     </div>
                                     <div class="col-md-3 col-xs-6">
                                         <div class="form-group" style="margin-right: 10px; margin-left: 1px; margin-bottom: 1px; margin-top: 1px;">
-                                            <font style="color: black">(%)(F8)</font>    
-                                            <money style="text-align:right" class="form-subtotal" v-model="returPembelian.potongan_faktur" v-bind="separator" v-shortkey.focus="['f8']"></money>
+                                            <font style="color: black">(%)(F8)</font>                                            
+                                            <input style="text-align:right" type="number" class="form-subtotal" value="0" v-model="returPembelian.potongan_persen" v-on:blur="potonganPersen" v-shortkey.focus="['f8']" />
                                         </div>
                                     </div>
                                 </div>
@@ -534,6 +534,9 @@
             },
             'inputTbsRetur.satuan_produk':function(){
                 this.hitungHargaKonversi(this.inputTbsRetur.harga_beli)
+            },
+            'returPembelian.potongan_faktur':function(){
+                this.potonganFaktur();
             }
         },
         methods: {
@@ -1026,73 +1029,116 @@
                 app.$swal({
                     text: "Anda Yakin Ingin Membatalkan Transaksi Ini ?",
                     buttons: {
-                      cancel: true,
-                      confirm: "OK"                   
-                  },
+                        cancel: true,
+                        confirm: "OK"                   
+                    },
 
-              }).then((value) => {
+                }).then((value) => {
 
-                if (!value) throw null;
+                    if (!value) throw null;
 
-                app.loading = true;
-                axios.post(app.url+'/proses-batal-retur')
-                .then(function (resp) {
-                    app.getTbs();
-                    app.alert("Membatalkan Transaksi Retur Pembelian");
-                    app.inputTbsRetur.supplier = ''
-                    app.returPembelian.subtotal = 0
-                    app.returPembelian.total_akhir = 0
-                    app.returPembelian.potong_hutang = 0
+                    app.loading = true;
+                    axios.post(app.url+'/proses-batal-retur')
+                    .then(function (resp) {
+                        app.getTbs();
+                        app.alert("Membatalkan Transaksi Retur Pembelian");
+                        app.inputTbsRetur.supplier = ''
+                        app.returPembelian.subtotal = 0
+                        app.returPembelian.total_akhir = 0
+                        app.returPembelian.potong_hutang = 0
+                        app.returPembelian.potongan_faktur = 0
+                        app.returPembelian.potongan_persen = 0
+                        app.returPembelian.pembayaran = 0
+                        app.returPembelian.kas = ''
+                        app.returPembelian.keterangan = ''
+                        app.returPembelian.supplier = ''
+                    })
+                    .catch(function (resp) {
+                        console.log(resp);
+                        app.loading = false;
+                        alert("Tidak Dapat Membatalkan Transaksi Retur Pembelian");
+                    });
+                });
+            },
+            potonganPersen(){
+                var app = this;
+                var potonganPersen = app.returPembelian.potongan_persen
+
+                if (potonganPersen > 100) {
+                    app.alertTbs("Potongan Tidak Bisa Lebih Dari 100%")
+                    app.returPembelian.total_akhir = app.returPembelian.subtotal
                     app.returPembelian.potongan_faktur = 0
                     app.returPembelian.potongan_persen = 0
-                    app.returPembelian.pembayaran = 0
-                    app.returPembelian.kas = ''
-                    app.returPembelian.keterangan = ''
-                    app.returPembelian.supplier = ''
-                })
-                .catch(function (resp) {
-                    console.log(resp);
-                    app.loading = false;
-                    alert("Tidak Dapat Membatalkan Transaksi Retur Pembelian");
-                });
-            });
-          },
-          hitungHargaKonversi(harga_beli){
-            var satuan = this.inputTbsRetur.satuan_produk.split("|");
+                }else{
+                    if (potonganPersen == '') {
+                        potonganPersen = 0
+                    }
 
-            this.inputTbsRetur.harga_produk = parseFloat(harga_beli) * ( parseFloat(satuan[3]) * parseFloat(satuan[4]) );
-        },
-        bayarPenjualan(){
-            $("#modal_selesai").show(); 
-            this.$refs.pembayaran.$el.focus()
-        },
-        closeModal(){
-            $("#modal_selesai").hide(); 
-            $("#modal_pembelian").hide(); 
-        },
-        closeModalInsertTbs(){
-            $("#modalInsertTbs").hide();
-            $("#modal_pembelian").show(); 
-        },
-        closeModalEditSatuan(){
-            $("#modalEditSatuan").hide();
-        },
-        alert(pesan) {
-            this.$swal({
-                text: pesan,
-                icon: "success",
-                buttons: false,
-                timer: 1500
-            })
-        },
-        alertGagal(pesan) {
-            this.$swal({
-                text: pesan,
-                icon: "warning",
-                buttons: false,
-                timer: 1500
-            })
+                    var potongan_nominal = parseFloat(app.returPembelian.subtotal) * (parseFloat(potonganPersen) / 100) 
+                    var total_akhir = parseFloat(app.returPembelian.subtotal,10) - parseFloat(potongan_nominal,10)
+
+                    app.returPembelian.potongan_faktur = potongan_nominal
+                    app.returPembelian.total_akhir = total_akhir
+                }
+            },
+            potonganFaktur(){
+                var app = this;
+                var potonganFaktur = app.returPembelian.potongan_faktur
+
+                if (potonganFaktur == '') {
+                    potonganFaktur = 0
+                }
+                var potongan_persen = (parseFloat(potonganFaktur) / parseFloat(app.returPembelian.subtotal)) * 100
+                var total_akhir = parseFloat(app.returPembelian.subtotal) - parseFloat(potonganFaktur)
+
+                if (potongan_persen > 100) {
+                    app.alertTbs("Potongan Tidak Bisa Lebih Dari 100%")
+                    app.returPembelian.total_akhir = app.returPembelian.subtotal
+                    app.returPembelian.potongan_faktur = 0
+                    app.returPembelian.potongan_persen = 0
+
+                }else{
+                    app.returPembelian.potongan_persen = potongan_persen.toFixed(2)
+                    app.returPembelian.total_akhir = total_akhir
+                }
+
+            },
+            hitungHargaKonversi(harga_beli){
+                var satuan = this.inputTbsRetur.satuan_produk.split("|");
+
+                this.inputTbsRetur.harga_produk = parseFloat(harga_beli) * ( parseFloat(satuan[3]) * parseFloat(satuan[4]) );
+            },
+            bayarPenjualan(){
+                $("#modal_selesai").show(); 
+                this.$refs.pembayaran.$el.focus()
+            },
+            closeModal(){
+                $("#modal_selesai").hide(); 
+                $("#modal_pembelian").hide(); 
+            },
+            closeModalInsertTbs(){
+                $("#modalInsertTbs").hide();
+                $("#modal_pembelian").show(); 
+            },
+            closeModalEditSatuan(){
+                $("#modalEditSatuan").hide();
+            },
+            alert(pesan) {
+                this.$swal({
+                    text: pesan,
+                    icon: "success",
+                    buttons: false,
+                    timer: 1500
+                })
+            },
+            alertGagal(pesan) {
+                this.$swal({
+                    text: pesan,
+                    icon: "warning",
+                    buttons: false,
+                    timer: 1500
+                })
+            }
         }
     }
-}
 </script>
