@@ -244,7 +244,7 @@
                     <tbody v-if="tbs_retur_penjualan.length > 0 && loading == false"  class="data-ada">
                       <tr v-for="tbs_retur_penjualans, index in tbs_retur_penjualan" >
 
-                        <td>{{ tbs_retur_penjualans.no_faktur_penjualan }}</td>
+                        <td># {{ tbs_retur_penjualans.no_faktur_penjualan }}</td>
                          <td>{{ tbs_retur_penjualans.kode_barang }} - {{ tbs_retur_penjualans.nama_barang }}</td>
                           <td style="text-align:right;">{{ tbs_retur_penjualans.jumlah_retur | pemisahTitik }}</td>
                           <td style="text-align:center;">{{ tbs_retur_penjualans.satuan }}</td>
@@ -253,7 +253,7 @@
                           <td style="text-align:right;">{{ tbs_retur_penjualans.potongan | pemisahTitik }}</td>
                           <td style="text-align:right;">{{ tbs_retur_penjualans.subtotal | pemisahTitik }}</td>
                           <td style="text-align:right;"> 
-                         <a  href="#create-retur-penjualan" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_retur_penjualans.id" v-on:click="deleteEntry(tbs_retur_penjualans.id, index,tbs_retur_penjualans.jumlah_retur,tbs_retur_penjualans.nama_barang,tbs_retur_penjualans.no_faktur_penjualan)">Delete</a>
+                         <a  href="#create-retur-penjualan" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_retur_penjualans.id" v-on:click="deleteEntry(tbs_retur_penjualans.id, index,tbs_retur_penjualans.harga_produk,tbs_retur_penjualans.nama_barang,tbs_retur_penjualans.no_faktur_penjualan)">Delete</a>
                         </td>
                       </tr>
                     </tbody>          
@@ -617,7 +617,7 @@ export default {
           timer: 1000,
     		});
     	},
-      deleteEntry(id, index,jumlah_retur,nama_produk,no_faktur_penjualan) {
+      deleteEntry(id,index,harga_produk,nama_produk,no_faktur_penjualan) {
         var app = this;
         app.$swal({
             text: "Anda Yakin Ingin Menghapus Retur Produk "+titleCase(nama_produk)+ " Faktur "+no_faktur_penjualan+ " ?",
@@ -626,25 +626,25 @@ export default {
         })
         .then((willDelete) => {
             if (willDelete) {
-                this.prosesDelete(id,no_faktur_penjualan,jumlah_retur,nama_produk);
+                this.prosesDelete(id,no_faktur_penjualan,harga_produk,nama_produk);
             } else {
                 app.$swal.close();
             }
         });
 
     },
-    prosesDelete(id,no_faktur_penjualan,jumlah_retur,nama_produk){
+    prosesDelete(id,no_faktur_penjualan,harga_produk,nama_produk){
         var app = this;
         app.loading = true;
-        axios.delete(app.url+'/proses-hapus-tbs-pembayaran-hutang/'+id)
+        axios.delete(app.url+'/proses-hapus-tbs-retur-penjualan/'+id)
         .then(function (resp) {
             if (resp.data == 0) {
                 app.alertGagal("Faktur "+no_faktur_penjualan+" Produk "+titleCase(nama_produk)+" Gagal Dihapus!")
                 app.loading = false
             }else{
-                var subtotal = parseFloat(app.inputPembayaranHutang.subtotal) - parseFloat(jumlah_retur)
+                var subtotal = parseFloat(app.inputReturPenjualan.subtotal) - parseFloat(harga_produk)
                 app.inputReturPenjualan.subtotal = subtotal.toFixed(2)
-                app.alert("Menghapus Faktur "+no_faktur_pembelian)
+                app.alert("Menghapus Faktur "+no_faktur_penjualan+" Produk "+titleCase(nama_produk))
                 app.getResults();
                 app.loading = false
             }
@@ -652,7 +652,7 @@ export default {
         .catch(function (resp) {
             console.log(resp);
             app.loading = false;
-            alert("Tidak dapat Menghapus tbs Pembayaran Hutang");
+            alert("Tidak dapat Menghapus tbs Retur Penjualan");
         });
     },
     alertGagal(pesan) { 

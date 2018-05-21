@@ -135,6 +135,7 @@ class ReturPenjualanController extends Controller
                 'harga_produk'        => $tbs_retur_penjualans->harga_produk,
                 'potongan'            => $tbs_retur_penjualans->potongan,
                 'subtotal'            => $tbs_retur_penjualans->subtotal,
+
             ]);
         }
 
@@ -268,6 +269,15 @@ class ReturPenjualanController extends Controller
         }
 
         return response()->json($respons);
+    }
+        //hapus tbs pembayaran hutang
+    public function prosesHapusTbsReturPenjualan($id)
+    {
+        if (!TbsReturPenjualan::destroy($id)) {
+            return 0;
+        } else {
+            return response(200);
+        }
     }
 
     /**
