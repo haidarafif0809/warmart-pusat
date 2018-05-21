@@ -89,6 +89,7 @@
 											<textarea class="form-control" placeholder="Silakan Isi Pesan Promo Untuk Pelanggan disini ..." rows="4" v-model="actionBucketSize.pesan"></textarea>
 										</div>
 
+										<p style="color: red; font-style: italic;">*Note : Gunakan Shorcut F2 untuk memasukan produk </p>    
 
 										<ul class="timeline timeline-simple">
 											<li class="timeline-inverted">
@@ -934,12 +935,14 @@ export default {
 
 			app.loading = true
 			$("#kirimPesan").html('Mohon Tunggu, Pesan Sedang dikirim ... <i v-if="loading" class="fa fa-spinner fa-spin"></i>')
+			$("#kirimPesan").prop('disabled', true)
 			axios.post(app.url+'/kirim-pesan',newActionBucketSize)
 			.then(resp => {
 				app.loading = false
 				app.closeModalAction()
 				app.alert("Berhasil Mengirimkan Pesan")
 				$("#kirimPesan").html('Kirim')
+				$("#kirimPesan").prop('disabled', false)
 			})
 			.catch(err => {
 				console.log(err)
@@ -947,6 +950,7 @@ export default {
 				app.errors = err.response.data.errors;
 				alert("Maaf, Silakan cek kembali form input anda!")
 				$("#kirimPesan").html('Kirim')
+				$("#kirimPesan").prop('disabled', false)
 			})
 			
 		},
