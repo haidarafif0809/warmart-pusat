@@ -363,7 +363,7 @@
                                         <button type="button" class="btn btn-success" id="bayar" v-on:click="bayarPenjualan()" v-shortkey.push="['f2']" @shortkey="bayarPenjualan()"><font style="font-size:13px;">Bayar(F2)</font></button>
                                     </div>
                                     <div class="col-md-6 col-xs-6">
-                                        <button type="submit" class="btn btn-danger" id="btnBatal" v-on:click="batalPenjualan()" v-shortkey.push="['f3']" @shortkey="batalPenjualan()">
+                                        <button type="submit" class="btn btn-danger" id="btnBatal" v-on:click="batalRetur()" v-shortkey.push="['f3']" @shortkey="batalRetur()">
                                             <font style="font-size:13px;">Batal(F3) </font>
                                         </button>
                                     </div>
@@ -485,7 +485,7 @@
                     total_akhir : 0,
                     potong_hutang : 0,
                     pembayaran : 0,
-                    keterangan: 0,                    
+                    keterangan: '',                    
                 }
             }
         },
@@ -1020,42 +1020,78 @@
                     alert("Pajak Produk tidak bisa diedit");
                 });
             },
-            hitungHargaKonversi(harga_beli){
-                var satuan = this.inputTbsRetur.satuan_produk.split("|");
+            batalRetur(){
+                var app = this
+                app.$swal({
+                    text: "Anda Yakin Ingin Membatalkan Transaksi Ini ?",
+                    buttons: {
+                      cancel: true,
+                      confirm: "OK"                   
+                  },
 
-                this.inputTbsRetur.harga_produk = parseFloat(harga_beli) * ( parseFloat(satuan[3]) * parseFloat(satuan[4]) );
-            },
-            bayarPenjualan(){
-                $("#modal_selesai").show(); 
-                this.$refs.pembayaran.$el.focus()
-            },
-            closeModal(){
-                $("#modal_selesai").hide(); 
-                $("#modal_pembelian").hide(); 
-            },
-            closeModalInsertTbs(){
-                $("#modalInsertTbs").hide();
-                $("#modal_pembelian").show(); 
-            },
-            closeModalEditSatuan(){
-                $("#modalEditSatuan").hide();
-            },
-            alert(pesan) {
-                this.$swal({
-                    text: pesan,
-                    icon: "success",
-                    buttons: false,
-                    timer: 1500
+              }).then((value) => {
+
+                if (!value) throw null;
+
+                app.loading = true;
+                axios.post(app.url+'/proses-batal-retur')
+                .then(function (resp) {
+                    app.getTbs();
+                    app.alert("Membatalkan Transaksi Retur Pembelian");
+                    app.inputTbsRetur.supplier = ''
+                    app.returPembelian.subtotal = 0
+                    app.returPembelian.total_akhir = 0
+                    app.returPembelian.potong_hutang = 0
+                    app.returPembelian.potongan_faktur = 0
+                    app.returPembelian.potongan_persen = 0
+                    app.returPembelian.pembayaran = 0
+                    app.returPembelian.kas = ''
+                    app.returPembelian.keterangan = ''
+                    app.returPembelian.supplier = ''
                 })
-            },
-            alertGagal(pesan) {
-                this.$swal({
-                    text: pesan,
-                    icon: "warning",
-                    buttons: false,
-                    timer: 1500
-                })
-            }
+                .catch(function (resp) {
+                    console.log(resp);
+                    app.loading = false;
+                    alert("Tidak Dapat Membatalkan Transaksi Retur Pembelian");
+                });
+            });
+          },
+          hitungHargaKonversi(harga_beli){
+            var satuan = this.inputTbsRetur.satuan_produk.split("|");
+
+            this.inputTbsRetur.harga_produk = parseFloat(harga_beli) * ( parseFloat(satuan[3]) * parseFloat(satuan[4]) );
+        },
+        bayarPenjualan(){
+            $("#modal_selesai").show(); 
+            this.$refs.pembayaran.$el.focus()
+        },
+        closeModal(){
+            $("#modal_selesai").hide(); 
+            $("#modal_pembelian").hide(); 
+        },
+        closeModalInsertTbs(){
+            $("#modalInsertTbs").hide();
+            $("#modal_pembelian").show(); 
+        },
+        closeModalEditSatuan(){
+            $("#modalEditSatuan").hide();
+        },
+        alert(pesan) {
+            this.$swal({
+                text: pesan,
+                icon: "success",
+                buttons: false,
+                timer: 1500
+            })
+        },
+        alertGagal(pesan) {
+            this.$swal({
+                text: pesan,
+                icon: "warning",
+                buttons: false,
+                timer: 1500
+            })
         }
     }
+}
 </script>
