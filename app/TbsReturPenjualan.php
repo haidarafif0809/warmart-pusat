@@ -52,7 +52,7 @@ class TbsReturPenjualan extends Model
                 }
         }
 
-            // DATA TBS PEMBAYARAN hutang
+            // DATA TBS Retur Penjualan
     public function scopeCekPelangganReturPenjualan($query_tbs, $session_id)
     {
         $query_tbs = TbsReturPenjualan::select(['tbs_retur_penjualans.session_id','penjualan_pos.pelanggan_id'])

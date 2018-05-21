@@ -246,7 +246,11 @@
 
                         <td># {{ tbs_retur_penjualans.no_faktur_penjualan }}</td>
                          <td>{{ tbs_retur_penjualans.kode_barang }} - {{ tbs_retur_penjualans.nama_barang }}</td>
-                          <td style="text-align:right;">{{ tbs_retur_penjualans.jumlah_retur | pemisahTitik }}</td>
+                         <td align="right"> 
+                           <a href="#create-retur-penjualan" v-bind:id="'edit-' + tbs_retur_penjualans.id" v-on:click="editJumlah(tbs_retur_penjualans.id, index,tbs_retur_penjualans.nama_barang,tbs_retur_penjualans.subtotal,tbs_retur_penjualans.jumlah_jual)"> 
+                            {{ tbs_retur_penjualans.jumlah_retur | pemisahTitik }} 
+                            </a> 
+                         </td> 
                           <td style="text-align:center;">{{ tbs_retur_penjualans.satuan }}</td>
                           <td style="text-align:right;">{{ tbs_retur_penjualans.harga_produk | pemisahTitik }}</td>
 
@@ -681,6 +685,66 @@ export default {
             alert("Tidak dapat Menghapus tbs Retur Penjualan");
         });
     },
+    editJumlah(id, index,nama_produk,subtotal_lama,jumlah_jual) { 
+                var app = this;    
+                swal({  
+                    title: titleCase(nama_produk),  
+                    input: 'number',  
+                    inputPlaceholder : 'Jumlah Retur',          
+                    html:'Berapa Jumlah Retur Yang Akan Dimasukkan ?',  
+                    animation: false,  
+                    showCloseButton: true,  
+                    showCancelButton: true,  
+                    focusConfirm: true,  
+                    confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> OK',  
+                    confirmButtonAriaLabel: 'Thumbs up, great!',  
+                    cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal',  
+                    closeOnConfirm: true,  
+                    cancelButtonAriaLabel: 'Thumbs down',  
+                    inputAttributes: {  
+                        'name': 'edit_qty_produk',  
+                    },  
+                    inputValidator : function (value) {  
+                        return new Promise(function (resolve, reject) {  
+                            if (value) {  
+                                resolve();  
+                            }   
+                            else {  
+                                reject('Jumlah Retur Harus Di Isi!');  
+                            }  
+                        })  
+                    }  
+                }).then(function (jumlah_retur) { 
+
+                    if (jumlah_retur != "0") {  
+                            app.loading = true; 
+                            if (jumlah_retur > jumlah_jual){
+                                app.loading = false;
+                                app.getResults();
+                                $("#modalInsertTbs").hide();
+                                $("#modal_pilih_retur").hide(); 
+                                app.alertTbs("Jumlah Retur yang Anda masukan melebihi Jumlah Jual !");
+                            }else{
+                              axios.get(app.url+'/proses-edit-jumlah-retur?jumlah_retur='+jumlah_retur+'&id_tbs='+id) 
+                                .then(function (resp) { 
+                                    app.alert("Mengubah Jumlah Retur "+titleCase(nama_produk)); 
+                                    app.loading = false; 
+                                    app.getResults();       
+                                    var subtotal = (parseInt(app.inputReturPenjualan.subtotal) - parseInt(subtotal_lama))  + parseInt(resp.data.subtotal) 
+                                   app.inputReturPenjualan.subtotal = subtotal.toFixed(2)
+                                }) 
+                                .catch(function (resp) { 
+                                    app.loading = false; 
+                                    alert("Jumlah Retur Tidak Bisa Diedit"); 
+                                }); 
+                            }   
+                    }  
+                    else {  
+                        swal('Oops...', 'Jumlah Tidak Boleh 0 !', 'error');  
+                        return false;  
+                    }  
+                });  
+    }, 
     alertGagal(pesan) { 
                 this.$swal({ 
                     text: pesan, 
