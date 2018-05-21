@@ -538,6 +538,7 @@
         },
         methods: {
             openSelectizeSupplier(){      
+                this.$store.dispatch('LOAD_SUPPLIER_LIST'); 
                 this.$refs.supplier.$el.selectize.focus();
             },
             openSelectizeKas(){      

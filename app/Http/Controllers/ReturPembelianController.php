@@ -14,8 +14,16 @@ class ReturPembelianController extends Controller
 {
 
     public function supplier(){
+        $session_id = session()->getId();
 
-        $suplier = Suplier::select('id', 'nama_suplier')->where('warung_id', Auth::user()->id_warung)->get();
+        $data_tbs   = TbsReturPembelian::select('supplier')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
+
+        if ($data_tbs->count() > 0) {
+            $suplier = Suplier::select('id', 'nama_suplier')->where('id', $data_tbs->first()->supplier)->get();
+        }else{
+            $suplier = Suplier::select('id', 'nama_suplier')->where('warung_id', Auth::user()->id_warung)->get();
+        }
+
         $array     = [];
         foreach ($suplier as $supliers) {
             array_push($array, [
@@ -287,6 +295,7 @@ class ReturPembelianController extends Controller
                     'subtotal'      => $subtotal,
                     'satuan_id'     => $data_satuan[0],
                     'satuan_dasar'  => $data_satuan[2],
+                    'supplier'  => $request->supplier,
                     'warung_id'     => Auth::user()->id_warung,
                     ]);
 
