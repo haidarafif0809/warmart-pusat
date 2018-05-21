@@ -319,7 +319,7 @@
                                         </td>
 
                                         <td align="right">
-                                            <a href="#create-retur-pembelian" v-bind:id="'edit-' + tbs_retur_pembelian.data_tbs.id_tbs_retur_pembelian" v-on:click="editTax(tbs_retur_pembelian.data_tbs.id_tbs_retur_pembelian, index,tbs_retur_pembelian.data_tbs.nama_barang,tbs_retur_pembelian.data_tbs.jumlah_retur,tbs_retur_pembelian.data_tbs.harga_produk,tbs_retur_pembelian.data_tbs.potongan,tbs_retur_pembelian.data_tbs.ppn_produk,tbs_retur_pembelian.data_tbs.subtotal)" >
+                                            <a href="#create-retur-pembelian" v-bind:id="'edit-' + tbs_retur_pembelian.data_tbs.id_tbs_retur_pembelian" v-on:click="editTax(tbs_retur_pembelian.data_tbs.id_tbs_retur_pembelian, index,tbs_retur_pembelian.data_tbs.nama_barang,tbs_retur_pembelian.data_tbs.jumlah_retur,tbs_retur_pembelian.data_tbs.harga_produk,tbs_retur_pembelian.data_tbs.potongan,tbs_retur_pembelian.ppn_produk,tbs_retur_pembelian.data_tbs.subtotal)" >
                                                 {{ tbs_retur_pembelian.data_tbs.tax | pemisahTitik }} | {{ Math.round(tbs_retur_pembelian.tax_persen,2) }} %
                                             </a>
                                         </td>
@@ -469,6 +469,8 @@
                     harga_beli : '',
                     satuan_produk: '',
                     stok_produk: 0,
+                    potongan_produk: 0,
+                    tax_produk: 0,
                     id_tbs: ''
                 },
                 inputPembayaranRetur: {
@@ -924,6 +926,98 @@
                 .catch(function (resp) { 
                     console.log(resp);    
                     alert("Tidak dapat Mengubah Potongan Produk");
+                });
+            },
+            editTax(id, index,nama_produk,jumlah,harga,potongan,ppn,subtotal_lama){
+                var app = this;   
+                var subtotal = (parseFloat(jumlah) * parseFloat(harga)) - parseFloat(potongan); 
+
+                if (ppn == '') { 
+                    var ppn_produk = '<select id="ppn_swal" name="ppn_swal"  class="swal2-input js-selectize-reguler">'+ 
+                    '<option value="Include" >Include</option>'+ 
+                    '<option value="Exclude" >Exclude</option>'+ 
+                    '</select></div>'; 
+                }else { 
+                    var ppn_produk = '<select id="ppn_swal" name="ppn_swal" class="swal2-input js-selectize-reguler">'+ 
+                    '<option selected="selected" value="'+ppn+'">'+ppn+'</option>'+ 
+                    '</select></div>'; 
+                } 
+
+                swal({ 
+                    title: titleCase(nama_produk), 
+                    html:'<i>Format : 10 (nominal) || 10% (persen)</i>'+ 
+                    '<div class="row">'+ 
+                    '<div class="col-sm-6 col-xs-6">'+ppn_produk+''+ 
+                    '<div class="col-sm-6 col-xs-6">'+ 
+                    '<input type="text" id="tax_swal" v-model="ppn_swal_input" class="swal2-input" placeholder="PAJAK"></div>'+ 
+                    '</div>', 
+                    animation: false, 
+                    showCloseButton: true, 
+                    showCancelButton: true, 
+                    confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> OK', 
+                    confirmButtonAriaLabel: 'Thumbs up, great!', 
+                    cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal', 
+                    cancelButtonAriaLabel: 'Thumbs down', 
+                    preConfirm: function () {
+                        return new Promise(function (resolve) { 
+                            resolve([
+                                $('#tax_swal').val(), 
+                                $('#ppn_swal').val()
+                                ]) 
+                        }) 
+                    } 
+                }).then(function (result) {   
+                    if (result[0] == '' || result[0] == 0) {
+                        swal('Oops...', 'Pajak Tidak Boleh 0 !', 'error'); 
+                        return false; 
+                    }   
+                    else if (result[1] == '') {
+                        swal('Oops...', 'PPN Belum Di Isi', 'error'); 
+                        return false; 
+                    }else{
+                        var pajak = result[0]; 
+                        var pos = pajak.search("%"); 
+
+                        if (pos > 0) {
+                            pajak = pajak.replace("%",""); 
+                            if (pajak > 100) {
+                                swal('Oops...', 'Pajak Tidak Boleh Lebih Dari 100%!', 'error'); 
+                                return false; 
+                            }else{
+                                var pajak = result[0];
+                                var ppn_edit = result[1];
+                                app.submitEditTax(pajak,id,nama_produk,ppn_edit,subtotal_lama);
+                            } 
+                        }else{
+                            if (subtotal < result[0]) {
+                                swal('Oops...', 'Pajak Tidak Boleh Melebihi Subtotal!', 'error'); 
+                                return false; 
+                            }else{
+                                var pajak = result[0];
+                                var ppn_edit = result[1];
+                                app.submitEditTax(pajak,id,nama_produk,ppn_edit,subtotal_lama);
+                            }
+                        } 
+                    } 
+                }); 
+            },
+            submitEditTax(pajak,id,nama_produk,ppn_edit,subtotal_lama){
+                var app = this;
+                console.log(pajak)
+                app.loading = true;
+                axios.get(app.url+'/proses-tax-tbs?tax_edit_produk='+pajak+'&id_tax='+id+'&ppn_produk='+ppn_edit)
+                .then(function (resp) {
+                    app.alert("Mengubah Pajak Produk "+titleCase(nama_produk));
+                    app.loading = false;
+                    app.getTbs();  
+
+                    var subtotal = (parseInt(app.returPembelian.subtotal) - parseInt(subtotal_lama)) + parseInt(resp.data.subtotal);
+                    app.returPembelian.subtotal = subtotal                       
+                    app.returPembelian.total_akhir  = subtotal 
+                })
+                .catch(function (resp) {
+                    app.loading = false;
+                    alert("Pajak Produk tidak bisa diedit");
                 });
             },
             hitungHargaKonversi(harga_beli){

@@ -1100,6 +1100,7 @@ Route::delete('/retur-pembelian/hapus-tbs/{id}', 'ReturPembelianController@hapus
 Route::get('/retur-pembelian/proses-edit-jumlah-retur', 'ReturPembelianController@editJumlahReturTbs')->middleware('auth');
 Route::post('/retur-pembelian/edit-satuan-tbs', 'ReturPembelianController@editSatuanTbs')->middleware('auth');
 Route::post('/retur-pembelian/proses-potongan-tbs', 'ReturPembelianController@editPotongan')->middleware('auth');
+Route::get('/retur-pembelian/proses-tax-tbs', 'ReturPembelianController@editTax')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 

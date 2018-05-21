@@ -72,7 +72,7 @@ class ReturPembelianController extends Controller
                         $tax_persen = $tax_format * 100;
 
                     } else if ($data_tbs->ppn == "Exclude") {
-                        $tax_persen = ($data_tbs->tax * 100) / ($data_tbs->jumlah_produk * $data_tbs->harga_produk - $data_tbs->potongan);
+                        $tax_persen = ($data_tbs->tax * 100) / ($data_tbs->jumlah_retur * $data_tbs->harga_produk - $data_tbs->potongan);
                     }
                 }
             } else {
@@ -116,7 +116,7 @@ class ReturPembelianController extends Controller
         return $potongan_produk;
     }
 
-    
+
     public function tampilPotongan($potongan_produk, $jumlah_produk, $harga_produk)
     {
 
@@ -411,6 +411,67 @@ class ReturPembelianController extends Controller
             $respons['subtotal'] = $subtotal;
 
             return response()->json($respons);
+        }
+    }
+
+
+    public function editTax(Request $request)
+    {
+        if (Auth::user()->id_warung == '') {
+            Auth::logout();
+            return response()->view('error.403');
+        } else {
+            // SELECT EDIT TBS PEMBELIAN
+            $tbs_retur_pembelian = TbsReturPembelian::find($request->id_tax);
+            $tax           = substr_count($request->tax_edit_produk, '%'); // UNTUK CEK APAKAH ADA STRING "%"
+            // JIKA TIDAK ADA
+            if ($tax == 0) {
+                if ($request->ppn_produk == 'Exclude') {
+                    $tax_produk  = filter_var($request->tax_edit_produk, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION); // TAX DAALAM BENTUK NOMINAL
+                    $tax_include = 0;
+                } else {
+                    $tax_produk  = 0;
+                    $tax_include = filter_var($request->tax_edit_produk, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION); // TAX DAALAM BENTUK NOMINAL;
+                }
+                $tax_persen = 0;
+            } else {
+                // JIKA ADA
+                $tax_persen = filter_var($request->tax_edit_produk, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION); //  PISAH STRING BERDASRAKAN TANDA "%"
+                // TAX PRODUK = ((HARGA * JUMLAH) - POTONGAN) * TAX PERSEN / 100
+                if ($request->ppn_produk == 'Include') {
+                    //perhitungan tax include
+                    $default_tax              = 1;
+                    $subtotal_kurang_potongan = (($tbs_retur_pembelian->harga_produk * $tbs_retur_pembelian->jumlah_retur) - $tbs_retur_pembelian->potongan);
+                    $hasil_tax                = $default_tax + ($tax_persen / 100);
+                    $hasil_tax2               = $subtotal_kurang_potongan / $hasil_tax;
+                    $tax_include              = $subtotal_kurang_potongan - $hasil_tax2;
+                    //perhitungan tax include
+                    $tax_produk = 0;
+                } elseif ($request->ppn_produk == 'Exclude') {
+                    $tax_produk  = (($tbs_retur_pembelian->harga_produk * $tbs_retur_pembelian->jumlah_retur) - $tbs_retur_pembelian->potongan) * $tax_persen / 100;
+                    $tax_include = 0;
+                }
+            }
+
+            if ($tax_produk == '') {
+                $tax_produk = 0;
+            }
+
+            if ($request->ppn_produk == 'Include') {
+                // JIKA PPN INCLUDE MAKA PAJAK TIDAK MEMPENGARUHI SUBTOTAL
+                $subtotal = ($tbs_retur_pembelian->harga_produk * $tbs_retur_pembelian->jumlah_retur) - $tbs_retur_pembelian->potongan;
+            } elseif ($request->ppn_produk == 'Exclude') {
+                // JIKA PPN EXCLUDE MAKA PAJAK MEMPENGARUHI SUBTOTAL
+                $subtotal = (($tbs_retur_pembelian->harga_produk * $tbs_retur_pembelian->jumlah_retur) - $tbs_retur_pembelian->potongan) + $tax_produk;
+            }
+            // UPDATE SUBTOTAL, TAX, PPN
+            $tbs_retur_pembelian->update(['subtotal' => $subtotal, 'tax' => $tax_produk, 'tax_include' => $tax_include, 'ppn' => $request->ppn_produk]);
+            $nama_barang = $tbs_retur_pembelian->TitleCaseBarang; // TITLE CASH
+
+            $respons['subtotal'] = $subtotal;
+
+            return response()->json($respons);
+
         }
     }
 
