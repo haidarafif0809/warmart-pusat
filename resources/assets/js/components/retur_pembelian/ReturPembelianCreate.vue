@@ -1279,7 +1279,7 @@
                     text: pesan,
                     icon: "success",
                     buttons: false,
-                    timer: 1500
+                    timer: 1000
                 })
             },
             alertGagal(pesan) {
@@ -1287,7 +1287,7 @@
                     text: pesan,
                     icon: "warning",
                     buttons: false,
-                    timer: 1500
+                    timer: 2000
                 })
             }
         }

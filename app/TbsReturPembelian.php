@@ -15,6 +15,12 @@ class TbsReturPembelian extends Model
 	protected $primaryKey = 'id_tbs_retur_pembelian';
 
 
+	public function produk()
+	{
+		return $this->hasOne('App\Barang', 'id', 'id_produk');
+	}
+	
+
 	public function scopeDataTransaksiTbsReturPembelian($query, $session_id, $warung_id) {
 		$query->select('tbs_retur_pembelians.id_tbs_retur_pembelian', 'tbs_retur_pembelians.jumlah_beli', 'tbs_retur_pembelians.jumlah_retur', 'barangs.nama_barang', 'barangs.kode_barang', 'tbs_retur_pembelians.id_produk', 'tbs_retur_pembelians.harga_produk', 'tbs_retur_pembelians.potongan', 'tbs_retur_pembelians.tax', 'tbs_retur_pembelians.subtotal', 'tbs_retur_pembelians.ppn', 'tbs_retur_pembelians.satuan_id', 'satuans.nama_satuan')
 		->leftJoin('barangs', 'barangs.id', '=', 'tbs_retur_pembelians.id_produk')

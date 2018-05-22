@@ -594,15 +594,24 @@ class ReturPembelianController extends Controller
 
             } else {
             //INSERT RETUR PEMBELIAN
+                $supplier   = TbsReturPembelian::select('supplier')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->first()->supplier;
                 $total = $request->total_akhir - $request->potong_hutang;
                 $retur = ReturPembelian::create([
                     'no_faktur_retur'   => $no_faktur,
-                    'suplier_id'        => $tbs_retur->first()->supplier,
+                    'suplier_id'        => $supplier,
                     'total'             => $total,
                     'total_bayar'       => $request->total_akhir,
                     'potongan'          => $request->potongan_faktur,
                     'potong_hutang'     => $request->potong_hutang,
                     'warung_id'         => $warung_id,
+                    ]);
+
+                TransaksiKas::create([
+                    'no_faktur'       => $no_faktur,
+                    'jenis_transaksi' => 'Retur Pembelian',
+                    'jumlah_masuk'    => $request->total_akhir,
+                    'kas'             => $request->kas,
+                    'warung_id'       => $warung_id
                     ]);
 
                 foreach ($tbs_retur->get() as $data_tbs) {
@@ -638,7 +647,7 @@ class ReturPembelianController extends Controller
                         $detail = DetailReturPembelian::create([
                             'no_faktur_retur'   => $no_faktur,
                             'id_produk'         => $data_tbs->id_produk,
-                            'jumlah_produk'      => $data_tbs->jumlah_retur,
+                            'jumlah_produk'     => $data_tbs->jumlah_retur,
                             'satuan_id'         => $data_tbs->satuan_id,
                             'satuan_dasar'      => $data_tbs->satuan_dasar,
                             'harga_produk'      => $data_tbs->harga_produk,
@@ -654,21 +663,14 @@ class ReturPembelianController extends Controller
                     }
                 }
 
-                TransaksiKas::create([
-                    'no_faktur'       => $no_faktur,
-                    'jenis_transaksi' => 'Retur Pembelian',
-                    'jumlah_masuk'    => $request->total_akhir,
-                    'kas'             => $request->kas,
-                    'warung_id'       => $warung_id
-                    ]);
-                // HAPUS TBS
-                $tbs_retur->delete();
-
-                DB::commit();
-
-                $respons['respons_retur'] = $retur->id;
-                return response()->json($respons);
             }
+                // HAPUS TBS
+            $tbs_retur->delete();
+
+            DB::commit();
+
+            $respons['respons_retur'] = $retur->id;
+            return response()->json($respons);
         }
 
     }
