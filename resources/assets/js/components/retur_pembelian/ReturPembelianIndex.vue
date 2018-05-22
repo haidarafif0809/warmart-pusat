@@ -51,24 +51,47 @@
 									<th style="text-align:right;">Potong Hutang</th>
 									<th style="text-align:right;">Kas</th>
 									<th style="text-align:right;">Diskon</th>
-									<th style="text-align:right;">Pajak</th>
-									<th style="text-align:center;">Waktu</th>									
+									<th style="text-align:center;">Waktu</th>
+									<th style="text-align:right;">Edit</th>
+									<th style="text-align:right;">Detail</th>
+									<th style="text-align:right;">Cetak</th>									
+									<th style="text-align:right;">Delete</th>
 								</tr>
 							</thead>
 							<tbody v-if="returPembelian.length > 0 && loading == false"  class="data-ada">
-								<tr v-for="returPembelians, index in returPembelian" >
-									<td>{{ returPembelians.waktu }}</td>
-									<td>{{ returPembelians.waktu }}</td>
-									<td>{{ returPembelians.waktu }}</td>
-									<td>{{ returPembelians.waktu }}</td>
-									<td>{{ returPembelians.waktu }}</td>
-									<td>{{ returPembelians.waktu }}</td>
-									<td>{{ returPembelians.waktu }}</td>
-									<td>{{ returPembelians.waktu }}</td>
+								<tr v-for="returPembelian, index in returPembelian" >
+									<td>{{ returPembelian.no_faktur_retur }}</td>
+									<td>{{ returPembelian.suplier | capitalize }}</td>
+									<td align="right">{{ returPembelian.total_bayar | pemisahTitik }}</td>
+									<td align="right">{{ returPembelian.potong_hutang | pemisahTitik }}</td>
+									<td align="right">{{ returPembelian.total | pemisahTitik }}</td>
+									<td align="right">{{ returPembelian.potongan | pemisahTitik }}</td>
+									<td align="center">{{ returPembelian.waktu}}</td>
+
+									<td style="text-align:right;">
+										<router-link :to="{name: 'prosesEditPembelianOrder', params: {id: returPembelian.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + returPembelian.id">
+											Edit 
+										</router-link>
+									</td>
+
+									<td style="text-align:right;">
+										<router-link :to="{name: 'detailPembelianOrder', params: {id: returPembelian.id}}" class="btn btn-xs btn-info" v-bind:id="'detail-' + returPembelian.no_faktur_retur" >
+											Detail
+										</router-link> 
+									</td>
+
+									<td style="text-align:right;">
+										<a target="blank" class="btn btn-primary btn-xs" v-bind:href="'retur-pembelian/cetak-besar-retur/'+returPembelian.id">Cetak Ulang</a>
+									</td>
+
+									<td style="text-align:right;">
+										<a  href="#retur-pembelian" class="btn btn-xs btn-danger" v-bind:id="'delete-' + returPembelian.id" v-on:click="deleteEntry(returPembelian.id, index,returPembelian.no_faktur_retur)">Delete
+										</a>
+									</td>
 								</tr>
 							</tbody>					
 							<tbody class="data-tidak-ada" v-else-if="returPembelian.length == 0 && loading == false">
-								<tr ><td colspan="8"  class="text-center">Tidak Ada Data</td></tr>
+								<tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
 							</tbody>
 						</table>	
 
@@ -91,7 +114,7 @@
 			return {
 				returPembelian: [],
 				returPembelianData: {},
-				url : window.location.origin+(window.location.pathname).replace("dashboard", "pembayaran-hutang"),
+				url : window.location.origin+(window.location.pathname).replace("dashboard", "retur-pembelian"),
 				pencarian: '',
 				loading: true,
 			}
@@ -106,7 +129,17 @@
 				this.loading = true;  
 			}
 		},
-
+		filters: {
+			pemisahTitik: function (value) {
+				var angka = [value];
+				var numberFormat = new Intl.NumberFormat('es-ES');
+				var formatted = angka.map(numberFormat.format);
+				return formatted.join('; ');
+			},
+			capitalize: function (value) {
+				return value.replace(/(^|\s)\S/g, l => l.toUpperCase())
+			},
+		},
 		methods: {
 			getResults(page) {
 				var app = this;	
@@ -115,6 +148,7 @@
 				}
 				axios.get(app.url+'/view?page='+page)
 				.then(function (resp) {
+					console.log(resp.data.data);
 					app.returPembelian = resp.data.data;
 					app.returPembelianData = resp.data;
 					app.loading = false;

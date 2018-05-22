@@ -1089,6 +1089,9 @@ Route::get('/tema/pencarian', 'SettingTemaController@pencarian')->middleware('au
 Route::get('/tema/ubah-tema/{id}/{default_tema}/', 'SettingTemaController@ubahTema')->middleware('auth'); 
 
 // Retur Pembelian
+Route::get('/retur-pembelian/view', 'ReturPembelianController@view')->middleware('auth');
+Route::get('/retur-pembelian/pencarian', 'ReturPembelianController@pencarian')->middleware('auth');
+
 Route::get('/retur-pembelian/view-tbs', 'ReturPembelianController@viewTbs')->middleware('auth');
 Route::get('/retur-pembelian/pencarian-tbs', 'ReturPembelianController@pencarianTbs')->middleware('auth');
 Route::get('/retur-pembelian/supplier', 'ReturPembelianController@supplier')->middleware('auth'); 
