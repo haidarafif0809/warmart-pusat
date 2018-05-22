@@ -60,10 +60,10 @@ th,td{
 						<div class="col-sm-4">
 							<table>
 								<tbody>
-									<tr><td width="25%"><font class="satu"> Waktu</td> <td> :&nbsp;&nbsp;</td> <td>{{$pembelian->waktu_beli}}</font> </td></tr> 
-									<tr><td width="25%"><font class="satu"> Kasir</td> <td> :&nbsp;&nbsp;</td> <td>{{$pembelian->kasir}}</font></td></tr> 
-									<tr><td width="25%"><font class="satu"> Status </td> <td> :&nbsp;&nbsp;</td> <td>{{$pembelian->status_pembelian}}</font></td></tr> 
-									<tr><td width="25%"><font class="satu"> Status </td> <td> :&nbsp;&nbsp;</td> <td>{{$pembelian->jatuh_tempo}}</font></td></tr> 
+									<tr><td width="25%"><font class="satu">Waktu</td> <td> :&nbsp;&nbsp;</td> <td>{{$pembelian->waktu_beli}}</font> </td></tr> 
+									<tr><td width="25%"><font class="satu">Kasir</td> <td> :&nbsp;&nbsp;</td> <td>{{$pembelian->kasir}}</font></td></tr> 
+									<tr><td width="25%"><font class="satu">Status</td> <td> :&nbsp;&nbsp;</td> <td>{{$pembelian->status_pembelian}}</font></td></tr> 
+									<tr><td width="25%"><font class="satu">Jatuh Tempo</td> <td> :&nbsp;&nbsp;</td> <td>{{$pembelian->jatuh_tempo}}</font></td></tr> 
 
 								</tbody>
 							</table>
