@@ -253,8 +253,11 @@
                          </td> 
                           <td style="text-align:center;">{{ tbs_retur_penjualans.satuan }}</td>
                           <td style="text-align:right;">{{ tbs_retur_penjualans.harga_produk | pemisahTitik }}</td>
-
-                          <td style="text-align:right;">{{ tbs_retur_penjualans.potongan | pemisahTitik }}</td>
+                          <td style="text-align:right;"> 
+                                <a href="#create-retur-penjualan" v-bind:id="'edit-' + tbs_retur_penjualans.id" v-on:click="editPotongan(tbs_retur_penjualans.id, index,tbs_retur_penjualans.nama_barang,tbs_retur_penjualans.subtotal)"> 
+                                   {{ tbs_retur_penjualans.potongan  }} 
+                                 </a> 
+                          </td> 
                           <td style="text-align:right;">{{ tbs_retur_penjualans.subtotal | pemisahTitik }}</td>
                           <td style="text-align:right;"> 
                          <a  href="#create-retur-penjualan" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_retur_penjualans.id" v-on:click="deleteEntry(tbs_retur_penjualans.id, index,tbs_retur_penjualans.subtotal,tbs_retur_penjualans.nama_barang,tbs_retur_penjualans.no_faktur_penjualan)">Delete</a>
@@ -744,6 +747,58 @@ export default {
                         return false;  
                     }  
                 });  
+    }, 
+    editPotongan(id, index,nama_produk,subtotal_lama) { 
+                var app = this;      
+                app.$swal({ 
+                    title: titleCase(nama_produk), 
+                    text : 'Format : 10 (nominal) || 10% (persen)', 
+                    content: { 
+                        element: "input", 
+                        attributes: { 
+                            placeholder: "Edit Potongan Produk", 
+                            type: "text", 
+                        }, 
+                    }, 
+                    buttons: { 
+                        cancel: true, 
+                        confirm: "OK"                    
+                    }, 
+ 
+                }).then((potongan) => { 
+                    if (!potongan) throw null; 
+                    this.submitEditPotongan(potongan,id,nama_produk,subtotal_lama); 
+                }); 
+     }, 
+     submitEditPotongan(potongan,id,nama_produk,subtotal_lama){ 
+                var app = this; 
+ 
+                app.inputTbsReturPenjualan.id_tbs = id; 
+                app.inputTbsReturPenjualan.potongan_produk = potongan; 
+                var newinputTbsReturPenjualan = app.inputTbsReturPenjualan; 
+ 
+                axios.post(app.url+'/proses-potongan-tbs', newinputTbsReturPenjualan) 
+                .then(function (resp) { 
+                    if (resp.data.status == 0) { 
+                        app.$swal({ 
+                            text: "Tidak Dapat Mengubah Potongan Produk, Periksa Kembali Inputan Anda!", 
+                        }); 
+                    }else if (resp.data.status == 1) { 
+                        app.$swal({ 
+                            text: "Potongan Yang Anda Masukan Melebihi Subtotal!", 
+                        }); 
+                    }else{ 
+                        var subtotal = (parseFloat(app.inputReturPenjualan.subtotal) - parseFloat(subtotal_lama)) + parseFloat(resp.data.subtotal) 
+                        app.alert("Mengubah Potongan Retur "+titleCase(nama_produk)); 
+                        app.loading = false; 
+                        app.inputReturPenjualan.subtotal = subtotal.toFixed(2) 
+                        app.getResults(); 
+                    } 
+                }) 
+                .catch(function (resp) {  
+                    console.log(resp);     
+                    alert("Tidak dapat Mengubah Potongan Produk"); 
+                }); 
     }, 
     alertGagal(pesan) { 
                 this.$swal({ 

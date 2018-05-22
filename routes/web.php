@@ -1103,6 +1103,8 @@ Route::delete('/retur-penjualan/proses-hapus-tbs-retur-penjualan/{id}', [
     ]);
 Route::get('/retur-penjualan/cek-pelanggan-double', 'ReturPenjualanController@cekPelangganDouble')->middleware('auth');
 Route::get('/retur-penjualan/proses-edit-jumlah-retur', 'ReturPenjualanController@editJumlahReturTbs')->middleware('auth'); 
+Route::post('/retur-penjualan/proses-potongan-tbs', 'ReturPenjualanController@editPotongan')->middleware('auth'); 
+
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
