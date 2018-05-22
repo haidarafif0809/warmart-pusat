@@ -629,10 +629,10 @@
           <div class="card-footer">
             <div class="row"> 
               <div class="col-md-4 col-xs-4"> 
-                <button type="button"   class="btn btn-success" id="bayar" v-on:click="bayarPenjualan()" v-shortkey.push="['f2']" @shortkey="bayarPenjualan() "><i class="material-icons">payment</i><b>(F2)</b> </button>
+                <button type="button"   class="btn btn-success" id="bayar" v-on:click="bayarPenjualan()" v-shortkey.push="['f2']" @shortkey="bayarPenjualan() "><b>Bayar(F2)</b> </button>
               </div>
               <div class="col-md-4 col-xs-4">
-                <button type="submit" class="btn btn-info" id="btnSimpan" v-on:click="simpanPenjualan()" v-shortkey.push="['shift']" @shortkey="simpanPenjualan() "> <i class="material-icons">save</i><b>(Shift)</b></button>
+                <button type="submit" class="btn btn-info" id="btnSimpan" v-on:click="simpanPenjualan()" v-shortkey.push="['shift']" @shortkey="simpanPenjualan() "><b>Simpan</b></button>
               </div>
               <div class="col-md-4 col-xs-4">
                 <button type="submit" class="btn btn-danger" id="btnBatal" v-on:click="batalPenjualan()" v-shortkey.push="['f3']" @shortkey="batalPenjualan()" > <i class="material-icons">clear</i><b>(F3)</b> </button>
@@ -1588,6 +1588,7 @@ submitAntrian(antrian,index){
   .then(resp => {
    console.log(resp.data)
    app.penjualan.pelanggan = antrian.pelanggan_id
+   console.log(antrian.pelanggan_id)
    app.antrian.data.splice(index,1)
    app.getResults()
    $("#modal_antri").hide()
@@ -1648,9 +1649,12 @@ submitSimpanPenjualan(){
     app.alertTbs("Pelanggan harus diisi")
   }else{
 
+    app.closeModalJumlahProduk()
+    app.alert("Menyimpan Penjualan")
+    app.tbs_penjualan.splice(0)
+    
     axios.post(app.url+'/simpan-tbs-penjualan', newSimpanPenjualan)
     .then((resp) => {
-      app.tbs_penjualan.splice(0)
       let newAntrian = {
         id : resp.data.id,
         no_antrian : resp.data.no_antrian,
@@ -1659,7 +1663,6 @@ submitSimpanPenjualan(){
       } 
       app.antrian.data.push(newAntrian)
       console.log(app.antrian.data)
-      app.alert("Menyimpan Penjualan")
       app.penjualan.pelanggan = 0
       app.penjualan.subtotal = 0
       app.penjualan.jatuh_tempo = ''
@@ -1668,7 +1671,6 @@ submitSimpanPenjualan(){
       app.penjualan.total_akhir = 0
       app.penjualan.pembayaran = 0
       app.hitungKembalian(app.penjualan.pembayaran)
-      app.closeModalJumlahProduk()
 
     })
     .catch((err) => {
