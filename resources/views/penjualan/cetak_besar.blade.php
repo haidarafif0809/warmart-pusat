@@ -62,9 +62,9 @@ th,td{
 							<table>
 								<tbody>
 									<tr><td width="25%"><font class="satu"> Waktu</td> <td> :&nbsp;&nbsp;</td> <td>{{$penjualan->waktu_jual}}</font> </td></tr> 
-									<tr><td width="25%"><font class="satu"> Kasir</td> <td> :&nbsp;&nbsp;</td> <td>{{$penjualan->kasir}}</font></td></tr> 
-									<tr><td width="25%"><font class="satu"> Status </td> <td> :&nbsp;&nbsp;</td> <td>{{$penjualan->status_penjualan}}</font></td></tr> 
-									<tr><td width="25%"><font class="satu"> Jatuh Tempo </td> <td> :&nbsp;&nbsp;</td> <td>{{$penjualan->jatuh_tempo}}</font></td></tr> 
+									<tr><td width="25%"><font class="satu">Kasir</td> <td> :&nbsp;&nbsp;</td> <td>{{$penjualan->kasir}}</font></td></tr> 
+									<tr><td width="25%"><font class="satu">Status</td> <td> :&nbsp;&nbsp;</td> <td>{{$penjualan->status_penjualan}}</font></td></tr> 
+									<tr><td width="25%"><font class="satu">Jatuh Tempo</td> <td> :&nbsp;&nbsp;</td> <td>{{$penjualan->jatuh_tempo}}</font></td></tr> 
 
 								</tbody>
 							</table>
