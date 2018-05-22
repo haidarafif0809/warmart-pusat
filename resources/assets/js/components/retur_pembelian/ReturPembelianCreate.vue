@@ -74,7 +74,7 @@
                                 <b>Pembelian Supplier {{inputTbsRetur.supplier}}</b> 
                             </div> 
                         </h4> 
-                    </div> 
+                    </div>  
                     <form class="form-horizontal" > 
                         <div class="modal-body"> 
                             <div class=" table-responsive ">
@@ -235,9 +235,7 @@
                                 </div>
 
                                 <div align="right"  style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                    <button v-if="returPembelian.kembalian >= 0 && returPembelian.kredit == 0" type="button" class="btn btn-success btn-sm" id="btnSelesai" v-on:click="selesaiPenjualan()" v-shortkey.push="['alt', 'x']" @shortkey="selesaiPenjualan()"><font style="font-size:15px;">Tunai(Alt + X)</font></button>
-
-                                    <button v-if="returPembelian.kredit > 0" type="button" class="btn btn-success btn-sm" id="btnSelesai" v-on:click="selesaiPenjualan()" v-shortkey.push="['alt', 'x']" @shortkey="selesaiPenjualan()"><font style="font-size:15px;">Piutang(Alt + X)</font></button>
+                                    <button type="button" class="btn btn-success btn-sm" id="btnSelesai" v-on:click="selesaiRetur()" v-shortkey.push="['alt', 'x']" @shortkey="selesaiRetur()"><font style="font-size:15px;">Tunai(Alt + X)</font></button>
 
                                     <button type="button" class="btn btn-default btn-sm"  v-on:click="closeModal()" v-shortkey.push="['esc']" @shortkey="closeModal()"> <font style="font-size:15px;">Tutup(Esc)</font></button>
                                 </div>
@@ -258,7 +256,7 @@
                 <!-- Modal content--> 
                 <div class="modal-content"> 
                     <div class="modal-header"> 
-                        <button type="button" class="close"  v-on:click="closeModalKas()" v-shortkey.push="['esc']" @shortkey="closeModalKas()"> &times;</button> 
+                        <button type="button" class="close"  v-on:click="closeModalKas()"> &times;</button> 
                         <h4 class="modal-title"> 
                             <div class="alert-icon"> 
                                 <b>Silahkan Isi Kas!</b> 
@@ -532,9 +530,6 @@
                     tax_produk: 0,
                     id_tbs: ''
                 },
-                inputPembayaranRetur: {
-                    keterangan: ''
-                },
                 returPembelian: {
                     kas: '',
                     supplier: '',
@@ -741,6 +736,8 @@
                     app.loading = false
                     app.seen = true
                     app.returPembelian.kas = app.default_kas
+                    console.log(app.default_kas)
+                    console.log(app.returPembelian.kas)
                     app.openSelectizeSupplier();
 
                     if (app.returPembelian.subtotal == 0) {          
@@ -1130,7 +1127,7 @@
                 var potonganPersen = app.returPembelian.potongan_persen
 
                 if (potonganPersen > 100) {
-                    app.alertTbs("Potongan Tidak Bisa Lebih Dari 100%")
+                    app.alertGagal("Potongan Tidak Bisa Lebih Dari 100%")
                     app.returPembelian.total_akhir = app.returPembelian.subtotal
                     app.returPembelian.potongan_faktur = 0
                     app.returPembelian.potongan_persen = 0
@@ -1157,7 +1154,7 @@
                 var total_akhir = parseFloat(app.returPembelian.subtotal) - parseFloat(potonganFaktur)
 
                 if (potongan_persen > 100) {
-                    app.alertTbs("Potongan Tidak Bisa Lebih Dari 100%")
+                    app.alertGagal("Potongan Tidak Bisa Lebih Dari 100%")
                     app.returPembelian.total_akhir = app.returPembelian.subtotal
                     app.returPembelian.potongan_faktur = 0
                     app.returPembelian.potongan_persen = 0
@@ -1188,6 +1185,65 @@
                     app.success = false;
                     app.errors = resp.response.data.errors;
                 });
+            },
+            selesaiRetur(){
+                this.$swal({
+                    text: "Anda Yakin Ingin Menyelesaikan Transaksi Ini ?",
+                    buttons: {
+                        cancel: true,
+                        confirm: "OK"                   
+                    },
+
+                }).then((value) => {
+                    if (!value) throw null;
+
+                    this.prosesSelesaiRetur(value);
+                });
+            },
+            prosesSelesaiRetur(value){
+                var app = this;
+                var newRetur = app.returPembelian;
+                app.loading = true;
+                console.log(app.returPembelian.kas)
+                if (app.returPembelian.kas == '') {
+                    app.loading = false;    
+                    app.$swal("Silakan Pilih Kas Terlebih Dahulu").then((value) => {
+                        app.openSelectizeKas();
+                    });
+                }else{
+                    app.closeModal();
+                    axios.post(app.url,newRetur).then(function (resp) {
+                        if (resp.data == 0) {
+                            app.alertGagal("Anda Belum Memasukan Produk");
+                            app.loading = false;
+                        }
+                        else if(resp.data.respons == 1){
+                            app.alertGagal("Gagal : Stok " + resp.data.nama_produk + " Tidak Mencukupi Untuk di Jual, Sisa Produk = "+resp.data.stok_produk);
+                            app.loading = false;
+                        }else if(resp.data.respons == 2){
+                            app.alertGagal("Gagal : Terjadi Kesalahan , Silakan Coba Lagi!");
+                            app.loading = false;
+                        }else{
+                            app.getTbs();
+                            app.alert("Menyelesaikan Transaksi Retur Pembelian");
+                            app.returPembelian.supplier = ''
+                            app.returPembelian.subtotal = 0
+                            app.returPembelian.potongan_persen = 0
+                            app.returPembelian.potongan_faktur = 0
+                            app.returPembelian.total_akhir = 0
+                            app.returPembelian.pembayaran = 0
+                            app.inputTbsRetur.supplier = ''   
+                            // window.open('penjualan/cetak-kecil-penjualan/'+resp.data.respons_penjualan,'_blank');
+                            app.loading = false;
+                        }
+                    })
+                    .catch(function (resp) {
+                        console.log(resp);
+                        app.loading = false;
+                        alert("Tidak Dapat Menyelesaikan Transaksi Retur Pembelian");        
+                        app.errors = resp.response.data.errors;
+                    });
+                }
             },
             tambahModalKas(){
                 $("#modal_tambah_kas").show();
