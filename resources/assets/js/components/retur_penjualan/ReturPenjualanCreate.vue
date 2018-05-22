@@ -293,7 +293,7 @@
                                                   <button type="button" class="btn btn-success btn-lg" id="bayar" v-on:click="bayarReturPenjualan()" v-shortkey.push="['f2']" @shortkey="bayarReturPenjualan()"><font style="font-size:20px;">Bayar(F2)</font></button>
                                               </div>
                                               <div class="col-md-6 col-xs-6">
-                                                  <button type="submit" class="btn btn-danger btn-lg" id="btnBatal" v-on:click="batalReturPenjualan()" v-shortkey.push="['f3']" @shortkey="batalReturPenjualan()"> <font style="font-size:20px;">Batal(F3) </font></button>
+                                                  <button type="button" class="btn btn-danger btn-lg" id="btnBatal" v-on:click="batalReturPenjualan()" v-shortkey.push="['f3']" @shortkey="batalReturPenjualan()"> <font style="font-size:20px;">Batal(F3) </font></button>
                                               </div>
                                           </div>
                                       </div>
@@ -800,6 +800,36 @@ export default {
                     alert("Tidak dapat Mengubah Potongan Produk"); 
                 }); 
     }, 
+    batalReturPenjualan(){
+      var app = this
+      app.$swal({
+        text: "Anda Yakin Ingin Membatalkan Transaksi Ini ?",
+        buttons: {
+          cancel: true,
+          confirm: "OK"                   
+        },
+
+      }).then((value) => {
+
+        if (!value) throw null;
+
+        app.loading = true;
+        axios.post(app.url+'/proses-batal-retur-penjualan')
+        .then(function (resp) {
+          app.inputReturPenjualan.subtotal = 0
+          app.getResults();
+          app.alert("Membatalkan Transaksi Retur Penjualan");
+
+        })
+        .catch(function (resp) {
+          console.log(resp);
+          app.loading = false;
+          alert("Tidak dapat Membatalkan Transaksi Retur Penjualan");
+        });
+
+      });
+
+    },
     alertGagal(pesan) { 
                 this.$swal({ 
                     text: pesan, 

@@ -377,7 +377,7 @@ class ReturPenjualanController extends Controller
 
     public function tampilPotongan($potongan_produk, $jumlah_produk, $harga_produk)
     {
-        
+
         $potongan_persen = ($potongan_produk / ($jumlah_produk * $harga_produk)) * 100;
 
         if ($potongan_produk > 0) {
@@ -390,6 +390,14 @@ class ReturPenjualanController extends Controller
 
     }
  
+    public function prosesBatalReturPenjualan()
+        {
+
+            $session_id         = session()->getId();
+            $data_tbs_retur_penjualan = TbsReturPenjualan::where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->delete();
+
+            return response(200);
+        }
 
         //hapus tbs tbs retur penjualan
     public function prosesHapusTbsReturPenjualan($id)
