@@ -70,7 +70,7 @@ class Pembelian extends Model
 
     public function scopeQueryCetak($query, $id)
     {
-        $query->select('w.name AS nama_warung', 'w.alamat AS alamat_warung', 's.nama_suplier AS suplier', 'u.name AS kasir', 'pembelians.potongan AS potongan', 'pembelians.total AS total', 'pembelians.tunai AS tunai', 'pembelians.kembalian AS kembalian', DB::raw('DATE_FORMAT(pembelians.created_at, "%d/%m/%Y %H:%i:%s") as waktu_beli'), 'w.no_telpon AS no_telp_warung', 'pembelians.id AS id', 's.alamat AS alamat_suplier', 'pembelians.status_pembelian AS status_pembelian', 'kas.nama_kas AS nama_kas', 'pembelians.suplier_id AS suplier_id', 'pembelians.no_faktur AS no_faktur')
+        $query->select('w.name AS nama_warung', 'w.alamat AS alamat_warung', 's.nama_suplier AS suplier', 'u.name AS kasir', 'pembelians.potongan AS potongan', 'pembelians.total AS total', 'pembelians.tunai AS tunai', 'pembelians.kembalian AS kembalian', DB::raw('DATE_FORMAT(pembelians.created_at, "%d/%m/%Y %H:%i:%s") as waktu_beli'), 'w.no_telpon AS no_telp_warung', 'pembelians.id AS id', 's.alamat AS alamat_suplier', 'pembelians.status_pembelian AS status_pembelian', 'kas.nama_kas AS nama_kas', 'pembelians.suplier_id AS suplier_id', 'pembelians.no_faktur AS no_faktur', 'pembelians.tanggal_jt_tempo AS tanggal_jt_tempo', DB::raw('DATE_FORMAT(pembelians.tanggal_jt_tempo, "%d/%m/%Y") as jatuh_tempo'))
         ->leftJoin('warungs AS w', 'pembelians.warung_id', '=', 'w.id')
         ->leftJoin('users AS u', 'u.id', '=', 'pembelians.created_by')
         ->leftJoin('supliers AS s', 's.id', '=', 'pembelians.suplier_id')
