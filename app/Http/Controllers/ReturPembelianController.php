@@ -168,6 +168,34 @@ class ReturPembelianController extends Controller
         return response()->json($respons);
     }
 
+    // PENCARIAN RETUR
+    public function pencarian(Request $request)
+    {
+        $search = $request->search;
+        $returPembelians = ReturPembelian::dataReturPembelian()
+        ->where(function ($query) use ($search) {
+            $query->orwhere('retur_pembelians.no_faktur_retur', 'LIKE', '%' . $search . '%')
+            ->orwhere('supliers.nama_suplier', 'LIKE', '%' . $search . '%');
+        })->paginate(10);
+        $array            = array();
+        foreach ($returPembelians as $returPembelian) {
+            array_push($array, [
+                'id'         => $returPembelian->id,
+                'no_faktur_retur'   => $returPembelian->no_faktur_retur,
+                'waktu'             => $returPembelian->Waktu,
+                'suplier'           => $returPembelian->nama_suplier,
+                'total'             => $returPembelian->total,
+                'total_bayar'       => $returPembelian->total_bayar,
+                'potong_hutang'     => $returPembelian->potong_hutang,
+                'potongan'     => $returPembelian->potongan,
+                ]);
+        }
+        $no_faktur_retur = "";
+        $url     = '/retur-pembelian/view';
+        $respons = $this->dataPagination($returPembelians, $array, $no_faktur_retur, $url);
+        return response()->json($respons);
+    }
+
     // VIEW TBS
     public function viewTbs()
     {
