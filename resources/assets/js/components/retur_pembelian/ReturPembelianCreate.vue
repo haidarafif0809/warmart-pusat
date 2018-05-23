@@ -217,7 +217,8 @@
                                     <div class="col-md-6">
                                         <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
                                             <font style="color: black">Potong Hutang</font>
-                                            <money style="text-align:right" readonly="" class="form-penjualan" id="potong_hutang" name="potong_hutang" placeholder="Potong Hutang"  v-model="returPembelian.potong_hutang" v-bind="separator" ></money> 
+                                            <money style="text-align:right" readonly="" class="form-penjualan" id="potong_hutang" name="potong_hutang" placeholder="Poton
+                                            g Hutang"  v-model="returPembelian.potong_hutang" v-bind="separator" ></money> 
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -408,15 +409,31 @@
                                 <i class="material-icons">shopping_cart</i>
                             </div>
                             <div class="card-content">
-                                <p class="category"><font style="font-size:20px;">Subtotal</font></p>
+                                <p class="category" style="font-size: 18px; font-weight: 400"> Subtotal </p>
                                 <h3 class="card-title"><b><font style="font-size:32px;">
                                     {{ returPembelian.subtotal | pemisahTitik }}</font></b>
                                 </h3>
+
+                                <p class="category" style="font-size: 18px; padding-bottom: 5px;">
+                                    <div class="checkbox">
+                                        <label style="font-size:18px; color: #999999">
+                                            <input type="checkbox" name="potong_hutang" id="display_potong_hutang" data-toogle="0" @change="displayPotongHutang"> Potong Hutang
+                                        </label>
+                                    </div> 
+                                </p>
+
+                                <span id="spanFakturHutang" style="display: none">
+                                    <selectize-component v-model="returPembelian.faktur_hutang" multiple :settings="placeholder_faktur_hutang" id="faktur_hutang" ref='faktur_hutang'>
+                                        <option v-for="fakturHutang, index in fakturHutangs" v-bind:value="fakturHutang.no_faktur">
+                                            {{fakturHutang.no_faktur+' | '+fakturHutang.hutang}}
+                                        </option>
+                                    </selectize-component>
+                                </span>
                             </div>
                             <div class="card-footer">
                                 <div class="row"> 
                                     <div class="col-md-6 col-xs-6"> 
-                                        <button type="button" class="btn btn-success" id="bayar" v-on:click="bayarPenjualan()" v-shortkey.push="['f2']" @shortkey="bayarPenjualan()"><font style="font-size:13px;">Bayar(F2)</font></button>
+                                        <button type="button" class="btn btn-success" id="bayar" v-on:click="bayarRetur()" v-shortkey.push="['f2']" @shortkey="bayarRetur()"><font style="font-size:13px;">Bayar(F2)</font></button>
                                     </div>
                                     <div class="col-md-6 col-xs-6">
                                         <button type="submit" class="btn btn-danger" id="btnBatal" v-on:click="batalRetur()" v-shortkey.push="['f3']" @shortkey="batalRetur()">
@@ -482,6 +499,7 @@
         data: function () {
             return {
                 errors: [],
+                fakturHutangs: [],
                 satuan: [],
                 tbsReturPembelians: [],
                 tbsReturPembelianDatas : {},
@@ -504,6 +522,11 @@
                 },
                 placeholder_supplier:{
                     placeholder: 'Cari Supplier (F1) ...',
+                    sortField: 'text',
+                    openOnFocus : true,
+                },
+                placeholder_faktur_hutang:{
+                    placeholder: 'Cari Faktur Hutang ...',
                     sortField: 'text',
                     openOnFocus : true,
                 },
@@ -538,6 +561,7 @@
                     potongan_persen : 0,
                     total_akhir : 0,
                     potong_hutang : 0,
+                    faktur_hutang : '',
                     pembayaran : 0,
                     keterangan: '',                    
                 },
@@ -597,7 +621,7 @@
             },
             'returPembelian.potongan_faktur':function(){
                 this.potonganFaktur();
-            }
+            },
         },
         methods: {
             openSelectizeSupplier(){      
@@ -606,6 +630,19 @@
             },
             openSelectizeKas(){      
                 this.$refs.kas.$el.selectize.focus();
+            },
+            getFakturHutang() {
+                var app = this;
+
+                axios.get(app.url+'/data-faktur-hutang')
+                .then( (resp) => {
+
+                    app.fakturHutangs = resp.data
+                })
+                .catch( (err) => {
+                    console.log(err);
+                    alert("Tidak Dapat Memuat Faktur Hutang");
+                })                
             },
             getDataPembelian(page) {
                 var app = this;
@@ -616,7 +653,7 @@
 
                 axios.get(app.url+'/data-pembelian?supplier='+supplier+'&page='+page)
                 .then( (resp) => {
-                    console.log(resp.data)
+
                     app.pembelians = resp.data.data
                     app.pembelianDatas = resp.data
                     app.loading = false
@@ -639,7 +676,7 @@
 
                 axios.get(app.url+'/pencarian-data-pembelian?search='+app.pencarianPembelian+'&supplier='+supplier+'&page='+page)
                 .then( (resp) => {
-                    console.log(resp.data)
+
                     app.pembelians = resp.data.data
                     app.pembelianDatas = resp.data
                     app.loading = false
@@ -730,15 +767,14 @@
 
                 axios.get(app.url+'/view-tbs?page='+page)
                 .then( (resp) => {
-                    console.log(resp.data)
+
                     app.tbsReturPembelians = resp.data.data
                     app.tbsReturPembelianDatas = resp.data
                     app.loading = false
                     app.seen = true
                     app.returPembelian.kas = app.default_kas
-                    console.log(app.default_kas)
-                    console.log(app.returPembelian.kas)
                     app.openSelectizeSupplier();
+                    app.getFakturHutang();
 
                     if (app.returPembelian.subtotal == 0) {          
                         app.getSubtotal(); 
@@ -771,7 +807,7 @@
 
                 axios.get(app.url+'/pencarian-tbs?search='+app.pencarian+'&page='+page)
                 .then( (resp) => {
-                    console.log(resp.data)
+
                     app.tbsReturPembelians = resp.data.data
                     app.tbsReturPembelianDatas = resp.data
                     app.loading = false
@@ -1245,6 +1281,34 @@
                     });
                 }
             },
+            displayPotongHutang() {
+                var data_toogle = $("#display_potong_hutang").attr("data-toogle");
+
+                if (data_toogle == 0) {
+                    $('#spanFakturHutang').show();
+                    $("#display_potong_hutang").attr("data-toogle", 1)
+                }
+                else{
+                    $('#spanFakturHutang').hide();
+                    $("#display_potong_hutang").attr("data-toogle", 0)
+                    this.returPembelian.faktur_hutang = '';
+                }
+            },
+            hitungPotongHutang() {
+                var app = this;
+                var faktur_hutang = app.returPembelian.faktur_hutang
+
+                axios.post(app.url+'/nilai-potong-hutang', {faktur_hutang})
+                .then( (resp) => {
+                    app.returPembelian.potong_hutang = resp.data;
+                    $("#modal_selesai").show(); 
+                    this.$refs.pembayaran.$el.focus()
+                })
+                .catch( (err) => {
+                    console.log(err);
+                    alert("Terjadi Masalah Hitung Nilai Potong Hutang");
+                })                   
+            },
             tambahModalKas(){
                 $("#modal_tambah_kas").show();
                 $("#modal_selesai").hide();
@@ -1255,9 +1319,8 @@
 
                 this.inputTbsRetur.harga_produk = parseFloat(harga_beli) * ( parseFloat(satuan[3]) * parseFloat(satuan[4]) );
             },
-            bayarPenjualan(){
-                $("#modal_selesai").show(); 
-                this.$refs.pembayaran.$el.focus()
+            bayarRetur(){
+                this.hitungPotongHutang()
             },
             closeModal(){
                 $("#modal_selesai").hide(); 

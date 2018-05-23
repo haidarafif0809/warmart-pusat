@@ -12,6 +12,7 @@ use App\DetailReturPembelian;
 use App\TbsReturPembelian;
 use App\ReturPembelian;
 use App\TransaksiKas;
+use App\TransaksiHutang;
 use App\SatuanKonversi;
 use Auth;
 
@@ -38,6 +39,46 @@ class ReturPembelianController extends Controller
 
         return response()->json($array);
 
+    }
+
+    public function fakturHutang(){
+        $session_id = session()->getId();
+
+        $data_tbs   = TbsReturPembelian::select('supplier')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
+
+        if ($data_tbs->count() > 0) {
+            $id_suplier = $data_tbs->first()->supplier;
+            $data_pembelians = TransaksiHutang::getDataPembelianHutang($id_suplier)->having('sisa_hutang', '>', 0)->get();
+        }else{
+            $id_suplier = 0;
+            $data_pembelians = TransaksiHutang::getDataPembelianHutang($id_suplier)->having('sisa_hutang', '>', 0)->get();
+        }
+
+        $array     = [];
+        foreach ($data_pembelians as $data_pembelian) {
+            array_push($array, [
+                'no_faktur' => $data_pembelian->no_faktur,
+                'hutang'    => number_format($data_pembelian->sisa_hutang, 0, ',', '.'),
+                ]);
+        }
+
+        return response()->json($array);
+    }
+
+    public function potongHutang(Request $request){
+
+        if ($request['faktur_hutang'] == "") {
+            $total = 0;
+        }else{
+            $total = 0;
+            foreach ($request['faktur_hutang'] as $faktur_hutang) {
+                $data_pembelian = TransaksiHutang::getDataPembelianHutangFaktur($faktur_hutang)->having('sisa_hutang', '>', 0)->first();
+                $total = $total + $data_pembelian->sisa_hutang;
+            }
+
+        }
+
+        return $total;
     }
 
     // DATA PAGINTION

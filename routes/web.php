@@ -1091,6 +1091,8 @@ Route::get('/tema/ubah-tema/{id}/{default_tema}/', 'SettingTemaController@ubahTe
 // Retur Pembelian
 Route::get('/retur-pembelian/view', 'ReturPembelianController@view')->middleware('auth');
 Route::get('/retur-pembelian/pencarian', 'ReturPembelianController@pencarian')->middleware('auth');
+Route::get('/retur-pembelian/data-faktur-hutang', 'ReturPembelianController@fakturHutang')->middleware('auth'); 
+Route::post('/retur-pembelian/nilai-potong-hutang', 'ReturPembelianController@potongHutang')->middleware('auth'); 
 
 Route::get('/retur-pembelian/view-tbs', 'ReturPembelianController@viewTbs')->middleware('auth');
 Route::get('/retur-pembelian/pencarian-tbs', 'ReturPembelianController@pencarianTbs')->middleware('auth');
