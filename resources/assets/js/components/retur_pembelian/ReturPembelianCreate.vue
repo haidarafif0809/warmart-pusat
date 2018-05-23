@@ -230,7 +230,8 @@
                                     <div class="col-md-12">
                                         <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
                                             <font style="color: black">Pembayaran(F10)</font>
-                                            <money style="text-align:right" class="form-penjualan" v-shortkey.focus="['f10']" id="pembayaran" name="pembayaran" placeholder="Pembayaran"  v-model="returPembelian.pembayaran" v-bind="separator"  autocomplete="off" ref="pembayaran"></money> 
+                                            <money style="text-align:right" class="form-penjualan" v-shortkey.focus="['f10']" id="pembayaran" name="pembayaran" placeholder="Pembayaran"  v-model="returPembelian.pembayaran" v-bind="separator"  autocomplete="off" ref="pembayaran" :disabled="disable">            
+                                            </money> 
                                         </div>
                                     </div>
                                 </div>
@@ -511,7 +512,8 @@
                 pencarian: '',
                 pencarianPembelian: '',
                 loading: true,
-                seen : false,
+                seen: false,
+                disable: false,
                 separator: {
                     decimal: ',',
                     thousands: '.',
@@ -1287,10 +1289,12 @@
                 if (data_toogle == 0) {
                     $('#spanFakturHutang').show();
                     $("#display_potong_hutang").attr("data-toogle", 1)
+                    this.disable = true;
                 }
                 else{
                     $('#spanFakturHutang').hide();
                     $("#display_potong_hutang").attr("data-toogle", 0)
+                    this.disable = false;
                     this.returPembelian.faktur_hutang = '';
                 }
             },
@@ -1301,6 +1305,13 @@
                 axios.post(app.url+'/nilai-potong-hutang', {faktur_hutang})
                 .then( (resp) => {
                     app.returPembelian.potong_hutang = resp.data;
+                    var selisih = app.returPembelian.total_akhir - app.returPembelian.potong_hutang;
+                    if (selisih < 0) {
+                        app.returPembelian.pembayaran = 0;
+                    }else{
+                        app.returPembelian.pembayaran = app.returPembelian.total_akhir;
+                    }
+
                     $("#modal_selesai").show(); 
                     this.$refs.pembayaran.$el.focus()
                 })
