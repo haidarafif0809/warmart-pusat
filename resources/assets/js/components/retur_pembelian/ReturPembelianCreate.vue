@@ -1166,6 +1166,11 @@
 
                 if (potonganPersen > 100) {
                     app.alertGagal("Potongan Tidak Bisa Lebih Dari 100%")
+                    var selisih = app.returPembelian.total_akhir - app.returPembelian.potong_hutang;
+                    if (selisih >= 0) {
+                        app.returPembelian.pembayaran = app.returPembelian.subtotal
+                    }
+
                     app.returPembelian.total_akhir = app.returPembelian.subtotal
                     app.returPembelian.potongan_faktur = 0
                     app.returPembelian.potongan_persen = 0
@@ -1176,6 +1181,10 @@
 
                     var potongan_nominal = parseFloat(app.returPembelian.subtotal) * (parseFloat(potonganPersen) / 100) 
                     var total_akhir = parseFloat(app.returPembelian.subtotal,10) - parseFloat(potongan_nominal,10)
+                    var selisih = total_akhir - app.returPembelian.potong_hutang;
+                    if (selisih >= 0){
+                        app.returPembelian.pembayaran = total_akhir
+                    }
 
                     app.returPembelian.potongan_faktur = potongan_nominal
                     app.returPembelian.total_akhir = total_akhir
@@ -1193,11 +1202,20 @@
 
                 if (potongan_persen > 100) {
                     app.alertGagal("Potongan Tidak Bisa Lebih Dari 100%")
+                    var selisih = total_akhir - app.returPembelian.potong_hutang;
+                    if (selisih >= 0) {
+                        app.returPembelian.pembayaran = app.returPembelian.subtotal
+                    }
+
                     app.returPembelian.total_akhir = app.returPembelian.subtotal
                     app.returPembelian.potongan_faktur = 0
                     app.returPembelian.potongan_persen = 0
 
                 }else{
+                    var selisih = total_akhir - app.returPembelian.potong_hutang;
+                    if (selisih >= 0) {
+                        app.returPembelian.pembayaran = total_akhir
+                    }
                     app.returPembelian.potongan_persen = potongan_persen.toFixed(2)
                     app.returPembelian.total_akhir = total_akhir
                 }
