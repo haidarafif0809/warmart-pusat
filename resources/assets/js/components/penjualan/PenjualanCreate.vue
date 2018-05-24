@@ -309,6 +309,50 @@
 <!-- / MODAL TOMBOL SELESAI --> 
 
 
+<div class="modal" id="modal_antri" role="dialog" tabindex="-1"  aria-labelledby="myModalLabel" aria-hidden="true" >
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close"  v-on:click="closeModal()" @shortkey="closeModal()"> &times;</button> 
+        <h4 class="modal-title"> 
+          <div class="alert-icon"> 
+            <b>Antrian</b>
+          </div> 
+        </h4> 
+      </div>
+      <div class="modal-body"> 
+
+        <div class="table-responsive">
+          <table class="table table-striped table-hover table-responsive">
+            <thead class="text-info">
+              <tr>
+                <th>No. Antrian</th>
+                <th class="text-center">Pelanggan</th>
+                <th class="text-center">Total Belanja</th>
+                <th class="text-center">Hapus</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <antrian v-for="list, index in antrian.data" :list="list" :key="list.id" v-on:deleteAntrian="deleteAntrian" v-on:changeAntrian="changeAntrian"></antrian>  
+
+            </tbody>    
+          </table>
+          <div align="right"><pagination :data="antrian" v-on:pagination-change-page="getAntrian" :limit="4"></pagination></div>
+
+        </div>        
+
+      </div>
+      <div class="modal-footer">  
+        <button type="button" class="btn btn-default btn-sm" v-on:click="closeModal()">Tutup</button>
+      </div> 
+
+    </div>
+  </div>
+</div>
+<!--    end small modal -->
+
+
 <!-- small modal -->
 <div class="modal" id="modalJumlahProduk" role="dialog" tabindex="-1"  aria-labelledby="myModalLabel" aria-hidden="true" >
   <div class="modal-dialog modal-medium">
@@ -339,6 +383,75 @@
           <button type="submit" class="btn btn-info">Tambah</button>
         </div>
       </form>
+
+    </div>
+  </div>
+</div>
+<!--    end small modal -->
+
+<!-- small modal -->
+<div class="modal" id="modalJumlahProduk" role="dialog" tabindex="-1"  aria-labelledby="myModalLabel" aria-hidden="true" >
+  <div class="modal-dialog modal-medium">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close"  v-on:click="closeModalJumlahProduk()" v-shortkey.push="['f9']" @shortkey="closeModalJumlahProduk()"> &times;</button> 
+      </div>
+
+      <form class="form-horizontal" v-on:submit.prevent="submitProdukPenjualan(inputTbsPenjualan.jumlah_produk)"> 
+        <div class="modal-body">
+          <h3 class="text-center"><b>{{inputTbsPenjualan.nama_produk}}</b></h3>
+
+          <div class="form-group">
+            <div class="col-md-7 col-xs-7">
+              <input class="form-control" type="number" v-model="inputTbsPenjualan.jumlah_produk" placeholder="Isi Jumlah Produk" name="jumlah_produk" id="jumlah_produk" ref="jumlah_produk" autocomplete="off" step="0.01">
+            </div>
+
+            <div class="col-md-5 col-xs-5 hurufBesar">
+              <selectize-component v-model="inputTbsPenjualan.satuan_produk" :settings="placeholder_satuan" id="satuan" name="satuan" ref='satuan'> 
+                <option v-for="satuans, index in satuan" v-bind:value="satuans.satuan" class="pull-left">{{ satuans.nama_satuan }}</option>
+              </selectize-component>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-simple" v-on:click="closeModalJumlahProduk()" v-shortkey.push="['f9']" @shortkey="closeModalJumlahProduk()">Close(F9)</button>
+          <button type="submit" class="btn btn-info">Tambah</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+<!--    end small modal -->
+
+<!-- small modal -->
+<div class="modal" id="modalSimpanPenjualan" role="dialog" tabindex="-1"  aria-labelledby="myModalLabel" aria-hidden="true" >
+  <div class="modal-dialog modal-medium">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" v-on:click="closeModalJumlahProduk()" v-shortkey.push="['f9']" @shortkey="closeModalJumlahProduk()"> &times;</button> 
+      </div>
+
+      <form class="form-horizontal" v-on:submit.prevent="submitSimpanPenjualan()"> 
+        <div class="modal-body">
+          <h3 class="text-center"><b>Simpan Penjualan</b></h3>
+
+          <div class="form-group">
+            <div class="col-md-12 col-xs-12 hurufBesar">
+              <selectize-component v-model="penjualan.pelanggan" :settings="placeholder_pelanggan" id="pelanggan" ref='pelanggan'> 
+                <option v-for="pelanggans, index in pelanggan" v-bind:value="pelanggans.id">{{ pelanggans.pelanggan }}</option>
+              </selectize-component>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-simple" v-on:click="closeModalJumlahProduk()" v-shortkey.push="['f9']" @shortkey="closeModalJumlahProduk()">Close(F9)</button>
+          <button type="submit" class="btn btn-info">Simpan</button>
+        </div>
+      </form>
+
     </div>
   </div>
 </div>
@@ -416,7 +529,7 @@
 
     <div class="row" style="margin-bottom: 1px; margin-top: 1px;">
 
-      <div class="col-md-3 col-xs-9">
+      <div class="col-md-4 col-xs-12">
         <div class="card card-produk" style="margin-bottom: 1px; margin-top: 1px;">
 
           <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
@@ -435,23 +548,27 @@
         </div>
       </div>
 
-      <div class="col-md-3">          
-      </div>
-      <div class="col-md-5"></div>
-      <div class="col-md-1 col-xs-1">                
-        <button class="btn btn-primary btn-round btn-fab btn-fab-mini" data-toggle="modal" data-target="#modal_setting">
-          <i class="material-icons">settings</i>
-        </button><b>Setting</b>
+      <div class="col-md-5">               
+
       </div>
 
+      <div class="col-md-3 col-xs-12" align="right">                
+
+        <button class="btn btn-xs btn-primary" v-on:click="showAntrian()">
+          Antrian
+        </button>
+        <button class="btn btn-xs btn-primary" data-toggle="modal" data-target="#modal_setting">
+          Setting
+        </button>
+      </div>
     </div>
 
 
     <!--TABEL TBS ITEM  MASUK -->
     <div class="row">
 
-      <div class="col-md-9">
-        <div class=" table-responsive ">
+      <div class="col-md-8">
+        <div class="table-responsive">
           <div class="pencarian">
             <input type="text" name="pencarian" v-model="pencarian" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
           </div>
@@ -499,7 +616,7 @@
 
         </div>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-4">
 
         <div class="card card-stats">
           <div class="card-header" data-background-color="blue">
@@ -511,11 +628,14 @@
           </div>
           <div class="card-footer">
             <div class="row"> 
-              <div class="col-md-6 col-xs-6"> 
-                <button type="button" class="btn btn-success" id="bayar" v-on:click="bayarPenjualan()" v-shortkey.push="['f2']" @shortkey="bayarPenjualan()"><font style="font-size:13px;">Bayar(F2)</font></button>
+              <div class="col-md-4 col-xs-4"> 
+                <button type="button"   class="btn btn-success" id="bayar" v-on:click="bayarPenjualan()" v-shortkey.push="['f2']" @shortkey="bayarPenjualan() "><b>Bayar(F2)</b> </button>
               </div>
-              <div class="col-md-6 col-xs-6">
-                <button type="submit" class="btn btn-danger" id="btnBatal" v-on:click="batalPenjualan()" v-shortkey.push="['f3']" @shortkey="batalPenjualan()"> <font style="font-size:13px;">Batal(F3) </font></button>
+              <div class="col-md-4 col-xs-4">
+                <button type="submit" class="btn btn-info" id="btnSimpan" v-on:click="simpanPenjualan()" v-shortkey.push="['shift']" @shortkey="simpanPenjualan() "><b>Simpan</b></button>
+              </div>
+              <div class="col-md-4 col-xs-4">
+                <button type="submit" class="btn btn-danger" id="btnBatal" v-on:click="batalPenjualan()" v-shortkey.push="['f3']" @shortkey="batalPenjualan()" > <i class="material-icons">clear</i><b>(F3)</b> </button>
               </div>
             </div>
           </div>
@@ -542,6 +662,7 @@ export default {
       errors: [],
       tbs_penjualan: [],
       satuan: [],
+      antrian: {},
       url : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
       urlDownloadExcel : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan/download-excel"),
       url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
@@ -634,6 +755,7 @@ export default {
       app.$store.dispatch('LOAD_KAS_LIST')  
       app.dataSettingPenjualanPos()
       app.getResults()  
+      app.getAntrian()
     },
     filters: {
       pemisahTitik: function (value) {
@@ -1435,6 +1557,48 @@ prosesSelesaiPenjualan(value){
   }
 
 },
+deleteAntrian(antrian){
+
+  let app = this
+  let index = app.antrian.data.indexOf(antrian)
+  app.antrian.data.splice(index,1)
+  
+  axios.delete(app.url+'/delete-antrian-penjualan/'+antrian.id)
+  .then(resp => {
+   app.alert("Menghapus antrian")
+ })
+  .catch(err => {
+   console.log(err)
+   alert("Antrian tidak dapat dihapus")
+ })
+
+},
+changeAntrian(antrian){
+
+  let app = this
+  let index = app.antrian.data.indexOf(antrian)
+
+  app.tbs_penjualan.length == 0 ? app.submitAntrian(antrian,index) : app.alertTbs("Selesaikan dulu produk yang masih ada")
+
+},
+submitAntrian(antrian,index){
+
+  let app = this
+  axios.post(app.url+'/pilih-antrian-penjualan',antrian)
+  .then(resp => {
+   console.log(resp.data)
+   app.penjualan.pelanggan = antrian.pelanggan_id
+   console.log(antrian.pelanggan_id)
+   app.antrian.data.splice(index,1)
+   app.getResults()
+   $("#modal_antri").hide()
+   app.openSelectizeProduk()
+ })
+  .catch(err => {
+   console.log(err)
+ })
+
+},
 simpanSetting(){
 
   var app = this
@@ -1449,7 +1613,6 @@ simpanSetting(){
     console.log(resp);
     alert("Tidak dapat Menyimpan Setting Penjualan POS");
   });
-
 
 },
 dataSettingPenjualanPos() {
@@ -1470,19 +1633,85 @@ dataSettingPenjualanPos() {
     console.log(resp);
     alert("Tidak Dapat Memuat Penjualan");
   });
+},
+simpanPenjualan(){
+  let app = this
+  app.tbs_penjualan.length > 0 ? ($("#modalSimpanPenjualan").show() , this.openSelectizePelanggan() ) : app.alertTbs("Produk masih kosong")
+
 }, 
+submitSimpanPenjualan(){
+
+  let app = this
+  let newSimpanPenjualan = {
+    pelanggan : app.penjualan.pelanggan
+  }
+  if (newSimpanPenjualan.pelanggan == '') {
+    app.alertTbs("Pelanggan harus diisi")
+  }else{
+
+    app.closeModalJumlahProduk()
+    app.alert("Menyimpan Penjualan")
+    app.tbs_penjualan.splice(0)
+    
+    axios.post(app.url+'/simpan-tbs-penjualan', newSimpanPenjualan)
+    .then((resp) => {
+      let newAntrian = {
+        id : resp.data.id,
+        no_antrian : resp.data.no_antrian,
+        pelanggan : resp.data.pelanggan,
+        total_belanja : new Intl.NumberFormat('es-ES').format(app.penjualan.subtotal)
+      } 
+      app.antrian.data.push(newAntrian)
+      console.log(app.antrian.data)
+      app.penjualan.pelanggan = 0
+      app.penjualan.subtotal = 0
+      app.penjualan.jatuh_tempo = ''
+      app.penjualan.potongan_persen = 0
+      app.penjualan.potongan_faktur = 0
+      app.penjualan.total_akhir = 0
+      app.penjualan.pembayaran = 0
+      app.hitungKembalian(app.penjualan.pembayaran)
+
+    })
+    .catch((err) => {
+      console.log(err)
+      alert("Terjadi Kesalahan!, tidak dapat menyimpan produk")
+    })
+
+  }
+  
+},
+getAntrian(page){
+  let app = this
+  if (typeof page === 'undefined') {
+    page = 1;
+  }
+  axios.get(app.url+'/get-antrian-penjualan?page='+page)
+  .then(resp => {
+    app.antrian = resp.data
+    console.log(resp.data)
+  })
+  .catch(err => {
+    alert("Terjadi Kesalahan!, tidak dapat memuat antrian")
+    console.log(err)
+  })
+},
+showAntrian(){
+  $("#modal_antri").show()
+},
 bayarPenjualan(){
   $("#modal_selesai").show(); 
   this.$refs.pembayaran.$el.focus()
 },
 closeModal(){
-
   $("#modal_selesai").hide(); 
+  $("#modal_antri").hide(); 
 },
 closeModalJumlahProduk(){  
   $("#modalJumlahProduk").hide();
   $("#modalEditSatuan").hide(); 
-  $("#modalEditHarga").hide(); 
+  $("#modalEditHarga").hide();  
+  $("#modalSimpanPenjualan").hide(); 
   this.openSelectizeProduk();
 },
 closeModalX(){

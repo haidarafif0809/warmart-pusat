@@ -789,6 +789,10 @@ Route::get('/penjualan/download-excel-penjualan/{no_faktur}', 'PenjualanControll
 Route::post('/penjualan/view-filter', 'PenjualanController@viewFilter')->middleware('auth');
 Route::post('/penjualan/total-laporan-penjualan', 'PenjualanController@totalLaporanPenjualan')->middleware('auth');
 Route::post('/penjualan/total-laporan-penjualan-filter', 'PenjualanController@totalLaporanPenjualanFilter')->middleware('auth');
+Route::post('/penjualan/simpan-tbs-penjualan', 'PenjualanController@simpanTbsPenjualan')->middleware('auth');
+Route::post('/penjualan/pilih-antrian-penjualan', 'PenjualanController@pilihAntrian')->middleware('auth');
+Route::get('/penjualan/get-antrian-penjualan', 'PenjualanController@getAntrian')->middleware('auth');
+Route::delete('/penjualan/delete-antrian-penjualan/{id}', 'PenjualanController@deleteAntrian')->middleware('auth');
 
 Route::get('/penjualan/satuan-konversi/{id_produk}', 'PenjualanController@dataSatuanProduk')->middleware('auth');
 
