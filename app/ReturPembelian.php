@@ -59,12 +59,23 @@ class ReturPembelian extends Model
         return $no_faktur;
     }
 
-	public function scopeDataReturPembelian ($query) {
-		$query = ReturPembelian::select(['retur_pembelians.no_faktur_retur', 'retur_pembelians.suplier_id', 'retur_pembelians.id', 'retur_pembelians.total', 'retur_pembelians.total_bayar', 'retur_pembelians.potongan', 'retur_pembelians.potong_hutang', 'supliers.nama_suplier'])
-		->leftJoin('supliers', 'supliers.id', '=', 'retur_pembelians.suplier_id')
-		->where('retur_pembelians.warung_id', Auth::user()->id_warung)
-		->orderBy('retur_pembelians.id', 'DESC');
+    public function scopeDataReturPembelian ($query) {
+    	$query = ReturPembelian::select(['retur_pembelians.no_faktur_retur', 'retur_pembelians.suplier_id', 'retur_pembelians.id', 'retur_pembelians.total', 'retur_pembelians.total_bayar', 'retur_pembelians.potongan', 'retur_pembelians.potong_hutang', 'supliers.nama_suplier'])
+    	->leftJoin('supliers', 'supliers.id', '=', 'retur_pembelians.suplier_id')
+    	->where('retur_pembelians.warung_id', Auth::user()->id_warung)
+    	->orderBy('retur_pembelians.id', 'DESC');
 
-		return $query;
-	}
+    	return $query;
+    }
+
+    public function scopeQueryCetak($query,$id) {
+    	$query =  ReturPembelian::select('warungs.name','warungs.alamat','warungs.no_telpon','retur_pembelians.no_faktur_retur', 'retur_pembelians.created_at', 'retur_pembelians.total', 'retur_pembelians.total_bayar', 'retur_pembelians.potongan', 'retur_pembelians.potong_hutang', 'supliers.nama_suplier')
+    	->leftJoin('supliers', 'retur_pembelians.suplier_id', '=', 'supliers.id')
+    	->leftJoin('warungs','retur_pembelians.warung_id','=','warungs.id')
+    	->where('retur_pembelians.id',$id)
+    	->where('retur_pembelians.warung_id', Auth::user()->id_warung)
+    	->orderBy('retur_pembelians.id');
+
+    	return $query;
+    }
 }
