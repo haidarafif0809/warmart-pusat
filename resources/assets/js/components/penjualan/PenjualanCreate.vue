@@ -1584,6 +1584,8 @@ changeAntrian(antrian){
 submitAntrian(antrian,index){
 
   let app = this
+  
+  $("#modal_antri").hide()
   app.loading = true
   axios.post(app.url+'/pilih-antrian-penjualan',antrian)
   .then(resp => {
@@ -1593,7 +1595,6 @@ submitAntrian(antrian,index){
    app.antrian.data.splice(index,1)
    app.getResults()
    app.loading = false
-   $("#modal_antri").hide()
    app.openSelectizeProduk()
  })
   .catch(err => {
