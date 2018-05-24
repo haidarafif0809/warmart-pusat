@@ -35,25 +35,37 @@ class TransaksiHutang extends Model
     // DATA PEMBELIAN HUTANG
     public function scopeDataPembelianHutang($data_supplier_hutang)
     {
-     $data_supplier_hutang = TransaksiHutang::select(['pembelians.id', 'pembelians.no_faktur', 'pembelians.suplier_id', 'pembelians.kredit', 'pembelians.tanggal_jt_tempo', 'supliers.nama_suplier', DB::raw('IFNULL(SUM(transaksi_hutangs.jumlah_masuk),0) - IFNULL(SUM(transaksi_hutangs.jumlah_keluar),0) AS sisa_hutang')])
-     ->leftJoin('pembelians', 'transaksi_hutangs.id_transaksi', '=', 'pembelians.id')
-     ->leftJoin('supliers', 'supliers.id', '=', 'pembelians.suplier_id')
-     ->where('pembelians.status_pembelian', 'Hutang')
-     ->where('pembelians.warung_id', Auth::user()->id_warung)
-     ->groupBy('transaksi_hutangs.id_transaksi')
-     ->having('sisa_hutang', '>', 0);
+       $data_supplier_hutang = TransaksiHutang::select(['pembelians.id', 'pembelians.no_faktur', 'pembelians.suplier_id', 'pembelians.kredit', 'pembelians.tanggal_jt_tempo', 'supliers.nama_suplier', DB::raw('IFNULL(SUM(transaksi_hutangs.jumlah_masuk),0) - IFNULL(SUM(transaksi_hutangs.jumlah_keluar),0) AS sisa_hutang')])
+       ->leftJoin('pembelians', 'transaksi_hutangs.id_transaksi', '=', 'pembelians.id')
+       ->leftJoin('supliers', 'supliers.id', '=', 'pembelians.suplier_id')
+       ->where('pembelians.status_pembelian', 'Hutang')
+       ->where('pembelians.warung_id', Auth::user()->id_warung)
+       ->groupBy('transaksi_hutangs.id_transaksi')
+       ->having('sisa_hutang', '>', 0);
 
-     return $data_supplier_hutang;
- }
+       return $data_supplier_hutang;
+   }
 
   // DATA PEMBELIAN HUTANG
- public function scopeGetDataPembelianHutang($data_supplier_hutang,$id_suplier)
- {
+   public function scopeGetDataPembelianHutang($data_supplier_hutang,$id_suplier)
+   {
     $data_supplier_hutang = TransaksiHutang::select(['pembelians.id', 'pembelians.no_faktur','pembelians.created_at', 'pembelians.suplier_id', 'pembelians.total', 'pembelians.tanggal_jt_tempo',DB::raw('IFNULL(SUM(transaksi_hutangs.jumlah_masuk),0) - IFNULL(SUM(transaksi_hutangs.jumlah_keluar),0) AS sisa_hutang')])
     ->leftJoin('pembelians', 'transaksi_hutangs.id_transaksi', '=', 'pembelians.id')
     ->leftJoin('supliers', 'supliers.id', '=', 'pembelians.suplier_id')
     ->where('pembelians.status_pembelian', 'Hutang')
     ->where('pembelians.suplier_id', $id_suplier)
+    ->where('pembelians.warung_id', Auth::user()->id_warung)
+    ->groupBy('transaksi_hutangs.id_transaksi');
+
+    return $data_supplier_hutang;
+}
+  // DATA PEMBELIAN HUTANG
+public function scopeGetDataPembelianHutangFaktur($data_supplier_hutang,$no_faktur)
+{
+    $data_supplier_hutang = TransaksiHutang::select([DB::raw('IFNULL(SUM(transaksi_hutangs.jumlah_masuk),0) - IFNULL(SUM(transaksi_hutangs.jumlah_keluar),0) AS sisa_hutang')])
+    ->leftJoin('pembelians', 'transaksi_hutangs.id_transaksi', '=', 'pembelians.id')
+    ->where('pembelians.status_pembelian', 'Hutang')
+    ->where('pembelians.no_faktur', $no_faktur)
     ->where('pembelians.warung_id', Auth::user()->id_warung)
     ->groupBy('transaksi_hutangs.id_transaksi');
 
@@ -74,14 +86,14 @@ public function scopeGetDataHutangBeredar($data_supplier_hutang,$request)
         ->where('pembelians.warung_id', Auth::user()->id_warung)
         ->groupBy('transaksi_hutangs.id_transaksi');
     }else{
-     $data_supplier_hutang = $this->queryLaporanHutangBeredar($request)
-     ->where('pembelians.status_pembelian', 'Hutang')
-     ->where(DB::raw('DATE(transaksi_hutangs.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
-     ->where(DB::raw('DATE(transaksi_hutangs.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
-     ->where('pembelians.warung_id', Auth::user()->id_warung)
-     ->groupBy('transaksi_hutangs.id_transaksi');
- }  
- return $data_supplier_hutang;
+       $data_supplier_hutang = $this->queryLaporanHutangBeredar($request)
+       ->where('pembelians.status_pembelian', 'Hutang')
+       ->where(DB::raw('DATE(transaksi_hutangs.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+       ->where(DB::raw('DATE(transaksi_hutangs.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+       ->where('pembelians.warung_id', Auth::user()->id_warung)
+       ->groupBy('transaksi_hutangs.id_transaksi');
+   }  
+   return $data_supplier_hutang;
 }
 
 
@@ -102,18 +114,18 @@ public function scopeCariDataHutangBeredar($data_supplier_hutang,$request)
         })
         ->groupBy('transaksi_hutangs.id_transaksi');
     }else{
-     $data_supplier_hutang = $this->queryLaporanHutangBeredar($request)
-     ->where('pembelians.status_pembelian', 'Hutang')
-     ->where(DB::raw('DATE(transaksi_hutangs.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
-     ->where(DB::raw('DATE(transaksi_hutangs.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
-     ->where('pembelians.warung_id', Auth::user()->id_warung)
-     ->where(function ($query) use ($search) {
+       $data_supplier_hutang = $this->queryLaporanHutangBeredar($request)
+       ->where('pembelians.status_pembelian', 'Hutang')
+       ->where(DB::raw('DATE(transaksi_hutangs.created_at)'), '>=', $this->tanggalSql($request->dari_tanggal))
+       ->where(DB::raw('DATE(transaksi_hutangs.created_at)'), '<=', $this->tanggalSql($request->sampai_tanggal))
+       ->where('pembelians.warung_id', Auth::user()->id_warung)
+       ->where(function ($query) use ($search) {
         $query->orWhere('pembelians.no_faktur', 'LIKE', '%' . $search . '%')
         ->orWhere('supliers.nama_suplier', 'LIKE', '%' . $search . '%');
     })
-     ->groupBy('transaksi_hutangs.id_transaksi');
- }  
- return $data_supplier_hutang;
+       ->groupBy('transaksi_hutangs.id_transaksi');
+   }  
+   return $data_supplier_hutang;
 }
 
 public function queryLaporanHutangBeredar($request)

@@ -220,6 +220,10 @@ import OptimasiSeo from './components/optimasi_seo/OptimasiSeo.vue';
 import ColorTheme from './components/color_theme/ColorTheme.vue';
 import ColorThemeCreate from './components/color_theme/ColorThemeCreate.vue';
 
+// RETUR PEMBELIAN
+import ReturPembelianIndex from './components/retur_pembelian/ReturPembelianIndex.vue';
+import ReturPembelianCreate from './components/retur_pembelian/ReturPembelianCreate.vue';
+
 
 const routes = [{
     path: '/',
@@ -895,6 +899,14 @@ const routes = [{
         path: '/create-tema', 
         component: ColorThemeCreate, 
         name: 'createColorTheme'
+    }, {
+        path: '/retur-pembelian',
+        component: ReturPembelianIndex,
+        name: 'indexReturPembelian'
+    }, {
+        path: '/create-retur-pembelian',
+        component: ReturPembelianCreate,
+        name: 'createReturPembelian'
     }
 
 
