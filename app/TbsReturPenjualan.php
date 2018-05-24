@@ -53,13 +53,22 @@ class TbsReturPenjualan extends Model
         }
 
             // DATA TBS Retur Penjualan
-    public function scopeCekPelangganReturPenjualan($query_tbs, $session_id)
+    public function scopeCekPelangganReturPenjualan($query_tbs, $session_id,$jenis_penjualan)
     {
-        $query_tbs = TbsReturPenjualan::select(['tbs_retur_penjualans.session_id','penjualan_pos.pelanggan_id'])
+        if ($jenis_penjualan == 0) {
+            $query_tbs = TbsReturPenjualan::select(['tbs_retur_penjualans.session_id','penjualan_pos.pelanggan_id'])
              ->leftJoin('penjualan_pos', 'tbs_retur_penjualans.no_faktur_penjualan', '=', 'penjualan_pos.id')
              ->leftJoin('satuans', 'tbs_retur_penjualans.id_satuan', '=', 'satuans.id')
             ->where('tbs_retur_penjualans.warung_id', Auth::user()->id_warung)
             ->where('tbs_retur_penjualans.session_id', $session_id);
+        }else{
+            $query_tbs = TbsReturPenjualan::select(['tbs_retur_penjualans.session_id','penjualans.id_pelanggan as pelanggan_id'])
+             ->leftJoin('penjualans', 'tbs_retur_penjualans.no_faktur_penjualan', '=', 'penjualans.id')
+             ->leftJoin('satuans', 'tbs_retur_penjualans.id_satuan', '=', 'satuans.id')
+            ->where('tbs_retur_penjualans.warung_id', Auth::user()->id_warung)
+            ->where('tbs_retur_penjualans.session_id', $session_id);
+        }
+        
 
         return $query_tbs;
     }

@@ -6,6 +6,10 @@
   color: red; 
   float: right;
 }
+.filter {
+  float: left;
+  padding-bottom: 15px;
+}
 .form-penjualan{
     width: 100%;
     padding: 12px 20px;
@@ -195,7 +199,16 @@
                                 </div> 
                                   <div class="modal-body">
                                                 <div class=" table-responsive ">
-                                                   <div class="pencarian">
+                                        
+                                              <div class="col-sm-4 filter">     
+                                              <label>Jenis Penjualan</label>
+                                                  <selectize-component v-model="inputTbsReturPenjualan.jenis_penjualan" :settings="placeholder_penjualan" id="jenis_penjualan" ref="jenis_penjualan" > 
+                                                    <option v-bind:value="0" > Penjualan POS </option>
+                                                    <option v-bind:value="1" > Penjualan Online </option>
+                                                  </selectize-component>
+                                                </div>
+
+                                                <div class="pencarian">
                                                     <input type="text" name="pencarian" v-model="pencarianretur" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
                                                 </div>
 
@@ -411,10 +424,14 @@ export default {
                     placeholder: '--PILIH SATUAN--', 
                     sortField: 'text', 
                     openOnFocus : true, 
-           }, 
+           },
+           placeholder_penjualan: {
+            placeholder: '--JENIS PENJUALAN--'
+            }, 
             inputTbsReturPenjualan:{
               pelanggan : '',
               id_pelanggan: '',
+              jenis_penjualan: 0,
             },
             inputReturPenjualan:{
                 subtotal: 0,
@@ -490,6 +507,11 @@ export default {
               this.pilihPelanggan();  
           }
         },
+        'inputTbsReturPenjualan.jenis_penjualan': function (newQuestion) {
+          if (this.inputTbsReturPenjualan.jenis_penjualan != '') {
+              this.pilihPelangganRetur();  
+          }
+        },
         'inputReturPenjualan.potongan_faktur':function(){
                 this.potonganFaktur();
             }
@@ -558,13 +580,15 @@ export default {
        pilihPelanggan() {
           var app = this;
           var pelanggan = app.inputTbsReturPenjualan.pelanggan;
+          var jenis_penjualan = app.inputTbsReturPenjualan.jenis_penjualan;
                 if (pelanggan == '') {
                         app.$swal({
                         text: "Silakan Pilih Pelanggan Telebih dahulu!",
                         });
               }else{
-                axios.get(app.url+'/cek-pelanggan-double').then(function (resp) {
+                axios.get(app.url+'/cek-pelanggan-double/'+jenis_penjualan).then(function (resp) {
                     if(resp.data.data_tbs > 0){
+                        console.log(resp.data.data_pelanggan.pelanggan_id)
                             if(resp.data.data_pelanggan.pelanggan_id != pelanggan){
                                   app.$swal({
                                     text: "Transaksi tidak boleh dari satu Pelanggan !!",
@@ -588,12 +612,13 @@ export default {
       pilihPelangganRetur(page){
             var app = this;
             var pelanggan = app.inputTbsReturPenjualan.pelanggan.split("|");
+            var jenis_penjualan = app.inputTbsReturPenjualan.jenis_penjualan;
             var id = pelanggan[0];
             if (typeof page === 'undefined') {
                 page = 1;
             }
             app.loading = true;
-            axios.get(app.url+'/data-pelanggan-retur/'+id+'?page='+page)
+            axios.get(app.url+'/data-pelanggan-retur/'+id+'/'+jenis_penjualan+'?page='+page)
                   .then(function (resp) {
                   app.dataPelangganRetur = resp.data.data;
                   app.dataPelangganReturData = resp.data;
@@ -610,11 +635,12 @@ export default {
       pencarianPelangganRetur(page){
             var app = this;
             var pelanggan = app.inputTbsReturPenjualan.pelanggan.split("|");
+            var jenis_penjualan = app.inputTbsReturPenjualan.jenis_penjualan;
             var id = pelanggan[0];
             if (typeof page === 'undefined') {
                 page = 1;
             }
-            axios.get(app.url+'/pencarian-pelanggan-retur/'+id+'?search='+app.pencarianretur+'&page='+page)
+            axios.get(app.url+'/pencarian-pelanggan-retur/'+id+'/'+jenis_penjualan+'?search='+app.pencarianretur+'&page='+page)
             .then(function (resp) {
                 app.dataPelangganRetur = resp.data.data;
                 app.dataPelangganReturData = resp.data;

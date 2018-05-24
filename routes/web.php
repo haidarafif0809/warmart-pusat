@@ -1092,8 +1092,8 @@ Route::get('/tema/ubah-tema/{id}/{default_tema}/', 'SettingTemaController@ubahTe
 Route::get('/retur-penjualan/view', 'ReturPenjualanController@view')->middleware('auth');
 Route::get('/retur-penjualan/view-tbs-retur-penjualan', 'ReturPenjualanController@viewTbsReturPenjualan')->middleware('auth');
 Route::get('/retur-penjualan/pencarian-tbs-retur-penjualan', 'ReturPenjualanController@viewTbsReturPenjualan')->middleware('auth');
-Route::get('/retur-penjualan/data-pelanggan-retur/{id}', 'ReturPenjualanController@dataPelangganRetur')->middleware('auth');
-Route::get('/retur-penjualan/pencarian-pelanggan-retur/{id}', 'ReturPenjualanController@pencarianPelangganRetur')->middleware('auth');
+Route::get('/retur-penjualan/data-pelanggan-retur/{id}/{jenis_penjualan}', 'ReturPenjualanController@dataPelangganRetur')->middleware('auth');
+Route::get('/retur-penjualan/pencarian-pelanggan-retur/{id}/{jenis_penjualan}', 'ReturPenjualanController@pencarianPelangganRetur')->middleware('auth');
 Route::post('/retur-penjualan/proses-tambah-tbs-retur-penjualan', 'ReturPenjualanController@prosesTbsReturPenjualan')->middleware('auth');
 Route::get('/retur-penjualan/subtotal-tbs-retur-penjualan/{jenis_tbs}', 'ReturPenjualanController@cekSubtotalTbsReturPenjualan')->middleware('auth');
 Route::delete('/retur-penjualan/proses-hapus-tbs-retur-penjualan/{id}', [
@@ -1101,7 +1101,7 @@ Route::delete('/retur-penjualan/proses-hapus-tbs-retur-penjualan/{id}', [
     'as'         => 'retur-penjualan.proses_hapus_tbs_retur_penjualan',
     'uses'       => 'ReturPenjualanController@prosesHapusTbsReturPenjualan',
     ]);
-Route::get('/retur-penjualan/cek-pelanggan-double', 'ReturPenjualanController@cekPelangganDouble')->middleware('auth');
+Route::get('/retur-penjualan/cek-pelanggan-double/{jenis_penjualan}', 'ReturPenjualanController@cekPelangganDouble')->middleware('auth');
 Route::get('/retur-penjualan/proses-edit-jumlah-retur', 'ReturPenjualanController@editJumlahReturTbs')->middleware('auth'); 
 Route::post('/retur-penjualan/proses-potongan-tbs', 'ReturPenjualanController@editPotongan')->middleware('auth'); 
 Route::post('/retur-penjualan/proses-batal-retur-penjualan', [

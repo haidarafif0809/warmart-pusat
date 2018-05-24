@@ -179,4 +179,36 @@ class Penjualan extends Model
         return $query_laporan;
     }
 
+     // DATA PENJUALAN ONline RETUR
+     public function scopeGetDataPenjualanRetur($data_pelanggan_retur,$id_pelanggan)
+     {
+        $data_pelanggan_retur = Penjualan::select(['penjualans.id as id_penjualan', 'barangs.kode_barang','barangs.nama_barang', 'detail_penjualans.jumlah as jumlah_produk','detail_penjualans.jumlah as jumlah_jual', 'detail_penjualans.harga as harga_produk', 'detail_penjualans.subtotal','penjualans.created_at','satuans.nama_satuan','barangs.id as id_produk'])
+        ->leftJoin('detail_penjualans', 'detail_penjualans.id_penjualan', '=', 'penjualans.id')
+        ->leftJoin('barangs', 'barangs.id', '=', 'detail_penjualans.id_produk')
+        ->leftJoin('satuans', 'satuans.id', '=', 'barangs.satuan_id')
+        ->where('penjualans.id_pelanggan', $id_pelanggan)
+        ->where('penjualans.id_warung', Auth::user()->id_warung);
+
+        return $data_pelanggan_retur;
+    }
+
+    // PENCARIAN PENJUALAN ONline RETUR
+    public function scopeGetDataCariPenjualanRetur($data_pelanggan_retur,$id_pelanggan,$request)
+    {
+        $search    = $request->search; 
+        $data_pelanggan_retur = Penjualan::select(['penjualans.id as id_penjualan', 'barangs.kode_barang','barangs.nama_barang', 'detail_penjualans.jumlah as jumlah_produk','detail_penjualans.jumlah as jumlah_jual', 'detail_penjualans.harga as harga_produk', 'detail_penjualans.subtotal','penjualans.created_at','satuans.nama_satuan','barangs.id as id_produk'])
+        ->leftJoin('detail_penjualans', 'detail_penjualans.id_penjualan', '=', 'penjualans.id')
+        ->leftJoin('barangs', 'barangs.id', '=', 'detail_penjualans.id_produk')
+        ->leftJoin('satuans', 'satuans.id', '=', 'barangs.satuan_id')
+        ->where('penjualans.id_pelanggan', $id_pelanggan)
+        ->where('penjualans.id_warung', Auth::user()->id_warung)
+        ->where(function ($query) use ($search) {
+            $query->orwhere('penjualans.id', 'LIKE', '%' . $search . '%')
+            ->orwhere('barangs.kode_barang', 'LIKE', '%' . $search . '%')
+            ->orwhere('barangs.nama_barang', 'LIKE', '%' . $search . '%');
+        });
+
+        return $data_pelanggan_retur;
+    }
+
 }

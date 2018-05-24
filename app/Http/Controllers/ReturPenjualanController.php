@@ -6,6 +6,7 @@ use App\DetailReturPenjualan;
 use App\Kas;
 use App\ReturPenjualan;
 use App\PenjualanPos;
+use App\Penjualan;
 use App\SettingAplikasi;
 use App\TbsReturPenjualan;
 use App\TransaksiKas;
@@ -175,13 +176,18 @@ class ReturPenjualanController extends Controller
     }
 
     //VIEW DAN PENCARIAN dataSupplierHutang
-    public function dataPelangganRetur($id)
+    public function dataPelangganRetur($id,$jenis_penjualan)
     {
         $session_id  = session()->getId();
         $user_warung = Auth::user()->id_warung;
         $id_pelanggan  = $id;
 
-        $data_retur_penjualan     = PenjualanPos::getDataPenjualanRetur($id_pelanggan)->paginate(10);
+        if ($jenis_penjualan == 0) {
+            $data_retur_penjualan     = PenjualanPos::getDataPenjualanRetur($id_pelanggan)->paginate(10);
+        }else{
+            $data_retur_penjualan     = Penjualan::getDataPenjualanRetur($id_pelanggan)->paginate(10);
+        }
+        
 
         $array = array();
         foreach ($data_retur_penjualan as $data_retur_penjualans) {
@@ -208,7 +214,11 @@ class ReturPenjualanController extends Controller
         $user_warung = Auth::user()->id_warung;
         $id_pelanggan  = $id;
         $search = $request->search;
-        $data_retur_penjualan     = PenjualanPos::getDataCariPenjualanRetur($id_pelanggan,$request)->paginate(10);
+         if ($jenis_penjualan == 0) {
+            $data_retur_penjualan     = PenjualanPos::getDataCariPenjualanRetur($id_pelanggan,$request)->paginate(10);
+        }else{
+            $data_retur_penjualan     = Penjualan::getDataCariPenjualanRetur($id_pelanggan,$request)->paginate(10);
+        }
 
         $array = array();
         foreach ($data_retur_penjualan as $data_retur_penjualans) {
@@ -273,10 +283,10 @@ class ReturPenjualanController extends Controller
         return response()->json($respons);
     }
 
-        public function cekPelangganDouble()
+        public function cekPelangganDouble($jenis_penjualan)
     {
         $session_id       = session()->getId();
-        $data_pelanggan_tbs = TbsReturPenjualan::cekPelangganReturPenjualan($session_id);
+        $data_pelanggan_tbs = TbsReturPenjualan::cekPelangganReturPenjualan($session_id,$jenis_penjualan);
         return response()->json([
             "data_pelanggan" => $data_pelanggan_tbs->first(),
             "data_tbs"      => $data_pelanggan_tbs->count(),
