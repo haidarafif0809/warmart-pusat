@@ -667,6 +667,9 @@ Route::post('/setting-pengiriman/simpan-setting-pengiriman', 'SettingPengirimanC
 Route::post('/setting-pengiriman/simpan-setting-bank', 'SettingPengirimanController@simpanSettingBank')->middleware('auth');
 Route::post('/setting-pengiriman/simpan-setting-default-alamat-pengiriman', 'SettingPengirimanController@simpanSettingDefaultAlamatPengiriman')->middleware('auth');
 Route::post('/setting-pengiriman/tambah-bank-transfer', 'SettingPengirimanController@tambahBankTransfer')->middleware('auth');
+Route::get('/setting-pengiriman/get-data-bank-transfer/{id_bank}', 'SettingPengirimanController@getDataEditSettingBank')->middleware('auth');
+Route::patch('/setting-pengiriman/edit-bank-transfer/{data_bank}', 'SettingPengirimanController@update')->middleware('auth');
+Route::get('/setting-pengiriman/hapus-bank-transfer/{id_bank}/{logo_bank}', 'SettingPengirimanController@hapusBankTransfer')->middleware('auth');
 
 // HAPUS TBS PEMBELIAN
 Route::delete('/pembelian/hapus-tbs-pembelian/{id}', [
@@ -1112,6 +1115,7 @@ Route::post('/retur-pembelian/edit-satuan-tbs', 'ReturPembelianController@editSa
 Route::post('/retur-pembelian/proses-potongan-tbs', 'ReturPembelianController@editPotongan')->middleware('auth');
 Route::get('/retur-pembelian/proses-tax-tbs', 'ReturPembelianController@editTax')->middleware('auth');
 Route::post('/retur-pembelian/proses-batal-retur', 'ReturPembelianController@batalRetur')->middleware('auth');
+
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
