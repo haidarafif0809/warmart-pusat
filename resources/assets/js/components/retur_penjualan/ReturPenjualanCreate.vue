@@ -41,12 +41,94 @@
 				<li class="active">Tambah Retur Penjualan</li>
 			</ul>
 
+        <!-- MODAL SELESAI -->
+        <div class="modal" id="modal_selesai" role="dialog" data-backdrop=""> 
+            <div class="modal-dialog"> 
+                <!-- Modal content--> 
+                <div class="modal-content"> 
+                    <div class="modal-header"> 
+                        <button type="button" class="close"  v-on:click="closeModalPembayaran()" v-shortkey.push="['esc']" @shortkey="closeModalPembayaran()"> &times;</button> 
+                        <h4 class="modal-title"> 
+                            <div class="alert-icon"> 
+                                <b>Silahkan Lengkapi Pembayaran!</b> 
+                            </div> 
+                        </h4> 
+                    </div> 
+                    <form class="form-horizontal" > 
+                        <div class="modal-body"> 
+                            <div class="card" style="margin-bottom:1px; margin-top:1px; margin-right:1px; margin-left:1px;">
+
+                                <div class="row">
+                                    <div class="col-md-5 col-xs-10">
+                                        <div class="form-group" style="margin-right: 1px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                                            <font style="color: black; margin: 8px 0">Kas(F6)</font>
+                                            <div style="margin-top: 8px">
+                                                <selectize-component style="margin: 8px 0px" v-model="inputReturPenjualan.kas" :settings="placeholder_kas" id="kas" ref='kas'>  
+                                                    <option v-for="kass, index in kas" v-bind:value="kass.id">{{ kass.nama_kas }}</option>
+                                                </selectize-component>
+                                            </div>
+                                            <br v-if="errors.kas">   <span v-if="errors.kas" id="kas_error" class="label label-danger">{{ errors.kas[0] }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1 col-xs-1" style="padding-left:0px">
+                                        <div class="form-group">
+                                            <div class="row" style="margin-top:11px">
+                                                <button class="btn btn-primary btn-icon waves-effect waves-light" v-on:click="tambahModalKas()" type="button"> <i class="material-icons" >add</i> </button>
+                                            </div>
+                                        </div>
+                                    </div>                                    
+
+                                    <div class="col-md-3 col-xs-6">
+                                        <div class="form-group" style="margin-right: 1px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px; width:130px;">
+                                            <font style="color: black">Potongan(F7)</font>  
+                                            <money style="text-align:right" class="form-subtotal" v-model="inputReturPenjualan.potongan_faktur" v-bind="separator" v-shortkey.focus="['f7']"></money>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-xs-6">
+                                        <div class="form-group" style="margin-right: 10px; margin-left: 1px; margin-bottom: 1px; margin-top: 1px;">
+                                            <font style="color: black">(%)(F8)</font>                                            
+                                            <input style="text-align:right" type="number" class="form-subtotal" value="0" v-model="inputReturPenjualan.potongan_persen" v-on:blur="potonganPersen" v-shortkey.focus="['f8']" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                                            <font style="color: black">Total Akhir</font>
+                                            <money style="text-align:right" class="form-penjualan" readonly="" id="total_akhir" name="total_akhir" placeholder="Total Akhir"  v-model="inputReturPenjualan.total_akhir" v-bind="separator" ></money> 
+                                        </div>    
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                                            <font style="color: black">Pembayaran(F10)</font>
+                                            <money style="text-align:right" class="form-penjualan" v-shortkey.focus="['f10']" id="pembayaran" name="pembayaran" placeholder="Pembayaran"  v-model="inputReturPenjualan.pembayaran" v-bind="separator"  autocomplete="off" ref="pembayaran"></money> 
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div align="right"  style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                                    <button type="button" class="btn btn-success btn-sm" id="btnSelesai" v-on:click="selesaiRetur()" v-shortkey.push="['alt', 'x']" @shortkey="selesaiRetur()"><font style="font-size:15px;">Tunai(Alt + X)</font></button>
+
+                                    <button type="button" class="btn btn-default btn-sm"  v-on:click="closeModalPembayaran()" v-shortkey.push="['esc']" @shortkey="closeModalPembayaran()"> <font style="font-size:15px;">Tutup(Esc)</font></button>
+                                </div>
+
+                            </div> 
+                        </div>
+                        <div class="modal-footer">
+                        </div> 
+                    </form>
+                </div>       
+            </div> 
+        </div> 
+        <!-- / MODAL TOMBOL SELESAI --> 
+
           <div class="modal" id="modal_pilih_retur" role="dialog" data-backdrop=""> 
                   <div class="modal-dialog modal-lg"> 
                          <!-- Modal content--> 
                             <div class="modal-content"> 
                                 <div class="modal-header"> 
-                                    <button type="button" class="close"  v-on:click="closeModalX()" v-shortkey.push="['esc']" @shortkey="closeModalX()"> &times;</button> 
+                                    <button type="button" class="close"  v-on:click="closeModalX()" > &times;</button> 
                                     <h4 class="modal-title"> 
                                         <div class="alert-icon"> 
                                             <b>Silahkan Pilih Faktur Penjualan !</b> 
@@ -89,6 +171,11 @@
                                                 <div align="right"><pagination :data="dataPelangganReturData" v-on:pagination-change-page="pilihPelangganRetur" :limit="6"></pagination></div>
                                               </div>
                                   </div>
+                                    <div align="right"  style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
+                                          <button type="button" class="btn btn-default btn-sm"  v-on:click="closeModalPembayaran()" v-shortkey.push="['esc']" @shortkey="closeModalPembayaran()"> <font style="font-size:15px;">Tutup(Esc)</font></button>
+                                  </div>
+                            </div> 
+
                             <div class="modal-footer">  
                            </div> 
                    </div>       
@@ -130,77 +217,7 @@
         </div> 
         <!-- MODAL INSERT TBS --> 
 
-            <!-- / MODAL SELESAI --> 
-            <div class="modal" id="modal_selesai" role="dialog" data-backdrop="">
-                <div class="modal-dialog"> 
-                    <!-- Modal content--> 
-                    <div class="modal-content"> 
-                        <div class="modal-header"> 
-                            <button type="button" class="close"  v-on:click="closeModalSelesai()" v-shortkey.push="['esc']" @shortkey="closeModalSelesai()"> &times;
-                            </button> 
-                            <h4 class="modal-title"> 
-                                <div class="alert-icon"> 
-                                    <b>Silahkan Lengkapi Retur Penjualan!</b> 
-                                </div> 
-                            </h4>
-                        </div> 
 
-                        <form class="form-horizontal"  v-on:submit.prevent="selesaiReturPenjualan()"> 
-                            <div class="modal-body"> 
-                                <div class="card" style="margin-bottom:1px; margin-top:1px; margin-right:1px; margin-left:1px;">
-
-                                    <div class="row">
-                                        <div class="col-md-6 col-xs-12">                                            
-                                            <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                                <font style="color: black">Tanggal</font> 
-                                                <datepicker :input-class="'form-control'" placeholder="Tanggal" v-model="inputReturPenjualan.tanggal" ref='tanggal'></datepicker>
-                                                <br v-if="errors.tanggal">  <span v-if="errors.tanggal" id="tanggal_error" class="label label-danger">{{ errors.tanggal[0] }}</span>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-5 col-xs-10">
-                                            <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
-                                                <font style="color: black">Kas(F4)</font><br>
-                                                <selectize-component v-model="inputReturPenjualan.kas" :settings="placeholder_kas" id="kas" ref='kas'> 
-                                                    <option v-for="kass, index in kas" v-bind:value="kass.id">{{ kass.nama_kas }}</option>
-                                                </selectize-component>                                                
-                                                <input class="form-control" type="hidden"  v-model="inputReturPenjualan.kas"  name="id_tbs" id="id_tbs"  v-shortkey="['f4']" @shortkey="openSelectizeKas()">
-                                                <br v-if="errors.kas">
-                                                <span v-if="errors.kas" id="kas_error" class="label label-danger">{{ errors.kas[0] }}
-                                                </span>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-1 col-xs-1" style="padding-left:0px">
-                                            <div class="form-group">
-                                                <div class="row" style="margin-top:11px">
-                                                    <button class="btn btn-primary btn-icon waves-effect waves-light" v-on:click="tambahModalKas()" type="button"> <i class="material-icons" >add</i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-12 col-xs-12">
-                                            <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
-                                                <font style="color: black">Keterangan</font><br>
-                                                <textarea v-model="inputReturPenjualan.keterangan" class="form-control" placeholder="Keterangan.." id="keterangan" name="keterangan" ref="keterangan"></textarea>
-                                            </div>
-                                        </div>
-
-                                        <div align="right"  style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                            <button type="submit" class="btn btn-success btn-lg" id="btnTbs"><font style="font-size:20px;">Selesai</font></button>
-
-                                            <button type="button" class="btn btn-default btn-lg"  v-on:click="closeModalSelesai()" v-shortkey.push="['esc']" @shortkey="closeModalSelesai()"> <font style="font-size:20px;">Tutup(Esc)</font></button>
-                                        </div>
-                                    </div>                                  
-                                </div> 
-                            </div>
-                            <div class="modal-footer">  
-                            </div> 
-                        </form>
-                    </div>       
-                </div> 
-            </div> 
-            <!-- / MODAL TOMBOL SELESAI --> 
 
           <div class="card" style="margin-bottom: 1px; margin-top: 1px;" ><!-- CARD --> 
                 <div class="card-content"> 
@@ -344,9 +361,16 @@ export default {
             },
             inputReturPenjualan:{
                 subtotal: 0,
+                pelanggan : '',
                 kas: '',
                 tanggal: new Date,
                 keterangan: '',
+                potongan_faktur : 0,
+                potongan_persen : 0,
+                total_akhir : 0,
+                potong_hutang : 0,
+                pembayaran : 0,
+                keterangan: '',  
             },
             formReturJualTbs:{
                 jumlah_retur : '',
@@ -408,7 +432,10 @@ export default {
           if (this.inputTbsReturPenjualan.pelanggan != '') {
               this.pilihPelanggan();  
           }
-        }
+        },
+        'inputReturPenjualan.potongan_faktur':function(){
+                this.potonganFaktur();
+            }
 
     },
     filters: {
@@ -609,6 +636,7 @@ export default {
                             var subtotal = parseFloat(app.inputReturPenjualan.subtotal) + parseFloat(resp.data.subtotal)
                             app.getResults();
                             app.inputReturPenjualan.subtotal = subtotal.toFixed(2)
+                            app.inputReturPenjualan.total_akhir = subtotal.toFixed(2)
                             app.alert("Berhasil Menambahkan Tbs Retur Penjualan"+ app.formReturJualTbs.nama_produk);
                             $("#modalInsertTbs").hide();
                             $("#modal_pilih_retur").hide(); 
@@ -627,6 +655,7 @@ export default {
         axios.get(app.url+'/subtotal-tbs-retur-penjualan/'+jenis_tbs)
         .then(function (resp) {
          app.inputReturPenjualan.subtotal += resp.data.subtotal;
+         app.inputReturPenjualan.total_akhir += resp.data.subtotal;
          })
         .catch(function (resp) {
           console.log(resp);
@@ -636,6 +665,11 @@ export default {
         this.inputTbsReturPenjualan.pelanggan = '', 
         $("#modal_pilih_retur").hide(); 
         $("#modalInsertTbs").hide(); 
+      },
+      closeModalPembayaran(){
+          $("#modal_selesai").hide(); 
+          $("#modalInsertTbs").hide();
+          $("#modal_pilih_retur").hide();
       },
       closeModalInsertTbs(){
         $("#modalInsertTbs").hide(); 
@@ -650,6 +684,10 @@ export default {
           timer: 1000,
     		});
     	},
+      bayarReturPenjualan(){
+          $("#modal_selesai").show(); 
+          this.$refs.pembayaran.$el.focus()
+      },
       deleteEntry(id,index,subtotals,nama_produk,no_faktur_penjualan) {
         var app = this;
         app.$swal({
@@ -677,6 +715,7 @@ export default {
             }else{
                 var subtotal = parseFloat(app.inputReturPenjualan.subtotal) - parseFloat(subtotals)
                 app.inputReturPenjualan.subtotal = subtotal.toFixed(2)
+                app.inputReturPenjualan.total_akhir = subtotal.toFixed(2)
                 app.alert("Menghapus Faktur "+no_faktur_penjualan+" Produk "+titleCase(nama_produk))
                 app.getResults();
                 app.loading = false
@@ -735,6 +774,7 @@ export default {
                                     app.getResults();       
                                     var subtotal = (parseInt(app.inputReturPenjualan.subtotal) - parseInt(subtotal_lama))  + parseInt(resp.data.subtotal) 
                                    app.inputReturPenjualan.subtotal = subtotal.toFixed(2)
+                                   app.inputReturPenjualan.total_akhir = subtotal.toFixed(2)
                                 }) 
                                 .catch(function (resp) { 
                                     app.loading = false; 
@@ -791,7 +831,8 @@ export default {
                         var subtotal = (parseFloat(app.inputReturPenjualan.subtotal) - parseFloat(subtotal_lama)) + parseFloat(resp.data.subtotal) 
                         app.alert("Mengubah Potongan Retur "+titleCase(nama_produk)); 
                         app.loading = false; 
-                        app.inputReturPenjualan.subtotal = subtotal.toFixed(2) 
+                        app.inputReturPenjualan.subtotal = subtotal.toFixed(2)
+                        app.inputReturPenjualan.total_akhir = subtotal.toFixed(2) 
                         app.getResults(); 
                     } 
                 }) 
@@ -800,6 +841,49 @@ export default {
                     alert("Tidak dapat Mengubah Potongan Produk"); 
                 }); 
     }, 
+    potonganPersen(){
+                var app = this;
+                var potonganPersen = app.inputReturPenjualan.potongan_persen
+
+                if (potonganPersen > 100) {
+                    app.alertGagal("Potongan Tidak Bisa Lebih Dari 100%")
+                    app.inputReturPenjualan.total_akhir = app.inputReturPenjualan.subtotal
+                    app.inputReturPenjualan.potongan_faktur = 0
+                    app.inputReturPenjualan.potongan_persen = 0
+                }else{
+                    if (potonganPersen == '') {
+                        potonganPersen = 0
+                    }
+
+                    var potongan_nominal = parseFloat(app.inputReturPenjualan.subtotal) * (parseFloat(potonganPersen) / 100) 
+                    var total_akhir = parseFloat(app.inputReturPenjualan.subtotal,10) - parseFloat(potongan_nominal,10)
+
+                    app.inputReturPenjualan.potongan_faktur = potongan_nominal
+                    app.inputReturPenjualan.total_akhir = total_akhir
+                }
+    },
+    potonganFaktur(){
+                var app = this;
+                var potonganFaktur = app.inputReturPenjualan.potongan_faktur
+
+                if (potonganFaktur == '') {
+                    potonganFaktur = 0
+                }
+                var potongan_persen = (parseFloat(potonganFaktur) / parseFloat(app.inputReturPenjualan.subtotal)) * 100
+                var total_akhir = parseFloat(app.inputReturPenjualan.subtotal) - parseFloat(potonganFaktur)
+
+                if (potongan_persen > 100) {
+                    app.alertGagal("Potongan Tidak Bisa Lebih Dari 100%")
+                    app.inputReturPenjualan.total_akhir = app.inputReturPenjualan.subtotal
+                    app.inputReturPenjualan.potongan_faktur = 0
+                    app.inputReturPenjualan.potongan_persen = 0
+
+                }else{
+                    app.inputReturPenjualan.potongan_persen = potongan_persen.toFixed(2)
+                    app.inputReturPenjualan.total_akhir = total_akhir
+                }
+
+    },
     batalReturPenjualan(){
       var app = this
       app.$swal({
