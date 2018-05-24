@@ -11,6 +11,7 @@ use App\PembelianOrder;
 use App\PenerimaanProduk;
 use App\DetailPenjualan;
 use App\DetailPenjualanPos;
+use App\DetailReturPembelian;
 use App\ItemKeluar;
 use App\ItemMasuk;
 use App\Kas;
@@ -25,6 +26,7 @@ use App\Observers\PembelianOrderObserver;
 use App\Observers\PenerimaanProdukObserver;
 use App\Observers\DetailPenjualanObserver;
 use App\Observers\DetailPenjualanPosObserver;
+use App\Observers\DetailReturPembelianObserver;
 use App\Observers\ItemKeluarObserver;
 use App\Observers\ItemMasukObserver;
 use App\Observers\KasKeluarObserver;
@@ -35,6 +37,7 @@ use App\Observers\PembayaranHutangObserver;
 use App\Observers\PembayaranPiutangObserver;
 use App\Observers\PembelianObserver;
 use App\Observers\PenjualanPosObserver;
+use App\Observers\ReturPembelianObserver;
 use App\Observers\ProdukObserver;
 use App\Observers\StokOpnameObserver;
 use App\Observers\UserWarungObserver;
@@ -43,6 +46,7 @@ use App\PembayaranHutang;
 use App\PembayaranPiutang;
 use App\Pembelian;
 use App\PenjualanPos;
+use App\ReturPembelian;
 use App\StokOpname;
 use App\UserWarung;
 use App\Warung;
@@ -88,6 +92,8 @@ class AppServiceProvider extends ServiceProvider
         BankWarung::observe(BankWarungObserver::class);
         PembelianOrder::observe(PembelianOrderObserver::class);
         PenerimaanProduk::observe(PenerimaanProdukObserver::class);
+        ReturPembelian::observe(ReturPembelianObserver::class);
+        DetailReturPembelian::observe(DetailReturPembelianObserver::class);
     }
 
     /**
