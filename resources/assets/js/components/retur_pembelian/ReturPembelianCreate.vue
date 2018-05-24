@@ -1168,7 +1168,7 @@
                     app.alertGagal("Potongan Tidak Bisa Lebih Dari 100%")
                     var selisih = app.returPembelian.total_akhir - app.returPembelian.potong_hutang;
                     if (selisih >= 0) {
-                        app.returPembelian.pembayaran = app.returPembelian.subtotal
+                        app.returPembelian.pembayaran = app.returPembelian.subtotal - app.returPembelian.potong_hutang
                     }
 
                     app.returPembelian.total_akhir = app.returPembelian.subtotal
@@ -1183,7 +1183,7 @@
                     var total_akhir = parseFloat(app.returPembelian.subtotal,10) - parseFloat(potongan_nominal,10)
                     var selisih = total_akhir - app.returPembelian.potong_hutang;
                     if (selisih >= 0){
-                        app.returPembelian.pembayaran = total_akhir
+                        app.returPembelian.pembayaran = total_akhir - app.returPembelian.potong_hutang
                     }
 
                     app.returPembelian.potongan_faktur = potongan_nominal
@@ -1204,7 +1204,7 @@
                     app.alertGagal("Potongan Tidak Bisa Lebih Dari 100%")
                     var selisih = total_akhir - app.returPembelian.potong_hutang;
                     if (selisih >= 0) {
-                        app.returPembelian.pembayaran = app.returPembelian.subtotal
+                        app.returPembelian.pembayaran = app.returPembelian.subtotal - app.returPembelian.potong_hutang
                     }
 
                     app.returPembelian.total_akhir = app.returPembelian.subtotal
@@ -1214,7 +1214,7 @@
                 }else{
                     var selisih = total_akhir - app.returPembelian.potong_hutang;
                     if (selisih >= 0) {
-                        app.returPembelian.pembayaran = total_akhir
+                        app.returPembelian.pembayaran = total_akhir - app.returPembelian.potong_hutang
                     }
                     app.returPembelian.potongan_persen = potongan_persen.toFixed(2)
                     app.returPembelian.total_akhir = total_akhir
@@ -1327,11 +1327,11 @@
                     if (selisih < 0) {
                         app.returPembelian.pembayaran = 0;
                     }else{
-                        app.returPembelian.pembayaran = app.returPembelian.total_akhir;
+                        app.returPembelian.pembayaran = selisih;
                     }
 
                     $("#modal_selesai").show(); 
-                    this.$refs.pembayaran.$el.focus()
+                    this.$refs.pembayaran.$el.focus()           
                 })
                 .catch( (err) => {
                     console.log(err);

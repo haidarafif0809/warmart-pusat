@@ -5,6 +5,7 @@ namespace App\Observers;
 use App\ReturPembelian;
 use App\DetailReturPembelian;
 use App\TransaksiKas;
+use App\TransaksiHutang;
 use App\Hpp;
 use Auth;
 
@@ -18,6 +19,8 @@ class ReturPembelianObserver
 		Hpp::where('no_faktur', $ReturPembelian->no_faktur_retur)->where('warung_id', $ReturPembelian->warung_id)->delete();
 
 		TransaksiKas::where('no_faktur', $ReturPembelian->no_faktur_retur)->delete();
+
+		TransaksiHutang::where('no_faktur', $ReturPembelian->no_faktur_retur)->delete();
 
 		return true;
 	}

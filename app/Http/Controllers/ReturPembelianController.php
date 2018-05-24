@@ -637,10 +637,11 @@ class ReturPembelianController extends Controller
             //INSERT RETUR PEMBELIAN
                 $supplier   = TbsReturPembelian::select('supplier')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->first()->supplier;
                 $total = $request->total_akhir - $request->potong_hutang;
+
                 $retur = ReturPembelian::create([
                     'no_faktur_retur'   => $no_faktur,
                     'suplier_id'        => $supplier,
-                    'total'             => $total,
+                    'total'             => $total < 0 ? 0 : $total,
                     'total_bayar'       => $request->total_akhir,
                     'potongan'          => $request->potongan_faktur,
                     'potong_hutang'     => $request->potong_hutang,
@@ -650,10 +651,67 @@ class ReturPembelianController extends Controller
                 TransaksiKas::create([
                     'no_faktur'       => $no_faktur,
                     'jenis_transaksi' => 'Retur Pembelian',
-                    'jumlah_masuk'    => $request->total_akhir,
+                    'jumlah_masuk'    => $total < 0 ? 0 : $total,
                     'kas'             => $request->kas,
                     'warung_id'       => $warung_id
                     ]);
+
+                /*Jika Retur Pembelian, menggunakan fitur potong hutang*/
+                if ($request->potong_hutang != '' || $request->potong_hutang != 0) {
+
+                    if ($total < 0) {
+                        $subtotal_akhir = $request->total_akhir;
+                    }else{
+                        $subtotal_akhir = $request->potong_hutang;
+                    }
+
+                    while ($subtotal_akhir > 0) {
+
+                        foreach ($request['faktur_hutang'] as $faktur_hutang) {
+
+                            $id_pembelian = Pembelian::select('id')->where('no_faktur', $faktur_hutang)->first()->id;
+                            $sisa_hutang = TransaksiHutang::getDataPembelianHutangFaktur($faktur_hutang)->having('sisa_hutang', '>', 0)->first()->sisa_hutang;
+
+                            if ($subtotal_akhir == $sisa_hutang) {
+
+                                TransaksiHutang::create([
+                                    'no_faktur'       => $no_faktur,
+                                    'id_transaksi'    => $id_pembelian,
+                                    'jenis_transaksi' => 'Retur Pembelian',
+                                    'jumlah_keluar'   => $subtotal_akhir,
+                                    'suplier_id'      => $supplier,
+                                    'warung_id'       => $warung_id,
+                                    ]);
+                                
+                                $subtotal_akhir = 0;
+                            }elseif ($subtotal_akhir > $sisa_hutang) {
+
+                                TransaksiHutang::create([
+                                    'no_faktur'       => $no_faktur,
+                                    'id_transaksi'    => $id_pembelian,
+                                    'jenis_transaksi' => 'Retur Pembelian',
+                                    'jumlah_keluar'   => $sisa_hutang,
+                                    'suplier_id'      => $supplier,
+                                    'warung_id'       => $warung_id,
+                                    ]);
+                                
+                                $subtotal_akhir = $subtotal_akhir - $sisa_hutang;
+                            }elseif ($subtotal_akhir < $sisa_hutang) {
+
+                                TransaksiHutang::create([
+                                    'no_faktur'       => $no_faktur,
+                                    'id_transaksi'    => $id_pembelian,
+                                    'jenis_transaksi' => 'Retur Pembelian',
+                                    'jumlah_keluar'   => $subtotal_akhir,
+                                    'suplier_id'      => $supplier,
+                                    'warung_id'       => $warung_id,
+                                    ]);
+                                
+                                $subtotal_akhir = 0;
+                            }
+                        } /*END FOREACH*/
+                    } /*END WHILE*/
+                }
 
                 foreach ($tbs_retur->get() as $data_tbs) {
 
