@@ -1289,7 +1289,7 @@
                             app.returPembelian.total_akhir = 0
                             app.returPembelian.pembayaran = 0
                             app.inputTbsRetur.supplier = ''   
-                            // window.open('penjualan/cetak-kecil-penjualan/'+resp.data.respons_penjualan,'_blank');
+                            window.open('retur-pembelian/cetak-retur-pembelian/'+resp.data.respons_retur,'_blank');
                             app.loading = false;
                         }
                     })

@@ -81,7 +81,7 @@
 									</td>
 
 									<td style="text-align:right;">
-										<a target="blank" class="btn btn-primary btn-xs" v-bind:href="'retur-pembelian/cetak-besar-retur/'+returPembelian.id">Cetak Ulang</a>
+										<a target="blank" class="btn btn-primary btn-xs" v-bind:href="'retur-pembelian/cetak-retur-pembelian/'+returPembelian.id">Cetak Ulang</a>
 									</td>
 
 									<td style="text-align:right;">
