@@ -79,6 +79,8 @@
     <link href="{{ asset('css/fonts-googleapis-icon.css') }}" rel="stylesheet" type="text/css"/>
     <link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet"/>
     <link href="{{ asset('css/collapseKeranjangBelanja.css') }}" rel="stylesheet"/>
+    <link href="{{ asset('css/robotoSlab.css')}}" rel="stylesheet"/>
+
 
 
     <!-- Facebook Pixel Code -->
@@ -795,12 +797,30 @@ body {
 
                 /* cek apakah id keranjangCollapseMobile ada */
                 if ($('#keranjangCollapseMobile').attr('class') != undefined) {
+
+                    /* cek apakah kelas bgAnimation ada atau tidak */
                     if ($('#keranjangCollapseMobile').attr('class').match(/bgAnimation/) != null) {
                         $('#keranjangCollapseMobile').removeClass('bgAnimation');
                     }
+
+                    swal({
+                        title: 'Berhasil!',
+                        type: 'success',
+                        text: 'Berhasil menambahkan produk ke keranjang belanja.',
+                        showConfirmButton: false
+                    })
+                    .then(() => {
+                        setTimeout(() => {
+                            $('#keranjangCollapseMobile').addClass('bgAnimation');
+                        }, 300);
+                    })
+                    .catch((resp) => {
+                        console.log('catch tambah produk: ', resp);
+                    });
+
                     setTimeout(() => {
-                        $('#keranjangCollapseMobile').addClass('bgAnimation');
-                    }, 300);
+                        swal.clickConfirm();
+                    }, 1800);
 
                     $.get('{{ url('/keranjang-belanja/collapse-keranjang-belanja-mobile') }}', function (data) {
                         collapseDataProdukMobile = data;
@@ -813,7 +833,22 @@ body {
                         collapseDataProduk = data;
                     })
                     .always(() => {
-                        getRemoveDataCollapse(['get', 'desktop']);
+                        swal({
+                            title: 'Berhasil!',
+                            type: 'success',
+                            text: 'Berhasil menambahkan produk ke keranjang belanja.',
+                            showConfirmButton: false
+                        })
+                        .then(() => {
+                            getRemoveDataCollapse(['get', 'desktop']);
+                        })
+                        .catch((resp) => {
+                            console.log('catch tambah produk: ', resp);
+                        });
+
+                        setTimeout(() => {
+                            swal.clickConfirm();
+                        }, 1800);
                     });
                 }
             });
