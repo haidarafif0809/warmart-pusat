@@ -9,6 +9,7 @@ use App\Barang;
 use App\Suplier;
 use App\Pembelian;
 use App\DetailReturPembelian;
+use App\EditTbsReturPembelian;
 use App\TbsReturPembelian;
 use App\ReturPembelian;
 use App\TransaksiKas;
@@ -869,6 +870,35 @@ class ReturPembelianController extends Controller
 
         return view('retur_pembelian.cetak_besar', ['retur_pembelian' => $retur_pembelian, 'detail_retur' => $detail_returs, 'subtotal' => $subtotal, 'terbilang' => $terbilang, 'setting_aplikasi' => $setting_aplikasi])->with(compact('html'));
 
+    }
+
+    public function prosesEditRetur($id) {        
+        $session_id                 = session()->getId();
+        $retur_pembelian            = ReturPembelian::find($id);
+        $detail_retur_pembelians    = DetailReturPembelian::where('no_faktur_retur', $retur_pembelian->no_faktur_retur)->where('warung_id', Auth::user()->id_warung);
+
+        $hapus_semua_edit_tbs_retur_pembelian = EditTbsReturPembelian::where('no_faktur_retur', $retur_pembelian->no_faktur_retur)->where('warung_id', Auth::user()->id_warung)
+        ->delete();
+
+        foreach ($detail_retur_pembelians->get() as $data_tbs) {
+            EditTbsReturPembelian::create([
+                'no_faktur_retur'   => $data_tbs->no_faktur_retur,
+                'session_id'        => $session_id,
+                'id_produk'         => $data_tbs->id_produk,
+                'jumlah_retur'      => $data_tbs->jumlah_produk,
+                'satuan_id'         => $data_tbs->satuan_id,
+                'satuan_dasar'      => $data_tbs->satuan_dasar,
+                'harga_produk'      => $data_tbs->harga_produk,
+                'subtotal'          => $data_tbs->subtotal,
+                'potongan'          => $data_tbs->potongan,
+                'tax'               => $data_tbs->tax,
+                'tax_include'       => $data_tbs->tax_include,
+                'ppn'               => $data_tbs->ppn,
+                'supplier'          => $data_tbs->supplier,
+                'warung_id'         => $data_tbs->warung_id,
+                ]);
+        }
+        return response(200);
     }
 
     /**

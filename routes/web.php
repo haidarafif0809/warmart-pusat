@@ -1098,12 +1098,8 @@ Route::get('/tema/ubah-tema/{id}/{default_tema}/', 'SettingTemaController@ubahTe
 // Retur Pembelian
 Route::get('/retur-pembelian/view', 'ReturPembelianController@view')->middleware('auth');
 Route::get('/retur-pembelian/pencarian', 'ReturPembelianController@pencarian')->middleware('auth');
-Route::get('/retur-pembelian/data-faktur-hutang', 'ReturPembelianController@fakturHutang')->middleware('auth'); 
-Route::post('/retur-pembelian/nilai-potong-hutang', 'ReturPembelianController@potongHutang')->middleware('auth'); 
-Route::get('/retur-pembelian/cetak-retur-pembelian/{id}', 'ReturPembelianController@cetakRetur')->middleware('auth');
 Route::get('/retur-pembelian/view-detail/{id}', 'ReturPembelianController@viewDetail')->middleware('auth');
 Route::get('/retur-pembelian/pencarian-detail/{id}', 'ReturPembelianController@pencarianDetail')->middleware('auth');
-
 Route::get('/retur-pembelian/view-tbs', 'ReturPembelianController@viewTbs')->middleware('auth');
 Route::get('/retur-pembelian/pencarian-tbs', 'ReturPembelianController@pencarianTbs')->middleware('auth');
 Route::get('/retur-pembelian/supplier', 'ReturPembelianController@supplier')->middleware('auth'); 
@@ -1117,7 +1113,11 @@ Route::post('/retur-pembelian/edit-satuan-tbs', 'ReturPembelianController@editSa
 Route::post('/retur-pembelian/proses-potongan-tbs', 'ReturPembelianController@editPotongan')->middleware('auth');
 Route::get('/retur-pembelian/proses-tax-tbs', 'ReturPembelianController@editTax')->middleware('auth');
 Route::post('/retur-pembelian/proses-batal-retur', 'ReturPembelianController@batalRetur')->middleware('auth');
+Route::get('/retur-pembelian/data-faktur-hutang', 'ReturPembelianController@fakturHutang')->middleware('auth'); 
+Route::post('/retur-pembelian/nilai-potong-hutang', 'ReturPembelianController@potongHutang')->middleware('auth'); 
+Route::get('/retur-pembelian/cetak-retur-pembelian/{id}', 'ReturPembelianController@cetakRetur')->middleware('auth');
 
+Route::get('/retur-pembelian/proses-edit-retur-pembelian/{id}', 'ReturPembelianController@prosesEditRetur')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 

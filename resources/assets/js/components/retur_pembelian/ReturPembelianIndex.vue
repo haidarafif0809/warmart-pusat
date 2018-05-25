@@ -69,7 +69,7 @@
 									<td align="center">{{ returPembelian.waktu}}</td>
 
 									<td style="text-align:right;">
-										<router-link :to="{name: 'prosesEditPembelianOrder', params: {id: returPembelian.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + returPembelian.id">
+										<router-link :to="{name: 'prosesEditReturPembelian', params: {id: returPembelian.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + returPembelian.id">
 											Edit 
 										</router-link>
 									</td>
