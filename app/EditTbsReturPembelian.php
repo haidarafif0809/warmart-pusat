@@ -29,4 +29,17 @@ class EditTbsReturPembelian extends Model
 		->where('edit_tbs_retur_pembelians.warung_id', $warung_id);
 		return $query;
 	}
+
+	public function scopeSubtotalTbs($query, $user_warung, $session_id, $no_faktur_retur)
+	{
+		$tbs_retur_pembelian = EditTbsReturPembelian::select(DB::raw('SUM(subtotal) as subtotal'))
+		->where('no_faktur_retur', $no_faktur_retur)
+		->where('session_id', $session_id)
+		->where('warung_id', Auth::user()->id_warung)->first();
+		if ($tbs_retur_pembelian->subtotal == null || $tbs_retur_pembelian->subtotal == '') {
+			return $query = 0;
+		} else {
+			return $query = $tbs_retur_pembelian->subtotal;
+		}
+	}
 }

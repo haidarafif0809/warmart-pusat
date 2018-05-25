@@ -59,7 +59,7 @@
           <ul class="breadcrumb"> 
             <li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li> 
             <li><router-link :to="{name: 'indexReturPembelian'}">Retur Pembelian</router-link></li> 
-            <li class="active">Tambah Retur Pembelian</li> 
+            <li class="active">Edit Retur Pembelian</li> 
         </ul> 
 
         <!-- MODEL DATA PEMBELIAN -->
@@ -319,7 +319,7 @@
                         <div class="card card-produk" style="margin-bottom: 1px; margin-top: 1px;">
                             <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
                                 <selectize-component v-model="inputTbsRetur.supplier" :settings="placeholder_supplier" id="supplier" ref='supplier'>
-                                    <option v-for="suplier, index in supliers" v-bind:value="suplier.id">
+                                    <option v-for="suplier, index in suppliers" v-bind:value="suplier.id">
                                         {{suplier.nama_suplier}}
                                     </option>
                                 </selectize-component>
@@ -502,6 +502,7 @@
                 errors: [],
                 fakturHutangs: [],
                 satuan: [],
+                suppliers: [],
                 tbsReturPembelians: [],
                 tbsReturPembelianDatas : {},
                 pembelians: [],
@@ -576,10 +577,7 @@
                 },
             }
         },
-        computed : mapState ({    
-            supliers(){
-                return this.$store.state.supplier
-            },
+        computed : mapState ({
             kas(){
                 return this.$store.state.kas
             },
@@ -588,7 +586,6 @@
         mounted() {
             var app = this;
             app.id_retur = app.$route.params.id;
-            app.$store.dispatch('LOAD_SUPPLIER_LIST');
             app.$store.dispatch('LOAD_KAS_LIST')
             app.getTbs();
         },
@@ -628,19 +625,31 @@
             },
         },
         methods: {
-            openSelectizeSupplier(){      
-                this.$store.dispatch('LOAD_SUPPLIER_LIST'); 
-                this.$refs.supplier.$el.selectize.focus();
+            openSelectizeSupplier(){   
+                var app = this; 
+                app.getSuppliers(app.id_retur);  
+                app.$refs.supplier.$el.selectize.focus();
             },
             openSelectizeKas(){      
                 this.$refs.kas.$el.selectize.focus();
             },
+            getSuppliers(id) {
+                var app = this;
+
+                axios.get(app.url+'/supplier-edit/'+id)
+                .then( (resp) => {
+                    app.suppliers = resp.data
+                })
+                .catch( (err) => {
+                    console.log(err);
+                    alert("Tidak Dapat Memuat Supplier");
+                })                
+            },
             getFakturHutang() {
                 var app = this;
 
-                axios.get(app.url+'/data-faktur-hutang')
+                axios.get(app.url+'/data-faktur-hutang/'+app.id_retur)
                 .then( (resp) => {
-
                     app.fakturHutangs = resp.data
                 })
                 .catch( (err) => {
@@ -779,6 +788,7 @@
                     app.returPembelian.kas = app.default_kas
                     app.openSelectizeSupplier();
                     app.getFakturHutang();
+                    app.getReturPembelian(app.id_retur);
 
                     if (app.returPembelian.subtotal == 0) {          
                         app.getSubtotal(); 
@@ -791,13 +801,28 @@
                     alert("Tidak Dapat Memuat Retur Pembelian");
                 })
             },
+            getReturPembelian(id){
+                var app = this
+
+                axios.get(app.url+'/data-retur-pembelian/'+id)
+                .then(function (resp) {
+                    console.log(resp.data)
+                    app.returPembelian.kas = resp.data.total
+                    app.returPembelian.supplier = resp.data.suplier_id
+                    app.returPembelian.total_akhir = resp.data.total_bayar
+                    app.returPembelian.potong_hutang = resp.data.potong_hutang
+                })
+                .catch(function (resp) {
+                  alert("Tidak Dapat Memuat Pembelian Order");
+              });
+            },
             getSubtotal(){
                 var app =  this;
                 var jenis_tbs = 1;
-                axios.get(app.url+'/subtotal-tbs')
+                axios.get(app.url+'/subtotal-edit-tbs/'+app.id_retur)
                 .then(function (resp) {
                     app.returPembelian.subtotal += resp.data.subtotal;
-                    app.returPembelian.total_akhir += resp.data.subtotal;
+                    // app.returPembelian.total_akhir += resp.data.subtotal;
                 })
                 .catch(function (resp) {
                     ;

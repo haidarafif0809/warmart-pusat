@@ -21,6 +21,10 @@ use Auth;
 class ReturPembelianController extends Controller
 {
 
+    public function dataRetur($id){
+        return $retur_pembelian = ReturPembelian::find($id);
+    }
+
     public function supplier(){
         $session_id = session()->getId();
 
@@ -43,10 +47,62 @@ class ReturPembelianController extends Controller
 
     }
 
+    public function supplierEdit($id){
+        $session_id = session()->getId();
+        $retur_pembelian = ReturPembelian::find($id);
+        $data_tbs   = EditTbsReturPembelian::select('supplier')
+        ->where('no_faktur_retur', $retur_pembelian->no_faktur_retur)
+        ->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
+
+        if ($data_tbs->count() > 0) {
+            $suplier = Suplier::select('id', 'nama_suplier')->where('id', $data_tbs->first()->supplier)->get();
+        }else{
+            $suplier = Suplier::select('id', 'nama_suplier')->where('warung_id', Auth::user()->id_warung)->get();
+        }
+
+        $array     = [];
+        foreach ($suplier as $supliers) {
+            array_push($array, [
+                'id'             => $supliers->id,
+                'nama_suplier' => $supliers->nama_suplier]);
+        }
+
+        return response()->json($array);
+
+    }
+
     public function fakturHutang(){
         $session_id = session()->getId();
 
         $data_tbs   = TbsReturPembelian::select('supplier')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
+
+        if ($data_tbs->count() > 0) {
+            $id_suplier = $data_tbs->first()->supplier;
+            $data_pembelians = TransaksiHutang::getDataPembelianHutang($id_suplier)->having('sisa_hutang', '>', 0)->get();
+        }else{
+            $id_suplier = 0;
+            $data_pembelians = TransaksiHutang::getDataPembelianHutang($id_suplier)->having('sisa_hutang', '>', 0)->get();
+        }
+
+        $array     = [];
+        foreach ($data_pembelians as $data_pembelian) {
+            array_push($array, [
+                'no_faktur' => $data_pembelian->no_faktur,
+                'hutang'    => number_format($data_pembelian->sisa_hutang, 0, ',', '.'),
+                ]);
+        }
+
+        return response()->json($array);
+    }
+
+    public function fakturHutangEdit($id){
+        $retur_pembelian = ReturPembelian::find($id);
+        $session_id = session()->getId();
+
+        $data_tbs   = EditTbsReturPembelian::select('supplier')
+        ->where('no_faktur_retur', $retur_pembelian->no_faktur_retur)
+        ->where('session_id', $session_id)
+        ->where('warung_id', Auth::user()->id_warung);
 
         if ($data_tbs->count() > 0) {
             $id_suplier = $data_tbs->first()->supplier;
@@ -416,6 +472,19 @@ class ReturPembelianController extends Controller
         $user_warung = Auth::user()->id_warung;
 
         $subtotal            = TbsReturPembelian::subtotalTbs($user_warung, $session_id);
+        $respons['subtotal'] = $subtotal;
+
+        return response()->json($respons);
+    }
+
+
+    public function getSubtotalEdit($id)
+    {
+        $retur_pembelian    = ReturPembelian::find($id);
+        $session_id  = session()->getId();
+        $user_warung = Auth::user()->id_warung;
+
+        $subtotal            = EditTbsReturPembelian::subtotalTbs($user_warung, $session_id, $retur_pembelian->no_faktur_retur);
         $respons['subtotal'] = $subtotal;
 
         return response()->json($respons);
