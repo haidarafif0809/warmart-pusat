@@ -46,10 +46,10 @@ class ReturPenjualan extends Model
         maka nomor nya kembali mulai dari 1, jika tidak maka nomor terakhir ditambah dengan 1
          */
         if ($bulan_akhir != $bulan_sekarang) {
-            $no_faktur = "1/RPJ/" . $data_bulan_terakhir . "/" . $tahun_terakhir;
+            $no_faktur = "1/RJ/" . $data_bulan_terakhir . "/" . $tahun_terakhir;
         } else {
             $nomor     = 1 + $ambil_nomor;
-            $no_faktur = $nomor . "/RPJ/" . $data_bulan_terakhir . "/" . $tahun_terakhir;
+            $no_faktur = $nomor . "/RJ/" . $data_bulan_terakhir . "/" . $tahun_terakhir;
         }
 
         return $no_faktur;

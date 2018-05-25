@@ -264,14 +264,14 @@
  
                     <form class="form-horizontal"  v-on:submit.prevent="saveFormReturJual()">  
                         <div class="modal-body"> 
-                            <h3 class="text-center"><b>{{formReturJualTbs.nama_produk}}</b></h3> 
+                            <h3 class="text-center"><b>{{inputTbsReturPenjualan.nama_produk}}</b></h3> 
  
                             <div class="form-group"> 
                                 <div class="col-md-6"> 
-                                    <input class="form-control" type="number" v-model="formReturJualTbs.jumlah_retur" placeholder="Isi Jumlah Retur" name="jumlah_retur" id="jumlah_retur" ref="jumlah_retur" autocomplete="off" step="0.01"> 
+                                    <input class="form-control" type="number" v-model="inputTbsReturPenjualan.jumlah_retur" placeholder="Isi Jumlah Retur" name="jumlah_retur" id="jumlah_retur" ref="jumlah_retur" autocomplete="off" step="0.01"> 
                                 </div> 
                                 <div class="col-md-6"> 
-                                    <selectize-component v-model="formReturJualTbs.satuan" :settings="placeholder_satuan" id="satuan" name="satuan" ref='satuan'>  
+                                    <selectize-component v-model="inputTbsReturPenjualan.satuan" :settings="placeholder_satuan" id="satuan" name="satuan" ref='satuan'>  
                                         <option v-for="satuans, index in satuan" v-bind:value="satuans.satuan" class="pull-left">{{ satuans.nama_satuan }}</option> 
                                     </selectize-component> 
                                 </div> 
@@ -432,6 +432,14 @@ export default {
               pelanggan : '',
               id_pelanggan: '',
               jenis_penjualan: 0,
+              jumlah_retur : '',
+              jumlah_jual : '',
+              nama_produk : '', 
+              id_produk : '', 
+              id_penjualan: '',
+              satuan : '', 
+              stok_produk: 0,
+              harga_produk:'',
             },
             inputReturPenjualan:{
                 subtotal: 0,
@@ -445,16 +453,6 @@ export default {
                 potong_hutang : 0,
                 pembayaran : 0,
                 keterangan: '',  
-            },
-            formReturJualTbs:{
-                jumlah_retur : '',
-                jumlah_jual : '',
-                nama_produk : '', 
-                id_produk : '', 
-                id_penjualan: '',
-                satuan : '', 
-                stok_produk: 0,
-                harga_produk:'' 
             },
             tambahKas: {
               kode_kas : '',
@@ -484,7 +482,7 @@ export default {
     app.$store.dispatch('LOAD_KAS_LIST');  
 	},
     computed : mapState ({    
-      pelanggan(){
+      pelanggan(){ 
         return this.$store.getters.pelangganTransaksi
       },
       kas(){
@@ -530,7 +528,7 @@ export default {
     },
     methods: {
        openSelectizePelanggan(){      
-            this.$refs.pelanggan.$el.selectize.setValue("");
+            this.$store.dispatch('LOAD_PELANGGAN_LIST');
             this.$refs.pelanggan.$el.selectize.focus();
           },
        openSelectizeKas(){      
@@ -586,10 +584,10 @@ export default {
                         text: "Silakan Pilih Pelanggan Telebih dahulu!",
                         });
               }else{
-                axios.get(app.url+'/cek-pelanggan-double/'+jenis_penjualan).then(function (resp) {
+                axios.get(app.url+'/cek-pelanggan-double').then(function (resp) {
                     if(resp.data.data_tbs > 0){
-                        console.log(resp.data.data_pelanggan.pelanggan_id)
-                            if(resp.data.data_pelanggan.pelanggan_id != pelanggan){
+                        console.log(resp.data.data_pelanggan.id_pelanggan)
+                            if(resp.data.data_pelanggan.id_pelanggan != pelanggan){
                                   app.$swal({
                                     text: "Transaksi tidak boleh dari satu Pelanggan !!",
                                   }); 
@@ -656,13 +654,13 @@ export default {
              var app = this;
                $("#modalInsertTbs").show();
                $("#modal_pilih_retur").hide();            
-                app.formReturJualTbs.nama_produk = titleCase(nama_barang);
-                app.formReturJualTbs.jumlah_retur = jumlah_produk;
-                app.formReturJualTbs.jumlah_jual = jumlah_jual;
-                app.formReturJualTbs.id_penjualan = id_penjualan;
-                app.formReturJualTbs.id_produk = id_produk;
-                app.formReturJualTbs.satuan = satuan;
-                app.formReturJualTbs.harga_produk = harga_produk;
+                app.inputTbsReturPenjualan.nama_produk = titleCase(nama_barang);
+                app.inputTbsReturPenjualan.jumlah_retur = jumlah_produk;
+                app.inputTbsReturPenjualan.jumlah_jual = jumlah_jual;
+                app.inputTbsReturPenjualan.id_penjualan = id_penjualan;
+                app.inputTbsReturPenjualan.id_produk = id_produk;
+                app.inputTbsReturPenjualan.satuan = satuan;
+                app.inputTbsReturPenjualan.harga_produk = harga_produk;
                 app.getSatuan(id_produk);
         },
         getSatuan(id_produk){ 
@@ -677,7 +675,7 @@ export default {
  
                         $.each(resp.data, function (i, item) { 
                             if (resp.data[i].id === resp.data[i].satuan_dasar) { 
-                                app.formReturJualTbs.satuan = resp.data[i].satuan; 
+                                app.inputTbsReturPenjualan.satuan = resp.data[i].satuan; 
                             } 
                         }); 
  
@@ -685,7 +683,7 @@ export default {
  
                         $.each(resp.data, function (i, item) { 
                             if (resp.data[i].id === parseInt(satuan_tbs)) { 
-                                app.formReturJualTbs.satuan = resp.data[i].satuan; 
+                                app.inputTbsReturPenjualan.satuan = resp.data[i].satuan; 
                             } 
                         }); 
  
@@ -698,8 +696,8 @@ export default {
             },
         saveFormReturJual() {
                 var app = this;
-                var newreturjual = app.formReturJualTbs;
-                  if (app.formReturJualTbs.jumlah_retur > app.formReturJualTbs.jumlah_jual){
+                var newreturjual = app.inputTbsReturPenjualan;
+                  if (app.inputTbsReturPenjualan.jumlah_retur > app.inputTbsReturPenjualan.jumlah_jual){
                         app.loading = false;
                         app.getResults();
                         $("#modalInsertTbs").hide();
@@ -714,13 +712,13 @@ export default {
                             app.getResults();
                             $("#modalInsertTbs").hide();
                             $("#modal_pilih_retur").hide(); 
-                            app.alertTbs("Produk "+app.formReturJualTbs.nama_produk+" Sudah Ada, Silakan Pilih Produk dari Faktur Lain! ");
+                            app.alertTbs("Produk "+app.inputTbsReturPenjualan.nama_produk+" Sudah Ada, Silakan Pilih Produk dari Faktur Lain! ");
                         }else{
                             var subtotal = parseFloat(app.inputReturPenjualan.subtotal) + parseFloat(resp.data.subtotal)
                             app.getResults();
                             app.inputReturPenjualan.subtotal = subtotal.toFixed(2)
                             app.inputReturPenjualan.total_akhir = subtotal.toFixed(2)
-                            app.alert("Berhasil Menambahkan Tbs Retur Penjualan"+ app.formReturJualTbs.nama_produk);
+                            app.alert("Berhasil Menambahkan Tbs Retur Penjualan"+ app.inputTbsReturPenjualan.nama_produk);
                             $("#modalInsertTbs").hide();
                             $("#modal_pilih_retur").hide(); 
                             app.loading = false;
@@ -991,6 +989,64 @@ export default {
       });
 
     },
+    selesaiRetur(){ 
+                this.$swal({ 
+                    text: "Anda Yakin Ingin Menyelesaikan Transaksi Ini ?", 
+                    buttons: { 
+                        cancel: true, 
+                        confirm: "OK"                    
+                    }, 
+ 
+                }).then((value) => { 
+                    if (!value) throw null; 
+                    this.prosesSelesaiRetur(value); 
+                }); 
+    }, 
+    prosesSelesaiRetur(value){ 
+                var app = this; 
+                var newRetur = app.inputReturPenjualan; 
+                app.loading = true; 
+                console.log(app.inputReturPenjualan.kas) 
+                if (app.inputReturPenjualan.kas == '') { 
+                    app.loading = false;     
+                    app.$swal("Silakan Pilih Kas Terlebih Dahulu").then((value) => { 
+                        app.openSelectizeKas(); 
+                    }); 
+                }else{ 
+                    app.closeModalPembayaran(); 
+                    axios.post(app.url,newRetur).then(function (resp) { 
+                        if (resp.data == 0) { 
+                            app.alertGagal("Anda Belum Memasukan Produk"); 
+                            app.loading = false; 
+                        } 
+                        else if(resp.data.respons == 1){ 
+                            app.alertGagal("Gagal : Stok " + resp.data.nama_produk + " Tidak Mencukupi Untuk di Jual, Sisa Produk = "+resp.data.stok_produk); 
+                            app.loading = false; 
+                        }else if(resp.data.respons == 2){ 
+                            app.alertGagal("Gagal : Terjadi Kesalahan , Silakan Coba Lagi!"); 
+                            app.loading = false; 
+                        }else{ 
+                            app.getResults(); 
+                            app.alert("Menyelesaikan Transaksi Retur Penjualan"); 
+                            app.inputReturPenjualan.supplier = '' 
+                            app.inputReturPenjualan.subtotal = 0 
+                            app.inputReturPenjualan.potongan_persen = 0 
+                            app.inputReturPenjualan.potongan_faktur = 0 
+                            app.inputReturPenjualan.total_akhir = 0 
+                            app.inputReturPenjualan.pembayaran = 0 
+                            app.inputTbsReturPenjualan.supplier = ''    
+                            // window.open('penjualan/cetak-kecil-penjualan/'+resp.data.respons_penjualan,'_blank'); 
+                            app.loading = false; 
+                        } 
+                    }) 
+                    .catch(function (resp) { 
+                        console.log(resp); 
+                        app.loading = false; 
+                        alert("Tidak Dapat Menyelesaikan Transaksi Retur Pembelian");         
+                        app.errors = resp.response.data.errors; 
+                    }); 
+                } 
+      }, 
       bayarReturPenjualan(){
           $("#modal_selesai").show(); 
           this.$refs.pembayaran.$el.focus()

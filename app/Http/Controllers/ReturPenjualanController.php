@@ -252,7 +252,7 @@ class ReturPenjualanController extends Controller
         if ($data_tbs->count() > 0) {
             return 0;
         } else {
-            $tbs_pembayaran_hutang = TbsReturPenjualan::create([
+            $tbs_retur_penjualan = TbsReturPenjualan::create([
                 'session_id'          => $session_id,
                 'no_faktur_penjualan' => $request->id_penjualan,
                 'id_produk'           => $request->id_produk,
@@ -263,6 +263,7 @@ class ReturPenjualanController extends Controller
                 'id_satuan_jual'           => $data_satuan[0], 
                 'id_satuan'        => $data_satuan[2],
                 'warung_id'           => Auth::user()->id_warung,
+                'id_pelanggan'      => $request->pelanggan,
             ]);
             $respons['subtotal'] = $subtotal;
             return response()->json($respons);
@@ -283,10 +284,10 @@ class ReturPenjualanController extends Controller
         return response()->json($respons);
     }
 
-        public function cekPelangganDouble($jenis_penjualan)
+        public function cekPelangganDouble()
     {
         $session_id       = session()->getId();
-        $data_pelanggan_tbs = TbsReturPenjualan::cekPelangganReturPenjualan($session_id,$jenis_penjualan);
+        $data_pelanggan_tbs = TbsReturPenjualan::cekPelangganReturPenjualan($session_id);
         return response()->json([
             "data_pelanggan" => $data_pelanggan_tbs->first(),
             "data_tbs"      => $data_pelanggan_tbs->count(),
@@ -427,7 +428,101 @@ class ReturPenjualanController extends Controller
      */
     public function store(Request $request)
     {
-        //
+      if (Auth::user()->id_warung == '') { 
+            Auth::logout(); 
+            return response()->view('error.403'); 
+        } else { 
+        // START TRANSAKSI 
+            DB::beginTransaction(); 
+            $warung_id  = Auth::user()->id_warung; 
+            $session_id = session()->getId(); 
+            $no_faktur  = ReturPenjualan::no_faktur($warung_id); 
+ 
+            $tbs_retur = TbsReturPenjualan::where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung); 
+ 
+            if ($tbs_retur->count() == 0) { 
+ 
+                return $tbs_retur->count(); 
+ 
+            } else { 
+            //INSERT RETUR PEMBELIAN 
+                $total = $request->total_akhir - $request->potong_hutang; 
+                $retur = ReturPenjualan::create([ 
+                    'no_faktur_retur'   => $no_faktur, 
+                    'suplier_id'        => $tbs_retur->first()->supplier, 
+                    'total'             => $total, 
+                    'total_bayar'       => $request->total_akhir, 
+                    'potongan'          => $request->potongan_faktur, 
+                    'potong_hutang'     => $request->potong_hutang, 
+                    'warung_id'         => $warung_id, 
+                    ]); 
+ 
+                foreach ($tbs_retur->get() as $data_tbs) { 
+ 
+                    $stok_produk = Hpp::stok_produk($data_tbs->id_produk); 
+                    $sisa        = $stok_produk - $data_tbs->jumlah_retur; 
+ 
+                    if ($data_tbs->satuan_id != $data_tbs->satuan_dasar) { 
+ 
+                        $jumlah_konversi = SatuanKonversi::select('jumlah_konversi')->where('warung_id', Auth::user()->id_warung) 
+                        ->where('id_produk', $data_tbs->id_produk) 
+                        ->where('id_satuan', $data_tbs->satuan_id)->first()->jumlah_konversi; 
+ 
+                        $jumlah_dasar = SatuanKonversi::select('jumlah_konversi')->where('id_satuan', $data_tbs->satuan_dasar); 
+                        if ($jumlah_dasar->count() > 0) { 
+                            $jumlah_konversi_dasar = intval($data_tbs->jumlah_retur) * (intval($jumlah_dasar->first()->jumlah_konversi) * intval($jumlah_konversi)); 
+                        } else { 
+                            $jumlah_konversi_dasar = intval($data_tbs->jumlah_retur) * intval($jumlah_konversi); 
+                        } 
+ 
+                        $sisa = $stok_produk - $jumlah_konversi_dasar; 
+                    } 
+ 
+                    if ($sisa < 0) { 
+                        //DI BATALKAN PROSES NYA 
+                        $respons['respons']     = 1; 
+                        $respons['nama_produk'] = title_case($data_tbs->produk->nama_barang); 
+                        $respons['stok_produk'] = $stok_produk; 
+                        DB::rollBack(); 
+                        return response()->json($respons); 
+                    }else{ 
+                        // INSERT DETAIL 
+                        $detail = DetailReturPenjualan::create([ 
+                            'no_faktur_retur'   => $no_faktur, 
+                            'id_produk'         => $data_tbs->id_produk, 
+                            'jumlah_produk'      => $data_tbs->jumlah_retur, 
+                            'satuan_id'         => $data_tbs->satuan_id, 
+                            'satuan_dasar'      => $data_tbs->satuan_dasar, 
+                            'harga_produk'      => $data_tbs->harga_produk, 
+                            'subtotal'          => $data_tbs->subtotal, 
+                            'potongan'          => $data_tbs->potongan, 
+                            'tax'               => $data_tbs->tax, 
+                            'tax_include'       => $data_tbs->tax_include, 
+                            'ppn'               => $data_tbs->ppn, 
+                            'supplier'          => $data_tbs->supplier, 
+                            'warung_id'         => $data_tbs->warung_id, 
+                            'created_at'        => $retur->created_at, 
+                            ]); 
+                    } 
+                } 
+ 
+                TransaksiKas::create([ 
+                    'no_faktur'       => $no_faktur, 
+                    'jenis_transaksi' => 'Retur Pembelian', 
+                    'jumlah_masuk'    => $request->total_akhir, 
+                    'kas'             => $request->kas, 
+                    'warung_id'       => $warung_id 
+                    ]); 
+                // HAPUS TBS 
+                $tbs_retur->delete(); 
+ 
+                DB::commit(); 
+ 
+                $respons['respons_retur'] = $retur->id; 
+                return response()->json($respons); 
+            } 
+        } 
+ 
     }
 
     /**
