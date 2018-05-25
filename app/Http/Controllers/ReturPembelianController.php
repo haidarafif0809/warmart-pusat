@@ -269,6 +269,53 @@ class ReturPembelianController extends Controller
         return response()->json($respons);
     }
 
+    // VIEW DETAIL
+    public function viewDetail($id)
+    {
+        $warung_id = Auth::user()->id_warung;
+        $retur_pembelian = ReturPembelian::find($id);
+
+        $detail_returs = DetailReturPembelian::dataDetailRetur($retur_pembelian->no_faktur_retur)->paginate(10);
+
+        $array = [];
+        foreach ($detail_returs as $detail_retur) {
+            array_push($array, [
+                'detail_retur'=> $detail_retur,
+                ]);
+        }
+
+        $url     = '/retur-pembelian/view-tbs';
+        $respons = $this->dataPagination($detail_returs, $array, $retur_pembelian->no_faktur_retur, $url);
+
+        return response()->json($respons);
+    }
+
+    // PENCARIAN DETAIL
+    public function pencarianDetail(Request $request, $id)
+    {
+        $warung_id = Auth::user()->id_warung;
+        $search = $request->search;
+        $retur_pembelian = ReturPembelian::find($id);
+
+        $detail_returs = DetailReturPembelian::dataDetailRetur($retur_pembelian->no_faktur_retur)
+        ->where(function ($query) use ($search) {
+            $query->orwhere('barangs.nama_barang', 'LIKE', '%' . $search . '%')
+            ->orwhere('satuans.nama_satuan', 'LIKE', '%' . $search . '%');
+        })->paginate(10);
+
+        $array = [];
+        foreach ($detail_returs as $detail_retur) {
+            array_push($array, [
+                'detail_retur'=> $detail_retur,
+                ]);
+        }
+
+        $url     = '/retur-pembelian/view-tbs';
+        $respons = $this->dataPagination($detail_returs, $array, $retur_pembelian->no_faktur_retur, $url);
+
+        return response()->json($respons);
+    }
+
     // VIEW TBS
     public function viewTbs()
     {

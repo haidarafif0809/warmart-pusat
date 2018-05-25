@@ -1101,6 +1101,8 @@ Route::get('/retur-pembelian/pencarian', 'ReturPembelianController@pencarian')->
 Route::get('/retur-pembelian/data-faktur-hutang', 'ReturPembelianController@fakturHutang')->middleware('auth'); 
 Route::post('/retur-pembelian/nilai-potong-hutang', 'ReturPembelianController@potongHutang')->middleware('auth'); 
 Route::get('/retur-pembelian/cetak-retur-pembelian/{id}', 'ReturPembelianController@cetakRetur')->middleware('auth');
+Route::get('/retur-pembelian/view-detail/{id}', 'ReturPembelianController@viewDetail')->middleware('auth');
+Route::get('/retur-pembelian/pencarian-detail/{id}', 'ReturPembelianController@pencarianDetail')->middleware('auth');
 
 Route::get('/retur-pembelian/view-tbs', 'ReturPembelianController@viewTbs')->middleware('auth');
 Route::get('/retur-pembelian/pencarian-tbs', 'ReturPembelianController@pencarianTbs')->middleware('auth');
