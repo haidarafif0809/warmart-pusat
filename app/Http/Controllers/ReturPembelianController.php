@@ -14,6 +14,7 @@ use App\ReturPembelian;
 use App\TransaksiKas;
 use App\TransaksiHutang;
 use App\SatuanKonversi;
+use App\SettingAplikasi;
 use Auth;
 
 class ReturPembelianController extends Controller
@@ -186,6 +187,37 @@ class ReturPembelianController extends Controller
 
     }
 
+
+    public function kekata($x)
+    {
+        $x     = abs($x);
+        $angka = array("", "satu", "dua", "tiga", "empat", "lima",
+            "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas");
+        $temp = "";
+        if ($x < 12) {
+            $temp = " " . $angka[$x];
+        } else if ($x < 20) {
+            $temp = $this->kekata($x - 10) . " belas";
+        } else if ($x < 100) {
+            $temp = $this->kekata($x / 10) . " puluh" . $this->kekata($x % 10);
+        } else if ($x < 200) {
+            $temp = " seratus" . $this->kekata($x - 100);
+        } else if ($x < 1000) {
+            $temp = $this->kekata($x / 100) . " ratus" . $this->kekata($x % 100);
+        } else if ($x < 2000) {
+            $temp = " seribu" . $this->kekata($x - 1000);
+        } else if ($x < 1000000) {
+            $temp = $this->kekata($x / 1000) . " ribu" . $this->kekata($x % 1000);
+        } else if ($x < 1000000000) {
+            $temp = $this->kekata($x / 1000000) . " juta" . $this->kekata($x % 1000000);
+        } else if ($x < 1000000000000) {
+            $temp = $this->kekata($x / 1000000000) . " milyar" . $this->kekata(fmod($x, 1000000000));
+        } else if ($x < 1000000000000000) {
+            $temp = $this->kekata($x / 1000000000000) . " trilyun" . $this->kekata(fmod($x, 1000000000000));
+        }
+        return $temp;
+    }
+
     // VIEW RETUR
     public function view()
     {
@@ -234,6 +266,53 @@ class ReturPembelianController extends Controller
         $no_faktur_retur = "";
         $url     = '/retur-pembelian/view';
         $respons = $this->dataPagination($returPembelians, $array, $no_faktur_retur, $url);
+        return response()->json($respons);
+    }
+
+    // VIEW DETAIL
+    public function viewDetail($id)
+    {
+        $warung_id = Auth::user()->id_warung;
+        $retur_pembelian = ReturPembelian::find($id);
+
+        $detail_returs = DetailReturPembelian::dataDetailRetur($retur_pembelian->no_faktur_retur)->paginate(10);
+
+        $array = [];
+        foreach ($detail_returs as $detail_retur) {
+            array_push($array, [
+                'detail_retur'=> $detail_retur,
+                ]);
+        }
+
+        $url     = '/retur-pembelian/view-tbs';
+        $respons = $this->dataPagination($detail_returs, $array, $retur_pembelian->no_faktur_retur, $url);
+
+        return response()->json($respons);
+    }
+
+    // PENCARIAN DETAIL
+    public function pencarianDetail(Request $request, $id)
+    {
+        $warung_id = Auth::user()->id_warung;
+        $search = $request->search;
+        $retur_pembelian = ReturPembelian::find($id);
+
+        $detail_returs = DetailReturPembelian::dataDetailRetur($retur_pembelian->no_faktur_retur)
+        ->where(function ($query) use ($search) {
+            $query->orwhere('barangs.nama_barang', 'LIKE', '%' . $search . '%')
+            ->orwhere('satuans.nama_satuan', 'LIKE', '%' . $search . '%');
+        })->paginate(10);
+
+        $array = [];
+        foreach ($detail_returs as $detail_retur) {
+            array_push($array, [
+                'detail_retur'=> $detail_retur,
+                ]);
+        }
+
+        $url     = '/retur-pembelian/view-tbs';
+        $respons = $this->dataPagination($detail_returs, $array, $retur_pembelian->no_faktur_retur, $url);
+
         return response()->json($respons);
     }
 
@@ -771,6 +850,24 @@ class ReturPembelianController extends Controller
             $respons['respons_retur'] = $retur->id;
             return response()->json($respons);
         }
+
+    }
+
+    public function cetakRetur($id)
+    {
+        //SETTING APLIKASI
+        $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
+
+        $retur_pembelian = ReturPembelian::QueryCetak($id)->first();
+
+        $detail_returs = DetailReturPembelian::dataDetailRetur($retur_pembelian->no_faktur_retur)->get();
+        $terbilang  = $this->kekata($retur_pembelian->total);
+        $subtotal   = 0;
+        foreach ($detail_returs as $detail_retur) {
+            $subtotal += $detail_retur->subtotal;
+        }
+
+        return view('retur_pembelian.cetak_besar', ['retur_pembelian' => $retur_pembelian, 'detail_retur' => $detail_returs, 'subtotal' => $subtotal, 'terbilang' => $terbilang, 'setting_aplikasi' => $setting_aplikasi])->with(compact('html'));
 
     }
 

@@ -75,13 +75,13 @@
 									</td>
 
 									<td style="text-align:right;">
-										<router-link :to="{name: 'detailPembelianOrder', params: {id: returPembelian.id}}" class="btn btn-xs btn-info" v-bind:id="'detail-' + returPembelian.no_faktur_retur" >
+										<router-link :to="{name: 'detailReturPembelian', params: {id: returPembelian.id}}" class="btn btn-xs btn-info" v-bind:id="'detail-' + returPembelian.no_faktur_retur" >
 											Detail
 										</router-link> 
 									</td>
 
 									<td style="text-align:right;">
-										<a target="blank" class="btn btn-primary btn-xs" v-bind:href="'retur-pembelian/cetak-besar-retur/'+returPembelian.id">Cetak Ulang</a>
+										<a target="blank" class="btn btn-primary btn-xs" v-bind:href="'retur-pembelian/cetak-retur-pembelian/'+returPembelian.id">Cetak Ulang</a>
 									</td>
 
 									<td style="text-align:right;">

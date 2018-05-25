@@ -224,6 +224,7 @@ import ColorThemeCreate from './components/color_theme/ColorThemeCreate.vue';
 // RETUR PEMBELIAN
 import ReturPembelianIndex from './components/retur_pembelian/ReturPembelianIndex.vue';
 import ReturPembelianCreate from './components/retur_pembelian/ReturPembelianCreate.vue';
+import ReturPembelianDetail from './components/retur_pembelian/ReturPembelianDetail.vue';
 
 
 const routes = [{
@@ -912,6 +913,10 @@ const routes = [{
         path: '/create-retur-pembelian',
         component: ReturPembelianCreate,
         name: 'createReturPembelian'
+    }, {
+        path: '/detail-retur-pembelian/:id',
+        component: ReturPembelianDetail,
+        name: 'detailReturPembelian'
     }
 
 
