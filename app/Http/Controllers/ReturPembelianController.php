@@ -336,6 +336,28 @@ class ReturPembelianController extends Controller
         return response()->json($respons);
     }
 
+
+    // VIEW EDIT TBS
+    public function viewEditTbs($id)
+    {   
+        $retur_pembelian    = ReturPembelian::find($id);
+        $no_faktur_retur    = $retur_pembelian->no_faktur_retur;
+        $session_id         = session()->getId();
+        $user_warung        = Auth::user()->id_warung;
+
+        $tbs_retur = EditTbsReturPembelian::dataTransaksiEditTbsReturPembelian($session_id, $no_faktur_retur, $user_warung)
+        ->orderBy('edit_tbs_retur_pembelians.id_edit_tbs_retur_pembelian', 'desc')->paginate(10);
+        
+        $db = "App\EditTbsReturPembelian";
+        $array = $this->foreachTbs($tbs_retur, $session_id, $db);
+
+        $url     = '/retur-pembelian/view-edit-tbs';
+        $respons = $this->dataPagination($tbs_retur, $array, $no_faktur_retur, $url);
+
+        return response()->json($respons);
+    }
+
+
     // PENCARIAN TBS
     public function pencarianTbs(Request $request)
     {
@@ -356,6 +378,33 @@ class ReturPembelianController extends Controller
 
         $url     = '/retur-pembelian/view-tbs';
         $respons = $this->dataPagination($tbs_retur, $array, $no_faktur, $url);
+
+        return response()->json($respons);
+    }
+
+
+    // PENCARIAN EDIT TBS
+    public function pencarianEditTbs(Request $request, $id)
+    {
+
+        $retur_pembelian    = ReturPembelian::find($id);
+        $no_faktur_retur    = $retur_pembelian->no_faktur_retur;
+        $session_id         = session()->getId();
+        $user_warung        = Auth::user()->id_warung;
+        $search = $request->search;
+
+        $tbs_retur = EditTbsReturPembelian::dataTransaksiEditTbsReturPembelian($session_id, $no_faktur_retur, $user_warung)
+        ->where(function ($query) use ($search) {
+            $query->orwhere('barangs.nama_barang', 'LIKE', '%' . $search . '%')
+            ->orwhere('barangs.kode_barang', 'LIKE', '%' . $search . '%')
+            ->orwhere('satuans.nama_satuan', 'LIKE', '%' . $search . '%');
+        })->orderBy('edit_tbs_retur_pembelians.id_edit_tbs_retur_pembelian', 'desc')->paginate(10);
+
+        $db = "App\EditTbsReturPembelian";
+        $array = $this->foreachTbs($tbs_retur, $session_id, $db);
+
+        $url     = '/retur-pembelian/view-edit-tbs';
+        $respons = $this->dataPagination($tbs_retur, $array, $no_faktur_retur, $url);
 
         return response()->json($respons);
     }
