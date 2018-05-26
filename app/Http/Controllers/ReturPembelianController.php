@@ -98,29 +98,44 @@ class ReturPembelianController extends Controller
     public function fakturHutangEdit($id){
         $retur_pembelian = ReturPembelian::find($id);
         $session_id = session()->getId();
+        $no_faktur_retur = $retur_pembelian->no_faktur_retur;
 
         $data_tbs   = EditTbsReturPembelian::select('supplier')
-        ->where('no_faktur_retur', $retur_pembelian->no_faktur_retur)
+        ->where('no_faktur_retur', $no_faktur_retur)
         ->where('session_id', $session_id)
         ->where('warung_id', Auth::user()->id_warung);
 
         if ($data_tbs->count() > 0) {
             $id_suplier = $data_tbs->first()->supplier;
-            $data_pembelians = TransaksiHutang::getDataPembelianHutang($id_suplier)->having('sisa_hutang', '>', 0)->get();
+            $data_pembelians = TransaksiHutang::getDataPembelianHutang($id_suplier)->get();
         }else{
             $id_suplier = 0;
-            $data_pembelians = TransaksiHutang::getDataPembelianHutang($id_suplier)->having('sisa_hutang', '>', 0)->get();
+            $data_pembelians = TransaksiHutang::getDataPembelianHutang($id_suplier)->get();
         }
 
         $array     = [];
         foreach ($data_pembelians as $data_pembelian) {
+            $data_hutangs = TransaksiHutang::hutangTerbayar($no_faktur_retur, $data_pembelian->id_transaksi)->get();
+
+            foreach ($data_hutangs as $data_hutang) {                
+                $hutang = $data_hutang->jumlah_keluar + $data_pembelian->sisa_hutang;
+            }
+
             array_push($array, [
                 'no_faktur' => $data_pembelian->no_faktur,
-                'hutang'    => number_format($data_pembelian->sisa_hutang, 0, ',', '.'),
-                ]);
+                'hutang'    => $hutang,
+                ]); 
         }
 
-        return response()->json($array);
+        $array_faktur = [];
+        $data_faktur = Pembelian::getFakturHutang($no_faktur_retur)->get();
+        foreach ($data_faktur as $data) {
+            array_push($array_faktur, $data->no_faktur);
+        }
+
+        $respons['faktur_hutang']   = $array;
+        $respons['faktur_default']  = $array_faktur;
+        return response()->json($respons);
     }
 
     public function potongHutang(Request $request){
@@ -130,8 +145,13 @@ class ReturPembelianController extends Controller
         }else{
             $total = 0;
             foreach ($request['faktur_hutang'] as $faktur_hutang) {
-                $data_pembelian = TransaksiHutang::getDataPembelianHutangFaktur($faktur_hutang)->having('sisa_hutang', '>', 0)->first();
-                $total = $total + $data_pembelian->sisa_hutang;
+                $data_pembelian = TransaksiHutang::getDataPembelianHutangFaktur($faktur_hutang)->first();
+                $data_hutangs = Pembelian::select(DB::raw('IFNULL(SUM(transaksi_hutangs.jumlah_keluar),0) AS jumlah_keluar'))
+                ->leftJoin('transaksi_hutangs', 'transaksi_hutangs.id_transaksi', '=', 'pembelians.id')
+                ->where('pembelians.no_faktur', $faktur_hutang)->first();
+
+                $hutang = $data_hutangs->jumlah_keluar + $data_pembelian->sisa_hutang;
+                $total = $total + $hutang;
             }
 
         }

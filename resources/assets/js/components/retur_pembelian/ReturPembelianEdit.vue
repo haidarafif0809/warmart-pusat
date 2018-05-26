@@ -516,6 +516,7 @@
                 loading: true,
                 seen: false,
                 disable: false,
+                potongan: 0,
                 separator: {
                     decimal: ',',
                     thousands: '.',
@@ -650,7 +651,10 @@
 
                 axios.get(app.url+'/data-faktur-hutang/'+app.id_retur)
                 .then( (resp) => {
-                    app.fakturHutangs = resp.data
+                    app.fakturHutangs = resp.data.faktur_hutang
+                    app.returPembelian.faktur_hutang = resp.data.faktur_default
+                    console.log(`${resp.data.faktur_default}`)
+                    console.log(resp.data.faktur_default)
                 })
                 .catch( (err) => {
                     console.log(err);
@@ -809,6 +813,7 @@
                     console.log(resp.data)
                     app.returPembelian.kas = resp.data.total
                     app.returPembelian.supplier = resp.data.suplier_id
+                    app.potongan = resp.data.potongan
                     app.returPembelian.total_akhir = resp.data.total_bayar
                     app.returPembelian.potong_hutang = resp.data.potong_hutang
                 })
@@ -822,7 +827,8 @@
                 axios.get(app.url+'/subtotal-edit-tbs/'+app.id_retur)
                 .then(function (resp) {
                     app.returPembelian.subtotal += resp.data.subtotal;
-                    // app.returPembelian.total_akhir += resp.data.subtotal;
+                    app.returPembelian.total_akhir += resp.data.subtotal;
+                    app.returPembelian.potongan_faktur = app.potongan;
                 })
                 .catch(function (resp) {
                     ;
