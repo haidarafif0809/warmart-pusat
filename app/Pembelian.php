@@ -142,4 +142,12 @@ class Pembelian extends Model
         ->where('detail_pembelians.warung_id', $warung_id);
         return $query;
     }
+
+    public function scopeGetFakturHutang($query, $no_faktur_retur) {
+        $query->select('pembelians.no_faktur')
+        ->leftJoin('transaksi_hutangs', 'transaksi_hutangs.id_transaksi', '=', 'pembelians.id')
+        ->where('transaksi_hutangs.no_faktur', $no_faktur_retur);
+
+        return $query;
+    }
 }

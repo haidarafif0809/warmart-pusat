@@ -9,6 +9,7 @@ use App\Barang;
 use App\Suplier;
 use App\Pembelian;
 use App\DetailReturPembelian;
+use App\EditTbsReturPembelian;
 use App\TbsReturPembelian;
 use App\ReturPembelian;
 use App\TransaksiKas;
@@ -20,10 +21,38 @@ use Auth;
 class ReturPembelianController extends Controller
 {
 
+    public function dataRetur($id){
+        return $retur_pembelian = ReturPembelian::find($id);
+    }
+
     public function supplier(){
         $session_id = session()->getId();
 
         $data_tbs   = TbsReturPembelian::select('supplier')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
+
+        if ($data_tbs->count() > 0) {
+            $suplier = Suplier::select('id', 'nama_suplier')->where('id', $data_tbs->first()->supplier)->get();
+        }else{
+            $suplier = Suplier::select('id', 'nama_suplier')->where('warung_id', Auth::user()->id_warung)->get();
+        }
+
+        $array     = [];
+        foreach ($suplier as $supliers) {
+            array_push($array, [
+                'id'             => $supliers->id,
+                'nama_suplier' => $supliers->nama_suplier]);
+        }
+
+        return response()->json($array);
+
+    }
+
+    public function supplierEdit($id){
+        $session_id = session()->getId();
+        $retur_pembelian = ReturPembelian::find($id);
+        $data_tbs   = EditTbsReturPembelian::select('supplier')
+        ->where('no_faktur_retur', $retur_pembelian->no_faktur_retur)
+        ->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
 
         if ($data_tbs->count() > 0) {
             $suplier = Suplier::select('id', 'nama_suplier')->where('id', $data_tbs->first()->supplier)->get();
@@ -66,6 +95,49 @@ class ReturPembelianController extends Controller
         return response()->json($array);
     }
 
+    public function fakturHutangEdit($id){
+        $retur_pembelian = ReturPembelian::find($id);
+        $session_id = session()->getId();
+        $no_faktur_retur = $retur_pembelian->no_faktur_retur;
+
+        $data_tbs   = EditTbsReturPembelian::select('supplier')
+        ->where('no_faktur_retur', $no_faktur_retur)
+        ->where('session_id', $session_id)
+        ->where('warung_id', Auth::user()->id_warung);
+
+        if ($data_tbs->count() > 0) {
+            $id_suplier = $data_tbs->first()->supplier;
+            $data_pembelians = TransaksiHutang::getDataPembelianHutang($id_suplier)->get();
+        }else{
+            $id_suplier = 0;
+            $data_pembelians = TransaksiHutang::getDataPembelianHutang($id_suplier)->get();
+        }
+
+        $array     = [];
+        foreach ($data_pembelians as $data_pembelian) {
+            $data_hutangs = TransaksiHutang::hutangTerbayar($no_faktur_retur, $data_pembelian->id_transaksi)->get();
+
+            foreach ($data_hutangs as $data_hutang) {                
+                $hutang = $data_hutang->jumlah_keluar + $data_pembelian->sisa_hutang;
+            }
+
+            array_push($array, [
+                'no_faktur' => $data_pembelian->no_faktur,
+                'hutang'    => $hutang,
+                ]); 
+        }
+
+        $array_faktur = [];
+        $data_faktur = Pembelian::getFakturHutang($no_faktur_retur)->get();
+        foreach ($data_faktur as $data) {
+            array_push($array_faktur, $data->no_faktur);
+        }
+
+        $respons['faktur_hutang']   = $array;
+        $respons['faktur_default']  = $array_faktur;
+        return response()->json($respons);
+    }
+
     public function potongHutang(Request $request){
 
         if ($request['faktur_hutang'] == "") {
@@ -73,8 +145,13 @@ class ReturPembelianController extends Controller
         }else{
             $total = 0;
             foreach ($request['faktur_hutang'] as $faktur_hutang) {
-                $data_pembelian = TransaksiHutang::getDataPembelianHutangFaktur($faktur_hutang)->having('sisa_hutang', '>', 0)->first();
-                $total = $total + $data_pembelian->sisa_hutang;
+                $data_pembelian = TransaksiHutang::getDataPembelianHutangFaktur($faktur_hutang)->first();
+                $data_hutangs = Pembelian::select(DB::raw('IFNULL(SUM(transaksi_hutangs.jumlah_keluar),0) AS jumlah_keluar'))
+                ->leftJoin('transaksi_hutangs', 'transaksi_hutangs.id_transaksi', '=', 'pembelians.id')
+                ->where('pembelians.no_faktur', $faktur_hutang)->first();
+
+                $hutang = $data_hutangs->jumlah_keluar + $data_pembelian->sisa_hutang;
+                $total = $total + $hutang;
             }
 
         }
@@ -269,6 +346,53 @@ class ReturPembelianController extends Controller
         return response()->json($respons);
     }
 
+    // VIEW DETAIL
+    public function viewDetail($id)
+    {
+        $warung_id = Auth::user()->id_warung;
+        $retur_pembelian = ReturPembelian::find($id);
+
+        $detail_returs = DetailReturPembelian::dataDetailRetur($retur_pembelian->no_faktur_retur)->paginate(10);
+
+        $array = [];
+        foreach ($detail_returs as $detail_retur) {
+            array_push($array, [
+                'detail_retur'=> $detail_retur,
+                ]);
+        }
+
+        $url     = '/retur-pembelian/view-tbs';
+        $respons = $this->dataPagination($detail_returs, $array, $retur_pembelian->no_faktur_retur, $url);
+
+        return response()->json($respons);
+    }
+
+    // PENCARIAN DETAIL
+    public function pencarianDetail(Request $request, $id)
+    {
+        $warung_id = Auth::user()->id_warung;
+        $search = $request->search;
+        $retur_pembelian = ReturPembelian::find($id);
+
+        $detail_returs = DetailReturPembelian::dataDetailRetur($retur_pembelian->no_faktur_retur)
+        ->where(function ($query) use ($search) {
+            $query->orwhere('barangs.nama_barang', 'LIKE', '%' . $search . '%')
+            ->orwhere('satuans.nama_satuan', 'LIKE', '%' . $search . '%');
+        })->paginate(10);
+
+        $array = [];
+        foreach ($detail_returs as $detail_retur) {
+            array_push($array, [
+                'detail_retur'=> $detail_retur,
+                ]);
+        }
+
+        $url     = '/retur-pembelian/view-tbs';
+        $respons = $this->dataPagination($detail_returs, $array, $retur_pembelian->no_faktur_retur, $url);
+
+        return response()->json($respons);
+    }
+
     // VIEW TBS
     public function viewTbs()
     {
@@ -287,6 +411,28 @@ class ReturPembelianController extends Controller
 
         return response()->json($respons);
     }
+
+
+    // VIEW EDIT TBS
+    public function viewEditTbs($id)
+    {   
+        $retur_pembelian    = ReturPembelian::find($id);
+        $no_faktur_retur    = $retur_pembelian->no_faktur_retur;
+        $session_id         = session()->getId();
+        $user_warung        = Auth::user()->id_warung;
+
+        $tbs_retur = EditTbsReturPembelian::dataTransaksiEditTbsReturPembelian($session_id, $no_faktur_retur, $user_warung)
+        ->orderBy('edit_tbs_retur_pembelians.id_edit_tbs_retur_pembelian', 'desc')->paginate(10);
+        
+        $db = "App\EditTbsReturPembelian";
+        $array = $this->foreachTbs($tbs_retur, $session_id, $db);
+
+        $url     = '/retur-pembelian/view-edit-tbs';
+        $respons = $this->dataPagination($tbs_retur, $array, $no_faktur_retur, $url);
+
+        return response()->json($respons);
+    }
+
 
     // PENCARIAN TBS
     public function pencarianTbs(Request $request)
@@ -313,12 +459,52 @@ class ReturPembelianController extends Controller
     }
 
 
+    // PENCARIAN EDIT TBS
+    public function pencarianEditTbs(Request $request, $id)
+    {
+
+        $retur_pembelian    = ReturPembelian::find($id);
+        $no_faktur_retur    = $retur_pembelian->no_faktur_retur;
+        $session_id         = session()->getId();
+        $user_warung        = Auth::user()->id_warung;
+        $search = $request->search;
+
+        $tbs_retur = EditTbsReturPembelian::dataTransaksiEditTbsReturPembelian($session_id, $no_faktur_retur, $user_warung)
+        ->where(function ($query) use ($search) {
+            $query->orwhere('barangs.nama_barang', 'LIKE', '%' . $search . '%')
+            ->orwhere('barangs.kode_barang', 'LIKE', '%' . $search . '%')
+            ->orwhere('satuans.nama_satuan', 'LIKE', '%' . $search . '%');
+        })->orderBy('edit_tbs_retur_pembelians.id_edit_tbs_retur_pembelian', 'desc')->paginate(10);
+
+        $db = "App\EditTbsReturPembelian";
+        $array = $this->foreachTbs($tbs_retur, $session_id, $db);
+
+        $url     = '/retur-pembelian/view-edit-tbs';
+        $respons = $this->dataPagination($tbs_retur, $array, $no_faktur_retur, $url);
+
+        return response()->json($respons);
+    }
+
+
     public function getSubtotal()
     {
         $session_id  = session()->getId();
         $user_warung = Auth::user()->id_warung;
 
         $subtotal            = TbsReturPembelian::subtotalTbs($user_warung, $session_id);
+        $respons['subtotal'] = $subtotal;
+
+        return response()->json($respons);
+    }
+
+
+    public function getSubtotalEdit($id)
+    {
+        $retur_pembelian    = ReturPembelian::find($id);
+        $session_id  = session()->getId();
+        $user_warung = Auth::user()->id_warung;
+
+        $subtotal            = EditTbsReturPembelian::subtotalTbs($user_warung, $session_id, $retur_pembelian->no_faktur_retur);
         $respons['subtotal'] = $subtotal;
 
         return response()->json($respons);
@@ -822,6 +1008,35 @@ class ReturPembelianController extends Controller
 
         return view('retur_pembelian.cetak_besar', ['retur_pembelian' => $retur_pembelian, 'detail_retur' => $detail_returs, 'subtotal' => $subtotal, 'terbilang' => $terbilang, 'setting_aplikasi' => $setting_aplikasi])->with(compact('html'));
 
+    }
+
+    public function prosesEditRetur($id) {        
+        $session_id                 = session()->getId();
+        $retur_pembelian            = ReturPembelian::find($id);
+        $detail_retur_pembelians    = DetailReturPembelian::where('no_faktur_retur', $retur_pembelian->no_faktur_retur)->where('warung_id', Auth::user()->id_warung);
+
+        $hapus_semua_edit_tbs_retur_pembelian = EditTbsReturPembelian::where('no_faktur_retur', $retur_pembelian->no_faktur_retur)->where('warung_id', Auth::user()->id_warung)
+        ->delete();
+
+        foreach ($detail_retur_pembelians->get() as $data_tbs) {
+            EditTbsReturPembelian::create([
+                'no_faktur_retur'   => $data_tbs->no_faktur_retur,
+                'session_id'        => $session_id,
+                'id_produk'         => $data_tbs->id_produk,
+                'jumlah_retur'      => $data_tbs->jumlah_produk,
+                'satuan_id'         => $data_tbs->satuan_id,
+                'satuan_dasar'      => $data_tbs->satuan_dasar,
+                'harga_produk'      => $data_tbs->harga_produk,
+                'subtotal'          => $data_tbs->subtotal,
+                'potongan'          => $data_tbs->potongan,
+                'tax'               => $data_tbs->tax,
+                'tax_include'       => $data_tbs->tax_include,
+                'ppn'               => $data_tbs->ppn,
+                'supplier'          => $data_tbs->supplier,
+                'warung_id'         => $data_tbs->warung_id,
+                ]);
+        }
+        return response(200);
     }
 
     /**
