@@ -4,14 +4,14 @@
             <ul class="breadcrumb">
                 <li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li>
                 <li><router-link :to="{name: 'indexSettingPengiriman', params: {tab: 'bankTransfer'}}">Setting Pengiriman</router-link></li>
-                <li class="active">Tambah Bank Transfer</li>
+                <li class="active">Edit Bank Transfer</li>
             </ul>
             <div class="card">
                 <div class="card-header card-header-icon" data-background-color="purple">
                     <i class="material-icons">settings_applications</i>
                 </div>
                 <div class="card-content">
-                    <h4 class="card-title">Tambah Bank Transfer</h4>
+                    <h4 class="card-title">Edit Bank Transfer</h4>
                     <form v-on:submit.prevent="saveForm()" class="form-horizontal"> 
                     	<div class="row">
 							<div class="col-md-6">
