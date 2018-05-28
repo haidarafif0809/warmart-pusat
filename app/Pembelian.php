@@ -70,7 +70,7 @@ class Pembelian extends Model
 
     public function scopeQueryCetak($query, $id)
     {
-        $query->select('w.name AS nama_warung', 'w.alamat AS alamat_warung', 's.nama_suplier AS suplier', 'u.name AS kasir', 'pembelians.potongan AS potongan', 'pembelians.total AS total', 'pembelians.tunai AS tunai', 'pembelians.kembalian AS kembalian', DB::raw('DATE_FORMAT(pembelians.created_at, "%d/%m/%Y %H:%i:%s") as waktu_beli'), 'w.no_telpon AS no_telp_warung', 'pembelians.id AS id', 's.alamat AS alamat_suplier', 'pembelians.status_pembelian AS status_pembelian', 'kas.nama_kas AS nama_kas', 'pembelians.suplier_id AS suplier_id', 'pembelians.no_faktur AS no_faktur')
+        $query->select('w.name AS nama_warung', 'w.alamat AS alamat_warung', 's.nama_suplier AS suplier', 'u.name AS kasir', 'pembelians.potongan AS potongan', 'pembelians.total AS total', 'pembelians.tunai AS tunai', 'pembelians.kembalian AS kembalian', DB::raw('DATE_FORMAT(pembelians.created_at, "%d/%m/%Y %H:%i:%s") as waktu_beli'), 'w.no_telpon AS no_telp_warung', 'pembelians.id AS id', 's.alamat AS alamat_suplier', 'pembelians.status_pembelian AS status_pembelian', 'kas.nama_kas AS nama_kas', 'pembelians.suplier_id AS suplier_id', 'pembelians.no_faktur AS no_faktur', 'pembelians.tanggal_jt_tempo AS tanggal_jt_tempo', DB::raw('DATE_FORMAT(pembelians.tanggal_jt_tempo, "%d/%m/%Y") as jatuh_tempo'))
         ->leftJoin('warungs AS w', 'pembelians.warung_id', '=', 'w.id')
         ->leftJoin('users AS u', 'u.id', '=', 'pembelians.created_by')
         ->leftJoin('supliers AS s', 's.id', '=', 'pembelians.suplier_id')
@@ -130,6 +130,24 @@ class Pembelian extends Model
         ->leftJoin('kas', 'pembelians.cara_bayar', '=', 'kas.id')
         ->leftJoin('users', 'pembelians.created_by', '=', 'users.id')
         ->where('pembelians.warung_id', Auth::user()->id_warung)->orderBy('pembelians.id', 'desc');
+        return $query;
+    }
+
+    public function scopeDataPembelian($query, $supplier, $warung_id) {
+        $query->select('pembelians.id', 'pembelians.no_faktur', 'detail_pembelians.id_produk', 'detail_pembelians.jumlah_produk', 'detail_pembelians.satuan_id', 'barangs.harga_beli', 'detail_pembelians.subtotal', 'barangs.nama_barang', 'satuans.nama_satuan')  
+        ->leftJoin('detail_pembelians', 'pembelians.no_faktur', '=', 'detail_pembelians.no_faktur')
+        ->leftJoin('barangs', 'detail_pembelians.id_produk', '=', 'barangs.id')
+        ->leftJoin('satuans', 'barangs.satuan_id', '=', 'satuans.id')
+        ->where('pembelians.suplier_id', $supplier)
+        ->where('detail_pembelians.warung_id', $warung_id);
+        return $query;
+    }
+
+    public function scopeGetFakturHutang($query, $no_faktur_retur) {
+        $query->select('pembelians.no_faktur')
+        ->leftJoin('transaksi_hutangs', 'transaksi_hutangs.id_transaksi', '=', 'pembelians.id')
+        ->where('transaksi_hutangs.no_faktur', $no_faktur_retur);
+
         return $query;
     }
 }

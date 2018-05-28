@@ -221,6 +221,13 @@ import OptimasiSeo from './components/optimasi_seo/OptimasiSeo.vue';
 import ColorTheme from './components/color_theme/ColorTheme.vue';
 import ColorThemeCreate from './components/color_theme/ColorThemeCreate.vue';
 
+// RETUR PEMBELIAN
+import ReturPembelianIndex from './components/retur_pembelian/ReturPembelianIndex.vue';
+import ReturPembelianCreate from './components/retur_pembelian/ReturPembelianCreate.vue';
+import ReturPembelianDetail from './components/retur_pembelian/ReturPembelianDetail.vue';
+import ReturPembelianProsesEdit from './components/retur_pembelian/ReturPembelianProsesEdit.vue';
+import ReturPembelianEdit from './components/retur_pembelian/ReturPembelianEdit.vue';
+
 
 const routes = [{
     path: '/',
@@ -900,6 +907,26 @@ const routes = [{
         path: '/create-tema', 
         component: ColorThemeCreate, 
         name: 'createColorTheme'
+    }, {
+        path: '/retur-pembelian',
+        component: ReturPembelianIndex,
+        name: 'indexReturPembelian'
+    }, {
+        path: '/create-retur-pembelian',
+        component: ReturPembelianCreate,
+        name: 'createReturPembelian'
+    }, {
+        path: '/detail-retur-pembelian/:id',
+        component: ReturPembelianDetail,
+        name: 'detailReturPembelian'
+    }, {
+        path: '/proses-edit-retur-pembelian/:id',
+        component: ReturPembelianProsesEdit,
+        name: 'prosesEditReturPembelian'
+    }, {
+        path: '/edit-retur-pembelian/:id',
+        component: ReturPembelianEdit,
+        name: 'editReturPembelian'
     }
 
 
