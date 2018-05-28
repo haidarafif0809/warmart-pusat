@@ -1079,8 +1079,8 @@ Route::put('/setting-promo/tambah-waktu-edit/{id}', 'SettingPromoController@tamb
 Route::post('/setting-promo/{id}', 'SettingPromoController@update')->middleware('auth');
 
 // Setting Ficel
-Route::get('/setting-fixel/view', 'SettingFixelController@view')->middleware('auth');
-Route::post('/setting-fixel/simpan-fixel', 'SettingFixelController@simpanSetting')->middleware('auth');
+Route::get('/setting-pixel/view', 'SettingFixelController@view')->middleware('auth');
+Route::post('/setting-pixel/simpan-pixel', 'SettingFixelController@simpanSetting')->middleware('auth');
 
 // Setting SEO
 Route::get('/optimasi-seo/view', 'SettingSeoController@view')->middleware('auth');

@@ -212,7 +212,7 @@ import PenerimaanProdukProsesEdit from './components/penerimaan_produk/Penerimaa
 import PenerimaanProdukEdit from './components/penerimaan_produk/PenerimaanProdukEdit.vue';
 
 // SETTING FIXEL
-import SettingFixel from './components/setting_pixel/SettingFixel.vue';
+import SettingPixel from './components/setting_pixel/SettingPixel.vue';
 
 // SETTING SEO
 import OptimasiSeo from './components/optimasi_seo/OptimasiSeo.vue';
@@ -865,9 +865,9 @@ const routes = [{
         component: PembelianOrderIndex, 
         name: 'indexPembelianOrder'
     },{ 
-        path: '/setting-fixel', 
-        component: SettingFixel, 
-        name: 'settingFixelIndex'
+        path: '/setting-pixel', 
+        component: SettingPixel, 
+        name: 'settingPixelIndex'
     },{ 
         path: '/penerimaan-produk', 
         component: PenerimaanProdukIndex, 

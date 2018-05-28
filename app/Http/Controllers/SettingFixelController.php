@@ -27,11 +27,6 @@ class SettingFixelController extends Controller
 		return $respons;
 	}
 	public function simpanSetting(Request $request){
-
-		SettingFixel::where('fixel','Google')->where('warung_id',Auth::user()->id_warung)->delete();
-		SettingFixel::where('fixel','Facebook')->where('warung_id',Auth::user()->id_warung)->delete();
-		SettingFixel::create(['fixel'=> 'Google','id_pixel' => $request->google,'warung_id'=>Auth::user()->id_warung,'logo'=>'google.png']);
-		SettingFixel::create(['fixel'=> 'Facebook','id_pixel' => $request->facebook,'warung_id'=>Auth::user()->id_warung,'logo'=>'facebook.jpg']);
-
+		SettingFixel::where('fixel', $request->pixel)->where('warung_id',Auth::user()->id_warung)->update(['id_pixel' => $request->id_pixel]);
 	}
 }

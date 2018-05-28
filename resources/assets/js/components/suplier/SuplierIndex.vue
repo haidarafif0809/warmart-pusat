@@ -246,7 +246,7 @@ export default {
                     timer: 2000
                 });
             } else {
-                axios.post(app.url+'/import-excel', newExcel)
+                axios.post(app.url + '/import-excel', newExcel)
                 .then((resp) => {
                     if (resp.data.error.length == 0) {
                         swal({
