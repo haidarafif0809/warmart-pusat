@@ -794,7 +794,7 @@ class ReturPembelianController extends Controller
         $harga_beli = Barang::select('harga_beli')->find($request->id_produk)->first()->harga_beli;
 
         $harga_produk = $harga_beli * ($satuan_konversi[3] * $satuan_konversi[4]);
-        $subtotal = ($edit_tbs_penjualan->jumlah_produk * $harga_produk) - $edit_tbs_penjualan->potongan;
+        $subtotal = ($edit_tbs_penjualan->jumlah_retur * $harga_produk) - $edit_tbs_penjualan->potongan;
 
         $edit_tbs_penjualan->update(['satuan_id' => $satuan_konversi[0], 'harga_produk' => $harga_produk, 'subtotal' => $subtotal]);
 
@@ -810,6 +810,15 @@ class ReturPembelianController extends Controller
     public function editSatuanTbs(Request $request){
 
         $db = 'App\TbsReturPembelian';
+        $respons = $this->editSatuan($request, $db);
+
+        return response()->json($respons);
+    }
+
+
+    public function editSatuanEditTbs(Request $request){
+
+        $db = 'App\EditTbsReturPembelian';
         $respons = $this->editSatuan($request, $db);
 
         return response()->json($respons);

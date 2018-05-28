@@ -993,7 +993,7 @@
                 if (satuan_tbs == satuan_produk[0]) {
                     $("#modalEditSatuan").hide();
                 }else{
-                    axios.post(app.url+'/edit-satuan-tbs', newSatuan)
+                    axios.post(app.url+'/edit-satuan-edit-tbs', newSatuan)
                     .then(function (resp) {
 
                         var subtotal = (parseInt(app.returPembelian.subtotal) - parseInt(subtotal_lama) + parseInt(resp.data.subtotal))
