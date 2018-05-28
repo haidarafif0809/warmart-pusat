@@ -625,6 +625,66 @@ class ReturPembelianController extends Controller
     }
 
 
+    //PROSES TAMBAH EDIT TBS RETUR PEMBELIAN
+    public function prosesEditTbs(Request $request) {
+
+        if (Auth::user()->id_warung == '') {
+            Auth::logout();
+            return response()->view('error.403');
+        } else {
+
+            $session_id = session()->getId();
+            $data_satuan = explode("|", $request->satuan_produk);
+            $data_tbs   = EditTbsReturPembelian::where('id_produk', $request->id_produk)
+            ->where('session_id', $session_id)->where('no_faktur_retur', $request->no_faktur)
+            ->where('warung_id', Auth::user()->id_warung);
+
+            if ($data_tbs->count() > 0) {
+
+                $subtotal_lama = $data_tbs->first()->subtotal;
+
+                $jumlah_produk = $data_tbs->first()->jumlah_retur + $request->jumlah_retur;
+
+                $subtotal_edit = ($jumlah_produk * $request->harga_produk) - $data_tbs->first()->potongan;
+
+                $data_tbs->update(['jumlah_retur' => $jumlah_produk, 'subtotal' => $subtotal_edit, 'harga_produk' => $request->harga_produk, 'satuan_id' => $data_satuan[0], 'satuan_dasar' => $data_satuan[2]]);
+
+                $subtotal = $jumlah_produk * $request->harga_produk;
+
+                $respons['status']        = 1;
+                $respons['subtotal_lama'] = $subtotal_lama;
+                $respons['subtotal']      = $subtotal;
+                return response()->json($respons);
+
+            } else {
+
+                // SUBTOTAL = JUMLAH * HARGA
+                $subtotal = $request->jumlah_retur * $request->harga_produk;
+                // INSERT TBS PEMBELIAN
+                $insertTbs = EditTbsReturPembelian::create([
+                    'id_produk'         => $request->id_produk,
+                    'no_faktur_retur'   => $request->no_faktur,
+                    'session_id'        => $session_id,
+                    'jumlah_retur'      => $request->jumlah_retur,
+                    'harga_produk'      => $request->harga_produk,
+                    'subtotal'          => $subtotal,
+                    'satuan_id'         => $data_satuan[0],
+                    'satuan_dasar'      => $data_satuan[2],
+                    'supplier'          => $request->supplier,
+                    'warung_id'         => Auth::user()->id_warung,
+                    ]);
+
+                $respons['status']   = 0;
+                $respons['subtotal'] = $subtotal;
+
+                return response()->json($respons);
+
+            }
+
+        }
+    }
+
+
     public function hapusTbs($id)
     {
         if (Auth::user()->id_warung == '') {

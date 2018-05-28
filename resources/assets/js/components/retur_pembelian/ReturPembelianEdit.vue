@@ -556,7 +556,8 @@
                     stok_produk: 0,
                     potongan_produk: 0,
                     tax_produk: 0,
-                    id_tbs: ''
+                    id_tbs: '',
+                    no_faktur: ''
                 },
                 returPembelian: {
                     kas: '',
@@ -748,7 +749,7 @@
                 var newTbs = app.inputTbsRetur;
 
                 app.loading = true;
-                axios.post(app.url+'/proses-tambah-tbs-retur-pembelian', newTbs)
+                axios.post(app.url+'/proses-tambah-edit-tbs-retur-pembelian', newTbs)
                 .then(function (resp) {
                     $("#modalInsertTbs").hide();
                     app.alert("Menambahkan Produk "+titleCase(nama_produk));
@@ -816,6 +817,7 @@
                     app.potongan = resp.data.potongan
                     app.returPembelian.total_akhir = resp.data.total_bayar
                     app.returPembelian.potong_hutang = resp.data.potong_hutang
+                    app.inputTbsRetur.no_faktur = resp.data.no_faktur_retur
                 })
                 .catch(function (resp) {
                   alert("Tidak Dapat Memuat Pembelian Order");
