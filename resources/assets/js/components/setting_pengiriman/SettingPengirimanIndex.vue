@@ -227,8 +227,6 @@ export default {
         app.getDataSettingPengiriman();
         app.getDataSettingBank();
 
-        console.log(app.$route.params);
-
         if (app.$route.params.tab != undefined) {
             let tab = '#' + app.$route.params.tab;
             $(tab).click();
