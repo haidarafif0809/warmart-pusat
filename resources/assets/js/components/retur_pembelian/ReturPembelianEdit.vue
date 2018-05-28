@@ -955,7 +955,7 @@
                 }).then(function (jumlah_retur) {
                     if (jumlah_retur != "0") { 
                         app.loading = true;
-                        axios.get(app.url+'/proses-edit-jumlah-retur?jumlah_retur='+jumlah_retur+'&id_tbs='+id)
+                        axios.get(app.url+'/proses-edit-jumlah-edit-tbs-retur?jumlah_retur='+jumlah_retur+'&id_tbs='+id)
                         .then(function (resp) {
                             app.alert("Mengubah Jumlah Retur "+titleCase(nama_produk));
                             app.loading = false;
