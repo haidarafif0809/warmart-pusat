@@ -1124,6 +1124,7 @@ Route::get('/retur-pembelian/supplier-edit/{id}', 'ReturPembelianController@supp
 Route::get('/retur-pembelian/data-retur-pembelian/{id}', 'ReturPembelianController@dataRetur')->middleware('auth'); 
 Route::get('/retur-pembelian/subtotal-edit-tbs/{id}', 'ReturPembelianController@getSubtotalEdit')->middleware('auth');
 Route::get('/retur-pembelian/data-faktur-hutang/{id}', 'ReturPembelianController@fakturHutangEdit')->middleware('auth'); 
+Route::delete('/retur-pembelian/hapus-edit-tbs/{id}', 'ReturPembelianController@hapusEditTbs')->middleware('auth');
 Route::post('/retur-pembelian/proses-tambah-edit-tbs-retur-pembelian', 'ReturPembelianController@prosesEditTbs')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {

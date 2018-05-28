@@ -357,13 +357,13 @@
                                             {{ tbs_retur_pembelian.data_tbs.kode_barang }} - {{ tbs_retur_pembelian.data_tbs.nama_barang | capitalize }}
                                         </td>
                                         <td align="right">
-                                            <a href="#create-retur-pembelian" v-bind:id="'edit-' + tbs_retur_pembelian.data_tbs.id_tbs_retur_pembelian" v-on:click="editJumlah(tbs_retur_pembelian.data_tbs.id_tbs_retur_pembelian, index,tbs_retur_pembelian.data_tbs.nama_barang,tbs_retur_pembelian.data_tbs.subtotal)">
+                                            <a :href="'#edit-retur-pembelian/'+id_retur" v-bind:id="'edit-' + tbs_retur_pembelian.data_tbs.id_edit_tbs_retur_pembelian" v-on:click="editJumlah(tbs_retur_pembelian.data_tbs.id_edit_tbs_retur_pembelian, index,tbs_retur_pembelian.data_tbs.nama_barang,tbs_retur_pembelian.data_tbs.subtotal)">
                                                 {{ tbs_retur_pembelian.data_tbs.jumlah_retur | pemisahTitik }}
                                             </a>
                                         </td>
 
                                         <td align="center">
-                                            <a href="#create-retur-pembelian" v-bind:id="'edit-' + tbs_retur_pembelian.data_tbs.id_tbs_retur_pembelian" v-bind:class="'hurufBesar satuan-' + tbs_retur_pembelian.data_tbs.id_produk" v-bind:data-satuan="''+tbs_retur_pembelian.data_tbs.satuan_id" v-on:click="editSatuan(tbs_retur_pembelian.data_tbs.id_tbs_retur_pembelian, index,tbs_retur_pembelian.data_tbs.nama_barang,tbs_retur_pembelian.data_tbs.subtotal, tbs_retur_pembelian.data_tbs.id_produk)">
+                                            <a :href="'#edit-retur-pembelian/'+id_retur" v-bind:id="'edit-' + tbs_retur_pembelian.data_tbs.id_edit_tbs_retur_pembelian" v-bind:class="'hurufBesar satuan-' + tbs_retur_pembelian.data_tbs.id_produk" v-bind:data-satuan="''+tbs_retur_pembelian.data_tbs.satuan_id" v-on:click="editSatuan(tbs_retur_pembelian.data_tbs.id_edit_tbs_retur_pembelian, index,tbs_retur_pembelian.data_tbs.nama_barang,tbs_retur_pembelian.data_tbs.subtotal, tbs_retur_pembelian.data_tbs.id_produk)">
                                                 {{ tbs_retur_pembelian.data_tbs.nama_satuan }}
                                             </a>
                                         </td>
@@ -371,20 +371,20 @@
                                         <td align="right">{{ tbs_retur_pembelian.data_tbs.harga_produk | pemisahTitik }}</td>
 
                                         <td align="right">
-                                            <a href="#create-retur-pembelian" v-bind:id="'edit-' + tbs_retur_pembelian.data_tbs.id_tbs_retur_pembelian" v-on:click="editPotongan(tbs_retur_pembelian.data_tbs.id_tbs_retur_pembelian, index,tbs_retur_pembelian.data_tbs.nama_barang,tbs_retur_pembelian.data_tbs.subtotal)">
+                                            <a :href="'#edit-retur-pembelian/'+id_retur" v-bind:id="'edit-' + tbs_retur_pembelian.data_tbs.id_edit_tbs_retur_pembelian" v-on:click="editPotongan(tbs_retur_pembelian.data_tbs.id_edit_tbs_retur_pembelian, index,tbs_retur_pembelian.data_tbs.nama_barang,tbs_retur_pembelian.data_tbs.subtotal)">
                                                 {{ tbs_retur_pembelian.data_tbs.potongan | pemisahTitik }} | {{ Math.round(tbs_retur_pembelian.potongan_persen,2) }} %
                                             </a>
                                         </td>
 
                                         <td align="right">
-                                            <a href="#create-retur-pembelian" v-bind:id="'edit-' + tbs_retur_pembelian.data_tbs.id_tbs_retur_pembelian" v-on:click="editTax(tbs_retur_pembelian.data_tbs.id_tbs_retur_pembelian, index,tbs_retur_pembelian.data_tbs.nama_barang,tbs_retur_pembelian.data_tbs.jumlah_retur,tbs_retur_pembelian.data_tbs.harga_produk,tbs_retur_pembelian.data_tbs.potongan,tbs_retur_pembelian.ppn_produk,tbs_retur_pembelian.data_tbs.subtotal)" >
+                                            <a :href="'#edit-retur-pembelian/'+id_retur" v-bind:id="'edit-' + tbs_retur_pembelian.data_tbs.id_edit_tbs_retur_pembelian" v-on:click="editTax(tbs_retur_pembelian.data_tbs.id_edit_tbs_retur_pembelian, index,tbs_retur_pembelian.data_tbs.nama_barang,tbs_retur_pembelian.data_tbs.jumlah_retur,tbs_retur_pembelian.data_tbs.harga_produk,tbs_retur_pembelian.data_tbs.potongan,tbs_retur_pembelian.ppn_produk,tbs_retur_pembelian.data_tbs.subtotal)" >
                                                 {{ tbs_retur_pembelian.data_tbs.tax | pemisahTitik }} | {{ Math.round(tbs_retur_pembelian.tax_persen,2) }} %
                                             </a>
                                         </td>
 
                                         <td align="right">{{ tbs_retur_pembelian.data_tbs.subtotal | pemisahTitik }}</td>
                                         <td style="text-align:right;">
-                                            <a href="#create-retur-pembelian" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_retur_pembelian.data_tbs.id_tbs_retur_pembelian" v-on:click="deleteEntry(tbs_retur_pembelian.data_tbs.id_tbs_retur_pembelian, index,tbs_retur_pembelian.data_tbs.nama_barang,tbs_retur_pembelian.data_tbs.subtotal)">
+                                            <a :href="'#edit-retur-pembelian/'+id_retur" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_retur_pembelian.data_tbs.id_edit_tbs_retur_pembelian" v-on:click="deleteEntry(tbs_retur_pembelian.data_tbs.id_edit_tbs_retur_pembelian, index,tbs_retur_pembelian.data_tbs.nama_barang,tbs_retur_pembelian.data_tbs.subtotal)">
                                                 Delete
                                             </a>
                                         </td>
@@ -907,7 +907,7 @@
             prosesDelete(id,nama_produk,subtotal_lama){
                 var app = this;
                 app.loading = true;
-                axios.delete(app.url+'/hapus-tbs/'+id)
+                axios.delete(app.url+'/hapus-edit-tbs/'+id)
                 .then(function (resp) {
                     app.getTbs();
 

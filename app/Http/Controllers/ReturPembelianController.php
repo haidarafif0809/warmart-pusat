@@ -699,6 +699,21 @@ class ReturPembelianController extends Controller
         }
     }
 
+
+    public function hapusEditTbs($id)
+    {
+        if (Auth::user()->id_warung == '') {
+            Auth::logout();
+            return response()->view('error.403');
+        } else {
+            $tbs_retur_pembelian = EditTbsReturPembelian::find($id);
+            $respons['subtotal'] = $tbs_retur_pembelian->subtotal;
+            $tbs_retur_pembelian->delete();
+
+            return response()->json($respons);
+        }
+    }
+
     public function editJumlahReturTbs(Request $request) {
 
         if (Auth::user()->id_warung == '') {
