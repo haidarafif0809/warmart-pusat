@@ -1109,6 +1109,7 @@ Route::post('/retur-penjualan/proses-batal-retur-penjualan', [
         'as'         => 'retur-penjualan.proses_batal_retur_penjualan',
         'uses'       => 'ReturPenjualanController@prosesBatalReturPenjualan',
         ]);
+Route::post('/retur-penjualan/edit-satuan-tbs', 'ReturPenjualanController@editSatuanTbs')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 

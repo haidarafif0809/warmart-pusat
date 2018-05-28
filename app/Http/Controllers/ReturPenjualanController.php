@@ -130,11 +130,13 @@ class ReturPenjualanController extends Controller
             array_push($array_retur_penjualan, [
                 'id'                  => $id_tbs,
                 'no_faktur_penjualan' => $tbs_retur_penjualans->no_faktur_penjualan,
+                'id_produk'           => $tbs_retur_penjualans->id_produk,
                 'kode_barang'         => $tbs_retur_penjualans->kode_barang,
                 'nama_barang'         => title_case($tbs_retur_penjualans->nama_barang),
                 'jumlah_jual'         => $tbs_retur_penjualans->jumlah_jual,
                 'jumlah_retur'        => $tbs_retur_penjualans->jumlah_retur,
                 'satuan'              => $tbs_retur_penjualans->satuan,
+                'id_satuan'              => $tbs_retur_penjualans->id_satuan,
                 'harga_produk'        => $tbs_retur_penjualans->harga_produk,
                 'potongan'            => $potongan,
                 'subtotal'            => $tbs_retur_penjualans->subtotal,
@@ -199,6 +201,7 @@ class ReturPenjualanController extends Controller
                 'jumlah_jual'         => $data_retur_penjualans->jumlah_jual,
                 'jumlah_produk'       => $data_retur_penjualans->jumlah_produk,
                 'satuan'              => $data_retur_penjualans->nama_satuan,
+                'id_satuan'           => $data_retur_penjualans->satuan_id,
                 'harga_produk'        => $data_retur_penjualans->harga_produk,
                 'subtotal'            => $data_retur_penjualans->subtotal,
                 'waktu'               => $data_retur_penjualans->Waktu,
@@ -228,6 +231,7 @@ class ReturPenjualanController extends Controller
                 'nama_barang'         => title_case($data_retur_penjualans->nama_barang),
                 'jumlah_jual'         => $data_retur_penjualans->jumlah_jual,
                 'jumlah_produk'       => $data_retur_penjualans->jumlah_produk,
+                'id_satuan'           => $data_retur_penjualans->satuan_id,
                 'satuan'              => $data_retur_penjualans->nama_satuan,
                 'harga_produk'        => $data_retur_penjualans->harga_produk,
                 'subtotal'            => $data_retur_penjualans->subtotal,
@@ -242,7 +246,7 @@ class ReturPenjualanController extends Controller
     public function prosesTbsReturPenjualan(Request $request)
     {
         $session_id = session()->getId();
-        $data_satuan = explode("|", $request->satuan); 
+        $data_satuan = explode("|", $request->satuan_produk); 
         $data_tbs   = TbsReturPenjualan::where('no_faktur_penjualan', $request->id_penjualan)->where('id_produk', $request->id_produk)
         ->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
 
@@ -250,7 +254,21 @@ class ReturPenjualanController extends Controller
         $subtotal = $request->jumlah_retur * $request->harga_produk;
         //JIKA FAKTUR YG DIPILIH SUDAH ADA DI TBS
         if ($data_tbs->count() > 0) {
-            return 0;
+                $subtotal_lama = $data_tbs->first()->subtotal;
+
+                $jumlah_retur = $data_tbs->first()->jumlah_retur + $request->jumlah_retur;
+
+                $subtotal_edit = ($jumlah_retur * $request->harga_produk) - $data_tbs->first()->potongan;
+
+                $data_tbs->update(['jumlah_retur' => $jumlah_retur, 'subtotal' => $subtotal_edit, 'harga_produk' => $request->harga_produk, 'id_satuan' => $data_satuan[0], 'satuan_dasar' => $data_satuan[2]]);
+
+                $subtotal = $jumlah_retur * $request->harga_produk;
+
+                $respons['status']        = 1;
+                $respons['subtotal_lama'] = $subtotal_lama;
+                $respons['subtotal']      = $subtotal;
+                return response()->json($respons);
+
         } else {
             $tbs_retur_penjualan = TbsReturPenjualan::create([
                 'session_id'          => $session_id,
@@ -260,10 +278,10 @@ class ReturPenjualanController extends Controller
                 'jumlah_retur'        => $request->jumlah_retur,
                 'jumlah_jual'         => $request->jumlah_jual,
                 'subtotal'            => $subtotal,
-                'id_satuan_jual'           => $data_satuan[0], 
-                'id_satuan'        => $data_satuan[2],
+                'id_satuan'           => $data_satuan[0], 
+                'satuan_dasar'        => $data_satuan[2],
                 'warung_id'           => Auth::user()->id_warung,
-                'id_pelanggan'      => $request->pelanggan,
+                'id_pelanggan'        => $request->pelanggan,
             ]);
             $respons['subtotal'] = $subtotal;
             return response()->json($respons);
@@ -386,6 +404,31 @@ class ReturPenjualanController extends Controller
         } 
     }
 
+        public function editSatuan($request, $db){
+
+            $satuan_konversi = explode("|", $request->satuan_produk);
+            $edit_tbs_penjualan = $db::find($request->id_tbs);
+
+            $subtotal = ($edit_tbs_penjualan->jumlah_retur * $satuan_konversi[5]) - $edit_tbs_penjualan->potongan;
+
+            $edit_tbs_penjualan->update(['id_satuan' => $satuan_konversi[0], 'harga_produk' => $satuan_konversi[5], 'subtotal' => $subtotal]);
+
+            $respons['harga_produk'] = $satuan_konversi[5];
+            $respons['nama_satuan']     = $satuan_konversi[1];
+            $respons['satuan_id']     = $satuan_konversi[0];
+            $respons['subtotal']     = $subtotal;
+
+            return $respons;
+        }
+
+        public function editSatuanTbs(Request $request){
+
+            $db = 'App\TbsReturPenjualan';
+            $respons = $this->editSatuan($request, $db);
+
+            return response()->json($respons);
+        }
+
     public function tampilPotongan($potongan_produk, $jumlah_produk, $harga_produk)
     {
 
@@ -446,21 +489,17 @@ class ReturPenjualanController extends Controller
  
             } else { 
             //INSERT RETUR PEMBELIAN 
-                $total = $request->total_akhir - $request->potong_hutang; 
+                $total = $request->total_akhir; 
                 $retur = ReturPenjualan::create([ 
                     'no_faktur_retur'   => $no_faktur, 
-                    'suplier_id'        => $tbs_retur->first()->supplier, 
-                    'total'             => $total, 
+                    'suplier_id'        => $tbs_retur->first()->id_pelanggan, 
+                    'total'             => $total,
                     'total_bayar'       => $request->total_akhir, 
-                    'potongan'          => $request->potongan_faktur, 
-                    'potong_hutang'     => $request->potong_hutang, 
+                    'potongan'          => $request->potongan_faktur,
                     'warung_id'         => $warung_id, 
                     ]); 
  
                 foreach ($tbs_retur->get() as $data_tbs) { 
- 
-                    $stok_produk = Hpp::stok_produk($data_tbs->id_produk); 
-                    $sisa        = $stok_produk - $data_tbs->jumlah_retur; 
  
                     if ($data_tbs->satuan_id != $data_tbs->satuan_dasar) { 
  
@@ -474,36 +513,23 @@ class ReturPenjualanController extends Controller
                         } else { 
                             $jumlah_konversi_dasar = intval($data_tbs->jumlah_retur) * intval($jumlah_konversi); 
                         } 
- 
-                        $sisa = $stok_produk - $jumlah_konversi_dasar; 
+
                     } 
  
-                    if ($sisa < 0) { 
-                        //DI BATALKAN PROSES NYA 
-                        $respons['respons']     = 1; 
-                        $respons['nama_produk'] = title_case($data_tbs->produk->nama_barang); 
-                        $respons['stok_produk'] = $stok_produk; 
-                        DB::rollBack(); 
-                        return response()->json($respons); 
-                    }else{ 
                         // INSERT DETAIL 
                         $detail = DetailReturPenjualan::create([ 
                             'no_faktur_retur'   => $no_faktur, 
                             'id_produk'         => $data_tbs->id_produk, 
-                            'jumlah_produk'      => $data_tbs->jumlah_retur, 
+                            'jumlah_retur'      => $data_tbs->jumlah_retur, 
                             'satuan_id'         => $data_tbs->satuan_id, 
                             'satuan_dasar'      => $data_tbs->satuan_dasar, 
                             'harga_produk'      => $data_tbs->harga_produk, 
                             'subtotal'          => $data_tbs->subtotal, 
                             'potongan'          => $data_tbs->potongan, 
-                            'tax'               => $data_tbs->tax, 
-                            'tax_include'       => $data_tbs->tax_include, 
-                            'ppn'               => $data_tbs->ppn, 
-                            'supplier'          => $data_tbs->supplier, 
+                            'id_pelanggan'      => $data_tbs->supplier, 
                             'warung_id'         => $data_tbs->warung_id, 
                             'created_at'        => $retur->created_at, 
                             ]); 
-                    } 
                 } 
  
                 TransaksiKas::create([ 

@@ -182,7 +182,7 @@ class Penjualan extends Model
      // DATA PENJUALAN ONline RETUR
      public function scopeGetDataPenjualanRetur($data_pelanggan_retur,$id_pelanggan)
      {
-        $data_pelanggan_retur = Penjualan::select(['penjualans.id as id_penjualan', 'barangs.kode_barang','barangs.nama_barang', 'detail_penjualans.jumlah as jumlah_produk','detail_penjualans.jumlah as jumlah_jual', 'detail_penjualans.harga as harga_produk', 'detail_penjualans.subtotal','penjualans.created_at','satuans.nama_satuan','barangs.id as id_produk'])
+        $data_pelanggan_retur = Penjualan::select(['penjualans.id as id_penjualan', 'barangs.kode_barang','barangs.nama_barang', 'detail_penjualans.jumlah as jumlah_produk','detail_penjualans.jumlah as jumlah_jual', 'detail_penjualans.harga as harga_produk', 'detail_penjualans.subtotal','penjualans.created_at','satuans.nama_satuan','barangs.id as id_produk','detail_penjualans.satuan_id'])
         ->leftJoin('detail_penjualans', 'detail_penjualans.id_penjualan', '=', 'penjualans.id')
         ->leftJoin('barangs', 'barangs.id', '=', 'detail_penjualans.id_produk')
         ->leftJoin('satuans', 'satuans.id', '=', 'barangs.satuan_id')
@@ -196,7 +196,7 @@ class Penjualan extends Model
     public function scopeGetDataCariPenjualanRetur($data_pelanggan_retur,$id_pelanggan,$request)
     {
         $search    = $request->search; 
-        $data_pelanggan_retur = Penjualan::select(['penjualans.id as id_penjualan', 'barangs.kode_barang','barangs.nama_barang', 'detail_penjualans.jumlah as jumlah_produk','detail_penjualans.jumlah as jumlah_jual', 'detail_penjualans.harga as harga_produk', 'detail_penjualans.subtotal','penjualans.created_at','satuans.nama_satuan','barangs.id as id_produk'])
+        $data_pelanggan_retur = Penjualan::select(['penjualans.id as id_penjualan', 'barangs.kode_barang','barangs.nama_barang', 'detail_penjualans.jumlah as jumlah_produk','detail_penjualans.jumlah as jumlah_jual', 'detail_penjualans.harga as harga_produk', 'detail_penjualans.subtotal','penjualans.created_at','satuans.nama_satuan','barangs.id as id_produk','detail_penjualans.satuan_id'])
         ->leftJoin('detail_penjualans', 'detail_penjualans.id_penjualan', '=', 'penjualans.id')
         ->leftJoin('barangs', 'barangs.id', '=', 'detail_penjualans.id_produk')
         ->leftJoin('satuans', 'satuans.id', '=', 'barangs.satuan_id')
