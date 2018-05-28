@@ -927,6 +927,14 @@ class ReturPembelianController extends Controller
         return response(200);
     }
 
+
+    public function batalEditRetur() {
+        $session_id         = session()->getId();
+        $retur_pembelian = EditTbsReturPembelian::where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->delete();
+
+        return response(200);
+    }
+
     /**
      * Display a listing of the resource.
      *

@@ -1177,9 +1177,8 @@
                     if (!value) throw null;
 
                     app.loading = true;
-                    axios.post(app.url+'/proses-batal-retur')
+                    axios.post(app.url+'/proses-batal-edit-retur')
                     .then(function (resp) {
-                        app.getTbs();
                         app.alert("Membatalkan Transaksi Retur Pembelian");
                         app.inputTbsRetur.supplier = ''
                         app.returPembelian.subtotal = 0
@@ -1191,6 +1190,7 @@
                         app.returPembelian.kas = ''
                         app.returPembelian.keterangan = ''
                         app.returPembelian.supplier = ''
+                        app.$router.replace('/retur-pembelian');
                     })
                     .catch(function (resp) {
                         console.log(resp);
