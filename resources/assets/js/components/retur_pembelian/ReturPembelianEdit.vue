@@ -418,7 +418,7 @@
                                 <p class="category" style="font-size: 18px; padding-bottom: 5px;">
                                     <div class="checkbox">
                                         <label style="font-size:18px; color: #999999">
-                                            <input type="checkbox" name="potong_hutang" id="display_potong_hutang" data-toogle="0" @change="displayPotongHutang"> Potong Hutang
+                                            <input type="checkbox" name="potong_hutang" v-model="potong_hutang" id="display_potong_hutang" data-toogle="0" @change="displayPotongHutang" true-value="1" false-value="0"> Potong Hutang
                                         </label>
                                     </div> 
                                 </p>
@@ -517,6 +517,7 @@
                 seen: false,
                 disable: false,
                 potongan: 0,
+                potong_hutang: 0,
                 separator: {
                     decimal: ',',
                     thousands: '.',
@@ -590,6 +591,8 @@
             app.id_retur = app.$route.params.id;
             app.$store.dispatch('LOAD_KAS_LIST')
             app.getTbs();
+            app.getFakturHutang();
+            app.getReturPembelian(app.id_retur);
         },
         filters: {
             pemisahTitik: function (value) {
@@ -653,9 +656,8 @@
                 axios.get(app.url+'/data-faktur-hutang/'+app.id_retur)
                 .then( (resp) => {
                     app.fakturHutangs = resp.data.faktur_hutang
-                    app.returPembelian.faktur_hutang = resp.data.faktur_default
-                    console.log(`${resp.data.faktur_default}`)
-                    console.log(resp.data.faktur_default)
+                    app.returPembelian.faktur_hutang = resp.data.faktur_default                    
+                    app.displayPotongHutangMounted();
                 })
                 .catch( (err) => {
                     console.log(err);
@@ -792,8 +794,6 @@
                     app.seen = true
                     app.returPembelian.kas = app.default_kas
                     app.openSelectizeSupplier();
-                    app.getFakturHutang();
-                    app.getReturPembelian(app.id_retur);
 
                     if (app.returPembelian.subtotal == 0) {          
                         app.getSubtotal(); 
@@ -818,6 +818,10 @@
                     app.returPembelian.total_akhir = resp.data.total_bayar
                     app.returPembelian.potong_hutang = resp.data.potong_hutang
                     app.inputTbsRetur.no_faktur = resp.data.no_faktur_retur
+
+                    if (app.returPembelian.potong_hutang > 0) {
+                        app.potong_hutang = 1;
+                    }
                 })
                 .catch(function (resp) {
                   alert("Tidak Dapat Memuat Pembelian Order");
@@ -1342,11 +1346,30 @@
                 if (data_toogle == 0) {
                     $('#spanFakturHutang').show();
                     $("#display_potong_hutang").attr("data-toogle", 1)
+                    app.potong_hutang = 1;
                     this.disable = true;
                 }
                 else{
                     $('#spanFakturHutang').hide();
                     $("#display_potong_hutang").attr("data-toogle", 0)
+                    app.potong_hutang = 0;
+                    this.disable = false;
+                    this.returPembelian.faktur_hutang = '';
+                }
+            },
+            displayPotongHutangMounted() {
+                var app = this;
+
+                if (app.returPembelian.faktur_hutang != '') {
+                    $('#spanFakturHutang').show();
+                    $("#display_potong_hutang").attr("data-toogle", 1)
+                    app.potong_hutang = 1;
+                    this.disable = true;
+                }
+                else{
+                    $('#spanFakturHutang').hide();
+                    $("#display_potong_hutang").attr("data-toogle", 0)
+                    app.potong_hutang = 0;
                     this.disable = false;
                     this.returPembelian.faktur_hutang = '';
                 }
@@ -1363,6 +1386,10 @@
                         app.returPembelian.pembayaran = 0;
                     }else{
                         app.returPembelian.pembayaran = selisih;
+                    }
+
+                    if (app.returPembelian.potong_hutang > 0) {
+                        app.potong_hutang = 1;
                     }
 
                     $("#modal_selesai").show(); 
