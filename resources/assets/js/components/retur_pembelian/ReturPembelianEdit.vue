@@ -570,7 +570,9 @@
                     potong_hutang : 0,
                     faktur_hutang : '',
                     pembayaran : 0,
-                    keterangan: '',                    
+                    keterangan: '',      
+                    no_faktur_retur: '',
+                    id: ''              
                 },
                 tambahKas: {
                     kode_kas : '',
@@ -812,11 +814,12 @@
                 axios.get(app.url+'/data-retur-pembelian/'+id)
                 .then(function (resp) {
                     console.log(resp.data)
-                    app.returPembelian.kas = resp.data.total
                     app.returPembelian.supplier = resp.data.suplier_id
                     app.potongan = resp.data.potongan
                     app.returPembelian.total_akhir = resp.data.total_bayar
                     app.returPembelian.potong_hutang = resp.data.potong_hutang
+                    app.returPembelian.no_faktur_retur = resp.data.no_faktur_retur
+                    app.returPembelian.id = resp.data.id
                     app.inputTbsRetur.no_faktur = resp.data.no_faktur_retur
 
                     if (app.returPembelian.potong_hutang > 0) {
@@ -1307,7 +1310,7 @@
                     });
                 }else{
                     app.closeModal();
-                    axios.post(app.url,newRetur).then(function (resp) {
+                    axios.post(app.url+'/update-retur-pembelian',newRetur).then(function (resp) {
                         if (resp.data == 0) {
                             app.alertGagal("Anda Belum Memasukan Produk");
                             app.loading = false;
@@ -1319,7 +1322,6 @@
                             app.alertGagal("Gagal : Terjadi Kesalahan , Silakan Coba Lagi!");
                             app.loading = false;
                         }else{
-                            app.getTbs();
                             app.alert("Menyelesaikan Transaksi Retur Pembelian");
                             app.returPembelian.supplier = ''
                             app.returPembelian.subtotal = 0
@@ -1330,6 +1332,7 @@
                             app.inputTbsRetur.supplier = ''   
                             window.open('retur-pembelian/cetak-retur-pembelian/'+resp.data.respons_retur,'_blank');
                             app.loading = false;
+                            app.$router.replace('/retur-pembelian');
                         }
                     })
                     .catch(function (resp) {
@@ -1346,13 +1349,13 @@
                 if (data_toogle == 0) {
                     $('#spanFakturHutang').show();
                     $("#display_potong_hutang").attr("data-toogle", 1)
-                    app.potong_hutang = 1;
+                    this.potong_hutang = 1;
                     this.disable = true;
                 }
                 else{
                     $('#spanFakturHutang').hide();
                     $("#display_potong_hutang").attr("data-toogle", 0)
-                    app.potong_hutang = 0;
+                    this.potong_hutang = 0;
                     this.disable = false;
                     this.returPembelian.faktur_hutang = '';
                 }
@@ -1377,8 +1380,9 @@
             hitungPotongHutang() {
                 var app = this;
                 var faktur_hutang = app.returPembelian.faktur_hutang
+                var no_faktur_retur = app.returPembelian.no_faktur_retur
 
-                axios.post(app.url+'/nilai-potong-hutang', {faktur_hutang})
+                axios.post(app.url+'/nilai-potong-hutang', {faktur_hutang, no_faktur_retur})
                 .then( (resp) => {
                     app.returPembelian.potong_hutang = resp.data;
                     var selisih = app.returPembelian.total_akhir - app.returPembelian.potong_hutang;

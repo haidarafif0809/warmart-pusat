@@ -1129,6 +1129,7 @@ Route::get('/retur-pembelian/proses-edit-jumlah-edit-tbs-retur', 'ReturPembelian
 Route::post('/retur-pembelian/edit-satuan-edit-tbs', 'ReturPembelianController@editSatuanEditTbs')->middleware('auth');
 Route::post('/retur-pembelian/proses-tambah-edit-tbs-retur-pembelian', 'ReturPembelianController@prosesEditTbs')->middleware('auth');
 Route::post('/retur-pembelian/proses-batal-edit-retur', 'ReturPembelianController@batalEditRetur')->middleware('auth');
+Route::post('/retur-pembelian/update-retur-pembelian', 'ReturPembelianController@updateReturPembelian')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
