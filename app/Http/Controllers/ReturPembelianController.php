@@ -153,9 +153,10 @@ class ReturPembelianController extends Controller
             foreach ($request['faktur_hutang'] as $faktur_hutang) {
                 $retur_hutang = TransaksiHutang::select('no_faktur')->where('no_faktur', $no_faktur_retur);
                 $data_pembelian = TransaksiHutang::getDataPembelianHutangFaktur($faktur_hutang)->first();
-                $data_hutangs = Pembelian::select(DB::raw('IFNULL(SUM(transaksi_hutangs.jumlah_keluar),0) AS jumlah_keluar'))
-                ->leftJoin('transaksi_hutangs', 'transaksi_hutangs.id_transaksi', '=', 'pembelians.id')
-                ->where('pembelians.no_faktur', $faktur_hutang)->first();
+                $data_hutangs = TransaksiHutang::select(DB::raw('IFNULL(SUM(transaksi_hutangs.jumlah_keluar),0) AS jumlah_keluar'))
+                ->where('transaksi_hutangs.no_faktur', $no_faktur_retur)
+                ->where('transaksi_hutangs.id_transaksi', $data_pembelian->id_transaksi)
+                ->first();
 
                 if ($retur_hutang->count() > 0) {
                     $hutang = $data_hutangs->jumlah_keluar + $data_pembelian->sisa_hutang;
@@ -1211,30 +1212,71 @@ class ReturPembelianController extends Controller
                             $transaksi_hutang = TransaksiHutang::where('no_faktur', $no_faktur)
                             ->where('id_transaksi', $id_pembelian)
                             ->where('jenis_transaksi', 'Retur Pembelian')
-                            ->where('warung_id', $warung_id)->first();
+                            ->where('warung_id', $warung_id);
 
                             if ($subtotal_akhir == $sisa_hutang) {
 
-                                $transaksi_hutang->update([
-                                    'jumlah_keluar'   => $subtotal_akhir,
-                                    'suplier_id'      => $supplier,
-                                    ]);
+                                if ($transaksi_hutang->count() > 0) {
+                                    $transaksi_hutang->update([
+                                        'jumlah_keluar'   => $subtotal_akhir,
+                                        'suplier_id'      => $supplier,
+                                        ]);
+                                }else{
+
+                                    TransaksiHutang::create([
+                                        'no_faktur'       => $no_faktur,
+                                        'id_transaksi'    => $id_pembelian,
+                                        'jenis_transaksi' => 'Retur Pembelian',
+                                        'jumlah_keluar'   => $subtotal_akhir,
+                                        'suplier_id'      => $supplier,
+                                        'warung_id'       => $warung_id,
+                                        ]);
+
+                                }
 
                                 $subtotal_akhir = 0;
                             }elseif ($subtotal_akhir > $sisa_hutang) {
 
-                                $transaksi_hutang->update([
-                                    'jumlah_keluar'   => $sisa_hutang,
-                                    'suplier_id'      => $supplier,
-                                    ]);
+
+                                if ($transaksi_hutang->count() > 0) {
+                                    $transaksi_hutang->update([
+                                        'jumlah_keluar'   => $sisa_hutang,
+                                        'suplier_id'      => $supplier,
+                                        ]);
+                                }else{
+
+                                    TransaksiHutang::create([
+                                        'no_faktur'       => $no_faktur,
+                                        'id_transaksi'    => $id_pembelian,
+                                        'jenis_transaksi' => 'Retur Pembelian',
+                                        'jumlah_keluar'   => $sisa_hutang,
+                                        'suplier_id'      => $supplier,
+                                        'warung_id'       => $warung_id,
+                                        ]);
+
+                                }
 
                                 $subtotal_akhir = $subtotal_akhir - $sisa_hutang;
                             }elseif ($subtotal_akhir < $sisa_hutang) {
 
-                                $transaksi_hutang->update([
-                                    'jumlah_keluar'   => $subtotal_akhir,
-                                    'suplier_id'      => $supplier,
-                                    ]);
+
+                                if ($transaksi_hutang->count() > 0) {
+                                    $transaksi_hutang->update([
+                                        'jumlah_keluar'   => $subtotal_akhir,
+                                        'suplier_id'      => $supplier,
+                                        ]);
+                                }else{
+
+                                    TransaksiHutang::create([
+                                        'no_faktur'       => $no_faktur,
+                                        'id_transaksi'    => $id_pembelian,
+                                        'jenis_transaksi' => 'Retur Pembelian',
+                                        'jumlah_keluar'   => $subtotal_akhir,
+                                        'suplier_id'      => $supplier,
+                                        'warung_id'       => $warung_id,
+                                        ]);
+
+                                }
 
                                 $subtotal_akhir = 0;
                             }

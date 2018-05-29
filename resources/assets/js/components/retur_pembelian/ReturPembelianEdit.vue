@@ -1381,11 +1381,13 @@
                 var app = this;
                 var faktur_hutang = app.returPembelian.faktur_hutang
                 var no_faktur_retur = app.returPembelian.no_faktur_retur
+                var total_akhir = app.returPembelian.total_akhir - app.returPembelian.potongan_faktur;
 
                 axios.post(app.url+'/nilai-potong-hutang', {faktur_hutang, no_faktur_retur})
                 .then( (resp) => {
+
                     app.returPembelian.potong_hutang = resp.data;
-                    var selisih = app.returPembelian.total_akhir - app.returPembelian.potong_hutang;
+                    var selisih = total_akhir - app.returPembelian.potong_hutang;
                     if (selisih < 0) {
                         app.returPembelian.pembayaran = 0;
                     }else{
