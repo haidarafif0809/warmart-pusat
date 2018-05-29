@@ -9,6 +9,7 @@ use Auth;
 use Illuminate\Http\Request;
 use Jenssegers\Agent\Agent;
 use Indonesia;
+use File;
 use Intervention\Image\ImageManagerStatic as Image;
 
 class SettingPengirimanController extends Controller
@@ -131,6 +132,7 @@ class SettingPengirimanController extends Controller
                 $filename     = $request->nama_bank . '.' . $extension;
                 $image_resize = Image::make($logo_bank->getRealPath());
                 // $image_resize->fit(300);
+                $image_resize->resize(80, 40);
                 $image_resize->save(public_path('jasa_pengiriman/' . $filename));
                 $tambahBankTransfer->logo_bank = $filename;
                 // menyimpan field logo_bank di table barangs dengan filename yang baru dibuat
@@ -138,5 +140,33 @@ class SettingPengirimanController extends Controller
             }
         }    
         return response()->json('berhasil!');
+    }
+
+    public function getDataEditSettingBank($id_bank) {
+        $dataSettingBank = SettingTransferBank::where('warung_id', Auth::user()->id_warung)->where('id', $id_bank)->first();
+
+        return response()->json($dataSettingBank);
+    }
+
+    public function update(Request $data_bank) {
+        $updateDataBank = SettingTransferBank::where('warung_id', Auth::user()->id_warung)->where('id', $data_bank->id);
+
+        // update data bank transfer
+        $updateDataBank->update($data_bank->all());
+
+        return 'Berhasil!';
+    }
+
+    public function hapusBankTransfer($id_bank, $logo_bank) {
+
+        $image_path = public_path('jasa_pengiriman/'. $logo_bank);
+        if(File::exists($image_path)) {
+
+            // hapus logo bank
+            File::delete($image_path);
+        }
+
+        $hapusBankTransfer = SettingTransferBank::where('warung_id', Auth::user()->id_warung)->where('id', $id_bank)->delete();
+        return 'Berhasil!';
     }
 }
