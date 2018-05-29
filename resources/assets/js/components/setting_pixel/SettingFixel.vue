@@ -83,13 +83,15 @@
       },
       methods: {
         settingFixel(fixel){
-            var app = this;
+            let app = this;
+            let pixel = fixel == 'Google' ? 'Google Analytics' : 'Facebook Pixel'
+            console.log(pixel)
             app.$swal({
-                title: 'Fixel '+fixel,
+                title: pixel,
                 content: {
                   element: "input",
                   attributes: {
-                    placeholder: 'Fixel '+fixel,
+                    placeholder: pixel,
                     type: "text",
                 },
             },
@@ -111,14 +113,14 @@
         var newFixel = app.fixel;
         axios.post(app.url+'/simpan-fixel', newFixel) 
         .then(function (resp) {
-            app.message = 'Berhasil Mengubah Setting Fixel';
+            app.message = 'Berhasil Mengubah Setting Setting Pixel & Analytics';
             app.alert(app.message);       
         })
         .catch(function (resp) {
             console.log(resp);
             app.fixel.google = "#";
             app.fixel.facebook = "#";
-            alert("Tidak Dapat Menyimpan Setting Fixel");
+            alert("Tidak Dapat Menyimpan Setting Setting Pixel & Analytics");
         });
     },
     getDataSettingFixel() {
