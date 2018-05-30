@@ -14,6 +14,7 @@ const state = {
 	pelanggan : [],
 	kasir:[],
 	suplier : [],
+	supplier : [],
 	bank : [],
 	suplier_order : [],
 }
@@ -45,7 +46,7 @@ const getters = {
 		return state.pelanggan.filter(function(pelanggan){
 			return pelanggan.id != "";
 		})
-	}
+	},
 }
 // Mutation adalah satu-satunya cara untuk merubah state
 const mutations = {
@@ -83,6 +84,10 @@ const mutations = {
 	// untuk memuat daftar bank
 	SET_BANK_LIST : (state, { list }) => {
 		state.bank = list
+	},
+	// untuk memuat data suplier
+	SET_SUPPLIER_LIST : (state, { list }) => {
+		state.supplier = list
 	},
 
 }
@@ -179,6 +184,18 @@ const actions = {
 		axios.get('penerimaan-produk/suplier-order')
 		.then((resp) => {
 			commit('SET_SUPLIER_ORDER_LIST',
+			{
+				list:resp.data
+			})
+		},
+		(err) => {
+			console.log(err)
+		})
+	},
+	LOAD_SUPPLIER_LIST : function({commit}){
+		axios.get('retur-pembelian/supplier')
+		.then((resp) => {
+			commit('SET_SUPPLIER_LIST',
 			{
 				list:resp.data
 			})

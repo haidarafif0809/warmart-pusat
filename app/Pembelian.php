@@ -132,4 +132,22 @@ class Pembelian extends Model
         ->where('pembelians.warung_id', Auth::user()->id_warung)->orderBy('pembelians.id', 'desc');
         return $query;
     }
+
+    public function scopeDataPembelian($query, $supplier, $warung_id) {
+        $query->select('pembelians.id', 'pembelians.no_faktur', 'detail_pembelians.id_produk', 'detail_pembelians.jumlah_produk', 'detail_pembelians.satuan_id', 'barangs.harga_beli', 'detail_pembelians.subtotal', 'barangs.nama_barang', 'satuans.nama_satuan')  
+        ->leftJoin('detail_pembelians', 'pembelians.no_faktur', '=', 'detail_pembelians.no_faktur')
+        ->leftJoin('barangs', 'detail_pembelians.id_produk', '=', 'barangs.id')
+        ->leftJoin('satuans', 'barangs.satuan_id', '=', 'satuans.id')
+        ->where('pembelians.suplier_id', $supplier)
+        ->where('detail_pembelians.warung_id', $warung_id);
+        return $query;
+    }
+
+    public function scopeGetFakturHutang($query, $no_faktur_retur) {
+        $query->select('pembelians.no_faktur')
+        ->leftJoin('transaksi_hutangs', 'transaksi_hutangs.id_transaksi', '=', 'pembelians.id')
+        ->where('transaksi_hutangs.no_faktur', $no_faktur_retur);
+
+        return $query;
+    }
 }

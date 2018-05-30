@@ -739,7 +739,7 @@
             </li>
             @endif
             <li>
-                <router-link :to="{name: 'settingFixelIndex'}" class="menu-nav">
+                <router-link :to="{name: 'settingPixelIndex'}" class="menu-nav">
                     <span class="sidebar-mini">
                         SP
                     </span>
