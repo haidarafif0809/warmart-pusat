@@ -1083,8 +1083,8 @@ Route::put('/setting-promo/tambah-waktu-edit/{id}', 'SettingPromoController@tamb
 Route::post('/setting-promo/{id}', 'SettingPromoController@update')->middleware('auth');
 
 // Setting Ficel
-Route::get('/setting-fixel/view', 'SettingFixelController@view')->middleware('auth');
-Route::post('/setting-fixel/simpan-fixel', 'SettingFixelController@simpanSetting')->middleware('auth');
+Route::get('/setting-pixel/view', 'SettingFixelController@view')->middleware('auth');
+Route::post('/setting-pixel/simpan-pixel', 'SettingFixelController@simpanSetting')->middleware('auth');
 
 // Setting SEO
 Route::get('/optimasi-seo/view', 'SettingSeoController@view')->middleware('auth');
@@ -1098,23 +1098,38 @@ Route::get('/tema/ubah-tema/{id}/{default_tema}/', 'SettingTemaController@ubahTe
 // Retur Pembelian
 Route::get('/retur-pembelian/view', 'ReturPembelianController@view')->middleware('auth');
 Route::get('/retur-pembelian/pencarian', 'ReturPembelianController@pencarian')->middleware('auth');
-Route::get('/retur-pembelian/data-faktur-hutang', 'ReturPembelianController@fakturHutang')->middleware('auth'); 
-Route::post('/retur-pembelian/nilai-potong-hutang', 'ReturPembelianController@potongHutang')->middleware('auth'); 
-
+Route::get('/retur-pembelian/view-detail/{id}', 'ReturPembelianController@viewDetail')->middleware('auth');
+Route::get('/retur-pembelian/pencarian-detail/{id}', 'ReturPembelianController@pencarianDetail')->middleware('auth');
 Route::get('/retur-pembelian/view-tbs', 'ReturPembelianController@viewTbs')->middleware('auth');
 Route::get('/retur-pembelian/pencarian-tbs', 'ReturPembelianController@pencarianTbs')->middleware('auth');
 Route::get('/retur-pembelian/supplier', 'ReturPembelianController@supplier')->middleware('auth'); 
 Route::get('/retur-pembelian/data-pembelian', 'ReturPembelianController@dataPembelian')->middleware('auth');
 Route::get('/retur-pembelian/pencarian-data-pembelian', 'ReturPembelianController@pencarianDataPembelian')->middleware('auth');
-Route::post('/retur-pembelian/proses-tambah-tbs-retur-pembelian', 'ReturPembelianController@prosesTbs')->middleware('auth');
 Route::get('/retur-pembelian/subtotal-tbs', 'ReturPembelianController@getSubtotal')->middleware('auth');
-Route::delete('/retur-pembelian/hapus-tbs/{id}', 'ReturPembelianController@hapusTbs')->middleware('auth');
 Route::get('/retur-pembelian/proses-edit-jumlah-retur', 'ReturPembelianController@editJumlahReturTbs')->middleware('auth');
+Route::get('/retur-pembelian/proses-tax-tbs', 'ReturPembelianController@editTax')->middleware('auth');
+Route::get('/retur-pembelian/data-faktur-hutang', 'ReturPembelianController@fakturHutang')->middleware('auth'); 
+Route::get('/retur-pembelian/cetak-retur-pembelian/{id}', 'ReturPembelianController@cetakRetur')->middleware('auth');
+Route::post('/retur-pembelian/proses-tambah-tbs-retur-pembelian', 'ReturPembelianController@prosesTbs')->middleware('auth');
+Route::post('/retur-pembelian/nilai-potong-hutang', 'ReturPembelianController@potongHutang')->middleware('auth'); 
+Route::post('/retur-pembelian/proses-batal-retur', 'ReturPembelianController@batalRetur')->middleware('auth');
 Route::post('/retur-pembelian/edit-satuan-tbs', 'ReturPembelianController@editSatuanTbs')->middleware('auth');
 Route::post('/retur-pembelian/proses-potongan-tbs', 'ReturPembelianController@editPotongan')->middleware('auth');
-Route::get('/retur-pembelian/proses-tax-tbs', 'ReturPembelianController@editTax')->middleware('auth');
-Route::post('/retur-pembelian/proses-batal-retur', 'ReturPembelianController@batalRetur')->middleware('auth');
+Route::delete('/retur-pembelian/hapus-tbs/{id}', 'ReturPembelianController@hapusTbs')->middleware('auth');
 
+Route::get('/retur-pembelian/proses-edit-retur-pembelian/{id}', 'ReturPembelianController@prosesEditRetur')->middleware('auth');
+Route::get('/retur-pembelian/view-edit-tbs/{id}', 'ReturPembelianController@viewEditTbs')->middleware('auth');
+Route::get('/retur-pembelian/pencarian-edit-tbs/{id}', 'ReturPembelianController@pencarianEditTbs')->middleware('auth');
+Route::get('/retur-pembelian/supplier-edit/{id}', 'ReturPembelianController@supplierEdit')->middleware('auth'); 
+Route::get('/retur-pembelian/data-retur-pembelian/{id}', 'ReturPembelianController@dataRetur')->middleware('auth'); 
+Route::get('/retur-pembelian/subtotal-edit-tbs/{id}', 'ReturPembelianController@getSubtotalEdit')->middleware('auth');
+Route::get('/retur-pembelian/data-faktur-hutang/{id}', 'ReturPembelianController@fakturHutangEdit')->middleware('auth'); 
+Route::delete('/retur-pembelian/hapus-edit-tbs/{id}', 'ReturPembelianController@hapusEditTbs')->middleware('auth');
+Route::get('/retur-pembelian/proses-edit-jumlah-edit-tbs-retur', 'ReturPembelianController@editJumlahReturEditTbs')->middleware('auth');
+Route::post('/retur-pembelian/edit-satuan-edit-tbs', 'ReturPembelianController@editSatuanEditTbs')->middleware('auth');
+Route::post('/retur-pembelian/proses-tambah-edit-tbs-retur-pembelian', 'ReturPembelianController@prosesEditTbs')->middleware('auth');
+Route::post('/retur-pembelian/proses-batal-edit-retur', 'ReturPembelianController@batalEditRetur')->middleware('auth');
+Route::post('/retur-pembelian/update-retur-pembelian', 'ReturPembelianController@updateReturPembelian')->middleware('auth');
 
 Route::middleware('optimizeImages', 'auth')->group(function () {
 

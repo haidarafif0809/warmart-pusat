@@ -48,9 +48,9 @@
 									<th>No. Transaksi</th>
 									<th>Supplier</th>
 									<th style="text-align:right;">Total Retur</th>
+									<th style="text-align:right;">Diskon</th>
 									<th style="text-align:right;">Potong Hutang</th>
 									<th style="text-align:right;">Kas</th>
-									<th style="text-align:right;">Diskon</th>
 									<th style="text-align:center;">Waktu</th>
 									<th style="text-align:right;">Edit</th>
 									<th style="text-align:right;">Detail</th>
@@ -62,26 +62,35 @@
 								<tr v-for="returPembelian, index in returPembelian" >
 									<td>{{ returPembelian.no_faktur_retur }}</td>
 									<td>{{ returPembelian.suplier | capitalize }}</td>
-									<td align="right">{{ returPembelian.total_bayar | pemisahTitik }}</td>
-									<td align="right">{{ returPembelian.potong_hutang | pemisahTitik }}</td>
-									<td align="right">{{ returPembelian.total | pemisahTitik }}</td>
+									<td align="right">
+										{{ (returPembelian.total_bayar + returPembelian.potongan) | pemisahTitik }}
+									</td>
+
 									<td align="right">{{ returPembelian.potongan | pemisahTitik }}</td>
+
+									<td align="right" v-if="returPembelian.total == 0">
+										{{ returPembelian.total_bayar | pemisahTitik }}
+									</td>
+
+									<td align="right" v-else>{{ returPembelian.potong_hutang | pemisahTitik }}</td>
+
+									<td align="right">{{ returPembelian.total | pemisahTitik }}</td>
 									<td align="center">{{ returPembelian.waktu}}</td>
 
 									<td style="text-align:right;">
-										<router-link :to="{name: 'prosesEditPembelianOrder', params: {id: returPembelian.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + returPembelian.id">
+										<router-link :to="{name: 'prosesEditReturPembelian', params: {id: returPembelian.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + returPembelian.id">
 											Edit 
 										</router-link>
 									</td>
 
 									<td style="text-align:right;">
-										<router-link :to="{name: 'detailPembelianOrder', params: {id: returPembelian.id}}" class="btn btn-xs btn-info" v-bind:id="'detail-' + returPembelian.no_faktur_retur" >
+										<router-link :to="{name: 'detailReturPembelian', params: {id: returPembelian.id}}" class="btn btn-xs btn-info" v-bind:id="'detail-' + returPembelian.no_faktur_retur" >
 											Detail
 										</router-link> 
 									</td>
 
 									<td style="text-align:right;">
-										<a target="blank" class="btn btn-primary btn-xs" v-bind:href="'retur-pembelian/cetak-besar-retur/'+returPembelian.id">Cetak Ulang</a>
+										<a target="blank" class="btn btn-primary btn-xs" v-bind:href="'retur-pembelian/cetak-retur-pembelian/'+returPembelian.id">Cetak Ulang</a>
 									</td>
 
 									<td style="text-align:right;">
