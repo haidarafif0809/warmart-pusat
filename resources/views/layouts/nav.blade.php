@@ -170,43 +170,62 @@
 @endif {{-- end if otoritas Persediaan --}}
 @endif  {{-- end if kasir_id  --}}
 
-@if(Laratrust::can('lihat_pembelian')) 
-<!--PEMBELIAN ORDER-->
-<li>
-    <router-link :to="{name: 'indexPembelianOrder'}" class="menu-nav disabled-menu">
-        <i class="material-icons">
-            add_shopping_cart
-        </i>
-        <p>
-            Order Pembelian
-        </p>
-    </router-link>
-</li>
 
-<!--PENERIMAAN PRODUK-->
 <li>
-    <router-link :to="{name: 'indexPenerimaanProduk'}" class="menu-nav disabled-menu">
-        <i class="material-icons">
-            add_shopping_cart
-        </i>
-        <p>
-            Penerimaan Produk
-        </p>
-    </router-link>
-</li>
-
-<!--PEMBELIAN-->
-<li>
-    <router-link :to="{name: 'indexPembelian'}" class="menu-nav disabled-menu">
+    <a class="disabled-menu" data-toggle="collapse" href="#pembelian">
         <i class="material-icons">
             add_shopping_cart
         </i>
         <p>
             Pembelian
+            <b class="caret">
+            </b>
         </p>
-    </router-link>
+    </a>
+    <div class="collapse" id="pembelian">
+        <ul class="nav">
+
+            @if(Laratrust::can('lihat_pembelian')) 
+            <!--PEMBELIAN ORDER-->
+            <li>
+                <router-link :to="{name: 'indexPembelianOrder'}" class="menu-nav disabled-menu">
+                    <span class="sidebar-mini">
+                        OP
+                    </span>
+                    <span class="sidebar-normal">
+                        Order Pembelian
+                    </span>
+                </router-link>
+            </li>
+
+            <!--PENERIMAAN PRODUK-->
+            <li>
+                <router-link :to="{name: 'indexPenerimaanProduk'}" class="menu-nav disabled-menu">
+                    <span class="sidebar-mini">
+                        PP
+                    </span>
+                    <span class="sidebar-normal">
+                        Penerimaan Produk
+                    </span>
+                </router-link>
+            </li>
+
+            <!--PEMBELIAN-->
+            <li>
+                <router-link :to="{name: 'indexPembelian'}" class="menu-nav disabled-menu">
+                    <span class="sidebar-mini">
+                        BL
+                    </span>
+                    <span class="sidebar-normal">
+                        Pembelian
+                    </span>
+                </router-link>
+            </li>
+            @endif 
+
+        </ul>
+    </div>
 </li>
-@endif 
 
 @if(Laratrust::can('lihat_pesanan')) 
 <!--PESANAN -->

@@ -14,7 +14,7 @@ class TemaWarna extends Model
 		$tema->nama_tema    = "Default";
 		$tema->kode_tema	= "#2AC326";
 		$tema->header_tema	= "#E91E63";
-		$tema->default_tema	= 1;
+		$tema->default_tema	= 0;
 		$tema->warung_id 	= $warung_id;
 		$tema->save();
 		
@@ -22,7 +22,7 @@ class TemaWarna extends Model
 		$tema->nama_tema    = "Meadowlark";
 		$tema->kode_tema	= "#003e53";
 		$tema->header_tema	= "#718a93";
-		$tema->default_tema	= 0;
+		$tema->default_tema	= 1;
 		$tema->warung_id 	= $warung_id;
 		$tema->save();
 		
