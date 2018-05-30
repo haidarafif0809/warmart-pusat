@@ -48,9 +48,9 @@
 									<th>No. Transaksi</th>
 									<th>Supplier</th>
 									<th style="text-align:right;">Total Retur</th>
+									<th style="text-align:right;">Diskon</th>
 									<th style="text-align:right;">Potong Hutang</th>
 									<th style="text-align:right;">Kas</th>
-									<th style="text-align:right;">Diskon</th>
 									<th style="text-align:center;">Waktu</th>
 									<th style="text-align:right;">Edit</th>
 									<th style="text-align:right;">Detail</th>
@@ -62,10 +62,19 @@
 								<tr v-for="returPembelian, index in returPembelian" >
 									<td>{{ returPembelian.no_faktur_retur }}</td>
 									<td>{{ returPembelian.suplier | capitalize }}</td>
-									<td align="right">{{ returPembelian.total_bayar | pemisahTitik }}</td>
-									<td align="right">{{ returPembelian.potong_hutang | pemisahTitik }}</td>
-									<td align="right">{{ returPembelian.total | pemisahTitik }}</td>
+									<td align="right">
+										{{ (returPembelian.total_bayar + returPembelian.potongan) | pemisahTitik }}
+									</td>
+
 									<td align="right">{{ returPembelian.potongan | pemisahTitik }}</td>
+
+									<td align="right" v-if="returPembelian.total == 0">
+										{{ returPembelian.total_bayar | pemisahTitik }}
+									</td>
+
+									<td align="right" v-else>{{ returPembelian.potong_hutang | pemisahTitik }}</td>
+
+									<td align="right">{{ returPembelian.total | pemisahTitik }}</td>
 									<td align="center">{{ returPembelian.waktu}}</td>
 
 									<td style="text-align:right;">

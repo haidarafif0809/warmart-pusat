@@ -357,13 +357,13 @@
                                             {{ tbs_retur_pembelian.data_tbs.kode_barang }} - {{ tbs_retur_pembelian.data_tbs.nama_barang | capitalize }}
                                         </td>
                                         <td align="right">
-                                            <a href="#create-retur-pembelian" v-bind:id="'edit-' + tbs_retur_pembelian.data_tbs.id_tbs_retur_pembelian" v-on:click="editJumlah(tbs_retur_pembelian.data_tbs.id_tbs_retur_pembelian, index,tbs_retur_pembelian.data_tbs.nama_barang,tbs_retur_pembelian.data_tbs.subtotal)">
+                                            <a :href="'#edit-retur-pembelian/'+id_retur" v-bind:id="'edit-' + tbs_retur_pembelian.data_tbs.id_edit_tbs_retur_pembelian" v-on:click="editJumlah(tbs_retur_pembelian.data_tbs.id_edit_tbs_retur_pembelian, index,tbs_retur_pembelian.data_tbs.nama_barang,tbs_retur_pembelian.data_tbs.subtotal)">
                                                 {{ tbs_retur_pembelian.data_tbs.jumlah_retur | pemisahTitik }}
                                             </a>
                                         </td>
 
                                         <td align="center">
-                                            <a href="#create-retur-pembelian" v-bind:id="'edit-' + tbs_retur_pembelian.data_tbs.id_tbs_retur_pembelian" v-bind:class="'hurufBesar satuan-' + tbs_retur_pembelian.data_tbs.id_produk" v-bind:data-satuan="''+tbs_retur_pembelian.data_tbs.satuan_id" v-on:click="editSatuan(tbs_retur_pembelian.data_tbs.id_tbs_retur_pembelian, index,tbs_retur_pembelian.data_tbs.nama_barang,tbs_retur_pembelian.data_tbs.subtotal, tbs_retur_pembelian.data_tbs.id_produk)">
+                                            <a :href="'#edit-retur-pembelian/'+id_retur" v-bind:id="'edit-' + tbs_retur_pembelian.data_tbs.id_edit_tbs_retur_pembelian" v-bind:class="'hurufBesar satuan-' + tbs_retur_pembelian.data_tbs.id_produk" v-bind:data-satuan="''+tbs_retur_pembelian.data_tbs.satuan_id" v-on:click="editSatuan(tbs_retur_pembelian.data_tbs.id_edit_tbs_retur_pembelian, index,tbs_retur_pembelian.data_tbs.nama_barang,tbs_retur_pembelian.data_tbs.subtotal, tbs_retur_pembelian.data_tbs.id_produk)">
                                                 {{ tbs_retur_pembelian.data_tbs.nama_satuan }}
                                             </a>
                                         </td>
@@ -371,20 +371,20 @@
                                         <td align="right">{{ tbs_retur_pembelian.data_tbs.harga_produk | pemisahTitik }}</td>
 
                                         <td align="right">
-                                            <a href="#create-retur-pembelian" v-bind:id="'edit-' + tbs_retur_pembelian.data_tbs.id_tbs_retur_pembelian" v-on:click="editPotongan(tbs_retur_pembelian.data_tbs.id_tbs_retur_pembelian, index,tbs_retur_pembelian.data_tbs.nama_barang,tbs_retur_pembelian.data_tbs.subtotal)">
+                                            <a :href="'#edit-retur-pembelian/'+id_retur" v-bind:id="'edit-' + tbs_retur_pembelian.data_tbs.id_edit_tbs_retur_pembelian" v-on:click="editPotongan(tbs_retur_pembelian.data_tbs.id_edit_tbs_retur_pembelian, index,tbs_retur_pembelian.data_tbs.nama_barang,tbs_retur_pembelian.data_tbs.subtotal)">
                                                 {{ tbs_retur_pembelian.data_tbs.potongan | pemisahTitik }} | {{ Math.round(tbs_retur_pembelian.potongan_persen,2) }} %
                                             </a>
                                         </td>
 
                                         <td align="right">
-                                            <a href="#create-retur-pembelian" v-bind:id="'edit-' + tbs_retur_pembelian.data_tbs.id_tbs_retur_pembelian" v-on:click="editTax(tbs_retur_pembelian.data_tbs.id_tbs_retur_pembelian, index,tbs_retur_pembelian.data_tbs.nama_barang,tbs_retur_pembelian.data_tbs.jumlah_retur,tbs_retur_pembelian.data_tbs.harga_produk,tbs_retur_pembelian.data_tbs.potongan,tbs_retur_pembelian.ppn_produk,tbs_retur_pembelian.data_tbs.subtotal)" >
+                                            <a :href="'#edit-retur-pembelian/'+id_retur" v-bind:id="'edit-' + tbs_retur_pembelian.data_tbs.id_edit_tbs_retur_pembelian" v-on:click="editTax(tbs_retur_pembelian.data_tbs.id_edit_tbs_retur_pembelian, index,tbs_retur_pembelian.data_tbs.nama_barang,tbs_retur_pembelian.data_tbs.jumlah_retur,tbs_retur_pembelian.data_tbs.harga_produk,tbs_retur_pembelian.data_tbs.potongan,tbs_retur_pembelian.ppn_produk,tbs_retur_pembelian.data_tbs.subtotal)" >
                                                 {{ tbs_retur_pembelian.data_tbs.tax | pemisahTitik }} | {{ Math.round(tbs_retur_pembelian.tax_persen,2) }} %
                                             </a>
                                         </td>
 
                                         <td align="right">{{ tbs_retur_pembelian.data_tbs.subtotal | pemisahTitik }}</td>
                                         <td style="text-align:right;">
-                                            <a href="#create-retur-pembelian" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_retur_pembelian.data_tbs.id_tbs_retur_pembelian" v-on:click="deleteEntry(tbs_retur_pembelian.data_tbs.id_tbs_retur_pembelian, index,tbs_retur_pembelian.data_tbs.nama_barang,tbs_retur_pembelian.data_tbs.subtotal)">
+                                            <a :href="'#edit-retur-pembelian/'+id_retur" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_retur_pembelian.data_tbs.id_edit_tbs_retur_pembelian" v-on:click="deleteEntry(tbs_retur_pembelian.data_tbs.id_edit_tbs_retur_pembelian, index,tbs_retur_pembelian.data_tbs.nama_barang,tbs_retur_pembelian.data_tbs.subtotal)">
                                                 Delete
                                             </a>
                                         </td>
@@ -418,7 +418,7 @@
                                 <p class="category" style="font-size: 18px; padding-bottom: 5px;">
                                     <div class="checkbox">
                                         <label style="font-size:18px; color: #999999">
-                                            <input type="checkbox" name="potong_hutang" id="display_potong_hutang" data-toogle="0" @change="displayPotongHutang"> Potong Hutang
+                                            <input type="checkbox" name="potong_hutang" v-model="potong_hutang" id="display_potong_hutang" data-toogle="0" @change="displayPotongHutang" true-value="1" false-value="0"> Potong Hutang
                                         </label>
                                     </div> 
                                 </p>
@@ -517,6 +517,7 @@
                 seen: false,
                 disable: false,
                 potongan: 0,
+                potong_hutang: 0,
                 separator: {
                     decimal: ',',
                     thousands: '.',
@@ -556,7 +557,8 @@
                     stok_produk: 0,
                     potongan_produk: 0,
                     tax_produk: 0,
-                    id_tbs: ''
+                    id_tbs: '',
+                    no_faktur: ''
                 },
                 returPembelian: {
                     kas: '',
@@ -568,7 +570,9 @@
                     potong_hutang : 0,
                     faktur_hutang : '',
                     pembayaran : 0,
-                    keterangan: '',                    
+                    keterangan: '',      
+                    no_faktur_retur: '',
+                    id: ''              
                 },
                 tambahKas: {
                     kode_kas : '',
@@ -589,6 +593,8 @@
             app.id_retur = app.$route.params.id;
             app.$store.dispatch('LOAD_KAS_LIST')
             app.getTbs();
+            app.getFakturHutang();
+            app.getReturPembelian(app.id_retur);
         },
         filters: {
             pemisahTitik: function (value) {
@@ -652,9 +658,8 @@
                 axios.get(app.url+'/data-faktur-hutang/'+app.id_retur)
                 .then( (resp) => {
                     app.fakturHutangs = resp.data.faktur_hutang
-                    app.returPembelian.faktur_hutang = resp.data.faktur_default
-                    console.log(`${resp.data.faktur_default}`)
-                    console.log(resp.data.faktur_default)
+                    app.returPembelian.faktur_hutang = resp.data.faktur_default                    
+                    app.displayPotongHutangMounted();
                 })
                 .catch( (err) => {
                     console.log(err);
@@ -748,7 +753,7 @@
                 var newTbs = app.inputTbsRetur;
 
                 app.loading = true;
-                axios.post(app.url+'/proses-tambah-tbs-retur-pembelian', newTbs)
+                axios.post(app.url+'/proses-tambah-edit-tbs-retur-pembelian', newTbs)
                 .then(function (resp) {
                     $("#modalInsertTbs").hide();
                     app.alert("Menambahkan Produk "+titleCase(nama_produk));
@@ -791,8 +796,6 @@
                     app.seen = true
                     app.returPembelian.kas = app.default_kas
                     app.openSelectizeSupplier();
-                    app.getFakturHutang();
-                    app.getReturPembelian(app.id_retur);
 
                     if (app.returPembelian.subtotal == 0) {          
                         app.getSubtotal(); 
@@ -811,11 +814,17 @@
                 axios.get(app.url+'/data-retur-pembelian/'+id)
                 .then(function (resp) {
                     console.log(resp.data)
-                    app.returPembelian.kas = resp.data.total
                     app.returPembelian.supplier = resp.data.suplier_id
                     app.potongan = resp.data.potongan
                     app.returPembelian.total_akhir = resp.data.total_bayar
                     app.returPembelian.potong_hutang = resp.data.potong_hutang
+                    app.returPembelian.no_faktur_retur = resp.data.no_faktur_retur
+                    app.returPembelian.id = resp.data.id
+                    app.inputTbsRetur.no_faktur = resp.data.no_faktur_retur
+
+                    if (app.returPembelian.potong_hutang > 0) {
+                        app.potong_hutang = 1;
+                    }
                 })
                 .catch(function (resp) {
                   alert("Tidak Dapat Memuat Pembelian Order");
@@ -905,7 +914,7 @@
             prosesDelete(id,nama_produk,subtotal_lama){
                 var app = this;
                 app.loading = true;
-                axios.delete(app.url+'/hapus-tbs/'+id)
+                axios.delete(app.url+'/hapus-edit-tbs/'+id)
                 .then(function (resp) {
                     app.getTbs();
 
@@ -953,7 +962,7 @@
                 }).then(function (jumlah_retur) {
                     if (jumlah_retur != "0") { 
                         app.loading = true;
-                        axios.get(app.url+'/proses-edit-jumlah-retur?jumlah_retur='+jumlah_retur+'&id_tbs='+id)
+                        axios.get(app.url+'/proses-edit-jumlah-edit-tbs-retur?jumlah_retur='+jumlah_retur+'&id_tbs='+id)
                         .then(function (resp) {
                             app.alert("Mengubah Jumlah Retur "+titleCase(nama_produk));
                             app.loading = false;
@@ -991,7 +1000,7 @@
                 if (satuan_tbs == satuan_produk[0]) {
                     $("#modalEditSatuan").hide();
                 }else{
-                    axios.post(app.url+'/edit-satuan-tbs', newSatuan)
+                    axios.post(app.url+'/edit-satuan-edit-tbs', newSatuan)
                     .then(function (resp) {
 
                         var subtotal = (parseInt(app.returPembelian.subtotal) - parseInt(subtotal_lama) + parseInt(resp.data.subtotal))
@@ -1171,9 +1180,8 @@
                     if (!value) throw null;
 
                     app.loading = true;
-                    axios.post(app.url+'/proses-batal-retur')
+                    axios.post(app.url+'/proses-batal-edit-retur')
                     .then(function (resp) {
-                        app.getTbs();
                         app.alert("Membatalkan Transaksi Retur Pembelian");
                         app.inputTbsRetur.supplier = ''
                         app.returPembelian.subtotal = 0
@@ -1185,6 +1193,7 @@
                         app.returPembelian.kas = ''
                         app.returPembelian.keterangan = ''
                         app.returPembelian.supplier = ''
+                        app.$router.replace('/retur-pembelian');
                     })
                     .catch(function (resp) {
                         console.log(resp);
@@ -1301,7 +1310,7 @@
                     });
                 }else{
                     app.closeModal();
-                    axios.post(app.url,newRetur).then(function (resp) {
+                    axios.post(app.url+'/update-retur-pembelian',newRetur).then(function (resp) {
                         if (resp.data == 0) {
                             app.alertGagal("Anda Belum Memasukan Produk");
                             app.loading = false;
@@ -1313,7 +1322,6 @@
                             app.alertGagal("Gagal : Terjadi Kesalahan , Silakan Coba Lagi!");
                             app.loading = false;
                         }else{
-                            app.getTbs();
                             app.alert("Menyelesaikan Transaksi Retur Pembelian");
                             app.returPembelian.supplier = ''
                             app.returPembelian.subtotal = 0
@@ -1324,6 +1332,7 @@
                             app.inputTbsRetur.supplier = ''   
                             window.open('retur-pembelian/cetak-retur-pembelian/'+resp.data.respons_retur,'_blank');
                             app.loading = false;
+                            app.$router.replace('/retur-pembelian');
                         }
                     })
                     .catch(function (resp) {
@@ -1340,11 +1349,30 @@
                 if (data_toogle == 0) {
                     $('#spanFakturHutang').show();
                     $("#display_potong_hutang").attr("data-toogle", 1)
+                    this.potong_hutang = 1;
                     this.disable = true;
                 }
                 else{
                     $('#spanFakturHutang').hide();
                     $("#display_potong_hutang").attr("data-toogle", 0)
+                    this.potong_hutang = 0;
+                    this.disable = false;
+                    this.returPembelian.faktur_hutang = '';
+                }
+            },
+            displayPotongHutangMounted() {
+                var app = this;
+
+                if (app.returPembelian.faktur_hutang != '') {
+                    $('#spanFakturHutang').show();
+                    $("#display_potong_hutang").attr("data-toogle", 1)
+                    app.potong_hutang = 1;
+                    this.disable = true;
+                }
+                else{
+                    $('#spanFakturHutang').hide();
+                    $("#display_potong_hutang").attr("data-toogle", 0)
+                    app.potong_hutang = 0;
                     this.disable = false;
                     this.returPembelian.faktur_hutang = '';
                 }
@@ -1352,15 +1380,22 @@
             hitungPotongHutang() {
                 var app = this;
                 var faktur_hutang = app.returPembelian.faktur_hutang
+                var no_faktur_retur = app.returPembelian.no_faktur_retur
+                var total_akhir = app.returPembelian.total_akhir - app.returPembelian.potongan_faktur;
 
-                axios.post(app.url+'/nilai-potong-hutang', {faktur_hutang})
+                axios.post(app.url+'/nilai-potong-hutang', {faktur_hutang, no_faktur_retur})
                 .then( (resp) => {
+
                     app.returPembelian.potong_hutang = resp.data;
-                    var selisih = app.returPembelian.total_akhir - app.returPembelian.potong_hutang;
+                    var selisih = total_akhir - app.returPembelian.potong_hutang;
                     if (selisih < 0) {
                         app.returPembelian.pembayaran = 0;
                     }else{
                         app.returPembelian.pembayaran = selisih;
+                    }
+
+                    if (app.returPembelian.potong_hutang > 0) {
+                        app.potong_hutang = 1;
                     }
 
                     $("#modal_selesai").show(); 
