@@ -2,7 +2,7 @@
 <html lang="en">
 <?php 
 $foto_logo = \App\UserWarung::select()->where('tipe_user',4)->orderBy('id', 'asc')->limit(1)->first();
-$nama_toko = \App\Warung::select('name')->first()->name;
+$nama_toko = \App\Warung::select('name')->where('id', \App\SettingPembedaAplikasi::where('app_address', url('/'))->first()->warung_id)->first()->name;
 $tema = \App\TemaWarna::where('default_tema', 1)->where('warung_id', \App\SettingPembedaAplikasi::where('app_address', url('/'))->first()->warung_id)->first();
 ?>
 <head>
