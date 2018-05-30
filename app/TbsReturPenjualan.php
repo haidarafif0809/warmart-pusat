@@ -13,7 +13,11 @@ class TbsReturPenjualan extends Model
     protected $fillable   = ['session_id', 'no_faktur_retur', 'no_faktur_penjualan', 'id_produk', 'jumlah_jual', 'jumlah_retur', 'id_satuan', 'id_satuan_jual', 'harga_produk', 'subtotal', 'tax','potongan','warung_id','id_pelanggan','satuan_dasar'];
     protected $primaryKey = 'id_tbs_retur_penjualan';
 
-
+        public function produk()
+    {
+        return $this->hasOne('App\Barang', 'id', 'id_produk');
+    }
+        
     // DATA TBS PEMBAYARAN hutang
     public function scopeDataTbsReturPenjualan($query_tbs, $session_id)
     {

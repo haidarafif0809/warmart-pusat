@@ -481,7 +481,8 @@ export default {
               nama_produk : '', 
               id_produk : '', 
               id_penjualan: '',
-              satuan_produk : '', 
+              satuan_produk : '',
+              satuan : '',
               stok_produk: 0,
               harga_produk:'',
               harga_jual : '',
@@ -706,7 +707,7 @@ export default {
             });
         },
         returJualEntry(id_penjualan,index,id_produk,kode_barang,nama_barang,jumlah_produk,satuan,harga_produk,jumlah_jual){
-             var app = this;
+              var app = this;
                $("#modalInsertTbs").show();
                $("#modal_pilih_retur").hide();            
                 app.inputTbsReturPenjualan.nama_produk = titleCase(nama_barang);
@@ -718,6 +719,7 @@ export default {
                 console.log(satuan);
                 app.inputTbsReturPenjualan.harga_produk = harga_produk;
                 app.inputTbsReturPenjualan.harga_jual = harga_produk;
+                app.getSatuan(id_produk);
         },
         getSatuan(id_produk){ 
                 var app = this; 
@@ -1077,13 +1079,13 @@ export default {
                         }else{ 
                             app.getResults(); 
                             app.alert("Menyelesaikan Transaksi Retur Penjualan"); 
-                            app.inputReturPenjualan.supplier = '' 
+                            app.inputReturPenjualan.pelanggan = '' 
                             app.inputReturPenjualan.subtotal = 0 
                             app.inputReturPenjualan.potongan_persen = 0 
                             app.inputReturPenjualan.potongan_faktur = 0 
                             app.inputReturPenjualan.total_akhir = 0 
                             app.inputReturPenjualan.pembayaran = 0 
-                            app.inputTbsReturPenjualan.supplier = ''    
+                            app.inputTbsReturPenjualan.pelanggan = ''    
                             // window.open('penjualan/cetak-kecil-penjualan/'+resp.data.respons_penjualan,'_blank'); 
                             app.loading = false; 
                         } 
@@ -1091,7 +1093,7 @@ export default {
                     .catch(function (resp) { 
                         console.log(resp); 
                         app.loading = false; 
-                        alert("Tidak Dapat Menyelesaikan Transaksi Retur Pembelian");         
+                        alert("Tidak Dapat Menyelesaikan Transaksi Retur Penjualan");         
                         app.errors = resp.response.data.errors; 
                     }); 
                 } 
@@ -1146,7 +1148,6 @@ export default {
       tambahModalKas(){
                 $("#modal_tambah_kas").show();
                 $("#modal_selesai").hide();
-                this.$refs.kode_kas.focus(); 
      },
     alertGagal(pesan) { 
                 this.$swal({ 

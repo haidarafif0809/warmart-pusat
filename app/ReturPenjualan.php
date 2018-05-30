@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 class ReturPenjualan extends Model
 {
     use AuditableTrait;
-    protected $fillable   = ['no_faktur_retur', 'id_pelanggan', 'keterangan', 'total', 'total_bayar','tax','potongan','id_kas','ppn','warung_id'];
+    protected $fillable   = ['no_faktur_retur', 'id_pelanggan', 'keterangan', 'total', 'total_bayar','tax','potongan','id_kas','ppn','warung_id','created_at'];
     protected $primaryKey = 'id_retur_penjualan';
 
 
@@ -32,7 +32,7 @@ class ReturPenjualan extends Model
         }
 
         //ambil bulan dan no_faktur dari tanggal pembayaran_piutang terakhir
-        $retur_penjualan = ReturPenjualan::select([DB::raw('MONTH(created_at) bulan'), 'no_faktur_retur'])->where('warung_id', $warung_id)->orderBy('id_pembayaran_piutang', 'DESC')->first();
+        $retur_penjualan = ReturPenjualan::select([DB::raw('MONTH(created_at) bulan'), 'no_faktur_retur'])->where('warung_id', $warung_id)->orderBy('id_retur_penjualan', 'DESC')->first();
 
         if ($retur_penjualan != null) {
             $pisah_nomor = explode("/", $retur_penjualan->no_faktur_retur);
@@ -79,7 +79,7 @@ class ReturPenjualan extends Model
     }
 
 
-        // DATA PEMBAYARAN PIUTANG
+        // DATA RETUR PENJUALAN
     public function scopeDataReturPenjualan($query_retur_penjualan)
     {
         $query_retur_penjualan = ReturPenjualan::select('retur_penjualans.id_retur_penjualan as id', 'retur_penjualans.no_faktur_retur as no_faktur', 'retur_penjualans.created_at', 'retur_penjualans.updated_at', 'retur_penjualans.total_bayar as total', 'kas.nama_kas as nama_kas', 'userbuat.name as petugas', 'retur_penjualans.keterangan as keterangan','userpelanggan.name as pelanggan')

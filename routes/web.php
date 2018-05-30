@@ -1156,7 +1156,7 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
     Route::resource('pembelian-order', 'PembelianOrderController');
     Route::resource('penerimaan-produk', 'PenerimaanProdukController');
     Route::resource('tema', 'SettingTemaController');
-
+    Route::resource('retur-penjualan', 'ReturPenjualanController');
 //BARANG
     //HALAMAN DESKRIPSI
     Route::get('/produk/detail-produk/{id}', [
