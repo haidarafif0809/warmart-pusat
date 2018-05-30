@@ -290,7 +290,7 @@ class SuplierController extends Controller
         $message['error'] = [];
         // variable untuk menyimpan lokasi (baris) yang akan di masukkan dalam pesan error
         $baris = 1;
-        // variable array yg nantinya hanya akan diisi string spasi. karena gunanya hanya untuk menentukan penginsertan koma yang akan memisahkan kolom2 yang kosong dengan menghitung isi arraynya, jadi string spasi saja udh cukup yang penting bisa diitung (biar hemat)
+        // variable array yg nantinya hanya akan diisi string spasi. karena gunanya hanya untuk menentukan penginsertan koma yang akan memisahkan kolom2 yang kosong dengan menghitung isi arraynya, jadi string spasi saja sdh cukup yang penting bisa diitung
         $arr = [];
         // variable untuk menampung kolom2 yang kosong
         $kolom = '';
