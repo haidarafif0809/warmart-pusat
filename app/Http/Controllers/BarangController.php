@@ -157,7 +157,8 @@ class BarangController extends Controller
 
     public function pilih_kategori()
     {
-        $kategori = KategoriBarang::all();
+        $kategori = KategoriBarang::where('warung_id', Auth::user()->id_warung)->get();
+
         return response()->json($kategori);
     }
 

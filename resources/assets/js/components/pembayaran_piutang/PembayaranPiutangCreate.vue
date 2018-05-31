@@ -46,7 +46,17 @@
         width: 36px;
         height: 36px;
     }
-
+    .table>thead>tr>th {
+        border-bottom-width: 1px;
+        font-size: 1em;
+        font-weight: 300;
+    }
+    .table>tbody>tr>td {
+        border-bottom-width: 1px;
+        font-size: 0.9em;
+        font-weight: 300;
+        color: black;
+    }
 </style>
 
 <template>
@@ -329,7 +339,7 @@
                                 <table class="table table-striped table-hover" v-if="seen">
                                     <thead class="text-primary">
                                         <tr>
-                                            <th class="text-right">No. Transaksi</th>
+                                            <th>No. Transaksi</th>
                                             <th> Pelanggan </th>
                                             <th class="text-center">Tanggal JT</th>
                                             <th class="text-right">Piutang</th>
