@@ -30,8 +30,6 @@ class DaftarProdukController extends Controller
      */
     public function index()
     {
-
-
     //Cek Address Aplikasi yg di Jalankan
         $address_current = url('/');
 
@@ -114,7 +112,7 @@ class DaftarProdukController extends Controller
         $tema = TemaWarna::select('header_tema', 'kode_tema')->where('default_tema', 1)->where('warung_id', $warung_id)->first();
 
         //PILIH DATA KATEGORI PRODUK
-        $kategori = KategoriBarang::select(['id', 'nama_kategori_barang', 'kategori_icon']);
+        $kategori = KategoriBarang::select(['id', 'nama_kategori_barang', 'kategori_icon'])->where('warung_id', $this->idWarung());
         //PERINTAH PAGINATION
         $produk_pagination = $data_produk->links();
         //FOTO HEADER
@@ -129,6 +127,11 @@ class DaftarProdukController extends Controller
         $nama_kategori   = "";
 
         return view('layouts.daftar_produk', ['kategori_produk' => $kategori_produk, 'daftar_produk' => $daftar_produk, 'daftar_warung' => $daftar_warung, 'produk_pagination' => $produk_pagination, 'foto_latar_belakang' => $foto_latar_belakang, 'nama_kategori' => $nama_kategori, 'agent' => $agent, 'cek_belanjaan' => $cek_belanjaan, 'logo_warmart' => $logo_warmart, 'setting_aplikasi' => $setting_aplikasi,'baner_promo'=>$baner_promo,'baner_promo_active'=>$baner_promo_active,'cek_baner'=>$cek_baner, 'tema' => $tema]);
+    }
+
+    public static function idWarung() {
+        $id_warung = SettingPembedaAplikasi::select('warung_id')->where('app_address', url('/'))->first();
+        return $id_warung->warung_id;
     }
 
     public static function produkKategori($kategori)
@@ -258,8 +261,8 @@ class DaftarProdukController extends Controller
         //PAGINATION DAFTAR PRODUK
             $produk_pagination = $data_produk->links();
         //PILIH KATEGORI
-            $kategori        = KategoriBarang::select(['id', 'nama_kategori_barang', 'kategori_icon'])->where('id',$id);
-            $kategori_semua  = KategoriBarang::select(['id', 'nama_kategori_barang', 'kategori_icon'])->where('id','!=',$id);
+            $kategori        = KategoriBarang::select(['id', 'nama_kategori_barang', 'kategori_icon'])->where('warung_id', $this->idWarung())->where('id', $id);
+            $kategori_semua  = KategoriBarang::select(['id', 'nama_kategori_barang', 'kategori_icon'])->where('warung_id', $this->idWarung())->where('id', '!=', $id);
             $kategori_produk = DaftarProdukController::produkKategori($kategori_semua);
             $daftar_warung   = DaftarProdukController::daftarWarung($warung_data);
             $data_kategori   = $kategori->first();
@@ -298,7 +301,7 @@ class DaftarProdukController extends Controller
         //PILIH DATA WARUNG
             $warung_data = Warung::search($request->search)->get();
         //PILIH KATEGORI
-            $kategori = KategoriBarang::select(['id', 'nama_kategori_barang', 'kategori_icon']);
+            $kategori = KategoriBarang::select(['id', 'nama_kategori_barang', 'kategori_icon'])->where('warung_id', $this->idWarung());
         //FOTO HEADER
             $foto_latar_belakang = "background-image: url('" . asset('/image/background2.jpg') . "');";
         //FOTO WARMART

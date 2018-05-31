@@ -35,32 +35,28 @@
 						</div>
 					</form>
 				</div>
-
 			</div>
 		</div>
 	</div>
 </template>
 
-
 <script>
 export default {
-
 	mounted() {
 		let app = this;
 		let id = app.$route.params.id;
 		app.kelompok_produkId = id;
-		
-		axios.get(app.url+'/' + id)
-		.then(function (resp) {
+
+		axios.get(app.url + '/' + id)
+		.then((resp) => {
 			app.kelompok_produk = resp.data;
 		})
-		.catch(function () {
+		.catch(() => {
 			alert("Tidak dapat memuat Kelompok Produk")
 		});
 	},	
 	data: function () {
 		return {
-
 			kelompok_produkId: null,
 			kelompok_produk: {
 				nama_kelompok : '',
@@ -75,25 +71,27 @@ export default {
 		saveForm() {
 			var app = this;
 			var newkelompok_produk = app.kelompok_produk;
-			axios.patch(app.url+'/' + app.kelompok_produkId, newkelompok_produk)
-			.then(function (resp) {
-				app.message = 'Berhasil Mengubah Kelompok Produk '+app.kelompok_produk.nama_kelompok;
-				app.alert(app.message);
+			axios.patch(app.url + '/' + app.kelompok_produkId, newkelompok_produk)
+			.then((resp) => {
+				swal({
+					title: 'Berhasil!',
+					type: 'success',
+					text: 'Berhasil Mengubah Kelompok Produk ' + app.kelompok_produk.nama_kelompok,
+					timer: 1800,
+					showConfirmButton: false
+				});
 				app.$router.replace('/kelompok-produk/');
 			})
-			.catch(function (resp) {
-				console.log(resp);
+			.catch((resp) => {
+				console.log('catch saveForm: ', resp);
 				app.errors = resp.response.data.errors;
-				alert("Periksa kembali data yang anda masukan");
+				swal({
+					title: 'Gagal!',
+					type: 'warning',
+					text: 'Periksa kembali data yang Anda masukkan.'
+				});
 			});
 		},
-		alert(pesan) {
-			this.$swal({
-				title: "Berhasil !",
-				text: pesan,
-				icon: "success",
-			});
-		}
 	}
 }
 </script>
