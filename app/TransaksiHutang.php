@@ -61,7 +61,7 @@ class TransaksiHutang extends Model
   // DATA PEMBELIAN HUTANG
 public function scopeGetDataPembelianHutangFaktur($data_supplier_hutang,$no_faktur)
 {
-  $data_supplier_hutang = TransaksiHutang::select([DB::raw('IFNULL(SUM(transaksi_hutangs.jumlah_masuk),0) - IFNULL(SUM(transaksi_hutangs.jumlah_keluar),0) AS sisa_hutang')])
+  $data_supplier_hutang = TransaksiHutang::select([DB::raw('IFNULL(SUM(transaksi_hutangs.jumlah_masuk),0) - IFNULL(SUM(transaksi_hutangs.jumlah_keluar),0) AS sisa_hutang'), 'transaksi_hutangs.id_transaksi'])
   ->leftJoin('pembelians', 'transaksi_hutangs.id_transaksi', '=', 'pembelians.id')
   ->where('pembelians.status_pembelian', 'Hutang')
   ->where('pembelians.no_faktur', $no_faktur)

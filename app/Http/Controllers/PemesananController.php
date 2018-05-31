@@ -104,7 +104,8 @@ class PemesananController extends Controller
         $data_pelanggan = $this->cekLokasiPelanggan();
          // END CEK LOKASI WARUNG
 
-        $jasa_pengirim = SettingJasaPengiriman::where('tampil_jasa_pengiriman', 1)->pluck('jasa_pengiriman', 'jasa_pengiriman');
+        $jasa_pengirim = SettingJasaPengiriman::where('tampil_jasa_pengiriman', 1)->where('warung_id', $warung_id)
+        ->pluck('jasa_pengiriman', 'jasa_pengiriman');
 
 
         if ($address_app->app_address == $address_current) {
@@ -151,7 +152,7 @@ class PemesananController extends Controller
         $defaultAlamatPelanggan = SettingDefaultAlamatPelanggan::select('provinsi','kabupaten','status_aktif')->where('warung_id',$warung_id);
 
         if ($defaultAlamatPelanggan->count() > 0) {
-           if ($defaultAlamatPelanggan->first()->status_aktif == 1) {
+         if ($defaultAlamatPelanggan->first()->status_aktif == 1) {
             $data_pelanggan['provinsi_pelanggan']  = Indonesia::findProvince($defaultAlamatPelanggan->first()->provinsi)->name;
             $data_pelanggan['kabupaten_pelanggan'] = Indonesia::findCity($defaultAlamatPelanggan->first()->kabupaten)->name;
         }else{
@@ -159,12 +160,12 @@ class PemesananController extends Controller
             $data_pelanggan['kabupaten_pelanggan'] = "";
         }
     }else{
-       $data_pelanggan['provinsi_pelanggan']  = "";
-       $data_pelanggan['kabupaten_pelanggan'] = "";
-   }
+     $data_pelanggan['provinsi_pelanggan']  = "";
+     $data_pelanggan['kabupaten_pelanggan'] = "";
+ }
 
 
-   return $data_pelanggan;
+ return $data_pelanggan;
 }
 
 
@@ -194,19 +195,19 @@ public function prosesSelesaikanPemesanan(Request $request)
             'alamat'  => 'required',
             'no_telp' => 'required|numeric|without_spaces|unique:users,no_telp',
             'password' => 'required|string|min:6',
-        ]);
+            ]);
 
-            $kode_verifikasi = rand(1111, 9999);
-            $user            = User::create([
-                'name'              => $request->name,
-                'email'             => $request->email,
-                'alamat'            => $request->alamat,
-                'no_telp'           => $request->no_telp,
-                'password'          => bcrypt($request->password),
-                'tipe_user'         => 3,
-                'status_konfirmasi' => 1,
-                'kode_verifikasi'   => $kode_verifikasi,
-                'id_warung'         => $warung_id
+        $kode_verifikasi = rand(1111, 9999);
+        $user            = User::create([
+            'name'              => $request->name,
+            'email'             => $request->email,
+            'alamat'            => $request->alamat,
+            'no_telp'           => $request->no_telp,
+            'password'          => bcrypt($request->password),
+            'tipe_user'         => 3,
+            'status_konfirmasi' => 1,
+            'kode_verifikasi'   => $kode_verifikasi,
+            'id_warung'         => $warung_id
             ]);
 
         $customerRole = Role::where('name', 'customer')->first();
@@ -266,7 +267,7 @@ public function prosesSelesaikanPemesanan(Request $request)
                     'biaya_kirim'        => str_replace('.', '', $request->ongkos_kirim),
                     'bank_transfer'      => $bank_transfer,
                     'kode_unik_transfer' => $kode_unik_transfer,
-                ]);
+                    ]);
 
                 // UBAH NILAI VARIABEL CEK PESANAN JADI ID WARUNG
                 $cek_pesanan = $id_warung;
@@ -322,7 +323,7 @@ public function prosesSelesaikanPemesanan(Request $request)
                     'biaya_kirim'        => str_replace('.', '', $request->ongkos_kirim),
                     'bank_transfer'      => $bank_transfer,
                     'kode_unik_transfer' => $kode_unik_transfer,
-                ]);
+                    ]);
 
                 // UBAH NILAI VARIABEL CEK PESANAN JADI ID WARUNG
                 $cek_pesanan = $id_warung;
@@ -350,7 +351,7 @@ public function prosesSelesaikanPemesanan(Request $request)
                 'id_pelanggan'         => $id_user,
                 'harga_produk'         => $keranjang_belanjaans['harga_jual'],
                 'jumlah_produk'        => $keranjang_belanjaans['jumlah_produk'],
-            ]);
+                ]);
 
             // HAPUS KERANJANG BELANJA
             KeranjangBelanja::destroy($keranjang_belanjaans['id_keranjang_belanja']);
@@ -429,8 +430,8 @@ public function prosesSelesaikanPemesanan(Request $request)
             CURLOPT_CUSTOMREQUEST  => "GET",
             CURLOPT_HTTPHEADER     => array(
                 "key: f038d4bff2cc5732df792e9b97cae16d",
-            ),
-        ));
+                ),
+            ));
 
         $response = curl_exec($curl);
         $err      = curl_error($curl);
@@ -460,8 +461,8 @@ public function prosesSelesaikanPemesanan(Request $request)
             CURLOPT_CUSTOMREQUEST  => "GET",
             CURLOPT_HTTPHEADER     => array(
                 "key: f038d4bff2cc5732df792e9b97cae16d",
-            ),
-        ));
+                ),
+            ));
 
         $response['data']  = curl_exec($curl);
         $response['kurir'] = $jasa_pengirim;
@@ -498,8 +499,8 @@ public function prosesSelesaikanPemesanan(Request $request)
             CURLOPT_HTTPHEADER     => array(
                 "content-type: application/x-www-form-urlencoded",
                 "key: f038d4bff2cc5732df792e9b97cae16d",
-            ),
-        ));
+                ),
+            ));
 
         $response = curl_exec($curl);
         $err      = curl_error($curl);

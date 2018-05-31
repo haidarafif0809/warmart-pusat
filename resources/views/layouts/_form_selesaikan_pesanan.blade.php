@@ -45,7 +45,7 @@
   <div class="col-md-6">
     {!! Form::textarea('alamat', null, ['class'=>'form-control','required','autocomplete'=>'off', 'placeholder' => 'Alamat', 'id' => 'alamatPelanggan', 'rows'=>'5','readonly']) !!}
     {!! $errors->first('alamat', '<p class="help-block" id="alamat_error">:message</p>') !!}
-    <button  style="margin-bottom: 1px; margin-top: 1px;"  class="btn btn-primary btn-simple " type="button" id="ubah_alamat">
+    <button  style="margin-bottom: 1px; margin-top: 1px;"  class="btn buttonColor" type="button" id="ubah_alamat">
       Ubah Alamat
     </button>
   </div>
