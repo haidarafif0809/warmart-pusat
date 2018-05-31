@@ -13,6 +13,7 @@ use App\Suplier;
 use App\TbsPembelian;
 use App\TransaksiHutang;
 use App\TransaksiKas;
+use App\PenerimaanProduk;
 use Auth;
 use Excel;
 use Illuminate\Http\Request;
@@ -43,6 +44,30 @@ class PembelianController extends Controller
         } else {
             return view('pembelian.index')->with(compact('html'));
         }
+    }
+
+    // DATA SUPLIER PENERIMAAN
+    public function suplierPenerimaan(){
+
+        $data_penerimaan = PenerimaanProduk::select(['penerimaan_produks.id', 'penerimaan_produks.no_faktur_penerimaan', 'penerimaan_produks.suplier_id', 'penerimaan_produks.keterangan','supliers.nama_suplier'])
+        ->leftJoin('supliers', 'supliers.id', '=', 'penerimaan_produks.suplier_id')
+        ->where('penerimaan_produks.status_penerimaan', 1)
+        ->where('penerimaan_produks.warung_id', Auth::user()->id_warung)->get();
+
+        $array = [];
+
+        foreach ($data_penerimaan as $penerimaan) {
+            array_push($array, [
+                'id_penerimaan'      => $penerimaan->id,
+                'suplier_id'    => $penerimaan->suplier_id,
+                'faktur_penerimaan'  => $penerimaan->no_faktur_penerimaan,
+                'suplier_penerimaan' => $penerimaan->nama_suplier,
+                'penerimaan'         => $penerimaan->id."|".$penerimaan->suplier_id."|".$penerimaan->no_faktur_penerimaan."|".$penerimaan->nama_suplier."|".$penerimaan->keterangan
+                ]);
+        }
+
+        return response()->json($array);
+
     }
 
     public function dataPagination($data_pembelian, $array_pembelian)
