@@ -13,5 +13,5 @@ class KategoriBarang extends Model
 	use AuditableTrait;
 	use LogsActivity;
 
-	protected $fillable = ['nama_kategori_barang','kategori_icon'];
+	protected $fillable = ['nama_kategori_barang','kategori_icon', 'warung_id'];
 }
