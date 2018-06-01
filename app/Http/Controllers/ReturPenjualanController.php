@@ -669,6 +669,15 @@ class ReturPenjualanController extends Controller
      */
     public function destroy($id)
     {
-        //
+        //START TRANSAKSI
+        DB::beginTransaction();
+
+        if (!ReturPenjualan::destroy($id)) {
+            DB::rollBack();
+            return 0;
+        } else {
+            DB::commit();
+            return response(200);
+        }
     }
 }
