@@ -399,7 +399,7 @@
                 <div class="card card-produk" style="margin-bottom: 1px; margin-top: 1px;">
                     <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
 
-                        <selectize-component v-model="inputTbsPembelian.suplier" :settings="placeholder_suplier" id="suplier" ref='suplier'>
+                        <selectize-component v-model="inputTbsPembelian.suplier_order" :settings="placeholder_suplier" id="suplier" ref='suplier'>
                             <option v-for="suplier, index in supliers" v-bind:value="suplier.order">
                                 {{suplier.faktur_order}} || {{suplier.suplier_order}}</option>
                             </selectize-component>
@@ -594,7 +594,9 @@
                     jumlah_produk : '',
                     harga_produk : '',
                     id_tbs : '',
-                    satuan_produk: ''
+                    satuan_produk: '',
+                    suplier_order: '',
+                    suplier_penerimaan: '',
                 },
                 inputPembayaranPembelian:{
                     potongan_persen: 0,
@@ -708,6 +710,9 @@ pencarian: function (newQuestion) {
 },
 'inputTbsPembelian.produk': function (newQuestion) {
     this.pilihProduk();  
+},
+'inputTbsPembelian.suplier_order': function (newQuestion) {
+    this.pilihSuplierOrder();  
 },
 'inputPembayaranPembelian.pembayaran':function (val){
     if (val == '') {
@@ -1071,6 +1076,42 @@ prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_pr
 
     })
     .catch(function (resp) {
+        app.loading = false;
+        alert("Tbs Pembelian tidak bisa ditambahkan");
+    });
+
+},
+pilihSuplierOrder() {
+    if (this.inputTbsPembelian.suplier_order != '') {
+        var app = this;
+        var dataOrder = app.inputTbsPembelian.suplier_order.split("|");
+        var id_order = dataOrder[0]; 
+        var suplier_id = dataOrder[1];
+        var faktur_order = dataOrder[2]; 
+        var suplier_order = dataOrder[3]; 
+        var keterangan_order = dataOrder[4]; 
+
+        app.inputPembayaranPembelian.suplier = suplier_id;
+        app.inputPembayaranPembelian.keterangan = keterangan_order;
+
+        this.getPembelianOrder(id_order,suplier_id,faktur_order,suplier_order);
+    }
+},
+getPembelianOrder(id_order,suplier_id,faktur_order,suplier_order){
+
+    var app = this;
+    app.loading = true;
+
+    axios.get(app.url+'/proses-tbs-order-pembelian?id_order='+id_order+'&suplier_id='+suplier_id+'&faktur_order='+faktur_order)
+    .then(function (resp) {
+        app.alert("Menerima Order Dari Supplier "+titleCase(suplier_order));
+        app.loading = false;
+        app.getResults();
+        app.inputPembayaranPembelian.subtotal = resp.data.subtotal;
+        app.inputTbsPembelian.suplier_order = '';
+    })
+    .catch(function (resp) {
+        console.log(resp)
         app.loading = false;
         alert("Tbs Pembelian tidak bisa ditambahkan");
     });

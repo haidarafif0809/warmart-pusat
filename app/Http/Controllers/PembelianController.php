@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Barang;
 use App\DetailPembelian;
+use App\DetailPembelianOrder;
 use App\EditTbsPembelian;
 use App\Kas;
 use App\Pembelian;
@@ -1535,5 +1536,50 @@ class PembelianController extends Controller
         $respons = $this->editSatuan($request, $db);
 
         return response()->json($respons);
+    }
+
+    // ORDER PEMBELIAN
+
+    // GET PEMEBLIAN ORDER - PEMBELIAN
+    public function prosesTbsOrderPembelian(Request $request){
+
+        if (Auth::user()->id_warung == '') {
+            Auth::logout();
+            return response()->view('error.403');
+        }else{
+
+            $data_orders = DetailPembelianOrder::where('no_faktur_order', $request->faktur_order)
+            ->where('warung_id', Auth::user()->id_warung)->get();
+
+            $session_id = session()->getId();
+            $subtotal = 0;
+
+            // HAPUS DATA TBS SUPLIER LAMA, JIKA TIBA TIBA SUPLIER DIUBAH
+            $hapus_tbs = TbsPembelian::where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)
+            ->where('faktur_order', '!=', NULL)->delete();
+
+            foreach ($data_orders as $data_order) {
+
+                $insert_tbs = TbsPembelian::create([
+                    'session_id'        => $session_id,
+                    'faktur_order'      => $data_order->no_faktur_order,
+                    'id_produk'         => $data_order->id_produk,
+                    'jumlah_produk'     => $data_order->jumlah_produk,
+                    'satuan_id'         => $data_order->satuan_id,
+                    'satuan_dasar'      => $data_order->satuan_dasar,
+                    'harga_produk'      => $data_order->harga_produk,
+                    'subtotal'          => $data_order->subtotal,
+                    'status_harga'      => $data_order->status_harga,
+                    'warung_id'         => $data_order->warung_id,
+                    ]);
+            }
+
+
+            $respons['status']   = 0;
+            $respons['subtotal'] = 0;
+
+            return response()->json($respons);
+        }
+
     }
 }
