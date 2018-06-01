@@ -91,6 +91,17 @@ class ReturPenjualanController extends Controller
         return response()->json($respons);
     }
 
+    public function pencarian(Request $request){
+        $retur_penjualan = ReturPenjualan::pencariandataReturPenjualan($request)->paginate(10);
+
+        $array_retur_penjualan = $this->foreachReturPenjualan($retur_penjualan);
+        $link_view                = 'view';
+
+        //DATA PAGINATION
+        $respons = $this->dataPagination($retur_penjualan, $array_retur_penjualan, $link_view);
+        return response()->json($respons);
+    }
+
         public function foreachReturPenjualan($retur_penjualan)
     {
         $array_retur_penjualan = array();
@@ -101,7 +112,7 @@ class ReturPenjualanController extends Controller
                 'pelanggan'  => $retur_penjualans->pelanggan,
                 'waktu'      => $retur_penjualans->Waktu,
                 'waktu_edit' => $retur_penjualans->WaktuEdit,
-                'total'      => $retur_penjualans->getTotalSeparator(),
+                'total'      => $retur_penjualans->TotalSeparator,
                 'kas'        => $retur_penjualans->nama_kas,
                 'keterangan' => $retur_penjualans->keterangan,
                 'user_buat'  => $retur_penjualans->petugas,
@@ -498,6 +509,7 @@ class ReturPenjualanController extends Controller
                     'total'             => $total < 0 ? 0 : $total,
                     'total_bayar'       => $request->total_akhir,
                     'potongan'          => $request->potongan_faktur,
+                    'id_kas'             => $request->kas,
                     'warung_id'         => $warung_id,
                     ]);
 

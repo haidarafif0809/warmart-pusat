@@ -35,9 +35,9 @@
 								<tr>
 									<th>No. Transaksi</th>
 									<th style="text-align:right;">Total</th>
-									<th>Kas</th>
-									<th>Waktu</th>									
-									<th>Keterangan</th>
+									<th style="text-align:right;">Kas</th>
+									<th style="text-align:right;">Waktu</th>									
+									<th style="text-align:right;">Keterangan</th>
 									<th style="text-align:right;">Cetak</th>
 									<th style="text-align:right;">Edit</th>	
 									<th style="text-align:right;">Delete</th>
@@ -59,14 +59,14 @@
 										<a target="blank" class="btn btn-primary btn-xs" v-bind:href="'retur-penjualan/cetak-retur-penjualan/'+returPenjualans.id">Cetak Ulang</a>
 									</td>
 
-									<td v-if="otoritas.edit_retur_penjualan == 1" style="text-align:right;">
+									<td  style="text-align:right;">
 										<router-link :to="{name: 'prosesEditreturPenjualan', params: {id: returPenjualans.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + returPenjualans.id" >
 											Edit
 										</router-link>
 									</td>
 
 									<td style="text-align:right;"> 
-										<a v-if="otoritas.hapus_retur_penjualan == 1" href="#retur-penjualan" class="btn btn-xs btn-danger" v-bind:id="'delete-' + returPenjualans.id" v-on:click="deleteEntry(returPenjualans.id, index,returPenjualans.no_faktur)">Delete</a>
+										<a  href="#retur-penjualan" class="btn btn-xs btn-danger" v-bind:id="'delete-' + returPenjualans.id" v-on:click="deleteEntry(returPenjualans.id, index,returPenjualans.no_faktur)">Delete</a>
 									</td>
 								</tr>
 							</tbody>					

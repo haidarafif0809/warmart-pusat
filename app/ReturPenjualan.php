@@ -72,7 +72,7 @@ class ReturPenjualan extends Model
         return $date_terbalik;
     }
 
-    public function getTotalSeparator()
+    public function getTotalSeparatorAttribute()
     {
         $total_bayar = number_format($this->total_bayar, 2, ',', '.');
         return $total_bayar;
@@ -82,7 +82,7 @@ class ReturPenjualan extends Model
         // DATA RETUR PENJUALAN
     public function scopeDataReturPenjualan($query_retur_penjualan)
     {
-        $query_retur_penjualan = ReturPenjualan::select('retur_penjualans.id_retur_penjualan as id', 'retur_penjualans.no_faktur_retur as no_faktur', 'retur_penjualans.created_at', 'retur_penjualans.updated_at', 'retur_penjualans.total_bayar as total', 'kas.nama_kas as nama_kas', 'userbuat.name as petugas', 'retur_penjualans.keterangan as keterangan','userpelanggan.name as pelanggan')
+        $query_retur_penjualan = ReturPenjualan::select('retur_penjualans.id_retur_penjualan as id', 'retur_penjualans.no_faktur_retur as no_faktur', 'retur_penjualans.created_at', 'retur_penjualans.updated_at', 'retur_penjualans.total_bayar as total_bayar', 'kas.nama_kas as nama_kas', 'userbuat.name as petugas', 'retur_penjualans.keterangan as keterangan','userpelanggan.name as pelanggan')
             ->leftJoin('kas', 'retur_penjualans.id_kas', '=', 'kas.id')
             ->leftJoin('users AS userbuat', 'retur_penjualans.created_by', '=', 'userbuat.id')
             ->leftJoin('users AS userpelanggan', 'retur_penjualans.id_pelanggan', '=', 'userpelanggan.id')
@@ -90,6 +90,23 @@ class ReturPenjualan extends Model
             ->orderBy('retur_penjualans.id_retur_penjualan');
 
         return $query_retur_penjualan;
+    }
+
+    public function scopePencarianDataReturPenjualan($query_retur_penjualan,$request)
+    {
+        $search = $request->search;
+        $query_retur_penjualan = ReturPenjualan::select('retur_penjualans.id_retur_penjualan as id', 'retur_penjualans.no_faktur_retur as no_faktur', 'retur_penjualans.created_at', 'retur_penjualans.updated_at', 'retur_penjualans.total_bayar as total_bayar', 'kas.nama_kas as nama_kas', 'userbuat.name as petugas', 'retur_penjualans.keterangan as keterangan','userpelanggan.name as pelanggan')
+            ->leftJoin('kas', 'retur_penjualans.id_kas', '=', 'kas.id')
+            ->leftJoin('users AS userbuat', 'retur_penjualans.created_by', '=', 'userbuat.id')
+            ->leftJoin('users AS userpelanggan', 'retur_penjualans.id_pelanggan', '=', 'userpelanggan.id')
+            ->where('retur_penjualans.warung_id', Auth::user()->id_warung)->where(function ($query) use ($search) {
+                    $query->orwhere('retur_penjualans.no_faktur_retur', 'LIKE', '%' . $search . '%')
+                          ->orwhere('kas.nama_kas', 'LIKE', '%' . $search . '%')
+                           ->orwhere('retur_penjualans.total_bayar', 'LIKE', '%' . $search . '%');
+                })->orderBy('retur_penjualans.id_retur_penjualan');
+            
+
+        return $query_retur_penjualan;        
     }
 
 }

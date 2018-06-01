@@ -1090,6 +1090,7 @@ Route::get('/tema/ubah-tema/{id}/{default_tema}/', 'SettingTemaController@ubahTe
 
 //Retur Penjualan Vue .js
 Route::get('/retur-penjualan/view', 'ReturPenjualanController@view')->middleware('auth');
+Route::get('/retur-penjualan/pencarian', 'ReturPenjualanController@pencarian')->middleware('auth');
 Route::get('/retur-penjualan/view-tbs-retur-penjualan', 'ReturPenjualanController@viewTbsReturPenjualan')->middleware('auth');
 Route::get('/retur-penjualan/pencarian-tbs-retur-penjualan', 'ReturPenjualanController@viewTbsReturPenjualan')->middleware('auth');
 Route::get('/retur-penjualan/data-pelanggan-retur/{id}/{jenis_penjualan}', 'ReturPenjualanController@dataPelangganRetur')->middleware('auth');
