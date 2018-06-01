@@ -413,7 +413,7 @@
                     <div class="card card-produk" style="margin-bottom: 1px; margin-top: 1px;">
                         <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
 
-                            <selectize-component v-model="inputTbsPembelian.suplier_penerimaans" :settings="placeholder_penerimaan" id="suplier_penerimaan" ref='suplier_penerimaan'>
+                            <selectize-component v-model="inputTbsPembelian.suplier_penerimaan" :settings="placeholder_penerimaan" id="suplier_penerimaan" ref='suplier_penerimaan'>
                                 <option v-for="suplier, index in suplier_penerimaans" v-bind:value="suplier.penerimaan">
                                     {{suplier.faktur_penerimaan}} || {{suplier.suplier_penerimaan}}</option>
                                 </selectize-component>
@@ -713,6 +713,9 @@ pencarian: function (newQuestion) {
 },
 'inputTbsPembelian.suplier_order': function (newQuestion) {
     this.pilihSuplierOrder();  
+},
+'inputTbsPembelian.suplier_penerimaan': function (newQuestion) {
+    this.pilihSuplierPenerimaan();  
 },
 'inputPembayaranPembelian.pembayaran':function (val){
     if (val == '') {
@@ -1109,6 +1112,42 @@ getPembelianOrder(id_order,suplier_id,faktur_order,suplier_order){
         app.getResults();
         app.inputPembayaranPembelian.subtotal = resp.data.subtotal;
         app.inputTbsPembelian.suplier_order = '';
+    })
+    .catch(function (resp) {
+        console.log(resp)
+        app.loading = false;
+        alert("Tbs Pembelian tidak bisa ditambahkan");
+    });
+
+},
+pilihSuplierPenerimaan() {
+    if (this.inputTbsPembelian.suplier_penerimaan != '') {
+        var app = this;
+        var dataPenerimaan = app.inputTbsPembelian.suplier_penerimaan.split("|");
+        var id_penerimaan = dataPenerimaan[0]; 
+        var suplier_id = dataPenerimaan[1];
+        var faktur_penerimaan = dataPenerimaan[2]; 
+        var suplier_penerimaan = dataPenerimaan[3]; 
+        var keterangan_penerimaan = dataPenerimaan[4]; 
+
+        app.inputPembayaranPembelian.suplier = suplier_id;
+        app.inputPembayaranPembelian.keterangan = keterangan_penerimaan;
+
+        this.getPembelianPenerimaan(id_penerimaan,suplier_id,faktur_penerimaan,suplier_penerimaan);
+    }
+},
+getPembelianPenerimaan(id_penerimaan,suplier_id,faktur_penerimaan,suplier_penerimaan){
+
+    var app = this;
+    app.loading = true;
+
+    axios.get(app.url+'/proses-tbs-penerimaan-produk-pembelian?id_penerimaan='+id_penerimaan+'&suplier_id='+suplier_id+'&faktur_penerimaan='+faktur_penerimaan)
+    .then(function (resp) {
+        app.alert("Penerimaan Produk Dari Supplier "+titleCase(suplier_penerimaan));
+        app.loading = false;
+        app.getResults();
+        app.inputPembayaranPembelian.subtotal = resp.data.subtotal;
+        app.inputTbsPembelian.suplier_penerimaan = '';
     })
     .catch(function (resp) {
         console.log(resp)
