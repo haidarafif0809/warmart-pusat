@@ -303,7 +303,7 @@
 </li>
 @endif
 
-
+<!-- 
 <li>
     <a class="disabled-menu" data-toggle="collapse" href="#retur">
         <i class="material-icons">
@@ -331,7 +331,7 @@
         </ul>
     </div>
 </li>
-
+-->
 
 @if(Laratrust::can('lihat_bucket_size') || Laratrust::can('jam_transaksi_penjualan') || Laratrust::can('laba_kotor_perpelanggan') || Laratrust::can('laba_kotor_perproduk') || Laratrust::can('kartu_stok') || Laratrust::can('kas') || Laratrust::can('mutasi_stok') || Laratrust::can('pembelian_perproduk') || Laratrust::can('hutang_beredar') || Laratrust::can('penjualan') || Laratrust::can('penjualan_harian') || Laratrust::can('penjualan_perproduk') || Laratrust::can('penjualan_perpelanggan') || Laratrust::can('penjualan_terbaik_perproduk') || Laratrust::can('piutang_beredar')) 
 <li>
