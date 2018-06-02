@@ -47,7 +47,7 @@
 								<tr v-for="returPenjualans, index in returPenjualan" >
 
 									<td>
-										<router-link :to="{name: 'detailreturPenjualan', params: {id: returPenjualans.id}}" v-bind:id="'detail-' + returPenjualans.id" >
+										<router-link :to="{name: 'detailReturPenjualan', params: {id: returPenjualans.id}}" v-bind:id="'detail-' + returPenjualans.id" >
 											{{returPenjualans.no_faktur}}
 										</router-link>
 									</td>
@@ -60,7 +60,7 @@
 									</td>
 
 									<td  style="text-align:right;">
-										<router-link :to="{name: 'prosesEditreturPenjualan', params: {id: returPenjualans.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + returPenjualans.id" >
+										<router-link :to="{name: 'prosesEditReturPenjualan', params: {id: returPenjualans.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + returPenjualans.id" >
 											Edit
 										</router-link>
 									</td>

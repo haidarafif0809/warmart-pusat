@@ -627,6 +627,47 @@ class ReturPenjualanController extends Controller
         }
     }
 
+        // VIEW DETAIL
+    public function viewDetail($id)
+    {
+        $warung_id = Auth::user()->id_warung;
+        $retur_penjualan = ReturPenjualan::find($id);
+
+        $detail_returs = DetailReturPenjualan::dataDetailRetur($retur_penjualan->no_faktur_retur)->paginate(10);
+
+        $array = [];
+        foreach ($detail_returs as $detail_retur) {
+            array_push($array, [
+                'detail_retur'=> $detail_retur,
+                ]);
+        }
+
+        $url     = '/retur-pembelian/view-tbs';
+        $respons = $this->dataPagination($detail_returs, $array, $retur_penjualan->no_faktur_retur, $url);
+
+        return response()->json($respons);
+    }
+
+    // PENCARIAN DETAIL
+    public function pencarianDetail(Request $request, $id)
+    {
+        $warung_id = Auth::user()->id_warung;
+        $search = $request->search;
+        $retur_penjualan = ReturPenjualan::find($id);
+
+        $detail_returs = DetailReturPenjualan::dataDetailRetur($retur_penjualan->no_faktur_retur)
+        ->where(function ($query) use ($search) {
+            $query->orwhere('barangs.nama_barang', 'LIKE', '%' . $search . '%')
+            ->orwhere('satuans.nama_satuan', 'LIKE', '%' . $search . '%');
+        })->paginate(10);
+
+        $array = [];
+        foreach ($detail_returs as $detail_retur) {
+            array_push($array, [
+                'detail_retur'=> $detail_retur,
+                ]);
+        }
+    }
     /**
      * Display the specified resource.
      *
@@ -660,6 +701,8 @@ class ReturPenjualanController extends Controller
     {
         //
     }
+
+
 
     /**
      * Remove the specified resource from storage.
