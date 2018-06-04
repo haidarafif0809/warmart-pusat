@@ -46,7 +46,7 @@
                                     <thead class="text-primary">
                                         <tr>
 
-                                            <th>No. Faktur</th>
+                                            <th> No. Transaksi </th>
                                             <th> Pelanggan </th>
                                             <th class="text-center">Tanggal JT</th>
                                             <th class="text-right">Piutang</th>
@@ -152,6 +152,7 @@ methods: {
         }
         axios.get(app.url+'/view-detail-pembayaran-piutang/'+id+'?page='+page)
         .then(function (resp) {
+            console.log(resp)
             app.detailPembayaranPiutang = resp.data.data;
             app.detailPembayaranPiutangData = resp.data;
             app.loading = false;

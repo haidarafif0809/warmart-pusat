@@ -303,6 +303,36 @@
 </li>
 @endif
 
+<!-- 
+<li>
+    <a class="disabled-menu" data-toggle="collapse" href="#retur">
+        <i class="material-icons">
+            remove_shopping_cart
+        </i>
+        <p>
+            Retur
+            <b class="caret"></b>
+        </p>
+    </a>
+    <div class="collapse" id="retur">
+        <ul class="nav">
+
+            <li>
+                <router-link :to="{name: 'indexReturPembelian'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        RB
+                    </span>
+                    <span class="sidebar-normal">
+                        Retur Pembelian
+                    </span>
+                </router-link>
+            </li>
+
+        </ul>
+    </div>
+</li>
+-->
+
 @if(Laratrust::can('lihat_bucket_size') || Laratrust::can('jam_transaksi_penjualan') || Laratrust::can('laba_kotor_perpelanggan') || Laratrust::can('laba_kotor_perproduk') || Laratrust::can('kartu_stok') || Laratrust::can('kas') || Laratrust::can('mutasi_stok') || Laratrust::can('pembelian_perproduk') || Laratrust::can('hutang_beredar') || Laratrust::can('penjualan') || Laratrust::can('penjualan_harian') || Laratrust::can('penjualan_perproduk') || Laratrust::can('penjualan_perpelanggan') || Laratrust::can('penjualan_terbaik_perproduk') || Laratrust::can('piutang_beredar')) 
 <li>
     <a class="disabled-menu" data-toggle="collapse" href="#laporan">
