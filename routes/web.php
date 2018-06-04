@@ -579,6 +579,7 @@ Route::get('/pembelian/template-excel', 'PembelianController@templateExcel')->mi
 Route::get('/pembelian/satuan-konversi/{id_produk}', 'PembelianController@dataSatuanProduk')->middleware('auth');
 Route::get('/pembelian/satuan-konversi-edit/{id_produk}', 'PembelianController@dataSatuanProdukEdit')->middleware('auth');
 Route::post('/pembelian/edit-satuan-tbs-pembelian', 'PembelianController@editSatuanTbsPembelian')->middleware('auth');
+Route::get('/pembelian/suplier-order', 'PembelianController@suplierOrder')->middleware('auth');
 Route::get('/pembelian/suplier-penerimaan', 'PembelianController@suplierPenerimaan')->middleware('auth');
 Route::get('/pembelian/proses-tbs-order-pembelian', 'PembelianController@prosesTbsOrderPembelian')->middleware('auth');
 Route::get('/pembelian/proses-tbs-penerimaan-produk-pembelian', 'PembelianController@prosesTbsPenerimaanProduk')->middleware('auth');

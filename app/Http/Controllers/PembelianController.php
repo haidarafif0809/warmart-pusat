@@ -16,6 +16,7 @@ use App\TbsPembelian;
 use App\TransaksiHutang;
 use App\TransaksiKas;
 use App\PenerimaanProduk;
+use App\PembelianOrder;
 use Auth;
 use Excel;
 use Illuminate\Http\Request;
@@ -48,14 +49,59 @@ class PembelianController extends Controller
         }
     }
 
+    // DATA SUPLIER ORDER
+    public function suplierOrder(){
+        $session_id = session()->getId();
+
+        $data_orders   = TbsPembelian::select('suplier_id')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
+
+        if ($data_orders->count() > 0) {
+            $data_order = PembelianOrder::select(['pembelian_orders.id', 'pembelian_orders.no_faktur_order', 'pembelian_orders.suplier_id', 'pembelian_orders.keterangan','supliers.nama_suplier'])
+            ->leftJoin('supliers', 'supliers.id', '=', 'pembelian_orders.suplier_id')
+            ->where('pembelian_orders.status_order', 1)
+            ->where('pembelian_orders.suplier_id', $data_orders->first()->suplier_id)
+            ->where('pembelian_orders.warung_id', Auth::user()->id_warung)->get();
+        }else{
+            $data_order = PembelianOrder::select(['pembelian_orders.id', 'pembelian_orders.no_faktur_order', 'pembelian_orders.suplier_id', 'pembelian_orders.keterangan','supliers.nama_suplier'])
+            ->leftJoin('supliers', 'supliers.id', '=', 'pembelian_orders.suplier_id')
+            ->where('pembelian_orders.status_order', 1)
+            ->where('pembelian_orders.warung_id', Auth::user()->id_warung)->get();
+        }
+
+        $array = [];
+
+        foreach ($data_order as $order) {
+            array_push($array, [
+                'id_order'      => $order->id,
+                'suplier_id'    => $order->suplier_id,
+                'faktur_order'  => $order->no_faktur_order,
+                'suplier_order' => $order->nama_suplier,
+                'order'         => $order->id."|".$order->suplier_id."|".$order->no_faktur_order."|".$order->nama_suplier."|".$order->keterangan
+                ]);
+        }
+
+        return response()->json($array);
+
+    }
+
     // DATA SUPLIER PENERIMAAN
     public function suplierPenerimaan(){
+        $session_id = session()->getId();
 
-        $data_penerimaan = PenerimaanProduk::select(['penerimaan_produks.id', 'penerimaan_produks.no_faktur_penerimaan', 'penerimaan_produks.suplier_id', 'penerimaan_produks.keterangan','supliers.nama_suplier'])
-        ->leftJoin('supliers', 'supliers.id', '=', 'penerimaan_produks.suplier_id')
-        ->where('penerimaan_produks.status_penerimaan', 1)
-        ->where('penerimaan_produks.warung_id', Auth::user()->id_warung)->get();
+        $data_penerimaans   = TbsPembelian::select('suplier_id')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
 
+        if ($data_penerimaans->count() > 0) {
+            $data_penerimaan = PenerimaanProduk::select(['penerimaan_produks.id', 'penerimaan_produks.no_faktur_penerimaan', 'penerimaan_produks.suplier_id', 'penerimaan_produks.keterangan','supliers.nama_suplier'])
+            ->leftJoin('supliers', 'supliers.id', '=', 'penerimaan_produks.suplier_id')
+            ->where('penerimaan_produks.status_penerimaan', 1)
+            ->where('penerimaan_produks.suplier_id', $data_penerimaans->first()->suplier_id)
+            ->where('penerimaan_produks.warung_id', Auth::user()->id_warung)->get();
+        }else{
+            $data_penerimaan = PenerimaanProduk::select(['penerimaan_produks.id', 'penerimaan_produks.no_faktur_penerimaan', 'penerimaan_produks.suplier_id', 'penerimaan_produks.keterangan','supliers.nama_suplier'])
+            ->leftJoin('supliers', 'supliers.id', '=', 'penerimaan_produks.suplier_id')
+            ->where('penerimaan_produks.status_penerimaan', 1)
+            ->where('penerimaan_produks.warung_id', Auth::user()->id_warung)->get();            
+        }
         $array = [];
 
         foreach ($data_penerimaan as $penerimaan) {
@@ -663,7 +709,23 @@ class PembelianController extends Controller
 
     public function pilih_suplier()
     {
-        $suplier = Suplier::select('id', 'nama_suplier')->where('warung_id', Auth::user()->id_warung)->get();
+
+        $session_id = session()->getId();
+
+        $faktur_order   = TbsPembelian::select('faktur_order')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
+
+        $faktur_order->count() > 0 ? $faktur_order = $faktur_order->first()->faktur_order : $faktur_order = '';
+        $data_order = PembelianOrder::select('suplier_id')->where('no_faktur_order', $faktur_order);
+
+        if ($data_order->count() > 0) {
+            $suplier = Suplier::select('id', 'nama_suplier')->where('id', $data_order->first()->suplier_id)
+            ->where('warung_id', Auth::user()->id_warung)
+            ->orderBy('id', 'DESC')->get();
+        }else{
+            $suplier = Suplier::select('id', 'nama_suplier')->where('warung_id', Auth::user()->id_warung)
+            ->orderBy('id', 'DESC')->get(); 
+        }
+
         return response()->json($suplier);
     }
 
@@ -1548,7 +1610,9 @@ class PembelianController extends Controller
             Auth::logout();
             return response()->view('error.403');
         }else{
-
+            $supplier = PembelianOrder::select('suplier_id')->where('no_faktur_order', $request->faktur_order)
+            ->first()->suplier_id;
+            
             $data_orders = DetailPembelianOrder::where('no_faktur_order', $request->faktur_order)
             ->where('warung_id', Auth::user()->id_warung)->get();
 
@@ -1571,6 +1635,7 @@ class PembelianController extends Controller
                     'harga_produk'      => $data_order->harga_produk,
                     'subtotal'          => $data_order->subtotal,
                     'status_harga'      => $data_order->status_harga,
+                    'suplier_id'        => $supplier,
                     'warung_id'         => $data_order->warung_id,
                     ]);
                 
@@ -1593,7 +1658,9 @@ class PembelianController extends Controller
         if (Auth::user()->id_warung == '') {
             Auth::logout();
             return response()->view('error.403');
-        }else{
+        }else{            
+            $supplier = PenerimaanProduk::select('suplier_id')->where('no_faktur_penerimaan', $request->faktur_penerimaan)
+            ->first()->suplier_id;
 
             $data_penerimaans = DetailPenerimaanProduk::where('no_faktur_penerimaan', $request->faktur_penerimaan)
             ->where('warung_id', Auth::user()->id_warung)->get();
@@ -1617,6 +1684,7 @@ class PembelianController extends Controller
                     'harga_produk'      => $data_penerimaan->harga_produk,
                     'subtotal'          => $sub_total,
                     'status_harga'      => $data_penerimaan->status_harga,
+                    'suplier_id'        => $supplier,
                     'warung_id'         => $data_penerimaan->warung_id,
                     ]);
 

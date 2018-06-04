@@ -17,6 +17,7 @@ const state = {
 	supplier : [],
 	bank : [],
 	suplier_order : [],
+	suplier_order_pembelian : [],
 	suplier_penerimaan : [],
 }
 //Getter berfungsi untuk mengakses state
@@ -58,6 +59,10 @@ const mutations = {
 	// untuk memuat data suplier order
 	SET_SUPLIER_ORDER_LIST : (state, { list }) => {
 		state.suplier_order = list
+	},
+	// untuk memuat data suplier order
+	SET_SUPLIER_ORDER_PEMBELIAN_LIST : (state, { list }) => {
+		state.suplier_order_pembelian = list
 	},
 	// untuk memuat data suplier penerimaan
 	SET_SUPLIER_PENERIMAAN_LIST : (state, { list }) => {
@@ -189,6 +194,18 @@ const actions = {
 		axios.get('penerimaan-produk/suplier-order')
 		.then((resp) => {
 			commit('SET_SUPLIER_ORDER_LIST',
+			{
+				list:resp.data
+			})
+		},
+		(err) => {
+			console.log(err)
+		})
+	},
+	LOAD_SUPLIER_ORDER_PEMBELIAN_LIST : function({commit}){
+		axios.get('pembelian/suplier-order')
+		.then((resp) => {
+			commit('SET_SUPLIER_ORDER_PEMBELIAN_LIST',
 			{
 				list:resp.data
 			})

@@ -681,7 +681,7 @@ seen : false,
 mounted() {
     var app = this;
     app.$store.dispatch('LOAD_PRODUK_LIST')
-    app.$store.dispatch('LOAD_SUPLIER_ORDER_LIST');
+    app.$store.dispatch('LOAD_SUPLIER_ORDER_PEMBELIAN_LIST');
     app.$store.dispatch('LOAD_SUPLIER_PENERIMAAN_LIST');
     app.$store.dispatch('LOAD_KAS_LIST')  
     app.dataSuplier();
@@ -695,7 +695,7 @@ computed : mapState ({
         return this.$store.state.kas
     }, 
     supliers(){
-        return this.$store.state.suplier_order
+        return this.$store.state.suplier_order_pembelian
     },
     suplier_penerimaans(){
         return this.$store.state.suplier_penerimaan
@@ -758,6 +758,9 @@ methods: {
             if (app.inputPembayaranPembelian.subtotal == 0) {          
                 app.getSubtotalTbs(); 
             } 
+            app.$store.dispatch('LOAD_SUPLIER_ORDER_PEMBELIAN_LIST');
+            app.$store.dispatch('LOAD_SUPLIER_PENERIMAAN_LIST');
+            app.dataSuplier();
 
         })
         .catch(function (resp) {
@@ -834,6 +837,8 @@ dataSuplier() {
         app.suplier = resp.data;
         $.each(resp.data, function (i, item) {
             if (resp.data[i].nama_suplier == "UMUM") {
+                app.inputPembayaranPembelian.suplier  = resp.data[i].id 
+            }else{
                 app.inputPembayaranPembelian.suplier  = resp.data[i].id 
             }
         });
