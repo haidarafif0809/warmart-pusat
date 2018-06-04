@@ -1663,6 +1663,7 @@ submitSimpanPenjualan(){
         id : resp.data.id,
         no_antrian : resp.data.no_antrian,
         pelanggan : resp.data.pelanggan,
+        pelanggan_id : app.penjualan.pelanggan,
         total_belanja : new Intl.NumberFormat('es-ES').format(app.penjualan.subtotal)
       } 
       app.antrian.data.push(newAntrian)
