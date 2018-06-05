@@ -546,15 +546,16 @@
             <div class="card-footer">
                 <div class="row"> 
                     <div class="col-md-6 col-xs-6"> 
-                        <button type="button btn-lg"  class="btn btn-success" id="bayar" v-on:click="selesaiPembelian()" v-shortkey.push="['f2']" @shortkey="selesaiPembelian()" ><font style="font-size:20px;">Bayar(F2)</font></button>
-                    </div>
-                    <div class="col-md-6 col-xs-6"> 
-                        <button type="submit btn-lg"  class="btn btn-danger" id="btnBatal" v-on:click="batalPembelian()" v-shortkey.push="['f3']" @shortkey="batalPembelian()" ><font style="font-size:20px;">Batal(F3)</font>  </button>
-                    </div>
-                </div>
-            </div>
-        </div>             
-    </div><!-- COL SM 4 --> 
+                      <button type="button" class="btn btn-success btn-footer" id="bayar" v-on:click="selesaiPembelian()" v-shortkey.push="['f2']" @shortkey="selesaiPembelian()"><font style="font-size:15px;">Bayar(F2)</font></button>
+
+                  </div>
+                  <div class="col-md-6 col-xs-6"> 
+                      <button type="submit" class="btn btn-danger btn-footer" id="btnBatal" v-on:click="batalPembelian()" v-shortkey.push="['f3']" @shortkey="batalPembelian()"> <font style="font-size:15px;">Batal(F3) </font></button>
+                  </div>
+              </div>
+          </div>
+      </div>             
+  </div><!-- COL SM 4 --> 
 </div><!-- ROW --> 
 </div>
 </div>
@@ -1112,10 +1113,14 @@ getPembelianOrder(id_order,suplier_id,faktur_order,suplier_order){
 
     axios.get(app.url+'/proses-tbs-order-pembelian?id_order='+id_order+'&suplier_id='+suplier_id+'&faktur_order='+faktur_order)
     .then(function (resp) {
+        var subtotal = parseInt(app.inputPembayaranPembelian.subtotal) + parseInt(resp.data.subtotal)
         app.alert("Menerima Order Dari Supplier "+titleCase(suplier_order));
         app.loading = false;
-        app.getResults();
-        app.inputPembayaranPembelian.subtotal = resp.data.subtotal;
+        app.getResults();        
+
+        app.inputPembayaranPembelian.subtotal = subtotal                       
+        app.inputPembayaranPembelian.total_akhir  = subtotal
+
         app.inputTbsPembelian.suplier_order = '';
     })
     .catch(function (resp) {
