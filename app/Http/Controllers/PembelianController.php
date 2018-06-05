@@ -1228,14 +1228,20 @@ class PembelianController extends Controller
                     ]);
             }
 
-            if ($data_produk_pembelian->first()->no_faktur_order != NULL) {
-                $update_order = PembelianOrder::where('no_faktur_order', $data_produk_pembelian->first()->no_faktur_order);
-                $update_order->update('status_order', 3);
+            $data_tbs_order = TbsPembelian::select('faktur_order')->where('session_id', $session_id)
+            ->where('faktur_order', '!=', NULL)->where('warung_id', Auth::user()->id_warung);
+
+            $data_tbs_penerimaan = TbsPembelian::select('faktur_penerimaan')->where('session_id', $session_id)
+            ->where('faktur_penerimaan', '!=', NULL)->where('warung_id', Auth::user()->id_warung);
+
+            if ($data_tbs_order->count() > 0) {
+                $update_order = PembelianOrder::where('no_faktur_order', $data_tbs_order->first()->faktur_order);
+                $update_order->update(['status_order' => 3]);
             }
 
-            if ($data_produk_pembelian->first()->no_faktur_penerimaan != NULL) {
-                $update_penerimaan = PenerimaanProduk::where('no_faktur_penerimaan', $data_produk_pembelian->first()->no_faktur_penerimaan);
-                $update_penerimaan->update('status_penerimaan', 3);
+            if ($data_tbs_penerimaan->count() > 0) {
+                $update_penerimaan = PenerimaanProduk::where('no_faktur_penerimaan', $data_tbs_penerimaan->first()->faktur_penerimaan);
+                $update_penerimaan->update(['status_penerimaan' => 3]);
             }
 
             //Transaksi Hutang & kas

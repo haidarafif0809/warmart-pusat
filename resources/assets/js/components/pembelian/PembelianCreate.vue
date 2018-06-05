@@ -1153,10 +1153,13 @@ getPembelianPenerimaan(id_penerimaan,suplier_id,faktur_penerimaan,suplier_peneri
 
     axios.get(app.url+'/proses-tbs-penerimaan-produk-pembelian?id_penerimaan='+id_penerimaan+'&suplier_id='+suplier_id+'&faktur_penerimaan='+faktur_penerimaan)
     .then(function (resp) {
+        var subtotal = parseInt(app.inputPembayaranPembelian.subtotal) + parseInt(resp.data.subtotal)
         app.alert("Penerimaan Produk Dari Supplier "+titleCase(suplier_penerimaan));
         app.loading = false;
         app.getResults();
-        app.inputPembayaranPembelian.subtotal = resp.data.subtotal;
+
+        app.inputPembayaranPembelian.subtotal = subtotal                       
+        app.inputPembayaranPembelian.total_akhir  = subtotal
         app.inputTbsPembelian.suplier_penerimaan = '';
     })
     .catch(function (resp) {
