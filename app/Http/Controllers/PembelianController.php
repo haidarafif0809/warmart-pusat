@@ -1325,6 +1325,9 @@ class PembelianController extends Controller
                 'tax'           => $data_tbs->tax,
                 'potongan'      => $data_tbs->potongan,
                 'ppn'           => $data_tbs->ppn,
+                'faktur_order'  => $data_tbs->faktur_order,
+                'faktur_penerimaan' => $data_tbs->faktur_penerimaan,
+                'suplier_id'    => $data_tbs->suplier_id,
                 'warung_id'     => Auth::user()->id_warung,
                 ]);
         }
