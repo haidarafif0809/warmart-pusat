@@ -22,6 +22,12 @@ class EditPembelianController extends Controller
         $this->middleware('user-must-warung');
     }
 
+    public function orderPembelian() {
+        $data_order = PembelianOrder::select(['pembelian_orders.id', 'pembelian_orders.no_faktur_order', 'pembelian_orders.suplier_id', 'pembelian_orders.keterangan','supliers.nama_suplier'])
+        ->leftJoin('supliers', 'supliers.id', '=', 'pembelian_orders.suplier_id');
+
+        return $data_order;
+    }
 
     // DATA SUPLIER ORDER
     public function suplierOrder($id){
@@ -33,14 +39,12 @@ class EditPembelianController extends Controller
         ->where('warung_id', Auth::user()->id_warung);
 
         if ($data_orders->count() > 0) {
-            $data_order = PembelianOrder::select(['pembelian_orders.id', 'pembelian_orders.no_faktur_order', 'pembelian_orders.suplier_id', 'pembelian_orders.keterangan','supliers.nama_suplier'])
-            ->leftJoin('supliers', 'supliers.id', '=', 'pembelian_orders.suplier_id')
+            $data_order = $this->orderPembelian()
             ->where('pembelian_orders.status_order', 1)
             ->where('pembelian_orders.suplier_id', $data_orders->first()->suplier_id)
             ->where('pembelian_orders.warung_id', Auth::user()->id_warung)->get();
 
-            $pembelian_order = PembelianOrder::select(['pembelian_orders.id', 'pembelian_orders.no_faktur_order', 'pembelian_orders.suplier_id', 'pembelian_orders.keterangan','supliers.nama_suplier'])
-            ->leftJoin('supliers', 'supliers.id', '=', 'pembelian_orders.suplier_id')
+            $pembelian_order = $this->orderPembelian()
             ->where('pembelian_orders.no_faktur_order', $data_orders->first()->faktur_order)
             ->where('pembelian_orders.warung_id', Auth::user()->id_warung)->first();
 
@@ -53,8 +57,7 @@ class EditPembelianController extends Controller
                 ]);
 
         }else{
-            $data_order = PembelianOrder::select(['pembelian_orders.id', 'pembelian_orders.no_faktur_order', 'pembelian_orders.suplier_id', 'pembelian_orders.keterangan','supliers.nama_suplier'])
-            ->leftJoin('supliers', 'supliers.id', '=', 'pembelian_orders.suplier_id')
+            $data_order = $this->orderPembelian()
             ->where('pembelian_orders.status_order', 1)
             ->where('pembelian_orders.warung_id', Auth::user()->id_warung)->get();
 
@@ -75,6 +78,13 @@ class EditPembelianController extends Controller
 
     }
 
+    public function penerimaanProduk() {
+        $data_penerimaan = PenerimaanProduk::select(['penerimaan_produks.id', 'penerimaan_produks.no_faktur_penerimaan', 'penerimaan_produks.suplier_id', 'penerimaan_produks.keterangan','supliers.nama_suplier'])
+        ->leftJoin('supliers', 'supliers.id', '=', 'penerimaan_produks.suplier_id');
+
+        return $data_penerimaan;
+    }
+
     // DATA SUPLIER PENERIMAAN
     public function suplierPenerimaan($id){
         $session_id = session()->getId();
@@ -85,14 +95,12 @@ class EditPembelianController extends Controller
         ->where('warung_id', Auth::user()->id_warung);
 
         if ($data_penerimaans->count() > 0) {
-            $data_penerimaan = PenerimaanProduk::select(['penerimaan_produks.id', 'penerimaan_produks.no_faktur_penerimaan', 'penerimaan_produks.suplier_id', 'penerimaan_produks.keterangan','supliers.nama_suplier'])
-            ->leftJoin('supliers', 'supliers.id', '=', 'penerimaan_produks.suplier_id')
+            $data_penerimaan = $this->penerimaanProduk()
             ->where('penerimaan_produks.status_penerimaan', 1)
             ->where('penerimaan_produks.suplier_id', $data_penerimaans->first()->suplier_id)
             ->where('penerimaan_produks.warung_id', Auth::user()->id_warung)->get();
 
-            $penerimaan_produk = PenerimaanProduk::select(['penerimaan_produks.id', 'penerimaan_produks.no_faktur_penerimaan', 'penerimaan_produks.suplier_id', 'penerimaan_produks.keterangan','supliers.nama_suplier'])
-            ->leftJoin('supliers', 'supliers.id', '=', 'penerimaan_produks.suplier_id')
+            $penerimaan_produk = $this->penerimaanProduk()
             ->where('penerimaan_produks.no_faktur_penerimaan', $data_penerimaans->first()->faktur_penerimaan)
             ->where('penerimaan_produks.warung_id', Auth::user()->id_warung)->first();
 
@@ -104,8 +112,7 @@ class EditPembelianController extends Controller
                 'penerimaan'         => $penerimaan_produk->id."|".$penerimaan_produk->suplier_id."|".$penerimaan_produk->no_faktur_penerimaan."|".$penerimaan_produk->nama_suplier."|".$penerimaan_produk->keterangan
                 ]);
         }else{
-            $data_penerimaan = PenerimaanProduk::select(['penerimaan_produks.id', 'penerimaan_produks.no_faktur_penerimaan', 'penerimaan_produks.suplier_id', 'penerimaan_produks.keterangan','supliers.nama_suplier'])
-            ->leftJoin('supliers', 'supliers.id', '=', 'penerimaan_produks.suplier_id')
+            $data_penerimaan = $this->penerimaanProduk()
             ->where('penerimaan_produks.status_penerimaan', 1)
             ->where('penerimaan_produks.warung_id', Auth::user()->id_warung)->get();  
 
