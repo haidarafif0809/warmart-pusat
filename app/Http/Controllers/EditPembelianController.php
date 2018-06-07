@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Barang;
 use App\DetailPembelian;
+use App\DetailPembelianOrder;
+use App\DetailPenerimaanProduk;
 use App\EditTbsPembelian;
 use App\Pembelian;
 use App\PembelianOrder;
@@ -627,5 +629,55 @@ class EditPembelianController extends Controller
             return response(200);
 
         }
+    }
+
+    // ORDER PEMBELIAN
+
+    // GET PEMEBLIAN ORDER - PEMBELIAN
+    public function prosesTbsOrderPembelian(Request $request){
+
+        if (Auth::user()->id_warung == '') {
+            Auth::logout();
+            return response()->view('error.403');
+        }else{
+            $supplier = PembelianOrder::select('suplier_id')->where('no_faktur_order', $request->faktur_order)
+            ->first()->suplier_id;
+            
+            $data_orders = DetailPembelianOrder::where('no_faktur_order', $request->faktur_order)
+            ->where('warung_id', Auth::user()->id_warung)->get();
+
+            $session_id = session()->getId();
+            $subtotal = 0;
+
+            // HAPUS DATA TBS SUPLIER LAMA, JIKA TIBA TIBA SUPLIER DIUBAH
+            $hapus_tbs = EditTbsPembelian::where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)
+            ->where('faktur_order', '!=', NULL)->delete();
+
+            foreach ($data_orders as $data_order) {
+
+                $insert_tbs = EditTbsPembelian::create([
+                    'session_id'        => $session_id,
+                    'no_faktur'         => $request->no_faktur,
+                    'faktur_order'      => $data_order->no_faktur_order,
+                    'id_produk'         => $data_order->id_produk,
+                    'jumlah_produk'     => $data_order->jumlah_produk,
+                    'satuan_id'         => $data_order->satuan_id,
+                    'satuan_dasar'      => $data_order->satuan_dasar,
+                    'harga_produk'      => $data_order->harga_produk,
+                    'subtotal'          => $data_order->subtotal,
+                    'status_harga'      => $data_order->status_harga,
+                    'suplier_id'        => $supplier,
+                    'warung_id'         => $data_order->warung_id,
+                    ]);
+                
+                $subtotal += $data_order->subtotal;
+            }
+
+
+            $respons['subtotal'] = $subtotal;
+
+            return response()->json($respons);
+        }
+
     }
 }

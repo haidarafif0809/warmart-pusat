@@ -663,6 +663,12 @@
             'inputTbsPembelian.produk': function () {
                 this.pilihProduk()
             },
+            'inputTbsPembelian.suplier_order': function (newQuestion) {
+                this.pilihSuplierOrder();  
+            },
+            'inputTbsPembelian.suplier_penerimaan': function (newQuestion) {
+                this.pilihSuplierPenerimaan();  
+            },
             'inputPembayaranPembelian.pembayaran':function (val){
                 if (val == '') {
                     val = 0
@@ -1052,6 +1058,86 @@
                     app.inputTbsPembelian.produk = ''
 
                 });
+            },
+            pilihSuplierOrder() {
+                if (this.inputTbsPembelian.suplier_order != '') {
+                    var app = this;
+                    var no_faktur = app.inputTbsPembelian.no_faktur;
+                    var dataOrder = app.inputTbsPembelian.suplier_order.split("|");
+                    var id_order = dataOrder[0]; 
+                    var suplier_id = dataOrder[1];
+                    var faktur_order = dataOrder[2]; 
+                    var suplier_order = dataOrder[3]; 
+                    var keterangan_order = dataOrder[4]; 
+
+                    app.inputPembayaranPembelian.suplier = suplier_id;
+                    app.inputPembayaranPembelian.keterangan = keterangan_order;
+
+                    this.getPembelianOrder(id_order,suplier_id,faktur_order,suplier_order,no_faktur);
+                }
+            },
+            getPembelianOrder(id_order,suplier_id,faktur_order,suplier_order,no_faktur){
+
+                var app = this;
+                app.loading = true;
+
+                axios.get(app.url_edit+'/proses-tbs-order-pembelian?id_order='+id_order+'&suplier_id='+suplier_id+'&faktur_order='+faktur_order+'&no_faktur='+no_faktur)
+                .then(function (resp) {
+                    var subtotal = parseInt(app.inputPembayaranPembelian.subtotal) + parseInt(resp.data.subtotal)
+                    app.alert("Menerima Order Dari Supplier "+titleCase(suplier_order));
+                    app.loading = false;
+                    app.getResults();        
+
+                    app.inputPembayaranPembelian.subtotal = subtotal                       
+                    app.inputPembayaranPembelian.total_akhir  = subtotal
+
+                    app.inputTbsPembelian.suplier_order = '';
+                })
+                .catch(function (resp) {
+                    console.log(resp)
+                    app.loading = false;
+                    alert("Tbs Pembelian tidak bisa ditambahkan");
+                });
+
+            },
+            pilihSuplierPenerimaan() {
+                if (this.inputTbsPembelian.suplier_penerimaan != '') {
+                    var app = this;
+                    var dataPenerimaan = app.inputTbsPembelian.suplier_penerimaan.split("|");
+                    var id_penerimaan = dataPenerimaan[0]; 
+                    var suplier_id = dataPenerimaan[1];
+                    var faktur_penerimaan = dataPenerimaan[2]; 
+                    var suplier_penerimaan = dataPenerimaan[3]; 
+                    var keterangan_penerimaan = dataPenerimaan[4]; 
+
+                    app.inputPembayaranPembelian.suplier = suplier_id;
+                    app.inputPembayaranPembelian.keterangan = keterangan_penerimaan;
+
+                    this.getPembelianPenerimaan(id_penerimaan,suplier_id,faktur_penerimaan,suplier_penerimaan);
+                }
+            },
+            getPembelianPenerimaan(id_penerimaan,suplier_id,faktur_penerimaan,suplier_penerimaan){
+
+                var app = this;
+                app.loading = true;
+
+                axios.get(app.url+'/proses-tbs-penerimaan-produk-pembelian?id_penerimaan='+id_penerimaan+'&suplier_id='+suplier_id+'&faktur_penerimaan='+faktur_penerimaan)
+                .then(function (resp) {
+                    var subtotal = parseInt(app.inputPembayaranPembelian.subtotal) + parseInt(resp.data.subtotal)
+                    app.alert("Penerimaan Produk Dari Supplier "+titleCase(suplier_penerimaan));
+                    app.loading = false;
+                    app.getResults();
+
+                    app.inputPembayaranPembelian.subtotal = subtotal                       
+                    app.inputPembayaranPembelian.total_akhir  = subtotal
+                    app.inputTbsPembelian.suplier_penerimaan = '';
+                })
+                .catch(function (resp) {
+                    console.log(resp)
+                    app.loading = false;
+                    alert("Tbs Pembelian tidak bisa ditambahkan");
+                });
+
             },
             editEntryJumlah(id, index,nama_produk,subtotal_lama) {    
                 var app = this; 
