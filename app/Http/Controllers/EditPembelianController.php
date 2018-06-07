@@ -680,4 +680,54 @@ class EditPembelianController extends Controller
         }
 
     }
+
+    // PENERIMAAN PRODUK
+
+    // GET PENERIMAAN PRODUK - PEMBELIAN
+    public function prosesTbsPenerimaanProduk(Request $request){
+
+        if (Auth::user()->id_warung == '') {
+            Auth::logout();
+            return response()->view('error.403');
+        }else{            
+            $supplier = PenerimaanProduk::select('suplier_id')->where('no_faktur_penerimaan', $request->faktur_penerimaan)
+            ->first()->suplier_id;
+
+            $data_penerimaans = DetailPenerimaanProduk::where('no_faktur_penerimaan', $request->faktur_penerimaan)
+            ->where('warung_id', Auth::user()->id_warung)->get();
+
+            $session_id = session()->getId();
+            $subtotal = 0;
+
+            // HAPUS DATA TBS SUPLIER LAMA, JIKA TIBA TIBA SUPLIER DIUBAH
+            $hapus_tbs = EditTbsPembelian::where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)
+            ->where('faktur_penerimaan', '!=', NULL)->delete();
+
+            foreach ($data_penerimaans as $data_penerimaan) {
+                $sub_total = $data_penerimaan->harga_produk * $data_penerimaan->jumlah_produk;
+                $insert_tbs = EditTbsPembelian::create([
+                    'session_id'        => $session_id,
+                    'no_faktur'         => $request->no_faktur,
+                    'faktur_penerimaan' => $data_penerimaan->no_faktur_penerimaan,
+                    'id_produk'         => $data_penerimaan->id_produk,
+                    'jumlah_produk'     => $data_penerimaan->jumlah_produk,
+                    'satuan_id'         => $data_penerimaan->satuan_id,
+                    'satuan_dasar'      => $data_penerimaan->satuan_dasar,
+                    'harga_produk'      => $data_penerimaan->harga_produk,
+                    'subtotal'          => $sub_total,
+                    'status_harga'      => $data_penerimaan->status_harga,
+                    'suplier_id'        => $supplier,
+                    'warung_id'         => $data_penerimaan->warung_id,
+                    ]);
+
+                $subtotal += $sub_total;
+            }
+
+
+            $respons['subtotal'] = $subtotal;
+
+            return response()->json($respons);
+        }
+
+    }
 }

@@ -1103,6 +1103,7 @@
             pilihSuplierPenerimaan() {
                 if (this.inputTbsPembelian.suplier_penerimaan != '') {
                     var app = this;
+                    var no_faktur = app.inputTbsPembelian.no_faktur;
                     var dataPenerimaan = app.inputTbsPembelian.suplier_penerimaan.split("|");
                     var id_penerimaan = dataPenerimaan[0]; 
                     var suplier_id = dataPenerimaan[1];
@@ -1113,15 +1114,15 @@
                     app.inputPembayaranPembelian.suplier = suplier_id;
                     app.inputPembayaranPembelian.keterangan = keterangan_penerimaan;
 
-                    this.getPembelianPenerimaan(id_penerimaan,suplier_id,faktur_penerimaan,suplier_penerimaan);
+                    this.getPembelianPenerimaan(id_penerimaan,suplier_id,faktur_penerimaan,suplier_penerimaan,no_faktur);
                 }
             },
-            getPembelianPenerimaan(id_penerimaan,suplier_id,faktur_penerimaan,suplier_penerimaan){
+            getPembelianPenerimaan(id_penerimaan,suplier_id,faktur_penerimaan,suplier_penerimaan,no_faktur){
 
                 var app = this;
                 app.loading = true;
 
-                axios.get(app.url+'/proses-tbs-penerimaan-produk-pembelian?id_penerimaan='+id_penerimaan+'&suplier_id='+suplier_id+'&faktur_penerimaan='+faktur_penerimaan)
+                axios.get(app.url_edit+'/proses-tbs-penerimaan-produk-pembelian?id_penerimaan='+id_penerimaan+'&suplier_id='+suplier_id+'&faktur_penerimaan='+faktur_penerimaan+'&no_faktur='+no_faktur)
                 .then(function (resp) {
                     var subtotal = parseInt(app.inputPembayaranPembelian.subtotal) + parseInt(resp.data.subtotal)
                     app.alert("Penerimaan Produk Dari Supplier "+titleCase(suplier_penerimaan));
