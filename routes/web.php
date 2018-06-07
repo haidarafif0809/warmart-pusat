@@ -594,6 +594,8 @@ Route::get('/edit-pembelian/cek-persen-tax-pembelian', 'EditPembelianController@
 Route::get('/edit-pembelian/proses-edit-tax-tbs-pembelian', 'EditPembelianController@editTaxTbsPembelian')->middleware('auth');
 Route::get('/edit-pembelian/cek-total-kas-pembelian', 'EditPembelianController@total_kas')->middleware('auth');
 Route::get('/edit-pembelian/cek-data-tbs-pembelian/{id}', 'EditPembelianController@cekDataPembelian')->middleware('auth');
+Route::get('/edit-pembelian/suplier-order/{id}', 'EditPembelianController@suplierOrder')->middleware('auth');
+Route::get('/edit-pembelian/suplier-penerimaan/{id}', 'EditPembelianController@suplierPenerimaan')->middleware('auth');
 Route::post('/pembelian/edit-satuan-edit-tbs-pembelian', 'PembelianController@editSatuanEditTbsPembelian')->middleware('auth');
 
 // PEMBELIAN
