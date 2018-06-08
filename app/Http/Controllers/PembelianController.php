@@ -49,21 +49,43 @@ class PembelianController extends Controller
         }
     }
 
+    public function orderPembelian() {
+        $data_order = PembelianOrder::select(['pembelian_orders.id', 'pembelian_orders.no_faktur_order', 'pembelian_orders.suplier_id', 'pembelian_orders.keterangan','supliers.nama_suplier'])
+        ->leftJoin('supliers', 'supliers.id', '=', 'pembelian_orders.suplier_id');
+
+        return $data_order;
+    }
+
+    public function penerimaanProduk() {
+        $data_penerimaan = PenerimaanProduk::select(['penerimaan_produks.id', 'penerimaan_produks.no_faktur_penerimaan', 'penerimaan_produks.suplier_id', 'penerimaan_produks.keterangan','supliers.nama_suplier'])
+        ->leftJoin('supliers', 'supliers.id', '=', 'penerimaan_produks.suplier_id');
+
+        return $data_penerimaan;
+    }
+
+    public function tbsPembelian($session_id)
+    {
+      $tbs_penjualan = TbsPembelian::select('suplier_id')->where('session_id', $session_id)
+      ->where('warung_id', Auth::user()->id_warung)
+      ->where('faktur_penerimaan', '!=', NULL)
+      ->orWhere('faktur_order', '!=', NULL);
+
+        return $tbs_penjualan;
+    }
+
     // DATA SUPLIER ORDER
     public function suplierOrder(){
         $session_id = session()->getId();
 
-        $data_orders   = TbsPembelian::select('suplier_id')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
+        $data_orders   = $this->tbsPembelian($session_id);
 
         if ($data_orders->count() > 0) {
-            $data_order = PembelianOrder::select(['pembelian_orders.id', 'pembelian_orders.no_faktur_order', 'pembelian_orders.suplier_id', 'pembelian_orders.keterangan','supliers.nama_suplier'])
-            ->leftJoin('supliers', 'supliers.id', '=', 'pembelian_orders.suplier_id')
+            $data_order = $this->orderPembelian()
             ->where('pembelian_orders.status_order', 1)
             ->where('pembelian_orders.suplier_id', $data_orders->first()->suplier_id)
             ->where('pembelian_orders.warung_id', Auth::user()->id_warung)->get();
         }else{
-            $data_order = PembelianOrder::select(['pembelian_orders.id', 'pembelian_orders.no_faktur_order', 'pembelian_orders.suplier_id', 'pembelian_orders.keterangan','supliers.nama_suplier'])
-            ->leftJoin('supliers', 'supliers.id', '=', 'pembelian_orders.suplier_id')
+            $data_order = $this->orderPembelian()
             ->where('pembelian_orders.status_order', 1)
             ->where('pembelian_orders.warung_id', Auth::user()->id_warung)->get();
         }
@@ -88,17 +110,15 @@ class PembelianController extends Controller
     public function suplierPenerimaan(){
         $session_id = session()->getId();
 
-        $data_penerimaans   = TbsPembelian::select('suplier_id')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
+        $data_penerimaans = $this->tbsPembelian($session_id);
 
         if ($data_penerimaans->count() > 0) {
-            $data_penerimaan = PenerimaanProduk::select(['penerimaan_produks.id', 'penerimaan_produks.no_faktur_penerimaan', 'penerimaan_produks.suplier_id', 'penerimaan_produks.keterangan','supliers.nama_suplier'])
-            ->leftJoin('supliers', 'supliers.id', '=', 'penerimaan_produks.suplier_id')
+            $data_penerimaan = $this->penerimaanProduk()
             ->where('penerimaan_produks.status_penerimaan', 1)
             ->where('penerimaan_produks.suplier_id', $data_penerimaans->first()->suplier_id)
             ->where('penerimaan_produks.warung_id', Auth::user()->id_warung)->get();
         }else{
-            $data_penerimaan = PenerimaanProduk::select(['penerimaan_produks.id', 'penerimaan_produks.no_faktur_penerimaan', 'penerimaan_produks.suplier_id', 'penerimaan_produks.keterangan','supliers.nama_suplier'])
-            ->leftJoin('supliers', 'supliers.id', '=', 'penerimaan_produks.suplier_id')
+            $data_penerimaan = $this->penerimaanProduk()
             ->where('penerimaan_produks.status_penerimaan', 1)
             ->where('penerimaan_produks.warung_id', Auth::user()->id_warung)->get();
         }

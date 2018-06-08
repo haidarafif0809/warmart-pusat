@@ -55,31 +55,12 @@ class EditPembelianController extends Controller
             ->where('pembelian_orders.status_order', 1)
             ->where('pembelian_orders.suplier_id', $data_orders->first()->suplier_id)
             ->where('pembelian_orders.warung_id', Auth::user()->id_warung)->get();
-
-            $pembelian_order = $this->orderPembelian()
-            ->where('pembelian_orders.no_faktur_order', $data_orders->where('faktur_order', '!=', NULL)->first()->faktur_order)
-            ->where('pembelian_orders.warung_id', Auth::user()->id_warung);
-
-            // Jika sebelumnya ada transaksi dari order pembelian
-            if ($pembelian_order->count() > 0) {
-              $array = array([
-                  'id_order'      => $pembelian_order->first()->id,
-                  'suplier_id'    => $pembelian_order->first()->suplier_id,
-                  'faktur_order'  => $pembelian_order->first()->no_faktur_order,
-                  'suplier_order' => $pembelian_order->first()->nama_suplier,
-                  'order'         => $pembelian_order->first()->id."|".$pembelian_order->first()->suplier_id."|".$pembelian_order->first()->no_faktur_order."|".$pembelian_order->first()->nama_suplier."|".$pembelian_order->first()->keterangan
-                  ]);
-            }else{
-              $array = [];
-            }
-
         }else{
             $data_order = $this->orderPembelian()
             ->where('pembelian_orders.status_order', 1)
             ->where('pembelian_orders.warung_id', Auth::user()->id_warung)->get();
-
-            $array = [];
         }
+        $array = [];
 
         foreach ($data_order as $order) {
             array_push($array, [
@@ -114,30 +95,12 @@ class EditPembelianController extends Controller
             ->where('penerimaan_produks.status_penerimaan', 1)
             ->where('penerimaan_produks.suplier_id', $data_penerimaans->first()->suplier_id)
             ->where('penerimaan_produks.warung_id', Auth::user()->id_warung)->get();
-
-            $penerimaan_produk = $this->penerimaanProduk()
-            ->where('penerimaan_produks.no_faktur_penerimaan', $data_penerimaans->where('faktur_penerimaan', '!=', NULL)->first()->faktur_penerimaan)
-            ->where('penerimaan_produks.warung_id', Auth::user()->id_warung);
-
-            // Jika sebelumnya ada transaksi dari penerimaan produk
-            if ($penerimaan_produk->count() > 0) {
-            $array = array([
-                'id_penerimaan'      => $penerimaan_produk->first()->id,
-                'suplier_id'         => $penerimaan_produk->first()->suplier_id,
-                'faktur_penerimaan'  => $penerimaan_produk->first()->no_faktur_penerimaan,
-                'suplier_penerimaan' => $penerimaan_produk->first()->nama_suplier,
-                'penerimaan'         => $penerimaan_produk->first()->id."|".$penerimaan_produk->first()->suplier_id."|".$penerimaan_produk->first()->no_faktur_penerimaan."|".$penerimaan_produk->first()->nama_suplier."|".$penerimaan_produk->first()->keterangan
-                ]);
-            }else{
-              $array = [];
-            }
         }else{
             $data_penerimaan = $this->penerimaanProduk()
             ->where('penerimaan_produks.status_penerimaan', 1)
             ->where('penerimaan_produks.warung_id', Auth::user()->id_warung)->get();
-
-            $array = [];
         }
+        $array = [];
 
         foreach ($data_penerimaan as $penerimaan) {
             array_push($array, [
