@@ -32,14 +32,23 @@ class EditPembelianController extends Controller
         return $data_order;
     }
 
+    public function editTbsPembelian($pembelian, $session_id)
+    {
+      $edit_tbs_penjualan = EditTbsPembelian::select(['suplier_id', 'faktur_penerimaan',  'faktur_order'])->where('session_id', $session_id)
+      ->where('no_faktur', $pembelian->no_faktur)
+      ->where('warung_id', Auth::user()->id_warung)
+      ->where('faktur_penerimaan', '!=', NULL)
+      ->orWhere('faktur_order', '!=', NULL);
+
+        return $edit_tbs_penjualan;
+    }
+
     // DATA SUPLIER ORDER
     public function suplierOrder($id){
         $session_id = session()->getId();
         $pembelian = Pembelian::find($id);
 
-        $data_orders   = EditTbsPembelian::select(['suplier_id', 'faktur_order'])->where('session_id', $session_id)
-        ->where('no_faktur', $pembelian->no_faktur)->where('faktur_order', '!=', NULL)
-        ->where('warung_id', Auth::user()->id_warung);
+        $data_orders   = $this->editTbsPembelian($pembelian, $session_id);
 
         if ($data_orders->count() > 0) {
             $data_order = $this->orderPembelian()
@@ -48,16 +57,21 @@ class EditPembelianController extends Controller
             ->where('pembelian_orders.warung_id', Auth::user()->id_warung)->get();
 
             $pembelian_order = $this->orderPembelian()
-            ->where('pembelian_orders.no_faktur_order', $data_orders->first()->faktur_order)
-            ->where('pembelian_orders.warung_id', Auth::user()->id_warung)->first();
+            ->where('pembelian_orders.no_faktur_order', $data_orders->where('faktur_order', '!=', NULL)->first()->faktur_order)
+            ->where('pembelian_orders.warung_id', Auth::user()->id_warung);
 
-            $array = array([
-                'id_order'      => $pembelian_order->id,
-                'suplier_id'    => $pembelian_order->suplier_id,
-                'faktur_order'  => $pembelian_order->no_faktur_order,
-                'suplier_order' => $pembelian_order->nama_suplier,
-                'order'         => $pembelian_order->id."|".$pembelian_order->suplier_id."|".$pembelian_order->no_faktur_order."|".$pembelian_order->nama_suplier."|".$pembelian_order->keterangan
-                ]);
+            // Jika sebelumnya ada transaksi dari order pembelian
+            if ($pembelian_order->count() > 0) {
+              $array = array([
+                  'id_order'      => $pembelian_order->first()->id,
+                  'suplier_id'    => $pembelian_order->first()->suplier_id,
+                  'faktur_order'  => $pembelian_order->first()->no_faktur_order,
+                  'suplier_order' => $pembelian_order->first()->nama_suplier,
+                  'order'         => $pembelian_order->first()->id."|".$pembelian_order->first()->suplier_id."|".$pembelian_order->first()->no_faktur_order."|".$pembelian_order->first()->nama_suplier."|".$pembelian_order->first()->keterangan
+                  ]);
+            }else{
+              $array = [];
+            }
 
         }else{
             $data_order = $this->orderPembelian()
@@ -93,9 +107,7 @@ class EditPembelianController extends Controller
         $session_id = session()->getId();
         $pembelian = Pembelian::find($id);
 
-        $data_penerimaans   = EditTbsPembelian::select(['suplier_id', 'faktur_penerimaan'])->where('session_id', $session_id)
-        ->where('no_faktur', $pembelian->no_faktur)->where('faktur_penerimaan', '!=', NULL)
-        ->where('warung_id', Auth::user()->id_warung);
+        $data_penerimaans   = $this->editTbsPembelian($pembelian, $session_id);
 
         if ($data_penerimaans->count() > 0) {
             $data_penerimaan = $this->penerimaanProduk()
@@ -104,16 +116,21 @@ class EditPembelianController extends Controller
             ->where('penerimaan_produks.warung_id', Auth::user()->id_warung)->get();
 
             $penerimaan_produk = $this->penerimaanProduk()
-            ->where('penerimaan_produks.no_faktur_penerimaan', $data_penerimaans->first()->faktur_penerimaan)
-            ->where('penerimaan_produks.warung_id', Auth::user()->id_warung)->first();
+            ->where('penerimaan_produks.no_faktur_penerimaan', $data_penerimaans->where('faktur_penerimaan', '!=', NULL)->first()->faktur_penerimaan)
+            ->where('penerimaan_produks.warung_id', Auth::user()->id_warung);
 
+            // Jika sebelumnya ada transaksi dari penerimaan produk
+            if ($penerimaan_produk->count() > 0) {
             $array = array([
-                'id_penerimaan'      => $penerimaan_produk->id,
-                'suplier_id'    => $penerimaan_produk->suplier_id,
-                'faktur_penerimaan'  => $penerimaan_produk->no_faktur_penerimaan,
-                'suplier_penerimaan' => $penerimaan_produk->nama_suplier,
-                'penerimaan'         => $penerimaan_produk->id."|".$penerimaan_produk->suplier_id."|".$penerimaan_produk->no_faktur_penerimaan."|".$penerimaan_produk->nama_suplier."|".$penerimaan_produk->keterangan
+                'id_penerimaan'      => $penerimaan_produk->first()->id,
+                'suplier_id'         => $penerimaan_produk->first()->suplier_id,
+                'faktur_penerimaan'  => $penerimaan_produk->first()->no_faktur_penerimaan,
+                'suplier_penerimaan' => $penerimaan_produk->first()->nama_suplier,
+                'penerimaan'         => $penerimaan_produk->first()->id."|".$penerimaan_produk->first()->suplier_id."|".$penerimaan_produk->first()->no_faktur_penerimaan."|".$penerimaan_produk->first()->nama_suplier."|".$penerimaan_produk->first()->keterangan
                 ]);
+            }else{
+              $array = [];
+            }
         }else{
             $data_penerimaan = $this->penerimaanProduk()
             ->where('penerimaan_produks.status_penerimaan', 1)

@@ -4,7 +4,7 @@
         overflow-y:auto;
     }
     .pencarian {
-        color: red; 
+        color: red;
         float: right;
     }
     .form-pembelian{
@@ -36,28 +36,28 @@
 </style>
 
 <template>
-    <div class="row"> 
-        <div class="col-md-12"> 
-            <ul class="breadcrumb"> 
-                <li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li> 
-                <li><router-link :to="{name: 'indexPembelian'}">Pembelian</router-link></li> 
-                <li class="active">Edit Pembelian</li> 
-            </ul> 
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="breadcrumb">
+                <li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li>
+                <li><router-link :to="{name: 'indexPembelian'}">Pembelian</router-link></li>
+                <li class="active">Edit Pembelian</li>
+            </ul>
 
-            <div class="modal" id="modal_tambah_kas" role="dialog" data-backdrop=""> 
-                <div class="modal-dialog"> 
-                    <!-- Modal content--> 
-                    <div class="modal-content"> 
-                        <div class="modal-header"> 
-                            <button type="button" class="close"  v-on:click="closeModalX()" v-shortkey.push="['esc']" @shortkey="closeModalX()"> &times;</button> 
-                            <h4 class="modal-title"> 
-                                <div class="alert-icon"> 
-                                    <b>Silahkan Isi Kas!</b> 
-                                </div> 
-                            </h4> 
-                        </div> 
+            <div class="modal" id="modal_tambah_kas" role="dialog" data-backdrop="">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close"  v-on:click="closeModalX()" v-shortkey.push="['esc']" @shortkey="closeModalX()"> &times;</button>
+                            <h4 class="modal-title">
+                                <div class="alert-icon">
+                                    <b>Silahkan Isi Kas!</b>
+                                </div>
+                            </h4>
+                        </div>
                         <div class="modal-body">
-                            <form v-on:submit.prevent="saveFormKas()" class="form-horizontal"> 
+                            <form v-on:submit.prevent="saveFormKas()" class="form-horizontal">
                                 <div class="form-group">
                                     <label for="kode_kas" class="col-md-3 control-label">Kode Kas</label>
                                     <div class="col-md-9">
@@ -96,27 +96,27 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="modal-footer">  
-                        </div> 
-                    </div>       
-                </div> 
-            </div> 
-            <!-- / MODAL TOMBOL SELESAI --> 
+                        <div class="modal-footer">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- / MODAL TOMBOL SELESAI -->
 
-            <div class="modal" id="modal_tambah_suplier" role="dialog" data-backdrop=""> 
-                <div class="modal-dialog"> 
-                    <!-- Modal content--> 
-                    <div class="modal-content"> 
-                        <div class="modal-header"> 
-                            <button type="button" class="close"  v-on:click="closeModalX()" v-shortkey.push="['esc']" @shortkey="closeModalX()"> &times;</button> 
-                            <h4 class="modal-title"> 
-                                <div class="alert-icon"> 
-                                    <b>Silahkan Isi Supplier!</b> 
-                                </div> 
-                            </h4> 
-                        </div> 
+            <div class="modal" id="modal_tambah_suplier" role="dialog" data-backdrop="">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close"  v-on:click="closeModalX()" v-shortkey.push="['esc']" @shortkey="closeModalX()"> &times;</button>
+                            <h4 class="modal-title">
+                                <div class="alert-icon">
+                                    <b>Silahkan Isi Supplier!</b>
+                                </div>
+                            </h4>
+                        </div>
                         <div class="modal-body">
-                            <form v-on:submit.prevent="saveFormSupplier()" class="form-horizontal"> 
+                            <form v-on:submit.prevent="saveFormSupplier()" class="form-horizontal">
                                 <div class="form-group">
                                     <label for="nama_suplier" class="col-md-3 control-label">Nama Supplier</label>
                                     <div class="col-md-9">
@@ -153,39 +153,39 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="modal-footer">  
-                        </div> 
-                    </div>       
-                </div> 
-            </div> 
-            <!-- / MODAL TOMBOL SELESAI --> 
+                        <div class="modal-footer">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- / MODAL TOMBOL SELESAI -->
 
-            <div class="modal" id="modal_selesai" role="dialog" data-backdrop=""> 
-                <div class="modal-dialog"> 
-                    <!-- Modal content--> 
-                    <div class="modal-content"> 
-                        <div class="modal-header"> 
-                            <button type="button" class="close"  v-on:click="closeModalX()" v-shortkey.push="['esc']" @shortkey="closeModalX()"> &times;</button> 
-                            <h4 class="modal-title"> 
-                                <div class="alert-icon"> 
-                                    <b>Silahkan Lengkapi Pembayaran!</b> 
-                                </div> 
-                            </h4> 
-                        </div> 
-                        <form class="form-horizontal" v-on:submit.prevent="saveForm()" > 
-                            <div class="modal-body"> 
+            <div class="modal" id="modal_selesai" role="dialog" data-backdrop="">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close"  v-on:click="closeModalX()" v-shortkey.push="['esc']" @shortkey="closeModalX()"> &times;</button>
+                            <h4 class="modal-title">
+                                <div class="alert-icon">
+                                    <b>Silahkan Lengkapi Pembayaran!</b>
+                                </div>
+                            </h4>
+                        </div>
+                        <form class="form-horizontal" v-on:submit.prevent="saveForm()" >
+                            <div class="modal-body">
                                 <div class="card" style="margin-bottom:1px; margin-top:1px; margin-right:1px; margin-left:1px;">
 
                                     <div class="row">
                                         <div class="col-md-6 col-xs-12">
                                             <div class="form-group" style="margin-right: 10px; margin-left: 1px; margin-bottom: 1px; margin-top: 1px;">
-                                                <font style="color: black">Potongan(F7)</font>  
+                                                <font style="color: black">Potongan(F7)</font>
                                                 <money class="form-subtotal" style="text-align:right;" v-model="inputPembayaranPembelian.potongan_faktur" v-bind="separator" v-shortkey.focus="['f7']"></money>
                                             </div>
                                         </div>
                                         <div class="col-md-6 col-xs-12">
                                             <div class="form-group" style="margin-right: 10px; margin-left: 1px; margin-bottom: 1px; margin-top: 1px;">
-                                                <font style="color: black">(%)(F8)</font>    
+                                                <font style="color: black">(%)(F8)</font>
                                                 <input type="text" class="form-subtotal" style="text-align:right;" value="0" v-model="inputPembayaranPembelian.potongan_persen" v-on:blur="hitungPotonganPersen" v-shortkey.focus="['f8']" />
                                             </div>
                                         </div>
@@ -195,15 +195,15 @@
                                     <div class="row">
                                         <div class="col-md-6 col-xs-12">
                                             <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                                <font style="color: black">Jatuh Tempo(F9)</font> 
+                                                <font style="color: black">Jatuh Tempo(F9)</font>
                                                 <datepicker :input-class="'form-control'" placeholder="Isi Bila Ada Jatuh Tempo" v-model="inputPembayaranPembelian.jatuh_tempo" v-shortkey.focus="['f9']" ></datepicker>
                                                 <br v-if="errors.jatuh_tempo">  <span v-if="errors.jatuh_tempo" id="jatuh_tempo_error" class="label label-danger">{{ errors.jatuh_tempo[0] }}</span>
                                             </div>
                                         </div>
                                         <div class="col-md-6 col-xs-12">
                                             <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
-                                                <font style="color: black">Keterangan</font> 
-                                                <textarea class="form-control" v-model="inputPembayaranPembelian.keterangan"  name="keterangan" id="keterangan" placeholder="Isi Disini" rows="1"></textarea> 
+                                                <font style="color: black">Keterangan</font>
+                                                <textarea class="form-control" v-model="inputPembayaranPembelian.keterangan"  name="keterangan" id="keterangan" placeholder="Isi Disini" rows="1"></textarea>
                                                 <br v-if="errors.keterangan">  <span v-if="errors.keterangan" id="jatuh_tempo_error" class="label label-danger">{{ errors.keterangan[0] }}</span>
                                             </div>
                                         </div>
@@ -213,12 +213,12 @@
                                         <div class="col-md-6 col-xs-12">
                                             <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
                                                 <font style="color: black">Total Akhir</font>
-                                                <money class="form-pembelian" style="text-align:right;" readonly="" id="total_akhir" name="total_akhir" placeholder="Total Akhir"  v-model="inputPembayaranPembelian.total_akhir" v-bind="separator" ></money> 
+                                                <money class="form-pembelian" style="text-align:right;" readonly="" id="total_akhir" name="total_akhir" placeholder="Total Akhir"  v-model="inputPembayaranPembelian.total_akhir" v-bind="separator" ></money>
                                             </div>
 
                                             <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
                                                 <font style="color: black">Pembayaran(F10)</font>
-                                                <money class="form-pembelian" style="text-align:right;" v-shortkey.focus="['f10']" id="pembayaran" name="pembayaran" placeholder="Pembayaran"  v-model="inputPembayaranPembelian.pembayaran" v-bind="separator" autocomplete="off" ref="pembayaran"></money> 
+                                                <money class="form-pembelian" style="text-align:right;" v-shortkey.focus="['f10']" id="pembayaran" name="pembayaran" placeholder="Pembayaran"  v-model="inputPembayaranPembelian.pembayaran" v-bind="separator" autocomplete="off" ref="pembayaran"></money>
                                             </div>
 
                                         </div>
@@ -226,12 +226,12 @@
 
                                             <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
                                                 <font style="color: black">Kembalian</font>
-                                                <money readonly="" class="form-pembelian" style="text-align:right;" id="kembalian" name="kembalian" placeholder="Kembalian"  v-model="inputPembayaranPembelian.kembalian" v-bind="separator" ></money> 
+                                                <money readonly="" class="form-pembelian" style="text-align:right;" id="kembalian" name="kembalian" placeholder="Kembalian"  v-model="inputPembayaranPembelian.kembalian" v-bind="separator" ></money>
                                             </div>
 
                                             <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
                                                 <font style="color: black">Kredit</font>
-                                                <money readonly="" class="form-pembelian" style="text-align:right;" id="kredit" name="kredit" placeholder="Kredit"  v-model="inputPembayaranPembelian.kredit" v-bind="separator" ></money> 
+                                                <money readonly="" class="form-pembelian" style="text-align:right;" id="kredit" name="kredit" placeholder="Kredit"  v-model="inputPembayaranPembelian.kredit" v-bind="separator" ></money>
                                             </div>
                                         </div>
                                     </div>
@@ -250,25 +250,25 @@
                                         <button type="button" class="btn btn-default btn-lg"  v-on:click="closeModalX()" v-shortkey.push="['esc']" @shortkey="closeModalX()"><font style="font-size:20px;"> Tutup(Esc)</font></button>
                                     </div>
 
-                                </div> 
+                                </div>
                             </div>
-                            <div class="modal-footer">  
-                            </div> 
+                            <div class="modal-footer">
+                            </div>
                         </form>
-                    </div>       
-                </div> 
-            </div> 
-            <!-- / MODAL TOMBOL SELESAI --> 
+                    </div>
+                </div>
+            </div>
+            <!-- / MODAL TOMBOL SELESAI -->
 
             <!-- small modal -->
             <div class="modal" id="modalJumlahProduk" role="dialog" tabindex="-1"  aria-labelledby="myModalLabel" aria-hidden="true" >
                 <div class="modal-dialog modal-medium">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <button type="button" class="close" v-on:click="closeModalJumlahProduk()" v-shortkey.push="['f9']" @shortkey="closeModalJumlahProduk()"> &times;</button> 
+                            <button type="button" class="close" v-on:click="closeModalJumlahProduk()" v-shortkey.push="['f9']" @shortkey="closeModalJumlahProduk()"> &times;</button>
                         </div>
 
-                        <form class="form-horizontal" v-on:submit.prevent="submitJumlahProduk(inputTbsPembelian.id_produk,inputTbsPembelian.jumlah_produk,inputTbsPembelian.harga_produk,inputTbsPembelian.nama_produk,inputTbsPembelian.no_faktur, inputTbsPembelian.satuan_produk)"> 
+                        <form class="form-horizontal" v-on:submit.prevent="submitJumlahProduk(inputTbsPembelian.id_produk,inputTbsPembelian.jumlah_produk,inputTbsPembelian.harga_produk,inputTbsPembelian.nama_produk,inputTbsPembelian.no_faktur, inputTbsPembelian.satuan_produk)">
                             <div class="modal-body">
                                 <h3 class="text-center"><b>{{inputTbsPembelian.nama_produk}}</b></h3>
 
@@ -277,7 +277,7 @@
                                         <input class="form-control" type="number" v-model="inputTbsPembelian.jumlah_produk" placeholder="Isi Jumlah Produk" name="jumlah_produk" id="jumlah_produk" ref="jumlah_produk" autocomplete="off" step="0.01">
                                     </div>
                                     <div class="col-md-4">
-                                        <selectize-component v-model="inputTbsPembelian.satuan_produk" :settings="placeholder_satuan" id="satuan" name="satuan" ref='satuan'> 
+                                        <selectize-component v-model="inputTbsPembelian.satuan_produk" :settings="placeholder_satuan" id="satuan" name="satuan" ref='satuan'>
                                             <option v-for="satuans, index in satuan" v-bind:value="satuans.satuan" class="pull-left">{{ satuans.nama_satuan }}</option>
                                         </selectize-component>
                                     </div>
@@ -303,17 +303,17 @@
                 <div class="modal-dialog modal-medium">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <button type="button" class="close"  v-on:click="closeModalJumlahProduk()" v-shortkey.push="['f9']" @shortkey="closeModalJumlahProduk()"> &times;</button> 
+                            <button type="button" class="close"  v-on:click="closeModalJumlahProduk()" v-shortkey.push="['f9']" @shortkey="closeModalJumlahProduk()"> &times;</button>
                         </div>
 
-                        <form class="form-horizontal" v-on:submit.prevent="subtmitEditSatuan(inputTbsPembelian.id_produk, inputTbsPembelian.id_tbs, inputTbsPembelian.subtotal)"> 
+                        <form class="form-horizontal" v-on:submit.prevent="subtmitEditSatuan(inputTbsPembelian.id_produk, inputTbsPembelian.id_tbs, inputTbsPembelian.subtotal)">
                             <div class="modal-body">
                                 <h3 class="text-center"><b>{{inputTbsPembelian.nama_produk}}</b></h3>
 
                                 <div class="form-group">
 
                                     <div class="col-md-12 col-xs-12 hurufBesar">
-                                        <selectize-component v-model="inputTbsPembelian.satuan_produk" :settings="placeholder_satuan" id="satuan" name="satuan" ref='satuan'> 
+                                        <selectize-component v-model="inputTbsPembelian.satuan_produk" :settings="placeholder_satuan" id="satuan" name="satuan" ref='satuan'>
                                             <option v-for="satuans, index in satuan" v-bind:value="satuans.satuan" class="pull-left">{{ satuans.nama_satuan }}</option>
                                         </selectize-component>
                                     </div>
@@ -330,19 +330,19 @@
             </div>
             <!--    end small modal -->
 
-            <div class="card" style="margin-bottom: 1px; margin-top: 1px;" ><!-- CARD --> 
-                <div class="card-content"> 
-                    <h4 class="card-title" style="margin-bottom: 1px; margin-top: 1px;"> Edit Pembelian {{ inputTbsPembelian.no_faktur }}</h4> 
-                    <div class="row" style="margin-bottom: 1px; margin-top: 1px;"> 
+            <div class="card" style="margin-bottom: 1px; margin-top: 1px;" ><!-- CARD -->
+                <div class="card-content">
+                    <h4 class="card-title" style="margin-bottom: 1px; margin-top: 1px;"> Edit Pembelian {{ inputTbsPembelian.no_faktur }}</h4>
+                    <div class="row" style="margin-bottom: 1px; margin-top: 1px;">
 
                         <div class="col-md-3">
                             <div class="card card-produk" style="margin-bottom: 1px; margin-top: 1px;">
                                 <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
 
-                                    <selectize-component v-model="inputTbsPembelian.produk" :settings="placeholder_produk" id="produk" ref='produk' v-shortkey.focus="['f1']" > 
+                                    <selectize-component v-model="inputTbsPembelian.produk" :settings="placeholder_produk" id="produk" ref='produk' v-shortkey.focus="['f1']" >
                                         <option v-for="produks, index in produk" v-bind:value="produks.produk" v-if="produks.hitung_stok == 1" >{{produks.barcode}} || {{produks.kode_produk}} || {{ produks.nama_produk }}</option>
                                     </selectize-component>
-                                </div><!--/COL MD  3 --> 
+                                </div><!--/COL MD  3 -->
                                 <span v-if="errors.produk" id="produk_error" class="label label-danger">{{ errors.produk[0] }}</span>
 
                                 <span style="display: none;">
@@ -432,15 +432,15 @@
                                                     </a>
                                                 </td>
                                                 <td><p id="table-subtotal" align="right">{{ tbs_pembelian.subtotal_tbs }}</p></td>
-                                                <td style="text-align:right;"> 
+                                                <td style="text-align:right;">
                                                     <a v-bind:href="'#edit-pembelian/'+id_pembelian" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_pembelian.id_tbs_pembelian" v-on:click="deleteEntry(tbs_pembelian.id_tbs_pembelian, index,tbs_pembelian.nama_produk)" >Delete</a>
                                                 </td>
                                             </tr>
-                                        </tbody>          
+                                        </tbody>
                                         <tbody class="data-tidak-ada"  v-else-if="tbs_pembelians.length == 0 && loading == false" >
                                             <tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
                                         </tbody>
-                                    </table>  
+                                    </table>
 
                                     <vue-simple-spinner v-if="loading"></vue-simple-spinner>
 
@@ -448,24 +448,24 @@
 
                                 </div>
 
-                                <p style="color: red; font-style: italic;">*Note : Klik Kolom Jumlah, Harga, Potongan & Tax Untuk Mengubah Nilai.</p> 
-                            </div><!-- COL SM 8 --> 
+                                <p style="color: red; font-style: italic;">*Note : Klik Kolom Jumlah, Harga, Potongan & Tax Untuk Mengubah Nilai.</p>
+                            </div><!-- COL SM 8 -->
 
-                            <div class="col-md-3"><!-- COL SM 4 --> 
-                                <div class="card card-stats"><!-- CARD --> 
+                            <div class="col-md-3"><!-- COL SM 4 -->
+                                <div class="card card-stats"><!-- CARD -->
                                     <div class="card-header" data-background-color="blue">
                                         <i class="material-icons">shopping_cart</i>
                                     </div>
-                                    <div class="card-content"> 
+                                    <div class="card-content">
                                         <p class="category"><h4>Subtotal</h4></p>
                                         <h3 class="card-title"><b><money class="form-subtotal" style="text-align:right;" v-model="inputPembayaranPembelian.subtotal" readonly v-bind="separator" ></money></b></h3>
-                                        <div class="row"> 
-                                            <div class="col-md-10 col-xs-10"> 
-                                                <h4>Suplier </h4> 
-                                                <selectize-component v-model="inputPembayaranPembelian.suplier" :settings="placeholder_suplier"  id="suplier" name="suplier" ref='suplier'> 
+                                        <div class="row">
+                                            <div class="col-md-10 col-xs-10">
+                                                <h4>Suplier </h4>
+                                                <selectize-component v-model="inputPembayaranPembelian.suplier" :settings="placeholder_suplier"  id="suplier" name="suplier" ref='suplier'>
                                                     <option v-for="supliers, index in suplier" v-bind:value="supliers.id">{{ supliers.nama_suplier }}</option>
                                                 </selectize-component>
-                                            </div> 
+                                            </div>
                                             <div class="col-md-1 col-xs-1" style="padding-left:0px;padding-top:43;">
                                                 <div class="row" style="margin-top:-10px">
                                                     <button class="btn btn-primary btn-icon waves-effect waves-light" v-on:click="tambahSupplier()" type="button"> <i class="material-icons" >add</i> </button>
@@ -473,47 +473,47 @@
                                             </div>
                                         </div><!-- end row-->
                                         <div class="row">
-                                            <div class="col-md-10 col-xs-10" > 
-                                                <h4>Kas </h4> 
+                                            <div class="col-md-10 col-xs-10" >
+                                                <h4>Kas </h4>
                                                 <div v-if="tbsPembelianData.kas_default == 0">
-                                                    <selectize-component style="text-align:left;" v-model="inputPembayaranPembelian.cara_bayar" :settings="placeholder_cara_bayar"  id="cara_bayar" name="cara_bayar" ref='cara_bayar'> 
+                                                    <selectize-component style="text-align:left;" v-model="inputPembayaranPembelian.cara_bayar" :settings="placeholder_cara_bayar"  id="cara_bayar" name="cara_bayar" ref='cara_bayar'>
                                                         <option v-for="cara_bayars, index in cara_bayar" v-bind:value="cara_bayars.id" >{{ cara_bayars.nama_kas }}</option>
                                                     </selectize-component>
                                                     <br>
-                                                    <span class="label label-danger"><router-link :to="{name: 'indexKas'}" class="menu-nav">Tambah Kas Disini</router-link></span> 
+                                                    <span class="label label-danger"><router-link :to="{name: 'indexKas'}" class="menu-nav">Tambah Kas Disini</router-link></span>
                                                 </div>
                                                 <div v-else>
-                                                    <selectize-component style="text-align:left;" v-model="inputPembayaranPembelian.cara_bayar" :settings="placeholder_cara_bayar" id="cara_bayar" name="cara_bayar" ref='cara_bayar'> 
+                                                    <selectize-component style="text-align:left;" v-model="inputPembayaranPembelian.cara_bayar" :settings="placeholder_cara_bayar" id="cara_bayar" name="cara_bayar" ref='cara_bayar'>
                                                         <option v-for="cara_bayars, index in cara_bayar" v-bind:value="cara_bayars.id">{{ cara_bayars.nama_kas }}</option>
                                                     </selectize-component>
                                                 </div>
-                                            </div> 
+                                            </div>
                                             <div class="col-md-1 col-xs-1" style="padding-left:0px;padding-top:43;">
                                                 <div class="row" style="margin-top:-10px">
                                                     <button class="btn btn-primary btn-icon waves-effect waves-light" v-on:click="tambahModalKas()" type="button"> <i class="material-icons" >add</i> </button>
                                                 </div>
                                             </div>
-                                        </div> 
+                                        </div>
 
                                     </div>
                                     <div class="card-footer">
-                                        <div class="row"> 
-                                            <div class="col-md-6 col-xs-6"> 
+                                        <div class="row">
+                                            <div class="col-md-6 col-xs-6">
                                               <button type="button" class="btn btn-success btn-footer" id="bayar" v-on:click="selesaiPembelian()" v-shortkey.push="['f2']" @shortkey="selesaiPembelian()"><font style="font-size:15px;">Bayar(F2)</font></button>
 
                                           </div>
-                                          <div class="col-md-6 col-xs-6"> 
+                                          <div class="col-md-6 col-xs-6">
                                               <button type="submit" class="btn btn-danger btn-footer" id="btnBatal" v-on:click="batalPembelian()" v-shortkey.push="['f3']" @shortkey="batalPembelian()"> <font style="font-size:15px;">Batal(F3) </font></button>
                                           </div>
                                       </div>
                                   </div>
-                              </div>             
-                          </div><!-- COL SM 4 --> 
-                      </div><!-- ROW --> 
+                              </div>
+                          </div><!-- COL SM 4 -->
+                      </div><!-- ROW -->
                   </div>
               </div>
-          </div> 
-      </div> 
+          </div>
+      </div>
   </template>
 
   <script>
@@ -557,7 +557,7 @@
                     kredit: 0.00,
                     jatuh_tempo: '',
                     keterangan: '',
-                    subtotal_number_format:0.00,  
+                    subtotal_number_format:0.00,
                     suplier: '',
                     cara_bayar: '',
                     status_pembelian: '',
@@ -627,7 +627,7 @@
                     suffix: '',
                     precision: 0,
                     masked: false /* doesn't work with directive */
-                },   
+                },
                 pencarian: '',
                 id_pembelian : 0,
                 loading: true,
@@ -645,7 +645,7 @@
             app.id_pembelian = app.$route.params.id;
 
         },
-        computed : mapState ({    
+        computed : mapState ({
             produk(){
                 return this.$store.getters.produkStok
             },
@@ -656,16 +656,16 @@
         watch: {
             pencarian: function (newQuestion) {
                 this.getHasilPencarian();
-                this.loading = true;  
+                this.loading = true;
             },
             'inputTbsPembelian.produk': function () {
                 this.pilihProduk()
             },
             'inputTbsPembelian.suplier_order': function (newQuestion) {
-                this.pilihSuplierOrder();  
+                this.pilihSuplierOrder();
             },
             'inputTbsPembelian.suplier_penerimaan': function (newQuestion) {
-                this.pilihSuplierPenerimaan();  
+                this.pilihSuplierPenerimaan();
             },
             'inputPembayaranPembelian.pembayaran':function (val){
                 if (val == '') {
@@ -680,14 +680,14 @@
                 this.hitungHargaKonversi()
             }
         },
-        methods: { 
-            openSelectizeProduk(){      
+        methods: {
+            openSelectizeProduk(){
                 this.$refs.produk.$el.selectize.focus();
             },
-            openSelectizeSuplier(){      
+            openSelectizeSuplier(){
                 this.$refs.suplier.$el.selectize.focus();
             },
-            openSelectizeKas(){      
+            openSelectizeKas(){
                 this.$refs.cara_bayar.$el.selectize.focus();
             },
             getSatuan(id_produk){
@@ -733,7 +733,7 @@
                     console.log(resp);
                     alert("Tidak Dapat Memuat Suplier Order");
                 });
-            }, 
+            },
             getSuplierPenerimaan(id_pembelian){
                 var app = this;
 
@@ -746,7 +746,7 @@
                     console.log(resp);
                     alert("Tidak Dapat Memuat Penerimaan Produk");
                 });
-            },   
+            },
             getDataPembelian(){
                 var app = this
                 var id = app.$route.params.id;
@@ -760,7 +760,7 @@
                     app.inputPembayaranPembelian.keterangan = resp.data.keterangan
                     if (app.inputPembayaranPembelian.subtotal > 0) {
                         app.inputPembayaranPembelian.potongan = resp.data.potongan
-                        app.inputPembayaranPembelian.potongan_faktur = resp.data.potongan                
+                        app.inputPembayaranPembelian.potongan_faktur = resp.data.potongan
                     }
                     if (app.inputPembayaranPembelian.status_pembelian == 'Hutang'){
                         app.inputPembayaranPembelian.jatuh_tempo = resp.data.tanggal_jt_tempo;
@@ -777,7 +777,7 @@
                 });
             },
             getResults(page) {
-                var app = this; 
+                var app = this;
                 var id = app.$route.params.id;
                 if (typeof page === 'undefined') {
                     page = 1;
@@ -789,15 +789,17 @@
                     app.inputTbsPembelian.no_faktur = resp.data.no_faktur;
                     app.inputPembayaranPembelian.no_faktur_edit = resp.data.no_faktur;
                     app.inputPembayaranPembelian.id_pembelian = app.id_pembelian;
-                    app.getDataPembelian(); 
+                    app.getDataPembelian();
                     app.inputPembayaranPembelian.subtotal = resp.data.subtotal;
                     var total_akhir = parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(app.inputPembayaranPembelian.potongan_faktur);
                     app.inputPembayaranPembelian.total_akhir = total_akhir;
-                    app.hitungKembalian(app.inputPembayaranPembelian.pembayaran); 
+                    app.hitungKembalian(app.inputPembayaranPembelian.pembayaran);
 
                     app.loading = false;
                     app.seen = true;
                     app.openSelectizeProduk();
+                    app.getSuplierOrder(id);
+                    app.getSuplierPenerimaan(id);
                     app.dataSuplier(app.$route.params.id);
 
                 })
@@ -827,7 +829,7 @@
                     alert("Tidak Dapat Memuat Pembelian");
                 });
 
-            }, 
+            },
             dataSuplier(id_pembelian) {
                 var app = this;
                 axios.get(app.url_edit+'/pilih-suplier/'+id_pembelian).then(function (resp) {
@@ -835,9 +837,9 @@
                     console.log(resp.data)
                     $.each(resp.data, function (i, item) {
                         if (resp.data[i].nama_suplier == "UMUM") {
-                            app.inputPembayaranPembelian.suplier  = resp.data[i].id 
+                            app.inputPembayaranPembelian.suplier  = resp.data[i].id
                         }else{
-                            app.inputPembayaranPembelian.suplier  = resp.data[i].id 
+                            app.inputPembayaranPembelian.suplier  = resp.data[i].id
                         }
                     });
                 })
@@ -851,8 +853,8 @@
                 var id = app.$route.params.id;
                 axios.get(app.url+'/ambil-faktur-pembelian/'+id).then(function (resp) {
 
-                    app.inputTbsPembelian.no_faktur = resp.data.no_faktur; 
-                    app.inputPembayaranPembelian.keterangan = resp.data.keterangan;        
+                    app.inputTbsPembelian.no_faktur = resp.data.no_faktur;
+                    app.inputPembayaranPembelian.keterangan = resp.data.keterangan;
 
                 })
                 .catch(function (resp) {
@@ -865,20 +867,20 @@
 
             },
             btnCloseModal(){
-                $("#modal_selesai").hide(); 
+                $("#modal_selesai").hide();
             },
             closeModalX(){
                 $("#modal_selesai").hide();
-                $("#modal_tambah_suplier").hide(); 
-                $("#modal_tambah_kas").hide();   
-            }, 
+                $("#modal_tambah_suplier").hide();
+                $("#modal_tambah_kas").hide();
+            },
             tambahSupplier(){
                 $("#modal_tambah_suplier").show();
                 this.$refs.nama_suplier.focus();
             },
             tambahModalKas(){
                 $("#modal_tambah_kas").show();
-                this.$refs.kode_kas.focus(); 
+                this.$refs.kode_kas.focus();
             },
             saveFormSupplier() {
                 var app = this;
@@ -941,47 +943,47 @@
                             toogle.prop('checked', false);
                         }
                     });
-                }  
+                }
             },
-            deleteEntry(id, index,nama_produk) { 
+            deleteEntry(id, index,nama_produk) {
 
-                var app = this; 
-                app.$swal({ 
-                    text: "Anda Yakin Ingin Menghapus Produk "+nama_produk+ " ?", 
-                    buttons: true, 
-                    dangerMode: true, 
-                }) 
-                .then((willDelete) => { 
-                    if (willDelete) { 
-                        this.prosesDelete(id,nama_produk); 
-                    } else { 
-                        app.$swal.close(); 
-                    } 
-                }); 
+                var app = this;
+                app.$swal({
+                    text: "Anda Yakin Ingin Menghapus Produk "+nama_produk+ " ?",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        this.prosesDelete(id,nama_produk);
+                    } else {
+                        app.$swal.close();
+                    }
+                });
 
             },
-            prosesDelete(id,nama_produk){ 
-                var app = this; 
-                app.loading = true; 
-                axios.delete(app.url_edit+'/hapus-tbs-pembelian/'+id) 
-                .then(function (resp) { 
-                    app.getResults(); 
-                    app.alert("Menghapus Produk "+nama_produk); 
-                    app.loading = false; 
+            prosesDelete(id,nama_produk){
+                var app = this;
+                app.loading = true;
+                axios.delete(app.url_edit+'/hapus-tbs-pembelian/'+id)
+                .then(function (resp) {
+                    app.getResults();
+                    app.alert("Menghapus Produk "+nama_produk);
+                    app.loading = false;
                     app.inputTbsPembelian.id_tbs = ''
-                }) 
-                .catch(function (resp) { 
-                    app.loading = false; 
-                }); 
+                })
+                .catch(function (resp) {
+                    app.loading = false;
+                });
             },
             pilihProduk() {
 
                 if (this.inputTbsPembelian.produk != '') {
                     var app = this;
                     var produk = app.inputTbsPembelian.produk.split("|");
-                    var id_produk = produk[0]; 
+                    var id_produk = produk[0];
                     var nama_produk = produk[1];
-                    var harga_produk = produk[2]; 
+                    var harga_produk = produk[2];
 
                     this.inputJumlahProduk(id_produk,nama_produk,harga_produk);
                     this.getSatuan(id_produk);
@@ -991,7 +993,7 @@
             inputJumlahProduk(id_produk,nama_produk,harga_produk){
                 var app = this
                 app.inputTbsPembelian.id_produk = id_produk
-                app.inputTbsPembelian.nama_produk = nama_produk  
+                app.inputTbsPembelian.nama_produk = nama_produk
                 var harga_tbs = $(".harga-"+id_produk).attr("data-harga")
 
                 if (typeof harga_tbs === 'undefined'){
@@ -1000,7 +1002,7 @@
                     app.inputTbsPembelian.harga_produk = harga_tbs;
                 }
                 $("#modalJumlahProduk").show();
-                app.$refs.jumlah_produk.focus(); 
+                app.$refs.jumlah_produk.focus();
             },
             submitJumlahProduk(id_produk,jumlah_produk,harga_produk,nama_produk,no_faktur,satuan_produk){
                 var app = this
@@ -1008,29 +1010,29 @@
                 var harga_tbs = $(".harga-"+produk[0]).attr("data-harga")
 
                 if (typeof harga_tbs === 'undefined'){
-                    var harga = produk[2]; 
+                    var harga = produk[2];
                 }else {
-                    var harga = harga_tbs; 
+                    var harga = harga_tbs;
                 }
 
                 if (jumlah_produk == "" || jumlah_produk == 0) {
 
                     app.$swal("Jumlah Produk Tidak Boleh Nol atau kosong!")
                     .then((value) => {
-                        app.$refs.jumlah_produk.focus() 
+                        app.$refs.jumlah_produk.focus()
                     })
 
                 }else if (harga_produk == "" || harga_produk == 0) {
 
                     app.$swal("Harga Produk Tidak Boleh Nol atau kosong!")
                     .then((value) => {
-                        app.$refs.harga_produk.focus() 
+                        app.$refs.harga_produk.focus()
                     })
 
                 }else if (harga != harga_produk) {
                     app.konfirmasiPerubahanHarga(id_produk,jumlah_produk,harga_produk,nama_produk,no_faktur,satuan_produk)
                 }else{
-                    var status_harga = 0; 
+                    var status_harga = 0;
                     app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,no_faktur,satuan_produk,status_harga)
                 }
             },
@@ -1041,16 +1043,16 @@
                     closeOnEsc: true,
                     buttons: {
                         cancel: true,
-                        confirm: "OK"                   
+                        confirm: "OK"
                     },
 
                 }).then((value) => {
 
                     if (value) {
-                        var status_harga = 1; 
+                        var status_harga = 1;
                         app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,no_faktur,satuan_produk,status_harga);
                     } else {
-                        var status_harga = 0; 
+                        var status_harga = 0;
                         app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,no_faktur,satuan_produk,status_harga);
                     }
 
@@ -1081,11 +1083,11 @@
                     var app = this;
                     var no_faktur = app.inputTbsPembelian.no_faktur;
                     var dataOrder = app.inputTbsPembelian.suplier_order.split("|");
-                    var id_order = dataOrder[0]; 
+                    var id_order = dataOrder[0];
                     var suplier_id = dataOrder[1];
-                    var faktur_order = dataOrder[2]; 
-                    var suplier_order = dataOrder[3]; 
-                    var keterangan_order = dataOrder[4]; 
+                    var faktur_order = dataOrder[2];
+                    var suplier_order = dataOrder[3];
+                    var keterangan_order = dataOrder[4];
 
                     app.inputPembayaranPembelian.suplier = suplier_id;
                     app.inputPembayaranPembelian.keterangan = keterangan_order;
@@ -1103,9 +1105,9 @@
                     var subtotal = parseInt(app.inputPembayaranPembelian.subtotal) + parseInt(resp.data.subtotal)
                     app.alert("Menerima Order Dari Supplier "+titleCase(suplier_order));
                     app.loading = false;
-                    app.getResults();        
+                    app.getResults();
 
-                    app.inputPembayaranPembelian.subtotal = subtotal                       
+                    app.inputPembayaranPembelian.subtotal = subtotal
                     app.inputPembayaranPembelian.total_akhir  = subtotal
 
                     app.inputTbsPembelian.suplier_order = '';
@@ -1122,11 +1124,11 @@
                     var app = this;
                     var no_faktur = app.inputTbsPembelian.no_faktur;
                     var dataPenerimaan = app.inputTbsPembelian.suplier_penerimaan.split("|");
-                    var id_penerimaan = dataPenerimaan[0]; 
+                    var id_penerimaan = dataPenerimaan[0];
                     var suplier_id = dataPenerimaan[1];
-                    var faktur_penerimaan = dataPenerimaan[2]; 
-                    var suplier_penerimaan = dataPenerimaan[3]; 
-                    var keterangan_penerimaan = dataPenerimaan[4]; 
+                    var faktur_penerimaan = dataPenerimaan[2];
+                    var suplier_penerimaan = dataPenerimaan[3];
+                    var keterangan_penerimaan = dataPenerimaan[4];
 
                     app.inputPembayaranPembelian.suplier = suplier_id;
                     app.inputPembayaranPembelian.keterangan = keterangan_penerimaan;
@@ -1146,7 +1148,7 @@
                     app.loading = false;
                     app.getResults();
 
-                    app.inputPembayaranPembelian.subtotal = subtotal                       
+                    app.inputPembayaranPembelian.subtotal = subtotal
                     app.inputPembayaranPembelian.total_akhir  = subtotal
                     app.inputTbsPembelian.suplier_penerimaan = '';
                 })
@@ -1157,38 +1159,38 @@
                 });
 
             },
-            editEntryJumlah(id, index,nama_produk,subtotal_lama) {    
-                var app = this; 
-                var id_pembelian = app.id_pembelian;  
-                swal({ 
-                    title: titleCase(nama_produk), 
-                    input: 'number', 
-                    inputPlaceholder : 'Jumlah Produk',         
-                    html:'Berapa Jumlah Produk Yang Akan Dimasukkan ?', 
-                    animation: false, 
-                    showCloseButton: true, 
-                    showCancelButton: true, 
-                    focusConfirm: true, 
-                    confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> OK', 
-                    confirmButtonAriaLabel: 'Thumbs up, great!', 
-                    cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal', 
-                    closeOnConfirm: true, 
-                    cancelButtonAriaLabel: 'Thumbs down', 
-                    inputAttributes: { 
-                        'name': 'edit_qty_produk', 
-                    }, 
-                    inputValidator : function (value) { 
-                        return new Promise(function (resolve, reject) { 
-                            if (value) { 
-                                resolve(); 
-                            }  
-                            else { 
-                                reject('Jumlah Harus Di Isi!'); 
-                            } 
-                        }) 
-                    } 
-                }).then(function (jumlah_produk) { 
-                    if (jumlah_produk != "0") { 
+            editEntryJumlah(id, index,nama_produk,subtotal_lama) {
+                var app = this;
+                var id_pembelian = app.id_pembelian;
+                swal({
+                    title: titleCase(nama_produk),
+                    input: 'number',
+                    inputPlaceholder : 'Jumlah Produk',
+                    html:'Berapa Jumlah Produk Yang Akan Dimasukkan ?',
+                    animation: false,
+                    showCloseButton: true,
+                    showCancelButton: true,
+                    focusConfirm: true,
+                    confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> OK',
+                    confirmButtonAriaLabel: 'Thumbs up, great!',
+                    cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal',
+                    closeOnConfirm: true,
+                    cancelButtonAriaLabel: 'Thumbs down',
+                    inputAttributes: {
+                        'name': 'edit_qty_produk',
+                    },
+                    inputValidator : function (value) {
+                        return new Promise(function (resolve, reject) {
+                            if (value) {
+                                resolve();
+                            }
+                            else {
+                                reject('Jumlah Harus Di Isi!');
+                            }
+                        })
+                    }
+                }).then(function (jumlah_produk) {
+                    if (jumlah_produk != "0") {
                         app.loading = true;
                         axios.get(app.url_edit+'/proses-edit-jumlah-tbs-pembelian?jumlah_edit_produk='+jumlah_produk+'&id_tbs_pembelian='+id)
                         .then(function (resp) {
@@ -1196,7 +1198,7 @@
                             app.loading = false;
                             var subtotal = (parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(subtotal_lama)) + parseInt(resp.data.subtotal);
                             app.getResults();
-                            app.inputPembayaranPembelian.subtotal = subtotal                        
+                            app.inputPembayaranPembelian.subtotal = subtotal
                             app.inputPembayaranPembelian.total_akhir  = subtotal
 
 
@@ -1206,12 +1208,12 @@
                             app.loading = false;
                             alert("Jumlah Produk tidak bisa diedit");
                         });
-                    } 
-                    else { 
-                        swal('Oops...', 'Jumlah Tidak Boleh 0 !', 'error'); 
-                        return false; 
-                    } 
-                }); 
+                    }
+                    else {
+                        swal('Oops...', 'Jumlah Tidak Boleh 0 !', 'error');
+                        return false;
+                    }
+                });
 
             },
             editSatuanEntry(id, index,nama_produk,subtotal_lama, id_produk) {
@@ -1239,7 +1241,7 @@
 
                         var subtotal = (parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(subtotal_lama) + parseInt(resp.data.subtotal))
 
-                        function cekTbs(tbs) { 
+                        function cekTbs(tbs) {
                             return tbs.id_tbs_pembelian === id_tbs
                         }
 
@@ -1250,49 +1252,49 @@
                         app.inputPembayaranPembelian.total_akhir = subtotal.toFixed(2)
                         app.hitungPotonganPersen()
                         app.inputTbsPembelian.id_tbs = ''
-                        app.openSelectizeProduk() 
+                        app.openSelectizeProduk()
                         $("#modalEditSatuan").hide();
 
                     })
                     .catch(function (resp) {
-                        console.log(resp);                  
+                        console.log(resp);
                         app.loading = false;
                         alert("Tidak Dapat Mengubah Satuan");
                     });
                 }
             },
-            editEntryHarga(id, index,nama_produk,subtotal_lama) {    
-                var app = this;  
-                var id_pembelian = app.id_pembelian;  
-                swal({ 
-                    title: titleCase(nama_produk), 
-                    input: 'number', 
-                    inputPlaceholder : 'Harga Produk',         
-                    html:'Berapa Harga Produk Yang Akan Dimasukkan ?', 
-                    animation: false, 
-                    showCloseButton: true, 
-                    showCancelButton: true, 
-                    focusConfirm: true, 
-                    confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> OK', 
-                    confirmButtonAriaLabel: 'Thumbs up, great!', 
-                    cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal', 
-                    closeOnConfirm: true, 
-                    cancelButtonAriaLabel: 'Thumbs down', 
-                    inputAttributes: { 
-                        'name': 'edit_harga_produk', 
-                    }, 
-                    inputValidator : function (value) { 
-                        return new Promise(function (resolve, reject) { 
-                            if (value) { 
-                                resolve(); 
-                            }  
-                            else { 
-                                reject('Harga Harus Di Isi!'); 
-                            } 
-                        }) 
-                    } 
-                }).then(function (harga_produk) { 
-                    if (harga_produk != "0") { 
+            editEntryHarga(id, index,nama_produk,subtotal_lama) {
+                var app = this;
+                var id_pembelian = app.id_pembelian;
+                swal({
+                    title: titleCase(nama_produk),
+                    input: 'number',
+                    inputPlaceholder : 'Harga Produk',
+                    html:'Berapa Harga Produk Yang Akan Dimasukkan ?',
+                    animation: false,
+                    showCloseButton: true,
+                    showCancelButton: true,
+                    focusConfirm: true,
+                    confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> OK',
+                    confirmButtonAriaLabel: 'Thumbs up, great!',
+                    cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal',
+                    closeOnConfirm: true,
+                    cancelButtonAriaLabel: 'Thumbs down',
+                    inputAttributes: {
+                        'name': 'edit_harga_produk',
+                    },
+                    inputValidator : function (value) {
+                        return new Promise(function (resolve, reject) {
+                            if (value) {
+                                resolve();
+                            }
+                            else {
+                                reject('Harga Harus Di Isi!');
+                            }
+                        })
+                    }
+                }).then(function (harga_produk) {
+                    if (harga_produk != "0") {
                         app.loading = true;
                         axios.get(app.url_edit+'/proses-edit-harga-tbs-pembelian?harga_edit_produk='+harga_produk+'&id_harga='+id)
                         .then(function (resp) {
@@ -1300,7 +1302,7 @@
                             app.loading = false;
                             var subtotal = (parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(subtotal_lama)) + parseInt(resp.data.subtotal);
                             app.getResults();
-                            app.inputPembayaranPembelian.subtotal = subtotal                        
+                            app.inputPembayaranPembelian.subtotal = subtotal
                             app.inputPembayaranPembelian.total_akhir  = subtotal
                             app.inputPembayaranPembelian.kredit = subtotal
                             app.$router.replace('/edit-pembelian/'+id_pembelian);
@@ -1309,54 +1311,54 @@
                             app.loading = false;
                             alert("Harga Produk tidak bisa diedit");
                         });
-                    } 
-                    else { 
-                        swal('Oops...', 'Harga Tidak Boleh 0 !', 'error'); 
-                        return false; 
-                    } 
-                }); 
+                    }
+                    else {
+                        swal('Oops...', 'Harga Tidak Boleh 0 !', 'error');
+                        return false;
+                    }
+                });
 
             },
-            editEntryPotongan(id, index,nama_produk,jumlah,harga,subtotal_lama) {    
-                var app = this;   
+            editEntryPotongan(id, index,nama_produk,jumlah,harga,subtotal_lama) {
+                var app = this;
                 var subtotal = parseFloat(jumlah) * parseFloat(harga);
-                swal({ 
-                    title: titleCase(nama_produk), 
-                    input: 'text', 
-                    inputPlaceholder : 'Potongan Produk',         
-                    html:'<i>Format : 10 (nominal) || 10% (persen)</i>', 
-                    animation: false, 
-                    showCloseButton: true, 
-                    showCancelButton: true, 
-                    focusConfirm: true, 
-                    confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> OK', 
-                    confirmButtonAriaLabel: 'Thumbs up, great!', 
-                    cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal', 
-                    closeOnConfirm: true, 
-                    cancelButtonAriaLabel: 'Thumbs down', 
-                    inputAttributes: { 
-                        'name': 'edit_potongan_produk', 
-                    }, 
-                    inputValidator : function (value) { 
-                        return new Promise(function (resolve, reject) { 
-                            if (value) { 
-                                resolve(); 
-                            }  
-                            else { 
-                                reject('Potongan Harus Di Isi!'); 
-                            } 
-                        }) 
-                    } 
-                }).then(function (potongan) { 
-                    var pos = potongan.search("%"); 
-                    if (pos > 0)  
-                    {   
-                        var potongan_produk = potongan; 
-                        potongan_produk = potongan_produk.replace("%","");       
-                        if (potongan_produk > 100) { 
-                            swal('Oops...', 'Potongan Tidak Boleh Lebih Dari 100%!', 'error'); 
-                        } 
-                        else if (potongan != "0") { 
+                swal({
+                    title: titleCase(nama_produk),
+                    input: 'text',
+                    inputPlaceholder : 'Potongan Produk',
+                    html:'<i>Format : 10 (nominal) || 10% (persen)</i>',
+                    animation: false,
+                    showCloseButton: true,
+                    showCancelButton: true,
+                    focusConfirm: true,
+                    confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> OK',
+                    confirmButtonAriaLabel: 'Thumbs up, great!',
+                    cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal',
+                    closeOnConfirm: true,
+                    cancelButtonAriaLabel: 'Thumbs down',
+                    inputAttributes: {
+                        'name': 'edit_potongan_produk',
+                    },
+                    inputValidator : function (value) {
+                        return new Promise(function (resolve, reject) {
+                            if (value) {
+                                resolve();
+                            }
+                            else {
+                                reject('Potongan Harus Di Isi!');
+                            }
+                        })
+                    }
+                }).then(function (potongan) {
+                    var pos = potongan.search("%");
+                    if (pos > 0)
+                    {
+                        var potongan_produk = potongan;
+                        potongan_produk = potongan_produk.replace("%","");
+                        if (potongan_produk > 100) {
+                            swal('Oops...', 'Potongan Tidak Boleh Lebih Dari 100%!', 'error');
+                        }
+                        else if (potongan != "0") {
                             axios.get(app.url_edit+'/cek-persen-potongan-pembelian?potongan_edit_produk='+potongan+'&id_potongan='+id)
                             .then(function (resp) {
                                 if (resp.data == 1) {
@@ -1369,23 +1371,23 @@
                                     app.submitEditPotongan(potongan,id,nama_produk,subtotal_lama);
                                 }
                             });
-                        } 
-                        else { 
-                            swal('Oops...', 'Potongan Tidak Boleh 0 !', 'error'); 
-                        } 
+                        }
+                        else {
+                            swal('Oops...', 'Potongan Tidak Boleh 0 !', 'error');
+                        }
 
-                    }else{ 
-                        if (subtotal < potongan) { 
-                            swal('Oops...', 'Potongan Tidak Boleh Melebihi Subtotal!', 'error'); 
-                        } 
-                        else if (potongan != "0") { 
+                    }else{
+                        if (subtotal < potongan) {
+                            swal('Oops...', 'Potongan Tidak Boleh Melebihi Subtotal!', 'error');
+                        }
+                        else if (potongan != "0") {
                             app.submitEditPotongan(potongan,id,nama_produk,subtotal_lama);
-                        } 
-                        else { 
-                            swal('Oops...', 'Potongan Tidak Boleh 0 !', 'error'); 
-                        } 
-                    } 
-                }); 
+                        }
+                        else {
+                            swal('Oops...', 'Potongan Tidak Boleh 0 !', 'error');
+                        }
+                    }
+                });
 
             },
             submitEditPotongan(potongan,id,nama_produk,subtotal_lama){
@@ -1397,11 +1399,11 @@
                     app.loading = false;
                     var subtotal = (parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(subtotal_lama)) + parseInt(resp.data.subtotal);
                     app.getResults();
-                    app.inputPembayaranPembelian.subtotal = subtotal                        
+                    app.inputPembayaranPembelian.subtotal = subtotal
                     app.inputPembayaranPembelian.total_akhir  = subtotal
                     app.inputPembayaranPembelian.kredit = subtotal
 
-                    var id_pembelian = app.id_pembelian;  
+                    var id_pembelian = app.id_pembelian;
                     app.$router.replace('/edit-pembelian/'+id_pembelian);
                 })
                 .catch(function (resp) {
@@ -1410,65 +1412,65 @@
                 });
             },
             editEntryTax(id, index,nama_produk,jumlah,harga,potongan,ppn,subtotal_lama){
-                var app = this;   
-                var subtotal = (parseFloat(jumlah) * parseFloat(harga)) - parseFloat(potongan); 
+                var app = this;
+                var subtotal = (parseFloat(jumlah) * parseFloat(harga)) - parseFloat(potongan);
 
-                if (ppn == '') { 
-                    var ppn_produk = '<select id="ppn_swal" name="ppn_swal" class="swal2-input js-selectize-reguler">'+ 
-                    '<option value"Include">Include</option>'+ 
-                    '<option value"Exclude">Exclude</option>'+ 
-                    '</select></div>'; 
-                }else { 
-                    var ppn_produk = '<select id="ppn_swal" name="ppn_swal" class="swal2-input js-selectize-reguler">'+ 
-                    '<option selected="selected" value="'+ppn+'">'+ppn+'</option>'+ 
-                    '</select></div>'; 
-                } 
+                if (ppn == '') {
+                    var ppn_produk = '<select id="ppn_swal" name="ppn_swal" class="swal2-input js-selectize-reguler">'+
+                    '<option value"Include">Include</option>'+
+                    '<option value"Exclude">Exclude</option>'+
+                    '</select></div>';
+                }else {
+                    var ppn_produk = '<select id="ppn_swal" name="ppn_swal" class="swal2-input js-selectize-reguler">'+
+                    '<option selected="selected" value="'+ppn+'">'+ppn+'</option>'+
+                    '</select></div>';
+                }
 
-                swal({ 
-                    title: titleCase(nama_produk), 
-                    html:'<i>Format : 10 (nominal) || 10% (persen)</i>'+ 
-                    '<div class="row">'+ 
-                    '<div class="col-sm-6 col-xs-6">'+ppn_produk+''+ 
-                    '<div class="col-sm-6 col-xs-6">'+ 
-                    '<input id="tax_swal" class="swal2-input" placeholder="PAJAK"></div>'+ 
-                    '</div>', 
-                    animation: false, 
-                    showCloseButton: true, 
-                    showCancelButton: true, 
-                    confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> OK', 
-                    confirmButtonAriaLabel: 'Thumbs up, great!', 
-                    cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal', 
-                    cancelButtonAriaLabel: 'Thumbs down', 
-                    preConfirm: function () { 
-                        return new Promise(function (resolve) { 
-                            resolve([ 
-                                $('#tax_swal').val(), 
-                                $('#ppn_swal').val() 
-                                ]) 
-                        }) 
-                    } 
-                }).then(function (result) {   
-                    if (result[0] == '' || result[0] == 0) { 
+                swal({
+                    title: titleCase(nama_produk),
+                    html:'<i>Format : 10 (nominal) || 10% (persen)</i>'+
+                    '<div class="row">'+
+                    '<div class="col-sm-6 col-xs-6">'+ppn_produk+''+
+                    '<div class="col-sm-6 col-xs-6">'+
+                    '<input id="tax_swal" class="swal2-input" placeholder="PAJAK"></div>'+
+                    '</div>',
+                    animation: false,
+                    showCloseButton: true,
+                    showCancelButton: true,
+                    confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> OK',
+                    confirmButtonAriaLabel: 'Thumbs up, great!',
+                    cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal',
+                    cancelButtonAriaLabel: 'Thumbs down',
+                    preConfirm: function () {
+                        return new Promise(function (resolve) {
+                            resolve([
+                                $('#tax_swal').val(),
+                                $('#ppn_swal').val()
+                                ])
+                        })
+                    }
+                }).then(function (result) {
+                    if (result[0] == '' || result[0] == 0) {
 
-                        swal('Oops...', 'Pajak Tidak Boleh 0 !', 'error'); 
-                        return false; 
-                    }   
-                    else if (result[1] == '') { 
+                        swal('Oops...', 'Pajak Tidak Boleh 0 !', 'error');
+                        return false;
+                    }
+                    else if (result[1] == '') {
 
-                        swal('Oops...', 'PPN Belum Di Isi', 'error'); 
-                        return false; 
-                    }else{ 
+                        swal('Oops...', 'PPN Belum Di Isi', 'error');
+                        return false;
+                    }else{
 
-                        var pajak = result[0]; 
-                        var pos = pajak.search("%"); 
+                        var pajak = result[0];
+                        var pos = pajak.search("%");
 
-                        if (pos > 0) { 
-                            pajak = pajak.replace("%",""); 
-                            if (pajak > 100) { 
+                        if (pos > 0) {
+                            pajak = pajak.replace("%","");
+                            if (pajak > 100) {
 
-                                swal('Oops...', 'Pajak Tidak Boleh Lebih Dari 100%!', 'error'); 
-                                return false; 
-                            }else{ 
+                                swal('Oops...', 'Pajak Tidak Boleh Lebih Dari 100%!', 'error');
+                                return false;
+                            }else{
                                 axios.get(app.url_edit+'/cek-persen-tax-pembelian?tax_edit_produk='+result[0]+'&id_tax='+id+'&ppn_produk='+result[1])
                                 .then(function (resp) {
                                     if (resp.data == 1) {
@@ -1483,22 +1485,22 @@
                                         app.submitEditTax(pajak,id,nama_produk,ppn_edit,subtotal_lama);
                                     }
                                 });
-                            } 
-                        }else{ 
+                            }
+                        }else{
 
-                            if (subtotal < result[0]) { 
+                            if (subtotal < result[0]) {
 
-                                swal('Oops...', 'Pajak Tidak Boleh Melebihi Subtotal!', 'error'); 
-                                return false; 
-                            }else{ 
+                                swal('Oops...', 'Pajak Tidak Boleh Melebihi Subtotal!', 'error');
+                                return false;
+                            }else{
                                 var pajak = result[0];
                                 var ppn_edit = result[1];
                                 app.submitEditTax(pajak,id,nama_produk,ppn_edit,subtotal_lama);
-                            } 
+                            }
 
-                        } 
-                    } 
-                }); 
+                        }
+                    }
+                });
             },
             submitEditTax(pajak,id,nama_produk,ppn_edit,subtotal_lama){
                 var app = this;
@@ -1509,10 +1511,10 @@
                     app.loading = false;
                     var subtotal = (parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(subtotal_lama)) + parseInt(resp.data.subtotal);
                     app.getResults();
-                    app.inputPembayaranPembelian.subtotal = subtotal                        
+                    app.inputPembayaranPembelian.subtotal = subtotal
                     app.inputPembayaranPembelian.total_akhir  = subtotal
                     app.inputPembayaranPembelian.kredit = subtotal
-                    var id_pembelian = app.id_pembelian;  
+                    var id_pembelian = app.id_pembelian;
                     app.$router.replace('/edit-pembelian/'+id_pembelian);
                 })
                 .catch(function (resp) {
@@ -1535,7 +1537,7 @@ batalPembelian(){
             .then(function (resp) {
 
                 var subtotal = parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(resp.data.subtotal)
-                app.inputPembayaranPembelian.subtotal = subtotal                        
+                app.inputPembayaranPembelian.subtotal = subtotal
                 app.inputPembayaranPembelian.total_akhir  = subtotal
                 app.inputPembayaranPembelian.kredit = subtotal
 
@@ -1558,24 +1560,24 @@ batalPembelian(){
 },//END BATAL PEMBELIAN
 selesaiPembelian(){
     var app = this;
-    if (app.inputPembayaranPembelian.suplier == '') { 
-        swal('Oops...', 'Suplier Belum Dipilih!', 'error'); 
+    if (app.inputPembayaranPembelian.suplier == '') {
+        swal('Oops...', 'Suplier Belum Dipilih!', 'error');
     }
-    else if (app.inputPembayaranPembelian.cara_bayar == '') { 
-        swal('Oops...', 'Cara Barang Belum Dipilih!', 'error'); 
-    } 
-    else{ 
-        $("#modal_selesai").show(); 
+    else if (app.inputPembayaranPembelian.cara_bayar == '') {
+        swal('Oops...', 'Cara Barang Belum Dipilih!', 'error');
+    }
+    else{
+        $("#modal_selesai").show();
         this.$refs.pembayaran.$el.focus();
-    } 
+    }
 },//END SWAL selesaiPembelian
 btnCloseModal(){
-    $("#modal_selesai").hide(); 
+    $("#modal_selesai").hide();
 },
 closeModalX(){
-    $("#modal_selesai").hide(); 
-    $("#modal_tambah_suplier").hide(); 
-    $("#modal_tambah_kas").hide();  
+    $("#modal_selesai").hide();
+    $("#modal_tambah_suplier").hide();
+    $("#modal_tambah_kas").hide();
 },
 hitungPotonganPersen(){
 
@@ -1583,7 +1585,7 @@ hitungPotonganPersen(){
 
     if (potonganPersen > 100) {
 
-        swal('Oops...','Potongan Tidak Bisa Lebih Dari 100%','error'); 
+        swal('Oops...','Potongan Tidak Bisa Lebih Dari 100%','error');
         this.inputPembayaranPembelian.total_akhir = this.inputPembayaranPembelian.subtotal;
         this.inputPembayaranPembelian.potongan_faktur = 0
         this.inputPembayaranPembelian.potongan_persen = 0
@@ -1596,12 +1598,12 @@ hitungPotonganPersen(){
             potonganPersen = 0
         }
 
-        var potongan_nominal = parseFloat(this.inputPembayaranPembelian.subtotal) * (parseFloat(potonganPersen)) / 100; 
+        var potongan_nominal = parseFloat(this.inputPembayaranPembelian.subtotal) * (parseFloat(potonganPersen)) / 100;
         var total_akhir = parseFloat(this.inputPembayaranPembelian.subtotal,10) - parseFloat(potongan_nominal,10);
 
         this.inputPembayaranPembelian.potongan_faktur = potongan_nominal.toFixed(2)
         this.inputPembayaranPembelian.total_akhir = total_akhir.toFixed(2)
-        this.inputPembayaranPembelian.kredit = total_akhir.toFixed(2)  
+        this.inputPembayaranPembelian.kredit = total_akhir.toFixed(2)
         this.inputPembayaranPembelian.potongan = potongan_nominal
         this.hitungKembalian(this.inputPembayaranPembelian.pembayaran)
 
@@ -1618,7 +1620,7 @@ hitungPotonganFaktur(){
     var total_akhir = parseFloat(this.inputPembayaranPembelian.subtotal) - parseFloat(potonganFaktur);
 
     if (potongan_persen > 100) {
-        swal('Oops...','Potongan Tidak Bisa Lebih Dari 100%','error'); 
+        swal('Oops...','Potongan Tidak Bisa Lebih Dari 100%','error');
         this.inputPembayaranPembelian.total_akhir = this.inputPembayaranPembelian.subtotal;
         this.inputPembayaranPembelian.potongan_faktur = 0
         this.inputPembayaranPembelian.potongan_persen = 0
@@ -1640,21 +1642,21 @@ hitungHargaKonversi(){
     this.inputTbsPembelian.harga_produk = parseFloat(produk[2]) * ( parseFloat(satuan[3]) * parseFloat(satuan[4]) );
 },
 hitungKembalian(val){
-    var kembalian = parseFloat(val) - parseFloat(this.inputPembayaranPembelian.total_akhir);   
+    var kembalian = parseFloat(val) - parseFloat(this.inputPembayaranPembelian.total_akhir);
     if (kembalian >= 0) {
 
-        this.inputPembayaranPembelian.kembalian = kembalian 
+        this.inputPembayaranPembelian.kembalian = kembalian
         this.inputPembayaranPembelian.kredit = 0
         this.inputPembayaranPembelian.status_pembelian = "Tunai";
         $("#btn-tunai-pembelian").show();
         $("#btn-hutang-pembelian").hide();
     }else{
-        this.inputPembayaranPembelian.kembalian = 0  
+        this.inputPembayaranPembelian.kembalian = 0
         this.inputPembayaranPembelian.kredit = parseFloat(this.inputPembayaranPembelian.total_akhir) - parseFloat(val);
         this.inputPembayaranPembelian.status_pembelian = "Hutang";
         $("#btn-tunai-pembelian").hide();
         $("#btn-hutang-pembelian").show();
-    }        
+    }
 },
 saveForm(){
 
@@ -1671,7 +1673,7 @@ saveForm(){
             text: "Anda Yakin Ingin Menyelesaikan Transaksi Ini ?",
             buttons: {
                 cancel: true,
-                confirm: "Submit"                   
+                confirm: "Submit"
             },
 
         }).then((value) => {
@@ -1682,7 +1684,7 @@ saveForm(){
 
         });
 
-    }     
+    }
 
 },
 prosesTransaksiSelesai(){
@@ -1704,10 +1706,10 @@ prosesTransaksiSelesai(){
         var data_produk_pembelian = resp.data.data_produk_pembelian;
         var jumlah_kas_lama = resp.data.jumlah_kas_lama;
 
-        var hitung_sisa_kas = (parseFloat(total_kas) + parseFloat(jumlah_kas_lama)) - parseFloat(pembayaran); 
+        var hitung_sisa_kas = (parseFloat(total_kas) + parseFloat(jumlah_kas_lama)) - parseFloat(pembayaran);
         if (hitung_sisa_kas >= 0) {
             if (data_produk_pembelian == 0){
-                swal('Oops...','Belum Ada Produk Yang Diinputkan','error'); 
+                swal('Oops...','Belum Ada Produk Yang Diinputkan','error');
             }
             else{
 
@@ -1739,9 +1741,9 @@ alert(pesan) {
         timer: 1000,
     });
 },
-closeModalJumlahProduk(){  
-    $("#modalJumlahProduk").hide(); 
-    $("#modalEditSatuan").hide(); 
+closeModalJumlahProduk(){
+    $("#modalJumlahProduk").hide();
+    $("#modalEditSatuan").hide();
     this.openSelectizeProduk();
 }
 }
