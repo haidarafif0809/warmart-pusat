@@ -1115,6 +1115,8 @@ Route::post('/retur-penjualan/proses-batal-retur-penjualan', [
         ]);
 Route::post('/retur-penjualan/edit-satuan-tbs', 'ReturPenjualanController@editSatuanTbs')->middleware('auth');
 
+Route::get('/retur-penjualan/cetak-retur-penjualan/{id}', 'ReturPenjualanController@cetakRetur')->middleware('auth');
+
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
     Route::resource('user', 'UserController');

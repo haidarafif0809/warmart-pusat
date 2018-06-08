@@ -302,13 +302,11 @@ class ReturPenjualanController extends Controller
     {
         $session_id  = session()->getId();
         $user_warung = Auth::user()->id_warung;
-        if ($jenis_tbs == 1) {
+
             $TbsReturPenjualan = new TbsReturPenjualan();
             $subtotal            = $TbsReturPenjualan->subtotalTbs($user_warung, $session_id);
             $respons['subtotal'] = $subtotal;
-        } else if ($jenis_tbs == 2) {
-            
-        }
+
 
         return response()->json($respons);
     }
@@ -337,7 +335,7 @@ class ReturPenjualanController extends Controller
                 // TAX PRODUK = (HARGA * JUMLAH RETUR - POTONGAN) * TAX /100 
                 $tax_produk = (($tbs_retur_penjualan->harga_produk * $request->jumlah_retur) - $tbs_retur_penjualan->potongan) * $tax / 100; 
  
-                // TAX PERSEN = (TAX TBS PEMBELIAN * 100) / (HARGA * JUMLAH RETUR - POTONGAN) 
+                // TAX PERSEN = (TAX TBS penjualan * 100) / (HARGA * JUMLAH RETUR - POTONGAN) 
                 $tax = ($tbs_retur_penjualan->tax * 100) / $tax_produk; 
             } 
  
@@ -474,6 +472,58 @@ class ReturPenjualanController extends Controller
         }
     }
 
+        public function cetakRetur($id)
+    {
+        //SETTING APLIKASI
+        $setting_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
+
+        $retur_penjualan = ReturPenjualan::QueryCetak($id)->first();
+        if ($retur_penjualan->nama_pelanggan == 0){
+            $pelanggan = "Umum";
+        }else{
+            $pelanggan = $retur_penjualan->name;
+        }
+        $detail_returs = DetailReturPenjualan::dataDetailRetur($retur_penjualan->no_faktur_retur)->get();
+        $terbilang  = $this->kekata($retur_penjualan->total);
+        $subtotal   = 0;
+        foreach ($detail_returs as $detail_retur) {
+            $subtotal += $detail_retur->subtotal;
+        }
+
+        return view('retur-penjualan.cetak-retur-penjualan', ['retur_penjualan' => $retur_penjualan, 'detail_retur' => $detail_returs, 'subtotal' => $subtotal, 'terbilang' => $terbilang, 'setting_aplikasi' => $setting_aplikasi,'pelanggan' => $pelanggan])->with(compact('html'));
+
+    }
+
+        public function kekata($x)
+    {
+        $x     = abs($x);
+        $angka = array("", "satu", "dua", "tiga", "empat", "lima",
+            "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas");
+        $temp = "";
+        if ($x < 12) {
+            $temp = " " . $angka[$x];
+        } else if ($x < 20) {
+            $temp = $this->kekata($x - 10) . " belas";
+        } else if ($x < 100) {
+            $temp = $this->kekata($x / 10) . " puluh" . $this->kekata($x % 10);
+        } else if ($x < 200) {
+            $temp = " seratus" . $this->kekata($x - 100);
+        } else if ($x < 1000) {
+            $temp = $this->kekata($x / 100) . " ratus" . $this->kekata($x % 100);
+        } else if ($x < 2000) {
+            $temp = " seribu" . $this->kekata($x - 1000);
+        } else if ($x < 1000000) {
+            $temp = $this->kekata($x / 1000) . " ribu" . $this->kekata($x % 1000);
+        } else if ($x < 1000000000) {
+            $temp = $this->kekata($x / 1000000) . " juta" . $this->kekata($x % 1000000);
+        } else if ($x < 1000000000000) {
+            $temp = $this->kekata($x / 1000000000) . " milyar" . $this->kekata(fmod($x, 1000000000));
+        } else if ($x < 1000000000000000) {
+            $temp = $this->kekata($x / 1000000000000) . " trilyun" . $this->kekata(fmod($x, 1000000000000));
+        }
+        return $temp;
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -499,7 +549,7 @@ class ReturPenjualanController extends Controller
                 return $tbs_retur->count();
 
             } else {
-            //INSERT RETUR PEMBELIAN
+            //INSERT RETUR penjualan
                 $pelanggan   = TbsReturPenjualan::select('id_pelanggan')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->first()->id_pelanggan;
                 $total = $request->total_akhir;
 
@@ -521,7 +571,7 @@ class ReturPenjualanController extends Controller
                     'warung_id'       => $warung_id
                     ]);
 
-                // /*Jika Retur Pembelian, menggunakan fitur potong hutang*/
+                // /*Jika Retur penjualan, menggunakan fitur potong hutang*/
                 // if ($request->potong_hutang != '' || $request->potong_hutang != 0) {
 
                 //     if ($total < 0) {
@@ -534,15 +584,15 @@ class ReturPenjualanController extends Controller
 
                 //         foreach ($request['faktur_hutang'] as $faktur_hutang) {
 
-                //             $id_pembelian = Pembelian::select('id')->where('no_faktur', $faktur_hutang)->first()->id;
-                //             $sisa_hutang = TransaksiHutang::getDataPembelianHutangFaktur($faktur_hutang)->having('sisa_hutang', '>', 0)->first()->sisa_hutang;
+                //             $id_penjualan = penjualan::select('id')->where('no_faktur', $faktur_hutang)->first()->id;
+                //             $sisa_hutang = TransaksiHutang::getDatapenjualanHutangFaktur($faktur_hutang)->having('sisa_hutang', '>', 0)->first()->sisa_hutang;
 
                 //             if ($subtotal_akhir == $sisa_hutang) {
 
                 //                 TransaksiHutang::create([
                 //                     'no_faktur'       => $no_faktur,
-                //                     'id_transaksi'    => $id_pembelian,
-                //                     'jenis_transaksi' => 'Retur Pembelian',
+                //                     'id_transaksi'    => $id_penjualan,
+                //                     'jenis_transaksi' => 'Retur penjualan',
                 //                     'jumlah_keluar'   => $subtotal_akhir,
                 //                     'suplier_id'      => $supplier,
                 //                     'warung_id'       => $warung_id,
@@ -553,8 +603,8 @@ class ReturPenjualanController extends Controller
 
                 //                 TransaksiHutang::create([
                 //                     'no_faktur'       => $no_faktur,
-                //                     'id_transaksi'    => $id_pembelian,
-                //                     'jenis_transaksi' => 'Retur Pembelian',
+                //                     'id_transaksi'    => $id_penjualan,
+                //                     'jenis_transaksi' => 'Retur penjualan',
                 //                     'jumlah_keluar'   => $sisa_hutang,
                 //                     'suplier_id'      => $supplier,
                 //                     'warung_id'       => $warung_id,
@@ -565,8 +615,8 @@ class ReturPenjualanController extends Controller
 
                 //                 TransaksiHutang::create([
                 //                     'no_faktur'       => $no_faktur,
-                //                     'id_transaksi'    => $id_pembelian,
-                //                     'jenis_transaksi' => 'Retur Pembelian',
+                //                     'id_transaksi'    => $id_penjualan,
+                //                     'jenis_transaksi' => 'Retur penjualan',
                 //                     'jumlah_keluar'   => $subtotal_akhir,
                 //                     'suplier_id'      => $supplier,
                 //                     'warung_id'       => $warung_id,
@@ -622,7 +672,7 @@ class ReturPenjualanController extends Controller
 
             DB::commit();
 
-            $respons['respons_retur'] = $retur->id;
+            $respons['respons_retur'] = $retur->id_retur_penjualan;
             return response()->json($respons);
         }
     }
@@ -642,7 +692,7 @@ class ReturPenjualanController extends Controller
                 ]);
         }
 
-        $url     = '/retur-pembelian/view-tbs';
+        $url     = '/retur-penjualan/view-tbs';
         $respons = $this->dataPagination($detail_returs, $array, $retur_penjualan->no_faktur_retur, $url);
 
         return response()->json($respons);

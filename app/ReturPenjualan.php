@@ -109,4 +109,15 @@ class ReturPenjualan extends Model
         return $query_retur_penjualan;        
     }
 
+        public function scopeQueryCetak($query,$id) {
+        $query =  ReturPenjualan::select('warungs.name','warungs.alamat','warungs.no_telpon','retur_penjualans.no_faktur_retur', 'retur_penjualans.created_at', 'retur_penjualans.total', 'retur_penjualans.total_bayar', 'retur_penjualans.potongan', 'users.name as nama_pelanggan')
+        ->leftJoin('users', 'retur_penjualans.id_pelanggan', '=', 'users.id')
+        ->leftJoin('warungs','retur_penjualans.warung_id','=','warungs.id')
+        ->where('retur_penjualans.id_retur_penjualan',$id)
+        ->where('retur_penjualans.warung_id', Auth::user()->id_warung)
+        ->orderBy('retur_penjualans.id_retur_penjualan');
+
+        return $query;
+    }
+
 }

@@ -1085,9 +1085,9 @@ export default {
                             app.inputReturPenjualan.potongan_faktur = 0 
                             app.inputReturPenjualan.total_akhir = 0 
                             app.inputReturPenjualan.pembayaran = 0 
-                            app.inputTbsReturPenjualan.pelanggan = ''    
-                            // window.open('penjualan/cetak-kecil-penjualan/'+resp.data.respons_penjualan,'_blank'); 
-                            app.loading = false; 
+                            app.inputTbsReturPenjualan.pelanggan = ''   
+                            window.open('retur-penjualan/cetak-retur-penjualan/'+resp.data.respons_retur,'_blank'); 
+                            app.loading = false;
                         } 
                     }) 
                     .catch(function (resp) { 
