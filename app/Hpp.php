@@ -89,7 +89,7 @@ class Hpp extends Model
 
                     $stok_sekarang = $this->stok_produk_tanggal($id_produk, $this->tanggalSql($tanggal));
 
-                    if ($stok_sekarang == 0) {
+                    if ($stok_sekarang > 0) {
 
                     $stok_produk = $stok_sekarang - $hpp_masuk->jumlah_masuk;
 
@@ -240,7 +240,7 @@ class Hpp extends Model
                     $tanggal = date('Y-m-d');
                     $stok_sekarang = $this->stok_produk_tanggal($id_produk, $this->tanggalSql($tanggal));
 
-                    if ($stok_sekarang == 0){
+                    if ($stok_sekarang > 0){
 
                     $stok_produk = $stok_sekarang - $hpp_masuk->jumlah_masuk;
 
