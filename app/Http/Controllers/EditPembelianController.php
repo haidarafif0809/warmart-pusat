@@ -117,9 +117,9 @@ class EditPembelianController extends Controller
         }else{
             $data_penerimaan = $this->penerimaanProduk()
             ->where('penerimaan_produks.status_penerimaan', 1)
-            ->where('penerimaan_produks.warung_id', Auth::user()->id_warung)->get();  
+            ->where('penerimaan_produks.warung_id', Auth::user()->id_warung)->get();
 
-            $array = [];          
+            $array = [];
         }
 
         foreach ($data_penerimaan as $penerimaan) {
@@ -191,9 +191,7 @@ class EditPembelianController extends Controller
         $session_id = session()->getId();
         $pembelian = Pembelian::find($id);
 
-        $data_suplier   = EditTbsPembelian::select('suplier_id')->where('session_id', $session_id)
-        ->where('no_faktur', $pembelian->no_faktur)
-        ->where('warung_id', Auth::user()->id_warung);
+        $data_suplier   = EditTbsPembelian::select('suplier_id')->where('session_id', $session_id)->where('suplier_id', '!=', NULL)->where('no_faktur', $pembelian->no_faktur)->where('warung_id', Auth::user()->id_warung);
 
         if ($data_suplier->count() > 0) {
             $suplier = Suplier::select('id', 'nama_suplier')->where('id', $data_suplier->first()->suplier_id)
@@ -201,7 +199,7 @@ class EditPembelianController extends Controller
             ->orderBy('id', 'DESC')->get();
         }else{
             $suplier = Suplier::select('id', 'nama_suplier')->where('warung_id', Auth::user()->id_warung)
-            ->orderBy('id', 'DESC')->get(); 
+            ->orderBy('id', 'DESC')->get();
         }
 
         return response()->json($suplier);
@@ -665,7 +663,7 @@ class EditPembelianController extends Controller
         }else{
             $supplier = PembelianOrder::select('suplier_id')->where('no_faktur_order', $request->faktur_order)
             ->first()->suplier_id;
-            
+
             $data_orders = DetailPembelianOrder::where('no_faktur_order', $request->faktur_order)
             ->where('warung_id', Auth::user()->id_warung)->get();
 
@@ -692,7 +690,7 @@ class EditPembelianController extends Controller
                     'suplier_id'        => $supplier,
                     'warung_id'         => $data_order->warung_id,
                     ]);
-                
+
                 $subtotal += $data_order->subtotal;
             }
 
@@ -712,7 +710,7 @@ class EditPembelianController extends Controller
         if (Auth::user()->id_warung == '') {
             Auth::logout();
             return response()->view('error.403');
-        }else{            
+        }else{
             $supplier = PenerimaanProduk::select('suplier_id')->where('no_faktur_penerimaan', $request->faktur_penerimaan)
             ->first()->suplier_id;
 

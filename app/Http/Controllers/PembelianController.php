@@ -100,7 +100,7 @@ class PembelianController extends Controller
             $data_penerimaan = PenerimaanProduk::select(['penerimaan_produks.id', 'penerimaan_produks.no_faktur_penerimaan', 'penerimaan_produks.suplier_id', 'penerimaan_produks.keterangan','supliers.nama_suplier'])
             ->leftJoin('supliers', 'supliers.id', '=', 'penerimaan_produks.suplier_id')
             ->where('penerimaan_produks.status_penerimaan', 1)
-            ->where('penerimaan_produks.warung_id', Auth::user()->id_warung)->get();            
+            ->where('penerimaan_produks.warung_id', Auth::user()->id_warung)->get();
         }
         $array = [];
 
@@ -712,7 +712,7 @@ class PembelianController extends Controller
 
         $session_id = session()->getId();
 
-        $data_suplier   = TbsPembelian::select('suplier_id')->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
+        $data_suplier   = TbsPembelian::select('suplier_id')->where('session_id', $session_id)->where('suplier_id', '!=', NULL)->where('warung_id', Auth::user()->id_warung);
 
         if ($data_suplier->count() > 0) {
             $suplier = Suplier::select('id', 'nama_suplier')->where('id', $data_suplier->first()->suplier_id)
@@ -720,7 +720,7 @@ class PembelianController extends Controller
             ->orderBy('id', 'DESC')->get();
         }else{
             $suplier = Suplier::select('id', 'nama_suplier')->where('warung_id', Auth::user()->id_warung)
-            ->orderBy('id', 'DESC')->get(); 
+            ->orderBy('id', 'DESC')->get();
         }
 
         return response()->json($suplier);
@@ -1205,7 +1205,7 @@ class PembelianController extends Controller
                         if ($data_tbs_pembelian->satuan_id == $data_tbs_pembelian->satuan_dasar) {
                             $barang->update(['harga_beli' => $data_tbs_pembelian->harga_produk]);
                         }
-                    }                        
+                    }
                 }
 
                 $detail_pembelian = DetailPembelian::create([
@@ -1566,17 +1566,17 @@ class PembelianController extends Controller
         if (Laratrust::can('tambah_pembelian')) {
             $tambah_pembelian = 1;
         }else{
-            $tambah_pembelian = 0;            
+            $tambah_pembelian = 0;
         }
         if (Laratrust::can('edit_pembelian')) {
             $edit_pembelian = 1;
         }else{
-            $edit_pembelian = 0;            
+            $edit_pembelian = 0;
         }
         if (Laratrust::can('hapus_pembelian')) {
             $hapus_pembelian = 1;
         }else{
-            $hapus_pembelian = 0;            
+            $hapus_pembelian = 0;
         }
         $respons['tambah_pembelian'] = $tambah_pembelian;
         $respons['edit_pembelian'] = $edit_pembelian;
@@ -1631,7 +1631,7 @@ class PembelianController extends Controller
         }else{
             $supplier = PembelianOrder::select('suplier_id')->where('no_faktur_order', $request->faktur_order)
             ->first()->suplier_id;
-            
+
             $data_orders = DetailPembelianOrder::where('no_faktur_order', $request->faktur_order)
             ->where('warung_id', Auth::user()->id_warung)->get();
 
@@ -1657,7 +1657,7 @@ class PembelianController extends Controller
                     'suplier_id'        => $supplier,
                     'warung_id'         => $data_order->warung_id,
                     ]);
-                
+
                 $subtotal += $data_order->subtotal;
             }
 
@@ -1677,7 +1677,7 @@ class PembelianController extends Controller
         if (Auth::user()->id_warung == '') {
             Auth::logout();
             return response()->view('error.403');
-        }else{            
+        }else{
             $supplier = PenerimaanProduk::select('suplier_id')->where('no_faktur_penerimaan', $request->faktur_penerimaan)
             ->first()->suplier_id;
 
