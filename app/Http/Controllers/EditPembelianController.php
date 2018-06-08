@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Suplier;
 use App\Barang;
 use App\DetailPembelian;
 use App\DetailPembelianOrder;
@@ -182,6 +183,28 @@ class EditPembelianController extends Controller
                 return response(200);
             }
         }
+    }
+
+    public function pilih_suplier($id)
+    {
+
+        $session_id = session()->getId();
+        $pembelian = Pembelian::find($id);
+
+        $data_suplier   = EditTbsPembelian::select('suplier_id')->where('session_id', $session_id)
+        ->where('no_faktur', $pembelian->no_faktur)
+        ->where('warung_id', Auth::user()->id_warung);
+
+        if ($data_suplier->count() > 0) {
+            $suplier = Suplier::select('id', 'nama_suplier')->where('id', $data_suplier->first()->suplier_id)
+            ->where('warung_id', Auth::user()->id_warung)
+            ->orderBy('id', 'DESC')->get();
+        }else{
+            $suplier = Suplier::select('id', 'nama_suplier')->where('warung_id', Auth::user()->id_warung)
+            ->orderBy('id', 'DESC')->get(); 
+        }
+
+        return response()->json($suplier);
     }
 
 //PROSES EDIT JUMLAH TBS PEMBELIAN

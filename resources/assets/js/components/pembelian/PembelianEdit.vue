@@ -523,6 +523,7 @@
             return {
                 errors: [],
                 tbs_pembelians: [],
+                suplier: [],
                 suplierOrder: [],
                 suplierPenerimaan: [],
                 satuan: [],
@@ -637,7 +638,7 @@
             var app = this;
             app.$store.dispatch('LOAD_PRODUK_LIST')
             app.$store.dispatch('LOAD_KAS_LIST')
-            app.$store.dispatch('LOAD_SUPLIER_LIST')
+            app.dataSuplier(app.$route.params.id);
             app.getSuplierOrder(app.$route.params.id);
             app.getSuplierPenerimaan(app.$route.params.id);
             app.getResults();
@@ -651,9 +652,6 @@
             cara_bayar(){
                 return this.$store.state.kas
             },
-            suplier(){
-                return this.$store.getters.suplier_pembelian
-            }
         }),
         watch: {
             pencarian: function (newQuestion) {
@@ -800,6 +798,7 @@
                     app.loading = false;
                     app.seen = true;
                     app.openSelectizeProduk();
+                    app.dataSuplier(app.$route.params.id);
 
                 })
                 .catch(function (resp) {
@@ -829,6 +828,24 @@
                 });
 
             }, 
+            dataSuplier(id_pembelian) {
+                var app = this;
+                axios.get(app.url_edit+'/pilih-suplier/'+id_pembelian).then(function (resp) {
+                    app.suplier = resp.data;
+                    console.log(resp.data)
+                    $.each(resp.data, function (i, item) {
+                        if (resp.data[i].nama_suplier == "UMUM") {
+                            app.inputPembayaranPembelian.suplier  = resp.data[i].id 
+                        }else{
+                            app.inputPembayaranPembelian.suplier  = resp.data[i].id 
+                        }
+                    });
+                })
+                .catch(function (resp) {
+                    console.log(resp)
+                    alert("Tidak Bisa Memuat Suplier");
+                });
+            },
             getFakturPembelian(){
                 var app = this;
                 var id = app.$route.params.id;
@@ -875,7 +892,7 @@
                     app.tambahSuplier.no_telp = '';
                     app.tambahSuplier.contact_person = '';
                     app.errors = '';
-                    app.$store.dispatch('LOAD_SUPLIER_LIST')
+                    app.dataSuplier();
                     $("#modal_tambah_suplier").hide();
                 })
                 .catch(function (resp) {
