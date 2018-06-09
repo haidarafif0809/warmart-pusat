@@ -462,7 +462,7 @@ class EditPembelianController extends Controller
     {
         $session_id            = session()->getId();
         $total_kas             = TransaksiKas::total_kas($request);
-        $data_produk_pembelian = EditTbsPembelian::where('no_faktur', $request->no_faktur)->where('warung_id', Auth::user()->id_warung);
+        $data_produk_pembelian = EditTbsPembelian::where('no_faktur', $request->no_faktur)->where('warung_id', Auth::user()->id_warung)->count();
         $kas                   = TransaksiKas::select('jumlah_keluar')->where('no_faktur', $request->no_faktur)->where('warung_id', Auth::user()->id_warung);
         if ($kas->count() == 0) {
             $jumlah_kas_lama = 0;
@@ -527,9 +527,26 @@ class EditPembelianController extends Controller
 
             }
 
+            $detail_order = DetailPembelian::select('faktur_order')->where('no_faktur', $no_faktur)
+            ->where('faktur_order', '!=', NULL)->where('warung_id', Auth::user()->id_warung);
+
+            $detail_penerimaan = DetailPembelian::select('faktur_penerimaan')->where('no_faktur', $no_faktur)
+            ->where('faktur_penerimaan', '!=', NULL)->where('warung_id', Auth::user()->id_warung);
+
+            if ($detail_order->count() > 0) {
+              $update_order = PembelianOrder::where('no_faktur_order', $detail_order->first()->faktur_order);
+              $update_order->update(['status_order' => 1]);
+            }
+
+            if ($detail_penerimaan->count() > 0) {
+              $update_penerimaan = PenerimaanProduk::where('no_faktur_penerimaan', $detail_penerimaan->first()->faktur_penerimaan);
+              $update_penerimaan->update(['status_penerimaan' => 1]);
+            }
+
             foreach ($data_detail_pembelian as $data_detail) {
 
                 $harga_tbs = EditTbsPembelian::select('harga_produk')->where('no_faktur', $data_detail->no_faktur)->where('id_produk', $data_detail->id_produk)->where('warung_id', Auth::user()->id_warung);
+
 
                 if (!$hapus_detail = DetailPembelian::destroy($data_detail->id_detail_pembelian)) {
                     //DI BATALKAN PROSES NYA
@@ -578,8 +595,6 @@ class EditPembelianController extends Controller
                 'ppn'              => $request->ppn,
                 ]);
 
-
-
             foreach ($data_produk_pembelian->get() as $data_tbs) {
                 //INSERT DETAIL PEMBELIAN
                 $detail_pembelian = DetailPembelian::create([
@@ -594,9 +609,28 @@ class EditPembelianController extends Controller
                     'tax_include'   => $data_tbs->tax_include,
                     'potongan'      => $data_tbs->potongan,
                     'ppn'           => $data_tbs->ppn,
+                    'faktur_order'  => $data_tbs->faktur_order,
+                    'faktur_penerimaan' => $data_tbs->faktur_penerimaan,
+                    'suplier_id'    => $data_tbs->suplier_id,
                     'warung_id'     => Auth::user()->id_warung,
                     'created_at'    => $update_pembelian->created_at,
                     ]);
+            }
+
+            $data_tbs_order = EditTbsPembelian::select('faktur_order')->where('no_faktur', $no_faktur)
+            ->where('faktur_order', '!=', NULL)->where('warung_id', Auth::user()->id_warung);
+
+            $data_tbs_penerimaan = EditTbsPembelian::select('faktur_penerimaan')->where('no_faktur', $no_faktur)
+            ->where('faktur_penerimaan', '!=', NULL)->where('warung_id', Auth::user()->id_warung);
+
+            if ($data_tbs_order->count() > 0) {
+                $update_order = PembelianOrder::where('no_faktur_order', $data_tbs_order->first()->faktur_order);
+                $update_order->update(['status_order' => 3]);
+            }
+
+            if ($data_tbs_penerimaan->count() > 0) {
+                $update_penerimaan = PenerimaanProduk::where('no_faktur_penerimaan', $data_tbs_penerimaan->first()->faktur_penerimaan);
+                $update_penerimaan->update(['status_penerimaan' => 3]);
             }
 
             $data_pembelian = Pembelian::find($request->id_pembelian);

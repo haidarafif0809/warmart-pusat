@@ -1716,6 +1716,7 @@ prosesTransaksiSelesai(){
                 var newPembelian = app.inputPembayaranPembelian;
                 axios.post(app.url_edit+'/proses-edit-pembelian', newPembelian)
                 .then(function (resp) {
+                  console.log(resp)
                     app.message = 'Berhasil Mengubah Pembelian';
                     app.alert(app.message);
                     app.$router.replace('/pembelian');
@@ -1724,6 +1725,7 @@ prosesTransaksiSelesai(){
 
                 })
                 .catch(function (resp) {
+                  console.log(resp);
                     app.success = false;
                 });
             }
