@@ -708,18 +708,23 @@ export default {
         },
         returJualEntry(id_penjualan,index,id_produk,kode_barang,nama_barang,jumlah_produk,satuan,harga_produk,jumlah_jual){
               var app = this;
-               $("#modalInsertTbs").show();
-               $("#modal_pilih_retur").hide();            
-                app.inputTbsReturPenjualan.nama_produk = titleCase(nama_barang);
-                app.inputTbsReturPenjualan.jumlah_retur = jumlah_produk;
-                app.inputTbsReturPenjualan.jumlah_jual = jumlah_jual;
-                app.inputTbsReturPenjualan.id_penjualan = id_penjualan;
-                app.inputTbsReturPenjualan.id_produk = id_produk;
-                app.inputTbsReturPenjualan.satuan_produk = satuan;
-                console.log(satuan);
-                app.inputTbsReturPenjualan.harga_produk = harga_produk;
-                app.inputTbsReturPenjualan.harga_jual = harga_produk;
-                app.getSatuan(id_produk);
+                if (jumlah_produk == 0){
+                    app.alertTbs("Maaf Jumlah Produk "+nama_barang+" yang akan diretur 0 ! ");
+                }else{
+                    $("#modalInsertTbs").show();
+                    $("#modal_pilih_retur").hide();            
+                    app.inputTbsReturPenjualan.nama_produk = titleCase(nama_barang);
+                    app.inputTbsReturPenjualan.jumlah_retur = jumlah_produk;
+                    app.inputTbsReturPenjualan.jumlah_jual = jumlah_jual;
+                    app.inputTbsReturPenjualan.id_penjualan = id_penjualan;
+                    app.inputTbsReturPenjualan.id_produk = id_produk;
+                    app.inputTbsReturPenjualan.satuan_produk = satuan;
+                    console.log(satuan);
+                    app.inputTbsReturPenjualan.harga_produk = harga_produk;
+                    app.inputTbsReturPenjualan.harga_jual = harga_produk;
+                    app.getSatuan(id_produk);
+            }
+               
         },
         getSatuan(id_produk){ 
                 var app = this; 
@@ -772,14 +777,23 @@ export default {
                             $("#modal_pilih_retur").hide(); 
                             app.alertTbs("Produk "+app.inputTbsReturPenjualan.nama_produk+" Sudah Ada, Silakan Pilih Produk dari Faktur Lain! ");
                         }else{
-                            var subtotal = parseFloat(app.inputReturPenjualan.subtotal) + parseFloat(resp.data.subtotal)
-                            app.getResults();
-                            app.inputReturPenjualan.subtotal = subtotal.toFixed(2)
-                            app.inputReturPenjualan.total_akhir = subtotal.toFixed(2)
-                            app.alert("Berhasil Menambahkan Tbs Retur Penjualan"+ app.inputTbsReturPenjualan.nama_produk);
-                            $("#modalInsertTbs").hide();
-                            $("#modal_pilih_retur").hide(); 
-                            app.loading = false;
+                            if (resp.data.status == 1) {
+                                var subtotal =  parseFloat(resp.data.subtotal)
+                                app.inputReturPenjualan.subtotal += subtotal
+                                app.inputReturPenjualan.total_akhir += subtotal
+                                app.getResults();
+                                app.alert("Berhasil Menambahkan Tbs Retur Penjualan"+ app.inputTbsReturPenjualan.nama_produk);
+                                $("#modalInsertTbs").hide();
+                                $("#modal_pilih_retur").hide(); 
+                                app.loading = false;
+                            }else{
+                                app.loading = false;
+                                app.getResults();
+                                $("#modalInsertTbs").hide();
+                                $("#modal_pilih_retur").hide(); 
+                                app.alertTbs("Jumlah Retur yang Anda masukan melebihi Jumlah Jual !");
+                            }
+                            
                         }
                       })
                       .catch(function (resp) {

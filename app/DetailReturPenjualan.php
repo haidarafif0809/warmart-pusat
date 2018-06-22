@@ -31,4 +31,14 @@ class DetailReturPenjualan extends Model
 		return $query_detail;
 	}
 
+	                  // DATA PENJUALAN POS RETUR
+     public function scopeGetStokRetur($data_stok_retur,$id_penjualan,$id_produk)
+     {
+        $data_stok_retur = DetailReturPenjualan::where('no_faktur_penjualan', $id_penjualan)
+        ->where('id_produk', $id_produk)
+        ->where('warung_id', Auth::user()->id_warung);
+
+        return $data_stok_retur;
+    }
+
 }

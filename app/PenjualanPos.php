@@ -315,6 +315,8 @@ class PenjualanPos extends Model
 
         return $data_pelanggan_retur;
     }
+
+
     
     // PENCARIAN PENJUALAN POS RETUR
     public function scopeGetDataCariPenjualanRetur($data_pelanggan_retur,$id_pelanggan,$request)

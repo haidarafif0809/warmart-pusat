@@ -204,13 +204,21 @@ class ReturPenjualanController extends Controller
 
         $array = array();
         foreach ($data_retur_penjualan as $data_retur_penjualans) {
+              $DatastokRetur     = DetailReturPenjualan::getStokRetur($data_retur_penjualans->id_penjualan,$data_retur_penjualans->id_produk);
+              
+              if ($DatastokRetur->count() > 0) {
+                  $stokRetur = $data_retur_penjualans->jumlah_produk - $DatastokRetur->first()->jumlah_retur;
+              }else{
+                  $stokRetur = $data_retur_penjualans->jumlah_produk;
+              }
+
             array_push($array, [
                 'id_penjualan'        => $data_retur_penjualans->id_penjualan,
                 'id_produk'           => $data_retur_penjualans->id_produk, 
                 'kode_barang'         => $data_retur_penjualans->kode_barang,
                 'nama_barang'         => title_case($data_retur_penjualans->nama_barang),
                 'jumlah_jual'         => $data_retur_penjualans->jumlah_jual,
-                'jumlah_produk'       => $data_retur_penjualans->jumlah_produk,
+                'jumlah_produk'       => $stokRetur,
                 'satuan'              => $data_retur_penjualans->nama_satuan,
                 'id_satuan'           => $data_retur_penjualans->satuan_id,
                 'harga_produk'        => $data_retur_penjualans->harga_produk,
@@ -261,39 +269,44 @@ class ReturPenjualanController extends Controller
         $data_tbs   = TbsReturPenjualan::where('no_faktur_penjualan', $request->id_penjualan)->where('id_produk', $request->id_produk)
         ->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung);
 
-
-        $subtotal = $request->jumlah_retur * $request->harga_produk;
-        //JIKA FAKTUR YG DIPILIH SUDAH ADA DI TBS
+         $subtotal = $request->jumlah_retur * $request->harga_produk;
+        
         if ($data_tbs->count() > 0) {
-                $subtotal_lama = $data_tbs->first()->subtotal;
-
+                $subtotal_lama = $data_tbs->first()->subtotal;   
                 $jumlah_retur = $data_tbs->first()->jumlah_retur + $request->jumlah_retur;
+                $subtotal_edit = $jumlah_retur * $request->harga_produk;
+               
 
-                $subtotal_edit = ($jumlah_retur * $request->harga_produk) - $data_tbs->first()->potongan;
+                if ($jumlah_retur <= $data_tbs->first()->jumlah_jual ) {
+                    $subtotal_edit = ($jumlah_retur * $request->harga_produk) - $data_tbs->first()->potongan;
+                    $data_tbs->update(['jumlah_retur' => $jumlah_retur, 'subtotal' => $subtotal_edit, 'harga_produk' => $request->harga_produk, 'id_satuan' => $data_satuan[0], 'satuan_dasar' => $data_satuan[2]]);
 
-                $data_tbs->update(['jumlah_retur' => $jumlah_retur, 'subtotal' => $subtotal_edit, 'harga_produk' => $request->harga_produk, 'id_satuan' => $data_satuan[0], 'satuan_dasar' => $data_satuan[2]]);
-
-                $subtotal = $jumlah_retur * $request->harga_produk;
-
-                $respons['status']        = 1;
-                $respons['subtotal_lama'] = $subtotal_lama;
-                $respons['subtotal']      = $subtotal;
-                return response()->json($respons);
+                    $respons['status']        = 1;
+                    $respons['subtotal_lama'] = $subtotal_lama;
+                    $respons['subtotal']      = $subtotal;
+                    return response()->json($respons);
+                }else{
+                    $respons['status']        = 0;
+                    return response()->json($respons);
+                }  
 
         } else {
-            $tbs_retur_penjualan = TbsReturPenjualan::create([
-                'session_id'          => $session_id,
-                'no_faktur_penjualan' => $request->id_penjualan,
-                'id_produk'           => $request->id_produk,
-                'harga_produk'        => $request->harga_produk,
-                'jumlah_retur'        => $request->jumlah_retur,
-                'jumlah_jual'         => $request->jumlah_jual,
-                'subtotal'            => $subtotal,
-                'id_satuan'           => $data_satuan[0], 
-                'satuan_dasar'        => $data_satuan[2],
-                'warung_id'           => Auth::user()->id_warung,
-                'id_pelanggan'        => $request->pelanggan,
-            ]);
+
+                $tbs_retur_penjualan = TbsReturPenjualan::create([
+                    'session_id'          => $session_id,
+                    'no_faktur_penjualan' => $request->id_penjualan,
+                    'id_produk'           => $request->id_produk,
+                    'harga_produk'        => $request->harga_produk,
+                    'jumlah_retur'        => $request->jumlah_retur,
+                    'jumlah_jual'         => $request->jumlah_jual,
+                    'subtotal'            => $subtotal,
+                    'id_satuan'           => $data_satuan[0], 
+                    'satuan_dasar'        => $data_satuan[2],
+                    'warung_id'           => Auth::user()->id_warung,
+                    'id_pelanggan'        => $request->pelanggan,
+                ]);
+
+            $respons['status']        = 1;
             $respons['subtotal'] = $subtotal;
             return response()->json($respons);
         }
