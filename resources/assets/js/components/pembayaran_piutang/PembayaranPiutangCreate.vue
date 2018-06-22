@@ -311,6 +311,52 @@
             </div> 
             <!-- / MODAL TOMBOL SELESAI --> 
 
+            <!--MODAL IMPORT-->
+            <div class="modal" id="modal_import" role="dialog" data-backdrop=""> 
+                <div class="modal-dialog">
+                    <!-- Modal content--> 
+                    <div class="modal-content"> 
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"> <i class="material-icons">close</i></button> 
+                            <h4 class="modal-title"> 
+                                <div class="alert-icon" style="font-weight: bold;"> 
+                                    Import Pembayaran Piutang
+                                </div> 
+                            </h4> 
+                        </div>                         
+                        <form v-on:submit.prevent="importExcel()" class="form-horizontal">
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <p style="font-weight: bold;">
+                                        Download <a :href="urlTemplate">Template</a> Excel Untuk Import Pembayaran Piutang.
+                                    </p>
+                                </div>
+                                <div class="form-group form-file-upload">
+                                    <input type="file" id="excel" multiple=""/>
+                                    <div class="input-group">
+                                        <input type="text" readonly="" class="form-control" placeholder="Browse File..."/>
+                                        <span class="input-group-btn input-group-s">
+                                            <button type="button" class="btn btn-just-icon btn-round btn-primary">
+                                                <i class="material-icons">attach_file</i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group">                                
+                                    <button class="btn btn-primary" id="btnImport" type="submit"><i class="material-icons">file_upload</i> Import</button>
+                                </div>
+
+                                <p style="color: red; font-style: italic;">*Note : Kolom Yang Berwarna Wajib Diisi.</p>
+                            </div>
+                            <div class="modal-footer">  
+                                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="material-icons">close</i> Batal</button> 
+                            </div> 
+                        </form>
+                    </div>       
+                </div> 
+            </div> 
+            <!-- / MODAL IMPORT EXCEL --> 
+
             <div class="card" style="margin-bottom: 1px; margin-top: 1px;">
                 <div class="card-content">
 
@@ -327,6 +373,9 @@
                                 </div>
                             </div>
                         </div>
+                        <button id="btnImport" class="btn btn-info" data-toggle="modal" data-target="#modal_import">
+                            <i class="material-icons">file_upload</i> Import Excel
+                        </button>
                     </div>
 
                     <!--TABEL TBS ITEM  MASUK -->
@@ -353,7 +402,7 @@
                                     </thead>
                                     <tbody v-if="tbs_pembayaran_piutang.length"  class="data-ada">
                                         <tr v-for="tbs_pembayaran_piutang, index in tbs_pembayaran_piutang" >
-                                            <td>{{ tbs_pembayaran_piutang.id_tbs_pembayaran_piutang }}</td>
+                                            <td>{{ tbs_pembayaran_piutang.id_penjualan }}</td>
                                             <td>{{ tbs_pembayaran_piutang.pelanggan }}</td>
                                             <td align="center">{{ tbs_pembayaran_piutang.jatuh_tempo | tanggal }}</td>
                                             <td align="right">{{ tbs_pembayaran_piutang.piutang | pemisahTitik }}</td>
@@ -365,7 +414,7 @@
                                                 <a href="#create-pembayaran-piutang" class="btn btn-xs btn-success" v-bind:id="'edit-' + tbs_pembayaran_piutang.id_tbs_pembayaran_piutang" v-on:click="editEntry(tbs_pembayaran_piutang.id_tbs_pembayaran_piutang, index, tbs_pembayaran_piutang.no_faktur_penjualan,tbs_pembayaran_piutang.pelanggan,tbs_pembayaran_piutang.jumlah_bayar,tbs_pembayaran_piutang.potongan,tbs_pembayaran_piutang.piutang)">Edit</a>
                                             </td>
                                             <td align="center">
-                                                <a href="#create-pembayaran-piutang" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_pembayaran_piutang.id_tbs_pembayaran_piutang" v-on:click="deleteEntry(tbs_pembayaran_piutang.id_tbs_pembayaran_piutang, index,tbs_pembayaran_piutang.jumlah_bayar,tbs_pembayaran_piutang.no_faktur_penjualan)">Delete</a>
+                                                <a href="#create-pembayaran-piutang" class="btn btn-xs btn-danger" v-bind:id="'delete-' + tbs_pembayaran_piutang.id_tbs_pembayaran_piutang" v-on:click="deleteEntry(tbs_pembayaran_piutang.id_tbs_pembayaran_piutang, index,tbs_pembayaran_piutang.jumlah_bayar,tbs_pembayaran_piutang.id_penjualan)">Delete</a>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -424,6 +473,7 @@
                 tbsPembayaranPiutangData : {},
                 url_piutang : window.location.origin+(window.location.pathname).replace("dashboard", "pembayaran-piutang"),
                 url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
+                urlTemplate : window.location.origin + (window.location.pathname).replace("dashboard", "pembayaran-piutang/template-excel"),
 
                 inputTbsPembayaranPiutang: {
                     penjualan_piutang: '',
@@ -546,7 +596,7 @@
                 axios.get(app.url_piutang+'/view-tbs-pembayaran-piutang?page='+page)
                 .then((resp) => {
                     app.tbs_pembayaran_piutang = resp.data.data;
-                    console.log(app.tbs_pembayaran_piutang);
+                    console.log('then getResults:', app.tbs_pembayaran_piutang);
                     app.tbsPembayaranPiutangData = resp.data;
                     app.loading = false;
                     app.seen = true;
@@ -604,15 +654,16 @@
             getDataFakturPiutang(id) {
                 var app = this;
                 axios.get(app.url_piutang+'/data-penjualan-piutang/'+id).then((resp) => {
-                    console.log(resp.data)
+                    console.log('getDataFakturPiutang:', resp.data)
                     app.inputTbsPembayaranPiutang.piutang = resp.data.sisa_piutang;
+                    app.inputTbsPembayaranPiutang.id_penjualan = resp.data.id;
                     app.inputTbsPembayaranPiutang.jumlah_bayar = resp.data.sisa_piutang;
                     app.inputTbsPembayaranPiutang.no_faktur_penjualan = resp.data.no_faktur;
                     app.inputTbsPembayaranPiutang.pelanggan_id = resp.data.pelanggan_id;
                     app.inputTbsPembayaranPiutang.jatuh_tempo = resp.data.tanggal_jt_tempo;
                 })
                 .catch((resp) => {
-                    console.log(resp);
+                    console.log('catch getDataFakturPiutang:', resp);
                     alert("Tidak Bisa Memuat Penjualan Piutang");
                 });
             },
@@ -637,6 +688,7 @@
                     app.inputTbsPembayaranPiutang.potongan = 0;
                     app.$refs.potongan.$el.focus();
                 } else {
+                    console.log('tambahTbsPembayaranPiutang:', newTbsPembayaranPiutang);
                     axios.post(app.url_piutang+'/proses-tambah-tbs-pembayaran-piutang',newTbsPembayaranPiutang)
                     .then((resp) => {
 
@@ -645,7 +697,7 @@
 
                             app.getResults();
                             app.pembayaranPiutang.subtotal = subtotal.toFixed(2)
-                            app.alert("Berhasil Menambahkan Faktur Piutang"+ app.inputTbsPembayaranPiutang.no_faktur_penjualan);
+                            app.alert("Berhasil Menambahkan No. Transaksi Piutang "+ app.inputTbsPembayaranPiutang.id_penjualan);
                             app.inputTbsPembayaranPiutang.penjualan_piutang = '';
                             app.inputTbsPembayaranPiutang.piutang = 0
                             app.inputTbsPembayaranPiutang.jumlah_bayar = 0
@@ -658,7 +710,8 @@
                             app.loading = false;
                         } else {
                             $("#modal_tbs").hide();
-                            app.alertTbs("Faktur "+app.inputTbsPembayaranPiutang.no_faktur_penjualan+" Sudah Ada, Silakan Pilih Faktur Piutang Lain!");
+                            // console.log('then tambahTbsPembayaranPiutang:', app.inputTbsPembayaranPiutang);
+                            app.alertTbs("No Transaksi " + app.inputTbsPembayaranPiutang.id_penjualan + " Sudah Ada, Silakan Pilih Piutang Lain!");
                             app.inputTbsPembayaranPiutang.penjualan_piutang = ''
                             app.getResults();
                             app.loading = false;
@@ -669,7 +722,7 @@
 
                         console.log(resp);              
                         app.loading = false;
-                        alert("Tidak dapat Menambahkan Faktur Penjualan Piutang");        
+                        alert("Tidak dapat Menambahkan No. Transaksi Penjualan Piutang");        
                         app.errors = resp.response.data.errors;
                     });
 
@@ -784,44 +837,44 @@
                     });
                 }
             },
-            deleteEntry(id, index,jumlah_bayar_lama,no_faktur_penjualan) {
+            deleteEntry(id, index,jumlah_bayar_lama,id_penjualan) {
 
                 var app = this;
                 app.$swal({
-                    text: "Anda Yakin Ingin Menghapus Faktur "+no_faktur_penjualan+ " ?",
+                    text: "Anda Yakin Ingin Menghapus No. Transaksi "+id_penjualan+ " ?",
                     buttons: true,
                     dangerMode: true,
                 })
                 .then((willDelete) => {
                     if (willDelete) {
-                        this.prosesDelete(id,no_faktur_penjualan,jumlah_bayar_lama);
+                        this.prosesDelete(id,id_penjualan,jumlah_bayar_lama);
                     } else {
                         app.$swal.close();
                     }
                 });
 
             },
-            prosesDelete(id,no_faktur_penjualan,jumlah_bayar_lama){
+            prosesDelete(id,id_penjualan,jumlah_bayar_lama){
                 var app = this;
                 app.loading = true;
                 axios.delete(app.url_piutang+'/proses-hapus-tbs-pembayaran-piutang/'+id)
                 .then((resp) => {
 
                     if (resp.data == 0) {
-                        app.alertTbs("Faktur "+no_faktur_penjualan+" Gagal Dihapus!")
+                        app.alertTbs("No. Transaksi "+id_penjualan+" Gagal Dihapus!")
                         app.loading = false
                     } else {
                         var subtotal = parseFloat(app.pembayaranPiutang.subtotal) - parseFloat(jumlah_bayar_lama)
                         app.getResults()
                         app.pembayaranPiutang.subtotal = subtotal.toFixed(2)
-                        app.alert("Menghapus Faktur "+no_faktur_penjualan)
+                        app.alert("Menghapus No. Transaksi "+id_penjualan)
                         app.loading = false
                     }
                 })
                 .catch((resp) => {
                     console.log(resp);
                     app.loading = false;
-                    alert("Tidak dapat Menghapus Faktur "+no_faktur_penjualan);
+                    alert("Tidak dapat Menghapus No. Transaksi "+id_penjualan);
                 });
             },
             batalPembayaranPiutang(){
@@ -871,7 +924,7 @@
                 var newPembayaranPiutang = app.pembayaranPiutang;
                 app.loading = true;
 
-                axios.post(app.url_piutang,newPembayaranPiutang)
+                axios.post(app.url_piutang, newPembayaranPiutang)
                 .then((resp) => {
 
                     if (resp.data == 0) {
@@ -974,7 +1027,84 @@
                     buttons: false,
                     timer: 1000
                 });
-            }
+            },
+            importExcel() {
+                var app = this;
+                let newExcel = new FormData();
+                let file = document.getElementById('excel').files[0];
+
+                if (file != undefined) {
+                    newExcel.append('excel', file)
+                } else {
+                    swal({
+                        type: 'warning',
+                        text: 'Silahkan Pilih File Terlebih Dahulu',
+                        timer: 1800,
+                        showConfirmButton: false
+                    })
+                    return;
+                }
+                app.loadingData();
+
+                // ambil ekstensinya
+                let ext = file.name.split('.');
+                ext = ext.pop();
+
+                if (ext != 'xlsx' && ext != 'xls') {
+                    swal({
+                        title: 'Gagal!',
+                        type: 'warning',
+                        text: 'File harus berekstensi .xlsx atau .xls',
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                } else {
+                    axios.post(app.url_piutang + '/import-excel', newExcel)
+                    .then((resp) => {
+                        console.log('then import:', resp);
+                        if (resp.data.errors !== undefined) {
+                            swal({
+                                title: 'Gagal!',
+                                type: 'warning',
+                                html: resp.data.errors
+                            });
+                        } else {
+
+                            $("#excel").val('');
+                            $("#modal_import").hide();
+
+                            swal({
+                                title: 'Berhasil!',
+                                type: 'success',
+                                text: resp.data.jumlah_data + ' Data Berhasil Diimport.',
+                                timer: 1800,
+                                showConfirmButton: false
+                            });
+                            app.getResults();
+                        }
+                    })
+                    .catch((resp) => {
+                        console.log('catch importExcel: ', resp);
+                        swal.close();
+
+                        swal({
+                            title: 'Gagal',
+                            type: 'warning',
+                            text: 'Terjadi Kesalahan Saat Proses Import!',
+                        });
+                    });
+                }
+            },
+            loadingData() {
+                swal({
+                    title: "Sedang Memproses Data ...",
+                    text: "Harap Tunggu!",
+                    type: "info",
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    showConfirmButton: false
+                });
+            },
         }
     }
 </script>

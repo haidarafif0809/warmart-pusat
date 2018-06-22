@@ -5,8 +5,8 @@
 use Jenssegers\Agent\Agent;
 $agent = new Agent();
 $warung_id = \App\SettingPembedaAplikasi::where('app_address', url('/'))->first()->warung_id;
-$judul_warung = \App\SettingFooter::where('warung_id', $warung_id)->first()->judul_warung;
 $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description'])->where('warung_id',$warung_id)->first();
+$judul_warung = \App\Warung::where('id', $warung_id)->first()->name;
 ?>
 <head>
     <meta charset="utf-8"/>

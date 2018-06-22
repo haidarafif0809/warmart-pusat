@@ -22,7 +22,9 @@
 					<h4 class="card-title"> Pembayaran Piutang </h4>
 
 					<div class="toolbar">
-						<p> <router-link :to="{name: 'createPembayaranPiutang'}" class="btn btn-primary" v-if="otoritas.tambah_pembayaran_piutang == 1">Tambah Pembayaran Piutang</router-link></p>
+						<p> 
+							<router-link :to="{name: 'createPembayaranPiutang'}" class="btn btn-primary" v-if="otoritas.tambah_pembayaran_piutang == 1">Tambah Pembayaran Piutang</router-link>
+						</p>
 					</div>
 
 					<div class=" table-responsive ">
@@ -99,7 +101,7 @@ export default {
 			pembayaranPiutang: [],
 			pembayaranPiutangData: {},
 			otoritas: {},
-			url : window.location.origin+(window.location.pathname).replace("dashboard", "pembayaran-piutang"),
+			url : window.location.origin + (window.location.pathname).replace("dashboard", "pembayaran-piutang"),
 			pencarian: '',
 			loading: true,
 		}
@@ -124,13 +126,14 @@ methods: {
 		}
 		axios.get(app.url+'/view?page='+page)
 		.then(function (resp) {
+			console.log(resp);
 			app.pembayaranPiutang = resp.data.data;
 			app.pembayaranPiutangData = resp.data;
 			app.otoritas = resp.data.otoritas.original;
 			app.loading = false;
 		})
 		.catch(function (resp) {
-			console.log(resp);
+			console.log('catch getResults:', resp);
 			app.loading = false;
 			alert("Tidak Dapat Memuat Pembayaran Piutang");
 		});
@@ -148,7 +151,7 @@ methods: {
 			app.loading = false;
 		})
 		.catch(function (resp) {
-			console.log(resp);
+			console.log('catch getHasilPencarian:', resp);
 			alert("Tidak Dapat Memuat Pembayaran Piutang");
 		});
 	},
@@ -185,6 +188,7 @@ methods: {
 					}
 				})
 				.catch(function (resp) {
+					console.log('catch deleteEntry:', resp);
 					alert("Tidak dapat Menghapus Pembayaran Piutang");
 				});
 			}else {
