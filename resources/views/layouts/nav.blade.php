@@ -1,6 +1,6 @@
 @if(Auth::user()->kasir_id == 0)
 
-@if(Laratrust::can('lihat_kas') || Laratrust::can('lihat_kategori_transaksi') || Laratrust::can('lihat_kas_masuk') || Laratrust::can('lihat_kas_keluar') || Laratrust::can('lihat_kas_mutasi')) 
+@if(Laratrust::can('lihat_kas') || Laratrust::can('lihat_kategori_transaksi') || Laratrust::can('lihat_kas_masuk') || Laratrust::can('lihat_kas_keluar') || Laratrust::can('lihat_kas_mutasi'))
 <li>
     <a class="disabled-menu" data-toggle="collapse" href="#transaksiKas">
         <i class="material-icons">
@@ -14,7 +14,7 @@
     </a>
     <div class="collapse" id="transaksiKas">
         <ul class="nav">
-            @if(Laratrust::can('lihat_kas')) 
+            @if(Laratrust::can('lihat_kas'))
             <li>
                 <router-link :to="{name: 'indexKas'}" class="menu-nav">
                     <span class="sidebar-mini">
@@ -27,7 +27,7 @@
             </li>
             @endif
 
-            @if(Laratrust::can('lihat_kategori_transaksi')) 
+            @if(Laratrust::can('lihat_kategori_transaksi'))
             <li>
                 <router-link :to="{name: 'indexKategoriTransaksi'}" class="menu-nav">
                     <span class="sidebar-mini">
@@ -40,7 +40,7 @@
             </li>
             @endif
 
-            @if(Laratrust::can('lihat_kas_masuk')) 
+            @if(Laratrust::can('lihat_kas_masuk'))
             <li>
                 <router-link :to="{name: 'indexKasMasuk'}" class="menu-nav">
                     <span class="sidebar-mini">
@@ -53,7 +53,7 @@
             </li>
             @endif
 
-            @if(Laratrust::can('lihat_kas_keluar')) 
+            @if(Laratrust::can('lihat_kas_keluar'))
             <li>
                 <router-link :to="{name: 'indexKasKeluar'}" class="menu-nav">
                     <span class="sidebar-mini">
@@ -66,7 +66,7 @@
             </li>
             @endif
 
-            @if(Laratrust::can('lihat_kas_mutasi')) 
+            @if(Laratrust::can('lihat_kas_mutasi'))
             <li>
                 <router-link :to="{name: 'indexKasMutasi'}" class="menu-nav">
                     <span class="sidebar-mini">
@@ -83,7 +83,7 @@
 </li>
 @endif
 
-@if(Laratrust::can('lihat_produk')) 
+@if(Laratrust::can('lihat_produk'))
 <!--PRODUK -->
 <li>
     <router-link :to="{name: 'indexProduk'}" class="menu-nav disabled-menu">
@@ -97,7 +97,7 @@
 </li>
 @endif
 
-@if(Laratrust::can('lihat_item_masuk') || Laratrust::can('lihat_item_keluar') || Laratrust::can('lihat_laporan_persediaan') || Laratrust::can('lihat_stok_opname')) 
+@if(Laratrust::can('lihat_item_masuk') || Laratrust::can('lihat_item_keluar') || Laratrust::can('lihat_laporan_persediaan') || Laratrust::can('lihat_stok_opname'))
 <li>
     <a class="disabled-menu" data-toggle="collapse" href="#persediaan">
         <i class="material-icons">
@@ -112,7 +112,7 @@
     <div class="collapse" id="persediaan">
         <ul class="nav">
 
-            @if(Laratrust::can('lihat_item_masuk')) 
+            @if(Laratrust::can('lihat_item_masuk'))
             <li>
                 <router-link :to="{name: 'indexItemMasuk'}" class="menu-nav">
                     <span class="sidebar-mini">
@@ -125,7 +125,7 @@
             </li>
             @endif
 
-            @if(Laratrust::can('lihat_item_keluar')) 
+            @if(Laratrust::can('lihat_item_keluar'))
             <li>
                 <router-link :to="{name: 'indexItemKeluar'}" class="menu-nav">
                     <span class="sidebar-mini">
@@ -138,7 +138,7 @@
             </li>
             @endif
 
-            @if(Laratrust::can('lihat_laporan_persediaan')) 
+            @if(Laratrust::can('lihat_laporan_persediaan'))
             <li>
                 <router-link :to="{name: 'indexLaporanPersediaan'}" class="menu-nav">
                     <span class="sidebar-mini">
@@ -151,7 +151,7 @@
             </li>
             @endif
 
-            @if(Laratrust::can('lihat_stok_opname')) 
+            @if(Laratrust::can('lihat_stok_opname'))
             <li>
                 <router-link :to="{name: 'indexStokOpname'}" class="menu-nav">
                     <span class="sidebar-mini">
@@ -185,7 +185,7 @@
     <div class="collapse" id="pembelian">
         <ul class="nav">
 
-            @if(Laratrust::can('lihat_pembelian')) 
+            @if(Laratrust::can('lihat_pembelian'))
             <!--PEMBELIAN ORDER-->
             <li>
                 <router-link :to="{name: 'indexPembelianOrder'}" class="menu-nav disabled-menu">
@@ -221,13 +221,13 @@
                     </span>
                 </router-link>
             </li>
-            @endif 
+            @endif
 
         </ul>
     </div>
 </li>
 
-@if(Laratrust::can('lihat_pesanan')) 
+@if(Laratrust::can('lihat_pesanan'))
 <!--PESANAN -->
 <li>
     <router-link :to="{name: 'indexPesananWarung'}" class="menu-nav disabled-menu">
@@ -239,9 +239,9 @@
         </p>
     </router-link>
 </li>
-@endif 
+@endif
 
-@if(Laratrust::can('lihat_penjualan')) 
+@if(Laratrust::can('lihat_penjualan'))
 {{-- PENJUALAN --}}
 <li>
     <router-link :to="{name: 'createPenjualan'}" class="menu-nav disabled-menu">
@@ -253,11 +253,11 @@
         </p>
     </router-link>
 </li>
-@endif 
+@endif
 
 
 @if(Auth::user()->kasir_id == 0)
-@if(Laratrust::can('lihat_pembayaran_hutang') || Laratrust::can('lihat_pembayaran_hutang')) 
+@if(Laratrust::can('lihat_pembayaran_hutang') || Laratrust::can('lihat_pembayaran_hutang'))
 <li>
     <a class="disabled-menu" data-toggle="collapse" href="#pembayaran">
         <i class="material-icons">
@@ -272,7 +272,7 @@
     <div class="collapse" id="pembayaran">
         <ul class="nav">
 
-            @if(Laratrust::can('lihat_pembayaran_piutang')) 
+            @if(Laratrust::can('lihat_pembayaran_piutang'))
             <li>
                 <router-link :to="{name: 'indexPembayaranPiutang'}" class="menu-nav">
                     <span class="sidebar-mini">
@@ -283,9 +283,9 @@
                     </span>
                 </router-link>
             </li>
-            @endif 
+            @endif
 
-            @if(Laratrust::can('lihat_pembayaran_hutang')) 
+            @if(Laratrust::can('lihat_pembayaran_hutang'))
             <li>
                 <router-link :to="{name: 'indexPembayaranHutang'}" class="menu-nav">
                     <span class="sidebar-mini">
@@ -303,7 +303,40 @@
 </li>
 @endif
 
-@if(Laratrust::can('lihat_bucket_size') || Laratrust::can('jam_transaksi_penjualan') || Laratrust::can('laba_kotor_perpelanggan') || Laratrust::can('laba_kotor_perproduk') || Laratrust::can('kartu_stok') || Laratrust::can('kas') || Laratrust::can('mutasi_stok') || Laratrust::can('pembelian_perproduk') || Laratrust::can('hutang_beredar') || Laratrust::can('penjualan') || Laratrust::can('penjualan_harian') || Laratrust::can('penjualan_perproduk') || Laratrust::can('penjualan_perpelanggan') || Laratrust::can('penjualan_terbaik_perproduk') || Laratrust::can('piutang_beredar')) 
+@if(Laratrust::can('lihat_retur_pembelian'))
+<li>
+    <a class="disabled-menu" data-toggle="collapse" href="#retur">
+        <i class="material-icons">
+            compare_arrow
+        </i>
+        <p>
+            Retur
+            <b class="caret">
+            </b>
+        </p>
+    </a>
+    <div class="collapse" id="retur">
+        <ul class="nav">
+
+            @if(Laratrust::can('lihat_retur_pembelian'))
+            <li>
+                <router-link :to="{name: 'indexReturPembelian'}" class="menu-nav">
+                    <span class="sidebar-mini">
+                        RB
+                    </span>
+                    <span class="sidebar-normal">
+                        Retur Pembelian
+                    </span>
+                </router-link>
+            </li>
+            @endif
+
+        </ul>
+    </div>
+</li>
+@endif
+
+@if(Laratrust::can('lihat_bucket_size') || Laratrust::can('jam_transaksi_penjualan') || Laratrust::can('laba_kotor_perpelanggan') || Laratrust::can('laba_kotor_perproduk') || Laratrust::can('kartu_stok') || Laratrust::can('kas') || Laratrust::can('mutasi_stok') || Laratrust::can('pembelian_perproduk') || Laratrust::can('hutang_beredar') || Laratrust::can('penjualan') || Laratrust::can('penjualan_harian') || Laratrust::can('penjualan_perproduk') || Laratrust::can('penjualan_perpelanggan') || Laratrust::can('penjualan_terbaik_perproduk') || Laratrust::can('piutang_beredar'))
 <li>
     <a class="disabled-menu" data-toggle="collapse" href="#laporan">
         <i class="material-icons">
@@ -318,7 +351,7 @@
     <div class="collapse" id="laporan">
         <ul class="nav">
 
-            @if(Laratrust::can('lihat_bucket_size')) 
+            @if(Laratrust::can('lihat_bucket_size'))
             <li>
                 <router-link :to="{name: 'indexLaporanBucketSize'}" class="menu-nav">
                     <span class="sidebar-mini">
@@ -331,7 +364,7 @@
             </li>
             @endif
 
-            @if(Laratrust::can('jam_transaksi_penjualan')) 
+            @if(Laratrust::can('jam_transaksi_penjualan'))
             <li>
                 <router-link :to="{name: 'indexGrafikJamTransaksiPenjualan'}" class="menu-nav">
                     <span class="sidebar-mini">
@@ -344,7 +377,7 @@
           </li>
           @endif
 
-          @if(Laratrust::can('laba_kotor_perpelanggan')) 
+          @if(Laratrust::can('laba_kotor_perpelanggan'))
           <li>
             <router-link :to="{name: 'indexLaporanLabaKotor'}" class="menu-nav">
                 <span class="sidebar-mini">
@@ -358,7 +391,7 @@
         @endif
 
 
-        @if(Laratrust::can('laba_kotor_perproduk')) 
+        @if(Laratrust::can('laba_kotor_perproduk'))
         <li>
             <router-link :to="{name: 'indexLaporanLabaKotorProduk'}" class="menu-nav">
                 <span class="sidebar-mini">
@@ -370,8 +403,8 @@
             </router-link>
         </li>
         @endif
-        
-        @if(Laratrust::can('kartu_stok')) 
+
+        @if(Laratrust::can('kartu_stok'))
         <li>
             <router-link :to="{name: 'indexLaporanKartuStok'}" class="menu-nav">
                 <span class="sidebar-mini">
@@ -383,8 +416,8 @@
             </router-link>
         </li>
         @endif
-        
-        @if(Laratrust::can('kas')) 
+
+        @if(Laratrust::can('kas'))
         <li>
             <router-link :to="{name: 'indexLaporanKas'}" class="menu-nav">
                 <span class="sidebar-mini">
@@ -396,8 +429,8 @@
             </router-link>
         </li>
         @endif
-        
-        @if(Laratrust::can('mutasi_stok')) 
+
+        @if(Laratrust::can('mutasi_stok'))
         <li>
             <router-link :to="{name: 'indexLaporanMutasiStok'}" class="menu-nav">
                 <span class="sidebar-mini">
@@ -409,8 +442,8 @@
             </router-link>
         </li>
         @endif
-        
-        @if(Laratrust::can('pembelian_perproduk')) 
+
+        @if(Laratrust::can('pembelian_perproduk'))
         <li>
             <router-link :to="{name: 'indexLaporanPembelianProduk'}" class="menu-nav">
                 <span class="sidebar-mini">
@@ -422,8 +455,8 @@
             </router-link>
         </li>
         @endif
-        
-        @if(Laratrust::can('hutang_beredar')) 
+
+        @if(Laratrust::can('hutang_beredar'))
         <li>
             <router-link :to="{name: 'indexLaporanHutangBeredar'}" class="menu-nav">
                 <span class="sidebar-mini">
@@ -436,7 +469,7 @@
         </li>
         @endif
 
-        @if(Laratrust::can('piutang_beredar')) 
+        @if(Laratrust::can('piutang_beredar'))
         <li>
             <router-link :to="{name: 'indexLaporanPiutangBeredar'}" class="menu-nav">
                 <span class="sidebar-mini">
@@ -448,8 +481,8 @@
             </router-link>
         </li>
         @endif
-        
-        @if(Laratrust::can('penjualan')) 
+
+        @if(Laratrust::can('penjualan'))
         <li>
             <router-link :to="{name: 'indexPenjualan'}" class="menu-nav">
                 <span class="sidebar-mini">
@@ -461,8 +494,8 @@
             </router-link>
         </li>
         @endif
-        
-        @if(Laratrust::can('penjualan_harian')) 
+
+        @if(Laratrust::can('penjualan_harian'))
         <li>
             <router-link :to="{name: 'indexLaporanPenjualanHarian'}" class="menu-nav">
                 <span class="sidebar-mini">
@@ -474,8 +507,8 @@
             </router-link>
         </li>
         @endif
-        
-        @if(Laratrust::can('penjualan_perproduk')) 
+
+        @if(Laratrust::can('penjualan_perproduk'))
         <li>
             <router-link :to="{name: 'indexLaporanPenjualanProduk'}" class="menu-nav">
                 <span class="sidebar-mini">
@@ -487,8 +520,8 @@
             </router-link>
         </li>
         @endif
-        
-        @if(Laratrust::can('penjualan_perpelanggan')) 
+
+        @if(Laratrust::can('penjualan_perpelanggan'))
         <li>
             <router-link :to="{name: 'indexLaporanPenjualanPelanggan'}" class="menu-nav">
                 <span class="sidebar-mini">
@@ -500,8 +533,8 @@
             </router-link>
         </li>
         @endif
-        
-        @if(Laratrust::can('penjualan_terbaik_perproduk')) 
+
+        @if(Laratrust::can('penjualan_terbaik_perproduk'))
         <li>
             <router-link :to="{name: 'indexLaporanPenjualanTerbaik'}" class="menu-nav">
                 <span class="sidebar-mini">
@@ -520,7 +553,7 @@
 
 @endif{{-- @endif kasir id --}}
 
-@if(Laratrust::can('lihat_master_data')) 
+@if(Laratrust::can('lihat_master_data'))
 <li>
     <a class="disabled-menu" data-toggle="collapse" href="#pagesExamples">
         <i class="material-icons">
@@ -537,7 +570,7 @@
 
             @if(\App\SettingAplikasi::select('tipe_aplikasi')->first()->tipe_aplikasi == 1)
 
-            @if(Laratrust::can('lihat_user')) 
+            @if(Laratrust::can('lihat_user'))
             <li>
                 <router-link :to="{name: 'indexDaftarUserWarung'}" class="menu-nav">
                     <span class="sidebar-mini">
@@ -550,7 +583,7 @@
             </li>
             @endif
 
-            @if(Laratrust::can('lihat_otoritas')) 
+            @if(Laratrust::can('lihat_otoritas'))
             <li>
                 <router-link :to="{name: 'indexOtoritas'}" class="menu-nav">
                     <span class="sidebar-mini">
@@ -563,7 +596,7 @@
             </li>
             @endif
 
-            @if(Laratrust::can('lihat_customer')) 
+            @if(Laratrust::can('lihat_customer'))
             <li>
                 <router-link :to="{name: 'indexCustomer'}" class="menu-nav">
                     <span class="sidebar-mini">
@@ -584,13 +617,13 @@
                         B
                     </span>
                     <span class="sidebar-normal">
-                        Bank 
+                        Bank
                     </span>
                 </router-link>
             </li> --}}
             @endif
 
-            {{-- user kasir 
+            {{-- user kasir
             <li>
                 <router-link :to="{name: 'indexUserKasir'}" class="menu-nav">
                     <span class="sidebar-mini">
@@ -652,7 +685,7 @@
 
 
 @if(Auth::user()->kasir_id == 0)
-@if(Laratrust::can('setting_footer') || Laratrust::can('setting_pengiriman') || Laratrust::can('seetting_verifikasi')|| Laratrust::can('lihat_setting_verifikasi')) 
+@if(Laratrust::can('setting_footer') || Laratrust::can('setting_pengiriman') || Laratrust::can('seetting_verifikasi')|| Laratrust::can('lihat_setting_verifikasi'))
 <li>
     <a class="disabled-menu" data-toggle="collapse" href="#settingWarung">
         <i class="material-icons">
@@ -687,7 +720,7 @@
                 </router-link>
             </li>
 
-            @if(Laratrust::can('setting_footer')) 
+            @if(Laratrust::can('setting_footer'))
             <li>
                 <router-link :to="{name: 'indexSettingFooter'}" class="menu-nav">
                     <span class="sidebar-mini">
@@ -700,7 +733,7 @@
             </li>
             @endif
 
-            @if(Laratrust::can('setting_pengiriman')) 
+            @if(Laratrust::can('setting_pengiriman'))
             <li>
                 <router-link :to="{name: 'indexSettingPengiriman'}" class="menu-nav">
                     <span class="sidebar-mini">
@@ -713,7 +746,7 @@
             </li>
             @endif
 
-            @if(Laratrust::can('seetting_verifikasi')) 
+            @if(Laratrust::can('seetting_verifikasi'))
             <li>
                 <router-link :to="{name: 'indexSettingVerifikasi'}" class="menu-nav">
                     <span class="sidebar-mini">
@@ -726,7 +759,7 @@
             </li>
             @endif
 
-            @if(Laratrust::can('lihat_setting_promo')) 
+            @if(Laratrust::can('lihat_setting_promo'))
             <li>
                 <router-link :to="{name: 'indexSettingPromo'}" class="menu-nav">
                     <span class="sidebar-mini">
