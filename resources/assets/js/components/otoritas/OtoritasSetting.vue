@@ -1,6 +1,6 @@
 <style scoped>
 .pencarian {
-  color: red; 
+  color: red;
   float: right;
 }
 </style>
@@ -31,9 +31,9 @@
           <label>
             <input type="checkbox" name="pilih_semua" v-model="pilih_semua" v-bind:value="1" v-on:change="pilihSemua"> Pilih Semua
           </label>
-        </div>            
+        </div>
         <!--END OTORITAS laporan -->
-        
+
         <div class="row" v-if="seen">
           <div class="col-sm-2">
             <!-- OTORITAS laporan -->
@@ -42,11 +42,11 @@
               <label>
                 <input type="checkbox" name="setting_user" v-bind:value="permission_laporans.id" v-model="setting_otoritas.laporan"> {{permission_laporans.display_name}}
               </label>
-            </div>            
+            </div>
             <!--END OTORITAS laporan -->
           </div>
 
-          <div class="col-sm-2"> 
+          <div class="col-sm-2">
             <!-- kas_masuk -->
             <b>Kas Masuk</b>
             <div class="checkbox" v-for="permissions_kas_masuk, index in permission_kas_masuk">
@@ -72,9 +72,9 @@
               </label>
             </div>
             <!-- Kelompok Produk  -->
-          </div>          
+          </div>
 
-          <div class="col-sm-2"> 
+          <div class="col-sm-2">
             <!-- Bank  -->
             <b>Bank</b>
             <div class="checkbox" v-for="permission_bank, index in permission_bank">
@@ -101,7 +101,7 @@
             <!-- pembayaran_piutang  -->
           </div>
 
-          <div class="col-sm-2"> 
+          <div class="col-sm-2">
             <!-- Customer  -->
             <b>Customer</b>
             <div class="checkbox" v-for="permission_customer, index in permission_customer">
@@ -128,7 +128,7 @@
             <!-- pembayaran_hutang  -->
           </div>
 
-          <div class="col-sm-2"> 
+          <div class="col-sm-2">
             <!-- Item Masuk  -->
             <b>Item Masuk</b>
             <div class="checkbox" v-for="permission_item_masuk, index in permission_item_masuk">
@@ -153,11 +153,11 @@
                 <input type="checkbox" name="setting_pembelian" v-bind:value="permission_pembelian.id" v-model="setting_otoritas.pembelian"> {{permission_pembelian.display_name}}
               </label>
             </div>
-            <!-- Pembelian  -->           
+            <!-- Pembelian  -->
 
           </div>
 
-          <div class="col-sm-2"> 
+          <div class="col-sm-2">
             <!-- Item Keluar  -->
             <b>Item Keluar</b>
             <div class="checkbox" v-for="permission_item_keluar, index in permission_item_keluar">
@@ -188,6 +188,15 @@
 
         <div class="row" v-if="seen">
           <div class="col-sm-2">
+          <!-- Retur Pembelian  -->
+          <b>Retur Pembelian</b>
+          <div class="checkbox" v-for="permission_retur_pembelian, index in permission_retur_pembelian">
+            <label>
+              <input type="checkbox" name="setting_retur_pembelian" v-bind:value="permission_retur_pembelian.id" v-model="setting_otoritas.retur_pembelian"> {{permission_retur_pembelian.display_name}}
+            </label>
+          </div>
+          <!-- Retur Pembelian  -->
+
             <!-- produk  -->
             <b>Produk</b>
             <div class="checkbox" v-for="permission_produk, index in permission_produk">
@@ -205,7 +214,7 @@
             </div>
             <!-- setting_promo  -->
           </div>
-          <div class="col-sm-2">            
+          <div class="col-sm-2">
             <!-- satuan  -->
             <b>Satuan</b>
             <div class="checkbox" v-for="permission_satuan, index in permission_satuan">
@@ -213,7 +222,7 @@
                 <input type="checkbox" name="setting_satuan" v-bind:value="permission_satuan.id" v-model="setting_otoritas.satuan"> {{permission_satuan.display_name}}
               </label>
             </div>
-            <!-- satuan  --> 
+            <!-- satuan  -->
 
             <!-- setting  -->
             <b>Setting</b>
@@ -225,7 +234,7 @@
             <!-- setting  -->
 
           </div>
-          <div class="col-sm-2">     
+          <div class="col-sm-2">
 
             <!-- OTORITAS KAS -->
             <b>Kas</b>
@@ -233,7 +242,7 @@
               <label>
                 <input type="checkbox" name="setting_kas" v-bind:value="permission_kass.id" v-model="setting_otoritas.kas"> {{permission_kass.display_name}}
               </label>
-            </div>            
+            </div>
             <!--END OTORITAS KAS -->
             <!-- Master Data -->
             <b>Master Data</b>
@@ -243,7 +252,7 @@
               </label>
             </div>
             <!-- Master Data -->
-            
+
             <!-- laporan_persediaan -->
             <b>Laporan Persediaan</b>
             <div class="checkbox" v-for="permissions_laporan_persediaan, index in permission_laporan_persediaan">
@@ -252,9 +261,9 @@
               </label>
             </div>
             <!--end laporan persediaan -->
-          </div>    
+          </div>
 
-          <div class="col-sm-2">            
+          <div class="col-sm-2">
             <!-- otoritas -->
             <b>Otoritas</b>
             <div class="checkbox" v-for="permissions_otoritas, index in permission_otoritas">
@@ -284,7 +293,7 @@
               <label v-if="permission_users.name != 'konfirmasi_user' && permission_users.name != 'reset_password_user' ">
                 <input type="checkbox" name="setting_user" v-bind:value="permission_users.id" v-model="setting_otoritas.user"> {{permission_users.display_name}}
               </label>
-            </div>            
+            </div>
             <!--END OTORITAS USER -->
           </div>
         </div>
@@ -332,6 +341,7 @@ export default {
      permission_stok_opname: [],
      permission_supplier: [],
      permission_setting_promo: [],
+     permission_retur_pembelian: [],
      setting_otoritas : {
       user : [],
       otoritas : [],
@@ -359,6 +369,7 @@ export default {
       stok_opname : [],
       supplier : [],
       setting_promo : [],
+      retur_pembelian : [],
     },
     nama_otoritas : '',
     pilih_semua : false,
@@ -374,7 +385,7 @@ mounted() {
 },
 watch: {
   pencarian: function (newQuestion) {
-    this.getHasilPencarian()  
+    this.getHasilPencarian()
   }
 },
 methods: {
@@ -411,6 +422,7 @@ methods: {
       app.permission_stok_opname = resp.data.permission_stok_opname
       app.permission_supplier = resp.data.permission_supplier
       app.permission_setting_promo = resp.data.permission_setting_promo
+      app.permission_retur_pembelian = resp.data.permission_retur_pembelian
 
 
       app.nama_otoritas = resp.data.otoritas.display_name
@@ -441,6 +453,7 @@ methods: {
       app.setting_otoritas.stok_opname = resp.data.data_permission_stok_opname
       app.setting_otoritas.supplier = resp.data.data_permission_supplier
       app.setting_otoritas.setting_promo = resp.data.data_permission_setting_promo
+      app.setting_otoritas.retur_pembelian = resp.data.data_permission_retur_pembelian
 
       app.loading = false;
       app.seen = true;
@@ -459,7 +472,7 @@ methods: {
       text: "Anda Yakin Ingin Menyimpan Otoritas Ini ?",
       buttons: {
         cancel: true,
-        confirm: "OK"                   
+        confirm: "OK"
       },
 
     }).then((value) => {
@@ -493,8 +506,8 @@ methods: {
     if (pilih_semua == true) {
 
         // OTORITAS LAPORAN
-        $.each(app.permission_laporan, function (i, item) { 
-          app.setting_otoritas.laporan.push(app.permission_laporan[i].id)     
+        $.each(app.permission_laporan, function (i, item) {
+          app.setting_otoritas.laporan.push(app.permission_laporan[i].id)
         });
 
         // OTORITAS USER
@@ -508,117 +521,121 @@ methods: {
         });
 
         // OTORITAS BANK
-        $.each(app.permission_bank, function (i, item) { 
-          app.setting_otoritas.bank.push(app.permission_bank[i].id)     
+        $.each(app.permission_bank, function (i, item) {
+          app.setting_otoritas.bank.push(app.permission_bank[i].id)
         });
 
         // OTORITAS CUSTOMER
-        $.each(app.permission_customer, function (i, item) { 
-          app.setting_otoritas.customer.push(app.permission_customer[i].id)     
+        $.each(app.permission_customer, function (i, item) {
+          app.setting_otoritas.customer.push(app.permission_customer[i].id)
         });
 
         // OTORITAS MASTER DATA
-        $.each(app.permission_master_data, function (i, item) { 
-          app.setting_otoritas.master_data.push(app.permission_master_data[i].id)     
+        $.each(app.permission_master_data, function (i, item) {
+          app.setting_otoritas.master_data.push(app.permission_master_data[i].id)
         });
 
         // OTORITAS ITEM MASUK
-        $.each(app.permission_item_masuk, function (i, item) { 
-          app.setting_otoritas.item_masuk.push(app.permission_item_masuk[i].id)     
+        $.each(app.permission_item_masuk, function (i, item) {
+          app.setting_otoritas.item_masuk.push(app.permission_item_masuk[i].id)
         });
 
         // OTORITAS ITEM KELUAR
-        $.each(app.permission_item_keluar, function (i, item) { 
-          app.setting_otoritas.item_keluar.push(app.permission_item_keluar[i].id)     
+        $.each(app.permission_item_keluar, function (i, item) {
+          app.setting_otoritas.item_keluar.push(app.permission_item_keluar[i].id)
         });
 
         // OTORITAS KAS
-        $.each(app.permission_kas, function (i, item) { 
-          app.setting_otoritas.kas.push(app.permission_kas[i].id)     
+        $.each(app.permission_kas, function (i, item) {
+          app.setting_otoritas.kas.push(app.permission_kas[i].id)
         });
 
         // OTORITAS KAS MASUK
-        $.each(app.permission_kas_masuk, function (i, item) { 
-          app.setting_otoritas.kas_masuk.push(app.permission_kas_masuk[i].id)     
+        $.each(app.permission_kas_masuk, function (i, item) {
+          app.setting_otoritas.kas_masuk.push(app.permission_kas_masuk[i].id)
         });
 
         // OTORITAS KAS KELUAR
-        $.each(app.permission_kas_keluar, function (i, item) { 
-          app.setting_otoritas.kas_keluar.push(app.permission_kas_keluar[i].id)     
+        $.each(app.permission_kas_keluar, function (i, item) {
+          app.setting_otoritas.kas_keluar.push(app.permission_kas_keluar[i].id)
         });
 
         // OTORITAS KAS MUTASI
-        $.each(app.permission_kas_mutasi, function (i, item) { 
-          app.setting_otoritas.kas_mutasi.push(app.permission_kas_mutasi[i].id)     
+        $.each(app.permission_kas_mutasi, function (i, item) {
+          app.setting_otoritas.kas_mutasi.push(app.permission_kas_mutasi[i].id)
         });
 
         // OTORITAS KATEGORI KAS
-        $.each(app.permission_kategori_transaksi, function (i, item) { 
-          app.setting_otoritas.kategori_transaksi.push(app.permission_kategori_transaksi[i].id)     
+        $.each(app.permission_kategori_transaksi, function (i, item) {
+          app.setting_otoritas.kategori_transaksi.push(app.permission_kategori_transaksi[i].id)
         });
 
         // OTORITAS KELOMPOK PRODUK
-        $.each(app.permission_kelompok_produk, function (i, item) { 
-          app.setting_otoritas.kelompok_produk.push(app.permission_kelompok_produk[i].id)     
+        $.each(app.permission_kelompok_produk, function (i, item) {
+          app.setting_otoritas.kelompok_produk.push(app.permission_kelompok_produk[i].id)
         });
 
         // OTORITAS LAPORAN PERSEDIAAN
-        $.each(app.permission_laporan_persediaan, function (i, item) { 
-          app.setting_otoritas.laporan_persediaan.push(app.permission_laporan_persediaan[i].id)     
+        $.each(app.permission_laporan_persediaan, function (i, item) {
+          app.setting_otoritas.laporan_persediaan.push(app.permission_laporan_persediaan[i].id)
         });
 
         // OTORITAS PEMBAYARAN PIUTANG
-        $.each(app.permission_pembayaran_piutang, function (i, item) { 
-          app.setting_otoritas.pembayaran_piutang.push(app.permission_pembayaran_piutang[i].id)     
+        $.each(app.permission_pembayaran_piutang, function (i, item) {
+          app.setting_otoritas.pembayaran_piutang.push(app.permission_pembayaran_piutang[i].id)
         });
 
         // OTORITAS PEMBAYARAN HUTANG
-        $.each(app.permission_pembayaran_hutang, function (i, item) { 
-          app.setting_otoritas.pembayaran_hutang.push(app.permission_pembayaran_hutang[i].id)     
+        $.each(app.permission_pembayaran_hutang, function (i, item) {
+          app.setting_otoritas.pembayaran_hutang.push(app.permission_pembayaran_hutang[i].id)
         });
 
         // OTORITAS PEMBELIAN
-        $.each(app.permission_pembelian, function (i, item) { 
-          app.setting_otoritas.pembelian.push(app.permission_pembelian[i].id)     
+        $.each(app.permission_pembelian, function (i, item) {
+          app.setting_otoritas.pembelian.push(app.permission_pembelian[i].id)
         });
 
         // OTORITAS PENJUALAN
-        $.each(app.permission_penjualan, function (i, item) { 
-          app.setting_otoritas.penjualan.push(app.permission_penjualan[i].id)     
+        $.each(app.permission_penjualan, function (i, item) {
+          app.setting_otoritas.penjualan.push(app.permission_penjualan[i].id)
         });
 
         // OTORITAS PESANAN
-        $.each(app.permission_pesanan, function (i, item) { 
-          app.setting_otoritas.pesanan.push(app.permission_pesanan[i].id)     
+        $.each(app.permission_pesanan, function (i, item) {
+          app.setting_otoritas.pesanan.push(app.permission_pesanan[i].id)
         });
 
         // OTORITAS PRODUK
-        $.each(app.permission_produk, function (i, item) { 
-          app.setting_otoritas.produk.push(app.permission_produk[i].id)     
+        $.each(app.permission_produk, function (i, item) {
+          app.setting_otoritas.produk.push(app.permission_produk[i].id)
         });
 
         // OTORITAS SATUAN
-        $.each(app.permission_satuan, function (i, item) { 
-          app.setting_otoritas.satuan.push(app.permission_satuan[i].id)     
+        $.each(app.permission_satuan, function (i, item) {
+          app.setting_otoritas.satuan.push(app.permission_satuan[i].id)
         });
 
         // OTORITAS SETTING
-        $.each(app.permission_setting, function (i, item) { 
+        $.each(app.permission_setting, function (i, item) {
           app.setting_otoritas.setting.push(app.permission_setting[i].id)
         });
 
         // OTORITAS STOK OPNAME
-        $.each(app.permission_stok_opname, function (i, item) { 
+        $.each(app.permission_stok_opname, function (i, item) {
           app.setting_otoritas.stok_opname.push(app.permission_stok_opname[i].id)
         });
 
         // OTORITAS SUPPLIER
-        $.each(app.permission_supplier, function (i, item) { 
+        $.each(app.permission_supplier, function (i, item) {
           app.setting_otoritas.supplier.push(app.permission_supplier[i].id)
         });
         // OTORITAS SETTING PROMO
-        $.each(app.permission_setting_promo, function (i, item) { 
+        $.each(app.permission_setting_promo, function (i, item) {
           app.setting_otoritas.setting_promo.push(app.permission_setting_promo[i].id)
+        });
+        // OTORITAS RETUR PEMBELIAN
+        $.each(app.permission_retur_pembelian, function (i, item) {
+          app.setting_otoritas.retur_pembelian.push(app.permission_retur_pembelian[i].id)
         });
 
 
@@ -626,7 +643,7 @@ methods: {
         // REMOVE VALUE ARRAY SETTING OTORITAS
         app.removeValue()
       }
-      console.log(app.setting_otoritas)
+      console.log(app.permission_retur_pembelian)
 
 
     },
@@ -659,16 +676,17 @@ methods: {
         app.setting_otoritas.stok_opname.splice(0)
         app.setting_otoritas.supplier.splice(0)
         app.setting_otoritas.setting_promo.splice(0)
+        app.setting_otoritas.retur_pembelian.splice(0)
       },
-      alert(pesan) { 
-        this.$swal({ 
-          title: "Berhasil!", 
-          text: pesan, 
-          icon: "success", 
+      alert(pesan) {
+        this.$swal({
+          title: "Berhasil!",
+          text: pesan,
+          icon: "success",
           buttons: false,
           timer: 1000,
-        }); 
-      }, 
+        });
+      },
     }
   }
   </script>

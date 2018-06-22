@@ -7,7 +7,7 @@ use Yajra\Datatables\Html\Builder;
 use Yajra\Datatables\Datatables;
 use Illuminate\Support\Facades\DB;
 use App\Role; //Modal
-use App\Otoritas; //Modal 
+use App\Otoritas; //Modal
 use Auth;
 use App\Permission;
 use Session;
@@ -24,9 +24,9 @@ class OtoritasController extends Controller
      */
 
     public function __construct()
-    {    
+    {
       $settings_aplikasi = SettingAplikasi::select('tipe_aplikasi')->first();
-      if ($settings_aplikasi->tipe_aplikasi == 0) {            
+      if ($settings_aplikasi->tipe_aplikasi == 0) {
         $this->middleware('user-must-admin');
       }
     }
@@ -114,32 +114,33 @@ class OtoritasController extends Controller
     {
 
      $permission_user = Permission::where('grup','user')->get();
-     $permission_otoritas = Permission::where('grup','otoritas')->get(); 
-     $permission_master_data = Permission::where('grup','master_data')->get(); 
-     $permission_bank = Permission::where('grup','bank')->get(); 
-     $permission_customer = Permission::where('grup','customer')->get(); 
-     $permission_master_data = Permission::where('grup','master_data')->get(); 
+     $permission_otoritas = Permission::where('grup','otoritas')->get();
+     $permission_master_data = Permission::where('grup','master_data')->get();
+     $permission_bank = Permission::where('grup','bank')->get();
+     $permission_customer = Permission::where('grup','customer')->get();
+     $permission_master_data = Permission::where('grup','master_data')->get();
      $permission_item_masuk = Permission::where('grup','item_masuk')->get();
-     $permission_item_keluar = Permission::where('grup','item_keluar')->get(); 
-     $permission_kas = Permission::where('grup','kas')->get(); 
-     $permission_kas_masuk = Permission::where('grup','kas_masuk')->get(); 
-     $permission_kas_keluar = Permission::where('grup','kas_keluar')->get(); 
-     $permission_kas_mutasi = Permission::where('grup','kas_mutasi')->get(); 
+     $permission_item_keluar = Permission::where('grup','item_keluar')->get();
+     $permission_kas = Permission::where('grup','kas')->get();
+     $permission_kas_masuk = Permission::where('grup','kas_masuk')->get();
+     $permission_kas_keluar = Permission::where('grup','kas_keluar')->get();
+     $permission_kas_mutasi = Permission::where('grup','kas_mutasi')->get();
      $permission_kategori_transaksi = Permission::where('grup','kategori_transaksi')->get();
-     $permission_kelompok_produk = Permission::where('grup','kelompok_produk')->get(); 
-     $permission_laporan = Permission::where('grup','laporan')->get(); 
-     $permission_laporan_persediaan = Permission::where('grup','laporan_persediaan')->get(); 
-     $permission_pembayaran_piutang = Permission::where('grup','pembayaran_piutang')->get(); 
-     $permission_pembayaran_hutang = Permission::where('grup','pembayaran_hutang')->get(); 
-     $permission_pembelian = Permission::where('grup','pembelian')->get(); 
-     $permission_penjualan = Permission::where('grup','penjualan')->get(); 
-     $permission_pesanan = Permission::where('grup','pesanan')->get(); 
-     $permission_produk = Permission::where('grup','produk')->get(); 
-     $permission_satuan = Permission::where('grup','satuan')->get(); 
-     $permission_setting = Permission::where('grup','setting')->get(); 
-     $permission_stok_opname = Permission::where('grup','stok_opname')->get(); 
-     $permission_supplier = Permission::where('grup','supplier')->get(); 
-     $permission_setting_promo = Permission::where('grup','setting_promo')->get(); 
+     $permission_kelompok_produk = Permission::where('grup','kelompok_produk')->get();
+     $permission_laporan = Permission::where('grup','laporan')->get();
+     $permission_laporan_persediaan = Permission::where('grup','laporan_persediaan')->get();
+     $permission_pembayaran_piutang = Permission::where('grup','pembayaran_piutang')->get();
+     $permission_pembayaran_hutang = Permission::where('grup','pembayaran_hutang')->get();
+     $permission_pembelian = Permission::where('grup','pembelian')->get();
+     $permission_penjualan = Permission::where('grup','penjualan')->get();
+     $permission_pesanan = Permission::where('grup','pesanan')->get();
+     $permission_produk = Permission::where('grup','produk')->get();
+     $permission_satuan = Permission::where('grup','satuan')->get();
+     $permission_setting = Permission::where('grup','setting')->get();
+     $permission_stok_opname = Permission::where('grup','stok_opname')->get();
+     $permission_supplier = Permission::where('grup','supplier')->get();
+     $permission_setting_promo = Permission::where('grup','setting_promo')->get();
+     $permission_retur_pembelian = Permission::where('grup','retur_pembelian')->get();
      $otoritas = Role::where('id',$id)->first();
 
      $arrayPermissionUser = array();
@@ -147,7 +148,6 @@ class OtoritasController extends Controller
      $arrayPermissionBank = array();
      $arrayPermissionCustomer = array();
      $arrayPermissionMasterData = array();
-
      $arrayPermissionItemMasuk = array();
      $arrayPermissionItemKeluar = array();
      $arrayPermissionKas = array();
@@ -169,6 +169,7 @@ class OtoritasController extends Controller
      $arrayPermissionStokOpname = array();
      $arrayPermissionSupplier = array();
      $arrayPermissionSettingPromo = array();
+     $arrayPermissionReturPembelian = [];
 
      $permission_role = PermissionRole::with('permissions')->where('role_id',$id)->get();
      foreach ($permission_role as $permission_roles) {
@@ -250,6 +251,9 @@ class OtoritasController extends Controller
    if ($permission_roles->permissions->grup == "setting_promo"){
      array_push($arrayPermissionSettingPromo, $permission_roles->permission_id);
    }
+   if ($permission_roles->permissions->grup == "retur_pembelian"){
+     array_push($arrayPermissionReturPembelian, $permission_roles->permission_id);
+   }
  }
 
  return response()->json([
@@ -279,6 +283,7 @@ class OtoritasController extends Controller
   "permission_stok_opname" => $permission_stok_opname,
   "permission_supplier" => $permission_supplier,
   "permission_setting_promo" => $permission_setting_promo,
+  "permission_retur_pembelian" => $permission_retur_pembelian,
 
   "otoritas"     => $otoritas,
 
@@ -307,7 +312,8 @@ class OtoritasController extends Controller
   "data_permission_setting" => $arrayPermissionSetting,
   "data_permission_stok_opname" => $arrayPermissionStokOpname,
   "data_permission_supplier" => $arrayPermissionSupplier,
-  "data_permission_setting_promo" => $arrayPermissionSettingPromo
+  "data_permission_setting_promo" => $arrayPermissionSettingPromo,
+  "data_permission_retur_pembelian" => $arrayPermissionReturPembelian,
 ]);
 }
 
@@ -329,7 +335,7 @@ class OtoritasController extends Controller
 
      }else{
 
-       Role::where('id', $id)->update([ 
+       Role::where('id', $id)->update([
         'name' =>$request->otoritas,
         'display_name'=>$request->otoritas]);
 
@@ -347,9 +353,9 @@ class OtoritasController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-    { 
+    {
         //menghapus data dengan pengecekan alert /peringatan
-      $user = Otoritas::where('role_id',$id); 
+      $user = Otoritas::where('role_id',$id);
 
       if ($user->count() > 0) {
         // menyiapkan pesan error
@@ -367,11 +373,11 @@ class OtoritasController extends Controller
      $permission = Permission::all();
      $role = Role::find($id);
 
-     foreach ($permission as $permissions ) {        
+     foreach ($permission as $permissions ) {
        $role->detachPermission($permissions);
      }
 
-     foreach ($request->user as $setting_user) {
+    foreach ($request->user as $setting_user) {
       $permission_user = Permission::whereId($setting_user)->first();
       $role->attachPermission($permission_user);
     }
@@ -391,8 +397,6 @@ class OtoritasController extends Controller
       $permission_master_data = Permission::whereId($setting_master_data)->first();
       $role->attachPermission($permission_master_data);
     }
-
-
     foreach ($request->item_masuk as $setting_item_masuk) {
       $permission_item_masuk = Permission::whereId($setting_item_masuk)->first();
       $role->attachPermission($permission_item_masuk);
@@ -401,33 +405,26 @@ class OtoritasController extends Controller
       $permission_item_keluar = Permission::whereId($setting_item_keluar)->first();
       $role->attachPermission($permission_item_keluar);
     }
-
     foreach ($request->kas as $setting_kas) {
       $permission_kas = Permission::whereId($setting_kas)->first();
       $role->attachPermission($permission_kas);
     }
-
     foreach ($request->kas_masuk as $setting_kas_masuk) {
       $permission_kas_masuk = Permission::whereId($setting_kas_masuk)->first();
       $role->attachPermission($permission_kas_masuk);
     }
-
     foreach ($request->kas_keluar as $setting_kas_keluar) {
       $permission_kas_keluar = Permission::whereId($setting_kas_keluar)->first();
       $role->attachPermission($permission_kas_keluar);
     }
-
-
     foreach ($request->kas_mutasi as $setting_kas_mutasi) {
       $permission_kas_mutasi = Permission::whereId($setting_kas_mutasi)->first();
       $role->attachPermission($permission_kas_mutasi);
     }
-
     foreach ($request->kategori_transaksi as $setting_kategori_transaksi) {
       $permission_kategori_transaksi = Permission::whereId($setting_kategori_transaksi)->first();
       $role->attachPermission($permission_kategori_transaksi);
     }
-
     foreach ($request->kelompok_produk as $setting_kelompok_produk) {
       $permission_kelompok_produk = Permission::whereId($setting_kelompok_produk)->first();
       $role->attachPermission($permission_kelompok_produk);
@@ -441,52 +438,42 @@ class OtoritasController extends Controller
       $permission_laporan = Permission::whereId($setting_laporan)->first();
       $role->attachPermission($permission_laporan);
     }
-
     foreach ($request->laporan_persediaan as $setting_laporan_persediaan) {
       $permission_laporan_persediaan = Permission::whereId($setting_laporan_persediaan)->first();
       $role->attachPermission($permission_laporan_persediaan);
     }
-
     foreach ($request->pembayaran_piutang as $setting_pembayaran_piutang) {
       $permission_pembayaran_piutang = Permission::whereId($setting_pembayaran_piutang)->first();
       $role->attachPermission($permission_pembayaran_piutang);
     }
-
     foreach ($request->pembayaran_hutang as $setting_pembayaran_hutang) {
       $permission_pembayaran_hutang = Permission::whereId($setting_pembayaran_hutang)->first();
       $role->attachPermission($permission_pembayaran_hutang);
     }
-
     foreach ($request->pembelian as $setting_pembelian) {
       $permission_pembelian = Permission::whereId($setting_pembelian)->first();
       $role->attachPermission($permission_pembelian);
     }
-
     foreach ($request->penjualan as $setting_penjualan) {
       $permission_penjualan = Permission::whereId($setting_penjualan)->first();
       $role->attachPermission($permission_penjualan);
     }
-
     foreach ($request->pesanan as $setting_pesanan) {
       $permission_pesanan = Permission::whereId($setting_pesanan)->first();
       $role->attachPermission($permission_pesanan);
     }
-
     foreach ($request->satuan as $setting_satuan) {
       $permission_satuan = Permission::whereId($setting_satuan)->first();
       $role->attachPermission($permission_satuan);
     }
-
     foreach ($request->setting as $setting_setting) {
       $permission_setting = Permission::whereId($setting_setting)->first();
       $role->attachPermission($permission_setting);
     }
-
     foreach ($request->stok_opname as $setting_stok_opname) {
       $permission_stok_opname = Permission::whereId($setting_stok_opname)->first();
       $role->attachPermission($permission_stok_opname);
     }
-
     foreach ($request->supplier as $setting_supplier) {
       $permission_supplier = Permission::whereId($setting_supplier)->first();
       $role->attachPermission($permission_supplier);
@@ -495,7 +482,10 @@ class OtoritasController extends Controller
       $permission_setting_promo = Permission::whereId($setting_setting_promo)->first();
       $role->attachPermission($permission_setting_promo);
     }
-
+    foreach ($request->retur_pembelian as $setting_retur_pembelian) {
+      $permission_retur_pembelian = Permission::whereId($setting_retur_pembelian)->first();
+      $role->attachPermission($permission_retur_pembelian);
+    }
   }
 
 
@@ -587,22 +577,22 @@ class OtoritasController extends Controller
     if (Laratrust::can('tambah_otoritas')) {
       $tambah_otoritas = 1;
     }else{
-      $tambah_otoritas = 0;            
+      $tambah_otoritas = 0;
     }
     if (Laratrust::can('edit_otoritas')) {
       $edit_otoritas = 1;
     }else{
-      $edit_otoritas = 0;            
+      $edit_otoritas = 0;
     }
     if (Laratrust::can('hapus_otoritas')) {
       $hapus_otoritas = 1;
     }else{
-      $hapus_otoritas = 0;            
+      $hapus_otoritas = 0;
     }
     if (Laratrust::can('permission_otoritas')) {
       $permission_otoritas = 1;
     }else{
-      $permission_otoritas = 0;            
+      $permission_otoritas = 0;
     }
     $respons['tambah_otoritas'] = $tambah_otoritas;
     $respons['edit_otoritas'] = $edit_otoritas;
