@@ -1,6 +1,6 @@
 <style scoped>
 	.pencarian {
-		color: red; 
+		color: red;
 		float: right;
 	}
 	.table>thead>tr>th {
@@ -25,16 +25,16 @@
 				<li class="active">Retur Pembelian</li>
 			</ul>
 
-			
+
 			<div class="card">
 				<div class="card-header card-header-icon" data-background-color="purple">
 					<i class="material-icons">shopping_cart</i>
 				</div>
 				<div class="card-content">
 					<h4 class="card-title"> Retur Pembelian </h4>
-					
+
 					<div class="toolbar">
-						<p> <router-link :to="{name: 'createReturPembelian'}" class="btn btn-primary">Tambah Retur Pembelian</router-link></p>
+						<p> <router-link :to="{name: 'createReturPembelian'}" class="btn btn-primary" v-if="otoritas.tambah_retur_pembelian == 1">Tambah Retur Pembelian</router-link></p>
 					</div>
 
 					<div class=" table-responsive ">
@@ -52,10 +52,10 @@
 									<th style="text-align:right;">Potong Hutang</th>
 									<th style="text-align:right;">Kas</th>
 									<th style="text-align:center;">Waktu</th>
-									<th style="text-align:right;">Edit</th>
+									<th style="text-align:right;" v-if="otoritas.edit_retur_pembelian == 1">Edit</th>
 									<th style="text-align:right;">Detail</th>
-									<th style="text-align:right;">Cetak</th>									
-									<th style="text-align:right;">Delete</th>
+									<th style="text-align:right;">Cetak</th>
+									<th style="text-align:right;" v-if="otoritas.hapus_retur_pembelian == 1">Delete</th>
 								</tr>
 							</thead>
 							<tbody v-if="returPembelian.length > 0 && loading == false"  class="data-ada">
@@ -77,32 +77,32 @@
 									<td align="right">{{ returPembelian.total | pemisahTitik }}</td>
 									<td align="center">{{ returPembelian.waktu}}</td>
 
-									<td style="text-align:right;">
+									<td style="text-align:right;" v-if="otoritas.edit_retur_pembelian == 1">
 										<router-link :to="{name: 'prosesEditReturPembelian', params: {id: returPembelian.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + returPembelian.id">
-											Edit 
+											Edit
 										</router-link>
 									</td>
 
 									<td style="text-align:right;">
 										<router-link :to="{name: 'detailReturPembelian', params: {id: returPembelian.id}}" class="btn btn-xs btn-info" v-bind:id="'detail-' + returPembelian.no_faktur_retur" >
 											Detail
-										</router-link> 
+										</router-link>
 									</td>
 
 									<td style="text-align:right;">
 										<a target="blank" class="btn btn-primary btn-xs" v-bind:href="'retur-pembelian/cetak-retur-pembelian/'+returPembelian.id">Cetak Ulang</a>
 									</td>
 
-									<td style="text-align:right;">
+									<td style="text-align:right;" v-if="otoritas.hapus_retur_pembelian == 1">
 										<a  href="#retur-pembelian" class="btn btn-xs btn-danger" v-bind:id="'delete-' + returPembelian.id" v-on:click="deleteEntry(returPembelian.id, index,returPembelian.no_faktur_retur)">Delete
 										</a>
 									</td>
 								</tr>
-							</tbody>					
+							</tbody>
 							<tbody class="data-tidak-ada" v-else-if="returPembelian.length == 0 && loading == false">
 								<tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
 							</tbody>
-						</table>	
+						</table>
 
 						<vue-simple-spinner v-if="loading"></vue-simple-spinner>
 
@@ -123,6 +123,7 @@
 			return {
 				returPembelian: [],
 				returPembelianData: {},
+				otoritas: {},
 				url : window.location.origin+(window.location.pathname).replace("dashboard", "retur-pembelian"),
 				pencarian: '',
 				loading: true,
@@ -135,7 +136,7 @@
 		watch: {
 			pencarian: function (newQuestion) {
 				this.getHasilPencarian();
-				this.loading = true;  
+				this.loading = true;
 			}
 		},
 		filters: {
@@ -151,15 +152,15 @@
 		},
 		methods: {
 			getResults(page) {
-				var app = this;	
+				var app = this;
 				if (typeof page === 'undefined') {
 					page = 1;
 				}
 				axios.get(app.url+'/view?page='+page)
 				.then(function (resp) {
-					console.log(resp.data.data);
 					app.returPembelian = resp.data.data;
 					app.returPembelianData = resp.data;
+    			app.otoritas = resp.data.otoritas.original;
 					app.loading = false;
 				})
 				.catch(function (resp) {
@@ -177,6 +178,7 @@
 				.then(function (resp) {
 					app.returPembelian = resp.data.data;
 					app.returPembelianData = resp.data;
+    			app.otoritas = resp.data.otoritas.original;
 					app.loading = false;
 				})
 				.catch(function (resp) {
@@ -212,7 +214,7 @@
 							}else{
 								app.getResults();
 								app.alert("Menghapus Pembelian "+no_faktur);
-								app.loading = false;  
+								app.loading = false;
 							}
 						})
 						.catch(function (resp) {
@@ -226,4 +228,3 @@
 		}
 	}
 </script>
-
