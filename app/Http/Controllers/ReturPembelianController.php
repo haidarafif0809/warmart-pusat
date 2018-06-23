@@ -345,10 +345,10 @@ class ReturPembelianController extends Controller
                 'no_faktur_retur'   => $returPembelian->no_faktur_retur,
                 'waktu'             => $returPembelian->Waktu,
                 'suplier'           => $returPembelian->nama_suplier,
-                'total'             => $returPembelian->total,
-                'total_bayar'       => $returPembelian->total_bayar,
-                'potong_hutang'     => $returPembelian->potong_hutang,
-                'potongan'     => $returPembelian->potongan,
+                'total'             => (float)$returPembelian->total,
+                'total_bayar'       => (float)$returPembelian->total_bayar,
+                'potong_hutang'     => (float)$returPembelian->potong_hutang,
+                'potongan'          => (float)$returPembelian->potongan,
                 ]);
         }
         $no_faktur_retur = "";
@@ -373,10 +373,10 @@ class ReturPembelianController extends Controller
                 'no_faktur_retur'   => $returPembelian->no_faktur_retur,
                 'waktu'             => $returPembelian->Waktu,
                 'suplier'           => $returPembelian->nama_suplier,
-                'total'             => $returPembelian->total,
-                'total_bayar'       => $returPembelian->total_bayar,
-                'potong_hutang'     => $returPembelian->potong_hutang,
-                'potongan'     => $returPembelian->potongan,
+                'total'             => (float)$returPembelian->total,
+                'total_bayar'       => (float)$returPembelian->total_bayar,
+                'potong_hutang'     => (float)$returPembelian->potong_hutang,
+                'potongan'          => (float)$returPembelian->potongan,
                 ]);
         }
         $no_faktur_retur = "";
