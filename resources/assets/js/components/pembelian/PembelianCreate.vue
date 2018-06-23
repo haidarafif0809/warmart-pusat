@@ -234,6 +234,19 @@
                         </div>
                     </div>
 
+                                    <div class="row">
+                                        <div class="col-md-6 col-xs-12">
+                                            <div class="form-group" style="margin-right: 10px; margin-left: 1px; margin-bottom: 1px; margin-top: 1px;">
+                                                <font style="color: black">Potongan(F7)</font>  
+                                                    <money style="text-align:right;" class="form-subtotal" v-model="inputPembayaranPembelian.potongan_faktur" v-bind="separator" v-shortkey.focus="['f7']"></money>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-xs-12">
+                                            <div class="form-group" style="margin-right: 10px; margin-left: 1px; margin-bottom: 1px; margin-top: 1px;">
+                                                <font style="color: black">(%)(F8)</font>    
+                                                <input type="text" class="form-subtotal" value="0" v-model="inputPembayaranPembelian.potongan_persen" v-on:blur="hitungPotonganPersen" v-shortkey.focus="['f8']" />
+                                            </div>
+                                        </div>
 
                 </div>
                 <div class="row">
@@ -277,6 +290,9 @@
             <money style="text-align:right;" readonly="" class="form-pembelian" id="kembalian" name="kembalian" placeholder="Kembalian"  v-model="inputPembayaranPembelian.kembalian" v-bind="separator" ></money> 
         </div>
 
+                                    <input type="hidden"  name="status_pembelian" id="status_pembelian" v-model="inputPembayaranPembelian.status_pembelian">
+                                    <input type="hidden" name="ppn" id="ppn" v-model="inputPembayaranPembelian.ppn">
+                                    <input type="hidden" name="potongan" id="potongan" v-model="inputPembayaranPembelian.potongan" >
 
     </div>
 </div>
@@ -347,6 +363,7 @@
             <div class="modal-header">
                 <button type="button" class="close"  v-on:click="closeModalJumlahProduk()" v-shortkey.push="['f9']" @shortkey="closeModalJumlahProduk()"> &times;</button> 
             </div>
+            <!--    end small modal -->
 
             <form class="form-horizontal" v-on:submit.prevent="subtmitEditSatuan(inputTbsPembelian.id_produk, inputTbsPembelian.id_tbs, inputTbsPembelian.subtotal)"> 
                 <div class="modal-body">
@@ -954,8 +971,9 @@ deleteEntry(id, index,nama_produk,subtotal_lama) {
         }
     });
 
-},//END fungsi deleteEntry (alert konfirmasi hapus)
-prosesDelete(id,nama_produk,subtotal_lama){
+            if (satuan_tbs == satuan_produk[0]) {
+                $("#modalEditSatuan").hide();
+            } else {
 
     var app = this;
     app.loading = true;

@@ -88,9 +88,18 @@ class Hpp extends Model
                     ->where('jenis_hpp', 1)->orderBy('id', 'DESC')->first();
 
                     $stok_sekarang = $this->stok_produk_tanggal($id_produk, $this->tanggalSql($tanggal));
+
+                    if ($stok_sekarang > 0) {
+
                     $stok_produk = $stok_sekarang - $hpp_masuk->jumlah_masuk;
 
                     $hpp_produk = ( ($hpp_keluar->first()->harga_unit * $stok_produk) + ($hpp_masuk->harga_unit * $hpp_masuk->jumlah_masuk) ) / ($stok_produk + $hpp_masuk->jumlah_masuk);
+
+                    }else{
+
+                    $hpp_produk = $hpp_keluar->first()->harga_unit;
+
+                    }
 
                 }else{
                     $hpp_produk = $hpp_keluar->first()->harga_unit;
@@ -228,11 +237,21 @@ class Hpp extends Model
                     ->where('warung_id', Auth::user()->id_warung)
                     ->where('jenis_hpp', 1)->orderBy('id', 'DESC')->first();
 
+                    $tanggal = date('Y-m-d');
                     $stok_sekarang = $this->stok_produk_tanggal($id_produk, $this->tanggalSql($tanggal));
+
+                    if ($stok_sekarang > 0){
+
                     $stok_produk = $stok_sekarang - $hpp_masuk->jumlah_masuk;
 
                     $hpp_produk = ( ($hpp_keluar->first()->harga_unit * $stok_produk) + ($hpp_masuk->harga_unit * $hpp_masuk->jumlah_masuk) ) / ($stok_produk + $hpp_masuk->jumlah_masuk);
+                    
+                    }else{
 
+                    $hpp_produk = $hpp_keluar->first()->harga_unit;
+
+                    }
+    
                 }else{
                     $hpp_produk = $hpp_keluar->first()->harga_unit;
                 }
